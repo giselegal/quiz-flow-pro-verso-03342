@@ -36,18 +36,17 @@ export class SupabaseFunnelService {
     return 'funnel_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
   }
 
-  /**
-   * Salvar funnel completo (dados + páginas)
-   */
-  interface SaveFunnelResult {
+export interface SaveFunnelResult {
   success: boolean;
   id?: string;
   error?: string;
 }
 
-interface LoadFunnelResult {
+export interface LoadFunnelResult {
   success: boolean;
-  funnel?: any;
+  funnel?: FunnelSchema;
+  error?: string;
+}
   error?: string;
 }
 
