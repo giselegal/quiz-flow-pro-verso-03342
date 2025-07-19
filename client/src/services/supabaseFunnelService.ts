@@ -41,20 +41,6 @@ export interface LoadFunnelResult {
 // Tipo auxiliar
 export type FunnelData = Omit<FunnelSchema, 'pages'>;
 
-export interface FunnelData extends Omit<FunnelSchema, 'pages'> {}
-
-export interface SaveFunnelResult {
-  success: boolean;
-  id?: string;
-  error?: string;
-}
-
-export interface LoadFunnelResult {
-  success: boolean;
-  funnel?: FunnelSchema;
-  error?: string;
-}
-
 // Serviço de Funnel
 export class SupabaseFunnelService {
   
