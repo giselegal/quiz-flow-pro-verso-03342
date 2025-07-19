@@ -18,7 +18,7 @@ import {
   Link,
   X
 } from 'lucide-react';
-import { useSchemaEditorFixed as useSchemaEditor } from '@/hooks/useSchemaEditorFixed';
+import { useSupabaseEditor } from '@/hooks/useSupabaseEditor';
 import { SchemaDrivenComponentsSidebar } from './sidebar/SchemaDrivenComponentsSidebar';
 import { DynamicPropertiesPanel } from './panels/DynamicPropertiesPanel';
 import { DroppableCanvas } from './dnd/DroppableCanvas';
@@ -68,9 +68,11 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     deleteBlock,
     saveFunnel,
     createNewFunnel,
+    publishFunnel,
     isLoading,
-    isSaving
-  } = useSchemaEditor(funnelId || undefined);
+    isSaving,
+    autoSaveState
+  } = useSupabaseEditor(funnelId || undefined);
 
   // Debug - verificar se o funnel está chegando corretamente
   console.log('🔍 DEBUG SchemaDrivenEditorResponsive - PROPS:', { funnelId });
