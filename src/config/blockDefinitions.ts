@@ -1030,7 +1030,12 @@ export const blockDefinitions: BlockDefinition[] = [
         label: 'Título',
         type: 'text-input',
         defaultValue: 'Garantia de 30 Dias'
-      },
+      }
+    ],
+    defaultProperties: {
+      title: 'Garantia de 30 Dias'
+    }
+  },
 
   {
     type: 'transformation-inline',
