@@ -1112,7 +1112,9 @@ export const blockDefinitions: BlockDefinition[] = [
         label: 'Preço Original',
         type: 'text-input',
         defaultValue: 'R$ 175,00'
-      },
+      }
+    ]
+  },
 
   {
     type: 'countdown-inline',
