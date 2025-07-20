@@ -1060,7 +1060,7 @@ export const blockDefinitions: BlockDefinition[] = [
         defaultValue: 'Vista-se de Você — na Prática'
       },
 
-  {
+      {
         key: 'benefits',
         label: 'Benefícios',
         type: 'array-editor',
