@@ -1044,7 +1044,12 @@ export const blockDefinitions: BlockDefinition[] = [
         label: 'Título Principal',
         type: 'text-input',
         defaultValue: 'Sua Transformação Começa Aqui'
-      },
+      }
+    ],
+    defaultProperties: {
+      title: 'Sua Transformação Começa Aqui'
+    }
+  },
 
   {
     type: 'final-value-proposition-inline',
