@@ -101,8 +101,6 @@ componentsToFix.forEach(component => {
   const fixed = applyResponsiveFixes(filePath, component);
   if (fixed) totalFixed++;
   console.log('');
-});
-
 console.log(`\n🎯 RESUMO: ${totalFixed}/${componentsToFix.length} componentes corrigidos`);
 
 if (totalFixed > 0) {
