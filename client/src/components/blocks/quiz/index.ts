@@ -15,12 +15,12 @@
 
 // Blocos principais do quiz (implementados)
 export { default as QuizQuestionBlock } from './QuizQuestionBlock';
-export { default as QuizProgressBlock } from './QuizProgressBlock';
+// Removed QuizProgressBlock - not needed
 export { default as QuizNavigationBlock } from './QuizNavigationBlock';
 export { default as QuizTransitionBlock } from './QuizTransitionBlock';
 
 // Blocos específicos para etapas especiais (implementados)
-export { default as QuizIntroBlock } from './QuizIntroBlock';
+// Removed QuizIntroBlock - not needed
 export { default as StartButtonBlock } from './StartButtonBlock';
 export { default as QuizBenefitsBlock } from './QuizBenefitsBlock';
 export { default as StrategicQuestionBlock } from './StrategicQuestionBlock';

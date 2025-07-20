@@ -131,7 +131,7 @@ export const FacebookPixelCard: React.FC<FacebookPixelCardProps> = ({
   };
 
   const handleEventToggle = (eventName: string) => {
-    setTrackedEvents(prev => ({
+    setTrackedEvents((prev: Record<string, boolean>) => ({
       ...prev,
       [eventName]: !prev[eventName]
     }));

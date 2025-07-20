@@ -123,8 +123,8 @@ export const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({
 
         // Contabilizar visitantes únicos por IP/sessão simulada
         const visitorId =
-          event.utm_source +
-          event.utm_campaign +
+          (event.utm_source || 'direct') +
+          (event.utm_campaign || 'none') +
           Math.floor(Math.random() * 100);
         hourlyData[hourKey].visitors.add(visitorId);
 

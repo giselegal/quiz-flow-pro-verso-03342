@@ -14,7 +14,7 @@
 
 // Blocos implementados
 export { default as HeaderBlock } from './HeaderBlock';
-export { default as PrimaryStyleCardBlock } from './PrimaryStyleCardBlock';
+// Removed PrimaryStyleCardBlock - not needed
 export { default as TestimonialsBlock } from './TestimonialsBlock';
 export { default as BeforeAfterTransformationBlock } from './BeforeAfterTransformationBlock';
 export { default as MotivationSectionBlock } from './MotivationSectionBlock';
