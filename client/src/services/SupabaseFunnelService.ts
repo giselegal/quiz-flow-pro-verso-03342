@@ -1,6 +1,6 @@
 import { supabase } from '../lib/supabase';
 
-// Interfaces e tipos
+// Interfaces e tipos - devem estar fora da classe
 export interface FunnelSchema {
   id: string;
   name: string;
@@ -40,7 +40,7 @@ export interface LoadFunnelResult {
 
 export type FunnelData = Omit<FunnelSchema, 'pages'>;
 
-// Serviço de Funnel
+// Serviço principal
 export class SupabaseFunnelService {
   /**
    * Gerar um novo ID único para o funnel
@@ -52,7 +52,7 @@ export class SupabaseFunnelService {
   /**
    * Criar um novo funnel
    */
-  public async createFunnel(data: Partial<FunnelSchema>): Promise<SaveFunnelResult> {
+  async createFunnel(data: Partial<FunnelSchema>): Promise<SaveFunnelResult> {
     try {
       const newFunnel: FunnelSchema = {
         id: SupabaseFunnelService.generateId(),
@@ -81,7 +81,7 @@ export class SupabaseFunnelService {
   /**
    * Salvar funnel completo (dados + páginas)
    */
-  public async saveFunnel(funnel: FunnelSchema): Promise<SaveFunnelResult> {
+  async saveFunnel(funnel: FunnelSchema): Promise<SaveFunnelResult> {
     try {
       // Preparar dados do funnel
       const funnelData: FunnelData = {
@@ -140,7 +140,7 @@ export class SupabaseFunnelService {
   /**
    * Recuperar um funnel por ID
    */
-  public async loadFunnel(id: string): Promise<LoadFunnelResult> {
+  async loadFunnel(id: string): Promise<LoadFunnelResult> {
     try {
       // Buscar dados do funnel
       const { data: funnelData, error: funnelError } = await supabase
@@ -189,7 +189,7 @@ export class SupabaseFunnelService {
   /**
    * Deletar um funnel por ID
    */
-  public async deleteFunnel(id: string): Promise<{ success: boolean; error?: string }> {
+  async deleteFunnel(id: string): Promise<{ success: boolean; error?: string }> {
     try {
       const { error } = await supabase
         .from('funnels')
