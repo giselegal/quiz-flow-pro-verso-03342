@@ -1126,7 +1126,9 @@ export const blockDefinitions: BlockDefinition[] = [
         label: 'Título',
         type: 'text-input',
         defaultValue: 'Oferta expira em:'
-      },
+      }
+    ]
+  },
 
   {
     type: 'button-inline',
@@ -1141,6 +1143,9 @@ export const blockDefinitions: BlockDefinition[] = [
         type: 'text-input',
         defaultValue: 'Clique Aqui'
       }
+    ]
+  }
+];
 
 
 // =====================================================================
