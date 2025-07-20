@@ -220,7 +220,7 @@ const QuestionBlock: React.FC<QuestionBlockProps> = ({
                     <label className="block text-sm text-[#8F7A6A] mb-1">Tipo de pergunta</label>
                     <select
                       value={question.type}
-                      onChange={(e) => updateQuestion(question.id, { type: e.target.value as 'text' | 'image' | 'both' })}
+                      onChange={(e) => updateQuestion(question.id, { type: e.target.value as 'text' | 'image' | 'both' | 'normal' | 'strategic' })}
                       className="p-2 border border-[#B89B7A]/20 rounded-md focus:outline-none focus:ring-2 focus:ring-[#B89B7A]/30"
                     >
                       <option value="text">Texto</option>

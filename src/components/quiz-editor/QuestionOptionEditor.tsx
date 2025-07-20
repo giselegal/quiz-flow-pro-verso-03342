@@ -16,7 +16,7 @@ import { GripVertical, Image, Trash2 } from 'lucide-react';
 
 interface QuestionOptionEditorProps {
   option: QuizOption;
-  questionType: 'text' | 'image' | 'both';
+  questionType: 'text' | 'image' | 'both' | 'normal' | 'strategic';
   onUpdate: (option: QuizOption) => void;
   onDelete: () => void;
   index: number;
