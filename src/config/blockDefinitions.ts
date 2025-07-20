@@ -1077,6 +1077,8 @@ export const blockDefinitions: BlockDefinition[] = [
           'Cores, modelagens e tecidos a seu favor',
           'Imagem alinhada aos seus objetivos',
           'Guarda-roupa funcional, sem compras por impulso'
+        ]
+      }
     ],
     defaultProperties: {
       title: 'Vista-se de Você — na Prática',
