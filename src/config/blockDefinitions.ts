@@ -1087,8 +1087,6 @@ export const blockDefinitions: BlockDefinition[] = [
         'Guarda-roupa funcional, sem compras por impulso'
       ]
     }
-  }
-    ],
   },
 
   // =====================================================================
