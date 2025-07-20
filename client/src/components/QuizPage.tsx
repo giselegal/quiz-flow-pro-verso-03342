@@ -85,7 +85,7 @@ const QuizPage: React.FC = () => {
       localStorage.setItem('quiz_start_time', Date.now().toString());
       const userName = user?.userName || localStorage.getItem('userName') || 'Anônimo';
       const userEmail = user?.email || localStorage.getItem('userEmail');
-      trackQuizStart(userName, userEmail);
+      trackQuizStart(userName, userEmail || undefined);
       setQuizStartTracked(true);
     }
   }, [quizStartTracked, user, showIntro]);
