@@ -1,4 +1,16 @@
 import React from 'react';
+import { PropertySchema } from '@/types/editor';
+
+// Block Definition Interface
+export interface BlockDefinition {
+  type: string;
+  name: string;
+  description: string;
+  icon: string;
+  category: string;
+  propertiesSchema: PropertySchema[];
+  defaultProperties: Record<string, any>;
+}
 
 // Tipos para ícones Lucide React
 export type IconType =
@@ -601,4 +613,94 @@ export type IconType =
   | 'FileCode'
   | 'FileCode2'
   | 'FileSpreadsheet'
-  | 'FilePresentatio'
+  | 'FilePresentatio';
+
+// Minimal block definitions array to satisfy imports
+export const blockDefinitions: BlockDefinition[] = [
+  {
+    type: 'heading',
+    name: 'Heading',
+    description: 'A simple heading block',
+    icon: 'Heading1',
+    category: 'content',
+    propertiesSchema: [
+      {
+        key: 'text',
+        label: 'Text',
+        type: 'text',
+        defaultValue: 'Heading'
+      }
+    ],
+    defaultProperties: {
+      text: 'Heading'
+    }
+  },
+  {
+    type: 'paragraph',
+    name: 'Paragraph',
+    description: 'A simple paragraph block',
+    icon: 'Type',
+    category: 'content',
+    propertiesSchema: [
+      {
+        key: 'text',
+        label: 'Text',
+        type: 'textarea',
+        defaultValue: 'Your paragraph text here'
+      }
+    ],
+    defaultProperties: {
+      text: 'Your paragraph text here'
+    }
+  },
+  {
+    type: 'button',
+    name: 'Button',
+    description: 'A clickable button',
+    icon: 'RectangleHorizontal',
+    category: 'content',
+    propertiesSchema: [
+      {
+        key: 'text',
+        label: 'Button Text',
+        type: 'text',
+        defaultValue: 'Click me'
+      },
+      {
+        key: 'url',
+        label: 'URL',
+        type: 'url',
+        defaultValue: '#'
+      }
+    ],
+    defaultProperties: {
+      text: 'Click me',
+      url: '#'
+    }
+  },
+  {
+    type: 'image',
+    name: 'Image',
+    description: 'An image block',
+    icon: 'Image',
+    category: 'content',
+    propertiesSchema: [
+      {
+        key: 'src',
+        label: 'Image URL',
+        type: 'image-url',
+        defaultValue: 'https://via.placeholder.com/400x300'
+      },
+      {
+        key: 'alt',
+        label: 'Alt Text',
+        type: 'text',
+        defaultValue: 'Image description'
+      }
+    ],
+    defaultProperties: {
+      src: 'https://via.placeholder.com/400x300',
+      alt: 'Image description'
+    }
+  }
+];
