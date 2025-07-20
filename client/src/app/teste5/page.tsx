@@ -11,7 +11,7 @@ import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
 import { QuizEditorPanel } from '@/components/editor/QuizEditorPanel';
 import { blockDefinitions, getBlocksByCategory } from '@/config/blockDefinitions';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 
 // Mock data for testing
 const mockStyleResult: StyleResult = {
@@ -87,7 +87,7 @@ export default function Teste5EditorPage() {
       if (saved) {
         const projectData = JSON.parse(saved);
         if (projectData.blocks) {
-          blockActions.updateBlocks(projectData.blocks);
+          blockActions.handleUpdateBlock('bulk-update', projectData.blocks);
           console.log('✅ Projeto teste5 carregado:', projectData);
           alert(`✅ Projeto carregado!\n\n📊 ${projectData.blocks.length} blocos restaurados\n🕒 Salvo em: ${new Date(projectData.timestamp).toLocaleString()}`);
         }
@@ -125,7 +125,7 @@ export default function Teste5EditorPage() {
       {/* Header */}
       <div className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6">
         <div className="flex items-center gap-4">
-          <Link href="/" className="text-blue-600 hover:text-blue-800">
+          <Link to="/" className="text-blue-600 hover:text-blue-800">
             <Home className="w-5 h-5" />
           </Link>
           <h1 className="text-xl font-semibold text-gray-900">Editor Teste5</h1>
@@ -305,7 +305,7 @@ export default function Teste5EditorPage() {
                   <TabsContent value="quiz" className="flex-1 overflow-hidden p-2">
                     <QuizEditorPanel 
                       blocks={blocks}
-                      onBlocksChange={blockActions.updateBlocks}
+                      onBlocksChange={(blocks: any[]) => console.log('Blocks updated:', blocks)}
                       testMode="teste5"
                     />
                   </TabsContent>
@@ -333,12 +333,11 @@ export default function Teste5EditorPage() {
                   <EditorPreview
                     blocks={blocks}
                     selectedBlockId={selectedBlockId}
-                    onBlockSelect={setSelectedBlockId}
-                    onBlockDelete={blockActions.handleDeleteBlock}
-                    onBlockReorder={blockActions.handleReorderBlocks}
-                    mockStyleResult={mockStyleResult}
+                    onSelectBlock={setSelectedBlockId}
+                    onReorderBlocks={blockActions.handleReorderBlocks}
+                    primaryStyle={mockStyleResult}
                     onSaveInline={handleSaveInline}
-                    testMode="teste5"
+                    isPreviewing={false}
                   />
                 </div>
               </div>
@@ -360,13 +359,11 @@ export default function Teste5EditorPage() {
               <EditorPreview
                 blocks={blocks}
                 selectedBlockId={null}
-                onBlockSelect={() => {}}
-                onBlockDelete={() => {}}
-                onBlockReorder={() => {}}
-                mockStyleResult={mockStyleResult}
+                onSelectBlock={() => {}}
+                onReorderBlocks={() => {}}
+                primaryStyle={mockStyleResult}
                 onSaveInline={() => {}}
-                previewMode={true}
-                testMode="teste5"
+                isPreviewing={true}
               />
             </div>
           </div>
@@ -382,7 +379,7 @@ export default function Teste5EditorPage() {
         </div>
         <div className="flex items-center gap-2">
           <span>Editor Unificado v1.0.0</span>
-          <Link href="/editor" className="text-blue-600 hover:text-blue-800">
+          <Link to="/editor" className="text-blue-600 hover:text-blue-800">
             Editor Principal
           </Link>
         </div>
