@@ -704,3 +704,59 @@ export const blockDefinitions: BlockDefinition[] = [
     }
   }
 ];
+
+// Utility functions
+export function getCategories(): string[] {
+  const categories = new Set(blockDefinitions.map(block => block.category));
+  return Array.from(categories);
+}
+
+export function getBlocksByCategory(category: string): BlockDefinition[] {
+  return blockDefinitions.filter(block => block.category === category);
+}
+
+export function findBlockDefinition(type: string): BlockDefinition | undefined {
+  return blockDefinitions.find(block => block.type === type);
+}
+
+export function getNewBlocks(): BlockDefinition[] {
+  return blockDefinitions.filter(block => block.category === 'content');
+}
+
+export function searchBlocks(searchTerm: string): BlockDefinition[] {
+  const term = searchTerm.toLowerCase();
+  return blockDefinitions.filter(block => 
+    block.name.toLowerCase().includes(term) ||
+    block.description.toLowerCase().includes(term) ||
+    block.type.toLowerCase().includes(term)
+  );
+}
+
+export function isValidBlockType(type: string): boolean {
+  return blockDefinitions.some(block => block.type === type);
+}
+
+export function createDefaultBlock(type: string, id?: string): any | null {
+  const definition = findBlockDefinition(type);
+  if (!definition) return null;
+
+  const properties: Record<string, any> = {};
+  
+  definition.propertiesSchema?.forEach(prop => {
+    if (prop.defaultValue !== undefined) {
+      properties[prop.key] = prop.defaultValue;
+    }
+  });
+
+  return {
+    id: id || `${type}-${Date.now()}`,
+    type,
+    properties,
+    order: 0
+  };
+}
+
+export function getBlockPropertiesSchema(type: string): PropertySchema[] | undefined {
+  const definition = findBlockDefinition(type);
+  return definition?.propertiesSchema;
+}
