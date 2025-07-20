@@ -1099,7 +1099,10 @@ export const blockDefinitions: BlockDefinition[] = [
         type: 'text-input',
         defaultValue: 'Seu Estilo Único'
       }
-    ]
+    ],
+    defaultProperties: {
+      resultTitle: 'Seu Estilo Único'
+    }
   },
 
   {
@@ -1115,7 +1118,10 @@ export const blockDefinitions: BlockDefinition[] = [
         type: 'text-input',
         defaultValue: 'R$ 175,00'
       }
-    ]
+    ],
+    defaultProperties: {
+      originalPrice: 'R$ 175,00'
+    }
   },
 
   {
@@ -1131,7 +1137,10 @@ export const blockDefinitions: BlockDefinition[] = [
         type: 'text-input',
         defaultValue: 'Oferta expira em:'
       }
-    ]
+    ],
+    defaultProperties: {
+      title: 'Oferta expira em:'
+    }
   },
 
   {
@@ -1147,7 +1156,10 @@ export const blockDefinitions: BlockDefinition[] = [
         type: 'text-input',
         defaultValue: 'Clique Aqui'
       }
-    ]
+    ],
+    defaultProperties: {
+      text: 'Clique Aqui'
+    }
   }
 ];
 
