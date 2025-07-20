@@ -1016,7 +1016,12 @@ export const blockDefinitions: BlockDefinition[] = [
         label: 'Título',
         type: 'text-input',
         defaultValue: 'Descubra Como Aplicar Seu Estilo na Prática'
-      },
+      }
+    ],
+    defaultProperties: {
+      title: 'Descubra Como Aplicar Seu Estilo na Prática'
+    }
+  },
 
   {
     type: 'guarantee-inline',
