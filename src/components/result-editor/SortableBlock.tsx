@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Block } from '@/types/editor';
 import { useSortable } from '@dnd-kit/sortable';
