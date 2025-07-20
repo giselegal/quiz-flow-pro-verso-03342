@@ -1,4 +1,4 @@
-import { SupabaseFunnelService } from '../services/SupabaseFunnelService';
+import { SupabaseFunnelService } from '../services/supabaseFunnelService';
 
 // Criar uma instância do serviço
 const funnelService = new SupabaseFunnelService();
