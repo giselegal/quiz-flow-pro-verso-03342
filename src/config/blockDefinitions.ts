@@ -1098,7 +1098,9 @@ export const blockDefinitions: BlockDefinition[] = [
         label: 'Título do Resultado',
         type: 'text-input',
         defaultValue: 'Seu Estilo Único'
-      },
+      }
+    ]
+  },
 
   {
     type: 'quiz-offer-pricing-inline',
