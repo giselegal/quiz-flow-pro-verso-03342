@@ -12,11 +12,14 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// CORS headers
+// CORS headers and Security headers
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  
+  // Content Security Policy - Allow necessary resources
+  res.header('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' https://replit.com; style-src 'self' 'unsafe-inline' data:; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self';");
   
   if (req.method === 'OPTIONS') {
     res.sendStatus(200);
@@ -44,12 +47,14 @@ app.post('/api/funnels', (req, res) => {
 });
 
 // Serve static files from dist/public
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, './public')));
 
 // SPA fallback - serve index.html for any non-API routes
 app.get('*', (req, res) => {
   if (!req.url.startsWith('/api/')) {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
+    const indexPath = path.join(__dirname, './public/index.html');
+    console.log(`Serving index.html from: ${indexPath}`);
+    res.sendFile(indexPath);
   } else {
     res.status(404).json({ error: 'API endpoint not found' });
   }
@@ -58,7 +63,7 @@ app.get('*', (req, res) => {
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📁 Serving files from: ${path.join(__dirname, '../public')}`);
+  console.log(`📁 Serving files from: ${path.join(__dirname, './public')}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
 });
 
