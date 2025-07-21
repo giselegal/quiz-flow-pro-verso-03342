@@ -23,74 +23,70 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
-    chunkSizeWarningLimit: 2000, // Aumenta o limite para 2MB para reduzir warnings
+    chunkSizeWarningLimit: 800, // 800kb limit
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          // Vendor chunks - bibliotecas externas
-          if (id.includes('node_modules')) {
-            // React ecosystem
-            if (id.includes('react') || id.includes('react-dom')) {
-              return 'react-vendor';
-            }
-            // UI libraries
-            if (id.includes('@radix-ui') || id.includes('lucide-react')) {
-              return 'ui-vendor';
-            }
-            // Drag and Drop
-            if (id.includes('@dnd-kit') || id.includes('@hello-pangea/dnd')) {
-              return 'dnd-vendor';
-            }
-            // Animation libraries
-            if (id.includes('framer-motion')) {
-              return 'animation-vendor';
-            }
-            // Form libraries
-            if (id.includes('@hookform') || id.includes('zod')) {
-              return 'form-vendor';
-            }
-            // Outros vendors
-            return 'vendor';
+        manualChunks: (id) => {
+          // React ecosystem
+          if (id.includes('react') || id.includes('react-dom') || id.includes('react-router') || id.includes('wouter')) {
+            return 'react-vendor';
           }
           
-          // App chunks - código da aplicação
-          // Editor core - funcionalidade principal do editor
+          // Animation libraries
+          if (id.includes('framer-motion') || id.includes('@dnd-kit')) {
+            return 'animation-vendor';
+          }
+          
+          // UI components and icons
+          if (id.includes('lucide-react') || id.includes('@radix-ui') || id.includes('clsx') || id.includes('tailwind')) {
+            return 'ui-vendor';
+          }
+          
+          // Editor core functionality
           if (id.includes('SchemaDrivenEditor') || 
               id.includes('useSchemaEditor') || 
-              id.includes('schemaDrivenFunnelService')) {
+              id.includes('schemaDrivenFunnelService') ||
+              id.includes('blockDefinitions')) {
             return 'editor-core';
           }
           
-          // Quiz data - dados estáticos do quiz
-          if (id.includes('realQuizData') || 
-              id.includes('blockDefinitions')) {
-            return 'quiz-data';
-          }
-          
-          // Visual editor - editor visual específico
-          if (id.includes('QuizOfferPageVisualEditor') || 
-              id.includes('visual-editor')) {
+          // Visual editor components
+          if (id.includes('visual-editor') || 
+              id.includes('QuizOfferPageVisualEditor') ||
+              id.includes('realQuizData')) {
             return 'visual-editor';
           }
           
-          // Pages - páginas principais
-          if (id.includes('Page.tsx') || 
-              id.includes('/pages/')) {
+          // Page components (split by type)
+          if (id.includes('pages/') || id.includes('Page.tsx')) {
+            if (id.includes('Quiz') || id.includes('Result')) {
+              return 'quiz-pages';
+            }
+            if (id.includes('Dashboard') || id.includes('Analytics') || id.includes('Settings')) {
+              return 'admin-pages';  
+            }
             return 'pages';
           }
           
-          // Components - componentes reutilizáveis
-          if (id.includes('/components/') && 
-              !id.includes('editor') && 
-              !id.includes('visual-editor')) {
+          // Large component groups
+          if (id.includes('components/') && !id.includes('editor/')) {
+            if (id.includes('quiz/') || id.includes('blocks/')) {
+              return 'quiz-components';
+            }
+            if (id.includes('admin/') || id.includes('dashboard/')) {
+              return 'admin-components';
+            }
             return 'components';
           }
           
-          // Utils and services
-          if (id.includes('/utils/') || 
-              id.includes('/services/') ||
-              id.includes('/hooks/')) {
+          // Utility functions
+          if (id.includes('utils/') || id.includes('lib/') || id.includes('helpers/')) {
             return 'utils';
+          }
+          
+          // Node modules that are not covered above
+          if (id.includes('node_modules/')) {
+            return 'vendor';
           }
         }
       }
