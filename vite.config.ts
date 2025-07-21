@@ -23,23 +23,75 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
-    chunkSizeWarningLimit: 1000, // Aumenta o limite para 1MB
+    chunkSizeWarningLimit: 2000, // Aumenta o limite para 2MB para reduzir warnings
     rollupOptions: {
       output: {
-        manualChunks: {
-          // Separar bibliotecas grandes em chunks específicos
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-vendor': ['lucide-react', '@radix-ui/react-slot', '@radix-ui/react-toast'],
-          'editor-core': [
-            './src/components/editor/SchemaDrivenEditorResponsive.tsx',
-            './src/hooks/useSchemaEditorFixed.ts',
-            './src/services/schemaDrivenFunnelService.ts'
-          ],
-          'dnd-vendor': ['@dnd-kit/core', '@dnd-kit/sortable', '@dnd-kit/utilities'],
-          'quiz-data': [
-            './src/components/visual-editor/realQuizData.ts',
-            './src/config/blockDefinitions.ts'
-          ]
+        manualChunks(id) {
+          // Vendor chunks - bibliotecas externas
+          if (id.includes('node_modules')) {
+            // React ecosystem
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'react-vendor';
+            }
+            // UI libraries
+            if (id.includes('@radix-ui') || id.includes('lucide-react')) {
+              return 'ui-vendor';
+            }
+            // Drag and Drop
+            if (id.includes('@dnd-kit') || id.includes('@hello-pangea/dnd')) {
+              return 'dnd-vendor';
+            }
+            // Animation libraries
+            if (id.includes('framer-motion')) {
+              return 'animation-vendor';
+            }
+            // Form libraries
+            if (id.includes('@hookform') || id.includes('zod')) {
+              return 'form-vendor';
+            }
+            // Outros vendors
+            return 'vendor';
+          }
+          
+          // App chunks - código da aplicação
+          // Editor core - funcionalidade principal do editor
+          if (id.includes('SchemaDrivenEditor') || 
+              id.includes('useSchemaEditor') || 
+              id.includes('schemaDrivenFunnelService')) {
+            return 'editor-core';
+          }
+          
+          // Quiz data - dados estáticos do quiz
+          if (id.includes('realQuizData') || 
+              id.includes('blockDefinitions')) {
+            return 'quiz-data';
+          }
+          
+          // Visual editor - editor visual específico
+          if (id.includes('QuizOfferPageVisualEditor') || 
+              id.includes('visual-editor')) {
+            return 'visual-editor';
+          }
+          
+          // Pages - páginas principais
+          if (id.includes('Page.tsx') || 
+              id.includes('/pages/')) {
+            return 'pages';
+          }
+          
+          // Components - componentes reutilizáveis
+          if (id.includes('/components/') && 
+              !id.includes('editor') && 
+              !id.includes('visual-editor')) {
+            return 'components';
+          }
+          
+          // Utils and services
+          if (id.includes('/utils/') || 
+              id.includes('/services/') ||
+              id.includes('/hooks/')) {
+            return 'utils';
+          }
         }
       }
     }
