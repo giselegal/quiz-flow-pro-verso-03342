@@ -23,5 +23,25 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    chunkSizeWarningLimit: 1000, // Aumenta o limite para 1MB
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Separar bibliotecas grandes em chunks específicos
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ui-vendor': ['lucide-react', '@radix-ui/react-slot', '@radix-ui/react-toast'],
+          'editor-core': [
+            './src/components/editor/SchemaDrivenEditorResponsive.tsx',
+            './src/hooks/useSchemaEditorFixed.ts',
+            './src/services/schemaDrivenFunnelService.ts'
+          ],
+          'dnd-vendor': ['@dnd-kit/core', '@dnd-kit/sortable', '@dnd-kit/utilities'],
+          'quiz-data': [
+            './src/components/visual-editor/realQuizData.ts',
+            './src/config/blockDefinitions.ts'
+          ]
+        }
+      }
+    }
   },
 }));
