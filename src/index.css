@@ -2,9 +2,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
 @import './styles/spinner-optimized.css';
 @import './styles/effects.css';
-/* @import './styles/typography.css'; */ /* MISSING */
-/* @import './styles/animations.css'; */ /* MISSING */
-/* @import './styles/spinner.css'; */ /* MISSING */
+@import './styles/typography.css';
+@import './styles/animations.css';
+@import './styles/spinner.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -433,9 +433,8 @@ img:hover, .hover-scale:hover {
     font-size: 1.25rem;
   }
   
-  .strategic-question .question-title,
-  .strategic-question .options,
-  .strategic-question-title {
+  .strategic-question .question-text,
+  .strategic-question .options {
     font-size: 1.35rem;
   }
 }
