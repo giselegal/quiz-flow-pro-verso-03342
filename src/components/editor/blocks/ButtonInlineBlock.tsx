@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { cn } from '@/lib/utils';
 import { MousePointer2, Edit3, ArrowRight, Download, Play, Star } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';
@@ -28,12 +28,8 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     backgroundColor = '',
     textColor = '',
     borderColor = '',
-    borderRadius = 'medium',
-    isEditable = true
+    borderRadius = 'medium'
   } = block.properties;
-
-  const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState(text);
 
   // Ícones disponíveis
   const iconMap = {
@@ -77,18 +73,6 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     full: 'rounded-full'
   };
 
-  const handleSave = () => {
-    if (onPropertyChange) {
-      onPropertyChange('text', editValue);
-    }
-    setIsEditing(false);
-  };
-
-  const handleCancel = () => {
-    setEditValue(text);
-    setIsEditing(false);
-  };
-
   const customStyles = {
     backgroundColor: backgroundColor || undefined,
     color: textColor || undefined,
@@ -104,100 +88,64 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         'flex-shrink-0 flex-grow-0 relative group',
         fullWidth ? 'w-full' : 'w-auto',
         // Container editável
-        'p-1 rounded-lg',
+        'p-1 rounded-lg cursor-pointer',
         isSelected && 'bg-blue-50/30',
         className
       )}
       onClick={onClick}
     >
-      {isEditing ? (
-        <div className="space-y-2 p-2 bg-white border rounded-lg shadow-sm">
-          <input
-            type="text"
-            value={editValue}
-            onChange={(e) => setEditValue(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md outline-none focus:border-blue-500"
-            placeholder="Texto do botão"
-            autoFocus
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') handleSave();
-              if (e.key === 'Escape') handleCancel();
-            }}
-          />
-          <div className="flex gap-2">
-            <button
-              onClick={handleSave}
-              className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600"
-            >
-              Salvar
-            </button>
-            <button
-              onClick={handleCancel}
-              className="px-3 py-1 bg-gray-500 text-white rounded text-sm hover:bg-gray-600"
-            >
-              Cancelar
-            </button>
-          </div>
+      <button
+        className={cn(
+          // Base styles
+          'inline-flex items-center justify-center font-medium transition-all duration-200',
+          'border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500',
+          'hover:scale-105 active:scale-95',
+          // Tamanho
+          sizeClasses[size as keyof typeof sizeClasses],
+          // Variante (aplicada apenas se não há estilos customizados)
+          !hasCustomStyles && variantClasses[variant as keyof typeof variantClasses],
+          // Border radius
+          borderRadiusClasses[borderRadius as keyof typeof borderRadiusClasses],
+          // Estados
+          disabled && 'opacity-50 cursor-not-allowed hover:scale-100',
+          fullWidth && 'w-full'
+        )}
+        style={hasCustomStyles ? customStyles : undefined}
+        disabled={disabled}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (href) {
+            window.open(href, target);
+          }
+        }}
+      >
+        {/* Ícone à esquerda */}
+        {IconComponent && iconPosition === 'left' && (
+          <IconComponent className={cn(iconSizes[size as keyof typeof iconSizes], 'mr-2')} />
+        )}
+
+        {/* Texto do botão */}
+        <span>{text || 'Clique Aqui'}</span>
+
+        {/* Ícone à direita */}
+        {IconComponent && iconPosition === 'right' && (
+          <IconComponent className={cn(iconSizes[size as keyof typeof iconSizes], 'ml-2')} />
+        )}
+      </button>
+
+      {/* Indicador de seleção */}
+      {isSelected && (
+        <div className="absolute -top-2 -right-2 bg-blue-500 text-white rounded-full p-1">
+          <Edit3 className="w-3 h-3" />
         </div>
-      ) : (
-        <>
-          <button
-            className={cn(
-              // Base styles
-              'inline-flex items-center justify-center font-medium transition-all duration-200',
-              'border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500',
-              'hover:scale-105 active:scale-95',
-              // Tamanho
-              sizeClasses[size as keyof typeof sizeClasses],
-              // Variante (aplicada apenas se não há estilos customizados)
-              !hasCustomStyles && variantClasses[variant as keyof typeof variantClasses],
-              // Border radius
-              borderRadiusClasses[borderRadius as keyof typeof borderRadiusClasses],
-              // Estados
-              disabled && 'opacity-50 cursor-not-allowed hover:scale-100',
-              fullWidth && 'w-full',
-              // Cursor editável
-              isEditable && 'cursor-pointer'
-            )}
-            style={hasCustomStyles ? customStyles : undefined}
-            disabled={disabled}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (isEditable) setIsEditing(true);
-              if (href && !isEditing) {
-                window.open(href, target);
-              }
-            }}
-          >
-            {/* Ícone à esquerda */}
-            {IconComponent && iconPosition === 'left' && (
-              <IconComponent className={cn(iconSizes[size as keyof typeof iconSizes], 'mr-2')} />
-            )}
+      )}
 
-            {/* Texto do botão */}
-            <span>{text || 'Clique Aqui'}</span>
-
-            {/* Ícone à direita */}
-            {IconComponent && iconPosition === 'right' && (
-              <IconComponent className={cn(iconSizes[size as keyof typeof iconSizes], 'ml-2')} />
-            )}
-          </button>
-
-          {/* Indicador de edição */}
-          {isEditable && isSelected && (
-            <div className="absolute -top-2 -right-2 bg-blue-500 text-white rounded-full p-1">
-              <Edit3 className="w-3 h-3" />
-            </div>
-          )}
-
-          {/* Empty state */}
-          {!text && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-100/80 rounded-lg text-gray-500 text-sm">
-              <MousePointer2 className="w-4 h-4 mr-2" />
-              Clique para editar
-            </div>
-          )}
-        </>
+      {/* Empty state */}
+      {!text && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100/80 rounded-lg text-gray-500 text-sm">
+          <MousePointer2 className="w-4 h-4 mr-2" />
+          Clique para selecionar e editar no painel
+        </div>
       )}
     </div>
   );

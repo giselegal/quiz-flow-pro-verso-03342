@@ -85,16 +85,11 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
     setFunnel(prev => {
       if (!prev) return null;
       const updated = updater(prev);
-      console.log('🔄 Funnel state updated, triggering auto-save:', updated.lastModified);
+      console.log('🔄 Funnel state updated:', updated.lastModified);
       saveToLocal(updated);
       
       // Marcar que há mudanças pendentes para o auto-save
       schemaDrivenFunnelService.markPendingChanges();
-      
-      // Trigger auto-save imediato para mudanças importantes
-      setTimeout(() => {
-        saveFunnel(false);
-      }, 1000);
       
       return updated;
     });
@@ -162,6 +157,12 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
   const saveFunnel = useCallback(async (manual: boolean = true) => {
     if (!funnel) return;
     
+    // Evitar salvamentos simultâneos
+    if (isSaving) {
+      console.log('⏳ Save already in progress, skipping...');
+      return;
+    }
+    
     setIsSaving(true);
     try {
       const savedFunnel = await schemaDrivenFunnelService.saveFunnel(funnel, !manual);
@@ -172,8 +173,11 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
           title: "Funil salvo!",
           description: "Todas as alterações foram salvas.",
         });
+      } else {
+        console.log('💾 Auto-save completed successfully');
       }
     } catch (error) {
+      console.error('❌ Save error:', error);
       if (manual) {
         toast({
           title: "Erro ao salvar",
@@ -184,7 +188,7 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
     } finally {
       setIsSaving(false);
     }
-  }, [funnel, toast]);
+  }, [funnel, toast, isSaving]);
 
   const syncWithBackend = useCallback(async () => {
     setIsSaving(true);
@@ -427,7 +431,7 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
 
   // Ativar auto-save por padrão
   useEffect(() => {
-    schemaDrivenFunnelService.enableAutoSave(30); // 30 segundos para reduzir carga
+    schemaDrivenFunnelService.enableAutoSave(60); // 60 segundos para reduzir conflitos
     
     return () => {
       schemaDrivenFunnelService.destroy();

@@ -110,12 +110,7 @@ const TestimonialsRealInlineBlock: React.FC<TestimonialsRealInlineBlockProps> = 
     >
       {/* Título */}
       <div className="mb-6">
-        <h3 
-          className="text-xl md:text-2xl font-bold text-center text-gray-800 mb-2"
-          contentEditable={!disabled}
-          onBlur={(e) => handleEdit('title', e.target.textContent)}
-          suppressContentEditableWarning={true}
-        >
+        <h3 className="text-xl md:text-2xl font-bold text-center text-gray-800 mb-2">
           {title}
         </h3>
         <div className="w-16 h-1 bg-gradient-to-r from-pink-400 to-purple-400 mx-auto rounded-full" />
@@ -133,37 +128,6 @@ const TestimonialsRealInlineBlock: React.FC<TestimonialsRealInlineBlockProps> = 
           renderTestimonial(testimonial, index)
         )}
       </div>
-
-      {/* Editor Inline */}
-      {isSelected && !disabled && (
-        <div className="mt-4 p-3 bg-white rounded-lg border border-pink-200">
-          <div className="text-xs text-gray-600 mb-2 font-medium">
-            📝 Editar Depoimentos
-          </div>
-          <div className="space-y-2 text-xs">
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={showRating}
-                onChange={(e) => handleEdit('showRating', e.target.checked)}
-                className="w-3 h-3"
-              />
-              <label className="text-gray-700">Mostrar avaliações</label>
-            </div>
-            <div>
-              <label className="text-gray-700 block mb-1">Layout:</label>
-              <select
-                value={layout}
-                onChange={(e) => handleEdit('layout', e.target.value)}
-                className="w-full p-1 text-xs border border-gray-300 rounded"
-              >
-                <option value="grid">Grade</option>
-                <option value="list">Lista</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

@@ -89,7 +89,7 @@ export interface AutoSaveState {
 }
 
 class SchemaDrivenFunnelService {
-  private baseUrl = '/api/schema-driven';
+  private baseUrl = 'http://localhost:3001/api/schema-driven';
   private localStorageKey = 'schema-driven-funnel';
   private versionStorageKey = 'schema-driven-versions';
   private autoSaveInterval: NodeJS.Timeout | null = null;

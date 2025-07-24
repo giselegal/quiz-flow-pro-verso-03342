@@ -116,7 +116,7 @@ const QuizEditorInterface: React.FC = () => {
   const loadExistingFunnel = async () => {
     try {
       // Buscar funnels do usuário
-      const response = await fetch('/api/funnels/user/1');
+      const response = await fetch('http://localhost:3001/api/funnels/user/1');
       const data = await response.json();
       
       if (data.success && data.data.length > 0) {
@@ -161,14 +161,14 @@ const QuizEditorInterface: React.FC = () => {
       let response;
       if (currentFunnelId) {
         // Atualizar funil existente
-        response = await fetch(`/api/funnels/${currentFunnelId}`, {
+        response = await fetch(`http://localhost:3001/api/funnels/${currentFunnelId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(funnelData)
         });
       } else {
         // Criar novo funil
-        response = await fetch('/api/funnels', {
+        response = await fetch('http://localhost:3001/api/funnels', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(funnelData)
@@ -211,7 +211,7 @@ const QuizEditorInterface: React.FC = () => {
 
     setIsPublishing(true);
     try {
-      const response = await fetch(`/api/funnels/${currentFunnelId}/publish`, {
+      const response = await fetch(`http://localhost:3001/api/funnels/${currentFunnelId}/publish`, {
         method: 'POST'
       });
 
@@ -254,7 +254,7 @@ const QuizEditorInterface: React.FC = () => {
   // Validar regras de pontuação
   const validateScoringRules = async () => {
     try {
-      const response = await fetch('/api/quiz/validate-scoring', {
+      const response = await fetch('http://localhost:3001/api/quiz/validate-scoring', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ quizConfig })
@@ -297,7 +297,7 @@ const QuizEditorInterface: React.FC = () => {
     });
 
     try {
-      const response = await fetch('/api/quiz/simulate-result', {
+      const response = await fetch('http://localhost:3001/api/quiz/simulate-result', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

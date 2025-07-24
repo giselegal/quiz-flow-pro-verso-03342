@@ -493,9 +493,9 @@ const ModernQuizEditor: React.FC = () => {
     const getCanvasWidth = () => {
       switch (deviceView) {
         case "mobile": return "375px";
-        case "tablet": return "768px";
-        case "desktop": return "100%";
-        default: return "100%";
+        case "tablet": return "672px"; // max-w-2xl = 672px
+        case "desktop": return "896px"; // max-w-4xl = 896px
+        default: return "896px";
       }
     };
 

@@ -59,7 +59,7 @@ export interface BlockData {
 }
 
 class FunnelService {
-  private baseUrl = '/api';
+  private baseUrl = 'http://localhost:3001/api';
 
   // Funnel operations
   async createFunnel(data: Omit<InsertFunnel, 'userId'> & { userId?: number }): Promise<Funnel> {

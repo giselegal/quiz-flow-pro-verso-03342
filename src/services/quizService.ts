@@ -10,7 +10,7 @@ export const fetchQuizQuestions = async (quizId: string) => {
 };
 
 export const saveParticipant = async (name: string, email: string, quizId: string) => {
-  const response = await fetch('/api/quiz-participants', {
+  const response = await fetch('http://localhost:3001/api/quiz-participants', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

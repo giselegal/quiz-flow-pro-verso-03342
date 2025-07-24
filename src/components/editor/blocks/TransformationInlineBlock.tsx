@@ -73,11 +73,7 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
               <img 
                 src={beforeImage}
                 alt="Antes"
-                className="w-full h-48 object-cover rounded-lg shadow-md cursor-pointer hover:scale-105 transition-transform"
-                onClick={() => {
-                  const newUrl = prompt('Nova URL da imagem "Antes":', beforeImage);
-                  if (newUrl !== null) handlePropertyChange('beforeImage', newUrl);
-                }}
+                className="w-full h-48 object-cover rounded-lg shadow-md"
               />
               <div className="absolute top-2 left-2 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
                 <InlineEditableText
@@ -107,13 +103,7 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
                 className="w-12 h-12 md:w-16 md:h-16 animate-pulse"
                 style={{ color: arrowColor }}
               />
-              <span 
-                className="text-xs text-gray-500 mt-2 cursor-pointer hover:bg-blue-50/50 rounded px-1"
-                onClick={() => {
-                  const newColor = prompt('Cor da seta (hex):', arrowColor);
-                  if (newColor !== null) handlePropertyChange('arrowColor', newColor);
-                }}
-              >
+              <span className="text-xs text-gray-500 mt-2">
                 Transformação
               </span>
             </div>
@@ -125,11 +115,7 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
               <img 
                 src={afterImage}
                 alt="Depois"
-                className="w-full h-48 object-cover rounded-lg shadow-md cursor-pointer hover:scale-105 transition-transform"
-                onClick={() => {
-                  const newUrl = prompt('Nova URL da imagem "Depois":', afterImage);
-                  if (newUrl !== null) handlePropertyChange('afterImage', newUrl);
-                }}
+                className="w-full h-48 object-cover rounded-lg shadow-md"
               />
               <div className="absolute top-2 left-2 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
                 <InlineEditableText

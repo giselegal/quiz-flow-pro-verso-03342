@@ -58,30 +58,10 @@ const LoaderInlineBlock: React.FC<LoaderInlineBlockProps> = ({
       <div className="grid w-full items-center gap-1.5">
         {/* Header */}
         <div className="w-full flex justify-between flex-row">
-          <div 
-            className="font-bold text-[#432818] cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (onPropertyChange && !disabled) {
-                const newTitle = prompt('Novo título:', title);
-                if (newTitle !== null) onPropertyChange('title', newTitle);
-              }
-            }}
-          >
+          <div className="font-bold text-[#432818]">
             {title}
           </div>
-          <div 
-            className="font-normal text-[#8F7A6A] cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (onPropertyChange && !disabled) {
-                const newPercentage = prompt('Nova porcentagem (0-100):', percentage.toString());
-                if (newPercentage !== null && !isNaN(Number(newPercentage))) {
-                  onPropertyChange('percentage', Math.max(0, Math.min(100, Number(newPercentage))));
-                }
-              }
-            }}
-          >
+          <div className="font-normal text-[#8F7A6A]">
             {percentage}%
           </div>
         </div>
@@ -98,16 +78,7 @@ const LoaderInlineBlock: React.FC<LoaderInlineBlockProps> = ({
         </div>
 
         {/* Description */}
-        <div 
-          className="text-[#8F7A6A] font-normal mt-2 text-center text-sm cursor-pointer"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (onPropertyChange && !disabled) {
-              const newDescription = prompt('Nova descrição:', description);
-              if (newDescription !== null) onPropertyChange('description', newDescription);
-            }
-          }}
-        >
+        <div className="text-[#8F7A6A] font-normal mt-2 text-center text-sm">
           {description}
         </div>
       </div>

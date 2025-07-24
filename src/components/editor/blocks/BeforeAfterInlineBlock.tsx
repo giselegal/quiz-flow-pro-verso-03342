@@ -134,20 +134,10 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
     >
       {/* Título */}
       <div className="text-center mb-6">
-        <h3 
-          className="text-xl md:text-2xl font-bold text-gray-800 mb-2"
-          contentEditable={!disabled}
-          onBlur={(e) => handleEdit('title', e.target.textContent)}
-          suppressContentEditableWarning={true}
-        >
+        <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
           {title}
         </h3>
-        <p 
-          className="text-gray-600 text-sm md:text-base"
-          contentEditable={!disabled}
-          onBlur={(e) => handleEdit('subtitle', e.target.textContent)}
-          suppressContentEditableWarning={true}
-        >
+        <p className="text-gray-600 text-sm md:text-base">
           {subtitle}
         </p>
         <div className="w-16 h-1 bg-gradient-to-r from-blue-400 to-indigo-400 mx-auto mt-3 rounded-full" />
@@ -179,57 +169,6 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
           Quero Minha Transformação
         </div>
       </div>
-
-      {/* Editor Inline */}
-      {isSelected && !disabled && (
-        <div className="mt-4 p-3 bg-white rounded-lg border border-blue-200">
-          <div className="text-xs text-gray-600 mb-2 font-medium">
-            🔄 Editar Antes/Depois
-          </div>
-          <div className="space-y-2 text-xs">
-            <div>
-              <label className="text-gray-700 block mb-1">Imagem Antes:</label>
-              <input
-                type="url"
-                value={beforeImage}
-                onChange={(e) => handleEdit('beforeImage', e.target.value)}
-                className="w-full p-1 text-xs border border-gray-300 rounded"
-                placeholder="https://..."
-              />
-            </div>
-            <div>
-              <label className="text-gray-700 block mb-1">Imagem Depois:</label>
-              <input
-                type="url"
-                value={afterImage}
-                onChange={(e) => handleEdit('afterImage', e.target.value)}
-                className="w-full p-1 text-xs border border-gray-300 rounded"
-                placeholder="https://..."
-              />
-            </div>
-            <div>
-              <label className="text-gray-700 block mb-1">Layout:</label>
-              <select
-                value={layoutStyle}
-                onChange={(e) => handleEdit('layoutStyle', e.target.value)}
-                className="w-full p-1 text-xs border border-gray-300 rounded"
-              >
-                <option value="side-by-side">Lado a Lado</option>
-                <option value="toggle">Alternância</option>
-              </select>
-            </div>
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={showComparison}
-                onChange={(e) => handleEdit('showComparison', e.target.checked)}
-                className="w-3 h-3"
-              />
-              <label className="text-gray-700">Mostrar comparação</label>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

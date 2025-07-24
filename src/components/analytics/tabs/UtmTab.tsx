@@ -31,7 +31,7 @@ export const UtmTab: React.FC<UtmTabProps> = ({
         setLoading(true);
         
         // Fetch data from the server API
-        const response = await fetch('/api/utm-analytics');
+        const response = await fetch('http://localhost:3001/api/utm-analytics');
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

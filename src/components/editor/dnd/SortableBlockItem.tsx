@@ -2,6 +2,7 @@ import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2, Copy, Eye, EyeOff } from 'lucide-react';
+import { UniversalBlockRenderer } from '../blocks/UniversalBlockRenderer';
 
 // Utility function for class names
 const cn = (...classes: (string | undefined | boolean)[]): string => {
@@ -136,20 +137,23 @@ export const SortableBlockItem: React.FC<SortableBlockItemProps> = ({
         </button>
       </div>
 
-      {/* Block Content - Simplified */}
+      {/* Block Content - Using UniversalBlockRenderer */}
       <div className={`relative w-full flex-1 ${isHidden ? 'pointer-events-none' : ''}`}>
-        <div className={`w-full h-full transition-all duration-200 p-4 bg-white border rounded-lg ${
+        <div className={`w-full h-full transition-all duration-200 ${
           isDragging ? 'pointer-events-none' : ''
-        } ${isSelected ? 'ring-2 ring-blue-500 border-blue-400' : 'border-gray-200'}`}>
-          <div className="font-medium text-gray-800">{block.type}</div>
-          <div className="text-sm text-gray-500 mt-1">
-            {Object.keys(block.properties).length} propriedades
-          </div>
-          {block.properties.title && (
-            <div className="text-sm text-gray-700 mt-2 truncate">
-              {block.properties.title}
-            </div>
-          )}
+        }`}>
+          <UniversalBlockRenderer
+            block={block}
+            isSelected={isSelected}
+            onClick={onSelect}
+            onSaveInline={onSaveInline}
+            disabled={disabled}
+            className={cn(
+              'w-full transition-all duration-200',
+              isSelected && 'ring-2 ring-blue-500 border-blue-400',
+              !isSelected && 'border-gray-200 hover:border-gray-300'
+            )}
+          />
         </div>
 
         {/* Block Type Label - Bottom Left when selected */}

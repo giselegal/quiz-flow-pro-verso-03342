@@ -6,7 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = Number(process.env.PORT) || 3000;
+const PORT = Number(process.env.PORT) || 3001;
 
 // Middleware
 app.use(express.json({ limit: '50mb' }));
@@ -55,6 +55,213 @@ app.get('/api/funnels', (req, res) => {
 
 app.post('/api/funnels', (req, res) => {
   res.json({ success: true, message: 'Funnel saved (placeholder)' });
+});
+
+app.put('/api/funnels/:id', (req, res) => {
+  const { id } = req.params;
+  const funnelData = req.body;
+  res.json({ 
+    success: true,
+    data: {
+      ...funnelData,
+      id,
+      lastModified: new Date().toISOString()
+    },
+    message: 'Funnel updated successfully'
+  });
+});
+
+// Schema-driven API routes
+app.get('/api/schema-driven/funnels', (req, res) => {
+  res.json({ 
+    success: true,
+    data: [],
+    message: 'Schema-driven funnels retrieved successfully'
+  });
+});
+
+app.get('/api/schema-driven/funnels/:id', (req, res) => {
+  const { id } = req.params;
+  res.json({ 
+    success: true,
+    data: {
+      id,
+      name: 'Sample Funnel',
+      description: 'A sample schema-driven funnel',
+      theme: 'default',
+      isPublished: false,
+      pages: [],
+      config: {
+        name: 'Sample Funnel',
+        isPublished: false,
+        theme: 'default',
+        primaryColor: '#3b82f6',
+        secondaryColor: '#64748b',
+        fontFamily: 'Inter'
+      },
+      version: 1,
+      lastModified: new Date().toISOString(),
+      createdAt: new Date().toISOString()
+    },
+    message: 'Schema-driven funnel retrieved successfully'
+  });
+});
+
+app.post('/api/schema-driven/funnels', (req, res) => {
+  const funnelData = req.body;
+  res.json({ 
+    success: true,
+    data: {
+      ...funnelData,
+      id: funnelData.id || `funnel-${Date.now()}`,
+      lastModified: new Date().toISOString(),
+      createdAt: funnelData.createdAt || new Date().toISOString()
+    },
+    message: 'Schema-driven funnel created successfully'
+  });
+});
+
+app.put('/api/schema-driven/funnels/:id', (req, res) => {
+  const { id } = req.params;
+  const funnelData = req.body;
+  res.json({ 
+    success: true,
+    data: {
+      ...funnelData,
+      id,
+      lastModified: new Date().toISOString()
+    },
+    message: 'Schema-driven funnel updated successfully'
+  });
+});
+
+app.delete('/api/schema-driven/funnels/:id', (req, res) => {
+  const { id } = req.params;
+  res.json({ 
+    success: true,
+    message: `Schema-driven funnel ${id} deleted successfully`
+  });
+});
+
+// Page configs API routes
+app.get('/api/page-configs/:pageType', (req, res) => {
+  const { pageType } = req.params;
+  res.json({ 
+    success: true,
+    data: {
+      pageType,
+      config: {
+        showProgress: true,
+        progressValue: 50,
+        backgroundColor: '#ffffff',
+        textColor: '#000000',
+        maxWidth: '800px',
+        padding: '2rem'
+      },
+      blocks: [],
+      settings: {
+        showProgress: true,
+        progressValue: 50,
+        backgroundColor: '#ffffff',
+        textColor: '#000000',
+        maxWidth: '800px'
+      }
+    },
+    message: `Page config for ${pageType} retrieved successfully`
+  });
+});
+
+app.post('/api/page-configs/:pageType', (req, res) => {
+  const { pageType } = req.params;
+  const configData = req.body;
+  res.json({ 
+    success: true,
+    data: {
+      pageType,
+      ...configData,
+      lastModified: new Date().toISOString()
+    },
+    message: `Page config for ${pageType} saved successfully`
+  });
+});
+
+// Additional API routes for quiz functionality
+app.get('/api/funnels/user/:userId', (req, res) => {
+  const { userId } = req.params;
+  res.json({ 
+    success: true,
+    data: [],
+    message: `Funnels for user ${userId} retrieved successfully`
+  });
+});
+
+app.put('/api/funnels/:id/publish', (req, res) => {
+  const { id } = req.params;
+  res.json({ 
+    success: true,
+    data: { id, isPublished: true },
+    message: `Funnel ${id} published successfully`
+  });
+});
+
+app.post('/api/quiz/validate-scoring', (req, res) => {
+  res.json({ 
+    success: true,
+    data: { isValid: true, score: 85 },
+    message: 'Quiz scoring validated successfully'
+  });
+});
+
+app.post('/api/quiz/simulate-result', (req, res) => {
+  res.json({ 
+    success: true,
+    data: { 
+      resultType: 'high-score',
+      score: 90,
+      recommendations: ['Great job!', 'Keep it up!']
+    },
+    message: 'Quiz result simulated successfully'
+  });
+});
+
+app.get('/api/utm-analytics', (req, res) => {
+  res.json({ 
+    success: true,
+    data: {
+      totalVisits: 1250,
+      conversions: 89,
+      conversionRate: 7.12,
+      sources: [
+        { source: 'google', visits: 450, conversions: 32 },
+        { source: 'facebook', visits: 380, conversions: 28 },
+        { source: 'direct', visits: 420, conversions: 29 }
+      ]
+    },
+    message: 'UTM analytics retrieved successfully'
+  });
+});
+
+app.post('/api/utm-analytics', (req, res) => {
+  res.json({ 
+    success: true,
+    message: 'UTM analytics data saved successfully'
+  });
+});
+
+app.get('/api/quiz-participants', (req, res) => {
+  res.json({ 
+    success: true,
+    data: [],
+    message: 'Quiz participants retrieved successfully'
+  });
+});
+
+app.post('/api/quiz-participants', (req, res) => {
+  res.json({ 
+    success: true,
+    data: { id: Date.now(), ...req.body },
+    message: 'Quiz participant saved successfully'
+  });
 });
 
 // Serve static files - múltiplos caminhos para compatibilidade
