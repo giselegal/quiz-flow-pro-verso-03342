@@ -75,8 +75,6 @@ const ResultPage: React.FC = () => {
     if (!primaryStyle && process.env.NODE_ENV === 'development') {
       console.log('Carregando dados mock para desenvolvimento...');
       loadMockData();
-      // Force reload dos dados após carregar mock
-      window.location.reload();
     }
   }, [primaryStyle]);
 

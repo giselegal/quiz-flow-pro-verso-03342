@@ -227,15 +227,18 @@
   box-shadow: 0 8px 25px rgba(0,0,0,0.25);
 }
 
-/* Melhorar performance desativando todas as animações não críticas */
+/* Melhorar performance otimizando animações críticas */
 * {
   will-change: auto !important;
-  transition: none !important; /* Desativar todas as transições por padrão */
 }
 
-/* Permitir apenas animações realmente essenciais */
-.critical-animation {
-  transition: opacity 300ms ease-in-out !important;
+/* Permitir animações suaves essenciais */
+.critical-animation,
+.card-hover-effect,
+.hover-scale,
+.btn-cta-green,
+.canvas-continue-button {
+  transition: all 0.3s ease !important;
 }
 
 /* Desabilitar efeitos hover de escala para melhorar performance */
