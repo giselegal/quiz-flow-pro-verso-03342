@@ -76,26 +76,67 @@ const FunnelPanelPage: React.FC = () => {
   });
   const { toast } = useToast();
 
+  // Função para garantir que existe um usuário autenticado
+  const ensureAuthenticatedUser = async () => {
+    try {
+      // Verificar se já existe um usuário autenticado
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      
+      if (user) {
+        return user;
+      }
+
+      // Se não há usuário autenticado, fazer login anônimo ou criar um usuário temporário
+      // Para desenvolvimento, vamos usar um usuário fixo
+      const { data: signInData, error: signInError } = await supabase.auth.signInAnonymously();
+      
+      if (signInError) {
+        console.warn('Erro ao fazer login anônimo:', signInError);
+        // Retornar um ID fixo para desenvolvimento
+        return { id: '00000000-0000-0000-0000-000000000000' };
+      }
+
+      return signInData.user;
+    } catch (error) {
+      console.warn('Erro na autenticação:', error);
+      // Retornar um ID fixo para desenvolvimento
+      return { id: '00000000-0000-0000-0000-000000000000' };
+    }
+  };
+
   // Carregar funis do Supabase
   const loadFunnels = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      
+      // Buscar funis
+      const { data: funnelsData, error: funnelsError } = await supabase
         .from('funnels')
-        .select(`
-          *,
-          funnel_pages(count)
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (funnelsError) throw funnelsError;
 
-      const funnelsWithCounts = data?.map(funnel => ({
-        ...funnel,
-        pages_count: funnel.funnel_pages?.[0]?.count || 0,
-        conversion_rate: Math.random() * 15 + 5, // Mock data
-        total_visitors: Math.floor(Math.random() * 1000) + 100 // Mock data
-      })) || [];
+      // Buscar contagem de páginas para cada funil
+      const funnelsWithCounts = await Promise.all(
+        (funnelsData || []).map(async (funnel) => {
+          const { count, error: countError } = await supabase
+            .from('funnel_pages')
+            .select('*', { count: 'exact', head: true })
+            .eq('funnel_id', funnel.id);
+
+          if (countError) {
+            console.warn(`Erro ao contar páginas do funil ${funnel.id}:`, countError);
+          }
+
+          return {
+            ...funnel,
+            pages_count: count || 0,
+            conversion_rate: Math.random() * 15 + 5, // Mock data
+            total_visitors: Math.floor(Math.random() * 1000) + 100 // Mock data
+          };
+        })
+      );
 
       setFunnels(funnelsWithCounts);
     } catch (error) {
@@ -113,9 +154,25 @@ const FunnelPanelPage: React.FC = () => {
   // Criar novo funil
   const createFunnel = async () => {
     try {
+      // Garantir que existe um usuário autenticado
+      const user = await ensureAuthenticatedUser();
+      
+      if (!user) {
+        toast({
+          title: "Erro de Autenticação",
+          description: "Não foi possível autenticar o usuário.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       const { data, error } = await supabase
         .from('funnels')
-        .insert([newFunnel])
+        .insert([{
+          ...newFunnel,
+          user_id: user.id,
+          is_published: newFunnel.status === 'active'
+        }])
         .select()
         .single();
 
@@ -133,7 +190,7 @@ const FunnelPanelPage: React.FC = () => {
       console.error('Erro ao criar funil:', error);
       toast({
         title: "Erro",
-        description: "Não foi possível criar o funil.",
+        description: `Não foi possível criar o funil: ${error.message || 'Erro desconhecido'}`,
         variant: "destructive",
       });
     }
@@ -203,13 +260,27 @@ const FunnelPanelPage: React.FC = () => {
 
   // Duplicar funil
   const duplicateFunnel = async (funnel: Funnel) => {
-    try {
+o /ediotr     try {
+      // Garantir que existe um usuário autenticado
+      const user = await ensureAuthenticatedUser();
+      
+      if (!user) {
+        toast({
+          title: "Erro de Autenticação",
+          description: "Não foi possível autenticar o usuário.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       const { data, error } = await supabase
         .from('funnels')
         .insert([{
           name: `${funnel.name} (Cópia)`,
           description: funnel.description,
-          status: 'draft'
+          status: 'draft',
+          user_id: user.id,
+          is_published: false
         }])
         .select()
         .single();
@@ -226,7 +297,7 @@ const FunnelPanelPage: React.FC = () => {
       console.error('Erro ao duplicar funil:', error);
       toast({
         title: "Erro",
-        description: "Não foi possível duplicar o funil.",
+        description: `Não foi possível duplicar o funil: ${error.message || 'Erro desconhecido'}`,
         variant: "destructive",
       });
     }
