@@ -45,7 +45,8 @@ const DashboardPage: React.FC = () => {
               <Route path="/admin/settings" component={SettingsPage} />
               <Route path="/admin/criativos" component={CreativesPage} />
               <Route path="/admin/analytics" component={AnalyticsPage} />
-              <Route path="/admin/editor" component={EditorPage} />
+              {/* Editor agora é independente do dashboard - usa /editor em vez de /admin/editor */}
+              {/* <Route path="/admin/editor" component={EditorPage} /> */}
             </Switch>
           </Suspense>
         </main>
