@@ -392,9 +392,9 @@ export const useSchemaEditor = (initialFunnelId?: string): UseSchemaEditorReturn
     }
   }, [initialFunnelId, loadFunnel]);
 
-  // Ativar auto-save por padrão
+  // Auto-save desabilitado - salvamento apenas manual
   useEffect(() => {
-    schemaDrivenFunnelService.enableAutoSave(10);
+    // schemaDrivenFunnelService.enableAutoSave(10); // Auto-save removido
     
     return () => {
       schemaDrivenFunnelService.destroy();

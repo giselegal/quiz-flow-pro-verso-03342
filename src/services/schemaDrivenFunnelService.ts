@@ -95,7 +95,7 @@ class SchemaDrivenFunnelService {
   private versionStorageKey = 'schema-driven-versions';
   private autoSaveInterval: NodeJS.Timeout | null = null;
   private autoSaveState: AutoSaveState = {
-    isEnabled: true,
+    isEnabled: false, // Auto-save desabilitado por padrão
     interval: 10, // 10 segundos
     lastSave: null,
     pendingChanges: false,

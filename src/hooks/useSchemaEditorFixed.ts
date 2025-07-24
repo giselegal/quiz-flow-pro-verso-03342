@@ -192,22 +192,8 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
     }
   }, [funnel, toast, isSaving]);
 
-  // Efeito para auto-salvar o funil com debounce
-  useEffect(() => {
-    if (funnel && initializedRef.current) {
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current);
-      }
-      saveTimeoutRef.current = setTimeout(() => {
-        saveFunnel(false); // Auto-save
-      }, 1000); // Salva 1 segundo após a última alteração
-    }
-    return () => {
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current);
-      }
-    };
-  }, [funnel, saveFunnel]);
+  // Auto-save removido - salvamento apenas manual
+  // O sistema de auto-save foi desabilitado por causar problemas
 
   // Efeito para lidar com o carregamento inicial do funil
   useEffect(() => {
@@ -450,9 +436,9 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
     return () => clearInterval(interval);
   }, []);
 
-  // Ativar auto-save por padrão
+  // Auto-save desabilitado - salvamento apenas manual
   useEffect(() => {
-    schemaDrivenFunnelService.enableAutoSave(60); // 60 segundos para reduzir conflitos
+    // schemaDrivenFunnelService.enableAutoSave(60); // Auto-save removido
     
     return () => {
       schemaDrivenFunnelService.destroy();
