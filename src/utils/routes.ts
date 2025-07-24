@@ -14,7 +14,7 @@ export const ROUTES = {
     SETTINGS: '/admin/settings',
     CRIATIVOS: '/admin/criativos',
     ANALYTICS: '/admin/analytics',
-    EDITOR: '/admin/editor'
+    EDITOR: '/editor'
   }
 }
 

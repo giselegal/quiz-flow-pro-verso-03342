@@ -7,7 +7,7 @@ const EditorNotFoundPage = () => {
 
   const handleRetry = () => {
     // Tenta recarregar a página do editor
-    navigate('/admin/editor', { replace: true });
+    navigate('/editor', { replace: true });
   };
 
   return (
