@@ -19,10 +19,9 @@ interface UseSchemaEditorReturn {
   selectedBlockId: string | null;
   
   // Ações do funil
-  createNewFunnel: () => Promise<void>;
+  createNewFunnel: () => void;
   loadFunnel: (funnelId: string) => Promise<void>;
   saveFunnel: (manual?: boolean) => Promise<void>;
-  syncWithBackend: () => Promise<void>;
   
   // Ações de página
   addPage: (pageData: Omit<SchemaDrivenPageData, 'id' | 'order'>) => void;
@@ -190,36 +189,7 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
     }
   }, [funnel, toast, isSaving]);
 
-  const syncWithBackend = useCallback(async () => {
-    setIsSaving(true);
-    try {
-      const result = await schemaDrivenFunnelService.syncWithBackend();
-      
-      if (result.success) {
-        if (funnel) {
-          const updatedFunnel = await schemaDrivenFunnelService.loadFunnel(funnel.id);
-          if (updatedFunnel) {
-            setFunnel(updatedFunnel);
-          }
-        }
-        
-        toast({
-          title: "Sincronização concluída!",
-          description: result.message,
-        });
-      } else {
-        throw new Error(result.message);
-      }
-    } catch (error) {
-      toast({
-        title: "Erro na sincronização",
-        description: error instanceof Error ? error.message : "Erro desconhecido",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSaving(false);
-    }
-  }, [funnel, toast]);
+  // Método removido - agora usamos Supabase diretamente
 
   // Ações de página
   const addPage = useCallback((pageData: Omit<SchemaDrivenPageData, 'id' | 'order'>) => {
@@ -453,7 +423,6 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
     createNewFunnel,
     loadFunnel,
     saveFunnel,
-    syncWithBackend,
     
     // Ações de página
     addPage,

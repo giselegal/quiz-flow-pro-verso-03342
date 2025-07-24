@@ -460,11 +460,18 @@ const FunnelPanelPage: React.FC = () => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem onClick={() => {
+                        // Navegar para o editor com o ID do funil
+                        window.location.href = `/editor/${funnel.id}`;
+                      }}>
+                        <Edit className="w-4 h-4 mr-2" />
+                        Editar no Editor
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => {
                         setSelectedFunnel(funnel);
                         setIsEditDialogOpen(true);
                       }}>
                         <Edit className="w-4 h-4 mr-2" />
-                        Editar
+                        Editar Informações
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => duplicateFunnel(funnel)}>
                         <Copy className="w-4 h-4 mr-2" />
@@ -507,12 +514,12 @@ const FunnelPanelPage: React.FC = () => {
                     size="sm" 
                     className="flex-1 bg-[#B89B7A] hover:bg-[#9F836A] text-white"
                     onClick={() => {
-                      setSelectedFunnel(funnel);
-                      setIsEditDialogOpen(true);
+                      // Navegar para o editor com o ID do funil
+                      window.location.href = `/editor/${funnel.id}`;
                     }}
                   >
                     <Edit className="w-4 h-4 mr-1" />
-                    Editar
+                    Editar no Editor
                   </Button>
                 </div>
 

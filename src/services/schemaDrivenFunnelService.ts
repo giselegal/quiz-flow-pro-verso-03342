@@ -1,6 +1,7 @@
 import type { BlockData } from '@/components/editor/blocks';
 import { REAL_QUIZ_QUESTIONS, STRATEGIC_QUESTIONS, TRANSITIONS } from '@/components/visual-editor/realQuizData';
 import { QuizDataAdapter } from './quizDataAdapter';
+import { supabase } from '../lib/supabase';
 
 // DEBUG: Verificar se os dados estão sendo importados corretamente
 console.log('🔍 DEBUG - Dados importados:');
@@ -515,25 +516,7 @@ class SchemaDrivenFunnelService {
     return funnel;
   }
 
-  async syncWithBackend(): Promise<{ success: boolean; message: string }> {
-    try {
-      const localFunnel = this.getLocalFunnel();
-      if (!localFunnel) {
-        return { success: false, message: 'No local funnel to sync' };
-      }
-
-      const savedFunnel = await this.saveFunnel(localFunnel);
-      return { 
-        success: true, 
-        message: `Synced successfully. Backend version: ${savedFunnel.version}` 
-      };
-    } catch (error) {
-      return { 
-        success: false, 
-        message: `Sync failed: ${error instanceof Error ? error.message : 'Unknown error'}` 
-      };
-    }
-  }
+  // Método removido - agora usamos Supabase diretamente nos métodos saveFunnel/loadFunnel
 
   // Utility methods
   createDefaultFunnel(): SchemaDrivenFunnelData {

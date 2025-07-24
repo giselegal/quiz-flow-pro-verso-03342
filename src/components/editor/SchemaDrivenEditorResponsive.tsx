@@ -509,7 +509,16 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           </div>
 
           {/* Actions */}
-          <div className="hidden md:block">
+          <div className="hidden md:flex space-x-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={createNewFunnel}
+              title="Criar novo funil"
+            >
+              <Plus className="w-4 h-4 mr-1" />
+              Novo
+            </Button>
             <Button variant="outline" size="sm" onClick={() => saveFunnel(true)}>
               <Save className="w-4 h-4 mr-1" />
               Backup
