@@ -1,7 +1,6 @@
 import React, { Suspense, lazy, useEffect } from "react";
 import { Router, Route, Switch } from "wouter";
 import { AuthProvider } from "./context/AuthContext";
-import { AdminAuthProvider } from "./context/AdminAuthContext";
 import { QuizProvider } from "./context/QuizContext";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
@@ -109,14 +108,12 @@ const App = () => {
                   component={DragDropTestPage}
                 />
                 
-                {/* Admin - protegido com AdminAuthProvider */}
+                {/* Admin - acesso livre */}
                 <Route path="/admin/:rest*">
                   {() => (
-                    <AdminAuthProvider>
-                      <AdminRoute>
-                        <DashboardPage />
-                      </AdminRoute>
-                    </AdminAuthProvider>
+                    <AdminRoute>
+                      <DashboardPage />
+                    </AdminRoute>
                   )}
                 </Route>
                 {/* 404 - Fallback para rotas não encontradas */}
