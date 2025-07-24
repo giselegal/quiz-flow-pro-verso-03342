@@ -8,6 +8,8 @@ export interface Block {
 }
 
 export type BlockType = 
+  | 'header'
+  | 'headline'  
   | 'heading'
   | 'paragraph'
   | 'image'
@@ -15,13 +17,21 @@ export type BlockType =
   | 'title'
   | 'subtitle'
   | 'text'
-  | 'styleResult'
+  | 'benefits'
+  | 'pricing'
+  | 'testimonials'
+  | 'guarantee'
   | 'cta'
+  | 'style-result'
+  | 'secondary-styles'
+  | 'spacer'
+  | 'video'
+  | 'two-column'
+  | 'quiz-question'
+  | 'styleResult'
   | 'testimonial'
   | 'carousel'
   | 'bonus'
-  | 'guarantee'
-  | 'quiz-question'
   | string;
 
 // Add missing EditorBlock type which was imported across many files
@@ -45,6 +55,39 @@ export interface EditableContent {
   buttonUrl?: string;
   description?: string;
   items?: any[];
+  
+  // Header properties
+  logo?: string;
+  logoAlt?: string;
+  logoWidth?: string | number;
+  logoHeight?: string | number;
+  
+  // Benefits properties
+  benefits?: string[];
+  
+  // Pricing properties
+  price?: string;
+  regularPrice?: string;
+  ctaText?: string;
+  ctaUrl?: string;
+  
+  // Testimonials properties
+  testimonials?: Array<{
+    id: string;
+    name: string;
+    text: string;
+    image?: string;
+  }>;
+  
+  // Two column properties
+  leftContent?: string;
+  rightContent?: string;
+  
+  // Video properties
+  videoUrl?: string;
+  
+  // Spacer properties
+  height?: string;
   
   // Quiz Question properties
   question?: string;

@@ -156,6 +156,51 @@ export const getDefaultContentForType = (type: BlockType): EditableContent => {
         }
       };
       
+    case 'cta':
+      return {
+        title: 'Chame para Ação',
+        text: 'Não perca esta oportunidade única! Clique no botão abaixo e transforme sua vida hoje mesmo.',
+        buttonText: 'Clique Aqui',
+        buttonUrl: '#',
+        alignment: 'center' as const,
+        style: {
+          backgroundColor: '#FAF9F7',
+          color: '#432818',
+          paddingY: '32px',
+          paddingX: '16px',
+          borderRadius: 'md' as BorderRadiusType
+        }
+      };
+    case 'spacer':
+      return {
+        height: '60px',
+        style: {
+          paddingY: '0px',
+          paddingX: '0px'
+        }
+      };
+    case 'video':
+      return {
+        videoUrl: '',
+        title: 'Vídeo',
+        alignment: 'center' as const,
+        style: {
+          paddingY: '16px',
+          paddingX: '16px',
+          borderRadius: 'md' as BorderRadiusType
+        }
+      };
+    case 'two-column':
+      return {
+        leftContent: 'Conteúdo da primeira coluna. Clique para editar este texto.',
+        rightContent: 'Conteúdo da segunda coluna. Clique para editar este texto.',
+        style: {
+          paddingY: '24px',
+          paddingX: '16px',
+          borderRadius: 'md' as BorderRadiusType
+        }
+      };
+      
     // Add more default content types as needed
     default:
       return {
