@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'wouter';
 import { 
   BarChart3, 
   Settings, 
@@ -62,8 +62,7 @@ const sidebarItems = [
 ];
 
 export function AdminSidebar() {
-  const location = useLocation();
-  const pathname = location.pathname;
+  const [location] = useLocation();
 
   return (
     <div className="w-64 bg-white border-r border-[#D4C4A0] h-screen">
@@ -74,12 +73,12 @@ export function AdminSidebar() {
       <nav className="px-4 space-y-2">
         {sidebarItems.map((item) => {
           const Icon = item.icon;
-          const isActive = pathname === item.href;
+          const isActive = location === item.href;
           
           return (
             <Link
               key={item.href}
-              to={item.href}
+              href={item.href}
               className={cn(
                 'flex flex-col gap-1 px-4 py-3 rounded-lg transition-colors',
                 isActive 
@@ -106,7 +105,7 @@ export function AdminSidebar() {
       
       <div className="absolute bottom-4 px-4 w-64">
         <Link
-          to="/"
+          href="/"
           className="flex items-center gap-3 px-4 py-3 text-[#B89B7A] hover:bg-[#F5F2E9] rounded-lg transition-colors"
         >
           <Eye className="w-5 h-5" />
