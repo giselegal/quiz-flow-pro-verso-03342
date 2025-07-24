@@ -7,6 +7,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 // Lazy loading das páginas do dashboard
 const DashboardOverview = lazy(() => import('./OverviewPage'));
 const QuizPage = lazy(() => import('./QuizPage'));
+const FunnelPanelPage = lazy(() => import('./FunnelPanelPage'));
 const ABTestPage = lazy(() => import('./ABTestPage'));
 const SettingsPage = lazy(() => import('./SettingsPage'));
 const CreativesPage = lazy(() => import('./CreativesPage'));
@@ -39,6 +40,7 @@ const DashboardPage: React.FC = () => {
               
               {/* Rotas do dashboard conforme solicitado */}
               <Route path="quiz" element={<QuizPage />} />
+              <Route path="funis" element={<FunnelPanelPage />} />
               <Route path="ab-tests" element={<ABTestPage />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="criativos" element={<CreativesPage />} />

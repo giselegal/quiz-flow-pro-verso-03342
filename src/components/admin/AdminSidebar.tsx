@@ -11,7 +11,8 @@ import {
   Target,
   Code,
   TrendingUp,
-  Home
+  Home,
+  Layers
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -25,6 +26,12 @@ const sidebarItems = [
     title: 'Quiz',
     href: '/admin/quiz',
     icon: Palette
+  },
+  {
+    title: 'Funis',
+    href: '/admin/funis',
+    icon: Layers,
+    description: 'Gerenciar funis de vendas'
   },
   {
     title: 'Testes A/B',

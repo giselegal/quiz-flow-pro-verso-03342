@@ -2,10 +2,10 @@
 
 -- Tabela de funnels
 CREATE TABLE funnels (
-  id VARCHAR PRIMARY KEY,
-  name VARCHAR NOT NULL,
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
   description TEXT,
-  user_id VARCHAR,
+  user_id TEXT,
   is_published BOOLEAN DEFAULT FALSE,
   version INTEGER DEFAULT 1,
   settings JSONB,
@@ -15,11 +15,11 @@ CREATE TABLE funnels (
 
 -- Tabela de páginas do funnel
 CREATE TABLE funnel_pages (
-  id VARCHAR PRIMARY KEY,
-  funnel_id VARCHAR NOT NULL REFERENCES funnels(id) ON DELETE CASCADE,
-  page_type VARCHAR NOT NULL,
+  id TEXT PRIMARY KEY,
+  funnel_id TEXT NOT NULL REFERENCES funnels(id) ON DELETE CASCADE,
+  page_type TEXT NOT NULL,
   page_order INTEGER NOT NULL,
-  title VARCHAR,
+  title TEXT,
   blocks JSONB NOT NULL DEFAULT '[]',
   metadata JSONB,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -56,19 +56,19 @@ ALTER TABLE funnel_pages ENABLE ROW LEVEL SECURITY;
 -- Políticas para funnels
 CREATE POLICY "Usuários podem ler seus próprios funnels"
   ON funnels FOR SELECT
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 CREATE POLICY "Usuários podem criar seus próprios funnels"
   ON funnels FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK (auth.uid()::text = user_id);
 
 CREATE POLICY "Usuários podem atualizar seus próprios funnels"
   ON funnels FOR UPDATE
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 CREATE POLICY "Usuários podem deletar seus próprios funnels"
   ON funnels FOR DELETE
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id);
 
 -- Políticas para funnel_pages
 CREATE POLICY "Usuários podem ler páginas de seus funnels"
@@ -76,7 +76,7 @@ CREATE POLICY "Usuários podem ler páginas de seus funnels"
   USING (EXISTS (
     SELECT 1 FROM funnels 
     WHERE funnels.id = funnel_pages.funnel_id 
-    AND funnels.user_id = auth.uid()
+    AND funnels.user_id = auth.uid()::text
   ));
 
 CREATE POLICY "Usuários podem criar páginas em seus funnels"
@@ -84,7 +84,7 @@ CREATE POLICY "Usuários podem criar páginas em seus funnels"
   WITH CHECK (EXISTS (
     SELECT 1 FROM funnels 
     WHERE funnels.id = funnel_pages.funnel_id 
-    AND funnels.user_id = auth.uid()
+    AND funnels.user_id = auth.uid()::text
   ));
 
 CREATE POLICY "Usuários podem atualizar páginas em seus funnels"
@@ -92,7 +92,7 @@ CREATE POLICY "Usuários podem atualizar páginas em seus funnels"
   USING (EXISTS (
     SELECT 1 FROM funnels 
     WHERE funnels.id = funnel_pages.funnel_id 
-    AND funnels.user_id = auth.uid()
+    AND funnels.user_id = auth.uid()::text
   ));
 
 CREATE POLICY "Usuários podem deletar páginas em seus funnels"
@@ -100,5 +100,5 @@ CREATE POLICY "Usuários podem deletar páginas em seus funnels"
   USING (EXISTS (
     SELECT 1 FROM funnels 
     WHERE funnels.id = funnel_pages.funnel_id 
-    AND funnels.user_id = auth.uid()
+    AND funnels.user_id = auth.uid()::text
   ));
