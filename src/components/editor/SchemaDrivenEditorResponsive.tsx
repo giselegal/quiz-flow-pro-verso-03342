@@ -293,9 +293,12 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   }, [funnel?.id, updateFunnelConfig, showToast]);
 
   const handleDeleteBlock = useCallback((blockId: string) => {
+    console.log('🔥 handleDeleteBlock called for:', blockId);
     pushToUndoStack(); // Salva o estado antes de deletar
+    console.log('📝 Calling deleteBlock from hook...');
     deleteBlock(blockId);
     showToast('Bloco excluído!', 'info');
+    console.log('✅ Delete block process completed');
   }, [deleteBlock, pushToUndoStack, showToast]);
 
   const handleDuplicateBlock = useCallback((blockId: string) => {
