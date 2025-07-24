@@ -311,20 +311,35 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
   }, [updateFunnelState]);
 
   const deleteBlock = useCallback(async (blockId: string) => {
-    updateFunnelState(prev => ({
-      ...prev,
-      pages: prev.pages.map(page => ({
-        ...page,
-        blocks: page.blocks.filter(block => block.id !== blockId)
-      }))
-    }));
+    console.log('🚀 deleteBlock hook called for:', blockId);
+    console.log('📊 Current funnel state:', funnel?.pages?.length, 'pages');
+    
+    updateFunnelState(prev => {
+      console.log('🔄 Updating funnel state, removing block:', blockId);
+      const updated = {
+        ...prev,
+        pages: prev.pages.map(page => ({
+          ...page,
+          blocks: page.blocks.filter(block => {
+            const keep = block.id !== blockId;
+            if (!keep) console.log('❌ Removing block:', block.id);
+            return keep;
+          })
+        }))
+      };
+      console.log('✅ Updated funnel state:', updated.pages[0]?.blocks?.length, 'blocks remaining');
+      return updated;
+    });
     
     if (selectedBlockId === blockId) {
+      console.log('🎯 Clearing selected block');
       setSelectedBlockId(null);
     }
     
     // Forçar salvamento imediato após exclusão
+    console.log('💾 Force saving after deletion...');
     await saveFunnel(false);
+    console.log('✅ Save completed');
   }, [updateFunnelState, selectedBlockId, saveFunnel]);
 
   const reorderBlocks = useCallback((newBlocks: BlockData[]) => {
