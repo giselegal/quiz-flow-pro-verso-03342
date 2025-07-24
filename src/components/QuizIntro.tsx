@@ -135,7 +135,7 @@ const QuizIntro: QuizIntroComponent = ({ onStart }) => {
                 width={120}
                 height={50}
                 loading="eager"
-                fetchPriority="high"
+                fetchpriority="high"
                 decoding="async"
                 style={{
                   objectFit: 'contain',
@@ -200,7 +200,7 @@ const QuizIntro: QuizIntroComponent = ({ onStart }) => {
                   width={300}
                   height={204}
                   loading="eager"
-                  fetchPriority="high"
+                  fetchpriority="high"
                   decoding="async"
                   id="lcp-image"
                 />

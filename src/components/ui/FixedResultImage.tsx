@@ -104,7 +104,7 @@ const FixedResultImage: React.FC<FixedResultImageProps> = ({
         height={height}
         className={`absolute inset-0 w-full h-full object-${objectFit} transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'} ${className}`}
         loading={priority ? 'eager' : 'lazy'}
-        fetchPriority={priority ? 'high' : 'auto'}
+        {...(priority ? { fetchpriority: 'high' } : { fetchpriority: 'auto' })}
         decoding={priority ? 'sync' : 'async'}
         onLoad={handleImageLoad}
       />

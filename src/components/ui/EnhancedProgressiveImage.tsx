@@ -10,7 +10,7 @@ interface EnhancedProgressiveImageProps {
   height?: number;
   onLoad?: () => void;
   loading?: 'lazy' | 'eager';
-  fetchPriority?: 'high' | 'low' | 'auto';
+  fetchpriority?: 'high' | 'low' | 'auto';
   style?: React.CSSProperties;
   fallbackSrc?: string;
 }
@@ -23,7 +23,7 @@ const EnhancedProgressiveImage: React.FC<EnhancedProgressiveImageProps> = ({
   height,
   onLoad,
   loading = 'lazy',
-  fetchPriority = 'auto',
+  fetchpriority = 'auto',
   style,
   fallbackSrc
 }) => {
@@ -107,7 +107,7 @@ const EnhancedProgressiveImage: React.FC<EnhancedProgressiveImageProps> = ({
             width={width}
             height={height}
             loading={loading}
-            fetchPriority={fetchPriority}
+            fetchpriority={fetchpriority}
             onLoad={handleLoad}
             onError={handleError}
             initial={{ opacity: 0 }}

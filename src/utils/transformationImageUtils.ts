@@ -18,7 +18,7 @@ export const preloadTransformationImages = (transformations) => {
     if (firstTransformation.beforeImage) {
       const imgBefore = new Image();
       imgBefore.src = `${firstTransformation.beforeImage}?q=85&f=auto&w=400&e_sharpen:60`;
-      imgBefore.fetchPriority = "high";
+      imgBefore.fetchpriority = "high";
       imgBefore.decoding = "sync"; // Decodificação síncrona para a primeira imagem
     }
     
@@ -26,7 +26,7 @@ export const preloadTransformationImages = (transformations) => {
     if (firstTransformation.afterImage) {
       const imgAfter = new Image();
       imgAfter.src = `${firstTransformation.afterImage}?q=85&f=auto&w=400&e_sharpen:60`;
-      imgAfter.fetchPriority = "high";
+      imgAfter.fetchpriority = "high";
       imgAfter.decoding = "sync"; // Decodificação síncrona para a primeira imagem
     }
   }

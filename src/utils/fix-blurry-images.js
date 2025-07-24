@@ -102,8 +102,8 @@ function fixBlurryImage(img) {
       // Desativar lazy loading para imagens críticas visíveis
       if (img.loading === 'lazy' && isInViewport(img)) {
         img.loading = 'eager';
-        if ('fetchPriority' in img) {
-          img.fetchPriority = 'high';
+        if ('fetchpriority' in img) {
+          img.fetchpriority = 'high';
         }
       }
       

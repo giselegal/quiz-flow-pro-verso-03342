@@ -61,25 +61,47 @@ class PageConfigService {
         }
       }
 
-      // Buscar do backend
-      const response = await fetch(`${this.baseUrl}/page-configs/${pageId}`);
-      
-      if (!response.ok) {
-        if (response.status === 404) {
-          return this.getDefaultPageConfig(pageId);
+      // Tentar buscar do localStorage primeiro (modo offline)
+      try {
+        const localConfig = localStorage.getItem(`page-config-${pageId}`);
+        if (localConfig) {
+          const config = JSON.parse(localConfig);
+          this.cache.set(pageId, config);
+          return config;
         }
-        throw new Error(`Failed to fetch page config: ${response.statusText}`);
+      } catch (localError) {
+        console.warn('Failed to load from localStorage:', localError);
       }
 
-      const config = await response.json();
-      
-      // Salvar no cache
-      this.cache.set(pageId, config);
-      
-      return config;
+      // Tentar buscar do backend apenas se disponível
+      try {
+        const response = await fetch(`${this.baseUrl}/page-configs/${pageId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          // Timeout rápido para não travar a aplicação
+          signal: AbortSignal.timeout(3000)
+        });
+        
+        if (response.ok) {
+          const config = await response.json();
+          // Salvar no cache e localStorage
+          this.cache.set(pageId, config);
+          localStorage.setItem(`page-config-${pageId}`, JSON.stringify(config));
+          return config;
+        }
+      } catch (apiError) {
+        console.warn('API not available, using offline mode:', apiError);
+      }
+
+      // Fallback para configuração padrão
+      const defaultConfig = this.getDefaultPageConfig(pageId);
+      this.cache.set(pageId, defaultConfig);
+      return defaultConfig;
     } catch (error) {
       console.error('Error fetching page config:', error);
-      // Fallback para configuração padrão
+      // Fallback final para configuração padrão
       return this.getDefaultPageConfig(pageId);
     }
   }
