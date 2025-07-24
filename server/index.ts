@@ -11,14 +11,25 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Supabase configuration
-const supabaseUrl = 'https://txqljpitotmcxntprxiu.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4cWxqcGl0b3RtY3hudHByeGl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ5NzI5NzQsImV4cCI6MjA1MDU0ODk3NH0.Uy5Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8';
+const SUPABASE_URL = "https://txqljpitotmcxntprxiu.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4cWxqcGl0b3RtY3hudHByeGl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4NjI3MzQsImV4cCI6MjA2NTQzODczNH0.rHGZV47KUnSJ0fDNXbL-OjuB50BsuzT2IeO_LL-P8ok";
 
-const supabase = createClient(supabaseUrl, supabaseKey, {
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
     persistSession: false,
     autoRefreshToken: false
   }
+});
+
+// Test Supabase connection
+supabase.from('funnels').select('count').limit(1).then(({ data, error }) => {
+  if (error) {
+    console.error('❌ Supabase connection failed:', error);
+  } else {
+    console.log('✅ Supabase connection successful');
+  }
+}).catch(err => {
+  console.error('❌ Supabase connection error:', err);
 });
 
 // Middleware
@@ -68,7 +79,262 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// API Routes placeholder
+// Schema-driven funnels endpoints with Supabase
+app.get('/api/schema-driven/funnels', async (req, res) => {
+  try {
+    const { data: funnels, error } = await supabase
+      .from('funnels')
+      .select(`
+        *,
+        funnel_pages (*)
+      `)
+      .order('updated_at', { ascending: false });
+
+    if (error) {
+      console.error('Supabase error:', error);
+      return res.status(500).json({ error: 'Failed to fetch funnels' });
+    }
+
+    // Transform data to match expected format
+    const transformedFunnels = funnels?.map(funnel => ({
+      id: funnel.id,
+      name: funnel.name,
+      description: funnel.description,
+      userId: funnel.user_id,
+      isPublished: funnel.is_published,
+      version: funnel.version,
+      settings: funnel.settings || {},
+      pages: funnel.funnel_pages?.map((page: any) => ({
+        id: page.id,
+        pageType: page.page_type,
+        pageOrder: page.page_order,
+        title: page.title,
+        blocks: page.blocks || [],
+        metadata: page.metadata || {}
+      })) || [],
+      createdAt: funnel.created_at,
+      updatedAt: funnel.updated_at
+    })) || [];
+
+    res.json(transformedFunnels);
+  } catch (error) {
+    console.error('Error fetching funnels:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get('/api/schema-driven/funnels/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const { data: funnel, error } = await supabase
+      .from('funnels')
+      .select(`
+        *,
+        funnel_pages (*)
+      `)
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return res.status(404).json({ error: 'Funnel not found' });
+      }
+      console.error('Supabase error:', error);
+      return res.status(500).json({ error: 'Failed to fetch funnel' });
+    }
+
+    // Transform data to match expected format
+    const transformedFunnel = {
+      id: funnel.id,
+      name: funnel.name,
+      description: funnel.description,
+      userId: funnel.user_id,
+      isPublished: funnel.is_published,
+      version: funnel.version,
+      settings: funnel.settings || {},
+      pages: funnel.funnel_pages?.map((page: any) => ({
+        id: page.id,
+        pageType: page.page_type,
+        pageOrder: page.page_order,
+        title: page.title,
+        blocks: page.blocks || [],
+        metadata: page.metadata || {}
+      })) || [],
+      createdAt: funnel.created_at,
+      updatedAt: funnel.updated_at
+    };
+
+    res.json(transformedFunnel);
+  } catch (error) {
+    console.error('Error fetching funnel:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/api/schema-driven/funnels', async (req, res) => {
+  try {
+    const funnelData = req.body;
+    
+    // Insert funnel
+    const { data: funnel, error: funnelError } = await supabase
+      .from('funnels')
+      .insert({
+        id: funnelData.id,
+        name: funnelData.name,
+        description: funnelData.description,
+        user_id: funnelData.userId || null,
+        is_published: funnelData.isPublished || false,
+        version: funnelData.version || 1,
+        settings: funnelData.settings || {}
+      })
+      .select()
+      .single();
+
+    if (funnelError) {
+      console.error('Supabase funnel error:', JSON.stringify(funnelError, null, 2));
+      console.error('Error details:', {
+        code: funnelError.code,
+        message: funnelError.message,
+        details: funnelError.details,
+        hint: funnelError.hint
+      });
+      return res.status(500).json({ error: 'Failed to create funnel' });
+    }
+
+    // Insert pages if they exist
+    if (funnelData.pages && funnelData.pages.length > 0) {
+      const pagesData = funnelData.pages.map((page: any) => ({
+        id: page.id || crypto.randomUUID(),
+        funnel_id: funnel.id,
+        page_type: page.pageType,
+        page_order: page.pageOrder || 0,
+        title: page.title,
+        blocks: page.blocks || [],
+        metadata: page.metadata || {}
+      }));
+
+      const { error: pagesError } = await supabase
+        .from('funnel_pages')
+        .insert(pagesData);
+
+      if (pagesError) {
+        console.error('Supabase pages error:', pagesError);
+        // Try to cleanup the funnel if pages failed
+        await supabase.from('funnels').delete().eq('id', funnel.id);
+        return res.status(500).json({ error: 'Failed to create funnel pages' });
+      }
+    }
+
+    res.status(201).json({ 
+      success: true, 
+      funnel: {
+        ...funnel,
+        pages: funnelData.pages || []
+      }
+    });
+  } catch (error) {
+    console.error('Error creating funnel:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.put('/api/schema-driven/funnels/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const funnelData = req.body;
+    
+    // Update funnel
+    const { data: funnel, error: funnelError } = await supabase
+      .from('funnels')
+      .update({
+        name: funnelData.name,
+        description: funnelData.description,
+        user_id: funnelData.userId,
+        is_published: funnelData.isPublished,
+        version: funnelData.version,
+        settings: funnelData.settings || {},
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (funnelError) {
+      if (funnelError.code === 'PGRST116') {
+        return res.status(404).json({ error: 'Funnel not found' });
+      }
+      console.error('Supabase funnel error:', funnelError);
+      return res.status(500).json({ error: 'Failed to update funnel' });
+    }
+
+    // Delete existing pages and insert new ones
+    if (funnelData.pages) {
+      // Delete existing pages
+      await supabase
+        .from('funnel_pages')
+        .delete()
+        .eq('funnel_id', id);
+
+      // Insert new pages
+      if (funnelData.pages.length > 0) {
+        const pagesData = funnelData.pages.map((page: any) => ({
+          id: page.id || crypto.randomUUID(),
+          funnel_id: id,
+          page_type: page.pageType,
+          page_order: page.pageOrder || 0,
+          title: page.title,
+          blocks: page.blocks || [],
+          metadata: page.metadata || {}
+        }));
+
+        const { error: pagesError } = await supabase
+          .from('funnel_pages')
+          .insert(pagesData);
+
+        if (pagesError) {
+          console.error('Supabase pages error:', pagesError);
+          return res.status(500).json({ error: 'Failed to update funnel pages' });
+        }
+      }
+    }
+
+    res.json({ 
+      success: true, 
+      funnel: {
+        ...funnel,
+        pages: funnelData.pages || []
+      }
+    });
+  } catch (error) {
+    console.error('Error updating funnel:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.delete('/api/schema-driven/funnels/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Delete funnel (pages will be deleted automatically due to CASCADE)
+    const { error } = await supabase
+      .from('funnels')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Supabase error:', error);
+      return res.status(500).json({ error: 'Failed to delete funnel' });
+    }
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting funnel:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Legacy funnels endpoints (for compatibility)
 app.get('/api/funnels', (req, res) => {
   res.json({ funnels: [] });
 });
@@ -88,78 +354,6 @@ app.put('/api/funnels/:id', (req, res) => {
       lastModified: new Date().toISOString()
     },
     message: 'Funnel updated successfully'
-  });
-});
-
-// Schema-driven API routes
-app.get('/api/schema-driven/funnels', (req, res) => {
-  res.json({ 
-    success: true,
-    data: [],
-    message: 'Schema-driven funnels retrieved successfully'
-  });
-});
-
-app.get('/api/schema-driven/funnels/:id', (req, res) => {
-  const { id } = req.params;
-  res.json({ 
-    success: true,
-    data: {
-      id,
-      name: 'Sample Funnel',
-      description: 'A sample schema-driven funnel',
-      theme: 'default',
-      isPublished: false,
-      pages: [],
-      config: {
-        name: 'Sample Funnel',
-        isPublished: false,
-        theme: 'default',
-        primaryColor: '#3b82f6',
-        secondaryColor: '#64748b',
-        fontFamily: 'Inter'
-      },
-      version: 1,
-      lastModified: new Date().toISOString(),
-      createdAt: new Date().toISOString()
-    },
-    message: 'Schema-driven funnel retrieved successfully'
-  });
-});
-
-app.post('/api/schema-driven/funnels', (req, res) => {
-  const funnelData = req.body;
-  res.json({ 
-    success: true,
-    data: {
-      ...funnelData,
-      id: funnelData.id || `funnel-${Date.now()}`,
-      lastModified: new Date().toISOString(),
-      createdAt: funnelData.createdAt || new Date().toISOString()
-    },
-    message: 'Schema-driven funnel created successfully'
-  });
-});
-
-app.put('/api/schema-driven/funnels/:id', (req, res) => {
-  const { id } = req.params;
-  const funnelData = req.body;
-  res.json({ 
-    success: true,
-    data: {
-      ...funnelData,
-      id,
-      lastModified: new Date().toISOString()
-    },
-    message: 'Schema-driven funnel updated successfully'
-  });
-});
-
-app.delete('/api/schema-driven/funnels/:id', (req, res) => {
-  const { id } = req.params;
-  res.json({ 
-    success: true,
-    message: `Schema-driven funnel ${id} deleted successfully`
   });
 });
 
