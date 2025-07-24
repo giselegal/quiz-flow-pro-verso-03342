@@ -1,74 +1,74 @@
-import { pgTable, text, serial, integer, boolean, timestamp, uuid, jsonb } from "drizzle-orm/pg-core";
+import { sqliteTable, text, integer, blob } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
+export const users = sqliteTable("users", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
 });
 
-export const utmAnalytics = pgTable("utm_analytics", {
-  id: uuid("id").defaultRandom().primaryKey(),
+export const utmAnalytics = sqliteTable("utm_analytics", {
+  id: text("id").primaryKey(),
   utmSource: text("utm_source"),
   utmMedium: text("utm_medium"),
   utmCampaign: text("utm_campaign"),
   utmContent: text("utm_content"),
   utmTerm: text("utm_term"),
-  participantId: uuid("participant_id"),
-  createdAt: timestamp("created_at").defaultNow(),
+  participantId: text("participant_id"),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
 });
 
-export const quizParticipants = pgTable("quiz_participants", {
-  id: uuid("id").defaultRandom().primaryKey(),
+export const quizParticipants = sqliteTable("quiz_participants", {
+  id: text("id").primaryKey(),
   name: text("name"),
   email: text("email"),
-  quizId: uuid("quiz_id"),
+  quizId: text("quiz_id"),
   utmSource: text("utm_source"),
   utmMedium: text("utm_medium"),
   utmCampaign: text("utm_campaign"),
-  createdAt: timestamp("created_at").defaultNow(),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
 });
 
-export const funnels = pgTable("funnels", {
-  id: uuid("id").defaultRandom().primaryKey(),
+export const funnels = sqliteTable("funnels", {
+  id: text("id").primaryKey(),
   name: text("name").notNull(),
   description: text("description"),
   userId: integer("user_id").references(() => users.id),
-  isPublished: boolean("is_published").default(false),
+  isPublished: integer("is_published", { mode: "boolean" }).default(false),
   version: integer("version").default(1),
-  settings: jsonb("settings"), // themes, A/B testing config, etc.
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  settings: text("settings", { mode: "json" }), // themes, A/B testing config, etc.
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow(),
 });
 
-export const funnelPages = pgTable("funnel_pages", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  funnelId: uuid("funnel_id").notNull().references(() => funnels.id, { onDelete: "cascade" }),
+export const funnelPages = sqliteTable("funnel_pages", {
+  id: text("id").primaryKey(),
+  funnelId: text("funnel_id").notNull().references(() => funnels.id, { onDelete: "cascade" }),
   pageType: text("page_type").notNull(), // 'intro', 'question', 'main-transition', etc.
   pageOrder: integer("page_order").notNull(),
   title: text("title"),
-  blocks: jsonb("blocks").notNull(), // array of block configurations
-  metadata: jsonb("metadata"), // page-specific settings
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  blocks: text("blocks", { mode: "json" }).notNull(), // array of block configurations
+  metadata: text("metadata", { mode: "json" }), // page-specific settings
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow(),
 });
 
-export const funnelVersions = pgTable("funnel_versions", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  funnelId: uuid("funnel_id").notNull().references(() => funnels.id, { onDelete: "cascade" }),
+export const funnelVersions = sqliteTable("funnel_versions", {
+  id: text("id").primaryKey(),
+  funnelId: text("funnel_id").notNull().references(() => funnels.id, { onDelete: "cascade" }),
   version: integer("version").notNull(),
-  funnelData: jsonb("funnel_data").notNull(), // complete funnel snapshot
-  createdAt: timestamp("created_at").defaultNow(),
+  funnelData: text("funnel_data", { mode: "json" }).notNull(), // complete funnel snapshot
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
   createdBy: integer("created_by").references(() => users.id),
 });
 
 // Tracking de eventos e conversões
-export const conversionEvents = pgTable("conversion_events", {
-  id: uuid("id").defaultRandom().primaryKey(),
+export const conversionEvents = sqliteTable("conversion_events", {
+  id: text("id").primaryKey(),
   eventType: text("event_type").notNull(), // 'lead', 'purchase', 'page_view', 'quiz_complete'
   eventSource: text("event_source").notNull(), // 'quiz', 'hotmart', 'manual'
-  participantId: uuid("participant_id"),
+  participantId: text("participant_id"),
   userEmail: text("user_email"),
   userName: text("user_name"),
   eventValue: integer("event_value"), // valor em centavos
@@ -82,27 +82,27 @@ export const conversionEvents = pgTable("conversion_events", {
   utmTerm: text("utm_term"),
   fbclid: text("fbclid"),
   facebookEventId: text("facebook_event_id"), // Para tracking CAPI
-  metadata: jsonb("metadata"), // dados extras específicos do evento
-  createdAt: timestamp("created_at").defaultNow(),
+  metadata: text("metadata", { mode: "json" }), // dados extras específicos do evento
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
 });
 
 // Resultados detalhados do quiz
-export const quizResults = pgTable("quiz_results", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  participantId: uuid("participant_id").references(() => quizParticipants.id),
+export const quizResults = sqliteTable("quiz_results", {
+  id: text("id").primaryKey(),
+  participantId: text("participant_id").references(() => quizParticipants.id),
   quizType: text("quiz_type").default("style-discovery"),
   primaryStyle: text("primary_style"), // categoria do estilo dominante
   stylePercentage: integer("style_percentage"), // pontuação do estilo
-  allStyles: jsonb("all_styles"), // todos os estilos e pontuações
-  answers: jsonb("answers"), // respostas do quiz
-  utmData: jsonb("utm_data"), // dados UTM no momento do quiz
-  browserData: jsonb("browser_data"), // IP, user agent, etc.
-  createdAt: timestamp("created_at").defaultNow(),
+  allStyles: text("all_styles", { mode: "json" }), // todos os estilos e pontuações
+  answers: text("answers", { mode: "json" }), // respostas do quiz
+  utmData: text("utm_data", { mode: "json" }), // dados UTM no momento do quiz
+  browserData: text("browser_data", { mode: "json" }), // IP, user agent, etc.
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
 });
 
 // Compras do Hotmart
-export const hotmartPurchases = pgTable("hotmart_purchases", {
-  id: uuid("id").defaultRandom().primaryKey(),
+export const hotmartPurchases = sqliteTable("hotmart_purchases", {
+  id: text("id").primaryKey(),
   transactionId: text("transaction_id").notNull().unique(),
   status: text("status").notNull(), // 'complete', 'approved', 'cancelled', 'refunded'
   buyerEmail: text("buyer_email").notNull(),
@@ -114,11 +114,11 @@ export const hotmartPurchases = pgTable("hotmart_purchases", {
   commissionValue: integer("commission_value"),
   affiliateEmail: text("affiliate_email"),
   webhookEventId: text("webhook_event_id"),
-  rawWebhookData: jsonb("raw_webhook_data"),
-  facebookEventSent: boolean("facebook_event_sent").default(false),
-  conversionEventId: uuid("conversion_event_id").references(() => conversionEvents.id),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  rawWebhookData: text("raw_webhook_data", { mode: "json" }),
+  facebookEventSent: integer("facebook_event_sent", { mode: "boolean" }).default(false),
+  conversionEventId: text("conversion_event_id").references(() => conversionEvents.id),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow(),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({

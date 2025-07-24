@@ -109,6 +109,11 @@ const App = () => {
                 />
                 
                 {/* Admin - acesso livre */}
+                <Route path="/admin">
+                  <AdminRoute>
+                    <DashboardPage />
+                  </AdminRoute>
+                </Route>
                 <Route path="/admin/:rest*">
                   {() => (
                     <AdminRoute>

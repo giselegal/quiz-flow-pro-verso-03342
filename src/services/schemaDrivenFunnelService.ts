@@ -162,6 +162,14 @@ class SchemaDrivenFunnelService {
     this.autoSaveState.pendingChanges = true;
   }
 
+  hasPendingChanges(): boolean {
+    return this.autoSaveState.pendingChanges;
+  }
+
+  clearPendingChanges() {
+    this.autoSaveState.pendingChanges = false;
+  }
+
   getAutoSaveState(): AutoSaveState {
     return { ...this.autoSaveState };
   }

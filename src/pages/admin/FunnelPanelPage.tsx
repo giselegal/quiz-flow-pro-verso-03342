@@ -260,7 +260,7 @@ const FunnelPanelPage: React.FC = () => {
 
   // Duplicar funil
   const duplicateFunnel = async (funnel: Funnel) => {
-o /ediotr     try {
+    try {
       // Garantir que existe um usuário autenticado
       const user = await ensureAuthenticatedUser();
       

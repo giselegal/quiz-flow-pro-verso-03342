@@ -32,7 +32,7 @@ interface UseSchemaEditorReturn {
   // Ações de bloco
   addBlock: (blockData: Omit<BlockData, 'id'>) => void;
   updateBlock: (blockId: string, updates: Partial<BlockData>) => void;
-  deleteBlock: (blockId: string) => void;
+  deleteBlock: (blockId: string) => Promise<void>;
   reorderBlocks: (newBlocks: BlockData[]) => void;
   setSelectedBlock: (blockId: string | null) => void;
   
@@ -59,6 +59,7 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
   
   const { toast } = useToast();
   const initializedRef = useRef(false);
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Computed values
   const currentPage = funnel?.pages?.find(page => page.id === currentPageId) || null;
@@ -175,6 +176,8 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
       } else {
         console.log('💾 Auto-save completed successfully');
       }
+      // Limpar o estado de mudanças pendentes após o salvamento bem-sucedido
+      schemaDrivenFunnelService.clearPendingChanges();
     } catch (error) {
       console.error('❌ Save error:', error);
       if (manual) {
@@ -189,7 +192,52 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
     }
   }, [funnel, toast, isSaving]);
 
-  // Método removido - agora usamos Supabase diretamente
+  // Efeito para auto-salvar o funil com debounce
+  useEffect(() => {
+    if (funnel && initializedRef.current) {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+      saveTimeoutRef.current = setTimeout(() => {
+        saveFunnel(false); // Auto-save
+      }, 1000); // Salva 1 segundo após a última alteração
+    }
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, [funnel, saveFunnel]);
+
+  // Efeito para lidar com o carregamento inicial do funil
+  useEffect(() => {
+    if (!initializedRef.current) {
+      initializedRef.current = true;
+      if (initialFunnelId) {
+        loadFunnel(initialFunnelId);
+      } else {
+        createNewFunnel();
+      }
+    }
+  }, [initialFunnelId, loadFunnel, createNewFunnel]);
+
+  // Efeito para salvar ao sair da página
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (schemaDrivenFunnelService.hasPendingChanges()) {
+        event.preventDefault();
+        event.returnValue = ''; // Required for Chrome
+        saveFunnel(false); // Tenta salvar antes de sair
+        return 'Você tem alterações não salvas. Deseja realmente sair?';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [saveFunnel]);
 
   // Ações de página
   const addPage = useCallback((pageData: Omit<SchemaDrivenPageData, 'id' | 'order'>) => {
@@ -276,7 +324,7 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
     }));
   }, [updateFunnelState]);
 
-  const deleteBlock = useCallback((blockId: string) => {
+  const deleteBlock = useCallback(async (blockId: string) => {
     updateFunnelState(prev => ({
       ...prev,
       pages: prev.pages.map(page => ({
@@ -288,7 +336,10 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
     if (selectedBlockId === blockId) {
       setSelectedBlockId(null);
     }
-  }, [updateFunnelState, selectedBlockId]);
+    
+    // Forçar salvamento imediato após exclusão
+    await saveFunnel(false);
+  }, [updateFunnelState, selectedBlockId, saveFunnel]);
 
   const reorderBlocks = useCallback((newBlocks: BlockData[]) => {
     if (!currentPageId) return;

@@ -13,13 +13,16 @@ import {
   Plus,
   Upload,
   Undo2, // Novo ícone para desfazer
-  Redo2 // Novo ícone para refazer
+  Redo2, // Novo ícone para refazer
+  ArrowLeft, // Ícone para voltar
+  Home // Ícone para dashboard
 } from 'lucide-react';
 import { useSchemaEditorFixed as useSchemaEditor } from '@/hooks/useSchemaEditorFixed';
 import { SchemaDrivenComponentsSidebar } from './sidebar/SchemaDrivenComponentsSidebar';
 import { DynamicPropertiesPanel } from './panels/DynamicPropertiesPanel';
 import { DroppableCanvas } from './dnd/DroppableCanvas';
 import { blockDefinitions } from '@/config/blockDefinitions';
+import { useLocation } from 'wouter';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -66,6 +69,9 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const [showRightSidebar, setShowRightSidebar] = useState(true);
   const [activeTab, setActiveTab] = useState<'components' | 'pages'>('components');
 
+  // Hook de navegação
+  const [, setLocation] = useLocation();
+
   // Estado para o Toast
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
@@ -94,9 +100,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     isSaving
   } = useSchemaEditor(funnelId || undefined);
 
-  // Ref para armazenar o estado atual antes de uma mudança significativa
-  const lastSavedStateRef = useRef<any | null>(null);
-
   // Função para mostrar toast
   const showToast = useCallback((message: string, type: 'success' | 'error' | 'info' = 'info') => {
     setToast({ message, type });
@@ -105,6 +108,22 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     }, 3000); // Esconde o toast após 3 segundos
     return () => clearTimeout(timer);
   }, []);
+
+  // Função para voltar ao dashboard
+  const handleBackToDashboard = useCallback(() => {
+    // Salvar antes de sair se houver mudanças pendentes
+    if (isSaving) {
+      showToast('Salvando alterações antes de sair...', 'info');
+      setTimeout(() => {
+        setLocation('/admin/funis');
+      }, 1000);
+    } else {
+      setLocation('/admin/funis');
+    }
+  }, [setLocation, isSaving, showToast]);
+
+  // Ref para armazenar o estado atual antes de uma mudança significativa
+  const lastSavedStateRef = useRef<any | null>(null);
 
   // Adiciona o estado atual ao undoStack
   const pushToUndoStack = useCallback(() => {
@@ -375,6 +394,20 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       {/* Header Responsivo */}
       <div className="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4">
         <div className="flex items-center space-x-4 min-w-0 flex-1">
+          {/* Botão Voltar ao Dashboard */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleBackToDashboard}
+            className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 px-3 py-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span className="hidden sm:inline">Dashboard</span>
+          </Button>
+
+          {/* Separador */}
+          <div className="h-6 w-px bg-gray-300" />
+
           {/* Info do funil */}
           <div className="flex items-center space-x-2 min-w-0">
             <FileText className="w-5 h-5 text-gray-500 flex-shrink-0" />
