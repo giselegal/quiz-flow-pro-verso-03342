@@ -21,6 +21,7 @@ import { useSchemaEditorFixed as useSchemaEditor } from '@/hooks/useSchemaEditor
 import { SchemaDrivenComponentsSidebar } from './sidebar/SchemaDrivenComponentsSidebar';
 import { DynamicPropertiesPanel } from './panels/DynamicPropertiesPanel';
 import { DroppableCanvas } from './dnd/DroppableCanvas';
+import { TestDeleteComponent } from './TestDeleteComponent';
 import { blockDefinitions } from '@/config/blockDefinitions';
 import { useLocation } from 'wouter';
 
@@ -661,6 +662,12 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               {deviceView === 'mobile' ? (
                 <div className="w-full max-w-sm bg-white rounded-lg shadow-sm min-h-[calc(100vh-120px)] mx-auto">
                   <div className="p-4">
+                    {/* Componente de teste para exclusão */}
+                    <TestDeleteComponent onDelete={() => {
+                      console.log('🧪 Teste de exclusão chamado!');
+                      showToast('Teste de exclusão funcionou!', 'success');
+                    }} />
+                    
                     <DroppableCanvas
                       blocks={currentPage?.blocks || []}
                       selectedBlockId={selectedBlockId || undefined}
