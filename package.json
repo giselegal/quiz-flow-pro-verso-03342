@@ -4,7 +4,9 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "set NODE_ENV=development && tsx server/index.ts",
+    "dev": "vite --host 0.0.0.0 --port 8080",
+    "dev:server": "set NODE_ENV=development && tsx server/index.ts",
+    "dev:full": "concurrently \"npm run dev\" \"npm run dev:server\"",
     "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/server.js",
     "build:dev": "vite build --mode development",
     "start": "set NODE_ENV=production && node dist/server.js",

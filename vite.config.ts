@@ -9,8 +9,12 @@ export default defineConfig(({ mode }) => ({
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
   server: {
-    host: "::",
+    host: "0.0.0.0",
     port: 8080,
+    strictPort: true,
+    hmr: {
+      port: 8080
+    }
   },
   resolve: {
     alias: {
