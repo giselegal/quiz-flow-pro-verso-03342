@@ -12,9 +12,9 @@ const PORT = process.env.PORT || 3001;
 
 // Supabase configuration
 const SUPABASE_URL = "https://pwtjuuhchtbzttrzoutw.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNDQ0NjAsImV4cCI6MjA2NzkyMDQ2MH0.EP0qLHBZK8nyxcod0FEVRQln4R_yVSWEGQwuIbJfP_w";
+const SUPABASE_SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MjM0NDQ2MCwiZXhwIjoyMDY3OTIwNDYwfQ.jkXLyH0tJttuL_P-Kt7dGsIzyBuLWZRJ3NZi6F9trUI";
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
   auth: {
     persistSession: false,
     autoRefreshToken: false
@@ -176,11 +176,14 @@ app.post('/api/schema-driven/funnels', async (req, res) => {
   try {
     const funnelData = req.body;
     
+    // Generate ID if not provided
+    const funnelId = funnelData.id || `funnel_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
     // Insert funnel
     const { data: funnel, error: funnelError } = await supabase
       .from('funnels')
       .insert({
-        id: funnelData.id,
+        id: funnelId,
         name: funnelData.name,
         description: funnelData.description,
         user_id: funnelData.userId || null,
