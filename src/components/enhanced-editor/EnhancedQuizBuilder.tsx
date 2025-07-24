@@ -12,7 +12,7 @@ const EnhancedQuizBuilder: React.FC = () => {
   const navigate = useNavigate();
   
   const handleOpenUnifiedEditor = () => {
-    navigate('/admin/editor');
+    navigate('/editor');
   };
   
   return (
