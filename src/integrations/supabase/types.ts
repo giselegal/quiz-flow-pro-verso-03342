@@ -14,327 +14,85 @@ export type Database = {
   }
   public: {
     Tables: {
-      participant_answers: {
+      funnel_pages: {
         Row: {
+          blocks: Json
           created_at: string | null
+          funnel_id: string
           id: string
-          option_id: string | null
-          participant_id: string | null
-          points: number | null
-          question_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          option_id?: string | null
-          participant_id?: string | null
-          points?: number | null
-          question_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          option_id?: string | null
-          participant_id?: string | null
-          points?: number | null
-          question_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "participant_answers_option_id_fkey"
-            columns: ["option_id"]
-            isOneToOne: false
-            referencedRelation: "question_options"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "participant_answers_participant_id_fkey"
-            columns: ["participant_id"]
-            isOneToOne: false
-            referencedRelation: "quiz_participants"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "participant_answers_question_id_fkey"
-            columns: ["question_id"]
-            isOneToOne: false
-            referencedRelation: "quiz_questions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      question_options: {
-        Row: {
-          created_at: string | null
-          id: string
-          image_url: string | null
-          order_index: number
-          points: number | null
-          question_id: string | null
-          style_code: string | null
-          text: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          image_url?: string | null
-          order_index: number
-          points?: number | null
-          question_id?: string | null
-          style_code?: string | null
-          text: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          image_url?: string | null
-          order_index?: number
-          points?: number | null
-          question_id?: string | null
-          style_code?: string | null
-          text?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "question_options_question_id_fkey"
-            columns: ["question_id"]
-            isOneToOne: false
-            referencedRelation: "quiz_questions"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "question_options_style_code_fkey"
-            columns: ["style_code"]
-            isOneToOne: false
-            referencedRelation: "style_types"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      quiz_participants: {
-        Row: {
-          created_at: string | null
-          email: string | null
-          id: string
-          name: string | null
-          quiz_id: string | null
-          utm_campaign: string | null
-          utm_medium: string | null
-          utm_source: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          email?: string | null
-          id?: string
-          name?: string | null
-          quiz_id?: string | null
-          utm_campaign?: string | null
-          utm_medium?: string | null
-          utm_source?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          email?: string | null
-          id?: string
-          name?: string | null
-          quiz_id?: string | null
-          utm_campaign?: string | null
-          utm_medium?: string | null
-          utm_source?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "quiz_participants_quiz_id_fkey"
-            columns: ["quiz_id"]
-            isOneToOne: false
-            referencedRelation: "quizzes"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      quiz_questions: {
-        Row: {
-          active: boolean | null
-          created_at: string | null
-          id: string
-          order_index: number
-          quiz_id: string | null
-          required_selections: number | null
-          title: string
-          type: string
-        }
-        Insert: {
-          active?: boolean | null
-          created_at?: string | null
-          id?: string
-          order_index: number
-          quiz_id?: string | null
-          required_selections?: number | null
-          title: string
-          type?: string
-        }
-        Update: {
-          active?: boolean | null
-          created_at?: string | null
-          id?: string
-          order_index?: number
-          quiz_id?: string | null
-          required_selections?: number | null
-          title?: string
-          type?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "quiz_questions_quiz_id_fkey"
-            columns: ["quiz_id"]
-            isOneToOne: false
-            referencedRelation: "quizzes"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      quizzes: {
-        Row: {
-          active: boolean | null
-          created_at: string | null
-          description: string | null
-          id: string
-          title: string
+          metadata: Json | null
+          page_order: number
+          page_type: string
+          title: string | null
           updated_at: string | null
         }
         Insert: {
-          active?: boolean | null
+          blocks?: Json
           created_at?: string | null
-          description?: string | null
-          id?: string
-          title?: string
-          updated_at?: string | null
-        }
-        Update: {
-          active?: boolean | null
-          created_at?: string | null
-          description?: string | null
-          id?: string
-          title?: string
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-      style_results: {
-        Row: {
-          created_at: string | null
+          funnel_id: string
           id: string
-          is_primary: boolean | null
-          participant_id: string | null
-          percentage: number | null
-          points: number | null
-          rank: number | null
-          style_type_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          is_primary?: boolean | null
-          participant_id?: string | null
-          percentage?: number | null
-          points?: number | null
-          rank?: number | null
-          style_type_id?: string | null
+          metadata?: Json | null
+          page_order: number
+          page_type: string
+          title?: string | null
+          updated_at?: string | null
         }
         Update: {
+          blocks?: Json
           created_at?: string | null
+          funnel_id?: string
           id?: string
-          is_primary?: boolean | null
-          participant_id?: string | null
-          percentage?: number | null
-          points?: number | null
-          rank?: number | null
-          style_type_id?: string | null
+          metadata?: Json | null
+          page_order?: number
+          page_type?: string
+          title?: string | null
+          updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "style_results_participant_id_fkey"
-            columns: ["participant_id"]
+            foreignKeyName: "funnel_pages_funnel_id_fkey"
+            columns: ["funnel_id"]
             isOneToOne: false
-            referencedRelation: "quiz_participants"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "style_results_style_type_id_fkey"
-            columns: ["style_type_id"]
-            isOneToOne: false
-            referencedRelation: "style_types"
+            referencedRelation: "funnels"
             referencedColumns: ["id"]
           },
         ]
       }
-      style_types: {
+      funnels: {
         Row: {
-          color_primary: string | null
-          color_secondary: string | null
           created_at: string | null
           description: string | null
           id: string
+          is_published: boolean | null
           name: string
+          settings: Json | null
+          updated_at: string | null
+          user_id: string | null
+          version: number | null
         }
         Insert: {
-          color_primary?: string | null
-          color_secondary?: string | null
           created_at?: string | null
           description?: string | null
           id: string
+          is_published?: boolean | null
           name: string
+          settings?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
+          version?: number | null
         }
         Update: {
-          color_primary?: string | null
-          color_secondary?: string | null
           created_at?: string | null
           description?: string | null
           id?: string
+          is_published?: boolean | null
           name?: string
+          settings?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
+          version?: number | null
         }
         Relationships: []
-      }
-      utm_analytics: {
-        Row: {
-          created_at: string | null
-          id: string
-          participant_id: string | null
-          utm_campaign: string | null
-          utm_content: string | null
-          utm_medium: string | null
-          utm_source: string | null
-          utm_term: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          participant_id?: string | null
-          utm_campaign?: string | null
-          utm_content?: string | null
-          utm_medium?: string | null
-          utm_source?: string | null
-          utm_term?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          participant_id?: string | null
-          utm_campaign?: string | null
-          utm_content?: string | null
-          utm_medium?: string | null
-          utm_source?: string | null
-          utm_term?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "utm_analytics_participant_id_fkey"
-            columns: ["participant_id"]
-            isOneToOne: false
-            referencedRelation: "quiz_participants"
-            referencedColumns: ["id"]
-          },
-        ]
       }
     }
     Views: {

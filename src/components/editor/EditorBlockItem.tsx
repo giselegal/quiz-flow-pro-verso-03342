@@ -105,7 +105,7 @@ export const EditorBlockItem: React.FC<EditorBlockItemProps> = ({
             onClick={onDelete}
             className="text-red-500 hover:text-red-700 hover:bg-red-50"
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="w-3 h-3" />
           </Button>
         </div>
       </div>

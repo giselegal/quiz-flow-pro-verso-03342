@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = Number(process.env.PORT) || 3001;
 
 // Supabase configuration
 const SUPABASE_URL = "https://pwtjuuhchtbzttrzoutw.supabase.co";
@@ -22,15 +22,18 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
 });
 
 // Test Supabase connection
-supabase.from('funnels').select('count').limit(1).then(({ data, error }) => {
-  if (error) {
-    console.error('❌ Supabase connection failed:', error);
-  } else {
-    console.log('✅ Supabase connection successful');
+(async () => {
+  try {
+    const { data, error } = await supabase.from('funnels').select('count').limit(1);
+    if (error) {
+      console.error('❌ Supabase connection failed:', error);
+    } else {
+      console.log('✅ Supabase connection successful');
+    }
+  } catch (err: any) {
+    console.error('❌ Supabase connection error:', err);
   }
-}).catch(err => {
-  console.error('❌ Supabase connection error:', err);
-});
+})();
 
 // Middleware
 app.use(express.json({ limit: '50mb' }));
