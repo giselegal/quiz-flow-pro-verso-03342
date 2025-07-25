@@ -433,6 +433,15 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         const test = await ABTestService.createTest({
           name: `Teste A/B - ${funnel.title || 'Sem título'}`,
           description: 'Teste A/B criado pelo editor',
+          quiz_id: funnelId,
+          traffic_split: 50,
+          settings: {
+            minimum_sample_size: 100,
+            confidence_level: 95,
+            test_duration_days: 14,
+            auto_declare_winner: false,
+            metrics_to_track: ['conversion_rate', 'completion_rate']
+          },
           variants: [
             { 
               name: 'Original',
@@ -722,6 +731,54 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
            >
              <Bug className="w-4 h-4 sm:mr-1" />
              <span className="hidden sm:inline">Diagnóstico</span>
+           </Button>
+
+           {/* Botões para funcionalidades avançadas */}
+           <Button
+             size="sm"
+             onClick={() => setShowTemplateSelector(!showTemplateSelector)}
+             variant="outline"
+             className="px-3"
+             title="Selecionar Template"
+           >
+             <TemplateIcon className="w-4 h-4 sm:mr-1" />
+             <span className="hidden sm:inline">Templates</span>
+           </Button>
+
+           <Button
+             size="sm"
+             onClick={handleCreateVersion}
+             variant="outline"
+             className="px-3"
+             title="Criar Nova Versão"
+             disabled={isPublishing}
+           >
+             <GitBranch className="w-4 h-4 sm:mr-1" />
+             <span className="hidden sm:inline">Versão</span>
+           </Button>
+
+           <Button
+             size="sm"
+             onClick={handleGenerateReport}
+             variant="outline"
+             className="px-3"
+             title="Gerar Relatório"
+             disabled={isPublishing}
+           >
+             <ReportIcon className="w-4 h-4 sm:mr-1" />
+             <span className="hidden sm:inline">Relatório</span>
+           </Button>
+
+           <Button
+             size="sm"
+             onClick={handleCreateABTest}
+             variant="outline"
+             className="px-3"
+             title="Criar Teste A/B"
+             disabled={isPublishing}
+           >
+             <BarChart3 className="w-4 h-4 sm:mr-1" />
+             <span className="hidden sm:inline">A/B Test</span>
            </Button>
         </div>
       </div>
