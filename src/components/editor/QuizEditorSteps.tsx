@@ -174,7 +174,8 @@ const QUIZ_STEPS: QuizStep[] = [
   ...MAIN_QUIZ_STEPS, // Etapas 1-10: Questões originais com imagens
   ...STRATEGIC_QUESTIONS // Etapas 11-21: Questões estratégicas
 ];
-  const QuizEditorSteps = () => {
+
+const QuizEditorSteps = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [responses, setResponses] = useState<Record<string, string[]>>({});
 
