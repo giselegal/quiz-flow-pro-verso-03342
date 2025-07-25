@@ -163,13 +163,10 @@ const QuizQuestionBlock = ({
     ? selectedOptions.size === maxSelections 
     : selectedOptions.size > 0;
 
-  // Destructuring das configurações de estilo
-  const { transition } = ANIMATION_CONFIG;
-  const { 
-    default: defaultStyles, 
-    selected: selectedStyles, 
-    hover: hoverStyles 
-  } = VISUAL_STATES_CONFIG;
+  // Destructuring das configurações de estilo (removido dependências não encontradas)
+  const defaultStyles = '';
+  const selectedStyles = '';
+  const hoverStyles = '';
 
   return (
     <div className={cn(
