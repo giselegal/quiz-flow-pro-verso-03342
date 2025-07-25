@@ -617,6 +617,232 @@ export type IconType =
 
 // Minimal block definitions array to satisfy imports
 export const blockDefinitions: BlockDefinition[] = [
+  // Blocos de Quiz - Novos componentes das 21 etapas
+  {
+    type: 'quiz-question',
+    name: 'Questão de Quiz',
+    description: 'Componente de questão de quiz com opções múltiplas e integração com cálculos',
+    icon: 'HelpCircle',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'question',
+        label: 'Pergunta',
+        type: 'textarea',
+        defaultValue: 'Qual dessas opções representa melhor seu estilo?'
+      },
+      {
+        key: 'allowMultiple',
+        label: 'Permitir múltiplas seleções',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'maxSelections',
+        label: 'Máximo de seleções',
+        type: 'number',
+        defaultValue: 3
+      },
+      {
+        key: 'showImages',
+        label: 'Mostrar imagens',
+        type: 'boolean',
+        defaultValue: true
+      }
+    ],
+    defaultProperties: {
+      question: 'Qual dessas opções representa melhor seu estilo?',
+      allowMultiple: true,
+      maxSelections: 3,
+      showImages: true,
+      options: [
+        {
+          id: '1',
+          text: 'Clássico e elegante',
+          styleCategory: 'Clássico',
+          points: 2,
+          keywords: ['elegante', 'sofisticado']
+        },
+        {
+          id: '2',
+          text: 'Moderno e descolado',
+          styleCategory: 'Contemporâneo',
+          points: 3,
+          keywords: ['moderno', 'descolado']
+        }
+      ]
+    }
+  },
+  {
+    type: 'quiz-question-configurable',
+    name: 'Questão Configurável',
+    description: 'Versão avançada da questão com painel de propriedades para configurar imagens, pontuação e categorias',
+    icon: 'Brain',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'question',
+        label: 'Pergunta',
+        type: 'textarea',
+        defaultValue: 'Qual dessas opções representa melhor seu estilo?'
+      },
+      {
+        key: 'questionId',
+        label: 'ID da Questão',
+        type: 'text',
+        defaultValue: 'question-1'
+      },
+      {
+        key: 'allowMultiple',
+        label: 'Permitir múltiplas seleções',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'maxSelections',
+        label: 'Máximo de seleções',
+        type: 'number',
+        defaultValue: 3
+      },
+      {
+        key: 'showImages',
+        label: 'Mostrar imagens',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'autoAdvance',
+        label: 'Auto-avanço',
+        type: 'boolean',
+        defaultValue: false
+      }
+    ],
+    defaultProperties: {
+      question: 'Qual dessas opções representa melhor seu estilo?',
+      questionId: 'question-1',
+      allowMultiple: true,
+      maxSelections: 3,
+      showImages: true,
+      autoAdvance: false,
+      options: [
+        {
+          id: '1',
+          text: 'Clássico e elegante',
+          imageUrl: '',
+          styleCategory: 'Clássico',
+          points: 2,
+          keywords: ['elegante', 'sofisticado', 'atemporal']
+        },
+        {
+          id: '2',
+          text: 'Moderno e descolado',
+          imageUrl: '',
+          styleCategory: 'Contemporâneo',
+          points: 3,
+          keywords: ['moderno', 'descolado', 'inovador']
+        },
+        {
+          id: '3',
+          text: 'Natural e autêntico',
+          imageUrl: '',
+          styleCategory: 'Natural',
+          points: 1,
+          keywords: ['natural', 'autêntico', 'orgânico']
+        }
+      ]
+    }
+  },
+  {
+    type: 'quiz-result-calculated',
+    name: 'Resultado Calculado',
+    description: 'Componente que mostra o resultado calculado em tempo real com base nas respostas',
+    icon: 'Award',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'showPercentages',
+        label: 'Mostrar percentuais',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showSecondaryStyles',
+        label: 'Mostrar estilos secundários',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'maxSecondaryStyles',
+        label: 'Máximo de estilos secundários',
+        type: 'number',
+        defaultValue: 2
+      }
+    ],
+    defaultProperties: {
+      showPercentages: true,
+      showSecondaryStyles: true,
+      maxSecondaryStyles: 2
+    }
+  },
+  {
+    type: 'quiz-start-page',
+    name: 'Página Inicial do Quiz',
+    description: 'Página de introdução e início do quiz',
+    icon: 'Play',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Descubra Seu Estilo'
+      },
+      {
+        key: 'subtitle',
+        label: 'Subtítulo',
+        type: 'textarea',
+        defaultValue: 'Responda algumas perguntas e descubra qual é o seu estilo predominante'
+      },
+      {
+        key: 'buttonText',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Começar Quiz'
+      }
+    ],
+    defaultProperties: {
+      title: 'Descubra Seu Estilo',
+      subtitle: 'Responda algumas perguntas e descubra qual é o seu estilo predominante',
+      buttonText: 'Começar Quiz'
+    }
+  },
+  {
+    type: 'quiz-transition',
+    name: 'Transição do Quiz',
+    description: 'Página de transição entre questões ou seções',
+    icon: 'LoaderCircle',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'message',
+        label: 'Mensagem',
+        type: 'text',
+        defaultValue: 'Analisando suas respostas...'
+      },
+      {
+        key: 'duration',
+        label: 'Duração (ms)',
+        type: 'number',
+        defaultValue: 3000
+      }
+    ],
+    defaultProperties: {
+      message: 'Analisando suas respostas...',
+      duration: 3000
+    }
+  },
+  
+  // Blocos básicos existentes
   {
     type: 'heading',
     name: 'Heading',
