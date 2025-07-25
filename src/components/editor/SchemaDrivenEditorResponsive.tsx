@@ -259,9 +259,12 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   }, [updateBlock, pushToUndoStack, showToast]);
 
   const handleSave = useCallback(() => {
+    console.log('🔘 [DEBUG] handleSave button clicked!');
+    console.log('🔘 [DEBUG] Current funnel:', funnel);
+    console.log('🔘 [DEBUG] isSaving state:', isSaving);
     saveFunnel(true);
     showToast('Funil salvo com sucesso!', 'success');
-  }, [saveFunnel, showToast]);
+  }, [saveFunnel, showToast, funnel, isSaving]);
 
   // Função de publicação
   const handlePublish = useCallback(async () => {

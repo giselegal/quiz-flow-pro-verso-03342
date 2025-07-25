@@ -383,24 +383,41 @@ class SchemaDrivenFunnelService {
 
   // Backend operations
   async saveFunnel(funnel: SchemaDrivenFunnelData, isAutoSave: boolean = false): Promise<SchemaDrivenFunnelData> {
+    console.log('💾 [DEBUG] saveFunnel called:', { 
+      funnelId: funnel.id, 
+      isAutoSave, 
+      funnelName: funnel.name,
+      pagesCount: funnel.pages?.length || 0
+    });
+
     try {
       // Tentar salvar no backend primeiro
+      console.log('🌐 [DEBUG] Sending PUT request to backend...');
+      const requestBody = {
+        ...funnel,
+        lastModified: new Date().toISOString()
+      };
+      console.log('📤 [DEBUG] Request body:', JSON.stringify(requestBody, null, 2));
+
       const response = await fetch(`${this.baseUrl}/funnels/${funnel.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...funnel,
-          lastModified: new Date().toISOString()
-        }),
+        body: JSON.stringify(requestBody),
       });
 
+      console.log('📥 [DEBUG] Response status:', response.status, response.statusText);
+
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        const errorText = await response.text();
+        console.error('❌ [DEBUG] Backend error response:', errorText);
+        throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
       }
 
       const result = await response.json();
+      console.log('✅ [DEBUG] Backend response:', result);
+
       const savedFunnel = {
         ...result.data,
         lastModified: new Date(result.data.lastModified),
@@ -415,10 +432,11 @@ class SchemaDrivenFunnelService {
       // Atualizar localStorage com dados do backend
       this.saveLocalFunnel(savedFunnel);
       
-      console.log('☁️ Funnel saved to backend successfully');
+      console.log('☁️ [DEBUG] Funnel saved to backend successfully');
       return savedFunnel;
 
     } catch (error) {
+      console.error('❌ [DEBUG] Backend save failed:', error);
       console.warn('⚠️ Backend unavailable, saving locally only:', error);
       
       // Fallback para localStorage
@@ -434,6 +452,7 @@ class SchemaDrivenFunnelService {
         this.saveVersion(updatedFunnel, 'Manual save (offline)');
       }
       
+      console.log('💾 [DEBUG] Funnel saved locally as fallback');
       return updatedFunnel;
     }
   }
@@ -563,6 +582,15 @@ class SchemaDrivenFunnelService {
   }
 
   /**
+   * Gera um ID único para páginas do funil
+   */
+  private generateUniquePageId(baseName: string): string {
+    const timestamp = Date.now();
+    const random = Math.random().toString(36).substring(2, 8);
+    return `${baseName}-${timestamp}-${random}`;
+  }
+
+  /**
    * Cria todas as 21 páginas usando APENAS componentes inline modulares ES7+
    * Arquitetura 100% modular com componentes independentes e responsivos
    */
@@ -577,7 +605,7 @@ class SchemaDrivenFunnelService {
     // ETAPA 1: INTRODUÇÃO (COLETA DO NOME)
     // ==========================================
     pages.push({
-      id: 'etapa-1-intro',
+      id: this.generateUniquePageId('etapa-1-intro'),
       name: 'Introdução',
       title: 'Etapa 1: Introdução - Coleta do Nome',
       type: 'intro',
@@ -686,7 +714,7 @@ class SchemaDrivenFunnelService {
       const currentProgress = 5 + (index + 1) * 5; // 5%, 10%, 15%... até 55%
       
       pages.push({
-        id: `etapa-${index + 2}-questao-${index + 1}`,
+        id: this.generateUniquePageId(`etapa-${index + 2}-questao-${index + 1}`),
         name: `Questão ${index + 1}`,
         title: `Etapa ${index + 2}: ${questionData.question}`,
         type: 'question',
@@ -787,7 +815,7 @@ class SchemaDrivenFunnelService {
     // Componentes: quiz-intro-header + heading-inline + text-inline + progress-inline + button-inline
     // ==========================================
     pages.push({
-      id: 'etapa-12-transicao-principal',
+      id: this.generateUniquePageId('etapa-12-transicao-principal'),
       name: 'Transição Principal',
       title: 'Etapa 12: Transição - Agora vamos conhecer você melhor',
       type: 'custom',
@@ -880,7 +908,7 @@ class SchemaDrivenFunnelService {
       const currentProgress = 65 + (index * 5); // 65%, 70%, 75%... até 90%
       
       pages.push({
-        id: `etapa-${index + 13}-estrategica-${index + 1}`,
+        id: this.generateUniquePageId(`etapa-${index + 13}-estrategica-${index + 1}`),
         name: `Questão Estratégica ${index + 1}`,
         title: `Etapa ${index + 13}: ${questionData.question}`,
         type: 'question',
@@ -983,7 +1011,7 @@ class SchemaDrivenFunnelService {
     // Componentes: quiz-intro-header + heading-inline + progress-inline + text-inline + loading-animation + button-inline
     // ==========================================
     pages.push({
-      id: 'etapa-19-transicao-final',
+      id: this.generateUniquePageId('etapa-19-transicao-final'),
       name: 'Transição Final',
       title: 'Etapa 19: Preparando seu resultado personalizado',
       type: 'custom',
@@ -1085,7 +1113,7 @@ class SchemaDrivenFunnelService {
     // Componentes inline específicos para resultado
     // ==========================================
     pages.push({
-      id: 'etapa-20-resultado',
+      id: this.generateUniquePageId('etapa-20-resultado'),
       name: 'Resultado Personalizado',
       title: 'Etapa 20: Seu Estilo Predominante Identificado',
       type: 'result',
@@ -1252,7 +1280,7 @@ class SchemaDrivenFunnelService {
     // Componentes inline específicos para conversão
     // ==========================================
     pages.push({
-      id: 'etapa-21-oferta',
+      id: this.generateUniquePageId('etapa-21-oferta'),
       name: 'Oferta Especial',
       title: 'Etapa 21: Oferta Personalizada Para Você',
       type: 'offer',

@@ -155,7 +155,12 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
   }, [toast]);
 
   const saveFunnel = useCallback(async (manual: boolean = true) => {
-    if (!funnel) return;
+    console.log('🎯 [DEBUG] saveFunnel hook called:', { manual, funnel: funnel?.id, isSaving });
+    
+    if (!funnel) {
+      console.log('❌ [DEBUG] No funnel to save!');
+      return;
+    }
     
     // Evitar salvamentos simultâneos
     if (isSaving) {
@@ -163,9 +168,12 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
       return;
     }
     
+    console.log('🚀 [DEBUG] Starting save process...');
     setIsSaving(true);
     try {
+      console.log('📞 [DEBUG] Calling schemaDrivenFunnelService.saveFunnel...');
       const savedFunnel = await schemaDrivenFunnelService.saveFunnel(funnel, !manual);
+      console.log('✅ [DEBUG] Save completed, updating state...');
       setFunnel(savedFunnel);
       
       if (manual) {
@@ -188,6 +196,7 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
         });
       }
     } finally {
+      console.log('🏁 [DEBUG] Save process finished, setting isSaving to false');
       setIsSaving(false);
     }
   }, [funnel, toast, isSaving]);

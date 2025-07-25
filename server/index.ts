@@ -41,7 +41,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cors({
-  origin: ['http://localhost:8080', 'http://localhost:3000', 'http://0.0.0.0:8080', 'http://192.168.1.11:8080'],
+  origin: ['http://localhost:8080', 'http://localhost:8081', 'http://localhost:3000', 'http://0.0.0.0:8080', 'http://0.0.0.0:8081', 'http://192.168.1.11:8080', 'http://192.168.1.11:8081'],
   credentials: true
 }));
 
@@ -170,7 +170,7 @@ app.get('/api/schema-driven/funnels/:id', async (req, res) => {
       updatedAt: funnel.updated_at
     };
 
-    res.json(transformedFunnel);
+    res.json({ data: transformedFunnel });
   } catch (error) {
     console.error('Error fetching funnel:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -215,9 +215,9 @@ app.post('/api/schema-driven/funnels', async (req, res) => {
       const pagesData = funnelData.pages.map((page: any) => ({
         id: page.id || crypto.randomUUID(),
         funnel_id: funnel.id,
-        page_type: page.pageType,
+        page_type: page.pageType || 'default',
         page_order: page.pageOrder || 0,
-        title: page.title,
+        title: page.title || 'Untitled Page',
         blocks: page.blocks || [],
         metadata: page.metadata || {}
       }));
@@ -236,7 +236,7 @@ app.post('/api/schema-driven/funnels', async (req, res) => {
 
     res.status(201).json({ 
       success: true, 
-      funnel: {
+      data: {
         ...funnel,
         pages: funnelData.pages || []
       }
@@ -251,6 +251,14 @@ app.put('/api/schema-driven/funnels/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const funnelData = req.body;
+    
+    console.log('🔍 DEBUG - PUT /api/schema-driven/funnels/:id');
+    console.log('  Funnel ID:', id);
+    console.log('  Funnel Name:', funnelData.name);
+    console.log('  Pages count:', funnelData.pages?.length || 0);
+    if (funnelData.pages) {
+      console.log('  Page IDs:', funnelData.pages.map((p: any) => p.id));
+    }
     
     // Update funnel
     const { data: funnel, error: funnelError } = await supabase
@@ -276,40 +284,70 @@ app.put('/api/schema-driven/funnels/:id', async (req, res) => {
       return res.status(500).json({ error: 'Failed to update funnel' });
     }
 
+    console.log('✅ Funnel updated successfully');
+
     // Delete existing pages and insert new ones
     if (funnelData.pages) {
-      // Delete existing pages
-      await supabase
+      console.log('🗑️ Deleting existing pages for funnel:', id);
+      
+      // First, get existing pages to see what we're dealing with
+      const { data: existingPages } = await supabase
+        .from('funnel_pages')
+        .select('id, title')
+        .eq('funnel_id', id);
+
+      console.log('📋 Existing pages:', existingPages?.map(p => ({ id: p.id, title: p.title })) || []);
+      
+      // Delete existing pages with explicit wait
+      const { error: deleteError, count: deletedCount } = await supabase
         .from('funnel_pages')
         .delete()
         .eq('funnel_id', id);
 
+      if (deleteError) {
+        console.error('❌ Error deleting pages:', deleteError);
+        return res.status(500).json({ error: 'Failed to delete existing pages' });
+      }
+
+      console.log('✅ Existing pages deleted, count:', deletedCount);
+
+      // Wait a bit to ensure deletion is complete
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       // Insert new pages
       if (funnelData.pages.length > 0) {
-        const pagesData = funnelData.pages.map((page: any) => ({
-          id: page.id || crypto.randomUUID(),
+        // Generate unique IDs for pages that don't have them
+        const pagesData = funnelData.pages.map((page: any, index: number) => ({
+          id: page.id || `page-${Date.now()}-${index}`,
           funnel_id: id,
-          page_type: page.pageType,
-          page_order: page.pageOrder || 0,
-          title: page.title,
+          page_type: page.pageType || page.type || 'default',
+          page_order: page.pageOrder || page.order || index,
+          title: page.title || `Page ${index + 1}`,
           blocks: page.blocks || [],
           metadata: page.metadata || {}
         }));
 
-        const { error: pagesError } = await supabase
-          .from('funnel_pages')
-          .insert(pagesData);
+        console.log('📄 Inserting pages:', pagesData.map(p => ({ id: p.id, title: p.title })));
 
-        if (pagesError) {
-          console.error('Supabase pages error:', pagesError);
-          return res.status(500).json({ error: 'Failed to update funnel pages' });
+        // Insert pages one by one to avoid conflicts
+        for (const pageData of pagesData) {
+          const { error: pageError } = await supabase
+            .from('funnel_pages')
+            .insert(pageData);
+
+          if (pageError) {
+            console.error('❌ Error inserting page:', pageData.id, pageError);
+            return res.status(500).json({ error: `Failed to insert page: ${pageData.title}` });
+          }
         }
+
+        console.log('✅ All pages inserted successfully');
       }
     }
 
     res.json({ 
       success: true, 
-      funnel: {
+      data: {
         ...funnel,
         pages: funnelData.pages || []
       }
