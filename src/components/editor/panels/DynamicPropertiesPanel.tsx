@@ -3,6 +3,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { PropertyInput } from './block-properties/PropertyInput';
+import { QuestionPropertiesPanel } from '../properties/QuestionPropertiesPanel';
 import { blockDefinitions, type PropertySchema as OriginalPropertySchema } from '@/config/blockDefinitions';
 import { type BlockData } from '@/components/editor/blocks';
 
@@ -119,6 +120,23 @@ export const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
     );
   }
 
+  // Verificar se é um bloco de questão de quiz (incluindo quiz-question-configurable)
+  const isQuizQuestionBlock = selectedBlock.type === 'quiz-question' || 
+                              selectedBlock.type === 'quiz-question-configurable' ||
+                              selectedBlock.type === 'QuizQuestionBlock' ||
+                              selectedBlock.type === 'QuizQuestionBlockConfigurable';
+
+  // Se for um bloco de questão de quiz, usar o painel especializado
+  if (isQuizQuestionBlock) {
+    return (
+      <QuestionPropertiesPanel
+        selectedBlock={selectedBlock}
+        onBlockPropertyChange={onBlockPropertyChange}
+        onNestedPropertyChange={onNestedPropertyChange}
+      />
+    );
+  }
+
   // Encontrar a definição do bloco selecionado
   const blockDefinition = getBlockDefinition(selectedBlock.type);
   
@@ -130,6 +148,9 @@ export const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
             <CardContent className="pt-6">
               <p className="text-sm text-gray-500">
                 Tipo de bloco não reconhecido: {selectedBlock.type}
+              </p>
+              <p className="text-xs text-gray-400 mt-2">
+                Para questões de quiz, use o tipo "quiz-question-configurable"
               </p>
             </CardContent>
           </Card>
