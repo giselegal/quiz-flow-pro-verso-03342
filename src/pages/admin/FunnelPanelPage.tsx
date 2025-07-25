@@ -575,28 +575,28 @@ const FunnelPanelPage: React.FC = () => {
   const filteredFunnels = funnels.filter(funnel => {
     const matchesSearch = funnel.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          (funnel.description || '').toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || funnel.status === statusFilter;
+    
+    let matchesStatus = true;
+    if (statusFilter === 'active') {
+      matchesStatus = funnel.is_published === true;
+    } else if (statusFilter === 'draft') {
+      matchesStatus = funnel.is_published === false;
+    } else if (statusFilter !== 'all') {
+      // Para outros filtros, manter comportamento padrão
+      matchesStatus = true;
+    }
+    
     return matchesSearch && matchesStatus;
   });
 
-  const getStatusBadgeVariant = (status: string) => {
-    switch (status) {
-      case 'active': return 'default';
-      case 'draft': return 'secondary';
-      case 'paused': return 'outline';
-      case 'archived': return 'destructive';
-      default: return 'secondary';
-    }
+  const getStatusBadgeVariant = (funnel: Funnel) => {
+    if (funnel.is_published) return 'default';
+    return 'secondary';
   };
 
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case 'active': return 'Ativo';
-      case 'draft': return 'Rascunho';
-      case 'paused': return 'Pausado';
-      case 'archived': return 'Arquivado';
-      default: return status;
-    }
+  const getStatusLabel = (funnel: Funnel) => {
+    if (funnel.is_published) return 'Ativo';
+    return 'Rascunho';
   };
 
   return (
@@ -740,8 +740,8 @@ const FunnelPanelPage: React.FC = () => {
                       {funnel.description || 'Sem descrição'}
                     </CardDescription>
                   </div>
-                  <Badge variant={getStatusBadgeVariant(funnel.status)}>
-                    {getStatusLabel(funnel.status)}
+                  <Badge variant={getStatusBadgeVariant(funnel)}>
+                    {getStatusLabel(funnel)}
                   </Badge>
                 </div>
               </CardHeader>
@@ -751,7 +751,7 @@ const FunnelPanelPage: React.FC = () => {
                     <Calendar className="w-4 h-4 mr-1" />
                     {new Date(funnel.created_at).toLocaleDateString('pt-BR')}
                   </span>
-                  <span>{funnel.pages_count || 0} páginas</span>
+                  <span>{funnel.settings?.pages_count || 0} páginas</span>
                 </div>
                 
                 <div className="flex gap-2">
