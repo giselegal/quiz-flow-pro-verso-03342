@@ -54,10 +54,10 @@ const FunnelPanelPage: React.FC = () => {
   });
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+    const [statusFilter, setStatusFilter] = useState<string>('all');
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [selectedFunnel, setSelectedFunnel] = useState<Funnel | null>(null);
+    const [selectedFunnel, setSelectedFunnel] = useState<Funnel | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
