@@ -16,36 +16,8 @@ export const DeleteBlockButton: React.FC<DeleteBlockButtonProps> = ({
     e.preventDefault();
     e.stopPropagation();
     
-    console.log(`🗑️ BOTÃO CLICADO - Bloco: ${blockId}`);
-    console.log('📋 Função onDelete recebida:', typeof onDelete);
-    
-    // FORÇAR EXCLUSÃO - tentar múltiplas abordagens
-    try {
-      // Método 1: Usar a função passada
-      if (typeof onDelete === 'function') {
-        console.log('🚀 Executando onDelete...');
-        onDelete(blockId);
-      }
-      
-      // Método 2: Tentar encontrar e remover o elemento DOM diretamente
-      setTimeout(() => {
-        const element = document.querySelector(`[data-block-id="${blockId}"]`) as HTMLElement;
-        if (element) {
-          console.log('🧨 FORÇANDO remoção visual do elemento');
-          element.style.display = 'none';
-          element.remove();
-        }
-      }, 100);
-      
-      // Método 3: Disparar evento customizado
-      window.dispatchEvent(new CustomEvent('forceDeleteBlock', { 
-        detail: { blockId } 
-      }));
-      
-      console.log(`✅ TODAS AS TENTATIVAS DE EXCLUSÃO EXECUTADAS PARA: ${blockId}`);
-      
-    } catch (error) {
-      console.error('❌ ERRO na exclusão:', error);
+    if (typeof onDelete === 'function') {
+      onDelete(blockId);
     }
   };
 
@@ -67,7 +39,7 @@ export const DeleteBlockButton: React.FC<DeleteBlockButtonProps> = ({
       title="Excluir Componente"
       aria-label="Excluir Componente"
     >
-      <Trash2 className="w-4 h-4" />
+      <Trash2 className="w-3 h-3" />
     </button>
   );
 };
