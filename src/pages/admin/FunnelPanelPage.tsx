@@ -238,11 +238,6 @@ const FunnelPanelPage: React.FC = () => {
     }
   };
 
-  // Navegar para o editor com funil específico
-  const navigateToEditor = (funnelId: string) => {
-    navigate(`/editor?funnelId=${funnelId}`);
-  };
-
   // Criar funil a partir de template
   const createFunnelFromTemplate = async (template: FunnelTemplate) => {
     try {
