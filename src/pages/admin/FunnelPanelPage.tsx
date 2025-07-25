@@ -260,22 +260,58 @@ const FunnelPanelPage: React.FC = () => {
     };
   };
 
-  // Criar funil a partir de template da base de dados (modo offline)
-  const createFunnelFromDBTemplate = async (templateFunnel: Funnel) => {
+  // Carregar template de 21 etapas existente ou navegar diretamente (modo offline)
+  const openDefaultTemplate = async () => {
+    try {
+      const templateId = 'default-quiz-funnel-21-steps';
+      console.log('🚀 Abrindo template de 21 etapas com ID fixo:', templateId);
+      
+      // Verificar se já existe o funil schema-driven para este template
+      const existingFunnel = await schemaDrivenFunnelService.loadFunnel(templateId);
+      
+      if (!existingFunnel) {
+        // Criar o template apenas uma vez com ID fixo
+        const funnelData = schemaDrivenFunnelService.createDefaultFunnel();
+        funnelData.id = templateId;
+        funnelData.name = 'Template: Funil Completo de Descoberta Pessoal';
+        funnelData.description = 'Template oficial de 21 etapas para descoberta de personalidade';
+        
+        await schemaDrivenFunnelService.saveFunnel(funnelData);
+        console.log('✅ Template de 21 etapas criado com ID fixo');
+      }
+      
+      // Navegar diretamente para o editor com o ID fixo
+      console.log('🧭 Navegando para o template no editor:', templateId);
+      navigateToEditor(templateId);
+      showToast('Abrindo template de 21 etapas...');
+      
+    } catch (error) {
+      console.error('❌ Erro ao abrir template:', error);
+      showToast('Erro ao carregar template', 'error');
+    }
+  };
+
+  // Criar NOVA CÓPIA do funil a partir de template (só quando duplicar)
+  const createFunnelFromDBTemplate = async (templateFunnel: Funnel, isDuplicate = false) => {
     try {
       console.log('🚀 Criando funil a partir do template da base de dados (OFFLINE):', templateFunnel.name);
       
       const user = await ensureAuthenticatedUser();
       const templateType = templateFunnel.settings?.template_type;
       
-      if (templateType === 'default-21-steps') {
-        // Para o template de 21 etapas, usar o serviço completo
+      if (templateType === 'default-21-steps' && !isDuplicate) {
+        // Se não for duplicação, apenas abrir o template existente
+        return openDefaultTemplate();
+      }
+      
+      if (templateType === 'default-21-steps' && isDuplicate) {
+        // Para duplicação, criar novo funil com ID único
         const funnelData = schemaDrivenFunnelService.createDefaultFunnel();
         
         const newFunnel: Funnel = {
-          id: 'funnel-' + Date.now(),
-          name: `Meu Quiz de Personalidade - ${new Date().toLocaleDateString('pt-BR')}`,
-          description: 'Funil personalizado baseado no template de 21 etapas',
+          id: 'funnel-copy-' + Date.now(),
+          name: `Cópia - Quiz de Personalidade - ${new Date().toLocaleDateString('pt-BR')}`,
+          description: 'Cópia personalizada do template de 21 etapas',
           status: 'draft',
           is_published: false,
           user_id: user.id,
@@ -293,7 +329,7 @@ const FunnelPanelPage: React.FC = () => {
         await schemaDrivenFunnelService.saveFunnel(funnelData);
         
         setFunnels(prev => [newFunnel, ...prev]);
-        showToast('Funil criado a partir do template de 21 etapas! (OFFLINE)');
+        showToast('Cópia do funil criada! (OFFLINE)');
         
         // Navegar para o editor
         console.log('🧭 Navegando para o editor:', newFunnel.id);
@@ -334,26 +370,28 @@ const FunnelPanelPage: React.FC = () => {
     }
   };
 
-  // Criar funil a partir de template (modo offline)
-  const createFunnelFromTemplate = async (template: FunnelTemplate) => {
-    console.log('🚀 Criando funil a partir do template (OFFLINE):', template.name);
+  // Criar funil a partir de template (modo offline) - só duplica quando necessário
+  const createFunnelFromTemplate = async (template: FunnelTemplate, isDuplicate = false) => {
+    console.log('🚀 Usando template (OFFLINE):', template.name, 'isDuplicate:', isDuplicate);
     
     try {
       const user = await ensureAuthenticatedUser();
       console.log('✅ Usuário autenticado (OFFLINE):', user.id);
       
-      if (template.id === 'default-quiz-funnel-21-steps') {
-        // Usar o serviço para criar o funil padrão de 21 etapas
-        console.log('📋 Criando funil padrão de 21 etapas...');
+      if (template.id === 'default-quiz-funnel-21-steps' && !isDuplicate) {
+        // Para o template de 21 etapas SEM duplicação, apenas abrir o existente
+        return openDefaultTemplate();
+      }
+      
+      if (template.id === 'default-quiz-funnel-21-steps' && isDuplicate) {
+        // Para DUPLICAÇÃO do template de 21 etapas, criar novo funil
+        console.log('📋 Criando CÓPIA do funil padrão de 21 etapas...');
         const funnelData = schemaDrivenFunnelService.createDefaultFunnel();
         
-        console.log('💾 Dados do funil criados:', funnelData);
-        
-        // Criar funil em modo offline
         const newFunnel: Funnel = {
-          id: 'funnel-' + Date.now(),
-          name: `Meu Quiz de Personalidade - ${new Date().toLocaleDateString('pt-BR')}`,
-          description: 'Funil de descoberta pessoal baseado no template de 21 etapas',
+          id: 'funnel-copy-' + Date.now(),
+          name: `Cópia - Quiz de Personalidade - ${new Date().toLocaleDateString('pt-BR')}`,
+          description: 'Cópia personalizada do template de 21 etapas',
           status: 'draft',
           is_published: false,
           user_id: user.id,
@@ -366,7 +404,7 @@ const FunnelPanelPage: React.FC = () => {
           }
         };
         
-        console.log('✅ Funil criado (OFFLINE):', newFunnel);
+        console.log('✅ Cópia do funil criada (OFFLINE):', newFunnel);
         
         // Salvar dados completos do funil com o ID correto
         funnelData.id = newFunnel.id;
@@ -375,14 +413,14 @@ const FunnelPanelPage: React.FC = () => {
         console.log('✅ Dados completos salvos no serviço');
         
         setFunnels(prev => [newFunnel, ...prev]);
-        showToast('Funil de 21 etapas criado com sucesso! (OFFLINE)');
+        showToast('Cópia do template de 21 etapas criada! (OFFLINE)');
         
         // Navegar para o editor
         console.log('🧭 Navegando para o editor:', newFunnel.id);
         navigateToEditor(newFunnel.id);
         
       } else {
-        // Criar funil baseado em outros templates
+        // Criar funil baseado em outros templates (sempre novo)
         console.log('📋 Criando funil para template:', template.name);
         
         const newFunnel: Funnel = {
@@ -745,7 +783,11 @@ const FunnelPanelPage: React.FC = () => {
             {(!searchTerm || statusFilter === 'all') && FUNNEL_TEMPLATES.map((template) => (
               <Card 
                 key={`template-${template.id}`}
-                className="border-2 border-[#B89B7A] bg-gradient-to-br from-[#F5F1EC] to-white hover:shadow-lg transition-all duration-200 transform hover:scale-105"
+                className={`border-2 transition-all duration-200 transform hover:scale-105 hover:shadow-lg ${
+                  template.id === 'default-quiz-funnel-21-steps' 
+                    ? 'border-[#B89B7A] bg-gradient-to-br from-[#B89B7A]/10 via-[#F5F1EC] to-white ring-2 ring-[#B89B7A]/20' 
+                    : 'border-[#B89B7A] bg-gradient-to-br from-[#F5F1EC] to-white'
+                }`}
               >
                 <CardHeader>
                   <div className="flex justify-between items-start">
@@ -753,6 +795,11 @@ const FunnelPanelPage: React.FC = () => {
                       <CardTitle className="text-lg text-[#B89B7A] font-bold flex items-center">
                         <template.icon className="w-5 h-5 mr-2" />
                         {template.name}
+                        {template.id === 'default-quiz-funnel-21-steps' && (
+                          <Badge className="ml-2 bg-[#B89B7A] text-white text-xs">
+                            PRINCIPAL
+                          </Badge>
+                        )}
                       </CardTitle>
                       <CardDescription className="mt-1 text-gray-600">
                         {template.description}
@@ -783,15 +830,46 @@ const FunnelPanelPage: React.FC = () => {
                     </span>
                   </div>
                   
+                  {template.id === 'default-quiz-funnel-21-steps' && (
+                    <div className="mb-4 p-3 bg-[#B89B7A]/10 rounded-lg border border-[#B89B7A]/20">
+                      <p className="text-xs text-[#8F7A6A] leading-relaxed">
+                        <strong>Funil Principal:</strong> Clique em "Usar Template" para abrir sempre o mesmo funil (ID fixo). 
+                        Clique em "Duplicar" apenas se quiser criar uma cópia personalizada.
+                      </p>
+                    </div>
+                  )}
+                  
                   <div className="flex gap-2">
-                    <Button 
-                      size="sm" 
-                      className="flex-1 bg-[#B89B7A] hover:bg-[#9F836A] text-white"
-                      onClick={() => createFunnelFromTemplate(template)}
-                    >
-                      <Plus className="w-4 h-4 mr-1" />
-                      Usar Template
-                    </Button>
+                    {template.id === 'default-quiz-funnel-21-steps' ? (
+                      <>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          className="flex-1"
+                          onClick={() => createFunnelFromTemplate(template, false)}
+                        >
+                          <Eye className="w-4 h-4 mr-1" />
+                          Usar Template
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          className="flex-1 bg-[#B89B7A] hover:bg-[#9F836A] text-white"
+                          onClick={() => createFunnelFromTemplate(template, true)}
+                        >
+                          <Copy className="w-4 h-4 mr-1" />
+                          Duplicar
+                        </Button>
+                      </>
+                    ) : (
+                      <Button 
+                        size="sm" 
+                        className="w-full bg-[#B89B7A] hover:bg-[#9F836A] text-white"
+                        onClick={() => createFunnelFromTemplate(template, false)}
+                      >
+                        <Plus className="w-4 h-4 mr-1" />
+                        Usar Template
+                      </Button>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -861,22 +939,46 @@ const FunnelPanelPage: React.FC = () => {
                       <div className="flex gap-2">
                         {isTemplate ? (
                           <>
-                            <Button 
-                              size="sm" 
-                              className="flex-1 bg-[#B89B7A] hover:bg-[#9F836A] text-white"
-                              onClick={() => createFunnelFromDBTemplate(funnel)}
-                            >
-                              <Plus className="w-4 h-4 mr-1" />
-                              Usar Template
-                            </Button>
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              onClick={() => navigateToEditor(funnel.id)}
-                            >
-                              <Eye className="w-4 h-4 mr-1" />
-                              Visualizar
-                            </Button>
+                            {funnel.settings?.template_type === 'default-21-steps' ? (
+                              <>
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  className="flex-1"
+                                  onClick={() => createFunnelFromDBTemplate(funnel, false)}
+                                >
+                                  <Eye className="w-4 h-4 mr-1" />
+                                  Usar Template
+                                </Button>
+                                <Button 
+                                  size="sm" 
+                                  className="flex-1 bg-[#B89B7A] hover:bg-[#9F836A] text-white"
+                                  onClick={() => createFunnelFromDBTemplate(funnel, true)}
+                                >
+                                  <Copy className="w-4 h-4 mr-1" />
+                                  Duplicar
+                                </Button>
+                              </>
+                            ) : (
+                              <>
+                                <Button 
+                                  size="sm" 
+                                  className="flex-1 bg-[#B89B7A] hover:bg-[#9F836A] text-white"
+                                  onClick={() => createFunnelFromDBTemplate(funnel, false)}
+                                >
+                                  <Plus className="w-4 h-4 mr-1" />
+                                  Usar Template
+                                </Button>
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  onClick={() => navigateToEditor(funnel.id)}
+                                >
+                                  <Eye className="w-4 h-4 mr-1" />
+                                  Visualizar
+                                </Button>
+                              </>
+                            )}
                           </>
                         ) : (
                           <>
@@ -1107,11 +1209,50 @@ const FunnelPanelPage: React.FC = () => {
 
                     {template.id === 'default-quiz-funnel-21-steps' && (
                       <div className="mt-3 p-3 bg-[#B89B7A]/10 rounded-lg">
-                        <p className="text-xs text-[#8F7A6A]">
+                        <p className="text-xs text-[#8F7A6A] mb-3">
                           <strong>Funil Principal:</strong> Este é o funil padrão completo com 21 etapas modulares 
                           para descoberta de personalidade e estilo pessoal.
                         </p>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              createFunnelFromTemplate(template, false);
+                            }}
+                            className="flex-1 text-xs"
+                          >
+                            <Eye className="w-3 h-3 mr-1" />
+                            Usar Template
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              createFunnelFromTemplate(template, true);
+                            }}
+                            className="flex-1 text-xs bg-[#B89B7A] hover:bg-[#9F836A] text-white"
+                          >
+                            <Copy className="w-3 h-3 mr-1" />
+                            Duplicar
+                          </Button>
+                        </div>
                       </div>
+                    )}
+                    
+                    {template.id !== 'default-quiz-funnel-21-steps' && (
+                      <Button
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          createFunnelFromTemplate(template, false);
+                        }}
+                        className="w-full mt-2 text-xs bg-[#B89B7A] hover:bg-[#9F836A] text-white"
+                      >
+                        <Plus className="w-3 h-3 mr-1" />
+                        Usar Template
+                      </Button>
                     )}
                   </CardContent>
                 </Card>
