@@ -434,8 +434,20 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           name: `Teste A/B - ${funnel.title || 'Sem título'}`,
           description: 'Teste A/B criado pelo editor',
           variants: [
-            { name: 'Original', data: funnel },
-            { name: 'Variante B', data: { ...funnel, title: `${funnel.title} - Variante B` } }
+            { 
+              name: 'Original',
+              type: 'control' as const,
+              quiz_data: funnel,
+              traffic_percentage: 50,
+              is_active: true
+            },
+            { 
+              name: 'Variante B',
+              type: 'variation' as const,
+              quiz_data: { ...funnel, title: `${funnel.title} - Variante B` },
+              traffic_percentage: 50,
+              is_active: true
+            }
           ]
         });
         showToast('Teste A/B criado com sucesso!', 'success');
