@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -197,12 +197,17 @@ const FunnelPanelPage: React.FC = () => {
     status: 'draft' as 'draft' | 'active' | 'paused' | 'archived'
   });
 
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
 
   // Toast simples como fallback
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
     console.log(`${type.toUpperCase()}: ${message}`);
     // TODO: Implementar toast real quando disponível
+  };
+
+  // Navegar para o editor com funil específico
+  const navigateToEditor = (funnelId: string) => {
+    setLocation(`/editor?funnelId=${funnelId}`);
   };  // Carregar funis e estatísticas
   useEffect(() => {
     loadFunnels();
