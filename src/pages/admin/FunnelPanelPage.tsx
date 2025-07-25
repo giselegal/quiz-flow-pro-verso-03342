@@ -242,6 +242,89 @@ const FunnelPanelPage: React.FC = () => {
     }
   };
 
+  // Criar funil a partir de template da base de dados
+  const createFunnelFromDBTemplate = async (templateFunnel: Funnel) => {
+    try {
+      const user = await ensureAuthenticatedUser();
+      if (!user) {
+        showToast('Erro de autenticação. Tente novamente.', 'error');
+        return;
+      }
+
+      const templateType = templateFunnel.settings?.template_type;
+      
+      if (templateType === 'default-21-steps') {
+        // Para o template de 21 etapas, usar o serviço completo
+        const funnelData = schemaDrivenFunnelService.createDefaultFunnel();
+        
+        const supabaseData = {
+          name: `Meu Quiz de Personalidade - ${new Date().toLocaleDateString('pt-BR')}`,
+          description: 'Funil personalizado baseado no template de 21 etapas',
+          is_published: false,
+          user_id: user.id,
+          settings: { 
+            pages_count: funnelData.pages.length,
+            template_type: 'custom',
+            based_on: 'default-21-steps'
+          }
+        };
+
+        const { data, error } = await supabase
+          .from('funnels')
+          .insert([supabaseData])
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        // Salvar dados completos do funil
+        funnelData.id = data.id;
+        await schemaDrivenFunnelService.saveFunnel(funnelData);
+        
+        setFunnels(prev => [data, ...prev]);
+        showToast('Funil criado a partir do template de 21 etapas!');
+        
+        // Navegar para o editor
+        navigateToEditor(data.id);
+        
+      } else {
+        // Para outros templates, criar estrutura básica
+        const templateName = templateFunnel.name.replace(' (TEMPLATE)', '');
+        const funnelData = {
+          name: `${templateName} - ${new Date().toLocaleDateString('pt-BR')}`,
+          description: `Funil personalizado baseado no template: ${templateName}`,
+          is_published: false,
+          user_id: user.id,
+          settings: { 
+            pages_count: templateFunnel.settings?.pages_count || 0,
+            template_type: 'custom',
+            based_on: templateType
+          }
+        };
+
+        const { data, error } = await supabase
+          .from('funnels')
+          .insert([funnelData])
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        setFunnels(prev => [data, ...prev]);
+        showToast(`Funil criado a partir do template!`);
+        
+        // Navegar para o editor
+        navigateToEditor(data.id);
+      }
+
+      loadStats();
+      
+    } catch (error) {
+      console.error('Erro ao criar funil do template:', error);
+      showToast('Erro ao criar funil do template. Tente novamente.', 'error');
+    }
+  };
+
   // Criar funil a partir de template
   const createFunnelFromTemplate = async (template: FunnelTemplate) => {
     try {
@@ -702,128 +785,189 @@ const FunnelPanelPage: React.FC = () => {
               </CardContent>
             </Card>
           ))
-        ) : filteredFunnels.length === 0 ? (
-          <div className="col-span-full text-center py-12">
-            <BarChart3 className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">Nenhum funil encontrado</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              {searchTerm || statusFilter !== 'all' 
-                ? 'Tente ajustar os filtros de busca.' 
-                : 'Comece criando seu primeiro funil.'}
-            </p>
-            {!searchTerm && statusFilter === 'all' && (
-              <Button 
-                className="mt-4" 
-                onClick={() => setIsCreateDialogOpen(true)}
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Criar Primeiro Funil
-              </Button>
-            )}
-          </div>
         ) : (
-          filteredFunnels.map((funnel) => {
-            const isTemplate = funnel.settings?.is_template === true;
-            return (
+          <>
+            {/* Templates Fixos */}
+            {(!searchTerm || statusFilter === 'all') && FUNNEL_TEMPLATES.map((template) => (
               <Card 
-                key={funnel.id} 
-                className={`hover:shadow-md transition-shadow ${isTemplate ? 'border-2 border-[#B89B7A] bg-gradient-to-br from-[#F5F1EC] to-white' : ''}`}
+                key={`template-${template.id}`}
+                className="border-2 border-[#B89B7A] bg-gradient-to-br from-[#F5F1EC] to-white hover:shadow-lg transition-all duration-200 transform hover:scale-105"
               >
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
-                      <CardTitle className={`text-lg ${isTemplate ? 'text-[#B89B7A] font-bold' : ''}`}>
-                        {funnel.name}
+                      <CardTitle className="text-lg text-[#B89B7A] font-bold flex items-center">
+                        <template.icon className="w-5 h-5 mr-2" />
+                        {template.name}
                       </CardTitle>
-                      <CardDescription className="mt-1">
-                        {funnel.description || 'Sem descrição'}
+                      <CardDescription className="mt-1 text-gray-600">
+                        {template.description}
                       </CardDescription>
-                      {isTemplate && (
-                        <div className="mt-2">
-                          <Badge className="bg-[#B89B7A] text-white">
-                            Template Pronto
-                          </Badge>
-                        </div>
-                      )}
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        <Badge className="bg-[#B89B7A] text-white text-xs">
+                          Template Pronto
+                        </Badge>
+                        <Badge variant="outline" className="text-xs">
+                          {template.steps} etapas
+                        </Badge>
+                        <Badge variant="outline" className="text-xs">
+                          ~{template.estimatedTime} min
+                        </Badge>
+                      </div>
                     </div>
-                    {!isTemplate && (
-                      <Badge variant={getStatusBadgeVariant(funnel)}>
-                        {getStatusLabel(funnel)}
-                      </Badge>
-                    )}
                   </div>
                 </CardHeader>
                 <CardContent>
                   <div className="flex justify-between items-center text-sm text-gray-500 mb-4">
-                    <span className="flex items-center">
-                      <Calendar className="w-4 h-4 mr-1" />
-                      {new Date(funnel.created_at).toLocaleDateString('pt-BR')}
+                    <span className="flex items-center capitalize">
+                      <Layout className="w-4 h-4 mr-1" />
+                      {template.category}
                     </span>
-                    <span>{funnel.settings?.pages_count || 0} páginas</span>
+                    <span className="flex items-center">
+                      <Clock className="w-4 h-4 mr-1" />
+                      {template.difficulty}
+                    </span>
                   </div>
                   
                   <div className="flex gap-2">
-                    {isTemplate ? (
-                      <>
-                        <Button 
-                          size="sm" 
-                          className="flex-1 bg-[#B89B7A] hover:bg-[#9F836A] text-white"
-                          onClick={() => createFunnelFromTemplate(funnel)}
-                        >
-                          <Plus className="w-4 h-4 mr-1" />
-                          Usar Template
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => navigateToEditor(funnel.id)}
-                        >
-                          <Eye className="w-4 h-4 mr-1" />
-                          Visualizar
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <Button variant="outline" size="sm" className="flex-1">
-                          <Eye className="w-4 h-4 mr-1" />
-                          Visualizar
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          className="flex-1 bg-[#B89B7A] hover:bg-[#9F836A] text-white"
-                          onClick={() => navigateToEditor(funnel.id)}
-                        >
-                          <Edit className="w-4 h-4 mr-1" />
-                          Editor
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => openEditDialog(funnel)}
-                        >
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => handleDuplicateFunnel(funnel)}
-                        >
-                          <Copy className="w-4 h-4" />
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => handleDeleteFunnel(funnel.id)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </>
-                    )}
+                    <Button 
+                      size="sm" 
+                      className="flex-1 bg-[#B89B7A] hover:bg-[#9F836A] text-white"
+                      onClick={() => createFunnelFromTemplate(template)}
+                    >
+                      <Plus className="w-4 h-4 mr-1" />
+                      Usar Template
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
-            );
-          })
+            ))}
+
+            {/* Funis Existentes */}
+            {filteredFunnels.length === 0 && !loading ? (
+              <div className="col-span-full text-center py-12">
+                <BarChart3 className="mx-auto h-12 w-12 text-gray-400" />
+                <h3 className="mt-2 text-sm font-medium text-gray-900">Nenhum funil encontrado</h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  {searchTerm || statusFilter !== 'all' 
+                    ? 'Tente ajustar os filtros de busca.' 
+                    : 'Comece criando seu primeiro funil usando um dos templates acima.'}
+                </p>
+                {!searchTerm && statusFilter === 'all' && (
+                  <Button 
+                    className="mt-4" 
+                    onClick={() => setIsCreateDialogOpen(true)}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Criar Funil Personalizado
+                  </Button>
+                )}
+              </div>
+            ) : (
+              filteredFunnels.map((funnel) => {
+                const isTemplate = funnel.settings?.is_template === true;
+                return (
+                  <Card 
+                    key={funnel.id} 
+                    className={`hover:shadow-md transition-shadow ${isTemplate ? 'border-2 border-[#B89B7A] bg-gradient-to-br from-[#F5F1EC] to-white' : ''}`}
+                  >
+                    <CardHeader>
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <CardTitle className={`text-lg ${isTemplate ? 'text-[#B89B7A] font-bold' : ''}`}>
+                            {funnel.name}
+                          </CardTitle>
+                          <CardDescription className="mt-1">
+                            {funnel.description || 'Sem descrição'}
+                          </CardDescription>
+                          {isTemplate && (
+                            <div className="mt-2">
+                              <Badge className="bg-[#B89B7A] text-white">
+                                Template Personalizado
+                              </Badge>
+                            </div>
+                          )}
+                        </div>
+                        {!isTemplate && (
+                          <Badge variant={getStatusBadgeVariant(funnel)}>
+                            {getStatusLabel(funnel)}
+                          </Badge>
+                        )}
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex justify-between items-center text-sm text-gray-500 mb-4">
+                        <span className="flex items-center">
+                          <Calendar className="w-4 h-4 mr-1" />
+                          {new Date(funnel.created_at).toLocaleDateString('pt-BR')}
+                        </span>
+                        <span>{funnel.settings?.pages_count || 0} páginas</span>
+                      </div>
+                      
+                      <div className="flex gap-2">
+                        {isTemplate ? (
+                          <>
+                            <Button 
+                              size="sm" 
+                              className="flex-1 bg-[#B89B7A] hover:bg-[#9F836A] text-white"
+                              onClick={() => createFunnelFromDBTemplate(funnel)}
+                            >
+                              <Plus className="w-4 h-4 mr-1" />
+                              Usar Template
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => navigateToEditor(funnel.id)}
+                            >
+                              <Eye className="w-4 h-4 mr-1" />
+                              Visualizar
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <Button variant="outline" size="sm" className="flex-1">
+                              <Eye className="w-4 h-4 mr-1" />
+                              Visualizar
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              className="flex-1 bg-[#B89B7A] hover:bg-[#9F836A] text-white"
+                              onClick={() => navigateToEditor(funnel.id)}
+                            >
+                              <Edit className="w-4 h-4 mr-1" />
+                              Editor
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => openEditDialog(funnel)}
+                            >
+                              <Edit className="w-4 h-4" />
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => handleDuplicateFunnel(funnel)}
+                            >
+                              <Copy className="w-4 h-4" />
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => handleDeleteFunnel(funnel.id)}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })
+            )}
+          </>
         )}
       </div>
 
