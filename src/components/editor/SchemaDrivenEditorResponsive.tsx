@@ -18,6 +18,7 @@ import {
   Home // Ícone para dashboard
 } from 'lucide-react';
 import { useSchemaEditorFixed as useSchemaEditor } from '@/hooks/useSchemaEditorFixed';
+import { useSupabaseEditor } from '@/hooks/useSupabaseEditor';
 import { SchemaDrivenComponentsSidebar } from './sidebar/SchemaDrivenComponentsSidebar';
 import { DynamicPropertiesPanel } from './panels/DynamicPropertiesPanel';
 import { DroppableCanvas } from './dnd/DroppableCanvas';

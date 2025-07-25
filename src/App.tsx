@@ -33,7 +33,6 @@ const DashboardPage = lazy(() => import("./pages/admin/DashboardPage"));
 
 // Editor Principal - Consolidado
 const SchemaDrivenEditorPage = lazy(() => import("./pages/SchemaDrivenEditorPage"));
-const BlockDefinitionsTest = lazy(() => import("./components/editor/tests/BlockDefinitionsTest"));
 const DragDropTestPage = lazy(() => import("./pages/DragDropTestPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
@@ -94,12 +93,6 @@ const App = () => {
                 <Route
                   path="/editor/:id"
                   component={SchemaDrivenEditorPage}
-                />
-                
-                {/* Teste de definições de blocos */}
-                <Route
-                  path="/test-blocks"
-                  component={BlockDefinitionsTest}
                 />
                 
                 {/* Teste de Drag & Drop */}
