@@ -24,7 +24,8 @@ import {
   Layout,
   Zap,
   Target,
-  Heart
+  Heart,
+  Clock
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { schemaDrivenFunnelService } from '../../services/schemaDrivenFunnelService';
@@ -193,7 +194,7 @@ const FunnelPanelPage: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    status: 'draft' as const
+    status: 'draft' as 'draft' | 'active' | 'paused' | 'archived'
   });
 
   const navigate = useNavigate();
@@ -446,7 +447,7 @@ const FunnelPanelPage: React.FC = () => {
     setFormData({
       name: funnel.name,
       description: funnel.description || '',
-      status: funnel.status as 'draft' | 'active' | 'paused' | 'archived'
+      status: funnel.status
     });
     setIsEditDialogOpen(true);
   };
@@ -484,12 +485,25 @@ const FunnelPanelPage: React.FC = () => {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Painel de Funis</h1>
-          <p className="text-gray-600 mt-1">Gerencie seus funis de conversão</p>
+          <p className="text-gray-600 mt-1">Gerencie seus funis de conversão e use templates prontos</p>
         </div>
-        <Button onClick={() => setIsCreateDialogOpen(true)}>
-          <Plus className="w-4 h-4 mr-2" />
-          Novo Funil
-        </Button>
+        <div className="flex gap-3">
+          <Button 
+            variant="outline" 
+            onClick={() => setIsTemplateDialogOpen(true)}
+            className="bg-white border-2 border-[#B89B7A] text-[#B89B7A] hover:bg-[#B89B7A] hover:text-white"
+          >
+            <Layout className="w-4 h-4 mr-2" />
+            Templates
+          </Button>
+          <Button 
+            onClick={() => setIsCreateDialogOpen(true)}
+            className="bg-[#B89B7A] hover:bg-[#9F836A] text-white"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Novo Funil
+          </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -624,6 +638,14 @@ const FunnelPanelPage: React.FC = () => {
                   <Button variant="outline" size="sm" className="flex-1">
                     <Eye className="w-4 h-4 mr-1" />
                     Visualizar
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    className="flex-1 bg-[#B89B7A] hover:bg-[#9F836A] text-white"
+                    onClick={() => navigateToEditor(funnel.id)}
+                  >
+                    <Edit className="w-4 h-4 mr-1" />
+                    Editor
                   </Button>
                   <Button 
                     variant="outline" 
@@ -763,6 +785,101 @@ const FunnelPanelPage: React.FC = () => {
             </Button>
             <Button onClick={handleEditFunnel} disabled={!formData.name.trim()}>
               Salvar Alterações
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Template Selection Dialog */}
+      <Dialog open={isTemplateDialogOpen} onOpenChange={setIsTemplateDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-[#432818]">Escolher Template de Funil</DialogTitle>
+            <DialogDescription>
+              Selecione um template pronto para começar rapidamente ou use o funil completo de 21 etapas.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
+            {FUNNEL_TEMPLATES.map((template) => {
+              const IconComponent = template.icon;
+              return (
+                <Card 
+                  key={template.id} 
+                  className={`cursor-pointer transition-all hover:shadow-lg border-2 ${
+                    selectedTemplate?.id === template.id 
+                      ? 'border-[#B89B7A] bg-[#F5F1EC]' 
+                      : 'border-gray-200 hover:border-[#B89B7A]'
+                  }`}
+                  onClick={() => setSelectedTemplate(template)}
+                >
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-lg bg-[#B89B7A] text-white">
+                          <IconComponent className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-lg text-[#432818]">{template.name}</CardTitle>
+                          <Badge 
+                            variant={template.difficulty === 'easy' ? 'secondary' : 
+                                   template.difficulty === 'medium' ? 'default' : 'destructive'}
+                            className="mt-1"
+                          >
+                            {template.difficulty === 'easy' ? 'Fácil' : 
+                             template.difficulty === 'medium' ? 'Médio' : 'Avançado'}
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <p className="text-sm text-[#8F7A6A] mb-4 line-clamp-3">{template.description}</p>
+                    
+                    <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
+                      <div className="flex items-center gap-2 text-[#8F7A6A]">
+                        <Target className="w-4 h-4" />
+                        <span>{template.steps} etapas</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-[#8F7A6A]">
+                        <Clock className="w-4 h-4" />
+                        <span>~{template.estimatedTime} min</span>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-1 mb-4">
+                      {template.tags.slice(0, 3).map((tag) => (
+                        <Badge key={tag} variant="outline" className="text-xs">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+
+                    {template.id === 'default-quiz-funnel-21-steps' && (
+                      <div className="mt-3 p-3 bg-[#B89B7A]/10 rounded-lg">
+                        <p className="text-xs text-[#8F7A6A]">
+                          <strong>Funil Principal:</strong> Este é o funil padrão completo com 21 etapas modulares 
+                          para descoberta de personalidade e estilo pessoal.
+                        </p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsTemplateDialogOpen(false)}>
+              Cancelar
+            </Button>
+            <Button 
+              onClick={() => selectedTemplate && createFunnelFromTemplate(selectedTemplate)}
+              disabled={!selectedTemplate}
+              className="bg-[#B89B7A] hover:bg-[#9F836A] text-white"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Criar Funil
             </Button>
           </DialogFooter>
         </DialogContent>
