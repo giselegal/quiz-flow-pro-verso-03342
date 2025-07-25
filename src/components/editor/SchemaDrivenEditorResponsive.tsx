@@ -15,16 +15,27 @@ import {
   Undo2, // Novo ícone para desfazer
   Redo2, // Novo ícone para refazer
   ArrowLeft, // Ícone para voltar
-  Home // Ícone para dashboard
+  Home, // Ícone para dashboard
+  Bug, // Ícone para diagnóstico
+  Layout as TemplateIcon, // Ícone para templates
+  GitBranch, // Ícone para versionamento
+  FileText as ReportIcon, // Ícone para relatórios
+  BarChart3 // Ícone para A/B testing
 } from 'lucide-react';
-import { useSchemaEditorFixed as useSchemaEditor } from '@/hooks/useSchemaEditorFixed';
-import { useSupabaseEditor } from '@/hooks/useSupabaseEditor';
+import { useSchemaEditorFixed as useSchemaEditor } from '../../hooks/useSchemaEditorFixed';
+import { useSupabaseEditor } from '../../hooks/useSupabaseEditor';
 import { SchemaDrivenComponentsSidebar } from './sidebar/SchemaDrivenComponentsSidebar';
 import { DynamicPropertiesPanel } from './panels/DynamicPropertiesPanel';
 import { DroppableCanvas } from './dnd/DroppableCanvas';
 import { TestDeleteComponent } from './TestDeleteComponent';
-import { blockDefinitions } from '@/config/blockDefinitions';
+import { blockDefinitions } from '../../config/blockDefinitions';
 import { useLocation } from 'wouter';
+import { saveDiagnostic } from '../../utils/saveDiagnostic';
+// Importar novos serviços e componentes
+import { TemplateSelector } from '../templates/TemplateSelector';
+import { VersioningService } from '../../services/versioningService';
+import { ReportService } from '../../services/reportService';
+import { ABTestService } from '../../services/abTestService';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -81,6 +92,12 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const [undoStack, setUndoStack] = useState<any[]>([]);
   const [redoStack, setRedoStack] = useState<any[]>([]);
   const [isPublishing, setIsPublishing] = useState(false);
+
+  // Estados para as novas funcionalidades
+  const [showTemplateSelector, setShowTemplateSelector] = useState(false);
+  const [showVersionHistory, setShowVersionHistory] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [showABTestModal, setShowABTestModal] = useState(false);
 
   // Hook principal do editor
   const {
@@ -266,6 +283,25 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     saveFunnel(true);
     showToast('Funil salvo com sucesso!', 'success');
   }, [saveFunnel, showToast, funnel, isSaving]);
+
+  // Função de diagnóstico do salvamento
+  const handleDiagnostic = useCallback(async () => {
+    console.log('🏥 Executando diagnóstico do sistema de salvamento...');
+    showToast('Executando diagnóstico...', 'info');
+    
+    try {
+      const results = await saveDiagnostic.runFullDiagnostic();
+      
+      if (results.supabaseConnection.success && results.funnelSave.success) {
+        showToast('✅ Sistema de salvamento funcionando!', 'success');
+      } else {
+        showToast('❌ Problemas detectados no salvamento', 'error');
+      }
+    } catch (error) {
+      console.error('Erro no diagnóstico:', error);
+      showToast('Erro ao executar diagnóstico', 'error');
+    }
+  }, [showToast]);
 
   // Função de publicação
   const handlePublish = useCallback(async () => {
@@ -590,6 +626,17 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
            >
              <Save className="w-4 h-4 sm:mr-1" />
              <span className="hidden sm:inline">{isSaving ? 'Salvando...' : 'Salvar'}</span>
+           </Button>
+
+           <Button
+             size="sm"
+             onClick={handleDiagnostic}
+             variant="outline"
+             className="px-3"
+             title="Diagnóstico do Sistema de Salvamento"
+           >
+             <Bug className="w-4 h-4 sm:mr-1" />
+             <span className="hidden sm:inline">Diagnóstico</span>
            </Button>
         </div>
       </div>

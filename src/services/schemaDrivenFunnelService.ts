@@ -600,7 +600,7 @@ class SchemaDrivenFunnelService {
     return null;
   }
 
-  // Backend operations
+  // Backend operations - USANDO SUPABASE
   async saveFunnel(funnel: SchemaDrivenFunnelData, isAutoSave: boolean = false): Promise<SchemaDrivenFunnelData> {
     console.log('💾 [DEBUG] saveFunnel called:', { 
       funnelId: funnel.id, 
@@ -610,53 +610,79 @@ class SchemaDrivenFunnelService {
     });
 
     try {
-      // Tentar salvar no backend primeiro
-      console.log('🌐 [DEBUG] Sending PUT request to backend...');
-      const requestBody = {
-        ...funnel,
-        lastModified: new Date().toISOString()
-      };
-      console.log('📤 [DEBUG] Request body:', JSON.stringify(requestBody, null, 2));
-
-      const response = await fetch(`${this.baseUrl}/funnels/${funnel.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
+      // Salvar no Supabase
+      console.log('🌐 [DEBUG] Saving to Supabase...');
+      
+      const supabaseData = {
+        id: funnel.id,
+        title: funnel.name,
+        description: funnel.description || '',
+        category: 'geral',
+        difficulty: 'medium' as const,
+        data: {
+          funnel: funnel,
+          pages: funnel.pages || [],
+          config: funnel.config || {}
         },
-        body: JSON.stringify(requestBody),
-      });
+        is_published: funnel.config?.isPublished || false,
+        updated_at: new Date().toISOString()
+      };
 
-      console.log('📥 [DEBUG] Response status:', response.status, response.statusText);
+      console.log('� [DEBUG] Supabase data:', supabaseData);
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('❌ [DEBUG] Backend error response:', errorText);
-        throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
+      // Verificar se já existe
+      const { data: existing } = await supabase
+        .from('quizzes')
+        .select('id')
+        .eq('id', funnel.id)
+        .single();
+
+      let result;
+      if (existing) {
+        // Atualizar existente
+        const { data, error } = await supabase
+          .from('quizzes')
+          .update(supabaseData)
+          .eq('id', funnel.id)
+          .select()
+          .single();
+        
+        if (error) throw error;
+        result = data;
+      } else {
+        // Criar novo
+        const { data, error } = await supabase
+          .from('quizzes')
+          .insert([{ ...supabaseData, created_at: new Date().toISOString() }])
+          .select()
+          .single();
+        
+        if (error) throw error;
+        result = data;
       }
 
-      const result = await response.json();
-      console.log('✅ [DEBUG] Backend response:', result);
+      console.log('✅ [DEBUG] Supabase response:', result);
 
       const savedFunnel = {
-        ...result.data,
-        lastModified: new Date(result.data.lastModified),
-        createdAt: new Date(result.data.createdAt)
+        ...funnel,
+        lastModified: new Date(),
+        version: funnel.version + (isAutoSave ? 0 : 1)
       };
 
-      // Salvar versão se sucesso no backend
+      // Salvar versão se sucesso no Supabase
       if (!isAutoSave) {
-        this.saveVersion(savedFunnel, 'Manual save from backend');
+        this.saveVersion(savedFunnel, 'Manual save to Supabase');
       }
 
-      // Atualizar localStorage com dados do backend
+      // Atualizar localStorage com dados salvos
       this.saveLocalFunnel(savedFunnel);
       
-      console.log('☁️ [DEBUG] Funnel saved to backend successfully');
+      console.log('☁️ [DEBUG] Funnel saved to Supabase successfully');
       return savedFunnel;
 
     } catch (error) {
-      console.error('❌ [DEBUG] Backend save failed:', error);
-      console.warn('⚠️ Backend unavailable, saving locally only:', error);
+      console.error('❌ [DEBUG] Supabase save failed:', error);
+      console.warn('⚠️ Supabase unavailable, saving locally only:', error);
       
       // Fallback para localStorage
       const updatedFunnel = {
@@ -684,15 +710,34 @@ class SchemaDrivenFunnelService {
     }
 
     try {
-      // Tentar carregar do backend primeiro
-      const response = await fetch(`${this.baseUrl}/funnels/${funnelId}`);
+      // Tentar carregar do Supabase primeiro
+      console.log('🌐 [DEBUG] Loading from Supabase...');
+      const { data, error } = await supabase
+        .from('quizzes')
+        .select('*')
+        .eq('id', funnelId)
+        .single();
       
-      if (response.ok) {
-        const result = await response.json();
-        const funnel = {
-          ...result.data,
-          lastModified: new Date(result.data.lastModified),
-          createdAt: new Date(result.data.createdAt)
+      if (error) {
+        console.warn('⚠️ Supabase error:', error);
+        throw error;
+      }
+
+      if (data) {
+        console.log('✅ [DEBUG] Found in Supabase:', data);
+        
+        // Converter dados do Supabase para o formato esperado
+        const funnel: SchemaDrivenFunnelData = {
+          id: data.id,
+          name: data.title,
+          description: data.description || '',
+          pages: data.data?.pages || [],
+          config: data.data?.config || {},
+          theme: 'default',
+          isPublished: data.is_published || false,
+          version: 1,
+          lastModified: new Date(data.updated_at),
+          createdAt: new Date(data.created_at)
         };
         
         // Atualizar localStorage com dados mais recentes
@@ -701,11 +746,11 @@ class SchemaDrivenFunnelService {
         } catch (saveError) {
           console.warn('⚠️ Failed to save to localStorage, continuing without cache:', saveError);
         }
-        console.log('☁️ Funnel loaded from backend');
+        console.log('☁️ Funnel loaded from Supabase');
         return funnel;
       }
     } catch (error) {
-      console.warn('⚠️ Backend unavailable, trying local storage:', error);
+      console.warn('⚠️ Supabase unavailable, trying local storage:', error);
     }
 
     // Fallback para localStorage
@@ -715,6 +760,7 @@ class SchemaDrivenFunnelService {
       return localFunnel;
     }
 
+    console.log('❌ Funnel not found in Supabase or localStorage');
     return null;
   }
 
@@ -729,29 +775,41 @@ class SchemaDrivenFunnelService {
     };
 
     try {
-      // Tentar criar no backend
-      const response = await fetch(`${this.baseUrl}/funnels`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      // Tentar criar no Supabase
+      console.log('🌐 [DEBUG] Creating in Supabase...');
+      
+      const supabaseData = {
+        id: funnel.id,
+        title: funnel.name,
+        description: funnel.description || '',
+        category: 'geral',
+        difficulty: 'medium' as const,
+        data: {
+          funnel: funnel,
+          pages: funnel.pages || [],
+          config: funnel.config || {}
         },
-        body: JSON.stringify(funnel),
-      });
+        is_published: funnel.isPublished || false,
+        created_at: now.toISOString(),
+        updated_at: now.toISOString()
+      };
 
-      if (response.ok) {
-        const result = await response.json();
-        const createdFunnel = {
-          ...result.data,
-          lastModified: new Date(result.data.lastModified),
-          createdAt: new Date(result.data.createdAt)
-        };
-        
-        this.saveLocalFunnel(createdFunnel);
-        this.saveVersion(createdFunnel, 'Initial creation');
-        console.log('☁️ Funnel created in backend');
-        return createdFunnel;
-      }
+      const { data: result, error } = await supabase
+        .from('quizzes')
+        .insert([supabaseData])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      console.log('✅ [DEBUG] Created in Supabase:', result);
+      
+      this.saveLocalFunnel(funnel);
+      this.saveVersion(funnel, 'Initial creation');
+      console.log('☁️ Funnel created in Supabase');
+      return funnel;
     } catch (error) {
+      console.warn('⚠️ Supabase unavailable, creating locally only:', error);
       console.warn('⚠️ Backend unavailable, creating locally:', error);
     }
 
