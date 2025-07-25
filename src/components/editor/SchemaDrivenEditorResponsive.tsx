@@ -36,6 +36,7 @@ import { TemplateSelector } from '../templates/TemplateSelector';
 import { VersioningService } from '../../services/versioningService';
 import { ReportService } from '../../services/reportService';
 import { ABTestService } from '../../services/abTestService';
+import { useAnalytics } from '../../services/analyticsService';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -84,6 +85,9 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
   // Hook de navegação
   const [, setLocation] = useLocation();
+
+  // Analytics hook
+  const { trackPageView, trackButtonClick, trackQuizStart } = useAnalytics();
 
   // Estado para o Toast
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
@@ -280,9 +284,10 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     console.log('🔘 [DEBUG] handleSave button clicked!');
     console.log('🔘 [DEBUG] Current funnel:', funnel);
     console.log('🔘 [DEBUG] isSaving state:', isSaving);
+    trackButtonClick(funnelId || 'new', 'save-button', 'Salvar');
     saveFunnel(true);
     showToast('Funil salvo com sucesso!', 'success');
-  }, [saveFunnel, showToast, funnel, isSaving]);
+  }, [saveFunnel, showToast, funnel, isSaving, trackButtonClick, funnelId]);
 
   // Função de diagnóstico do salvamento
   const handleDiagnostic = useCallback(async () => {
