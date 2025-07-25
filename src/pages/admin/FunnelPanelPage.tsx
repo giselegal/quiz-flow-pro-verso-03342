@@ -40,6 +40,10 @@ interface Funnel {
   pages_count?: number;
   views?: number;
   conversions?: number;
+  user_id?: string;
+  is_published?: boolean;
+  version?: number;
+  settings?: any;
 }
 
 interface FunnelStats {
@@ -274,7 +278,7 @@ const FunnelPanelPage: React.FC = () => {
         if (error) throw error;
         
         // Salvar dados completos do funil
-        await schemaDrivenFunnelService.saveFunnel(funnelData.id, funnelData);
+        await schemaDrivenFunnelService.saveFunnel(funnelData);
         
         setFunnels(prev => [data, ...prev]);
         showToast('Funil padrão de 21 etapas criado com sucesso!');
@@ -325,45 +329,8 @@ const FunnelPanelPage: React.FC = () => {
     try {
       setLoading(true);
       
-      // Primeiro, verificar se o funil padrão de 21 etapas existe
-      const DEFAULT_FUNNEL_ID = 'default-quiz-funnel-21-steps';
-      const { data: existingDefault, error: checkError } = await supabase
-        .from('funnels')
-        .select('*')
-        .eq('id', DEFAULT_FUNNEL_ID)
-        .single();
-
-      // Se não existe, criar o funil padrão
-      if (!existingDefault && checkError?.code === 'PGRST116') {
-        try {
-          const user = await ensureAuthenticatedUser();
-          if (user) {
-            const defaultFunnelData = schemaDrivenFunnelService.createDefaultFunnel();
-            
-            const supabaseData = {
-              id: defaultFunnelData.id,
-              name: defaultFunnelData.name,
-              description: defaultFunnelData.description,
-              status: 'active' as const,
-              user_id: user.id,
-              pages_count: defaultFunnelData.pages.length,
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString()
-            };
-
-            await supabase
-              .from('funnels')
-              .upsert(supabaseData);
-              
-            // Salvar dados completos do funil
-            await schemaDrivenFunnelService.saveFunnel(defaultFunnelData.id, defaultFunnelData);
-            
-            console.log('✅ Funil padrão de 21 etapas criado automaticamente');
-          }
-        } catch (error) {
-          console.error('Erro ao criar funil padrão:', error);
-        }
-      }
+      // Criar templates principais como funis padrão se não existirem
+      await createDefaultTemplatesIfNeeded();
 
       // Carregar todos os funis
       const { data, error } = await supabase
@@ -380,16 +347,105 @@ const FunnelPanelPage: React.FC = () => {
     }
   };
 
+  const createDefaultTemplatesIfNeeded = async () => {
+    try {
+      const user = await ensureAuthenticatedUser();
+      if (!user) return;
+
+      // Template principal de 21 etapas
+      const DEFAULT_FUNNEL_ID = 'default-quiz-funnel-21-steps';
+      const { data: existingDefault } = await supabase
+        .from('funnels')
+        .select('id')
+        .eq('id', DEFAULT_FUNNEL_ID)
+        .single();
+
+      if (!existingDefault) {
+        const defaultFunnelData = schemaDrivenFunnelService.createDefaultFunnel();
+        
+        const supabaseData = {
+          name: '🎯 ' + defaultFunnelData.name,
+          description: defaultFunnelData.description + ' (Template Principal)',
+          is_published: true,
+          user_id: user.id,
+          settings: { 
+            pages_count: defaultFunnelData.pages.length,
+            template_type: 'default-21-steps'
+          }
+        };
+
+        const { data: savedFunnel } = await supabase.from('funnels').insert(supabaseData).select().single();
+        if (savedFunnel) {
+          // Salvar dados completos do funil usando o ID gerado pelo Supabase
+          defaultFunnelData.id = savedFunnel.id;
+          await schemaDrivenFunnelService.saveFunnel(defaultFunnelData);
+        }
+        
+        console.log('✅ Template principal de 21 etapas criado');
+      }
+
+      // Template rápido de personalidade
+      const QUICK_TEMPLATE_ID = 'quick-personality-quiz-template';
+      const { data: existingQuick } = await supabase
+        .from('funnels')
+        .select('id')
+        .eq('settings->template_type', 'quick-personality')
+        .single();
+
+      if (!existingQuick) {
+        const quickTemplate = {
+          name: '⚡ Quiz Rápido de Personalidade',
+          description: 'Template básico para descobrir traços de personalidade em 7 etapas (Template)',
+          is_published: true,
+          user_id: user.id,
+          settings: { 
+            pages_count: 7,
+            template_type: 'quick-personality'
+          }
+        };
+
+        await supabase.from('funnels').insert(quickTemplate);
+        console.log('✅ Template rápido criado');
+      }
+
+      // Template de estilo de vida
+      const { data: existingLifestyle } = await supabase
+        .from('funnels')
+        .select('id')
+        .eq('settings->template_type', 'lifestyle-assessment')
+        .single();
+
+      if (!existingLifestyle) {
+        const lifestyleTemplate = {
+          name: '❤️ Avaliação de Estilo de Vida',
+          description: 'Descubra qual estilo de vida combina mais com você em 12 etapas (Template)',
+          is_published: true,
+          user_id: user.id,
+          settings: { 
+            pages_count: 12,
+            template_type: 'lifestyle-assessment'
+          }
+        };
+
+        await supabase.from('funnels').insert(lifestyleTemplate);
+        console.log('✅ Template de estilo de vida criado');
+      }
+
+    } catch (error) {
+      console.error('Erro ao criar templates padrão:', error);
+    }
+  };
+
   const loadStats = async () => {
     try {
       const { data: funnelsData, error } = await supabase
         .from('funnels')
-        .select('status');
+        .select('is_published');
 
       if (error) throw error;
 
       const totalFunnels = funnelsData?.length || 0;
-      const activeFunnels = funnelsData?.filter(f => f.status === 'active').length || 0;
+      const activeFunnels = funnelsData?.filter(f => f.is_published).length || 0;
 
       setStats({
         total_funnels: totalFunnels,
@@ -411,14 +467,14 @@ const FunnelPanelPage: React.FC = () => {
         return;
       }
 
-      const funnelId = `funnel-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
       const funnelData = {
         ...formData,
-        id: funnelId,
         user_id: user.id,
-        pages_count: 0,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        is_published: false,
+        settings: { 
+          pages_count: 0,
+          template_type: 'custom'
+        }
       };
 
       const { data, error } = await supabase
@@ -437,7 +493,7 @@ const FunnelPanelPage: React.FC = () => {
       showToast('Funil criado com sucesso!');
       
       // Navegar para o editor
-      navigateToEditor(funnelId);
+      navigateToEditor(data.id);
     } catch (error) {
       console.error('Erro ao criar funil:', error);
       showToast('Erro ao criar funil. Tente novamente.', 'error');
