@@ -19,6 +19,7 @@ import RichTextBlock from '@/components/editor/blocks/RichTextBlock';
 import QuizStepBlock from '@/components/editor/blocks/QuizStepBlock';
 import QuizStartPageBlock from '@/components/editor/blocks/QuizStartPageBlock';
 import QuizQuestionBlock from '@/components/editor/blocks/QuizQuestionBlock';
+import QuizQuestionBlockConfigurable from '@/components/editor/blocks/QuizQuestionBlockConfigurable';
 import QuestionMultipleBlock from '@/components/editor/blocks/QuestionMultipleBlock';
 import StrategicQuestionBlock from '@/components/editor/blocks/StrategicQuestionBlock';
 import QuizTransitionBlock from '@/components/editor/blocks/QuizTransitionBlock';
@@ -64,6 +65,8 @@ export const EDITOR_BLOCKS_MAP: Record<string, ComponentType<any>> = {
   'QuizStartPageBlock': QuizStartPageBlock,
   'quiz-question': QuizQuestionBlock,
   'QuizQuestionBlock': QuizQuestionBlock,
+  'quiz-question-configurable': QuizQuestionBlockConfigurable,
+  'QuizQuestionBlockConfigurable': QuizQuestionBlockConfigurable,
   'question-multiple': QuestionMultipleBlock,
   'QuestionMultipleBlock': QuestionMultipleBlock,
   'strategic-question': StrategicQuestionBlock,

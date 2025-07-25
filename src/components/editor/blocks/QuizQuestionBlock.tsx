@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { CheckCircle, Heart, ArrowRight, ArrowLeft } from 'lucide-react';
+import { CheckCircle, Heart, ArrowRight, ArrowLeft, Settings, Star, Tag, Edit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { 
-  OptionsGridUtils, 
-  VISUAL_STATES_CONFIG,
-  ANIMATION_CONFIG,
-  ACCESSIBILITY_CONFIG,
-  VALIDATION_CONFIG,
-  type OptionItem 
-} from '@/config/optionsGridConfig';
 import { useEditorQuizContext } from '../../../contexts/EditorQuizContext';
+
+interface QuestionOption {
+  id: string;
+  text: string;
+  imageUrl?: string;
+  styleCategory?: string;
+  points?: number;
+  keywords?: string[];
+}
 
 interface QuizQuestionBlockProps {
   question?: string;
-  options?: Array<{ id: string; text: string; imageUrl?: string }>;
+  options?: Array<QuestionOption>;
   allowMultiple?: boolean;
   showImages?: boolean;
   maxSelections?: number;
@@ -28,21 +29,50 @@ interface QuizQuestionBlockProps {
   block?: any;
   isSelected?: boolean;
   onPropertyChange?: (key: string, value: any) => void;
+  isEditing?: boolean;
+  showPropertiesPanel?: boolean;
 }
 
 const QuizQuestionBlock = ({
   question = 'Etapa 1: Qual dessas opções representa melhor seu estilo predominante?',
   options = [
-    { id: '1', text: 'Clássico e elegante', imageUrl: 'https://res.cloudinary.com/dtx0k4ue6/image/upload/v1710847234/estilo-classico_urkpfx.jpg' },
-    { id: '2', text: 'Moderno e descolado', imageUrl: 'https://res.cloudinary.com/dtx0k4ue6/image/upload/v1710847235/estilo-moderno_hqxmzv.jpg' },
-    { id: '3', text: 'Natural e autêntico', imageUrl: 'https://res.cloudinary.com/dtx0k4ue6/image/upload/v1710847236/estilo-natural_wnxkdi.jpg' },
-    { id: '4', text: 'Casual e descontraído' }
+    { 
+      id: '1', 
+      text: 'Clássico e elegante', 
+      imageUrl: 'https://res.cloudinary.com/dtx0k4ue6/image/upload/v1710847234/estilo-classico_urkpfx.jpg',
+      styleCategory: 'Clássico',
+      points: 2,
+      keywords: ['elegante', 'sofisticado', 'atemporal']
+    },
+    { 
+      id: '2', 
+      text: 'Moderno e descolado', 
+      imageUrl: 'https://res.cloudinary.com/dtx0k4ue6/image/upload/v1710847235/estilo-moderno_hqxmzv.jpg',
+      styleCategory: 'Contemporâneo',
+      points: 3,
+      keywords: ['moderno', 'descolado', 'inovador']
+    },
+    { 
+      id: '3', 
+      text: 'Natural e autêntico', 
+      imageUrl: 'https://res.cloudinary.com/dtx0k4ue6/image/upload/v1710847236/estilo-natural_wnxkdi.jpg',
+      styleCategory: 'Natural',
+      points: 1,
+      keywords: ['natural', 'autêntico', 'orgânico']
+    },
+    { 
+      id: '4', 
+      text: 'Casual e descontraído',
+      styleCategory: 'Natural',
+      points: 1,
+      keywords: ['casual', 'descontraído', 'relaxado']
+    }
   ],
   allowMultiple = true,
   showImages = true,
   maxSelections = 3,
-  autoAdvance = true, // AUTO-AVANÇO ATIVADO por padrão
-  autoAdvanceDelay = 1500, // 1.5 segundos de delay
+  autoAdvance = true,
+  autoAdvanceDelay = 1500,
   onNext,
   onBack,
   progressPercent = 0,
@@ -50,10 +80,35 @@ const QuizQuestionBlock = ({
   className,
   block,
   isSelected = false,
-  onPropertyChange
+  onPropertyChange,
+  isEditing = false,
+  showPropertiesPanel = false
 }: QuizQuestionBlockProps) => {
   const [selectedOptions, setSelectedOptions] = useState<Set<string>>(new Set());
   const [isAutoAdvancing, setIsAutoAdvancing] = useState(false);
+  const [showProperties, setShowProperties] = useState(showPropertiesPanel);
+
+  // Configurações visuais
+  const transition = 'all 0.3s ease-in-out';
+  const selectedBg = 'bg-blue-100';
+  const selectedBorder = 'border-blue-500';
+  const hoverBg = 'hover:bg-gray-50';
+  const hoverBorder = 'hover:border-gray-300';
+
+  // Cores das categorias
+  const getCategoryColor = (category?: string) => {
+    const colors: Record<string, string> = {
+      'Natural': '#8B7355',
+      'Clássico': '#4A4A4A',
+      'Contemporâneo': '#2563EB',
+      'Elegante': '#7C3AED',
+      'Romântico': '#EC4899',
+      'Sexy': '#EF4444',
+      'Dramático': '#1F2937',
+      'Criativo': '#F59E0B',
+    };
+    return colors[category || ''] || '#6B7280';
+  };
 
   // Tentar usar context do editor, mas não falhar se não estiver disponível
   const editorQuizContext = (() => {
