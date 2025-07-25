@@ -249,71 +249,38 @@ const FunnelPanelPage: React.FC = () => {
 
   // Garantir que existe um usuário autenticado (modo offline)
   const ensureAuthenticatedUser = async () => {
-    try {
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      
-      if (user) {
-        console.log('✅ Usuário autenticado encontrado:', user.id);
-        return user;
-      }
-
-      // Se não há usuário, tentar criar um usuário anônimo temporário
-      console.log('🔐 Tentando criar usuário anônimo...');
-      const { data: anonUser, error: anonError } = await supabase.auth.signInAnonymously();
-      
-      if (anonError) {
-        console.error('❌ Erro ao criar usuário anônimo:', anonError);
-        
-        // Modo offline - simular usuário
-        console.log('🔧 Modo offline ativado - simulando usuário');
-        return {
-          id: 'offline-user-' + Date.now(),
-          email: 'offline@local.dev',
-          app_metadata: {},
-          user_metadata: {},
-          aud: 'authenticated',
-          created_at: new Date().toISOString()
-        };
-      }
-
-      console.log('✅ Usuário anônimo criado:', anonUser.user?.id);
-      return anonUser.user;
-    } catch (error) {
-      console.error('❌ Erro de autenticação geral:', error);
-      
-      // Modo offline - simular usuário
-      console.log('🔧 Modo offline ativado - simulando usuário');
-      return {
-        id: 'offline-user-' + Date.now(),
-        email: 'offline@local.dev',
-        app_metadata: {},
-        user_metadata: {},
-        aud: 'authenticated',
-        created_at: new Date().toISOString()
-      };
-    }
+    console.log(' Modo offline ativado - simulando usuário');
+    return {
+      id: 'offline-user-' + Date.now(),
+      email: 'offline@local.dev',
+      app_metadata: {},
+      user_metadata: {},
+      aud: 'authenticated',
+      created_at: new Date().toISOString()
+    };
   };
 
-  // Criar funil a partir de template da base de dados
+  // Criar funil a partir de template da base de dados (modo offline)
   const createFunnelFromDBTemplate = async (templateFunnel: Funnel) => {
     try {
+      console.log('🚀 Criando funil a partir do template da base de dados (OFFLINE):', templateFunnel.name);
+      
       const user = await ensureAuthenticatedUser();
-      if (!user) {
-        showToast('Erro de autenticação. Tente novamente.', 'error');
-        return;
-      }
-
       const templateType = templateFunnel.settings?.template_type;
       
       if (templateType === 'default-21-steps') {
         // Para o template de 21 etapas, usar o serviço completo
         const funnelData = schemaDrivenFunnelService.createDefaultFunnel();
         
-        const supabaseData = {
+        const newFunnel: Funnel = {
+          id: 'funnel-' + Date.now(),
           name: `Meu Quiz de Personalidade - ${new Date().toLocaleDateString('pt-BR')}`,
           description: 'Funil personalizado baseado no template de 21 etapas',
+          status: 'draft',
           is_published: false,
           user_id: user.id,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
           settings: { 
             pages_count: funnelData.pages.length,
             template_type: 'custom',
@@ -321,32 +288,29 @@ const FunnelPanelPage: React.FC = () => {
           }
         };
 
-        const { data, error } = await supabase
-          .from('funnels')
-          .insert([supabaseData])
-          .select()
-          .single();
-
-        if (error) throw error;
-
         // Salvar dados completos do funil
-        funnelData.id = data.id;
+        funnelData.id = newFunnel.id;
         await schemaDrivenFunnelService.saveFunnel(funnelData);
         
-        setFunnels(prev => [data, ...prev]);
-        showToast('Funil criado a partir do template de 21 etapas!');
+        setFunnels(prev => [newFunnel, ...prev]);
+        showToast('Funil criado a partir do template de 21 etapas! (OFFLINE)');
         
         // Navegar para o editor
-        navigateToEditor(data.id);
+        console.log('🧭 Navegando para o editor:', newFunnel.id);
+        navigateToEditor(newFunnel.id);
         
       } else {
         // Para outros templates, criar estrutura básica
         const templateName = templateFunnel.name.replace(' (TEMPLATE)', '');
-        const funnelData = {
+        const newFunnel: Funnel = {
+          id: 'funnel-' + Date.now(),
           name: `${templateName} - ${new Date().toLocaleDateString('pt-BR')}`,
           description: `Funil personalizado baseado no template: ${templateName}`,
+          status: 'draft',
           is_published: false,
           user_id: user.id,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
           settings: { 
             pages_count: templateFunnel.settings?.pages_count || 0,
             template_type: 'custom',
@@ -354,19 +318,12 @@ const FunnelPanelPage: React.FC = () => {
           }
         };
 
-        const { data, error } = await supabase
-          .from('funnels')
-          .insert([funnelData])
-          .select()
-          .single();
-
-        if (error) throw error;
-
-        setFunnels(prev => [data, ...prev]);
-        showToast(`Funil criado a partir do template!`);
+        setFunnels(prev => [newFunnel, ...prev]);
+        showToast(`Funil criado a partir do template! (OFFLINE)`);
         
         // Navegar para o editor
-        navigateToEditor(data.id);
+        console.log('🧭 Navegando para o editor:', newFunnel.id);
+        navigateToEditor(newFunnel.id);
       }
 
       loadStats();
@@ -377,18 +334,13 @@ const FunnelPanelPage: React.FC = () => {
     }
   };
 
-  // Criar funil a partir de template
+  // Criar funil a partir de template (modo offline)
   const createFunnelFromTemplate = async (template: FunnelTemplate) => {
-    console.log('🚀 Criando funil a partir do template:', template.name);
+    console.log('🚀 Criando funil a partir do template (OFFLINE):', template.name);
     
     try {
       const user = await ensureAuthenticatedUser();
-      if (!user) {
-        showToast('Erro de autenticação. Tente novamente.', 'error');
-        return;
-      }
-
-      console.log('✅ Usuário autenticado:', user.id);
+      console.log('✅ Usuário autenticado (OFFLINE):', user.id);
       
       if (template.id === 'default-quiz-funnel-21-steps') {
         // Usar o serviço para criar o funil padrão de 21 etapas
@@ -397,56 +349,51 @@ const FunnelPanelPage: React.FC = () => {
         
         console.log('💾 Dados do funil criados:', funnelData);
         
-        // Salvar no banco de dados usando a nova estrutura
-        const supabaseData = {
+        // Criar funil em modo offline
+        const newFunnel: Funnel = {
+          id: 'funnel-' + Date.now(),
           name: `Meu Quiz de Personalidade - ${new Date().toLocaleDateString('pt-BR')}`,
           description: 'Funil de descoberta pessoal baseado no template de 21 etapas',
+          status: 'draft',
           is_published: false,
           user_id: user.id,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
           settings: {
             pages_count: funnelData.pages.length,
             template_type: 'custom',
             based_on: 'default-21-steps'
           }
         };
-
-        console.log('💾 Salvando no Supabase:', supabaseData);
-
-        const { data, error } = await supabase
-          .from('funnels')
-          .insert([supabaseData])
-          .select()
-          .single();
-
-        if (error) {
-          console.error('❌ Erro no Supabase:', error);
-          throw error;
-        }
         
-        console.log('✅ Funil salvo no Supabase:', data);
+        console.log('✅ Funil criado (OFFLINE):', newFunnel);
         
         // Salvar dados completos do funil com o ID correto
-        funnelData.id = data.id;
+        funnelData.id = newFunnel.id;
         await schemaDrivenFunnelService.saveFunnel(funnelData);
         
         console.log('✅ Dados completos salvos no serviço');
         
-        setFunnels(prev => [data, ...prev]);
-        showToast('Funil de 21 etapas criado com sucesso!');
+        setFunnels(prev => [newFunnel, ...prev]);
+        showToast('Funil de 21 etapas criado com sucesso! (OFFLINE)');
         
         // Navegar para o editor
-        console.log('🧭 Navegando para o editor:', data.id);
-        navigateToEditor(data.id);
+        console.log('🧭 Navegando para o editor:', newFunnel.id);
+        navigateToEditor(newFunnel.id);
         
       } else {
         // Criar funil baseado em outros templates
         console.log('📋 Criando funil para template:', template.name);
         
-        const supabaseData = {
+        const newFunnel: Funnel = {
+          id: 'funnel-' + Date.now(),
           name: `${template.name.replace(' (TEMPLATE)', '')} - ${new Date().toLocaleDateString('pt-BR')}`,
           description: template.description,
+          status: 'draft',
           is_published: false,
           user_id: user.id,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
           settings: {
             pages_count: template.steps,
             template_type: 'custom',
@@ -456,27 +403,14 @@ const FunnelPanelPage: React.FC = () => {
           }
         };
 
-        console.log('💾 Salvando template personalizado:', supabaseData);
+        console.log('✅ Template personalizado criado (OFFLINE):', newFunnel);
 
-        const { data, error } = await supabase
-          .from('funnels')
-          .insert([supabaseData])
-          .select()
-          .single();
-
-        if (error) {
-          console.error('❌ Erro no Supabase:', error);
-          throw error;
-        }
-
-        console.log('✅ Template personalizado salvo:', data);
-
-        setFunnels(prev => [data, ...prev]);
-        showToast(`Funil "${template.name}" criado com sucesso!`);
+        setFunnels(prev => [newFunnel, ...prev]);
+        showToast(`Funil "${template.name}" criado com sucesso! (OFFLINE)`);
         
         // Navegar para o editor
-        console.log('🧭 Navegando para o editor:', data.id);
-        navigateToEditor(data.id);
+        console.log('🧭 Navegando para o editor:', newFunnel.id);
+        navigateToEditor(newFunnel.id);
       }
 
       loadStats();
@@ -489,46 +423,8 @@ const FunnelPanelPage: React.FC = () => {
 
   const loadFunnels = async () => {
     try {
-      console.log('📊 Carregando funis...');
+      console.log('📊 Carregando funis (MODO OFFLINE)...');
       setLoading(true);
-      
-      // Criar templates principais como funis padrão se não existirem
-      await createDefaultTemplatesIfNeeded();
-
-      // Carregar todos os funis
-      const { data, error } = await supabase
-        .from('funnels')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('❌ Erro ao carregar funis:', error);
-        
-        // Modo offline - carregar dados simulados
-        console.log('🔧 Modo offline - carregando dados simulados');
-        const simulatedFunnels: Funnel[] = [
-          {
-            id: 'demo-funnel-1',
-            name: 'Funil de Demonstração',
-            description: 'Este é um funil de exemplo para demonstração',
-            status: 'draft',
-            is_published: false,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-            user_id: 'demo-user',
-            settings: {
-              pages_count: 5,
-              template_type: 'custom'
-            }
-          }
-        ];
-        setFunnels(simulatedFunnels);
-      } else {
-        console.log('✅ Funis carregados:', data?.length || 0);
-        setFunnels(data || []);
-      }
-    } catch (error) {
-      console.error('❌ Erro geral ao carregar funis:', error);
       
       // Modo offline - carregar dados simulados
       console.log('🔧 Modo offline - carregando dados simulados');
@@ -548,172 +444,76 @@ const FunnelPanelPage: React.FC = () => {
           }
         }
       ];
+      
       setFunnels(simulatedFunnels);
+      console.log('✅ Funis carregados (OFFLINE):', simulatedFunnels.length);
+    } catch (error) {
+      console.error('❌ Erro geral ao carregar funis:', error);
+      setFunnels([]);
     } finally {
       setLoading(false);
     }
   };
 
   const createDefaultTemplatesIfNeeded = async () => {
-    try {
-      const user = await ensureAuthenticatedUser();
-      if (!user) return;
-
-      // Template principal de 21 etapas
-      const DEFAULT_FUNNEL_ID = 'default-quiz-funnel-21-steps';
-      const { data: existingDefault } = await supabase
-        .from('funnels')
-        .select('id')
-        .eq('id', DEFAULT_FUNNEL_ID)
-        .single();
-
-      if (!existingDefault) {
-        const defaultFunnelData = schemaDrivenFunnelService.createDefaultFunnel();
-        
-        const supabaseData = {
-          name: '🎯 ' + defaultFunnelData.name,
-          description: defaultFunnelData.description + ' (Template Principal)',
-          is_published: true,
-          user_id: user.id,
-          settings: { 
-            pages_count: defaultFunnelData.pages.length,
-            template_type: 'default-21-steps'
-          }
-        };
-
-        const { data: savedFunnel } = await supabase.from('funnels').insert(supabaseData).select().single();
-        if (savedFunnel) {
-          // Salvar dados completos do funil usando o ID gerado pelo Supabase
-          defaultFunnelData.id = savedFunnel.id;
-          await schemaDrivenFunnelService.saveFunnel(defaultFunnelData);
-        }
-        
-        console.log('✅ Template principal de 21 etapas criado');
-      }
-
-      // Template rápido de personalidade
-      const QUICK_TEMPLATE_ID = 'quick-personality-quiz-template';
-      const { data: existingQuick } = await supabase
-        .from('funnels')
-        .select('id')
-        .eq('settings->template_type', 'quick-personality')
-        .single();
-
-      if (!existingQuick) {
-        const quickTemplate = {
-          name: '⚡ Quiz Rápido de Personalidade',
-          description: 'Template básico para descobrir traços de personalidade em 7 etapas (Template)',
-          is_published: true,
-          user_id: user.id,
-          settings: { 
-            pages_count: 7,
-            template_type: 'quick-personality'
-          }
-        };
-
-        await supabase.from('funnels').insert(quickTemplate);
-        console.log('✅ Template rápido criado');
-      }
-
-      // Template de estilo de vida
-      const { data: existingLifestyle } = await supabase
-        .from('funnels')
-        .select('id')
-        .eq('settings->template_type', 'lifestyle-assessment')
-        .single();
-
-      if (!existingLifestyle) {
-        const lifestyleTemplate = {
-          name: '❤️ Avaliação de Estilo de Vida',
-          description: 'Descubra qual estilo de vida combina mais com você em 12 etapas (Template)',
-          is_published: true,
-          user_id: user.id,
-          settings: { 
-            pages_count: 12,
-            template_type: 'lifestyle-assessment'
-          }
-        };
-
-        await supabase.from('funnels').insert(lifestyleTemplate);
-        console.log('✅ Template de estilo de vida criado');
-      }
-
-    } catch (error) {
-      console.error('Erro ao criar templates padrão:', error);
-    }
+    // Função desabilitada no modo offline
+    console.log('🔧 Templates serão criados dinamicamente no modo offline');
   };
 
   const loadStats = async () => {
     try {
-      const { data: funnelsData, error } = await supabase
-        .from('funnels')
-        .select('is_published');
-
-      if (error) throw error;
-
-      const totalFunnels = funnelsData?.length || 0;
-      const activeFunnels = funnelsData?.filter(f => f.is_published).length || 0;
-
+      console.log('📊 Carregando estatísticas (MODO OFFLINE)...');
+      
+      // Simular estatísticas
       setStats({
-        total_funnels: totalFunnels,
-        active_funnels: activeFunnels,
-        total_views: 0, // Implementar quando houver dados de analytics
+        total_funnels: funnels.length,
+        active_funnels: funnels.filter(f => f.is_published).length,
+        total_views: 0,
         total_conversions: 0,
         conversion_rate: 0
       });
+      
+      console.log('✅ Estatísticas carregadas (OFFLINE)');
     } catch (error) {
       console.error('Erro ao carregar estatísticas:', error);
     }
   };
 
   const handleCreateFunnel = async () => {
-    console.log('🚀 Criando funil personalizado...');
+    console.log('🚀 Criando funil personalizado (OFFLINE)...');
     
     try {
       const user = await ensureAuthenticatedUser();
-      if (!user) {
-        showToast('Erro de autenticação. Tente novamente.', 'error');
-        return;
-      }
-
-      console.log('✅ Usuário autenticado:', user.id);
+      console.log('✅ Usuário autenticado (OFFLINE):', user.id);
       console.log('📋 Dados do formulário:', formData);
 
-      const funnelData = {
-        ...formData,
+      const newFunnel: Funnel = {
+        id: 'funnel-' + Date.now(),
+        name: formData.name,
+        description: formData.description,
+        status: formData.status,
+        is_published: formData.status === 'active',
         user_id: user.id,
-        is_published: false,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
         settings: { 
           pages_count: 0,
           template_type: 'custom'
         }
       };
 
-      console.log('💾 Salvando funil personalizado:', funnelData);
+      console.log('✅ Funil personalizado criado (OFFLINE):', newFunnel);
 
-      const { data, error } = await supabase
-        .from('funnels')
-        .insert([funnelData])
-        .select()
-        .single();
-
-      if (error) {
-        console.error('❌ Erro no Supabase:', error);
-        throw error;
-      }
-
-      console.log('✅ Funil personalizado salvo:', data);
-
-      setFunnels(prev => [data, ...prev]);
+      setFunnels(prev => [newFunnel, ...prev]);
       setIsCreateDialogOpen(false);
       setFormData({ name: '', description: '', status: 'draft' });
       loadStats();
       
-      showToast('Funil criado com sucesso!');
+      showToast('Funil criado com sucesso! (OFFLINE)');
       
       // Navegar para o editor
-      console.log('🧭 Navegando para o editor:', data.id);
-      navigateToEditor(data.id);
+      console.log('🧭 Navegando para o editor:', newFunnel.id);
+      navigateToEditor(newFunnel.id);
     } catch (error) {
       console.error('❌ Erro ao criar funil:', error);
       showToast('Erro ao criar funil. Tente novamente.', 'error');
