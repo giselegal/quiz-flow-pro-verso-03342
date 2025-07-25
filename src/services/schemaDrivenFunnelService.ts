@@ -1,7 +1,226 @@
 import type { BlockData } from '@/components/editor/blocks';
-import { REAL_QUIZ_QUESTIONS, STRATEGIC_QUESTIONS, TRANSITIONS } from '@/components/visual-editor/realQuizData';
 import { QuizDataAdapter } from './quizDataAdapter';
 import { supabase } from '../lib/supabase';
+
+// Dados inline do quiz - movidos para este arquivo
+const REAL_QUIZ_QUESTIONS = [
+  {
+    id: 'q1',
+    question: 'Qual dessas opções representa melhor seu estilo predominante?',
+    options: [
+      { id: '1', text: 'Clássico e elegante', value: 'classico' },
+      { id: '2', text: 'Moderno e descolado', value: 'moderno' },
+      { id: '3', text: 'Natural e autêntico', value: 'natural' },
+      { id: '4', text: 'Casual e descontraído', value: 'casual' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  },
+  {
+    id: 'q2',
+    question: 'Qual ambiente você mais se identifica?',
+    options: [
+      { id: '1', text: 'Casa aconchegante', value: 'casa' },
+      { id: '2', text: 'Escritório moderno', value: 'escritorio' },
+      { id: '3', text: 'Natureza ao ar livre', value: 'natureza' },
+      { id: '4', text: 'Café urbano', value: 'cafe' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  },
+  {
+    id: 'q3',
+    question: 'Quais cores mais combinam com você?',
+    options: [
+      { id: '1', text: 'Tons neutros (bege, branco, cinza)', value: 'neutros' },
+      { id: '2', text: 'Cores vibrantes (azul, vermelho, amarelo)', value: 'vibrantes' },
+      { id: '3', text: 'Tons terrosos (marrom, verde, ocre)', value: 'terrosos' },
+      { id: '4', text: 'Cores pastéis (rosa, lilás, azul claro)', value: 'pasteis' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  },
+  {
+    id: 'q4',
+    question: 'Qual peça você usaria em um jantar especial?',
+    options: [
+      { id: '1', text: 'Vestido preto básico', value: 'vestido_preto' },
+      { id: '2', text: 'Blazer estruturado', value: 'blazer' },
+      { id: '3', text: 'Blusa fluida', value: 'blusa_fluida' },
+      { id: '4', text: 'Jeans escuro elegante', value: 'jeans_elegante' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  },
+  {
+    id: 'q5',
+    question: 'Como você prefere seus acessórios?',
+    options: [
+      { id: '1', text: 'Minimalistas e discretos', value: 'minimalistas' },
+      { id: '2', text: 'Statement e chamativos', value: 'statement' },
+      { id: '3', text: 'Naturais e orgânicos', value: 'naturais' },
+      { id: '4', text: 'Práticos e funcionais', value: 'praticos' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  },
+  {
+    id: 'q6',
+    question: 'Qual estampa você mais usa?',
+    options: [
+      { id: '1', text: 'Listras clássicas', value: 'listras' },
+      { id: '2', text: 'Estampas geométricas', value: 'geometricas' },
+      { id: '3', text: 'Florais delicados', value: 'florais' },
+      { id: '4', text: 'Prefiro liso', value: 'liso' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  },
+  {
+    id: 'q7',
+    question: 'Qual tipo de calçado você mais usa?',
+    options: [
+      { id: '1', text: 'Salto médio clássico', value: 'salto_medio' },
+      { id: '2', text: 'Tênis moderno', value: 'tenis' },
+      { id: '3', text: 'Sandália rasteira', value: 'rasteira' },
+      { id: '4', text: 'Sapato oxford', value: 'oxford' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  },
+  {
+    id: 'q8',
+    question: 'Como você se veste para trabalhar?',
+    options: [
+      { id: '1', text: 'Formal e estruturado', value: 'formal' },
+      { id: '2', text: 'Business casual', value: 'business_casual' },
+      { id: '3', text: 'Confortável e solto', value: 'confortavel' },
+      { id: '4', text: 'Criativo e expressivo', value: 'criativo' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  },
+  {
+    id: 'q9',
+    question: 'Qual silhueta você prefere?',
+    options: [
+      { id: '1', text: 'Ajustada ao corpo', value: 'ajustada' },
+      { id: '2', text: 'Estruturada e angular', value: 'estruturada' },
+      { id: '3', text: 'Fluida e solta', value: 'fluida' },
+      { id: '4', text: 'Oversized confortável', value: 'oversized' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  },
+  {
+    id: 'q10',
+    question: 'Qual é seu mood de fim de semana?',
+    options: [
+      { id: '1', text: 'Elegante mesmo no casual', value: 'elegante_casual' },
+      { id: '2', text: 'Moderno e urbano', value: 'moderno_urbano' },
+      { id: '3', text: 'Natural e relaxado', value: 'natural_relaxado' },
+      { id: '4', text: 'Prático e esportivo', value: 'pratico_esportivo' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  }
+];
+
+const STRATEGIC_QUESTIONS = [
+  {
+    id: 'sq1',
+    question: 'O que mais te incomoda no seu guarda-roupa atual?',
+    options: [
+      { id: '1', text: 'Não sei combinar as peças', value: 'combinacao' },
+      { id: '2', text: 'Tenho muita roupa mas nada para usar', value: 'excesso' },
+      { id: '3', text: 'Não me sinto confiante', value: 'confianca' },
+      { id: '4', text: 'Não sei qual é meu estilo', value: 'identidade' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  },
+  {
+    id: 'sq2',
+    question: 'Quanto você gasta por mês com roupas?',
+    options: [
+      { id: '1', text: 'Até R$ 200', value: 'ate_200' },
+      { id: '2', text: 'R$ 200 a R$ 500', value: '200_500' },
+      { id: '3', text: 'R$ 500 a R$ 1000', value: '500_1000' },
+      { id: '4', text: 'Mais de R$ 1000', value: 'mais_1000' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  },
+  {
+    id: 'sq3',
+    question: 'Qual sua maior dificuldade na hora de se vestir?',
+    options: [
+      { id: '1', text: 'Escolher as cores certas', value: 'cores' },
+      { id: '2', text: 'Combinar estampas', value: 'estampas' },
+      { id: '3', text: 'Escolher a ocasião certa', value: 'ocasiao' },
+      { id: '4', text: 'Valorizar meu corpo', value: 'corpo' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  },
+  {
+    id: 'sq4',
+    question: 'O que você mais gostaria de mudar?',
+    options: [
+      { id: '1', text: 'Ter mais confiança', value: 'confianca' },
+      { id: '2', text: 'Organizar melhor o guarda-roupa', value: 'organizacao' },
+      { id: '3', text: 'Comprar menos e melhor', value: 'consumo' },
+      { id: '4', text: 'Descobrir meu estilo único', value: 'estilo_unico' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  },
+  {
+    id: 'sq5',
+    question: 'Como você prefere receber orientação de estilo?',
+    options: [
+      { id: '1', text: 'Consultoria individual', value: 'individual' },
+      { id: '2', text: 'Guias e materiais online', value: 'online' },
+      { id: '3', text: 'Workshops em grupo', value: 'grupo' },
+      { id: '4', text: 'Aplicativo interativo', value: 'app' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  },
+  {
+    id: 'sq6',
+    question: 'Você estaria disposta a investir em consultoria?',
+    options: [
+      { id: '1', text: 'Sim, quero atendimento personalizado', value: 'sim_personalizado' },
+      { id: '2', text: 'Talvez, dependendo do valor', value: 'talvez' },
+      { id: '3', text: 'Prefiro primeiro ver resultados', value: 'resultados_primeiro' },
+      { id: '4', text: 'Não neste momento', value: 'nao_agora' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  }
+];
+
+const TRANSITIONS = {
+  main: 'Agora vamos conhecer você melhor',
+  final: 'Preparando seu resultado personalizado'
+};
 
 // DEBUG: Verificar se os dados estão sendo importados corretamente
 console.log('🔍 DEBUG - Dados importados:');
@@ -1588,9 +1807,9 @@ class SchemaDrivenFunnelService {
 
   async deletePage(funnelId: string, pageId: string): Promise<void> {
     try {
-      const funnel = this.loadLocalFunnel(funnelId);
+      const funnel = await this.loadFunnel(funnelId);
       if (!funnel) {
-        throw new Error(`Funil com ID ${funnelId} não encontrado localmente.`);
+        throw new Error(`Funil com ID ${funnelId} não encontrado.`);
       }
 
       const updatedPages = funnel.pages.filter(page => page.id !== pageId);
