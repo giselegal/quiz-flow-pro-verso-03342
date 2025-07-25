@@ -44,8 +44,8 @@ interface FunnelStats {
 }
 
 const FunnelPanelPage: React.FC = () => {
-  const [funnels, setFunnels] = useState&lt;Funnel[]&gt;([]);
-  const [stats, setStats] = useState&lt;FunnelStats&gt;({
+  const [funnels, setFunnels] = useState<Funnel[]>([]);
+  const [stats, setStats] = useState<FunnelStats>({
     total_funnels: 0,
     active_funnels: 0,
     total_views: 0,
