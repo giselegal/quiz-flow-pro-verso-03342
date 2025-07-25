@@ -484,6 +484,14 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     }
   }, [funnel, isLoading, funnelId, createNewFunnel, showToast]);
 
+  // Analytics: Track page view when editor loads
+  useEffect(() => {
+    if (funnel) {
+      trackPageView(funnel.id, 'editor-main');
+      console.log('📊 [Analytics] Editor page view tracked');
+    }
+  }, [funnel, trackPageView]);
+
   // DEBUG: Log estado das sidebars
   useEffect(() => {
     console.log('🔍 DEBUG Estado:', {
