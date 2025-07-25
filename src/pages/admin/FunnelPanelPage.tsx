@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
+import { useNavigate } from 'react-router-dom';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Badge } from '../../components/ui/badge';
+import { Textarea } from '../../components/ui/textarea';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../../components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
+import { Label } from '../../components/ui/label';
 import { 
   Plus, 
   Search, 
@@ -19,9 +20,14 @@ import {
   BarChart3,
   Users,
   TrendingUp,
-  Calendar
+  Calendar,
+  Layout,
+  Zap,
+  Target,
+  Heart
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { schemaDrivenFunnelService } from '../../services/schemaDrivenFunnelService';
 
 interface Funnel {
   id: string;
@@ -43,6 +49,130 @@ interface FunnelStats {
   conversion_rate: number;
 }
 
+interface FunnelTemplate {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  steps: number;
+  icon: React.ComponentType<any>;
+  difficulty: 'easy' | 'medium' | 'hard';
+  estimatedTime: number;
+  tags: string[];
+  stepTitles: string[];
+}
+
+// Templates de funis disponíveis
+const FUNNEL_TEMPLATES: FunnelTemplate[] = [
+  {
+    id: 'default-quiz-funnel-21-steps',
+    name: 'Funil Completo de Descoberta Pessoal',
+    description: 'Funil completo para descoberta do estilo pessoal - 21 etapas modulares',
+    category: 'personalidade',
+    steps: 21,
+    icon: Target,
+    difficulty: 'medium',
+    estimatedTime: 15,
+    tags: ['descoberta', 'personalidade', 'completo'],
+    stepTitles: [
+      'Boas-vindas e Introdução',
+      'Primeira Pergunta - Preferências Básicas',
+      'Exploração de Interesses',
+      'Análise de Comportamento',
+      'Preferências de Estilo',
+      'Avaliação de Personalidade',
+      'Gostos e Desgostos',
+      'Cenários Hipotéticos',
+      'Escolhas de Vida',
+      'Ambiente Ideal',
+      'Relacionamentos',
+      'Carreira e Trabalho',
+      'Hobbies e Lazer',
+      'Valores Pessoais',
+      'Desafios e Medos',
+      'Aspirações e Sonhos',
+      'Análise Comportamental',
+      'Preferências Detalhadas',
+      'Consolidação de Dados',
+      'Resultado Personalizado',
+      'Oferta Personalizada'
+    ]
+  },
+  {
+    id: 'quick-personality-quiz',
+    name: 'Quiz Rápido de Personalidade',
+    description: 'Quiz curto e direto para descobrir traços básicos de personalidade',
+    category: 'personalidade',
+    steps: 7,
+    icon: Zap,
+    difficulty: 'easy',
+    estimatedTime: 5,
+    tags: ['rápido', 'personalidade', 'básico'],
+    stepTitles: [
+      'Introdução',
+      'Preferências Sociais',
+      'Estilo de Trabalho',
+      'Tomada de Decisões',
+      'Gestão de Tempo',
+      'Comunicação',
+      'Resultado'
+    ]
+  },
+  {
+    id: 'lifestyle-assessment',
+    name: 'Avaliação de Estilo de Vida',
+    description: 'Descubra qual estilo de vida combina mais com você',
+    category: 'estilo-vida',
+    steps: 12,
+    icon: Heart,
+    difficulty: 'medium',
+    estimatedTime: 10,
+    tags: ['estilo', 'vida', 'bem-estar'],
+    stepTitles: [
+      'Boas-vindas',
+      'Rotina Diária',
+      'Preferências Alimentares',
+      'Atividade Física',
+      'Relacionamentos',
+      'Trabalho e Carreira',
+      'Tempo Livre',
+      'Viagens e Aventuras',
+      'Finanças Pessoais',
+      'Saúde e Bem-estar',
+      'Valores e Prioridades',
+      'Seu Estilo Ideal'
+    ]
+  },
+  {
+    id: 'career-guidance',
+    name: 'Orientação Profissional',
+    description: 'Encontre a carreira ideal baseada em suas habilidades e interesses',
+    category: 'carreira',
+    steps: 15,
+    icon: Layout,
+    difficulty: 'hard',
+    estimatedTime: 20,
+    tags: ['carreira', 'profissional', 'habilidades'],
+    stepTitles: [
+      'Introdução ao Assessment',
+      'Histórico Educacional',
+      'Experiências Profissionais',
+      'Habilidades Técnicas',
+      'Habilidades Interpessoais',
+      'Interesses e Paixões',
+      'Valores no Trabalho',
+      'Ambiente de Trabalho Ideal',
+      'Desafios Profissionais',
+      'Objetivos de Carreira',
+      'Estilo de Liderança',
+      'Work-Life Balance',
+      'Análise de Competências',
+      'Recomendações de Carreira',
+      'Plano de Desenvolvimento'
+    ]
+  }
+];
+
 const FunnelPanelPage: React.FC = () => {
   const [funnels, setFunnels] = useState<Funnel[]>([]);
   const [stats, setStats] = useState<FunnelStats>({
@@ -54,21 +184,141 @@ const FunnelPanelPage: React.FC = () => {
   });
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-    const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isTemplateDialogOpen, setIsTemplateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-    const [selectedFunnel, setSelectedFunnel] = useState<Funnel | null>(null);
+  const [selectedFunnel, setSelectedFunnel] = useState<Funnel | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<FunnelTemplate | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     status: 'draft' as const
   });
 
-  // Carregar funis e estatísticas
+  const navigate = useNavigate();
+
+  // Toast simples como fallback
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    console.log(`${type.toUpperCase()}: ${message}`);
+    // TODO: Implementar toast real quando disponível
+  };  // Carregar funis e estatísticas
   useEffect(() => {
     loadFunnels();
     loadStats();
   }, []);
+
+  // Garantir que existe um usuário autenticado
+  const ensureAuthenticatedUser = async () => {
+    try {
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      
+      if (user) {
+        return user;
+      }
+
+      // Se não há usuário, tentar criar um usuário anônimo temporário
+      const { data: anonUser, error: anonError } = await supabase.auth.signInAnonymously();
+      
+      if (anonError) {
+        console.error('❌ Erro ao criar usuário anônimo:', anonError);
+        return null;
+      }
+
+      return anonUser.user;
+    } catch (error) {
+      console.error('❌ Erro de autenticação:', error);
+      return null;
+    }
+  };
+
+  // Navegar para o editor com funil específico
+  const navigateToEditor = (funnelId: string) => {
+    navigate(`/editor?funnelId=${funnelId}`);
+  };
+
+  // Criar funil a partir de template
+  const createFunnelFromTemplate = async (template: FunnelTemplate) => {
+    try {
+      const user = await ensureAuthenticatedUser();
+      if (!user) {
+        showToast('Erro de autenticação. Tente novamente.', 'error');
+        return;
+      }
+
+      let funnelData;
+      
+      if (template.id === 'default-quiz-funnel-21-steps') {
+        // Usar o serviço para criar o funil padrão de 21 etapas
+        funnelData = schemaDrivenFunnelService.createDefaultFunnel();
+        
+        // Salvar no banco de dados
+        const supabaseData = {
+          id: funnelData.funnel.id,
+          name: funnelData.funnel.name,
+          description: funnelData.funnel.description,
+          status: 'draft' as const,
+          user_id: user.id,
+          pages_count: funnelData.pages.length,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+
+        const { data, error } = await supabase
+          .from('funnels')
+          .upsert(supabaseData)
+          .select()
+          .single();
+
+        if (error) throw error;
+        
+        // Salvar dados completos do funil
+        await schemaDrivenFunnelService.saveFunnel(funnelData.funnel.id, funnelData);
+        
+        setFunnels(prev => [data, ...prev]);
+        showToast('Funil padrão de 21 etapas criado com sucesso!');
+        
+        // Navegar para o editor
+        navigateToEditor(funnelData.funnel.id);
+        
+      } else {
+        // Criar funil baseado em outros templates
+        const funnelId = `funnel-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        
+        const supabaseData = {
+          id: funnelId,
+          name: template.name,
+          description: template.description,
+          status: 'draft' as const,
+          user_id: user.id,
+          pages_count: template.steps,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+
+        const { data, error } = await supabase
+          .from('funnels')
+          .insert(supabaseData)
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        setFunnels(prev => [data, ...prev]);
+        showToast(`Template "${template.name}" criado com sucesso!`);
+        
+        // Navegar para o editor
+        navigateToEditor(funnelId);
+      }
+
+      setIsTemplateDialogOpen(false);
+      loadStats();
+      
+    } catch (error) {
+      console.error('Erro ao criar funil do template:', error);
+      showToast('Erro ao criar funil do template. Tente novamente.', 'error');
+    }
+  };
 
   const loadFunnels = async () => {
     try {
