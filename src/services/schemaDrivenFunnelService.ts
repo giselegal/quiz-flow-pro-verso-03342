@@ -1483,6 +1483,118 @@ class SchemaDrivenFunnelService {
   destroy() {
     this.disableAutoSave();
   }
+
+  async deleteBlock(funnelId: string, pageId: string, blockId: string): Promise<void> {
+    try {
+      // Carregar o funil atual
+      const funnel = await this.loadFunnel(funnelId);
+      if (!funnel) {
+        console.error(`❌ Funil com ID ${funnelId} não encontrado.`);
+        return;
+      }
+
+      // Encontrar a página e remover o bloco
+      const updatedPages = funnel.pages.map(page => {
+        if (page.id === pageId) {
+          return {
+            ...page,
+            blocks: page.blocks.filter(block => block.id !== blockId)
+          };
+        }
+        return page;
+      });
+
+      const updatedFunnel = {
+        ...funnel,
+        pages: updatedPages,
+        lastModified: new Date()
+      };
+
+      // Salvar o funil atualizado no backend
+      const { error } = await supabase
+        .from('funnels')
+        .update({
+          settings: updatedFunnel, // Supabase armazena o objeto completo em 'settings'
+          updated_at: updatedFunnel.lastModified.toISOString() // Atualiza o timestamp
+        })
+        .eq('id', funnelId);
+
+      if (error) {
+        throw error;
+      }
+
+      // Atualizar o localStorage e o histórico de versões
+      this.saveLocalFunnel(updatedFunnel);
+      this.saveVersion(updatedFunnel, `Block ${blockId} deleted from page ${pageId}`);
+      console.log(`🗑️ Bloco ${blockId} excluído da página ${pageId} do funil ${funnelId} e salvo no backend.`);
+    } catch (error) {
+      console.error(`❌ Erro ao excluir bloco ${blockId} do funil ${funnelId}:`, error);
+      throw error; // Re-lançar para que o chamador possa lidar com isso
+    }
+  }
+
+
+  async deleteFunnel(funnelId: string): Promise<void> {
+    try {
+      const { error } = await supabase
+        .from('funnels')
+        .delete()
+        .eq('id', funnelId);
+
+      if (error) {
+        throw error;
+      }
+
+      // Remover do localStorage
+      localStorage.removeItem(`funnel_${funnelId}`);
+      // Limpar histórico de versões para este funil
+      localStorage.removeItem(`funnel_versions_${funnelId}`);
+
+      console.log(`🗑️ Funil ${funnelId} excluído do backend e do localStorage.`);
+    } catch (error) {
+      console.error(`❌ Erro ao excluir funil ${funnelId}:`, error);
+      throw error;
+    }
+  }
+
+
+  async deletePage(funnelId: string, pageId: string): Promise<void> {
+    try {
+      const funnel = this.loadLocalFunnel(funnelId);
+      if (!funnel) {
+        throw new Error(`Funil com ID ${funnelId} não encontrado localmente.`);
+      }
+
+      const updatedPages = funnel.pages.filter(page => page.id !== pageId);
+
+      const updatedFunnel = {
+        ...funnel,
+        pages: updatedPages,
+        lastModified: new Date()
+      };
+
+      // Salvar o funil atualizado no backend
+      const { error } = await supabase
+        .from('funnels')
+        .update({
+          settings: updatedFunnel, // Supabase armazena o objeto completo em 'settings'
+          updated_at: updatedFunnel.lastModified.toISOString() // Atualiza o timestamp
+        })
+        .eq('id', funnelId);
+
+      if (error) {
+        throw error;
+      }
+
+      // Atualizar o localStorage e o histórico de versões
+      this.saveLocalFunnel(updatedFunnel);
+      this.saveVersion(updatedFunnel, `Page ${pageId} deleted from funnel ${funnelId}`);
+      console.log(`🗑️ Página ${pageId} excluída do funil ${funnelId} e salva no backend.`);
+    } catch (error) {
+      console.error(`❌ Erro ao excluir página ${pageId} do funil ${funnelId}:`, error);
+      throw error; // Re-lançar para que o chamador possa lidar com isso
+    }
+  }
 }
 
 export const schemaDrivenFunnelService = new SchemaDrivenFunnelService();

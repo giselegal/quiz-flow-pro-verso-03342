@@ -255,17 +255,37 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
     });
   }, [updateFunnelState]);
 
-  const deletePage = useCallback((pageId: string) => {
-    updateFunnelState(prev => ({
-      ...prev,
-      pages: prev.pages.filter(page => page.id !== pageId)
-    }));
-    
-    if (currentPageId === pageId) {
-      setCurrentPageId(null);
-      setSelectedBlockId(null);
+  const deletePage = useCallback(async (pageId: string) => {
+    if (!funnel) return;
+
+    try {
+      // Chamar o serviço para excluir a página no backend
+      await schemaDrivenFunnelService.deletePage(funnel.id, pageId);
+
+      // Atualizar o estado local após a exclusão bem-sucedida no backend
+      updateFunnelState(prevFunnel => ({
+        ...prevFunnel,
+        pages: prevFunnel.pages.filter(page => page.id !== pageId)
+      }));
+
+      if (currentPageId === pageId) {
+        setCurrentPageId(null);
+        setSelectedBlockId(null);
+      }
+
+      toast({
+        title: "Página excluída!",
+        description: "A página foi removida com sucesso e salva no backend.",
+      });
+    } catch (error) {
+      console.error('❌ Erro ao excluir página:', error);
+      toast({
+        title: "Erro ao excluir página",
+        description: error instanceof Error ? error.message : "Erro desconhecido ao excluir página.",
+        variant: "destructive",
+      });
     }
-  }, [updateFunnelState, currentPageId]);
+  }, [funnel, updateFunnelState, currentPageId, toast]);
 
   const setCurrentPage = useCallback((pageId: string) => {
     setCurrentPageId(pageId);
@@ -311,36 +331,37 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
   }, [updateFunnelState]);
 
   const deleteBlock = useCallback(async (blockId: string) => {
-    console.log('🚀 deleteBlock hook called for:', blockId);
-    console.log('📊 Current funnel state:', funnel?.pages?.length, 'pages');
-    
-    updateFunnelState(prev => {
-      console.log('🔄 Updating funnel state, removing block:', blockId);
-      const updated = {
-        ...prev,
-        pages: prev.pages.map(page => ({
-          ...page,
-          blocks: page.blocks.filter(block => {
-            const keep = block.id !== blockId;
-            if (!keep) console.log('❌ Removing block:', block.id);
-            return keep;
-          })
-        }))
-      };
-      console.log('✅ Updated funnel state:', updated.pages[0]?.blocks?.length, 'blocks remaining');
-      return updated;
-    });
-    
-    if (selectedBlockId === blockId) {
-      console.log('🎯 Clearing selected block');
+    if (!funnel || !currentPage) return;
+
+    try {
+      // Chamar o serviço para excluir o bloco no backend
+      await schemaDrivenFunnelService.deleteBlock(funnel.id, currentPage.id, blockId);
+
+      // Atualizar o estado local após a exclusão bem-sucedida no backend
+      updateFunnelState(prevFunnel => ({
+        ...prevFunnel,
+        pages: prevFunnel.pages.map(page =>
+          page.id === currentPage.id
+            ? { ...page, blocks: page.blocks.filter(block => block.id !== blockId) }
+            : page
+        )
+      }));
+
       setSelectedBlockId(null);
+
+      toast({
+        title: "Bloco excluído!",
+        description: "O bloco foi removido com sucesso e salvo no backend.",
+      });
+    } catch (error) {
+      console.error('❌ Erro ao excluir bloco:', error);
+      toast({
+        title: "Erro ao excluir bloco",
+        description: error instanceof Error ? error.message : "Erro desconhecido ao excluir bloco.",
+        variant: "destructive",
+      });
     }
-    
-    // Forçar salvamento imediato após exclusão
-    console.log('💾 Force saving after deletion...');
-    await saveFunnel(false);
-    console.log('✅ Save completed');
-  }, [updateFunnelState, selectedBlockId, saveFunnel]);
+  }, [funnel, currentPage, updateFunnelState, toast]);
 
   const reorderBlocks = useCallback((newBlocks: BlockData[]) => {
     if (!currentPageId) return;
