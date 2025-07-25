@@ -147,6 +147,47 @@ export const STYLE_CATEGORIES = [
 
 ---
 
-**📅 Data da Correção:** Hoje
+---
+
+## 🔄 ATUALIZAÇÃO FINAL - 21 ETAPAS CORRIGIDAS:
+
+### **✅ PROBLEMA RESOLVIDO: 21 Etapas Não Atualizadas**
+
+**Causa:** O arquivo `schemaDrivenFunnelService.ts` e `QuizEditorSteps.tsx` tinham questões hardcoded obsoletas e duplicações.
+
+**✅ CORREÇÕES APLICADAS:**
+
+#### **1. Serviço Principal Atualizado:**
+- **Arquivo:** `/src/services/schemaDrivenFunnelService.ts`
+- **Mudança:** Importação das questões corretas do `correctQuizQuestions.ts`
+- **Código Aplicado:**
+```typescript
+import { CORRECT_QUIZ_QUESTIONS } from '@/data/correctQuizQuestions';
+
+// Usar as questões originais corrigidas
+const REAL_QUIZ_QUESTIONS = CORRECT_QUIZ_QUESTIONS;
+```
+
+#### **2. QuizEditorSteps Limpo:**
+- **Arquivo:** `/src/components/editor/QuizEditorSteps.tsx`
+- **Mudança:** Removidas duplicações e questões obsoletas
+- **Resultado:** Agora usa apenas as questões do `CORRECT_QUIZ_QUESTIONS`
+
+#### **3. Integração Validada:**
+- ✅ Etapas 1-10: Questões originais com imagens corretas
+- ✅ Etapas 11-21: Questões estratégicas para funil
+- ✅ Total: 21 etapas completas e funcionais
+
+### **🎯 RESULTADO:**
+Todas as 21 etapas agora estão sincronizadas com as questões originais corrigidas em todo o sistema:
+- Editor de componentes
+- Serviço de criação de funis
+- Componente de teste QuizEditorSteps
+- Painel de propriedades
+
+**📅 Data da Atualização:** Hoje  
+**🔧 Status:** CONCLUÍDO ✅
+
+**📊 Data da Correção:** Hoje
 **🔧 Status:** CONCLUÍDO ✅
 **🎯 Cobertura:** 100% dos problemas identificados

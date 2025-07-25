@@ -234,17 +234,66 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
   // Auto-save removido - salvamento apenas manual
   // O sistema de auto-save foi desabilitado por causar problemas
 
-  // Efeito para lidar com o carregamento inicial do funil
+    // Efeito único para carregamento inicial do funil (corrigido para evitar duplicação)
   useEffect(() => {
-    if (!initializedRef.current) {
-      initializedRef.current = true;
-      if (initialFunnelId) {
-        loadFunnel(initialFunnelId);
+    if (initializedRef.current) return;
+    initializedRef.current = true;
+
+    const initializeFunnel = async () => {
+      console.log('🚀 Iniciando carregamento do funil...');
+      
+      if (initialFunnelId && typeof initialFunnelId === 'string') {
+        console.log('🔄 Loading existing funnel with ID:', initialFunnelId);
+        await loadFunnel(initialFunnelId);
       } else {
-        createNewFunnel();
+        // Sempre tentar carregar o funil padrão primeiro para evitar duplicação
+        const defaultId = 'default-quiz-funnel-21-steps';
+        console.log('🔍 Tentando carregar funil padrão existente com ID:', defaultId);
+        
+        try {
+          const existingFunnel = await schemaDrivenFunnelService.loadFunnel(defaultId);
+          if (existingFunnel) {
+            console.log('✅ Funil padrão encontrado! Carregando...', existingFunnel.name);
+            setFunnel(existingFunnel);
+            setCurrentPageId(existingFunnel.pages[0]?.id || null);
+          } else {
+            console.log('🆕 Nenhum funil encontrado, criando novo funil padrão');
+            const defaultFunnel = schemaDrivenFunnelService.createDefaultFunnel();
+            console.log('🔍 DEBUG - Funil criado:', {
+              id: defaultFunnel.id,
+              name: defaultFunnel.name,
+              pagesCount: defaultFunnel.pages.length,
+              pageNames: defaultFunnel.pages.map(p => p.name),
+              firstPageBlocks: defaultFunnel.pages[0]?.blocks?.length || 0
+            });
+            
+            setFunnel(defaultFunnel);
+            setCurrentPageId(defaultFunnel.pages[0]?.id || null);
+            
+            // Salvar o novo funil no Supabase imediatamente
+            try {
+              await schemaDrivenFunnelService.saveFunnel(defaultFunnel);
+              console.log('💾 Funil padrão salvo no Supabase com sucesso');
+            } catch (saveError) {
+              console.warn('⚠️ Falha ao salvar no Supabase, salvando localmente:', saveError);
+              schemaDrivenFunnelService.saveLocalFunnel(defaultFunnel);
+            }
+          }
+        } catch (error) {
+          console.error('❌ Erro ao verificar funil existente:', error);
+          // Fallback: criar funil local
+          const defaultFunnel = schemaDrivenFunnelService.createDefaultFunnel();
+          setFunnel(defaultFunnel);
+          setCurrentPageId(defaultFunnel.pages[0]?.id || null);
+          schemaDrivenFunnelService.saveLocalFunnel(defaultFunnel);
+        }
+        
+        console.log('🎯 Processo de inicialização concluído');
       }
-    }
-  }, [initialFunnelId, loadFunnel, createNewFunnel]);
+    };
+
+    initializeFunnel();
+  }, [initialFunnelId, loadFunnel]);
 
   // Efeito para salvar ao sair da página
   useEffect(() => {
@@ -500,38 +549,6 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
       });
     }
   }, [quizLogic, toast]);
-
-  // Inicializar funil apenas uma vez
-  useEffect(() => {
-    if (initializedRef.current) return;
-    initializedRef.current = true;
-
-    if (initialFunnelId && typeof initialFunnelId === 'string') {
-      console.log('🔄 Loading funnel with ID:', initialFunnelId);
-      loadFunnel(initialFunnelId);
-    } else {
-      console.log('🆕 Creating default funnel');
-      const defaultFunnel = schemaDrivenFunnelService.createDefaultFunnel();
-      console.log('🔍 DEBUG - Funnel criado:', {
-        id: defaultFunnel.id,
-        name: defaultFunnel.name,
-        pagesCount: defaultFunnel.pages.length,
-        pageNames: defaultFunnel.pages.map(p => p.name),
-        firstPageBlocks: defaultFunnel.pages[0]?.blocks?.length || 0
-      });
-      
-      setFunnel(defaultFunnel);
-      setCurrentPageId(defaultFunnel.pages[0]?.id || null);
-      
-      try {
-        schemaDrivenFunnelService.saveLocalFunnel(defaultFunnel);
-      } catch (error) {
-        console.warn('⚠️ Failed to save default funnel to localStorage:', error);
-      }
-      
-      console.log('🎯 Funil carregado com', defaultFunnel.pages.length, 'etapas:', defaultFunnel.pages.map(p => p.name));
-    }
-  }, [initialFunnelId, loadFunnel]);
 
   // Atualizar estado do auto-save menos frequentemente
   useEffect(() => {

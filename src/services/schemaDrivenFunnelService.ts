@@ -696,8 +696,11 @@ class SchemaDrivenFunnelService {
   createDefaultFunnel(): SchemaDrivenFunnelData {
     const now = new Date();
     
+    // USAR ID FIXO PARA EVITAR DUPLICAÇÃO!
+    const FIXED_FUNNEL_ID = 'default-quiz-funnel-21-steps';
+    
     return {
-      id: `funnel-${Date.now()}`,
+      id: FIXED_FUNNEL_ID, // ID fixo para evitar duplicação
       name: 'Quiz CaktoQuiz - Descubra Seu Estilo',
       description: 'Funil completo para descoberta do estilo pessoal - 21 etapas modulares',
       theme: 'caktoquiz',
