@@ -489,6 +489,7 @@ const FunnelPanelPage: React.FC = () => {
 
   const loadFunnels = async () => {
     try {
+      console.log('📊 Carregando funis...');
       setLoading(true);
       
       // Criar templates principais como funis padrão se não existirem
@@ -500,10 +501,54 @@ const FunnelPanelPage: React.FC = () => {
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setFunnels(data || []);
+      if (error) {
+        console.error('❌ Erro ao carregar funis:', error);
+        
+        // Modo offline - carregar dados simulados
+        console.log('🔧 Modo offline - carregando dados simulados');
+        const simulatedFunnels: Funnel[] = [
+          {
+            id: 'demo-funnel-1',
+            name: 'Funil de Demonstração',
+            description: 'Este é um funil de exemplo para demonstração',
+            status: 'draft',
+            is_published: false,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            user_id: 'demo-user',
+            settings: {
+              pages_count: 5,
+              template_type: 'custom'
+            }
+          }
+        ];
+        setFunnels(simulatedFunnels);
+      } else {
+        console.log('✅ Funis carregados:', data?.length || 0);
+        setFunnels(data || []);
+      }
     } catch (error) {
-      console.error('Erro ao carregar funis:', error);
+      console.error('❌ Erro geral ao carregar funis:', error);
+      
+      // Modo offline - carregar dados simulados
+      console.log('🔧 Modo offline - carregando dados simulados');
+      const simulatedFunnels: Funnel[] = [
+        {
+          id: 'demo-funnel-1',
+          name: 'Funil de Demonstração',
+          description: 'Este é um funil de exemplo para demonstração',
+          status: 'draft',
+          is_published: false,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          user_id: 'demo-user',
+          settings: {
+            pages_count: 5,
+            template_type: 'custom'
+          }
+        }
+      ];
+      setFunnels(simulatedFunnels);
     } finally {
       setLoading(false);
     }
