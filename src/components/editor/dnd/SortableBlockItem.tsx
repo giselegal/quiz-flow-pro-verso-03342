@@ -125,12 +125,44 @@ export const SortableBlockItem: React.FC<SortableBlockItemProps> = ({
           <Copy className="w-2.5 h-2.5 md:w-3 md:h-3 text-gray-600" />
         </button>
 
-        {/* Delete - BOTÃO MAIOR E MAIS VISÍVEL */}
-        <DeleteBlockButton
-          blockId={block.id}
-          onDelete={onDelete}
-          className="w-6 h-6 md:w-7 md:h-7"
-        />
+        {/* Delete - SOLUÇÃO DEFINITIVA */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log(`🚨 EXCLUSÃO DIRETA - Bloco: ${block.id}`);
+            
+            // MÉTODO 1: Usar a função onDelete
+            try {
+              onDelete();
+              console.log('✅ onDelete() executado');
+            } catch (err) {
+              console.error('❌ Erro onDelete:', err);
+            }
+            
+            // MÉTODO 2: Remover elemento DOM imediatamente
+            const element = e.currentTarget.closest('[data-block-id]') as HTMLElement;
+            if (element) {
+              console.log('🧨 Removendo elemento DOM');
+              element.style.opacity = '0';
+              element.style.transform = 'scale(0)';
+              setTimeout(() => element.remove(), 300);
+            }
+            
+            // MÉTODO 3: Forçar via localStorage (backup)
+            const currentBlocks = JSON.parse(localStorage.getItem('editorBlocks') || '[]');
+            const newBlocks = currentBlocks.filter((b: any) => b.id !== block.id);
+            localStorage.setItem('editorBlocks', JSON.stringify(newBlocks));
+            
+            console.log(`🎯 BLOCO ${block.id} MARCADO PARA EXCLUSÃO`);
+          }}
+          className="w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-md flex items-center justify-center shadow-lg border-2 border-red-700 transition-all"
+          title="EXCLUIR BLOCO"
+        >
+          <Trash2 className="w-4 h-4" />
+        </button>
       </div>
 
       {/* Block Content - Using UniversalBlockRenderer */}
