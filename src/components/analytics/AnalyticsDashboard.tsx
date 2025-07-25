@@ -27,6 +27,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   const [funnel, setFunnel] = useState<ConversionFunnel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('overview');
 
   const { getQuizMetrics, getConversionFunnel, syncLocalEvents } = useAnalytics();
 
@@ -65,50 +66,20 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     }
   }, [quizId]);
 
-  // Componente de métrica
+  // Componente de métrica simplificado
   const MetricCard: React.FC<{
     title: string;
     value: string | number;
     description: string;
     icon: React.ReactNode;
-    trend?: 'up' | 'down' | 'neutral';
-  }> = ({ title, value, description, icon, trend = 'neutral' }) => (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+  }> = ({ title, value, description, icon }) => (
+    <div className="bg-white p-6 rounded-lg border shadow-sm">
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-sm font-medium text-gray-600">{title}</h3>
         {icon}
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
-        <p className="text-xs text-muted-foreground flex items-center gap-1">
-          {trend === 'up' && <TrendingUp className="h-3 w-3 text-green-500" />}
-          {trend === 'down' && <TrendingUp className="h-3 w-3 text-red-500 rotate-180" />}
-          {description}
-        </p>
-      </CardContent>
-    </Card>
-  );
-
-  // Componente de funil de conversão
-  const FunnelStep: React.FC<{ step: ConversionFunnel; isLast: boolean }> = ({ step, isLast }) => (
-    <div className="relative">
-      <div className="flex items-center justify-between p-4 bg-white border rounded-lg">
-        <div className="flex-1">
-          <h4 className="font-medium">{step.step_name}</h4>
-          <p className="text-sm text-gray-600">{step.total_users} usuários</p>
-        </div>
-        <div className="text-right">
-          <div className="text-lg font-bold">{step.conversion_rate}%</div>
-          {step.drop_off_rate > 0 && (
-            <div className="text-sm text-red-600">-{step.drop_off_rate}% drop-off</div>
-          )}
-        </div>
       </div>
-      {!isLast && (
-        <div className="flex justify-center my-2">
-          <div className="w-0 h-0 border-l-8 border-r-8 border-l-transparent border-r-transparent border-t-8 border-gray-300"></div>
-        </div>
-      )}
+      <div className="text-2xl font-bold text-gray-900">{value}</div>
+      <p className="text-xs text-gray-500">{description}</p>
     </div>
   );
 
@@ -126,18 +97,18 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   if (error) {
     return (
       <div className={`p-6 ${className}`}>
-        <Card className="border-red-200">
-          <CardContent className="flex items-center space-x-2 p-6">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+          <div className="flex items-center space-x-2">
             <AlertCircle className="h-5 w-5 text-red-500" />
             <div>
               <p className="font-medium text-red-900">Erro ao carregar analytics</p>
               <p className="text-sm text-red-600">{error}</p>
-              <Button onClick={loadAnalytics} variant="outline" size="sm" className="mt-2">
+              <Button onClick={loadAnalytics} className="mt-2 bg-red-600 hover:bg-red-700">
                 Tentar novamente
               </Button>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     );
   }
@@ -145,17 +116,15 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   if (!metrics) {
     return (
       <div className={`p-6 ${className}`}>
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center p-12">
-            <BarChart3 className="h-12 w-12 text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900">Nenhum dado disponível</h3>
-            <p className="text-sm text-gray-600 text-center mt-2">
-              Ainda não há dados de analytics para este quiz.
-              <br />
-              Comece a compartilhar seu quiz para ver as estatísticas aqui.
-            </p>
-          </CardContent>
-        </Card>
+        <div className="bg-white border rounded-lg p-12 text-center">
+          <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900">Nenhum dado disponível</h3>
+          <p className="text-sm text-gray-600 mt-2">
+            Ainda não há dados de analytics para este quiz.
+            <br />
+            Comece a compartilhar seu quiz para ver as estatísticas aqui.
+          </p>
+        </div>
       </div>
     );
   }
@@ -171,11 +140,11 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           </p>
         </div>
         <div className="flex space-x-2">
-          <Button onClick={loadAnalytics} variant="outline" size="sm">
+          <Button onClick={loadAnalytics} variant="outline">
             <RefreshCw className="h-4 w-4 mr-2" />
             Atualizar
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
             Exportar
           </Button>
@@ -207,52 +176,61 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           value={`${metrics.completion_rate}%`}
           description="% de conclusão"
           icon={<TrendingUp className="h-4 w-4 text-orange-500" />}
-          trend={metrics.completion_rate > 50 ? 'up' : 'down'}
         />
       </div>
 
-      <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-          <TabsTrigger value="funnel">Funil de Conversão</TabsTrigger>
-          <TabsTrigger value="performance">Performance</TabsTrigger>
-        </TabsList>
+      {/* Tabs */}
+      <div className="w-full">
+        <div className="border-b border-gray-200">
+          <nav className="-mb-px flex space-x-8">
+            {['overview', 'funnel', 'performance'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === tab
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                {tab === 'overview' ? 'Visão Geral' : 
+                 tab === 'funnel' ? 'Funil de Conversão' : 'Performance'}
+              </button>
+            ))}
+          </nav>
+        </div>
 
-        <TabsContent value="overview" className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Métricas secundárias */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Métricas Detalhadas</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Taxa de Conversão:</span>
-                  <Badge variant={metrics.conversion_rate > 10 ? 'default' : 'secondary'}>
-                    {metrics.conversion_rate}%
-                  </Badge>
+        <div className="mt-6">
+          {activeTab === 'overview' && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Métricas detalhadas */}
+              <div className="bg-white border rounded-lg p-6">
+                <h3 className="text-lg font-medium mb-4">Métricas Detalhadas</h3>
+                <div className="space-y-4">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Taxa de Conversão:</span>
+                    <Badge variant={metrics.conversion_rate > 10 ? 'default' : 'secondary'}>
+                      {metrics.conversion_rate}%
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Taxa de Rejeição:</span>
+                    <Badge variant={metrics.bounce_rate < 50 ? 'default' : 'destructive'}>
+                      {metrics.bounce_rate}%
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Tempo Médio:</span>
+                    <span className="font-medium">
+                      {Math.floor(metrics.average_time / 60)}m {metrics.average_time % 60}s
+                    </span>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Taxa de Rejeição:</span>
-                  <Badge variant={metrics.bounce_rate < 50 ? 'default' : 'destructive'}>
-                    {metrics.bounce_rate}%
-                  </Badge>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Tempo Médio:</span>
-                  <span className="font-medium">
-                    {Math.floor(metrics.average_time / 60)}m {metrics.average_time % 60}s
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
+              </div>
 
-            {/* Status geral */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Status do Quiz</CardTitle>
-              </CardHeader>
-              <CardContent>
+              {/* Status geral */}
+              <div className="bg-white border rounded-lg p-6">
+                <h3 className="text-lg font-medium mb-4">Status do Quiz</h3>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span>Performance:</span>
@@ -270,28 +248,37 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                     </Badge>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
+              </div>
+            </div>
+          )}
 
-        <TabsContent value="funnel">
-          <Card>
-            <CardHeader>
-              <CardTitle>Funil de Conversão</CardTitle>
-              <CardDescription>
-                Visualize onde os usuários abandonam o processo
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+          {activeTab === 'funnel' && (
+            <div className="bg-white border rounded-lg p-6">
+              <h3 className="text-lg font-medium mb-4">Funil de Conversão</h3>
+              <p className="text-gray-600 mb-6">Visualize onde os usuários abandonam o processo</p>
+              
               {funnel.length > 0 ? (
                 <div className="space-y-4">
                   {funnel.map((step, index) => (
-                    <FunnelStep 
-                      key={step.step_name} 
-                      step={step} 
-                      isLast={index === funnel.length - 1} 
-                    />
+                    <div key={step.step_name} className="relative">
+                      <div className="flex items-center justify-between p-4 bg-gray-50 border rounded-lg">
+                        <div className="flex-1">
+                          <h4 className="font-medium">{step.step_name}</h4>
+                          <p className="text-sm text-gray-600">{step.total_users} usuários</p>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-lg font-bold">{step.conversion_rate}%</div>
+                          {step.drop_off_rate > 0 && (
+                            <div className="text-sm text-red-600">-{step.drop_off_rate}% drop-off</div>
+                          )}
+                        </div>
+                      </div>
+                      {index < funnel.length - 1 && (
+                        <div className="flex justify-center my-2">
+                          <div className="w-0 h-0 border-l-8 border-r-8 border-l-transparent border-r-transparent border-t-8 border-gray-300"></div>
+                        </div>
+                      )}
+                    </div>
                   ))}
                 </div>
               ) : (
@@ -300,16 +287,12 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                   <p className="text-gray-600">Dados do funil não disponíveis</p>
                 </div>
               )}
-            </CardContent>
-          </Card>
-        </TabsContent>
+            </div>
+          )}
 
-        <TabsContent value="performance">
-          <Card>
-            <CardHeader>
-              <CardTitle>Análise de Performance</CardTitle>
-            </CardHeader>
-            <CardContent>
+          {activeTab === 'performance' && (
+            <div className="bg-white border rounded-lg p-6">
+              <h3 className="text-lg font-medium mb-4">Análise de Performance</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <h4 className="font-medium mb-2">Recomendações</h4>
@@ -352,10 +335,10 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

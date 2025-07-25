@@ -37,6 +37,7 @@ import { VersioningService } from '../../services/versioningService';
 import { ReportService } from '../../services/reportService';
 import { ABTestService } from '../../services/abTestService';
 import { useAnalytics } from '../../services/analyticsService';
+import AnalyticsDashboard from '../analytics/AnalyticsDashboard';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -102,6 +103,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showABTestModal, setShowABTestModal] = useState(false);
+  const [showAnalyticsDashboard, setShowAnalyticsDashboard] = useState(false);
 
   // Hook principal do editor
   const {
@@ -282,11 +284,31 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
   const handleSave = useCallback(() => {
     console.log('🔘 [DEBUG] handleSave button clicked!');
-    console.log('🔘 [DEBUG] Current funnel:', funnel);
-    console.log('🔘 [DEBUG] isSaving state:', isSaving);
+    console.log('🔘 [DEBUG] Current funnel state:', {
+      id: funnel?.id,
+      name: funnel?.name,
+      pagesCount: funnel?.pages?.length,
+      hasPages: !!funnel?.pages,
+      isSaving,
+      timestamp: new Date().toISOString()
+    });
+    
+    // Verificar se há um funil válido
+    if (!funnel) {
+      console.error('❌ [DEBUG] No funnel available for saving!');
+      showToast('Erro: Nenhum funil carregado para salvar', 'error');
+      return;
+    }
+    
+    if (isSaving) {
+      console.log('⏳ [DEBUG] Save already in progress, ignoring click');
+      return;
+    }
+    
+    console.log('📞 [DEBUG] Calling saveFunnel(true) - manual save');
     trackButtonClick(funnelId || 'new', 'save-button', 'Salvar');
     saveFunnel(true);
-    showToast('Funil salvo com sucesso!', 'success');
+    showToast('Iniciando salvamento...', 'success');
   }, [saveFunnel, showToast, funnel, isSaving, trackButtonClick, funnelId]);
 
   // Função de diagnóstico do salvamento
@@ -793,6 +815,17 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
              <BarChart3 className="w-4 h-4 sm:mr-1" />
              <span className="hidden sm:inline">A/B Test</span>
            </Button>
+
+           <Button
+             size="sm"
+             onClick={() => setShowAnalyticsDashboard(!showAnalyticsDashboard)}
+             variant="outline"
+             className="px-3"
+             title="Dashboard de Analytics"
+           >
+             <BarChart3 className="w-4 h-4 sm:mr-1" />
+             <span className="hidden sm:inline">Analytics</span>
+           </Button>
         </div>
       </div>
 
@@ -1018,6 +1051,30 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               <TemplateSelector
                 onSelectTemplate={handleTemplateSelect}
                 onClose={() => setShowTemplateSelector(false)}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Analytics Dashboard */}
+      {showAnalyticsDashboard && funnel && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden">
+            <div className="flex justify-between items-center p-4 border-b">
+              <h2 className="text-xl font-semibold">Analytics Dashboard</h2>
+              <Button
+                onClick={() => setShowAnalyticsDashboard(false)}
+                variant="outline"
+                size="sm"
+              >
+                ✕
+              </Button>
+            </div>
+            <div className="overflow-y-auto max-h-[80vh]">
+              <AnalyticsDashboard
+                quizId={funnel.id}
+                className="border-0"
               />
             </div>
           </div>

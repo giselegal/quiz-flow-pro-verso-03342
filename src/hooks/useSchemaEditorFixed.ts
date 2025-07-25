@@ -155,10 +155,22 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
   }, [toast]);
 
   const saveFunnel = useCallback(async (manual: boolean = true) => {
-    console.log('🎯 [DEBUG] saveFunnel hook called:', { manual, funnel: funnel?.id, isSaving });
+    console.log('🎯 [DEBUG] saveFunnel hook called:', { 
+      manual, 
+      funnelId: funnel?.id, 
+      funnelName: funnel?.name,
+      pagesCount: funnel?.pages?.length,
+      isSaving,
+      timestamp: new Date().toISOString()
+    });
     
     if (!funnel) {
-      console.log('❌ [DEBUG] No funnel to save!');
+      console.error('❌ [DEBUG] No funnel to save!');
+      toast({
+        title: "Erro ao salvar",
+        description: "Nenhum funil carregado para salvar.",
+        variant: "destructive",
+      });
       return;
     }
     
@@ -168,7 +180,13 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
       return;
     }
     
-    console.log('🚀 [DEBUG] Starting save process...');
+    console.log('🚀 [DEBUG] Starting save process...', {
+      funnelData: {
+        id: funnel.id,
+        name: funnel.name,
+        pages: funnel.pages?.map(p => ({ id: p.id, name: p.name, blocksCount: p.blocks?.length || 0 }))
+      }
+    });
     setIsSaving(true);
     try {
       console.log('📞 [DEBUG] Calling schemaDrivenFunnelService.saveFunnel...');
