@@ -376,6 +376,79 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     }
   }, [currentPage, updatePage, pushToUndoStack, showToast]);
 
+  // Handler para templates
+  const handleTemplateSelect = useCallback((template: any) => {
+    if (template && funnel) {
+      updateFunnelConfig(template);
+      showToast('Template aplicado com sucesso!', 'success');
+    }
+  }, [funnel, updateFunnelConfig, showToast]);
+
+  // Handler para versionamento
+  const handleCreateVersion = useCallback(async () => {
+    if (funnel && funnelId) {
+      setIsPublishing(true);
+      try {
+        const version = await VersioningService.createVersion(
+          funnelId, 
+          'Versão criada pelo editor',
+          { quiz: funnel }
+        );
+        showToast('Nova versão criada com sucesso!', 'success');
+        console.log('Nova versão:', version);
+      } catch (error) {
+        console.error('Erro ao criar versão:', error);
+        showToast('Erro ao criar versão', 'error');
+      } finally {
+        setIsPublishing(false);
+      }
+    }
+  }, [funnel, funnelId, showToast]);
+
+  // Handler para relatórios
+  const handleGenerateReport = useCallback(async () => {
+    if (funnelId) {
+      setIsPublishing(true);
+      try {
+        const report = await ReportService.generateSummaryReport(funnelId);
+        showToast('Relatório gerado com sucesso!', 'success');
+        console.log('Relatório:', report);
+        
+        // Download do relatório
+        ReportService.downloadReport(report, `relatorio-${funnelId}.pdf`);
+      } catch (error) {
+        console.error('Erro ao gerar relatório:', error);
+        showToast('Erro ao gerar relatório', 'error');
+      } finally {
+        setIsPublishing(false);
+      }
+    }
+  }, [funnelId, showToast]);
+
+  // Handler para A/B testing
+  const handleCreateABTest = useCallback(async () => {
+    if (funnel && funnelId) {
+      setIsPublishing(true);
+      try {
+        const test = await ABTestService.createTest({
+          name: `Teste A/B - ${funnel.title || 'Sem título'}`,
+          description: 'Teste A/B criado pelo editor',
+          variants: [
+            { name: 'Original', data: funnel },
+            { name: 'Variante B', data: { ...funnel, title: `${funnel.title} - Variante B` } }
+          ]
+        });
+        showToast('Teste A/B criado com sucesso!', 'success');
+        console.log('Teste A/B:', test);
+      } catch (error) {
+        console.error('Erro ao criar teste A/B:', error);
+        showToast('Erro ao criar teste A/B', 'error');
+      } finally {
+        setIsPublishing(false);
+      }
+    }
+  }, [funnel, funnelId, showToast]);
+
 
   // Auto-create funnel se necessário
   useEffect(() => {
