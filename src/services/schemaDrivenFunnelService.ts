@@ -1,9 +1,10 @@
 import type { BlockData } from '@/components/editor/blocks';
 import { QuizDataAdapter } from './quizDataAdapter';
 import { supabase } from '../lib/supabase';
+import { CORRECT_QUIZ_QUESTIONS } from '@/data/correctQuizQuestions';
 
-// Dados inline do quiz - movidos para este arquivo
-const REAL_QUIZ_QUESTIONS = [
+// Usar as questões originais corrigidas
+const REAL_QUIZ_QUESTIONS = CORRECT_QUIZ_QUESTIONS;
   {
     id: 'q1',
     question: 'Qual dessas opções representa melhor seu estilo predominante?',
