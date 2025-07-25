@@ -9,6 +9,7 @@ import { useEditor } from '@/hooks/useEditor';
 import { useEditorPersistence } from '@/hooks/editor/useEditorPersistence';
 import { toast } from '@/components/ui/use-toast';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { EditorQuizProvider } from '@/context/EditorQuizContext';
 
 const EditorPage: React.FC = () => {
   const [location, setLocation] = useLocation();

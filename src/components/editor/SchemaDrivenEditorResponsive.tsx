@@ -38,6 +38,7 @@ import { ReportService } from '../../services/reportService';
 import { ABTestService } from '../../services/abTestService';
 import { useAnalytics } from '../../services/analyticsService';
 import AnalyticsDashboard from '../analytics/AnalyticsDashboard';
+import { EditorQuizProvider } from '../../context/EditorQuizContext';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -563,7 +564,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   }
 
   return (
-    <div className={`h-screen flex flex-col overflow-hidden bg-gray-50 ${className}`}>
+    <EditorQuizProvider>
+      <div className={`h-screen flex flex-col overflow-hidden bg-gray-50 ${className}`}>
       {/* Header Responsivo */}
       <div className="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4">
         <div className="flex items-center space-x-4 min-w-0 flex-1">
@@ -1081,6 +1083,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         </div>
       )}
     </div>
+    </EditorQuizProvider>
   );
 };
 
