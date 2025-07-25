@@ -207,7 +207,7 @@ const FunnelPanelPage: React.FC = () => {
 
   // Navegar para o editor com funil específico
   const navigateToEditor = (funnelId: string) => {
-    setLocation(`/editor?funnelId=${funnelId}`);
+    setLocation(`/editor/${funnelId}`);
   };  // Carregar funis e estatísticas
   useEffect(() => {
     loadFunnels();
@@ -405,9 +405,25 @@ const FunnelPanelPage: React.FC = () => {
 
   const handleCreateFunnel = async () => {
     try {
+      const user = await ensureAuthenticatedUser();
+      if (!user) {
+        showToast('Erro de autenticação. Tente novamente.', 'error');
+        return;
+      }
+
+      const funnelId = `funnel-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const funnelData = {
+        ...formData,
+        id: funnelId,
+        user_id: user.id,
+        pages_count: 0,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
       const { data, error } = await supabase
         .from('funnels')
-        .insert([formData])
+        .insert([funnelData])
         .select()
         .single();
 
@@ -417,8 +433,14 @@ const FunnelPanelPage: React.FC = () => {
       setIsCreateDialogOpen(false);
       setFormData({ name: '', description: '', status: 'draft' });
       loadStats();
+      
+      showToast('Funil criado com sucesso!');
+      
+      // Navegar para o editor
+      navigateToEditor(funnelId);
     } catch (error) {
       console.error('Erro ao criar funil:', error);
+      showToast('Erro ao criar funil. Tente novamente.', 'error');
     }
   };
 
