@@ -25,6 +25,7 @@ import QuizTransitionBlock from '@/components/editor/blocks/QuizTransitionBlock'
 import ResultPageBlock from '@/components/editor/blocks/ResultPageBlock';
 import QuizOfferPageBlock from '@/components/editor/blocks/QuizOfferPageBlock';
 import ResultHeaderBlock from '@/components/editor/blocks/ResultHeaderBlock';
+import QuizResultCalculatedBlock from '../components/editor/blocks/QuizResultCalculatedBlock';
 
 // Blocos de seções
 import FAQSectionBlock from '@/components/editor/blocks/FAQSectionBlock';
@@ -71,6 +72,8 @@ export const EDITOR_BLOCKS_MAP: Record<string, ComponentType<any>> = {
   'QuizTransitionBlock': QuizTransitionBlock,
   'result-page': ResultPageBlock,
   'ResultPageBlock': ResultPageBlock,
+  'quiz-result-calculated': QuizResultCalculatedBlock,
+  'QuizResultCalculatedBlock': QuizResultCalculatedBlock,
   'quiz-offer-page': QuizOfferPageBlock,
   'QuizOfferPageBlock': QuizOfferPageBlock,
   'result-header': ResultHeaderBlock,

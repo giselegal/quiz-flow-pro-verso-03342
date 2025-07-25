@@ -10,6 +10,7 @@ import {
   VALIDATION_CONFIG,
   type OptionItem 
 } from '@/config/optionsGridConfig';
+import { useEditorQuizContext } from '../../../contexts/EditorQuizContext';
 
 interface QuizQuestionBlockProps {
   question?: string;
@@ -54,6 +55,15 @@ const QuizQuestionBlock = ({
   const [selectedOptions, setSelectedOptions] = useState<Set<string>>(new Set());
   const [isAutoAdvancing, setIsAutoAdvancing] = useState(false);
 
+  // Tentar usar context do editor, mas não falhar se não estiver disponível
+  const editorQuizContext = (() => {
+    try {
+      return useEditorQuizContext();
+    } catch {
+      return null; // Editor em modo preview
+    }
+  })();
+
   // Auto-avanço quando atingir máximo de seleções
   useEffect(() => {
     if (autoAdvance && allowMultiple && selectedOptions.size === maxSelections) {
@@ -86,6 +96,12 @@ const QuizQuestionBlock = ({
     }
     
     setSelectedOptions(newSelected);
+
+    // ✅ INTEGRAÇÃO COM LÓGICA REAL DE CÁLCULO
+    if (editorQuizContext && block?.id) {
+      const selectedArray = Array.from(newSelected);
+      editorQuizContext.handleAnswer(block.id, selectedArray);
+    }
   };
 
   const canProceed = allowMultiple 

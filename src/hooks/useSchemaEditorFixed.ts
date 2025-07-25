@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { schemaDrivenFunnelService, type SchemaDrivenFunnelData, type SchemaDrivenPageData, type AutoSaveState } from '@/services/schemaDrivenFunnelService';
 import { type BlockData } from '@/components/editor/blocks';
 import { useToast } from '@/hooks/use-toast';
+import { useQuizLogic } from './useQuizLogic'; // ✅ IMPORTAR LÓGICA DE CÁLCULO
 
 interface UseSchemaEditorReturn {
   // Estado do funil
@@ -47,6 +48,11 @@ interface UseSchemaEditorReturn {
   // Auto-save controls
   enableAutoSave: (interval?: number) => void;
   disableAutoSave: () => void;
+  
+  // ✅ NOVOS: Integração com cálculos
+  quizCalculations: ReturnType<typeof useQuizLogic>;
+  toggleQuizMode: () => void;
+  testQuizLogic: () => void;
 }
 
 export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorReturn => {
@@ -60,6 +66,12 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
   const { toast } = useToast();
   const initializedRef = useRef(false);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // ✅ INTEGRAÇÃO COM LÓGICA DE CÁLCULO DO QUIZ
+  const quizLogic = useQuizLogic();
+  
+  // Estados para conectar com a lógica de cálculo
+  const [quizMode, setQuizMode] = useState(false); // Se está em modo de teste do quiz
 
   // Computed values
   const currentPage = funnel?.pages?.find(page => page.id === currentPageId) || null;
@@ -457,6 +469,38 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
     schemaDrivenFunnelService.disableAutoSave();
   }, []);
 
+  // ✅ NOVAS FUNÇÕES: Integração com quiz logic
+  const toggleQuizMode = useCallback(() => {
+    setQuizMode(prev => !prev);
+    if (!quizMode) {
+      toast({
+        title: "Modo de teste ativado",
+        description: "Agora você pode testar a lógica de cálculo em tempo real",
+      });
+    }
+  }, [quizMode, toast]);
+
+  const testQuizLogic = useCallback(() => {
+    console.log('🧮 Testando lógica de cálculo:', {
+      currentAnswers: quizLogic.currentAnswers,
+      quizResult: quizLogic.quizResult,
+      strategicAnswers: quizLogic.strategicAnswers
+    });
+    
+    if (quizLogic.quizResult) {
+      toast({
+        title: "Cálculo funcionando!",
+        description: `Estilo primário: ${quizLogic.quizResult.primaryStyle || 'N/A'}`,
+      });
+    } else {
+      toast({
+        title: "Sem resultados ainda",
+        description: "Responda algumas questões para testar o cálculo",
+        variant: "destructive"
+      });
+    }
+  }, [quizLogic, toast]);
+
   // Inicializar funil apenas uma vez
   useEffect(() => {
     if (initializedRef.current) return;
@@ -548,5 +592,10 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
     // Auto-save
     enableAutoSave,
     disableAutoSave,
+    
+    // ✅ NOVOS: Integração com cálculos
+    quizCalculations: quizLogic,
+    toggleQuizMode,
+    testQuizLogic,
   };
 };
