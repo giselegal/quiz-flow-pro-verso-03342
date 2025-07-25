@@ -274,13 +274,13 @@ const FunnelPanelPage: React.FC = () => {
         if (error) throw error;
         
         // Salvar dados completos do funil
-        await schemaDrivenFunnelService.saveFunnel(funnelData.funnel.id, funnelData);
+        await schemaDrivenFunnelService.saveFunnel(funnelData.id, funnelData);
         
         setFunnels(prev => [data, ...prev]);
         showToast('Funil padrão de 21 etapas criado com sucesso!');
         
         // Navegar para o editor
-        navigateToEditor(funnelData.funnel.id);
+        navigateToEditor(funnelData.id);
         
       } else {
         // Criar funil baseado em outros templates
@@ -324,6 +324,48 @@ const FunnelPanelPage: React.FC = () => {
   const loadFunnels = async () => {
     try {
       setLoading(true);
+      
+      // Primeiro, verificar se o funil padrão de 21 etapas existe
+      const DEFAULT_FUNNEL_ID = 'default-quiz-funnel-21-steps';
+      const { data: existingDefault, error: checkError } = await supabase
+        .from('funnels')
+        .select('*')
+        .eq('id', DEFAULT_FUNNEL_ID)
+        .single();
+
+      // Se não existe, criar o funil padrão
+      if (!existingDefault && checkError?.code === 'PGRST116') {
+        try {
+          const user = await ensureAuthenticatedUser();
+          if (user) {
+            const defaultFunnelData = schemaDrivenFunnelService.createDefaultFunnel();
+            
+            const supabaseData = {
+              id: defaultFunnelData.id,
+              name: defaultFunnelData.name,
+              description: defaultFunnelData.description,
+              status: 'active' as const,
+              user_id: user.id,
+              pages_count: defaultFunnelData.pages.length,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            };
+
+            await supabase
+              .from('funnels')
+              .upsert(supabaseData);
+              
+            // Salvar dados completos do funil
+            await schemaDrivenFunnelService.saveFunnel(defaultFunnelData.id, defaultFunnelData);
+            
+            console.log('✅ Funil padrão de 21 etapas criado automaticamente');
+          }
+        } catch (error) {
+          console.error('Erro ao criar funil padrão:', error);
+        }
+      }
+
+      // Carregar todos os funis
       const { data, error } = await supabase
         .from('funnels')
         .select('*')
