@@ -609,19 +609,11 @@ const FunnelPanelPage: React.FC = () => {
         </div>
         <div className="flex gap-3">
           <Button 
-            variant="outline" 
-            onClick={() => setIsTemplateDialogOpen(true)}
-            className="bg-white border-2 border-[#B89B7A] text-[#B89B7A] hover:bg-[#B89B7A] hover:text-white"
-          >
-            <Layout className="w-4 h-4 mr-2" />
-            Templates
-          </Button>
-          <Button 
             onClick={() => setIsCreateDialogOpen(true)}
             className="bg-[#B89B7A] hover:bg-[#9F836A] text-white"
           >
             <Plus className="w-4 h-4 mr-2" />
-            Novo Funil
+            Novo Funil Personalizado
           </Button>
         </div>
       </div>
@@ -730,68 +722,108 @@ const FunnelPanelPage: React.FC = () => {
             )}
           </div>
         ) : (
-          filteredFunnels.map((funnel) => (
-            <Card key={funnel.id} className="hover:shadow-md transition-shadow">
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <CardTitle className="text-lg">{funnel.name}</CardTitle>
-                    <CardDescription className="mt-1">
-                      {funnel.description || 'Sem descrição'}
-                    </CardDescription>
+          filteredFunnels.map((funnel) => {
+            const isTemplate = funnel.settings?.is_template === true;
+            return (
+              <Card 
+                key={funnel.id} 
+                className={`hover:shadow-md transition-shadow ${isTemplate ? 'border-2 border-[#B89B7A] bg-gradient-to-br from-[#F5F1EC] to-white' : ''}`}
+              >
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <CardTitle className={`text-lg ${isTemplate ? 'text-[#B89B7A] font-bold' : ''}`}>
+                        {funnel.name}
+                      </CardTitle>
+                      <CardDescription className="mt-1">
+                        {funnel.description || 'Sem descrição'}
+                      </CardDescription>
+                      {isTemplate && (
+                        <div className="mt-2">
+                          <Badge className="bg-[#B89B7A] text-white">
+                            Template Pronto
+                          </Badge>
+                        </div>
+                      )}
+                    </div>
+                    {!isTemplate && (
+                      <Badge variant={getStatusBadgeVariant(funnel)}>
+                        {getStatusLabel(funnel)}
+                      </Badge>
+                    )}
                   </div>
-                  <Badge variant={getStatusBadgeVariant(funnel)}>
-                    {getStatusLabel(funnel)}
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="flex justify-between items-center text-sm text-gray-500 mb-4">
-                  <span className="flex items-center">
-                    <Calendar className="w-4 h-4 mr-1" />
-                    {new Date(funnel.created_at).toLocaleDateString('pt-BR')}
-                  </span>
-                  <span>{funnel.settings?.pages_count || 0} páginas</span>
-                </div>
-                
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm" className="flex-1">
-                    <Eye className="w-4 h-4 mr-1" />
-                    Visualizar
-                  </Button>
-                  <Button 
-                    size="sm" 
-                    className="flex-1 bg-[#B89B7A] hover:bg-[#9F836A] text-white"
-                    onClick={() => navigateToEditor(funnel.id)}
-                  >
-                    <Edit className="w-4 h-4 mr-1" />
-                    Editor
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => openEditDialog(funnel)}
-                  >
-                    <Edit className="w-4 h-4" />
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => handleDuplicateFunnel(funnel)}
-                  >
-                    <Copy className="w-4 h-4" />
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => handleDeleteFunnel(funnel.id)}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))
+                </CardHeader>
+                <CardContent>
+                  <div className="flex justify-between items-center text-sm text-gray-500 mb-4">
+                    <span className="flex items-center">
+                      <Calendar className="w-4 h-4 mr-1" />
+                      {new Date(funnel.created_at).toLocaleDateString('pt-BR')}
+                    </span>
+                    <span>{funnel.settings?.pages_count || 0} páginas</span>
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    {isTemplate ? (
+                      <>
+                        <Button 
+                          size="sm" 
+                          className="flex-1 bg-[#B89B7A] hover:bg-[#9F836A] text-white"
+                          onClick={() => createFunnelFromTemplate(funnel)}
+                        >
+                          <Plus className="w-4 h-4 mr-1" />
+                          Usar Template
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => navigateToEditor(funnel.id)}
+                        >
+                          <Eye className="w-4 h-4 mr-1" />
+                          Visualizar
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button variant="outline" size="sm" className="flex-1">
+                          <Eye className="w-4 h-4 mr-1" />
+                          Visualizar
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          className="flex-1 bg-[#B89B7A] hover:bg-[#9F836A] text-white"
+                          onClick={() => navigateToEditor(funnel.id)}
+                        >
+                          <Edit className="w-4 h-4 mr-1" />
+                          Editor
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => openEditDialog(funnel)}
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleDuplicateFunnel(funnel)}
+                        >
+                          <Copy className="w-4 h-4" />
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleDeleteFunnel(funnel.id)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })
         )}
       </div>
 
