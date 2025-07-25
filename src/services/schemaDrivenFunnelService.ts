@@ -1773,6 +1773,108 @@ class SchemaDrivenFunnelService {
       throw error; // Re-lançar para que o chamador possa lidar com isso
     }
   }
+
+  // Métodos para interface de administração
+  async createFunnelFromTemplate(template: any, userId: string, customName?: string): Promise<any> {
+    try {
+      // Criar estrutura de funil baseada no template
+      const pages = template.stepTitles.map((title: string, index: number) => ({
+        id: `step-${index + 1}`,
+        title: title,
+        blocks: [],
+        order: index + 1
+      }));
+
+      const funnelName = customName || `${template.name} - ${new Date().toLocaleString('pt-BR')}`;
+      
+      // Criar registro no Supabase
+      const supabaseData = {
+        id: `funnel-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        name: funnelName,
+        description: template.description,
+        status: 'draft',
+        user_id: userId,
+        pages_count: template.steps,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      const { data, error } = await supabase
+        .from('funnels')
+        .insert([supabaseData])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Criar funil schema-driven correspondente
+      const funnelData = this.createDefaultFunnel();
+      funnelData.id = data.id;
+      funnelData.name = funnelName;
+      funnelData.description = template.description;
+      funnelData.pages = pages;
+
+      await this.saveFunnel(funnelData);
+
+      console.log('✅ Funil criado a partir do template:', template.name);
+      return data;
+    } catch (error) {
+      console.error('❌ Erro ao criar funil a partir do template:', error);
+      throw error;
+    }
+  }
+
+  // Método simplificado para criar funil personalizado da interface admin
+  async createFunnelForAdmin(name: string, description?: string, userId?: string, isPublished = false): Promise<any> {
+    try {
+      // Criar registro no Supabase
+      const supabaseData = {
+        id: `funnel-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        name: name,
+        description: description || '',
+        status: isPublished ? 'active' : 'draft',
+        user_id: userId,
+        pages_count: 1,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      const { data, error } = await supabase
+        .from('funnels')
+        .insert([supabaseData])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Criar funil schema-driven correspondente
+      const funnelData = this.createDefaultFunnel();
+      funnelData.id = data.id;
+      funnelData.name = name;
+      funnelData.description = description || '';
+      funnelData.isPublished = isPublished;
+      funnelData.pages = [{
+        id: 'step-1',
+        name: 'Primeira Etapa',
+        title: 'Primeira Etapa',
+        type: 'intro' as const,
+        blocks: [],
+        order: 1,
+        settings: {
+          showProgressBar: true,
+          backgroundColor: '#FFFFFF'
+        }
+      }];
+
+      await this.saveFunnel(funnelData);
+
+      console.log('✅ Funil personalizado criado:', name);
+      return data;
+    } catch (error) {
+      console.error('❌ Erro ao criar funil personalizado:', error);
+      throw error;
+    }
+  }
 }
 
 export const schemaDrivenFunnelService = new SchemaDrivenFunnelService();
