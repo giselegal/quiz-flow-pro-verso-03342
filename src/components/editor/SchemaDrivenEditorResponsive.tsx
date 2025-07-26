@@ -989,6 +989,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                 <div className="w-full max-w-2xl bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-[#B89B7A]/20 min-h-[calc(100vh-140px)] mx-auto overflow-hidden">
                   <div className="p-8">
                     <DroppableCanvas
+                      setShowRightSidebar={setShowRightSidebar}
                       blocks={currentPage?.blocks || []}
                       selectedBlockId={selectedBlockId || undefined}
                       onBlockSelect={(blockId) => setSelectedBlock(blockId)}
@@ -1015,6 +1016,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                 <div className="w-full bg-white/95 backdrop-blur-sm rounded-lg shadow-lg border border-[#B89B7A]/20 min-h-[calc(100vh-120px)]">
                   <div className="p-6">
                     <DroppableCanvas
+                      setShowRightSidebar={setShowRightSidebar}
                       blocks={currentPage?.blocks || []}
                       selectedBlockId={selectedBlockId || undefined}
                       onBlockSelect={(blockId) => setSelectedBlock(blockId)}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { PropertySchema } from '../types/editor';
+import { PlaceholderUtils } from '../utils/placeholderUtils';
 
 // Block Definition Interface
 export interface BlockDefinition {
@@ -915,7 +916,7 @@ export const blockDefinitions: BlockDefinition[] = [
         key: 'src',
         label: 'Image URL',
         type: 'image-url',
-        defaultValue: 'https://via.placeholder.com/400x300'
+        defaultValue: PlaceholderUtils.generateContentPlaceholder(400, 300)
       },
       {
         key: 'alt',
@@ -925,7 +926,7 @@ export const blockDefinitions: BlockDefinition[] = [
       }
     ],
     defaultProperties: {
-      src: 'https://via.placeholder.com/400x300',
+      src: PlaceholderUtils.getContentImage(400, 300),
       alt: 'Image description'
     }
   },
