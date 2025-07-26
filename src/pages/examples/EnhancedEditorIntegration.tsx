@@ -238,45 +238,184 @@ const FunnelManagementPage: React.FC = () => {
 // Hook personalizado para facilitar integração
 const useEnhancedEditor = (funnelId: string) => {
   const [isEditorReady, setIsEditorReady] = useState(false);
-  const [funnelData, setFunnelData] = useState(null);
+  const [funnelData, setFunnelData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     // Carregar dados do funil
     const loadFunnel = async () => {
-      try {
-        // Aqui você faria a chamada para sua API
-        // const data = await funnelService.getFunnel(funnelId);
-        // setFunnelData(data);
+      if (!funnelId || funnelId === 'new') {
         setIsEditorReady(true);
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        // Importar o serviço existente
+        const { funnelService } = await import('../../services/funnelService');
+        const data = await funnelService.loadFunnelData(funnelId);
+        
+        if (!isMounted) return;
+
+        if (data) {
+          setFunnelData(data);
+          setIsEditorReady(true);
+        } else {
+          setError('Funil não encontrado');
+        }
       } catch (error) {
         console.error('Erro ao carregar funil:', error);
+        if (isMounted) {
+          setError('Erro ao carregar dados do funil');
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
-    if (funnelId) {
-      loadFunnel();
-    }
+    loadFunnel();
+
+    return () => {
+      isMounted = false;
+    };
   }, [funnelId]);
 
+  // Métodos para ações do funil
+  const saveFunnel = async (updatedData: any) => {
+    try {
+      const { funnelService } = await import('../../services/funnelService');
+      const result = await funnelService.saveFunnelData(updatedData);
+      if (result) {
+        // Recarregar dados após salvar
+        const freshData = await funnelService.loadFunnelData(funnelId);
+        if (freshData) {
+          setFunnelData(freshData);
+        }
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Erro ao salvar funil:', error);
+      return false;
+    }
+  };
+
+  const publishFunnel = async () => {
+    try {
+      const { funnelService } = await import('../../services/funnelService');
+      const result = await funnelService.updateFunnel(funnelId, { 
+        isPublished: true,
+        publishedAt: new Date().toISOString()
+      });
+      return !!result;
+    } catch (error) {
+      console.error('Erro ao publicar funil:', error);
+      return false;
+    }
+  };
+
+  const deleteFunnel = async () => {
+    try {
+      const { funnelService } = await import('../../services/funnelService');
+      await funnelService.deleteFunnel(funnelId);
+      return true;
+    } catch (error) {
+      console.error('Erro ao deletar funil:', error);
+      return false;
+    }
+  };
+
   return {
+    // Estados
     isEditorReady,
     funnelData,
-    // Métodos uteis
+    isLoading,
+    error,
+    
+    // Métodos de ação
+    saveFunnel,
+    publishFunnel,
+    deleteFunnel,
+    
+    // Métodos de navegação
     openEditor: () => window.open(`/admin/funis/${funnelId}/editor`, '_blank'),
     openPreview: () => window.open(`/preview/${funnelId}`, '_blank'),
-    openAnalytics: () => window.open(`/admin/funis/${funnelId}/analytics`, '_blank')
+    openAnalytics: () => window.open(`/admin/funis/${funnelId}/analytics`, '_blank'),
+    
+    // Método para recarregar dados
+    refresh: () => {
+      setIsEditorReady(false);
+      setIsLoading(true);
+      setError(null);
+      // O useEffect será chamado novamente devido à mudança de estado
+    }
   };
 };
 
 // Exemplo de uso em um componente existente
 const ExistingComponentExample: React.FC = () => {
   const funnelId = "exemplo-123";
-  const { isEditorReady, openEditor, openPreview } = useEnhancedEditor(funnelId);
+  const { 
+    isEditorReady, 
+    isLoading, 
+    error, 
+    funnelData,
+    openEditor, 
+    openPreview,
+    saveFunnel,
+    publishFunnel,
+    deleteFunnel,
+    refresh
+  } = useEnhancedEditor(funnelId);
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+            <p className="mt-2 text-sm text-gray-600">Carregando funil...</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <div className="text-center">
+            <div className="text-red-500 mb-2">❌</div>
+            <p className="text-sm text-red-600 mb-4">{error}</p>
+            <Button onClick={refresh} size="sm">
+              Tentar Novamente
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Ações do Funil</CardTitle>
+        <CardTitle className="flex items-center justify-between">
+          Ações do Funil
+          {funnelData && (
+            <Badge variant="outline" className="text-xs">
+              {funnelData.name || 'Sem nome'}
+            </Badge>
+          )}
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
         <Button 
@@ -296,6 +435,49 @@ const ExistingComponentExample: React.FC = () => {
           <Eye className="h-4 w-4 mr-2" />
           Visualizar Funil
         </Button>
+
+        <div className="grid grid-cols-2 gap-2">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={async () => {
+              const success = await publishFunnel();
+              if (success) {
+                alert('Funil publicado com sucesso!');
+                refresh();
+              } else {
+                alert('Erro ao publicar funil');
+              }
+            }}
+          >
+            Publicar
+          </Button>
+          
+          <Button 
+            variant="destructive" 
+            size="sm"
+            onClick={async () => {
+              if (confirm('Tem certeza que deseja deletar este funil?')) {
+                const success = await deleteFunnel();
+                if (success) {
+                  alert('Funil deletado com sucesso!');
+                } else {
+                  alert('Erro ao deletar funil');
+                }
+              }
+            }}
+          >
+            Deletar
+          </Button>
+        </div>
+
+        {funnelData && (
+          <div className="mt-4 p-3 bg-gray-50 rounded text-xs">
+            <p><strong>ID:</strong> {funnelData.id}</p>
+            <p><strong>Páginas:</strong> {funnelData.pages?.length || 0}</p>
+            <p><strong>Última atualização:</strong> {new Date().toLocaleDateString()}</p>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
