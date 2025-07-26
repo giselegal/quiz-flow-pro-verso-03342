@@ -846,52 +846,78 @@ export const blockDefinitions: BlockDefinition[] = [
   // Blocos básicos existentes
   {
     type: 'heading',
-    name: 'Heading',
-    description: 'A simple heading block',
+    name: 'Título',
+    description: 'Títulos e subtítulos com diferentes níveis (H1-H4)',
     icon: 'Heading1',
     category: 'content',
     propertiesSchema: [
       {
-        key: 'text',
-        label: 'Text',
+        key: 'content',
+        label: 'Conteúdo',
         type: 'text',
-        defaultValue: 'Heading'
+        defaultValue: 'Seu Título Aqui'
+      },
+      {
+        key: 'level',
+        label: 'Nível',
+        type: 'select',
+        options: ['h1', 'h2', 'h3', 'h4'],
+        defaultValue: 'h1'
       }
     ],
     defaultProperties: {
-      text: 'Heading'
+      content: 'Seu Título Aqui',
+      level: 'h1'
     }
   },
   {
-    type: 'paragraph',
-    name: 'Paragraph',
-    description: 'A simple paragraph block',
+    type: 'text',
+    name: 'Texto',
+    description: 'Bloco de texto simples com formatação básica',
     icon: 'Type',
     category: 'content',
     propertiesSchema: [
       {
-        key: 'text',
-        label: 'Text',
+        key: 'content',
+        label: 'Conteúdo',
         type: 'textarea',
-        defaultValue: 'Your paragraph text here'
+        defaultValue: 'Parágrafo de texto editável.'
       }
     ],
     defaultProperties: {
-      text: 'Your paragraph text here'
+      content: 'Parágrafo de texto editável.'
+    }
+  },
+  {
+    type: 'paragraph',
+    name: 'Parágrafo',
+    description: 'Bloco de parágrafo simples',
+    icon: 'Type',
+    category: 'content',
+    propertiesSchema: [
+      {
+        key: 'content',
+        label: 'Conteúdo',
+        type: 'textarea',
+        defaultValue: 'Parágrafo de texto editável.'
+      }
+    ],
+    defaultProperties: {
+      content: 'Parágrafo de texto editável.'
     }
   },
   {
     type: 'button',
-    name: 'Button',
-    description: 'A clickable button',
+    name: 'Botão',
+    description: 'Botão interativo com link ou ação personalizada',
     icon: 'RectangleHorizontal',
     category: 'content',
     propertiesSchema: [
       {
         key: 'text',
-        label: 'Button Text',
+        label: 'Texto do Botão',
         type: 'text',
-        defaultValue: 'Click me'
+        defaultValue: 'Clique Aqui'
       },
       {
         key: 'url',
@@ -901,7 +927,7 @@ export const blockDefinitions: BlockDefinition[] = [
       }
     ],
     defaultProperties: {
-      text: 'Click me',
+      text: 'Clique Aqui',
       url: '#'
     }
   },
@@ -1656,7 +1682,7 @@ export const blockDefinitions: BlockDefinition[] = [
         key: 'content',
         label: 'Conteúdo',
         type: 'textarea',
-        defaultValue: 'Seu texto elegante aqui...'
+        defaultValue: 'Texto editável com formatação elegante.'
       },
       {
         key: 'fontFamily',
@@ -1687,7 +1713,7 @@ export const blockDefinitions: BlockDefinition[] = [
       }
     ],
     defaultProperties: {
-      content: 'Seu texto elegante aqui...',
+      content: 'Texto editável com formatação elegante.',
       fontFamily: 'Inter',
       fontSize: 'text-base',
       textAlign: 'text-left',

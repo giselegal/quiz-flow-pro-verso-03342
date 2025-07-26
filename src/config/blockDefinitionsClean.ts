@@ -243,7 +243,7 @@ export const blockDefinitions: BlockDefinition[] = [
         key: 'content',
         label: 'Conteúdo',
         type: 'textarea',
-        defaultValue: 'Seu texto elegante aqui...',
+        defaultValue: 'Texto editável com formatação elegante.',
         rows: 3,
         description: 'Suporte a HTML e palavras destacadas'
       },

@@ -35,7 +35,7 @@ export const getDefaultData = (type: SimpleComponent["type"]): SimpleComponent["
     case "subtitle":
       return { text: "Novo Subtítulo", fontSize: "1.25rem" };
     case "text":
-      return { text: "Seu texto elegante aqui...", fontSize: "1rem" };
+      return { text: "Parágrafo de texto editável.", fontSize: "1rem" };
     case "image":
       return {
         src: PlaceholderUtils.generateContentPlaceholder(400, 300, "Nova Imagem"),

@@ -15,7 +15,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   className = ''
 }) => {
   const {
-    content = 'Seu texto elegante aqui...',
+    content = 'Texto editável com formatação elegante.',
     fontSize = 'medium',
     fontWeight = 'normal',
     textAlign = 'left',
