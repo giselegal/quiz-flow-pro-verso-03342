@@ -30,7 +30,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({
   onDelete,
   onShare
 }) => {
-  const getDifficultyColor = (difficulty: string) => {
+  const getDifficultyColor = (difficulty: string | null) => {
     switch (difficulty) {
       case 'easy': return 'bg-green-100 text-green-800';
       case 'medium': return 'bg-yellow-100 text-yellow-800';
@@ -39,12 +39,12 @@ export const QuizCard: React.FC<QuizCardProps> = ({
     }
   };
 
-  const getDifficultyLabel = (difficulty: string) => {
+  const getDifficultyLabel = (difficulty: string | null) => {
     switch (difficulty) {
       case 'easy': return 'Fácil';
       case 'medium': return 'Médio';
       case 'hard': return 'Difícil';
-      default: return difficulty;
+      default: return difficulty || 'N/A';
     }
   };
 
@@ -216,7 +216,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({
       <div className="px-6 py-3 bg-white border-t border-gray-100">
         <div className="flex justify-between items-center text-sm text-gray-500">
           <span>
-            {quiz.question_count || 0} pergunta{(quiz.question_count || 0) !== 1 ? 's' : ''}
+            Perguntas não carregadas
           </span>
           <span>
             Atualizado {new Date(quiz.updated_at).toLocaleDateString('pt-BR')}
