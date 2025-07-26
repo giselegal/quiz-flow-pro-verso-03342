@@ -717,8 +717,8 @@ const FunnelPanelPage: React.FC = () => {
           </div>
         </div>
 
-      {/* Stats Cards - Redesigned com cores da marca */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Stats Cards - Redesigned com cores da marca */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card className="bg-gradient-to-br from-white to-[#fffaf7] border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-semibold text-[#8F7A6A]">Total de Funis</CardTitle>
@@ -772,8 +772,8 @@ const FunnelPanelPage: React.FC = () => {
         </Card>
       </div>
 
-      {/* Filters - Redesigned com cores da marca */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-[#B89B7A]/20 p-6">
+        {/* Filters - Redesigned com cores da marca */}
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-[#B89B7A]/20 p-6">
         <div className="flex flex-col lg:flex-row gap-4">
           <div className="relative flex-1">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#8F7A6A] w-5 h-5" />
@@ -800,8 +800,8 @@ const FunnelPanelPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Funnels List - Redesigned */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+        {/* Funnels List - Redesigned */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
         {loading ? (
           Array.from({ length: 6 }).map((_, i) => (
             <Card key={i} className="animate-pulse bg-white shadow-lg">
@@ -1071,6 +1071,7 @@ const FunnelPanelPage: React.FC = () => {
             )}
           </>
         )}
+        </div>
       </div>
 
       {/* Create Funnel Dialog */}
