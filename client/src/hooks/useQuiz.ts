@@ -118,6 +118,75 @@ export const useUserQuizzes = () => {
     setError(null);
 
     try {
+      // Verificar se está em modo mock
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      
+      if (!supabaseUrl || supabaseUrl.includes('temporary-mock-url')) {
+        // Mock data para desenvolvimento
+        const mockQuizzes: Quiz[] = [
+          {
+            id: 'mock-quiz-1',
+            title: 'Quiz de Conhecimentos Gerais',
+            description: 'Teste seus conhecimentos em diversos assuntos',
+            author_id: user.id,
+            category: 'geral',
+            difficulty: 'medium',
+            time_limit: null,
+            is_public: true,
+            is_published: true,
+            is_template: false,
+            thumbnail_url: null,
+            version: 1,
+            slug: 'quiz-conhecimentos-gerais',
+            tags: ['conhecimento', 'cultura'],
+            settings: {
+              allowRetake: true,
+              showResults: true,
+              shuffleQuestions: false,
+              showProgressBar: true,
+              passingScore: 60
+            },
+            view_count: 150,
+            completion_count: 89,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          },
+          {
+            id: 'mock-quiz-2',
+            title: 'Quiz de Tecnologia',
+            description: 'Desafie-se com perguntas sobre tecnologia moderna',
+            author_id: user.id,
+            category: 'tecnologia',
+            difficulty: 'hard',
+            time_limit: 30,
+            is_public: false,
+            is_published: false,
+            is_template: false,
+            thumbnail_url: null,
+            version: 1,
+            slug: 'quiz-tecnologia',
+            tags: ['tech', 'programação'],
+            settings: {
+              allowRetake: false,
+              showResults: true,
+              shuffleQuestions: true,
+              showProgressBar: true,
+              passingScore: 70
+            },
+            view_count: 45,
+            completion_count: 23,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }
+        ];
+
+        // Simular carregamento
+        await new Promise(resolve => setTimeout(resolve, 500));
+        setQuizzes(mockQuizzes);
+        return;
+      }
+
+      // Modo normal com Supabase
       const { data, error } = await QuizService.getUserQuizzes(user.id);
       
       if (error) {
