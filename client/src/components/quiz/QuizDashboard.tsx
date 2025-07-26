@@ -48,7 +48,12 @@ export const QuizDashboard: React.FC<QuizDashboardProps> = ({
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
-  const handleCreateQuiz = async (quizData: any) => {
+  const handleCreateQuiz = async (quizData: {
+    title: string;
+    description?: string;
+    category: string;
+    difficulty: string;
+  }) => {
     try {
       const { data, error } = await createQuiz({
         title: quizData.title,
