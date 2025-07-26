@@ -1642,6 +1642,156 @@ export const blockDefinitions: BlockDefinition[] = [
       spacing: 32,
       width: 50
     }
+  },
+
+  // COMPONENTES INLINE BÁSICOS
+  {
+    type: 'text-inline',
+    name: 'Texto Moderno',
+    description: 'Texto responsivo com tipografia moderna',
+    icon: 'Type',
+    category: 'Inline',
+    propertiesSchema: [
+      {
+        key: 'content',
+        label: 'Conteúdo',
+        type: 'textarea',
+        defaultValue: 'Seu texto elegante aqui...'
+      },
+      {
+        key: 'fontFamily',
+        label: 'Família da Fonte',
+        type: 'select',
+        options: ['Playfair Display', 'Inter', 'system-ui'],
+        defaultValue: 'Inter'
+      },
+      {
+        key: 'fontSize',
+        label: 'Tamanho',
+        type: 'select',
+        options: ['text-sm', 'text-base', 'text-lg', 'text-2xl', 'text-3xl'],
+        defaultValue: 'text-base'
+      },
+      {
+        key: 'textAlign',
+        label: 'Alinhamento',
+        type: 'select',
+        options: ['text-left', 'text-center', 'text-right'],
+        defaultValue: 'text-left'
+      },
+      {
+        key: 'color',
+        label: 'Cor do Texto',
+        type: 'color',
+        defaultValue: '#432818'
+      }
+    ],
+    defaultProperties: {
+      content: 'Seu texto elegante aqui...',
+      fontFamily: 'Inter',
+      fontSize: 'text-base',
+      textAlign: 'text-left',
+      color: '#432818'
+    }
+  },
+
+  {
+    type: 'heading-inline',
+    name: 'Título Elegante',
+    description: 'Títulos com design moderno e destaque de palavras',
+    icon: 'Heading',
+    category: 'Inline',
+    propertiesSchema: [
+      {
+        key: 'content',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Título Principal'
+      },
+      {
+        key: 'level',
+        label: 'Nível',
+        type: 'select',
+        options: ['h1', 'h2', 'h3', 'h4'],
+        defaultValue: 'h2'
+      },
+      {
+        key: 'fontWeight',
+        label: 'Peso da Fonte',
+        type: 'select',
+        options: ['normal', 'medium', 'semibold', 'bold', 'extrabold'],
+        defaultValue: 'bold'
+      },
+      {
+        key: 'textAlign',
+        label: 'Alinhamento',
+        type: 'select',
+        options: ['left', 'center', 'right'],
+        defaultValue: 'center'
+      },
+      {
+        key: 'color',
+        label: 'Cor do Texto',
+        type: 'color',
+        defaultValue: '#1f2937'
+      }
+    ],
+    defaultProperties: {
+      content: 'Título Principal',
+      level: 'h2',
+      fontWeight: 'bold',
+      textAlign: 'center',
+      color: '#1f2937'
+    }
+  },
+
+  {
+    type: 'button-inline',
+    name: 'Botão Elegante',
+    description: 'Botão responsivo com design moderno',
+    icon: 'MousePointer',
+    category: 'Inline',
+    propertiesSchema: [
+      {
+        key: 'text',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Clique Aqui'
+      },
+      {
+        key: 'href',
+        label: 'Link/Ação',
+        type: 'text',
+        defaultValue: '#'
+      },
+      {
+        key: 'variant',
+        label: 'Estilo',
+        type: 'select',
+        options: ['primary', 'secondary', 'outline', 'ghost'],
+        defaultValue: 'primary'
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: ['small', 'medium', 'large'],
+        defaultValue: 'medium'
+      },
+      {
+        key: 'fullWidth',
+        label: 'Largura Total',
+        type: 'boolean',
+        defaultValue: false
+      }
+    ],
+    defaultProperties: {
+      text: 'Clique Aqui',
+      href: '#',
+      variant: 'primary',
+      size: 'medium',
+      fullWidth: false
+    }
   }
 ];
 
