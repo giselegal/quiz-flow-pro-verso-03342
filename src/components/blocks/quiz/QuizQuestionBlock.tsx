@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '../../ui/button';
 import { ArrowLeft } from 'lucide-react';
-import { useEditorQuizContext } from '../../../context/EditorQuizContext';
+import { useEditorQuizContext } from '../../../contexts/EditorQuizContext';
 
 /**
  * QuizQuestionBlock - Componente de pergunta de quiz 100% reutilizável e editável

@@ -212,39 +212,17 @@ const FunnelPanelPage: React.FC = () => {
 
   const [, setLocation] = useLocation();
 
-  // Toast melhorado para debug
+  // Sistema de toast unificado migrado da versão manual
+  const { toast } = useToast();
+  
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
     console.log(`${type.toUpperCase()}: ${message}`);
     
-    // Criar toast visual temporário
-    const toast = document.createElement('div');
-    toast.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 12px 20px;
-      background: ${type === 'success' ? '#10B981' : '#EF4444'};
-      color: white;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      z-index: 9999;
-      font-family: system-ui;
-      font-size: 14px;
-      max-width: 300px;
-      transition: all 0.3s ease;
-    `;
-    toast.textContent = message;
-    
-    document.body.appendChild(toast);
-    
-    // Remover após 3 segundos
-    setTimeout(() => {
-      if (toast.parentNode) {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateX(100%)';
-        setTimeout(() => toast.remove(), 300);
-      }
-    }, 3000);
+    toast({
+      title: type === 'success' ? 'Sucesso' : 'Erro',
+      description: message,
+      variant: type === 'error' ? 'destructive' : 'default',
+    });
   };
 
   // Navegar para o editor com funil específico
@@ -639,18 +617,30 @@ const FunnelPanelPage: React.FC = () => {
     setIsEditDialogOpen(true);
   };
 
+  // ✅ BUSCA AVANÇADA MELHORADA - Fase 1
   const filteredFunnels = funnels.filter(funnel => {
-    const matchesSearch = funnel.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (funnel.description || '').toLowerCase().includes(searchTerm.toLowerCase());
+    // Busca avançada por nome, descrição, tags e configurações
+    const searchLower = searchTerm.toLowerCase();
+    const matchesSearch = searchTerm === '' || 
+      funnel.name.toLowerCase().includes(searchLower) ||
+      (funnel.description || '').toLowerCase().includes(searchLower) ||
+      // Buscar em configurações e metadados
+      JSON.stringify(funnel.settings || {}).toLowerCase().includes(searchLower) ||
+      // Buscar por categoria/tipo se existir
+      (funnel.settings?.template_type || '').toLowerCase().includes(searchLower) ||
+      (funnel.settings?.based_on || '').toLowerCase().includes(searchLower) ||
+      (funnel.settings?.category || '').toLowerCase().includes(searchLower);
     
+    // Filtro de status melhorado
     let matchesStatus = true;
     if (statusFilter === 'active') {
       matchesStatus = funnel.is_published === true;
     } else if (statusFilter === 'draft') {
-      matchesStatus = funnel.is_published === false;
-    } else if (statusFilter !== 'all') {
-      // Para outros filtros, manter comportamento padrão
-      matchesStatus = true;
+      matchesStatus = funnel.is_published === false || funnel.status === 'draft';
+    } else if (statusFilter === 'paused') {
+      matchesStatus = funnel.status === 'paused';
+    } else if (statusFilter === 'archived') {
+      matchesStatus = funnel.status === 'archived';
     }
     
     return matchesSearch && matchesStatus;
@@ -773,19 +763,19 @@ const FunnelPanelPage: React.FC = () => {
       </div>
 
         {/* Filters - Redesigned com cores da marca */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-[#B89B7A]/20 p-6">
-        <div className="flex flex-col lg:flex-row gap-4">
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-[#B89B7A]/20 p-4 md:p-6">
+        <div className="flex flex-col sm:flex-row lg:flex-row gap-3 md:gap-4">
           <div className="relative flex-1">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#8F7A6A] w-5 h-5" />
             <Input
-              placeholder="Buscar funis por nome ou descrição..."
+              placeholder="🔍 Buscar por nome, descrição, tags ou categoria..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-12 h-12 border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A] text-base"
+              className="pl-12 h-12 border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A] text-base bg-white/70 backdrop-blur-sm"
             />
           </div>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-full lg:w-64 h-12 border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]">
+            <SelectTrigger className="w-full sm:w-64 lg:w-64 h-10 md:h-12 border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]">
               <Filter className="w-5 h-5 mr-2 text-[#8F7A6A]" />
               <SelectValue placeholder="Filtrar por status" />
             </SelectTrigger>
@@ -800,8 +790,8 @@ const FunnelPanelPage: React.FC = () => {
         </div>
       </div>
 
-        {/* Funnels List - Redesigned */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+        {/* Funnels List - Melhorada responsividade - Fase 1 */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
         {loading ? (
           Array.from({ length: 6 }).map((_, i) => (
             <Card key={i} className="animate-pulse bg-white shadow-lg">

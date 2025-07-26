@@ -38,7 +38,7 @@ import { ReportService } from '../../services/reportService';
 import { ABTestService } from '../../services/abTestService';
 import { useAnalytics } from '../../services/analyticsService';
 import AnalyticsDashboard from '../analytics/AnalyticsDashboard';
-import { EditorQuizProvider } from '../../context/EditorQuizContext';
+import { EditorQuizProvider } from '../../contexts/EditorQuizContext';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;

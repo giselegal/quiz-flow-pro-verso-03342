@@ -7,9 +7,10 @@ import PropertiesPanel from '@/components/editor/properties/PropertiesPanel';
 import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
 import { useEditor } from '@/hooks/useEditor';
 import { useEditorPersistence } from '@/hooks/editor/useEditorPersistence';
+import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
 import { toast } from '@/components/ui/use-toast';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { EditorQuizProvider } from '@/context/EditorQuizContext';
+import { EditorQuizProvider } from '@/contexts/EditorQuizContext';
 
 const EditorPage: React.FC = () => {
   const [location, setLocation] = useLocation();
@@ -18,6 +19,35 @@ const EditorPage: React.FC = () => {
   
   const { config, addBlock, updateBlock, deleteBlock, setConfig } = useEditor();
   const { saveFunnel, loadFunnel, isSaving, isLoading } = useEditorPersistence();
+  
+  // ✅ AUTO-SAVE COM DEBOUNCE - Fase 1 
+  const handleAutoSave = async (data: any) => {
+    const funnelData = {
+      id: data.id || `funnel_${Date.now()}`,
+      name: data.title || 'Novo Funil',
+      description: data.description || '',
+      isPublished: false,
+      version: 1,
+      settings: data.settings || {},
+      pages: [{
+        id: `page_${Date.now()}`,
+        pageType: 'landing',
+        pageOrder: 0,
+        title: data.title || 'Página Principal',
+        blocks: data.blocks,
+        metadata: {}
+      }]
+    };
+    await saveFunnel(funnelData);
+  };
+  
+  const { forceSave } = useAutoSaveWithDebounce({
+    data: config,
+    onSave: handleAutoSave,
+    delay: 500,
+    enabled: !!config?.blocks?.length,
+    showToasts: false
+  });
 
   // Extract funnel ID from URL
   const urlParams = new URLSearchParams(window.location.search);
@@ -43,24 +73,8 @@ const EditorPage: React.FC = () => {
   }, [funnelId, loadFunnel, setConfig]);
 
   const handleSave = async () => {
-    const funnelData = {
-      id: config.id || `funnel_${Date.now()}`,
-      name: config.title || 'Novo Funil',
-      description: config.description || '',
-      isPublished: false,
-      version: 1,
-      settings: config.settings || {},
-      pages: [{
-        id: `page_${Date.now()}`,
-        pageType: 'landing',
-        pageOrder: 0,
-        title: config.title || 'Página Principal',
-        blocks: config.blocks,
-        metadata: {}
-      }]
-    };
-
-    await saveFunnel(funnelData);
+    // Usar forceSave para salvamento manual imediato
+    await forceSave();
   };
 
   const handleGoBack = () => {
