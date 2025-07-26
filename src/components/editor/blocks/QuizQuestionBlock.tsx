@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 import { CheckCircle, Heart, ArrowRight, ArrowLeft, Settings, Star, Tag, Edit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useEditorQuizContext } from '../../../contexts/EditorQuizContext';
+import { OptionsGridUtils } from '@/config/optionsGridConfig';
 
 interface QuestionOption {
   id: string;
