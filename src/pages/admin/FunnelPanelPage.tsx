@@ -814,8 +814,8 @@ const FunnelPanelPage: React.FC = () => {
                 key={`template-${template.id}`}
                 className={`group relative overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-2xl border-0 ${
                   template.id === 'default-quiz-funnel-21-steps' 
-                    ? 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 ring-2 ring-blue-200 shadow-xl' 
-                    : 'bg-gradient-to-br from-white to-slate-50 shadow-lg hover:shadow-xl'
+                    ? 'bg-gradient-to-br from-[#F5F1EC] via-[#F0E8DC] to-[#EBE0D0] ring-2 ring-[#B89B7A] shadow-xl' 
+                    : 'bg-gradient-to-br from-white to-[#F5F1EC] shadow-lg hover:shadow-xl'
                 }`}
               >
                 {/* Gradient Overlay */}
@@ -826,26 +826,26 @@ const FunnelPanelPage: React.FC = () => {
                     <div className="flex-1">
                       <CardTitle className={`text-xl font-bold flex items-center ${
                         template.id === 'default-quiz-funnel-21-steps' 
-                          ? 'text-blue-700' 
-                          : 'text-slate-700'
+                          ? 'text-[#B89B7A]' 
+                          : 'text-[#432818]'
                       }`}>
                         <div className={`w-10 h-10 rounded-full flex items-center justify-center mr-3 ${
                           template.id === 'default-quiz-funnel-21-steps' 
-                            ? 'bg-blue-100' 
-                            : 'bg-slate-100'
+                            ? 'bg-[#F0E8DC]' 
+                            : 'bg-[#F5F1EC]'
                         }`}>
                           <template.icon className="w-5 h-5" />
                         </div>
                         <div>
                           {template.name}
                           {template.id === 'default-quiz-funnel-21-steps' && (
-                            <Badge className="ml-2 bg-blue-600 text-white text-xs font-semibold">
+                            <Badge className="ml-2 bg-[#B89B7A] text-white text-xs font-semibold">
                               PRINCIPAL
                             </Badge>
                           )}
                         </div>
                       </CardTitle>
-                      <CardDescription className="text-slate-600 mt-2 leading-relaxed">
+                      <CardDescription className="text-[#6B5B4F] mt-2 leading-relaxed">
                         {template.description}
                       </CardDescription>
                     </div>
@@ -858,7 +858,7 @@ const FunnelPanelPage: React.FC = () => {
                       <Badge 
                         key={tag} 
                         variant="secondary" 
-                        className="text-xs bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
+                        className="text-xs bg-[#F0E8DC] text-[#6B5B4F] hover:bg-[#EBE0D0] transition-colors"
                       >
                         {tag}
                       </Badge>
@@ -867,12 +867,12 @@ const FunnelPanelPage: React.FC = () => {
                   
                   <div className="grid grid-cols-3 gap-4 text-sm">
                     <div className="text-center">
-                      <div className="font-semibold text-slate-700">{template.steps}</div>
-                      <div className="text-slate-500">Etapas</div>
+                      <div className="font-semibold text-[#432818]">{template.steps}</div>
+                      <div className="text-[#6B5B4F]">Etapas</div>
                     </div>
                     <div className="text-center">
-                      <div className="font-semibold text-slate-700">{template.estimatedTime}min</div>
-                      <div className="text-slate-500">Duração</div>
+                      <div className="font-semibold text-[#432818]">{template.estimatedTime}min</div>
+                      <div className="text-[#6B5B4F]">Duração</div>
                     </div>
                     <div className="text-center">
                       <Badge 
