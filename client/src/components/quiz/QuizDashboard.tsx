@@ -116,88 +116,88 @@ export const QuizDashboard: React.FC<QuizDashboardProps> = ({
   }
 
   return (
-    <div className=\"space-y-6\">
+    <div className="space-y-6">
       {/* Header */}
-      <div className=\"flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4\">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className=\"text-2xl font-bold text-gray-900\">Meus Quizzes</h1>
-          <p className=\"text-gray-600\">
+          <h1 className="text-2xl font-bold text-gray-900">Meus Quizzes</h1>
+          <p className="text-gray-600">
             {quizzes.length} quiz{quizzes.length !== 1 ? 'zes' : ''} criado{quizzes.length !== 1 ? 's' : ''}
           </p>
         </div>
         
         <Button 
           onClick={() => setIsCreateModalOpen(true)}
-          className=\"bg-blue-600 hover:bg-blue-700\"
+          className="bg-blue-600 hover:bg-blue-700"
         >
-          <Plus className=\"w-4 h-4 mr-2\" />
+          <Plus className="w-4 h-4 mr-2" />
           Novo Quiz
         </Button>
       </div>
 
       {/* Filtros e Busca */}
-      <div className=\"bg-white rounded-lg border p-4\">
-        <div className=\"flex flex-col lg:flex-row gap-4\">
+      <div className="bg-white rounded-lg border p-4">
+        <div className="flex flex-col lg:flex-row gap-4">
           {/* Busca */}
-          <div className=\"flex-1\">
-            <div className=\"relative\">
-              <Search className=\"absolute left-3 top-3 h-4 w-4 text-gray-400\" />
+          <div className="flex-1">
+            <div className="relative">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
-                placeholder=\"Buscar quizzes...\"
+                placeholder="Buscar quizzes..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className=\"pl-10\"
+                className="pl-10"
               />
             </div>
           </div>
 
           {/* Filtros */}
-          <div className=\"flex flex-col sm:flex-row gap-4\">
+          <div className="flex flex-col sm:flex-row gap-4">
             <Select
               value={selectedCategory}
               onValueChange={setSelectedCategory}
             >
-              <option value=\"all\">Todas as categorias</option>
-              <option value=\"geral\">Geral</option>
-              <option value=\"educacao\">Educação</option>
-              <option value=\"entretenimento\">Entretenimento</option>
-              <option value=\"business\">Negócios</option>
-              <option value=\"tecnologia\">Tecnologia</option>
-              <option value=\"saude\">Saúde</option>
-              <option value=\"esportes\">Esportes</option>
-              <option value=\"historia\">História</option>
-              <option value=\"ciencia\">Ciência</option>
-              <option value=\"arte\">Arte</option>
+              <option value="all">Todas as categorias</option>
+              <option value="geral">Geral</option>
+              <option value="educacao">Educação</option>
+              <option value="entretenimento">Entretenimento</option>
+              <option value="business">Negócios</option>
+              <option value="tecnologia">Tecnologia</option>
+              <option value="saude">Saúde</option>
+              <option value="esportes">Esportes</option>
+              <option value="historia">História</option>
+              <option value="ciencia">Ciência</option>
+              <option value="arte">Arte</option>
             </Select>
 
             <Select
               value={selectedStatus}
               onValueChange={setSelectedStatus}
             >
-              <option value=\"all\">Todos os status</option>
-              <option value=\"published\">Publicados</option>
-              <option value=\"draft\">Rascunhos</option>
-              <option value=\"public\">Públicos</option>
-              <option value=\"private\">Privados</option>
+              <option value="all">Todos os status</option>
+              <option value="published">Publicados</option>
+              <option value="draft">Rascunhos</option>
+              <option value="public">Públicos</option>
+              <option value="private">Privados</option>
             </Select>
 
             {/* Toggle de visualização */}
-            <div className=\"flex border rounded-md\">
+            <div className="flex border rounded-md">
               <Button
                 variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                size=\"sm\"
+                size="sm"
                 onClick={() => setViewMode('grid')}
-                className=\"rounded-r-none\"
+                className="rounded-r-none"
               >
-                <Grid className=\"w-4 h-4\" />
+                <Grid className="w-4 h-4" />
               </Button>
               <Button
                 variant={viewMode === 'list' ? 'default' : 'ghost'}
-                size=\"sm\"
+                size="sm"
                 onClick={() => setViewMode('list')}
-                className=\"rounded-l-none\"
+                className="rounded-l-none"
               >
-                <List className=\"w-4 h-4\" />
+                <List className="w-4 h-4" />
               </Button>
             </div>
           </div>
@@ -209,24 +209,24 @@ export const QuizDashboard: React.FC<QuizDashboardProps> = ({
         <EmptyState
           icon={Plus}
           title={searchQuery || selectedCategory !== 'all' || selectedStatus !== 'all' 
-            ? \"Nenhum quiz encontrado\" 
-            : \"Crie seu primeiro quiz\"
+            ? "Nenhum quiz encontrado" 
+            : "Crie seu primeiro quiz"
           }
           description={searchQuery || selectedCategory !== 'all' || selectedStatus !== 'all'
-            ? \"Tente ajustar os filtros de busca\"
-            : \"Comece criando um quiz para engajar sua audiência\"
+            ? "Tente ajustar os filtros de busca"
+            : "Comece criando um quiz para engajar sua audiência"
           }
           action={
             <Button onClick={() => setIsCreateModalOpen(true)}>
-              <Plus className=\"w-4 h-4 mr-2\" />
+              <Plus className="w-4 h-4 mr-2" />
               Criar Quiz
             </Button>
           }
         />
       ) : (
         <div className={viewMode === 'grid' 
-          ? \"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6\" 
-          : \"space-y-4\"
+          ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
+          : "space-y-4"
         }>
           {filteredQuizzes.map((quiz) => (
             viewMode === 'grid' ? (
