@@ -565,48 +565,48 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
   return (
     <EditorQuizProvider>
-      <div className={`h-screen flex flex-col overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/30`}>
-      {/* Header Responsivo - Redesigned */}
-      <div className="h-16 bg-white/95 backdrop-blur-sm border-b border-slate-200/60 shadow-sm flex items-center justify-between px-6">
+      <div className={`h-screen flex flex-col overflow-hidden bg-gradient-to-br from-[#fffaf7] via-[#F3E8E6]/30 to-[#fffaf7]/50`}>
+      {/* Header Responsivo - Redesigned com cores da marca */}
+      <div className="h-16 bg-white/95 backdrop-blur-sm border-b border-[#B89B7A]/20 shadow-sm flex items-center justify-between px-6">
         <div className="flex items-center space-x-6 min-w-0 flex-1">
-          {/* Botão Voltar ao Dashboard - Redesigned */}
+          {/* Botão Voltar ao Dashboard - Redesigned com cores da marca */}
           <Button
             variant="ghost"
             size="sm"
             onClick={handleBackToDashboard}
-            className="flex items-center space-x-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 px-4 py-2 rounded-lg transition-all duration-200"
+            className="flex items-center space-x-2 text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10 px-4 py-2 rounded-lg transition-all duration-200"
           >
             <ArrowLeft className="w-4 h-4" />
             <span className="hidden sm:inline font-medium">Dashboard</span>
           </Button>
 
           {/* Separador */}
-          <div className="h-8 w-px bg-gradient-to-b from-transparent via-slate-300 to-transparent" />
+          <div className="h-8 w-px bg-gradient-to-b from-transparent via-[#B89B7A]/30 to-transparent" />
 
-          {/* Info do funil - Redesigned */}
+          {/* Info do funil - Redesigned com cores da marca */}
           <div className="flex items-center space-x-3 min-w-0">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center">
-              <FileText className="w-5 h-5 text-blue-600" />
+            <div className="w-10 h-10 bg-gradient-to-br from-[#B89B7A]/20 to-[#aa6b5d]/20 rounded-lg flex items-center justify-center">
+              <FileText className="w-5 h-5 text-[#B89B7A]" />
             </div>
             <div className="min-w-0">
-              <h2 className="font-semibold text-slate-800 truncate text-lg">{funnel.name}</h2>
+              <h2 className="font-semibold text-[#432818] truncate text-lg">{funnel.name}</h2>
               <div className="flex items-center space-x-2">
                 <Badge 
                   variant={funnel.isPublished ? 'default' : 'secondary'} 
                   className={`text-xs ${
                     funnel.isPublished 
-                      ? 'bg-green-100 text-green-700 border-green-200' 
-                      : 'bg-amber-100 text-amber-700 border-amber-200'
+                      ? 'bg-[#B89B7A]/20 text-[#432818] border-[#B89B7A]/30' 
+                      : 'bg-[#aa6b5d]/20 text-[#8F7A6A] border-[#aa6b5d]/30'
                   }`}
                 >
                   {funnel.isPublished ? 'Publicado' : 'Rascunho'}
                 </Badge>
                 {/* Info da página atual */}
                 {currentPage && (
-                  <div className="hidden lg:flex items-center space-x-2 text-sm text-slate-500">
+                  <div className="hidden lg:flex items-center space-x-2 text-sm text-[#8F7A6A]">
                     <span>•</span>
                     <span className="truncate">{currentPage.title}</span>
-                    <Badge variant="outline" className="text-xs border-slate-200 text-slate-600">
+                    <Badge variant="outline" className="text-xs border-[#B89B7A]/30 text-[#8F7A6A]">
                       {currentPage.blocks.length} bloco{currentPage.blocks.length !== 1 ? 's' : ''}
                     </Badge>
                   </div>
@@ -617,17 +617,17 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         </div>
 
         <div className="flex items-center space-x-3">
-          {/* Status - Redesigned */}
-          <div className="hidden sm:flex items-center space-x-2 bg-slate-50 rounded-full px-3 py-1.5">
+          {/* Status - Redesigned com cores da marca */}
+          <div className="hidden sm:flex items-center space-x-2 bg-[#fffaf7] rounded-full px-3 py-1.5 border border-[#B89B7A]/20">
             <div className={`w-2 h-2 rounded-full ${
-              isSaving ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500'
+              isSaving ? 'bg-[#aa6b5d] animate-pulse' : 'bg-[#B89B7A]'
             }`} />
-            <span className="text-xs font-medium text-slate-600">
+            <span className="text-xs font-medium text-[#8F7A6A]">
               {isSaving ? 'Salvando...' : 'Sincronizado'}
             </span>
           </div>
 
-          {/* Botões Mobile - SEMPRE VISÍVEIS EM MÓBILE - Redesigned */}
+          {/* Botões Mobile - SEMPRE VISÍVEIS EM MÓBILE - Redesigned com cores da marca */}
           <div className="flex space-x-2 md:hidden">
             <Button
               variant="default"
@@ -639,8 +639,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               }}
               className={`text-white text-xs px-3 py-2 rounded-lg transition-all duration-200 ${
                 showLeftSidebar
-                  ? 'bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg'
-                  : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700'
+                  ? 'bg-gradient-to-r from-[#B89B7A] to-[#8F7A6A] shadow-lg'
+                  : 'bg-gradient-to-r from-[#B89B7A]/80 to-[#8F7A6A]/80 hover:from-[#B89B7A] hover:to-[#8F7A6A]'
               }`}
             >
               <Menu className="w-4 h-4 mr-1" />
@@ -656,8 +656,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               }}
               className={`text-white text-xs px-3 py-2 rounded-lg transition-all duration-200 ${
                 showRightSidebar
-                  ? 'bg-gradient-to-r from-emerald-600 to-emerald-700 shadow-lg'
-                  : 'bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700'
+                  ? 'bg-gradient-to-r from-[#aa6b5d] to-[#8F7A6A] shadow-lg'
+                  : 'bg-gradient-to-r from-[#aa6b5d]/80 to-[#8F7A6A]/80 hover:from-[#aa6b5d] hover:to-[#8F7A6A]'
               }`}
             >
               <Settings className="w-4 h-4 mr-1" />
@@ -665,8 +665,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
             </Button>
           </div>
 
-          {/* Device Controls - Redesigned */}
-          <div className="hidden lg:flex bg-slate-100 rounded-lg p-1">
+          {/* Device Controls - Redesigned com cores da marca */}
+          <div className="hidden lg:flex bg-[#fffaf7] border border-[#B89B7A]/20 rounded-lg p-1">
             <Button
               variant={deviceView === 'mobile' ? 'default' : 'ghost'}
               size="sm"
@@ -677,8 +677,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               }}
               className={`px-3 py-2 rounded-md transition-all duration-200 ${
                 deviceView === 'mobile' 
-                  ? 'bg-white shadow-sm text-slate-700' 
-                  : 'text-slate-500 hover:text-slate-700 hover:bg-white/50'
+                  ? 'bg-white shadow-sm text-[#432818] border border-[#B89B7A]/30' 
+                  : 'text-[#8F7A6A] hover:text-[#432818] hover:bg-white/50'
               }`}
             >
               <Smartphone className="w-4 h-4" />
@@ -693,8 +693,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               }}
               className={`px-3 py-2 rounded-md transition-all duration-200 ${
                 deviceView === 'tablet' 
-                  ? 'bg-white shadow-sm text-slate-700' 
-                  : 'text-slate-500 hover:text-slate-700 hover:bg-white/50'
+                  ? 'bg-white shadow-sm text-[#432818] border border-[#B89B7A]/30' 
+                  : 'text-[#8F7A6A] hover:text-[#432818] hover:bg-white/50'
               }`}
             >
               <Tablet className="w-4 h-4" />
@@ -709,16 +709,16 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               }}
               className={`px-3 py-2 rounded-md transition-all duration-200 ${
                 deviceView === 'desktop' 
-                  ? 'bg-white shadow-sm text-slate-700' 
-                  : 'text-slate-500 hover:text-slate-700 hover:bg-white/50'
+                  ? 'bg-white shadow-sm text-[#432818] border border-[#B89B7A]/30' 
+                  : 'text-[#8F7A6A] hover:text-[#432818] hover:bg-white/50'
               }`}
             >
               <Monitor className="w-4 h-4" />
             </Button>
           </div>
 
-          {/* Botões Undo/Redo - Redesigned */}
-          <div className="hidden md:flex space-x-1 bg-slate-100 rounded-lg p-1">
+          {/* Botões Undo/Redo - Redesigned com cores da marca */}
+          <div className="hidden md:flex space-x-1 bg-[#fffaf7] border border-[#B89B7A]/20 rounded-lg p-1">
             <Button
               variant="ghost"
               size="sm"
@@ -727,8 +727,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               title="Desfazer"
               className={`px-3 py-2 rounded-md transition-all duration-200 ${
                 undoStack.length === 0 
-                  ? 'text-slate-400 cursor-not-allowed' 
-                  : 'text-slate-600 hover:text-slate-800 hover:bg-white/70'
+                  ? 'text-[#B89B7A]/40 cursor-not-allowed' 
+                  : 'text-[#8F7A6A] hover:text-[#432818] hover:bg-white/70'
               }`}
             >
               <Undo2 className="w-4 h-4" />
@@ -741,8 +741,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               title="Refazer"
               className={`px-3 py-2 rounded-md transition-all duration-200 ${
                 redoStack.length === 0 
-                  ? 'text-slate-400 cursor-not-allowed' 
-                  : 'text-slate-600 hover:text-slate-800 hover:bg-white/70'
+                  ? 'text-[#B89B7A]/40 cursor-not-allowed' 
+                  : 'text-[#8F7A6A] hover:text-[#432818] hover:bg-white/70'
               }`}
             >
               <Redo2 className="w-4 h-4" />
@@ -756,7 +756,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               size="sm" 
               onClick={createNewFunnel}
               title="Criar novo funil"
-              className="border-slate-200 text-slate-600 hover:text-slate-800 hover:bg-slate-50 hover:border-slate-300 transition-all duration-200"
+              className="border-[#B89B7A]/30 text-[#432818] hover:text-[#432818] hover:bg-[#B89B7A]/10 hover:border-[#B89B7A]/50 transition-all duration-200"
             >
               <Plus className="w-4 h-4 mr-1" />
               Novo
@@ -765,7 +765,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               variant="outline" 
               size="sm" 
               onClick={() => saveFunnel(true)}
-              className="border-slate-200 text-slate-600 hover:text-slate-800 hover:bg-slate-50 hover:border-slate-300 transition-all duration-200"
+              className="border-[#B89B7A]/30 text-[#432818] hover:text-[#432818] hover:bg-[#B89B7A]/10 hover:border-[#B89B7A]/50 transition-all duration-200"
             >
               <Save className="w-4 h-4 mr-1" />
               Backup
@@ -775,7 +775,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           <Button 
             variant="outline" 
             size="sm" 
-            className="hidden sm:inline-flex border-slate-200 text-slate-600 hover:text-slate-800 hover:bg-slate-50 hover:border-slate-300 transition-all duration-200"
+            className="hidden sm:inline-flex border-[#B89B7A]/30 text-[#432818] hover:text-[#432818] hover:bg-[#B89B7A]/10 hover:border-[#B89B7A]/50 transition-all duration-200"
           >
              <Eye className="w-4 h-4 mr-1" />
              <span className="hidden lg:inline">Preview</span>
@@ -893,10 +893,10 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           <div
             className={`
               ${deviceView === 'mobile'
-                ? 'fixed top-16 left-0 bottom-0 w-80 z-50 bg-white/95 backdrop-blur-lg shadow-2xl border-r border-slate-200/60'
+                ? 'fixed top-16 left-0 bottom-0 w-80 z-50 bg-white/95 backdrop-blur-lg shadow-2xl border-r border-[#B89B7A]/20'
                 : deviceView === 'tablet'
-                  ? 'relative w-64 bg-white/95 backdrop-blur-sm border-r border-slate-200/60'
-                  : 'relative w-80 bg-white/95 backdrop-blur-sm border-r border-slate-200/60'
+                  ? 'relative w-64 bg-white/95 backdrop-blur-sm border-r border-[#B89B7A]/20'
+                  : 'relative w-80 bg-white/95 backdrop-blur-sm border-r border-[#B89B7A]/20'
               }
               flex flex-col transition-all duration-300 ease-in-out
             `}
@@ -906,12 +906,12 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               opacity: 1
             }}
           >
-            <div className="flex items-center justify-between p-4 border-b border-slate-200/60 bg-gradient-to-r from-slate-50 to-blue-50">
+            <div className="flex items-center justify-between p-4 border-b border-[#B89B7A]/20 bg-gradient-to-r from-[#B89B7A]/10 to-[#aa6b5d]/10">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center">
-                  <Menu className="w-4 h-4 text-blue-600" />
+                <div className="w-8 h-8 bg-gradient-to-br from-[#B89B7A]/20 to-[#aa6b5d]/20 rounded-lg flex items-center justify-center">
+                  <Menu className="w-4 h-4 text-[#432818]" />
                 </div>
-                <h2 className="font-semibold text-slate-800">Componentes</h2>
+                <h2 className="font-semibold text-[#432818]">Componentes</h2>
               </div>
               {deviceView === 'mobile' && (
                 <Button
@@ -921,7 +921,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                     console.log('🔄 Closing left sidebar from X button');
                     setShowLeftSidebar(false);
                   }}
-                  className="h-8 w-8 p-0 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-all duration-200"
+                  className="h-8 w-8 p-0 text-[#432818] hover:text-[#432818] hover:bg-[#B89B7A]/20 rounded-lg transition-all duration-200"
                 >
                   ×
                 </Button>
@@ -952,7 +952,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               }
             `}>
               {deviceView === 'mobile' ? (
-                <div className="w-full max-w-sm bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/60 min-h-[calc(100vh-140px)] mx-auto overflow-hidden">
+                <div className="w-full max-w-sm bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-[#B89B7A]/20 min-h-[calc(100vh-140px)] mx-auto overflow-hidden">
                   <div className="p-6">
                     {/* Componente de teste para exclusão */}
                     <TestDeleteComponent onDelete={() => {
@@ -973,18 +973,18 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                     />
 
                     {!currentPage && (
-                      <div className="text-center py-12 text-slate-500">
-                        <div className="w-16 h-16 bg-gradient-to-br from-slate-100 to-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                          <FileText className="w-8 h-8 text-slate-400" />
+                      <div className="text-center py-12 text-[#432818]/60">
+                        <div className="w-16 h-16 bg-gradient-to-br from-[#B89B7A]/20 to-[#aa6b5d]/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                          <FileText className="w-8 h-8 text-[#B89B7A]" />
                         </div>
-                        <h3 className="text-sm font-semibold mb-2 text-slate-700">Nenhuma página selecionada</h3>
-                        <p className="text-xs text-slate-500">Selecione uma página para começar a editar</p>
+                        <h3 className="text-sm font-semibold mb-2 text-[#432818]">Nenhuma página selecionada</h3>
+                        <p className="text-xs text-[#432818]/60">Selecione uma página para começar a editar</p>
                       </div>
                     )}
                   </div>
                 </div>
               ) : deviceView === 'tablet' ? (
-                <div className="w-full max-w-2xl bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/60 min-h-[calc(100vh-140px)] mx-auto overflow-hidden">
+                <div className="w-full max-w-2xl bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-[#B89B7A]/20 min-h-[calc(100vh-140px)] mx-auto overflow-hidden">
                   <div className="p-8">
                     <DroppableCanvas
                       blocks={currentPage?.blocks || []}
@@ -999,18 +999,18 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                     />
 
                     {!currentPage && (
-                      <div className="text-center py-20 text-slate-500">
-                        <div className="w-20 h-20 bg-gradient-to-br from-slate-100 to-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                          <FileText className="w-10 h-10 text-slate-400" />
+                      <div className="text-center py-20 text-[#432818]/60">
+                        <div className="w-20 h-20 bg-gradient-to-br from-[#B89B7A]/20 to-[#aa6b5d]/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                          <FileText className="w-10 h-10 text-[#B89B7A]" />
                         </div>
-                        <h3 className="text-lg font-semibold mb-3 text-slate-700">Nenhuma página selecionada</h3>
-                        <p className="text-sm text-slate-500">Selecione uma página para começar a editar.</p>
+                        <h3 className="text-lg font-semibold mb-3 text-[#432818]">Nenhuma página selecionada</h3>
+                        <p className="text-sm text-[#432818]/60">Selecione uma página para começar a editar.</p>
                       </div>
                     )}
                   </div>
                 </div>
               ) : (
-                <div className="w-full bg-white rounded-lg shadow-lg min-h-[calc(100vh-120px)]">
+                <div className="w-full bg-white/95 backdrop-blur-sm rounded-lg shadow-lg border border-[#B89B7A]/20 min-h-[calc(100vh-120px)]">
                   <div className="p-6">
                     <DroppableCanvas
                       blocks={currentPage?.blocks || []}
@@ -1025,9 +1025,12 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                     />
 
                     {!currentPage && (
-                      <div className="text-center py-16 text-gray-500">
-                        <h3 className="text-lg font-medium mb-2">Nenhuma página selecionada</h3>
-                        <p className="text-sm">Selecione uma página para começar a editar.</p>
+                      <div className="text-center py-16 text-[#432818]/60">
+                        <div className="w-24 h-24 bg-gradient-to-br from-[#B89B7A]/20 to-[#aa6b5d]/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                          <FileText className="w-12 h-12 text-[#B89B7A]" />
+                        </div>
+                        <h3 className="text-lg font-medium mb-2 text-[#432818]">Nenhuma página selecionada</h3>
+                        <p className="text-sm text-[#432818]/60">Selecione uma página para começar a editar.</p>
                       </div>
                     )}
                   </div>
