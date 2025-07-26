@@ -179,14 +179,14 @@ const ResultPage: React.FC = () => {
     return originalComponent;
   };
 
-  return <div className="min-h-screen relative overflow-hidden" style={{
+  return <div className="min-h-screen relative" style={{
     backgroundColor: globalStyles.backgroundColor || '#fffaf7',
     color: globalStyles.textColor || '#432818',
     fontFamily: globalStyles.fontFamily || 'inherit'
   }}>
-      {/* Decorative background elements */}
-      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-[#B89B7A]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-      <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-[#aa6b5d]/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+      {/* Decorative background elements - melhorados */}
+      <div className="absolute top-0 right-0 w-1/4 h-1/4 bg-[#B89B7A]/3 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-1/5 h-1/5 bg-[#aa6b5d]/3 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
       
       {renderConfigurableComponent('header-component-real', 
         <Header 
@@ -198,7 +198,7 @@ const ResultPage: React.FC = () => {
         />
       )}
 
-      <div className="container mx-auto px-4 py-6 max-w-4xl relative z-10">
+      <div className="container mx-auto px-4 py-8 md:px-6 lg:px-8 max-w-5xl relative z-10">
         {/* ATTENTION: Primary Style Card - Usando componente inline editável */}
         <AnimatedWrapper animation="fade" show={true} duration={600} delay={300}>
           {renderConfigurableComponent('result-header-inline',
@@ -206,7 +206,7 @@ const ResultPage: React.FC = () => {
               pageId="result-page"
               blockId="result-header-inline"
               fallback={
-                <Card className="p-6 mb-10 bg-white shadow-md border border-[#B89B7A]/20 card-elegant">
+                <Card className="p-6 md:p-8 mb-12 bg-white shadow-lg hover:shadow-xl transition-all duration-300 border border-[#B89B7A]/20 rounded-xl">
                   <div className="text-center mb-8">
                     <div className="max-w-md mx-auto mb-6">
                       <div className="flex justify-between items-center mb-2">
@@ -219,13 +219,13 @@ const ResultPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-8 items-center">
+                  <div className="flex flex-col md:grid md:grid-cols-2 gap-8 items-center">
                     <div className="space-y-4">
                       <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={400}>
                         <p className="text-[#432818] leading-relaxed">{description}</p>
                       </AnimatedWrapper>
                       <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={600}>
-                        <div className="bg-white rounded-lg p-4 shadow-sm border border-[#B89B7A]/10 glass-panel">
+                        <div className="bg-white rounded-lg p-4 md:p-6 shadow-sm border border-[#B89B7A]/10 transition-all duration-200 hover:shadow-md">
                           <h3 className="text-lg font-medium text-[#432818] mb-2">Estilos que Também Influenciam Você</h3>
                           {/* Renderizar estilos secundários de forma correta */}
                           <div className="space-y-2">
@@ -264,14 +264,14 @@ const ResultPage: React.FC = () => {
                       </AnimatedWrapper>
                     </div>
                     <AnimatedWrapper animation={isLowPerformance ? 'none' : 'scale'} show={true} duration={500} delay={500}>
-                      <div className="max-w-[238px] mx-auto relative">
+                      <div className="max-w-[280px] mx-auto relative order-first md:order-last">
                         <img 
-                          src={`${image}?q=auto:best&f=auto&w=238`} 
+                          src={`${image}?q=auto:best&f=auto&w=280`} 
                           alt={`Estilo ${category}`} 
                           className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300" 
                           loading="eager" 
                           fetchpriority="high" 
-                          width="238" 
+                          width="280" 
                           height="auto"
                           onError={(e) => {
                             console.error('Erro ao carregar imagem do estilo:', e);
