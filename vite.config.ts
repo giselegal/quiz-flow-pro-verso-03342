@@ -43,9 +43,14 @@ export default defineConfig(({ mode }) => ({
     },
   },
   optimizeDeps: {
-    exclude: ['clsx', 'react-dom/client', 'wouter'],
+    exclude: ['clsx', 'wouter'],
+    include: ['use-sync-external-store', 'use-sync-external-store/shim', 'use-sync-external-store/shim/index.js', 'react-dom/client'],
   },
   build: {
+    commonjsOptions: {
+      transformMixedEsModules: true,
+      include: [/use-sync-external-store/, /node_modules/],
+    },
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
     chunkSizeWarningLimit: 800, // 800kb limit
