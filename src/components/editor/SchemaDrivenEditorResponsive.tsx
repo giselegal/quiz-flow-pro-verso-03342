@@ -222,8 +222,9 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         properties: defaultProperties
       });
       showToast(`Componente "${type}" adicionado!`, 'success');
+      setShowRightSidebar(true);
     }
-  }, [addBlock, currentPage, pushToUndoStack, showToast]);
+  }, [addBlock, currentPage, pushToUndoStack, showToast, setShowRightSidebar]);
 
   // Debounced handler para mudanças de propriedade
   const debouncedHandleBlockPropertyChange = useRef(
@@ -961,6 +962,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                     }} />
                     
                     <DroppableCanvas
+                      setShowRightSidebar={setShowRightSidebar}
                       blocks={currentPage?.blocks || []}
                       selectedBlockId={selectedBlockId || undefined}
                       onBlockSelect={(blockId) => setSelectedBlock(blockId)}

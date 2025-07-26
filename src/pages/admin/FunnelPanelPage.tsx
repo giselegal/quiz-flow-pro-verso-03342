@@ -889,8 +889,8 @@ const FunnelPanelPage: React.FC = () => {
                       onClick={() => openDefaultTemplate()}
                       className={`flex-1 transition-all duration-200 ${
                         template.id === 'default-quiz-funnel-21-steps'
-                          ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg'
-                          : 'bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white'
+                          ? 'bg-gradient-to-r from-[#B89B7A] to-[#9F836A] hover:from-[#9F836A] hover:to-[#8A6F5A] text-white shadow-lg'
+                          : 'bg-gradient-to-r from-[#432818] to-[#331e12] hover:from-[#331e12] hover:to-[#23140c] text-white'
                       }`}
                     >
                       <Eye className="w-4 h-4 mr-2" />
@@ -903,7 +903,7 @@ const FunnelPanelPage: React.FC = () => {
                         setSelectedTemplate(template);
                         setIsTemplateDialogOpen(true);
                       }}
-                      className="border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+                      className="border-[#EBE0D0] hover:border-[#D9C9B8] hover:bg-[#F5F1EC] text-[#6B5B4F]"
                     >
                       <Copy className="w-4 h-4" />
                     </Button>
@@ -914,17 +914,17 @@ const FunnelPanelPage: React.FC = () => {
 
             {/* Funis Existentes */}
             {filteredFunnels.length === 0 && !loading ? (
-              <div className="col-span-full text-center py-12">
-                <BarChart3 className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-sm font-medium text-gray-900">Nenhum funil encontrado</h3>
-                <p className="mt-1 text-sm text-gray-500">
+              <div className="col-span-full text-center py-12 bg-[#FDFBF9] border-2 border-dashed border-[#EBE0D0] rounded-lg">
+                <BarChart3 className="mx-auto h-12 w-12 text-[#D9C9B8]" />
+                <h3 className="mt-4 text-lg font-semibold text-[#432818]">Nenhum Funil Encontrado</h3>
+                <p className="mt-2 text-sm text-[#6B5B4F]">
                   {searchTerm || statusFilter !== 'all' 
                     ? 'Tente ajustar os filtros de busca.' 
                     : 'Comece criando seu primeiro funil usando um dos templates acima.'}
                 </p>
                 {!searchTerm && statusFilter === 'all' && (
                   <Button 
-                    className="mt-4" 
+                    className="mt-6 bg-gradient-to-r from-[#B89B7A] to-[#9F836A] hover:from-[#9F836A] hover:to-[#8A6F5A] text-white shadow-lg"
                     onClick={() => setIsCreateDialogOpen(true)}
                   >
                     <Plus className="w-4 h-4 mr-2" />
@@ -965,7 +965,7 @@ const FunnelPanelPage: React.FC = () => {
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="flex justify-between items-center text-sm text-gray-500 mb-4">
+                      <div className="flex justify-between items-center text-sm text-[#6B5B4F] mb-4">
                         <span className="flex items-center">
                           <Calendar className="w-4 h-4 mr-1" />
                           {new Date(funnel.created_at).toLocaleDateString('pt-BR')}
@@ -981,7 +981,7 @@ const FunnelPanelPage: React.FC = () => {
                                 <Button 
                                   size="sm" 
                                   variant="outline"
-                                  className="flex-1"
+                                  className="flex-1 border-[#EBE0D0] hover:border-[#D9C9B8] hover:bg-[#F5F1EC] text-[#6B5B4F]"
                                   onClick={() => createFunnelFromDBTemplate(funnel, false)}
                                 >
                                   <Eye className="w-4 h-4 mr-1" />
@@ -989,7 +989,7 @@ const FunnelPanelPage: React.FC = () => {
                                 </Button>
                                 <Button 
                                   size="sm" 
-                                  className="flex-1 bg-[#B89B7A] hover:bg-[#9F836A] text-white"
+                                  className="flex-1 bg-gradient-to-r from-[#B89B7A] to-[#9F836A] hover:from-[#9F836A] hover:to-[#8A6F5A] text-white shadow-md"
                                   onClick={() => createFunnelFromDBTemplate(funnel, true)}
                                 >
                                   <Copy className="w-4 h-4 mr-1" />
@@ -1000,7 +1000,7 @@ const FunnelPanelPage: React.FC = () => {
                               <>
                                 <Button 
                                   size="sm" 
-                                  className="flex-1 bg-[#B89B7A] hover:bg-[#9F836A] text-white"
+                                  className="flex-1 bg-gradient-to-r from-[#B89B7A] to-[#9F836A] hover:from-[#9F836A] hover:to-[#8A6F5A] text-white shadow-md"
                                   onClick={() => createFunnelFromDBTemplate(funnel, false)}
                                 >
                                   <Plus className="w-4 h-4 mr-1" />
@@ -1009,6 +1009,7 @@ const FunnelPanelPage: React.FC = () => {
                                 <Button 
                                   variant="outline" 
                                   size="sm"
+                                  className="border-[#EBE0D0] hover:border-[#D9C9B8] hover:bg-[#F5F1EC] text-[#6B5B4F]"
                                   onClick={() => navigateToEditor(funnel.id)}
                                 >
                                   <Eye className="w-4 h-4 mr-1" />
@@ -1019,13 +1020,13 @@ const FunnelPanelPage: React.FC = () => {
                           </>
                         ) : (
                           <>
-                            <Button variant="outline" size="sm" className="flex-1">
+                            <Button variant="outline" size="sm" className="flex-1 border-[#EBE0D0] hover:border-[#D9C9B8] hover:bg-[#F5F1EC] text-[#6B5B4F]">
                               <Eye className="w-4 h-4 mr-1" />
                               Visualizar
                             </Button>
                             <Button 
                               size="sm" 
-                              className="flex-1 bg-[#B89B7A] hover:bg-[#9F836A] text-white"
+                              className="flex-1 bg-gradient-to-r from-[#B89B7A] to-[#9F836A] hover:from-[#9F836A] hover:to-[#8A6F5A] text-white shadow-md"
                               onClick={() => navigateToEditor(funnel.id)}
                             >
                               <Edit className="w-4 h-4 mr-1" />
@@ -1034,6 +1035,7 @@ const FunnelPanelPage: React.FC = () => {
                             <Button 
                               variant="outline" 
                               size="sm"
+                              className="border-[#EBE0D0] hover:border-[#D9C9B8] hover:bg-[#F5F1EC] text-[#6B5B4F]"
                               onClick={() => openEditDialog(funnel)}
                             >
                               <Edit className="w-4 h-4" />
@@ -1041,6 +1043,7 @@ const FunnelPanelPage: React.FC = () => {
                             <Button 
                               variant="outline" 
                               size="sm"
+                              className="border-[#EBE0D0] hover:border-[#D9C9B8] hover:bg-[#F5F1EC] text-[#6B5B4F]"
                               onClick={() => handleDuplicateFunnel(funnel)}
                             >
                               <Copy className="w-4 h-4" />
@@ -1048,6 +1051,7 @@ const FunnelPanelPage: React.FC = () => {
                             <Button 
                               variant="outline" 
                               size="sm"
+                              className="border-[#EBE0D0] hover:border-[#D9C9B8] hover:bg-[#F5F1EC] text-red-600 hover:text-red-700 hover:border-red-300"
                               onClick={() => handleDeleteFunnel(funnel.id)}
                             >
                               <Trash2 className="w-4 h-4" />

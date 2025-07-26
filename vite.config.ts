@@ -36,10 +36,14 @@ export default defineConfig(({ mode }) => ({
   },
   resolve: {
     alias: {
-      "@": path.resolve(import.meta.dirname, "src"),
-      "@shared": path.resolve(import.meta.dirname, "shared"),
-      "@assets": path.resolve(import.meta.dirname, "attached_assets"),
+      "@": path.resolve(__dirname, "./src"),
+      "@components": path.resolve(__dirname, "./client/src/components"),
+      "@shared": path.resolve(__dirname, "./shared"),
+      "@assets": path.resolve(__dirname, "./attached_assets"),
     },
+  },
+  optimizeDeps: {
+    exclude: ['clsx', 'react-dom/client', 'wouter'],
   },
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),

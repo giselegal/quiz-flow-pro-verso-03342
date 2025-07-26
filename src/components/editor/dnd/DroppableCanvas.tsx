@@ -24,6 +24,7 @@ interface DroppableCanvasProps {
   onBlockToggleVisibility: (blockId: string) => void;
   onSaveInline: (blockId: string, updates: Partial<BlockData>) => void;
   onAddBlock: (blockType: string) => void;
+  setShowRightSidebar: (show: boolean) => void; // Adicionado
   className?: string;
   disabled?: boolean;
 }
@@ -37,6 +38,7 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
   onBlockToggleVisibility,
   onSaveInline,
   onAddBlock,
+  setShowRightSidebar, // Adicionado
   className,
   disabled = false
 }) => {
@@ -144,7 +146,10 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
                     <SortableBlockItem
                       block={block}
                       isSelected={block.id === selectedBlockId}
-                      onSelect={() => onBlockSelect(block.id)}
+                      onSelect={() => {
+                        onBlockSelect(block.id);
+                        setShowRightSidebar(true); // Adicionado
+                      }}
                       onDelete={() => onBlockDelete(block.id)}
                       onDuplicate={() => onBlockDuplicate(block.id)}
                       onToggleVisibility={() => onBlockToggleVisibility(block.id)}
