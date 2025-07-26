@@ -926,7 +926,7 @@ export const blockDefinitions: BlockDefinition[] = [
       }
     ],
     defaultProperties: {
-      src: PlaceholderUtils.getContentImage(400, 300),
+      src: PlaceholderUtils.generateContentPlaceholder(400, 300),
       alt: 'Image description'
     }
   },
@@ -1362,7 +1362,7 @@ export const blockDefinitions: BlockDefinition[] = [
         key: 'imageUrl',
         label: 'URL da Imagem',
         type: 'image-url',
-        defaultValue: 'https://via.placeholder.com/400x300'
+        defaultValue: PlaceholderUtils.generateContentPlaceholder(400, 300)
       },
       {
         key: 'title',
@@ -1404,7 +1404,7 @@ export const blockDefinitions: BlockDefinition[] = [
     ],
     defaultProperties: {
       layout: 'horizontal',
-      imageUrl: 'https://via.placeholder.com/400x300',
+      imageUrl: PlaceholderUtils.generateContentPlaceholder(400, 300),
       title: 'Título do Card',
       description: 'Descrição detalhada do conteúdo do card.',
       buttonText: 'Saiba Mais',
@@ -1506,7 +1506,7 @@ export const blockDefinitions: BlockDefinition[] = [
         key: 'authorPhoto',
         label: 'Foto do Autor',
         type: 'image-url',
-        defaultValue: 'https://via.placeholder.com/80x80'
+        defaultValue: PlaceholderUtils.generateAvatarPlaceholder(80, '👤')
       },
       {
         key: 'rating',
@@ -1532,7 +1532,7 @@ export const blockDefinitions: BlockDefinition[] = [
       text: 'Este produto mudou minha vida! Recomendo para todos.',
       authorName: 'Maria Silva',
       authorTitle: 'Cliente Verificada',
-      authorPhoto: 'https://via.placeholder.com/80x80',
+      authorPhoto: PlaceholderUtils.generateAvatarPlaceholder(80, '👤'),
       rating: 5,
       showStars: true,
       layout: 'card'
