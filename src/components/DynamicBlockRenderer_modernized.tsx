@@ -24,14 +24,11 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
 }) => {
   // Para fins de demonstração, vamos simular props baseadas no blockId
   const componentType = blockId || 'default';
-  const props: any = {
+  const props = {
     question: 'Qual dessas opções representa melhor seu estilo?',
-    questionId: 'question-1',
     allowMultiple: true,
     maxSelections: 3,
     showImages: true,
-    autoAdvance: false,
-    height: '2rem',
     options: [
       { id: '1', text: 'Clássico e elegante', styleCategory: 'Clássico', points: 2, keywords: ['elegante', 'sofisticado'] },
       { id: '2', text: 'Moderno e descolado', styleCategory: 'Contemporâneo', points: 3, keywords: ['moderno', 'descolado'] },
