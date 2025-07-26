@@ -1,5 +1,14 @@
 import React from 'react';
 
+// Componentes modernos
+import { 
+  TestimonialSlider, 
+  CountdownTimer, 
+  PricingCard, 
+  InteractiveProgressBar, 
+  SocialProofBanner 
+} from './ModernComponents';
+
 // Componentes básicos
 import { 
   CheckCircle, Star, Gift, Lock, Shield, Award, Clock, ArrowRight, 
@@ -213,6 +222,42 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
             </div>
           </div>
         );
+
+      // COMPONENTES MODERNOS AVANÇADOS
+      case 'testimonial-slider':
+        return <TestimonialSlider autoPlay={true} interval={5000} />;
+
+      case 'countdown-timer-real':
+        return (
+          <CountdownTimer 
+            title="⏰ Oferta Limitada!"
+            urgencyText="Aproveite enquanto há tempo"
+          />
+        );
+
+      case 'pricing-card-modern':
+        return (
+          <PricingCard 
+            title="Transformação Completa"
+            originalPrice={175}
+            discountPrice={39.90}
+            discount={77}
+            isPopular={true}
+          />
+        );
+
+      case 'progress-bar-modern':
+        return (
+          <InteractiveProgressBar 
+            currentStep={props.currentStep || 8}
+            totalSteps={21}
+            showPercentage={true}
+            showStepLabels={true}
+          />
+        );
+
+      case 'social-proof':
+        return <SocialProofBanner showLiveCounter={true} />;
 
       // BLOCOS DE QUIZ CONFIGURÁVEIS
       case 'quiz-question':
