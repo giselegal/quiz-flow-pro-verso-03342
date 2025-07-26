@@ -1,5 +1,5 @@
 import React from 'react';
-import { PropertySchema } from '@/types/editor';
+import { PropertySchema } from '../types/editor';
 
 // Block Definition Interface
 export interface BlockDefinition {
@@ -927,6 +927,719 @@ export const blockDefinitions: BlockDefinition[] = [
     defaultProperties: {
       src: 'https://via.placeholder.com/400x300',
       alt: 'Image description'
+    }
+  },
+
+  // ===========================
+  // COMPONENTES MODERNOS PARA PÁGINAS DINÂMICAS
+  // Modulares, Independentes, BoxFlex, Reutilizáveis e Editáveis
+  // ===========================
+
+  // COMPONENTES DE LAYOUT FLEXÍVEL
+  {
+    type: 'flex-container-horizontal',
+    name: 'Container Horizontal Flex',
+    description: 'Container flexível horizontal para organizar componentes em linha (inline/boxflex)',
+    icon: 'ArrowRightLeft',
+    category: 'Layout',
+    propertiesSchema: [
+      {
+        key: 'justifyContent',
+        label: 'Alinhamento Horizontal',
+        type: 'select',
+        options: ['flex-start', 'center', 'flex-end', 'space-between', 'space-around', 'space-evenly'],
+        defaultValue: 'space-between'
+      },
+      {
+        key: 'alignItems',
+        label: 'Alinhamento Vertical',
+        type: 'select',
+        options: ['flex-start', 'center', 'flex-end', 'stretch'],
+        defaultValue: 'center'
+      },
+      {
+        key: 'gap',
+        label: 'Espaçamento (px)',
+        type: 'number',
+        defaultValue: 16
+      },
+      {
+        key: 'wrap',
+        label: 'Quebra de linha',
+        type: 'boolean',
+        defaultValue: true
+      }
+    ],
+    defaultProperties: {
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      gap: 16,
+      wrap: true,
+      className: 'flex flex-wrap items-center justify-between gap-4 p-4'
+    }
+  },
+
+  {
+    type: 'flex-container-vertical',
+    name: 'Container Vertical Flex',
+    description: 'Container flexível vertical para organizar componentes em coluna',
+    icon: 'Rows3',
+    category: 'Layout',
+    propertiesSchema: [
+      {
+        key: 'alignItems',
+        label: 'Alinhamento Horizontal',
+        type: 'select',
+        options: ['flex-start', 'center', 'flex-end', 'stretch'],
+        defaultValue: 'center'
+      },
+      {
+        key: 'justifyContent',
+        label: 'Alinhamento Vertical',
+        type: 'select',
+        options: ['flex-start', 'center', 'flex-end', 'space-between', 'space-around'],
+        defaultValue: 'flex-start'
+      },
+      {
+        key: 'gap',
+        label: 'Espaçamento (px)',
+        type: 'number',
+        defaultValue: 24
+      }
+    ],
+    defaultProperties: {
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      gap: 24,
+      className: 'flex flex-col items-center justify-start gap-6 p-6'
+    }
+  },
+
+  // COMPONENTES DE VENDAS MODERNOS
+  {
+    type: 'countdown-timer-real',
+    name: 'Timer de Contagem Regressiva',
+    description: 'Timer funcional e editável com design moderno para urgência em vendas',
+    icon: 'Clock',
+    category: 'Vendas',
+    propertiesSchema: [
+      {
+        key: 'targetDate',
+        label: 'Data/Hora Alvo',
+        type: 'datetime-local',
+        defaultValue: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 16)
+      },
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Esta oferta expira em:'
+      },
+      {
+        key: 'showLabels',
+        label: 'Mostrar Labels (dias, horas, etc)',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: ['small', 'medium', 'large'],
+        defaultValue: 'medium'
+      },
+      {
+        key: 'color',
+        label: 'Cor do tema',
+        type: 'color',
+        defaultValue: '#432818'
+      }
+    ],
+    defaultProperties: {
+      targetDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
+      title: 'Esta oferta expira em:',
+      showLabels: true,
+      size: 'medium',
+      color: '#432818'
+    }
+  },
+
+  {
+    type: 'pricing-card-modern',
+    name: 'Card de Preço Moderno',
+    description: 'Card de preço responsivo e editável com destaque e call-to-action',
+    icon: 'CircleDollarSign',
+    category: 'Vendas',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título da Oferta',
+        type: 'text',
+        defaultValue: 'Oferta Especial'
+      },
+      {
+        key: 'originalPrice',
+        label: 'Preço Original',
+        type: 'number',
+        defaultValue: 497
+      },
+      {
+        key: 'salePrice',
+        label: 'Preço Promocional',
+        type: 'number',
+        defaultValue: 197
+      },
+      {
+        key: 'currency',
+        label: 'Moeda',
+        type: 'text',
+        defaultValue: 'R$'
+      },
+      {
+        key: 'installments',
+        label: 'Parcelamento',
+        type: 'text',
+        defaultValue: '12x de R$ 16,42'
+      },
+      {
+        key: 'ctaText',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Quero Aproveitar'
+      },
+      {
+        key: 'highlight',
+        label: 'Destacar Card',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'badge',
+        label: 'Badge de Destaque',
+        type: 'text',
+        defaultValue: 'MELHOR OFERTA'
+      }
+    ],
+    defaultProperties: {
+      title: 'Oferta Especial',
+      originalPrice: 497,
+      salePrice: 197,
+      currency: 'R$',
+      installments: '12x de R$ 16,42',
+      ctaText: 'Quero Aproveitar',
+      highlight: true,
+      badge: 'MELHOR OFERTA'
+    }
+  },
+
+  {
+    type: 'cta-button-modern',
+    name: 'Botão CTA Moderno',
+    description: 'Botão de call-to-action com animações e estados editáveis',
+    icon: 'MousePointer',
+    category: 'Vendas',
+    propertiesSchema: [
+      {
+        key: 'text',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Comprar Agora'
+      },
+      {
+        key: 'subtext',
+        label: 'Subtexto',
+        type: 'text',
+        defaultValue: 'Pagamento 100% seguro'
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: ['small', 'medium', 'large', 'xlarge'],
+        defaultValue: 'large'
+      },
+      {
+        key: 'variant',
+        label: 'Variante',
+        type: 'select',
+        options: ['primary', 'secondary', 'gradient', 'outline'],
+        defaultValue: 'gradient'
+      },
+      {
+        key: 'icon',
+        label: 'Ícone',
+        type: 'select',
+        options: ['none', 'arrow', 'check', 'heart', 'star', 'lock'],
+        defaultValue: 'arrow'
+      },
+      {
+        key: 'pulse',
+        label: 'Animação de Pulso',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'fullWidth',
+        label: 'Largura Total',
+        type: 'boolean',
+        defaultValue: false
+      }
+    ],
+    defaultProperties: {
+      text: 'Comprar Agora',
+      subtext: 'Pagamento 100% seguro',
+      size: 'large',
+      variant: 'gradient',
+      icon: 'arrow',
+      pulse: true,
+      fullWidth: false
+    }
+  },
+
+  // COMPONENTES DE QUIZ MODERNOS
+  {
+    type: 'quiz-question-modern',
+    name: 'Questão de Quiz Moderna',
+    description: 'Componente de questão com layout responsivo, imagens e múltiplas seleções',
+    icon: 'HelpCircle',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'question',
+        label: 'Pergunta',
+        type: 'textarea',
+        defaultValue: 'Qual dessas opções mais combina com você?'
+      },
+      {
+        key: 'questionNumber',
+        label: 'Número da Questão',
+        type: 'number',
+        defaultValue: 1
+      },
+      {
+        key: 'totalQuestions',
+        label: 'Total de Questões',
+        type: 'number',
+        defaultValue: 10
+      },
+      {
+        key: 'layout',
+        label: 'Layout das Opções',
+        type: 'select',
+        options: ['grid-2', 'grid-3', 'grid-4', 'list', 'horizontal'],
+        defaultValue: 'grid-2'
+      },
+      {
+        key: 'allowMultiple',
+        label: 'Múltiplas Seleções',
+        type: 'boolean',
+        defaultValue: false
+      },
+      {
+        key: 'showImages',
+        label: 'Mostrar Imagens',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'autoAdvance',
+        label: 'Avançar Automaticamente',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showProgress',
+        label: 'Mostrar Progresso',
+        type: 'boolean',
+        defaultValue: true
+      }
+    ],
+    defaultProperties: {
+      question: 'Qual dessas opções mais combina com você?',
+      questionNumber: 1,
+      totalQuestions: 10,
+      layout: 'grid-2',
+      allowMultiple: false,
+      showImages: true,
+      autoAdvance: true,
+      showProgress: true,
+      options: [
+        {
+          id: 'opt1',
+          text: 'Opção 1',
+          image: 'https://via.placeholder.com/300x200',
+          value: 'option1'
+        },
+        {
+          id: 'opt2',
+          text: 'Opção 2',
+          image: 'https://via.placeholder.com/300x200',
+          value: 'option2'
+        }
+      ]
+    }
+  },
+
+  {
+    type: 'progress-bar-modern',
+    name: 'Barra de Progresso Moderna',
+    description: 'Barra de progresso animada e customizável para quizzes e formulários',
+    icon: 'TrendingUp',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'percentage',
+        label: 'Porcentagem (%)',
+        type: 'number',
+        defaultValue: 65
+      },
+      {
+        key: 'showLabel',
+        label: 'Mostrar Label',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'label',
+        label: 'Texto do Label',
+        type: 'text',
+        defaultValue: 'Progresso do Quiz'
+      },
+      {
+        key: 'animated',
+        label: 'Animação',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'color',
+        label: 'Cor',
+        type: 'select',
+        options: ['primary', 'success', 'warning', 'danger', 'custom'],
+        defaultValue: 'primary'
+      },
+      {
+        key: 'customColor',
+        label: 'Cor Personalizada',
+        type: 'color',
+        defaultValue: '#B89B7A'
+      },
+      {
+        key: 'height',
+        label: 'Altura (px)',
+        type: 'number',
+        defaultValue: 8
+      }
+    ],
+    defaultProperties: {
+      percentage: 65,
+      showLabel: true,
+      label: 'Progresso do Quiz',
+      animated: true,
+      color: 'primary',
+      customColor: '#B89B7A',
+      height: 8
+    }
+  },
+
+  // COMPONENTES DE CONTEÚDO FLEXÍVEL
+  {
+    type: 'image-text-card',
+    name: 'Card Imagem + Texto',
+    description: 'Card flexível com imagem e texto, layout editável (horizontal/vertical)',
+    icon: 'Package',
+    category: 'Layout',
+    propertiesSchema: [
+      {
+        key: 'layout',
+        label: 'Layout',
+        type: 'select',
+        options: ['horizontal', 'vertical', 'image-left', 'image-right', 'image-top', 'image-bottom'],
+        defaultValue: 'horizontal'
+      },
+      {
+        key: 'imageUrl',
+        label: 'URL da Imagem',
+        type: 'image-url',
+        defaultValue: 'https://via.placeholder.com/400x300'
+      },
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Título do Card'
+      },
+      {
+        key: 'description',
+        label: 'Descrição',
+        type: 'textarea',
+        defaultValue: 'Descrição detalhada do conteúdo do card.'
+      },
+      {
+        key: 'buttonText',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Saiba Mais'
+      },
+      {
+        key: 'buttonUrl',
+        label: 'URL do Botão',
+        type: 'url',
+        defaultValue: '#'
+      },
+      {
+        key: 'imageRatio',
+        label: 'Proporção da Imagem',
+        type: 'select',
+        options: ['1:1', '4:3', '16:9', '3:2'],
+        defaultValue: '4:3'
+      },
+      {
+        key: 'shadow',
+        label: 'Sombra',
+        type: 'boolean',
+        defaultValue: true
+      }
+    ],
+    defaultProperties: {
+      layout: 'horizontal',
+      imageUrl: 'https://via.placeholder.com/400x300',
+      title: 'Título do Card',
+      description: 'Descrição detalhada do conteúdo do card.',
+      buttonText: 'Saiba Mais',
+      buttonUrl: '#',
+      imageRatio: '4:3',
+      shadow: true
+    }
+  },
+
+  {
+    type: 'stats-counter',
+    name: 'Contador de Estatísticas',
+    description: 'Contador animado para mostrar números importantes (vendas, clientes, etc.)',
+    icon: 'BarChart3',
+    category: 'Vendas',
+    propertiesSchema: [
+      {
+        key: 'number',
+        label: 'Número',
+        type: 'number',
+        defaultValue: 1250
+      },
+      {
+        key: 'label',
+        label: 'Label',
+        type: 'text',
+        defaultValue: 'Clientes Satisfeitos'
+      },
+      {
+        key: 'prefix',
+        label: 'Prefixo',
+        type: 'text',
+        defaultValue: ''
+      },
+      {
+        key: 'suffix',
+        label: 'Sufixo',
+        type: 'text',
+        defaultValue: '+'
+      },
+      {
+        key: 'animationDuration',
+        label: 'Duração da Animação (ms)',
+        type: 'number',
+        defaultValue: 2000
+      },
+      {
+        key: 'icon',
+        label: 'Ícone',
+        type: 'select',
+        options: ['none', 'users', 'star', 'heart', 'check', 'trophy', 'target'],
+        defaultValue: 'users'
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: ['small', 'medium', 'large'],
+        defaultValue: 'medium'
+      }
+    ],
+    defaultProperties: {
+      number: 1250,
+      label: 'Clientes Satisfeitos',
+      prefix: '',
+      suffix: '+',
+      animationDuration: 2000,
+      icon: 'users',
+      size: 'medium'
+    }
+  },
+
+  {
+    type: 'testimonial-card',
+    name: 'Card de Depoimento',
+    description: 'Card de depoimento com foto, nome, avaliação e texto editáveis',
+    icon: 'Quote',
+    category: 'Vendas',
+    propertiesSchema: [
+      {
+        key: 'text',
+        label: 'Texto do Depoimento',
+        type: 'textarea',
+        defaultValue: 'Este produto mudou minha vida! Recomendo para todos.'
+      },
+      {
+        key: 'authorName',
+        label: 'Nome do Autor',
+        type: 'text',
+        defaultValue: 'Maria Silva'
+      },
+      {
+        key: 'authorTitle',
+        label: 'Título/Cargo',
+        type: 'text',
+        defaultValue: 'Cliente Verificada'
+      },
+      {
+        key: 'authorPhoto',
+        label: 'Foto do Autor',
+        type: 'image-url',
+        defaultValue: 'https://via.placeholder.com/80x80'
+      },
+      {
+        key: 'rating',
+        label: 'Avaliação (1-5)',
+        type: 'number',
+        defaultValue: 5
+      },
+      {
+        key: 'showStars',
+        label: 'Mostrar Estrelas',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'layout',
+        label: 'Layout',
+        type: 'select',
+        options: ['card', 'inline', 'minimal'],
+        defaultValue: 'card'
+      }
+    ],
+    defaultProperties: {
+      text: 'Este produto mudou minha vida! Recomendo para todos.',
+      authorName: 'Maria Silva',
+      authorTitle: 'Cliente Verificada',
+      authorPhoto: 'https://via.placeholder.com/80x80',
+      rating: 5,
+      showStars: true,
+      layout: 'card'
+    }
+  },
+
+  {
+    type: 'feature-highlight',
+    name: 'Destaque de Recurso',
+    description: 'Card para destacar recursos/benefícios com ícone, título e descrição',
+    icon: 'Star',
+    category: 'Vendas',
+    propertiesSchema: [
+      {
+        key: 'icon',
+        label: 'Ícone',
+        type: 'select',
+        options: ['check', 'star', 'heart', 'shield', 'lightning', 'gift', 'target', 'crown'],
+        defaultValue: 'check'
+      },
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Recurso Incrível'
+      },
+      {
+        key: 'description',
+        label: 'Descrição',
+        type: 'textarea',
+        defaultValue: 'Descrição detalhada do recurso e seus benefícios.'
+      },
+      {
+        key: 'layout',
+        label: 'Layout',
+        type: 'select',
+        options: ['vertical', 'horizontal', 'icon-left', 'icon-top'],
+        defaultValue: 'vertical'
+      },
+      {
+        key: 'iconColor',
+        label: 'Cor do Ícone',
+        type: 'color',
+        defaultValue: '#B89B7A'
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: ['small', 'medium', 'large'],
+        defaultValue: 'medium'
+      }
+    ],
+    defaultProperties: {
+      icon: 'check',
+      title: 'Recurso Incrível',
+      description: 'Descrição detalhada do recurso e seus benefícios.',
+      layout: 'vertical',
+      iconColor: '#B89B7A',
+      size: 'medium'
+    }
+  },
+
+  {
+    type: 'section-divider',
+    name: 'Divisor de Seção',
+    description: 'Divisor estilizado para separar seções da página',
+    icon: 'Minus',
+    category: 'Layout',
+    propertiesSchema: [
+      {
+        key: 'style',
+        label: 'Estilo',
+        type: 'select',
+        options: ['line', 'dots', 'wave', 'gradient', 'ornament'],
+        defaultValue: 'gradient'
+      },
+      {
+        key: 'thickness',
+        label: 'Espessura (px)',
+        type: 'number',
+        defaultValue: 2
+      },
+      {
+        key: 'color',
+        label: 'Cor',
+        type: 'color',
+        defaultValue: '#B89B7A'
+      },
+      {
+        key: 'spacing',
+        label: 'Espaçamento Vertical (px)',
+        type: 'number',
+        defaultValue: 32
+      },
+      {
+        key: 'width',
+        label: 'Largura (%)',
+        type: 'number',
+        defaultValue: 50
+      }
+    ],
+    defaultProperties: {
+      style: 'gradient',
+      thickness: 2,
+      color: '#B89B7A',
+      spacing: 32,
+      width: 50
     }
   }
 ];

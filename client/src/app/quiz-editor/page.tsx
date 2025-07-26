@@ -256,35 +256,147 @@ const QuizEditorContent: React.FC = () => {
 
       {/* Main Editor - Layout Simples de 3 Colunas */}
       <div className="flex-1 flex">
-        {/* Sidebar */}
+        {/* Sidebar com Abas */}
         {state.sidebarVisible && (
-          <div className="w-80 bg-white border-r p-4">
-            <h3 className="font-semibold mb-4">Perguntas</h3>
-            <div className="space-y-2">
-              {state.questions.map((question, index) => (
-                <div 
-                  key={question.id}
-                  className={`p-3 border rounded cursor-pointer hover:bg-gray-50 ${
-                    state.selectedQuestionId === question.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
+          <div className="w-80 bg-white border-r flex flex-col">
+            {/* Abas Páginas e Blocos */}
+            <div className="border-b">
+              <div className="flex">
+                <button 
+                  className={`flex-1 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                    activeTab === 'pages' 
+                      ? 'border-blue-500 text-blue-600 bg-blue-50' 
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
                   }`}
-                  onClick={() => selectQuestion(question.id)}
+                  onClick={() => setActiveTab('pages')}
                 >
-                  <div className="font-medium text-sm">Pergunta {index + 1}</div>
-                  <div className="text-xs text-gray-600 truncate">
-                    {question.question_text || 'Sem título'}
+                  📄 Páginas
+                </button>
+                <button 
+                  className={`flex-1 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                    activeTab === 'blocks' 
+                      ? 'border-blue-500 text-blue-600 bg-blue-50' 
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+                  onClick={() => setActiveTab('blocks')}
+                >
+                  🧩 Blocos
+                </button>
+              </div>
+            </div>
+
+            {/* Conteúdo das Abas */}
+            <div className="flex-1 p-4 overflow-y-auto">
+              {activeTab === 'pages' ? (
+                /* Aba Páginas */
+                <div>
+                  <h3 className="font-semibold mb-4">Perguntas do Quiz</h3>
+                  <div className="space-y-2">
+                    {state.questions.map((question, index) => (
+                      <div 
+                        key={question.id}
+                        className={`p-3 border rounded cursor-pointer hover:bg-gray-50 transition-colors ${
+                          state.selectedQuestionId === question.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
+                        }`}
+                        onClick={() => selectQuestion(question.id)}
+                      >
+                        <div className="font-medium text-sm">Pergunta {index + 1}</div>
+                        <div className="text-xs text-gray-600 truncate">
+                          {question.question_text || 'Sem título'}
+                        </div>
+                        <div className="text-xs text-blue-600 mt-1">
+                          {question.question_type === 'multiple_choice' ? '📋 Múltipla escolha' : '📝 Resposta aberta'}
+                        </div>
+                      </div>
+                    ))}
+                    
+                    {state.questions.length === 0 && (
+                      <div className="text-center py-8 text-gray-500">
+                        <div className="mb-4">📝</div>
+                        <p className="mb-2">Nenhuma pergunta criada ainda.</p>
+                        <button 
+                          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                          onClick={handleAddQuestion}
+                        >
+                          Criar primeira pergunta
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
-              ))}
-              
-              {state.questions.length === 0 && (
-                <div className="text-center py-8 text-gray-500">
-                  <p>Nenhuma pergunta criada ainda.</p>
-                  <button 
-                    className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                    onClick={handleAddQuestion}
-                  >
-                    Criar primeira pergunta
-                  </button>
+              ) : (
+                /* Aba Blocos */
+                <div>
+                  <h3 className="font-semibold mb-4">Componentes Disponíveis</h3>
+                  
+                  {/* Busca */}
+                  <div className="mb-4">
+                    <input 
+                      type="text"
+                      placeholder="Buscar componentes..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={blockSearch}
+                      onChange={(e) => setBlockSearch(e.target.value)}
+                    />
+                  </div>
+
+                  {/* Categorias de Blocos */}
+                  <div className="space-y-3">
+                    <div>
+                      <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">⭐ Populares</h4>
+                      <div className="grid grid-cols-2 gap-2">
+                        {availableBlocks.filter(block => block.category === 'popular').map((block) => (
+                          <div 
+                            key={block.type}
+                            className="p-3 border border-gray-200 rounded cursor-pointer hover:border-blue-300 hover:bg-blue-50 transition-colors"
+                            onClick={() => handleAddBlock(block.type)}
+                          >
+                            <div className="text-sm font-medium text-gray-900">{block.icon}</div>
+                            <div className="text-xs text-gray-600 mt-1">{block.label}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">📝 Básicos</h4>
+                      <div className="grid grid-cols-2 gap-2">
+                        {availableBlocks.filter(block => block.category === 'basic').map((block) => (
+                          <div 
+                            key={block.type}
+                            className="p-3 border border-gray-200 rounded cursor-pointer hover:border-blue-300 hover:bg-blue-50 transition-colors"
+                            onClick={() => handleAddBlock(block.type)}
+                          >
+                            <div className="text-sm font-medium text-gray-900">{block.icon}</div>
+                            <div className="text-xs text-gray-600 mt-1">{block.label}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">🎯 Quiz</h4>
+                      <div className="grid grid-cols-2 gap-2">
+                        {availableBlocks.filter(block => block.category === 'quiz').map((block) => (
+                          <div 
+                            key={block.type}
+                            className="p-3 border border-gray-200 rounded cursor-pointer hover:border-blue-300 hover:bg-blue-50 transition-colors"
+                            onClick={() => handleAddBlock(block.type)}
+                          >
+                            <div className="text-sm font-medium text-gray-900">{block.icon}</div>
+                            <div className="text-xs text-gray-600 mt-1">{block.label}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {availableBlocks.length === 0 && (
+                    <div className="text-center py-8 text-gray-500">
+                      <div className="mb-4">🧩</div>
+                      <p>Nenhum componente encontrado.</p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

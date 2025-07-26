@@ -182,9 +182,9 @@ export type PropertyType =
 export interface PropertySchema {
   key: string; // Chave da propriedade (ex: 'text', 'fontSize')
   label: string; // Rótulo visível no painel
-  type: PropertyType; // Tipo de controle (text, color, select, array-of-objects, etc.)
+  type: string; // Tipo de controle - usando string para flexibilidade
   defaultValue?: any; // Valor padrão
-  options?: { label: string; value: string }[]; // Para tipo 'select'
+  options?: string[] | { label: string; value: any }[]; // Para tipo 'select' - aceita ambos formatos
   nestedPath?: string; // Para propriedades aninhadas (ex: 'styles.backgroundColor')
   itemSchema?: PropertySchema[]; // Para 'array-of-objects', define o schema de cada item
   min?: number; // Para 'number' e 'range'
@@ -194,6 +194,7 @@ export interface PropertySchema {
   helpText?: string; // Texto de ajuda
   description?: string; // Descrição adicional
   rows?: number; // Para textarea
+  required?: boolean; // Campo obrigatório
 }
 
 // Interface para as opções de uma pergunta
