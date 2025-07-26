@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 // Componentes modernos
 import { 
@@ -13,7 +13,7 @@ import {
 import { 
   CheckCircle, Star, Gift, Lock, Shield, Award, Clock, ArrowRight, 
   HelpCircle, Brain, Play, Code, LoaderCircle, Image as ImageIcon,
-  StretchHorizontal, Rows3 
+  StretchHorizontal, Rows3, ShoppingCart, ArrowDown 
 } from 'lucide-react';
 
 interface DynamicBlockRendererProps {
@@ -422,6 +422,300 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               <button className="bg-gradient-to-r from-[#B89B7A] to-[#432818] hover:from-[#432818] hover:to-[#B89B7A] text-white font-bold py-4 px-8 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
                 {props.buttonText || 'Começar Quiz Agora'}
               </button>
+            </div>
+          </div>
+        );
+
+      // COMPONENTES ESPECÍFICOS DA PÁGINA DE RESULTADO
+      case 'header-component-real':
+        return (
+          <div className="bg-white shadow-sm border-b border-[#B89B7A]/20 py-6">
+            <div className="container mx-auto px-4 max-w-4xl">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <img 
+                    src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp" 
+                    alt="Logo" 
+                    className="h-12 w-auto"
+                  />
+                  <div>
+                    <h1 className="text-2xl font-bold text-[#432818]" style={{ fontFamily: 'Playfair Display, serif' }}>
+                      Seu Resultado Personalizado
+                    </h1>
+                    <p className="text-[#6B5B73] text-sm">Descubra seu estilo único</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'result-header-inline':
+        return (
+          <div className="bg-white p-6 rounded-xl shadow-md border border-[#B89B7A]/20 mb-8">
+            <div className="text-center mb-6">
+              <h2 className="text-3xl font-bold text-[#432818] mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+                🎉 Parabéns! Descobrimos seu estilo
+              </h2>
+              <div className="max-w-md mx-auto">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm text-[#8F7A6A]">Seu estilo predominante</span>
+                  <span className="text-[#aa6b5d] font-medium">92%</span>
+                </div>
+                <div className="w-full bg-[#F3E8E6] rounded-full h-3">
+                  <div className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] h-3 rounded-full" style={{ width: '92%' }}></div>
+                </div>
+              </div>
+            </div>
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <h3 className="text-xl font-semibold text-[#432818] mb-3">Estilo Romântico Clássico</h3>
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  Você possui uma elegância natural que combina feminilidade e sofisticação. 
+                  Seu estilo é atemporal, com peças que valorizam sua personalidade única.
+                </p>
+                <div className="bg-[#f9f4ef] rounded-lg p-4">
+                  <h4 className="font-medium text-[#432818] mb-2">Características principais:</h4>
+                  <ul className="space-y-1 text-sm text-gray-600">
+                    <li>• Feminilidade e delicadeza</li>
+                    <li>• Elegância atemporal</li>
+                    <li>• Versatilidade para todas as ocasiões</li>
+                  </ul>
+                </div>
+              </div>
+              <div className="text-center">
+                <img 
+                  src="https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.webp"
+                  alt="Seu estilo"
+                  className="w-full max-w-xs mx-auto rounded-lg shadow-lg"
+                />
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'before-after-component-real':
+        return (
+          <div className="bg-gradient-to-br from-[#f9f4ef] to-white p-8 rounded-xl mb-8">
+            <h3 className="text-2xl font-bold text-center text-[#432818] mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
+              A Transformação que Você Merece
+            </h3>
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="text-center">
+                <div className="bg-gray-100 p-6 rounded-lg mb-4">
+                  <h4 className="text-lg font-semibold text-gray-600 mb-2">Antes</h4>
+                  <p className="text-gray-600 text-sm">
+                    Guarda-roupa desorganizado, compras por impulso, 
+                    dúvidas sobre o que vestir a cada ocasião.
+                  </p>
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="bg-gradient-to-br from-[#B89B7A] to-[#aa6b5d] text-white p-6 rounded-lg mb-4">
+                  <h4 className="text-lg font-semibold mb-2">Depois</h4>
+                  <p className="text-sm">
+                    Estilo definido, looks intencionais, 
+                    confiança em cada escolha de roupa.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'motivation-component-real':
+        return (
+          <div className="bg-white p-8 rounded-xl shadow-md border border-[#B89B7A]/20 mb-8">
+            <div className="text-center mb-6">
+              <Award className="w-12 h-12 text-[#B89B7A] mx-auto mb-4" />
+              <h3 className="text-2xl font-bold text-[#432818] mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+                Por que Investir no Seu Estilo?
+              </h3>
+            </div>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Star className="w-8 h-8 text-[#B89B7A]" />
+                </div>
+                <h4 className="font-semibold text-[#432818] mb-2">Confiança</h4>
+                <p className="text-sm text-gray-600">Sinta-se poderosa e autêntica em cada look</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Clock className="w-8 h-8 text-[#B89B7A]" />
+                </div>
+                <h4 className="font-semibold text-[#432818] mb-2">Praticidade</h4>
+                <p className="text-sm text-gray-600">Economize tempo decidindo o que vestir</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Gift className="w-8 h-8 text-[#B89B7A]" />
+                </div>
+                <h4 className="font-semibold text-[#432818] mb-2">Economia</h4>
+                <p className="text-sm text-gray-600">Compre apenas o que realmente funciona</p>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'bonus-component-real':
+        return (
+          <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-8 rounded-xl border border-green-200 mb-8">
+            <div className="text-center mb-6">
+              <Gift className="w-12 h-12 text-green-600 mx-auto mb-4" />
+              <h3 className="text-2xl font-bold text-green-800 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>
+                Bônus Exclusivos
+              </h3>
+              <p className="text-green-700">Conteúdos extras para potencializar seus resultados</p>
+            </div>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-white p-4 rounded-lg border border-green-200">
+                <h4 className="font-semibold text-green-800 mb-2">🎯 Guia de Peças-Chave</h4>
+                <p className="text-sm text-gray-600">As 10 peças essenciais para seu guarda-roupa</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg border border-green-200">
+                <h4 className="font-semibold text-green-800 mb-2">✨ Visagismo Facial</h4>
+                <p className="text-sm text-gray-600">Como valorizar seu rosto com as escolhas certas</p>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'testimonials-component-real':
+        return <TestimonialSlider autoPlay={true} interval={5000} />;
+
+      case 'cta-section-inline':
+        return (
+          <div className="text-center my-10">
+            <div className="bg-[#f9f4ef] p-6 rounded-lg border border-[#B89B7A]/10 mb-6">
+              <h3 className="text-xl font-medium text-center text-[#aa6b5d] mb-4">
+                Descubra Como Aplicar Seu Estilo na Prática
+              </h3>
+              <div className="flex justify-center">
+                <ArrowDown className="w-8 h-8 text-[#B89B7A] animate-bounce" />
+              </div>
+            </div>
+            <button 
+              className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+              onClick={() => window.location.href = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912'}
+            >
+              <span className="flex items-center justify-center gap-2">
+                <ShoppingCart className="w-5 h-5" />
+                Quero meu Guia de Estilo Agora
+              </span>
+            </button>
+            <div className="mt-4 flex items-center justify-center gap-2 text-sm text-gray-600">
+              <Lock className="w-4 h-4" />
+              <span>Compra 100% segura</span>
+            </div>
+          </div>
+        );
+
+      case 'guarantee-component-real':
+        return (
+          <div className="bg-blue-50 p-8 rounded-xl border border-blue-200 mb-8">
+            <div className="text-center">
+              <Shield className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+              <h3 className="text-2xl font-bold text-blue-800 mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+                Garantia de 7 Dias
+              </h3>
+              <p className="text-blue-700 max-w-2xl mx-auto">
+                Experimente por 7 dias. Se não ficar completamente satisfeita com os resultados, 
+                devolvemos 100% do seu investimento, sem perguntas.
+              </p>
+            </div>
+          </div>
+        );
+
+      case 'mentor-component-real':
+        return (
+          <div className="bg-white p-8 rounded-xl shadow-md border border-[#B89B7A]/20 mb-8">
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <h3 className="text-2xl font-bold text-[#432818] mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+                  Sobre Gisele Galvão
+                </h3>
+                <p className="text-gray-700 mb-4">
+                  Consultora de imagem com mais de 10 anos de experiência, já transformou 
+                  a vida de milhares de mulheres através do poder do estilo pessoal.
+                </p>
+                <div className="flex items-center gap-2 text-sm text-[#B89B7A]">
+                  <Star className="w-4 h-4 fill-current" />
+                  <span>3000+ mulheres transformadas</span>
+                </div>
+              </div>
+              <div className="text-center">
+                <img 
+                  src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp"
+                  alt="Gisele Galvão"
+                  className="w-40 h-40 rounded-full mx-auto object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'value-stack-inline':
+        return (
+          <div className="text-center mt-10">
+            <h2 className="text-2xl md:text-3xl font-bold text-[#aa6b5d] mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
+              Vista-se de Você — na Prática
+            </h2>
+            <p className="text-[#432818] mb-8 max-w-xl mx-auto">
+              Agora que você conhece seu estilo, é hora de aplicá-lo com clareza e intenção.
+            </p>
+
+            <div className="bg-white p-6 rounded-lg shadow-md border border-[#B89B7A]/20 mb-8 max-w-md mx-auto">
+              <h3 className="text-xl font-medium text-center text-[#aa6b5d] mb-4">O Que Você Recebe Hoje</h3>
+              
+              <div className="space-y-3 mb-6">
+                <div className="flex justify-between items-center p-2 border-b border-[#B89B7A]/10">
+                  <span>Guia Principal</span>
+                  <span className="font-medium">R$ 67,00</span>
+                </div>
+                <div className="flex justify-between items-center p-2 border-b border-[#B89B7A]/10">
+                  <span>Bônus - Peças-chave</span>
+                  <span className="font-medium">R$ 79,00</span>
+                </div>
+                <div className="flex justify-between items-center p-2 border-b border-[#B89B7A]/10">
+                  <span>Bônus - Visagismo Facial</span>
+                  <span className="font-medium">R$ 29,00</span>
+                </div>
+                <div className="flex justify-between items-center p-2 pt-3 font-bold">
+                  <span>Valor Total</span>
+                  <div className="relative">
+                    <span>R$ 175,00</span>
+                    <div className="absolute top-1/2 left-0 right-0 h-[2px] bg-red-500 transform -translate-y-1/2 -rotate-3"></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="text-center p-4 bg-[#f9f4ef] rounded-lg">
+                <p className="text-sm text-[#aa6b5d] uppercase font-medium">Hoje por apenas</p>
+                <p className="text-4xl font-bold text-[#432818]">R$ 39,00</p>
+                <p className="text-xs text-gray-500 mt-1">Pagamento único</p>
+              </div>
+            </div>
+
+            <button 
+              className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-5 px-8 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg mb-4"
+              onClick={() => window.location.href = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912'}
+            >
+              <span className="flex items-center justify-center gap-2">
+                <ShoppingCart className="w-5 h-5" />
+                Garantir Meu Guia + Bônus Especiais
+              </span>
+            </button>
+
+            <div className="flex items-center justify-center gap-4 text-sm text-gray-600">
+              <div className="flex items-center gap-1">
+                <Lock className="w-4 h-4" />
+                <span>Compra segura</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Shield className="w-4 h-4" />
+                <span>Garantia 7 dias</span>
+              </div>
             </div>
           </div>
         );

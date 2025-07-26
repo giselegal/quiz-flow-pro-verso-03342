@@ -275,7 +275,7 @@ const ResultPage: React.FC = () => {
                           height="auto"
                           onError={(e) => {
                             console.error('Erro ao carregar imagem do estilo:', e);
-                            console.log('URL da imagem:', `${image}?q=auto:best&f=auto&w=238`);
+                            console.log('URL da imagem:', `${image}?q=auto:best&f=auto&w=280`);
                             console.log('Category:', category);
                             console.log('StyleConfig data:', styleConfigData);
                           }}
@@ -345,8 +345,8 @@ const ResultPage: React.FC = () => {
               pageId="result-page"
               blockId="cta-section-inline"
               fallback={
-                <div className="text-center my-10">
-                  <div className="bg-[#f9f4ef] p-6 rounded-lg border border-[#B89B7A]/10 mb-6">
+                <div className="text-center my-12">
+                  <div className="bg-gradient-to-br from-[#f9f4ef] to-[#fff7f3] p-6 md:p-8 rounded-xl border border-[#B89B7A]/10 mb-8 shadow-sm">
                     <h3 className="text-xl font-medium text-center text-[#aa6b5d] mb-4">
                       Descubra Como Aplicar Seu Estilo na Prática
                     </h3>
@@ -355,9 +355,9 @@ const ResultPage: React.FC = () => {
                     </div>
                   </div>
                   
-                  <Button onClick={handleCTAClick} className="text-white py-4 px-6 rounded-md btn-cta-green" onMouseEnter={() => setIsButtonHovered(true)} onMouseLeave={() => setIsButtonHovered(false)} style={{
-                  background: "linear-gradient(to right, #4CAF50, #45a049)",
-                  boxShadow: "0 4px 14px rgba(76, 175, 80, 0.4)"
+                  <Button onClick={handleCTAClick} className="text-white py-4 px-8 rounded-xl text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl" onMouseEnter={() => setIsButtonHovered(true)} onMouseLeave={() => setIsButtonHovered(false)} style={{
+                  background: "linear-gradient(135deg, #4CAF50, #45a049)",
+                  boxShadow: "0 6px 20px rgba(76, 175, 80, 0.4)"
                 }}>
                     <span className="flex items-center justify-center gap-2">
                       <ShoppingCart className={`w-5 h-5 transition-transform duration-300 ${isButtonHovered ? 'scale-110' : ''}`} />
@@ -397,8 +397,8 @@ const ResultPage: React.FC = () => {
               pageId="result-page"
               blockId="value-stack-inline"
               fallback={
-                <div className="text-center mt-10">
-                  <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-4">
+                <div className="text-center mt-16">
+                  <h2 className="text-3xl md:text-4xl font-playfair text-[#aa6b5d] mb-6">
                     Vista-se de Você — na Prática
                   </h2>
                   <div className="elegant-divider"></div>
