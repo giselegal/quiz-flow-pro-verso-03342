@@ -565,57 +565,69 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
   return (
     <EditorQuizProvider>
-      <div className={`h-screen flex flex-col overflow-hidden bg-gray-50 ${className}`}>
-      {/* Header Responsivo */}
-      <div className="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4">
-        <div className="flex items-center space-x-4 min-w-0 flex-1">
-          {/* Botão Voltar ao Dashboard */}
+      <div className={`h-screen flex flex-col overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/30`}>
+      {/* Header Responsivo - Redesigned */}
+      <div className="h-16 bg-white/95 backdrop-blur-sm border-b border-slate-200/60 shadow-sm flex items-center justify-between px-6">
+        <div className="flex items-center space-x-6 min-w-0 flex-1">
+          {/* Botão Voltar ao Dashboard - Redesigned */}
           <Button
             variant="ghost"
             size="sm"
             onClick={handleBackToDashboard}
-            className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 px-3 py-2"
+            className="flex items-center space-x-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 px-4 py-2 rounded-lg transition-all duration-200"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span className="hidden sm:inline">Dashboard</span>
+            <span className="hidden sm:inline font-medium">Dashboard</span>
           </Button>
 
           {/* Separador */}
-          <div className="h-6 w-px bg-gray-300" />
+          <div className="h-8 w-px bg-gradient-to-b from-transparent via-slate-300 to-transparent" />
 
-          {/* Info do funil */}
-          <div className="flex items-center space-x-2 min-w-0">
-            <FileText className="w-5 h-5 text-gray-500 flex-shrink-0" />
-            <span className="font-medium text-gray-800 truncate">{funnel.name}</span>
-            <Badge variant={funnel.isPublished ? 'default' : 'secondary'} className="text-xs hidden sm:inline-flex">
-              {funnel.isPublished ? 'Publicado' : 'Rascunho'}
-            </Badge>
-          </div>
-
-          {/* Info da página atual */}
-          {currentPage && (
-            <div className="hidden lg:flex items-center space-x-2 text-sm text-gray-600">
-              <span>•</span>
-              <span className="truncate">{currentPage.title}</span>
-              <Badge variant="outline" className="text-xs">
-                {currentPage.blocks.length} bloco{currentPage.blocks.length !== 1 ? 's' : ''}
-              </Badge>
+          {/* Info do funil - Redesigned */}
+          <div className="flex items-center space-x-3 min-w-0">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center">
+              <FileText className="w-5 h-5 text-blue-600" />
             </div>
-          )}
+            <div className="min-w-0">
+              <h2 className="font-semibold text-slate-800 truncate text-lg">{funnel.name}</h2>
+              <div className="flex items-center space-x-2">
+                <Badge 
+                  variant={funnel.isPublished ? 'default' : 'secondary'} 
+                  className={`text-xs ${
+                    funnel.isPublished 
+                      ? 'bg-green-100 text-green-700 border-green-200' 
+                      : 'bg-amber-100 text-amber-700 border-amber-200'
+                  }`}
+                >
+                  {funnel.isPublished ? 'Publicado' : 'Rascunho'}
+                </Badge>
+                {/* Info da página atual */}
+                {currentPage && (
+                  <div className="hidden lg:flex items-center space-x-2 text-sm text-slate-500">
+                    <span>•</span>
+                    <span className="truncate">{currentPage.title}</span>
+                    <Badge variant="outline" className="text-xs border-slate-200 text-slate-600">
+                      {currentPage.blocks.length} bloco{currentPage.blocks.length !== 1 ? 's' : ''}
+                    </Badge>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="flex items-center space-x-2">
-          {/* Status */}
-          <div className="hidden sm:flex items-center space-x-2">
+        <div className="flex items-center space-x-3">
+          {/* Status - Redesigned */}
+          <div className="hidden sm:flex items-center space-x-2 bg-slate-50 rounded-full px-3 py-1.5">
             <div className={`w-2 h-2 rounded-full ${
-              isSaving ? 'bg-yellow-500 animate-pulse' : 'bg-green-500'
+              isSaving ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500'
             }`} />
-            <span className="text-xs text-gray-600">
-              {isSaving ? 'Salvando...' : 'Online'}
+            <span className="text-xs font-medium text-slate-600">
+              {isSaving ? 'Salvando...' : 'Sincronizado'}
             </span>
           </div>
 
-          {/* Botões Mobile - SEMPRE VISÍVEIS EM MÓBILE */}
+          {/* Botões Mobile - SEMPRE VISÍVEIS EM MÓBILE - Redesigned */}
           <div className="flex space-x-2 md:hidden">
             <Button
               variant="default"
@@ -625,10 +637,10 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                 setShowLeftSidebar(!showLeftSidebar);
                 if (showRightSidebar) setShowRightSidebar(false);
               }}
-              className={`text-white text-xs px-3 py-2 ${
+              className={`text-white text-xs px-3 py-2 rounded-lg transition-all duration-200 ${
                 showLeftSidebar
-                  ? 'bg-blue-700 hover:bg-blue-800'
-                  : 'bg-blue-600 hover:bg-blue-700'
+                  ? 'bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg'
+                  : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700'
               }`}
             >
               <Menu className="w-4 h-4 mr-1" />
@@ -642,10 +654,10 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                 setShowRightSidebar(!showRightSidebar);
                 if (showLeftSidebar) setShowLeftSidebar(false);
               }}
-              className={`text-white text-xs px-3 py-2 ${
+              className={`text-white text-xs px-3 py-2 rounded-lg transition-all duration-200 ${
                 showRightSidebar
-                  ? 'bg-green-700 hover:bg-green-800'
-                  : 'bg-green-600 hover:bg-green-700'
+                  ? 'bg-gradient-to-r from-emerald-600 to-emerald-700 shadow-lg'
+                  : 'bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700'
               }`}
             >
               <Settings className="w-4 h-4 mr-1" />
@@ -653,18 +665,21 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
             </Button>
           </div>
 
-          {/* Device Controls */}
-          <div className="hidden lg:flex border rounded-md">
+          {/* Device Controls - Redesigned */}
+          <div className="hidden lg:flex bg-slate-100 rounded-lg p-1">
             <Button
               variant={deviceView === 'mobile' ? 'default' : 'ghost'}
               size="sm"
               onClick={() => {
                 setDeviceView('mobile');
-                // Adicionado: Garante que as sidebars fiquem visíveis ao mudar para mobile view
                 setShowLeftSidebar(true);
                 setShowRightSidebar(true);
               }}
-              className="rounded-r-none px-2"
+              className={`px-3 py-2 rounded-md transition-all duration-200 ${
+                deviceView === 'mobile' 
+                  ? 'bg-white shadow-sm text-slate-700' 
+                  : 'text-slate-500 hover:text-slate-700 hover:bg-white/50'
+              }`}
             >
               <Smartphone className="w-4 h-4" />
             </Button>
@@ -676,7 +691,11 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                 setShowLeftSidebar(true);
                 setShowRightSidebar(true);
               }}
-              className="rounded-none px-2"
+              className={`px-3 py-2 rounded-md transition-all duration-200 ${
+                deviceView === 'tablet' 
+                  ? 'bg-white shadow-sm text-slate-700' 
+                  : 'text-slate-500 hover:text-slate-700 hover:bg-white/50'
+              }`}
             >
               <Tablet className="w-4 h-4" />
             </Button>
@@ -688,52 +707,76 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                 setShowLeftSidebar(true);
                 setShowRightSidebar(true);
               }}
-              className="rounded-l-none px-2"
+              className={`px-3 py-2 rounded-md transition-all duration-200 ${
+                deviceView === 'desktop' 
+                  ? 'bg-white shadow-sm text-slate-700' 
+                  : 'text-slate-500 hover:text-slate-700 hover:bg-white/50'
+              }`}
             >
               <Monitor className="w-4 h-4" />
             </Button>
           </div>
 
-          {/* Botões Undo/Redo */}
-          <div className="hidden md:flex space-x-1">
+          {/* Botões Undo/Redo - Redesigned */}
+          <div className="hidden md:flex space-x-1 bg-slate-100 rounded-lg p-1">
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
               onClick={handleUndo}
               disabled={undoStack.length === 0}
               title="Desfazer"
+              className={`px-3 py-2 rounded-md transition-all duration-200 ${
+                undoStack.length === 0 
+                  ? 'text-slate-400 cursor-not-allowed' 
+                  : 'text-slate-600 hover:text-slate-800 hover:bg-white/70'
+              }`}
             >
               <Undo2 className="w-4 h-4" />
             </Button>
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
               onClick={handleRedo}
               disabled={redoStack.length === 0}
               title="Refazer"
+              className={`px-3 py-2 rounded-md transition-all duration-200 ${
+                redoStack.length === 0 
+                  ? 'text-slate-400 cursor-not-allowed' 
+                  : 'text-slate-600 hover:text-slate-800 hover:bg-white/70'
+              }`}
             >
               <Redo2 className="w-4 h-4" />
             </Button>
           </div>
 
-          {/* Actions */}
+          {/* Actions - Redesigned */}
           <div className="hidden md:flex space-x-2">
             <Button 
               variant="outline" 
               size="sm" 
               onClick={createNewFunnel}
               title="Criar novo funil"
+              className="border-slate-200 text-slate-600 hover:text-slate-800 hover:bg-slate-50 hover:border-slate-300 transition-all duration-200"
             >
               <Plus className="w-4 h-4 mr-1" />
               Novo
             </Button>
-            <Button variant="outline" size="sm" onClick={() => saveFunnel(true)}>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => saveFunnel(true)}
+              className="border-slate-200 text-slate-600 hover:text-slate-800 hover:bg-slate-50 hover:border-slate-300 transition-all duration-200"
+            >
               <Save className="w-4 h-4 mr-1" />
               Backup
             </Button>
           </div>
 
-          <Button variant="outline" size="sm" className="hidden sm:inline-flex">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="hidden sm:inline-flex border-slate-200 text-slate-600 hover:text-slate-800 hover:bg-slate-50 hover:border-slate-300 transition-all duration-200"
+          >
              <Eye className="w-4 h-4 mr-1" />
              <span className="hidden lg:inline">Preview</span>
            </Button>
@@ -743,20 +786,20 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
              onClick={handlePublish}
              disabled={isPublishing || !funnel?.id}
              variant="default"
-             className="bg-blue-600 hover:bg-blue-700 px-3"
+             className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 px-4"
            >
-             <Eye className="w-4 h-4 sm:mr-1" />
-             <span className="hidden sm:inline">{isPublishing ? 'Publicando...' : 'Publicar'}</span>
+             <Eye className="w-4 h-4 sm:mr-2" />
+             <span className="hidden sm:inline font-medium">{isPublishing ? 'Publicando...' : 'Publicar'}</span>
            </Button>
 
            <Button
              size="sm"
              onClick={handleSave}
              disabled={isSaving}
-             className="bg-[#B89B7A] hover:bg-[#a08965] px-3"
+             className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 px-4"
            >
-             <Save className="w-4 h-4 sm:mr-1" />
-             <span className="hidden sm:inline">{isSaving ? 'Salvando...' : 'Salvar'}</span>
+             <Save className="w-4 h-4 sm:mr-2" />
+             <span className="hidden sm:inline font-medium">{isSaving ? 'Salvando...' : 'Salvar'}</span>
            </Button>
 
            <Button
@@ -836,7 +879,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         {/* Overlay para mobile quando sidebar está aberta - TESTE FORÇADO */}
         {(showLeftSidebar || showRightSidebar) && deviceView === 'mobile' && (
           <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-all duration-300"
             onClick={() => {
               console.log('🔄 Overlay clicked - closing sidebars');
               setShowLeftSidebar(false);
@@ -845,17 +888,17 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           />
         )}
 
-        {/* Left Sidebar - RESPONSIVE */}
+        {/* Left Sidebar - RESPONSIVE - Redesigned */}
         {showLeftSidebar && (
           <div
             className={`
               ${deviceView === 'mobile'
-                ? 'fixed top-14 left-0 bottom-0 w-80 z-50 bg-white shadow-2xl border-r border-gray-300'
+                ? 'fixed top-16 left-0 bottom-0 w-80 z-50 bg-white/95 backdrop-blur-lg shadow-2xl border-r border-slate-200/60'
                 : deviceView === 'tablet'
-                  ? 'relative w-64 bg-white border-r border-gray-200'
-                  : 'relative w-80 bg-white border-r border-gray-200'
+                  ? 'relative w-64 bg-white/95 backdrop-blur-sm border-r border-slate-200/60'
+                  : 'relative w-80 bg-white/95 backdrop-blur-sm border-r border-slate-200/60'
               }
-              flex flex-col
+              flex flex-col transition-all duration-300 ease-in-out
             `}
             style={{
               display: 'flex',
@@ -863,8 +906,13 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               opacity: 1
             }}
           >
-            <div className="flex items-center justify-between p-3 border-b border-gray-200">
-              <h2 className="font-semibold text-gray-900">Componentes</h2>
+            <div className="flex items-center justify-between p-4 border-b border-slate-200/60 bg-gradient-to-r from-slate-50 to-blue-50">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center">
+                  <Menu className="w-4 h-4 text-blue-600" />
+                </div>
+                <h2 className="font-semibold text-slate-800">Componentes</h2>
+              </div>
               {deviceView === 'mobile' && (
                 <Button
                   variant="ghost"
@@ -873,7 +921,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                     console.log('🔄 Closing left sidebar from X button');
                     setShowLeftSidebar(false);
                   }}
-                  className="h-8 w-8 p-0"
+                  className="h-8 w-8 p-0 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-all duration-200"
                 >
                   ×
                 </Button>
@@ -892,20 +940,20 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           </div>
         )}
 
-        {/* Central Canvas */}
-        <div className="flex-1 flex flex-col overflow-hidden bg-gray-50">
-          <div className="flex-1 overflow-auto flex justify-center">
+        {/* Central Canvas - Redesigned */}
+        <div className="flex-1 flex flex-col overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/30">
+          <div className="flex-1 overflow-auto flex justify-center p-4">
             <div className={`
               ${deviceView === 'mobile'
-                ? 'w-full max-w-sm mx-auto p-2'
+                ? 'w-full max-w-sm mx-auto'
                 : deviceView === 'tablet'
-                  ? 'w-full max-w-2xl mx-auto p-4'
-                  : 'w-full max-w-4xl mx-auto p-6'
+                  ? 'w-full max-w-2xl mx-auto'
+                  : 'w-full max-w-4xl mx-auto'
               }
             `}>
               {deviceView === 'mobile' ? (
-                <div className="w-full max-w-sm bg-white rounded-lg shadow-sm min-h-[calc(100vh-120px)] mx-auto">
-                  <div className="p-4">
+                <div className="w-full max-w-sm bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/60 min-h-[calc(100vh-140px)] mx-auto overflow-hidden">
+                  <div className="p-6">
                     {/* Componente de teste para exclusão */}
                     <TestDeleteComponent onDelete={() => {
                       console.log('🧪 Teste de exclusão chamado!');
@@ -925,16 +973,19 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                     />
 
                     {!currentPage && (
-                      <div className="text-center py-8 text-gray-500">
-                        <h3 className="text-sm font-medium mb-2">Nenhuma página selecionada</h3>
-                        <p className="text-xs">Selecione uma página para começar a editar</p>
+                      <div className="text-center py-12 text-slate-500">
+                        <div className="w-16 h-16 bg-gradient-to-br from-slate-100 to-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                          <FileText className="w-8 h-8 text-slate-400" />
+                        </div>
+                        <h3 className="text-sm font-semibold mb-2 text-slate-700">Nenhuma página selecionada</h3>
+                        <p className="text-xs text-slate-500">Selecione uma página para começar a editar</p>
                       </div>
                     )}
                   </div>
                 </div>
               ) : deviceView === 'tablet' ? (
-                <div className="w-full max-w-2xl bg-white rounded-lg shadow-lg min-h-[calc(100vh-120px)] mx-auto">
-                  <div className="p-6">
+                <div className="w-full max-w-2xl bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/60 min-h-[calc(100vh-140px)] mx-auto overflow-hidden">
+                  <div className="p-8">
                     <DroppableCanvas
                       blocks={currentPage?.blocks || []}
                       selectedBlockId={selectedBlockId || undefined}
@@ -948,9 +999,12 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                     />
 
                     {!currentPage && (
-                      <div className="text-center py-16 text-gray-500">
-                        <h3 className="text-lg font-medium mb-2">Nenhuma página selecionada</h3>
-                        <p className="text-sm">Selecione uma página para começar a editar.</p>
+                      <div className="text-center py-20 text-slate-500">
+                        <div className="w-20 h-20 bg-gradient-to-br from-slate-100 to-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                          <FileText className="w-10 h-10 text-slate-400" />
+                        </div>
+                        <h3 className="text-lg font-semibold mb-3 text-slate-700">Nenhuma página selecionada</h3>
+                        <p className="text-sm text-slate-500">Selecione uma página para começar a editar.</p>
                       </div>
                     )}
                   </div>
@@ -983,7 +1037,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           </div>
         </div>
 
-        {/* Right Sidebar - RESPONSIVE */}
+        {/* Right Sidebar - RESPONSIVE - Redesigned */}
         {showRightSidebar && (
           <div
             className={`

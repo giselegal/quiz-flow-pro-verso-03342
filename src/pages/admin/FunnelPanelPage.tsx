@@ -1,32 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Badge } from '../../components/ui/badge';
-import { Textarea } from '../../components/ui/textarea';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../../components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
-import { Label } from '../../components/ui/label';
 import { 
   Plus, 
   Search, 
   Filter, 
-  MoreHorizontal, 
+  BarChart3, 
+  TrendingUp, 
+  Users, 
+  Target,
+  Eye, 
+  Copy, 
   Edit, 
   Trash2, 
-  Copy, 
-  Eye, 
-  BarChart3,
-  Users,
-  TrendingUp,
-  Calendar,
-  Layout,
+  MoreHorizontal, 
+  Layout, 
+  Clock, 
+  Star,
   Zap,
-  Target,
   Heart,
-  Clock
+  Brain,
+  Briefcase,
+  GraduationCap,
+  ShoppingCart,
+  Gamepad2,
+  Trophy,
+  Lightbulb
 } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Badge } from '../../components/ui/badge';
+import { Input } from '../../components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../../components/ui/dialog';
+import { Label } from '../../components/ui/label';
+import { Textarea } from '../../components/ui/textarea';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../../components/ui/dropdown-menu';
+import { useToast } from '../../hooks/use-toast';
 import { supabase } from '../../lib/supabase';
 import { schemaDrivenFunnelService } from '../../services/schemaDrivenFunnelService';
 
@@ -658,218 +667,255 @@ const FunnelPanelPage: React.FC = () => {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Aviso de Modo Offline */}
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-        <div className="flex items-center">
-          <div className="flex-shrink-0">
-            <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-            </svg>
-          </div>
-          <div className="ml-3">
-            <p className="text-sm text-yellow-800">
-              <strong>Modo Offline Ativo:</strong> Os templates e criação de funis estão funcionando em modo offline para demonstração. 
-              Os funis criados serão salvos localmente e você pode testar a navegação para o editor.
-            </p>
-          </div>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-[#fffaf7] via-[#F9F6F2] to-[#F3E8E6]">
+      {/* Background Pattern com cores da marca */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(circle at 25% 25%, #B89B7A 2px, transparent 2px), radial-gradient(circle at 75% 75%, #432818 1px, transparent 1px)`,
+          backgroundSize: '50px 50px'
+        }}></div>
       </div>
-
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Painel de Funis</h1>
-          <p className="text-gray-600 mt-1">Gerencie seus funis de conversão e use templates prontos</p>
+      
+      <div className="relative z-10 p-6 space-y-8">
+        {/* Aviso de Modo Offline - Redesigned com cores da marca */}
+        <div className="bg-gradient-to-r from-[#aa6b5d] to-[#B89B7A] border border-[#432818]/20 rounded-xl p-5 shadow-lg">
+          <div className="flex items-start">
+            <div className="flex-shrink-0">
+              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                <svg className="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              </div>
+            </div>
+            <div className="ml-4">
+              <h3 className="text-sm font-semibold text-white">Modo Demonstração Ativo</h3>
+              <p className="text-sm text-white/90 mt-1">
+                Os templates e criação de funis estão funcionando em modo offline para demonstração. 
+                Os funis criados serão salvos localmente e você pode testar a navegação para o editor.
+              </p>
+            </div>
+          </div>
         </div>
-        <div className="flex gap-3">
-          <Button 
-            onClick={() => setIsCreateDialogOpen(true)}
-            className="bg-[#B89B7A] hover:bg-[#9F836A] text-white"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Novo Funil Personalizado
-          </Button>
-        </div>
-      </div>
 
-      {/* Stats Cards */}
+        {/* Header - Redesigned com cores da marca */}
+        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-6">
+          <div className="space-y-2">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-[#432818] via-[#8F7A6A] to-[#B89B7A] bg-clip-text text-transparent">
+              Painel de Funis
+            </h1>
+            <p className="text-lg text-[#8F7A6A]">Gerencie seus funis de conversão e use templates prontos</p>
+          </div>
+          <div className="flex gap-3">
+            <Button 
+              onClick={() => setIsCreateDialogOpen(true)}
+              className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] hover:from-[#432818] hover:to-[#8F7A6A] text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+              size="lg"
+            >
+              <Plus className="w-5 h-5 mr-2" />
+              Novo Funil Personalizado
+            </Button>
+          </div>
+        </div>
+
+      {/* Stats Cards - Redesigned com cores da marca */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
+        <Card className="bg-gradient-to-br from-white to-[#fffaf7] border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total de Funis</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-semibold text-[#8F7A6A]">Total de Funis</CardTitle>
+            <div className="w-10 h-10 bg-[#B89B7A]/20 rounded-full flex items-center justify-center">
+              <BarChart3 className="h-5 w-5 text-[#B89B7A]" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.total_funnels}</div>
+            <div className="text-3xl font-bold text-[#432818]">{stats.total_funnels}</div>
+            <p className="text-xs text-[#8F7A6A] mt-1">+2 este mês</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-gradient-to-br from-white to-[#F3E8E6] border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Funis Ativos</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-semibold text-[#8F7A6A]">Funis Ativos</CardTitle>
+            <div className="w-10 h-10 bg-[#aa6b5d]/20 rounded-full flex items-center justify-center">
+              <TrendingUp className="h-5 w-5 text-[#aa6b5d]" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.active_funnels}</div>
+            <div className="text-3xl font-bold text-[#432818]">{stats.active_funnels}</div>
+            <p className="text-xs text-[#8F7A6A] mt-1">+1 esta semana</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-gradient-to-br from-white to-[#fffaf7] border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Visualizações</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-semibold text-[#8F7A6A]">Visualizações</CardTitle>
+            <div className="w-10 h-10 bg-[#B89B7A]/20 rounded-full flex items-center justify-center">
+              <Users className="h-5 w-5 text-[#B89B7A]" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.total_views.toLocaleString()}</div>
+            <div className="text-3xl font-bold text-[#432818]">{stats.total_views.toLocaleString()}</div>
+            <p className="text-xs text-[#8F7A6A] mt-1">+12% vs mês anterior</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-gradient-to-br from-white to-[#F3E8E6] border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Taxa de Conversão</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-semibold text-[#8F7A6A]">Taxa de Conversão</CardTitle>
+            <div className="w-10 h-10 bg-[#aa6b5d]/20 rounded-full flex items-center justify-center">
+              <Target className="h-5 w-5 text-[#aa6b5d]" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.conversion_rate.toFixed(1)}%</div>
+            <div className="text-3xl font-bold text-[#432818]">{stats.conversion_rate.toFixed(1)}%</div>
+            <p className="text-xs text-[#8F7A6A] mt-1">+0.5% esta semana</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-          <Input
-            placeholder="Buscar funis..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
+      {/* Filters - Redesigned com cores da marca */}
+      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-[#B89B7A]/20 p-6">
+        <div className="flex flex-col lg:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#8F7A6A] w-5 h-5" />
+            <Input
+              placeholder="Buscar funis por nome ou descrição..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-12 h-12 border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A] text-base"
+            />
+          </div>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-full lg:w-64 h-12 border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]">
+              <Filter className="w-5 h-5 mr-2 text-[#8F7A6A]" />
+              <SelectValue placeholder="Filtrar por status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos os status</SelectItem>
+              <SelectItem value="active">Ativo</SelectItem>
+              <SelectItem value="draft">Rascunho</SelectItem>
+              <SelectItem value="paused">Pausado</SelectItem>
+              <SelectItem value="archived">Arquivado</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-full sm:w-48">
-            <Filter className="w-4 h-4 mr-2" />
-            <SelectValue placeholder="Filtrar por status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todos os status</SelectItem>
-            <SelectItem value="active">Ativo</SelectItem>
-            <SelectItem value="draft">Rascunho</SelectItem>
-            <SelectItem value="paused">Pausado</SelectItem>
-            <SelectItem value="archived">Arquivado</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
-      {/* Funnels List */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+      {/* Funnels List - Redesigned */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
         {loading ? (
           Array.from({ length: 6 }).map((_, i) => (
-            <Card key={i} className="animate-pulse">
-              <CardHeader>
-                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+            <Card key={i} className="animate-pulse bg-white shadow-lg">
+              <CardHeader className="space-y-3">
+                <div className="h-6 bg-slate-200 rounded-lg w-3/4"></div>
+                <div className="h-4 bg-slate-200 rounded w-1/2"></div>
               </CardHeader>
-              <CardContent>
-                <div className="h-3 bg-gray-200 rounded w-full mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+              <CardContent className="space-y-3">
+                <div className="h-4 bg-slate-200 rounded w-full"></div>
+                <div className="h-4 bg-slate-200 rounded w-2/3"></div>
               </CardContent>
             </Card>
           ))
         ) : (
           <>
-            {/* Templates Fixos */}
+            {/* Templates Fixos - Redesigned */}
             {(!searchTerm || statusFilter === 'all') && FUNNEL_TEMPLATES.map((template) => (
               <Card 
                 key={`template-${template.id}`}
-                className={`border-2 transition-all duration-200 transform hover:scale-105 hover:shadow-lg ${
+                className={`group relative overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-2xl border-0 ${
                   template.id === 'default-quiz-funnel-21-steps' 
-                    ? 'border-[#B89B7A] bg-gradient-to-br from-[#B89B7A]/10 via-[#F5F1EC] to-white ring-2 ring-[#B89B7A]/20' 
-                    : 'border-[#B89B7A] bg-gradient-to-br from-[#F5F1EC] to-white'
+                    ? 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 ring-2 ring-blue-200 shadow-xl' 
+                    : 'bg-gradient-to-br from-white to-slate-50 shadow-lg hover:shadow-xl'
                 }`}
               >
-                <CardHeader>
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                
+                <CardHeader className="relative z-10">
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
-                      <CardTitle className="text-lg text-[#B89B7A] font-bold flex items-center">
-                        <template.icon className="w-5 h-5 mr-2" />
-                        {template.name}
-                        {template.id === 'default-quiz-funnel-21-steps' && (
-                          <Badge className="ml-2 bg-[#B89B7A] text-white text-xs">
-                            PRINCIPAL
-                          </Badge>
-                        )}
+                      <CardTitle className={`text-xl font-bold flex items-center ${
+                        template.id === 'default-quiz-funnel-21-steps' 
+                          ? 'text-blue-700' 
+                          : 'text-slate-700'
+                      }`}>
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center mr-3 ${
+                          template.id === 'default-quiz-funnel-21-steps' 
+                            ? 'bg-blue-100' 
+                            : 'bg-slate-100'
+                        }`}>
+                          <template.icon className="w-5 h-5" />
+                        </div>
+                        <div>
+                          {template.name}
+                          {template.id === 'default-quiz-funnel-21-steps' && (
+                            <Badge className="ml-2 bg-blue-600 text-white text-xs font-semibold">
+                              PRINCIPAL
+                            </Badge>
+                          )}
+                        </div>
                       </CardTitle>
-                      <CardDescription className="mt-1 text-gray-600">
+                      <CardDescription className="text-slate-600 mt-2 leading-relaxed">
                         {template.description}
                       </CardDescription>
-                      <div className="mt-2 flex flex-wrap gap-1">
-                        <Badge className="bg-[#B89B7A] text-white text-xs">
-                          Template Pronto
-                        </Badge>
-                        <Badge variant="outline" className="text-xs">
-                          {template.steps} etapas
-                        </Badge>
-                        <Badge variant="outline" className="text-xs">
-                          ~{template.estimatedTime} min
-                        </Badge>
-                      </div>
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <div className="flex justify-between items-center text-sm text-gray-500 mb-4">
-                    <span className="flex items-center capitalize">
-                      <Layout className="w-4 h-4 mr-1" />
-                      {template.category}
-                    </span>
-                    <span className="flex items-center">
-                      <Clock className="w-4 h-4 mr-1" />
-                      {template.difficulty}
-                    </span>
+                
+                <CardContent className="relative z-10 space-y-4">
+                  <div className="flex flex-wrap gap-2">
+                    {template.tags.map((tag) => (
+                      <Badge 
+                        key={tag} 
+                        variant="secondary" 
+                        className="text-xs bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
+                      >
+                        {tag}
+                      </Badge>
+                    ))}
                   </div>
                   
-                  {template.id === 'default-quiz-funnel-21-steps' && (
-                    <div className="mb-4 p-3 bg-[#B89B7A]/10 rounded-lg border border-[#B89B7A]/20">
-                      <p className="text-xs text-[#8F7A6A] leading-relaxed">
-                        <strong>Funil Principal:</strong> Clique em "Usar Template" para abrir sempre o mesmo funil (ID fixo). 
-                        Clique em "Duplicar" apenas se quiser criar uma cópia personalizada.
-                      </p>
+                  <div className="grid grid-cols-3 gap-4 text-sm">
+                    <div className="text-center">
+                      <div className="font-semibold text-slate-700">{template.steps}</div>
+                      <div className="text-slate-500">Etapas</div>
                     </div>
-                  )}
-                  
-                  <div className="flex gap-2">
-                    {template.id === 'default-quiz-funnel-21-steps' ? (
-                      <>
-                        <Button 
-                          size="sm" 
-                          variant="outline"
-                          className="flex-1"
-                          onClick={() => createFunnelFromTemplate(template, false)}
-                        >
-                          <Eye className="w-4 h-4 mr-1" />
-                          Usar Template
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          className="flex-1 bg-[#B89B7A] hover:bg-[#9F836A] text-white"
-                          onClick={() => createFunnelFromTemplate(template, true)}
-                        >
-                          <Copy className="w-4 h-4 mr-1" />
-                          Duplicar
-                        </Button>
-                      </>
-                    ) : (
-                      <Button 
-                        size="sm" 
-                        className="w-full bg-[#B89B7A] hover:bg-[#9F836A] text-white"
-                        onClick={() => createFunnelFromTemplate(template, false)}
+                    <div className="text-center">
+                      <div className="font-semibold text-slate-700">{template.estimatedTime}min</div>
+                      <div className="text-slate-500">Duração</div>
+                    </div>
+                    <div className="text-center">
+                      <Badge 
+                        variant={template.difficulty === 'easy' ? 'default' : template.difficulty === 'medium' ? 'secondary' : 'destructive'}
+                        className="text-xs"
                       >
-                        <Plus className="w-4 h-4 mr-1" />
-                        Usar Template
-                      </Button>
-                    )}
+                        {template.difficulty === 'easy' ? 'Fácil' : template.difficulty === 'medium' ? 'Médio' : 'Avançado'}
+                      </Badge>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-2 pt-2">
+                    <Button
+                      onClick={() => openDefaultTemplate()}
+                      className={`flex-1 transition-all duration-200 ${
+                        template.id === 'default-quiz-funnel-21-steps'
+                          ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg'
+                          : 'bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white'
+                      }`}
+                    >
+                      <Eye className="w-4 h-4 mr-2" />
+                      {template.id === 'default-quiz-funnel-21-steps' ? 'Abrir Editor' : 'Usar Template'}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setSelectedTemplate(template);
+                        setIsTemplateDialogOpen(true);
+                      }}
+                      className="border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
