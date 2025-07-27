@@ -28,6 +28,15 @@ import FAQSectionBlock from '../components/editor/blocks/FAQSectionBlock';
 import TestimonialsBlock from '../components/editor/blocks/TestimonialsBlock';
 import GuaranteeBlock from '../components/editor/blocks/GuaranteeBlock';
 
+// Componentes INLINE reais das 21 etapas
+import QuizIntroHeaderBlock from '../components/editor/blocks/QuizIntroHeaderBlock';
+import TextInlineBlock from '../components/editor/blocks/TextInlineBlock';
+import HeadingInlineBlock from '../components/editor/blocks/HeadingInlineBlock';
+import ImageDisplayInlineBlock from '../components/editor/blocks/ImageDisplayInlineBlock';
+import FormInputBlock from '../components/editor/blocks/FormInputBlock';
+import ButtonInlineBlock from '../components/editor/blocks/ButtonInlineBlock';
+import OptionsGridBlock from '../components/editor/blocks/OptionsGridBlock';
+
 export const EDITOR_BLOCKS_MAP: Record<string, ComponentType<any>> = {
   // Blocos básicos
   'header': HeaderBlock,
@@ -36,6 +45,15 @@ export const EDITOR_BLOCKS_MAP: Record<string, ComponentType<any>> = {
   'button': ButtonBlock,
   'spacer': SpacerBlock,
   'rich-text': RichTextBlock,
+  
+  // ✅ COMPONENTES INLINE REAIS DAS 21 ETAPAS
+  'quiz-intro-header': QuizIntroHeaderBlock,
+  'text-inline': TextInlineBlock,
+  'heading-inline': HeadingInlineBlock,
+  'image-display-inline': ImageDisplayInlineBlock,
+  'form-input': FormInputBlock,
+  'button-inline': ButtonInlineBlock,
+  'options-grid': OptionsGridBlock,
   
   // ✅ ETAPAS DO FUNIL COMPLETO (1-21)
   

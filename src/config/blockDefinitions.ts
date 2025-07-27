@@ -1,5 +1,5 @@
 import React from 'react';
-import { PropertySchema } from '../types/editor';
+import { PropertySchema } from './funnelBlockDefinitions';
 import { PlaceholderUtils } from '../utils/placeholderUtils';
 
 // Block Definition Interface
@@ -979,6 +979,190 @@ export const blockDefinitions: BlockDefinition[] = [
     defaultProperties: {
       resultTitle: 'Seu Estilo Predominante',
       showCompatibility: true
+    }
+  },
+  
+  // ✅ COMPONENTES INLINE REAIS DAS 21 ETAPAS
+  {
+    type: 'quiz-intro-header',
+    name: 'Cabeçalho do Quiz',
+    description: 'Cabeçalho com logo e barra de progresso',
+    icon: 'Play',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'logoUrl',
+        label: 'URL do Logo',
+        type: 'text',
+        defaultValue: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp'
+      },
+      {
+        key: 'progressValue',
+        label: 'Valor do Progresso',
+        type: 'number',
+        defaultValue: 0
+      }
+    ],
+    defaultProperties: {
+      logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+      progressValue: 0
+    }
+  },
+  {
+    type: 'text-inline',
+    name: 'Texto Inline',
+    description: 'Componente de texto simples inline',
+    icon: 'Type',
+    category: 'Content',
+    propertiesSchema: [
+      {
+        key: 'content',
+        label: 'Conteúdo',
+        type: 'textarea',
+        defaultValue: 'Texto exemplo'
+      },
+      {
+        key: 'fontSize',
+        label: 'Tamanho da Fonte',
+        type: 'text',
+        defaultValue: 'text-base'
+      }
+    ],
+    defaultProperties: {
+      content: 'Texto exemplo',
+      fontSize: 'text-base'
+    }
+  },
+  {
+    type: 'heading-inline',
+    name: 'Título Inline',
+    description: 'Componente de título inline',
+    icon: 'Heading1',
+    category: 'Content',
+    propertiesSchema: [
+      {
+        key: 'content',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Título Exemplo'
+      },
+      {
+        key: 'level',
+        label: 'Nível (h1-h6)',
+        type: 'number',
+        defaultValue: 2
+      }
+    ],
+    defaultProperties: {
+      content: 'Título Exemplo',
+      level: 2
+    }
+  },
+  {
+    type: 'image-display-inline',
+    name: 'Imagem Inline',
+    description: 'Componente de imagem inline',
+    icon: 'Image',
+    category: 'Content',
+    propertiesSchema: [
+      {
+        key: 'src',
+        label: 'URL da Imagem',
+        type: 'text',
+        defaultValue: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp'
+      },
+      {
+        key: 'alt',
+        label: 'Texto Alternativo',
+        type: 'text',
+        defaultValue: 'Imagem'
+      }
+    ],
+    defaultProperties: {
+      src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+      alt: 'Imagem'
+    }
+  },
+  {
+    type: 'button-inline',
+    name: 'Botão Inline',
+    description: 'Componente de botão inline',
+    icon: 'RectangleHorizontal',
+    category: 'Interactive',
+    propertiesSchema: [
+      {
+        key: 'text',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Clique aqui'
+      },
+      {
+        key: 'variant',
+        label: 'Variante',
+        type: 'text',
+        defaultValue: 'primary'
+      }
+    ],
+    defaultProperties: {
+      text: 'Clique aqui',
+      variant: 'primary'
+    }
+  },
+  {
+    type: 'form-input',
+    name: 'Campo de Formulário',
+    description: 'Componente de input para formulários',
+    icon: 'Keyboard',
+    category: 'Interactive',
+    propertiesSchema: [
+      {
+        key: 'label',
+        label: 'Label',
+        type: 'text',
+        defaultValue: 'Nome'
+      },
+      {
+        key: 'placeholder',
+        label: 'Placeholder',
+        type: 'text',
+        defaultValue: 'Digite seu nome'
+      },
+      {
+        key: 'required',
+        label: 'Obrigatório',
+        type: 'boolean',
+        defaultValue: false
+      }
+    ],
+    defaultProperties: {
+      label: 'Nome',
+      placeholder: 'Digite seu nome',
+      required: false
+    }
+  },
+  {
+    type: 'options-grid',
+    name: 'Grade de Opções',
+    description: 'Grade de opções para quiz',
+    icon: 'Grid3x3',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'options',
+        label: 'Opções',
+        type: 'array-of-objects',
+        defaultValue: []
+      },
+      {
+        key: 'questionId',
+        label: 'ID da Questão',
+        type: 'text',
+        defaultValue: ''
+      }
+    ],
+    defaultProperties: {
+      options: [],
+      questionId: ''
     }
   },
   
