@@ -124,23 +124,20 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
           
           {/* Additional Categories */}
           <div className="flex flex-wrap gap-1">
-            {Object.entries(BLOCK_CATEGORIES).map(([key, category]) => {
-              if (key === 'basic') return null; // Already shown above
-              const IconComponent = category.icon;
+            {BLOCK_CATEGORIES.filter(category => category !== 'basic').map((category) => {
               return (
                 <Button
-                  key={key}
-                  variant={activeTab === key ? 'default' : 'outline'}
+                  key={category}
+                  variant={activeTab === category ? 'default' : 'outline'}
                   size="sm"
                   className={`h-7 text-xs px-2 ${
-                    activeTab === key 
+                    activeTab === category 
                       ? 'bg-[#B89B7A] text-white hover:bg-[#a08965]' 
                       : 'border-[#B89B7A]/20 text-[#8F7A6A] hover:border-[#B89B7A] hover:text-[#432818]'
                   }`}
-                  onClick={() => setActiveTab(key)}
+                  onClick={() => setActiveTab(category)}
                 >
-                  <IconComponent className="w-3 h-3 mr-1" />
-                  {category.label}
+                  {category}
                 </Button>
               );
             })}
@@ -204,21 +201,16 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
             )}
 
             {/* Category Tabs */}
-            {Object.keys(BLOCK_CATEGORIES).includes(activeTab) && activeTab !== 'popular' && (
+            {BLOCK_CATEGORIES.includes(activeTab) && activeTab !== 'popular' && (
               <div>
                 <div className="mb-3">
                   <div 
-                    className="inline-flex items-center px-2 py-1 rounded-md border text-xs"
-                    style={{ 
-                      borderColor: BLOCK_CATEGORIES[activeTab as keyof typeof BLOCK_CATEGORIES].color + '50',
-                      color: BLOCK_CATEGORIES[activeTab as keyof typeof BLOCK_CATEGORIES].color
-                    }}
+                    className="inline-flex items-center px-2 py-1 rounded-md border text-xs border-[#B89B7A]/30 text-[#432818]"
                   >
-                    {React.createElement(BLOCK_CATEGORIES[activeTab as keyof typeof BLOCK_CATEGORIES].icon, { className: "w-3 h-3 mr-1" })}
-                    {BLOCK_CATEGORIES[activeTab as keyof typeof BLOCK_CATEGORIES].label}
+                    {activeTab}
                   </div>
                   <p className="text-xs text-[#8F7A6A] mt-1">
-                    {BLOCK_CATEGORIES[activeTab as keyof typeof BLOCK_CATEGORIES].description}
+                    Componentes da categoria {activeTab}
                   </p>
                 </div>
                 <div className="space-y-2">

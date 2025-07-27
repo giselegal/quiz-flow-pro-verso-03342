@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Trash2, GripVertical } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
+import { ModularBlockRenderer } from '../blocks/ModularBlockSystem';
 
 interface PreviewBlockProps {
   block: EditorBlock;
