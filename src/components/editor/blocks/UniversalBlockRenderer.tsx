@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { Block } from '@/types/editor';
-import { getBlockComponent } from '@/config/editorBlocksMapping21Steps';
+import { Block } from '../../../types/editor';
+import { getBlockComponent } from '../../../config/editorBlocksMapping21Steps';
 
 interface UniversalBlockRendererProps {
   block: Block;
