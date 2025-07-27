@@ -9,7 +9,7 @@ import {
   getPopularBlocks,
   searchBlocks,
   BlockComponent
-} from '../blocks/BlockComponents';
+} from '../blocks/ModularBlockSystem';
 
 interface ComponentsSidebarProps {
   onComponentSelect: (type: string) => void;

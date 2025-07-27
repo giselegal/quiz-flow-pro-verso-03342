@@ -173,13 +173,14 @@ export const ModularBlockRenderer: React.FC<ModularBlockRendererProps> = ({
   if (isFunnelBlock(block.type)) {
     return (
       <FunnelBlockRenderer
-        type={block.type}
-        properties={block.properties || block.content || {}}
-        isSelected={isSelected}
-        isEditing={isEditing}
-        onUpdate={onUpdate}
-        onSelect={onSelect}
-        className={className}
+        block={{
+          id: block.id,
+          type: block.type,
+          properties: block.properties || block.content || {}
+        }}
+        isEditable={isEditing}
+        onEdit={onSelect}
+        onDelete={() => {}}
       />
     );
   }
@@ -187,12 +188,13 @@ export const ModularBlockRenderer: React.FC<ModularBlockRendererProps> = ({
   // Usar DynamicBlockRenderer para outros blocos
   return (
     <DynamicBlockRenderer
-      type={block.type}
-      content={block.content || block.properties || {}}
-      isSelected={isSelected}
-      isEditing={isEditing}
-      onUpdate={onUpdate}
-      onSelect={onSelect}
+      pageId="editor"
+      blockId={block.id}
+      fallback={
+        <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center text-gray-500">
+          Componente não implementado: {block.type}
+        </div>
+      }
       className={className}
     />
   );
