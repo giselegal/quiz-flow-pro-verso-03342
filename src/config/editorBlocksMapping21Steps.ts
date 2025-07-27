@@ -37,6 +37,11 @@ import FormInputBlock from '../components/editor/blocks/FormInputBlock';
 import ButtonInlineBlock from '../components/editor/blocks/ButtonInlineBlock';
 import OptionsGridBlock from '../components/editor/blocks/OptionsGridBlock';
 
+// Componentes INLINE de resultado (etapa 20)
+import ResultHeaderInlineBlock from '../components/editor/blocks/ResultHeaderInlineBlock';
+import ResultCardInlineBlock from '../components/editor/blocks/ResultCardInlineBlock';
+import StyleCardInlineBlock from '../components/editor/blocks/StyleCardInlineBlock';
+
 export const EDITOR_BLOCKS_MAP: Record<string, ComponentType<any>> = {
   // Blocos básicos
   'header': HeaderBlock,
@@ -54,6 +59,11 @@ export const EDITOR_BLOCKS_MAP: Record<string, ComponentType<any>> = {
   'form-input': FormInputBlock,
   'button-inline': ButtonInlineBlock,
   'options-grid': OptionsGridBlock,
+  
+  // ✅ COMPONENTES INLINE DE RESULTADO (ETAPA 20)
+  'result-header-inline': ResultHeaderInlineBlock,
+  'result-card-inline': ResultCardInlineBlock,
+  'style-card-inline': StyleCardInlineBlock,
   
   // ✅ ETAPAS DO FUNIL COMPLETO (1-21)
   

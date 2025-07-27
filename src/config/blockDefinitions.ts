@@ -1165,6 +1165,130 @@ export const blockDefinitions: BlockDefinition[] = [
       questionId: ''
     }
   },
+  {
+    type: 'result-header-inline',
+    name: 'Cabeçalho do Resultado',
+    description: 'Cabeçalho personalizado para página de resultado',
+    icon: 'Crown',
+    category: 'Result',
+    propertiesSchema: [
+      {
+        key: 'logoUrl',
+        label: 'URL do Logo',
+        type: 'text',
+        defaultValue: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp'
+      },
+      {
+        key: 'userName',
+        label: 'Nome do Usuário',
+        type: 'text',
+        defaultValue: 'Usuário'
+      },
+      {
+        key: 'showProgress',
+        label: 'Mostrar Progresso',
+        type: 'boolean',
+        defaultValue: false
+      }
+    ],
+    defaultProperties: {
+      logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+      userName: 'Usuário',
+      showProgress: false
+    }
+  },
+  {
+    type: 'result-card-inline',
+    name: 'Card Principal do Resultado',
+    description: 'Card principal mostrando o estilo predominante',
+    icon: 'Award',
+    category: 'Result',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Seu Estilo Predominante'
+      },
+      {
+        key: 'styleName',
+        label: 'Nome do Estilo',
+        type: 'text',
+        defaultValue: 'Clássico'
+      },
+      {
+        key: 'percentage',
+        label: 'Porcentagem',
+        type: 'number',
+        defaultValue: 85
+      },
+      {
+        key: 'description',
+        label: 'Descrição',
+        type: 'textarea',
+        defaultValue: 'Baseado nas suas respostas, identificamos características do estilo...'
+      },
+      {
+        key: 'imageUrl',
+        label: 'URL da Imagem',
+        type: 'text',
+        defaultValue: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp'
+      }
+    ],
+    defaultProperties: {
+      title: 'Seu Estilo Predominante',
+      styleName: 'Clássico',
+      percentage: 85,
+      description: 'Baseado nas suas respostas, identificamos características do estilo...',
+      imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp'
+    }
+  },
+  {
+    type: 'style-card-inline',
+    name: 'Card de Estilo Secundário',
+    description: 'Card para mostrar estilos secundários/complementares',
+    icon: 'Palette',
+    category: 'Result',
+    propertiesSchema: [
+      {
+        key: 'styleName',
+        label: 'Nome do Estilo',
+        type: 'text',
+        defaultValue: 'Estilo Secundário'
+      },
+      {
+        key: 'percentage',
+        label: 'Porcentagem',
+        type: 'number',
+        defaultValue: 20
+      },
+      {
+        key: 'description',
+        label: 'Descrição',
+        type: 'textarea',
+        defaultValue: 'Características complementares do seu estilo'
+      },
+      {
+        key: 'imageUrl',
+        label: 'URL da Imagem',
+        type: 'text',
+        defaultValue: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_moderno.webp'
+      },
+      {
+        key: 'compact',
+        label: 'Modo Compacto',
+        type: 'boolean',
+        defaultValue: true
+      }
+    ],
+    defaultProperties: {
+      styleName: 'Estilo Secundário',
+      percentage: 20,
+      description: 'Características complementares do seu estilo',
+      imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_moderno.webp',
+      compact: true
+    }
+  },
   
   // Blocos básicos existentes
   {
