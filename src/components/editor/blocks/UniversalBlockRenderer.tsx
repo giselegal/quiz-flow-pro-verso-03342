@@ -50,7 +50,9 @@ export const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
         isSelected={isSelected}
         isEditing={!disabled}
         onUpdate={handleUpdate}
+        onPropertyChange={handleUpdate}
         onSelect={onClick}
+        onClick={onClick}
         disabled={disabled}
       />
     </div>
