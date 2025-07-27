@@ -842,6 +842,145 @@ export const blockDefinitions: BlockDefinition[] = [
       duration: 3000
     }
   },
+  {
+    type: 'strategic-question',
+    name: 'Questão Estratégica',
+    description: 'Questões para segmentação e qualificação (etapas 13-18)',
+    icon: 'Brain',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'question',
+        label: 'Pergunta',
+        type: 'textarea',
+        defaultValue: 'Qual é o seu maior desafio?'
+      },
+      {
+        key: 'options',
+        label: 'Opções',
+        type: 'array',
+        defaultValue: [
+          { id: '1', text: 'Opção 1', weight: 1 },
+          { id: '2', text: 'Opção 2', weight: 2 },
+          { id: '3', text: 'Opção 3', weight: 3 },
+          { id: '4', text: 'Opção 4', weight: 4 }
+        ]
+      }
+    ],
+    defaultProperties: {
+      question: 'Qual é o seu maior desafio?',
+      options: [
+        { id: '1', text: 'Opção 1', weight: 1 },
+        { id: '2', text: 'Opção 2', weight: 2 },
+        { id: '3', text: 'Opção 3', weight: 3 },
+        { id: '4', text: 'Opção 4', weight: 4 }
+      ]
+    }
+  },
+  {
+    type: 'question-multiple',
+    name: 'Questão Múltipla Escolha',
+    description: 'Questão de múltipla escolha avançada',
+    icon: 'CheckCircle',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'question',
+        label: 'Pergunta',
+        type: 'textarea',
+        defaultValue: 'Selecione uma ou mais opções:'
+      },
+      {
+        key: 'options',
+        label: 'Opções',
+        type: 'array',
+        defaultValue: [
+          { id: '1', text: 'Opção 1' },
+          { id: '2', text: 'Opção 2' },
+          { id: '3', text: 'Opção 3' }
+        ]
+      },
+      {
+        key: 'allowMultiple',
+        label: 'Permitir múltipla seleção',
+        type: 'boolean',
+        defaultValue: false
+      }
+    ],
+    defaultProperties: {
+      question: 'Selecione uma ou mais opções:',
+      options: [
+        { id: '1', text: 'Opção 1' },
+        { id: '2', text: 'Opção 2' },
+        { id: '3', text: 'Opção 3' }
+      ],
+      allowMultiple: false
+    }
+  },
+  {
+    type: 'quiz-offer-page',
+    name: 'Página de Oferta do Quiz',
+    description: 'Página completa de vendas após o resultado (etapa 21)',
+    icon: 'ShoppingCart',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título da Oferta',
+        type: 'text',
+        defaultValue: 'Transforme Seu Estilo Agora'
+      },
+      {
+        key: 'price',
+        label: 'Preço',
+        type: 'text',
+        defaultValue: 'R$ 97,00'
+      },
+      {
+        key: 'originalPrice',
+        label: 'Preço Original',
+        type: 'text',
+        defaultValue: 'R$ 197,00'
+      },
+      {
+        key: 'ctaText',
+        label: 'Texto do CTA',
+        type: 'text',
+        defaultValue: 'Quero Transformar Meu Estilo'
+      }
+    ],
+    defaultProperties: {
+      title: 'Transforme Seu Estilo Agora',
+      price: 'R$ 97,00',
+      originalPrice: 'R$ 197,00',
+      ctaText: 'Quero Transformar Meu Estilo'
+    }
+  },
+  {
+    type: 'modern-result-page',
+    name: 'Página de Resultado Moderna',
+    description: 'Página de resultado com design moderno e calculado',
+    icon: 'Award',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'resultTitle',
+        label: 'Título do Resultado',
+        type: 'text',
+        defaultValue: 'Seu Estilo Predominante'
+      },
+      {
+        key: 'showCompatibility',
+        label: 'Mostrar Compatibilidade',
+        type: 'boolean',
+        defaultValue: true
+      }
+    ],
+    defaultProperties: {
+      resultTitle: 'Seu Estilo Predominante',
+      showCompatibility: true
+    }
+  },
   
   // Blocos básicos existentes
   {
