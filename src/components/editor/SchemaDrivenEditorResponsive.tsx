@@ -609,8 +609,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                     <span className="truncate">{currentPage.title}</span>
                     <Badge variant="outline" className="text-xs border-[#B89B7A]/30 text-[#8F7A6A]">
                       {currentPage.blocks.length} bloco{currentPage.blocks.length !== 1 ? 's' : ''}
-                    </div>
-                )}
+                    </Badge>
+                  )}
               </div>
             </div>
           </div>
