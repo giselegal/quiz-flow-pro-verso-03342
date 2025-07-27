@@ -29,7 +29,11 @@ const BlockItem: React.FC<BlockItemProps> = ({ block, onSelect }) => {
     >
       <div className="flex items-start gap-3 w-full">
         <div className="flex-shrink-0 w-8 h-8 bg-[#B89B7A]/10 rounded-lg flex items-center justify-center">
-          <block.icon className="w-4 h-4 text-[#B89B7A]" />
+          {typeof block.icon === 'string' ? (
+            <span className="text-lg">{block.icon}</span>
+          ) : (
+            React.createElement(block.icon as React.ComponentType<any>, { className: "w-4 h-4 text-[#B89B7A]" })
+          )}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
