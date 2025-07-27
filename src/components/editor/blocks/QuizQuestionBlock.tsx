@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Check, X } from 'lucide-react';
 
 interface QuizQuestionBlockProps {
-  content: EditableContent;
+  content?: EditableContent;
   isSelected?: boolean;
   isEditing?: boolean;
   onUpdate?: (content: Partial<EditableContent>) => void;
@@ -15,7 +15,7 @@ interface QuizQuestionBlockProps {
 }
 
 export const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
-  content,
+  content = {},
   isSelected = false,
   isEditing = false,
   onUpdate,
@@ -25,8 +25,9 @@ export const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
 
-  const question = content.question || 'Qual é sua pergunta?';
-  const options = content.options || [
+  // Add null checks and default values
+  const question = content?.question || 'Qual é sua pergunta?';
+  const options = content?.options || [
     { id: '1', text: 'Opção 1', imageUrl: '' },
     { id: '2', text: 'Opção 2', imageUrl: '' },
     { id: '3', text: 'Opção 3', imageUrl: '' }
@@ -35,7 +36,7 @@ export const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
   const handleOptionSelect = (optionId: string) => {
     if (!isPreviewMode) return;
     
-    if (content.multipleSelection) {
+    if (content?.multipleSelection) {
       setSelectedOptions(prev => 
         prev.includes(optionId) 
           ? prev.filter(id => id !== optionId)
@@ -46,9 +47,9 @@ export const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
     }
   };
 
-  const progressPercent = content.progressPercent || 0;
-  const showImages = content.showImages || false;
-  const optionLayout = content.optionLayout || 'vertical';
+  const progressPercent = content?.progressPercent || 0;
+  const showImages = content?.showImages || false;
+  const optionLayout = content?.optionLayout || 'vertical';
 
   return (
     <div
@@ -60,14 +61,14 @@ export const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
       )}
       onClick={onSelect}
       style={{
-        backgroundColor: content.style?.backgroundColor,
-        padding: content.style?.padding,
-        margin: content.style?.margin
+        backgroundColor: content?.style?.backgroundColor,
+        padding: content?.style?.padding,
+        margin: content?.style?.margin
       }}
     >
       {/* Header com Logo e Progresso */}
       <div className="flex items-center justify-between mb-6">
-        {content.logoUrl && (
+        {content?.logoUrl && (
           <img 
             src={content.logoUrl} 
             alt="Logo" 
@@ -96,7 +97,7 @@ export const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
           {question}
         </h2>
         
-        {content.multipleSelection && (
+        {content?.multipleSelection && (
           <p className="text-sm text-gray-600">
             Selecione uma ou mais opções
           </p>
@@ -144,7 +145,7 @@ export const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
 
       {/* Botões de Navegação */}
       <div className="flex justify-between mt-6">
-        {content.showBackButton && (
+        {content?.showBackButton && (
           <Button variant="outline">
             Voltar
           </Button>
