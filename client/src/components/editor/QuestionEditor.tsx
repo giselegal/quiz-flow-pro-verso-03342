@@ -1,278 +1,237 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
-import { X, Plus, Edit2, Save, Trash2 } from 'lucide-react';
-
-interface QuestionOption {
-  id: string;
-  text: string;
-  isCorrect: boolean;
-}
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Textarea } from '../ui/textarea';
+import { Checkbox } from '../ui/checkbox';
+import { Badge } from '../ui/badge';
+import { Trash2, Plus, GripVertical } from 'lucide-react';
 
 interface Question {
   id: string;
-  question_text: string;
-  question_type: string;
-  options: QuestionOption[];
-  correct_answers: string[];
-  points: number;
-  explanation?: string;
-  time_limit?: number;
+  text: string;
+  type: 'multiple_choice' | 'single_choice' | 'text' | 'rating';
+  options?: string[];
   required: boolean;
-  hint?: string;
-  media_url?: string;
-  media_type?: string;
-  tags: string[];
+  category?: string;
+  points?: number;
 }
 
 interface QuestionEditorProps {
   question: Question;
-  onSave: (question: Question) => void;
-  onCancel: () => void;
-  onDelete: (id: string) => void;
+  index: number;
+  onUpdate: (question: Question) => void;
+  onDelete: () => void;
+  onDuplicate: () => void;
 }
 
 export const QuestionEditor: React.FC<QuestionEditorProps> = ({
   question,
-  onSave,
-  onCancel,
-  onDelete
+  index,
+  onUpdate,
+  onDelete,
+  onDuplicate
 }) => {
-  const [editedQuestion, setEditedQuestion] = useState<Question>(question);
-  const [newTag, setNewTag] = useState('');
-
+  const [localQuestion, setLocalQuestion] = useState<Question>(question);
+  
   useEffect(() => {
-    setEditedQuestion(question);
+    setLocalQuestion(question);
   }, [question]);
 
-  const handleOptionChange = (optionId: string, field: keyof QuestionOption, value: any) => {
-    setEditedQuestion(prev => ({
-      ...prev,
-      options: prev.options.map(opt => 
-        opt.id === optionId 
-          ? { ...opt, [field]: value }
-          : opt
-      )
-    }));
+  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const updatedQuestion = { ...localQuestion, text: e.target.value };
+    setLocalQuestion(updatedQuestion);
+    onUpdate(updatedQuestion);
+  };
+
+  const handleTypeChange = (value: string) => {
+    const updatedQuestion = { 
+      ...localQuestion, 
+      type: value as Question['type'],
+      options: value === 'multiple_choice' || value === 'single_choice' ? ['Opção 1', 'Opção 2'] : undefined
+    };
+    setLocalQuestion(updatedQuestion);
+    onUpdate(updatedQuestion);
+  };
+
+  const handleOptionChange = (index: number, value: string) => {
+    if (!localQuestion.options) return;
+    
+    const newOptions = [...localQuestion.options];
+    newOptions[index] = value;
+    const updatedQuestion = { ...localQuestion, options: newOptions };
+    setLocalQuestion(updatedQuestion);
+    onUpdate(updatedQuestion);
+  };
+
+  const handleRequiredChange = (checked: boolean) => {
+    const updatedQuestion = { ...localQuestion, required: checked };
+    setLocalQuestion(updatedQuestion);
+    onUpdate(updatedQuestion);
+  };
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const updatedQuestion = { ...localQuestion, category: e.target.value };
+    setLocalQuestion(updatedQuestion);
+    onUpdate(updatedQuestion);
   };
 
   const addOption = () => {
-    const newOption: QuestionOption = {
-      id: `option_${Date.now()}`,
-      text: '',
-      isCorrect: false
-    };
+    if (!localQuestion.options) return;
     
-    setEditedQuestion(prev => ({
-      ...prev,
-      options: [...prev.options, newOption]
-    }));
+    const newOptions = [...localQuestion.options, `Opção ${localQuestion.options.length + 1}`];
+    const updatedQuestion = { ...localQuestion, options: newOptions };
+    setLocalQuestion(updatedQuestion);
+    onUpdate(updatedQuestion);
   };
 
-  const removeOption = (optionId: string) => {
-    setEditedQuestion(prev => ({
-      ...prev,
-      options: prev.options.filter(opt => opt.id !== optionId)
-    }));
+  const removeOption = (index: number) => {
+    if (!localQuestion.options || localQuestion.options.length <= 2) return;
+    
+    const newOptions = localQuestion.options.filter((_, i) => i !== index);
+    const updatedQuestion = { ...localQuestion, options: newOptions };
+    setLocalQuestion(updatedQuestion);
+    onUpdate(updatedQuestion);
   };
 
-  const addTag = () => {
-    if (newTag.trim() && !editedQuestion.tags.includes(newTag.trim())) {
-      setEditedQuestion(prev => ({
-        ...prev,
-        tags: [...prev.tags, newTag.trim()]
-      }));
-      setNewTag('');
-    }
-  };
-
-  const removeTag = (tagToRemove: string) => {
-    setEditedQuestion(prev => ({
-      ...prev,
-      tags: prev.tags.filter(tag => tag !== tagToRemove)
-    }));
-  };
-
-  const handleSave = () => {
-    onSave(editedQuestion);
+  const handlePointsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const points = parseInt(e.target.value) || 0;
+    const updatedQuestion = { ...localQuestion, points };
+    setLocalQuestion(updatedQuestion);
+    onUpdate(updatedQuestion);
   };
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <span>Editar Pergunta</span>
-          <div className="flex gap-2">
-            <Button onClick={handleSave} size="sm">
-              <Save className="h-4 w-4 mr-2" />
-              Salvar
-            </Button>
-            <Button variant="outline" onClick={onCancel} size="sm">
-              Cancelar
-            </Button>
-            <Button 
-              variant="destructive" 
-              onClick={() => onDelete(question.id)} 
-              size="sm"
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Excluir
-            </Button>
-          </div>
+    <Card className="mb-4">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-lg font-semibold">
+          Pergunta {index + 1}
         </CardTitle>
+        <div className="flex items-center space-x-2">
+          <Button variant="ghost" size="sm">
+            <GripVertical className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" size="sm" onClick={onDuplicate}>
+            <Plus className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" size="sm" onClick={onDelete}>
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
       </CardHeader>
-      
-      <CardContent className="space-y-6">
-        {/* Pergunta */}
+      <CardContent className="space-y-4">
+        {/* Question Text */}
         <div className="space-y-2">
-          <Label htmlFor="question">Pergunta</Label>
+          <Label htmlFor={`question-${question.id}`}>Texto da Pergunta</Label>
           <Textarea
-            id="question"
-            value={editedQuestion.question_text}
-            onChange={(e) => setEditedQuestion(prev => ({ ...prev, question_text: e.target.value }))}
+            id={`question-${question.id}`}
+            value={localQuestion.text}
+            onChange={handleTextChange}
             placeholder="Digite sua pergunta aqui..."
-            rows={3}
+            className="min-h-[80px]"
           />
         </div>
 
-        {/* Tipo de Pergunta */}
+        {/* Question Type */}
         <div className="space-y-2">
           <Label>Tipo de Pergunta</Label>
-          <Select 
-            value={editedQuestion.question_type} 
-            onValueChange={(value) => setEditedQuestion(prev => ({ ...prev, question_type: value }))}
-          >
+          <Select value={localQuestion.type} onValueChange={handleTypeChange}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="multiple_choice">Múltipla Escolha</SelectItem>
               <SelectItem value="single_choice">Escolha Única</SelectItem>
-              <SelectItem value="true_false">Verdadeiro/Falso</SelectItem>
-              <SelectItem value="short_answer">Resposta Curta</SelectItem>
-              <SelectItem value="essay">Dissertativa</SelectItem>
+              <SelectItem value="text">Texto Livre</SelectItem>
+              <SelectItem value="rating">Avaliação</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
-        {/* Opções */}
-        {['multiple_choice', 'single_choice', 'true_false'].includes(editedQuestion.question_type) && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label>Opções de Resposta</Label>
-              <Button onClick={addOption} size="sm" variant="outline">
-                <Plus className="h-4 w-4 mr-2" />
-                Adicionar Opção
-              </Button>
-            </div>
-            
-            {editedQuestion.options.map((option, index) => (
-              <div key={option.id} className="flex items-center gap-4 p-4 border rounded-lg">
-                <Checkbox
-                  checked={option.isCorrect}
-                  onCheckedChange={(checked) => 
-                    handleOptionChange(option.id, 'isCorrect', checked)
-                  }
-                />
+        {/* Options for multiple/single choice */}
+        {(localQuestion.type === 'multiple_choice' || localQuestion.type === 'single_choice') && (
+          <div className="space-y-2">
+            <Label>Opções</Label>
+            {localQuestion.options?.map((option, optIndex) => (
+              <div key={optIndex} className="flex items-center space-x-2">
                 <Input
-                  value={option.text}
-                  onChange={(e) => handleOptionChange(option.id, 'text', e.target.value)}
-                  placeholder={`Opção ${index + 1}`}
-                  className="flex-1"
+                  value={option}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleOptionChange(optIndex, e.target.value)}
+                  placeholder={`Opção ${optIndex + 1}`}
                 />
-                <Button 
-                  onClick={() => removeOption(option.id)}
-                  size="sm"
-                  variant="destructive"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+                {localQuestion.options && localQuestion.options.length > 2 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removeOption(optIndex)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
             ))}
+            <Button variant="outline" size="sm" onClick={addOption}>
+              <Plus className="h-4 w-4 mr-2" />
+              Adicionar Opção
+            </Button>
           </div>
         )}
 
-        {/* Configurações */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="points">Pontos</Label>
-            <Input
-              id="points"
-              type="number"
-              value={editedQuestion.points}
-              onChange={(e) => setEditedQuestion(prev => ({ ...prev, points: parseInt(e.target.value) || 0 }))}
-              min="0"
+        {/* Additional Settings */}
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id={`required-${question.id}`}
+              checked={localQuestion.required}
+              onCheckedChange={handleRequiredChange}
             />
+            <Label htmlFor={`required-${question.id}`}>Obrigatória</Label>
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="time_limit">Tempo Limite (segundos)</Label>
+          <div className="flex items-center space-x-2">
+            <Label htmlFor={`points-${question.id}`}>Pontos:</Label>
             <Input
-              id="time_limit"
+              id={`points-${question.id}`}
               type="number"
-              value={editedQuestion.time_limit || ''}
-              onChange={(e) => setEditedQuestion(prev => ({ ...prev, time_limit: parseInt(e.target.value) || undefined }))}
+              value={localQuestion.points || 0}
+              onChange={handlePointsChange}
+              className="w-20"
               min="0"
             />
           </div>
         </div>
 
-        {/* Explicação */}
+        {/* Category */}
         <div className="space-y-2">
-          <Label htmlFor="explanation">Explicação (opcional)</Label>
-          <Textarea
-            id="explanation"
-            value={editedQuestion.explanation || ''}
-            onChange={(e) => setEditedQuestion(prev => ({ ...prev, explanation: e.target.value }))}
-            placeholder="Explicação sobre a resposta correta..."
-            rows={2}
+          <Label htmlFor={`category-${question.id}`}>Categoria</Label>
+          <Input
+            id={`category-${question.id}`}
+            value={localQuestion.category || ''}
+            onChange={handleCategoryChange}
+            placeholder="Digite a categoria..."
           />
         </div>
 
-        {/* Tags */}
-        <div className="space-y-2">
-          <Label>Tags</Label>
-          <div className="flex gap-2 flex-wrap mb-2">
-            {editedQuestion.tags.map(tag => (
-              <Badge key={tag} variant="secondary" className="flex items-center gap-1">
-                {tag}
-                <X 
-                  className="h-3 w-3 cursor-pointer" 
-                  onClick={() => removeTag(tag)}
-                />
-              </Badge>
-            ))}
-          </div>
-          <div className="flex gap-2">
-            <Input
-              value={newTag}
-              onChange={(e) => setNewTag(e.target.value)}
-              placeholder="Adicionar tag..."
-              onKeyPress={(e) => e.key === 'Enter' && addTag()}
-            />
-            <Button onClick={addTag} size="sm">
-              <Plus className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-
-        {/* Obrigatório */}
+        {/* Question Stats */}
         <div className="flex items-center space-x-2">
-          <Checkbox
-            id="required"
-            checked={editedQuestion.required}
-            onCheckedChange={(checked) => setEditedQuestion(prev => ({ ...prev, required: !!checked }))}
-          />
-          <Label htmlFor="required">Pergunta obrigatória</Label>
+          <Badge variant="secondary">
+            Tipo: {localQuestion.type === 'multiple_choice' ? 'Múltipla Escolha' : 
+                   localQuestion.type === 'single_choice' ? 'Escolha Única' : 
+                   localQuestion.type === 'text' ? 'Texto' : 'Avaliação'}
+          </Badge>
+          {localQuestion.required && (
+            <Badge variant="destructive">Obrigatória</Badge>
+          )}
+          {localQuestion.points && localQuestion.points > 0 && (
+            <Badge variant="default">{localQuestion.points} pontos</Badge>
+          )}
         </div>
       </CardContent>
     </Card>
   );
 };
+
+export default QuestionEditor;
