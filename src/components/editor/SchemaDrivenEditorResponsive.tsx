@@ -905,3 +905,53 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 };
 
 export default SchemaDrivenEditorResponsive;
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import {
+  DroppableCanvas,
+  SchemaDrivenComponentsSidebar,
+  DynamicPropertiesPanel,
+  TemplateSelector,
+  AnalyticsDashboard
+} from './components'; // Ajuste conforme necessário
+import { useSchemaEditorFixed } from './hooks/useSchemaEditorFixed';
+import { Button, Badge, Toast } from './ui'; // Ajuste conforme necessário
+import { Plus, ArrowLeft, FileText, Menu } from 'lucide-react'; // Ajuste conforme necessário
+import { debounce } from 'lodash';
+import { TestDeleteComponent } from './TestDeleteComponent'; // Componente de teste para exclusão
+import {
+  ABTestService,
+  ReportService,
+  VersioningService,
+  saveDiagnostic
+} from './services'; // Ajuste conforme necessário
+
+const SchemaDrivenEditorResponsive = ({ funnelId }) => {
+  const {
+    funnel,
+    currentPage,
+    isLoading,
+    isSaving,
+    deviceView,
+    showLeftSidebar,
+    showRightSidebar,
+    setShowLeftSidebar,
+    setShowRightSidebar,
+    updateFunnelConfig,
+    createNewFunnel,
+    updatePage,
+    addBlock,
+    updateBlock,
+    deleteBlock,
+    trackButtonClick,
+    trackPageView
+  } = useSchemaEditorFixed(funnelId);
+
+  const [selectedBlockId, setSelectedBlock] = useState<string | null>(null);
+  const [showTemplateSelector, setShowTemplateSelector] = useState(false);
+  const [showAnalyticsDashboard, setShowAnalyticsDashboard] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: string } | null>(null);
+  const [isPublishing, setIsPublishing] = useState(false);
+
+  // Undo/Redo stacks
+  const [undoStack, setUndoStack] = useState<any[]>([]);
+  const [redoStack, setRedoStack] = useState<any[]>([]);
