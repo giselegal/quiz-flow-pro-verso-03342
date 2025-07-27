@@ -97,7 +97,12 @@ export const CreateQuizModal: React.FC<CreateQuizModalProps> = ({ onQuizCreated 
               onValueChange={(value) => setFormData({ ...formData, category: value })}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Selecione uma categoria" />
+                <SelectValue>
+                  {formData.category === 'general' && 'Geral'}
+                  {formData.category === 'education' && 'Educação'}
+                  {formData.category === 'entertainment' && 'Entretenimento'}
+                  {formData.category === 'business' && 'Negócios'}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="general">Geral</SelectItem>
@@ -115,7 +120,11 @@ export const CreateQuizModal: React.FC<CreateQuizModalProps> = ({ onQuizCreated 
               onValueChange={(value) => setFormData({ ...formData, difficulty: value })}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Selecione a dificuldade" />
+                <SelectValue>
+                  {formData.difficulty === 'easy' && 'Fácil'}
+                  {formData.difficulty === 'medium' && 'Médio'}
+                  {formData.difficulty === 'hard' && 'Difícil'}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="easy">Fácil</SelectItem>

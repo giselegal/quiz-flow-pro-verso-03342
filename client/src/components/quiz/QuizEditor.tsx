@@ -94,10 +94,11 @@ export const QuizEditor: React.FC<QuizEditorProps> = ({ quiz, onBack }) => {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4">
-            {questions.map((question) => (
+            {questions.map((question, index) => (
               <QuestionEditor
                 key={question.id}
                 question={transformQuizQuestion(question)}
+                index={index}
                 onUpdate={handleUpdateQuestion}
                 onDelete={() => handleDeleteQuestion(question.id)}
                 onDuplicate={() => handleDuplicateQuestion(question.id)}
