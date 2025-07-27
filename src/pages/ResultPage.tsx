@@ -158,25 +158,11 @@ const ResultPage: React.FC = () => {
     guideImage,
     description
   } = styleConfigData;
+  
   const handleCTAClick = () => {
     // Track checkout initiation
     trackButtonClick('checkout_button', 'Iniciar Checkout', 'results_page');
     window.location.href = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912';
-  };
-
-  /**
-   * Renderiza um componente com configurações do editor se disponível,
-   * caso contrário renderiza o componente original
-   */
-  const renderConfigurableComponent = (blockId: string, originalComponent: React.ReactNode) => {
-    if (pageConfig && !configLoading) {
-      return <DynamicBlockRenderer 
-        pageId="result-page"
-        blockId={blockId}
-        fallback={originalComponent}
-      />;
-    }
-    return originalComponent;
   };
 
   return <div className="min-h-screen relative" style={{
@@ -188,15 +174,13 @@ const ResultPage: React.FC = () => {
       <div className="absolute top-0 right-0 w-1/4 h-1/4 bg-[#B89B7A]/3 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 w-1/5 h-1/5 bg-[#aa6b5d]/3 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
       
-      {renderConfigurableComponent('header-component-real', 
-        <Header 
-          primaryStyle={styleData as any} 
-          logoHeight={globalStyles.logoHeight} 
-          logo={globalStyles.logo} 
-          logoAlt={globalStyles.logoAlt} 
-          userName={user?.userName} 
-        />
-      )}
+      <Header 
+        primaryStyle={styleData as any} 
+        logoHeight={globalStyles.logoHeight} 
+        logo={globalStyles.logo} 
+        logoAlt={globalStyles.logoAlt} 
+        userName={user?.userName} 
+      />
 
       <div className="container mx-auto px-4 py-8 md:px-6 lg:px-8 max-w-5xl relative z-10">
         {/* ATTENTION: Primary Style Card - Usando componente inline editável */}
@@ -312,30 +296,22 @@ const ResultPage: React.FC = () => {
 
         {/* INTEREST: Before/After Transformation Section */}
         <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={700}>
-          {renderConfigurableComponent('before-after-component-real', 
-            <BeforeAfterTransformation />
-          )}
+          <BeforeAfterTransformation />
         </AnimatedWrapper>
 
         {/* INTEREST: Motivation Section */}
         <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={800}>
-          {renderConfigurableComponent('motivation-component-real', 
-            <MotivationSection />
-          )}
+          <MotivationSection />
         </AnimatedWrapper>
 
         {/* INTEREST: Bonus Section */}
         <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={850}>
-          {renderConfigurableComponent('bonus-component-real', 
-            <BonusSection />
-          )}
+                    <ExclusiveBonusSection />
         </AnimatedWrapper>
 
         {/* DESIRE: Testimonials */}
         <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={900}>
-          {renderConfigurableComponent('testimonials-component-real', 
-            <Testimonials />
-          )}
+                    <TestimonialsSection />
         </AnimatedWrapper>
 
         {/* DESIRE: Featured CTA (Green) - Usando componente inline editável */}
