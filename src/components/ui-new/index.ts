@@ -74,6 +74,7 @@ export { default as Form } from './Form';
 
 // Re-export types
 export type { TabsProps, MenuProps, SelectProps, FormProps, FormItemProps } from 'antd';
+export type {
   InputProps,
   TextAreaProps,
   NumberInputProps,
