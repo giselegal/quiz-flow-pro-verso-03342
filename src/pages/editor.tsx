@@ -3,7 +3,7 @@ import { useLocation } from 'wouter';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { ComponentsSidebar } from '@/components/editor/sidebar/ComponentsSidebar';
 import { EditPreview } from '@/components/editor/preview/EditPreview';
-import PropertiesPanel from '@/components/editor/properties/PropertiesPanel';
+import ModernPropertiesPanel from '@/components/editor/properties/ModernPropertiesPanel';
 import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
 import { useEditor } from '@/hooks/useEditor';
 import { useEditorPersistence } from '@/hooks/editor/useEditorPersistence';
@@ -130,7 +130,7 @@ const EditorPage: React.FC = () => {
 
         {/* Properties Panel */}
         <ResizablePanel defaultSize={25}>
-          <PropertiesPanel
+          <ModernPropertiesPanel
             selectedComponentId={selectedComponentId}
             onClose={() => setSelectedComponentId(null)}
             blocks={config.blocks}
