@@ -1,13 +1,27 @@
 import React from 'react';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Slider } from '@/components/ui/slider';
+import { Input } from '../../../../components/ui/input';
+import { Textarea } from '../../../../components/ui/textarea';
+import { Switch } from '../../../../components/ui/switch';
+import { Label } from '../../../../components/ui/label';
+import { Button } from '../../../../components/ui/button';
+import { Slider } from '../../../../components/ui/slider';
 import { useDropzone } from 'react-dropzone';
 import { Plus, Trash2, Type, Image, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, Upload } from 'lucide-react';
-import { PropertySchema } from '@/config/blockDefinitionsClean';
+
+// Interface modular para propriedades de componentes flexíveis
+interface PropertySchema {
+  key: string;
+  label: string;
+  type: string; // Tipo flexível para suportar todos os casos
+  placeholder?: string;
+  description?: string;
+  defaultValue?: any;
+  rows?: number;
+  min?: number;
+  max?: number;
+  options?: { label: string; value: string }[];
+  itemSchema?: PropertySchema[];
+}
 
 interface PropertyInputProps {
   schema: PropertySchema;
@@ -496,6 +510,102 @@ export const PropertyInput: React.FC<PropertyInputProps> = ({
             placeholder={schema.placeholder}
             rows={schema.rows || 6}
             className="font-mono text-sm"
+          />
+          {schema.description && (
+            <p className="text-xs text-gray-500">{schema.description}</p>
+          )}
+        </div>
+      );
+
+    case 'array-of-objects':
+      const arrayOfObjectsValue = Array.isArray(currentValue) ? currentValue : [];
+      
+      return (
+        <div className="space-y-2">
+          <Label>{schema.label}</Label>
+          <div className="space-y-3 p-4 border border-gray-200 rounded-lg bg-gray-50">
+            <div className="text-sm text-gray-600">
+              {arrayOfObjectsValue.length === 0 ? (
+                <p>Nenhum item configurado</p>
+              ) : (
+                <p>{arrayOfObjectsValue.length} item(ns) configurado(s)</p>
+              )}
+            </div>
+            
+            {arrayOfObjectsValue.map((item, index) => (
+              <div key={index} className="flex items-start space-x-2 p-3 bg-white rounded border">
+                <div className="flex-1">
+                  <div className="text-xs text-gray-500 mb-2">Item {index + 1}</div>
+                  <div className="space-y-2">
+                    {Object.entries(item).map(([key, value]) => (
+                      <div key={key} className="flex items-center space-x-2">
+                        <Label className="text-xs w-20 truncate">{key}:</Label>
+                        <Input
+                          value={String(value || '')}
+                          onChange={(e) => {
+                            const newArray = [...arrayOfObjectsValue];
+                            newArray[index] = { ...newArray[index], [key]: e.target.value };
+                            handleInputChange(newArray);
+                          }}
+                          className="flex-1 text-xs"
+                          placeholder={`${key}...`}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    const newArray = arrayOfObjectsValue.filter((_, i) => i !== index);
+                    handleInputChange(newArray);
+                  }}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+            
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                // Adicionar objeto padrão baseado no primeiro item ou estrutura básica
+                const defaultItem = arrayOfObjectsValue.length > 0 
+                  ? Object.keys(arrayOfObjectsValue[0]).reduce((acc, key) => {
+                      acc[key] = '';
+                      return acc;
+                    }, {} as any)
+                  : { text: '', value: '', image: '' }; // Estrutura padrão para opções de quiz
+                
+                const newArray = [...arrayOfObjectsValue, defaultItem];
+                handleInputChange(newArray);
+              }}
+              className="w-full"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Adicionar Item
+            </Button>
+          </div>
+          {schema.description && (
+            <p className="text-xs text-gray-500 mt-2">{schema.description}</p>
+          )}
+        </div>
+      );
+
+    case 'tex':
+    case 'text': // Alias para compatibilidade com tipo 'tex' mal configurado
+      return (
+        <div className="space-y-2">
+          <Label htmlFor={schema.key}>{schema.label}</Label>
+          <Input
+            id={schema.key}
+            value={currentValue || ''}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e.target.value)}
+            placeholder={schema.placeholder}
           />
           {schema.description && (
             <p className="text-xs text-gray-500">{schema.description}</p>
