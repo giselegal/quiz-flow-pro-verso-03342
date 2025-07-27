@@ -364,88 +364,86 @@ const ResultPage: React.FC = () => {
 
         {/* ACTION: Final Value Proposition and CTA - Usando componente inline editável */}
         <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={1100}>
-          {renderConfigurableComponent('value-stack-inline',
-            <DynamicBlockRenderer 
-              pageId="result-page"
-              blockId="value-stack-inline"
-              fallback={
-                <div className="text-center mt-16">
-                  <h2 className="text-3xl md:text-4xl font-playfair text-[#aa6b5d] mb-6">
-                    Vista-se de Você — na Prática
-                  </h2>
-                  <div className="elegant-divider"></div>
-                  <p className="text-[#432818] mb-6 max-w-xl mx-auto">
-                    Agora que você conhece seu estilo, é hora de aplicá-lo com clareza e intenção. 
-                    O Guia da Gisele Galvão foi criado para mulheres como você — que querem se vestir 
-                    com autenticidade e transformar sua imagem em ferramenta de poder.
-                  </p>
+          <div className="text-center mt-16">
+            <h2 className="text-3xl md:text-4xl font-playfair text-[#aa6b5d] mb-6">
+              Vista-se de Você — na Prática
+            </h2>
+            <div className="elegant-divider"></div>
+            <p className="text-[#432818] mb-6 max-w-xl mx-auto">
+              Agora que você conhece seu estilo, é hora de aplicá-lo com clareza e intenção. 
+              O Guia da Gisele Galvão foi criado para mulheres como você — que querem se vestir 
+              com autenticidade e transformar sua imagem em ferramenta de poder.
+            </p>
 
-                  <div className="bg-gradient-to-r from-[#fff7f3] to-[#f9f4ef] p-6 rounded-lg mb-6 border border-[#B89B7A]/10 glass-panel">
-                    <h3 className="text-xl font-medium text-[#aa6b5d] mb-4">O Guia de Estilo e Imagem + Bônus Exclusivos</h3>
-                    <ul className="space-y-3 text-left max-w-xl mx-auto text-[#432818]">
-                      {["Looks com intenção e identidade", "Cores, modelagens e tecidos a seu favor", "Imagem alinhada aos seus objetivos", "Guarda-roupa funcional, sem compras por impulso"].map((item, index) => <li key={index} className="flex items-start">
-                          <div className="flex-shrink-0 h-5 w-5 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full flex items-center justify-center text-white mr-2 mt-0.5">
-                            <CheckCircle className="h-3 w-3" />
-                          </div>
-                          <span>{item}</span>
-                        </li>)}
-                    </ul>
-                  </div>
-
-                  {/* Updated Value Stack Section with new prices and fixed red line */}
-                  <div className="bg-white p-6 rounded-lg shadow-md border border-[#B89B7A]/20 card-elegant mb-8 max-w-md mx-auto">
-                    <h3 className="text-xl font-medium text-center text-[#aa6b5d] mb-4">O Que Você Recebe Hoje</h3>
-                    
-                    <div className="space-y-3 mb-6">
-                      <div className="flex justify-between items-center p-2 border-b border-[#B89B7A]/10">
-                        <span>Guia Principal</span>
-                        <span className="font-medium">R$ 67,00</span>
-                      </div>
-                      <div className="flex justify-between items-center p-2 border-b border-[#B89B7A]/10">
-                        <span>Bônus - Peças-chave</span>
-                        <span className="font-medium">R$ 79,00</span>
-                      </div>
-                      <div className="flex justify-between items-center p-2 border-b border-[#B89B7A]/10">
-                        <span>Bônus - Visagismo Facial</span>
-                        <span className="font-medium">R$ 29,00</span>
-                      </div>
-                      <div className="flex justify-between items-center p-2 pt-3 font-bold">
-                        <span>Valor Total</span>
-                        <div className="relative">
-                          <span>R$ 175,00</span>
-                          <div className="absolute top-1/2 left-0 right-0 h-[2px] bg-[#ff5a5a] transform -translate-y-1/2 -rotate-3"></div>
-                        </div>
-                      </div>
+            <div className="bg-gradient-to-r from-[#fff7f3] to-[#f9f4ef] p-6 rounded-lg mb-6 border border-[#B89B7A]/10 glass-panel">
+              <h3 className="text-xl font-medium text-[#aa6b5d] mb-4">O Guia de Estilo e Imagem + Bônus Exclusivos</h3>
+              <ul className="space-y-3 text-left max-w-xl mx-auto text-[#432818]">
+                {["Looks com intenção e identidade", "Cores, modelagens e tecidos a seu favor", "Imagem alinhada aos seus objetivos", "Guarda-roupa funcional, sem compras por impulso"].map((item, index) => <li key={index} className="flex items-start">
+                    <div className="flex-shrink-0 h-5 w-5 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full flex items-center justify-center text-white mr-2 mt-0.5">
+                      <CheckCircle className="h-3 w-3" />
                     </div>
-                    
-                    <div className="text-center p-4 bg-[#f9f4ef] rounded-lg">
-                      <p className="text-sm text-[#aa6b5d] uppercase font-medium">Hoje por apenas</p>
-                      <p className="text-4xl font-bold gold-text">R$ 39,00</p>
-                      <p className="text-xs text-[#3a3a3a]/60 mt-1">Pagamento único</p>
-                    </div>
-                  </div>
+                    <span>{item}</span>
+                  </li>)}
+              </ul>
+            </div>
 
-                  <Button onClick={handleCTAClick} className="text-white py-5 px-8 rounded-md shadow-md transition-colors btn-3d mb-2" style={{
-                  background: "linear-gradient(to right, #4CAF50, #45a049)",
-                  boxShadow: "0 4px 14px rgba(76, 175, 80, 0.4)",
-                  fontSize: "1rem" /* Smaller font size for button */
-                }} onMouseEnter={() => setIsButtonHovered(true)} onMouseLeave={() => setIsButtonHovered(false)}>
-                    <span className="flex items-center justify-center gap-2">
-                      <ShoppingCart className={`w-4 h-4 transition-transform duration-300 ${isButtonHovered ? 'scale-110' : ''}`} />
-                      <span>Garantir Meu Guia + Bônus Especiais</span>
-                    </span>
-                  </Button>
-                  
-                  <SecurePurchaseElement />
-
-                  <p className="text-sm text-[#aa6b5d] mt-2 flex items-center justify-center gap-1">
-                    <Lock className="w-3 h-3" />
-                    <span>Oferta exclusiva nesta página</span>
-                  </p>
+            {/* Updated Value Stack Section with new prices and fixed red line */}
+            <div className="bg-white p-6 rounded-lg shadow-md border border-[#B89B7A]/20 card-elegant mb-8 max-w-md mx-auto">
+              <h3 className="text-xl font-medium text-center text-[#aa6b5d] mb-4">O Que Você Recebe Hoje</h3>
+              
+              <div className="space-y-3 mb-6">
+                <div className="flex justify-between items-center p-2 border-b border-[#B89B7A]/10">
+                  <span>Guia Principal</span>
+                  <span className="font-medium">R$ 67,00</span>
                 </div>
-              }
-            />
-          )}
+                <div className="flex justify-between items-center p-2 border-b border-[#B89B7A]/10">
+                  <span>Bônus - Peças-chave</span>
+                  <span className="font-medium">R$ 79,00</span>
+                </div>
+                <div className="flex justify-between items-center p-2 border-b border-[#B89B7A]/10">
+                  <span>Bônus - Visagismo Facial</span>
+                  <span className="font-medium">R$ 29,00</span>
+                </div>
+                <div className="flex justify-between items-center p-2 pt-3 font-bold">
+                  <span>Valor Total</span>
+                  <div className="relative">
+                    <span>R$ 175,00</span>
+                    <div className="absolute top-1/2 left-0 right-0 h-[2px] bg-[#ff5a5a] transform -translate-y-1/2 -rotate-3"></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="text-center p-4 bg-[#f9f4ef] rounded-lg">
+                <p className="text-sm text-[#aa6b5d] uppercase font-medium">Hoje por apenas</p>
+                <p className="text-4xl font-bold gold-text">R$ 39,00</p>
+                <p className="text-xs text-[#3a3a3a]/60 mt-1">Pagamento único</p>
+              </div>
+            </div>
+
+            <button 
+              onClick={handleCTAClick} 
+              className="text-white py-5 px-8 rounded-md shadow-md transition-colors btn-3d mb-2" 
+              style={{
+                background: "linear-gradient(to right, #4CAF50, #45a049)",
+                boxShadow: "0 4px 14px rgba(76, 175, 80, 0.4)",
+                fontSize: "1rem"
+              }} 
+              onMouseEnter={() => setIsButtonHovered(true)} 
+              onMouseLeave={() => setIsButtonHovered(false)}
+            >
+              <span className="flex items-center justify-center gap-2">
+                <ShoppingCart className={`w-4 h-4 transition-transform duration-300 ${isButtonHovered ? 'scale-110' : ''}`} />
+                <span>Garantir Meu Guia + Bônus Especiais</span>
+              </span>
+            </button>
+            
+            <SecurePurchaseElement />
+
+            <p className="text-sm text-[#aa6b5d] mt-2 flex items-center justify-center gap-1">
+              <Lock className="w-3 h-3" />
+              <span>Oferta exclusiva nesta página</span>
+            </p>
+          </div>
         </AnimatedWrapper>
       </div>
 
