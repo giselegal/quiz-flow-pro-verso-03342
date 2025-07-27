@@ -524,22 +524,45 @@ export const PropertyInput: React.FC<PropertyInputProps> = ({
         <div className="space-y-2">
           <Label>{schema.label}</Label>
           <div className="space-y-3 p-4 border border-gray-200 rounded-lg bg-gray-50">
-            <div className="text-sm text-gray-600">
-              {arrayOfObjectsValue.length === 0 ? (
-                <p>Nenhum item configurado</p>
-              ) : (
-                <p>{arrayOfObjectsValue.length} item(ns) configurado(s)</p>
-              )}
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-gray-600">
+                {arrayOfObjectsValue.length === 0 ? (
+                  <span>Nenhum item configurado</span>
+                ) : (
+                  <span>{arrayOfObjectsValue.length} item(ns) configurado(s)</span>
+                )}
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  // Adicionar objeto padrão baseado no primeiro item ou estrutura básica
+                  const defaultItem = arrayOfObjectsValue.length > 0 
+                    ? Object.keys(arrayOfObjectsValue[0]).reduce((acc, key) => {
+                        acc[key] = '';
+                        return acc;
+                      }, {} as any)
+                    : { text: '', value: '', image: '' }; // Estrutura padrão para opções de quiz
+                  
+                  const newArray = [...arrayOfObjectsValue, defaultItem];
+                  handleInputChange(newArray);
+                }}
+                className="flex items-center space-x-1"
+              >
+                <Plus className="w-3 h-3" />
+                <span>Adicionar</span>
+              </Button>
             </div>
             
             {arrayOfObjectsValue.map((item, index) => (
               <div key={index} className="flex items-start space-x-2 p-3 bg-white rounded border">
                 <div className="flex-1">
-                  <div className="text-xs text-gray-500 mb-2">Item {index + 1}</div>
-                  <div className="space-y-2">
+                  <div className="text-xs text-gray-500 mb-2 font-medium">Item {index + 1}</div>
+                  <div className="grid grid-cols-1 gap-3">
                     {Object.entries(item).map(([key, value]) => (
-                      <div key={key} className="flex items-center space-x-2">
-                        <Label className="text-xs w-20 truncate">{key}:</Label>
+                      <div key={key} className="space-y-1">
+                        <Label className="text-xs text-gray-600 capitalize">{key}:</Label>
                         <Input
                           value={String(value || '')}
                           onChange={(e) => {
@@ -547,8 +570,8 @@ export const PropertyInput: React.FC<PropertyInputProps> = ({
                             newArray[index] = { ...newArray[index], [key]: e.target.value };
                             handleInputChange(newArray);
                           }}
-                          className="flex-1 text-xs"
-                          placeholder={`${key}...`}
+                          className="text-sm"
+                          placeholder={`Digite ${key}...`}
                         />
                       </div>
                     ))}
@@ -562,33 +585,20 @@ export const PropertyInput: React.FC<PropertyInputProps> = ({
                     const newArray = arrayOfObjectsValue.filter((_, i) => i !== index);
                     handleInputChange(newArray);
                   }}
-                  className="text-red-500 hover:text-red-700"
+                  className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                  title="Remover item"
                 >
                   <Trash2 className="w-4 h-4" />
                 </Button>
               </div>
             ))}
             
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => {
-                // Adicionar objeto padrão baseado no primeiro item ou estrutura básica
-                const defaultItem = arrayOfObjectsValue.length > 0 
-                  ? Object.keys(arrayOfObjectsValue[0]).reduce((acc, key) => {
-                      acc[key] = '';
-                      return acc;
-                    }, {} as any)
-                  : { text: '', value: '', image: '' }; // Estrutura padrão para opções de quiz
-                
-                const newArray = [...arrayOfObjectsValue, defaultItem];
-                handleInputChange(newArray);
-              }}
-              className="w-full"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Adicionar Item
-            </Button>
+            {arrayOfObjectsValue.length === 0 && (
+              <div className="text-center py-8 text-gray-500">
+                <div className="text-sm">Nenhum item adicionado ainda</div>
+                <div className="text-xs mt-1">Clique em "Adicionar" para criar o primeiro item</div>
+              </div>
+            )}
           </div>
           {schema.description && (
             <p className="text-xs text-gray-500 mt-2">{schema.description}</p>
