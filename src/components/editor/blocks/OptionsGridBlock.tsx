@@ -1,6 +1,14 @@
 
 import React from 'react';
-import { Block } from '@/types/editor';
+import { Block } from '../../../types/editor';
+
+interface Option {
+  id: string;
+  text: string;
+  value: string;
+  imageUrl?: string;
+  category?: string;
+}
 
 interface OptionsGridBlockProps {
   block: Block;
@@ -15,27 +23,42 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   onSelect,
   isPreview = false
 }) => {
-  const columns = block.content?.columns || 2;
-  const gap = block.content?.gap || 'medium';
-  const items = block.content?.items || [
-    'Opção 1',
-    'Opção 2',
-    'Opção 3',
-    'Opção 4'
-  ];
-
-  const gapClasses = {
-    small: 'gap-2',
-    medium: 'gap-4',
-    large: 'gap-6'
+  // Acessar propriedades corretas do bloco
+  const properties = block.properties || {};
+  const content = block.content || {};
+  
+  const options: Option[] = properties.options || content.options || [];
+  const columns = properties.columns || content.columns || 2;
+  const showImages = properties.showImages !== undefined ? properties.showImages : true;
+  const multipleSelection = properties.multipleSelection || false;
+  const maxSelections = properties.maxSelections || 1;
+  
+  // Grid responsivo baseado no número de colunas
+  const getGridClasses = (cols: number) => {
+    switch (cols) {
+      case 1: return 'grid-cols-1';
+      case 2: return 'grid-cols-1 md:grid-cols-2';
+      case 3: return 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3';
+      case 4: return 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4';
+      default: return 'grid-cols-1 md:grid-cols-2';
+    }
   };
 
-  const gridClasses = {
-    1: 'grid-cols-1',
-    2: 'grid-cols-1 md:grid-cols-2',
-    3: 'grid-cols-1 md:grid-cols-3',
-    4: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'
-  };
+  // Se não há opções, mostrar placeholder
+  if (!options || options.length === 0) {
+    return (
+      <div 
+        className={`p-4 ${
+          isSelected && !isPreview ? 'ring-2 ring-[#B89B7A] bg-[#FAF9F7]' : ''
+        }`}
+        onClick={onSelect}
+      >
+        <div className="text-center text-gray-500 py-8">
+          <p>Configure as opções nas propriedades do bloco</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div 
@@ -44,21 +67,41 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       }`}
       onClick={onSelect}
     >
-      <div className={`grid ${gridClasses[columns]} ${gapClasses[gap]}`}>
-        {items.map((item, index) => (
+      <div className={`grid ${getGridClasses(columns)} gap-4`}>
+        {options.map((option, index) => (
           <div
-            key={index}
-            className="p-4 bg-white rounded-lg border border-[#B89B7A]/20 hover:border-[#B89B7A] transition-colors cursor-pointer"
+            key={option.id || index}
+            className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 cursor-pointer transition-colors"
           >
-            <div className="text-center">
-              <div className="w-12 h-12 bg-[#FAF9F7] rounded-full flex items-center justify-center mx-auto mb-3">
-                <span className="text-[#B89B7A] font-medium">{index + 1}</span>
+            {showImages && option.imageUrl && (
+              <div className="mb-3">
+                <img 
+                  src={option.imageUrl} 
+                  alt={option.text}
+                  className="w-full h-40 object-cover rounded-md"
+                />
               </div>
-              <p className="text-sm font-medium text-[#432818]">{item}</p>
+            )}
+            <div className="text-sm font-medium text-gray-900">
+              {option.text}
             </div>
+            {option.category && (
+              <div className="text-xs text-gray-500 mt-1">
+                {option.category}
+              </div>
+            )}
           </div>
         ))}
       </div>
+      
+      {/* Informações de configuração no editor */}
+      {!isPreview && (
+        <div className="mt-4 text-xs text-gray-500 border-t pt-2">
+          <p>✓ {options.length} opções configuradas</p>
+          <p>✓ {multipleSelection ? `Múltipla seleção (máx: ${maxSelections})` : 'Seleção única'}</p>
+          <p>✓ {showImages ? 'Com imagens' : 'Apenas texto'}</p>
+        </div>
+      )}
     </div>
   );
 };
