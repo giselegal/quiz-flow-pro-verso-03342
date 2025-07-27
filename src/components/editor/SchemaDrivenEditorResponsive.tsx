@@ -610,7 +610,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                     <Badge variant="outline" className="text-xs border-[#B89B7A]/30 text-[#8F7A6A]">
                       {currentPage.blocks.length} bloco{currentPage.blocks.length !== 1 ? 's' : ''}
                     </Badge>
-                  )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
