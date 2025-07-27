@@ -79,6 +79,21 @@ const ResultPage: React.FC = () => {
     }
   }, [primaryStyle]);
 
+  /**
+   * Renderiza um componente com configurações do editor se disponível,
+   * caso contrário renderiza o componente original
+   */
+  const renderConfigurableComponent = (blockId: string, originalComponent: React.ReactNode) => {
+    if (pageConfig && !configLoading) {
+      return <DynamicBlockRenderer 
+        pageId="result-page"
+        blockId={blockId}
+        fallback={originalComponent}
+      />;
+    }
+    return originalComponent;
+  };
+
   // Adaptar dados para compatibilidade com os componentes
   const styleData = {
     category: 'Natural' as keyof typeof styleConfig, // Default fallback
@@ -251,10 +266,10 @@ const ResultPage: React.FC = () => {
                       <div className="max-w-[280px] mx-auto relative order-first md:order-last">
                         <img 
                           src={`${image}?q=auto:best&f=auto&w=280`} 
-                          alt={`Estilo ${category}`} 
+                          alt={`Estilo ${String(category)}`} 
                           className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300" 
                           loading="eager" 
-                          fetchpriority="high" 
+                          fetchPriority="high" 
                           width="280" 
                           height="auto"
                           onError={(e) => {
@@ -273,7 +288,7 @@ const ResultPage: React.FC = () => {
                     <div className="mt-8 max-w-[540px] mx-auto relative">
                       <img 
                         src={`${guideImage}?q=auto:best&f=auto&w=540`} 
-                        alt={`Guia de Estilo ${category}`} 
+                        alt={`Guia de Estilo ${String(category)}`} 
                         loading="lazy" 
                         className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300" 
                         width="540" 
