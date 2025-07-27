@@ -9,6 +9,9 @@ import {
   SocialProofBanner 
 } from './ModernComponents';
 
+// Componentes de funil
+import FunnelBlockRenderer, { useIsFunnelBlock } from './editor/FunnelBlockRenderer';
+
 // Componentes básicos
 import { 
   CheckCircle, Star, Gift, Lock, Shield, Award, Clock, ArrowRight, 
@@ -62,6 +65,21 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
 
   // Renderizar componente baseado no tipo
   const renderComponent = () => {
+    // Verificar se é um bloco de funil
+    const isFunnelBlock = useIsFunnelBlock(componentType);
+    if (isFunnelBlock) {
+      return (
+        <FunnelBlockRenderer
+          block={{
+            id: blockId,
+            type: componentType,
+            properties: props
+          }}
+          isEditable={false}
+        />
+      );
+    }
+
     switch (componentType) {
       case 'quiz-transition':
         return (

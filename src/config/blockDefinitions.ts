@@ -1,6 +1,26 @@
 import React from 'react';
 import { PropertySchema } from './funnelBlockDefinitions';
 import { PlaceholderUtils } from '../utils/placeholderUtils';
+// Importar componentes de funil
+import {
+  FunnelIntroStep,
+  NameCollectStep,
+  QuizIntroStep,
+  QuestionMultipleStep,
+  QuizTransitionStep,
+  ProcessingStep,
+  ResultIntroStep,
+  ResultDetailsStep,
+  ResultGuideStep,
+  OfferTransitionStep,
+  OfferPageStep,
+  FunnelProgressBar,
+  QuizOption,
+  CountdownTimer,
+  ResultCard,
+  StyleGuideViewer,
+  OfferCard
+} from '../components/funnel-blocks';
 
 // Block Definition Interface
 export interface BlockDefinition {
@@ -2323,3 +2343,533 @@ export function getBlockPropertiesSchema(type: string): PropertySchema[] | undef
   const definition = findBlockDefinition(type);
   return definition?.propertiesSchema;
 }
+
+// DEFINIÇÕES DE BLOCOS DE FUNIL - COMPONENTES REUTILIZÁVEIS
+export const funnelComponentBlocks: BlockDefinition[] = [
+  // ETAPA 1: INTRODUÇÃO DO FUNIL
+  {
+    type: 'funnel-intro-step',
+    name: 'Introdução do Funil',
+    description: 'Página de introdução do funil com título, subtítulo e botão de início',
+    icon: '🏁',
+    category: 'Funil',
+    defaultProperties: {
+      title: 'Descubra Seu Estilo Ideal',
+      subtitle: 'Responda nosso quiz e receba um guia personalizado',
+      buttonText: 'Começar Agora',
+      logoUrl: '',
+      backgroundImage: '',
+      showProgressBar: true,
+      stepNumber: 1,
+      totalSteps: 21
+    },
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título Principal',
+        type: 'text',
+        defaultValue: 'Descubra Seu Estilo Ideal'
+      },
+      {
+        key: 'subtitle',
+        label: 'Subtítulo',
+        type: 'text',
+        defaultValue: 'Responda nosso quiz e receba um guia personalizado'
+      },
+      {
+        key: 'buttonText',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Começar Agora'
+      },
+      {
+        key: 'logoUrl',
+        label: 'URL do Logo',
+        type: 'url',
+        defaultValue: ''
+      },
+      {
+        key: 'backgroundImage',
+        label: 'Imagem de Fundo',
+        type: 'url',
+        defaultValue: ''
+      },
+      {
+        key: 'showProgressBar',
+        label: 'Mostrar Barra de Progresso',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'stepNumber',
+        label: 'Número da Etapa',
+        type: 'number',
+        defaultValue: 1
+      },
+      {
+        key: 'totalSteps',
+        label: 'Total de Etapas',
+        type: 'number',
+        defaultValue: 21
+      }
+    ]
+  },
+
+  // ETAPA 2: COLETA DE NOME
+  {
+    type: 'name-collect-step',
+    name: 'Coleta de Nome',
+    description: 'Etapa para coletar o nome do usuário',
+    icon: '👤',
+    category: 'Funil',
+    defaultProperties: {
+      title: 'Como podemos te chamar?',
+      subtitle: 'Digite seu nome para personalizar sua experiência',
+      placeholder: 'Seu nome aqui...',
+      buttonText: 'Continuar',
+      showProgressBar: true,
+      stepNumber: 2,
+      totalSteps: 21
+    },
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Como podemos te chamar?'
+      },
+      {
+        key: 'subtitle',
+        label: 'Subtítulo',
+        type: 'text',
+        defaultValue: 'Digite seu nome para personalizar sua experiência'
+      },
+      {
+        key: 'placeholder',
+        label: 'Placeholder do Input',
+        type: 'text',
+        defaultValue: 'Seu nome aqui...'
+      },
+      {
+        key: 'buttonText',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Continuar'
+      },
+      {
+        key: 'showProgressBar',
+        label: 'Mostrar Barra de Progresso',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'stepNumber',
+        label: 'Número da Etapa',
+        type: 'number',
+        defaultValue: 2
+      },
+      {
+        key: 'totalSteps',
+        label: 'Total de Etapas',
+        type: 'number',
+        defaultValue: 21
+      }
+    ]
+  },
+
+  // ETAPA: PERGUNTA DE MÚLTIPLA ESCOLHA
+  {
+    type: 'question-multiple-step',
+    name: 'Pergunta de Múltipla Escolha',
+    description: 'Pergunta do quiz com opções de múltipla escolha e imagens',
+    icon: '❓',
+    category: 'Funil',
+    defaultProperties: {
+      question: 'Qual é sua preferência?',
+      questionNumber: 1,
+      totalQuestions: 10,
+      multiSelect: false,
+      maxSelections: 1,
+      showProgressBar: true,
+      options: [
+        {
+          id: 'opcao-1',
+          text: 'Opção 1',
+          imageUrl: '',
+          value: 'opcao-1',
+          category: 'categoria-1'
+        },
+        {
+          id: 'opcao-2',
+          text: 'Opção 2',
+          imageUrl: '',
+          value: 'opcao-2',
+          category: 'categoria-2'
+        }
+      ]
+    },
+    propertiesSchema: [
+      {
+        key: 'question',
+        label: 'Pergunta',
+        type: 'text',
+        defaultValue: 'Qual é sua preferência?'
+      },
+      {
+        key: 'questionNumber',
+        label: 'Número da Pergunta',
+        type: 'number',
+        defaultValue: 1
+      },
+      {
+        key: 'totalQuestions',
+        label: 'Total de Perguntas',
+        type: 'number',
+        defaultValue: 10
+      },
+      {
+        key: 'multiSelect',
+        label: 'Permitir Múltipla Seleção',
+        type: 'boolean',
+        defaultValue: false
+      },
+      {
+        key: 'maxSelections',
+        label: 'Máximo de Seleções',
+        type: 'number',
+        defaultValue: 1
+      },
+      {
+        key: 'options',
+        label: 'Opções de Resposta',
+        type: 'array-of-objects',
+        defaultValue: []
+      },
+      {
+        key: 'showProgressBar',
+        label: 'Mostrar Barra de Progresso',
+        type: 'boolean',
+        defaultValue: true
+      }
+    ]
+  },
+
+  // ETAPA: DETALHES DO RESULTADO
+  {
+    type: 'result-details-step',
+    name: 'Detalhes do Resultado',
+    description: 'Página que mostra os detalhes do resultado do quiz',
+    icon: '📊',
+    category: 'Funil',
+    defaultProperties: {
+      result: {
+        category: 'elegante',
+        title: 'Seu Estilo é Elegante',
+        description: 'Você possui uma preferência por elegância refinada, moderna e sem exageros.',
+        imageUrl: '',
+        guideImageUrl: '',
+        recommendations: [
+          'Invista em peças atemporais',
+          'Prefira tecidos de qualidade',
+          'Mantenha uma paleta neutra'
+        ]
+      },
+      buttonText: 'Ver guia completo',
+      showProgressBar: true,
+      stepNumber: 18,
+      totalSteps: 21
+    },
+    propertiesSchema: [
+      {
+        key: 'buttonText',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Ver guia completo'
+      },
+      {
+        key: 'showProgressBar',
+        label: 'Mostrar Barra de Progresso',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'stepNumber',
+        label: 'Número da Etapa',
+        type: 'number',
+        defaultValue: 18
+      },
+      {
+        key: 'totalSteps',
+        label: 'Total de Etapas',
+        type: 'number',
+        defaultValue: 21
+      }
+    ]
+  },
+
+  // ETAPA: PÁGINA DE OFERTA FINAL
+  {
+    type: 'offer-page-step',
+    name: 'Página de Oferta',
+    description: 'Página final com a oferta comercial',
+    icon: '💰',
+    category: 'Funil',
+    defaultProperties: {
+      offer: {
+        title: 'Consultoria de Estilo Personalizada',
+        description: 'Receba um guia completo baseado no seu resultado',
+        price: 'R$ 297',
+        originalPrice: 'R$ 497',
+        buttonText: 'Quero minha consultoria',
+        features: [
+          'Análise completa do seu estilo',
+          'Guia de compras personalizado',
+          'Dicas de combinações',
+          'Suporte por 30 dias'
+        ]
+      },
+      showProgressBar: false,
+      stepNumber: 21,
+      totalSteps: 21
+    },
+    propertiesSchema: [
+      {
+        key: 'showProgressBar',
+        label: 'Mostrar Barra de Progresso',
+        type: 'boolean',
+        defaultValue: false
+      },
+      {
+        key: 'stepNumber',
+        label: 'Número da Etapa',
+        type: 'number',
+        defaultValue: 21
+      },
+      {
+        key: 'totalSteps',
+        label: 'Total de Etapas',
+        type: 'number',
+        defaultValue: 21
+      }
+    ]
+  },
+
+  // COMPONENTES COMPARTILHADOS
+
+  // BARRA DE PROGRESSO
+  {
+    type: 'funnel-progress-bar',
+    name: 'Barra de Progresso do Funil',
+    description: 'Barra de progresso reutilizável para funis',
+    icon: '📊',
+    category: 'Funil - Compartilhados',
+    defaultProperties: {
+      currentStep: 1,
+      totalSteps: 21,
+      showLabels: false,
+      color: '#B89B7A',
+      size: 'md',
+      animated: true,
+      showPercentage: false
+    },
+    propertiesSchema: [
+      {
+        key: 'currentStep',
+        label: 'Etapa Atual',
+        type: 'number',
+        defaultValue: 1
+      },
+      {
+        key: 'totalSteps',
+        label: 'Total de Etapas',
+        type: 'number',
+        defaultValue: 21
+      },
+      {
+        key: 'showLabels',
+        label: 'Mostrar Rótulos',
+        type: 'boolean',
+        defaultValue: false
+      },
+      {
+        key: 'color',
+        label: 'Cor da Barra',
+        type: 'color',
+        defaultValue: '#B89B7A'
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: [
+          { label: 'Pequeno', value: 'sm' },
+          { label: 'Médio', value: 'md' },
+          { label: 'Grande', value: 'lg' }
+        ],
+        defaultValue: 'md'
+      },
+      {
+        key: 'animated',
+        label: 'Animado',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showPercentage',
+        label: 'Mostrar Porcentagem',
+        type: 'boolean',
+        defaultValue: false
+      }
+    ]
+  },
+
+  // CARD DE RESULTADO
+  {
+    type: 'result-card',
+    name: 'Card de Resultado',
+    description: 'Card para exibição de resultados de quiz',
+    icon: '🎯',
+    category: 'Funil - Compartilhados',
+    defaultProperties: {
+      result: {
+        category: 'elegante',
+        title: 'Seu Estilo é Elegante',
+        description: 'Você possui uma preferência por elegância refinada.',
+        imageUrl: ''
+      },
+      showButton: true,
+      buttonText: 'Ver Detalhes',
+      size: 'md'
+    },
+    propertiesSchema: [
+      {
+        key: 'showButton',
+        label: 'Mostrar Botão',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'buttonText',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Ver Detalhes'
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: [
+          { label: 'Pequeno', value: 'sm' },
+          { label: 'Médio', value: 'md' },
+          { label: 'Grande', value: 'lg' }
+        ],
+        defaultValue: 'md'
+      }
+    ]
+  },
+
+  // TIMER DE CONTAGEM REGRESSIVA
+  {
+    type: 'countdown-timer',
+    name: 'Timer de Contagem',
+    description: 'Timer de contagem regressiva para criar urgência',
+    icon: '⏰',
+    category: 'Funil - Compartilhados',
+    defaultProperties: {
+      initialTime: 300,
+      showIcon: true,
+      size: 'md',
+      color: '#B89B7A',
+      format: 'mm:ss'
+    },
+    propertiesSchema: [
+      {
+        key: 'initialTime',
+        label: 'Tempo Inicial (segundos)',
+        type: 'number',
+        defaultValue: 300
+      },
+      {
+        key: 'showIcon',
+        label: 'Mostrar Ícone',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: [
+          { label: 'Pequeno', value: 'sm' },
+          { label: 'Médio', value: 'md' },
+          { label: 'Grande', value: 'lg' }
+        ],
+        defaultValue: 'md'
+      },
+      {
+        key: 'color',
+        label: 'Cor',
+        type: 'color',
+        defaultValue: '#B89B7A'
+      },
+      {
+        key: 'format',
+        label: 'Formato',
+        type: 'select',
+        options: [
+          { label: 'mm:ss', value: 'mm:ss' },
+          { label: 'hh:mm:ss', value: 'hh:mm:ss' },
+          { label: 'Apenas minutos', value: 'mm' }
+        ],
+        defaultValue: 'mm:ss'
+      }
+    ]
+  },
+
+  // CARD DE OFERTA
+  {
+    type: 'offer-card',
+    name: 'Card de Oferta',
+    description: 'Card para exibição de ofertas comerciais',
+    icon: '💳',
+    category: 'Funil - Compartilhados',
+    defaultProperties: {
+      offer: {
+        title: 'Consultoria Personalizada',
+        description: 'Receba um guia completo',
+        price: 'R$ 297',
+        originalPrice: 'R$ 497',
+        buttonText: 'Adquirir agora',
+        features: [
+          'Análise completa',
+          'Guia personalizado',
+          'Suporte incluído'
+        ]
+      },
+      showDiscount: true,
+      variant: 'default'
+    },
+    propertiesSchema: [
+      {
+        key: 'showDiscount',
+        label: 'Mostrar Desconto',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'variant',
+        label: 'Variante Visual',
+        type: 'select',
+        options: [
+          { label: 'Padrão', value: 'default' },
+          { label: 'Destacado', value: 'featured' },
+          { label: 'Compacto', value: 'compact' }
+        ],
+        defaultValue: 'default'
+      }
+    ]
+  }
+];
+
+// Adicionar os blocos de funil aos blocos principais
+export const allBlockDefinitions = [...blockDefinitions, ...funnelComponentBlocks];
