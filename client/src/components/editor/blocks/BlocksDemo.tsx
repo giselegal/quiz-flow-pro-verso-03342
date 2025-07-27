@@ -1,282 +1,209 @@
 
 import React, { useState } from 'react';
+import { EditorProvider } from '@/contexts/EditorContext';
 import { BlockComponents } from './BlockComponents';
 import { EditorBlock } from '@/types/editor';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Edit2, Trash2, Eye, EyeOff } from 'lucide-react';
 
-interface BlocksDemoProps {
-  className?: string;
-}
+export const BlocksDemo = () => {
+  const [activeTab, setActiveTab] = useState('editor');
 
-export const BlocksDemo: React.FC<BlocksDemoProps> = ({ className }) => {
-  const [blocks, setBlocks] = useState<EditorBlock[]>([
+  const mockBlocks: EditorBlock[] = [
     {
-      id: 'demo-1',
+      id: '1',
       type: 'header',
       content: {
         title: 'Título Principal',
-        subtitle: 'Subtítulo do componente',
-        style: {
-          textAlign: 'center',
-          color: '#333',
-          fontSize: 'text-3xl'
-        }
+        subtitle: 'Subtítulo do exemplo'
       },
       order: 0
     },
     {
-      id: 'demo-2',
+      id: '2',
       type: 'text',
       content: {
-        text: 'Este é um exemplo de texto editável. Clique duplo para editar.',
-        style: {
-          color: '#666',
-          fontSize: '16px'
-        }
+        text: 'Este é um exemplo de texto em um bloco do editor.'
       },
       order: 1
     },
     {
-      id: 'demo-3',
+      id: '3',
       type: 'image',
       content: {
-        imageUrl: 'https://via.placeholder.com/400x200',
-        imageAlt: 'Imagem de exemplo',
-        caption: 'Legenda da imagem'
+        imageUrl: 'https://via.placeholder.com/400x300',
+        alt: 'Imagem de exemplo'
       },
       order: 2
     },
     {
-      id: 'demo-4',
+      id: '4',
       type: 'button',
       content: {
-        buttonText: 'Botão de Exemplo',
-        buttonUrl: 'https://exemplo.com',
-        style: {
-          backgroundColor: '#007bff',
-          color: 'white',
-          textAlign: 'center'
-        }
+        text: 'Botão de Exemplo',
+        url: '#',
+        variant: 'default'
       },
       order: 3
     },
     {
-      id: 'demo-5',
+      id: '5',
       type: 'spacer',
       content: {
-        height: '60px'
+        height: 40
       },
       order: 4
-    },
-    {
-      id: 'demo-6',
-      type: 'quiz-question',
-      content: {
-        question: 'Qual é a sua cor favorita?',
-        options: [
-          { id: '1', text: 'Azul', imageUrl: '' },
-          { id: '2', text: 'Vermelho', imageUrl: '' },
-          { id: '3', text: 'Verde', imageUrl: '' },
-          { id: '4', text: 'Amarelo', imageUrl: '' }
-        ],
-        multipleSelection: false,
-        showImages: false,
-        progressPercent: 50,
-        logoUrl: '',
-        showBackButton: true,
-        optionLayout: 'vertical'
-      },
-      order: 5
     }
-  ]);
-
-  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
-  const [isPreviewMode, setIsPreviewMode] = useState(false);
-
-  const handleBlockUpdate = (blockId: string, content: any) => {
-    setBlocks(prev => 
-      prev.map(block => 
-        block.id === blockId 
-          ? { ...block, content: { ...block.content, ...content } }
-          : block
-      )
-    );
-  };
-
-  const handleBlockDelete = (blockId: string) => {
-    setBlocks(prev => prev.filter(block => block.id !== blockId));
-    if (selectedBlockId === blockId) {
-      setSelectedBlockId(null);
-    }
-  };
-
-  const addNewBlock = (type: EditorBlock['type']) => {
-    const newBlock: EditorBlock = {
-      id: `demo-${Date.now()}`,
-      type,
-      content: getDefaultContent(type),
-      order: blocks.length
-    };
-    
-    setBlocks(prev => [...prev, newBlock]);
-    setSelectedBlockId(newBlock.id);
-  };
-
-  const getDefaultContent = (type: EditorBlock['type']) => {
-    switch (type) {
-      case 'header':
-        return { title: 'Novo Título', subtitle: 'Subtítulo' };
-      case 'text':
-        return { text: 'Novo texto aqui...' };
-      case 'image':
-        return { imageUrl: '', imageAlt: '', caption: '' };
-      case 'button':
-        return { buttonText: 'Clique aqui', buttonUrl: '' };
-      case 'spacer':
-        return { height: '40px' };
-      case 'quiz-question':
-        return {
-          question: 'Nova pergunta?',
-          options: [
-            { id: '1', text: 'Opção 1', imageUrl: '' },
-            { id: '2', text: 'Opção 2', imageUrl: '' }
-          ],
-          multipleSelection: false,
-          showImages: false,
-          progressPercent: 0,
-          logoUrl: '',
-          showBackButton: false,
-          optionLayout: 'vertical'
-        };
-      default:
-        return {};
-    }
-  };
-
-  const availableBlockTypes = [
-    { type: 'header', name: 'Cabeçalho', icon: '📄' },
-    { type: 'text', name: 'Texto', icon: '📝' },
-    { type: 'image', name: 'Imagem', icon: '🖼️' },
-    { type: 'button', name: 'Botão', icon: '🔘' },
-    { type: 'spacer', name: 'Espaçador', icon: '⬜' },
-    { type: 'quiz-question', name: 'Questão Quiz', icon: '❓' }
   ];
 
+  const blockTypeInfo = {
+    header: { icon: '📄', name: 'Cabeçalho', description: 'Título e subtítulo' },
+    text: { icon: '📝', name: 'Texto', description: 'Parágrafo de texto' },
+    image: { icon: '🖼️', name: 'Imagem', description: 'Imagem com alt text' },
+    button: { icon: '🔘', name: 'Botão', description: 'Botão clicável' },
+    spacer: { icon: '⬜', name: 'Espaçador', description: 'Espaço em branco' }
+  };
+
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Demo de Componentes</h1>
-        <p className="text-gray-600">
-          Demonstração dos componentes do editor com funcionalidades completas
-        </p>
-      </div>
+    <EditorProvider>
+      <div className="container mx-auto p-6 max-w-6xl">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">Demo dos Blocos do Editor</h1>
+          <p className="text-gray-600">
+            Visualize como os diferentes tipos de blocos são renderizados
+          </p>
+        </div>
 
-      <Tabs defaultValue="editor" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="editor">Editor</TabsTrigger>
-          <TabsTrigger value="blocks">Blocos Disponíveis</TabsTrigger>
-        </TabsList>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="editor">Editor</TabsTrigger>
+            <TabsTrigger value="preview">Preview</TabsTrigger>
+            <TabsTrigger value="docs">Documentação</TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="editor" className="space-y-6">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <Button
-                variant={isPreviewMode ? "default" : "outline"}
-                onClick={() => setIsPreviewMode(!isPreviewMode)}
-              >
-                {isPreviewMode ? <EyeOff className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
-                {isPreviewMode ? 'Sair do Preview' : 'Preview'}
-              </Button>
-              <Badge variant="secondary">
-                {blocks.length} bloco{blocks.length !== 1 ? 's' : ''}
-              </Badge>
-            </div>
-            
-            <div className="flex gap-2">
-              {availableBlockTypes.map(blockType => (
-                <Button
-                  key={blockType.type}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => addNewBlock(blockType.type as EditorBlock['type'])}
-                >
-                  <span className="mr-1">{blockType.icon}</span>
-                  {blockType.name}
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            {blocks
-              .sort((a, b) => a.order - b.order)
-              .map(block => (
-                <Card key={block.id} className="relative">
-                  <CardContent className="p-0">
-                    <BlockComponents
-                      block={block}
-                      isSelected={selectedBlockId === block.id}
-                      isEditing={!isPreviewMode}
-                      onUpdate={(content) => handleBlockUpdate(block.id, content)}
-                      onSelect={() => setSelectedBlockId(block.id)}
-                    />
-                    
-                    {!isPreviewMode && (
-                      <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => setSelectedBlockId(block.id)}
-                        >
-                          <Edit2 className="h-3 w-3" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => handleBlockDelete(block.id)}
-                        >
-                          <Trash2 className="h-3 w-3" />
+          <TabsContent value="editor" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  🎨 Modo Editor
+                  <Badge variant="secondary">Editável</Badge>
+                </CardTitle>
+                <CardDescription>
+                  Blocos com controles de edição ativados
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {mockBlocks.map((block) => (
+                    <div key={block.id} className="border rounded-lg p-4 bg-gray-50">
+                      <div className="flex justify-between items-center mb-2">
+                        <Badge variant="outline">
+                          {blockTypeInfo[block.type as keyof typeof blockTypeInfo]?.icon} {' '}
+                          {blockTypeInfo[block.type as keyof typeof blockTypeInfo]?.name}
+                        </Badge>
+                        <Button variant="outline" size="sm">
+                          Editar
                         </Button>
                       </div>
-                    )}
-                  </CardContent>
-                </Card>
-              ))}
-          </div>
-        </TabsContent>
+                      <BlockComponents
+                        block={block}
+                        isSelected={false}
+                        isEditing={true}
+                        onUpdate={() => {}}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-        <TabsContent value="blocks" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {availableBlockTypes.map(blockType => (
-              <Card key={blockType.type}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <span>{blockType.icon}</span>
-                    {blockType.name}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-600 mb-3">
-                    Componente do tipo {blockType.type}
-                  </p>
-                  <Button
-                    onClick={() => addNewBlock(blockType.type as EditorBlock['type'])}
-                    className="w-full"
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Adicionar
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
-    </div>
+          <TabsContent value="preview" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  👁️ Modo Preview
+                  <Badge variant="secondary">Somente Leitura</Badge>
+                </CardTitle>
+                <CardDescription>
+                  Blocos como aparecerão para o usuário final
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {mockBlocks.map((block) => (
+                    <BlockComponents
+                      key={block.id}
+                      block={block}
+                      isSelected={false}
+                      isEditing={false}
+                      onUpdate={() => {}}
+                    />
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="docs" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>📚 Documentação dos Blocos</CardTitle>
+                <CardDescription>
+                  Informações sobre cada tipo de bloco disponível
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-4">
+                  {Object.entries(blockTypeInfo).map(([type, info]) => (
+                    <div key={type} className="border rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-2xl">{info.icon}</span>
+                        <h3 className="font-semibold">{info.name}</h3>
+                        <Badge variant="outline">{type}</Badge>
+                      </div>
+                      <p className="text-gray-600 mb-3">{info.description}</p>
+                      <div className="text-sm text-gray-500">
+                        <strong>Propriedades:</strong>
+                        <ul className="mt-1 ml-4 list-disc">
+                          {type === 'header' && (
+                            <>
+                              <li>title: string - Título principal</li>
+                              <li>subtitle: string - Subtítulo opcional</li>
+                            </>
+                          )}
+                          {type === 'text' && (
+                            <li>text: string - Conteúdo do texto</li>
+                          )}
+                          {type === 'image' && (
+                            <>
+                              <li>imageUrl: string - URL da imagem</li>
+                              <li>alt: string - Texto alternativo</li>
+                            </>
+                          )}
+                          {type === 'button' && (
+                            <>
+                              <li>text: string - Texto do botão</li>
+                              <li>url: string - URL de destino</li>
+                              <li>variant: 'default' | 'outline' - Estilo</li>
+                            </>
+                          )}
+                          {type === 'spacer' && (
+                            <li>height: number - Altura em pixels</li>
+                          )}
+                        </ul>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </EditorProvider>
   );
 };
 

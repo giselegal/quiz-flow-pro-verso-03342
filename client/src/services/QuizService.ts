@@ -1,44 +1,11 @@
 
 import { createClient } from '@supabase/supabase-js';
+import { Quiz, QuizQuestion, QuizWithQuestions } from '../types/supabase';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-export interface Quiz {
-  id: string;
-  title: string;
-  description: string | null;
-  author_id: string;
-  category: string;
-  difficulty: string | null;
-  time_limit: number | null;
-  settings: any;
-  is_public: boolean;
-  is_published: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface QuizQuestion {
-  id: string;
-  quiz_id: string;
-  question_text: string;
-  question_type: string;
-  options: any;
-  correct_answers: any;
-  points: number | null;
-  time_limit: number | null;
-  required: boolean | null;
-  explanation: string | null;
-  hint: string | null;
-  media_url: string | null;
-  media_type: string | null;
-  tags: string[];
-  order_index: number;
-  created_at: string;
-}
 
 export class QuizService {
   static async createQuiz(quizData: Omit<Quiz, 'id' | 'created_at' | 'updated_at'>): Promise<Quiz> {
@@ -86,6 +53,17 @@ export class QuizService {
     return data;
   }
 
+  static async getQuizById(id: string): Promise<QuizWithQuestions | null> {
+    const quiz = await this.getQuiz(id);
+    if (!quiz) return null;
+
+    const questions = await this.getQuizQuestions(id);
+    return {
+      ...quiz,
+      questions
+    };
+  }
+
   static async updateQuiz(id: string, updates: Partial<Quiz>): Promise<Quiz> {
     const { data, error } = await supabase
       .from('quizzes')
@@ -110,6 +88,22 @@ export class QuizService {
     if (error) {
       throw new Error(`Erro ao deletar quiz: ${error.message}`);
     }
+  }
+
+  static async duplicateQuiz(id: string): Promise<Quiz> {
+    const originalQuiz = await this.getQuiz(id);
+    if (!originalQuiz) {
+      throw new Error('Quiz não encontrado');
+    }
+
+    const { id: _, created_at, updated_at, ...quizData } = originalQuiz;
+    const duplicatedQuiz = await this.createQuiz({
+      ...quizData,
+      title: `${originalQuiz.title} (Cópia)`,
+      is_published: false
+    });
+
+    return duplicatedQuiz;
   }
 
   static async getQuizQuestions(quizId: string): Promise<QuizQuestion[]> {
@@ -140,6 +134,29 @@ export class QuizService {
     return data;
   }
 
+  static async addQuestion(quizId: string, questionData: Partial<QuizQuestion>): Promise<QuizQuestion> {
+    const questionsCount = await this.getQuizQuestions(quizId);
+    
+    const newQuestion: Omit<QuizQuestion, 'id' | 'created_at'> = {
+      quiz_id: quizId,
+      question_text: questionData.question_text || 'Nova pergunta',
+      question_type: questionData.question_type || 'multiple_choice',
+      options: questionData.options || [],
+      correct_answers: questionData.correct_answers || [],
+      points: questionData.points || 1,
+      time_limit: questionData.time_limit || null,
+      required: questionData.required || true,
+      explanation: questionData.explanation || null,
+      hint: questionData.hint || null,
+      media_url: questionData.media_url || null,
+      media_type: questionData.media_type || null,
+      tags: questionData.tags || [],
+      order_index: questionsCount.length
+    };
+
+    return this.createQuestion(newQuestion);
+  }
+
   static async updateQuestion(id: string, updates: Partial<QuizQuestion>): Promise<QuizQuestion> {
     const { data, error } = await supabase
       .from('quiz_questions')
@@ -166,6 +183,32 @@ export class QuizService {
     }
   }
 
+  static async reorderQuestions(quizId: string, questionIds: string[]): Promise<void> {
+    const updates = questionIds.map((id, index) => ({
+      id,
+      order_index: index
+    }));
+
+    for (const update of updates) {
+      await this.updateQuestion(update.id, { order_index: update.order_index });
+    }
+  }
+
+  static async getPublicQuizzes(): Promise<Quiz[]> {
+    const { data, error } = await supabase
+      .from('quizzes')
+      .select('*')
+      .eq('is_public', true)
+      .eq('is_published', true)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      throw new Error(`Erro ao buscar quizzes públicos: ${error.message}`);
+    }
+
+    return data || [];
+  }
+
   static async publishQuiz(id: string): Promise<Quiz> {
     return this.updateQuiz(id, { is_published: true });
   }
@@ -174,3 +217,5 @@ export class QuizService {
     return this.updateQuiz(id, { is_published: false });
   }
 }
+
+export { Quiz, QuizQuestion, QuizWithQuestions };
