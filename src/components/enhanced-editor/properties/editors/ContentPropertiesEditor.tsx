@@ -1,445 +1,310 @@
 
 import React from 'react';
-import { Block } from '@/types/editor';
-import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
-import { QuestionPropertiesPanel } from '../../properties/QuestionPropertiesPanel';
+import { Switch } from '@/components/ui/switch';
+import { Block } from '@/types/editor';
+import { QuestionPropertiesPanel } from '@/components/editor/properties/QuestionPropertiesPanel';
 
 interface ContentPropertiesEditorProps {
   block: Block;
-  onUpdate: (content: any) => void;
+  onUpdate: (updates: any) => void;
 }
 
 export function ContentPropertiesEditor({ block, onUpdate }: ContentPropertiesEditorProps) {
-  const isQuizQuestionBlock = block.type === 'quiz-question' || 
-                              block.type === 'quiz-question-configurable' ||
-                              block.type === 'QuizQuestionBlock' ||
-                              block.type === 'QuizQuestionBlockConfigurable';
+  const { content = {}, type } = block;
 
-  if (isQuizQuestionBlock) {
+  // Para blocos de quiz-question-configurable, usar o painel especializado
+  if (type === 'quiz-question-configurable') {
     return (
       <QuestionPropertiesPanel
-        selectedBlock={block}
-        onBlockPropertyChange={(property, value) => {
-          onUpdate({ [property]: value });
-        }}
-        onNestedPropertyChange={(path, value) => {
-          const pathArray = path.split('.');
-          const updatedContent = { ...block.content };
-          let current = updatedContent;
-          
-          for (let i = 0; i < pathArray.length - 1; i++) {
-            if (!current[pathArray[i]]) {
-              current[pathArray[i]] = {};
-            }
-            current = current[pathArray[i]];
-          }
-          
-          current[pathArray[pathArray.length - 1]] = value;
-          onUpdate(updatedContent);
-        }}
+        block={block}
+        onUpdate={onUpdate}
       />
     );
   }
 
-  switch (block.type) {
+  const handleInputChange = (field: string, value: any) => {
+    onUpdate({ [field]: value });
+  };
+
+  const renderBasicFields = () => (
+    <>
+      {/* Título */}
+      <div className="space-y-2">
+        <Label htmlFor="title">Título</Label>
+        <Input
+          id="title"
+          value={content.title || ''}
+          onChange={(e) => handleInputChange('title', e.target.value)}
+          placeholder="Digite o título"
+        />
+      </div>
+
+      {/* Subtítulo */}
+      <div className="space-y-2">
+        <Label htmlFor="subtitle">Subtítulo</Label>
+        <Input
+          id="subtitle"
+          value={content.subtitle || ''}
+          onChange={(e) => handleInputChange('subtitle', e.target.value)}
+          placeholder="Digite o subtítulo"
+        />
+      </div>
+
+      {/* Texto */}
+      <div className="space-y-2">
+        <Label htmlFor="text">Texto</Label>
+        <Textarea
+          id="text"
+          value={content.text || ''}
+          onChange={(e) => handleInputChange('text', e.target.value)}
+          placeholder="Digite o texto"
+          rows={4}
+        />
+      </div>
+    </>
+  );
+
+  const renderImageFields = () => (
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="imageUrl">URL da Imagem</Label>
+        <Input
+          id="imageUrl"
+          value={content.imageUrl || content.src || ''}
+          onChange={(e) => handleInputChange('imageUrl', e.target.value)}
+          placeholder="https://exemplo.com/imagem.jpg"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="alt">Texto Alternativo</Label>
+        <Input
+          id="alt"
+          value={content.alt || ''}
+          onChange={(e) => handleInputChange('alt', e.target.value)}
+          placeholder="Descrição da imagem"
+        />
+      </div>
+    </>
+  );
+
+  const renderButtonFields = () => (
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="buttonText">Texto do Botão</Label>
+        <Input
+          id="buttonText"
+          value={content.buttonText || content.text || ''}
+          onChange={(e) => handleInputChange('buttonText', e.target.value)}
+          placeholder="Clique aqui"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="buttonUrl">URL do Botão</Label>
+        <Input
+          id="buttonUrl"
+          value={content.buttonUrl || content.href || ''}
+          onChange={(e) => handleInputChange('buttonUrl', e.target.value)}
+          placeholder="https://exemplo.com"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="variant">Estilo do Botão</Label>
+        <Select 
+          value={content.variant || 'primary'}
+          onValueChange={(value) => handleInputChange('variant', value)}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Selecione o estilo" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="primary">Primário</SelectItem>
+            <SelectItem value="secondary">Secundário</SelectItem>
+            <SelectItem value="outline">Contorno</SelectItem>
+            <SelectItem value="ghost">Fantasma</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </>
+  );
+
+  const renderVideoFields = () => (
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="videoUrl">URL do Vídeo</Label>
+        <Input
+          id="videoUrl"
+          value={content.videoUrl || content.src || ''}
+          onChange={(e) => handleInputChange('videoUrl', e.target.value)}
+          placeholder="https://youtube.com/embed/..."
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="autoplay">Reprodução Automática</Label>
+        <Switch
+          checked={content.autoplay || false}
+          onCheckedChange={(checked) => handleInputChange('autoplay', checked)}
+        />
+      </div>
+    </>
+  );
+
+  const renderSpacerFields = () => (
+    <div className="space-y-2">
+      <Label htmlFor="height">Altura do Espaçador</Label>
+      <Select 
+        value={content.height || 'medium'}
+        onValueChange={(value) => handleInputChange('height', value)}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="Selecione a altura" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="small">Pequeno (20px)</SelectItem>
+          <SelectItem value="medium">Médio (40px)</SelectItem>
+          <SelectItem value="large">Grande (80px)</SelectItem>
+          <SelectItem value="xlarge">Extra Grande (120px)</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+  );
+
+  const renderListFields = () => (
+    <div className="space-y-2">
+      <Label htmlFor="items">Itens da Lista</Label>
+      <Textarea
+        id="items"
+        value={content.items ? content.items.join('\n') : ''}
+        onChange={(e) => handleInputChange('items', e.target.value.split('\n').filter(Boolean))}
+        placeholder="Digite cada item em uma linha"
+        rows={6}
+      />
+    </div>
+  );
+
+  const renderTwoColumnFields = () => (
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="leftContent">Conteúdo da Coluna Esquerda</Label>
+        <Textarea
+          id="leftContent"
+          value={content.leftContent || ''}
+          onChange={(e) => handleInputChange('leftContent', e.target.value)}
+          placeholder="Conteúdo da coluna esquerda"
+          rows={4}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="rightContent">Conteúdo da Coluna Direita</Label>
+        <Textarea
+          id="rightContent"
+          value={content.rightContent || ''}
+          onChange={(e) => handleInputChange('rightContent', e.target.value)}
+          placeholder="Conteúdo da coluna direita"
+          rows={4}
+        />
+      </div>
+    </>
+  );
+
+  // Renderizar campos específicos baseado no tipo
+  switch (type) {
+    case 'header':
     case 'headline':
       return (
         <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="title">Título</Label>
-            <Input
-              id="title"
-              value={block.content?.title || ''}
-              onChange={(e) => onUpdate({ title: e.target.value })}
-              placeholder="Digite o título..."
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="subtitle">Subtítulo</Label>
-            <Input
-              id="subtitle"
-              value={block.content?.subtitle || ''}
-              onChange={(e) => onUpdate({ subtitle: e.target.value })}
-              placeholder="Digite o subtítulo..."
-            />
-          </div>
+          {renderBasicFields()}
           <div className="space-y-2">
             <Label htmlFor="level">Nível do Título</Label>
-            <Select
-              value={block.content?.level?.toString() || '1'}
-              onValueChange={(value) => onUpdate({ level: parseInt(value) })}
+            <Select 
+              value={content.level?.toString() || '1'}
+              onValueChange={(value) => handleInputChange('level', parseInt(value))}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Selecione o nível" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="1">H1</SelectItem>
-                <SelectItem value="2">H2</SelectItem>
-                <SelectItem value="3">H3</SelectItem>
-                <SelectItem value="4">H4</SelectItem>
+                <SelectItem value="1">H1 - Título Principal</SelectItem>
+                <SelectItem value="2">H2 - Subtítulo</SelectItem>
+                <SelectItem value="3">H3 - Título Menor</SelectItem>
+                <SelectItem value="4">H4 - Título Pequeno</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
       );
-      
+
     case 'text':
       return (
         <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="text">Texto</Label>
-            <Textarea
-              id="text"
-              value={block.content?.text || ''}
-              onChange={(e) => onUpdate({ text: e.target.value })}
-              placeholder="Digite o texto..."
-              rows={6}
-            />
-          </div>
+          {renderBasicFields()}
         </div>
       );
-      
+
     case 'image':
       return (
         <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="imageUrl">URL da Imagem</Label>
-            <Input
-              id="imageUrl"
-              value={block.content?.imageUrl || ''}
-              onChange={(e) => onUpdate({ imageUrl: e.target.value })}
-              placeholder="https://exemplo.com/imagem.jpg"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="imageAlt">Texto Alternativo</Label>
-            <Input
-              id="imageAlt"
-              value={block.content?.imageAlt || ''}
-              onChange={(e) => onUpdate({ imageAlt: e.target.value })}
-              placeholder="Descrição da imagem para acessibilidade"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="caption">Legenda</Label>
-            <Input
-              id="caption"
-              value={block.content?.caption || ''}
-              onChange={(e) => onUpdate({ caption: e.target.value })}
-              placeholder="Legenda da imagem"
-            />
-          </div>
+          {renderImageFields()}
         </div>
       );
 
     case 'button':
-      return (
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="buttonText">Texto do Botão</Label>
-            <Input
-              id="buttonText"
-              value={block.content?.text || ''}
-              onChange={(e) => onUpdate({ text: e.target.value })}
-              placeholder="Clique aqui"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="buttonUrl">URL de Destino</Label>
-            <Input
-              id="buttonUrl"
-              value={block.content?.url || ''}
-              onChange={(e) => onUpdate({ url: e.target.value })}
-              placeholder="https://exemplo.com"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="buttonStyle">Estilo do Botão</Label>
-            <Select
-              value={block.content?.variant || 'default'}
-              onValueChange={(value) => onUpdate({ variant: value })}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione o estilo" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="default">Padrão</SelectItem>
-                <SelectItem value="outline">Contorno</SelectItem>
-                <SelectItem value="ghost">Fantasma</SelectItem>
-                <SelectItem value="destructive">Destrutivo</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-      );
-
-    case 'spacer':
-      return (
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="spacerHeight">Altura do Espaçador (px)</Label>
-            <Input
-              id="spacerHeight"
-              type="number"
-              value={block.content?.height || 50}
-              onChange={(e) => onUpdate({ height: parseInt(e.target.value) })}
-              placeholder="50"
-            />
-          </div>
-        </div>
-      );
-
-    case 'benefits':
-      return (
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="benefitsTitle">Título dos Benefícios</Label>
-            <Input
-              id="benefitsTitle"
-              value={block.content?.title || ''}
-              onChange={(e) => onUpdate({ title: e.target.value })}
-              placeholder="Por que escolher nosso produto?"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="benefitsItems">Lista de Benefícios (um por linha)</Label>
-            <Textarea
-              id="benefitsItems"
-              value={block.content?.items?.join('\n') || ''}
-              onChange={(e) => onUpdate({ items: e.target.value.split('\n').filter(item => item.trim()) })}
-              placeholder="Benefício 1&#10;Benefício 2&#10;Benefício 3"
-              rows={5}
-            />
-          </div>
-        </div>
-      );
-
-    case 'testimonials':
-      return (
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="testimonialsTitle">Título dos Depoimentos</Label>
-            <Input
-              id="testimonialsTitle"
-              value={block.content?.title || ''}
-              onChange={(e) => onUpdate({ title: e.target.value })}
-              placeholder="O que nossos clientes dizem"
-            />
-          </div>
-          <div className="p-4 border rounded-md bg-[#FAF9F7]">
-            <p className="text-sm text-[#8F7A6A]">
-              Os depoimentos são gerenciados no banco de dados. 
-              Use o painel administrativo para adicionar ou editar depoimentos.
-            </p>
-          </div>
-        </div>
-      );
-
-    case 'pricing':
-      return (
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="pricingTitle">Título do Preço</Label>
-            <Input
-              id="pricingTitle"
-              value={block.content?.title || ''}
-              onChange={(e) => onUpdate({ title: e.target.value })}
-              placeholder="Investimento"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="price">Preço</Label>
-            <Input
-              id="price"
-              value={block.content?.price || ''}
-              onChange={(e) => onUpdate({ price: e.target.value })}
-              placeholder="R$ 297,00"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="originalPrice">Preço Original</Label>
-            <Input
-              id="originalPrice"
-              value={block.content?.originalPrice || ''}
-              onChange={(e) => onUpdate({ originalPrice: e.target.value })}
-              placeholder="R$ 497,00"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="installments">Parcelamento</Label>
-            <Input
-              id="installments"
-              value={block.content?.installments || ''}
-              onChange={(e) => onUpdate({ installments: e.target.value })}
-              placeholder="12x de R$ 29,70"
-            />
-          </div>
-        </div>
-      );
-
-    case 'guarantee':
-      return (
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="guaranteeTitle">Título da Garantia</Label>
-            <Input
-              id="guaranteeTitle"
-              value={block.content?.title || ''}
-              onChange={(e) => onUpdate({ title: e.target.value })}
-              placeholder="Garantia de 30 dias"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="guaranteeText">Texto da Garantia</Label>
-            <Textarea
-              id="guaranteeText"
-              value={block.content?.text || ''}
-              onChange={(e) => onUpdate({ text: e.target.value })}
-              placeholder="Descrição da garantia oferecida..."
-              rows={4}
-            />
-          </div>
-        </div>
-      );
-
     case 'cta':
       return (
         <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="ctaTitle">Título da CTA</Label>
-            <Input
-              id="ctaTitle"
-              value={block.content?.title || ''}
-              onChange={(e) => onUpdate({ title: e.target.value })}
-              placeholder="Não perca esta oportunidade!"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="ctaText">Texto do Botão</Label>
-            <Input
-              id="ctaText"
-              value={block.content?.buttonText || ''}
-              onChange={(e) => onUpdate({ buttonText: e.target.value })}
-              placeholder="Quero garantir minha vaga!"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="ctaUrl">URL de Destino</Label>
-            <Input
-              id="ctaUrl"
-              value={block.content?.url || ''}
-              onChange={(e) => onUpdate({ url: e.target.value })}
-              placeholder="https://checkout.exemplo.com"
-            />
-          </div>
+          {renderButtonFields()}
         </div>
       );
 
     case 'video':
       return (
         <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="videoUrl">URL do Vídeo</Label>
-            <Input
-              id="videoUrl"
-              value={block.content?.videoUrl || ''}
-              onChange={(e) => onUpdate({ videoUrl: e.target.value })}
-              placeholder="https://youtube.com/embed/..."
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="videoTitle">Título do Vídeo</Label>
-            <Input
-              id="videoTitle"
-              value={block.content?.title || ''}
-              onChange={(e) => onUpdate({ title: e.target.value })}
-              placeholder="Título do vídeo"
-            />
-          </div>
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="autoplay"
-              checked={block.content?.autoplay || false}
-              onCheckedChange={(checked) => onUpdate({ autoplay: checked })}
-            />
-            <Label htmlFor="autoplay">Reprodução automática</Label>
-          </div>
+          {renderBasicFields()}
+          {renderVideoFields()}
+        </div>
+      );
+
+    case 'spacer':
+      return (
+        <div className="space-y-4">
+          {renderSpacerFields()}
+        </div>
+      );
+
+    case 'benefits':
+    case 'testimonials':
+      return (
+        <div className="space-y-4">
+          {renderBasicFields()}
+          {renderListFields()}
         </div>
       );
 
     case 'two-column':
       return (
         <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="leftContent">Conteúdo da Coluna Esquerda</Label>
-            <Textarea
-              id="leftContent"
-              value={block.content?.leftContent || ''}
-              onChange={(e) => onUpdate({ leftContent: e.target.value })}
-              placeholder="Conteúdo da coluna esquerda..."
-              rows={4}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="rightContent">Conteúdo da Coluna Direita</Label>
-            <Textarea
-              id="rightContent"
-              value={block.content?.rightContent || ''}
-              onChange={(e) => onUpdate({ rightContent: e.target.value })}
-              placeholder="Conteúdo da coluna direita..."
-              rows={4}
-            />
-          </div>
-        </div>
-      );
-
-    case 'quiz-start-page':
-      return (
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="quizTitle">Título do Quiz</Label>
-            <Input
-              id="quizTitle"
-              value={block.content?.title || ''}
-              onChange={(e) => onUpdate({ title: e.target.value })}
-              placeholder="Descubra seu estilo pessoal"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="quizDescription">Descrição do Quiz</Label>
-            <Textarea
-              id="quizDescription"
-              value={block.content?.description || ''}
-              onChange={(e) => onUpdate({ description: e.target.value })}
-              placeholder="Responda às perguntas para descobrir..."
-              rows={3}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="startButtonText">Texto do Botão Iniciar</Label>
-            <Input
-              id="startButtonText"
-              value={block.content?.buttonText || ''}
-              onChange={(e) => onUpdate({ buttonText: e.target.value })}
-              placeholder="Começar Quiz"
-            />
-          </div>
+          {renderBasicFields()}
+          {renderTwoColumnFields()}
         </div>
       );
 
     case 'options-grid':
       return (
         <div className="space-y-4">
+          {renderBasicFields()}
           <div className="space-y-2">
-            <Label htmlFor="gridColumns">Número de Colunas</Label>
-            <Select
-              value={block.content?.columns?.toString() || '2'}
-              onValueChange={(value) => onUpdate({ columns: parseInt(value) })}
+            <Label htmlFor="columns">Número de Colunas</Label>
+            <Select 
+              value={content.columns?.toString() || '2'}
+              onValueChange={(value) => handleInputChange('columns', parseInt(value))}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Selecione o número de colunas" />
@@ -452,35 +317,63 @@ export function ContentPropertiesEditor({ block, onUpdate }: ContentPropertiesEd
               </SelectContent>
             </Select>
           </div>
+          {renderListFields()}
+        </div>
+      );
+
+    case 'pricing':
+      return (
+        <div className="space-y-4">
+          {renderBasicFields()}
           <div className="space-y-2">
-            <Label htmlFor="gridGap">Espaçamento entre itens</Label>
-            <Select
-              value={block.content?.gap || 'medium'}
-              onValueChange={(value) => onUpdate({ gap: value })}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione o espaçamento" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="small">Pequeno</SelectItem>
-                <SelectItem value="medium">Médio</SelectItem>
-                <SelectItem value="large">Grande</SelectItem>
-              </SelectContent>
-            </Select>
+            <Label htmlFor="price">Preço</Label>
+            <Input
+              id="price"
+              value={content.price || ''}
+              onChange={(e) => handleInputChange('price', e.target.value)}
+              placeholder="R$ 97,00"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="originalPrice">Preço Original</Label>
+            <Input
+              id="originalPrice"
+              value={content.originalPrice || ''}
+              onChange={(e) => handleInputChange('originalPrice', e.target.value)}
+              placeholder="R$ 197,00"
+            />
           </div>
         </div>
       );
-      
+
+    case 'guarantee':
+      return (
+        <div className="space-y-4">
+          {renderBasicFields()}
+          <div className="space-y-2">
+            <Label htmlFor="period">Período de Garantia</Label>
+            <Input
+              id="period"
+              value={content.period || ''}
+              onChange={(e) => handleInputChange('period', e.target.value)}
+              placeholder="30 dias"
+            />
+          </div>
+        </div>
+      );
+
     default:
       return (
-        <div className="p-4 border border-[#B89B7A]/20 rounded-md bg-[#FAF9F7]">
-          <p className="text-[#8F7A6A]">
-            Editor de propriedades não implementado para o tipo: <strong>{block.type}</strong>
-          </p>
-          <p className="text-sm text-[#8F7A6A] mt-2">
-            Este tipo de bloco pode ser adicionado à página, mas suas propriedades 
-            específicas precisam ser configuradas via código.
-          </p>
+        <div className="space-y-4">
+          {renderBasicFields()}
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <p className="text-sm text-gray-600">
+              Tipo de bloco: <strong>{type}</strong>
+            </p>
+            <p className="text-xs text-gray-500 mt-1">
+              Propriedades básicas disponíveis para edição.
+            </p>
+          </div>
         </div>
       );
   }

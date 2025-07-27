@@ -1,30 +1,24 @@
+
 import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2, Copy, Eye, EyeOff } from 'lucide-react';
 import { UniversalBlockRenderer } from '../blocks/UniversalBlockRenderer';
-import { DeleteBlockButton } from '../DeleteBlockButton';
+import { Block } from '@/types/editor';
 
 // Utility function for class names
 const cn = (...classes: (string | undefined | boolean)[]): string => {
   return classes.filter(Boolean).join(' ');
 };
 
-// Tipo local para BlockData
-interface BlockData {
-  id: string;
-  type: string;
-  properties: Record<string, any>;
-}
-
 interface SortableBlockItemProps {
-  block: BlockData;
+  block: Block;
   isSelected: boolean;
   onSelect: () => void;
   onDelete: () => void;
   onDuplicate: () => void;
   onToggleVisibility: () => void;
-  onSaveInline: (blockId: string, updates: Partial<BlockData>) => void;
+  onSaveInline: (blockId: string, updates: Partial<Block>) => void;
   disabled?: boolean;
   className?: string;
 }
@@ -70,7 +64,7 @@ export const SortableBlockItem: React.FC<SortableBlockItemProps> = ({
       style={style}
       className={cn(
         'group relative w-full rounded-lg transition-all duration-200',
-        'flex flex-col', // Layout flexível vertical
+        'flex flex-col',
         isDragging && 'opacity-50 scale-105 z-50',
         isOver && 'ring-1 ring-blue-300/50',
         isSelected && 'ring-1 ring-blue-400/60 shadow-sm',
@@ -78,12 +72,13 @@ export const SortableBlockItem: React.FC<SortableBlockItemProps> = ({
         className
       )}
       onClick={onSelect}
+      data-block-id={block.id}
     >
-      {/* Controls Overlay - SEMPRE VISÍVEL PARA DEBUG */}
+      {/* Controls Overlay */}
       <div className={cn(
         'absolute top-2 right-2 flex gap-1 transition-opacity z-20 bg-white/90 backdrop-blur-sm rounded-md p-1 shadow-lg border border-gray-200',
-        // FORÇAR VISIBILIDADE PARA DEBUG
-        'opacity-100', // Sempre visível
+        'opacity-0 group-hover:opacity-100',
+        isSelected && 'opacity-100',
         'md:gap-1 gap-0.5',
         'md:p-1 p-0.5'
       )}>
@@ -125,47 +120,22 @@ export const SortableBlockItem: React.FC<SortableBlockItemProps> = ({
           <Copy className="w-2.5 h-2.5 md:w-3 md:h-3 text-gray-600" />
         </button>
 
-        {/* Delete - SOLUÇÃO DEFINITIVA */}
+        {/* Delete */}
         <button
           type="button"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            
-            console.log(`🚨 EXCLUSÃO DIRETA - Bloco: ${block.id}`);
-            
-            // MÉTODO 1: Usar a função onDelete
-            try {
-              onDelete();
-              console.log('✅ onDelete() executado');
-            } catch (err) {
-              console.error('❌ Erro onDelete:', err);
-            }
-            
-            // MÉTODO 2: Remover elemento DOM imediatamente
-            const element = e.currentTarget.closest('[data-block-id]') as HTMLElement;
-            if (element) {
-              console.log('🧨 Removendo elemento DOM');
-              element.style.opacity = '0';
-              element.style.transform = 'scale(0)';
-              setTimeout(() => element.remove(), 300);
-            }
-            
-            // MÉTODO 3: Forçar via localStorage (backup)
-            const currentBlocks = JSON.parse(localStorage.getItem('editorBlocks') || '[]');
-            const newBlocks = currentBlocks.filter((b: any) => b.id !== block.id);
-            localStorage.setItem('editorBlocks', JSON.stringify(newBlocks));
-            
-            console.log(`🎯 BLOCO ${block.id} MARCADO PARA EXCLUSÃO`);
+            onDelete();
           }}
-          className="w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-md flex items-center justify-center shadow-lg border-2 border-red-700 transition-all"
-          title="EXCLUIR BLOCO"
+          className="w-5 h-5 md:w-6 md:h-6 p-0 bg-red-500 hover:bg-red-600 text-white rounded-sm flex items-center justify-center"
+          title="Excluir bloco"
         >
-          <Trash2 className="w-4 h-4" />
+          <Trash2 className="w-2.5 h-2.5 md:w-3 md:h-3" />
         </button>
       </div>
 
-      {/* Block Content - Using UniversalBlockRenderer */}
+      {/* Block Content */}
       <div className={`relative w-full flex-1 ${isHidden ? 'pointer-events-none' : ''}`}>
         <div className={`w-full h-full transition-all duration-200 ${
           isDragging ? 'pointer-events-none' : ''
@@ -184,7 +154,7 @@ export const SortableBlockItem: React.FC<SortableBlockItemProps> = ({
           />
         </div>
 
-        {/* Block Type Label - Bottom Left when selected */}
+        {/* Block Type Label */}
         {isSelected && (
           <div className="absolute bottom-2 left-2 bg-gray-600/80 text-white text-xs px-2 py-1 rounded-md shadow-sm opacity-75">
             {block.type}
@@ -201,16 +171,6 @@ export const SortableBlockItem: React.FC<SortableBlockItemProps> = ({
           </div>
         )}
       </div>
-
-      {/* Drop Zone Indicators */}
-      <div
-        className="absolute -top-2 left-0 right-0 h-1 bg-blue-500 opacity-0 transition-opacity"
-        data-drop-zone="before"
-      />
-      <div
-        className="absolute -bottom-2 left-0 right-0 h-1 bg-blue-500 opacity-0 transition-opacity"
-        data-drop-zone="after"
-      />
     </div>
   );
 };
