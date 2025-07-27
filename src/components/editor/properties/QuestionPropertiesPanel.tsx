@@ -1,468 +1,297 @@
-/**
- * PAINEL DE PROPRIEDADES AVANÇADO PARA QUESTÕES
- * Permite configurar imagens, pontuação e categorias das opções
- */
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Block } from '@/types/editor';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
+import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { CORRECT_QUIZ_QUESTIONS, STYLE_CATEGORIES } from '@/data/correctQuizQuestions';
+import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Plus, 
-  Trash2, 
-  Image as ImageIcon, 
-  Star, 
-  Tag, 
-  Settings,
-  Upload,
-  Eye,
-  EyeOff
-} from 'lucide-react';
-
-// Categorias de estilo disponíveis
-const STYLE_CATEGORIES = [
-  { id: 'Natural', name: 'Natural', color: '#8B7355' },
-  { id: 'Clássico', name: 'Clássico', color: '#4A4A4A' },
-  { id: 'Contemporâneo', name: 'Contemporâneo', color: '#2563EB' },
-  { id: 'Elegante', name: 'Elegante', color: '#7C3AED' },
-  { id: 'Romântico', name: 'Romântico', color: '#EC4899' },
-  { id: 'Sexy', name: 'Sexy', color: '#EF4444' },
-  { id: 'Dramático', name: 'Dramático', color: '#1F2937' },
-  { id: 'Criativo', name: 'Criativo', color: '#F59E0B' },
-];
-
-interface QuestionOption {
-  id: string;
-  text: string;
-  imageUrl?: string;
-  styleCategory: string;
-  points: number;
-  keywords: string[];
-}
 
 interface QuestionPropertiesPanelProps {
-  block: any;
-  onPropertyChange: (key: string, value: any) => void;
-  onClose?: () => void;
+  selectedBlock: Block;
+  onBlockPropertyChange: (property: string, value: any) => void;
+  onNestedPropertyChange: (path: string, value: any) => void;
 }
 
+const CATEGORY_COLORS = {
+  'Natural': '#8B7355',
+  'Clássico': '#4A4A4A',
+  'Contemporâneo': '#2563EB',
+  'Elegante': '#7C3AED',
+  'Romântico': '#EC4899',
+  'Sexy': '#EF4444',
+  'Dramático': '#1F2937',
+  'Criativo': '#F59E0B'
+};
+
 export const QuestionPropertiesPanel: React.FC<QuestionPropertiesPanelProps> = ({
-  block,
-  onPropertyChange,
-  onClose
+  selectedBlock,
+  onBlockPropertyChange,
+  onNestedPropertyChange
 }) => {
-  const [activeTab, setActiveTab] = useState('basic');
-  const [previewMode, setPreviewMode] = useState(false);
+  const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
+  
+  const questionData = selectedBlock.content?.questionData || CORRECT_QUIZ_QUESTIONS[0];
+  const showImages = selectedBlock.content?.showImages ?? true;
+  const allowMultiple = selectedBlock.content?.allowMultiple ?? false;
+  const maxSelections = selectedBlock.content?.maxSelections ?? 1;
+  const autoAdvance = selectedBlock.content?.autoAdvance ?? false;
+  const questionId = selectedBlock.content?.questionId || 'q1';
 
-  // Props padrão do bloco
-  const {
-    question = 'Qual dessas opções representa melhor seu estilo?',
-    options = [
-      { id: '1', text: 'Opção 1', styleCategory: 'Natural', points: 1, keywords: [] },
-      { id: '2', text: 'Opção 2', styleCategory: 'Clássico', points: 1, keywords: [] },
-      { id: '3', text: 'Opção 3', styleCategory: 'Contemporâneo', points: 1, keywords: [] },
-    ],
-    allowMultiple = true,
-    maxSelections = 3,
-    showImages = true,
-    autoAdvance = false,
-    questionId = block?.id || 'question-1'
-  } = block?.props || {};
+  const handleQuestionSelect = (index: number) => {
+    setSelectedQuestionIndex(index);
+    onBlockPropertyChange('questionData', CORRECT_QUIZ_QUESTIONS[index]);
+    onBlockPropertyChange('questionId', `q${index + 1}`);
+  };
 
-  // Adicionar nova opção
-  const addOption = () => {
-    const newOption: QuestionOption = {
-      id: `option-${Date.now()}`,
-      text: 'Nova opção',
-      styleCategory: 'Natural',
-      points: 1,
-      keywords: []
+  const handleOptionUpdate = (optionIndex: number, field: string, value: any) => {
+    const updatedOptions = [...questionData.options];
+    updatedOptions[optionIndex] = {
+      ...updatedOptions[optionIndex],
+      [field]: value
     };
     
-    onPropertyChange('options', [...options, newOption]);
-  };
-
-  // Remover opção
-  const removeOption = (optionId: string) => {
-    onPropertyChange('options', options.filter((opt: QuestionOption) => opt.id !== optionId));
-  };
-
-  // Atualizar opção específica
-  const updateOption = (optionId: string, field: string, value: any) => {
-    const updatedOptions = options.map((opt: QuestionOption) => 
-      opt.id === optionId ? { ...opt, [field]: value } : opt
-    );
-    onPropertyChange('options', updatedOptions);
-  };
-
-  // Adicionar palavra-chave
-  const addKeyword = (optionId: string, keyword: string) => {
-    if (!keyword.trim()) return;
+    const updatedQuestionData = {
+      ...questionData,
+      options: updatedOptions
+    };
     
-    const option = options.find((opt: QuestionOption) => opt.id === optionId);
-    if (option && !option.keywords.includes(keyword)) {
-      updateOption(optionId, 'keywords', [...option.keywords, keyword]);
-    }
-  };
-
-  // Remover palavra-chave
-  const removeKeyword = (optionId: string, keyword: string) => {
-    const option = options.find((opt: QuestionOption) => opt.id === optionId);
-    if (option) {
-      updateOption(optionId, 'keywords', option.keywords.filter(k => k !== keyword));
-    }
-  };
-
-  const getCategoryColor = (categoryId: string) => {
-    return STYLE_CATEGORIES.find(cat => cat.id === categoryId)?.color || '#6B7280';
+    onBlockPropertyChange('questionData', updatedQuestionData);
   };
 
   return (
-    <div className="w-80 bg-white border-l border-gray-200 overflow-y-auto">
-      <div className="p-4 border-b bg-gray-50">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="font-semibold text-gray-900">Propriedades da Questão</h3>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setPreviewMode(!previewMode)}
+    <div className="space-y-6">
+      <Tabs defaultValue="basic" className="w-full">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="basic">Básico</TabsTrigger>
+          <TabsTrigger value="options">Opções</TabsTrigger>
+          <TabsTrigger value="advanced">Avançado</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="basic" className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="questionSelect">Questão Original</Label>
+            <Select
+              value={selectedQuestionIndex.toString()}
+              onValueChange={(value) => handleQuestionSelect(parseInt(value))}
             >
-              {previewMode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </Button>
-            {onClose && (
-              <Button variant="ghost" size="sm" onClick={onClose}>
-                ×
-              </Button>
-            )}
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione uma questão" />
+              </SelectTrigger>
+              <SelectContent>
+                {CORRECT_QUIZ_QUESTIONS.map((question, index) => (
+                  <SelectItem key={index} value={index.toString()}>
+                    Questão {index + 1}: {question.question.substring(0, 50)}...
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-        </div>
-        <p className="text-sm text-gray-600">
-          Configure pergunta, opções, pontuação e categorias
-        </p>
-      </div>
 
-      <div className="p-4">
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="basic">Básico</TabsTrigger>
-            <TabsTrigger value="options">Opções</TabsTrigger>
-            <TabsTrigger value="advanced">Avançado</TabsTrigger>
-          </TabsList>
+          <div className="space-y-2">
+            <Label htmlFor="questionText">Texto da Questão</Label>
+            <Input
+              id="questionText"
+              value={questionData.question}
+              onChange={(e) => onNestedPropertyChange('questionData.question', e.target.value)}
+              placeholder="Digite a pergunta..."
+            />
+          </div>
 
-          {/* Configurações Básicas */}
-          <TabsContent value="basic" className="space-y-4">
-            <div>
-              <Label htmlFor="question">Pergunta</Label>
+          <div className="space-y-2">
+            <Label htmlFor="questionId">ID da Questão</Label>
+            <Input
+              id="questionId"
+              value={questionId}
+              onChange={(e) => onBlockPropertyChange('questionId', e.target.value)}
+              placeholder="q1"
+            />
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="allowMultiple"
+              checked={allowMultiple}
+              onCheckedChange={(checked) => onBlockPropertyChange('allowMultiple', checked)}
+            />
+            <Label htmlFor="allowMultiple">Permitir múltiplas seleções</Label>
+          </div>
+
+          {allowMultiple && (
+            <div className="space-y-2">
+              <Label htmlFor="maxSelections">Máximo de seleções</Label>
               <Input
-                id="question"
-                value={question}
-                onChange={(e) => onPropertyChange('question', e.target.value)}
-                placeholder="Digite sua pergunta..."
+                id="maxSelections"
+                type="number"
+                min="1"
+                max={questionData.options.length}
+                value={maxSelections}
+                onChange={(e) => onBlockPropertyChange('maxSelections', parseInt(e.target.value))}
               />
             </div>
+          )}
 
-            <div>
-              <Label htmlFor="questionId">ID da Questão</Label>
-              <Input
-                id="questionId"
-                value={questionId}
-                onChange={(e) => onPropertyChange('questionId', e.target.value)}
-                placeholder="question-1"
-              />
-            </div>
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="showImages"
+              checked={showImages}
+              onCheckedChange={(checked) => onBlockPropertyChange('showImages', checked)}
+            />
+            <Label htmlFor="showImages">Mostrar imagens</Label>
+          </div>
 
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="allowMultiple"
-                checked={allowMultiple}
-                onCheckedChange={(checked) => onPropertyChange('allowMultiple', checked)}
-              />
-              <Label htmlFor="allowMultiple">Permitir múltiplas seleções</Label>
-            </div>
-
-            {allowMultiple && (
-              <div>
-                <Label htmlFor="maxSelections">Máximo de seleções</Label>
-                <Select
-                  value={maxSelections.toString()}
-                  onValueChange={(value) => onPropertyChange('maxSelections', parseInt(value))}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="1">1</SelectItem>
-                    <SelectItem value="2">2</SelectItem>
-                    <SelectItem value="3">3</SelectItem>
-                    <SelectItem value="4">4</SelectItem>
-                    <SelectItem value="5">5</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="showImages"
-                checked={showImages}
-                onCheckedChange={(checked) => onPropertyChange('showImages', checked)}
-              />
-              <Label htmlFor="showImages">Mostrar imagens</Label>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="autoAdvance"
-                checked={autoAdvance}
-                onCheckedChange={(checked) => onPropertyChange('autoAdvance', checked)}
-              />
-              <Label htmlFor="autoAdvance">Avançar automaticamente</Label>
-            </div>
-          </TabsContent>
-
-          {/* Configuração de Opções */}
-          <TabsContent value="options" className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label>Opções da Questão ({options.length})</Label>
-              <Button onClick={addOption} size="sm">
-                <Plus className="w-4 h-4 mr-1" />
-                Adicionar
-              </Button>
-            </div>
-
-            <div className="space-y-4 max-h-96 overflow-y-auto">
-              {options.map((option: QuestionOption, index: number) => (
-                <Card key={option.id} className="p-3">
-                  <div className="space-y-3">
-                    {/* Texto da opção */}
-                    <div>
-                      <Label className="text-xs">Texto da Opção {index + 1}</Label>
-                      <Input
-                        value={option.text}
-                        onChange={(e) => updateOption(option.id, 'text', e.target.value)}
-                        placeholder="Texto da opção..."
-                        className="text-sm"
-                      />
-                    </div>
-
-                    {/* Imagem da opção */}
-                    {showImages && (
-                      <div>
-                        <Label className="text-xs flex items-center gap-1">
-                          <ImageIcon className="w-3 h-3" />
-                          URL da Imagem
-                        </Label>
-                        <div className="flex gap-2">
-                          <Input
-                            value={option.imageUrl || ''}
-                            onChange={(e) => updateOption(option.id, 'imageUrl', e.target.value)}
-                            placeholder="https://..."
-                            className="text-sm"
-                          />
-                          <Button variant="outline" size="sm">
-                            <Upload className="w-3 h-3" />
-                          </Button>
-                        </div>
-                        {option.imageUrl && (
-                          <div className="mt-2">
-                            <img 
-                              src={option.imageUrl} 
-                              alt={option.text}
-                              className="w-full h-20 object-cover rounded border"
-                              onError={(e) => {
-                                e.currentTarget.style.display = 'none';
-                              }}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Categoria de Estilo */}
-                    <div>
-                      <Label className="text-xs flex items-center gap-1">
-                        <Tag className="w-3 h-3" />
-                        Categoria de Estilo
-                      </Label>
-                      <Select
-                        value={option.styleCategory}
-                        onValueChange={(value) => updateOption(option.id, 'styleCategory', value)}
-                      >
-                        <SelectTrigger className="text-sm">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {STYLE_CATEGORIES.map((category) => (
-                            <SelectItem key={category.id} value={category.id}>
-                              <div className="flex items-center gap-2">
-                                <div 
-                                  className="w-3 h-3 rounded-full" 
-                                  style={{ backgroundColor: category.color }}
-                                />
-                                {category.name}
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    {/* Pontuação */}
-                    <div>
-                      <Label className="text-xs flex items-center gap-1">
-                        <Star className="w-3 h-3" />
-                        Pontuação
-                      </Label>
-                      <Input
-                        type="number"
-                        min="0"
-                        max="10"
-                        value={option.points}
-                        onChange={(e) => updateOption(option.id, 'points', parseInt(e.target.value) || 0)}
-                        className="text-sm"
-                      />
-                    </div>
-
-                    {/* Palavras-chave */}
-                    <div>
-                      <Label className="text-xs">Palavras-chave</Label>
-                      <div className="flex flex-wrap gap-1 mb-2">
-                        {option.keywords.map((keyword) => (
-                          <Badge 
-                            key={keyword} 
-                            variant="secondary"
-                            className="text-xs cursor-pointer"
-                            onClick={() => removeKeyword(option.id, keyword)}
-                          >
-                            {keyword} ×
-                          </Badge>
-                        ))}
-                      </div>
-                      <Input
-                        placeholder="Adicionar palavra-chave..."
-                        className="text-sm"
-                        onKeyPress={(e) => {
-                          if (e.key === 'Enter') {
-                            const input = e.target as HTMLInputElement;
-                            addKeyword(option.id, input.value);
-                            input.value = '';
-                          }
-                        }}
-                      />
-                    </div>
-
-                    {/* Preview da categoria */}
-                    <div className="flex items-center justify-between pt-2 border-t">
-                      <Badge 
-                        style={{ 
-                          backgroundColor: getCategoryColor(option.styleCategory),
-                          color: 'white'
-                        }}
-                      >
-                        {option.styleCategory} • {option.points} pts
-                      </Badge>
-                      
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeOption(option.id)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-
-          {/* Configurações Avançadas */}
-          <TabsContent value="advanced" className="space-y-4">
-            <Card className="p-3">
-              <CardHeader className="p-0 pb-3">
-                <CardTitle className="text-sm flex items-center gap-2">
-                  <Settings className="w-4 h-4" />
-                  Configurações de Cálculo
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0 space-y-3">
-                <div>
-                  <Label className="text-xs">Total de Pontos Possíveis</Label>
-                  <div className="text-sm text-gray-600">
-                    {options.reduce((total: number, opt: QuestionOption) => total + opt.points, 0)} pontos
-                  </div>
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="autoAdvance"
+              checked={autoAdvance}
+              onCheckedChange={(checked) => onBlockPropertyChange('autoAdvance', checked)}
+            />
+            <Label htmlFor="autoAdvance">Avançar automaticamente</Label>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="options" className="space-y-4">
+          <div className="space-y-4">
+            <h4 className="font-medium text-[#432818]">Configuração das Opções</h4>
+            
+            {questionData.options.map((option, index) => (
+              <Card key={index} className="p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h5 className="font-medium text-sm">Opção {index + 1}</h5>
+                  {option.styleCategory && (
+                    <Badge 
+                      style={{ 
+                        backgroundColor: CATEGORY_COLORS[option.styleCategory] || '#B89B7A',
+                        color: 'white'
+                      }}
+                    >
+                      {option.styleCategory}
+                    </Badge>
+                  )}
                 </div>
                 
-                <div>
-                  <Label className="text-xs">Categorias Utilizadas</Label>
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    {Array.from(new Set(options.map((opt: QuestionOption) => opt.styleCategory))).map(category => (
-                      <Badge 
-                        key={category}
-                        style={{ 
-                          backgroundColor: getCategoryColor(category),
-                          color: 'white'
-                        }}
-                        className="text-xs"
-                      >
-                        {category}
-                      </Badge>
-                    ))}
-                  </div>
+                <div className="space-y-2">
+                  <Label htmlFor={`option-text-${index}`}>Texto</Label>
+                  <Input
+                    id={`option-text-${index}`}
+                    value={option.text}
+                    onChange={(e) => handleOptionUpdate(index, 'text', e.target.value)}
+                    placeholder="Texto da opção"
+                  />
                 </div>
-
-                <div>
-                  <Label className="text-xs">Distribuição de Pontos</Label>
-                  <div className="space-y-1 text-xs">
-                    {STYLE_CATEGORIES.map(category => {
-                      const categoryPoints = options
-                        .filter((opt: QuestionOption) => opt.styleCategory === category.id)
-                        .reduce((total: number, opt: QuestionOption) => total + opt.points, 0);
-                      
-                      if (categoryPoints > 0) {
-                        return (
-                          <div key={category.id} className="flex justify-between">
-                            <span>{category.name}:</span>
-                            <span className="font-medium">{categoryPoints} pts</span>
+                
+                <div className="space-y-2">
+                  <Label htmlFor={`option-image-${index}`}>URL da Imagem</Label>
+                  <Input
+                    id={`option-image-${index}`}
+                    value={option.imageUrl || ''}
+                    onChange={(e) => handleOptionUpdate(index, 'imageUrl', e.target.value)}
+                    placeholder="https://exemplo.com/imagem.jpg"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor={`option-category-${index}`}>Categoria de Estilo</Label>
+                  <Select
+                    value={option.styleCategory || ''}
+                    onValueChange={(value) => handleOptionUpdate(index, 'styleCategory', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione uma categoria" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {STYLE_CATEGORIES.map((category) => (
+                        <SelectItem key={category} value={category}>
+                          <div className="flex items-center gap-2">
+                            <div 
+                              className="w-3 h-3 rounded-full"
+                              style={{ backgroundColor: CATEGORY_COLORS[category] }}
+                            />
+                            {category}
                           </div>
-                        );
-                      }
-                      return null;
-                    })}
-                  </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
-              </CardContent>
+                
+                <div className="space-y-2">
+                  <Label htmlFor={`option-points-${index}`}>Pontuação</Label>
+                  <Input
+                    id={`option-points-${index}`}
+                    type="number"
+                    min="0"
+                    max="10"
+                    value={option.points || 0}
+                    onChange={(e) => handleOptionUpdate(index, 'points', parseInt(e.target.value))}
+                  />
+                </div>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="advanced" className="space-y-4">
+          <div className="space-y-4">
+            <h4 className="font-medium text-[#432818]">Configurações Avançadas</h4>
+            
+            <Card className="p-4">
+              <h5 className="font-medium text-sm mb-3">Estatísticas da Questão</h5>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="text-[#8F7A6A]">Total de opções:</span>
+                  <span className="ml-2 font-medium">{questionData.options.length}</span>
+                </div>
+                <div>
+                  <span className="text-[#8F7A6A]">Total de pontos:</span>
+                  <span className="ml-2 font-medium">
+                    {questionData.options.reduce((sum, opt) => sum + (opt.points || 0), 0)}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[#8F7A6A]">Categorias ativas:</span>
+                  <span className="ml-2 font-medium">
+                    {new Set(questionData.options.map(opt => opt.styleCategory).filter(Boolean)).size}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[#8F7A6A]">Com imagens:</span>
+                  <span className="ml-2 font-medium">
+                    {questionData.options.filter(opt => opt.imageUrl).length}
+                  </span>
+                </div>
+              </div>
             </Card>
-
-            {/* Configurações de Preview */}
-            <Card className="p-3">
-              <CardHeader className="p-0 pb-3">
-                <CardTitle className="text-sm">Preview da Questão</CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="text-xs text-gray-600 mb-2">
-                  {question}
-                </div>
-                <div className="text-xs">
-                  • {options.length} opções
-                  • {allowMultiple ? `Até ${maxSelections} seleções` : '1 seleção'}
-                  • {showImages ? 'Com imagens' : 'Apenas texto'}
-                  • {autoAdvance ? 'Auto-avanço' : 'Manual'}
-                </div>
-              </CardContent>
+            
+            <Card className="p-4">
+              <h5 className="font-medium text-sm mb-3">Distribuição por Categoria</h5>
+              <div className="space-y-2">
+                {STYLE_CATEGORIES.map((category) => {
+                  const count = questionData.options.filter(opt => opt.styleCategory === category).length;
+                  if (count === 0) return null;
+                  
+                  return (
+                    <div key={category} className="flex items-center justify-between text-sm">
+                      <div className="flex items-center gap-2">
+                        <div 
+                          className="w-3 h-3 rounded-full"
+                          style={{ backgroundColor: CATEGORY_COLORS[category] }}
+                        />
+                        <span>{category}</span>
+                      </div>
+                      <span className="font-medium">{count} opções</span>
+                    </div>
+                  );
+                })}
+              </div>
             </Card>
-          </TabsContent>
-        </Tabs>
-      </div>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
-
-export default QuestionPropertiesPanel;
