@@ -42,3 +42,34 @@ export interface QuizQuestion {
 export interface QuizWithQuestions extends Quiz {
   questions: QuizQuestion[];
 }
+
+export interface Profile {
+  id: string;
+  email: string;
+  name: string;
+  avatar_url?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Database {
+  public: {
+    Tables: {
+      quizzes: {
+        Row: Quiz;
+        Insert: Omit<Quiz, 'id' | 'created_at' | 'updated_at'>;
+        Update: Partial<Omit<Quiz, 'id' | 'created_at' | 'updated_at'>>;
+      };
+      quiz_questions: {
+        Row: QuizQuestion;
+        Insert: Omit<QuizQuestion, 'id' | 'created_at'>;
+        Update: Partial<Omit<QuizQuestion, 'id' | 'created_at'>>;
+      };
+      profiles: {
+        Row: Profile;
+        Insert: Omit<Profile, 'id' | 'created_at' | 'updated_at'>;
+        Update: Partial<Omit<Profile, 'id' | 'created_at' | 'updated_at'>>;
+      };
+    };
+  };
+}
