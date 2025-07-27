@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { blockDefinitions } from '@/config/blockDefinitions';
+import { allBlockDefinitions } from '@/config/blockDefinitions';
 import { 
   Type, Image, ArrowRight, CheckCircle, Target, Play, Star, FileText, ShoppingCart, Clock, 
   MessageSquare, HelpCircle, Shield, Video, AlertTriangle, Zap, Volume2, RotateCcw, Loader, 
@@ -22,10 +22,10 @@ import {
 
 // Funções auxiliares locais
 const getCategories = (): string[] => {
-  const categorySet = new Set(blockDefinitions.map(block => block.category || 'Sem Categoria'));
+  const categorySet = new Set(allBlockDefinitions.map(block => block.category || 'Sem Categoria'));
   const categories = Array.from(categorySet);
   // Ordem específica das categorias para melhor UX
-  const priorityOrder = ['Quiz', 'Básicos', 'Layout', 'Vendas', 'Avançados', 'Inline', 'Sem Categoria'];
+  const priorityOrder = ['Funil', 'Funil - Compartilhados', 'Quiz', 'Básicos', 'Layout', 'Vendas', 'Avançados', 'Inline', 'Sem Categoria'];
   return categories.sort((a, b) => {
     const aIndex = priorityOrder.indexOf(a);
     const bIndex = priorityOrder.indexOf(b);
@@ -37,7 +37,7 @@ const getCategories = (): string[] => {
 };
 
 const getBlocksByCategory = (category: string) => 
-  blockDefinitions.filter(block => (block.category || 'Sem Categoria') === category);
+  allBlockDefinitions.filter(block => (block.category || 'Sem Categoria') === category);
 
 // Mapeamento de ícones completo
 const iconMap: { [key: string]: React.ReactNode } = {
@@ -118,7 +118,7 @@ export const SchemaDrivenComponentsSidebar: React.FC<SchemaDrivenComponentsSideb
   setCurrentPage
 }) => {
   const categories = getCategories();
-  const allBlocks = blockDefinitions;
+  const allBlocks = allBlockDefinitions;
 
   return (
     <div className="h-full flex flex-col">
