@@ -28,25 +28,25 @@ export const useNavigationValidation = (
   const [validationState, setValidationState] = useState<Record<number, ValidationResult>>({});
   const [isValidating, setIsValidating] = useState(false);
 
-  // Validar uma etapa específica
-  const validateStep = useCallback((stepNumber: number, data: StepData): ValidationResult => {
-    const step = data.steps.find(s => s.stepNumber === stepNumber);
+  // Validar uma página específica
+  const validatePage = useCallback((pageIndex: number, data: SchemaDrivenFunnelData): ValidationResult => {
+    const page = data.pages[pageIndex];
     
-    if (!step) {
+    if (!page) {
       return {
         isValid: false,
-        errors: [{ field: 'step', message: 'Etapa não encontrada', type: 'invalid' }],
+        errors: [{ field: 'page', message: 'Página não encontrada', type: 'invalid' }],
         canProceed: false
       };
     }
 
     const errors: ValidationError[] = [];
 
-    // Validações baseadas no tipo de etapa
-    switch (step.type) {
-      case 'quiz-intro':
-        // Validar se há título e descrição
-        if (!step.content?.title?.trim()) {
+    // Validações baseadas no tipo de página
+    switch (page.type) {
+      case 'intro':
+        // Validar se há título
+        if (!page.title?.trim()) {
           errors.push({
             field: 'title',
             message: 'Título é obrigatório',
@@ -55,51 +55,50 @@ export const useNavigationValidation = (
         }
         break;
 
-      case 'quiz-question':
-        // Validar pergunta
-        if (!step.content?.question?.trim()) {
+      case 'question':
+        // Validar se há blocos de pergunta
+        const questionBlocks = page.blocks.filter(block => 
+          block.type === 'options-grid' || 
+          block.type === 'text-inline' || 
+          block.type === 'heading-inline'
+        );
+        
+        if (questionBlocks.length === 0) {
           errors.push({
             field: 'question',
-            message: 'Pergunta é obrigatória',
+            message: 'Página de pergunta precisa ter componentes de questão',
             type: 'required'
           });
         }
 
-        // Validar opções
-        const options = step.content?.options || [];
-        if (options.length < 2) {
-          errors.push({
-            field: 'options',
-            message: 'Pelo menos 2 opções são necessárias',
-            type: 'incomplete'
-          });
-        }
-
-        // Verificar se todas as opções têm texto
-        options.forEach((option, index) => {
-          if (!option.text?.trim()) {
+        // Verificar se há opções
+        const optionsBlock = page.blocks.find(block => block.type === 'options-grid');
+        if (optionsBlock && optionsBlock.properties?.options) {
+          const options = optionsBlock.properties.options;
+          if (options.length < 2) {
             errors.push({
-              field: `option_${index}`,
-              message: `Opção ${index + 1} não pode estar vazia`,
-              type: 'required'
+              field: 'options',
+              message: 'Pelo menos 2 opções são necessárias',
+              type: 'incomplete'
             });
           }
-        });
 
-        // Validar seleção do usuário (se necessário)
-        const userSelection = step.userInput?.selectedOption;
-        if (enableAutoValidation && userSelection === undefined) {
-          errors.push({
-            field: 'selection',
-            message: 'Selecione uma opção para continuar',
-            type: 'required'
+          // Verificar se todas as opções têm texto
+          options.forEach((option: any, index: number) => {
+            if (!option.text?.trim()) {
+              errors.push({
+                field: `option_${index}`,
+                message: `Opção ${index + 1} não pode estar vazia`,
+                type: 'required'
+              });
+            }
           });
         }
         break;
 
-      case 'quiz-result':
+      case 'result':
         // Validar título do resultado
-        if (!step.content?.title?.trim()) {
+        if (!page.title?.trim()) {
           errors.push({
             field: 'title',
             message: 'Título do resultado é obrigatório',
@@ -107,38 +106,40 @@ export const useNavigationValidation = (
           });
         }
 
-        // Validar descrição
-        if (!step.content?.description?.trim()) {
+        // Verificar se há blocos de resultado
+        const resultBlocks = page.blocks.filter(block => 
+          block.type === 'result-header-inline' || 
+          block.type === 'result-card-inline' ||
+          block.type === 'style-card-inline'
+        );
+        
+        if (resultBlocks.length === 0) {
           errors.push({
-            field: 'description',
-            message: 'Descrição do resultado é obrigatória',
+            field: 'result',
+            message: 'Página de resultado precisa ter componentes de resultado',
             type: 'required'
           });
         }
         break;
 
-      case 'form-step':
-        // Validar campos do formulário
-        const formData = step.userInput?.formData || {};
-        const requiredFields = step.content?.fields?.filter(f => f.required) || [];
-        
-        requiredFields.forEach(field => {
-          if (!formData[field.name]?.trim()) {
-            errors.push({
-              field: field.name,
-              message: `${field.label} é obrigatório`,
-              type: 'required'
-            });
-          }
-        });
+      case 'offer':
+      case 'thank-you':
+        // Validar título
+        if (!page.title?.trim()) {
+          errors.push({
+            field: 'title',
+            message: 'Título é obrigatório',
+            type: 'required'
+          });
+        }
         break;
     }
 
-    // Verificar se há componentes necessários
-    if (step.blocks && step.blocks.length === 0) {
+    // Verificar se há componentes
+    if (page.blocks && page.blocks.length === 0) {
       errors.push({
         field: 'blocks',
-        message: 'Etapa precisa ter pelo menos um componente',
+        message: 'Página precisa ter pelo menos um componente',
         type: 'incomplete'
       });
     }
@@ -153,85 +154,83 @@ export const useNavigationValidation = (
     };
   }, [enableAutoValidation]);
 
-  // Validar todas as etapas
-  const validateAllSteps = useCallback(async (): Promise<Record<number, ValidationResult>> => {
+  // Validar todas as páginas
+  const validateAllPages = useCallback(async (): Promise<Record<number, ValidationResult>> => {
     setIsValidating(true);
     
     const results: Record<number, ValidationResult> = {};
     
-    stepData.steps.forEach(step => {
-      results[step.stepNumber] = validateStep(step.stepNumber, stepData);
+    funnelData.pages.forEach((page, index) => {
+      results[index] = validatePage(index, funnelData);
     });
 
     setValidationState(results);
     setIsValidating(false);
     
     return results;
-  }, [stepData, validateStep]);
+  }, [funnelData, validatePage]);
 
-  // Validar antes de navegar para próxima etapa
-  const validateForNavigation = useCallback((fromStep: number, toStep: number): Promise<boolean> => {
+  // Validar antes de navegar para próxima página
+  const validateForNavigation = useCallback((fromPage: number, toPage: number): Promise<boolean> => {
     return new Promise((resolve) => {
-      const currentStepValidation = validateStep(fromStep, stepData);
+      const currentPageValidation = validatePage(fromPage, funnelData);
       
       // Atualizar estado de validação
       setValidationState(prev => ({
         ...prev,
-        [fromStep]: currentStepValidation
+        [fromPage]: currentPageValidation
       }));
 
       // Permitir navegação se a validação passou ou se não é obrigatória
-      resolve(currentStepValidation.canProceed);
+      resolve(currentPageValidation.canProceed);
     });
-  }, [stepData, validateStep]);
+  }, [funnelData, validatePage]);
 
-  // Obter resultado de validação para uma etapa
-  const getStepValidation = useCallback((stepNumber: number): ValidationResult => {
-    return validationState[stepNumber] || {
+  // Obter resultado de validação para uma página
+  const getPageValidation = useCallback((pageIndex: number): ValidationResult => {
+    return validationState[pageIndex] || {
       isValid: true,
       errors: [],
       canProceed: true
     };
   }, [validationState]);
 
-  // Verificar se todas as etapas são válidas
-  const areAllStepsValid = useCallback((): boolean => {
+  // Verificar se todas as páginas são válidas
+  const areAllPagesValid = useCallback((): boolean => {
     return Object.values(validationState).every(result => result.isValid);
   }, [validationState]);
 
-  // Obter próxima etapa inválida
-  const getNextInvalidStep = useCallback((): number | null => {
-    const sortedSteps = stepData.steps.sort((a, b) => a.stepNumber - b.stepNumber);
-    
-    for (const step of sortedSteps) {
-      const validation = validationState[step.stepNumber];
+  // Obter próxima página inválida
+  const getNextInvalidPage = useCallback((): number | null => {
+    for (let i = 0; i < funnelData.pages.length; i++) {
+      const validation = validationState[i];
       if (validation && !validation.isValid) {
-        return step.stepNumber;
+        return i;
       }
     }
     
     return null;
-  }, [stepData, validationState]);
+  }, [funnelData, validationState]);
 
   // Calcular progresso de validação
   const getValidationProgress = useCallback((): { completed: number; total: number; percentage: number } => {
-    const total = stepData.steps.length;
+    const total = funnelData.pages.length;
     const completed = Object.values(validationState).filter(result => result.isValid).length;
     const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
     
     return { completed, total, percentage };
-  }, [stepData, validationState]);
+  }, [funnelData, validationState]);
 
-  // Auto-validar quando a etapa atual muda
+  // Auto-validar quando a página atual muda
   useEffect(() => {
-    if (validateOnStepChange && currentStep) {
-      const validation = validateStep(currentStep, stepData);
+    if (validateOnStepChange && currentStep !== undefined && currentStep >= 0) {
+      const validation = validatePage(currentStep, funnelData);
       setValidationState(prev => ({
         ...prev,
         [currentStep]: validation
       }));
     }
-  }, [currentStep, stepData, validateOnStepChange, validateStep]);
+  }, [currentStep, funnelData, validateOnStepChange, validatePage]);
 
   return {
     // Estados
@@ -239,29 +238,29 @@ export const useNavigationValidation = (
     isValidating,
     
     // Funções de validação
-    validateStep,
-    validateAllSteps,
+    validatePage,
+    validateAllPages,
     validateForNavigation,
     
     // Getters
-    getStepValidation,
-    areAllStepsValid,
-    getNextInvalidStep,
+    getPageValidation,
+    areAllPagesValid,
+    getNextInvalidPage,
     getValidationProgress,
     
     // Helpers
-    hasErrors: (stepNumber: number) => {
-      const validation = getStepValidation(stepNumber);
+    hasErrors: (pageIndex: number) => {
+      const validation = getPageValidation(pageIndex);
       return validation.errors.length > 0;
     },
     
-    canProceedFromStep: (stepNumber: number) => {
-      const validation = getStepValidation(stepNumber);
+    canProceedFromPage: (pageIndex: number) => {
+      const validation = getPageValidation(pageIndex);
       return validation.canProceed;
     },
     
-    getStepErrors: (stepNumber: number) => {
-      const validation = getStepValidation(stepNumber);
+    getPageErrors: (pageIndex: number) => {
+      const validation = getPageValidation(pageIndex);
       return validation.errors;
     }
   };
