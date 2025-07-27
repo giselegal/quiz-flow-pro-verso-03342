@@ -609,8 +609,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                     <span className="truncate">{currentPage.title}</span>
                     <Badge variant="outline" className="text-xs border-[#B89B7A]/30 text-[#8F7A6A]">
                       {currentPage.blocks.length} bloco{currentPage.blocks.length !== 1 ? 's' : ''}
-                    </Badge>
-                  </div>
+                    </div>
                 )}
               </div>
             </div>
@@ -630,6 +629,215 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
           {/* Botões Mobile - SEMPRE VISÍVEIS EM MÓBILE - Redesigned com cores da marca */}
           <div className="flex space-x-2 md:hidden">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleSave}
+              className="text-[#432818] hover:text-[#432818] hover:bg-[#B89B7A]/20"
+            >
+              <Save className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                console.log('🔄 Toggle left sidebar from mobile button');
+                setShowLeftSidebar(!showLeftSidebar);
+              }}
+              className="text-[#432818] hover:text-[#432818] hover:bg-[#B89B7A]/20"
+            >
+              <Menu className="w-4 h-4" />
+            </Button>
+          </div>
+
+          {/* Controles do Dispositivo - Redesigned com cores da marca */}
+          <div className="hidden md:flex items-center space-x-1 bg-[#fffaf7] rounded-lg p-1 border border-[#B89B7A]/20">
+            <Button
+              variant={deviceView === 'mobile' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setDeviceView('mobile')}
+              className={`h-8 px-3 transition-all duration-200 ${
+                deviceView === 'mobile'
+                  ? 'bg-[#B89B7A] text-white shadow-sm'
+                  : 'text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10'
+              }`}
+            >
+              <Smartphone className="w-4 h-4" />
+            </Button>
+            <Button
+              variant={deviceView === 'tablet' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setDeviceView('tablet')}
+              className={`h-8 px-3 transition-all duration-200 ${
+                deviceView === 'tablet'
+                  ? 'bg-[#B89B7A] text-white shadow-sm'
+                  : 'text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10'
+              }`}
+            >
+              <Tablet className="w-4 h-4" />
+            </Button>
+            <Button
+              variant={deviceView === 'desktop' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setDeviceView('desktop')}
+              className={`h-8 px-3 transition-all duration-200 ${
+                deviceView === 'desktop'
+                  ? 'bg-[#B89B7A] text-white shadow-sm'
+                  : 'text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10'
+              }`}
+            >
+              <Monitor className="w-4 h-4" />
+            </Button>
+          </div>
+
+          {/* Ações principais - Redesigned com cores da marca */}
+          <div className="flex items-center space-x-2">
+            {/* Undo/Redo */}
+            <div className="hidden lg:flex items-center space-x-1 bg-[#fffaf7] rounded-lg p-1 border border-[#B89B7A]/20">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleUndo}
+                disabled={undoStack.length === 0}
+                className="h-8 w-8 p-0 text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Desfazer"
+              >
+                <Undo2 className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleRedo}
+                disabled={redoStack.length === 0}
+                className="h-8 w-8 p-0 text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Refazer"
+              >
+                <Redo2 className="w-4 h-4" />
+              </Button>
+            </div>
+
+            {/* Ferramentas avançadas */}
+            <div className="hidden xl:flex items-center space-x-1 bg-[#fffaf7] rounded-lg p-1 border border-[#B89B7A]/20">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowTemplateSelector(true)}
+                className="h-8 w-8 p-0 text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10"
+                title="Templates"
+              >
+                <TemplateIcon className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleCreateVersion}
+                disabled={isPublishing}
+                className="h-8 w-8 p-0 text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10 disabled:opacity-50"
+                title="Criar Versão"
+              >
+                <GitBranch className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleGenerateReport}
+                disabled={isPublishing}
+                className="h-8 w-8 p-0 text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10 disabled:opacity-50"
+                title="Relatórios"
+              >
+                <ReportIcon className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleCreateABTest}
+                disabled={isPublishing}
+                className="h-8 w-8 p-0 text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10 disabled:opacity-50"
+                title="A/B Test"
+              >
+                <BarChart3 className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowAnalyticsDashboard(true)}
+                className="h-8 w-8 p-0 text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10"
+                title="Analytics"
+              >
+                <BarChart3 className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleDiagnostic}
+                className="h-8 w-8 p-0 text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10"
+                title="Diagnóstico"
+              >
+                <Bug className="w-4 h-4" />
+              </Button>
+            </div>
+
+            {/* Ações principais */}
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleSave}
+                disabled={isSaving}
+                className="hidden sm:flex border-[#B89B7A]/30 text-[#432818] hover:text-[#432818] hover:bg-[#B89B7A]/10"
+              >
+                <Save className="w-4 h-4 mr-2" />
+                {isSaving ? 'Salvando...' : 'Salvar'}
+              </Button>
+              <Button
+                onClick={handlePublish}
+                disabled={isPublishing || isSaving}
+                size="sm"
+                className="bg-[#B89B7A] hover:bg-[#aa6b5d] text-white shadow-sm transition-all duration-200"
+              >
+                <Eye className="w-4 h-4 mr-2" />
+                {isPublishing ? 'Publicando...' : 'Publicar'}
+              </Button>
+            </div>
+
+            {/* Toggle Sidebars - Desktop */}
+            <div className="hidden lg:flex items-center space-x-1 bg-[#fffaf7] rounded-lg p-1 border border-[#B89B7A]/20">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  console.log('🔄 Toggle left sidebar from desktop button');
+                  setShowLeftSidebar(!showLeftSidebar);
+                }}
+                className={`h-8 w-8 p-0 transition-all duration-200 ${
+                  showLeftSidebar
+                    ? 'bg-[#B89B7A] text-white'
+                    : 'text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10'
+                }`}
+                title="Toggle Components"
+              >
+                <Menu className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  console.log('🔄 Toggle right sidebar from desktop button');
+                  setShowRightSidebar(!showRightSidebar);
+                }}
+                className={`h-8 w-8 p-0 transition-all duration-200 ${
+                  showRightSidebar
+                    ? 'bg-[#B89B7A] text-white'
+                    : 'text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10'
+                }`}
+                title="Toggle Properties"
+              >
+                <Settings className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Main Layout */}
       <div className="flex-1 flex overflow-hidden relative">
@@ -905,53 +1113,3 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 };
 
 export default SchemaDrivenEditorResponsive;
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import {
-  DroppableCanvas,
-  SchemaDrivenComponentsSidebar,
-  DynamicPropertiesPanel,
-  TemplateSelector,
-  AnalyticsDashboard
-} from './components'; // Ajuste conforme necessário
-import { useSchemaEditorFixed } from './hooks/useSchemaEditorFixed';
-import { Button, Badge, Toast } from './ui'; // Ajuste conforme necessário
-import { Plus, ArrowLeft, FileText, Menu } from 'lucide-react'; // Ajuste conforme necessário
-import { debounce } from 'lodash';
-import { TestDeleteComponent } from './TestDeleteComponent'; // Componente de teste para exclusão
-import {
-  ABTestService,
-  ReportService,
-  VersioningService,
-  saveDiagnostic
-} from './services'; // Ajuste conforme necessário
-
-const SchemaDrivenEditorResponsive = ({ funnelId }) => {
-  const {
-    funnel,
-    currentPage,
-    isLoading,
-    isSaving,
-    deviceView,
-    showLeftSidebar,
-    showRightSidebar,
-    setShowLeftSidebar,
-    setShowRightSidebar,
-    updateFunnelConfig,
-    createNewFunnel,
-    updatePage,
-    addBlock,
-    updateBlock,
-    deleteBlock,
-    trackButtonClick,
-    trackPageView
-  } = useSchemaEditorFixed(funnelId);
-
-  const [selectedBlockId, setSelectedBlock] = useState<string | null>(null);
-  const [showTemplateSelector, setShowTemplateSelector] = useState(false);
-  const [showAnalyticsDashboard, setShowAnalyticsDashboard] = useState(false);
-  const [toast, setToast] = useState<{ message: string; type: string } | null>(null);
-  const [isPublishing, setIsPublishing] = useState(false);
-
-  // Undo/Redo stacks
-  const [undoStack, setUndoStack] = useState<any[]>([]);
-  const [redoStack, setRedoStack] = useState<any[]>([]);
