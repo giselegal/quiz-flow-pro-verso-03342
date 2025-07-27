@@ -1,6 +1,7 @@
 
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { Block } from '../../../types/editor';
+import { useQuestionValidation } from '../../../hooks/useQuestionValidation';
 
 interface Option {
   id: string;
@@ -15,13 +16,15 @@ interface OptionsGridBlockProps {
   isSelected?: boolean;
   onSelect?: () => void;
   isPreview?: boolean;
+  onValidationChange?: (isValid: boolean, errors: string[]) => void;
 }
 
 const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   block,
   isSelected,
   onSelect,
-  isPreview = false
+  isPreview = false,
+  onValidationChange
 }) => {
   // Acessar propriedades corretas do bloco
   const properties = block.properties || {};
@@ -32,7 +35,51 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   const showImages = properties.showImages !== undefined ? properties.showImages : true;
   const multipleSelection = properties.multipleSelection || false;
   const maxSelections = properties.maxSelections || 1;
+  const minSelections = properties.minSelections || 1;
+  const isRequired = properties.isRequired !== undefined ? properties.isRequired : true;
   
+  // Estado das seleções
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  
+  // Validação
+  const validation = useQuestionValidation(selectedOptions, {
+    isRequired,
+    minSelections,
+    maxSelections,
+    isMultipleChoice: multipleSelection
+  });
+
+  // Notificar mudanças de validação
+  React.useEffect(() => {
+    if (onValidationChange) {
+      onValidationChange(validation.canProceed, validation.errors);
+    }
+  }, [validation, onValidationChange]);
+
+  // Manipular seleção de opção
+  const handleOptionSelect = useCallback((optionId: string) => {
+    if (isPreview) return; // Não permitir seleção no preview
+    
+    setSelectedOptions(prev => {
+      if (multipleSelection) {
+        // Múltipla seleção
+        if (prev.includes(optionId)) {
+          // Remover se já selecionado
+          return prev.filter(id => id !== optionId);
+        } else {
+          // Adicionar se não exceder o máximo
+          if (prev.length < maxSelections) {
+            return [...prev, optionId];
+          }
+          return prev;
+        }
+      } else {
+        // Seleção única
+        return prev.includes(optionId) ? [] : [optionId];
+      }
+    });
+  }, [multipleSelection, maxSelections, isPreview]);
+
   // Grid responsivo baseado no número de colunas
   const getGridClasses = (cols: number) => {
     switch (cols) {
@@ -68,31 +115,77 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       onClick={onSelect}
     >
       <div className={`grid ${getGridClasses(columns)} gap-4`}>
-        {options.map((option, index) => (
-          <div
-            key={option.id || index}
-            className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 cursor-pointer transition-colors"
-          >
-            {showImages && option.imageUrl && (
-              <div className="mb-3">
-                <img 
-                  src={option.imageUrl} 
-                  alt={option.text}
-                  className="w-full h-40 object-cover rounded-md"
-                />
+        {options.map((option, index) => {
+          const isOptionSelected = selectedOptions.includes(option.id);
+          
+          return (
+            <div
+              key={option.id || index}
+              className={`
+                border rounded-lg p-4 cursor-pointer transition-all duration-200
+                ${isOptionSelected 
+                  ? 'border-[#B89B7A] bg-[#B89B7A]/10 shadow-md' 
+                  : 'border-gray-200 hover:border-[#B89B7A]/50 hover:bg-gray-50'
+                }
+                ${!isPreview ? 'hover:shadow-md' : ''}
+              `}
+              onClick={() => handleOptionSelect(option.id)}
+            >
+              {/* Indicador de seleção */}
+              {isOptionSelected && (
+                <div className="flex justify-end mb-2">
+                  <div className="w-6 h-6 bg-[#B89B7A] rounded-full flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+              )}
+              
+              {showImages && option.imageUrl && (
+                <div className="mb-3">
+                  <img 
+                    src={option.imageUrl} 
+                    alt={option.text}
+                    className="w-full h-40 object-cover rounded-md"
+                  />
+                </div>
+              )}
+              
+              <div className="text-sm font-medium text-gray-900">
+                {option.text}
               </div>
-            )}
-            <div className="text-sm font-medium text-gray-900">
-              {option.text}
+              
+              {option.category && (
+                <div className="text-xs text-gray-500 mt-1">
+                  {option.category}
+                </div>
+              )}
             </div>
-            {option.category && (
-              <div className="text-xs text-gray-500 mt-1">
-                {option.category}
-              </div>
-            )}
-          </div>
-        ))}
+          );
+        })}
       </div>
+      
+      {/* Feedback de validação */}
+      {!isPreview && validation.errors.length > 0 && (
+        <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
+          {validation.errors.map((error, index) => (
+            <p key={index} className="text-sm text-red-600">
+              ⚠️ {error}
+            </p>
+          ))}
+        </div>
+      )}
+      
+      {/* Status de seleção */}
+      {!isPreview && selectedOptions.length > 0 && (
+        <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
+          <p className="text-sm text-green-600">
+            ✅ {selectedOptions.length} opç{selectedOptions.length > 1 ? 'ões' : 'ão'} selecionada{selectedOptions.length > 1 ? 's' : ''}
+            {multipleSelection && ` (máx: ${maxSelections})`}
+          </p>
+        </div>
+      )}
       
       {/* Informações de configuração no editor */}
       {!isPreview && (
@@ -100,6 +193,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
           <p>✓ {options.length} opções configuradas</p>
           <p>✓ {multipleSelection ? `Múltipla seleção (máx: ${maxSelections})` : 'Seleção única'}</p>
           <p>✓ {showImages ? 'Com imagens' : 'Apenas texto'}</p>
+          <p>✓ Validação: {validation.canProceed ? 'OK' : 'Pendente'}</p>
         </div>
       )}
     </div>
