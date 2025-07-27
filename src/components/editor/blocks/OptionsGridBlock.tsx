@@ -176,34 +176,62 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         })}
       </div>
       
-      {/* Feedback de validação */}
-      {!isPreview && validation.errors.length > 0 && (
-        <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
-          {validation.errors.map((error, index) => (
-            <p key={index} className="text-sm text-red-600">
-              ⚠️ {error}
-            </p>
-          ))}
-        </div>
-      )}
-      
-      {/* Status de seleção */}
-      {!isPreview && selectedOptions.length > 0 && (
-        <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
-          <p className="text-sm text-green-600">
-            ✅ {selectedOptions.length} opç{selectedOptions.length > 1 ? 'ões' : 'ão'} selecionada{selectedOptions.length > 1 ? 's' : ''}
-            {multipleSelection && ` (máx: ${maxSelections})`}
-          </p>
-        </div>
-      )}
-      
-      {/* Informações de configuração no editor */}
+      {/* Feedback de validação moderno */}
       {!isPreview && (
-        <div className="mt-4 text-xs text-gray-500 border-t pt-2">
-          <p>✓ {options.length} opções configuradas</p>
-          <p>✓ {multipleSelection ? `Múltipla seleção (máx: ${maxSelections})` : 'Seleção única'}</p>
-          <p>✓ {showImages ? 'Com imagens' : 'Apenas texto'}</p>
-          <p>✓ Validação: {validation.canProceed ? 'OK' : 'Pendente'}</p>
+        <div className="mt-6 space-y-3">
+          {/* Status de seleção */}
+          <div className={`flex items-center p-3 rounded-lg border ${
+            validation.canProceed 
+              ? 'bg-green-50 border-green-200 text-green-700' 
+              : selectedOptions.length > 0 
+                ? 'bg-yellow-50 border-yellow-200 text-yellow-700'
+                : 'bg-gray-50 border-gray-200 text-gray-600'
+          }`}>
+            {validation.canProceed ? (
+              <CheckCircle2 className="w-5 h-5 mr-3 flex-shrink-0" />
+            ) : (
+              <AlertCircle className="w-5 h-5 mr-3 flex-shrink-0" />
+            )}
+            
+            <div className="flex-1">
+              {validation.canProceed ? (
+                <p className="text-sm font-medium">
+                  ✅ Seleção válida ({selectedOptions.length} opç{selectedOptions.length > 1 ? 'ões' : 'ão'})
+                </p>
+              ) : validation.errors.length > 0 ? (
+                <div>
+                  <p className="text-sm font-medium mb-1">Atenção necessária:</p>
+                  {validation.errors.map((error, index) => (
+                    <p key={index} className="text-xs">{error}</p>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm">
+                  Selecione {minSelections} opç{minSelections > 1 ? 'ões' : 'ão'} para continuar
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Informações de configuração */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs text-gray-500">
+            <div className="flex items-center">
+              <div className="w-2 h-2 bg-[#B89B7A] rounded-full mr-2"></div>
+              {options.length} opções
+            </div>
+            <div className="flex items-center">
+              <div className="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+              {multipleSelection ? `Múltipla (${maxSelections})` : 'Única'}
+            </div>
+            <div className="flex items-center">
+              <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+              {showImages ? 'Com imagens' : 'Texto'}
+            </div>
+            <div className="flex items-center">
+              <div className={`w-2 h-2 rounded-full mr-2 ${validation.canProceed ? 'bg-green-400' : 'bg-red-400'}`}></div>
+              {validation.canProceed ? 'Válido' : 'Pendente'}
+            </div>
+          </div>
         </div>
       )}
     </div>
