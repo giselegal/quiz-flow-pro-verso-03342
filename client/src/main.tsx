@@ -1,15 +1,18 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import App from './App';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { ConfigProvider } from 'antd'
+import ptBR from 'antd/locale/pt_BR'
+import App from './App'
+import { quizQuestTheme } from './config/antd-theme'
+import './index.css'
 
-const container = document.getElementById('root');
-if (!container) {
-  throw new Error('Root element not found');
-}
-
-const root = createRoot(container);
-root.render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+    <ConfigProvider 
+      theme={quizQuestTheme}
+      locale={ptBR}
+    >
+      <App />
+    </ConfigProvider>
+  </React.StrictMode>,
+)

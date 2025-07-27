@@ -1,14 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Textarea } from '../ui/textarea';
-import { Checkbox } from '../ui/checkbox';
-import { Badge } from '../ui/badge';
+import { Card, Form, Typography, Space, Divider, Checkbox } from 'antd';
+import { Button } from '../ui-new/Button';
+import { Input, TextArea, NumberInput } from '../ui-new/Input';
+import { Select } from '../ui-new/Select';
+import { Badge } from '../ui-new/Badge';
 import { Trash2, Plus, GripVertical } from 'lucide-react';
+
+const { Title, Text } = Typography;
 
 interface Question {
   id: string;
@@ -97,139 +96,124 @@ export const QuestionEditor: React.FC<QuestionEditorProps> = ({
     onUpdate(updatedQuestion);
   };
 
-  const handlePointsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const points = parseInt(e.target.value) || 0;
+  const handlePointsChange = (value: number | null) => {
+    const points = value || 0;
     const updatedQuestion = { ...localQuestion, points };
     setLocalQuestion(updatedQuestion);
     onUpdate(updatedQuestion);
   };
 
   return (
-    <Card className="mb-4">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-lg font-semibold">
+    <Card style={{ marginBottom: 16 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+        <Title level={4} style={{ margin: 0 }}>
           Pergunta {index + 1}
-        </CardTitle>
-        <div className="flex items-center space-x-2">
-          <Button variant="ghost" size="sm">
-            <GripVertical className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="sm" onClick={onDuplicate}>
-            <Plus className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="sm" onClick={onDelete}>
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
+        </Title>
+        <Space>
+          <Button variant="ghost" size="small" icon={<GripVertical size={16} />} />
+          <Button variant="ghost" size="small" icon={<Plus size={16} />} onClick={onDuplicate} />
+          <Button variant="ghost" size="small" icon={<Trash2 size={16} />} onClick={onDelete} />
+        </Space>
+      </div>
+      
+      <Form layout="vertical">
         {/* Question Text */}
-        <div className="space-y-2">
-          <Label htmlFor={`question-${question.id}`}>Texto da Pergunta</Label>
-          <Textarea
-            id={`question-${question.id}`}
+        <Form.Item label="Texto da Pergunta">
+          <TextArea
             value={localQuestion.text}
             onChange={handleTextChange}
             placeholder="Digite sua pergunta aqui..."
-            className="min-h-[80px]"
+            rows={3}
           />
-        </div>
+        </Form.Item>
 
         {/* Question Type */}
-        <div className="space-y-2">
-          <Label>Tipo de Pergunta</Label>
-          <Select value={localQuestion.type} onValueChange={handleTypeChange}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="multiple_choice">Múltipla Escolha</SelectItem>
-              <SelectItem value="single_choice">Escolha Única</SelectItem>
-              <SelectItem value="text">Texto Livre</SelectItem>
-              <SelectItem value="rating">Avaliação</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <Form.Item label="Tipo de Pergunta">
+          <Select 
+            value={localQuestion.type} 
+            onChange={handleTypeChange}
+            options={[
+              { value: 'multiple_choice', label: 'Múltipla Escolha' },
+              { value: 'single_choice', label: 'Escolha Única' },
+              { value: 'text', label: 'Texto Livre' },
+              { value: 'rating', label: 'Avaliação' }
+            ]}
+          />
+        </Form.Item>
 
         {/* Options for multiple/single choice */}
         {(localQuestion.type === 'multiple_choice' || localQuestion.type === 'single_choice') && (
-          <div className="space-y-2">
-            <Label>Opções</Label>
-            {localQuestion.options?.map((option, optIndex) => (
-              <div key={optIndex} className="flex items-center space-x-2">
-                <Input
-                  value={option}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleOptionChange(optIndex, e.target.value)}
-                  placeholder={`Opção ${optIndex + 1}`}
-                />
-                {localQuestion.options && localQuestion.options.length > 2 && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeOption(optIndex)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
-            ))}
-            <Button variant="outline" size="sm" onClick={addOption}>
-              <Plus className="h-4 w-4 mr-2" />
-              Adicionar Opção
-            </Button>
-          </div>
+          <Form.Item label="Opções">
+            <Space direction="vertical" style={{ width: '100%' }}>
+              {localQuestion.options?.map((option, optIndex) => (
+                <Space key={optIndex} style={{ display: 'flex', width: '100%' }}>
+                  <Input
+                    value={option}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleOptionChange(optIndex, e.target.value)}
+                    placeholder={`Opção ${optIndex + 1}`}
+                    style={{ flex: 1 }}
+                  />
+                  {localQuestion.options && localQuestion.options.length > 2 && (
+                    <Button
+                      variant="ghost"
+                      size="small"
+                      onClick={() => removeOption(optIndex)}
+                      icon={<Trash2 size={16} />}
+                    />
+                  )}
+                </Space>
+              ))}
+              <Button variant="secondary" size="small" onClick={addOption} icon={<Plus size={16} />}>
+                Adicionar Opção
+              </Button>
+            </Space>
+          </Form.Item>
         )}
 
         {/* Additional Settings */}
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id={`required-${question.id}`}
-              checked={localQuestion.required}
-              onCheckedChange={handleRequiredChange}
-            />
-            <Label htmlFor={`required-${question.id}`}>Obrigatória</Label>
-          </div>
+        <Space>
+          <Checkbox
+            checked={localQuestion.required}
+            onChange={(e) => handleRequiredChange(e.target.checked)}
+          >
+            Obrigatória
+          </Checkbox>
           
-          <div className="flex items-center space-x-2">
-            <Label htmlFor={`points-${question.id}`}>Pontos:</Label>
-            <Input
-              id={`points-${question.id}`}
-              type="number"
+          <Space>
+            <Text>Pontos:</Text>
+            <NumberInput
               value={localQuestion.points || 0}
               onChange={handlePointsChange}
-              className="w-20"
-              min="0"
+              min={0}
+              style={{ width: 80 }}
             />
-          </div>
-        </div>
+          </Space>
+        </Space>
 
         {/* Category */}
-        <div className="space-y-2">
-          <Label htmlFor={`category-${question.id}`}>Categoria</Label>
+        <Form.Item label="Categoria">
           <Input
-            id={`category-${question.id}`}
             value={localQuestion.category || ''}
             onChange={handleCategoryChange}
             placeholder="Digite a categoria..."
           />
-        </div>
+        </Form.Item>
 
         {/* Question Stats */}
-        <div className="flex items-center space-x-2">
+        <Space wrap>
           <Badge variant="secondary">
             Tipo: {localQuestion.type === 'multiple_choice' ? 'Múltipla Escolha' : 
                    localQuestion.type === 'single_choice' ? 'Escolha Única' : 
                    localQuestion.type === 'text' ? 'Texto' : 'Avaliação'}
           </Badge>
           {localQuestion.required && (
-            <Badge variant="destructive">Obrigatória</Badge>
+            <Badge variant="danger">Obrigatória</Badge>
           )}
           {localQuestion.points && localQuestion.points > 0 && (
-            <Badge variant="default">{localQuestion.points} pontos</Badge>
+            <Badge variant="info">{localQuestion.points} pontos</Badge>
           )}
-        </div>
-      </CardContent>
+        </Space>
+      </Form>
     </Card>
   );
 };
