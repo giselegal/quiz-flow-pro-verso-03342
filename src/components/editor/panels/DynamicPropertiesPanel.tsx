@@ -4,12 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { PropertyInput } from './block-properties/PropertyInput';
 import { QuestionPropertiesPanel } from '../properties/QuestionPropertiesPanel';
-import { blockDefinitions, type PropertySchema as OriginalPropertySchema } from '@/config/blockDefinitions';
+import { allBlockDefinitions, type PropertySchema as OriginalPropertySchema } from '@/config/blockDefinitions';
 import { type BlockData } from '@/components/editor/blocks';
 
 // Função auxiliar local
 const getBlockDefinition = (type: string) => 
-  blockDefinitions.find(block => block.type === type);
+  allBlockDefinitions.find(block => block.type === type);
 
 interface DynamicPropertiesPanelProps {
   selectedBlock: BlockData | null;
