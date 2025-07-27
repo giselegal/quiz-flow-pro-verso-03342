@@ -860,13 +860,13 @@ class SchemaDrivenFunnelService {
     // Componentes: quiz-intro-header + heading-inline + text-inline + options-grid + button-inline
     // ==========================================
     REAL_QUIZ_QUESTIONS.forEach((questionData, index) => {
-      console.log(`🎯 [ES7+] Criando questão ${index + 1}:`, questionData.question);
+      console.log(`🎯 [ES7+] Criando questão ${index + 1}:`, questionData.title);
       const currentProgress = 5 + (index + 1) * 5; // 5%, 10%, 15%... até 55%
       
       pages.push({
         id: this.generateUniquePageId(`etapa-${index + 2}-questao-${index + 1}`),
         name: `Questão ${index + 1}`,
-        title: `Etapa ${index + 2}: ${questionData.question}`,
+        title: `Etapa ${index + 2}: ${questionData.title}`,
         type: 'question',
         order: index + 2,
         blocks: [
@@ -889,7 +889,7 @@ class SchemaDrivenFunnelService {
             id: `question-${index + 1}-title`,
             type: 'heading-inline',
             properties: {
-              content: questionData.question,
+              content: questionData.title,
               level: 'h2',
               fontSize: 'text-2xl',
               fontWeight: 'font-bold',
