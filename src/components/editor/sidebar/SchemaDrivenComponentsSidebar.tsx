@@ -1,8 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { Tabs, Input, Card } from '../../ui-new';
-import { Button } from '../../ui-new/Button';
-import { Badge } from '../../ui-new/Badge';
-import { PlusOutlined, AppstoreOutlined, FileTextOutlined, SearchOutlined } from '@ant-design/icons';
+import Tabs from '../../ui-new/Tabs';
+import Input from '../../ui-new/Input';
+import Card from '../../ui-new/Card';
+import Button from '../../ui-new/Button';
+import Badge from '../../ui-new/Badge';
+import { PlusOutlined, AppstoreOutlined, FileTextOutlined } from '@ant-design/icons';
 import { Space, Typography, Empty, Divider } from 'antd';
 import { allBlockDefinitions } from '../../../config/blockDefinitions';
 
