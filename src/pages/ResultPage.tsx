@@ -306,12 +306,12 @@ const ResultPage: React.FC = () => {
 
         {/* INTEREST: Bonus Section */}
         <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={850}>
-                    <ExclusiveBonusSection />
+                    <BonusSection />
         </AnimatedWrapper>
 
         {/* DESIRE: Testimonials */}
         <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={900}>
-                    <TestimonialsSection />
+                    <Testimonials />
         </AnimatedWrapper>
 
         {/* DESIRE: Featured CTA (Green) - Usando componente inline editável */}
@@ -354,16 +354,12 @@ const ResultPage: React.FC = () => {
 
         {/* DESIRE: Guarantee Section */}
         <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={1000}>
-          {renderConfigurableComponent('guarantee-component-real', 
-            <GuaranteeSection />
-          )}
+          <GuaranteeSection />
         </AnimatedWrapper>
 
         {/* DESIRE: Mentor and Trust Elements */}
         <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={1050}>
-          {renderConfigurableComponent('mentor-component-real', 
-            <MentorSection />
-          )}
+          <MentorSection />
         </AnimatedWrapper>
 
         {/* ACTION: Final Value Proposition and CTA - Usando componente inline editável */}
