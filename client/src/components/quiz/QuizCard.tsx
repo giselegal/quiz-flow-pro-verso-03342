@@ -11,9 +11,10 @@ interface QuizCardProps {
   onEdit: (quiz: Quiz) => void;
   onPreview: (quiz: Quiz) => void;
   onDelete: (id: string) => void;
+  onDuplicate: (id: string) => void;
 }
 
-export const QuizCard: React.FC<QuizCardProps> = ({ quiz, onEdit, onPreview, onDelete }) => {
+export const QuizCard: React.FC<QuizCardProps> = ({ quiz, onEdit, onPreview, onDelete, onDuplicate }) => {
   return (
     <Card className="h-full">
       <CardHeader>
@@ -55,6 +56,9 @@ export const QuizCard: React.FC<QuizCardProps> = ({ quiz, onEdit, onPreview, onD
           </Button>
           <Button onClick={() => onPreview(quiz)} variant="outline" size="sm">
             Visualizar
+          </Button>
+          <Button onClick={() => onDuplicate(quiz.id)} variant="outline" size="sm">
+            Duplicar
           </Button>
           <Button onClick={() => onDelete(quiz.id)} variant="destructive" size="sm">
             Excluir

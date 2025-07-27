@@ -1,143 +1,141 @@
 
-import { createClient } from '@supabase/supabase-js';
-import { Quiz, QuizQuestion, QuizWithQuestions } from '../types/supabase';
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { supabase } from '../lib/supabase';
+import type { Quiz, QuizQuestion, QuizWithQuestions } from '../types/supabase';
 
 export class QuizService {
-  static async createQuiz(quizData: Omit<Quiz, 'id' | 'created_at' | 'updated_at'>): Promise<Quiz> {
-    const { data, error } = await supabase
-      .from('quizzes')
-      .insert([quizData])
-      .select()
-      .single();
-
-    if (error) {
-      throw new Error(`Erro ao criar quiz: ${error.message}`);
-    }
-
-    return data;
-  }
-
   static async getQuizzes(userId: string): Promise<Quiz[]> {
-    const { data, error } = await supabase
-      .from('quizzes')
-      .select('*')
-      .eq('author_id', userId)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      throw new Error(`Erro ao buscar quizzes: ${error.message}`);
-    }
-
-    return data || [];
-  }
-
-  static async getQuiz(id: string): Promise<Quiz | null> {
-    const { data, error } = await supabase
-      .from('quizzes')
-      .select('*')
-      .eq('id', id)
-      .single();
-
-    if (error) {
-      if (error.code === 'PGRST116') {
-        return null;
+    // Mock data for development
+    const mockQuizzes: Quiz[] = [
+      {
+        id: '1',
+        title: 'Quiz Exemplo',
+        description: 'Descrição do quiz',
+        author_id: userId,
+        category: 'general',
+        difficulty: 'medium',
+        time_limit: null,
+        is_public: false,
+        is_published: false,
+        is_template: false,
+        thumbnail_url: null,
+        tags: [],
+        view_count: 0,
+        completion_rate: 0,
+        average_score: 0,
+        settings: {},
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       }
-      throw new Error(`Erro ao buscar quiz: ${error.message}`);
-    }
-
-    return data;
+    ];
+    
+    return mockQuizzes;
   }
 
-  static async getQuizById(id: string): Promise<QuizWithQuestions | null> {
-    const quiz = await this.getQuiz(id);
-    if (!quiz) return null;
-
-    const questions = await this.getQuizQuestions(id);
-    return {
-      ...quiz,
-      questions
+  static async getQuizById(id: string): Promise<QuizWithQuestions> {
+    // Mock data for development
+    const mockQuiz: QuizWithQuestions = {
+      id,
+      title: 'Quiz Exemplo',
+      description: 'Descrição do quiz',
+      author_id: 'user-1',
+      category: 'general',
+      difficulty: 'medium',
+      time_limit: null,
+      is_public: false,
+      is_published: false,
+      is_template: false,
+      thumbnail_url: null,
+      tags: [],
+      view_count: 0,
+      completion_rate: 0,
+      average_score: 0,
+      settings: {},
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      questions: []
     };
+    
+    return mockQuiz;
+  }
+
+  static async createQuiz(quizData: Omit<Quiz, 'id' | 'created_at' | 'updated_at'>): Promise<Quiz> {
+    // Mock creation
+    const newQuiz: Quiz = {
+      id: `quiz_${Date.now()}`,
+      ...quizData,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+    
+    return newQuiz;
   }
 
   static async updateQuiz(id: string, updates: Partial<Quiz>): Promise<Quiz> {
-    const { data, error } = await supabase
-      .from('quizzes')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single();
-
-    if (error) {
-      throw new Error(`Erro ao atualizar quiz: ${error.message}`);
-    }
-
-    return data;
+    // Mock update
+    const updatedQuiz: Quiz = {
+      id,
+      title: 'Updated Quiz',
+      description: 'Updated description',
+      author_id: 'user-1',
+      category: 'general',
+      difficulty: 'medium',
+      time_limit: null,
+      is_public: false,
+      is_published: false,
+      is_template: false,
+      thumbnail_url: null,
+      tags: [],
+      view_count: 0,
+      completion_rate: 0,
+      average_score: 0,
+      settings: {},
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      ...updates
+    };
+    
+    return updatedQuiz;
   }
 
   static async deleteQuiz(id: string): Promise<void> {
-    const { error } = await supabase
-      .from('quizzes')
-      .delete()
-      .eq('id', id);
-
-    if (error) {
-      throw new Error(`Erro ao deletar quiz: ${error.message}`);
-    }
+    // Mock deletion
+    console.log(`Deleting quiz ${id}`);
   }
 
   static async duplicateQuiz(id: string): Promise<Quiz> {
-    const originalQuiz = await this.getQuiz(id);
-    if (!originalQuiz) {
-      throw new Error('Quiz não encontrado');
-    }
-
-    const { id: _, created_at, updated_at, ...quizData } = originalQuiz;
-    const duplicatedQuiz = await this.createQuiz({
-      ...quizData,
-      title: `${originalQuiz.title} (Cópia)`,
-      is_published: false
-    });
-
+    // Mock duplication
+    const duplicatedQuiz: Quiz = {
+      id: `quiz_${Date.now()}`,
+      title: 'Quiz Duplicado',
+      description: 'Descrição duplicada',
+      author_id: 'user-1',
+      category: 'general',
+      difficulty: 'medium',
+      time_limit: null,
+      is_public: false,
+      is_published: false,
+      is_template: false,
+      thumbnail_url: null,
+      tags: [],
+      view_count: 0,
+      completion_rate: 0,
+      average_score: 0,
+      settings: {},
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+    
     return duplicatedQuiz;
   }
 
   static async getQuizQuestions(quizId: string): Promise<QuizQuestion[]> {
-    const { data, error } = await supabase
-      .from('quiz_questions')
-      .select('*')
-      .eq('quiz_id', quizId)
-      .order('order_index', { ascending: true });
-
-    if (error) {
-      throw new Error(`Erro ao buscar perguntas: ${error.message}`);
-    }
-
-    return data || [];
-  }
-
-  static async createQuestion(questionData: Omit<QuizQuestion, 'id' | 'created_at'>): Promise<QuizQuestion> {
-    const { data, error } = await supabase
-      .from('quiz_questions')
-      .insert([questionData])
-      .select()
-      .single();
-
-    if (error) {
-      throw new Error(`Erro ao criar pergunta: ${error.message}`);
-    }
-
-    return data;
+    // Mock questions
+    return [];
   }
 
   static async addQuestion(quizId: string, questionData: Partial<QuizQuestion>): Promise<QuizQuestion> {
-    const questionsCount = await this.getQuizQuestions(quizId);
-    
-    const newQuestion: Omit<QuizQuestion, 'id' | 'created_at'> = {
+    const newQuestion: QuizQuestion = {
+      id: `question_${Date.now()}`,
       quiz_id: quizId,
       question_text: questionData.question_text || 'Nova pergunta',
       question_type: questionData.question_type || 'multiple_choice',
@@ -151,71 +149,48 @@ export class QuizService {
       media_url: questionData.media_url || null,
       media_type: questionData.media_type || null,
       tags: questionData.tags || [],
-      order_index: questionsCount.length
+      order_index: questionData.order_index || 0,
+      created_at: new Date().toISOString()
     };
-
-    return this.createQuestion(newQuestion);
+    
+    return newQuestion;
   }
 
   static async updateQuestion(id: string, updates: Partial<QuizQuestion>): Promise<QuizQuestion> {
-    const { data, error } = await supabase
-      .from('quiz_questions')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single();
-
-    if (error) {
-      throw new Error(`Erro ao atualizar pergunta: ${error.message}`);
-    }
-
-    return data;
+    const updatedQuestion: QuizQuestion = {
+      id,
+      quiz_id: 'quiz-1',
+      question_text: 'Updated question',
+      question_type: 'multiple_choice',
+      options: [],
+      correct_answers: [],
+      points: 1,
+      time_limit: null,
+      required: true,
+      explanation: null,
+      hint: null,
+      media_url: null,
+      media_type: null,
+      tags: [],
+      order_index: 0,
+      created_at: new Date().toISOString(),
+      ...updates
+    };
+    
+    return updatedQuestion;
   }
 
   static async deleteQuestion(id: string): Promise<void> {
-    const { error } = await supabase
-      .from('quiz_questions')
-      .delete()
-      .eq('id', id);
-
-    if (error) {
-      throw new Error(`Erro ao deletar pergunta: ${error.message}`);
-    }
+    console.log(`Deleting question ${id}`);
   }
 
   static async reorderQuestions(quizId: string, questionIds: string[]): Promise<void> {
-    const updates = questionIds.map((id, index) => ({
-      id,
-      order_index: index
-    }));
-
-    for (const update of updates) {
-      await this.updateQuestion(update.id, { order_index: update.order_index });
-    }
+    console.log(`Reordering questions for quiz ${quizId}:`, questionIds);
   }
 
   static async getPublicQuizzes(): Promise<Quiz[]> {
-    const { data, error } = await supabase
-      .from('quizzes')
-      .select('*')
-      .eq('is_public', true)
-      .eq('is_published', true)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      throw new Error(`Erro ao buscar quizzes públicos: ${error.message}`);
-    }
-
-    return data || [];
-  }
-
-  static async publishQuiz(id: string): Promise<Quiz> {
-    return this.updateQuiz(id, { is_published: true });
-  }
-
-  static async unpublishQuiz(id: string): Promise<Quiz> {
-    return this.updateQuiz(id, { is_published: false });
+    return [];
   }
 }
 
-export { Quiz, QuizQuestion, QuizWithQuestions };
+export type { Quiz, QuizQuestion, QuizWithQuestions };
