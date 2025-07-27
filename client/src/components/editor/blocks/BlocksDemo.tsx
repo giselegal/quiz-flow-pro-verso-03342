@@ -1,243 +1,283 @@
+
 import React, { useState } from 'react';
-import { AVAILABLE_BLOCKS, getBlocksByCategory, getPopularBlocks } from '../../../src/components/editor/blocks/BlockComponents';
-import { BLOCK_REGISTRY, renderBlock } from './BlockRegistry';
+import { BlockComponents } from './BlockComponents';
+import { EditorBlock } from '@/types/editor';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Plus, Edit2, Trash2, Eye, EyeOff } from 'lucide-react';
 
-export const BlocksDemo: React.FC = () => {
-  const [selectedBlock, setSelectedBlock] = useState<string>('heading');
-  const [blockProps, setBlockProps] = useState<any>({});
+interface BlocksDemoProps {
+  className?: string;
+}
 
-  const popularBlocks = getPopularBlocks();
-  const basicBlocks = getBlocksByCategory('basic');
-  const quizBlocks = getBlocksByCategory('quiz');
-
-  const handleBlockSelect = (blockType: string) => {
-    setSelectedBlock(blockType);
-    
-    // Set default props based on block type
-    const defaultProps: Record<string, any> = {
-      'heading': {
-        level: 'h1',
-        content: 'Este é um Título Personalizado',
-        fontSize: 36,
-        textColor: '#B89B7A',
-        textAlign: 'center'
+export const BlocksDemo: React.FC<BlocksDemoProps> = ({ className }) => {
+  const [blocks, setBlocks] = useState<EditorBlock[]>([
+    {
+      id: 'demo-1',
+      type: 'header',
+      content: {
+        title: 'Título Principal',
+        subtitle: 'Subtítulo do componente',
+        style: {
+          textAlign: 'center',
+          color: '#333',
+          fontSize: 'text-3xl'
+        }
       },
-      'text': {
-        content: 'Este é um parágrafo de exemplo que demonstra como o bloco de texto funciona no editor. Você pode personalizar a fonte, cor e alinhamento.',
-        fontSize: 18,
-        textColor: '#333333',
-        textAlign: 'left'
+      order: 0
+    },
+    {
+      id: 'demo-2',
+      type: 'text',
+      content: {
+        text: 'Este é um exemplo de texto editável. Clique duplo para editar.',
+        style: {
+          color: '#666',
+          fontSize: '16px'
+        }
       },
-      'button': {
-        text: 'Clique Aqui Para Continuar',
-        backgroundColor: '#B89B7A',
-        textColor: '#ffffff',
-        paddingX: 32,
-        paddingY: 16,
-        borderRadius: 12,
-        fullWidth: false
+      order: 1
+    },
+    {
+      id: 'demo-3',
+      type: 'image',
+      content: {
+        imageUrl: 'https://via.placeholder.com/400x200',
+        imageAlt: 'Imagem de exemplo',
+        caption: 'Legenda da imagem'
       },
-      'image': {
-        src: 'https://via.placeholder.com/400x250/B89B7A/ffffff?text=Imagem+de+Exemplo',
-        alt: 'Imagem de exemplo',
-        width: 400,
-        height: 250,
-        objectFit: 'cover',
-        borderRadius: 12
+      order: 2
+    },
+    {
+      id: 'demo-4',
+      type: 'button',
+      content: {
+        buttonText: 'Botão de Exemplo',
+        buttonUrl: 'https://exemplo.com',
+        style: {
+          backgroundColor: '#007bff',
+          color: 'white',
+          textAlign: 'center'
+        }
       },
-      'spacer': {
-        height: 40,
-        backgroundColor: 'transparent',
-        borderStyle: 'dashed',
-        borderColor: '#B89B7A'
+      order: 3
+    },
+    {
+      id: 'demo-5',
+      type: 'spacer',
+      content: {
+        height: '60px'
       },
-      'quiz-question': {
-        questionText: 'Qual é a sua preferência de estilo?',
-        questionTextSize: 32,
-        questionTextColor: '#432818',
-        questionTextAlign: 'center',
-        layout: '2-columns',
+      order: 4
+    },
+    {
+      id: 'demo-6',
+      type: 'quiz-question',
+      content: {
+        question: 'Qual é a sua cor favorita?',
         options: [
-          {
-            id: '1',
-            text: 'Estilo Clássico',
-            imageUrl: 'https://via.placeholder.com/150x150/B89B7A/ffffff?text=Clássico',
-            value: 'classic'
-          },
-          {
-            id: '2',
-            text: 'Estilo Moderno',
-            imageUrl: 'https://via.placeholder.com/150x150/8F7A6A/ffffff?text=Moderno',
-            value: 'modern'
-          },
-          {
-            id: '3',
-            text: 'Estilo Casual',
-            imageUrl: 'https://via.placeholder.com/150x150/432818/ffffff?text=Casual',
-            value: 'casual'
-          },
-          {
-            id: '4',
-            text: 'Estilo Elegante',
-            imageUrl: 'https://via.placeholder.com/150x150/FAF9F7/432818?text=Elegante',
-            value: 'elegant'
-          }
+          { id: '1', text: 'Azul', imageUrl: '' },
+          { id: '2', text: 'Vermelho', imageUrl: '' },
+          { id: '3', text: 'Verde', imageUrl: '' },
+          { id: '4', text: 'Amarelo', imageUrl: '' }
         ],
-        primaryColor: '#B89B7A',
-        secondaryColor: '#ffffff',
-        borderColor: '#e5e7eb',
-        showProgressBar: true,
-        progressValue: 40
-      }
-    };
+        multipleSelection: false,
+        showImages: false,
+        progressPercent: 50,
+        logoUrl: '',
+        showBackButton: true,
+        optionLayout: 'vertical'
+      },
+      order: 5
+    }
+  ]);
 
-    setBlockProps(defaultProps[blockType] || {});
+  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
+
+  const handleBlockUpdate = (blockId: string, content: any) => {
+    setBlocks(prev => 
+      prev.map(block => 
+        block.id === blockId 
+          ? { ...block, content: { ...block.content, ...content } }
+          : block
+      )
+    );
   };
 
+  const handleBlockDelete = (blockId: string) => {
+    setBlocks(prev => prev.filter(block => block.id !== blockId));
+    if (selectedBlockId === blockId) {
+      setSelectedBlockId(null);
+    }
+  };
+
+  const addNewBlock = (type: EditorBlock['type']) => {
+    const newBlock: EditorBlock = {
+      id: `demo-${Date.now()}`,
+      type,
+      content: getDefaultContent(type),
+      order: blocks.length
+    };
+    
+    setBlocks(prev => [...prev, newBlock]);
+    setSelectedBlockId(newBlock.id);
+  };
+
+  const getDefaultContent = (type: EditorBlock['type']) => {
+    switch (type) {
+      case 'header':
+        return { title: 'Novo Título', subtitle: 'Subtítulo' };
+      case 'text':
+        return { text: 'Novo texto aqui...' };
+      case 'image':
+        return { imageUrl: '', imageAlt: '', caption: '' };
+      case 'button':
+        return { buttonText: 'Clique aqui', buttonUrl: '' };
+      case 'spacer':
+        return { height: '40px' };
+      case 'quiz-question':
+        return {
+          question: 'Nova pergunta?',
+          options: [
+            { id: '1', text: 'Opção 1', imageUrl: '' },
+            { id: '2', text: 'Opção 2', imageUrl: '' }
+          ],
+          multipleSelection: false,
+          showImages: false,
+          progressPercent: 0,
+          logoUrl: '',
+          showBackButton: false,
+          optionLayout: 'vertical'
+        };
+      default:
+        return {};
+    }
+  };
+
+  const availableBlockTypes = [
+    { type: 'header', name: 'Cabeçalho', icon: '📄' },
+    { type: 'text', name: 'Texto', icon: '📝' },
+    { type: 'image', name: 'Imagem', icon: '🖼️' },
+    { type: 'button', name: 'Botão', icon: '🔘' },
+    { type: 'spacer', name: 'Espaçador', icon: '⬜' },
+    { type: 'quiz-question', name: 'Questão Quiz', icon: '❓' }
+  ];
+
   return (
-    <div className="blocks-demo p-6 max-w-7xl mx-auto">
+    <div className="max-w-6xl mx-auto p-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-[#432818] mb-2">🧱 Demonstração dos Blocos</h1>
-        <p className="text-[#8F7A6A]">
-          Teste todos os componentes disponíveis na aba "Blocos" do editor
+        <h1 className="text-3xl font-bold mb-2">Demo de Componentes</h1>
+        <p className="text-gray-600">
+          Demonstração dos componentes do editor com funcionalidades completas
         </p>
       </div>
 
-      <div className="grid lg:grid-cols-4 gap-6">
-        {/* Sidebar com lista de blocos */}
-        <div className="lg:col-span-1">
-          <div className="bg-white border border-[#B89B7A]/20 rounded-lg overflow-hidden">
-            {/* Populares */}
-            <div className="p-4 border-b border-[#B89B7A]/10">
-              <h3 className="font-semibold text-[#432818] mb-3 flex items-center">
-                ⭐ Populares
-              </h3>
-              {popularBlocks.map((block) => (
-                <button
-                  key={block.type}
-                  className={`w-full text-left p-2 rounded mb-1 transition-colors ${
-                    selectedBlock === block.type
-                      ? 'bg-[#B89B7A] text-white'
-                      : 'hover:bg-[#FAF9F7] text-[#8F7A6A]'
-                  }`}
-                  onClick={() => handleBlockSelect(block.type)}
-                >
-                  <div className="flex items-center gap-2">
-                    <block.icon className="w-4 h-4" />
-                    <span className="text-sm">{block.label}</span>
-                  </div>
-                </button>
-              ))}
-            </div>
+      <Tabs defaultValue="editor" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="editor">Editor</TabsTrigger>
+          <TabsTrigger value="blocks">Blocos Disponíveis</TabsTrigger>
+        </TabsList>
 
-            {/* Básicos */}
-            <div className="p-4 border-b border-[#B89B7A]/10">
-              <h3 className="font-semibold text-[#432818] mb-3">🔧 Básicos</h3>
-              {basicBlocks.map((block) => (
-                <button
-                  key={block.type}
-                  className={`w-full text-left p-2 rounded mb-1 transition-colors ${
-                    selectedBlock === block.type
-                      ? 'bg-[#B89B7A] text-white'
-                      : 'hover:bg-[#FAF9F7] text-[#8F7A6A]'
-                  }`}
-                  onClick={() => handleBlockSelect(block.type)}
-                >
-                  <div className="flex items-center gap-2">
-                    <block.icon className="w-4 h-4" />
-                    <span className="text-sm">{block.label}</span>
-                  </div>
-                </button>
-              ))}
+        <TabsContent value="editor" className="space-y-6">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <Button
+                variant={isPreviewMode ? "default" : "outline"}
+                onClick={() => setIsPreviewMode(!isPreviewMode)}
+              >
+                {isPreviewMode ? <EyeOff className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
+                {isPreviewMode ? 'Sair do Preview' : 'Preview'}
+              </Button>
+              <Badge variant="secondary">
+                {blocks.length} bloco{blocks.length !== 1 ? 's' : ''}
+              </Badge>
             </div>
-
-            {/* Quiz */}
-            <div className="p-4">
-              <h3 className="font-semibold text-[#432818] mb-3">❓ Quiz</h3>
-              {quizBlocks.map((block) => (
-                <button
-                  key={block.type}
-                  className={`w-full text-left p-2 rounded mb-1 transition-colors ${
-                    selectedBlock === block.type
-                      ? 'bg-[#B89B7A] text-white'
-                      : 'hover:bg-[#FAF9F7] text-[#8F7A6A]'
-                  }`}
-                  onClick={() => handleBlockSelect(block.type)}
+            
+            <div className="flex gap-2">
+              {availableBlockTypes.map(blockType => (
+                <Button
+                  key={blockType.type}
+                  variant="outline"
+                  size="sm"
+                  onClick={() => addNewBlock(blockType.type as EditorBlock['type'])}
                 >
-                  <div className="flex items-center gap-2">
-                    <block.icon className="w-4 h-4" />
-                    <span className="text-sm">{block.label}</span>
-                    {block.isPro && <span className="text-xs">👑</span>}
-                  </div>
-                </button>
+                  <span className="mr-1">{blockType.icon}</span>
+                  {blockType.name}
+                </Button>
               ))}
             </div>
           </div>
-        </div>
 
-        {/* Preview Area */}
-        <div className="lg:col-span-3">
-          <div className="bg-white border border-[#B89B7A]/20 rounded-lg">
-            {/* Header */}
-            <div className="p-4 border-b border-[#B89B7A]/10">
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-[#432818]">
-                  Preview: {AVAILABLE_BLOCKS.find(b => b.type === selectedBlock)?.label}
-                </h3>
-                <div className="text-sm text-[#8F7A6A]">
-                  {AVAILABLE_BLOCKS.find(b => b.type === selectedBlock)?.description}
-                </div>
-              </div>
-            </div>
-
-            {/* Preview Content */}
-            <div className="p-8 min-h-[400px] bg-[#FAF9F7]/30">
-              <div className="max-w-4xl mx-auto">
-                {renderBlock(selectedBlock, blockProps)}
-              </div>
-            </div>
-
-            {/* Properties Info */}
-            <div className="p-4 border-t border-[#B89B7A]/10 bg-gray-50">
-              <h4 className="font-medium text-[#432818] mb-2">Propriedades Configuráveis:</h4>
-              <div className="text-sm text-[#8F7A6A] space-y-1">
-                {Object.keys(blockProps).map((prop) => (
-                  <div key={prop} className="flex">
-                    <span className="font-mono text-xs bg-gray-200 px-2 py-1 rounded mr-2">
-                      {prop}
-                    </span>
-                    <span>{JSON.stringify(blockProps[prop])}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+          <div className="space-y-4">
+            {blocks
+              .sort((a, b) => a.order - b.order)
+              .map(block => (
+                <Card key={block.id} className="relative">
+                  <CardContent className="p-0">
+                    <BlockComponents
+                      block={block}
+                      isSelected={selectedBlockId === block.id}
+                      isEditing={!isPreviewMode}
+                      onUpdate={(content) => handleBlockUpdate(block.id, content)}
+                      onSelect={() => setSelectedBlockId(block.id)}
+                    />
+                    
+                    {!isPreviewMode && (
+                      <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setSelectedBlockId(block.id)}
+                        >
+                          <Edit2 className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => handleBlockDelete(block.id)}
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
           </div>
-        </div>
-      </div>
+        </TabsContent>
 
-      {/* Statistics */}
-      <div className="mt-8 grid md:grid-cols-4 gap-4">
-        <div className="bg-white border border-[#B89B7A]/20 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-[#B89B7A]">{AVAILABLE_BLOCKS.length}</div>
-          <div className="text-sm text-[#8F7A6A]">Total de Blocos</div>
-        </div>
-        <div className="bg-white border border-[#B89B7A]/20 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-green-600">{popularBlocks.length}</div>
-          <div className="text-sm text-[#8F7A6A]">Populares</div>
-        </div>
-        <div className="bg-white border border-[#B89B7A]/20 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-purple-600">
-            {AVAILABLE_BLOCKS.filter(b => b.isPro).length}
+        <TabsContent value="blocks" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {availableBlockTypes.map(blockType => (
+              <Card key={blockType.type}>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <span>{blockType.icon}</span>
+                    {blockType.name}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Componente do tipo {blockType.type}
+                  </p>
+                  <Button
+                    onClick={() => addNewBlock(blockType.type as EditorBlock['type'])}
+                    className="w-full"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Adicionar
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
           </div>
-          <div className="text-sm text-[#8F7A6A]">Pro Features</div>
-        </div>
-        <div className="bg-white border border-[#B89B7A]/20 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-blue-600">
-            {Object.keys(BLOCK_REGISTRY).length}
-          </div>
-          <div className="text-sm text-[#8F7A6A]">Implementados</div>
-        </div>
-      </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
+
+export default BlocksDemo;

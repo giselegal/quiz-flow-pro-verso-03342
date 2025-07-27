@@ -1,58 +1,110 @@
-import React from 'react';
-import type { BlockComponentProps } from '@/types/blocks';
 
-const TextBlock: React.FC<BlockComponentProps> = ({ 
-  block,
+import React, { useState, useRef, useEffect } from 'react';
+import { cn } from '@/lib/utils';
+import { EditableContent } from '@/types/editor';
+
+interface TextBlockProps {
+  content: EditableContent;
+  isSelected?: boolean;
+  isEditing?: boolean;
+  onUpdate?: (content: Partial<EditableContent>) => void;
+  onSelect?: () => void;
+  className?: string;
+}
+
+export const TextBlock: React.FC<TextBlockProps> = ({
+  content,
   isSelected = false,
-  onClick,
-  className = ''
+  isEditing = false,
+  onUpdate,
+  onSelect,
+  className
 }) => {
-  const { 
-    content = 'Este é um bloco de texto. Clique para editar.',
-    fontSize = 'base',
-    alignment = 'left',
-    color = 'text-gray-800'
-  } = block.properties;
+  const [isInlineEditing, setIsInlineEditing] = useState(false);
+  const [localText, setLocalText] = useState(content.text || '');
+  const textRef = useRef<HTMLDivElement>(null);
 
-  const fontSizeClasses: Record<string, string> = {
-    sm: 'text-sm',
-    base: 'text-base',
-    lg: 'text-lg',
-    xl: 'text-xl',
-    '2xl': 'text-2xl'
+  useEffect(() => {
+    setLocalText(content.text || '');
+  }, [content.text]);
+
+  const handleDoubleClick = () => {
+    if (onUpdate) {
+      setIsInlineEditing(true);
+      setTimeout(() => {
+        textRef.current?.focus();
+      }, 0);
+    }
   };
 
-  const alignmentClasses: Record<string, string> = {
-    left: 'text-left',
-    center: 'text-center',
-    right: 'text-right',
-    justify: 'text-justify'
+  const handleBlur = () => {
+    setIsInlineEditing(false);
+    if (onUpdate && localText !== content.text) {
+      onUpdate({ text: localText });
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleBlur();
+    }
+    if (e.key === 'Escape') {
+      setLocalText(content.text || '');
+      setIsInlineEditing(false);
+    }
+  };
+
+  const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
+    setLocalText(e.currentTarget.textContent || '');
   };
 
   return (
-    <div 
-      className={`
-        p-4 rounded-lg cursor-pointer transition-all duration-200
-        ${isSelected 
-          ? 'border-2 border-blue-500 bg-blue-50' 
-          : 'border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]'
-        }
-        ${className}
-      `}
-      onClick={onClick}
-      data-block-id={block.id}
-      data-block-type={block.type}
+    <div
+      className={cn(
+        "relative p-4 rounded-lg transition-all duration-200",
+        isSelected && "ring-2 ring-blue-400 ring-offset-2",
+        isInlineEditing && "ring-2 ring-green-400 ring-offset-2",
+        "hover:bg-gray-50 cursor-pointer",
+        className
+      )}
+      onClick={onSelect}
+      onDoubleClick={handleDoubleClick}
+      style={{
+        color: content.style?.color,
+        backgroundColor: content.style?.backgroundColor,
+        fontSize: content.style?.fontSize,
+        fontWeight: content.style?.fontWeight,
+        textAlign: content.style?.textAlign as any,
+        padding: content.style?.padding,
+        margin: content.style?.margin
+      }}
     >
-      <div 
-        className={`
-          ${fontSizeClasses[fontSize]} 
-          ${alignmentClasses[alignment]} 
-          ${color}
-          leading-relaxed whitespace-pre-wrap
-        `}
-      >
-        {content}
-      </div>
+      {isInlineEditing ? (
+        <div
+          ref={textRef}
+          contentEditable
+          suppressContentEditableWarning
+          className="outline-none min-h-[1.5rem] leading-relaxed"
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+          onInput={handleInput}
+          dangerouslySetInnerHTML={{ __html: localText }}
+        />
+      ) : (
+        <div 
+          className="min-h-[1.5rem] leading-relaxed"
+          dangerouslySetInnerHTML={{ 
+            __html: localText || '<span class="text-gray-400">Clique duplo para editar texto...</span>' 
+          }}
+        />
+      )}
+      
+      {isInlineEditing && (
+        <div className="absolute -top-8 left-0 bg-green-500 text-white px-2 py-1 rounded text-xs">
+          Editando - Enter para salvar, Esc para cancelar
+        </div>
+      )}
     </div>
   );
 };

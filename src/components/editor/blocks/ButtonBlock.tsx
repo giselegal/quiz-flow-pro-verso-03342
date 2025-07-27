@@ -1,67 +1,174 @@
-import React from 'react';
-import type { BlockComponentProps } from '@/types/blocks';
 
-const ButtonBlock: React.FC<BlockComponentProps> = ({ 
-  block,
+import React, { useState, useRef, useEffect } from 'react';
+import { cn } from '@/lib/utils';
+import { EditableContent } from '@/types/editor';
+import { Button } from '@/components/ui/button';
+import { ExternalLink, Mail, Download, ArrowRight } from 'lucide-react';
+
+interface ButtonBlockProps {
+  content: EditableContent;
+  isSelected?: boolean;
+  isEditing?: boolean;
+  onUpdate?: (content: Partial<EditableContent>) => void;
+  onSelect?: () => void;
+  className?: string;
+}
+
+export const ButtonBlock: React.FC<ButtonBlockProps> = ({
+  content,
   isSelected = false,
   isEditing = false,
-  onClick,
-  onPropertyChange,
-  className = ''
+  onUpdate,
+  onSelect,
+  className
 }) => {
-  const { 
-    text = 'Texto do Botão', 
-    style = 'primary', 
-    size = 'default',
-    fullWidth = false,
-    url = '',
-    action = 'link'
-  } = block.properties;
+  const [isInlineEditing, setIsInlineEditing] = useState(false);
+  const [localButtonText, setLocalButtonText] = useState(content.buttonText || '');
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const handlePropertyChange = (key: string, value: any) => {
-    if (onPropertyChange) {
-      onPropertyChange(key, value);
+  useEffect(() => {
+    setLocalButtonText(content.buttonText || '');
+  }, [content.buttonText]);
+
+  const handleDoubleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onUpdate) {
+      setIsInlineEditing(true);
+      setTimeout(() => {
+        buttonRef.current?.focus();
+      }, 0);
     }
   };
 
-  const styleClasses: Record<string, string> = {
-    primary: 'bg-[#B89B7A] hover:bg-[#a08965] text-white',
-    secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-800',
-    accent: 'bg-[#432818] hover:bg-[#2a1910] text-white'
+  const handleBlur = () => {
+    setIsInlineEditing(false);
+    if (onUpdate && localButtonText !== content.buttonText) {
+      onUpdate({ buttonText: localButtonText });
+    }
   };
 
-  const sizeClasses: Record<string, string> = {
-    sm: 'px-3 py-1.5 text-sm',
-    default: 'px-4 py-2 text-base',
-    lg: 'px-6 py-3 text-lg'
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleBlur();
+    }
+    if (e.key === 'Escape') {
+      setLocalButtonText(content.buttonText || '');
+      setIsInlineEditing(false);
+    }
+  };
+
+  const handleButtonClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (isInlineEditing) {
+      return;
+    }
+    
+    if (content.buttonUrl) {
+      if (content.buttonUrl.startsWith('mailto:')) {
+        window.location.href = content.buttonUrl;
+      } else if (content.buttonUrl.startsWith('tel:')) {
+        window.location.href = content.buttonUrl;
+      } else {
+        window.open(content.buttonUrl, '_blank', 'noopener,noreferrer');
+      }
+    }
+  };
+
+  const getButtonIcon = () => {
+    if (!content.buttonUrl) return null;
+    
+    if (content.buttonUrl.startsWith('mailto:')) {
+      return <Mail className="h-4 w-4 mr-2" />;
+    }
+    if (content.buttonUrl.includes('download')) {
+      return <Download className="h-4 w-4 mr-2" />;
+    }
+    if (content.buttonUrl.startsWith('http')) {
+      return <ExternalLink className="h-4 w-4 mr-2" />;
+    }
+    return <ArrowRight className="h-4 w-4 mr-2" />;
+  };
+
+  const getButtonVariant = () => {
+    const style = content.style?.backgroundColor;
+    if (style?.includes('blue')) return 'default';
+    if (style?.includes('green')) return 'default';
+    if (style?.includes('red')) return 'destructive';
+    if (style?.includes('gray')) return 'secondary';
+    return 'default';
   };
 
   return (
-    <div 
-      className={`
-        p-4 rounded-lg cursor-pointer transition-all duration-200 flex justify-center
-        ${isSelected 
-          ? 'border-2 border-blue-500 bg-blue-50' 
-          : 'border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]'
-        }
-        ${className}
-      `}
-      onClick={onClick}
-      data-block-id={block.id}
-      data-block-type={block.type}
+    <div
+      className={cn(
+        "relative p-4 rounded-lg transition-all duration-200",
+        isSelected && "ring-2 ring-blue-400 ring-offset-2",
+        isInlineEditing && "ring-2 ring-green-400 ring-offset-2",
+        "hover:bg-gray-50 cursor-pointer",
+        content.style?.textAlign === 'center' && "text-center",
+        content.style?.textAlign === 'right' && "text-right",
+        className
+      )}
+      onClick={onSelect}
+      style={{
+        backgroundColor: content.style?.backgroundColor,
+        padding: content.style?.padding,
+        margin: content.style?.margin
+      }}
     >
-      <div 
-        className={`
-          rounded-lg font-medium transition-colors duration-200 flex items-center justify-center cursor-pointer
-          ${styleClasses[style]}
-          ${sizeClasses[size]}
-          ${fullWidth ? 'w-full' : 'w-auto'}
-        `}
+      <Button
+        ref={buttonRef}
+        variant={getButtonVariant()}
+        size="lg"
+        className={cn(
+          "relative transition-all duration-200",
+          isInlineEditing && "ring-2 ring-green-400",
+          content.style?.width && `w-${content.style.width}`,
+          content.style?.borderRadius && `rounded-${content.style.borderRadius}`
+        )}
+        style={{
+          backgroundColor: content.style?.backgroundColor,
+          color: content.style?.color,
+          fontSize: content.style?.fontSize,
+          fontWeight: content.style?.fontWeight,
+          padding: content.style?.padding,
+          borderRadius: content.style?.borderRadius,
+          boxShadow: content.style?.boxShadow
+        }}
+        onClick={handleButtonClick}
+        onDoubleClick={handleDoubleClick}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
       >
-        <span className="text-inherit">
-          {text}
-        </span>
-      </div>
+        {getButtonIcon()}
+        {isInlineEditing ? (
+          <span
+            contentEditable
+            suppressContentEditableWarning
+            className="outline-none"
+            onInput={(e) => {
+              setLocalButtonText(e.currentTarget.textContent || '');
+            }}
+            dangerouslySetInnerHTML={{ __html: localButtonText }}
+          />
+        ) : (
+          <span>{localButtonText || 'Clique para editar'}</span>
+        )}
+      </Button>
+      
+      {isInlineEditing && (
+        <div className="absolute -top-8 left-0 bg-green-500 text-white px-2 py-1 rounded text-xs">
+          Editando - Enter para salvar, Esc para cancelar
+        </div>
+      )}
+      
+      {isSelected && !content.buttonUrl && (
+        <div className="absolute -bottom-6 left-0 bg-orange-500 text-white px-2 py-1 rounded text-xs">
+          Adicione uma URL no painel de propriedades
+        </div>
+      )}
     </div>
   );
 };

@@ -1,336 +1,193 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
-import type { Quiz, Question } from '../types/supabase';
-import { useQuiz, useQuestions } from './useQuiz';
 
-export interface EditorState {
-  quiz: Quiz | null;
-  questions: Question[];
-  currentQuestionIndex: number;
-  isDirty: boolean;
-  isAutoSaving: boolean;
-  lastSaved: Date | null;
+import { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+
+interface QuizQuestion {
+  id: string;
+  quiz_id: string;
+  question_text: string;
+  question_type: string;
+  options: { text: string; isCorrect: boolean }[];
+  correct_answers: string[];
+  points: number;
+  explanation?: string;
+  time_limit?: number;
+  required: boolean;
+  hint?: string;
+  media_url?: string;
+  media_type?: string;
+  tags: string[];
+  order_index: number;
 }
 
-export interface EditorActions {
-  setQuiz: (quiz: Quiz) => void;
-  updateQuizField: (field: keyof Quiz, value: any) => void;
-  addQuestion: () => void;
-  updateQuestion: (index: number, question: Partial<Question>) => void;
-  deleteQuestion: (index: number) => void;
-  reorderQuestions: (fromIndex: number, toIndex: number) => void;
-  setCurrentQuestion: (index: number) => void;
-  saveQuiz: () => Promise<{ error: Error | null }>;
-  resetEditor: () => void;
-  markDirty: () => void;
-  markClean: () => void;
+interface Quiz {
+  id: string;
+  title: string;
+  description: string | null;
+  author_id: string;
+  category: string;
+  difficulty: string | null;
+  time_limit: number | null;
+  settings: any;
+  is_public: boolean;
+  is_published: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
-interface UseQuizEditorOptions {
-  quizId?: string;
-  autoSave?: boolean;
-  autoSaveInterval?: number; // em milissegundos
-}
+export const useQuizEditor = (quizId?: string) => {
+  const { user } = useAuth();
+  const [quiz, setQuiz] = useState<Quiz | null>(null);
+  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
-const defaultOptions: UseQuizEditorOptions = {
-  autoSave: true,
-  autoSaveInterval: 30000 // 30 segundos
-};
-
-export const useQuizEditor = (options: UseQuizEditorOptions = {}) => {
-  const { quizId, autoSave, autoSaveInterval } = { ...defaultOptions, ...options };
-  
-  const { quiz, loading: quizLoading, error: quizError, updateQuiz } = useQuiz(quizId);
-  const { 
-    questions, 
-    loading: questionsLoading, 
-    error: questionsError,
-    addQuestion: addQuestionService,
-    updateQuestion: updateQuestionService,
-    deleteQuestion: deleteQuestionService,
-    reorderQuestions: reorderQuestionsService,
-    setQuestions
-  } = useQuestions(quizId || '');
-
-  const [state, setState] = useState<EditorState>({
-    quiz: null,
-    questions: [],
-    currentQuestionIndex: 0,
-    isDirty: false,
-    isAutoSaving: false,
-    lastSaved: null
-  });
-
-  const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const pendingChangesRef = useRef<{
-    quiz?: Partial<Quiz>;
-    questions?: { id: string; updates: Partial<Question> }[];
-  }>({});
-
-  // Sincronizar com dados carregados
+  // Load quiz and questions
   useEffect(() => {
-    if (quiz && questions) {
-      setState(prev => ({
-        ...prev,
-        quiz,
-        questions
-      }));
+    if (quizId) {
+      loadQuiz(quizId);
+    } else {
+      setLoading(false);
     }
-  }, [quiz, questions]);
+  }, [quizId]);
 
-  // Auto-save
-  useEffect(() => {
-    if (!autoSave || !state.isDirty) return;
-
-    const startAutoSave = () => {
-      if (autoSaveTimerRef.current) {
-        clearTimeout(autoSaveTimerRef.current);
-      }
-
-      autoSaveTimerRef.current = setTimeout(async () => {
-        if (state.isDirty) {
-          await performAutoSave();
-        }
-      }, autoSaveInterval);
-    };
-
-    startAutoSave();
-
-    return () => {
-      if (autoSaveTimerRef.current) {
-        clearTimeout(autoSaveTimerRef.current);
-      }
-    };
-  }, [state.isDirty, autoSave, autoSaveInterval]);
-
-  const performAutoSave = useCallback(async () => {
-    if (!state.quiz || !state.isDirty) return;
-
-    setState(prev => ({ ...prev, isAutoSaving: true }));
-
+  const loadQuiz = async (id: string) => {
     try {
-      // Salvar alterações do quiz
-      if (pendingChangesRef.current.quiz) {
-        await updateQuiz(pendingChangesRef.current.quiz);
-        pendingChangesRef.current.quiz = undefined;
-      }
-
-      // Salvar alterações das questões
-      if (pendingChangesRef.current.questions) {
-        for (const { id, updates } of pendingChangesRef.current.questions) {
-          await updateQuestionService(id, updates);
-        }
-        pendingChangesRef.current.questions = undefined;
-      }
-
-      setState(prev => ({
-        ...prev,
-        isDirty: false,
-        lastSaved: new Date()
-      }));
-    } catch (error) {
-      console.error('Erro no auto-save:', error);
-    } finally {
-      setState(prev => ({ ...prev, isAutoSaving: false }));
-    }
-  }, [state.quiz, state.isDirty, updateQuiz, updateQuestionService]);
-
-  const markDirty = useCallback(() => {
-    setState(prev => ({ ...prev, isDirty: true }));
-  }, []);
-
-  const markClean = useCallback(() => {
-    setState(prev => ({ ...prev, isDirty: false, lastSaved: new Date() }));
-  }, []);
-
-  const setQuiz = useCallback((newQuiz: Quiz) => {
-    setState(prev => ({ ...prev, quiz: newQuiz }));
-  }, []);
-
-  const updateQuizField = useCallback((field: keyof Quiz, value: any) => {
-    setState(prev => {
-      if (!prev.quiz) return prev;
-      
-      const updatedQuiz = { ...prev.quiz, [field]: value };
-      
-      // Adicionar à lista de mudanças pendentes
-      if (!pendingChangesRef.current.quiz) {
-        pendingChangesRef.current.quiz = {};
-      }
-      pendingChangesRef.current.quiz[field] = value;
-      
-      return {
-        ...prev,
-        quiz: updatedQuiz,
-        isDirty: true
+      setLoading(true);
+      // Simulated API call - replace with actual API
+      const mockQuiz: Quiz = {
+        id,
+        title: 'Quiz Exemplo',
+        description: 'Descrição do quiz',
+        author_id: user?.id || '',
+        category: 'general',
+        difficulty: 'medium',
+        time_limit: null,
+        settings: {},
+        is_public: false,
+        is_published: false,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       };
-    });
-  }, []);
+      setQuiz(mockQuiz);
+      setQuestions([]);
+    } catch (err) {
+      setError('Erro ao carregar quiz');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const addQuestion = useCallback(async () => {
-    if (!state.quiz) return;
+  const updateQuiz = useCallback((updates: Partial<Quiz>) => {
+    if (!quiz) return;
+    
+    setQuiz(prev => prev ? { ...prev, ...updates } : null);
+  }, [quiz]);
 
-    const newQuestion: Omit<Question, 'id' | 'created_at'> = {
-      quiz_id: state.quiz.id,
-      question_text: '',
+  const addQuestion = useCallback(() => {
+    if (!quiz) return;
+    
+    const newQuestion: QuizQuestion = {
+      id: `question_${Date.now()}`,
+      quiz_id: quiz.id,
+      question_text: 'Nova pergunta',
       question_type: 'multiple_choice',
       options: [
-        { text: '', isCorrect: false },
-        { text: '', isCorrect: false },
-        { text: '', isCorrect: false },
-        { text: '', isCorrect: false }
+        { text: 'Opção 1', isCorrect: false },
+        { text: 'Opção 2', isCorrect: false }
       ],
       correct_answers: [],
       points: 1,
       explanation: '',
-      media_url: null,
-      order_index: state.questions.length
+      time_limit: undefined,
+      required: true,
+      hint: '',
+      media_url: undefined,
+      media_type: undefined,
+      tags: [],
+      order_index: questions.length
     };
-
-    const { error } = await addQuestionService(newQuestion);
     
-    if (!error) {
-      markDirty();
-    }
+    setQuestions(prev => [...prev, newQuestion]);
+    return newQuestion.id;
+  }, [quiz, questions.length]);
 
-    return { error };
-  }, [state.quiz, state.questions.length, addQuestionService, markDirty]);
-
-  const updateQuestion = useCallback((index: number, updates: Partial<Question>) => {
-    setState(prev => {
-      const updatedQuestions = [...prev.questions];
-      const question = updatedQuestions[index];
-      
-      if (!question) return prev;
-
-      updatedQuestions[index] = { ...question, ...updates };
-
-      // Adicionar à lista de mudanças pendentes
-      if (!pendingChangesRef.current.questions) {
-        pendingChangesRef.current.questions = [];
-      }
-      
-      const existingIndex = pendingChangesRef.current.questions.findIndex(q => q.id === question.id);
-      if (existingIndex >= 0) {
-        pendingChangesRef.current.questions[existingIndex].updates = {
-          ...pendingChangesRef.current.questions[existingIndex].updates,
-          ...updates
-        };
-      } else {
-        pendingChangesRef.current.questions.push({
-          id: question.id,
-          updates
-        });
-      }
-
-      return {
-        ...prev,
-        questions: updatedQuestions,
-        isDirty: true
-      };
-    });
+  const updateQuestion = useCallback((id: string, updates: Partial<QuizQuestion>) => {
+    setQuestions(prev => prev.map(q => 
+      q.id === id ? { ...q, ...updates } : q
+    ));
   }, []);
 
-  const deleteQuestion = useCallback(async (index: number) => {
-    const question = state.questions[index];
-    if (!question) return { error: new Error('Questão não encontrada') };
+  const deleteQuestion = useCallback((id: string) => {
+    setQuestions(prev => prev.filter(q => q.id !== id));
+  }, []);
 
-    const { error } = await deleteQuestionService(question.id);
-    
-    if (!error) {
-      setState(prev => ({
-        ...prev,
-        questions: prev.questions.filter((_, i) => i !== index),
-        currentQuestionIndex: Math.max(0, Math.min(prev.currentQuestionIndex, prev.questions.length - 2))
+  const reorderQuestions = useCallback((dragIndex: number, hoverIndex: number) => {
+    setQuestions(prev => {
+      const newQuestions = [...prev];
+      const draggedQuestion = newQuestions[dragIndex];
+      
+      newQuestions.splice(dragIndex, 1);
+      newQuestions.splice(hoverIndex, 0, draggedQuestion);
+      
+      return newQuestions.map((q, index) => ({
+        ...q,
+        order_index: index
       }));
-      markDirty();
-    }
-
-    return { error };
-  }, [state.questions, deleteQuestionService, markDirty]);
-
-  const reorderQuestions = useCallback(async (fromIndex: number, toIndex: number) => {
-    const newQuestions = [...state.questions];
-    const [movedQuestion] = newQuestions.splice(fromIndex, 1);
-    newQuestions.splice(toIndex, 0, movedQuestion);
-
-    // Atualizar índices
-    const reorderUpdates = newQuestions.map((q, index) => ({
-      id: q.id,
-      order_index: index
-    }));
-
-    const { error } = await reorderQuestionsService(reorderUpdates);
-    
-    if (!error) {
-      setState(prev => ({
-        ...prev,
-        questions: newQuestions.map((q, index) => ({ ...q, order_index: index })),
-        currentQuestionIndex: toIndex
-      }));
-      markDirty();
-    }
-
-    return { error };
-  }, [state.questions, reorderQuestionsService, markDirty]);
-
-  const setCurrentQuestion = useCallback((index: number) => {
-    setState(prev => ({
-      ...prev,
-      currentQuestionIndex: Math.max(0, Math.min(index, prev.questions.length - 1))
-    }));
+    });
   }, []);
 
   const saveQuiz = useCallback(async () => {
-    if (!state.quiz) return { error: new Error('Quiz não carregado') };
-
-    setState(prev => ({ ...prev, isAutoSaving: true }));
-
+    if (!quiz || !user) return false;
+    
     try {
-      await performAutoSave();
-      return { error: null };
-    } catch (error) {
-      return { error: error as Error };
+      setSaving(true);
+      // Simulated API call - replace with actual API
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      return true;
+    } catch (err) {
+      setError('Erro ao salvar quiz');
+      return false;
     } finally {
-      setState(prev => ({ ...prev, isAutoSaving: false }));
+      setSaving(false);
     }
-  }, [state.quiz, performAutoSave]);
+  }, [quiz, user]);
 
-  const resetEditor = useCallback(() => {
-    setState({
-      quiz: null,
-      questions: [],
-      currentQuestionIndex: 0,
-      isDirty: false,
-      isAutoSaving: false,
-      lastSaved: null
-    });
+  const publishQuiz = useCallback(async () => {
+    if (!quiz) return false;
     
-    pendingChangesRef.current = {};
-    
-    if (autoSaveTimerRef.current) {
-      clearTimeout(autoSaveTimerRef.current);
-    }
-  }, []);
+    updateQuiz({ is_published: true });
+    return await saveQuiz();
+  }, [quiz, updateQuiz, saveQuiz]);
 
-  const actions: EditorActions = {
-    setQuiz,
-    updateQuizField,
+  const duplicateQuestion = useCallback((id: string) => {
+    const question = questions.find(q => q.id === id);
+    if (!question) return;
+    
+    const duplicatedQuestion: QuizQuestion = {
+      ...question,
+      id: `question_${Date.now()}`,
+      question_text: `${question.question_text} (Cópia)`,
+      order_index: questions.length
+    };
+    
+    setQuestions(prev => [...prev, duplicatedQuestion]);
+  }, [questions]);
+
+  return {
+    quiz,
+    questions,
+    loading,
+    error,
+    saving,
+    updateQuiz,
     addQuestion,
     updateQuestion,
     deleteQuestion,
     reorderQuestions,
-    setCurrentQuestion,
     saveQuiz,
-    resetEditor,
-    markDirty,
-    markClean
-  };
-
-  return {
-    state,
-    actions,
-    loading: quizLoading || questionsLoading,
-    error: quizError || questionsError,
-    currentQuestion: state.questions[state.currentQuestionIndex] || null
+    publishQuiz,
+    duplicateQuestion
   };
 };
