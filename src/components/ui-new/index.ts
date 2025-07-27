@@ -39,3 +39,9 @@ export type {
   DifficultyBadgeProps,
   CategoryBadgeProps
 } from './Badge';
+
+export { default as Tabs } from './Tabs';
+export { default as Card } from './Card';
+
+// Re-export types
+export type { TabsProps } from 'antd';
