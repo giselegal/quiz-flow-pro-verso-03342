@@ -42,6 +42,8 @@ export type {
 
 export { default as Tabs } from './Tabs';
 export { default as Card } from './Card';
+export { default as ScrollArea } from './ScrollArea';
+export { default as Dropdown } from './Dropdown';
 
 // Re-export types
-export type { TabsProps } from 'antd';
+export type { TabsProps, MenuProps } from 'antd';

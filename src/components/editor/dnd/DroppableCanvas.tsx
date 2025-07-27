@@ -1,36 +1,35 @@
-import React from 'react';
-import { useDroppable } from '@dnd-kit/core';
-import { SortableBlockItem } from './SortableBlockItem';
-import { Plus } from 'lucide-react';
+import React, { useState, useCallback } from 'react';
+import { Card, Button, Dropdown, ScrollArea } from '../../ui-new';
+import { Badge } from '../../ui-new/Badge';
+import { 
+  DragOutlined, 
+  MoreOutlined, 
+  CopyOutlined, 
+  DeleteOutlined, 
+  EyeOutlined, 
+  EyeInvisibleOutlined,
+  PlusOutlined 
+} from '@ant-design/icons';
+import { Space, Typography, Empty, Tooltip } from 'antd';
+import { allBlockDefinitions } from '../../../config/blockDefinitions';
 
-// Utility function for class names
-const cn = (...classes: (string | undefined | boolean)[]): string => {
-  return classes.filter(Boolean).join(' ');
-};
-
-// Tipo local para BlockData
-interface BlockData {
-  id: string;
-  type: string;
-  properties: Record<string, any>;
-}
+const { Text, Title } = Typography;
 
 interface DroppableCanvasProps {
-  blocks: BlockData[];
+  blocks: any[];
   selectedBlockId?: string;
   onBlockSelect: (blockId: string) => void;
   onBlockDelete: (blockId: string) => void;
   onBlockDuplicate: (blockId: string) => void;
   onBlockToggleVisibility: (blockId: string) => void;
-  onSaveInline: (blockId: string, updates: Partial<BlockData>) => void;
-  onAddBlock: (blockType: string) => void;
-  setShowRightSidebar: (show: boolean) => void; // Adicionado
+  onSaveInline: (blockId: string, updates: any) => void;
+  onAddBlock: (type: string) => void;
+  setShowRightSidebar: (show: boolean) => void;
   className?: string;
-  disabled?: boolean;
 }
 
 export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
-  blocks,
+  blocks = [],
   selectedBlockId,
   onBlockSelect,
   onBlockDelete,
@@ -38,194 +37,255 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
   onBlockToggleVisibility,
   onSaveInline,
   onAddBlock,
-  setShowRightSidebar, // Adicionado
-  className,
-  disabled = false
+  setShowRightSidebar,
+  className = '',
 }) => {
-  const {
-    setNodeRef,
-    isOver,
-    active
-  } = useDroppable({
-    id: 'canvas-drop-zone',
-    data: {
-      type: 'canvas-drop-zone',
-      position: blocks.length
-    }
-  });
+  const [draggedBlock, setDraggedBlock] = useState<string | null>(null);
 
-  const isDraggingFromSidebar = active?.data.current?.type === 'sidebar-component';
+  const getBlockDefinition = useCallback((type: string) => {
+    return allBlockDefinitions.find(def => def.type === type);
+  }, []);
 
-  return (
-    <div
-      ref={setNodeRef}
-      className={cn(
-        'relative min-h-[800px] w-full transition-all duration-200 editor-canvas',
-        isOver && isDraggingFromSidebar && 'bg-blue-50 ring-2 ring-blue-300 ring-dashed',
-        className
-      )}
-      style={{
-        padding: 'var(--global-gap)',
-        maxWidth: 'var(--global-width)',
-        margin: '0 auto',
-        borderRadius: 'var(--global-radius)'
-      }}
-    >
-      {/* Empty State */}
-      {blocks.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-96 text-gray-500 border-2 border-dashed border-gray-300 rounded-lg bg-white">
-          {/* Logo placeholder */}
-          <div className="canvas-logo bg-gray-100 rounded-full flex items-center justify-center mb-4">
-            <Plus className="w-8 h-8 text-gray-400" />
-          </div>
-          
-          {/* Progress bar placeholder */}
-          <div className="canvas-progress-bar bg-gray-200 rounded-full mb-6 max-w-md w-full">
-            <div className="h-full bg-blue-300 rounded-full" style={{ width: '0%' }}></div>
-          </div>
-          
-          {/* Main title */}
-          <h3 className="canvas-main-title text-gray-700 mb-2 text-center">
-            Teste de Estilo Pessoal
-          </h3>
-          
-          {/* Main image placeholder */}
-          <div className="canvas-main-image bg-gray-100 rounded-lg flex items-center justify-center mb-6" style={{ height: '200px' }}>
-            <span className="text-gray-400 text-sm">Imagem Principal</span>
-          </div>
-          
-          {/* Input field placeholder */}
-          <div className="w-full max-w-md mb-4">
-            <label className="canvas-input-label text-gray-600 block">NOME</label>
-            <input 
-              type="text" 
-              className="canvas-input-field border border-gray-300 bg-gray-50" 
-              placeholder="Digite seu nome aqui..."
-              disabled
-            />
-          </div>
-          
-          {/* Continue button */}
-          <button className="canvas-continue-button max-w-md opacity-75 cursor-not-allowed">
-            Continuar
-          </button>
-          
-          <div className="mt-8 text-center">
-            <p className="text-sm text-gray-500 mb-2">
-              Arraste componentes da barra lateral para começar a construir sua página.
-            </p>
-          </div>
-        </div>
-      ) : (
-        /* LAYOUT VERTICAL CENTRALIZADO - CONFORME ESPECIFICAÇÕES */
-        <div className="w-full bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          {/* Container Flexbox VERTICAL - CENTRALIZADO - RESPONSIVO */}
-          <div className="flex flex-col items-center gap-6 w-full max-w-2xl mx-auto">
-            {blocks.map((block, index) => {
-              // LARGURA 100% RESPONSIVA - CENTRALIZADA CONFORME ESPECIFICAÇÕES
-              const getResponsiveWidth = () => {
-                // Todos os componentes ocupam largura total do canvas centralizado
-                // LARGURA UNIFICADA para layout vertical consistente
-                return "w-full max-w-full";
-              };
+  const handleBlockClick = useCallback((blockId: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    onBlockSelect(blockId);
+    setShowRightSidebar(true);
+  }, [onBlockSelect, setShowRightSidebar]);
 
-              return (
-                <React.Fragment key={block.id}>
-                  {/* Drop Zone Between Blocks */}
-                  <DropZoneBetween
-                    position={index}
-                    isVisible={isDraggingFromSidebar}
-                  />
-                  
-                  {/* Block Item Container - TODOS CENTRALIZADOS E FULL WIDTH */}
-                  <div className={cn(
-                    getResponsiveWidth(),
-                    "min-h-[120px] transition-all duration-200",
-                    "flex-shrink-0" // Evita encolhimento excessivo
-                  )}>
-                    <SortableBlockItem
-                      block={block}
-                      isSelected={block.id === selectedBlockId}
-                      onSelect={() => {
-                        onBlockSelect(block.id);
-                        setShowRightSidebar(true); // Adicionado
-                      }}
-                      onDelete={() => onBlockDelete(block.id)}
-                      onDuplicate={() => onBlockDuplicate(block.id)}
-                      onToggleVisibility={() => onBlockToggleVisibility(block.id)}
-                      onSaveInline={onSaveInline}
-                      disabled={disabled}
-                      className={cn(
-                        "w-full h-full transition-all duration-200",
-                        // Todos os componentes têm identidade visual consistente
-                        "border border-gray-200 rounded-lg shadow-sm bg-white",
-                        "hover:shadow-md hover:border-blue-300",
-                        "min-h-[120px] flex flex-col",
-                        // Cores da marca para identidade visual
-                        (block.id === selectedBlockId) && "ring-2 ring-blue-500 border-blue-400 bg-blue-50"
-                      )}
-                    />
-                  </div>
-                </React.Fragment>
-              );
-            })}
-          </div>
-          
-          {/* Final Drop Zone */}
-          <DropZoneBetween
-            position={blocks.length}
-            isVisible={isDraggingFromSidebar}
-            isLast={true}
-          />
-        </div>
-      )}
+  const renderBlockActions = useCallback((block: any) => {
+    const isVisible = !block.properties?.hidden;
+    
+    const dropdownItems = [
+      {
+        key: 'duplicate',
+        label: 'Duplicar',
+        icon: <CopyOutlined />,
+        onClick: () => onBlockDuplicate(block.id),
+      },
+      {
+        key: 'visibility',
+        label: isVisible ? 'Ocultar' : 'Mostrar',
+        icon: isVisible ? <EyeInvisibleOutlined /> : <EyeOutlined />,
+        onClick: () => onBlockToggleVisibility(block.id),
+      },
+      {
+        key: 'delete',
+        label: 'Excluir',
+        icon: <DeleteOutlined />,
+        danger: true,
+        onClick: () => onBlockDelete(block.id),
+      },
+    ];
 
-      {/* Global Drop Overlay */}
-      {isOver && isDraggingFromSidebar && (
-        <div className="absolute inset-0 bg-blue-500 bg-opacity-5 rounded-lg pointer-events-none">
-          <div className="absolute inset-4 border-2 border-blue-400 border-dashed rounded-lg flex items-center justify-center">
-            <div className="bg-blue-500 text-white px-4 py-2 rounded-lg font-medium">
-              Solte aqui para adicionar {active?.data.current?.title}
+    return (
+      <Dropdown
+        items={dropdownItems}
+        trigger={['click']}
+        placement="bottomRight"
+      >
+        <Button
+          variant="ghost"
+          size="small"
+          className="opacity-0 group-hover:opacity-100 transition-opacity"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <MoreOutlined />
+        </Button>
+      </Dropdown>
+    );
+  }, [onBlockDuplicate, onBlockToggleVisibility, onBlockDelete]);
+
+  const renderBlock = useCallback((block: any, index: number) => {
+    const definition = getBlockDefinition(block.type);
+    const isSelected = selectedBlockId === block.id;
+    const isHidden = block.properties?.hidden;
+    
+    return (
+      <Card
+        key={block.id}
+        className={`
+          group relative transition-all duration-200 cursor-pointer
+          ${isSelected ? 'ring-2 ring-[#B89B7A] bg-[#B89B7A]/5' : 'hover:shadow-md'}
+          ${isHidden ? 'opacity-50' : ''}
+          ${className}
+        `}
+        onClick={(e) => handleBlockClick(block.id, e)}
+        size="small"
+      >
+        {/* Block Header */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center space-x-3">
+            <Tooltip title="Arrastar para reordenar">
+              <div className="cursor-move opacity-50 hover:opacity-100">
+                <DragOutlined className="text-[#8F7A6A]" />
+              </div>
+            </Tooltip>
+            
+            <div className="flex items-center space-x-2">
+              <div className="w-6 h-6 bg-gradient-to-br from-[#B89B7A]/20 to-[#aa6b5d]/20 rounded-lg flex items-center justify-center">
+                {definition?.icon ? (
+                  <definition.icon className="w-3 h-3 text-[#B89B7A]" />
+                ) : (
+                  <span className="text-[#B89B7A] text-xs font-bold">
+                    {index + 1}
+                  </span>
+                )}
+              </div>
+              
+              <div>
+                <Text strong className="text-[#432818] text-sm">
+                  {definition?.label || block.type}
+                </Text>
+                {isHidden && (
+                  <Badge variant="secondary" size="small" className="ml-2">
+                    Oculto
+                  </Badge>
+                )}
+              </div>
             </div>
           </div>
+          
+          <div className="flex items-center space-x-1">
+            {renderBlockActions(block)}
+          </div>
         </div>
-      )}
+
+        {/* Block Preview Content */}
+        <div className="space-y-2">
+          {/* Render basic block preview based on type */}
+          {block.type === 'QuizStartPageBlock' && (
+            <div className="p-3 bg-gradient-to-r from-[#B89B7A]/10 to-[#aa6b5d]/10 rounded-lg">
+              <Title level={5} className="!mb-1 !text-[#432818]">
+                {block.properties?.title || 'Página Inicial'}
+              </Title>
+              <Text className="text-[#8F7A6A] text-xs">
+                {block.properties?.subtitle || 'Subtitle aqui'}
+              </Text>
+            </div>
+          )}
+          
+          {block.type === 'QuizQuestionBlock' && (
+            <div className="p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
+              <Title level={5} className="!mb-1 !text-[#432818]">
+                {block.properties?.question || 'Pergunta aqui'}
+              </Title>
+              <div className="flex flex-wrap gap-1 mt-2">
+                {(block.properties?.options || ['Opção 1', 'Opção 2']).map((option: string, idx: number) => (
+                  <Badge key={idx} variant="info" size="small">
+                    {option}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {/* Default preview for other block types */}
+          {!['QuizStartPageBlock', 'QuizQuestionBlock'].includes(block.type) && (
+            <div className="p-3 bg-gray-50 rounded-lg">
+              <Text className="text-[#8F7A6A] text-xs">
+                {definition?.description || `Bloco do tipo: ${block.type}`}
+              </Text>
+              {block.properties && Object.keys(block.properties).length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {Object.entries(block.properties).slice(0, 3).map(([key, value]) => (
+                    <Badge key={key} variant="secondary" size="small">
+                      {key}: {String(value).slice(0, 10)}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Selection indicator */}
+        {isSelected && (
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-lg opacity-20 -z-10" />
+        )}
+      </Card>
+    );
+  }, [
+    selectedBlockId,
+    getBlockDefinition,
+    handleBlockClick,
+    renderBlockActions,
+    className
+  ]);
+
+  const renderEmptyState = () => (
+    <div className="flex flex-col items-center justify-center h-64 text-center">
+      <Empty
+        image={Empty.PRESENTED_IMAGE_SIMPLE}
+        description={
+          <div className="space-y-3">
+            <Text className="text-[#8F7A6A]">
+              Nenhum bloco adicionado ainda
+            </Text>
+            <Text className="text-[#8F7A6A] text-xs">
+              Arraste componentes da sidebar ou clique no botão abaixo
+            </Text>
+          </div>
+        }
+      />
+      <Button
+        variant="primary"
+        size="small"
+        icon={<PlusOutlined />}
+        onClick={() => onAddBlock('QuizStartPageBlock')}
+        className="mt-4"
+      >
+        Adicionar Primeiro Bloco
+      </Button>
     </div>
   );
-};
-
-interface DropZoneBetweenProps {
-  position: number;
-  isVisible: boolean;
-  isLast?: boolean;
-}
-
-const DropZoneBetween: React.FC<DropZoneBetweenProps> = ({
-  position,
-  isVisible,
-  isLast = false
-}) => {
-  const {
-    setNodeRef,
-    isOver
-  } = useDroppable({
-    id: `drop-zone-${position}`,
-    data: {
-      type: 'canvas-drop-zone',
-      position
-    }
-  });
-
-  if (!isVisible) return null;
 
   return (
-    <div
-      ref={setNodeRef}
-      className={cn(
-        'h-2 transition-all duration-200 rounded',
-        isOver ? 'bg-blue-500 h-4' : 'bg-blue-200',
-        isLast && 'mt-8'
-      )}
-    />
+    <ScrollArea className="h-full p-4">
+      <div className="max-w-full space-y-4">
+        {blocks.length > 0 ? (
+          <>
+            {/* Canvas Header */}
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <Title level={4} className="!mb-1 !text-[#432818]">
+                  Canvas de Edição
+                </Title>
+                <Text className="text-[#8F7A6A]">
+                  {blocks.length} bloco{blocks.length !== 1 ? 's' : ''} adicionado{blocks.length !== 1 ? 's' : ''}
+                </Text>
+              </div>
+              <Badge variant="info" size="small">
+                {blocks.filter(b => !b.properties?.hidden).length} visível
+                {blocks.filter(b => !b.properties?.hidden).length !== 1 ? 'is' : ''}
+              </Badge>
+            </div>
+
+            {/* Blocks List */}
+            <div className="space-y-3">
+              {blocks.map((block, index) => renderBlock(block, index))}
+            </div>
+
+            {/* Add Block Button */}
+            <Card className="border-dashed border-2 border-[#B89B7A]/30 bg-[#B89B7A]/5 hover:border-[#B89B7A] hover:bg-[#B89B7A]/10 transition-all duration-200">
+              <div className="flex items-center justify-center py-4">
+                <Button
+                  variant="ghost"
+                  size="small"
+                  icon={<PlusOutlined />}
+                  onClick={() => onAddBlock('QuizQuestionBlock')}
+                  className="text-[#B89B7A] hover:text-[#432818]"
+                >
+                  Adicionar Novo Bloco
+                </Button>
+              </div>
+            </Card>
+          </>
+        ) : (
+          renderEmptyState()
+        )}
+      </div>
+    </ScrollArea>
   );
 };
+
+export default DroppableCanvas;
