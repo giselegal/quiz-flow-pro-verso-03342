@@ -1,3 +1,4 @@
+
 export interface Block {
   id: string;
   type: string;
@@ -60,4 +61,26 @@ export interface EditableContent {
   period?: string;
   style?: Record<string, any>;
   [key: string]: any;
+}
+
+export interface PropertySchema {
+  key: string;
+  label: string;
+  type: 'text' | 'textarea' | 'number' | 'color' | 'select' | 'checkbox' | 'image' | 'array';
+  defaultValue?: any;
+  options?: Array<{ value: string; label: string }>;
+  description?: string;
+  required?: boolean;
+  validation?: {
+    min?: number;
+    max?: number;
+    pattern?: string;
+  };
+}
+
+export interface EditorConfig {
+  blocks: EditorBlock[];
+  title?: string;
+  description?: string;
+  settings?: any;
 }

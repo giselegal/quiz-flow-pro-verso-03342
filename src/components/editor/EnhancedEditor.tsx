@@ -1,156 +1,195 @@
 
 import React, { useState, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { EditorBlock } from '@/types/editor';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BarChart3, Save, Settings, Users, Globe, Shield } from 'lucide-react';
-import { StyleResult } from '@/types/quiz';
-import { ComponentsSidebar } from './sidebar/ComponentsSidebar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
 import { EditorToolbar } from './toolbar/EditorToolbar';
-import { PreviewPanel } from './preview/PreviewPanel';
 import PropertiesPanel from './properties/PropertiesPanel';
-import { SEOOptimizer } from './seo/SEOOptimizer';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface EnhancedEditorProps {
-  primaryStyle?: StyleResult;
-  onSave?: () => void;
+  blocks: EditorBlock[];
+  selectedBlockId: string | null;
+  onBlockSelect: (blockId: string) => void;
+  onBlockUpdate: (blockId: string, updates: Partial<EditorBlock>) => void;
+  onBlockDelete: (blockId: string) => void;
+  onBlockAdd: (type: string) => void;
+  onSave: () => void;
   onPublish?: () => void;
+  isPreviewing: boolean;
+  onTogglePreview: () => void;
+  canSave: boolean;
+  canPublish?: boolean;
 }
 
-const EnhancedEditor: React.FC<EnhancedEditorProps> = ({ 
-  primaryStyle, 
-  onSave, 
-  onPublish 
+export const EnhancedEditor: React.FC<EnhancedEditorProps> = ({
+  blocks,
+  selectedBlockId,
+  onBlockSelect,
+  onBlockUpdate,
+  onBlockDelete,
+  onBlockAdd,
+  onSave,
+  onPublish,
+  isPreviewing,
+  onTogglePreview,
+  canSave,
+  canPublish = false
 }) => {
-  const [activeTab, setActiveTab] = useState('design');
-  const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
-  const [isPreviewMode, setIsPreviewMode] = useState(false);
-  const [data, setData] = useState<any>({});
+  const [activeTab, setActiveTab] = useState('editor');
+  
+  const selectedBlock = blocks.find(block => block.id === selectedBlockId);
 
-  // Ensure we have a valid StyleResult (string)
-  const validPrimaryStyle: StyleResult = primaryStyle || 'natural';
+  const handleClose = useCallback(() => {
+    onBlockSelect('');
+  }, [onBlockSelect]);
 
-  const handleSave = useCallback(() => {
-    setData((prev: any) => ({ ...prev, lastSaved: new Date() }));
-    onSave?.();
-  }, [onSave]);
+  const handleUpdateComponent = useCallback((componentId: string, newData: Partial<EditorBlock>) => {
+    onBlockUpdate(componentId, newData);
+  }, [onBlockUpdate]);
 
-  const handlePublish = useCallback(() => {
-    onPublish?.();
-  }, [onPublish]);
+  const handleDeleteComponent = useCallback((componentId: string) => {
+    onBlockDelete(componentId);
+  }, [onBlockDelete]);
 
-  const handleComponentSelect = (componentId: string) => {
-    setSelectedComponent(componentId);
-  };
+  const blockTypes = [
+    { type: 'text', label: 'Text', icon: '📝' },
+    { type: 'image', label: 'Image', icon: '🖼️' },
+    { type: 'button', label: 'Button', icon: '🔘' },
+    { type: 'header', label: 'Header', icon: '📄' },
+    { type: 'spacer', label: 'Spacer', icon: '⬜' },
+  ];
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-gray-50">
-      <EditorToolbar
-        onSave={handleSave}
-        canSave={true}
-        canPublish={true}
-        isPreviewMode={isPreviewMode}
-        onTogglePreview={() => setIsPreviewMode(!isPreviewMode)}
-      />
-
-      <div className="flex-1 overflow-hidden">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full">
-          <div className="border-b bg-white px-4">
-            <TabsList className="grid w-full grid-cols-5">
-              <TabsTrigger value="design">Design</TabsTrigger>
-              <TabsTrigger value="content">Content</TabsTrigger>
-              <TabsTrigger value="seo">SEO</TabsTrigger>
-              <TabsTrigger value="analytics">Analytics</TabsTrigger>
-              <TabsTrigger value="settings">Settings</TabsTrigger>
-            </TabsList>
-          </div>
-
-          <TabsContent value="design" className="flex-1 m-0">
-            <ResizablePanelGroup direction="horizontal" className="h-full">
-              <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-                <div className="h-full border-r bg-white">
-                  <ComponentsSidebar onComponentSelect={handleComponentSelect} />
+    <div className="flex h-screen bg-gray-50">
+      {/* Left Sidebar */}
+      <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+        <div className="p-4 border-b border-gray-200">
+          <h2 className="text-lg font-semibold">Page Editor</h2>
+        </div>
+        
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
+          <TabsList className="mx-4 mt-4">
+            <TabsTrigger value="editor">Editor</TabsTrigger>
+            <TabsTrigger value="properties">Properties</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="editor" className="flex-1 p-4">
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-medium mb-3">Add Components</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  {blockTypes.map(({ type, label, icon }) => (
+                    <Button
+                      key={type}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onBlockAdd(type)}
+                      className="h-12 flex flex-col items-center gap-1"
+                    >
+                      <span className="text-lg">{icon}</span>
+                      <span className="text-xs">{label}</span>
+                    </Button>
+                  ))}
                 </div>
-              </ResizablePanel>
+              </div>
               
-              <ResizableHandle withHandle />
+              <Separator />
               
-              <ResizablePanel defaultSize={60}>
-                <PreviewPanel
-                  isPreviewMode={isPreviewMode}
-                  onComponentSelect={handleComponentSelect}
-                  data={data}
-                />
-              </ResizablePanel>
-              
-              <ResizableHandle withHandle />
-              
-              <ResizablePanel defaultSize={20} minSize={15} maxSize={35}>
-                <div className="h-full border-l bg-white">
-                  <PropertiesPanel
-                    selectedComponentId={selectedComponent}
-                    onClose={() => setSelectedComponent(null)}
-                  />
+              <div>
+                <h3 className="font-medium mb-3">Page Structure</h3>
+                <div className="space-y-2">
+                  {blocks.map((block, index) => (
+                    <Card
+                      key={block.id}
+                      className={`cursor-pointer transition-colors ${
+                        selectedBlockId === block.id ? 'ring-2 ring-blue-500' : ''
+                      }`}
+                      onClick={() => onBlockSelect(block.id)}
+                    >
+                      <CardContent className="p-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <Badge variant="secondary" className="text-xs">
+                              {block.type}
+                            </Badge>
+                            <span className="text-sm font-medium">
+                              {block.content.title || block.content.text || `Block ${index + 1}`}
+                            </span>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onBlockDelete(block.id);
+                            }}
+                          >
+                            ×
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
-              </ResizablePanel>
-            </ResizablePanelGroup>
-          </TabsContent>
-
-          <TabsContent value="content" className="flex-1 m-0">
-            <div className="h-full p-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Settings className="w-5 h-5" />
-                    Content Management
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">Content editing interface will be implemented here.</p>
-                </CardContent>
-              </Card>
+              </div>
             </div>
           </TabsContent>
-
-          <TabsContent value="seo" className="flex-1 m-0">
-            <div className="h-full p-4">
-              <SEOOptimizer funnelId="default" />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="analytics" className="flex-1 m-0">
-            <div className="h-full p-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <BarChart3 className="w-5 h-5" />
-                    Analytics Dashboard
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">Analytics dashboard will be implemented here.</p>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="settings" className="flex-1 m-0">
-            <div className="h-full p-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Settings className="w-5 h-5" />
-                    Editor Settings
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">Settings panel will be implemented here.</p>
-                </CardContent>
-              </Card>
-            </div>
+          
+          <TabsContent value="properties" className="flex-1 p-4">
+            {selectedBlock ? (
+              <PropertiesPanel
+                selectedComponent={selectedBlock}
+                onUpdateComponent={handleUpdateComponent}
+                onDeleteComponent={handleDeleteComponent}
+              />
+            ) : (
+              <div className="text-center text-gray-500 py-8">
+                Select a component to edit its properties
+              </div>
+            )}
           </TabsContent>
         </Tabs>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col">
+        <EditorToolbar
+          onSave={onSave}
+          canSave={canSave}
+          isPreviewing={isPreviewing}
+          onTogglePreview={onTogglePreview}
+        />
+        
+        <div className="flex-1 overflow-auto">
+          <div className="max-w-4xl mx-auto p-8">
+            {blocks.length === 0 ? (
+              <div className="text-center py-16 text-gray-500">
+                <p>No components added yet.</p>
+                <p className="text-sm">Use the sidebar to add components to your page.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {blocks.map((block) => (
+                  <div
+                    key={block.id}
+                    className={`border rounded-lg p-4 ${
+                      selectedBlockId === block.id
+                        ? 'border-blue-500 bg-blue-50'
+                        : 'border-gray-200'
+                    }`}
+                    onClick={() => onBlockSelect(block.id)}
+                  >
+                    <div className="text-sm text-gray-500 mb-2">{block.type}</div>
+                    <div>{JSON.stringify(block.content)}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
