@@ -1,370 +1,301 @@
-import React, { useState, useEffect } from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/Input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Progress } from '@/components/ui/progress';
-import { ComponentsSidebar } from './ComponentsSidebar';
-import { VersioningPanel } from './panels/VersioningPanel';
-import { DevicePreview } from './DevicePreview';
-import { PropertyPanel } from './PropertyPanel';
-import { EditorToolbar } from './toolbar/EditorToolbar';
-import { Version } from '@/types/quiz';
-import { 
-  Plus, 
-  Trash2, 
-  Edit, 
-  Eye, 
-  EyeOff, 
-  Copy, 
-  Move, 
-  Settings, 
-  Smartphone, 
-  Tablet, 
-  Monitor,
-  Save,
-  Undo,
-  Redo,
-  Play,
-  Pause,
-  RotateCcw,
-  Download,
-  Upload,
-  Share2,
-  Layers,
-  Palette,
-  Code,
-  Database,
-  BarChart3,
-  Users,
-  Calendar,
-  Clock,
-  Zap,
-  Star,
-  Heart,
-  MessageCircle,
-  ThumbsUp,
-  Archive,
-  BookOpen,
-  Lightbulb,
-  Target,
-  TrendingUp,
-  Award,
-  Shield,
-  CheckCircle,
-  AlertCircle,
-  Info,
-  X,
-  ChevronDown,
-  ChevronUp,
-  ChevronLeft,
-  ChevronRight
-} from 'lucide-react';
 
-interface ModularQuizEditorProps {
-  quizId?: string;
-  onSave?: (data: any) => void;
-  onPreview?: () => void;
+import React, { useState, useCallback } from 'react';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/Input';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from '@/components/ui/select';
+import { PropertyPanel } from './PropertyPanel';
+import { VersioningPanel } from './panels/VersioningPanel';
+import { SimplePage } from '@/types/quiz';
+import { Version } from '@/types/quiz';
+
+interface EditorPage {
+  id: string;
+  title: string;
+  components: any[];
+  settings: any;
+  order: number;
 }
 
 interface EditorComponent {
   id: string;
   type: string;
-  props: Record<string, any>;
-  children?: EditorComponent[];
+  props: any;
   order: number;
 }
 
-interface EditorPage {
-  id: string;
-  title: string;
-  components: EditorComponent[];
-  settings: Record<string, any>;
-  order: number;
+interface ModularQuizEditorProps {
+  initialPages?: SimplePage[];
+  onSave?: (pages: SimplePage[]) => void;
 }
 
-interface EditorState {
-  isDragging: boolean;
-  dragOverIndex: number | null;
-  selectedComponentId: string | null;
-  currentPageIndex: number;
-  deviceView: 'mobile' | 'tablet' | 'desktop';
-  activeTab: 'editor' | 'funis' | 'historico' | 'config';
-  activeConfigSection: string;
-  isPreviewMode: boolean;
-}
-
-interface VersionChange {
-  type: 'add' | 'remove' | 'edit';
-  component?: string;
-  page?: string;
-  description: string;
-}
-
-const ModularQuizEditor: React.FC<ModularQuizEditorProps> = ({
-  quizId,
-  onSave,
-  onPreview
+export const ModularQuizEditor: React.FC<ModularQuizEditorProps> = ({
+  initialPages = [],
+  onSave
 }) => {
-  const [pages, setPages] = useState<EditorPage[]>([]);
+  const [pages, setPages] = useState<EditorPage[]>(
+    initialPages.map((page, index) => ({
+      id: page.id,
+      title: page.title,
+      components: page.components,
+      settings: {},
+      order: index
+    }))
+  );
+  
+  const [activePageId, setActivePageId] = useState<string | null>(
+    pages.length > 0 ? pages[0].id : null
+  );
+  
+  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
+  const [deviceView, setDeviceView] = useState<'desktop' | 'mobile' | 'tablet'>('desktop');
   const [versions, setVersions] = useState<Version[]>([]);
-  const [state, setState] = useState<EditorState>({
-    isDragging: false,
-    dragOverIndex: null,
-    selectedComponentId: null,
-    currentPageIndex: 0,
-    deviceView: 'desktop',
-    activeTab: 'editor',
-    activeConfigSection: 'general',
-    isPreviewMode: false
-  });
 
-  const handleDragStart = () => {
-    setState(prev => ({ ...prev, isDragging: true }));
-  };
+  const activePage = pages.find(p => p.id === activePageId);
+  const selectedComponent = activePage?.components.find(c => c.id === selectedComponentId);
 
-  const handleDragUpdate = (event: any) => {
-    if (!event.destination) return;
-    setState(prev => ({ ...prev, dragOverIndex: event.destination.index }));
-  };
+  const handleSavePages = useCallback(() => {
+    const simplePagesData: SimplePage[] = pages.map(page => ({
+      id: page.id,
+      title: page.title,
+      type: 'question' as const,
+      progress: 0,
+      showHeader: true,
+      showProgress: true,
+      components: page.components
+    }));
+    
+    if (onSave) {
+      onSave(simplePagesData);
+    }
+  }, [pages, onSave]);
 
-  const handleDragEnd = (event: any) => {
-    setState(prev => ({ ...prev, isDragging: false, dragOverIndex: null }));
-    const { source, destination } = event;
-
-    if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) {
+  const handleDragEnd = useCallback((result: any) => {
+    const { destination, source, draggableId } = result;
+    
+    if (!destination) return;
+    
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
       return;
     }
+    
+    // Handle component reordering logic here
+    console.log('Drag ended:', { destination, source, draggableId });
+  }, []);
 
-    const reorderedPages = reorder(
-      pages,
-      source.index,
-      destination.index
-    );
-
-    setPages(reorderedPages);
-  };
-
-  const reorder = (list: any[], startIndex: number, endIndex: number) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-    return result;
-  };
-
-  const handleAddComponent = (type: string) => {
+  const addComponent = useCallback((type: string) => {
+    if (!activePage) return;
+    
     const newComponent: EditorComponent = {
       id: `component-${Date.now()}`,
       type,
-      props: { text: 'Novo Componente' },
-      order: pages[state.currentPageIndex].components.length
+      props: {},
+      order: activePage.components.length
     };
+    
+    setPages(prev => prev.map(page => 
+      page.id === activePageId 
+        ? { ...page, components: [...page.components, newComponent] }
+        : page
+    ));
+  }, [activePage, activePageId]);
 
-    setPages(prev => {
-      const newPages = [...prev];
-      newPages[state.currentPageIndex].components = [...newPages[state.currentPageIndex].components, newComponent];
-      return newPages;
-    });
-  };
+  const updateComponent = useCallback((id: string, updates: any) => {
+    setPages(prev => prev.map(page => 
+      page.id === activePageId 
+        ? {
+            ...page,
+            components: page.components.map(comp =>
+              comp.id === id ? { ...comp, ...updates } : comp
+            )
+          }
+        : page
+    ));
+  }, [activePageId]);
 
-  const handleUpdateComponent = (componentId: string, newProps: Record<string, any>) => {
-    setPages(prev => {
-      const newPages = [...prev];
-      newPages[state.currentPageIndex].components = newPages[state.currentPageIndex].components.map(component => {
-        if (component.id === componentId) {
-          return { ...component, props: { ...component.props, ...newProps } };
-        }
-        return component;
-      });
-      return newPages;
-    });
-  };
-
-  const handleDeleteComponent = (componentId: string) => {
-    setPages(prev => {
-      const newPages = [...prev];
-      newPages[state.currentPageIndex].components = newPages[state.currentPageIndex].components.filter(component => component.id !== componentId);
-      return newPages;
-    });
-  };
-
-  const handleAddPage = () => {
-    const newPage: EditorPage = {
-      id: `page-${Date.now()}`,
-      title: `Página ${pages.length + 1}`,
-      components: [],
-      settings: {},
-      order: pages.length
-    };
-
-    setPages(prev => [...prev, newPage]);
-  };
-
-  const handleUpdatePage = (pageId: string, newSettings: Record<string, any>) => {
-    setPages(prev => {
-      const newPages = [...prev];
-      newPages[state.currentPageIndex] = { ...newPages[state.currentPageIndex], settings: newSettings };
-      return newPages;
-    });
-  };
-
-  const handleDeletePage = (pageId: string) => {
-    setPages(prev => prev.filter(page => page.id !== pageId));
-  };
-
-  const handleCreateVersion = (name: string, description: string) => {
-    const newVersion: Version = {
-      id: `version-${Date.now()}`,
-      name,
-      description,
-      timestamp: Date.now(),
-      createdAt: new Date().toISOString(),
-      data: { pages }
-    };
-    setVersions(prev => [...prev, newVersion]);
-  };
-
-  const handleRestoreVersion = (versionId: string) => {
-    const version = versions.find(v => v.id === versionId);
-    if (version) {
-      setPages(version.data.pages);
+  const deleteComponent = useCallback((id: string) => {
+    setPages(prev => prev.map(page => 
+      page.id === activePageId 
+        ? {
+            ...page,
+            components: page.components.filter(comp => comp.id !== id)
+          }
+        : page
+    ));
+    
+    if (selectedComponentId === id) {
+      setSelectedComponentId(null);
     }
-  };
-
-  const handleDeleteVersion = (versionId: string) => {
-    setVersions(prev => prev.filter(v => v.id !== versionId));
-  };
-
-  const selectedComponent = pages[state.currentPageIndex]?.components.find(
-    c => c.id === state.selectedComponentId
-  );
+  }, [activePageId, selectedComponentId]);
 
   return (
     <div className="h-screen flex flex-col bg-gray-50">
-      <EditorToolbar
-        onSave={() => onSave?.(pages)}
-        onPreview={onPreview}
-        onUndo={() => {}}
-        onRedo={() => {}}
-        onTogglePreview={() => setState(prev => ({ ...prev, isPreviewMode: !prev.isPreviewMode }))}
-        isPreviewing={state.isPreviewMode}
-        canUndo={false}
-        canRedo={false}
-        canSave={true}
-      />
-      
+      {/* Header */}
+      <div className="bg-white border-b px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <h1 className="text-xl font-semibold">Quiz Editor</h1>
+          <Select value={deviceView} onValueChange={(value: 'desktop' | 'mobile' | 'tablet') => setDeviceView(value)}>
+            <SelectTrigger className="w-32">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="desktop">Desktop</SelectItem>
+              <SelectItem value="tablet">Tablet</SelectItem>
+              <SelectItem value="mobile">Mobile</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm">
+            Preview
+          </Button>
+          <Button onClick={handleSavePages} size="sm">
+            Save
+          </Button>
+        </div>
+      </div>
+
+      {/* Main Content */}
       <div className="flex-1 flex overflow-hidden">
-        <div className="w-64 border-r border-gray-200 bg-white">
-          <Tabs value={state.activeTab} onValueChange={(value) => setState(prev => ({ ...prev, activeTab: value as any }))}>
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="editor">Editor</TabsTrigger>
-              <TabsTrigger value="funis">Funis</TabsTrigger>
-              <TabsTrigger value="historico">Histórico</TabsTrigger>
-              <TabsTrigger value="config">Config</TabsTrigger>
+        {/* Sidebar */}
+        <div className="w-64 bg-white border-r flex flex-col">
+          <Tabs defaultValue="pages" className="flex-1">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="pages">Pages</TabsTrigger>
+              <TabsTrigger value="components">Components</TabsTrigger>
             </TabsList>
             
-            <TabsContent value="editor" className="p-0">
-              <ComponentsSidebar onComponentSelect={(type) => {}} />
+            <TabsContent value="pages" className="flex-1 p-4">
+              <div className="space-y-2">
+                {pages.map((page) => (
+                  <Card
+                    key={page.id}
+                    className={`cursor-pointer transition-colors ${
+                      activePageId === page.id ? 'bg-blue-50 border-blue-200' : ''
+                    }`}
+                    onClick={() => setActivePageId(page.id)}
+                  >
+                    <CardHeader className="p-3">
+                      <CardTitle className="text-sm">{page.title}</CardTitle>
+                    </CardHeader>
+                  </Card>
+                ))}
+              </div>
             </TabsContent>
             
-            <TabsContent value="funis" className="p-4">
-              <h3 className="font-semibold mb-4">Funis Salvos</h3>
-              <p className="text-sm text-gray-600">Nenhum funil salvo ainda.</p>
-            </TabsContent>
-            
-            <TabsContent value="historico" className="p-0">
-              <VersioningPanel
-                versions={versions}
-                onDeleteVersion={handleDeleteVersion}
-                onRestoreVersion={handleRestoreVersion}
-              />
-            </TabsContent>
-            
-            <TabsContent value="config" className="p-4">
-              <h3 className="font-semibold mb-4">Configurações</h3>
-              <p className="text-sm text-gray-600">Configurações do editor.</p>
+            <TabsContent value="components" className="flex-1 p-4">
+              <div className="space-y-2">
+                {['text', 'image', 'button', 'input'].map((type) => (
+                  <Button
+                    key={type}
+                    variant="outline"
+                    className="w-full justify-start"
+                    onClick={() => addComponent(type)}
+                  >
+                    {type}
+                  </Button>
+                ))}
+              </div>
             </TabsContent>
           </Tabs>
         </div>
-        
-        <div className="flex-1 flex flex-col">
-          <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-white">
-            <div className="flex items-center gap-2">
-              <Select value={state.deviceView} onValueChange={(value) => setState(prev => ({ ...prev, deviceView: value as any }))}>
-                <SelectTrigger className="w-32">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="mobile">
-                    <div className="flex items-center gap-2">
-                      <Smartphone className="w-4 h-4" />
-                      Mobile
+
+        {/* Editor Area */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <div className="flex-1 p-4 overflow-auto">
+              {activePage && (
+                <Droppable droppableId="components">
+                  {(provided) => (
+                    <div
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      className="space-y-4"
+                    >
+                      {activePage.components.map((component, index) => (
+                        <Draggable
+                          key={component.id}
+                          draggableId={component.id}
+                          index={index}
+                        >
+                          {(provided) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              className={`p-4 border rounded-lg cursor-pointer transition-colors ${
+                                selectedComponentId === component.id
+                                  ? 'border-blue-500 bg-blue-50'
+                                  : 'border-gray-200 hover:border-gray-300'
+                              }`}
+                              onClick={() => setSelectedComponentId(component.id)}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm font-medium">
+                                  {component.type}
+                                </span>
+                                <Badge variant="secondary">{component.id}</Badge>
+                              </div>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
                     </div>
-                  </SelectItem>
-                  <SelectItem value="tablet">
-                    <div className="flex items-center gap-2">
-                      <Tablet className="w-4 h-4" />
-                      Tablet
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="desktop">
-                    <div className="flex items-center gap-2">
-                      <Monitor className="w-4 h-4" />
-                      Desktop
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+                  )}
+                </Droppable>
+              )}
             </div>
-            
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setState(prev => ({ ...prev, isPreviewMode: !prev.isPreviewMode }))}
-              >
-                {state.isPreviewMode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                {state.isPreviewMode ? 'Editar' : 'Visualizar'}
-              </Button>
-            </div>
-          </div>
-          
-          <div className="flex-1 overflow-auto">
-            <DevicePreview
-              deviceType={state.deviceView}
-              isPreviewMode={state.isPreviewMode}
-              pages={pages}
-              currentPageIndex={state.currentPageIndex}
-              selectedComponentId={state.selectedComponentId}
-              onSelectComponent={(id) => setState(prev => ({ ...prev, selectedComponentId: id }))}
-            />
-          </div>
+          </DragDropContext>
         </div>
-        
-        <div className="w-80 border-l border-gray-200 bg-white">
-          <PropertyPanel
-            selectedComponent={selectedComponent}
-            onChange={(updated) => {
-              if (updated) {
-                setPages(prev => prev.map((page, index) => 
-                  index === state.currentPageIndex
-                    ? {
-                        ...page,
-                        components: page.components.map(comp =>
-                          comp.id === updated.id ? updated : comp
-                        )
-                      }
-                    : page
-                ));
-              }
-            }}
-          />
+
+        {/* Properties Panel */}
+        <div className="w-80 bg-white border-l flex flex-col">
+          <Tabs defaultValue="properties" className="flex-1">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="properties">Properties</TabsTrigger>
+              <TabsTrigger value="versions">Versions</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="properties" className="flex-1 p-4">
+              {selectedComponent ? (
+                <PropertyPanel
+                  block={selectedComponent}
+                  onChange={(updated) => updateComponent(selectedComponent.id, updated)}
+                  onDelete={() => deleteComponent(selectedComponent.id)}
+                />
+              ) : (
+                <div className="text-center text-gray-500 mt-8">
+                  Select a component to edit its properties
+                </div>
+              )}
+            </TabsContent>
+            
+            <TabsContent value="versions" className="flex-1 p-4">
+              <VersioningPanel 
+                versions={versions}
+                onDeleteVersion={(versionId: string) => {
+                  setVersions(prev => prev.filter(v => v.id !== versionId));
+                }}
+                onRestoreVersion={(versionId: string) => {
+                  console.log('Restore version:', versionId);
+                }}
+              />
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>
