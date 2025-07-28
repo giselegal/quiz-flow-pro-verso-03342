@@ -1,3 +1,4 @@
+
 export interface Block {
   id: string;
   type: string;
@@ -65,7 +66,8 @@ export interface EditableContent {
   level?: number;
   videoUrl?: string;
   autoplay?: boolean;
-  height?: string;
+  height?: string | number; // Allow both string and number
+  width?: string | number;   // Allow both string and number
   items?: string[];
   leftContent?: string;
   rightContent?: string;

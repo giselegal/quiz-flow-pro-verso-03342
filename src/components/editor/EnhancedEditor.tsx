@@ -21,18 +21,43 @@ export const EnhancedEditor: React.FC<EnhancedEditorProps> = ({
 
   // Convert EditorBlock to SimpleComponent for the PropertiesPanel
   const convertToSimpleComponent = (block: EditorBlock): SimpleComponent => {
+    // Ensure height and width are converted to numbers when needed
+    const data = { ...block.content };
+    
+    // Convert height to number if it's a string number
+    if (typeof data.height === 'string' && !isNaN(Number(data.height))) {
+      data.height = Number(data.height);
+    }
+    
+    // Convert width to number if it's a string number
+    if (typeof data.width === 'string' && !isNaN(Number(data.width))) {
+      data.width = Number(data.width);
+    }
+
     return {
       id: block.id,
       type: block.type as SimpleComponent['type'],
-      data: block.content || {},
+      data: data as SimpleComponent['data'],
       style: {}
     };
   };
 
   const handleUpdateComponent = (componentId: string, newData: Partial<SimpleComponent>) => {
     // Convert back to EditorBlock format
+    const content = { ...newData.data };
+    
+    // Convert height back to string if needed for EditorBlock
+    if (typeof content.height === 'number') {
+      content.height = content.height.toString();
+    }
+    
+    // Convert width back to string if needed for EditorBlock
+    if (typeof content.width === 'number') {
+      content.width = content.width.toString();
+    }
+
     const editorUpdates: Partial<EditorBlock> = {
-      content: { ...newData.data },
+      content: content,
       type: newData.type as EditorBlock['type']
     };
     onUpdateBlock(componentId, editorUpdates);
