@@ -162,7 +162,8 @@ const MAIN_QUIZ_STEPS: QuizStep[] = CORRECT_QUIZ_QUESTIONS.map((q, index) => ({
   options: q.options.map(opt => ({
     id: opt.id,
     text: opt.text,
-    imageUrl: opt.imageUrl
+    value: opt.id,
+    imageUrl: ('imageUrl' in opt) ? opt.imageUrl : undefined
   })),
   allowMultiple: q.multiSelect > 1,
   showImages: q.type === 'both' || q.type === 'image',
