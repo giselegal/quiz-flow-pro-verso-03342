@@ -460,7 +460,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       setIsPublishing(true);
       try {
         const test = await ABTestService.createTest({
-          name: `Teste A/B - ${funnel.title || 'Sem título'}`,
+          name: `Teste A/B - ${funnel.settings?.title || funnel.metadata?.title || 'Sem título'}`,
           description: 'Teste A/B criado pelo editor',
           quiz_id: funnelId,
           traffic_split: 50,
