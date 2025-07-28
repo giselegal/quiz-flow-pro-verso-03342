@@ -17,14 +17,21 @@ const EditorLayout = ({ primaryStyle }: EditorLayoutProps) => {
   const { config, addBlock, updateBlock, deleteBlock } = useEditor();
 
   // Função para adicionar um bloco quando um componente é selecionado do sidebar
-  const handleComponentSelect = (componentType: EditorBlock['type']) => {
-    const newBlockId = addBlock(componentType);
+  const handleComponentSelect = (componentType: string) => {
+    const newBlockId = addBlock(componentType as EditorBlock['type']);
     setSelectedComponent(newBlockId);
   };
 
   // Função para mostrar as propriedades de um bloco
   const handleSelectComponent = (blockId: string) => {
     setSelectedComponent(blockId);
+  };
+
+  // Ensure we have a valid StyleResult
+  const validPrimaryStyle: StyleResult = primaryStyle || {
+    category: 'Natural' as const,
+    score: 0,
+    percentage: 100
   };
 
   return (
@@ -42,11 +49,7 @@ const EditorLayout = ({ primaryStyle }: EditorLayoutProps) => {
         {/* Central Area - Page Preview */}
         <ResizablePanel defaultSize={55}>
           <PagePreview
-            primaryStyle={primaryStyle || {
-              category: 'Natural',
-              score: 0,
-              percentage: 100
-            }}
+            primaryStyle={validPrimaryStyle}
             onSelectComponent={handleSelectComponent}
             blocks={config.blocks}
             onAddBlock={() => handleComponentSelect('headline')}

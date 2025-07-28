@@ -5,6 +5,7 @@ import type { TooltipProps as AntTooltipProps } from 'antd';
 
 export interface TooltipProps extends AntTooltipProps {
   variant?: 'default' | 'dark' | 'light';
+  children: React.ReactNode;
 }
 
 export const Tooltip: React.FC<TooltipProps> = ({
@@ -37,15 +38,15 @@ export const Tooltip: React.FC<TooltipProps> = ({
   );
 };
 
-// Provider pattern components for compatibility
+// Provider pattern components for compatibility with shadcn/ui
 export const TooltipProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <>{children}</>;
 };
 
-export const TooltipTrigger: React.FC<{ children: React.ReactNode; asChild?: boolean }> = ({ 
-  children, 
-  asChild = false 
-}) => {
+export const TooltipTrigger: React.FC<{ 
+  children: React.ReactNode; 
+  asChild?: boolean;
+}> = ({ children, asChild = false }) => {
   return <>{children}</>;
 };
 
