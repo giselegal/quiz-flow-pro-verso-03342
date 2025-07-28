@@ -3,22 +3,26 @@ import { Dropdown as AntDropdown, DropdownProps as AntDropdownProps, Menu } from
 import { styled } from 'styled-components';
 
 const StyledMenu = styled(Menu)`
+  background-color: var(--background);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+
   .ant-dropdown-menu-item {
-    color: #432818;
+    color: var(--foreground);
     transition: all 0.2s ease;
     
     &:hover {
-      background: rgba(184, 155, 122, 0.1);
-      color: #432818;
+      background: var(--accent);
+      color: var(--accent-foreground);
     }
   }
   
   .ant-dropdown-menu-item-danger {
-    color: #ff4d4f;
+    color: var(--destructive);
     
     &:hover {
-      background: rgba(255, 77, 79, 0.1);
-      color: #ff4d4f;
+      background: var(--destructive);
+      color: var(--destructive-foreground);
     }
   }
 `;

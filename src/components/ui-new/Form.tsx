@@ -4,18 +4,18 @@ import { styled } from 'styled-components';
 
 const StyledForm = styled(AntForm)`
   .ant-form-item-label > label {
-    color: #432818;
+    color: var(--foreground);
     font-weight: 500;
     font-size: 14px;
   }
 
   .ant-form-item-explain-error {
-    color: #ff4d4f;
+    color: var(--destructive);
     font-size: 12px;
   }
 
   .ant-form-item-explain-success {
-    color: #52c41a;
+    color: var(--success);
     font-size: 12px;
   }
 
@@ -27,15 +27,17 @@ const StyledForm = styled(AntForm)`
     .ant-input,
     .ant-select-selector,
     .ant-input-number {
-      border-color: rgba(184, 155, 122, 0.3);
+      border-color: var(--border);
+      background-color: var(--background);
+      color: var(--foreground);
 
       &:hover {
-        border-color: #B89B7A;
+        border-color: var(--brand-primary);
       }
 
       &:focus {
-        border-color: #B89B7A;
-        box-shadow: 0 0 0 2px rgba(184, 155, 122, 0.2);
+        border-color: var(--brand-primary);
+        box-shadow: 0 0 0 2px var(--ring);
       }
     }
   }

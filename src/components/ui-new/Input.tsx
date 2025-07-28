@@ -5,52 +5,56 @@ import { SearchOutlined } from '@ant-design/icons';
 
 const StyledInput = styled(AntInput)`
   &.ant-input {
-    border-radius: 8px;
-    border-color: rgba(184, 155, 122, 0.3);
+    border-radius: var(--radius);
+    border-color: var(--border);
+    background-color: var(--background);
+    color: var(--foreground);
     padding: 8px 12px;
     font-size: 14px;
     transition: all 0.2s ease;
 
     &:hover {
-      border-color: #B89B7A;
+      border-color: var(--brand-primary);
     }
 
     &:focus {
-      border-color: #B89B7A;
-      box-shadow: 0 0 0 2px rgba(184, 155, 122, 0.2);
+      border-color: var(--brand-primary);
+      box-shadow: 0 0 0 2px var(--ring);
     }
 
     &::placeholder {
-      color: #8F7A6A;
+      color: var(--muted-foreground);
     }
   }
 `;
 
 const StyledSearch = styled(AntInput.Search)`
   .ant-input {
-    border-radius: 8px;
-    border-color: rgba(184, 155, 122, 0.3);
+    border-radius: var(--radius);
+    border-color: var(--border);
+    background-color: var(--background);
+    color: var(--foreground);
     padding: 8px 12px;
     font-size: 14px;
 
     &:hover {
-      border-color: #B89B7A;
+      border-color: var(--brand-primary);
     }
 
     &:focus {
-      border-color: #B89B7A;
-      box-shadow: 0 0 0 2px rgba(184, 155, 122, 0.2);
+      border-color: var(--brand-primary);
+      box-shadow: 0 0 0 2px var(--ring);
     }
   }
 
   .ant-btn {
-    background: #B89B7A;
-    border-color: #B89B7A;
-    border-radius: 0 8px 8px 0;
+    background: var(--brand-primary);
+    border-color: var(--brand-primary);
+    border-radius: 0 var(--radius) var(--radius) 0;
 
     &:hover {
-      background: #A68960;
-      border-color: #A68960;
+      background: var(--brand-accent);
+      border-color: var(--brand-accent);
     }
   }
 `;

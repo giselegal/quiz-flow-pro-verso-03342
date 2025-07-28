@@ -4,30 +4,50 @@ import { styled } from 'styled-components';
 
 const StyledSelect = styled(AntSelect)`
   .ant-select-selector {
-    border-radius: 8px !important;
-    border-color: rgba(184, 155, 122, 0.3) !important;
+    border-radius: var(--radius) !important;
+    border-color: var(--border) !important;
+    background-color: var(--background) !important;
+    color: var(--foreground) !important;
     transition: all 0.2s ease;
 
     &:hover {
-      border-color: #B89B7A !important;
+      border-color: var(--brand-primary) !important;
     }
   }
 
   &.ant-select-focused .ant-select-selector {
-    border-color: #B89B7A !important;
-    box-shadow: 0 0 0 2px rgba(184, 155, 122, 0.2) !important;
+    border-color: var(--brand-primary) !important;
+    box-shadow: 0 0 0 2px var(--ring) !important;
   }
 
   .ant-select-selection-placeholder {
-    color: #8F7A6A !important;
+    color: var(--muted-foreground) !important;
   }
 
   .ant-select-arrow {
-    color: #8F7A6A !important;
+    color: var(--muted-foreground) !important;
   }
 
   &.ant-select-open .ant-select-arrow {
-    color: #B89B7A !important;
+    color: var(--brand-primary) !important;
+  }
+
+  .ant-select-dropdown {
+    border-radius: var(--radius) !important;
+    border-color: var(--border) !important;
+    background-color: var(--background) !important;
+  }
+
+  .ant-select-item {
+    color: var(--foreground) !important;
+
+    &-option-selected {
+      background-color: var(--accent) !important;
+    }
+
+    &-option-active {
+      background-color: var(--accent) !important;
+    }
   }
 `;
 
