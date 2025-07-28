@@ -1,12 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { Input } from '../../ui/input';
 import { Card, CardContent } from '../../ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
+import { Tabs } from '../../ui-new/Tabs';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
 import { PlusOutlined, AppstoreOutlined, FileTextOutlined, SearchOutlined } from '@ant-design/icons';
 import { Space, Typography, Empty, Divider } from 'antd';
 import { allBlockDefinitions } from '../../../config/blockDefinitions';
+import { renderLucideIcon } from '../../../utils/iconMap';
 
 const { Text } = Typography;
 
@@ -89,7 +90,7 @@ export const SchemaDrivenComponentsSidebar: React.FC<SchemaDrivenComponentsSideb
                     <div className="flex items-center space-x-3">
                       <div className="w-8 h-8 bg-gradient-to-br from-[#B89B7A]/20 to-[#aa6b5d]/20 rounded-lg flex items-center justify-center">
                         {block.icon ? (
-                          <block.icon className="w-4 h-4 text-[#B89B7A]" />
+                          renderLucideIcon(block.icon, "w-4 h-4 text-[#B89B7A]")
                         ) : (
                           <AppstoreOutlined className="w-4 h-4 text-[#B89B7A]" />
                         )}

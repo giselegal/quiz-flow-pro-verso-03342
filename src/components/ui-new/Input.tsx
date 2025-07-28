@@ -61,6 +61,7 @@ interface InputProps extends AntInputProps {
 
 export const Input: React.FC<InputProps> = ({ 
   variant = 'default',
+  allowClear,
   ...props 
 }) => {
   if (variant === 'search') {
@@ -68,12 +69,13 @@ export const Input: React.FC<InputProps> = ({
       <StyledSearch
         placeholder="Buscar..."
         enterButton={<SearchOutlined />}
+        allowClear={allowClear}
         {...props}
       />
     );
   }
 
-  return <StyledInput {...props} />;
+  return <StyledInput allowClear={allowClear} {...props} />;
 };
 
 export default Input;

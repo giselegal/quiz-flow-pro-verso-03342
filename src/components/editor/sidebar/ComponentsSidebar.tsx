@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Search, Star, Crown } from 'lucide-react';
+import { renderLucideIcon } from '../../../utils/iconMap';
 import { 
   AVAILABLE_BLOCKS, 
   BLOCK_CATEGORIES, 
@@ -29,7 +30,7 @@ const BlockItem: React.FC<BlockItemProps> = ({ block, onSelect }) => {
     >
       <div className="flex items-start gap-3 w-full">
         <div className="flex-shrink-0 w-8 h-8 bg-[#B89B7A]/10 rounded-lg flex items-center justify-center">
-          <block.icon className="w-4 h-4 text-[#B89B7A]" />
+          {renderLucideIcon(block.icon, "w-4 h-4 text-[#B89B7A]")}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
