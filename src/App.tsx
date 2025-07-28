@@ -31,8 +31,8 @@ const QuizDescubraSeuEstilo = lazy(
 );
 const DashboardPage = lazy(() => import("./pages/admin/DashboardPage"));
 
-// Editor Principal - Consolidado
-const SchemaDrivenEditorPage = lazy(() => import("./pages/SchemaDrivenEditorPage"));
+// Editor Principal - Consolidado - Usando Editor Responsivo Avançado
+const SchemaDrivenEditorResponsive = lazy(() => import("./components/editor/SchemaDrivenEditorResponsive"));
 const DragDropTestPage = lazy(() => import("./pages/DragDropTestPage"));
 const FunnelComponentsDemo = lazy(() => import("./pages/FunnelComponentsDemo"));
 const ModularComponentsDemo = lazy(() => import("./pages/ModularComponentsDemo"));
@@ -89,12 +89,12 @@ const App = () => {
                 {/* Editor Principal - ÚNICO EDITOR para Quiz e Funis Completos */}
                 <Route
                   path="/editor"
-                  component={SchemaDrivenEditorPage}
+                  component={() => <SchemaDrivenEditorResponsive />}
                 />
                 {/* Editor com ID específico */}
                 <Route
                   path="/editor/:id"
-                  component={SchemaDrivenEditorPage}
+                  component={({ params }: any) => <SchemaDrivenEditorResponsive funnelId={params.id} />}
                 />
                 
                 {/* Teste de Drag & Drop */}
