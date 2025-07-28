@@ -752,7 +752,7 @@ class SchemaDrivenFunnelService {
     const pages: SchemaDrivenPageData[] = [];
 
     // ==========================================
-    // ETAPA 1: INTRODUÇÃO (COLETA DO NOME)
+    // ETAPA 1: INTRODUÇÃO - COMPONENTE INDIVIDUALIZADO
     // ==========================================
     pages.push({
       id: this.generateUniquePageId('etapa-1-intro'),
@@ -762,86 +762,30 @@ class SchemaDrivenFunnelService {
       order: 1,
       blocks: [
         {
-          id: 'intro-header',
-          type: 'quiz-intro-header',
+          id: 'quiz-start-page-block',
+          type: 'quiz-start-page',
           properties: {
-            logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-            logoAlt: 'Logo Gisele Galvão',
-            logoWidth: 96,
-            logoHeight: 96,
-            progressValue: 0,
-            progressMax: 100,
-            showBackButton: false
-          }
-        },
-        {
-          id: 'intro-decorative-spacer',
-          type: 'spacer',
-          properties: {
-            height: 4,
-            backgroundColor: '#B89B7A',
-            marginTop: 0,
-            marginBottom: 24
-          }
-        },
-        {
-          id: 'intro-main-heading',
-          type: 'text-inline',
-          properties: {
-            content: '<span style="color: #B89B7A; font-weight: 700;">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com você.',
-            fontSize: 'text-3xl',
-            fontWeight: 'font-bold',
-            textAlign: 'text-center',
-            color: '#432818',
-            marginBottom: 24
-          }
-        },
-        {
-          id: 'intro-hero-image',
-          type: 'image-display-inline',
-          properties: {
-            src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.webp',
-            alt: 'Transforme seu guarda-roupa',
-            width: 600,
-            height: 400,
-            className: 'object-cover w-full h-auto rounded-lg mx-auto'
-          }
-        },
-        {
-          id: 'intro-subtitle',
-          type: 'text-inline',
-          properties: {
-            content: 'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
-            fontSize: 'text-lg',
-            textAlign: 'text-center',
-            color: '#432818',
-            marginTop: 16,
-            marginBottom: 32
-          }
-        },
-        {
-          id: 'intro-name-input',
-          type: 'form-input',
-          properties: {
-            label: 'NOME',
-            placeholder: 'Digite seu nome aqui...',
-            required: true,
-            inputType: 'text',
-            helperText: '',
-            name: 'userName'
-          }
-        },
-        {
-          id: 'intro-cta-button',
-          type: 'button-inline',
-          properties: {
-            text: 'Quero Descobrir meu Estilo Agora!',
-            variant: 'primary',
-            size: 'large',
-            fullWidth: true,
-            backgroundColor: '#B89B7A',
-            textColor: '#ffffff',
-            requiresValidInput: true
+            title: 'Descubra Seu Estilo Pessoal Único',
+            subtitle: 'Chega de guarda-roupa lotado e sensação de "não tenho nada para vestir"',
+            description: 'Um quiz personalizado que vai te ajudar a descobrir seu estilo predominante e como aplicá-lo no dia a dia com confiança.',
+            buttonText: 'Começar Meu Quiz de Estilo',
+            benefits: [
+              '✓ Descubra seu estilo predominante em apenas 5 minutos',
+              '✓ Receba dicas personalizadas para seu perfil único',
+              '✓ Aprenda a criar looks que combinam 100% com você',
+              '✓ Ganhe confiança para se vestir todos os dias'
+            ],
+            nameInputPlaceholder: 'Digite seu primeiro nome aqui...',
+            showNameInput: true,
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.webp',
+            backgroundColor: '#fffaf7',
+            textColor: '#432818',
+            showBenefits: true,
+            showSubtitle: true,
+            buttonVariant: 'primary',
+            buttonSize: 'large',
+            showIcon: true,
+            icon: 'play'
           }
         }
       ],

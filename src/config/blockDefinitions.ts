@@ -838,6 +838,69 @@ export const blockDefinitions: BlockDefinition[] = [
     }
   },
   {
+    type: 'quiz-question-page',
+    name: 'Página de Questão do Quiz',
+    description: 'Página individualizada para questões do quiz',
+    icon: 'HelpCircle',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'question',
+        label: 'Pergunta',
+        type: 'textarea',
+        defaultValue: 'Qual destas opções mais descreve seu estilo?'
+      },
+      {
+        key: 'options',
+        label: 'Opções',
+        type: 'array',
+        defaultValue: [
+          { id: '1', text: 'Clássico e elegante', value: 'classico' },
+          { id: '2', text: 'Moderno e minimalista', value: 'moderno' },
+          { id: '3', text: 'Bohemio e criativo', value: 'bohemio' },
+          { id: '4', text: 'Casual e confortável', value: 'casual' }
+        ]
+      },
+      {
+        key: 'questionNumber',
+        label: 'Número da Questão',
+        type: 'number',
+        defaultValue: 1
+      },
+      {
+        key: 'totalQuestions',
+        label: 'Total de Questões',
+        type: 'number',
+        defaultValue: 10
+      },
+      {
+        key: 'allowMultiple',
+        label: 'Permitir Múltiplas Seleções',
+        type: 'boolean',
+        defaultValue: false
+      },
+      {
+        key: 'buttonText',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Próxima Pergunta'
+      }
+    ],
+    defaultProperties: {
+      question: 'Qual destas opções mais descreve seu estilo?',
+      options: [
+        { id: '1', text: 'Clássico e elegante', value: 'classico' },
+        { id: '2', text: 'Moderno e minimalista', value: 'moderno' },
+        { id: '3', text: 'Bohemio e criativo', value: 'bohemio' },
+        { id: '4', text: 'Casual e confortável', value: 'casual' }
+      ],
+      questionNumber: 1,
+      totalQuestions: 10,
+      allowMultiple: false,
+      buttonText: 'Próxima Pergunta'
+    }
+  },
+  {
     type: 'quiz-transition',
     name: 'Transição do Quiz',
     description: 'Página de transição entre questões ou seções',

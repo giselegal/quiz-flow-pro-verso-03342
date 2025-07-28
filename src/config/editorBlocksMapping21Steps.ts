@@ -11,6 +11,7 @@ import { ComponentType } from 'react';
 import QuizQuestionBlock from '../components/editor/blocks/QuizQuestionBlock';
 import QuizQuestionBlockConfigurable from '../components/editor/blocks/QuizQuestionBlockConfigurable';
 import QuizQuestionBlockFixed from '../components/editor/blocks/QuizQuestionBlockFixed';
+import QuizQuestionPageBlock from '../components/editor/blocks/QuizQuestionPageBlock';
 import QuizResultCalculatedBlock from '../components/editor/blocks/QuizResultCalculatedBlock';
 import QuizStartPageBlock from '../components/editor/blocks/QuizStartPageBlock';
 import QuizOfferPageBlock from '../components/editor/blocks/QuizOfferPageBlock';
@@ -65,13 +66,15 @@ export const EDITOR_BLOCKS_MAP: Record<string, ComponentType<any>> = {
   'result-card-inline': ResultCardInlineBlock,
   'style-card-inline': StyleCardInlineBlock,
   
-  // ✅ ETAPAS DO FUNIL COMPLETO (1-21)
+  // ✅ ETAPAS DO FUNIL COMPLETO (1-21) - COMPONENTES INDIVIDUALIZADOS
   
   // Etapa 1: Introdução
   'quiz-start-page': QuizStartPageBlock,
   'QuizStartPageBlock': QuizStartPageBlock,
   
-  // Etapas 2-11: Questões principais
+  // Etapas 2-11: Questões principais  
+  'quiz-question-page': QuizQuestionPageBlock,
+  'QuizQuestionPageBlock': QuizQuestionPageBlock,
   'quiz-question': QuizQuestionBlockFixed,
   'QuizQuestionBlock': QuizQuestionBlockFixed,
   'quiz-question-configurable': QuizQuestionBlockConfigurable,
