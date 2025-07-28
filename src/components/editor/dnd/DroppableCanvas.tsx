@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from 'react';
-import { Card, Button, Dropdown, ScrollArea } from '../../ui-new';
-import { Badge } from '../../ui-new/Badge';
+import { Card } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
+import { ScrollArea } from '../../ui/scroll-area';
 import { 
   DragOutlined, 
   MoreOutlined, 
@@ -10,7 +12,7 @@ import {
   EyeInvisibleOutlined,
   PlusOutlined 
 } from '@ant-design/icons';
-import { Space, Typography, Empty, Tooltip } from 'antd';
+import { Space, Typography, Empty, Tooltip, Dropdown } from 'antd';
 import { allBlockDefinitions } from '../../../config/blockDefinitions';
 
 const { Text, Title } = Typography;
@@ -79,13 +81,13 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
 
     return (
       <Dropdown
-        items={dropdownItems}
+        menu={{ items: dropdownItems }}
         trigger={['click']}
         placement="bottomRight"
       >
         <Button
           variant="ghost"
-          size="small"
+          size="sm"
           className="opacity-0 group-hover:opacity-100 transition-opacity"
           onClick={(e) => e.stopPropagation()}
         >
@@ -110,7 +112,6 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
           ${className}
         `}
         onClick={(e) => handleBlockClick(block.id, e)}
-        size="small"
       >
         {/* Block Header */}
         <div className="flex items-center justify-between mb-3">

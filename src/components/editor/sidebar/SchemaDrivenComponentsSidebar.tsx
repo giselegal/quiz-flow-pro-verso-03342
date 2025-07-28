@@ -55,11 +55,9 @@ export const SchemaDrivenComponentsSidebar: React.FC<SchemaDrivenComponentsSideb
     <div className="p-4 space-y-4">
       {/* Search Input */}
       <Input
-        variant="search"
         placeholder="Buscar componentes..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        allowClear
       />
 
       {/* Components by Category */}
@@ -72,7 +70,7 @@ export const SchemaDrivenComponentsSidebar: React.FC<SchemaDrivenComponentsSideb
                 <Text strong className="text-[#432818] text-sm uppercase tracking-wide">
                   {category}
                 </Text>
-                <Badge variant="secondary" size="small">
+                <Badge variant="secondary">
                   {blocks.length}
                 </Badge>
               </div>
@@ -81,34 +79,34 @@ export const SchemaDrivenComponentsSidebar: React.FC<SchemaDrivenComponentsSideb
                 {blocks.map((block) => (
                   <Card
                     key={block.type}
-                    variant="component"
-                    size="small"
                     onClick={() => onComponentSelect(block.type)}
-                    className="cursor-pointer"
+                    className="cursor-pointer hover:bg-[#B89B7A]/5 transition-colors"
                   >
-                    <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-gradient-to-br from-[#B89B7A]/20 to-[#aa6b5d]/20 rounded-lg flex items-center justify-center">
-                        {block.icon ? (
-                          typeof block.icon === 'string' ? (
-                            <span className="text-lg">{block.icon}</span>
+                    <CardContent className="p-3">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-gradient-to-br from-[#B89B7A]/20 to-[#aa6b5d]/20 rounded-lg flex items-center justify-center">
+                          {block.icon ? (
+                            typeof block.icon === 'string' ? (
+                              <span className="text-lg">{block.icon}</span>
+                            ) : (
+                              React.createElement(block.icon as React.ComponentType<any>, { className: "w-4 h-4 text-[#B89B7A]" })
+                            )
                           ) : (
-                            React.createElement(block.icon as React.ComponentType<any>, { className: "w-4 h-4 text-[#B89B7A]" })
-                          )
-                        ) : (
-                          <AppstoreOutlined className="w-4 h-4 text-[#B89B7A]" />
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <Text strong className="text-[#432818] text-sm block">
-                          {block.name || block.type}
-                        </Text>
-                        {block.description && (
-                          <Text className="text-[#8F7A6A] text-xs block truncate">
-                            {block.description}
+                            <AppstoreOutlined className="w-4 h-4 text-[#B89B7A]" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <Text strong className="text-[#432818] text-sm block">
+                            {block.name || block.type}
                           </Text>
-                        )}
+                          {block.description && (
+                            <Text className="text-[#8F7A6A] text-xs block truncate">
+                              {block.description}
+                            </Text>
+                          )}
+                        </div>
                       </div>
-                    </div>
+                    </CardContent>
                   </Card>
                 ))}
               </div>
