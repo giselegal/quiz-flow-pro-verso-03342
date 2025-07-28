@@ -1,236 +1,321 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
-import { Progress } from '../../ui/progress';
-import { Button } from '../../ui/button';
-import { Badge } from '../../ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
-import { TrendingUp, TrendingDown, Users, Eye, MousePointer, Clock } from 'lucide-react';
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  PieChart,
+  Pie,
+  Cell
+} from 'recharts';
+import { 
+  TrendingUp, 
+  Users, 
+  Target, 
+  DollarSign,
+  Eye,
+  MousePointer,
+  UserCheck,
+  Clock,
+  AlertCircle,
+  CheckCircle2
+} from 'lucide-react';
 
-interface AnalyticsData {
-  totalViews: number;
-  totalConversions: number;
-  conversionRate: number;
-  averageTime: number;
-  bounceRate: number;
-  topFunnels: Array<{
-    id: string;
-    name: string;
-    views: number;
-    conversions: number;
-    conversionRate: number;
-  }>;
-}
-
-const AdvancedAnalytics: React.FC = () => {
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsData>({
-    totalViews: 0,
-    totalConversions: 0,
-    conversionRate: 0,
-    averageTime: 0,
-    bounceRate: 0,
-    topFunnels: []
-  });
+const AdvancedAnalytics = () => {
+  const [funnels, setFunnels] = useState([]);
+  const [analytics, setAnalytics] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedDateRange, setSelectedDateRange] = useState('30d');
+  const [selectedFunnel, setSelectedFunnel] = useState(null);
 
   useEffect(() => {
     fetchAnalyticsData();
-  }, [selectedDateRange]);
+  }, []);
 
   const fetchAnalyticsData = async () => {
     try {
       setLoading(true);
       
-      // Fetch funnel data from existing tables
-      const { data: funnels, error: funnelsError } = await supabase
+      // Fetch funnels
+      const { data: funnelsData, error: funnelsError } = await supabase
         .from('funnels')
         .select('*')
-        .eq('is_published', true);
+        .order('created_at', { ascending: false });
 
       if (funnelsError) {
         console.error('Error fetching funnels:', funnelsError);
-        return;
+      } else {
+        setFunnels(funnelsData || []);
       }
 
-      // Mock analytics data based on existing funnels
-      const mockAnalytics: AnalyticsData = {
-        totalViews: Math.floor(Math.random() * 10000) + 1000,
-        totalConversions: Math.floor(Math.random() * 500) + 50,
-        conversionRate: Math.random() * 20 + 5,
-        averageTime: Math.floor(Math.random() * 300) + 120,
-        bounceRate: Math.random() * 30 + 20,
-        topFunnels: funnels?.map(funnel => ({
-          id: funnel.id,
-          name: funnel.name,
-          views: Math.floor(Math.random() * 1000) + 100,
-          conversions: Math.floor(Math.random() * 50) + 10,
-          conversionRate: Math.random() * 15 + 5
-        })) || []
-      };
+      // Mock analytics data since we don't have the analytics tables
+      const mockAnalyticsData = [
+        {
+          id: 1,
+          funnel_id: funnelsData?.[0]?.id || 'funnel-1',
+          event_type: 'page_view',
+          user_session: 'session-1',
+          created_at: new Date().toISOString(),
+          metadata: { page: 'landing' }
+        },
+        {
+          id: 2,
+          funnel_id: funnelsData?.[0]?.id || 'funnel-1',
+          event_type: 'quiz_started',
+          user_session: 'session-1',
+          created_at: new Date().toISOString(),
+          metadata: { step: 1 }
+        },
+        {
+          id: 3,
+          funnel_id: funnelsData?.[0]?.id || 'funnel-1',
+          event_type: 'quiz_completed',
+          user_session: 'session-1',
+          created_at: new Date().toISOString(),
+          metadata: { result: 'elegante' }
+        }
+      ];
 
-      setAnalyticsData(mockAnalytics);
+      setAnalytics(mockAnalyticsData);
     } catch (error) {
-      console.error('Error fetching analytics data:', error);
+      console.error('Error fetching analytics:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const chartData = [
-    { name: 'Jan', views: 4000, conversions: 240 },
-    { name: 'Feb', views: 3000, conversions: 180 },
-    { name: 'Mar', views: 2000, conversions: 120 },
-    { name: 'Apr', views: 2780, conversions: 167 },
-    { name: 'May', views: 1890, conversions: 113 },
-    { name: 'Jun', views: 2390, conversions: 143 },
+  // Calculate metrics
+  const calculateMetrics = () => {
+    if (!analytics.length) return {};
+
+    const totalViews = analytics.filter(a => a.event_type === 'page_view').length;
+    const totalStarts = analytics.filter(a => a.event_type === 'quiz_started').length;
+    const totalCompletions = analytics.filter(a => a.event_type === 'quiz_completed').length;
+    
+    const conversionRate = totalViews > 0 ? (totalCompletions / totalViews) * 100 : 0;
+    const completionRate = totalStarts > 0 ? (totalCompletions / totalStarts) * 100 : 0;
+    const abandonmentRate = totalStarts > 0 ? ((totalStarts - totalCompletions) / totalStarts) * 100 : 0;
+
+    return {
+      totalViews,
+      totalStarts,
+      totalCompletions,
+      conversionRate,
+      completionRate,
+      abandonmentRate
+    };
+  };
+
+  const metrics = calculateMetrics();
+
+  // Mock data for charts
+  const dailyMetrics = [
+    { date: '2024-01-01', views: 120, starts: 80, completions: 45 },
+    { date: '2024-01-02', views: 150, starts: 95, completions: 60 },
+    { date: '2024-01-03', views: 180, starts: 110, completions: 75 },
+    { date: '2024-01-04', views: 200, starts: 130, completions: 85 },
+    { date: '2024-01-05', views: 175, starts: 120, completions: 78 },
+    { date: '2024-01-06', views: 220, starts: 145, completions: 92 },
+    { date: '2024-01-07', views: 195, starts: 125, completions: 80 }
   ];
 
-  const pieData = [
-    { name: 'Desktop', value: 400 },
-    { name: 'Mobile', value: 300 },
-    { name: 'Tablet', value: 100 },
+  const conversionFunnelData = [
+    { name: 'Visualizações', value: metrics.totalViews || 1000, color: '#8884d8' },
+    { name: 'Inicializações', value: metrics.totalStarts || 800, color: '#82ca9d' },
+    { name: 'Conclusões', value: metrics.totalCompletions || 600, color: '#ffc658' },
+    { name: 'Conversões', value: Math.round((metrics.totalCompletions || 600) * 0.8), color: '#ff7300' }
   ];
 
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
+  const trafficSourcesData = [
+    { name: 'Orgânico', value: 45, color: '#8884d8' },
+    { name: 'Redes Sociais', value: 30, color: '#82ca9d' },
+    { name: 'Direto', value: 15, color: '#ffc658' },
+    { name: 'Referência', value: 10, color: '#ff7300' }
+  ];
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Carregando analytics...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Advanced Analytics</h1>
-        <div className="flex gap-2">
-          <Button 
-            variant={selectedDateRange === '7d' ? 'default' : 'outline'}
-            onClick={() => setSelectedDateRange('7d')}
-          >
-            7 Days
-          </Button>
-          <Button 
-            variant={selectedDateRange === '30d' ? 'default' : 'outline'}
-            onClick={() => setSelectedDateRange('30d')}
-          >
-            30 Days
-          </Button>
-          <Button 
-            variant={selectedDateRange === '90d' ? 'default' : 'outline'}
-            onClick={() => setSelectedDateRange('90d')}
-          >
-            90 Days
-          </Button>
+    <div className="max-w-7xl mx-auto p-6 space-y-8">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Analytics Avançado</h1>
+          <p className="text-gray-600 mt-2">Monitore o desempenho dos seus funnels em tempo real</p>
         </div>
+        <Button onClick={fetchAnalyticsData} disabled={loading}>
+          {loading ? 'Atualizando...' : 'Atualizar Dados'}
+        </Button>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      {/* Funnel Selector */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Selecionar Funil</CardTitle>
+          <CardDescription>Escolha um funil para análise detalhada</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {funnels.map((funnel) => (
+              <div
+                key={funnel.id}
+                onClick={() => setSelectedFunnel(funnel)}
+                className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                  selectedFunnel?.id === funnel.id
+                    ? 'border-blue-500 bg-blue-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <h3 className="font-semibold text-gray-900">{funnel.name}</h3>
+                <p className="text-sm text-gray-600 mt-1">{funnel.description}</p>
+                <div className="mt-2 flex items-center justify-between">
+                  <Badge variant={funnel.is_published ? "default" : "secondary"}>
+                    {funnel.is_published ? 'Publicado' : 'Rascunho'}
+                  </Badge>
+                  <span className="text-xs text-gray-500">
+                    v{funnel.version}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Key Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Views</CardTitle>
+            <CardTitle className="text-sm font-medium">Total de Visualizações</CardTitle>
             <Eye className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{analyticsData.totalViews.toLocaleString()}</div>
-            <div className="flex items-center text-xs text-muted-foreground">
-              <TrendingUp className="h-3 w-3 mr-1" />
-              +12% from last month
-            </div>
+            <div className="text-2xl font-bold">{metrics.totalViews || 0}</div>
+            <p className="text-xs text-muted-foreground">
+              +20.1% em relação ao mês anterior
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Conversions</CardTitle>
+            <CardTitle className="text-sm font-medium">Quiz Iniciados</CardTitle>
             <MousePointer className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{analyticsData.totalConversions.toLocaleString()}</div>
-            <div className="flex items-center text-xs text-muted-foreground">
-              <TrendingUp className="h-3 w-3 mr-1" />
-              +8% from last month
-            </div>
+            <div className="text-2xl font-bold">{metrics.totalStarts || 0}</div>
+            <p className="text-xs text-muted-foreground">
+              +15.3% em relação ao mês anterior
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Quiz Concluídos</CardTitle>
+            <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{analyticsData.conversionRate.toFixed(1)}%</div>
-            <div className="flex items-center text-xs text-muted-foreground">
-              <TrendingDown className="h-3 w-3 mr-1" />
-              -2% from last month
-            </div>
+            <div className="text-2xl font-bold">{metrics.totalCompletions || 0}</div>
+            <p className="text-xs text-muted-foreground">
+              +12.5% em relação ao mês anterior
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg. Time</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Taxa de Conversão</CardTitle>
+            <Target className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{Math.floor(analyticsData.averageTime / 60)}m {analyticsData.averageTime % 60}s</div>
-            <div className="flex items-center text-xs text-muted-foreground">
-              <TrendingUp className="h-3 w-3 mr-1" />
-              +5% from last month
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Bounce Rate</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{analyticsData.bounceRate.toFixed(1)}%</div>
-            <div className="flex items-center text-xs text-muted-foreground">
-              <TrendingDown className="h-3 w-3 mr-1" />
-              -3% from last month
-            </div>
+            <div className="text-2xl font-bold">{metrics.conversionRate?.toFixed(1) || 0}%</div>
+            <p className="text-xs text-muted-foreground">
+              +2.4% em relação ao mês anterior
+            </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Charts */}
+      {/* Conversion Funnel */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Funil de Conversão</CardTitle>
+          <CardDescription>Visualize o fluxo de usuários através do funil</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {conversionFunnelData.map((step, index) => (
+              <div key={step.name} className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium">{step.name}</span>
+                  <span className="text-sm text-gray-600">{step.value.toLocaleString()}</span>
+                </div>
+                <Progress 
+                  percent={index === 0 ? 100 : (step.value / conversionFunnelData[0].value) * 100}
+                  className="h-2"
+                />
+                {index > 0 && (
+                  <div className="text-xs text-gray-500">
+                    {((step.value / conversionFunnelData[index - 1].value) * 100).toFixed(1)}% do passo anterior
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Performance Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Views vs Conversions</CardTitle>
+            <CardTitle>Desempenho Diário</CardTitle>
+            <CardDescription>Visualizações, inicializações e conclusões por dia</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={chartData}>
+              <LineChart data={dailyMetrics}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
+                <XAxis dataKey="date" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="views" fill="#8884d8" />
-                <Bar dataKey="conversions" fill="#82ca9d" />
-              </BarChart>
+                <Line type="monotone" dataKey="views" stroke="#8884d8" name="Visualizações" />
+                <Line type="monotone" dataKey="starts" stroke="#82ca9d" name="Inicializações" />
+                <Line type="monotone" dataKey="completions" stroke="#ffc658" name="Conclusões" />
+              </LineChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Device Distribution</CardTitle>
+            <CardTitle>Fontes de Tráfego</CardTitle>
+            <CardDescription>Distribuição de visitantes por origem</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
-                  data={pieData}
+                  data={trafficSourcesData}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
@@ -239,8 +324,8 @@ const AdvancedAnalytics: React.FC = () => {
                   fill="#8884d8"
                   dataKey="value"
                 >
-                  {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  {trafficSourcesData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
                 <Tooltip />
@@ -250,27 +335,67 @@ const AdvancedAnalytics: React.FC = () => {
         </Card>
       </div>
 
-      {/* Top Funnels */}
+      {/* Performance Indicators */}
       <Card>
         <CardHeader>
-          <CardTitle>Top Performing Funnels</CardTitle>
+          <CardTitle>Indicadores de Performance</CardTitle>
+          <CardDescription>Métricas importantes para otimização</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-green-600">
+                {metrics.completionRate?.toFixed(1) || 0}%
+              </div>
+              <div className="text-sm text-gray-600 mt-2">Taxa de Conclusão</div>
+              <Progress 
+                percent={metrics.completionRate || 0}
+                className="mt-2"
+              />
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-red-600">
+                {metrics.abandonmentRate?.toFixed(1) || 0}%
+              </div>
+              <div className="text-sm text-gray-600 mt-2">Taxa de Abandono</div>
+              <Progress 
+                percent={metrics.abandonmentRate || 0}
+                className="mt-2"
+              />
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-blue-600">2:34</div>
+              <div className="text-sm text-gray-600 mt-2">Tempo Médio</div>
+              <Progress 
+                percent={75}
+                className="mt-2"
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Real-time Activity */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Atividade em Tempo Real</CardTitle>
+          <CardDescription>Eventos recentes dos usuários</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {analyticsData.topFunnels.map((funnel) => (
-              <div key={funnel.id} className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex-1">
-                  <h3 className="font-medium">{funnel.name}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {funnel.views.toLocaleString()} views • {funnel.conversions} conversions
-                  </p>
+            {analytics.slice(0, 5).map((event) => (
+              <div key={event.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-sm font-medium">
+                    {event.event_type === 'page_view' ? 'Visualização de página' :
+                     event.event_type === 'quiz_started' ? 'Quiz iniciado' :
+                     event.event_type === 'quiz_completed' ? 'Quiz concluído' : event.event_type}
+                  </span>
                 </div>
-                <div className="flex items-center gap-4">
-                  <Badge variant="secondary">
-                    {funnel.conversionRate.toFixed(1)}% CVR
-                  </Badge>
-                  <Progress value={funnel.conversionRate} className="w-20" />
-                </div>
+                <span className="text-xs text-gray-500">
+                  {new Date(event.created_at).toLocaleTimeString()}
+                </span>
               </div>
             ))}
           </div>
