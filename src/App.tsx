@@ -89,12 +89,12 @@ const App = () => {
                 {/* Editor Principal - ÚNICO EDITOR para Quiz e Funis Completos */}
                 <Route
                   path="/editor"
-                  component={() => <SchemaDrivenEditorResponsive />}
+                  component={() => <SchemaDrivenEditorSimple />}
                 />
                 {/* Editor com ID específico */}
                 <Route
                   path="/editor/:id"
-                  component={({ params }: any) => <SchemaDrivenEditorResponsive funnelId={params.id} />}
+                  component={({ params }: any) => <SchemaDrivenEditorSimple funnelId={params.id} />}
                 />
                 
                 {/* Teste de Drag & Drop */}

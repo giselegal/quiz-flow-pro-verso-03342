@@ -57,7 +57,7 @@ const SchemaDrivenEditorSimple: React.FC<SchemaDrivenEditorSimpleProps> = ({
         
         let currentFunnel;
         if (funnelId) {
-          currentFunnel = await schemaDrivenFunnelService.getFunnel(funnelId);
+          currentFunnel = await schemaDrivenFunnelService.loadFunnel(funnelId);
         }
         
         if (!currentFunnel) {
@@ -325,12 +325,12 @@ const SchemaDrivenEditorSimple: React.FC<SchemaDrivenEditorSimpleProps> = ({
             {showLeftSidebar && (
               <div className="w-80 bg-white border-r border-[#E0D5C7] shadow-sm">
                 <SchemaDrivenComponentsSidebar
+                  onComponentSelect={handleBlockAdd}
                   activeTab={activeTab}
-                  onTabChange={setActiveTab}
-                  pages={pages}
+                  onTabChange={(tab: string) => setActiveTab(tab as 'components' | 'pages')}
+                  funnelPages={pages}
                   currentPageId={currentPage?.id}
-                  onPageSelect={handlePageSelect}
-                  blockDefinitions={allBlockDefinitions}
+                  setCurrentPage={handlePageSelect}
                 />
               </div>
             )}
