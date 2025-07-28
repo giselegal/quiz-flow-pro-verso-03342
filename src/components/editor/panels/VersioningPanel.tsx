@@ -101,6 +101,5 @@ export const VersioningPanel: React.FC<VersioningPanelProps> = ({
     </div>
   );
 };
-</VersioningPanel>
 
 export default VersioningPanel;
