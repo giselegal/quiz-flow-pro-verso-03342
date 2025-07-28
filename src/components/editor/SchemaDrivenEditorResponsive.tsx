@@ -25,7 +25,7 @@ import {
   FileText as ReportIcon, // Ícone para relatórios
   BarChart3 // Ícone para A/B testing
 } from 'lucide-react';
-import { useSchemaEditorFixed as useSchemaEditor } from '../../hooks/useSchemaEditorFixed';
+import { useSchemaEditor } from '../../hooks/useSchemaEditor';
 import { useSupabaseEditor } from '../../hooks/useSupabaseEditor';
 import { SchemaDrivenComponentsSidebar } from './sidebar/SchemaDrivenComponentsSidebar';
 import { DynamicPropertiesPanel } from './panels/DynamicPropertiesPanel';
@@ -82,10 +82,13 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   funnelId,
   className = ''
 }) => {
+  console.log('🔧 Editor iniciando com funnelId:', funnelId);
+  
   const [deviceView, setDeviceView] = useState<DeviceView>('desktop');
   const [showLeftSidebar, setShowLeftSidebar] = useState(true);
   const [showRightSidebar, setShowRightSidebar] = useState(true);
   const [activeTab, setActiveTab] = useState<'components' | 'pages'>('components');
+  const [debugInfo, setDebugInfo] = useState<string>('Iniciando...');
 
   // Hook de navegação
   const [, setLocation] = useLocation();
@@ -127,6 +130,24 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     isLoading,
     isSaving
   } = useSchemaEditor(funnelId || undefined);
+
+  // Debug logs
+  console.log('Editor Debug:', {
+    funnel: !!funnel,
+    currentPage: !!currentPage,
+    currentPageId,
+    selectedBlockId,
+    funnelId,
+    blocksLength: currentPage?.blocks?.length || 0,
+    isLoading,
+    isSaving
+  });
+
+  // Atualizar debug info
+  useEffect(() => {
+    const info = `Funil: ${funnel ? 'OK' : 'NULL'} | Página: ${currentPage ? 'OK' : 'NULL'} | Blocos: ${currentPage?.blocks?.length || 0}`;
+    setDebugInfo(info);
+  }, [funnel, currentPage]);
 
   // Função para mostrar toast
   const showToast = useCallback((message: string, type: 'success' | 'error' | 'info' = 'info') => {
