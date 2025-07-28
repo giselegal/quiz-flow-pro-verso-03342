@@ -1,37 +1,69 @@
+
 /**
- * Blocos de Resultado Reutilizáveis - ETAPA 20 DO FUNIL COMPLETO
+ * Componentes de Resultado Reutilizáveis - ETAPAS 20-21 DO FUNIL COMPLETO
  * 
- * Página de resultado completa com componentes implementados:
- * - Header com logo e nome do usuário ✅
- * - Card de estilo predominante ✅
- * - Depoimentos e prova social ✅
- * - Seções de motivação e transformação ✅
- * - Bônus e ofertas ✅
- * - Call-to-actions finais ✅
+ * Blocos 100% editáveis para uso no editor visual /editor
+ * Cada componente é totalmente configurável via props e pode ser usado
+ * independentemente ou integrado com o DynamicBlockRenderer.
  * 
- * TODO: Implementar blocos adicionais conforme necessário
+ * COBERTURA COMPLETA:
+ * - Etapa 20: Página de resultado completa ✅
+ * - Etapa 21: Página de oferta/venda ✅
  */
 
-// Blocos implementados
-export { default as HeaderBlock } from './HeaderBlock';
+// Blocos principais de resultado (implementados)
 export { default as PrimaryStyleCardBlock } from './PrimaryStyleCardBlock';
-export { default as TestimonialsBlock } from './TestimonialsBlock';
-export { default as BeforeAfterTransformationBlock } from './BeforeAfterTransformationBlock';
-export { default as MotivationSectionBlock } from './MotivationSectionBlock';
-export { default as BonusSectionBlock } from './BonusSectionBlock';
+export { default as SecondaryStylesBlock } from './SecondaryStylesBlock';
+export { default as StyleDescriptionBlock } from './StyleDescriptionBlock';
+export { default as PersonalizedTipsBlock } from './PersonalizedTipsBlock';
+export { default as SocialProofBlock } from './SocialProofBlock';
 export { default as FinalCTABlock } from './FinalCTABlock';
-
-// TODO: Implementar conforme necessário
-// export { default as SecondaryStylesBlock } from './SecondaryStylesBlock';
-// export { default as GuaranteeSectionBlock } from './GuaranteeSectionBlock';
-// export { default as MentorSectionBlock } from './MentorSectionBlock';
-// export { default as SecurePurchaseBlock } from './SecurePurchaseBlock';
+export { default as OfferCardBlock } from './OfferCardBlock';
+export { default as TestimonialsBlock } from './TestimonialsBlock';
+export { default as FAQBlock } from './FAQBlock';
+export { default as CountdownBlock } from './CountdownBlock';
+export { default as GuaranteeBlock } from './GuaranteeBlock';
+export { default as BonusesBlock } from './BonusesBlock';
+export { default as PricingBlock } from './PricingBlock';
+export { default as UrgencyBlock } from './UrgencyBlock';
+export { default as TrustSignalsBlock } from './TrustSignalsBlock';
 
 // Re-export types para facilitar importação
-export type { HeaderBlockProps } from './HeaderBlock';
-export type { StyleResultData, PrimaryStyleCardBlockProps } from './PrimaryStyleCardBlock';
-export type { TestimonialData, TestimonialsBlockProps } from './TestimonialsBlock';
-export type { BeforeAfterTransformationBlockProps } from './BeforeAfterTransformationBlock';
-export type { MotivationSectionBlockProps } from './MotivationSectionBlock';
-export type { BonusItem, BonusSectionBlockProps } from './BonusSectionBlock';
-export type { FinalCTABlockProps } from './FinalCTABlock';
+export type { PrimaryStyleCardBlockProps } from './PrimaryStyleCardBlock';
+export type { SecondaryStylesBlockProps } from './SecondaryStylesBlock';
+export type { StyleDescriptionBlockProps } from './StyleDescriptionBlock';
+export type { PersonalizedTipsBlockProps } from './PersonalizedTipsBlock';
+export type { SocialProofBlockProps } from './SocialProofBlock';
+export type { OfferCardBlockProps } from './OfferCardBlock';
+export type { TestimonialsBlockProps } from './TestimonialsBlock';
+export type { FAQBlockProps } from './FAQBlock';
+export type { CountdownBlockProps } from './CountdownBlock';
+export type { GuaranteeBlockProps } from './GuaranteeBlock';
+export type { BonusesBlockProps } from './BonusesBlock';
+export type { PricingBlockProps } from './PricingBlock';
+export type { UrgencyBlockProps } from './UrgencyBlock';
+export type { TrustSignalsBlockProps } from './TrustSignalsBlock';
+
+// Export StyleResult types from the main component
+export type { StyleResultData, StyleResultProps } from '@/components/result/StyleResult';
+
+// Types dos blocos específicos
+export interface FinalCTABlockProps {
+  id?: string;
+  title?: string;
+  subtitle?: string;
+  description?: string;
+  buttonText?: string;
+  buttonUrl?: string;
+  buttonSize?: 'sm' | 'md' | 'lg';
+  showSecondaryButton?: boolean;
+  secondaryButtonText?: string;
+  secondaryButtonUrl?: string;
+  backgroundColor?: string;
+  titleColor?: string;
+  descriptionColor?: string;
+  buttonColor?: string;
+  className?: string;
+  isEditable?: boolean;
+  onUpdate?: (updates: any) => void;
+}

@@ -8,6 +8,7 @@ interface InlineEditableTextProps {
   onSave?: (value: string) => void;
   placeholder?: string;
   className?: string;
+  style?: React.CSSProperties;
   multiline?: boolean;
   isTextArea?: boolean;
   maxLines?: number;
@@ -27,6 +28,7 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   onSave,
   placeholder = 'Digite aqui...',
   className = '',
+  style = {},
   multiline = false,
   isTextArea = false,
   maxLines = 3,
@@ -89,11 +91,8 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
         placeholder={placeholder}
         disabled={disabled}
         className={baseClasses}
+        style={style}
         rows={maxLines}
-        style={{
-          minHeight: '1.5rem',
-          maxHeight: `${maxLines * 1.5}rem`
-        }}
       />
     );
   }
@@ -106,6 +105,7 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
       placeholder={placeholder}
       disabled={disabled}
       className={baseClasses}
+      style={style}
     />
   );
 };

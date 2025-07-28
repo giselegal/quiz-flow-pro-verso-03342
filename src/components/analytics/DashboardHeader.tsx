@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { RefreshCcw, Download, Trash2, Filter, LayoutGrid, LayoutList } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuCheckboxItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tooltip, TooltipProvider } from '@/components/ui/Tooltip';
+import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/Tooltip';
 
 interface DashboardHeaderProps {
   timeRange: '7d' | '30d' | 'all';
@@ -70,18 +70,23 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             <h1 className="text-xl font-semibold">Analytics</h1>
             
             <TooltipProvider>
-              <Tooltip title={compactView ? "Expandir visualização" : "Compactar visualização"}>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 p-0"
-                  onClick={onToggleCompactView}
-                >
-                  {compactView ? 
-                    <LayoutGrid className="h-4 w-4" /> : 
-                    <LayoutList className="h-4 w-4" />
-                  }
-                </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0"
+                    onClick={onToggleCompactView}
+                  >
+                    {compactView ? 
+                      <LayoutGrid className="h-4 w-4" /> : 
+                      <LayoutList className="h-4 w-4" />
+                    }
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {compactView ? "Expandir visualização" : "Compactar visualização"}
+                </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </div>

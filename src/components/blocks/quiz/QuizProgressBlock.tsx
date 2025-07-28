@@ -1,8 +1,10 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 import type { BlockComponentProps } from '@/types/blocks';
 
 export interface QuizProgressBlockProps extends BlockComponentProps {
+  id?: string;
   currentStep?: number;
   totalSteps?: number;
   percentage?: number;
@@ -18,7 +20,7 @@ export interface QuizProgressBlockProps extends BlockComponentProps {
 }
 
 const QuizProgressBlock: React.FC<QuizProgressBlockProps> = ({
-  blockId = 'quiz-progress',
+  id = 'quiz-progress',
   currentStep = 1,
   totalSteps = 10,
   percentage = 0,
@@ -41,7 +43,7 @@ const QuizProgressBlock: React.FC<QuizProgressBlockProps> = ({
         'quiz-progress-block w-full py-4',
         className
       )}
-      data-block-id={blockId}
+      data-block-id={id}
     >
       {/* Step counter */}
       {showNumbers && (

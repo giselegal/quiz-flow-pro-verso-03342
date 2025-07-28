@@ -5,6 +5,7 @@ import InlineEditableText from '@/components/editor/blocks/base/InlineEditableTe
 import type { BlockComponentProps } from '@/types/blocks';
 
 export interface QuizIntroBlockProps extends BlockComponentProps {
+  id?: string;
   title?: string;
   subtitle?: string;
   description?: string;
@@ -51,7 +52,7 @@ export interface QuizIntroBlockProps extends BlockComponentProps {
  */
 
 const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
-  blockId = 'quiz-intro',
+  id = 'quiz-intro',
   title = 'Descubra Seu Estilo Único',
   subtitle = 'Quiz Personalizado de Estilo',
   description = 'Responda algumas perguntas rápidas e descubra qual estilo combina mais com sua personalidade.',
@@ -92,7 +93,7 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
         backgroundColor, 
         borderColor: `${borderColor}40` 
       }}
-      data-block-id={blockId}
+      data-block-id={id}
     >
       {/* Logo */}
       <div className="text-center mb-8">
@@ -210,8 +211,7 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
           )}
           style={{ 
             backgroundColor: buttonColor,
-            boxShadow: `0 4px 15px ${buttonColor}40`,
-            focusRingColor: `${buttonColor}50`
+            boxShadow: `0 4px 15px ${buttonColor}40`
           }}
         >
           {buttonText}
