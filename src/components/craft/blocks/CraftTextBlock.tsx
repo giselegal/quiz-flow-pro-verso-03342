@@ -87,7 +87,7 @@ const CraftTextBlockSettings = () => {
         <Label htmlFor="fontWeight">Peso da Fonte</Label>
         <Select 
           value={props.fontWeight} 
-          onValueChange={(value: string) => setProp((props: CraftTextBlockProps) => props.fontWeight = value as any)}
+          onValueChange={(value) => setProp((props: CraftTextBlockProps) => props.fontWeight = value as any)}
         >
           <SelectTrigger className="mt-1">
             <SelectValue />
@@ -104,7 +104,7 @@ const CraftTextBlockSettings = () => {
         <Label htmlFor="textAlign">Alinhamento</Label>
         <Select 
           value={props.textAlign} 
-          onValueChange={(value: string) => setProp((props: CraftTextBlockProps) => props.textAlign = value as any)}
+          onValueChange={(value) => setProp((props: CraftTextBlockProps) => props.textAlign = value as any)}
         >
           <SelectTrigger className="mt-1">
             <SelectValue />

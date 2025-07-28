@@ -65,7 +65,7 @@ const CraftHeadingBlockSettings = () => {
         <Label htmlFor="level">Nível do Título</Label>
         <Select 
           value={props.level.toString()} 
-          onValueChange={(value: string) => setProp((props: CraftHeadingBlockProps) => props.level = Number(value))}
+          onValueChange={(value) => setProp((props: CraftHeadingBlockProps) => props.level = Number(value))}
         >
           <SelectTrigger className="mt-1">
             <SelectValue />
@@ -85,7 +85,7 @@ const CraftHeadingBlockSettings = () => {
         <Label htmlFor="textAlign">Alinhamento</Label>
         <Select 
           value={props.textAlign} 
-          onValueChange={(value: string) => setProp((props: CraftHeadingBlockProps) => props.textAlign = value as any)}
+          onValueChange={(value) => setProp((props: CraftHeadingBlockProps) => props.textAlign = value as any)}
         >
           <SelectTrigger className="mt-1">
             <SelectValue />
