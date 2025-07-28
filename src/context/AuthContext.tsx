@@ -42,24 +42,30 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     
     if (email) {
       userData.email = email;
-      localStorage.setItem('userEmail', email);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('userEmail', email);
+      }
     }
     
     // Preservar o status de admin caso exista
-    const savedRole = localStorage.getItem('userRole');
-    if (savedRole) {
-      userData.role = savedRole;
+    if (typeof window !== 'undefined') {
+      const savedRole = localStorage.getItem('userRole');
+      if (savedRole) {
+        userData.role = savedRole;
+      }
+      localStorage.setItem('userName', name);
     }
     
     setUser(userData);
-    localStorage.setItem('userName', name);
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userEmail');
-    localStorage.removeItem('userRole');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('userName');
+      localStorage.removeItem('userEmail');
+      localStorage.removeItem('userRole');
+    }
   };
 
   return (

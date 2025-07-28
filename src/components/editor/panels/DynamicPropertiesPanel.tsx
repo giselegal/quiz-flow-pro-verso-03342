@@ -17,7 +17,7 @@ interface DynamicPropertiesPanelProps {
     name?: string;
     description?: string;
     isPublished?: boolean;
-    theme?: string;
+    theme?: string;mi
   };
   onBlockPropertyChange: (key: string, value: any) => void;
   onNestedPropertyChange: (path: string, value: any) => void;
