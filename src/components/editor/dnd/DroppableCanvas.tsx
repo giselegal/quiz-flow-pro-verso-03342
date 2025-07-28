@@ -142,7 +142,7 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
                   {definition?.name || block.type}
                 </Text>
                 {isHidden && (
-                  <Badge variant="secondary" size="small" className="ml-2">
+                  <Badge variant="secondary" className="ml-2">
                     Oculto
                   </Badge>
                 )}
@@ -176,7 +176,7 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
               </Title>
               <div className="flex flex-wrap gap-1 mt-2">
                 {(block.properties?.options || ['Opção 1', 'Opção 2']).map((option: string, idx: number) => (
-                  <Badge key={idx} variant="info" size="small">
+                  <Badge key={idx} variant="default">
                     {option}
                   </Badge>
                 ))}
@@ -193,7 +193,7 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
               {block.properties && Object.keys(block.properties).length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-1">
                   {Object.entries(block.properties).slice(0, 3).map(([key, value]) => (
-                    <Badge key={key} variant="secondary" size="small">
+                    <Badge key={key} variant="secondary">
                       {key}: {String(value).slice(0, 10)}
                     </Badge>
                   ))}
@@ -233,12 +233,12 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
         }
       />
       <Button
-        variant="primary"
-        size="small"
-        icon={<PlusOutlined />}
+        variant="default"
+        size="sm"
         onClick={() => onAddBlock('QuizStartPageBlock')}
         className="mt-4"
       >
+        <PlusOutlined className="mr-2" />
         Adicionar Primeiro Bloco
       </Button>
     </div>
@@ -259,7 +259,7 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
                   {blocks.length} bloco{blocks.length !== 1 ? 's' : ''} adicionado{blocks.length !== 1 ? 's' : ''}
                 </Text>
               </div>
-              <Badge variant="info" size="small">
+              <Badge variant="default">
                 {blocks.filter(b => !b.properties?.hidden).length} visível
                 {blocks.filter(b => !b.properties?.hidden).length !== 1 ? 'is' : ''}
               </Badge>
@@ -275,11 +275,11 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
               <div className="flex items-center justify-center py-4">
                 <Button
                   variant="ghost"
-                  size="small"
-                  icon={<PlusOutlined />}
+                  size="sm"
                   onClick={() => onAddBlock('QuizQuestionBlock')}
                   className="text-[#B89B7A] hover:text-[#432818]"
                 >
+                  <PlusOutlined className="mr-2" />
                   Adicionar Novo Bloco
                 </Button>
               </div>
