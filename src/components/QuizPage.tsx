@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import QuizIntro from './QuizIntro';
-import { QuizContent } from './QuizContent';
+import { QuizContent } from './quiz/QuizContent';
 import { MainTransition } from './MainTransition';
 import { LoadingManager } from './LoadingManager';
 import { ResultPage } from './ResultPage';

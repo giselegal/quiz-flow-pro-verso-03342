@@ -1,5 +1,5 @@
 
-import { StyleResult } from '@/types/quiz';
+import { StyleResult, StyleData } from '@/types/quiz';
 
 export const ALL_STYLES = {
   elegante: 'elegante',
@@ -12,52 +12,60 @@ export const ALL_STYLES = {
   moderno: 'moderno'
 } as const;
 
-export const styleResults: Record<StyleResult, any> = {
+export const styleResults: Record<StyleResult, StyleData> = {
   elegante: {
-    image: '/placeholder-elegante.jpg',
+    name: 'Elegante',
     description: 'Você valoriza sofisticação e refinamento',
+    image: '/placeholder-elegante.jpg',
     recommendations: ['Peças clássicas', 'Cores neutras', 'Cortes limpos'],
     additionalStyles: ['classico', 'moderno']
   },
   romantico: {
-    image: '/placeholder-romantico.jpg',
+    name: 'Romântico',
     description: 'Você adora feminilidade e delicadeza',
+    image: '/placeholder-romantico.jpg',
     recommendations: ['Estampas florais', 'Cores suaves', 'Texturas delicadas'],
     additionalStyles: ['elegante', 'natural']
   },
   criativo: {
-    image: '/placeholder-criativo.jpg',
+    name: 'Criativo',
     description: 'Você expressa personalidade através da moda',
+    image: '/placeholder-criativo.jpg',
     recommendations: ['Peças únicas', 'Combinações ousadas', 'Acessórios marcantes'],
     additionalStyles: ['dramatico', 'moderno']
   },
   dramatico: {
-    image: '/placeholder-dramatico.jpg',
+    name: 'Dramático',
     description: 'Você gosta de causar impacto visual',
+    image: '/placeholder-dramatico.jpg',
     recommendations: ['Silhuetas marcantes', 'Cores vibrantes', 'Contrastes fortes'],
     additionalStyles: ['criativo', 'sexy']
   },
   natural: {
-    image: '/placeholder-natural.jpg',
+    name: 'Natural',
     description: 'Você prioriza conforto e autenticidade',
+    image: '/placeholder-natural.jpg',
     recommendations: ['Tecidos naturais', 'Cores terrosas', 'Cortes confortáveis'],
     additionalStyles: ['romantico', 'classico']
   },
   sexy: {
-    image: '/placeholder-sexy.jpg',
+    name: 'Sexy',
     description: 'Você valoriza sensualidade e confiança',
+    image: '/placeholder-sexy.jpg',
     recommendations: ['Cortes ajustados', 'Decotes estratégicos', 'Cores intensas'],
     additionalStyles: ['dramatico', 'elegante']
   },
   classico: {
-    image: '/placeholder-classico.jpg',
+    name: 'Clássico',
     description: 'Você aprecia peças atemporais e versáteis',
+    image: '/placeholder-classico.jpg',
     recommendations: ['Básicos de qualidade', 'Cores neutras', 'Cortes tradicionais'],
     additionalStyles: ['elegante', 'natural']
   },
   moderno: {
-    image: '/placeholder-moderno.jpg',
+    name: 'Moderno',
     description: 'Você acompanha tendências contemporâneas',
+    image: '/placeholder-moderno.jpg',
     recommendations: ['Peças atuais', 'Tecnologia têxtil', 'Designs inovadores'],
     additionalStyles: ['criativo', 'elegante']
   }

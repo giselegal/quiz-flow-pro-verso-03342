@@ -1,9 +1,22 @@
+
 export interface Quiz {
   id: string;
   created_at?: string;
   title: string;
   description?: string;
   user_id?: string;
+}
+
+export interface Question {
+  id: string;
+  title: string;
+  question?: string;
+  type: string;
+  options: Array<{
+    id: string;
+    text: string;
+  }>;
+  multiSelect?: boolean;
 }
 
 export interface QuizQuestion {
@@ -28,10 +41,17 @@ export interface QuizQuestion {
 export interface UserResponse {
   questionId: string;
   answerIds: string[];
-  optionIds?: string[];
 }
 
 export type StyleResult = 'elegante' | 'romantico' | 'criativo' | 'dramatico' | 'natural' | 'sexy' | 'classico' | 'moderno';
+
+export interface StyleData {
+  name: string;
+  description: string;
+  image?: string;
+  recommendations?: string[];
+  additionalStyles?: string[];
+}
 
 export interface ResultPageConfig {
   styleType: string;
