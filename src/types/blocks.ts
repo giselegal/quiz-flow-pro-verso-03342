@@ -13,6 +13,7 @@ export interface BlockDefinition {
 export interface BlockData {
   id: string;
   type: string;
+  content: Record<string, any>;
   properties?: Record<string, any>;
 }
 

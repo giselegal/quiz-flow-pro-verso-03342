@@ -1,44 +1,34 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { BarChart3, Users, Settings, Eye, Save, Download, Upload } from 'lucide-react';
+import { BarChart3, Save, Settings, Users, Globe, Shield } from 'lucide-react';
 import { StyleResult } from '@/types/quiz';
-
-// Components from admin modules
-import { AccessControlSystem, PermissionsProvider, ProtectedComponent, usePermissions } from '../admin/security/AccessControlSystem';
-import { WorkflowManager, StatusBadge, useWorkflow } from '../admin/workflow/PublishingWorkflow';
-import { AnalyticsDashboard } from '../admin/analytics/AdvancedAnalytics';
-
-// Editor components
-import { SEOOptimizer } from './seo/SEOOptimizer';
+import { ComponentsSidebar } from './sidebar/ComponentsSidebar';
 import { EditorToolbar } from './toolbar/EditorToolbar';
 import { PreviewPanel } from './preview/PreviewPanel';
-import PropertiesPanel from './properties/PropertiesPanel';
+import { PropertiesPanel } from './properties/PropertiesPanel';
+import { SEOOptimizer } from './seo/SEOOptimizer';
+import { usePermissions } from '@/hooks/usePermissions';
+import { useWorkflow } from '@/hooks/useWorkflow';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 
 interface EnhancedEditorProps {
-  initialData?: any;
   primaryStyle?: StyleResult;
-  onSave?: (data: any) => void;
-  onPublish?: (data: any) => void;
+  onSave?: () => void;
+  onPublish?: () => void;
 }
 
-const EnhancedEditor: React.FC<EnhancedEditorProps> = ({
-  initialData,
-  primaryStyle,
-  onSave,
-  onPublish
+const EnhancedEditor: React.FC<EnhancedEditorProps> = ({ 
+  primaryStyle, 
+  onSave, 
+  onPublish 
 }) => {
-  const [activeTab, setActiveTab] = useState('editor');
+  const [activeTab, setActiveTab] = useState('design');
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
-  const [editorData, setEditorData] = useState(initialData || {});
-
-  // Access control and workflow hooks
-  const permissions = usePermissions();
-  const workflow = useWorkflow();
+  const [data, setData] = useState<any>({});
 
   // Ensure we have a valid StyleResult
   const validPrimaryStyle: StyleResult = primaryStyle || {
@@ -47,206 +37,140 @@ const EnhancedEditor: React.FC<EnhancedEditorProps> = ({
     percentage: 100
   };
 
-  useEffect(() => {
-    // Log user action
-    if (permissions.hasPermission) {
-      console.log('User accessed enhanced editor');
-    }
-    
-    // Initialize workflow
-    if (workflow.canEdit) {
-      console.log('Workflow initialized');
-    }
-  }, [permissions, workflow]);
+  const { hasPermission } = usePermissions();
+  const { state: workflowState, actions: workflowActions } = useWorkflow();
 
-  const handleSave = () => {
-    if (onSave) {
-      onSave(editorData);
+  const handleSave = useCallback(() => {
+    if (hasPermission('editor', 'save')) {
+      setData((prev: any) => ({ ...prev, lastSaved: new Date() }));
+      onSave?.();
     }
-  };
+  }, [hasPermission, onSave]);
 
-  const handlePublish = () => {
-    if (onPublish && workflow.canPublish) {
-      onPublish(editorData);
+  const handlePublish = useCallback(() => {
+    if (hasPermission('editor', 'publish')) {
+      workflowActions.publishFunnel();
+      onPublish?.();
     }
-  };
+  }, [hasPermission, workflowActions, onPublish]);
 
   const handleComponentSelect = (componentId: string) => {
     setSelectedComponent(componentId);
   };
 
-  const handleDataUpdate = (updates: any) => {
-    setEditorData(prev => ({ ...prev, ...updates }));
-  };
+  const canEdit = hasPermission('editor', 'edit');
+  const canPublish = hasPermission('editor', 'publish');
 
   return (
-    <PermissionsProvider>
-      <div className="h-screen flex flex-col overflow-hidden bg-gray-50">
-        {/* Header */}
-        <div className="bg-white border-b shadow-sm">
-          <div className="flex items-center justify-between px-6 py-4">
-            <div className="flex items-center space-x-4">
-              <h1 className="text-2xl font-bold text-gray-900">Enhanced Editor</h1>
-              <StatusBadge status={workflow.status} />
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsPreviewMode(!isPreviewMode)}
-              >
-                <Eye className="w-4 h-4 mr-2" />
-                {isPreviewMode ? 'Edit' : 'Preview'}
-              </Button>
-              
-              <ProtectedComponent resource="editor" action="save">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleSave}
-                >
-                  <Save className="w-4 h-4 mr-2" />
-                  Save
-                </Button>
-              </ProtectedComponent>
-              
-              <ProtectedComponent resource="editor" action="publish">
-                <Button
-                  variant="default"
-                  size="sm"
-                  onClick={handlePublish}
-                  disabled={!workflow.canPublish}
-                >
-                  <Upload className="w-4 h-4 mr-2" />
-                  Publish
-                </Button>
-              </ProtectedComponent>
-            </div>
+    <div className="h-screen flex flex-col overflow-hidden bg-gray-50">
+      <EditorToolbar
+        onSave={handleSave}
+        onPublish={handlePublish}
+        canSave={canEdit}
+        canPublish={canPublish}
+        isPreviewMode={isPreviewMode}
+        onTogglePreview={() => setIsPreviewMode(!isPreviewMode)}
+      />
+
+      <div className="flex-1 overflow-hidden">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full">
+          <div className="border-b bg-white px-4">
+            <TabsList className="grid w-full grid-cols-5">
+              <TabsTrigger value="design">Design</TabsTrigger>
+              <TabsTrigger value="content">Content</TabsTrigger>
+              <TabsTrigger value="seo">SEO</TabsTrigger>
+              <TabsTrigger value="analytics">Analytics</TabsTrigger>
+              <TabsTrigger value="settings">Settings</TabsTrigger>
+            </TabsList>
           </div>
-        </div>
 
-        {/* Main Content */}
-        <div className="flex-1 overflow-hidden">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full">
-            <div className="border-b bg-white">
-              <TabsList className="ml-6">
-                <TabsTrigger value="editor">Editor</TabsTrigger>
-                <TabsTrigger value="seo">SEO</TabsTrigger>
-                <TabsTrigger value="analytics">Analytics</TabsTrigger>
-                <TabsTrigger value="workflow">Workflow</TabsTrigger>
-                <TabsTrigger value="settings">Settings</TabsTrigger>
-              </TabsList>
+          <TabsContent value="design" className="flex-1 m-0">
+            <ResizablePanelGroup direction="horizontal" className="h-full">
+              <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+                <div className="h-full border-r bg-white">
+                  <ComponentsSidebar onComponentSelect={handleComponentSelect} />
+                </div>
+              </ResizablePanel>
+              
+              <ResizableHandle withHandle />
+              
+              <ResizablePanel defaultSize={60}>
+                <PreviewPanel
+                  isPreviewMode={isPreviewMode}
+                  onComponentSelect={handleComponentSelect}
+                  data={data}
+                />
+              </ResizablePanel>
+              
+              <ResizableHandle withHandle />
+              
+              <ResizablePanel defaultSize={20} minSize={15} maxSize={35}>
+                <div className="h-full border-l bg-white">
+                  <PropertiesPanel
+                    selectedComponentId={selectedComponent}
+                    onClose={() => setSelectedComponent(null)}
+                  />
+                </div>
+              </ResizablePanel>
+            </ResizablePanelGroup>
+          </TabsContent>
+
+          <TabsContent value="content" className="flex-1 m-0">
+            <div className="h-full p-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Settings className="w-5 h-5" />
+                    Content Management
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">Content editing interface will be implemented here.</p>
+                </CardContent>
+              </Card>
             </div>
+          </TabsContent>
 
-            <TabsContent value="editor" className="h-full mt-0">
-              <div className="h-full flex">
-                {/* Components Sidebar */}
-                <div className="w-64 bg-white border-r overflow-y-auto">
-                  <div className="p-4">
-                    <h2 className="font-semibold text-gray-900 mb-4">Components</h2>
-                    <div className="space-y-2">
-                      {/* Component library would go here */}
-                      <Card className="cursor-pointer hover:bg-gray-50">
-                        <CardContent className="p-3">
-                          <div className="font-medium text-sm">Text Block</div>
-                          <div className="text-xs text-gray-500">Add text content</div>
-                        </CardContent>
-                      </Card>
-                      
-                      <Card className="cursor-pointer hover:bg-gray-50">
-                        <CardContent className="p-3">
-                          <div className="font-medium text-sm">Image Block</div>
-                          <div className="text-xs text-gray-500">Add images</div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </div>
-                </div>
+          <TabsContent value="seo" className="flex-1 m-0">
+            <div className="h-full p-4">
+              <SEOOptimizer funnelId="default" />
+            </div>
+          </TabsContent>
 
-                {/* Main Editor Area */}
-                <div className="flex-1 flex">
-                  {/* Canvas */}
-                  <div className="flex-1 bg-gray-100 p-4">
-                    <PreviewPanel
-                      primaryStyle={validPrimaryStyle}
-                      isPreviewMode={isPreviewMode}
-                      onComponentSelect={handleComponentSelect}
-                      data={editorData}
-                    />
-                  </div>
+          <TabsContent value="analytics" className="flex-1 m-0">
+            <div className="h-full p-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <BarChart3 className="w-5 h-5" />
+                    Analytics Dashboard
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">Analytics dashboard will be implemented here.</p>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
 
-                  {/* Properties Panel */}
-                  <div className="w-80 bg-white border-l overflow-y-auto">
-                    <PropertiesPanel
-                      selectedComponentId={selectedComponent}
-                      onClose={() => setSelectedComponent(null)}
-                    />
-                  </div>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="seo" className="h-full mt-0">
-              <div className="p-6">
-                <SEOOptimizer />
-              </div>
-            </TabsContent>
-
-            <TabsContent value="analytics" className="h-full mt-0">
-              <div className="p-6">
-                <ProtectedComponent 
-                  resource="analytics" 
-                  action="view"
-                  fallback={<div>Access denied</div>}
-                >
-                  <AnalyticsDashboard />
-                </ProtectedComponent>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="workflow" className="h-full mt-0">
-              <div className="p-6">
-                <WorkflowManager>
-                  <div>Workflow management content</div>
-                </WorkflowManager>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="settings" className="h-full mt-0">
-              <div className="p-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Editor Settings</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Auto-save interval
-                        </label>
-                        <select className="w-full p-2 border rounded-md">
-                          <option>30 seconds</option>
-                          <option>1 minute</option>
-                          <option>5 minutes</option>
-                        </select>
-                      </div>
-                      
-                      <div>
-                        <label className="flex items-center space-x-2">
-                          <input type="checkbox" className="rounded" />
-                          <span className="text-sm text-gray-700">Enable dark mode</span>
-                        </label>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
+          <TabsContent value="settings" className="flex-1 m-0">
+            <div className="h-full p-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Settings className="w-5 h-5" />
+                    Editor Settings
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">Settings panel will be implemented here.</p>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
-    </PermissionsProvider>
+    </div>
   );
 };
 

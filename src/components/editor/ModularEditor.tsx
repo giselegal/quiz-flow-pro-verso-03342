@@ -1,348 +1,400 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { Separator } from '../ui/separator';
-import { Plus, Layout, Eye, Code2 } from 'lucide-react';
 
-import { 
-  ModularComponent, 
-  FlexContainer, 
-  TextModule, 
-  ImageModule, 
-  ButtonModule 
-} from './ModularComponent';
+import React, { useState, useCallback } from 'react';
+import { DndContext, DragEndEvent, DragOverlay, DragStartEvent } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { Plus, Trash2, GripVertical, Eye, EyeOff, Undo, Redo } from 'lucide-react';
+import ModularPropertiesPanel from './ModularPropertiesPanel';
 
-import { 
-  ModularPropertiesPanel,
-  createTextPropertyGroups,
-  createImagePropertyGroups,
-  createButtonPropertyGroups
-} from './ModularPropertiesPanel';
-
-// =====================================================================
-// 🎯 MODULAR EDITOR - Editor de Componentes Modulares com Flexbox
-// =====================================================================
-
-interface ComponentData {
+interface Component {
   id: string;
   type: 'text' | 'image' | 'button' | 'container';
   properties: Record<string, any>;
-  children?: ComponentData[];
+  order: number;
 }
 
 interface ModularEditorProps {
-  initialComponents?: ComponentData[];
-  onComponentsChange?: (components: ComponentData[]) => void;
-  className?: string;
+  initialComponents?: Component[];
+  onSave?: (components: Component[]) => void;
+  onPreview?: (components: Component[]) => void;
 }
 
-export const ModularEditor: React.FC<ModularEditorProps> = ({
+const ModularEditor: React.FC<ModularEditorProps> = ({
   initialComponents = [],
-  onComponentsChange,
-  className = ''
+  onSave,
+  onPreview
 }) => {
-  const [components, setComponents] = useState<ComponentData[]>(initialComponents);
-  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
-  const [previewMode, setPreviewMode] = useState(false);
+  const [components, setComponents] = useState<Component[]>(initialComponents);
+  const [selectedComponent, setSelectedComponent] = useState<Component | null>(null);
+  const [activeTab, setActiveTab] = useState('components');
+  const [isPreview, setIsPreview] = useState(false);
+  const [draggedComponent, setDraggedComponent] = useState<Component | null>(null);
 
-  const selectedComponent = components.find(comp => comp.id === selectedComponentId);
+  // Component templates
+  const componentTemplates = {
+    text: {
+      type: 'text' as const,
+      properties: {
+        content: {
+          title: 'Sample Title',
+          text: 'Sample text content',
+          buttonText: 'Click me',
+          buttonUrl: '#',
+          imageUrl: ''
+        },
+        style: {
+          backgroundColor: '#ffffff',
+          textColor: '#000000',
+          fontSize: '16px',
+          fontWeight: 'normal',
+          padding: '16px',
+          borderRadius: '8px'
+        },
+        layout: {
+          width: '100%',
+          height: 'auto',
+          alignment: 'left'
+        },
+        animation: {
+          type: 'none',
+          duration: 300
+        }
+      }
+    },
+    image: {
+      type: 'image' as const,
+      properties: {
+        content: {
+          title: '',
+          text: '',
+          buttonText: '',
+          buttonUrl: '',
+          imageUrl: 'https://via.placeholder.com/300x200'
+        },
+        style: {
+          backgroundColor: '#ffffff',
+          textColor: '#000000',
+          fontSize: '16px',
+          fontWeight: 'normal',
+          padding: '0px',
+          borderRadius: '8px'
+        },
+        layout: {
+          width: '300px',
+          height: '200px',
+          alignment: 'center'
+        },
+        animation: {
+          type: 'none',
+          duration: 300
+        }
+      }
+    },
+    button: {
+      type: 'button' as const,
+      properties: {
+        content: {
+          title: '',
+          text: '',
+          buttonText: 'Click me',
+          buttonUrl: '#',
+          imageUrl: ''
+        },
+        style: {
+          backgroundColor: '#007bff',
+          textColor: '#ffffff',
+          fontSize: '16px',
+          fontWeight: 'bold',
+          padding: '12px 24px',
+          borderRadius: '6px'
+        },
+        layout: {
+          width: 'auto',
+          height: 'auto',
+          alignment: 'center'
+        },
+        animation: {
+          type: 'none',
+          duration: 300
+        }
+      }
+    }
+  };
 
-  // =====================================================================
-  // 🔧 COMPONENT MANAGEMENT
-  // =====================================================================
-
-  const addComponent = (type: ComponentData['type']) => {
-    const newComponent: ComponentData = {
-      id: `comp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+  const addComponent = useCallback((type: 'text' | 'image' | 'button') => {
+    const template = componentTemplates[type];
+    const newComponent: Component = {
+      id: `${type}_${Date.now()}`,
       type,
-      properties: getDefaultPropertiesForType(type)
+      properties: template.properties,
+      order: components.length
     };
+    
+    setComponents(prev => [...prev, newComponent]);
+    setSelectedComponent(newComponent);
+  }, [components.length]);
 
-    const newComponents = [...components, newComponent];
-    setComponents(newComponents);
-    setSelectedComponentId(newComponent.id);
-    onComponentsChange?.(newComponents);
-  };
-
-  const updateComponent = (id: string, properties: Record<string, any>) => {
-    const newComponents = components.map(comp => 
-      comp.id === id 
-        ? { ...comp, properties: { ...comp.properties, ...properties } }
-        : comp
+  const updateComponent = useCallback((id: string, updates: Partial<Component['properties']>) => {
+    setComponents(prev => 
+      prev.map(comp => 
+        comp.id === id 
+          ? { ...comp, properties: { ...comp.properties, ...updates } }
+          : comp
+      )
     );
-    setComponents(newComponents);
-    onComponentsChange?.(newComponents);
+  }, []);
+
+  const deleteComponent = useCallback((id: string) => {
+    setComponents(prev => prev.filter(comp => comp.id !== id));
+    setSelectedComponent(null);
+  }, []);
+
+  const handleDragStart = (event: DragStartEvent) => {
+    const component = components.find(c => c.id === event.active.id);
+    setDraggedComponent(component || null);
   };
 
-  const deleteComponent = (id: string) => {
-    const newComponents = components.filter(comp => comp.id !== id);
-    setComponents(newComponents);
-    if (selectedComponentId === id) {
-      setSelectedComponentId(null);
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    
+    if (!over || active.id === over.id) {
+      setDraggedComponent(null);
+      return;
     }
-    onComponentsChange?.(newComponents);
-  };
 
-  const duplicateComponent = (id: string) => {
-    const componentToDuplicate = components.find(comp => comp.id === id);
-    if (!componentToDuplicate) return;
+    const activeIndex = components.findIndex(c => c.id === active.id);
+    const overIndex = components.findIndex(c => c.id === over.id);
 
-    const newComponent: ComponentData = {
-      ...componentToDuplicate,
-      id: `comp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-    };
-
-    const newComponents = [...components, newComponent];
-    setComponents(newComponents);
-    setSelectedComponentId(newComponent.id);
-    onComponentsChange?.(newComponents);
-  };
-
-  const moveComponent = (id: string, direction: 'up' | 'down') => {
-    const currentIndex = components.findIndex(comp => comp.id === id);
-    if (currentIndex === -1) return;
-
-    const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
-    if (newIndex < 0 || newIndex >= components.length) return;
-
-    const newComponents = [...components];
-    const [movedComponent] = newComponents.splice(currentIndex, 1);
-    newComponents.splice(newIndex, 0, movedComponent);
-
-    setComponents(newComponents);
-    onComponentsChange?.(newComponents);
-  };
-
-  // =====================================================================
-  // 🎨 PROPERTY MANAGEMENT
-  // =====================================================================
-
-  const handlePropertyChange = (groupId: string, propertyKey: string, value: any) => {
-    if (!selectedComponentId) return;
-
-    const newProperties = {
-      [propertyKey]: value
-    };
-
-    updateComponent(selectedComponentId, newProperties);
-  };
-
-  const getPropertyGroups = () => {
-    if (!selectedComponent) return [];
-
-    switch (selectedComponent.type) {
-      case 'text':
-        return createTextPropertyGroups(selectedComponent.properties);
-      case 'image':
-        return createImagePropertyGroups(selectedComponent.properties);
-      case 'button':
-        return createButtonPropertyGroups(selectedComponent.properties);
-      default:
-        return [];
+    if (activeIndex !== -1 && overIndex !== -1) {
+      const newComponents = [...components];
+      const [removed] = newComponents.splice(activeIndex, 1);
+      newComponents.splice(overIndex, 0, removed);
+      
+      // Update order
+      const reorderedComponents = newComponents.map((comp, index) => ({
+        ...comp,
+        order: index
+      }));
+      
+      setComponents(reorderedComponents);
     }
+    
+    setDraggedComponent(null);
   };
 
-  // =====================================================================
-  // 🔧 HELPERS
-  // =====================================================================
+  const handleSave = () => {
+    onSave?.(components);
+  };
 
-  const getDefaultPropertiesForType = (type: ComponentData['type']) => {
+  const handlePreview = () => {
+    setIsPreview(!isPreview);
+    onPreview?.(components);
+  };
+
+  const renderComponentPreview = (component: Component) => {
+    const { type, properties } = component;
+    const style = properties.style || {};
+    const content = properties.content || {};
+    
     switch (type) {
       case 'text':
-        return {
-          text: 'Novo texto editável',
-          size: 'base',
-          weight: 'normal',
-          color: '#000000',
-          align: 'left'
-        };
+        return (
+          <div style={style} className="p-4 border rounded">
+            <h3 className="text-lg font-semibold">{content.title}</h3>
+            <p>{content.text}</p>
+          </div>
+        );
+      
       case 'image':
-        return {
-          src: 'https://via.placeholder.com/300x200?text=Nova+Imagem',
-          alt: 'Nova imagem',
-          width: 300,
-          height: 200,
-          objectFit: 'cover',
-          rounded: false
-        };
+        return (
+          <div style={style} className="border rounded overflow-hidden">
+            <img 
+              src={content.imageUrl} 
+              alt={content.title || 'Component image'}
+              style={{ width: '100%', height: 'auto' }}
+            />
+          </div>
+        );
+      
       case 'button':
-        return {
-          text: 'Novo botão',
-          variant: 'primary',
-          size: 'md',
-          fullWidth: false,
-          disabled: false
-        };
+        return (
+          <button 
+            style={style}
+            className="px-4 py-2 rounded cursor-pointer hover:opacity-80"
+          >
+            {content.buttonText}
+          </button>
+        );
+      
       default:
-        return {};
+        return <div>Unknown component type</div>;
     }
   };
 
-  const renderComponent = (component: ComponentData) => {
-    const commonProps = {
-      id: component.id,
-      isSelected: selectedComponentId === component.id,
-      isEditable: !previewMode,
-      onSelect: setSelectedComponentId,
-      onEdit: setSelectedComponentId,
-      onDelete: deleteComponent,
-      onDuplicate: duplicateComponent,
-      onMove: moveComponent
-    };
-
-    switch (component.type) {
-      case 'text':
-        return (
-          <TextModule
-            key={component.id}
-            {...commonProps}
-            {...component.properties}
-          />
-        );
-      case 'image':
-        return (
-          <ImageModule
-            key={component.id}
-            {...commonProps}
-            {...component.properties}
-          />
-        );
-      case 'button':
-        return (
-          <ButtonModule
-            key={component.id}
-            {...commonProps}
-            {...component.properties}
-            onClick={() => console.log('Botão clicado:', component.id)}
-          />
-        );
-      default:
-        return null;
+  const handlePropertyChange = (groupId: string, propertyKey: string, value: any) => {
+    if (selectedComponent) {
+      const updates = {
+        ...selectedComponent.properties,
+        [groupId]: {
+          ...selectedComponent.properties[groupId],
+          [propertyKey]: value
+        }
+      };
+      updateComponent(selectedComponent.id, updates);
     }
   };
 
   return (
-    <div className={`modular-editor h-screen flex ${className}`}>
-      {/* 📱 CANVAS AREA */}
-      <div className="flex-1 flex flex-col">
-        {/* Header */}
-        <div className="bg-white border-b p-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Layout className="h-5 w-5" />
-            <h1 className="font-semibold">Editor Modular</h1>
-            <Badge variant="outline">{components.length} componentes</Badge>
-          </div>
-          
-          <div className="flex items-center space-x-2">
-            <Button
-              variant={previewMode ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setPreviewMode(!previewMode)}
-            >
-              <Eye className="h-4 w-4 mr-1" />
-              {previewMode ? 'Editar' : 'Preview'}
-            </Button>
-            
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => console.log('Export:', components)}
-            >
-              <Code2 className="h-4 w-4 mr-1" />
-              Exportar
-            </Button>
-          </div>
-        </div>
-
-        {/* Canvas */}
-        <div className="flex-1 bg-gray-50 p-6 overflow-auto">
-          <div className="max-w-4xl mx-auto">
-            <FlexContainer 
-              direction="column" 
-              gap={16}
-              className="min-h-96 bg-white rounded-lg shadow-sm border-2 border-dashed border-gray-200 p-6"
-            >
-              {components.length === 0 ? (
-                <div className="flex-1 flex items-center justify-center text-gray-500">
-                  <div className="text-center">
-                    <Layout className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p className="font-medium">Nenhum componente adicionado</p>
-                    <p className="text-sm">Use o painel lateral para adicionar componentes</p>
-                  </div>
-                </div>
-              ) : (
-                components.map(renderComponent)
-              )}
-            </FlexContainer>
-          </div>
+    <div className="h-screen flex flex-col bg-gray-50">
+      {/* Header */}
+      <div className="border-b bg-white p-4 flex justify-between items-center">
+        <h1 className="text-xl font-semibold">Modular Editor</h1>
+        <div className="flex gap-2">
+          <Button onClick={handleSave} variant="outline">
+            Save
+          </Button>
+          <Button onClick={handlePreview} variant="outline">
+            {isPreview ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
+            {isPreview ? 'Edit' : 'Preview'}
+          </Button>
         </div>
       </div>
 
-      {/* 🎛️ SIDEBAR */}
-      <div className="w-80 bg-white border-l flex flex-col">
-        {/* Add Components */}
-        <div className="p-4 border-b">
-          <h2 className="font-medium mb-3 flex items-center">
-            <Plus className="h-4 w-4 mr-2" />
-            Adicionar Componentes
-          </h2>
-          <div className="grid grid-cols-2 gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => addComponent('text')}
-              className="flex flex-col items-center p-3 h-auto"
-            >
-              <Type className="h-4 w-4 mb-1" />
-              <span className="text-xs">Texto</span>
-            </Button>
+      <div className="flex-1 flex overflow-hidden">
+        {/* Sidebar */}
+        <div className="w-80 border-r bg-white flex flex-col">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="components">Components</TabsTrigger>
+              <TabsTrigger value="properties">Properties</TabsTrigger>
+            </TabsList>
             
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => addComponent('image')}
-              className="flex flex-col items-center p-3 h-auto"
-            >
-              <Image className="h-4 w-4 mb-1" />
-              <span className="text-xs">Imagem</span>
-            </Button>
-            
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => addComponent('button')}
-              className="flex flex-col items-center p-3 h-auto"
-            >
-              <Plus className="h-4 w-4 mb-1" />
-              <span className="text-xs">Botão</span>
-            </Button>
-          </div>
+            <TabsContent value="components" className="flex-1 overflow-y-auto p-4">
+              <div className="space-y-4">
+                <div>
+                  <h3 className="font-medium mb-2">Add Components</h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button
+                      onClick={() => addComponent('text')}
+                      variant="outline"
+                      className="h-20 flex flex-col items-center gap-1"
+                    >
+                      <span className="text-xs">Text</span>
+                    </Button>
+                    <Button
+                      onClick={() => addComponent('image')}
+                      variant="outline"
+                      className="h-20 flex flex-col items-center gap-1"
+                    >
+                      <span className="text-xs">Image</span>
+                    </Button>
+                    <Button
+                      onClick={() => addComponent('button')}
+                      variant="outline"
+                      className="h-20 flex flex-col items-center gap-1"
+                    >
+                      <span className="text-xs">Button</span>
+                    </Button>
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div>
+                  <h3 className="font-medium mb-2">Component List</h3>
+                  <div className="space-y-2">
+                    {components.map(component => (
+                      <div
+                        key={component.id}
+                        className={`p-2 border rounded cursor-pointer hover:bg-gray-50 ${
+                          selectedComponent?.id === component.id ? 'bg-blue-50 border-blue-300' : ''
+                        }`}
+                        onClick={() => setSelectedComponent(component)}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium capitalize">
+                            {component.type}
+                          </span>
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteComponent(component.id);
+                            }}
+                            variant="ghost"
+                            size="sm"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="properties" className="flex-1 overflow-y-auto">
+              <ModularPropertiesPanel
+                selectedComponent={selectedComponent}
+                onPropertyChange={handlePropertyChange}
+                onSave={handleSave}
+                onReset={() => setSelectedComponent(null)}
+              />
+            </TabsContent>
+          </Tabs>
         </div>
 
-        {/* Properties Panel */}
-        <div className="flex-1 overflow-hidden">
-          {selectedComponent ? (
-            <ModularPropertiesPanel
-              componentId={selectedComponent.id}
-              componentType={selectedComponent.type}
-              propertyGroups={getPropertyGroups()}
-              onPropertyChange={handlePropertyChange}
-              onSave={() => console.log('Salvo:', selectedComponent)}
-              onReset={() => {
-                const defaultProps = getDefaultPropertiesForType(selectedComponent.type);
-                updateComponent(selectedComponent.id, defaultProps);
-              }}
-              className="h-full border-none"
-            />
-          ) : (
-            <div className="p-4 text-center text-gray-500">
-              <Settings className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              <p className="text-sm">Selecione um componente para editar suas propriedades</p>
-            </div>
-          )}
+        {/* Main Content */}
+        <div className="flex-1 overflow-y-auto p-4">
+          <div className="max-w-4xl mx-auto">
+            <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+              <SortableContext items={components.map(c => c.id)} strategy={verticalListSortingStrategy}>
+                <div className="space-y-4">
+                  {components.map(component => (
+                    <div
+                      key={component.id}
+                      className={`relative ${
+                        selectedComponent?.id === component.id ? 'ring-2 ring-blue-500' : ''
+                      }`}
+                      onClick={() => setSelectedComponent(component)}
+                    >
+                      {!isPreview && (
+                        <div className="absolute top-2 right-2 z-10 flex gap-1">
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteComponent(component.id);
+                            }}
+                            variant="destructive"
+                            size="sm"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      )}
+                      {renderComponentPreview(component)}
+                    </div>
+                  ))}
+                </div>
+              </SortableContext>
+              
+              <DragOverlay>
+                {draggedComponent && renderComponentPreview(draggedComponent)}
+              </DragOverlay>
+            </DndContext>
+          </div>
         </div>
       </div>
     </div>
   );
 };
+
+export default ModularEditor;

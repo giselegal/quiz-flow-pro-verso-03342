@@ -43,7 +43,11 @@ export interface UserResponse {
   answerIds: string[];
 }
 
-export type StyleResult = 'elegante' | 'romantico' | 'criativo' | 'dramatico' | 'natural' | 'sexy' | 'classico' | 'moderno';
+export interface StyleResult {
+  category: string;
+  score: number;
+  percentage: number;
+}
 
 export interface StyleData {
   name: string;
