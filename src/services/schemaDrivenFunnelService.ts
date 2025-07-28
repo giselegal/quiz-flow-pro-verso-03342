@@ -1,6 +1,96 @@
 import type { BlockData } from '@/components/editor/blocks';
-import { REAL_QUIZ_QUESTIONS, STRATEGIC_QUESTIONS, TRANSITIONS } from '@/components/visual-editor/realQuizData';
 import { QuizDataAdapter } from './quizDataAdapter';
+import { supabase } from '../lib/supabase';
+import { CORRECT_QUIZ_QUESTIONS } from '@/data/correctQuizQuestions';
+
+// Usar as questões originais corrigidas
+const REAL_QUIZ_QUESTIONS = CORRECT_QUIZ_QUESTIONS;
+
+const STRATEGIC_QUESTIONS = [
+  {
+    id: 'sq1',
+    question: 'O que mais te incomoda no seu guarda-roupa atual?',
+    options: [
+      { id: '1', text: 'Não sei combinar as peças', value: 'combinacao' },
+      { id: '2', text: 'Tenho muita roupa mas nada para usar', value: 'excesso' },
+      { id: '3', text: 'Não me sinto confiante', value: 'confianca' },
+      { id: '4', text: 'Não sei qual é meu estilo', value: 'identidade' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  },
+  {
+    id: 'sq2',
+    question: 'Quanto você gasta por mês com roupas?',
+    options: [
+      { id: '1', text: 'Até R$ 200', value: 'ate_200' },
+      { id: '2', text: 'R$ 200 a R$ 500', value: '200_500' },
+      { id: '3', text: 'R$ 500 a R$ 1000', value: '500_1000' },
+      { id: '4', text: 'Mais de R$ 1000', value: 'mais_1000' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  },
+  {
+    id: 'sq3',
+    question: 'Qual sua maior dificuldade na hora de se vestir?',
+    options: [
+      { id: '1', text: 'Escolher as cores certas', value: 'cores' },
+      { id: '2', text: 'Combinar estampas', value: 'estampas' },
+      { id: '3', text: 'Escolher a ocasião certa', value: 'ocasiao' },
+      { id: '4', text: 'Valorizar meu corpo', value: 'corpo' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  },
+  {
+    id: 'sq4',
+    question: 'O que você mais gostaria de mudar?',
+    options: [
+      { id: '1', text: 'Ter mais confiança', value: 'confianca' },
+      { id: '2', text: 'Organizar melhor o guarda-roupa', value: 'organizacao' },
+      { id: '3', text: 'Comprar menos e melhor', value: 'consumo' },
+      { id: '4', text: 'Descobrir meu estilo único', value: 'estilo_unico' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  },
+  {
+    id: 'sq5',
+    question: 'Como você prefere receber orientação de estilo?',
+    options: [
+      { id: '1', text: 'Consultoria individual', value: 'individual' },
+      { id: '2', text: 'Guias e materiais online', value: 'online' },
+      { id: '3', text: 'Workshops em grupo', value: 'grupo' },
+      { id: '4', text: 'Aplicativo interativo', value: 'app' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  },
+  {
+    id: 'sq6',
+    question: 'Você estaria disposta a investir em consultoria?',
+    options: [
+      { id: '1', text: 'Sim, quero atendimento personalizado', value: 'sim_personalizado' },
+      { id: '2', text: 'Talvez, dependendo do valor', value: 'talvez' },
+      { id: '3', text: 'Prefiro primeiro ver resultados', value: 'resultados_primeiro' },
+      { id: '4', text: 'Não neste momento', value: 'nao_agora' }
+    ],
+    type: 'text',
+    multipleSelection: false,
+    maxSelections: 1
+  }
+];
+
+const TRANSITIONS = {
+  main: 'Agora vamos conhecer você melhor',
+  final: 'Preparando seu resultado personalizado'
+};
 
 // DEBUG: Verificar se os dados estão sendo importados corretamente
 console.log('🔍 DEBUG - Dados importados:');
@@ -89,12 +179,12 @@ export interface AutoSaveState {
 }
 
 class SchemaDrivenFunnelService {
-  private baseUrl = '/api/schema-driven';
+  private baseUrl = 'http://localhost:3001/api/schema-driven';
   private localStorageKey = 'schema-driven-funnel';
   private versionStorageKey = 'schema-driven-versions';
   private autoSaveInterval: NodeJS.Timeout | null = null;
   private autoSaveState: AutoSaveState = {
-    isEnabled: true,
+    isEnabled: false, // Auto-save desabilitado por padrão
     interval: 10, // 10 segundos
     lastSave: null,
     pendingChanges: false,
@@ -159,6 +249,14 @@ class SchemaDrivenFunnelService {
 
   markPendingChanges() {
     this.autoSaveState.pendingChanges = true;
+  }
+
+  hasPendingChanges(): boolean {
+    return this.autoSaveState.pendingChanges;
+  }
+
+  clearPendingChanges() {
+    this.autoSaveState.pendingChanges = false;
   }
 
   getAutoSaveState(): AutoSaveState {
@@ -372,45 +470,89 @@ class SchemaDrivenFunnelService {
     return null;
   }
 
-  // Backend operations
+  // Backend operations - USANDO SUPABASE
   async saveFunnel(funnel: SchemaDrivenFunnelData, isAutoSave: boolean = false): Promise<SchemaDrivenFunnelData> {
+    console.log('💾 [DEBUG] saveFunnel called:', { 
+      funnelId: funnel.id, 
+      isAutoSave, 
+      funnelName: funnel.name,
+      pagesCount: funnel.pages?.length || 0
+    });
+
     try {
-      // Tentar salvar no backend primeiro
-      const response = await fetch(`${this.baseUrl}/funnels/${funnel.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
+      // Salvar no Supabase
+      console.log('🌐 [DEBUG] Saving to Supabase...');
+      
+      const supabaseData = {
+        id: funnel.id,
+        title: funnel.name,
+        description: funnel.description || '',
+        category: 'geral',
+        difficulty: 'medium' as const,
+        data: {
+          funnel: funnel,
+          pages: funnel.pages || [],
+          config: funnel.config || {}
         },
-        body: JSON.stringify({
-          ...funnel,
-          lastModified: new Date().toISOString()
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-
-      const result = await response.json();
-      const savedFunnel = {
-        ...result.data,
-        lastModified: new Date(result.data.lastModified),
-        createdAt: new Date(result.data.createdAt)
+        is_published: funnel.config?.isPublished || false,
+        updated_at: new Date().toISOString()
       };
 
-      // Salvar versão se sucesso no backend
-      if (!isAutoSave) {
-        this.saveVersion(savedFunnel, 'Manual save from backend');
+      console.log('� [DEBUG] Supabase data:', supabaseData);
+
+      // Verificar se já existe
+      const { data: existing } = await supabase
+        .from('quizzes')
+        .select('id')
+        .eq('id', funnel.id)
+        .single();
+
+      let result;
+      if (existing) {
+        // Atualizar existente
+        const { data, error } = await supabase
+          .from('quizzes')
+          .update(supabaseData)
+          .eq('id', funnel.id)
+          .select()
+          .single();
+        
+        if (error) throw error;
+        result = data;
+      } else {
+        // Criar novo
+        const { data, error } = await supabase
+          .from('quizzes')
+          .insert([{ ...supabaseData, created_at: new Date().toISOString() }])
+          .select()
+          .single();
+        
+        if (error) throw error;
+        result = data;
       }
 
-      // Atualizar localStorage com dados do backend
+      console.log('✅ [DEBUG] Supabase response:', result);
+
+      const savedFunnel = {
+        ...funnel,
+        lastModified: new Date(),
+        version: funnel.version + (isAutoSave ? 0 : 1)
+      };
+
+      // Salvar versão se sucesso no Supabase
+      if (!isAutoSave) {
+        this.saveVersion(savedFunnel, 'Manual save to Supabase');
+      }
+
+      // Atualizar localStorage com dados salvos
       this.saveLocalFunnel(savedFunnel);
       
-      console.log('☁️ Funnel saved to backend successfully');
+      console.log('☁️ [DEBUG] Funnel saved to Supabase successfully');
       return savedFunnel;
 
     } catch (error) {
-      console.warn('⚠️ Backend unavailable, saving locally only:', error);
+      console.error('❌ [DEBUG] Supabase save failed:', error);
+      console.warn('⚠️ Supabase unavailable, saving locally only:', error);
       
       // Fallback para localStorage
       const updatedFunnel = {
@@ -425,6 +567,7 @@ class SchemaDrivenFunnelService {
         this.saveVersion(updatedFunnel, 'Manual save (offline)');
       }
       
+      console.log('💾 [DEBUG] Funnel saved locally as fallback');
       return updatedFunnel;
     }
   }
@@ -437,15 +580,34 @@ class SchemaDrivenFunnelService {
     }
 
     try {
-      // Tentar carregar do backend primeiro
-      const response = await fetch(`${this.baseUrl}/funnels/${funnelId}`);
+      // Tentar carregar do Supabase primeiro
+      console.log('🌐 [DEBUG] Loading from Supabase...');
+      const { data, error } = await supabase
+        .from('quizzes')
+        .select('*')
+        .eq('id', funnelId)
+        .single();
       
-      if (response.ok) {
-        const result = await response.json();
-        const funnel = {
-          ...result.data,
-          lastModified: new Date(result.data.lastModified),
-          createdAt: new Date(result.data.createdAt)
+      if (error) {
+        console.warn('⚠️ Supabase error:', error);
+        throw error;
+      }
+
+      if (data) {
+        console.log('✅ [DEBUG] Found in Supabase:', data);
+        
+        // Converter dados do Supabase para o formato esperado
+        const funnel: SchemaDrivenFunnelData = {
+          id: data.id,
+          name: data.title,
+          description: data.description || '',
+          pages: data.data?.pages || [],
+          config: data.data?.config || {},
+          theme: 'default',
+          isPublished: data.is_published || false,
+          version: 1,
+          lastModified: new Date(data.updated_at),
+          createdAt: new Date(data.created_at)
         };
         
         // Atualizar localStorage com dados mais recentes
@@ -454,11 +616,11 @@ class SchemaDrivenFunnelService {
         } catch (saveError) {
           console.warn('⚠️ Failed to save to localStorage, continuing without cache:', saveError);
         }
-        console.log('☁️ Funnel loaded from backend');
+        console.log('☁️ Funnel loaded from Supabase');
         return funnel;
       }
     } catch (error) {
-      console.warn('⚠️ Backend unavailable, trying local storage:', error);
+      console.warn('⚠️ Supabase unavailable, trying local storage:', error);
     }
 
     // Fallback para localStorage
@@ -468,6 +630,7 @@ class SchemaDrivenFunnelService {
       return localFunnel;
     }
 
+    console.log('❌ Funnel not found in Supabase or localStorage');
     return null;
   }
 
@@ -482,29 +645,41 @@ class SchemaDrivenFunnelService {
     };
 
     try {
-      // Tentar criar no backend
-      const response = await fetch(`${this.baseUrl}/funnels`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      // Tentar criar no Supabase
+      console.log('🌐 [DEBUG] Creating in Supabase...');
+      
+      const supabaseData = {
+        id: funnel.id,
+        title: funnel.name,
+        description: funnel.description || '',
+        category: 'geral',
+        difficulty: 'medium' as const,
+        data: {
+          funnel: funnel,
+          pages: funnel.pages || [],
+          config: funnel.config || {}
         },
-        body: JSON.stringify(funnel),
-      });
+        is_published: funnel.isPublished || false,
+        created_at: now.toISOString(),
+        updated_at: now.toISOString()
+      };
 
-      if (response.ok) {
-        const result = await response.json();
-        const createdFunnel = {
-          ...result.data,
-          lastModified: new Date(result.data.lastModified),
-          createdAt: new Date(result.data.createdAt)
-        };
-        
-        this.saveLocalFunnel(createdFunnel);
-        this.saveVersion(createdFunnel, 'Initial creation');
-        console.log('☁️ Funnel created in backend');
-        return createdFunnel;
-      }
+      const { data: result, error } = await supabase
+        .from('quizzes')
+        .insert([supabaseData])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      console.log('✅ [DEBUG] Created in Supabase:', result);
+      
+      this.saveLocalFunnel(funnel);
+      this.saveVersion(funnel, 'Initial creation');
+      console.log('☁️ Funnel created in Supabase');
+      return funnel;
     } catch (error) {
+      console.warn('⚠️ Supabase unavailable, creating locally only:', error);
       console.warn('⚠️ Backend unavailable, creating locally:', error);
     }
 
@@ -515,32 +690,17 @@ class SchemaDrivenFunnelService {
     return funnel;
   }
 
-  async syncWithBackend(): Promise<{ success: boolean; message: string }> {
-    try {
-      const localFunnel = this.getLocalFunnel();
-      if (!localFunnel) {
-        return { success: false, message: 'No local funnel to sync' };
-      }
-
-      const savedFunnel = await this.saveFunnel(localFunnel);
-      return { 
-        success: true, 
-        message: `Synced successfully. Backend version: ${savedFunnel.version}` 
-      };
-    } catch (error) {
-      return { 
-        success: false, 
-        message: `Sync failed: ${error instanceof Error ? error.message : 'Unknown error'}` 
-      };
-    }
-  }
+  // Método removido - agora usamos Supabase diretamente nos métodos saveFunnel/loadFunnel
 
   // Utility methods
   createDefaultFunnel(): SchemaDrivenFunnelData {
     const now = new Date();
     
+    // USAR ID FIXO PARA EVITAR DUPLICAÇÃO!
+    const FIXED_FUNNEL_ID = 'default-quiz-funnel-21-steps';
+    
     return {
-      id: `funnel-${Date.now()}`,
+      id: FIXED_FUNNEL_ID, // ID fixo para evitar duplicação
       name: 'Quiz CaktoQuiz - Descubra Seu Estilo',
       description: 'Funil completo para descoberta do estilo pessoal - 21 etapas modulares',
       theme: 'caktoquiz',
@@ -572,6 +732,15 @@ class SchemaDrivenFunnelService {
   }
 
   /**
+   * Gera um ID único para páginas do funil
+   */
+  private generateUniquePageId(baseName: string): string {
+    const timestamp = Date.now();
+    const random = Math.random().toString(36).substring(2, 8);
+    return `${baseName}-${timestamp}-${random}`;
+  }
+
+  /**
    * Cria todas as 21 páginas usando APENAS componentes inline modulares ES7+
    * Arquitetura 100% modular com componentes independentes e responsivos
    */
@@ -586,7 +755,7 @@ class SchemaDrivenFunnelService {
     // ETAPA 1: INTRODUÇÃO (COLETA DO NOME)
     // ==========================================
     pages.push({
-      id: 'etapa-1-intro',
+      id: this.generateUniquePageId('etapa-1-intro'),
       name: 'Introdução',
       title: 'Etapa 1: Introdução - Coleta do Nome',
       type: 'intro',
@@ -691,13 +860,13 @@ class SchemaDrivenFunnelService {
     // Componentes: quiz-intro-header + heading-inline + text-inline + options-grid + button-inline
     // ==========================================
     REAL_QUIZ_QUESTIONS.forEach((questionData, index) => {
-      console.log(`🎯 [ES7+] Criando questão ${index + 1}:`, questionData.question);
+      console.log(`🎯 [ES7+] Criando questão ${index + 1}:`, questionData.title);
       const currentProgress = 5 + (index + 1) * 5; // 5%, 10%, 15%... até 55%
       
       pages.push({
-        id: `etapa-${index + 2}-questao-${index + 1}`,
+        id: this.generateUniquePageId(`etapa-${index + 2}-questao-${index + 1}`),
         name: `Questão ${index + 1}`,
-        title: `Etapa ${index + 2}: ${questionData.question}`,
+        title: `Etapa ${index + 2}: ${questionData.title}`,
         type: 'question',
         order: index + 2,
         blocks: [
@@ -720,7 +889,7 @@ class SchemaDrivenFunnelService {
             id: `question-${index + 1}-title`,
             type: 'heading-inline',
             properties: {
-              content: questionData.question,
+              content: questionData.title,
               level: 'h2',
               fontSize: 'text-2xl',
               fontWeight: 'font-bold',
@@ -796,7 +965,7 @@ class SchemaDrivenFunnelService {
     // Componentes: quiz-intro-header + heading-inline + text-inline + progress-inline + button-inline
     // ==========================================
     pages.push({
-      id: 'etapa-12-transicao-principal',
+      id: this.generateUniquePageId('etapa-12-transicao-principal'),
       name: 'Transição Principal',
       title: 'Etapa 12: Transição - Agora vamos conhecer você melhor',
       type: 'custom',
@@ -889,7 +1058,7 @@ class SchemaDrivenFunnelService {
       const currentProgress = 65 + (index * 5); // 65%, 70%, 75%... até 90%
       
       pages.push({
-        id: `etapa-${index + 13}-estrategica-${index + 1}`,
+        id: this.generateUniquePageId(`etapa-${index + 13}-estrategica-${index + 1}`),
         name: `Questão Estratégica ${index + 1}`,
         title: `Etapa ${index + 13}: ${questionData.question}`,
         type: 'question',
@@ -992,7 +1161,7 @@ class SchemaDrivenFunnelService {
     // Componentes: quiz-intro-header + heading-inline + progress-inline + text-inline + loading-animation + button-inline
     // ==========================================
     pages.push({
-      id: 'etapa-19-transicao-final',
+      id: this.generateUniquePageId('etapa-19-transicao-final'),
       name: 'Transição Final',
       title: 'Etapa 19: Preparando seu resultado personalizado',
       type: 'custom',
@@ -1094,7 +1263,7 @@ class SchemaDrivenFunnelService {
     // Componentes inline específicos para resultado
     // ==========================================
     pages.push({
-      id: 'etapa-20-resultado',
+      id: this.generateUniquePageId('etapa-20-resultado'),
       name: 'Resultado Personalizado',
       title: 'Etapa 20: Seu Estilo Predominante Identificado',
       type: 'result',
@@ -1261,7 +1430,7 @@ class SchemaDrivenFunnelService {
     // Componentes inline específicos para conversão
     // ==========================================
     pages.push({
-      id: 'etapa-21-oferta',
+      id: this.generateUniquePageId('etapa-21-oferta'),
       name: 'Oferta Especial',
       title: 'Etapa 21: Oferta Personalizada Para Você',
       type: 'offer',
@@ -1491,6 +1660,220 @@ class SchemaDrivenFunnelService {
   // Cleanup
   destroy() {
     this.disableAutoSave();
+  }
+
+  async deleteBlock(funnelId: string, pageId: string, blockId: string): Promise<void> {
+    try {
+      // Carregar o funil atual
+      const funnel = await this.loadFunnel(funnelId);
+      if (!funnel) {
+        console.error(`❌ Funil com ID ${funnelId} não encontrado.`);
+        return;
+      }
+
+      // Encontrar a página e remover o bloco
+      const updatedPages = funnel.pages.map(page => {
+        if (page.id === pageId) {
+          return {
+            ...page,
+            blocks: page.blocks.filter(block => block.id !== blockId)
+          };
+        }
+        return page;
+      });
+
+      const updatedFunnel = {
+        ...funnel,
+        pages: updatedPages,
+        lastModified: new Date()
+      };
+
+      // Salvar o funil atualizado no backend
+      const { error } = await supabase
+        .from('funnels')
+        .update({
+          settings: updatedFunnel, // Supabase armazena o objeto completo em 'settings'
+          updated_at: updatedFunnel.lastModified.toISOString() // Atualiza o timestamp
+        })
+        .eq('id', funnelId);
+
+      if (error) {
+        throw error;
+      }
+
+      // Atualizar o localStorage e o histórico de versões
+      this.saveLocalFunnel(updatedFunnel);
+      this.saveVersion(updatedFunnel, `Block ${blockId} deleted from page ${pageId}`);
+      console.log(`🗑️ Bloco ${blockId} excluído da página ${pageId} do funil ${funnelId} e salvo no backend.`);
+    } catch (error) {
+      console.error(`❌ Erro ao excluir bloco ${blockId} do funil ${funnelId}:`, error);
+      throw error; // Re-lançar para que o chamador possa lidar com isso
+    }
+  }
+
+
+  async deleteFunnel(funnelId: string): Promise<void> {
+    try {
+      const { error } = await supabase
+        .from('funnels')
+        .delete()
+        .eq('id', funnelId);
+
+      if (error) {
+        throw error;
+      }
+
+      // Remover do localStorage
+      localStorage.removeItem(`funnel_${funnelId}`);
+      // Limpar histórico de versões para este funil
+      localStorage.removeItem(`funnel_versions_${funnelId}`);
+
+      console.log(`🗑️ Funil ${funnelId} excluído do backend e do localStorage.`);
+    } catch (error) {
+      console.error(`❌ Erro ao excluir funil ${funnelId}:`, error);
+      throw error;
+    }
+  }
+
+
+  async deletePage(funnelId: string, pageId: string): Promise<void> {
+    try {
+      const funnel = await this.loadFunnel(funnelId);
+      if (!funnel) {
+        throw new Error(`Funil com ID ${funnelId} não encontrado.`);
+      }
+
+      const updatedPages = funnel.pages.filter(page => page.id !== pageId);
+
+      const updatedFunnel = {
+        ...funnel,
+        pages: updatedPages,
+        lastModified: new Date()
+      };
+
+      // Salvar o funil atualizado no backend
+      const { error } = await supabase
+        .from('funnels')
+        .update({
+          settings: updatedFunnel, // Supabase armazena o objeto completo em 'settings'
+          updated_at: updatedFunnel.lastModified.toISOString() // Atualiza o timestamp
+        })
+        .eq('id', funnelId);
+
+      if (error) {
+        throw error;
+      }
+
+      // Atualizar o localStorage e o histórico de versões
+      this.saveLocalFunnel(updatedFunnel);
+      this.saveVersion(updatedFunnel, `Page ${pageId} deleted from funnel ${funnelId}`);
+      console.log(`🗑️ Página ${pageId} excluída do funil ${funnelId} e salva no backend.`);
+    } catch (error) {
+      console.error(`❌ Erro ao excluir página ${pageId} do funil ${funnelId}:`, error);
+      throw error; // Re-lançar para que o chamador possa lidar com isso
+    }
+  }
+
+  // Métodos para interface de administração
+  async createFunnelFromTemplate(template: any, userId: string, customName?: string): Promise<any> {
+    try {
+      // Criar estrutura de funil baseada no template
+      const pages = template.stepTitles.map((title: string, index: number) => ({
+        id: `step-${index + 1}`,
+        title: title,
+        blocks: [],
+        order: index + 1
+      }));
+
+      const funnelName = customName || `${template.name} - ${new Date().toLocaleString('pt-BR')}`;
+      
+      // Criar registro no Supabase
+      const supabaseData = {
+        id: `funnel-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        name: funnelName,
+        description: template.description,
+        status: 'draft',
+        user_id: userId,
+        pages_count: template.steps,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      const { data, error } = await supabase
+        .from('funnels')
+        .insert([supabaseData])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Criar funil schema-driven correspondente
+      const funnelData = this.createDefaultFunnel();
+      funnelData.id = data.id;
+      funnelData.name = funnelName;
+      funnelData.description = template.description;
+      funnelData.pages = pages;
+
+      await this.saveFunnel(funnelData);
+
+      console.log('✅ Funil criado a partir do template:', template.name);
+      return data;
+    } catch (error) {
+      console.error('❌ Erro ao criar funil a partir do template:', error);
+      throw error;
+    }
+  }
+
+  // Método simplificado para criar funil personalizado da interface admin
+  async createFunnelForAdmin(name: string, description?: string, userId?: string, isPublished = false): Promise<any> {
+    try {
+      // Criar registro no Supabase
+      const supabaseData = {
+        id: `funnel-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        name: name,
+        description: description || '',
+        status: isPublished ? 'active' : 'draft',
+        user_id: userId,
+        pages_count: 1,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      const { data, error } = await supabase
+        .from('funnels')
+        .insert([supabaseData])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Criar funil schema-driven correspondente
+      const funnelData = this.createDefaultFunnel();
+      funnelData.id = data.id;
+      funnelData.name = name;
+      funnelData.description = description || '';
+      funnelData.isPublished = isPublished;
+      funnelData.pages = [{
+        id: 'step-1',
+        name: 'Primeira Etapa',
+        title: 'Primeira Etapa',
+        type: 'intro' as const,
+        blocks: [],
+        order: 1,
+        settings: {
+          showProgressBar: true,
+          backgroundColor: '#FFFFFF'
+        }
+      }];
+
+      await this.saveFunnel(funnelData);
+
+      console.log('✅ Funil personalizado criado:', name);
+      return data;
+    } catch (error) {
+      console.error('❌ Erro ao criar funil personalizado:', error);
+      throw error;
+    }
   }
 }
 

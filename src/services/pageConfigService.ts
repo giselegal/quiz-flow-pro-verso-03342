@@ -1,4 +1,5 @@
 import type { BlockData } from './funnelService';
+import { getDefaultPageConfig } from '../data/defaultPageConfigs';
 
 export interface PageStyles {
   backgroundColor?: string;
@@ -49,38 +50,39 @@ class PageConfigService {
   }
 
   /**
-   * Buscar configuração de uma página específica
+   * Buscar configuração de uma página
    */
-  async getPageConfig(pageId: string): Promise<PageConfig | null> {
+  async getPageConfig(pageId: string): Promise<PageConfig> {
     try {
       // Verificar cache primeiro
-      if (this.cache.has(pageId)) {
-        const cached = this.cache.get(pageId);
-        if (cached && this.isCacheValid(cached)) {
-          return cached;
-        }
+      const cacheKey = `page-config-${pageId}`;
+      const cached = this.cache.get(cacheKey);
+      if (cached) {
+        return cached;
       }
 
-      // Buscar do backend
-      const response = await fetch(`${this.baseUrl}/page-configs/${pageId}`);
-      
-      if (!response.ok) {
-        if (response.status === 404) {
-          return this.getDefaultPageConfig(pageId);
-        }
-        throw new Error(`Failed to fetch page config: ${response.statusText}`);
+      // Tentar buscar do localStorage primeiro
+      const localConfig = this.getFromLocalStorage(pageId);
+      if (localConfig) {
+        this.cache.set(cacheKey, localConfig);
+        return localConfig;
       }
 
-      const config = await response.json();
+      // Se não encontrou no localStorage, usar configuração padrão
+      const defaultConfig = this.getDefaultPageConfig(pageId);
       
-      // Salvar no cache
-      this.cache.set(pageId, config);
+      // Salvar a configuração padrão no localStorage para próximas vezes
+      this.saveToLocalStorage(pageId, defaultConfig);
+      this.cache.set(cacheKey, defaultConfig);
       
-      return config;
+      return defaultConfig;
+
     } catch (error) {
-      console.error('Error fetching page config:', error);
-      // Fallback para configuração padrão
-      return this.getDefaultPageConfig(pageId);
+      console.error('Erro ao buscar configuração da página:', error);
+      
+      // Em caso de erro, retornar configuração padrão
+      const defaultConfig = this.getDefaultPageConfig(pageId);
+      return defaultConfig;
     }
   }
 
@@ -255,56 +257,37 @@ class PageConfigService {
   }
 
   /**
+   * Buscar configuração do localStorage
+   */
+  private getFromLocalStorage(pageId: string): PageConfig | null {
+    try {
+      const stored = localStorage.getItem(`page-config-${pageId}`);
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    } catch (error) {
+      console.warn('Erro ao ler do localStorage:', error);
+    }
+    return null;
+  }
+
+  /**
+   * Salvar configuração no localStorage
+   */
+  private saveToLocalStorage(pageId: string, config: PageConfig): void {
+    try {
+      localStorage.setItem(`page-config-${pageId}`, JSON.stringify(config));
+    } catch (error) {
+      console.warn('Erro ao salvar no localStorage:', error);
+    }
+  }
+
+  /**
    * Obter configuração padrão para uma página
    */
   private getDefaultPageConfig(pageId: string): PageConfig {
-    const defaultConfigs: Record<string, Partial<PageConfig>> = {
-      'etapa-20-resultado-a': {
-        pageName: 'Página de Resultado',
-        styles: {
-          backgroundColor: '#fffaf7',
-          textColor: '#432818',
-          fontFamily: 'Inter, sans-serif'
-        },
-        blocks: []
-      },
-      'etapa-21-oferta-b': {
-        pageName: 'Página de Oferta',
-        styles: {
-          backgroundColor: '#FFFBF7',
-          textColor: '#432818',
-          fontFamily: 'Inter, sans-serif'
-        },
-        blocks: []
-      }
-    };
-
-    const defaultConfig = defaultConfigs[pageId] || {};
-
-    return {
-      pageId,
-      pageName: defaultConfig.pageName || 'Página',
-      blocks: defaultConfig.blocks || [],
-      styles: defaultConfig.styles || {
-        backgroundColor: '#ffffff',
-        textColor: '#000000',
-        fontFamily: 'Arial, sans-serif'
-      },
-      metadata: {
-        title: '',
-        description: '',
-        keywords: [],
-        ogImage: ''
-      },
-      settings: {
-        showProgress: false,
-        progressValue: 0,
-        abTestVariant: 'A',
-        customScripts: []
-      },
-      lastModified: new Date().toISOString(),
-      version: 1
-    };
+    // Usar configurações padrão importadas
+    return getDefaultPageConfig(pageId);
   }
 
   /**

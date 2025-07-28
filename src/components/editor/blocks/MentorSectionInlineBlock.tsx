@@ -88,33 +88,18 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
         <div className="order-1 lg:order-2 text-center lg:text-left">
           
           {/* Nome e Título */}
-          <h3 
-            className="text-2xl md:text-3xl font-bold text-gray-800 mb-2"
-            contentEditable={!disabled}
-            onBlur={(e) => handleEdit('mentorName', e.target.textContent)}
-            suppressContentEditableWarning={true}
-          >
+          <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
             {mentorName}
           </h3>
           
-          <p 
-            className="text-purple-600 font-semibold text-sm md:text-base mb-4"
-            contentEditable={!disabled}
-            onBlur={(e) => handleEdit('mentorTitle', e.target.textContent)}
-            suppressContentEditableWarning={true}
-          >
+          <p className="text-purple-600 font-semibold text-sm md:text-base mb-4">
             {mentorTitle}
           </p>
 
           {/* Bio */}
           <div className="bg-white p-4 rounded-lg shadow-sm border border-purple-100 mb-6">
             <Quote className="w-5 h-5 text-purple-400 mb-2" />
-            <p 
-              className="text-gray-700 text-sm md:text-base leading-relaxed"
-              contentEditable={!disabled}
-              onBlur={(e) => handleEdit('mentorBio', e.target.textContent)}
-              suppressContentEditableWarning={true}
-            >
+            <p className="text-gray-700 text-sm md:text-base leading-relaxed">
               {mentorBio}
             </p>
           </div>
@@ -148,27 +133,6 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
           ))}
         </div>
       </div>
-
-      {/* Editor Inline */}
-      {isSelected && !disabled && (
-        <div className="mt-4 p-3 bg-white rounded-lg border border-purple-200">
-          <div className="text-xs text-gray-600 mb-2 font-medium">
-            👩‍💼 Editar Seção da Mentora
-          </div>
-          <div className="space-y-2 text-xs">
-            <div>
-              <label className="text-gray-700 block mb-1">URL da Foto:</label>
-              <input
-                type="url"
-                value={mentorImage}
-                onChange={(e) => handleEdit('mentorImage', e.target.value)}
-                className="w-full p-1 text-xs border border-gray-300 rounded"
-                placeholder="https://..."
-              />
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

@@ -151,9 +151,9 @@ const QuizOption: React.FC<QuizOptionProps> = ({
           <QuizOptionImage
             imageUrl={option.imageUrl}
             altText={option.text}
-            styleCategory={option.styleCategory}
+            styleCategory={option.styleCategory || ''}
             isSelected={isSelected}
-            is3DQuestion={is3DQuestion}
+            is3DQuestion={is3DQuestion || false}
             questionId={questionId || ''}
           />
         )}

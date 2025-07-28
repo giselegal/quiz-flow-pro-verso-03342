@@ -7,7 +7,7 @@ const LoadingAccessPage = () => {
   
   // Definir as rotas disponíveis e seus redirecionamentos
   const routeMap: Record<string, string> = {
-    'editor': '/admin/editor',
+    'editor': '/editor',
     'admin': '/admin',
     'dashboard': '/admin/dashboard',
     'unified-editor': '/admin/unified-editor',

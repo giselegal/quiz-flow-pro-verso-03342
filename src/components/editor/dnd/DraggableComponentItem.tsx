@@ -1,7 +1,10 @@
 import React from 'react';
 import { useDraggable } from '@dnd-kit/core';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+
+// Utility function for class names
+const cn = (...classes: (string | undefined | boolean)[]): string => {
+  return classes.filter(Boolean).join(' ');
+};
 
 interface DraggableComponentItemProps {
   blockType: string;
@@ -44,17 +47,15 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
   } : undefined;
 
   return (
-    <Button
+    <div
       ref={setNodeRef}
-      variant="outline"
       className={cn(
-        'w-full h-auto p-3 flex flex-col items-start gap-2 text-left cursor-grab hover:bg-gray-50 transition-all duration-200',
+        'w-full h-auto p-3 flex flex-col items-start gap-2 text-left cursor-grab hover:bg-gray-50 transition-all duration-200 border border-gray-200 rounded-lg bg-white',
         isDragging && 'opacity-50 cursor-grabbing scale-105',
         disabled && 'opacity-50 cursor-not-allowed',
         className
       )}
       style={style}
-      disabled={disabled}
       {...attributes}
       {...listeners}
     >
@@ -86,6 +87,6 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
       {isDragging && (
         <div className="absolute inset-0 bg-blue-500 bg-opacity-10 rounded-md border-2 border-blue-500 border-dashed" />
       )}
-    </Button>
+    </div>
   );
 };

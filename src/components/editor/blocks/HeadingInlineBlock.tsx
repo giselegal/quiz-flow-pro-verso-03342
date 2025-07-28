@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { cn } from '@/lib/utils';
 import { Type, Edit3 } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';
@@ -15,6 +15,15 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = ''
 }) => {
+  // Verificação de segurança para evitar erro de undefined
+  if (!block || !block.properties) {
+    return (
+      <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
+        <p className="text-red-600">Erro: Bloco não encontrado ou propriedades indefinidas</p>
+      </div>
+    );
+  }
+
   const {
     content = 'Título Principal',
     level = 'h2', // h1, h2, h3, h4, h5, h6
@@ -23,12 +32,8 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
     backgroundColor = 'transparent',
     fontWeight = 'bold',
     maxWidth = 'full',
-    responsive = true,
-    isEditable = true
+    responsive = true
   } = block.properties;
-
-  const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState(content);
 
   // Tamanhos responsivos por nível
   const levelClasses = {
@@ -67,18 +72,6 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
     full: 'max-w-full'
   };
 
-  const handleSave = () => {
-    if (onPropertyChange) {
-      onPropertyChange('content', editValue);
-    }
-    setIsEditing(false);
-  };
-
-  const handleCancel = () => {
-    setEditValue(content);
-    setIsEditing(false);
-  };
-
   const HeadingTag = level as keyof JSX.IntrinsicElements;
 
   return (
@@ -89,89 +82,46 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
         // Container editável
         'p-2 sm:p-3 rounded-lg border border-transparent',
         'hover:border-gray-200 hover:bg-gray-50/30 transition-all duration-200',
+        'cursor-pointer',
         isSelected && 'border-blue-500 bg-blue-50/30',
         className
       )}
       onClick={onClick}
     >
-      {isEditing ? (
-        <div className="w-full space-y-2">
-          <input
-            type="text"
-            value={editValue}
-            onChange={(e) => setEditValue(e.target.value)}
-            className={cn(
-              'w-full bg-transparent border-b-2 border-blue-500 outline-none',
-              levelClasses[level as keyof typeof levelClasses],
-              textAlignClasses[textAlign as keyof typeof textAlignClasses],
-              fontWeightClasses[fontWeight as keyof typeof fontWeightClasses]
-            )}
-            style={{ color }}
-            autoFocus
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') handleSave();
-              if (e.key === 'Escape') handleCancel();
-            }}
-          />
-          <div className="flex gap-2">
-            <button
-              onClick={handleSave}
-              className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600"
-            >
-              Salvar
-            </button>
-            <button
-              onClick={handleCancel}
-              className="px-3 py-1 bg-gray-500 text-white rounded text-sm hover:bg-gray-600"
-            >
-              Cancelar
-            </button>
-          </div>
+      <HeadingTag
+        className={cn(
+          // Tamanho responsivo
+          levelClasses[level as keyof typeof levelClasses],
+          // Alinhamento
+          textAlignClasses[textAlign as keyof typeof textAlignClasses],
+          // Peso da fonte
+          fontWeightClasses[fontWeight as keyof typeof fontWeightClasses],
+          // Largura máxima
+          maxWidthClasses[maxWidth as keyof typeof maxWidthClasses],
+          // Visual
+          'leading-tight tracking-tight transition-colors duration-200'
+        )}
+        style={{
+          color,
+          backgroundColor: backgroundColor === 'transparent' ? undefined : backgroundColor
+        }}
+      >
+        {content || 'Título Principal'}
+      </HeadingTag>
+
+      {/* Indicador de seleção */}
+      {isSelected && (
+        <div className="absolute -top-2 -right-2 bg-blue-500 text-white rounded-full p-1">
+          <Edit3 className="w-3 h-3" />
         </div>
-      ) : (
-        <>
-          <HeadingTag
-            className={cn(
-              // Tamanho responsivo
-              levelClasses[level as keyof typeof levelClasses],
-              // Alinhamento
-              textAlignClasses[textAlign as keyof typeof textAlignClasses],
-              // Peso da fonte
-              fontWeightClasses[fontWeight as keyof typeof fontWeightClasses],
-              // Largura máxima
-              maxWidthClasses[maxWidth as keyof typeof maxWidthClasses],
-              // Visual
-              'leading-tight tracking-tight transition-colors duration-200',
-              // Cursor editável
-              isEditable && 'cursor-text hover:opacity-80'
-            )}
-            style={{
-              color,
-              backgroundColor: backgroundColor === 'transparent' ? undefined : backgroundColor
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (isEditable) setIsEditing(true);
-            }}
-          >
-            {content || 'Título Principal'}
-          </HeadingTag>
+      )}
 
-          {/* Indicador de edição */}
-          {isEditable && isSelected && (
-            <div className="absolute -top-2 -right-2 bg-blue-500 text-white rounded-full p-1">
-              <Edit3 className="w-3 h-3" />
-            </div>
-          )}
-
-          {/* Empty state */}
-          {!content && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-100/80 rounded-lg text-gray-500">
-              <Type className="w-6 h-6 mr-2" />
-              <span className="text-sm">Clique para adicionar título</span>
-            </div>
-          )}
-        </>
+      {/* Empty state */}
+      {!content && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100/80 rounded-lg text-gray-500">
+          <Type className="w-6 h-6 mr-2" />
+          <span className="text-sm">Clique para selecionar e editar no painel</span>
+        </div>
       )}
     </div>
   );

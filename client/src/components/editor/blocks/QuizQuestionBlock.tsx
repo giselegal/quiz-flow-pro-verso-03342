@@ -1,307 +1,296 @@
-import React, { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
-import { CheckCircle, Heart, ArrowRight, ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { 
-  OptionsGridUtils, 
-  VISUAL_STATES_CONFIG,
-  ANIMATION_CONFIG,
-  ACCESSIBILITY_CONFIG,
-  VALIDATION_CONFIG,
-  type OptionItem 
-} from '@/config/optionsGridConfig';
+import React, { useState } from 'react';
+import { ChevronLeft, CheckCircle } from 'lucide-react';
 
-interface QuizQuestionBlockProps {
-  question?: string;
-  options?: Array<{ id: string; text: string; imageUrl?: string }>;
-  allowMultiple?: boolean;
-  showImages?: boolean;
-  maxSelections?: number;
-  autoAdvance?: boolean;
-  autoAdvanceDelay?: number;
-  onNext?: () => void;
-  onBack?: () => void;
-  progressPercent?: number;
-  logoUrl?: string;
-  className?: string;
-  block?: any;
-  isSelected?: boolean;
-  onPropertyChange?: (key: string, value: any) => void;
+interface QuizOption {
+  id: string;
+  text: string;
+  imageUrl?: string;
+  value?: string;
+  nextStepId?: string;
 }
 
-const QuizQuestionBlock = ({
-  question = 'Etapa 1: Qual dessas opções representa melhor seu estilo predominante?',
-  options = [
-    { id: '1', text: 'Clássico e elegante', imageUrl: 'https://res.cloudinary.com/dtx0k4ue6/image/upload/v1710847234/estilo-classico_urkpfx.jpg' },
-    { id: '2', text: 'Moderno e descolado', imageUrl: 'https://res.cloudinary.com/dtx0k4ue6/image/upload/v1710847235/estilo-moderno_hqxmzv.jpg' },
-    { id: '3', text: 'Natural e autêntico', imageUrl: 'https://res.cloudinary.com/dtx0k4ue6/image/upload/v1710847236/estilo-natural_wnxkdi.jpg' },
-    { id: '4', text: 'Casual e descontraído' }
-  ],
-  allowMultiple = true,
-  showImages = true,
-  maxSelections = 3,
-  autoAdvance = true, // AUTO-AVANÇO ATIVADO por padrão
-  autoAdvanceDelay = 1500, // 1.5 segundos de delay
-  onNext,
+interface QuizQuestionBlockProps {
+  // Header
+  headerEnabled?: boolean;
+  logoUrl?: string;
+  showProgressBar?: boolean;
+  showBackButton?: boolean;
+  progressValue?: number;
+  
+  // Question
+  questionText?: string;
+  questionTextSize?: number;
+  questionTextColor?: string;
+  questionTextAlign?: 'left' | 'center' | 'right';
+  
+  // Layout
+  layout?: '1-column' | '2-columns' | '3-columns';
+  direction?: 'vertical' | 'horizontal';
+  disposition?: 'image-text' | 'text-image' | 'text-only' | 'image-only';
+  
+  // Options
+  options?: QuizOption[];
+  
+  // Validation
+  isMultipleChoice?: boolean;
+  isRequired?: boolean;
+  autoProceed?: boolean;
+  
+  // Styling
+  borderRadius?: 'none' | 'small' | 'medium' | 'large';
+  boxShadow?: 'none' | 'small' | 'medium' | 'large';
+  spacing?: 'small' | 'medium' | 'large';
+  optionStyle?: 'simple' | 'card' | 'modern' | 'minimal';
+  
+  // Colors
+  primaryColor?: string;
+  secondaryColor?: string;
+  borderColor?: string;
+  hoverColor?: string;
+  
+  // Callbacks
+  onOptionSelect?: (option: QuizOption | QuizOption[]) => void;
+  onBack?: () => void;
+  onNext?: () => void;
+  
+  className?: string;
+}
+
+export const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
+  // Header defaults
+  headerEnabled = true,
+  logoUrl = '',
+  showProgressBar = true,
+  showBackButton = true,
+  progressValue = 25,
+  
+  // Question defaults
+  questionText = 'Qual é o seu tipo de roupa favorita?',
+  questionTextSize = 28,
+  questionTextColor = '#000000',
+  questionTextAlign = 'center',
+  
+  // Layout defaults
+  layout = '2-columns',
+  direction = 'vertical',
+  disposition = 'image-text',
+  
+  // Options defaults
+  options = [],
+  
+  // Validation defaults
+  isMultipleChoice = false,
+  isRequired = true,
+  autoProceed = false,
+  
+  // Styling defaults
+  borderRadius = 'small',
+  boxShadow = 'medium',
+  spacing = 'medium',
+  optionStyle = 'card',
+  
+  // Colors defaults
+  primaryColor = '#B89B7A',
+  secondaryColor = '#ffffff',
+  borderColor = '#e5e7eb',
+  hoverColor = '#a08965',
+  
+  // Callbacks
+  onOptionSelect,
   onBack,
-  progressPercent = 0,
-  logoUrl = 'https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png',
-  className,
-  block,
-  isSelected = false,
-  onPropertyChange
-}: QuizQuestionBlockProps) => {
-  const [selectedOptions, setSelectedOptions] = useState<Set<string>>(new Set());
-  const [isAutoAdvancing, setIsAutoAdvancing] = useState(false);
+  onNext,
+  
+  className = ''
+}) => {
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
-  // Auto-avanço quando atingir máximo de seleções
-  useEffect(() => {
-    if (autoAdvance && allowMultiple && selectedOptions.size === maxSelections) {
-      setIsAutoAdvancing(true);
-      const timer = setTimeout(() => {
-        onNext?.();
-        setIsAutoAdvancing(false);
-      }, autoAdvanceDelay);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [selectedOptions.size, autoAdvance, allowMultiple, maxSelections, autoAdvanceDelay, onNext]);
-
-  const handleOptionClick = (optionId: string) => {
-    const newSelected = new Set(selectedOptions);
-    
-    if (allowMultiple) {
-      if (newSelected.has(optionId)) {
-        newSelected.delete(optionId);
-      } else if (newSelected.size < maxSelections) {
-        newSelected.add(optionId);
-      }
-    } else {
-      newSelected.clear();
-      newSelected.add(optionId);
-      // Auto-avanço imediato para seleção única
-      if (autoAdvance) {
-        setTimeout(() => onNext?.(), autoAdvanceDelay);
-      }
-    }
-    
-    setSelectedOptions(newSelected);
+  // Style mappings
+  const borderRadiusMap = {
+    none: '0px',
+    small: '8px',
+    medium: '12px',
+    large: '16px'
   };
 
-  const canProceed = allowMultiple 
-    ? selectedOptions.size === maxSelections 
-    : selectedOptions.size > 0;
+  const shadowMap = {
+    none: 'none',
+    small: '0 1px 3px rgba(0,0,0,0.1)',
+    medium: '0 4px 6px rgba(0,0,0,0.1)',
+    large: '0 10px 15px rgba(0,0,0,0.1)'
+  };
 
-  // Destructuring das configurações de estilo
-  const { transition } = ANIMATION_CONFIG;
-  const { 
-    default: defaultStyles, 
-    selected: selectedStyles, 
-    hover: hoverStyles 
-  } = VISUAL_STATES_CONFIG;
+  const spacingMap = {
+    small: '8px',
+    medium: '16px',
+    large: '24px'
+  };
+
+  const gridColsMap = {
+    '1-column': 'grid-cols-1',
+    '2-columns': 'grid-cols-1 md:grid-cols-2',
+    '3-columns': 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+  };
+
+  const handleOptionClick = (option: QuizOption) => {
+    let newSelection: string[];
+    
+    if (isMultipleChoice) {
+      newSelection = selectedOptions.includes(option.id)
+        ? selectedOptions.filter(id => id !== option.id)
+        : [...selectedOptions, option.id];
+    } else {
+      newSelection = [option.id];
+    }
+    
+    setSelectedOptions(newSelection);
+    
+    if (onOptionSelect) {
+      const selectedOptionObjects = options.filter(opt => newSelection.includes(opt.id));
+      onOptionSelect(isMultipleChoice ? selectedOptionObjects : selectedOptionObjects[0]);
+    }
+    
+    // Auto-proceed for single choice
+    if (!isMultipleChoice && autoProceed && onNext) {
+      setTimeout(() => onNext(), 300);
+    }
+  };
+
+  const getOptionStyle = (optionId: string) => {
+    const isSelected = selectedOptions.includes(optionId);
+    const baseStyle = {
+      borderRadius: borderRadiusMap[borderRadius],
+      boxShadow: shadowMap[boxShadow],
+      border: `2px solid ${isSelected ? primaryColor : borderColor}`,
+      backgroundColor: isSelected ? primaryColor : secondaryColor,
+      color: isSelected ? secondaryColor : '#333333',
+      cursor: 'pointer',
+      transition: 'all 0.2s ease',
+      padding: spacingMap[spacing]
+    };
+
+    return baseStyle;
+  };
 
   return (
-    <div className={cn(
-      "w-full h-full flex flex-col bg-white",
-      // Layout responsivo HORIZONTAL - MÁXIMO 2 COLUNAS - LARGURA 100%
-      "p-4 md:p-6 rounded-lg border border-gray-200",
-      // LARGURA 100% DO CONTAINER - SEM ARGUMENTOS VERTICAIS
-      "min-h-[200px] max-w-full",
-      isSelected && "ring-2 ring-blue-500 bg-blue-50",
-      className
-    )}>
-      
-      {/* Vertical Canvas Header */}
-      <div className="flex flex-row w-full h-auto justify-center relative mb-6" data-sentry-component="VerticalCanvasHeader">
-        {/* Back Button */}
-        {onBack && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onBack}
-            className="absolute left-0 h-10 w-10 hover:bg-primary hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        )}
-        
-        {/* Logo and Progress Container */}
-        <div className="flex flex-col w-full customizable-width justify-start items-center gap-4">
-          {/* Logo */}
-          {logoUrl && (
-            <img 
-              width="96" 
-              height="96" 
-              className="max-w-24 object-cover rounded-lg" 
-              alt="Logo" 
-              src={logoUrl}
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-              }}
-            />
-          )}
+    <div className={`quiz-question-block ${className}`}>
+      {/* Header */}
+      {headerEnabled && (
+        <div className="header flex items-center justify-between p-4 border-b">
+          <div className="flex items-center gap-4">
+            {showBackButton && onBack && (
+              <button
+                onClick={onBack}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+            )}
+            {logoUrl && (
+              <img src={logoUrl} alt="Logo" className="h-8" />
+            )}
+          </div>
           
-          {/* Progress Bar */}
-          {progressPercent > 0 && (
-            <div 
-              className="relative w-full overflow-hidden rounded-full bg-zinc-300 h-2"
-              role="progressbar"
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={progressPercent}
-            >
-              <div 
-                className="progress h-full w-full flex-1 bg-[#B89B7A] transition-all duration-500"
-                style={{ transform: `translateX(-${100 - progressPercent}%)` }}
-              />
+          {showProgressBar && (
+            <div className="flex-1 max-w-xs mx-4">
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  className="h-2 rounded-full transition-all duration-300"
+                  style={{
+                    width: `${progressValue}%`,
+                    backgroundColor: primaryColor
+                  }}
+                />
+              </div>
+              <div className="text-right text-sm text-gray-600 mt-1">
+                {progressValue}%
+              </div>
             </div>
           )}
-        </div>
-      </div>
-
-      {/* Progress Bar - Versão alternativa se não houver logo */}
-      {!logoUrl && progressPercent > 0 && (
-        <div className="mb-4">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-xs text-gray-500">Progresso</span>
-            <span className="text-xs text-gray-500">{progressPercent}%</span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className="bg-[#B89B7A] h-2 rounded-full transition-all duration-500"
-              style={{ width: `${progressPercent}%` }}
-            />
-          </div>
         </div>
       )}
 
-      {/* Question Header */}
-      <div className="text-center mb-6">
-        <h2 className="text-lg md:text-xl font-bold text-[#aa6b5d] mb-3 leading-tight">
-          {question}
+      {/* Question */}
+      <div className="question-section p-6">
+        <h2
+          className="font-playfair font-bold mb-6"
+          style={{
+            fontSize: `${questionTextSize}px`,
+            color: questionTextColor,
+            textAlign: questionTextAlign,
+            lineHeight: 1.2
+          }}
+        >
+          {questionText}
         </h2>
-        {allowMultiple && (
-          <p className="text-[#8F7A6A] text-xs md:text-sm">
-            {autoAdvance 
-              ? `Escolha até ${maxSelections} opções - avanço automático ativado` 
-              : `Você pode escolher até ${maxSelections} opções que mais combinam com você`
-            }
-          </p>
-        )}
-      </div>
 
-      {/* Options Grid - RESPONSIVO MÁXIMO 2 COLUNAS - LAYOUT HORIZONTAL */}
-      <div className={cn(
-        "grid gap-3 md:gap-4 flex-1 w-full",
-        // Converter opções para o formato correto usando spread operator
-        OptionsGridUtils.getGridClasses(
-          options.map(opt => ({ 
-            ...opt, 
-            value: opt.id,
-            category: '' 
-          })), 
-          2
-        )
-      )}>
-        {options.map((option) => {
-          const isOptionSelected = selectedOptions.has(option.id);
-          const hasImage = Boolean(option.imageUrl && option.imageUrl.trim() !== '');
-          const { aspectRatio } = OptionsGridUtils.getCardAspectConfig(hasImage);
-          
-          return (
-            <div
-              key={option.id}
-              onClick={() => handleOptionClick(option.id)}
-              className={cn(
-                "relative cursor-pointer rounded-lg border-2 bg-white hover:shadow-md flex flex-col",
-                transition,
-                aspectRatio,
-                isOptionSelected 
-                  ? `${selectedStyles.border} ${selectedStyles.background} ${selectedStyles.shadow}` 
-                  : `${defaultStyles.border} ${hoverStyles.border}/50`
-              )}
-            >
-              {/* Selection Indicator */}
-              {isOptionSelected && (
-                <div className="absolute -top-1 -right-1 z-10">
-                  <div className="w-5 h-5 bg-[#B89B7A] rounded-full flex items-center justify-center">
-                    <CheckCircle className="w-3 h-3 text-white" />
+        {/* Options Grid */}
+        {options.length > 0 && (
+          <div className={`grid gap-4 ${gridColsMap[layout]}`}>
+            {options.map((option) => (
+              <div
+                key={option.id}
+                className="option-item hover:scale-105 transition-transform"
+                style={getOptionStyle(option.id)}
+                onClick={() => handleOptionClick(option)}
+              >
+                {/* Selected indicator */}
+                {selectedOptions.includes(option.id) && (
+                  <div className="absolute top-2 right-2">
+                    <CheckCircle className="w-5 h-5" style={{ color: secondaryColor }} />
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* Option Image */}
-              {showImages && option.imageUrl && (
-                <div className="aspect-video w-full rounded-t-lg overflow-hidden">
-                  <img 
-                    src={option.imageUrl} 
-                    alt={option.text}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.currentTarget.src = OptionsGridUtils.getFallbackImageUrl(option.text);
-                    }}
-                  />
-                </div>
-              )}
+                {/* Option content based on disposition */}
+                <div className={`flex ${direction === 'horizontal' ? 'flex-row' : 'flex-col'} items-center gap-3`}>
+                  {/* Image */}
+                  {(disposition === 'image-text' || disposition === 'text-image' || disposition === 'image-only') && option.imageUrl && (
+                    <div className={`${disposition === 'text-image' ? 'order-2' : ''} flex-shrink-0`}>
+                      <img
+                        src={option.imageUrl}
+                        alt={option.text}
+                        className="w-20 h-20 object-cover rounded-lg"
+                      />
+                    </div>
+                  )}
 
-              {/* Option Text */}
-              <div className={cn(
-                "p-3 text-center flex-1 flex items-center justify-center",
-                !showImages && "py-6"
-              )}>
-                <h3 className={cn(
-                  "font-medium text-[#432818] leading-tight text-center",
-                  showImages ? "text-sm" : "text-base"
-                )}>
-                  {option.text}
-                </h3>
+                  {/* Text */}
+                  {disposition !== 'image-only' && (
+                    <div className={`${disposition === 'text-image' ? 'order-1' : ''} text-center flex-1`}>
+                      <span className="text-base font-medium">
+                        {option.text}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            ))}
+          </div>
+        )}
 
-      {/* Status Footer */}
-      <div className="mt-4 pt-3 border-t border-gray-100">
-        <div className="flex items-center justify-between">
-          {/* Selection Counter */}
-          {allowMultiple ? (
-            <div className="flex items-center gap-2">
-              <Heart className="w-4 h-4 text-[#B89B7A]" />
-              <span className="text-xs text-[#8F7A6A]">
-                {`${selectedOptions.size} de ${maxSelections} selecionadas`}
-              </span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-[#B89B7A]" />
-              <span className="text-xs text-[#8F7A6A]">
-                {selectedOptions.size > 0 ? 'Selecionado' : 'Selecione uma opção'}
-              </span>
-            </div>
-          )}
+        {/* Default options if none provided */}
+        {options.length === 0 && (
+          <div className="text-center py-8 text-gray-500">
+            <p>Nenhuma opção configurada</p>
+            <p className="text-sm">Configure as opções no painel de propriedades</p>
+          </div>
+        )}
 
-          {/* Next Button ou Auto-advance Status */}
-          {!autoAdvance && canProceed && (
-            <Button
+        {/* Continue button for multiple choice */}
+        {isMultipleChoice && selectedOptions.length > 0 && onNext && (
+          <div className="text-center mt-6">
+            <button
               onClick={onNext}
-              size="sm"
-              className="bg-[#B89B7A] hover:bg-[#aa6b5d] text-white"
+              className="px-6 py-3 rounded-lg font-medium transition-colors"
+              style={{
+                backgroundColor: primaryColor,
+                color: secondaryColor
+              }}
             >
-              Próximo <ArrowRight className="w-4 h-4 ml-1" />
-            </Button>
-          )}
-
-          {autoAdvance && isAutoAdvancing && (
-            <div className="flex items-center gap-2 text-xs text-[#B89B7A]">
-              <div className="w-3 h-3 border-2 border-[#B89B7A] border-t-transparent rounded-full animate-spin" />
-              Avançando...
-            </div>
-          )}
-        </div>
+              Continuar
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
 };
-
-export default QuizQuestionBlock;

@@ -1,70 +1,186 @@
-import React from 'react';
+
+import React, { useState, useRef } from 'react';
 import { cn } from '@/lib/utils';
+import { EditableContent } from '@/types/editor';
+import { Upload, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 interface ImageBlockProps {
-  block: {
-    id: string;
-    type: string;
-    properties: {
-      src?: string;
-      alt?: string;
-      width?: string | number;
-      height?: string | number;
-      className?: string;
-      alignment?: 'left' | 'center' | 'right';
-    };
-  };
+  content: EditableContent;
   isSelected?: boolean;
-  onClick?: () => void;
-  onSaveInline?: (blockId: string, key: string, newValue: string) => void;
-  disabled?: boolean;
+  isEditing?: boolean;
+  onUpdate?: (content: Partial<EditableContent>) => void;
+  onSelect?: () => void;
   className?: string;
 }
 
-export const ImageBlock: React.FC<ImageBlockProps> = ({ 
-  block,
+export const ImageBlock: React.FC<ImageBlockProps> = ({
+  content,
   isSelected = false,
-  onClick,
-  disabled = false,
+  isEditing = false,
+  onUpdate,
+  onSelect,
   className
 }) => {
-  const { 
-    src = 'https://via.placeholder.com/600x400?text=Imagem', 
-    alt = 'Imagem', 
-    width = 'auto',
-    height = 'auto',
-    alignment = 'center' 
-  } = block?.properties || {};
+  const [isUploading, setIsUploading] = useState(false);
+  const [showUrlInput, setShowUrlInput] = useState(false);
+  const [urlInput, setUrlInput] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const alignmentClass = alignment === 'left' ? 'justify-start' : 
-                        alignment === 'right' ? 'justify-end' : 
-                        'justify-center';
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !onUpdate) return;
+
+    setIsUploading(true);
+    
+    try {
+      // Simular upload - em produção, fazer upload real
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const imageUrl = e.target?.result as string;
+        onUpdate({
+          imageUrl,
+          imageAlt: content.imageAlt || file.name
+        });
+        setIsUploading(false);
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Erro no upload:', error);
+      setIsUploading(false);
+    }
+  };
+
+  const handleUrlSubmit = () => {
+    if (urlInput && onUpdate) {
+      onUpdate({
+        imageUrl: urlInput,
+        imageAlt: content.imageAlt || 'Imagem'
+      });
+      setUrlInput('');
+      setShowUrlInput(false);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    if (onUpdate) {
+      onUpdate({
+        imageUrl: '',
+        imageAlt: ''
+      });
+    }
+  };
 
   return (
     <div
       className={cn(
-        'relative w-full p-2 sm:p-3 md:p-4 rounded-lg border-2 border-dashed',
-        isSelected ? 'border-[#B89B7A] bg-[#FAF9F7]' : 'border-gray-300 bg-white',
-        'cursor-pointer hover:border-[#B89B7A]/60 transition-all duration-200',
+        "relative p-4 rounded-lg transition-all duration-200",
+        isSelected && "ring-2 ring-blue-400 ring-offset-2",
+        "hover:bg-gray-50 cursor-pointer",
         className
       )}
-      onClick={onClick}
+      onClick={onSelect}
+      style={{
+        backgroundColor: content.style?.backgroundColor,
+        padding: content.style?.padding,
+        margin: content.style?.margin,
+        textAlign: content.style?.textAlign as any
+      }}
     >
-      {/* Image Container - Visual Only */}
-      <div className={cn('flex w-full', alignmentClass)}>
-        <img 
-          src={src}
-          alt={alt}
-          style={{ 
-            width: typeof width === 'number' ? `${width}px` : width,
-            height: typeof height === 'number' ? `${height}px` : height,
-          }}
-          className="rounded-lg object-cover w-full h-auto max-w-full max-h-[300px] sm:max-h-[400px] md:max-h-[500px] shadow-sm"
-          onError={(e) => {
-            e.currentTarget.src = 'https://via.placeholder.com/600x400?text=Erro+ao+carregar+imagem';
-          }}
-        />
-      </div>
+      {content.imageUrl ? (
+        <div className="relative group">
+          <img
+            src={content.imageUrl}
+            alt={content.imageAlt || 'Imagem'}
+            className={cn(
+              "max-w-full h-auto rounded-lg",
+              content.style?.width && `w-${content.style.width}`,
+              content.style?.height && `h-${content.style.height}`,
+              content.style?.objectFit && `object-${content.style.objectFit}`
+            )}
+            style={{
+              borderRadius: content.style?.borderRadius,
+              boxShadow: content.style?.boxShadow
+            }}
+          />
+          
+          {isSelected && onUpdate && (
+            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={handleRemoveImage}
+                className="p-1 h-6 w-6"
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </div>
+          )}
+          
+          {content.caption && (
+            <p className="text-sm text-gray-600 mt-2 text-center">
+              {content.caption}
+            </p>
+          )}
+        </div>
+      ) : (
+        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+          {isUploading ? (
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+              <span className="ml-2 text-gray-600">Enviando...</span>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <Upload className="h-8 w-8 mx-auto text-gray-400" />
+              <p className="text-gray-600">Adicione uma imagem</p>
+              
+              {onUpdate && (
+                <div className="space-y-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="w-full"
+                  >
+                    Upload de Arquivo
+                  </Button>
+                  
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowUrlInput(!showUrlInput)}
+                    className="w-full"
+                  >
+                    Adicionar por URL
+                  </Button>
+                  
+                  {showUrlInput && (
+                    <div className="flex gap-2">
+                      <Input
+                        value={urlInput}
+                        onChange={(e) => setUrlInput(e.target.value)}
+                        placeholder="https://exemplo.com/imagem.jpg"
+                        className="flex-1"
+                      />
+                      <Button onClick={handleUrlSubmit} size="sm">
+                        OK
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+          
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileUpload}
+            className="hidden"
+          />
+        </div>
+      )}
     </div>
   );
 };

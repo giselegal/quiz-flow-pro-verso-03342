@@ -176,7 +176,7 @@ const ResultPagePrototype: React.FC = () => {
                     alt={`Estilo ${category}`} 
                     className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300" 
                     loading="eager" 
-                    fetchPriority="high" 
+                    fetchpriority="high" 
                     width="238" 
                     height="auto" 
                   />

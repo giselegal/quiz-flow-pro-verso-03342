@@ -34,7 +34,7 @@ export const blockDefinitions: BlockDefinition[] = [
     category: 'Quiz',
     propertiesSchema: [
       {
-        key: 'logoUrl',
+        key: 'logoSrc',
         label: 'URL do Logo',
         type: 'image-url',
         defaultValue: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
@@ -56,6 +56,14 @@ export const blockDefinitions: BlockDefinition[] = [
         max: 200
       },
       {
+        key: 'logoHeight',
+        label: 'Altura do Logo (px)',
+        type: 'number-input',
+        defaultValue: 96,
+        min: 50,
+        max: 200
+      },
+      {
         key: 'progressValue',
         label: 'Progresso (%)',
         type: 'number-input',
@@ -65,10 +73,158 @@ export const blockDefinitions: BlockDefinition[] = [
         description: 'Valor atual do progresso do quiz'
       },
       {
+        key: 'progressMax',
+        label: 'Progresso Máximo',
+        type: 'number-input',
+        defaultValue: 100,
+        min: 1,
+        max: 100,
+        description: 'Valor máximo do progresso'
+      },
+      {
         key: 'showBackButton',
         label: 'Mostrar Botão Voltar',
         type: 'boolean-switch',
         defaultValue: false
+      },
+      {
+        key: 'showProgressBar',
+        label: 'Mostrar Barra de Progresso',
+        type: 'boolean-switch',
+        defaultValue: true
+      },
+      {
+        key: 'containerWidth',
+        label: 'Largura do Container',
+        type: 'select',
+        defaultValue: 'full',
+        options: [
+          { label: 'Largura Total', value: 'full' },
+          { label: 'Máximo 4xl', value: 'max-4xl' },
+          { label: 'Máximo 2xl', value: 'max-2xl' }
+        ]
+      },
+      {
+        key: 'gap',
+        label: 'Espaçamento Interno',
+        type: 'select',
+        defaultValue: '4',
+        options: [
+          { label: 'Pequeno (2)', value: '2' },
+          { label: 'Médio (4)', value: '4' },
+          { label: 'Grande (6)', value: '6' },
+          { label: 'Extra Grande (8)', value: '8' }
+        ]
+      },
+      {
+        key: 'backgroundColor',
+        label: 'Cor de Fundo',
+        type: 'color-picker',
+        defaultValue: '#ffffff',
+        description: 'Cor de fundo do cabeçalho'
+      }
+    ]
+  },
+
+  // =====================================================================
+  // CABEÇALHO UNIVERSAL PARA ETAPAS DO QUIZ
+  // =====================================================================
+  {
+    type: 'vertical-canvas-header',
+    name: 'Cabeçalho Vertical',
+    description: 'Cabeçalho universal com logo, progresso e botão voltar para todas as etapas',
+    icon: 'Layout',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'logoSrc',
+        label: 'URL do Logo',
+        type: 'image-url',
+        defaultValue: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.png',
+        description: 'Logo da marca (recomendado: PNG/SVG quadrado)'
+      },
+      {
+        key: 'logoAlt',
+        label: 'Texto Alternativo do Logo',
+        type: 'text-input',
+        defaultValue: 'Logo',
+        placeholder: 'Descrição do logo para acessibilidade'
+      },
+      {
+        key: 'logoWidth',
+        label: 'Largura do Logo (px)',
+        type: 'number-input',
+        defaultValue: 96,
+        min: 48,
+        max: 200,
+        description: 'Largura em pixels (recomendado: 96px)'
+      },
+      {
+        key: 'logoHeight',
+        label: 'Altura do Logo (px)',
+        type: 'number-input',
+        defaultValue: 96,
+        min: 48,
+        max: 200,
+        description: 'Altura em pixels (recomendado: 96px)'
+      },
+      {
+        key: 'progressValue',
+        label: 'Progresso Atual (%)',
+        type: 'number-input',
+        defaultValue: 7.14,
+        min: 0,
+        max: 100,
+        description: 'Porcentagem atual do progresso'
+      },
+      {
+        key: 'progressMax',
+        label: 'Progresso Máximo',
+        type: 'number-input',
+        defaultValue: 100,
+        min: 1,
+        max: 100,
+        description: 'Valor máximo do progresso'
+      },
+      {
+        key: 'showProgress',
+        label: 'Mostrar Barra de Progresso',
+        type: 'boolean-switch',
+        defaultValue: true,
+        description: 'Exibir ou ocultar a barra de progresso'
+      },
+      {
+        key: 'showBackButton',
+        label: 'Mostrar Botão Voltar',
+        type: 'boolean-switch',
+        defaultValue: true,
+        description: 'Exibir botão de navegação para etapa anterior'
+      },
+      {
+        key: 'containerWidth',
+        label: 'Largura do Container',
+        type: 'select',
+        options: [
+          { label: 'Largura Total', value: 'w-full' },
+          { label: 'Largura Customizada', value: 'customizable-width' },
+          { label: 'Máximo 2XL', value: 'w-full max-w-2xl' },
+          { label: 'Máximo XL', value: 'w-full max-w-xl' }
+        ],
+        defaultValue: 'w-full',
+        description: 'Controla a largura do container principal'
+      },
+      {
+        key: 'gap',
+        label: 'Espaçamento Interno',
+        type: 'select',
+        options: [
+          { label: 'Pequeno (2)', value: 'gap-2' },
+          { label: 'Médio (4)', value: 'gap-4' },
+          { label: 'Grande (6)', value: 'gap-6' },
+          { label: 'Extra Grande (8)', value: 'gap-8' }
+        ],
+        defaultValue: 'gap-4',
+        description: 'Espaçamento entre elementos do cabeçalho'
       }
     ]
   },
@@ -87,7 +243,7 @@ export const blockDefinitions: BlockDefinition[] = [
         key: 'content',
         label: 'Conteúdo',
         type: 'textarea',
-        defaultValue: 'Seu texto elegante aqui...',
+        defaultValue: 'Texto editável com formatação elegante.',
         rows: 3,
         description: 'Suporte a HTML e palavras destacadas'
       },

@@ -68,25 +68,9 @@ const BadgeInlineBlock: React.FC<BadgeInlineBlockProps> = ({
       )}
       
       {/* Text */}
-      <span 
-        className="truncate"
-        onClick={(e) => {
-          e.stopPropagation();
-          if (onPropertyChange && !disabled) {
-            const newText = prompt('Novo texto:', text);
-            if (newText !== null) onPropertyChange('text', newText);
-          }
-        }}
-      >
+      <span className="truncate">
         {text}
       </span>
-      
-      {/* Edit indicator */}
-      {!disabled && (
-        <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-          <Edit3 className="w-3 h-3 opacity-50" />
-        </div>
-      )}
     </div>
   );
 };

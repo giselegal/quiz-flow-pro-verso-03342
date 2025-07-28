@@ -1,260 +1,237 @@
-import React, { useState, useEffect } from 'react';
-import { InlineEditableText } from './InlineEditableText';
-import { Rows3, Check } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
-import { 
-  OptionsGridUtils, 
-  IMAGE_SIZE_CLASSES, 
-  GRID_LAYOUT_CONFIG,
-  VISUAL_STATES_CONFIG,
-  ANIMATION_CONFIG,
-  SPACING_CONFIG,
-  ACCESSIBILITY_CONFIG,
-  VALIDATION_CONFIG,
-  type OptionItem,
-  type OptionsGridConfig 
-} from '@/config/optionsGridConfig';
-const OptionsGridBlock: React.FC<BlockComponentProps> = ({
+
+import React, { useState, useCallback, useEffect } from 'react';
+import { Block } from '../../../types/editor';
+import { useQuestionValidation } from '../../../hooks/useQuestionValidation';
+import { AlertCircle, CheckCircle2, Settings, Eye, Edit3 } from 'lucide-react';
+
+interface Option {
+  id: string;
+  text: string;
+  value: string;
+  imageUrl?: string;
+  category?: string;
+}
+
+interface OptionsGridBlockProps {
+  block: Block;
+  isSelected?: boolean;
+  onSelect?: () => void;
+  isPreview?: boolean;
+  onValidationChange?: (isValid: boolean, errors: string[]) => void;
+}
+
+const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   block,
-  isSelected = false,
-  isEditing = false,
-  onClick,
-  onPropertyChange,
-  className = ''
+  isSelected,
+  onSelect,
+  isPreview = false,
+  onValidationChange
 }) => {
-  const {
-    title = '',
-    options = [
-      { id: 'opcao-1', text: 'Opção 1', value: 'opcao-1', imageUrl: '', category: '' },
-      { id: 'opcao-2', text: 'Opção 2', value: 'opcao-2', imageUrl: '', category: '' }
-    ],
-    columns = 2,
-    showImages = true,
-    imageSize = 'large',
-    multipleSelection = false,
-    maxSelections = 1,
-    minSelections = 1,
-    validationMessage = 'Selecione uma opção',
-    gridGap = 16,
-    selectedOptions = []
-  } = block.properties;
+  // Acessar propriedades corretas do bloco
+  const properties = block.properties || {};
+  const content = block.content || {};
+  
+  const options: Option[] = properties.options || content.options || [];
+  const columns = properties.columns || content.columns || 2;
+  const showImages = properties.showImages !== undefined ? properties.showImages : true;
+  const multipleSelection = properties.multipleSelection || false;
+  const maxSelections = properties.maxSelections || 1;
+  const minSelections = properties.minSelections || 1;
+  const isRequired = properties.isRequired !== undefined ? properties.isRequired : true;
+  
+  // Estado das seleções
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  
+  // Validação
+  const validation = useQuestionValidation(selectedOptions, {
+    isRequired,
+    minSelections,
+    maxSelections,
+    isMultipleChoice: multipleSelection
+  });
 
-  // Estado local para gerenciar seleções
-  const [internalSelectedOptions, setInternalSelectedOptions] = useState<string[]>(selectedOptions || []);
-  const [validationError, setValidationError] = useState<string>('');
-
-  // Sincronizar estado interno com propriedades do bloco apenas na inicialização
-  useEffect(() => {
-    if (selectedOptions && Array.isArray(selectedOptions)) {
-      setInternalSelectedOptions(selectedOptions);
+  // Notificar mudanças de validação
+  React.useEffect(() => {
+    if (onValidationChange) {
+      onValidationChange(validation.canProceed, validation.errors);
     }
-  }, []); // Removido todas as dependências para evitar loop
+  }, [validation, onValidationChange]);
 
-  const handlePropertyChange = (key: string, value: any) => {
-    if (onPropertyChange) {
-      onPropertyChange(key, value);
-    }
-  };
-
-  const handleOptionSelect = (optionId: string, optionValue: string) => {
-    if (isEditing) return; // Não permitir seleção no modo de edição
-
-    let newSelectedOptions: string[] = [];
+  // Manipular seleção de opção
+  const handleOptionSelect = useCallback((optionId: string) => {
+    if (isPreview) return; // Não permitir seleção no preview
     
-    if (multipleSelection) {
-      // Seleção múltipla
-      if (internalSelectedOptions.includes(optionId)) {
-        // Desmarcar opção
-        newSelectedOptions = internalSelectedOptions.filter(id => id !== optionId);
-      } else {
-        // Marcar opção (respeitando limite máximo)
-        if (internalSelectedOptions.length < maxSelections) {
-          newSelectedOptions = [...internalSelectedOptions, optionId];
+    setSelectedOptions(prev => {
+      if (multipleSelection) {
+        // Múltipla seleção
+        if (prev.includes(optionId)) {
+          // Remover se já selecionado
+          return prev.filter(id => id !== optionId);
         } else {
-          const errorMessage = VALIDATION_CONFIG.messages.selectMaximum(maxSelections);
-          setValidationError(errorMessage);
-          return;
+          // Adicionar se não exceder o máximo
+          if (prev.length < maxSelections) {
+            return [...prev, optionId];
+          }
+          return prev;
         }
+      } else {
+        // Seleção única
+        return prev.includes(optionId) ? [] : [optionId];
       }
-    } else {
-      // Seleção única
-      newSelectedOptions = internalSelectedOptions.includes(optionId) ? [] : [optionId];
-    }
+    });
+  }, [multipleSelection, maxSelections, isPreview]);
 
-    setInternalSelectedOptions(newSelectedOptions);
-    handlePropertyChange('selectedOptions', newSelectedOptions);
-    
-    // Validar seleção usando configuração de validação
-    if (newSelectedOptions.length < minSelections) {
-      const errorMessage = validationMessage || VALIDATION_CONFIG.messages.selectMinimum(minSelections);
-      setValidationError(errorMessage);
-    } else {
-      setValidationError('');
+  // Grid responsivo baseado no número de colunas
+  const getGridClasses = (cols: number) => {
+    switch (cols) {
+      case 1: return 'grid-cols-1';
+      case 2: return 'grid-cols-1 md:grid-cols-2';
+      case 3: return 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3';
+      case 4: return 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4';
+      default: return 'grid-cols-1 md:grid-cols-2';
     }
   };
 
-  const isOptionSelected = (optionId: string) => {
-    return internalSelectedOptions.includes(optionId);
-  };
-
-  const getGridCols = (hasImages: boolean, textOnlyColumns: number = 1) => {
-    // Usar utilitário do optionsGridConfig
-    return OptionsGridUtils.getGridClasses(options, columns);
-  };
-
-  const getImageHeight = (size: string) => {
-    // Usar classes de altura da configuração
-    return OptionsGridUtils.getImageHeightClasses(size as 'small' | 'medium' | 'large');
-  };
-
+  // Se não há opções, mostrar placeholder moderno
   if (!options || options.length === 0) {
     return (
-      <div
-        className={`
-          bg-gray-100 p-4 sm:p-6 md:p-8 rounded-lg text-gray-500 flex flex-col items-center justify-center min-h-[120px] sm:min-h-[150px] cursor-pointer transition-all duration-200
-          ${isSelected 
-            ? 'ring-1 ring-gray-400/40 bg-gray-50/30' 
-            : 'hover:shadow-sm'
-          }
-          ${className}
-        `}
-        onClick={onClick}
-        data-block-id={block.id}
-        data-block-type={block.type}
+      <div 
+        className={`p-6 border-2 border-dashed border-gray-300 rounded-xl transition-all ${
+          isSelected && !isPreview ? 'ring-2 ring-[#B89B7A] bg-[#FAF9F7] border-[#B89B7A]' : 'hover:border-gray-400'
+        }`}
+        onClick={onSelect}
       >
-        <Rows3 className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 mb-2 sm:mb-3 md:mb-4 opacity-50" />
-        <p className="text-xs sm:text-sm md:text-base text-center px-2">Configure as opções do grid no painel de propriedades.</p>
+        <div className="text-center text-gray-500 py-8">
+          <Settings className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+          <h3 className="text-lg font-semibold text-gray-700 mb-2">Configure as opções</h3>
+          <p className="text-sm text-gray-500 mb-4">Adicione as opções de resposta para esta questão</p>
+          
+          {!isPreview && (
+            <div className="inline-flex items-center px-4 py-2 bg-[#B89B7A] text-white rounded-lg text-sm font-medium hover:bg-[#A08A6C] transition-colors">
+              <Edit3 className="w-4 h-4 mr-2" />
+              Abrir painel de propriedades
+            </div>
+          )}
+        </div>
       </div>
     );
   }
 
   return (
-    <div
-      className={`
-        py-2 sm:py-3 md:py-4 text-center space-y-3 sm:space-y-4 cursor-pointer transition-all duration-200 w-full
-        ${isSelected 
-          ? 'ring-1 ring-gray-400/40 bg-gray-50/30' 
-          : 'hover:shadow-sm'
-        }
-        ${className}
-      `}
-      onClick={onClick}
-      data-block-id={block.id}
-      data-block-type={block.type}
+    <div 
+      className={`p-4 ${
+        isSelected && !isPreview ? 'ring-2 ring-[#B89B7A] bg-[#FAF9F7]' : ''
+      }`}
+      onClick={onSelect}
     >
-      {title && (
-        <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-[#432818] mb-3 sm:mb-4 md:mb-6 px-1 sm:px-2">
-          <InlineEditableText
-            value={title}
-            onChange={(value: string) => handlePropertyChange('title', value)}
-            className="inline-block"
-            placeholder="Título das opções"
-          />
-        </h3>
-      )}
-      
-      {/* Detectar se tem imagens para escolher layout automaticamente */}
-      {(() => {
-        const hasImages = OptionsGridUtils.hasImages(options);
-        const gridCols = getGridCols(hasImages, columns);
-        const cardAspectConfig = OptionsGridUtils.getCardAspectConfig(hasImages);
-        
-        return (
-          <div 
-            className={`grid ${gridCols} w-full mx-auto px-1 sm:px-0 ${SPACING_CONFIG.grid.mobile} ${SPACING_CONFIG.grid.tablet} ${SPACING_CONFIG.grid.desktop}`}
-          >
-            {options.map((option: any, index: number) => {
-          const isSelected = isOptionSelected(option.id);
-          const hasOptionImage = option.imageUrl && option.imageUrl.trim() !== '';
+      <div className={`grid ${getGridClasses(columns)} gap-4`}>
+        {options.map((option, index) => {
+          const isOptionSelected = selectedOptions.includes(option.id);
           
           return (
-            <button 
-              key={option.id || index} 
+            <div
+              key={option.id || index}
               className={`
-                group relative rounded-lg text-sm sm:text-base md:text-lg font-medium ring-offset-background 
-                ${ANIMATION_CONFIG.transition} transform hover:scale-[1.02] 
-                ${ACCESSIBILITY_CONFIG.button.focusVisible}
-                disabled:pointer-events-none disabled:opacity-50 active:scale-95 
-                border-2 bg-white hover:shadow-lg overflow-hidden w-full gap-1 flex 
-                flex-col items-center justify-start option-button
-                ${hasImages && hasOptionImage ? cardAspectConfig.aspectRatio : `${cardAspectConfig.aspectRatio} ${cardAspectConfig.minHeight} ${cardAspectConfig.padding}`} 
-                ${isSelected 
-                  ? `${VISUAL_STATES_CONFIG.selected.border} ${VISUAL_STATES_CONFIG.selected.background} ${VISUAL_STATES_CONFIG.selected.shadow} ${VISUAL_STATES_CONFIG.selected.transform}` 
-                  : `${VISUAL_STATES_CONFIG.default.border} ${VISUAL_STATES_CONFIG.hover.border} ${VISUAL_STATES_CONFIG.hover.background} ${VISUAL_STATES_CONFIG.default.shadow}`
+                border rounded-lg p-4 cursor-pointer transition-all duration-200
+                ${isOptionSelected 
+                  ? 'border-[#B89B7A] bg-[#B89B7A]/10 shadow-md' 
+                  : 'border-gray-200 hover:border-[#B89B7A]/50 hover:bg-gray-50'
                 }
-                ${isEditing ? 'cursor-default' : 'cursor-pointer'}
-                ${ACCESSIBILITY_CONFIG.touchTarget.class}
+                ${!isPreview ? 'hover:shadow-md' : ''}
               `}
-              type="button"
-              onClick={() => handleOptionSelect(option.id, option.value)}
-              disabled={isEditing}
-              data-option-id={option.id}
-              data-option-value={option.value}
-              data-option-category={option.category}
-              data-selected={isSelected}
+              onClick={() => handleOptionSelect(option.id)}
             >
               {/* Indicador de seleção */}
-              {isSelected && (
-                <div className={`absolute ${ANIMATION_CONFIG.selectionIndicator.position} ${ANIMATION_CONFIG.selectionIndicator.size} ${ANIMATION_CONFIG.selectionIndicator.background} rounded-full flex items-center justify-center shadow-lg z-10 ${ANIMATION_CONFIG.selectionIndicator.animation}`}>
-                  <Check className={`${ANIMATION_CONFIG.selectionIndicator.iconSize} text-white`} />
+              {isOptionSelected && (
+                <div className="flex justify-end mb-2">
+                  <div className="w-6 h-6 bg-[#B89B7A] rounded-full flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
                 </div>
               )}
               
               {showImages && option.imageUrl && (
-                <div className="relative w-full flex-1">
-                  <img
-                    src={option.imageUrl}
+                <div className="mb-3">
+                  <img 
+                    src={option.imageUrl} 
                     alt={option.text}
-                    width={ACCESSIBILITY_CONFIG.image.width}
-                    height={ACCESSIBILITY_CONFIG.image.height}
-                    loading={ACCESSIBILITY_CONFIG.image.loading}
-                    className={`w-full rounded-t-lg bg-white ${getImageHeight(imageSize)} object-cover ${ANIMATION_CONFIG.transition}`}
-                    onError={(e) => {
-                      e.currentTarget.src = OptionsGridUtils.getFallbackImageUrl(option.text);
-                    }}
+                    className="w-full h-40 object-cover rounded-md"
                   />
-                  {/* Overlay de seleção */}
-                  {isSelected && (
-                    <div className={`absolute inset-0 ${ANIMATION_CONFIG.overlay.background} ${ANIMATION_CONFIG.overlay.borderRadius} ${ANIMATION_CONFIG.overlay.transition}`}></div>
-                  )}
                 </div>
               )}
               
-              <div className={`w-full flex flex-row items-center justify-center flex-shrink-0 ${
-                hasOptionImage ? SPACING_CONFIG.cards.withImages.padding : SPACING_CONFIG.cards.textOnly.padding
-              }`}>
-                <div className="break-words w-full custom-quill quill ql-editor quill-option text-center">
-                  <div 
-                    className={`font-medium ${ANIMATION_CONFIG.transition} ${
-                      hasOptionImage ? SPACING_CONFIG.cards.withImages.leading : SPACING_CONFIG.cards.textOnly.leading
-                    } ${
-                      isSelected ? 'text-[#432818]' : 'text-[#432818] group-hover:text-[#B89B7A]'
-                    }`}
-                    dangerouslySetInnerHTML={{ __html: option.text || 'Opção sem texto' }}
-                  />
-                </div>
+              <div className="text-sm font-medium text-gray-900">
+                {option.text}
               </div>
-            </button>
+              
+              {option.category && (
+                <div className="text-xs text-gray-500 mt-1">
+                  {option.category}
+                </div>
+              )}
+            </div>
           );
         })}
-        </div>
-        );
-      })()}
+      </div>
       
-      {/* Mensagem de validação */}
-      {validationError && (
-        <div className={VALIDATION_CONFIG.styles.error.container}>
-          <p className={VALIDATION_CONFIG.styles.error.text}>{validationError}</p>
-        </div>
-      )}
-      
-      {/* Informações de seleção para modo de edição */}
-      {isEditing && (
-        <div className={VALIDATION_CONFIG.styles.info.container}>
-          <p className={VALIDATION_CONFIG.styles.info.text}>
-            Modo de edição: {internalSelectedOptions.length} opção(ões) selecionada(s)
-            {multipleSelection && ` (máx: ${maxSelections}, mín: ${minSelections})`}
-          </p>
+      {/* Feedback de validação moderno */}
+      {!isPreview && (
+        <div className="mt-6 space-y-3">
+          {/* Status de seleção */}
+          <div className={`flex items-center p-3 rounded-lg border ${
+            validation.canProceed 
+              ? 'bg-green-50 border-green-200 text-green-700' 
+              : selectedOptions.length > 0 
+                ? 'bg-yellow-50 border-yellow-200 text-yellow-700'
+                : 'bg-gray-50 border-gray-200 text-gray-600'
+          }`}>
+            {validation.canProceed ? (
+              <CheckCircle2 className="w-5 h-5 mr-3 flex-shrink-0" />
+            ) : (
+              <AlertCircle className="w-5 h-5 mr-3 flex-shrink-0" />
+            )}
+            
+            <div className="flex-1">
+              {validation.canProceed ? (
+                <p className="text-sm font-medium">
+                  ✅ Seleção válida ({selectedOptions.length} opç{selectedOptions.length > 1 ? 'ões' : 'ão'})
+                </p>
+              ) : validation.errors.length > 0 ? (
+                <div>
+                  <p className="text-sm font-medium mb-1">Atenção necessária:</p>
+                  {validation.errors.map((error, index) => (
+                    <p key={index} className="text-xs">{error}</p>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm">
+                  Selecione {minSelections} opç{minSelections > 1 ? 'ões' : 'ão'} para continuar
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Informações de configuração */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs text-gray-500">
+            <div className="flex items-center">
+              <div className="w-2 h-2 bg-[#B89B7A] rounded-full mr-2"></div>
+              {options.length} opções
+            </div>
+            <div className="flex items-center">
+              <div className="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+              {multipleSelection ? `Múltipla (${maxSelections})` : 'Única'}
+            </div>
+            <div className="flex items-center">
+              <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+              {showImages ? 'Com imagens' : 'Texto'}
+            </div>
+            <div className="flex items-center">
+              <div className={`w-2 h-2 rounded-full mr-2 ${validation.canProceed ? 'bg-green-400' : 'bg-red-400'}`}></div>
+              {validation.canProceed ? 'Válido' : 'Pendente'}
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -262,4 +239,3 @@ const OptionsGridBlock: React.FC<BlockComponentProps> = ({
 };
 
 export default OptionsGridBlock;
-

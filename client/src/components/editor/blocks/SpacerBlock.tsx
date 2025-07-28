@@ -1,39 +1,31 @@
 import React from 'react';
 
 interface SpacerBlockProps {
-  properties?: {
-    height?: string;
-  };
-  isSelected?: boolean;
-  onClick?: () => void;
-  onSaveInline?: (blockId: string, field: string, value: any) => void;
-  disabled?: boolean;
-  block?: any;
+  height?: number;
+  backgroundColor?: string;
+  borderStyle?: 'none' | 'solid' | 'dashed' | 'dotted';
+  borderColor?: string;
+  className?: string;
 }
 
-export const SpacerBlock: React.FC<SpacerBlockProps> = ({ 
-  properties = {}, 
-  isSelected = false,
-  onClick,
-  disabled = false
+export const SpacerBlock: React.FC<SpacerBlockProps> = ({
+  height = 20,
+  backgroundColor = 'transparent',
+  borderStyle = 'none',
+  borderColor = '#facc15',
+  className = ''
 }) => {
-  const { height = '50px' } = properties;
+  const style = {
+    height: `${height}px`,
+    backgroundColor,
+    borderTop: borderStyle !== 'none' ? `1px ${borderStyle} ${borderColor}` : 'none',
+    width: '100%'
+  };
 
   return (
-    <div 
-      className={`
-        rounded-lg cursor-pointer transition-all duration-200 flex items-center justify-center
-        ${isSelected 
-          ? 'border-2 border-blue-500 bg-blue-50' 
-          : 'border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]'
-        }
-      `}
-      style={{ height }}
-      onClick={onClick}
-    >
-      <span className="text-xs text-gray-400 font-mono">
-        Espaçador ({height})
-      </span>
-    </div>
+    <div
+      className={className}
+      style={style}
+    />
   );
 };

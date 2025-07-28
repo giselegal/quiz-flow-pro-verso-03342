@@ -1,0 +1,184 @@
+/* Loading Spinners - Quiz Quest Challenge Verse */
+
+/* Default Spinner */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #B89B7A;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Spinner Sizes */
+.spinner-sm {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+.spinner-md {
+  width: 24px;
+  height: 24px;
+  border-width: 2px;
+}
+
+.spinner-lg {
+  width: 32px;
+  height: 32px;
+  border-width: 3px;
+}
+
+.spinner-xl {
+  width: 40px;
+  height: 40px;
+  border-width: 3px;
+}
+
+/* Spinner Colors */
+.spinner-primary {
+  border-top-color: #B89B7A;
+}
+
+.spinner-secondary {
+  border-top-color: #8F7A6A;
+}
+
+.spinner-white {
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+}
+
+/* Dots Spinner */
+.dots-spinner {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.dots-spinner div {
+  position: absolute;
+  top: 33px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #B89B7A;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+
+.dots-spinner div:nth-child(1) {
+  left: 8px;
+  animation: dots1 0.6s infinite;
+}
+
+.dots-spinner div:nth-child(2) {
+  left: 8px;
+  animation: dots2 0.6s infinite;
+}
+
+.dots-spinner div:nth-child(3) {
+  left: 32px;
+  animation: dots2 0.6s infinite;
+}
+
+.dots-spinner div:nth-child(4) {
+  left: 56px;
+  animation: dots3 0.6s infinite;
+}
+
+@keyframes dots1 {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+
+@keyframes dots3 {
+  0% { transform: scale(1); }
+  100% { transform: scale(0); }
+}
+
+@keyframes dots2 {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(24px, 0); }
+}
+
+/* Pulse Spinner */
+.pulse-spinner {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  background-color: #B89B7A;
+  border-radius: 100%;
+  animation: pulse-scale 1.0s infinite ease-in-out;
+}
+
+@keyframes pulse-scale {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1.0);
+    opacity: 0;
+  }
+}
+
+/* Loading States */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.loading-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.loading-text {
+  margin-left: 10px;
+  color: #8F7A6A;
+  font-size: 14px;
+}
+
+/* Editor Loading States */
+.editor-loading-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #8F7A6A;
+}
+
+.editor-loading-panel .spinner {
+  margin-bottom: 16px;
+}
+
+.editor-saving {
+  position: relative;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.editor-saving::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #B89B7A;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}

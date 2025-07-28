@@ -239,14 +239,6 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
                     src={coverUrl}
                     alt={title}
                     className="w-20 h-20 rounded-lg object-cover shadow-md"
-                    onClick={() => {
-                      if (isSelected) {
-                        const newUrl = prompt('URL da capa:', coverUrl);
-                        if (newUrl !== null) {
-                          handlePropertyChange('coverUrl', newUrl);
-                        }
-                      }
-                    }}
                   />
                   
                   {isLoading && (
@@ -434,29 +426,14 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
               </div>
             </div>
 
-            {/* Editor Controls */}
-            {isSelected && (
-              <div className="flex flex-col gap-1">
-                <button
-                  onClick={() => {
-                    const newUrl = prompt('URL do áudio:', audioUrl);
-                    if (newUrl !== null) {
-                      handlePropertyChange('audioUrl', newUrl);
-                    }
-                  }}
-                  className="p-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600 transition-colors"
-                  title="Alterar URL"
-                >
-                  <ExternalLink className="w-3 h-3" />
-                </button>
-                
-                <button
-                  onClick={() => handlePropertyChange('compactMode', !compactMode)}
-                  className="p-1 bg-green-500 text-white rounded text-xs hover:bg-green-600 transition-colors"
-                  title="Modo compacto"
-                >
-                  <Headphones className="w-3 h-3" />
-                </button>
+            {/* Compact Mode Cover */}
+            {showCover && compactMode && (
+              <div className="flex-shrink-0">
+                <img
+                  src={coverUrl}
+                  alt={title}
+                  className="w-12 h-12 rounded-lg object-cover shadow-md"
+                />
               </div>
             )}
           </div>

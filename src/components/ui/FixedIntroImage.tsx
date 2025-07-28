@@ -97,7 +97,7 @@ const FixedIntroImage: React.FC<FixedIntroImageProps> = ({
         height={height}
         className="absolute inset-0 w-full h-full object-cover quiz-intro-image"
         loading={priority ? 'eager' : 'lazy'}
-        fetchPriority={priority ? 'high' : 'auto'}
+        fetchpriority={priority ? 'high' : 'auto'}
         decoding={priority ? 'sync' : 'async'}
         style={{imageRendering: 'crisp-edges'}}
         onLoad={() => {

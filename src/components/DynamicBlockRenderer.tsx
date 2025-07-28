@@ -1,23 +1,23 @@
-import React from 'react';
-import { useDynamicComponent } from '@/hooks/usePageConfig';
+import React, { useState } from 'react';
 
-// Importar componentes reais
-import { Header } from '@/components/result/Header';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import Testimonials from '@/components/quiz-result/sales/Testimonials';
-import SecondaryStylesSection from '@/components/quiz-result/SecondaryStylesSection';
-import MotivationSection from '@/components/result/MotivationSection';
-import BonusSection from '@/components/result/BonusSection';
-import GuaranteeSection from '@/components/result/GuaranteeSection';
-import MentorSection from '@/components/result/MentorSection';
-import SecurePurchaseElement from '@/components/result/SecurePurchaseElement';
-import BeforeAfterTransformation from '@/components/result/BeforeAfterTransformation';
-import FixedIntroImage from '@/components/ui/FixedIntroImage';
+// Componentes modernos
+import { 
+  TestimonialSlider, 
+  CountdownTimer, 
+  PricingCard, 
+  InteractiveProgressBar, 
+  SocialProofBanner 
+} from './ModernComponents';
+
+// Componentes de funil
+import FunnelBlockRenderer, { useIsFunnelBlock } from './editor/FunnelBlockRenderer';
 
 // Componentes básicos
-import { Progress } from '@/components/ui/progress';
-import { CheckCircle, Star, Gift, Lock, Shield, Award, Clock, ArrowRight } from 'lucide-react';
+import { 
+  CheckCircle, Star, Gift, Lock, Shield, Award, Clock, ArrowRight, 
+  HelpCircle, Brain, Play, Code, LoaderCircle, Image as ImageIcon,
+  StretchHorizontal, Rows3, ShoppingCart, ArrowDown 
+} from 'lucide-react';
 
 interface DynamicBlockRendererProps {
   pageId: string;
@@ -34,555 +34,433 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
   className = '',
   style = {}
 }) => {
-  const { componentType, props, isConfigured, rawBlock } = useDynamicComponent(pageId, blockId);
-
-  if (!isConfigured) {
-    return fallback || <div className="p-4 border-dashed border-2 border-gray-300 text-gray-500 text-center">
-      Bloco não configurado: {blockId}
-    </div>;
-  }
+  // Para fins de demonstração, vamos simular props baseadas no blockId
+  const componentType = blockId || 'default';
+  const props: any = {
+    question: 'Qual dessas opções representa melhor seu estilo?',
+    questionId: 'question-1',
+    allowMultiple: true,
+    maxSelections: 3,
+    showImages: true,
+    autoAdvance: false,
+    height: '2rem',
+    options: [
+      { id: '1', text: 'Clássico e elegante', styleCategory: 'Clássico', points: 2, keywords: ['elegante', 'sofisticado'] },
+      { id: '2', text: 'Moderno e descolado', styleCategory: 'Contemporâneo', points: 3, keywords: ['moderno', 'descolado'] },
+      { id: '3', text: 'Natural e autêntico', styleCategory: 'Natural', points: 1, keywords: ['natural', 'autêntico'] }
+    ],
+    title: 'Descubra Seu Estilo',
+    subtitle: 'Um quiz personalizado para descobrir seu estilo único',
+    buttonText: 'Começar Quiz Agora',
+    text: 'Texto de exemplo',
+    content: 'Conteúdo de exemplo',
+    message: 'Analisando suas respostas...',
+    src: '',
+    alt: 'Imagem',
+    caption: '',
+    showPercentages: true,
+    showSecondaryStyles: true,
+    maxSecondaryStyles: 2
+  };
 
   // Renderizar componente baseado no tipo
   const renderComponent = () => {
+    // Verificar se é um bloco de funil
+    const isFunnelBlock = useIsFunnelBlock(componentType);
+    if (isFunnelBlock) {
+      return (
+        <FunnelBlockRenderer
+          block={{
+            id: blockId,
+            type: componentType,
+            properties: props
+          }}
+          isEditable={false}
+        />
+      );
+    }
+
     switch (componentType) {
-      // COMPONENTES REAIS - RESULTPAGE
-      case 'header-component-real':
+      case 'quiz-transition':
         return (
-          <Header 
-            primaryStyle={props.primaryStyle}
-            logoHeight={props.logoHeight}
-            logo={props.logo}
-            logoAlt={props.logoAlt}
-            userName={props.userName}
-          />
-        );
-
-      case 'card-component-real':
-        return (
-          <Card className={props.className}>
-            {rawBlock?.settings?.children?.map((child: any, index: number) => (
-              <DynamicBlockRenderer 
-                key={child.id || index}
-                pageId={pageId}
-                blockId={child.id}
-                fallback={<div>Child component: {child.type}</div>}
-              />
-            ))}
-            {!rawBlock?.settings?.children && (
-              <div className="p-6 mb-10 bg-white shadow-md border border-[#B89B7A]/20 rounded-lg">
-                <div className="text-center mb-8">
-                  <div className="max-w-md mx-auto mb-6">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm text-[#8F7A6A]">Seu estilo predominante</span>
-                      <span className="text-[#aa6b5d] font-medium">92%</span>
-                    </div>
-                    <Progress value={92} className="h-2 bg-[#F3E8E6]" />
-                  </div>
-                </div>
+          <div className="min-h-[400px] bg-gradient-to-br from-[#432818] to-[#6B5B73] rounded-xl flex items-center justify-center text-white">
+            <div className="text-center max-w-md mx-auto p-8">
+              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6 animate-spin">
+                <LoaderCircle className="w-8 h-8" />
               </div>
-            )}
-          </Card>
-        );
-
-      case 'secondary-styles-component-real':
-        return <SecondaryStylesSection secondaryStyles={props.secondaryStyles || []} />;
-
-      case 'before-after-component-real':
-        return <BeforeAfterTransformation />;
-
-      case 'motivation-component-real':
-        return <MotivationSection />;
-
-      case 'bonus-component-real':
-        return <BonusSection />;
-
-      case 'testimonials-component-real':
-        return <Testimonials />;
-
-      case 'guarantee-component-real':
-        return <GuaranteeSection />;
-
-      case 'mentor-component-real':
-        return <MentorSection />;
-
-      case 'secure-purchase-component-real':
-        return <SecurePurchaseElement />;
-
-      // COMPONENTES REAIS - QUIZOFFERPAGE
-      case 'fixed-intro-image-component-real':
-        return (
-          <FixedIntroImage
-            src={props.src}
-            alt={props.alt}
-            width={props.width}
-            height={props.height}
-            className={props.className}
-          />
-        );
-
-      case 'button-component-real':
-        return (
-          <Button
-            className={props.className}
-            style={props.style}
-            onClick={props.onClick}
-          >
-            {props.children}
-          </Button>
-        );
-
-      // COMPONENTES CUSTOMIZADOS BASEADOS NOS TIPOS REAIS
-      case 'countdown-timer-component-real':
-        return (
-          <div className="flex flex-col items-center py-6">
-            <p className="text-[#432818] font-semibold mb-2 flex items-center">
-              <Clock className="w-4 h-4 mr-1 text-[#B89B7A]" />
-              Esta oferta expira em:
-            </p>
-            <div className="flex items-center justify-center gap-1">
-              <div className="bg-[#432818] text-white px-3 py-2 rounded-md text-lg font-mono font-bold shadow-sm">01</div>
-              <span className="text-[#B89B7A] font-bold text-xl">:</span>
-              <div className="bg-[#432818] text-white px-3 py-2 rounded-md text-lg font-mono font-bold shadow-sm">59</div>
-              <span className="text-[#B89B7A] font-bold text-xl">:</span>
-              <div className="bg-[#432818] text-white px-3 py-2 rounded-md text-lg font-mono font-bold shadow-sm">42</div>
+              <h3 className="text-2xl font-semibold mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+                {props.message || 'Analisando suas respostas...'}
+              </h3>
+              <div className="w-full bg-white/20 rounded-full h-2 mb-4">
+                <div className="bg-[#B89B7A] h-2 rounded-full w-2/3 animate-pulse"></div>
+              </div>
+              <p className="text-white/70 text-sm">
+                Isso pode levar alguns segundos
+              </p>
             </div>
           </div>
         );
 
-      case 'pricing-section-component-real':
-        return (
-          <div className={props.className || "bg-gradient-to-r from-green-500 to-green-600 rounded-xl p-8 text-white text-center"}>
-            <p className="text-sm opacity-90 mb-2">{props.title || 'Oferta por tempo limitado'}</p>
-            <div className="mb-4">
-              <span className="text-sm">5x de</span>
-              <span className="text-4xl font-bold mx-2">{props.installments || 'R$ 8,83'}</span>
-            </div>
-            <p className="text-lg">ou à vista <strong>{props.fullPrice || 'R$ 39,90'}</strong></p>
-            <p className="text-sm mt-2 opacity-75">{props.savings || '77% OFF - Economia de R$ 135,10'}</p>
-          </div>
-        );
-
-      case 'section-title-component-real':
-        return (
-          <div className="py-6 text-center">
-            <div className="inline-flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full border border-green-200 mb-6">
-              <Award className="w-4 h-4 text-green-600" />
-              <span className="text-sm font-semibold text-green-700">3000+ mulheres transformadas</span>
-            </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-[#432818] mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
-              {props.title || 'Descubra Seu Estilo Predominante'}
-            </h1>
-            <p className="text-lg text-[#6B5B73] max-w-2xl mx-auto">
-              {props.subtitle || 'Tenha finalmente um guarda-roupa que funciona 100%'}
-            </p>
-          </div>
-        );
-
-      case 'faq-section-component-real':
-        return (
-          <div className="py-6">
-            <h2 className="text-2xl font-bold text-[#432818] text-center mb-8" style={{ fontFamily: 'Playfair Display, serif' }}>
-              Perguntas Frequentes
-            </h2>
-            <div className="space-y-4 max-w-2xl mx-auto">
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-[#432818] mb-2">Como funciona o quiz?</h4>
-                <p className="text-gray-700 text-sm">É muito simples! Você responde algumas perguntas sobre suas preferências e recebe seu resultado personalizado.</p>
-              </div>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-[#432818] mb-2">Quanto tempo demora?</h4>
-                <p className="text-gray-700 text-sm">O quiz leva apenas 5 minutos para ser concluído.</p>
-              </div>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-[#432818] mb-2">O material é digital?</h4>
-                <p className="text-gray-700 text-sm">Sim, você recebe tudo por email imediatamente após a compra.</p>
-              </div>
-            </div>
-          </div>
-        );
-
-      // COMPONENTES BÁSICOS DO EDITOR
-      case 'HeaderBlock':
-        return (
-          <div className={`text-${props.alignment || 'center'} py-6`}>
-            <h1 className={`font-bold mb-2 ${
-              props.titleSize === 'small' ? 'text-2xl' :
-              props.titleSize === 'medium' ? 'text-3xl' : 'text-4xl'
-            }`}>
-              {props.title || 'Título'}
-            </h1>
-            {props.subtitle && (
-              <p className="text-lg text-gray-600">{props.subtitle}</p>
-            )}
-          </div>
-        );
-
-      case 'TextBlock':
-        return (
-          <div className={`text-${props.alignment || 'left'} py-4`}>
-            <p className={`${
-              props.fontSize === 'small' ? 'text-sm' :
-              props.fontSize === 'large' ? 'text-lg' : 'text-base'
-            }`}>
-              {props.content || 'Texto do bloco'}
-            </p>
-          </div>
-        );
-
-      case 'ImageBlock':
-        return (
-          <div className={`text-${props.alignment || 'center'} py-4`}>
-            <img
-              src={props.src || 'https://via.placeholder.com/400x300?text=Imagem'}
-              alt={props.alt || 'Imagem'}
-              style={{ width: props.width || '100%' }}
-              className="max-w-full h-auto"
-            />
-          </div>
-        );
-
-      case 'ButtonBlock':
-        return (
-          <div className="text-center py-4">
-            <Button
-              className={`${
-                props.size === 'sm' ? 'px-4 py-2' :
-                props.size === 'lg' ? 'px-8 py-4 text-lg' : 'px-6 py-3'
-              } ${props.fullWidth ? 'w-full' : ''}`}
-              variant={props.style === 'secondary' ? 'secondary' : 'default'}
-            >
-              {props.text || 'Botão'}
-            </Button>
-          </div>
-        );
-
-      case 'ProgressBlock':
+      // COMPONENTES BÁSICOS
+      case 'heading':
         return (
           <div className="py-4">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm text-[#8F7A6A]">{props.label || 'Progresso'}</span>
-              {props.showPercentage && (
-                <span className="text-[#aa6b5d] font-medium">{props.value || 0}%</span>
+            <h2 className="text-3xl font-bold text-[#432818] leading-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
+              {props.text || 'Heading'}
+            </h2>
+          </div>
+        );
+
+      case 'paragraph':
+        return (
+          <div className="py-3">
+            <p className="text-gray-700 leading-relaxed text-lg">
+              {props.text || 'Your paragraph text here'}
+            </p>
+          </div>
+        );
+
+      case 'button':
+        return (
+          <div className="py-4">
+            <button className="bg-gradient-to-r from-[#B89B7A] to-[#432818] hover:from-[#432818] hover:to-[#B89B7A] text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+              {props.text || 'Click me'}
+            </button>
+          </div>
+        );
+
+      case 'image':
+        return (
+          <div className="py-4">
+            <div className="relative rounded-xl overflow-hidden shadow-lg">
+              {props.src ? (
+                <img 
+                  src={props.src} 
+                  alt={props.alt || 'Image'} 
+                  className="w-full h-auto object-cover"
+                />
+              ) : (
+                <div className="bg-gradient-to-br from-gray-100 to-gray-200 h-64 flex items-center justify-center">
+                  <div className="text-center text-gray-500">
+                    <ImageIcon className="w-12 h-12 mx-auto mb-2" />
+                    <p>Adicione uma imagem</p>
+                  </div>
+                </div>
+              )}
+              {props.caption && (
+                <div className="bg-black/50 text-white p-3 text-sm">
+                  {props.caption}
+                </div>
               )}
             </div>
-            <Progress value={props.value || 0} className="h-2 bg-[#F3E8E6]" />
           </div>
         );
 
-      case 'QuestionBlock':
+      case 'container':
         return (
-          <div className="py-6">
-            <div className="space-y-6">
-              <h3 className="text-xl md:text-2xl font-semibold text-[#432818] text-center leading-relaxed">
-                {props.question || 'Qual é a sua pergunta?'}
+          <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <div className="space-y-4">
+              {props.title && (
+                <h3 className="text-xl font-semibold text-[#432818] border-b border-gray-200 pb-2">
+                  {props.title}
+                </h3>
+              )}
+              <div className="text-gray-600">
+                {props.content || 'Container content here'}
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'divider':
+        return (
+          <div className="py-8">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="bg-white px-4 text-gray-500">
+                  {props.text || ''}
+                </span>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'spacer':
+        return (
+          <div style={{ height: props.height || '2rem' }}></div>
+        );
+
+      // COMPONENTES DE LAYOUT
+      case 'flex-container-horizontal':
+        return (
+          <div className="flex flex-wrap gap-4 items-center justify-center p-4 bg-gradient-to-r from-gray-50 to-white rounded-xl border border-gray-200">
+            <div className="text-center flex-1 min-w-[200px]">
+              <div className="w-12 h-12 bg-[#B89B7A] rounded-lg flex items-center justify-center mx-auto mb-3">
+                <StretchHorizontal className="w-6 h-6 text-white" />
+              </div>
+              <h4 className="font-semibold text-[#432818] mb-2">Container Horizontal</h4>
+              <p className="text-sm text-gray-600">Elementos organizados lado a lado</p>
+            </div>
+            <div className="text-center flex-1 min-w-[200px]">
+              <div className="p-4 bg-white rounded-lg border border-gray-200">
+                <p className="text-sm text-gray-500">Espaço para conteúdo 1</p>
+              </div>
+            </div>
+            <div className="text-center flex-1 min-w-[200px]">
+              <div className="p-4 bg-white rounded-lg border border-gray-200">
+                <p className="text-sm text-gray-500">Espaço para conteúdo 2</p>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'flex-container-vertical':
+        return (
+          <div className="space-y-4 p-4 bg-gradient-to-b from-gray-50 to-white rounded-xl border border-gray-200">
+            <div className="text-center">
+              <div className="w-12 h-12 bg-[#B89B7A] rounded-lg flex items-center justify-center mx-auto mb-3">
+                <Rows3 className="w-6 h-6 text-white" />
+              </div>
+              <h4 className="font-semibold text-[#432818] mb-2">Container Vertical</h4>
+              <p className="text-sm text-gray-600">Elementos organizados verticalmente</p>
+            </div>
+            <div className="space-y-3">
+              <div className="p-4 bg-white rounded-lg border border-gray-200">
+                <p className="text-sm text-gray-500">Espaço para conteúdo 1</p>
+              </div>
+              <div className="p-4 bg-white rounded-lg border border-gray-200">
+                <p className="text-sm text-gray-500">Espaço para conteúdo 2</p>
+              </div>
+              <div className="p-4 bg-white rounded-lg border border-gray-200">
+                <p className="text-sm text-gray-500">Espaço para conteúdo 3</p>
+              </div>
+            </div>
+          </div>
+        );
+
+      // COMPONENTES MODERNOS AVANÇADOS
+      case 'testimonial-slider':
+        return <TestimonialSlider autoPlay={true} interval={5000} />;
+
+      case 'countdown-timer-real':
+        return (
+          <CountdownTimer 
+            title="⏰ Oferta Limitada!"
+            urgencyText="Aproveite enquanto há tempo"
+          />
+        );
+
+      case 'pricing-card-modern':
+        return (
+          <PricingCard 
+            title="Transformação Completa"
+            originalPrice={175}
+            discountPrice={39.90}
+            discount={77}
+            isPopular={true}
+          />
+        );
+
+      case 'progress-bar-modern':
+        return (
+          <InteractiveProgressBar 
+            currentStep={props.currentStep || 8}
+            totalSteps={21}
+            showPercentage={true}
+            showStepLabels={true}
+          />
+        );
+
+      case 'social-proof':
+        return <SocialProofBanner showLiveCounter={true} />;
+
+      // BLOCOS DE QUIZ CONFIGURÁVEIS
+      case 'quiz-question':
+        return (
+          <div className="bg-white border border-[#B89B7A] rounded-xl p-6 shadow-lg">
+            <div className="text-center mb-6">
+              <div className="w-12 h-12 bg-[#B89B7A] rounded-full flex items-center justify-center mx-auto mb-4">
+                <HelpCircle className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold text-[#432818] mb-2">
+                {props.question || 'Qual dessas opções representa melhor seu estilo?'}
               </h3>
-              <div className="grid gap-4 md:grid-cols-2">
-                {(props.options || []).map((option: any, index: number) => (
-                  <div
-                    key={option.id || index}
-                    className="border-2 border-[#B89B7A]/30 hover:border-[#B89B7A] hover:bg-[#f9f4ef] rounded-xl transition-all duration-200 cursor-pointer group p-4"
-                  >
-                    {option.imageUrl && (
-                      <div className="mb-3">
-                        <img 
-                          src={option.imageUrl} 
-                          alt={option.text}
-                          className="w-full h-32 object-cover rounded-lg"
-                        />
-                      </div>
-                    )}
-                    <div className="flex items-start gap-3">
-                      <span className="font-bold text-[#B89B7A] text-lg min-w-[24px]">
-                        {String.fromCharCode(65 + index)}.
-                      </span>
-                      <span className="text-[#432818] text-sm leading-relaxed">
-                        {option.text || `Opção ${String.fromCharCode(65 + index)}`}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        );
-
-      // ETAPAS ESPECÍFICAS DO FUNIL - COMPONENTES PERSONALIZADOS
-
-      // ETAPA 1: Quiz Introdução
-      case 'quiz-intro-etapa-1':
-        return (
-          <div className="min-h-screen bg-gradient-to-br from-[#f9f4ef] to-white flex items-center justify-center p-4">
-            <div className="max-w-4xl mx-auto text-center space-y-8">
-              <img 
-                src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp"
-                alt="Logo Gisele Galvão"
-                className="h-16 mx-auto mb-8"
-              />
-              <h1 className="text-3xl md:text-5xl font-bold text-[#432818] mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
-                <span className="text-[#B89B7A]">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com você.
-              </h1>
-              <p className="text-lg md:text-xl text-[#6B5B73] max-w-3xl mx-auto leading-relaxed">
-                Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.
+              <p className="text-sm text-gray-600">
+                {props.allowMultiple ? `Selecione até ${props.maxSelections || 3} opções` : 'Selecione uma opção'}
               </p>
-              <img 
-                src="https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.webp"
-                alt="Descubra seu estilo predominante"
-                className="w-full max-w-2xl mx-auto rounded-xl shadow-lg"
-              />
-              <div className="max-w-md mx-auto space-y-4">
-                <input 
-                  type="text"
-                  placeholder="Digite seu nome aqui..."
-                  className="w-full px-6 py-4 text-lg border-2 border-[#B89B7A]/30 rounded-xl focus:border-[#B89B7A] focus:outline-none"
-                />
-                <button className="w-full bg-[#B89B7A] hover:bg-[#aa6b5d] text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 transform hover:scale-105">
-                  Quero Descobrir meu Estilo Agora!
-                </button>
-              </div>
-              <p className="text-sm text-gray-500">Seus dados estão seguros conosco.</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {(props.options || [
+                { id: '1', text: 'Clássico e elegante', styleCategory: 'Clássico' },
+                { id: '2', text: 'Moderno e descolado', styleCategory: 'Contemporâneo' }
+              ]).map((option: any) => (
+                <div key={option.id} className="p-4 border border-gray-200 rounded-lg hover:border-[#B89B7A] cursor-pointer transition-all">
+                  <div className="font-medium text-[#432818]">{option.text}</div>
+                  {option.styleCategory && (
+                    <div className="text-sm text-[#B89B7A] mt-1">Categoria: {option.styleCategory}</div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         );
 
-      // ETAPAS 2-11: Questões principais específicas
-      case 'quiz-questao-principal':
+      case 'quiz-question-configurable':
         return (
-          <div className="min-h-screen bg-white flex flex-col">
-            <div className="flex-1 max-w-4xl mx-auto w-full p-6 flex flex-col justify-center">
-              {/* Progress Bar */}
-              <div className="mb-8">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-[#8F7A6A]">{props.progressLabel || 'Questão 1 de 10'}</span>
-                  <span className="text-[#aa6b5d] font-medium">{props.progressValue || 5}%</span>
-                </div>
-                <div className="w-full bg-[#F3E8E6] rounded-full h-2">
-                  <div 
-                    className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] h-2 rounded-full transition-all duration-500"
-                    style={{ width: `${props.progressValue || 5}%` }}
-                  />
-                </div>
+          <div className="bg-gradient-to-br from-white to-[#f9f4ef] border-2 border-[#B89B7A] rounded-xl p-8 shadow-xl">
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 bg-gradient-to-br from-[#B89B7A] to-[#432818] rounded-full flex items-center justify-center mx-auto mb-4">
+                <Brain className="w-8 h-8 text-white" />
               </div>
-
-              {/* Questão */}
-              <div className="space-y-8">
-                <h2 className="text-2xl md:text-3xl font-bold text-[#432818] text-center leading-relaxed" style={{ fontFamily: 'Playfair Display, serif' }}>
-                  {props.question || 'Qual o seu tipo de roupa favorita?'}
-                </h2>
-
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {(props.options || []).map((option: any, index: number) => (
-                    <div
-                      key={option.id || index}
-                      className="border-2 border-[#B89B7A]/30 hover:border-[#B89B7A] hover:bg-[#f9f4ef] rounded-xl transition-all duration-200 cursor-pointer group overflow-hidden"
-                    >
-                      {option.imageUrl && (
-                        <div className="aspect-video bg-gray-100">
-                          <img 
-                            src={option.imageUrl} 
-                            alt={option.text}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      )}
-                      <div className="p-4">
-                        <div className="flex items-start gap-3">
-                          <span className="font-bold text-[#B89B7A] text-lg min-w-[24px]">
-                            {String.fromCharCode(65 + index)}.
-                          </span>
-                          <span className="text-[#432818] text-sm leading-relaxed">
-                            {option.text || `Opção ${String.fromCharCode(65 + index)}`}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {props.multipleSelection && (
-                  <p className="text-center text-sm text-[#8F7A6A]">
-                    Selecione até {props.maxSelections || 3} opções
-                  </p>
+              <h3 className="text-2xl font-bold text-[#432818] mb-3" style={{ fontFamily: 'Playfair Display, serif' }}>
+                {props.question || 'Questão Configurável Avançada'}
+              </h3>
+              <div className="flex justify-center gap-4 text-sm">
+                <span className="bg-[#B89B7A] text-white px-3 py-1 rounded-full">
+                  ID: {props.questionId || 'question-1'}
+                </span>
+                {props.autoAdvance && (
+                  <span className="bg-green-500 text-white px-3 py-1 rounded-full">Auto-avanço</span>
                 )}
               </div>
             </div>
-          </div>
-        );
-
-      // ETAPA 12: Transição Principal
-      case 'quiz-transicao-principal':
-        return (
-          <div className="min-h-screen bg-gradient-to-br from-[#f9f4ef] to-white flex items-center justify-center p-4">
-            <div className="max-w-3xl mx-auto text-center space-y-8">
-              <div className="mb-8">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-[#8F7A6A]">Progresso</span>
-                  <span className="text-[#aa6b5d] font-medium">60%</span>
-                </div>
-                <div className="w-full bg-[#F3E8E6] rounded-full h-2">
-                  <div className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] h-2 rounded-full w-[60%]" />
-                </div>
-              </div>
-              <h1 className="text-3xl md:text-4xl font-bold text-[#432818] mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
-                {props.title || 'Ótimo! Agora vamos conhecer você melhor'}
-              </h1>
-              <p className="text-lg text-[#6B5B73] max-w-2xl mx-auto leading-relaxed">
-                {props.message || 'As próximas perguntas vão nos ajudar a personalizar ainda mais seu resultado.'}
-              </p>
-              <div className="flex justify-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#B89B7A]"></div>
-              </div>
-            </div>
-          </div>
-        );
-
-      // ETAPAS 13-18: Questões estratégicas
-      case 'quiz-questao-estrategica':
-        return (
-          <div className="min-h-screen bg-white flex flex-col">
-            <div className="flex-1 max-w-3xl mx-auto w-full p-6 flex flex-col justify-center">
-              {/* Progress Bar */}
-              <div className="mb-8">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-[#8F7A6A]">{props.progressLabel || 'Questão estratégica 1 de 6'}</span>
-                  <span className="text-[#aa6b5d] font-medium">{props.progressValue || 65}%</span>
-                </div>
-                <div className="w-full bg-[#F3E8E6] rounded-full h-2">
-                  <div 
-                    className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] h-2 rounded-full transition-all duration-500"
-                    style={{ width: `${props.progressValue || 65}%` }}
-                  />
-                </div>
-              </div>
-
-              {/* Questão Estratégica */}
-              <div className="space-y-8">
-                <h2 className="text-2xl md:text-3xl font-bold text-[#432818] text-center leading-relaxed" style={{ fontFamily: 'Playfair Display, serif' }}>
-                  {props.question || 'Qual é sua faixa etária?'}
-                </h2>
-
-                <div className="space-y-3 max-w-2xl mx-auto">
-                  {(props.options || []).map((option: any, index: number) => (
-                    <div
-                      key={option.id || index}
-                      className="border-2 border-[#B89B7A]/30 hover:border-[#B89B7A] hover:bg-[#f9f4ef] rounded-xl transition-all duration-200 cursor-pointer p-4"
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="font-bold text-[#B89B7A] text-lg">
-                          {String.fromCharCode(65 + index)}.
-                        </span>
-                        <span className="text-[#432818] text-base">
-                          {option.text || `Opção ${String.fromCharCode(65 + index)}`}
-                        </span>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {(props.options || [
+                { id: '1', text: 'Clássico e elegante', styleCategory: 'Clássico', points: 2 },
+                { id: '2', text: 'Moderno e descolado', styleCategory: 'Contemporâneo', points: 3 },
+                { id: '3', text: 'Natural e autêntico', styleCategory: 'Natural', points: 1 }
+              ]).map((option: any) => (
+                <div key={option.id} className="group bg-white border border-gray-200 rounded-lg p-4 hover:border-[#B89B7A] hover:shadow-lg cursor-pointer transition-all duration-300">
+                  <div className="font-semibold text-[#432818] mb-2">{option.text}</div>
+                  <div className="text-xs text-gray-500 space-y-1">
+                    <div>Categoria: <span className="text-[#B89B7A] font-medium">{option.styleCategory}</span></div>
+                    <div>Pontos: <span className="bg-[#432818] text-white px-2 py-0.5 rounded">{option.points}</span></div>
+                    {option.keywords && (
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {option.keywords.map((keyword: string, idx: number) => (
+                          <span key={idx} className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-xs">
+                            {keyword}
+                          </span>
+                        ))}
                       </div>
-                    </div>
-                  ))}
+                    )}
+                  </div>
                 </div>
-
-                <div className="text-center">
-                  <button className="bg-[#B89B7A] hover:bg-[#aa6b5d] text-white font-bold py-3 px-8 rounded-xl transition-all duration-200">
-                    Continuar
-                  </button>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         );
 
-      // ETAPA 19: Transição Final
-      case 'quiz-transicao-final':
+      case 'quiz-result-calculated':
         return (
-          <div className="min-h-screen bg-gradient-to-br from-[#f9f4ef] to-white flex items-center justify-center p-4">
-            <div className="max-w-3xl mx-auto text-center space-y-8">
-              <div className="mb-8">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-[#8F7A6A]">Finalizando</span>
-                  <span className="text-[#aa6b5d] font-medium">95%</span>
-                </div>
-                <div className="w-full bg-[#F3E8E6] rounded-full h-2">
-                  <div className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] h-2 rounded-full w-[95%]" />
+          <div className="bg-gradient-to-br from-[#432818] to-[#6B5B73] rounded-xl p-8 text-white shadow-2xl">
+            <div className="text-center mb-8">
+              <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Award className="w-10 h-10 text-white" />
+              </div>
+              <h3 className="text-3xl font-bold mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>
+                Seu Resultado Calculado
+              </h3>
+              <p className="text-white/80">Baseado em suas respostas</p>
+            </div>
+            
+            <div className="bg-white/10 rounded-lg p-6 mb-6">
+              <div className="text-center">
+                <div className="text-4xl font-bold text-[#B89B7A] mb-2">92%</div>
+                <div className="text-lg font-semibold">Estilo Romântico Clássico</div>
+                <div className="text-sm text-white/70 mt-2">Compatibilidade com seu perfil</div>
+              </div>
+            </div>
+            
+            {props.showSecondaryStyles && (
+              <div className="space-y-3">
+                <h4 className="font-semibold text-white/90">Estilos Secundários:</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-white/10 rounded-lg p-4 text-center">
+                    <div className="text-2xl font-bold text-[#B89B7A]">75%</div>
+                    <div className="text-sm">Elegante</div>
+                  </div>
+                  <div className="bg-white/10 rounded-lg p-4 text-center">
+                    <div className="text-2xl font-bold text-[#B89B7A]">68%</div>
+                    <div className="text-sm">Sofisticado</div>
+                  </div>
                 </div>
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold text-[#432818] mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
-                Preparando seu resultado personalizado...
+            )}
+          </div>
+        );
+
+      case 'quiz-start-page':
+        return (
+          <div className="min-h-[500px] bg-gradient-to-br from-[#f9f4ef] via-white to-[#f9f4ef] rounded-xl p-8 text-center">
+            <div className="max-w-2xl mx-auto">
+              <div className="w-24 h-24 bg-gradient-to-br from-[#B89B7A] to-[#432818] rounded-full flex items-center justify-center mx-auto mb-8">
+                <Play className="w-12 h-12 text-white" />
+              </div>
+              
+              <h1 className="text-4xl md:text-5xl font-bold text-[#432818] mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
+                {props.title || 'Descubra Seu Estilo'}
               </h1>
-              <p className="text-lg text-[#6B5B73] max-w-2xl mx-auto leading-relaxed">
-                Estamos analisando suas respostas e criando um guia exclusivo para você.
+              
+              <p className="text-lg text-[#6B5B73] mb-8 leading-relaxed">
+                {props.subtitle || 'Um quiz personalizado para descobrir seu estilo único e transformar seu guarda-roupa'}
               </p>
-              <div className="flex flex-col items-center space-y-4">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#B89B7A]"></div>
-                <p className="text-sm text-[#8F7A6A] animate-pulse">
-                  Analisando suas preferências...
-                </p>
+              
+              <div className="bg-white rounded-lg p-6 shadow-lg mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                  <div>
+                    <div className="w-12 h-12 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <Clock className="w-6 h-6 text-[#B89B7A]" />
+                    </div>
+                    <div className="font-semibold text-[#432818]">5 minutos</div>
+                    <div className="text-sm text-gray-600">Duração estimada</div>
+                  </div>
+                  <div>
+                    <div className="w-12 h-12 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <HelpCircle className="w-6 h-6 text-[#B89B7A]" />
+                    </div>
+                    <div className="font-semibold text-[#432818]">16 questões</div>
+                    <div className="text-sm text-gray-600">Cuidadosamente selecionadas</div>
+                  </div>
+                  <div>
+                    <div className="w-12 h-12 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <Award className="w-6 h-6 text-[#B89B7A]" />
+                    </div>
+                    <div className="font-semibold text-[#432818]">Resultado único</div>
+                    <div className="text-sm text-gray-600">Personalizado para você</div>
+                  </div>
+                </div>
               </div>
+              
+              <button className="bg-gradient-to-r from-[#B89B7A] to-[#432818] hover:from-[#432818] hover:to-[#B89B7A] text-white font-bold py-4 px-8 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                {props.buttonText || 'Começar Quiz Agora'}
+              </button>
             </div>
           </div>
         );
 
-      // ETAPA 20: Resultado completo
-      case 'quiz-resultado-completo':
+      // COMPONENTES ESPECÍFICOS DA PÁGINA DE RESULTADO
+      case 'header-component-real':
         return (
-          <div className="min-h-screen bg-gray-50">
-            <div className="max-w-6xl mx-auto p-6 space-y-8">
-              {/* Header do Resultado */}
-              <div className="bg-white rounded-xl shadow-md p-8 text-center">
-                <img 
-                  src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp"
-                  alt="Logo Gisele Galvão"
-                  className="h-16 mx-auto mb-6"
-                />
-                <h1 className="text-3xl md:text-4xl font-bold text-[#432818] mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
-                  Parabéns, {props.userName || 'Seu Nome'}!
-                </h1>
-                <h2 className="text-2xl text-[#B89B7A] font-semibold mb-6">
-                  Você descobriu seu Estilo Predominante
-                </h2>
-
-                {/* Card do Estilo */}
-                <div className="max-w-md mx-auto mb-8">
-                  <div className="bg-gradient-to-br from-[#f9f4ef] to-[#f0e6d6] rounded-xl p-6 border border-[#B89B7A]/20">
-                    <img 
-                      src={props.styleImage || "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp"}
-                      alt={props.styleName || "Estilo Elegante"}
-                      className="w-full h-48 object-cover rounded-lg mb-4"
-                    />
-                    <h3 className="text-2xl font-bold text-[#432818] mb-2">
-                      {props.styleName || 'Estilo Elegante'}
-                    </h3>
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm text-[#8F7A6A]">Compatibilidade</span>
-                      <span className="text-[#aa6b5d] font-medium">92%</span>
-                    </div>
-                    <Progress value={92} className="h-3 bg-white" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Características do Estilo */}
-              <div className="bg-white rounded-xl shadow-md p-8">
-                <h3 className="text-2xl font-bold text-[#432818] mb-6 text-center">
-                  Características do seu estilo
-                </h3>
-                <div className="grid md:grid-cols-3 gap-6">
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-[#f9f4ef] rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Star className="w-8 h-8 text-[#B89B7A]" />
-                    </div>
-                    <h4 className="font-semibold text-[#432818] mb-2">Sofisticação</h4>
-                    <p className="text-sm text-gray-600">Elegância refinada e moderna</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-[#f9f4ef] rounded-full flex items-center justify-center mx-auto mb-4">
-                      <CheckCircle className="w-8 h-8 text-[#B89B7A]" />
-                    </div>
-                    <h4 className="font-semibold text-[#432818] mb-2">Qualidade</h4>
-                    <p className="text-sm text-gray-600">Peças de alta qualidade e duráveis</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-[#f9f4ef] rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Award className="w-8 h-8 text-[#B89B7A]" />
-                    </div>
-                    <h4 className="font-semibold text-[#432818] mb-2">Versatilidade</h4>
-                    <p className="text-sm text-gray-600">Looks para todas as ocasiões</p>
+          <div className="bg-white shadow-sm border-b border-[#B89B7A]/20 py-6">
+            <div className="container mx-auto px-4 max-w-4xl">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <img 
+                    src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp" 
+                    alt="Logo" 
+                    className="h-12 w-auto"
+                  />
+                  <div>
+                    <h1 className="text-2xl font-bold text-[#432818]" style={{ fontFamily: 'Playfair Display, serif' }}>
+                      Seu Resultado Personalizado
+                    </h1>
+                    <p className="text-[#6B5B73] text-sm">Descubra seu estilo único</p>
                   </div>
                 </div>
               </div>
@@ -590,67 +468,271 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
           </div>
         );
 
-      // ETAPA 21: Oferta Especial
-      case 'quiz-oferta-especial':
+      case 'result-header-inline':
         return (
-          <div className="min-h-screen bg-gray-50">
-            <div className="max-w-4xl mx-auto p-6 space-y-8">
-              {/* Header da Oferta */}
-              <div className="text-center py-8">
-                <div className="inline-flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full border border-green-200 mb-6">
-                  <Award className="w-4 h-4 text-green-600" />
-                  <span className="text-sm font-semibold text-green-700">3000+ mulheres transformadas</span>
+          <div className="bg-white p-6 rounded-xl shadow-md border border-[#B89B7A]/20 mb-8">
+            <div className="text-center mb-6">
+              <h2 className="text-3xl font-bold text-[#432818] mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+                🎉 Parabéns! Descobrimos seu estilo
+              </h2>
+              <div className="max-w-md mx-auto">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm text-[#8F7A6A]">Seu estilo predominante</span>
+                  <span className="text-[#aa6b5d] font-medium">92%</span>
                 </div>
-                <h1 className="text-3xl md:text-5xl font-bold text-[#432818] mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
-                  Descubra Seu Estilo Predominante
-                </h1>
-                <p className="text-lg text-[#6B5B73] max-w-2xl mx-auto">
-                  Tenha finalmente um guarda-roupa que funciona 100%
-                </p>
+                <div className="w-full bg-[#F3E8E6] rounded-full h-3">
+                  <div className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] h-3 rounded-full" style={{ width: '92%' }}></div>
+                </div>
               </div>
-
-              {/* Imagem Principal */}
+            </div>
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <h3 className="text-xl font-semibold text-[#432818] mb-3">Estilo Romântico Clássico</h3>
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  Você possui uma elegância natural que combina feminilidade e sofisticação. 
+                  Seu estilo é atemporal, com peças que valorizam sua personalidade única.
+                </p>
+                <div className="bg-[#f9f4ef] rounded-lg p-4">
+                  <h4 className="font-medium text-[#432818] mb-2">Características principais:</h4>
+                  <ul className="space-y-1 text-sm text-gray-600">
+                    <li>• Feminilidade e delicadeza</li>
+                    <li>• Elegância atemporal</li>
+                    <li>• Versatilidade para todas as ocasiões</li>
+                  </ul>
+                </div>
+              </div>
               <div className="text-center">
                 <img 
                   src="https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.webp"
-                  alt="Transforme seu guarda-roupa"
-                  className="w-full max-w-2xl mx-auto rounded-xl shadow-lg"
+                  alt="Seu estilo"
+                  className="w-full max-w-xs mx-auto rounded-lg shadow-lg"
                 />
               </div>
+            </div>
+          </div>
+        );
 
-              {/* Countdown Timer */}
-              <div className="bg-white rounded-xl shadow-md p-6">
-                <div className="text-center">
-                  <p className="text-[#432818] font-semibold mb-4 flex items-center justify-center">
-                    <Clock className="w-5 h-5 mr-2 text-[#B89B7A]" />
-                    Esta oferta expira em:
+      case 'before-after-component-real':
+        return (
+          <div className="bg-gradient-to-br from-[#f9f4ef] to-white p-8 rounded-xl mb-8">
+            <h3 className="text-2xl font-bold text-center text-[#432818] mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
+              A Transformação que Você Merece
+            </h3>
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="text-center">
+                <div className="bg-gray-100 p-6 rounded-lg mb-4">
+                  <h4 className="text-lg font-semibold text-gray-600 mb-2">Antes</h4>
+                  <p className="text-gray-600 text-sm">
+                    Guarda-roupa desorganizado, compras por impulso, 
+                    dúvidas sobre o que vestir a cada ocasião.
                   </p>
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="bg-[#432818] text-white px-4 py-3 rounded-lg text-xl font-mono font-bold">01</div>
-                    <span className="text-[#B89B7A] font-bold text-2xl">:</span>
-                    <div className="bg-[#432818] text-white px-4 py-3 rounded-lg text-xl font-mono font-bold">59</div>
-                    <span className="text-[#B89B7A] font-bold text-2xl">:</span>
-                    <div className="bg-[#432818] text-white px-4 py-3 rounded-lg text-xl font-mono font-bold">42</div>
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="bg-gradient-to-br from-[#B89B7A] to-[#aa6b5d] text-white p-6 rounded-lg mb-4">
+                  <h4 className="text-lg font-semibold mb-2">Depois</h4>
+                  <p className="text-sm">
+                    Estilo definido, looks intencionais, 
+                    confiança em cada escolha de roupa.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'motivation-component-real':
+        return (
+          <div className="bg-white p-8 rounded-xl shadow-md border border-[#B89B7A]/20 mb-8">
+            <div className="text-center mb-6">
+              <Award className="w-12 h-12 text-[#B89B7A] mx-auto mb-4" />
+              <h3 className="text-2xl font-bold text-[#432818] mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+                Por que Investir no Seu Estilo?
+              </h3>
+            </div>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Star className="w-8 h-8 text-[#B89B7A]" />
+                </div>
+                <h4 className="font-semibold text-[#432818] mb-2">Confiança</h4>
+                <p className="text-sm text-gray-600">Sinta-se poderosa e autêntica em cada look</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Clock className="w-8 h-8 text-[#B89B7A]" />
+                </div>
+                <h4 className="font-semibold text-[#432818] mb-2">Praticidade</h4>
+                <p className="text-sm text-gray-600">Economize tempo decidindo o que vestir</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Gift className="w-8 h-8 text-[#B89B7A]" />
+                </div>
+                <h4 className="font-semibold text-[#432818] mb-2">Economia</h4>
+                <p className="text-sm text-gray-600">Compre apenas o que realmente funciona</p>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'bonus-component-real':
+        return (
+          <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-8 rounded-xl border border-green-200 mb-8">
+            <div className="text-center mb-6">
+              <Gift className="w-12 h-12 text-green-600 mx-auto mb-4" />
+              <h3 className="text-2xl font-bold text-green-800 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>
+                Bônus Exclusivos
+              </h3>
+              <p className="text-green-700">Conteúdos extras para potencializar seus resultados</p>
+            </div>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-white p-4 rounded-lg border border-green-200">
+                <h4 className="font-semibold text-green-800 mb-2">🎯 Guia de Peças-Chave</h4>
+                <p className="text-sm text-gray-600">As 10 peças essenciais para seu guarda-roupa</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg border border-green-200">
+                <h4 className="font-semibold text-green-800 mb-2">✨ Visagismo Facial</h4>
+                <p className="text-sm text-gray-600">Como valorizar seu rosto com as escolhas certas</p>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'testimonials-component-real':
+        return <TestimonialSlider autoPlay={true} interval={5000} />;
+
+      case 'cta-section-inline':
+        return (
+          <div className="text-center my-10">
+            <div className="bg-[#f9f4ef] p-6 rounded-lg border border-[#B89B7A]/10 mb-6">
+              <h3 className="text-xl font-medium text-center text-[#aa6b5d] mb-4">
+                Descubra Como Aplicar Seu Estilo na Prática
+              </h3>
+              <div className="flex justify-center">
+                <ArrowDown className="w-8 h-8 text-[#B89B7A] animate-bounce" />
+              </div>
+            </div>
+            <button 
+              className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+              onClick={() => window.location.href = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912'}
+            >
+              <span className="flex items-center justify-center gap-2">
+                <ShoppingCart className="w-5 h-5" />
+                Quero meu Guia de Estilo Agora
+              </span>
+            </button>
+            <div className="mt-4 flex items-center justify-center gap-2 text-sm text-gray-600">
+              <Lock className="w-4 h-4" />
+              <span>Compra 100% segura</span>
+            </div>
+          </div>
+        );
+
+      case 'guarantee-component-real':
+        return (
+          <div className="bg-blue-50 p-8 rounded-xl border border-blue-200 mb-8">
+            <div className="text-center">
+              <Shield className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+              <h3 className="text-2xl font-bold text-blue-800 mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+                Garantia de 7 Dias
+              </h3>
+              <p className="text-blue-700 max-w-2xl mx-auto">
+                Experimente por 7 dias. Se não ficar completamente satisfeita com os resultados, 
+                devolvemos 100% do seu investimento, sem perguntas.
+              </p>
+            </div>
+          </div>
+        );
+
+      case 'mentor-component-real':
+        return (
+          <div className="bg-white p-8 rounded-xl shadow-md border border-[#B89B7A]/20 mb-8">
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <h3 className="text-2xl font-bold text-[#432818] mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+                  Sobre Gisele Galvão
+                </h3>
+                <p className="text-gray-700 mb-4">
+                  Consultora de imagem com mais de 10 anos de experiência, já transformou 
+                  a vida de milhares de mulheres através do poder do estilo pessoal.
+                </p>
+                <div className="flex items-center gap-2 text-sm text-[#B89B7A]">
+                  <Star className="w-4 h-4 fill-current" />
+                  <span>3000+ mulheres transformadas</span>
+                </div>
+              </div>
+              <div className="text-center">
+                <img 
+                  src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp"
+                  alt="Gisele Galvão"
+                  className="w-40 h-40 rounded-full mx-auto object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'value-stack-inline':
+        return (
+          <div className="text-center mt-10">
+            <h2 className="text-2xl md:text-3xl font-bold text-[#aa6b5d] mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
+              Vista-se de Você — na Prática
+            </h2>
+            <p className="text-[#432818] mb-8 max-w-xl mx-auto">
+              Agora que você conhece seu estilo, é hora de aplicá-lo com clareza e intenção.
+            </p>
+
+            <div className="bg-white p-6 rounded-lg shadow-md border border-[#B89B7A]/20 mb-8 max-w-md mx-auto">
+              <h3 className="text-xl font-medium text-center text-[#aa6b5d] mb-4">O Que Você Recebe Hoje</h3>
+              
+              <div className="space-y-3 mb-6">
+                <div className="flex justify-between items-center p-2 border-b border-[#B89B7A]/10">
+                  <span>Guia Principal</span>
+                  <span className="font-medium">R$ 67,00</span>
+                </div>
+                <div className="flex justify-between items-center p-2 border-b border-[#B89B7A]/10">
+                  <span>Bônus - Peças-chave</span>
+                  <span className="font-medium">R$ 79,00</span>
+                </div>
+                <div className="flex justify-between items-center p-2 border-b border-[#B89B7A]/10">
+                  <span>Bônus - Visagismo Facial</span>
+                  <span className="font-medium">R$ 29,00</span>
+                </div>
+                <div className="flex justify-between items-center p-2 pt-3 font-bold">
+                  <span>Valor Total</span>
+                  <div className="relative">
+                    <span>R$ 175,00</span>
+                    <div className="absolute top-1/2 left-0 right-0 h-[2px] bg-red-500 transform -translate-y-1/2 -rotate-3"></div>
                   </div>
                 </div>
               </div>
-
-              {/* Pricing */}
-              <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-xl p-8 text-white text-center">
-                <p className="text-sm opacity-90 mb-2">Oferta por tempo limitado</p>
-                <div className="mb-4">
-                  <span className="text-sm">5x de</span>
-                  <span className="text-5xl font-bold mx-3">R$ 8,83</span>
-                </div>
-                <p className="text-xl mb-2">ou à vista <strong>R$ 39,90</strong></p>
-                <p className="text-sm opacity-75">77% OFF - Economia de R$ 135,10</p>
+              
+              <div className="text-center p-4 bg-[#f9f4ef] rounded-lg">
+                <p className="text-sm text-[#aa6b5d] uppercase font-medium">Hoje por apenas</p>
+                <p className="text-4xl font-bold text-[#432818]">R$ 39,00</p>
+                <p className="text-xs text-gray-500 mt-1">Pagamento único</p>
               </div>
+            </div>
 
-              {/* CTA */}
-              <div className="text-center">
-                <button className="bg-[#4CAF50] hover:bg-green-600 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all duration-200 transform hover:scale-105 w-full max-w-md">
-                  QUERO DESCOBRIR MEU ESTILO AGORA
-                </button>
+            <button 
+              className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-5 px-8 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg mb-4"
+              onClick={() => window.location.href = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912'}
+            >
+              <span className="flex items-center justify-center gap-2">
+                <ShoppingCart className="w-5 h-5" />
+                Garantir Meu Guia + Bônus Especiais
+              </span>
+            </button>
+
+            <div className="flex items-center justify-center gap-4 text-sm text-gray-600">
+              <div className="flex items-center gap-1">
+                <Lock className="w-4 h-4" />
+                <span>Compra segura</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Shield className="w-4 h-4" />
+                <span>Garantia 7 dias</span>
               </div>
             </div>
           </div>
@@ -659,13 +741,38 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
       // FALLBACK
       default:
         return (
-          <div className="p-4 border border-gray-300 rounded bg-gray-50">
-            <p className="text-sm text-gray-600">
-              Componente: {componentType}
-            </p>
-            {props.title && <h3 className="font-medium">{props.title}</h3>}
-            {props.content && <p className="text-sm">{props.content}</p>}
-            {props.text && <p className="text-sm">{props.text}</p>}
+          <div className="p-6 border-2 border-dashed border-gray-300 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100">
+            <div className="text-center">
+              <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Code className="w-6 h-6 text-gray-500" />
+              </div>
+              <h3 className="font-semibold text-gray-700 mb-2">
+                Componente: {componentType}
+              </h3>
+              <p className="text-sm text-gray-500 mb-4">
+                Este componente agora possui um design personalizado
+              </p>
+              {props.title && (
+                <div className="bg-white rounded-lg p-3 mb-3">
+                  <h4 className="font-medium text-gray-700">{props.title}</h4>
+                </div>
+              )}
+              {props.content && (
+                <div className="bg-white rounded-lg p-3 mb-3">
+                  <p className="text-sm text-gray-600">{props.content}</p>
+                </div>
+              )}
+              {props.text && (
+                <div className="bg-white rounded-lg p-3">
+                  <p className="text-sm text-gray-600">{props.text}</p>
+                </div>
+              )}
+              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                <p className="text-xs text-blue-600">
+                  ✨ Componente com design moderno e responsivo aplicado!
+                </p>
+              </div>
+            </div>
           </div>
         );
     }

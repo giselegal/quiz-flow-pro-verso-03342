@@ -1,72 +1,55 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
 
 interface ImageBlockProps {
-  block: {
-    id: string;
-    type: string;
-    properties: {
-      src?: string;
-      alt?: string;
-      width?: string | number;
-      height?: string | number;
-      className?: string;
-      alignment?: 'left' | 'center' | 'right';
-    };
-  };
-  isSelected?: boolean;
-  onClick?: () => void;
-  onSaveInline?: (blockId: string, key: string, newValue: string) => void;
-  disabled?: boolean;
+  src?: string;
+  alt?: string;
+  width?: number;
+  height?: number;
+  objectFit?: 'cover' | 'contain' | 'fill' | 'none';
+  borderRadius?: number;
   className?: string;
 }
 
-export const ImageBlock: React.FC<ImageBlockProps> = ({ 
-  block,
-  isSelected = false,
-  onClick,
-  disabled = false,
-  className
+export const ImageBlock: React.FC<ImageBlockProps> = ({
+  src = '',
+  alt = 'Imagem',
+  width = 300,
+  height = 200,
+  objectFit = 'cover',
+  borderRadius = 8,
+  className = ''
 }) => {
-  const { 
-    src = 'https://via.placeholder.com/600x400?text=Imagem', 
-    alt = 'Imagem', 
-    width = 'auto',
-    height = 'auto',
-    alignment = 'center' 
-  } = block?.properties || {};
+  const style = {
+    width: `${width}px`,
+    height: `${height}px`,
+    objectFit,
+    borderRadius: `${borderRadius}px`,
+    display: 'block'
+  };
 
-  const alignmentClass = alignment === 'left' ? 'justify-start' : 
-                        alignment === 'right' ? 'justify-end' : 
-                        'justify-center';
+  // Placeholder se não há imagem
+  if (!src) {
+    return (
+      <div
+        className={`bg-gray-200 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-500 ${className}`}
+        style={style}
+      >
+        <div className="text-center">
+          <svg className="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <p className="text-sm">Clique para adicionar imagem</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div
-      className={cn(
-        'relative w-full p-2 sm:p-3 md:p-4 rounded-lg border-2 border-dashed',
-        isSelected ? 'border-[#B89B7A] bg-[#FAF9F7]' : 'border-gray-300 bg-white',
-        'cursor-pointer hover:border-[#B89B7A]/60 transition-all duration-200',
-        className
-      )}
-      onClick={onClick}
-    >
-      {/* Image Container - Visual Only */}
-      <div className={cn('flex w-full', alignmentClass)}>
-        <img 
-          src={src}
-          alt={alt}
-          style={{ 
-            width: typeof width === 'number' ? `${width}px` : width,
-            height: typeof height === 'number' ? `${height}px` : height,
-          }}
-          className="rounded-lg object-cover w-full h-auto max-w-full max-h-[300px] sm:max-h-[400px] md:max-h-[500px] shadow-sm"
-          onError={(e) => {
-            e.currentTarget.src = 'https://via.placeholder.com/600x400?text=Erro+ao+carregar+imagem';
-          }}
-        />
-      </div>
-    </div>
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      style={style}
+    />
   );
 };
-
-export default ImageBlock;

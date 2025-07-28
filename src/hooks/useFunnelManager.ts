@@ -1,11 +1,14 @@
 import { useState, useCallback, useEffect } from 'react';
 import { QuizFunnel, QuizVersion } from '../interfaces/quiz';
 import { FunnelManagerState } from '../interfaces/editor';
+import { useToast } from '@/components/ui/use-toast';
+import { schemaDrivenFunnelService } from '@/services/schemaDrivenFunnelService';
 
 const STORAGE_KEY = 'quiz-funnels';
 const VERSIONS_STORAGE_KEY = 'quiz-versions';
 
 export const useFunnelManager = () => {
+  const { toast } = useToast();
   const [state, setState] = useState<FunnelManagerState>({
     funnels: [],
     versions: {},
@@ -206,21 +209,37 @@ export const useFunnelManager = () => {
   }, [state.funnels, saveFunnels]);
 
   // Deletar funil
-  const deleteFunnel = useCallback((funnelId: string) => {
-    const updatedFunnels = state.funnels.filter(f => f.id !== funnelId);
-    const updatedVersions = { ...state.versions };
-    delete updatedVersions[funnelId];
-    
-    setState(prev => ({
-      ...prev,
-      funnels: updatedFunnels,
-      versions: updatedVersions,
-      activeFunnelId: prev.activeFunnelId === funnelId ? null : prev.activeFunnelId,
-    }));
-    
-    saveFunnels(updatedFunnels);
-    saveVersions(updatedVersions);
-  }, [state.funnels, state.versions, saveFunnels, saveVersions]);
+  const deleteFunnel = useCallback(async (funnelId: string) => {
+    try {
+      await schemaDrivenFunnelService.deleteFunnel(funnelId);
+
+      const updatedFunnels = state.funnels.filter(f => f.id !== funnelId);
+      const updatedVersions = { ...state.versions };
+      delete updatedVersions[funnelId];
+      
+      setState(prev => ({
+        ...prev,
+        funnels: updatedFunnels,
+        versions: updatedVersions,
+        activeFunnelId: prev.activeFunnelId === funnelId ? null : prev.activeFunnelId,
+      }));
+      
+      saveFunnels(updatedFunnels);
+      saveVersions(updatedVersions);
+
+      toast({
+        title: "Funil excluído!",
+        description: "O funil foi removido com sucesso e salvo no backend.",
+      });
+    } catch (error) {
+      console.error('❌ Erro ao excluir funil:', error);
+      toast({
+        title: "Erro ao excluir funil",
+        description: error instanceof Error ? error.message : "Erro desconhecido ao excluir funil.",
+        variant: "destructive",
+      });
+    }
+  }, [state.funnels, state.versions, saveFunnels, saveVersions, toast]);
 
   // Selecionar funil ativo
   const setActiveFunnel = useCallback((funnelId: string | null) => {

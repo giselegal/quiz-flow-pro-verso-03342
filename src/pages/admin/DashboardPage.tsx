@@ -1,12 +1,13 @@
 
 import React, { Suspense, lazy } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Route, Switch, useLocation } from 'wouter';
 import { AdminSidebar } from '../../components/admin/AdminSidebar';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 // Lazy loading das páginas do dashboard
 const DashboardOverview = lazy(() => import('./OverviewPage'));
 const QuizPage = lazy(() => import('./QuizPage'));
+const FunnelPanelPage = lazy(() => import('./FunnelPanelPage'));
 const ABTestPage = lazy(() => import('./ABTestPage'));
 const SettingsPage = lazy(() => import('./SettingsPage'));
 const CreativesPage = lazy(() => import('./CreativesPage'));
@@ -33,21 +34,20 @@ const DashboardPage: React.FC = () => {
       <div className="flex-1 overflow-hidden">
         <main className="h-full overflow-y-auto">
           <Suspense fallback={<LoadingFallback />}>
-            <Routes>
+            <Switch>
               {/* Rota principal - Overview */}
-              <Route index element={<DashboardOverview />} />
+              <Route path="/admin" component={DashboardOverview} />
               
               {/* Rotas do dashboard conforme solicitado */}
-              <Route path="quiz" element={<QuizPage />} />
-              <Route path="ab-tests" element={<ABTestPage />} />
-              <Route path="settings" element={<SettingsPage />} />
-              <Route path="criativos" element={<CreativesPage />} />
-              <Route path="analytics" element={<AnalyticsPage />} />
-              <Route path="editor" element={<EditorPage />} />
-              
-              {/* Redirecionamento para rota não encontrada */}
-              <Route path="*" element={<Navigate to="/admin" replace />} />
-            </Routes>
+              <Route path="/admin/quiz" component={QuizPage} />
+              <Route path="/admin/funis" component={FunnelPanelPage} />
+              <Route path="/admin/ab-tests" component={ABTestPage} />
+              <Route path="/admin/settings" component={SettingsPage} />
+              <Route path="/admin/criativos" component={CreativesPage} />
+              <Route path="/admin/analytics" component={AnalyticsPage} />
+              {/* Editor agora é independente do dashboard - usa /editor em vez de /admin/editor */}
+              {/* <Route path="/admin/editor" component={EditorPage} /> */}
+            </Switch>
           </Suspense>
         </main>
       </div>

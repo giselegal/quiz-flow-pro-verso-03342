@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { schemaDrivenFunnelService, type SchemaDrivenFunnelData, type SchemaDrivenPageData, type AutoSaveState } from '@/services/schemaDrivenFunnelService';
 import { type BlockData } from '@/components/editor/blocks';
 import { useToast } from '@/hooks/use-toast';
+import { useQuizLogic } from './useQuizLogic'; // ✅ IMPORTAR LÓGICA DE CÁLCULO
 
 interface UseSchemaEditorReturn {
   // Estado do funil
@@ -19,10 +20,9 @@ interface UseSchemaEditorReturn {
   selectedBlockId: string | null;
   
   // Ações do funil
-  createNewFunnel: () => Promise<void>;
+  createNewFunnel: () => void;
   loadFunnel: (funnelId: string) => Promise<void>;
   saveFunnel: (manual?: boolean) => Promise<void>;
-  syncWithBackend: () => Promise<void>;
   
   // Ações de página
   addPage: (pageData: Omit<SchemaDrivenPageData, 'id' | 'order'>) => void;
@@ -33,7 +33,7 @@ interface UseSchemaEditorReturn {
   // Ações de bloco
   addBlock: (blockData: Omit<BlockData, 'id'>) => void;
   updateBlock: (blockId: string, updates: Partial<BlockData>) => void;
-  deleteBlock: (blockId: string) => void;
+  deleteBlock: (blockId: string) => Promise<void>;
   reorderBlocks: (newBlocks: BlockData[]) => void;
   setSelectedBlock: (blockId: string | null) => void;
   
@@ -48,6 +48,11 @@ interface UseSchemaEditorReturn {
   // Auto-save controls
   enableAutoSave: (interval?: number) => void;
   disableAutoSave: () => void;
+  
+  // ✅ NOVOS: Integração com cálculos
+  quizCalculations: ReturnType<typeof useQuizLogic>;
+  toggleQuizMode: () => void;
+  testQuizLogic: () => void;
 }
 
 export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorReturn => {
@@ -60,6 +65,13 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
   
   const { toast } = useToast();
   const initializedRef = useRef(false);
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // ✅ INTEGRAÇÃO COM LÓGICA DE CÁLCULO DO QUIZ
+  const quizLogic = useQuizLogic();
+  
+  // Estados para conectar com a lógica de cálculo
+  const [quizMode, setQuizMode] = useState(false); // Se está em modo de teste do quiz
 
   // Computed values
   const currentPage = funnel?.pages?.find(page => page.id === currentPageId) || null;
@@ -85,16 +97,11 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
     setFunnel(prev => {
       if (!prev) return null;
       const updated = updater(prev);
-      console.log('🔄 Funnel state updated, triggering auto-save:', updated.lastModified);
+      console.log('🔄 Funnel state updated:', updated.lastModified);
       saveToLocal(updated);
       
       // Marcar que há mudanças pendentes para o auto-save
       schemaDrivenFunnelService.markPendingChanges();
-      
-      // Trigger auto-save imediato para mudanças importantes
-      setTimeout(() => {
-        saveFunnel(false);
-      }, 1000);
       
       return updated;
     });
@@ -160,11 +167,43 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
   }, [toast]);
 
   const saveFunnel = useCallback(async (manual: boolean = true) => {
-    if (!funnel) return;
+    console.log('🎯 [DEBUG] saveFunnel hook called:', { 
+      manual, 
+      funnelId: funnel?.id, 
+      funnelName: funnel?.name,
+      pagesCount: funnel?.pages?.length,
+      isSaving,
+      timestamp: new Date().toISOString()
+    });
     
+    if (!funnel) {
+      console.error('❌ [DEBUG] No funnel to save!');
+      toast({
+        title: "Erro ao salvar",
+        description: "Nenhum funil carregado para salvar.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Evitar salvamentos simultâneos
+    if (isSaving) {
+      console.log('⏳ Save already in progress, skipping...');
+      return;
+    }
+    
+    console.log('🚀 [DEBUG] Starting save process...', {
+      funnelData: {
+        id: funnel.id,
+        name: funnel.name,
+        pages: funnel.pages?.map(p => ({ id: p.id, name: p.name, blocksCount: p.blocks?.length || 0 }))
+      }
+    });
     setIsSaving(true);
     try {
+      console.log('📞 [DEBUG] Calling schemaDrivenFunnelService.saveFunnel...');
       const savedFunnel = await schemaDrivenFunnelService.saveFunnel(funnel, !manual);
+      console.log('✅ [DEBUG] Save completed, updating state...');
       setFunnel(savedFunnel);
       
       if (manual) {
@@ -172,8 +211,13 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
           title: "Funil salvo!",
           description: "Todas as alterações foram salvas.",
         });
+      } else {
+        console.log('💾 Auto-save completed successfully');
       }
+      // Limpar o estado de mudanças pendentes após o salvamento bem-sucedido
+      schemaDrivenFunnelService.clearPendingChanges();
     } catch (error) {
+      console.error('❌ Save error:', error);
       if (manual) {
         toast({
           title: "Erro ao salvar",
@@ -182,40 +226,92 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
         });
       }
     } finally {
+      console.log('🏁 [DEBUG] Save process finished, setting isSaving to false');
       setIsSaving(false);
     }
-  }, [funnel, toast]);
+  }, [funnel, toast, isSaving]);
 
-  const syncWithBackend = useCallback(async () => {
-    setIsSaving(true);
-    try {
-      const result = await schemaDrivenFunnelService.syncWithBackend();
+  // Auto-save removido - salvamento apenas manual
+  // O sistema de auto-save foi desabilitado por causar problemas
+
+    // Efeito único para carregamento inicial do funil (corrigido para evitar duplicação)
+  useEffect(() => {
+    if (initializedRef.current) return;
+    initializedRef.current = true;
+
+    const initializeFunnel = async () => {
+      console.log('🚀 Iniciando carregamento do funil...');
       
-      if (result.success) {
-        if (funnel) {
-          const updatedFunnel = await schemaDrivenFunnelService.loadFunnel(funnel.id);
-          if (updatedFunnel) {
-            setFunnel(updatedFunnel);
+      if (initialFunnelId && typeof initialFunnelId === 'string') {
+        console.log('🔄 Loading existing funnel with ID:', initialFunnelId);
+        await loadFunnel(initialFunnelId);
+      } else {
+        // Sempre tentar carregar o funil padrão primeiro para evitar duplicação
+        const defaultId = 'default-quiz-funnel-21-steps';
+        console.log('🔍 Tentando carregar funil padrão existente com ID:', defaultId);
+        
+        try {
+          const existingFunnel = await schemaDrivenFunnelService.loadFunnel(defaultId);
+          if (existingFunnel) {
+            console.log('✅ Funil padrão encontrado! Carregando...', existingFunnel.name);
+            setFunnel(existingFunnel);
+            setCurrentPageId(existingFunnel.pages[0]?.id || null);
+          } else {
+            console.log('🆕 Nenhum funil encontrado, criando novo funil padrão');
+            const defaultFunnel = schemaDrivenFunnelService.createDefaultFunnel();
+            console.log('🔍 DEBUG - Funil criado:', {
+              id: defaultFunnel.id,
+              name: defaultFunnel.name,
+              pagesCount: defaultFunnel.pages.length,
+              pageNames: defaultFunnel.pages.map(p => p.name),
+              firstPageBlocks: defaultFunnel.pages[0]?.blocks?.length || 0
+            });
+            
+            setFunnel(defaultFunnel);
+            setCurrentPageId(defaultFunnel.pages[0]?.id || null);
+            
+            // Salvar o novo funil no Supabase imediatamente
+            try {
+              await schemaDrivenFunnelService.saveFunnel(defaultFunnel);
+              console.log('💾 Funil padrão salvo no Supabase com sucesso');
+            } catch (saveError) {
+              console.warn('⚠️ Falha ao salvar no Supabase, salvando localmente:', saveError);
+              schemaDrivenFunnelService.saveLocalFunnel(defaultFunnel);
+            }
           }
+        } catch (error) {
+          console.error('❌ Erro ao verificar funil existente:', error);
+          // Fallback: criar funil local
+          const defaultFunnel = schemaDrivenFunnelService.createDefaultFunnel();
+          setFunnel(defaultFunnel);
+          setCurrentPageId(defaultFunnel.pages[0]?.id || null);
+          schemaDrivenFunnelService.saveLocalFunnel(defaultFunnel);
         }
         
-        toast({
-          title: "Sincronização concluída!",
-          description: result.message,
-        });
-      } else {
-        throw new Error(result.message);
+        console.log('🎯 Processo de inicialização concluído');
       }
-    } catch (error) {
-      toast({
-        title: "Erro na sincronização",
-        description: error instanceof Error ? error.message : "Erro desconhecido",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSaving(false);
-    }
-  }, [funnel, toast]);
+    };
+
+    initializeFunnel();
+  }, [initialFunnelId, loadFunnel]);
+
+  // Efeito para salvar ao sair da página
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (schemaDrivenFunnelService.hasPendingChanges()) {
+        event.preventDefault();
+        event.returnValue = ''; // Required for Chrome
+        saveFunnel(false); // Tenta salvar antes de sair
+        return 'Você tem alterações não salvas. Deseja realmente sair?';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [saveFunnel]);
 
   // Ações de página
   const addPage = useCallback((pageData: Omit<SchemaDrivenPageData, 'id' | 'order'>) => {
@@ -247,17 +343,37 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
     });
   }, [updateFunnelState]);
 
-  const deletePage = useCallback((pageId: string) => {
-    updateFunnelState(prev => ({
-      ...prev,
-      pages: prev.pages.filter(page => page.id !== pageId)
-    }));
-    
-    if (currentPageId === pageId) {
-      setCurrentPageId(null);
-      setSelectedBlockId(null);
+  const deletePage = useCallback(async (pageId: string) => {
+    if (!funnel) return;
+
+    try {
+      // Chamar o serviço para excluir a página no backend
+      await schemaDrivenFunnelService.deletePage(funnel.id, pageId);
+
+      // Atualizar o estado local após a exclusão bem-sucedida no backend
+      updateFunnelState(prevFunnel => ({
+        ...prevFunnel,
+        pages: prevFunnel.pages.filter(page => page.id !== pageId)
+      }));
+
+      if (currentPageId === pageId) {
+        setCurrentPageId(null);
+        setSelectedBlockId(null);
+      }
+
+      toast({
+        title: "Página excluída!",
+        description: "A página foi removida com sucesso e salva no backend.",
+      });
+    } catch (error) {
+      console.error('❌ Erro ao excluir página:', error);
+      toast({
+        title: "Erro ao excluir página",
+        description: error instanceof Error ? error.message : "Erro desconhecido ao excluir página.",
+        variant: "destructive",
+      });
     }
-  }, [updateFunnelState, currentPageId]);
+  }, [funnel, updateFunnelState, currentPageId, toast]);
 
   const setCurrentPage = useCallback((pageId: string) => {
     setCurrentPageId(pageId);
@@ -302,19 +418,38 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
     }));
   }, [updateFunnelState]);
 
-  const deleteBlock = useCallback((blockId: string) => {
-    updateFunnelState(prev => ({
-      ...prev,
-      pages: prev.pages.map(page => ({
-        ...page,
-        blocks: page.blocks.filter(block => block.id !== blockId)
-      }))
-    }));
-    
-    if (selectedBlockId === blockId) {
+  const deleteBlock = useCallback(async (blockId: string) => {
+    if (!funnel || !currentPage) return;
+
+    try {
+      // Chamar o serviço para excluir o bloco no backend
+      await schemaDrivenFunnelService.deleteBlock(funnel.id, currentPage.id, blockId);
+
+      // Atualizar o estado local após a exclusão bem-sucedida no backend
+      updateFunnelState(prevFunnel => ({
+        ...prevFunnel,
+        pages: prevFunnel.pages.map(page =>
+          page.id === currentPage.id
+            ? { ...page, blocks: page.blocks.filter(block => block.id !== blockId) }
+            : page
+        )
+      }));
+
       setSelectedBlockId(null);
+
+      toast({
+        title: "Bloco excluído!",
+        description: "O bloco foi removido com sucesso e salvo no backend.",
+      });
+    } catch (error) {
+      console.error('❌ Erro ao excluir bloco:', error);
+      toast({
+        title: "Erro ao excluir bloco",
+        description: error instanceof Error ? error.message : "Erro desconhecido ao excluir bloco.",
+        variant: "destructive",
+      });
     }
-  }, [updateFunnelState, selectedBlockId]);
+  }, [funnel, currentPage, updateFunnelState, toast]);
 
   const reorderBlocks = useCallback((newBlocks: BlockData[]) => {
     if (!currentPageId) return;
@@ -383,37 +518,37 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
     schemaDrivenFunnelService.disableAutoSave();
   }, []);
 
-  // Inicializar funil apenas uma vez
-  useEffect(() => {
-    if (initializedRef.current) return;
-    initializedRef.current = true;
-
-    if (initialFunnelId && typeof initialFunnelId === 'string') {
-      console.log('🔄 Loading funnel with ID:', initialFunnelId);
-      loadFunnel(initialFunnelId);
-    } else {
-      console.log('🆕 Creating default funnel');
-      const defaultFunnel = schemaDrivenFunnelService.createDefaultFunnel();
-      console.log('🔍 DEBUG - Funnel criado:', {
-        id: defaultFunnel.id,
-        name: defaultFunnel.name,
-        pagesCount: defaultFunnel.pages.length,
-        pageNames: defaultFunnel.pages.map(p => p.name),
-        firstPageBlocks: defaultFunnel.pages[0]?.blocks?.length || 0
+  // ✅ NOVAS FUNÇÕES: Integração com quiz logic
+  const toggleQuizMode = useCallback(() => {
+    setQuizMode(prev => !prev);
+    if (!quizMode) {
+      toast({
+        title: "Modo de teste ativado",
+        description: "Agora você pode testar a lógica de cálculo em tempo real",
       });
-      
-      setFunnel(defaultFunnel);
-      setCurrentPageId(defaultFunnel.pages[0]?.id || null);
-      
-      try {
-        schemaDrivenFunnelService.saveLocalFunnel(defaultFunnel);
-      } catch (error) {
-        console.warn('⚠️ Failed to save default funnel to localStorage:', error);
-      }
-      
-      console.log('🎯 Funil carregado com', defaultFunnel.pages.length, 'etapas:', defaultFunnel.pages.map(p => p.name));
     }
-  }, [initialFunnelId, loadFunnel]);
+  }, [quizMode, toast]);
+
+  const testQuizLogic = useCallback(() => {
+    console.log('🧮 Testando lógica de cálculo:', {
+      currentAnswers: quizLogic.currentAnswers,
+      quizResult: quizLogic.quizResult,
+      strategicAnswers: quizLogic.strategicAnswers
+    });
+    
+    if (quizLogic.quizResult) {
+      toast({
+        title: "Cálculo funcionando!",
+        description: `Estilo primário: ${quizLogic.quizResult.primaryStyle || 'N/A'}`,
+      });
+    } else {
+      toast({
+        title: "Sem resultados ainda",
+        description: "Responda algumas questões para testar o cálculo",
+        variant: "destructive"
+      });
+    }
+  }, [quizLogic, toast]);
 
   // Atualizar estado do auto-save menos frequentemente
   useEffect(() => {
@@ -425,9 +560,9 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
     return () => clearInterval(interval);
   }, []);
 
-  // Ativar auto-save por padrão
+  // Auto-save desabilitado - salvamento apenas manual
   useEffect(() => {
-    schemaDrivenFunnelService.enableAutoSave(30); // 30 segundos para reduzir carga
+    // schemaDrivenFunnelService.enableAutoSave(60); // Auto-save removido
     
     return () => {
       schemaDrivenFunnelService.destroy();
@@ -449,7 +584,6 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
     createNewFunnel,
     loadFunnel,
     saveFunnel,
-    syncWithBackend,
     
     // Ações de página
     addPage,
@@ -475,5 +609,10 @@ export const useSchemaEditorFixed = (initialFunnelId?: string): UseSchemaEditorR
     // Auto-save
     enableAutoSave,
     disableAutoSave,
+    
+    // ✅ NOVOS: Integração com cálculos
+    quizCalculations: quizLogic,
+    toggleQuizMode,
+    testQuizLogic,
   };
 };

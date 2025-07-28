@@ -10,28 +10,28 @@ const validateSteps1to19 = () => {
       id: 'step-1-intro',
       title: 'Etapa 1: Introdução e Coleta do Nome',
       status: '✅ CORRETA',
-      components: ['quiz-intro-header', 'text-inline', 'form-input', 'button-inline'],
+      components: ['vertical-canvas-header', 'text-inline', 'form-input', 'button-inline'],
       description: 'Componentes inline para captura do nome e início do quiz'
     },
     steps2to11: {
       id: 'steps-2-11-questions',
       title: 'Etapas 2-11: Questões Principais do Quiz',
       status: '✅ CORRETAS',
-      components: ['quiz-intro-header', 'heading-inline', 'text-inline', 'options-grid'],
+      components: ['vertical-canvas-header', 'heading-inline', 'text-inline', 'options-grid'],
       description: '10 questões com imagens e texto, sistema de pontuação por estilo'
     },
     step12: {
       id: 'step-12-transition',
       title: 'Etapa 12: Transição Principal',
       status: '✅ CORRETA',
-      components: ['quiz-intro-header', 'heading-inline', 'text-inline', 'progress-inline'],
+      components: ['vertical-canvas-header', 'heading-inline', 'text-inline', 'progress-inline'],
       description: 'Transição motivacional antes das questões estratégicas'
     },
     steps13to18: {
       id: 'steps-13-18-strategic',
       title: 'Etapas 13-18: Questões Estratégicas', 
       status: '✅ CORRETAS',
-      components: ['quiz-intro-header', 'heading-inline', 'text-inline', 'options-grid'],
+      components: ['vertical-canvas-header', 'heading-inline', 'text-inline', 'options-grid'],
       description: '6 questões de segmentação e qualificação comercial'
     },
     step19: {

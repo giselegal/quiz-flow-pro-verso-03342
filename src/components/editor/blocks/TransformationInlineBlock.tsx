@@ -9,6 +9,15 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = ''
 }) => {
+  // Verificação de segurança para evitar erro de undefined
+  if (!block || !block.properties) {
+    return (
+      <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
+        <p className="text-red-600">Erro: Bloco não encontrado ou propriedades indefinidas</p>
+      </div>
+    );
+  }
+
   const { 
     title = 'Sua Transformação Começa Aqui',
     subtitle = 'Veja o que você vai alcançar',
@@ -73,11 +82,7 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
               <img 
                 src={beforeImage}
                 alt="Antes"
-                className="w-full h-48 object-cover rounded-lg shadow-md cursor-pointer hover:scale-105 transition-transform"
-                onClick={() => {
-                  const newUrl = prompt('Nova URL da imagem "Antes":', beforeImage);
-                  if (newUrl !== null) handlePropertyChange('beforeImage', newUrl);
-                }}
+                className="w-full h-48 object-cover rounded-lg shadow-md"
               />
               <div className="absolute top-2 left-2 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
                 <InlineEditableText
@@ -107,13 +112,7 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
                 className="w-12 h-12 md:w-16 md:h-16 animate-pulse"
                 style={{ color: arrowColor }}
               />
-              <span 
-                className="text-xs text-gray-500 mt-2 cursor-pointer hover:bg-blue-50/50 rounded px-1"
-                onClick={() => {
-                  const newColor = prompt('Cor da seta (hex):', arrowColor);
-                  if (newColor !== null) handlePropertyChange('arrowColor', newColor);
-                }}
-              >
+              <span className="text-xs text-gray-500 mt-2">
                 Transformação
               </span>
             </div>
@@ -125,11 +124,7 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
               <img 
                 src={afterImage}
                 alt="Depois"
-                className="w-full h-48 object-cover rounded-lg shadow-md cursor-pointer hover:scale-105 transition-transform"
-                onClick={() => {
-                  const newUrl = prompt('Nova URL da imagem "Depois":', afterImage);
-                  if (newUrl !== null) handlePropertyChange('afterImage', newUrl);
-                }}
+                className="w-full h-48 object-cover rounded-lg shadow-md"
               />
               <div className="absolute top-2 left-2 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
                 <InlineEditableText

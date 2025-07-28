@@ -1,4 +1,23 @@
 import { SimpleComponent, QuizOption, BonusItem, FaqItem } from "@/interfaces/quiz";
+import PlaceholderUtils from "./placeholderUtils";
+
+// Dados padrão para componentes
+export const defaultImageData = {
+  src: PlaceholderUtils.generateContentPlaceholder(400, 300),
+  alt: 'Imagem padrão'
+};
+
+export const defaultAvatarData = {
+  avatar: PlaceholderUtils.generateAvatarPlaceholder(64, '👤'),
+  name: 'Nome do usuário'
+};
+
+export const defaultTestimonialData = {
+  text: 'Este é um depoimento de exemplo que demonstra como o componente funciona.',
+  author: 'João Silva',
+  avatar: PlaceholderUtils.generateAvatarPlaceholder(48, 'JS'),
+  role: 'Cliente satisfeito'
+};
 
 export const getDefaultData = (type: SimpleComponent["type"]): SimpleComponent["data"] => {
   switch (type) {
@@ -16,10 +35,10 @@ export const getDefaultData = (type: SimpleComponent["type"]): SimpleComponent["
     case "subtitle":
       return { text: "Novo Subtítulo", fontSize: "1.25rem" };
     case "text":
-      return { text: "Digite seu texto aqui...", fontSize: "1rem" };
+      return { text: "Parágrafo de texto editável.", fontSize: "1rem" };
     case "image":
       return {
-        src: "https://via.placeholder.com/400x300/B89B7A/FFFFFF?text=Nova+Imagem",
+        src: PlaceholderUtils.generateContentPlaceholder(400, 300, "Nova Imagem"),
         alt: "Nova imagem",
         width: 400,
         height: 300,
@@ -56,7 +75,7 @@ export const getDefaultData = (type: SimpleComponent["type"]): SimpleComponent["
         text: "Este produto mudou minha vida completamente! Recomendo para todos que querem resultados reais.",
         name: "Cliente Satisfeito",
         role: "Cliente verificado",
-        avatar: "https://via.placeholder.com/60x60/B89B7A/FFFFFF?text=👤",
+        avatar: PlaceholderUtils.generateAvatarPlaceholder(60, "👤"),
       };
     case "price":
       return {

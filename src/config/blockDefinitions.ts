@@ -1,10 +1,39 @@
-// =====================================================================
-// 1. src/types.ts - Definições de tipos (Corrigido e Expandido)
-// =====================================================================
 import React from 'react';
+import { PropertySchema } from './funnelBlockDefinitions';
+import { PlaceholderUtils } from '../utils/placeholderUtils';
+// Importar componentes de funil
+import {
+  FunnelIntroStep,
+  NameCollectStep,
+  QuizIntroStep,
+  QuestionMultipleStep,
+  QuizTransitionStep,
+  ProcessingStep,
+  ResultIntroStep,
+  ResultDetailsStep,
+  ResultGuideStep,
+  OfferTransitionStep,
+  OfferPageStep,
+  FunnelProgressBar,
+  QuizOption,
+  CountdownTimer,
+  ResultCard,
+  StyleGuideViewer,
+  OfferCard
+} from '../components/funnel-blocks';
 
-// Tipos para ícones Lucide React (expandido para incluir todos os usados nas definições)
-// A lista é grande, mas focaremos na correção da estrutura do schema.
+// Block Definition Interface
+export interface BlockDefinition {
+  type: string;
+  name: string;
+  description: string;
+  icon: string;
+  category: string;
+  propertiesSchema: PropertySchema[];
+  defaultProperties: Record<string, any>;
+}
+
+// Tipos para ícones Lucide React
 export type IconType =
   | 'Type'
   | 'Heading1'
@@ -49,177 +78,2070 @@ export type IconType =
   | 'GalleryHorizontalEnd'
   | 'Zap'
   | 'Target'
-  | 'TrendingUp'; // Adicionei os ícones que estavam faltando no HTML anterior
+  | 'Star'
+  | 'Flame'
+  | 'TrendingUp'
+  | 'Lightbulb'
+  | 'Palette'
+  | 'Camera'
+  | 'FileText'
+  | 'Download'
+  | 'Upload'
+  | 'Settings'
+  | 'Edit'
+  | 'Trash'
+  | 'Copy'
+  | 'Move'
+  | 'Plus'
+  | 'Minus'
+  | 'X'
+  | 'Check'
+  | 'ChevronUp'
+  | 'ChevronDown'
+  | 'ChevronLeft'
+  | 'ChevronRight'
+  | 'ArrowUp'
+  | 'ArrowDown'
+  | 'ArrowLeft'
+  | 'ArrowRight'
+  | 'Eye'
+  | 'EyeOff'
+  | 'Lock'
+  | 'Unlock'
+  | 'Search'
+  | 'Filter'
+  | 'Sort'
+  | 'Grid'
+  | 'List as ListIcon'
+  | 'Calendar'
+  | 'Mail'
+  | 'Phone'
+  | 'Globe'
+  | 'Link'
+  | 'ExternalLink'
+  | 'Home'
+  | 'User'
+  | 'Users as UsersIcon'
+  | 'Menu'
+  | 'MoreHorizontal'
+  | 'MoreVertical'
+  | 'Info'
+  | 'AlertCircle'
+  | 'CheckCircle as CheckCircleIcon'
+  | 'XCircle'
+  | 'AlertTriangle'
+  | 'Refresh'
+  | 'RotateCcw'
+  | 'Volume2'
+  | 'VolumeX'
+  | 'Wifi'
+  | 'WifiOff'
+  | 'Battery'
+  | 'BatteryLow'
+  | 'Bluetooth'
+  | 'Cpu'
+  | 'HardDrive'
+  | 'Monitor'
+  | 'Smartphone'
+  | 'Tablet'
+  | 'Laptop'
+  | 'Desktop'
+  | 'Server'
+  | 'Database'
+  | 'Cloud'
+  | 'CloudOff'
+  | 'Folder'
+  | 'FolderOpen'
+  | 'File'
+  | 'FileText as FileTextIcon'
+  | 'Image as ImageIcon'
+  | 'Video as VideoIcon'
+  | 'Music'
+  | 'Headphones'
+  | 'Mic as MicIcon'
+  | 'Camera as CameraIcon'
+  | 'Printer'
+  | 'Scanner'
+  | 'Gamepad2'
+  | 'Joystick'
+  | 'MousePointer'
+  | 'Keyboard'
+  | 'Monitor as MonitorIcon'
+  | 'Tv'
+  | 'Radio'
+  | 'Satellite'
+  | 'Antenna'
+  | 'Rss'
+  | 'Bookmark'
+  | 'BookmarkPlus'
+  | 'Tag'
+  | 'Tags'
+  | 'Hash'
+  | 'AtSign'
+  | 'Percent'
+  | 'Dollar'
+  | 'Euro'
+  | 'Pound'
+  | 'Yen'
+  | 'Bitcoin'
+  | 'CreditCard'
+  | 'Banknote'
+  | 'Wallet'
+  | 'ShoppingBag'
+  | 'ShoppingCart as ShoppingCartIcon'
+  | 'Package'
+  | 'PackageCheck'
+  | 'Truck'
+  | 'Plane'
+  | 'Car'
+  | 'Bike'
+  | 'Bus'
+  | 'Train'
+  | 'Ship'
+  | 'Rocket'
+  | 'Zap as ZapIcon'
+  | 'Battery as BatteryIcon'
+  | 'Plug'
+  | 'PowerOff'
+  | 'Power'
+  | 'Sun'
+  | 'Moon'
+  | 'Stars'
+  | 'CloudRain'
+  | 'CloudSnow'
+  | 'CloudLightning'
+  | 'Thermometer'
+  | 'Droplets'
+  | 'Wind'
+  | 'Compass'
+  | 'MapPin'
+  | 'Map'
+  | 'Navigation'
+  | 'Crosshair'
+  | 'Send'
+  | 'MessageCircle'
+  | 'MessageSquare as MessageSquareIcon'
+  | 'Mail as MailIcon'
+  | 'Inbox'
+  | 'Send as SendIcon'
+  | 'Reply'
+  | 'ReplyAll'
+  | 'Forward'
+  | 'Archive'
+  | 'Trash2'
+  | 'Spam'
+  | 'AlertOctagon'
+  | 'ShieldAlert'
+  | 'ShieldCheck'
+  | 'Lock as LockIcon'
+  | 'Unlock as UnlockIcon'
+  | 'Key'
+  | 'Fingerprint'
+  | 'Eye as EyeIcon'
+  | 'EyeOff as EyeOffIcon'
+  | 'UserCheck'
+  | 'UserMinus'
+  | 'UserPlus'
+  | 'UserX'
+  | 'Users as UsersIcon2'
+  | 'UserCog'
+  | 'Contact'
+  | 'Contact2'
+  | 'Baby'
+  | 'Dog'
+  | 'Cat'
+  | 'Bird'
+  | 'Fish'
+  | 'Rabbit'
+  | 'Squirrel'
+  | 'Turtle'
+  | 'Bug'
+  | 'Flower'
+  | 'Flower2'
+  | 'Trees'
+  | 'TreePine'
+  | 'TreeDeciduous'
+  | 'Leaf'
+  | 'Clover'
+  | 'Cherry'
+  | 'Apple'
+  | 'Grape'
+  | 'Orange'
+  | 'Banana'
+  | 'Strawberry'
+  | 'Carrot'
+  | 'Pizza'
+  | 'Coffee'
+  | 'Wine'
+  | 'Beer'
+  | 'IceCream'
+  | 'Cake'
+  | 'Sandwich'
+  | 'Utensils'
+  | 'UtensilsCrossed'
+  | 'ChefHat'
+  | 'CookingPot'
+  | 'Microwave'
+  | 'Refrigerator'
+  | 'Stove'
+  | 'Blender'
+  | 'Scale as ScaleIcon'
+  | 'Timer'
+  | 'AlarmClock'
+  | 'Clock as ClockIcon'
+  | 'Watch'
+  | 'Calendar as CalendarIcon'
+  | 'CalendarDays'
+  | 'CalendarCheck'
+  | 'CalendarX'
+  | 'CalendarPlus'
+  | 'CalendarMinus'
+  | 'CalendarClock'
+  | 'Hourglass'
+  | 'Timer as TimerIcon'
+  | 'Stopwatch'
+  | 'Alarm'
+  | 'Bell'
+  | 'BellRing'
+  | 'BellOff'
+  | 'Volume'
+  | 'Volume1'
+  | 'Volume2 as Volume2Icon'
+  | 'VolumeX as VolumeXIcon'
+  | 'Mute'
+  | 'Unmute'
+  | 'Play as PlayIcon'
+  | 'Pause'
+  | 'Stop'
+  | 'Rewind'
+  | 'FastForward'
+  | 'SkipBack'
+  | 'SkipForward'
+  | 'Repeat'
+  | 'Repeat1'
+  | 'Shuffle'
+  | 'Disc'
+  | 'Disc2'
+  | 'Disc3'
+  | 'Radio as RadioIcon'
+  | 'Headphones as HeadphonesIcon'
+  | 'Speaker'
+  | 'Music2'
+  | 'Music3'
+  | 'Music4'
+  | 'Podcast'
+  | 'AudioWaveform'
+  | 'AudioLines'
+  | 'Waveform'
+  | 'Activity'
+  | 'BarChart'
+  | 'BarChart2'
+  | 'BarChart3'
+  | 'BarChart4'
+  | 'LineChart'
+  | 'PieChart'
+  | 'TrendingUp as TrendingUpIcon'
+  | 'TrendingDown'
+  | 'ArrowUpRight'
+  | 'ArrowDownRight'
+  | 'ArrowUpLeft'
+  | 'ArrowDownLeft'
+  | 'ArrowBigUp'
+  | 'ArrowBigDown'
+  | 'ArrowBigLeft'
+  | 'ArrowBigRight'
+  | 'ArrowUpDown'
+  | 'ArrowLeftRight'
+  | 'ArrowUpCircle'
+  | 'ArrowDownCircle'
+  | 'ArrowLeftCircle'
+  | 'ArrowRightCircle'
+  | 'ChevronsUp'
+  | 'ChevronsDown'
+  | 'ChevronsLeft'
+  | 'ChevronsRight'
+  | 'ChevronsUpDown'
+  | 'ChevronsLeftRight'
+  | 'CornerUpLeft'
+  | 'CornerUpRight'
+  | 'CornerDownLeft'
+  | 'CornerDownRight'
+  | 'CornerLeftUp'
+  | 'CornerLeftDown'
+  | 'CornerRightUp'
+  | 'CornerRightDown'
+  | 'Move as MoveIcon'
+  | 'Move3d'
+  | 'MousePointer2'
+  | 'MousePointer as MousePointerIcon'
+  | 'Crosshair as CrosshairIcon'
+  | 'Target as TargetIcon'
+  | 'Focus'
+  | 'Minimize'
+  | 'Maximize'
+  | 'Minimize2'
+  | 'Maximize2'
+  | 'Expand'
+  | 'Shrink'
+  | 'ZoomIn'
+  | 'ZoomOut'
+  | 'Scan'
+  | 'ScanLine'
+  | 'QrCode'
+  | 'Barcode'
+  | 'Binary'
+  | 'Cpu as CpuIcon'
+  | 'HardDrive as HardDriveIcon'
+  | 'MemoryStick'
+  | 'SdCard'
+  | 'Usb'
+  | 'Ethernet'
+  | 'Wifi as WifiIcon'
+  | 'WifiOff as WifiOffIcon'
+  | 'Bluetooth as BluetoothIcon'
+  | 'BluetoothConnected'
+  | 'BluetoothOff'
+  | 'BluetoothSearching'
+  | 'Nfc'
+  | 'Radar'
+  | 'Satellite as SatelliteIcon'
+  | 'Antenna as AntennaIcon'
+  | 'Router'
+  | 'Network'
+  | 'Lan'
+  | 'Globe as GlobeIcon'
+  | 'Earth'
+  | 'MapPin as MapPinIcon'
+  | 'Map as MapIcon'
+  | 'Navigation as NavigationIcon'
+  | 'Navigation2'
+  | 'NavigationOff'
+  | 'Compass as CompassIcon'
+  | 'Route'
+  | 'RouteOff'
+  | 'MapPinOff'
+  | 'Milestone'
+  | 'Signpost'
+  | 'SignpostBig'
+  | 'TreePine as TreePineIcon'
+  | 'TreeDeciduous as TreeDeciduousIcon'
+  | 'Mountain'
+  | 'MountainSnow'
+  | 'Waves'
+  | 'Sun as SunIcon'
+  | 'Moon as MoonIcon'
+  | 'Stars as StarsIcon'
+  | 'CloudRain as CloudRainIcon'
+  | 'CloudSnow as CloudSnowIcon'
+  | 'CloudLightning as CloudLightningIcon'
+  | 'CloudDrizzle'
+  | 'CloudHail'
+  | 'CloudSun'
+  | 'CloudMoon'
+  | 'Cloudy'
+  | 'PartlyCloudy'
+  | 'Sunrise'
+  | 'Sunset'
+  | 'Wind as WindIcon'
+  | 'Tornado'
+  | 'Snowflake'
+  | 'Thermometer as ThermometerIcon'
+  | 'ThermometerSun'
+  | 'ThermometerSnowflake'
+  | 'Gauge'
+  | 'Droplets as DropletsIcon'
+  | 'Droplet'
+  | 'Flame as FlameIcon'
+  | 'Zap as ZapIcon2'
+  | 'Bolt'
+  | 'Flashlight'
+  | 'FlashlightOff'
+  | 'Lightbulb as LightbulbIcon'
+  | 'LightbulbOff'
+  | 'Candle'
+  | 'Lamp'
+  | 'LampCeiling'
+  | 'LampDesk'
+  | 'LampFloor'
+  | 'LampWallDown'
+  | 'LampWallUp'
+  | 'Spotlight'
+  | 'SunMedium'
+  | 'SunDim'
+  | 'MoonStar'
+  | 'Eclipse'
+  | 'Sunrise as SunriseIcon'
+  | 'Sunset as SunsetIcon'
+  | 'Clock1'
+  | 'Clock2'
+  | 'Clock3'
+  | 'Clock4'
+  | 'Clock5'
+  | 'Clock6'
+  | 'Clock7'
+  | 'Clock8'
+  | 'Clock9'
+  | 'Clock10'
+  | 'Clock11'
+  | 'Clock12'
+  | 'AlarmClock as AlarmClockIcon'
+  | 'AlarmClockOff'
+  | 'Timer as TimerIcon2'
+  | 'TimerOff'
+  | 'TimerReset'
+  | 'Stopwatch as StopwatchIcon'
+  | 'Hourglass as HourglassIcon'
+  | 'Loader'
+  | 'Loader2'
+  | 'LoaderCircle as LoaderCircleIcon'
+  | 'RotateCw as RotateCwIcon'
+  | 'RotateCcw as RotateCcwIcon'
+  | 'Refresh as RefreshIcon'
+  | 'RefreshCw'
+  | 'RefreshCcw'
+  | 'IterationCw'
+  | 'IterationCcw'
+  | 'ArrowUp as ArrowUpIcon'
+  | 'ArrowDown as ArrowDownIcon'
+  | 'ArrowLeft as ArrowLeftIcon'
+  | 'ArrowRight as ArrowRightIcon'
+  | 'ArrowUpRight as ArrowUpRightIcon'
+  | 'ArrowDownRight as ArrowDownRightIcon'
+  | 'ArrowUpLeft as ArrowUpLeftIcon'
+  | 'ArrowDownLeft as ArrowDownLeftIcon'
+  | 'ArrowBigUp as ArrowBigUpIcon'
+  | 'ArrowBigDown as ArrowBigDownIcon'
+  | 'ArrowBigLeft as ArrowBigLeftIcon'
+  | 'ArrowBigRight as ArrowBigRightIcon'
+  | 'ArrowUpDown as ArrowUpDownIcon'
+  | 'ArrowLeftRight as ArrowLeftRightIcon'
+  | 'ArrowUpCircle as ArrowUpCircleIcon'
+  | 'ArrowDownCircle as ArrowDownCircleIcon'
+  | 'ArrowLeftCircle as ArrowLeftCircleIcon'
+  | 'ArrowRightCircle as ArrowRightCircleIcon'
+  | 'ChevronUp as ChevronUpIcon'
+  | 'ChevronDown as ChevronDownIcon'
+  | 'ChevronLeft as ChevronLeftIcon'
+  | 'ChevronRight as ChevronRightIcon'
+  | 'ChevronsUp as ChevronsUpIcon'
+  | 'ChevronsDown as ChevronsDownIcon'
+  | 'ChevronsLeft as ChevronsLeftIcon'
+  | 'ChevronsRight as ChevronsRightIcon'
+  | 'ChevronsUpDown as ChevronsUpDownIcon'
+  | 'ChevronsLeftRight as ChevronsLeftRightIcon'
+  | 'ChevronFirst'
+  | 'ChevronLast'
+  | 'Plus as PlusIcon'
+  | 'Minus as MinusIcon'
+  | 'X as XIcon'
+  | 'Check as CheckIcon'
+  | 'CheckCircle2'
+  | 'XCircle as XCircleIcon'
+  | 'AlertCircle as AlertCircleIcon'
+  | 'AlertTriangle as AlertTriangleIcon'
+  | 'AlertOctagon as AlertOctagonIcon'
+  | 'Info as InfoIcon'
+  | 'HelpCircle as HelpCircleIcon'
+  | 'MessageCircle as MessageCircleIcon'
+  | 'MessageSquareText'
+  | 'MessageSquareDot'
+  | 'MessageSquarePlus'
+  | 'MessageSquareMore'
+  | 'MessageSquareX'
+  | 'MessageSquareWarning'
+  | 'MessageSquareCode'
+  | 'MessageSquareQuote'
+  | 'MessageSquareReply'
+  | 'MessageSquareShare'
+  | 'MessageSquareHeart'
+  | 'MessagesSquare'
+  | 'MessageCircleMore'
+  | 'MessageCircleX'
+  | 'MessageCircleWarning'
+  | 'MessageCircleCode'
+  | 'MessageCircleQuestion'
+  | 'MessageCircleReply'
+  | 'MessageCircleHeart'
+  | 'BellRing as BellRingIcon'
+  | 'BellOff as BellOffIcon'
+  | 'BellPlus'
+  | 'BellMinus'
+  | 'BellDot'
+  | 'Notification'
+  | 'Inbox as InboxIcon'
+  | 'Outbox'
+  | 'Send as SendIcon2'
+  | 'SendHorizonal'
+  | 'Reply as ReplyIcon'
+  | 'ReplyAll as ReplyAllIcon'
+  | 'Forward as ForwardIcon'
+  | 'Archive as ArchiveIcon'
+  | 'ArchiveRestore'
+  | 'ArchiveX'
+  | 'Trash as TrashIcon'
+  | 'Trash2 as Trash2Icon'
+  | 'Delete'
+  | 'Eraser'
+  | 'Backspace'
+  | 'Undo'
+  | 'Undo2'
+  | 'Redo'
+  | 'Redo2'
+  | 'Copy as CopyIcon'
+  | 'Clipboard'
+  | 'ClipboardCopy'
+  | 'ClipboardPaste'
+  | 'ClipboardCheck'
+  | 'ClipboardX'
+  | 'ClipboardList'
+  | 'ClipboardType'
+  | 'ClipboardEdit'
+  | 'Scissors'
+  | 'PenTool'
+  | 'Pen'
+  | 'Pencil'
+  | 'Edit as EditIcon'
+  | 'Edit2'
+  | 'Edit3'
+  | 'FileEdit'
+  | 'FilePen'
+  | 'FilePenLine'
+  | 'NotepadText'
+  | 'NotepadTextDashed'
+  | 'StickyNote'
+  | 'BookOpen'
+  | 'BookOpenCheck'
+  | 'BookOpenText'
+  | 'BookText'
+  | 'BookCopy'
+  | 'BookMarked'
+  | 'BookMinus'
+  | 'BookPlus'
+  | 'BookX'
+  | 'BookUp'
+  | 'BookDown'
+  | 'BookA'
+  | 'Library'
+  | 'LibraryBig'
+  | 'Newspaper'
+  | 'FileText as FileTextIcon2'
+  | 'FileType'
+  | 'FileType2'
+  | 'FileImage'
+  | 'FileVideo'
+  | 'FileAudio'
+  | 'FileArchive'
+  | 'FileCode'
+  | 'FileCode2'
+  | 'FileSpreadsheet'
+  | 'FilePresentatio';
 
-
-// Tipos base para o schema de propriedades
-export type PropertyInputType =
-  | 'text-input'
-  | 'textarea'
-  | 'number-input'
-  | 'boolean-switch'
-  | 'color-picker'
-  | 'select'
-  | 'image-url'
-  | 'video-url'
-  | 'array-editor'
-  | 'json-editor';
-
-export interface PropertyOption {
-  label: string;
-  value: string;
-}
-
-export interface PropertySchema {
-  key: string;
-  label: string;
-  type: PropertyInputType;
-  placeholder?: string;
-  defaultValue?: any;
-  options?: PropertyOption[];
-  min?: number;
-  max?: number;
-  rows?: number;
-  description?: string;
-  itemSchema?: PropertySchema[]; // Para 'array-editor'
-  nestedPath?: string; // Para propriedades aninhadas
-  hidden?: boolean; // Para ocultar no painel
-}
-
-// Definição de um bloco para o editor (com metadados para a sidebar)
-export interface BlockDefinition {
-  // Removido 'id: string;' pois 'type' já serve como identificador único para a definição do bloco.
-  type: string; // Tipo de bloco (usado para mapear para o componente React e como ID único)
-  name: string; // Nome amigável para exibição na sidebar
-  description: string; // Descrição breve do bloco
-  icon: IconType; // Nome do ícone Lucide como string
-  category: string; // Categoria para agrupar na sidebar (ex: 'Texto', 'Mídia', 'Quiz')
-  tags?: string[]; // Tags opcionais para busca/filtragem
-  isNew?: boolean; // Flag para indicar que é um bloco novo (pode exibir um badge "Novo!")
-  propertiesSchema?: PropertySchema[]; // O schema de propriedades para este bloco
-}
-
-// Interface base para qualquer bloco (mantida do código anterior)
-export interface Block {
-  id: string; // ID único da instância do bloco no funil
-  type: string; // Corresponde ao BlockDefinition.type
-  properties: Record<string, any>; // Propriedades específicas do bloco
-}
-
-// Interface para as opções de um quiz (mais detalhada)
-export interface QuizOption {
-    id: string;
-    text: string; // Pode ser HTML (rich text)
-    imageUrl?: string;
-    profileType?: string; // Ex: 'Natural', 'Clássico' - para pontuação/perfil
-    scoreValue?: number; // Pontuação para a opção
-    nextStepId?: string; // Se a opção leva a um caminho condicional
-}
-
-// Interfaces para as propriedades de blocos específicos (mantidas do código anterior)
-export interface InputBlockProps {
-  label: string;
-  placeholder?: string;
-  inputType: 'text' | 'email' | 'number' | 'password';
-  required?: boolean;
-  value?: string;
-}
-
-export interface ImageBlockProps {
-  imageUrl: string;
-  altText?: string;
-  maxWidth?: number;
-  height?: number;
-  objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
-  borderRadius?: BorderSizeType;
-}
-
-// Tipos para layout e estilo (mantidos do código anterior)
-export type LayoutType = '1-column' | '2-columns' | '3-columns';
-export type DirectionType = 'vertical' | 'horizontal';
-export type DispositionType = 'image-text' | 'text-image' | 'text-only' | 'image-only';
-export type BorderSizeType = 'none' | 'small' | 'medium' | 'large';
-export type ShadowSizeType = 'none' | 'small' | 'medium' | 'large';
-export type SpacingType = 'small' | 'medium' | 'large';
-export type DetailType = 'none' | 'line' | 'dot';
-export type StyleType = 'simple' | 'card';
-
-// Interface para o funil (simplificado para este exemplo)
-export interface Funnel {
-  id: string;
-  name: string;
-  pages: Page[];
-  config: Record<string, any>;
-  version: number;
-  isPublished: boolean;
-}
-
-// Interface para uma página do funil (simplificado)
-export interface Page {
-  id: string;
-  title: string;
-  blocks: Block[];
-}
-
-
-// =====================================================================
-// 2. src/config/blockDefinitions.ts - Definição dos schemas para cada tipo de bloco (Corrigido e Refatorado)
-// =====================================================================
-// Importe v4 as uuidv4 se ainda não estiver importado no arquivo principal
-// import { v4 as uuidv4 } from 'uuid';
-
+// Minimal block definitions array to satisfy imports
 export const blockDefinitions: BlockDefinition[] = [
-  // Categoria: Texto
+  // Blocos de Quiz - Novos componentes das 21 etapas
   {
-    type: 'main-heading-inline', // Renomeado para inline
-    name: 'Título Principal (Inline)',
-    description: 'Cabeçalho principal horizontal responsivo inline.',
-    icon: 'Heading1', // Corrigido para o nome Lucide correto
-    category: 'Inline',
+    type: 'quiz-question',
+    name: 'Questão de Quiz',
+    description: 'Componente de questão de quiz com opções múltiplas e integração com cálculos',
+    icon: 'HelpCircle',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'question',
+        label: 'Pergunta',
+        type: 'textarea',
+        defaultValue: 'Qual dessas opções representa melhor seu estilo?'
+      },
+      {
+        key: 'allowMultiple',
+        label: 'Permitir múltiplas seleções',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'maxSelections',
+        label: 'Máximo de seleções',
+        type: 'number',
+        defaultValue: 3
+      },
+      {
+        key: 'showImages',
+        label: 'Mostrar imagens',
+        type: 'boolean',
+        defaultValue: true
+      }
+    ],
+    defaultProperties: {
+      question: 'Qual dessas opções representa melhor seu estilo?',
+      allowMultiple: true,
+      maxSelections: 3,
+      showImages: true,
+      options: [
+        {
+          id: '1',
+          text: 'Clássico e elegante',
+          styleCategory: 'Clássico',
+          points: 2,
+          keywords: ['elegante', 'sofisticado']
+        },
+        {
+          id: '2',
+          text: 'Moderno e descolado',
+          styleCategory: 'Contemporâneo',
+          points: 3,
+          keywords: ['moderno', 'descolado']
+        }
+      ]
+    }
+  },
+  {
+    type: 'quiz-question-configurable',
+    name: 'Questão Configurável',
+    description: 'Versão avançada da questão com painel de propriedades para configurar imagens, pontuação e categorias',
+    icon: 'Brain',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'question',
+        label: 'Pergunta',
+        type: 'textarea',
+        defaultValue: 'Qual dessas opções representa melhor seu estilo?'
+      },
+      {
+        key: 'questionId',
+        label: 'ID da Questão',
+        type: 'text',
+        defaultValue: 'question-1'
+      },
+      {
+        key: 'allowMultiple',
+        label: 'Permitir múltiplas seleções',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'maxSelections',
+        label: 'Máximo de seleções',
+        type: 'number',
+        defaultValue: 3
+      },
+      {
+        key: 'showImages',
+        label: 'Mostrar imagens',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'autoAdvance',
+        label: 'Auto-avanço',
+        type: 'boolean',
+        defaultValue: false
+      }
+    ],
+    defaultProperties: {
+      question: 'Qual dessas opções representa melhor seu estilo?',
+      questionId: 'question-1',
+      allowMultiple: true,
+      maxSelections: 3,
+      showImages: true,
+      autoAdvance: false,
+      options: [
+        {
+          id: '1',
+          text: 'Clássico e elegante',
+          imageUrl: '',
+          styleCategory: 'Clássico',
+          points: 2,
+          keywords: ['elegante', 'sofisticado', 'atemporal']
+        },
+        {
+          id: '2',
+          text: 'Moderno e descolado',
+          imageUrl: '',
+          styleCategory: 'Contemporâneo',
+          points: 3,
+          keywords: ['moderno', 'descolado', 'inovador']
+        },
+        {
+          id: '3',
+          text: 'Natural e autêntico',
+          imageUrl: '',
+          styleCategory: 'Natural',
+          points: 1,
+          keywords: ['natural', 'autêntico', 'orgânico']
+        }
+      ]
+    }
+  },
+  {
+    type: 'quiz-result-calculated',
+    name: 'Resultado Calculado',
+    description: 'Componente que mostra o resultado calculado em tempo real com base nas respostas',
+    icon: 'Award',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'showPercentages',
+        label: 'Mostrar percentuais',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showSecondaryStyles',
+        label: 'Mostrar estilos secundários',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'maxSecondaryStyles',
+        label: 'Máximo de estilos secundários',
+        type: 'number',
+        defaultValue: 2
+      }
+    ],
+    defaultProperties: {
+      showPercentages: true,
+      showSecondaryStyles: true,
+      maxSecondaryStyles: 2
+    }
+  },
+  {
+    type: 'quiz-start-page',
+    name: 'Página Inicial do Quiz',
+    description: 'Página de introdução e início do quiz',
+    icon: 'Play',
+    category: 'Quiz',
     propertiesSchema: [
       {
         key: 'title',
-        label: 'Texto do Título',
-        type: 'text-input',
-        placeholder: 'Seu Título Aqui',
-        defaultValue: 'Título Principal'
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Descubra Seu Estilo'
       },
       {
         key: 'subtitle',
         label: 'Subtítulo',
         type: 'textarea',
-        placeholder: 'Subtítulo opcional...',
-        rows: 2
+        defaultValue: 'Responda algumas perguntas e descubra qual é o seu estilo predominante'
       },
       {
-        key: 'titleSize',
-        label: 'Tamanho do Título',
-        type: 'select',
-        options: [
-          { label: 'Pequeno', value: 'small' },
-          { label: 'Médio', value: 'medium' },
-          { label: 'Grande', value: 'large' },
-        ],
-        defaultValue: 'large',
-      },
-      {
-        key: 'alignment',
-        label: 'Alinhamento',
-        type: 'select',
-        options: [
-          { label: 'Esquerda', value: 'left' },
-          { label: 'Centro', value: 'center' },
-          { label: 'Direita', value: 'right' },
-        ],
-        defaultValue: 'center',
-      },
+        key: 'buttonText',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Começar Quiz'
+      }
     ],
+    defaultProperties: {
+      title: 'Descubra Seu Estilo',
+      subtitle: 'Responda algumas perguntas e descubra qual é o seu estilo predominante',
+      buttonText: 'Começar Quiz'
+    }
+  },
+  {
+    type: 'quiz-transition',
+    name: 'Transição do Quiz',
+    description: 'Página de transição entre questões ou seções',
+    icon: 'LoaderCircle',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'message',
+        label: 'Mensagem',
+        type: 'text',
+        defaultValue: 'Analisando suas respostas...'
+      },
+      {
+        key: 'duration',
+        label: 'Duração (ms)',
+        type: 'number',
+        defaultValue: 3000
+      }
+    ],
+    defaultProperties: {
+      message: 'Analisando suas respostas...',
+      duration: 3000
+    }
+  },
+  {
+    type: 'strategic-question',
+    name: 'Questão Estratégica',
+    description: 'Questões para segmentação e qualificação (etapas 13-18)',
+    icon: 'Brain',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'question',
+        label: 'Pergunta',
+        type: 'textarea',
+        defaultValue: 'Qual é o seu maior desafio?'
+      },
+      {
+        key: 'options',
+        label: 'Opções',
+        type: 'array',
+        defaultValue: [
+          { id: '1', text: 'Opção 1', weight: 1 },
+          { id: '2', text: 'Opção 2', weight: 2 },
+          { id: '3', text: 'Opção 3', weight: 3 },
+          { id: '4', text: 'Opção 4', weight: 4 }
+        ]
+      }
+    ],
+    defaultProperties: {
+      question: 'Qual é o seu maior desafio?',
+      options: [
+        { id: '1', text: 'Opção 1', weight: 1 },
+        { id: '2', text: 'Opção 2', weight: 2 },
+        { id: '3', text: 'Opção 3', weight: 3 },
+        { id: '4', text: 'Opção 4', weight: 4 }
+      ]
+    }
+  },
+  {
+    type: 'question-multiple',
+    name: 'Questão Múltipla Escolha',
+    description: 'Questão de múltipla escolha avançada',
+    icon: 'CheckCircle',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'question',
+        label: 'Pergunta',
+        type: 'textarea',
+        defaultValue: 'Selecione uma ou mais opções:'
+      },
+      {
+        key: 'options',
+        label: 'Opções',
+        type: 'array',
+        defaultValue: [
+          { id: '1', text: 'Opção 1' },
+          { id: '2', text: 'Opção 2' },
+          { id: '3', text: 'Opção 3' }
+        ]
+      },
+      {
+        key: 'allowMultiple',
+        label: 'Permitir múltipla seleção',
+        type: 'boolean',
+        defaultValue: false
+      }
+    ],
+    defaultProperties: {
+      question: 'Selecione uma ou mais opções:',
+      options: [
+        { id: '1', text: 'Opção 1' },
+        { id: '2', text: 'Opção 2' },
+        { id: '3', text: 'Opção 3' }
+      ],
+      allowMultiple: false
+    }
+  },
+  {
+    type: 'quiz-offer-page',
+    name: 'Página de Oferta do Quiz',
+    description: 'Página completa de vendas após o resultado (etapa 21)',
+    icon: 'ShoppingCart',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título da Oferta',
+        type: 'text',
+        defaultValue: 'Transforme Seu Estilo Agora'
+      },
+      {
+        key: 'price',
+        label: 'Preço',
+        type: 'text',
+        defaultValue: 'R$ 97,00'
+      },
+      {
+        key: 'originalPrice',
+        label: 'Preço Original',
+        type: 'text',
+        defaultValue: 'R$ 197,00'
+      },
+      {
+        key: 'ctaText',
+        label: 'Texto do CTA',
+        type: 'text',
+        defaultValue: 'Quero Transformar Meu Estilo'
+      }
+    ],
+    defaultProperties: {
+      title: 'Transforme Seu Estilo Agora',
+      price: 'R$ 97,00',
+      originalPrice: 'R$ 197,00',
+      ctaText: 'Quero Transformar Meu Estilo'
+    }
+  },
+  {
+    type: 'modern-result-page',
+    name: 'Página de Resultado Moderna',
+    description: 'Página de resultado com design moderno e calculado',
+    icon: 'Award',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'resultTitle',
+        label: 'Título do Resultado',
+        type: 'text',
+        defaultValue: 'Seu Estilo Predominante'
+      },
+      {
+        key: 'showCompatibility',
+        label: 'Mostrar Compatibilidade',
+        type: 'boolean',
+        defaultValue: true
+      }
+    ],
+    defaultProperties: {
+      resultTitle: 'Seu Estilo Predominante',
+      showCompatibility: true
+    }
+  },
+  
+  // ✅ COMPONENTES INLINE REAIS DAS 21 ETAPAS
+  {
+    type: 'quiz-intro-header',
+    name: 'Cabeçalho do Quiz',
+    description: 'Cabeçalho com logo e barra de progresso',
+    icon: 'Play',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'logoUrl',
+        label: 'URL do Logo',
+        type: 'text',
+        defaultValue: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp'
+      },
+      {
+        key: 'progressValue',
+        label: 'Valor do Progresso',
+        type: 'number',
+        defaultValue: 0
+      }
+    ],
+    defaultProperties: {
+      logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+      progressValue: 0
+    }
+  },
+  {
+    type: 'text-inline',
+    name: 'Texto Inline',
+    description: 'Componente de texto simples inline',
+    icon: 'Type',
+    category: 'Content',
+    propertiesSchema: [
+      {
+        key: 'content',
+        label: 'Conteúdo',
+        type: 'textarea',
+        defaultValue: 'Texto exemplo'
+      },
+      {
+        key: 'fontSize',
+        label: 'Tamanho da Fonte',
+        type: 'text',
+        defaultValue: 'text-base'
+      }
+    ],
+    defaultProperties: {
+      content: 'Texto exemplo',
+      fontSize: 'text-base'
+    }
+  },
+  {
+    type: 'heading-inline',
+    name: 'Título Inline',
+    description: 'Componente de título inline',
+    icon: 'Heading1',
+    category: 'Content',
+    propertiesSchema: [
+      {
+        key: 'content',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Título Exemplo'
+      },
+      {
+        key: 'level',
+        label: 'Nível (h1-h6)',
+        type: 'number',
+        defaultValue: 2
+      }
+    ],
+    defaultProperties: {
+      content: 'Título Exemplo',
+      level: 2
+    }
+  },
+  {
+    type: 'image-display-inline',
+    name: 'Imagem Inline',
+    description: 'Componente de imagem inline',
+    icon: 'Image',
+    category: 'Content',
+    propertiesSchema: [
+      {
+        key: 'src',
+        label: 'URL da Imagem',
+        type: 'text',
+        defaultValue: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp'
+      },
+      {
+        key: 'alt',
+        label: 'Texto Alternativo',
+        type: 'text',
+        defaultValue: 'Imagem'
+      }
+    ],
+    defaultProperties: {
+      src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+      alt: 'Imagem'
+    }
+  },
+  {
+    type: 'button-inline',
+    name: 'Botão Inline',
+    description: 'Componente de botão inline',
+    icon: 'RectangleHorizontal',
+    category: 'Interactive',
+    propertiesSchema: [
+      {
+        key: 'text',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Clique aqui'
+      },
+      {
+        key: 'variant',
+        label: 'Variante',
+        type: 'text',
+        defaultValue: 'primary'
+      }
+    ],
+    defaultProperties: {
+      text: 'Clique aqui',
+      variant: 'primary'
+    }
+  },
+  {
+    type: 'form-input',
+    name: 'Campo de Formulário',
+    description: 'Componente de input para formulários',
+    icon: 'Keyboard',
+    category: 'Interactive',
+    propertiesSchema: [
+      {
+        key: 'label',
+        label: 'Label',
+        type: 'text',
+        defaultValue: 'Nome'
+      },
+      {
+        key: 'placeholder',
+        label: 'Placeholder',
+        type: 'text',
+        defaultValue: 'Digite seu nome'
+      },
+      {
+        key: 'required',
+        label: 'Obrigatório',
+        type: 'boolean',
+        defaultValue: false
+      }
+    ],
+    defaultProperties: {
+      label: 'Nome',
+      placeholder: 'Digite seu nome',
+      required: false
+    }
+  },
+  {
+    type: 'options-grid',
+    name: 'Grade de Opções',
+    description: 'Grade de opções para quiz',
+    icon: 'Grid3x3',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'options',
+        label: 'Opções',
+        type: 'array-of-objects',
+        defaultValue: []
+      },
+      {
+        key: 'questionId',
+        label: 'ID da Questão',
+        type: 'text',
+        defaultValue: ''
+      }
+    ],
+    defaultProperties: {
+      options: [],
+      questionId: ''
+    }
+  },
+  {
+    type: 'result-header-inline',
+    name: 'Cabeçalho do Resultado',
+    description: 'Cabeçalho personalizado para página de resultado',
+    icon: 'Crown',
+    category: 'Result',
+    propertiesSchema: [
+      {
+        key: 'logoUrl',
+        label: 'URL do Logo',
+        type: 'text',
+        defaultValue: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp'
+      },
+      {
+        key: 'userName',
+        label: 'Nome do Usuário',
+        type: 'text',
+        defaultValue: 'Usuário'
+      },
+      {
+        key: 'showProgress',
+        label: 'Mostrar Progresso',
+        type: 'boolean',
+        defaultValue: false
+      }
+    ],
+    defaultProperties: {
+      logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+      userName: 'Usuário',
+      showProgress: false
+    }
+  },
+  {
+    type: 'result-card-inline',
+    name: 'Card Principal do Resultado',
+    description: 'Card principal mostrando o estilo predominante',
+    icon: 'Award',
+    category: 'Result',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Seu Estilo Predominante'
+      },
+      {
+        key: 'styleName',
+        label: 'Nome do Estilo',
+        type: 'text',
+        defaultValue: 'Clássico'
+      },
+      {
+        key: 'percentage',
+        label: 'Porcentagem',
+        type: 'number',
+        defaultValue: 85
+      },
+      {
+        key: 'description',
+        label: 'Descrição',
+        type: 'textarea',
+        defaultValue: 'Baseado nas suas respostas, identificamos características do estilo...'
+      },
+      {
+        key: 'imageUrl',
+        label: 'URL da Imagem',
+        type: 'text',
+        defaultValue: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp'
+      }
+    ],
+    defaultProperties: {
+      title: 'Seu Estilo Predominante',
+      styleName: 'Clássico',
+      percentage: 85,
+      description: 'Baseado nas suas respostas, identificamos características do estilo...',
+      imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp'
+    }
+  },
+  {
+    type: 'style-card-inline',
+    name: 'Card de Estilo Secundário',
+    description: 'Card para mostrar estilos secundários/complementares',
+    icon: 'Palette',
+    category: 'Result',
+    propertiesSchema: [
+      {
+        key: 'styleName',
+        label: 'Nome do Estilo',
+        type: 'text',
+        defaultValue: 'Estilo Secundário'
+      },
+      {
+        key: 'percentage',
+        label: 'Porcentagem',
+        type: 'number',
+        defaultValue: 20
+      },
+      {
+        key: 'description',
+        label: 'Descrição',
+        type: 'textarea',
+        defaultValue: 'Características complementares do seu estilo'
+      },
+      {
+        key: 'imageUrl',
+        label: 'URL da Imagem',
+        type: 'text',
+        defaultValue: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_moderno.webp'
+      },
+      {
+        key: 'compact',
+        label: 'Modo Compacto',
+        type: 'boolean',
+        defaultValue: true
+      }
+    ],
+    defaultProperties: {
+      styleName: 'Estilo Secundário',
+      percentage: 20,
+      description: 'Características complementares do seu estilo',
+      imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_moderno.webp',
+      compact: true
+    }
+  },
+  
+  // Blocos básicos existentes
+  {
+    type: 'heading',
+    name: 'Título',
+    description: 'Títulos e subtítulos com diferentes níveis (H1-H4)',
+    icon: 'Heading1',
+    category: 'content',
+    propertiesSchema: [
+      {
+        key: 'content',
+        label: 'Conteúdo',
+        type: 'text',
+        defaultValue: 'Seu Título Aqui'
+      },
+      {
+        key: 'level',
+        label: 'Nível',
+        type: 'select',
+        options: ['h1', 'h2', 'h3', 'h4'],
+        defaultValue: 'h1'
+      }
+    ],
+    defaultProperties: {
+      content: 'Seu Título Aqui',
+      level: 'h1'
+    }
+  },
+  {
+    type: 'text',
+    name: 'Texto',
+    description: 'Bloco de texto simples com formatação básica',
+    icon: 'Type',
+    category: 'content',
+    propertiesSchema: [
+      {
+        key: 'content',
+        label: 'Conteúdo',
+        type: 'textarea',
+        defaultValue: 'Parágrafo de texto editável.'
+      }
+    ],
+    defaultProperties: {
+      content: 'Parágrafo de texto editável.'
+    }
+  },
+  {
+    type: 'paragraph',
+    name: 'Parágrafo',
+    description: 'Bloco de parágrafo simples',
+    icon: 'Type',
+    category: 'content',
+    propertiesSchema: [
+      {
+        key: 'content',
+        label: 'Conteúdo',
+        type: 'textarea',
+        defaultValue: 'Parágrafo de texto editável.'
+      }
+    ],
+    defaultProperties: {
+      content: 'Parágrafo de texto editável.'
+    }
+  },
+  {
+    type: 'button',
+    name: 'Botão',
+    description: 'Botão interativo com link ou ação personalizada',
+    icon: 'RectangleHorizontal',
+    category: 'content',
+    propertiesSchema: [
+      {
+        key: 'text',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Clique Aqui'
+      },
+      {
+        key: 'url',
+        label: 'URL',
+        type: 'url',
+        defaultValue: '#'
+      }
+    ],
+    defaultProperties: {
+      text: 'Clique Aqui',
+      url: '#'
+    }
+  },
+  {
+    type: 'image',
+    name: 'Image',
+    description: 'An image block',
+    icon: 'Image',
+    category: 'content',
+    propertiesSchema: [
+      {
+        key: 'src',
+        label: 'Image URL',
+        type: 'image-url',
+        defaultValue: PlaceholderUtils.generateContentPlaceholder(400, 300)
+      },
+      {
+        key: 'alt',
+        label: 'Alt Text',
+        type: 'text',
+        defaultValue: 'Image description'
+      }
+    ],
+    defaultProperties: {
+      src: PlaceholderUtils.generateContentPlaceholder(400, 300),
+      alt: 'Image description'
+    }
+  },
+
+  // ===========================
+  // COMPONENTES MODERNOS PARA PÁGINAS DINÂMICAS
+  // Modulares, Independentes, BoxFlex, Reutilizáveis e Editáveis
+  // ===========================
+
+  // COMPONENTES DE LAYOUT FLEXÍVEL
+  {
+    type: 'flex-container-horizontal',
+    name: 'Container Horizontal Flex',
+    description: 'Container flexível horizontal para organizar componentes em linha (inline/boxflex)',
+    icon: 'ArrowRightLeft',
+    category: 'Layout',
+    propertiesSchema: [
+      {
+        key: 'justifyContent',
+        label: 'Alinhamento Horizontal',
+        type: 'select',
+        options: ['flex-start', 'center', 'flex-end', 'space-between', 'space-around', 'space-evenly'],
+        defaultValue: 'space-between'
+      },
+      {
+        key: 'alignItems',
+        label: 'Alinhamento Vertical',
+        type: 'select',
+        options: ['flex-start', 'center', 'flex-end', 'stretch'],
+        defaultValue: 'center'
+      },
+      {
+        key: 'gap',
+        label: 'Espaçamento (px)',
+        type: 'number',
+        defaultValue: 16
+      },
+      {
+        key: 'wrap',
+        label: 'Quebra de linha',
+        type: 'boolean',
+        defaultValue: true
+      }
+    ],
+    defaultProperties: {
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      gap: 16,
+      wrap: true,
+      className: 'flex flex-wrap items-center justify-between gap-4 p-4'
+    }
   },
 
   {
+    type: 'flex-container-vertical',
+    name: 'Container Vertical Flex',
+    description: 'Container flexível vertical para organizar componentes em coluna',
+    icon: 'Rows3',
+    category: 'Layout',
+    propertiesSchema: [
+      {
+        key: 'alignItems',
+        label: 'Alinhamento Horizontal',
+        type: 'select',
+        options: ['flex-start', 'center', 'flex-end', 'stretch'],
+        defaultValue: 'center'
+      },
+      {
+        key: 'justifyContent',
+        label: 'Alinhamento Vertical',
+        type: 'select',
+        options: ['flex-start', 'center', 'flex-end', 'space-between', 'space-around'],
+        defaultValue: 'flex-start'
+      },
+      {
+        key: 'gap',
+        label: 'Espaçamento (px)',
+        type: 'number',
+        defaultValue: 24
+      }
+    ],
+    defaultProperties: {
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      gap: 24,
+      className: 'flex flex-col items-center justify-start gap-6 p-6'
+    }
+  },
+
+  // COMPONENTES DE VENDAS MODERNOS
+  {
+    type: 'countdown-timer-real',
+    name: 'Timer de Contagem Regressiva',
+    description: 'Timer funcional e editável com design moderno para urgência em vendas',
+    icon: 'Clock',
+    category: 'Vendas',
+    propertiesSchema: [
+      {
+        key: 'targetDate',
+        label: 'Data/Hora Alvo',
+        type: 'datetime-local',
+        defaultValue: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 16)
+      },
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Esta oferta expira em:'
+      },
+      {
+        key: 'showLabels',
+        label: 'Mostrar Labels (dias, horas, etc)',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: ['small', 'medium', 'large'],
+        defaultValue: 'medium'
+      },
+      {
+        key: 'color',
+        label: 'Cor do tema',
+        type: 'color',
+        defaultValue: '#432818'
+      }
+    ],
+    defaultProperties: {
+      targetDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
+      title: 'Esta oferta expira em:',
+      showLabels: true,
+      size: 'medium',
+      color: '#432818'
+    }
+  },
+
+  {
+    type: 'pricing-card-modern',
+    name: 'Card de Preço Moderno',
+    description: 'Card de preço responsivo e editável com destaque e call-to-action',
+    icon: 'CircleDollarSign',
+    category: 'Vendas',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título da Oferta',
+        type: 'text',
+        defaultValue: 'Oferta Especial'
+      },
+      {
+        key: 'originalPrice',
+        label: 'Preço Original',
+        type: 'number',
+        defaultValue: 497
+      },
+      {
+        key: 'salePrice',
+        label: 'Preço Promocional',
+        type: 'number',
+        defaultValue: 197
+      },
+      {
+        key: 'currency',
+        label: 'Moeda',
+        type: 'text',
+        defaultValue: 'R$'
+      },
+      {
+        key: 'installments',
+        label: 'Parcelamento',
+        type: 'text',
+        defaultValue: '12x de R$ 16,42'
+      },
+      {
+        key: 'ctaText',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Quero Aproveitar'
+      },
+      {
+        key: 'highlight',
+        label: 'Destacar Card',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'badge',
+        label: 'Badge de Destaque',
+        type: 'text',
+        defaultValue: 'MELHOR OFERTA'
+      }
+    ],
+    defaultProperties: {
+      title: 'Oferta Especial',
+      originalPrice: 497,
+      salePrice: 197,
+      currency: 'R$',
+      installments: '12x de R$ 16,42',
+      ctaText: 'Quero Aproveitar',
+      highlight: true,
+      badge: 'MELHOR OFERTA'
+    }
+  },
+
+  {
+    type: 'cta-button-modern',
+    name: 'Botão CTA Moderno',
+    description: 'Botão de call-to-action com animações e estados editáveis',
+    icon: 'MousePointer',
+    category: 'Vendas',
+    propertiesSchema: [
+      {
+        key: 'text',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Comprar Agora'
+      },
+      {
+        key: 'subtext',
+        label: 'Subtexto',
+        type: 'text',
+        defaultValue: 'Pagamento 100% seguro'
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: ['small', 'medium', 'large', 'xlarge'],
+        defaultValue: 'large'
+      },
+      {
+        key: 'variant',
+        label: 'Variante',
+        type: 'select',
+        options: ['primary', 'secondary', 'gradient', 'outline'],
+        defaultValue: 'gradient'
+      },
+      {
+        key: 'icon',
+        label: 'Ícone',
+        type: 'select',
+        options: ['none', 'arrow', 'check', 'heart', 'star', 'lock'],
+        defaultValue: 'arrow'
+      },
+      {
+        key: 'pulse',
+        label: 'Animação de Pulso',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'fullWidth',
+        label: 'Largura Total',
+        type: 'boolean',
+        defaultValue: false
+      }
+    ],
+    defaultProperties: {
+      text: 'Comprar Agora',
+      subtext: 'Pagamento 100% seguro',
+      size: 'large',
+      variant: 'gradient',
+      icon: 'arrow',
+      pulse: true,
+      fullWidth: false
+    }
+  },
+
+  // COMPONENTES DE QUIZ MODERNOS
+  {
+    type: 'quiz-question-modern',
+    name: 'Questão de Quiz Moderna',
+    description: 'Componente de questão com layout responsivo, imagens e múltiplas seleções',
+    icon: 'HelpCircle',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'question',
+        label: 'Pergunta',
+        type: 'textarea',
+        defaultValue: 'Qual dessas opções mais combina com você?'
+      },
+      {
+        key: 'questionNumber',
+        label: 'Número da Questão',
+        type: 'number',
+        defaultValue: 1
+      },
+      {
+        key: 'totalQuestions',
+        label: 'Total de Questões',
+        type: 'number',
+        defaultValue: 10
+      },
+      {
+        key: 'layout',
+        label: 'Layout das Opções',
+        type: 'select',
+        options: ['grid-2', 'grid-3', 'grid-4', 'list', 'horizontal'],
+        defaultValue: 'grid-2'
+      },
+      {
+        key: 'allowMultiple',
+        label: 'Múltiplas Seleções',
+        type: 'boolean',
+        defaultValue: false
+      },
+      {
+        key: 'showImages',
+        label: 'Mostrar Imagens',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'autoAdvance',
+        label: 'Avançar Automaticamente',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showProgress',
+        label: 'Mostrar Progresso',
+        type: 'boolean',
+        defaultValue: true
+      }
+    ],
+    defaultProperties: {
+      question: 'Qual dessas opções mais combina com você?',
+      questionNumber: 1,
+      totalQuestions: 10,
+      layout: 'grid-2',
+      allowMultiple: false,
+      showImages: true,
+      autoAdvance: true,
+      showProgress: true,
+      options: [
+        {
+          id: 'opt1',
+          text: 'Opção 1',
+          image: 'https://via.placeholder.com/300x200',
+          value: 'option1'
+        },
+        {
+          id: 'opt2',
+          text: 'Opção 2',
+          image: 'https://via.placeholder.com/300x200',
+          value: 'option2'
+        }
+      ]
+    }
+  },
+
+  {
+    type: 'progress-bar-modern',
+    name: 'Barra de Progresso Moderna',
+    description: 'Barra de progresso animada e customizável para quizzes e formulários',
+    icon: 'TrendingUp',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'percentage',
+        label: 'Porcentagem (%)',
+        type: 'number',
+        defaultValue: 65
+      },
+      {
+        key: 'showLabel',
+        label: 'Mostrar Label',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'label',
+        label: 'Texto do Label',
+        type: 'text',
+        defaultValue: 'Progresso do Quiz'
+      },
+      {
+        key: 'animated',
+        label: 'Animação',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'color',
+        label: 'Cor',
+        type: 'select',
+        options: ['primary', 'success', 'warning', 'danger', 'custom'],
+        defaultValue: 'primary'
+      },
+      {
+        key: 'customColor',
+        label: 'Cor Personalizada',
+        type: 'color',
+        defaultValue: '#B89B7A'
+      },
+      {
+        key: 'height',
+        label: 'Altura (px)',
+        type: 'number',
+        defaultValue: 8
+      }
+    ],
+    defaultProperties: {
+      percentage: 65,
+      showLabel: true,
+      label: 'Progresso do Quiz',
+      animated: true,
+      color: 'primary',
+      customColor: '#B89B7A',
+      height: 8
+    }
+  },
+
+  // COMPONENTES DE CONTEÚDO FLEXÍVEL
+  {
+    type: 'image-text-card',
+    name: 'Card Imagem + Texto',
+    description: 'Card flexível com imagem e texto, layout editável (horizontal/vertical)',
+    icon: 'Package',
+    category: 'Layout',
+    propertiesSchema: [
+      {
+        key: 'layout',
+        label: 'Layout',
+        type: 'select',
+        options: ['horizontal', 'vertical', 'image-left', 'image-right', 'image-top', 'image-bottom'],
+        defaultValue: 'horizontal'
+      },
+      {
+        key: 'imageUrl',
+        label: 'URL da Imagem',
+        type: 'image-url',
+        defaultValue: PlaceholderUtils.generateContentPlaceholder(400, 300)
+      },
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Título do Card'
+      },
+      {
+        key: 'description',
+        label: 'Descrição',
+        type: 'textarea',
+        defaultValue: 'Descrição detalhada do conteúdo do card.'
+      },
+      {
+        key: 'buttonText',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Saiba Mais'
+      },
+      {
+        key: 'buttonUrl',
+        label: 'URL do Botão',
+        type: 'url',
+        defaultValue: '#'
+      },
+      {
+        key: 'imageRatio',
+        label: 'Proporção da Imagem',
+        type: 'select',
+        options: ['1:1', '4:3', '16:9', '3:2'],
+        defaultValue: '4:3'
+      },
+      {
+        key: 'shadow',
+        label: 'Sombra',
+        type: 'boolean',
+        defaultValue: true
+      }
+    ],
+    defaultProperties: {
+      layout: 'horizontal',
+      imageUrl: PlaceholderUtils.generateContentPlaceholder(400, 300),
+      title: 'Título do Card',
+      description: 'Descrição detalhada do conteúdo do card.',
+      buttonText: 'Saiba Mais',
+      buttonUrl: '#',
+      imageRatio: '4:3',
+      shadow: true
+    }
+  },
+
+  {
+    type: 'stats-counter',
+    name: 'Contador de Estatísticas',
+    description: 'Contador animado para mostrar números importantes (vendas, clientes, etc.)',
+    icon: 'BarChart3',
+    category: 'Vendas',
+    propertiesSchema: [
+      {
+        key: 'number',
+        label: 'Número',
+        type: 'number',
+        defaultValue: 1250
+      },
+      {
+        key: 'label',
+        label: 'Label',
+        type: 'text',
+        defaultValue: 'Clientes Satisfeitos'
+      },
+      {
+        key: 'prefix',
+        label: 'Prefixo',
+        type: 'text',
+        defaultValue: ''
+      },
+      {
+        key: 'suffix',
+        label: 'Sufixo',
+        type: 'text',
+        defaultValue: '+'
+      },
+      {
+        key: 'animationDuration',
+        label: 'Duração da Animação (ms)',
+        type: 'number',
+        defaultValue: 2000
+      },
+      {
+        key: 'icon',
+        label: 'Ícone',
+        type: 'select',
+        options: ['none', 'users', 'star', 'heart', 'check', 'trophy', 'target'],
+        defaultValue: 'users'
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: ['small', 'medium', 'large'],
+        defaultValue: 'medium'
+      }
+    ],
+    defaultProperties: {
+      number: 1250,
+      label: 'Clientes Satisfeitos',
+      prefix: '',
+      suffix: '+',
+      animationDuration: 2000,
+      icon: 'users',
+      size: 'medium'
+    }
+  },
+
+  {
+    type: 'testimonial-card',
+    name: 'Card de Depoimento',
+    description: 'Card de depoimento com foto, nome, avaliação e texto editáveis',
+    icon: 'Quote',
+    category: 'Vendas',
+    propertiesSchema: [
+      {
+        key: 'text',
+        label: 'Texto do Depoimento',
+        type: 'textarea',
+        defaultValue: 'Este produto mudou minha vida! Recomendo para todos.'
+      },
+      {
+        key: 'authorName',
+        label: 'Nome do Autor',
+        type: 'text',
+        defaultValue: 'Maria Silva'
+      },
+      {
+        key: 'authorTitle',
+        label: 'Título/Cargo',
+        type: 'text',
+        defaultValue: 'Cliente Verificada'
+      },
+      {
+        key: 'authorPhoto',
+        label: 'Foto do Autor',
+        type: 'image-url',
+        defaultValue: PlaceholderUtils.generateAvatarPlaceholder(80, '👤')
+      },
+      {
+        key: 'rating',
+        label: 'Avaliação (1-5)',
+        type: 'number',
+        defaultValue: 5
+      },
+      {
+        key: 'showStars',
+        label: 'Mostrar Estrelas',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'layout',
+        label: 'Layout',
+        type: 'select',
+        options: ['card', 'inline', 'minimal'],
+        defaultValue: 'card'
+      }
+    ],
+    defaultProperties: {
+      text: 'Este produto mudou minha vida! Recomendo para todos.',
+      authorName: 'Maria Silva',
+      authorTitle: 'Cliente Verificada',
+      authorPhoto: PlaceholderUtils.generateAvatarPlaceholder(80, '👤'),
+      rating: 5,
+      showStars: true,
+      layout: 'card'
+    }
+  },
+
+  {
+    type: 'feature-highlight',
+    name: 'Destaque de Recurso',
+    description: 'Card para destacar recursos/benefícios com ícone, título e descrição',
+    icon: 'Star',
+    category: 'Vendas',
+    propertiesSchema: [
+      {
+        key: 'icon',
+        label: 'Ícone',
+        type: 'select',
+        options: ['check', 'star', 'heart', 'shield', 'lightning', 'gift', 'target', 'crown'],
+        defaultValue: 'check'
+      },
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Recurso Incrível'
+      },
+      {
+        key: 'description',
+        label: 'Descrição',
+        type: 'textarea',
+        defaultValue: 'Descrição detalhada do recurso e seus benefícios.'
+      },
+      {
+        key: 'layout',
+        label: 'Layout',
+        type: 'select',
+        options: ['vertical', 'horizontal', 'icon-left', 'icon-top'],
+        defaultValue: 'vertical'
+      },
+      {
+        key: 'iconColor',
+        label: 'Cor do Ícone',
+        type: 'color',
+        defaultValue: '#B89B7A'
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: ['small', 'medium', 'large'],
+        defaultValue: 'medium'
+      }
+    ],
+    defaultProperties: {
+      icon: 'check',
+      title: 'Recurso Incrível',
+      description: 'Descrição detalhada do recurso e seus benefícios.',
+      layout: 'vertical',
+      iconColor: '#B89B7A',
+      size: 'medium'
+    }
+  },
+
+  {
+    type: 'section-divider',
+    name: 'Divisor de Seção',
+    description: 'Divisor estilizado para separar seções da página',
+    icon: 'Minus',
+    category: 'Layout',
+    propertiesSchema: [
+      {
+        key: 'style',
+        label: 'Estilo',
+        type: 'select',
+        options: ['line', 'dots', 'wave', 'gradient', 'ornament'],
+        defaultValue: 'gradient'
+      },
+      {
+        key: 'thickness',
+        label: 'Espessura (px)',
+        type: 'number',
+        defaultValue: 2
+      },
+      {
+        key: 'color',
+        label: 'Cor',
+        type: 'color',
+        defaultValue: '#B89B7A'
+      },
+      {
+        key: 'spacing',
+        label: 'Espaçamento Vertical (px)',
+        type: 'number',
+        defaultValue: 32
+      },
+      {
+        key: 'width',
+        label: 'Largura (%)',
+        type: 'number',
+        defaultValue: 50
+      }
+    ],
+    defaultProperties: {
+      style: 'gradient',
+      thickness: 2,
+      color: '#B89B7A',
+      spacing: 32,
+      width: 50
+    }
+  },
+
+  // COMPONENTES INLINE BÁSICOS
+  {
     type: 'text-inline',
-    name: 'Parágrafo (Inline)',
-    description: 'Bloco de texto horizontal responsivo inline com suporte a personalização.',
+    name: 'Texto Moderno',
+    description: 'Texto responsivo com tipografia moderna',
     icon: 'Type',
     category: 'Inline',
     propertiesSchema: [
@@ -227,2929 +2149,727 @@ export const blockDefinitions: BlockDefinition[] = [
         key: 'content',
         label: 'Conteúdo',
         type: 'textarea',
-        placeholder: 'Digite seu texto aqui...',
-        rows: 4,
-        defaultValue: 'Conteúdo do texto aqui...'
+        defaultValue: 'Texto editável com formatação elegante.'
+      },
+      {
+        key: 'fontFamily',
+        label: 'Família da Fonte',
+        type: 'select',
+        options: ['Playfair Display', 'Inter', 'system-ui'],
+        defaultValue: 'Inter'
       },
       {
         key: 'fontSize',
-        label: 'Tamanho da Fonte',
+        label: 'Tamanho',
         type: 'select',
-        options: [
-          { label: 'Extra Pequeno', value: 'xs' },
-          { label: 'Pequeno', value: 'sm' },
-          { label: 'Normal', value: 'base' },
-          { label: 'Grande', value: 'lg' },
-          { label: 'Extra Grande', value: 'xl' },
-          { label: 'XXL', value: '2xl' },
-          { label: 'XXXL', value: '3xl' },
-        ],
-        defaultValue: 'base',
-      },
-      {
-        key: 'fontWeight',
-        label: 'Peso da Fonte',
-        type: 'select',
-        options: [
-          { label: 'Normal', value: 'normal' },
-          { label: 'Médio', value: 'medium' },
-          { label: 'Semibold', value: 'semibold' },
-          { label: 'Bold', value: 'bold' },
-        ],
-        defaultValue: 'normal',
+        options: ['text-sm', 'text-base', 'text-lg', 'text-2xl', 'text-3xl'],
+        defaultValue: 'text-base'
       },
       {
         key: 'textAlign',
         label: 'Alinhamento',
         type: 'select',
-        options: [
-          { label: 'Esquerda', value: 'left' },
-          { label: 'Centro', value: 'center' },
-          { label: 'Direita', value: 'right' },
-        ],
-        defaultValue: 'left',
+        options: ['text-left', 'text-center', 'text-right'],
+        defaultValue: 'text-left'
       },
       {
-        key: 'useUsername',
-        label: 'Usar Nome do Usuário',
-        type: 'boolean-switch',
-        defaultValue: false
-      },
-      {
-        key: 'usernamePattern',
-        label: 'Padrão de Personalização',
-        type: 'text-input',
-        placeholder: 'Olá {{username}}, ...',
-        defaultValue: 'Olá {{username}}!'
-      },
-      {
-        key: 'trackingEnabled',
-        label: 'Habilitar Analytics',
-        type: 'boolean-switch',
-        defaultValue: false
-      },
-      {
-        key: 'animation',
-        label: 'Animação',
-        type: 'select',
-        options: [
-          { label: 'Fade In', value: 'fadeIn' },
-          { label: 'Slide da Esquerda', value: 'slideInFromLeft' },
-          { label: 'Slide da Direita', value: 'slideInFromRight' },
-          { label: 'Scale In', value: 'scaleIn' },
-        ],
-        defaultValue: 'fadeIn',
+        key: 'color',
+        label: 'Cor do Texto',
+        type: 'color',
+        defaultValue: '#432818'
       }
     ],
+    defaultProperties: {
+      content: 'Texto editável com formatação elegante.',
+      fontFamily: 'Inter',
+      fontSize: 'text-base',
+      textAlign: 'text-left',
+      color: '#432818'
+    }
   },
 
-  // Categoria: Mídia
   {
-    type: 'image-inline',
-    name: 'Imagem (Inline)',
-    description: 'Imagem horizontal responsiva inline.',
-    icon: 'Image', // Corrigido para o nome Lucide correto
+    type: 'heading-inline',
+    name: 'Título Elegante',
+    description: 'Títulos com design moderno e destaque de palavras',
+    icon: 'Heading',
     category: 'Inline',
     propertiesSchema: [
       {
-        key: 'src',
-        label: 'URL da Imagem',
-        type: 'image-url',
-        placeholder: 'https://via.placeholder.com/600x400',
-        defaultValue: 'https://via.placeholder.com/600x400?text=Imagem'
+        key: 'content',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Título Principal'
       },
       {
-        key: 'alt',
-        label: 'Texto Alternativo',
-        type: 'text-input',
-        placeholder: 'Descrição da imagem',
-        defaultValue: 'Imagem'
+        key: 'level',
+        label: 'Nível',
+        type: 'select',
+        options: ['h1', 'h2', 'h3', 'h4'],
+        defaultValue: 'h2'
       },
       {
-        key: 'width',
-        label: 'Largura',
-        type: 'text-input',
-        placeholder: 'auto, 100%, 300px...',
-        defaultValue: 'auto'
+        key: 'fontWeight',
+        label: 'Peso da Fonte',
+        type: 'select',
+        options: ['normal', 'medium', 'semibold', 'bold', 'extrabold'],
+        defaultValue: 'bold'
       },
       {
-        key: 'alignment',
+        key: 'textAlign',
         label: 'Alinhamento',
         type: 'select',
-        options: [
-          { label: 'Esquerda', value: 'left' },
-          { label: 'Centro', value: 'center' },
-          { label: 'Direita', value: 'right' },
-        ],
-        defaultValue: 'center',
-      },
-    ],
-  },
-
-  {
-    type: 'video-player', // Corrigido de 'video' para 'video-player' para consistência
-    name: 'Player de Vídeo',
-    description: 'Incorporação de vídeo YouTube/Vimeo.',
-    icon: 'Video', // Corrigido para o nome Lucide correto
-    category: 'Mídia',
-    propertiesSchema: [
-      {
-        key: 'videoUrl',
-        label: 'URL do Vídeo',
-        type: 'video-url',
-        placeholder: 'https://youtube.com/watch?v=...',
-        description: 'Insira a URL direta para o arquivo de vídeo (.mp4, .webm, etc.) ou link do YouTube/Vimeo.'
-      },
-      {
-        key: 'poster',
-        label: 'Imagem de Capa',
-        type: 'image-url',
-        placeholder: 'https://...'
-      },
-      {
-        key: 'autoplay',
-        label: 'Autoplay',
-        type: 'boolean-switch',
-        defaultValue: false
-      },
-      {
-        key: 'controls',
-        label: 'Mostrar Controles',
-        type: 'boolean-switch',
-        defaultValue: true
-      },
-    ],
-  },
-
-  {
-    type: 'audio',
-    name: 'Player de Áudio', // Mais descritivo
-    description: 'Player de áudio.',
-    icon: 'Mic', // Corrigido para o nome Lucide correto
-    category: 'Mídia',
-    propertiesSchema: [
-      { key: 'audioUrl', label: 'URL do Áudio', type: 'video-url', placeholder: 'https://example.com/audio.mp3', description: 'Insira a URL direta para o arquivo de áudio (.mp3, .wav, etc.).' },
-      { key: 'autoplay', label: 'Autoplay', type: 'boolean-switch', defaultValue: false },
-      { key: 'controls', label: 'Mostrar Controles', type: 'boolean-switch', defaultValue: true },
-    ],
-  },
-
-  {
-    type: 'carousel',
-    name: 'Carrossel de Imagens', // Mais descritivo
-    description: 'Galeria de imagens deslizante.',
-    icon: 'GalleryHorizontalEnd', // Corrigido para o nome Lucide correto
-    category: 'Mídia',
-    propertiesSchema: [
-      {
-        key: 'images',
-        label: 'Imagens do Carrossel',
-        type: 'array-editor',
-        itemSchema: [
-          { key: 'src', label: 'URL da Imagem', type: 'image-url', placeholder: 'https://example.com/img1.jpg' },
-          { key: 'alt', label: 'Texto Alternativo', type: 'text-input', placeholder: 'Imagem do carrossel' },
-        ],
-        description: 'Adicione URLs e textos alternativos para as imagens do carrossel.'
-      },
-      { key: 'autoplay', label: 'Autoplay', type: 'boolean-switch', defaultValue: true },
-      { key: 'interval', label: 'Intervalo (ms)', type: 'number-input', min: 1000, defaultValue: 5000, description: 'Tempo entre as transições de imagem.' },
-    ],
-  },
-
-  // Categoria: Interação
-  {
-    type: 'button',
-    name: 'Botão',
-    description: 'Botão de ação personalizável.',
-    icon: 'RectangleHorizontal', // Corrigido para o nome Lucide correto
-    category: 'Interação',
-    propertiesSchema: [
-      {
-        key: 'text',
-        label: 'Texto do Botão',
-        type: 'text-input',
-        placeholder: 'Clique aqui',
-        defaultValue: 'Texto do Botão'
-      },
-      {
-        key: 'style',
-        label: 'Estilo',
-        type: 'select',
-        options: [
-          { label: 'Primário', value: 'primary' },
-          { label: 'Secundário', value: 'secondary' },
-          { label: 'Destaque', value: 'accent' },
-        ],
-        defaultValue: 'primary',
-      },
-      {
-        key: 'size',
-        label: 'Tamanho',
-        type: 'select',
-        options: [
-          { label: 'Pequeno', value: 'sm' },
-          { label: 'Padrão', value: 'default' },
-          { label: 'Grande', value: 'lg' },
-        ],
-        defaultValue: 'default',
-      },
-      {
-        key: 'fullWidth',
-        label: 'Largura Total',
-        type: 'boolean-switch',
-        defaultValue: false
-      },
-    ],
-  },
-
-  {
-    type: 'form-input', // Renomeado para 'form-input' para clareza
-    name: 'Campo de Entrada',
-    description: 'Input de texto genérico para formulários.',
-    icon: 'TextCursorInput', // Corrigido para o nome Lucide correto
-    category: 'Formulário', // Nova categoria
-    propertiesSchema: [
-      { key: 'label', label: 'Rótulo', type: 'text-input', placeholder: 'Nome Completo' },
-      { key: 'placeholder', label: 'Placeholder', type: 'text-input', placeholder: 'Digite seu nome aqui...' },
-      {
-        key: 'inputType', // Renomeado de 'type' para 'inputType' para evitar conflito com BlockDefinition.type
-        label: 'Tipo de Input',
-        type: 'select',
-        options: [
-          { label: 'Texto', value: 'text' },
-          { label: 'Email', value: 'email' },
-          { label: 'Telefone', value: 'tel' },
-          { label: 'Número', value: 'number' },
-          { label: 'Senha', value: 'password' },
-        ],
-        defaultValue: 'text',
-      },
-      { key: 'required', label: 'Obrigatório', type: 'boolean-switch', defaultValue: false },
-    ],
-  },
-
-  // Categoria: UI
-  {
-    type: 'spacer',
-    name: 'Espaçador',
-    description: 'Adiciona espaço em branco entre blocos.',
-    icon: 'StretchHorizontal', // Corrigido para o nome Lucide correto
-    category: 'UI',
-    propertiesSchema: [
-      {
-        key: 'height',
-        label: 'Altura',
-        type: 'text-input',
-        placeholder: '50px, 2rem, etc.',
-        defaultValue: '50px'
-      },
-      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color-picker', defaultValue: 'transparent' },
-      { key: 'borderStyle', label: 'Estilo da Borda', type: 'select', defaultValue: 'none',
-        options: [
-          { label: 'Nenhum', value: 'none' },
-          { label: 'Sólida', value: 'solid' },
-          { label: 'Tracejada', value: 'dashed' },
-          { label: 'Pontilhada', value: 'dotted' },
-        ]
-      },
-      { key: 'borderColor', label: 'Cor da Borda', type: 'color-picker', defaultValue: '#facc15' },
-    ],
-  },
-
-  {
-    type: 'alert',
-    name: 'Alerta',
-    description: 'Caixa de mensagem de alerta com diferentes variantes.',
-    icon: 'TriangleAlert', // Corrigido para o nome Lucide correto
-    category: 'UI',
-    propertiesSchema: [
-      { key: 'title', label: 'Título do Alerta', type: 'text-input', placeholder: 'Atenção!' },
-      { key: 'message', label: 'Mensagem do Alerta', type: 'textarea', placeholder: 'Esta é uma mensagem importante.', rows: 2 },
-      {
-        key: 'variant',
-        label: 'Variante',
-        type: 'select',
-        options: [
-          { label: 'Info (Azul)', value: 'info' },
-          { label: 'Sucesso (Verde)', value: 'success' },
-          { label: 'Aviso (Amarelo)', value: 'warning' },
-          { label: 'Erro (Vermelho)', value: 'error' },
-        ],
-        defaultValue: 'info',
-      },
-    ],
-  },
-
-  {
-    type: 'loader', // Renomeado de 'loader' para 'loader' para consistência
-    name: 'Indicador de Carregamento', // Mais descritivo
-    description: 'Indicador de carregamento animado.',
-    icon: 'LoaderCircle', // Corrigido para o nome Lucide correto
-    category: 'UI',
-    propertiesSchema: [
-      { key: 'message', label: 'Mensagem', type: 'text-input', placeholder: 'Carregando...' },
-      {
-        key: 'animationType', // Renomeado de 'type' para 'animationType' para evitar conflito
-        label: 'Tipo de Animação',
-        type: 'select',
-        options: [
-          { label: 'Girando', value: 'spinning' },
-          { label: 'Pontos', value: 'dots' },
-          { label: 'Barras', value: 'bars' },
-          { label: 'Elegante', value: 'elegant' },
-        ],
-        defaultValue: 'spinning',
-      },
-      { key: 'duration', label: 'Duração (ms)', type: 'number-input', min: 100, defaultValue: 4000, description: 'Duração da animação (se aplicável).' },
-    ],
-  },
-
-  {
-    type: 'confetti',
-    name: 'Efeito Confetti', // Mais descritivo
-    description: 'Efeito visual de confete.',
-    icon: 'Sparkles', // Corrigido para o nome Lucide correto
-    category: 'UI',
-    isNew: true,
-    propertiesSchema: [
-      { key: 'duration', label: 'Duração (ms)', type: 'number-input', defaultValue: 3000, min: 500, description: 'Tempo que o confete fica visível.' },
-      { key: 'particleCount', label: 'Contagem de Partículas', type: 'number-input', defaultValue: 100, min: 10, max: 500, description: 'Número de partículas de confete.' },
-    ],
-  },
-
-  {
-    type: 'marquee',
-    name: 'Marquise (Texto Rolante)', // Mais descritivo
-    description: 'Texto rolando horizontalmente.',
-    icon: 'ArrowRightLeft', // Corrigido para o nome Lucide correto
-    category: 'UI',
-    isNew: true,
-    propertiesSchema: [
-      { key: 'text', label: 'Texto da Marquise', type: 'text-input', placeholder: 'Texto que rola...' },
-      { key: 'speed', label: 'Velocidade', type: 'number-input', defaultValue: 50, min: 10, max: 200, description: 'Velocidade de rolagem (menor = mais rápido).' },
-      { key: 'direction', label: 'Direção', type: 'select', options: [{ label: 'Esquerda', value: 'left' }, { label: 'Direita', value: 'right' }], defaultValue: 'left' },
-      { key: 'textColor', label: 'Cor do Texto', type: 'color-picker', defaultValue: '#000000' },
-      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color-picker', defaultValue: '#f0f0f0' },
-    ],
-  },
-
-  {
-    type: 'options-grid',
-    name: 'Grid de Opções',
-    description: 'Exibe opções em um formato de grade, ideal para seleção visual com imagens grandes.',
-    icon: 'Rows3',
-    category: 'UI',
-    propertiesSchema: [
-      { key: 'title', label: 'Título da Seção', type: 'text-input', placeholder: 'Escolha sua opção:', defaultValue: '' },
-      {
-        key: 'options',
-        label: 'Opções',
-        type: 'array-editor',
-        itemSchema: [
-          { key: 'id', label: 'ID da Opção', type: 'text-input', placeholder: 'opcao-1', defaultValue: '' },
-          { key: 'text', label: 'Texto da Opção (HTML permitido)', type: 'textarea', placeholder: 'A) <strong>Texto</strong> da opção', defaultValue: '' },
-          { key: 'value', label: 'Valor da Opção', type: 'text-input', placeholder: 'valor-opcao', defaultValue: '' },
-          { key: 'imageUrl', label: 'URL da Imagem', type: 'image-url', placeholder: 'https://example.com/option1.jpg', defaultValue: '' },
-          { key: 'category', label: 'Categoria', type: 'text-input', placeholder: 'categoria-estilo', defaultValue: '' },
-        ],
-        defaultValue: [
-          { id: 'opcao-1', text: 'Opção 1', value: 'opcao-1', imageUrl: '', category: '' },
-          { id: 'opcao-2', text: 'Opção 2', value: 'opcao-2', imageUrl: '', category: '' }
-        ]
-      },
-      { key: 'columns', label: 'Colunas (Grade)', type: 'number-input', min: 1, max: 4, defaultValue: 2 },
-      { key: 'showImages', label: 'Mostrar Imagens', type: 'boolean-switch', defaultValue: true },
-      { key: 'imageSize', label: 'Tamanho das Imagens', type: 'select', options: [
-        { label: 'Pequeno', value: 'small' },
-        { label: 'Médio', value: 'medium' },
-        { label: 'Grande', value: 'large' }
-      ], defaultValue: 'large' },
-      { key: 'multipleSelection', label: 'Seleção Múltipla', type: 'boolean-switch', defaultValue: false },
-      { key: 'maxSelections', label: 'Máximo de Seleções', type: 'number-input', min: 1, max: 10, defaultValue: 1 },
-      { key: 'minSelections', label: 'Mínimo de Seleções', type: 'number-input', min: 1, max: 10, defaultValue: 1 },
-      { key: 'validationMessage', label: 'Mensagem de Validação', type: 'text-input', placeholder: 'Selecione uma opção', defaultValue: 'Selecione uma opção' },
-      { key: 'gridGap', label: 'Espaçamento (px)', type: 'number-input', min: 4, max: 32, defaultValue: 16 },
-      { key: 'selectedOptions', label: 'Opções Selecionadas', type: 'array-editor', itemSchema: [
-        { key: 'value', label: 'ID da Opção', type: 'text-input', placeholder: 'opcao-1', defaultValue: '' }
-      ], defaultValue: [] },
-    ],
-  },
-
-  // Categoria: Gráficos
-  {
-    type: 'chart-area',
-    name: 'Gráfico de Área',
-    description: 'Gráfico de área para visualizar dados.',
-    icon: 'ChartArea', // Corrigido para o nome Lucide correto
-    category: 'Gráficos',
-    propertiesSchema: [
-      { key: 'title', label: 'Título do Gráfico', type: 'text-input', placeholder: 'Gráfico de Área' },
-      { key: 'data', label: 'Dados (JSON)', type: 'json-editor', placeholder: '[{"x": 1, "y": 10}, {"x": 2, "y": 20}]', description: 'Array de objetos com dados para o gráfico.' },
-      { key: 'xAxisKey', label: 'Chave do Eixo X', type: 'text-input', placeholder: 'x', defaultValue: 'x' },
-      { key: 'yAxisKey', label: 'Chave do Eixo Y', type: 'text-input', placeholder: 'y', defaultValue: 'y' },
-    ],
-  },
-
-  {
-    type: 'chart-compare',
-    name: 'Gráfico de Comparação', // Mais descritivo
-    description: 'Gráfico de comparação de dois valores.',
-    icon: 'AlignHorizontalDistributeEnd', // Corrigido para o nome Lucide correto
-    category: 'Gráficos',
-    isNew: true,
-    propertiesSchema: [
-      { key: 'title', label: 'Título da Comparação', type: 'text-input', placeholder: 'Antes vs Depois' },
-      { key: 'value1', label: 'Valor 1', type: 'number-input', defaultValue: 30, min: 0, max: 100 },
-      { key: 'label1', label: 'Label 1', type: 'text-input', placeholder: 'Antes' },
-      { key: 'value2', label: 'Valor 2', type: 'number-input', defaultValue: 70, min: 0, max: 100 },
-      { key: 'label2', label: 'Label 2', type: 'text-input', placeholder: 'Depois' },
-      { key: 'color1', label: 'Cor 1', type: 'color-picker', defaultValue: '#B89B7A' },
-      { key: 'color2', label: 'Cor 2', type: 'color-picker', defaultValue: '#432818' },
-    ],
-  },
-
-  {
-    type: 'chart-level',
-    name: 'Indicador de Nível', // Mais descritivo
-    description: 'Indicador circular de nível ou progresso.',
-    icon: 'SlidersHorizontal', // Corrigido para o nome Lucide correto
-    category: 'Gráficos',
-    propertiesSchema: [
-      { key: 'value', label: 'Valor (%)', type: 'number-input', defaultValue: 75, min: 0, max: 100 },
-      { key: 'label', label: 'Rótulo', type: 'text-input', placeholder: 'Nível de Progresso' },
-      { key: 'color', label: 'Cor Principal', type: 'color-picker', defaultValue: '#3b82f6' },
-      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color-picker', defaultValue: '#e0e7ff' },
-    ],
-  },
-
-  // Categoria: Social
-  {
-    type: 'arguments',
-    name: 'Argumentos/Benefícios', // Mais descritivo
-    description: 'Lista de argumentos ou benefícios com ícones.',
-    icon: 'Book', // Corrigido para o nome Lucide correto
-    category: 'Social',
-    propertiesSchema: [
-      { key: 'title', label: 'Título', type: 'text-input', placeholder: 'Por que escolher nosso produto?' },
-      {
-        key: 'items',
-        label: 'Lista de Argumentos',
-        type: 'array-editor',
-        itemSchema: [
-          { key: 'text', label: 'Texto do Argumento', type: 'text-input', placeholder: 'Qualidade superior' },
-          { key: 'icon', label: 'Ícone (Lucide ou Emoji)', type: 'text-input', placeholder: 'CheckCircle ou ✅' },
-        ],
-        description: 'Adicione cada argumento com seu texto e um ícone (nome Lucide React ou emoji).'
-      },
-    ],
-  },
-
-  {
-    type: 'quote',
-    name: 'Citação',
-    description: 'Um bloco de citação com autor.',
-    icon: 'Quote', // Corrigido para o nome Lucide correto
-    category: 'Social',
-    propertiesSchema: [
-      { key: 'text', label: 'Texto da Citação', type: 'textarea', placeholder: 'A vida é o que acontece enquanto você está ocupado fazendo outros planos.', rows: 3 },
-      { key: 'author', label: 'Autor', type: 'text-input', placeholder: 'John Lennon' },
-    ],
-  },
-
-  // Categoria: Credibilidade
-  {
-    type: 'testimonials-grid',
-    name: 'Grade de Depoimentos',
-    description: 'Seção com múltiplos depoimentos de clientes.',
-    icon: 'Users', // Corrigido para o nome Lucide correto
-    category: 'Credibilidade',
-    propertiesSchema: [
-      { key: 'title', label: 'Título da Seção', type: 'text-input', placeholder: 'O que nossos clientes dizem', defaultValue: 'Depoimentos' },
-      {
-        key: 'testimonials',
-        label: 'Depoimentos',
-        type: 'array-editor',
-        defaultValue: [
-          { name: 'Maria Silva', text: 'A consultoria mudou completamente minha relação com a moda!', rating: 5, image: 'https://placehold.co/100x100/cccccc/333333?text=Avatar', occupation: 'Empresária' }
-        ],
-        itemSchema: [
-          { key: 'name', label: 'Nome', type: 'text-input' },
-          { key: 'text', label: 'Depoimento', type: 'textarea', rows: 3 },
-          { key: 'rating', label: 'Avaliação (1-5)', type: 'number-input', min: 1, max: 5 },
-          { key: 'image', label: 'Foto', type: 'image-url' },
-          { key: 'occupation', label: 'Profissão', type: 'text-input' }
-        ]
-      },
-      {
-        key: 'layout',
-        label: 'Layout',
-        type: 'select',
-        defaultValue: 'grid',
-        options: [
-          { label: 'Grade 2x2', value: 'grid' },
-          { label: 'Carrossel', value: 'carousel' },
-          { label: 'Lista Vertical', value: 'list' }
-        ]
-      },
-      { key: 'showRating', label: 'Mostrar Avaliações', type: 'boolean-switch', defaultValue: true }
-    ],
-  },
-
-  {
-    type: 'faq-section',
-    name: 'Perguntas Frequentes',
-    description: 'Seção de FAQ com perguntas e respostas.',
-    icon: 'HelpCircle', // Corrigido para o nome Lucide correto
-    category: 'Credibilidade',
-    propertiesSchema: [
-      { key: 'title', label: 'Título da Seção', type: 'text-input', placeholder: 'Perguntas Frequentes', defaultValue: 'Dúvidas Frequentes' },
-      {
-        key: 'faqs',
-        label: 'Perguntas e Respostas',
-        type: 'array-editor',
-        itemSchema: [
-          { key: 'question', label: 'Pergunta', type: 'text-input', placeholder: 'Como funciona?' },
-          { key: 'answer', label: 'Resposta', type: 'textarea', placeholder: 'Resposta detalhada...', rows: 3 },
-        ],
-      },
-      { key: 'allowMultiple', label: 'Permitir Múltiplas Abertas', type: 'boolean-switch', defaultValue: false }
-    ],
-  },
-
-  {
-    type: 'guarantee-section', // Renomeado para consistência
-    name: 'Seção de Garantia',
-    description: 'Selo de garantia para transmitir confiança.',
-    icon: 'Shield', // Corrigido para o nome Lucide correto
-    category: 'Credibilidade',
-    propertiesSchema: [
-      { key: 'title', label: 'Título', type: 'text-input', defaultValue: 'Garantia Incondicional' },
-      { key: 'guaranteeText', label: 'Texto da Garantia', type: 'textarea', rows: 3, defaultValue: 'Se você não ficar 100% satisfeita com sua transformação, devolvemos seu dinheiro.' },
-      { key: 'guaranteePeriod', label: 'Período de Garantia', type: 'text-input', defaultValue: '30 dias' },
-      { key: 'guaranteeIcon', label: 'Ícone da Garantia', type: 'image-url', placeholder: 'https://...' },
-      { key: 'showMoneyBackBadge', label: 'Mostrar Selo "Dinheiro de Volta"', type: 'boolean-switch', defaultValue: true }, // Corrigido o nome da chave
-      { key: 'additionalInfo', label: 'Informações Adicionais', type: 'textarea', rows: 2, placeholder: 'Termos e condições adicionais' }
-    ],
-  },
-
-  // Categoria: Vendas
-  {
-    type: 'product-carousel',
-    name: 'Carrossel de Produtos',
-    description: 'Carrossel responsivo com produtos e CTAs.',
-    icon: 'ShoppingCart',
-    category: 'Vendas',
-    propertiesSchema: [
-      { key: 'title', label: 'Título', type: 'text-input', defaultValue: 'Nossos Produtos' },
-      { key: 'subtitle', label: 'Subtítulo', type: 'text-input', defaultValue: '' },
-      {
-        key: 'products',
-        label: 'Produtos',
-        type: 'array-editor',
-        defaultValue: [
-          { id: '1', name: 'Produto 1', description: 'Descrição do produto', price: 'R$ 97,00', image: 'https://placehold.co/400x300', ctaText: 'Comprar Agora' }
-        ],
-        itemSchema: [
-          { key: 'id', label: 'ID', type: 'text-input' },
-          { key: 'name', label: 'Nome', type: 'text-input' },
-          { key: 'description', label: 'Descrição', type: 'textarea', rows: 2 },
-          { key: 'price', label: 'Preço', type: 'text-input' },
-          { key: 'originalPrice', label: 'Preço Original', type: 'text-input' },
-          { key: 'discount', label: 'Desconto', type: 'text-input' },
-          { key: 'image', label: 'Imagem', type: 'image-url' },
-          { key: 'rating', label: 'Avaliação (1-5)', type: 'number-input', min: 1, max: 5 },
-          { key: 'reviews', label: 'Número de Avaliações', type: 'number-input' },
-          { key: 'ctaText', label: 'Texto do Botão', type: 'text-input' },
-          { key: 'ctaUrl', label: 'URL do Botão', type: 'text-input' }
-        ]
-      },
-      { key: 'itemsPerView', label: 'Items por Visualização', type: 'number-input', min: 1, max: 4, defaultValue: 3 },
-      { key: 'showArrows', label: 'Mostrar Setas', type: 'boolean-switch', defaultValue: true },
-      { key: 'showDots', label: 'Mostrar Pontos', type: 'boolean-switch', defaultValue: true },
-      { key: 'autoplay', label: 'Autoplay', type: 'boolean-switch', defaultValue: false },
-      { key: 'autoplayInterval', label: 'Intervalo Autoplay (ms)', type: 'number-input', defaultValue: 5000 }
-    ],
-  },
-
-  {
-    type: 'before-after',
-    name: 'Antes e Depois',
-    description: 'Comparação interativa antes e depois.',
-    icon: 'ArrowRightLeft',
-    category: 'Vendas',
-    propertiesSchema: [
-      { key: 'title', label: 'Título', type: 'text-input', defaultValue: 'Transformação' },
-      { key: 'subtitle', label: 'Subtítulo', type: 'text-input', defaultValue: '' },
-      { key: 'beforeImage', label: 'Imagem Antes', type: 'image-url', placeholder: 'https://example.com/before.jpg' },
-      { key: 'afterImage', label: 'Imagem Depois', type: 'image-url', placeholder: 'https://example.com/after.jpg' },
-      { key: 'beforeLabel', label: 'Label Antes', type: 'text-input', defaultValue: 'Antes' },
-      { key: 'afterLabel', label: 'Label Depois', type: 'text-input', defaultValue: 'Depois' },
-      { key: 'beforeDescription', label: 'Descrição Antes', type: 'textarea', rows: 3 },
-      { key: 'afterDescription', label: 'Descrição Depois', type: 'textarea', rows: 3 },
-      { key: 'showLabels', label: 'Mostrar Labels', type: 'boolean-switch', defaultValue: true },
-      { key: 'showDescriptions', label: 'Mostrar Descrições', type: 'boolean-switch', defaultValue: true },
-      { key: 'sliderPosition', label: 'Posição Inicial do Slider (%)', type: 'number-input', min: 0, max: 100, defaultValue: 50 }
-    ],
-  },
-
-  {
-    type: 'two-columns',
-    name: 'Duas Colunas',
-    description: 'Layout responsivo de duas colunas com depoimentos ou conteúdo personalizado.',
-    icon: 'Rows3',
-    category: 'Inline',
-    propertiesSchema: [
-      { key: 'title', label: 'Título da Seção', type: 'text-input', defaultValue: 'Depoimentos dos Clientes' },
-      { key: 'showTitle', label: 'Mostrar Título', type: 'boolean-switch', defaultValue: true },
-      {
-        key: 'layout',
-        label: 'Tipo de Layout',
-        type: 'select',
-        options: [
-          { label: 'Grid Responsivo', value: 'grid' },
-          { label: 'Flexbox', value: 'flex' }
-        ],
-        defaultValue: 'grid'
-      },
-      {
-        key: 'columnType',
-        label: 'Tipo de Conteúdo',
-        type: 'select',
-        options: [
-          { label: 'Depoimentos/Reviews', value: 'reviews' },
-          { label: 'Cards de Benefícios', value: 'benefits' },
-          { label: 'Estatísticas', value: 'stats' },
-          { label: 'Conteúdo Personalizado', value: 'custom' }
-        ],
-        defaultValue: 'reviews'
-      },
-      { key: 'showRating', label: 'Mostrar Estrelas', type: 'boolean-switch', defaultValue: true },
-      { key: 'showHandle', label: 'Mostrar @handle', type: 'boolean-switch', defaultValue: true },
-      {
-        key: 'cardStyle',
-        label: 'Estilo dos Cards',
-        type: 'select',
-        options: [
-          { label: 'Com Borda', value: 'bordered' },
-          { label: 'Preenchido', value: 'filled' },
-          { label: 'Minimalista', value: 'minimal' },
-          { label: 'Elevado', value: 'elevated' }
-        ],
-        defaultValue: 'bordered'
-      },
-      {
-        key: 'alignment',
-        label: 'Alinhamento',
-        type: 'select',
-        options: [
-          { label: 'Esquerda', value: 'left' },
-          { label: 'Centro', value: 'center' },
-          { label: 'Direita', value: 'right' }
-        ],
+        options: ['left', 'center', 'right'],
         defaultValue: 'center'
       },
       {
-        key: 'spacing',
-        label: 'Espaçamento',
-        type: 'select',
-        options: [
-          { label: 'Compacto', value: 'tight' },
-          { label: 'Normal', value: 'normal' },
-          { label: 'Amplo', value: 'loose' }
-        ],
-        defaultValue: 'normal'
-      },
-      { key: 'useUsername', label: 'Personalizar com Nome', type: 'boolean-switch', defaultValue: false },
-      { key: 'trackingEnabled', label: 'Habilitar Métricas', type: 'boolean-switch', defaultValue: false },
-      {
-        key: 'animation',
-        label: 'Animação',
-        type: 'select',
-        options: [
-          { label: 'Fade In', value: 'fadeIn' },
-          { label: 'Scale In', value: 'scaleIn' },
-          { label: 'Slide Up', value: 'slideUp' },
-          { label: 'Sem Animação', value: 'none' }
-        ],
-        defaultValue: 'fadeIn'
-      }
-    ],
-  },
-
-  {
-    type: 'pros-cons',
-    name: 'Prós e Contras',
-    description: 'Lista de vantagens e desvantagens.',
-    icon: 'Scale',
-    category: 'Vendas',
-    propertiesSchema: [
-      { key: 'title', label: 'Título', type: 'text-input', defaultValue: 'Prós e Contras' },
-      { key: 'subtitle', label: 'Subtítulo', type: 'text-input', defaultValue: '' },
-      { key: 'prosTitle', label: 'Título dos Prós', type: 'text-input', defaultValue: 'Vantagens' },
-      { key: 'consTitle', label: 'Título dos Contras', type: 'text-input', defaultValue: 'Desvantagens' },
-      {
-        key: 'pros',
-        label: 'Lista de Prós',
-        type: 'array-editor',
-        defaultValue: [
-          { id: '1', text: 'Vantagem 1', highlight: false }
-        ],
-        itemSchema: [
-          { key: 'id', label: 'ID', type: 'text-input' },
-          { key: 'text', label: 'Texto', type: 'text-input' },
-          { key: 'icon', label: 'Ícone', type: 'text-input' },
-          { key: 'highlight', label: 'Destacar', type: 'boolean-switch' }
-        ]
-      },
-      {
-        key: 'cons',
-        label: 'Lista de Contras',
-        type: 'array-editor',
-        defaultValue: [
-          { id: '1', text: 'Desvantagem 1', severity: 'low' }
-        ],
-        itemSchema: [
-          { key: 'id', label: 'ID', type: 'text-input' },
-          { key: 'text', label: 'Texto', type: 'text-input' },
-          { key: 'icon', label: 'Ícone', type: 'text-input' },
-          { key: 'severity', label: 'Gravidade', type: 'select', options: [
-            { label: 'Baixa', value: 'low' },
-            { label: 'Média', value: 'medium' },
-            { label: 'Alta', value: 'high' }
-          ]}
-        ]
-      },
-      {
-        key: 'layout',
-        label: 'Layout',
-        type: 'select',
-        options: [
-          { label: 'Lado a Lado', value: 'side-by-side' },
-          { label: 'Empilhado', value: 'stacked' }
-        ],
-        defaultValue: 'side-by-side'
-      },
-      { key: 'showIcons', label: 'Mostrar Ícones', type: 'boolean-switch', defaultValue: true }
-    ],
-  },
-
-  {
-    type: 'dynamic-pricing',
-    name: 'Preços Dinâmicos',
-    description: 'Tabela de preços flexível e responsiva.',
-    icon: 'CircleDollarSign',
-    category: 'Vendas',
-    propertiesSchema: [
-      { key: 'title', label: 'Título', type: 'text-input', defaultValue: 'Escolha seu Plano' },
-      { key: 'subtitle', label: 'Subtítulo', type: 'text-input', defaultValue: '' },
-      {
-        key: 'plans',
-        label: 'Planos',
-        type: 'array-editor',
-        defaultValue: [
-          { id: '1', name: 'Básico', price: '97', features: ['Recurso 1', 'Recurso 2'], ctaText: 'Escolher Plano' }
-        ],
-        itemSchema: [
-          { key: 'id', label: 'ID', type: 'text-input' },
-          { key: 'name', label: 'Nome do Plano', type: 'text-input' },
-          { key: 'description', label: 'Descrição', type: 'text-input' },
-          { key: 'price', label: 'Preço', type: 'text-input' },
-          { key: 'originalPrice', label: 'Preço Original', type: 'text-input' },
-          { key: 'discount', label: 'Desconto', type: 'text-input' },
-          { key: 'badge', label: 'Badge', type: 'text-input' },
-          { key: 'badgeColor', label: 'Cor do Badge', type: 'color-picker' },
-          { key: 'ctaText', label: 'Texto do Botão', type: 'text-input' },
-          { key: 'ctaUrl', label: 'URL do Botão', type: 'text-input' },
-          { key: 'isPopular', label: 'Mais Popular', type: 'boolean-switch' },
-          { key: 'isRecommended', label: 'Recomendado', type: 'boolean-switch' }
-        ]
-      },
-      {
-        key: 'layout',
-        label: 'Layout',
-        type: 'select',
-        options: [
-          { label: 'Cards', value: 'cards' },
-          { label: 'Tabela', value: 'table' },
-          { label: 'Minimal', value: 'minimal' }
-        ],
-        defaultValue: 'cards'
-      },
-      { key: 'currency', label: 'Moeda', type: 'text-input', defaultValue: 'R$' }
-    ],
-  },
-
-                                  {
-    type: 'value-anchoring',
-    name: 'Ancoragem de Valor',
-    description: 'Demonstração de valor e ROI.',
-    icon: 'Target',
-    category: 'Vendas',
-    propertiesSchema: [
-      { key: 'title', label: 'Título', type: 'text-input', defaultValue: 'Valor Investido vs Retorno' },
-      { key: 'subtitle', label: 'Subtítulo', type: 'text-input', defaultValue: '' },
-      {
-        key: 'anchoringType',
-        label: 'Tipo de Ancoragem',
-        type: 'select',
-        options: [
-          { label: 'Comparação de Preços', value: 'price-comparison' },
-          { label: 'Valor do Tempo', value: 'time-value' },
-          { label: 'Análise de Custos', value: 'cost-analysis' },
-          { label: 'Calculadora ROI', value: 'roi-calculator' }
-        ],
-        defaultValue: 'price-comparison'
-      },
-      { key: 'mainValue', label: 'Valor Principal', type: 'text-input', defaultValue: 'R$ 97,00' },
-      { key: 'comparisonValue', label: 'Valor de Comparação', type: 'text-input', defaultValue: 'R$ 2.970,00' },
-      { key: 'period', label: 'Período', type: 'text-input', defaultValue: '' },
-      { key: 'description', label: 'Descrição', type: 'textarea', rows: 3 },
-      { key: 'highlightSavings', label: 'Destacar Economia', type: 'boolean-switch', defaultValue: true },
-      { key: 'savingsText', label: 'Texto da Economia', type: 'text-input', defaultValue: 'Economia de 96%' },
-      {
-        key: 'visualType',
-        label: 'Tipo Visual',
-        type: 'select',
-        options: [
-          { label: 'Comparação', value: 'comparison' },
-          { label: 'Cards', value: 'cards' },
-          { label: 'Gráfico', value: 'chart' },
-          { label: 'Calculadora', value: 'calculator' }
-        ],
-        defaultValue: 'comparison'
-      }
-    ],
-  },
-
-  {
-    type: 'sales-offer',
-    name: 'Oferta de Vendas',
-    description: 'Apresentação da oferta principal com preços.',
-    icon: 'ShoppingCart', // Corrigido para o nome Lucide correto
-    category: 'Vendas',
-    propertiesSchema: [
-      { key: 'productName', label: 'Nome do Produto/Serviço', type: 'text-input', defaultValue: 'Consultoria de Estilo Personalizada' },
-      { key: 'headline', label: 'Título Principal', type: 'textarea', rows: 2, defaultValue: 'Transforme seu guarda-roupa com consultoria personalizada' },
-      { key: 'description', label: 'Descrição da Oferta', type: 'textarea', rows: 4, defaultValue: 'Receba um plano completo e personalizado para potencializar seu estilo único' },
-      { key: 'originalPrice', label: 'Preço Original', type: 'number-input', defaultValue: 497 },
-      { key: 'currentPrice', label: 'Preço Promocional', type: 'number-input', defaultValue: 197 },
-      { key: 'currency', label: 'Moeda', type: 'text-input', defaultValue: 'R$' },
-      { key: 'showDiscount', label: 'Mostrar % de Desconto', type: 'boolean-switch', defaultValue: true },
-      {
-        key: 'features',
-        label: 'Características/Benefícios',
-        type: 'array-editor',
-        defaultValue: [
-          { text: 'Análise completa do seu estilo', highlight: false },
-          { text: 'Cartela de cores personalizada', highlight: false },
-          { text: 'Guia de compras direcionado', highlight: false },
-          { text: 'Suporte por 30 dias', highlight: false }
-        ],
-        itemSchema: [
-          { key: 'text', label: 'Benefício', type: 'text-input' },
-          { key: 'highlight', label: 'Destacar', type: 'boolean-switch' }
-        ]
-      },
-      { key: 'ctaText', label: 'Texto do Botão', type: 'text-input', defaultValue: 'Quero Transformar Meu Estilo Agora' },
-      { key: 'urgencyText', label: 'Texto de Urgência', type: 'text-input', defaultValue: 'Oferta limitada por tempo!' }
-    ],
-  },
-
-  {
-    type: 'urgency-timer',
-    name: 'Timer de Urgência',
-    description: 'Contador regressivo para criar urgência.',
-    icon: 'Clock', // Corrigido para o nome Lucide correto
-    category: 'Vendas',
-    propertiesSchema: [
-      { key: 'title', label: 'Título', type: 'text-input', defaultValue: 'Oferta expira em:' },
-      {
-        key: 'timerType',
-        label: 'Tipo de Timer',
-        type: 'select',
-        defaultValue: 'fixed',
-        options: [
-          { label: 'Tempo Fixo', value: 'fixed' },
-          { label: 'Evergreen (por usuário)', value: 'evergreen' },
-          { label: 'Data Específica', value: 'specific' }
-        ]
-      },
-      { key: 'duration', label: 'Duração (minutos)', type: 'number-input', defaultValue: 30, min: 1, max: 60, description: 'Para timer evergreen' },
-      { key: 'endDate', label: 'Data de Fim', type: 'text-input', placeholder: 'YYYY-MM-DD HH:MM', description: 'Para timer de data específica' },
-      { key: 'expiredText', label: 'Texto Quando Expira', type: 'text-input', defaultValue: 'Oferta Expirada' },
-      { key: 'showLabels', label: 'Mostrar Labels (dias, horas, etc)', type: 'boolean-switch', defaultValue: true },
-      {
-        key: 'style',
-        label: 'Estilo Visual',
-        type: 'select',
-        defaultValue: 'digital',
-        options: [
-          { label: 'Digital', value: 'digital' },
-          { label: 'Flip Cards', value: 'flip' },
-          { label: 'Circular', value: 'circular' }
-        ]
-      }
-    ],
-  },
-
-  {
-    type: 'bonus-section',
-    name: 'Seção de Bônus',
-    description: 'Bônus adicionais para aumentar o valor percebido.',
-    icon: 'Gift', // Corrigido para o nome Lucide correto
-    category: 'Vendas',
-    propertiesSchema: [
-      { key: 'title', label: 'Título', type: 'text-input', defaultValue: 'Bônus Exclusivos' },
-      { key: 'subtitle', label: 'Subtítulo', type: 'text-input', defaultValue: 'Além da consultoria, você também recebe:' },
-      {
-        key: 'bonuses',
-        label: 'Lista de Bônus',
-        type: 'array-editor',
-        defaultValue: [
-          { name: 'Guia de Maquiagem', description: 'Técnicas para valorizar seu estilo', value: 97, image: 'https://placehold.co/100x100/cccccc/333333?text=Bonus' }
-        ],
-        itemSchema: [
-          { key: 'name', label: 'Nome do Bônus', type: 'text-input' },
-          { key: 'description', label: 'Descrição', type: 'textarea', rows: 2 },
-          { key: 'value', label: 'Valor (R$)', type: 'number-input' },
-          { key: 'image', label: 'Imagem', type: 'image-url' }
-        ]
-      },
-      { key: 'showValues', label: 'Mostrar Valores dos Bônus', type: 'boolean-switch', defaultValue: true },
-      {
-        key: 'layoutStyle',
-        label: 'Estilo do Layout',
-        type: 'select',
-        defaultValue: 'cards',
-        options: [
-          { label: 'Cards', value: 'cards' },
-          { label: 'Lista', value: 'list' },
-          { label: 'Grid', value: 'grid' }
-        ]
-      }
-    ],
-  },
-
-  // Categoria: Outros (para blocos genéricos ou de integração)
-  {
-    type: 'script',
-    name: 'Script Personalizado', // Mais descritivo
-    description: 'Insere código JavaScript customizado na página.',
-    icon: 'Code', // Corrigido para o nome Lucide correto
-    category: 'Outros',
-    propertiesSchema: [
-      { key: 'code', label: 'Código JavaScript', type: 'textarea', rows: 10, placeholder: 'console.log("Olá mundo!");', description: 'Insira o código JS que será injetado na página.' },
-      {
-        key: 'placement',
-        label: 'Posicionamento',
-        type: 'select',
-        options: [
-          { label: 'Head', value: 'head' },
-          { label: 'Body (Início)', value: 'body-start' },
-          { label: 'Body (Fim)', value: 'body-end' }
-        ],
-        defaultValue: 'body-end'
-      },
-    ],
-  },
-
-  {
-    type: 'terms',
-    name: 'Termos e Condições', // Mais descritivo
-    description: 'Bloco de termos e condições ou aviso legal.',
-    icon: 'Scale', // Corrigido para o nome Lucide correto
-    category: 'Outros',
-    propertiesSchema: [
-      { key: 'title', label: 'Título', type: 'text-input', defaultValue: 'Termos e Condições' },
-      { key: 'content', label: 'Conteúdo', type: 'textarea', rows: 5, defaultValue: 'Leia nossos termos de uso...' }
-    ],
-  },
-
-  // Outros blocos (mantidos e ajustados)
-  {
-    type: 'list',
-    name: 'Lista de Itens', // Mais descritivo
-    description: 'Lista de itens (ordenada ou não).',
-    icon: 'List',
-    category: 'Texto',
-    isNew: true,
-    propertiesSchema: [
-      { key: 'listType', label: 'Tipo de Lista', type: 'select', options: [{ label: 'Não Ordenada', value: 'ul' }, { label: 'Ordenada', value: 'ol' }], defaultValue: 'ul' },
-      {
-        key: 'items',
-        label: 'Itens da Lista',
-        type: 'array-editor',
-        itemSchema: [
-          { key: 'text', label: 'Texto do Item', type: 'text-input', placeholder: 'Novo item' },
-        ],
-      },
-    ],
-  },
-
-  {
-    type: 'chart-compare',
-    name: 'Gráfico de Comparação',
-    description: 'Gráfico de comparação de dois valores.',
-    icon: 'AlignHorizontalDistributeEnd',
-    category: 'Gráficos',
-    isNew: true,
-    propertiesSchema: [
-      { key: 'title', label: 'Título da Comparação', type: 'text-input', placeholder: 'Antes vs Depois' },
-      { key: 'value1', label: 'Valor 1', type: 'number-input', defaultValue: 30, min: 0, max: 100 },
-      { key: 'label1', label: 'Label 1', type: 'text-input', placeholder: 'Antes' },
-      { key: 'value2', label: 'Valor 2', type: 'number-input', defaultValue: 70, min: 0, max: 100 },
-      { key: 'label2', label: 'Label 2', type: 'text-input', placeholder: 'Depois' },
-      { key: 'color1', label: 'Cor 1', type: 'color-picker', defaultValue: '#B89B7A' },
-      { key: 'color2', label: 'Cor 2', type: 'color-picker', defaultValue: '#432818' },
-    ],
-  },
-
-  {
-    type: 'confetti',
-    name: 'Efeito Confetti',
-    description: 'Efeito visual de confete.',
-    icon: 'Sparkles',
-    category: 'UI',
-    isNew: true,
-    propertiesSchema: [
-      { key: 'duration', label: 'Duração (ms)', type: 'number-input', defaultValue: 3000, min: 500, description: 'Tempo que o confete fica visível.' },
-      { key: 'particleCount', label: 'Contagem de Partículas', type: 'number-input', defaultValue: 100, min: 10, max: 500, description: 'Número de partículas de confete.' },
-    ],
-  },
-
-  {
-    type: 'marquee',
-    name: 'Marquise (Texto Rolante)',
-    description: 'Texto rolando horizontalmente.',
-    icon: 'ArrowRightLeft',
-    category: 'UI',
-    isNew: true,
-    propertiesSchema: [
-      { key: 'text', label: 'Texto da Marquise', type: 'text-input', placeholder: 'Texto que rola...' },
-      { key: 'speed', label: 'Velocidade', type: 'number-input', defaultValue: 50, min: 10, max: 200, description: 'Velocidade de rolagem (menor = mais rápido).' },
-      { key: 'direction', label: 'Direção', type: 'select', options: [{ label: 'Esquerda', value: 'left' }, { label: 'Direita', value: 'right' }], defaultValue: 'left' },
-      { key: 'textColor', label: 'Cor do Texto', type: 'color-picker', defaultValue: '#000000' },
-      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color-picker', defaultValue: '#f0f0f0' },
-    ],
-  },
-
-  {
-    type: 'options-grid',
-    name: 'Grid de Opções',
-    description: 'Exibe opções em um formato de grade, ideal para seleção visual.',
-    icon: 'Rows3',
-    category: 'UI',
-    propertiesSchema: [
-      { key: 'title', label: 'Título da Seção', type: 'text-input', placeholder: 'Escolha sua opção:' },
-      {
-        key: 'options',
-        label: 'Opções',
-        type: 'array-editor',
-        itemSchema: [
-          { key: 'text', label: 'Texto da Opção', type: 'text-input', placeholder: 'Opção 1' },
-          { key: 'imageUrl', label: 'URL da Imagem (Opcional)', type: 'image-url', placeholder: 'https://example.com/option1.jpg' },
-        ],
-      },
-      { key: 'columns', label: 'Colunas (Grade)', type: 'number-input', min: 1, max: 4, defaultValue: 2 },
-    ],
-  },
-
-  {
-    type: 'script',
-    name: 'Script Personalizado',
-    description: 'Insere código JavaScript customizado na página.',
-    icon: 'Code',
-    category: 'Outros',
-    propertiesSchema: [
-      { key: 'code', label: 'Código JavaScript', type: 'textarea', rows: 10, placeholder: 'console.log("Olá mundo!");', description: 'Insira o código JS que será injetado na página.' },
-      {
-        key: 'placement',
-        label: 'Posicionamento',
-        type: 'select',
-        options: [{ label: 'Head', value: 'head' }, { label: 'Body (Início)', value: 'body-start' }, { label: 'Body (Fim)', value: 'body-end' }],
-        defaultValue: 'body-end'
-      },
-    ],
-  },
-
-  {
-    type: 'terms',
-    name: 'Termos e Condições',
-    description: 'Bloco de termos e condições ou aviso legal.',
-    icon: 'Scale',
-    category: 'Outros',
-    propertiesSchema: [
-      { key: 'title', label: 'Título', type: 'text-input', defaultValue: 'Termos e Condições' },
-      { key: 'content', label: 'Conteúdo', type: 'textarea', rows: 5, defaultValue: 'Leia nossos termos de uso...' }
-    ],
-  },
-
-  // NOVOS COMPONENTES MODULARES INLINE - ETAPAS 20 E 21
-  {
-    type: 'result-header-inline',
-    name: 'Cabeçalho de Resultado (Modular)',
-    description: 'Cabeçalho modular para página de resultado',
-    icon: 'Award',
-    category: 'Resultado',
-    propertiesSchema: [
-      { key: 'logoUrl', label: 'URL do Logo', type: 'image-url', defaultValue: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp' },
-      { key: 'logoAlt', label: 'Texto Alt do Logo', type: 'text-input', defaultValue: 'Logo Gisele Galvão' },
-      { key: 'logoHeight', label: 'Altura do Logo', type: 'text-input', defaultValue: '60px' },
-      { key: 'userName', label: 'Nome do Usuário', type: 'text-input', defaultValue: 'Querida' },
-      { key: 'title', label: 'Título', type: 'text-input', defaultValue: 'Parabéns, {userName}!' },
-      { key: 'subtitle', label: 'Subtítulo', type: 'text-input', defaultValue: 'Seu resultado personalizado está pronto' },
-      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color-picker', defaultValue: '#FFFBF7' },
-      { key: 'textColor', label: 'Cor do Texto', type: 'color-picker', defaultValue: '#432818' },
-      { key: 'showLogo', label: 'Mostrar Logo', type: 'boolean-switch', defaultValue: true },
-      { key: 'gridColumns', label: 'Colunas no Grid', type: 'number-input', defaultValue: 1, min: 1, max: 2 },
-      { key: 'spacing', label: 'Espaçamento', type: 'select', options: [
-        { label: 'Nenhum', value: 'none' },
-        { label: 'Pequeno', value: 'sm' },
-        { label: 'Médio', value: 'md' },
-        { label: 'Grande', value: 'lg' },
-        { label: 'Extra Grande', value: 'xl' }
-      ], defaultValue: 'lg' }
-    ]
-  },
-
-  {
-    type: 'testimonials-result',
-    name: 'Depoimentos de Resultado (Modular)',
-    description: 'Seção modular de depoimentos para página de resultado',
-    icon: 'MessageSquare',
-    category: 'Resultado',
-    propertiesSchema: [
-      { key: 'title', label: 'Título', type: 'text-input', defaultValue: 'O que nossas clientes dizem' },
-      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color-picker', defaultValue: '#ffffff' },
-      { key: 'textColor', label: 'Cor do Texto', type: 'color-picker', defaultValue: '#432818' },
-      { key: 'accentColor', label: 'Cor de Destaque', type: 'color-picker', defaultValue: '#B89B7A' },
-      { key: 'layout', label: 'Layout', type: 'select', options: [
-        { label: 'Grade', value: 'grid' },
-        { label: 'Carrossel', value: 'carousel' }
-      ], defaultValue: 'grid' },
-      { key: 'showRatings', label: 'Mostrar Avaliações', type: 'boolean-switch', defaultValue: true },
-      { key: 'showProfessions', label: 'Mostrar Profissões', type: 'boolean-switch', defaultValue: true },
-      { key: 'gridColumns', label: 'Colunas no Grid', type: 'number-input', defaultValue: 1, min: 1, max: 2 },
-      { key: 'spacing', label: 'Espaçamento', type: 'select', options: [
-        { label: 'Pequeno', value: 'sm' },
-        { label: 'Médio', value: 'md' },
-        { label: 'Grande', value: 'lg' },
-        { label: 'Extra Grande', value: 'xl' }
-      ], defaultValue: 'lg' }
-    ]
-  },
-
-  {
-    type: 'quiz-offer-pricing',
-    name: 'Preços da Oferta (Modular)',
-    description: 'Seção modular de preços para página de oferta',
-    icon: 'ShoppingCart',
-    category: 'Oferta',
-    propertiesSchema: [
-      { key: 'originalPrice', label: 'Preço Original', type: 'text-input', defaultValue: 'R$ 175,00' },
-      { key: 'finalPrice', label: 'Preço Final', type: 'text-input', defaultValue: 'R$ 39,90' },
-      { key: 'paymentOptions', label: 'Opções de Pagamento', type: 'text-input', defaultValue: 'ou 5x de R$ 8,83' },
-      { key: 'ctaText', label: 'Texto do Botão', type: 'text-input', defaultValue: 'QUERO DESCOBRIR MEU ESTILO AGORA' },
-      { key: 'ctaUrl', label: 'URL do Botão', type: 'text-input', defaultValue: '#checkout' },
-      { key: 'discountText', label: 'Texto do Desconto', type: 'text-input', defaultValue: 'Economia de R$ 135,10 (77% OFF)' },
-      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color-picker', defaultValue: '#ffffff' },
-      { key: 'textColor', label: 'Cor do Texto', type: 'color-picker', defaultValue: '#432818' },
-      { key: 'accentColor', label: 'Cor de Destaque', type: 'color-picker', defaultValue: '#B89B7A' },
-      { key: 'gridColumns', label: 'Colunas no Grid', type: 'number-input', defaultValue: 1, min: 1, max: 2 },
-      { key: 'spacing', label: 'Espaçamento', type: 'select', options: [
-        { label: 'Pequeno', value: 'sm' },
-        { label: 'Médio', value: 'md' },
-        { label: 'Grande', value: 'lg' },
-        { label: 'Extra Grande', value: 'xl' }
-      ], defaultValue: 'md' }
-    ]
-  },
-
-  {
-    type: 'countdown-timer',
-    name: 'Timer de Contagem Regressiva (Modular)',
-    description: 'Timer modular de urgência para ofertas',
-    icon: 'Clock',
-    category: 'Oferta',
-    propertiesSchema: [
-      { key: 'initialMinutes', label: 'Minutos Iniciais', type: 'number-input', defaultValue: 15, min: 1, max: 60 },
-      { key: 'title', label: 'Título', type: 'text-input', defaultValue: 'Oferta por tempo limitado' },
-      { key: 'urgencyText', label: 'Texto de Urgência', type: 'text-input', defaultValue: 'Esta oferta expira em:' },
-      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color-picker', defaultValue: '#ffffff' },
-      { key: 'textColor', label: 'Cor do Texto', type: 'color-picker', defaultValue: '#432818' },
-      { key: 'accentColor', label: 'Cor de Destaque', type: 'color-picker', defaultValue: '#B89B7A' },
-      { key: 'gridColumns', label: 'Colunas no Grid', type: 'number-input', defaultValue: 1, min: 1, max: 2 },
-      { key: 'spacing', label: 'Espaçamento', type: 'select', options: [
-        { label: 'Pequeno', value: 'sm' },
-        { label: 'Médio', value: 'md' },
-        { label: 'Grande', value: 'lg' },
-        { label: 'Extra Grande', value: 'xl' }
-      ], defaultValue: 'md' }
-    ]
-  },
-
-  {
-    type: 'bonus-list',
-    name: 'Lista de Bônus (Modular)',
-    description: 'Lista modular de bônus e produtos inclusos',
-    icon: 'Gift',
-    category: 'Oferta',
-    propertiesSchema: [
-      { key: 'title', label: 'Título', type: 'text-input', defaultValue: 'Bônus Exclusivos Inclusos' },
-      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color-picker', defaultValue: '#ffffff' },
-      { key: 'textColor', label: 'Cor do Texto', type: 'color-picker', defaultValue: '#432818' },
-      { key: 'accentColor', label: 'Cor de Destaque', type: 'color-picker', defaultValue: '#B89B7A' },
-      { key: 'gridColumns', label: 'Colunas no Grid', type: 'number-input', defaultValue: 1, min: 1, max: 2 },
-      { key: 'spacing', label: 'Espaçamento', type: 'select', options: [
-        { label: 'Pequeno', value: 'sm' },
-        { label: 'Médio', value: 'md' },
-        { label: 'Grande', value: 'lg' },
-        { label: 'Extra Grande', value: 'xl' }
-      ], defaultValue: 'md' }
-    ]
-  },
-
-  // COMPONENTES MODULARES REAIS DA RESULT PAGE
-  {
-    type: 'result-header',
-    name: 'Cabeçalho de Resultado',
-    description: 'Header real da página de resultado com nome do usuário',
-    icon: 'Award',
-    category: 'Resultado',
-    propertiesSchema: [
-      {
-        key: 'title',
-        label: 'Título',
-        type: 'text-input',
-        defaultValue: 'Parabéns!'
-      },
-      {
-        key: 'subtitle',
-        label: 'Subtítulo',
-        type: 'text-input',
-        defaultValue: 'Seu Estilo Pessoal foi Revelado'
-      },
-      {
-        key: 'showLogo',
-        label: 'Mostrar Logo',
-        type: 'boolean-switch',
-        defaultValue: true
-      }
-    ]
-  },
-
-  {
-    type: 'style-card',
-    name: 'Card do Estilo',
-    description: 'Card real do estilo predominante com imagem e descrição',
-    icon: 'Sparkles',
-    category: 'Resultado',
-    propertiesSchema: [
-      {
-        key: 'showProgress',
-        label: 'Mostrar Progresso',
-        type: 'boolean-switch',
-        defaultValue: true
-      },
-      {
-        key: 'showDescription',
-        label: 'Mostrar Descrição',
-        type: 'boolean-switch',
-        defaultValue: true
-      },
-      {
-        key: 'showImage',
-        label: 'Mostrar Imagem',
-        type: 'boolean-switch',
-        defaultValue: true
-      }
-    ]
-  },
-
-  {
-    type: 'before-after',
-    name: 'Antes e Depois',
-    description: 'Seção real de transformação antes/depois da ResultPage',
-    icon: 'ArrowRightLeft',
-    category: 'Resultado',
-    propertiesSchema: [
-      {
-        key: 'title',
-        label: 'Título',
-        type: 'text-input',
-        defaultValue: 'Sua Transformação Começa Agora'
-      },
-      {
-        key: 'showComparison',
-        label: 'Mostrar Comparação',
-        type: 'boolean-switch',
-        defaultValue: true
-      }
-    ]
-  },
-
-  {
-    type: 'bonus-section',
-    name: 'Seção de Bônus',
-    description: 'Bônus reais da ResultPage com imagens e valores',
-    icon: 'Gift',
-    category: 'Resultado',
-    propertiesSchema: [
-      {
-        key: 'title',
-        label: 'Título',
-        type: 'text-input',
-        defaultValue: 'Bônus Exclusivos para Você'
-      },
-      {
-        key: 'showImages',
-        label: 'Mostrar Imagens',
-        type: 'boolean-switch',
-        defaultValue: true
-      }
-    ]
-  },
-
-  {
-    type: 'testimonials-real',
-    name: 'Depoimentos Reais',
-    description: 'Depoimentos reais da ResultPage com nomes e profissões',
-    icon: 'MessageSquare',
-    category: 'Resultado',
-    propertiesSchema: [
-      {
-        key: 'title',
-        label: 'Título',
-        type: 'text-input',
-        defaultValue: 'Transformações Reais'
-      },
-      {
-        key: 'showRatings',
-        label: 'Mostrar Avaliações',
-        type: 'boolean-switch',
-        defaultValue: true
-      },
-      {
-        key: 'layout',
-        label: 'Layout',
-        type: 'select',
-        options: [
-          { label: 'Grade', value: 'grid' },
-          { label: 'Carrossel', value: 'carousel' }
-        ],
-        defaultValue: 'grid'
-      }
-    ]
-  },
-
-  {
-    type: 'guarantee-section',
-    name: 'Seção de Garantia',
-    description: 'Garantia real da ResultPage com detalhes completos',
-    icon: 'Shield',
-    category: 'Resultado',
-    propertiesSchema: [
-      {
-        key: 'title',
-        label: 'Título',
-        type: 'text-input',
-        defaultValue: 'Garantia Incondicional'
-      },
-      {
-        key: 'guaranteePeriod',
-        label: 'Período da Garantia',
-        type: 'text-input',
-        defaultValue: '7 dias'
-      },
-      {
-        key: 'showIcon',
-        label: 'Mostrar Ícone',
-        type: 'boolean-switch',
-        defaultValue: true
-      }
-    ]
-  },
-
-  {
-    type: 'mentor-section',
-    name: 'Seção da Mentora',
-    description: 'Seção real da Gisele Galvão com credenciais e foto',
-    icon: 'Users',
-    category: 'Resultado',
-    propertiesSchema: [
-      {
-        key: 'title',
-        label: 'Título',
-        type: 'text-input',
-        defaultValue: 'Conheça Gisele Galvão'
-      },
-      {
-        key: 'showCredentials',
-        label: 'Mostrar Credenciais',
-        type: 'boolean-switch',
-        defaultValue: true
-      },
-      {
-        key: 'showImage',
-        label: 'Mostrar Imagem',
-        type: 'boolean-switch',
-        defaultValue: true
-      }
-    ]
-  },
-
-
-
-  // === BLOCOS DE QUIZ (extraídos do QuizPage real) ===
-  {
-    type: 'quiz-question',
-    name: 'Questão do Quiz',
-    description: 'Questão real do quiz com opções e imagens reais do Cloudinary',
-    icon: 'HelpCircle',
-    category: 'Quiz',
-    propertiesSchema: [
-      {
-        key: 'question',
-        label: 'Pergunta',
-        type: 'text-input',
-        defaultValue: 'Qual dessas opções representa melhor seu estilo?'
-      },
-      {
-        key: 'allowMultiple',
-        label: 'Permitir Múltiplas Seleções',
-        type: 'boolean-switch',
-        defaultValue: true
-      },
-      {
-        key: 'showImages',
-        label: 'Mostrar Imagens',
-        type: 'boolean-switch',
-        defaultValue: true
-      },
-      {
-        key: 'options',
-        label: 'Opções',
-        type: 'array-editor',
-        defaultValue: [
-          { id: '1', text: 'Clássico e elegante', imageUrl: 'https://res.cloudinary.com/dtx0k4ue6/image/upload/v1710847234/estilo-classico_urkpfx.jpg' },
-          { id: '2', text: 'Moderno e descolado', imageUrl: 'https://res.cloudinary.com/dtx0k4ue6/image/upload/v1710847235/estilo-moderno_hqxmzv.jpg' },
-          { id: '3', text: 'Natural e autêntico', imageUrl: 'https://res.cloudinary.com/dtx0k4ue6/image/upload/v1710847236/estilo-natural_wnxkdi.jpg' }
-        ]
-      }
-    ]
-  },
-
-  {
-    type: 'quiz-progress',
-    name: 'Progresso do Quiz',
-    description: 'Barra de progresso real do quiz com dados dinâmicos',
-    icon: 'LoaderCircle',
-    category: 'Quiz',
-    propertiesSchema: [
-      {
-        key: 'currentStep',
-        label: 'Etapa Atual',
-        type: 'number-input',
-        defaultValue: 3,
-        min: 1
-      },
-      {
-        key: 'totalSteps',
-        label: 'Total de Etapas',
-        type: 'number-input',
-        defaultValue: 10,
-        min: 1
-      },
-      {
-        key: 'stepTitle',
-        label: 'Título da Etapa',
-        type: 'text-input',
-        defaultValue: 'Descobrindo seu estilo...'
-      },
-      {
-        key: 'showStepNumbers',
-        label: 'Mostrar Números',
-        type: 'boolean-switch',
-        defaultValue: true
-      }
-    ]
-  },
-
-  // === COMPONENTES INLINE EDITÁVEIS E RESPONSIVOS ===
-  {
-    type: 'style-card-inline',
-    name: 'Card de Estilo (Inline)',
-    description: 'Componente inline editável para mostrar estilo descoberto',
-    icon: 'Sparkles',
-    category: 'Inline',
-    propertiesSchema: [
-      {
-        key: 'title',
-        label: 'Título',
-        type: 'text-input',
-        defaultValue: 'Seu Estilo Único'
-      },
-      {
-        key: 'subtitle',
-        label: 'Subtítulo',
-        type: 'text-input',
-        defaultValue: 'Descoberto através do quiz'
-      },
-      {
-        key: 'description',
-        label: 'Descrição',
-        type: 'textarea',
-        defaultValue: 'Características principais do seu perfil de estilo pessoal'
-      },
-      {
-        key: 'showIcon',
-        label: 'Mostrar Ícone',
-        type: 'boolean-switch',
-        defaultValue: true
-      }
-    ]
-  },
-
-  {
-    type: 'testimonial-inline',
-    name: 'Depoimento (Inline)',
-    description: 'Depoimento inline editável com estrelas e autor',
-    icon: 'Quote',
-    category: 'Inline',
-    propertiesSchema: [
-      {
-        key: 'text',
-        label: 'Texto do Depoimento',
-        type: 'textarea',
-        defaultValue: 'Descobri meu estilo autêntico e agora me visto com muito mais confiança!'
-      },
-      {
-        key: 'authorName',
-        label: 'Nome do Autor',
-        type: 'text-input',
-        defaultValue: 'Maria Silva'
-      },
-      {
-        key: 'authorRole',
-        label: 'Cargo/Descrição',
-        type: 'text-input',
-        defaultValue: 'Cliente satisfeita'
-      },
-      {
-        key: 'rating',
-        label: 'Avaliação (1-5)',
-        type: 'number-input',
-        defaultValue: 5,
-        min: 1,
-        max: 5
-      },
-      {
-        key: 'showStars',
-        label: 'Mostrar Estrelas',
-        type: 'boolean-switch',
-        defaultValue: true
-      }
-    ]
-  },
-
-  {
-    type: 'bonus-inline',
-    name: 'Bônus (Inline)',
-    description: 'Item de bônus inline editável com valor e descrição',
-    icon: 'Gift',
-    category: 'Inline',
-    propertiesSchema: [
-      {
-        key: 'title',
-        label: 'Título do Bônus',
-        type: 'text-input',
-        defaultValue: 'Bônus Exclusivo'
-      },
-      {
-        key: 'value',
-        label: 'Valor',
-        type: 'text-input',
-        defaultValue: 'R$ 97,00'
-      },
-      {
-        key: 'description',
-        label: 'Descrição',
-        type: 'textarea',
-        defaultValue: 'Material adicional incluso gratuitamente'
-      },
-      {
-        key: 'showIcon',
-        label: 'Mostrar Ícone',
-        type: 'boolean-switch',
-        defaultValue: true
-      }
-    ]
-  },
-
-  {
-    type: 'cta-inline',
-    name: 'CTA (Inline)',
-    description: 'Call-to-action moderno inline com personalização e analytics',
-    icon: 'Target',
-    category: 'Inline',
-    propertiesSchema: [
-      {
-        key: 'text',
-        label: 'Texto Principal',
-        type: 'text-input',
-        defaultValue: 'Transforme seu estilo hoje'
-      },
-      {
-        key: 'buttonText',
-        label: 'Texto do Botão',
-        type: 'text-input',
-        defaultValue: 'Quero meu Guia'
-      },
-      {
-        key: 'price',
-        label: 'Preço',
-        type: 'text-input',
-        defaultValue: 'R$ 97,00'
-      },
-      {
-        key: 'showPrice',
-        label: 'Mostrar Preço',
-        type: 'boolean-switch',
-        defaultValue: true
-      },
-      {
-        key: 'buttonStyle',
-        label: 'Estilo do Botão',
-        type: 'select',
-        options: [
-          { label: 'Principal', value: 'primary' },
-          { label: 'Marca', value: 'brand' },
-          { label: 'Sucesso', value: 'success' },
-          { label: 'Atenção', value: 'warning' },
-          { label: 'Perigo', value: 'danger' },
-        ],
-        defaultValue: 'brand',
-      },
-      {
-        key: 'icon',
-        label: 'Ícone',
-        type: 'select',
-        options: [
-          { label: 'Carrinho', value: 'shopping-cart' },
-          { label: 'Seta', value: 'arrow-right' },
-          { label: 'Raio', value: 'zap' },
-          { label: 'Estrela', value: 'star' },
-          { label: 'Relógio', value: 'clock' },
-          { label: 'Presente', value: 'gift' },
-          { label: 'Tendência', value: 'trending-up' },
-        ],
-        defaultValue: 'shopping-cart',
-      },
-      {
-        key: 'showIcon',
-        label: 'Mostrar Ícone',
-        type: 'boolean-switch',
-        defaultValue: true
-      },
-      {
-        key: 'useUsername',
-        label: 'Usar Nome do Usuário',
-        type: 'boolean-switch',
-        defaultValue: false
-      },
-      {
-        key: 'usernamePattern',
-        label: 'Padrão de Personalização',
-        type: 'text-input',
-        placeholder: 'Clique aqui {{username}}!',
-        defaultValue: 'Clique aqui {{username}}!'
-      },
-      {
-        key: 'trackingEnabled',
-        label: 'Habilitar Analytics',
-        type: 'boolean-switch',
-        defaultValue: true
-      },
-      {
-        key: 'conversionValue',
-        label: 'Valor de Conversão',
-        type: 'number-input',
-        defaultValue: 100
-      },
-      {
-        key: 'redirectUrl',
-        label: 'URL de Redirecionamento',
-        type: 'text-input',
-        placeholder: 'https://...',
-        defaultValue: '#'
-      },
-      {
-        key: 'showUrgency',
-        label: 'Mostrar Urgência',
-        type: 'boolean-switch',
-        defaultValue: false
-      },
-      {
-        key: 'urgencyText',
-        label: 'Texto de Urgência',
-        type: 'text-input',
-        placeholder: 'Oferta limitada!',
-        defaultValue: 'Últimas unidades!'
-      },
-      {
-        key: 'animation',
-        label: 'Animação',
-        type: 'select',
-        options: [
-          { label: 'Scale In', value: 'scaleIn' },
-          { label: 'Fade In', value: 'fadeIn' },
-          { label: 'Slide da Esquerda', value: 'slideInFromLeft' },
-          { label: 'Slide da Direita', value: 'slideInFromRight' },
-        ],
-        defaultValue: 'scaleIn',
-      }
-    ]
-  },
-
-  {
-    type: 'progress-inline',
-    name: 'Progresso (Inline)',
-    description: 'Barra de progresso inline editável e responsiva',
-    icon: 'TrendingUp',
-    category: 'Inline',
-    propertiesSchema: [
-      {
-        key: 'label',
-        label: 'Rótulo',
-        type: 'text-input',
-        defaultValue: 'Progresso do Quiz'
-      },
-      {
-        key: 'percentage',
-        label: 'Porcentagem',
-        type: 'number-input',
-        defaultValue: 65,
-        min: 0,
-        max: 100
-      },
-      {
         key: 'color',
-        label: 'Cor',
-        type: 'color-picker',
-        defaultValue: '#B89B7A'
-      },
-      {
-        key: 'showPercentage',
-        label: 'Mostrar Porcentagem',
-        type: 'boolean-switch',
-        defaultValue: true
-      }
-    ]
-  },
-
-  {
-    type: 'badge-inline',
-    name: 'Badge (Inline)',
-    description: 'Badge inline editável para indicadores e rótulos',
-    icon: 'Shield',
-    category: 'Inline',
-    propertiesSchema: [
-      {
-        key: 'text',
-        label: 'Texto',
-        type: 'text-input',
-        defaultValue: 'Compra Segura'
-      },
-      {
-        key: 'type',
-        label: 'Tipo',
-        type: 'select',
-        defaultValue: 'security',
-        options: [
-          { label: 'Segurança', value: 'security' },
-          { label: 'Garantia', value: 'guarantee' },
-          { label: 'Avaliação', value: 'rating' },
-          { label: 'Conquista', value: 'achievement' }
-        ]
-      },
-      {
-        key: 'variant',
-        label: 'Variante',
-        type: 'select',
-        defaultValue: 'default',
-        options: [
-          { label: 'Padrão', value: 'default' },
-          { label: 'Sucesso', value: 'success' },
-          { label: 'Aviso', value: 'warning' },
-          { label: 'Info', value: 'info' }
-        ]
-      },
-      {
-        key: 'showIcon',
-        label: 'Mostrar Ícone',
-        type: 'boolean-switch',
-        defaultValue: true
-      }
-    ]
-  },
-
-  {
-    type: 'stat-inline',
-    name: 'Estatística (Inline)',
-    description: 'Estatística moderna inline com animações e personalização',
-    icon: 'Users',
-    category: 'Inline',
-    propertiesSchema: [
-      {
-        key: 'value',
-        label: 'Valor',
-        type: 'text-input',
-        defaultValue: '1000+'
-      },
-      {
-        key: 'label',
-        label: 'Rótulo',
-        type: 'text-input',
-        defaultValue: 'Clientes Satisfeitas'
-      },
-      {
-        key: 'icon',
-        label: 'Ícone',
-        type: 'select',
-        options: [
-          { label: 'Usuários', value: 'users' },
-          { label: 'Tendência', value: 'trending-up' },
-          { label: 'Coração', value: 'heart' },
-          { label: 'Relógio', value: 'clock' },
-          { label: 'Estrela', value: 'star' },
-          { label: 'Prêmio', value: 'award' },
-          { label: 'Alvo', value: 'target' },
-          { label: 'Raio', value: 'zap' },
-          { label: 'Gráfico', value: 'bar-chart' },
-        ],
-        defaultValue: 'users'
-      },
-      {
-        key: 'showIcon',
-        label: 'Mostrar Ícone',
-        type: 'boolean-switch',
-        defaultValue: true
-      },
-      {
-        key: 'animatedCounter',
-        label: 'Contador Animado',
-        type: 'boolean-switch',
-        defaultValue: true
-      },
-      {
-        key: 'size',
-        label: 'Tamanho',
-        type: 'select',
-        options: [
-          { label: 'Pequeno', value: 'small' },
-          { label: 'Médio', value: 'medium' },
-          { label: 'Grande', value: 'large' },
-        ],
-        defaultValue: 'medium'
-      },
-      {
-        key: 'layout',
-        label: 'Layout',
-        type: 'select',
-        options: [
-          { label: 'Horizontal', value: 'horizontal' },
-          { label: 'Vertical', value: 'vertical' },
-        ],
-        defaultValue: 'horizontal'
-      },
-      {
-        key: 'useUsername',
-        label: 'Usar Nome do Usuário',
-        type: 'boolean-switch',
-        defaultValue: false
-      },
-      {
-        key: 'usernamePattern',
-        label: 'Padrão de Personalização',
-        type: 'text-input',
-        placeholder: '{{username}}, você será a próxima!',
-        defaultValue: '{{username}}, você será a próxima!'
-      },
-      {
-        key: 'trackingEnabled',
-        label: 'Habilitar Analytics',
-        type: 'boolean-switch',
-        defaultValue: false
-      },
-      {
-        key: 'animation',
-        label: 'Animação',
-        type: 'select',
-        options: [
-          { label: 'Scale In', value: 'scaleIn' },
-          { label: 'Fade In', value: 'fadeIn' },
-          { label: 'Slide da Esquerda', value: 'slideInFromLeft' },
-          { label: 'Slide da Direita', value: 'slideInFromRight' },
-        ],
-        defaultValue: 'scaleIn',
-      }
-    ]
-  },
-
-  {
-    type: 'pricing-inline',
-    name: 'Preço (Inline)',
-    description: 'Card de preço inline editável estilo profissional',
-    icon: 'Crown',
-    category: 'Inline',
-    propertiesSchema: [
-      {
-        key: 'title',
-        label: 'Título do Plano',
-        type: 'text-input',
-        defaultValue: 'Plano Premium'
-      },
-      {
-        key: 'badge',
-        label: 'Badge',
-        type: 'text-input',
-        defaultValue: 'Mais Popular'
-      },
-      {
-        key: 'price',
-        label: 'Preço',
-        type: 'text-input',
-        defaultValue: 'R$ 39,90'
-      },
-      {
-        key: 'originalPrice',
-        label: 'Preço Original',
-        type: 'text-input',
-        defaultValue: 'R$ 47,00'
-      },
-      {
-        key: 'discount',
-        label: 'Desconto',
-        type: 'text-input',
-        defaultValue: '15% Off'
-      },
-      {
-        key: 'period',
-        label: 'Período',
-        type: 'text-input',
-        defaultValue: 'à vista'
-      },
-      {
-        key: 'isPopular',
-        label: 'Marcar como Popular',
-        type: 'boolean-switch',
-        defaultValue: true
-      }
-    ]
-  },
-
-  {
-    type: 'loader-inline',
-    name: 'Carregamento (Inline)',
-    description: 'Barra de carregamento inline com animação',
-    icon: 'LoaderCircle',
-    category: 'Inline',
-    propertiesSchema: [
-      {
-        key: 'title',
-        label: 'Título',
-        type: 'text-input',
-        defaultValue: 'Carregando...'
-      },
-      {
-        key: 'percentage',
-        label: 'Porcentagem',
-        type: 'number-input',
-        defaultValue: 60,
-        min: 0,
-        max: 100
-      },
-      {
-        key: 'description',
-        label: 'Descrição',
-        type: 'text-input',
-        defaultValue: 'Analisando seu estilo pessoal...'
-      },
-      {
-        key: 'animated',
-        label: 'Animado',
-        type: 'boolean-switch',
-        defaultValue: true
-      },
-      {
-        key: 'color',
-        label: 'Cor',
-        type: 'color-picker',
-        defaultValue: '#B89B7A'
-      }
-    ]
-  },
-
-  {
-    type: 'comparison-inline',
-    name: 'Comparação (Inline)',
-    description: 'Comparação antes/depois inline interativa',
-    icon: 'ArrowRightLeft',
-    category: 'Inline',
-    propertiesSchema: [
-      {
-        key: 'beforeTitle',
-        label: 'Título "Antes"',
-        type: 'text-input',
-        defaultValue: 'Antes'
-      },
-      {
-        key: 'afterTitle',
-        label: 'Título "Depois"',
-        type: 'text-input',
-        defaultValue: 'Depois'
-      },
-      {
-        key: 'beforeText',
-        label: 'Texto "Antes"',
-        type: 'textarea',
-        defaultValue: 'Sem direção de estilo, compras por impulso'
-      },
-      {
-        key: 'afterText',
-        label: 'Texto "Depois"',
-        type: 'textarea',
-        defaultValue: 'Estilo definido, compras certeiras'
-      },
-      {
-        key: 'dividerPosition',
-        label: 'Posição do Divisor (%)',
-        type: 'number-input',
-        defaultValue: 50,
-        min: 10,
-        max: 90
-      }
-    ]
-  },
-
-  {
-    type: 'notification-inline',
-    name: 'Notificações (Inline)',
-    description: 'Lista de notificações inline editável estilo profissional',
-    icon: 'MessageSquare',
-    category: 'Inline',
-    propertiesSchema: [
-      {
-        key: 'maxVisible',
-        label: 'Máximo Visível',
-        type: 'number-input',
-        defaultValue: 4,
-        min: 1,
-        max: 10
-      },
-      {
-        key: 'animated',
-        label: 'Animado',
-        type: 'boolean-switch',
-        defaultValue: true
-      }
-    ]
-  },
-
-  // =====================================================================
-  // COMPONENTES INLINE ESPECÍFICOS DA ETAPA 20 (RESULT PAGE)
-  // =====================================================================
-  
-  {
-    type: 'result-header-inline',
-    name: 'Cabeçalho de Resultado (Inline)',
-    description: 'Card principal com estilo predominante, progresso e imagens',
-    icon: 'Award',
-    category: 'Result Page',
-    propertiesSchema: [
-      {
-        key: 'title',
-        label: 'Título',
-        type: 'text-input',
-        placeholder: 'Seu estilo predominante',
-        defaultValue: 'Seu Estilo Predominante'
-      },
-      {
-        key: 'percentage',
-        label: 'Porcentagem',
-        type: 'number-input',
-        min: 0,
-        max: 100,
-        defaultValue: 85
-      },
-      {
-        key: 'description',
-        label: 'Descrição',
-        type: 'textarea',
-        placeholder: 'Descrição do estilo...',
-        rows: 4,
-        defaultValue: 'Descubra como aplicar seu estilo pessoal único na prática...'
-      },
-      {
-        key: 'imageUrl',
-        label: 'URL da Imagem do Estilo',
-        type: 'image-url',
-        defaultValue: 'https://via.placeholder.com/238x320?text=Estilo'
-      },
-      {
-        key: 'guideImageUrl',
-        label: 'URL da Imagem do Guia',
-        type: 'image-url',
-        defaultValue: 'https://via.placeholder.com/540x300?text=Guia+de+Estilo'
-      },
-      {
-        key: 'progressColor',
-        label: 'Cor do Progresso',
-        type: 'color-picker',
-        defaultValue: '#B89B7A'
-      },
-      {
-        key: 'badgeText',
-        label: 'Texto do Badge',
-        type: 'text-input',
-        defaultValue: 'Exclusivo'
-      }
-    ]
-  },
-
-  {
-    type: 'value-stack-inline',
-    name: 'Stack de Valor (Inline)',
-    description: 'Seção com benefícios, itens de valor e preços',
-    icon: 'CircleDollarSign',
-    category: 'Result Page',
-    propertiesSchema: [
-      {
-        key: 'title',
-        label: 'Título',
-        type: 'text-input',
-        defaultValue: 'O Que Você Recebe Hoje'
-      },
-      {
-        key: 'items',
-        label: 'Itens de Valor',
-        type: 'array-editor',
-        itemSchema: [
-          {
-            key: 'name',
-            label: 'Nome do Item',
-            type: 'text-input',
-            defaultValue: 'Item'
-          },
-          {
-            key: 'value',
-            label: 'Valor',
-            type: 'text-input',
-            defaultValue: 'R$ 0,00'
-          }
-        ],
-        defaultValue: [
-          { name: 'Guia Principal', value: 'R$ 67,00' },
-          { name: 'Bônus - Peças-chave', value: 'R$ 79,00' },
-          { name: 'Bônus - Visagismo Facial', value: 'R$ 29,00' }
-        ]
-      },
-      {
-        key: 'totalValue',
-        label: 'Valor Total',
-        type: 'text-input',
-        defaultValue: 'R$ 175,00'
-      },
-      {
-        key: 'finalPrice',
-        label: 'Preço Final',
-        type: 'text-input',
-        defaultValue: 'R$ 39,00'
-      },
-      {
-        key: 'finalPriceLabel',
-        label: 'Label do Preço Final',
-        type: 'text-input',
-        defaultValue: 'Hoje por apenas'
-      },
-      {
-        key: 'paymentInfo',
-        label: 'Info do Pagamento',
-        type: 'text-input',
-        defaultValue: 'Pagamento único'
-      },
-      {
-        key: 'benefits',
-        label: 'Benefícios',
-        type: 'array-editor',
-        itemSchema: [
-          {
-            key: 'benefit',
-            label: 'Benefício',
-            type: 'text-input',
-            defaultValue: 'Benefício'
-          }
-        ],
-        defaultValue: [
-          'Looks com intenção e identidade',
-          'Cores, modelagens e tecidos a seu favor',
-          'Imagem alinhada aos seus objetivos',
-          'Guarda-roupa funcional, sem compras por impulso'
-        ]
-      }
-    ]
-  },
-
-  {
-    type: 'cta-section-inline',
-    name: 'Seção CTA (Inline)',
-    description: 'Seção de call-to-action com título e botão',
-    icon: 'ShoppingCart',
-    category: 'Result Page',
-    propertiesSchema: [
-      {
-        key: 'title',
-        label: 'Título',
-        type: 'text-input',
-        defaultValue: 'Descubra Como Aplicar Seu Estilo na Prática'
-      },
-      {
-        key: 'buttonText',
-        label: 'Texto do Botão',
-        type: 'text-input',
-        defaultValue: 'Quero meu Guia de Estilo Agora'
-      },
-      {
-        key: 'buttonUrl',
-        label: 'URL do Botão',
-        type: 'text-input',
-        defaultValue: '#'
-      },
-      {
-        key: 'buttonColor',
-        label: 'Cor do Botão',
-        type: 'color-picker',
-        defaultValue: 'linear-gradient(to right, #4CAF50, #45a049)'
-      },
-      {
-        key: 'securityText',
-        label: 'Texto de Segurança',
-        type: 'text-input',
-        defaultValue: 'Oferta exclusiva nesta página'
-      },
-      {
-        key: 'arrowEnabled',
-        label: 'Mostrar Seta',
-        type: 'boolean-switch',
-        defaultValue: true
-      },
-      {
-        key: 'style',
-        label: 'Estilo',
-        type: 'select',
-        options: [
-          { label: 'Verde', value: 'green' },
-          { label: 'Primário', value: 'primary' },
-          { label: 'Secundário', value: 'secondary' }
-        ],
-        defaultValue: 'green'
-      }
-    ]
-  },
-
-  {
-    type: 'guarantee-inline',
-    name: 'Garantia (Inline)',
-    description: 'Seção de garantia com ícone e características',
-    icon: 'Shield',
-    category: 'Result Page',
-    propertiesSchema: [
-      {
-        key: 'title',
-        label: 'Título',
-        type: 'text-input',
-        defaultValue: 'Garantia de 30 Dias'
-      },
-      {
-        key: 'description',
-        label: 'Descrição',
-        type: 'textarea',
-        rows: 3,
-        defaultValue: 'Se você não ficar satisfeita com o resultado, devolvemos 100% do seu dinheiro em até 30 dias.'
-      },
-      {
-        key: 'iconType',
-        label: 'Tipo de Ícone',
-        type: 'select',
-        options: [
-          { label: 'Escudo', value: 'shield' },
-          { label: 'Estrela', value: 'star' },
-          { label: 'Check', value: 'check' }
-        ],
-        defaultValue: 'shield'
-      },
-      {
-        key: 'backgroundColor',
-        label: 'Cor de Fundo',
-        type: 'color-picker',
-        defaultValue: '#f9f4ef'
-      },
-      {
-        key: 'borderColor',
-        label: 'Cor da Borda',
-        type: 'color-picker',
-        defaultValue: '#B89B7A'
-      },
-      {
-        key: 'features',
-        label: 'Características',
-        type: 'array-editor',
-        itemSchema: [
-          {
-            key: 'feature',
-            label: 'Característica',
-            type: 'text-input',
-            defaultValue: 'Característica'
-          }
-        ],
-        defaultValue: [
-          'Garantia incondicional',
-          'Devolução em até 30 dias',
-          'Suporte completo',
-          'Sem riscos'
-        ]
-      }
-    ]
-  },
-
-  {
-    type: 'transformation-inline',
-    name: 'Transformação (Inline)',
-    description: 'Comparação antes/depois com imagens e descrições',
-    icon: 'ArrowRightLeft',
-    category: 'Result Page',
-    propertiesSchema: [
-      {
-        key: 'title',
-        label: 'Título Principal',
-        type: 'text-input',
-        defaultValue: 'Sua Transformação Começa Aqui'
-      },
-      {
-        key: 'subtitle',
-        label: 'Subtítulo',
-        type: 'text-input',
-        defaultValue: 'Veja o que você vai alcançar'
-      },
-      {
-        key: 'beforeTitle',
-        label: 'Título do Antes',
-        type: 'text-input',
-        defaultValue: 'ANTES'
-      },
-      {
-        key: 'beforeDescription',
-        label: 'Descrição do Antes',
-        type: 'textarea',
-        rows: 3,
-        defaultValue: 'Sem direção no guarda-roupa, comprando por impulso e se sentindo sempre inadequada.'
-      },
-      {
-        key: 'beforeImage',
-        label: 'Imagem do Antes',
-        type: 'image-url',
-        defaultValue: 'https://via.placeholder.com/300x200?text=Antes'
-      },
-      {
-        key: 'afterTitle',
-        label: 'Título do Depois',
-        type: 'text-input',
-        defaultValue: 'DEPOIS'
-      },
-      {
-        key: 'afterDescription',
-        label: 'Descrição do Depois',
-        type: 'textarea',
-        rows: 3,
-        defaultValue: 'Com um estilo autêntico, confiante e alinhado com seus objetivos pessoais e profissionais.'
-      },
-      {
-        key: 'afterImage',
-        label: 'Imagem do Depois',
-        type: 'image-url',
-        defaultValue: 'https://via.placeholder.com/300x200?text=Depois'
-      },
-      {
-        key: 'arrowColor',
-        label: 'Cor da Seta',
-        type: 'color-picker',
-        defaultValue: '#B89B7A'
-      }
-    ]
-  },
-
-  {
-    type: 'final-value-proposition-inline',
-    name: 'Proposta de Valor Final (Inline)',
-    description: 'Seção final com título, benefícios e CTA',
-    icon: 'Crown',
-    category: 'Result Page',
-    propertiesSchema: [
-      {
-        key: 'title',
-        label: 'Título Principal',
-        type: 'text-input',
-        defaultValue: 'Vista-se de Você — na Prática'
-      },
-      {
-        key: 'description',
-        label: 'Descrição',
-        type: 'textarea',
-        rows: 3,
-        defaultValue: 'Agora que você conhece seu estilo, é hora de aplicá-lo com clareza e intenção.'
-      },
-      {
-        key: 'sectionTitle',
-        label: 'Título da Seção',
-        type: 'text-input',
-        defaultValue: 'O Guia de Estilo e Imagem + Bônus Exclusivos'
-      },
-      {
-        key: 'buttonText',
-        label: 'Texto do Botão',
-        type: 'text-input',
-        defaultValue: 'Garantir Meu Guia + Bônus Especiais'
-      },
-      {
-        key: 'buttonUrl',
-        label: 'URL do Botão',
-        type: 'text-input',
-        defaultValue: '#'
-      },
-      {
-        key: 'securityText',
-        label: 'Texto de Segurança',
-        type: 'text-input',
-        defaultValue: 'Oferta exclusiva nesta página'
-      },
-      {
-        key: 'dividerEnabled',
-        label: 'Mostrar Divisor',
-        type: 'boolean-switch',
-        defaultValue: true
-      },
-      {
-        key: 'benefits',
-        label: 'Benefícios',
-        type: 'array-editor',
-        itemSchema: [
-          {
-            key: 'benefit',
-            label: 'Benefício',
-            type: 'text-input',
-            defaultValue: 'Benefício'
-          }
-        ],
-        defaultValue: [
-          'Looks com intenção e identidade',
-          'Cores, modelagens e tecidos a seu favor',
-          'Imagem alinhada aos seus objetivos',
-          'Guarda-roupa funcional, sem compras por impulso'
-        ]
-      }
-    ]
-  },
-
-  // =====================================================================
-  // NOVOS BLOCOS INLINE MODULARES ETAPAS 20 E 21 - ES7+ PADRÃO
-  // =====================================================================
-  
-  {
-    type: 'result-card-inline',
-    name: 'Card de Resultado (Inline)',
-    description: 'Card modular com o resultado do quiz personalizado',
-    icon: 'Award',
-    category: 'Inline',
-    propertiesSchema: [
-      {
-        key: 'resultTitle',
-        label: 'Título do Resultado',
-        type: 'text-input',
-        defaultValue: 'Seu Estilo Único'
-      },
-      {
-        key: 'resultSubtitle',
-        label: 'Subtítulo',
-        type: 'text-input',
-        defaultValue: 'Descoberto através do quiz'
-      },
-      {
-        key: 'resultDescription',
-        label: 'Descrição',
-        type: 'textarea',
-        rows: 4,
-        defaultValue: 'Características principais do seu perfil de estilo pessoal descoberto.'
-      },
-      {
-        key: 'showImage',
-        label: 'Mostrar Imagem',
-        type: 'boolean-switch',
-        defaultValue: true
-      },
-      {
-        key: 'imageUrl',
-        label: 'URL da Imagem',
-        type: 'image-url',
-        defaultValue: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp'
-      },
-      {
-        key: 'backgroundColor',
-        label: 'Cor de Fundo',
-        type: 'color-picker',
-        defaultValue: '#ffffff'
-      },
-      {
-        key: 'textColor',
         label: 'Cor do Texto',
-        type: 'color-picker',
-        defaultValue: '#432818'
-      },
-      {
-        key: 'accentColor',
-        label: 'Cor de Destaque',
-        type: 'color-picker',
-        defaultValue: '#B89B7A'
-      },
-      {
-        key: 'gridColumns',
-        label: 'Colunas no Grid',
-        type: 'number-input',
-        defaultValue: 1,
-        min: 1,
-        max: 2
-      },
-      {
-        key: 'spacing',
-        label: 'Espaçamento',
-        type: 'select',
-        options: [
-          { label: 'Nenhum', value: 'none' },
-          { label: 'Pequeno', value: 'sm' },
-          { label: 'Médio', value: 'md' },
-          { label: 'Grande', value: 'lg' },
-          { label: 'Extra Grande', value: 'xl' }
-        ],
-        defaultValue: 'lg'
+        type: 'color',
+        defaultValue: '#1f2937'
       }
-    ]
-  },
-
-  {
-    type: 'quiz-offer-pricing-inline',
-    name: 'Preços da Oferta (Inline)',
-    description: 'Seção modular de preços para a página de oferta',
-    icon: 'CircleDollarSign',
-    category: 'Inline',
-    propertiesSchema: [
-      {
-        key: 'originalPrice',
-        label: 'Preço Original',
-        type: 'text-input',
-        defaultValue: 'R$ 175,00'
-      },
-      {
-        key: 'finalPrice',
-        label: 'Preço Final',
-        type: 'text-input',
-        defaultValue: 'R$ 39,90'
-      },
-      {
-        key: 'paymentOptions',
-        label: 'Opções de Pagamento',
-        type: 'text-input',
-        defaultValue: 'ou 5x de R$ 8,83'
-      },
-      {
-        key: 'discountText',
-        label: 'Texto do Desconto',
-        type: 'text-input',
-        defaultValue: 'Economia de R$ 135,10 (77% OFF)'
-      },
-      {
-        key: 'ctaText',
-        label: 'Texto do Botão',
-        type: 'text-input',
-        defaultValue: 'QUERO DESCOBRIR MEU ESTILO AGORA'
-      },
-      {
-        key: 'ctaUrl',
-        label: 'URL do Botão',
-        type: 'text-input',
-        defaultValue: '#checkout'
-      },
-      {
-        key: 'backgroundColor',
-        label: 'Cor de Fundo',
-        type: 'color-picker',
-        defaultValue: '#ffffff'
-      },
-      {
-        key: 'textColor',
-        label: 'Cor do Texto',
-        type: 'color-picker',
-        defaultValue: '#432818'
-      },
-      {
-        key: 'accentColor',
-        label: 'Cor de Destaque',
-        type: 'color-picker',
-        defaultValue: '#B89B7A'
-      },
-      {
-        key: 'gridColumns',
-        label: 'Colunas no Grid',
-        type: 'number-input',
-        defaultValue: 1,
-        min: 1,
-        max: 2
-      },
-      {
-        key: 'spacing',
-        label: 'Espaçamento',
-        type: 'select',
-        options: [
-          { label: 'Nenhum', value: 'none' },
-          { label: 'Pequeno', value: 'sm' },
-          { label: 'Médio', value: 'md' },
-          { label: 'Grande', value: 'lg' },
-          { label: 'Extra Grande', value: 'xl' }
-        ],
-        defaultValue: 'md'
-      }
-    ]
-  },
-
-  {
-    type: 'countdown-inline',
-    name: 'Contador Regressivo (Inline)',
-    description: 'Contador regressivo modular para urgência',
-    icon: 'Clock',
-    category: 'Inline',
-    propertiesSchema: [
-      {
-        key: 'title',
-        label: 'Título',
-        type: 'text-input',
-        defaultValue: 'Oferta expira em:'
-      },
-      {
-        key: 'hours',
-        label: 'Horas',
-        type: 'number-input',
-        defaultValue: 2,
-        min: 0,
-        max: 24
-      },
-      {
-        key: 'minutes',
-        label: 'Minutos',
-        type: 'number-input',
-        defaultValue: 30,
-        min: 0,
-        max: 59
-      },
-      {
-        key: 'showTitle',
-        label: 'Mostrar Título',
-        type: 'boolean-switch',
-        defaultValue: true
-      },
-      {
-        key: 'backgroundColor',
-        label: 'Cor de Fundo',
-        type: 'color-picker',
-        defaultValue: '#dc2626'
-      },
-      {
-        key: 'textColor',
-        label: 'Cor do Texto',
-        type: 'color-picker',
-        defaultValue: '#ffffff'
-      },
-      {
-        key: 'gridColumns',
-        label: 'Colunas no Grid',
-        type: 'number-input',
-        defaultValue: 1,
-        min: 1,
-        max: 2
-      },
-      {
-        key: 'spacing',
-        label: 'Espaçamento',
-        type: 'select',
-        options: [
-          { label: 'Nenhum', value: 'none' },
-          { label: 'Pequeno', value: 'sm' },
-          { label: 'Médio', value: 'md' },
-          { label: 'Grande', value: 'lg' },
-          { label: 'Extra Grande', value: 'xl' }
-        ],
-        defaultValue: 'md'
-      }
-    ]
+    ],
+    defaultProperties: {
+      content: 'Título Principal',
+      level: 'h2',
+      fontWeight: 'bold',
+      textAlign: 'center',
+      color: '#1f2937'
+    }
   },
 
   {
     type: 'button-inline',
-    name: 'Botão (Inline)',
-    description: 'Botão modular personalizável para CTAs',
-    icon: 'RectangleHorizontal',
+    name: 'Botão Elegante',
+    description: 'Botão responsivo com design moderno',
+    icon: 'MousePointer',
     category: 'Inline',
     propertiesSchema: [
       {
         key: 'text',
         label: 'Texto do Botão',
-        type: 'text-input',
+        type: 'text',
         defaultValue: 'Clique Aqui'
       },
       {
-        key: 'url',
-        label: 'URL/Link',
-        type: 'text-input',
+        key: 'href',
+        label: 'Link/Ação',
+        type: 'text',
         defaultValue: '#'
+      },
+      {
+        key: 'variant',
+        label: 'Estilo',
+        type: 'select',
+        options: ['primary', 'secondary', 'outline', 'ghost'],
+        defaultValue: 'primary'
       },
       {
         key: 'size',
         label: 'Tamanho',
         type: 'select',
-        options: [
-          { label: 'Pequeno', value: 'sm' },
-          { label: 'Médio', value: 'md' },
-          { label: 'Grande', value: 'lg' },
-          { label: 'Extra Grande', value: 'xl' }
-        ],
-        defaultValue: 'lg'
-      },
-      {
-        key: 'variant',
-        label: 'Variação',
-        type: 'select',
-        options: [
-          { label: 'Sólido', value: 'solid' },
-          { label: 'Contorno', value: 'outline' },
-          { label: 'Fantasma', value: 'ghost' },
-          { label: 'Gradiente', value: 'gradient' }
-        ],
-        defaultValue: 'solid'
-      },
-      {
-        key: 'backgroundColor',
-        label: 'Cor de Fundo',
-        type: 'color-picker',
-        defaultValue: '#B89B7A'
-      },
-      {
-        key: 'textColor',
-        label: 'Cor do Texto',
-        type: 'color-picker',
-        defaultValue: '#ffffff'
+        options: ['small', 'medium', 'large'],
+        defaultValue: 'medium'
       },
       {
         key: 'fullWidth',
         label: 'Largura Total',
-        type: 'boolean-switch',
+        type: 'boolean',
         defaultValue: false
-      },
-      {
-        key: 'openInNewTab',
-        label: 'Abrir em Nova Aba',
-        type: 'boolean-switch',
-        defaultValue: false
-      },
-      {
-        key: 'gridColumns',
-        label: 'Colunas no Grid',
-        type: 'number-input',
-        defaultValue: 1,
-        min: 1,
-        max: 2
-      },
-      {
-        key: 'spacing',
-        label: 'Espaçamento',
-        type: 'select',
-        options: [
-          { label: 'Nenhum', value: 'none' },
-          { label: 'Pequeno', value: 'sm' },
-          { label: 'Médio', value: 'md' },
-          { label: 'Grande', value: 'lg' },
-          { label: 'Extra Grande', value: 'xl' }
-        ],
-        defaultValue: 'md'
       }
-    ]
+    ],
+    defaultProperties: {
+      text: 'Clique Aqui',
+      href: '#',
+      variant: 'primary',
+      size: 'medium',
+      fullWidth: false
+    }
   }
-
 ];
 
-// =====================================================================
-// 3. Funções utilitárias para trabalhar com as definições de blocos
-// =====================================================================
-
-/**
- * Encontra uma definição de bloco pelo tipo
- * @param type Tipo do bloco a ser encontrado
- * @returns A definição do bloco ou undefined se não encontrado
- */
-export function findBlockDefinition(type: string): BlockDefinition | undefined {
-  return blockDefinitions.find(def => def.type === type);
-}
-
-/**
- * Obtém todas as categorias únicas dos blocos
- * @returns Array com todas as categorias disponíveis
- */
+// Utility functions
 export function getCategories(): string[] {
-  const categories = new Set(blockDefinitions.map(def => def.category));
-  return Array.from(categories).sort();
+  const categories = new Set(blockDefinitions.map(block => block.category));
+  return Array.from(categories);
 }
 
-/**
- * Obtém todos os blocos de uma categoria específica
- * @param category Nome da categoria
- * @returns Array com todas as definições de blocos da categoria
- */
 export function getBlocksByCategory(category: string): BlockDefinition[] {
-  return blockDefinitions.filter(def => def.category === category);
+  return blockDefinitions.filter(block => block.category === category);
 }
 
-/**
- * Obtém blocos marcados como novos
- * @returns Array com todas as definições de blocos novos
- */
+export function findBlockDefinition(type: string): BlockDefinition | undefined {
+  return blockDefinitions.find(block => block.type === type);
+}
+
 export function getNewBlocks(): BlockDefinition[] {
-  return blockDefinitions.filter(def => def.isNew === true);
+  return blockDefinitions.filter(block => block.category === 'content');
 }
 
-/**
- * Busca blocos por texto (nome, descrição ou tags)
- * @param searchTerm Termo de busca
- * @returns Array com definições de blocos que correspondem à busca
- */
 export function searchBlocks(searchTerm: string): BlockDefinition[] {
   const term = searchTerm.toLowerCase();
-  return blockDefinitions.filter(def => 
-    def.name.toLowerCase().includes(term) ||
-    def.description.toLowerCase().includes(term) ||
-    def.tags?.some(tag => tag.toLowerCase().includes(term))
+  return blockDefinitions.filter(block => 
+    block.name.toLowerCase().includes(term) ||
+    block.description.toLowerCase().includes(term) ||
+    block.type.toLowerCase().includes(term)
   );
 }
 
-/**
- * Valida se um tipo de bloco existe
- * @param type Tipo do bloco
- * @returns true se o tipo existe, false caso contrário
- */
 export function isValidBlockType(type: string): boolean {
-  return blockDefinitions.some(def => def.type === type);
+  return blockDefinitions.some(block => block.type === type);
 }
 
-/**
- * Cria um bloco com propriedades padrão baseado na definição
- * @param type Tipo do bloco
- * @param id ID único para o bloco (se não fornecido, será gerado)
- * @returns Objeto Block com propriedades padrão ou null se tipo inválido
- */
-export function createDefaultBlock(type: string, id?: string): Block | null {
+export function createDefaultBlock(type: string, id?: string): any | null {
   const definition = findBlockDefinition(type);
   if (!definition) return null;
 
-  const defaultProperties: Record<string, any> = {};
+  const properties: Record<string, any> = {};
   
-  // Preencher propriedades padrão baseado no schema
   definition.propertiesSchema?.forEach(prop => {
     if (prop.defaultValue !== undefined) {
-      defaultProperties[prop.key] = prop.defaultValue;
+      properties[prop.key] = prop.defaultValue;
     }
   });
 
   return {
-    id: id || `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    id: id || `${type}-${Date.now()}`,
     type,
-    properties: defaultProperties
+    properties,
+    order: 0
   };
 }
 
-/**
- * Obtém o schema de propriedades para um tipo de bloco
- * @param type Tipo do bloco
- * @returns Array com o schema de propriedades ou undefined se não encontrado
- */
 export function getBlockPropertiesSchema(type: string): PropertySchema[] | undefined {
   const definition = findBlockDefinition(type);
   return definition?.propertiesSchema;
 }
 
-// Export default para compatibilidade
-export default blockDefinitions;
+// DEFINIÇÕES DE BLOCOS DE FUNIL - COMPONENTES REUTILIZÁVEIS
+export const funnelComponentBlocks: BlockDefinition[] = [
+  // ETAPA 1: INTRODUÇÃO DO FUNIL
+  {
+    type: 'funnel-intro-step',
+    name: 'Introdução do Funil',
+    description: 'Página de introdução do funil com título, subtítulo e botão de início',
+    icon: '🏁',
+    category: 'Funil',
+    defaultProperties: {
+      title: 'Descubra Seu Estilo Ideal',
+      subtitle: 'Responda nosso quiz e receba um guia personalizado',
+      buttonText: 'Começar Agora',
+      logoUrl: '',
+      backgroundImage: '',
+      showProgressBar: true,
+      stepNumber: 1,
+      totalSteps: 21
+    },
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título Principal',
+        type: 'text',
+        defaultValue: 'Descubra Seu Estilo Ideal'
+      },
+      {
+        key: 'subtitle',
+        label: 'Subtítulo',
+        type: 'text',
+        defaultValue: 'Responda nosso quiz e receba um guia personalizado'
+      },
+      {
+        key: 'buttonText',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Começar Agora'
+      },
+      {
+        key: 'logoUrl',
+        label: 'URL do Logo',
+        type: 'url',
+        defaultValue: ''
+      },
+      {
+        key: 'backgroundImage',
+        label: 'Imagem de Fundo',
+        type: 'url',
+        defaultValue: ''
+      },
+      {
+        key: 'showProgressBar',
+        label: 'Mostrar Barra de Progresso',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'stepNumber',
+        label: 'Número da Etapa',
+        type: 'number',
+        defaultValue: 1
+      },
+      {
+        key: 'totalSteps',
+        label: 'Total de Etapas',
+        type: 'number',
+        defaultValue: 21
+      }
+    ]
+  },
+
+  // ETAPA 2: COLETA DE NOME
+  {
+    type: 'name-collect-step',
+    name: 'Coleta de Nome',
+    description: 'Etapa para coletar o nome do usuário',
+    icon: '👤',
+    category: 'Funil',
+    defaultProperties: {
+      title: 'Como podemos te chamar?',
+      subtitle: 'Digite seu nome para personalizar sua experiência',
+      placeholder: 'Seu nome aqui...',
+      buttonText: 'Continuar',
+      showProgressBar: true,
+      stepNumber: 2,
+      totalSteps: 21
+    },
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Como podemos te chamar?'
+      },
+      {
+        key: 'subtitle',
+        label: 'Subtítulo',
+        type: 'text',
+        defaultValue: 'Digite seu nome para personalizar sua experiência'
+      },
+      {
+        key: 'placeholder',
+        label: 'Placeholder do Input',
+        type: 'text',
+        defaultValue: 'Seu nome aqui...'
+      },
+      {
+        key: 'buttonText',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Continuar'
+      },
+      {
+        key: 'showProgressBar',
+        label: 'Mostrar Barra de Progresso',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'stepNumber',
+        label: 'Número da Etapa',
+        type: 'number',
+        defaultValue: 2
+      },
+      {
+        key: 'totalSteps',
+        label: 'Total de Etapas',
+        type: 'number',
+        defaultValue: 21
+      }
+    ]
+  },
+
+  // ETAPA: PERGUNTA DE MÚLTIPLA ESCOLHA
+  {
+    type: 'question-multiple-step',
+    name: 'Pergunta de Múltipla Escolha',
+    description: 'Pergunta do quiz com opções de múltipla escolha e imagens',
+    icon: '❓',
+    category: 'Funil',
+    defaultProperties: {
+      question: 'Qual é sua preferência?',
+      questionNumber: 1,
+      totalQuestions: 10,
+      multiSelect: false,
+      maxSelections: 1,
+      showProgressBar: true,
+      options: [
+        {
+          id: 'opcao-1',
+          text: 'Opção 1',
+          imageUrl: '',
+          value: 'opcao-1',
+          category: 'categoria-1'
+        },
+        {
+          id: 'opcao-2',
+          text: 'Opção 2',
+          imageUrl: '',
+          value: 'opcao-2',
+          category: 'categoria-2'
+        }
+      ]
+    },
+    propertiesSchema: [
+      {
+        key: 'question',
+        label: 'Pergunta',
+        type: 'text',
+        defaultValue: 'Qual é sua preferência?'
+      },
+      {
+        key: 'questionNumber',
+        label: 'Número da Pergunta',
+        type: 'number',
+        defaultValue: 1
+      },
+      {
+        key: 'totalQuestions',
+        label: 'Total de Perguntas',
+        type: 'number',
+        defaultValue: 10
+      },
+      {
+        key: 'multiSelect',
+        label: 'Permitir Múltipla Seleção',
+        type: 'boolean',
+        defaultValue: false
+      },
+      {
+        key: 'maxSelections',
+        label: 'Máximo de Seleções',
+        type: 'number',
+        defaultValue: 1
+      },
+      {
+        key: 'options',
+        label: 'Opções de Resposta',
+        type: 'array-of-objects',
+        defaultValue: []
+      },
+      {
+        key: 'showProgressBar',
+        label: 'Mostrar Barra de Progresso',
+        type: 'boolean',
+        defaultValue: true
+      }
+    ]
+  },
+
+  // ETAPA: DETALHES DO RESULTADO
+  {
+    type: 'result-details-step',
+    name: 'Detalhes do Resultado',
+    description: 'Página que mostra os detalhes do resultado do quiz',
+    icon: '📊',
+    category: 'Funil',
+    defaultProperties: {
+      result: {
+        category: 'elegante',
+        title: 'Seu Estilo é Elegante',
+        description: 'Você possui uma preferência por elegância refinada, moderna e sem exageros.',
+        imageUrl: '',
+        guideImageUrl: '',
+        recommendations: [
+          'Invista em peças atemporais',
+          'Prefira tecidos de qualidade',
+          'Mantenha uma paleta neutra'
+        ]
+      },
+      buttonText: 'Ver guia completo',
+      showProgressBar: true,
+      stepNumber: 18,
+      totalSteps: 21
+    },
+    propertiesSchema: [
+      {
+        key: 'buttonText',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Ver guia completo'
+      },
+      {
+        key: 'showProgressBar',
+        label: 'Mostrar Barra de Progresso',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'stepNumber',
+        label: 'Número da Etapa',
+        type: 'number',
+        defaultValue: 18
+      },
+      {
+        key: 'totalSteps',
+        label: 'Total de Etapas',
+        type: 'number',
+        defaultValue: 21
+      }
+    ]
+  },
+
+  // ETAPA: PÁGINA DE OFERTA FINAL
+  {
+    type: 'offer-page-step',
+    name: 'Página de Oferta',
+    description: 'Página final com a oferta comercial',
+    icon: '💰',
+    category: 'Funil',
+    defaultProperties: {
+      offer: {
+        title: 'Consultoria de Estilo Personalizada',
+        description: 'Receba um guia completo baseado no seu resultado',
+        price: 'R$ 297',
+        originalPrice: 'R$ 497',
+        buttonText: 'Quero minha consultoria',
+        features: [
+          'Análise completa do seu estilo',
+          'Guia de compras personalizado',
+          'Dicas de combinações',
+          'Suporte por 30 dias'
+        ]
+      },
+      showProgressBar: false,
+      stepNumber: 21,
+      totalSteps: 21
+    },
+    propertiesSchema: [
+      {
+        key: 'showProgressBar',
+        label: 'Mostrar Barra de Progresso',
+        type: 'boolean',
+        defaultValue: false
+      },
+      {
+        key: 'stepNumber',
+        label: 'Número da Etapa',
+        type: 'number',
+        defaultValue: 21
+      },
+      {
+        key: 'totalSteps',
+        label: 'Total de Etapas',
+        type: 'number',
+        defaultValue: 21
+      }
+    ]
+  },
+
+  // COMPONENTES COMPARTILHADOS
+
+  // BARRA DE PROGRESSO
+  {
+    type: 'funnel-progress-bar',
+    name: 'Barra de Progresso do Funil',
+    description: 'Barra de progresso reutilizável para funis',
+    icon: '📊',
+    category: 'Funil - Compartilhados',
+    defaultProperties: {
+      currentStep: 1,
+      totalSteps: 21,
+      showLabels: false,
+      color: '#B89B7A',
+      size: 'md',
+      animated: true,
+      showPercentage: false
+    },
+    propertiesSchema: [
+      {
+        key: 'currentStep',
+        label: 'Etapa Atual',
+        type: 'number',
+        defaultValue: 1
+      },
+      {
+        key: 'totalSteps',
+        label: 'Total de Etapas',
+        type: 'number',
+        defaultValue: 21
+      },
+      {
+        key: 'showLabels',
+        label: 'Mostrar Rótulos',
+        type: 'boolean',
+        defaultValue: false
+      },
+      {
+        key: 'color',
+        label: 'Cor da Barra',
+        type: 'color',
+        defaultValue: '#B89B7A'
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: [
+          { label: 'Pequeno', value: 'sm' },
+          { label: 'Médio', value: 'md' },
+          { label: 'Grande', value: 'lg' }
+        ],
+        defaultValue: 'md'
+      },
+      {
+        key: 'animated',
+        label: 'Animado',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showPercentage',
+        label: 'Mostrar Porcentagem',
+        type: 'boolean',
+        defaultValue: false
+      }
+    ]
+  },
+
+  // CARD DE RESULTADO
+  {
+    type: 'result-card',
+    name: 'Card de Resultado',
+    description: 'Card para exibição de resultados de quiz',
+    icon: '🎯',
+    category: 'Funil - Compartilhados',
+    defaultProperties: {
+      result: {
+        category: 'elegante',
+        title: 'Seu Estilo é Elegante',
+        description: 'Você possui uma preferência por elegância refinada.',
+        imageUrl: ''
+      },
+      showButton: true,
+      buttonText: 'Ver Detalhes',
+      size: 'md'
+    },
+    propertiesSchema: [
+      {
+        key: 'showButton',
+        label: 'Mostrar Botão',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'buttonText',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Ver Detalhes'
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: [
+          { label: 'Pequeno', value: 'sm' },
+          { label: 'Médio', value: 'md' },
+          { label: 'Grande', value: 'lg' }
+        ],
+        defaultValue: 'md'
+      }
+    ]
+  },
+
+  // TIMER DE CONTAGEM REGRESSIVA
+  {
+    type: 'countdown-timer',
+    name: 'Timer de Contagem',
+    description: 'Timer de contagem regressiva para criar urgência',
+    icon: '⏰',
+    category: 'Funil - Compartilhados',
+    defaultProperties: {
+      initialTime: 300,
+      showIcon: true,
+      size: 'md',
+      color: '#B89B7A',
+      format: 'mm:ss'
+    },
+    propertiesSchema: [
+      {
+        key: 'initialTime',
+        label: 'Tempo Inicial (segundos)',
+        type: 'number',
+        defaultValue: 300
+      },
+      {
+        key: 'showIcon',
+        label: 'Mostrar Ícone',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: [
+          { label: 'Pequeno', value: 'sm' },
+          { label: 'Médio', value: 'md' },
+          { label: 'Grande', value: 'lg' }
+        ],
+        defaultValue: 'md'
+      },
+      {
+        key: 'color',
+        label: 'Cor',
+        type: 'color',
+        defaultValue: '#B89B7A'
+      },
+      {
+        key: 'format',
+        label: 'Formato',
+        type: 'select',
+        options: [
+          { label: 'mm:ss', value: 'mm:ss' },
+          { label: 'hh:mm:ss', value: 'hh:mm:ss' },
+          { label: 'Apenas minutos', value: 'mm' }
+        ],
+        defaultValue: 'mm:ss'
+      }
+    ]
+  },
+
+  // CARD DE OFERTA
+  {
+    type: 'offer-card',
+    name: 'Card de Oferta',
+    description: 'Card para exibição de ofertas comerciais',
+    icon: '💳',
+    category: 'Funil - Compartilhados',
+    defaultProperties: {
+      offer: {
+        title: 'Consultoria Personalizada',
+        description: 'Receba um guia completo',
+        price: 'R$ 297',
+        originalPrice: 'R$ 497',
+        buttonText: 'Adquirir agora',
+        features: [
+          'Análise completa',
+          'Guia personalizado',
+          'Suporte incluído'
+        ]
+      },
+      showDiscount: true,
+      variant: 'default'
+    },
+    propertiesSchema: [
+      {
+        key: 'showDiscount',
+        label: 'Mostrar Desconto',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'variant',
+        label: 'Variante Visual',
+        type: 'select',
+        options: [
+          { label: 'Padrão', value: 'default' },
+          { label: 'Destacado', value: 'featured' },
+          { label: 'Compacto', value: 'compact' }
+        ],
+        defaultValue: 'default'
+      }
+    ]
+  }
+];
+
+// Adicionar os blocos de funil aos blocos principais
+export const allBlockDefinitions = [...blockDefinitions, ...funnelComponentBlocks];

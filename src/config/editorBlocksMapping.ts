@@ -1,8 +1,9 @@
+
 /**
  * Mapeamento dos blocos do editor para seus respectivos componentes
  * 
  * Este arquivo mapeia os tipos de bloco para os componentes React que os renderizam.
- * Atualizado para incluir os novos componentes de funil reutilizáveis.
+ * Atualizado para incluir todos os componentes do sistema.
  */
 
 import { ComponentType } from 'react';
@@ -19,43 +20,40 @@ import RichTextBlock from '@/components/editor/blocks/RichTextBlock';
 import QuizStepBlock from '@/components/editor/blocks/QuizStepBlock';
 import QuizStartPageBlock from '@/components/editor/blocks/QuizStartPageBlock';
 import QuizQuestionBlock from '@/components/editor/blocks/QuizQuestionBlock';
-import QuestionMultipleBlock from '@/components/editor/blocks/QuestionMultipleBlock';
-import StrategicQuestionBlock from '@/components/editor/blocks/StrategicQuestionBlock';
-import QuizTransitionBlock from '@/components/editor/blocks/QuizTransitionBlock';
-import ResultPageBlock from '@/components/editor/blocks/ResultPageBlock';
-import QuizOfferPageBlock from '@/components/editor/blocks/QuizOfferPageBlock';
-import ResultHeaderBlock from '@/components/editor/blocks/ResultHeaderBlock';
+import QuizQuestionBlockConfigurable from '@/components/editor/blocks/QuizQuestionBlockConfigurable';
+import QuizResultCalculatedBlock from '@/components/editor/blocks/QuizResultCalculatedBlock';
 
-// Blocos de seções
-import FAQSectionBlock from '@/components/editor/blocks/FAQSectionBlock';
+// Blocos de estrutura e layout
+import TwoColumnBlock from '@/components/editor/blocks/TwoColumnBlock';
+import VideoBlock from '@/components/editor/blocks/VideoBlock';
+import OptionsGridBlock from '@/components/editor/blocks/OptionsGridBlock';
+
+// Blocos de vendas e conversão
+import BenefitsBlock from '@/components/editor/blocks/BenefitsBlock';
 import TestimonialsBlock from '@/components/editor/blocks/TestimonialsBlock';
+import PricingBlock from '@/components/editor/blocks/PricingBlock';
 import GuaranteeBlock from '@/components/editor/blocks/GuaranteeBlock';
-import VideoPlayerBlock from '@/components/editor/blocks/VideoPlayerBlock';
+import CTABlock from '@/components/editor/blocks/CTABlock';
 
-// Componentes de funil reutilizáveis
-import FunnelStepBlock from '@/components/funnel-blocks/editor/FunnelStepBlock';
-import {
-  FunnelIntroStep,
-  NameCollectStep,
-  QuizIntroStep,
-  QuestionMultipleStep as FunnelQuestionMultipleStep,
-  QuizTransitionStep,
-  ProcessingStep,
-  ResultIntroStep,
-  ResultDetailsStep,
-  ResultGuideStep,
-  OfferTransitionStep,
-  OfferPageStep
-} from '@/components/funnel-blocks';
+// Blocos especiais
+import StyleResultBlock from '@/components/editor/blocks/StyleResultBlock';
+import SecondaryStylesBlock from '@/components/editor/blocks/SecondaryStylesBlock';
+import HeadlineBlock from '@/components/editor/blocks/HeadlineBlock';
 
 export const EDITOR_BLOCKS_MAP: Record<string, ComponentType<any>> = {
   // Blocos básicos
   'header': HeaderBlock,
+  'headline': HeadlineBlock,
   'text': TextBlock,
   'image': ImageBlock,
   'button': ButtonBlock,
   'spacer': SpacerBlock,
   'rich-text': RichTextBlock,
+  
+  // Blocos de estrutura
+  'two-column': TwoColumnBlock,
+  'video': VideoBlock,
+  'options-grid': OptionsGridBlock,
   
   // Blocos de quiz e resultado
   'quiz-step': QuizStepBlock,
@@ -63,35 +61,21 @@ export const EDITOR_BLOCKS_MAP: Record<string, ComponentType<any>> = {
   'QuizStartPageBlock': QuizStartPageBlock,
   'quiz-question': QuizQuestionBlock,
   'QuizQuestionBlock': QuizQuestionBlock,
-  'question-multiple': QuestionMultipleBlock,
-  'QuestionMultipleBlock': QuestionMultipleBlock,
-  'strategic-question': StrategicQuestionBlock,
-  'StrategicQuestionBlock': StrategicQuestionBlock,
-  'quiz-transition': QuizTransitionBlock,
-  'QuizTransitionBlock': QuizTransitionBlock,
-  'result-page': ResultPageBlock,
-  'ResultPageBlock': ResultPageBlock,
-  'quiz-offer-page': QuizOfferPageBlock,
-  'QuizOfferPageBlock': QuizOfferPageBlock,
-  'result-header': ResultHeaderBlock,
-  'faq-section': FAQSectionBlock,
-  'testimonials': TestimonialsBlock,
-  'guarantee': GuaranteeBlock,
-  'video-player': VideoPlayerBlock,
+  'quiz-question-configurable': QuizQuestionBlockConfigurable,
+  'QuizQuestionBlockConfigurable': QuizQuestionBlockConfigurable,
+  'quiz-result-calculated': QuizResultCalculatedBlock,
+  'QuizResultCalculatedBlock': QuizResultCalculatedBlock,
   
-  // Novos blocos de funil reutilizáveis
-  'funnel-step': FunnelStepBlock,
-  'funnel-intro': FunnelIntroStep,
-  'funnel-name-collect': NameCollectStep,
-  'funnel-quiz-intro': QuizIntroStep,
-  'funnel-question': FunnelQuestionMultipleStep,
-  'funnel-transition': QuizTransitionStep,
-  'funnel-processing': ProcessingStep,
-  'funnel-result-intro': ResultIntroStep,
-  'funnel-result-details': ResultDetailsStep,
-  'funnel-result-guide': ResultGuideStep,
-  'funnel-offer-transition': OfferTransitionStep,
-  'funnel-offer-page': OfferPageStep
+  // Blocos de vendas
+  'benefits': BenefitsBlock,
+  'testimonials': TestimonialsBlock,
+  'pricing': PricingBlock,
+  'guarantee': GuaranteeBlock,
+  'cta': CTABlock,
+  
+  // Blocos especiais
+  'style-result': StyleResultBlock,
+  'secondary-styles': SecondaryStylesBlock,
 };
 
 // Helper para verificar se um tipo de bloco existe
@@ -102,4 +86,35 @@ export const hasBlockComponent = (blockType: string): boolean => {
 // Helper para obter o componente de um tipo
 export const getBlockComponent = (blockType: string): ComponentType<any> | undefined => {
   return EDITOR_BLOCKS_MAP[blockType];
+};
+
+// Lista de tipos de bloco disponíveis
+export const AVAILABLE_BLOCK_TYPES = Object.keys(EDITOR_BLOCKS_MAP);
+
+// Categorias de blocos para organização na UI
+export const BLOCK_CATEGORIES = {
+  'content': {
+    title: 'Conteúdo',
+    blocks: ['header', 'headline', 'text', 'image', 'video', 'rich-text']
+  },
+  'layout': {
+    title: 'Layout',
+    blocks: ['two-column', 'spacer', 'options-grid']
+  },
+  'quiz': {
+    title: 'Quiz',
+    blocks: ['quiz-start-page', 'quiz-question', 'quiz-question-configurable', 'quiz-result-calculated']
+  },
+  'sales': {
+    title: 'Vendas',
+    blocks: ['benefits', 'testimonials', 'pricing', 'guarantee', 'cta']
+  },
+  'interactive': {
+    title: 'Interativo',
+    blocks: ['button', 'quiz-step']
+  },
+  'special': {
+    title: 'Especiais',
+    blocks: ['style-result', 'secondary-styles']
+  }
 };

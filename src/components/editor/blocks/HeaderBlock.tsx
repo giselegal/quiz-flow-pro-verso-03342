@@ -1,55 +1,148 @@
-import React from 'react';
-import type { BlockComponentProps } from '@/types/blocks';
 
-const HeaderBlock: React.FC<BlockComponentProps> = ({ 
-  block,
+import React, { useState, useRef, useEffect } from 'react';
+import { cn } from '@/lib/utils';
+import { EditableContent } from '@/types/editor';
+
+interface HeaderBlockProps {
+  content: EditableContent;
+  isSelected?: boolean;
+  isEditing?: boolean;
+  onUpdate?: (content: Partial<EditableContent>) => void;
+  onSelect?: () => void;
+  className?: string;
+}
+
+export const HeaderBlock: React.FC<HeaderBlockProps> = ({
+  content,
   isSelected = false,
-  onClick,
-  className = ''
+  isEditing = false,
+  onUpdate,
+  onSelect,
+  className
 }) => {
-  const { 
-    title = 'Título Principal', 
-    subtitle = '', 
-    titleSize = 'large', 
-    alignment = 'center' 
-  } = block.properties;
+  const [isInlineEditing, setIsInlineEditing] = useState(false);
+  const [localTitle, setLocalTitle] = useState(content.title || '');
+  const [localSubtitle, setLocalSubtitle] = useState(content.subtitle || '');
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
 
-  const titleSizeClasses: Record<string, string> = {
-    small: 'text-2xl md:text-3xl',
-    medium: 'text-3xl md:text-4xl',
-    large: 'text-4xl md:text-5xl'
+  useEffect(() => {
+    setLocalTitle(content.title || '');
+    setLocalSubtitle(content.subtitle || '');
+  }, [content.title, content.subtitle]);
+
+  const handleDoubleClick = (field: 'title' | 'subtitle') => {
+    if (onUpdate) {
+      setIsInlineEditing(true);
+      setTimeout(() => {
+        if (field === 'title') {
+          titleRef.current?.focus();
+        } else {
+          subtitleRef.current?.focus();
+        }
+      }, 0);
+    }
   };
 
-  const alignmentClasses: Record<string, string> = {
-    left: 'text-left',
-    center: 'text-center',
-    right: 'text-right'
+  const handleBlur = () => {
+    setIsInlineEditing(false);
+    if (onUpdate && (localTitle !== content.title || localSubtitle !== content.subtitle)) {
+      onUpdate({ title: localTitle, subtitle: localSubtitle });
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleBlur();
+    }
+    if (e.key === 'Escape') {
+      setLocalTitle(content.title || '');
+      setLocalSubtitle(content.subtitle || '');
+      setIsInlineEditing(false);
+    }
+  };
+
+  const getHeaderSize = () => {
+    switch (content.style?.fontSize) {
+      case 'text-4xl': return 'h1';
+      case 'text-3xl': return 'h2';
+      case 'text-2xl': return 'h3';
+      case 'text-xl': return 'h4';
+      default: return 'h1';
+    }
   };
 
   return (
-    <div 
-      className={`
-        p-4 rounded-lg cursor-pointer transition-all duration-200
-        ${isSelected 
-          ? 'border-2 border-blue-500 bg-blue-50' 
-          : 'border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]'
-        }
-        ${className}
-      `}
-      onClick={onClick}
-      data-block-id={block.id}
-      data-block-type={block.type}
+    <div
+      className={cn(
+        "relative p-6 rounded-lg transition-all duration-200",
+        isSelected && "ring-2 ring-blue-400 ring-offset-2",
+        isInlineEditing && "ring-2 ring-green-400 ring-offset-2",
+        "hover:bg-gray-50 cursor-pointer",
+        className
+      )}
+      onClick={onSelect}
+      style={{
+        backgroundColor: content.style?.backgroundColor,
+        padding: content.style?.padding,
+        margin: content.style?.margin,
+        textAlign: content.style?.textAlign as any
+      }}
     >
-      <div className={`${alignmentClasses[alignment]} space-y-2`}>
-        <h1 className={`${titleSizeClasses[titleSize]} font-bold text-[#432818] leading-tight`}>
-          {title}
-        </h1>
-        {subtitle && (
-          <h2 className="text-lg md:text-xl text-[#6B5B73] font-medium">
-            {subtitle}
-          </h2>
+      <div className="text-center">
+        {React.createElement(
+          getHeaderSize(),
+          {
+            ref: titleRef,
+            contentEditable: isInlineEditing,
+            suppressContentEditableWarning: true,
+            className: cn(
+              "font-bold mb-2 outline-none",
+              content.style?.fontSize || "text-3xl"
+            ),
+            style: {
+              color: content.style?.color,
+              fontWeight: content.style?.fontWeight,
+              fontFamily: content.style?.fontFamily
+            },
+            onDoubleClick: () => handleDoubleClick('title'),
+            onBlur: handleBlur,
+            onKeyDown: handleKeyDown,
+            onInput: (e: React.FormEvent<HTMLHeadingElement>) => {
+              setLocalTitle(e.currentTarget.textContent || '');
+            }
+          },
+          localTitle || 'Título Principal'
+        )}
+        
+        {(content.subtitle || isInlineEditing) && (
+          <p
+            ref={subtitleRef}
+            contentEditable={isInlineEditing}
+            suppressContentEditableWarning
+            className="text-lg opacity-80 outline-none"
+            style={{
+              color: content.style?.color,
+              fontFamily: content.style?.fontFamily
+            }}
+            onDoubleClick={() => handleDoubleClick('subtitle')}
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
+            onInput={(e) => {
+              setLocalSubtitle(e.currentTarget.textContent || '');
+            }}
+          >
+            {localSubtitle || 'Subtítulo opcional'}
+          </p>
         )}
       </div>
+      
+      {isInlineEditing && (
+        <div className="absolute -top-8 left-0 bg-green-500 text-white px-2 py-1 rounded text-xs">
+          Editando - Enter para salvar, Esc para cancelar
+        </div>
+      )}
     </div>
   );
 };

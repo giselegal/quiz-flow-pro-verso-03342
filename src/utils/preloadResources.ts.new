@@ -22,7 +22,7 @@ export const preloadCriticalScripts = (): void => {
     linkEl.rel = 'preload';
     linkEl.as = 'image';
     linkEl.href = mainImageURL;
-    linkEl.fetchPriority = 'high';
+    linkEl.fetchpriority = 'high';
     
     // Adicionar ao head se ainda não existir
     const linkExists = Array.from(document.head.querySelectorAll('link[rel="preload"][as="image"]'))
@@ -93,7 +93,7 @@ export const preloadCriticalImages = (page: 'home' | 'quiz' | 'result'): void =>
       linkEl.rel = 'preload';
       linkEl.as = 'image';
       linkEl.href = imageUrl;
-      linkEl.fetchPriority = 'high';
+      linkEl.fetchpriority = 'high';
       document.head.appendChild(linkEl);
     } else {
       // Para imagens secundárias, usar fetch com prioridade mais baixa

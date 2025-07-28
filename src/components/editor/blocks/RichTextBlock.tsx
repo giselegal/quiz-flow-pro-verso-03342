@@ -52,34 +52,16 @@ export const RichTextBlock: React.FC<RichTextBlockProps> = ({
   onSelect,
   className = '',
   minHeight = 100,
-  placeholder = 'Clique para editar...'
+  placeholder = 'Clique para selecionar e editar no painel'
 }) => {
-  const [isEditingInternal, setIsEditingInternal] = useState(false);
   const [currentContent, setCurrentContent] = useState(content);
-  const quillRef = useRef<any>(null);
 
   useEffect(() => {
     setCurrentContent(content);
   }, [content]);
 
-  const handleDoubleClick = () => {
-    setIsEditingInternal(true);
-    onEdit?.();
-  };
-
   const handleClick = () => {
     onSelect?.();
-  };
-
-  const handleBlur = () => {
-    setIsEditingInternal(false);
-    if (currentContent !== content) {
-      onChange(currentContent);
-    }
-  };
-
-  const handleChange = (value: string) => {
-    setCurrentContent(value);
   };
 
   const stripHtml = (html: string) => {
@@ -96,53 +78,16 @@ export const RichTextBlock: React.FC<RichTextBlockProps> = ({
         isSelected ? 'ring-2 ring-blue-500 ring-opacity-50' : ''
       } ${className}`}
       onClick={handleClick}
-      onDoubleClick={handleDoubleClick}
     >
-      {isEditingInternal || isEditing ? (
-        <div className="rich-text-editor">
-          <Suspense fallback={<div className="animate-pulse bg-gray-200 h-32 rounded-md"></div>}>
-            <ReactQuill
-              ref={quillRef}
-              theme="snow"
-              value={currentContent}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              modules={quillModules}
-              formats={quillFormats}
-              placeholder={placeholder}
-              style={{ minHeight: `${minHeight}px` }}
-            />
-          </Suspense>
-        </div>
-      ) : (
-        <div
-          className={`rich-text-display cursor-pointer hover:bg-gray-50 transition-colors duration-200 p-4 rounded-md border-2 border-transparent hover:border-gray-200 ${
-            isEmpty ? 'text-gray-400 italic' : ''
-          }`}
-          style={{ minHeight: `${minHeight}px` }}
-          dangerouslySetInnerHTML={{ 
-            __html: isEmpty ? placeholder : currentContent 
-          }}
-        />
-      )}
-      
-      {/* Toolbar de ações quando selecionado */}
-      {isSelected && !isEditingInternal && (
-        <div className="absolute top-2 right-2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
-          <button
-            className="p-1 bg-white border border-gray-300 rounded shadow-sm hover:bg-gray-50"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDoubleClick();
-            }}
-            title="Editar texto"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
-          </button>
-        </div>
-      )}
+      <div
+        className={`rich-text-display cursor-pointer hover:bg-gray-50 transition-colors duration-200 p-4 rounded-md border-2 border-transparent hover:border-gray-200 ${
+          isEmpty ? 'text-gray-400 italic' : ''
+        }`}
+        style={{ minHeight: `${minHeight}px` }}
+        dangerouslySetInnerHTML={{ 
+          __html: isEmpty ? placeholder : currentContent 
+        }}
+      />
 
       {/* CSS customizado para o Quill */}
       <style>{`

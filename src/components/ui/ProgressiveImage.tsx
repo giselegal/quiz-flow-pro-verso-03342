@@ -108,7 +108,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
         height={height || "auto"}
         loading={priority ? "eager" : "lazy"}
         decoding={priority ? "sync" : "async"}
-        fetchPriority={priority ? "high" : "auto"}
+        {...(priority ? { fetchpriority: "high" } : { fetchpriority: "auto" })}
         onLoad={handleLoad}
         onError={handleError}
       />

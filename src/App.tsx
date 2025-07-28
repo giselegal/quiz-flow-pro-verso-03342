@@ -1,7 +1,6 @@
 import React, { Suspense, lazy, useEffect } from "react";
 import { Router, Route, Switch } from "wouter";
 import { AuthProvider } from "./context/AuthContext";
-import { AdminAuthProvider } from "./context/AdminAuthContext";
 import { QuizProvider } from "./context/QuizContext";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
@@ -32,9 +31,11 @@ const QuizDescubraSeuEstilo = lazy(
 );
 const DashboardPage = lazy(() => import("./pages/admin/DashboardPage"));
 
-// Editor Principal - Consolidado
-const SchemaDrivenEditorPage = lazy(() => import("./pages/SchemaDrivenEditorPage"));
-const BlockDefinitionsTest = lazy(() => import("./components/editor/tests/BlockDefinitionsTest"));
+// Editor Principal - Usando versão simplificada para corrigir erro de importação
+const SchemaDrivenEditorSimple = lazy(() => import("./components/editor/SchemaDrivenEditorSimple"));
+const DragDropTestPage = lazy(() => import("./pages/DragDropTestPage"));
+const FunnelComponentsDemo = lazy(() => import("./pages/FunnelComponentsDemo"));
+const ModularComponentsDemo = lazy(() => import("./pages/ModularComponentsDemo"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 const App = () => {
@@ -88,27 +89,43 @@ const App = () => {
                 {/* Editor Principal - ÚNICO EDITOR para Quiz e Funis Completos */}
                 <Route
                   path="/editor"
-                  component={SchemaDrivenEditorPage}
+                  component={() => <SchemaDrivenEditorSimple />}
                 />
                 {/* Editor com ID específico */}
                 <Route
                   path="/editor/:id"
-                  component={SchemaDrivenEditorPage}
+                  component={({ params }: any) => <SchemaDrivenEditorSimple funnelId={params.id} />}
                 />
                 
-                {/* Teste de definições de blocos */}
+                {/* Teste de Drag & Drop */}
                 <Route
-                  path="/test-blocks"
-                  component={BlockDefinitionsTest}
+                  path="/drag-drop-test"
+                  component={DragDropTestPage}
                 />
-                {/* Admin - protegido com AdminAuthProvider */}
+
+                {/* Demo de Componentes de Funil */}
+                <Route
+                  path="/funnel-demo"
+                  component={FunnelComponentsDemo}
+                />
+
+                {/* Demo de Componentes Modulares */}
+                <Route
+                  path="/modular-demo"
+                  component={ModularComponentsDemo}
+                />
+                
+                {/* Admin - acesso livre */}
+                <Route path="/admin">
+                  <AdminRoute>
+                    <DashboardPage />
+                  </AdminRoute>
+                </Route>
                 <Route path="/admin/:rest*">
                   {() => (
-                    <AdminAuthProvider>
-                      <AdminRoute>
-                        <DashboardPage />
-                      </AdminRoute>
-                    </AdminAuthProvider>
+                    <AdminRoute>
+                      <DashboardPage />
+                    </AdminRoute>
                   )}
                 </Route>
                 {/* 404 - Fallback para rotas não encontradas */}

@@ -68,15 +68,7 @@ const GuaranteeInlineBlock: React.FC<BlockComponentProps> = ({
         <div className="text-center mb-6">
           {/* Icon */}
           <div className="flex justify-center mb-4">
-            <div 
-              className="p-4 rounded-full bg-white shadow-md cursor-pointer hover:scale-105 transition-transform"
-              onClick={() => {
-                const newIcon = prompt('Tipo de ícone (shield, star, check):', iconType);
-                if (newIcon && ['shield', 'star', 'check'].includes(newIcon)) {
-                  handlePropertyChange('iconType', newIcon);
-                }
-              }}
-            >
+            <div className="p-4 rounded-full bg-white shadow-md">
               {getIcon()}
             </div>
           </div>
@@ -108,43 +100,11 @@ const GuaranteeInlineBlock: React.FC<BlockComponentProps> = ({
           {features.map((feature: string, index: number) => (
             <div key={index} className="flex items-center space-x-3 bg-white/50 p-3 rounded-lg">
               <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-              <span 
-                className="text-[#432818] cursor-pointer hover:bg-blue-50/50 rounded px-1 flex-1"
-                onClick={() => {
-                  const newFeature = prompt('Editar característica:', feature);
-                  if (newFeature !== null) handleFeatureChange(index, newFeature);
-                }}
-              >
+              <span className="text-[#432818] flex-1">
                 {feature}
               </span>
             </div>
           ))}
-        </div>
-
-        {/* Style Controls */}
-        <div className="mt-6 pt-4 border-t border-gray-200 text-center text-xs text-gray-500 space-y-1">
-          <div>
-            <span 
-              className="cursor-pointer hover:bg-blue-50/50 rounded px-1"
-              onClick={() => {
-                const newBg = prompt('Cor de fundo (hex):', backgroundColor);
-                if (newBg !== null) handlePropertyChange('backgroundColor', newBg);
-              }}
-            >
-              Fundo: {backgroundColor}
-            </span>
-          </div>
-          <div>
-            <span 
-              className="cursor-pointer hover:bg-blue-50/50 rounded px-1"
-              onClick={() => {
-                const newBorder = prompt('Cor da borda (hex):', borderColor);
-                if (newBorder !== null) handlePropertyChange('borderColor', newBorder);
-              }}
-            >
-              Borda: {borderColor}
-            </span>
-          </div>
         </div>
       </div>
     </div>

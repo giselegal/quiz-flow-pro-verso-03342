@@ -143,7 +143,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
                 <Label htmlFor="type">Tipo de Pergunta</Label>
                 <Select
                   value={editedQuestion.type}
-                  onValueChange={(value: 'text' | 'image' | 'both') => 
+                  onValueChange={(value: 'text' | 'image' | 'both' | 'normal' | 'strategic') => 
                     setEditedQuestion(prev => ({ ...prev, type: value }))
                   }
                 >

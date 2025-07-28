@@ -156,7 +156,7 @@ export const OptimizedImage = ({
         height={height}
         loading={priority ? "eager" : "lazy"}
         decoding={priority ? "sync" : "async"}
-        fetchPriority={priority ? "high" : "auto"}
+        fetchpriority={priority ? "high" : "auto"}
         srcSet={responsiveImageProps.srcSet || undefined}
         sizes={responsiveImageProps.sizes || undefined}
         onLoad={() => {

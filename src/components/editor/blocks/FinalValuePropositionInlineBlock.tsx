@@ -102,15 +102,7 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
                 <div className="flex-shrink-0 h-5 w-5 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full flex items-center justify-center text-white mr-2 mt-0.5">
                   <CheckCircle className="h-3 w-3" />
                 </div>
-                <span 
-                  className="cursor-pointer hover:bg-blue-50/50 rounded px-1"
-                  onClick={() => {
-                    const newBenefit = prompt('Editar benefício:', benefit);
-                    if (newBenefit !== null) handleBenefitChange(index, newBenefit);
-                  }}
-                >
-                  {benefit}
-                </span>
+                <span>{benefit}</span>
               </li>
             ))}
           </ul>
@@ -130,58 +122,15 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
         >
           <span className="flex items-center justify-center gap-2">
             <ShoppingCart className={`w-4 h-4 transition-transform duration-300 ${isButtonHovered ? 'scale-110' : ''}`} />
-            <span 
-              className="cursor-pointer"
-              onClick={(e) => {
-                e.stopPropagation();
-                const newText = prompt('Editar texto do botão:', buttonText);
-                if (newText !== null) handlePropertyChange('buttonText', newText);
-              }}
-            >
-              {buttonText}
-            </span>
+            <span>{buttonText}</span>
           </span>
         </Button>
 
         {/* Security Text */}
         <p className="text-sm text-[#aa6b5d] mt-2 flex items-center justify-center gap-1">
           <Lock className="w-3 h-3" />
-          <span 
-            className="cursor-pointer hover:bg-blue-50/50 rounded px-1"
-            onClick={() => {
-              const newText = prompt('Editar texto de segurança:', securityText);
-              if (newText !== null) handlePropertyChange('securityText', newText);
-            }}
-          >
-            {securityText}
-          </span>
+          <span>{securityText}</span>
         </p>
-
-        {/* Configuration Controls */}
-        <div className="mt-4 text-xs text-gray-500 space-y-1">
-          <div>
-            <span 
-              className="cursor-pointer hover:bg-blue-50/50 rounded px-1"
-              onClick={() => {
-                const newUrl = prompt('Editar URL do botão:', buttonUrl);
-                if (newUrl !== null) handlePropertyChange('buttonUrl', newUrl);
-              }}
-            >
-              URL: {buttonUrl}
-            </span>
-          </div>
-          <div>
-            <span 
-              className="cursor-pointer hover:bg-blue-50/50 rounded px-1"
-              onClick={() => {
-                const newDivider = confirm('Mostrar divisor?');
-                handlePropertyChange('dividerEnabled', newDivider);
-              }}
-            >
-              Divisor: {dividerEnabled ? 'Ativado' : 'Desativado'}
-            </span>
-          </div>
-        </div>
       </div>
     </div>
   );

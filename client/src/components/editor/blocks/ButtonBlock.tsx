@@ -1,69 +1,73 @@
 import React from 'react';
-import type { BlockComponentProps } from '@/types/blocks';
 
-const ButtonBlock: React.FC<BlockComponentProps> = ({ 
-  block,
-  isSelected = false,
-  isEditing = false,
-  onClick,
-  onPropertyChange,
-  className = ''
+interface ButtonBlockProps {
+  text?: string;
+  link?: string;
+  backgroundColor?: string;
+  textColor?: string;
+  paddingX?: number;
+  paddingY?: number;
+  borderRadius?: number;
+  fullWidth?: boolean;
+  className?: string;
+  onClick?: () => void;
+}
+
+export const ButtonBlock: React.FC<ButtonBlockProps> = ({
+  text = 'Clique Aqui',
+  link = '#',
+  backgroundColor = '#B89B7A',
+  textColor = '#ffffff',
+  paddingX = 24,
+  paddingY = 12,
+  borderRadius = 8,
+  fullWidth = false,
+  className = '',
+  onClick
 }) => {
-  const { 
-    text = 'Texto do Botão', 
-    style = 'primary', 
-    size = 'default',
-    fullWidth = false,
-    url = '',
-    action = 'link'
-  } = block.properties;
+  const style = {
+    backgroundColor,
+    color: textColor,
+    padding: `${paddingY}px ${paddingX}px`,
+    borderRadius: `${borderRadius}px`,
+    border: 'none',
+    cursor: 'pointer',
+    fontSize: '16px',
+    fontWeight: 500,
+    textDecoration: 'none',
+    display: 'inline-block',
+    textAlign: 'center' as const,
+    transition: 'all 0.2s ease',
+    width: fullWidth ? '100%' : 'auto'
+  };
 
-  const handlePropertyChange = (key: string, value: any) => {
-    if (onPropertyChange) {
-      onPropertyChange(key, value);
+  const handleClick = (e: React.MouseEvent) => {
+    if (onClick) {
+      e.preventDefault();
+      onClick();
     }
   };
 
-  const styleClasses: Record<string, string> = {
-    primary: 'bg-[#B89B7A] hover:bg-[#a08965] text-white',
-    secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-800',
-    accent: 'bg-[#432818] hover:bg-[#2a1910] text-white'
-  };
-
-  const sizeClasses: Record<string, string> = {
-    sm: 'px-3 py-1.5 text-sm',
-    default: 'px-4 py-2 text-base',
-    lg: 'px-6 py-3 text-lg'
-  };
+  if (link && link !== '#') {
+    return (
+      <a
+        href={link}
+        className={`hover:opacity-90 ${className}`}
+        style={style}
+        onClick={handleClick}
+      >
+        {text}
+      </a>
+    );
+  }
 
   return (
-    <div 
-      className={`
-        p-4 rounded-lg cursor-pointer transition-all duration-200 flex justify-center
-        ${isSelected 
-          ? 'border-2 border-blue-500 bg-blue-50' 
-          : 'border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]'
-        }
-        ${className}
-      `}
-      onClick={onClick}
-      data-block-id={block.id}
-      data-block-type={block.type}
+    <button
+      className={`hover:opacity-90 ${className}`}
+      style={style}
+      onClick={handleClick}
     >
-      <div 
-        className={`
-          rounded-lg font-medium transition-colors duration-200 flex items-center justify-center cursor-pointer
-          ${styleClasses[style]}
-          ${sizeClasses[size]}
-          ${fullWidth ? 'w-full' : 'w-auto'}
-        `}
-      >
-        <span className="text-inherit">
-          {text}
-        </span>
-      </div>
-    </div>
+      {text}
+    </button>
   );
 };
-
-export default ButtonBlock;

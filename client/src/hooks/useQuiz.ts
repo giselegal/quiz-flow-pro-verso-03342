@@ -1,120 +1,231 @@
-import { StyleResult, QuizResult } from '@/types/quiz';
-import { useState, useEffect, useCallback } from 'react'; // Adicionado useCallback
-import { toast } from '@/components/ui/use-toast';
-import { useLocation } from 'wouter';
-import { useQuizLogic } from './useQuizLogic'; // Importar o hook de lógica principal
 
-export const useQuiz = () => {
-  const {
-    quizResult, 
-    calculateResults, 
-    resetQuiz: resetLogicQuiz, // Renomear para evitar conflito
-    // Outros estados e funções de useQuizLogic podem ser importados se necessário
-  } = useQuizLogic();
+import { useState, useEffect } from 'react';
+import { QuizService, Quiz, QuizQuestion, QuizWithQuestions } from '../services/QuizService';
 
-  const [isSubmittingResults, setIsSubmittingResults] = useState(false);
-  const [location, setLocation] = useLocation();
-  
-  // Os estados primaryStyle e secondaryStyles agora são derivados de quizResult de useQuizLogic
-  const primaryStyle = quizResult?.primaryStyle || null;
-  const secondaryStyles = quizResult?.secondaryStyles || [];
+export const useQuiz = (quizId?: string) => {
+  const [quiz, setQuiz] = useState<QuizWithQuestions | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Funções como startQuiz e submitAnswers podem permanecer aqui se envolverem chamadas de API específicas
-  // ou lógica de UI que não pertence ao core do quiz.
-  const startQuiz = async (name: string, email: string, quizId: string) => {
-    try {
-      console.log(`Starting quiz for ${name} (${email}) with quiz ID ${quizId}`);
-      // Aqui poderia haver uma chamada de API para registrar o início do quiz
-      // Por enquanto, retorna um mock
-      return { id: '1', name, email };
-    } catch (error) {
-      toast({
-        title: "Erro ao iniciar o quiz",
-        description: "Por favor, tente novamente.",
-        variant: "destructive",
-      });
-      throw error;
-    }
-  };
-
-  const submitAnswers = async (
-    answers: Array<{ questionId: string; optionId: string; points: number }>
-  ) => {
-    try {
-      console.log('Submitting answers:', answers);
-      // Aqui poderia haver uma chamada de API para salvar respostas parciais
-    } catch (error) {
-      toast({
-        title: "Erro ao salvar respostas",
-        description: "Por favor, tente novamente.",
-        variant: "destructive",
-      });
-      throw error;
-    }
-  };
-  
-  // submitResults agora usa calculateResults de useQuizLogic
-  const submitResults = useCallback(async (clickOrder: string[]) => {
-    try {
-      setIsSubmittingResults(true);
-      console.log("Submitting results with click order:", clickOrder);
-      
-      // A lógica de cálculo e salvamento no localStorage já está em useQuizLogic
-      const finalResults = calculateResults(clickOrder); // Passa clickOrder para desempate
-      
-      if (finalResults) {
-        console.log("Final results from useQuizLogic:", finalResults);
-        // A navegação pode ocorrer aqui ou ser gerenciada pelo componente que chama submitResults
-        // navigate('/resultado'); // Exemplo de navegação
-      } else {
-        // Tratar caso onde resultados não puderam ser calculados
-        toast({
-          title: "Erro ao calcular resultados",
-          description: "Não foi possível finalizar o quiz. Tente novamente.",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error("Error submitting results:", error);
-      toast({
-        title: "Erro ao submeter resultados",
-        description: "Ocorreu um problema ao finalizar o quiz.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmittingResults(false);
-    }
-  }, [calculateResults, setLocation]); // Adicionado setLocation às dependências
-
-  // A função de reset pode chamar a função de reset do useQuizLogic
-  const resetQuiz = useCallback(() => {
-    resetLogicQuiz();
-    // Qualquer lógica adicional de reset específica de useQuiz pode vir aqui
-    console.log('Quiz reset from useQuiz');
-  }, [resetLogicQuiz]);
-
-  // Efeito para carregar dados mock apenas se não houver resultado e estiver no editor/dev
-  // Esta lógica pode ser específica demais para useQuizLogic e pode permanecer aqui.
   useEffect(() => {
-    if (!quizResult && (window.location.href.includes('/admin/editor') || process.env.NODE_ENV === 'development')) {
-      console.log('Using mock data for editor as quizResult is null in useQuiz');
-      // Se precisar setar mock data, idealmente useQuizLogic deveria ter uma função para isso,
-      // ou o componente que precisa do mock data o faria diretamente.
-      // Por ora, esta lógica de mock data está efetivamente desabilitada pois primaryStyle/secondaryStyles são derivados.
+    if (quizId) {
+      loadQuiz(quizId);
     }
-  }, [quizResult]); // Depende de quizResult de useQuizLogic
+  }, [quizId]);
+
+  const loadQuiz = async (id: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const quizData = await QuizService.getQuizById(id);
+      setQuiz(quizData);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao carregar quiz');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateQuiz = async (updates: Partial<Quiz>) => {
+    if (!quiz) return;
+
+    try {
+      setLoading(true);
+      const updatedQuiz = await QuizService.updateQuiz(quiz.id, updates);
+      setQuiz(prev => prev ? { ...prev, ...updatedQuiz } : null);
+      return updatedQuiz;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao atualizar quiz');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return {
-    primaryStyle,
-    secondaryStyles,
-    isSubmittingResults,
-    startQuiz,
-    submitAnswers,
-    submitResults,
-    resetQuiz,
-    // Expor quizResult diretamente se os componentes precisarem de mais dados
-    quizResult 
+    quiz,
+    loading,
+    error,
+    loadQuiz,
+    updateQuiz,
+    setQuiz
   };
 };
 
-export default useQuiz;
+export const useQuizzes = () => {
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const loadQuizzes = async (userId: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const quizzesData = await QuizService.getQuizzes(userId);
+      setQuizzes(quizzesData);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao carregar quizzes');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const createQuiz = async (quizData: Omit<Quiz, 'id' | 'created_at' | 'updated_at'>) => {
+    try {
+      setLoading(true);
+      const newQuiz = await QuizService.createQuiz(quizData);
+      setQuizzes(prev => [newQuiz, ...prev]);
+      return newQuiz;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao criar quiz');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const duplicateQuiz = async (id: string) => {
+    try {
+      setLoading(true);
+      const duplicatedQuiz = await QuizService.duplicateQuiz(id);
+      setQuizzes(prev => [duplicatedQuiz, ...prev]);
+      return duplicatedQuiz;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao duplicar quiz');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteQuiz = async (id: string) => {
+    try {
+      setLoading(true);
+      await QuizService.deleteQuiz(id);
+      setQuizzes(prev => prev.filter(q => q.id !== id));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao deletar quiz');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    quizzes,
+    loading,
+    error,
+    loadQuizzes,
+    createQuiz,
+    duplicateQuiz,
+    deleteQuiz
+  };
+};
+
+export const useQuizQuestions = (quizId: string) => {
+  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const loadQuestions = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const questionsData = await QuizService.getQuizQuestions(quizId);
+      setQuestions(questionsData);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao carregar perguntas');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addQuestion = async (questionData: Partial<QuizQuestion>) => {
+    try {
+      setLoading(true);
+      const newQuestion = await QuizService.addQuestion(quizId, questionData);
+      setQuestions(prev => [...prev, newQuestion]);
+      return newQuestion;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao adicionar pergunta');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateQuestion = async (id: string, updates: Partial<QuizQuestion>) => {
+    try {
+      setLoading(true);
+      const updatedQuestion = await QuizService.updateQuestion(id, updates);
+      setQuestions(prev => prev.map(q => q.id === id ? updatedQuestion : q));
+      return updatedQuestion;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao atualizar pergunta');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteQuestion = async (id: string) => {
+    try {
+      setLoading(true);
+      await QuizService.deleteQuestion(id);
+      setQuestions(prev => prev.filter(q => q.id !== id));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao deletar pergunta');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const reorderQuestions = async (questionIds: string[]) => {
+    try {
+      setLoading(true);
+      await QuizService.reorderQuestions(quizId, questionIds);
+      // Update local state to reflect new order
+      const reorderedQuestions = questionIds.map(id => 
+        questions.find(q => q.id === id)!
+      ).map((q, index) => ({ ...q, order_index: index }));
+      setQuestions(reorderedQuestions);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao reordenar perguntas');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getPublicQuizzes = async () => {
+    try {
+      setLoading(true);
+      const publicQuizzes = await QuizService.getPublicQuizzes();
+      return publicQuizzes;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao carregar quizzes públicos');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (quizId) {
+      loadQuestions();
+    }
+  }, [quizId]);
+
+  return {
+    questions,
+    loading,
+    error,
+    loadQuestions,
+    addQuestion,
+    updateQuestion,
+    deleteQuestion,
+    reorderQuestions,
+    getPublicQuizzes
+  };
+};
