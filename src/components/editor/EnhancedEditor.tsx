@@ -26,16 +26,16 @@ export const EnhancedEditor: React.FC<EnhancedEditorProps> = ({
     // Convert string dimensions to numbers for SimpleComponent, handling undefined values
     if (typeof data.height === 'string') {
       const numHeight = parseFloat(data.height);
-      data.height = isNaN(numHeight) ? undefined : numHeight;
+      data.height = isNaN(numHeight) ? 0 : numHeight;
     } else if (data.height === undefined) {
-      delete data.height;
+      data.height = 0;
     }
     
     if (typeof data.width === 'string') {
       const numWidth = parseFloat(data.width);
-      data.width = isNaN(numWidth) ? undefined : numWidth;
+      data.width = isNaN(numWidth) ? 0 : numWidth;
     } else if (data.width === undefined) {
-      delete data.width;
+      data.width = 0;
     }
 
     return {
