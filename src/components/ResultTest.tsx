@@ -2,7 +2,7 @@
 import React from 'react';
 import { StyleResult, StyleData } from '@/types/quiz';
 import { Progress } from '@/components/ui/progress';
-import { Card } from '@/components/ui/Card';
+import { Card } from '@/components/ui/card';
 import { styleResults } from '@/data/styleData';
 
 interface ResultTestProps {
@@ -49,7 +49,7 @@ export const ResultTest: React.FC<ResultTestProps> = ({ primaryStyle, secondaryS
         </div>
       )}
 
-      <Progress percent={75} className="mb-4" />
+      <Progress value={75} className="mb-4" />
     </div>
   );
 };

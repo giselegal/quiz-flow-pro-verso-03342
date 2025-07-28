@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { StyleResult } from '@/types/quiz';
-import { ALL_STYLES } from '@/data/styleData';
+import { styleResults } from '@/data/styleData';
 
 interface QuizResultProps {
   primaryStyle: StyleResult;
@@ -14,7 +14,7 @@ const QuizResult: React.FC<QuizResultProps> = ({
   secondaryStyles, 
   userName 
 }) => {
-  const primaryStyleData = ALL_STYLES[primaryStyle];
+  const primaryStyleData = styleResults[primaryStyle];
   
   return (
     <div className="min-h-screen bg-[#faf8f5] flex items-center justify-center p-4">
@@ -45,7 +45,7 @@ const QuizResult: React.FC<QuizResultProps> = ({
               </h3>
               <div className="space-y-3">
                 {secondaryStyles.map((style, index) => {
-                  const styleData = ALL_STYLES[style];
+                  const styleData = styleResults[style];
                   return (
                     <div key={index} className="bg-[#f8f6f3] p-3 rounded-lg">
                       <h4 className="font-medium text-[#432818]">
