@@ -1,48 +1,41 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { ArrowLeft, Play } from 'lucide-react';
+import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import type { Quiz } from '../../types/supabase';
 
-const QuizPreview: React.FC = () => {
+interface QuizPreviewProps {
+  quiz: Quiz;
+  onBack: () => void;
+}
+
+const QuizPreview: React.FC<QuizPreviewProps> = ({ quiz, onBack }) => {
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold text-[#432818] mb-6">Pré-visualização do Quiz</h1>
-      
-      <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-lg shadow-sm border border-[#B89B7A]/20 p-6">
-          <h2 className="text-xl font-semibold text-[#432818] mb-4">
-            Descubra Seu Estilo Pessoal
-          </h2>
-          
-          <div className="mb-6">
-            <div className="w-full bg-[#B89B7A]/20 rounded-full h-2 mb-4">
-              <div className="bg-[#B89B7A] h-2 rounded-full" style={{ width: '25%' }}></div>
-            </div>
-            <p className="text-sm text-[#8F7A6A] text-center">Pergunta 1 de 4</p>
+    <div className="container mx-auto px-4 py-8">
+      <Button onClick={onBack} variant="ghost" className="mb-4">
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Voltar
+      </Button>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            {quiz.title}
+            <Badge variant="secondary">Preview</Badge>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-gray-600">{quiz.description}</p>
+          <div className="mt-4">
+            <Button>
+              <Play className="mr-2 h-4 w-4" />
+              Iniciar Quiz
+            </Button>
           </div>
-          
-          <div className="mb-6">
-            <h3 className="text-lg font-medium text-[#432818] mb-4">
-              Qual dessas cores mais representa você?
-            </h3>
-            
-            <div className="grid grid-cols-2 gap-3">
-              {['Azul sereno', 'Vermelho vibrante', 'Verde natural', 'Dourado elegante'].map((option, index) => (
-                <button
-                  key={index}
-                  className="p-3 text-left border border-[#B89B7A]/30 rounded-lg hover:bg-[#B89B7A]/10 transition-colors"
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-          
-          <div className="flex justify-between">
-            <Button variant="outline">Anterior</Button>
-            <Button>Próxima</Button>
-          </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

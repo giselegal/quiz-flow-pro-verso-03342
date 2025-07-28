@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
 import QuizDashboard from './quiz/QuizDashboard';
-import { QuizEditor } from './quiz/QuizEditor';
-import { QuizPreview } from './quiz/QuizPreview';
+import QuizEditor from './quiz/QuizEditor';
+import QuizPreview from './quiz/QuizPreview';
 import QuizIntro from './QuizIntro';
 import type { Quiz } from '../types/supabase';
 
