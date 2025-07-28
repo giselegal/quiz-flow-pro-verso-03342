@@ -8,18 +8,24 @@ import { Button } from '@/components/ui/button';
 
 interface CraftButtonBlockProps {
   text: string;
-  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
-  size?: 'default' | 'sm' | 'lg';
+  variant?: 'default' | 'destructive' | 'outline' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
   href?: string;
 }
 
 export const CraftButtonBlock: React.FC<CraftButtonBlockProps> = ({
   text = 'Botão',
   variant = 'default',
-  size = 'default',
+  size = 'md',
   href = '#'
 }) => {
   const { connectors: { connect, drag } } = useNode();
+
+  const handleClick = () => {
+    if (href && href !== '#') {
+      window.open(href, '_blank');
+    }
+  };
 
   return (
     <div
@@ -29,7 +35,7 @@ export const CraftButtonBlock: React.FC<CraftButtonBlockProps> = ({
       <Button
         variant={variant}
         size={size}
-        onClick={() => href && window.open(href, '_blank')}
+        onClick={handleClick}
         className="cursor-pointer"
       >
         {text}
@@ -68,9 +74,7 @@ const CraftButtonBlockSettings = () => {
             <SelectItem value="default">Padrão</SelectItem>
             <SelectItem value="destructive">Destrutivo</SelectItem>
             <SelectItem value="outline">Contorno</SelectItem>
-            <SelectItem value="secondary">Secundário</SelectItem>
             <SelectItem value="ghost">Fantasma</SelectItem>
-            <SelectItem value="link">Link</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -86,7 +90,7 @@ const CraftButtonBlockSettings = () => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="sm">Pequeno</SelectItem>
-            <SelectItem value="default">Padrão</SelectItem>
+            <SelectItem value="md">Médio</SelectItem>
             <SelectItem value="lg">Grande</SelectItem>
           </SelectContent>
         </Select>
@@ -110,7 +114,7 @@ const CraftButtonBlockSettings = () => {
   props: {
     text: 'Botão',
     variant: 'default',
-    size: 'default',
+    size: 'md',
     href: '#'
   },
   related: {
