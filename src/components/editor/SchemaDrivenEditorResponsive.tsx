@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from '../ui/button';
-import { Badge } from '../ui/Badge';
+import { Badge } from '../ui/badge';
 import {
   FileText,
   Menu,
