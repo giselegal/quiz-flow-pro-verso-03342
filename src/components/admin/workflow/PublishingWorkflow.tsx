@@ -1,422 +1,396 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
-import { 
-  Clock, 
-  CheckCircle, 
-  AlertCircle, 
-  User, 
-  Calendar,
-  Play,
-  Pause,
-  Archive,
-  Eye,
-  Edit,
-  Trash2
-} from 'lucide-react';
+import { Calendar, Clock, User, CheckCircle, AlertCircle, Play, Pause, Archive } from 'lucide-react';
+
+// Define proper types for our data
+interface FunnelData {
+  id: string;
+  name: string;
+  description: string | null;
+  is_published: boolean | null;
+  version: number | null;
+  created_at: string | null;
+  updated_at: string | null;
+  user_id: string | null;
+  settings: any;
+}
+
+interface WorkflowItem {
+  id: string;
+  funnel_id: string;
+  funnel_name: string;
+  status: string;
+  assignee_id: string;
+  assignee_name: string;
+  reviewer_id: string;
+  reviewer_name: string;
+  scheduled_at: string | null;
+  published_at: string | null;
+  paused_at: string | null;
+  archived_at: string | null;
+  created_at: string;
+  updated_at: string;
+  priority: string;
+  estimated_completion: string;
+  actual_completion: string | null;
+  notes: string;
+}
 
 const PublishingWorkflow = () => {
-  const [funnels, setFunnels] = useState([]);
-  const [workflows, setWorkflows] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedWorkflow, setSelectedWorkflow] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [funnels, setFunnels] = useState<FunnelData[]>([]);
+  const [workflows, setWorkflows] = useState<WorkflowItem[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<string>('all');
 
   useEffect(() => {
-    fetchWorkflowData();
+    loadFunnels();
+    loadWorkflows();
   }, []);
 
-  const fetchWorkflowData = async () => {
+  const loadFunnels = async () => {
     try {
       setLoading(true);
-      
-      // Fetch existing funnels
-      const { data: funnelsData, error: funnelsError } = await supabase
+      const { data, error } = await supabase
         .from('funnels')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (funnelsError) {
-        console.error('Error fetching funnels:', funnelsError);
-      } else {
-        setFunnels(funnelsData || []);
-      }
-
-      // Create mock workflow data based on existing funnels
-      const mockWorkflows = (funnelsData || []).map(funnel => ({
-        id: `workflow-${funnel.id}`,
-        funnel_id: funnel.id,
-        funnel_name: funnel.name,
-        status: funnel.is_published ? 'published' : 'draft',
-        assignee_id: 'user-1',
-        assignee_name: 'Editor Principal',
-        reviewer_id: 'user-2',
-        reviewer_name: 'Revisor Senior',
-        scheduled_at: funnel.is_published ? null : new Date(Date.now() + 86400000).toISOString(),
-        published_at: funnel.is_published ? funnel.created_at : null,
-        paused_at: null,
-        archived_at: null,
-        created_at: funnel.created_at,
-        updated_at: funnel.updated_at,
-        progress: funnel.is_published ? 100 : 75,
-        priority: 'medium',
-        notes: 'Workflow criado automaticamente'
-      }));
-
-      setWorkflows(mockWorkflows);
-    } catch (error) {
-      console.error('Error fetching workflow data:', error);
+      if (error) throw error;
+      setFunnels(data || []);
+    } catch (err) {
+      console.error('Error loading funnels:', err);
+      setError('Failed to load funnels');
+      // Use mock data as fallback
+      setFunnels([
+        {
+          id: '1',
+          name: 'Lead Generation Funnel',
+          description: 'Main lead generation funnel',
+          is_published: true,
+          version: 1,
+          created_at: '2024-01-01T00:00:00Z',
+          updated_at: '2024-01-01T00:00:00Z',
+          user_id: 'user1',
+          settings: {}
+        }
+      ]);
     } finally {
       setLoading(false);
     }
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'draft': return 'bg-gray-500';
-      case 'in_review': return 'bg-yellow-500';
-      case 'approved': return 'bg-green-500';
-      case 'published': return 'bg-blue-500';
-      case 'scheduled': return 'bg-purple-500';
-      case 'paused': return 'bg-orange-500';
-      case 'archived': return 'bg-red-500';
-      default: return 'bg-gray-500';
-    }
-  };
-
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case 'draft': return <Edit className="h-4 w-4" />;
-      case 'in_review': return <Eye className="h-4 w-4" />;
-      case 'approved': return <CheckCircle className="h-4 w-4" />;
-      case 'published': return <CheckCircle className="h-4 w-4" />;
-      case 'scheduled': return <Calendar className="h-4 w-4" />;
-      case 'paused': return <Pause className="h-4 w-4" />;
-      case 'archived': return <Archive className="h-4 w-4" />;
-      default: return <Clock className="h-4 w-4" />;
-    }
-  };
-
-  const handleStatusChange = async (workflowId, newStatus) => {
+  const loadWorkflows = async () => {
     try {
-      // Update workflow status (mock implementation)
-      setWorkflows(prev => prev.map(w => 
-        w.id === workflowId 
-          ? { ...w, status: newStatus, updated_at: new Date().toISOString() }
-          : w
-      ));
-      
-      // If publishing, update the actual funnel
-      if (newStatus === 'published') {
-        const workflow = workflows.find(w => w.id === workflowId);
-        if (workflow) {
-          const { error } = await supabase
-            .from('funnels')
-            .update({ is_published: true })
-            .eq('id', workflow.funnel_id);
-            
-          if (error) {
-            console.error('Error updating funnel:', error);
-          }
+      // Using mock data since the workflow tables don't exist in the current schema
+      const mockWorkflows: WorkflowItem[] = [
+        {
+          id: '1',
+          funnel_id: '1',
+          funnel_name: 'Lead Generation Funnel',
+          status: 'in_progress',
+          assignee_id: 'user1',
+          assignee_name: 'John Doe',
+          reviewer_id: 'user2',
+          reviewer_name: 'Jane Smith',
+          scheduled_at: '2024-01-15T10:00:00Z',
+          published_at: null,
+          paused_at: null,
+          archived_at: null,
+          created_at: '2024-01-01T00:00:00Z',
+          updated_at: '2024-01-01T00:00:00Z',
+          priority: 'high',
+          estimated_completion: '2024-01-15T00:00:00Z',
+          actual_completion: null,
+          notes: 'Working on final review'
+        },
+        {
+          id: '2',
+          funnel_id: '2',
+          funnel_name: 'Product Sales Funnel',
+          status: 'completed',
+          assignee_id: 'user2',
+          assignee_name: 'Jane Smith',
+          reviewer_id: 'user3',
+          reviewer_name: 'Bob Johnson',
+          scheduled_at: '2024-01-10T09:00:00Z',
+          published_at: '2024-01-10T09:30:00Z',
+          paused_at: null,
+          archived_at: null,
+          created_at: '2024-01-01T00:00:00Z',
+          updated_at: '2024-01-10T09:30:00Z',
+          priority: 'medium',
+          estimated_completion: '2024-01-10T00:00:00Z',
+          actual_completion: '2024-01-10T09:30:00Z',
+          notes: 'Completed successfully'
         }
-      }
-    } catch (error) {
-      console.error('Error updating workflow status:', error);
+      ];
+
+      setWorkflows(mockWorkflows);
+    } catch (err) {
+      console.error('Error loading workflows:', err);
+      setError('Failed to load workflows');
     }
   };
 
-  const handleSchedulePublication = async (workflowId, scheduledDate) => {
-    try {
-      setWorkflows(prev => prev.map(w => 
-        w.id === workflowId 
-          ? { 
-              ...w, 
-              status: 'scheduled', 
-              scheduled_at: scheduledDate,
-              updated_at: new Date().toISOString()
-            }
-          : w
-      ));
-    } catch (error) {
-      console.error('Error scheduling publication:', error);
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'completed': return 'bg-green-100 text-green-800';
+      case 'in_progress': return 'bg-blue-100 text-blue-800';
+      case 'pending': return 'bg-yellow-100 text-yellow-800';
+      case 'paused': return 'bg-orange-100 text-orange-800';
+      case 'archived': return 'bg-gray-100 text-gray-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
   };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'completed': return <CheckCircle className="w-4 h-4" />;
+      case 'in_progress': return <Play className="w-4 h-4" />;
+      case 'pending': return <Clock className="w-4 h-4" />;
+      case 'paused': return <Pause className="w-4 h-4" />;
+      case 'archived': return <Archive className="w-4 h-4" />;
+      default: return <AlertCircle className="w-4 h-4" />;
+    }
+  };
+
+  const updateWorkflowStatus = (workflowId: string, newStatus: string) => {
+    setWorkflows(prev => 
+      prev.map(workflow => 
+        workflow.id === workflowId 
+          ? { ...workflow, status: newStatus, updated_at: new Date().toISOString() }
+          : workflow
+      )
+    );
+  };
+
+  const scheduleWorkflow = (workflowId: string, scheduledDate: string) => {
+    setWorkflows(prev => 
+      prev.map(workflow => 
+        workflow.id === workflowId 
+          ? { ...workflow, scheduled_at: scheduledDate, updated_at: new Date().toISOString() }
+          : workflow
+      )
+    );
+  };
+
+  const filteredWorkflows = selectedStatus === 'all' 
+    ? workflows 
+    : workflows.filter(workflow => workflow.status === selectedStatus);
 
   if (loading) {
+    return <div className="p-6">Loading workflow...</div>;
+  }
+
+  if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Carregando workflow...</p>
-        </div>
+      <div className="p-6">
+        <div className="text-red-500 mb-4">Error: {error}</div>
+        <Button onClick={() => { setError(null); loadFunnels(); loadWorkflows(); }}>
+          Retry
+        </Button>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-6 space-y-8">
-      <div className="flex items-center justify-between">
+    <div className="p-6 space-y-6">
+      <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Workflow de Publicação</h1>
-          <p className="text-gray-600 mt-2">Gerencie o processo de publicação dos seus funnels</p>
+          <h1 className="text-2xl font-bold">Publishing Workflow</h1>
+          <p className="text-gray-600">Manage funnel publishing and review process</p>
         </div>
-        <Button onClick={fetchWorkflowData} disabled={loading}>
-          {loading ? 'Atualizando...' : 'Atualizar'}
+        <Button>
+          <Play className="w-4 h-4 mr-2" />
+          New Workflow
         </Button>
       </div>
 
-      {/* Workflow Status Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      {/* Status Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Rascunhos</CardTitle>
-            <Edit className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">In Progress</CardTitle>
+            <Play className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {workflows.filter(w => w.status === 'draft').length}
+              {workflows.filter(w => w.status === 'in_progress').length}
             </div>
+            <p className="text-xs text-muted-foreground">Active workflows</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Em Revisão</CardTitle>
-            <Eye className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Pending</CardTitle>
+            <Clock className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {workflows.filter(w => w.status === 'in_review').length}
+              {workflows.filter(w => w.status === 'pending').length}
             </div>
+            <p className="text-xs text-muted-foreground">Awaiting review</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Agendados</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Completed</CardTitle>
+            <CheckCircle className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {workflows.filter(w => w.status === 'scheduled').length}
+              {workflows.filter(w => w.status === 'completed').length}
             </div>
+            <p className="text-xs text-muted-foreground">Published funnels</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Publicados</CardTitle>
-            <CheckCircle className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Paused</CardTitle>
+            <Pause className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {workflows.filter(w => w.status === 'published').length}
+              {workflows.filter(w => w.status === 'paused').length}
             </div>
+            <p className="text-xs text-muted-foreground">On hold</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Workflow List */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Workflows Ativos</CardTitle>
-          <CardDescription>Gerencie o status e progresso dos seus funnels</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {workflows.map((workflow) => (
-              <div 
-                key={workflow.id} 
-                className="border rounded-lg p-4 space-y-4"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-3 h-3 rounded-full ${getStatusColor(workflow.status)}`}></div>
-                    <h3 className="font-semibold text-lg">{workflow.funnel_name}</h3>
-                    <Badge variant="outline" className="flex items-center space-x-1">
-                      {getStatusIcon(workflow.status)}
-                      <span className="capitalize">{workflow.status}</span>
-                    </Badge>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleStatusChange(workflow.id, 'in_review')}
-                      disabled={workflow.status === 'published'}
-                    >
-                      <Eye className="h-4 w-4 mr-1" />
-                      Revisar
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleStatusChange(workflow.id, 'published')}
-                      disabled={workflow.status === 'published'}
-                    >
-                      <Play className="h-4 w-4 mr-1" />
-                      Publicar
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleStatusChange(workflow.id, 'paused')}
-                      disabled={workflow.status === 'draft'}
-                    >
-                      <Pause className="h-4 w-4 mr-1" />
-                      Pausar
-                    </Button>
-                  </div>
-                </div>
+      <Tabs defaultValue="active" className="w-full">
+        <TabsList>
+          <TabsTrigger value="active">Active</TabsTrigger>
+          <TabsTrigger value="completed">Completed</TabsTrigger>
+          <TabsTrigger value="archived">Archived</TabsTrigger>
+        </TabsList>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <p className="text-sm text-gray-600">Responsável</p>
-                    <div className="flex items-center space-x-2 mt-1">
-                      <User className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm">{workflow.assignee_name}</span>
+        <TabsContent value="active" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Active Workflows</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {filteredWorkflows.map((workflow) => (
+                  <div key={workflow.id} className="border rounded-lg p-4">
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <Badge className={getStatusColor(workflow.status)}>
+                            {getStatusIcon(workflow.status)}
+                            <span className="ml-1 capitalize">{workflow.status}</span>
+                          </Badge>
+                          <h3 className="font-semibold">{workflow.funnel_name}</h3>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
+                          <div className="flex items-center gap-2">
+                            <User className="w-4 h-4" />
+                            <span>Assignee: {workflow.assignee_name}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <User className="w-4 h-4" />
+                            <span>Reviewer: {workflow.reviewer_name}</span>
+                          </div>
+                          {workflow.scheduled_at && (
+                            <div className="flex items-center gap-2">
+                              <Calendar className="w-4 h-4" />
+                              <span>Scheduled: {new Date(workflow.scheduled_at).toLocaleDateString()}</span>
+                            </div>
+                          )}
+                          {workflow.estimated_completion && (
+                            <div className="flex items-center gap-2">
+                              <Clock className="w-4 h-4" />
+                              <span>Est. Completion: {new Date(workflow.estimated_completion).toLocaleDateString()}</span>
+                            </div>
+                          )}
+                        </div>
+                        {workflow.notes && (
+                          <p className="text-sm text-gray-700 mt-2">{workflow.notes}</p>
+                        )}
+                      </div>
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => updateWorkflowStatus(workflow.id, 'completed')}
+                        >
+                          Complete
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => updateWorkflowStatus(workflow.id, 'paused')}
+                        >
+                          Pause
+                        </Button>
+                      </div>
+                    </div>
+                    <Progress percent={workflow.status === 'completed' ? 100 : workflow.status === 'in_progress' ? 60 : 20} />
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="completed">
+          <Card>
+            <CardHeader>
+              <CardTitle>Completed Workflows</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {workflows.filter(w => w.status === 'completed').map((workflow) => (
+                  <div key={workflow.id} className="border rounded-lg p-4">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h3 className="font-semibold">{workflow.funnel_name}</h3>
+                        <p className="text-sm text-gray-600">
+                          Completed by {workflow.assignee_name}
+                        </p>
+                        {workflow.published_at && (
+                          <p className="text-sm text-gray-500">
+                            Published: {new Date(workflow.published_at).toLocaleString()}
+                          </p>
+                        )}
+                      </div>
+                      <Badge className="bg-green-100 text-green-800">
+                        <CheckCircle className="w-4 h-4 mr-1" />
+                        Completed
+                      </Badge>
                     </div>
                   </div>
-                  <div>
-                    <p className="text-sm text-gray-600">Revisor</p>
-                    <div className="flex items-center space-x-2 mt-1">
-                      <User className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm">{workflow.reviewer_name}</span>
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">Última Atualização</p>
-                    <div className="flex items-center space-x-2 mt-1">
-                      <Clock className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm">
-                        {new Date(workflow.updated_at).toLocaleString()}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Progresso</span>
-                    <span className="text-sm text-gray-600">{workflow.progress}%</span>
-                  </div>
-                  <Progress percent={workflow.progress} className="h-2" />
-                </div>
-
-                {workflow.scheduled_at && (
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                    <div className="flex items-center space-x-2">
-                      <Calendar className="h-4 w-4 text-yellow-600" />
-                      <span className="text-sm text-yellow-800">
-                        Agendado para: {new Date(workflow.scheduled_at).toLocaleString()}
-                      </span>
-                    </div>
-                  </div>
-                )}
-
-                {workflow.published_at && (
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                    <div className="flex items-center space-x-2">
-                      <CheckCircle className="h-4 w-4 text-green-600" />
-                      <span className="text-sm text-green-800">
-                        Publicado em: {new Date(workflow.published_at).toLocaleString()}
-                      </span>
-                    </div>
-                  </div>
-                )}
+                ))}
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-      {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Ações Rápidas</CardTitle>
-          <CardDescription>Operações comuns do workflow</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Button 
-              variant="outline" 
-              className="flex items-center space-x-2 h-auto p-4"
-              onClick={() => handleStatusChange('all', 'in_review')}
-            >
-              <Eye className="h-5 w-5" />
-              <div className="text-left">
-                <div className="font-medium">Revisar Todos</div>
-                <div className="text-sm text-gray-600">Mover rascunhos para revisão</div>
+        <TabsContent value="archived">
+          <Card>
+            <CardHeader>
+              <CardTitle>Archived Workflows</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center text-gray-500 py-8">
+                No archived workflows found.
               </div>
-            </Button>
-
-            <Button 
-              variant="outline" 
-              className="flex items-center space-x-2 h-auto p-4"
-              onClick={() => handleSchedulePublication('all', new Date(Date.now() + 86400000).toISOString())}
-            >
-              <Calendar className="h-5 w-5" />
-              <div className="text-left">
-                <div className="font-medium">Agendar Publicação</div>
-                <div className="text-sm text-gray-600">Programar para amanhã</div>
-              </div>
-            </Button>
-
-            <Button 
-              variant="outline" 
-              className="flex items-center space-x-2 h-auto p-4"
-              onClick={() => handleStatusChange('all', 'published')}
-            >
-              <Play className="h-5 w-5" />
-              <div className="text-left">
-                <div className="font-medium">Publicar Aprovados</div>
-                <div className="text-sm text-gray-600">Publicar todos aprovados</div>
-              </div>
-            </Button>
-
-            <Button 
-              variant="outline" 
-              className="flex items-center space-x-2 h-auto p-4"
-              onClick={() => handleStatusChange('all', 'archived')}
-            >
-              <Archive className="h-5 w-5" />
-              <div className="text-left">
-                <div className="font-medium">Arquivar Antigos</div>
-                <div className="text-sm text-gray-600">Arquivar workflows antigos</div>
-              </div>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Workflow Timeline */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Timeline do Workflow</CardTitle>
-          <CardDescription>Histórico de atividades recentes</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {workflows.slice(0, 5).map((workflow) => (
-              <div key={workflow.id} className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
-                <div className={`w-3 h-3 rounded-full ${getStatusColor(workflow.status)}`}></div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">{workflow.funnel_name}</p>
-                  <p className="text-xs text-gray-600">
-                    Status alterado para {workflow.status} • {new Date(workflow.updated_at).toLocaleString()}
-                  </p>
-                </div>
-                <Badge variant="outline" className="text-xs">
-                  {workflow.status}
-                </Badge>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
