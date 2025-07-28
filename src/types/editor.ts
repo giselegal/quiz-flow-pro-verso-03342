@@ -25,6 +25,7 @@ export type BlockType =
   | 'quiz-question'
   | 'quiz-question-configurable'
   | 'quiz-start-page'
+  | 'quiz-question-page'
   | 'quiz-result-calculated'
   | 'benefits'
   | 'testimonials'

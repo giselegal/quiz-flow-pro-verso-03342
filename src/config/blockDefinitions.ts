@@ -853,7 +853,7 @@ export const blockDefinitions: BlockDefinition[] = [
       {
         key: 'options',
         label: 'Opções',
-        type: 'array',
+        type: 'array-of-objects',
         defaultValue: [
           { id: '1', text: 'Clássico e elegante', value: 'classico' },
           { id: '2', text: 'Moderno e minimalista', value: 'moderno' },
