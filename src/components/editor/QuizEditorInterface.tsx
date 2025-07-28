@@ -229,7 +229,7 @@ const QuizEditorInterface: React.FC = () => {
     } catch (error) {
       toast({
         title: 'Erro ao Publicar',
-        description: `Erro: ${error.message}`,
+        description: `Erro: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
         variant: 'destructive',
       });
     }
@@ -376,10 +376,10 @@ const QuizEditorInterface: React.FC = () => {
             {isPublishing ? 'Publicando...' : 'Publicar'}
           </Button>
           
-          <Button 
+          <Button
             onClick={handleTest}
             disabled={!currentFunnelId || !isPublished}
-            variant="secondary"
+            variant="outline"
             size="sm"
           >
             <ExternalLink className="w-4 h-4 mr-2" />
