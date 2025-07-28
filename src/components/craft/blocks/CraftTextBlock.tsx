@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { useNode } from '@craftjs/core';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface CraftTextBlockProps {
   text: string;
@@ -86,7 +87,7 @@ const CraftTextBlockSettings = () => {
         <Label htmlFor="fontWeight">Peso da Fonte</Label>
         <Select 
           value={props.fontWeight} 
-          onValueChange={(value) => setProp((props: CraftTextBlockProps) => props.fontWeight = value as any)}
+          onValueChange={(value: string) => setProp((props: CraftTextBlockProps) => props.fontWeight = value as any)}
         >
           <SelectTrigger className="mt-1">
             <SelectValue />
@@ -103,7 +104,7 @@ const CraftTextBlockSettings = () => {
         <Label htmlFor="textAlign">Alinhamento</Label>
         <Select 
           value={props.textAlign} 
-          onValueChange={(value) => setProp((props: CraftTextBlockProps) => props.textAlign = value as any)}
+          onValueChange={(value: string) => setProp((props: CraftTextBlockProps) => props.textAlign = value as any)}
         >
           <SelectTrigger className="mt-1">
             <SelectValue />

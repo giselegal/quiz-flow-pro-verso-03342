@@ -3,20 +3,20 @@ import React from 'react';
 import { useNode } from '@craftjs/core';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 
 interface CraftButtonBlockProps {
   text: string;
-  variant?: 'default' | 'destructive' | 'outline' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost';
+  size?: 'sm' | 'default' | 'lg';
   href?: string;
 }
 
 export const CraftButtonBlock: React.FC<CraftButtonBlockProps> = ({
   text = 'Botão',
   variant = 'default',
-  size = 'md',
+  size = 'default',
   href = '#'
 }) => {
   const { connectors: { connect, drag } } = useNode();
@@ -65,7 +65,7 @@ const CraftButtonBlockSettings = () => {
         <Label htmlFor="variant">Variante</Label>
         <Select 
           value={props.variant} 
-          onValueChange={(value) => setProp((props: CraftButtonBlockProps) => props.variant = value as any)}
+          onValueChange={(value: string) => setProp((props: CraftButtonBlockProps) => props.variant = value as any)}
         >
           <SelectTrigger className="mt-1">
             <SelectValue />
@@ -74,6 +74,7 @@ const CraftButtonBlockSettings = () => {
             <SelectItem value="default">Padrão</SelectItem>
             <SelectItem value="destructive">Destrutivo</SelectItem>
             <SelectItem value="outline">Contorno</SelectItem>
+            <SelectItem value="secondary">Secundário</SelectItem>
             <SelectItem value="ghost">Fantasma</SelectItem>
           </SelectContent>
         </Select>
@@ -83,14 +84,14 @@ const CraftButtonBlockSettings = () => {
         <Label htmlFor="size">Tamanho</Label>
         <Select 
           value={props.size} 
-          onValueChange={(value) => setProp((props: CraftButtonBlockProps) => props.size = value as any)}
+          onValueChange={(value: string) => setProp((props: CraftButtonBlockProps) => props.size = value as any)}
         >
           <SelectTrigger className="mt-1">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="sm">Pequeno</SelectItem>
-            <SelectItem value="md">Médio</SelectItem>
+            <SelectItem value="default">Médio</SelectItem>
             <SelectItem value="lg">Grande</SelectItem>
           </SelectContent>
         </Select>
@@ -114,7 +115,7 @@ const CraftButtonBlockSettings = () => {
   props: {
     text: 'Botão',
     variant: 'default',
-    size: 'md',
+    size: 'default',
     href: '#'
   },
   related: {

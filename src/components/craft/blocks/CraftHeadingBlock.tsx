@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { useNode } from '@craftjs/core';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface CraftHeadingBlockProps {
   text: string;
@@ -18,7 +19,7 @@ export const CraftHeadingBlock: React.FC<CraftHeadingBlockProps> = ({
   textAlign = 'left',
   color = '#000000'
 }) => {
-  const { connectors: { connect, drag }, actions: { setProp } } = useNode();
+  const { connectors: { connect, drag } } = useNode();
 
   const HeadingTag = `h${level}` as keyof React.ReactHTML;
 
@@ -64,7 +65,7 @@ const CraftHeadingBlockSettings = () => {
         <Label htmlFor="level">Nível do Título</Label>
         <Select 
           value={props.level.toString()} 
-          onValueChange={(value) => setProp((props: CraftHeadingBlockProps) => props.level = Number(value))}
+          onValueChange={(value: string) => setProp((props: CraftHeadingBlockProps) => props.level = Number(value))}
         >
           <SelectTrigger className="mt-1">
             <SelectValue />
@@ -84,7 +85,7 @@ const CraftHeadingBlockSettings = () => {
         <Label htmlFor="textAlign">Alinhamento</Label>
         <Select 
           value={props.textAlign} 
-          onValueChange={(value) => setProp((props: CraftHeadingBlockProps) => props.textAlign = value as any)}
+          onValueChange={(value: string) => setProp((props: CraftHeadingBlockProps) => props.textAlign = value as any)}
         >
           <SelectTrigger className="mt-1">
             <SelectValue />
