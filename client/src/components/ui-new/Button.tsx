@@ -2,7 +2,7 @@ import React from 'react';
 import { Button as AntButton } from 'antd';
 import type { ButtonProps as AntButtonProps } from 'antd';
 
-export interface ButtonProps extends Omit<AntButtonProps, 'size' | 'type'> {
+export interface ButtonProps extends Omit<AntButtonProps, 'size'> {
   variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'ghost' | 'link';
   size?: 'small' | 'medium' | 'large';
   fullWidth?: boolean;

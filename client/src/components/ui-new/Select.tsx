@@ -70,7 +70,7 @@ export const Select: React.FC<SelectProps> = ({
     status: error ? 'error' : undefined,
     style: { width: fullWidth ? '100%' : undefined },
     filterOption: searchable ? (input, option) =>
-      (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+      String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
     : false,
     ...props
   };

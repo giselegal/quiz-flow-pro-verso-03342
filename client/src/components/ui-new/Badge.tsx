@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge as AntBadge, Tag } from 'antd';
 import type { BadgeProps as AntBadgeProps, TagProps } from 'antd';
-import { difficultyColors, statusColors, quizCategoryColors } from '../config/antd-theme';
+import { difficultyColors, statusColors, quizCategoryColors } from '../../config/antd-theme';
 
 export interface BadgeProps extends Omit<AntBadgeProps, 'color'> {
   variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'info';
@@ -86,7 +86,6 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
   return (
     <Tag 
       color={statusColors[status]}
-      size={tagSize}
       className="font-medium"
     >
       {getStatusText(status)}
@@ -130,7 +129,6 @@ export const DifficultyBadge: React.FC<DifficultyBadgeProps> = ({
   return (
     <Tag 
       color={difficultyColors[difficulty]}
-      size={tagSize}
       className="font-medium flex items-center gap-1"
     >
       <span>{getDifficultyIcon(difficulty)}</span>
@@ -176,7 +174,6 @@ export const CategoryBadge: React.FC<CategoryBadgeProps> = ({
   return (
     <Tag 
       color={quizCategoryColors[category]}
-      size={tagSize}
       className="font-medium"
     >
       {getCategoryText(category)}

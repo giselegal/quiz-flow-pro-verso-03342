@@ -2,7 +2,7 @@ import React from 'react';
 import { Input as AntInput, InputNumber } from 'antd';
 import type { InputProps as AntInputProps, InputNumberProps } from 'antd';
 
-const { TextArea, Search, Password } = AntInput;
+const { TextArea: AntTextArea, Search, Password } = AntInput;
 
 export interface InputProps extends Omit<AntInputProps, 'size'> {
   label?: string;
@@ -12,7 +12,7 @@ export interface InputProps extends Omit<AntInputProps, 'size'> {
   helperText?: string;
 }
 
-export interface TextAreaProps extends React.ComponentProps<typeof TextArea> {
+export interface TextAreaProps extends React.ComponentProps<typeof AntTextArea> {
   label?: string;
   error?: string;
   fullWidth?: boolean;

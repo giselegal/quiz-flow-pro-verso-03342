@@ -56,7 +56,6 @@ export const quizQuestTheme: ThemeConfig = {
       borderRadius: 8,
       controlHeight: 40,
       paddingInline: 24,
-      fontWeight: 500,
     },
     
     Input: {
@@ -99,12 +98,10 @@ export const quizQuestTheme: ThemeConfig = {
     
     Badge: {
       borderRadius: 10,
-      fontWeight: 500,
     },
     
     Tag: {
       borderRadius: 6,
-      fontWeight: 500,
     },
     
     Progress: {
