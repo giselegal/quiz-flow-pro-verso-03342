@@ -42,16 +42,6 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
   className,
   disabled = false
 }) => {
-<<<<<<< HEAD
-  // 🔍 DEBUG INICIAL
-  console.log('🎨 DroppableCanvas renderizado com:', {
-    blocksLength: blocks.length,
-    blocks: blocks.map(b => ({ id: b.id, type: b.type })),
-    mappingKeys: Object.keys(EDITOR_BLOCKS_MAP)
-  });
-
-  const [draggedBlock, setDraggedBlock] = useState<string | null>(null);
-=======
   const {
     setNodeRef,
     isOver,
@@ -63,7 +53,6 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
       position: blocks.length
     }
   });
->>>>>>> origin/main
 
   const isDraggingFromSidebar = active?.data.current?.type === 'sidebar-component';
 

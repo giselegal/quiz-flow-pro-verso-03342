@@ -28,16 +28,7 @@ import { SchemaDrivenComponentsSidebar } from './sidebar/SchemaDrivenComponentsS
 import { DynamicPropertiesPanel } from './panels/DynamicPropertiesPanel';
 import { DroppableCanvas } from './dnd/DroppableCanvas';
 import { TestDeleteComponent } from './TestDeleteComponent';
-<<<<<<< HEAD
-import EditorStatus from './EditorStatus';
-import QuickTest from './QuickTest';
-import DataDebug from './DataDebug';
-import { BlockMappingDebug } from '../debug/BlockMappingDebug';
-import { SimpleBlockDebug } from '../debug/SimpleBlockDebug';
-import { allBlockDefinitions } from '../../config/blockDefinitions';
-=======
 import { blockDefinitions } from '../../config/blockDefinitions';
->>>>>>> origin/main
 import { useLocation } from 'wouter';
 import { saveDiagnostic } from '../../utils/saveDiagnostic';
 // Importar novos serviços e componentes
@@ -1105,44 +1096,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
       )}
 
-<<<<<<< HEAD
-      {/* Data Debug */}
-      <DataDebug 
-        funnel={funnel}
-        currentPage={currentPage}
-        pages={funnel?.pages || []}
-      />
-
-      {/* Block Mapping Debug */}
-      <BlockMappingDebug 
-        blocks={currentPage?.blocks || []}
-      />
-
-      {/* Simple Block Debug - Console Logs */}
-      <SimpleBlockDebug 
-        blocks={currentPage?.blocks || []}
-        currentPageId={currentPageId || undefined}
-      />
-
-      {/* Editor Status */}
-      <EditorStatus 
-        funnel={funnel}
-        currentPage={currentPage}
-        isLoading={isLoading}
-        isSaving={isSaving}
-      />
-
-      {/* Quick Test */}
-      {currentPage && (
-        <QuickTest
-          onAddTestBlock={handleAddTestBlock}
-          onTestSave={handleTestSave}
-          blocksCount={currentPage.blocks?.length || 0}
-        />
-      )}
-
-=======
->>>>>>> origin/main
       {/* Template Selector Modal */}
       {showTemplateSelector && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
