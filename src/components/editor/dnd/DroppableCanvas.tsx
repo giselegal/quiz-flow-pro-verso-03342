@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from 'react';
-import { Card, Button, Dropdown, ScrollArea } from '../../ui-new';
-import { Badge } from '../../ui-new/Badge';
+import { Card, CardContent } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
+import { ScrollArea } from '../../ui/scroll-area';
 import { 
   DragOutlined, 
   MoreOutlined, 

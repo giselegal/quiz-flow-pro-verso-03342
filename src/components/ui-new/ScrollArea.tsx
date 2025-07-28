@@ -1,45 +1,34 @@
 import React from 'react';
-import { styled } from 'styled-components';
-
-const StyledScrollArea = styled.div`
-  overflow-y: auto;
-  overflow-x: hidden;
-  
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-  
-  &::-webkit-scrollbar-track {
-    background: rgba(184, 155, 122, 0.1);
-    border-radius: 3px;
-  }
-  
-  &::-webkit-scrollbar-thumb {
-    background: rgba(184, 155, 122, 0.4);
-    border-radius: 3px;
-    
-    &:hover {
-      background: rgba(184, 155, 122, 0.6);
-    }
-  }
-`;
 
 interface ScrollAreaProps {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  maxHeight?: string | number;
 }
 
-export const ScrollArea: React.FC<ScrollAreaProps> = ({ 
+const ScrollArea: React.FC<ScrollAreaProps> = ({ 
   children, 
-  className = '',
-  style 
+  className = '', 
+  style = {},
+  maxHeight = '100%'
 }) => {
+  const scrollAreaStyle = {
+    overflowY: 'auto' as const,
+    overflowX: 'hidden' as const,
+    maxHeight,
+    ...style
+  };
+
   return (
-    <StyledScrollArea className={className} style={style}>
+    <div 
+      className={`scroll-area ${className}`.trim()} 
+      style={scrollAreaStyle}
+    >
       {children}
-    </StyledScrollArea>
+    </div>
   );
 };
 
 export default ScrollArea;
+export { ScrollArea };
