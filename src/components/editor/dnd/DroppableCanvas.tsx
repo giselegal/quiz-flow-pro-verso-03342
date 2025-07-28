@@ -255,10 +255,10 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
       <Button
         variant="default"
         size="sm"
-        icon={<PlusOutlined />}
         onClick={() => onAddBlock('QuizStartPageBlock')}
         className="mt-4"
       >
+        <PlusOutlined className="mr-2 h-4 w-4" />
         Adicionar Primeiro Bloco
       </Button>
     </div>
@@ -279,7 +279,7 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
                   {blocks.length} bloco{blocks.length !== 1 ? 's' : ''} adicionado{blocks.length !== 1 ? 's' : ''}
                 </Text>
               </div>
-              <Badge variant="info" size="small">
+              <Badge variant="secondary">
                 {blocks.filter(b => !b.properties?.hidden).length} visível
                 {blocks.filter(b => !b.properties?.hidden).length !== 1 ? 'is' : ''}
               </Badge>
