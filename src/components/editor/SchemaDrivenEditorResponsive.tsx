@@ -212,22 +212,21 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const handleComponentSelect = useCallback((type: string) => {
     pushToUndoStack(); // Salva o estado antes de adicionar
     const definition = allBlockDefinitions.find((def: any) => def.type === type);
->>>>>>> main
-    if (definition && currentPage) {
-      const defaultProperties: Record<string, any> = {};
-      definition.propertiesSchema?.forEach((prop: any) => {
-        if (prop.defaultValue !== undefined) {
-          defaultProperties[prop.key] = prop.defaultValue;
-        }
-      });
-      addBlock({
-        type,
-        properties: defaultProperties
-      });
-      showToast(`Componente "${type}" adicionado!`, 'success');
-      setShowRightSidebar(true);
-    }
-  }, [addBlock, currentPage, pushToUndoStack, showToast, setShowRightSidebar]);
+  if (definition && currentPage) {
+    const defaultProperties: Record<string, any> = {};
+    definition.propertiesSchema?.forEach((prop: any) => {
+      if (prop.defaultValue !== undefined) {
+        defaultProperties[prop.key] = prop.defaultValue;
+      }
+    });
+    addBlock({
+      type,
+      properties: defaultProperties
+    });
+    showToast(`Componente "${type}" adicionado!`, 'success');
+    setShowRightSidebar(true);
+  }
+}, [addBlock, currentPage, pushToUndoStack, showToast, setShowRightSidebar]);
 
   // Debounced handler para mudanças de propriedade
   const debouncedHandleBlockPropertyChange = useRef(
