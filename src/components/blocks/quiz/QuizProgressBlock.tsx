@@ -1,61 +1,63 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
-import type { BlockData } from '@/types/blocks';
+import type { BlockComponentProps } from '@/types/blocks';
 
-interface QuizProgressBlockProps {
-  block: BlockData;
-  className?: string;
-  onUpdate?: (updates: Partial<BlockData>) => void;
-  isSelected?: boolean;
-  onSelect?: () => void;
+export interface QuizProgressBlockProps extends BlockComponentProps {
+  currentStep?: number;
+  totalSteps?: number;
+  percentage?: number;
+  showNumbers?: boolean;
+  showPercentage?: boolean;
+  progressColor?: string;
+  backgroundColor?: string;
+  textColor?: string;
+  height?: number;
+  borderRadius?: number;
+  isEditable?: boolean;
+  onUpdate?: (updates: any) => void;
 }
 
 const QuizProgressBlock: React.FC<QuizProgressBlockProps> = ({
-  block,
-  className,
-  onUpdate,
-  isSelected,
-  onSelect
+  blockId = 'quiz-progress',
+  currentStep = 1,
+  totalSteps = 10,
+  percentage = 0,
+  showNumbers = true,
+  showPercentage = true,
+  progressColor = '#B89B7A',
+  backgroundColor = '#f3f4f6',
+  textColor = '#374151',
+  height = 8,
+  borderRadius = 9999,
+  className = '',
+  isEditable = false,
+  onUpdate = () => {}
 }) => {
-  const properties = block.properties || {};
-  const {
-    currentStep = 1,
-    totalSteps = 10,
-    showPercentage = true,
-    color = '#B89B7A',
-    backgroundColor = '#F3F4F6',
-    height = 8,
-    borderRadius = 4
-  } = properties;
-
-  const progress = Math.min((currentStep / totalSteps) * 100, 100);
-
-  const handleClick = () => {
-    onSelect?.();
-  };
+  const calculatedPercentage = percentage || (currentStep / totalSteps) * 100;
 
   return (
-    <div
+    <div 
       className={cn(
-        'quiz-progress-block w-full p-4',
-        'transition-all duration-200',
-        isSelected && 'ring-2 ring-blue-500 bg-blue-50',
+        'quiz-progress-block w-full py-4',
         className
       )}
-      onClick={handleClick}
+      data-block-id={blockId}
     >
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-gray-700">
-          Progresso
-        </span>
-        {showPercentage && (
-          <span className="text-sm text-gray-600">
-            {Math.round(progress)}%
+      {/* Step counter */}
+      {showNumbers && (
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-sm font-medium" style={{ color: textColor }}>
+            Etapa {currentStep} de {totalSteps}
           </span>
-        )}
-      </div>
-      
+          {showPercentage && (
+            <span className="text-sm font-medium" style={{ color: textColor }}>
+              {Math.round(calculatedPercentage)}%
+            </span>
+          )}
+        </div>
+      )}
+
+      {/* Progress bar */}
       <div 
         className="w-full rounded-full overflow-hidden"
         style={{ 
@@ -65,20 +67,23 @@ const QuizProgressBlock: React.FC<QuizProgressBlockProps> = ({
         }}
       >
         <div
-          className="h-full transition-all duration-300 ease-out"
-          style={{
-            width: `${progress}%`,
-            backgroundColor: color,
+          className="h-full transition-all duration-500 ease-out"
+          style={{ 
+            width: `${calculatedPercentage}%`,
+            backgroundColor: progressColor,
             borderRadius: `${borderRadius}px`
           }}
         />
       </div>
-      
-      <div className="flex justify-between items-center mt-2">
-        <span className="text-xs text-gray-500">
-          Etapa {currentStep} de {totalSteps}
-        </span>
-      </div>
+
+      {/* Percentage only display */}
+      {!showNumbers && showPercentage && (
+        <div className="text-center mt-2">
+          <span className="text-sm font-medium" style={{ color: textColor }}>
+            {Math.round(calculatedPercentage)}% completo
+          </span>
+        </div>
+      )}
     </div>
   );
 };

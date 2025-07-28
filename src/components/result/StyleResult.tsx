@@ -2,86 +2,81 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 
-export interface StyleResult {
-  category: string;
-  score: number;
+export interface StyleResultData {
+  id: string;
+  name: string;
+  description: string;
   percentage: number;
-  description?: string;
-  characteristics?: string[];
-  recommendations?: string[];
-  color?: string;
+  imageUrl: string;
+  characteristics: string[];
 }
 
-interface StyleResultProps {
-  result: StyleResult;
+export interface StyleResultProps {
+  primaryStyle: StyleResultData;
+  showPercentage?: boolean;
+  style?: React.CSSProperties;
   className?: string;
-  compact?: boolean;
 }
 
-const StyleResult: React.FC<StyleResultProps> = ({
-  result,
-  className,
-  compact = false
+export const StyleResult: React.FC<StyleResultProps> = ({
+  primaryStyle,
+  showPercentage = true,
+  style,
+  className
 }) => {
-  const {
-    category,
-    score,
-    percentage,
-    description,
-    characteristics = [],
-    recommendations = [],
-    color = '#B89B7A'
-  } = result;
-
   return (
-    <div className={cn(
-      'style-result bg-white rounded-lg p-6 shadow-sm border border-gray-200',
-      className
-    )}>
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl font-semibold text-gray-800">{category}</h3>
-        <div className="text-right">
-          <div className="text-2xl font-bold" style={{ color }}>
-            {percentage}%
-          </div>
-          <div className="text-sm text-gray-500">
-            Score: {score}
-          </div>
+    <div 
+      className={cn(
+        'bg-white p-8 rounded-xl shadow-lg border-2 border-[#B89B7A]/20',
+        'text-center max-w-md mx-auto',
+        className
+      )}
+      style={style}
+    >
+      <div className="mb-6">
+        <img 
+          src={primaryStyle.imageUrl} 
+          alt={primaryStyle.name}
+          className="w-32 h-32 mx-auto rounded-full object-cover shadow-md"
+        />
+      </div>
+      
+      <h2 className="text-2xl font-bold text-[#432818] mb-4">
+        {primaryStyle.name}
+      </h2>
+      
+      {showPercentage && (
+        <div className="mb-4">
+          <span className="text-3xl font-bold text-[#B89B7A]">
+            {primaryStyle.percentage}%
+          </span>
+          <p className="text-sm text-[#8F7A6A] mt-1">
+            compatibilidade
+          </p>
+        </div>
+      )}
+      
+      <p className="text-[#5D4A3A] mb-6 leading-relaxed">
+        {primaryStyle.description}
+      </p>
+      
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold text-[#432818]">
+          Características:
+        </h3>
+        <div className="flex flex-wrap gap-2 justify-center">
+          {primaryStyle.characteristics.map((char, index) => (
+            <span
+              key={index}
+              className="px-3 py-1 bg-[#B89B7A]/20 text-[#432818] rounded-full text-sm"
+            >
+              {char}
+            </span>
+          ))}
         </div>
       </div>
-
-      {!compact && (
-        <>
-          {description && (
-            <p className="text-gray-600 mb-4">{description}</p>
-          )}
-
-          {characteristics.length > 0 && (
-            <div className="mb-4">
-              <h4 className="font-medium text-gray-700 mb-2">Características:</h4>
-              <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-                {characteristics.map((char, index) => (
-                  <li key={index}>{char}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {recommendations.length > 0 && (
-            <div>
-              <h4 className="font-medium text-gray-700 mb-2">Recomendações:</h4>
-              <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-                {recommendations.map((rec, index) => (
-                  <li key={index}>{rec}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </>
-      )}
     </div>
   );
 };
 
 export default StyleResult;
-export { StyleResult };

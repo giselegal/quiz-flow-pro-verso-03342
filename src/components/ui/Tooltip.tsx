@@ -32,8 +32,19 @@ export const Tooltip: React.FC<TooltipProps> = ({
   );
 };
 
-// TooltipProvider for compatibility with existing code
+// Additional components for compatibility
 export const TooltipProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return <>{children}</>;
+};
+
+export const TooltipTrigger: React.FC<{ children: React.ReactNode; asChild?: boolean }> = ({ 
+  children, 
+  asChild = false 
+}) => {
+  return <>{children}</>;
+};
+
+export const TooltipContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <>{children}</>;
 };
 

@@ -1,356 +1,228 @@
+
 import React, { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Settings, CheckCircle, AlertCircle, ExternalLink } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { ExternalLink, Settings, CheckCircle, AlertCircle } from 'lucide-react';
 
-interface Integration {
-  id: string;
-  name: string;
-  status: 'connected' | 'disconnected' | 'error';
-  description: string;
-  icon: string;
-  lastSync?: string;
-  settings?: Record<string, any>;
-}
+export const IntegrationTab: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('facebook');
 
-interface IntegrationTabProps {
-  funnelId?: string;
-}
-
-const IntegrationTab: React.FC<IntegrationTabProps> = ({ funnelId }) => {
-  const [activeTab, setActiveTab] = useState('all');
-  const [integrations] = useState<Integration[]>([
+  const integrations = [
     {
-      id: 'google-analytics',
-      name: 'Google Analytics',
-      status: 'connected',
-      description: 'Track visitor behavior and conversion metrics',
-      icon: '📊',
-      lastSync: '2 minutes ago',
-      settings: { trackingId: 'UA-12345678-1' }
-    },
-    {
-      id: 'facebook-pixel',
+      id: 'facebook',
       name: 'Facebook Pixel',
+      description: 'Track conversions and optimize ads',
       status: 'connected',
-      description: 'Track conversions for Facebook ads',
       icon: '📘',
-      lastSync: '5 minutes ago',
-      settings: { pixelId: '123456789' }
+      settings: {
+        pixelId: '1234567890',
+        trackPurchases: true,
+        trackLeads: true,
+        trackPageViews: true
+      }
     },
     {
-      id: 'mailchimp',
-      name: 'Mailchimp',
-      status: 'disconnected',
-      description: 'Sync leads to email marketing campaigns',
-      icon: '📧',
-      settings: {}
-    },
-    {
-      id: 'zapier',
-      name: 'Zapier',
-      status: 'error',
-      description: 'Automate workflows and data sync',
-      icon: '⚡',
-      lastSync: '2 hours ago',
-      settings: { webhookUrl: 'https://hooks.zapier.com/...' }
-    },
-    {
-      id: 'hubspot',
-      name: 'HubSpot',
+      id: 'google',
+      name: 'Google Analytics',
+      description: 'Comprehensive web analytics',
       status: 'connected',
-      description: 'CRM integration for lead management',
-      icon: '🎯',
-      lastSync: '10 minutes ago',
-      settings: { apiKey: 'hub_key_123' }
+      icon: '📊',
+      settings: {
+        measurementId: 'G-XXXXXXXXXX',
+        trackEvents: true,
+        trackConversions: true,
+        enhancedEcommerce: false
+      }
+    },
+    {
+      id: 'hotmart',
+      name: 'Hotmart',
+      description: 'E-commerce and affiliate tracking',
+      status: 'disconnected',
+      icon: '🛒',
+      settings: {
+        affiliateId: '',
+        trackSales: false,
+        trackCommissions: false
+      }
     }
-  ]);
+  ];
 
-  const getStatusBadge = (status: string) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
-      case 'connected':
-        return <Badge variant="default" className="bg-green-100 text-green-800">Connected</Badge>;
-      case 'disconnected':
-        return <Badge variant="destructive">Disconnected</Badge>;
-      case 'error':
-        return <Badge variant="destructive">Error</Badge>;
-      default:
-        return <Badge variant="outline">Unknown</Badge>;
+      case 'connected': return 'bg-green-100 text-green-800';
+      case 'disconnected': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'connected':
-        return <CheckCircle className="w-4 h-4 text-green-500" />;
-      case 'disconnected':
-        return <AlertCircle className="w-4 h-4 text-gray-500" />;
-      case 'error':
-        return <AlertCircle className="w-4 h-4 text-red-500" />;
-      default:
-        return <AlertCircle className="w-4 h-4 text-gray-500" />;
+      case 'connected': return <CheckCircle className="w-4 h-4 text-green-600" />;
+      case 'disconnected': return <AlertCircle className="w-4 h-4 text-red-600" />;
+      default: return <Settings className="w-4 h-4 text-gray-600" />;
     }
   };
 
-  const filteredIntegrations = integrations.filter(integration => {
-    if (activeTab === 'all') return true;
-    return integration.status === activeTab;
-  });
-
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h3 className="text-lg font-semibold">Integrations</h3>
-          <p className="text-sm text-gray-600">
-            Connect your funnel to external services
-          </p>
-        </div>
-        <Button variant="outline" size="sm">
-          <Settings className="w-4 h-4 mr-2" />
-          Manage All
-        </Button>
-      </div>
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <ExternalLink className="w-5 h-5" />
+          Integrações
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="facebook">Facebook</TabsTrigger>
+            <TabsTrigger value="google">Google</TabsTrigger>
+            <TabsTrigger value="hotmart">Hotmart</TabsTrigger>
+          </TabsList>
 
-      {/* Filter Tabs */}
-      <Tabs defaultValue={activeTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="connected">Connected</TabsTrigger>
-          <TabsTrigger value="disconnected">Disconnected</TabsTrigger>
-          <TabsTrigger value="error">Error</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="all" className="mt-4">
-          <div className="space-y-4">
-            {filteredIntegrations.map((integration) => (
-              <Card key={integration.id} className="p-4">
+          {integrations.map((integration) => (
+            <TabsContent key={integration.id} value={integration.id} className="mt-6">
+              <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className="text-2xl">{integration.icon}</div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{integration.icon}</span>
                     <div>
-                      <div className="flex items-center space-x-2">
-                        <h4 className="font-medium">{integration.name}</h4>
-                        {getStatusIcon(integration.status)}
-                      </div>
+                      <h3 className="font-semibold">{integration.name}</h3>
                       <p className="text-sm text-gray-600">{integration.description}</p>
-                      {integration.lastSync && (
-                        <p className="text-xs text-gray-500">
-                          Last sync: {integration.lastSync}
-                        </p>
-                      )}
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    {getStatusBadge(integration.status)}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex items-center space-x-1"
-                    >
-                      <Settings className="w-4 h-4" />
-                      <span>Configure</span>
-                    </Button>
-                  </div>
+                  <Badge className={getStatusColor(integration.status)}>
+                    {getStatusIcon(integration.status)}
+                    {integration.status === 'connected' ? 'Conectado' : 'Desconectado'}
+                  </Badge>
                 </div>
 
-                {/* Settings Preview */}
-                {integration.status === 'connected' && Object.keys(integration.settings || {}).length > 0 && (
-                  <div className="mt-3 pt-3 border-t border-gray-200">
-                    <div className="flex items-center space-x-2 text-sm text-gray-600">
-                      <span>Settings:</span>
-                      {Object.entries(integration.settings || {}).map(([key, value]) => (
-                        <Badge key={key} variant="outline" className="text-xs">
-                          {key}: {String(value).substring(0, 10)}...
-                        </Badge>
-                      ))}
+                {integration.id === 'facebook' && (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="pixelId">Pixel ID</Label>
+                        <Input
+                          id="pixelId"
+                          value={integration.settings.pixelId}
+                          placeholder="Digite o ID do Pixel"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <Label htmlFor="trackPurchases">Rastrear Compras</Label>
+                        <Switch
+                          id="trackPurchases"
+                          checked={integration.settings.trackPurchases}
+                        />
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <Label htmlFor="trackLeads">Rastrear Leads</Label>
+                        <Switch
+                          id="trackLeads"
+                          checked={integration.settings.trackLeads}
+                        />
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <Label htmlFor="trackPageViews">Rastrear Visualizações</Label>
+                        <Switch
+                          id="trackPageViews"
+                          checked={integration.settings.trackPageViews}
+                        />
+                      </div>
                     </div>
                   </div>
                 )}
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
 
-        <TabsContent value="connected" className="mt-4">
-          <div className="space-y-4">
-            {filteredIntegrations.filter(i => i.status === 'connected').map((integration) => (
-              <Card key={integration.id} className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className="text-2xl">{integration.icon}</div>
-                    <div>
-                      <div className="flex items-center space-x-2">
-                        <h4 className="font-medium">{integration.name}</h4>
-                        {getStatusIcon(integration.status)}
+                {integration.id === 'google' && (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="measurementId">Measurement ID</Label>
+                        <Input
+                          id="measurementId"
+                          value={integration.settings.measurementId}
+                          placeholder="G-XXXXXXXXXX"
+                        />
                       </div>
-                      <p className="text-sm text-gray-600">{integration.description}</p>
-                      {integration.lastSync && (
-                        <p className="text-xs text-gray-500">
-                          Last sync: {integration.lastSync}
-                        </p>
-                      )}
                     </div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    {getStatusBadge(integration.status)}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex items-center space-x-1"
-                    >
-                      <Settings className="w-4 h-4" />
-                      <span>Configure</span>
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Settings Preview */}
-                {integration.status === 'connected' && Object.keys(integration.settings || {}).length > 0 && (
-                  <div className="mt-3 pt-3 border-t border-gray-200">
-                    <div className="flex items-center space-x-2 text-sm text-gray-600">
-                      <span>Settings:</span>
-                      {Object.entries(integration.settings || {}).map(([key, value]) => (
-                        <Badge key={key} variant="outline" className="text-xs">
-                          {key}: {String(value).substring(0, 10)}...
-                        </Badge>
-                      ))}
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <Label htmlFor="trackEvents">Rastrear Eventos</Label>
+                        <Switch
+                          id="trackEvents"
+                          checked={integration.settings.trackEvents}
+                        />
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <Label htmlFor="trackConversions">Rastrear Conversões</Label>
+                        <Switch
+                          id="trackConversions"
+                          checked={integration.settings.trackConversions}
+                        />
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <Label htmlFor="enhancedEcommerce">Enhanced E-commerce</Label>
+                        <Switch
+                          id="enhancedEcommerce"
+                          checked={integration.settings.enhancedEcommerce}
+                        />
+                      </div>
                     </div>
                   </div>
                 )}
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
 
-        <TabsContent value="disconnected" className="mt-4">
-          <div className="space-y-4">
-            {filteredIntegrations.filter(i => i.status === 'disconnected').map((integration) => (
-              <Card key={integration.id} className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className="text-2xl">{integration.icon}</div>
-                    <div>
-                      <div className="flex items-center space-x-2">
-                        <h4 className="font-medium">{integration.name}</h4>
-                        {getStatusIcon(integration.status)}
+                {integration.id === 'hotmart' && (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="affiliateId">Affiliate ID</Label>
+                        <Input
+                          id="affiliateId"
+                          value={integration.settings.affiliateId}
+                          placeholder="Digite o ID do afiliado"
+                        />
                       </div>
-                      <p className="text-sm text-gray-600">{integration.description}</p>
-                      {integration.lastSync && (
-                        <p className="text-xs text-gray-500">
-                          Last sync: {integration.lastSync}
-                        </p>
-                      )}
                     </div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    {getStatusBadge(integration.status)}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex items-center space-x-1"
-                    >
-                      <Settings className="w-4 h-4" />
-                      <span>Configure</span>
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Settings Preview */}
-                {integration.status === 'connected' && Object.keys(integration.settings || {}).length > 0 && (
-                  <div className="mt-3 pt-3 border-t border-gray-200">
-                    <div className="flex items-center space-x-2 text-sm text-gray-600">
-                      <span>Settings:</span>
-                      {Object.entries(integration.settings || {}).map(([key, value]) => (
-                        <Badge key={key} variant="outline" className="text-xs">
-                          {key}: {String(value).substring(0, 10)}...
-                        </Badge>
-                      ))}
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <Label htmlFor="trackSales">Rastrear Vendas</Label>
+                        <Switch
+                          id="trackSales"
+                          checked={integration.settings.trackSales}
+                        />
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <Label htmlFor="trackCommissions">Rastrear Comissões</Label>
+                        <Switch
+                          id="trackCommissions"
+                          checked={integration.settings.trackCommissions}
+                        />
+                      </div>
                     </div>
                   </div>
                 )}
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
 
-        <TabsContent value="error" className="mt-4">
-          <div className="space-y-4">
-            {filteredIntegrations.filter(i => i.status === 'error').map((integration) => (
-              <Card key={integration.id} className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className="text-2xl">{integration.icon}</div>
-                    <div>
-                      <div className="flex items-center space-x-2">
-                        <h4 className="font-medium">{integration.name}</h4>
-                        {getStatusIcon(integration.status)}
-                      </div>
-                      <p className="text-sm text-gray-600">{integration.description}</p>
-                      {integration.lastSync && (
-                        <p className="text-xs text-gray-500">
-                          Last sync: {integration.lastSync}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    {getStatusBadge(integration.status)}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex items-center space-x-1"
-                    >
-                      <Settings className="w-4 h-4" />
-                      <span>Configure</span>
-                    </Button>
-                  </div>
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline">Testar Conexão</Button>
+                  <Button>
+                    {integration.status === 'connected' ? 'Atualizar' : 'Conectar'}
+                  </Button>
                 </div>
-
-                {/* Settings Preview */}
-                {integration.status === 'connected' && Object.keys(integration.settings || {}).length > 0 && (
-                  <div className="mt-3 pt-3 border-t border-gray-200">
-                    <div className="flex items-center space-x-2 text-sm text-gray-600">
-                      <span>Settings:</span>
-                      {Object.entries(integration.settings || {}).map(([key, value]) => (
-                        <Badge key={key} variant="outline" className="text-xs">
-                          {key}: {String(value).substring(0, 10)}...
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
-
-      {/* Quick Actions */}
-      <Card className="p-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h4 className="font-medium">Quick Actions</h4>
-            <p className="text-sm text-gray-600">
-              Common integration tasks
-            </p>
-          </div>
-          <div className="flex space-x-2">
-            <Button variant="outline" size="sm">
-              <ExternalLink className="w-4 h-4 mr-2" />
-              Browse Apps
-            </Button>
-            <Button variant="outline" size="sm">
-              Test All
-            </Button>
-          </div>
-        </div>
-      </Card>
-    </div>
+              </div>
+            </TabsContent>
+          ))}
+        </Tabs>
+      </CardContent>
+    </Card>
   );
 };
-
-export default IntegrationTab;
