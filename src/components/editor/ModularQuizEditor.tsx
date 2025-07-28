@@ -4,10 +4,9 @@ import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/componen
 import { ComponentsSidebar } from '@/components/result-editor/ComponentsSidebar';
 import { EditorPreview } from '@/components/result-editor/EditorPreview';
 import { PropertiesPanel } from '@/components/result-editor/PropertiesPanel';
-import { Input } from '@/components/ui/Input';
+import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Smartphone, Tablet, Monitor, Save, Eye, RotateCcw } from 'lucide-react';
 
