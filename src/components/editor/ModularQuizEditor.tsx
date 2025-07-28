@@ -1,275 +1,365 @@
-import React, { useState, useCallback } from 'react';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/Input';
-import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { ComponentsSidebar } from './ComponentsSidebar';
-import { PropertyPanel } from './PropertyPanel';
-import { DevicePreview } from './DevicePreview';
-import { VersioningPanel } from './panels/VersioningPanel';
-import { Eye, Settings, History, Smartphone, Tablet, Monitor, Save, Undo, Redo } from 'lucide-react';
 
-// Define interfaces and types
-interface EditorPage {
-  id: string;
-  title: string;
-  components: EditorComponent[];
-  settings: Record<string, any>;
-  order: number;
-}
+import React, { useState, useCallback, useEffect } from 'react';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+import { 
+  Eye, 
+  EyeOff, 
+  Plus, 
+  Trash2, 
+  Copy, 
+  Save, 
+  Undo, 
+  Redo, 
+  Settings,
+  Smartphone,
+  Tablet,
+  Monitor
+} from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { PropertyPanel } from './PropertyPanel';
+import { QuizFunnel, SimplePage, SimpleComponent, Version } from '@/types/quiz';
+import { EditorBlock } from '@/types/editor';
+
+// Mock components for missing imports
+const ComponentsSidebar = ({ onAddComponent }: { onAddComponent: (type: string) => void }) => (
+  <div className="w-64 bg-gray-50 p-4">
+    <h3 className="font-medium mb-4">Components</h3>
+    <div className="space-y-2">
+      <Button size="sm" onClick={() => onAddComponent('text')}>Add Text</Button>
+      <Button size="sm" onClick={() => onAddComponent('image')}>Add Image</Button>
+      <Button size="sm" onClick={() => onAddComponent('button')}>Add Button</Button>
+    </div>
+  </div>
+);
+
+const DevicePreview = ({ device, children }: { device: string; children: React.ReactNode }) => (
+  <div className={`${device === 'mobile' ? 'max-w-sm' : device === 'tablet' ? 'max-w-md' : 'max-w-full'} mx-auto`}>
+    {children}
+  </div>
+);
 
 interface EditorComponent {
   id: string;
   type: string;
-  data: Record<string, any>;
-  style: Record<string, any>;
+  content: any;
+  style?: any;
+}
+
+interface EditorPage {
+  id: string;
+  title: string;
+  components: EditorComponent[];
+  settings?: any;
   order: number;
 }
 
-interface Version {
-  id: string;
-  timestamp: number;
-  description: string;
-  data: any;
+interface ModularQuizEditorProps {
+  initialFunnel?: QuizFunnel;
+  onSave?: (funnel: QuizFunnel) => void;
+  onPreview?: (funnel: QuizFunnel) => void;
 }
 
-interface EditorState {
-  pages: EditorPage[];
-  selectedPageId: string | null;
-  selectedComponentId: string | null;
-  deviceView: 'desktop' | 'tablet' | 'mobile';
-  activeTab: 'editor' | 'versions' | 'settings';
-  isPreviewMode: boolean;
-}
+export const ModularQuizEditor: React.FC<ModularQuizEditorProps> = ({
+  initialFunnel,
+  onSave,
+  onPreview
+}) => {
+  const [pages, setPages] = useState<EditorPage[]>([]);
+  const [selectedPageId, setSelectedPageId] = useState<string | null>(null);
+  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [device, setDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
+  const [history, setHistory] = useState<EditorPage[][]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
 
-export const ModularQuizEditor: React.FC = () => {
-  const [state, setState] = useState<EditorState>({
-    pages: [{
-      id: 'page-1',
-      title: 'Page 1',
+  // Initialize pages from funnel
+  useEffect(() => {
+    if (initialFunnel?.pages) {
+      const editorPages: EditorPage[] = initialFunnel.pages.map((page, index) => ({
+        id: page.id,
+        title: page.title,
+        components: page.components.map(comp => ({
+          id: comp.id,
+          type: comp.type,
+          content: comp.data,
+          style: comp.style
+        })),
+        settings: {},
+        order: index
+      }));
+      setPages(editorPages);
+      if (editorPages.length > 0) {
+        setSelectedPageId(editorPages[0].id);
+      }
+    }
+  }, [initialFunnel]);
+
+  const saveToHistory = useCallback(() => {
+    const newHistory = history.slice(0, historyIndex + 1);
+    newHistory.push(JSON.parse(JSON.stringify(pages)));
+    setHistory(newHistory);
+    setHistoryIndex(newHistory.length - 1);
+  }, [history, historyIndex, pages]);
+
+  const undo = useCallback(() => {
+    if (historyIndex > 0) {
+      setHistoryIndex(historyIndex - 1);
+      setPages(history[historyIndex - 1]);
+    }
+  }, [history, historyIndex]);
+
+  const redo = useCallback(() => {
+    if (historyIndex < history.length - 1) {
+      setHistoryIndex(historyIndex + 1);
+      setPages(history[historyIndex + 1]);
+    }
+  }, [history, historyIndex]);
+
+  const addPage = useCallback(() => {
+    const newPage: EditorPage = {
+      id: `page-${Date.now()}`,
+      title: `Page ${pages.length + 1}`,
       components: [],
       settings: {},
-      order: 0
-    }],
-    selectedPageId: 'page-1',
-    selectedComponentId: null,
-    deviceView: 'desktop',
-    activeTab: 'editor',
-    isPreviewMode: false
-  });
+      order: pages.length
+    };
+    setPages([...pages, newPage]);
+    setSelectedPageId(newPage.id);
+    saveToHistory();
+  }, [pages, saveToHistory]);
 
-  const [versions, setVersions] = useState<Version[]>([]);
-
-  const selectedPage = state.pages.find(p => p.id === state.selectedPageId);
-  const selectedComponent = selectedPage?.components.find(c => c.id === state.selectedComponentId);
-
-  const handleAddComponent = useCallback((type: string) => {
-    if (!selectedPage) return;
-
+  const addComponent = useCallback((type: string) => {
+    if (!selectedPageId) return;
+    
     const newComponent: EditorComponent = {
       id: `component-${Date.now()}`,
       type,
-      data: { title: `New ${type}` },
-      style: {},
-      order: selectedPage.components.length
+      content: { text: 'New component' },
+      style: {}
     };
+    
+    setPages(pages.map(page => 
+      page.id === selectedPageId 
+        ? { ...page, components: [...page.components, newComponent] }
+        : page
+    ));
+    setSelectedComponentId(newComponent.id);
+    saveToHistory();
+  }, [selectedPageId, pages, saveToHistory]);
 
-    setState(prev => ({
-      ...prev,
-      pages: prev.pages.map(page => 
-        page.id === prev.selectedPageId 
-          ? { ...page, components: [...page.components, newComponent] }
-          : page
-      ),
-      selectedComponentId: newComponent.id
-    }));
-  }, [selectedPage]);
-
-  const handleUpdateComponent = useCallback((componentId: string, updates: Partial<EditorComponent>) => {
-    setState(prev => ({
-      ...prev,
-      pages: prev.pages.map(page => 
-        page.id === prev.selectedPageId 
-          ? {
-              ...page,
-              components: page.components.map(comp =>
-                comp.id === componentId ? { ...comp, ...updates } : comp
-              )
-            }
-          : page
+  const updateComponent = useCallback((componentId: string, updates: Partial<EditorComponent>) => {
+    setPages(pages.map(page => ({
+      ...page,
+      components: page.components.map(comp => 
+        comp.id === componentId ? { ...comp, ...updates } : comp
       )
-    }));
-  }, []);
+    })));
+    saveToHistory();
+  }, [pages, saveToHistory]);
 
-  const handleDeleteComponent = useCallback((componentId: string) => {
-    setState(prev => ({
-      ...prev,
-      pages: prev.pages.map(page => 
-        page.id === prev.selectedPageId 
-          ? {
-              ...page,
-              components: page.components.filter(comp => comp.id !== componentId)
-            }
-          : page
-      ),
-      selectedComponentId: null
-    }));
-  }, []);
-
-  const handleDragEnd = useCallback((result: any) => {
-    if (!result.destination || !selectedPage) return;
-
-    const items = Array.from(selectedPage.components);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-
-    setState(prev => ({
-      ...prev,
-      pages: prev.pages.map(page => 
-        page.id === prev.selectedPageId 
-          ? { ...page, components: items.map((item, index) => ({ ...item, order: index })) }
-          : page
-      )
-    }));
-  }, [selectedPage]);
-
-  const handleSaveVersion = useCallback((description: string) => {
-    const newVersion: Version = {
-      id: `version-${Date.now()}`,
-      timestamp: Date.now(),
-      description,
-      data: { ...state }
-    };
-    setVersions(prev => [...prev, newVersion]);
-  }, [state]);
-
-  const handleRestoreVersion = useCallback((versionId: string) => {
-    const version = versions.find(v => v.id === versionId);
-    if (version) {
-      setState(version.data);
+  const deleteComponent = useCallback((componentId: string) => {
+    setPages(pages.map(page => ({
+      ...page,
+      components: page.components.filter(comp => comp.id !== componentId)
+    })));
+    if (selectedComponentId === componentId) {
+      setSelectedComponentId(null);
     }
-  }, [versions]);
+    saveToHistory();
+  }, [pages, selectedComponentId, saveToHistory]);
+
+  const handleSave = useCallback(() => {
+    if (onSave) {
+      const funnel: QuizFunnel = {
+        id: initialFunnel?.id || 'new-funnel',
+        name: initialFunnel?.name || 'New Funnel',
+        pages: pages.map(page => ({
+          id: page.id,
+          title: page.title,
+          type: 'question' as const,
+          progress: 0,
+          showHeader: true,
+          showProgress: true,
+          components: page.components.map(comp => ({
+            id: comp.id,
+            type: comp.type as SimpleComponent['type'],
+            data: comp.content,
+            style: comp.style || {}
+          }))
+        }))
+      };
+      onSave(funnel);
+    }
+  }, [pages, initialFunnel, onSave]);
+
+  const handlePreview = useCallback(() => {
+    if (onPreview) {
+      const funnel: QuizFunnel = {
+        id: initialFunnel?.id || 'preview-funnel',
+        name: initialFunnel?.name || 'Preview Funnel',
+        pages: pages.map(page => ({
+          id: page.id,
+          title: page.title,
+          type: 'question' as const,
+          progress: 0,
+          showHeader: true,
+          showProgress: true,
+          components: page.components.map(comp => ({
+            id: comp.id,
+            type: comp.type as SimpleComponent['type'],
+            data: comp.content,
+            style: comp.style || {}
+          }))
+        }))
+      };
+      onPreview(funnel);
+    }
+  }, [pages, initialFunnel, onPreview]);
+
+  const selectedPage = pages.find(page => page.id === selectedPageId);
+  const selectedComponent = selectedPage?.components.find(comp => comp.id === selectedComponentId);
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <h1 className="text-xl font-semibold">Quiz Editor</h1>
-            <Select value={state.deviceView} onValueChange={(value: 'desktop' | 'tablet' | 'mobile') => setState(prev => ({ ...prev, deviceView: value }))}>
+    <div className="flex h-screen bg-gray-100">
+      {/* Sidebar */}
+      <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
+        <div className="p-4 border-b border-gray-200">
+          <h2 className="text-lg font-semibold">Quiz Editor</h2>
+        </div>
+        
+        <Tabs defaultValue="pages" className="flex-1">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="pages">Pages</TabsTrigger>
+            <TabsTrigger value="components">Components</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="pages" className="p-4">
+            <div className="space-y-2">
+              <Button onClick={addPage} className="w-full">
+                <Plus className="w-4 h-4 mr-2" />
+                Add Page
+              </Button>
+              {pages.map((page) => (
+                <div
+                  key={page.id}
+                  className={`p-2 rounded cursor-pointer ${
+                    selectedPageId === page.id ? 'bg-blue-100' : 'hover:bg-gray-100'
+                  }`}
+                  onClick={() => setSelectedPageId(page.id)}
+                >
+                  <div className="font-medium">{page.title}</div>
+                  <div className="text-sm text-gray-500">
+                    {page.components.length} components
+                  </div>
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="components" className="p-4">
+            <ComponentsSidebar onAddComponent={addComponent} />
+          </TabsContent>
+        </Tabs>
+      </div>
+
+      {/* Main Editor */}
+      <div className="flex-1 flex flex-col">
+        {/* Toolbar */}
+        <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <Button size="sm" onClick={undo} disabled={historyIndex <= 0}>
+              <Undo className="w-4 h-4" />
+            </Button>
+            <Button size="sm" onClick={redo} disabled={historyIndex >= history.length - 1}>
+              <Redo className="w-4 h-4" />
+            </Button>
+            <div className="border-l border-gray-200 h-6 mx-2" />
+            <Select value={device} onValueChange={(value: 'desktop' | 'tablet' | 'mobile') => setDevice(value)}>
               <SelectTrigger className="w-32">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="desktop">
-                  <div className="flex items-center space-x-2">
-                    <Monitor className="w-4 h-4" />
-                    <span>Desktop</span>
-                  </div>
+                  <Monitor className="w-4 h-4 mr-2" />
+                  Desktop
                 </SelectItem>
                 <SelectItem value="tablet">
-                  <div className="flex items-center space-x-2">
-                    <Tablet className="w-4 h-4" />
-                    <span>Tablet</span>
-                  </div>
+                  <Tablet className="w-4 h-4 mr-2" />
+                  Tablet
                 </SelectItem>
                 <SelectItem value="mobile">
-                  <div className="flex items-center space-x-2">
-                    <Smartphone className="w-4 h-4" />
-                    <span>Mobile</span>
-                  </div>
+                  <Smartphone className="w-4 h-4 mr-2" />
+                  Mobile
                 </SelectItem>
               </SelectContent>
             </Select>
           </div>
           
           <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm">
-              <Undo className="w-4 h-4" />
+            <Button size="sm" variant="outline" onClick={() => setIsPreviewMode(!isPreviewMode)}>
+              {isPreviewMode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              {isPreviewMode ? 'Edit' : 'Preview'}
             </Button>
-            <Button variant="outline" size="sm">
-              <Redo className="w-4 h-4" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => setState(prev => ({ ...prev, isPreviewMode: !prev.isPreviewMode }))}
-            >
-              <Eye className="w-4 h-4 mr-2" />
-              Preview
-            </Button>
-            <Button size="sm">
+            <Button size="sm" onClick={handlePreview}>Preview</Button>
+            <Button size="sm" onClick={handleSave}>
               <Save className="w-4 h-4 mr-2" />
               Save
             </Button>
           </div>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar */}
-        <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-          <Tabs value={state.activeTab} onValueChange={(value: any) => setState(prev => ({ ...prev, activeTab: value }))}>
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="editor">Editor</TabsTrigger>
-              <TabsTrigger value="versions">Versions</TabsTrigger>
-              <TabsTrigger value="settings">Settings</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="editor" className="flex-1 overflow-hidden">
-              <ComponentsSidebar onAddComponent={handleAddComponent} />
-            </TabsContent>
-            
-            <TabsContent value="versions" className="flex-1 overflow-hidden">
-              <VersioningPanel 
-                versions={versions}
-                onSaveVersion={handleSaveVersion}
-                onRestoreVersion={handleRestoreVersion}
-              />
-            </TabsContent>
-            
-            <TabsContent value="settings" className="flex-1 p-4">
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="quiz-title">Quiz Title</Label>
-                  <Input id="quiz-title" placeholder="Enter quiz title" />
+        {/* Canvas */}
+        <div className="flex-1 overflow-auto p-4">
+          <DevicePreview device={device}>
+            {selectedPage && (
+              <div className="bg-white rounded-lg shadow-sm min-h-96 p-4">
+                <h3 className="text-lg font-semibold mb-4">{selectedPage.title}</h3>
+                <div className="space-y-4">
+                  {selectedPage.components.map((component) => (
+                    <div
+                      key={component.id}
+                      className={`p-4 border rounded cursor-pointer ${
+                        selectedComponentId === component.id
+                          ? 'border-blue-500 bg-blue-50'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                      onClick={() => setSelectedComponentId(component.id)}
+                    >
+                      <div className="text-sm text-gray-500 mb-2">{component.type}</div>
+                      <div>{component.content.text || 'Component content'}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </TabsContent>
-          </Tabs>
+            )}
+          </DevicePreview>
         </div>
+      </div>
 
-        {/* Main Editor Area */}
-        <div className="flex-1 flex flex-col">
-          <DevicePreview 
-            deviceView={state.deviceView}
-            components={selectedPage?.components || []}
-            onSelectComponent={(id: string) => setState(prev => ({ ...prev, selectedComponentId: id }))}
-            selectedComponentId={state.selectedComponentId}
-            onDragEnd={handleDragEnd}
+      {/* Properties Panel */}
+      <div className="w-80 bg-white border-l border-gray-200">
+        {selectedComponent ? (
+          <PropertyPanel
+            block={{
+              id: selectedComponent.id,
+              type: selectedComponent.type,
+              content: selectedComponent.content,
+              properties: selectedComponent.content,
+              order: 0
+            }}
+            onChange={(updated) => updateComponent(selectedComponent.id, { content: updated })}
+            onDelete={() => deleteComponent(selectedComponent.id)}
           />
-        </div>
-
-        {/* Properties Panel */}
-        {selectedComponent && (
-          <div className="w-80 bg-white border-l border-gray-200">
-            <PropertyPanel 
-              block={selectedComponent}
-              onUpdate={(updated: Partial<EditorComponent>) => handleUpdateComponent(selectedComponent.id, updated)}
-              onDelete={() => handleDeleteComponent(selectedComponent.id)}
-            />
+        ) : (
+          <div className="p-4 text-center text-gray-500">
+            Select a component to edit its properties
           </div>
         )}
       </div>

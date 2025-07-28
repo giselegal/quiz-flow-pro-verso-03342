@@ -45,13 +45,17 @@ export const EnhancedEditor: React.FC<EnhancedEditorProps> = ({
   const handleUpdateComponent = (componentId: string, newData: Partial<SimpleComponent>) => {
     const content = { ...newData.data };
     
-    // Convert number dimensions back to strings for EditorBlock
+    // Convert number dimensions back to strings for EditorBlock, handling undefined values
     if (typeof content.height === 'number') {
       content.height = content.height.toString();
+    } else if (content.height === undefined) {
+      content.height = undefined;
     }
     
     if (typeof content.width === 'number') {
       content.width = content.width.toString();
+    } else if (content.width === undefined) {
+      content.width = undefined;
     }
 
     const editorUpdates: Partial<EditorBlock> = {
