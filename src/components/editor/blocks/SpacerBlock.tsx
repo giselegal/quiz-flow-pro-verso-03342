@@ -5,7 +5,7 @@ import { EditableContent } from '@/types/editor';
 import { Move, Minus } from 'lucide-react';
 
 interface SpacerBlockProps {
-  content?: EditableContent;
+  content: EditableContent;
   isSelected?: boolean;
   isEditing?: boolean;
   onUpdate?: (content: Partial<EditableContent>) => void;
@@ -14,7 +14,7 @@ interface SpacerBlockProps {
 }
 
 export const SpacerBlock: React.FC<SpacerBlockProps> = ({
-  content = {},
+  content,
   isSelected = false,
   isEditing = false,
   onUpdate,
@@ -23,17 +23,13 @@ export const SpacerBlock: React.FC<SpacerBlockProps> = ({
 }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [startY, setStartY] = useState(0);
-  
-  // Safely get height with fallback
-  const spacerHeight = content?.height || '40px';
-  const numericHeight = parseInt(spacerHeight.replace('px', '')) || 40;
-  
-  const [currentHeight, setCurrentHeight] = useState(numericHeight);
+  const [currentHeight, setCurrentHeight] = useState(
+    parseInt(content.height || '40')
+  );
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!onUpdate) return;
     
-    e.preventDefault();
     setIsDragging(true);
     setStartY(e.clientY);
     
@@ -56,6 +52,9 @@ export const SpacerBlock: React.FC<SpacerBlockProps> = ({
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   };
+
+  const spacerHeight = content.height || '40px';
+  const numericHeight = parseInt(spacerHeight);
 
   return (
     <div

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Search, Star, Crown } from 'lucide-react';
-import { renderLucideIcon } from '../../../utils/iconMap';
 import { 
   AVAILABLE_BLOCKS, 
   BLOCK_CATEGORIES, 
@@ -10,7 +9,7 @@ import {
   getPopularBlocks,
   searchBlocks,
   BlockComponent
-} from '../blocks/ModularBlockSystem';
+} from '../blocks/BlockComponents';
 
 interface ComponentsSidebarProps {
   onComponentSelect: (type: string) => void;
@@ -30,7 +29,7 @@ const BlockItem: React.FC<BlockItemProps> = ({ block, onSelect }) => {
     >
       <div className="flex items-start gap-3 w-full">
         <div className="flex-shrink-0 w-8 h-8 bg-[#B89B7A]/10 rounded-lg flex items-center justify-center">
-          {renderLucideIcon(block.icon, "w-4 h-4 text-[#B89B7A]")}
+          <block.icon className="w-4 h-4 text-[#B89B7A]" />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
@@ -125,20 +124,23 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
           
           {/* Additional Categories */}
           <div className="flex flex-wrap gap-1">
-            {BLOCK_CATEGORIES.filter(category => category !== 'basic').map((category) => {
+            {Object.entries(BLOCK_CATEGORIES).map(([key, category]) => {
+              if (key === 'basic') return null; // Already shown above
+              const IconComponent = category.icon;
               return (
                 <Button
-                  key={category}
-                  variant={activeTab === category ? 'default' : 'outline'}
+                  key={key}
+                  variant={activeTab === key ? 'default' : 'outline'}
                   size="sm"
                   className={`h-7 text-xs px-2 ${
-                    activeTab === category 
+                    activeTab === key 
                       ? 'bg-[#B89B7A] text-white hover:bg-[#a08965]' 
                       : 'border-[#B89B7A]/20 text-[#8F7A6A] hover:border-[#B89B7A] hover:text-[#432818]'
                   }`}
-                  onClick={() => setActiveTab(category)}
+                  onClick={() => setActiveTab(key)}
                 >
-                  {category}
+                  <IconComponent className="w-3 h-3 mr-1" />
+                  {category.label}
                 </Button>
               );
             })}
@@ -202,16 +204,21 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
             )}
 
             {/* Category Tabs */}
-            {BLOCK_CATEGORIES.includes(activeTab) && activeTab !== 'popular' && (
+            {Object.keys(BLOCK_CATEGORIES).includes(activeTab) && activeTab !== 'popular' && (
               <div>
                 <div className="mb-3">
                   <div 
-                    className="inline-flex items-center px-2 py-1 rounded-md border text-xs border-[#B89B7A]/30 text-[#432818]"
+                    className="inline-flex items-center px-2 py-1 rounded-md border text-xs"
+                    style={{ 
+                      borderColor: BLOCK_CATEGORIES[activeTab as keyof typeof BLOCK_CATEGORIES].color + '50',
+                      color: BLOCK_CATEGORIES[activeTab as keyof typeof BLOCK_CATEGORIES].color
+                    }}
                   >
-                    {activeTab}
+                    {React.createElement(BLOCK_CATEGORIES[activeTab as keyof typeof BLOCK_CATEGORIES].icon, { className: "w-3 h-3 mr-1" })}
+                    {BLOCK_CATEGORIES[activeTab as keyof typeof BLOCK_CATEGORIES].label}
                   </div>
                   <p className="text-xs text-[#8F7A6A] mt-1">
-                    Componentes da categoria {activeTab}
+                    {BLOCK_CATEGORIES[activeTab as keyof typeof BLOCK_CATEGORIES].description}
                   </p>
                 </div>
                 <div className="space-y-2">

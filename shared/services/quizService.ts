@@ -1,24 +1,17 @@
 
 import { supabase } from '../lib/supabase';
-import type { Quiz, QuizQuestion } from '../../client/src/types/supabase';
 
 export interface QuizData {
   id?: string;
   title: string;
-  description?: string | null;
+  description?: string;
   author_id: string;
   category?: string;
-  difficulty?: string | null;
-  time_limit?: number | null;
+  difficulty?: string;
+  time_limit?: number;
   settings?: any;
   is_public?: boolean;
   is_published?: boolean;
-  is_template?: boolean;
-  thumbnail_url?: string | null;
-  tags?: string[];
-  view_count?: number;
-  completion_rate?: number;
-  average_score?: number;
 }
 
 export interface CreateQuestionData {
@@ -28,12 +21,12 @@ export interface CreateQuestionData {
   options: any;
   correct_answers: any;
   points: number;
-  time_limit?: number | null;
-  required?: boolean | null;
-  explanation?: string | null;
-  hint?: string | null;
-  media_url?: string | null;
-  media_type?: string | null;
+  time_limit?: number;
+  required?: boolean;
+  explanation?: string;
+  hint?: string;
+  media_url?: string;
+  media_type?: string;
   tags: string[];
   order_index: number;
 }
