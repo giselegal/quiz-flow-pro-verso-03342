@@ -116,10 +116,10 @@ const STRATEGIC_QUESTIONS: QuizStep[] = [
     id: 'step-19',
     question: 'Etapa 19: Qual seria seu maior obstáculo?',
     options: [
-      { id: '1', text: 'Falta de conhecimento sobre moda' },
-      { id: '2', text: 'Orçamento limitado' },
-      { id: '3', text: 'Falta de tempo para pesquisar' },
-      { id: '4', text: 'Medo de errar e desperdiçar dinheiro' }
+      { id: '1', text: 'Falta de conhecimento sobre moda', value: '1' },
+      { id: '2', text: 'Orçamento limitado', value: '2' },
+      { id: '3', text: 'Falta de tempo para pesquisar', value: '3' },
+      { id: '4', text: 'Medo de errar e desperdiçar dinheiro', value: '4' }
     ],
     allowMultiple: false,
     showImages: false,
@@ -130,10 +130,10 @@ const STRATEGIC_QUESTIONS: QuizStep[] = [
     id: 'step-20',
     question: 'Etapa 20: Qual resultado você mais espera?',
     options: [
-      { id: '1', text: 'Um guia prático e personalizado' },
-      { id: '2', text: 'Dicas de combinações certeiras' },
-      { id: '3', text: 'Lista de compras inteligente' },
-      { id: '4', text: 'Confiança para criar looks únicos' }
+      { id: '1', text: 'Um guia prático e personalizado', value: '1' },
+      { id: '2', text: 'Dicas de combinações certeiras', value: '2' },
+      { id: '3', text: 'Lista de compras inteligente', value: '3' },
+      { id: '4', text: 'Confiança para criar looks únicos', value: '4' }
     ],
     allowMultiple: false,
     showImages: false,
@@ -144,10 +144,10 @@ const STRATEGIC_QUESTIONS: QuizStep[] = [
     id: 'step-21',
     question: 'Etapa 21: Teria interesse em uma consultoria personalizada?',
     options: [
-      { id: '1', text: 'Sim, quero saber mais sobre consultoria' },
-      { id: '2', text: 'Talvez, dependendo do formato' },
-      { id: '3', text: 'Prefiro primeiro o resultado do quiz' },
-      { id: '4', text: 'Não, só quero o resultado gratuito' }
+      { id: '1', text: 'Sim, quero saber mais sobre consultoria', value: '1' },
+      { id: '2', text: 'Talvez, dependendo do formato', value: '2' },
+      { id: '3', text: 'Prefiro primeiro o resultado do quiz', value: '3' },
+      { id: '4', text: 'Não, só quero o resultado gratuito', value: '4' }
     ],
     allowMultiple: false,
     showImages: false,
