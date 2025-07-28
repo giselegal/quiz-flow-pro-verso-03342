@@ -8,7 +8,7 @@ import { blockDefinitions } from '@/config/blockDefinitions';
 import { Plus } from 'lucide-react';
 
 const SimpleEditorTest: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('blocks');
+  const [activeTab, setActiveTab] = useState<'pages' | 'components'>('components');
   
   const {
     funnel,
@@ -44,6 +44,7 @@ const SimpleEditorTest: React.FC = () => {
 
     addBlock({
       type: blockType,
+      content: defaultProperties,
       properties: defaultProperties
     });
     
