@@ -31,8 +31,8 @@ const QuizDescubraSeuEstilo = lazy(
 );
 const DashboardPage = lazy(() => import("./pages/admin/DashboardPage"));
 
-// Editor Principal - Consolidado - Usando Editor Responsivo Avançado
-const SchemaDrivenEditorResponsive = lazy(() => import("./components/editor/SchemaDrivenEditorResponsive"));
+// Editor Principal - Usando versão simplificada para corrigir erro de importação
+const SchemaDrivenEditorSimple = lazy(() => import("./components/editor/SchemaDrivenEditorSimple"));
 const DragDropTestPage = lazy(() => import("./pages/DragDropTestPage"));
 const FunnelComponentsDemo = lazy(() => import("./pages/FunnelComponentsDemo"));
 const ModularComponentsDemo = lazy(() => import("./pages/ModularComponentsDemo"));
