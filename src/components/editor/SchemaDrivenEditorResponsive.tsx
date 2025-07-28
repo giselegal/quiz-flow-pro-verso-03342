@@ -26,7 +26,7 @@ import { useSchemaEditorFixed as useSchemaEditor } from '../../hooks/useSchemaEd
 import { useSupabaseEditor } from '../../hooks/useSupabaseEditor';
 import { SchemaDrivenComponentsSidebar } from './sidebar/SchemaDrivenComponentsSidebar';
 import { DynamicPropertiesPanel } from './panels/DynamicPropertiesPanel';
-import { DroppableCanvas } from './dnd/DroppableCanvas';
+import DroppableCanvas from './dnd/DroppableCanvas';
 import { TestDeleteComponent } from './TestDeleteComponent';
 import { allBlockDefinitions } from '../../config/blockDefinitions';
 import { useLocation } from 'wouter';

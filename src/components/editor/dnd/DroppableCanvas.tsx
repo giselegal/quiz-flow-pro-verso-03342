@@ -3,7 +3,6 @@ import { useDrop } from 'react-dnd';
 import { Card, CardContent } from '../../ui/card';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
-import { ScrollArea } from '../../ui/scroll-area';
 import { 
   DragOutlined, 
   MoreOutlined, 
@@ -37,12 +36,7 @@ interface DroppableCanvasProps {
   className?: string;
 }
 
-export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
-  blocks = [],
-  selectedBlockId,
-  onBlockSelect,
-  onBlockDelete,
-export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
+const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
   blocks = [],
   selectedBlockId,
   onBlockSelect,
@@ -77,30 +71,6 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
   }, [onBlockSelect, setShowRightSidebar]);
 
   const renderBlockActions = useCallback((block: any) => {
-    const isVisible = !block.properties?.hidden;
-    
-    const dropdownItems = [
-      {
-        key: 'duplicate',
-        label: 'Duplicar',
-        icon: <CopyOutlined />,
-        onClick: () => onBlockDuplicate(block.id),
-      },
-      {
-        key: 'visibility',
-        label: isVisible ? 'Ocultar' : 'Mostrar',
-        icon: isVisible ? <EyeInvisibleOutlined /> : <EyeOutlined />,
-        onClick: () => onBlockToggleVisibility(block.id),
-      },
-      {
-        key: 'delete',
-        label: 'Excluir',
-        icon: <DeleteOutlined />,
-        danger: true,
-        onClick: () => onBlockDelete(block.id),
-      },
-    ];
-
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -153,98 +123,95 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
         `}
         onClick={(e) => handleBlockClick(block.id, e)}
       >
-        {/* Block Header */}
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center space-x-3">
-            <Tooltip title="Arrastar para reordenar">
-              <div className="cursor-move opacity-50 hover:opacity-100">
-                <DragOutlined className="text-[#8F7A6A]" />
-              </div>
-            </Tooltip>
-            
-            <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 bg-gradient-to-br from-[#B89B7A]/20 to-[#aa6b5d]/20 rounded-lg flex items-center justify-center">
-                {definition?.icon ? (
-                  <span className="text-[#B89B7A] text-xs">
-                    {definition.icon}
-                  </span>
-                ) : (
-                  <span className="text-[#B89B7A] text-xs font-bold">
-                    {index + 1}
-                  </span>
-                )}
-              </div>
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center space-x-3">
+              <Tooltip title="Arrastar para reordenar">
+                <div className="cursor-move opacity-50 hover:opacity-100">
+                  <DragOutlined className="text-[#8F7A6A]" />
+                </div>
+              </Tooltip>
               
-              <div>
-                <Text strong className="text-[#432818] text-sm">
-                  {definition?.name || block.type}
-                </Text>
-                {isHidden && (
-                  <Badge variant="secondary" className="ml-2">
-                    Oculto
-                  </Badge>
-                )}
+              <div className="flex items-center space-x-2">
+                <div className="w-6 h-6 bg-gradient-to-br from-[#B89B7A]/20 to-[#aa6b5d]/20 rounded-lg flex items-center justify-center">
+                  {definition?.icon ? (
+                    <span className="text-[#B89B7A] text-xs">
+                      {definition.icon}
+                    </span>
+                  ) : (
+                    <span className="text-[#B89B7A] text-xs font-bold">
+                      {index + 1}
+                    </span>
+                  )}
+                </div>
+                
+                <div>
+                  <Text strong className="text-[#432818] text-sm">
+                    {definition?.name || block.type}
+                  </Text>
+                  {isHidden && (
+                    <Badge variant="secondary" className="ml-2">
+                      Oculto
+                    </Badge>
+                  )}
+                </div>
               </div>
             </div>
+            
+            <div className="flex items-center space-x-1">
+              {renderBlockActions(block)}
+            </div>
           </div>
-          
-          <div className="flex items-center space-x-1">
-            {renderBlockActions(block)}
-          </div>
-        </div>
 
-        {/* Block Preview Content */}
-        <div className="space-y-2">
-          {/* Render basic block preview based on type */}
-          {block.type === 'QuizStartPageBlock' && (
-            <div className="p-3 bg-gradient-to-r from-[#B89B7A]/10 to-[#aa6b5d]/10 rounded-lg">
-              <Title level={5} className="!mb-1 !text-[#432818]">
-                {block.properties?.title || 'Página Inicial'}
-              </Title>
-              <Text className="text-[#8F7A6A] text-xs">
-                {block.properties?.subtitle || 'Subtitle aqui'}
-              </Text>
-            </div>
-          )}
-          
-          {block.type === 'QuizQuestionBlock' && (
-            <div className="p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
-              <Title level={5} className="!mb-1 !text-[#432818]">
-                {block.properties?.question || 'Pergunta aqui'}
-              </Title>
-              <div className="flex flex-wrap gap-1 mt-2">
-                {(block.properties?.options || ['Opção 1', 'Opção 2']).map((option: string, idx: number) => (
-                  <Badge key={idx} variant="secondary">
-                    {option}
-                  </Badge>
-                ))}
+          <div className="space-y-2">
+            {block.type === 'QuizStartPageBlock' && (
+              <div className="p-3 bg-gradient-to-r from-[#B89B7A]/10 to-[#aa6b5d]/10 rounded-lg">
+                <Title level={5} className="!mb-1 !text-[#432818]">
+                  {block.properties?.title || 'Página Inicial'}
+                </Title>
+                <Text className="text-[#8F7A6A] text-xs">
+                  {block.properties?.subtitle || 'Subtitle aqui'}
+                </Text>
               </div>
-            </div>
-          )}
-          
-          {/* Default preview for other block types */}
-          {!['QuizStartPageBlock', 'QuizQuestionBlock'].includes(block.type) && (
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <Text className="text-[#8F7A6A] text-xs">
-                {definition?.description || `Bloco do tipo: ${block.type}`}
-              </Text>
-              {block.properties && Object.keys(block.properties).length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-1">
-                  {Object.entries(block.properties).slice(0, 3).map(([key, value]) => (
-                    <Badge key={key} variant="secondary">
-                      {key}: {String(value).slice(0, 10)}
+            )}
+            
+            {block.type === 'QuizQuestionBlock' && (
+              <div className="p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
+                <Title level={5} className="!mb-1 !text-[#432818]">
+                  {block.properties?.question || 'Pergunta aqui'}
+                </Title>
+                <div className="flex flex-wrap gap-1 mt-2">
+                  {(block.properties?.options || ['Opção 1', 'Opção 2']).map((option: string, idx: number) => (
+                    <Badge key={idx} variant="secondary">
+                      {option}
                     </Badge>
                   ))}
                 </div>
-              )}
-            </div>
-          )}
-        </div>
+              </div>
+            )}
+            
+            {!['QuizStartPageBlock', 'QuizQuestionBlock'].includes(block.type) && (
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <Text className="text-[#8F7A6A] text-xs">
+                  {definition?.description || `Bloco do tipo: ${block.type}`}
+                </Text>
+                {block.properties && Object.keys(block.properties).length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {Object.entries(block.properties).slice(0, 3).map(([key, value]) => (
+                      <Badge key={key} variant="secondary">
+                        {key}: {String(value).slice(0, 10)}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
-        {/* Selection indicator */}
-        {isSelected && (
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-lg opacity-20 -z-10" />
-        )}
+          {isSelected && (
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-lg opacity-20 -z-10" />
+          )}
+        </CardContent>
       </Card>
     );
   }, [
@@ -283,11 +250,13 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
   );
 
   return (
-    <ScrollArea ref={drop} className={`h-full p-4 ${isOver ? 'bg-blue-50 border-2 border-blue-300 border-dashed' : ''}`}>
-      <div className="max-w-full space-y-4">
+    <div 
+      ref={drop} 
+      className={`h-full p-4 ${isOver ? 'bg-blue-50 border-2 border-blue-300 border-dashed' : ''}`}
+    >
+      <div className="max-w-full space-y-4 h-full overflow-y-auto">
         {blocks.length > 0 ? (
           <>
-            {/* Canvas Header */}
             <div className="flex items-center justify-between mb-6">
               <div>
                 <Title level={4} className="!mb-1 !text-[#432818]">
@@ -303,31 +272,31 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
               </Badge>
             </div>
 
-            {/* Blocks List */}
             <div className="space-y-3">
               {blocks.map((block, index) => renderBlock(block, index))}
             </div>
 
-            {/* Add Block Button */}
             <Card className="border-dashed border-2 border-[#B89B7A]/30 bg-[#B89B7A]/5 hover:border-[#B89B7A] hover:bg-[#B89B7A]/10 transition-all duration-200">
-              <div className="flex items-center justify-center py-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onAddBlock('QuizQuestionBlock')}
-                  className="text-[#B89B7A] hover:text-[#432818]"
-                >
-                  <PlusOutlined className="mr-2 h-4 w-4" />
-                  Adicionar Novo Bloco
-                </Button>
-              </div>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-center py-4">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onAddBlock('QuizQuestionBlock')}
+                    className="text-[#B89B7A] hover:text-[#432818]"
+                  >
+                    <PlusOutlined className="mr-2 h-4 w-4" />
+                    Adicionar Novo Bloco
+                  </Button>
+                </div>
+              </CardContent>
             </Card>
           </>
         ) : (
           renderEmptyState()
         )}
       </div>
-    </ScrollArea>
+    </div>
   );
 };
 

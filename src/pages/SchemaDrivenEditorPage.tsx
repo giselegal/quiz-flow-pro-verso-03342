@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DroppableCanvas } from '../components/editor/dnd/DroppableCanvas';
+import DroppableCanvas from '../components/editor/dnd/DroppableCanvas';
 import { FormElementsPanel } from '../components/editor/FormElementsPanel';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
