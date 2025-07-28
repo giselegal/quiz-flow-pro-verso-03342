@@ -1,521 +1,256 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  LineChart,
-  Line,
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
-import {
-  TrendingUp,
-  TrendingDown,
-  DollarSign,
-  Users,
-  Target,
-  Clock,
-  Zap,
-  RefreshCw,
-} from "lucide-react";
 
-interface AnalyticsEvent {
-  event_name: string;
-  timestamp: number;
-  date: string;
-  utm_content?: string;
+import React, { useState, useEffect } from 'react';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { TrendingUp, TrendingDown, Users, Activity, Target, Clock } from 'lucide-react';
+
+interface RealTimeEvent {
+  id: string;
+  type: string;
+  timestamp: string;
   utm_source?: string;
   utm_campaign?: string;
-  value?: number;
-  currency?: string;
-  email?: string;
+  page: string;
+  user_id: string;
 }
 
-interface RealTimeDataPoint {
-  time: string;
-  visitors: number;
-  conversions: number;
-  revenue: string;
-  avgSession: number;
+interface RealTimeMetric {
+  name: string;
+  value: number;
+  change: number;
+  trend: 'up' | 'down' | 'stable';
+  icon: React.ReactNode;
 }
 
 interface RealTimeMetricsProps {
-  analyticsData: AnalyticsEvent[];
-  loading?: boolean;
+  funnelId?: string;
 }
 
-export const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({
-  analyticsData,
-  loading = false,
-}) => {
-  const [realTimeData, setRealTimeData] = useState<RealTimeDataPoint[]>([]);
-  const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
-  const [autoRefresh, setAutoRefresh] = useState(true);
+const RealTimeMetrics: React.FC<RealTimeMetricsProps> = ({ funnelId }) => {
+  const [events, setEvents] = useState<RealTimeEvent[]>([]);
+  const [metrics, setMetrics] = useState<RealTimeMetric[]>([]);
+  const [isLive, setIsLive] = useState(true);
 
-  // Simular dados em tempo real (em produção, conectaria a API)
   useEffect(() => {
-    if (!autoRefresh) return;
+    if (isLive) {
+      const interval = setInterval(() => {
+        generateMockEvent();
+        updateMetrics();
+      }, 2000);
 
-    const interval = setInterval(() => {
-      generateRealTimeData();
-      setLastUpdate(new Date());
-    }, 30000); // Atualiza a cada 30 segundos
-
-    return () => clearInterval(interval);
-  }, [autoRefresh]);
-
-  const generateRealTimeData = () => {
-    try {
-      // Tentar buscar dados reais do localStorage
-      const events = JSON.parse(
-        localStorage.getItem("all_tracked_events") || "[]"
-      );
-      const now = new Date();
-
-      // Filtrar eventos das últimas 24 horas
-      const today = events.filter((event: AnalyticsEvent) => {
-        const eventDate = new Date(event.timestamp || event.date);
-        const hoursDiff =
-          (now.getTime() - eventDate.getTime()) / (1000 * 60 * 60);
-        return hoursDiff <= 24;
-      });
-
-      // Agrupar por hora
-      const hourlyData: Record<
-        string,
-        {
-          visitors: Set<string>;
-          conversions: number;
-          revenue: number;
-          sessions: string[];
-        }
-      > = {};
-      today.forEach((event: AnalyticsEvent) => {
-        const eventTime = new Date(event.timestamp || event.date);
-        const hour = eventTime.getHours();
-        const hourKey = `${hour.toString().padStart(2, "0")}:00`;
-
-        if (!hourlyData[hourKey]) {
-          hourlyData[hourKey] = {
-            visitors: new Set(),
-            conversions: 0,
-            revenue: 0,
-            sessions: [],
-          };
-        }
-
-        // Contabilizar visitantes únicos por IP/sessão simulada
-        const visitorId =
-          event.utm_source +
-          event.utm_campaign +
-          Math.floor(Math.random() * 100);
-        hourlyData[hourKey].visitors.add(visitorId);
-
-        if (event.event_name === "Lead" || event.event_name === "Purchase") {
-          hourlyData[hourKey].conversions++;
-        }
-
-        if (event.event_name === "Purchase" && event.value) {
-          hourlyData[hourKey].revenue +=
-            parseFloat(event.value.toString()) || 0;
-        }
-      });
-
-      // Se há dados reais, usar eles
-      if (Object.keys(hourlyData).length > 0) {
-        const currentHour = now.getHours().toString().padStart(2, "0") + ":00";
-        const currentData = hourlyData[currentHour] || {
-          visitors: new Set<string>(),
-          conversions: 0,
-          revenue: 0,
-        };
-
-        const newDataPoint = {
-          time: now.toLocaleTimeString("pt-BR", {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          timestamp: now.getTime(),
-          visitors: currentData.visitors.size,
-          conversions: currentData.conversions,
-          revenue: currentData.revenue.toFixed(2),
-          avgSession: Math.floor(Math.random() * 180) + 60, // Ainda simulado
-        };
-
-        setRealTimeData((prev) => {
-          const updated = [...prev, newDataPoint];
-          return updated.slice(-20);
-        });
-        return;
-      }
-    } catch (error) {
-      console.log("Erro ao buscar dados reais, usando simulados:", error);
+      return () => clearInterval(interval);
     }
+  }, [isLive]);
 
-    // Fallback para dados simulados se não há dados reais
-    const now = new Date();
-    const newDataPoint = {
-      time: now.toLocaleTimeString("pt-BR", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      timestamp: now.getTime(),
-      visitors: Math.floor(Math.random() * 50) + 10,
-      conversions: Math.floor(Math.random() * 10) + 1,
-      revenue: (Math.random() * 500 + 100).toFixed(2),
-      avgSession: Math.floor(Math.random() * 180) + 60,
+  const generateMockEvent = () => {
+    const eventTypes = ['page_view', 'quiz_start', 'quiz_complete', 'lead_capture', 'conversion'];
+    const pages = ['landing', 'quiz', 'results', 'offer', 'thank-you'];
+    const sources = ['google', 'facebook', 'direct', 'email', 'instagram'];
+    const campaigns = ['summer-sale', 'retargeting', 'lookalike', 'brand-awareness'];
+
+    const newEvent: RealTimeEvent = {
+      id: Date.now().toString(),
+      type: eventTypes[Math.floor(Math.random() * eventTypes.length)],
+      timestamp: new Date().toISOString(),
+      utm_source: sources[Math.floor(Math.random() * sources.length)],
+      utm_campaign: campaigns[Math.floor(Math.random() * campaigns.length)],
+      page: pages[Math.floor(Math.random() * pages.length)],
+      user_id: `user_${Math.floor(Math.random() * 10000)}`
     };
 
-    setRealTimeData((prev) => {
-      const updated = [...prev, newDataPoint];
-      return updated.slice(-20);
-    });
+    setEvents(prev => [newEvent, ...prev.slice(0, 19)]);
   };
 
-  // Gerar dados iniciais
+  const updateMetrics = () => {
+    const mockMetrics: RealTimeMetric[] = [
+      {
+        name: 'Active Users',
+        value: Math.floor(Math.random() * 50) + 20,
+        change: Math.floor(Math.random() * 10) - 5,
+        trend: Math.random() > 0.5 ? 'up' : 'down',
+        icon: <Users className="w-4 h-4" />
+      },
+      {
+        name: 'Conversions/Hour',
+        value: Math.floor(Math.random() * 20) + 5,
+        change: Math.floor(Math.random() * 5) - 2,
+        trend: Math.random() > 0.5 ? 'up' : 'down',
+        icon: <Target className="w-4 h-4" />
+      },
+      {
+        name: 'Page Views/Min',
+        value: Math.floor(Math.random() * 100) + 50,
+        change: Math.floor(Math.random() * 20) - 10,
+        trend: Math.random() > 0.5 ? 'up' : 'down',
+        icon: <Activity className="w-4 h-4" />
+      },
+      {
+        name: 'Avg Session Time',
+        value: Math.floor(Math.random() * 300) + 120,
+        change: Math.floor(Math.random() * 30) - 15,
+        trend: Math.random() > 0.5 ? 'up' : 'down',
+        icon: <Clock className="w-4 h-4" />
+      }
+    ];
+
+    setMetrics(mockMetrics);
+  };
+
   useEffect(() => {
-    const initialData = [];
-    for (let i = 19; i >= 0; i--) {
-      const time = new Date(Date.now() - i * 30000);
-      initialData.push({
-        time: time.toLocaleTimeString("pt-BR", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        timestamp: time.getTime(),
-        visitors: Math.floor(Math.random() * 50) + 10,
-        conversions: Math.floor(Math.random() * 10) + 1,
-        revenue: (Math.random() * 500 + 100).toFixed(2),
-        avgSession: Math.floor(Math.random() * 180) + 60,
-      });
-    }
-    setRealTimeData(initialData);
+    updateMetrics();
   }, []);
 
-  // Calcular métricas atuais
-  const currentMetrics =
-    realTimeData.length > 0
-      ? {
-          activeVisitors: realTimeData[realTimeData.length - 1]?.visitors || 0,
-          conversionRate:
-            realTimeData.length > 1
-              ? (
-                  ((realTimeData[realTimeData.length - 1]?.conversions || 0) /
-                    (realTimeData[realTimeData.length - 1]?.visitors || 1)) *
-                  100
-                ).toFixed(1)
-              : "0.0",
-          revenueToday: realTimeData
-            .reduce((sum, point) => sum + parseFloat(point.revenue || "0"), 0)
-            .toFixed(2),
-          avgSessionTime:
-            realTimeData.length > 0
-              ? Math.floor(
-                  realTimeData.reduce(
-                    (sum, point) => sum + (point.avgSession || 0),
-                    0
-                  ) / realTimeData.length
-                )
-              : 0,
-        }
-      : {
-          activeVisitors: 0,
-          conversionRate: "0.0",
-          revenueToday: "0.00",
-          avgSessionTime: 0,
-        };
-
-  // Cores para os gráficos
-  const colors = {
-    primary: "#B89B7A",
-    secondary: "#D4C4A0",
-    success: "#10B981",
-    warning: "#F59E0B",
-    danger: "#EF4444",
+  const formatTime = (timestamp: string) => {
+    return new Date(timestamp).toLocaleTimeString();
   };
 
-  const formatSessionTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+  const getEventIcon = (type: string) => {
+    switch (type) {
+      case 'page_view':
+        return '👁️';
+      case 'quiz_start':
+        return '🎯';
+      case 'quiz_complete':
+        return '✅';
+      case 'lead_capture':
+        return '📧';
+      case 'conversion':
+        return '💰';
+      default:
+        return '📊';
+    }
   };
 
-  if (loading) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Zap className="w-5 h-5" />
-            Métricas em Tempo Real
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="h-[400px] flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+  const getEventColor = (type: string) => {
+    switch (type) {
+      case 'conversion':
+        return 'bg-green-100 text-green-800';
+      case 'lead_capture':
+        return 'bg-blue-100 text-blue-800';
+      case 'quiz_complete':
+        return 'bg-purple-100 text-purple-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getTrendIcon = (trend: string) => {
+    switch (trend) {
+      case 'up':
+        return <TrendingUp className="w-4 h-4 text-green-500" />;
+      case 'down':
+        return <TrendingDown className="w-4 h-4 text-red-500" />;
+      default:
+        return <Activity className="w-4 h-4 text-gray-500" />;
+    }
+  };
+
+  const getTrendColor = (trend: string) => {
+    switch (trend) {
+      case 'up':
+        return 'text-green-500';
+      case 'down':
+        return 'text-red-500';
+      default:
+        return 'text-gray-500';
+    }
+  };
 
   return (
     <div className="space-y-6">
-      {/* Header com controles */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-green-500" />
-                Métricas em Tempo Real
-                <Badge variant="outline" className="ml-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse"></div>
-                  LIVE
-                </Badge>
-              </CardTitle>
-              <CardDescription>
-                Última atualização: {lastUpdate.toLocaleTimeString("pt-BR")}
-              </CardDescription>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setAutoRefresh(!autoRefresh)}
-              >
-                <RefreshCw
-                  className={`w-4 h-4 mr-2 ${
-                    autoRefresh ? "animate-spin" : ""
-                  }`}
-                />
-                {autoRefresh ? "Pausar" : "Retomar"}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={generateRealTimeData}
-              >
-                Atualizar Agora
-              </Button>
-            </div>
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h3 className="text-lg font-semibold">Real-Time Analytics</h3>
+          <p className="text-sm text-gray-600">
+            Live activity on your funnel
+          </p>
+        </div>
+        <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2">
+            <div className={`w-2 h-2 rounded-full ${isLive ? 'bg-green-500' : 'bg-gray-500'}`}></div>
+            <span className="text-sm">{isLive ? 'Live' : 'Paused'}</span>
           </div>
-        </CardHeader>
-      </Card>
-
-      {/* Cards de métricas instantâneas */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Visitantes Ativos
-                </p>
-                <p className="text-2xl font-bold text-green-600">
-                  {currentMetrics.activeVisitors}
-                </p>
-              </div>
-              <Users className="w-8 h-8 text-green-600" />
-            </div>
-            <p className="text-xs text-muted-foreground mt-2">
-              Usuários online agora
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Taxa de Conversão
-                </p>
-                <p className="text-2xl font-bold text-blue-600">
-                  {currentMetrics.conversionRate}%
-                </p>
-              </div>
-              <Target className="w-8 h-8 text-blue-600" />
-            </div>
-            <p className="text-xs text-muted-foreground mt-2">
-              Conversões vs visitantes
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Receita Hoje
-                </p>
-                <p className="text-2xl font-bold text-green-600">
-                  R$ {currentMetrics.revenueToday}
-                </p>
-              </div>
-              <DollarSign className="w-8 h-8 text-green-600" />
-            </div>
-            <p className="text-xs text-muted-foreground mt-2">
-              Vendas confirmadas
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Tempo Médio
-                </p>
-                <p className="text-2xl font-bold text-purple-600">
-                  {formatSessionTime(currentMetrics.avgSessionTime)}
-                </p>
-              </div>
-              <Clock className="w-8 h-8 text-purple-600" />
-            </div>
-            <p className="text-xs text-muted-foreground mt-2">
-              Duração das sessões
-            </p>
-          </CardContent>
-        </Card>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsLive(!isLive)}
+          >
+            {isLive ? 'Pause' : 'Resume'}
+          </Button>
+        </div>
       </div>
 
-      {/* Gráficos em tempo real */}
-      <Tabs defaultValue="visitors" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="visitors">Visitantes</TabsTrigger>
-          <TabsTrigger value="conversions">Conversões</TabsTrigger>
-          <TabsTrigger value="revenue">Receita</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="visitors">
-          <Card>
-            <CardHeader>
-              <CardTitle>Visitantes Ativos (Últimos 10 minutos)</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={realTimeData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="time" />
-                    <YAxis />
-                    <Tooltip
-                      labelFormatter={(label) => `Horário: ${label}`}
-                      formatter={(value: number | string, name: string) => [
-                        value,
-                        name === "visitors" ? "Visitantes" : name,
-                      ]}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="visitors"
-                      stroke={colors.primary}
-                      fill={colors.primary}
-                      fillOpacity={0.3}
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
+      {/* Real-Time Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {metrics.map((metric) => (
+          <Card key={metric.name} className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                {metric.icon}
+                <span className="text-sm font-medium">{metric.name}</span>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="conversions">
-          <Card>
-            <CardHeader>
-              <CardTitle>Conversões em Tempo Real</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={realTimeData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="time" />
-                    <YAxis />
-                    <Tooltip
-                      labelFormatter={(label) => `Horário: ${label}`}
-                      formatter={(value: number | string) => [
-                        value,
-                        "Conversões",
-                      ]}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="conversions"
-                      stroke={colors.success}
-                      strokeWidth={3}
-                      dot={{ fill: colors.success, strokeWidth: 2, r: 4 }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
+              <div className="flex items-center space-x-1">
+                {getTrendIcon(metric.trend)}
+                <span className={`text-sm ${getTrendColor(metric.trend)}`}>
+                  {metric.change > 0 ? '+' : ''}{metric.change}
+                </span>
               </div>
-            </CardContent>
+            </div>
+            <div className="mt-2">
+              <p className="text-2xl font-bold">
+                {metric.name === 'Avg Session Time' 
+                  ? `${Math.floor(metric.value / 60)}:${(metric.value % 60).toString().padStart(2, '0')}`
+                  : metric.value
+                }
+              </p>
+            </div>
           </Card>
-        </TabsContent>
+        ))}
+      </div>
 
-        <TabsContent value="revenue">
-          <Card>
-            <CardHeader>
-              <CardTitle>Receita Acumulada</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart
-                    data={realTimeData.map((point, index) => ({
-                      ...point,
-                      cumulativeRevenue: realTimeData
-                        .slice(0, index + 1)
-                        .reduce(
-                          (sum, p) => sum + parseFloat(p.revenue || "0"),
-                          0
-                        )
-                        .toFixed(2),
-                    }))}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="time" />
-                    <YAxis />
-                    <Tooltip
-                      labelFormatter={(label) => `Horário: ${label}`}
-                      formatter={(value: number | string) => [
-                        `R$ ${value}`,
-                        "Receita Acumulada",
-                      ]}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="cumulativeRevenue"
-                      stroke={colors.success}
-                      fill={colors.success}
-                      fillOpacity={0.3}
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
+      {/* Event Stream */}
+      <Card className="p-4">
+        <div className="flex justify-between items-center mb-4">
+          <h4 className="font-medium">Live Event Stream</h4>
+          <Badge variant="outline" className="text-xs">
+            {events.length} events
+          </Badge>
+        </div>
+        
+        <div className="space-y-2 max-h-96 overflow-y-auto">
+          {events.map((event) => (
+            <div key={event.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+              <div className="flex items-center space-x-3">
+                <span className="text-lg">{getEventIcon(event.type)}</span>
+                <div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm font-medium">{event.type.replace('_', ' ')}</span>
+                    <Badge variant="outline" className={`text-xs ${getEventColor(event.type)}`}>
+                      {event.page}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center space-x-2 text-xs text-gray-500">
+                    <span>User: {event.user_id}</span>
+                    {event.utm_source && (
+                      <span>• Source: {event.utm_source}</span>
+                    )}
+                    {event.utm_campaign && (
+                      <span>• Campaign: {event.utm_campaign}</span>
+                    )}
+                  </div>
+                </div>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+              <span className="text-xs text-gray-500">
+                {formatTime(event.timestamp)}
+              </span>
+            </div>
+          ))}
+        </div>
+      </Card>
     </div>
   );
 };
+
+export default RealTimeMetrics;

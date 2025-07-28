@@ -31,8 +31,18 @@ export const Alert: React.FC<AlertProps> = ({
   );
 };
 
-export const AlertDescription: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return <div className="text-sm">{children}</div>;
+export const AlertDescription: React.FC<{ children: React.ReactNode; className?: string }> = ({ 
+  children, 
+  className 
+}) => {
+  return <div className={cn("text-sm", className)}>{children}</div>;
+};
+
+export const AlertTitle: React.FC<{ children: React.ReactNode; className?: string }> = ({ 
+  children, 
+  className 
+}) => {
+  return <h5 className={cn("font-medium leading-none tracking-tight", className)}>{children}</h5>;
 };
 
 export default Alert;
