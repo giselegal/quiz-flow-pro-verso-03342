@@ -1,443 +1,482 @@
-
-import React, { useState, useCallback, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { SimpleComponent, QuizConfig, QuizFunnel, Version, QuizOption } from '@/types/quiz';
+import { SimpleComponent, ComponentType, QuizConfig, QuizFunnel, Version } from '@/types/quiz';
+import { useFunnelManager } from '@/hooks/useFunnelManager';
 import { useVersionManager } from '@/hooks/useVersionManager';
 import { useComponentManager } from '@/hooks/useComponentManager';
-import PropertiesPanel from './properties/PropertiesPanel';
-import ConfigPanel from './config/ConfigPanel';
-import FunnelManagementPanel from './panels/FunnelManagementPanel';
-import { VersioningPanel } from './panels/VersioningPanel';
-import { Plus, Save, Eye, EyeOff, Settings, History, Folder } from 'lucide-react';
+import { QuizOption } from '@/types/quiz';
+import { 
+  Save, 
+  Play, 
+  Pause, 
+  RotateCcw, 
+  Settings, 
+  Layers, 
+  Clock, 
+  Trash2, 
+  Copy, 
+  Eye, 
+  EyeOff,
+  Plus,
+  Minus
+} from 'lucide-react';
 
 interface ModularQuizEditorProps {
-  funnelId?: string;
+  initialFunnel?: QuizFunnel;
   onSave?: (funnel: QuizFunnel) => void;
   onPreview?: (funnel: QuizFunnel) => void;
 }
 
-export const ModularQuizEditor: React.FC<ModularQuizEditorProps> = ({
-  funnelId,
+const ModularQuizEditor: React.FC<ModularQuizEditorProps> = ({
+  initialFunnel,
   onSave,
   onPreview
 }) => {
-  const [activeTab, setActiveTab] = useState('editor');
-  const [isPreviewing, setIsPreviewing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<'editor' | 'funis' | 'historico' | 'config'>('editor');
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);
+  const [deviceView, setDeviceView] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
   
-  // Component management
   const {
     components,
     selectedComponentId,
     setSelectedComponentId,
     addComponent,
     updateComponent,
-    deleteComponent
+    deleteComponent,
+    getComponentById
   } = useComponentManager();
-  
-  // Version management
+
+  const {
+    funnel,
+    saveFunnel,
+    loadFunnel,
+    createNewFunnel,
+    duplicateFunnel,
+    deleteFunnel,
+    isLoading: funnelLoading
+  } = useFunnelManager(initialFunnel);
+
   const {
     versions,
     currentVersion,
     saveVersion,
     loadVersion,
-    deleteVersion,
-    clearHistory
-  } = useVersionManager(funnelId);
-  
-  // Quiz configuration
-  const [quizConfig, setQuizConfig] = useState<QuizConfig>({
-    title: 'New Quiz',
-    description: '',
-    theme: {
-      primaryColor: '#3b82f6',
-      secondaryColor: '#64748b'
-    }
-  });
-  
-  // Current funnel state
-  const [currentFunnel, setCurrentFunnel] = useState<QuizFunnel>({
-    id: funnelId || `funnel-${Date.now()}`,
-    name: 'New Funnel',
-    description: 'A new quiz funnel',
-    pages: [
-      {
-        id: 'intro-page',
-        title: 'Introduction',
-        type: 'intro',
-        progress: 0,
-        showHeader: true,
-        showProgress: true,
-        components: []
+    createAutoSave,
+    isLoading: versionLoading
+  } = useVersionManager();
+
+  // Auto-save functionality
+  useEffect(() => {
+    const autoSaveInterval = setInterval(() => {
+      if (funnel && components.length > 0) {
+        createAutoSave(funnel);
       }
-    ]
-  });
+    }, 30000); // Auto-save every 30 seconds
 
-  const selectedComponent = components.find(c => c.id === selectedComponentId);
+    return () => clearInterval(autoSaveInterval);
+  }, [funnel, components, createAutoSave]);
 
-  // Component type options
-  const componentTypes = [
-    { type: 'title' as const, label: 'Title', icon: '📝' },
-    { type: 'text' as const, label: 'Text', icon: '📄' },
-    { type: 'image' as const, label: 'Image', icon: '🖼️' },
-    { type: 'button' as const, label: 'Button', icon: '🔘' },
-    { type: 'input' as const, label: 'Input', icon: '📝' },
-    { type: 'options' as const, label: 'Options', icon: '☑️' },
-    { type: 'spacer' as const, label: 'Spacer', icon: '⬜' },
-    { type: 'video' as const, label: 'Video', icon: '🎥' }
-  ];
-
-  const handleAddComponent = useCallback((type: SimpleComponent['type']) => {
-    const componentId = addComponent(type);
-    
-    // Add to current page
-    const currentPage = currentFunnel.pages[0];
-    if (currentPage) {
-      const newComponent: SimpleComponent = {
-        id: componentId,
-        type,
-        data: getDefaultDataForType(type),
-        style: {}
+  const handleSave = async () => {
+    if (funnel) {
+      const updatedFunnel = {
+        ...funnel,
+        pages: funnel.pages.map((page, index) => 
+          index === currentPageIndex 
+            ? { ...page, components }
+            : page
+        )
       };
       
-      const updatedPages = currentFunnel.pages.map(page => 
-        page.id === currentPage.id 
-          ? { ...page, components: [...page.components, newComponent] }
-          : page
-      );
-      
-      setCurrentFunnel(prev => ({ ...prev, pages: updatedPages }));
+      await saveFunnel(updatedFunnel);
+      await saveVersion(updatedFunnel, 'Manual save');
+      onSave?.(updatedFunnel);
     }
-  }, [addComponent, currentFunnel.pages]);
+  };
 
-  const handleUpdateComponent = useCallback((componentId: string, newData: Partial<SimpleComponent>) => {
-    updateComponent(componentId, newData);
-    
-    // Update in funnel pages
-    const updatedPages = currentFunnel.pages.map(page => ({
-      ...page,
-      components: page.components.map(component =>
-        component.id === componentId ? { ...component, ...newData } : component
-      )
-    }));
-    
-    setCurrentFunnel(prev => ({ ...prev, pages: updatedPages }));
-  }, [updateComponent, currentFunnel.pages]);
-
-  const handleDeleteComponent = useCallback((componentId: string) => {
-    deleteComponent(componentId);
-    
-    // Remove from funnel pages
-    const updatedPages = currentFunnel.pages.map(page => ({
-      ...page,
-      components: page.components.filter(component => component.id !== componentId)
-    }));
-    
-    setCurrentFunnel(prev => ({ ...prev, pages: updatedPages }));
-  }, [deleteComponent, currentFunnel.pages]);
-
-  const handleSave = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      
-      // Save version
-      const versionId = await saveVersion(
-        currentFunnel,
-        `Version ${new Date().toLocaleString()}`,
-        'Auto-saved version'
-      );
-      
-      // Call external save handler if provided
-      if (onSave) {
-        onSave(currentFunnel);
-      }
-      
-      console.log('Funnel saved successfully:', versionId);
-    } catch (error) {
-      console.error('Error saving funnel:', error);
-    } finally {
-      setIsLoading(false);
+  const handlePreview = () => {
+    if (funnel) {
+      const updatedFunnel = {
+        ...funnel,
+        pages: funnel.pages.map((page, index) => 
+          index === currentPageIndex 
+            ? { ...page, components }
+            : page
+        )
+      };
+      onPreview?.(updatedFunnel);
     }
-  }, [currentFunnel, saveVersion, onSave]);
+  };
 
-  const handlePreview = useCallback(() => {
-    setIsPreviewing(!isPreviewing);
-    if (onPreview) {
-      onPreview(currentFunnel);
-    }
-  }, [isPreviewing, onPreview, currentFunnel]);
+  const handleAddComponent = (type: ComponentType) => {
+    const componentId = addComponent(type);
+    setSelectedComponentId(componentId);
+  };
 
-  const handleLoadVersion = useCallback((versionId: string) => {
-    const versionData = loadVersion(versionId);
-    if (versionData) {
-      setCurrentFunnel(versionData);
-    }
-  }, [loadVersion]);
+  const handleUpdateComponent = (id: string, updates: Partial<SimpleComponent>) => {
+    updateComponent(id, updates);
+  };
 
-  const handleDeleteVersion = useCallback((versionId: string) => {
-    deleteVersion(versionId);
-  }, [deleteVersion]);
+  const handleDeleteComponent = (id: string) => {
+    deleteComponent(id);
+  };
 
-  const handleUpdateConfig = useCallback((updates: Partial<QuizConfig>) => {
-    setQuizConfig(prev => ({ ...prev, ...updates }));
-  }, []);
-
-  const handleUpdateConfigSection = useCallback(<K extends keyof QuizConfig>(
-    section: K,
-    updates: Partial<QuizConfig[K]>
-  ) => {
-    setQuizConfig(prev => ({
-      ...prev,
-      [section]: { ...prev[section], ...updates }
-    }));
-  }, []);
-
-  // Mock funnel management functions (would integrate with actual funnel system)
-  const handleLoadFunnel = useCallback(async (funnelId: string) => {
-    // Mock implementation
-    console.log('Loading funnel:', funnelId);
-  }, []);
-
-  const handleDeleteFunnel = useCallback(async (funnelId: string) => {
-    // Mock implementation
-    console.log('Deleting funnel:', funnelId);
-  }, []);
-
-  return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Left Sidebar */}
-      <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
-        <div className="p-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold">Quiz Editor</h2>
+  const renderComponentEditor = () => {
+    const selectedComponent = getComponentById(selectedComponentId || '');
+    
+    if (!selectedComponent) {
+      return (
+        <div className="p-4 text-center text-gray-500">
+          Selecione um componente para editar
         </div>
-        
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
-          <TabsList className="mx-4 mt-4 grid grid-cols-4 w-full">
-            <TabsTrigger value="editor">Editor</TabsTrigger>
-            <TabsTrigger value="properties">Props</TabsTrigger>
-            <TabsTrigger value="config">Config</TabsTrigger>
-            <TabsTrigger value="versions">Versions</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="editor" className="flex-1 p-4">
-            <div className="space-y-4">
-              <div>
-                <h3 className="font-medium mb-3">Add Components</h3>
-                <div className="grid grid-cols-2 gap-2">
-                  {componentTypes.map(({ type, label, icon }) => (
-                    <Button
-                      key={type}
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleAddComponent(type)}
-                      className="h-12 flex flex-col items-center gap-1"
-                    >
-                      <span className="text-lg">{icon}</span>
-                      <span className="text-xs">{label}</span>
-                    </Button>
-                  ))}
-                </div>
-              </div>
-              
-              <Separator />
-              
-              <div>
-                <h3 className="font-medium mb-3">Page Components</h3>
-                <div className="space-y-2">
-                  {components.map((component, index) => (
-                    <Card
-                      key={component.id}
-                      className={`cursor-pointer transition-colors ${
-                        selectedComponentId === component.id ? 'ring-2 ring-blue-500' : ''
-                      }`}
-                      onClick={() => setSelectedComponentId(component.id)}
-                    >
-                      <CardContent className="p-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <Badge variant="secondary" className="text-xs">
-                              {component.type}
-                            </Badge>
-                            <span className="text-sm font-medium">
-                              {component.data.text || component.data.title || `Component ${index + 1}`}
-                            </span>
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteComponent(component.id);
-                            }}
-                          >
-                            ×
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="properties" className="flex-1 p-4">
-            {selectedComponent ? (
-              <PropertiesPanel
-                selectedComponent={selectedComponent}
-                onUpdateComponent={handleUpdateComponent}
-                onDeleteComponent={handleDeleteComponent}
+      );
+    }
+
+    return (
+      <div className="p-4 space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-medium">Editar Componente</h3>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => handleDeleteComponent(selectedComponent.id)}
+            className="text-red-500"
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </div>
+
+        <div className="space-y-3">
+          <div>
+            <Label>Tipo</Label>
+            <Badge variant="secondary">{selectedComponent.type}</Badge>
+          </div>
+
+          {selectedComponent.type === 'text' && (
+            <div>
+              <Label>Texto</Label>
+              <Input
+                value={selectedComponent.data.text || ''}
+                onChange={(e) => handleUpdateComponent(selectedComponent.id, {
+                  data: { ...selectedComponent.data, text: e.target.value }
+                })}
+                placeholder="Digite o texto"
               />
-            ) : (
-              <div className="text-center text-gray-500 py-8">
-                Select a component to edit its properties
+            </div>
+          )}
+
+          {selectedComponent.type === 'image' && (
+            <>
+              <div>
+                <Label>URL da Imagem</Label>
+                <Input
+                  value={selectedComponent.data.src || ''}
+                  onChange={(e) => handleUpdateComponent(selectedComponent.id, {
+                    data: { ...selectedComponent.data, src: e.target.value }
+                  })}
+                  placeholder="https://exemplo.com/imagem.jpg"
+                />
+              </div>
+              <div>
+                <Label>Texto Alternativo</Label>
+                <Input
+                  value={selectedComponent.data.alt || ''}
+                  onChange={(e) => handleUpdateComponent(selectedComponent.id, {
+                    data: { ...selectedComponent.data, alt: e.target.value }
+                  })}
+                  placeholder="Descrição da imagem"
+                />
+              </div>
+            </>
+          )}
+
+          {selectedComponent.type === 'button' && (
+            <>
+              <div>
+                <Label>Texto do Botão</Label>
+                <Input
+                  value={selectedComponent.data.text || ''}
+                  onChange={(e) => handleUpdateComponent(selectedComponent.id, {
+                    data: { ...selectedComponent.data, text: e.target.value }
+                  })}
+                  placeholder="Clique aqui"
+                />
+              </div>
+              <div>
+                <Label>Link</Label>
+                <Input
+                  value={selectedComponent.data.href || ''}
+                  onChange={(e) => handleUpdateComponent(selectedComponent.id, {
+                    data: { ...selectedComponent.data, href: e.target.value }
+                  })}
+                  placeholder="https://exemplo.com"
+                />
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const renderComponentList = () => {
+    const componentTypes: { type: ComponentType; label: string; icon: React.ReactNode }[] = [
+      { type: 'title', label: 'Título', icon: <Plus className="w-4 h-4" /> },
+      { type: 'text', label: 'Texto', icon: <Plus className="w-4 h-4" /> },
+      { type: 'image', label: 'Imagem', icon: <Plus className="w-4 h-4" /> },
+      { type: 'button', label: 'Botão', icon: <Plus className="w-4 h-4" /> },
+      { type: 'spacer', label: 'Espaçador', icon: <Plus className="w-4 h-4" /> },
+      { type: 'progress', label: 'Progresso', icon: <Plus className="w-4 h-4" /> },
+    ];
+
+    return (
+      <div className="p-4 space-y-2">
+        <h3 className="text-lg font-medium mb-4">Componentes</h3>
+        {componentTypes.map((comp) => (
+          <Button
+            key={comp.type}
+            variant="outline"
+            className="w-full justify-start"
+            onClick={() => handleAddComponent(comp.type)}
+          >
+            {comp.icon}
+            <span className="ml-2">{comp.label}</span>
+          </Button>
+        ))}
+      </div>
+    );
+  };
+
+  const renderCanvas = () => {
+    return (
+      <div className="flex-1 p-4 bg-gray-50">
+        <div className={`mx-auto bg-white rounded-lg shadow-sm ${
+          deviceView === 'mobile' ? 'max-w-sm' :
+          deviceView === 'tablet' ? 'max-w-md' : 'max-w-4xl'
+        }`}>
+          <div className="p-6 space-y-4">
+            {components.map((component) => (
+              <div
+                key={component.id}
+                className={`p-3 border rounded cursor-pointer transition-colors ${
+                  selectedComponentId === component.id
+                    ? 'border-blue-500 bg-blue-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+                onClick={() => setSelectedComponentId(component.id)}
+              >
+                <div className="text-xs text-gray-500 mb-1">{component.type}</div>
+                
+                {component.type === 'text' && (
+                  <p>{component.data.text || 'Texto vazio'}</p>
+                )}
+                
+                {component.type === 'title' && (
+                  <h2 className="text-xl font-bold">{component.data.text || 'Título'}</h2>
+                )}
+                
+                {component.type === 'image' && (
+                  <div className="bg-gray-100 h-32 flex items-center justify-center rounded">
+                    {component.data.src ? (
+                      <img src={component.data.src} alt={component.data.alt} className="max-h-full" />
+                    ) : (
+                      <span className="text-gray-400">Imagem</span>
+                    )}
+                  </div>
+                )}
+                
+                {component.type === 'button' && (
+                  <Button className="w-full">
+                    {component.data.text || 'Botão'}
+                  </Button>
+                )}
+                
+                {component.type === 'spacer' && (
+                  <div className="bg-gray-100 h-8 flex items-center justify-center rounded border-dashed border-2">
+                    <span className="text-xs text-gray-400">Espaçador</span>
+                  </div>
+                )}
+                
+                {component.type === 'progress' && (
+                  <Progress value={component.data.progressValue || 50} className="w-full" />
+                )}
+              </div>
+            ))}
+            
+            {components.length === 0 && (
+              <div className="text-center py-12 text-gray-500">
+                <p>Nenhum componente adicionado</p>
+                <p className="text-sm">Adicione componentes da barra lateral</p>
               </div>
             )}
-          </TabsContent>
-          
-          <TabsContent value="config" className="flex-1 p-4">
-            <ConfigPanel
-              config={quizConfig}
-              onUpdateConfig={handleUpdateConfig}
-              onUpdateConfigSection={handleUpdateConfigSection}
-            />
-          </TabsContent>
-          
-          <TabsContent value="versions" className="flex-1 p-4">
-            <VersioningPanel
-              versions={versions}
-              currentVersionId={currentVersion}
-              onLoadVersion={handleLoadVersion}
-              onDeleteVersion={handleDeleteVersion}
-              onClearHistory={clearHistory}
-              isLoading={isLoading}
-            />
-          </TabsContent>
-        </Tabs>
+          </div>
+        </div>
       </div>
+    );
+  };
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Toolbar */}
-        <div className="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4">
-          <div className="flex items-center gap-2">
-            <Button
-              variant="default"
-              size="sm"
-              onClick={handleSave}
-              disabled={isLoading}
-            >
-              <Save className="w-4 h-4 mr-2" />
-              {isLoading ? 'Saving...' : 'Save'}
-            </Button>
+  return (
+    <div className="h-screen flex flex-col bg-white">
+      {/* Header */}
+      <div className="border-b border-gray-200 p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <h1 className="text-xl font-semibold">Editor de Quiz</h1>
+            <Badge variant="outline">
+              {funnel?.name || 'Novo Funil'}
+            </Badge>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center space-x-2">
             <Button
               variant="outline"
               size="sm"
-              onClick={handlePreview}
+              onClick={() => setDeviceView('mobile')}
+              className={deviceView === 'mobile' ? 'bg-blue-50' : ''}
             >
-              {isPreviewing ? (
-                <>
-                  <EyeOff className="w-4 h-4 mr-2" />
-                  Edit
-                </>
-              ) : (
-                <>
-                  <Eye className="w-4 h-4 mr-2" />
-                  Preview
-                </>
-              )}
+              📱
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setDeviceView('tablet')}
+              className={deviceView === 'tablet' ? 'bg-blue-50' : ''}
+            >
+              📱
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setDeviceView('desktop')}
+              className={deviceView === 'desktop' ? 'bg-blue-50' : ''}
+            >
+              💻
             </Button>
             
-            <Badge variant={isPreviewing ? "default" : "secondary"}>
-              {isPreviewing ? "Preview" : "Edit"}
-            </Badge>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsPreviewMode(!isPreviewMode)}
+            >
+              {isPreviewMode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </Button>
+            
+            <Button onClick={handlePreview} size="sm">
+              <Play className="w-4 h-4 mr-2" />
+              Preview
+            </Button>
+            
+            <Button onClick={handleSave} size="sm">
+              <Save className="w-4 h-4 mr-2" />
+              Salvar
+            </Button>
           </div>
         </div>
-        
-        {/* Canvas */}
-        <div className="flex-1 overflow-auto">
-          <div className="max-w-4xl mx-auto p-8">
-            {components.length === 0 ? (
-              <div className="text-center py-16 text-gray-500">
-                <p>No components added yet.</p>
-                <p className="text-sm">Use the sidebar to add components to your quiz.</p>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex">
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as any)} className="flex-1 flex">
+          <div className="w-64 border-r border-gray-200 bg-gray-50">
+            <TabsList className="grid w-full grid-cols-1 h-auto p-2">
+              <TabsTrigger value="editor" className="justify-start">
+                <Layers className="w-4 h-4 mr-2" />
+                Editor
+              </TabsTrigger>
+              <TabsTrigger value="funis" className="justify-start">
+                <Copy className="w-4 h-4 mr-2" />
+                Funis
+              </TabsTrigger>
+              <TabsTrigger value="historico" className="justify-start">
+                <Clock className="w-4 h-4 mr-2" />
+                Histórico
+              </TabsTrigger>
+              <TabsTrigger value="config" className="justify-start">
+                <Settings className="w-4 h-4 mr-2" />
+                Config
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="editor" className="mt-0">
+              {renderComponentList()}
+            </TabsContent>
+
+            <TabsContent value="funis" className="mt-0 p-4">
+              <div className="space-y-2">
+                <Button
+                  variant="outline"
+                  className="w-full justify-start"
+                  onClick={createNewFunnel}
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Novo Funil
+                </Button>
+                {/* Lista de funis seria renderizada aqui */}
               </div>
-            ) : (
-              <div className="space-y-4">
-                {components.map((component) => (
+            </TabsContent>
+
+            <TabsContent value="historico" className="mt-0 p-4">
+              <div className="space-y-2">
+                <h4 className="font-medium">Versões</h4>
+                {versions.map((version) => (
                   <div
-                    key={component.id}
-                    className={`border rounded-lg p-4 ${
-                      selectedComponentId === component.id
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200'
-                    }`}
-                    onClick={() => setSelectedComponentId(component.id)}
+                    key={version.id}
+                    className="p-2 border rounded text-sm cursor-pointer hover:bg-gray-50"
+                    onClick={() => loadVersion(version.id)}
                   >
-                    <div className="text-sm text-gray-500 mb-2">{component.type}</div>
-                    <div className="space-y-2">
-                      {component.data.text && (
-                        <div className="text-sm">{component.data.text}</div>
-                      )}
-                      {component.data.title && (
-                        <div className="text-lg font-semibold">{component.data.title}</div>
-                      )}
-                      {component.data.src && (
-                        <img 
-                          src={component.data.src} 
-                          alt={component.data.alt || 'Component image'} 
-                          className="max-w-full h-auto"
-                        />
-                      )}
+                    <div className="font-medium">v{version.version}</div>
+                    <div className="text-gray-500 text-xs">
+                      {new Date(version.createdAt).toLocaleString()}
                     </div>
                   </div>
                 ))}
               </div>
-            )}
+            </TabsContent>
+
+            <TabsContent value="config" className="mt-0 p-4">
+              <div className="space-y-4">
+                <div>
+                  <Label>Nome do Funil</Label>
+                  <Input
+                    value={funnel?.name || ''}
+                    onChange={(e) => {
+                      // Update funnel name logic here
+                    }}
+                    placeholder="Nome do funil"
+                  />
+                </div>
+                <div>
+                  <Label>Descrição</Label>
+                  <Input
+                    value={funnel?.description || ''}
+                    onChange={(e) => {
+                      // Update funnel description logic here
+                    }}
+                    placeholder="Descrição do funil"
+                  />
+                </div>
+              </div>
+            </TabsContent>
           </div>
-        </div>
+
+          <div className="flex-1 flex">
+            {renderCanvas()}
+            
+            {/* Properties Panel */}
+            <div className="w-80 border-l border-gray-200 bg-white">
+              {renderComponentEditor()}
+            </div>
+          </div>
+        </Tabs>
       </div>
     </div>
   );
 };
-
-// Helper function to get default data for component types
-function getDefaultDataForType(type: SimpleComponent['type']) {
-  switch (type) {
-    case 'title':
-      return { text: 'New Title', fontSize: '24px', fontWeight: 'bold' };
-    case 'text':
-      return { text: 'New text content' };
-    case 'image':
-      return { src: '', alt: 'Image', width: 300, height: 200 };
-    case 'button':
-      return { text: 'Click me', variant: 'default' };
-    case 'input':
-      return { type: 'text', placeholder: 'Enter text...', label: 'Input' };
-    case 'options':
-      return { 
-        options: [
-          { id: '1', text: 'Option 1', value: 'option1' },
-          { id: '2', text: 'Option 2', value: 'option2' }
-        ],
-        multiSelect: false
-      };
-    case 'spacer':
-      return { height: '20px' };
-    case 'video':
-      return { videoUrl: '', width: 560, height: 315 };
-    default:
-      return {};
-  }
-}
 
 export default ModularQuizEditor;

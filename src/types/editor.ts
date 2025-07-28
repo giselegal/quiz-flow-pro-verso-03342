@@ -1,4 +1,3 @@
-
 export interface Block {
   id: string;
   type: string;
@@ -35,7 +34,22 @@ export type BlockType =
   | 'hero-section'
   | 'bonus-carousel'
   | 'style-result'
-  | 'secondary-styles';
+  | 'secondary-styles'
+  | 'input'
+  | 'progress'
+  | 'title'
+  | 'subtitle'
+  | 'paragraph'
+  | 'email'
+  | 'phone'
+  | 'options'
+  | 'logo'
+  | 'testimonial'
+  | 'price'
+  | 'countdown'
+  | 'bonus'
+  | 'faq'
+  | 'social-proof';
 
 export interface EditableContent {
   title?: string;

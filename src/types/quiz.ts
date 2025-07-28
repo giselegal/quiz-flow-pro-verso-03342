@@ -1,4 +1,3 @@
-
 export interface Quiz {
   id: string;
   created_at?: string;
@@ -83,7 +82,6 @@ export interface ResultPageConfig {
   };
 }
 
-// Add missing types for editor components
 export interface QuizConfig {
   title?: string;
   description?: string;
