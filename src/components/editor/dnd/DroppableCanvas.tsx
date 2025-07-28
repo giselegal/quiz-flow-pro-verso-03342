@@ -149,7 +149,9 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
             <div className="flex items-center space-x-2">
               <div className="w-6 h-6 bg-gradient-to-br from-[#B89B7A]/20 to-[#aa6b5d]/20 rounded-lg flex items-center justify-center">
                 {definition?.icon ? (
-                  <definition.icon className="w-3 h-3 text-[#B89B7A]" />
+                  <span className="text-[#B89B7A] text-xs">
+                    {definition.icon}
+                  </span>
                 ) : (
                   <span className="text-[#B89B7A] text-xs font-bold">
                     {index + 1}
@@ -159,7 +161,7 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
               
               <div>
                 <Text strong className="text-[#432818] text-sm">
-                  {definition?.label || block.type}
+                  {definition?.name || block.type}
                 </Text>
                 {isHidden && (
                   <Badge variant="secondary" className="ml-2">
@@ -295,11 +297,11 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
               <div className="flex items-center justify-center py-4">
                 <Button
                   variant="ghost"
-                  size="small"
-                  icon={<PlusOutlined />}
+                  size="sm"
                   onClick={() => onAddBlock('QuizQuestionBlock')}
                   className="text-[#B89B7A] hover:text-[#432818]"
                 >
+                  <PlusOutlined className="mr-2 h-4 w-4" />
                   Adicionar Novo Bloco
                 </Button>
               </div>
