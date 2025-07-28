@@ -162,16 +162,21 @@ export const CraftToolbox: React.FC = () => {
       <h3 className="text-sm font-medium text-gray-700 mb-3">{title}</h3>
       <div className="space-y-2">
         {blocks.map((block, index) => (
-          <Button
+          <div
             key={index}
-            ref={(ref) => connectors.create(ref, <Element is={block.type} {...block.props} />)}
-            variant="ghost"
-            size="sm"
-            className="w-full justify-start h-10"
+            ref={(ref: HTMLDivElement) => 
+              ref && connectors.create(ref, <Element is={block.type} {...block.props} />)
+            }
           >
-            {block.icon}
-            <span className="ml-2">{block.label}</span>
-          </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start h-10 cursor-move"
+            >
+              {block.icon}
+              <span className="ml-2">{block.label}</span>
+            </Button>
+          </div>
         ))}
       </div>
     </div>

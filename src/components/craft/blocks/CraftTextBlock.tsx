@@ -27,13 +27,16 @@ export const CraftTextBlock: React.FC<CraftTextBlockProps> = ({
 
   return (
     <div
-      ref={(ref) => connect(drag(ref))}
+      ref={(ref) => ref && connect(drag(ref))}
       className="relative group"
     >
       <p
         contentEditable
         suppressContentEditableWarning
-        onBlur={(e) => setProp((props: CraftTextBlockProps) => props.text = e.target.innerText)}
+        onBlur={(e) => {
+          const target = e.target as HTMLElement;
+          setProp((props: CraftTextBlockProps) => props.text = target.innerText);
+        }}
         style={{
           fontSize: `${fontSize}px`,
           fontWeight,
@@ -140,7 +143,7 @@ const CraftTextBlockSettings = () => {
   );
 };
 
-CraftTextBlock.craft = {
+(CraftTextBlock as any).craft = {
   displayName: 'Texto',
   props: {
     text: 'Texto de exemplo',

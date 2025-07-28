@@ -40,7 +40,7 @@ export const CraftHeadingBlock: React.FC<CraftHeadingBlockProps> = ({
 
   return (
     <div
-      ref={(ref) => connect(drag(ref))}
+      ref={(ref) => ref && connect(drag(ref))}
       className="relative group"
       style={{
         marginTop: `${marginTop}px`,
@@ -50,7 +50,10 @@ export const CraftHeadingBlock: React.FC<CraftHeadingBlockProps> = ({
       <HeadingTag
         contentEditable
         suppressContentEditableWarning
-        onBlur={(e) => setProp((props: CraftHeadingBlockProps) => props.text = e.target.innerText)}
+        onBlur={(e) => {
+          const target = e.target as HTMLElement;
+          setProp((props: CraftHeadingBlockProps) => props.text = target.innerText);
+        }}
         style={{
           fontSize: getFontSize(),
           fontWeight: 'bold',
@@ -157,7 +160,7 @@ const CraftHeadingBlockSettings = () => {
   );
 };
 
-CraftHeadingBlock.craft = {
+(CraftHeadingBlock as any).craft = {
   displayName: 'Cabeçalho',
   props: {
     text: 'Cabeçalho',

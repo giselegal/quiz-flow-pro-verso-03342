@@ -22,7 +22,7 @@ export const CraftContainer: React.FC<CraftContainerProps> = ({
 
   return (
     <div
-      ref={(ref) => connect(drag(ref))}
+      ref={(ref) => ref && connect(drag(ref))}
       className={cn('relative', className)}
       style={{
         padding: `${padding}px`,
@@ -35,7 +35,7 @@ export const CraftContainer: React.FC<CraftContainerProps> = ({
   );
 };
 
-CraftContainer.craft = {
+(CraftContainer as any).craft = {
   displayName: 'Container',
   props: {
     padding: 16,

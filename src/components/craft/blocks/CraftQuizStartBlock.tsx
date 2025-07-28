@@ -30,7 +30,7 @@ export const CraftQuizStartBlock: React.FC<CraftQuizStartBlockProps> = ({
 
   return (
     <div
-      ref={(ref) => connect(drag(ref))}
+      ref={(ref) => ref && connect(drag(ref))}
       className="relative group w-full"
       style={{ backgroundColor }}
     >
@@ -148,7 +148,7 @@ const CraftQuizStartBlockSettings = () => {
   );
 };
 
-CraftQuizStartBlock.craft = {
+(CraftQuizStartBlock as any).craft = {
   displayName: 'Início do Quiz',
   props: {
     title: 'Bem-vindo ao Quiz!',
