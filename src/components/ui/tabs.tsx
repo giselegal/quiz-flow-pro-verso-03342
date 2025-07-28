@@ -1,26 +1,10 @@
 
 import * as React from "react"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
+
 import { cn } from "@/lib/utils"
 
-interface TabsProps extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root> {
-  value?: string;
-  onValueChange?: (value: string) => void;
-}
-
-const Tabs = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Root>,
-  TabsProps
->(({ className, value, onValueChange, ...props }, ref) => (
-  <TabsPrimitive.Root
-    ref={ref}
-    className={cn("", className)}
-    value={value}
-    onValueChange={onValueChange}
-    {...props}
-  />
-))
-Tabs.displayName = TabsPrimitive.Root.displayName
+const Tabs = TabsPrimitive.Root
 
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,

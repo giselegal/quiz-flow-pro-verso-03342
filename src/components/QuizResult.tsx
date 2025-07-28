@@ -30,10 +30,10 @@ const QuizResult: React.FC<QuizResultProps> = ({
             </h2>
             <div className="bg-[#B89B7A]/10 p-4 rounded-lg">
               <h3 className="text-2xl font-bold text-[#B89B7A] mb-2">
-                {primaryStyleData.name}
+                {primaryStyleData?.name || primaryStyle}
               </h3>
               <p className="text-[#432818]">
-                {primaryStyleData.description}
+                {primaryStyleData?.description || 'Descrição não disponível'}
               </p>
             </div>
           </div>
@@ -49,10 +49,10 @@ const QuizResult: React.FC<QuizResultProps> = ({
                   return (
                     <div key={index} className="bg-[#f8f6f3] p-3 rounded-lg">
                       <h4 className="font-medium text-[#432818]">
-                        {styleData.name}
+                        {styleData?.name || style}
                       </h4>
                       <p className="text-sm text-[#8F7A6A]">
-                        {styleData.description}
+                        {styleData?.description || 'Descrição não disponível'}
                       </p>
                     </div>
                   );

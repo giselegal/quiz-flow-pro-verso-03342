@@ -8,10 +8,8 @@ import { StyleResult } from '@/types/quiz';
 import { ComponentsSidebar } from './sidebar/ComponentsSidebar';
 import { EditorToolbar } from './toolbar/EditorToolbar';
 import { PreviewPanel } from './preview/PreviewPanel';
-import { PropertiesPanel } from './properties/PropertiesPanel';
+import PropertiesPanel from './properties/PropertiesPanel';
 import { SEOOptimizer } from './seo/SEOOptimizer';
-import { usePermissions } from '@/hooks/usePermissions';
-import { useWorkflow } from '@/hooks/useWorkflow';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 
 interface EnhancedEditorProps {
@@ -30,44 +28,28 @@ const EnhancedEditor: React.FC<EnhancedEditorProps> = ({
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [data, setData] = useState<any>({});
 
-  // Ensure we have a valid StyleResult
-  const validPrimaryStyle: StyleResult = primaryStyle || {
-    category: 'Natural',
-    score: 0,
-    percentage: 100
-  };
-
-  const { hasPermission } = usePermissions();
-  const { state: workflowState, actions: workflowActions } = useWorkflow();
+  // Ensure we have a valid StyleResult (string)
+  const validPrimaryStyle: StyleResult = primaryStyle || 'natural';
 
   const handleSave = useCallback(() => {
-    if (hasPermission('editor', 'save')) {
-      setData((prev: any) => ({ ...prev, lastSaved: new Date() }));
-      onSave?.();
-    }
-  }, [hasPermission, onSave]);
+    setData((prev: any) => ({ ...prev, lastSaved: new Date() }));
+    onSave?.();
+  }, [onSave]);
 
   const handlePublish = useCallback(() => {
-    if (hasPermission('editor', 'publish')) {
-      workflowActions.publishFunnel();
-      onPublish?.();
-    }
-  }, [hasPermission, workflowActions, onPublish]);
+    onPublish?.();
+  }, [onPublish]);
 
   const handleComponentSelect = (componentId: string) => {
     setSelectedComponent(componentId);
   };
 
-  const canEdit = hasPermission('editor', 'edit');
-  const canPublish = hasPermission('editor', 'publish');
-
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-gray-50">
       <EditorToolbar
         onSave={handleSave}
-        onPublish={handlePublish}
-        canSave={canEdit}
-        canPublish={canPublish}
+        canSave={true}
+        canPublish={true}
         isPreviewMode={isPreviewMode}
         onTogglePreview={() => setIsPreviewMode(!isPreviewMode)}
       />

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import QuizIntro from './QuizIntro';
 import { QuizContent } from './quiz/QuizContent';
@@ -9,8 +8,6 @@ import { QuizDescubraSeuEstilo } from './QuizDescubraSeuEstilo';
 import { StyleResult, UserResponse } from '@/types/quiz';
 import { ALL_STYLES, styleResults } from '@/data/styleData';
 import { strategicQuestions } from '@/data/strategicQuestions';
-
-type StyleType = keyof typeof ALL_STYLES;
 
 export const QuizPage: React.FC = () => {
   const [userName, setUserName] = useState<string>('');
@@ -33,6 +30,56 @@ export const QuizPage: React.FC = () => {
       setUserName(savedName);
     }
   }, []);
+
+  const calculateAndShowResult = async () => {
+    const styleScores: Record<string, number> = {
+      elegante: 0,
+      romantico: 0,
+      criativo: 0,
+      dramatico: 0,
+      natural: 0,
+      sexy: 0,
+      classico: 0,
+      moderno: 0
+    };
+
+    Object.keys(answers).forEach(questionId => {
+      const questionAnswers = answers[questionId];
+      questionAnswers.forEach(answerId => {
+        if (styleScores[answerId] !== undefined) {
+          styleScores[answerId] += 1;
+        }
+      });
+    });
+
+    let calculatedPrimaryStyle: StyleResult | null = null;
+    let maxScore = 0;
+
+    Object.keys(styleScores).forEach(style => {
+      if (styleScores[style] > maxScore) {
+        maxScore = styleScores[style];
+        calculatedPrimaryStyle = style as StyleResult;
+      }
+    });
+
+    const calculatedSecondaryStyles: StyleResult[] = Object.keys(styleScores)
+      .filter(style => styleScores[style] > 0 && style !== calculatedPrimaryStyle)
+      .sort((a, b) => styleScores[b] - styleScores[a])
+      .slice(0, 2) as StyleResult[];
+
+    setPrimaryStyle(calculatedPrimaryStyle);
+    setSecondaryStyles(calculatedSecondaryStyles);
+
+    localStorage.setItem('quizResult', JSON.stringify({
+      primaryStyle: calculatedPrimaryStyle,
+      secondaryStyles: calculatedSecondaryStyles
+    }));
+
+    setTimeout(() => {
+      setShowingFinalTransition(false);
+      setShowingResult(true);
+    }, 3000);
+  };
 
   const handleAnswerSubmit = (response: UserResponse) => {
     setAnswers(prevAnswers => {
@@ -66,57 +113,6 @@ export const QuizPage: React.FC = () => {
         calculateAndShowResult();
       }
     }
-  };
-
-  const calculateAndShowResult = async () => {
-    const styleScores: Record<StyleResult, number> = {
-      elegante: 0,
-      romantico: 0,
-      criativo: 0,
-      dramatico: 0,
-      natural: 0,
-      sexy: 0,
-      classico: 0,
-      moderno: 0
-    };
-
-    Object.keys(answers).forEach(questionId => {
-      const questionAnswers = answers[questionId];
-      questionAnswers.forEach(answerId => {
-        const styleKey = answerId as StyleResult;
-        if (styleScores[styleKey] !== undefined) {
-          styleScores[styleKey] += 1;
-        }
-      });
-    });
-
-    let calculatedPrimaryStyle: StyleResult | null = null;
-    let maxScore = 0;
-
-    (Object.keys(styleScores) as StyleResult[]).forEach(style => {
-      if (styleScores[style] > maxScore) {
-        maxScore = styleScores[style];
-        calculatedPrimaryStyle = style;
-      }
-    });
-
-    const calculatedSecondaryStyles: StyleResult[] = (Object.keys(styleScores) as StyleResult[])
-      .filter(style => styleScores[style] > 0 && style !== calculatedPrimaryStyle)
-      .sort((a, b) => styleScores[b] - styleScores[a])
-      .slice(0, 2);
-
-    setPrimaryStyle(calculatedPrimaryStyle);
-    setSecondaryStyles(calculatedSecondaryStyles);
-
-    localStorage.setItem('quizResult', JSON.stringify({
-      primaryStyle: calculatedPrimaryStyle,
-      secondaryStyles: calculatedSecondaryStyles
-    }));
-
-    setTimeout(() => {
-      setShowingFinalTransition(false);
-      setShowingResult(true);
-    }, 3000);
   };
 
   const getStyleInfo = (style: StyleResult) => {

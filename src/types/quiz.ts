@@ -43,11 +43,8 @@ export interface UserResponse {
   answerIds: string[];
 }
 
-export interface StyleResult {
-  category: string;
-  score: number;
-  percentage: number;
-}
+// StyleResult is now a string type representing the style name
+export type StyleResult = string;
 
 export interface StyleData {
   name: string;
