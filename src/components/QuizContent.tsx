@@ -1,169 +1,81 @@
-
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/Button';
+import React from 'react';
+import { QuizQuestion } from './QuizQuestion';
+import { UserResponse } from '@/types/quiz';
 import { Progress } from '@/components/ui/Progress';
-import { Card } from '@/components/ui/Card';
-
-interface QuizOption {
-  id: string;
-  text: string;
-  styleCategory: string;
-  points: number;
-  keywords: string[];
-  image?: string;
-}
-
-interface QuizQuestion {
-  id: string;
-  question: string;
-  options: QuizOption[];
-  type: 'single' | 'multiple';
-  maxSelections?: number;
-}
+import { AnimatedWrapper } from './ui/animated-wrapper';
+import { strategicQuestions } from '@/data/strategicQuestions';
+import { StrategicQuestions } from './quiz/StrategicQuestions';
 
 interface QuizContentProps {
-  questions: QuizQuestion[];
-  onComplete: (answers: Record<string, string[]>) => void;
-  currentQuestion: number;
-  onNext: () => void;
-  onPrev: () => void;
-  answers: Record<string, string[]>;
-  onAnswer: (questionId: string, selectedOptions: string[]) => void;
+  user: any;
+  currentQuestionIndex: number;
+  totalQuestions: number;
+  showingStrategicQuestions: boolean;
+  currentStrategicQuestionIndex: number;
+  currentQuestion: any;
+  currentAnswers: string[];
+  handleAnswerSubmit: (response: UserResponse) => void;
 }
 
-const QuizContent: React.FC<QuizContentProps> = ({
-  questions,
-  onComplete,
+export const QuizContent: React.FC<QuizContentProps> = ({
+  user,
+  currentQuestionIndex,
+  totalQuestions,
+  showingStrategicQuestions,
+  currentStrategicQuestionIndex,
   currentQuestion,
-  onNext,
-  onPrev,
-  answers,
-  onAnswer
+  currentAnswers,
+  handleAnswerSubmit,
 }) => {
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  // Get user name from localStorage if not provided in props
+  const userName = user?.userName || localStorage.getItem('userName') || '';
   
-  const question = questions[currentQuestion];
-  const progress = ((currentQuestion + 1) / questions.length) * 100;
+  const totalNumberOfStrategicQuestions = strategicQuestions.length;
+
+  const progressValue = showingStrategicQuestions
+    ? Math.round(((totalQuestions + currentStrategicQuestionIndex + 1) / (totalQuestions + totalNumberOfStrategicQuestions)) * 100)
+    : Math.round(((currentQuestionIndex + 1) / totalQuestions) * 100);
+
+  const currentStep = showingStrategicQuestions
+    ? totalQuestions + currentStrategicQuestionIndex + 1
+    : currentQuestionIndex + 1;
   
-  const handleOptionSelect = (optionId: string) => {
-    if (question.type === 'single') {
-      setSelectedOptions([optionId]);
-      onAnswer(question.id, [optionId]);
-    } else {
-      const newSelection = selectedOptions.includes(optionId)
-        ? selectedOptions.filter(id => id !== optionId)
-        : [...selectedOptions, optionId];
-      
-      if (question.maxSelections && newSelection.length > question.maxSelections) {
-        return;
-      }
-      
-      setSelectedOptions(newSelection);
-      onAnswer(question.id, newSelection);
-    }
-  };
-
-  const handleNext = () => {
-    if (currentQuestion === questions.length - 1) {
-      onComplete(answers);
-    } else {
-      onNext();
-      setSelectedOptions([]);
-    }
-  };
-
-  const canProceed = selectedOptions.length > 0;
+  const totalSteps = showingStrategicQuestions
+    ? totalQuestions + totalNumberOfStrategicQuestions
+    : totalQuestions;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
-        {/* Header com progresso */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-sm text-gray-600">
-              Pergunta {currentQuestion + 1} de {questions.length}
-            </span>
-            <span className="text-sm text-gray-600">
-              {Math.round(progress)}% completo
-            </span>
-          </div>
-          <Progress 
-            percent={progress} 
-            showInfo={false}
-            strokeColor="#B89B7A"
-            className="h-2"
+    <>
+      <Progress 
+        percent={progressValue} 
+        className="w-full h-2 bg-[#B89B7A]/20 fixed top-0 left-0 z-50"
+        strokeColor="#B89B7A"
+        showInfo={false}
+      />
+      
+      <AnimatedWrapper show={true} className="flex justify-center items-center pt-4 pb-2 px-4 w-full">
+        <div className="text-sm text-[#1A1818]/60">
+          {currentStep} de {totalSteps}
+        </div>
+      </AnimatedWrapper>
+
+      <div className="container mx-auto px-4 py-8 w-full max-w-5xl">
+        {showingStrategicQuestions ? (
+          <StrategicQuestions
+            currentQuestionIndex={currentStrategicQuestionIndex}
+            answers={{}}
+            onAnswer={handleAnswerSubmit}
           />
-        </div>
-
-        {/* Pergunta */}
-        <Card className="mb-8">
-          <div className="p-6">
-            <h2 className="text-2xl font-playfair font-bold text-[#432818] mb-6 text-center">
-              {question.question}
-            </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {question.options.map((option) => (
-                <Card
-                  key={option.id}
-                  variant="component"
-                  className={`p-4 cursor-pointer transition-all duration-200 ${
-                    selectedOptions.includes(option.id)
-                      ? 'border-[#B89B7A] bg-[#B89B7A]/10'
-                      : 'hover:border-[#B89B7A]/50'
-                  }`}
-                  onClick={() => handleOptionSelect(option.id)}
-                >
-                  {option.image && (
-                    <img
-                      src={option.image}
-                      alt={option.text}
-                      className="w-full h-32 object-cover rounded-lg mb-3"
-                    />
-                  )}
-                  <p className="text-[#432818] font-medium text-center">
-                    {option.text}
-                  </p>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </Card>
-
-        {/* Navegação */}
-        <div className="flex justify-between items-center">
-          <Button
-            variant="secondary"
-            onClick={onPrev}
-            disabled={currentQuestion === 0}
-            className="px-6 py-3"
-          >
-            Anterior
-          </Button>
-          
-          <div className="text-center">
-            {question.type === 'multiple' && question.maxSelections && (
-              <p className="text-sm text-gray-600 mb-2">
-                Selecione até {question.maxSelections} opções
-              </p>
-            )}
-            <p className="text-sm text-gray-600">
-              {selectedOptions.length} selecionada(s)
-            </p>
-          </div>
-          
-          <Button
-            variant="primary"
-            onClick={handleNext}
-            disabled={!canProceed}
-            className="px-6 py-3 bg-[#B89B7A] hover:bg-[#A68B6A]"
-          >
-            {currentQuestion === questions.length - 1 ? 'Finalizar' : 'Próxima'}
-          </Button>
-        </div>
+        ) : (
+          <QuizQuestion
+            question={currentQuestion}
+            onAnswer={handleAnswerSubmit}
+            currentAnswers={currentAnswers || []}
+            showQuestionImage={true}
+            autoAdvance={true}
+          />
+        )}
       </div>
-    </div>
+    </>
   );
 };
-
-export default QuizContent;
