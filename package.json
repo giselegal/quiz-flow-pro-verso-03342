@@ -90,6 +90,8 @@
     "react-countdown-circle-timer": "^3.2.1",
     "react-countup": "^6.5.3",
     "react-day-picker": "^8.10.1",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.3.8",
     "react-hook-form": "^7.55.0",
