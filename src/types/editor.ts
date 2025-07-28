@@ -66,8 +66,8 @@ export interface EditableContent {
   level?: number;
   videoUrl?: string;
   autoplay?: boolean;
-  height?: string | number; // Allow both string and number
-  width?: string | number;   // Allow both string and number
+  height?: string | number;
+  width?: string | number;
   items?: string[];
   leftContent?: string;
   rightContent?: string;
@@ -82,16 +82,24 @@ export interface EditableContent {
 export interface PropertySchema {
   key: string;
   label: string;
-  type: 'text' | 'textarea' | 'number' | 'color' | 'select' | 'checkbox' | 'image' | 'array';
+  type: 'text' | 'textarea' | 'number' | 'color' | 'select' | 'checkbox' | 'image' | 'array' | 'range' | 'boolean' | 'url' | 'icon-select' | 'array-of-objects';
   defaultValue?: any;
   options?: Array<{ value: string; label: string }>;
   description?: string;
   required?: boolean;
+  placeholder?: string;
+  helpText?: string;
+  nestedPath?: string;
+  itemSchema?: PropertySchema[];
   validation?: {
     min?: number;
     max?: number;
+    step?: number;
     pattern?: string;
   };
+  min?: number;
+  max?: number;
+  step?: number;
 }
 
 export interface EditorConfig {

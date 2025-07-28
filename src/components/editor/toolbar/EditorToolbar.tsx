@@ -2,103 +2,99 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
-import { Save, Eye, EyeOff, Undo, Redo, Settings } from 'lucide-react';
+import { 
+  Save, 
+  Undo, 
+  Redo, 
+  Eye, 
+  EyeOff, 
+  Play,
+  Download,
+  Upload,
+  Settings
+} from 'lucide-react';
 
 export interface EditorToolbarProps {
   onSave: () => void;
-  canSave: boolean;
-  isPreviewing: boolean;
+  onUndo: () => void;
+  onRedo: () => void;
   onTogglePreview: () => void;
-  onUndo?: () => void;
-  onRedo?: () => void;
-  canUndo?: boolean;
-  canRedo?: boolean;
-  onSettings?: () => void;
+  onPreview?: () => void;
+  isPreviewing: boolean;
+  canUndo: boolean;
+  canRedo: boolean;
+  canSave: boolean;
 }
 
 export const EditorToolbar: React.FC<EditorToolbarProps> = ({
   onSave,
-  canSave,
-  isPreviewing,
-  onTogglePreview,
   onUndo,
   onRedo,
-  canUndo = false,
-  canRedo = false,
-  onSettings
+  onTogglePreview,
+  onPreview,
+  isPreviewing,
+  canUndo,
+  canRedo,
+  canSave
 }) => {
   return (
-    <div className="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4">
-      <div className="flex items-center gap-2">
-        <Button
-          variant="default"
-          size="sm"
-          onClick={onSave}
-          disabled={!canSave}
-        >
-          <Save className="w-4 h-4 mr-2" />
-          Save
-        </Button>
-        
-        <Separator orientation="vertical" className="h-6" />
-        
-        {onUndo && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onUndo}
-            disabled={!canUndo}
-          >
-            <Undo className="w-4 h-4" />
-          </Button>
-        )}
-        
-        {onRedo && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onRedo}
-            disabled={!canRedo}
-          >
-            <Redo className="w-4 h-4" />
-          </Button>
-        )}
-        
-        {onSettings && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onSettings}
-          >
-            <Settings className="w-4 h-4" />
-          </Button>
-        )}
-      </div>
+    <div className="flex items-center gap-2 p-3 border-b border-gray-200 bg-white">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={onUndo}
+        disabled={!canUndo}
+        className="h-8"
+      >
+        <Undo className="w-4 h-4" />
+      </Button>
       
-      <div className="flex items-center gap-2">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={onRedo}
+        disabled={!canRedo}
+        className="h-8"
+      >
+        <Redo className="w-4 h-4" />
+      </Button>
+      
+      <Separator orientation="vertical" className="h-6" />
+      
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={onTogglePreview}
+        className="h-8"
+      >
+        {isPreviewing ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+        {isPreviewing ? 'Editar' : 'Visualizar'}
+      </Button>
+      
+      {onPreview && (
         <Button
-          variant="outline"
+          variant="ghost"
           size="sm"
-          onClick={onTogglePreview}
+          onClick={onPreview}
+          className="h-8"
         >
-          {isPreviewing ? (
-            <>
-              <EyeOff className="w-4 h-4 mr-2" />
-              Edit
-            </>
-          ) : (
-            <>
-              <Eye className="w-4 h-4 mr-2" />
-              Preview
-            </>
-          )}
+          <Play className="w-4 h-4" />
+          Testar
         </Button>
-        
-        <Badge variant={isPreviewing ? "default" : "secondary"}>
-          {isPreviewing ? "Preview" : "Edit"}
-        </Badge>
-      </div>
+      )}
+      
+      <div className="flex-1" />
+      
+      <Button
+        variant="default"
+        size="sm"
+        onClick={onSave}
+        disabled={!canSave}
+        className="h-8"
+      >
+        <Save className="w-4 h-4 mr-2" />
+        Salvar
+      </Button>
     </div>
   );
 };
