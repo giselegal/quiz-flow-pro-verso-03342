@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { Block } from '@/types/editor';
-import { FunnelIntroStep } from '@/components/funnel-blocks/steps/FunnelIntroStep';
-import { NameCollectStep } from '@/components/funnel-blocks/steps/NameCollectStep';
-import { QuizIntroStep } from '@/components/funnel-blocks/steps/QuizIntroStep';
+import FunnelIntroStep from '@/components/funnel-blocks/steps/FunnelIntroStep';
+import NameCollectStep from '@/components/funnel-blocks/steps/NameCollectStep';
+import QuizIntroStep from '@/components/funnel-blocks/steps/QuizIntroStep';
 import { CountdownTimerProps, ResultCardProps, OfferCardProps } from '@/types/blocks';
 
 interface FunnelBlockRendererProps {
@@ -11,6 +11,7 @@ interface FunnelBlockRendererProps {
   isEditable?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
+  isSelected?: boolean;
   stepNumber?: number;
   totalSteps?: number;
 }
@@ -80,6 +81,7 @@ export const FunnelBlockRenderer: React.FC<FunnelBlockRendererProps> = ({
   isEditable = false,
   onEdit,
   onDelete,
+  isSelected = false,
   stepNumber = 1,
   totalSteps = 21
 }) => {
@@ -93,7 +95,8 @@ export const FunnelBlockRenderer: React.FC<FunnelBlockRendererProps> = ({
     onDelete,
     stepNumber,
     totalSteps,
-    data
+    data,
+    stepType: type
   };
 
   switch (type) {
@@ -101,7 +104,6 @@ export const FunnelBlockRenderer: React.FC<FunnelBlockRendererProps> = ({
       return (
         <FunnelIntroStep
           {...commonProps}
-          stepType="intro"
         />
       );
 
@@ -109,7 +111,6 @@ export const FunnelBlockRenderer: React.FC<FunnelBlockRendererProps> = ({
       return (
         <NameCollectStep
           {...commonProps}
-          stepType="name-collect"
         />
       );
 
@@ -117,7 +118,6 @@ export const FunnelBlockRenderer: React.FC<FunnelBlockRendererProps> = ({
       return (
         <QuizIntroStep
           {...commonProps}
-          stepType="quiz-intro"
         />
       );
 
@@ -125,7 +125,6 @@ export const FunnelBlockRenderer: React.FC<FunnelBlockRendererProps> = ({
       return (
         <QuestionMultipleStep
           {...commonProps}
-          stepType="question-multiple"
         />
       );
 
@@ -133,7 +132,6 @@ export const FunnelBlockRenderer: React.FC<FunnelBlockRendererProps> = ({
       return (
         <QuizTransitionStep
           {...commonProps}
-          stepType="quiz-transition"
         />
       );
 
@@ -141,7 +139,6 @@ export const FunnelBlockRenderer: React.FC<FunnelBlockRendererProps> = ({
       return (
         <ProcessingStep
           {...commonProps}
-          stepType="processing"
         />
       );
 
@@ -149,7 +146,6 @@ export const FunnelBlockRenderer: React.FC<FunnelBlockRendererProps> = ({
       return (
         <ResultIntroStep
           {...commonProps}
-          stepType="result-intro"
         />
       );
 
@@ -157,7 +153,6 @@ export const FunnelBlockRenderer: React.FC<FunnelBlockRendererProps> = ({
       return (
         <ResultDetailsStep
           {...commonProps}
-          stepType="result-details"
         />
       );
 
@@ -165,7 +160,6 @@ export const FunnelBlockRenderer: React.FC<FunnelBlockRendererProps> = ({
       return (
         <ResultGuideStep
           {...commonProps}
-          stepType="result-guide"
         />
       );
 
@@ -173,7 +167,6 @@ export const FunnelBlockRenderer: React.FC<FunnelBlockRendererProps> = ({
       return (
         <OfferTransitionStep
           {...commonProps}
-          stepType="offer-transition"
         />
       );
 
@@ -181,7 +174,6 @@ export const FunnelBlockRenderer: React.FC<FunnelBlockRendererProps> = ({
       return (
         <OfferPageStep
           {...commonProps}
-          stepType="offer-page"
         />
       );
 
