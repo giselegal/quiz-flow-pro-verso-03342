@@ -1,856 +1,544 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
-// Componentes UI
+import React, { useState, useCallback, useMemo } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { Toaster } from '@/components/ui/toaster';
-
-// Ícones
-import {
-  Save, Eye, Monitor, Tablet, Smartphone, Settings,
-  FileText, History, FolderOpen, ArrowLeft, Play,
-  Undo, Redo, Copy, Download, Upload, GripVertical
-} from 'lucide-react';
-
-// Componentes do Editor
-import ComponentList from './ComponentList';
-import PageEditorCanvas from './PageEditorCanvas';
-import PropertiesPanel from './panels/PropertiesPanel';
-import ConfigPanel from './panels/ConfigPanel';
-import FunnelManagementPanel from './panels/FunnelManagementPanel';
-import VersioningPanel from './panels/VersioningPanel';
-
-// Hooks
-import { useToast } from '@/hooks/use-toast';
+import { Badge } from '@/components/ui/badge';
+import { SimpleComponent, ComponentType, QuizConfig, QuizFunnel, Version } from '@/types/quiz';
+import { Plus, Save, Play, Settings, Layers, History, Eye, Code, Smartphone, Monitor, Download } from 'lucide-react';
 import { useFunnelManager } from '@/hooks/useFunnelManager';
 import { useVersionManager } from '@/hooks/useVersionManager';
+import { useComponentManager } from '@/hooks/useComponentManager';
+import { QuizOption } from '@/types/quiz';
 
-// Interfaces e dados
-import { QuizFunnel, QuizConfig, SimplePage, SimpleComponent } from '@/interfaces/quiz';
-import { ComponentType } from '@/interfaces/editor';
-import { COMPONENT_CATEGORIES } from '@/data/componentDefinitions';
+// Import panels
+import { PropertiesPanel } from './properties/PropertiesPanel';
+import { ConfigPanel } from './config/ConfigPanel';
+import { FunnelManagementPanel } from './panels/FunnelManagementPanel';
+import { VersioningPanel } from './panels/VersioningPanel';
 
-// Estilos
-import styles from '@/styles/editor/editor-modular.module.css';
+interface ModularQuizEditorProps {
+  initialFunnel?: QuizFunnel;
+  onSave?: (funnel: QuizFunnel) => void;
+  onPreview?: (funnel: QuizFunnel) => void;
+  onExport?: (funnel: QuizFunnel) => void;
+}
 
-// Estado inicial para o editor
-const initialEditorState = {
-  activeTab: 'editor',
-  deviceView: 'desktop',
-  selectedComponentId: null,
-  dragOverIndex: null,
-  currentPageIndex: 0,
-  isDragging: false,
-  isPreviewMode: false,
-  activeConfigSection: 'domain'
-};
+// Define interfaces for panel props
+interface PropertiesPanelProps {
+  selectedComponent: SimpleComponent;
+  onUpdateComponent: (componentId: string, newData: Partial<SimpleComponent>) => void;
+  onDeleteComponent: (componentId: string) => void;
+}
 
-const ModularQuizEditor: React.FC = () => {
-  // States
-  const [currentFunnel, setCurrentFunnel] = useState<QuizFunnel>({
-    id: 'default',
-    name: 'Quiz de Estilo Pessoal',
-    pages: [],
-    updatedAt: new Date().toISOString()
-  });
-  const [quizConfig, setQuizConfig] = useState<QuizConfig>({
-    domain: '',
-    seo: { title: '', description: '', keywords: '' },
-    pixel: { facebookPixelId: '', googleAnalyticsId: '' },
-    utm: { source: '', medium: '', campaign: '', content: '', term: '' },
-    scoring: {
-      normalQuestionPoints: 1,
-      strategicQuestionPoints: 2,
-      autoAdvanceNormal: false,
-      autoAdvanceStrategic: false,
-      normalSelectionLimit: 3,
-      strategicSelectionLimit: 1
-    },
-    results: {
-      showUserName: true,
-      showPrimaryStyle: true,
-      showSecondaryStyles: true,
-      showPercentages: true,
-      showStyleImages: true,
-      showStyleGuides: true
-    }
-  });
+interface ConfigPanelProps {
+  config: QuizConfig;
+  onUpdateConfig: (updates: Partial<QuizConfig>) => void;
+  onUpdateConfigSection: <K extends keyof QuizConfig>(section: K, updates: Partial<QuizConfig[K]>) => void;
+}
 
-  // Editor state
-  const [activeTab, setActiveTab] = useState<'editor' | 'funis' | 'historico' | 'config'>(initialEditorState.activeTab as any);
-  const [deviceView, setDeviceView] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
-  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(initialEditorState.selectedComponentId);
-  const [dragOverIndex, setDragOverIndex] = useState<number | null>(initialEditorState.dragOverIndex);
-  const [currentPageIndex, setCurrentPageIndex] = useState(initialEditorState.currentPageIndex);
-  const [isDragging, setIsDragging] = useState(initialEditorState.isDragging);
-  const [isPreviewMode, setIsPreviewMode] = useState(initialEditorState.isPreviewMode);
-  const [activeConfigSection, setActiveConfigSection] = useState(initialEditorState.activeConfigSection);
-  
-  // Funnel & Version Management
-  const { toast } = useToast();
-  const { saveFunnel, loadFunnel, deleteFunnel, createBackup, restoreBackup } = useFunnelManager();
-  const { 
-    versions, 
-    currentVersion, 
-    saveVersion, 
-    loadVersion, 
-    deleteVersion, 
-    clearHistory, 
-    getVersionHistory, 
-    getVersionMetadata 
-  } = useVersionManager();
-  const [funnels, setFunnels] = useState<QuizFunnel[]>([]);
-  const [versionMetadata, setVersionMetadata] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState({
-    funnels: false,
-    versions: false,
-    backup: false
-  });
+interface FunnelManagementPanelProps {
+  funnel: QuizFunnel;
+  onLoadFunnel: (funnelId: string) => Promise<void>;
+  onDeleteFunnel: (funnelId: string) => Promise<void>;
+  isLoading: boolean;
+}
 
-  // Derived state
-  const currentPage = currentFunnel.pages[currentPageIndex] || null;
-  const selectedComponent = currentPage?.components?.find(comp => comp.id === selectedComponentId) || null;
+interface VersioningPanelProps {
+  funnel: QuizFunnel;
+  onLoadVersion: (version: Version) => QuizFunnel | null;
+  onDeleteVersion: () => void;
+  onClearHistory: () => void;
+  isLoading: boolean;
+}
 
-  // Inicializar o editor com uma página vazia se necessário
-  useEffect(() => {
-    if (currentFunnel.pages.length === 0) {
-      setCurrentFunnel(prev => ({
-        ...prev,
-        pages: [{
-          id: `page-${Date.now()}`,
-          title: 'Página Inicial',
-          type: 'intro',
-          progress: 0,
-          showHeader: true,
-          showProgress: true,
-          components: []
-        }]
-      }));
-    }
-  }, []);
+export const ModularQuizEditor: React.FC<ModularQuizEditorProps> = ({
+  initialFunnel,
+  onSave,
+  onPreview,
+  onExport
+}) => {
+  const [activeTab, setActiveTab] = useState('design');
+  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [deviceView, setDeviceView] = useState<'desktop' | 'mobile'>('desktop');
 
-  // Carregar funnels e histórico de versões
-  useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(prev => ({ ...prev, funnels: true }));
-      try {
-        const savedFunnels = await loadFunnel();
-        if (savedFunnels && Array.isArray(savedFunnels)) {
-          setFunnels(savedFunnels);
-        }
-      } catch (error) {
-        console.error("Erro ao carregar funis:", error);
-        toast({
-          title: "Erro ao carregar funis",
-          description: "Não foi possível carregar seus funis salvos.",
-          variant: "destructive"
-        });
-      } finally {
-        setIsLoading(prev => ({ ...prev, funnels: false }));
-      }
+  // Use hooks
+  const funnelManager = useFunnelManager();
+  const { createFunnel, updateFunnel, getFunnelById, activeFunnelId } = funnelManager;
+  const componentManager = useComponentManager();
+  const versionManager = useVersionManager();
 
-      setIsLoading(prev => ({ ...prev, versions: true }));
-      try {
-        const versionHistory = await getVersionHistory();
-        const metadata = await getVersionMetadata();
-        if (versionHistory && Array.isArray(versionHistory)) {
-          // versions já vem do hook, não precisamos de setVersions
-        }
-        if (metadata) {
-          setVersionMetadata(metadata);
-        }
-      } catch (error) {
-        console.error("Erro ao carregar histórico:", error);
-      } finally {
-        setIsLoading(prev => ({ ...prev, versions: false }));
-      }
+  // Get current funnel
+  const currentFunnel = useMemo(() => {
+    return initialFunnel || (activeFunnelId ? getFunnelById(activeFunnelId) : null);
+  }, [initialFunnel, activeFunnelId, getFunnelById]);
+
+  // Get current page
+  const currentPage = currentFunnel?.pages?.[0];
+  const components = currentPage?.components || [];
+
+  // Get selected component
+  const selectedComponent = useMemo(() => {
+    return components.find(c => c.id === selectedComponentId) || null;
+  }, [components, selectedComponentId]);
+
+  // Component management
+  const handleAddComponent = useCallback((type: ComponentType) => {
+    if (!currentFunnel) return;
+
+    const newComponent: SimpleComponent = {
+      id: `comp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      type,
+      order: components.length,
+      style: {},
+      ...(type === 'text' && { text: 'New text component' }),
+      ...(type === 'image' && { src: '', alt: 'New image', width: 300, height: 200 }),
+      ...(type === 'button' && { text: 'Click me', href: '#' }),
+      ...(type === 'title' && { text: 'New title', level: 1 }),
+      ...(type === 'subtitle' && { text: 'New subtitle', level: 2 }),
+      ...(type === 'input' && { placeholder: 'Enter text...', required: false }),
+      ...(type === 'email' && { placeholder: 'Enter email...', required: true }),
+      ...(type === 'options' && { 
+        question: 'Select an option', 
+        options: [
+          { id: 'opt1', text: 'Option 1', value: 'option1' },
+          { id: 'opt2', text: 'Option 2', value: 'option2' }
+        ] as QuizOption[]
+      }),
+      ...(type === 'video' && { src: '', controls: true, autoplay: false }),
+      ...(type === 'progress' && { value: 50, max: 100 }),
+      ...(type === 'spacer' && { height: 20 }),
+      ...(type === 'faq' && { 
+        question: 'Frequently Asked Question?', 
+        answer: 'This is the answer to the question.' 
+      }),
+      ...(type === 'testimonial' && { 
+        text: 'This is a great testimonial!', 
+        author: 'John Doe',
+        role: 'Customer'
+      }),
+      ...(type === 'guarantee' && { 
+        title: '30-Day Money Back Guarantee',
+        description: 'If you\'re not satisfied, get your money back.'
+      }),
+      ...(type === 'bonus' && { 
+        title: 'Exclusive Bonus',
+        description: 'Get this amazing bonus with your purchase!'
+      }),
+      ...(type === 'social-proof' && { 
+        text: 'Join 10,000+ satisfied customers!'
+      }),
+      ...(type === 'pricing' && { 
+        price: '$99',
+        originalPrice: '$199',
+        period: 'one-time'
+      }),
+      ...(type === 'countdown' && { 
+        endDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+        text: 'Limited Time Offer!'
+      })
     };
 
-    loadData();
-  }, []);
-
-  // Manipulação de Componentes
-  const handleDragStart = useCallback((e: React.DragEvent, componentType: ComponentType) => {
-    e.dataTransfer.setData('componentType', JSON.stringify(componentType));
-    setIsDragging(true);
-  }, []);
-
-  const handleDragOver = useCallback((e: React.DragEvent, index: number) => {
-    e.preventDefault();
-    setDragOverIndex(index);
-  }, []);
-
-  const handleDrop = useCallback((e: React.DragEvent, index: number) => {
-    e.preventDefault();
-    const componentTypeData = e.dataTransfer.getData('componentType');
-    if (!componentTypeData || !currentPage) return;
-
-    try {
-      const componentType = JSON.parse(componentTypeData) as ComponentType;
-      
-      const newComponent: SimpleComponent = {
-        id: `${componentType.type}-${Date.now()}`,
-        type: componentType.type as any,
-        data: componentType.defaultData || {},
-        style: componentType.defaultData?.style || {}
-      };
-      
-      const newComponents = [...(currentPage.components || [])];
-      newComponents.splice(index, 0, newComponent);
-      
-      // Atualiza a página atual
-      const updatedPages = [...currentFunnel.pages];
-      updatedPages[currentPageIndex] = {
+    const updatedComponents = [...components, newComponent];
+    
+    updateFunnel(currentFunnel.id, {
+      pages: [{
         ...currentPage,
-        components: newComponents
-      };
-      
-      setCurrentFunnel(prev => ({
-        ...prev,
-        pages: updatedPages
-      }));
-      
-      // Seleciona o componente recém-adicionado
-      setSelectedComponentId(newComponent.id);
-      
-      // Notifica o usuário
-      toast({
-        title: "Componente adicionado",
-        description: `${componentType.name} foi adicionado à página.`,
-        variant: "default"
-      });
-      
-    } catch (error) {
-      console.error("Erro ao adicionar componente:", error);
-      toast({
-        title: "Erro",
-        description: "Não foi possível adicionar o componente.",
-        variant: "destructive"
-      });
-    } finally {
-      setDragOverIndex(null);
-      setIsDragging(false);
-    }
-  }, [currentFunnel, currentPage, currentPageIndex, toast]);
+        components: updatedComponents
+      }]
+    });
 
-  const updateComponent = useCallback((componentId: string, newData: Partial<SimpleComponent['data']>) => {
-    if (!currentPage) return;
-    
-    const updatedComponents = currentPage.components.map(comp => 
-      comp.id === componentId
-        ? { ...comp, ...newData }
-        : comp
+    setSelectedComponentId(newComponent.id);
+  }, [currentFunnel, currentPage, components, updateFunnel]);
+
+  const handleUpdateComponent = useCallback((componentId: string, updates: Partial<SimpleComponent>) => {
+    if (!currentFunnel) return;
+
+    const updatedComponents = components.map(c => 
+      c.id === componentId ? { ...c, ...updates } : c
     );
-    
-    const updatedPages = [...currentFunnel.pages];
-    updatedPages[currentPageIndex] = {
-      ...currentPage,
-      components: updatedComponents
-    };
-    
-    setCurrentFunnel(prev => ({
-      ...prev,
-      pages: updatedPages,
-      updatedAt: new Date().toISOString()
-    }));
-  }, [currentFunnel, currentPage, currentPageIndex]);
 
-  const deleteComponent = useCallback((componentId: string) => {
-    if (!currentPage) return;
-    
-    const updatedComponents = currentPage.components.filter(comp => comp.id !== componentId);
-    
-    const updatedPages = [...currentFunnel.pages];
-    updatedPages[currentPageIndex] = {
-      ...currentPage,
-      components: updatedComponents
-    };
-    
-    setCurrentFunnel(prev => ({
-      ...prev,
-      pages: updatedPages,
-      updatedAt: new Date().toISOString()
-    }));
-    
-    setSelectedComponentId(null);
-    
-    toast({
-      title: "Componente removido",
-      description: "O componente foi removido da página.",
-      variant: "default"
+    updateFunnel(currentFunnel.id, {
+      pages: [{
+        ...currentPage,
+        components: updatedComponents
+      }]
     });
-  }, [currentFunnel, currentPage, currentPageIndex, toast]);
+  }, [currentFunnel, currentPage, components, updateFunnel]);
 
-  const duplicateComponent = useCallback((componentId: string) => {
-    if (!currentPage) return;
+  const handleDeleteComponent = useCallback((componentId: string) => {
+    if (!currentFunnel) return;
+
+    const updatedComponents = components.filter(c => c.id !== componentId);
     
-    const componentToDuplicate = currentPage.components.find(comp => comp.id === componentId);
-    if (!componentToDuplicate) return;
-    
-    const duplicatedComponent = {
-      ...componentToDuplicate,
-      id: `${componentToDuplicate.type}-${Date.now()}`,
-    };
-    
-    const componentIndex = currentPage.components.findIndex(comp => comp.id === componentId);
-    
-    const updatedComponents = [...currentPage.components];
-    updatedComponents.splice(componentIndex + 1, 0, duplicatedComponent);
-    
-    const updatedPages = [...currentFunnel.pages];
-    updatedPages[currentPageIndex] = {
-      ...currentPage,
-      components: updatedComponents
-    };
-    
-    setCurrentFunnel(prev => ({
-      ...prev,
-      pages: updatedPages,
-      updatedAt: new Date().toISOString()
-    }));
-    
-    setSelectedComponentId(duplicatedComponent.id);
-    
-    toast({
-      title: "Componente duplicado",
-      description: "Uma cópia do componente foi criada.",
-      variant: "default"
+    updateFunnel(currentFunnel.id, {
+      pages: [{
+        ...currentPage,
+        components: updatedComponents
+      }]
     });
-  }, [currentFunnel, currentPage, currentPageIndex, toast]);
 
-  // Funções de Gerenciamento de Páginas
-  const addNewPage = useCallback(() => {
-    const newPage: SimplePage = {
-      id: `page-${Date.now()}`,
-      title: `Página ${currentFunnel.pages.length + 1}`,
-      type: 'content',
-      progress: Math.min(Math.ceil((currentFunnel.pages.length + 1) / Math.max(currentFunnel.pages.length + 1, 10) * 100), 100),
-      showHeader: true,
-      showProgress: true,
-      components: []
-    };
-    
-    setCurrentFunnel(prev => ({
-      ...prev,
-      pages: [...prev.pages, newPage],
-      updatedAt: new Date().toISOString()
-    }));
-    
-    setCurrentPageIndex(currentFunnel.pages.length);
-    setSelectedComponentId(null);
-    
-    toast({
-      title: "Página adicionada",
-      description: "Uma nova página foi adicionada ao funil.",
-      variant: "default"
-    });
-  }, [currentFunnel, toast]);
-
-  const updateCurrentPage = useCallback((updates: Partial<SimplePage>) => {
-    if (!currentPage) return;
-    
-    const updatedPages = [...currentFunnel.pages];
-    updatedPages[currentPageIndex] = {
-      ...currentPage,
-      ...updates
-    };
-    
-    setCurrentFunnel(prev => ({
-      ...prev,
-      pages: updatedPages,
-      updatedAt: new Date().toISOString()
-    }));
-  }, [currentFunnel, currentPage, currentPageIndex]);
-
-  const deletePage = useCallback(() => {
-    if (currentFunnel.pages.length <= 1) {
-      toast({
-        title: "Não é possível excluir",
-        description: "Você precisa ter pelo menos uma página no funil.",
-        variant: "destructive"
-      });
-      return;
+    if (selectedComponentId === componentId) {
+      setSelectedComponentId(null);
     }
-    
-    const updatedPages = currentFunnel.pages.filter((_, index) => index !== currentPageIndex);
-    
-    setCurrentFunnel(prev => ({
-      ...prev,
-      pages: updatedPages,
-      updatedAt: new Date().toISOString()
-    }));
-    
-    setCurrentPageIndex(Math.max(0, currentPageIndex - 1));
-    setSelectedComponentId(null);
-    
-    toast({
-      title: "Página removida",
-      description: "A página foi removida do funil.",
-      variant: "default"
-    });
-  }, [currentFunnel, currentPageIndex, toast]);
+  }, [currentFunnel, currentPage, components, updateFunnel, selectedComponentId]);
 
-  // Funções de Gerenciamento de Funil
-  const handleCreateBackup = useCallback(async () => {
-    setIsLoading(prev => ({ ...prev, backup: true }));
-    try {
-      await createBackup(currentFunnel);
-      toast({
-        title: "Backup criado",
-        description: "Um backup do funil atual foi criado com sucesso.",
-        variant: "default"
-      });
-    } catch (error) {
-      console.error("Erro ao criar backup:", error);
-      toast({
-        title: "Erro",
-        description: "Não foi possível criar o backup do funil.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(prev => ({ ...prev, backup: false }));
+  const handleSave = useCallback(() => {
+    if (currentFunnel && onSave) {
+      onSave(currentFunnel);
     }
-  }, [currentFunnel, createBackup, toast]);
+  }, [currentFunnel, onSave]);
 
-  const handleRestoreBackup = useCallback(async () => {
-    setIsLoading(prev => ({ ...prev, backup: true }));
-    try {
-      const restored = await restoreBackup();
-      if (restored) {
-        setCurrentFunnel(restored);
-        setCurrentPageIndex(0);
-        setSelectedComponentId(null);
-        toast({
-          title: "Backup restaurado",
-          description: "O funil foi restaurado com sucesso.",
-          variant: "default"
-        });
-      }
-    } catch (error) {
-      console.error("Erro ao restaurar backup:", error);
-      toast({
-        title: "Erro",
-        description: "Não foi possível restaurar o backup do funil.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(prev => ({ ...prev, backup: false }));
+  const handlePreview = useCallback(() => {
+    if (currentFunnel && onPreview) {
+      onPreview(currentFunnel);
     }
-  }, [restoreBackup, toast]);
+  }, [currentFunnel, onPreview]);
 
-  const handleLoadFunnel = useCallback(async (funnelId: string) => {
-    setIsLoading(prev => ({ ...prev, funnels: true }));
-    try {
-      const funnel = await loadFunnel(funnelId);
-      if (funnel) {
-        setCurrentFunnel(funnel);
-        setCurrentPageIndex(0);
-        setSelectedComponentId(null);
-        toast({
-          title: "Funil carregado",
-          description: "O funil selecionado foi carregado com sucesso.",
-          variant: "default"
-        });
-      }
-    } catch (error) {
-      console.error("Erro ao carregar funil:", error);
-      toast({
-        title: "Erro",
-        description: "Não foi possível carregar o funil selecionado.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(prev => ({ ...prev, funnels: false }));
-    }
-  }, [loadFunnel, toast]);
+  if (!currentFunnel) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <p className="text-gray-500">No funnel selected</p>
+      </div>
+    );
+  }
 
-  const handleDeleteFunnel = useCallback(async (funnelId: string) => {
-    setIsLoading(prev => ({ ...prev, funnels: true }));
-    try {
-      await deleteFunnel(funnelId);
-      setFunnels(prev => prev.filter(f => f.id !== funnelId));
-      toast({
-        title: "Funil excluído",
-        description: "O funil selecionado foi excluído com sucesso.",
-        variant: "default"
-      });
-    } catch (error) {
-      console.error("Erro ao excluir funil:", error);
-      toast({
-        title: "Erro",
-        description: "Não foi possível excluir o funil selecionado.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(prev => ({ ...prev, funnels: false }));
-    }
-  }, [deleteFunnel, toast]);
-
-  // Funções de Configuração do Quiz
-  const updateQuizConfig = useCallback((updates: Partial<QuizConfig>) => {
-    setQuizConfig(prev => ({
-      ...prev,
-      ...updates
-    }));
-  }, []);
-
-  const updateConfig = useCallback(<K extends keyof QuizConfig>(
-    section: K,
-    updates: Partial<QuizConfig[K]>
-  ) => {
-    setQuizConfig(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        ...updates
-      }
-    }));
-  }, []);
-
-  const saveChanges = useCallback(async () => {
-    try {
-      await saveFunnel(currentFunnel);
-      await saveVersion(currentFunnel, "Auto-salvo");
-      
-      // Atualizar lista de funnels e versões após salvar
-      const savedFunnels = await loadFunnel();
-      const versionHistory = await getVersionHistory();
-      const metadata = await getVersionMetadata();
-      
-      if (savedFunnels && Array.isArray(savedFunnels)) {
-        setFunnels(savedFunnels);
-      }
-      
-      if (versionHistory && Array.isArray(versionHistory)) {
-        setVersions(versionHistory);
-      }
-      
-      if (metadata) {
-        setVersionMetadata(metadata);
-      }
-      
-      toast({
-        title: "Funil salvo",
-        description: "Todas as alterações foram salvas com sucesso.",
-        variant: "default"
-      });
-    } catch (error) {
-      console.error("Erro ao salvar funil:", error);
-      toast({
-        title: "Erro",
-        description: "Não foi possível salvar as alterações.",
-        variant: "destructive"
-      });
-    }
-  }, [currentFunnel, saveFunnel, saveVersion, loadFunnel, getVersionHistory, getVersionMetadata, toast]);
-
-  const openPreview = useCallback(() => {
-    // Implementar abertura de preview em nova aba
-    window.open(`/preview?funnel=${encodeURIComponent(JSON.stringify(currentFunnel))}`, '_blank');
-  }, [currentFunnel]);
-
-  // Render
   return (
-    <div className={styles.editorLayout}>
-      {/* Header do Editor */}
-      <header className={styles.editorHeader}>
-        <nav className={styles.editorHeaderNav}>
-          <div className={styles.editorHeaderGroup}>
-            <Button
-              variant="link"
-              size="icon"
-              className={styles.editorHeaderLinkButton}
-              onClick={() => window.history.back()}
-              title="Voltar"
-            >
-              <ArrowLeft className={styles.icon} />
-            </Button>
-            
-            <Button
-              variant="link"
-              size="icon"
-              className={styles.editorHeaderLinkButton}
-              disabled
-              title="Desfazer"
-            >
-              <Undo className={styles.icon} />
-            </Button>
-            
-            <Button
-              variant="link"
-              size="icon"
-              className={styles.editorHeaderLinkButton}
-              disabled
-              title="Refazer"
-            >
-              <Redo className={styles.icon} />
-            </Button>
-            
-            <Button
-              variant="link"
-              size="icon"
-              className={styles.editorHeaderLinkButton}
-              onClick={() => saveChanges()}
-              title="Salvar"
-            >
-              <Save className={styles.icon} />
-            </Button>
+    <DndProvider backend={HTML5Backend}>
+      <div className="flex h-screen bg-gray-50">
+        {/* Sidebar */}
+        <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+          <div className="p-4 border-b border-gray-200">
+            <h2 className="font-semibold text-lg">Quiz Editor</h2>
+            <p className="text-sm text-gray-600">{currentFunnel.name}</p>
           </div>
-          
-          <div className={styles.editorHeaderGroup}>
-            <Button
-              variant="link"
-              size="icon"
-              className={`${styles.editorHeaderLinkButton} ${deviceView === 'desktop' ? styles.active : ''}`}
-              onClick={() => setDeviceView('desktop')}
-              title="Visualização Desktop"
-            >
-              <Monitor className={styles.icon} />
-            </Button>
-            
-            <Button
-              variant="link"
-              size="icon"
-              className={`${styles.editorHeaderLinkButton} ${deviceView === 'tablet' ? styles.active : ''}`}
-              onClick={() => setDeviceView('tablet')}
-              title="Visualização Tablet"
-            >
-              <Tablet className={styles.icon} />
-            </Button>
-            
-            <Button
-              variant="link"
-              size="icon"
-              className={`${styles.editorHeaderLinkButton} ${deviceView === 'mobile' ? styles.active : ''}`}
-              onClick={() => setDeviceView('mobile')}
-              title="Visualização Mobile"
-            >
-              <Smartphone className={styles.icon} />
-            </Button>
-            
-            <Button
-              variant="link"
-              size="icon"
-              className={styles.editorHeaderLinkButton}
-              onClick={() => openPreview()}
-              title="Abrir Preview"
-            >
-              <Play className={styles.icon} />
-            </Button>
-          </div>
-          
-          <div className={styles.editorHeaderGroup}>
-            <Tabs
-              defaultValue="editor"
-              value={activeTab}
-              onValueChange={(value) => setActiveTab(value as any)}
-              className="flex h-10"
-            >
-              <TabsList className="bg-transparent p-0 gap-1">
-                <TabsTrigger
-                  value="editor"
-                  className={`h-8 px-3 text-xs ${activeTab === 'editor' ? 'bg-amber-50 text-amber-900' : 'bg-transparent text-gray-600'}`}
-                >
-                  Construtor
-                </TabsTrigger>
-                <TabsTrigger
-                  value="funis"
-                  className={`h-8 px-3 text-xs ${activeTab === 'funis' ? 'bg-amber-50 text-amber-900' : 'bg-transparent text-gray-600'}`}
-                >
-                  Funis
-                </TabsTrigger>
-                <TabsTrigger
-                  value="historico"
-                  className={`h-8 px-3 text-xs ${activeTab === 'historico' ? 'bg-amber-50 text-amber-900' : 'bg-transparent text-gray-600'}`}
-                >
-                  Histórico
-                </TabsTrigger>
-                <TabsTrigger
-                  value="config"
-                  className={`h-8 px-3 text-xs ${activeTab === 'config' ? 'bg-amber-50 text-amber-900' : 'bg-transparent text-gray-600'}`}
-                >
-                  Configurações
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </div>
-        </nav>
-      </header>
-      
-      {/* Coluna Esquerda - Etapas */}
-      <div className={styles.stepsSidebar}>
-        <div className={styles.stepsHeader}>
-          <h2 className="text-sm font-semibold">Páginas do Quiz</h2>
-          <p className="text-xs text-muted-foreground">
-            {currentPageIndex + 1} de {currentFunnel.pages.length}
-          </p>
-        </div>
-        
-        <ScrollArea className="flex-1">
-          <div className="py-2">
-            {currentFunnel.pages.map((page, index) => (
-              <button
-                key={page.id}
-                className={`${styles.stepButton} ${currentPageIndex === index ? styles.active : ''}`}
-                onClick={() => {
-                  setCurrentPageIndex(index);
-                  setSelectedComponentId(null);
-                }}
-              >
-                <GripVertical className={styles.gripIcon} />
-                <div className="ml-2 flex-1 overflow-hidden text-left">
-                  <div className="truncate">{page.title || `Página ${index + 1}`}</div>
-                  <div className="text-xs opacity-60">
-                    {page.components.length} componentes
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
-          
-          <div className="p-3 space-y-2">
-            <Button size="sm" className="w-full" onClick={addNewPage}>
-              Adicionar Página
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              className="w-full"
-              onClick={deletePage}
-              disabled={currentFunnel.pages.length <= 1}
-            >
-              Remover Página
-            </Button>
-          </div>
-          
-          <Separator className="my-4" />
-          
-          <div className="p-3">
-            <div className="text-xs font-semibold mb-2">Progresso: {currentPage?.progress || 0}%</div>
-            <div className="w-full bg-gray-100 rounded h-1">
-              <div
-                className="bg-gradient-to-r from-[#B89B7A] to-[#432818] h-1 rounded"
-                style={{ width: `${currentPage?.progress || 0}%` }}
-              />
-            </div>
-          </div>
-        </ScrollArea>
-      </div>
-      
-      {/* Coluna Meio-Esquerda - Componentes */}
-      <div className={styles.componentsSidebar}>
-        <div className={styles.componentsHeader}>
-          <h2 className="text-sm font-semibold">Componentes</h2>
-          <p className="text-xs text-muted-foreground">
-            Arraste para o canvas
-          </p>
-        </div>
-        
-        <ScrollArea className="flex-1">
-          <div className="p-3 space-y-4">
-            {Object.values(COMPONENT_CATEGORIES).map((category) => (
-              <div key={category.title} className="space-y-2">
-                <h3 className={`text-xs font-semibold`} style={{color: category.color === 'blue' ? '#1d4ed8' : category.color === 'green' ? '#15803d' : '#ea580c'}}>
-                  {category.title}
-                </h3>
-                <div className="grid grid-cols-1 gap-2">
-                  {category.components.map((compType) => {
-                    const Icon = compType.icon;
-                    return (
-                      <div
-                        key={compType.type}
-                        className={styles.componentItem}
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, compType)}
-                      >
-                        <Icon className={styles.icon} />
-                        <div className="font-medium text-xs">
-                          {compType.name}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
-        </ScrollArea>
-      </div>
-      
-      {/* Coluna Central - Canvas */}
-      <PageEditorCanvas
-        currentPage={currentPage}
-        deviceView={deviceView}
-        selectedComponent={selectedComponentId}
-        setSelectedComponent={setSelectedComponentId}
-        handleDragOver={handleDragOver}
-        handleDrop={handleDrop}
-        dragOverIndex={dragOverIndex}
-        deleteComponent={deleteComponent}
-        duplicateComponent={duplicateComponent}
-      />
-      
-      {/* Coluna Direita - Propriedades */}
-      <div className={styles.propertiesSidebar}>
-        <div className={styles.propertiesHeader}>
-          <h2 className="text-sm font-semibold">Propriedades</h2>
-        </div>
-        
-        <ScrollArea className="flex-1">
-          <div className="p-3">
-            <TabsContent value="editor" className="mt-0">
+
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="design">
+                <Plus className="w-4 h-4" />
+              </TabsTrigger>
+              <TabsTrigger value="properties">
+                <Settings className="w-4 h-4" />
+              </TabsTrigger>
+              <TabsTrigger value="config">
+                <Layers className="w-4 h-4" />
+              </TabsTrigger>
+              <TabsTrigger value="versions">
+                <History className="w-4 h-4" />
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="design" className="flex-1 p-4">
+              <ComponentLibrary onAddComponent={handleAddComponent} />
+            </TabsContent>
+
+            <TabsContent value="properties" className="flex-1 p-4">
               {selectedComponent ? (
                 <PropertiesPanel
                   selectedComponent={selectedComponent}
-                  updateComponent={updateComponent}
-                  deleteComponent={deleteComponent}
+                  onUpdateComponent={handleUpdateComponent}
+                  onDeleteComponent={handleDeleteComponent}
                 />
               ) : (
-                <div className="text-center text-muted-foreground mt-8">
-                  <Settings className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">
-                    Selecione um componente para editar suas propriedades
-                  </p>
-                </div>
+                <p className="text-gray-500 text-center">Select a component to edit its properties</p>
               )}
             </TabsContent>
-            
-            <TabsContent value="config" className="mt-0">
+
+            <TabsContent value="config" className="flex-1 p-4">
               <ConfigPanel
-                quizConfig={quizConfig}
-                updateQuizConfig={updateQuizConfig}
-                updateConfig={updateConfig}
+                config={currentFunnel.config}
+                onUpdateConfig={(updates) => updateFunnel(currentFunnel.id, { config: { ...currentFunnel.config, ...updates } })}
+                onUpdateConfigSection={(section, updates) => updateFunnel(currentFunnel.id, { 
+                  config: { 
+                    ...currentFunnel.config, 
+                    [section]: { ...currentFunnel.config[section], ...updates } 
+                  } 
+                })}
               />
             </TabsContent>
-            
-            <TabsContent value="funis" className="mt-0">
-              <FunnelManagementPanel
-                funnels={funnels}
-                currentFunnel={currentFunnel}
-                handleLoadFunnel={handleLoadFunnel}
-                handleDeleteFunnel={handleDeleteFunnel}
-                isLoading={isLoading.funnels}
-              />
-            </TabsContent>
-            
-            <TabsContent value="historico" className="mt-0">
+
+            <TabsContent value="versions" className="flex-1 p-4">
               <VersioningPanel
-                versions={versions}
-                currentVersionId={versionMetadata?.currentVersion}
-                loadVersion={(version) => loadVersion(version)}
-                deleteVersion={() => {}}  // Implementar função deleteVersion
-                clearHistory={clearHistory}
-                isLoading={isLoading.versions}
+                funnel={currentFunnel}
+                onLoadVersion={versionManager.loadVersion}
+                onDeleteVersion={versionManager.deleteVersion}
+                onClearHistory={versionManager.clearHistory}
+                isLoading={false}
               />
             </TabsContent>
+          </Tabs>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col">
+          {/* Toolbar */}
+          <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Button
+                variant={deviceView === 'desktop' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setDeviceView('desktop')}
+              >
+                <Monitor className="w-4 h-4" />
+              </Button>
+              <Button
+                variant={deviceView === 'mobile' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setDeviceView('mobile')}
+              >
+                <Smartphone className="w-4 h-4" />
+              </Button>
+              <Button
+                variant={isPreviewMode ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setIsPreviewMode(!isPreviewMode)}
+              >
+                <Eye className="w-4 h-4" />
+                {isPreviewMode ? 'Edit' : 'Preview'}
+              </Button>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Button variant="outline" size="sm" onClick={handlePreview}>
+                <Play className="w-4 h-4 mr-2" />
+                Test
+              </Button>
+              <Button variant="outline" size="sm" onClick={onExport}>
+                <Download className="w-4 h-4 mr-2" />
+                Export
+              </Button>
+              <Button size="sm" onClick={handleSave}>
+                <Save className="w-4 h-4 mr-2" />
+                Save
+              </Button>
+            </div>
           </div>
-        </ScrollArea>
+
+          {/* Canvas */}
+          <div className="flex-1 overflow-auto">
+            <div className={`mx-auto bg-white min-h-full ${
+              deviceView === 'mobile' ? 'max-w-sm' : 'max-w-4xl'
+            }`}>
+              <QuizCanvas
+                components={components}
+                selectedComponentId={selectedComponentId}
+                onSelectComponent={setSelectedComponentId}
+                onUpdateComponent={handleUpdateComponent}
+                onDeleteComponent={handleDeleteComponent}
+                isPreviewMode={isPreviewMode}
+                deviceView={deviceView}
+              />
+            </div>
+          </div>
+        </div>
       </div>
+    </DndProvider>
+  );
+};
+
+// Component Library
+const ComponentLibrary: React.FC<{ onAddComponent: (type: ComponentType) => void }> = ({ onAddComponent }) => {
+  const componentTypes: { type: ComponentType; label: string; category: string }[] = [
+    { type: 'title', label: 'Title', category: 'Text' },
+    { type: 'subtitle', label: 'Subtitle', category: 'Text' },
+    { type: 'text', label: 'Text', category: 'Text' },
+    { type: 'image', label: 'Image', category: 'Media' },
+    { type: 'video', label: 'Video', category: 'Media' },
+    { type: 'button', label: 'Button', category: 'Interactive' },
+    { type: 'input', label: 'Input', category: 'Interactive' },
+    { type: 'email', label: 'Email', category: 'Interactive' },
+    { type: 'options', label: 'Options', category: 'Interactive' },
+    { type: 'progress', label: 'Progress', category: 'Feedback' },
+    { type: 'spacer', label: 'Spacer', category: 'Layout' },
+    { type: 'faq', label: 'FAQ', category: 'Content' },
+    { type: 'testimonial', label: 'Testimonial', category: 'Social' },
+    { type: 'guarantee', label: 'Guarantee', category: 'Sales' },
+    { type: 'bonus', label: 'Bonus', category: 'Sales' },
+    { type: 'social-proof', label: 'Social Proof', category: 'Social' },
+    { type: 'pricing', label: 'Pricing', category: 'Sales' },
+    { type: 'countdown', label: 'Countdown', category: 'Urgency' }
+  ];
+
+  const categories = useMemo(() => {
+    return componentTypes.reduce((acc, comp) => {
+      if (!acc[comp.category]) {
+        acc[comp.category] = [];
+      }
+      acc[comp.category].push(comp);
+      return acc;
+    }, {} as Record<string, typeof componentTypes>);
+  }, []);
+
+  return (
+    <div className="space-y-4">
+      <h3 className="font-medium">Components</h3>
+      {Object.entries(categories).map(([category, components]) => (
+        <div key={category}>
+          <h4 className="text-sm font-medium text-gray-600 mb-2">{category}</h4>
+          <div className="grid grid-cols-2 gap-2">
+            {components.map(({ type, label }) => (
+              <Button
+                key={type}
+                variant="outline"
+                size="sm"
+                className="justify-start"
+                onClick={() => onAddComponent(type)}
+              >
+                {label}
+              </Button>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+// Quiz Canvas
+const QuizCanvas: React.FC<{
+  components: SimpleComponent[];
+  selectedComponentId: string | null;
+  onSelectComponent: (id: string) => void;
+  onUpdateComponent: (id: string, updates: Partial<SimpleComponent>) => void;
+  onDeleteComponent: (id: string) => void;
+  isPreviewMode: boolean;
+  deviceView: 'desktop' | 'mobile';
+}> = ({
+  components,
+  selectedComponentId,
+  onSelectComponent,
+  onUpdateComponent,
+  onDeleteComponent,
+  isPreviewMode,
+  deviceView
+}) => {
+  return (
+    <div className="p-8 space-y-4">
+      {components.map(component => (
+        <ComponentRenderer
+          key={component.id}
+          component={component}
+          isSelected={selectedComponentId === component.id}
+          onSelect={() => onSelectComponent(component.id)}
+          onUpdate={(updates) => onUpdateComponent(component.id, updates)}
+          onDelete={() => onDeleteComponent(component.id)}
+          isPreviewMode={isPreviewMode}
+          deviceView={deviceView}
+        />
+      ))}
       
-      <Toaster />
+      {components.length === 0 && (
+        <div className="text-center py-16 text-gray-500">
+          <p>No components added yet.</p>
+          <p className="text-sm">Use the sidebar to add components to your quiz.</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Component Renderer
+const ComponentRenderer: React.FC<{
+  component: SimpleComponent;
+  isSelected: boolean;
+  onSelect: () => void;
+  onUpdate: (updates: Partial<SimpleComponent>) => void;
+  onDelete: () => void;
+  isPreviewMode: boolean;
+  deviceView: 'desktop' | 'mobile';
+}> = ({ component, isSelected, onSelect, onUpdate, onDelete, isPreviewMode, deviceView }) => {
+  const renderComponent = () => {
+    switch (component.type) {
+      case 'title':
+        return (
+          <h1 className="text-2xl font-bold" style={component.style}>
+            {component.text || 'Title'}
+          </h1>
+        );
+      case 'subtitle':
+        return (
+          <h2 className="text-xl font-semibold" style={component.style}>
+            {component.text || 'Subtitle'}
+          </h2>
+        );
+      case 'text':
+        return (
+          <p className="text-base" style={component.style}>
+            {component.text || 'Text content'}
+          </p>
+        );
+      case 'image':
+        return (
+          <img
+            src={component.src || '/api/placeholder/300/200'}
+            alt={component.alt || 'Image'}
+            className="max-w-full h-auto"
+            style={component.style}
+          />
+        );
+      case 'button':
+        return (
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            style={component.style}
+          >
+            {component.text || 'Button'}
+          </button>
+        );
+      case 'input':
+        return (
+          <input
+            type="text"
+            placeholder={component.placeholder || 'Enter text...'}
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            style={component.style}
+          />
+        );
+      case 'spacer':
+        return (
+          <div
+            className="w-full bg-gray-100 border-dashed border-2 border-gray-300 flex items-center justify-center"
+            style={{ height: component.height || 20, ...component.style }}
+          >
+            <span className="text-gray-400 text-sm">Spacer ({component.height || 20}px)</span>
+          </div>
+        );
+      default:
+        return (
+          <div className="p-4 bg-gray-100 border border-gray-300 rounded">
+            <p className="text-gray-600">Component: {component.type}</p>
+          </div>
+        );
+    }
+  };
+
+  return (
+    <div
+      className={`relative group ${isSelected ? 'ring-2 ring-blue-500' : ''} ${
+        !isPreviewMode ? 'hover:ring-1 hover:ring-gray-300 cursor-pointer' : ''
+      }`}
+      onClick={!isPreviewMode ? onSelect : undefined}
+    >
+      {renderComponent()}
+      
+      {!isPreviewMode && (
+        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete();
+            }}
+          >
+            Delete
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
