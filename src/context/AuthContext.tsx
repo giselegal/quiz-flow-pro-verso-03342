@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface User {
   userName: string;
@@ -16,24 +16,17 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-
-  // Safe localStorage access with useEffect
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedName = localStorage.getItem('userName');
-      const savedEmail = localStorage.getItem('userEmail');
-      const savedRole = localStorage.getItem('userRole');
-      
-      if (savedName) {
-        setUser({ 
-          userName: savedName,
-          ...(savedEmail && { email: savedEmail }),
-          ...(savedRole && { role: savedRole })
-        });
-      }
-    }
-  }, []);
+  const [user, setUser] = useState<User | null>(() => {
+    const savedName = localStorage.getItem('userName');
+    const savedEmail = localStorage.getItem('userEmail');
+    const savedRole = localStorage.getItem('userRole');
+    
+    return savedName ? { 
+      userName: savedName,
+      ...(savedEmail && { email: savedEmail }),
+      ...(savedRole && { role: savedRole })
+    } : null;
+  });
 
   const login = (name: string, email?: string) => {
     const userData: User = { 
@@ -42,30 +35,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     
     if (email) {
       userData.email = email;
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('userEmail', email);
-      }
+      localStorage.setItem('userEmail', email);
     }
     
     // Preservar o status de admin caso exista
-    if (typeof window !== 'undefined') {
-      const savedRole = localStorage.getItem('userRole');
-      if (savedRole) {
-        userData.role = savedRole;
-      }
-      localStorage.setItem('userName', name);
+    const savedRole = localStorage.getItem('userRole');
+    if (savedRole) {
+      userData.role = savedRole;
     }
     
     setUser(userData);
+    localStorage.setItem('userName', name);
   };
 
   const logout = () => {
     setUser(null);
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('userName');
-      localStorage.removeItem('userEmail');
-      localStorage.removeItem('userRole');
-    }
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userRole');
   };
 
   return (

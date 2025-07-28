@@ -1,4 +1,3 @@
-
 /**
  * Exports dos Blocos do Editor - Apenas Componentes Funcionais
  * 
@@ -52,9 +51,6 @@ export { default as ValueAnchoringBlock } from './ValueAnchoringBlock';
 
 // Renderizador universal (principal)
 export { UniversalBlockRenderer } from './UniversalBlockRenderer';
-
-// Block Renderer (alias for UniversalBlockRenderer)
-export { UniversalBlockRenderer as BlockRenderer } from './UniversalBlockRenderer';
 
 // Tipos relacionados aos blocos
 export type { BlockRendererProps } from './UniversalBlockRenderer';

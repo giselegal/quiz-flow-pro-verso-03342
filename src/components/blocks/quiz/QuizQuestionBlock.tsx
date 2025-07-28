@@ -1,138 +1,335 @@
+import React, { useState, useEffect } from 'react';
+import { Button } from '../../ui/button';
+import { ArrowLeft } from 'lucide-react';
+import { useEditorQuizContext } from '../../../contexts/EditorQuizContext';
 
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import type { BlockComponentProps } from '@/types/blocks';
+/**
+ * QuizQuestionBlock - Componente de pergunta de quiz 100% reutilizável e editável
+ * 
+ * Props editáveis via editor visual:
+ * - question: string - Texto da pergunta
+ * - description?: string - Descrição opcional
+ * - options: QuestionOption[] - Array de opções
+ * - multipleSelection?: boolean - Permite múltipla seleção
+ * - maxSelections?: number - Máximo de seleções (quando múltipla)
+ * - required?: boolean - Campo obrigatório
+ * - alignment?: 'left' | 'center' | 'right' - Alinhamento
+ * - optionLayout?: 'vertical' | 'horizontal' | 'grid' - Layout das opções
+ * - showImages?: boolean - Exibir imagens nas opções
+ * - onAnswer?: (answers: string[]) => void - Callback de resposta
+ * 
+ * @example
+ * <QuizQuestionBlock
+ *   blockId="quiz-question-1"
+ *   question="Qual o seu tipo de roupa favorita?"
+ *   options={[
+ *     { id: 'natural', text: 'Conforto e praticidade', imageUrl: '...', value: 'natural' },
+ *     { id: 'classico', text: 'Discrição e sobriedade', imageUrl: '...', value: 'classico' }
+ *   ]}
+ *   multipleSelection={true}
+ *   maxSelections={3}
+ *   required={true}
+ *   onAnswer={(answers) => console.log('Respostas:', answers)}
+ * />
+ */
 
 export interface QuestionOption {
   id: string;
   text: string;
-  value: string | number;
+  value: string;
   imageUrl?: string;
-  isCorrect?: boolean;
-  weight?: number;
   category?: string;
 }
 
-export interface QuizQuestionBlockProps extends BlockComponentProps {
-  id?: string;
-  question?: string;
-  options?: QuestionOption[];
-  selectedOption?: string;
-  onOptionSelect?: (optionId: string) => void;
+export interface QuizQuestionBlockProps {
+  // Identificação
+  blockId: string;
+  className?: string;
+  style?: React.CSSProperties;
+
+  // Conteúdo editável
+  question: string;
+  description?: string;
+  options: QuestionOption[];
+
+  // Header properties
+  logoUrl?: string;
+  showBackButton?: boolean;
+  onBack?: () => void;
+  progressPercent?: number;
+
+  // Configurações de seleção
+  multipleSelection?: boolean;
+  maxSelections?: number;
+  minSelections?: number;
+  required?: boolean;
+
+  // Layout e apresentação
+  alignment?: 'left' | 'center' | 'right';
+  optionLayout?: 'vertical' | 'horizontal' | 'grid';
   showImages?: boolean;
-  multipleChoice?: boolean;
-  questionColor?: string;
-  backgroundColor?: string;
-  borderColor?: string;
-  isEditable?: boolean;
-  onUpdate?: (updates: any) => void;
+  
+  // Callbacks
+  onAnswer?: (answers: string[]) => void;
+  onValidationError?: (error: string) => void;
+  
+  // Editor integration props
+  onClick?: () => void;
+  isSelected?: boolean;
+  block?: any;
+
+  // Estados
+  selectedAnswers?: string[];
+  disabled?: boolean;
 }
 
 const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
-  id = 'quiz-question',
-  question = 'Qual é a sua pergunta?',
-  options = [
-    { id: '1', text: 'Opção 1', value: 'option1' },
-    { id: '2', text: 'Opção 2', value: 'option2' },
-    { id: '3', text: 'Opção 3', value: 'option3' },
-    { id: '4', text: 'Opção 4', value: 'option4' }
-  ],
-  selectedOption = '',
-  onOptionSelect = () => {},
-  showImages = false,
-  multipleChoice = false,
-  questionColor = '#432818',
-  backgroundColor = '#ffffff',
-  borderColor = '#B89B7A',
+  blockId,
   className = '',
-  isEditable = false,
-  onUpdate = () => {}
+  style = {},
+  question,
+  description,
+  options = [],
+  
+  // Header props
+  logoUrl = '/api/placeholder/96/96',
+  showBackButton = true,
+  onBack,
+  progressPercent = 65,
+  
+  // Selection props
+  multipleSelection = false,
+  maxSelections = 1,
+  minSelections = 1,
+  required = false,
+  alignment = 'center',
+  optionLayout = 'grid',
+  showImages = true,
+  onAnswer,
+  onValidationError,
+  selectedAnswers = [],
+  disabled = false,
+  
+  // Editor integration props
+  onClick,
+  isSelected = false,
+  block
 }) => {
-  const handleOptionSelect = (optionId: string) => {
-    if (onOptionSelect) {
-      onOptionSelect(optionId);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>(selectedAnswers);
+  const [validationError, setValidationError] = useState<string>('');
+
+  // Sincronizar com selectedAnswers externo
+  useEffect(() => {
+    setSelectedOptions(selectedAnswers);
+  }, [selectedAnswers]);
+
+  const handleOptionClick = (optionId: string) => {
+    if (disabled) return;
+
+    let newSelection: string[];
+
+    if (multipleSelection) {
+      if (selectedOptions.includes(optionId)) {
+        // Remover seleção
+        newSelection = selectedOptions.filter(id => id !== optionId);
+      } else {
+        // Adicionar seleção
+        if (selectedOptions.length >= maxSelections) {
+          const error = `Você pode selecionar no máximo ${maxSelections} opções`;
+          setValidationError(error);
+          onValidationError?.(error);
+          return;
+        }
+        newSelection = [...selectedOptions, optionId];
+      }
+    } else {
+      // Seleção única
+      newSelection = [optionId];
+    }
+
+    setSelectedOptions(newSelection);
+    setValidationError('');
+    onAnswer?.(newSelection);
+  };
+
+  const validate = () => {
+    if (required && selectedOptions.length === 0) {
+      const error = 'Esta pergunta é obrigatória';
+      setValidationError(error);
+      onValidationError?.(error);
+      return false;
+    }
+
+    if (multipleSelection && selectedOptions.length < minSelections) {
+      const error = `Selecione pelo menos ${minSelections} opções`;
+      setValidationError(error);
+      onValidationError?.(error);
+      return false;
+    }
+
+    return true;
+  };
+
+  const getGridCols = () => {
+    switch (optionLayout) {
+      case 'horizontal':
+        return 'grid-cols-1 md:grid-cols-4';
+      case 'vertical':
+        return 'grid-cols-1';
+      case 'grid':
+      default:
+        return 'grid-cols-1 md:grid-cols-2';
     }
   };
 
   return (
     <div 
-      className={cn(
-        'quiz-question-block w-full max-w-3xl mx-auto p-8 rounded-xl shadow-lg',
-        'border-2 transition-all duration-300',
-        className
-      )}
-      style={{ 
-        backgroundColor, 
-        borderColor: `${borderColor}40` 
-      }}
-      data-block-id={id}
+      className={`quiz-question-block ${className} ${isSelected ? 'ring-2 ring-blue-500' : ''}`}
+      style={style}
+      data-block-id={blockId}
+      onClick={onClick}
     >
-      {/* Question */}
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold leading-tight" style={{ color: questionColor }}>
-          {question}
-        </h2>
-      </div>
-
-      {/* Options */}
-      <div className="space-y-4">
-        {options.map((option) => (
-          <div
-            key={option.id}
-            className={cn(
-              'p-4 rounded-lg border-2 cursor-pointer transition-all duration-200',
-              'hover:shadow-md hover:scale-[1.02]',
-              selectedOption === option.id 
-                ? 'border-[#B89B7A] bg-[#B89B7A]/10' 
-                : 'border-gray-200 hover:border-[#B89B7A]/50'
-            )}
-            onClick={() => handleOptionSelect(option.id)}
+      {/* Vertical Canvas Header - SEMPRE VISÍVEL */}
+      <div className="flex flex-row w-full h-auto justify-center relative mb-8 bg-white p-4 shadow-sm rounded-lg border-2 border-[#B89B7A]" data-sentry-component="VerticalCanvasHeader">
+        {/* Back Button */}
+        {showBackButton && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onBack || (() => console.log('Voltar clicado'))}
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 h-10 w-10 hover:bg-primary hover:text-foreground bg-gray-100 border"
           >
-            <div className="flex items-center space-x-4">
-              {/* Option Image */}
-              {showImages && option.imageUrl && (
-                <img 
-                  src={option.imageUrl} 
-                  alt={option.text}
-                  className="w-16 h-16 rounded-lg object-cover"
-                />
-              )}
-              
-              {/* Option Text */}
-              <div className="flex-1">
-                <p className="text-lg font-medium" style={{ color: questionColor }}>
-                  {option.text}
-                </p>
-              </div>
-              
-              {/* Selection Indicator */}
-              <div className={cn(
-                'w-6 h-6 rounded-full border-2 flex items-center justify-center',
-                selectedOption === option.id 
-                  ? 'border-[#B89B7A] bg-[#B89B7A]' 
-                  : 'border-gray-300'
-              )}>
-                {selectedOption === option.id && (
-                  <div className="w-3 h-3 rounded-full bg-white"></div>
-                )}
-              </div>
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+        )}
+        
+        {/* Logo and Progress Container */}
+        <div className="flex flex-col w-full max-w-md justify-start items-center gap-6">
+          {/* Logo - SEMPRE VISÍVEL */}
+          <div className="flex justify-center">
+            <img 
+              width="96" 
+              height="96" 
+              className="w-24 h-24 object-cover rounded-lg shadow-md border-2 border-gray-200" 
+              alt="Logo" 
+              src={logoUrl || '/api/placeholder/96/96'}
+              onError={(e) => {
+                e.currentTarget.src = '/api/placeholder/96/96';
+              }}
+            />
+          </div>
+          
+          {/* Progress Bar - SEMPRE VISÍVEL */}
+          <div className="w-full max-w-xs">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm text-gray-600">Progresso</span>
+              <span className="text-sm font-medium text-[#B89B7A]">{progressPercent || 0}%</span>
+            </div>
+            <div 
+              className="relative w-full overflow-hidden rounded-full bg-gray-200 h-3 shadow-inner"
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={progressPercent || 0}
+            >
+              <div 
+                className="progress h-full bg-gradient-to-r from-[#B89B7A] to-[#D4C4A8] transition-all duration-700 ease-out rounded-full"
+                style={{ width: `${progressPercent || 0}%` }}
+              />
             </div>
           </div>
-        ))}
+        </div>
       </div>
 
-      {/* Continue Button */}
-      {selectedOption && (
-        <div className="text-center mt-8">
-          <Button
-            size="lg"
-            className="px-8 py-3 bg-[#B89B7A] hover:bg-[#A38A69] text-white font-semibold"
-          >
-            Continuar
-          </Button>
+      <div className="py-6">
+        <div className="space-y-6">
+          {/* Pergunta */}
+          <div className={`text-${alignment}`}>
+            <h3 className="text-xl md:text-2xl font-semibold text-[#432818] leading-relaxed font-playfair">
+              {question || 'Qual é a sua pergunta?'}
+            </h3>
+            {description && (
+              <p className="text-[#6B5B73] text-lg mt-2">
+                {description}
+              </p>
+            )}
+          </div>
+
+          {/* Opções */}
+          <div className={`grid gap-4 ${getGridCols()}`}>
+            {options.map((option, index) => {
+              const isSelected = selectedOptions.includes(option.id);
+              
+              return (
+                <div
+                  key={option.id}
+                  onClick={() => handleOptionClick(option.id)}
+                  className={`
+                    border-2 rounded-xl transition-all duration-200 cursor-pointer group
+                    ${isSelected 
+                      ? 'border-[#B89B7A] bg-[#f9f4ef] shadow-md' 
+                      : 'border-[#B89B7A]/30 hover:border-[#B89B7A] hover:bg-[#f9f4ef]'
+                    }
+                    ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+                  `}
+                >
+                  {/* Imagem da opção */}
+                  {showImages && option.imageUrl && (
+                    <div className="aspect-[4/3] overflow-hidden rounded-t-xl">
+                      <img
+                        src={option.imageUrl}
+                        alt={option.text}
+                        className={`w-full h-full object-cover transition-transform duration-300 ${
+                          !disabled ? 'group-hover:scale-105' : ''
+                        }`}
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+
+                  {/* Texto da opção */}
+                  <div className="p-4">
+                    <div className="flex items-start gap-3">
+                      <span className={`
+                        font-bold text-lg min-w-[24px] transition-transform
+                        ${isSelected ? 'text-[#B89B7A] scale-110' : 'text-[#B89B7A]'}
+                        ${!disabled ? 'group-hover:scale-110' : ''}
+                      `}>
+                        {String.fromCharCode(65 + index)}.
+                      </span>
+                      <span className={`
+                        text-sm leading-relaxed
+                        ${isSelected ? 'text-[#432818] font-medium' : 'text-[#432818]'}
+                      `}>
+                        {option.text}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Instruções para múltipla seleção */}
+          {multipleSelection && (
+            <div className="text-center text-sm text-[#6B5B73] italic">
+              Selecione até {maxSelections} opções
+              {selectedOptions.length > 0 && (
+                <span className="ml-2 text-[#B89B7A] font-medium">
+                  ({selectedOptions.length}/{maxSelections} selecionadas)
+                </span>
+              )}
+            </div>
+          )}
+
+          {/* Erro de validação */}
+          {validationError && (
+            <div className="text-center text-sm text-red-600 bg-red-50 p-3 rounded-lg">
+              {validationError}
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

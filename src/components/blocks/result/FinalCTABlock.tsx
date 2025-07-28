@@ -1,98 +1,119 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+
+/**
+ * BLOCO EDITÁVEL: Call-to-Action Final
+ * 
+ * Props Editáveis:
+ * - title: string (título principal)
+ * - subtitle: string (subtítulo)
+ * - description: string (descrição)
+ * - buttonText: string (texto do botão)
+ * - buttonUrl: string (URL do botão)
+ * - buttonStyle: 'primary' | 'secondary' | 'success' | 'warning'
+ * - buttonSize: 'sm' | 'md' | 'lg'
+ * - showUrgency: boolean (mostrar elementos de urgência)
+ * - urgencyText: string (texto de urgência)
+ * - backgroundColor: string
+ * - textAlign: 'left' | 'center' | 'right'
+ * 
+ * Exemplo de Uso:
+ * <FinalCTABlock 
+ *   title="Não perca esta oportunidade!"
+ *   buttonText="Garantir minha vaga"
+ *   showUrgency={true}
+ *   urgencyText="Oferta válida por tempo limitado"
+ * />
+ */
 
 export interface FinalCTABlockProps {
-  id?: string;
+  blockId?: string;
   title?: string;
   subtitle?: string;
   description?: string;
   buttonText?: string;
   buttonUrl?: string;
-  buttonSize?: 'sm' | 'md' | 'lg';
-  showSecondaryButton?: boolean;
-  secondaryButtonText?: string;
-  secondaryButtonUrl?: string;
+  buttonStyle?: 'primary' | 'secondary' | 'success' | 'warning';
+  buttonSize?: 'sm' | 'lg' | 'default';
+  showUrgency?: boolean;
+  urgencyText?: string;
   backgroundColor?: string;
-  titleColor?: string;
-  descriptionColor?: string;
-  buttonColor?: string;
+  textAlign?: 'left' | 'center' | 'right';
   className?: string;
-  isEditable?: boolean;
-  onUpdate?: (updates: any) => void;
 }
 
 const FinalCTABlock: React.FC<FinalCTABlockProps> = ({
-  id = 'final-cta',
-  title = 'Pronta para Transformar Seu Estilo?',
-  subtitle = 'Descubra como aplicar seu resultado na prática',
-  description = 'Tenha acesso ao guia completo com dicas personalizadas baseadas no seu perfil de estilo.',
-  buttonText = 'Quero Transformar Meu Estilo',
+  blockId = 'final-cta',
+  title = 'Sua transformação começa agora!',
+  subtitle = 'Não deixe para depois',
+  description = 'Garante já seu acesso completo ao CaktoQuiz e descubra seu estilo único.',
+  buttonText = 'Quero me transformar agora',
   buttonUrl = '#',
+  buttonStyle = 'primary',
   buttonSize = 'lg',
-  showSecondaryButton = false,
-  secondaryButtonText = 'Saiba Mais',
-  secondaryButtonUrl = '#',
-  backgroundColor = '#ffffff',
-  titleColor = '#432818',
-  descriptionColor = '#8F7A6A',
-  buttonColor = '#B89B7A',
+  showUrgency = true,
+  urgencyText = '⏰ Oferta por tempo limitado',
+  backgroundColor = '#f8f9fa',
+  textAlign = 'center',
   className = '',
-  isEditable = false,
-  onUpdate
 }) => {
-  const validButtonSize = ['sm', 'md', 'lg'].includes(buttonSize) ? buttonSize as 'sm' | 'md' | 'lg' : 'lg';
+  const handleClick = () => {
+    if (buttonUrl && buttonUrl !== '#') {
+      window.open(buttonUrl, '_blank');
+    }
+  };
 
   return (
     <div 
-      className={`final-cta-block p-8 rounded-xl text-center ${className}`}
-      style={{ backgroundColor }}
-      data-block-id={id}
+      className={`final-cta-block py-16 px-6 ${className}`} 
+      data-block-id={blockId}
+      style={{ 
+        backgroundColor,
+        textAlign 
+      }}
     >
-      {title && (
-        <h2 
-          className="text-3xl font-playfair font-bold mb-4"
-          style={{ color: titleColor }}
-        >
+      <div className="max-w-4xl mx-auto">
+        {showUrgency && urgencyText && (
+          <div className="mb-4">
+            <span className="inline-block bg-red-100 text-red-800 px-4 py-2 rounded-full text-sm font-semibold">
+              {urgencyText}
+            </span>
+          </div>
+        )}
+        
+        <h2 className="text-3xl md:text-4xl font-bold text-[#432818] mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
           {title}
         </h2>
-      )}
-      
-      {subtitle && (
-        <p className="text-xl mb-6" style={{ color: descriptionColor }}>
-          {subtitle}
-        </p>
-      )}
-      
-      {description && (
-        <p className="text-lg mb-8 max-w-2xl mx-auto" style={{ color: descriptionColor }}>
-          {description}
-        </p>
-      )}
-      
-      <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        
+        {subtitle && (
+          <h3 className="text-xl md:text-2xl text-[#6B5B73] mb-6">
+            {subtitle}
+          </h3>
+        )}
+        
+        {description && (
+          <p className="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
+            {description}
+          </p>
+        )}
+        
         <Button
-          size={validButtonSize}
-          className="text-white font-semibold px-8"
-          style={{ backgroundColor: buttonColor }}
-          onClick={() => window.open(buttonUrl, '_blank')}
+          onClick={handleClick}
+          size={buttonSize}
+          className={`
+            px-8 py-4 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl
+            ${buttonStyle === 'primary' ? 'bg-[#B89B7A] hover:bg-[#a68a6d]' : ''}
+            ${buttonStyle === 'secondary' ? 'bg-gray-600 hover:bg-gray-700' : ''}
+            ${buttonStyle === 'success' ? 'bg-green-600 hover:bg-green-700' : ''}
+            ${buttonStyle === 'warning' ? 'bg-orange-600 hover:bg-orange-700' : ''}
+          `}
         >
           {buttonText}
-          <ArrowRight className="ml-2 h-5 w-5" />
         </Button>
         
-        {showSecondaryButton && (
-          <Button
-            variant="outline"
-            size={validButtonSize}
-            className="font-semibold px-8"
-            style={{ borderColor: buttonColor, color: buttonColor }}
-            onClick={() => window.open(secondaryButtonUrl, '_blank')}
-          >
-            {secondaryButtonText}
-          </Button>
-        )}
+        <div className="mt-6 text-sm text-gray-500">
+          <p>✅ Acesso imediato • ✅ Garantia de 7 dias • ✅ Suporte especializado</p>
+        </div>
       </div>
     </div>
   );

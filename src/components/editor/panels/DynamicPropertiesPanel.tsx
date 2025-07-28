@@ -17,7 +17,7 @@ interface DynamicPropertiesPanelProps {
     name?: string;
     description?: string;
     isPublished?: boolean;
-    theme?: string;mi
+    theme?: string;
   };
   onBlockPropertyChange: (key: string, value: any) => void;
   onNestedPropertyChange: (path: string, value: any) => void;
@@ -75,10 +75,10 @@ export const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
   if (!selectedBlock) {
     return (
       <ScrollArea className="h-full">
-        <div className="p-4 space-y-6 bg-[#2D3748] text-white">
-          <Card className="bg-[#1A202C] border-[#4A5568]">
+        <div className="p-4 space-y-6">
+          <Card>
             <CardHeader>
-              <CardTitle className="text-sm text-[#F7FAFC]">Configurações do Funil</CardTitle>
+              <CardTitle className="text-sm">Configurações do Funil</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <PropertyInput
@@ -143,13 +143,13 @@ export const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
   if (!blockDefinition) {
     return (
       <ScrollArea className="h-full">
-        <div className="p-4 bg-[#2D3748] text-white">
-          <Card className="bg-[#1A202C] border-[#4A5568]">
+        <div className="p-4">
+          <Card>
             <CardContent className="pt-6">
-              <p className="text-sm text-[#E2E8F0]">
+              <p className="text-sm text-gray-500">
                 Tipo de bloco não reconhecido: {selectedBlock.type}
               </p>
-              <p className="text-xs text-[#A0AEC0] mt-2">
+              <p className="text-xs text-gray-400 mt-2">
                 Para questões de quiz, use o tipo "quiz-question-configurable"
               </p>
             </CardContent>
@@ -161,21 +161,21 @@ export const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
 
   return (
     <ScrollArea className="h-full">
-      <div className="p-2 sm:p-4 space-y-3 sm:space-y-6 bg-[#2D3748] text-white">
+      <div className="p-2 sm:p-4 space-y-3 sm:space-y-6">
         {/* Cabeçalho do bloco */}
-        <Card className="bg-[#1A202C] border-[#4A5568]">
+        <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm text-[#F7FAFC]">
+              <CardTitle className="text-sm">
                 {blockDefinition.name}
               </CardTitle>
               {blockDefinition.isNew && (
-                <Badge variant="secondary" className="text-xs bg-[#4A5568] text-[#E2E8F0]">
+                <Badge variant="secondary" className="text-xs">
                   Novo!
                 </Badge>
               )}
             </div>
-            <p className="text-xs text-[#A0AEC0]">
+            <p className="text-xs text-gray-500">
               {blockDefinition.description}
             </p>
           </CardHeader>
@@ -183,9 +183,9 @@ export const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
 
         {/* Propriedades do bloco */}
         {blockDefinition.propertiesSchema && (
-          <Card className="bg-[#1A202C] border-[#4A5568]">
+          <Card>
             <CardHeader>
-              <CardTitle className="text-sm text-[#F7FAFC]">Propriedades</CardTitle>
+              <CardTitle className="text-sm">Propriedades</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {blockDefinition.propertiesSchema.map((schema) => {

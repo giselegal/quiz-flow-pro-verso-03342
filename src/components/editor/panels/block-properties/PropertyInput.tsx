@@ -64,16 +64,15 @@ export const PropertyInput: React.FC<PropertyInputProps> = ({
     case 'text-input':
       return (
         <div className="space-y-2">
-          <Label htmlFor={schema.key} className="text-[#E2E8F0]">{schema.label}</Label>
+          <Label htmlFor={schema.key}>{schema.label}</Label>
           <Input
             id={schema.key}
             value={currentValue || ''}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e.target.value)}
             placeholder={schema.placeholder}
-            className="bg-[#4A5568] border-[#718096] text-[#F7FAFC] placeholder-[#A0AEC0]"
           />
           {schema.description && (
-            <p className="text-xs text-[#A0AEC0]">{schema.description}</p>
+            <p className="text-xs text-gray-500">{schema.description}</p>
           )}
         </div>
       );
@@ -82,17 +81,16 @@ export const PropertyInput: React.FC<PropertyInputProps> = ({
     case 'text-area': // Alias para compatibilidade
       return (
         <div className="space-y-2">
-          <Label htmlFor={schema.key} className="text-[#E2E8F0]">{schema.label}</Label>
+          <Label htmlFor={schema.key}>{schema.label}</Label>
           <Textarea
             id={schema.key}
             value={currentValue || ''}
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange(e.target.value)}
             placeholder={schema.placeholder}
             rows={schema.rows || 3}
-            className="bg-[#4A5568] border-[#718096] text-[#F7FAFC] placeholder-[#A0AEC0]"
           />
           {schema.description && (
-            <p className="text-xs text-[#A0AEC0]">{schema.description}</p>
+            <p className="text-xs text-gray-500">{schema.description}</p>
           )}
         </div>
       );
@@ -100,7 +98,7 @@ export const PropertyInput: React.FC<PropertyInputProps> = ({
     case 'number-input':
       return (
         <div className="space-y-2">
-          <Label htmlFor={schema.key} className="text-[#E2E8F0]">{schema.label}</Label>
+          <Label htmlFor={schema.key}>{schema.label}</Label>
           <Input
             id={schema.key}
             type="number"
@@ -109,28 +107,24 @@ export const PropertyInput: React.FC<PropertyInputProps> = ({
             placeholder={schema.placeholder}
             min={schema.min}
             max={schema.max}
-            className="bg-[#4A5568] border-[#718096] text-[#F7FAFC] placeholder-[#A0AEC0]"
           />
           {schema.description && (
-            <p className="text-xs text-[#A0AEC0]">{schema.description}</p>
+            <p className="text-xs text-gray-500">{schema.description}</p>
           )}
         </div>
       );
 
     case 'boolean-switch':
       return (
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label htmlFor={schema.key} className="text-[#E2E8F0]">{schema.label}</Label>
-            <Switch
-              id={schema.key}
-              checked={currentValue || false}
-              onCheckedChange={handleInputChange}
-              className="data-[state=checked]:bg-[#4299E1] data-[state=unchecked]:bg-[#718096]"
-            />
-          </div>
+        <div className="flex items-center space-x-2">
+          <Switch
+            id={schema.key}
+            checked={currentValue || false}
+            onCheckedChange={handleInputChange}
+          />
+          <Label htmlFor={schema.key}>{schema.label}</Label>
           {schema.description && (
-            <p className="text-xs text-[#A0AEC0]">{schema.description}</p>
+            <p className="text-xs text-gray-500 ml-2">{schema.description}</p>
           )}
         </div>
       );
@@ -138,25 +132,25 @@ export const PropertyInput: React.FC<PropertyInputProps> = ({
     case 'color-picker':
       return (
         <div className="space-y-2">
-          <Label htmlFor={schema.key} className="text-[#E2E8F0]">{schema.label}</Label>
+          <Label htmlFor={schema.key}>{schema.label}</Label>
           <div className="flex items-center space-x-2">
             <Input
               id={schema.key}
               type="color"
               value={currentValue || '#000000'}
               onChange={(e) => handleInputChange(e.target.value)}
-              className="w-12 h-8 p-1 bg-[#4A5568] border-[#718096] rounded cursor-pointer"
+              className="w-16 h-10 p-1 border rounded"
             />
             <Input
               type="text"
               value={currentValue || ''}
               onChange={(e) => handleInputChange(e.target.value)}
               placeholder="#000000"
-              className="flex-1 bg-[#4A5568] border-[#718096] text-[#F7FAFC] placeholder-[#A0AEC0]"
+              className="flex-1"
             />
           </div>
           {schema.description && (
-            <p className="text-xs text-[#A0AEC0]">{schema.description}</p>
+            <p className="text-xs text-gray-500">{schema.description}</p>
           )}
         </div>
       );
@@ -165,8 +159,8 @@ export const PropertyInput: React.FC<PropertyInputProps> = ({
       return (
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <Label className="text-[#E2E8F0]">{schema.label}</Label>
-            <span className="text-sm text-[#A0AEC0]">{currentValue || 14}px</span>
+            <Label>{schema.label}</Label>
+            <span className="text-sm text-gray-500">{currentValue || 14}px</span>
           </div>
           <Slider
             value={[currentValue || 14]}
@@ -174,47 +168,39 @@ export const PropertyInput: React.FC<PropertyInputProps> = ({
             max={schema.max || 72}
             min={schema.min || 8}
             step={1}
-            className="w-full [&_[role=slider]]:bg-[#4299E1] [&_[role=slider]]:border-[#4299E1] [&>span:first-child]:bg-[#718096] [&>span:last-child]:bg-[#4299E1]"
+            className="w-full"
           />
-          {schema.description && (
-            <p className="text-xs text-[#A0AEC0]">{schema.description}</p>
-          )}
         </div>
       );
 
     case 'font-weight-buttons':
-      const fontWeights = schema.options || ['normal', 'bold', '100', '200', '300', '400', '500', '600', '700', '800', '900'];
       return (
         <div className="space-y-2">
-          <Label className="text-[#E2E8F0]">{schema.label}</Label>
-          <div className="flex flex-wrap gap-2">
-            {fontWeights.map((weight) => (
-              <Button
-                key={weight}
-                variant={currentValue === weight ? "default" : "outline"}
-                size="sm"
-                onClick={() => handleInputChange(weight)}
-                className={`text-xs ${
-                  currentValue === weight 
-                    ? "bg-[#4299E1] text-white border-[#4299E1]" 
-                    : "bg-[#4A5568] text-[#E2E8F0] border-[#718096] hover:bg-[#718096]"
-                }`}
-                style={{ fontWeight: weight }}
-              >
-                {weight === 'normal' ? 'Normal' : weight === 'bold' ? 'Bold' : weight}
-              </Button>
-            ))}
+          <Label>{schema.label}</Label>
+          <div className="flex gap-1">
+            {['Normal', 'Médio', 'Semi', 'Negrito'].map((weight, index) => {
+              const weights = ['400', '500', '600', '700'];
+              const isActive = currentValue === weights[index];
+              return (
+                <Button
+                  key={weight}
+                  variant={isActive ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handleInputChange(weights[index])}
+                  className={`flex-1 ${isActive ? 'bg-[#B89B7A] hover:bg-[#a08965]' : ''}`}
+                >
+                  {weight}
+                </Button>
+              );
+            })}
           </div>
-          {schema.description && (
-            <p className="text-xs text-[#A0AEC0]">{schema.description}</p>
-          )}
         </div>
       );
 
     case 'text-style-buttons':
       return (
         <div className="space-y-2">
-          <Label className="text-[#E2E8F0]">{schema.label}</Label>
+          <Label>{schema.label}</Label>
           <div className="flex gap-1">
             <Button
               variant={currentValue?.includes('italic') ? 'default' : 'outline'}
@@ -227,11 +213,6 @@ export const PropertyInput: React.FC<PropertyInputProps> = ({
                   : [...styles, 'italic'];
                 handleInputChange(newStyles.join(' '));
               }}
-              className={`${
-                currentValue?.includes('italic') 
-                  ? "bg-[#4299E1] text-white border-[#4299E1]" 
-                  : "bg-[#4A5568] text-[#E2E8F0] border-[#718096] hover:bg-[#718096]"
-              }`}
             >
               <Italic className="w-4 h-4" />
             </Button>
@@ -246,18 +227,10 @@ export const PropertyInput: React.FC<PropertyInputProps> = ({
                   : [...styles, 'underline'];
                 handleInputChange(newStyles.join(' '));
               }}
-              className={`${
-                currentValue?.includes('underline') 
-                  ? "bg-[#4299E1] text-white border-[#4299E1]" 
-                  : "bg-[#4A5568] text-[#E2E8F0] border-[#718096] hover:bg-[#718096]"
-              }`}
             >
               <Underline className="w-4 h-4" />
             </Button>
           </div>
-          {schema.description && (
-            <p className="text-xs text-[#A0AEC0]">{schema.description}</p>
-          )}
         </div>
       );
 

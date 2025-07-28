@@ -1,398 +1,348 @@
-
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Settings, Eye, EyeOff, Save, Trash2 } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
+import { Separator } from '../ui/separator';
+import { Plus, Layout, Eye, Code2 } from 'lucide-react';
 
-interface ModularEditorProps {
-  initialData?: any;
-  onSave?: (data: any) => void;
-  onCancel?: () => void;
-}
+import { 
+  ModularComponent, 
+  FlexContainer, 
+  TextModule, 
+  ImageModule, 
+  ButtonModule 
+} from './ModularComponent';
 
-interface Component {
+import { 
+  ModularPropertiesPanel,
+  createTextPropertyGroups,
+  createImagePropertyGroups,
+  createButtonPropertyGroups
+} from './ModularPropertiesPanel';
+
+// =====================================================================
+// 🎯 MODULAR EDITOR - Editor de Componentes Modulares com Flexbox
+// =====================================================================
+
+interface ComponentData {
   id: string;
   type: 'text' | 'image' | 'button' | 'container';
-  properties: {
-    content: {
-      title: string;
-      text: string;
-      buttonText: string;
-      buttonUrl: string;
-      imageUrl: string;
-    };
-    style: {
-      backgroundColor: string;
-      textColor: string;
-      fontSize: string;
-      fontWeight: string;
-      padding: string;
-      borderRadius: string;
-    };
-    layout: {
-      width: string;
-      height: string;
-      margin: string;
-      display: string;
-    };
-    animation: {
-      type: string;
-      duration: string;
-      delay: string;
-    };
-  };
+  properties: Record<string, any>;
+  children?: ComponentData[];
 }
 
-const ModularEditor: React.FC<ModularEditorProps> = ({ 
-  initialData = {}, 
-  onSave,
-  onCancel 
+interface ModularEditorProps {
+  initialComponents?: ComponentData[];
+  onComponentsChange?: (components: ComponentData[]) => void;
+  className?: string;
+}
+
+export const ModularEditor: React.FC<ModularEditorProps> = ({
+  initialComponents = [],
+  onComponentsChange,
+  className = ''
 }) => {
-  const [components, setComponents] = useState<Component[]>([]);
-  const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
-  const [isPreviewMode, setIsPreviewMode] = useState(false);
-  const [data, setData] = useState(initialData);
+  const [components, setComponents] = useState<ComponentData[]>(initialComponents);
+  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
+  const [previewMode, setPreviewMode] = useState(false);
 
-  const addComponent = (type: Component['type']) => {
-    const newComponent: Component = {
-      id: `component-${Date.now()}`,
+  const selectedComponent = components.find(comp => comp.id === selectedComponentId);
+
+  // =====================================================================
+  // 🔧 COMPONENT MANAGEMENT
+  // =====================================================================
+
+  const addComponent = (type: ComponentData['type']) => {
+    const newComponent: ComponentData = {
+      id: `comp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       type,
-      properties: {
-        content: {
-          title: 'New Component',
-          text: 'Sample text',
-          buttonText: 'Click me',
-          buttonUrl: '#',
-          imageUrl: '',
-        },
-        style: {
-          backgroundColor: '#ffffff',
-          textColor: '#000000',
-          fontSize: '16px',
-          fontWeight: 'normal',
-          padding: '16px',
-          borderRadius: '8px',
-        },
-        layout: {
-          width: '100%',
-          height: 'auto',
-          margin: '8px',
-          display: 'block',
-        },
-        animation: {
-          type: 'none',
-          duration: '0.3s',
-          delay: '0s',
-        },
-      },
+      properties: getDefaultPropertiesForType(type)
     };
 
-    setComponents(prev => [...prev, newComponent]);
-    setSelectedComponent(newComponent.id);
+    const newComponents = [...components, newComponent];
+    setComponents(newComponents);
+    setSelectedComponentId(newComponent.id);
+    onComponentsChange?.(newComponents);
   };
 
-  const updateComponent = (componentId: string, updates: Partial<Component>) => {
-    setComponents(prev => prev.map(comp => 
-      comp.id === componentId 
-        ? { ...comp, ...updates }
+  const updateComponent = (id: string, properties: Record<string, any>) => {
+    const newComponents = components.map(comp => 
+      comp.id === id 
+        ? { ...comp, properties: { ...comp.properties, ...properties } }
         : comp
-    ));
+    );
+    setComponents(newComponents);
+    onComponentsChange?.(newComponents);
   };
 
-  const deleteComponent = (componentId: string) => {
-    setComponents(prev => prev.filter(comp => comp.id !== componentId));
-    setSelectedComponent(null);
-  };
-
-  const handlePropertyChange = (property: string, value: any) => {
-    if (!selectedComponent) return;
-    
-    const component = components.find(c => c.id === selectedComponent);
-    if (!component) return;
-
-    const updatedComponent = { ...component };
-    
-    // Handle nested property updates
-    if (property.includes('.')) {
-      const [group, key] = property.split('.');
-      if (updatedComponent.properties[group as keyof typeof updatedComponent.properties]) {
-        (updatedComponent.properties[group as keyof typeof updatedComponent.properties] as any)[key] = value;
-      }
-    } else {
-      (updatedComponent.properties as any)[property] = value;
+  const deleteComponent = (id: string) => {
+    const newComponents = components.filter(comp => comp.id !== id);
+    setComponents(newComponents);
+    if (selectedComponentId === id) {
+      setSelectedComponentId(null);
     }
-
-    updateComponent(selectedComponent, updatedComponent);
+    onComponentsChange?.(newComponents);
   };
 
-  const handleSave = () => {
-    const saveData = {
-      ...data,
-      components,
-      lastModified: new Date().toISOString()
+  const duplicateComponent = (id: string) => {
+    const componentToDuplicate = components.find(comp => comp.id === id);
+    if (!componentToDuplicate) return;
+
+    const newComponent: ComponentData = {
+      ...componentToDuplicate,
+      id: `comp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
     };
-    
-    onSave?.(saveData);
+
+    const newComponents = [...components, newComponent];
+    setComponents(newComponents);
+    setSelectedComponentId(newComponent.id);
+    onComponentsChange?.(newComponents);
   };
 
-  const handleReset = () => {
-    setComponents([]);
-    setSelectedComponent(null);
-    setData(initialData);
+  const moveComponent = (id: string, direction: 'up' | 'down') => {
+    const currentIndex = components.findIndex(comp => comp.id === id);
+    if (currentIndex === -1) return;
+
+    const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+    if (newIndex < 0 || newIndex >= components.length) return;
+
+    const newComponents = [...components];
+    const [movedComponent] = newComponents.splice(currentIndex, 1);
+    newComponents.splice(newIndex, 0, movedComponent);
+
+    setComponents(newComponents);
+    onComponentsChange?.(newComponents);
   };
 
-  const renderComponent = (component: Component) => {
-    const { type, properties } = component;
-    const isSelected = selectedComponent === component.id;
+  // =====================================================================
+  // 🎨 PROPERTY MANAGEMENT
+  // =====================================================================
 
-    const baseStyle = {
-      backgroundColor: properties.style.backgroundColor,
-      color: properties.style.textColor,
-      fontSize: properties.style.fontSize,
-      fontWeight: properties.style.fontWeight,
-      padding: properties.style.padding,
-      borderRadius: properties.style.borderRadius,
-      width: properties.layout.width,
-      height: properties.layout.height,
-      margin: properties.layout.margin,
-      display: properties.layout.display,
-      border: isSelected ? '2px solid #3b82f6' : '1px solid #e5e7eb',
-      cursor: 'pointer',
+  const handlePropertyChange = (groupId: string, propertyKey: string, value: any) => {
+    if (!selectedComponentId) return;
+
+    const newProperties = {
+      [propertyKey]: value
     };
 
-    const handleClick = () => {
-      if (!isPreviewMode) {
-        setSelectedComponent(component.id);
-      }
-    };
+    updateComponent(selectedComponentId, newProperties);
+  };
 
+  const getPropertyGroups = () => {
+    if (!selectedComponent) return [];
+
+    switch (selectedComponent.type) {
+      case 'text':
+        return createTextPropertyGroups(selectedComponent.properties);
+      case 'image':
+        return createImagePropertyGroups(selectedComponent.properties);
+      case 'button':
+        return createButtonPropertyGroups(selectedComponent.properties);
+      default:
+        return [];
+    }
+  };
+
+  // =====================================================================
+  // 🔧 HELPERS
+  // =====================================================================
+
+  const getDefaultPropertiesForType = (type: ComponentData['type']) => {
     switch (type) {
       case 'text':
-        return (
-          <div key={component.id} style={baseStyle} onClick={handleClick}>
-            <h3>{properties.content.title}</h3>
-            <p>{properties.content.text}</p>
-          </div>
-        );
+        return {
+          text: 'Novo texto editável',
+          size: 'base',
+          weight: 'normal',
+          color: '#000000',
+          align: 'left'
+        };
+      case 'image':
+        return {
+          src: 'https://via.placeholder.com/300x200?text=Nova+Imagem',
+          alt: 'Nova imagem',
+          width: 300,
+          height: 200,
+          objectFit: 'cover',
+          rounded: false
+        };
+      case 'button':
+        return {
+          text: 'Novo botão',
+          variant: 'primary',
+          size: 'md',
+          fullWidth: false,
+          disabled: false
+        };
+      default:
+        return {};
+    }
+  };
 
+  const renderComponent = (component: ComponentData) => {
+    const commonProps = {
+      id: component.id,
+      isSelected: selectedComponentId === component.id,
+      isEditable: !previewMode,
+      onSelect: setSelectedComponentId,
+      onEdit: setSelectedComponentId,
+      onDelete: deleteComponent,
+      onDuplicate: duplicateComponent,
+      onMove: moveComponent
+    };
+
+    switch (component.type) {
+      case 'text':
+        return (
+          <TextModule
+            key={component.id}
+            {...commonProps}
+            {...component.properties}
+          />
+        );
       case 'image':
         return (
-          <div key={component.id} style={baseStyle} onClick={handleClick}>
-            {properties.content.imageUrl ? (
-              <img 
-                src={properties.content.imageUrl} 
-                alt={properties.content.title}
-                style={{ width: '100%', height: 'auto' }}
-              />
-            ) : (
-              <div style={{ padding: '40px', textAlign: 'center', backgroundColor: '#f3f4f6' }}>
-                Image Placeholder
-              </div>
-            )}
-          </div>
+          <ImageModule
+            key={component.id}
+            {...commonProps}
+            {...component.properties}
+          />
         );
-
       case 'button':
         return (
-          <div key={component.id} style={baseStyle} onClick={handleClick}>
-            <button style={{ 
-              padding: '8px 16px', 
-              backgroundColor: '#3b82f6',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}>
-              {properties.content.buttonText}
-            </button>
-          </div>
+          <ButtonModule
+            key={component.id}
+            {...commonProps}
+            {...component.properties}
+            onClick={() => console.log('Botão clicado:', component.id)}
+          />
         );
-
-      case 'container':
-        return (
-          <div key={component.id} style={baseStyle} onClick={handleClick}>
-            <div style={{ padding: '20px', border: '1px dashed #9ca3af' }}>
-              Container: {properties.content.title}
-            </div>
-          </div>
-        );
-
       default:
         return null;
     }
   };
 
-  const selectedComp = components.find(c => c.id === selectedComponent);
-
   return (
-    <div className="h-screen flex flex-col">
-      {/* Toolbar */}
-      <div className="border-b bg-white p-4 flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Button 
-            variant="outline" 
-            onClick={() => addComponent('text')}
-            className="flex items-center space-x-2"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Add Text</span>
-          </Button>
-          <Button 
-            variant="outline" 
-            onClick={() => addComponent('image')}
-            className="flex items-center space-x-2"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Add Image</span>
-          </Button>
-          <Button 
-            variant="outline" 
-            onClick={() => addComponent('button')}
-            className="flex items-center space-x-2"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Add Button</span>
-          </Button>
-          <Button 
-            variant="outline" 
-            onClick={() => addComponent('container')}
-            className="flex items-center space-x-2"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Add Container</span>
-          </Button>
+    <div className={`modular-editor h-screen flex ${className}`}>
+      {/* 📱 CANVAS AREA */}
+      <div className="flex-1 flex flex-col">
+        {/* Header */}
+        <div className="bg-white border-b p-4 flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <Layout className="h-5 w-5" />
+            <h1 className="font-semibold">Editor Modular</h1>
+            <Badge variant="outline">{components.length} componentes</Badge>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <Button
+              variant={previewMode ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setPreviewMode(!previewMode)}
+            >
+              <Eye className="h-4 w-4 mr-1" />
+              {previewMode ? 'Editar' : 'Preview'}
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => console.log('Export:', components)}
+            >
+              <Code2 className="h-4 w-4 mr-1" />
+              Exportar
+            </Button>
+          </div>
         </div>
-        
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            onClick={() => setIsPreviewMode(!isPreviewMode)}
-            className="flex items-center space-x-2"
-          >
-            {isPreviewMode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            <span>{isPreviewMode ? 'Edit' : 'Preview'}</span>
-          </Button>
-          <Button onClick={handleSave} className="flex items-center space-x-2">
-            <Save className="w-4 h-4" />
-            <span>Save</span>
-          </Button>
+
+        {/* Canvas */}
+        <div className="flex-1 bg-gray-50 p-6 overflow-auto">
+          <div className="max-w-4xl mx-auto">
+            <FlexContainer 
+              direction="column" 
+              gap={16}
+              className="min-h-96 bg-white rounded-lg shadow-sm border-2 border-dashed border-gray-200 p-6"
+            >
+              {components.length === 0 ? (
+                <div className="flex-1 flex items-center justify-center text-gray-500">
+                  <div className="text-center">
+                    <Layout className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p className="font-medium">Nenhum componente adicionado</p>
+                    <p className="text-sm">Use o painel lateral para adicionar componentes</p>
+                  </div>
+                </div>
+              ) : (
+                components.map(renderComponent)
+              )}
+            </FlexContainer>
+          </div>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Canvas */}
-        <div className="flex-1 overflow-auto p-4 bg-gray-50">
-          <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm min-h-[600px] p-6">
-            {components.length === 0 ? (
-              <div className="flex items-center justify-center h-64 border-2 border-dashed border-gray-300 rounded-lg">
-                <div className="text-center">
-                  <p className="text-gray-500 mb-4">No components added yet</p>
-                  <Button onClick={() => addComponent('text')}>Add your first component</Button>
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {components.map(renderComponent)}
-              </div>
-            )}
+      {/* 🎛️ SIDEBAR */}
+      <div className="w-80 bg-white border-l flex flex-col">
+        {/* Add Components */}
+        <div className="p-4 border-b">
+          <h2 className="font-medium mb-3 flex items-center">
+            <Plus className="h-4 w-4 mr-2" />
+            Adicionar Componentes
+          </h2>
+          <div className="grid grid-cols-2 gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => addComponent('text')}
+              className="flex flex-col items-center p-3 h-auto"
+            >
+              <Type className="h-4 w-4 mb-1" />
+              <span className="text-xs">Texto</span>
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => addComponent('image')}
+              className="flex flex-col items-center p-3 h-auto"
+            >
+              <Image className="h-4 w-4 mb-1" />
+              <span className="text-xs">Imagem</span>
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => addComponent('button')}
+              className="flex flex-col items-center p-3 h-auto"
+            >
+              <Plus className="h-4 w-4 mb-1" />
+              <span className="text-xs">Botão</span>
+            </Button>
           </div>
         </div>
 
         {/* Properties Panel */}
-        {selectedComp && !isPreviewMode && (
-          <div className="w-80 border-l bg-white p-4 overflow-auto">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold">Properties</h3>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => deleteComponent(selectedComp.id)}
-                className="text-red-600 hover:text-red-700"
-              >
-                <Trash2 className="w-4 h-4" />
-              </Button>
+        <div className="flex-1 overflow-hidden">
+          {selectedComponent ? (
+            <ModularPropertiesPanel
+              componentId={selectedComponent.id}
+              componentType={selectedComponent.type}
+              propertyGroups={getPropertyGroups()}
+              onPropertyChange={handlePropertyChange}
+              onSave={() => console.log('Salvo:', selectedComponent)}
+              onReset={() => {
+                const defaultProps = getDefaultPropertiesForType(selectedComponent.type);
+                updateComponent(selectedComponent.id, defaultProps);
+              }}
+              className="h-full border-none"
+            />
+          ) : (
+            <div className="p-4 text-center text-gray-500">
+              <Settings className="h-8 w-8 mx-auto mb-2 opacity-50" />
+              <p className="text-sm">Selecione um componente para editar suas propriedades</p>
             </div>
-
-            <Tabs defaultValue="content" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="content">Content</TabsTrigger>
-                <TabsTrigger value="style">Style</TabsTrigger>
-                <TabsTrigger value="layout">Layout</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="content" className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="title">Title</Label>
-                  <Input
-                    id="title"
-                    value={selectedComp.properties.content.title}
-                    onChange={(e) => handlePropertyChange('content.title', e.target.value)}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="text">Text</Label>
-                  <Textarea
-                    id="text"
-                    value={selectedComp.properties.content.text}
-                    onChange={(e) => handlePropertyChange('content.text', e.target.value)}
-                  />
-                </div>
-              </TabsContent>
-
-              <TabsContent value="style" className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="backgroundColor">Background Color</Label>
-                  <Input
-                    id="backgroundColor"
-                    type="color"
-                    value={selectedComp.properties.style.backgroundColor}
-                    onChange={(e) => handlePropertyChange('style.backgroundColor', e.target.value)}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="textColor">Text Color</Label>
-                  <Input
-                    id="textColor"
-                    type="color"
-                    value={selectedComp.properties.style.textColor}
-                    onChange={(e) => handlePropertyChange('style.textColor', e.target.value)}
-                  />
-                </div>
-              </TabsContent>
-
-              <TabsContent value="layout" className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="width">Width</Label>
-                  <Input
-                    id="width"
-                    value={selectedComp.properties.layout.width}
-                    onChange={(e) => handlePropertyChange('layout.width', e.target.value)}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="padding">Padding</Label>
-                  <Input
-                    id="padding"
-                    value={selectedComp.properties.style.padding}
-                    onChange={(e) => handlePropertyChange('style.padding', e.target.value)}
-                  />
-                </div>
-              </TabsContent>
-            </Tabs>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
 };
-
-export default ModularEditor;

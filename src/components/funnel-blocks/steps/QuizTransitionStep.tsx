@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { FunnelStepProps } from '@/types/funnel';
-import { Card, CardContent } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Loader2 } from 'lucide-react';
 
 /**
  * QuizTransitionStep - Etapa 15: Transição entre quiz e resultado
@@ -78,52 +75,58 @@ export const QuizTransitionStep: React.FC<FunnelStepProps> = ({
   return (
     <div 
       className={cn(
-        "min-h-screen flex items-center justify-center p-6",
+        "relative min-h-[50vh] flex flex-col items-center justify-center p-6",
         backgroundColor,
         className
       )}
       onClick={isEditable ? onEdit : undefined}
       data-funnel-step-id={id}
     >
-      <Card className="w-full max-w-lg mx-auto">
-        <CardContent className="text-center space-y-8 py-12">
-          {/* Título */}
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-            {title}
-          </h2>
-          
-          {/* Área de animação/loading */}
-          <div className="py-6">
-            <div className="flex justify-center">
-              <Loader2 className="h-16 w-16 animate-spin text-[#B89B7A]" />
-            </div>
+      <div className="max-w-lg mx-auto text-center space-y-8">
+        {/* Título */}
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+          {title}
+        </h2>
+        
+        {/* Área de animação/loading */}
+        <div className="py-6">
+          <div className="flex justify-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-indigo-600"></div>
           </div>
-          
-          {/* Mensagens de carregamento */}
-          <div className="h-12">
-            <p className="text-gray-600 animate-pulse transition-opacity duration-500">
-              {messages[currentMessage]}
-            </p>
-          </div>
-          
-          {/* Barra de progresso */}
-          <div className="space-y-2">
-            <Progress 
-              percent={progress} 
-              className="w-full"
-              showInfo={false}
-            />
-            <p className="text-sm text-gray-500">{progress}% completo</p>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+        
+        {/* Mensagens de carregamento */}
+        <div className="h-12">
+          <p className="text-gray-600 animate-fade-in">
+            {messages[currentMessage]}
+          </p>
+        </div>
+        
+        {/* Barra de progresso */}
+        <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-indigo-600 transition-all duration-300"
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+      </div>
       
       {/* Indicador de edição */}
       {isEditable && (
-        <div className="absolute top-4 right-4 bg-blue-500 text-white text-xs px-2 py-1 rounded z-10">
-          Modo de Edição
+        <div className="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded">
+          Editar
         </div>
       )}
+      
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.5s ease-in-out;
+        }
+      `}</style>
     </div>
   );
 };

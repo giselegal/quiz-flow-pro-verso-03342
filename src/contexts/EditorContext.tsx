@@ -1,11 +1,21 @@
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import { EditorBlock, EditableContent } from '@/types/editor';
+import { EditorActions } from '@/types/editorActions';
+import { getDefaultContentForType } from '@/utils/editorDefaults';
+import { generateId } from '@/utils/idGenerator';
 
 interface EditorContextType {
-  currentFunnel: string | null;
-  setCurrentFunnel: (id: string | null) => void;
-  isEditing: boolean;
-  setIsEditing: (editing: boolean) => void;
+  blocks: EditorBlock[];
+  selectedBlockId: string | null;
+  activeTab: string;
+  blockSearch: string;
+  availableBlocks: any[];
+  actions: EditorActions;
+  setActiveTab: (tab: string) => void;
+  setBlockSearch: (search: string) => void;
+  handleAddBlock: (type: string) => void;
+  setSelectedBlockId: (id: string | null) => void;
 }
 
 const EditorContext = createContext<EditorContextType | undefined>(undefined);
@@ -23,15 +33,83 @@ interface EditorProviderProps {
 }
 
 export const EditorProvider: React.FC<EditorProviderProps> = ({ children }) => {
-  const [currentFunnel, setCurrentFunnel] = useState<string | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const [blocks, setBlocks] = useState<EditorBlock[]>([]);
+  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('editor');
+  const [blockSearch, setBlockSearch] = useState('');
+
+  const availableBlocks = [
+    { type: 'header', name: 'Cabeçalho', icon: '📄', category: 'content' },
+    { type: 'text', name: 'Texto', icon: '📝', category: 'content' },
+    { type: 'image', name: 'Imagem', icon: '🖼️', category: 'content' },
+    { type: 'button', name: 'Botão', icon: '🔘', category: 'content' },
+    { type: 'spacer', name: 'Espaçador', icon: '⬜', category: 'layout' },
+    { type: 'quiz-question', name: 'Questão Quiz', icon: '❓', category: 'quiz' },
+    { type: 'testimonial', name: 'Depoimento', icon: '💬', category: 'content' }
+  ];
+
+  const addBlock = useCallback((type: EditorBlock['type']) => {
+    const newBlock: EditorBlock = {
+      id: generateId(),
+      type,
+      content: getDefaultContentForType(type),
+      order: blocks.length
+    };
+    
+    setBlocks(prev => [...prev, newBlock]);
+    setSelectedBlockId(newBlock.id);
+    return newBlock.id;
+  }, [blocks.length]);
+
+  const updateBlock = useCallback((id: string, content: Partial<EditableContent>) => {
+    setBlocks(prev => 
+      prev.map(block => 
+        block.id === id 
+          ? { ...block, content: { ...block.content, ...content } }
+          : block
+      )
+    );
+  }, []);
+
+  const deleteBlock = useCallback((id: string) => {
+    setBlocks(prev => prev.filter(block => block.id !== id));
+    if (selectedBlockId === id) {
+      setSelectedBlockId(null);
+    }
+  }, [selectedBlockId]);
+
+  const reorderBlocks = useCallback((startIndex: number, endIndex: number) => {
+    setBlocks(prev => {
+      const result = Array.from(prev);
+      const [removed] = result.splice(startIndex, 1);
+      result.splice(endIndex, 0, removed);
+      return result.map((block, index) => ({ ...block, order: index }));
+    });
+  }, []);
+
+  const handleAddBlock = useCallback((type: string) => {
+    addBlock(type as EditorBlock['type']);
+  }, [addBlock]);
+
+  const actions: EditorActions = {
+    addBlock,
+    updateBlock,
+    deleteBlock,
+    reorderBlocks
+  };
 
   return (
-    <EditorContext.Provider value={{ 
-      currentFunnel, 
-      setCurrentFunnel, 
-      isEditing, 
-      setIsEditing 
+    <EditorContext.Provider value={{
+      blocks,
+      selectedBlockId,
+      activeTab,
+      blockSearch,
+      availableBlocks,
+      actions,
+      setActiveTab,
+      setBlockSearch,
+      handleAddBlock,
+      setSelectedBlockId
     }}>
       {children}
     </EditorContext.Provider>

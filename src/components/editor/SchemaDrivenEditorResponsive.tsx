@@ -28,7 +28,7 @@ import { SchemaDrivenComponentsSidebar } from './sidebar/SchemaDrivenComponentsS
 import { DynamicPropertiesPanel } from './panels/DynamicPropertiesPanel';
 import { DroppableCanvas } from './dnd/DroppableCanvas';
 import { TestDeleteComponent } from './TestDeleteComponent';
-import { blockDefinitions } from '../../config/blockDefinitions';
+import { allBlockDefinitions } from '../../config/blockDefinitions';
 import { useLocation } from 'wouter';
 import { saveDiagnostic } from '../../utils/saveDiagnostic';
 // Importar novos serviços e componentes
@@ -209,7 +209,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   // Handlers
   const handleComponentSelect = useCallback((type: string) => {
     pushToUndoStack(); // Salva o estado antes de adicionar
-    const definition = blockDefinitions.find((def: any) => def.type === type);
+    const definition = allBlockDefinitions.find((def: any) => def.type === type);
     if (definition && currentPage) {
       const defaultProperties: Record<string, any> = {};
       definition.propertiesSchema?.forEach((prop: any) => {
@@ -460,7 +460,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       setIsPublishing(true);
       try {
         const test = await ABTestService.createTest({
-          name: `Teste A/B - ${funnel.config?.seo?.title || funnel.config?.name || 'Sem título'}`,
+          name: `Teste A/B - ${funnel.title || 'Sem título'}`,
           description: 'Teste A/B criado pelo editor',
           quiz_id: funnelId,
           traffic_split: 50,
@@ -482,7 +482,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
             { 
               name: 'Variante B',
               type: 'variation' as const,
-              quiz_data: funnel,
+              quiz_data: { ...funnel, title: `${funnel.title} - Variante B` },
               traffic_percentage: 50,
               is_active: true
             }
@@ -1014,10 +1014,10 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           <div
             className={`
               ${deviceView === 'mobile'
-                ? 'fixed top-14 right-0 bottom-0 w-80 z-50 bg-[#2D3748] backdrop-blur-lg shadow-2xl border-l border-[#4A5568]'
+                ? 'fixed top-14 right-0 bottom-0 w-80 z-50 bg-white/95 backdrop-blur-lg shadow-2xl border-l border-[#B89B7A]/30'
                 : deviceView === 'tablet'
-                  ? 'relative w-64 bg-[#2D3748] backdrop-blur-sm border-l border-[#4A5568]'
-                  : 'relative w-80 bg-[#2D3748] backdrop-blur-sm border-l border-[#4A5568]'
+                  ? 'relative w-64 bg-white/95 backdrop-blur-sm border-l border-[#B89B7A]/20'
+                  : 'relative w-80 bg-white/95 backdrop-blur-sm border-l border-[#B89B7A]/20'
               }
               flex flex-col
             `}
@@ -1027,8 +1027,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               opacity: 1
             }}
           >
-            <div className="flex items-center justify-between p-3 border-b border-[#4A5568] bg-[#1A202C]">
-              <h2 className="font-semibold text-[#F7FAFC]">Propriedades</h2>
+            <div className="flex items-center justify-between p-3 border-b border-[#B89B7A]/20 bg-gradient-to-r from-[#B89B7A]/10 to-[#aa6b5d]/10">
+              <h2 className="font-semibold text-[#432818]">Propriedades</h2>
               {deviceView === 'mobile' && (
                 <Button
                   variant="ghost"
@@ -1037,7 +1037,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                     console.log('🔄 Closing right sidebar from X button');
                     setShowRightSidebar(false);
                   }}
-                  className="h-8 w-8 p-0 text-[#F7FAFC] hover:text-[#F7FAFC] hover:bg-[#4A5568]"
+                  className="h-8 w-8 p-0 text-[#432818] hover:text-[#432818] hover:bg-[#B89B7A]/20"
                 >
                   ×
                 </Button>
