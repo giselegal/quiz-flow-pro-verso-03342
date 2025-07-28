@@ -505,10 +505,35 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   // Auto-create funnel se necessário
   useEffect(() => {
     if (!funnel && !isLoading && !funnelId) {
+      console.log('🚀 Criando novo funil com 21 etapas...');
       createNewFunnel();
-      showToast('Novo funil criado!', 'success');
+      showToast('Novo funil criado com 21 etapas!', 'success');
     }
   }, [funnel, isLoading, funnelId, createNewFunnel, showToast]);
+
+  // Debug: Log do funil criado
+  useEffect(() => {
+    if (funnel && funnel.pages) {
+      console.log('📊 Funil carregado:', {
+        id: funnel.id,
+        name: funnel.name,
+        totalPages: funnel.pages.length,
+        pagesList: funnel.pages.map(p => ({
+          id: p.id,
+          title: p.title,
+          order: p.order,
+          blocksCount: p.blocks?.length || 0
+        }))
+      });
+      
+      if (funnel.pages.length === 21) {
+        console.log('✅ As 21 etapas foram criadas corretamente!');
+        showToast('✅ Funil com 21 etapas carregado!', 'success');
+      } else {
+        console.warn(`⚠️ Apenas ${funnel.pages.length} etapas foram criadas (esperado: 21)`);
+      }
+    }
+  }, [funnel, showToast]);
 
   // Analytics: Track page view when editor loads
   useEffect(() => {
@@ -567,8 +592,9 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   }
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className={`h-screen flex flex-col overflow-hidden bg-gradient-to-br from-[#fffaf7] via-[#F3E8E6]/30 to-[#fffaf7]/50`}>
+    <DirectionProvider dir="ltr">
+      <DndProvider backend={HTML5Backend}>
+        <div className={`h-screen flex flex-col overflow-hidden bg-gradient-to-br from-[#fffaf7] via-[#F3E8E6]/30 to-[#fffaf7]/50`}>
       {/* Header Responsivo - Redesigned com cores da marca */}
       <div className="h-16 bg-white/95 backdrop-blur-sm border-b border-[#B89B7A]/20 shadow-sm flex items-center justify-between px-6">
         <div className="flex items-center space-x-6 min-w-0 flex-1">
@@ -1110,8 +1136,9 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           </div>
         </div>
       )}
-      </div>
-    </DndProvider>
+        </div>
+      </DndProvider>
+    </DirectionProvider>
   );
 };
 
