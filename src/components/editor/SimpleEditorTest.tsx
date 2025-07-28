@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { SchemaDrivenComponentsSidebar } from './sidebar/SchemaDrivenComponentsSidebar';
 import { UniversalBlockRenderer, BlockData } from './blocks';
+import { Block } from '@/types/blocks';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { Button } from '@/components/ui/button';
 import { useSimpleEditor } from '@/hooks/useSimpleEditor';
@@ -8,7 +9,7 @@ import { blockDefinitions } from '@/config/blockDefinitions';
 import { Plus } from 'lucide-react';
 
 const SimpleEditorTest: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('blocks');
+  const [activeTab, setActiveTab] = useState<'pages' | 'components'>('components');
   
   const {
     funnel,
@@ -75,7 +76,10 @@ const SimpleEditorTest: React.FC = () => {
             <SchemaDrivenComponentsSidebar 
               onComponentSelect={handleComponentSelect}
               activeTab={activeTab}
-              onTabChange={setActiveTab}
+              onTabChange={(tab) => setActiveTab(tab as 'pages' | 'components')}
+              funnelPages={funnel.pages}
+              currentPageId={currentPage?.id}
+              setCurrentPage={(pageId) => console.log('Page change to:', pageId)}
             />
           </div>
         </ResizablePanel>
@@ -104,7 +108,7 @@ const SimpleEditorTest: React.FC = () => {
                           </p>
                           <Button 
                             variant="outline" 
-                            onClick={() => setActiveTab('blocks')}
+                            onClick={() => setActiveTab('components')}
                           >
                             <Plus className="w-4 h-4 mr-2" />
                             Adicionar Primeiro Bloco
@@ -114,7 +118,7 @@ const SimpleEditorTest: React.FC = () => {
                         currentPage.blocks.map((block) => (
                           <div key={block.id} className="group relative">
                             <UniversalBlockRenderer
-                              block={block}
+                              block={block as Block}
                               isSelected={block.id === selectedBlockId}
                               onClick={() => setSelectedBlock(block.id)}
                               onSaveInline={handleInlineEdit}

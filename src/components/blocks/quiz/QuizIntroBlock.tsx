@@ -1,245 +1,221 @@
-import React, { useState, useEffect } from 'react';
-import { Input } from '@/components/ui/input';
+
+import React from 'react';
 import { cn } from '@/lib/utils';
-import { useQuizTracking } from '@/hooks/useQuizTracking';
-import { InlineEditableText } from '../../editor/blocks/InlineEditableText';
+import InlineEditableText from '@/components/editor/blocks/base/InlineEditableText';
 import type { BlockComponentProps } from '@/types/blocks';
 
+export interface QuizIntroBlockProps extends BlockComponentProps {
+  id?: string;
+  title?: string;
+  subtitle?: string;
+  description?: string;
+  userName?: string;
+  benefits?: string[];
+  buttonText?: string;
+  logoUrl?: string;
+  onNext?: () => void;
+  showBenefits?: boolean;
+  titleColor?: string;
+  subtitleColor?: string;
+  descriptionColor?: string;
+  buttonColor?: string;
+  backgroundColor?: string;
+  borderColor?: string;
+  isEditable?: boolean;
+  onUpdate?: (updates: any) => void;
+}
+
 /**
- * QuizIntroBlock - Schema-driven compatible version
+ * BLOCO EDITÁVEL: Introdução do Quiz
  * 
- * Integrado com o sistema de edição visual schema-driven
- * Suporta edição inline e propriedades dinâmicas
+ * Props Editáveis:
+ * - title: string (título principal)
+ * - subtitle: string (subtítulo)
+ * - description: string (descrição)
+ * - userName: string (nome do usuário)
+ * - benefits: string[] (lista de benefícios)
+ * - buttonText: string (texto do botão)
+ * - logoUrl: string (URL do logo)
+ * - showBenefits: boolean (mostrar benefícios)
+ * - cores personalizáveis
  * 
- * @example
- * <QuizIntroBlock
- *   block={{
- *     id: 'quiz-intro-1',
- *     type: 'quiz-intro',
- *     properties: {
- *       title: 'Descubra Seu Estilo Pessoal',
- *       subtitle: 'Um quiz personalizado...',
- *       buttonText: 'Iniciar Quiz'
- *     }
- *   }}
- *   isSelected={false}
- *   onClick={() => {}}
- *   onPropertyChange={(key, value) => {}}
+ * Exemplo de Uso:
+ * <QuizIntroBlock 
+ *   title="Descubra Seu Estilo"
+ *   subtitle="Quiz personalizado"
+ *   description="Responda algumas perguntas..."
+ *   userName="Maria"
+ *   benefits={["Resultado instantâneo", "Personalizado"]}
+ *   buttonText="Começar Quiz"
+ *   showBenefits={true}
  * />
  */
 
-// Interface compatível com schema-driven system
-export interface QuizIntroBlockProps extends BlockComponentProps {
-  // Props específicas do quiz intro (opcional - fallback para compatibilidade)
-  onStart?: (nome: string) => void;
-}
-
 const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
-  block,
-  isSelected = false,
-  isEditing = false,
-  onClick,
-  onPropertyChange,
-  onStart,
+  id = 'quiz-intro',
+  title = 'Descubra Seu Estilo Único',
+  subtitle = 'Quiz Personalizado de Estilo',
+  description = 'Responda algumas perguntas rápidas e descubra qual estilo combina mais com sua personalidade.',
+  userName = '',
+  benefits = [
+    'Resultado instantâneo e personalizado',
+    'Baseado em análise de personalidade',
+    'Dicas exclusivas para seu estilo'
+  ],
+  buttonText = 'Começar Quiz',
+  logoUrl = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+  onNext = () => {},
+  showBenefits = true,
+  titleColor = '#432818',
+  subtitleColor = '#8F7A6A',
+  descriptionColor = '#5D4A3A',
+  buttonColor = '#B89B7A',
+  backgroundColor = '#ffffff',
+  borderColor = '#B89B7A',
   className = '',
+  isEditable = false,
+  onUpdate = () => {}
 }) => {
-  const [nome, setNome] = useState('');
-  const [error, setError] = useState('');
-  const { trackUIInteraction, trackCTAClick } = useQuizTracking();
-
-  // Validação defensiva para evitar erro quando block ou properties não existem
-  if (!block || !block.properties) {
-    console.warn('QuizIntroBlock: block ou block.properties não foi fornecido', { block });
-    return (
-      <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
-        <p className="text-red-600 font-medium">Erro: Configuração do bloco inválida</p>
-        <p className="text-sm text-red-500 mt-1">
-          O componente QuizIntroBlock precisa de um objeto 'block' com 'properties' válidas.
-        </p>
-      </div>
-    );
-  }
-
-  // Extrair propriedades do schema com valores padrão (usando cores da marca)
-  const {
-    title = 'Descubra Seu Estilo Pessoal',
-    subtitle = 'Um quiz personalizado para descobrir seu estilo único',
-    description = 'Responda algumas perguntas e descubra o estilo que combina perfeitamente com você.',
-    inputPlaceholder = 'Digite seu primeiro nome',
-    buttonText = 'Iniciar Quiz',
-    backgroundColor = '#fffaf7', // brand-cream
-    textColor = '#432818', // brand-coffee
-    backgroundImage,
-    showBenefits = true,
-    benefits = [
-      'Descubra seu estilo único',
-      'Recomendações personalizadas', 
-      'Resultado instantâneo'
-    ]
-  } = block.properties;
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!nome.trim()) {
-      setError('Por favor, digite seu nome para continuar');
-      trackUIInteraction('form_validation', 'name_input', 'validation_error', {
-        error: 'empty_name'
-      });
-      return;
-    }
-    
-    setError('');
-    trackCTAClick('quiz_start', `Iniciar Quiz - ${nome.trim()}`);
-    
-    if (onStart) {
-      onStart(nome.trim());
+  const handleUpdateProperty = (key: string, value: any) => {
+    if (onUpdate) {
+      onUpdate({ [key]: value });
     }
   };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setNome(value);
-    setError('');
-    
-    if (value.length > 0 && nome.length === 0) {
-      trackUIInteraction('form_field', 'name_input', 'first_input', {
-        field: 'name'
-      });
-    }
-  };
-
-  const handleClick = () => {
-    if (onClick) {
-      onClick();
-    }
-  };
-
-  const handlePropertyChange = (key: string, value: string) => {
-    if (onPropertyChange) {
-      onPropertyChange(key, value);
-    }
-  };
-
-  useEffect(() => {
-    if (typeof window !== 'undefined' && 'performance' in window) {
-      window.performance.mark('component-mounted');
-    }
-  }, []);
 
   return (
-    <div
+    <div 
       className={cn(
-        'min-h-screen flex flex-col items-center justify-center p-8',
-        'transition-all duration-200',
-        isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2',
+        'quiz-intro-block w-full max-w-2xl mx-auto p-8 rounded-xl shadow-lg',
+        'border-2 transition-all duration-300',
         className
       )}
-      style={{ backgroundColor, color: textColor }}
-      onClick={handleClick}
-      data-block-id={block.id}
-      data-block-type={block.type}
+      style={{ 
+        backgroundColor, 
+        borderColor: `${borderColor}40` 
+      }}
+      data-block-id={id}
     >
-      {/* Background Image */}
-      {backgroundImage && (
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
-          style={{ backgroundImage: `url(${backgroundImage})` }}
+      {/* Logo */}
+      <div className="text-center mb-8">
+        <img 
+          src={logoUrl} 
+          alt="Logo" 
+          className="w-24 h-24 mx-auto rounded-full object-cover shadow-md"
         />
-      )}
+      </div>
 
-      <div className="relative z-10 w-full max-w-2xl mx-auto space-y-8 text-center">
-        {/* Título */}
-        <div className="space-y-4">
+      {/* Título */}
+      <div className="text-center mb-6">
+        {isEditable ? (
           <InlineEditableText
             value={title}
-            onSave={(value) => handlePropertyChange('title', value)}
-            className="text-4xl md:text-5xl font-bold leading-tight"
-            style={{ color: textColor }}
-            placeholder="Título do quiz"
+            onChange={(value: string) => handleUpdateProperty('title', value)}
+            className="text-3xl font-bold text-center"
+            style={{ color: titleColor }}
+            placeholder="Título principal"
           />
-          
+        ) : (
+          <h1 className="text-3xl font-bold" style={{ color: titleColor }}>
+            {title}
+          </h1>
+        )}
+        
+        {isEditable ? (
           <InlineEditableText
             value={subtitle}
-            onSave={(value) => handlePropertyChange('subtitle', value)}
-            className="text-xl md:text-2xl text-opacity-80"
-            style={{ color: textColor }}
-            placeholder="Subtítulo explicativo"
+            onChange={(value: string) => handleUpdateProperty('subtitle', value)}
+            className="text-lg mt-2 text-center"
+            style={{ color: subtitleColor }}
+            placeholder="Subtítulo"
           />
-          
+        ) : (
+          <p className="text-lg mt-2" style={{ color: subtitleColor }}>
+            {subtitle}
+          </p>
+        )}
+      </div>
+
+      {/* Descrição */}
+      <div className="text-center mb-8">
+        {isEditable ? (
           <InlineEditableText
             value={description}
-            onSave={(value) => handlePropertyChange('description', value)}
-            className="text-lg text-opacity-70"
-            style={{ color: textColor }}
-            placeholder="Descrição detalhada"
+            onChange={(value: string) => handleUpdateProperty('description', value)}
+            className="text-base leading-relaxed text-center"
+            style={{ color: descriptionColor }}
+            placeholder="Descrição do quiz"
             isTextArea={true}
           />
-        </div>
-
-        {/* Benefícios */}
-        {showBenefits && (
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold">O que você vai descobrir:</h3>
-            <div className="grid gap-2 text-left max-w-md mx-auto">
-              {benefits.map((benefit: string, index: number) => (
-                <div key={index} className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-current rounded-full opacity-60" />
-                  <span>{benefit}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+        ) : (
+          <p className="text-base leading-relaxed" style={{ color: descriptionColor }}>
+            {description}
+          </p>
         )}
+      </div>
 
-        {/* Formulário */}
-        <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto">
-          <div>
-            <Input
-              type="text"
-              placeholder={inputPlaceholder}
-              value={nome}
-              onChange={handleInputChange}
-              className={cn(
-                "w-full p-4 text-lg rounded-lg border-2 bg-white/90",
-                error 
-                  ? "border-red-500 focus:ring-red-500" 
-                  : "border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
-              )}
-              autoFocus
-              required
-            />
-            {error && (
-              <p className="mt-2 text-sm text-red-500 font-medium">{error}</p>
-            )}
+      {/* Saudação personalizada */}
+      {userName && (
+        <div className="text-center mb-6">
+          <p className="text-lg font-medium" style={{ color: titleColor }}>
+            Olá, {userName}! 👋
+          </p>
+        </div>
+      )}
+
+      {/* Benefícios */}
+      {showBenefits && benefits.length > 0 && (
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold mb-4 text-center" style={{ color: titleColor }}>
+            O que você vai descobrir:
+          </h3>
+          <div className="space-y-3">
+            {benefits.map((benefit, index) => (
+              <div key={index} className="flex items-start space-x-3">
+                <div 
+                  className="w-5 h-5 rounded-full flex items-center justify-center text-white text-sm font-bold mt-0.5"
+                  style={{ backgroundColor: buttonColor }}
+                >
+                  ✓
+                </div>
+                {isEditable ? (
+                  <InlineEditableText
+                    value={benefit}
+                    onChange={(value: string) => {
+                      const newBenefits = [...benefits];
+                      newBenefits[index] = value;
+                      handleUpdateProperty('benefits', newBenefits);
+                    }}
+                    placeholder="Benefício"
+                    disabled={!isEditable}
+                  />
+                ) : (
+                  <p className="text-sm leading-relaxed" style={{ color: descriptionColor }}>
+                    {benefit}
+                  </p>
+                )}
+              </div>
+            ))}
           </div>
-          
-          <button
-            type="submit"
-            disabled={!nome.trim()}
-            className={cn(
-              'w-full py-4 px-6 text-lg font-semibold rounded-lg',
-              'transition-all duration-300 transform',
-              'focus:outline-none focus:ring-4 focus:ring-opacity-50',
-              nome.trim()
-                ? 'bg-[#B89B7A] hover:bg-[#A38A69] text-white hover:scale-105 shadow-lg focus:ring-[#B89B7A]'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            )}
-          >
-            <InlineEditableText
-              value={buttonText}
-              onSave={(value) => handlePropertyChange('buttonText', value)}
-              placeholder="Texto do botão"
-              disabled={!isEditing}
-            />
-          </button>
-        </form>
+        </div>
+      )}
 
-        {/* Privacy notice */}
-        <p className="text-sm opacity-70 max-w-md mx-auto">
-          Seu nome é necessário para personalizar sua experiência. 
-          Respeitamos sua privacidade.
-        </p>
+      {/* Botão de Começar */}
+      <div className="text-center">
+        <button
+          onClick={onNext}
+          className={cn(
+            'px-8 py-4 rounded-lg font-semibold text-white text-lg',
+            'transition-all duration-300 transform hover:scale-105',
+            'shadow-lg hover:shadow-xl',
+            'focus:outline-none focus:ring-4 focus:ring-opacity-50'
+          )}
+          style={{ 
+            backgroundColor: buttonColor,
+            boxShadow: `0 4px 15px ${buttonColor}40`
+          }}
+        >
+          {buttonText}
+        </button>
       </div>
     </div>
   );

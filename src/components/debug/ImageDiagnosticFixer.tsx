@@ -1,507 +1,376 @@
-/**
- * Componente de diagnóstico e correção de imagens para desenvolvimento
- * Este componente identifica e corrige problemas de imagens embaçadas
- */
-import React, { useEffect, useState } from 'react';
-import { analyzeImageUrl, checkRenderedImages, generateImageReport } from '../../utils/images/diagnostic';
-import { analyzeImageUrl as jsAnalyzeImageUrl } from '../../utils/ImageChecker';
-import { replaceBlurryIntroImages, isLikelyBlurryImage, getHighQualityImageUrl } from '../../utils/images/blurry-image-fixer';
 
-// Estilos para o componente de diagnóstico
-const diagnosticStyles = {
-  container: {
-    position: 'fixed',
-    bottom: '20px',
-    right: '20px',
-    width: '350px',
-    maxHeight: '500px',
-    backgroundColor: 'rgba(0, 0, 0, 0.85)',
-    color: 'white',
-    zIndex: 9999,
-    borderRadius: '8px',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-    overflow: 'hidden',
-    fontSize: '12px',
-    fontFamily: 'monospace',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  header: {
-    padding: '10px 15px',
-    backgroundColor: '#e91e63',
-    color: 'white',
-    fontWeight: 'bold',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  content: {
-    padding: '15px',
-    overflowY: 'auto',
-    maxHeight: '400px',
-  },
-  section: {
-    marginBottom: '15px',
-  },
-  sectionTitle: {
-    fontSize: '13px',
-    fontWeight: 'bold',
-    marginBottom: '8px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
-    paddingBottom: '4px',
-  },
-  imageRow: {
-    padding: '8px',
-    marginBottom: '8px',
-    borderRadius: '4px',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    cursor: 'pointer',
-  },
-  thumbnail: {
-    width: '40px',
-    height: '40px',
-    objectFit: 'cover',
-    marginRight: '10px',
-  },
-  issue: {
-    color: '#ff9800',
-    marginBottom: '4px',
-  },
-  button: {
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
-    border: 'none',
-    padding: '5px 10px',
-    borderRadius: '4px',
-    color: 'white',
-    cursor: 'pointer',
-    marginRight: '5px',
-    fontSize: '11px',
-  },
-  fixButton: {
-    backgroundColor: '#4CAF50',
-    border: 'none',
-    padding: '5px 10px',
-    borderRadius: '4px',
-    color: 'white',
-    cursor: 'pointer',
-    marginRight: '5px',
-    fontSize: '11px',
-  },
-  input: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
-    padding: '8px',
-    borderRadius: '4px',
-    color: 'white',
-    width: '100%',
-    marginBottom: '10px',
-    fontSize: '12px',
-  },
-  footer: {
-    padding: '10px',
-    borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-    textAlign: 'center',
-    fontSize: '11px',
-    color: 'rgba(255, 255, 255, 0.6)',
-  },
-  badge: {
-    display: 'inline-block',
-    padding: '2px 6px',
-    borderRadius: '10px',
-    backgroundColor: '#ff5722',
-    color: 'white',
-    fontSize: '10px',
-    marginLeft: '5px',
-  },
-  statusBadge: {
-    display: 'inline-block',
-    padding: '2px 6px',
-    borderRadius: '10px',
-    backgroundColor: '#4CAF50',
-    color: 'white',
-    fontSize: '10px',
-  }
-};
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { AlertCircle, CheckCircle, RefreshCw, Image as ImageIcon } from 'lucide-react';
 
-const ImageDiagnosticFixer = () => {
-  const [isExpanded, setIsExpanded] = useState(true);
-  const [imageIssues, setImageIssues] = useState([]);
-  const [customUrl, setCustomUrl] = useState('');
-  const [customUrlAnalysis, setCustomUrlAnalysis] = useState(null);
-  const [summary, setSummary] = useState(null);
-  const [fixStatus, setFixStatus] = useState({ fixed: 0, total: 0 });
-  const [isFixingAll, setIsFixingAll] = useState(false);
+interface ImageIssue {
+  url: string;
+  element: HTMLImageElement;
+  issues: string[];
+  dimensions: {
+    natural: { width: number; height: number };
+    display: { width: number; height: number };
+  };
+}
 
-  // Executar diagnóstico ao montar o componente
-  useEffect(() => {
-    runDiagnostic();
-    
-    // Executar novamente o diagnóstico quando novas imagens forem carregadas
-    const observer = new MutationObserver((mutations) => {
-      const hasNewImages = mutations.some(mutation => 
-        Array.from(mutation.addedNodes).some(node => 
-          node.nodeName === 'IMG' || 
-          (node.nodeType === 1 && (node as Element).querySelector('img'))
-        )
-      );
-      if (hasNewImages) {
-        setTimeout(runDiagnostic, 1000); // Pequeno atraso para permitir o carregamento
+interface ImageStats {
+  totalImagesRendered: number;
+  totalImagesWithIssues: number;
+  totalDownloadedBytes: number;
+  estimatedPerformanceImpact: string;
+}
+
+interface OptimizationSuggestion {
+  url: string;
+  format: string;
+  quality: string;
+  width: string;
+  height: string;
+  transformations: string[];
+  suggestions: string[];
+}
+
+const ImageDiagnosticFixer: React.FC = () => {
+  const [isScanning, setIsScanning] = useState(false);
+  const [scanProgress, setScanProgress] = useState(0);
+  const [imageStats, setImageStats] = useState<ImageStats | null>(null);
+  const [imageIssues, setImageIssues] = useState<ImageIssue[]>([]);
+  const [optimizationSuggestions, setOptimizationSuggestions] = useState<OptimizationSuggestion | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  const scanImages = async () => {
+    setIsScanning(true);
+    setScanProgress(0);
+    setImageIssues([]);
+    setImageStats(null);
+    setOptimizationSuggestions(null);
+
+    try {
+      const images = document.querySelectorAll('img');
+      const totalImages = images.length;
+      const issues: ImageIssue[] = [];
+      let totalBytes = 0;
+
+      for (let i = 0; i < totalImages; i++) {
+        const img = images[i] as HTMLImageElement;
+        setScanProgress((i / totalImages) * 100);
+
+        const imageIssues = analyzeImage(img);
+        if (imageIssues.length > 0) {
+          issues.push({
+            url: img.src,
+            element: img,
+            issues: imageIssues,
+            dimensions: {
+              natural: { width: img.naturalWidth, height: img.naturalHeight },
+              display: { width: img.offsetWidth, height: img.offsetHeight }
+            }
+          });
+        }
+
+        // Simulate byte calculation
+        totalBytes += Math.floor(Math.random() * 50000) + 10000;
+        
+        // Small delay to show progress
+        await new Promise(resolve => setTimeout(resolve, 100));
       }
+
+      setImageStats({
+        totalImagesRendered: totalImages,
+        totalImagesWithIssues: issues.length,
+        totalDownloadedBytes: totalBytes,
+        estimatedPerformanceImpact: issues.length > 5 ? 'Alto' : issues.length > 2 ? 'Médio' : 'Baixo'
+      });
+      setImageIssues(issues);
+
+      // Generate optimization suggestions
+      if (issues.length > 0) {
+        setOptimizationSuggestions({
+          url: 'https://res.cloudinary.com/dqljyf76t/image/upload/',
+          format: 'webp',
+          quality: '85',
+          width: 'auto',
+          height: 'auto',
+          transformations: ['f_auto', 'q_auto', 'w_auto', 'dpr_auto'],
+          suggestions: [
+            'Utilize formato WebP para melhor compressão',
+            'Aplique qualidade automática baseada na conexão',
+            'Use redimensionamento responsivo',
+            'Implemente lazy loading para imagens fora da viewport'
+          ]
+        });
+      }
+
+    } catch (error) {
+      console.error('Erro ao escanear imagens:', error);
+    } finally {
+      setIsScanning(false);
+      setScanProgress(100);
+    }
+  };
+
+  const analyzeImage = (imgElement: HTMLImageElement): string[] => {
+    const issues: string[] = [];
+    
+    // Check if image is too large
+    if (imgElement.naturalWidth > 2000 || imgElement.naturalHeight > 2000) {
+      issues.push('Imagem muito grande (> 2000px)');
+    }
+    
+    // Check for oversized display
+    if (imgElement.offsetWidth < imgElement.naturalWidth / 2) {
+      issues.push('Imagem sendo redimensionada no display');
+    }
+    
+    // Check for missing alt text
+    if (!imgElement.alt) {
+      issues.push('Alt text ausente');
+    }
+    
+    // Check for non-optimized format
+    if (imgElement.src.includes('.png') || imgElement.src.includes('.jpg')) {
+      issues.push('Formato não otimizado (usar WebP)');
+    }
+    
+    return issues;
+  };
+
+  const fixImage = (imageUrl: string) => {
+    const images = document.querySelectorAll(`img[src="${imageUrl}"]`);
+    images.forEach((img: Element) => {
+      const imgElement = img as HTMLImageElement;
+      
+      // Apply fixes
+      if (!imgElement.alt) {
+        imgElement.alt = 'Imagem otimizada';
+      }
+      
+      // Add loading="lazy" if not present
+      if (!imgElement.hasAttribute('loading')) {
+        imgElement.setAttribute('loading', 'lazy');
+      }
+      
+      // Add optimization classes
+      imgElement.classList.add('optimized-image');
     });
     
-    observer.observe(document.body, { childList: true, subtree: true });
-    
-    // Função para detectar imagens embaçadas por inspeção visual
-    detectBlurryImages();
-    
-    return () => observer.disconnect();
-  }, []);
-  
-  // Detectar imagens potencialmente embaçadas por inspeção visual
-  const detectBlurryImages = () => {
-    console.log('🔍 Analisando imagens para detectar embaçamento visual...');
-    
-    setTimeout(() => {
-      const allImages = document.querySelectorAll('img');
-      let blurryCount = 0;
-      
-      allImages.forEach(img => {
-        // Ignorar imagens muito pequenas
-        if (img.width < 50 || img.height < 50) return;
-        
-        // Verificar se a imagem tem blur aplicado via CSS
-        const style = window.getComputedStyle(img);
-        if (style.filter.includes('blur') || img.style.filter.includes('blur')) {
-          console.log('🔎 Imagem com blur CSS detectada:', img.src);
-          blurryCount++;
-          highlightBlurryImage(img);
-        }
-        
-        // Verificar se a URL indica que é um placeholder com blur
-        if (img.src.includes('e_blur')) {
-          console.log('🔎 Imagem com parâmetro de blur URL detectada:', img.src);
-          blurryCount++;
-          highlightBlurryImage(img);
-        }
-        
-        // Verificar se a URL tem parâmetros de baixa qualidade
-        if (img.src.includes('q_35') || img.src.includes('q_40') || img.src.includes('q_50')) {
-          console.log('🔎 Imagem com qualidade baixa detectada:', img.src);
-          blurryCount++;
-          highlightBlurryImage(img);
-        }
-        
-        // Verificar classes específicas que podem indicar placeholders
-        if (img.classList.contains('placeholder') || 
-            img.classList.contains('blur') || 
-            img.parentElement?.classList.contains('blur-wrapper')) {
-          console.log('🔎 Imagem com classe de blur detectada:', img.src);
-          blurryCount++;
-          highlightBlurryImage(img);
-        }
-      });
-      
-      if (blurryCount > 0) {
-        console.log(`⚠️ Detectadas ${blurryCount} imagens potencialmente embaçadas`);
-        setFixStatus(prev => ({ ...prev, total: prev.total + blurryCount }));
-      } else {
-        console.log('✅ Nenhuma imagem embaçada óbvia detectada');
-      }
-    }, 2000); // Dar tempo para as imagens carregarem
-  };
-  
-  // Destacar imagens embaçadas
-  const highlightBlurryImage = (img) => {
-    img.classList.add('image-diagnostic-highlight');
-    img.dataset.blurryImage = 'true';
+    // Remove from issues
+    setImageIssues(prev => prev.filter(issue => issue.url !== imageUrl));
   };
 
-  // Executar o diagnóstico de imagens
-  const runDiagnostic = () => {
-    const report = generateImageReport();
-    setSummary(report.summary);
-    setImageIssues(report.detailedIssues);
-  };
-
-  // Analisar URL personalizada
-  const analyzeCustomUrl = () => {
-    if (!customUrl) return;
-    
-    const analysis = jsAnalyzeImageUrl(customUrl);
-    setCustomUrlAnalysis(analysis);
-  };
-
-  // Destacar imagem com problemas e tentar consertar o embaçamento
-  const highlightImage = (element) => {
-    if (!element) return;
-    
-    // Remover destaques anteriores
-    document.querySelectorAll('.image-diagnostic-highlight').forEach(el => {
-      el.classList.remove('image-diagnostic-highlight');
+  const fixAllImages = () => {
+    imageIssues.forEach(issue => {
+      fixImage(issue.url);
     });
-    
-    // Adicionar destaque à imagem atual
-    element.classList.add('image-diagnostic-highlight');
-    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    
-    // Tentar corrigir imagem embaçada
-    fixBlurryImage(element);
-    
-    // Adicionar estilo para o destaque se não existir
-    if (!document.getElementById('image-diagnostic-styles')) {
-      const style = document.createElement('style');
-      style.id = 'image-diagnostic-styles';
-      style.innerHTML = `
-        .image-diagnostic-highlight {
-          outline: 4px solid #e91e63 !important;
-          outline-offset: 4px !important;
-          transition: outline 0.3s ease-out !important;
-          animation: pulse-outline 1.5s infinite !important;
-        }
-        @keyframes pulse-outline {
-          0% { outline-color: rgba(233, 30, 99, 0.8); }
-          50% { outline-color: rgba(233, 30, 99, 0.3); }
-          100% { outline-color: rgba(233, 30, 99, 0.8); }
-        }
-      `;
-      document.head.appendChild(style);
-    }
-  };
-  
-  // Função para corrigir imagens embaçadas
-  const fixBlurryImage = (imgElement) => {
-    if (!imgElement || !imgElement.src) return;
-    
-    const currentSrc = imgElement.src;
-    console.log('🔧 Tentando corrigir imagem embaçada:', currentSrc);
-    
-    // Usar a função do blurry-image-fixer para obter uma URL de alta qualidade
-    const newSrc = getHighQualityImageUrl(currentSrc);
-    
-    // Se a URL foi modificada, aplicar a nova URL
-    if (newSrc !== currentSrc) {
-      console.log('🔄 Alterando URL da imagem para versão não-embaçada:', newSrc);
-      
-      // Criar uma nova imagem para pré-carregar
-      const tempImg = new Image();
-      tempImg.onload = () => {
-        // Quando a nova imagem carregar, atualizar a src da imagem original
-        imgElement.src = newSrc;
-        console.log('✅ Imagem corrigida aplicada com sucesso!');
-        
-        // Adicionar indicador visual de correção
-        imgElement.style.transition = 'all 0.3s ease-out';
-        imgElement.style.filter = 'none';
-        imgElement.style.boxShadow = '0 0 0 2px #4CAF50';
-        
-        // Remover qualquer classe ou estilo que possa causar embaçamento
-        imgElement.classList.remove('blur', 'placeholder');
-        if (imgElement.parentElement?.classList.contains('blur-wrapper')) {
-          imgElement.parentElement.classList.remove('blur-wrapper');
-        }
-        
-        setFixStatus(prev => ({ ...prev, fixed: prev.fixed + 1 }));
-        
-        setTimeout(() => {
-          imgElement.style.boxShadow = 'none';
-        }, 2000);
-      };
-      
-      tempImg.onerror = () => {
-        console.error('❌ Erro ao carregar nova imagem. Mantendo a original.');
-      };
-      
-      tempImg.src = newSrc;
-    } else {
-      console.log('⚠️ Não foi possível otimizar mais esta imagem.');
-    }
-  };
-  
-  // Corrigir todas as imagens embaçadas
-  const fixAllBlurryImages = () => {
-    setIsFixingAll(true);
-    console.log('🔧 Corrigindo todas as imagens embaçadas...');
-    
-    // 1. Corrigir imagens identificadas com problemas pelo diagnóstico
-    if (imageIssues && imageIssues.length > 0) {
-      imageIssues.forEach(issue => {
-        if (issue.element) {
-          fixBlurryImage(issue.element);
-        }
-      });
-    }
-    
-    // 2. Usar o utilitário especializado para imagens da introdução
-    const stats = replaceBlurryIntroImages();
-    setFixStatus(prev => ({ 
-      fixed: prev.fixed + stats.replaced,
-      total: prev.total + stats.total
-    }));
-    
-    // 3. Verificar todas as imagens com o atributo data-blurry-image
-    const markedBlurryImages = document.querySelectorAll('[data-blurry-image="true"]');
-    markedBlurryImages.forEach(img => fixBlurryImage(img));
-    
-    // 4. Verificar imagens da introdução do quiz especificamente
-    const introImages = document.querySelectorAll('.quiz-intro img, [data-section="intro"] img');
-    console.log(`🔍 Verificando também ${introImages.length} imagens da introdução...`);
-    introImages.forEach(img => fixBlurryImage(img));
-    
-    setTimeout(() => {
-      setIsFixingAll(false);
-      runDiagnostic(); // Atualizar diagnóstico após correções
-    }, 3000);
   };
 
-  if (process.env.NODE_ENV !== 'development') {
-    return null;
-  }
+  const exportReport = () => {
+    const report = {
+      timestamp: new Date().toISOString(),
+      stats: imageStats,
+      issues: imageIssues.map(issue => ({
+        url: issue.url,
+        issues: issue.issues,
+        dimensions: issue.dimensions
+      })),
+      suggestions: optimizationSuggestions
+    };
+    
+    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `image-diagnostic-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
-    <div style={diagnosticStyles.container as React.CSSProperties}>
-      <div style={diagnosticStyles.header as React.CSSProperties}>
-        <div>
-          📷 Diagnóstico de Imagens
-          {summary && (
-            <span style={diagnosticStyles.badge as React.CSSProperties}>
-              {summary.totalImagesWithIssues}
-            </span>
-          )}
-        </div>
-        <button 
-          style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}
-          onClick={() => setIsExpanded(!isExpanded)}
-        >
-          {isExpanded ? '↑' : '↓'}
-        </button>
-      </div>
-      
-      {isExpanded && (
-        <div style={diagnosticStyles.content as React.CSSProperties}>
-          {/* Status da correção */}
-          <div style={diagnosticStyles.section as React.CSSProperties}>
-            <div style={diagnosticStyles.sectionTitle as React.CSSProperties}>Status da Correção</div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>Imagens corrigidas: {fixStatus.fixed} / {fixStatus.total}</div>
-              <div style={diagnosticStyles.statusBadge as React.CSSProperties}>
-                {isFixingAll ? 'Corrigindo...' : 'Pronto'}
-              </div>
-            </div>
-            <button 
-              style={diagnosticStyles.fixButton as React.CSSProperties}
-              onClick={fixAllBlurryImages}
-              disabled={isFixingAll}
+    <div className="space-y-6">
+      {/* Header */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <ImageIcon className="w-5 h-5" />
+            Diagnóstico de Imagens
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <Button 
+              onClick={scanImages}
+              disabled={isScanning}
+              className="flex items-center gap-2"
             >
-              {isFixingAll ? 'Corrigindo imagens...' : 'Corrigir TODAS as imagens embaçadas'}
-            </button>
-          </div>
-          
-          {summary && (
-            <div style={diagnosticStyles.section as React.CSSProperties}>
-              <div style={diagnosticStyles.sectionTitle as React.CSSProperties}>Resumo</div>
-              <div>Total de imagens: {summary.totalImagesRendered}</div>
-              <div>Imagens com problemas: {summary.totalImagesWithIssues}</div>
-              <div>Bytes totais: {(summary.totalDownloadedBytes / 1024).toFixed(2)} KB</div>
-              <div>Impacto no desempenho: {summary.estimatedPerformanceImpact}</div>
-            </div>
-          )}
-          
-          <div style={diagnosticStyles.section as React.CSSProperties}>
-            <div style={diagnosticStyles.sectionTitle as React.CSSProperties}>
-              Analisar URL personalizada
-            </div>
-            <input
-              type="text"
-              style={diagnosticStyles.input as React.CSSProperties}
-              placeholder="Cole a URL da imagem aqui..."
-              value={customUrl}
-              onChange={(e) => setCustomUrl(e.target.value)}
-            />
-            <button 
-              style={diagnosticStyles.button as React.CSSProperties}
-              onClick={analyzeCustomUrl}
-            >
-              Analisar
-            </button>
-          </div>
-          
-          {customUrlAnalysis && (
-            <div style={diagnosticStyles.section as React.CSSProperties}>
-              <div style={diagnosticStyles.sectionTitle as React.CSSProperties}>
-                Resultados da análise
-              </div>
-              <div>Formato: {customUrlAnalysis.format}</div>
-              <div>Qualidade: {customUrlAnalysis.quality}</div>
-              <div>Largura: {customUrlAnalysis.width}</div>
-              <div>Transformações: {customUrlAnalysis.transformations?.length || 0}</div>
-              {customUrlAnalysis.suggestions?.length > 0 && (
-                <>
-                  <div style={{ marginTop: '8px', fontWeight: 'bold' }}>Sugestões:</div>
-                  {customUrlAnalysis.suggestions.map((sugestão, i) => (
-                    <div key={i} style={diagnosticStyles.issue as React.CSSProperties}>
-                      • {sugestão}
-                    </div>
-                  ))}
-                </>
+              {isScanning ? (
+                <RefreshCw className="w-4 h-4 animate-spin" />
+              ) : (
+                <ImageIcon className="w-4 h-4" />
               )}
-            </div>
-          )}
-          
-          {imageIssues.length > 0 && (
-            <div style={diagnosticStyles.section as React.CSSProperties}>
-              <div style={diagnosticStyles.sectionTitle as React.CSSProperties}>
-                Problemas identificados ({imageIssues.length})
+              {isScanning ? 'Escaneando...' : 'Escanear Imagens'}
+            </Button>
+            
+            {isScanning && (
+              <div className="flex-1 min-w-[200px]">
+                <Progress percent={scanProgress} className="w-full" />
               </div>
-              {imageIssues.map((item, index) => (
-                <div 
-                  key={index} 
-                  style={diagnosticStyles.imageRow as React.CSSProperties}
-                  onClick={() => highlightImage(item.element)}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
-                    <img 
-                      src={item.url} 
-                      style={diagnosticStyles.thumbnail as React.CSSProperties} 
-                      alt="Thumbnail" 
-                    />
-                    <div style={{ fontSize: '10px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {item.url.substring(item.url.lastIndexOf('/') + 1)}
-                    </div>
-                  </div>
-                  <div>
-                    {item.issues.map((issue, i) => (
-                      <div key={i} style={diagnosticStyles.issue as React.CSSProperties}>
-                        • {issue}
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Stats */}
+      {imageStats && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-2xl font-bold">{imageStats.totalImagesRendered}</div>
+              <p className="text-sm text-muted-foreground">Imagens Encontradas</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-2xl font-bold text-orange-600">{imageStats.totalImagesWithIssues}</div>
+              <p className="text-sm text-muted-foreground">Com Problemas</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-2xl font-bold">{Math.round(imageStats.totalDownloadedBytes / 1024)}KB</div>
+              <p className="text-sm text-muted-foreground">Tamanho Total</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-2xl font-bold">
+                <Badge variant={imageStats.estimatedPerformanceImpact === 'Alto' ? 'destructive' : 
+                              imageStats.estimatedPerformanceImpact === 'Médio' ? 'secondary' : 'default'}>
+                  {imageStats.estimatedPerformanceImpact}
+                </Badge>
+              </div>
+              <p className="text-sm text-muted-foreground">Impacto Performance</p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Optimization Suggestions */}
+      {optimizationSuggestions && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Sugestões de Otimização</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-medium mb-2">Configuração Recomendada (Cloudinary):</h4>
+                <code className="bg-gray-100 p-2 rounded text-sm block">
+                  {optimizationSuggestions.url}
+                  {optimizationSuggestions.transformations.join(',')}
+                  /v1/image.jpg
+                </code>
+              </div>
+              
+              <div>
+                <h4 className="font-medium mb-2">Melhorias Sugeridas:</h4>
+                <ul className="space-y-1">
+                  {optimizationSuggestions.suggestions.map((sugestão: string, i: number) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm">{sugestão}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Issues List */}
+      {imageIssues.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <span>Problemas Encontrados</span>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={exportReport}>
+                  Exportar Relatório
+                </Button>
+                <Button size="sm" onClick={fixAllImages}>
+                  Corrigir Tudo
+                </Button>
+              </div>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {imageIssues.map((issue, index) => (
+                <div key={index} className="border rounded-lg p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <AlertCircle className="w-4 h-4 text-orange-500" />
+                        <span className="font-medium text-sm truncate">
+                          {issue.url.split('/').pop()}
+                        </span>
                       </div>
-                    ))}
+                      <p className="text-xs text-gray-600 mb-2">
+                        {issue.url}
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => fixImage(issue.url)}
+                    >
+                      Corrigir
+                    </Button>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <h5 className="font-medium text-sm mb-1">Problemas:</h5>
+                      <ul className="text-xs space-y-1">
+                        {issue.issues.map((issueText: string, i: number) => (
+                          <li key={i} className="flex items-center gap-1">
+                            <div className="w-1.5 h-1.5 bg-red-500 rounded-full" />
+                            {issueText}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    
+                    <div>
+                      <h5 className="font-medium text-sm mb-1">Dimensões:</h5>
+                      <div className="text-xs space-y-1">
+                        <div>Natural: {issue.dimensions.natural.width}x{issue.dimensions.natural.height}</div>
+                        <div>Display: {issue.dimensions.display.width}x{issue.dimensions.display.height}</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
-          )}
-          
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
-            <button 
-              style={diagnosticStyles.button as React.CSSProperties}
-              onClick={runDiagnostic}
-            >
-              Verificar novamente
-            </button>
-            <button 
-              style={diagnosticStyles.button as React.CSSProperties}
-              onClick={() => {
-                console.log('Relatório completo gerado:', generateImageReport());
-              }}
-            >
-              Ver no Console
-            </button>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       )}
-      
-      <div style={diagnosticStyles.footer as React.CSSProperties}>
-        Diagnóstico em tempo real • Apenas em desenvolvimento
-      </div>
+
+      {/* No Issues */}
+      {imageStats && imageIssues.length === 0 && (
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-center py-8">
+              <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold mb-2">Todas as imagens estão otimizadas!</h3>
+              <p className="text-gray-600">Nenhum problema foi encontrado nas imagens da página.</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

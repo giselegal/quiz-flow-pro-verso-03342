@@ -4,7 +4,7 @@ import { Card } from './ui/card';
 import { AnimatedWrapper } from './ui/animated-wrapper';
 import { QuizQuestion } from './QuizQuestion';
 import { strategicQuestions } from '../data/strategicQuestions';
-import { UserResponse } from '@/types/quiz';
+import { UserResponse, Question } from '@/types/quiz';
 
 interface QuizTransitionProps {
   onContinue: () => void;
@@ -15,10 +15,18 @@ interface QuizTransitionProps {
 const QuizTransition: React.FC<QuizTransitionProps> = ({ onContinue, onAnswer, currentAnswers }) => {
   const handleFirstStrategicAnswer = (response: UserResponse) => {
     onAnswer(response);
-    // Reduzindo o delay para a transição ser mais rápida
     setTimeout(() => {
       onContinue();
-    }, 250); // Reduzido de 500ms para 250ms
+    }, 250);
+  };
+
+  // Convert strategic question format to expected Question format
+  const firstStrategicQuestion: Question = {
+    id: strategicQuestions[0].id,
+    title: strategicQuestions[0].question,
+    type: 'single',
+    options: strategicQuestions[0].options,
+    multiSelect: false
   };
 
   return (
@@ -48,10 +56,11 @@ const QuizTransition: React.FC<QuizTransitionProps> = ({ onContinue, onAnswer, c
 
         <AnimatedWrapper show={true}>
           <QuizQuestion
-            question={strategicQuestions[0]}
+            question={firstStrategicQuestion}
             onAnswer={handleFirstStrategicAnswer}
             currentAnswers={currentAnswers}
             autoAdvance={true}
+            isStrategicQuestion={true}
           />
         </AnimatedWrapper>
       </div>

@@ -1,249 +1,152 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DynamicPropertiesPanel } from '../editor/panels/DynamicPropertiesPanel';
-import { BlockRenderer, BlockData } from '../editor/blocks';
-import { blockDefinitions, getCategories, getBlocksByCategory } from '@/config/blockDefinitionsClean';
-import { Type, Image, ArrowRight, CheckCircle, Target, Play, Star, FileText, ShoppingCart, Clock, MessageSquare, HelpCircle, Shield, Video } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { BlockDefinition, BlockData, Block } from '@/types/blocks';
 
-// Mock de dados para demonstração
-const mockBlocks: BlockData[] = [
+// Mock block definitions with proper types
+const mockBlockDefinitions: BlockDefinition[] = [
   {
-    id: '1',
-    type: 'header',
-    properties: {
-      title: 'Meu Título Incrível',
-      subtitle: 'Este é um subtítulo interessante',
-      titleSize: 'large',
-      alignment: 'center'
-    }
-  },
-  {
-    id: '2',
+    id: 'text-block',
     type: 'text',
-    properties: {
-      content: 'Este é um parágrafo de exemplo para demonstrar o sistema schema-driven.',
-      fontSize: 'medium',
-      alignment: 'left'
-    }
+    name: 'Text Block',
+    category: 'Content',
+    isNew: true,
+    description: 'Add text content'
   },
   {
-    id: '3',
+    id: 'image-block',
     type: 'image',
-    properties: {
-      src: 'https://via.placeholder.com/600x300?text=Imagem+Demo',
-      alt: 'Imagem de demonstração',
-      width: 'auto',
-      alignment: 'center'
-    }
+    name: 'Image Block',
+    category: 'Media',
+    isNew: false,
+    description: 'Add images'
   }
 ];
 
-const mockFunnelConfig = {
-  name: 'Quiz CaktoQuiz - Demonstração',
-  description: 'Demonstração do sistema schema-driven',
-  isPublished: false,
-  theme: 'caktoquiz'
-};
+const SchemaDrivenDemo: React.FC = () => {
+  const [selectedBlock, setSelectedBlock] = useState<BlockDefinition | null>(null);
+  const [blocks, setBlocks] = useState<Block[]>([]);
 
-// Mapeamento de ícones
-const iconMap: { [key: string]: React.ReactNode } = {
-  'Type': <Type className="w-4 h-4" />,
-  'Image': <Image className="w-4 h-4" />,
-  'ArrowRight': <ArrowRight className="w-4 h-4" />,
-  'CheckCircle': <CheckCircle className="w-4 h-4" />,
-  'Target': <Target className="w-4 h-4" />,
-  'Play': <Play className="w-4 h-4" />,
-  'Star': <Star className="w-4 h-4" />,
-  'FileText': <FileText className="w-4 h-4" />,
-  'ShoppingCart': <ShoppingCart className="w-4 h-4" />,
-  'Clock': <Clock className="w-4 h-4" />,
-  'MessageSquare': <MessageSquare className="w-4 h-4" />,
-  'HelpCircle': <HelpCircle className="w-4 h-4" />,
-  'Shield': <Shield className="w-4 h-4" />,
-  'Video': <Video className="w-4 h-4" />
-};
-
-export const SchemaDrivenDemo: React.FC = () => {
-  const [blocks, setBlocks] = useState<BlockData[]>(mockBlocks);
-  const [selectedBlockId, setSelectedBlockId] = useState<string>('1');
-  const [funnelConfig, setFunnelConfig] = useState(mockFunnelConfig);
-  const [activeTab, setActiveTab] = useState('blocks');
-
-  const selectedBlock = blocks.find(b => b.id === selectedBlockId) || blocks[0];
-
-  // Handlers para o painel de propriedades
-  const handleBlockPropertyChange = (key: string, value: any) => {
-    setBlocks(prev => prev.map(block => 
-      block.id === selectedBlockId 
-        ? { ...block, properties: { ...block.properties, [key]: value } }
-        : block
-    ));
+  const handleBlockSelect = (block: BlockDefinition) => {
+    setSelectedBlock(block);
   };
 
-  const handleNestedPropertyChange = (path: string, value: any) => {
-    const keys = path.split('.');
-    setBlocks(prev => prev.map(block => {
-      if (block.id !== selectedBlockId) return block;
-      
-      const newProperties = { ...block.properties };
-      let target = newProperties;
-      
-      for (let i = 0; i < keys.length - 1; i++) {
-        if (!target[keys[i]]) target[keys[i]] = {};
-        target = target[keys[i]];
+  const handleAddBlock = (blockDef: BlockDefinition) => {
+    const newBlock: Block = {
+      id: `${blockDef.type}-${Date.now()}`,
+      type: blockDef.type,
+      content: {
+        text: blockDef.type === 'text' ? 'Sample text' : '',
+        src: blockDef.type === 'image' ? 'https://via.placeholder.com/300x200' : ''
       }
-      target[keys[keys.length - 1]] = value;
-      
-      return { ...block, properties: newProperties };
-    }));
-  };
-
-  const handleFunnelConfigChange = (config: Partial<typeof mockFunnelConfig>) => {
-    setFunnelConfig(prev => ({ ...prev, ...config }));
-  };
-
-  // Handler para adicionar novo bloco
-  const addBlock = (blockType: string) => {
-    const definition = blockDefinitions.find(def => def.type === blockType);
-    if (!definition) return;
-
-    const defaultProperties: Record<string, any> = {};
-    definition.propertiesSchema?.forEach(prop => {
-      if (prop.defaultValue !== undefined) {
-        if (prop.nestedPath) {
-          const keys = prop.nestedPath.split('.');
-          let target = defaultProperties;
-          for (let i = 0; i < keys.length - 1; i++) {
-            if (!target[keys[i]]) target[keys[i]] = {};
-            target = target[keys[i]];
-          }
-          target[keys[keys.length - 1]] = prop.defaultValue;
-        } else {
-          defaultProperties[prop.key] = prop.defaultValue;
-        }
-      }
-    });
-
-    const newBlock: BlockData = {
-      id: `block-${Date.now()}`,
-      type: blockType,
-      properties: defaultProperties
     };
-
-    setBlocks(prev => [...prev, newBlock]);
-    setSelectedBlockId(newBlock.id);
+    setBlocks([...blocks, newBlock]);
   };
 
   return (
     <div className="h-screen flex">
-      {/* Sidebar Esquerda - Biblioteca de Blocos */}
-      <div className="w-80 border-r bg-white">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-          <div className="border-b p-4">
-            <TabsList className="w-full">
-              <TabsTrigger value="pages">Páginas</TabsTrigger>
-              <TabsTrigger value="blocks">Blocos</TabsTrigger>
-            </TabsList>
-          </div>
-          
-          <TabsContent value="pages" className="flex-1 p-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm">Páginas do Funil</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-500">
-                  Sistema de páginas seria implementado aqui...
-                </p>
+      {/* Sidebar */}
+      <div className="w-80 border-r bg-gray-50 p-4">
+        <h2 className="text-lg font-semibold mb-4">Block Library</h2>
+        <div className="space-y-2">
+          {mockBlockDefinitions.map((block) => (
+            <Card
+              key={block.id}
+              className="cursor-pointer hover:bg-gray-100"
+              onClick={() => handleBlockSelect(block)}
+            >
+              <CardContent className="p-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-medium">{block.name}</h3>
+                    <p className="text-sm text-gray-600">{block.description}</p>
+                  </div>
+                  {block.isNew && (
+                    <Badge variant="secondary" className="text-xs">New</Badge>
+                  )}
+                </div>
               </CardContent>
             </Card>
-          </TabsContent>
-
-          <TabsContent value="blocks" className="flex-1 overflow-auto">
-            <div className="p-4 space-y-4">
-              {getCategories().map(category => (
-                <div key={category}>
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">
-                    {category}
-                  </h3>
-                  <div className="space-y-2">
-                    {getBlocksByCategory(category).map(block => (
-                      <Button
-                        key={block.id}
-                        variant="ghost"
-                        className="w-full justify-start p-3 h-auto"
-                        onClick={() => addBlock(block.type)}
-                      >
-                        <div className="flex items-center space-x-3">
-                          <div className="text-gray-600">
-                            {iconMap[block.icon] || <Type className="w-4 h-4" />}
-                          </div>
-                          <div className="text-left">
-                            <div className="font-medium text-sm">
-                              {block.name}
-                              {block.isNew && (
-                                <Badge variant="secondary" className="ml-2 text-xs">
-                                  Novo
-                                </Badge>
-                              )}
-                            </div>
-                            <div className="text-xs text-gray-500">
-                              {block.description}
-                            </div>
-                          </div>
-                        </div>
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </TabsContent>
-        </Tabs>
+          ))}
+        </div>
       </div>
 
-      {/* Canvas Central */}
-      <div className="flex-1 bg-gray-50 overflow-auto">
-        <div className="p-8">
-          <div className="max-w-4xl mx-auto bg-white min-h-[800px] shadow-lg rounded-lg">
-            <div className="p-6 space-y-6">
-              <div className="border-b pb-4">
-                <h2 className="text-lg font-semibold text-gray-800">
-                  Preview do Funil: {funnelConfig.name}
-                </h2>
-                <p className="text-sm text-gray-600">
-                  {funnelConfig.description}
-                </p>
+      {/* Main Content */}
+      <div className="flex-1 p-4">
+        <Tabs defaultValue="canvas" className="h-full">
+          <TabsList>
+            <TabsTrigger value="canvas">Canvas</TabsTrigger>
+            <TabsTrigger value="preview">Preview</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="canvas" className="h-full">
+            <div className="border rounded-lg p-4 h-full">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold">Canvas</h2>
+                {selectedBlock && (
+                  <Button onClick={() => handleAddBlock(selectedBlock)}>
+                    Add {selectedBlock.name}
+                  </Button>
+                )}
               </div>
               
               <div className="space-y-4">
                 {blocks.map((block) => (
-                  <BlockRenderer
-                    key={block.id}
-                    block={block}
-                    isSelected={block.id === selectedBlockId}
-                    onClick={() => setSelectedBlockId(block.id)}
-                  />
+                  <Card key={block.id} className="p-4">
+                    <div className="flex justify-between items-center">
+                      <span className="font-medium">{block.type} Block</span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setBlocks(blocks.filter(b => b.id !== block.id))}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                    <div className="mt-2">
+                      {block.type === 'text' && (
+                        <p>{block.content.text}</p>
+                      )}
+                      {block.type === 'image' && (
+                        <img src={block.content.src} alt="Block content" className="max-w-xs" />
+                      )}
+                    </div>
+                  </Card>
+                ))}
+                
+                {blocks.length === 0 && (
+                  <div className="text-center py-12 text-gray-500">
+                    Select a block from the sidebar to get started
+                  </div>
+                )}
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="preview">
+            <div className="border rounded-lg p-4">
+              <h2 className="text-xl font-semibold mb-4">Preview</h2>
+              <div className="space-y-4">
+                {blocks.map((block) => (
+                  <div key={block.id}>
+                    {block.type === 'text' && (
+                      <p className="text-lg">{block.content.text}</p>
+                    )}
+                    {block.type === 'image' && (
+                      <img src={block.content.src} alt="Content" className="max-w-md rounded" />
+                    )}
+                  </div>
                 ))}
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Sidebar Direita - Painel de Propriedades */}
-      <div className="w-80 border-l bg-white">
-        <DynamicPropertiesPanel
-          selectedBlock={selectedBlock}
-          funnelConfig={funnelConfig}
-          onBlockPropertyChange={handleBlockPropertyChange}
-          onNestedPropertyChange={handleNestedPropertyChange}
-          onFunnelConfigChange={handleFunnelConfigChange}
-        />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
 };
+
+export default SchemaDrivenDemo;

@@ -1,34 +1,59 @@
-// Tipos base para o sistema de blocos schema-driven
+
+export interface BlockDefinition {
+  id: string;
+  type: string;
+  name: string;
+  category: string;
+  icon?: string;
+  description?: string;
+  isNew?: boolean;
+  defaultProps?: Record<string, any>;
+}
 
 export interface BlockData {
   id: string;
   type: string;
-  properties: Record<string, any>;
+  content: Record<string, any>;
+  properties?: Record<string, any>;
+}
+
+export interface Block {
+  id: string;
+  type: string;
+  content: Record<string, any>;
+  order?: number;
+  properties?: Record<string, any>;
 }
 
 export interface BlockComponentProps {
-  block: BlockData;
+  block: Block;
   isSelected?: boolean;
-  isEditing?: boolean;
   onClick?: () => void;
-  onPropertyChange?: (key: string, value: any) => void;
+  onUpdate?: (updates: any) => void;
+  onDelete?: () => void;
   className?: string;
+  isEditing?: boolean;
+  onPropertyChange?: (key: string, value: any) => void;
 }
 
-// Tipos específicos para quiz
-export interface QuizAnswer {
-  id: string;
-  text: string;
-  value: string;
-  weight?: number;
+export interface CountdownTimerProps {
+  duration: number;
+  onComplete: () => void;
+  showIcon?: boolean;
+  size?: string;
+  color?: string;
 }
 
-export interface QuizOption {
-  id: string;
-  text: string;
-  value: string;
-  weight?: number;
+export interface ResultCardProps {
+  data: any;
+  showButton?: boolean;
+  buttonText?: string;
+  onButtonClick?: () => void;
+  size?: string;
 }
 
-// Re-export tipos existentes para compatibilidade
-// export type { BlockData as Block } from '@/services/funnelService';
+export interface OfferCardProps {
+  data: any;
+  showDiscount?: boolean;
+  onPurchase?: () => void;
+}

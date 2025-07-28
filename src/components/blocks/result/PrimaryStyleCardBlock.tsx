@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { StyleResult } from '@/components/result/StyleResult';
+import type { StyleResultData } from '@/components/result/StyleResult';
 
 /**
  * BLOCO EDITÁVEL: Card de Resultado de Estilo Predominante
@@ -26,15 +28,6 @@ import { StyleResult } from '@/components/result/StyleResult';
  *   cardStyle="elegant"
  * />
  */
-
-export interface StyleResultData {
-  id: string;
-  name: string;
-  description: string;
-  percentage: number;
-  imageUrl: string;
-  characteristics: string[];
-}
 
 export interface PrimaryStyleCardBlockProps {
   blockId?: string;

@@ -1,3 +1,4 @@
+
 /**
  * Componentes de Quiz Reutilizáveis - ETAPAS 1-19 DO FUNIL COMPLETO
  * 

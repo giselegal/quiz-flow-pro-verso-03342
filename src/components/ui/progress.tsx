@@ -1,34 +1,37 @@
 
-import * as React from "react"
-import * as ProgressPrimitive from "@radix-ui/react-progress"
+import React from 'react';
+import { Progress as AntProgress } from 'antd';
+import type { ProgressProps as AntProgressProps } from 'antd';
 
-import { cn } from "@/lib/utils"
-
-interface ProgressProps extends React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
-  indicatorClassName?: string;
+export interface ProgressProps extends AntProgressProps {
+  variant?: 'default' | 'success' | 'warning' | 'error';
 }
 
-const Progress = React.forwardRef<
-  React.ElementRef<typeof ProgressPrimitive.Root>,
-  ProgressProps
->(({ className, indicatorClassName, value, ...props }, ref) => (
-  <ProgressPrimitive.Root
-    ref={ref}
-    className={cn(
-      "relative h-4 w-full overflow-hidden rounded-full bg-secondary/30",
-      className
-    )}
-    {...props}
-  >
-    <ProgressPrimitive.Indicator
-      className={cn(
-        "h-full w-full flex-1 bg-primary transition-transform duration-500 ease-in-out",
-        indicatorClassName
-      )}
-      style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
-    />
-  </ProgressPrimitive.Root>
-))
-Progress.displayName = ProgressPrimitive.Root.displayName
+export const Progress: React.FC<ProgressProps> = ({
+  variant = 'default',
+  className = '',
+  ...props
+}) => {
+  const getVariantColor = (variant: ProgressProps['variant']) => {
+    switch (variant) {
+      case 'success':
+        return '#52c41a';
+      case 'warning':
+        return '#faad14';
+      case 'error':
+        return '#ff4d4f';
+      default:
+        return undefined;
+    }
+  };
 
-export { Progress }
+  return (
+    <AntProgress
+      className={className}
+      strokeColor={getVariantColor(variant)}
+      {...props}
+    />
+  );
+};
+
+export default Progress;

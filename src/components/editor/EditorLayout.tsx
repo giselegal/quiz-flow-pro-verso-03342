@@ -1,72 +1,97 @@
 
 import React, { useState } from 'react';
-import { StyleResult } from '@/types/quiz';
-import { ComponentsSidebar } from './sidebar/ComponentsSidebar';
-import PropertiesPanel from './properties/PropertiesPanel';
-import PagePreview from './preview/PagePreview';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { EditorBlock } from '@/types/editor';
-import { useEditor } from '@/hooks/useEditor';
+import { ComponentsSidebar } from '@/components/result-editor/ComponentsSidebar';
+import { EditorPreview } from '@/components/result-editor/EditorPreview';
+import { PropertiesPanel } from '@/components/result-editor/PropertiesPanel';
+import { StyleResult } from '@/types/quiz';
 
 interface EditorLayoutProps {
-  primaryStyle?: StyleResult;
+  selectedStyle: StyleResult | { category: string; score: number; percentage: number; };
+  onShowTemplates?: () => void;
 }
 
-const EditorLayout = ({ primaryStyle }: EditorLayoutProps) => {
-  const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
-  const { config, addBlock, updateBlock, deleteBlock } = useEditor();
+export const EditorLayout: React.FC<EditorLayoutProps> = ({ 
+  selectedStyle, 
+  onShowTemplates 
+}) => {
+  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
+  const [blocks, setBlocks] = useState<any[]>([]);
+  const [isPreviewing, setIsPreviewing] = useState(false);
 
-  // Função para adicionar um bloco quando um componente é selecionado do sidebar
-  const handleComponentSelect = (componentType: EditorBlock['type']) => {
-    const newBlockId = addBlock(componentType);
-    setSelectedComponent(newBlockId);
+  // Normalize selectedStyle to string format
+  const normalizedStyle: string = typeof selectedStyle === 'string' 
+    ? selectedStyle 
+    : selectedStyle.category || 'natural';
+
+  const handleComponentSelect = (componentId: string) => {
+    setSelectedBlockId(componentId);
   };
 
-  // Função para mostrar as propriedades de um bloco
-  const handleSelectComponent = (blockId: string) => {
-    setSelectedComponent(blockId);
+  const handleBlockAdd = (blockType: string) => {
+    const newBlock = {
+      id: `block-${Date.now()}`,
+      type: blockType,
+      content: {},
+      properties: {}
+    };
+    setBlocks(prev => [...prev, newBlock]);
+  };
+
+  const handleBlockUpdate = (blockId: string, updates: any) => {
+    setBlocks(prev => prev.map(block => 
+      block.id === blockId 
+        ? { ...block, content: { ...block.content, ...updates } }
+        : block
+    ));
+  };
+
+  const handleBlockDelete = (blockId: string) => {
+    setBlocks(prev => prev.filter(block => block.id !== blockId));
+    setSelectedBlockId(null);
+  };
+
+  const handleBlockReorder = (sourceIndex: number, destinationIndex: number) => {
+    setBlocks(prev => {
+      const newBlocks = [...prev];
+      const [removed] = newBlocks.splice(sourceIndex, 1);
+      newBlocks.splice(destinationIndex, 0, removed);
+      return newBlocks;
+    });
   };
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
-      <ResizablePanelGroup direction="horizontal" className="flex-1">
-        {/* Left Sidebar - Components */}
+      <ResizablePanelGroup direction="horizontal" className="h-full">
         <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-          <div className="h-full border-r border-[#B89B7A]/20 bg-white overflow-y-auto">
-            <ComponentsSidebar onComponentSelect={handleComponentSelect} />
-          </div>
+          <ComponentsSidebar onComponentSelect={handleBlockAdd} />
         </ResizablePanel>
-        
+
         <ResizableHandle withHandle />
-        
-        {/* Central Area - Page Preview */}
+
         <ResizablePanel defaultSize={55}>
-          <PagePreview
-            primaryStyle={primaryStyle || {
-              category: 'Natural',
-              score: 0,
-              percentage: 100
-            }}
-            onSelectComponent={handleSelectComponent}
-            blocks={config.blocks}
-            onAddBlock={() => handleComponentSelect('headline')}
+          <EditorPreview
+            blocks={blocks}
+            selectedBlockId={selectedBlockId}
+            onSelectBlock={setSelectedBlockId}
+            isPreviewing={isPreviewing}
+            primaryStyle={normalizedStyle}
+            onReorderBlocks={handleBlockReorder}
           />
         </ResizablePanel>
-        
+
         <ResizableHandle withHandle />
-        
-        {/* Right Sidebar - Properties */}
-        <ResizablePanel defaultSize={25} minSize={20} maxSize={40}>
-          <div className="h-full border-l border-[#B89B7A]/20 bg-white overflow-y-auto">
-            <PropertiesPanel
-              selectedComponentId={selectedComponent}
-              onClose={() => setSelectedComponent(null)}
-            />
-          </div>
+
+        <ResizablePanel defaultSize={25}>
+          <PropertiesPanel
+            selectedBlockId={selectedBlockId}
+            blocks={blocks}
+            onClose={() => setSelectedBlockId(null)}
+            onUpdate={handleBlockUpdate}
+            onDelete={handleBlockDelete}
+          />
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
   );
 };
-
-export default EditorLayout;
