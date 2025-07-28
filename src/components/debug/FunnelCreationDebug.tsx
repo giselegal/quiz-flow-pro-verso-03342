@@ -26,20 +26,6 @@ export const FunnelCreationDebug = ({ funnel }: FunnelCreationDebugProps) => {
         if (page.blocks && page.blocks.length > 0) {
           page.blocks.forEach((block: any, blockIndex: number) => {
             console.log(`       ${blockIndex + 1}. ${block.type} (${block.id})`);
-            
-            // Debug detalhado para blocos SpacerBlock
-            if (block.type === 'spacer') {
-              console.log(`         🔍 SPACER BLOCK DEBUG:`);
-              console.log(`         - properties existe: ${!!block.properties}`);
-              console.log(`         - properties:`, block.properties);
-              if (block.properties) {
-                console.log(`         - height existe: ${!!block.properties.height}`);
-                console.log(`         - height valor:`, block.properties.height);
-              }
-            }
-            
-            // Debug geral das propriedades de todos os blocos
-            console.log(`         - Propriedades:`, block.properties || 'UNDEFINED');
           });
         }
       });
