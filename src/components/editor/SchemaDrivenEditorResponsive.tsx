@@ -28,7 +28,7 @@ import { SchemaDrivenComponentsSidebar } from './sidebar/SchemaDrivenComponentsS
 import { DynamicPropertiesPanel } from './panels/DynamicPropertiesPanel';
 import { DroppableCanvas } from './dnd/DroppableCanvas';
 import { TestDeleteComponent } from './TestDeleteComponent';
-import { allBlockDefinitions } from '../../config/blockDefinitions';
+import { blockDefinitions } from '../../config/blockDefinitions';
 import { useLocation } from 'wouter';
 import { saveDiagnostic } from '../../utils/saveDiagnostic';
 // Importar novos serviços e componentes
@@ -209,7 +209,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   // Handlers
   const handleComponentSelect = useCallback((type: string) => {
     pushToUndoStack(); // Salva o estado antes de adicionar
-    const definition = allBlockDefinitions.find((def: any) => def.type === type);
+    const definition = blockDefinitions.find((def: any) => def.type === type);
     if (definition && currentPage) {
       const defaultProperties: Record<string, any> = {};
       definition.propertiesSchema?.forEach((prop: any) => {

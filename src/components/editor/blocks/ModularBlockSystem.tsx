@@ -24,7 +24,8 @@ import {
   Minus,
   ArrowRightLeft,
   Rows3,
-  Keyboard
+  Keyboard,
+  Flag
 } from 'lucide-react';
 
 /**
@@ -52,7 +53,8 @@ const ICON_MAP: Record<string, React.ComponentType<any>> = {
   'Minus': Minus,
   'ArrowRightLeft': ArrowRightLeft,
   'Rows3': Rows3,
-  'Keyboard': Keyboard
+  'Keyboard': Keyboard,
+  '🏁': Flag
 };
 
 /**
