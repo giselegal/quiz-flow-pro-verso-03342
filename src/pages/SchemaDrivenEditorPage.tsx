@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { DroppableCanvas } from '../components/editor/dnd/DroppableCanvas';
 import { FormElementsPanel } from '../components/editor/FormElementsPanel';
-import { DndProvider } from '../components/editor/dnd/DndProvider';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { BlockData } from '../types/blocks';
 
 export default function SchemaDrivenEditorPage() {
@@ -63,14 +64,7 @@ export default function SchemaDrivenEditorPage() {
   };
 
   return (
-    <DndProvider
-      blocks={blocks}
-      onBlocksReorder={handleBlocksReorder}
-      onBlockAdd={handleBlockAdd}
-      onBlockSelect={setSelectedBlockId}
-      selectedBlockId={selectedBlockId}
-      onBlockUpdate={handleBlockUpdate}
-    >
+    <DndProvider backend={HTML5Backend}>
       <div className="flex h-screen">
         <FormElementsPanel />
         <div className="flex-1">

@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { useDrop } from 'react-dnd';
 import { Card, CardContent } from '../../ui/card';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
@@ -49,6 +50,16 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
   className = '',
 }) => {
   const [draggedBlock, setDraggedBlock] = useState<string | null>(null);
+
+  const [{ isOver }, drop] = useDrop(() => ({
+    accept: 'form-element',
+    drop: (item: { type: string }) => {
+      onAddBlock(item.type);
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
+  }));
 
   const getBlockDefinition = useCallback((type: string) => {
     return allBlockDefinitions.find(def => def.type === type);
@@ -267,7 +278,7 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
   );
 
   return (
-    <ScrollArea className="h-full p-4">
+    <ScrollArea ref={drop} className={`h-full p-4 ${isOver ? 'bg-blue-50 border-2 border-blue-300 border-dashed' : ''}`}>
       <div className="max-w-full space-y-4">
         {blocks.length > 0 ? (
           <>
