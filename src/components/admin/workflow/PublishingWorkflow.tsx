@@ -1,76 +1,160 @@
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
-export type WorkflowStatus = 'draft' | 'review' | 'approved' | 'published' | 'archived';
-
-interface WorkflowItem {
-  id: string;
-  title: string;
-  status: WorkflowStatus;
-  createdAt: Date;
-  updatedAt: Date;
-  authorId: string;
-}
+type WorkflowStatus = 'draft' | 'review' | 'approved' | 'published' | 'rejected';
 
 interface WorkflowContextType {
-  items: WorkflowItem[];
-  updateStatus: (id: string, status: WorkflowStatus) => void;
-  createItem: (title: string) => void;
+  status: WorkflowStatus;
+  canEdit: boolean;
+  canPublish: boolean;
+  canReview: boolean;
+  updateStatus: (status: WorkflowStatus) => void;
+  submitForReview: () => void;
+  approve: () => void;
+  reject: (reason?: string) => void;
+  publish: () => void;
 }
 
-const WorkflowContext = createContext<WorkflowContextType | undefined>(undefined);
+const WorkflowContext = createContext<WorkflowContextType>({
+  status: 'draft',
+  canEdit: true,
+  canPublish: false,
+  canReview: false,
+  updateStatus: () => {},
+  submitForReview: () => {},
+  approve: () => {},
+  reject: () => {},
+  publish: () => {}
+});
 
-export const WorkflowManager: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [items, setItems] = useState<WorkflowItem[]>([]);
+export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [status, setStatus] = useState<WorkflowStatus>('draft');
+  const [userRole] = useState<string>('editor'); // This would come from auth context
 
-  const updateStatus = (id: string, status: WorkflowStatus) => {
-    setItems(prev => prev.map(item => 
-      item.id === id ? { ...item, status, updatedAt: new Date() } : item
-    ));
+  const canEdit = status === 'draft' || status === 'rejected';
+  const canPublish = status === 'approved' && userRole === 'admin';
+  const canReview = status === 'review' && userRole === 'reviewer';
+
+  const updateStatus = (newStatus: WorkflowStatus) => {
+    setStatus(newStatus);
   };
 
-  const createItem = (title: string) => {
-    const newItem: WorkflowItem = {
-      id: Date.now().toString(),
-      title,
-      status: 'draft',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      authorId: 'current-user'
-    };
-    setItems(prev => [...prev, newItem]);
+  const submitForReview = () => {
+    setStatus('review');
+  };
+
+  const approve = () => {
+    setStatus('approved');
+  };
+
+  const reject = (reason?: string) => {
+    setStatus('rejected');
+    console.log('Rejected:', reason);
+  };
+
+  const publish = () => {
+    setStatus('published');
+  };
+
+  const value: WorkflowContextType = {
+    status,
+    canEdit,
+    canPublish,
+    canReview,
+    updateStatus,
+    submitForReview,
+    approve,
+    reject,
+    publish
   };
 
   return (
-    <WorkflowContext.Provider value={{ items, updateStatus, createItem }}>
+    <WorkflowContext.Provider value={value}>
       {children}
     </WorkflowContext.Provider>
   );
 };
 
-export const useWorkflow = () => {
-  const context = useContext(WorkflowContext);
-  if (!context) {
-    throw new Error('useWorkflow must be used within a WorkflowManager');
-  }
-  return context;
-};
+export const useWorkflow = () => useContext(WorkflowContext);
 
-export const StatusBadge: React.FC<{ status: WorkflowStatus }> = ({ status }) => {
+interface StatusBadgeProps {
+  status: WorkflowStatus;
+  className?: string;
+}
+
+export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
   const getStatusColor = (status: WorkflowStatus) => {
     switch (status) {
-      case 'draft': return 'bg-gray-500';
-      case 'review': return 'bg-yellow-500';
-      case 'approved': return 'bg-green-500';
-      case 'published': return 'bg-blue-500';
-      case 'archived': return 'bg-red-500';
-      default: return 'bg-gray-500';
+      case 'draft': return 'secondary';
+      case 'review': return 'default';
+      case 'approved': return 'secondary';
+      case 'published': return 'default';
+      case 'rejected': return 'destructive';
+      default: return 'secondary';
     }
   };
 
   return (
-    <span className={`px-2 py-1 rounded text-white text-xs ${getStatusColor(status)}`}>
-      {status}
-    </span>
+    <Badge variant={getStatusColor(status)} className={className}>
+      {status.charAt(0).toUpperCase() + status.slice(1)}
+    </Badge>
   );
 };
+
+interface WorkflowManagerProps {
+  children: ReactNode;
+}
+
+export const WorkflowManager: React.FC<WorkflowManagerProps> = ({ children }) => {
+  const workflow = useWorkflow();
+
+  return (
+    <WorkflowProvider>
+      <div className="space-y-4">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <span>Workflow Status</span>
+              <StatusBadge status={workflow.status} />
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex space-x-2">
+              {workflow.canEdit && (
+                <Button onClick={workflow.submitForReview} size="sm">
+                  Submit for Review
+                </Button>
+              )}
+              {workflow.canReview && (
+                <>
+                  <Button onClick={workflow.approve} size="sm">
+                    Approve
+                  </Button>
+                  <Button 
+                    onClick={() => workflow.reject('Content needs revision')} 
+                    variant="outline" 
+                    size="sm"
+                  >
+                    Reject
+                  </Button>
+                </>
+              )}
+              {workflow.canPublish && (
+                <Button onClick={workflow.publish} size="sm">
+                  Publish
+                </Button>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+        
+        {children}
+      </div>
+    </WorkflowProvider>
+  );
+};
+
+export default WorkflowManager;

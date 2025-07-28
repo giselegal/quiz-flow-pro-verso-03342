@@ -1,364 +1,215 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
 import { 
-  Settings, 
-  Palette, 
   Type, 
-  Layout, 
   Image, 
-  Link, 
-  Code, 
-  Eye, 
-  EyeOff,
-  Trash2
+  MousePointer, 
+  Palette, 
+  Layout, 
+  Settings2,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  Bold,
+  Italic,
+  Underline
 } from 'lucide-react';
 
-interface ModularPropertiesPanelProps {
-  selectedBlockId?: string | null;
-  onClose?: () => void;
-  onUpdate?: (properties: any) => void;
-  onDelete?: () => void;
+export interface ModularPropertiesPanelProps {
+  selectedComponent: any;
+  onPropertyChange: (property: string, value: any) => void;
+  onSave: () => void;
+  onReset: () => void;
 }
 
-export const ModularPropertiesPanel: React.FC<ModularPropertiesPanelProps> = ({
-  selectedBlockId,
-  onClose,
-  onUpdate,
-  onDelete
-}) => {
-  const [activeTab, setActiveTab] = useState('content');
-  const [properties, setProperties] = useState({
-    content: {
-      title: '',
-      text: '',
-      buttonText: '',
-      buttonUrl: '',
-      imageUrl: ''
-    },
-    style: {
-      backgroundColor: '#ffffff',
-      textColor: '#000000',
-      fontSize: '16px',
-      fontWeight: 'normal',
-      padding: '16px',
-      borderRadius: '8px'
-    },
-    layout: {
-      width: '100%',
-      height: 'auto',
-      alignment: 'left',
-      spacing: '16px'
-    },
-    animation: {
-      type: 'none',
-      duration: '0.3s',
-      delay: '0s'
+interface PropertyGroup {
+  id: string;
+  title: string;
+  properties: Record<string, any>;
+}
+
+// Create property groups for different component types
+export const createTextPropertyGroups = (component: any): PropertyGroup[] => [
+  {
+    id: 'content',
+    title: 'Content',
+    properties: {
+      text: component.properties?.text || '',
+      fontSize: component.properties?.fontSize || '16px',
+      fontWeight: component.properties?.fontWeight || 'normal',
+      color: component.properties?.color || '#000000'
     }
-  });
+  },
+  {
+    id: 'layout',
+    title: 'Layout',
+    properties: {
+      alignment: component.properties?.alignment || 'left',
+      padding: component.properties?.padding || '0px',
+      margin: component.properties?.margin || '0px'
+    }
+  }
+];
 
-  const handlePropertyChange = (section: string, key: string, value: any) => {
-    setProperties(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        [key]: value
-      }
-    }));
-    
-    onUpdate?.(properties);
-  };
+export const createImagePropertyGroups = (component: any): PropertyGroup[] => [
+  {
+    id: 'content',
+    title: 'Content',
+    properties: {
+      src: component.properties?.src || '',
+      alt: component.properties?.alt || '',
+      width: component.properties?.width || 'auto',
+      height: component.properties?.height || 'auto'
+    }
+  },
+  {
+    id: 'style',
+    title: 'Style',
+    properties: {
+      borderRadius: component.properties?.borderRadius || '0px',
+      objectFit: component.properties?.objectFit || 'cover'
+    }
+  }
+];
 
-  if (!selectedBlockId) {
+export const createButtonPropertyGroups = (component: any): PropertyGroup[] => [
+  {
+    id: 'content',
+    title: 'Content',
+    properties: {
+      text: component.properties?.text || 'Button',
+      url: component.properties?.url || '',
+      target: component.properties?.target || '_self'
+    }
+  },
+  {
+    id: 'style',
+    title: 'Style',
+    properties: {
+      backgroundColor: component.properties?.backgroundColor || '#007bff',
+      color: component.properties?.color || '#ffffff',
+      padding: component.properties?.padding || '12px 24px',
+      borderRadius: component.properties?.borderRadius || '6px'
+    }
+  }
+];
+
+const ModularPropertiesPanel: React.FC<ModularPropertiesPanelProps> = ({
+  selectedComponent,
+  onPropertyChange,
+  onSave,
+  onReset
+}) => {
+  if (!selectedComponent) {
     return (
-      <div className="h-full flex items-center justify-center p-4">
-        <div className="text-center">
-          <Settings className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-500">
-            Selecione um bloco para editar suas propriedades
-          </p>
-        </div>
-      </div>
+      <Card className="h-full">
+        <CardContent className="p-4">
+          <div className="text-center text-gray-500 py-8">
+            Select a component to edit its properties
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
+  // Get property groups based on component type
+  const getPropertyGroups = (): PropertyGroup[] => {
+    switch (selectedComponent.type) {
+      case 'text':
+        return createTextPropertyGroups(selectedComponent);
+      case 'image':
+        return createImagePropertyGroups(selectedComponent);
+      case 'button':
+        return createButtonPropertyGroups(selectedComponent);
+      default:
+        return [];
+    }
+  };
+
+  const propertyGroups = getPropertyGroups();
+
+  const handlePropertyChange = (groupId: string, propertyKey: string, value: any) => {
+    onPropertyChange(`${groupId}.${propertyKey}`, value);
+  };
+
+  const renderPropertyEditor = (group: PropertyGroup) => {
+    const groupProps = group.properties;
+    
+    return (
+      <div key={group.id} className="space-y-4">
+        <h3 className="font-medium text-sm text-gray-700 border-b pb-2">
+          {group.title}
+        </h3>
+        
+        {Object.entries(groupProps).map(([key, value]) => (
+          <div key={key} className="space-y-2">
+            <label className="block text-sm font-medium text-gray-600 capitalize">
+              {key.replace(/([A-Z])/g, ' $1').trim()}
+            </label>
+            
+            {typeof value === 'string' && (
+              <input
+                type="text"
+                value={value}
+                onChange={(e) => handlePropertyChange(group.id, key, e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            )}
+            
+            {typeof value === 'number' && (
+              <input
+                type="number"
+                value={value}
+                onChange={(e) => handlePropertyChange(group.id, key, parseInt(e.target.value))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            )}
+            
+            {typeof value === 'boolean' && (
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={value}
+                  onChange={(e) => handlePropertyChange(group.id, key, e.target.checked)}
+                  className="rounded"
+                />
+                <span className="text-sm text-gray-700">Enable</span>
+              </label>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
-    <div className="h-full flex flex-col">
-      <div className="border-b p-4 bg-white">
-        <div className="flex items-center justify-between">
-          <h3 className="font-medium">Propriedades do Bloco</h3>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onDelete}
-            >
-              <Trash2 className="w-4 h-4" />
+    <Card className="h-full">
+      <CardHeader className="border-b">
+        <CardTitle className="flex items-center space-x-2">
+          <Settings2 className="w-5 h-5" />
+          <span>Properties</span>
+        </CardTitle>
+      </CardHeader>
+      
+      <CardContent className="p-0">
+        <div className="p-4 space-y-6">
+          {propertyGroups.map(renderPropertyEditor)}
+          
+          <div className="flex space-x-2 pt-4 border-t">
+            <Button onClick={onSave} className="flex-1">
+              Save
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onClose}
-            >
-              <EyeOff className="w-4 h-4" />
+            <Button onClick={onReset} variant="outline" className="flex-1">
+              Reset
             </Button>
           </div>
         </div>
-      </div>
-
-      <div className="flex-1 overflow-auto">
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="content">
-              <Type className="w-4 h-4 mr-2" />
-              Conteúdo
-            </TabsTrigger>
-            <TabsTrigger value="style">
-              <Palette className="w-4 h-4 mr-2" />
-              Estilo
-            </TabsTrigger>
-            <TabsTrigger value="layout">
-              <Layout className="w-4 h-4 mr-2" />
-              Layout
-            </TabsTrigger>
-            <TabsTrigger value="animation">
-              <Eye className="w-4 h-4 mr-2" />
-              Animação
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="content" className="p-4 space-y-4">
-            <div>
-              <Label htmlFor="title">Título</Label>
-              <Input
-                id="title"
-                value={properties.content.title}
-                onChange={(e) => handlePropertyChange('content', 'title', e.target.value)}
-                placeholder="Digite o título"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="text">Texto</Label>
-              <Textarea
-                id="text"
-                value={properties.content.text}
-                onChange={(e) => handlePropertyChange('content', 'text', e.target.value)}
-                placeholder="Digite o texto"
-                rows={4}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="buttonText">Texto do Botão</Label>
-              <Input
-                id="buttonText"
-                value={properties.content.buttonText}
-                onChange={(e) => handlePropertyChange('content', 'buttonText', e.target.value)}
-                placeholder="Clique aqui"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="buttonUrl">URL do Botão</Label>
-              <Input
-                id="buttonUrl"
-                value={properties.content.buttonUrl}
-                onChange={(e) => handlePropertyChange('content', 'buttonUrl', e.target.value)}
-                placeholder="https://exemplo.com"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="imageUrl">URL da Imagem</Label>
-              <Input
-                id="imageUrl"
-                value={properties.content.imageUrl}
-                onChange={(e) => handlePropertyChange('content', 'imageUrl', e.target.value)}
-                placeholder="https://exemplo.com/imagem.jpg"
-              />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="style" className="p-4 space-y-4">
-            <div>
-              <Label htmlFor="backgroundColor">Cor de Fundo</Label>
-              <Input
-                id="backgroundColor"
-                type="color"
-                value={properties.style.backgroundColor}
-                onChange={(e) => handlePropertyChange('style', 'backgroundColor', e.target.value)}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="textColor">Cor do Texto</Label>
-              <Input
-                id="textColor"
-                type="color"
-                value={properties.style.textColor}
-                onChange={(e) => handlePropertyChange('style', 'textColor', e.target.value)}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="fontSize">Tamanho da Fonte</Label>
-              <Select
-                value={properties.style.fontSize}
-                onValueChange={(value) => handlePropertyChange('style', 'fontSize', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="12px">12px</SelectItem>
-                  <SelectItem value="14px">14px</SelectItem>
-                  <SelectItem value="16px">16px</SelectItem>
-                  <SelectItem value="18px">18px</SelectItem>
-                  <SelectItem value="20px">20px</SelectItem>
-                  <SelectItem value="24px">24px</SelectItem>
-                  <SelectItem value="32px">32px</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <Label htmlFor="fontWeight">Peso da Fonte</Label>
-              <Select
-                value={properties.style.fontWeight}
-                onValueChange={(value) => handlePropertyChange('style', 'fontWeight', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="normal">Normal</SelectItem>
-                  <SelectItem value="bold">Negrito</SelectItem>
-                  <SelectItem value="lighter">Mais Leve</SelectItem>
-                  <SelectItem value="bolder">Mais Negrito</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <Label htmlFor="padding">Padding</Label>
-              <Input
-                id="padding"
-                value={properties.style.padding}
-                onChange={(e) => handlePropertyChange('style', 'padding', e.target.value)}
-                placeholder="16px"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="borderRadius">Border Radius</Label>
-              <Input
-                id="borderRadius"
-                value={properties.style.borderRadius}
-                onChange={(e) => handlePropertyChange('style', 'borderRadius', e.target.value)}
-                placeholder="8px"
-              />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="layout" className="p-4 space-y-4">
-            <div>
-              <Label htmlFor="width">Largura</Label>
-              <Input
-                id="width"
-                value={properties.layout.width}
-                onChange={(e) => handlePropertyChange('layout', 'width', e.target.value)}
-                placeholder="100%"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="height">Altura</Label>
-              <Input
-                id="height"
-                value={properties.layout.height}
-                onChange={(e) => handlePropertyChange('layout', 'height', e.target.value)}
-                placeholder="auto"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="alignment">Alinhamento</Label>
-              <Select
-                value={properties.layout.alignment}
-                onValueChange={(value) => handlePropertyChange('layout', 'alignment', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="left">Esquerda</SelectItem>
-                  <SelectItem value="center">Centro</SelectItem>
-                  <SelectItem value="right">Direita</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <Label htmlFor="spacing">Espaçamento</Label>
-              <Input
-                id="spacing"
-                value={properties.layout.spacing}
-                onChange={(e) => handlePropertyChange('layout', 'spacing', e.target.value)}
-                placeholder="16px"
-              />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="animation" className="p-4 space-y-4">
-            <div>
-              <Label htmlFor="animationType">Tipo de Animação</Label>
-              <Select
-                value={properties.animation.type}
-                onValueChange={(value) => handlePropertyChange('animation', 'type', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Nenhuma</SelectItem>
-                  <SelectItem value="fade">Fade</SelectItem>
-                  <SelectItem value="slide">Slide</SelectItem>
-                  <SelectItem value="scale">Scale</SelectItem>
-                  <SelectItem value="bounce">Bounce</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <Label htmlFor="duration">Duração</Label>
-              <Input
-                id="duration"
-                value={properties.animation.duration}
-                onChange={(e) => handlePropertyChange('animation', 'duration', e.target.value)}
-                placeholder="0.3s"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="delay">Delay</Label>
-              <Input
-                id="delay"
-                value={properties.animation.delay}
-                onChange={(e) => handlePropertyChange('animation', 'delay', e.target.value)}
-                placeholder="0s"
-              />
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
+
+export default ModularPropertiesPanel;

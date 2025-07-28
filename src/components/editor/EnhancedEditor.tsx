@@ -1,228 +1,125 @@
 
 import React, { useState, useEffect } from 'react';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { BarChart3, Settings, Save, Eye, Upload, Download } from 'lucide-react';
-import { toast } from '@/components/ui/use-toast';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { BarChart3, Users, Settings, Eye, Save, Download, Upload } from 'lucide-react';
 import { StyleResult } from '@/types/quiz';
 
-// Import admin components
-import { 
-  PermissionsProvider, 
-  ProtectedComponent, 
-  usePermissions 
-} from '../admin/security/AccessControlSystem';
+// Components from admin modules
+import { AccessControlSystem, PermissionsProvider, ProtectedComponent, usePermissions } from '../admin/security/AccessControlSystem';
+import { WorkflowManager, StatusBadge, useWorkflow } from '../admin/workflow/PublishingWorkflow';
+import { AnalyticsDashboard } from '../admin/analytics/AdvancedAnalytics';
 
-import { 
-  WorkflowManager, 
-  StatusBadge, 
-  useWorkflow 
-} from '../admin/workflow/PublishingWorkflow';
-
-import { 
-  AnalyticsDashboard
-} from '../admin/analytics/AdvancedAnalytics';
-
-// Import editor components
-import { ComponentsSidebar } from './sidebar/ComponentsSidebar';
-import { PreviewPanel } from './preview/PreviewPanel';
-import { PropertiesPanel } from './properties/PropertiesPanel';
+// Editor components
 import { SEOOptimizer } from './seo/SEOOptimizer';
 import { EditorToolbar } from './toolbar/EditorToolbar';
+import { PreviewPanel } from './preview/PreviewPanel';
+import PropertiesPanel from './properties/PropertiesPanel';
 
 interface EnhancedEditorProps {
-  funnelId: string;
-  funnelName: string;
-  selectedStyle?: StyleResult;
-  onSave?: () => void;
-  onPublish?: () => void;
-  onExport?: () => void;
-  onImport?: () => void;
+  initialData?: any;
+  primaryStyle?: StyleResult;
+  onSave?: (data: any) => void;
+  onPublish?: (data: any) => void;
 }
 
-export const EnhancedEditor: React.FC<EnhancedEditorProps> = ({
-  funnelId,
-  funnelName,
-  selectedStyle,
+const EnhancedEditor: React.FC<EnhancedEditorProps> = ({
+  initialData,
+  primaryStyle,
   onSave,
-  onPublish,
-  onExport,
-  onImport
+  onPublish
 }) => {
-  // State management
-  const [activeTab, setActiveTab] = useState<'editor' | 'analytics' | 'seo' | 'workflow' | 'settings'>('editor');
-  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('editor');
+  const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [editorData, setEditorData] = useState(initialData || {});
+
+  // Access control and workflow hooks
+  const permissions = usePermissions();
+  const workflow = useWorkflow();
 
   // Ensure we have a valid StyleResult
-  const validSelectedStyle: StyleResult = selectedStyle || {
-    category: 'Natural' as unknown as StyleResult['category'],
+  const validPrimaryStyle: StyleResult = primaryStyle || {
+    category: 'Natural',
     score: 0,
     percentage: 100
   };
 
-  // Hooks
-  const { hasPermission, logAction } = usePermissions();
-  const { state: workflowState, actions: workflowActions } = useWorkflow();
-
-  // Auto-save functionality
   useEffect(() => {
-    const autoSave = setInterval(() => {
-      if (hasPermission('funnel', 'edit')) {
-        handleAutoSave();
-      }
-    }, 30000); // Auto-save every 30 seconds
+    // Log user action
+    if (permissions.hasPermission) {
+      console.log('User accessed enhanced editor');
+    }
+    
+    // Initialize workflow
+    if (workflow.canEdit) {
+      console.log('Workflow initialized');
+    }
+  }, [permissions, workflow]);
 
-    return () => clearInterval(autoSave);
-  }, [hasPermission]);
-
-  const handleAutoSave = async () => {
-    try {
-      setIsSaving(true);
-      // Implement auto-save logic here
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate save
-      setLastSaved(new Date());
-      logAction('auto_save', { funnelId, timestamp: new Date().toISOString() });
-    } catch (error) {
-      console.error('Auto-save failed:', error);
-    } finally {
-      setIsSaving(false);
+  const handleSave = () => {
+    if (onSave) {
+      onSave(editorData);
     }
   };
 
-  const handleSave = async () => {
-    try {
-      setIsSaving(true);
-      await onSave?.();
-      setLastSaved(new Date());
-      logAction('manual_save', { funnelId, timestamp: new Date().toISOString() });
-      toast({
-        title: "Salvo com sucesso",
-        description: "Suas alterações foram salvas.",
-      });
-    } catch (error) {
-      toast({
-        title: "Erro ao salvar",
-        description: "Ocorreu um erro ao salvar as alterações.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSaving(false);
+  const handlePublish = () => {
+    if (onPublish && workflow.canPublish) {
+      onPublish(editorData);
     }
   };
 
-  const handlePublish = async () => {
-    try {
-      await workflowActions.requestApproval(funnelId);
-      await onPublish?.();
-      toast({
-        title: "Publicação solicitada",
-        description: "Sua solicitação de publicação foi enviada para aprovação.",
-      });
-    } catch (error) {
-      toast({
-        title: "Erro na publicação",
-        description: "Ocorreu um erro ao solicitar a publicação.",
-        variant: "destructive",
-      });
-    }
+  const handleComponentSelect = (componentId: string) => {
+    setSelectedComponent(componentId);
   };
 
-  const handleExport = async () => {
-    try {
-      await onExport?.();
-      logAction('export', { funnelId, timestamp: new Date().toISOString() });
-      toast({
-        title: "Exportação concluída",
-        description: "O funil foi exportado com sucesso.",
-      });
-    } catch (error) {
-      toast({
-        title: "Erro na exportação",
-        description: "Ocorreu um erro ao exportar o funil.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleImport = async () => {
-    try {
-      await onImport?.();
-      logAction('import', { funnelId, timestamp: new Date().toISOString() });
-      toast({
-        title: "Importação concluída",
-        description: "O funil foi importado com sucesso.",
-      });
-    } catch (error) {
-      toast({
-        title: "Erro na importação",
-        description: "Ocorreu um erro ao importar o funil.",
-        variant: "destructive",
-      });
-    }
+  const handleDataUpdate = (updates: any) => {
+    setEditorData(prev => ({ ...prev, ...updates }));
   };
 
   return (
     <PermissionsProvider>
-      <div className="h-screen flex flex-col">
+      <div className="h-screen flex flex-col overflow-hidden bg-gray-50">
         {/* Header */}
-        <div className="border-b bg-background p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <h1 className="text-2xl font-bold">{funnelName}</h1>
-              <StatusBadge status={workflowState.status} />
-              {isSaving && <Badge variant="secondary">Salvando...</Badge>}
-              {lastSaved && (
-                <span className="text-sm text-muted-foreground">
-                  Último salvamento: {lastSaved.toLocaleTimeString()}
-                </span>
-              )}
+        <div className="bg-white border-b shadow-sm">
+          <div className="flex items-center justify-between px-6 py-4">
+            <div className="flex items-center space-x-4">
+              <h1 className="text-2xl font-bold text-gray-900">Enhanced Editor</h1>
+              <StatusBadge status={workflow.status} />
             </div>
-            <div className="flex items-center gap-2">
+            
+            <div className="flex items-center space-x-2">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setIsPreviewMode(!isPreviewMode)}
               >
                 <Eye className="w-4 h-4 mr-2" />
-                {isPreviewMode ? 'Editar' : 'Visualizar'}
+                {isPreviewMode ? 'Edit' : 'Preview'}
               </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleExport}
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Exportar
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleImport}
-              >
-                <Upload className="w-4 h-4 mr-2" />
-                Importar
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleSave}
-                disabled={isSaving}
-              >
-                <Save className="w-4 h-4 mr-2" />
-                Salvar
-              </Button>
-              <ProtectedComponent resource="funnel" action="publish">
+              
+              <ProtectedComponent resource="editor" action="save">
                 <Button
-                  onClick={handlePublish}
-                  disabled={workflowState.status !== 'draft'}
+                  variant="outline"
+                  size="sm"
+                  onClick={handleSave}
                 >
-                  Publicar
+                  <Save className="w-4 h-4 mr-2" />
+                  Save
+                </Button>
+              </ProtectedComponent>
+              
+              <ProtectedComponent resource="editor" action="publish">
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={handlePublish}
+                  disabled={!workflow.canPublish}
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  Publish
                 </Button>
               </ProtectedComponent>
             </div>
@@ -231,91 +128,117 @@ export const EnhancedEditor: React.FC<EnhancedEditorProps> = ({
 
         {/* Main Content */}
         <div className="flex-1 overflow-hidden">
-          <Tabs value={activeTab} onValueChange={(value: any) => setActiveTab(value)}>
-            <TabsList className="border-b w-full justify-start rounded-none">
-              <TabsTrigger value="editor">Editor</TabsTrigger>
-              <ProtectedComponent resource="analytics" action="read">
-                <TabsTrigger value="analytics">
-                  <BarChart3 className="w-4 h-4 mr-2" />
-                  Analytics
-                </TabsTrigger>
-              </ProtectedComponent>
-              <TabsTrigger value="seo">SEO</TabsTrigger>
-              <ProtectedComponent resource="workflow" action="read">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full">
+            <div className="border-b bg-white">
+              <TabsList className="ml-6">
+                <TabsTrigger value="editor">Editor</TabsTrigger>
+                <TabsTrigger value="seo">SEO</TabsTrigger>
+                <TabsTrigger value="analytics">Analytics</TabsTrigger>
                 <TabsTrigger value="workflow">Workflow</TabsTrigger>
-              </ProtectedComponent>
-              <TabsTrigger value="settings">
-                <Settings className="w-4 h-4 mr-2" />
-                Configurações
-              </TabsTrigger>
-            </TabsList>
+                <TabsTrigger value="settings">Settings</TabsTrigger>
+              </TabsList>
+            </div>
 
-            <TabsContent value="editor" className="h-full">
-              <ResizablePanelGroup direction="horizontal" className="h-full">
-                <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-                  <ComponentsSidebar onComponentSelect={() => {}} />
-                </ResizablePanel>
-                
-                <ResizableHandle withHandle />
-                
-                <ResizablePanel defaultSize={55}>
-                  <PreviewPanel
-                    selectedStyle={validSelectedStyle}
-                    isPreviewMode={isPreviewMode}
-                    selectedBlockId={selectedBlockId}
-                    onSelectBlock={setSelectedBlockId}
-                  />
-                </ResizablePanel>
-                
-                <ResizableHandle withHandle />
-                
-                <ResizablePanel defaultSize={25}>
-                  <PropertiesPanel
-                    selectedBlockId={selectedBlockId}
-                    onUpdate={() => {}}
-                    onClose={() => setSelectedBlockId(null)}
-                  />
-                </ResizablePanel>
-              </ResizablePanelGroup>
-            </TabsContent>
+            <TabsContent value="editor" className="h-full mt-0">
+              <div className="h-full flex">
+                {/* Components Sidebar */}
+                <div className="w-64 bg-white border-r overflow-y-auto">
+                  <div className="p-4">
+                    <h2 className="font-semibold text-gray-900 mb-4">Components</h2>
+                    <div className="space-y-2">
+                      {/* Component library would go here */}
+                      <Card className="cursor-pointer hover:bg-gray-50">
+                        <CardContent className="p-3">
+                          <div className="font-medium text-sm">Text Block</div>
+                          <div className="text-xs text-gray-500">Add text content</div>
+                        </CardContent>
+                      </Card>
+                      
+                      <Card className="cursor-pointer hover:bg-gray-50">
+                        <CardContent className="p-3">
+                          <div className="font-medium text-sm">Image Block</div>
+                          <div className="text-xs text-gray-500">Add images</div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </div>
+                </div>
 
-            <TabsContent value="analytics" className="h-full">
-              <ProtectedComponent 
-                resource="analytics" 
-                action="read"
-                fallback={
-                  <Card className="m-4">
-                    <CardHeader>
-                      <CardTitle>Acesso Negado</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p>Você não tem permissão para acessar os analytics.</p>
-                    </CardContent>
-                  </Card>
-                }
-              >
-                <AnalyticsDashboard />
-              </ProtectedComponent>
-            </TabsContent>
+                {/* Main Editor Area */}
+                <div className="flex-1 flex">
+                  {/* Canvas */}
+                  <div className="flex-1 bg-gray-100 p-4">
+                    <PreviewPanel
+                      primaryStyle={validPrimaryStyle}
+                      isPreviewMode={isPreviewMode}
+                      onComponentSelect={handleComponentSelect}
+                      data={editorData}
+                    />
+                  </div>
 
-            <TabsContent value="seo" className="h-full">
-              <div className="p-4">
-                <SEOOptimizer funnelId={funnelId} />
+                  {/* Properties Panel */}
+                  <div className="w-80 bg-white border-l overflow-y-auto">
+                    <PropertiesPanel
+                      selectedComponentId={selectedComponent}
+                      onClose={() => setSelectedComponent(null)}
+                    />
+                  </div>
+                </div>
               </div>
             </TabsContent>
 
-            <TabsContent value="workflow" className="h-full">
-              <WorkflowManager />
+            <TabsContent value="seo" className="h-full mt-0">
+              <div className="p-6">
+                <SEOOptimizer />
+              </div>
             </TabsContent>
 
-            <TabsContent value="settings" className="h-full">
-              <div className="p-4">
+            <TabsContent value="analytics" className="h-full mt-0">
+              <div className="p-6">
+                <ProtectedComponent 
+                  resource="analytics" 
+                  action="view"
+                  fallback={<div>Access denied</div>}
+                >
+                  <AnalyticsDashboard />
+                </ProtectedComponent>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="workflow" className="h-full mt-0">
+              <div className="p-6">
+                <WorkflowManager>
+                  <div>Workflow management content</div>
+                </WorkflowManager>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="settings" className="h-full mt-0">
+              <div className="p-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Configurações do Funil</CardTitle>
+                    <CardTitle>Editor Settings</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p>Configurações em desenvolvimento...</p>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Auto-save interval
+                        </label>
+                        <select className="w-full p-2 border rounded-md">
+                          <option>30 seconds</option>
+                          <option>1 minute</option>
+                          <option>5 minutes</option>
+                        </select>
+                      </div>
+                      
+                      <div>
+                        <label className="flex items-center space-x-2">
+                          <input type="checkbox" className="rounded" />
+                          <span className="text-sm text-gray-700">Enable dark mode</span>
+                        </label>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               </div>
@@ -326,3 +249,5 @@ export const EnhancedEditor: React.FC<EnhancedEditorProps> = ({
     </PermissionsProvider>
   );
 };
+
+export default EnhancedEditor;

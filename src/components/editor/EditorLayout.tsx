@@ -16,20 +16,20 @@ const EditorLayout = ({ primaryStyle }: EditorLayoutProps) => {
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
   const { config, addBlock, updateBlock, deleteBlock } = useEditor();
 
-  // Función para adicionar um bloco quando um componente é selecionado do sidebar
+  // Function to add a block when a component is selected from sidebar
   const handleComponentSelect = (componentType: string) => {
     const newBlockId = addBlock(componentType as BlockType);
     setSelectedComponent(newBlockId);
   };
 
-  // Função para mostrar as propriedades de um bloco
+  // Function to show properties of a block
   const handleSelectComponent = (blockId: string) => {
     setSelectedComponent(blockId);
   };
 
-  // Ensure we have a valid StyleResult with proper type handling
+  // Ensure we have a valid StyleResult
   const validPrimaryStyle: StyleResult = primaryStyle || {
-    category: 'Natural' as unknown as StyleResult['category'],
+    category: 'Natural',
     score: 0,
     percentage: 100
   };
