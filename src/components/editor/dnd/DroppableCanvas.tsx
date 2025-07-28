@@ -42,6 +42,11 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
   selectedBlockId,
   onBlockSelect,
   onBlockDelete,
+export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
+  blocks = [],
+  selectedBlockId,
+  onBlockSelect,
+  onBlockDelete,
   onBlockDuplicate,
   onBlockToggleVisibility,
   onSaveInline,
