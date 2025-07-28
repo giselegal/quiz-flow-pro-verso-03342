@@ -1,16 +1,18 @@
 import React from 'react';
-import { useRoute } from 'wouter';
-import SchemaDrivenEditorResponsive from '../components/editor/SchemaDrivenEditorResponsive';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DroppableCanvas } from '@/components/editor/dnd/DroppableCanvas';
+import { FormElementsPanel } from '@/components/editor/FormElementsPanel';
 
-const SchemaDrivenEditorPage: React.FC = () => {
-  const [match, params] = useRoute('/editor/:id');
-  const funnelId = params?.id;
-
+export default function SchemaDrivenEditorPage() {
   return (
-    <div className="h-screen w-screen overflow-hidden bg-gray-50">
-      <SchemaDrivenEditorResponsive funnelId={funnelId} className="h-full w-full" />
-    </div>
+    <DndProvider backend={HTML5Backend}>
+      <div className="flex h-screen">
+        <FormElementsPanel />
+        <div className="flex-1">
+          <DroppableCanvas />
+        </div>
+      </div>
+    </DndProvider>
   );
-};
-
-export default SchemaDrivenEditorPage;
+}

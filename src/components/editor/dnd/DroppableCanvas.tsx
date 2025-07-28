@@ -14,6 +14,7 @@ import {
 } from '@ant-design/icons';
 import { Space, Typography, Empty, Tooltip } from 'antd';
 import { allBlockDefinitions } from '../../../config/blockDefinitions';
+import { Dropdown } from '../../ui/dropdown';
 
 const { Text, Title } = Typography;
 
