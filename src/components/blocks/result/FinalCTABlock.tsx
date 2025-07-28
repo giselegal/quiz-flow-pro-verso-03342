@@ -1,118 +1,113 @@
+
 import React from 'react';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { ArrowRight, Star, Shield, Clock } from 'lucide-react';
+import type { BlockData } from '@/types/blocks';
 
-/**
- * BLOCO EDITÁVEL: Call-to-Action Final
- * 
- * Props Editáveis:
- * - title: string (título principal)
- * - subtitle: string (subtítulo)
- * - description: string (descrição)
- * - buttonText: string (texto do botão)
- * - buttonUrl: string (URL do botão)
- * - buttonStyle: 'primary' | 'secondary' | 'success' | 'warning'
- * - buttonSize: 'sm' | 'md' | 'lg'
- * - showUrgency: boolean (mostrar elementos de urgência)
- * - urgencyText: string (texto de urgência)
- * - backgroundColor: string
- * - textAlign: 'left' | 'center' | 'right'
- * 
- * Exemplo de Uso:
- * <FinalCTABlock 
- *   title="Não perca esta oportunidade!"
- *   buttonText="Garantir minha vaga"
- *   showUrgency={true}
- *   urgencyText="Oferta válida por tempo limitado"
- * />
- */
-
-export interface FinalCTABlockProps {
-  blockId?: string;
-  title?: string;
-  subtitle?: string;
-  description?: string;
-  buttonText?: string;
-  buttonUrl?: string;
-  buttonStyle?: 'primary' | 'secondary' | 'success' | 'warning';
-  buttonSize?: 'sm' | 'lg' | 'default';
-  showUrgency?: boolean;
-  urgencyText?: string;
-  backgroundColor?: string;
-  textAlign?: 'left' | 'center' | 'right';
+interface FinalCTABlockProps {
+  block: BlockData;
   className?: string;
+  onUpdate?: (updates: Partial<BlockData>) => void;
+  isSelected?: boolean;
+  onSelect?: () => void;
 }
 
 const FinalCTABlock: React.FC<FinalCTABlockProps> = ({
-  blockId = 'final-cta',
-  title = 'Sua transformação começa agora!',
-  subtitle = 'Não deixe para depois',
-  description = 'Garante já seu acesso completo ao CaktoQuiz e descubra seu estilo único.',
-  buttonText = 'Quero me transformar agora',
-  buttonUrl = '#',
-  buttonStyle = 'primary',
-  buttonSize = 'lg',
-  showUrgency = true,
-  urgencyText = '⏰ Oferta por tempo limitado',
-  backgroundColor = '#f8f9fa',
-  textAlign = 'center',
-  className = '',
+  block,
+  className,
+  onUpdate,
+  isSelected,
+  onSelect
 }) => {
+  const properties = block.properties || {};
+  const {
+    title = 'Transforme seu estilo agora!',
+    subtitle = 'Não perca esta oportunidade única',
+    buttonText = 'Quero transformar meu estilo',
+    buttonSize = 'lg',
+    urgencyText = 'Oferta válida por tempo limitado',
+    showGuarantee = true,
+    guaranteeText = 'Garantia de 30 dias',
+    showTestimonials = true,
+    primaryColor = '#B89B7A'
+  } = properties;
+
   const handleClick = () => {
-    if (buttonUrl && buttonUrl !== '#') {
-      window.open(buttonUrl, '_blank');
-    }
+    onSelect?.();
   };
 
+  // Ensure buttonSize is valid
+  const validButtonSize = ['sm', 'md', 'lg'].includes(buttonSize) ? buttonSize : 'lg';
+
   return (
-    <div 
-      className={`final-cta-block py-16 px-6 ${className}`} 
-      data-block-id={blockId}
-      style={{ 
-        backgroundColor,
-        textAlign 
-      }}
+    <div
+      className={cn(
+        'final-cta-block w-full py-12 px-6',
+        'bg-gradient-to-r from-[#FAF9F7] to-white',
+        'border-t-4 border-[#B89B7A]',
+        'transition-all duration-200',
+        isSelected && 'ring-2 ring-blue-500 bg-blue-50',
+        className
+      )}
+      onClick={handleClick}
     >
-      <div className="max-w-4xl mx-auto">
-        {showUrgency && urgencyText && (
-          <div className="mb-4">
-            <span className="inline-block bg-red-100 text-red-800 px-4 py-2 rounded-full text-sm font-semibold">
-              {urgencyText}
-            </span>
-          </div>
-        )}
-        
-        <h2 className="text-3xl md:text-4xl font-bold text-[#432818] mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
-          {title}
-        </h2>
-        
-        {subtitle && (
-          <h3 className="text-xl md:text-2xl text-[#6B5B73] mb-6">
+      <div className="max-w-4xl mx-auto text-center">
+        {/* Main CTA */}
+        <div className="mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+            {title}
+          </h2>
+          <p className="text-lg text-gray-600 mb-6">
             {subtitle}
-          </h3>
-        )}
-        
-        {description && (
-          <p className="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
-            {description}
           </p>
-        )}
-        
-        <Button
-          onClick={handleClick}
-          size={buttonSize}
-          className={`
-            px-8 py-4 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl
-            ${buttonStyle === 'primary' ? 'bg-[#B89B7A] hover:bg-[#a68a6d]' : ''}
-            ${buttonStyle === 'secondary' ? 'bg-gray-600 hover:bg-gray-700' : ''}
-            ${buttonStyle === 'success' ? 'bg-green-600 hover:bg-green-700' : ''}
-            ${buttonStyle === 'warning' ? 'bg-orange-600 hover:bg-orange-700' : ''}
-          `}
-        >
-          {buttonText}
-        </Button>
-        
-        <div className="mt-6 text-sm text-gray-500">
-          <p>✅ Acesso imediato • ✅ Garantia de 7 dias • ✅ Suporte especializado</p>
+        </div>
+
+        {/* Urgency */}
+        <div className="mb-8">
+          <div className="inline-flex items-center px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-medium">
+            <Clock className="w-4 h-4 mr-2" />
+            {urgencyText}
+          </div>
+        </div>
+
+        {/* Main Button */}
+        <div className="mb-8">
+          <Button 
+            size={validButtonSize as "sm" | "md" | "lg"}
+            className="bg-[#B89B7A] hover:bg-[#A68A6D] text-white font-semibold px-8 py-4 text-lg"
+          >
+            {buttonText}
+            <ArrowRight className="w-5 h-5 ml-2" />
+          </Button>
+        </div>
+
+        {/* Trust Elements */}
+        <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-8">
+          {showGuarantee && (
+            <div className="flex items-center text-gray-600">
+              <Shield className="w-5 h-5 mr-2 text-green-500" />
+              <span className="text-sm">{guaranteeText}</span>
+            </div>
+          )}
+          
+          {showTestimonials && (
+            <div className="flex items-center text-gray-600">
+              <div className="flex">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                ))}
+              </div>
+              <span className="ml-2 text-sm">Mais de 1000 clientes satisfeitos</span>
+            </div>
+          )}
+        </div>
+
+        {/* Secondary Info */}
+        <div className="text-center">
+          <p className="text-sm text-gray-500">
+            Processamento seguro • Sem taxas ocultas • Suporte 24/7
+          </p>
         </div>
       </div>
     </div>

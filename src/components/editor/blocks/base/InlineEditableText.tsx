@@ -1,12 +1,15 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 
 interface InlineEditableTextProps {
   value: string;
   onChange: (value: string) => void;
+  onSave?: (value: string) => void;
   placeholder?: string;
   className?: string;
   multiline?: boolean;
+  isTextArea?: boolean;
   maxLines?: number;
   fontSize?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl';
   fontWeight?: 'normal' | 'medium' | 'semibold' | 'bold';
@@ -21,9 +24,11 @@ interface InlineEditableTextProps {
 const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   value,
   onChange,
+  onSave,
   placeholder = 'Digite aqui...',
   className = '',
   multiline = false,
+  isTextArea = false,
   maxLines = 3,
   fontSize = 'base',
   fontWeight = 'normal',
@@ -31,7 +36,11 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   disabled = false
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    onChange(e.target.value);
+    const newValue = e.target.value;
+    onChange(newValue);
+    if (onSave) {
+      onSave(newValue);
+    }
   };
 
   const baseClasses = cn(
@@ -72,7 +81,7 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
     className
   );
 
-  if (multiline) {
+  if (multiline || isTextArea) {
     return (
       <textarea
         value={value}

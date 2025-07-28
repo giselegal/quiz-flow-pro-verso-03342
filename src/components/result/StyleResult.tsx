@@ -1,74 +1,87 @@
 
 import React from 'react';
-import { StyleResult } from '@/types/quiz';
-import { Card } from '@/components/ui/card';
-import SecondaryStylesSection from '@/components/quiz-result/SecondaryStylesSection';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { cn } from '@/lib/utils';
 
-interface StyleResultSectionProps {
-  primaryStyle: StyleResult;
-  description: string;
-  image: string;
-  secondaryStyles: StyleResult[];
+export interface StyleResult {
+  category: string;
+  score: number;
+  percentage: number;
+  description?: string;
+  characteristics?: string[];
+  recommendations?: string[];
+  color?: string;
 }
 
-export const StyleResultSection: React.FC<StyleResultSectionProps> = ({
-  primaryStyle,
-  description,
-  image,
-  secondaryStyles
-}) => {
-  const isMobile = useIsMobile();
-  
-  return (
-    <Card className="p-4 bg-white shadow-sm border border-[#B89B7A]/20">
-      <div className="w-full max-w-md mx-auto mb-4">
-        <div className="flex items-center justify-between mb-1">
-          <span className="text-sm font-medium text-[#432818]">Estilo Predominante</span>
-          <span className="text-sm font-medium text-[#B89B7A]">{primaryStyle.percentage}%</span>
-        </div>
-        <div className="w-full bg-[#F3E8E6] rounded-full h-2">
-          <div 
-            className="bg-[#B89B7A] h-2 rounded-full transition-all duration-300 ease-in-out" 
-            style={{ width: `${primaryStyle.percentage}%` }} 
-          />
-        </div>
-      </div>
-      
-      <div className="space-y-4">
-        {isMobile ? (
-          // Mobile layout - Image left, description right
-          <div className="flex gap-4">
-            <img 
-              src={image} 
-              alt={`Estilo ${primaryStyle.category}`}
-              className="w-[30%] h-min rounded-lg shadow-sm" 
-            />
-            <p className="text-base text-[#432818] leading-relaxed flex-1">
-              {description}
-            </p>
-          </div>
-        ) : (
-          // Desktop layout - Complementary styles overlay on image
-          <div className="relative">
-            <img 
-              src={image} 
-              alt={`Estilo ${primaryStyle.category}`}
-              className="w-1/2 h-auto rounded-lg shadow-sm mx-auto" 
-            />
-            <div className="absolute bottom-2 right-2 w-48 bg-white/90 rounded-lg p-2 shadow-md">
-              <SecondaryStylesSection secondaryStyles={secondaryStyles} />
-            </div>
-          </div>
-        )}
+interface StyleResultProps {
+  result: StyleResult;
+  className?: string;
+  compact?: boolean;
+}
 
-        {/* Show secondary styles below on mobile */}
-        {isMobile && (
-          <div className="bg-white rounded-lg p-3 shadow-sm border border-[#B89B7A]/10">
-            <SecondaryStylesSection secondaryStyles={secondaryStyles} />
+const StyleResult: React.FC<StyleResultProps> = ({
+  result,
+  className,
+  compact = false
+}) => {
+  const {
+    category,
+    score,
+    percentage,
+    description,
+    characteristics = [],
+    recommendations = [],
+    color = '#B89B7A'
+  } = result;
+
+  return (
+    <div className={cn(
+      'style-result bg-white rounded-lg p-6 shadow-sm border border-gray-200',
+      className
+    )}>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-xl font-semibold text-gray-800">{category}</h3>
+        <div className="text-right">
+          <div className="text-2xl font-bold" style={{ color }}>
+            {percentage}%
           </div>
-        )}
+          <div className="text-sm text-gray-500">
+            Score: {score}
+          </div>
+        </div>
       </div>
-    </Card>
+
+      {!compact && (
+        <>
+          {description && (
+            <p className="text-gray-600 mb-4">{description}</p>
+          )}
+
+          {characteristics.length > 0 && (
+            <div className="mb-4">
+              <h4 className="font-medium text-gray-700 mb-2">Características:</h4>
+              <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                {characteristics.map((char, index) => (
+                  <li key={index}>{char}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {recommendations.length > 0 && (
+            <div>
+              <h4 className="font-medium text-gray-700 mb-2">Recomendações:</h4>
+              <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                {recommendations.map((rec, index) => (
+                  <li key={index}>{rec}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </>
+      )}
+    </div>
   );
 };
+
+export default StyleResult;
+export { StyleResult };
