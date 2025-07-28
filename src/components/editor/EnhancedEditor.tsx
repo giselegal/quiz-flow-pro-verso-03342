@@ -23,15 +23,19 @@ export const EnhancedEditor: React.FC<EnhancedEditorProps> = ({
   const convertToSimpleComponent = (block: EditorBlock): SimpleComponent => {
     const data = { ...block.content };
     
-    // Convert string dimensions to numbers for SimpleComponent
+    // Convert string dimensions to numbers for SimpleComponent, handling undefined values
     if (typeof data.height === 'string') {
       const numHeight = parseFloat(data.height);
       data.height = isNaN(numHeight) ? undefined : numHeight;
+    } else if (data.height === undefined) {
+      delete data.height;
     }
     
     if (typeof data.width === 'string') {
       const numWidth = parseFloat(data.width);
       data.width = isNaN(numWidth) ? undefined : numWidth;
+    } else if (data.width === undefined) {
+      delete data.width;
     }
 
     return {
@@ -48,14 +52,10 @@ export const EnhancedEditor: React.FC<EnhancedEditorProps> = ({
     // Convert number dimensions back to strings for EditorBlock, handling undefined values
     if (typeof content.height === 'number') {
       content.height = content.height.toString();
-    } else if (content.height === undefined) {
-      content.height = undefined;
     }
     
     if (typeof content.width === 'number') {
       content.width = content.width.toString();
-    } else if (content.width === undefined) {
-      content.width = undefined;
     }
 
     const editorUpdates: Partial<EditorBlock> = {

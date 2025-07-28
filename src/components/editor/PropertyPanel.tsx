@@ -1,78 +1,114 @@
 
-import React, { useState } from 'react';
+import React from 'react';
+import { EditorBlock, PropertySchema } from '@/types/editor';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import { Slider } from '@/components/ui/slider';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Trash2, Plus, X } from 'lucide-react';
-import { Block, PropertySchema } from '@/types/editor';
-import { getIconByName } from '@/utils/iconMap';
+import { Badge } from '@/components/ui/badge';
+import { Trash2, Plus, Minus } from 'lucide-react';
 
 interface PropertyPanelProps {
-  block: Block;
-  onChange: (content: any) => void;
-  onDelete: () => void;
+  selectedBlock: EditorBlock | null;
+  onUpdateBlock: (id: string, content: any) => void;
+  onDeleteBlock: (id: string) => void;
 }
 
 export const PropertyPanel: React.FC<PropertyPanelProps> = ({
-  block,
-  onChange,
-  onDelete
+  selectedBlock,
+  onUpdateBlock,
+  onDeleteBlock
 }) => {
-  const [activeTab, setActiveTab] = useState('content');
+  if (!selectedBlock) {
+    return (
+      <div className="p-4 text-center text-gray-500">
+        Selecione um bloco para editar suas propriedades
+      </div>
+    );
+  }
+
+  const getPropertiesForBlockType = (blockType: string): PropertySchema[] => {
+    const commonProperties: PropertySchema[] = [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        placeholder: 'Digite o título...'
+      },
+      {
+        key: 'subtitle',
+        label: 'Subtítulo',
+        type: 'text',
+        placeholder: 'Digite o subtítulo...'
+      }
+    ];
+
+    const blockSpecificProperties: Record<string, PropertySchema[]> = {
+      text: [
+        {
+          key: 'text',
+          label: 'Texto',
+          type: 'textarea',
+          placeholder: 'Digite o texto...'
+        }
+      ],
+      button: [
+        {
+          key: 'buttonText',
+          label: 'Texto do Botão',
+          type: 'text',
+          placeholder: 'Clique aqui'
+        },
+        {
+          key: 'buttonUrl',
+          label: 'URL do Botão',
+          type: 'url',
+          placeholder: 'https://...'
+        }
+      ],
+      image: [
+        {
+          key: 'imageUrl',
+          label: 'URL da Imagem',
+          type: 'url',
+          placeholder: 'https://...'
+        },
+        {
+          key: 'alt',
+          label: 'Texto Alternativo',
+          type: 'text',
+          placeholder: 'Descrição da imagem'
+        }
+      ]
+    };
+
+    return [...commonProperties, ...(blockSpecificProperties[blockType] || [])];
+  };
+
+  const properties = getPropertiesForBlockType(selectedBlock.type);
 
   const handlePropertyChange = (key: string, value: any) => {
-    onChange({
-      ...block.content,
+    const updatedContent = {
+      ...selectedBlock.content,
       [key]: value
-    });
-  };
-
-  const handleNestedPropertyChange = (property: PropertySchema, value: any) => {
-    if (property.nestedPath) {
-      const keys = property.nestedPath.split('.');
-      const currentValue = block.properties || {};
-      const newValue = { ...currentValue };
-      
-      let current = newValue;
-      for (let i = 0; i < keys.length - 1; i++) {
-        if (!current[keys[i]]) current[keys[i]] = {};
-        current = current[keys[i]];
-      }
-      current[keys[keys.length - 1]] = value;
-      
-      onChange(newValue);
-    } else {
-      handlePropertyChange(property.key, value);
-    }
-  };
-
-  const getValue = (property: PropertySchema): any => {
-    if (property.nestedPath) {
-      const keys = property.nestedPath.split('.');
-      let current = block.properties || {};
-      for (const key of keys) {
-        current = current[key];
-        if (!current) return property.defaultValue;
-      }
-      return current;
-    }
-    return block.content?.[property.key] ?? property.defaultValue;
+    };
+    onUpdateBlock(selectedBlock.id, updatedContent);
   };
 
   const renderPropertyInput = (property: PropertySchema) => {
-    const value = getValue(property);
+    const value = selectedBlock.content[property.key] || property.defaultValue || '';
 
     switch (property.type) {
       case 'text':
+      case 'url':
         return (
           <Input
-            value={value || ''}
-            onChange={(e) => handleNestedPropertyChange(property, e.target.value)}
+            value={value}
+            onChange={(e) => handlePropertyChange(property.key, e.target.value)}
             placeholder={property.placeholder}
           />
         );
@@ -80,8 +116,8 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
       case 'textarea':
         return (
           <Textarea
-            value={value || ''}
-            onChange={(e) => handleNestedPropertyChange(property, e.target.value)}
+            value={value}
+            onChange={(e) => handlePropertyChange(property.key, e.target.value)}
             placeholder={property.placeholder}
             rows={4}
           />
@@ -91,42 +127,35 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
         return (
           <Input
             type="number"
-            value={value || ''}
-            onChange={(e) => handleNestedPropertyChange(property, Number(e.target.value))}
-            min={property.min}
-            max={property.max}
-            step={property.step}
+            value={value}
+            onChange={(e) => handlePropertyChange(property.key, parseFloat(e.target.value) || 0)}
+            placeholder={property.placeholder}
           />
         );
 
-      case 'range':
+      case 'color':
         return (
-          <div className="space-y-2">
-            <Slider
-              value={[value || 0]}
-              onValueChange={(values) => handleNestedPropertyChange(property, values[0])}
-              min={property.min || 0}
-              max={property.max || 100}
-              step={property.step || 1}
-              className="w-full"
-            />
-            <div className="text-sm text-gray-500 text-center">{value}</div>
-          </div>
+          <Input
+            type="color"
+            value={value}
+            onChange={(e) => handlePropertyChange(property.key, e.target.value)}
+          />
         );
 
+      case 'checkbox':
       case 'boolean':
         return (
           <Switch
-            checked={value || false}
-            onCheckedChange={(checked) => handleNestedPropertyChange(property, checked)}
+            checked={value}
+            onCheckedChange={(checked) => handlePropertyChange(property.key, checked)}
           />
         );
 
       case 'select':
         return (
-          <Select value={value || ''} onValueChange={(val) => handleNestedPropertyChange(property, val)}>
+          <Select value={value} onValueChange={(val) => handlePropertyChange(property.key, val)}>
             <SelectTrigger>
-              <SelectValue placeholder="Select option" />
+              <SelectValue placeholder={property.placeholder} />
             </SelectTrigger>
             <SelectContent>
               {property.options?.map((option) => (
@@ -138,167 +167,56 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
           </Select>
         );
 
-      case 'color':
-        return (
-          <div className="flex items-center space-x-2">
-            <Input
-              type="color"
-              value={value || '#000000'}
-              onChange={(e) => handleNestedPropertyChange(property, e.target.value)}
-              className="w-12 h-8 p-0 border-0"
-            />
-            <Input
-              type="text"
-              value={value || ''}
-              onChange={(e) => handleNestedPropertyChange(property, e.target.value)}
-              placeholder={property.placeholder}
-              className="flex-1"
-            />
-          </div>
-        );
-
-      case 'url':
-        return (
-          <Input
-            type="url"
-            value={value || ''}
-            onChange={(e) => handleNestedPropertyChange(property, e.target.value)}
-            placeholder={property.placeholder}
-          />
-        );
-
-      case 'image':
+      case 'range':
         return (
           <div className="space-y-2">
-            <Input
-              type="url"
-              value={value || ''}
-              onChange={(e) => handleNestedPropertyChange(property, e.target.value)}
-              placeholder={property.placeholder}
+            <Slider
+              value={[value]}
+              onValueChange={(values) => handlePropertyChange(property.key, values[0])}
+              max={property.max || 100}
+              min={property.min || 0}
+              step={property.step || 1}
             />
-            {value && (
-              <div className="w-full h-32 bg-gray-100 rounded-lg flex items-center justify-center">
-                <img
-                  src={value}
-                  alt="Preview"
-                  className="max-w-full max-h-full object-contain"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-              </div>
-            )}
+            <div className="text-sm text-gray-500 text-center">{value}</div>
           </div>
-        );
-
-      case 'icon-select':
-        return (
-          <Select value={value || ''} onValueChange={(val) => handleNestedPropertyChange(property, val)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select icon" />
-            </SelectTrigger>
-            <SelectContent>
-              {property.options?.map((option) => {
-                const IconComponent = getIconByName(option.value);
-                return (
-                  <SelectItem key={option.value} value={option.value}>
-                    <div className="flex items-center space-x-2">
-                      {IconComponent && <IconComponent className="w-4 h-4" />}
-                      <span>{option.label}</span>
-                    </div>
-                  </SelectItem>
-                );
-              })}
-            </SelectContent>
-          </Select>
         );
 
       case 'array':
         const arrayValue = Array.isArray(value) ? value : [];
         return (
           <div className="space-y-2">
-            {arrayValue.map((item: string, index: number) => (
+            {arrayValue.map((item, index) => (
               <div key={index} className="flex items-center space-x-2">
                 <Input
                   value={item}
                   onChange={(e) => {
                     const newArray = [...arrayValue];
                     newArray[index] = e.target.value;
-                    handleNestedPropertyChange(property, newArray);
+                    handlePropertyChange(property.key, newArray);
                   }}
-                  placeholder={property.placeholder}
+                  placeholder={`Item ${index + 1}`}
                 />
                 <Button
+                  variant="ghost"
                   size="sm"
-                  variant="outline"
                   onClick={() => {
                     const newArray = arrayValue.filter((_, i) => i !== index);
-                    handleNestedPropertyChange(property, newArray);
+                    handlePropertyChange(property.key, newArray);
                   }}
                 >
-                  <X className="w-4 h-4" />
+                  <Minus className="w-4 h-4" />
                 </Button>
               </div>
             ))}
             <Button
-              size="sm"
               variant="outline"
+              size="sm"
               onClick={() => {
-                handleNestedPropertyChange(property, [...arrayValue, '']);
+                handlePropertyChange(property.key, [...arrayValue, '']);
               }}
             >
               <Plus className="w-4 h-4 mr-2" />
-              Add Item
-            </Button>
-          </div>
-        );
-
-      case 'array-of-objects':
-        const objectArrayValue = Array.isArray(value) ? value : [];
-        return (
-          <div className="space-y-4">
-            {objectArrayValue.map((item: any, index: number) => (
-              <Card key={index} className="p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <h4 className="font-medium">Item {index + 1}</h4>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => {
-                      const newArray = objectArrayValue.filter((_, i) => i !== index);
-                      handleNestedPropertyChange(property, newArray);
-                    }}
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
-                </div>
-                {property.itemSchema?.map((itemProperty: PropertySchema) => (
-                  <div key={itemProperty.key} className="mb-2">
-                    <Label className="text-sm font-medium">{itemProperty.label}</Label>
-                    <div className="mt-1">
-                      {renderPropertyInput({
-                        ...itemProperty,
-                        key: `${index}.${itemProperty.key}`,
-                        // Override the getValue function for nested objects
-                      })}
-                    </div>
-                  </div>
-                ))}
-              </Card>
-            ))}
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => {
-                const newItem = {};
-                property.itemSchema?.forEach((itemProp) => {
-                  newItem[itemProp.key] = itemProp.defaultValue;
-                });
-                handleNestedPropertyChange(property, [...objectArrayValue, newItem]);
-              }}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add Item
+              Adicionar Item
             </Button>
           </div>
         );
@@ -306,45 +224,58 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
       default:
         return (
           <Input
-            value={value || ''}
-            onChange={(e) => handleNestedPropertyChange(property, e.target.value)}
+            value={value}
+            onChange={(e) => handlePropertyChange(property.key, e.target.value)}
             placeholder={property.placeholder}
           />
         );
     }
   };
 
-  // Mock schema for demonstration
-  const mockSchema: PropertySchema[] = [
-    { key: 'text', label: 'Text', type: 'text', placeholder: 'Enter text' },
-    { key: 'title', label: 'Title', type: 'text', placeholder: 'Enter title' },
-    { key: 'subtitle', label: 'Subtitle', type: 'text', placeholder: 'Enter subtitle' },
-  ];
-
   return (
-    <div className="h-full flex flex-col">
-      <CardHeader className="border-b">
-        <CardTitle className="flex items-center justify-between">
-          <span>Properties</span>
-          <Button size="sm" variant="outline" onClick={onDelete}>
-            <Trash2 className="w-4 h-4" />
-          </Button>
-        </CardTitle>
-      </CardHeader>
+    <div className="h-full p-4 space-y-4 bg-white">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h3 className="text-lg font-medium">Propriedades</h3>
+          <Badge variant="outline" className="mt-1">
+            {selectedBlock.type}
+          </Badge>
+        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-red-500"
+          onClick={() => onDeleteBlock(selectedBlock.id)}
+        >
+          <Trash2 className="w-4 h-4" />
+        </Button>
+      </div>
 
-      <CardContent className="flex-1 overflow-auto p-4">
-        <div className="space-y-4">
-          {mockSchema.map((property) => (
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm">Configurações</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {properties.map((property) => (
             <div key={property.key} className="space-y-2">
-              <Label className="text-sm font-medium">{property.label}</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor={property.key} className="text-sm font-medium">
+                  {property.label}
+                </Label>
+                {property.required && (
+                  <Badge variant="destructive" className="text-xs">
+                    Obrigatório
+                  </Badge>
+                )}
+              </div>
               {renderPropertyInput(property)}
               {property.helpText && (
                 <p className="text-xs text-gray-500">{property.helpText}</p>
               )}
             </div>
           ))}
-        </div>
-      </CardContent>
+        </CardContent>
+      </Card>
     </div>
   );
 };
