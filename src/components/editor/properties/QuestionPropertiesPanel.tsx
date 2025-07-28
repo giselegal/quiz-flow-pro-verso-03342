@@ -85,7 +85,7 @@ export const QuestionPropertiesPanel: React.FC<QuestionPropertiesPanelProps> = (
               <SelectContent>
                 {CORRECT_QUIZ_QUESTIONS.map((question, index) => (
                   <SelectItem key={index} value={index.toString()}>
-                    Questão {index + 1}: {question.title ? question.title.substring(0, 50) : 'Questão sem texto'}...
+                    Questão {index + 1}: {question.question.substring(0, 50)}...
                   </SelectItem>
                 ))}
               </SelectContent>
