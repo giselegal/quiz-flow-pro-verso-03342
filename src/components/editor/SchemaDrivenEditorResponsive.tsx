@@ -1,209 +1,275 @@
-
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, useDraggable, useDroppable } from '@dnd-kit/core';
+import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { toast } from '@/hooks/use-toast';
-import { PlusIcon, TrashIcon, SettingsIcon } from 'lucide-react';
+import { Plus, Trash2, Edit, Settings, Eye, Smartphone, Monitor } from 'lucide-react';
 
-interface SchemaDrivenEditorResponsiveProps {
-  funnelId?: string;
-  className?: string;
+interface ComponentProps {
+  id: string;
+  type: string;
+  props?: any;
+  children?: ComponentProps[];
 }
 
-const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> = ({ 
-  funnelId, 
-  className = '' 
-}) => {
-  const [activeTab, setActiveTab] = useState('editor');
-  const [blocks, setBlocks] = useState([]);
-  const [selectedBlock, setSelectedBlock] = useState<string | null>(null);
+const initialComponents: ComponentProps[] = [
+  { id: '1', type: 'heading', props: { text: 'Título Principal', level: 1 } },
+  { id: '2', type: 'paragraph', props: { text: 'Este é um parágrafo de exemplo.' } },
+  { id: '3', type: 'button', props: { text: 'Clique Aqui', variant: 'primary' } },
+  { id: '4', type: 'image', props: { src: 'https://via.placeholder.com/150', alt: 'Imagem de Exemplo' } },
+];
 
-  useEffect(() => {
-    if (funnelId) {
-      // Load funnel data
-      console.log('Loading funnel:', funnelId);
-    }
-  }, [funnelId]);
+const SchemaDrivenEditorResponsive: React.FC = () => {
+  const [components, setComponents] = React.useState<ComponentProps[]>(initialComponents);
+  const [selectedComponent, setSelectedComponent] = React.useState<ComponentProps | null>(null);
+  const [isDragging, setIsDragging] = React.useState(false);
+  const [draggedComponent, setDraggedComponent] = React.useState<ComponentProps | null>(null);
+  const [previewMode, setPreviewMode] = React.useState<'desktop' | 'tablet' | 'mobile'>('desktop');
 
-  const handleAddBlock = (blockType: string) => {
-    const newBlock = {
-      id: `block-${Date.now()}`,
-      type: blockType,
-      properties: {}
-    };
-    setBlocks(prev => [...prev, newBlock]);
-    toast({
-      title: "Bloco adicionado",
-      description: `Bloco ${blockType} foi adicionado com sucesso.`
-    });
+  const handleDragStart = (event: DragStartEvent) => {
+    setIsDragging(true);
+    const draggedId = event.active.id.toString();
+    const component = components.find(c => c.id === draggedId);
+    setDraggedComponent(component || null);
   };
 
-  const handleDeleteBlock = (blockId: string) => {
-    setBlocks(prev => prev.filter(block => block.id !== blockId));
-    if (selectedBlock === blockId) {
-      setSelectedBlock(null);
+  const handleDragEnd = (event: DragEndEvent) => {
+    setIsDragging(false);
+    const { over } = event;
+
+    if (over) {
+      const overId = over.id.toString();
+      if (draggedComponent) {
+        setComponents(prevComponents => {
+          const newComponents = [...prevComponents];
+          const overIndex = newComponents.findIndex(c => c.id === overId);
+          if (overIndex !== -1) {
+            newComponents.splice(overIndex, 0, draggedComponent);
+            return newComponents;
+          }
+          return prevComponents;
+        });
+      }
     }
-    toast({
-      title: "Bloco removido",
-      description: "Bloco foi removido com sucesso."
-    });
+    setDraggedComponent(null);
+  };
+
+  const addComponent = (type: string) => {
+    const newId = Math.random().toString(36).substring(7);
+    const newComponent: ComponentProps = { id: newId, type: type };
+    setComponents([...components, newComponent]);
+  };
+
+  const updateComponent = (updatedComponent: ComponentProps) => {
+    setComponents(components.map(c => c.id === updatedComponent.id ? updatedComponent : c));
+    setSelectedComponent(updatedComponent);
+  };
+
+  const deleteComponent = (id: string) => {
+    setComponents(components.filter(c => c.id !== id));
+    setSelectedComponent(null);
+  };
+
+  const handleSelect = (component: ComponentProps) => {
+    setSelectedComponent(component);
+  };
+
+  const renderComponent = (component: ComponentProps) => {
+    switch (component.type) {
+      case 'heading':
+        return <h2 key={component.id} className="text-2xl">{component.props?.text || 'Título'}</h2>;
+      case 'paragraph':
+        return <p key={component.id}>{component.props?.text || 'Parágrafo'}</p>;
+      case 'button':
+        return <Button key={component.id}>{component.props?.text || 'Botão'}</Button>;
+      case 'image':
+        return <img key={component.id} src={component.props?.src || 'https://via.placeholder.com/150'} alt={component.props?.alt || 'Imagem'} />;
+      default:
+        return <div key={component.id}>Componente Desconhecido</div>;
+    }
   };
 
   return (
-    <div className={`h-full bg-background ${className}`}>
-      <div className="border-b">
-        <div className="flex items-center justify-between p-4">
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl font-semibold">Editor Schema-Driven</h1>
-            <Badge variant="secondary">
-              {blocks.length} blocos
-            </Badge>
-          </div>
-          <Button onClick={() => toast({ title: "Funcionalidade em breve" })}>
-            <SettingsIcon className="h-4 w-4 mr-2" />
-            Configurações
+    <div className="flex h-screen">
+      {/* Sidebar de Componentes */}
+      <aside className="w-64 bg-gray-100 p-4 border-r">
+        <h3 className="font-medium mb-4">Componentes</h3>
+        <div className="space-y-2">
+          <Button variant="outline" className="w-full justify-start" onClick={() => addComponent('heading')}>
+            <Plus className="mr-2 h-4 w-4" /> Título
+          </Button>
+          <Button variant="outline" className="w-full justify-start" onClick={() => addComponent('paragraph')}>
+            <Plus className="mr-2 h-4 w-4" /> Parágrafo
+          </Button>
+          <Button variant="outline" className="w-full justify-start" onClick={() => addComponent('button')}>
+            <Plus className="mr-2 h-4 w-4" /> Botão
+          </Button>
+          <Button variant="outline" className="w-full justify-start" onClick={() => addComponent('image')}>
+            <Plus className="mr-2 h-4 w-4" /> Imagem
           </Button>
         </div>
+      </aside>
+
+      {/* Editor */}
+      <div className="flex-1 p-4">
+        <Tabs defaultValue="design" className="mb-4">
+          <TabsList>
+            <TabsTrigger value="design">Design</TabsTrigger>
+            <TabsTrigger value="preview">Preview</TabsTrigger>
+          </TabsList>
+          <TabsContent value="design" className="space-y-4">
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setPreviewMode('desktop')}>
+                <Monitor className="mr-2 h-4 w-4" />
+                Desktop
+              </Button>
+              <Button variant="outline" onClick={() => setPreviewMode('tablet')}>
+                <Edit className="mr-2 h-4 w-4" />
+                Tablet
+              </Button>
+              <Button variant="outline" onClick={() => setPreviewMode('mobile')}>
+                <Smartphone className="mr-2 h-4 w-4" />
+                Mobile
+              </Button>
+            </div>
+
+            <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Área de Design</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {components.map(component => (
+                    <div
+                      key={component.id}
+                      className={`p-4 rounded border ${selectedComponent?.id === component.id ? 'border-primary ring-2 ring-primary/20' : 'border-gray-200 hover:border-gray-300'} cursor-move`}
+                      onClick={() => handleSelect(component)}
+                    >
+                      {renderComponent(component)}
+                      <div className="flex justify-end mt-2">
+                        <Button variant="ghost" size="sm" onClick={() => deleteComponent(component.id)}>
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Excluir
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+              <DragOverlay>
+                {draggedComponent ? renderComponent(draggedComponent) : null}
+              </DragOverlay>
+            </DndContext>
+          </TabsContent>
+          <TabsContent value="preview">
+            <div className="p-4">
+              <h3 className="font-medium">Preview</h3>
+              <div className="border rounded p-4">
+                {components.map(component => renderComponent(component))}
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="editor">Editor</TabsTrigger>
-          <TabsTrigger value="preview">Preview</TabsTrigger>
-          <TabsTrigger value="settings">Configurações</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="editor" className="h-full">
-          <div className="grid grid-cols-1 lg:grid-cols-4 h-full">
-            <div className="col-span-1 border-r bg-muted/20 p-4">
-              <h3 className="font-semibold mb-4">Componentes</h3>
-              <div className="space-y-2">
-                {['text', 'heading', 'image', 'button', 'spacer'].map((type) => (
-                  <Button
-                    key={type}
-                    variant="outline"
-                    size="sm"
-                    className="w-full justify-start"
-                    onClick={() => handleAddBlock(type)}
-                  >
-                    <PlusIcon className="h-4 w-4 mr-2" />
-                    {type.charAt(0).toUpperCase() + type.slice(1)}
-                  </Button>
-                ))}
+      {/* Sidebar de Propriedades */}
+      <aside className="w-80 bg-gray-50 p-4 border-l">
+        <h3 className="font-medium mb-4">Propriedades</h3>
+        {selectedComponent ? (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Tipo</label>
+              <div className="mt-1 rounded border bg-gray-100 p-2 text-sm">
+                {selectedComponent.type}
               </div>
             </div>
-
-            <div className="col-span-2 p-4">
-              <h3 className="font-semibold mb-4">Canvas</h3>
-              <div className="min-h-[400px] border-2 border-dashed border-muted-foreground/25 rounded-lg p-4">
-                {blocks.length === 0 ? (
-                  <div className="text-center text-muted-foreground">
-                    Adicione componentes para começar a editar
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {blocks.map((block: any) => (
-                      <Card
-                        key={block.id}
-                        className={`cursor-pointer transition-all ${
-                          selectedBlock === block.id ? 'ring-2 ring-primary' : ''
-                        }`}
-                        onClick={() => setSelectedBlock(block.id)}
-                      >
-                        <CardHeader className="pb-2">
-                          <div className="flex items-center justify-between">
-                            <CardTitle className="text-sm">
-                              {block.type.charAt(0).toUpperCase() + block.type.slice(1)}
-                            </CardTitle>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteBlock(block.id);
-                              }}
-                            >
-                              <TrashIcon className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </CardHeader>
-                        <CardContent className="pt-0">
-                          <div className="text-sm text-muted-foreground">
-                            Bloco {block.type} - ID: {block.id}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                )}
-              </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">ID</label>
+              <input
+                type="text"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                value={selectedComponent.id}
+                onChange={(e) => updateComponent({ ...selectedComponent, id: e.target.value })}
+              />
             </div>
-
-            <div className="col-span-1 border-l bg-muted/20 p-4">
-              <h3 className="font-semibold mb-4">Propriedades</h3>
-              {selectedBlock ? (
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="block-id">ID do Bloco</Label>
-                    <Input
-                      id="block-id"
-                      value={selectedBlock}
-                      disabled
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label>Propriedades personalizadas aparecerão aqui</Label>
-                  </div>
-                </div>
-              ) : (
-                <div className="text-sm text-muted-foreground">
-                  Selecione um bloco para editar suas propriedades
-                </div>
-              )}
-            </div>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="preview" className="h-full">
-          <div className="p-4">
-            <h3 className="font-semibold mb-4">Preview do Funnel</h3>
-            <div className="border rounded-lg p-8 bg-white">
-              <div className="text-center text-muted-foreground">
-                Preview será renderizado aqui
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="settings" className="h-full">
-          <div className="p-4">
-            <h3 className="font-semibold mb-4">Configurações do Funnel</h3>
-            <div className="space-y-4">
+            {selectedComponent.type === 'heading' && (
               <div>
-                <Label htmlFor="funnel-name">Nome do Funnel</Label>
-                <Input
-                  id="funnel-name"
-                  placeholder="Nome do seu funnel"
-                  className="mt-1"
+                <label className="block text-sm font-medium text-gray-700">Texto do Título</label>
+                <input
+                  type="text"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                  value={selectedComponent.props?.text || ''}
+                  onChange={(e) => updateComponent({
+                    ...selectedComponent,
+                    props: { ...selectedComponent.props, text: e.target.value }
+                  })}
                 />
               </div>
+            )}
+            {selectedComponent.type === 'paragraph' && (
               <div>
-                <Label htmlFor="funnel-description">Descrição</Label>
-                <Input
-                  id="funnel-description"
-                  placeholder="Descrição do funnel"
-                  className="mt-1"
+                <label className="block text-sm font-medium text-gray-700">Texto do Parágrafo</label>
+                <textarea
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                  value={selectedComponent.props?.text || ''}
+                  onChange={(e) => updateComponent({
+                    ...selectedComponent,
+                    props: { ...selectedComponent.props, text: e.target.value }
+                  })}
                 />
               </div>
-            </div>
+            )}
+            {selectedComponent.type === 'button' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Texto do Botão</label>
+                <input
+                  type="text"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                  value={selectedComponent.props?.text || ''}
+                  onChange={(e) => updateComponent({
+                    ...selectedComponent,
+                    props: { ...selectedComponent.props, text: e.target.value }
+                  })}
+                />
+              </div>
+            )}
+            {selectedComponent.type === 'image' && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">URL da Imagem</label>
+                  <input
+                    type="url"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                    value={selectedComponent.props?.src || ''}
+                    onChange={(e) => updateComponent({
+                      ...selectedComponent,
+                      props: { ...selectedComponent.props, src: e.target.value }
+                    })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Texto Alternativo</label>
+                  <input
+                    type="text"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                    value={selectedComponent.props?.alt || ''}
+                    onChange={(e) => updateComponent({
+                      ...selectedComponent,
+                      props: { ...selectedComponent.props, alt: e.target.value }
+                    })}
+                  />
+                </div>
+              </>
+            )}
           </div>
-        </TabsContent>
-      </Tabs>
+        ) : (
+          <div className="text-center text-gray-500">
+            <Settings className="mx-auto h-6 w-6 mb-2" />
+            Selecione um componente para editar
+          </div>
+        )}
+      </aside>
     </div>
   );
 };
