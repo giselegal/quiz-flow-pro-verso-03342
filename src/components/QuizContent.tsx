@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { QuizQuestion } from './QuizQuestion';
 import { UserResponse } from '@/types/quiz';
-import { Progress } from '@/components/ui/Progress';
+import { Progress } from '@/components/ui/progress';
 import { AnimatedWrapper } from './ui/animated-wrapper';
 import { strategicQuestions } from '@/data/strategicQuestions';
 import { StrategicQuestions } from './quiz/StrategicQuestions';

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import QuizIntro from './QuizIntro';
 import { QuizContent } from './QuizContent';
@@ -68,7 +69,7 @@ export const QuizPage: React.FC = () => {
   };
 
   const calculateAndShowResult = async () => {
-    const styleScores: { [style in StyleType]: number } = {
+    const styleScores: Record<StyleResult, number> = {
       elegante: 0,
       romantico: 0,
       criativo: 0,
@@ -82,9 +83,9 @@ export const QuizPage: React.FC = () => {
     Object.keys(answers).forEach(questionId => {
       const questionAnswers = answers[questionId];
       questionAnswers.forEach(answerId => {
-        const points = ALL_STYLES[answerId as StyleType] || 0;
-        if (typeof points === 'string') {
-          styleScores[points] += 1;
+        const styleKey = answerId as StyleResult;
+        if (styleScores[styleKey] !== undefined) {
+          styleScores[styleKey] += 1;
         }
       });
     });
@@ -92,18 +93,17 @@ export const QuizPage: React.FC = () => {
     let calculatedPrimaryStyle: StyleResult | null = null;
     let maxScore = 0;
 
-    (Object.keys(styleScores) as (keyof typeof styleScores)[]).forEach(style => {
+    (Object.keys(styleScores) as StyleResult[]).forEach(style => {
       if (styleScores[style] > maxScore) {
         maxScore = styleScores[style];
-        calculatedPrimaryStyle = style as StyleResult;
+        calculatedPrimaryStyle = style;
       }
     });
 
-    const calculatedSecondaryStyles: StyleResult[] = (Object.keys(styleScores) as (keyof typeof styleScores)[])
+    const calculatedSecondaryStyles: StyleResult[] = (Object.keys(styleScores) as StyleResult[])
       .filter(style => styleScores[style] > 0 && style !== calculatedPrimaryStyle)
       .sort((a, b) => styleScores[b] - styleScores[a])
-      .slice(0, 2)
-      .map(style => style as StyleResult);
+      .slice(0, 2);
 
     setPrimaryStyle(calculatedPrimaryStyle);
     setSecondaryStyles(calculatedSecondaryStyles);

@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { AnimatedWrapper } from './ui/animated-wrapper';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 interface QuizFinalTransitionProps {
@@ -15,7 +16,7 @@ export const QuizFinalTransition: React.FC<QuizFinalTransitionProps> = ({
   return (
     <AnimatedWrapper show={showingFinalTransition}>
       <div className="flex flex-col items-center justify-center h-screen bg-[#faf8f5]">
-        <LoadingSpinner size="lg" />
+        <LoadingSpinner size="large" />
         <p className="mt-4 text-lg text-[#432818]">
           Preparando seu resultado...
         </p>
