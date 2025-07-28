@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { FunnelStepProps } from '@/types/funnel';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import QuizOption from '../shared/QuizOption';
 import FunnelProgressBar from '../shared/FunnelProgressBar';
 
@@ -80,31 +81,31 @@ export const QuestionMultipleStep: React.FC<FunnelStepProps> = ({
   return (
     <div 
       className={cn(
-        "relative rounded-xl shadow-md p-6",
+        "min-h-screen flex items-center justify-center p-6",
         backgroundColor,
         className
       )}
       onClick={isEditable ? onEdit : undefined}
       data-funnel-step-id={id}
     >
-      {showProgress && (
-        <FunnelProgressBar 
-          currentStep={stepNumber} 
-          totalSteps={totalSteps} 
-          className="mb-6"
-        />
-      )}
-      
-      <div className="max-w-3xl mx-auto">
-        {/* Questão principal */}
-        <div className="mb-8 text-center">
+      <Card className="w-full max-w-3xl mx-auto">
+        {showProgress && (
+          <div className="p-6 pb-0">
+            <FunnelProgressBar 
+              currentStep={stepNumber} 
+              totalSteps={totalSteps} 
+            />
+          </div>
+        )}
+        
+        <CardHeader className="text-center space-y-4">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
             {question}
           </h2>
           
           {/* Imagem opcional */}
           {imageUrl && (
-            <div className="mt-4 flex justify-center">
+            <div className="flex justify-center">
               <img 
                 src={imageUrl} 
                 alt="" 
@@ -112,53 +113,55 @@ export const QuestionMultipleStep: React.FC<FunnelStepProps> = ({
               />
             </div>
           )}
-        </div>
+        </CardHeader>
         
-        {/* Opções de resposta */}
-        <div className="grid gap-3 mb-8">
-          {options.map((option) => (
-            <QuizOption
-              key={option.id}
-              option={option}
-              isSelected={selectedOptions.includes(option.id)}
-              onSelect={() => handleSelect(option.id)}
-              multiSelect={multiSelect}
-              disabled={isEditable}
-            />
-          ))}
-        </div>
-        
-        {/* Navegação */}
-        <div className="flex justify-between mt-8">
-          {onPrevious && (
-            <Button 
-              variant="outline"
-              onClick={isEditable ? undefined : onPrevious}
-              disabled={isEditable}
-            >
-              {prevButtonText}
-            </Button>
-          )}
-          
-          <div className={cn(
-            "flex-1",
-            onPrevious ? "ml-4" : ""
-          )}>
-            <Button
-              onClick={handleNext}
-              disabled={!canContinue || isEditable}
-              className="w-full"
-            >
-              {buttonText}
-            </Button>
+        <CardContent className="space-y-6">
+          {/* Opções de resposta */}
+          <div className="grid gap-3">
+            {options.map((option: any) => (
+              <QuizOption
+                key={option.id}
+                option={option}
+                isSelected={selectedOptions.includes(option.id)}
+                onSelect={() => handleSelect(option.id)}
+                multiSelect={multiSelect}
+                disabled={isEditable}
+              />
+            ))}
           </div>
-        </div>
-      </div>
+          
+          {/* Navegação */}
+          <div className="flex justify-between mt-8">
+            {onPrevious && (
+              <Button 
+                variant="outline"
+                onClick={isEditable ? undefined : onPrevious}
+                disabled={isEditable}
+              >
+                {prevButtonText}
+              </Button>
+            )}
+            
+            <div className={cn(
+              "flex-1",
+              onPrevious ? "ml-4" : ""
+            )}>
+              <Button
+                onClick={handleNext}
+                disabled={!canContinue || isEditable}
+                className="w-full bg-[#B89B7A] hover:bg-[#A38967]"
+              >
+                {buttonText}
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
       
       {/* Indicador de edição */}
       {isEditable && (
-        <div className="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded">
-          Editar
+        <div className="absolute top-4 right-4 bg-blue-500 text-white text-xs px-2 py-1 rounded z-10">
+          Modo de Edição
         </div>
       )}
     </div>
