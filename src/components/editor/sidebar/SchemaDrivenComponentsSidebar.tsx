@@ -1,11 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../ui/tabs';
 import { Input } from '../../ui/input';
 import { Card, CardContent } from '../../ui/card';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
 import { PlusOutlined, AppstoreOutlined, FileTextOutlined } from '@ant-design/icons';
-import { Space, Typography, Empty, Divider } from 'antd';
+import { Space, Typography, Empty, Divider, Tabs } from 'antd';
 import { allBlockDefinitions } from '../../../config/blockDefinitions';
 
 const { Text } = Typography;
@@ -130,15 +129,15 @@ export const SchemaDrivenComponentsSidebar: React.FC<SchemaDrivenComponentsSideb
     <div className="p-4 space-y-4">
       {/* Add Page Button */}
       <Button
-        variant="primary"
-        size="small"
-        fullWidth
-        icon={<PlusOutlined />}
+        variant="default"
+        size="sm"
+        className="w-full"
         onClick={() => {
           // Lógica para adicionar nova página
           console.log('Adicionar nova página');
         }}
       >
+        <PlusOutlined className="mr-2" />
         Nova Página
       </Button>
 
@@ -150,9 +149,7 @@ export const SchemaDrivenComponentsSidebar: React.FC<SchemaDrivenComponentsSideb
           {funnelPages.map((page, index) => (
             <Card
               key={page.id}
-              variant="page"
-              size="small"
-              className={`cursor-pointer transition-all duration-200 ${
+              className={`cursor-pointer transition-all duration-200 p-3 ${
                 currentPageId === page.id 
                   ? 'bg-[#B89B7A]/10 border-[#B89B7A]' 
                   : 'hover:bg-[#B89B7A]/5'
@@ -172,11 +169,11 @@ export const SchemaDrivenComponentsSidebar: React.FC<SchemaDrivenComponentsSideb
                     {page.title || `Página ${index + 1}`}
                   </Text>
                   <div className="flex items-center space-x-2 mt-1">
-                    <Badge variant="info" size="small">
+                    <Badge variant="default">
                       {page.blocks?.length || 0} blocos
                     </Badge>
                     {page.type && (
-                      <Badge variant="secondary" size="small">
+                      <Badge variant="secondary">
                         {page.type}
                       </Badge>
                     )}
@@ -203,7 +200,7 @@ export const SchemaDrivenComponentsSidebar: React.FC<SchemaDrivenComponentsSideb
     <div className="h-full flex flex-col bg-white">
       <Tabs
         activeKey={activeTab}
-        onChange={onTabChange}
+        onChange={(key) => onTabChange(key as "components" | "pages")}
         items={[
           {
             key: 'components',

@@ -14,6 +14,7 @@ import {
 } from '@ant-design/icons';
 import { Space, Typography, Empty, Tooltip, Dropdown } from 'antd';
 import { allBlockDefinitions } from '../../../config/blockDefinitions';
+import { UniversalBlockRenderer } from '../blocks/UniversalBlockRenderer';
 
 const { Text, Title } = Typography;
 
@@ -157,50 +158,17 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
 
         {/* Block Preview Content */}
         <div className="space-y-2">
-          {/* Render basic block preview based on type */}
-          {block.type === 'QuizStartPageBlock' && (
-            <div className="p-3 bg-gradient-to-r from-[#B89B7A]/10 to-[#aa6b5d]/10 rounded-lg">
-              <Title level={5} className="!mb-1 !text-[#432818]">
-                {block.properties?.title || 'Página Inicial'}
-              </Title>
-              <Text className="text-[#8F7A6A] text-xs">
-                {block.properties?.subtitle || 'Subtitle aqui'}
-              </Text>
-            </div>
-          )}
-          
-          {block.type === 'QuizQuestionBlock' && (
-            <div className="p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
-              <Title level={5} className="!mb-1 !text-[#432818]">
-                {block.properties?.question || 'Pergunta aqui'}
-              </Title>
-              <div className="flex flex-wrap gap-1 mt-2">
-                {(block.properties?.options || ['Opção 1', 'Opção 2']).map((option: string, idx: number) => (
-                  <Badge key={idx} variant="default">
-                    {option}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          )}
-          
-          {/* Default preview for other block types */}
-          {!['QuizStartPageBlock', 'QuizQuestionBlock'].includes(block.type) && (
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <Text className="text-[#8F7A6A] text-xs">
-                {definition?.description || `Bloco do tipo: ${block.type}`}
-              </Text>
-              {block.properties && Object.keys(block.properties).length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-1">
-                  {Object.entries(block.properties).slice(0, 3).map(([key, value]) => (
-                    <Badge key={key} variant="secondary">
-                      {key}: {String(value).slice(0, 10)}
-                    </Badge>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+          {/* Use UniversalBlockRenderer to show actual component */}
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <UniversalBlockRenderer
+              block={block}
+              isSelected={isSelected}
+              onClick={() => handleBlockClick(block.id, { stopPropagation: () => {} } as any)}
+              onSaveInline={onSaveInline}
+              disabled={false}
+              className="w-full"
+            />
+          </div>
         </div>
 
         {/* Selection indicator */}
