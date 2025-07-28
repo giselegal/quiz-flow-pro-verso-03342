@@ -27,12 +27,12 @@ const EditorLayout = ({ primaryStyle }: EditorLayoutProps) => {
     setSelectedComponent(blockId);
   };
 
-  // Ensure we have a valid StyleResult with proper type assertion
+  // Ensure we have a valid StyleResult with proper type handling
   const validPrimaryStyle: StyleResult = primaryStyle || {
-    category: 'Natural' as const,
+    category: 'Natural' as unknown as StyleResult['category'],
     score: 0,
     percentage: 100
-  } as StyleResult;
+  };
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">

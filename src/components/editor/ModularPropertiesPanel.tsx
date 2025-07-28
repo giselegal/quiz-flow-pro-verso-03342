@@ -1,590 +1,364 @@
+
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Textarea } from '../ui/textarea';
-import { Label } from '../ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Switch } from '../ui/switch';
-import { Slider } from '../ui/slider';
-import { Badge } from '../ui/badge';
-import { Separator } from '../ui/separator';
-import { ScrollArea } from '../ui/scroll-area';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
 import { 
   Settings, 
-  Type, 
-  Image, 
-  MousePointer, 
   Palette, 
-  Layout,
-  Spacing,
-  Eye,
-  Code,
-  Save,
-  RotateCcw
+  Type, 
+  Layout, 
+  Image, 
+  Link, 
+  Code, 
+  Eye, 
+  EyeOff,
+  Trash2
 } from 'lucide-react';
 
-// =====================================================================
-// 🎛️ MODULAR PROPERTIES SYSTEM - Sistema de Propriedades Modulares
-// =====================================================================
-
-interface PropertyGroup {
-  id: string;
-  title: string;
-  icon?: React.ReactNode;
-  properties: PropertyDefinition[];
-  collapsible?: boolean;
-  defaultExpanded?: boolean;
-}
-
-interface PropertyDefinition {
-  key: string;
-  label: string;
-  type: 'text' | 'textarea' | 'number' | 'select' | 'boolean' | 'color' | 'slider' | 'range';
-  value: any;
-  placeholder?: string;
-  description?: string;
-  options?: { label: string; value: any }[];
-  min?: number;
-  max?: number;
-  step?: number;
-  validation?: (value: any) => string | null;
-}
-
 interface ModularPropertiesPanelProps {
-  componentId: string;
-  componentType: string;
-  propertyGroups: PropertyGroup[];
-  onPropertyChange: (groupId: string, propertyKey: string, value: any) => void;
-  onSave?: () => void;
-  onReset?: () => void;
-  className?: string;
+  selectedBlockId?: string | null;
+  onClose?: () => void;
+  onUpdate?: (properties: any) => void;
+  onDelete?: () => void;
 }
 
 export const ModularPropertiesPanel: React.FC<ModularPropertiesPanelProps> = ({
-  componentId,
-  componentType,
-  propertyGroups,
-  onPropertyChange,
-  onSave,
-  onReset,
-  className = ''
+  selectedBlockId,
+  onClose,
+  onUpdate,
+  onDelete
 }) => {
-  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
-    new Set(propertyGroups.filter(group => group.defaultExpanded !== false).map(group => group.id))
-  );
-  const [hasChanges, setHasChanges] = useState(false);
-
-  const toggleGroup = (groupId: string) => {
-    const newExpanded = new Set(expandedGroups);
-    if (newExpanded.has(groupId)) {
-      newExpanded.delete(groupId);
-    } else {
-      newExpanded.add(groupId);
+  const [activeTab, setActiveTab] = useState('content');
+  const [properties, setProperties] = useState({
+    content: {
+      title: '',
+      text: '',
+      buttonText: '',
+      buttonUrl: '',
+      imageUrl: ''
+    },
+    style: {
+      backgroundColor: '#ffffff',
+      textColor: '#000000',
+      fontSize: '16px',
+      fontWeight: 'normal',
+      padding: '16px',
+      borderRadius: '8px'
+    },
+    layout: {
+      width: '100%',
+      height: 'auto',
+      alignment: 'left',
+      spacing: '16px'
+    },
+    animation: {
+      type: 'none',
+      duration: '0.3s',
+      delay: '0s'
     }
-    setExpandedGroups(newExpanded);
+  });
+
+  const handlePropertyChange = (section: string, key: string, value: any) => {
+    setProperties(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [key]: value
+      }
+    }));
+    
+    onUpdate?.(properties);
   };
 
-  const handlePropertyChange = (groupId: string, propertyKey: string, value: any) => {
-    onPropertyChange(groupId, propertyKey, value);
-    setHasChanges(true);
-  };
-
-  const handleSave = () => {
-    onSave?.();
-    setHasChanges(false);
-  };
-
-  const handleReset = () => {
-    onReset?.();
-    setHasChanges(false);
-  };
+  if (!selectedBlockId) {
+    return (
+      <div className="h-full flex items-center justify-center p-4">
+        <div className="text-center">
+          <Settings className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+          <p className="text-gray-500">
+            Selecione um bloco para editar suas propriedades
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <Card className={`modular-properties-panel ${className}`}>
-      <CardHeader className="pb-3">
+    <div className="h-full flex flex-col">
+      <div className="border-b p-4 bg-white">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Settings className="h-4 w-4" />
-            <CardTitle className="text-sm font-medium">Propriedades</CardTitle>
+          <h3 className="font-medium">Propriedades do Bloco</h3>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onDelete}
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onClose}
+            >
+              <EyeOff className="w-4 h-4" />
+            </Button>
           </div>
-          <Badge variant="secondary" className="text-xs">
-            {componentType}
-          </Badge>
         </div>
-        <div className="text-xs text-gray-500">
-          ID: {componentId}
-        </div>
-      </CardHeader>
+      </div>
 
-      <CardContent className="pt-0 space-y-4">
-        <ScrollArea className="h-96">
-          <div className="space-y-4 pr-4">
-            {propertyGroups.map((group) => (
-              <PropertyGroupRenderer
-                key={group.id}
-                group={group}
-                isExpanded={expandedGroups.has(group.id)}
-                onToggle={() => toggleGroup(group.id)}
-                onPropertyChange={(propertyKey, value) => 
-                  handlePropertyChange(group.id, propertyKey, value)
-                }
+      <div className="flex-1 overflow-auto">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="content">
+              <Type className="w-4 h-4 mr-2" />
+              Conteúdo
+            </TabsTrigger>
+            <TabsTrigger value="style">
+              <Palette className="w-4 h-4 mr-2" />
+              Estilo
+            </TabsTrigger>
+            <TabsTrigger value="layout">
+              <Layout className="w-4 h-4 mr-2" />
+              Layout
+            </TabsTrigger>
+            <TabsTrigger value="animation">
+              <Eye className="w-4 h-4 mr-2" />
+              Animação
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="content" className="p-4 space-y-4">
+            <div>
+              <Label htmlFor="title">Título</Label>
+              <Input
+                id="title"
+                value={properties.content.title}
+                onChange={(e) => handlePropertyChange('content', 'title', e.target.value)}
+                placeholder="Digite o título"
               />
-            ))}
-          </div>
-        </ScrollArea>
-
-        {/* Controles de ação */}
-        {(onSave || onReset) && (
-          <>
-            <Separator />
-            <div className="flex items-center justify-between pt-2">
-              <div className="flex space-x-2">
-                {onReset && (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={handleReset}
-                    className="flex items-center space-x-1"
-                  >
-                    <RotateCcw className="h-3 w-3" />
-                    <span>Reset</span>
-                  </Button>
-                )}
-              </div>
-              
-              {onSave && (
-                <Button
-                  size="sm"
-                  onClick={handleSave}
-                  disabled={!hasChanges}
-                  className="flex items-center space-x-1"
-                >
-                  <Save className="h-3 w-3" />
-                  <span>Salvar</span>
-                </Button>
-              )}
             </div>
-          </>
-        )}
-      </CardContent>
-    </Card>
-  );
-};
 
-// =====================================================================
-// 🎨 PROPERTY GROUP RENDERER
-// =====================================================================
+            <div>
+              <Label htmlFor="text">Texto</Label>
+              <Textarea
+                id="text"
+                value={properties.content.text}
+                onChange={(e) => handlePropertyChange('content', 'text', e.target.value)}
+                placeholder="Digite o texto"
+                rows={4}
+              />
+            </div>
 
-interface PropertyGroupRendererProps {
-  group: PropertyGroup;
-  isExpanded: boolean;
-  onToggle: () => void;
-  onPropertyChange: (propertyKey: string, value: any) => void;
-}
+            <div>
+              <Label htmlFor="buttonText">Texto do Botão</Label>
+              <Input
+                id="buttonText"
+                value={properties.content.buttonText}
+                onChange={(e) => handlePropertyChange('content', 'buttonText', e.target.value)}
+                placeholder="Clique aqui"
+              />
+            </div>
 
-const PropertyGroupRenderer: React.FC<PropertyGroupRendererProps> = ({
-  group,
-  isExpanded,
-  onToggle,
-  onPropertyChange
-}) => {
-  return (
-    <div className="border rounded-lg p-3 bg-gray-50">
-      <button
-        onClick={onToggle}
-        className="flex items-center justify-between w-full text-left"
-      >
-        <div className="flex items-center space-x-2">
-          {group.icon}
-          <h3 className="font-medium text-sm">{group.title}</h3>
-        </div>
-        <Badge variant={isExpanded ? 'default' : 'secondary'} className="text-xs">
-          {isExpanded ? '−' : '+'}
-        </Badge>
-      </button>
+            <div>
+              <Label htmlFor="buttonUrl">URL do Botão</Label>
+              <Input
+                id="buttonUrl"
+                value={properties.content.buttonUrl}
+                onChange={(e) => handlePropertyChange('content', 'buttonUrl', e.target.value)}
+                placeholder="https://exemplo.com"
+              />
+            </div>
 
-      {isExpanded && (
-        <div className="mt-3 space-y-3">
-          {group.properties.map((property) => (
-            <PropertyRenderer
-              key={property.key}
-              property={property}
-              onValueChange={(value) => onPropertyChange(property.key, value)}
-            />
-          ))}
-        </div>
-      )}
+            <div>
+              <Label htmlFor="imageUrl">URL da Imagem</Label>
+              <Input
+                id="imageUrl"
+                value={properties.content.imageUrl}
+                onChange={(e) => handlePropertyChange('content', 'imageUrl', e.target.value)}
+                placeholder="https://exemplo.com/imagem.jpg"
+              />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="style" className="p-4 space-y-4">
+            <div>
+              <Label htmlFor="backgroundColor">Cor de Fundo</Label>
+              <Input
+                id="backgroundColor"
+                type="color"
+                value={properties.style.backgroundColor}
+                onChange={(e) => handlePropertyChange('style', 'backgroundColor', e.target.value)}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="textColor">Cor do Texto</Label>
+              <Input
+                id="textColor"
+                type="color"
+                value={properties.style.textColor}
+                onChange={(e) => handlePropertyChange('style', 'textColor', e.target.value)}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="fontSize">Tamanho da Fonte</Label>
+              <Select
+                value={properties.style.fontSize}
+                onValueChange={(value) => handlePropertyChange('style', 'fontSize', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="12px">12px</SelectItem>
+                  <SelectItem value="14px">14px</SelectItem>
+                  <SelectItem value="16px">16px</SelectItem>
+                  <SelectItem value="18px">18px</SelectItem>
+                  <SelectItem value="20px">20px</SelectItem>
+                  <SelectItem value="24px">24px</SelectItem>
+                  <SelectItem value="32px">32px</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label htmlFor="fontWeight">Peso da Fonte</Label>
+              <Select
+                value={properties.style.fontWeight}
+                onValueChange={(value) => handlePropertyChange('style', 'fontWeight', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="normal">Normal</SelectItem>
+                  <SelectItem value="bold">Negrito</SelectItem>
+                  <SelectItem value="lighter">Mais Leve</SelectItem>
+                  <SelectItem value="bolder">Mais Negrito</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label htmlFor="padding">Padding</Label>
+              <Input
+                id="padding"
+                value={properties.style.padding}
+                onChange={(e) => handlePropertyChange('style', 'padding', e.target.value)}
+                placeholder="16px"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="borderRadius">Border Radius</Label>
+              <Input
+                id="borderRadius"
+                value={properties.style.borderRadius}
+                onChange={(e) => handlePropertyChange('style', 'borderRadius', e.target.value)}
+                placeholder="8px"
+              />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="layout" className="p-4 space-y-4">
+            <div>
+              <Label htmlFor="width">Largura</Label>
+              <Input
+                id="width"
+                value={properties.layout.width}
+                onChange={(e) => handlePropertyChange('layout', 'width', e.target.value)}
+                placeholder="100%"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="height">Altura</Label>
+              <Input
+                id="height"
+                value={properties.layout.height}
+                onChange={(e) => handlePropertyChange('layout', 'height', e.target.value)}
+                placeholder="auto"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="alignment">Alinhamento</Label>
+              <Select
+                value={properties.layout.alignment}
+                onValueChange={(value) => handlePropertyChange('layout', 'alignment', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="left">Esquerda</SelectItem>
+                  <SelectItem value="center">Centro</SelectItem>
+                  <SelectItem value="right">Direita</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label htmlFor="spacing">Espaçamento</Label>
+              <Input
+                id="spacing"
+                value={properties.layout.spacing}
+                onChange={(e) => handlePropertyChange('layout', 'spacing', e.target.value)}
+                placeholder="16px"
+              />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="animation" className="p-4 space-y-4">
+            <div>
+              <Label htmlFor="animationType">Tipo de Animação</Label>
+              <Select
+                value={properties.animation.type}
+                onValueChange={(value) => handlePropertyChange('animation', 'type', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Nenhuma</SelectItem>
+                  <SelectItem value="fade">Fade</SelectItem>
+                  <SelectItem value="slide">Slide</SelectItem>
+                  <SelectItem value="scale">Scale</SelectItem>
+                  <SelectItem value="bounce">Bounce</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label htmlFor="duration">Duração</Label>
+              <Input
+                id="duration"
+                value={properties.animation.duration}
+                onChange={(e) => handlePropertyChange('animation', 'duration', e.target.value)}
+                placeholder="0.3s"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="delay">Delay</Label>
+              <Input
+                id="delay"
+                value={properties.animation.delay}
+                onChange={(e) => handlePropertyChange('animation', 'delay', e.target.value)}
+                placeholder="0s"
+              />
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 };
-
-// =====================================================================
-// 🎛️ PROPERTY RENDERER
-// =====================================================================
-
-interface PropertyRendererProps {
-  property: PropertyDefinition;
-  onValueChange: (value: any) => void;
-}
-
-const PropertyRenderer: React.FC<PropertyRendererProps> = ({
-  property,
-  onValueChange
-}) => {
-  const [error, setError] = useState<string | null>(null);
-
-  const handleChange = (value: any) => {
-    // Validação
-    if (property.validation) {
-      const validationError = property.validation(value);
-      setError(validationError);
-      if (validationError) return;
-    } else {
-      setError(null);
-    }
-
-    onValueChange(value);
-  };
-
-  const renderInput = () => {
-    switch (property.type) {
-      case 'text':
-        return (
-          <Input
-            value={property.value || ''}
-            onChange={(e) => handleChange(e.target.value)}
-            placeholder={property.placeholder}
-          />
-        );
-
-      case 'textarea':
-        return (
-          <Textarea
-            value={property.value || ''}
-            onChange={(e) => handleChange(e.target.value)}
-            placeholder={property.placeholder}
-            rows={3}
-          />
-        );
-
-      case 'number':
-        return (
-          <Input
-            type="number"
-            value={property.value || ''}
-            onChange={(e) => handleChange(Number(e.target.value))}
-            placeholder={property.placeholder}
-            min={property.min}
-            max={property.max}
-            step={property.step}
-          />
-        );
-
-      case 'select':
-        return (
-          <Select
-            value={property.value}
-            onValueChange={handleChange}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Selecione..." />
-            </SelectTrigger>
-            <SelectContent>
-              {property.options?.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        );
-
-      case 'boolean':
-        return (
-          <div className="flex items-center space-x-2">
-            <Switch
-              checked={property.value}
-              onCheckedChange={handleChange}
-            />
-            <span className="text-sm">{property.value ? 'Ativo' : 'Inativo'}</span>
-          </div>
-        );
-
-      case 'color':
-        return (
-          <div className="flex items-center space-x-2">
-            <Input
-              type="color"
-              value={property.value || '#000000'}
-              onChange={(e) => handleChange(e.target.value)}
-              className="w-12 h-8 p-0 border rounded"
-            />
-            <Input
-              type="text"
-              value={property.value || ''}
-              onChange={(e) => handleChange(e.target.value)}
-              placeholder="#000000"
-              className="flex-1"
-            />
-          </div>
-        );
-
-      case 'slider':
-        return (
-          <div className="space-y-2">
-            <div className="flex justify-between text-xs text-gray-500">
-              <span>{property.min || 0}</span>
-              <span className="font-medium">{property.value}</span>
-              <span>{property.max || 100}</span>
-            </div>
-            <Slider
-              value={[property.value || 0]}
-              onValueChange={(value) => handleChange(value[0])}
-              min={property.min || 0}
-              max={property.max || 100}
-              step={property.step || 1}
-            />
-          </div>
-        );
-
-      case 'range':
-        const [min, max] = property.value || [0, 100];
-        return (
-          <div className="space-y-2">
-            <div className="flex justify-between text-xs text-gray-500">
-              <span>{property.min || 0}</span>
-              <span className="font-medium">{min} - {max}</span>
-              <span>{property.max || 100}</span>
-            </div>
-            <Slider
-              value={[min, max]}
-              onValueChange={(value) => handleChange(value)}
-              min={property.min || 0}
-              max={property.max || 100}
-              step={property.step || 1}
-            />
-          </div>
-        );
-
-      default:
-        return (
-          <div className="text-sm text-gray-500 italic">
-            Tipo de campo não suportado: {property.type}
-          </div>
-        );
-    }
-  };
-
-  return (
-    <div className="space-y-2">
-      <Label className="text-xs font-medium">{property.label}</Label>
-      {renderInput()}
-      {error && (
-        <p className="text-xs text-red-500">{error}</p>
-      )}
-      {property.description && (
-        <p className="text-xs text-gray-500">{property.description}</p>
-      )}
-    </div>
-  );
-};
-
-// =====================================================================
-// 🎯 PROPERTY GROUP PRESETS
-// =====================================================================
-
-export const createTextPropertyGroups = (initialValues: any = {}): PropertyGroup[] => [
-  {
-    id: 'content',
-    title: 'Conteúdo',
-    icon: <Type className="h-4 w-4" />,
-    defaultExpanded: true,
-    properties: [
-      {
-        key: 'text',
-        label: 'Texto',
-        type: 'textarea',
-        value: initialValues.text || 'Texto editável',
-        placeholder: 'Digite o texto aqui...'
-      }
-    ]
-  },
-  {
-    id: 'typography',
-    title: 'Tipografia',
-    icon: <Type className="h-4 w-4" />,
-    properties: [
-      {
-        key: 'size',
-        label: 'Tamanho',
-        type: 'select',
-        value: initialValues.size || 'base',
-        options: [
-          { label: 'Pequeno', value: 'sm' },
-          { label: 'Normal', value: 'base' },
-          { label: 'Grande', value: 'lg' },
-          { label: 'Extra Grande', value: 'xl' },
-          { label: 'XXL', value: '2xl' }
-        ]
-      },
-      {
-        key: 'weight',
-        label: 'Peso',
-        type: 'select',
-        value: initialValues.weight || 'normal',
-        options: [
-          { label: 'Normal', value: 'normal' },
-          { label: 'Médio', value: 'medium' },
-          { label: 'Semi-negrito', value: 'semibold' },
-          { label: 'Negrito', value: 'bold' }
-        ]
-      },
-      {
-        key: 'color',
-        label: 'Cor',
-        type: 'color',
-        value: initialValues.color || '#000000'
-      },
-      {
-        key: 'align',
-        label: 'Alinhamento',
-        type: 'select',
-        value: initialValues.align || 'left',
-        options: [
-          { label: 'Esquerda', value: 'left' },
-          { label: 'Centro', value: 'center' },
-          { label: 'Direita', value: 'right' }
-        ]
-      }
-    ]
-  }
-];
-
-export const createImagePropertyGroups = (initialValues: any = {}): PropertyGroup[] => [
-  {
-    id: 'source',
-    title: 'Fonte',
-    icon: <Image className="h-4 w-4" />,
-    defaultExpanded: true,
-    properties: [
-      {
-        key: 'src',
-        label: 'URL da Imagem',
-        type: 'text',
-        value: initialValues.src || '',
-        placeholder: 'https://...'
-      },
-      {
-        key: 'alt',
-        label: 'Texto Alternativo',
-        type: 'text',
-        value: initialValues.alt || '',
-        placeholder: 'Descrição da imagem'
-      }
-    ]
-  },
-  {
-    id: 'dimensions',
-    title: 'Dimensões',
-    icon: <Layout className="h-4 w-4" />,
-    properties: [
-      {
-        key: 'width',
-        label: 'Largura (px)',
-        type: 'slider',
-        value: initialValues.width || 300,
-        min: 50,
-        max: 800,
-        step: 10
-      },
-      {
-        key: 'height',
-        label: 'Altura (px)',
-        type: 'slider',
-        value: initialValues.height || 200,
-        min: 50,
-        max: 600,
-        step: 10
-      },
-      {
-        key: 'objectFit',
-        label: 'Ajuste',
-        type: 'select',
-        value: initialValues.objectFit || 'cover',
-        options: [
-          { label: 'Cobrir', value: 'cover' },
-          { label: 'Conter', value: 'contain' },
-          { label: 'Preencher', value: 'fill' },
-          { label: 'Nenhum', value: 'none' }
-        ]
-      },
-      {
-        key: 'rounded',
-        label: 'Bordas Arredondadas',
-        type: 'boolean',
-        value: initialValues.rounded || false
-      }
-    ]
-  }
-];
-
-export const createButtonPropertyGroups = (initialValues: any = {}): PropertyGroup[] => [
-  {
-    id: 'content',
-    title: 'Conteúdo',
-    icon: <MousePointer className="h-4 w-4" />,
-    defaultExpanded: true,
-    properties: [
-      {
-        key: 'text',
-        label: 'Texto',
-        type: 'text',
-        value: initialValues.text || 'Botão',
-        placeholder: 'Digite o texto do botão'
-      }
-    ]
-  },
-  {
-    id: 'style',
-    title: 'Estilo',
-    icon: <Palette className="h-4 w-4" />,
-    properties: [
-      {
-        key: 'variant',
-        label: 'Variante',
-        type: 'select',
-        value: initialValues.variant || 'primary',
-        options: [
-          { label: 'Primário', value: 'primary' },
-          { label: 'Secundário', value: 'secondary' },
-          { label: 'Contorno', value: 'outline' },
-          { label: 'Fantasma', value: 'ghost' }
-        ]
-      },
-      {
-        key: 'size',
-        label: 'Tamanho',
-        type: 'select',
-        value: initialValues.size || 'md',
-        options: [
-          { label: 'Pequeno', value: 'sm' },
-          { label: 'Médio', value: 'md' },
-          { label: 'Grande', value: 'lg' }
-        ]
-      },
-      {
-        key: 'fullWidth',
-        label: 'Largura Total',
-        type: 'boolean',
-        value: initialValues.fullWidth || false
-      },
-      {
-        key: 'disabled',
-        label: 'Desabilitado',
-        type: 'boolean',
-        value: initialValues.disabled || false
-      }
-    ]
-  }
-];
