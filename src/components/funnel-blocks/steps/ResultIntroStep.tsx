@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { FunnelStepProps } from '@/types/funnel';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { ChevronRight } from 'lucide-react';
 
 /**
@@ -54,81 +56,70 @@ export const ResultIntroStep: React.FC<FunnelStepProps> = ({
   return (
     <div 
       className={cn(
-        "relative rounded-xl shadow-md p-6",
+        "min-h-screen flex items-center justify-center p-6",
         backgroundColor,
-        animateIn ? "animate-fade-in-up" : "",
+        animateIn ? "animate-in slide-in-from-bottom-4 duration-700" : "",
         className
       )}
       onClick={isEditable ? onEdit : undefined}
       data-funnel-step-id={id}
     >
-      <div className="max-w-2xl mx-auto text-center space-y-8">
-        {/* Categoria do resultado */}
-        <div className="inline-block bg-indigo-100 text-indigo-800 px-4 py-1 rounded-full text-sm font-medium">
-          {result.category}
-        </div>
+      <Card className="w-full max-w-2xl mx-auto">
+        <CardHeader className="text-center space-y-4">
+          {/* Categoria do resultado */}
+          <Badge variant="secondary" className="w-fit mx-auto text-sm">
+            {result.category}
+          </Badge>
+          
+          {/* Título */}
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+            {title}
+          </h2>
+          
+          {/* Subtítulo */}
+          <p className="text-xl text-gray-600">
+            {subtitle}
+          </p>
+        </CardHeader>
         
-        {/* Título */}
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-          {title}
-        </h2>
-        
-        {/* Subtítulo */}
-        <p className="text-xl text-gray-600">
-          {subtitle}
-        </p>
-        
-        {/* Prévia da imagem */}
-        {result.imageUrl && (
-          <div className="mt-6 relative">
-            <div className="relative h-48 w-48 mx-auto rounded-full overflow-hidden border-4 border-indigo-200">
-              <img 
-                src={result.imageUrl} 
-                alt={result.category}
-                className="object-cover w-full h-full"
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30"></div>
-            </div>
-            <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-              <div className="bg-white/80 backdrop-blur-sm rounded-full p-2 shadow-lg">
-                <ChevronRight size={24} className="text-indigo-600" />
+        <CardContent className="text-center space-y-8">
+          {/* Prévia da imagem */}
+          {result.imageUrl && (
+            <div className="relative">
+              <div className="relative h-48 w-48 mx-auto rounded-full overflow-hidden border-4 border-[#B89B7A]/30 shadow-lg">
+                <img 
+                  src={result.imageUrl} 
+                  alt={result.category}
+                  className="object-cover w-full h-full"
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30"></div>
+              </div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <div className="bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg">
+                  <ChevronRight size={24} className="text-[#B89B7A]" />
+                </div>
               </div>
             </div>
-          </div>
-        )}
-        
-        {/* Botão CTA */}
-        <Button
-          onClick={isEditable ? undefined : onNext}
-          size="lg"
-          className="mt-8 px-8"
-        >
-          {buttonText}
-        </Button>
-      </div>
+          )}
+          
+          {/* Botão CTA */}
+          <Button
+            onClick={isEditable ? undefined : onNext}
+            size="lg"
+            className="px-8 bg-[#B89B7A] hover:bg-[#A38967]"
+            disabled={isEditable}
+          >
+            {buttonText}
+          </Button>
+        </CardContent>
+      </Card>
       
       {/* Indicador de edição */}
       {isEditable && (
-        <div className="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded">
-          Editar
+        <div className="absolute top-4 right-4 bg-blue-500 text-white text-xs px-2 py-1 rounded z-10">
+          Modo de Edição
         </div>
       )}
-      
-      <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fade-in-up {
-          animation: fadeInUp 0.8s ease-out;
-        }
-      `}</style>
     </div>
   );
 };
