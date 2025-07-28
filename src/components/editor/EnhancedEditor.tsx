@@ -1,438 +1,266 @@
-// Enhanced Editor - Integração de Todas as Melhorias
-import React, { useState, useEffect, useCallback } from 'react';
-import { useLocation } from 'wouter';
-import { Button } from '../ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Badge } from '../ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { 
-  Save, 
-  Eye, 
-  Settings, 
-  BarChart3, 
-  Shield, 
-  Globe, 
-  Calendar,
-  CheckCircle,
-  AlertCircle,
-  Smartphone,
-  Tablet,
-  Monitor,
-  ArrowLeft
-} from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Settings, Analytics, Users, Shield, Workflow, Save, Eye, Code, Smartphone, Tablet, Monitor } from 'lucide-react';
+import { StyleResult } from '@/types/quiz';
+import { useEditor } from '@/hooks/useEditor';
 
-// Importar todos os sistemas melhorados
-import { ValidationSummary, useValidation, type FunnelValidationContext } from './validation/ValidationSystem';
-import { 
-  ToastContainer, 
-  AutoSaveIndicator, 
-  ConnectionIndicator, 
-  LoadingOverlay,
-  useFeedbackSystem,
-  useAutoSave,
-  useConnectionState
-} from './feedback/FeedbackSystem';
+// Import admin components
 import { PermissionsProvider, ProtectedComponent, usePermissions } from '../admin/security/AccessControlSystem';
-import { CustomURLEditor, SEOEditor, type SEOMetadata, useCustomURLs } from './seo/SEOSystem';
 import { WorkflowManager, StatusBadge, useWorkflow } from '../admin/workflow/PublishingWorkflow';
 import { AnalyticsDashboard } from '../admin/analytics/AdvancedAnalytics';
 
-// Importar o editor base existente
-import SchemaDrivenEditorResponsive from './SchemaDrivenEditorResponsive';
+// Enhanced Editor Components
+import { EnhancedEditorDashboard } from '../enhanced-editor/dashboard/EnhancedEditorDashboard';
+import { PropertiesPanel } from '../enhanced-editor/properties/PropertiesPanel';
+import { PreviewPanel } from '../enhanced-editor/preview/PreviewPanel';
 
-// Tipos
 interface EnhancedEditorProps {
+  primaryStyle?: StyleResult;
   funnelId?: string;
-  className?: string;
+  funnelName?: string;
 }
 
-interface FunnelData {
-  id: string;
-  name: string;
-  description?: string;
-  pages: any[];
-  seo: SEOMetadata;
-  status: 'draft' | 'review' | 'published' | 'paused' | 'archived';
-  updatedAt: string;
-}
-
-type DeviceView = 'mobile' | 'tablet' | 'desktop';
-
-// Componente principal do editor melhorado
-const EnhancedEditor: React.FC<EnhancedEditorProps> = ({ 
+export const EnhancedEditor: React.FC<EnhancedEditorProps> = ({
+  primaryStyle,
   funnelId = 'default',
-  className = '' 
+  funnelName = 'Novo Funil'
 }) => {
-  const [, setLocation] = useLocation();
-  const [activeTab, setActiveTab] = useState<'editor' | 'seo' | 'workflow' | 'analytics' | 'settings'>('editor');
-  const [deviceView, setDeviceView] = useState<DeviceView>('desktop');
-  const [showSidebar, setShowSidebar] = useState(true);
+  const [activeTab, setActiveTab] = useState<'editor' | 'workflow' | 'analytics' | 'seo' | 'settings'>('editor');
+  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
+  const [viewportSize, setViewportSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('lg');
+  const [isPreviewing, setIsPreviewing] = useState(false);
   
-  // Estados do funil
-  const [funnelData, setFunnelData] = useState<FunnelData>({
-    id: funnelId,
-    name: 'Novo Funil',
-    description: '',
-    pages: [],
-    seo: {
-      title: '',
-      description: '',
-      keywords: [],
-      openGraph: {
-        title: '',
-        description: '',
-        image: '',
-        type: 'quiz'
-      },
-      twitterCard: {
-        card: 'summary_large_image',
-        title: '',
-        description: '',
-        image: ''
-      }
-    },
-    status: 'draft',
-    updatedAt: new Date().toISOString()
-  });
+  const { config, addBlock, updateBlock, deleteBlock, reorderBlocks, saveConfig } = useEditor();
+  const { hasPermission } = usePermissions();
+  const { items, updateStatus } = useWorkflow();
 
-  // Hooks dos sistemas avançados
-  const feedback = useFeedbackSystem();
-  const connectionState = useConnectionState();
-  const { hasPermission, logAction } = usePermissions();
-  const { workflowState } = useWorkflow(funnelId);
-  const { urls } = useCustomURLs(funnelId);
-
-  // Validação
-  const validationContext: FunnelValidationContext = {
-    funnel: funnelData,
-    pages: funnelData.pages,
-    userRole: 'editor' // Pode vir do contexto de permissões
+  const handleBlockSelect = (blockId: string) => {
+    setSelectedBlockId(blockId);
   };
 
-  // Auto-save
-  const { autoSaveState, pendingChanges } = useAutoSave(
-    async () => {
-      await saveFunnel();
-    },
-    [funnelData],
-    { enabled: true, interval: 3000 }
-  );
-
-  // Funções
-  const saveFunnel = useCallback(async () => {
-    try {
-      feedback.startLoading('Salvando funil...');
-      
-      // Simular salvamento - substituir por API real
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      await logAction('update_funnel', 'funnel', funnelId, {
-        newData: funnelData,
-        description: 'Funil atualizado via editor'
-      });
-
-      feedback.showSuccess('Funil salvo com sucesso!');
-    } catch (error) {
-      feedback.showError('Erro ao salvar', 'Não foi possível salvar o funil');
-    } finally {
-      feedback.stopLoading();
-    }
-  }, [funnelData, funnelId, feedback, logAction]);
-
-  const publishFunnel = useCallback(async () => {
-    try {
-      feedback.startLoading('Publicando funil...');
-      
-      // Validar antes de publicar
-      const { getValidationSummary } = useValidation();
-      // const summary = getValidationSummary; // Implementar validação
-
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      setFunnelData(prev => ({ ...prev, status: 'published' }));
-      
-      await logAction('publish_funnel', 'funnel', funnelId, {
-        description: 'Funil publicado'
-      });
-
-      feedback.showSuccess('Funil publicado!', 'Seu funil está agora acessível publicamente');
-    } catch (error) {
-      feedback.showError('Erro ao publicar', 'Não foi possível publicar o funil');
-    } finally {
-      feedback.stopLoading();
-    }
-  }, [funnelId, feedback, logAction]);
-
-  const previewFunnel = useCallback(() => {
-    const previewUrl = urls.find(url => url.isPrimary)?.slug || funnelId;
-    window.open(`/preview/${previewUrl}`, '_blank');
-    
-    logAction('view_funnel', 'funnel', funnelId, {
-      description: 'Preview do funil aberto'
-    });
-  }, [urls, funnelId, logAction]);
-
-  const handleSEOChange = useCallback((newSEO: SEOMetadata) => {
-    setFunnelData(prev => ({ 
-      ...prev, 
-      seo: newSEO,
-      updatedAt: new Date().toISOString()
-    }));
-  }, []);
-
-  const getDeviceViewport = () => {
-    switch (deviceView) {
-      case 'mobile': return 'max-w-sm mx-auto';
-      case 'tablet': return 'max-w-2xl mx-auto';
-      default: return 'w-full';
-    }
+  const handleBlockUpdate = (blockId: string, content: any) => {
+    updateBlock(blockId, content);
   };
+
+  const handleBlockDelete = (blockId: string) => {
+    deleteBlock(blockId);
+    setSelectedBlockId(null);
+  };
+
+  const handleReorderBlocks = (sourceIndex: number, destinationIndex: number) => {
+    reorderBlocks(sourceIndex, destinationIndex);
+  };
+
+  const handleSave = () => {
+    saveConfig();
+  };
+
+  const validPrimaryStyle: StyleResult = primaryStyle || {
+    category: 'Natural' as const,
+    score: 0,
+    percentage: 100
+  } as StyleResult;
 
   return (
     <PermissionsProvider>
-      <div className={`h-screen flex flex-col bg-gray-50 ${className}`}>
-        {/* Header */}
-        <header className="bg-white border-b shadow-sm">
-          <div className="px-6 py-4">
+      <WorkflowManager>
+        <div className="h-screen flex flex-col bg-[#FAF9F7]">
+          {/* Header */}
+          <div className="border-b bg-white p-4">
             <div className="flex items-center justify-between">
-              {/* Left side */}
-              <div className="flex items-center gap-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setLocation('/admin/funis')}
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Voltar
-                </Button>
-                
-                <div>
-                  <h1 className="text-xl font-semibold text-gray-900">
-                    {funnelData.name}
-                  </h1>
-                  <div className="flex items-center gap-2 mt-1">
-                    {workflowState && <StatusBadge status={workflowState.status} />}
-                    <span className="text-sm text-gray-500">
-                      Atualizado em {new Date(funnelData.updatedAt).toLocaleString()}
-                    </span>
-                  </div>
-                </div>
+              <div>
+                <h1 className="text-2xl font-playfair text-[#432818]">
+                  Editor Avançado
+                </h1>
+                <p className="text-sm text-[#8F7A6A]">{funnelName}</p>
               </div>
-
-              {/* Center - Device View Toggle */}
-              <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
-                {[
-                  { type: 'mobile' as DeviceView, icon: Smartphone },
-                  { type: 'tablet' as DeviceView, icon: Tablet },
-                  { type: 'desktop' as DeviceView, icon: Monitor }
-                ].map(({ type, icon: Icon }) => (
+              
+              <div className="flex items-center gap-2">
+                <StatusBadge status="draft" />
+                
+                {/* Viewport Size Controls */}
+                <div className="flex items-center gap-1 border rounded-lg p-1">
                   <Button
-                    key={type}
-                    variant={deviceView === type ? "default" : "ghost"}
+                    variant={viewportSize === 'sm' ? 'default' : 'ghost'}
                     size="sm"
-                    onClick={() => setDeviceView(type)}
-                    className="px-3"
+                    onClick={() => setViewportSize('sm')}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Smartphone className="w-4 h-4" />
                   </Button>
-                ))}
-              </div>
+                  <Button
+                    variant={viewportSize === 'md' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setViewportSize('md')}
+                  >
+                    <Tablet className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant={viewportSize === 'lg' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setViewportSize('lg')}
+                  >
+                    <Monitor className="w-4 h-4" />
+                  </Button>
+                </div>
 
-              {/* Right side */}
-              <div className="flex items-center gap-3">
-                {/* Status indicators */}
-                <AutoSaveIndicator 
-                  autoSaveState={autoSaveState} 
-                  pendingChanges={pendingChanges} 
-                />
-                <ConnectionIndicator connectionState={connectionState} />
-
-                {/* Action buttons */}
-                <Button variant="outline" size="sm" onClick={previewFunnel}>
-                  <Eye className="h-4 w-4 mr-2" />
-                  Preview
+                {/* Action Buttons */}
+                <Button
+                  variant={isPreviewing ? 'default' : 'outline'}
+                  onClick={() => setIsPreviewing(!isPreviewing)}
+                  className="gap-2"
+                >
+                  <Eye className="w-4 h-4" />
+                  {isPreviewing ? 'Sair do Preview' : 'Preview'}
                 </Button>
                 
-                <ProtectedComponent resource="funnel" action="update" resourceId={funnelId}>
-                  <Button size="sm" onClick={saveFunnel}>
-                    <Save className="h-4 w-4 mr-2" />
+                <ProtectedComponent resource="funnel" action="edit">
+                  <Button onClick={handleSave} className="gap-2">
+                    <Save className="w-4 h-4" />
                     Salvar
                   </Button>
                 </ProtectedComponent>
-
-                <ProtectedComponent resource="funnel" action="publish" resourceId={funnelId}>
-                  <Button 
-                    size="sm" 
-                    variant="default"
-                    onClick={publishFunnel}
-                    disabled={funnelData.status === 'published'}
-                  >
-                    <CheckCircle className="h-4 w-4 mr-2" />
-                    {funnelData.status === 'published' ? 'Publicado' : 'Publicar'}
-                  </Button>
-                </ProtectedComponent>
               </div>
             </div>
           </div>
-        </header>
 
-        {/* Main Content */}
-        <div className="flex-1 flex overflow-hidden">
-          {/* Sidebar */}
-          {showSidebar && (
-            <div className="w-80 bg-white border-r overflow-y-auto">
-              <Tabs value={activeTab} onValueChange={(value: any) => setActiveTab(value)}>
-                <TabsList className="grid w-full grid-cols-5 p-1 m-4">
-                  <TabsTrigger value="editor" className="text-xs">
-                    <Settings className="h-4 w-4" />
+          {/* Main Content */}
+          <div className="flex-1 overflow-hidden">
+            <Tabs defaultValue="editor" className="h-full flex flex-col">
+              <div className="border-b bg-white px-4">
+                <TabsList className="w-full justify-start">
+                  <TabsTrigger value="editor" className="gap-2">
+                    <Code className="w-4 h-4" />
+                    Editor
                   </TabsTrigger>
-                  <TabsTrigger value="seo" className="text-xs">
-                    <Globe className="h-4 w-4" />
+                  <TabsTrigger value="workflow" className="gap-2">
+                    <Workflow className="w-4 h-4" />
+                    Workflow
                   </TabsTrigger>
-                  <TabsTrigger value="workflow" className="text-xs">
-                    <Calendar className="h-4 w-4" />
+                  <TabsTrigger value="analytics" className="gap-2">
+                    <Analytics className="w-4 h-4" />
+                    Analytics
                   </TabsTrigger>
-                  <TabsTrigger value="analytics" className="text-xs">
-                    <BarChart3 className="h-4 w-4" />
+                  <TabsTrigger value="seo" className="gap-2">
+                    <Settings className="w-4 h-4" />
+                    SEO
                   </TabsTrigger>
-                  <TabsTrigger value="settings" className="text-xs">
-                    <Shield className="h-4 w-4" />
+                  <TabsTrigger value="settings" className="gap-2">
+                    <Shield className="w-4 h-4" />
+                    Configurações
                   </TabsTrigger>
                 </TabsList>
+              </div>
 
-                <div className="px-4 pb-4">
-                  <TabsContent value="editor" className="mt-0">
+              <div className="flex-1 overflow-hidden">
+                <TabsContent value="editor" className="h-full m-0">
+                  <div className="h-full flex">
+                    {/* Left Sidebar - Components */}
+                    <div className="w-64 border-r bg-white">
+                      <div className="p-4">
+                        <h3 className="font-medium text-[#432818] mb-3">Componentes</h3>
+                        {/* Component library will go here */}
+                      </div>
+                    </div>
+                    
+                    {/* Center - Preview */}
+                    <div className="flex-1">
+                      <PreviewPanel
+                        blocks={config.blocks}
+                        selectedBlockId={selectedBlockId}
+                        onSelectBlock={handleBlockSelect}
+                        isPreviewing={isPreviewing}
+                        viewportSize={viewportSize}
+                        primaryStyle={validPrimaryStyle}
+                        onReorderBlocks={handleReorderBlocks}
+                      />
+                    </div>
+                    
+                    {/* Right Sidebar - Properties */}
+                    <div className="w-80 border-l bg-white">
+                      <ProtectedComponent resource="funnel" action="edit" fallback={
+                        <div className="p-4 text-center text-[#8F7A6A]">
+                          Sem permissão para editar
+                        </div>
+                      }>
+                        <PropertiesPanel
+                          selectedBlockId={selectedBlockId}
+                          blocks={config.blocks}
+                          onClose={() => setSelectedBlockId(null)}
+                          onUpdate={handleBlockUpdate}
+                          onDelete={handleBlockDelete}
+                        />
+                      </ProtectedComponent>
+                    </div>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="workflow" className="h-full m-0">
+                  <div className="h-full p-4">
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-sm">Validação</CardTitle>
+                        <CardTitle>Workflow de Publicação</CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <ValidationSummary context={validationContext} />
+                        <div className="space-y-4">
+                          {items.map((item) => (
+                            <div key={item.id} className="flex items-center justify-between p-3 border rounded-lg">
+                              <div>
+                                <h4 className="font-medium">{item.title}</h4>
+                                <p className="text-sm text-[#8F7A6A]">
+                                  Criado em {item.createdAt.toLocaleDateString()}
+                                </p>
+                              </div>
+                              <StatusBadge status={item.status} />
+                            </div>
+                          ))}
+                        </div>
                       </CardContent>
                     </Card>
-                  </TabsContent>
-
-                  <TabsContent value="seo" className="mt-0 space-y-4">
-                    <CustomURLEditor 
-                      funnelId={funnelId}
-                      onSave={(slug) => {
-                        feedback.showSuccess('URL personalizada criada!', `/${slug}`);
-                      }}
-                    />
-                    <SEOEditor 
-                      metadata={funnelData.seo}
-                      onChange={handleSEOChange}
-                    />
-                  </TabsContent>
-
-                  <TabsContent value="workflow" className="mt-0">
-                    <ProtectedComponent 
-                      resource="funnel" 
-                      action="update" 
-                      resourceId={funnelId}
-                      fallback={
-                        <div className="text-center py-8">
-                          <Shield className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                          <p className="text-sm text-gray-600">Sem permissão</p>
-                        </div>
-                      }
-                    >
-                      <WorkflowManager 
-                        funnelId={funnelId}
-                        funnelName={funnelData.name}
-                      />
-                    </ProtectedComponent>
-                  </TabsContent>
-
-                  <TabsContent value="analytics" className="mt-0">
-                    <ProtectedComponent 
-                      resource="analytics" 
-                      action="read"
-                      fallback={
-                        <div className="text-center py-8">
-                          <BarChart3 className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                          <p className="text-sm text-gray-600">Sem permissão para analytics</p>
-                        </div>
-                      }
-                    >
-                      <div className="text-sm">
-                        <p className="mb-2">Analytics básico disponível.</p>
-                        <Button size="sm" onClick={() => setActiveTab('analytics')}>
-                          Ver Dashboard Completo
-                        </Button>
-                      </div>
-                    </ProtectedComponent>
-                  </TabsContent>
-
-                  <TabsContent value="settings" className="mt-0">
-                    <div className="space-y-4">
-                      <Card>
-                        <CardHeader>
-                          <CardTitle className="text-sm">Configurações</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm">Sidebar</span>
-                            <Button 
-                              size="sm" 
-                              variant="outline"
-                              onClick={() => setShowSidebar(!showSidebar)}
-                            >
-                              {showSidebar ? 'Ocultar' : 'Mostrar'}
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </TabsContent>
-                </div>
-              </Tabs>
-            </div>
-          )}
-
-          {/* Editor Canvas */}
-          <div className="flex-1 overflow-hidden">
-            {activeTab === 'analytics' ? (
-              <div className="h-full overflow-y-auto p-6">
-                <AnalyticsDashboard funnelId={funnelId} />
-              </div>
-            ) : (
-              <div className="h-full bg-gray-100 p-6">
-                <div className={`h-full bg-white rounded-lg shadow-sm overflow-hidden ${getDeviceViewport()}`}>
-                  <div className="h-full">
-                    <SchemaDrivenEditorResponsive 
-                      funnelId={funnelId}
-                      className="h-full border-0"
-                    />
                   </div>
-                </div>
+                </TabsContent>
+
+                <TabsContent value="analytics" className="h-full m-0">
+                  <div className="h-full p-4">
+                    <AnalyticsDashboard />
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="seo" className="h-full m-0">
+                  <div className="h-full p-4">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Configurações SEO</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-[#8F7A6A]">
+                          Configurações de SEO estarão disponíveis em breve.
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="settings" className="h-full m-0">
+                  <div className="h-full p-4">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Configurações Gerais</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-[#8F7A6A]">
+                          Configurações gerais estarão disponíveis em breve.
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </TabsContent>
               </div>
-            )}
+            </Tabs>
           </div>
         </div>
-
-        {/* Loading Overlay */}
-        <LoadingOverlay 
-          isLoading={feedback.loadingState.isLoading}
-          message={feedback.loadingState.message}
-          progress={feedback.loadingState.progress}
-        />
-
-        {/* Toast Container */}
-        <ToastContainer />
-      </div>
+      </WorkflowManager>
     </PermissionsProvider>
   );
 };
-
-// Wrapper para compatibilidade
-const EnhancedEditorPage: React.FC<{ funnelId?: string }> = ({ funnelId }) => {
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <EnhancedEditor funnelId={funnelId} />
-    </div>
-  );
-};
-
-export default EnhancedEditor;
-export { EnhancedEditorPage };

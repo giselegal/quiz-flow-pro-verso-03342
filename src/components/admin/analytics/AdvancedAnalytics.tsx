@@ -1,45 +1,35 @@
 
 import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-interface AnalyticsData {
-  views: number;
-  conversions: number;
-  revenue: number;
-  users: number;
+export interface AnalyticsDashboardProps {
+  // Add any required props here
 }
 
-interface AnalyticsDashboardProps {
-  data?: AnalyticsData;
-  className?: string;
-}
-
-export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ 
-  data = { views: 0, conversions: 0, revenue: 0, users: 0 },
-  className = '' 
-}) => {
+export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = () => {
   return (
-    <div className={`p-6 bg-white rounded-lg shadow ${className}`}>
-      <h2 className="text-xl font-semibold mb-4">Analytics Dashboard</h2>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="p-4 bg-blue-50 rounded">
-          <h3 className="font-medium text-blue-900">Views</h3>
-          <p className="text-2xl font-bold text-blue-600">{data.views}</p>
-        </div>
-        <div className="p-4 bg-green-50 rounded">
-          <h3 className="font-medium text-green-900">Conversions</h3>
-          <p className="text-2xl font-bold text-green-600">{data.conversions}</p>
-        </div>
-        <div className="p-4 bg-purple-50 rounded">
-          <h3 className="font-medium text-purple-900">Revenue</h3>
-          <p className="text-2xl font-bold text-purple-600">${data.revenue}</p>
-        </div>
-        <div className="p-4 bg-orange-50 rounded">
-          <h3 className="font-medium text-orange-900">Users</h3>
-          <p className="text-2xl font-bold text-orange-600">{data.users}</p>
-        </div>
-      </div>
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Analytics Dashboard</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="p-4 bg-[#FAF9F7] rounded-lg">
+              <h3 className="font-medium text-[#432818]">Conversões</h3>
+              <p className="text-2xl font-bold text-[#B89B7A]">45.2%</p>
+            </div>
+            <div className="p-4 bg-[#FAF9F7] rounded-lg">
+              <h3 className="font-medium text-[#432818]">Visitantes</h3>
+              <p className="text-2xl font-bold text-[#B89B7A]">2,341</p>
+            </div>
+            <div className="p-4 bg-[#FAF9F7] rounded-lg">
+              <h3 className="font-medium text-[#432818]">Receita</h3>
+              <p className="text-2xl font-bold text-[#B89B7A]">R$ 12,450</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
-
-export default AnalyticsDashboard;

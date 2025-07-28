@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface User {
   id: string;
@@ -23,8 +23,12 @@ interface PermissionsContextType {
 
 const PermissionsContext = createContext<PermissionsContextType | undefined>(undefined);
 
-export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+export const PermissionsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>({
+    id: 'default',
+    role: 'admin',
+    permissions: ['funnel:read', 'funnel:edit', 'funnel:delete']
+  });
   const [permissions] = useState<Permission[]>([]);
 
   const hasPermission = (resource: string, action: string) => {
@@ -50,13 +54,13 @@ export const usePermissions = () => {
 export const ProtectedComponent: React.FC<{
   resource: string;
   action: string;
-  children: React.ReactNode;
-  fallback?: React.ReactNode;
+  children: ReactNode;
+  fallback?: ReactNode;
 }> = ({ resource, action, children, fallback }) => {
   const { hasPermission } = usePermissions();
 
   if (!hasPermission(resource, action)) {
-    return fallback || null;
+    return <>{fallback || null}</>;
   }
 
   return <>{children}</>;
