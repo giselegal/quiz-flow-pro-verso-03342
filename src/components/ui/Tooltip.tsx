@@ -32,4 +32,9 @@ export const Tooltip: React.FC<TooltipProps> = ({
   );
 };
 
+// TooltipProvider for compatibility with existing code
+export const TooltipProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return <>{children}</>;
+};
+
 export default Tooltip;
