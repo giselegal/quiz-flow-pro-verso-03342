@@ -1,5 +1,15 @@
-import React from 'react';
-import { CheckCircle, AlertCircle, AlertTriangle, Loader } from 'lucide-react';
+import React from 'react';  const getStatusIcon = () => {
+    if (!validation || validation.errors.length === 0) {
+      return <CheckCircle className="w-4 h-4 text-green-500" />;
+    }
+    
+    const hasRequired = validation.errors.some((e: any) => e.type === 'required');
+    if (hasRequired) {
+      return <AlertCircle className="w-4 h-4 text-red-500" />;
+    }
+    
+    return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
+  };eckCircle, AlertCircle, AlertTriangle, Loader } from 'lucide-react';
 import { ValidationResult, ValidationError } from '../hooks/useNavigationValidation';
 
 interface ValidationIndicatorProps {

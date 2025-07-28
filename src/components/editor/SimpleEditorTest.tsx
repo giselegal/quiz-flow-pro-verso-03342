@@ -45,7 +45,7 @@ const SimpleEditorTest: React.FC = () => {
 
     addBlock({
       type: blockType,
-      content: defaultProperties
+      properties: defaultProperties
     });
     
     console.log('✅ SIMPLE TEST: addBlock called successfully');
