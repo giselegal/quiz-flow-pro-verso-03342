@@ -1,43 +1,37 @@
-
 /**
- * Componentes de Resultado Reutilizáveis - ETAPAS 20-21 DO FUNIL COMPLETO
+ * Blocos de Resultado Reutilizáveis - ETAPA 20 DO FUNIL COMPLETO
  * 
- * Blocos 100% editáveis para uso no editor visual /editor
- * Cada componente é totalmente configurável via props e pode ser usado
- * independentemente ou integrado com o DynamicBlockRenderer.
+ * Página de resultado completa com componentes implementados:
+ * - Header com logo e nome do usuário ✅
+ * - Card de estilo predominante ✅
+ * - Depoimentos e prova social ✅
+ * - Seções de motivação e transformação ✅
+ * - Bônus e ofertas ✅
+ * - Call-to-actions finais ✅
  * 
- * COBERTURA COMPLETA:
- * - Etapa 20: Página de resultado completa ✅
- * - Etapa 21: Página de oferta/venda ✅
+ * TODO: Implementar blocos adicionais conforme necessário
  */
 
-// Blocos principais de resultado (apenas os que existem)
+// Blocos implementados
+export { default as HeaderBlock } from './HeaderBlock';
 export { default as PrimaryStyleCardBlock } from './PrimaryStyleCardBlock';
+export { default as TestimonialsBlock } from './TestimonialsBlock';
+export { default as BeforeAfterTransformationBlock } from './BeforeAfterTransformationBlock';
+export { default as MotivationSectionBlock } from './MotivationSectionBlock';
+export { default as BonusSectionBlock } from './BonusSectionBlock';
 export { default as FinalCTABlock } from './FinalCTABlock';
 
+// TODO: Implementar conforme necessário
+// export { default as SecondaryStylesBlock } from './SecondaryStylesBlock';
+// export { default as GuaranteeSectionBlock } from './GuaranteeSectionBlock';
+// export { default as MentorSectionBlock } from './MentorSectionBlock';
+// export { default as SecurePurchaseBlock } from './SecurePurchaseBlock';
+
 // Re-export types para facilitar importação
-export type { PrimaryStyleCardBlockProps } from './PrimaryStyleCardBlock';
-
-// Export StyleResult types from the main component
-export type { StyleResultData, StyleResultProps } from '@/components/result/StyleResult';
-
-// Types dos blocos específicos
-export interface FinalCTABlockProps {
-  id?: string;
-  title?: string;
-  subtitle?: string;
-  description?: string;
-  buttonText?: string;
-  buttonUrl?: string;
-  buttonSize?: 'sm' | 'md' | 'lg';
-  showSecondaryButton?: boolean;
-  secondaryButtonText?: string;
-  secondaryButtonUrl?: string;
-  backgroundColor?: string;
-  titleColor?: string;
-  descriptionColor?: string;
-  buttonColor?: string;
-  className?: string;
-  isEditable?: boolean;
-  onUpdate?: (updates: any) => void;
-}
+export type { HeaderBlockProps } from './HeaderBlock';
+export type { StyleResultData, PrimaryStyleCardBlockProps } from './PrimaryStyleCardBlock';
+export type { TestimonialData, TestimonialsBlockProps } from './TestimonialsBlock';
+export type { BeforeAfterTransformationBlockProps } from './BeforeAfterTransformationBlock';
+export type { MotivationSectionBlockProps } from './MotivationSectionBlock';
+export type { BonusItem, BonusSectionBlockProps } from './BonusSectionBlock';
+export type { FinalCTABlockProps } from './FinalCTABlock';

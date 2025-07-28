@@ -1,8 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { Card } from '../../ui/card';
-import { Button } from '../../ui/button';
-import { Badge } from '../../ui/badge';
-import { ScrollArea } from '../../ui/scroll-area';
+import { Card, Button, Dropdown, ScrollArea } from '../../ui-new';
+import { Badge } from '../../ui-new/Badge';
 import { 
   DragOutlined, 
   MoreOutlined, 
@@ -12,9 +10,8 @@ import {
   EyeInvisibleOutlined,
   PlusOutlined 
 } from '@ant-design/icons';
-import { Space, Typography, Empty, Tooltip, Dropdown } from 'antd';
+import { Space, Typography, Empty, Tooltip } from 'antd';
 import { allBlockDefinitions } from '../../../config/blockDefinitions';
-import { UniversalBlockRenderer } from '../blocks/UniversalBlockRenderer';
 
 const { Text, Title } = Typography;
 
@@ -82,13 +79,13 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
 
     return (
       <Dropdown
-        menu={{ items: dropdownItems }}
+        items={dropdownItems}
         trigger={['click']}
         placement="bottomRight"
       >
         <Button
           variant="ghost"
-          size="sm"
+          size="small"
           className="opacity-0 group-hover:opacity-100 transition-opacity"
           onClick={(e) => e.stopPropagation()}
         >
@@ -113,6 +110,7 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
           ${className}
         `}
         onClick={(e) => handleBlockClick(block.id, e)}
+        size="small"
       >
         {/* Block Header */}
         <div className="flex items-center justify-between mb-3">
@@ -126,11 +124,7 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
             <div className="flex items-center space-x-2">
               <div className="w-6 h-6 bg-gradient-to-br from-[#B89B7A]/20 to-[#aa6b5d]/20 rounded-lg flex items-center justify-center">
                 {definition?.icon ? (
-                  typeof definition.icon === 'string' ? (
-                    <span className="text-sm">{definition.icon}</span>
-                  ) : (
-                    React.createElement(definition.icon as React.ComponentType<any>, { className: "w-3 h-3 text-[#B89B7A]" })
-                  )
+                  <definition.icon className="w-3 h-3 text-[#B89B7A]" />
                 ) : (
                   <span className="text-[#B89B7A] text-xs font-bold">
                     {index + 1}
@@ -140,10 +134,10 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
               
               <div>
                 <Text strong className="text-[#432818] text-sm">
-                  {definition?.name || block.type}
+                  {definition?.label || block.type}
                 </Text>
                 {isHidden && (
-                  <Badge variant="secondary" className="ml-2">
+                  <Badge variant="secondary" size="small" className="ml-2">
                     Oculto
                   </Badge>
                 )}
@@ -158,17 +152,50 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
 
         {/* Block Preview Content */}
         <div className="space-y-2">
-          {/* Use UniversalBlockRenderer to show actual component */}
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
-            <UniversalBlockRenderer
-              block={block}
-              isSelected={isSelected}
-              onClick={() => handleBlockClick(block.id, { stopPropagation: () => {} } as any)}
-              onSaveInline={onSaveInline}
-              disabled={false}
-              className="w-full"
-            />
-          </div>
+          {/* Render basic block preview based on type */}
+          {block.type === 'QuizStartPageBlock' && (
+            <div className="p-3 bg-gradient-to-r from-[#B89B7A]/10 to-[#aa6b5d]/10 rounded-lg">
+              <Title level={5} className="!mb-1 !text-[#432818]">
+                {block.properties?.title || 'Página Inicial'}
+              </Title>
+              <Text className="text-[#8F7A6A] text-xs">
+                {block.properties?.subtitle || 'Subtitle aqui'}
+              </Text>
+            </div>
+          )}
+          
+          {block.type === 'QuizQuestionBlock' && (
+            <div className="p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
+              <Title level={5} className="!mb-1 !text-[#432818]">
+                {block.properties?.question || 'Pergunta aqui'}
+              </Title>
+              <div className="flex flex-wrap gap-1 mt-2">
+                {(block.properties?.options || ['Opção 1', 'Opção 2']).map((option: string, idx: number) => (
+                  <Badge key={idx} variant="info" size="small">
+                    {option}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {/* Default preview for other block types */}
+          {!['QuizStartPageBlock', 'QuizQuestionBlock'].includes(block.type) && (
+            <div className="p-3 bg-gray-50 rounded-lg">
+              <Text className="text-[#8F7A6A] text-xs">
+                {definition?.description || `Bloco do tipo: ${block.type}`}
+              </Text>
+              {block.properties && Object.keys(block.properties).length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {Object.entries(block.properties).slice(0, 3).map(([key, value]) => (
+                    <Badge key={key} variant="secondary" size="small">
+                      {key}: {String(value).slice(0, 10)}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Selection indicator */}
@@ -201,12 +228,12 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
         }
       />
       <Button
-        variant="default"
-        size="sm"
+        variant="primary"
+        size="small"
+        icon={<PlusOutlined />}
         onClick={() => onAddBlock('QuizStartPageBlock')}
         className="mt-4"
       >
-        <PlusOutlined className="mr-2" />
         Adicionar Primeiro Bloco
       </Button>
     </div>
@@ -227,7 +254,7 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
                   {blocks.length} bloco{blocks.length !== 1 ? 's' : ''} adicionado{blocks.length !== 1 ? 's' : ''}
                 </Text>
               </div>
-              <Badge variant="default">
+              <Badge variant="info" size="small">
                 {blocks.filter(b => !b.properties?.hidden).length} visível
                 {blocks.filter(b => !b.properties?.hidden).length !== 1 ? 'is' : ''}
               </Badge>
@@ -243,11 +270,11 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
               <div className="flex items-center justify-center py-4">
                 <Button
                   variant="ghost"
-                  size="sm"
+                  size="small"
+                  icon={<PlusOutlined />}
                   onClick={() => onAddBlock('QuizQuestionBlock')}
                   className="text-[#B89B7A] hover:text-[#432818]"
                 >
-                  <PlusOutlined className="mr-2" />
                   Adicionar Novo Bloco
                 </Button>
               </div>

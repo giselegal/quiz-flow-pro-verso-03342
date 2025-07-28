@@ -1,18 +1,6 @@
 import React from 'react';
 import { CheckCircle, AlertCircle, AlertTriangle, Loader } from 'lucide-react';
-
-// Definições de tipos locais (já que o hook não existe ainda)
-interface ValidationError {
-  type: string;
-  message: string;
-  field?: string;
-}
-
-interface ValidationResult {
-  errors: ValidationError[];
-  isValid: boolean;
-  canProceed?: boolean;
-}
+import { ValidationResult, ValidationError } from '../hooks/useNavigationValidation';
 
 interface ValidationIndicatorProps {
   validation: ValidationResult;
@@ -41,7 +29,7 @@ const ValidationIndicator: React.FC<ValidationIndicatorProps> = ({
       return <CheckCircle className="w-4 h-4 text-green-500" />;
     }
     
-    const hasRequired = validation.errors.some((e: ValidationError) => e.type === 'required');
+    const hasRequired = validation.errors.some(e => e.type === 'required');
     if (hasRequired) {
       return <AlertCircle className="w-4 h-4 text-red-500" />;
     }
@@ -54,9 +42,9 @@ const ValidationIndicator: React.FC<ValidationIndicatorProps> = ({
       return 'Válido';
     }
     
-    const requiredErrors = validation.errors.filter((e: ValidationError) => e.type === 'required').length;
-    const incompleteErrors = validation.errors.filter((e: ValidationError) => e.type === 'incomplete').length;
-    const invalidErrors = validation.errors.filter((e: ValidationError) => e.type === 'invalid').length;
+    const requiredErrors = validation.errors.filter(e => e.type === 'required').length;
+    const incompleteErrors = validation.errors.filter(e => e.type === 'incomplete').length;
+    const invalidErrors = validation.errors.filter(e => e.type === 'invalid').length;
     
     if (requiredErrors > 0) {
       return `${requiredErrors} campo${requiredErrors > 1 ? 's' : ''} obrigatório${requiredErrors > 1 ? 's' : ''}`;
@@ -78,7 +66,7 @@ const ValidationIndicator: React.FC<ValidationIndicatorProps> = ({
       return 'text-green-600';
     }
     
-    const hasRequired = validation.errors.some((e: ValidationError) => e.type === 'required');
+    const hasRequired = validation.errors.some(e => e.type === 'required');
     return hasRequired ? 'text-red-600' : 'text-yellow-600';
   };
 
@@ -93,7 +81,7 @@ const ValidationIndicator: React.FC<ValidationIndicatorProps> = ({
       
       {showDetails && validation.errors.length > 0 && (
         <div className="mt-2 space-y-1">
-          {validation.errors.map((error: ValidationError, index: number) => (
+          {validation.errors.map((error, index) => (
             <ValidationErrorItem key={index} error={error} />
           ))}
         </div>
@@ -190,8 +178,8 @@ export const useValidationDisplay = (validation: ValidationResult) => {
       return { status: 'success', message: 'Tudo OK' };
     }
     
-    const requiredCount = validation.errors.filter((e: ValidationError) => e.type === 'required').length;
-    const incompleteCount = validation.errors.filter((e: ValidationError) => e.type === 'incomplete').length;
+    const requiredCount = validation.errors.filter(e => e.type === 'required').length;
+    const incompleteCount = validation.errors.filter(e => e.type === 'incomplete').length;
     
     if (requiredCount > 0) {
       return { 
@@ -214,13 +202,13 @@ export const useValidationDisplay = (validation: ValidationResult) => {
   };
 
   const getErrorsByType = () => {
-    const grouped = validation.errors.reduce((acc: Record<string, ValidationError[]>, error: ValidationError) => {
+    const grouped = validation.errors.reduce((acc, error) => {
       if (!acc[error.type]) {
         acc[error.type] = [];
       }
       acc[error.type].push(error);
       return acc;
-    }, {});
+    }, {} as Record<string, ValidationError[]>);
     
     return grouped;
   };

@@ -1,100 +1,154 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { 
   Save, 
-  Undo, 
-  Redo, 
   Eye, 
   EyeOff, 
-  Play,
-  Download,
-  Upload,
-  Settings
+  Undo, 
+  Redo,
+  Smartphone, 
+  Tablet, 
+  Monitor, 
+  LayoutGrid
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Block } from '@/types/editor';
 
-export interface EditorToolbarProps {
-  onSave: () => void;
-  onUndo: () => void;
-  onRedo: () => void;
-  onTogglePreview: () => void;
-  onPreview?: () => void;
+interface EditorToolbarProps {
   isPreviewing: boolean;
-  canUndo: boolean;
-  canRedo: boolean;
-  canSave: boolean;
+  onTogglePreview: () => void;
+  onSave: () => void;
+  onUndo?: () => Block[];
+  onRedo?: () => Block[];
+  canUndo?: boolean;
+  canRedo?: boolean;
+  viewportSize?: 'sm' | 'md' | 'lg' | 'xl';
+  onViewportSizeChange?: (size: 'sm' | 'md' | 'lg' | 'xl') => void;
 }
 
-export const EditorToolbar: React.FC<EditorToolbarProps> = ({
+export const EditorToolbar: React.FC<EditorToolbarProps> = ({ 
+  isPreviewing,
+  onTogglePreview,
   onSave,
   onUndo,
   onRedo,
-  onTogglePreview,
-  onPreview,
-  isPreviewing,
-  canUndo,
-  canRedo,
-  canSave
+  canUndo = false,
+  canRedo = false,
+  viewportSize = 'lg',
+  onViewportSizeChange = () => {}
 }) => {
   return (
-    <div className="flex items-center gap-2 p-3 border-b border-gray-200 bg-white">
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={onUndo}
-        disabled={!canUndo}
-        className="h-8"
-      >
-        <Undo className="w-4 h-4" />
-      </Button>
-      
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={onRedo}
-        disabled={!canRedo}
-        className="h-8"
-      >
-        <Redo className="w-4 h-4" />
-      </Button>
-      
-      <Separator orientation="vertical" className="h-6" />
-      
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={onTogglePreview}
-        className="h-8"
-      >
-        {isPreviewing ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-        {isPreviewing ? 'Editar' : 'Visualizar'}
-      </Button>
-      
-      {onPreview && (
+    <div className="bg-white border-b border-[#B89B7A]/20 p-2 flex items-center justify-between">
+      <div className="flex items-center space-x-2">
+        {onUndo && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onUndo}
+            disabled={!canUndo}
+            title="Desfazer"
+            className="text-[#432818]"
+          >
+            <Undo className="h-4 w-4" />
+          </Button>
+        )}
+        
+        {onRedo && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onRedo}
+            disabled={!canRedo}
+            title="Refazer"
+            className="text-[#432818]"
+          >
+            <Redo className="h-4 w-4" />
+          </Button>
+        )}
+
         <Button
           variant="ghost"
           size="sm"
-          onClick={onPreview}
-          className="h-8"
+          className={cn(
+            "text-[#432818]",
+            viewportSize === 'sm' && "bg-[#FAF9F7]"
+          )}
+          onClick={() => onViewportSizeChange('sm')}
+          title="Visualização Mobile"
         >
-          <Play className="w-4 h-4" />
-          Testar
+          <Smartphone className="h-4 w-4" />
         </Button>
-      )}
+        
+        <Button
+          variant="ghost"
+          size="sm"
+          className={cn(
+            "text-[#432818]",
+            viewportSize === 'md' && "bg-[#FAF9F7]"
+          )}
+          onClick={() => onViewportSizeChange('md')}
+          title="Visualização Tablet"
+        >
+          <Tablet className="h-4 w-4" />
+        </Button>
+        
+        <Button
+          variant="ghost"
+          size="sm"
+          className={cn(
+            "text-[#432818]",
+            viewportSize === 'lg' && "bg-[#FAF9F7]"
+          )}
+          onClick={() => onViewportSizeChange('lg')}
+          title="Visualização Desktop"
+        >
+          <Monitor className="h-4 w-4" />
+        </Button>
+        
+        <Button
+          variant="ghost"
+          size="sm"
+          className={cn(
+            "text-[#432818]",
+            viewportSize === 'xl' && "bg-[#FAF9F7]"
+          )}
+          onClick={() => onViewportSizeChange('xl')}
+          title="Visualização Desktop Grande"
+        >
+          <LayoutGrid className="h-4 w-4" />
+        </Button>
+      </div>
       
-      <div className="flex-1" />
-      
-      <Button
-        variant="default"
-        size="sm"
-        onClick={onSave}
-        disabled={!canSave}
-        className="h-8"
-      >
-        <Save className="w-4 h-4 mr-2" />
-        Salvar
-      </Button>
+      <div className="flex items-center space-x-2">
+        <Button
+          variant="outline" 
+          size="sm"
+          onClick={onTogglePreview}
+          className="text-[#432818]"
+        >
+          {isPreviewing ? (
+            <>
+              <EyeOff className="mr-2 h-4 w-4" />
+              Editar
+            </>
+          ) : (
+            <>
+              <Eye className="mr-2 h-4 w-4" />
+              Visualizar
+            </>
+          )}
+        </Button>
+        
+        <Button
+          onClick={onSave}
+          size="sm"
+          className="bg-[#B89B7A] hover:bg-[#A38A69] text-white"
+        >
+          <Save className="mr-2 h-4 w-4" />
+          Salvar
+        </Button>
+      </div>
     </div>
   );
 };

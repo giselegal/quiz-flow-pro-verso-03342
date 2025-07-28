@@ -53,7 +53,6 @@ export const PageEditor: React.FC<PageEditorProps> = ({
         isPreviewing={isPreviewing}
         canUndo={canUndo}
         canRedo={canRedo}
-        canSave={true}
       />
 
       <div className="flex-1 overflow-auto p-4 bg-[#FAF9F7]">

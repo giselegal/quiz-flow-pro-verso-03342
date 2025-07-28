@@ -1,10 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { Input } from '../../ui/input';
-import { Card, CardContent } from '../../ui/card';
-import { Button } from '../../ui/button';
-import { Badge } from '../../ui/badge';
-import { PlusOutlined, AppstoreOutlined, FileTextOutlined } from '@ant-design/icons';
-import { Space, Typography, Empty, Divider, Tabs } from 'antd';
+import { Tabs, Input, Card } from '../../ui-new';
+import { Button } from '../../ui-new/Button';
+import { Badge } from '../../ui-new/Badge';
+import { PlusOutlined, AppstoreOutlined, FileTextOutlined, SearchOutlined } from '@ant-design/icons';
+import { Space, Typography, Empty, Divider } from 'antd';
 import { allBlockDefinitions } from '../../../config/blockDefinitions';
 
 const { Text } = Typography;
@@ -54,9 +53,11 @@ export const SchemaDrivenComponentsSidebar: React.FC<SchemaDrivenComponentsSideb
     <div className="p-4 space-y-4">
       {/* Search Input */}
       <Input
+        variant="search"
         placeholder="Buscar componentes..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        allowClear
       />
 
       {/* Components by Category */}
@@ -69,7 +70,7 @@ export const SchemaDrivenComponentsSidebar: React.FC<SchemaDrivenComponentsSideb
                 <Text strong className="text-[#432818] text-sm uppercase tracking-wide">
                   {category}
                 </Text>
-                <Badge variant="secondary">
+                <Badge variant="secondary" size="small">
                   {blocks.length}
                 </Badge>
               </div>
@@ -78,34 +79,30 @@ export const SchemaDrivenComponentsSidebar: React.FC<SchemaDrivenComponentsSideb
                 {blocks.map((block) => (
                   <Card
                     key={block.type}
+                    variant="component"
+                    size="small"
                     onClick={() => onComponentSelect(block.type)}
-                    className="cursor-pointer hover:bg-[#B89B7A]/5 transition-colors"
+                    className="cursor-pointer"
                   >
-                    <CardContent className="p-3">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-gradient-to-br from-[#B89B7A]/20 to-[#aa6b5d]/20 rounded-lg flex items-center justify-center">
-                          {block.icon ? (
-                            typeof block.icon === 'string' ? (
-                              <span className="text-lg">{block.icon}</span>
-                            ) : (
-                              React.createElement(block.icon as React.ComponentType<any>, { className: "w-4 h-4 text-[#B89B7A]" })
-                            )
-                          ) : (
-                            <AppstoreOutlined className="w-4 h-4 text-[#B89B7A]" />
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <Text strong className="text-[#432818] text-sm block">
-                            {block.name || block.type}
-                          </Text>
-                          {block.description && (
-                            <Text className="text-[#8F7A6A] text-xs block truncate">
-                              {block.description}
-                            </Text>
-                          )}
-                        </div>
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-gradient-to-br from-[#B89B7A]/20 to-[#aa6b5d]/20 rounded-lg flex items-center justify-center">
+                        {block.icon ? (
+                          <block.icon className="w-4 h-4 text-[#B89B7A]" />
+                        ) : (
+                          <AppstoreOutlined className="w-4 h-4 text-[#B89B7A]" />
+                        )}
                       </div>
-                    </CardContent>
+                      <div className="flex-1 min-w-0">
+                        <Text strong className="text-[#432818] text-sm block">
+                          {block.label || block.type}
+                        </Text>
+                        {block.description && (
+                          <Text className="text-[#8F7A6A] text-xs block truncate">
+                            {block.description}
+                          </Text>
+                        )}
+                      </div>
+                    </div>
                   </Card>
                 ))}
               </div>
@@ -129,15 +126,15 @@ export const SchemaDrivenComponentsSidebar: React.FC<SchemaDrivenComponentsSideb
     <div className="p-4 space-y-4">
       {/* Add Page Button */}
       <Button
-        variant="default"
-        size="sm"
-        className="w-full"
+        variant="primary"
+        size="small"
+        fullWidth
+        icon={<PlusOutlined />}
         onClick={() => {
           // Lógica para adicionar nova página
           console.log('Adicionar nova página');
         }}
       >
-        <PlusOutlined className="mr-2" />
         Nova Página
       </Button>
 
@@ -149,7 +146,9 @@ export const SchemaDrivenComponentsSidebar: React.FC<SchemaDrivenComponentsSideb
           {funnelPages.map((page, index) => (
             <Card
               key={page.id}
-              className={`cursor-pointer transition-all duration-200 p-3 ${
+              variant="page"
+              size="small"
+              className={`cursor-pointer transition-all duration-200 ${
                 currentPageId === page.id 
                   ? 'bg-[#B89B7A]/10 border-[#B89B7A]' 
                   : 'hover:bg-[#B89B7A]/5'
@@ -169,11 +168,11 @@ export const SchemaDrivenComponentsSidebar: React.FC<SchemaDrivenComponentsSideb
                     {page.title || `Página ${index + 1}`}
                   </Text>
                   <div className="flex items-center space-x-2 mt-1">
-                    <Badge variant="default">
+                    <Badge variant="info" size="small">
                       {page.blocks?.length || 0} blocos
                     </Badge>
                     {page.type && (
-                      <Badge variant="secondary">
+                      <Badge variant="secondary" size="small">
                         {page.type}
                       </Badge>
                     )}
@@ -200,7 +199,7 @@ export const SchemaDrivenComponentsSidebar: React.FC<SchemaDrivenComponentsSideb
     <div className="h-full flex flex-col bg-white">
       <Tabs
         activeKey={activeTab}
-        onChange={(key) => onTabChange(key as "components" | "pages")}
+        onChange={onTabChange}
         items={[
           {
             key: 'components',

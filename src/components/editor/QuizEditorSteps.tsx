@@ -5,7 +5,7 @@ import { CORRECT_QUIZ_QUESTIONS } from '@/data/correctQuizQuestions';
 interface QuizStep {
   id: string;
   question: string;
-  options: Array<{ id: string; text: string; value: string; imageUrl?: string }>;
+  options: Array<{ id: string; text: string; imageUrl?: string }>;
   allowMultiple?: boolean;
   showImages?: boolean;
   maxSelections?: number;
@@ -18,10 +18,10 @@ const STRATEGIC_QUESTIONS: QuizStep[] = [
     id: 'step-12',
     question: 'Etapa 12: O que é mais atrativo para você na moda?',
     options: [
-      { id: '1', text: 'Estilo personalizado e único', value: '1' },
-      { id: '2', text: 'Facilidade nas combinações', value: '2' },
-      { id: '3', text: 'Investimentos duráveis e versáteis', value: '3' },
-      { id: '4', text: 'Looks criativos e impactantes', value: '4' }
+      { id: '1', text: 'Estilo personalizado e único' },
+      { id: '2', text: 'Facilidade nas combinações' },
+      { id: '3', text: 'Investimentos duráveis e versáteis' },
+      { id: '4', text: 'Looks criativos e impactantes' }
     ],
     allowMultiple: false,
     showImages: false,
@@ -32,10 +32,10 @@ const STRATEGIC_QUESTIONS: QuizStep[] = [
     id: 'step-13',
     question: 'Etapa 13: Qual é seu maior desafio com o guarda-roupa?',
     options: [
-      { id: '1', text: 'Não sei combinar as peças que tenho', value: '1' },
-      { id: '2', text: 'Compro coisas que não uso', value: '2' },
-      { id: '3', text: 'Sempre me sinto inadequada', value: '3' },
-      { id: '4', text: 'Não sei qual é meu estilo', value: '4' }
+      { id: '1', text: 'Não sei combinar as peças que tenho' },
+      { id: '2', text: 'Compro coisas que não uso' },
+      { id: '3', text: 'Sempre me sinto inadequada' },
+      { id: '4', text: 'Não sei qual é meu estilo' }
     ],
     allowMultiple: false,
     showImages: false,
@@ -46,10 +46,10 @@ const STRATEGIC_QUESTIONS: QuizStep[] = [
     id: 'step-14',
     question: 'Etapa 14: Como seria sua situação ideal?',
     options: [
-      { id: '1', text: 'Guarda-roupa enxuto e funcional', value: '1' },
-      { id: '2', text: 'Estilo definido e auténtico', value: '2' },
-      { id: '3', text: 'Confiança para qualquer ocasião', value: '3' },
-      { id: '4', text: 'Facilidade nas escolhas diárias', value: '4' }
+      { id: '1', text: 'Guarda-roupa enxuto e funcional' },
+      { id: '2', text: 'Estilo definido e auténtico' },
+      { id: '3', text: 'Confiança para qualquer ocasião' },
+      { id: '4', text: 'Facilidade nas escolhas diárias' }
     ],
     allowMultiple: false,
     showImages: false,
@@ -60,10 +60,10 @@ const STRATEGIC_QUESTIONS: QuizStep[] = [
     id: 'step-15',
     question: 'Etapa 15: Quanto investiria para transformar seu estilo?',
     options: [
-      { id: '1', text: 'Até R$ 200 por mês', value: '1' },
-      { id: '2', text: 'R$ 200 - R$ 500 por mês', value: '2' },
-      { id: '3', text: 'R$ 500 - R$ 1.000 por mês', value: '3' },
-      { id: '4', text: 'Acima de R$ 1.000 por mês', value: '4' }
+      { id: '1', text: 'Até R$ 200 por mês' },
+      { id: '2', text: 'R$ 200 - R$ 500 por mês' },
+      { id: '3', text: 'R$ 500 - R$ 1.000 por mês' },
+      { id: '4', text: 'Acima de R$ 1.000 por mês' }
     ],
     allowMultiple: false,
     showImages: false,
@@ -74,10 +74,10 @@ const STRATEGIC_QUESTIONS: QuizStep[] = [
     id: 'step-16',
     question: 'Etapa 16: O que mais te motiva a mudar seu estilo?',
     options: [
-      { id: '1', text: 'Aumentar a autoestima', value: '1' },
-      { id: '2', text: 'Impressionar melhor profissionalmente', value: '2' },
-      { id: '3', text: 'Me sentir mais atrativa', value: '3' },
-      { id: '4', text: 'Expressar minha personalidade', value: '4' }
+      { id: '1', text: 'Aumentar a autoestima' },
+      { id: '2', text: 'Impressionar melhor profissionalmente' },
+      { id: '3', text: 'Me sentir mais atrativa' },
+      { id: '4', text: 'Expressar minha personalidade' }
     ],
     allowMultiple: false,
     showImages: false,
@@ -88,10 +88,10 @@ const STRATEGIC_QUESTIONS: QuizStep[] = [
     id: 'step-17',
     question: 'Etapa 17: Quão urgente é essa transformação para você?',
     options: [
-      { id: '1', text: 'Muito urgente, preciso mudar agora', value: '1' },
-      { id: '2', text: 'Urgente, nos próximos 3 meses', value: '2' },
-      { id: '3', text: 'Moderado, até 6 meses', value: '3' },
-      { id: '4', text: 'Sem pressa, quando der certo', value: '4' }
+      { id: '1', text: 'Muito urgente, preciso mudar agora' },
+      { id: '2', text: 'Urgente, nos próximos 3 meses' },
+      { id: '3', text: 'Moderado, até 6 meses' },
+      { id: '4', text: 'Sem pressa, quando der certo' }
     ],
     allowMultiple: false,
     showImages: false,
@@ -102,10 +102,10 @@ const STRATEGIC_QUESTIONS: QuizStep[] = [
     id: 'step-18',
     question: 'Etapa 18: Já tentou mudanças no estilo antes?',
     options: [
-      { id: '1', text: 'Sim, mas não deu muito certo', value: '1' },
-      { id: '2', text: 'Sim, com alguns sucessos', value: '2' },
-      { id: '3', text: 'Muito pouco, quase nada', value: '3' },
-      { id: '4', text: 'Não, seria a primeira vez', value: '4' }
+      { id: '1', text: 'Sim, mas não deu muito certo' },
+      { id: '2', text: 'Sim, com alguns sucessos' },
+      { id: '3', text: 'Muito pouco, quase nada' },
+      { id: '4', text: 'Não, seria a primeira vez' }
     ],
     allowMultiple: false,
     showImages: false,
@@ -116,10 +116,10 @@ const STRATEGIC_QUESTIONS: QuizStep[] = [
     id: 'step-19',
     question: 'Etapa 19: Qual seria seu maior obstáculo?',
     options: [
-      { id: '1', text: 'Falta de conhecimento sobre moda', value: '1' },
-      { id: '2', text: 'Orçamento limitado', value: '2' },
-      { id: '3', text: 'Falta de tempo para pesquisar', value: '3' },
-      { id: '4', text: 'Medo de errar e desperdiçar dinheiro', value: '4' }
+      { id: '1', text: 'Falta de conhecimento sobre moda' },
+      { id: '2', text: 'Orçamento limitado' },
+      { id: '3', text: 'Falta de tempo para pesquisar' },
+      { id: '4', text: 'Medo de errar e desperdiçar dinheiro' }
     ],
     allowMultiple: false,
     showImages: false,
@@ -130,10 +130,10 @@ const STRATEGIC_QUESTIONS: QuizStep[] = [
     id: 'step-20',
     question: 'Etapa 20: Qual resultado você mais espera?',
     options: [
-      { id: '1', text: 'Um guia prático e personalizado', value: '1' },
-      { id: '2', text: 'Dicas de combinações certeiras', value: '2' },
-      { id: '3', text: 'Lista de compras inteligente', value: '3' },
-      { id: '4', text: 'Confiança para criar looks únicos', value: '4' }
+      { id: '1', text: 'Um guia prático e personalizado' },
+      { id: '2', text: 'Dicas de combinações certeiras' },
+      { id: '3', text: 'Lista de compras inteligente' },
+      { id: '4', text: 'Confiança para criar looks únicos' }
     ],
     allowMultiple: false,
     showImages: false,
@@ -144,10 +144,10 @@ const STRATEGIC_QUESTIONS: QuizStep[] = [
     id: 'step-21',
     question: 'Etapa 21: Teria interesse em uma consultoria personalizada?',
     options: [
-      { id: '1', text: 'Sim, quero saber mais sobre consultoria', value: '1' },
-      { id: '2', text: 'Talvez, dependendo do formato', value: '2' },
-      { id: '3', text: 'Prefiro primeiro o resultado do quiz', value: '3' },
-      { id: '4', text: 'Não, só quero o resultado gratuito', value: '4' }
+      { id: '1', text: 'Sim, quero saber mais sobre consultoria' },
+      { id: '2', text: 'Talvez, dependendo do formato' },
+      { id: '3', text: 'Prefiro primeiro o resultado do quiz' },
+      { id: '4', text: 'Não, só quero o resultado gratuito' }
     ],
     allowMultiple: false,
     showImages: false,
@@ -162,11 +162,10 @@ const MAIN_QUIZ_STEPS: QuizStep[] = CORRECT_QUIZ_QUESTIONS.map((q, index) => ({
   options: q.options.map(opt => ({
     id: opt.id,
     text: opt.text,
-    value: opt.id,
-    imageUrl: ('imageUrl' in opt) ? opt.imageUrl : undefined
+    imageUrl: opt.imageUrl
   })),
   allowMultiple: q.multiSelect > 1,
-  showImages: q.type === 'both',
+  showImages: q.type === 'both' || q.type === 'image',
   maxSelections: q.multiSelect
 }));
 

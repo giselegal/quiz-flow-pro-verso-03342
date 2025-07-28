@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface User {
   userName: string;
@@ -16,24 +16,17 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-
-  // Safe localStorage access with useEffect
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedName = localStorage.getItem('userName');
-      const savedEmail = localStorage.getItem('userEmail');
-      const savedRole = localStorage.getItem('userRole');
-      
-      if (savedName) {
-        setUser({ 
-          userName: savedName,
-          ...(savedEmail && { email: savedEmail }),
-          ...(savedRole && { role: savedRole })
-        });
-      }
-    }
-  }, []);
+  const [user, setUser] = useState<User | null>(() => {
+    const savedName = localStorage.getItem('userName');
+    const savedEmail = localStorage.getItem('userEmail');
+    const savedRole = localStorage.getItem('userRole');
+    
+    return savedName ? { 
+      userName: savedName,
+      ...(savedEmail && { email: savedEmail }),
+      ...(savedRole && { role: savedRole })
+    } : null;
+  });
 
   const login = (name: string, email?: string) => {
     const userData: User = { 

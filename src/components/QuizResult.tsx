@@ -1,67 +1,113 @@
-
-import React from 'react';
-import { StyleResult } from '@/types/quiz';
-import { styleResults } from '@/data/styleData';
+import React, { useEffect, useState } from "react";
+import { StyleResult } from "../types/quiz";
+import { useAuth } from "../context/AuthContext";
+import { ContentContainer } from "./shared/ContentContainer";
+import { GridLayout } from "./shared/GridLayout";
+import ResultHeader from "./quiz-result/ResultHeader";
+import PrimaryStyleCard from "./quiz-result/PrimaryStyleCard";
+import SecondaryStylesSection from "./quiz-result/SecondaryStylesSection";
+import OfferCard from "./quiz-result/OfferCard";
+import BeforeAfterTransformation from "./result/BeforeAfterTransformation";
+import { CheckCircle } from "lucide-react";
+import { sharedStyles } from "@/styles/sharedStyles";
+import { ResultPageConfig } from "@/types/resultPageConfig";
+import { cn } from "@/lib/utils";
+import GuaranteeSection from "./result/GuaranteeSection";
 
 interface QuizResultProps {
   primaryStyle: StyleResult;
   secondaryStyles: StyleResult[];
-  userName?: string;
+  config?: ResultPageConfig;
+  previewMode?: boolean;
+  onReset?: () => void;
 }
 
-const QuizResult: React.FC<QuizResultProps> = ({ 
-  primaryStyle, 
-  secondaryStyles, 
-  userName 
+const QuizResult: React.FC<QuizResultProps> = ({
+  primaryStyle,
+  secondaryStyles,
+  config: externalConfig,
+  previewMode = false,
+  onReset,
 }) => {
-  const primaryStyleData = styleResults[primaryStyle];
-  
+  const { user } = useAuth();
+  const [userName, setUserName] = useState<string>("Visitante");
+
+  useEffect(() => {
+    if (user && user.userName) {
+      setUserName(user.userName);
+    } else {
+      const storedName = localStorage.getItem("userName");
+      if (storedName) {
+        setUserName(storedName);
+      }
+    }
+  }, [user]);
+
+  const [config, setConfig] = useState<ResultPageConfig | null>(null);
+
+  useEffect(() => {
+    try {
+      if (externalConfig) {
+        setConfig(externalConfig);
+      } else {
+        const configKey = `quiz_result_config_${primaryStyle.category}`;
+        const savedConfig = localStorage.getItem(configKey);
+
+        if (savedConfig) {
+          setConfig(JSON.parse(savedConfig));
+          console.log("Loaded config from localStorage:", configKey);
+        } else {
+          console.log("No saved config found for:", primaryStyle.category);
+          setConfig(null);
+        }
+      }
+    } catch (error) {
+      console.error("Error loading custom settings:", error);
+      setConfig(null);
+    }
+  }, [primaryStyle.category, externalConfig]);
+
+  if (!primaryStyle || !secondaryStyles) {
+    console.error("Missing required props:", { primaryStyle, secondaryStyles });
+    return <div>Erro ao carregar os resultados. Por favor, refaça o quiz.</div>;
+  }
+
+  // Build custom title with user name
+  const customTitle = `Olá, ${userName}, seu Estilo Predominante é:`;
+
   return (
-    <div className="min-h-screen bg-[#faf8f5] flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full bg-white rounded-lg shadow-lg p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-playfair text-[#432818] mb-4">
-            {userName ? `${userName}, s` : 'S'}eu Resultado
-          </h1>
-          
-          <div className="mb-6">
-            <h2 className="text-xl text-[#8F7A6A] mb-2">
-              Seu estilo predominante é:
-            </h2>
-            <div className="bg-[#B89B7A]/10 p-4 rounded-lg">
-              <h3 className="text-2xl font-bold text-[#B89B7A] mb-2">
-                {primaryStyleData?.name || primaryStyle}
-              </h3>
-              <p className="text-[#432818]">
-                {primaryStyleData?.description || 'Descrição não disponível'}
-              </p>
-            </div>
+    <div
+      className={cn(
+        "min-h-screen",
+        previewMode ? "max-h-screen overflow-auto" : ""
+      )}
+      style={{
+        backgroundColor:
+          config?.globalStyles?.backgroundColor ||
+          sharedStyles.colors.background,
+        color:
+          config?.globalStyles?.textColor || sharedStyles.colors.textPrimary,
+      }}
+    >
+      <ContentContainer size="md">
+        <ResultHeader userName={userName} customTitle={customTitle} />
+
+        <div className="space-y-8">
+          <PrimaryStyleCard primaryStyle={primaryStyle} />
+          <SecondaryStylesSection secondaryStyles={secondaryStyles} />
+          <OfferCard
+            primaryStyle={primaryStyle}
+            config={config?.offer?.hero?.content || {}}
+          />
+          {/* Bloco de transformação Antes e Depois */}
+          <BeforeAfterTransformation />
+
+          {/* Importar componente GuaranteeSection em vez de usar o simples */}
+          <div className="mt-12 mb-8">
+            <GuaranteeSection />
           </div>
-          
-          {secondaryStyles.length > 0 && (
-            <div>
-              <h3 className="text-lg font-medium text-[#432818] mb-4">
-                Seus estilos complementares:
-              </h3>
-              <div className="space-y-3">
-                {secondaryStyles.map((style, index) => {
-                  const styleData = styleResults[style];
-                  return (
-                    <div key={index} className="bg-[#f8f6f3] p-3 rounded-lg">
-                      <h4 className="font-medium text-[#432818]">
-                        {styleData?.name || style}
-                      </h4>
-                      <p className="text-sm text-[#8F7A6A]">
-                        {styleData?.description || 'Descrição não disponível'}
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
         </div>
-      </div>
+      </ContentContainer>
     </div>
   );
 };

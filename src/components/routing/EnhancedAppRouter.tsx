@@ -44,6 +44,19 @@ const ErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 };
 
 // Lazy loading dos componentes (com fallbacks seguros)
+const EnhancedEditor = lazy(() => 
+  import('../../components/editor/EnhancedEditor').catch(() => ({
+    default: () => (
+      <div className="p-8 text-center">
+        <p className="text-red-600">Erro ao carregar o Editor Melhorado</p>
+        <p className="text-sm text-gray-600 mt-2">
+          Verifique se o arquivo está no local correto: /src/components/editor/EnhancedEditor.tsx
+        </p>
+      </div>
+    )
+  }))
+);
+
 const SystemIntegrationTest = lazy(() => 
   import('../../components/testing/SystemIntegrationTest').catch(() => ({
     default: () => (
@@ -57,6 +70,36 @@ const SystemIntegrationTest = lazy(() =>
   }))
 );
 
+const FunnelManagementPage = lazy(() => 
+  import('../../pages/examples/EnhancedEditorIntegration').then(module => ({
+    default: module.FunnelManagementPage
+  })).catch(() => ({
+    default: () => (
+      <div className="p-8 text-center">
+        <p className="text-red-600">Erro ao carregar Gestão de Funis</p>
+        <p className="text-sm text-gray-600 mt-2">
+          Verifique se o arquivo está no local correto: /src/pages/examples/EnhancedEditorIntegration.tsx
+        </p>
+      </div>
+    )
+  }))
+);
+
+const EditorPage = lazy(() => 
+  import('../../pages/examples/EnhancedEditorIntegration').then(module => ({
+    default: module.default
+  })).catch(() => ({
+    default: () => (
+      <div className="p-8 text-center">
+        <p className="text-red-600">Erro ao carregar Página do Editor</p>
+        <p className="text-sm text-gray-600 mt-2">
+          Verifique se o arquivo está no local correto: /src/pages/examples/EnhancedEditorIntegration.tsx
+        </p>
+      </div>
+    )
+  }))
+);
+
 // Dashboard simples se não existir
 const SimpleDashboard: React.FC = () => (
   <div className="min-h-screen bg-gray-50 p-8">
@@ -64,13 +107,13 @@ const SimpleDashboard: React.FC = () => (
       <h1 className="text-3xl font-bold mb-8">Quiz Quest Challenge Verse</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold mb-4">🎯 Editor Principal</h2>
-          <p className="text-gray-600 mb-4">Acesse o editor principal SchemaDrivenEditorResponsive</p>
+          <h2 className="text-xl font-semibold mb-4">🎯 Editor Melhorado</h2>
+          <p className="text-gray-600 mb-4">Acesse o novo editor com todas as funcionalidades avançadas</p>
           <a 
             href="/editor" 
-            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           >
-            Abrir Editor
+            Acessar Editor
           </a>
         </div>
         
@@ -134,8 +177,38 @@ export const EnhancedAppRouter: React.FC = () => {
               <Route path="/" component={SimpleDashboard} />
               <Route path="/dashboard" component={SimpleDashboard} />
 
+              {/* Rotas do Editor Melhorado */}
+              <Route path="/editor" component={FunnelManagementPage} />
+              <Route path="/editor/:funnelId" component={EditorPage} />
+              <Route path="/admin/funis" component={FunnelManagementPage} />
+              <Route path="/admin/funis/:funnelId/editor" component={EditorPage} />
+              
+              {/* Rota para Analytics */}
+              <Route path="/admin/funis/:funnelId/analytics">
+                {({ funnelId }) => (
+                  <div className="p-6">
+                    <h1 className="text-2xl font-bold mb-4">Analytics - Funil {funnelId}</h1>
+                    <div className="bg-white p-8 rounded-lg shadow-sm border text-center">
+                      <p className="text-gray-600 mb-4">Dashboard de Analytics será carregado aqui</p>
+                      <p className="text-sm text-gray-500">
+                        Componente: AdvancedAnalytics para funil {funnelId}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </Route>
+
               {/* Rota para Testes de Desenvolvimento */}
               <Route path="/dev/test" component={SystemIntegrationTest} />
+              
+              {/* Rota de exemplo direto do editor */}
+              <Route path="/enhanced-editor/:funnelId">
+                {({ funnelId }) => (
+                  <Suspense fallback={<PageLoader />}>
+                    <EnhancedEditor funnelId={funnelId} />
+                  </Suspense>
+                )}
+              </Route>
 
               {/* Rota 404 */}
               <Route>

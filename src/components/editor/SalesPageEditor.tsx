@@ -58,14 +58,14 @@ const SalesPageEditor: React.FC<SalesPageEditorProps> = ({ primaryStyle, onClose
               <Card key={block.id} className="p-4 relative border border-[#B89B7A]/20">
                 <div className="flex items-center justify-end gap-2 mb-2">
                   <Button
-                    size="sm"
+                    size="icon"
                     variant="ghost"
                     className="w-8 h-8"
                   >
                     <MoveIcon className="w-4 h-4 text-[#8F7A6A]" />
                   </Button>
                   <Button
-                    size="sm"
+                    size="icon"
                     variant="ghost"
                     onClick={() => deleteBlock(block.id)}
                     className="w-8 h-8 text-red-500"
