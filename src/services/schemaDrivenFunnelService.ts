@@ -699,13 +699,10 @@ class SchemaDrivenFunnelService {
     // USAR ID FIXO PARA EVITAR DUPLICAÇÃO!
     const FIXED_FUNNEL_ID = 'default-quiz-funnel-21-steps';
     
-    console.log('🏗️ [DEBUG] Criando funil com componentes INDIVIDUALIZADOS...');
-    console.log('📊 [DEBUG] Componentes disponíveis:', Object.keys(require('../config/editorBlocksMapping21Steps').EDITOR_BLOCKS_MAP));
-    
     return {
       id: FIXED_FUNNEL_ID, // ID fixo para evitar duplicação
       name: 'Quiz CaktoQuiz - Descubra Seu Estilo',
-      description: 'Funil completo para descoberta do estilo pessoal - 21 etapas com componentes individualizados',
+      description: 'Funil completo para descoberta do estilo pessoal - 21 etapas modulares',
       theme: 'caktoquiz',
       isPublished: false,
       pages: this.createModularPages(),
@@ -755,7 +752,7 @@ class SchemaDrivenFunnelService {
     const pages: SchemaDrivenPageData[] = [];
 
     // ==========================================
-    // ETAPA 1: INTRODUÇÃO - COMPONENTE INDIVIDUALIZADO
+    // ETAPA 1: INTRODUÇÃO (COLETA DO NOME)
     // ==========================================
     pages.push({
       id: this.generateUniquePageId('etapa-1-intro'),
@@ -765,30 +762,86 @@ class SchemaDrivenFunnelService {
       order: 1,
       blocks: [
         {
-          id: 'quiz-start-page-block',
-          type: 'quiz-start-page',
+          id: 'intro-header',
+          type: 'quiz-intro-header',
           properties: {
-            title: 'Descubra Seu Estilo Pessoal Único',
-            subtitle: 'Chega de guarda-roupa lotado e sensação de "não tenho nada para vestir"',
-            description: 'Um quiz personalizado que vai te ajudar a descobrir seu estilo predominante e como aplicá-lo no dia a dia com confiança.',
-            buttonText: 'Começar Meu Quiz de Estilo',
-            benefits: [
-              '✓ Descubra seu estilo predominante em apenas 5 minutos',
-              '✓ Receba dicas personalizadas para seu perfil único',
-              '✓ Aprenda a criar looks que combinam 100% com você',
-              '✓ Ganhe confiança para se vestir todos os dias'
-            ],
-            nameInputPlaceholder: 'Digite seu primeiro nome aqui...',
-            showNameInput: true,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.webp',
-            backgroundColor: '#fffaf7',
-            textColor: '#432818',
-            showBenefits: true,
-            showSubtitle: true,
-            buttonVariant: 'primary',
-            buttonSize: 'large',
-            showIcon: true,
-            icon: 'play'
+            logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            logoAlt: 'Logo Gisele Galvão',
+            logoWidth: 96,
+            logoHeight: 96,
+            progressValue: 0,
+            progressMax: 100,
+            showBackButton: false
+          }
+        },
+        {
+          id: 'intro-decorative-spacer',
+          type: 'spacer',
+          properties: {
+            height: 4,
+            backgroundColor: '#B89B7A',
+            marginTop: 0,
+            marginBottom: 24
+          }
+        },
+        {
+          id: 'intro-main-heading',
+          type: 'text-inline',
+          properties: {
+            content: '<span style="color: #B89B7A; font-weight: 700;">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com você.',
+            fontSize: 'text-3xl',
+            fontWeight: 'font-bold',
+            textAlign: 'text-center',
+            color: '#432818',
+            marginBottom: 24
+          }
+        },
+        {
+          id: 'intro-hero-image',
+          type: 'image-display-inline',
+          properties: {
+            src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.webp',
+            alt: 'Transforme seu guarda-roupa',
+            width: 600,
+            height: 400,
+            className: 'object-cover w-full h-auto rounded-lg mx-auto'
+          }
+        },
+        {
+          id: 'intro-subtitle',
+          type: 'text-inline',
+          properties: {
+            content: 'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
+            fontSize: 'text-lg',
+            textAlign: 'text-center',
+            color: '#432818',
+            marginTop: 16,
+            marginBottom: 32
+          }
+        },
+        {
+          id: 'intro-name-input',
+          type: 'form-input',
+          properties: {
+            label: 'NOME',
+            placeholder: 'Digite seu nome aqui...',
+            required: true,
+            inputType: 'text',
+            helperText: '',
+            name: 'userName'
+          }
+        },
+        {
+          id: 'intro-cta-button',
+          type: 'button-inline',
+          properties: {
+            text: 'Quero Descobrir meu Estilo Agora!',
+            variant: 'primary',
+            size: 'large',
+            fullWidth: true,
+            backgroundColor: '#B89B7A',
+            textColor: '#ffffff',
+            requiresValidInput: true
           }
         }
       ],
@@ -803,39 +856,96 @@ class SchemaDrivenFunnelService {
     });
 
     // ==========================================
-    // ETAPAS 2-11: QUESTÕES PRINCIPAIS - COMPONENTES INDIVIDUALIZADOS
+    // ETAPAS 2-11: QUESTÕES PRINCIPAIS (10 QUESTÕES)
+    // Componentes: quiz-intro-header + heading-inline + text-inline + options-grid + button-inline
     // ==========================================
     REAL_QUIZ_QUESTIONS.forEach((questionData, index) => {
-      console.log(`🎯 [ES7+] Criando questão ${index + 1}:`, questionData.title);
+      console.log(`🎯 [ES7+] Criando questão ${index + 1}:`, questionData.question);
       const currentProgress = 5 + (index + 1) * 5; // 5%, 10%, 15%... até 55%
       
       pages.push({
         id: this.generateUniquePageId(`etapa-${index + 2}-questao-${index + 1}`),
         name: `Questão ${index + 1}`,
-        title: `Etapa ${index + 2}: ${questionData.title}`,
+        title: `Etapa ${index + 2}: ${questionData.question}`,
         type: 'question',
         order: index + 2,
         blocks: [
+          // 1. Cabeçalho modular com logo e progresso
           {
-            id: `question-${index + 1}-page`,
-            type: 'quiz-question-page',
+            id: `question-${index + 1}-header`,
+            type: 'quiz-intro-header',
             properties: {
-              question: questionData.title,
+              logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+              logoAlt: 'Logo Gisele Galvão',
+              logoWidth: 96,
+              logoHeight: 96,
+              progressValue: currentProgress,
+              progressMax: 100,
+              showBackButton: true
+            }
+          },
+          // 2. Título da questão (componente inline)
+          {
+            id: `question-${index + 1}-title`,
+            type: 'heading-inline',
+            properties: {
+              content: questionData.question,
+              level: 'h2',
+              fontSize: 'text-2xl',
+              fontWeight: 'font-bold',
+              textAlign: 'text-center',
+              color: '#432818',
+              marginBottom: 8
+            }
+          },
+          // 3. Indicador de progresso textual (componente inline)
+          {
+            id: `question-${index + 1}-progress-label`,
+            type: 'text-inline',
+            properties: {
+              content: `Questão ${index + 1} de 10`,
+              fontSize: 'text-sm',
+              textAlign: 'text-center',
+              color: '#6B7280',
+              marginBottom: 24
+            }
+          },
+          // 4. Grid de opções responsivo (máx 2 colunas)
+          {
+            id: `question-${index + 1}-options`,
+            type: 'options-grid',
+            properties: {
               options: questionData.options.map(opt => ({
                 id: opt.id,
                 text: opt.text,
-                value: opt.value || opt.id
+                value: opt.value || opt.id,
+                imageUrl: (opt as any).imageUrl || undefined,
+                category: (opt as any).category || opt.value || opt.id
               })),
-              questionNumber: index + 1,
-              totalQuestions: REAL_QUIZ_QUESTIONS.length,
-              allowMultiple: questionData.multipleSelection || false,
+              columns: questionData.type === 'both' ? 2 : 1,
+              showImages: questionData.type === 'both' || questionData.type === undefined,
+              imageSize: 'large',
+              multipleSelection: questionData.multipleSelection || false,
               maxSelections: questionData.maxSelections || 1,
-              backgroundColor: '#fffaf7',
-              textColor: '#432818',
-              showProgress: true,
-              buttonText: index === REAL_QUIZ_QUESTIONS.length - 1 ? 'Continuar para Análise' : 'Próxima Pergunta',
-              showBackButton: index > 0,
-              imageUrl: (questionData as any).imageUrl || ''
+              minSelections: 1,
+              validationMessage: `Selecione ${questionData.maxSelections || 1} opç${(questionData.maxSelections || 1) > 1 ? 'ões' : 'ão'}`,
+              gridGap: 16,
+              responsiveColumns: true // Força máximo 2 colunas
+            }
+          },
+          // 5. Botão continuar modular (componente inline)
+          {
+            id: `question-${index + 1}-continue`,
+            type: 'button-inline',
+            properties: {
+              text: 'Continuar',
+              variant: 'primary',
+              size: 'large',
+              fullWidth: true,
+              backgroundColor: '#B89B7A',
+              textColor: '#ffffff',
+              disabled: true,
+              requiresValidSelection: true
             }
           }
         ],
@@ -1751,12 +1861,8 @@ class SchemaDrivenFunnelService {
         blocks: [],
         order: 1,
         settings: {
-          showProgress: true,
-          progressValue: 0,
-          backgroundColor: '#FFFFFF',
-          textColor: '#432818',
-          maxWidth: 'max-w-4xl',
-          padding: 'p-6'
+          showProgressBar: true,
+          backgroundColor: '#FFFFFF'
         }
       }];
 

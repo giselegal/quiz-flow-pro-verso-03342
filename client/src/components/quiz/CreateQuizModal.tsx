@@ -1,149 +1,184 @@
-
 import React, { useState } from 'react';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Label } from '../ui/label';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
-import { useQuizzes } from '../../hooks/useQuiz';
-import { useAuth } from '../../contexts/AuthContext';
+import { X, Plus } from 'lucide-react';
+import { Button } from '../ui/Button';
+import { Input } from '../ui/Input';
+import { Select } from '../ui/Select';
 
 interface CreateQuizModalProps {
-  onQuizCreated: (quiz: any) => void;
+  isOpen: boolean;
+  onClose: () => void;
+  onCreate: (quizData: {
+    title: string;
+    description?: string;
+    category: string;
+    difficulty: string;
+  }) => void;
 }
 
-export const CreateQuizModal: React.FC<CreateQuizModalProps> = ({ onQuizCreated }) => {
-  const [isOpen, setIsOpen] = useState(false);
+export const CreateQuizModal: React.FC<CreateQuizModalProps> = ({
+  isOpen,
+  onClose,
+  onCreate
+}) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    category: 'general',
+    category: 'geral',
     difficulty: 'medium'
   });
-  
-  const { createQuiz, loading } = useQuizzes();
-  const { user } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!user) return;
+    // Validação
+    const newErrors: Record<string, string> = {};
+    
+    if (!formData.title.trim()) {
+      newErrors.title = 'Título é obrigatório';
+    }
+    
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
 
-    try {
-      const newQuiz = await createQuiz({
-        ...formData,
-        author_id: user.id,
-        is_public: false,
-        is_published: false,
-        is_template: false,
-        thumbnail_url: null,
-        tags: [],
-        view_count: 0,
-        completion_rate: 0,
-        average_score: 0,
-        settings: {},
-        time_limit: null
-      });
-      
-      onQuizCreated(newQuiz);
-      setIsOpen(false);
-      setFormData({
-        title: '',
-        description: '',
-        category: 'general',
-        difficulty: 'medium'
-      });
-    } catch (error) {
-      console.error('Erro ao criar quiz:', error);
+    onCreate(formData);
+    
+    // Reset form
+    setFormData({
+      title: '',
+      description: '',
+      category: 'geral',
+      difficulty: 'medium'
+    });
+    setErrors({});
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
     }
   };
 
+  if (!isOpen) return null;
+
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button>Criar Novo Quiz</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Criar Novo Quiz</DialogTitle>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-black bg-opacity-50"
+        onClick={onClose}
+      />
+      
+      {/* Modal */}
+      <div className="relative bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+          <h2 className="text-xl font-semibold text-gray-900">
+            Criar Novo Quiz
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {/* Título */}
           <div>
-            <Label htmlFor="title">Título</Label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Título do Quiz *
+            </label>
             <Input
-              id="title"
               value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              placeholder="Digite o título do quiz"
-              required
+              onChange={(e) => handleInputChange('title', e.target.value)}
+              placeholder="Digite o título do quiz..."
+              className={errors.title ? 'border-red-300' : ''}
             />
+            {errors.title && (
+              <p className="mt-1 text-sm text-red-600">{errors.title}</p>
+            )}
           </div>
 
+          {/* Descrição */}
           <div>
-            <Label htmlFor="description">Descrição</Label>
-            <Input
-              id="description"
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Descrição
+            </label>
+            <textarea
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="Descreva o quiz"
+              onChange={(e) => handleInputChange('description', e.target.value)}
+              placeholder="Descreva o que seu quiz aborda..."
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
 
+          {/* Categoria */}
           <div>
-            <Label htmlFor="category">Categoria</Label>
-            <Select 
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Categoria
+            </label>
+            <Select
               value={formData.category}
-              onValueChange={(value) => setFormData({ ...formData, category: value })}
+              onValueChange={(value) => handleInputChange('category', value)}
             >
-              <SelectTrigger>
-                <SelectValue>
-                  {formData.category === 'general' && 'Geral'}
-                  {formData.category === 'education' && 'Educação'}
-                  {formData.category === 'entertainment' && 'Entretenimento'}
-                  {formData.category === 'business' && 'Negócios'}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="general">Geral</SelectItem>
-                <SelectItem value="education">Educação</SelectItem>
-                <SelectItem value="entertainment">Entretenimento</SelectItem>
-                <SelectItem value="business">Negócios</SelectItem>
-              </SelectContent>
+              <option value="geral">Geral</option>
+              <option value="educacao">Educação</option>
+              <option value="entretenimento">Entretenimento</option>
+              <option value="business">Negócios</option>
+              <option value="tecnologia">Tecnologia</option>
+              <option value="saude">Saúde</option>
+              <option value="esportes">Esportes</option>
+              <option value="historia">História</option>
+              <option value="ciencia">Ciência</option>
+              <option value="arte">Arte</option>
             </Select>
           </div>
 
+          {/* Dificuldade */}
           <div>
-            <Label htmlFor="difficulty">Dificuldade</Label>
-            <Select 
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Dificuldade
+            </label>
+            <Select
               value={formData.difficulty}
-              onValueChange={(value) => setFormData({ ...formData, difficulty: value })}
+              onValueChange={(value) => handleInputChange('difficulty', value)}
             >
-              <SelectTrigger>
-                <SelectValue>
-                  {formData.difficulty === 'easy' && 'Fácil'}
-                  {formData.difficulty === 'medium' && 'Médio'}
-                  {formData.difficulty === 'hard' && 'Difícil'}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="easy">Fácil</SelectItem>
-                <SelectItem value="medium">Médio</SelectItem>
-                <SelectItem value="hard">Difícil</SelectItem>
-              </SelectContent>
+              <option value="easy">Fácil</option>
+              <option value="medium">Médio</option>
+              <option value="hard">Difícil</option>
             </Select>
           </div>
 
-          <div className="flex justify-end space-x-2">
-            <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
+          {/* Buttons */}
+          <div className="flex space-x-3 pt-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              className="flex-1"
+            >
               Cancelar
             </Button>
-            <Button type="submit" disabled={loading}>
-              {loading ? 'Criando...' : 'Criar Quiz'}
+            <Button
+              type="submit"
+              className="flex-1 bg-blue-600 hover:bg-blue-700"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Criar Quiz
             </Button>
           </div>
         </form>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 };

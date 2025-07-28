@@ -8,41 +8,25 @@
 import { ComponentType } from 'react';
 
 // Componentes que realmente existem (verificados)
-import QuizQuestionBlock from '../components/editor/blocks/QuizQuestionBlock';
-import QuizQuestionBlockConfigurable from '../components/editor/blocks/QuizQuestionBlockConfigurable';
-import QuizQuestionBlockFixed from '../components/editor/blocks/QuizQuestionBlockFixed';
-import QuizQuestionPageBlock from '../components/editor/blocks/QuizQuestionPageBlock';
-import QuizResultCalculatedBlock from '../components/editor/blocks/QuizResultCalculatedBlock';
-import QuizStartPageBlock from '../components/editor/blocks/QuizStartPageBlock';
-import QuizOfferPageBlock from '../components/editor/blocks/QuizOfferPageBlock';
-import ModernResultPageBlock from '../components/editor/blocks/ModernResultPageBlock';
-import QuestionMultipleBlock from '../components/editor/blocks/QuestionMultipleBlock';
-import StrategicQuestionBlock from '../components/editor/blocks/StrategicQuestionBlock';
-import QuizTransitionBlock from '../components/editor/blocks/QuizTransitionBlock';
-import HeaderBlock from '../components/editor/blocks/HeaderBlock';
-import TextBlock from '../components/editor/blocks/TextBlock';
-import ImageBlock from '../components/editor/blocks/ImageBlock';
-import ButtonBlock from '../components/editor/blocks/ButtonBlock';
-import SpacerBlock from '../components/editor/blocks/SpacerBlock';
-import RichTextBlock from '../components/editor/blocks/RichTextBlock';
-import FAQSectionBlock from '../components/editor/blocks/FAQSectionBlock';
-import TestimonialsBlock from '../components/editor/blocks/TestimonialsBlock';
-import GuaranteeBlock from '../components/editor/blocks/GuaranteeBlock';
-
-// Componentes INLINE reais das 21 etapas
-import QuizIntroHeaderBlock from '../components/editor/blocks/QuizIntroHeaderBlock';
-import TextInlineBlock from '../components/editor/blocks/TextInlineBlock';
-import HeadingInlineBlock from '../components/editor/blocks/HeadingInlineBlock';
-import ImageDisplayInlineBlock from '../components/editor/blocks/ImageDisplayInlineBlock';
-import FormInputBlock from '../components/editor/blocks/FormInputBlock';
-import ButtonInlineBlock from '../components/editor/blocks/ButtonInlineBlock';
-import OptionsGridBlock from '../components/editor/blocks/OptionsGridBlock';
-import ProgressInlineBlock from '../components/editor/blocks/ProgressInlineBlock';
-
-// Componentes INLINE de resultado (etapa 20)
-import ResultHeaderInlineBlock from '../components/editor/blocks/ResultHeaderInlineBlock';
-import ResultCardInlineBlock from '../components/editor/blocks/ResultCardInlineBlock';
-import StyleCardInlineBlock from '../components/editor/blocks/StyleCardInlineBlock';
+import QuizQuestionBlock from '@/components/editor/blocks/QuizQuestionBlock';
+import QuizQuestionBlockConfigurable from '@/components/editor/blocks/QuizQuestionBlockConfigurable';
+import QuizQuestionBlockFixed from '@/components/editor/blocks/QuizQuestionBlockFixed';
+import QuizResultCalculatedBlock from '@/components/editor/blocks/QuizResultCalculatedBlock';
+import QuizStartPageBlock from '@/components/editor/blocks/QuizStartPageBlock';
+import QuizOfferPageBlock from '@/components/editor/blocks/QuizOfferPageBlock';
+import ModernResultPageBlock from '@/components/editor/blocks/ModernResultPageBlock';
+import QuestionMultipleBlock from '@/components/editor/blocks/QuestionMultipleBlock';
+import StrategicQuestionBlock from '@/components/editor/blocks/StrategicQuestionBlock';
+import QuizTransitionBlock from '@/components/editor/blocks/QuizTransitionBlock';
+import HeaderBlock from '@/components/editor/blocks/HeaderBlock';
+import TextBlock from '@/components/editor/blocks/TextBlock';
+import ImageBlock from '@/components/editor/blocks/ImageBlock';
+import ButtonBlock from '@/components/editor/blocks/ButtonBlock';
+import SpacerBlock from '@/components/editor/blocks/SpacerBlock';
+import RichTextBlock from '@/components/editor/blocks/RichTextBlock';
+import FAQSectionBlock from '@/components/editor/blocks/FAQSectionBlock';
+import TestimonialsBlock from '@/components/editor/blocks/TestimonialsBlock';
+import GuaranteeBlock from '@/components/editor/blocks/GuaranteeBlock';
 
 export const EDITOR_BLOCKS_MAP: Record<string, ComponentType<any>> = {
   // Blocos básicos
@@ -53,30 +37,13 @@ export const EDITOR_BLOCKS_MAP: Record<string, ComponentType<any>> = {
   'spacer': SpacerBlock,
   'rich-text': RichTextBlock,
   
-  // ✅ COMPONENTES INLINE REAIS DAS 21 ETAPAS
-  'quiz-intro-header': QuizIntroHeaderBlock,
-  'text-inline': TextInlineBlock,
-  'heading-inline': HeadingInlineBlock,
-  'image-display-inline': ImageDisplayInlineBlock,
-  'form-input': FormInputBlock,
-  'button-inline': ButtonInlineBlock,
-  'options-grid': OptionsGridBlock,
-  'progress-inline': ProgressInlineBlock,
-  
-  // ✅ COMPONENTES INLINE DE RESULTADO (ETAPA 20)
-  'result-header-inline': ResultHeaderInlineBlock,
-  'result-card-inline': ResultCardInlineBlock,
-  'style-card-inline': StyleCardInlineBlock,
-  
-  // ✅ ETAPAS DO FUNIL COMPLETO (1-21) - COMPONENTES INDIVIDUALIZADOS
+  // ✅ ETAPAS DO FUNIL COMPLETO (1-21)
   
   // Etapa 1: Introdução
   'quiz-start-page': QuizStartPageBlock,
   'QuizStartPageBlock': QuizStartPageBlock,
   
-  // Etapas 2-11: Questões principais  
-  'quiz-question-page': QuizQuestionPageBlock,
-  'QuizQuestionPageBlock': QuizQuestionPageBlock,
+  // Etapas 2-11: Questões principais
   'quiz-question': QuizQuestionBlockFixed,
   'QuizQuestionBlock': QuizQuestionBlockFixed,
   'quiz-question-configurable': QuizQuestionBlockConfigurable,
@@ -142,12 +109,7 @@ export const hasBlockComponent = (blockType: string): boolean => {
 
 // Helper para obter o componente de um tipo
 export const getBlockComponent = (blockType: string): ComponentType<any> | undefined => {
-  const component = EDITOR_BLOCKS_MAP[blockType];
-  console.log(`🔍 getBlockComponent('${blockType}'):`, component ? '✅ Found' : '❌ Not found');
-  if (!component) {
-    console.log('📋 Available block types:', Object.keys(EDITOR_BLOCKS_MAP));
-  }
-  return component;
+  return EDITOR_BLOCKS_MAP[blockType];
 };
 
 // Helper para obter o tipo de bloco de uma etapa específica

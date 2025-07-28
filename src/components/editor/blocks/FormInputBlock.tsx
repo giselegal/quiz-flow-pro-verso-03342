@@ -8,15 +8,6 @@ const FormInputBlock: React.FC<BlockComponentProps> = ({
   onClick,
   className = ''
 }) => {
-  // Verificação de segurança para evitar erro de undefined
-  if (!block || !block.properties) {
-    return (
-      <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
-        <p className="text-red-600">Erro: Bloco não encontrado ou propriedades indefinidas</p>
-      </div>
-    );
-  }
-
   const { 
     label = 'Campo de Input',
     placeholder = 'Digite aqui...',

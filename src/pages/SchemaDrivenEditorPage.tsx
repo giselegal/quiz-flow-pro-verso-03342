@@ -1,86 +1,16 @@
-import React, { useState } from 'react';
-import DroppableCanvas from '../components/editor/dnd/DroppableCanvas';
-import { FormElementsPanel } from '../components/editor/FormElementsPanel';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { BlockData } from '../types/blocks';
+import React from 'react';
+import { useRoute } from 'wouter';
+import SchemaDrivenEditorResponsive from '@/components/editor/SchemaDrivenEditorResponsive';
 
-export default function SchemaDrivenEditorPage() {
-  const [blocks, setBlocks] = useState<BlockData[]>([]);
-  const [selectedBlockId, setSelectedBlockId] = useState<string>();
-  const [showRightSidebar, setShowRightSidebar] = useState(false);
-
-  const handleBlocksReorder = (newBlocks: BlockData[]) => {
-    setBlocks(newBlocks);
-  };
-
-  const handleBlockAdd = (blockType: string, position?: number) => {
-    const newBlock: BlockData = {
-      id: `block-${Date.now()}`,
-      type: blockType,
-      properties: {},
-    };
-    
-    if (position !== undefined) {
-      const newBlocks = [...blocks];
-      newBlocks.splice(position, 0, newBlock);
-      setBlocks(newBlocks);
-    } else {
-      setBlocks([...blocks, newBlock]);
-    }
-  };
-
-  const handleBlockUpdate = (blockId: string, updates: Partial<BlockData>) => {
-    setBlocks(blocks.map(block => 
-      block.id === blockId ? { ...block, ...updates } : block
-    ));
-  };
-
-  const handleBlockDelete = (blockId: string) => {
-    setBlocks(blocks.filter(block => block.id !== blockId));
-  };
-
-  const handleBlockDuplicate = (blockId: string) => {
-    const blockToDuplicate = blocks.find(block => block.id === blockId);
-    if (blockToDuplicate) {
-      const duplicatedBlock: BlockData = {
-        ...blockToDuplicate,
-        id: `block-${Date.now()}`,
-      };
-      setBlocks([...blocks, duplicatedBlock]);
-    }
-  };
-
-  const handleBlockToggleVisibility = (blockId: string) => {
-    setBlocks(blocks.map(block => 
-      block.id === blockId 
-        ? { ...block, properties: { ...block.properties, visible: !block.properties.visible } }
-        : block
-    ));
-  };
-
-  const handleSaveInline = (blockId: string, updates: any) => {
-    handleBlockUpdate(blockId, { properties: { ...blocks.find(b => b.id === blockId)?.properties, ...updates } });
-  };
+const SchemaDrivenEditorPage: React.FC = () => {
+  const [match, params] = useRoute('/editor/:id');
+  const funnelId = params?.id;
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className="flex h-screen">
-        <FormElementsPanel />
-        <div className="flex-1">
-          <DroppableCanvas 
-            blocks={blocks}
-            selectedBlockId={selectedBlockId}
-            onBlockSelect={setSelectedBlockId}
-            onBlockDelete={handleBlockDelete}
-            onBlockDuplicate={handleBlockDuplicate}
-            onBlockToggleVisibility={handleBlockToggleVisibility}
-            onSaveInline={handleSaveInline}
-            onAddBlock={handleBlockAdd}
-            setShowRightSidebar={setShowRightSidebar}
-          />
-        </div>
-      </div>
-    </DndProvider>
+    <div className="h-screen w-screen overflow-hidden bg-gray-50">
+      <SchemaDrivenEditorResponsive funnelId={funnelId} className="h-full w-full" />
+    </div>
   );
-}
+};
+
+export default SchemaDrivenEditorPage;

@@ -31,14 +31,9 @@ const QuizDescubraSeuEstilo = lazy(
 );
 const DashboardPage = lazy(() => import("./pages/admin/DashboardPage"));
 
-// Editor Principal - Usando versão responsiva completa
-const SchemaDrivenEditorResponsive = lazy(() => import("./components/editor/SchemaDrivenEditorResponsive"));
-const SimpleEditor = lazy(() => import("./components/editor/SimpleEditor"));
-const TestSimpleEditor = lazy(() => import("./components/editor/TestSimpleEditor"));
+// Editor Principal - Consolidado
+const SchemaDrivenEditorPage = lazy(() => import("./pages/SchemaDrivenEditorPage"));
 const DragDropTestPage = lazy(() => import("./pages/DragDropTestPage"));
-const FunnelComponentsDemo = lazy(() => import("./pages/FunnelComponentsDemo"));
-const ModularComponentsDemo = lazy(() => import("./pages/ModularComponentsDemo"));
-const TestPage = lazy(() => import("./components/TestPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 const App = () => {
@@ -92,48 +87,18 @@ const App = () => {
                 {/* Editor Principal - ÚNICO EDITOR para Quiz e Funis Completos */}
                 <Route
                   path="/editor"
-                  component={() => <SchemaDrivenEditorResponsive />}
+                  component={SchemaDrivenEditorPage}
                 />
                 {/* Editor com ID específico */}
                 <Route
                   path="/editor/:id"
-                  component={({ params }: any) => <SchemaDrivenEditorResponsive funnelId={params.id} />}
-                />
-                
-                {/* Editor de Teste Simples */}
-                <Route
-                  path="/test-editor"
-                  component={TestSimpleEditor}
-                />
-                
-                {/* Editor Simples para Teste */}
-                <Route
-                  path="/simple-editor"
-                  component={SimpleEditor}
-                />
-                
-                {/* Página de Teste */}
-                <Route
-                  path="/test"
-                  component={TestPage}
+                  component={SchemaDrivenEditorPage}
                 />
                 
                 {/* Teste de Drag & Drop */}
                 <Route
                   path="/drag-drop-test"
                   component={DragDropTestPage}
-                />
-
-                {/* Demo de Componentes de Funil */}
-                <Route
-                  path="/funnel-demo"
-                  component={FunnelComponentsDemo}
-                />
-
-                {/* Demo de Componentes Modulares */}
-                <Route
-                  path="/modular-demo"
-                  component={ModularComponentsDemo}
                 />
                 
                 {/* Admin - acesso livre */}

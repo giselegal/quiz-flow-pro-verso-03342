@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { DirectionProvider } from '@radix-ui/react-direction';
 import {
   FileText,
   Menu,
@@ -25,18 +22,22 @@ import {
   FileText as ReportIcon, // Ícone para relatórios
   BarChart3 // Ícone para A/B testing
 } from 'lucide-react';
-import { useSchemaEditorFixed } from '../../hooks/useSchemaEditorFixed';
+import { useSchemaEditorFixed as useSchemaEditor } from '../../hooks/useSchemaEditorFixed';
 import { useSupabaseEditor } from '../../hooks/useSupabaseEditor';
 import { SchemaDrivenComponentsSidebar } from './sidebar/SchemaDrivenComponentsSidebar';
 import { DynamicPropertiesPanel } from './panels/DynamicPropertiesPanel';
-import DroppableCanvas from './dnd/DroppableCanvas';
+import { DroppableCanvas } from './dnd/DroppableCanvas';
 import { TestDeleteComponent } from './TestDeleteComponent';
+<<<<<<< HEAD
 import EditorStatus from './EditorStatus';
 import QuickTest from './QuickTest';
 import DataDebug from './DataDebug';
 import { BlockMappingDebug } from '../debug/BlockMappingDebug';
 import { SimpleBlockDebug } from '../debug/SimpleBlockDebug';
 import { allBlockDefinitions } from '../../config/blockDefinitions';
+=======
+import { blockDefinitions } from '../../config/blockDefinitions';
+>>>>>>> origin/main
 import { useLocation } from 'wouter';
 import { saveDiagnostic } from '../../utils/saveDiagnostic';
 // Importar novos serviços e componentes
@@ -46,6 +47,7 @@ import { ReportService } from '../../services/reportService';
 import { ABTestService } from '../../services/abTestService';
 import { useAnalytics } from '../../services/analyticsService';
 import AnalyticsDashboard from '../analytics/AnalyticsDashboard';
+import { EditorQuizProvider } from '../../contexts/EditorQuizContext';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -131,7 +133,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     createNewFunnel,
     isLoading,
     isSaving
-  } = useSchemaEditorFixed(funnelId || undefined);
+  } = useSchemaEditor(funnelId || undefined);
 
   // Função para mostrar toast
   const showToast = useCallback((message: string, type: 'success' | 'error' | 'info' = 'info') => {
@@ -213,43 +215,25 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   }, [redoStack, currentPage, updatePage, showToast]);
 
 
-  // Handlers de teste rápido
-  const handleAddTestBlock = useCallback(() => {
-    addBlock({
-      type: 'text',
-      properties: {
-        content: `Bloco de teste adicionado em ${new Date().toLocaleTimeString()}`,
-        fontSize: '16px',
-        color: '#333'
-      }
-    });
-    showToast('Bloco de teste adicionado!', 'success');
-  }, [addBlock, showToast]);
-
-  const handleTestSave = useCallback(() => {
-    saveFunnel(true);
-    showToast('Teste de salvamento iniciado!', 'info');
-  }, [saveFunnel, showToast]);
-
   // Handlers
   const handleComponentSelect = useCallback((type: string) => {
     pushToUndoStack(); // Salva o estado antes de adicionar
-    const definition = allBlockDefinitions.find((def: any) => def.type === type);
-  if (definition && currentPage) {
-    const defaultProperties: Record<string, any> = {};
-    definition.propertiesSchema?.forEach((prop: any) => {
-      if (prop.defaultValue !== undefined) {
-        defaultProperties[prop.key] = prop.defaultValue;
-      }
-    });
-    addBlock({
-      type,
-      properties: defaultProperties
-    });
-    showToast(`Componente "${type}" adicionado!`, 'success');
-    setShowRightSidebar(true);
-  }
-}, [addBlock, currentPage, pushToUndoStack, showToast, setShowRightSidebar]);
+    const definition = blockDefinitions.find((def: any) => def.type === type);
+    if (definition && currentPage) {
+      const defaultProperties: Record<string, any> = {};
+      definition.propertiesSchema?.forEach((prop: any) => {
+        if (prop.defaultValue !== undefined) {
+          defaultProperties[prop.key] = prop.defaultValue;
+        }
+      });
+      addBlock({
+        type,
+        properties: defaultProperties
+      });
+      showToast(`Componente "${type}" adicionado!`, 'success');
+      setShowRightSidebar(true);
+    }
+  }, [addBlock, currentPage, pushToUndoStack, showToast, setShowRightSidebar]);
 
   // Debounced handler para mudanças de propriedade
   const debouncedHandleBlockPropertyChange = useRef(
@@ -528,35 +512,10 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   // Auto-create funnel se necessário
   useEffect(() => {
     if (!funnel && !isLoading && !funnelId) {
-      console.log('🚀 Criando novo funil com 21 etapas...');
       createNewFunnel();
-      showToast('Novo funil criado com 21 etapas!', 'success');
+      showToast('Novo funil criado!', 'success');
     }
   }, [funnel, isLoading, funnelId, createNewFunnel, showToast]);
-
-  // Debug: Log do funil criado
-  useEffect(() => {
-    if (funnel && funnel.pages) {
-      console.log('📊 Funil carregado:', {
-        id: funnel.id,
-        name: funnel.name,
-        totalPages: funnel.pages.length,
-        pagesList: funnel.pages.map(p => ({
-          id: p.id,
-          title: p.title,
-          order: p.order,
-          blocksCount: p.blocks?.length || 0
-        }))
-      });
-      
-      if (funnel.pages.length === 21) {
-        console.log('✅ As 21 etapas foram criadas corretamente!');
-        showToast('✅ Funil com 21 etapas carregado!', 'success');
-      } else {
-        console.warn(`⚠️ Apenas ${funnel.pages.length} etapas foram criadas (esperado: 21)`);
-      }
-    }
-  }, [funnel, showToast]);
 
   // Analytics: Track page view when editor loads
   useEffect(() => {
@@ -615,9 +574,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   }
 
   return (
-    <DirectionProvider dir="ltr">
-      <DndProvider backend={HTML5Backend}>
-        <div className={`h-screen flex flex-col overflow-hidden bg-gradient-to-br from-[#fffaf7] via-[#F3E8E6]/30 to-[#fffaf7]/50`}>
+    <EditorQuizProvider>
+      <div className={`h-screen flex flex-col overflow-hidden bg-gradient-to-br from-[#fffaf7] via-[#F3E8E6]/30 to-[#fffaf7]/50`}>
       {/* Header Responsivo - Redesigned com cores da marca */}
       <div className="h-16 bg-white/95 backdrop-blur-sm border-b border-[#B89B7A]/20 shadow-sm flex items-center justify-between px-6">
         <div className="flex items-center space-x-6 min-w-0 flex-1">
@@ -682,36 +640,55 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           {/* Botões Mobile - SEMPRE VISÍVEIS EM MÓBILE - Redesigned com cores da marca */}
           <div className="flex space-x-2 md:hidden">
             <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleSave}
-              className="text-[#432818] hover:text-[#432818] hover:bg-[#B89B7A]/20"
-            >
-              <Save className="w-4 h-4" />
-            </Button>
-            <Button
-              variant="ghost"
+              variant="default"
               size="sm"
               onClick={() => {
-                console.log('🔄 Toggle left sidebar from mobile button');
+                console.log('🔄 Toggleing left sidebar:', !showLeftSidebar);
                 setShowLeftSidebar(!showLeftSidebar);
+                if (showRightSidebar) setShowRightSidebar(false);
               }}
-              className="text-[#432818] hover:text-[#432818] hover:bg-[#B89B7A]/20"
+              className={`text-white text-xs px-3 py-2 rounded-lg transition-all duration-200 ${
+                showLeftSidebar
+                  ? 'bg-gradient-to-r from-[#B89B7A] to-[#8F7A6A] shadow-lg'
+                  : 'bg-gradient-to-r from-[#B89B7A]/80 to-[#8F7A6A]/80 hover:from-[#B89B7A] hover:to-[#8F7A6A]'
+              }`}
             >
-              <Menu className="w-4 h-4" />
+              <Menu className="w-4 h-4 mr-1" />
+              Componentes
+            </Button>
+            <Button
+              variant="default"
+              size="sm"
+              onClick={() => {
+                console.log('🔄 Toggleing right sidebar:', !showRightSidebar);
+                setShowRightSidebar(!showRightSidebar);
+                if (showLeftSidebar) setShowLeftSidebar(false);
+              }}
+              className={`text-white text-xs px-3 py-2 rounded-lg transition-all duration-200 ${
+                showRightSidebar
+                  ? 'bg-gradient-to-r from-[#aa6b5d] to-[#8F7A6A] shadow-lg'
+                  : 'bg-gradient-to-r from-[#aa6b5d]/80 to-[#8F7A6A]/80 hover:from-[#aa6b5d] hover:to-[#8F7A6A]'
+              }`}
+            >
+              <Settings className="w-4 h-4 mr-1" />
+              Props
             </Button>
           </div>
 
-          {/* Controles do Dispositivo - Redesigned com cores da marca */}
-          <div className="hidden md:flex items-center space-x-1 bg-[#fffaf7] rounded-lg p-1 border border-[#B89B7A]/20">
+          {/* Device Controls - Redesigned com cores da marca */}
+          <div className="hidden lg:flex bg-[#fffaf7] border border-[#B89B7A]/20 rounded-lg p-1">
             <Button
               variant={deviceView === 'mobile' ? 'default' : 'ghost'}
               size="sm"
-              onClick={() => setDeviceView('mobile')}
-              className={`h-8 px-3 transition-all duration-200 ${
-                deviceView === 'mobile'
-                  ? 'bg-[#B89B7A] text-white shadow-sm'
-                  : 'text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10'
+              onClick={() => {
+                setDeviceView('mobile');
+                setShowLeftSidebar(true);
+                setShowRightSidebar(true);
+              }}
+              className={`px-3 py-2 rounded-md transition-all duration-200 ${
+                deviceView === 'mobile' 
+                  ? 'bg-white shadow-sm text-[#432818] border border-[#B89B7A]/30' 
+                  : 'text-[#8F7A6A] hover:text-[#432818] hover:bg-white/50'
               }`}
             >
               <Smartphone className="w-4 h-4" />
@@ -719,11 +696,15 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
             <Button
               variant={deviceView === 'tablet' ? 'default' : 'ghost'}
               size="sm"
-              onClick={() => setDeviceView('tablet')}
-              className={`h-8 px-3 transition-all duration-200 ${
-                deviceView === 'tablet'
-                  ? 'bg-[#B89B7A] text-white shadow-sm'
-                  : 'text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10'
+              onClick={() => {
+                setDeviceView('tablet');
+                setShowLeftSidebar(true);
+                setShowRightSidebar(true);
+              }}
+              className={`px-3 py-2 rounded-md transition-all duration-200 ${
+                deviceView === 'tablet' 
+                  ? 'bg-white shadow-sm text-[#432818] border border-[#B89B7A]/30' 
+                  : 'text-[#8F7A6A] hover:text-[#432818] hover:bg-white/50'
               }`}
             >
               <Tablet className="w-4 h-4" />
@@ -731,163 +712,175 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
             <Button
               variant={deviceView === 'desktop' ? 'default' : 'ghost'}
               size="sm"
-              onClick={() => setDeviceView('desktop')}
-              className={`h-8 px-3 transition-all duration-200 ${
-                deviceView === 'desktop'
-                  ? 'bg-[#B89B7A] text-white shadow-sm'
-                  : 'text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10'
+              onClick={() => {
+                setDeviceView('desktop');
+                setShowLeftSidebar(true);
+                setShowRightSidebar(true);
+              }}
+              className={`px-3 py-2 rounded-md transition-all duration-200 ${
+                deviceView === 'desktop' 
+                  ? 'bg-white shadow-sm text-[#432818] border border-[#B89B7A]/30' 
+                  : 'text-[#8F7A6A] hover:text-[#432818] hover:bg-white/50'
               }`}
             >
               <Monitor className="w-4 h-4" />
             </Button>
           </div>
 
-          {/* Ações principais - Redesigned com cores da marca */}
-          <div className="flex items-center space-x-2">
-            {/* Undo/Redo */}
-            <div className="hidden lg:flex items-center space-x-1 bg-[#fffaf7] rounded-lg p-1 border border-[#B89B7A]/20">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleUndo}
-                disabled={undoStack.length === 0}
-                className="h-8 w-8 p-0 text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10 disabled:opacity-50 disabled:cursor-not-allowed"
-                title="Desfazer"
-              >
-                <Undo2 className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleRedo}
-                disabled={redoStack.length === 0}
-                className="h-8 w-8 p-0 text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10 disabled:opacity-50 disabled:cursor-not-allowed"
-                title="Refazer"
-              >
-                <Redo2 className="w-4 h-4" />
-              </Button>
-            </div>
-
-            {/* Ferramentas avançadas */}
-            <div className="hidden xl:flex items-center space-x-1 bg-[#fffaf7] rounded-lg p-1 border border-[#B89B7A]/20">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowTemplateSelector(true)}
-                className="h-8 w-8 p-0 text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10"
-                title="Templates"
-              >
-                <TemplateIcon className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleCreateVersion}
-                disabled={isPublishing}
-                className="h-8 w-8 p-0 text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10 disabled:opacity-50"
-                title="Criar Versão"
-              >
-                <GitBranch className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleGenerateReport}
-                disabled={isPublishing}
-                className="h-8 w-8 p-0 text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10 disabled:opacity-50"
-                title="Relatórios"
-              >
-                <ReportIcon className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleCreateABTest}
-                disabled={isPublishing}
-                className="h-8 w-8 p-0 text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10 disabled:opacity-50"
-                title="A/B Test"
-              >
-                <BarChart3 className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowAnalyticsDashboard(true)}
-                className="h-8 w-8 p-0 text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10"
-                title="Analytics"
-              >
-                <BarChart3 className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleDiagnostic}
-                className="h-8 w-8 p-0 text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10"
-                title="Diagnóstico"
-              >
-                <Bug className="w-4 h-4" />
-              </Button>
-            </div>
-
-            {/* Ações principais */}
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleSave}
-                disabled={isSaving}
-                className="hidden sm:flex border-[#B89B7A]/30 text-[#432818] hover:text-[#432818] hover:bg-[#B89B7A]/10"
-              >
-                <Save className="w-4 h-4 mr-2" />
-                {isSaving ? 'Salvando...' : 'Salvar'}
-              </Button>
-              <Button
-                onClick={handlePublish}
-                disabled={isPublishing || isSaving}
-                size="sm"
-                className="bg-[#B89B7A] hover:bg-[#aa6b5d] text-white shadow-sm transition-all duration-200"
-              >
-                <Eye className="w-4 h-4 mr-2" />
-                {isPublishing ? 'Publicando...' : 'Publicar'}
-              </Button>
-            </div>
-
-            {/* Toggle Sidebars - Desktop */}
-            <div className="hidden lg:flex items-center space-x-1 bg-[#fffaf7] rounded-lg p-1 border border-[#B89B7A]/20">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  console.log('🔄 Toggle left sidebar from desktop button');
-                  setShowLeftSidebar(!showLeftSidebar);
-                }}
-                className={`h-8 w-8 p-0 transition-all duration-200 ${
-                  showLeftSidebar
-                    ? 'bg-[#B89B7A] text-white'
-                    : 'text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10'
-                }`}
-                title="Toggle Components"
-              >
-                <Menu className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  console.log('🔄 Toggle right sidebar from desktop button');
-                  setShowRightSidebar(!showRightSidebar);
-                }}
-                className={`h-8 w-8 p-0 transition-all duration-200 ${
-                  showRightSidebar
-                    ? 'bg-[#B89B7A] text-white'
-                    : 'text-[#8F7A6A] hover:text-[#432818] hover:bg-[#B89B7A]/10'
-                }`}
-                title="Toggle Properties"
-              >
-                <Settings className="w-4 h-4" />
-              </Button>
-            </div>
+          {/* Botões Undo/Redo - Redesigned com cores da marca */}
+          <div className="hidden md:flex space-x-1 bg-[#fffaf7] border border-[#B89B7A]/20 rounded-lg p-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleUndo}
+              disabled={undoStack.length === 0}
+              title="Desfazer"
+              className={`px-3 py-2 rounded-md transition-all duration-200 ${
+                undoStack.length === 0 
+                  ? 'text-[#B89B7A]/40 cursor-not-allowed' 
+                  : 'text-[#8F7A6A] hover:text-[#432818] hover:bg-white/70'
+              }`}
+            >
+              <Undo2 className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleRedo}
+              disabled={redoStack.length === 0}
+              title="Refazer"
+              className={`px-3 py-2 rounded-md transition-all duration-200 ${
+                redoStack.length === 0 
+                  ? 'text-[#B89B7A]/40 cursor-not-allowed' 
+                  : 'text-[#8F7A6A] hover:text-[#432818] hover:bg-white/70'
+              }`}
+            >
+              <Redo2 className="w-4 h-4" />
+            </Button>
           </div>
+
+          {/* Actions - Redesigned */}
+          <div className="hidden md:flex space-x-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={createNewFunnel}
+              title="Criar novo funil"
+              className="border-[#B89B7A]/30 text-[#432818] hover:text-[#432818] hover:bg-[#B89B7A]/10 hover:border-[#B89B7A]/50 transition-all duration-200"
+            >
+              <Plus className="w-4 h-4 mr-1" />
+              Novo
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => saveFunnel(true)}
+              className="border-[#B89B7A]/30 text-[#432818] hover:text-[#432818] hover:bg-[#B89B7A]/10 hover:border-[#B89B7A]/50 transition-all duration-200"
+            >
+              <Save className="w-4 h-4 mr-1" />
+              Backup
+            </Button>
+          </div>
+
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="hidden sm:inline-flex border-[#B89B7A]/30 text-[#432818] hover:text-[#432818] hover:bg-[#B89B7A]/10 hover:border-[#B89B7A]/50 transition-all duration-200"
+          >
+             <Eye className="w-4 h-4 mr-1" />
+             <span className="hidden lg:inline">Preview</span>
+           </Button>
+
+           <Button
+             size="sm"
+             onClick={handlePublish}
+             disabled={isPublishing || !funnel?.id}
+             variant="default"
+             className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 px-4"
+           >
+             <Eye className="w-4 h-4 sm:mr-2" />
+             <span className="hidden sm:inline font-medium">{isPublishing ? 'Publicando...' : 'Publicar'}</span>
+           </Button>
+
+           <Button
+             size="sm"
+             onClick={handleSave}
+             disabled={isSaving}
+             className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 px-4"
+           >
+             <Save className="w-4 h-4 sm:mr-2" />
+             <span className="hidden sm:inline font-medium">{isSaving ? 'Salvando...' : 'Salvar'}</span>
+           </Button>
+
+           <Button
+             size="sm"
+             onClick={handleDiagnostic}
+             variant="outline"
+             className="px-3"
+             title="Diagnóstico do Sistema de Salvamento"
+           >
+             <Bug className="w-4 h-4 sm:mr-1" />
+             <span className="hidden sm:inline">Diagnóstico</span>
+           </Button>
+
+           {/* Botões para funcionalidades avançadas */}
+           <Button
+             size="sm"
+             onClick={() => setShowTemplateSelector(!showTemplateSelector)}
+             variant="outline"
+             className="px-3"
+             title="Selecionar Template"
+           >
+             <TemplateIcon className="w-4 h-4 sm:mr-1" />
+             <span className="hidden sm:inline">Templates</span>
+           </Button>
+
+           <Button
+             size="sm"
+             onClick={handleCreateVersion}
+             variant="outline"
+             className="px-3"
+             title="Criar Nova Versão"
+             disabled={isPublishing}
+           >
+             <GitBranch className="w-4 h-4 sm:mr-1" />
+             <span className="hidden sm:inline">Versão</span>
+           </Button>
+
+           <Button
+             size="sm"
+             onClick={handleGenerateReport}
+             variant="outline"
+             className="px-3"
+             title="Gerar Relatório"
+             disabled={isPublishing}
+           >
+             <ReportIcon className="w-4 h-4 sm:mr-1" />
+             <span className="hidden sm:inline">Relatório</span>
+           </Button>
+
+           <Button
+             size="sm"
+             onClick={handleCreateABTest}
+             variant="outline"
+             className="px-3"
+             title="Criar Teste A/B"
+             disabled={isPublishing}
+           >
+             <BarChart3 className="w-4 h-4 sm:mr-1" />
+             <span className="hidden sm:inline">A/B Test</span>
+           </Button>
+
+           <Button
+             size="sm"
+             onClick={() => setShowAnalyticsDashboard(!showAnalyticsDashboard)}
+             variant="outline"
+             className="px-3"
+             title="Dashboard de Analytics"
+           >
+             <BarChart3 className="w-4 h-4 sm:mr-1" />
+             <span className="hidden sm:inline">Analytics</span>
+           </Button>
         </div>
       </div>
 
@@ -1112,6 +1105,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
       )}
 
+<<<<<<< HEAD
       {/* Data Debug */}
       <DataDebug 
         funnel={funnel}
@@ -1147,6 +1141,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         />
       )}
 
+=======
+>>>>>>> origin/main
       {/* Template Selector Modal */}
       {showTemplateSelector && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
@@ -1194,9 +1190,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           </div>
         </div>
       )}
-        </div>
-      </DndProvider>
-    </DirectionProvider>
+    </div>
+    </EditorQuizProvider>
   );
 };
 

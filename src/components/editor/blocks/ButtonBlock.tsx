@@ -15,7 +15,7 @@ interface ButtonBlockProps {
 }
 
 export const ButtonBlock: React.FC<ButtonBlockProps> = ({
-  content = {},
+  content,
   isSelected = false,
   isEditing = false,
   onUpdate,
@@ -23,12 +23,12 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
   className
 }) => {
   const [isInlineEditing, setIsInlineEditing] = useState(false);
-  const [localButtonText, setLocalButtonText] = useState(content?.buttonText || 'Clique aqui');
+  const [localButtonText, setLocalButtonText] = useState(content.buttonText || '');
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    setLocalButtonText(content?.buttonText || 'Clique aqui');
-  }, [content?.buttonText]);
+    setLocalButtonText(content.buttonText || '');
+  }, [content.buttonText]);
 
   const handleDoubleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -42,7 +42,7 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
 
   const handleBlur = () => {
     setIsInlineEditing(false);
-    if (onUpdate && localButtonText !== content?.buttonText) {
+    if (onUpdate && localButtonText !== content.buttonText) {
       onUpdate({ buttonText: localButtonText });
     }
   };
@@ -53,7 +53,7 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
       handleBlur();
     }
     if (e.key === 'Escape') {
-      setLocalButtonText(content?.buttonText || 'Clique aqui');
+      setLocalButtonText(content.buttonText || '');
       setIsInlineEditing(false);
     }
   };
@@ -65,7 +65,7 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
       return;
     }
     
-    if (content?.buttonUrl) {
+    if (content.buttonUrl) {
       if (content.buttonUrl.startsWith('mailto:')) {
         window.location.href = content.buttonUrl;
       } else if (content.buttonUrl.startsWith('tel:')) {
@@ -77,7 +77,7 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
   };
 
   const getButtonIcon = () => {
-    if (!content?.buttonUrl) return null;
+    if (!content.buttonUrl) return null;
     
     if (content.buttonUrl.startsWith('mailto:')) {
       return <Mail className="h-4 w-4 mr-2" />;
@@ -92,7 +92,7 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
   };
 
   const getButtonVariant = () => {
-    const style = content?.style?.backgroundColor;
+    const style = content.style?.backgroundColor;
     if (style?.includes('blue')) return 'default';
     if (style?.includes('green')) return 'default';
     if (style?.includes('red')) return 'destructive';
@@ -107,15 +107,15 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
         isSelected && "ring-2 ring-blue-400 ring-offset-2",
         isInlineEditing && "ring-2 ring-green-400 ring-offset-2",
         "hover:bg-gray-50 cursor-pointer",
-        content?.style?.textAlign === 'center' && "text-center",
-        content?.style?.textAlign === 'right' && "text-right",
+        content.style?.textAlign === 'center' && "text-center",
+        content.style?.textAlign === 'right' && "text-right",
         className
       )}
       onClick={onSelect}
       style={{
-        backgroundColor: content?.style?.backgroundColor,
-        padding: content?.style?.padding,
-        margin: content?.style?.margin
+        backgroundColor: content.style?.backgroundColor,
+        padding: content.style?.padding,
+        margin: content.style?.margin
       }}
     >
       <Button
@@ -125,14 +125,14 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
         className={cn(
           "relative transition-all duration-200",
           isInlineEditing && "ring-2 ring-green-400",
-          content?.style?.width && `w-${content.style.width}`,
-          content?.style?.borderRadius && `rounded-${content.style.borderRadius}`
+          content.style?.width && `w-${content.style.width}`,
+          content.style?.borderRadius && `rounded-${content.style.borderRadius}`
         )}
         style={{
-          backgroundColor: content?.style?.backgroundColor,
-          color: content?.style?.color,
-          fontSize: content?.style?.fontSize,
-          fontWeight: content?.style?.fontWeight,
+          backgroundColor: content.style?.backgroundColor,
+          color: content.style?.color,
+          fontSize: content.style?.fontSize,
+          fontWeight: content.style?.fontWeight,
           padding: content.style?.padding,
           borderRadius: content.style?.borderRadius,
           boxShadow: content.style?.boxShadow
