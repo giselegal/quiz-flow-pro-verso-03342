@@ -342,7 +342,7 @@ const SchemaDrivenEditorSimple: React.FC<SchemaDrivenEditorSimpleProps> = ({
                   <div className="bg-white rounded-lg shadow-lg min-h-[600px]">
                     <DroppableCanvas
                       blocks={currentPage?.blocks || []}
-                      selectedBlockId={selectedBlockId}
+                      selectedBlockId={selectedBlockId || undefined}
                       onBlockSelect={handleBlockSelect}
                       onBlockDelete={handleBlockDelete}
                       onBlockDuplicate={handleBlockDuplicate}
@@ -361,12 +361,26 @@ const SchemaDrivenEditorSimple: React.FC<SchemaDrivenEditorSimpleProps> = ({
               <div className="w-80 bg-white border-l border-[#E0D5C7] shadow-sm">
                 <DynamicPropertiesPanel
                   selectedBlock={getSelectedBlock()}
-                  onSave={(updates: any) => {
+                  funnelConfig={{}}
+                  onBlockPropertyChange={(key: string, value: any) => {
                     if (selectedBlockId) {
-                      handleSaveInline(selectedBlockId, updates);
+                      handleSaveInline(selectedBlockId, { properties: { [key]: value } });
                     }
                   }}
-                  onClose={() => setShowRightSidebar(false)}
+                  onNestedPropertyChange={(path: string, value: any) => {
+                    if (selectedBlockId) {
+                      const pathKeys = path.split('.');
+                      const updates: any = {};
+                      let current = updates;
+                      for (let i = 0; i < pathKeys.length - 1; i++) {
+                        current[pathKeys[i]] = {};
+                        current = current[pathKeys[i]];
+                      }
+                      current[pathKeys[pathKeys.length - 1]] = value;
+                      handleSaveInline(selectedBlockId, { properties: updates });
+                    }
+                  }}
+                  onFunnelConfigChange={() => {}}
                 />
               </div>
             )}
