@@ -10,16 +10,16 @@ const StyledScrollArea = styled.div`
   }
   
   &::-webkit-scrollbar-track {
-    background: rgba(184, 155, 122, 0.1);
-    border-radius: 3px;
+    background: var(--accent);
+    border-radius: calc(var(--radius) * 0.5);
   }
   
   &::-webkit-scrollbar-thumb {
-    background: rgba(184, 155, 122, 0.4);
-    border-radius: 3px;
+    background: var(--muted);
+    border-radius: calc(var(--radius) * 0.5);
     
     &:hover {
-      background: rgba(184, 155, 122, 0.6);
+      background: var(--muted-foreground);
     }
   }
 `;

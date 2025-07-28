@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tag } from 'antd';
 import type { TagProps } from 'antd';
+import { styled } from 'styled-components';
 
 export interface BadgeProps extends Omit<TagProps, 'color'> {
   variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'info';
@@ -17,19 +18,19 @@ export const Badge: React.FC<BadgeProps> = ({
   const getColor = (variant: BadgeProps['variant']) => {
     switch (variant) {
       case 'primary':
-        return 'blue';
+        return 'var(--primary)';
       case 'secondary':
-        return 'default';
+        return 'var(--secondary)';
       case 'success':
-        return 'green';
+        return 'var(--success)';
       case 'warning':
-        return 'orange';
+        return 'var(--warning)';
       case 'danger':
-        return 'red';
+        return 'var(--destructive)';
       case 'info':
-        return 'cyan';
+        return 'var(--info)';
       default:
-        return 'default';
+        return 'var(--secondary)';
     }
   };
 

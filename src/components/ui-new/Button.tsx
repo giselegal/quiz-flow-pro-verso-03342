@@ -1,6 +1,38 @@
 import React from 'react';
 import { Button as AntButton } from 'antd';
 import type { ButtonProps as AntButtonProps } from 'antd';
+import { styled } from 'styled-components';
+
+const StyledButton = styled(AntButton)`
+  &.ant-btn {
+    border-radius: var(--radius);
+    font-weight: 500;
+    transition: all 0.2s ease;
+
+    &-primary {
+      background: var(--brand-primary);
+      border-color: var(--brand-primary);
+      color: var(--primary-foreground);
+
+      &:hover {
+        background: var(--brand-accent);
+        border-color: var(--brand-accent);
+      }
+    }
+
+    &-default {
+      border-color: var(--border);
+      background-color: var(--background);
+      color: var(--foreground);
+
+      &:hover {
+        border-color: var(--brand-primary);
+        color: var(--brand-primary);
+        background-color: var(--accent);
+      }
+    }
+  }
+`;
 
 export interface ButtonProps extends Omit<AntButtonProps, 'size' | 'type'> {
   variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'ghost' | 'link';

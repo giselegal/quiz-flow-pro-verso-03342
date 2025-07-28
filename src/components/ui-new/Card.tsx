@@ -3,8 +3,10 @@ import { Card as AntCard, CardProps as AntCardProps } from 'antd';
 import { styled } from 'styled-components';
 
 const StyledCard = styled(AntCard)<{ $variant?: string; $hoverable?: boolean }>`
-  border-radius: 12px;
-  border-color: rgba(184, 155, 122, 0.2);
+  border-radius: var(--radius);
+  border-color: var(--border);
+  background-color: var(--card);
+  color: var(--card-foreground);
   transition: all 0.2s ease;
 
   ${({ $variant }) => {
@@ -14,17 +16,17 @@ const StyledCard = styled(AntCard)<{ $variant?: string; $hoverable?: boolean }>`
           cursor: pointer;
           
           &:hover {
-            border-color: #B89B7A;
-            box-shadow: 0 4px 12px rgba(184, 155, 122, 0.15);
+            border-color: var(--brand-primary);
+            box-shadow: 0 4px 12px var(--ring);
             transform: translateY(-2px);
           }
         `;
       case 'page':
         return `
-          border-left: 4px solid #B89B7A;
+          border-left: 4px solid var(--brand-primary);
           
           &:hover {
-            background: rgba(184, 155, 122, 0.05);
+            background: var(--accent);
           }
         `;
       default:
@@ -34,21 +36,21 @@ const StyledCard = styled(AntCard)<{ $variant?: string; $hoverable?: boolean }>`
 
   ${({ $hoverable }) => $hoverable && `
     &:hover {
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+      box-shadow: 0 2px 8px var(--ring);
     }
   `}
 
   .ant-card-head {
-    border-bottom-color: rgba(184, 155, 122, 0.2);
+    border-bottom-color: var(--border);
     
     .ant-card-head-title {
-      color: #432818;
+      color: var(--brand-secondary);
       font-weight: 600;
     }
   }
 
   .ant-card-body {
-    color: #8F7A6A;
+    color: var(--muted-foreground);
   }
 `;
 

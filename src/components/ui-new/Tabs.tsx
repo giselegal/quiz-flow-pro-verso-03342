@@ -4,32 +4,32 @@ import { styled } from 'styled-components';
 
 const StyledTabs = styled(AntTabs)`
   .ant-tabs-nav {
-    background: linear-gradient(to right, rgba(184, 155, 122, 0.1), rgba(170, 107, 93, 0.1));
-    border-radius: 8px;
+    background: var(--accent);
+    border-radius: var(--radius);
     padding: 4px;
     margin-bottom: 16px;
   }
 
   .ant-tabs-tab {
-    border-radius: 6px !important;
+    border-radius: calc(var(--radius) * 0.75) !important;
     border: none !important;
-    color: #8F7A6A !important;
+    color: var(--muted-foreground) !important;
     font-weight: 500;
     transition: all 0.2s ease;
 
     &:hover {
-      color: #432818 !important;
-      background: rgba(184, 155, 122, 0.1) !important;
+      color: var(--foreground) !important;
+      background: var(--accent) !important;
     }
   }
 
   .ant-tabs-tab-active {
-    background: #B89B7A !important;
-    color: white !important;
-    box-shadow: 0 2px 4px rgba(184, 155, 122, 0.3);
+    background: var(--brand-primary) !important;
+    color: var(--primary-foreground) !important;
+    box-shadow: var(--shadow-sm);
 
     &:hover {
-      color: white !important;
+      color: var(--primary-foreground) !important;
     }
   }
 
