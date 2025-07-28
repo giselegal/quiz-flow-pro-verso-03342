@@ -1,114 +1,98 @@
 
 import React from 'react';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Star, Shield, Clock } from 'lucide-react';
-import type { BlockData } from '@/types/blocks';
+import { ArrowRight } from 'lucide-react';
 
-interface FinalCTABlockProps {
-  block: BlockData;
+export interface FinalCTABlockProps {
+  id?: string;
+  title?: string;
+  subtitle?: string;
+  description?: string;
+  buttonText?: string;
+  buttonUrl?: string;
+  buttonSize?: 'sm' | 'md' | 'lg';
+  showSecondaryButton?: boolean;
+  secondaryButtonText?: string;
+  secondaryButtonUrl?: string;
+  backgroundColor?: string;
+  titleColor?: string;
+  descriptionColor?: string;
+  buttonColor?: string;
   className?: string;
-  onUpdate?: (updates: Partial<BlockData>) => void;
-  isSelected?: boolean;
-  onSelect?: () => void;
+  isEditable?: boolean;
+  onUpdate?: (updates: any) => void;
 }
 
 const FinalCTABlock: React.FC<FinalCTABlockProps> = ({
-  block,
-  className,
-  onUpdate,
-  isSelected,
-  onSelect
+  id = 'final-cta',
+  title = 'Pronta para Transformar Seu Estilo?',
+  subtitle = 'Descubra como aplicar seu resultado na prática',
+  description = 'Tenha acesso ao guia completo com dicas personalizadas baseadas no seu perfil de estilo.',
+  buttonText = 'Quero Transformar Meu Estilo',
+  buttonUrl = '#',
+  buttonSize = 'lg',
+  showSecondaryButton = false,
+  secondaryButtonText = 'Saiba Mais',
+  secondaryButtonUrl = '#',
+  backgroundColor = '#ffffff',
+  titleColor = '#432818',
+  descriptionColor = '#8F7A6A',
+  buttonColor = '#B89B7A',
+  className = '',
+  isEditable = false,
+  onUpdate
 }) => {
-  const properties = block.properties || {};
-  const {
-    title = 'Transforme seu estilo agora!',
-    subtitle = 'Não perca esta oportunidade única',
-    buttonText = 'Quero transformar meu estilo',
-    buttonSize = 'lg',
-    urgencyText = 'Oferta válida por tempo limitado',
-    showGuarantee = true,
-    guaranteeText = 'Garantia de 30 dias',
-    showTestimonials = true,
-    primaryColor = '#B89B7A'
-  } = properties;
-
-  const handleClick = () => {
-    onSelect?.();
-  };
-
-  // Ensure buttonSize is valid
-  const validButtonSize = ['sm', 'md', 'lg'].includes(buttonSize) ? buttonSize : 'lg';
+  const validButtonSize = ['sm', 'md', 'lg'].includes(buttonSize) ? buttonSize as 'sm' | 'md' | 'lg' : 'lg';
 
   return (
-    <div
-      className={cn(
-        'final-cta-block w-full py-12 px-6',
-        'bg-gradient-to-r from-[#FAF9F7] to-white',
-        'border-t-4 border-[#B89B7A]',
-        'transition-all duration-200',
-        isSelected && 'ring-2 ring-blue-500 bg-blue-50',
-        className
-      )}
-      onClick={handleClick}
+    <div 
+      className={`final-cta-block p-8 rounded-xl text-center ${className}`}
+      style={{ backgroundColor }}
+      data-block-id={id}
     >
-      <div className="max-w-4xl mx-auto text-center">
-        {/* Main CTA */}
-        <div className="mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-            {title}
-          </h2>
-          <p className="text-lg text-gray-600 mb-6">
-            {subtitle}
-          </p>
-        </div>
-
-        {/* Urgency */}
-        <div className="mb-8">
-          <div className="inline-flex items-center px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-medium">
-            <Clock className="w-4 h-4 mr-2" />
-            {urgencyText}
-          </div>
-        </div>
-
-        {/* Main Button */}
-        <div className="mb-8">
-          <Button 
-            size={validButtonSize as "sm" | "md" | "lg"}
-            className="bg-[#B89B7A] hover:bg-[#A68A6D] text-white font-semibold px-8 py-4 text-lg"
+      {title && (
+        <h2 
+          className="text-3xl font-playfair font-bold mb-4"
+          style={{ color: titleColor }}
+        >
+          {title}
+        </h2>
+      )}
+      
+      {subtitle && (
+        <p className="text-xl mb-6" style={{ color: descriptionColor }}>
+          {subtitle}
+        </p>
+      )}
+      
+      {description && (
+        <p className="text-lg mb-8 max-w-2xl mx-auto" style={{ color: descriptionColor }}>
+          {description}
+        </p>
+      )}
+      
+      <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <Button
+          size={validButtonSize}
+          className="text-white font-semibold px-8"
+          style={{ backgroundColor: buttonColor }}
+          onClick={() => window.open(buttonUrl, '_blank')}
+        >
+          {buttonText}
+          <ArrowRight className="ml-2 h-5 w-5" />
+        </Button>
+        
+        {showSecondaryButton && (
+          <Button
+            variant="outline"
+            size={validButtonSize}
+            className="font-semibold px-8"
+            style={{ borderColor: buttonColor, color: buttonColor }}
+            onClick={() => window.open(secondaryButtonUrl, '_blank')}
           >
-            {buttonText}
-            <ArrowRight className="w-5 h-5 ml-2" />
+            {secondaryButtonText}
           </Button>
-        </div>
-
-        {/* Trust Elements */}
-        <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-8">
-          {showGuarantee && (
-            <div className="flex items-center text-gray-600">
-              <Shield className="w-5 h-5 mr-2 text-green-500" />
-              <span className="text-sm">{guaranteeText}</span>
-            </div>
-          )}
-          
-          {showTestimonials && (
-            <div className="flex items-center text-gray-600">
-              <div className="flex">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-                ))}
-              </div>
-              <span className="ml-2 text-sm">Mais de 1000 clientes satisfeitos</span>
-            </div>
-          )}
-        </div>
-
-        {/* Secondary Info */}
-        <div className="text-center">
-          <p className="text-sm text-gray-500">
-            Processamento seguro • Sem taxas ocultas • Suporte 24/7
-          </p>
-        </div>
+        )}
       </div>
     </div>
   );

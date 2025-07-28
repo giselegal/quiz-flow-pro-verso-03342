@@ -10,6 +10,8 @@ export interface TooltipProps extends AntTooltipProps {
 export const Tooltip: React.FC<TooltipProps> = ({
   variant = 'default',
   className = '',
+  children,
+  title,
   ...props
 }) => {
   const getVariantProps = (variant: TooltipProps['variant']) => {
@@ -26,13 +28,16 @@ export const Tooltip: React.FC<TooltipProps> = ({
   return (
     <AntTooltip
       className={className}
+      title={title}
       {...getVariantProps(variant)}
       {...props}
-    />
+    >
+      {children}
+    </AntTooltip>
   );
 };
 
-// Additional components for compatibility
+// Provider pattern components for compatibility
 export const TooltipProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <>{children}</>;
 };
