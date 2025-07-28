@@ -196,7 +196,7 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
               </Title>
               <div className="flex flex-wrap gap-1 mt-2">
                 {(block.properties?.options || ['Opção 1', 'Opção 2']).map((option: string, idx: number) => (
-                  <Badge key={idx} variant="info" size="small">
+                  <Badge key={idx} variant="secondary">
                     {option}
                   </Badge>
                 ))}
@@ -213,7 +213,7 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
               {block.properties && Object.keys(block.properties).length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-1">
                   {Object.entries(block.properties).slice(0, 3).map(([key, value]) => (
-                    <Badge key={key} variant="secondary" size="small">
+                    <Badge key={key} variant="secondary">
                       {key}: {String(value).slice(0, 10)}
                     </Badge>
                   ))}
@@ -253,8 +253,8 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
         }
       />
       <Button
-        variant="primary"
-        size="small"
+        variant="default"
+        size="sm"
         icon={<PlusOutlined />}
         onClick={() => onAddBlock('QuizStartPageBlock')}
         className="mt-4"
