@@ -14,7 +14,12 @@ import {
 } from '@ant-design/icons';
 import { Space, Typography, Empty, Tooltip } from 'antd';
 import { allBlockDefinitions } from '../../../config/blockDefinitions';
-import { Dropdown } from '../../ui/dropdown';
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '../../ui/dropdown-menu';
 
 const { Text, Title } = Typography;
 
@@ -81,20 +86,38 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
     ];
 
     return (
-      <Dropdown
-        items={dropdownItems}
-        trigger={['click']}
-        placement="bottomRight"
-      >
-        <Button
-          variant="ghost"
-          size="small"
-          className="opacity-0 group-hover:opacity-100 transition-opacity"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <MoreOutlined />
-        </Button>
-      </Dropdown>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="opacity-0 group-hover:opacity-100 transition-opacity"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <MoreOutlined />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => onBlockDuplicate(block.id)}>
+            <CopyOutlined className="mr-2 h-4 w-4" />
+            Duplicar
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => onBlockToggleVisibility(block.id)}>
+            {block.properties?.hidden ? 
+              <EyeOutlined className="mr-2 h-4 w-4" /> : 
+              <EyeInvisibleOutlined className="mr-2 h-4 w-4" />
+            }
+            {block.properties?.hidden ? 'Mostrar' : 'Ocultar'}
+          </DropdownMenuItem>
+          <DropdownMenuItem 
+            onClick={() => onBlockDelete(block.id)}
+            className="text-red-600"
+          >
+            <DeleteOutlined className="mr-2 h-4 w-4" />
+            Excluir
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     );
   }, [onBlockDuplicate, onBlockToggleVisibility, onBlockDelete]);
 
@@ -113,7 +136,6 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
           ${className}
         `}
         onClick={(e) => handleBlockClick(block.id, e)}
-        size="small"
       >
         {/* Block Header */}
         <div className="flex items-center justify-between mb-3">
@@ -140,7 +162,7 @@ export const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
                   {definition?.label || block.type}
                 </Text>
                 {isHidden && (
-                  <Badge variant="secondary" size="small" className="ml-2">
+                  <Badge variant="secondary" className="ml-2">
                     Oculto
                   </Badge>
                 )}
