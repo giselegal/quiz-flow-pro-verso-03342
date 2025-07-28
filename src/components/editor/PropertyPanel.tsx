@@ -1,147 +1,41 @@
 
 import React from 'react';
-import { EditorBlock, PropertySchema } from '@/types/editor';
+import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Trash2, Settings } from 'lucide-react';
+import { Slider } from '@/components/ui/slider';
+import { Badge } from '@/components/ui/badge';
+import { Trash2, Copy, Eye, EyeOff } from 'lucide-react';
+import { Block } from '@/types/editor';
 
 interface PropertyPanelProps {
-  selectedBlock: EditorBlock | null;
-  onUpdateBlock: (id: string, updates: Partial<EditorBlock>) => void;
+  selectedBlock: Block | null;
+  onUpdateBlock: (id: string, updates: Partial<Block>) => void;
   onDeleteBlock: (id: string) => void;
+  onDuplicateBlock: (id: string) => void;
 }
-
-// Define property schemas for different block types
-const getPropertySchema = (blockType: string): PropertySchema[] => {
-  const baseSchema: PropertySchema[] = [
-    {
-      key: 'title',
-      label: 'Título',
-      type: 'text',
-      placeholder: 'Digite o título'
-    },
-    {
-      key: 'subtitle',
-      label: 'Subtítulo',
-      type: 'text',
-      placeholder: 'Digite o subtítulo'
-    }
-  ];
-
-  switch (blockType) {
-    case 'text':
-    case 'paragraph':
-      return [
-        ...baseSchema,
-        {
-          key: 'text',
-          label: 'Texto',
-          type: 'textarea',
-          placeholder: 'Digite o texto'
-        }
-      ];
-    
-    case 'image':
-      return [
-        ...baseSchema,
-        {
-          key: 'imageUrl',
-          label: 'URL da Imagem',
-          type: 'text',
-          placeholder: 'https://exemplo.com/imagem.jpg'
-        },
-        {
-          key: 'alt',
-          label: 'Texto Alternativo',
-          type: 'text',
-          placeholder: 'Descrição da imagem'
-        }
-      ];
-    
-    case 'button':
-    case 'cta':
-      return [
-        ...baseSchema,
-        {
-          key: 'buttonText',
-          label: 'Texto do Botão',
-          type: 'text',
-          placeholder: 'Clique aqui'
-        },
-        {
-          key: 'buttonUrl',
-          label: 'URL do Botão',
-          type: 'text',
-          placeholder: 'https://exemplo.com'
-        },
-        {
-          key: 'variant',
-          label: 'Estilo do Botão',
-          type: 'select',
-          options: [
-            { value: 'default', label: 'Padrão' },
-            { value: 'primary', label: 'Primário' },
-            { value: 'secondary', label: 'Secundário' },
-            { value: 'outline', label: 'Contorno' }
-          ]
-        }
-      ];
-    
-    case 'header':
-    case 'headline':
-      return [
-        ...baseSchema,
-        {
-          key: 'level',
-          label: 'Nível do Título',
-          type: 'select',
-          options: [
-            { value: '1', label: 'H1' },
-            { value: '2', label: 'H2' },
-            { value: '3', label: 'H3' },
-            { value: '4', label: 'H4' }
-          ]
-        }
-      ];
-    
-    case 'spacer':
-      return [
-        {
-          key: 'height',
-          label: 'Altura',
-          type: 'number',
-          placeholder: '40'
-        }
-      ];
-    
-    default:
-      return baseSchema;
-  }
-};
 
 export const PropertyPanel: React.FC<PropertyPanelProps> = ({
   selectedBlock,
   onUpdateBlock,
-  onDeleteBlock
+  onDeleteBlock,
+  onDuplicateBlock
 }) => {
   if (!selectedBlock) {
     return (
-      <div className="h-full flex flex-col items-center justify-center p-4 text-center">
-        <Settings className="w-12 h-12 text-gray-400 mb-4" />
-        <h3 className="text-lg font-medium text-gray-900 mb-2">Propriedades</h3>
-        <p className="text-sm text-gray-500">Selecione um bloco para editar suas propriedades</p>
+      <div className="p-4 text-center text-gray-500">
+        <div className="mb-4 text-4xl">🎯</div>
+        <h3 className="mb-2 font-medium">Properties</h3>
+        <p className="text-sm">Select a block to edit its properties</p>
       </div>
     );
   }
 
-  const schema = getPropertySchema(selectedBlock.type);
-
-  const handlePropertyChange = (key: string, value: any) => {
+  const handleContentUpdate = (key: string, value: any) => {
     onUpdateBlock(selectedBlock.id, {
       content: {
         ...selectedBlock.content,
@@ -150,61 +44,58 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
     });
   };
 
-  const renderPropertyField = (property: PropertySchema) => {
-    const value = selectedBlock.content?.[property.key] || property.defaultValue || '';
+  const handlePropertyUpdate = (key: string, value: any) => {
+    const properties = selectedBlock.properties || {};
+    onUpdateBlock(selectedBlock.id, {
+      properties: {
+        ...properties,
+        [key]: value
+      }
+    });
+  };
 
-    switch (property.type) {
+  const renderPropertyEditor = (property: any) => {
+    const { key, label, type, options, defaultValue, min, max, step } = property;
+    const value = selectedBlock.content?.[key] || selectedBlock.properties?.[key] || defaultValue;
+
+    switch (type) {
       case 'text':
         return (
-          <div key={property.key} className="space-y-2">
-            <Label htmlFor={property.key}>{property.label}</Label>
+          <div className="space-y-2">
+            <Label htmlFor={key}>{label}</Label>
             <Input
-              id={property.key}
-              value={value}
-              onChange={(e) => handlePropertyChange(property.key, e.target.value)}
-              placeholder={property.placeholder}
+              id={key}
+              value={value || ''}
+              onChange={(e) => handleContentUpdate(key, e.target.value)}
+              placeholder={`Enter ${label.toLowerCase()}`}
             />
           </div>
         );
 
       case 'textarea':
         return (
-          <div key={property.key} className="space-y-2">
-            <Label htmlFor={property.key}>{property.label}</Label>
+          <div className="space-y-2">
+            <Label htmlFor={key}>{label}</Label>
             <Textarea
-              id={property.key}
-              value={value}
-              onChange={(e) => handlePropertyChange(property.key, e.target.value)}
-              placeholder={property.placeholder}
-              rows={4}
-            />
-          </div>
-        );
-
-      case 'number':
-        return (
-          <div key={property.key} className="space-y-2">
-            <Label htmlFor={property.key}>{property.label}</Label>
-            <Input
-              id={property.key}
-              type="number"
-              value={value}
-              onChange={(e) => handlePropertyChange(property.key, parseFloat(e.target.value) || 0)}
-              placeholder={property.placeholder}
+              id={key}
+              value={value || ''}
+              onChange={(e) => handleContentUpdate(key, e.target.value)}
+              placeholder={`Enter ${label.toLowerCase()}`}
+              rows={3}
             />
           </div>
         );
 
       case 'select':
         return (
-          <div key={property.key} className="space-y-2">
-            <Label htmlFor={property.key}>{property.label}</Label>
-            <Select value={value} onValueChange={(val: string) => handlePropertyChange(property.key, val)}>
+          <div className="space-y-2">
+            <Label htmlFor={key}>{label}</Label>
+            <Select value={value || ''} onValueChange={(val) => handleContentUpdate(key, val)}>
               <SelectTrigger>
-                <SelectValue placeholder={`Selecione ${property.label.toLowerCase()}`} />
+                <SelectValue placeholder={`Select ${label.toLowerCase()}`} />
               </SelectTrigger>
               <SelectContent>
-                {property.options?.map((option) => (
+                {options?.map((option: any) => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
                   </SelectItem>
@@ -214,15 +105,98 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
           </div>
         );
 
-      case 'checkbox':
+      case 'number':
         return (
-          <div key={property.key} className="flex items-center space-x-2">
-            <Switch
-              id={property.key}
-              checked={value}
-              onCheckedChange={(checked) => handlePropertyChange(property.key, checked)}
+          <div className="space-y-2">
+            <Label htmlFor={key}>{label}</Label>
+            <Input
+              id={key}
+              type="number"
+              value={value || ''}
+              onChange={(e) => handleContentUpdate(key, parseFloat(e.target.value) || 0)}
+              placeholder={`Enter ${label.toLowerCase()}`}
+              min={min}
+              max={max}
+              step={step}
             />
-            <Label htmlFor={property.key}>{property.label}</Label>
+          </div>
+        );
+
+      case 'boolean':
+        return (
+          <div className="flex items-center justify-between">
+            <Label htmlFor={key}>{label}</Label>
+            <Switch
+              id={key}
+              checked={value || false}
+              onCheckedChange={(checked) => handleContentUpdate(key, checked)}
+            />
+          </div>
+        );
+
+      case 'color':
+        return (
+          <div className="space-y-2">
+            <Label htmlFor={key}>{label}</Label>
+            <div className="flex items-center gap-2">
+              <Input
+                id={key}
+                type="color"
+                value={value || '#000000'}
+                onChange={(e) => handleContentUpdate(key, e.target.value)}
+                className="w-12 h-12 p-1"
+              />
+              <Input
+                type="text"
+                value={value || '#000000'}
+                onChange={(e) => handleContentUpdate(key, e.target.value)}
+                placeholder="#000000"
+                className="flex-1"
+              />
+            </div>
+          </div>
+        );
+
+      case 'range':
+        return (
+          <div className="space-y-2">
+            <Label htmlFor={key}>{label}</Label>
+            <div className="px-2">
+              <Slider
+                value={[value || defaultValue || 0]}
+                onValueChange={(values) => handleContentUpdate(key, values[0])}
+                max={max || 100}
+                min={min || 0}
+                step={step || 1}
+                className="w-full"
+              />
+            </div>
+            <div className="text-sm text-gray-500 text-center">
+              {value || defaultValue || 0}
+            </div>
+          </div>
+        );
+
+      case 'image':
+        return (
+          <div className="space-y-2">
+            <Label htmlFor={key}>{label}</Label>
+            <Input
+              id={key}
+              type="url"
+              value={value || ''}
+              onChange={(e) => handleContentUpdate(key, e.target.value)}
+              placeholder="Enter image URL"
+            />
+            {value && (
+              <div className="mt-2">
+                <img
+                  src={value}
+                  alt="Preview"
+                  className="w-full h-24 object-cover rounded border"
+                />
+              </div>
+            )}
           </div>
         );
 
@@ -231,28 +205,121 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
     }
   };
 
+  // Get properties schema based on block type
+  const getPropertiesSchema = () => {
+    switch (selectedBlock.type) {
+      case 'header':
+        return [
+          { key: 'title', label: 'Title', type: 'text' },
+          { key: 'subtitle', label: 'Subtitle', type: 'text' },
+          { key: 'level', label: 'Level', type: 'select', options: [
+            { value: 1, label: 'H1' },
+            { value: 2, label: 'H2' },
+            { value: 3, label: 'H3' },
+            { value: 4, label: 'H4' },
+          ]},
+          { key: 'textAlign', label: 'Text Align', type: 'select', options: [
+            { value: 'left', label: 'Left' },
+            { value: 'center', label: 'Center' },
+            { value: 'right', label: 'Right' },
+          ]},
+        ];
+      case 'text':
+        return [
+          { key: 'text', label: 'Text', type: 'textarea' },
+          { key: 'textAlign', label: 'Text Align', type: 'select', options: [
+            { value: 'left', label: 'Left' },
+            { value: 'center', label: 'Center' },
+            { value: 'right', label: 'Right' },
+          ]},
+        ];
+      case 'image':
+        return [
+          { key: 'src', label: 'Image URL', type: 'image' },
+          { key: 'alt', label: 'Alt Text', type: 'text' },
+          { key: 'width', label: 'Width', type: 'number' },
+          { key: 'height', label: 'Height', type: 'number' },
+        ];
+      case 'button':
+        return [
+          { key: 'text', label: 'Button Text', type: 'text' },
+          { key: 'href', label: 'Link URL', type: 'text' },
+          { key: 'variant', label: 'Variant', type: 'select', options: [
+            { value: 'primary', label: 'Primary' },
+            { value: 'secondary', label: 'Secondary' },
+            { value: 'outline', label: 'Outline' },
+            { value: 'ghost', label: 'Ghost' },
+          ]},
+          { key: 'size', label: 'Size', type: 'select', options: [
+            { value: 'sm', label: 'Small' },
+            { value: 'md', label: 'Medium' },
+            { value: 'lg', label: 'Large' },
+          ]},
+        ];
+      default:
+        return [];
+    }
+  };
+
   return (
-    <div className="h-full flex flex-col bg-white border-l">
-      <div className="p-4 border-b">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-medium">Propriedades</h3>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onDeleteBlock(selectedBlock.id)}
-            className="text-red-500 hover:text-red-700"
-          >
-            <Trash2 className="w-4 h-4" />
-          </Button>
+    <div className="h-full flex flex-col">
+      <div className="p-4 border-b bg-white">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h3 className="font-medium">Properties</h3>
+            <Badge variant="outline" className="mt-1">
+              {selectedBlock.type}
+            </Badge>
+          </div>
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onDuplicateBlock(selectedBlock.id)}
+            >
+              <Copy className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onDeleteBlock(selectedBlock.id)}
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
-        <p className="text-sm text-gray-500 mt-1">
-          {selectedBlock.type}
-        </p>
       </div>
 
-      <div className="flex-1 overflow-auto p-4">
-        <div className="space-y-4">
-          {schema.map((property) => renderPropertyField(property))}
+      <div className="flex-1 p-4 space-y-4 overflow-auto">
+        {getPropertiesSchema().map((property) => (
+          <div key={property.key}>
+            {renderPropertyEditor(property)}
+          </div>
+        ))}
+
+        {/* Additional properties for all blocks */}
+        <div className="pt-4 border-t">
+          <h4 className="font-medium mb-3">Layout & Spacing</h4>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Margin</Label>
+              <Input
+                type="text"
+                value={selectedBlock.properties?.margin || ''}
+                onChange={(e) => handlePropertyUpdate('margin', e.target.value)}
+                placeholder="e.g., 16px or 1rem"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Padding</Label>
+              <Input
+                type="text"
+                value={selectedBlock.properties?.padding || ''}
+                onChange={(e) => handlePropertyUpdate('padding', e.target.value)}
+                placeholder="e.g., 16px or 1rem"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
