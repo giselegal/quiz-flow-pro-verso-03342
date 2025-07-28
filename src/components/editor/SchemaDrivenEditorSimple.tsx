@@ -68,6 +68,13 @@ const SchemaDrivenEditorSimple: React.FC<SchemaDrivenEditorSimpleProps> = ({
         console.log('✅ Funil carregado:', currentFunnel);
         console.log(`📊 Total de páginas: ${currentFunnel.pages?.length || 0}`);
         
+        if (currentFunnel.pages) {
+          console.log('📄 Lista de páginas criadas:');
+          currentFunnel.pages.forEach((page: any, index: number) => {
+            console.log(`  ${index + 1}. ${page.title || page.name || 'Sem título'} (ID: ${page.id})`);
+          });
+        }
+        
         setFunnel(currentFunnel);
         setPages(currentFunnel.pages || []);
         
