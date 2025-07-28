@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form as AntForm, FormProps as AntFormProps, FormItemProps as AntFormItemProps } from 'antd';
-import { styled } from 'styled-components';
+import './Form.css';
 
 const StyledForm = styled(AntForm)`
   .ant-form-item-label > label {
