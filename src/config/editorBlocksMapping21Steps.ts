@@ -37,6 +37,7 @@ import ImageDisplayInlineBlock from '../components/editor/blocks/ImageDisplayInl
 import FormInputBlock from '../components/editor/blocks/FormInputBlock';
 import ButtonInlineBlock from '../components/editor/blocks/ButtonInlineBlock';
 import OptionsGridBlock from '../components/editor/blocks/OptionsGridBlock';
+import ProgressInlineBlock from '../components/editor/blocks/ProgressInlineBlock';
 
 // Componentes INLINE de resultado (etapa 20)
 import ResultHeaderInlineBlock from '../components/editor/blocks/ResultHeaderInlineBlock';
@@ -60,6 +61,7 @@ export const EDITOR_BLOCKS_MAP: Record<string, ComponentType<any>> = {
   'form-input': FormInputBlock,
   'button-inline': ButtonInlineBlock,
   'options-grid': OptionsGridBlock,
+  'progress-inline': ProgressInlineBlock,
   
   // ✅ COMPONENTES INLINE DE RESULTADO (ETAPA 20)
   'result-header-inline': ResultHeaderInlineBlock,
@@ -140,7 +142,12 @@ export const hasBlockComponent = (blockType: string): boolean => {
 
 // Helper para obter o componente de um tipo
 export const getBlockComponent = (blockType: string): ComponentType<any> | undefined => {
-  return EDITOR_BLOCKS_MAP[blockType];
+  const component = EDITOR_BLOCKS_MAP[blockType];
+  console.log(`🔍 getBlockComponent('${blockType}'):`, component ? '✅ Found' : '❌ Not found');
+  if (!component) {
+    console.log('📋 Available block types:', Object.keys(EDITOR_BLOCKS_MAP));
+  }
+  return component;
 };
 
 // Helper para obter o tipo de bloco de uma etapa específica

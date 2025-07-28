@@ -31,6 +31,9 @@ import { SchemaDrivenComponentsSidebar } from './sidebar/SchemaDrivenComponentsS
 import { DynamicPropertiesPanel } from './panels/DynamicPropertiesPanel';
 import DroppableCanvas from './dnd/DroppableCanvas';
 import { TestDeleteComponent } from './TestDeleteComponent';
+import EditorStatus from './EditorStatus';
+import QuickTest from './QuickTest';
+import DataDebug from './DataDebug';
 import { allBlockDefinitions } from '../../config/blockDefinitions';
 import { useLocation } from 'wouter';
 import { saveDiagnostic } from '../../utils/saveDiagnostic';
@@ -207,6 +210,24 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     }
   }, [redoStack, currentPage, updatePage, showToast]);
 
+
+  // Handlers de teste rápido
+  const handleAddTestBlock = useCallback(() => {
+    addBlock({
+      type: 'text',
+      properties: {
+        content: `Bloco de teste adicionado em ${new Date().toLocaleTimeString()}`,
+        fontSize: '16px',
+        color: '#333'
+      }
+    });
+    showToast('Bloco de teste adicionado!', 'success');
+  }, [addBlock, showToast]);
+
+  const handleTestSave = useCallback(() => {
+    saveFunnel(true);
+    showToast('Teste de salvamento iniciado!', 'info');
+  }, [saveFunnel, showToast]);
 
   // Handlers
   const handleComponentSelect = useCallback((type: string) => {
@@ -1087,6 +1108,30 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       {/* Render Toast */}
       {toast && (
         <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
+      )}
+
+      {/* Data Debug */}
+      <DataDebug 
+        funnel={funnel}
+        currentPage={currentPage}
+        pages={funnel?.pages || []}
+      />
+
+      {/* Editor Status */}
+      <EditorStatus 
+        funnel={funnel}
+        currentPage={currentPage}
+        isLoading={isLoading}
+        isSaving={isSaving}
+      />
+
+      {/* Quick Test */}
+      {currentPage && (
+        <QuickTest
+          onAddTestBlock={handleAddTestBlock}
+          onTestSave={handleTestSave}
+          blocksCount={currentPage.blocks?.length || 0}
+        />
       )}
 
       {/* Template Selector Modal */}

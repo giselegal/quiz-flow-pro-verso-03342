@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from 'react';
 import { useDrop } from 'react-dnd';
 import { Card, CardContent } from '../../ui/card';
@@ -112,6 +113,14 @@ const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
     const definition = getBlockDefinition(block.type);
     const isSelected = selectedBlockId === block.id;
     const isHidden = block.properties?.hidden;
+    
+    // ✅ Debug dos blocos sendo renderizados
+    console.log(`🎨 Renderizando bloco:`, {
+      id: block.id,
+      type: block.type,
+      hasDefinition: !!definition,
+      hasComponent: !!EDITOR_BLOCKS_MAP[block.type]
+    });
     
     // ✅ Tentar renderizar o componente real das 21 etapas
     const BlockComponent = EDITOR_BLOCKS_MAP[block.type];
