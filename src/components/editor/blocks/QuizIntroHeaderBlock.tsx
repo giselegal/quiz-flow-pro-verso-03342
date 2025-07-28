@@ -18,6 +18,15 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   disabled = false,
   className
 }) => {
+  // Verificação de segurança para evitar erro de undefined
+  if (!block || !block.properties) {
+    return (
+      <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
+        <p className="text-red-600">Erro: Bloco não encontrado ou propriedades indefinidas</p>
+      </div>
+    );
+  }
+
   const { 
     logoUrl = 'https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png',
     logoAlt = 'Logo',
