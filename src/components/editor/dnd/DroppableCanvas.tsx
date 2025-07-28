@@ -50,6 +50,13 @@ const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
   setShowRightSidebar,
   className = '',
 }) => {
+  // 🔍 DEBUG INICIAL
+  console.log('🎨 DroppableCanvas renderizado com:', {
+    blocksLength: blocks.length,
+    blocks: blocks.map(b => ({ id: b.id, type: b.type })),
+    mappingKeys: Object.keys(EDITOR_BLOCKS_MAP)
+  });
+
   const [draggedBlock, setDraggedBlock] = useState<string | null>(null);
 
   const [{ isOver }, drop] = useDrop(() => ({

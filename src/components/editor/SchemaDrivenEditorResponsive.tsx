@@ -34,6 +34,8 @@ import { TestDeleteComponent } from './TestDeleteComponent';
 import EditorStatus from './EditorStatus';
 import QuickTest from './QuickTest';
 import DataDebug from './DataDebug';
+import { BlockMappingDebug } from '../debug/BlockMappingDebug';
+import { SimpleBlockDebug } from '../debug/SimpleBlockDebug';
 import { allBlockDefinitions } from '../../config/blockDefinitions';
 import { useLocation } from 'wouter';
 import { saveDiagnostic } from '../../utils/saveDiagnostic';
@@ -1115,6 +1117,17 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         funnel={funnel}
         currentPage={currentPage}
         pages={funnel?.pages || []}
+      />
+
+      {/* Block Mapping Debug */}
+      <BlockMappingDebug 
+        blocks={currentPage?.blocks || []}
+      />
+
+      {/* Simple Block Debug - Console Logs */}
+      <SimpleBlockDebug 
+        blocks={currentPage?.blocks || []}
+        currentPageId={currentPageId || undefined}
       />
 
       {/* Editor Status */}
