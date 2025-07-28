@@ -1,146 +1,161 @@
-
 import React, { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
-import { QuizQuestion as QuizQuestionType, UserResponse } from '../types/quiz';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { QuizOption } from './quiz/QuizOption';
-import { highlightStrategicWords } from '@/utils/textHighlight';
-import { Button } from './ui/button';
-import { ArrowRight } from 'lucide-react';
-import { useQuestionScroll } from '@/hooks/useQuestionScroll';
-import { StaggeredOptionAnimations } from './effects/StaggeredOptionAnimations';
+import { motion } from 'framer-motion';
+import { UserResponse } from '@/types/quiz';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { ChevronRight, ChevronLeft } from 'lucide-react';
 
-interface QuizQuestionProps {
-  question: QuizQuestionType;
-  onAnswer: (response: UserResponse) => void;
-  currentAnswers: string[];
-  autoAdvance?: boolean;
-  hideTitle?: boolean;
-  showQuestionImage?: boolean;
-  isStrategicQuestion?: boolean; // Nova prop
+interface Option {
+  id: string;
+  text: string;
+  imageUrl?: string;
+  styleCategory?: string;
+  points?: number;
 }
 
-const QuizQuestion: React.FC<QuizQuestionProps> = ({
+interface Question {
+  id: string;
+  title: string;
+  type: 'text' | 'image' | 'both';
+  multiSelect: boolean;
+  options: Option[];
+}
+
+interface QuizQuestionProps {
+  question: Question;
+  onAnswer: (response: UserResponse) => void;
+  currentAnswers: string[];
+  showQuestionImage?: boolean;
+  autoAdvance?: boolean;
+}
+
+export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   question,
   onAnswer,
   currentAnswers,
-  autoAdvance = false,
-  hideTitle = false,
-  showQuestionImage = false,
-  isStrategicQuestion = false
+  showQuestionImage = true,
+  autoAdvance = true,
 }) => {
-  const isMobile = useIsMobile();
-  const hasImageOptions = question.type !== 'text';
-  const [imageError, setImageError] = useState(false);
-  const { scrollToQuestion } = useQuestionScroll();
+  const [selectedOptions, setSelectedOptions] = useState<string[]>(currentAnswers);
+  const [isAnswered, setIsAnswered] = useState(false);
 
   useEffect(() => {
-    scrollToQuestion(question.id);
-  }, [question.id, scrollToQuestion]);
+    setSelectedOptions(currentAnswers);
+    setIsAnswered(currentAnswers.length > 0);
+  }, [currentAnswers]);
 
   const handleOptionSelect = (optionId: string) => {
-    let newSelectedOptions: string[];
-    
-    if (currentAnswers.includes(optionId)) {
-      // Para questões estratégicas, não permitimos desmarcar a única opção selecionada
-      if (isStrategicQuestion) {
-        return; // Não permite desmarcar a opção em questões estratégicas
-      }
-      newSelectedOptions = currentAnswers.filter(id => id !== optionId);
-    } else {
-      if (isStrategicQuestion) {
-        // Para questões estratégicas, substituímos qualquer seleção anterior
-        newSelectedOptions = [optionId];
-      } else if (question.multiSelect && currentAnswers.length >= question.multiSelect) {
-        newSelectedOptions = [...currentAnswers.slice(1), optionId];
+    let newSelection: string[];
+
+    if (question.multiSelect) {
+      if (selectedOptions.includes(optionId)) {
+        newSelection = selectedOptions.filter((id) => id !== optionId);
       } else {
-        newSelectedOptions = [...currentAnswers, optionId];
+        newSelection = [...selectedOptions, optionId];
       }
+    } else {
+      newSelection = [optionId];
     }
-    
-    onAnswer({ 
-      questionId: question.id,
-      selectedOptions: newSelectedOptions,
-      timestamp: new Date()
-    });
+
+    setSelectedOptions(newSelection);
   };
-  
-  const getGridColumns = () => {
-    if (question.type === 'text') {
-      if (isStrategicQuestion) {
-        return "grid-cols-1 gap-3 px-2";
-      }
-      return isMobile ? "grid-cols-1 gap-3 px-2" : "grid-cols-1 gap-4 px-4";
+
+  const handleSubmit = () => {
+    if (selectedOptions.length > 0) {
+      setIsAnswered(true);
+
+      // Calculate total points
+      let totalPoints = 0;
+      question.options.forEach(option => {
+        if (selectedOptions.includes(option.id) && option.points) {
+          totalPoints += option.points;
+        }
+      });
+
+      const response: UserResponse = {
+        questionId: question.id,
+        optionIds: selectedOptions,
+        points: totalPoints
+      };
+
+      onAnswer(response);
     }
-    return isMobile ? "grid-cols-2 gap-1 px-0.5" : "grid-cols-2 gap-3 px-2";
   };
-  
+
+  useEffect(() => {
+    if (isAnswered && autoAdvance) {
+      // Auto-submit after a delay
+      const timer = setTimeout(() => {
+        handleSubmit();
+      }, 500); // Adjust the delay as needed
+
+      return () => clearTimeout(timer);
+    }
+  }, [isAnswered, autoAdvance, handleSubmit]);
+
+  const isOptionSelected = (optionId: string) => {
+    return selectedOptions.includes(optionId);
+  };
+
   return (
-    <div className={cn("w-full max-w-6xl mx-auto pb-5 relative", 
-      isMobile && "px-2", 
-      isStrategicQuestion && "max-w-3xl strategic-question",
-      question.type === 'text' && !isStrategicQuestion && "text-only-question"
-    )} id={`question-${question.id}`}>
-      {!hideTitle && (
-        <>
-          <h2 className={cn(
-            "font-playfair text-center mb-5 px-3 pt-3 text-brand-coffee font-semibold tracking-normal",
-            isMobile ? "text-base" : "text-base sm:text-xl",
-            isStrategicQuestion && "strategic-question-title text-[#432818] mb-6 font-bold whitespace-pre-line",
-            isStrategicQuestion && isMobile && "text-[1.25rem] sm:text-2xl", // Texto maior para questões estratégicas em mobile
-            question.type === 'text' && !isStrategicQuestion && ".text-only-question & " && "text-[1.15rem] sm:text-xl" // Texto maior para títulos em questões só texto
-          )}>
-            {highlightStrategicWords(question.title || question.question)}
-          </h2>
-          
-          {isStrategicQuestion && question.imageUrl && !imageError && showQuestionImage && (
-            <div className="w-full mb-6">
-              <img 
-                src={question.imageUrl} 
-                alt="Question visual" 
-                className="w-full max-w-md mx-auto rounded-lg shadow-sm" 
-                onError={() => {
-                  console.error(`Failed to load image: ${question.imageUrl}`);
-                  setImageError(true);
-                }}
-              />
-            </div>
-          )}
-        </>
-      )}
-      
-      <div className="w-full">
-        <StaggeredOptionAnimations 
-          questionId={question.id}
-          isVisible={true}
-          className={cn(
-            "grid h-full",
-            getGridColumns(),
-            hasImageOptions && "mb-4 relative",
-            isStrategicQuestion && "gap-4"
-          )}
-        >
-          {question.options.map((option, index) => (
-            <QuizOption 
-              key={option.id} 
-              option={option} 
-              isSelected={currentAnswers.includes(option.id)} 
-              onSelect={handleOptionSelect}
-              type={question.type === "strategic" || question.type === "normal" ? "both" : (question.type as 'text' | 'image' | 'both')}
-              questionId={question.id}
-              isDisabled={
-                (isStrategicQuestion && currentAnswers.length > 0 && !currentAnswers.includes(option.id)) || 
-                (!isStrategicQuestion && !currentAnswers.includes(option.id) && 
-                  currentAnswers.length >= (question.multiSelect || 1))
-              }
-              isStrategicOption={isStrategicQuestion}
+    <Card className="bg-white rounded-2xl shadow-xl overflow-hidden">
+      <div className="px-6 py-4">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">{question.title}</h2>
+
+        {showQuestionImage && (
+          <div className="mb-4">
+            {/* You might want to add a default image or handle missing images */}
+            <img
+              src="https://images.unsplash.com/photo-1517245386804-bb43f6536c3e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              alt="Question Image"
+              className="w-full h-auto object-cover rounded-md"
             />
+          </div>
+        )}
+
+        <div className="grid gap-4">
+          {question.options.map((option) => (
+            <motion.div
+              key={option.id}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`p-4 rounded-lg border cursor-pointer ${isOptionSelected(option.id)
+                ? 'bg-[#B89B7A]/20 border-[#B89B7A]'
+                : 'border-gray-200 hover:border-gray-400'
+                }`}
+              onClick={() => handleOptionSelect(option.id)}
+            >
+              <div className="flex items-center space-x-3">
+                {option.imageUrl && (
+                  <img
+                    src={option.imageUrl}
+                    alt={`Option: ${option.text}`}
+                    className="w-12 h-12 rounded object-cover"
+                  />
+                )}
+                <span className="text-gray-700">{option.text}</span>
+              </div>
+            </motion.div>
           ))}
-        </StaggeredOptionAnimations>
+        </div>
       </div>
-    </div>
+
+      <div className="bg-gray-50 px-6 py-4 flex justify-end items-center">
+        {question.multiSelect && (
+          <div className="mr-4 text-sm text-gray-600">
+            {selectedOptions.length} opção(ões) selecionada(s)
+          </div>
+        )}
+        <Button
+          onClick={handleSubmit}
+          disabled={isAnswered}
+          className="bg-[#B89B7A] hover:bg-[#A68B6A] text-white font-semibold py-2 px-4 rounded-full"
+        >
+          {isAnswered ? 'Avançando...' : 'Confirmar'}
+          <ChevronRight className="ml-2 h-4 w-4" />
+        </Button>
+      </div>
+    </Card>
   );
 };
-
-export { QuizQuestion };
-

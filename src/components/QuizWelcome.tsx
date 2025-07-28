@@ -1,80 +1,121 @@
-
-import { useState } from 'react';
-import { Input } from './ui/input';
-import { Button } from './ui/button';
-import { useAuth } from '../context/AuthContext';
-import Logo from './ui/logo';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/Button';
 
 interface QuizWelcomeProps {
-  onStart: () => void;
+  onStart: (name: string) => void;
+  title?: string;
+  description?: string;
 }
 
-export const QuizWelcome = ({ onStart }: QuizWelcomeProps) => {
-  const [name, setName] = useState('');
-  const { login } = useAuth();
+interface InputProps {
+  placeholder?: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
-  const handleStart = () => {
-    if (name.trim()) {
-      login(name.trim());
-      localStorage.setItem('userName', name.trim());
-      onStart();
+const Input: React.FC<InputProps> = ({ placeholder, value, onChange }) => (
+  <input
+    type="text"
+    placeholder={placeholder}
+    value={value}
+    onChange={onChange}
+    className="w-full p-4 border rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-[#B89B7A]"
+  />
+);
+
+const QuizWelcome: React.FC<QuizWelcomeProps> = ({ onStart, title, description }) => {
+  const [name, setName] = React.useState('');
+
+  const handleSubmit = () => {
+    if (name.trim() !== '') {
+      onStart(name);
+    } else {
+      alert('Por favor, digite seu nome.');
     }
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center">
-      <div className="w-full max-w-xl mx-auto flex flex-col items-center px-4 py-8">
-        {/* Logo and Progress Bar */}
-        <Logo className="h-16 mb-4" />
-        <div className="w-full max-w-[140px] h-[3px] bg-brand-gold mb-2" />
-        <div className="w-full max-w-[500px] h-[1px] bg-[#E5E2DE]" />
-
-        {/* Title */}
-        <h1 className="font-playfair text-3xl font-medium text-[#1A1818] text-center mt-8 mb-10">
-          Teste de Estilo Pessoal
-        </h1>
-
-        {/* Main Image */}
-        <div className="w-full max-w-2xl mb-12">
-          <img
-            src="/lovable-uploads/9f029fbb-cabe-48ef-9877-aad214e94c60.png"
-            alt="Mulheres estilosas"
-            className="w-full h-auto"
-          />
-        </div>
-
-        {/* Form */}
-        <div className="w-full max-w-md">
-          <form
-            onSubmit={e => { e.preventDefault(); handleStart(); }}
-            className="space-y-4"
-          >
-            <div className="space-y-2">
-              <label
-                htmlFor="name"
-                className="block text-[#1A1818] text-sm font-medium"
-              >
-                NOME <span className="text-brand-gold">*</span>
-              </label>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 flex items-center justify-center p-4"
+    >
+      <div className="max-w-4xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div className="relative">
+          <div className="absolute top-4 left-4 z-10">
+            <img
+              src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp"
+              alt="Logo da Marca Gisele"
+              className="h-12 w-auto object-contain"
+              width={120}
+              height={50}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              style={{ objectFit: 'contain', maxWidth: '100%', aspectRatio: '120 / 50' }}
+            />
+          </div>
+          
+          <div className="relative z-20 px-8 py-12 text-center">
+            <h1 className="text-4xl md:text-5xl font-playfair font-bold text-[#432818] mb-6 leading-tight">
+              {title || 'Descubra Seu Estilo Único'}
+            </h1>
+            
+            <p className="text-xl text-[#5D4A3A] mb-8 max-w-2xl mx-auto leading-relaxed">
+              {description || 'Um quiz personalizado para revelar seu estilo de moda e transformar sua forma de se vestir'}
+            </p>
+            
+            <div className="mb-6">
               <Input
-                id="name"
+                placeholder="Digite seu nome"
                 value={name}
-                onChange={e => setName(e.target.value)}
-                placeholder="Digite seu nome aqui..."
-                className="w-full h-12 px-4 bg-[#F5F5F5] border-none rounded-md text-[#1A1818] placeholder:text-[#8E9196]"
+                onChange={(e) => setName(e.target.value)}
               />
             </div>
             
             <Button
-              type="submit"
-              disabled={!name.trim()}
-              className="w-full h-12 bg-[#C1A57B] hover:bg-[#B89B7A] text-white font-medium rounded-md transition-colors"
+              variant="primary"
+              size="large"
+              fullWidth={false}
+              onClick={handleSubmit}
+              className="bg-[#B89B7A] hover:bg-[#A68B6A] text-white font-semibold py-4 px-8 rounded-full text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             >
-              Continuar
+              Iniciar Quiz Agora
             </Button>
-          </form>
+          </div>
+        </div>
+        
+        <div className="bg-gradient-to-r from-[#B89B7A] to-[#A68B6A] px-8 py-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between text-white">
+            <div className="flex items-center space-x-4 mb-4 sm:mb-0">
+              <img
+                src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp"
+                alt="Logo"
+                className="h-10 w-auto object-contain"
+                width={80}
+                height={40}
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+                id="footer-logo"
+              />
+              <div>
+                <p className="font-medium">Gisele Oliveira</p>
+                <p className="text-sm opacity-90">Consultora de Estilo</p>
+              </div>
+            </div>
+            
+            <div className="text-center sm:text-right">
+              <p className="text-sm opacity-90">Tempo estimado:</p>
+              <p className="font-medium">5-7 minutos</p>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
+
+export default QuizWelcome;
