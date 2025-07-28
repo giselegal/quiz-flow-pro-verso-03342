@@ -21,7 +21,7 @@ export const EnhancedEditor: React.FC<EnhancedEditorProps> = ({
 
   // Convert EditorBlock to SimpleComponent for the PropertiesPanel
   const convertToSimpleComponent = (block: EditorBlock): SimpleComponent => {
-    const data = { ...block.content };
+    const data = { ...block.content } as SimpleComponent['data'];
     
     // Convert string dimensions to numbers for SimpleComponent, handling undefined values
     if (typeof data.height === 'string') {

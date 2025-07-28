@@ -22,6 +22,7 @@ export interface Block {
   type: string;
   content: Record<string, any>;
   order?: number;
+  properties?: Record<string, any>;
 }
 
 export interface BlockComponentProps {
@@ -31,6 +32,8 @@ export interface BlockComponentProps {
   onUpdate?: (updates: any) => void;
   onDelete?: () => void;
   className?: string;
+  isEditing?: boolean;
+  onPropertyChange?: (key: string, value: any) => void;
 }
 
 export interface CountdownTimerProps {

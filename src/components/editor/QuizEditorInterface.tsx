@@ -191,7 +191,7 @@ const QuizEditorInterface: React.FC = () => {
     } catch (error) {
       toast({
         title: 'Erro ao Salvar',
-        description: `Erro: ${error.message}`,
+        description: `Erro: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
         variant: 'destructive',
       });
     }
