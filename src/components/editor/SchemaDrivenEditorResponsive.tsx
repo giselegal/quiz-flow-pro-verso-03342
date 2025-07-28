@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import {
   FileText,
   Menu,
@@ -564,7 +566,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   }
 
   return (
-    <div className={`h-screen flex flex-col overflow-hidden bg-gradient-to-br from-[#fffaf7] via-[#F3E8E6]/30 to-[#fffaf7]/50`}>
+    <DndProvider backend={HTML5Backend}>
+      <div className={`h-screen flex flex-col overflow-hidden bg-gradient-to-br from-[#fffaf7] via-[#F3E8E6]/30 to-[#fffaf7]/50`}>
       {/* Header Responsivo - Redesigned com cores da marca */}
       <div className="h-16 bg-white/95 backdrop-blur-sm border-b border-[#B89B7A]/20 shadow-sm flex items-center justify-between px-6">
         <div className="flex items-center space-x-6 min-w-0 flex-1">
