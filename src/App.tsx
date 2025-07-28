@@ -34,6 +34,7 @@ const DashboardPage = lazy(() => import("./pages/admin/DashboardPage"));
 // Editor Principal - Usando versão responsiva completa
 const SchemaDrivenEditorResponsive = lazy(() => import("./components/editor/SchemaDrivenEditorResponsive"));
 const SimpleEditor = lazy(() => import("./components/editor/SimpleEditor"));
+const TestSimpleEditor = lazy(() => import("./components/editor/TestSimpleEditor"));
 const DragDropTestPage = lazy(() => import("./pages/DragDropTestPage"));
 const FunnelComponentsDemo = lazy(() => import("./pages/FunnelComponentsDemo"));
 const ModularComponentsDemo = lazy(() => import("./pages/ModularComponentsDemo"));
@@ -97,6 +98,12 @@ const App = () => {
                 <Route
                   path="/editor/:id"
                   component={({ params }: any) => <SchemaDrivenEditorResponsive funnelId={params.id} />}
+                />
+                
+                {/* Editor de Teste Simples */}
+                <Route
+                  path="/test-editor"
+                  component={TestSimpleEditor}
                 />
                 
                 {/* Editor Simples para Teste */}
