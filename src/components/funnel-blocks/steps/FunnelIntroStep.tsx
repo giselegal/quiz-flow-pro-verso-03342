@@ -1,9 +1,10 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import { FunnelStepProps } from '@/types/funnel';
 import { useFunnelNavigation } from '../hooks/useFunnelNavigation';
-import { FunnelProgressBar } from '../shared/FunnelProgressBar';
 
 /**
  * FunnelIntroStep - Componente para a página de introdução do funil
@@ -109,15 +110,24 @@ const FunnelIntroStep: React.FC<FunnelIntroStepProps> = ({
           {buttonText}
         </Button>
         
-        {/* Barra de progresso */}
+        {/* Barra de progresso com Shadcn UI */}
         {showProgressBar && (
-          <div className="w-full mt-12 max-w-lg">
-            <FunnelProgressBar 
-              currentStep={stepNumber} 
-              totalSteps={totalSteps}
-              showText
-            />
-          </div>
+          <Card className="w-full mt-12 max-w-lg bg-white/90 backdrop-blur-sm">
+            <CardContent className="p-4">
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm text-gray-600">
+                  <span>Progresso</span>
+                  <span>{stepNumber} de {totalSteps}</span>
+                </div>
+                <Progress 
+                  percent={(stepNumber / totalSteps) * 100} 
+                  className="h-2"
+                  strokeColor="#B89B7A"
+                  showInfo={false}
+                />
+              </div>
+            </CardContent>
+          </Card>
         )}
         
         {/* Indicador de edição */}
