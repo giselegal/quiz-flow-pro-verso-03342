@@ -1,38 +1,7 @@
+
 import React from 'react';
 import { Button as AntButton } from 'antd';
 import type { ButtonProps as AntButtonProps } from 'antd';
-import { styled } from 'styled-components';
-
-const StyledButton = styled(AntButton)`
-  &.ant-btn {
-    border-radius: var(--radius);
-    font-weight: 500;
-    transition: all 0.2s ease;
-
-    &-primary {
-      background: var(--brand-primary);
-      border-color: var(--brand-primary);
-      color: var(--primary-foreground);
-
-      &:hover {
-        background: var(--brand-accent);
-        border-color: var(--brand-accent);
-      }
-    }
-
-    &-default {
-      border-color: var(--border);
-      background-color: var(--background);
-      color: var(--foreground);
-
-      &:hover {
-        border-color: var(--brand-primary);
-        color: var(--brand-primary);
-        background-color: var(--accent);
-      }
-    }
-  }
-`;
 
 export interface ButtonProps extends Omit<AntButtonProps, 'size' | 'type'> {
   variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'ghost' | 'link';
@@ -86,36 +55,37 @@ export const Button: React.FC<ButtonProps> = ({
     }
   };
 
-  // Cores para variantes especiais
-  const getVariantStyles = (variant: ButtonProps['variant']) => {
+  // Classes customizadas para diferentes variants
+  const getVariantClasses = (variant: ButtonProps['variant']) => {
+    const baseClasses = 'font-medium transition-all duration-200';
+    
     switch (variant) {
       case 'success':
-        return {
-          style: { backgroundColor: '#52c41a', borderColor: '#52c41a' }
-        };
+        return `${baseClasses} bg-green-500 border-green-500 hover:bg-green-600 hover:border-green-600`;
       case 'warning':
-        return {
-          style: { backgroundColor: '#faad14', borderColor: '#faad14' }
-        };
+        return `${baseClasses} bg-yellow-500 border-yellow-500 hover:bg-yellow-600 hover:border-yellow-600`;
       case 'danger':
-        return {
-          danger: true
-        };
+        return `${baseClasses} bg-red-500 border-red-500 hover:bg-red-600 hover:border-red-600`;
+      case 'ghost':
+        return `${baseClasses} bg-transparent border-gray-300 text-gray-700 hover:border-blue-500 hover:text-blue-500`;
       default:
-        return {};
+        return baseClasses;
     }
   };
 
-  const variantStyles = getVariantStyles(variant);
+  const combinedClassName = [
+    getVariantClasses(variant),
+    fullWidth ? 'w-full' : '',
+    className
+  ].filter(Boolean).join(' ');
 
   return (
     <AntButton
       type={getAntType(variant)}
       size={getAntSize(size)}
       loading={loading}
+      className={combinedClassName}
       block={fullWidth}
-      className={className}
-      {...variantStyles}
       {...props}
     >
       {children}
