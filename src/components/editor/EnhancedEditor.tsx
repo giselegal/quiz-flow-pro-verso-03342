@@ -24,12 +24,14 @@ export const EnhancedEditor: React.FC<EnhancedEditorProps> = ({
     const data = { ...block.content };
     
     // Convert string dimensions to numbers for SimpleComponent
-    if (typeof data.height === 'string' && !isNaN(Number(data.height))) {
-      data.height = Number(data.height);
+    if (typeof data.height === 'string') {
+      const numHeight = parseFloat(data.height);
+      data.height = isNaN(numHeight) ? undefined : numHeight;
     }
     
-    if (typeof data.width === 'string' && !isNaN(Number(data.width))) {
-      data.width = Number(data.width);
+    if (typeof data.width === 'string') {
+      const numWidth = parseFloat(data.width);
+      data.width = isNaN(numWidth) ? undefined : numWidth;
     }
 
     return {
