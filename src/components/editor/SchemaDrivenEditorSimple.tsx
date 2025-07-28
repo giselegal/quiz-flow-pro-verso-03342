@@ -15,9 +15,7 @@ import {
   Eye,
   Plus,
   Upload,
-  ArrowLeft,
-  Home
-} from 'lucide-react';
+  ArrowLeft} from 'lucide-react';
 import { SchemaDrivenComponentsSidebar } from './sidebar/SchemaDrivenComponentsSidebar';
 import { DynamicPropertiesPanel } from './panels/DynamicPropertiesPanel';
 import DroppableCanvas from './dnd/DroppableCanvas';

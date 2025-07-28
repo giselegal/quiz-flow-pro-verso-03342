@@ -699,10 +699,13 @@ class SchemaDrivenFunnelService {
     // USAR ID FIXO PARA EVITAR DUPLICAÇÃO!
     const FIXED_FUNNEL_ID = 'default-quiz-funnel-21-steps';
     
+    console.log('🏗️ [DEBUG] Criando funil com componentes INDIVIDUALIZADOS...');
+    console.log('📊 [DEBUG] Componentes disponíveis:', Object.keys(require('../config/editorBlocksMapping21Steps').EDITOR_BLOCKS_MAP));
+    
     return {
       id: FIXED_FUNNEL_ID, // ID fixo para evitar duplicação
       name: 'Quiz CaktoQuiz - Descubra Seu Estilo',
-      description: 'Funil completo para descoberta do estilo pessoal - 21 etapas modulares',
+      description: 'Funil completo para descoberta do estilo pessoal - 21 etapas com componentes individualizados',
       theme: 'caktoquiz',
       isPublished: false,
       pages: this.createModularPages(),
@@ -800,8 +803,7 @@ class SchemaDrivenFunnelService {
     });
 
     // ==========================================
-    // ETAPAS 2-11: QUESTÕES PRINCIPAIS (10 QUESTÕES)
-    // Componentes: quiz-intro-header + heading-inline + text-inline + options-grid + button-inline
+    // ETAPAS 2-11: QUESTÕES PRINCIPAIS - COMPONENTES INDIVIDUALIZADOS
     // ==========================================
     REAL_QUIZ_QUESTIONS.forEach((questionData, index) => {
       console.log(`🎯 [ES7+] Criando questão ${index + 1}:`, questionData.title);
@@ -814,82 +816,26 @@ class SchemaDrivenFunnelService {
         type: 'question',
         order: index + 2,
         blocks: [
-          // 1. Cabeçalho modular com logo e progresso
           {
-            id: `question-${index + 1}-header`,
-            type: 'quiz-intro-header',
+            id: `question-${index + 1}-page`,
+            type: 'quiz-question-page',
             properties: {
-              logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-              logoAlt: 'Logo Gisele Galvão',
-              logoWidth: 96,
-              logoHeight: 96,
-              progressValue: currentProgress,
-              progressMax: 100,
-              showBackButton: true
-            }
-          },
-          // 2. Título da questão (componente inline)
-          {
-            id: `question-${index + 1}-title`,
-            type: 'heading-inline',
-            properties: {
-              content: questionData.title,
-              level: 'h2',
-              fontSize: 'text-2xl',
-              fontWeight: 'font-bold',
-              textAlign: 'text-center',
-              color: '#432818',
-              marginBottom: 8
-            }
-          },
-          // 3. Indicador de progresso textual (componente inline)
-          {
-            id: `question-${index + 1}-progress-label`,
-            type: 'text-inline',
-            properties: {
-              content: `Questão ${index + 1} de 10`,
-              fontSize: 'text-sm',
-              textAlign: 'text-center',
-              color: '#6B7280',
-              marginBottom: 24
-            }
-          },
-          // 4. Grid de opções responsivo (máx 2 colunas)
-          {
-            id: `question-${index + 1}-options`,
-            type: 'options-grid',
-            properties: {
+              question: questionData.title,
               options: questionData.options.map(opt => ({
                 id: opt.id,
                 text: opt.text,
-                value: opt.value || opt.id,
-                imageUrl: (opt as any).imageUrl || undefined,
-                category: (opt as any).category || opt.value || opt.id
+                value: opt.value || opt.id
               })),
-              columns: questionData.type === 'both' ? 2 : 1,
-              showImages: questionData.type === 'both' || questionData.type === undefined,
-              imageSize: 'large',
-              multipleSelection: questionData.multipleSelection || false,
+              questionNumber: index + 1,
+              totalQuestions: REAL_QUIZ_QUESTIONS.length,
+              allowMultiple: questionData.multipleSelection || false,
               maxSelections: questionData.maxSelections || 1,
-              minSelections: 1,
-              validationMessage: `Selecione ${questionData.maxSelections || 1} opç${(questionData.maxSelections || 1) > 1 ? 'ões' : 'ão'}`,
-              gridGap: 16,
-              responsiveColumns: true // Força máximo 2 colunas
-            }
-          },
-          // 5. Botão continuar modular (componente inline)
-          {
-            id: `question-${index + 1}-continue`,
-            type: 'button-inline',
-            properties: {
-              text: 'Continuar',
-              variant: 'primary',
-              size: 'large',
-              fullWidth: true,
-              backgroundColor: '#B89B7A',
-              textColor: '#ffffff',
-              disabled: true,
-              requiresValidSelection: true
+              backgroundColor: '#fffaf7',
+              textColor: '#432818',
+              showProgress: true,
+              buttonText: index === REAL_QUIZ_QUESTIONS.length - 1 ? 'Continuar para Análise' : 'Próxima Pergunta',
+              showBackButton: index > 0,
+              imageUrl: (questionData as any).imageUrl || ''
             }
           }
         ],
@@ -1805,8 +1751,12 @@ class SchemaDrivenFunnelService {
         blocks: [],
         order: 1,
         settings: {
-          showProgressBar: true,
-          backgroundColor: '#FFFFFF'
+          showProgress: true,
+          progressValue: 0,
+          backgroundColor: '#FFFFFF',
+          textColor: '#432818',
+          maxWidth: 'max-w-4xl',
+          padding: 'p-6'
         }
       }];
 
