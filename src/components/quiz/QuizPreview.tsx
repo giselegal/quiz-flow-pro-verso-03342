@@ -1,47 +1,50 @@
 
 import React from 'react';
-import { ArrowLeft, Play } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
-import { Card } from '@/components/ui/Card';
-import type { Quiz } from '../../types/supabase';
+import { Button } from '@/components/ui/button';
 
-interface QuizPreviewProps {
-  quiz: Quiz;
-  onBack: () => void;
-}
-
-export const QuizPreview: React.FC<QuizPreviewProps> = ({ quiz, onBack }) => {
+const QuizPreview: React.FC = () => {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Button onClick={onBack} variant="ghost" className="mb-4">
-        <ArrowLeft className="mr-2 h-4 w-4" />
-        Voltar
-      </Button>
-
-      <Card className="p-6">
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold">{quiz.title}</h1>
-            <Badge variant="secondary">Preview</Badge>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold text-[#432818] mb-6">Pré-visualização do Quiz</h1>
+      
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-white rounded-lg shadow-sm border border-[#B89B7A]/20 p-6">
+          <h2 className="text-xl font-semibold text-[#432818] mb-4">
+            Descubra Seu Estilo Pessoal
+          </h2>
+          
+          <div className="mb-6">
+            <div className="w-full bg-[#B89B7A]/20 rounded-full h-2 mb-4">
+              <div className="bg-[#B89B7A] h-2 rounded-full" style={{ width: '25%' }}></div>
+            </div>
+            <p className="text-sm text-[#8F7A6A] text-center">Pergunta 1 de 4</p>
           </div>
           
-          <p className="text-gray-600">{quiz.description}</p>
-          
-          <div className="space-y-2">
-            <p><strong>Categoria:</strong> {quiz.category}</p>
-            <p><strong>Dificuldade:</strong> {quiz.difficulty || 'Não definida'}</p>
-            <p><strong>Status:</strong> {quiz.is_published ? 'Publicado' : 'Rascunho'}</p>
+          <div className="mb-6">
+            <h3 className="text-lg font-medium text-[#432818] mb-4">
+              Qual dessas cores mais representa você?
+            </h3>
+            
+            <div className="grid grid-cols-2 gap-3">
+              {['Azul sereno', 'Vermelho vibrante', 'Verde natural', 'Dourado elegante'].map((option, index) => (
+                <button
+                  key={index}
+                  className="p-3 text-left border border-[#B89B7A]/30 rounded-lg hover:bg-[#B89B7A]/10 transition-colors"
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
           </div>
           
-          <div className="pt-4">
-            <Button>
-              <Play className="mr-2 h-4 w-4" />
-              Iniciar Quiz
-            </Button>
+          <div className="flex justify-between">
+            <Button variant="outline">Anterior</Button>
+            <Button>Próxima</Button>
           </div>
         </div>
-      </Card>
+      </div>
     </div>
   );
 };
+
+export default QuizPreview;
