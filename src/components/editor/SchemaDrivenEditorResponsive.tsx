@@ -592,28 +592,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   }
 
   return (
-<<<<<<< HEAD
-    <DndProvider
-      blocks={currentPage?.blocks || []}
-      onBlocksReorder={handleBlocksReorder}
-      onBlockAdd={handleBlockAdd}
-      onBlockSelect={(blockId) => setSelectedBlock(blockId)}
-      selectedBlockId={selectedBlockId || undefined}
-      onBlockUpdate={handleBlockUpdate}
-    >
-      <div className={`h-screen flex flex-col overflow-hidden bg-gray-50 ${className}`}>
-        {/* Header Responsivo */}
-        <div className="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4">
-          <div className="flex items-center space-x-4 min-w-0 flex-1">
-            {/* Info do funil */}
-            <div className="flex items-center space-x-2 min-w-0">
-              <FileText className="w-5 h-5 text-gray-500 flex-shrink-0" />
-              <span className="font-medium text-gray-800 truncate">{funnel.name}</span>
-              <Badge variant={funnel.isPublished ? 'default' : 'secondary'} className="text-xs hidden sm:inline-flex">
-                {funnel.isPublished ? 'Publicado' : 'Rascunho'}
-              </Badge>
-            </div>
-=======
     <DirectionProvider dir="ltr">
       <DndProvider backend={HTML5Backend}>
         <div className={`h-screen flex flex-col overflow-hidden bg-gradient-to-br from-[#fffaf7] via-[#F3E8E6]/30 to-[#fffaf7]/50`}>
@@ -630,7 +608,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
             <ArrowLeft className="w-4 h-4" />
             <span className="hidden sm:inline font-medium">Dashboard</span>
           </Button>
->>>>>>> main
 
           {/* Separador */}
           <div className="h-8 w-px bg-gradient-to-b from-transparent via-[#B89B7A]/30 to-transparent" />
@@ -1106,9 +1083,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           </div>
         )}
       </div>
-<<<<<<< HEAD
-    </DndProvider>
-=======
 
       {/* Render Toast */}
       {toast && (
@@ -1165,7 +1139,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         </div>
       </DndProvider>
     </DirectionProvider>
->>>>>>> main
   );
 };
 
