@@ -8,10 +8,11 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { ScrollArea } from '../ui/scroll-area';
 import { Badge } from '../ui/badge';
+import { blockDefinitions } from '../../config/blockDefinitions';
 import { 
   Search, Grid3X3, Type, Image, Square as ButtonIcon, 
   BarChart3, AlertCircle, Star, Calendar, Clock,
-  ChevronDown, Package, Sparkles
+  ChevronDown, Package, Sparkles, Shield, Quote, Play, Code
 } from 'lucide-react';
 import {
   Collapsible,
@@ -47,106 +48,92 @@ interface ComponentsPanelProps {
   layout?: 'vertical' | 'horizontal';
 }
 
-const COMPONENT_CATEGORIES: ComponentCategory[] = [
-  {
-    id: 'basic',
-    name: 'Básicos',
-    icon: <Package className="w-4 h-4" />,
-    isExpanded: true,
-    items: [
-      {
-        id: 'text',
-        name: 'Texto',
-        icon: <Type className="w-4 h-4" />,
-        category: 'basic',
-        description: 'Bloco de texto simples'
-      },
-      {
-        id: 'heading',
-        name: 'Título',
-        icon: <Type className="w-4 h-4" />,
-        category: 'basic',
-        description: 'Cabeçalho ou título'
-      },
-      {
-        id: 'button',
-        name: 'Botão',
-        icon: <ButtonIcon className="w-4 h-4" />,
-        category: 'basic',
-        description: 'Botão interativo'
-      },
-      {
-        id: 'image',
-        name: 'Imagem',
-        icon: <Image className="w-4 h-4" />,
-        category: 'basic',
-        description: 'Imagem ou mídia'
-      }
-    ]
-  },
-  {
-    id: 'quiz',
-    name: 'Quiz Components',
-    icon: <BarChart3 className="w-4 h-4" />,
-    isExpanded: true,
-    items: [
-      {
-        id: 'quiz-question',
-        name: 'Questão',
-        icon: <AlertCircle className="w-4 h-4" />,
-        category: 'quiz',
-        description: 'Pergunta do quiz',
-        isNew: true
-      },
-      {
-        id: 'quiz-options',
-        name: 'Opções',
-        icon: <Grid3X3 className="w-4 h-4" />,
-        category: 'quiz',
-        description: 'Grade de opções de resposta'
-      },
-      {
-        id: 'quiz-progress',
-        name: 'Progresso',
-        icon: <BarChart3 className="w-4 h-4" />,
-        category: 'quiz',
-        description: 'Barra de progresso do quiz'
-      },
-      {
-        id: 'quiz-result',
-        name: 'Resultado',
-        icon: <Star className="w-4 h-4" />,
-        category: 'quiz',
-        description: 'Exibição de resultado',
-        isPro: true
-      }
-    ]
-  },
-  {
-    id: 'advanced',
-    name: 'Avançados',
-    icon: <Sparkles className="w-4 h-4" />,
-    isExpanded: false,
-    items: [
-      {
-        id: 'countdown',
-        name: 'Countdown',
-        icon: <Clock className="w-4 h-4" />,
-        category: 'advanced',
-        description: 'Timer regressivo',
-        isNew: true
-      },
-      {
-        id: 'calendar',
-        name: 'Calendário',
-        icon: <Calendar className="w-4 h-4" />,
-        category: 'advanced',
-        description: 'Seletor de data',
-        isPro: true
-      }
-    ]
+// Mapeamento de ícones para os componentes
+const iconMap: { [key: string]: React.ReactNode } = {
+  'Type': <Type className="w-4 h-4" />,
+  'Image': <Image className="w-4 h-4" />,
+  'Shield': <Shield className="w-4 h-4" />,
+  'Quote': <Quote className="w-4 h-4" />,
+  'Play': <Play className="w-4 h-4" />,
+  'Code': <Code className="w-4 h-4" />,
+  'ArrowRight': <ButtonIcon className="w-4 h-4" />,
+  'CheckCircle': <AlertCircle className="w-4 h-4" />,
+  'Target': <BarChart3 className="w-4 h-4" />,
+  'Star': <Star className="w-4 h-4" />,
+  'Clock': <Clock className="w-4 h-4" />,
+  'Calendar': <Calendar className="w-4 h-4" />,
+  'Grid3X3': <Grid3X3 className="w-4 h-4" />,
+  'Package': <Package className="w-4 h-4" />,
+  'Sparkles': <Sparkles className="w-4 h-4" />
+};
+
+// Função para gerar categorias e componentes dinamicamente a partir do blockDefinitions
+const generateComponentCategories = (): ComponentCategory[] => {
+  // Agrupar por categoria
+  const categoriesMap = new Map<string, ComponentItem[]>();
+  
+  blockDefinitions.forEach(block => {
+    const category = block.category || 'Outros';
+    if (!categoriesMap.has(category)) {
+      categoriesMap.set(category, []);
+    }
+    
+    const icon = iconMap[block.icon] || <Package className="w-4 h-4" />;
+    
+    categoriesMap.get(category)!.push({
+      id: block.type,
+      name: block.name,
+      icon,
+      category,
+      description: block.description,
+      isNew: ['guarantee', 'testimonials', 'quiz-start-page', 'script'].includes(block.type)
+    });
+  });
+
+  // Converter Map para array de categorias
+  const categories: ComponentCategory[] = [];
+  const categoryOrder = ['Básicos', 'Quiz', 'Vendas', 'Layout', 'Avançados', 'Inline'];
+  
+  // Adicionar categorias na ordem especificada
+  categoryOrder.forEach(categoryName => {
+    if (categoriesMap.has(categoryName)) {
+      categories.push({
+        id: categoryName.toLowerCase().replace(/\s+/g, '-'),
+        name: categoryName,
+        icon: getCategoryIcon(categoryName),
+        items: categoriesMap.get(categoryName)!,
+        isExpanded: ['Básicos', 'Quiz', 'Vendas'].includes(categoryName)
+      });
+    }
+  });
+  
+  // Adicionar categorias restantes
+  categoriesMap.forEach((items, categoryName) => {
+    if (!categoryOrder.includes(categoryName)) {
+      categories.push({
+        id: categoryName.toLowerCase().replace(/\s+/g, '-'),
+        name: categoryName,
+        icon: <Package className="w-4 h-4" />,
+        items,
+        isExpanded: false
+      });
+    }
+  });
+  
+  return categories;
+};
+
+// Função para obter ícone da categoria
+const getCategoryIcon = (categoryName: string): React.ReactNode => {
+  switch (categoryName) {
+    case 'Básicos': return <Package className="w-4 h-4" />;
+    case 'Quiz': return <BarChart3 className="w-4 h-4" />;
+    case 'Vendas': return <Star className="w-4 h-4" />;
+    case 'Layout': return <Grid3X3 className="w-4 h-4" />;
+    case 'Avançados': return <Sparkles className="w-4 h-4" />;
+    default: return <Package className="w-4 h-4" />;
   }
-];
+};
 
 export const ComponentsPanel: React.FC<ComponentsPanelProps> = ({
   onComponentSelect,
@@ -156,12 +143,19 @@ export const ComponentsPanel: React.FC<ComponentsPanelProps> = ({
   className,
   layout = 'vertical'
 }) => {
-  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>(
-    COMPONENT_CATEGORIES.reduce((acc, cat) => ({
+  // Gerar categorias dinamicamente a partir do blockDefinitions
+  const COMPONENT_CATEGORIES = useMemo(() => generateComponentCategories(), []);
+
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
+
+  // Inicializar categorias expandidas
+  React.useEffect(() => {
+    const initialExpanded = COMPONENT_CATEGORIES.reduce((acc, cat) => ({
       ...acc,
       [cat.id]: cat.isExpanded || false
-    }), {})
-  );
+    }), {});
+    setExpandedCategories(initialExpanded);
+  }, [COMPONENT_CATEGORIES]);
 
   const [internalSearchTerm, setInternalSearchTerm] = useState(searchTerm);
 
@@ -177,7 +171,7 @@ export const ComponentsPanel: React.FC<ComponentsPanelProps> = ({
         item.description?.toLowerCase().includes(term)
       )
     })).filter(category => category.items.length > 0);
-  }, [searchTerm, internalSearchTerm, onSearchChange]);
+  }, [searchTerm, internalSearchTerm, onSearchChange, COMPONENT_CATEGORIES]);
 
   const toggleCategory = (categoryId: string) => {
     setExpandedCategories(prev => ({

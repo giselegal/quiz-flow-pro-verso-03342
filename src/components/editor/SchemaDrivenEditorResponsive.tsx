@@ -524,30 +524,38 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           <ResizablePanelGroup direction="horizontal" className="flex-1">
           {/* Steps Panel */}
           <ResizablePanel defaultSize={18} minSize={15} maxSize={25}>
-            <StepsPanel
-              steps={steps}
-              selectedStepId={selectedStepId}
-              onStepSelect={handleStepSelect}
-              onStepAdd={handleStepAdd}
-              onStepUpdate={handleStepUpdate}
-              onStepDelete={handleStepDelete}
-              onStepDuplicate={handleStepDuplicate}
-              onStepReorder={handleStepReorder}
-              className="h-full border-r border-gray-200"
-            />
+            <div className="h-full border-r border-gray-200 overflow-hidden">
+              <ScrollArea className="h-full">
+                <StepsPanel
+                  steps={steps}
+                  selectedStepId={selectedStepId}
+                  onStepSelect={handleStepSelect}
+                  onStepAdd={handleStepAdd}
+                  onStepUpdate={handleStepUpdate}
+                  onStepDelete={handleStepDelete}
+                  onStepDuplicate={handleStepDuplicate}
+                  onStepReorder={handleStepReorder}
+                  className="p-2"
+                />
+              </ScrollArea>
+            </div>
           </ResizablePanel>
 
           <ResizableHandle withHandle />
 
           {/* Components Panel */}
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-            <ComponentsPanel
-              onComponentSelect={handleComponentSelect}
-              searchTerm={searchTerm}
-              onSearchChange={setSearchTerm}
-              className="h-full border-r border-gray-200"
-              layout="vertical"
-            />
+            <div className="h-full border-r border-gray-200 overflow-hidden">
+              <ScrollArea className="h-full">
+                <ComponentsPanel
+                  onComponentSelect={handleComponentSelect}
+                  searchTerm={searchTerm}
+                  onSearchChange={setSearchTerm}
+                  className="p-2"
+                  layout="vertical"
+                />
+              </ScrollArea>
+            </div>
           </ResizablePanel>
 
           <ResizableHandle withHandle />
