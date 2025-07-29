@@ -289,39 +289,7 @@ export const ComponentsPanel: React.FC<ComponentsPanelProps> = ({
       
       <CardContent className="flex-1 p-0">
         <ScrollArea className="h-full px-4">
-          {/* Botão para carregar Template das 21 Etapas */}
-          {onTemplateLoad && (
-            <div className="mb-4 pt-2">
-              <Button
-                onClick={() => onTemplateLoad('quiz-21-etapas')}
-                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-3 px-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
-              >
-                <div className="flex items-center space-x-2">
-                  <Sparkles className="w-5 h-5" />
-                  <div className="text-left">
-                    <div className="text-sm font-semibold">🚀 Carregar 21 Etapas</div>
-                    <div className="text-xs opacity-90">Funil completo de quiz</div>
-                  </div>
-                </div>
-              </Button>
-
-              {/* Botão para carregar versão individualizada */}
-              <Button
-                onClick={() => onTemplateLoad && onTemplateLoad('quiz-21-etapas-individualizado')}
-                className="w-full h-auto p-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white border-0 shadow-md"
-              >
-                <div className="flex items-center gap-3">
-                  <Sparkles className="w-5 h-5" />
-                  <div className="text-left">
-                    <div className="text-sm font-semibold">🧩 Componentes Individuais</div>
-                    <div className="text-xs opacity-90">Módulos separados e editáveis</div>
-                  </div>
-                </div>
-              </Button>
-            </div>
-          )}
-          
-          <div className="space-y-2 pb-4">
+          <div className="space-y-2 pb-4 pt-2">
             {filteredCategories.map((category) => (
               <Collapsible
                 key={category.id}

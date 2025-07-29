@@ -15,6 +15,7 @@ import { normalizeBlock } from '../../utils/blockTypeMapping';
 import { AdvancedPropertyPanel } from './AdvancedPropertyPanel';
 import { EditorStatus } from './components/EditorStatus';
 import { StepsPanel } from './StepsPanel';
+import StepsPanelQuiz from './StepsPanelQuiz';
 import { ComponentsPanel } from './ComponentsPanel';
 
 interface SchemaDrivenEditorResponsiveProps {
@@ -603,7 +604,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           <ResizablePanel defaultSize={18} minSize={15} maxSize={25}>
             <div className="h-full border-r border-gray-200 overflow-hidden">
               <ScrollArea className="h-full">
-                <StepsPanel
+                <StepsPanelQuiz
                   steps={steps}
                   selectedStepId={selectedStepId}
                   onStepSelect={handleStepSelect}

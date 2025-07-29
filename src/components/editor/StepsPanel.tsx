@@ -1,4 +1,84 @@
+// ========================================// =====================================================================
+// components/editor/StepsPanel.tsx - Painel de Etapas do Quiz
 // =====================================================================
+
+import React, { useState, useCallback } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { ScrollArea } from '../ui/scroll-area';
+import { Badge } from '../ui/badge';
+import { 
+  GripVertical, Plus, MoreHorizontal, Edit2, 
+  Trash2, Copy, Check, X 
+} from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
+import { cn } from '../../lib/utils';
+
+interface Step {
+  id: string;
+  name: string;
+  order: number;
+  blocksCount: number;
+  isActive?: boolean;
+}
+
+interface StepsPanelProps {
+  steps: Step[];
+  selectedStepId: string | null;
+  onStepSelect: (stepId: string) => void;
+  onStepAdd: () => void;
+  onStepUpdate: (stepId: string, updates: Partial<Step>) => void;
+  onStepDelete: (stepId: string) => void;
+  onStepDuplicate: (stepId: string) => void;
+  onStepReorder: (draggedId: string, targetId: string) => void;
+  className?: string;
+}
+
+export const StepsPanel: React.FC<StepsPanelProps> = ({
+  steps,
+  selectedStepId,
+  onStepSelect,
+  onStepAdd,
+  onStepUpdate,
+  onStepDelete,
+  onStepDuplicate,
+  onStepReorder,
+  className = ''
+}) => {
+  const [editingStepId, setEditingStepId] = useState<string | null>(null);
+  const [editingName, setEditingName] = useState('');
+
+  // 21 Etapas pré-definidas do Quiz
+  const quiz21Steps = [
+    { id: 'etapa-1', name: 'Etapa 1', description: 'Introdução do Quiz' },
+    { id: 'etapa-2', name: 'Etapa 2', description: 'Primeira Questão' },
+    { id: 'etapa-3', name: 'Etapa 3', description: 'Segunda Questão' },
+    { id: 'etapa-4', name: 'Etapa 4', description: 'Terceira Questão' },
+    { id: 'etapa-5', name: 'Etapa 5', description: 'Quarta Questão' },
+    { id: 'etapa-6', name: 'Etapa 6', description: 'Quinta Questão' },
+    { id: 'etapa-7', name: 'Etapa 7', description: 'Sexta Questão' },
+    { id: 'etapa-8', name: 'Etapa 8', description: 'Sétima Questão' },
+    { id: 'etapa-9', name: 'Etapa 9', description: 'Oitava Questão' },
+    { id: 'etapa-10', name: 'Etapa 10', description: 'Nona Questão' },
+    { id: 'etapa-11', name: 'Etapa 11', description: 'Décima Questão' },
+    { id: 'etapa-12', name: 'Etapa 12', description: 'Análise Parcial' },
+    { id: 'etapa-13', name: 'Etapa 13', description: 'Depoimentos' },
+    { id: 'etapa-14', name: 'Etapa 14', description: 'Resultado Preliminar' },
+    { id: 'etapa-15', name: 'Etapa 15', description: 'Detalhes do Estilo' },
+    { id: 'etapa-16', name: 'Etapa 16', description: 'Recomendações' },
+    { id: 'etapa-17', name: 'Etapa 17', description: 'Antes e Depois' },
+    { id: 'etapa-18', name: 'Etapa 18', description: 'Galeria de Looks' },
+    { id: 'etapa-19', name: 'Etapa 19', description: 'Oferta Especial' },
+    { id: 'etapa-20', name: 'Etapa 20', description: 'Garantia' },
+    { id: 'etapa-21', name: 'Etapa 21', description: 'CTA Final' }
+  ];================
 // components/editor/StepsPanel.tsx - Painel de Etapas
 // =====================================================================
 
