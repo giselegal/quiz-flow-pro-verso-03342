@@ -157,7 +157,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const handleClearAll = useCallback(() => {
     if (confirm('Tem certeza que deseja limpar todos os blocos?')) {
       // Limpar todos os blocos
-      config.blocks.forEach(block => {
+      config.blocks?.forEach(block => {
         deleteBlock(block.id);
       });
       setSelectedBlockId(null);
@@ -176,7 +176,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   }, [isPreviewing]);
 
   const sortedBlocks = useMemo(() => {
-    return [...config.blocks].sort((a, b) => (a.order || 0) - (b.order || 0));
+    return [...(config.blocks || [])].sort((a, b) => (a.order || 0) - (b.order || 0));
   }, [config.blocks]);
 
   // Filtrar blocos por categoria e termo de busca
@@ -259,7 +259,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                 </Button>
               </div>
               
-              {config.blocks.length > 0 && (
+              {(config.blocks?.length || 0) > 0 && (
                 <Button
                   variant="outline"
                   size="sm"
@@ -476,10 +476,10 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
             <AdvancedPropertyPanel
               selectedBlockId={selectedBlockId}
-              properties={selectedBlockId ? config.pages[0]?.blocks.find(b => b.id === selectedBlockId)?.properties || {} : {}}
+              properties={selectedBlockId ? config.blocks?.find(b => b.id === selectedBlockId)?.properties || {} : {}}
               onPropertyChange={(key, value) => {
                 if (selectedBlockId) {
-                  const block = config.pages[0]?.blocks.find(b => b.id === selectedBlockId);
+                  const block = config.blocks?.find(b => b.id === selectedBlockId);
                   if (block) {
                     updateBlock(selectedBlockId, { 
                       ...block, 
@@ -505,7 +505,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
             canUndo={true} // TODO: Get from property history
             canRedo={false} // TODO: Get from property history
             lastAction="Propriedade alterada" // TODO: Get from property history
-            totalBlocks={config.pages[0]?.blocks.length || 0}
+            totalBlocks={config.blocks?.length || 0}
             previewMode={previewMode}
           />
         </div>
