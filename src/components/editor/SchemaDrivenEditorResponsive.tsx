@@ -5,7 +5,7 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { Plus, Eye, EyeOff, Download, Upload, Trash2 } from 'lucide-react';
+import { Plus, Eye, EyeOff, Download, Upload, Trash2, Monitor, Tablet, Smartphone } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEditor } from '@/hooks/useEditor';
 import { UniversalBlockRenderer } from './blocks/UniversalBlockRenderer';
@@ -16,6 +16,14 @@ interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
   className?: string;
 }
+
+type PreviewMode = 'desktop' | 'tablet' | 'mobile';
+
+const PREVIEW_DIMENSIONS = {
+  desktop: { width: '100%', maxWidth: '1200px' },
+  tablet: { width: '768px', maxWidth: '768px' },
+  mobile: { width: '375px', maxWidth: '375px' }
+};
 
 const AVAILABLE_BLOCKS = [
   // === COMPONENTES BÁSICOS ===
@@ -93,6 +101,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const { config, addBlock, updateBlock, deleteBlock, saveConfig } = useEditor();
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
+  const [previewMode, setPreviewMode] = useState<PreviewMode>('desktop');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
@@ -216,6 +225,38 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                 <Download className="w-4 h-4" />
                 Carregar Blocos de Teste
               </Button>
+              
+              {/* Preview Mode Buttons */}
+              <div className="flex items-center gap-1 border border-gray-200 rounded-md p-1">
+                <Button
+                  variant={previewMode === 'desktop' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setPreviewMode('desktop')}
+                  className="h-8 px-2"
+                  title="Preview Desktop"
+                >
+                  <Monitor className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant={previewMode === 'tablet' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setPreviewMode('tablet')}
+                  className="h-8 px-2"
+                  title="Preview Tablet"
+                >
+                  <Tablet className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant={previewMode === 'mobile' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setPreviewMode('mobile')}
+                  className="h-8 px-2"
+                  title="Preview Mobile"
+                >
+                  <Smartphone className="w-4 h-4" />
+                </Button>
+              </div>
+              
               {config.blocks.length > 0 && (
                 <Button
                   variant="outline"
@@ -317,7 +358,25 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           <ResizablePanel defaultSize={60}>
             <div className="h-full bg-gray-50 overflow-hidden">
               <ScrollArea className="h-full p-6">
-                <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm min-h-96">
+                {/* Preview Mode Indicator */}
+                <div className="text-center mb-4">
+                  <div className="inline-flex items-center gap-2 bg-white rounded-md px-3 py-1 text-sm text-gray-600 shadow-sm border">
+                    {previewMode === 'desktop' && <><Monitor className="w-4 h-4" /> Desktop (1200px)</>}
+                    {previewMode === 'tablet' && <><Tablet className="w-4 h-4" /> Tablet (768px)</>}
+                    {previewMode === 'mobile' && <><Smartphone className="w-4 h-4" /> Mobile (375px)</>}
+                  </div>
+                </div>
+                
+                {/* Responsive Canvas Container */}
+                <div className="flex justify-center">
+                  <div 
+                    className="bg-white rounded-lg shadow-sm min-h-96 transition-all duration-300"
+                    style={{
+                      width: PREVIEW_DIMENSIONS[previewMode].width,
+                      maxWidth: PREVIEW_DIMENSIONS[previewMode].maxWidth,
+                      minWidth: previewMode === 'mobile' ? '375px' : 'auto'
+                    }}
+                  >
                   <div className="p-6">
                     {sortedBlocks.length === 0 ? (
                       <div className="flex flex-col items-center justify-center h-96 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
@@ -402,6 +461,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                         })}
                       </div>
                     )}
+                  </div>
                   </div>
                 </div>
               </ScrollArea>
