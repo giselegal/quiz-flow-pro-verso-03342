@@ -24,57 +24,25 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
   onClick,
   className
 }) => {
-  const [isInlineEditing, setIsInlineEditing] = useState(false);
   const [localButtonText, setLocalButtonText] = useState(content.buttonText || '');
-  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setLocalButtonText(content.buttonText || '');
   }, [content.buttonText]);
 
-  const handleDoubleClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (onUpdate) {
-      setIsInlineEditing(true);
-      setTimeout(() => {
-        buttonRef.current?.focus();
-      }, 0);
-    }
-  };
-
-  const handleBlur = () => {
-    setIsInlineEditing(false);
-    if (onUpdate && localButtonText !== content.buttonText) {
-      onUpdate({ buttonText: localButtonText });
-    }
-  };
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter') {
       e.preventDefault();
-      handleBlur();
     }
     if (e.key === 'Escape') {
       setLocalButtonText(content.buttonText || '');
-      setIsInlineEditing(false);
     }
   };
 
   const handleButtonClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    
-    if (isInlineEditing) {
-      return;
-    }
-    
-    if (content.buttonUrl) {
-      if (content.buttonUrl.startsWith('mailto:')) {
-        window.location.href = content.buttonUrl;
-      } else if (content.buttonUrl.startsWith('tel:')) {
-        window.location.href = content.buttonUrl;
-      } else {
-        window.open(content.buttonUrl, '_blank', 'noopener,noreferrer');
-      }
+    if (content.action === 'link' && content.url) {
+      window.open(content.url, '_blank');
     }
   };
 
