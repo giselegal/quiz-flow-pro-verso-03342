@@ -1,14 +1,13 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Edit, Trash2 } from 'lucide-react';
-import { blockComponents, BlockComponentProps } from './BlockComponents';
+import { BlockComponents, BlockComponentProps } from './BlockComponents';
 
 interface Block {
   id: string;
-  type: keyof typeof blockComponents;
+  type: 'text' | 'question' | 'image';
   content: any;
 }
 
@@ -16,7 +15,7 @@ export default function BlocksDemo() {
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [selectedBlock, setSelectedBlock] = useState<string | null>(null);
 
-  const addBlock = (type: keyof typeof blockComponents) => {
+  const addBlock = (type: 'text' | 'question' | 'image') => {
     const newBlock: Block = {
       id: Date.now().toString(),
       type,
@@ -25,7 +24,7 @@ export default function BlocksDemo() {
     setBlocks([...blocks, newBlock]);
   };
 
-  const getDefaultContent = (type: keyof typeof blockComponents) => {
+  const getDefaultContent = (type: 'text' | 'question' | 'image') => {
     switch (type) {
       case 'text':
         return { text: 'Texto de exemplo' };
@@ -63,7 +62,7 @@ export default function BlocksDemo() {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                {(Object.keys(blockComponents) as Array<keyof typeof blockComponents>).map((type) => (
+                {(['text', 'question', 'image'] as const).map((type) => (
                   <Button
                     key={type}
                     variant="outline"
@@ -84,22 +83,17 @@ export default function BlocksDemo() {
         {/* Main Content */}
         <div className="lg:col-span-3">
           <div className="space-y-4">
-            {blocks.map((block) => {
-              const BlockComponent = blockComponents[block.type];
-              if (!BlockComponent) return null;
-
-              return (
-                <Card key={block.id} className="relative">
-                  <CardContent className="p-4">
-                    <BlockComponent
-                      content={block.content}
-                      onUpdate={(content: any) => updateBlock(block.id, content)}
-                      onDelete={() => deleteBlock(block.id)}
-                    />
-                  </CardContent>
-                </Card>
-              );
-            })}
+            {blocks.map((block) => (
+              <Card key={block.id} className="relative">
+                <CardContent className="p-4">
+                  <BlockComponents
+                    block={block}
+                    onUpdate={(content: any) => updateBlock(block.id, content)}
+                    onSelect={() => {}}
+                  />
+                </CardContent>
+              </Card>
+            ))}
 
             {blocks.length === 0 && (
               <Card>

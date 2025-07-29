@@ -38,7 +38,7 @@ export const useQuiz = () => {
         description: quizData.description || undefined,
         category: quizData.category || 'general',
         difficulty: quizData.difficulty || undefined,
-        time_limit: quizData.time_limit || undefined,
+        time_limit: quizData.time_limit === null ? undefined : quizData.time_limit,
         is_public: quizData.is_public || false,
         is_published: quizData.is_published || false
       };
@@ -64,7 +64,8 @@ export const useQuiz = () => {
       const processedUpdates = {
         ...updates,
         description: updates.description || undefined,
-        difficulty: updates.difficulty || undefined
+        difficulty: updates.difficulty || undefined,
+        time_limit: updates.time_limit === null ? undefined : updates.time_limit
       };
       
       const updatedQuiz = await QuizService.updateQuiz(quiz.id, processedUpdates);

@@ -8,7 +8,7 @@ import ButtonBlock from './ButtonBlock';
 import SpacerBlock from './SpacerBlock';
 import QuizQuestionBlock from './QuizQuestionBlock';
 
-interface BlockComponentProps {
+export interface BlockComponentProps {
   block: EditorBlock;
   isSelected?: boolean;
   isEditing?: boolean;
