@@ -36,7 +36,9 @@ import {
   // NOVA IMPLEMENTAÇÃO: Componentes das 21 Etapas Inline
   QuizStartPageInlineBlock,
   QuizQuestionInlineBlock,
-  QuizProgressInlineBlock
+  QuizProgressInlineBlock,
+  QuizTransitionInlineBlock,
+  QuizLoadingInlineBlock
 } from './inline';
 
 // Componentes básicos (funcionais)
@@ -202,6 +204,8 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'quiz-start-page-inline': () => <QuizStartPageInlineBlock {...commonProps} />,
       'quiz-question-inline': () => <QuizQuestionInlineBlock {...commonProps} />,
       'quiz-progress-inline': () => <QuizProgressInlineBlock {...commonProps} />,
+      'quiz-transition-inline': () => <QuizTransitionInlineBlock {...commonProps} />,
+      'quiz-loading-inline': () => <QuizLoadingInlineBlock {...commonProps} />,
       
       // === COMPONENTES ETAPA 20/21 (sem duplicação) ===
       'quiz-offer-pricing-inline': () => <QuizOfferPricingInlineBlock {...commonProps} />,

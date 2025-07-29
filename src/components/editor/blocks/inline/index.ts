@@ -30,6 +30,8 @@ export { default as LoadingAnimationBlock } from './LoadingAnimationBlock';
 export { default as QuizStartPageInlineBlock } from './QuizStartPageInlineBlock';
 export { default as QuizQuestionInlineBlock } from './QuizQuestionInlineBlock';
 export { default as QuizProgressInlineBlock } from './QuizProgressInlineBlock';
+export { default as QuizTransitionInlineBlock } from './QuizTransitionInlineBlock';
+export { default as QuizLoadingInlineBlock } from './QuizLoadingInlineBlock';
 
 // Tipos base
 export type { BlockComponentProps } from '../../../../types/blocks';
