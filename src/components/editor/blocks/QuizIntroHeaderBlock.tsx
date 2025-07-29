@@ -57,16 +57,16 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
       onClick={onClick}
     >
       {/* Header Content - Visual Only */}
-      <div className="flex items-center justify-between mb-4">
-        {/* Back Button */}
+      <div className="flex items-center justify-center mb-4 relative">
+        {/* Back Button - Absolute positioned to not affect centering */}
         {showBackButton && (
-          <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
+          <button className="absolute left-0 p-2 rounded-lg hover:bg-gray-100 transition-colors">
             <ArrowLeft className="w-5 h-5 text-gray-600" />
           </button>
         )}
 
-        {/* Logo */}
-        <div className="flex-1 flex justify-center items-center relative group">
+        {/* Logo - Centered */}
+        <div className="flex justify-center items-center">
           <img 
             src={logoUrl}
             alt={logoAlt}
@@ -74,35 +74,13 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
               width: `${logoWidth}px`, 
               height: `${logoHeight}px` 
             }}
-            className="object-contain mx-auto"
+            className="object-contain"
             onError={(e) => {
               e.currentTarget.src = 'https://via.placeholder.com/96x96?text=Logo';
             }}
           />
-          {!disabled && (
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-black bg-opacity-50 rounded flex flex-col items-center justify-center text-white text-xs">
-              <InlineEditText
-                value={logoUrl}
-                onChange={(value) => handlePropertyChange('logoUrl', value)}
-                placeholder="URL da logo"
-                className="text-center text-white bg-transparent w-full px-2"
-                disabled={disabled}
-                as="div"
-              />
-              <InlineEditText
-                value={logoAlt}
-                onChange={(value) => handlePropertyChange('logoAlt', value)}
-                placeholder="Alt da logo"
-                className="text-center text-white bg-transparent w-full px-2 mt-1"
-                disabled={disabled}
-                as="div"
-              />
-            </div>
-          )}
+          {/* Edição inline removida - apenas no painel de propriedades */}
         </div>
-
-        {/* Spacer for alignment */}
-        <div className="w-9" />
       </div>
 
       {/* Progress Bar */}
@@ -115,22 +93,9 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
       
       {/* Progress Text */}
       <div className="text-center mt-2">
-        <InlineEditText
-          value={`${Math.round(progressValue)}% completo`}
-          onChange={(value) => {
-            const match = value.match(/(\d+)%/);
-            if (match) {
-              const numValue = parseInt(match[1]);
-              if (!isNaN(numValue)) {
-                handlePropertyChange('progressValue', numValue);
-              }
-            }
-          }}
-          placeholder="0% completo"
-          className="text-sm text-gray-600"
-          disabled={disabled}
-          as="span"
-        />
+        <span className="text-sm text-gray-600">
+          {Math.round(progressValue)}% completo
+        </span>
       </div>
     </div>
   );

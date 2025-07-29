@@ -147,14 +147,10 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         // Converter dados do funil para o formato do editor
         if (funnelData.pages && funnelData.pages.length > 0) {
           const firstPage = funnelData.pages[0];
-          console.log('🔍 [DEBUG] Primeira página:', firstPage);
-          console.log('🔍 [DEBUG] Blocos da primeira página:', firstPage.blocks);
           
           const editorConfig = {
             blocks: firstPage.blocks || []
           };
-          
-          console.log('🔍 [DEBUG] Config do editor:', editorConfig);
           
           // Usar o método do useEditor para atualizar
           setConfig(editorConfig);
@@ -856,8 +852,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                             type: block.type,
                             properties: block.properties || { ...block.content || {}, order: block.order || 0 }
                           };
-
-                          console.log('🔍 [DEBUG] Renderizando bloco:', block.type, blockData);
 
                           return (
                             <div

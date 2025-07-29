@@ -67,11 +67,11 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
   // Text align classes
   const textAlignClasses = {
     left: 'text-left',
-    center: 'text-center mx-auto',
-    right: 'text-right ml-auto',
+    center: 'text-center',
+    right: 'text-right',
     'text-left': 'text-left',
-    'text-center': 'text-center mx-auto',
-    'text-right': 'text-right ml-auto'
+    'text-center': 'text-center',
+    'text-right': 'text-right'
   };
 
   // Função para converter valores numéricos de margem em classes Tailwind
@@ -91,26 +91,25 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
   };
 
   // Usar className customizada se fornecida, senão usar classes padrão
-  const imageClasses = customClassName || cn(
-    sizeClasses[size as keyof typeof sizeClasses],
-    textAlignClasses[textAlign as keyof typeof textAlignClasses]
+  const containerClasses = cn(
+    // INLINE HORIZONTAL: Flexível e quebra linha automaticamente
+    'flex-shrink-0 flex-grow-0 relative',
+    // Centralização quando necessária
+    textAlign === 'center' || textAlign === 'text-center' ? 'mx-auto flex justify-center' : '',
+    // Usar classes customizadas ou responsivo modular
+    customClassName || sizeClasses[size as keyof typeof sizeClasses],
+    // Estados do editor
+    isSelected && 'ring-2 ring-blue-500 ring-offset-2',
+    'cursor-pointer transition-all duration-200',
+    // Margens
+    getMarginClass(marginTop, 'top'),
+    getMarginClass(marginBottom, 'bottom'),
+    className
   );
 
   return (
     <div
-      className={cn(
-        // INLINE HORIZONTAL: Flexível e quebra linha automaticamente
-        'flex-shrink-0 flex-grow-0 relative',
-        // Usar classes customizadas ou responsivo modular
-        imageClasses,
-        // Estados do editor
-        isSelected && 'ring-2 ring-blue-500 ring-offset-2',
-        'cursor-pointer transition-all duration-200',
-        // Margens
-        getMarginClass(marginTop, 'top'),
-        getMarginClass(marginBottom, 'bottom'),
-        className
-      )}
+      className={containerClasses}
       onClick={onClick}
     >
       <div
