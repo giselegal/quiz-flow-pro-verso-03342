@@ -175,9 +175,12 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
           // Line height
           lineHeight || 'leading-normal'
         )}
-        style={{ color }}
+        style={{ 
+          color,
+          ...(fontFamily !== 'inherit' && { fontFamily }),
+          ...(maxWidth !== 'auto' && { maxWidth })
+        }}
         // ES7+ Conditional data attributes
-        {...(maxWidth !== 'auto' && { style: { ...{ color }, maxWidth } })}
       >
         {isHtmlContent ? (
           <div dangerouslySetInnerHTML={{ __html: personalizedContent }} />

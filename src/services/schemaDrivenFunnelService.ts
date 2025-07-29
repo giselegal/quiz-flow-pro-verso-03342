@@ -581,16 +581,9 @@ class SchemaDrivenFunnelService {
 
     // Para o template especial, priorizar funcionamento offline
     if (funnelId === 'default-quiz-funnel-21-steps') {
-      console.log('📱 [DEBUG] Template especial detectado - funcionamento offline prioritário');
+      console.log('📱 [DEBUG] Template especial detectado - forçando recriação com melhorias');
       
-      // Verificar localStorage primeiro
-      const localFunnel = this.getLocalFunnel();
-      if (localFunnel && localFunnel.id === funnelId) {
-        console.log('💾 Template carregado do localStorage');
-        return localFunnel;
-      }
-      
-      // Se não existe no local, criar template novo
+      // Força recriação para aplicar melhorias mais recentes
       console.log('🔄 Criando novo template de 21 etapas...');
       const defaultFunnel = this.createDefaultFunnel();
       defaultFunnel.id = funnelId;
