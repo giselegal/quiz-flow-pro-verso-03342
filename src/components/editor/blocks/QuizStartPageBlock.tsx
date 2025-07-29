@@ -1,8 +1,7 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { InlineEditText } from './InlineEditText';
+import { cn } from '../../../lib/utils';
+import { Button } from '../../../components/ui/button';
+import { Badge } from '../../../components/ui/badge';
 
 interface QuizStartPageBlockProps {
   block: {
@@ -82,35 +81,38 @@ const QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
         </Badge>
 
         {/* Title */}
-        <InlineEditText
-          as="h1"
-          value={title}
-          onChange={(newValue) => handlePropertyChange('title', newValue)}
-          placeholder="Título do quiz..."
-          disabled={disabled}
-          className="text-lg md:text-xl font-bold mb-2 leading-tight"
-        />
+        <h1 
+          className={cn(
+            "text-lg md:text-xl font-bold mb-2 leading-tight cursor-pointer p-2 rounded border-2 border-transparent hover:border-blue-300",
+            isSelected && "ring-2 ring-blue-500 ring-opacity-50"
+          )}
+          onClick={onClick}
+        >
+          {title}
+        </h1>
 
         {/* Subtitle */}
-        <InlineEditText
-          as="p"
-          value={subtitle}
-          onChange={(newValue) => handlePropertyChange('subtitle', newValue)}
-          placeholder="Subtítulo do quiz..."
-          disabled={disabled}
-          className="text-sm mb-3 opacity-80 leading-relaxed"
-        />
+        <p 
+          className={cn(
+            "text-sm mb-3 opacity-80 leading-relaxed cursor-pointer p-2 rounded border-2 border-transparent hover:border-blue-300",
+            isSelected && "ring-2 ring-blue-500 ring-opacity-50"
+          )}
+          onClick={onClick}
+        >
+          {subtitle}
+        </p>
       </div>
 
       {/* Description */}
-      <InlineEditText
-        as="p"
-        value={description}
-        onChange={(newValue) => handlePropertyChange('description', newValue)}
-        placeholder="Descrição do quiz..."
-        disabled={disabled}
-        className="text-xs md:text-sm mb-4 opacity-75 text-center leading-relaxed"
-      />
+      <p 
+        className={cn(
+          "text-xs md:text-sm mb-4 opacity-75 text-center leading-relaxed cursor-pointer p-2 rounded border-2 border-transparent hover:border-blue-300",
+          isSelected && "ring-2 ring-blue-500 ring-opacity-50"
+        )}
+        onClick={onClick}
+      >
+        {description}
+      </p>
 
       {/* Benefits List */}
       {benefits && benefits.length > 0 && (
