@@ -1,7 +1,7 @@
-import type { BlockData } from '@/components/editor/blocks';
+import type { BlockData } from '../components/editor/blocks';
 import { QuizDataAdapter } from './quizDataAdapter';
 import { supabase } from '../lib/supabase';
-import { CORRECT_QUIZ_QUESTIONS } from '@/data/correctQuizQuestions';
+import { CORRECT_QUIZ_QUESTIONS } from '../data/correctQuizQuestions';
 
 // Usar as questões originais corrigidas
 const REAL_QUIZ_QUESTIONS = CORRECT_QUIZ_QUESTIONS;
@@ -767,9 +767,9 @@ class SchemaDrivenFunnelService {
           properties: {
             logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
             logoAlt: 'Logo Gisele Galvão',
-            logoWidth: 96,
-            logoHeight: 96,
-            progressValue: 0,
+            logoWidth: 120,
+            logoHeight: 120,
+            progressValue: 100,
             progressMax: 100,
             showBackButton: false
           }
@@ -788,12 +788,13 @@ class SchemaDrivenFunnelService {
           id: 'intro-main-heading',
           type: 'text-inline',
           properties: {
-            content: '<span style="color: #B89B7A; font-weight: 700;">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com você.',
+            content: '<span style="color: #B89B7A; font-weight: 700; font-size: 2.5rem;">Chega</span> de um guarda-roupa lotado e da sensação de que <span style="color: #B89B7A; font-weight: 700;">nada combina com você.</span>',
             fontSize: 'text-3xl',
             fontWeight: 'font-bold',
             textAlign: 'text-center',
             color: '#432818',
-            marginBottom: 24
+            marginBottom: 32,
+            lineHeight: '1.2'
           }
         },
         {
@@ -802,21 +803,24 @@ class SchemaDrivenFunnelService {
           properties: {
             src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.webp',
             alt: 'Transforme seu guarda-roupa',
-            width: 600,
-            height: 400,
-            className: 'object-cover w-full h-auto rounded-lg mx-auto'
+            width: 500,
+            height: 350,
+            className: 'object-cover w-full max-w-lg h-auto rounded-xl mx-auto shadow-lg',
+            textAlign: 'text-center',
+            marginBottom: 32
           }
         },
         {
           id: 'intro-subtitle',
           type: 'text-inline',
           properties: {
-            content: 'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
-            fontSize: 'text-lg',
+            content: 'Em poucos minutos, descubra seu <strong style="color: #B89B7A;">Estilo Predominante</strong> — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
+            fontSize: 'text-xl',
             textAlign: 'text-center',
             color: '#432818',
-            marginTop: 16,
-            marginBottom: 32
+            marginTop: 0,
+            marginBottom: 40,
+            lineHeight: '1.6'
           }
         },
         {
