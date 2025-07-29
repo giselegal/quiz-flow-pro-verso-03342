@@ -27,13 +27,19 @@ import FormInputBlock from './FormInputBlock';
 import ListBlock from './ListBlock';
 import ScriptBlock from './ScriptBlock';
 
+// === COMPONENTES REAIS QUE ESTAVAM COMO FALLBACK ===
+import SectionDividerBlock from './SectionDividerBlock';
+import StatsMetricsBlock from './StatsMetricsBlock';
+import TwoColumnsBlock from './TwoColumnsBlock';
+import TestimonialInlineBlock from './TestimonialInlineBlock';
+import ProgressInlineBlock from './ProgressInlineBlock';
+import StyleCardInlineBlock from './StyleCardInlineBlock';
+
 // === COMPONENTES INLINE MODULARES (com verificação de existência) ===
 // Desabilitado para evitar problemas de dynamic imports
 let TextInlineBlock: any;
-let StyleCardInlineBlock: any;
 let StatInlineBlock: any;
 let BadgeInlineBlock: any;
-let ProgressInlineBlock: any;
 let ImageDisplayInlineBlock: any;
 let PricingCardInlineBlock: any;
 let TestimonialCardInlineBlock: any;
@@ -208,10 +214,10 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'quiz-question-modern': () => <QuizQuestionBlock {...commonProps} />,
       'progress-bar-modern': () => <EnhancedFallbackBlock {...commonProps} blockType="progress-bar-modern" />,
       'image-text-card': () => <EnhancedFallbackBlock {...commonProps} blockType="image-text-card" />,
-      'stats-counter': () => <EnhancedFallbackBlock {...commonProps} blockType="stats-counter" />,
-      'testimonial-card': () => <EnhancedFallbackBlock {...commonProps} blockType="testimonial-card" />,
+      'stats-counter': () => <StatsMetricsBlock {...commonProps} block={{...commonProps.block, type: 'stats-metrics'} as any} />,
+      'testimonial-card': () => <TestimonialInlineBlock {...commonProps} />,
       'feature-highlight': () => <EnhancedFallbackBlock {...commonProps} blockType="feature-highlight" />,
-      'section-divider': () => <EnhancedFallbackBlock {...commonProps} blockType="section-divider" />,
+      'section-divider': () => <SectionDividerBlock {...commonProps} />,
       'flex-container-horizontal': () => <EnhancedFallbackBlock {...commonProps} blockType="flex-container-horizontal" />,
       'flex-container-vertical': () => <EnhancedFallbackBlock {...commonProps} blockType="flex-container-vertical" />,
       
@@ -220,9 +226,9 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'heading-inline': () => <HeadingInlineBlock {...commonProps} />,
       'button-inline': () => <ButtonInlineBlock {...commonProps} />,
       'badge-inline': () => BadgeInlineBlock ? <BadgeInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
-      'progress-inline': () => ProgressInlineBlock ? <ProgressInlineBlock {...commonProps} /> : <FallbackBlock {...commonProps} blockType="progress-inline" />,
+      'progress-inline': () => <ProgressInlineBlock {...commonProps} />,
       'image-display-inline': () => ImageDisplayInlineBlock ? <ImageDisplayInlineBlock {...commonProps} /> : <ImageInlineBlock {...commonProps} />,
-      'style-card-inline': () => StyleCardInlineBlock ? <StyleCardInlineBlock {...commonProps} /> : <FallbackBlock {...commonProps} blockType="style-card-inline" />,
+      'style-card-inline': () => <StyleCardInlineBlock {...commonProps} />,
       'countdown-inline': () => CountdownInlineBlock ? <CountdownInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
       'countdown-timer-inline': () => CountdownInlineBlock ? <CountdownInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
       'countdown-timer-real': () => CountdownInlineBlock ? <CountdownInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
