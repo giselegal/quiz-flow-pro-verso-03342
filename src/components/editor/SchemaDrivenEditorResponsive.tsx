@@ -5,7 +5,7 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { Plus, Eye, EyeOff, Download, Upload } from 'lucide-react';
+import { Plus, Eye, EyeOff, Download, Upload, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEditor } from '@/hooks/useEditor';
 import { UniversalBlockRenderer } from './blocks/UniversalBlockRenderer';
@@ -104,24 +104,32 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const handleLoadTemplate = useCallback(() => {
     try {
       const template = getInitialQuiz21EtapasTemplate();
-      // Converter EditorBlocks para o formato do useEditor
-      const convertedBlocks = template.blocks.map(block => ({
-        id: block.id,
-        type: block.type,
-        content: block.content,
-        order: block.order
-      }));
+      console.log('🔄 Carregando template das 21 etapas...', template);
       
-      // Carregar os blocos no editor
-      convertedBlocks.forEach(block => {
-        addBlock(block.type, block.content);
+      // Limpar blocos existentes primeiro (opcional)
+      // setConfig({ blocks: [] });
+      
+      // Carregar cada bloco usando a API correta do useEditor
+      template.blocks.forEach((templateBlock, index) => {
+        console.log(`📦 Adicionando bloco ${index + 1}:`, templateBlock.type);
+        
+        // Adicionar o bloco (que criará com conteúdo padrão)
+        const newBlockId = addBlock(templateBlock.type as any);
+        
+        // Depois atualizar com o conteúdo do template
+        setTimeout(() => {
+          updateBlock(newBlockId, templateBlock.content);
+        }, 10 * index); // Pequeno delay para garantir ordem
       });
       
       console.log('✅ Template das 21 etapas carregado com sucesso!');
+      alert('✅ Template das 21 etapas carregado com sucesso! Verifique o canvas.');
+      
     } catch (error) {
       console.error('❌ Erro ao carregar template:', error);
+      alert('❌ Erro ao carregar template. Verifique o console.');
     }
-  }, [addBlock]);
+  }, [addBlock, updateBlock]);
 
   const handleSaveInline = useCallback((blockId: string, updates: Partial<BlockData>) => {
     updateBlock(blockId, updates.properties || {});
