@@ -1,90 +1,96 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { Quiz } from '@/types/quiz';
-import { QuizService } from '../services/QuizService';
+import { QuizService } from '@/services/QuizService';
 
 export const useQuizzes = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const loadQuizzes = async () => {
-    setLoading(true);
-    setError(null);
-    
+  const loadQuizzes = useCallback(async () => {
     try {
-      // For now, use a mock user ID - in a real app this would come from auth
-      const userId = 'current-user-id';
-      const data = await QuizService.getQuizzes(userId);
+      setLoading(true);
+      setError(null);
+      const data = await QuizService.getQuizzes('default-author');
       setQuizzes(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load quizzes');
+      setError(err instanceof Error ? err.message : 'Erro ao carregar quizzes');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const createQuiz = async (quizData: Partial<Quiz>) => {
-    setLoading(true);
-    setError(null);
-    
+  const createQuiz = useCallback(async (quizData: Partial<Quiz>) => {
     try {
-      // Add required fields
-      const quizToCreate = {
-        ...quizData,
-        author_id: 'current-user-id', // In a real app this would come from auth
-        title: quizData.title || 'Novo Quiz',
-        description: quizData.description || null,
+      setLoading(true);
+      setError(null);
+      
+      const processedData = {
+        author_id: quizData.author_id || 'default-author',
+        title: quizData.title || 'Untitled Quiz',
+        description: quizData.description || undefined, // Convert null to undefined
         category: quizData.category || 'general',
-        difficulty: quizData.difficulty || null,
-        time_limit: quizData.time_limit || null,
+        difficulty: quizData.difficulty || undefined,
+        time_limit: quizData.time_limit || undefined,
         is_public: quizData.is_public || false,
         is_published: quizData.is_published || false
       };
-      
-      const newQuiz = await QuizService.createQuiz(quizToCreate);
-      
-      // Format the quiz to match our Quiz type
-      const formattedQuiz: Quiz = {
-        id: newQuiz.id,
-        title: newQuiz.title,
-        description: newQuiz.description,
-        author_id: newQuiz.author_id,
-        category: newQuiz.category,
-        difficulty: newQuiz.difficulty,
-        time_limit: newQuiz.time_limit,
-        is_public: newQuiz.is_public,
-        is_published: newQuiz.is_published,
-        is_template: false,
-        thumbnail_url: null,
-        tags: [],
-        view_count: 0,
-        average_score: 0,
-        completion_count: 0,
-        questions: [],
-        created_at: newQuiz.created_at,
-        updated_at: newQuiz.updated_at
-      };
-      
-      setQuizzes(prev => [...prev, formattedQuiz]);
-      return formattedQuiz;
+
+      const newQuiz = await QuizService.createQuiz(processedData);
+      setQuizzes(prev => [newQuiz, ...prev]);
+      return newQuiz;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create quiz');
+      setError(err instanceof Error ? err.message : 'Erro ao criar quiz');
       throw err;
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  useEffect(() => {
-    loadQuizzes();
+  const updateQuiz = useCallback(async (id: string, updates: Partial<Quiz>) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const processedUpdates = {
+        ...updates,
+        description: updates.description || undefined // Convert null to undefined
+      };
+      
+      const updatedQuiz = await QuizService.updateQuiz(id, processedUpdates);
+      setQuizzes(prev => prev.map(quiz => quiz.id === id ? updatedQuiz : quiz));
+      return updatedQuiz;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao atualizar quiz');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const deleteQuiz = useCallback(async (id: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      await QuizService.deleteQuiz(id);
+      setQuizzes(prev => prev.filter(quiz => quiz.id !== id));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao deletar quiz');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   return {
     quizzes,
     loading,
     error,
+    loadQuizzes,
     createQuiz,
-    loadQuizzes
+    updateQuiz,
+    deleteQuiz
   };
 };

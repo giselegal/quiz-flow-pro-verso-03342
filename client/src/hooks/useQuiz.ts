@@ -1,164 +1,141 @@
 
-import { useState, useEffect } from 'react';
-import { QuizService } from '@/services/QuizService';
+import { useState, useCallback } from 'react';
 import { Quiz, Question } from '@/types/quiz';
+import { QuizService } from '@/services/QuizService';
 
-export const useQuiz = (quizId?: string) => {
+export const useQuiz = () => {
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (quizId) {
-      loadQuiz(quizId);
-    }
-  }, [quizId]);
-
-  const loadQuiz = async (id: string) => {
-    setLoading(true);
-    setError(null);
-    
+  const loadQuiz = useCallback(async (id: string) => {
     try {
+      setLoading(true);
+      setError(null);
       const quizData = await QuizService.getQuiz(id);
       if (quizData) {
         setQuiz(quizData);
         const questionsData = await QuizService.getQuizQuestions(id);
-        setQuestions(questionsData || []);
-      } else {
-        setError('Quiz não encontrado');
+        setQuestions(questionsData);
       }
     } catch (err) {
-      setError('Erro ao carregar quiz');
+      setError(err instanceof Error ? err.message : 'Erro ao carregar quiz');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const updateQuiz = async (updates: Partial<Quiz>) => {
+  const saveQuiz = useCallback(async (quizData: Partial<Quiz>) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const processedData = {
+        ...quizData,
+        author_id: quizData.author_id || 'default-author',
+        title: quizData.title || 'Untitled Quiz',
+        description: quizData.description || undefined, // Convert null to undefined
+        category: quizData.category || 'general',
+        difficulty: quizData.difficulty || undefined,
+        time_limit: quizData.time_limit || undefined,
+        is_public: quizData.is_public || false,
+        is_published: quizData.is_published || false
+      };
+
+      const savedQuiz = await QuizService.createQuiz(processedData);
+      setQuiz(savedQuiz);
+      return savedQuiz;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao salvar quiz');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const updateQuiz = useCallback(async (updates: Partial<Quiz>) => {
     if (!quiz) return;
     
-    setLoading(true);
     try {
-      const updatedQuiz = await QuizService.updateQuiz(quiz.id, updates);
+      setLoading(true);
+      setError(null);
+      
+      const processedUpdates = {
+        ...updates,
+        description: updates.description || undefined // Convert null to undefined
+      };
+      
+      const updatedQuiz = await QuizService.updateQuiz(quiz.id, processedUpdates);
       setQuiz(updatedQuiz);
       return updatedQuiz;
     } catch (err) {
-      setError('Erro ao atualizar quiz');
+      setError(err instanceof Error ? err.message : 'Erro ao atualizar quiz');
       throw err;
     } finally {
       setLoading(false);
     }
-  };
+  }, [quiz]);
 
-  const saveQuiz = async (quizData?: Partial<Quiz>) => {
+  const addQuestion = useCallback(async (questionData: Partial<Question>) => {
     if (!quiz) return;
     
-    const dataToSave = quizData || quiz;
-    return await updateQuiz(dataToSave);
-  };
-
-  const addQuestion = async (questionData: Partial<Question>) => {
-    if (!quiz) return;
-    
-    setLoading(true);
     try {
-      const questionToCreate = {
+      setLoading(true);
+      setError(null);
+      
+      const question = await QuizService.createQuestions([{
         quiz_id: quiz.id,
         question_text: questionData.text || '',
-        question_type: questionData.type || 'single_choice',
-        options: questionData.options || [],
-        correct_answers: [],
+        question_type: questionData.type || 'text',
+        options: questionData.options || {},
+        correct_answers: {},
         points: 1,
-        order_index: questions.length,
-        tags: questionData.tags || []
-      };
+        tags: questionData.tags || [],
+        order_index: questions.length
+      }]);
       
-      const newQuestion = await QuizService.createQuestions([questionToCreate]);
-      if (newQuestion && newQuestion.length > 0) {
-        const question = newQuestion[0];
-        const formattedQuestion: Question = {
-          id: question.id,
-          title: question.question_text,
-          text: question.question_text,
-          type: question.question_type as any,
-          options: question.options || [],
-          required: question.required || false,
-          hint: question.hint,
-          tags: question.tags || []
-        };
-        setQuestions(prev => [...prev, formattedQuestion]);
-        return formattedQuestion;
-      }
+      const newQuestion = question[0];
+      setQuestions(prev => [...prev, newQuestion]);
+      return newQuestion;
     } catch (err) {
-      setError('Erro ao adicionar pergunta');
+      setError(err instanceof Error ? err.message : 'Erro ao adicionar pergunta');
       throw err;
     } finally {
       setLoading(false);
     }
-  };
+  }, [quiz, questions.length]);
 
-  const updateQuestion = async (questionId: string, updates: Partial<Question>) => {
-    setLoading(true);
+  const updateQuestion = useCallback(async (questionId: string, updates: Partial<Question>) => {
     try {
-      const updateData = {
-        question_text: updates.text,
-        question_type: updates.type,
-        options: updates.options,
-        hint: updates.hint,
-        tags: updates.tags
-      };
+      setLoading(true);
+      setError(null);
       
-      const updatedQuestion = await QuizService.updateQuestion(questionId, updateData);
-      const formattedQuestion: Question = {
-        id: updatedQuestion.id,
-        title: updatedQuestion.question_text,
-        text: updatedQuestion.question_text,
-        type: updatedQuestion.question_type as any,
-        options: updatedQuestion.options || [],
-        required: updatedQuestion.required || false,
-        hint: updatedQuestion.hint,
-        tags: updatedQuestion.tags || []
-      };
-      
-      setQuestions(prev => prev.map(q => q.id === questionId ? formattedQuestion : q));
-      return formattedQuestion;
+      const updatedQuestion = await QuizService.updateQuestion(questionId, updates);
+      setQuestions(prev => prev.map(q => q.id === questionId ? updatedQuestion : q));
+      return updatedQuestion;
     } catch (err) {
-      setError('Erro ao atualizar pergunta');
+      setError(err instanceof Error ? err.message : 'Erro ao atualizar pergunta');
       throw err;
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const deleteQuestion = async (questionId: string) => {
-    setLoading(true);
+  const deleteQuestion = useCallback(async (questionId: string) => {
     try {
+      setLoading(true);
+      setError(null);
+      
       await QuizService.deleteQuestion(questionId);
       setQuestions(prev => prev.filter(q => q.id !== questionId));
     } catch (err) {
-      setError('Erro ao deletar pergunta');
+      setError(err instanceof Error ? err.message : 'Erro ao deletar pergunta');
       throw err;
     } finally {
       setLoading(false);
     }
-  };
-
-  const reorderQuestions = async (questionIds: string[]) => {
-    if (!quiz) return;
-    
-    setLoading(true);
-    try {
-      // For now, just reorder locally
-      const reorderedQuestions = questionIds.map(id => questions.find(q => q.id === id)!).filter(Boolean);
-      setQuestions(reorderedQuestions);
-    } catch (err) {
-      setError('Erro ao reordenar perguntas');
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, []);
 
   return {
     quiz,
@@ -166,11 +143,10 @@ export const useQuiz = (quizId?: string) => {
     loading,
     error,
     loadQuiz,
-    updateQuiz,
     saveQuiz,
+    updateQuiz,
     addQuestion,
     updateQuestion,
-    deleteQuestion,
-    reorderQuestions
+    deleteQuestion
   };
 };

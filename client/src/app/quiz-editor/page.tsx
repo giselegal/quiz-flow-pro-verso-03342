@@ -1,260 +1,220 @@
 
 'use client';
 
-import React, { useState } from 'react';
-import { useLocation } from 'wouter';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Plus, ArrowLeft, Save, Settings, Eye, Trash2 } from 'lucide-react';
-
-// Import components
-import QuizDashboard from '@/components/quiz/QuizDashboard';
-import QuizEditor from '@/components/quiz/QuizEditor';
-import QuizPreview from '@/components/quiz/QuizPreview';
-import CreateQuizModal from '@/components/quiz/CreateQuizModal';
-import { blockComponents } from '@/components/editor/blocks/BlockComponents';
-
-// Import hooks
-import { useQuizzes } from '@/hooks/useQuizzes';
+import { Textarea } from '@/components/ui/textarea';
+import { Plus, Edit, Trash2 } from 'lucide-react';
 import { useQuiz } from '@/hooks/useQuiz';
+import { useQuizzes } from '@/hooks/useQuizzes';
+import { blockComponents } from '@/components/editor/blocks/BlockComponents';
+import { Quiz, Question } from '@/types/quiz';
 
-// Import types
-import { Quiz } from '@/types/quiz';
+// Define interfaces
+interface EditorBlock {
+  id: string;
+  type: 'text' | 'question' | 'image';
+  content: any;
+}
 
-const QuizEditorPage: React.FC = () => {
-  const [location, setLocation] = useLocation();
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'editor' | 'preview'>('dashboard');
+interface EditableContent {
+  text?: string;
+  question?: string;
+  options?: string[];
+  imageUrl?: string;
+  alt?: string;
+}
+
+export default function QuizEditorPage() {
+  const [selectedView, setSelectedView] = useState('dashboard');
+  const [blocks, setBlocks] = useState<EditorBlock[]>([]);
   const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-
-  // Quiz hooks
-  const { quizzes, loading: quizzesLoading, createQuiz } = useQuizzes();
+  
+  const { quizzes, loading: quizzesLoading, loadQuizzes } = useQuizzes();
   const { 
     quiz, 
     questions, 
     loading: quizLoading, 
-    error, 
-    updateQuiz, 
-    addQuestion, 
-    updateQuestion, 
-    deleteQuestion,
-    saveQuiz
-  } = useQuiz(selectedQuiz?.id);
+    saveQuiz,
+    loadQuiz,
+    updateQuiz,
+    addQuestion,
+    updateQuestion,
+    deleteQuestion
+  } = useQuiz();
 
-  // Editor state
-  const [editorBlocks, setEditorBlocks] = useState<any[]>([]);
+  useEffect(() => {
+    loadQuizzes();
+  }, [loadQuizzes]);
 
-  const handleQuizSelect = (selectedQuiz: Quiz) => {
-    setSelectedQuiz(selectedQuiz);
-    setActiveTab('editor');
-  };
-
-  const handleCreateQuiz = async (quizData: Partial<Quiz>) => {
-    try {
-      const newQuiz = await createQuiz(quizData);
-      setSelectedQuiz(newQuiz);
-      setActiveTab('editor');
-      setShowCreateModal(false);
-    } catch (error) {
-      console.error('Error creating quiz:', error);
-    }
-  };
-
-  const handleSaveQuiz = async () => {
-    if (!selectedQuiz) return;
-    
-    try {
-      await saveQuiz();
-      console.log('Quiz saved successfully');
-    } catch (error) {
-      console.error('Error saving quiz:', error);
-    }
-  };
-
-  const handleBackToDashboard = () => {
-    setSelectedQuiz(null);
-    setActiveTab('dashboard');
-  };
-
-  const handleAddBlock = (blockType: string) => {
-    const newBlock = {
+  const addBlock = (type: EditorBlock['type']) => {
+    const newBlock: EditorBlock = {
       id: Date.now().toString(),
-      type: blockType,
-      content: { text: 'Novo bloco' },
-      order: editorBlocks.length
+      type,
+      content: getDefaultContent(type)
     };
-    setEditorBlocks([...editorBlocks, newBlock]);
+    setBlocks([...blocks, newBlock]);
   };
 
-  const handleUpdateBlock = (blockId: string, content: any) => {
-    setEditorBlocks(blocks => 
-      blocks.map(block => 
-        block.id === blockId ? { ...block, content } : block
-      )
-    );
+  const getDefaultContent = (type: EditorBlock['type']): EditableContent => {
+    switch (type) {
+      case 'text':
+        return { text: '' };
+      case 'question':
+        return { question: '', options: ['', ''] };
+      case 'image':
+        return { imageUrl: '', alt: '' };
+      default:
+        return {};
+    }
   };
 
-  const handleDeleteBlock = (blockId: string) => {
-    setEditorBlocks(blocks => blocks.filter(block => block.id !== blockId));
+  const updateBlock = (id: string, content: EditableContent) => {
+    setBlocks(blocks.map(block => 
+      block.id === id ? { ...block, content } : block
+    ));
+  };
+
+  const deleteBlock = (id: string) => {
+    setBlocks(blocks.filter(block => block.id !== id));
+  };
+
+  const handleQuizSelect = (quiz: Quiz) => {
+    setSelectedQuiz(quiz);
+    loadQuiz(quiz.id);
+    setSelectedView('editor');
+  };
+
+  const handleCreateQuiz = async () => {
+    try {
+      await saveQuiz({
+        title: 'Novo Quiz',
+        description: 'Descrição do quiz',
+        category: 'general',
+        is_public: false,
+        is_published: false
+      });
+      loadQuizzes();
+      setSelectedView('editor');
+    } catch (error) {
+      console.error('Erro ao criar quiz:', error);
+    }
   };
 
   if (quizzesLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p>Carregando...</p>
-      </div>
-    );
+    return <div className="p-8">Carregando...</div>;
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
-              {selectedQuiz && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleBackToDashboard}
-                  className="flex items-center gap-2"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                  Voltar
-                </Button>
-              )}
-              <h1 className="text-xl font-semibold">
-                {selectedQuiz ? `Editando: ${selectedQuiz.title}` : 'Editor de Quizzes'}
-              </h1>
-            </div>
-            
-            {selectedQuiz && (
-              <div className="flex items-center space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setActiveTab('dashboard')}
-                  className={activeTab === 'dashboard' ? 'bg-blue-50' : ''}
-                >
-                  Dashboard
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setActiveTab('editor')}
-                  className={activeTab === 'editor' ? 'bg-blue-50' : ''}
-                >
-                  Editor
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setActiveTab('preview')}
-                  className={activeTab === 'preview' ? 'bg-blue-50' : ''}
-                >
-                  Preview
-                </Button>
-                <Button
-                  onClick={handleSaveQuiz}
-                  className="flex items-center gap-2"
-                  disabled={quizLoading}
-                >
-                  <Save className="w-4 h-4" />
-                  Salvar
-                </Button>
-              </div>
-            )}
+      {selectedView === 'dashboard' && (
+        <div className="container mx-auto p-8">
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-3xl font-bold">Quiz Editor</h1>
+            <Button onClick={handleCreateQuiz} className="flex items-center gap-2">
+              <Plus size={16} />
+              Criar Novo Quiz
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {quizzes.map((quiz) => (
+              <Card key={quiz.id} className="cursor-pointer hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    {quiz.title}
+                    <Badge variant="secondary">{quiz.category}</Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 mb-4">{quiz.description}</p>
+                  <div className="flex gap-2">
+                    <Button 
+                      size="sm" 
+                      onClick={() => handleQuizSelect(quiz)}
+                      className="flex items-center gap-1"
+                    >
+                      <Edit size={14} />
+                      Editar
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === 'dashboard' && (
-          <QuizDashboard 
-            quizzes={quizzes} 
-            onQuizSelect={handleQuizSelect}
-            onCreateQuiz={() => setShowCreateModal(true)}
-          />
-        )}
-
-        {activeTab === 'editor' && selectedQuiz && (
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Editor de Blocos</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex gap-2 mb-4">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleAddBlock('text')}
-                  >
-                    + Texto
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleAddBlock('question')}
-                  >
-                    + Pergunta
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleAddBlock('image')}
-                  >
-                    + Imagem
-                  </Button>
-                </div>
-                
-                <div className="space-y-4">
-                  {editorBlocks.map((block) => {
-                    const BlockComponent = blockComponents[block.type];
-                    if (!BlockComponent) return null;
-                    
-                    return (
-                      <div key={block.id} className="border rounded-lg p-4">
-                        <BlockComponent
-                          content={block.content}
-                          onUpdate={(content) => handleUpdateBlock(block.id, content)}
-                          onDelete={() => handleDeleteBlock(block.id)}
-                        />
-                      </div>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
-
-            <QuizEditor
-              quiz={selectedQuiz}
-              questions={questions}
-              onQuizUpdate={updateQuiz}
-              onQuestionAdd={addQuestion}
-              onQuestionUpdate={updateQuestion}
-              onQuestionDelete={deleteQuestion}
-            />
+      {selectedView === 'editor' && (
+        <div className="flex h-screen">
+          {/* Sidebar */}
+          <div className="w-64 bg-white border-r p-4">
+            <Button 
+              variant="ghost" 
+              onClick={() => setSelectedView('dashboard')}
+              className="mb-4"
+            >
+              ← Voltar
+            </Button>
+            
+            <h2 className="font-bold mb-4">Componentes</h2>
+            <div className="space-y-2">
+              {Object.keys(blockComponents).map((type) => (
+                <Button
+                  key={type}
+                  variant="outline"
+                  className="w-full justify-start"
+                  onClick={() => addBlock(type as EditorBlock['type'])}
+                >
+                  {type === 'text' && 'Texto'}
+                  {type === 'question' && 'Pergunta'}
+                  {type === 'image' && 'Imagem'}
+                </Button>
+              ))}
+            </div>
           </div>
-        )}
 
-        {activeTab === 'preview' && selectedQuiz && (
-          <QuizPreview quiz={selectedQuiz} />
-        )}
-      </div>
+          {/* Main Editor */}
+          <div className="flex-1 p-8">
+            {selectedQuiz && (
+              <div className="mb-6">
+                <Input
+                  value={selectedQuiz.title}
+                  onChange={(e) => updateQuiz({ title: e.target.value })}
+                  className="text-2xl font-bold mb-2"
+                  placeholder="Título do Quiz"
+                />
+                <Textarea
+                  value={selectedQuiz.description || ''}
+                  onChange={(e) => updateQuiz({ description: e.target.value })}
+                  placeholder="Descrição do quiz"
+                  className="mb-4"
+                />
+              </div>
+            )}
 
-      {/* Create Quiz Modal */}
-      <CreateQuizModal
-        isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        onSubmit={handleCreateQuiz}
-      />
+            <div className="space-y-4">
+              {blocks.map((block) => {
+                const BlockComponent = blockComponents[block.type];
+                if (!BlockComponent) return null;
+                
+                return (
+                  <div key={block.id} className="border rounded-lg p-4">
+                    <BlockComponent
+                      content={block.content}
+                      onUpdate={(content: EditableContent) => updateBlock(block.id, content)}
+                      onDelete={() => deleteBlock(block.id)}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
-};
-
-export default QuizEditorPage;
+}

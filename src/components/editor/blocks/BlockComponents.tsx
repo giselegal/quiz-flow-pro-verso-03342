@@ -67,4 +67,14 @@ export const BlockComponents: React.FC<BlockComponentProps> = ({
   }
 };
 
+// Export the available blocks array that's being imported elsewhere
+export const AVAILABLE_BLOCKS = [
+  { type: 'text', name: 'Texto', icon: 'Type' },
+  { type: 'header', name: 'Cabeçalho', icon: 'Heading' },
+  { type: 'image', name: 'Imagem', icon: 'Image' },
+  { type: 'button', name: 'Botão', icon: 'MousePointer' },
+  { type: 'spacer', name: 'Espaçador', icon: 'Space' },
+  { type: 'quiz-question', name: 'Pergunta', icon: 'HelpCircle' }
+];
+
 export default BlockComponents;
