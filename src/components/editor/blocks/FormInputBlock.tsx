@@ -71,6 +71,11 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
         if (onValueChange) {
           onValueChange(newValue.trim());
         }
+
+        // Disparar evento customizado para outros componentes
+        window.dispatchEvent(new CustomEvent('quiz-input-change', {
+          detail: { blockId: block.id, value: newValue.trim(), valid }
+        }));
       } catch (error) {
         console.error('❌ Erro ao salvar resposta:', error);
       }
@@ -117,23 +122,6 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
             }
           `}
         />
-        
-        {/* Indicador de status */}
-        {value && (
-          <div className="flex items-center gap-2 text-xs">
-            {isValid ? (
-              <>
-                <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                <span className="text-green-600">Salvo automaticamente</span>
-              </>
-            ) : (
-              <>
-                <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                <span className="text-red-600">Campo obrigatório</span>
-              </>
-            )}
-          </div>
-        )}
       </div>
     </div>
   );
