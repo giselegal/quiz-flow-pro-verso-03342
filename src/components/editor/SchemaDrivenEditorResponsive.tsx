@@ -1,7 +1,7 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+// import { DndProvider } from 'react-dnd';
+// import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
@@ -54,7 +54,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   }, [config.blocks]);
 
   return (
-    <DndProvider backend={HTML5Backend}>
+    // <DndProvider backend={HTML5Backend}>
       <div className={cn('h-full flex flex-col bg-gray-50', className)}>
         {/* Header */}
         <div className="flex-shrink-0 bg-white border-b border-gray-200 px-4 py-2">
@@ -192,7 +192,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
-    </DndProvider>
+    // </DndProvider>
   );
 };
 
