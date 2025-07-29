@@ -11,6 +11,7 @@ import { useEditor } from '../../hooks/useEditor';
 import { UniversalBlockRenderer } from './blocks/UniversalBlockRenderer';
 import type { BlockData } from '../../types/blocks';
 import { getInitialQuiz21EtapasTemplate } from '../../templates/quiz21EtapasTemplate';
+import { normalizeBlock } from '../../utils/blockTypeMapping';
 import { AdvancedPropertyPanel } from './AdvancedPropertyPanel';
 import { EditorStatus } from './components/EditorStatus';
 import { StepsPanel } from './StepsPanel';
@@ -202,41 +203,93 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     try {
       setSelectedBlockId(null);
       
-      // Teste simples primeiro - adicionar alguns blocos básicos
-      console.log('🔄 Carregando blocos de teste...');
+      console.log('🔄 Carregando blocos de teste básicos...');
       
-      // Blocos de teste simples que sabemos que existem
+      // Blocos de teste extremamente simples para garantir funcionamento
       const testBlocks = [
-        { type: 'heading', content: { text: 'Etapa 1: Introdução' } },
-        { type: 'text', content: { text: 'Bem-vindo ao quiz de estilo pessoal' } },
-        { type: 'button', content: { text: 'Começar Quiz' } },
-        { type: 'heading', content: { text: 'Questão 1' } },
-        { type: 'text', content: { text: 'Qual seu estilo preferido?' } }
+        { 
+          id: 'test-1',
+          type: 'heading', 
+          properties: { 
+            content: 'Bem-vindo ao Editor Visual das 21 Etapas',
+            level: 'h1',
+            textAlign: 'center',
+            color: '#1f2937'
+          } 
+        },
+        { 
+          id: 'test-2',
+          type: 'text', 
+          properties: { 
+            content: 'Este é um exemplo de texto editável. Clique neste bloco para configurar suas propriedades.',
+            textAlign: 'left'
+          } 
+        },
+        { 
+          id: 'test-3',
+          type: 'button', 
+          properties: { 
+            content: 'Botão de Exemplo',
+            backgroundColor: '#3b82f6',
+            textColor: '#ffffff',
+            size: 'medium'
+          } 
+        },
+        { 
+          id: 'test-4',
+          type: 'text-inline', 
+          properties: { 
+            content: 'Componente de texto inline - totalmente responsivo e editável'
+          } 
+        },
+        { 
+          id: 'test-5',
+          type: 'heading-inline', 
+          properties: { 
+            content: 'Título Responsivo',
+            level: 'h2',
+            color: '#059669'
+          } 
+        }
       ];
       
+      // Normalizar e adicionar blocos um por vez
       let addedCount = 0;
       for (const block of testBlocks) {
         try {
-          console.log(`📦 Adicionando bloco ${addedCount + 1}: ${block.type}`);
-          const newBlockId = addBlock(block.type as any);
+          const normalizedBlock = normalizeBlock(block);
+          console.log(`📦 Adicionando bloco ${addedCount + 1}:`, normalizedBlock.type);
+          
+          const newBlockId = addBlock(normalizedBlock.type as any);
           addedCount++;
           
-          // Atualizar com conteúdo após pequeno delay
+          // Atualizar propriedades do bloco
           setTimeout(() => {
-            updateBlock(newBlockId, block.content);
-          }, 50);
+            updateBlock(newBlockId, normalizedBlock.properties);
+          }, 100);
           
         } catch (blockError) {
           console.warn(`⚠️ Erro ao adicionar bloco ${block.type}:`, blockError);
         }
       }
       
-      console.log(`✅ Blocos de teste carregados! ${addedCount} blocos adicionados.`);
-      alert(`✅ Blocos de teste carregados!\n${addedCount} componentes adicionados ao canvas.`);
+      console.log(`✅ ${addedCount} blocos de teste adicionados com sucesso!`);
+      
+      // Toast de sucesso
+      if (addedCount > 0) {
+        // toast({
+        //   title: "Template carregado!",
+        //   description: `${addedCount} blocos foram adicionados ao editor.`,
+        // });
+      }
       
     } catch (error) {
-      console.error('❌ Erro ao carregar blocos:', error);
-      alert(`❌ Erro ao carregar blocos: ${error.message}`);
+      console.error('❌ Erro ao carregar template:', error);
+      // toast({
+      //   title: "Erro ao carregar template",
+      //   description: "Não foi possível carregar os blocos de teste.",
+      //   variant: "destructive",
+      // });
     }
   }, [addBlock, updateBlock]);
 
