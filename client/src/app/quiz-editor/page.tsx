@@ -3,265 +3,270 @@
 
 import React, { useState } from 'react';
 import { useLocation } from 'wouter';
-import { useQuiz } from '@/hooks/useQuiz';
-import { useQuizzes } from '@/hooks/useQuiz';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BlockComponents } from '@/components/editor/blocks/BlockComponents';
-import { QuizDashboard } from '@/components/quiz/QuizDashboard';
-import { QuizPreview } from '@/components/quiz/QuizPreview';
-import { Plus, Save, Eye, Settings } from 'lucide-react';
+import { useQuizzes } from '@/hooks/useQuizzes';
+import { useQuiz } from '@/hooks/useQuiz';
 import { Quiz, Question } from '@/types/quiz';
+import { QuizDashboard } from '@/components/quiz/QuizDashboard';
+import { QuizEditor } from '@/components/quiz/QuizEditor';
+import { QuizPreview } from '@/components/quiz/QuizPreview';
+import { CreateQuizModal } from '@/components/quiz/CreateQuizModal';
+import BlockComponents from '@/components/editor/blocks/BlockComponents';
+import { Plus, Save, Eye, Settings } from 'lucide-react';
 
-export default function QuizEditorPage() {
-  const [location, setLocation] = useLocation();
-  const [activeTab, setActiveTab] = useState('dashboard');
+interface EditorBlock {
+  id: string;
+  type: 'text' | 'multiple_choice' | 'single_choice' | 'rating';
+  content: any;
+  order: number;
+}
+
+const QuizEditorPage: React.FC = () => {
+  const [location, navigate] = useLocation();
+  const { quizzes, loading: quizzesLoading, error: quizzesError, createQuiz } = useQuizzes();
+  const { quiz, questions, loading, error, loadQuiz, updateQuiz, addQuestion, updateQuestion, deleteQuestion } = useQuiz();
   
-  const {
-    quiz,
-    questions,
-    loading,
-    error,
-    loadQuiz,
-    updateQuiz,
-    addQuestion,
-    updateQuestion,
-    deleteQuestion,
-    saveQuiz
-  } = useQuiz();
-
-  const { quizzes, loading: quizzesLoading, createQuiz } = useQuizzes();
-
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [editingQuestion, setEditingQuestion] = useState<Question | null>(null);
+  const [blocks, setBlocks] = useState<EditorBlock[]>([]);
 
-  // Handle quiz selection
-  const handleQuizSelect = async (quiz: Quiz) => {
-    setSelectedQuiz(quiz);
-    await loadQuiz(quiz.id);
-  };
-
-  // Handle adding new question
-  const handleAddQuestion = async () => {
-    if (!quiz) return;
+  const saveQuiz = async () => {
+    if (!selectedQuiz) return;
     
     try {
-      await addQuestion({
-        title: 'Nova Pergunta',
-        text: 'Digite sua pergunta aqui',
-        type: 'multiple_choice',
-        options: []
-      });
-    } catch (error) {
-      console.error('Error adding question:', error);
-    }
-  };
-
-  // Handle updating question
-  const handleUpdateQuestion = async (questionId: string, updates: Partial<Question>) => {
-    try {
-      await updateQuestion(questionId, updates);
-    } catch (error) {
-      console.error('Error updating question:', error);
-    }
-  };
-
-  // Handle saving quiz
-  const handleSave = async () => {
-    if (!quiz) return;
-    
-    try {
-      await saveQuiz();
+      await updateQuiz({ ...selectedQuiz });
+      console.log('Quiz saved successfully');
     } catch (error) {
       console.error('Error saving quiz:', error);
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="border-b bg-white">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold">Editor de Quiz</h1>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm">
-                <Settings className="w-4 h-4 mr-2" />
-                Configurações
-              </Button>
-              <Button onClick={handleSave} disabled={loading}>
-                <Save className="w-4 h-4 mr-2" />
-                {loading ? 'Salvando...' : 'Salvar'}
-              </Button>
+  const handleQuizSelect = (selectedQuiz: Quiz) => {
+    setSelectedQuiz(selectedQuiz);
+    setActiveTab('editor');
+  };
+
+  const handleCreateQuiz = async (quizData: any) => {
+    try {
+      const newQuiz = await createQuiz(quizData);
+      setSelectedQuiz(newQuiz);
+      setActiveTab('editor');
+    } catch (error) {
+      console.error('Error creating quiz:', error);
+    }
+  };
+
+  const addBlock = (type: EditorBlock['type']) => {
+    const newBlock: EditorBlock = {
+      id: `block-${Date.now()}`,
+      type,
+      content: getDefaultContentForType(type),
+      order: blocks.length
+    };
+    setBlocks([...blocks, newBlock]);
+  };
+
+  const updateBlock = (id: string, content: any) => {
+    setBlocks(blocks.map(block => 
+      block.id === id ? { ...block, content: { ...block.content, ...content } } : block
+    ));
+  };
+
+  const deleteBlock = (id: string) => {
+    setBlocks(blocks.filter(block => block.id !== id));
+  };
+
+  const getDefaultContentForType = (type: EditorBlock['type']) => {
+    switch (type) {
+      case 'text':
+        return { text: 'Digite seu texto aqui...' };
+      case 'multiple_choice':
+        return {
+          question: 'Sua pergunta aqui?',
+          options: ['Opção 1', 'Opção 2', 'Opção 3']
+        };
+      case 'single_choice':
+        return {
+          question: 'Sua pergunta aqui?',
+          options: ['Opção A', 'Opção B', 'Opção C']
+        };
+      case 'rating':
+        return {
+          question: 'Como você avaliaria?',
+          minLabel: 'Ruim',
+          maxLabel: 'Excelente',
+          scale: 5
+        };
+      default:
+        return {};
+    }
+  };
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'dashboard':
+        return (
+          <QuizDashboard 
+            quizzes={quizzes}
+            onQuizSelect={handleQuizSelect}
+            onCreateQuiz={() => setShowCreateModal(true)}
+          />
+        );
+      case 'editor':
+        return selectedQuiz ? (
+          <div className="flex-1 flex flex-col">
+            <div className="bg-white border-b p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-xl font-bold">{selectedQuiz.title}</h1>
+                  <p className="text-gray-500 text-sm">Editor de Quiz</p>
+                </div>
+                <div className="flex space-x-2">
+                  <Button variant="outline" onClick={() => setActiveTab('preview')}>
+                    <Eye className="w-4 h-4 mr-2" />
+                    Preview
+                  </Button>
+                  <Button onClick={saveQuiz}>
+                    <Save className="w-4 h-4 mr-2" />
+                    Salvar
+                  </Button>
+                </div>
+              </div>
             </div>
+
+            <div className="flex-1 flex">
+              {/* Sidebar */}
+              <div className="w-64 bg-gray-50 border-r p-4">
+                <h3 className="font-medium mb-4">Componentes</h3>
+                <div className="space-y-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => addBlock('text')}
+                    className="w-full justify-start"
+                  >
+                    📝 Texto
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => addBlock('multiple_choice')}
+                    className="w-full justify-start"
+                  >
+                    ☑️ Múltipla Escolha
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => addBlock('single_choice')}
+                    className="w-full justify-start"
+                  >
+                    ⚪ Escolha Única
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => addBlock('rating')}
+                    className="w-full justify-start"
+                  >
+                    ⭐ Avaliação
+                  </Button>
+                </div>
+              </div>
+
+              {/* Editor Canvas */}
+              <div className="flex-1 p-6 overflow-y-auto">
+                <div className="max-w-2xl mx-auto space-y-4">
+                  {blocks.map(block => (
+                    <div key={block.id} className="border rounded-lg p-4 bg-white">
+                      <BlockComponents
+                        block={block}
+                        onUpdate={(content) => updateBlock(block.id, content)}
+                        onDelete={() => deleteBlock(block.id)}
+                      />
+                    </div>
+                  ))}
+                  
+                  {blocks.length === 0 && (
+                    <div className="text-center py-12 text-gray-500">
+                      <p className="mb-4">Nenhum componente adicionado ainda</p>
+                      <p className="text-sm">Use a barra lateral para adicionar componentes ao seu quiz</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="flex-1 flex items-center justify-center">
+            <p className="text-gray-500">Selecione um quiz para editar</p>
+          </div>
+        );
+      case 'preview':
+        return selectedQuiz ? (
+          <QuizPreview quiz={selectedQuiz} />
+        ) : (
+          <div className="flex-1 flex items-center justify-center">
+            <p className="text-gray-500">Nenhum quiz selecionado para preview</p>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="h-screen flex flex-col bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b px-6 py-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold">Quiz Editor</h1>
+          <div className="flex space-x-2">
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className={`px-4 py-2 rounded-md ${
+                activeTab === 'dashboard' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Dashboard
+            </button>
+            <button
+              onClick={() => setActiveTab('editor')}
+              className={`px-4 py-2 rounded-md ${
+                activeTab === 'editor' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Editor
+            </button>
+            <button
+              onClick={() => setActiveTab('preview')}
+              className={`px-4 py-2 rounded-md ${
+                activeTab === 'preview' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Preview
+            </button>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-6">
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-            <TabsTrigger value="questions">Perguntas</TabsTrigger>
-            <TabsTrigger value="design">Design</TabsTrigger>
-            <TabsTrigger value="preview">Preview</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="dashboard" className="mt-6">
-            <QuizDashboard 
-              quizzes={quizzes}
-              onQuizSelect={handleQuizSelect}
-            />
-          </TabsContent>
-
-          <TabsContent value="questions" className="mt-6">
-            <div className="space-y-6">
-              <div className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold">Perguntas do Quiz</h2>
-                <Button onClick={handleAddQuestion} disabled={!quiz}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Nova Pergunta
-                </Button>
-              </div>
-
-              {error && (
-                <Card className="p-4 border-red-200 bg-red-50">
-                  <p className="text-red-600">{error}</p>
-                </Card>
-              )}
-
-              {!quiz && (
-                <Card className="p-8 text-center">
-                  <p className="text-gray-500">Selecione um quiz para começar a editar</p>
-                </Card>
-              )}
-
-              {quiz && (
-                <div className="space-y-4">
-                  <Card className="p-4">
-                    <h3 className="font-medium mb-2">Informações do Quiz</h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label>Título</Label>
-                        <Input 
-                          value={quiz.title} 
-                          onChange={(e) => updateQuiz({ title: e.target.value })}
-                        />
-                      </div>
-                      <div>
-                        <Label>Descrição</Label>
-                        <Textarea 
-                          value={quiz.description} 
-                          onChange={(e) => updateQuiz({ description: e.target.value })}
-                        />
-                      </div>
-                    </div>
-                  </Card>
-
-                  <div className="space-y-4">
-                    {questions.map((question, index) => (
-                      <Card key={question.id} className="p-4">
-                        <div className="flex justify-between items-start mb-3">
-                          <Badge variant="outline">Pergunta {index + 1}</Badge>
-                          <Button 
-                            variant="destructive" 
-                            size="sm"
-                            onClick={() => deleteQuestion(question.id)}
-                          >
-                            Excluir
-                          </Button>
-                        </div>
-                        
-                        <div className="space-y-3">
-                          <div>
-                            <Label>Título da Pergunta</Label>
-                            <Input 
-                              value={question.title}
-                              onChange={(e) => handleUpdateQuestion(question.id, { title: e.target.value })}
-                            />
-                          </div>
-                          
-                          <div>
-                            <Label>Texto da Pergunta</Label>
-                            <Textarea 
-                              value={question.text}
-                              onChange={(e) => handleUpdateQuestion(question.id, { text: e.target.value })}
-                            />
-                          </div>
-                        </div>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="design" className="mt-6">
-            <div className="grid grid-cols-4 gap-6">
-              <div className="col-span-1">
-                <Card className="p-4">
-                  <h3 className="font-medium mb-4">Componentes</h3>
-                  <div className="space-y-2">
-                    <Button variant="outline" className="w-full justify-start">
-                      📝 Texto
-                    </Button>
-                    <Button variant="outline" className="w-full justify-start">
-                      🖼️ Imagem
-                    </Button>
-                    <Button variant="outline" className="w-full justify-start">
-                      🔘 Botão
-                    </Button>
-                  </div>
-                </Card>
-              </div>
-              
-              <div className="col-span-2">
-                <Card className="p-6 min-h-[400px]">
-                  <h3 className="font-medium mb-4">Editor Visual</h3>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                    <p className="text-gray-500">Arraste componentes aqui para personalizar seu quiz</p>
-                  </div>
-                </Card>
-              </div>
-              
-              <div className="col-span-1">
-                <Card className="p-4">
-                  <h3 className="font-medium mb-4">Propriedades</h3>
-                  <p className="text-gray-500 text-sm">Selecione um componente para editar suas propriedades</p>
-                </Card>
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="preview" className="mt-6">
-            <div className="flex justify-center">
-              <div className="w-full max-w-2xl">
-                <Card className="p-6">
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="font-medium">Preview do Quiz</h3>
-                    <Button variant="outline" size="sm">
-                      <Eye className="w-4 h-4 mr-2" />
-                      Tela Cheia
-                    </Button>
-                  </div>
-                  
-                  {quiz ? (
-                    <QuizPreview quiz={quiz} />
-                  ) : (
-                    <div className="text-center py-8 text-gray-500">
-                      Selecione um quiz para visualizar o preview
-                    </div>
-                  )}
-                </Card>
-              </div>
-            </div>
-          </TabsContent>
-        </Tabs>
+      {/* Content */}
+      <div className="flex-1 overflow-hidden">
+        {renderTabContent()}
       </div>
+
+      {/* Create Quiz Modal */}
+      <CreateQuizModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSubmit={handleCreateQuiz}
+      />
     </div>
   );
-}
+};
+
+export default QuizEditorPage;

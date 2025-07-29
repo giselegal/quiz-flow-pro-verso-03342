@@ -20,10 +20,11 @@ export const useQuiz = (quizId?: string) => {
     setError(null);
     
     try {
-      const quizData = await QuizService.getQuizById(id);
+      const quizData = await QuizService.getQuiz(id);
       if (quizData) {
         setQuiz(quizData);
-        setQuestions(quizData.questions || []);
+        const questionsData = await QuizService.getQuizQuestions(id);
+        setQuestions(questionsData || []);
       } else {
         setError('Quiz não encontrado');
       }
@@ -50,14 +51,45 @@ export const useQuiz = (quizId?: string) => {
     }
   };
 
+  const saveQuiz = async (quizData?: Partial<Quiz>) => {
+    if (!quiz) return;
+    
+    const dataToSave = quizData || quiz;
+    return await updateQuiz(dataToSave);
+  };
+
   const addQuestion = async (questionData: Partial<Question>) => {
     if (!quiz) return;
     
     setLoading(true);
     try {
-      const newQuestion = await QuizService.addQuestion(quiz.id, questionData);
-      setQuestions(prev => [...prev, newQuestion]);
-      return newQuestion;
+      const questionToCreate = {
+        quiz_id: quiz.id,
+        question_text: questionData.text || '',
+        question_type: questionData.type || 'single_choice',
+        options: questionData.options || [],
+        correct_answers: [],
+        points: 1,
+        order_index: questions.length,
+        tags: questionData.tags || []
+      };
+      
+      const newQuestion = await QuizService.createQuestions([questionToCreate]);
+      if (newQuestion && newQuestion.length > 0) {
+        const question = newQuestion[0];
+        const formattedQuestion: Question = {
+          id: question.id,
+          title: question.question_text,
+          text: question.question_text,
+          type: question.question_type as any,
+          options: question.options || [],
+          required: question.required || false,
+          hint: question.hint,
+          tags: question.tags || []
+        };
+        setQuestions(prev => [...prev, formattedQuestion]);
+        return formattedQuestion;
+      }
     } catch (err) {
       setError('Erro ao adicionar pergunta');
       throw err;
@@ -69,9 +101,28 @@ export const useQuiz = (quizId?: string) => {
   const updateQuestion = async (questionId: string, updates: Partial<Question>) => {
     setLoading(true);
     try {
-      const updatedQuestion = await QuizService.updateQuestion(questionId, updates);
-      setQuestions(prev => prev.map(q => q.id === questionId ? updatedQuestion : q));
-      return updatedQuestion;
+      const updateData = {
+        question_text: updates.text,
+        question_type: updates.type,
+        options: updates.options,
+        hint: updates.hint,
+        tags: updates.tags
+      };
+      
+      const updatedQuestion = await QuizService.updateQuestion(questionId, updateData);
+      const formattedQuestion: Question = {
+        id: updatedQuestion.id,
+        title: updatedQuestion.question_text,
+        text: updatedQuestion.question_text,
+        type: updatedQuestion.question_type as any,
+        options: updatedQuestion.options || [],
+        required: updatedQuestion.required || false,
+        hint: updatedQuestion.hint,
+        tags: updatedQuestion.tags || []
+      };
+      
+      setQuestions(prev => prev.map(q => q.id === questionId ? formattedQuestion : q));
+      return formattedQuestion;
     } catch (err) {
       setError('Erro ao atualizar pergunta');
       throw err;
@@ -98,7 +149,7 @@ export const useQuiz = (quizId?: string) => {
     
     setLoading(true);
     try {
-      await QuizService.reorderQuestions(quiz.id, questionIds);
+      // For now, just reorder locally
       const reorderedQuestions = questionIds.map(id => questions.find(q => q.id === id)!).filter(Boolean);
       setQuestions(reorderedQuestions);
     } catch (err) {
@@ -116,80 +167,10 @@ export const useQuiz = (quizId?: string) => {
     error,
     loadQuiz,
     updateQuiz,
+    saveQuiz,
     addQuestion,
     updateQuestion,
     deleteQuestion,
     reorderQuestions
-  };
-};
-
-export const useQuizzes = () => {
-  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const loadQuizzes = async (userId: string) => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const quizzesData = await QuizService.getUserQuizzes(userId);
-      setQuizzes(quizzesData);
-    } catch (err) {
-      setError('Erro ao carregar quizzes');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const createQuiz = async (quizData: Partial<Quiz>) => {
-    setLoading(true);
-    try {
-      const newQuiz = await QuizService.createQuiz(quizData);
-      setQuizzes(prev => [...prev, newQuiz]);
-      return newQuiz;
-    } catch (err) {
-      setError('Erro ao criar quiz');
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const duplicateQuiz = async (quizId: string) => {
-    setLoading(true);
-    try {
-      const duplicatedQuiz = await QuizService.duplicateQuiz(quizId);
-      setQuizzes(prev => [...prev, duplicatedQuiz]);
-      return duplicatedQuiz;
-    } catch (err) {
-      setError('Erro ao duplicar quiz');
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const deleteQuiz = async (quizId: string) => {
-    setLoading(true);
-    try {
-      await QuizService.deleteQuiz(quizId);
-      setQuizzes(prev => prev.filter(q => q.id !== quizId));
-    } catch (err) {
-      setError('Erro ao deletar quiz');
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return {
-    quizzes,
-    loading,
-    error,
-    loadQuizzes,
-    createQuiz,
-    duplicateQuiz,
-    deleteQuiz
   };
 };
