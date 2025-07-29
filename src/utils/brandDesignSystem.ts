@@ -50,10 +50,10 @@ export const BRAND_COLORS = {
 // GRADIENTES DA MARCA
 // =====================================================
 export const BRAND_GRADIENTS = {
-  primary: `linear-gradient(135deg, ${BRAND_COLORS.primary.main} 0%, ${BRAND_COLORS.primary.hover} 100%)`,
-  secondary: `linear-gradient(135deg, ${BRAND_COLORS.secondary.main} 0%, ${BRAND_COLORS.secondary.hover} 100%)`,
-  hero: `linear-gradient(135deg, ${BRAND_COLORS.primary.main} 0%, ${BRAND_COLORS.secondary.main} 100%)`,
-  elegant: `linear-gradient(135deg, ${BRAND_COLORS.primary.light} 0%, ${BRAND_COLORS.primary.main} 50%, ${BRAND_COLORS.secondary.main} 100%)`,
+  primary: 'linear-gradient(135deg, #B89B7A 0%, #A68B6A 100%)',
+  secondary: 'linear-gradient(135deg, #8B7355 0%, #7A6245 100%)',
+  hero: 'linear-gradient(135deg, #B89B7A 0%, #8B7355 100%)',
+  elegant: 'linear-gradient(135deg, #D4C4B0 0%, #B89B7A 50%, #8B7355 100%)',
 };
 
 // =====================================================
@@ -127,11 +127,11 @@ export const SPACING = {
 export const BUTTON_STYLES = {
   // Variantes com cores da marca
   variants: {
-    primary: `bg-[${BRAND_COLORS.primary.main}] hover:bg-[${BRAND_COLORS.primary.hover}] text-white border-[${BRAND_COLORS.primary.main}] hover:border-[${BRAND_COLORS.primary.hover}]`,
-    secondary: `bg-[${BRAND_COLORS.secondary.main}] hover:bg-[${BRAND_COLORS.secondary.hover}] text-white border-[${BRAND_COLORS.secondary.main}] hover:border-[${BRAND_COLORS.secondary.hover}]`,
-    outline: `bg-transparent hover:bg-[${BRAND_COLORS.primary.main}] text-[${BRAND_COLORS.primary.main}] hover:text-white border-[${BRAND_COLORS.primary.main}]`,
-    ghost: `bg-transparent hover:bg-[${BRAND_COLORS.primary.light}] text-[${BRAND_COLORS.primary.main}] hover:text-[${BRAND_COLORS.secondary.main}] border-transparent`,
-    accent: `bg-gradient-to-r ${BRAND_GRADIENTS.primary} text-white border-transparent shadow-lg hover:shadow-xl`,
+    primary: 'bg-[#B89B7A] hover:bg-[#A68B6A] text-white border-[#B89B7A] hover:border-[#A68B6A]',
+    secondary: 'bg-[#8B7355] hover:bg-[#7A6245] text-white border-[#8B7355] hover:border-[#7A6245]',
+    outline: 'bg-transparent hover:bg-[#B89B7A] text-[#B89B7A] hover:text-white border-[#B89B7A]',
+    ghost: 'bg-transparent hover:bg-[#D4C4B0] text-[#B89B7A] hover:text-[#8B7355] border-transparent',
+    accent: 'bg-gradient-to-r from-[#B89B7A] to-[#8B7355] text-white border-transparent shadow-lg hover:shadow-xl',
   },
   
   // Tamanhos responsivos
@@ -228,18 +228,18 @@ export const EFFECTS = {
     md: 'shadow-md',
     lg: 'shadow-lg',
     xl: 'shadow-xl',
-    brand: `shadow-lg shadow-[${BRAND_COLORS.primary.main}]/20`,
-    glow: `shadow-2xl shadow-[${BRAND_COLORS.primary.main}]/30`,
+    brand: 'shadow-lg shadow-[#B89B7A]/20',
+    glow: 'shadow-2xl shadow-[#B89B7A]/30',
   },
   
   borders: {
-    brand: `border-[${BRAND_COLORS.primary.main}]`,
-    brandLight: `border-[${BRAND_COLORS.primary.light}]`,
-    subtle: `border-[${BRAND_COLORS.neutral.gray200}]`,
+    brand: 'border-[#B89B7A]',
+    brandLight: 'border-[#D4C4B0]',
+    subtle: 'border-[#E5E7EB]',
   },
   
   focus: {
-    brand: `focus:ring-4 focus:ring-[${BRAND_COLORS.primary.main}]/20 focus:border-[${BRAND_COLORS.primary.main}]`,
+    brand: 'focus:ring-4 focus:ring-[#B89B7A]/20 focus:border-[#B89B7A]',
     outline: 'focus:outline-none focus:ring-2 focus:ring-offset-2',
   },
 };
