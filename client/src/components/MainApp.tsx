@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import QuizDashboard from './quiz/QuizDashboard';
+import { QuizDashboard } from './quiz/QuizDashboard';
 import QuizEditor from './quiz/QuizEditor';
 import { Quiz } from '@/types/quiz';
 

@@ -1,315 +1,245 @@
 
-'use client';
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { EditorProvider } from '@/contexts/EditorContext';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
-import { Plus, Settings, Eye, Save, ArrowLeft } from 'lucide-react';
-import { useEditor } from '@/contexts/EditorContext';
+import { Input } from '@/components/ui/input';
+import { Plus, Eye, Settings, Save, ArrowLeft } from 'lucide-react';
+import { BlockComponents } from '@/components/editor/blocks/BlockComponents';
 import { Quiz, Question } from '@/types/quiz';
-import { QuizService } from '@/services/QuizService';
 
-export default function QuizEditorPage() {
-  const {
-    blocks,
-    selectedBlockId,
-    setSelectedBlockId,
-    state,
-    loadQuiz,
-    createQuiz,
-    saveQuiz,
-    actions
-  } = useEditor();
-
-  const [quiz, setQuiz] = useState<Quiz | null>(null);
+const QuizEditorPage: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('editor');
+  const [currentQuiz, setCurrentQuiz] = useState<Quiz | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState('questions');
-
-  // Load quiz data on component mount
-  useEffect(() => {
-    const loadQuizData = async () => {
-      setLoading(true);
-      try {
-        const quizzes = await QuizService.getQuizzes();
-        if (quizzes.length > 0) {
-          const firstQuiz = quizzes[0];
-          setQuiz(firstQuiz);
-          setQuestions(firstQuiz.questions || []);
-        }
-      } catch (error) {
-        console.error('Error loading quiz:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadQuizData();
-  }, []);
-
-  const handleSave = async () => {
-    if (!quiz) return;
-    
-    setLoading(true);
-    try {
-      await QuizService.updateQuiz(quiz.id, {
-        ...quiz,
-        questions
-      });
-    } catch (error) {
-      console.error('Error saving quiz:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const addQuestion = () => {
+  
+  const handleAddQuestion = () => {
     const newQuestion: Question = {
-      id: `question-${Date.now()}`,
-      title: 'Nova pergunta',
-      text: 'Digite sua pergunta aqui',
-      type: 'multiple_choice',
+      id: `q-${Date.now()}`,
+      title: 'Nova Pergunta',
+      tags: [],
+      text: 'Digite sua pergunta aqui...',
+      type: 'single_choice',
       options: [
-        { id: '1', text: 'Opção 1', isCorrect: false },
-        { id: '2', text: 'Opção 2', isCorrect: false }
+        { id: 'opt1', text: 'Opção 1', isCorrect: false },
+        { id: 'opt2', text: 'Opção 2', isCorrect: true },
+        { id: 'opt3', text: 'Opção 3', isCorrect: false },
+        { id: 'opt4', text: 'Opção 4', isCorrect: false }
       ],
-      required: true,
-      tags: []
+      required: true
     };
-
-    setQuestions(prev => [...prev, newQuestion]);
+    setQuestions([...questions, newQuestion]);
   };
 
-  const updateQuestion = (id: string, updates: Partial<Question>) => {
-    setQuestions(prev =>
-      prev.map(q => (q.id === id ? { ...q, ...updates } : q))
-    );
-  };
-
-  const deleteQuestion = (id: string) => {
-    setQuestions(prev => prev.filter(q => q.id !== id));
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-      </div>
-    );
-  }
+  const sampleBlocks = [
+    {
+      id: 'block-1',
+      type: 'header',
+      content: {
+        title: 'Título do Quiz',
+        subtitle: 'Subtítulo opcional'
+      },
+      order: 0
+    },
+    {
+      id: 'block-2',
+      type: 'text',
+      content: {
+        text: 'Descrição do quiz aqui...'
+      },
+      order: 1
+    }
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Voltar
-            </Button>
-            <div>
-              <h1 className="text-xl font-semibold">
-                {quiz?.title || 'Editor de Quiz'}
-              </h1>
-              <p className="text-sm text-gray-500">
-                {questions.length} pergunta(s)
-              </p>
+    <EditorProvider>
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <div className="bg-white shadow-sm border-b">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <Button variant="ghost" size="sm">
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Voltar
+                </Button>
+                <div>
+                  <h1 className="text-xl font-bold">Editor de Quiz</h1>
+                  <p className="text-sm text-gray-500">
+                    {currentQuiz?.title || 'Novo Quiz'}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Button variant="outline" size="sm">
+                  <Save className="w-4 h-4 mr-2" />
+                  Salvar
+                </Button>
+                <Button variant="outline" size="sm">
+                  <Eye className="w-4 h-4 mr-2" />
+                  Visualizar
+                </Button>
+                <Button className="bg-blue-600 hover:bg-blue-700" size="sm">
+                  Publicar
+                </Button>
+              </div>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm">
-              <Eye className="w-4 h-4 mr-2" />
-              Visualizar
-            </Button>
-            <Button onClick={handleSave} disabled={loading} size="sm">
-              <Save className="w-4 h-4 mr-2" />
-              Salvar
-            </Button>
-          </div>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-6 py-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="questions">Perguntas</TabsTrigger>
-            <TabsTrigger value="design">Design</TabsTrigger>
-            <TabsTrigger value="settings">Configurações</TabsTrigger>
-            <TabsTrigger value="preview">Preview</TabsTrigger>
-          </TabsList>
+        {/* Main Content */}
+        <div className="container mx-auto px-4 py-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="grid grid-cols-3 w-full max-w-md">
+              <TabsTrigger value="editor">Editor</TabsTrigger>
+              <TabsTrigger value="preview">Preview</TabsTrigger>
+              <TabsTrigger value="settings">Configurações</TabsTrigger>
+            </TabsList>
 
-          <TabsContent className="mt-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Questions List */}
-              <div className="lg:col-span-2">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-medium">Perguntas do Quiz</h2>
-                  <Button onClick={addQuestion} size="sm">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Nova Pergunta
-                  </Button>
+            <TabsContent className="mt-6">
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                {/* Sidebar */}
+                <div className="lg:col-span-1">
+                  <div className="bg-white rounded-lg shadow-sm border p-4">
+                    <h3 className="font-medium mb-4">Componentes</h3>
+                    <div className="space-y-2">
+                      {['header', 'text', 'image', 'button', 'quiz-question'].map(type => (
+                        <Button
+                          key={type}
+                          variant="outline"
+                          size="sm"
+                          className="w-full justify-start"
+                        >
+                          <Plus className="w-4 h-4 mr-2" />
+                          {type.charAt(0).toUpperCase() + type.slice(1)}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
-                <div className="space-y-4">
-                  {questions.map((question, index) => (
-                    <Card key={question.id} className="p-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-2 mb-2">
-                            <Badge variant="secondary">
-                              Pergunta {index + 1}
-                            </Badge>
-                            <Badge variant="outline">
-                              {question.type === 'multiple_choice' ? 'Múltipla Escolha' : 'Escolha Única'}
-                            </Badge>
-                          </div>
-                          <Input
-                            value={question.text}
-                            onChange={(e) =>
-                              updateQuestion(question.id, { text: e.target.value })
-                            }
-                            placeholder="Digite sua pergunta"
-                            className="mb-3"
-                          />
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => deleteQuestion(question.id)}
-                          className="ml-2"
-                        >
-                          ×
-                        </Button>
+                {/* Editor */}
+                <div className="lg:col-span-3">
+                  <div className="bg-white rounded-lg shadow-sm border min-h-[600px]">
+                    <div className="p-6">
+                      <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-lg font-medium">Canvas do Quiz</h2>
+                        <Badge variant="outline">
+                          {sampleBlocks.length} componentes
+                        </Badge>
                       </div>
-
-                      <div className="space-y-2">
-                        {question.options.map((option, optionIndex) => (
-                          <div key={option.id} className="flex items-center space-x-2">
-                            <input
-                              type={question.type === 'multiple_choice' ? 'checkbox' : 'radio'}
-                              checked={option.isCorrect}
-                              onChange={(e) => {
-                                const newOptions = [...question.options];
-                                newOptions[optionIndex] = {
-                                  ...option,
-                                  isCorrect: e.target.checked
-                                };
-                                updateQuestion(question.id, { options: newOptions });
-                              }}
-                            />
-                            <Input
-                              value={option.text}
-                              onChange={(e) => {
-                                const newOptions = [...question.options];
-                                newOptions[optionIndex] = {
-                                  ...option,
-                                  text: e.target.value
-                                };
-                                updateQuestion(question.id, { options: newOptions });
-                              }}
-                              placeholder={`Opção ${optionIndex + 1}`}
-                              className="flex-1"
+                      
+                      <div className="space-y-4">
+                        {sampleBlocks.map(block => (
+                          <div key={block.id} className="border rounded-lg p-4 hover:bg-gray-50">
+                            <BlockComponents
+                              block={block}
+                              isSelected={false}
+                              isEditing={false}
                             />
                           </div>
                         ))}
                       </div>
-                    </Card>
-                  ))}
 
-                  {questions.length === 0 && (
-                    <Card className="p-8 text-center">
-                      <p className="text-gray-500 mb-4">
-                        Nenhuma pergunta criada ainda
-                      </p>
-                      <Button onClick={addQuestion}>
-                        <Plus className="w-4 h-4 mr-2" />
-                        Criar primeira pergunta
-                      </Button>
-                    </Card>
-                  )}
+                      {/* Add Question Button */}
+                      <div className="mt-6 pt-6 border-t">
+                        <Button
+                          onClick={handleAddQuestion}
+                          variant="outline"
+                          className="w-full"
+                        >
+                          <Plus className="w-4 h-4 mr-2" />
+                          Adicionar Pergunta
+                        </Button>
+                      </div>
+
+                      {/* Questions List */}
+                      {questions.length > 0 && (
+                        <div className="mt-6 space-y-4">
+                          <h3 className="font-medium">Perguntas ({questions.length})</h3>
+                          {questions.map((question, index) => (
+                            <div key={question.id} className="border rounded-lg p-4">
+                              <div className="flex items-center justify-between mb-2">
+                                <Badge variant="outline">
+                                  Pergunta {index + 1}
+                                </Badge>
+                                <Badge variant={question.type === 'single_choice' ? 'default' : 'secondary'}>
+                                  {question.type}
+                                </Badge>
+                              </div>
+                              <Input
+                                value={question.text}
+                                onChange={(e) => {
+                                  const updatedQuestions = [...questions];
+                                  updatedQuestions[index].text = e.target.value;
+                                  setQuestions(updatedQuestions);
+                                }}
+                                placeholder="Digite sua pergunta..."
+                                className="mb-3"
+                              />
+                              <div className="space-y-2">
+                                {question.options.map((option, optIndex) => (
+                                  <div key={option.id} className="flex items-center space-x-2">
+                                    <Input
+                                      value={option.text}
+                                      onChange={(e) => {
+                                        const updatedQuestions = [...questions];
+                                        updatedQuestions[index].options[optIndex].text = e.target.value;
+                                        setQuestions(updatedQuestions);
+                                      }}
+                                      placeholder={`Opção ${optIndex + 1}`}
+                                      className="flex-1"
+                                    />
+                                    <Badge variant={option.isCorrect ? 'default' : 'secondary'}>
+                                      {option.isCorrect ? 'Correta' : 'Incorreta'}
+                                    </Badge>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
+            </TabsContent>
 
-              {/* Question Properties */}
-              <div className="space-y-4">
-                <Card className="p-4">
-                  <h3 className="font-medium mb-3">Propriedades da Pergunta</h3>
-                  <div className="space-y-3">
-                    <div>
-                      <label className="text-sm font-medium">Tipo</label>
-                      <select className="w-full mt-1 p-2 border rounded">
-                        <option value="multiple_choice">Múltipla Escolha</option>
-                        <option value="single_choice">Escolha Única</option>
-                        <option value="text">Texto Livre</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium">Obrigatória</label>
-                      <input type="checkbox" className="ml-2" />
-                    </div>
-                  </div>
-                </Card>
-
-                <Card className="p-4">
-                  <h3 className="font-medium mb-3">Configurações do Quiz</h3>
-                  <div className="space-y-3">
-                    <div>
-                      <label className="text-sm font-medium">Título</label>
-                      <Input
-                        value={quiz?.title || ''}
-                        onChange={(e) => setQuiz(prev => prev ? { ...prev, title: e.target.value } : null)}
-                        placeholder="Título do quiz"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium">Descrição</label>
-                      <Textarea
-                        value={quiz?.description || ''}
-                        onChange={(e) => setQuiz(prev => prev ? { ...prev, description: e.target.value } : null)}
-                        placeholder="Descrição do quiz"
-                        rows={3}
-                      />
-                    </div>
-                  </div>
-                </Card>
+            <TabsContent className="mt-6">
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <h2 className="text-lg font-medium mb-4">Visualização</h2>
+                <div className="text-center py-12 text-gray-500">
+                  Visualização do quiz será mostrada aqui
+                </div>
               </div>
-            </div>
-          </TabsContent>
+            </TabsContent>
 
-          <TabsContent className="mt-6">
-            <Card className="p-8 text-center">
-              <h3 className="text-lg font-medium mb-2">Design do Quiz</h3>
-              <p className="text-gray-500">
-                Personalize a aparência do seu quiz
-              </p>
-            </Card>
-          </TabsContent>
-
-          <TabsContent className="mt-6">
-            <Card className="p-8 text-center">
-              <h3 className="text-lg font-medium mb-2">Configurações</h3>
-              <p className="text-gray-500">
-                Configure as opções avançadas do quiz
-              </p>
-            </Card>
-          </TabsContent>
-
-          <TabsContent className="mt-6">
-            <Card className="p-8 text-center">
-              <h3 className="text-lg font-medium mb-2">Preview</h3>
-              <p className="text-gray-500">
-                Veja como seu quiz será exibido
-              </p>
-            </Card>
-          </TabsContent>
-        </Tabs>
+            <TabsContent className="mt-6">
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <h2 className="text-lg font-medium mb-4">Configurações</h2>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Título do Quiz</label>
+                    <Input placeholder="Digite o título do quiz" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Descrição</label>
+                    <Input placeholder="Digite a descrição do quiz" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Categoria</label>
+                    <Input placeholder="Digite a categoria" />
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
-    </div>
+    </EditorProvider>
   );
-}
+};
+
+export default QuizEditorPage;

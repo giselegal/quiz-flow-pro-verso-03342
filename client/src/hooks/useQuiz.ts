@@ -1,466 +1,195 @@
-import { useState, useEffect, useCallback } from 'react';
-import { QuizService, type QuizWithQuestions } from '../services/QuizService';
-import type { Quiz, Question, InsertQuiz, InsertQuestion } from '../types/supabase';
-import { useAuth } from '../context/AuthContext';
 
-// ====================================
-// HOOK FOR MANAGING A SINGLE QUIZ
-// ====================================
+import { useState, useEffect } from 'react';
+import { QuizService } from '@/services/QuizService';
+import { Quiz, Question } from '@/types/quiz';
+
 export const useQuiz = (quizId?: string) => {
-  const [quiz, setQuiz] = useState<QuizWithQuestions | null>(null);
+  const [quiz, setQuiz] = useState<Quiz | null>(null);
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const loadQuiz = useCallback(async (id: string) => {
-    if (!id) return;
-    
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const { data, error } = await QuizService.getQuizById(id);
-      
-      if (error) {
-        setError(error);
-      } else {
-        setQuiz(data);
-      }
-    } catch (err) {
-      setError(err as Error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (quizId) {
       loadQuiz(quizId);
     }
-  }, [quizId, loadQuiz]);
+  }, [quizId]);
 
-  const updateQuiz = useCallback(async (updates: Partial<Quiz>) => {
-    if (!quiz) return { error: new Error('Quiz não carregado') };
-
+  const loadQuiz = async (id: string) => {
     setLoading(true);
     setError(null);
-
+    
     try {
-      const { data, error } = await QuizService.updateQuiz(quiz.id, updates);
-      
-      if (error) {
-        setError(error);
-        return { error };
+      const quizData = await QuizService.getQuizById(id);
+      if (quizData) {
+        setQuiz(quizData);
+        setQuestions(quizData.questions || []);
+      } else {
+        setError('Quiz não encontrado');
       }
-
-      if (data) {
-        setQuiz(prev => prev ? { ...prev, ...data } : null);
-      }
-
-      return { error: null };
     } catch (err) {
-      const error = err as Error;
-      setError(error);
-      return { error };
+      setError('Erro ao carregar quiz');
     } finally {
       setLoading(false);
     }
-  }, [quiz]);
+  };
 
-  const deleteQuiz = useCallback(async () => {
-    if (!quiz) return { error: new Error('Quiz não carregado') };
-
+  const updateQuiz = async (updates: Partial<Quiz>) => {
+    if (!quiz) return;
+    
     setLoading(true);
-    setError(null);
-
     try {
-      const { error } = await QuizService.deleteQuiz(quiz.id);
-      
-      if (error) {
-        setError(error);
-        return { error };
-      }
-
-      setQuiz(null);
-      return { error: null };
+      const updatedQuiz = await QuizService.updateQuiz(quiz.id, updates);
+      setQuiz(updatedQuiz);
+      return updatedQuiz;
     } catch (err) {
-      const error = err as Error;
-      setError(error);
-      return { error };
+      setError('Erro ao atualizar quiz');
+      throw err;
     } finally {
       setLoading(false);
     }
-  }, [quiz]);
+  };
+
+  const addQuestion = async (questionData: Partial<Question>) => {
+    if (!quiz) return;
+    
+    setLoading(true);
+    try {
+      const newQuestion = await QuizService.addQuestion(quiz.id, questionData);
+      setQuestions(prev => [...prev, newQuestion]);
+      return newQuestion;
+    } catch (err) {
+      setError('Erro ao adicionar pergunta');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateQuestion = async (questionId: string, updates: Partial<Question>) => {
+    setLoading(true);
+    try {
+      const updatedQuestion = await QuizService.updateQuestion(questionId, updates);
+      setQuestions(prev => prev.map(q => q.id === questionId ? updatedQuestion : q));
+      return updatedQuestion;
+    } catch (err) {
+      setError('Erro ao atualizar pergunta');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteQuestion = async (questionId: string) => {
+    setLoading(true);
+    try {
+      await QuizService.deleteQuestion(questionId);
+      setQuestions(prev => prev.filter(q => q.id !== questionId));
+    } catch (err) {
+      setError('Erro ao deletar pergunta');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const reorderQuestions = async (questionIds: string[]) => {
+    if (!quiz) return;
+    
+    setLoading(true);
+    try {
+      await QuizService.reorderQuestions(quiz.id, questionIds);
+      const reorderedQuestions = questionIds.map(id => questions.find(q => q.id === id)!).filter(Boolean);
+      setQuestions(reorderedQuestions);
+    } catch (err) {
+      setError('Erro ao reordenar perguntas');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return {
     quiz,
+    questions,
     loading,
     error,
     loadQuiz,
     updateQuiz,
-    deleteQuiz,
-    refetch: () => quiz && loadQuiz(quiz.id)
-  };
-};
-
-// ====================================
-// HOOK FOR MANAGING USER'S QUIZZES
-// ====================================
-export const useUserQuizzes = () => {
-  const { user } = useAuth();
-  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const loadUserQuizzes = useCallback(async () => {
-    if (!user) return;
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      // Verificar se está em modo mock
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      
-      if (!supabaseUrl || supabaseUrl.includes('temporary-mock-url')) {
-        // Mock data para desenvolvimento
-        const mockQuizzes: Quiz[] = [
-          {
-            id: 'mock-quiz-1',
-            title: 'Quiz de Conhecimentos Gerais',
-            description: 'Teste seus conhecimentos em diversos assuntos',
-            author_id: user.id,
-            category: 'geral',
-            difficulty: 'medium',
-            time_limit: null,
-            is_public: true,
-            is_published: true,
-            is_template: false,
-            thumbnail_url: null,
-            version: 1,
-            slug: 'quiz-conhecimentos-gerais',
-            tags: ['conhecimento', 'cultura'],
-            settings: {
-              allowRetake: true,
-              showResults: true,
-              shuffleQuestions: false,
-              showProgressBar: true,
-              passingScore: 60
-            },
-            view_count: 150,
-            completion_count: 89,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          },
-          {
-            id: 'mock-quiz-2',
-            title: 'Quiz de Tecnologia',
-            description: 'Desafie-se com perguntas sobre tecnologia moderna',
-            author_id: user.id,
-            category: 'tecnologia',
-            difficulty: 'hard',
-            time_limit: 30,
-            is_public: false,
-            is_published: false,
-            is_template: false,
-            thumbnail_url: null,
-            version: 1,
-            slug: 'quiz-tecnologia',
-            tags: ['tech', 'programação'],
-            settings: {
-              allowRetake: false,
-              showResults: true,
-              shuffleQuestions: true,
-              showProgressBar: true,
-              passingScore: 70
-            },
-            view_count: 45,
-            completion_count: 23,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          }
-        ];
-
-        // Simular carregamento
-        await new Promise(resolve => setTimeout(resolve, 500));
-        setQuizzes(mockQuizzes);
-        return;
-      }
-
-      // Modo normal com Supabase
-      const { data, error } = await QuizService.getUserQuizzes(user.id);
-      
-      if (error) {
-        setError(error);
-      } else {
-        setQuizzes(data || []);
-      }
-    } catch (err) {
-      setError(err as Error);
-    } finally {
-      setLoading(false);
-    }
-  }, [user]);
-
-  useEffect(() => {
-    loadUserQuizzes();
-  }, [loadUserQuizzes]);
-
-  const createQuiz = useCallback(async (quizData: InsertQuiz) => {
-    if (!user) return { error: new Error('Usuário não autenticado') };
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const { data, error } = await QuizService.createQuiz({
-        ...quizData,
-        author_id: user.id
-      });
-      
-      if (error) {
-        setError(error);
-        return { data: null, error };
-      }
-
-      if (data) {
-        setQuizzes(prev => [data, ...prev]);
-      }
-
-      return { data, error: null };
-    } catch (err) {
-      const error = err as Error;
-      setError(error);
-      return { data: null, error };
-    } finally {
-      setLoading(false);
-    }
-  }, [user]);
-
-  const duplicateQuiz = useCallback(async (originalId: string, newTitle: string) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const { data, error } = await QuizService.duplicateQuiz(originalId, newTitle);
-      
-      if (error) {
-        setError(error);
-        return { error };
-      }
-
-      if (data) {
-        setQuizzes(prev => [data, ...prev]);
-      }
-
-      return { error: null };
-    } catch (err) {
-      const error = err as Error;
-      setError(error);
-      return { error };
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  return {
-    quizzes,
-    loading,
-    error,
-    createQuiz,
-    duplicateQuiz,
-    refetch: loadUserQuizzes
-  };
-};
-
-// ====================================
-// HOOK FOR MANAGING QUESTIONS
-// ====================================
-export const useQuestions = (quizId: string) => {
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const addQuestion = useCallback(async (questionData: Omit<InsertQuestion, 'quiz_id'>) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const { data, error } = await QuizService.addQuestion({
-        ...questionData,
-        quiz_id: quizId
-      });
-      
-      if (error) {
-        setError(error);
-        return { error };
-      }
-
-      if (data) {
-        setQuestions(prev => [...prev, data].sort((a, b) => a.order_index - b.order_index));
-      }
-
-      return { error: null };
-    } catch (err) {
-      const error = err as Error;
-      setError(error);
-      return { error };
-    } finally {
-      setLoading(false);
-    }
-  }, [quizId]);
-
-  const updateQuestion = useCallback(async (questionId: string, updates: Partial<Question>) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const { data, error } = await QuizService.updateQuestion(questionId, updates);
-      
-      if (error) {
-        setError(error);
-        return { error };
-      }
-
-      if (data) {
-        setQuestions(prev => prev.map(q => q.id === questionId ? data : q));
-      }
-
-      return { error: null };
-    } catch (err) {
-      const error = err as Error;
-      setError(error);
-      return { error };
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const deleteQuestion = useCallback(async (questionId: string) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const { error } = await QuizService.deleteQuestion(questionId);
-      
-      if (error) {
-        setError(error);
-        return { error };
-      }
-
-      setQuestions(prev => prev.filter(q => q.id !== questionId));
-      return { error: null };
-    } catch (err) {
-      const error = err as Error;
-      setError(error);
-      return { error };
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const reorderQuestions = useCallback(async (newOrder: { id: string; order_index: number }[]) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const { error } = await QuizService.reorderQuestions(newOrder);
-      
-      if (error) {
-        setError(error);
-        return { error };
-      }
-
-      // Atualizar ordem local
-      setQuestions(prev => {
-        const updated = [...prev];
-        newOrder.forEach(({ id, order_index }) => {
-          const question = updated.find(q => q.id === id);
-          if (question) {
-            question.order_index = order_index;
-          }
-        });
-        return updated.sort((a, b) => a.order_index - b.order_index);
-      });
-
-      return { error: null };
-    } catch (err) {
-      const error = err as Error;
-      setError(error);
-      return { error };
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  return {
-    questions,
-    loading,
-    error,
     addQuestion,
     updateQuestion,
     deleteQuestion,
-    reorderQuestions,
-    setQuestions
+    reorderQuestions
   };
 };
 
-// ====================================
-// HOOK FOR PUBLIC QUIZZES
-// ====================================
-export const usePublicQuizzes = (limit = 20) => {
+export const useQuizzes = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-  const [hasMore, setHasMore] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const loadQuizzes = useCallback(async (offset = 0, reset = false) => {
+  const loadQuizzes = async (userId: string) => {
     setLoading(true);
     setError(null);
-
+    
     try {
-      const { data, error } = await QuizService.getPublicQuizzes(limit, offset);
-      
-      if (error) {
-        setError(error);
-        return;
-      }
-
-      const newQuizzes = data || [];
-      
-      if (reset) {
-        setQuizzes(newQuizzes);
-      } else {
-        setQuizzes(prev => [...prev, ...newQuizzes]);
-      }
-
-      setHasMore(newQuizzes.length === limit);
+      const quizzesData = await QuizService.getQuizzes(userId);
+      setQuizzes(quizzesData);
     } catch (err) {
-      setError(err as Error);
+      setError('Erro ao carregar quizzes');
     } finally {
       setLoading(false);
     }
-  }, [limit]);
+  };
 
-  useEffect(() => {
-    loadQuizzes(0, true);
-  }, [loadQuizzes]);
-
-  const loadMore = useCallback(() => {
-    if (!loading && hasMore) {
-      loadQuizzes(quizzes.length);
+  const createQuiz = async (quizData: Partial<Quiz>) => {
+    setLoading(true);
+    try {
+      const newQuiz = await QuizService.createQuiz(quizData);
+      setQuizzes(prev => [...prev, newQuiz]);
+      return newQuiz;
+    } catch (err) {
+      setError('Erro ao criar quiz');
+      throw err;
+    } finally {
+      setLoading(false);
     }
-  }, [loading, hasMore, quizzes.length, loadQuizzes]);
+  };
 
-  const refetch = useCallback(() => {
-    loadQuizzes(0, true);
-  }, [loadQuizzes]);
+  const duplicateQuiz = async (quizId: string) => {
+    setLoading(true);
+    try {
+      const duplicatedQuiz = await QuizService.duplicateQuiz(quizId);
+      setQuizzes(prev => [...prev, duplicatedQuiz]);
+      return duplicatedQuiz;
+    } catch (err) {
+      setError('Erro ao duplicar quiz');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteQuiz = async (quizId: string) => {
+    setLoading(true);
+    try {
+      await QuizService.deleteQuiz(quizId);
+      setQuizzes(prev => prev.filter(q => q.id !== quizId));
+    } catch (err) {
+      setError('Erro ao deletar quiz');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return {
     quizzes,
     loading,
     error,
-    hasMore,
-    loadMore,
-    refetch
+    loadQuizzes,
+    createQuiz,
+    duplicateQuiz,
+    deleteQuiz
   };
 };

@@ -31,6 +31,7 @@ export interface Quiz {
   tags: string[];
   view_count: number;
   average_score: number;
+  completion_count?: number;
   questions: Question[];
   created_at: string;
   updated_at: string;
