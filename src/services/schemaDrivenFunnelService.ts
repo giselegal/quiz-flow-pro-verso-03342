@@ -827,25 +827,34 @@ class SchemaDrivenFunnelService {
           id: 'intro-name-input',
           type: 'form-input',
           properties: {
-            label: 'NOME',
+            label: 'COMO VOCÊ GOSTARIA DE SER CHAMADA?',
             placeholder: 'Digite seu nome aqui...',
             required: true,
             inputType: 'text',
-            helperText: '',
-            name: 'userName'
+            helperText: 'Seu nome será usado para personalizar sua experiência',
+            name: 'userName',
+            textAlign: 'text-center',
+            marginBottom: 32
           }
         },
         {
           id: 'intro-cta-button',
           type: 'button-inline',
           properties: {
-            text: 'Quero Descobrir meu Estilo Agora!',
+            text: '✨ Quero Descobrir meu Estilo Agora! ✨',
             variant: 'primary',
             size: 'large',
             fullWidth: true,
             backgroundColor: '#B89B7A',
             textColor: '#ffffff',
-            requiresValidInput: true
+            requiresValidInput: true,
+            textAlign: 'text-center',
+            borderRadius: 'rounded-full',
+            padding: 'py-4 px-8',
+            fontSize: 'text-lg',
+            fontWeight: 'font-bold',
+            boxShadow: 'shadow-xl',
+            hoverEffect: true
           }
         }
       ],
@@ -864,13 +873,13 @@ class SchemaDrivenFunnelService {
     // Componentes: quiz-intro-header + heading-inline + text-inline + options-grid + button-inline
     // ==========================================
     REAL_QUIZ_QUESTIONS.forEach((questionData, index) => {
-      console.log(`🎯 [ES7+] Criando questão ${index + 1}:`, questionData.question);
+      console.log(`🎯 [ES7+] Criando questão ${index + 1}:`, questionData.title);
       const currentProgress = 5 + (index + 1) * 5; // 5%, 10%, 15%... até 55%
       
       pages.push({
         id: this.generateUniquePageId(`etapa-${index + 2}-questao-${index + 1}`),
         name: `Questão ${index + 1}`,
-        title: `Etapa ${index + 2}: ${questionData.question}`,
+        title: `Etapa ${index + 2}: ${questionData.title}`,
         type: 'question',
         order: index + 2,
         blocks: [
@@ -893,7 +902,7 @@ class SchemaDrivenFunnelService {
             id: `question-${index + 1}-title`,
             type: 'heading-inline',
             properties: {
-              content: questionData.question,
+              content: questionData.title,
               level: 'h2',
               fontSize: 'text-2xl',
               fontWeight: 'font-bold',
@@ -929,10 +938,10 @@ class SchemaDrivenFunnelService {
               columns: questionData.type === 'both' ? 2 : 1,
               showImages: questionData.type === 'both' || questionData.type === undefined,
               imageSize: 'large',
-              multipleSelection: questionData.multipleSelection || false,
-              maxSelections: questionData.maxSelections || 1,
+              multipleSelection: questionData.multiSelect > 1 || false,
+              maxSelections: questionData.multiSelect || 1,
               minSelections: 1,
-              validationMessage: `Selecione ${questionData.maxSelections || 1} opç${(questionData.maxSelections || 1) > 1 ? 'ões' : 'ão'}`,
+              validationMessage: `Selecione ${questionData.multiSelect || 1} opç${(questionData.multiSelect || 1) > 1 ? 'ões' : 'ão'}`,
               gridGap: 16,
               responsiveColumns: true // Força máximo 2 colunas
             }
