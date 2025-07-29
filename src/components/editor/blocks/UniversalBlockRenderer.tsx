@@ -213,6 +213,9 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'quiz-loading-inline': () => <QuizLoadingInlineBlock {...commonProps} />,
       'quiz-result-inline': () => <QuizResultInlineBlock {...commonProps} />,
       'quiz-analysis-inline': () => <QuizAnalysisInlineBlock {...commonProps} />,
+      'quiz-category-inline': () => <QuizCategoryInlineBlock {...commonProps} />,
+      'quiz-recommendation-inline': () => <QuizRecommendationInlineBlock {...commonProps} />,
+      'quiz-action-plan-inline': () => <QuizActionPlanInlineBlock {...commonProps} />,
       
       // === COMPONENTES ETAPA 20/21 (sem duplicação) ===
       'quiz-offer-pricing-inline': () => <QuizOfferPricingInlineBlock {...commonProps} />,
