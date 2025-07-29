@@ -196,6 +196,9 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'quiz-question': () => <QuizQuestionBlock {...commonProps} />,
       'quiz-progress': () => <QuizProgressBlock {...commonProps} />,
       
+      // === NOVA IMPLEMENTAÇÃO: Componentes das 21 Etapas Inline ===
+      'quiz-start-page-inline': () => <QuizStartPageInlineBlock {...commonProps} />,
+      
       // === COMPONENTES ETAPA 20/21 (sem duplicação) ===
       'quiz-offer-pricing-inline': () => <QuizOfferPricingInlineBlock {...commonProps} />,
       'divider-inline': () => <SpacerBlock {...commonProps} />,
