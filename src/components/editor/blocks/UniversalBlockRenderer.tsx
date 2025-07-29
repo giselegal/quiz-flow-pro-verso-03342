@@ -40,7 +40,10 @@ import {
   QuizTransitionInlineBlock,
   QuizLoadingInlineBlock,
   QuizResultInlineBlock,
-  QuizAnalysisInlineBlock
+  QuizAnalysisInlineBlock,
+  QuizCategoryInlineBlock,
+  QuizRecommendationInlineBlock,
+  QuizActionPlanInlineBlock
 } from './inline';
 
 // Componentes básicos (funcionais)

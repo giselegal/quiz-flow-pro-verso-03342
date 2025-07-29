@@ -26,7 +26,7 @@ export { default as BonusListInlineBlock } from './BonusListInlineBlock';
 export { default as QuizIntroHeaderBlock } from './QuizIntroHeaderBlock';
 export { default as LoadingAnimationBlock } from './LoadingAnimationBlock';
 
-// NOVA IMPLEMENTAÇÃO: Componentes das 21 Etapas Inline
+// Exportações dos componentes inline das 21 etapas do funil
 export { default as QuizStartPageInlineBlock } from './QuizStartPageInlineBlock';
 export { default as QuizQuestionInlineBlock } from './QuizQuestionInlineBlock';
 export { default as QuizProgressInlineBlock } from './QuizProgressInlineBlock';
@@ -34,6 +34,9 @@ export { default as QuizTransitionInlineBlock } from './QuizTransitionInlineBloc
 export { default as QuizLoadingInlineBlock } from './QuizLoadingInlineBlock';
 export { default as QuizResultInlineBlock } from './QuizResultInlineBlock';
 export { default as QuizAnalysisInlineBlock } from './QuizAnalysisInlineBlock';
+export { default as QuizCategoryInlineBlock } from './QuizCategoryInlineBlock';
+export { default as QuizRecommendationInlineBlock } from './QuizRecommendationInlineBlock';
+export { default as QuizActionPlanInlineBlock } from './QuizActionPlanInlineBlock';
 
 // Tipos base
 export type { BlockComponentProps } from '../../../../types/blocks';
