@@ -261,3 +261,14 @@ export const blockComponents = {
   'quiz-question': QuizQuestionBlock,
   testimonial: TestimonialBlock,
 };
+
+// Default export for the main component
+const BlockComponents: FC<BlockComponentProps> = (props) => {
+  const Component = blockComponents[props.content?.type as keyof typeof blockComponents];
+  if (!Component) {
+    return <div>Unknown block type</div>;
+  }
+  return <Component {...props} />;
+};
+
+export default BlockComponents;

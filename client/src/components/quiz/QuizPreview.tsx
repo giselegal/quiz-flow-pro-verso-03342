@@ -1,115 +1,193 @@
 
 import React from 'react';
-import { Quiz } from '@/types/quiz';
+import { Quiz, Question } from '@/types/quiz';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Eye, Clock, Users, Star } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Clock, Users, BarChart } from 'lucide-react';
 
 interface QuizPreviewProps {
   quiz: Quiz;
-  onClose: () => void;
-  onEdit: () => void;
+  onEdit?: () => void;
+  onPlay?: () => void;
+  showStats?: boolean;
 }
 
-export const QuizPreview: React.FC<QuizPreviewProps> = ({
-  quiz,
-  onClose,
-  onEdit
+export const QuizPreview: React.FC<QuizPreviewProps> = ({ 
+  quiz, 
+  onEdit, 
+  onPlay, 
+  showStats = true 
 }) => {
-  if (!quiz) {
-    return (
-      <div className="p-8 text-center text-gray-500">
-        Quiz não encontrado
-      </div>
-    );
-  }
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('pt-BR');
+  };
+
+  const getDifficultyColor = (difficulty: string | null) => {
+    switch (difficulty) {
+      case 'easy': return 'bg-green-100 text-green-800';
+      case 'medium': return 'bg-yellow-100 text-yellow-800';
+      case 'hard': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="space-y-6">
+      {/* Quiz Header */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex justify-between items-start">
+            <div className="flex-1">
               <CardTitle className="text-2xl mb-2">{quiz.title}</CardTitle>
-              <p className="text-gray-600">{quiz.description}</p>
+              <p className="text-gray-600 mb-4">{quiz.description}</p>
+              
+              <div className="flex flex-wrap gap-2 mb-4">
+                <Badge variant="secondary">{quiz.category}</Badge>
+                {quiz.difficulty && (
+                  <Badge className={getDifficultyColor(quiz.difficulty)}>
+                    {quiz.difficulty}
+                  </Badge>
+                )}
+                {quiz.is_public && <Badge variant="outline">Público</Badge>}
+                {quiz.is_published && <Badge variant="outline">Publicado</Badge>}
+              </div>
+
+              {showStats && (
+                <div className="flex items-center gap-4 text-sm text-gray-500">
+                  <div className="flex items-center gap-1">
+                    <Users className="w-4 h-4" />
+                    <span>{quiz.completion_count || 0} participantes</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <BarChart className="w-4 h-4" />
+                    <span>{quiz.average_score}% média</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Clock className="w-4 h-4" />
+                    <span>Atualizado em {formatDate(quiz.updated_at)}</span>
+                  </div>
+                </div>
+              )}
             </div>
-            <div className="flex items-center space-x-2">
-              <Button variant="outline" onClick={onEdit}>
-                Editar
-              </Button>
-              <Button variant="outline" onClick={onClose}>
-                Fechar
-              </Button>
+            
+            <div className="flex gap-2">
+              {onEdit && (
+                <Button variant="outline" onClick={onEdit}>
+                  Editar
+                </Button>
+              )}
+              {onPlay && (
+                <Button onClick={onPlay}>
+                  Iniciar Quiz
+                </Button>
+              )}
             </div>
           </div>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Quiz Info */}
-            <div className="space-y-4">
-              <div className="flex items-center space-x-4">
-                <Badge variant={quiz.is_published ? 'default' : 'secondary'}>
-                  {quiz.is_published ? 'Publicado' : 'Rascunho'}
-                </Badge>
-                <Badge variant="outline">{quiz.category}</Badge>
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <Eye className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm text-gray-600">
-                    {quiz.view_count || 0} visualizações
-                  </span>
-                </div>
-                
-                <div className="flex items-center space-x-2">
-                  <Users className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm text-gray-600">
-                    {quiz.completion_count || 0} respostas
-                  </span>
-                </div>
-                
-                {quiz.time_limit && (
-                  <div className="flex items-center space-x-2">
-                    <Clock className="w-4 h-4 text-gray-500" />
-                    <span className="text-sm text-gray-600">
-                      {Math.floor(quiz.time_limit / 60)} minutos
-                    </span>
-                  </div>
-                )}
-                
-                <div className="flex items-center space-x-2">
-                  <Star className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm text-gray-600">
-                    {quiz.average_score || 0}% média de acertos
-                  </span>
-                </div>
-              </div>
-            </div>
+      </Card>
 
-            {/* Questions Preview */}
-            <div>
-              <h3 className="font-semibold mb-3">
-                Perguntas ({quiz.questions?.length || 0})
-              </h3>
-              <div className="space-y-2 max-h-64 overflow-y-auto">
-                {quiz.questions?.map((question, index) => (
-                  <div key={question.id} className="p-3 border rounded-lg">
-                    <div className="flex items-start space-x-2">
-                      <span className="text-sm font-medium text-gray-500">
-                        {index + 1}.
-                      </span>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium">{question.question_text}</p>
-                        <p className="text-xs text-gray-500 mt-1">
-                          {question.question_type} • {question.points} pontos
-                        </p>
-                      </div>
-                    </div>
+      {/* Quiz Questions */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Perguntas ({quiz.questions?.length || 0})</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {!quiz.questions || quiz.questions.length === 0 ? (
+            <p className="text-center text-gray-500 py-8">
+              Nenhuma pergunta adicionada ainda.
+            </p>
+          ) : (
+            <div className="space-y-6">
+              {quiz.questions.map((question, index) => (
+                <div key={question.id} className="border rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Badge variant="outline">#{index + 1}</Badge>
+                    <h3 className="font-semibold">{question.title}</h3>
                   </div>
-                ))}
-              </div>
+                  
+                  <p className="mb-4">{question.text}</p>
+                  
+                  {question.type === 'multiple_choice' && (
+                    <div className="space-y-2">
+                      {question.options.map((option, optionIndex) => (
+                        <div key={optionIndex} className="flex items-center gap-2">
+                          <input 
+                            type="radio" 
+                            name={`question-${question.id}`} 
+                            disabled 
+                          />
+                          <span>{option.text}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {question.type === 'single_choice' && (
+                    <div className="space-y-2">
+                      {question.options.map((option, optionIndex) => (
+                        <div key={optionIndex} className="flex items-center gap-2">
+                          <input 
+                            type="checkbox" 
+                            disabled 
+                          />
+                          <span>{option.text}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {question.type === 'text' && (
+                    <Input disabled placeholder="Resposta de texto livre" />
+                  )}
+                  
+                  {question.type === 'rating' && (
+                    <div className="flex items-center gap-2">
+                      {[1, 2, 3, 4, 5].map((rating) => (
+                        <button key={rating} className="text-2xl" disabled>
+                          ⭐
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  
+                  <div className="flex items-center gap-2 mt-4">
+                    <Badge variant="secondary">{question.type}</Badge>
+                    {question.required && <Badge variant="outline">Obrigatória</Badge>}
+                    {question.hint && <Badge variant="outline">Com dica</Badge>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Quiz Settings */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Configurações</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Limite de Tempo</label>
+              <p className="text-sm text-gray-600">
+                {quiz.time_limit ? `${quiz.time_limit} minutos` : 'Sem limite'}
+              </p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Visibilidade</label>
+              <p className="text-sm text-gray-600">
+                {quiz.is_public ? 'Público' : 'Privado'}
+              </p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Status</label>
+              <p className="text-sm text-gray-600">
+                {quiz.is_published ? 'Publicado' : 'Rascunho'}
+              </p>
             </div>
           </div>
         </CardContent>
