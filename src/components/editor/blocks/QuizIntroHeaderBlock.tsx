@@ -30,7 +30,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   const { 
     logoUrl = 'https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png',
     logoAlt = 'Logo',
-    progressValue = 7.14,
+    progressValue = 0,
     progressMax = 100,
     showBackButton = true,
     logoWidth = 96,
@@ -63,7 +63,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
         )}
 
         {/* Logo */}
-        <div className="flex-1 flex justify-center relative group">
+        <div className="flex-1 flex justify-center items-center relative group">
           <img 
             src={logoUrl}
             alt={logoAlt}
@@ -71,7 +71,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
               width: `${logoWidth}px`, 
               height: `${logoHeight}px` 
             }}
-            className="object-contain"
+            className="object-contain mx-auto"
             onError={(e) => {
               e.currentTarget.src = 'https://via.placeholder.com/96x96?text=Logo';
             }}
