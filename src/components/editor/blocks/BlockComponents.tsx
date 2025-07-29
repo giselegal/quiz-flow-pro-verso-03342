@@ -1,71 +1,127 @@
 
 import React from 'react';
-import { EditorBlock } from '@/types/editor';
-import TextBlock from './TextBlock';
-import HeaderBlock from './HeaderBlock';
-import ImageBlock from './ImageBlock';
-import ButtonBlock from './ButtonBlock';
-import SpacerBlock from './SpacerBlock';
-import QuizQuestionBlock from './QuizQuestionBlock';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { Trash2, Settings } from 'lucide-react';
 
 export interface BlockComponentProps {
-  block: EditorBlock;
-  isSelected?: boolean;
-  isEditing?: boolean;
-  onUpdate?: (content: any) => void;
-  onSelect?: () => void;
-  className?: string;
+  content: any;
+  onUpdate: (content: any) => void;
+  onDelete: () => void;
 }
 
-export const BlockComponents: React.FC<BlockComponentProps> = ({
-  block,
-  isSelected = false,
-  isEditing = false,
-  onUpdate,
-  onSelect,
-  className
-}) => {
-  const commonProps = {
-    content: block.content,
-    isSelected,
-    isEditing,
-    onUpdate,
-    onSelect,
-    className
-  };
-
-  switch (block.type) {
-    case 'text':
-    case 'paragraph':
-      return <TextBlock {...commonProps} />;
-      
-    case 'header':
-    case 'heading':
-    case 'headline':
-    case 'title':
-      return <HeaderBlock {...commonProps} />;
-      
-    case 'image':
-      return <ImageBlock {...commonProps} />;
-      
-    case 'button':
-    case 'cta':
-      return <ButtonBlock {...commonProps} />;
-      
-    case 'spacer':
-      return <SpacerBlock {...commonProps} />;
-      
-    case 'quiz-question':
-      return <QuizQuestionBlock {...commonProps} />;
-      
-    default:
-      return (
-        <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center text-gray-500">
-          Componente não implementado: {block.type}
-        </div>
-      );
-  }
+export const TextBlock: React.FC<BlockComponentProps> = ({ content, onUpdate, onDelete }) => {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <Badge variant="outline">Texto</Badge>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onDelete}
+          className="text-red-500 hover:text-red-700"
+        >
+          <Trash2 className="w-4 h-4" />
+        </Button>
+      </div>
+      <Textarea
+        placeholder="Digite o texto aqui..."
+        value={content.text || ''}
+        onChange={(e) => onUpdate({ ...content, text: e.target.value })}
+        rows={4}
+      />
+    </div>
+  );
 };
+
+export const QuestionBlock: React.FC<BlockComponentProps> = ({ content, onUpdate, onDelete }) => {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <Badge variant="outline">Pergunta</Badge>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onDelete}
+          className="text-red-500 hover:text-red-700"
+        >
+          <Trash2 className="w-4 h-4" />
+        </Button>
+      </div>
+      <Input
+        placeholder="Digite a pergunta..."
+        value={content.question || ''}
+        onChange={(e) => onUpdate({ ...content, question: e.target.value })}
+      />
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Opções:</label>
+        {(content.options || ['', '']).map((option: string, index: number) => (
+          <Input
+            key={index}
+            placeholder={`Opção ${index + 1}`}
+            value={option}
+            onChange={(e) => {
+              const newOptions = [...(content.options || ['', ''])];
+              newOptions[index] = e.target.value;
+              onUpdate({ ...content, options: newOptions });
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export const ImageBlock: React.FC<BlockComponentProps> = ({ content, onUpdate, onDelete }) => {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <Badge variant="outline">Imagem</Badge>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onDelete}
+          className="text-red-500 hover:text-red-700"
+        >
+          <Trash2 className="w-4 h-4" />
+        </Button>
+      </div>
+      <Input
+        placeholder="URL da imagem"
+        value={content.imageUrl || ''}
+        onChange={(e) => onUpdate({ ...content, imageUrl: e.target.value })}
+      />
+      <Input
+        placeholder="Texto alternativo"
+        value={content.alt || ''}
+        onChange={(e) => onUpdate({ ...content, alt: e.target.value })}
+      />
+      {content.imageUrl && (
+        <div className="mt-4">
+          <img 
+            src={content.imageUrl} 
+            alt={content.alt || 'Preview'} 
+            className="max-w-full h-auto rounded-lg"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export const blockComponents = {
+  text: TextBlock,
+  question: QuestionBlock,
+  image: ImageBlock,
+};
+
+// Export the main component for compatibility
+export const BlockComponents = blockComponents;
 
 // Export the available blocks array that's being imported elsewhere
 export const AVAILABLE_BLOCKS = [
@@ -76,5 +132,3 @@ export const AVAILABLE_BLOCKS = [
   { type: 'spacer', name: 'Espaçador', icon: 'Space' },
   { type: 'quiz-question', name: 'Pergunta', icon: 'HelpCircle' }
 ];
-
-export default BlockComponents;
