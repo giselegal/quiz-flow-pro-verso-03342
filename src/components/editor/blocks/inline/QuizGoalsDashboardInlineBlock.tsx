@@ -369,7 +369,7 @@ export const QuizGoalsDashboardInlineBlock: React.FC<QuizGoalsDashboardInlineBlo
         <div className="mb-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {performanceMetrics.map((metric, index) => {
-              const TrendIcon = getTrendIcon(metric.trend);
+              const TrendIconComponent = getTrendIcon(metric.trend);
               const trendColor = metric.trend === 'up' ? 'text-green-600' : 
                                metric.trend === 'down' ? 'text-red-600' : 'text-gray-600';
               
@@ -380,7 +380,7 @@ export const QuizGoalsDashboardInlineBlock: React.FC<QuizGoalsDashboardInlineBlo
                       {metric.name}
                     </h4>
                     <div className={cn('flex items-center gap-1', trendColor)}>
-                      <TrendIcon />
+                      <TrendIconComponent className="w-4 h-4" />
                       <span className="text-xs">{metric.change}</span>
                     </div>
                   </div>
@@ -513,7 +513,7 @@ export const QuizGoalsDashboardInlineBlock: React.FC<QuizGoalsDashboardInlineBlo
           const daysLeft = daysUntilTarget(goal.targetDate);
           const completedMilestones = goal.milestones.filter(m => m.completed).length;
           const totalMilestones = goal.milestones.length;
-          const CategoryIcon = getCategoryIcon(goal.category);
+          const CategoryIconComponent = getCategoryIcon(goal.category);
           
           return (
             <div key={goal.id} className="bg-white rounded-lg border shadow-sm p-6">
@@ -521,7 +521,7 @@ export const QuizGoalsDashboardInlineBlock: React.FC<QuizGoalsDashboardInlineBlo
                 {/* Ícone da Categoria */}
                 <div className="flex-shrink-0">
                   <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <CategoryIcon className="text-blue-600" />
+                    <CategoryIconComponent className="text-blue-600" />
                   </div>
                 </div>
 
@@ -650,7 +650,7 @@ export const QuizGoalsDashboardInlineBlock: React.FC<QuizGoalsDashboardInlineBlo
             
             <div className="space-y-3">
               {insights.map((insight, index) => {
-                const InsightIcon = getInsightIcon(insight.type);
+                const InsightIconComponent = getInsightIcon(insight.type);
                 const insightColors = {
                   positive: 'border-green-200 bg-green-50 text-green-700',
                   warning: 'border-yellow-200 bg-yellow-50 text-yellow-700',
@@ -666,7 +666,7 @@ export const QuizGoalsDashboardInlineBlock: React.FC<QuizGoalsDashboardInlineBlo
                     )}
                   >
                     <div className="flex items-start gap-3">
-                      <InsightIcon className="flex-shrink-0 mt-0.5" />
+                      <InsightIconComponent className="flex-shrink-0 mt-0.5 w-5 h-5" />
                       <div className="flex-1">
                         <h4 className="font-medium mb-1">{insight.title}</h4>
                         <p className="text-sm opacity-90">{insight.description}</p>
