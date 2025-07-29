@@ -1,14 +1,15 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 interface BlockComponentProps {
-  content: any;
+  content: EditableContent;
   isSelected?: boolean;
-  onSelect?: () => void;
+  isEditing?: boolean;
   onUpdate?: (content: any) => void;
+  onSelect?: () => void;
+  className?: string;
 }
 
 export const HeaderBlock: React.FC<BlockComponentProps> = ({ 
@@ -128,27 +129,46 @@ export const SpacerBlock: React.FC<BlockComponentProps> = ({
 export const QuizQuestionBlock: React.FC<BlockComponentProps> = ({ 
   content, 
   isSelected, 
-  onSelect, 
-  onUpdate 
+  isEditing,
+  onUpdate, 
+  onSelect,
+  className 
 }) => {
   return (
-    <div 
-      className={`border-2 p-4 rounded-lg cursor-pointer ${
+    <div
+      className={`border rounded-lg p-4 cursor-pointer transition-colors ${
         isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
-      }`}
+      } ${className}`}
       onClick={onSelect}
     >
-      <h3 className="font-semibold mb-2">
-        {content?.question || 'Quiz Question'}
-      </h3>
-      <div className="space-y-2">
-        {content?.options?.map((option: any, index: number) => (
-          <div key={index} className="flex items-center space-x-2">
-            <input type="radio" name="quiz-option" disabled />
-            <span>{option.text}</span>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="font-medium">Pergunta do Quiz</h3>
+          <Badge variant="outline">Quiz</Badge>
+        </div>
+        
+        <div className="space-y-2">
+          <p className="text-gray-700">{content.question || 'Qual é sua pergunta?'}</p>
+          
+          <div className="space-y-1">
+            {content.options?.map((option: any, index: number) => (
+              <div key={index} className="flex items-center space-x-2">
+                <div className="w-4 h-4 border border-gray-300 rounded"></div>
+                <span className="text-sm">{option.text}</span>
+              </div>
+            ))}
           </div>
-        )) || (
-          <div className="text-gray-500">No options available</div>
+        </div>
+        
+        {isEditing && (
+          <div className="flex items-center space-x-2 pt-2 border-t">
+            <Button size="sm" variant="outline">
+              Editar Pergunta
+            </Button>
+            <Button size="sm" variant="outline">
+              Adicionar Opção
+            </Button>
+          </div>
         )}
       </div>
     </div>

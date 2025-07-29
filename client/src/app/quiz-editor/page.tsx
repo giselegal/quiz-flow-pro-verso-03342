@@ -2,44 +2,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useEditor } from '@/contexts/EditorContext';
+import QuestionEditor from '@/components/editor/QuestionEditor';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useEditor } from '@/contexts/EditorContext';
-import QuestionEditor from '@/components/editor/QuestionEditor';
-
-interface Question {
-  id: string;
-  text: string;
-  type: 'text' | 'multiple_choice' | 'single_choice' | 'rating';
-  options: Array<{
-    text: string;
-    isCorrect: boolean;
-  }>;
-  required: boolean;
-  hint?: string;
-  title?: string;
-  tags?: string[];
-}
-
-interface Quiz {
-  id: string;
-  title: string;
-  description: string | null;
-  author_id: string;
-  category: string;
-  difficulty: string | null;
-  time_limit: number | null;
-  is_public: boolean | null;
-  is_published: boolean | null;
-  created_at: string;
-  updated_at: string;
-  questions: Question[];
-}
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Plus, Settings, Eye, Save, ArrowLeft } from 'lucide-react';
+import { Quiz, Question } from '@/types/quiz';
 
 export default function QuizEditorPage() {
   const {
@@ -66,58 +37,55 @@ export default function QuizEditorPage() {
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setErrorState] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (state.quiz) {
       setQuiz(state.quiz);
-      setQuestions(state.quiz.questions.map(q => ({
-        ...q,
-        title: q.text,
-        tags: []
-      })));
+      setQuestions(state.quiz.questions || []);
     }
   }, [state.quiz]);
 
   const handleCreateQuiz = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
-      const newQuiz = await createQuiz({
+      await createQuiz({
         title: 'Novo Quiz',
-        description: '',
-        author_id: 'user-1',
-        category: 'general',
-        difficulty: 'medium',
-        time_limit: null,
-        is_public: false,
-        is_published: false
+        description: 'Descrição do quiz',
+        category: 'general'
       });
-      setQuiz(newQuiz);
-    } catch (err) {
-      setErrorState('Erro ao criar quiz');
+    } catch (error) {
+      setError('Erro ao criar quiz');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   const handleSaveQuiz = async () => {
     if (!quiz) return;
     
-    setLoading(true);
+    setIsLoading(true);
     try {
       await saveQuiz();
-    } catch (err) {
-      setErrorState('Erro ao salvar quiz');
+    } catch (error) {
+      setError('Erro ao salvar quiz');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
+  };
+
+  const handleUpdateQuiz = (updates: Partial<Quiz>) => {
+    if (!quiz) return;
+    const updatedQuiz = { ...quiz, ...updates };
+    setQuiz(updatedQuiz);
+    updateQuiz(updates);
   };
 
   const handleAddQuestion = () => {
     const newQuestion: Question = {
       id: `question-${Date.now()}`,
-      text: 'Nova pergunta',
+      title: 'Nova pergunta',
+      text: 'Digite sua pergunta aqui',
       type: 'multiple_choice',
       options: [
         { text: 'Opção 1', isCorrect: false },
@@ -125,18 +93,21 @@ export default function QuizEditorPage() {
       ],
       required: true,
       hint: '',
-      title: 'Nova pergunta',
       tags: []
     };
-    
+
     setQuestions(prev => [...prev, newQuestion]);
     setSelectedQuestionId(newQuestion.id);
+    addQuestion();
   };
 
   const handleUpdateQuestion = (questionId: string, updates: Partial<Question>) => {
-    setQuestions(prev =>
-      prev.map(q => q.id === questionId ? { ...q, ...updates } : q)
+    setQuestions(prev => 
+      prev.map(q => 
+        q.id === questionId ? { ...q, ...updates } : q
+      )
     );
+    updateQuestion(questionId, updates);
   };
 
   const handleDeleteQuestion = (questionId: string) => {
@@ -144,252 +115,233 @@ export default function QuizEditorPage() {
     if (selectedQuestionId === questionId) {
       setSelectedQuestionId(null);
     }
+    deleteQuestion(questionId);
+  };
+
+  const handleSelectQuestion = (questionId: string) => {
+    setSelectedQuestionId(questionId);
+    selectQuestion(questionId);
   };
 
   const selectedQuestion = questions.find(q => q.id === selectedQuestionId);
 
-  const handleQuestionTextChange = (questionId: string, text: string) => {
-    handleUpdateQuestion(questionId, { text, title: text });
-  };
+  const renderQuestionList = () => (
+    <div className="space-y-2">
+      {questions.map((question: Question, index: number) => (
+        <Card 
+          key={question.id}
+          className={`cursor-pointer transition-colors ${
+            selectedQuestionId === question.id ? 'border-blue-500 bg-blue-50' : 'hover:bg-gray-50'
+          }`}
+          onClick={() => handleSelectQuestion(question.id)}
+        >
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <h4 className="font-medium">Pergunta {index + 1}</h4>
+                <p className="text-sm text-gray-600 truncate">{question.text}</p>
+              </div>
+              <Badge variant="secondary">{question.type}</Badge>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
 
-  const handleQuestionTypeChange = (questionId: string, type: Question['type']) => {
-    handleUpdateQuestion(questionId, { type });
-  };
+  const renderQuizSettings = () => (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-sm font-medium mb-2">Título do Quiz</label>
+        <Input
+          value={quiz?.title || ''}
+          onChange={(e) => handleUpdateQuiz({ title: e.target.value })}
+          placeholder="Digite o título do quiz"
+        />
+      </div>
+      
+      <div>
+        <label className="block text-sm font-medium mb-2">Descrição</label>
+        <Input
+          value={quiz?.description || ''}
+          onChange={(e) => handleUpdateQuiz({ description: e.target.value })}
+          placeholder="Digite a descrição do quiz"
+        />
+      </div>
+      
+      <div>
+        <label className="block text-sm font-medium mb-2">Categoria</label>
+        <Input
+          value={quiz?.category || ''}
+          onChange={(e) => handleUpdateQuiz({ category: e.target.value })}
+          placeholder="Digite a categoria"
+        />
+      </div>
+    </div>
+  );
 
-  const handleAddOption = (questionId: string) => {
-    const question = questions.find(q => q.id === questionId);
-    if (question) {
-      const newOptions = [...question.options, { text: `Opção ${question.options.length + 1}`, isCorrect: false }];
-      handleUpdateQuestion(questionId, { options: newOptions });
-    }
-  };
-
-  const handleUpdateOption = (questionId: string, optionIndex: number, text: string) => {
-    const question = questions.find(q => q.id === questionId);
-    if (question) {
-      const newOptions = [...question.options];
-      newOptions[optionIndex] = { ...newOptions[optionIndex], text };
-      handleUpdateQuestion(questionId, { options: newOptions });
-    }
-  };
-
-  const handleToggleCorrectOption = (questionId: string, optionIndex: number) => {
-    const question = questions.find(q => q.id === questionId);
-    if (question) {
-      const newOptions = [...question.options];
-      newOptions[optionIndex] = { ...newOptions[optionIndex], isCorrect: !newOptions[optionIndex].isCorrect };
-      handleUpdateQuestion(questionId, { options: newOptions });
-    }
-  };
-
-  const handleRemoveOption = (questionId: string, optionIndex: number) => {
-    const question = questions.find(q => q.id === questionId);
-    if (question && question.options.length > 2) {
-      const newOptions = question.options.filter((_, index) => index !== optionIndex);
-      handleUpdateQuestion(questionId, { options: newOptions });
-    }
-  };
+  if (!quiz) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Editor de Quiz</h1>
+          <p className="text-gray-600 mb-6">Crie um novo quiz para começar</p>
+          <Button onClick={handleCreateQuiz} disabled={isLoading}>
+            <Plus className="w-4 h-4 mr-2" />
+            {isLoading ? 'Criando...' : 'Criar Novo Quiz'}
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Editor de Quiz</h1>
-          <p className="text-gray-600">Crie e edite quizzes interativos</p>
+    <div className="h-screen flex flex-col">
+      {/* Header */}
+      <div className="border-b bg-white p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <Button variant="ghost" size="sm">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Voltar
+            </Button>
+            <h1 className="text-2xl font-bold">{quiz.title}</h1>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <Button variant="outline" onClick={togglePreview}>
+              <Eye className="w-4 h-4 mr-2" />
+              Visualizar
+            </Button>
+            <Button onClick={handleSaveQuiz} disabled={isLoading}>
+              <Save className="w-4 h-4 mr-2" />
+              {isLoading ? 'Salvando...' : 'Salvar'}
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 flex">
+        {/* Sidebar */}
+        <div className="w-80 border-r bg-gray-50">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="questions">Perguntas</TabsTrigger>
+              <TabsTrigger value="settings">Configurações</TabsTrigger>
+              <TabsTrigger value="blocks">Blocos</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="questions" className="p-4">
+              <div className="space-y-4">
+                <Button onClick={handleAddQuestion} className="w-full">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Adicionar Pergunta
+                </Button>
+                {renderQuestionList()}
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="settings" className="p-4">
+              {renderQuizSettings()}
+            </TabsContent>
+            
+            <TabsContent value="blocks" className="p-4">
+              <div className="space-y-4">
+                <Input
+                  placeholder="Buscar blocos..."
+                  value={blockSearch}
+                  onChange={(e) => setBlockSearch(e.target.value)}
+                />
+                
+                <div className="space-y-2">
+                  <h3 className="font-medium">Conteúdo</h3>
+                  {availableBlocks.filter((block: any) => block.category === 'content').map((block: any) => (
+                    <Button
+                      key={block.type}
+                      variant="ghost"
+                      className="w-full justify-start"
+                      onClick={() => handleAddBlock(block.type)}
+                    >
+                      <span className="mr-2">{block.icon}</span>
+                      {block.name}
+                    </Button>
+                  ))}
+                </div>
+                
+                <div className="space-y-2">
+                  <h3 className="font-medium">Layout</h3>
+                  {availableBlocks.filter((block: any) => block.category === 'layout').map((block: any) => (
+                    <Button
+                      key={block.type}
+                      variant="ghost"
+                      className="w-full justify-start"
+                      onClick={() => handleAddBlock(block.type)}
+                    >
+                      <span className="mr-2">{block.icon}</span>
+                      {block.name}
+                    </Button>
+                  ))}
+                </div>
+                
+                <div className="space-y-2">
+                  <h3 className="font-medium">Quiz</h3>
+                  {availableBlocks.filter((block: any) => block.category === 'quiz').map((block: any) => (
+                    <Button
+                      key={block.type}
+                      variant="ghost"
+                      className="w-full justify-start"
+                      onClick={() => handleAddBlock(block.type)}
+                    >
+                      <span className="mr-2">{block.icon}</span>
+                      {block.name}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
 
-        {error && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-700">{error}</p>
-          </div>
-        )}
-
-        {!quiz ? (
-          <Card>
-            <CardHeader>
-              <CardTitle>Criar Novo Quiz</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Button onClick={handleCreateQuiz} disabled={loading}>
-                {loading ? 'Criando...' : 'Criar Quiz'}
-              </Button>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Sidebar */}
-            <div className="lg:col-span-3">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Configurações</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label htmlFor="quiz-title">Título do Quiz</Label>
-                    <Input
-                      id="quiz-title"
-                      value={quiz.title}
-                      onChange={(e) => setQuiz({ ...quiz, title: e.target.value })}
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="quiz-description">Descrição</Label>
-                    <Textarea
-                      id="quiz-description"
-                      value={quiz.description || ''}
-                      onChange={(e) => setQuiz({ ...quiz, description: e.target.value })}
-                    />
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="quiz-public"
-                      checked={quiz.is_public || false}
-                      onCheckedChange={(checked) => setQuiz({ ...quiz, is_public: checked })}
-                    />
-                    <Label htmlFor="quiz-public">Quiz Público</Label>
-                  </div>
-                  
-                  <Button onClick={handleSaveQuiz} disabled={loading} className="w-full">
-                    {loading ? 'Salvando...' : 'Salvar Quiz'}
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Tabs */}
-              <Card className="mt-4">
-                <CardHeader>
-                  <div className="flex space-x-2">
-                    <Button
-                      variant={activeTab === 'questions' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => setActiveTab('questions')}
-                    >
-                      Perguntas
-                    </Button>
-                    <Button
-                      variant={activeTab === 'blocks' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => setActiveTab('blocks')}
-                    >
-                      Blocos
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  {activeTab === 'questions' ? (
-                    <div className="space-y-2">
-                      {questions.map((question, index) => (
-                        <div
-                          key={question.id}
-                          className={`p-3 rounded-lg border cursor-pointer transition-colors ${
-                            selectedQuestionId === question.id
-                              ? 'border-blue-500 bg-blue-50'
-                              : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                          onClick={() => setSelectedQuestionId(question.id)}
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="font-medium">Pergunta {index + 1}</span>
-                            <Badge variant="secondary">{question.type}</Badge>
-                          </div>
-                          <p className="text-sm text-gray-600 mt-1 truncate">
-                            {question.text}
-                          </p>
-                        </div>
-                      ))}
-                      <Button onClick={handleAddQuestion} className="w-full">
-                        Adicionar Pergunta
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <div>
-                        <Input
-                          placeholder="Buscar blocos..."
-                          value={blockSearch}
-                          onChange={(e) => setBlockSearch(e.target.value)}
-                        />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <h3 className="font-medium">Conteúdo</h3>
-                        {availableBlocks.filter((block: any) => block.category === 'content').map((block: any) => (
-                          <div
-                            key={block.type}
-                            className="p-2 border rounded cursor-pointer hover:bg-gray-50"
-                            onClick={() => handleAddBlock(block.type)}
-                          >
-                            <span className="text-sm">{block.icon} {block.name}</span>
-                          </div>
-                        ))}
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <h3 className="font-medium">Quiz</h3>
-                        {availableBlocks.filter((block: any) => block.category === 'quiz').map((block: any) => (
-                          <div
-                            key={block.type}
-                            className="p-2 border rounded cursor-pointer hover:bg-gray-50"
-                            onClick={() => handleAddBlock(block.type)}
-                          >
-                            <span className="text-sm">{block.icon} {block.name}</span>
-                          </div>
-                        ))}
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <h3 className="font-medium">Layout</h3>
-                        {availableBlocks.filter((block: any) => block.category === 'layout').map((block: any) => (
-                          <div
-                            key={block.type}
-                            className="p-2 border rounded cursor-pointer hover:bg-gray-50"
-                            onClick={() => handleAddBlock(block.type)}
-                          >
-                            <span className="text-sm">{block.icon} {block.name}</span>
-                          </div>
-                        ))}
-                      </div>
-                      
-                      {availableBlocks.length === 0 && (
-                        <p className="text-gray-500 text-center py-4">
-                          Nenhum bloco disponível
-                        </p>
-                      )}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+        {/* Main Content */}
+        <div className="flex-1 p-6">
+          {activeTab === 'questions' && selectedQuestion && (
+            <QuestionEditor
+              question={selectedQuestion}
+              onUpdate={(updates) => handleUpdateQuestion(selectedQuestion.id, updates)}
+              onDelete={() => handleDeleteQuestion(selectedQuestion.id)}
+            />
+          )}
+          
+          {activeTab === 'questions' && !selectedQuestion && (
+            <div className="h-full flex items-center justify-center">
+              <div className="text-center">
+                <p className="text-gray-500 mb-4">Selecione uma pergunta para editar</p>
+                <Button onClick={handleAddQuestion}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Adicionar Primeira Pergunta
+                </Button>
+              </div>
             </div>
-
-            {/* Main Content */}
-            <div className="lg:col-span-9">
-              <Card>
-                <CardHeader>
-                  <CardTitle>
-                    {selectedQuestion ? `Editando: ${selectedQuestion.text}` : 'Selecione uma pergunta'}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {selectedQuestion ? (
-                    <QuestionEditor
-                      question={selectedQuestion}
-                      onUpdate={(updates) => handleUpdateQuestion(selectedQuestion.id, updates)}
-                      onDelete={() => handleDeleteQuestion(selectedQuestion.id)}
-                    />
-                  ) : (
-                    <div className="text-center py-8">
-                      <p className="text-gray-500">
-                        Selecione uma pergunta na barra lateral para começar a editar
-                      </p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+          )}
+          
+          {activeTab === 'settings' && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Configurações do Quiz</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {renderQuizSettings()}
+              </CardContent>
+            </Card>
+          )}
+          
+          {activeTab === 'blocks' && (
+            <div className="text-center">
+              <p className="text-gray-500">Selecione um bloco na barra lateral para adicionar ao quiz</p>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

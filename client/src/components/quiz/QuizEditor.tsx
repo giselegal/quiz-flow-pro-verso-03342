@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { ArrowLeft } from 'lucide-react';
-import { Button } from '../ui/Button';
-import type { Quiz } from '../../types/supabase';
+import { Button } from '@/components/ui/button';
+import { Quiz } from '@/types/quiz';
 
 interface QuizEditorProps {
   quiz: Quiz;
@@ -48,7 +49,7 @@ export const QuizEditor: React.FC<QuizEditorProps> = ({
         </div>
       </div>
 
-      {/* Conteúdo do Editor */}
+      {/* Content */}
       <div className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow-sm border p-8">
           <div className="text-center py-12">
@@ -76,3 +77,5 @@ export const QuizEditor: React.FC<QuizEditorProps> = ({
     </div>
   );
 };
+
+export default QuizEditor;
