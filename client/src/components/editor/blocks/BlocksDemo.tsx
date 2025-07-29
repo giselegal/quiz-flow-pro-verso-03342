@@ -1,283 +1,200 @@
 
 import React, { useState } from 'react';
-import { BlockComponents } from './BlockComponents';
+import { blockComponents } from './BlockComponents';
 import { EditorBlock } from '@/types/editor';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Edit2, Trash2, Eye, EyeOff } from 'lucide-react';
 
-interface BlocksDemoProps {
-  className?: string;
-}
+export default function BlocksDemo() {
+  const [selectedBlock, setSelectedBlock] = useState<string | null>(null);
+  const [editingBlock, setEditingBlock] = useState<string | null>(null);
 
-export const BlocksDemo: React.FC<BlocksDemoProps> = ({ className }) => {
-  const [blocks, setBlocks] = useState<EditorBlock[]>([
+  const demoBlocks: EditorBlock[] = [
     {
-      id: 'demo-1',
+      id: 'header-1',
       type: 'header',
-      content: {
-        title: 'Título Principal',
-        subtitle: 'Subtítulo do componente',
-        style: {
-          textAlign: 'center',
-          color: '#333',
-          fontSize: 'text-3xl'
-        }
-      },
-      order: 0
+      order: 0,
+      content: { text: 'Título Principal' }
     },
     {
-      id: 'demo-2',
+      id: 'text-1',
       type: 'text',
-      content: {
-        text: 'Este é um exemplo de texto editável. Clique duplo para editar.',
-        style: {
-          color: '#666',
-          fontSize: '16px'
-        }
-      },
-      order: 1
+      order: 1,
+      content: { text: 'Este é um exemplo de texto. Você pode editá-lo clicando no botão de edição.' }
     },
     {
-      id: 'demo-3',
+      id: 'image-1',
       type: 'image',
-      content: {
-        imageUrl: 'https://via.placeholder.com/400x200',
-        imageAlt: 'Imagem de exemplo',
-        caption: 'Legenda da imagem'
-      },
-      order: 2
+      order: 2,
+      content: { 
+        src: 'https://via.placeholder.com/400x200',
+        alt: 'Imagem de exemplo'
+      }
     },
     {
-      id: 'demo-4',
+      id: 'button-1',
       type: 'button',
-      content: {
-        buttonText: 'Botão de Exemplo',
-        buttonUrl: 'https://exemplo.com',
-        style: {
-          backgroundColor: '#007bff',
-          color: 'white',
-          textAlign: 'center'
-        }
-      },
-      order: 3
+      order: 3,
+      content: { 
+        text: 'Clique aqui',
+        backgroundColor: '#3b82f6'
+      }
     },
     {
-      id: 'demo-5',
+      id: 'spacer-1',
       type: 'spacer',
-      content: {
-        height: '60px'
-      },
-      order: 4
+      order: 4,
+      content: { height: 60 }
     },
     {
-      id: 'demo-6',
+      id: 'quiz-1',
       type: 'quiz-question',
+      order: 5,
       content: {
-        question: 'Qual é a sua cor favorita?',
+        question: 'Qual é a resposta correta?',
         options: [
-          { id: '1', text: 'Azul', imageUrl: '' },
-          { id: '2', text: 'Vermelho', imageUrl: '' },
-          { id: '3', text: 'Verde', imageUrl: '' },
-          { id: '4', text: 'Amarelo', imageUrl: '' }
-        ],
-        multipleSelection: false,
-        showImages: false,
-        progressPercent: 50,
-        logoUrl: '',
-        showBackButton: true,
-        optionLayout: 'vertical'
-      },
-      order: 5
+          { text: 'Opção A', isCorrect: false },
+          { text: 'Opção B', isCorrect: true },
+          { text: 'Opção C', isCorrect: false },
+          { text: 'Opção D', isCorrect: false }
+        ]
+      }
+    },
+    {
+      id: 'testimonial-1',
+      type: 'testimonial',
+      order: 6,
+      content: {
+        text: 'Este produto mudou minha vida! Recomendo para todos.',
+        author: 'João Silva'
+      }
     }
-  ]);
-
-  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
-  const [isPreviewMode, setIsPreviewMode] = useState(false);
+  ];
 
   const handleBlockUpdate = (blockId: string, content: any) => {
-    setBlocks(prev => 
-      prev.map(block => 
-        block.id === blockId 
-          ? { ...block, content: { ...block.content, ...content } }
-          : block
-      )
+    console.log('Updating block:', blockId, content);
+  };
+
+  const handleBlockSelect = (blockId: string) => {
+    setSelectedBlock(blockId);
+    setEditingBlock(null);
+  };
+
+  const handleBlockEdit = (blockId: string) => {
+    setEditingBlock(blockId);
+  };
+
+  const renderBlock = (block: EditorBlock) => {
+    const BlockComponent = blockComponents[block.type];
+    
+    if (!BlockComponent) {
+      return (
+        <div key={block.id} className="p-4 border-2 border-dashed border-gray-300 rounded-lg">
+          <p className="text-gray-500">Componente não encontrado: {block.type}</p>
+        </div>
+      );
+    }
+
+    return (
+      <div key={block.id} className="mb-4">
+        <BlockComponent
+          content={block.content}
+          isSelected={selectedBlock === block.id}
+          isEditing={editingBlock === block.id}
+          onUpdate={(content) => handleBlockUpdate(block.id, content)}
+          onSelect={() => handleBlockSelect(block.id)}
+        />
+      </div>
     );
   };
 
-  const handleBlockDelete = (blockId: string) => {
-    setBlocks(prev => prev.filter(block => block.id !== blockId));
-    if (selectedBlockId === blockId) {
-      setSelectedBlockId(null);
-    }
-  };
-
-  const addNewBlock = (type: EditorBlock['type']) => {
-    const newBlock: EditorBlock = {
-      id: `demo-${Date.now()}`,
-      type,
-      content: getDefaultContent(type),
-      order: blocks.length
-    };
-    
-    setBlocks(prev => [...prev, newBlock]);
-    setSelectedBlockId(newBlock.id);
-  };
-
-  const getDefaultContent = (type: EditorBlock['type']) => {
-    switch (type) {
-      case 'header':
-        return { title: 'Novo Título', subtitle: 'Subtítulo' };
-      case 'text':
-        return { text: 'Novo texto aqui...' };
-      case 'image':
-        return { imageUrl: '', imageAlt: '', caption: '' };
-      case 'button':
-        return { buttonText: 'Clique aqui', buttonUrl: '' };
-      case 'spacer':
-        return { height: '40px' };
-      case 'quiz-question':
-        return {
-          question: 'Nova pergunta?',
-          options: [
-            { id: '1', text: 'Opção 1', imageUrl: '' },
-            { id: '2', text: 'Opção 2', imageUrl: '' }
-          ],
-          multipleSelection: false,
-          showImages: false,
-          progressPercent: 0,
-          logoUrl: '',
-          showBackButton: false,
-          optionLayout: 'vertical'
-        };
-      default:
-        return {};
-    }
-  };
-
-  const availableBlockTypes = [
-    { type: 'header', name: 'Cabeçalho', icon: '📄' },
-    { type: 'text', name: 'Texto', icon: '📝' },
-    { type: 'image', name: 'Imagem', icon: '🖼️' },
-    { type: 'button', name: 'Botão', icon: '🔘' },
-    { type: 'spacer', name: 'Espaçador', icon: '⬜' },
-    { type: 'quiz-question', name: 'Questão Quiz', icon: '❓' }
-  ];
-
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Demo de Componentes</h1>
-        <p className="text-gray-600">
-          Demonstração dos componentes do editor com funcionalidades completas
-        </p>
-      </div>
+    <div className="min-h-screen bg-gray-50 p-8">
+      <div className="max-w-6xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Demonstração de Blocos
+          </h1>
+          <p className="text-gray-600">
+            Explore os diferentes tipos de blocos disponíveis no editor
+          </p>
+        </div>
 
-      <Tabs defaultValue="editor" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="editor">Editor</TabsTrigger>
-          <TabsTrigger value="blocks">Blocos Disponíveis</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="editor" className="space-y-6">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <Button
-                variant={isPreviewMode ? "default" : "outline"}
-                onClick={() => setIsPreviewMode(!isPreviewMode)}
-              >
-                {isPreviewMode ? <EyeOff className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
-                {isPreviewMode ? 'Sair do Preview' : 'Preview'}
-              </Button>
-              <Badge variant="secondary">
-                {blocks.length} bloco{blocks.length !== 1 ? 's' : ''}
-              </Badge>
-            </div>
-            
-            <div className="flex gap-2">
-              {availableBlockTypes.map(blockType => (
-                <Button
-                  key={blockType.type}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => addNewBlock(blockType.type as EditorBlock['type'])}
-                >
-                  <span className="mr-1">{blockType.icon}</span>
-                  {blockType.name}
-                </Button>
-              ))}
-            </div>
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            <Card>
+              <CardHeader>
+                <CardTitle>Controles</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {selectedBlock && (
+                  <div>
+                    <h3 className="font-medium mb-2">Bloco Selecionado</h3>
+                    <Badge variant="secondary">{selectedBlock}</Badge>
+                  </div>
+                )}
+                
+                <div className="space-y-2">
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => setSelectedBlock(null)}
+                  >
+                    Limpar Seleção
+                  </Button>
+                  {selectedBlock && (
+                    <Button 
+                      size="sm"
+                      onClick={() => handleBlockEdit(selectedBlock)}
+                    >
+                      Editar Bloco
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
-          <div className="space-y-4">
-            {blocks
-              .sort((a, b) => a.order - b.order)
-              .map(block => (
-                <Card key={block.id} className="relative">
-                  <CardContent className="p-0">
-                    <BlockComponents
-                      block={block}
-                      isSelected={selectedBlockId === block.id}
-                      isEditing={!isPreviewMode}
-                      onUpdate={(content) => handleBlockUpdate(block.id, content)}
-                      onSelect={() => setSelectedBlockId(block.id)}
-                    />
-                    
-                    {!isPreviewMode && (
-                      <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => setSelectedBlockId(block.id)}
-                        >
-                          <Edit2 className="h-3 w-3" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => handleBlockDelete(block.id)}
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    )}
+          {/* Main Content */}
+          <div className="lg:col-span-3">
+            <Tabs defaultValue="preview" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="preview">Preview</TabsTrigger>
+                <TabsTrigger value="code">Código</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="preview" className="space-y-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Preview dos Blocos</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {demoBlocks.map(renderBlock)}
+                    </div>
                   </CardContent>
                 </Card>
-              ))}
+              </TabsContent>
+              
+              <TabsContent value="code">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Estrutura dos Blocos</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto">
+                      <code>{JSON.stringify(demoBlocks, null, 2)}</code>
+                    </pre>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
           </div>
-        </TabsContent>
-
-        <TabsContent value="blocks" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {availableBlockTypes.map(blockType => (
-              <Card key={blockType.type}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <span>{blockType.icon}</span>
-                    {blockType.name}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-600 mb-3">
-                    Componente do tipo {blockType.type}
-                  </p>
-                  <Button
-                    onClick={() => addNewBlock(blockType.type as EditorBlock['type'])}
-                    className="w-full"
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Adicionar
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
+        </div>
+      </div>
     </div>
   );
-};
-
-export default BlocksDemo;
+}
