@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import type { BlockComponentProps } from '@/types/blocks';
+import { cn } from '../../../lib/utils';
+import { Button } from '../../../components/ui/button';
+import type { BlockComponentProps } from '../../../types/blocks';
 
 const CTAInlineBlock: React.FC<BlockComponentProps> = ({
   block,
