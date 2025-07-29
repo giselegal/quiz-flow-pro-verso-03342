@@ -38,6 +38,7 @@ interface StepsPanelProps {
   onStepDelete: (stepId: string) => void;
   onStepDuplicate: (stepId: string) => void;
   onStepReorder: (draggedId: string, targetId: string) => void;
+  onAddBlocksToStep?: (stepId: string, blocks: any[]) => void;
   className?: string;
 }
 
@@ -48,6 +49,11 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
   onStepAdd,
   onStepUpdate,
   onStepDelete,
+  onStepDuplicate,
+  onStepReorder,
+  onAddBlocksToStep,
+  className = ''
+}) => {
   onStepDuplicate,
   onStepReorder,
   className = ''

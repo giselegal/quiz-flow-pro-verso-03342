@@ -20,7 +20,6 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { cn } from '../../lib/utils';
-import { quiz21StepsTemplates, getQuizStepTemplate } from '../../templates/quiz21StepsTemplates';
 
 interface Step {
   id: string;
@@ -39,7 +38,6 @@ interface StepsPanelProps {
   onStepDelete: (stepId: string) => void;
   onStepDuplicate: (stepId: string) => void;
   onStepReorder: (draggedId: string, targetId: string) => void;
-  onAddBlocksToStep?: (stepId: string, blocks: any[]) => void;
   className?: string;
 }
 
@@ -52,7 +50,6 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
   onStepDelete,
   onStepDuplicate,
   onStepReorder,
-  onAddBlocksToStep,
   className = ''
 }) => {
   const [editingStepId, setEditingStepId] = useState<string | null>(null);
@@ -111,37 +108,24 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
 
   // Carregar as 21 etapas do quiz real
   const handleLoad21Steps = useCallback(() => {
-    console.log('🚀 Carregando 21 etapas do quiz...');
-    
-    quiz21StepsTemplates.forEach((stepTemplate, index) => {
+    realQuiz21Steps.forEach((stepData, index) => {
       setTimeout(() => {
-        // Primeiro, criar/adicionar a etapa
-        onStepAdd();
+        const step: Step = {
+          id: stepData.id,
+          name: stepData.name,
+          order: index + 1,
+          blocksCount: 0,
+          isActive: false
+        };
         
-        // Depois de um pequeno delay, atualizar a etapa com os dados corretos
+        // Simular criação e atualização da etapa
+        onStepAdd();
         setTimeout(() => {
-          const step: Step = {
-            id: stepTemplate.id,
-            name: stepTemplate.name,
-            order: index + 1,
-            blocksCount: stepTemplate.blocks.length,
-            isActive: false
-          };
-          
-          console.log(`📝 Criando etapa ${index + 1}: ${stepTemplate.name}`);
           onStepUpdate(step.id, step);
-          
-          // Se existe função para adicionar blocos, adicionar os blocos da etapa
-          if (onAddBlocksToStep && stepTemplate.blocks.length > 0) {
-            console.log(`🧩 Adicionando ${stepTemplate.blocks.length} blocos à etapa ${stepTemplate.name}`);
-            onAddBlocksToStep(step.id, stepTemplate.blocks);
-          }
-        }, 100);
-      }, 200 * index); // Delay progressivo para cada etapa
+        }, 50);
+      }, 100 * index);
     });
-
-    console.log(`✅ Processo iniciado para carregar ${quiz21StepsTemplates.length} etapas!`);
-  }, [onStepAdd, onStepUpdate, onAddBlocksToStep]);
+  }, [onStepAdd, onStepUpdate]);
 
   return (
     <Card className={cn('h-full flex flex-col', className)}>
@@ -284,22 +268,14 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
 
             {/* Load 21 Quiz Steps Button */}
             {steps.length === 0 && (
-              <div className="space-y-3">
-                <div className="text-center text-sm text-gray-500 py-4">
-                  Nenhuma etapa criada ainda
-                </div>
-                <Button
-                  variant="default"
-                  className="w-full flex items-center justify-center space-x-2 p-4 bg-gradient-to-r from-[#B89B7A] to-[#9F836A] hover:from-[#9F836A] hover:to-[#8A6F5A] text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                  onClick={handleLoad21Steps}
-                >
-                  <Plus className="w-5 h-5" />
-                  <span className="font-semibold">📋 Carregar 21 Etapas do Quiz CaktoQuiz</span>
-                </Button>
-                <div className="text-xs text-gray-400 text-center">
-                  Inclui todas as questões e componentes de produção
-                </div>
-              </div>
+              <Button
+                variant="default"
+                className="w-full flex items-center justify-center space-x-2 p-3 bg-[#B89B7A] hover:bg-[#9F836A] text-white"
+                onClick={handleLoad21Steps}
+              >
+                <Plus className="w-4 h-4" />
+                <span>📋 Carregar 21 Etapas do Quiz</span>
+              </Button>
             )}
           </div>
         </ScrollArea>

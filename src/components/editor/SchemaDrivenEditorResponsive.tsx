@@ -15,7 +15,6 @@ import { normalizeBlock } from '../../utils/blockTypeMapping';
 import { AdvancedPropertyPanel } from './AdvancedPropertyPanel';
 import { EditorStatus } from './components/EditorStatus';
 import { StepsPanel } from './StepsPanel';
-import StepsPanelQuiz from './StepsPanelQuiz';
 import { ComponentsPanel } from './ComponentsPanel';
 
 interface SchemaDrivenEditorResponsiveProps {
@@ -139,6 +138,33 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     const newBlockId = addBlock(blockType as any);
     setSelectedBlockId(newBlockId);
   }, [addBlock]);
+
+  // Função para adicionar múltiplos blocos a uma etapa específica
+  const handleAddBlocksToStep = useCallback((stepId: string, blocksToAdd: any[]) => {
+    console.log(`🎯 Adicionando ${blocksToAdd.length} blocos à etapa ${stepId}`);
+    
+    blocksToAdd.forEach((block, index) => {
+      setTimeout(() => {
+        try {
+          const newBlockId = addBlock(block.type as any);
+          if (newBlockId && block.properties) {
+            // Atualizar propriedades do bloco
+            updateBlock(newBlockId, block.properties);
+          }
+          console.log(`✅ Bloco ${index + 1}/${blocksToAdd.length} adicionado: ${block.type}`);
+        } catch (error) {
+          console.error(`❌ Erro ao adicionar bloco ${block.type}:`, error);
+        }
+      }, 100 * index); // Delay entre cada bloco
+    });
+
+    // Atualizar contador de blocos da etapa
+    setSteps(prev => prev.map(step => 
+      step.id === stepId 
+        ? { ...step, blocksCount: step.blocksCount + blocksToAdd.length }
+        : step
+    ));
+  }, [addBlock, updateBlock]);
 
   // Steps management functions
   const handleStepSelect = useCallback((stepId: string) => {
@@ -604,7 +630,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           <ResizablePanel defaultSize={18} minSize={15} maxSize={25}>
             <div className="h-full border-r border-gray-200 overflow-hidden">
               <ScrollArea className="h-full">
-                <StepsPanelQuiz
+                <StepsPanel
                   steps={steps}
                   selectedStepId={selectedStepId}
                   onStepSelect={handleStepSelect}
@@ -613,6 +639,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                   onStepDelete={handleStepDelete}
                   onStepDuplicate={handleStepDuplicate}
                   onStepReorder={handleStepReorder}
+                  onAddBlocksToStep={handleAddBlocksToStep}
                   className="p-2"
                 />
               </ScrollArea>
