@@ -37,6 +37,9 @@ export { default as QuizAnalysisInlineBlock } from './QuizAnalysisInlineBlock';
 export { default as QuizCategoryInlineBlock } from './QuizCategoryInlineBlock';
 export { default as QuizRecommendationInlineBlock } from './QuizRecommendationInlineBlock';
 export { default as QuizActionPlanInlineBlock } from './QuizActionPlanInlineBlock';
+export { default as QuizMetricsInlineBlock } from './QuizMetricsInlineBlock';
+export { default as QuizComparisonInlineBlock } from './QuizComparisonInlineBlock';
+export { default as QuizCertificateInlineBlock } from './QuizCertificateInlineBlock';
 
 // Tipos base
 export type { BlockComponentProps } from '../../../../types/blocks';
