@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 // import { DndProvider } from 'react-dnd';
 // import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../ui/resizable';
@@ -16,6 +16,8 @@ import { AdvancedPropertyPanel } from './AdvancedPropertyPanel';
 import { EditorStatus } from './components/EditorStatus';
 import { StepsPanel } from './StepsPanel';
 import { ComponentsPanel } from './ComponentsPanel';
+import { schemaDrivenFunnelService } from '../../services/schemaDrivenFunnelService';
+import { useToast } from '../../hooks/use-toast';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -103,13 +105,103 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   funnelId,
   className
 }) => {
-  const { config, addBlock, updateBlock, deleteBlock, saveConfig } = useEditor();
+  const { config, addBlock, updateBlock, deleteBlock, saveConfig, setConfig } = useEditor();
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [previewMode, setPreviewMode] = useState<PreviewMode>('desktop');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [isMobile, setIsMobile] = useState(false);
+  const [isLoadingFunnel, setIsLoadingFunnel] = useState(false);
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);
+  const { toast } = useToast();
+
+  // Carregar dados do funil quando funnelId mudar
+  useEffect(() => {
+    const loadFunnelData = async () => {
+      if (!funnelId) {
+        console.log('📝 Nenhum funnelId fornecido, usando dados padrão');
+        return;
+      }
+
+      setIsLoadingFunnel(true);
+      console.log('🚀 Carregando funil com ID:', funnelId);
+      
+      try {
+        const funnelData = await schemaDrivenFunnelService.loadFunnel(funnelId);
+        
+        if (!funnelData) {
+          console.log('⚠️ Funil não encontrado, criando template padrão...');
+          
+          // Se é o template de 21 etapas, criar automaticamente
+          if (funnelId === 'default-quiz-funnel-21-steps') {
+            const defaultFunnel = schemaDrivenFunnelService.createDefaultFunnel();
+            defaultFunnel.id = funnelId;
+            await schemaDrivenFunnelService.saveFunnel(defaultFunnel);
+            
+            toast({
+              title: 'Template Criado',
+              description: 'Template de 21 etapas criado automaticamente',
+            });
+            
+            // Recarregar após criar
+            setTimeout(() => loadFunnelData(), 500);
+            return;
+          }
+          
+          toast({
+            title: 'Funil não encontrado',
+            description: 'O funil solicitado não existe',
+            variant: 'destructive',
+          });
+          return;
+        }
+
+        console.log('✅ Funil carregado:', funnelData.name);
+        console.log('📄 Páginas encontradas:', funnelData.pages.length);
+        
+        // Converter dados do funil para o formato do editor
+        if (funnelData.pages && funnelData.pages.length > 0) {
+          const firstPage = funnelData.pages[0];
+          const editorConfig = {
+            blocks: firstPage.blocks || []
+          };
+          
+          // Usar o método do useEditor para atualizar
+          setConfig(editorConfig);
+          
+          // Atualizar steps baseado nas páginas
+          const funnelSteps = funnelData.pages.map((page, index) => ({
+            id: page.id,
+            name: page.title || `Etapa ${index + 1}`,
+            order: index + 1,
+            blocksCount: page.blocks?.length || 0,
+            isActive: index === 0
+          }));
+          
+          setSteps(funnelSteps);
+          setSelectedStepId(funnelSteps[0]?.id || 'step-1');
+          
+          toast({
+            title: 'Funil Carregado',
+            description: `${funnelData.name} - ${funnelData.pages.length} páginas`,
+          });
+        }
+        
+      } catch (error) {
+        console.error('❌ Erro ao carregar funil:', error);
+        toast({
+          title: 'Erro ao carregar funil',
+          description: 'Verifique se o ID do funil está correto',
+          variant: 'destructive',
+        });
+      } finally {
+        setIsLoadingFunnel(false);
+      }
+    };
+
+    loadFunnelData();
+  }, [funnelId, setConfig, toast]);
 
   // Detect mobile screen size
   React.useEffect(() => {
