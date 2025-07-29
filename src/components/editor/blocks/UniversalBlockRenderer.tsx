@@ -235,10 +235,17 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'subtitle-standalone': () => <HeadingInlineBlock {...commonProps} />,
       'single-button': () => <ButtonInlineBlock {...commonProps} />,
       'single-image': () => <ImageInlineBlock {...commonProps} />,
-      'text-paragraph': () => TextInlineBlock ? <TextInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
+      'text-paragraph': () => <TextInlineBlock {...commonProps} />,
       'icon-standalone': () => <BadgeInlineBlock {...commonProps} />,
       'divider-line': () => <SectionDividerBlock {...commonProps} />,
       'spacing-block': () => <SpacerBlock {...commonProps} />,
+      
+      // === COMPONENTES DE RESULTADO ===
+      'result-header-inline': () => <ResultHeaderInlineBlock {...commonProps} />,
+      'result-card-inline': () => <ResultCardInlineBlock {...commonProps} />,
+      'before-after-inline': () => <BeforeAfterInlineBlock {...commonProps} />,
+      'bonus-list-inline': () => <BonusListInlineBlock {...commonProps} />,
+      'step-header-inline': () => <StepHeaderInlineBlock {...commonProps} />,
     };
 
     // Renderizar com fallback
