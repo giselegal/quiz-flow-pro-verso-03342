@@ -579,8 +579,36 @@ class SchemaDrivenFunnelService {
       return null;
     }
 
+    // Para o template especial, priorizar funcionamento offline
+    if (funnelId === 'default-quiz-funnel-21-steps') {
+      console.log('📱 [DEBUG] Template especial detectado - funcionamento offline prioritário');
+      
+      // Verificar localStorage primeiro
+      const localFunnel = this.getLocalFunnel();
+      if (localFunnel && localFunnel.id === funnelId) {
+        console.log('💾 Template carregado do localStorage');
+        return localFunnel;
+      }
+      
+      // Se não existe no local, criar template novo
+      console.log('🔄 Criando novo template de 21 etapas...');
+      const defaultFunnel = this.createDefaultFunnel();
+      defaultFunnel.id = funnelId;
+      
+      // Salvar localmente primeiro
+      this.saveLocalFunnel(defaultFunnel);
+      
+      // Tentar salvar no Supabase em background (sem await)
+      this.saveFunnel(defaultFunnel).catch(error => {
+        console.warn('⚠️ Falha ao salvar no Supabase (funcionando offline):', error);
+      });
+      
+      console.log('✅ Template criado e funcionando offline');
+      return defaultFunnel;
+    }
+
     try {
-      // Tentar carregar do Supabase primeiro
+      // Para outros funis, tentar carregar do Supabase primeiro
       console.log('🌐 [DEBUG] Loading from Supabase...');
       const { data, error } = await supabase
         .from('quizzes')
@@ -1874,6 +1902,7 @@ class SchemaDrivenFunnelService {
         blocks: [],
         order: 1,
         settings: {
+          showProgress: true,
           progressValue: 0,
           backgroundColor: '#FFFFFF',
           textColor: '#432818',

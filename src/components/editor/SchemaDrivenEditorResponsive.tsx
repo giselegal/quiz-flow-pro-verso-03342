@@ -128,31 +128,10 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       console.log('🚀 Carregando funil com ID:', funnelId);
       
       try {
-        // Se é o template de 21 etapas, sempre recriar para garantir as últimas melhorias
-        if (funnelId === 'default-quiz-funnel-21-steps') {
-          console.log('🔄 Recriando template de 21 etapas com melhorias mais recentes...');
-          
-          // Limpar localStorage para forçar recriação
-          schemaDrivenFunnelService.clearLocalFunnel();
-          
-          const defaultFunnel = schemaDrivenFunnelService.createDefaultFunnel();
-          defaultFunnel.id = funnelId;
-          await schemaDrivenFunnelService.saveFunnel(defaultFunnel);
-          
-          toast({
-            title: 'Template Atualizado',
-            description: 'Template de 21 etapas recriado com as melhorias mais recentes',
-          });
-          
-          // Recarregar após criar
-          setTimeout(() => loadFunnelData(), 500);
-          return;
-        }
-        
         const funnelData = await schemaDrivenFunnelService.loadFunnel(funnelId);
         
         if (!funnelData) {
-          console.log('⚠️ Funil não encontrado, criando template padrão...');
+          console.log('⚠️ Funil não encontrado');
           
           toast({
             title: 'Funil não encontrado',
