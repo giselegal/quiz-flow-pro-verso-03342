@@ -28,6 +28,7 @@ export { default as LoadingAnimationBlock } from './LoadingAnimationBlock';
 
 // NOVA IMPLEMENTAÇÃO: Componentes das 21 Etapas Inline
 export { default as QuizStartPageInlineBlock } from './QuizStartPageInlineBlock';
+export { default as QuizQuestionInlineBlock } from './QuizQuestionInlineBlock';
 
 // Tipos base
 export type { BlockComponentProps } from '../../../../types/blocks';

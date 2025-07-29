@@ -34,7 +34,8 @@ import {
   // Componentes especializados para Quiz
   LoadingAnimationBlock,
   // NOVA IMPLEMENTAÇÃO: Componentes das 21 Etapas Inline
-  QuizStartPageInlineBlock
+  QuizStartPageInlineBlock,
+  QuizQuestionInlineBlock
 } from './inline';
 
 // Componentes básicos (funcionais)
@@ -198,6 +199,7 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       
       // === NOVA IMPLEMENTAÇÃO: Componentes das 21 Etapas Inline ===
       'quiz-start-page-inline': () => <QuizStartPageInlineBlock {...commonProps} />,
+      'quiz-question-inline': () => <QuizQuestionInlineBlock {...commonProps} />,
       
       // === COMPONENTES ETAPA 20/21 (sem duplicação) ===
       'quiz-offer-pricing-inline': () => <QuizOfferPricingInlineBlock {...commonProps} />,
