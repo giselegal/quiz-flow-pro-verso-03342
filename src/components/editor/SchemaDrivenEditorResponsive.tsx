@@ -131,6 +131,17 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     }
   }, [addBlock, updateBlock]);
 
+  const handleClearAll = useCallback(() => {
+    if (confirm('Tem certeza que deseja limpar todos os blocos?')) {
+      // Limpar todos os blocos
+      config.blocks.forEach(block => {
+        deleteBlock(block.id);
+      });
+      setSelectedBlockId(null);
+      console.log('🗑️ Todos os blocos foram removidos');
+    }
+  }, [config.blocks, deleteBlock]);
+
   const handleSaveInline = useCallback((blockId: string, updates: Partial<BlockData>) => {
     updateBlock(blockId, updates.properties || {});
   }, [updateBlock]);
@@ -193,6 +204,17 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                 <Download className="w-4 h-4" />
                 Carregar Quiz 21 Etapas
               </Button>
+              {config.blocks.length > 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleClearAll}
+                  className="flex items-center gap-2 text-red-600 hover:text-red-700"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Limpar Tudo
+                </Button>
+              )}
               <Button
                 variant="outline"
                 size="sm"
@@ -318,16 +340,23 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                                 <li>• 10 questões principais</li>
                                 <li>• 6 questões estratégicas</li>
                                 <li>• Página de resultado</li>
+                                <li>• Página de oferta</li>
                               </ul>
                             </div>
                             <div className="text-left">
                               <p className="font-medium">🎯 Recursos:</p>
                               <ul className="space-y-1">
                                 <li>• Cálculos automáticos</li>
-                                <li>• Página de oferta</li>
+                                <li>• Progress tracking</li>
+                                <li>• Transições suaves</li>
                                 <li>• Sistema completo</li>
                               </ul>
                             </div>
+                          </div>
+                          <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                            <p className="text-xs text-blue-700">
+                              <strong>📊 Status:</strong> {AVAILABLE_BLOCKS.length} componentes disponíveis
+                            </p>
                           </div>
                         </div>
                       </div>
