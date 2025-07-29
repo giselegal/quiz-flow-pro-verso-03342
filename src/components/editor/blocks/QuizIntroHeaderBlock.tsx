@@ -27,6 +27,9 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
     );
   }
 
+  // Debug das propriedades recebidas
+  console.log('🔍 [QuizIntroHeaderBlock] Propriedades recebidas:', block.properties);
+
   const { 
     logoUrl = 'https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png',
     logoAlt = 'Logo',
