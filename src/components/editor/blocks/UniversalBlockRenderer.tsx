@@ -40,15 +40,15 @@ import BadgeInlineBlock from './BadgeInlineBlock';
 
 // === COMPONENTES INLINE MODULARES (com verificação de existência) ===
 // Desabilitado para evitar problemas de dynamic imports
-let TextInlineBlock: any;
 let StatInlineBlock: any;
-let ImageDisplayInlineBlock: any;
 let PricingCardInlineBlock: any;
 let TestimonialCardInlineBlock: any;
 let CountdownInlineBlock: any;
 let LoadingAnimationBlock: any;
 
 // === IMPORTANDO COMPONENTES INLINE ESSENCIAIS ===
+import ImageDisplayInlineBlock from './inline/ImageDisplayInlineBlock';
+import TextInlineBlock from './inline/TextInlineBlock';
 try {
   CountdownInlineBlock = require('./inline/CountdownInlineBlock').default;
 } catch (e) {
@@ -59,12 +59,6 @@ try {
   PricingCardInlineBlock = require('./inline/PricingCardInlineBlock').default;
 } catch (e) {
   console.warn('PricingCardInlineBlock não disponível');
-}
-
-try {
-  TextInlineBlock = require('./inline/TextInlineBlock').default;
-} catch (e) {
-  console.warn('TextInlineBlock não disponível');
 }
 
 try {
@@ -171,7 +165,7 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
     const componentMap: Record<string, () => React.ReactNode> = {
       // === COMPONENTES BÁSICOS ESSENCIAIS ===
       'heading': () => <HeadingInlineBlock {...commonProps} />,
-      'text': () => TextInlineBlock ? <TextInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
+      'text': () => <TextInlineBlock {...commonProps} />,
       'image': () => <ImageInlineBlock {...commonProps} />,
       'button': () => <ButtonInlineBlock {...commonProps} />,
       'cta': () => <CTAInlineBlock {...commonProps} />,
@@ -215,12 +209,12 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'flex-container-vertical': () => <TwoColumnsBlock {...commonProps} block={{...commonProps.block, type: 'two-columns'} as any} />,
       
       // === COMPONENTES INLINE BÁSICOS (com fallback) ===
-      'text-inline': () => TextInlineBlock ? <TextInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
+      'text-inline': () => <TextInlineBlock {...commonProps} />,
       'heading-inline': () => <HeadingInlineBlock {...commonProps} />,
       'button-inline': () => <ButtonInlineBlock {...commonProps} />,
       'badge-inline': () => <BadgeInlineBlock {...commonProps} />,
       'progress-inline': () => <ProgressInlineBlock {...commonProps} />,
-      'image-display-inline': () => ImageDisplayInlineBlock ? <ImageDisplayInlineBlock {...commonProps} /> : <ImageInlineBlock {...commonProps} />,
+      'image-display-inline': () => <ImageDisplayInlineBlock {...commonProps} />,
       'style-card-inline': () => <StyleCardInlineBlock {...commonProps} />,
       'countdown-inline': () => CountdownInlineBlock ? <CountdownInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
       'countdown-timer-inline': () => CountdownInlineBlock ? <CountdownInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
