@@ -547,10 +547,22 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   return (
     // <DndProvider backend={HTML5Backend}>
       <div className={cn('h-full flex flex-col bg-gray-50', className)}>
+        {/* Loading Indicator */}
+        {isLoadingFunnel && (
+          <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center">
+            <div className="text-center">
+              <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-gray-600">Carregando funil{funnelId ? `: ${funnelId}` : ''}...</p>
+            </div>
+          </div>
+        )}
+        
         {/* Header */}
         <div className="flex-shrink-0 bg-white border-b border-gray-200 px-4 py-2">
           <div className="flex items-center justify-between">
-            <h1 className="text-xl font-semibold text-gray-900">Editor Visual das 21 Etapas</h1>
+            <h1 className="text-xl font-semibold text-gray-900">
+              Editor Visual {funnelId ? `- ${funnelId}` : 'das 21 Etapas'}
+            </h1>
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
