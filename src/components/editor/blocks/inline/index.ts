@@ -43,6 +43,9 @@ export { default as QuizCertificateInlineBlock } from './QuizCertificateInlineBl
 export { default as QuizLeaderboardInlineBlock } from './QuizLeaderboardInlineBlock';
 export { default as QuizBadgesInlineBlock } from './QuizBadgesInlineBlock';
 export { default as QuizEvolutionInlineBlock } from './QuizEvolutionInlineBlock';
+export { default as QuizNetworkingInlineBlock } from './QuizNetworkingInlineBlock';
+export { default as QuizDevelopmentPlanInlineBlock } from './QuizDevelopmentPlanInlineBlock';
+export { default as QuizGoalsDashboardInlineBlock } from './QuizGoalsDashboardInlineBlock';
 
 // Tipos base
 export type { BlockComponentProps } from '../../../../types/blocks';

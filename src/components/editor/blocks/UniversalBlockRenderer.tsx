@@ -49,7 +49,10 @@ import {
   QuizCertificateInlineBlock,
   QuizLeaderboardInlineBlock,
   QuizBadgesInlineBlock,
-  QuizEvolutionInlineBlock
+  QuizEvolutionInlineBlock,
+  QuizNetworkingInlineBlock,
+  QuizDevelopmentPlanInlineBlock,
+  QuizGoalsDashboardInlineBlock
 } from './inline';
 
 // Componentes básicos (funcionais)
@@ -228,6 +231,9 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'quiz-leaderboard-inline': () => <QuizLeaderboardInlineBlock {...commonProps} />,
       'quiz-badges-inline': () => <QuizBadgesInlineBlock {...commonProps} />,
       'quiz-evolution-inline': () => <QuizEvolutionInlineBlock {...commonProps} />,
+      'quiz-networking-inline': () => <QuizNetworkingInlineBlock {...commonProps} />,
+      'quiz-development-plan-inline': () => <QuizDevelopmentPlanInlineBlock {...commonProps} />,
+      'quiz-goals-dashboard-inline': () => <QuizGoalsDashboardInlineBlock {...commonProps} />,
       
       // === COMPONENTES ETAPA 20/21 (sem duplicação) ===
       'quiz-offer-pricing-inline': () => <QuizOfferPricingInlineBlock {...commonProps} />,
