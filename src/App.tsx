@@ -34,6 +34,7 @@ const DashboardPage = lazy(() => import("./pages/admin/DashboardPage"));
 // Editor Principal - Consolidado
 const SchemaDrivenEditorPage = lazy(() => import("./pages/SchemaDrivenEditorPage"));
 const DragDropTestPage = lazy(() => import("./pages/DragDropTestPage"));
+const InteractiveDemoPage = lazy(() => import("./pages/InteractiveDemoPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 const App = () => {
@@ -99,6 +100,12 @@ const App = () => {
                 <Route
                   path="/drag-drop-test"
                   component={DragDropTestPage}
+                />
+                
+                {/* Demo Interativo */}
+                <Route
+                  path="/demo"
+                  component={InteractiveDemoPage}
                 />
                 
                 {/* Admin - acesso livre */}

@@ -5,7 +5,7 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../ui/resizable';
 import { ScrollArea } from '../ui/scroll-area';
 import { Button } from '../ui/button';
-import { Plus, Eye, EyeOff, Download, Upload, Trash2, Monitor, Tablet, Smartphone } from 'lucide-react';
+import { Plus, Eye, EyeOff, Download, Upload, Trash2, Monitor, Tablet, Smartphone, PlayCircle, ExternalLink } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { useEditor } from '../../hooks/useEditor';
 import { UniversalBlockRenderer } from './blocks/UniversalBlockRenderer';
@@ -13,6 +13,8 @@ import type { BlockData } from '../../types/blocks';
 import { getInitialQuiz21EtapasTemplate } from '../../templates/quiz21EtapasTemplate';
 import { AdvancedPropertyPanel } from './AdvancedPropertyPanel';
 import { EditorStatus } from './components/EditorStatus';
+import { StepsPanel } from './StepsPanel';
+import { ComponentsPanel } from './ComponentsPanel';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -106,14 +108,95 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const [previewMode, setPreviewMode] = useState<PreviewMode>('desktop');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile screen size
+  React.useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    
+    return () => window.removeEventListener('resize', checkIsMobile);
+  }, []);
 
   // Safe access to blocks with fallback
   const blocks = config?.blocks || [];
+
+  // Steps state
+  const [steps, setSteps] = useState([
+    { id: 'step-1', name: 'Etapa 1', order: 1, blocksCount: 0, isActive: true },
+    { id: 'step-2', name: 'Etapa 2', order: 2, blocksCount: 0, isActive: false },
+    { id: 'step-3', name: 'Etapa 3', order: 3, blocksCount: 0, isActive: false },
+  ]);
+  const [selectedStepId, setSelectedStepId] = useState<string>('step-1');
 
   const handleAddBlock = useCallback((blockType: string) => {
     const newBlockId = addBlock(blockType as any);
     setSelectedBlockId(newBlockId);
   }, [addBlock]);
+
+  // Steps management functions
+  const handleStepSelect = useCallback((stepId: string) => {
+    setSelectedStepId(stepId);
+    setSelectedBlockId(null); // Clear block selection when changing steps
+  }, []);
+
+  const handleStepAdd = useCallback(() => {
+    const newStep = {
+      id: `step-${Date.now()}`,
+      name: `Etapa ${steps.length + 1}`,
+      order: steps.length + 1,
+      blocksCount: 0,
+      isActive: false
+    };
+    setSteps(prev => [...prev, newStep]);
+  }, [steps.length]);
+
+  const handleStepUpdate = useCallback((stepId: string, updates: any) => {
+    setSteps(prev => prev.map(step => 
+      step.id === stepId ? { ...step, ...updates } : step
+    ));
+  }, []);
+
+  const handleStepDelete = useCallback((stepId: string) => {
+    if (steps.length <= 1) {
+      alert('Não é possível excluir a última etapa');
+      return;
+    }
+    
+    if (confirm('Tem certeza que deseja excluir esta etapa?')) {
+      setSteps(prev => prev.filter(step => step.id !== stepId));
+      if (selectedStepId === stepId) {
+        setSelectedStepId(steps[0]?.id || '');
+      }
+    }
+  }, [steps, selectedStepId]);
+
+  const handleStepDuplicate = useCallback((stepId: string) => {
+    const stepToDuplicate = steps.find(step => step.id === stepId);
+    if (stepToDuplicate) {
+      const newStep = {
+        ...stepToDuplicate,
+        id: `step-${Date.now()}`,
+        name: `${stepToDuplicate.name} (Cópia)`,
+        order: steps.length + 1
+      };
+      setSteps(prev => [...prev, newStep]);
+    }
+  }, [steps]);
+
+  const handleStepReorder = useCallback((draggedId: string, targetId: string) => {
+    // TODO: Implement drag and drop reordering
+    console.log('Reorder step', draggedId, 'to', targetId);
+  }, []);
+
+  // Component selection handler
+  const handleComponentSelect = useCallback((componentId: string) => {
+    handleAddBlock(componentId);
+  }, [handleAddBlock]);
 
   const handleLoadTemplate = useCallback(async () => {
     try {
@@ -224,6 +307,16 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               <Button
                 variant="outline"
                 size="sm"
+                onClick={() => window.open('/demo', '_blank')}
+                className="flex items-center gap-2"
+              >
+                <PlayCircle className="w-4 h-4" />
+                Demo Interativo
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={handleLoadTemplate}
                 className="flex items-center gap-2"
               >
@@ -289,78 +382,125 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           </div>
         </div>
 
-        <ResizablePanelGroup direction="horizontal" className="flex-1">
-          {/* Components Sidebar */}
-          <ResizablePanel defaultSize={25} minSize={20} maxSize={35}>
-            <div className="h-full bg-white border-r border-gray-200 flex flex-col">
-              <div className="p-4 border-b border-gray-200 space-y-3">
-                <h2 className="font-medium text-gray-900">Componentes</h2>
-                
-                {/* Search Bar */}
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Buscar componentes..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full px-3 py-2 pl-9 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <div className="absolute left-3 top-2.5">
-                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  </div>
-                </div>
+        {/* Main Content Area */}
+        {isMobile ? (
+          /* Mobile Layout - Vertical Stack */
+          <div className="flex-1 flex flex-col">
+            {/* Mobile Components Panel - Horizontal */}
+            <div className="flex-shrink-0 border-b border-gray-200">
+              <ComponentsPanel
+                onComponentSelect={handleComponentSelect}
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                layout="horizontal"
+                className="h-auto"
+              />
+            </div>
 
-                {/* Category Filter */}
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            {/* Mobile Steps Panel - Horizontal */}
+            <div className="flex-shrink-0 border-b border-gray-200 p-2">
+              <div className="flex space-x-2 overflow-x-auto">
+                {steps.map((step) => (
+                  <Button
+                    key={step.id}
+                    variant={selectedStepId === step.id ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => handleStepSelect(step.id)}
+                    className="whitespace-nowrap"
+                  >
+                    {step.name}
+                  </Button>
+                ))}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleStepAdd}
+                  className="whitespace-nowrap"
                 >
-                  {categories.map((category) => (
-                    <option key={category.value} value={category.value}>
-                      {category.label}
-                    </option>
-                  ))}
-                </select>
+                  <Plus className="w-4 h-4" />
+                </Button>
               </div>
-              
-              <ScrollArea className="flex-1 p-4">
-                <div className="space-y-1">
-                  {filteredBlocks.length === 0 ? (
-                    <div className="text-center py-8">
-                      <p className="text-gray-500 text-sm">
-                        Nenhum componente encontrado
-                      </p>
+            </div>
+
+            {/* Mobile Canvas */}
+            <div className="flex-1 bg-gray-50 overflow-hidden">
+              <ScrollArea className="h-full p-4">
+                <div className="bg-white rounded-lg shadow-sm min-h-96 p-6">
+                  {sortedBlocks.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-96 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
+                      <div className="text-center space-y-4 max-w-md">
+                        <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center">
+                          <Plus className="w-8 h-8 text-blue-600" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                            Editor das 21 Etapas do Quiz
+                          </h3>
+                          <p className="text-gray-600 mb-4">
+                            Selecione componentes acima para começar a construir sua etapa
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   ) : (
-                    filteredBlocks.map((block) => (
-                      <Button
-                        key={block.type}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleAddBlock(block.type)}
-                        className="w-full justify-start text-left hover:bg-blue-50 hover:border-blue-300"
-                        disabled={isPreviewing}
-                      >
-                        <span className="mr-3 text-base">{block.icon}</span>
-                        <div className="flex flex-col items-start">
-                          <span className="font-medium">{block.name}</span>
-                          <span className="text-xs text-gray-500 capitalize">{block.category}</span>
+                    <div className="space-y-4">
+                      {sortedBlocks.map((block) => (
+                        <div
+                          key={block.id}
+                          onClick={() => setSelectedBlockId(block.id)}
+                          className={cn(
+                            'relative p-4 rounded-lg border-2 transition-all cursor-pointer',
+                            selectedBlockId === block.id
+                              ? 'border-blue-500 bg-blue-50'
+                              : 'border-gray-200 hover:border-gray-300'
+                          )}
+                        >
+                          <UniversalBlockRenderer
+                            block={block}
+                          />
                         </div>
-                      </Button>
-                    ))
+                      ))}
+                    </div>
                   )}
                 </div>
               </ScrollArea>
             </div>
+          </div>
+        ) : (
+          /* Desktop Layout - Horizontal Panels */
+          <ResizablePanelGroup direction="horizontal" className="flex-1">
+          {/* Steps Panel */}
+          <ResizablePanel defaultSize={18} minSize={15} maxSize={25}>
+            <StepsPanel
+              steps={steps}
+              selectedStepId={selectedStepId}
+              onStepSelect={handleStepSelect}
+              onStepAdd={handleStepAdd}
+              onStepUpdate={handleStepUpdate}
+              onStepDelete={handleStepDelete}
+              onStepDuplicate={handleStepDuplicate}
+              onStepReorder={handleStepReorder}
+              className="h-full border-r border-gray-200"
+            />
+          </ResizablePanel>
+
+          <ResizableHandle withHandle />
+
+          {/* Components Panel */}
+          <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+            <ComponentsPanel
+              onComponentSelect={handleComponentSelect}
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              className="h-full border-r border-gray-200"
+              layout="vertical"
+            />
           </ResizablePanel>
 
           <ResizableHandle withHandle />
 
           {/* Canvas */}
-          <ResizablePanel defaultSize={60}>
+          <ResizablePanel defaultSize={42}>
             <div className="h-full bg-gray-50 overflow-hidden">
               <ScrollArea className="h-full p-6">
                 {/* Preview Mode Indicator */}
@@ -498,6 +638,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
             />
           </ResizablePanel>
         </ResizablePanelGroup>
+        )}
         
         {/* Editor Status Bar */}
         <div className="flex-shrink-0">
