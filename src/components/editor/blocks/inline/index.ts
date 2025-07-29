@@ -28,17 +28,17 @@ export { default as LoadingAnimationBlock } from './LoadingAnimationBlock';
 
 // Exportações dos componentes inline das 21 etapas do funil
 export { default as QuizStartPageInlineBlock } from './QuizStartPageInlineBlock';
-export { default as QuizQuestionInlineBlock } from './QuizQuestionInlineBlock';
-export { default as QuizProgressInlineBlock } from './QuizProgressInlineBlock';
-export { default as QuizTransitionInlineBlock } from './QuizTransitionInlineBlock';
-export { default as QuizLoadingInlineBlock } from './QuizLoadingInlineBlock';
-export { default as QuizResultInlineBlock } from './QuizResultInlineBlock';
-export { default as QuizAnalysisInlineBlock } from './QuizAnalysisInlineBlock';
-export { default as QuizCategoryInlineBlock } from './QuizCategoryInlineBlock';
-export { default as QuizRecommendationInlineBlock } from './QuizRecommendationInlineBlock';
-export { default as QuizActionPlanInlineBlock } from './QuizActionPlanInlineBlock';
-export { default as QuizMetricsInlineBlock } from './QuizMetricsInlineBlock';
-export { default as QuizComparisonInlineBlock } from './QuizComparisonInlineBlock';
+export { default as QuizPersonalInfoInlineBlock } from './QuizPersonalInfoInlineBlock';
+export { default as QuizExperienceInlineBlock } from './QuizExperienceInlineBlock';
+export { default as QuizSkillsAssessmentInlineBlock } from './QuizSkillsAssessmentInlineBlock';
+export { default as QuizLeadershipStyleInlineBlock } from './QuizLeadershipStyleInlineBlock';
+export { default as QuizCommunicationInlineBlock } from './QuizCommunicationInlineBlock';
+export { default as QuizProblemSolvingInlineBlock } from './QuizProblemSolvingInlineBlock';
+export { default as QuizGoalsInlineBlock } from './QuizGoalsInlineBlock';
+export { default as QuizMotivationInlineBlock } from './QuizMotivationInlineBlock';
+export { default as QuizWorkStyleInlineBlock } from './QuizWorkStyleInlineBlock';
+export { default as QuizFeedbackInlineBlock } from './QuizFeedbackInlineBlock';
+export { default as QuizResultsInlineBlock } from './QuizResultsInlineBlock';
 export { default as QuizCertificateInlineBlock } from './QuizCertificateInlineBlock';
 export { default as QuizLeaderboardInlineBlock } from './QuizLeaderboardInlineBlock';
 export { default as QuizBadgesInlineBlock } from './QuizBadgesInlineBlock';
@@ -46,6 +46,8 @@ export { default as QuizEvolutionInlineBlock } from './QuizEvolutionInlineBlock'
 export { default as QuizNetworkingInlineBlock } from './QuizNetworkingInlineBlock';
 export { default as QuizDevelopmentPlanInlineBlock } from './QuizDevelopmentPlanInlineBlock';
 export { default as QuizGoalsDashboardInlineBlock } from './QuizGoalsDashboardInlineBlock';
+export { default as QuizFinalResultsInlineBlock } from './QuizFinalResultsInlineBlock';
+export { default as QuizOfferCTAInlineBlock } from './QuizOfferCTAInlineBlock';
 
 // Tipos base
 export type { BlockComponentProps } from '../../../../types/blocks';
