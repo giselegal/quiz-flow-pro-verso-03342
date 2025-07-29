@@ -694,22 +694,32 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      {sortedBlocks.map((block) => (
-                        <div
-                          key={block.id}
-                          onClick={() => setSelectedBlockId(block.id)}
-                          className={cn(
-                            'relative p-4 rounded-lg border-2 transition-all cursor-pointer',
-                            selectedBlockId === block.id
-                              ? 'border-blue-500 bg-blue-50'
-                              : 'border-gray-200 hover:border-gray-300'
-                          )}
-                        >
-                          <UniversalBlockRenderer
-                            block={block}
-                          />
-                        </div>
-                      ))}
+                      {sortedBlocks.map((block) => {
+                        // Para blocos do funil, usar properties diretamente
+                        // Para blocos do editor antigo, converter content para properties  
+                        const blockData: BlockData = {
+                          id: block.id,
+                          type: block.type,
+                          properties: block.properties || { ...block.content || {}, order: block.order || 0 }
+                        };
+
+                        return (
+                          <div
+                            key={block.id}
+                            onClick={() => setSelectedBlockId(block.id)}
+                            className={cn(
+                              'relative p-4 rounded-lg border-2 transition-all cursor-pointer',
+                              selectedBlockId === block.id
+                                ? 'border-blue-500 bg-blue-50'
+                                : 'border-gray-200 hover:border-gray-300'
+                            )}
+                          >
+                            <UniversalBlockRenderer
+                              block={blockData}
+                            />
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
