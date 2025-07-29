@@ -199,6 +199,46 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     handleAddBlock(componentId);
   }, [handleAddBlock]);
 
+  // Template loading handler para 21 etapas
+  const handleTemplateLoad = useCallback((templateId: string) => {
+    if (templateId === 'quiz-21-etapas') {
+      console.log('🚀 Carregando template das 21 etapas...');
+      
+      // Importar e carregar as 21 etapas
+      import('../../utils/quiz21EtapasLoader').then(({ loadQuiz21EtapasTemplate }) => {
+        const template = loadQuiz21EtapasTemplate();
+        
+        // Converter para o formato do editor atual
+        const editorBlocks = template.blocks.map((block, index) => ({
+          id: block.id,
+          type: block.type as any,
+          content: {
+            ...block.content,
+            // Garantir que tenha as propriedades básicas
+            content: block.content.title || block.content.question || block.content.description || `Etapa ${index + 1}`,
+          },
+          order: index
+        }));
+
+        // Atualizar configuração com as 21 etapas
+        const newConfig = {
+          ...config,
+          blocks: editorBlocks,
+          ...template.settings && { settings: template.settings },
+          ...template.globalStyles && { globalStyles: template.globalStyles }
+        };
+
+        // Aplicar a nova configuração
+        config.blocks = editorBlocks;
+        setSelectedBlockId(null);
+        
+        console.log('✅ 21 etapas carregadas com sucesso!', editorBlocks);
+      }).catch(error => {
+        console.error('❌ Erro ao carregar template das 21 etapas:', error);
+      });
+    }
+  }, [config]);
+
   const handleLoadTemplate = useCallback(async () => {
     try {
       setSelectedBlockId(null);
@@ -443,6 +483,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
             <div className="flex-shrink-0 border-b border-gray-200">
               <ComponentsPanel
                 onComponentSelect={handleComponentSelect}
+                onTemplateLoad={handleTemplateLoad}
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
                 layout="horizontal"
@@ -549,6 +590,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               <ScrollArea className="h-full">
                 <ComponentsPanel
                   onComponentSelect={handleComponentSelect}
+                  onTemplateLoad={handleTemplateLoad}
                   searchTerm={searchTerm}
                   onSearchChange={setSearchTerm}
                   className="p-2"

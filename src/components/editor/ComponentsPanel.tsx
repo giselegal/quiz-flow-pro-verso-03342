@@ -42,6 +42,7 @@ interface ComponentCategory {
 interface ComponentsPanelProps {
   onComponentSelect: (componentId: string) => void;
   onComponentDrag?: (componentId: string) => void;
+  onTemplateLoad?: (templateId: string) => void; // Nova função para carregar templates
   searchTerm?: string;
   onSearchChange?: (term: string) => void;
   className?: string;
@@ -138,6 +139,7 @@ const getCategoryIcon = (categoryName: string): React.ReactNode => {
 export const ComponentsPanel: React.FC<ComponentsPanelProps> = ({
   onComponentSelect,
   onComponentDrag,
+  onTemplateLoad,
   searchTerm = '',
   onSearchChange,
   className,
@@ -287,6 +289,24 @@ export const ComponentsPanel: React.FC<ComponentsPanelProps> = ({
       
       <CardContent className="flex-1 p-0">
         <ScrollArea className="h-full px-4">
+          {/* Botão para carregar Template das 21 Etapas */}
+          {onTemplateLoad && (
+            <div className="mb-4 pt-2">
+              <Button
+                onClick={() => onTemplateLoad('quiz-21-etapas')}
+                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-3 px-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
+              >
+                <div className="flex items-center space-x-2">
+                  <Sparkles className="w-5 h-5" />
+                  <div className="text-left">
+                    <div className="text-sm font-semibold">🚀 Carregar 21 Etapas</div>
+                    <div className="text-xs opacity-90">Funil completo de quiz</div>
+                  </div>
+                </div>
+              </Button>
+            </div>
+          )}
+          
           <div className="space-y-2 pb-4">
             {filteredCategories.map((category) => (
               <Collapsible

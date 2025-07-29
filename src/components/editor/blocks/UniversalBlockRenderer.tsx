@@ -188,6 +188,13 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'quiz-progress': () => <QuizProgressBlock {...commonProps} />,
       'quiz-transition': () => <QuizTransitionBlock {...commonProps} />,
       'quiz-start-page': () => <QuizStartPageBlock {...commonProps} />,
+      'quiz-result-calculated': () => <FallbackBlock {...commonProps} blockType="quiz-result-calculated" />,
+      
+      // === COMPONENTES DAS 21 ETAPAS DO FUNIL ===
+      'quiz-start-page-inline': () => <QuizStartPageBlock {...commonProps} />,
+      'strategic-question-main': () => <QuizQuestionBlock {...commonProps} />,
+      'quiz-final-results-inline': () => <FallbackBlock {...commonProps} blockType="quiz-final-results-inline" />,
+      'quiz-offer-pricing-inline': () => <FallbackBlock {...commonProps} blockType="quiz-offer-pricing-inline" />,
       
       // === COMPONENTES MODERNOS CRIADOS 28/07 ===
       'guarantee': () => <GuaranteeBlock {...commonProps} />,

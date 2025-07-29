@@ -2139,6 +2139,379 @@ export const blockDefinitions: BlockDefinition[] = [
       code: '// Seu código JavaScript aqui...',
       placement: 'body-end'
     }
+  },
+
+  // ===== COMPONENTES DAS 21 ETAPAS DO FUNIL =====
+  
+  {
+    type: 'quiz-start-page-inline',
+    name: 'Página Inicial Quiz Inline',
+    description: 'Página de introdução do quiz com CTA personalizada - versão inline',
+    icon: 'Play',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título Principal',
+        type: 'text',
+        defaultValue: 'Descubra Seu Estilo Pessoal'
+      },
+      {
+        key: 'subtitle',
+        label: 'Subtítulo',
+        type: 'textarea',
+        defaultValue: 'Um quiz completo para descobrir o estilo que combina com você'
+      },
+      {
+        key: 'description',
+        label: 'Descrição',
+        type: 'textarea',
+        defaultValue: 'Responda 21 perguntas e receba um guia personalizado baseado no seu perfil único'
+      },
+      {
+        key: 'ctaText',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Começar Quiz'
+      },
+      {
+        key: 'backgroundImage',
+        label: 'Imagem de Fundo',
+        type: 'text',
+        defaultValue: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800'
+      },
+      {
+        key: 'showProgress',
+        label: 'Mostrar Progresso',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'progressValue',
+        label: 'Valor do Progresso (%)',
+        type: 'number',
+        defaultValue: 5
+      }
+    ],
+    defaultProperties: {
+      title: 'Descubra Seu Estilo Pessoal',
+      subtitle: 'Um quiz completo para descobrir o estilo que combina com você',
+      description: 'Responda 21 perguntas e receba um guia personalizado baseado no seu perfil único',
+      ctaText: 'Começar Quiz',
+      backgroundImage: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800',
+      showProgress: true,
+      progressValue: 5
+    }
+  },
+
+  {
+    type: 'strategic-question-main',
+    name: 'Questão Estratégica',
+    description: 'Questão estratégica para qualificação de leads no funil',
+    icon: 'Brain',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título da Questão',
+        type: 'text',
+        defaultValue: 'Questão Estratégica'
+      },
+      {
+        key: 'question',
+        label: 'Pergunta',
+        type: 'textarea',
+        defaultValue: 'Qual é seu maior desafio com o guarda-roupa?'
+      },
+      {
+        key: 'options',
+        label: 'Opções de Resposta',
+        type: 'array',
+        defaultValue: [
+          { id: 'opt1', text: 'Não sei combinar as peças', category: 'conhecimento', weight: 2 },
+          { id: 'opt2', text: 'Compro coisas que não uso', category: 'planejamento', weight: 2 },
+          { id: 'opt3', text: 'Sempre me sinto inadequada', category: 'confianca', weight: 2 },
+          { id: 'opt4', text: 'Não sei qual é meu estilo', category: 'identidade', weight: 2 }
+        ]
+      },
+      {
+        key: 'allowMultiple',
+        label: 'Permitir Múltiplas Seleções',
+        type: 'boolean',
+        defaultValue: false
+      },
+      {
+        key: 'progressValue',
+        label: 'Progresso (%)',
+        type: 'number',
+        defaultValue: 70
+      },
+      {
+        key: 'category',
+        label: 'Categoria',
+        type: 'text',
+        defaultValue: 'estrategica'
+      }
+    ],
+    defaultProperties: {
+      title: 'Questão Estratégica',
+      question: 'Qual é seu maior desafio com o guarda-roupa?',
+      options: [
+        { id: 'opt1', text: 'Não sei combinar as peças', category: 'conhecimento', weight: 2 },
+        { id: 'opt2', text: 'Compro coisas que não uso', category: 'planejamento', weight: 2 },
+        { id: 'opt3', text: 'Sempre me sinto inadequada', category: 'confianca', weight: 2 },
+        { id: 'opt4', text: 'Não sei qual é meu estilo', category: 'identidade', weight: 2 }
+      ],
+      allowMultiple: false,
+      progressValue: 70,
+      category: 'estrategica'
+    }
+  },
+
+  {
+    type: 'quiz-final-results-inline',
+    name: 'Resultado Final Personalizado',
+    description: 'Exibe resultado final com nome do usuário, porcentagens, estilos e imagens',
+    icon: 'Award',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Seu Estilo Pessoal'
+      },
+      {
+        key: 'resultType',
+        label: 'Tipo de Resultado',
+        type: 'select',
+        options: [
+          { label: 'Dinâmico (baseado em respostas)', value: 'dinamico' },
+          { label: 'Estático', value: 'estatico' }
+        ],
+        defaultValue: 'dinamico'
+      },
+      {
+        key: 'showPrimaryStyle',
+        label: 'Mostrar Estilo Principal',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showSecondaryStyles',
+        label: 'Mostrar Estilos Secundários',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showPercentages',
+        label: 'Mostrar Porcentagens',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showRecommendations',
+        label: 'Mostrar Recomendações',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showBeforeAfter',
+        label: 'Mostrar Antes/Depois',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'ctaText',
+        label: 'Texto do CTA',
+        type: 'text',
+        defaultValue: 'Quero Aprender Mais'
+      },
+      {
+        key: 'progressValue',
+        label: 'Progresso (%)',
+        type: 'number',
+        defaultValue: 100
+      }
+    ],
+    defaultProperties: {
+      title: 'Seu Estilo Pessoal',
+      resultType: 'dinamico',
+      showPrimaryStyle: true,
+      showSecondaryStyles: true,
+      showPercentages: true,
+      showRecommendations: true,
+      showBeforeAfter: true,
+      ctaText: 'Quero Aprender Mais',
+      progressValue: 100
+    }
+  },
+
+  {
+    type: 'quiz-offer-pricing-inline',
+    name: 'Página de Oferta Quiz',
+    description: 'Página de oferta comercial baseada no resultado do quiz',
+    icon: 'CircleDollarSign',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título da Oferta',
+        type: 'text',
+        defaultValue: 'Transforme Seu Estilo Agora'
+      },
+      {
+        key: 'subtitle',
+        label: 'Subtítulo',
+        type: 'textarea',
+        defaultValue: 'Consultoria personalizada baseada no seu resultado'
+      },
+      {
+        key: 'originalPrice',
+        label: 'Preço Original',
+        type: 'text',
+        defaultValue: 'R$ 497,00'
+      },
+      {
+        key: 'salePrice',
+        label: 'Preço Promocional',
+        type: 'text',
+        defaultValue: 'R$ 197,00'
+      },
+      {
+        key: 'discount',
+        label: 'Desconto',
+        type: 'text',
+        defaultValue: '60% OFF'
+      },
+      {
+        key: 'features',
+        label: 'Benefícios/Características',
+        type: 'array',
+        defaultValue: [
+          'Análise completa do seu estilo',
+          'Guia de combinações personalizado',
+          'Lista de compras inteligente',
+          'Consultoria de 1 hora',
+          'Suporte por 30 dias'
+        ]
+      },
+      {
+        key: 'ctaText',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Quero Minha Consultoria'
+      },
+      {
+        key: 'urgencyText',
+        label: 'Texto de Urgência',
+        type: 'text',
+        defaultValue: 'Oferta válida apenas hoje!'
+      },
+      {
+        key: 'showTestimonials',
+        label: 'Mostrar Depoimentos',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showGuarantee',
+        label: 'Mostrar Garantia',
+        type: 'boolean',
+        defaultValue: true
+      }
+    ],
+    defaultProperties: {
+      title: 'Transforme Seu Estilo Agora',
+      subtitle: 'Consultoria personalizada baseada no seu resultado',
+      originalPrice: 'R$ 497,00',
+      salePrice: 'R$ 197,00',
+      discount: '60% OFF',
+      features: [
+        'Análise completa do seu estilo',
+        'Guia de combinações personalizado',
+        'Lista de compras inteligente',
+        'Consultoria de 1 hora',
+        'Suporte por 30 dias'
+      ],
+      ctaText: 'Quero Minha Consultoria',
+      urgencyText: 'Oferta válida apenas hoje!',
+      showTestimonials: true,
+      showGuarantee: true
+    }
+  },
+
+  {
+    type: 'style-card-inline',
+    name: 'Card de Estilo Personalizado',
+    description: 'Card que exibe estilo calculado com nome, porcentagem, descrição e imagem',
+    icon: 'Sparkles',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'styleName',
+        label: 'Nome do Estilo',
+        type: 'text',
+        defaultValue: 'Elegante'
+      },
+      {
+        key: 'percentage',
+        label: 'Porcentagem',
+        type: 'number',
+        defaultValue: 85
+      },
+      {
+        key: 'description',
+        label: 'Descrição do Estilo',
+        type: 'textarea',
+        defaultValue: 'Seu estilo único combina sofisticação e elegância'
+      },
+      {
+        key: 'showStars',
+        label: 'Mostrar Estrelas',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showProgress',
+        label: 'Mostrar Barra de Progresso',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'cardSize',
+        label: 'Tamanho do Card',
+        type: 'select',
+        options: [
+          { label: 'Pequeno', value: 'small' },
+          { label: 'Médio', value: 'medium' },
+          { label: 'Grande', value: 'large' }
+        ],
+        defaultValue: 'medium'
+      },
+      {
+        key: 'backgroundColor',
+        label: 'Cor de Fundo',
+        type: 'color',
+        defaultValue: 'white'
+      },
+      {
+        key: 'borderColor',
+        label: 'Cor da Borda',
+        type: 'color',
+        defaultValue: '#B89B7A'
+      }
+    ],
+    defaultProperties: {
+      styleName: 'Elegante',
+      percentage: 85,
+      description: 'Seu estilo único combina sofisticação e elegância',
+      showStars: true,
+      showProgress: true,
+      cardSize: 'medium',
+      backgroundColor: 'white',
+      borderColor: '#B89B7A'
+    }
   }
 ];
 
