@@ -1874,8 +1874,10 @@ class SchemaDrivenFunnelService {
         blocks: [],
         order: 1,
         settings: {
-          showProgressBar: true,
-          backgroundColor: '#FFFFFF'
+          progressValue: 0,
+          backgroundColor: '#FFFFFF',
+          textColor: '#432818',
+          maxWidth: '100%'
         }
       }];
 
