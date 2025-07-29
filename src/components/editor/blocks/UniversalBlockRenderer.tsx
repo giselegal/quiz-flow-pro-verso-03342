@@ -39,6 +39,25 @@ let TestimonialCardInlineBlock: any;
 let CountdownInlineBlock: any;
 let LoadingAnimationBlock: any;
 
+// === IMPORTANDO COMPONENTES INLINE ESSENCIAIS ===
+try {
+  CountdownInlineBlock = require('./inline/CountdownInlineBlock').default;
+} catch (e) {
+  console.warn('CountdownInlineBlock não disponível');
+}
+
+try {
+  PricingCardInlineBlock = require('./inline/PricingCardInlineBlock').default;
+} catch (e) {
+  console.warn('PricingCardInlineBlock não disponível');
+}
+
+try {
+  TextInlineBlock = require('./inline/TextInlineBlock').default;
+} catch (e) {
+  console.warn('TextInlineBlock não disponível');
+}
+
 // Novos componentes inline criados
 import ResultHeaderInlineBlock from './inline/ResultHeaderInlineBlock';
 import ResultCardInlineBlock from './inline/ResultCardInlineBlock';
@@ -173,8 +192,15 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'image-display-inline': () => ImageDisplayInlineBlock ? <ImageDisplayInlineBlock {...commonProps} /> : <ImageInlineBlock {...commonProps} />,
       'style-card-inline': () => StyleCardInlineBlock ? <StyleCardInlineBlock {...commonProps} /> : <FallbackBlock {...commonProps} blockType="style-card-inline" />,
       'countdown-inline': () => CountdownInlineBlock ? <CountdownInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
+      'countdown-timer-inline': () => CountdownInlineBlock ? <CountdownInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
+      'countdown-timer-real': () => CountdownInlineBlock ? <CountdownInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
       'stat-inline': () => StatInlineBlock ? <StatInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
       'pricing-card-inline': () => PricingCardInlineBlock ? <PricingCardInlineBlock {...commonProps} /> : <FallbackBlock {...commonProps} blockType="pricing-card-inline" />,
+      'price-highlight-inline': () => PricingCardInlineBlock ? <PricingCardInlineBlock {...commonProps} /> : <FallbackBlock {...commonProps} blockType="price-highlight-inline" />,
+      
+      // === COMPONENTES CTA MODERNOS ===
+      'cta-button-modern': () => <ButtonInlineBlock {...commonProps} />,
+      'cta-modern': () => <CTAInlineBlock {...commonProps} />,
       
       // === COMPONENTES DE LOADING ===
       'loading-animation': () => LoadingAnimationBlock ? <LoadingAnimationBlock {...commonProps} /> : <FallbackBlock {...commonProps} blockType="loading-animation" />,
