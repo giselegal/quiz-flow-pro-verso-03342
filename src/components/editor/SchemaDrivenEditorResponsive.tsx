@@ -2,12 +2,12 @@
 import React, { useState, useCallback, useMemo } from 'react';
 // import { DndProvider } from 'react-dnd';
 // import { HTML5Backend } from 'react-dnd-html5-backend';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Button } from '@/components/ui/button';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../ui/resizable';
+import { ScrollArea } from '../ui/scroll-area';
+import { Button } from '../ui/button';
 import { Plus, Eye, EyeOff, Download, Upload, Trash2, Monitor, Tablet, Smartphone } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useEditor } from '@/hooks/useEditor';
+import { cn } from '../../lib/utils';
+import { useEditor } from '../../hooks/useEditor';
 import { UniversalBlockRenderer } from './blocks/UniversalBlockRenderer';
 import type { BlockData } from '../../types/blocks';
 import { getInitialQuiz21EtapasTemplate } from '../../templates/quiz21EtapasTemplate';
@@ -107,6 +107,9 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
+  // Safe access to blocks with fallback
+  const blocks = config?.blocks || [];
+
   const handleAddBlock = useCallback((blockType: string) => {
     const newBlockId = addBlock(blockType as any);
     setSelectedBlockId(newBlockId);
@@ -157,13 +160,13 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const handleClearAll = useCallback(() => {
     if (confirm('Tem certeza que deseja limpar todos os blocos?')) {
       // Limpar todos os blocos
-      config.blocks?.forEach(block => {
+      blocks.forEach(block => {
         deleteBlock(block.id);
       });
       setSelectedBlockId(null);
       console.log('🗑️ Todos os blocos foram removidos');
     }
-  }, [config.blocks, deleteBlock]);
+  }, [blocks, deleteBlock]);
 
   const handleSaveInline = useCallback((blockId: string, updates: Partial<BlockData>) => {
     updateBlock(blockId, updates.properties || {});
@@ -176,8 +179,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   }, [isPreviewing]);
 
   const sortedBlocks = useMemo(() => {
-    return [...(config.blocks || [])].sort((a, b) => (a.order || 0) - (b.order || 0));
-  }, [config.blocks]);
+    return [...blocks].sort((a, b) => (a.order || 0) - (b.order || 0));
+  }, [blocks]);
 
   // Filtrar blocos por categoria e termo de busca
   const filteredBlocks = useMemo(() => {
@@ -259,7 +262,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                 </Button>
               </div>
               
-              {(config.blocks?.length || 0) > 0 && (
+              {blocks.length > 0 && (
                 <Button
                   variant="outline"
                   size="sm"
@@ -476,10 +479,10 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
             <AdvancedPropertyPanel
               selectedBlockId={selectedBlockId}
-              properties={selectedBlockId ? config.blocks?.find(b => b.id === selectedBlockId)?.properties || {} : {}}
+              properties={selectedBlockId ? blocks.find(b => b.id === selectedBlockId)?.properties || {} : {}}
               onPropertyChange={(key, value) => {
                 if (selectedBlockId) {
-                  const block = config.blocks?.find(b => b.id === selectedBlockId);
+                  const block = blocks.find(b => b.id === selectedBlockId);
                   if (block) {
                     updateBlock(selectedBlockId, { 
                       ...block, 
