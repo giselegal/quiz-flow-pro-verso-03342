@@ -1,191 +1,201 @@
 
 import React, { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { blockComponents } from './BlockComponents';
 import { EditableContent } from '@/types/editor';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-export default function BlocksDemo() {
-  const [selectedBlockType, setSelectedBlockType] = useState<string | null>(null);
-  const [selectedContent, setSelectedContent] = useState<EditableContent>({});
+const BlocksDemo: React.FC = () => {
+  const [selectedBlock, setSelectedBlock] = useState<string | null>(null);
 
-  const blockTypes = [
-    { type: 'header', name: 'Cabeçalho', category: 'content' },
-    { type: 'text', name: 'Texto', category: 'content' },
-    { type: 'image', name: 'Imagem', category: 'content' },
-    { type: 'button', name: 'Botão', category: 'content' },
-    { type: 'spacer', name: 'Espaçador', category: 'layout' },
-    { type: 'quiz-question', name: 'Pergunta', category: 'quiz' },
-    { type: 'testimonial', name: 'Depoimento', category: 'content' }
+  // Sample block data with proper types
+  const sampleBlocks = [
+    {
+      id: '1',
+      type: 'header',
+      content: {
+        title: 'Título Principal',
+        textColor: '#333333'
+      } as EditableContent
+    },
+    {
+      id: '2',
+      type: 'text',
+      content: {
+        text: 'Este é um exemplo de bloco de texto.',
+        textColor: '#666666'
+      } as EditableContent
+    },
+    {
+      id: '3',
+      type: 'image',
+      content: {
+        imageUrl: 'https://via.placeholder.com/400x200',
+        imageAlt: 'Imagem de exemplo'
+      } as EditableContent
+    },
+    {
+      id: '4',
+      type: 'button',
+      content: {
+        buttonText: 'Clique Aqui',
+        buttonUrl: '#',
+        textColor: '#ffffff'
+      } as EditableContent
+    },
+    {
+      id: '5',
+      type: 'spacer',
+      content: {
+        height: '50px'
+      } as EditableContent
+    },
+    {
+      id: '6',
+      type: 'quiz-question',
+      content: {
+        question: 'Qual é a sua cor favorita?',
+        options: [
+          { id: '1', text: 'Azul', isCorrect: false },
+          { id: '2', text: 'Verde', isCorrect: true },
+          { id: '3', text: 'Vermelho', isCorrect: false },
+          { id: '4', text: 'Amarelo', isCorrect: false }
+        ]
+      } as EditableContent
+    },
+    {
+      id: '7',
+      type: 'testimonial',
+      content: {
+        text: 'Este produto mudou minha vida completamente!',
+        author: 'João Silva'
+      } as EditableContent
+    }
   ];
 
-  const defaultContent: Record<string, EditableContent> = {
-    header: {
-      text: 'Título Principal',
-      textColor: '#1a1a1a',
-      backgroundColor: '#ffffff'
-    },
-    text: {
-      text: 'Este é um parágrafo de exemplo com texto demonstrativo.',
-      textColor: '#4a4a4a',
-      backgroundColor: '#ffffff'
-    },
-    image: {
-      src: 'https://via.placeholder.com/400x200',
-      alt: 'Imagem de exemplo',
-      height: 200
-    },
-    button: {
-      text: 'Botão de Exemplo',
-      textColor: '#ffffff',
-      backgroundColor: '#3b82f6'
-    },
-    spacer: {
-      height: 40,
-      backgroundColor: '#f8f9fa'
-    },
-    'quiz-question': {
-      question: 'Qual é a sua cor favorita?',
-      options: [
-        { text: 'Azul', isCorrect: false },
-        { text: 'Verde', isCorrect: true },
-        { text: 'Vermelho', isCorrect: false },
-        { text: 'Amarelo', isCorrect: false }
-      ]
-    },
-    testimonial: {
-      text: 'Este produto mudou minha vida completamente!',
-      author: 'João Silva',
-      textColor: '#2d3748',
-      backgroundColor: '#f7fafc'
-    }
-  };
-
-  const handleBlockSelect = (blockType: string) => {
-    setSelectedBlockType(blockType);
-    setSelectedContent(defaultContent[blockType] || {});
-  };
-
-  const handleContentUpdate = (content: EditableContent) => {
-    setSelectedContent(content);
-  };
-
-  const renderBlock = (blockType: string, content: EditableContent) => {
-    const BlockComponent = blockComponents[blockType];
+  const renderBlock = (block: any) => {
+    const BlockComponent = blockComponents[block.type as keyof typeof blockComponents];
+    
     if (!BlockComponent) {
-      return <div className="text-red-500">Componente não encontrado: {blockType}</div>;
+      return (
+        <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center text-gray-500">
+          Componente não implementado: {block.type}
+        </div>
+      );
     }
 
     return (
       <BlockComponent
-        content={content}
-        isSelected={selectedBlockType === blockType}
+        content={block.content}
+        isSelected={selectedBlock === block.id}
         isEditing={false}
-        onUpdate={handleContentUpdate}
-        onSelect={() => handleBlockSelect(blockType)}
+        onUpdate={(content: any) => console.log('Update:', content)}
+        onSelect={() => setSelectedBlock(block.id)}
       />
     );
   };
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold mb-2">Demonstração de Blocos</h1>
-        <p className="text-gray-600">Explore os diferentes tipos de blocos disponíveis</p>
+    <div className="p-6 max-w-4xl mx-auto">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-2">Demonstração dos Blocos</h1>
+        <p className="text-gray-600">
+          Visualize todos os tipos de blocos disponíveis no editor.
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Sidebar com lista de blocos */}
-        <div className="lg:col-span-1">
-          <Card>
-            <CardHeader>
-              <CardTitle>Tipos de Blocos</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {blockTypes.map((block) => (
-                  <Button
-                    key={block.type}
-                    variant={selectedBlockType === block.type ? "default" : "outline"}
-                    className="w-full justify-start"
-                    onClick={() => handleBlockSelect(block.type)}
-                  >
-                    <div className="flex items-center justify-between w-full">
-                      <span>{block.name}</span>
-                      <Badge variant="secondary" className="ml-2">
-                        {block.category}
-                      </Badge>
+      <Tabs defaultValue="all" className="mb-6">
+        <TabsList>
+          <TabsTrigger value="all">Todos</TabsTrigger>
+          <TabsTrigger value="content">Conteúdo</TabsTrigger>
+          <TabsTrigger value="layout">Layout</TabsTrigger>
+          <TabsTrigger value="quiz">Quiz</TabsTrigger>
+        </TabsList>
+
+        <TabsContent className="space-y-6">
+          <div className="grid gap-6">
+            {sampleBlocks.map((block) => (
+              <Card key={block.id} className="overflow-hidden">
+                <div className="p-4 bg-gray-50 border-b">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <Badge variant="secondary">{block.type}</Badge>
+                      <span className="text-sm text-gray-600">ID: {block.id}</span>
                     </div>
-                  </Button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Área de preview */}
-        <div className="lg:col-span-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                {selectedBlockType ? `Preview: ${blockTypes.find(b => b.type === selectedBlockType)?.name}` : 'Selecione um Bloco'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {selectedBlockType ? (
-                <div className="space-y-4">
-                  <Tabs defaultValue="preview">
-                    <TabsList>
-                      <TabsTrigger value="preview">Preview</TabsTrigger>
-                      <TabsTrigger value="code">Código</TabsTrigger>
-                    </TabsList>
-                    
-                    <TabsContent value="preview">
-                      <div className="border rounded-lg p-4 bg-white">
-                        {renderBlock(selectedBlockType, selectedContent)}
-                      </div>
-                    </TabsContent>
-                    
-                    <TabsContent value="code">
-                      <div className="bg-gray-100 rounded-lg p-4">
-                        <pre className="text-sm overflow-x-auto">
-                          <code>{JSON.stringify(selectedContent, null, 2)}</code>
-                        </pre>
-                      </div>
-                    </TabsContent>
-                  </Tabs>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSelectedBlock(
+                        selectedBlock === block.id ? null : block.id
+                      )}
+                    >
+                      {selectedBlock === block.id ? 'Desselecionar' : 'Selecionar'}
+                    </Button>
+                  </div>
                 </div>
-              ) : (
-                <div className="text-center py-12">
-                  <p className="text-gray-500">Selecione um tipo de bloco na barra lateral para ver o preview</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+                <CardContent className="p-6">
+                  {renderBlock(block)}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
 
-      {/* Showcase de todos os blocos */}
-      <div className="space-y-6">
-        <h2 className="text-2xl font-bold text-center">Todos os Blocos</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {blockTypes.map((block) => (
-            <Card key={block.type}>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  {block.name}
-                  <Badge variant="outline">{block.category}</Badge>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {renderBlock(block.type, defaultContent[block.type] || {})}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
+        <TabsContent className="space-y-6">
+          <div className="grid gap-6">
+            {sampleBlocks
+              .filter(block => ['header', 'text', 'image', 'button', 'testimonial'].includes(block.type))
+              .map((block) => (
+                <Card key={block.id} className="overflow-hidden">
+                  <div className="p-4 bg-gray-50 border-b">
+                    <Badge variant="secondary">{block.type}</Badge>
+                  </div>
+                  <CardContent className="p-6">
+                    {renderBlock(block)}
+                  </CardContent>
+                </Card>
+              ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent className="space-y-6">
+          <div className="grid gap-6">
+            {sampleBlocks
+              .filter(block => ['spacer'].includes(block.type))
+              .map((block) => (
+                <Card key={block.id} className="overflow-hidden">
+                  <div className="p-4 bg-gray-50 border-b">
+                    <Badge variant="secondary">{block.type}</Badge>
+                  </div>
+                  <CardContent className="p-6">
+                    {renderBlock(block)}
+                  </CardContent>
+                </Card>
+              ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent className="space-y-6">
+          <div className="grid gap-6">
+            {sampleBlocks
+              .filter(block => ['quiz-question'].includes(block.type))
+              .map((block) => (
+                <Card key={block.id} className="overflow-hidden">
+                  <div className="p-4 bg-gray-50 border-b">
+                    <Badge variant="secondary">{block.type}</Badge>
+                  </div>
+                  <CardContent className="p-6">
+                    {renderBlock(block)}
+                  </CardContent>
+                </Card>
+              ))}
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
-}
+};
+
+export default BlocksDemo;

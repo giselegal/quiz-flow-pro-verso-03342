@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import { EditorBlock, EditableContent } from '@/types/editor';
 
 interface Question {
   id: string;
@@ -37,6 +38,13 @@ interface EditorState {
   error: string | null;
 }
 
+interface EditorActions {
+  addBlock: (type: string) => string;
+  updateBlock: (id: string, content: Partial<EditableContent>) => void;
+  deleteBlock: (id: string) => void;
+  reorderBlocks: (startIndex: number, endIndex: number) => void;
+}
+
 interface EditorContextType {
   activeTab: string;
   blockSearch: string;
@@ -44,6 +52,12 @@ interface EditorContextType {
   setActiveTab: (tab: string) => void;
   setBlockSearch: (search: string) => void;
   handleAddBlock: (type: string) => void;
+  
+  // Editor-specific properties
+  blocks: EditorBlock[];
+  selectedBlockId: string | null;
+  setSelectedBlockId: (id: string | null) => void;
+  actions: EditorActions;
   
   // Quiz editor specific properties
   state: EditorState;
@@ -77,6 +91,8 @@ interface EditorProviderProps {
 export const EditorProvider: React.FC<EditorProviderProps> = ({ children }) => {
   const [activeTab, setActiveTab] = useState('editor');
   const [blockSearch, setBlockSearch] = useState('');
+  const [blocks, setBlocks] = useState<EditorBlock[]>([]);
+  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [state, setState] = useState<EditorState>({
     quiz: null,
     selectedQuestionId: null,
@@ -96,9 +112,53 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({ children }) => {
     { type: 'testimonial', name: 'Depoimento', icon: '💬', category: 'content' }
   ];
 
-  const handleAddBlock = useCallback((type: string) => {
-    console.log('Adding block:', type);
+  const addBlock = useCallback((type: string): string => {
+    const newBlock: EditorBlock = {
+      id: `block-${Date.now()}`,
+      type,
+      content: {},
+      order: blocks.length
+    };
+    setBlocks(prev => [...prev, newBlock]);
+    return newBlock.id;
+  }, [blocks.length]);
+
+  const updateBlock = useCallback((id: string, content: Partial<EditableContent>) => {
+    setBlocks(prev => 
+      prev.map(block => 
+        block.id === id 
+          ? { ...block, content: { ...block.content, ...content } }
+          : block
+      )
+    );
   }, []);
+
+  const deleteBlock = useCallback((id: string) => {
+    setBlocks(prev => prev.filter(block => block.id !== id));
+    if (selectedBlockId === id) {
+      setSelectedBlockId(null);
+    }
+  }, [selectedBlockId]);
+
+  const reorderBlocks = useCallback((startIndex: number, endIndex: number) => {
+    setBlocks(prev => {
+      const result = Array.from(prev);
+      const [removed] = result.splice(startIndex, 1);
+      result.splice(endIndex, 0, removed);
+      return result.map((block, index) => ({ ...block, order: index }));
+    });
+  }, []);
+
+  const actions: EditorActions = {
+    addBlock,
+    updateBlock,
+    deleteBlock,
+    reorderBlocks
+  };
+
+  const handleAddBlock = useCallback((type: string) => {
+    addBlock(type);
+  }, [addBlock]);
 
   const loadQuiz = useCallback(async (id: string) => {
     setState(prev => ({ ...prev, loading: true }));
@@ -236,6 +296,10 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({ children }) => {
       setActiveTab,
       setBlockSearch,
       handleAddBlock,
+      blocks,
+      selectedBlockId,
+      setSelectedBlockId,
+      actions,
       state,
       loadQuiz,
       createQuiz,

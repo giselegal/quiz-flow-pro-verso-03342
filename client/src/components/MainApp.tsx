@@ -1,54 +1,92 @@
+
 import React, { useState } from 'react';
-import { QuizDashboard } from './quiz/QuizDashboard';
-import { QuizEditor } from './quiz/QuizEditor';
-import { QuizPreview } from './quiz/QuizPreview';
-import type { Quiz } from '../types/supabase';
+import { Routes, Route } from 'react-router-dom';
+import QuizDashboard from './quiz/QuizDashboard';
+import QuizEditor from './quiz/QuizEditor';
+import { Quiz } from '@/types/quiz';
 
-type ViewMode = 'dashboard' | 'editor' | 'preview';
+interface MainAppProps {
+  onShowTemplates?: () => void;
+}
 
-export const MainApp: React.FC = () => {
-  const [viewMode, setViewMode] = useState<ViewMode>('dashboard');
+const MainApp: React.FC<MainAppProps> = ({ onShowTemplates }) => {
   const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
 
-  const handleEditQuiz = (quiz: Quiz) => {
+  const handleQuizSelect = (quiz: Quiz) => {
     setSelectedQuiz(quiz);
-    setViewMode('editor');
-  };
-
-  const handlePreviewQuiz = (quiz: Quiz) => {
-    setSelectedQuiz(quiz);
-    setViewMode('preview');
+    setIsEditing(true);
   };
 
   const handleBackToDashboard = () => {
     setSelectedQuiz(null);
-    setViewMode('dashboard');
+    setIsEditing(false);
   };
 
+  const mockQuizzes: Quiz[] = [
+    {
+      id: '1',
+      title: 'Quiz de Personalidade',
+      description: 'Descubra mais sobre sua personalidade',
+      author_id: 'user-1',
+      category: 'personality',
+      difficulty: 'easy',
+      time_limit: null,
+      is_public: true,
+      is_published: true,
+      is_template: false,
+      thumbnail_url: null,
+      tags: ['personalidade', 'autoconhecimento'],
+      view_count: 150,
+      average_score: 85,
+      questions: [],
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    {
+      id: '2',
+      title: 'Quiz de Conhecimentos Gerais',
+      description: 'Teste seus conhecimentos',
+      author_id: 'user-1',
+      category: 'knowledge',
+      difficulty: 'medium',
+      time_limit: 300,
+      is_public: true,
+      is_published: false,
+      is_template: false,
+      thumbnail_url: null,
+      tags: ['conhecimento', 'geral'],
+      view_count: 89,
+      average_score: 72,
+      questions: [],
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }
+  ];
+
+  if (isEditing && selectedQuiz) {
+    return (
+      <QuizEditor
+        quiz={selectedQuiz}
+        onBack={handleBackToDashboard}
+      />
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {viewMode === 'dashboard' && (
-        <div className="container mx-auto px-4 py-8">
+    <Routes>
+      <Route 
+        path="/" 
+        element={
           <QuizDashboard
-            onEditQuiz={handleEditQuiz}
-            onPreviewQuiz={handlePreviewQuiz}
+            quizzes={mockQuizzes}
+            onQuizSelect={handleQuizSelect}
+            onShowTemplates={onShowTemplates}
           />
-        </div>
-      )}
-
-      {viewMode === 'editor' && selectedQuiz && (
-        <QuizEditor
-          quiz={selectedQuiz}
-          onBack={handleBackToDashboard}
-        />
-      )}
-
-      {viewMode === 'preview' && selectedQuiz && (
-        <QuizPreview
-          quiz={selectedQuiz}
-          onBack={handleBackToDashboard}
-        />
-      )}
-    </div>
+        } 
+      />
+    </Routes>
   );
 };
+
+export default MainApp;
