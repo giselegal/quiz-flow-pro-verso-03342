@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { EditableContent } from '@/types/editor';
 import { Button } from '@/components/ui/button';
@@ -75,13 +75,12 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
       className={cn(
         "relative p-4 rounded-lg transition-all duration-200",
         isSelected && "ring-2 ring-blue-400 ring-offset-2",
-        isInlineEditing && "ring-2 ring-green-400 ring-offset-2",
         "hover:bg-gray-50 cursor-pointer",
         content.style?.textAlign === 'center' && "text-center",
         content.style?.textAlign === 'right' && "text-right",
         className
       )}
-      onClick={onSelect}
+      onClick={onClick || onSelect}
       style={{
         backgroundColor: content.style?.backgroundColor,
         padding: content.style?.padding,
@@ -89,12 +88,10 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
       }}
     >
       <Button
-        ref={buttonRef}
         variant={getButtonVariant()}
         size="lg"
         className={cn(
           "relative transition-all duration-200",
-          isInlineEditing && "ring-2 ring-green-400",
           content.style?.width && `w-${content.style.width}`,
           content.style?.borderRadius && `rounded-${content.style.borderRadius}`
         )}
@@ -108,24 +105,10 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
           boxShadow: content.style?.boxShadow
         }}
         onClick={handleButtonClick}
-        onDoubleClick={onClick}
-        title="Clique para editar no Painel de Propriedades"
       >
         {getButtonIcon()}
         <span>{localButtonText || 'Texto do botão'}</span>
       </Button>
-      
-      {isInlineEditing && (
-        <div className="absolute -top-8 left-0 bg-green-500 text-white px-2 py-1 rounded text-xs">
-          Editando - Enter para salvar, Esc para cancelar
-        </div>
-      )}
-      
-      {isSelected && !content.buttonUrl && (
-        <div className="absolute -bottom-6 left-0 bg-orange-500 text-white px-2 py-1 rounded text-xs">
-          Adicione uma URL no painel de propriedades
-        </div>
-      )}
     </div>
   );
 };
