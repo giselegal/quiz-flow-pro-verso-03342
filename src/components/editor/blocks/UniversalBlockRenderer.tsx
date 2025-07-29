@@ -38,7 +38,9 @@ import {
   QuizQuestionInlineBlock,
   QuizProgressInlineBlock,
   QuizTransitionInlineBlock,
-  QuizLoadingInlineBlock
+  QuizLoadingInlineBlock,
+  QuizResultInlineBlock,
+  QuizAnalysisInlineBlock
 } from './inline';
 
 // Componentes básicos (funcionais)
