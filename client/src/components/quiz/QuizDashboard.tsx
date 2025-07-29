@@ -31,7 +31,7 @@ export const QuizDashboard: React.FC<QuizDashboardProps> = ({
     return matchesSearch && matchesCategory;
   });
 
-  const categories = [...new Set(quizzes.map(quiz => quiz.category))];
+  const categories = Array.from(new Set(quizzes.map(quiz => quiz.category)));
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -150,9 +150,12 @@ export const QuizDashboard: React.FC<QuizDashboardProps> = ({
         <QuizList
           quizzes={filteredQuizzes}
           onQuizSelect={onQuizSelect}
+          onQuizEdit={onQuizSelect}
           viewMode={viewMode}
         />
       </div>
     </div>
   );
 };
+
+export default QuizDashboard;

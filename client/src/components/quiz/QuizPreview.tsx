@@ -1,104 +1,121 @@
 
 import React from 'react';
-import { Clock, Users, Star, Eye } from 'lucide-react';
+import { Quiz } from '@/types/quiz';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Quiz } from '@/types/quiz';
+import { Eye, Clock, Users, Star } from 'lucide-react';
 
 interface QuizPreviewProps {
   quiz: Quiz;
-  onStart: () => void;
   onClose: () => void;
+  onEdit: () => void;
 }
 
 export const QuizPreview: React.FC<QuizPreviewProps> = ({
   quiz,
-  onStart,
-  onClose
+  onClose,
+  onEdit
 }) => {
-  const formatDuration = (seconds: number | null) => {
-    if (!seconds) return 'Sem limite';
-    const minutes = Math.floor(seconds / 60);
-    return `${minutes} min`;
-  };
-
-  const getDifficultyColor = (difficulty: string | null) => {
-    switch (difficulty) {
-      case 'easy': return 'bg-green-100 text-green-800';
-      case 'medium': return 'bg-yellow-100 text-yellow-800';
-      case 'hard': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
+  if (!quiz) {
+    return (
+      <div className="p-8 text-center text-gray-500">
+        Quiz não encontrado
+      </div>
+    );
+  }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <Card className="max-w-2xl w-full max-h-[90vh] overflow-auto">
+    <div className="max-w-4xl mx-auto p-6">
+      <Card>
         <CardHeader>
-          <div className="flex justify-between items-start">
+          <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-2xl mb-2">{quiz.title}</CardTitle>
-              <p className="text-gray-600 mb-4">{quiz.description}</p>
+              <p className="text-gray-600">{quiz.description}</p>
             </div>
-            <Button variant="ghost" onClick={onClose}>
-              ×
-            </Button>
-          </div>
-          
-          <div className="flex flex-wrap gap-2 mb-4">
-            <Badge variant="outline" className={getDifficultyColor(quiz.difficulty)}>
-              {quiz.difficulty?.charAt(0).toUpperCase() + quiz.difficulty?.slice(1) || 'Não definido'}
-            </Badge>
-            <Badge variant="outline">
-              {quiz.category.charAt(0).toUpperCase() + quiz.category.slice(1)}
-            </Badge>
-            {quiz.tags.map(tag => (
-              <Badge key={tag} variant="secondary">
-                {tag}
-              </Badge>
-            ))}
+            <div className="flex items-center space-x-2">
+              <Button variant="outline" onClick={onEdit}>
+                Editar
+              </Button>
+              <Button variant="outline" onClick={onClose}>
+                Fechar
+              </Button>
+            </div>
           </div>
         </CardHeader>
-        
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-gray-500" />
-              <span className="text-sm">{formatDuration(quiz.time_limit)}</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Quiz Info */}
+            <div className="space-y-4">
+              <div className="flex items-center space-x-4">
+                <Badge variant={quiz.is_published ? 'default' : 'secondary'}>
+                  {quiz.is_published ? 'Publicado' : 'Rascunho'}
+                </Badge>
+                <Badge variant="outline">{quiz.category}</Badge>
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <Eye className="w-4 h-4 text-gray-500" />
+                  <span className="text-sm text-gray-600">
+                    {quiz.view_count || 0} visualizações
+                  </span>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <Users className="w-4 h-4 text-gray-500" />
+                  <span className="text-sm text-gray-600">
+                    {quiz.completion_count || 0} respostas
+                  </span>
+                </div>
+                
+                {quiz.time_limit && (
+                  <div className="flex items-center space-x-2">
+                    <Clock className="w-4 h-4 text-gray-500" />
+                    <span className="text-sm text-gray-600">
+                      {Math.floor(quiz.time_limit / 60)} minutos
+                    </span>
+                  </div>
+                )}
+                
+                <div className="flex items-center space-x-2">
+                  <Star className="w-4 h-4 text-gray-500" />
+                  <span className="text-sm text-gray-600">
+                    {quiz.average_score || 0}% média de acertos
+                  </span>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Users className="w-4 h-4 text-gray-500" />
-              <span className="text-sm">{quiz.completion_count || 0} participantes</span>
+
+            {/* Questions Preview */}
+            <div>
+              <h3 className="font-semibold mb-3">
+                Perguntas ({quiz.questions?.length || 0})
+              </h3>
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {quiz.questions?.map((question, index) => (
+                  <div key={question.id} className="p-3 border rounded-lg">
+                    <div className="flex items-start space-x-2">
+                      <span className="text-sm font-medium text-gray-500">
+                        {index + 1}.
+                      </span>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">{question.question_text}</p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {question.question_type} • {question.points} pontos
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Star className="w-4 h-4 text-gray-500" />
-              <span className="text-sm">{quiz.average_score}% média</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Eye className="w-4 h-4 text-gray-500" />
-              <span className="text-sm">{quiz.view_count} visualizações</span>
-            </div>
-          </div>
-          
-          <div className="mb-6">
-            <h3 className="font-medium mb-2">Sobre este quiz</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Este quiz contém {quiz.questions.length} perguntas e está classificado como {quiz.difficulty || 'não definido'}.
-              {quiz.time_limit && ` Você terá ${formatDuration(quiz.time_limit)} para completar.`}
-            </p>
-          </div>
-          
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={onClose}>
-              Cancelar
-            </Button>
-            <Button onClick={onStart} className="bg-blue-600 hover:bg-blue-700">
-              Iniciar Quiz
-            </Button>
           </div>
         </CardContent>
       </Card>
     </div>
   );
 };
+
+export default QuizPreview;

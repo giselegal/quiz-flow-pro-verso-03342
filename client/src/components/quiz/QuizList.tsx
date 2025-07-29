@@ -9,65 +9,77 @@ interface QuizListProps {
   quizzes: Quiz[];
   onQuizSelect: (quiz: Quiz) => void;
   onQuizEdit: (quiz: Quiz) => void;
+  viewMode?: 'grid' | 'list';
 }
 
 export const QuizList: React.FC<QuizListProps> = ({
   quizzes,
   onQuizSelect,
-  onQuizEdit
+  onQuizEdit,
+  viewMode = 'grid'
 }) => {
+  const gridClasses = viewMode === 'grid' 
+    ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
+    : 'space-y-4';
+
+  const cardClasses = viewMode === 'grid'
+    ? 'bg-white rounded-lg shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer'
+    : 'bg-white rounded-lg shadow-sm border p-4 hover:shadow-md transition-shadow cursor-pointer flex items-center justify-between';
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className={gridClasses}>
       {quizzes.map((quiz) => (
         <div
           key={quiz.id}
-          className="bg-white rounded-lg shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer"
+          className={cardClasses}
           onClick={() => onQuizSelect(quiz)}
         >
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex-1">
-              <h3 className="font-semibold text-lg mb-2">{quiz.title}</h3>
-              <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                {quiz.description}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between mb-4">
-            <Badge variant={quiz.is_published ? 'default' : 'secondary'}>
-              {quiz.is_published ? 'Publicado' : 'Rascunho'}
-            </Badge>
-            <Badge variant="outline">{quiz.category}</Badge>
-          </div>
-
-          <div className="flex items-center text-sm text-gray-500 space-x-4 mb-4">
-            <div className="flex items-center">
-              <Eye className="w-4 h-4 mr-1" />
-              {quiz.view_count || 0}
-            </div>
-            {quiz.time_limit && (
-              <div className="flex items-center">
-                <Clock className="w-4 h-4 mr-1" />
-                {Math.floor(quiz.time_limit / 60)}min
+          <div className={viewMode === 'grid' ? '' : 'flex-1'}>
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex-1">
+                <h3 className="font-semibold text-lg mb-2">{quiz.title}</h3>
+                <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                  {quiz.description}
+                </p>
               </div>
-            )}
-          </div>
+            </div>
 
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-500">
-              {quiz.questions.length} pergunta(s)
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                onQuizEdit(quiz);
-              }}
-            >
-              <Edit className="w-4 h-4 mr-1" />
-              Editar
-            </Button>
+            <div className="flex items-center justify-between mb-4">
+              <Badge variant={quiz.is_published ? 'default' : 'secondary'}>
+                {quiz.is_published ? 'Publicado' : 'Rascunho'}
+              </Badge>
+              <Badge variant="outline">{quiz.category}</Badge>
+            </div>
+
+            <div className="flex items-center text-sm text-gray-500 space-x-4 mb-4">
+              <div className="flex items-center">
+                <Eye className="w-4 h-4 mr-1" />
+                {quiz.view_count || 0}
+              </div>
+              {quiz.time_limit && (
+                <div className="flex items-center">
+                  <Clock className="w-4 h-4 mr-1" />
+                  {Math.floor(quiz.time_limit / 60)}min
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-gray-500">
+                {quiz.questions.length} pergunta(s)
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onQuizEdit(quiz);
+                }}
+              >
+                <Edit className="w-4 h-4 mr-1" />
+                Editar
+              </Button>
+            </div>
           </div>
         </div>
       ))}

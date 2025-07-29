@@ -1,245 +1,293 @@
 
 import React, { useState } from 'react';
-import { EditorProvider } from '@/contexts/EditorContext';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Plus, Save, Eye, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Plus, Eye, Settings, Save, ArrowLeft } from 'lucide-react';
-import { BlockComponents } from '@/components/editor/blocks/BlockComponents';
-import { Quiz, Question } from '@/types/quiz';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import BlockComponents from '@/components/editor/blocks/BlockComponents';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { useEditor } from '@/contexts/EditorContext';
+import type { Quiz, Question } from '@/types/quiz';
+import type { EditorBlock } from '@/types/editor';
 
-const QuizEditorPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('editor');
-  const [currentQuiz, setCurrentQuiz] = useState<Quiz | null>(null);
-  const [questions, setQuestions] = useState<Question[]>([]);
-  
-  const handleAddQuestion = () => {
-    const newQuestion: Question = {
-      id: `q-${Date.now()}`,
-      title: 'Nova Pergunta',
-      tags: [],
-      text: 'Digite sua pergunta aqui...',
-      type: 'single_choice',
-      options: [
-        { id: 'opt1', text: 'Opção 1', isCorrect: false },
-        { id: 'opt2', text: 'Opção 2', isCorrect: true },
-        { id: 'opt3', text: 'Opção 3', isCorrect: false },
-        { id: 'opt4', text: 'Opção 4', isCorrect: false }
-      ],
-      required: true
-    };
-    setQuestions([...questions, newQuestion]);
+export default function QuizEditorPage() {
+  const {
+    blocks,
+    selectedBlockId,
+    setSelectedBlockId,
+    activeTab,
+    setActiveTab,
+    actions
+  } = useEditor();
+
+  const [currentQuiz, setCurrentQuiz] = useState<Quiz>({
+    id: '',
+    title: 'Novo Quiz',
+    description: '',
+    author_id: '',
+    category: 'style',
+    difficulty: 'medium',
+    time_limit: null,
+    is_public: true,
+    is_published: false,
+    is_template: false,
+    thumbnail_url: null,
+    tags: [],
+    view_count: 0,
+    completion_count: 0,
+    average_score: 0,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    questions: []
+  });
+
+  const [currentQuestion, setCurrentQuestion] = useState<Question>({
+    id: '',
+    quiz_id: '',
+    question_text: '',
+    question_type: 'multiple_choice',
+    options: [],
+    correct_answer: '',
+    points: 1,
+    order_index: 0,
+    is_required: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  });
+
+  const handleAddBlock = (type: string) => {
+    actions.addBlock(type);
   };
 
-  const sampleBlocks = [
-    {
-      id: 'block-1',
-      type: 'header',
-      content: {
-        title: 'Título do Quiz',
-        subtitle: 'Subtítulo opcional'
-      },
-      order: 0
-    },
-    {
-      id: 'block-2',
-      type: 'text',
-      content: {
-        text: 'Descrição do quiz aqui...'
-      },
-      order: 1
-    }
+  const handleUpdateBlock = (id: string, content: any) => {
+    actions.updateBlock(id, content);
+  };
+
+  const handleDeleteBlock = (id: string) => {
+    actions.deleteBlock(id);
+  };
+
+  const handleSaveQuiz = () => {
+    console.log('Saving quiz:', currentQuiz);
+    console.log('Blocks:', blocks);
+  };
+
+  const handlePreview = () => {
+    console.log('Previewing quiz');
+  };
+
+  const handlePublish = () => {
+    console.log('Publishing quiz');
+  };
+
+  const availableBlocks = [
+    { type: 'header', name: 'Cabeçalho', icon: '📄' },
+    { type: 'text', name: 'Texto', icon: '📝' },
+    { type: 'image', name: 'Imagem', icon: '🖼️' },
+    { type: 'button', name: 'Botão', icon: '🔘' },
+    { type: 'spacer', name: 'Espaçador', icon: '⬜' },
+    { type: 'quiz-question', name: 'Questão', icon: '❓' }
   ];
 
   return (
-    <EditorProvider>
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <div className="bg-white shadow-sm border-b">
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <Button variant="ghost" size="sm">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Voltar
-                </Button>
-                <div>
-                  <h1 className="text-xl font-bold">Editor de Quiz</h1>
-                  <p className="text-sm text-gray-500">
-                    {currentQuiz?.title || 'Novo Quiz'}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Button variant="outline" size="sm">
-                  <Save className="w-4 h-4 mr-2" />
-                  Salvar
-                </Button>
-                <Button variant="outline" size="sm">
-                  <Eye className="w-4 h-4 mr-2" />
-                  Visualizar
-                </Button>
-                <Button className="bg-blue-600 hover:bg-blue-700" size="sm">
-                  Publicar
-                </Button>
-              </div>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <h1 className="text-2xl font-bold text-gray-900">Editor de Quiz</h1>
+              <Badge variant="secondary">Rascunho</Badge>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Button variant="outline" size="sm" onClick={handlePreview}>
+                <Eye className="w-4 h-4 mr-2" />
+                Visualizar
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleSaveQuiz}>
+                <Save className="w-4 h-4 mr-2" />
+                Salvar
+              </Button>
+              <Button size="sm" onClick={handlePublish}>
+                Publicar
+              </Button>
             </div>
           </div>
         </div>
-
-        {/* Main Content */}
-        <div className="container mx-auto px-4 py-6">
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-3 w-full max-w-md">
-              <TabsTrigger value="editor">Editor</TabsTrigger>
-              <TabsTrigger value="preview">Preview</TabsTrigger>
-              <TabsTrigger value="settings">Configurações</TabsTrigger>
-            </TabsList>
-
-            <TabsContent className="mt-6">
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                {/* Sidebar */}
-                <div className="lg:col-span-1">
-                  <div className="bg-white rounded-lg shadow-sm border p-4">
-                    <h3 className="font-medium mb-4">Componentes</h3>
-                    <div className="space-y-2">
-                      {['header', 'text', 'image', 'button', 'quiz-question'].map(type => (
-                        <Button
-                          key={type}
-                          variant="outline"
-                          size="sm"
-                          className="w-full justify-start"
-                        >
-                          <Plus className="w-4 h-4 mr-2" />
-                          {type.charAt(0).toUpperCase() + type.slice(1)}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Editor */}
-                <div className="lg:col-span-3">
-                  <div className="bg-white rounded-lg shadow-sm border min-h-[600px]">
-                    <div className="p-6">
-                      <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-lg font-medium">Canvas do Quiz</h2>
-                        <Badge variant="outline">
-                          {sampleBlocks.length} componentes
-                        </Badge>
-                      </div>
-                      
-                      <div className="space-y-4">
-                        {sampleBlocks.map(block => (
-                          <div key={block.id} className="border rounded-lg p-4 hover:bg-gray-50">
-                            <BlockComponents
-                              block={block}
-                              isSelected={false}
-                              isEditing={false}
-                            />
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Add Question Button */}
-                      <div className="mt-6 pt-6 border-t">
-                        <Button
-                          onClick={handleAddQuestion}
-                          variant="outline"
-                          className="w-full"
-                        >
-                          <Plus className="w-4 h-4 mr-2" />
-                          Adicionar Pergunta
-                        </Button>
-                      </div>
-
-                      {/* Questions List */}
-                      {questions.length > 0 && (
-                        <div className="mt-6 space-y-4">
-                          <h3 className="font-medium">Perguntas ({questions.length})</h3>
-                          {questions.map((question, index) => (
-                            <div key={question.id} className="border rounded-lg p-4">
-                              <div className="flex items-center justify-between mb-2">
-                                <Badge variant="outline">
-                                  Pergunta {index + 1}
-                                </Badge>
-                                <Badge variant={question.type === 'single_choice' ? 'default' : 'secondary'}>
-                                  {question.type}
-                                </Badge>
-                              </div>
-                              <Input
-                                value={question.text}
-                                onChange={(e) => {
-                                  const updatedQuestions = [...questions];
-                                  updatedQuestions[index].text = e.target.value;
-                                  setQuestions(updatedQuestions);
-                                }}
-                                placeholder="Digite sua pergunta..."
-                                className="mb-3"
-                              />
-                              <div className="space-y-2">
-                                {question.options.map((option, optIndex) => (
-                                  <div key={option.id} className="flex items-center space-x-2">
-                                    <Input
-                                      value={option.text}
-                                      onChange={(e) => {
-                                        const updatedQuestions = [...questions];
-                                        updatedQuestions[index].options[optIndex].text = e.target.value;
-                                        setQuestions(updatedQuestions);
-                                      }}
-                                      placeholder={`Opção ${optIndex + 1}`}
-                                      className="flex-1"
-                                    />
-                                    <Badge variant={option.isCorrect ? 'default' : 'secondary'}>
-                                      {option.isCorrect ? 'Correta' : 'Incorreta'}
-                                    </Badge>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent className="mt-6">
-              <div className="bg-white rounded-lg shadow-sm border p-6">
-                <h2 className="text-lg font-medium mb-4">Visualização</h2>
-                <div className="text-center py-12 text-gray-500">
-                  Visualização do quiz será mostrada aqui
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent className="mt-6">
-              <div className="bg-white rounded-lg shadow-sm border p-6">
-                <h2 className="text-lg font-medium mb-4">Configurações</h2>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Título do Quiz</label>
-                    <Input placeholder="Digite o título do quiz" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Descrição</label>
-                    <Input placeholder="Digite a descrição do quiz" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Categoria</label>
-                    <Input placeholder="Digite a categoria" />
-                  </div>
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
       </div>
-    </EditorProvider>
-  );
-};
 
-export default QuizEditorPage;
+      {/* Main Content */}
+      <div className="container mx-auto px-4 py-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="editor">Editor</TabsTrigger>
+            <TabsTrigger value="settings">Configurações</TabsTrigger>
+            <TabsTrigger value="preview">Visualização</TabsTrigger>
+          </TabsList>
+
+          <TabsContent className="mt-6">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+              {/* Sidebar - Components */}
+              <Card className="lg:col-span-1">
+                <CardHeader>
+                  <CardTitle className="text-lg">Componentes</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {availableBlocks.map((block) => (
+                      <Button
+                        key={block.type}
+                        variant="outline"
+                        className="w-full justify-start"
+                        onClick={() => handleAddBlock(block.type)}
+                      >
+                        <span className="mr-2">{block.icon}</span>
+                        {block.name}
+                      </Button>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Main Editor Area */}
+              <Card className="lg:col-span-2">
+                <CardHeader>
+                  <CardTitle className="text-lg">Canvas</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {blocks.length === 0 ? (
+                      <div className="text-center py-12 text-gray-500">
+                        <p>Nenhum componente adicionado ainda.</p>
+                        <p className="text-sm">Selecione um componente na sidebar para começar.</p>
+                      </div>
+                    ) : (
+                      blocks.map((block) => (
+                        <div
+                          key={block.id}
+                          className={`border-2 border-dashed rounded-lg p-4 cursor-pointer transition-colors ${
+                            selectedBlockId === block.id
+                              ? 'border-blue-500 bg-blue-50'
+                              : 'border-gray-300 hover:border-gray-400'
+                          }`}
+                          onClick={() => setSelectedBlockId(block.id)}
+                        >
+                          <BlockComponents
+                            block={block}
+                            isSelected={selectedBlockId === block.id}
+                            onUpdate={(content) => handleUpdateBlock(block.id, content)}
+                            onSelect={() => setSelectedBlockId(block.id)}
+                          />
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Properties Panel */}
+              <Card className="lg:col-span-1">
+                <CardHeader>
+                  <CardTitle className="text-lg">Propriedades</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {selectedBlockId ? (
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="block-id">ID do Bloco</Label>
+                        <Input
+                          id="block-id"
+                          value={selectedBlockId}
+                          readOnly
+                          className="mt-1"
+                        />
+                      </div>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => {
+                          handleDeleteBlock(selectedBlockId);
+                          setSelectedBlockId(null);
+                        }}
+                      >
+                        Excluir Bloco
+                      </Button>
+                    </div>
+                  ) : (
+                    <p className="text-gray-500 text-sm">
+                      Selecione um bloco para ver suas propriedades
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Configurações do Quiz</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="quiz-title">Título</Label>
+                    <Input
+                      id="quiz-title"
+                      value={currentQuiz.title}
+                      onChange={(e) => setCurrentQuiz({...currentQuiz, title: e.target.value})}
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="quiz-category">Categoria</Label>
+                    <Input
+                      id="quiz-category"
+                      value={currentQuiz.category}
+                      onChange={(e) => setCurrentQuiz({...currentQuiz, category: e.target.value})}
+                      className="mt-1"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <Label htmlFor="quiz-description">Descrição</Label>
+                    <Input
+                      id="quiz-description"
+                      value={currentQuiz.description || ''}
+                      onChange={(e) => setCurrentQuiz({...currentQuiz, description: e.target.value})}
+                      className="mt-1"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Visualização</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="bg-gray-100 rounded-lg p-6">
+                  <div className="space-y-4">
+                    {blocks.map((block) => (
+                      <BlockComponents
+                        key={block.id}
+                        block={block}
+                        isSelected={false}
+                        onUpdate={() => {}}
+                        onSelect={() => {}}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
+  );
+}
