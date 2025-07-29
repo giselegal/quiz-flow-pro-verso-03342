@@ -81,35 +81,35 @@ interface FunnelTemplate {
 const FUNNEL_TEMPLATES: FunnelTemplate[] = [
   {
     id: 'default-quiz-funnel-21-steps',
-    name: 'Funil Completo de Descoberta Pessoal',
-    description: 'Funil completo para descoberta do estilo pessoal - 21 etapas modulares',
+    name: 'Quiz Completo: Descoberta de Estilo Pessoal (21 Etapas)',
+    description: 'Funil profissional completo com 21 etapas otimizadas para descoberta do estilo pessoal. Inclui 10 questões principais + perguntas estratégicas + páginas de resultado + ofertas personalizadas. Design responsivo e pronto para produção.',
     category: 'personalidade',
     steps: 21,
     icon: Target,
     difficulty: 'medium',
     estimatedTime: 15,
-    tags: ['descoberta', 'personalidade', 'completo'],
+    tags: ['profissional', 'completo', 'personalidade', 'conversão', 'pronto-uso'],
     stepTitles: [
-      'Boas-vindas e Introdução',
-      'Primeira Pergunta - Preferências Básicas',
-      'Exploração de Interesses',
-      'Análise de Comportamento',
-      'Preferências de Estilo',
-      'Avaliação de Personalidade',
-      'Gostos e Desgostos',
-      'Cenários Hipotéticos',
-      'Escolhas de Vida',
-      'Ambiente Ideal',
-      'Relacionamentos',
-      'Carreira e Trabalho',
-      'Hobbies e Lazer',
-      'Valores Pessoais',
-      'Desafios e Medos',
-      'Aspirações e Sonhos',
-      'Análise Comportamental',
-      'Preferências Detalhadas',
-      'Consolidação de Dados',
-      'Resultado Personalizado',
+      'Introdução e Coleta do Nome',
+      'Questão 1: Preferência de Cores',
+      'Questão 2: Estilo de Vida',
+      'Questão 3: Ocasiões Especiais',
+      'Questão 4: Conforto vs. Estilo',
+      'Questão 5: Padrões e Texturas',
+      'Questão 6: Inspiração de Moda',
+      'Questão 7: Acessórios Preferidos',
+      'Questão 8: Compras de Roupa',
+      'Questão 9: Estilo no Trabalho',
+      'Questão 10: Look Ideal',
+      'Transição: Conhecendo Você Melhor',
+      'Pergunta Estratégica 1: Problema Principal',
+      'Pergunta Estratégica 2: Orçamento Mensal',
+      'Pergunta Estratégica 3: Maior Dificuldade',
+      'Pergunta Estratégica 4: Forma do Corpo',
+      'Pergunta Estratégica 5: Meta Principal',
+      'Transição: Quase Terminando',
+      'Coleta de Contato',
+      'Resultado: Análise do Estilo',
       'Oferta Personalizada'
     ]
   },
@@ -894,7 +894,7 @@ const FunnelPanelPage: React.FC = () => {
                       }`}
                     >
                       <Eye className="w-4 h-4 mr-2" />
-                      {template.id === 'default-quiz-funnel-21-steps' ? 'Abrir Editor' : 'Usar Template'}
+                      {template.id === 'default-quiz-funnel-21-steps' ? 'Usar Template Completo' : 'Usar Template'}
                     </Button>
                     <Button
                       variant="outline"
@@ -1051,7 +1051,7 @@ const FunnelPanelPage: React.FC = () => {
                             <Button 
                               variant="outline" 
                               size="sm"
-                              className="border-[#EBE0D0] hover:border-[#D9C9B8] hover:bg-[#F5F1EC] text-red-600 hover:text-red-700 hover:border-red-300"
+                              className="border-[#EBE0D0] hover:border-red-300 hover:bg-red-50 text-red-600 hover:text-red-700"
                               onClick={() => handleDeleteFunnel(funnel.id)}
                             >
                               <Trash2 className="w-4 h-4" />

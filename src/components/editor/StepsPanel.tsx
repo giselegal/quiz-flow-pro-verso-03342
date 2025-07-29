@@ -20,7 +20,6 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { cn } from '../../lib/utils';
-import { quiz21StepsTemplates, getQuizStepTemplate } from '../../templates/quiz21StepsTemplates';
 
 interface Step {
   id: string;
@@ -108,40 +107,6 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
       handleEditCancel();
     }
   }, [handleEditSave, handleEditCancel]);
-
-  // Carregar as 21 etapas do quiz real
-  const handleLoad21Steps = useCallback(() => {
-    console.log('🚀 Carregando 21 etapas do quiz...');
-    
-    quiz21StepsTemplates.forEach((stepTemplate, index) => {
-      setTimeout(() => {
-        // Primeiro, criar/adicionar a etapa
-        onStepAdd();
-        
-        // Depois de um pequeno delay, atualizar a etapa com os dados corretos
-        setTimeout(() => {
-          const step: Step = {
-            id: stepTemplate.id,
-            name: stepTemplate.name,
-            order: index + 1,
-            blocksCount: stepTemplate.blocks.length,
-            isActive: false
-          };
-          
-          console.log(`📝 Criando etapa ${index + 1}: ${stepTemplate.name}`);
-          onStepUpdate(step.id, step);
-          
-          // Se existe função para adicionar blocos, adicionar os blocos da etapa
-          if (onAddBlocksToStep && stepTemplate.blocks.length > 0) {
-            console.log(`🧩 Adicionando ${stepTemplate.blocks.length} blocos à etapa ${stepTemplate.name}`);
-            onAddBlocksToStep(step.id, stepTemplate.blocks);
-          }
-        }, 100);
-      }, 200 * index); // Delay progressivo para cada etapa
-    });
-
-    console.log(`✅ Processo iniciado para carregar ${quiz21StepsTemplates.length} etapas!`);
-  }, [onStepAdd, onStepUpdate, onAddBlocksToStep]);
 
   return (
     <Card className={cn('h-full flex flex-col', className)}>
@@ -281,26 +246,6 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
               <Plus className="w-4 h-4" />
               <span>Adicionar Nova Etapa</span>
             </Button>
-
-            {/* Load 21 Quiz Steps Button */}
-            {steps.length === 0 && (
-              <div className="space-y-3">
-                <div className="text-center text-sm text-gray-500 py-4">
-                  Nenhuma etapa criada ainda
-                </div>
-                <Button
-                  variant="default"
-                  className="w-full flex items-center justify-center space-x-2 p-4 bg-gradient-to-r from-[#B89B7A] to-[#9F836A] hover:from-[#9F836A] hover:to-[#8A6F5A] text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                  onClick={handleLoad21Steps}
-                >
-                  <Plus className="w-5 h-5" />
-                  <span className="font-semibold">📋 Carregar 21 Etapas do Quiz CaktoQuiz</span>
-                </Button>
-                <div className="text-xs text-gray-400 text-center">
-                  Inclui todas as questões e componentes de produção
-                </div>
-              </div>
-            )}
           </div>
         </ScrollArea>
       </CardContent>
