@@ -1,197 +1,240 @@
 
-import React from 'react';
-import { Quiz, Question } from '@/types/quiz';
+import React, { useState } from 'react';
+import { Quiz } from '@/types/quiz';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Clock, Users, BarChart } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { CheckCircle, Circle, Clock, User, Star } from 'lucide-react';
 
 interface QuizPreviewProps {
   quiz: Quiz;
-  onEdit?: () => void;
-  onPlay?: () => void;
-  showStats?: boolean;
 }
 
-export const QuizPreview: React.FC<QuizPreviewProps> = ({ 
-  quiz, 
-  onEdit, 
-  onPlay, 
-  showStats = true 
-}) => {
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR');
+export const QuizPreview: React.FC<QuizPreviewProps> = ({ quiz }) => {
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
+  const [showResults, setShowResults] = useState(false);
+
+  const handleAnswerSelect = (questionId: string, answerId: string) => {
+    setSelectedAnswers(prev => ({
+      ...prev,
+      [questionId]: answerId
+    }));
   };
 
-  const getDifficultyColor = (difficulty: string | null) => {
-    switch (difficulty) {
-      case 'easy': return 'bg-green-100 text-green-800';
-      case 'medium': return 'bg-yellow-100 text-yellow-800';
-      case 'hard': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex < quiz.questions.length - 1) {
+      setCurrentQuestionIndex(prev => prev + 1);
+    } else {
+      setShowResults(true);
     }
   };
 
-  return (
-    <div className="space-y-6">
-      {/* Quiz Header */}
-      <Card>
-        <CardHeader>
-          <div className="flex justify-between items-start">
-            <div className="flex-1">
-              <CardTitle className="text-2xl mb-2">{quiz.title}</CardTitle>
-              <p className="text-gray-600 mb-4">{quiz.description}</p>
-              
-              <div className="flex flex-wrap gap-2 mb-4">
-                <Badge variant="secondary">{quiz.category}</Badge>
-                {quiz.difficulty && (
-                  <Badge className={getDifficultyColor(quiz.difficulty)}>
-                    {quiz.difficulty}
-                  </Badge>
-                )}
-                {quiz.is_public && <Badge variant="outline">Público</Badge>}
-                {quiz.is_published && <Badge variant="outline">Publicado</Badge>}
-              </div>
+  const handlePrevQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(prev => prev - 1);
+    }
+  };
 
-              {showStats && (
-                <div className="flex items-center gap-4 text-sm text-gray-500">
-                  <div className="flex items-center gap-1">
-                    <Users className="w-4 h-4" />
-                    <span>{quiz.completion_count || 0} participantes</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <BarChart className="w-4 h-4" />
-                    <span>{quiz.average_score}% média</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    <span>Atualizado em {formatDate(quiz.updated_at)}</span>
-                  </div>
-                </div>
-              )}
-            </div>
-            
-            <div className="flex gap-2">
-              {onEdit && (
-                <Button variant="outline" onClick={onEdit}>
-                  Editar
-                </Button>
-              )}
-              {onPlay && (
-                <Button onClick={onPlay}>
-                  Iniciar Quiz
-                </Button>
-              )}
-            </div>
-          </div>
-        </CardHeader>
-      </Card>
+  const resetQuiz = () => {
+    setCurrentQuestionIndex(0);
+    setSelectedAnswers({});
+    setShowResults(false);
+  };
 
-      {/* Quiz Questions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Perguntas ({quiz.questions?.length || 0})</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {!quiz.questions || quiz.questions.length === 0 ? (
-            <p className="text-center text-gray-500 py-8">
-              Nenhuma pergunta adicionada ainda.
+  if (!quiz.questions || quiz.questions.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-gray-500">Este quiz não possui perguntas ainda.</p>
+      </div>
+    );
+  }
+
+  if (showResults) {
+    const score = Object.keys(selectedAnswers).length;
+    const totalQuestions = quiz.questions.length;
+    const percentage = Math.round((score / totalQuestions) * 100);
+
+    return (
+      <div className="max-w-2xl mx-auto">
+        <Card className="text-center">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-center gap-2">
+              <Star className="w-6 h-6 text-yellow-500" />
+              Quiz Concluído!
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="text-6xl font-bold text-blue-600">{percentage}%</div>
+            <p className="text-lg text-gray-600">
+              Você respondeu {score} de {totalQuestions} perguntas
             </p>
-          ) : (
-            <div className="space-y-6">
-              {quiz.questions.map((question, index) => (
-                <div key={question.id} className="border rounded-lg p-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Badge variant="outline">#{index + 1}</Badge>
-                    <h3 className="font-semibold">{question.title}</h3>
+            <div className="flex gap-4 justify-center">
+              <Button onClick={resetQuiz} variant="outline">
+                Refazer Quiz
+              </Button>
+              <Button onClick={() => window.close()}>
+                Fechar
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  const currentQuestion = quiz.questions[currentQuestionIndex];
+  const progress = ((currentQuestionIndex + 1) / quiz.questions.length) * 100;
+
+  return (
+    <div className="max-w-2xl mx-auto">
+      {/* Header */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-2xl font-bold text-gray-900">{quiz.title}</h1>
+          <Badge variant="secondary">
+            {currentQuestionIndex + 1} de {quiz.questions.length}
+          </Badge>
+        </div>
+        
+        {/* Progress Bar */}
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div 
+            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Question Card */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">
+            {currentQuestion.title}
+          </CardTitle>
+          {currentQuestion.text && currentQuestion.text !== currentQuestion.title && (
+            <p className="text-gray-600 mt-2">{currentQuestion.text}</p>
+          )}
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {currentQuestion.type === 'multiple_choice' && (
+            <div className="space-y-3">
+              {currentQuestion.options.map((option) => {
+                const isSelected = selectedAnswers[currentQuestion.id] === option.id;
+                return (
+                  <div
+                    key={option.id}
+                    className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                      isSelected 
+                        ? 'border-blue-500 bg-blue-50' 
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                    onClick={() => handleAnswerSelect(currentQuestion.id, option.id)}
+                  >
+                    <div className="flex items-center gap-3">
+                      {isSelected ? (
+                        <CheckCircle className="w-5 h-5 text-blue-500" />
+                      ) : (
+                        <Circle className="w-5 h-5 text-gray-400" />
+                      )}
+                      <span className="text-gray-900">{option.text}</span>
+                    </div>
                   </div>
-                  
-                  <p className="mb-4">{question.text}</p>
-                  
-                  {question.type === 'multiple_choice' && (
-                    <div className="space-y-2">
-                      {question.options.map((option, optionIndex) => (
-                        <div key={optionIndex} className="flex items-center gap-2">
-                          <input 
-                            type="radio" 
-                            name={`question-${question.id}`} 
-                            disabled 
-                          />
-                          <span>{option.text}</span>
-                        </div>
-                      ))}
+                );
+              })}
+            </div>
+          )}
+
+          {currentQuestion.type === 'text' && (
+            <div>
+              <Textarea
+                placeholder="Digite sua resposta aqui..."
+                value={selectedAnswers[currentQuestion.id] || ''}
+                onChange={(e) => handleAnswerSelect(currentQuestion.id, e.target.value)}
+                rows={4}
+              />
+            </div>
+          )}
+
+          {currentQuestion.type === 'single_choice' && (
+            <div className="space-y-3">
+              {currentQuestion.options.map((option) => {
+                const isSelected = selectedAnswers[currentQuestion.id] === option.id;
+                return (
+                  <div
+                    key={option.id}
+                    className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                      isSelected 
+                        ? 'border-blue-500 bg-blue-50' 
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                    onClick={() => handleAnswerSelect(currentQuestion.id, option.id)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`w-4 h-4 rounded-full border-2 ${
+                        isSelected 
+                          ? 'border-blue-500 bg-blue-500' 
+                          : 'border-gray-300'
+                      }`}>
+                        {isSelected && (
+                          <div className="w-full h-full rounded-full bg-white scale-50" />
+                        )}
+                      </div>
+                      <span className="text-gray-900">{option.text}</span>
                     </div>
-                  )}
-                  
-                  {question.type === 'single_choice' && (
-                    <div className="space-y-2">
-                      {question.options.map((option, optionIndex) => (
-                        <div key={optionIndex} className="flex items-center gap-2">
-                          <input 
-                            type="checkbox" 
-                            disabled 
-                          />
-                          <span>{option.text}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  
-                  {question.type === 'text' && (
-                    <Input disabled placeholder="Resposta de texto livre" />
-                  )}
-                  
-                  {question.type === 'rating' && (
-                    <div className="flex items-center gap-2">
-                      {[1, 2, 3, 4, 5].map((rating) => (
-                        <button key={rating} className="text-2xl" disabled>
-                          ⭐
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                  
-                  <div className="flex items-center gap-2 mt-4">
-                    <Badge variant="secondary">{question.type}</Badge>
-                    {question.required && <Badge variant="outline">Obrigatória</Badge>}
-                    {question.hint && <Badge variant="outline">Com dica</Badge>}
                   </div>
-                </div>
-              ))}
+                );
+              })}
+            </div>
+          )}
+
+          {currentQuestion.type === 'rating' && (
+            <div className="flex justify-center gap-2">
+              {[1, 2, 3, 4, 5].map((rating) => {
+                const isSelected = selectedAnswers[currentQuestion.id] === rating.toString();
+                return (
+                  <button
+                    key={rating}
+                    onClick={() => handleAnswerSelect(currentQuestion.id, rating.toString())}
+                    className={`w-12 h-12 rounded-full border-2 font-semibold transition-all ${
+                      isSelected
+                        ? 'border-blue-500 bg-blue-500 text-white'
+                        : 'border-gray-300 text-gray-600 hover:border-gray-400'
+                    }`}
+                  >
+                    {rating}
+                  </button>
+                );
+              })}
             </div>
           )}
         </CardContent>
       </Card>
 
-      {/* Quiz Settings */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Configurações</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Limite de Tempo</label>
-              <p className="text-sm text-gray-600">
-                {quiz.time_limit ? `${quiz.time_limit} minutos` : 'Sem limite'}
-              </p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Visibilidade</label>
-              <p className="text-sm text-gray-600">
-                {quiz.is_public ? 'Público' : 'Privado'}
-              </p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Status</label>
-              <p className="text-sm text-gray-600">
-                {quiz.is_published ? 'Publicado' : 'Rascunho'}
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Navigation */}
+      <div className="flex justify-between items-center mt-6">
+        <Button
+          variant="outline"
+          onClick={handlePrevQuestion}
+          disabled={currentQuestionIndex === 0}
+        >
+          Anterior
+        </Button>
+        
+        <div className="flex items-center gap-2 text-sm text-gray-500">
+          <Clock className="w-4 h-4" />
+          {currentQuestionIndex + 1} de {quiz.questions.length}
+        </div>
+        
+        <Button
+          onClick={handleNextQuestion}
+          disabled={!selectedAnswers[currentQuestion.id]}
+        >
+          {currentQuestionIndex === quiz.questions.length - 1 ? 'Finalizar' : 'Próxima'}
+        </Button>
+      </div>
     </div>
   );
 };
