@@ -133,7 +133,7 @@ export const useQuizzes = () => {
     setError(null);
     
     try {
-      const quizzesData = await QuizService.getQuizzes(userId);
+      const quizzesData = await QuizService.getUserQuizzes(userId);
       setQuizzes(quizzesData);
     } catch (err) {
       setError('Erro ao carregar quizzes');
