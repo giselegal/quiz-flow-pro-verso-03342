@@ -20,6 +20,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     content = 'Texto exemplo',
     fontSize = 'medium',
     fontWeight = 'normal',
+    fontFamily = 'inherit',
     textAlign = 'left',
     color = '#374151',
     backgroundColor = 'transparent',
