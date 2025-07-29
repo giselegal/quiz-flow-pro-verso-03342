@@ -101,33 +101,45 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     setSelectedBlockId(newBlockId);
   }, [addBlock]);
 
-  const handleLoadTemplate = useCallback(() => {
+  const handleLoadTemplate = useCallback(async () => {
     try {
-      const template = getInitialQuiz21EtapasTemplate();
-      console.log('🔄 Carregando template das 21 etapas...', template);
+      setSelectedBlockId(null);
       
-      // Limpar blocos existentes primeiro (opcional)
-      // setConfig({ blocks: [] });
+      // Teste simples primeiro - adicionar alguns blocos básicos
+      console.log('🔄 Carregando blocos de teste...');
       
-      // Carregar cada bloco usando a API correta do useEditor
-      template.blocks.forEach((templateBlock, index) => {
-        console.log(`📦 Adicionando bloco ${index + 1}:`, templateBlock.type);
-        
-        // Adicionar o bloco (que criará com conteúdo padrão)
-        const newBlockId = addBlock(templateBlock.type as any);
-        
-        // Depois atualizar com o conteúdo do template
-        setTimeout(() => {
-          updateBlock(newBlockId, templateBlock.content);
-        }, 10 * index); // Pequeno delay para garantir ordem
-      });
+      // Blocos de teste simples que sabemos que existem
+      const testBlocks = [
+        { type: 'heading', content: { text: 'Etapa 1: Introdução' } },
+        { type: 'text', content: { text: 'Bem-vindo ao quiz de estilo pessoal' } },
+        { type: 'button', content: { text: 'Começar Quiz' } },
+        { type: 'heading', content: { text: 'Questão 1' } },
+        { type: 'text', content: { text: 'Qual seu estilo preferido?' } }
+      ];
       
-      console.log('✅ Template das 21 etapas carregado com sucesso!');
-      alert('✅ Template das 21 etapas carregado com sucesso! Verifique o canvas.');
+      let addedCount = 0;
+      for (const block of testBlocks) {
+        try {
+          console.log(`📦 Adicionando bloco ${addedCount + 1}: ${block.type}`);
+          const newBlockId = addBlock(block.type as any);
+          addedCount++;
+          
+          // Atualizar com conteúdo após pequeno delay
+          setTimeout(() => {
+            updateBlock(newBlockId, block.content);
+          }, 50);
+          
+        } catch (blockError) {
+          console.warn(`⚠️ Erro ao adicionar bloco ${block.type}:`, blockError);
+        }
+      }
+      
+      console.log(`✅ Blocos de teste carregados! ${addedCount} blocos adicionados.`);
+      alert(`✅ Blocos de teste carregados!\n${addedCount} componentes adicionados ao canvas.`);
       
     } catch (error) {
-      console.error('❌ Erro ao carregar template:', error);
-      alert('❌ Erro ao carregar template. Verifique o console.');
+      console.error('❌ Erro ao carregar blocos:', error);
+      alert(`❌ Erro ao carregar blocos: ${error.message}`);
     }
   }, [addBlock, updateBlock]);
 
@@ -202,7 +214,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                 className="flex items-center gap-2"
               >
                 <Download className="w-4 h-4" />
-                Carregar Quiz 21 Etapas
+                Carregar Blocos de Teste
               </Button>
               {config.blocks.length > 0 && (
                 <Button
@@ -327,7 +339,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                               className="w-full mb-2"
                             >
                               <Download className="w-4 h-4 mr-2" />
-                              Carregar Template Completo
+                              Carregar Blocos de Teste
                             </Button>
                             <p className="text-sm text-gray-500">
                               Ou arraste componentes da barra lateral
