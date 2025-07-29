@@ -4,8 +4,9 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { Button } from '@/components/ui/button';
 import { Eye, EyeOff, Smartphone, Tablet, Monitor } from 'lucide-react';
 import { useEditor } from '@/hooks/useEditor';
-import { blockComponents } from '../blocks/BlockComponents';
+import { FunnelStepBlock } from '@/components/funnel-blocks/editor/FunnelStepBlock';
 import { useFunnelConfig } from '@/components/funnel-blocks/editor/FunnelConfigProvider';
+import { cn } from '@/lib/utils';
 
 interface EditPreviewProps {
   isPreviewing: boolean;
@@ -35,46 +36,55 @@ export const EditPreview: React.FC<EditPreviewProps> = ({
   };
 
   const renderBlock = (block: any, index: number) => {
-    const BlockComponent = blockComponents[block.type as keyof typeof blockComponents];
-    
-    if (!BlockComponent) {
+    // Check if it's a funnel step block
+    if (block.type && block.type.startsWith('funnel-step-')) {
+      const stepType = block.type.replace('funnel-step-', '');
+      
       return (
-        <div key={block.id} className="p-4 border-2 border-dashed border-gray-300 rounded-lg">
-          <p className="text-gray-500">Componente não encontrado: {block.type}</p>
+        <div
+          key={block.id}
+          className={cn(
+            "relative transition-all duration-200 rounded-lg mb-4",
+            selectedComponentId === block.id && !isPreviewing && "ring-2 ring-blue-500",
+            !isPreviewing && "hover:shadow-sm cursor-pointer"
+          )}
+          onClick={() => !isPreviewing && onSelectComponent(block.id)}
+        >
+          <FunnelStepBlock
+            block={{
+              id: block.id,
+              type: 'funnel-step',
+              properties: {
+                stepType: stepType as any,
+                stepNumber: block.stepNumber || currentStep,
+                totalSteps: 21,
+                ...block.content
+              }
+            }}
+            isSelected={selectedComponentId === block.id}
+            onClick={() => !isPreviewing && onSelectComponent(block.id)}
+          />
         </div>
       );
     }
-
+    
+    // Fallback for other block types
     return (
       <div
         key={block.id}
-        className={`
-          relative transition-all duration-200 rounded-lg
-          ${selectedComponentId === block.id ? 'ring-2 ring-blue-500' : ''}
-          ${!isPreviewing ? 'hover:shadow-sm cursor-pointer' : ''}
-        `}
+        className={cn(
+          "relative transition-all duration-200 rounded-lg mb-4 p-4 border border-gray-200 bg-white",
+          selectedComponentId === block.id && !isPreviewing && "ring-2 ring-blue-500",
+          !isPreviewing && "hover:shadow-sm cursor-pointer"
+        )}
         onClick={() => !isPreviewing && onSelectComponent(block.id)}
       >
-        <BlockComponent
-          content={block.content}
-          onUpdate={() => {}}
-          onDelete={() => {}}
-        />
-        
-        {!isPreviewing && (
-          <div className="absolute top-2 right-2 opacity-0 hover:opacity-100 transition-opacity">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                onSelectComponent(block.id);
-              }}
-            >
-              Editar
-            </Button>
-          </div>
-        )}
+        <h3 className="font-medium text-gray-800 mb-2">
+          {block.content?.title || block.content?.text || `Bloco ${block.type}`}
+        </h3>
+        <p className="text-sm text-gray-600">
+          Tipo: {block.type}
+        </p>
       </div>
     );
   };
@@ -156,7 +166,7 @@ export const EditPreview: React.FC<EditPreviewProps> = ({
 
       {/* Preview Area */}
       <div className="flex-1 overflow-auto bg-gray-50 p-4">
-        <div className={`${getDeviceStyles()} bg-white rounded-lg shadow-sm min-h-full`}>
+        <div className={cn(getDeviceStyles(), "bg-white rounded-lg shadow-sm min-h-full")}>
           {funnelMode ? (
             // Modo funil - mostra apenas a etapa atual
             <div className="p-6">
@@ -176,6 +186,14 @@ export const EditPreview: React.FC<EditPreviewProps> = ({
               {config.blocks
                 .filter(block => block.stepNumber === currentStep)
                 .map((block, index) => renderBlock(block, index))}
+              
+              {/* Mostrar mensagem se não há componentes para esta etapa */}
+              {config.blocks.filter(block => block.stepNumber === currentStep).length === 0 && (
+                <div className="text-center py-12 text-gray-500">
+                  <p>Nenhum componente adicionado para esta etapa.</p>
+                  <p className="text-sm mt-2">Use o painel lateral para adicionar componentes.</p>
+                </div>
+              )}
             </div>
           ) : (
             // Modo editor - mostra todos os blocos
@@ -209,7 +227,14 @@ export const EditPreview: React.FC<EditPreviewProps> = ({
                     
                     {config.blocks.length === 0 && (
                       <div className="text-center py-12 text-gray-500">
-                        <p>Adicione componentes do painel lateral para começar</p>
+                        <div className="mb-4 text-6xl">🎨</div>
+                        <h3 className="mb-2 text-lg font-medium">Canvas Vazio</h3>
+                        <p className="text-center">
+                          Adicione componentes do painel lateral para começar a construir seu funil
+                        </p>
+                        <div className="mt-4 text-sm">
+                          💡 Dica: Comece com uma etapa de introdução para dar boas-vindas aos seus visitantes
+                        </div>
                       </div>
                     )}
                   </div>

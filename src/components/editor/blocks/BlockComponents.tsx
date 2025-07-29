@@ -5,15 +5,15 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Trash2, Settings } from 'lucide-react';
-
-// Importar componentes de funil
 import { FunnelStepBlock } from '@/components/funnel-blocks/editor/FunnelStepBlock';
-import type { FunnelStepType } from '@/types/funnel';
+import { getDefaultContentForFunnelStep } from '@/config/funnelSteps';
 
 export interface BlockComponentProps {
   content: any;
   onUpdate: (content: any) => void;
   onDelete: () => void;
+  blockId?: string;
+  stepNumber?: number;
 }
 
 export const TextBlock: React.FC<BlockComponentProps> = ({ content, onUpdate, onDelete }) => {
@@ -118,133 +118,63 @@ export const ImageBlock: React.FC<BlockComponentProps> = ({ content, onUpdate, o
   );
 };
 
-// Wrapper para componentes de funil
-export const FunnelStepBlockWrapper: React.FC<BlockComponentProps & { stepType: FunnelStepType; stepNumber: number }> = ({ 
-  content, 
-  onUpdate, 
-  onDelete, 
-  stepType, 
-  stepNumber 
-}) => {
-  const block = {
-    id: `step-${stepNumber}`,
-    type: 'funnel-step',
-    properties: {
-      stepType,
-      stepNumber,
-      totalSteps: 21,
-      ...content
-    }
-  };
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <Badge variant="outline">Etapa {stepNumber}: {stepType}</Badge>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onDelete}
-          className="text-red-500 hover:text-red-700"
-        >
-          <Trash2 className="w-4 h-4" />
-        </Button>
+// Componentes específicos do funil
+const createFunnelStepComponent = (stepType: string) => {
+  return ({ content, onUpdate, onDelete, blockId, stepNumber }: BlockComponentProps) => {
+    const stepTypeName = stepType.replace('funnel-step-', '');
+    
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <Badge variant="outline">Etapa {stepNumber || '?'}</Badge>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onDelete}
+            className="text-red-500 hover:text-red-700"
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </div>
+        
+        <FunnelStepBlock
+          block={{
+            id: blockId || 'preview',
+            type: 'funnel-step',
+            properties: {
+              stepType: stepTypeName as any,
+              stepNumber: stepNumber || 1,
+              totalSteps: 21,
+              ...content
+            }
+          }}
+          onPropertyChange={(key, value) => {
+            onUpdate({ ...content, [key]: value });
+          }}
+        />
       </div>
-      <FunnelStepBlock
-        block={block}
-        onPropertyChange={(key, value) => {
-          onUpdate({ ...content, [key]: value });
-        }}
-      />
-    </div>
-  );
+    );
+  };
 };
-
-// Componentes específicos para cada etapa do funil
-export const FunnelIntroBlock: React.FC<BlockComponentProps> = (props) => (
-  <FunnelStepBlockWrapper {...props} stepType="intro" stepNumber={1} />
-);
-
-export const NameCollectBlock: React.FC<BlockComponentProps> = (props) => (
-  <FunnelStepBlockWrapper {...props} stepType="name-collect" stepNumber={2} />
-);
-
-export const QuizIntroBlock: React.FC<BlockComponentProps> = (props) => (
-  <FunnelStepBlockWrapper {...props} stepType="quiz-intro" stepNumber={3} />
-);
-
-export const QuestionMultipleBlock: React.FC<BlockComponentProps> = (props) => (
-  <FunnelStepBlockWrapper {...props} stepType="question-multiple" stepNumber={4} />
-);
-
-export const QuizTransitionBlock: React.FC<BlockComponentProps> = (props) => (
-  <FunnelStepBlockWrapper {...props} stepType="quiz-transition" stepNumber={15} />
-);
-
-export const ProcessingBlock: React.FC<BlockComponentProps> = (props) => (
-  <FunnelStepBlockWrapper {...props} stepType="processing" stepNumber={16} />
-);
-
-export const ResultIntroBlock: React.FC<BlockComponentProps> = (props) => (
-  <FunnelStepBlockWrapper {...props} stepType="result-intro" stepNumber={17} />
-);
-
-export const ResultDetailsBlock: React.FC<BlockComponentProps> = (props) => (
-  <FunnelStepBlockWrapper {...props} stepType="result-details" stepNumber={18} />
-);
-
-export const ResultGuideBlock: React.FC<BlockComponentProps> = (props) => (
-  <FunnelStepBlockWrapper {...props} stepType="result-guide" stepNumber={19} />
-);
-
-export const OfferTransitionBlock: React.FC<BlockComponentProps> = (props) => (
-  <FunnelStepBlockWrapper {...props} stepType="offer-transition" stepNumber={20} />
-);
-
-export const OfferPageBlock: React.FC<BlockComponentProps> = (props) => (
-  <FunnelStepBlockWrapper {...props} stepType="offer-page" stepNumber={21} />
-);
 
 export const blockComponents = {
   text: TextBlock,
   question: QuestionBlock,
   image: ImageBlock,
   
-  // Componentes de funil
-  'funnel-intro': FunnelIntroBlock,
-  'name-collect': NameCollectBlock,
-  'quiz-intro': QuizIntroBlock,
-  'question-multiple': QuestionMultipleBlock,
-  'quiz-transition': QuizTransitionBlock,
-  'processing': ProcessingBlock,
-  'result-intro': ResultIntroBlock,
-  'result-details': ResultDetailsBlock,
-  'result-guide': ResultGuideBlock,
-  'offer-transition': OfferTransitionBlock,
-  'offer-page': OfferPageBlock,
+  // Componentes do funil
+  'funnel-step-intro': createFunnelStepComponent('funnel-step-intro'),
+  'funnel-step-name-collect': createFunnelStepComponent('funnel-step-name-collect'),
+  'funnel-step-quiz-intro': createFunnelStepComponent('funnel-step-quiz-intro'),
+  'funnel-step-question-multiple': createFunnelStepComponent('funnel-step-question-multiple'),
+  'funnel-step-quiz-transition': createFunnelStepComponent('funnel-step-quiz-transition'),
+  'funnel-step-processing': createFunnelStepComponent('funnel-step-processing'),
+  'funnel-step-result-intro': createFunnelStepComponent('funnel-step-result-intro'),
+  'funnel-step-result-details': createFunnelStepComponent('funnel-step-result-details'),
+  'funnel-step-result-guide': createFunnelStepComponent('funnel-step-result-guide'),
+  'funnel-step-offer-transition': createFunnelStepComponent('funnel-step-offer-transition'),
+  'funnel-step-offer-page': createFunnelStepComponent('funnel-step-offer-page')
 };
 
-// Exportar funções de utilidade
-export const getBlocksByCategory = (category: string) => {
-  return Object.keys(blockComponents).filter(key => {
-    if (category === 'Funil') {
-      return key.includes('funnel') || key.includes('collect') || key.includes('quiz') || 
-             key.includes('question') || key.includes('processing') || key.includes('result') || 
-             key.includes('offer');
-    }
-    return ['text', 'question', 'image'].includes(key);
-  });
-};
-
-export const getPopularBlocks = () => {
-  return ['funnel-intro', 'question-multiple', 'result-details', 'offer-page'];
-};
-
-export const searchBlocks = (query: string) => {
-  return Object.keys(blockComponents).filter(key => 
-    key.toLowerCase().includes(query.toLowerCase())
-  );
-};
-
-export { blockComponents as BlockComponent };
-export { BlockComponentProps };
+// Export the main component for compatibility
+export const BlockComponents = blockComponents;

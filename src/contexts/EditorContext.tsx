@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, useCallback, ReactNode } fr
 import { EditorBlock, EditableContent } from '@/types/editor';
 import { EditorActions } from '@/types/editorActions';
 import { getDefaultContentForType } from '@/utils/editorDefaults';
+import { getDefaultContentForFunnelStep } from '@/config/funnelSteps';
 import { generateId } from '@/utils/idGenerator';
 
 interface EditorContextType {
@@ -49,17 +50,33 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({ children }) => {
   ];
 
   const addBlock = useCallback((type: EditorBlock['type']) => {
+    let content;
+    let stepNumber = 1;
+    
+    // Check if it's a funnel step
+    if (type.startsWith('funnel-step-')) {
+      const stepType = type.replace('funnel-step-', '');
+      content = getDefaultContentForFunnelStep(stepType);
+      
+      // Calculate step number based on existing blocks
+      const existingSteps = blocks.filter(b => b.type?.startsWith('funnel-step-'));
+      stepNumber = existingSteps.length + 1;
+    } else {
+      content = getDefaultContentForType(type);
+    }
+    
     const newBlock: EditorBlock = {
       id: generateId(),
       type,
-      content: getDefaultContentForType(type),
-      order: blocks.length
+      content,
+      order: blocks.length,
+      stepNumber: type.startsWith('funnel-step-') ? stepNumber : undefined
     };
     
     setBlocks(prev => [...prev, newBlock]);
     setSelectedBlockId(newBlock.id);
     return newBlock.id;
-  }, [blocks.length]);
+  }, [blocks]);
 
   const updateBlock = useCallback((id: string, content: Partial<EditableContent>) => {
     setBlocks(prev => 
@@ -88,6 +105,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({ children }) => {
   }, []);
 
   const handleAddBlock = useCallback((type: string) => {
+    console.log('EditorContext: Adicionando bloco do tipo:', type);
     addBlock(type as EditorBlock['type']);
   }, [addBlock]);
 
