@@ -88,9 +88,14 @@ export class QuizService {
   }
 
   static async updateQuiz(id: string, updates: Partial<QuizData>) {
+    const processedUpdates = {
+      ...updates,
+      difficulty: updates.difficulty || null
+    };
+
     const { data, error } = await supabase
       .from('quizzes')
-      .update(updates)
+      .update(processedUpdates)
       .eq('id', id)
       .select()
       .single();

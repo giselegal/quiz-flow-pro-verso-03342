@@ -4,11 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Edit, Trash2 } from 'lucide-react';
-import { blockComponents } from './BlockComponents';
+import { blockComponents, BlockComponentProps } from './BlockComponents';
 
 interface Block {
   id: string;
-  type: string;
+  type: keyof typeof blockComponents;
   content: any;
 }
 
@@ -16,7 +16,7 @@ export default function BlocksDemo() {
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [selectedBlock, setSelectedBlock] = useState<string | null>(null);
 
-  const addBlock = (type: string) => {
+  const addBlock = (type: keyof typeof blockComponents) => {
     const newBlock: Block = {
       id: Date.now().toString(),
       type,
@@ -25,7 +25,7 @@ export default function BlocksDemo() {
     setBlocks([...blocks, newBlock]);
   };
 
-  const getDefaultContent = (type: string) => {
+  const getDefaultContent = (type: keyof typeof blockComponents) => {
     switch (type) {
       case 'text':
         return { text: 'Texto de exemplo' };
@@ -63,7 +63,7 @@ export default function BlocksDemo() {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                {Object.keys(blockComponents).map((type) => (
+                {(Object.keys(blockComponents) as Array<keyof typeof blockComponents>).map((type) => (
                   <Button
                     key={type}
                     variant="outline"
@@ -93,7 +93,7 @@ export default function BlocksDemo() {
                   <CardContent className="p-4">
                     <BlockComponent
                       content={block.content}
-                      onUpdate={(content) => updateBlock(block.id, content)}
+                      onUpdate={(content: any) => updateBlock(block.id, content)}
                       onDelete={() => deleteBlock(block.id)}
                     />
                   </CardContent>
