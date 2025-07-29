@@ -167,28 +167,6 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
 
   // ES7+ Sistema de renderização otimizado com useMemo
   const renderedComponent = useMemo(() => {
-    const commonProps = {
-      block,
-      isSelected,
-      onClick,
-      onPropertyChange: (key: string, value: any) => {
-        if (onSaveInline) {
-          const updatedBlock = {
-            ...block,
-            properties: { ...block.properties, [key]: value }
-          };
-          onSaveInline(block.id, updatedBlock);
-        }
-      },
-      className: cn(
-        // Responsividade nativa mobile-first
-        'w-full transition-all duration-200',
-        'border border-gray-200 rounded-lg shadow-sm bg-white',
-        'hover:shadow-md hover:border-blue-300',
-        isSelected && 'ring-2 ring-blue-500 border-blue-400 bg-blue-50'
-      )
-    };
-
     const componentMap: Record<string, () => React.ReactNode> = {
       // === COMPONENTES BÁSICOS ESSENCIAIS ===
       'heading': () => <HeadingInlineBlock {...commonProps} />,
