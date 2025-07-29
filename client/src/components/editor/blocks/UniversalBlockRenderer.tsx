@@ -1,46 +1,46 @@
 
 import React from 'react';
-import { cn } from '../../../lib/utils';
-import type { BlockData } from '../../../types/blocks';
+import { cn } from '@/lib/utils';
+import type { BlockData } from '@/types/blocks';
 
 // === COMPONENTES BÁSICOS FUNCIONAIS ===
-import QuizQuestionBlock from './QuizQuestionBlock';
-import QuizProgressBlock from './QuizProgressBlock';
-import QuestionMultipleBlock from './QuestionMultipleBlock';
-import StrategicQuestionBlock from './StrategicQuestionBlock';
-import QuizTransitionBlock from './QuizTransitionBlock';
-import OptionsGridBlock from './OptionsGridBlock';
-import VerticalCanvasHeaderBlock from './VerticalCanvasHeaderBlock';
-import { SpacerBlock } from './SpacerBlock';
-import { VideoPlayerBlock } from './VideoPlayerBlock';
-import FormInputBlock from './FormInputBlock';
-import ListBlock from './ListBlock';
-import HeadingInlineBlock from './HeadingInlineBlock';
-import ImageInlineBlock from './ImageInlineBlock';
-import ButtonInlineBlock from './ButtonInlineBlock';
-import CTAInlineBlock from './CTAInlineBlock';
+import QuizQuestionBlock from '../../../components/editor/blocks/QuizQuestionBlock';
+import QuizProgressBlock from '../../../components/editor/blocks/QuizProgressBlock';
+import QuestionMultipleBlock from '../../../components/editor/blocks/QuestionMultipleBlock';
+import StrategicQuestionBlock from '../../../components/editor/blocks/StrategicQuestionBlock';
+import QuizTransitionBlock from '../../../components/editor/blocks/QuizTransitionBlock';
+import OptionsGridBlock from '../../../components/editor/blocks/OptionsGridBlock';
+import VerticalCanvasHeaderBlock from '../../../components/editor/blocks/VerticalCanvasHeaderBlock';
+import { SpacerBlock } from '../../../components/editor/blocks/SpacerBlock';
+import { VideoPlayerBlock } from '../../../components/editor/blocks/VideoPlayerBlock';
+import FormInputBlock from '../../../components/editor/blocks/FormInputBlock';
+import ListBlock from '../../../components/editor/blocks/ListBlock';
+import HeadingInlineBlock from '../../../components/editor/blocks/HeadingInlineBlock';
+import ImageInlineBlock from '../../../components/editor/blocks/ImageInlineBlock';
+import ButtonInlineBlock from '../../../components/editor/blocks/ButtonInlineBlock';
+import CTAInlineBlock from '../../../components/editor/blocks/CTAInlineBlock';
 
 // === COMPONENTES INLINE EXISTENTES ===
-import TextInlineBlock from './inline/TextInlineBlock';
-import BadgeInlineBlock from './inline/BadgeInlineBlock';
-import ProgressInlineBlock from './inline/ProgressInlineBlock';
-import ImageDisplayInlineBlock from './inline/ImageDisplayInlineBlock';
-import PricingCardInlineBlock from './inline/PricingCardInlineBlock';
-import TestimonialCardInlineBlock from './inline/TestimonialCardInlineBlock';
-import ResultHeaderInlineBlock from './inline/ResultHeaderInlineBlock';
-import StepHeaderInlineBlock from './inline/StepHeaderInlineBlock';
-import StatInlineBlock from './inline/StatInlineBlock';
-import LoadingAnimationBlock from './inline/LoadingAnimationBlock';
-import QuizIntroHeaderBlock from './inline/QuizIntroHeaderBlock';
-import CountdownInlineBlock from './inline/CountdownInlineBlock';
-import StyleCardInlineBlock from './inline/StyleCardInlineBlock';
-import ResultCardInlineBlock from './inline/ResultCardInlineBlock';
-import BeforeAfterInlineBlock from './inline/BeforeAfterInlineBlock';
+import TextInlineBlock from '../../../components/editor/blocks/inline/TextInlineBlock';
+import BadgeInlineBlock from '../../../components/editor/blocks/inline/BadgeInlineBlock';
+import ProgressInlineBlock from '../../../components/editor/blocks/inline/ProgressInlineBlock';
+import ImageDisplayInlineBlock from '../../../components/editor/blocks/inline/ImageDisplayInlineBlock';
+import PricingCardInlineBlock from '../../../components/editor/blocks/inline/PricingCardInlineBlock';
+import TestimonialCardInlineBlock from '../../../components/editor/blocks/inline/TestimonialCardInlineBlock';
+import ResultHeaderInlineBlock from '../../../components/editor/blocks/inline/ResultHeaderInlineBlock';
+import StepHeaderInlineBlock from '../../../components/editor/blocks/inline/StepHeaderInlineBlock';
+import StatInlineBlock from '../../../components/editor/blocks/inline/StatInlineBlock';
+import LoadingAnimationBlock from '../../../components/editor/blocks/inline/LoadingAnimationBlock';
+import QuizIntroHeaderBlock from '../../../components/editor/blocks/inline/QuizIntroHeaderBlock';
+import CountdownInlineBlock from '../../../components/editor/blocks/inline/CountdownInlineBlock';
+import StyleCardInlineBlock from '../../../components/editor/blocks/inline/StyleCardInlineBlock';
+import ResultCardInlineBlock from '../../../components/editor/blocks/inline/ResultCardInlineBlock';
+import BeforeAfterInlineBlock from '../../../components/editor/blocks/inline/BeforeAfterInlineBlock';
 
 // === COMPONENTES MODERNOS ===
-import TestimonialsGridBlock from './TestimonialsGridBlock';
-import FAQSectionBlock from './FAQSectionBlock';
-import GuaranteeBlock from './GuaranteeBlock';
+import TestimonialsGridBlock from '../../../components/editor/blocks/TestimonialsGridBlock';
+import FAQSectionBlock from '../../../components/editor/blocks/FAQSectionBlock';
+import GuaranteeBlock from '../../../components/editor/blocks/GuaranteeBlock';
 
 export interface BlockRendererProps {
   block: BlockData;
