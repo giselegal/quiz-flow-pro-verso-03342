@@ -28,11 +28,4 @@ const BasicTextBlock: React.FC<BlockComponentProps> = ({
   );
 };
 
-      <div className="text-gray-800">
-        {text}
-      </div>
-    </div>
-  );
-};
-
 export default BasicTextBlock;
