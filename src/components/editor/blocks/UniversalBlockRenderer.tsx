@@ -4,6 +4,7 @@ import type { BlockData } from '../../../types/blocks';
 
 // === COMPONENTE DE FALLBACK ===
 import FallbackBlock from './FallbackBlock';
+import EnhancedFallbackBlock from './EnhancedFallbackBlock';
 import BasicTextBlock from './BasicTextBlock';
 
 // === COMPONENTES PRINCIPAIS DO SISTEMA ===
@@ -205,14 +206,14 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       // === COMPONENTES ADICIONAIS (com fallback) ===
       'quiz-question-configurable': () => <QuizQuestionBlock {...commonProps} />,
       'quiz-question-modern': () => <QuizQuestionBlock {...commonProps} />,
-      'progress-bar-modern': () => <FallbackBlock {...commonProps} blockType="progress-bar-modern" />,
-      'image-text-card': () => <FallbackBlock {...commonProps} blockType="image-text-card" />,
-      'stats-counter': () => <FallbackBlock {...commonProps} blockType="stats-counter" />,
-      'testimonial-card': () => <FallbackBlock {...commonProps} blockType="testimonial-card" />,
-      'feature-highlight': () => <FallbackBlock {...commonProps} blockType="feature-highlight" />,
-      'section-divider': () => <FallbackBlock {...commonProps} blockType="section-divider" />,
-      'flex-container-horizontal': () => <FallbackBlock {...commonProps} blockType="flex-container-horizontal" />,
-      'flex-container-vertical': () => <FallbackBlock {...commonProps} blockType="flex-container-vertical" />,
+      'progress-bar-modern': () => <EnhancedFallbackBlock {...commonProps} blockType="progress-bar-modern" />,
+      'image-text-card': () => <EnhancedFallbackBlock {...commonProps} blockType="image-text-card" />,
+      'stats-counter': () => <EnhancedFallbackBlock {...commonProps} blockType="stats-counter" />,
+      'testimonial-card': () => <EnhancedFallbackBlock {...commonProps} blockType="testimonial-card" />,
+      'feature-highlight': () => <EnhancedFallbackBlock {...commonProps} blockType="feature-highlight" />,
+      'section-divider': () => <EnhancedFallbackBlock {...commonProps} blockType="section-divider" />,
+      'flex-container-horizontal': () => <EnhancedFallbackBlock {...commonProps} blockType="flex-container-horizontal" />,
+      'flex-container-vertical': () => <EnhancedFallbackBlock {...commonProps} blockType="flex-container-vertical" />,
       
       // === COMPONENTES INLINE BÁSICOS (com fallback) ===
       'text-inline': () => TextInlineBlock ? <TextInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
