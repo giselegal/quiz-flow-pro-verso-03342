@@ -24,8 +24,10 @@ import CTAInlineBlock from './CTAInlineBlock';
 import { SpacerBlock } from './SpacerBlock';
 import FormInputBlock from './FormInputBlock';
 import ListBlock from './ListBlock';
+import ScriptBlock from './ScriptBlock';
 
 // === COMPONENTES INLINE MODULARES (com verificação de existência) ===
+// Desabilitado para evitar problemas de dynamic imports
 let TextInlineBlock: any;
 let StyleCardInlineBlock: any;
 let StatInlineBlock: any;
@@ -36,23 +38,6 @@ let PricingCardInlineBlock: any;
 let TestimonialCardInlineBlock: any;
 let CountdownInlineBlock: any;
 let LoadingAnimationBlock: any;
-
-// Importação segura com fallback
-try {
-  const inlineComponents = require('./inline');
-  TextInlineBlock = inlineComponents.TextInlineBlock;
-  StyleCardInlineBlock = inlineComponents.StyleCardInlineBlock;
-  StatInlineBlock = inlineComponents.StatInlineBlock;
-  BadgeInlineBlock = inlineComponents.BadgeInlineBlock;
-  ProgressInlineBlock = inlineComponents.ProgressInlineBlock;
-  ImageDisplayInlineBlock = inlineComponents.ImageDisplayInlineBlock;
-  PricingCardInlineBlock = inlineComponents.PricingCardInlineBlock;
-  TestimonialCardInlineBlock = inlineComponents.TestimonialCardInlineBlock;
-  CountdownInlineBlock = inlineComponents.CountdownInlineBlock;
-  LoadingAnimationBlock = inlineComponents.LoadingAnimationBlock;
-} catch (error) {
-  console.warn('Alguns componentes inline não puderam ser carregados:', error);
-}
 
 // Novos componentes inline criados
 import ResultHeaderInlineBlock from './inline/ResultHeaderInlineBlock';
@@ -68,6 +53,8 @@ import ResultPageHeaderBlock from './ResultPageHeaderBlock';
 import TestimonialsGridBlock from './TestimonialsGridBlock';
 import FAQSectionBlock from './FAQSectionBlock';
 import GuaranteeBlock from './GuaranteeBlock';
+import TestimonialsBlock from './TestimonialsBlock';
+import QuizStartPageBlock from './QuizStartPageBlock';
 
 export interface BlockRendererProps {
   block: BlockData;
@@ -161,6 +148,7 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'spacer': () => <SpacerBlock {...commonProps} />,
       'form-input': () => <FormInputBlock {...commonProps} />,
       'list': () => <ListBlock {...commonProps} />,
+      'script': () => <ScriptBlock {...commonProps} />,
       
       // === COMPONENTES QUIZ PRINCIPAIS ===
       'options-grid': () => <OptionsGridBlock {...commonProps} />,
@@ -168,6 +156,13 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'quiz-question': () => <QuizQuestionBlock {...commonProps} />,
       'quiz-progress': () => <QuizProgressBlock {...commonProps} />,
       'quiz-transition': () => <QuizTransitionBlock {...commonProps} />,
+      'quiz-start-page': () => <QuizStartPageBlock {...commonProps} />,
+      
+      // === COMPONENTES MODERNOS CRIADOS 28/07 ===
+      'guarantee': () => <GuaranteeBlock {...commonProps} />,
+      'testimonials': () => <TestimonialsBlock {...commonProps} />,
+      'testimonials-grid': () => <TestimonialsGridBlock {...commonProps} />,
+      'faq-section': () => <FAQSectionBlock {...commonProps} />,
       
       // === COMPONENTES INLINE BÁSICOS (com fallback) ===
       'text-inline': () => TextInlineBlock ? <TextInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,

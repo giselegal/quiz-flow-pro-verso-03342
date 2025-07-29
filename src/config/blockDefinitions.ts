@@ -1818,6 +1818,167 @@ export const blockDefinitions: BlockDefinition[] = [
       size: 'medium',
       fullWidth: false
     }
+  },
+
+  // === COMPONENTES CRIADOS 28/07/2025 ===
+  {
+    type: 'guarantee',
+    name: 'Bloco de Garantia',
+    description: 'Seção de garantia incondicional com ícone e benefícios',
+    icon: 'Shield',
+    category: 'Vendas',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título da Garantia',
+        type: 'text',
+        defaultValue: 'Garantia Incondicional'
+      },
+      {
+        key: 'guaranteePeriod',
+        label: 'Período da Garantia',
+        type: 'text',
+        defaultValue: '7 dias'
+      },
+      {
+        key: 'showIcon',
+        label: 'Mostrar Ícone',
+        type: 'boolean',
+        defaultValue: true
+      }
+    ],
+    defaultProperties: {
+      title: 'Garantia Incondicional',
+      guaranteePeriod: '7 dias',
+      showIcon: true
+    }
+  },
+
+  {
+    type: 'testimonials',
+    name: 'Bloco de Depoimentos',
+    description: 'Grid de depoimentos reais com avaliações',
+    icon: 'Quote',
+    category: 'Vendas',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título da Seção',
+        type: 'text',
+        defaultValue: 'Transformações Reais'
+      },
+      {
+        key: 'showRatings',
+        label: 'Mostrar Avaliações',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'layout',
+        label: 'Layout',
+        type: 'select',
+        options: [
+          { label: 'Grid', value: 'grid' },
+          { label: 'Carrossel', value: 'carousel' }
+        ],
+        defaultValue: 'grid'
+      }
+    ],
+    defaultProperties: {
+      title: 'Transformações Reais',
+      showRatings: true,
+      layout: 'grid'
+    }
+  },
+
+  {
+    type: 'quiz-start-page',
+    name: 'Página Inicial do Quiz',
+    description: 'Página de apresentação e início do quiz com coleta de nome',
+    icon: 'Play',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título Principal',
+        type: 'text',
+        defaultValue: 'Etapa 1: Descubra Seu Estilo Pessoal Único'
+      },
+      {
+        key: 'subtitle',
+        label: 'Subtítulo',
+        type: 'text',
+        defaultValue: 'Chega de guarda-roupa lotado e sensação de "não tenho nada para vestir"'
+      },
+      {
+        key: 'description',
+        label: 'Descrição',
+        type: 'textarea',
+        defaultValue: 'Um quiz personalizado que vai te ajudar a descobrir seu estilo predominante e como aplicá-lo no dia a dia com confiança.'
+      },
+      {
+        key: 'buttonText',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Começar Meu Quiz de Estilo'
+      },
+      {
+        key: 'showNameInput',
+        label: 'Mostrar Campo de Nome',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'nameInputPlaceholder',
+        label: 'Placeholder do Nome',
+        type: 'text',
+        defaultValue: 'Digite seu primeiro nome'
+      }
+    ],
+    defaultProperties: {
+      title: 'Etapa 1: Descubra Seu Estilo Pessoal Único',
+      subtitle: 'Chega de guarda-roupa lotado e sensação de "não tenho nada para vestir"',
+      description: 'Um quiz personalizado que vai te ajudar a descobrir seu estilo predominante e como aplicá-lo no dia a dia com confiança.',
+      buttonText: 'Começar Meu Quiz de Estilo',
+      showNameInput: true,
+      nameInputPlaceholder: 'Digite seu primeiro nome',
+      benefits: [
+        '✓ Descubra seu estilo predominante em apenas 5 minutos',
+        '✓ Receba dicas personalizadas para seu perfil único',
+        '✓ Aprenda a criar looks que combinam 100% com você',
+        '✓ Ganhe confiança para se vestir todos os dias'
+      ]
+    }
+  },
+
+  {
+    type: 'script',
+    name: 'Bloco de Script',
+    description: 'Inserir código JavaScript personalizado na página',
+    icon: 'Code',
+    category: 'Avançados',
+    propertiesSchema: [
+      {
+        key: 'code',
+        label: 'Código JavaScript',
+        type: 'textarea',
+        defaultValue: '// Seu código JavaScript aqui...'
+      },
+      {
+        key: 'placement',
+        label: 'Posicionamento',
+        type: 'select',
+        options: [
+          { label: 'Final do Body', value: 'body-end' },
+          { label: 'Início do Head', value: 'head' }
+        ],
+        defaultValue: 'body-end'
+      }
+    ],
+    defaultProperties: {
+      code: '// Seu código JavaScript aqui...',
+      placement: 'body-end'
+    }
   }
 ];
 
