@@ -508,7 +508,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
             canUndo={true} // TODO: Get from property history
             canRedo={false} // TODO: Get from property history
             lastAction="Propriedade alterada" // TODO: Get from property history
-            totalBlocks={config.blocks?.length || 0}
+            totalBlocks={blocks.length}
             previewMode={previewMode}
           />
         </div>
