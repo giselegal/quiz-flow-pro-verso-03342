@@ -11,6 +11,8 @@ import { useEditor } from '@/hooks/useEditor';
 import { UniversalBlockRenderer } from './blocks/UniversalBlockRenderer';
 import type { BlockData } from '../../types/blocks';
 import { getInitialQuiz21EtapasTemplate } from '../../templates/quiz21EtapasTemplate';
+import { AdvancedPropertyPanel } from './AdvancedPropertyPanel';
+import { EditorStatus } from './components/EditorStatus';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -472,37 +474,41 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
           {/* Properties Panel */}
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-            <div className="h-full bg-white border-l border-gray-200">
-              <div className="p-4 border-b border-gray-200">
-                <h2 className="font-medium text-gray-900">Propriedades</h2>
-              </div>
-              <div className="p-4">
-                {selectedBlockId ? (
-                  <div className="space-y-4">
-                    <p className="text-sm text-gray-600">
-                      Bloco selecionado: {selectedBlockId}
-                    </p>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => {
-                        deleteBlock(selectedBlockId);
-                        setSelectedBlockId(null);
-                      }}
-                      className="w-full"
-                    >
-                      Deletar Bloco
-                    </Button>
-                  </div>
-                ) : (
-                  <p className="text-sm text-gray-500">
-                    Selecione um bloco para editar suas propriedades
-                  </p>
-                )}
-              </div>
-            </div>
+            <AdvancedPropertyPanel
+              selectedBlockId={selectedBlockId}
+              properties={selectedBlockId ? config.pages[0]?.blocks.find(b => b.id === selectedBlockId)?.properties || {} : {}}
+              onPropertyChange={(key, value) => {
+                if (selectedBlockId) {
+                  const block = config.pages[0]?.blocks.find(b => b.id === selectedBlockId);
+                  if (block) {
+                    updateBlock(selectedBlockId, { 
+                      ...block, 
+                      properties: { ...block.properties, [key]: value } 
+                    });
+                  }
+                }
+              }}
+              onDeleteBlock={selectedBlockId ? () => {
+                deleteBlock(selectedBlockId);
+                setSelectedBlockId(null);
+              } : undefined}
+            />
           </ResizablePanel>
         </ResizablePanelGroup>
+        
+        {/* Editor Status Bar */}
+        <div className="flex-shrink-0">
+          <EditorStatus
+            selectedBlockId={selectedBlockId || undefined}
+            historyCount={10} // TODO: Get from property history
+            currentHistoryIndex={5} // TODO: Get from property history
+            canUndo={true} // TODO: Get from property history
+            canRedo={false} // TODO: Get from property history
+            lastAction="Propriedade alterada" // TODO: Get from property history
+            totalBlocks={config.pages[0]?.blocks.length || 0}
+            previewMode={previewMode}
+          />
+        </div>
       </div>
     // </DndProvider>
   );
