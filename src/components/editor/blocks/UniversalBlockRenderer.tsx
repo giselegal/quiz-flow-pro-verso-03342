@@ -32,7 +32,9 @@ import {
   QuizOfferPricingInlineBlock,
   CountdownInlineBlock,
   // Componentes especializados para Quiz
-  LoadingAnimationBlock
+  LoadingAnimationBlock,
+  // NOVA IMPLEMENTAÇÃO: Componentes das 21 Etapas Inline
+  QuizStartPageInlineBlock
 } from './inline';
 
 // Componentes básicos (funcionais)

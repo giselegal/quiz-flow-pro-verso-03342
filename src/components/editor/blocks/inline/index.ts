@@ -26,5 +26,8 @@ export { default as BonusListInlineBlock } from './BonusListInlineBlock';
 export { default as QuizIntroHeaderBlock } from './QuizIntroHeaderBlock';
 export { default as LoadingAnimationBlock } from './LoadingAnimationBlock';
 
+// NOVA IMPLEMENTAÇÃO: Componentes das 21 Etapas Inline
+export { default as QuizStartPageInlineBlock } from './QuizStartPageInlineBlock';
+
 // Tipos base
-export type { BlockComponentProps } from '@/types/blocks';
+export type { BlockComponentProps } from '../../../../types/blocks';
