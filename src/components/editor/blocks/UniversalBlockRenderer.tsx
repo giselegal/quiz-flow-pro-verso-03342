@@ -202,6 +202,18 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'testimonials-grid': () => <TestimonialsGridBlock {...commonProps} />,
       'faq-section': () => <FAQSectionBlock {...commonProps} />,
       
+      // === COMPONENTES ADICIONAIS (com fallback) ===
+      'quiz-question-configurable': () => <QuizQuestionBlock {...commonProps} />,
+      'quiz-question-modern': () => <QuizQuestionBlock {...commonProps} />,
+      'progress-bar-modern': () => <FallbackBlock {...commonProps} blockType="progress-bar-modern" />,
+      'image-text-card': () => <FallbackBlock {...commonProps} blockType="image-text-card" />,
+      'stats-counter': () => <FallbackBlock {...commonProps} blockType="stats-counter" />,
+      'testimonial-card': () => <FallbackBlock {...commonProps} blockType="testimonial-card" />,
+      'feature-highlight': () => <FallbackBlock {...commonProps} blockType="feature-highlight" />,
+      'section-divider': () => <FallbackBlock {...commonProps} blockType="section-divider" />,
+      'flex-container-horizontal': () => <FallbackBlock {...commonProps} blockType="flex-container-horizontal" />,
+      'flex-container-vertical': () => <FallbackBlock {...commonProps} blockType="flex-container-vertical" />,
+      
       // === COMPONENTES INLINE BÁSICOS (com fallback) ===
       'text-inline': () => TextInlineBlock ? <TextInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
       'heading-inline': () => <HeadingInlineBlock {...commonProps} />,

@@ -208,36 +208,41 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       import('../../utils/quiz21EtapasLoader').then(({ loadQuiz21EtapasTemplate }) => {
         const template = loadQuiz21EtapasTemplate();
         
-        // Converter para o formato do editor atual
-        const editorBlocks = template.blocks.map((block, index) => ({
-          id: block.id,
-          type: block.type as any,
-          content: {
-            ...block.content,
-            // Garantir que tenha as propriedades básicas
-            content: block.content.title || block.content.question || block.content.description || `Etapa ${index + 1}`,
-          },
-          order: index
-        }));
-
-        // Atualizar configuração com as 21 etapas
-        const newConfig = {
-          ...config,
-          blocks: editorBlocks,
-          ...template.settings && { settings: template.settings },
-          ...template.globalStyles && { globalStyles: template.globalStyles }
-        };
-
-        // Aplicar a nova configuração
-        config.blocks = editorBlocks;
-        setSelectedBlockId(null);
+        // Converter para o formato do editor atual usando addBlock
+        console.log('📦 Limpando blocos existentes...');
         
-        console.log('✅ 21 etapas carregadas com sucesso!', editorBlocks);
+        // Limpar blocos atuais
+        blocks.forEach(block => {
+          deleteBlock(block.id);
+        });
+        
+        // Adicionar cada bloco das 21 etapas
+        template.blocks.forEach((templateBlock, index) => {
+          try {
+            console.log(`📦 Adicionando etapa ${index + 1}: ${templateBlock.type}`);
+            const newBlockId = addBlock(templateBlock.type as any);
+            
+            // Atualizar propriedades do bloco após criação
+            setTimeout(() => {
+              updateBlock(newBlockId, {
+                ...templateBlock.content,
+                order: index
+              });
+            }, 100);
+            
+          } catch (error) {
+            console.warn(`⚠️ Erro ao adicionar bloco ${templateBlock.type}:`, error);
+          }
+        });
+        
+        setSelectedBlockId(null);
+        console.log('✅ 21 etapas carregadas com sucesso!');
+        
       }).catch(error => {
         console.error('❌ Erro ao carregar template das 21 etapas:', error);
       });
     }
-  }, [config]);
+  }, [addBlock, updateBlock, deleteBlock, blocks]);
 
   const handleLoadTemplate = useCallback(async () => {
     try {
