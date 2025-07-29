@@ -16,6 +16,7 @@ import StrategicQuestionBlock from './StrategicQuestionBlock';
 import QuizTransitionBlock from './QuizTransitionBlock';
 import OptionsGridBlock from './OptionsGridBlock';
 import VerticalCanvasHeaderBlock from './VerticalCanvasHeaderBlock';
+import QuizIntroHeaderBlock from './QuizIntroHeaderBlock';
 
 // === COMPONENTES BÁSICOS ESSENCIAIS ===
 import HeadingInlineBlock from './HeadingInlineBlock';
@@ -182,6 +183,7 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       // === COMPONENTES QUIZ PRINCIPAIS ===
       'options-grid': () => <OptionsGridBlock {...commonProps} />,
       'vertical-canvas-header': () => <VerticalCanvasHeaderBlock {...commonProps} />,
+      'quiz-intro-header': () => <QuizIntroHeaderBlock {...commonProps} />,
       'quiz-question': () => <QuizQuestionBlock {...commonProps} />,
       'quiz-progress': () => <QuizProgressBlock {...commonProps} />,
       'quiz-transition': () => <QuizTransitionBlock {...commonProps} />,
