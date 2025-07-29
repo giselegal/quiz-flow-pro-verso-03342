@@ -9,6 +9,7 @@ import { Plus, Eye, EyeOff, Download, Upload, Trash2, Monitor, Tablet, Smartphon
 import { cn } from '@/lib/utils';
 import { useEditor } from '@/hooks/useEditor';
 import { UniversalBlockRenderer } from './blocks/UniversalBlockRenderer';
+import { AdvancedPropertyPanel } from './AdvancedPropertyPanel';
 import type { BlockData } from '../../types/blocks';
 import { getInitialQuiz21EtapasTemplate } from '../../templates/quiz21EtapasTemplate';
 
@@ -471,36 +472,23 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           <ResizableHandle withHandle />
 
           {/* Properties Panel */}
-          <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-            <div className="h-full bg-white border-l border-gray-200">
-              <div className="p-4 border-b border-gray-200">
-                <h2 className="font-medium text-gray-900">Propriedades</h2>
-              </div>
-              <div className="p-4">
-                {selectedBlockId ? (
-                  <div className="space-y-4">
-                    <p className="text-sm text-gray-600">
-                      Bloco selecionado: {selectedBlockId}
-                    </p>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => {
-                        deleteBlock(selectedBlockId);
-                        setSelectedBlockId(null);
-                      }}
-                      className="w-full"
-                    >
-                      Deletar Bloco
-                    </Button>
-                  </div>
-                ) : (
-                  <p className="text-sm text-gray-500">
-                    Selecione um bloco para editar suas propriedades
-                  </p>
-                )}
-              </div>
-            </div>
+          <ResizablePanel defaultSize={20} minSize={15} maxSize={35}>
+            <AdvancedPropertyPanel
+              selectedBlockId={selectedBlockId}
+              properties={selectedBlockId ? 
+                (config.blocks.find(b => b.id === selectedBlockId)?.content || {}) : 
+                {}
+              }
+              onPropertyChange={(key, value) => {
+                if (selectedBlockId) {
+                  updateBlock(selectedBlockId, { [key]: value });
+                }
+              }}
+              onDeleteBlock={selectedBlockId ? () => {
+                deleteBlock(selectedBlockId);
+                setSelectedBlockId(null);
+              } : undefined}
+            />
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
