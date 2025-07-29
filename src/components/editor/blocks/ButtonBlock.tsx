@@ -11,6 +11,7 @@ interface ButtonBlockProps {
   isEditing?: boolean;
   onUpdate?: (content: Partial<EditableContent>) => void;
   onSelect?: () => void;
+  onClick?: () => void;
   className?: string;
 }
 
@@ -138,24 +139,11 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
           boxShadow: content.style?.boxShadow
         }}
         onClick={handleButtonClick}
-        onDoubleClick={handleDoubleClick}
-        onBlur={handleBlur}
-        onKeyDown={handleKeyDown}
+        onDoubleClick={onClick}
+        title="Clique para editar no Painel de Propriedades"
       >
         {getButtonIcon()}
-        {isInlineEditing ? (
-          <span
-            contentEditable
-            suppressContentEditableWarning
-            className="outline-none"
-            onInput={(e) => {
-              setLocalButtonText(e.currentTarget.textContent || '');
-            }}
-            dangerouslySetInnerHTML={{ __html: localButtonText }}
-          />
-        ) : (
-          <span>{localButtonText || 'Clique para editar'}</span>
-        )}
+        <span>{localButtonText || 'Texto do botão'}</span>
       </Button>
       
       {isInlineEditing && (

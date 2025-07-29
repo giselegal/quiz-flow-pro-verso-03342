@@ -51,7 +51,7 @@ const FallbackBlock: React.FC<BlockComponentProps & { blockType?: string }> = ({
           </p>
           <div className="flex items-center space-x-2 text-xs text-yellow-600">
             <Info className="w-3 h-3" />
-            <span>Clique para configurar este bloco</span>
+            <span>Clique para configurar no painel de propriedades →</span>
           </div>
         </div>
       </div>

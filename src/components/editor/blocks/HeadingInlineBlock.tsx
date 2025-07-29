@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Type, Edit3 } from 'lucide-react';
+import { Type, Settings } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';
 
 /**
@@ -103,15 +103,22 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
       {/* Indicador de seleção */}
       {isSelected && (
         <div className="absolute -top-2 -right-2 bg-blue-500 text-white rounded-full p-1">
-          <Edit3 className="w-3 h-3" />
+          <Settings className="w-3 h-3" />
         </div>
       )}
 
-      {/* Empty state */}
+      {/* Empty state com instruções */}
       {!content && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100/80 rounded-lg text-gray-500">
           <Type className="w-6 h-6 mr-2" />
-          <span className="text-sm">Clique para selecionar e editar no painel</span>
+          <span className="text-sm">Clique e edite no painel de propriedades →</span>
+        </div>
+      )}
+
+      {/* Instrução quando selecionado */}
+      {isSelected && content && (
+        <div className="absolute -bottom-8 left-0 bg-blue-600 text-white text-xs px-2 py-1 rounded text-nowrap">
+          💡 Edite no painel de propriedades
         </div>
       )}
     </div>

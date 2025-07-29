@@ -237,8 +237,11 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
               Painel de Propriedades
             </h3>
-            <p className="text-gray-600 text-sm">
-              Selecione um bloco no canvas para editar suas propriedades
+            <p className="text-gray-600 text-sm mb-1">
+              Selecione um componente no canvas para editá-lo
+            </p>
+            <p className="text-xs text-blue-600">
+              💡 Toda edição acontece aqui no painel
             </p>
           </div>
         </div>
@@ -251,8 +254,9 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
       <div className="p-4 border-b border-gray-200 bg-white sticky top-0 z-10">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">Propriedades</h2>
-            <p className="text-sm text-gray-500">Bloco: {selectedBlockId}</p>
+            <h2 className="text-lg font-semibold text-gray-900">Painel de Propriedades</h2>
+            <p className="text-sm text-gray-500">Configure o bloco selecionado</p>
+            <p className="text-xs text-blue-600 mt-1">Clique em um componente no canvas para editá-lo aqui</p>
           </div>
           <div className="flex items-center space-x-2">
             <PropertyHistory

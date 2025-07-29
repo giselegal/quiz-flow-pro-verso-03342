@@ -2,49 +2,26 @@
 // components/editor/blocks/BasicTextBlock.tsx - Componente de texto básico
 // =====================================================================
 
-import React, { useState } from 'react';
+import React from 'react';
 import { cn } from '../../../lib/utils';
-import { Type, Edit3 } from 'lucide-react';
+import { Type } from 'lucide-react';
 import type { BlockComponentProps } from '../../../types/blocks';
 
 /**
- * BasicTextBlock - Componente de texto simples e funcional
- * Usado como fallback quando TextInlineBlock não está disponível
+ * BasicTextBlock - Componente de texto simples SEM edição inline
+ * Edição acontece exclusivamente no Painel de Propriedades
  */
 const BasicTextBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  onPropertyChange,
   className = ''
 }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [text, setText] = useState(block.properties?.content || 'Clique para editar o texto...');
+  const text = block.properties?.content || 'Clique para selecionar e editar no painel de propriedades →';
 
   const handleClick = () => {
     if (onClick) {
       onClick();
-    }
-    if (!isEditing) {
-      setIsEditing(true);
-    }
-  };
-
-  const handleSave = () => {
-    setIsEditing(false);
-    if (onPropertyChange) {
-      onPropertyChange('content', text);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSave();
-    }
-    if (e.key === 'Escape') {
-      setIsEditing(false);
-      setText(block.properties?.content || 'Clique para editar o texto...');
     }
   };
 
@@ -65,29 +42,20 @@ const BasicTextBlock: React.FC<BlockComponentProps> = ({
       <div className="flex items-center space-x-2 mb-2">
         <Type className="w-4 h-4 text-gray-500" />
         <span className="text-xs font-medium text-gray-600">Texto</span>
-        {isSelected && <Edit3 className="w-3 h-3 text-blue-500" />}
+        {isSelected && (
+          <span className="text-xs text-blue-500 font-medium">
+            ← Edite no painel de propriedades
+          </span>
+        )}
       </div>
 
-      {isEditing ? (
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onBlur={handleSave}
-          onKeyDown={handleKeyDown}
-          autoFocus
-          className="w-full p-2 border border-gray-300 rounded resize-none focus:border-blue-500 focus:ring-1 focus:ring-blue-200 outline-none"
-          rows={3}
-          placeholder="Digite seu texto aqui..."
-        />
-      ) : (
-        <p className="text-gray-800 whitespace-pre-wrap">
-          {text}
-        </p>
-      )}
+      <p className="text-gray-800 whitespace-pre-wrap">
+        {text}
+      </p>
 
       {isSelected && (
-        <div className="mt-2 text-xs text-gray-500">
-          Clique para editar • Enter para salvar • Esc para cancelar
+        <div className="mt-2 text-xs text-blue-600 bg-blue-50 p-2 rounded">
+          💡 Use o painel de propriedades à direita para editar este componente
         </div>
       )}
     </div>
