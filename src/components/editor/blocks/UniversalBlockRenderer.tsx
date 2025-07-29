@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { cn } from '../../../lib/utils';
 import type { BlockData } from '../../../types/blocks';
 
@@ -35,12 +35,12 @@ import TestimonialInlineBlock from './TestimonialInlineBlock';
 import ProgressInlineBlock from './ProgressInlineBlock';
 import StyleCardInlineBlock from './StyleCardInlineBlock';
 import CTASectionInlineBlock from './CTASectionInlineBlock';
+import BadgeInlineBlock from './BadgeInlineBlock';
 
 // === COMPONENTES INLINE MODULARES (com verificação de existência) ===
 // Desabilitado para evitar problemas de dynamic imports
 let TextInlineBlock: any;
 let StatInlineBlock: any;
-let BadgeInlineBlock: any;
 let ImageDisplayInlineBlock: any;
 let PricingCardInlineBlock: any;
 let TestimonialCardInlineBlock: any;
@@ -64,12 +64,6 @@ try {
   TextInlineBlock = require('./inline/TextInlineBlock').default;
 } catch (e) {
   console.warn('TextInlineBlock não disponível');
-}
-
-try {
-  BadgeInlineBlock = require('./inline/BadgeInlineBlock').default;
-} catch (e) {
-  console.warn('BadgeInlineBlock não disponível');
 }
 
 try {
@@ -105,10 +99,28 @@ export interface BlockRendererProps {
 }
 
 /**
- * Universal Block Renderer for Schema-Driven Editor (ALL INLINE HORIZONTAL)
- * Renders any block type based on its type property
- * All components are now inline-editable with horizontal flexbox layout
- * Implements responsive, mobile-first design with max 2 columns
+ * Universal Block Renderer for Schema-Driven Editor - VERSÃO OTIMIZADA ES7+
+ * 
+ * 🚀 RECURSOS MODERNOS IMPLEMENTADOS:
+ * - ✅ useMemo para otimização de performance
+ * - ✅ Componentes reais substituindo fallbacks feios
+ * - ✅ TypeScript com type safety 
+ * - ✅ Flexbox responsivo mobile-first
+ * - ✅ Spreading operators ES7+ (...props)
+ * - ✅ Template literals e arrow functions
+ * 
+ * 📦 COMPONENTES MAPEADOS (Real vs Fallback):
+ * - stats-counter → StatsMetricsBlock ✅
+ * - testimonial-card → TestimonialInlineBlock ✅  
+ * - section-divider → SectionDividerBlock ✅
+ * - progress-inline → ProgressInlineBlock ✅
+ * - style-card-inline → StyleCardInlineBlock ✅
+ * - badge-inline → BadgeInlineBlock ✅
+ * - feature-highlight → CTASectionInlineBlock ✅
+ * - flex-containers → TwoColumnsBlock ✅
+ * 
+ * 🎯 ARQUITETURA:
+ * blockDefinitions.ts (schemas) → UniversalBlockRenderer.tsx (mapping) → ComponenteReal.tsx (visual)
  */
 export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
   block,
@@ -118,8 +130,8 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
   disabled = false,
   className
 }) => {
-  // ES7+ Props comuns padronizados para flexbox inline responsivo
-  const commonProps = {
+  // ES7+ Props otimizados com useMemo para melhor performance
+  const commonProps = useMemo(() => ({
     block,
     isSelected,
     onClick,
@@ -146,15 +158,15 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'max-w-full overflow-hidden',
       className
     )
-  };
+  }), [block, isSelected, onClick, onSaveInline, disabled, className]);
 
   // TODOS os componentes são agora inline - removido conceito de não-inline
   const isInlineBlock = (blockType: string): boolean => {
     return true; // Todos são inline agora
   };
 
-  // ES7+ Sistema responsivo simplificado - SEM wrapper duplo
-  const renderComponent = () => {
+  // ES7+ Sistema de renderização otimizado com useMemo
+  const renderedComponent = useMemo(() => {
     const commonProps = {
       block,
       isSelected,
@@ -214,19 +226,19 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'quiz-question-configurable': () => <QuizQuestionBlock {...commonProps} />,
       'quiz-question-modern': () => <QuizQuestionBlock {...commonProps} />,
       'progress-bar-modern': () => <ProgressInlineBlock {...commonProps} />,
-      'image-text-card': () => <TwoColumnsBlock {...commonProps} />,
+      'image-text-card': () => <TwoColumnsBlock {...commonProps} block={{...commonProps.block, type: 'two-columns'} as any} />,
       'stats-counter': () => <StatsMetricsBlock {...commonProps} block={{...commonProps.block, type: 'stats-metrics'} as any} />,
       'testimonial-card': () => <TestimonialInlineBlock {...commonProps} />,
       'feature-highlight': () => <CTASectionInlineBlock {...commonProps} />,
       'section-divider': () => <SectionDividerBlock {...commonProps} />,
-      'flex-container-horizontal': () => <TwoColumnsBlock {...commonProps} />,
-      'flex-container-vertical': () => <TwoColumnsBlock {...commonProps} />,
+      'flex-container-horizontal': () => <TwoColumnsBlock {...commonProps} block={{...commonProps.block, type: 'two-columns'} as any} />,
+      'flex-container-vertical': () => <TwoColumnsBlock {...commonProps} block={{...commonProps.block, type: 'two-columns'} as any} />,
       
       // === COMPONENTES INLINE BÁSICOS (com fallback) ===
       'text-inline': () => TextInlineBlock ? <TextInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
       'heading-inline': () => <HeadingInlineBlock {...commonProps} />,
       'button-inline': () => <ButtonInlineBlock {...commonProps} />,
-      'badge-inline': () => BadgeInlineBlock ? <BadgeInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
+      'badge-inline': () => <BadgeInlineBlock {...commonProps} />,
       'progress-inline': () => <ProgressInlineBlock {...commonProps} />,
       'image-display-inline': () => ImageDisplayInlineBlock ? <ImageDisplayInlineBlock {...commonProps} /> : <ImageInlineBlock {...commonProps} />,
       'style-card-inline': () => <StyleCardInlineBlock {...commonProps} />,
@@ -258,7 +270,7 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
 
     // Fallback padrão
     return <FallbackBlock {...commonProps} blockType={block.type} />;
-  };
+  }, [block.type, commonProps]); // ES7+ Dependency array otimizado
 
   return (
     <div className={cn(
@@ -267,7 +279,7 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'transition-all duration-300 ease-out',
       className
     )}>
-      {renderComponent()}
+      {renderedComponent}
     </div>
   );
 };
