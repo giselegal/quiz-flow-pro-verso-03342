@@ -207,3 +207,8 @@ export const getStepsByType = (stepType: FunnelStepType): FunnelStepConfig[] => 
 export const getTotalSteps = (): number => {
   return FUNNEL_STEPS_CONFIG.length;
 };
+
+export const getDefaultContentForFunnelStep = (stepType: string) => {
+  const stepConfig = FUNNEL_STEPS_CONFIG.find(step => step.stepType === stepType);
+  return stepConfig ? stepConfig.defaultContent : {};
+};
