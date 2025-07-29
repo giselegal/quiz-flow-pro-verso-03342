@@ -1,9 +1,10 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Edit, Trash2 } from 'lucide-react';
-import { BlockComponents, BlockComponentProps } from './BlockComponents';
+import { blockComponents, BlockComponentProps } from './BlockComponents';
 
 interface Block {
   id: string;
@@ -47,6 +48,22 @@ export default function BlocksDemo() {
     setBlocks(blocks.filter(block => block.id !== id));
   };
 
+  const renderBlock = (block: Block) => {
+    const Component = blockComponents[block.type as keyof typeof blockComponents];
+    
+    if (!Component) {
+      return <div>Componente não encontrado</div>;
+    }
+
+    return (
+      <Component
+        content={block.content}
+        onUpdate={(content: any) => updateBlock(block.id, content)}
+        onDelete={() => deleteBlock(block.id)}
+      />
+    );
+  };
+
   return (
     <div className="container mx-auto p-8">
       <div className="flex items-center justify-between mb-6">
@@ -86,11 +103,7 @@ export default function BlocksDemo() {
             {blocks.map((block) => (
               <Card key={block.id} className="relative">
                 <CardContent className="p-4">
-                  <BlockComponents
-                    block={block}
-                    onUpdate={(content: any) => updateBlock(block.id, content)}
-                    onSelect={() => {}}
-                  />
+                  {renderBlock(block)}
                 </CardContent>
               </Card>
             ))}

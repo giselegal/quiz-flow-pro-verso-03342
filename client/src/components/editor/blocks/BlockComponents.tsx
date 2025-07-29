@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Trash2, Settings } from 'lucide-react';
 
-interface BlockComponentProps {
+export interface BlockComponentProps {
   content: any;
   onUpdate: (content: any) => void;
   onDelete: () => void;
@@ -119,3 +119,6 @@ export const blockComponents = {
   question: QuestionBlock,
   image: ImageBlock,
 };
+
+// Export the main component for compatibility
+export const BlockComponents = blockComponents;
