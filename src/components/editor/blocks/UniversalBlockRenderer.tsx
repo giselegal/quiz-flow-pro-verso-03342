@@ -233,6 +233,16 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       
       // === COMPONENTES DE LOADING ===
       'loading-animation': () => LoadingAnimationBlock ? <LoadingAnimationBlock {...commonProps} /> : <FallbackBlock {...commonProps} blockType="loading-animation" />,
+
+      // === COMPONENTES INDIVIDUALIZADOS E MODULARES ===
+      'title-standalone': () => <HeadingInlineBlock {...commonProps} />,
+      'subtitle-standalone': () => <HeadingInlineBlock {...commonProps} />,
+      'single-button': () => <ButtonInlineBlock {...commonProps} />,
+      'single-image': () => <ImageInlineBlock {...commonProps} />,
+      'text-paragraph': () => TextInlineBlock ? <TextInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
+      'icon-standalone': () => <BadgeInlineBlock {...commonProps} />,
+      'divider-line': () => <SectionDividerBlock {...commonProps} />,
+      'spacing-block': () => <SpacerBlock {...commonProps} />,
     };
 
     // Renderizar com fallback

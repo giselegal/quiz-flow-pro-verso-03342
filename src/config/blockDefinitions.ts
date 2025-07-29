@@ -2512,6 +2512,292 @@ export const blockDefinitions: BlockDefinition[] = [
       backgroundColor: 'white',
       borderColor: '#B89B7A'
     }
+  },
+
+  // ===== COMPONENTES INDIVIDUALIZADOS E MODULARES =====
+  
+  {
+    type: 'title-standalone',
+    name: 'Título Individual',
+    description: 'Título independente e personalizável',
+    icon: 'Type',
+    category: 'Micro-Componentes',
+    propertiesSchema: [
+      {
+        key: 'text',
+        label: 'Texto do Título',
+        type: 'text',
+        defaultValue: 'Meu Título'
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: ['h1', 'h2', 'h3', 'h4'],
+        defaultValue: 'h2'
+      },
+      {
+        key: 'color',
+        label: 'Cor',
+        type: 'color',
+        defaultValue: '#1a1a1a'
+      },
+      {
+        key: 'alignment',
+        label: 'Alinhamento',
+        type: 'select',
+        options: ['left', 'center', 'right'],
+        defaultValue: 'center'
+      }
+    ],
+    defaultProperties: {
+      text: 'Meu Título',
+      size: 'h2',
+      color: '#1a1a1a',
+      alignment: 'center'
+    }
+  },
+
+  {
+    type: 'subtitle-standalone',
+    name: 'Subtítulo Individual',
+    description: 'Subtítulo independente para complementar conteúdo',
+    icon: 'Type',
+    category: 'Micro-Componentes',
+    propertiesSchema: [
+      {
+        key: 'text',
+        label: 'Texto do Subtítulo',
+        type: 'text',
+        defaultValue: 'Descrição adicional'
+      },
+      {
+        key: 'color',
+        label: 'Cor',
+        type: 'color',
+        defaultValue: '#666666'
+      }
+    ],
+    defaultProperties: {
+      text: 'Descrição adicional',
+      color: '#666666'
+    }
+  },
+
+  {
+    type: 'single-button',
+    name: 'Botão Individual',
+    description: 'Botão independente e customizável',
+    icon: 'MousePointer',
+    category: 'Micro-Componentes',
+    propertiesSchema: [
+      {
+        key: 'text',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Clique Aqui'
+      },
+      {
+        key: 'style',
+        label: 'Estilo',
+        type: 'select',
+        options: ['primary', 'secondary', 'outline', 'ghost'],
+        defaultValue: 'primary'
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: ['sm', 'md', 'lg'],
+        defaultValue: 'md'
+      },
+      {
+        key: 'url',
+        label: 'URL/Link',
+        type: 'text',
+        defaultValue: '#'
+      }
+    ],
+    defaultProperties: {
+      text: 'Clique Aqui',
+      style: 'primary',
+      size: 'md',
+      url: '#'
+    }
+  },
+
+  {
+    type: 'single-image',
+    name: 'Imagem Individual',
+    description: 'Imagem independente com controles básicos',
+    icon: 'Image',
+    category: 'Micro-Componentes',
+    propertiesSchema: [
+      {
+        key: 'src',
+        label: 'URL da Imagem',
+        type: 'text',
+        defaultValue: 'https://via.placeholder.com/400x300'
+      },
+      {
+        key: 'alt',
+        label: 'Texto Alternativo',
+        type: 'text',
+        defaultValue: 'Imagem'
+      },
+      {
+        key: 'width',
+        label: 'Largura',
+        type: 'select',
+        options: ['auto', '25%', '50%', '75%', '100%'],
+        defaultValue: '100%'
+      },
+      {
+        key: 'borderRadius',
+        label: 'Bordas Arredondadas',
+        type: 'select',
+        options: ['none', 'sm', 'md', 'lg', 'full'],
+        defaultValue: 'md'
+      }
+    ],
+    defaultProperties: {
+      src: 'https://via.placeholder.com/400x300',
+      alt: 'Imagem',
+      width: '100%',
+      borderRadius: 'md'
+    }
+  },
+
+  {
+    type: 'text-paragraph',
+    name: 'Parágrafo Individual',
+    description: 'Parágrafo de texto independente',
+    icon: 'FileText',
+    category: 'Micro-Componentes',
+    propertiesSchema: [
+      {
+        key: 'content',
+        label: 'Conteúdo',
+        type: 'textarea',
+        defaultValue: 'Este é um parágrafo de exemplo.'
+      },
+      {
+        key: 'size',
+        label: 'Tamanho da Fonte',
+        type: 'select',
+        options: ['sm', 'base', 'lg', 'xl'],
+        defaultValue: 'base'
+      },
+      {
+        key: 'color',
+        label: 'Cor',
+        type: 'color',
+        defaultValue: '#374151'
+      }
+    ],
+    defaultProperties: {
+      content: 'Este é um parágrafo de exemplo.',
+      size: 'base',
+      color: '#374151'
+    }
+  },
+
+  {
+    type: 'icon-standalone',
+    name: 'Ícone Individual',
+    description: 'Ícone independente decorativo',
+    icon: 'Star',
+    category: 'Micro-Componentes',
+    propertiesSchema: [
+      {
+        key: 'iconName',
+        label: 'Nome do Ícone',
+        type: 'select',
+        options: ['Star', 'Heart', 'Check', 'X', 'Plus', 'Arrow'],
+        defaultValue: 'Star'
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: ['sm', 'md', 'lg', 'xl'],
+        defaultValue: 'md'
+      },
+      {
+        key: 'color',
+        label: 'Cor',
+        type: 'color',
+        defaultValue: '#3B82F6'
+      }
+    ],
+    defaultProperties: {
+      iconName: 'Star',
+      size: 'md',
+      color: '#3B82F6'
+    }
+  },
+
+  {
+    type: 'divider-line',
+    name: 'Linha Divisória',
+    description: 'Linha simples para separar seções',
+    icon: 'Minus',
+    category: 'Micro-Componentes',
+    propertiesSchema: [
+      {
+        key: 'style',
+        label: 'Estilo',
+        type: 'select',
+        options: ['solid', 'dashed', 'dotted'],
+        defaultValue: 'solid'
+      },
+      {
+        key: 'thickness',
+        label: 'Espessura',
+        type: 'select',
+        options: ['1px', '2px', '3px', '4px'],
+        defaultValue: '1px'
+      },
+      {
+        key: 'color',
+        label: 'Cor',
+        type: 'color',
+        defaultValue: '#E5E7EB'
+      },
+      {
+        key: 'width',
+        label: 'Largura',
+        type: 'select',
+        options: ['25%', '50%', '75%', '100%'],
+        defaultValue: '100%'
+      }
+    ],
+    defaultProperties: {
+      style: 'solid',
+      thickness: '1px',
+      color: '#E5E7EB',
+      width: '100%'
+    }
+  },
+
+  {
+    type: 'spacing-block',
+    name: 'Espaçamento',
+    description: 'Bloco invisível para criar espaçamento vertical',
+    icon: 'Square',
+    category: 'Micro-Componentes',
+    propertiesSchema: [
+      {
+        key: 'height',
+        label: 'Altura',
+        type: 'select',
+        options: ['10px', '20px', '30px', '40px', '60px', '80px'],
+        defaultValue: '20px'
+      }
+    ],
+    defaultProperties: {
+      height: '20px'
+    }
   }
 ];
 

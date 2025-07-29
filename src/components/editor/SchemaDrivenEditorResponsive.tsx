@@ -218,31 +218,62 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         
         // Adicionar cada bloco das 21 etapas
         template.blocks.forEach((templateBlock, index) => {
-          try {
-            console.log(`📦 Adicionando etapa ${index + 1}: ${templateBlock.type}`);
-            const newBlockId = addBlock(templateBlock.type as any);
-            
-            // Atualizar propriedades do bloco após criação
-            setTimeout(() => {
-              updateBlock(newBlockId, {
-                ...templateBlock.content,
-                order: index
-              });
-            }, 100);
-            
-          } catch (error) {
-            console.warn(`⚠️ Erro ao adicionar bloco ${templateBlock.type}:`, error);
-          }
+          const newBlock: BlockData = {
+            id: templateBlock.id || `block-${Date.now()}-${index}`,
+            type: templateBlock.type,
+            properties: templateBlock.content || {}
+          };
+          
+          // Usar addBlock para adicionar o bloco
+          const newBlockId = addBlock(newBlock.type as any);
+          
+          // Atualizar as propriedades após a criação
+          setTimeout(() => {
+            updateBlock(newBlockId, newBlock.properties);
+          }, 100);
         });
         
-        setSelectedBlockId(null);
-        console.log('✅ 21 etapas carregadas com sucesso!');
-        
+        console.log('✅ Template das 21 etapas carregado com sucesso!');
       }).catch(error => {
         console.error('❌ Erro ao carregar template das 21 etapas:', error);
       });
+    } else if (templateId === 'quiz-21-etapas-individualizado') {
+      console.log('🧩 Carregando componentes individualizados...');
+      
+      // Importar e carregar componentes individualizados
+      import('../../utils/quiz21EtapasIndividualizado').then(({ loadQuiz21EtapasIndividualizado }) => {
+        const individualizados = loadQuiz21EtapasIndividualizado();
+        
+        console.log('📦 Limpando blocos existentes...');
+        
+        // Limpar blocos atuais
+        blocks.forEach(block => {
+          deleteBlock(block.id);
+        });
+        
+        // Adicionar cada componente individualizado
+        individualizados.forEach((block, index) => {
+          const newBlock: BlockData = {
+            id: block.id || `individual-${Date.now()}-${index}`,
+            type: block.type,
+            properties: block.properties || {}
+          };
+          
+          // Usar addBlock para adicionar o bloco
+          const newBlockId = addBlock(newBlock.type as any);
+          
+          // Atualizar as propriedades após a criação
+          setTimeout(() => {
+            updateBlock(newBlockId, newBlock.properties);
+          }, 100);
+        });
+        
+        console.log('✅ Componentes individualizados carregados com sucesso!');
+      }).catch(error => {
+        console.error('❌ Erro ao carregar componentes individualizados:', error);
+      });
     }
-  }, [addBlock, updateBlock, deleteBlock, blocks]);
+  }, [blocks, deleteBlock, addBlock]);
 
   const handleLoadTemplate = useCallback(async () => {
     try {
