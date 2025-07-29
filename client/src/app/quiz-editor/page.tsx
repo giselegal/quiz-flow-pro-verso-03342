@@ -1,293 +1,267 @@
 
-import React, { useState, useEffect } from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import { useLocation } from 'wouter';
+import { useQuiz } from '@/hooks/useQuiz';
+import { useQuizzes } from '@/hooks/useQuiz';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useQuizzes } from '@/hooks/useQuiz';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { blockComponents } from '@/components/editor/blocks/BlockComponents';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { BlockComponents } from '@/components/editor/blocks/BlockComponents';
 import { QuizDashboard } from '@/components/quiz/QuizDashboard';
 import { QuizPreview } from '@/components/quiz/QuizPreview';
-import { Quiz, Question } from '@/types/quiz';
 import { Plus, Save, Eye, Settings } from 'lucide-react';
+import { Quiz, Question } from '@/types/quiz';
 
-const QuizEditorPage = () => {
+export default function QuizEditorPage() {
   const [location, setLocation] = useLocation();
   const [activeTab, setActiveTab] = useState('dashboard');
+  
+  const {
+    quiz,
+    questions,
+    loading,
+    error,
+    loadQuiz,
+    updateQuiz,
+    addQuestion,
+    updateQuestion,
+    deleteQuestion,
+    saveQuiz
+  } = useQuiz();
+
+  const { quizzes, loading: quizzesLoading, createQuiz } = useQuizzes();
+
   const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
-  const [newQuestionText, setNewQuestionText] = useState('');
-  const [newQuestionType, setNewQuestionType] = useState<'multiple_choice' | 'text'>('multiple_choice');
-  const [newOptions, setNewOptions] = useState(['', '']);
 
-  const { quizzes, loading, error, createQuiz, loadQuizzes } = useQuizzes();
-
-  useEffect(() => {
-    loadQuizzes('user-1'); // Load quizzes for current user
-  }, []);
-
-  const handleCreateQuiz = async () => {
-    try {
-      const newQuiz = await createQuiz({
-        title: 'Novo Quiz',
-        description: 'Descrição do quiz',
-        category: 'general',
-        author_id: 'user-1'
-      });
-      setSelectedQuiz(newQuiz);
-      setActiveTab('editor');
-    } catch (error) {
-      console.error('Error creating quiz:', error);
-    }
-  };
-
-  const handleQuizSelect = (quiz: Quiz) => {
+  // Handle quiz selection
+  const handleQuizSelect = async (quiz: Quiz) => {
     setSelectedQuiz(quiz);
-    setActiveTab('editor');
+    await loadQuiz(quiz.id);
   };
 
-  const addNewQuestion = () => {
-    if (!selectedQuiz || !newQuestionText.trim()) return;
-
-    const newQuestion: Question = {
-      id: Date.now().toString(),
-      title: newQuestionText,
-      text: newQuestionText,
-      type: newQuestionType,
-      options: newOptions.filter(opt => opt.trim()).map((opt, index) => ({
-        id: `opt-${Date.now()}-${index}`,
-        text: opt,
-        isCorrect: index === 0 // First option is correct by default
-      })),
-      required: true,
-      tags: []
-    };
-
-    const updatedQuiz = {
-      ...selectedQuiz,
-      questions: [...(selectedQuiz.questions || []), newQuestion]
-    };
-
-    setSelectedQuiz(updatedQuiz);
-    setNewQuestionText('');
-    setNewOptions(['', '']);
-  };
-
-  const generateBlockContent = (type: string) => {
-    switch (type) {
-      case 'text':
-        return { text: 'Texto de exemplo' };
-      case 'header':
-        return { title: 'Título de exemplo' };
-      case 'image':
-        return { imageUrl: '', imageAlt: 'Imagem' };
-      case 'button':
-        return { buttonText: 'Clique aqui', buttonUrl: '#' };
-      case 'spacer':
-        return {};
-      default:
-        return {};
+  // Handle adding new question
+  const handleAddQuestion = async () => {
+    if (!quiz) return;
+    
+    try {
+      await addQuestion({
+        title: 'Nova Pergunta',
+        text: 'Digite sua pergunta aqui',
+        type: 'multiple_choice',
+        options: []
+      });
+    } catch (error) {
+      console.error('Error adding question:', error);
     }
   };
 
-  const renderBlockComponent = (type: string, content: any) => {
-    const Component = blockComponents[type as keyof typeof blockComponents];
-    if (!Component) {
-      return <div>Componente não encontrado: {type}</div>;
+  // Handle updating question
+  const handleUpdateQuestion = async (questionId: string, updates: Partial<Question>) => {
+    try {
+      await updateQuestion(questionId, updates);
+    } catch (error) {
+      console.error('Error updating question:', error);
     }
-    return <Component content={content} />;
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">Carregando...</h2>
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4 text-red-600">Erro</h2>
-          <p>{error}</p>
-        </div>
-      </div>
-    );
-  }
+  // Handle saving quiz
+  const handleSave = async () => {
+    if (!quiz) return;
+    
+    try {
+      await saveQuiz();
+    } catch (error) {
+      console.error('Error saving quiz:', error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Editor de Quiz</h1>
-          <p className="text-gray-600">Crie e gerencie seus quizzes</p>
+      <div className="border-b bg-white">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-bold">Editor de Quiz</h1>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm">
+                <Settings className="w-4 h-4 mr-2" />
+                Configurações
+              </Button>
+              <Button onClick={handleSave} disabled={loading}>
+                <Save className="w-4 h-4 mr-2" />
+                {loading ? 'Salvando...' : 'Salvar'}
+              </Button>
+            </div>
+          </div>
         </div>
+      </div>
 
+      <div className="container mx-auto px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-            <TabsTrigger value="editor">Editor</TabsTrigger>
+            <TabsTrigger value="questions">Perguntas</TabsTrigger>
+            <TabsTrigger value="design">Design</TabsTrigger>
             <TabsTrigger value="preview">Preview</TabsTrigger>
-            <TabsTrigger value="settings">Configurações</TabsTrigger>
           </TabsList>
 
           <TabsContent value="dashboard" className="mt-6">
-            <QuizDashboard
+            <QuizDashboard 
               quizzes={quizzes}
               onQuizSelect={handleQuizSelect}
-              onShowTemplates={() => setActiveTab('templates')}
             />
           </TabsContent>
 
-          <TabsContent value="editor" className="mt-6">
-            {selectedQuiz ? (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Settings className="w-5 h-5" />
-                      Configurações do Quiz
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <Label htmlFor="quiz-title">Título</Label>
-                      <Input
-                        id="quiz-title"
-                        value={selectedQuiz.title}
-                        onChange={(e) => setSelectedQuiz({
-                          ...selectedQuiz,
-                          title: e.target.value
-                        })}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="quiz-description">Descrição</Label>
-                      <Textarea
-                        id="quiz-description"
-                        value={selectedQuiz.description || ''}
-                        onChange={(e) => setSelectedQuiz({
-                          ...selectedQuiz,
-                          description: e.target.value
-                        })}
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Plus className="w-5 h-5" />
-                      Adicionar Pergunta
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <Label htmlFor="question-text">Pergunta</Label>
-                      <Input
-                        id="question-text"
-                        value={newQuestionText}
-                        onChange={(e) => setNewQuestionText(e.target.value)}
-                        placeholder="Digite sua pergunta..."
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="question-type">Tipo</Label>
-                      <select
-                        id="question-type"
-                        value={newQuestionType}
-                        onChange={(e) => setNewQuestionType(e.target.value as 'multiple_choice' | 'text')}
-                        className="w-full p-2 border rounded"
-                      >
-                        <option value="multiple_choice">Múltipla Escolha</option>
-                        <option value="text">Texto</option>
-                      </select>
-                    </div>
-                    {newQuestionType === 'multiple_choice' && (
-                      <div>
-                        <Label>Opções</Label>
-                        {newOptions.map((option, index) => (
-                          <Input
-                            key={index}
-                            value={option}
-                            onChange={(e) => {
-                              const updatedOptions = [...newOptions];
-                              updatedOptions[index] = e.target.value;
-                              setNewOptions(updatedOptions);
-                            }}
-                            placeholder={`Opção ${index + 1}`}
-                            className="mt-2"
-                          />
-                        ))}
-                        <Button
-                          variant="outline"
-                          onClick={() => setNewOptions([...newOptions, ''])}
-                          className="mt-2"
-                        >
-                          Adicionar Opção
-                        </Button>
-                      </div>
-                    )}
-                    <Button onClick={addNewQuestion} className="w-full">
-                      Adicionar Pergunta
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <h3 className="text-lg font-semibold mb-4">Selecione um quiz para editar</h3>
-                <Button onClick={handleCreateQuiz}>
+          <TabsContent value="questions" className="mt-6">
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-semibold">Perguntas do Quiz</h2>
+                <Button onClick={handleAddQuestion} disabled={!quiz}>
                   <Plus className="w-4 h-4 mr-2" />
-                  Criar Novo Quiz
+                  Nova Pergunta
                 </Button>
               </div>
-            )}
+
+              {error && (
+                <Card className="p-4 border-red-200 bg-red-50">
+                  <p className="text-red-600">{error}</p>
+                </Card>
+              )}
+
+              {!quiz && (
+                <Card className="p-8 text-center">
+                  <p className="text-gray-500">Selecione um quiz para começar a editar</p>
+                </Card>
+              )}
+
+              {quiz && (
+                <div className="space-y-4">
+                  <Card className="p-4">
+                    <h3 className="font-medium mb-2">Informações do Quiz</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label>Título</Label>
+                        <Input 
+                          value={quiz.title} 
+                          onChange={(e) => updateQuiz({ title: e.target.value })}
+                        />
+                      </div>
+                      <div>
+                        <Label>Descrição</Label>
+                        <Textarea 
+                          value={quiz.description} 
+                          onChange={(e) => updateQuiz({ description: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                  </Card>
+
+                  <div className="space-y-4">
+                    {questions.map((question, index) => (
+                      <Card key={question.id} className="p-4">
+                        <div className="flex justify-between items-start mb-3">
+                          <Badge variant="outline">Pergunta {index + 1}</Badge>
+                          <Button 
+                            variant="destructive" 
+                            size="sm"
+                            onClick={() => deleteQuestion(question.id)}
+                          >
+                            Excluir
+                          </Button>
+                        </div>
+                        
+                        <div className="space-y-3">
+                          <div>
+                            <Label>Título da Pergunta</Label>
+                            <Input 
+                              value={question.title}
+                              onChange={(e) => handleUpdateQuestion(question.id, { title: e.target.value })}
+                            />
+                          </div>
+                          
+                          <div>
+                            <Label>Texto da Pergunta</Label>
+                            <Textarea 
+                              value={question.text}
+                              onChange={(e) => handleUpdateQuestion(question.id, { text: e.target.value })}
+                            />
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="design" className="mt-6">
+            <div className="grid grid-cols-4 gap-6">
+              <div className="col-span-1">
+                <Card className="p-4">
+                  <h3 className="font-medium mb-4">Componentes</h3>
+                  <div className="space-y-2">
+                    <Button variant="outline" className="w-full justify-start">
+                      📝 Texto
+                    </Button>
+                    <Button variant="outline" className="w-full justify-start">
+                      🖼️ Imagem
+                    </Button>
+                    <Button variant="outline" className="w-full justify-start">
+                      🔘 Botão
+                    </Button>
+                  </div>
+                </Card>
+              </div>
+              
+              <div className="col-span-2">
+                <Card className="p-6 min-h-[400px]">
+                  <h3 className="font-medium mb-4">Editor Visual</h3>
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                    <p className="text-gray-500">Arraste componentes aqui para personalizar seu quiz</p>
+                  </div>
+                </Card>
+              </div>
+              
+              <div className="col-span-1">
+                <Card className="p-4">
+                  <h3 className="font-medium mb-4">Propriedades</h3>
+                  <p className="text-gray-500 text-sm">Selecione um componente para editar suas propriedades</p>
+                </Card>
+              </div>
+            </div>
           </TabsContent>
 
           <TabsContent value="preview" className="mt-6">
-            {selectedQuiz ? (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Eye className="w-5 h-5" />
-                    Preview do Quiz
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <QuizPreview quiz={selectedQuiz} />
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="text-center py-12">
-                <p className="text-gray-500">Selecione um quiz para ver o preview</p>
+            <div className="flex justify-center">
+              <div className="w-full max-w-2xl">
+                <Card className="p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="font-medium">Preview do Quiz</h3>
+                    <Button variant="outline" size="sm">
+                      <Eye className="w-4 h-4 mr-2" />
+                      Tela Cheia
+                    </Button>
+                  </div>
+                  
+                  {quiz ? (
+                    <QuizPreview quiz={quiz} />
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      Selecione um quiz para visualizar o preview
+                    </div>
+                  )}
+                </Card>
               </div>
-            )}
-          </TabsContent>
-
-          <TabsContent value="settings" className="mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Configurações Gerais</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-500">Configurações em desenvolvimento...</p>
-              </CardContent>
-            </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
     </div>
   );
-};
-
-export default QuizEditorPage;
+}
