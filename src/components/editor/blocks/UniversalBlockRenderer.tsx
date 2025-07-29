@@ -34,6 +34,7 @@ import TwoColumnsBlock from './TwoColumnsBlock';
 import TestimonialInlineBlock from './TestimonialInlineBlock';
 import ProgressInlineBlock from './ProgressInlineBlock';
 import StyleCardInlineBlock from './StyleCardInlineBlock';
+import CTASectionInlineBlock from './CTASectionInlineBlock';
 
 // === COMPONENTES INLINE MODULARES (com verificação de existência) ===
 // Desabilitado para evitar problemas de dynamic imports
@@ -209,17 +210,17 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'testimonials-grid': () => <TestimonialsGridBlock {...commonProps} />,
       'faq-section': () => <FAQSectionBlock {...commonProps} />,
       
-      // === COMPONENTES ADICIONAIS (com fallback) ===
+      // === COMPONENTES ADICIONAIS (agora com componentes reais) ===
       'quiz-question-configurable': () => <QuizQuestionBlock {...commonProps} />,
       'quiz-question-modern': () => <QuizQuestionBlock {...commonProps} />,
-      'progress-bar-modern': () => <EnhancedFallbackBlock {...commonProps} blockType="progress-bar-modern" />,
-      'image-text-card': () => <EnhancedFallbackBlock {...commonProps} blockType="image-text-card" />,
+      'progress-bar-modern': () => <ProgressInlineBlock {...commonProps} />,
+      'image-text-card': () => <TwoColumnsBlock {...commonProps} />,
       'stats-counter': () => <StatsMetricsBlock {...commonProps} block={{...commonProps.block, type: 'stats-metrics'} as any} />,
       'testimonial-card': () => <TestimonialInlineBlock {...commonProps} />,
-      'feature-highlight': () => <EnhancedFallbackBlock {...commonProps} blockType="feature-highlight" />,
+      'feature-highlight': () => <CTASectionInlineBlock {...commonProps} />,
       'section-divider': () => <SectionDividerBlock {...commonProps} />,
-      'flex-container-horizontal': () => <EnhancedFallbackBlock {...commonProps} blockType="flex-container-horizontal" />,
-      'flex-container-vertical': () => <EnhancedFallbackBlock {...commonProps} blockType="flex-container-vertical" />,
+      'flex-container-horizontal': () => <TwoColumnsBlock {...commonProps} />,
+      'flex-container-vertical': () => <TwoColumnsBlock {...commonProps} />,
       
       // === COMPONENTES INLINE BÁSICOS (com fallback) ===
       'text-inline': () => TextInlineBlock ? <TextInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
