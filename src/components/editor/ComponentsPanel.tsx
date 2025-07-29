@@ -8,7 +8,7 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { ScrollArea } from '../ui/scroll-area';
 import { Badge } from '../ui/badge';
-import { blockDefinitions } from '../../config/blockDefinitions';
+import { blockDefinitions } from '../../config/blockDefinitions.ts';
 import { 
   Search, Grid3X3, Type, Image, Square as ButtonIcon, 
   BarChart3, AlertCircle, Star, Calendar, Clock,

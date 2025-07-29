@@ -58,6 +58,18 @@ try {
   console.warn('TextInlineBlock não disponível');
 }
 
+try {
+  BadgeInlineBlock = require('./inline/BadgeInlineBlock').default;
+} catch (e) {
+  console.warn('BadgeInlineBlock não disponível');
+}
+
+try {
+  StatInlineBlock = require('./inline/StatInlineBlock').default;
+} catch (e) {
+  console.warn('StatInlineBlock não disponível');
+}
+
 // Novos componentes inline criados
 import ResultHeaderInlineBlock from './inline/ResultHeaderInlineBlock';
 import ResultCardInlineBlock from './inline/ResultCardInlineBlock';

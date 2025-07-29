@@ -43,9 +43,16 @@ export const mapBlockType = (originalType: string): string => {
     'bonus-list-inline': 'text-inline',
     'step-header-inline': 'heading-inline',
     'testimonial-card-inline': 'text-inline',
-    'countdown-inline': 'text-inline',
-    'stat-inline': 'text-inline',
+    'countdown-inline': 'countdown-inline',
+    'countdown-timer-inline': 'countdown-inline',
+    'countdown-timer-real': 'countdown-inline',
+    'stat-inline': 'stat-inline',
     'pricing-card-inline': 'pricing-card-inline',
+    'price-highlight-inline': 'pricing-card-inline',
+    
+    // Componentes CTA modernos
+    'cta-button-modern': 'button-inline',
+    'cta-modern': 'cta',
     
     // Fallbacks
     'form-input': 'form-input',
