@@ -1,71 +1,37 @@
 
 export interface EditableContent {
   text?: string;
-  src?: string;
-  alt?: string;
-  backgroundColor?: string;
-  textColor?: string;
-  height?: string | number;
+  title?: string;
+  subtitle?: string;
+  imageUrl?: string;
+  imageAlt?: string;
+  buttonText?: string;
+  buttonUrl?: string;
+  items?: string[];
   question?: string;
   options?: Array<{
+    id: string;
     text: string;
-    isCorrect?: boolean;
+    isCorrect: boolean;
   }>;
-  author?: string;
-  [key: string]: any;
+  type?: 'text' | 'multiple_choice' | 'single_choice' | 'rating';
+  required?: boolean;
+  hint?: string;
+  tags?: string[];
 }
 
 export interface EditorBlock {
   id: string;
-  type: BlockType;
+  type: string;
   content: EditableContent;
   order: number;
 }
 
-export interface Block extends EditorBlock {}
-
-export type BlockType = 
-  | 'header'
-  | 'text'
-  | 'image'
-  | 'button'
-  | 'spacer'
-  | 'quiz-question'
-  | 'testimonial';
-
 export interface EditorConfig {
   blocks: EditorBlock[];
-  globalStyles?: {
-    primaryColor?: string;
-    secondaryColor?: string;
-    fontFamily?: string;
-    fontSize?: string;
+  settings: {
+    title: string;
+    description: string;
+    theme: string;
   };
-}
-
-export interface QuizQuestion {
-  id: string;
-  text: string;
-  type: 'multiple_choice' | 'single_choice' | 'text' | 'rating';
-  options: Array<{
-    text: string;
-    isCorrect: boolean;
-  }>;
-  required: boolean;
-  hint?: string;
-}
-
-export interface Quiz {
-  id: string;
-  title: string;
-  description: string | null;
-  author_id: string;
-  category: string;
-  difficulty: string | null;
-  time_limit: number | null;
-  is_public: boolean | null;
-  is_published: boolean | null;
-  created_at: string;
-  updated_at: string;
-  questions: QuizQuestion[];
 }

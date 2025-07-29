@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useRoute } from 'wouter';
 import SchemaDrivenEditorResponsive from '@/components/editor/SchemaDrivenEditorResponsive';
