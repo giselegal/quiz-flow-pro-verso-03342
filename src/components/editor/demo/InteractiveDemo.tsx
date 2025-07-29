@@ -107,101 +107,124 @@ export const InteractiveDemo: React.FC = () => {
           </div>
         </div>
 
-        {/* Demo Navigation */}
-        <Tabs value={demoSteps[currentStep]?.id} className="w-full">
-          <TabsList className="grid w-full grid-cols-5 mb-6">
-            {demoSteps.map((step, index) => (
-              <TabsTrigger
-                key={step.id}
-                value={step.id}
-                onClick={() => setCurrentStep(index)}
-                className="flex items-center space-x-2"
-              >
-                <div className="flex items-center space-x-1">
-                  {completedSteps.has(step.id) ? (
-                    <CheckCircle className="w-4 h-4 text-green-600" />
-                  ) : (
-                    step.icon
-                  )}
-                  <span className="hidden sm:inline">{step.title}</span>
-                </div>
-              </TabsTrigger>
-            ))}
+        {/* Main Tabs */}
+        <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2 mb-6">
+            <TabsTrigger value="demo" className="flex items-center space-x-2">
+              <PlayCircle className="w-4 h-4" />
+              <span>Demo Interativo</span>
+            </TabsTrigger>
+            <TabsTrigger value="docs" className="flex items-center space-x-2">
+              <FileText className="w-4 h-4" />
+              <span>Documentação Técnica</span>
+            </TabsTrigger>
           </TabsList>
 
-          {demoSteps.map((step) => (
-            <TabsContent key={step.id} value={step.id}>
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-3">
-                    {step.icon}
-                    <span>{step.title}</span>
-                    {completedSteps.has(step.id) && (
-                      <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                        Concluído
-                      </Badge>
-                    )}
-                  </CardTitle>
-                  <p className="text-gray-600">{step.description}</p>
-                </CardHeader>
-                <CardContent>
-                  {step.component}
+          <TabsContent value="demo">
+            {/* Demo Navigation */}
+            <Tabs value={demoSteps[currentStep]?.id} className="w-full">
+              <TabsList className="grid w-full grid-cols-5 mb-6">
+                {demoSteps.map((step, index) => (
+                  <TabsTrigger
+                    key={step.id}
+                    value={step.id}
+                    onClick={() => setCurrentStep(index)}
+                    className="flex items-center space-x-2"
+                  >
+                    <div className="flex items-center space-x-1">
+                      {completedSteps.has(step.id) ? (
+                        <CheckCircle className="w-4 h-4 text-green-600" />
+                      ) : (
+                        step.icon
+                      )}
+                      <span className="hidden sm:inline">{step.title}</span>
+                    </div>
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+
+              {demoSteps.map((step) => (
+                <TabsContent key={step.id} value={step.id}>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-3">
+                        {step.icon}
+                        <span>{step.title}</span>
+                        {completedSteps.has(step.id) && (
+                          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                            Concluído
+                          </Badge>
+                        )}
+                      </CardTitle>
+                      <p className="text-gray-600">{step.description}</p>
+                    </CardHeader>
+                    <CardContent>
+                      {step.component}
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              ))}
+            </Tabs>
+
+            {/* Navigation Controls */}
+            <div className="flex justify-between items-center mt-8">
+              <Button
+                variant="outline"
+                onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+                disabled={currentStep === 0}
+              >
+                Anterior
+              </Button>
+              
+              <div className="flex space-x-2">
+                {demoSteps.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`w-3 h-3 rounded-full transition-colors ${
+                      index === currentStep
+                        ? 'bg-blue-600'
+                        : completedSteps.has(demoSteps[index].id)
+                        ? 'bg-green-500'
+                        : 'bg-gray-300'
+                    }`}
+                  />
+                ))}
+              </div>
+
+              <Button
+                onClick={() => setCurrentStep(Math.min(demoSteps.length - 1, currentStep + 1))}
+                disabled={currentStep === demoSteps.length - 1}
+              >
+                Próximo
+              </Button>
+            </div>
+
+            {/* Completion Message */}
+            {completedSteps.size === demoSteps.length && (
+              <Card className="mt-8 bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
+                <CardContent className="text-center py-8">
+                  <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                    🎉 Parabéns!
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                    Você explorou todas as funcionalidades do editor visual!
+                  </p>
+                  <Button 
+                    className="bg-green-600 hover:bg-green-700"
+                    onClick={() => window.open('/editor', '_blank')}
+                  >
+                    Começar a Usar o Editor
+                  </Button>
                 </CardContent>
               </Card>
-            </TabsContent>
-          ))}
+            )}
+          </TabsContent>
+
+          <TabsContent value="docs">
+            <TechnicalDocs />
+          </TabsContent>
         </Tabs>
-
-        {/* Navigation Controls */}
-        <div className="flex justify-between items-center mt-8">
-          <Button
-            variant="outline"
-            onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
-            disabled={currentStep === 0}
-          >
-            Anterior
-          </Button>
-          
-          <div className="flex space-x-2">
-            {demoSteps.map((_, index) => (
-              <div
-                key={index}
-                className={`w-3 h-3 rounded-full transition-colors ${
-                  index === currentStep
-                    ? 'bg-blue-600'
-                    : completedSteps.has(demoSteps[index].id)
-                    ? 'bg-green-500'
-                    : 'bg-gray-300'
-                }`}
-              />
-            ))}
-          </div>
-
-          <Button
-            onClick={() => setCurrentStep(Math.min(demoSteps.length - 1, currentStep + 1))}
-            disabled={currentStep === demoSteps.length - 1}
-          >
-            Próximo
-          </Button>
-        </div>
-
-        {/* Completion Message */}
-        {completedSteps.size === demoSteps.length && (
-          <Card className="mt-8 bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
-            <CardContent className="text-center py-8">
-              <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                🎉 Parabéns!
-              </h3>
-              <p className="text-gray-600 mb-4">
-                Você explorou todas as funcionalidades do editor visual!
-              </p>
-              <Button className="bg-green-600 hover:bg-green-700">
-                Começar a Usar o Editor
-              </Button>
-            </CardContent>
-          </Card>
-        )}
       </div>
     </div>
   );
