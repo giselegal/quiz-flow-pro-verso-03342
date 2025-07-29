@@ -11,8 +11,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 import { 
   Monitor, Tablet, Smartphone, Settings, History, 
   Palette, Layers, Sparkles, CheckCircle, PlayCircle,
-  MousePointerClick, Keyboard, Eye, Code2
+  MousePointerClick, Keyboard, Eye, Code2, FileText
 } from 'lucide-react';
+import { TechnicalDocs } from './TechnicalDocs';
 
 interface DemoStep {
   id: string;
@@ -26,6 +27,7 @@ interface DemoStep {
 export const InteractiveDemo: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
+  const [currentTab, setCurrentTab] = useState('demo');
 
   const demoSteps: DemoStep[] = [
     {
