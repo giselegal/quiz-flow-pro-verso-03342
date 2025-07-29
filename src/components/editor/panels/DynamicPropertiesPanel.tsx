@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { PropertyInput } from './block-properties/PropertyInput';
 import { QuestionPropertiesPanel } from '../properties/QuestionPropertiesPanel';
-import { blockDefinitions, type PropertySchema as OriginalPropertySchema } from '@/config/blockDefinitions';
+import { blockDefinitions, type PropertySchema as OriginalPropertySchema } from '../../../config/blockDefinitions.ts';
 import { type BlockData } from '@/components/editor/blocks';
 
 // Função auxiliar local

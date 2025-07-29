@@ -4,7 +4,7 @@
  */
 
 // Importe os tipos necessários (assumindo que estão em 'src/types.ts')
-import type { Block, Page as SchemaDrivenPageData, Funnel as SchemaDrivenFunnelData } from '../types/blocks'; // Renomeei Page para evitar conflito local
+import type { BlockData as Block, Page as SchemaDrivenPageData, Funnel as SchemaDrivenFunnelData } from './funnelService'; // Renomeei Page para evitar conflito local
 import { blockDefinitions } from '../config/blockDefinitions.ts';
 // import { QuizDataAdapter } from './quizDataAdapter'; // Não usado neste arquivo, pode ser removido se não for necessário
 
