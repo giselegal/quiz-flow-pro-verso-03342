@@ -1,6 +1,6 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
-import type { BlockData } from '@/types/blocks';
+import { cn } from '../../../lib/utils';
+import type { BlockData } from '../../../types/blocks';
 
 // === COMPONENTES PRINCIPAIS DO SISTEMA ===
 // Componentes de página completa (funcionais)
