@@ -21,6 +21,7 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
   isEditing = false,
   onUpdate,
   onSelect,
+  onClick,
   className
 }) => {
   const [isInlineEditing, setIsInlineEditing] = useState(false);
