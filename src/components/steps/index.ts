@@ -33,83 +33,83 @@ export interface StepTemplate {
   multiSelect?: number;
 }
 
-// ✅ MAPEAMENTO COMPLETO: 21 ETAPAS DO QUIZ
+// ✅ MAPEAMENTO COMPLETO: 21 ETAPAS DO QUIZ DE ESTILO GISELE GALVÃO
 export const STEP_TEMPLATES = {
   1: {
     id: "1",
-    name: "Bem-vindo ao Quiz",
+    name: "Bem-vinda ao Quiz",
     type: "intro" as const,
-    description: "Página inicial de apresentação do quiz",
+    description: "Página inicial de apresentação do quiz de estilo",
     getTemplate: getStep01Template
   },
   2: {
     id: "2",
-    name: "Questão 1: Setor de Atuação",
+    name: "Questão 1: Tipo de Roupa Favorita",
     type: "question" as const,
-    description: "Identificação do setor principal de atuação da empresa",
+    description: "Qual o seu tipo de roupa favorita?",
     getTemplate: getStep02Template
   },
   3: {
     id: "3",
-    name: "Questão 2: Faturamento Mensal",
+    name: "Questão 2: Personalidade",
     type: "question" as const,
-    description: "Definição da faixa de faturamento mensal da empresa",
+    description: "Como você se definiria em termos de personalidade?",
     getTemplate: getStep03Template
   },
   4: {
     id: "4",
-    name: "Questão 3: Equipe",
+    name: "Questão 3: Visual",
     type: "question" as const,
-    description: "Identificação do tamanho da equipe de trabalho",
+    description: "Qual visual você mais se identifica?",
     getTemplate: getStep04Template
   },
   5: {
     id: "5",
-    name: "Questão 4: Tempo no Mercado",
+    name: "Questão 4: Estampas",
     type: "question" as const,
-    description: "Definição do tempo de atuação no mercado",
+    description: "Quais estampas você mais se identifica?",
     getTemplate: getStep05Template
   },
   6: {
     id: "6",
-    name: "Questão 5: Principal Desafio",
+    name: "Questão 5: Casaco Favorito",
     type: "question" as const,
-    description: "Identificação do principal desafio enfrentado",
+    description: "Qual casaco é seu favorito?",
     getTemplate: getStep06Template
   },
   7: {
     id: "7",
-    name: "Questão 6: Estratégia Atual",
+    name: "Questão 6: Calça Favorita",
     type: "question" as const,
-    description: "Definição da estratégia de marketing atual",
+    description: "Qual sua calça favorita?",
     getTemplate: getStep07Template
   },
   8: {
     id: "8",
-    name: "Questão 7: Orçamento Marketing",
+    name: "Questão 7: Sapatos",
     type: "question" as const,
-    description: "Identificação do orçamento destinado ao marketing",
+    description: "Qual desses sapatos você tem ou mais gosta?",
     getTemplate: getStep08Template
   },
   9: {
     id: "9",
-    name: "Questão 8: Ferramentas Utilizadas",
+    name: "Questão 8: Acessórios",
     type: "question" as const,
-    description: "Definição das ferramentas de marketing utilizadas",
+    description: "Quais acessórios você mais usa ou gostaria de usar?",
     getTemplate: getStep09Template
   },
   10: {
     id: "10",
-    name: "Questão 9: Metas Principais",
+    name: "Questão 9: Tecidos",
     type: "question" as const,
-    description: "Identificação das principais metas do negócio",
+    description: "Qual característica dos tecidos é mais importante para você?",
     getTemplate: getStep10Template
   },
   11: {
     id: "11",
-    name: "Questão 10: Maior Frustração",
+    name: "Questão 10: Características dos Tecidos",
     type: "question" as const,
-    description: "Definição da maior frustração com marketing atual",
+    description: "O que mais valoriza nos tecidos das suas roupas?",
     getTemplate: getStep11Template
   },
   12: {
@@ -121,65 +121,65 @@ export const STEP_TEMPLATES = {
   },
   13: {
     id: "13",
-    name: "Questão 11: Canais de Vendas",
-    type: "question" as const,
-    description: "Identificação dos principais canais de vendas",
+    name: "Questão 11: Guarda-roupa",
+    type: "strategic" as const,
+    description: "Quando você olha para o seu guarda-roupa, qual dessas frases te vem à cabeça?",
     getTemplate: getStep13Template
   },
   14: {
     id: "14",
-    name: "Questão 12: Processo de Vendas",
-    type: "question" as const,
-    description: "Definição do processo de vendas atual",
+    name: "Questão 12: Dificuldades para se Arrumar",
+    type: "strategic" as const,
+    description: "Qual é a sua principal dificuldade na hora de se arrumar para sair?",
     getTemplate: getStep14Template
   },
   15: {
     id: "15",
-    name: "Questão 13: Acompanhamento Leads",
-    type: "question" as const,
-    description: "Identificação do processo de acompanhamento de leads",
+    name: "Questão 13: Prioridades nas Compras",
+    type: "strategic" as const,
+    description: "Quando você vai comprar roupas, o que mais prioriza?",
     getTemplate: getStep15Template
   },
   16: {
     id: "16",
-    name: "Questão 14: CRM Utilizado",
-    type: "question" as const,
-    description: "Definição do CRM ou ferramenta de gestão de clientes",
+    name: "Questão 14: Critérios de Compra",
+    type: "strategic" as const,
+    description: "Qual critério é mais importante na hora de escolher uma peça?",
     getTemplate: getStep16Template
   },
   17: {
     id: "17",
-    name: "Questão 15: Conversão de Leads",
-    type: "question" as const,
-    description: "Identificação da taxa de conversão de leads",
+    name: "Questão 15: Orçamento Mensal",
+    type: "strategic" as const,
+    description: "Qual orçamento você costuma destinar para roupas por mês?",
     getTemplate: getStep17Template
   },
   18: {
     id: "18",
-    name: "Questão 16: Ticket Médio",
-    type: "question" as const,
-    description: "Definição do ticket médio de vendas",
+    name: "Questão 16: Investimento em Consultoria",
+    type: "strategic" as const,
+    description: "Você investiria em consultoria de imagem e estilo?",
     getTemplate: getStep18Template
   },
   19: {
     id: "19",
-    name: "Questão 17: Automação",
-    type: "question" as const,
-    description: "Identificação do nível de automação de processos",
+    name: "Análise do seu Estilo",
+    type: "transition" as const,
+    description: "Analisando suas respostas para definir seu perfil de estilo",
     getTemplate: getStep19Template
   },
   20: {
     id: "20",
-    name: "Questão 18: Investimento em Marketing",
-    type: "question" as const,
-    description: "Definição da disposição para investir em marketing",
+    name: "Seu Resultado Personalizado",
+    type: "result" as const,
+    description: "Resultado completo com seu perfil de estilo e dicas personalizadas",
     getTemplate: getStep20Template
   },
   21: {
     id: "21",
-    name: "Resultado Final",
-    type: "result" as const,
-    description: "Página de resultado personalizado do quiz",
+    name: "Oferta Especial",
+    type: "offer" as const,
+    description: "Oferta especial do Guia de Estilo Gisele Galvão",
     getTemplate: getStep21Template
   }
 };

@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { QuizQuestion } from '../QuizQuestion';
-import { UserResponse } from '@/types/quiz';
-import { strategicQuestions } from '@/data/strategicQuestions';
+// Update the import path to the correct location of UserResponse
+import { UserResponse } from '../../types/quiz';
+import { strategicQuestions } from '../../data/strategicQuestions';
 import { AnimatedWrapper } from '../ui/animated-wrapper';
-import { preloadCriticalImages, preloadImagesByUrls } from '@/utils/imageManager';
+import { preloadCriticalImages, preloadImagesByUrls } from '../../utils/imageManager';
 import OptimizedImage from '../ui/OptimizedImage';
-import { getAllImages } from '@/data/imageBank'; // Importar para acessar o banco de imagens
+// import { getAllImages } from '@/data/imageBank'; // Importar para acessar o banco de imagens
 
 // Imagens críticas da página de resultados a serem pré-carregadas
 const RESULT_CRITICAL_IMAGES = [
