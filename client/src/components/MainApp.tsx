@@ -3,6 +3,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useQuizzes } from '@/hooks/useQuizzes';
 import QuizDashboard from './quiz/QuizDashboard';
+import TestEditor from './editor/TestEditor';
 
 export default function MainApp() {
   const { quizzes, loading, loadQuizzes, createQuiz } = useQuizzes();
@@ -46,6 +47,7 @@ export default function MainApp() {
             onCreateQuiz={handleCreateQuiz}
           />
         } />
+        <Route path="/test-editor" element={<TestEditor />} />
       </Routes>
     </div>
   );

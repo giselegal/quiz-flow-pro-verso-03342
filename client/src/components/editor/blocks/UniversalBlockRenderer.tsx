@@ -3,13 +3,14 @@ import React from 'react';
 import { cn } from '../../../lib/utils';
 import type { BlockData } from '../../../types/blocks';
 
-// Import only existing components
+// Import existing components
 import OptionsGridBlock from './OptionsGridBlock';
 import VerticalCanvasHeaderBlock from './VerticalCanvasHeaderBlock';
 import HeadingInlineBlock from './HeadingInlineBlock';
 import ImageInlineBlock from './ImageInlineBlock';
 import ButtonInlineBlock from './ButtonInlineBlock';
 import CTAInlineBlock from './CTAInlineBlock';
+import TextInlineBlock from './TextInlineBlock';
 
 export interface BlockRendererProps {
   block: BlockData;
@@ -56,13 +57,21 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
     )
   };
 
-  // Simple component mapping with only existing components
+  // Enhanced component mapping with better coverage
   const renderComponent = () => {
     switch (block.type) {
       case 'heading':
       case 'header':
       case 'title':
+      case 'heading-inline':
+      case 'quiz-title':
         return <HeadingInlineBlock {...commonProps} />;
+      
+      case 'text':
+      case 'text-inline':
+      case 'paragraph':
+      case 'description':
+        return <TextInlineBlock {...commonProps} />;
       
       case 'image':
       case 'image-inline':
@@ -74,37 +83,47 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       
       case 'cta':
       case 'cta-inline':
+      case 'call-to-action':
         return <CTAInlineBlock {...commonProps} />;
       
       case 'options-grid':
       case 'quiz-options':
+      case 'options':
         return <OptionsGridBlock {...commonProps} />;
       
       case 'vertical-canvas-header':
       case 'quiz-header':
+      case 'canvas-header':
         return <VerticalCanvasHeaderBlock {...commonProps} />;
       
-      case 'text':
       default:
-        // Fallback component for text and unknown types
+        // Enhanced fallback component with better UX
         return (
           <div 
             className={cn(
-              'p-4 min-h-[60px] flex items-center',
+              'p-4 min-h-[80px] flex items-center justify-center',
               'border-2 border-dashed border-gray-300 rounded-lg',
-              'bg-gray-50 text-center text-gray-500',
-              isSelected && 'border-blue-500 bg-blue-50',
-              !disabled && 'hover:bg-gray-100'
+              'bg-gray-50 text-center text-gray-500 transition-all duration-200',
+              isSelected && 'border-blue-500 bg-blue-50 text-blue-600',
+              !disabled && 'hover:bg-gray-100 hover:border-gray-400'
             )}
             onClick={onClick}
           >
             <div className="w-full">
-              <p className="text-sm font-medium">
-                {block.type === 'text' ? 'Bloco de Texto' : `Componente: ${block.type}`}
-              </p>
-              <p className="text-xs mt-1">
-                {block.properties?.text || 'Clique para editar'}
-              </p>
+              <div className="text-sm font-medium mb-1">
+                📦 {block.type || 'Componente Desconhecido'}
+              </div>
+              <div className="text-xs text-gray-400">
+                {block.properties?.text || 
+                 block.properties?.content || 
+                 block.properties?.title || 
+                 'Clique para editar este bloco'}
+              </div>
+              {isSelected && (
+                <div className="text-xs text-blue-500 mt-2">
+                  ✏️ Selecionado - Use o painel de propriedades
+                </div>
+              )}
             </div>
           </div>
         );
