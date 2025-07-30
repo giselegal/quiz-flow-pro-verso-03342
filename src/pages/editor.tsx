@@ -3,7 +3,7 @@ import { useLocation } from 'wouter';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../components/ui/resizable';
 import { ComponentsSidebar } from '../components/editor/sidebar/ComponentsSidebar';
 import { EditPreview } from '../components/editor/preview/EditPreview';
-import PropertiesPanel from '../components/editor/properties/PropertiesPanel';
+import { AdvancedPropertyPanel } from '../components/editor/AdvancedPropertyPanel';
 import { EditorToolbar } from '../components/editor/toolbar/EditorToolbar';
 import { useEditor } from '../hooks/useEditor';
 import { useEditorPersistence } from '../hooks/editor/useEditorPersistence';
@@ -154,10 +154,21 @@ const EditorPage: React.FC = () => {
           <ResizableHandle />
           
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-            <PropertiesPanel
-              selectedComponentId={selectedComponentId}
-              config={config}
-              onUpdateBlock={updateBlock}
+            <AdvancedPropertyPanel
+              selectedBlockId={selectedComponentId}
+              properties={selectedComponentId ? config.blocks?.find(b => b.id === selectedComponentId)?.properties || {} : {}}
+              onPropertyChange={(key, value) => {
+                if (selectedComponentId) {
+                  const block = config.blocks?.find(b => b.id === selectedComponentId);
+                  if (block) {
+                    updateBlock(selectedComponentId, { 
+                      ...block, 
+                      properties: { ...block.properties, [key]: value } 
+                    });
+                  }
+                }
+              }}
+              onDeleteBlock={selectedComponentId ? () => deleteBlock(selectedComponentId) : undefined}
             />
           </ResizablePanel>
         </ResizablePanelGroup>

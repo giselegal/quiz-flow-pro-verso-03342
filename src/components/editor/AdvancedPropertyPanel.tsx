@@ -94,11 +94,11 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     layout: true,
     options: true,
-    validations: false,
-    styling: false,
-    customization: false,
+    validations: true,
+    styling: true,
+    customization: true,
     advanced: false,
-    general: false
+    general: true
   });
 
   // Property history management

@@ -1,13 +1,11 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { cn } from '../../../lib/utils';
 import type { BlockData } from '../../../types/blocks';
 
-// === COMPONENTE DE FALLBACK ===
-import FallbackBlock from './FallbackBlock';
-import EnhancedFallbackBlock from './EnhancedFallbackBlock';
-import BasicTextBlock from './BasicTextBlock';
-
 // === COMPONENTES PRINCIPAIS DO SISTEMA ===
+// Componentes de página completa (funcionais)
+
+
 // Componentes de quiz (funcionais)
 import QuizQuestionBlock from './QuizQuestionBlock';
 import QuizProgressBlock from './QuizProgressBlock';
@@ -16,56 +14,60 @@ import StrategicQuestionBlock from './StrategicQuestionBlock';
 import QuizTransitionBlock from './QuizTransitionBlock';
 import OptionsGridBlock from './OptionsGridBlock';
 import VerticalCanvasHeaderBlock from './VerticalCanvasHeaderBlock';
-import QuizIntroHeaderBlock from './QuizIntroHeaderBlock';
 
-// === COMPONENTES BÁSICOS ESSENCIAIS ===
+// === COMPONENTES INLINE MODULARES (ES7+) ===
+// Importação corrigida e otimizada dos componentes inline
+import {
+  TextInlineBlock,
+  StyleCardInlineBlock,
+  StatInlineBlock,
+  BadgeInlineBlock,
+  ProgressInlineBlock,
+  ImageDisplayInlineBlock,
+  PricingCardInlineBlock,
+  TestimonialCardInlineBlock,
+  // Etapa 20 (Resultado)
+  TestimonialsInlineBlock,
+  // Etapa 21 (Oferta)
+  QuizOfferPricingInlineBlock,
+  CountdownInlineBlock,
+  // Componentes especializados para Quiz
+  LoadingAnimationBlock,
+    // NOVA IMPLEMENTAÇÃO: Componentes das 21 Etapas Inline (existentes)
+  QuizStartPageInlineBlock,
+  QuizQuestionInlineBlock,
+  QuizProgressInlineBlock,
+  QuizTransitionInlineBlock,
+  QuizLoadingInlineBlock,
+  QuizResultInlineBlock,
+  QuizAnalysisInlineBlock,
+  QuizCategoryInlineBlock,
+  QuizRecommendationInlineBlock,
+  QuizActionPlanInlineBlock,
+  QuizMetricsInlineBlock,
+  QuizComparisonInlineBlock,
+  QuizCertificateInlineBlock,
+  QuizLeaderboardInlineBlock,
+  QuizBadgesInlineBlock,
+  QuizEvolutionInlineBlock,
+  QuizNetworkingInlineBlock,
+  QuizDevelopmentPlanInlineBlock,
+  QuizGoalsDashboardInlineBlock,
+  QuizFinalResultsInlineBlock,
+  QuizOfferCTAInlineBlock
+} from './inline';
+
+// Componentes básicos (funcionais)
+import { SpacerBlock } from './SpacerBlock';
+import { VideoPlayerBlock } from './VideoPlayerBlock';
+import FormInputBlock from './FormInputBlock';
+import ListBlock from './ListBlock';
+
+// Componentes inline básicos e funcionais
 import HeadingInlineBlock from './HeadingInlineBlock';
 import ImageInlineBlock from './ImageInlineBlock';
 import ButtonInlineBlock from './ButtonInlineBlock';
 import CTAInlineBlock from './CTAInlineBlock';
-import { SpacerBlock } from './SpacerBlock';
-import FormInputBlock from './FormInputBlock';
-import ListBlock from './ListBlock';
-import ScriptBlock from './ScriptBlock';
-
-// === COMPONENTES REAIS QUE ESTAVAM COMO FALLBACK ===
-import SectionDividerBlock from './SectionDividerBlock';
-import StatsMetricsBlock from './StatsMetricsBlock';
-import TwoColumnsBlock from './TwoColumnsBlock';
-import TestimonialInlineBlock from './TestimonialInlineBlock';
-import ProgressInlineBlock from './ProgressInlineBlock';
-import StyleCardInlineBlock from './StyleCardInlineBlock';
-import CTASectionInlineBlock from './CTASectionInlineBlock';
-import BadgeInlineBlock from './BadgeInlineBlock';
-
-// === COMPONENTES INLINE MODULARES (com verificação de existência) ===
-// Desabilitado para evitar problemas de dynamic imports
-let StatInlineBlock: any;
-let PricingCardInlineBlock: any;
-let TestimonialCardInlineBlock: any;
-let CountdownInlineBlock: any;
-let LoadingAnimationBlock: any;
-
-// === IMPORTANDO COMPONENTES INLINE ESSENCIAIS ===
-import ImageDisplayInlineBlock from './inline/ImageDisplayInlineBlock';
-import TextInlineBlock from './inline/TextInlineBlock';
-try {
-  CountdownInlineBlock = require('./inline/CountdownInlineBlock').default;
-} catch (e) {
-  console.warn('CountdownInlineBlock não disponível');
-}
-
-try {
-  PricingCardInlineBlock = require('./inline/PricingCardInlineBlock').default;
-} catch (e) {
-  console.warn('PricingCardInlineBlock não disponível');
-}
-
-try {
-  StatInlineBlock = require('./inline/StatInlineBlock').default;
-} catch (e) {
-  console.warn('StatInlineBlock não disponível');
-}
 
 // Novos componentes inline criados
 import ResultHeaderInlineBlock from './inline/ResultHeaderInlineBlock';
@@ -73,8 +75,6 @@ import ResultCardInlineBlock from './inline/ResultCardInlineBlock';
 import BeforeAfterInlineBlock from './inline/BeforeAfterInlineBlock';
 import BonusListInlineBlock from './inline/BonusListInlineBlock';
 import StepHeaderInlineBlock from './inline/StepHeaderInlineBlock';
-import LegalNoticeInlineBlock from './LegalNoticeInlineBlock';
-import DecorativeBarInlineBlock from './DecorativeBarInlineBlock';
 
 // Novos componentes modulares para etapas 20 e 21 (temporariamente desabilitados)
 import ResultPageHeaderBlock from './ResultPageHeaderBlock';
@@ -83,8 +83,6 @@ import ResultPageHeaderBlock from './ResultPageHeaderBlock';
 import TestimonialsGridBlock from './TestimonialsGridBlock';
 import FAQSectionBlock from './FAQSectionBlock';
 import GuaranteeBlock from './GuaranteeBlock';
-import TestimonialsBlock from './TestimonialsBlock';
-import QuizStartPageBlock from './QuizStartPageBlock';
 
 export interface BlockRendererProps {
   block: BlockData;
@@ -96,28 +94,10 @@ export interface BlockRendererProps {
 }
 
 /**
- * Universal Block Renderer for Schema-Driven Editor - VERSÃO OTIMIZADA ES7+
- * 
- * 🚀 RECURSOS MODERNOS IMPLEMENTADOS:
- * - ✅ useMemo para otimização de performance
- * - ✅ Componentes reais substituindo fallbacks feios
- * - ✅ TypeScript com type safety 
- * - ✅ Flexbox responsivo mobile-first
- * - ✅ Spreading operators ES7+ (...props)
- * - ✅ Template literals e arrow functions
- * 
- * 📦 COMPONENTES MAPEADOS (Real vs Fallback):
- * - stats-counter → StatsMetricsBlock ✅
- * - testimonial-card → TestimonialInlineBlock ✅  
- * - section-divider → SectionDividerBlock ✅
- * - progress-inline → ProgressInlineBlock ✅
- * - style-card-inline → StyleCardInlineBlock ✅
- * - badge-inline → BadgeInlineBlock ✅
- * - feature-highlight → CTASectionInlineBlock ✅
- * - flex-containers → TwoColumnsBlock ✅
- * 
- * 🎯 ARQUITETURA:
- * blockDefinitions.ts (schemas) → UniversalBlockRenderer.tsx (mapping) → ComponenteReal.tsx (visual)
+ * Universal Block Renderer for Schema-Driven Editor (ALL INLINE HORIZONTAL)
+ * Renders any block type based on its type property
+ * All components are now inline-editable with horizontal flexbox layout
+ * Implements responsive, mobile-first design with max 2 columns
  */
 export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
   block,
@@ -127,8 +107,8 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
   disabled = false,
   className
 }) => {
-  // ES7+ Props otimizados com useMemo para melhor performance
-  const commonProps = useMemo(() => ({
+  // ES7+ Props comuns padronizados para flexbox inline responsivo
+  const commonProps = {
     block,
     isSelected,
     onClick,
@@ -155,125 +135,173 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'max-w-full overflow-hidden',
       className
     )
-  }), [block, isSelected, onClick, onSaveInline, disabled, className]);
+  };
 
   // TODOS os componentes são agora inline - removido conceito de não-inline
   const isInlineBlock = (blockType: string): boolean => {
     return true; // Todos são inline agora
   };
 
-  // ES7+ Sistema de renderização otimizado com useMemo
-  const renderedComponent = useMemo(() => {
+  // ES7+ Sistema responsivo simplificado - SEM wrapper duplo
+  const renderComponent = () => {
+    const commonProps = {
+      block,
+      isSelected,
+      onClick,
+      onPropertyChange: (key: string, value: any) => {
+        if (onSaveInline) {
+          const updatedBlock = {
+            ...block,
+            properties: { ...block.properties, [key]: value }
+          };
+          onSaveInline(block.id, updatedBlock);
+        }
+      },
+      className: cn(
+        // Responsividade nativa mobile-first
+        'w-full transition-all duration-200',
+        'border border-gray-200 rounded-lg shadow-sm bg-white',
+        'hover:shadow-md hover:border-blue-300',
+        isSelected && 'ring-2 ring-blue-500 border-blue-400 bg-blue-50'
+      )
+    };
+
     const componentMap: Record<string, () => React.ReactNode> = {
-      // === COMPONENTES BÁSICOS ESSENCIAIS ===
-      'heading': () => <HeadingInlineBlock {...commonProps} />,
-      'text': () => <TextInlineBlock {...commonProps} />,
-      'image': () => <ImageInlineBlock {...commonProps} />,
-      'button': () => <ButtonInlineBlock {...commonProps} />,
-      'button-inline': () => <ButtonInlineBlock {...commonProps} />,
-      'cta': () => <CTAInlineBlock {...commonProps} />,
-      'spacer': () => <SpacerBlock {...commonProps} />,
+      // === COMPONENTES BÁSICOS ===
+      header: () => <HeadingInlineBlock {...commonProps} />,
+      text: () => <TextInlineBlock {...commonProps} />,
+      image: () => <ImageInlineBlock {...commonProps} />,
+      button: () => <ButtonInlineBlock {...commonProps} />,
+      spacer: () => <SpacerBlock {...commonProps} />,
       'form-input': () => <FormInputBlock {...commonProps} />,
-      'list': () => <ListBlock {...commonProps} />,
-      'script': () => <ScriptBlock {...commonProps} />,
+      list: () => <ListBlock {...commonProps} />,
       
-      // === COMPONENTES QUIZ PRINCIPAIS ===
-      'options-grid': () => <OptionsGridBlock {...commonProps} />,
-      'vertical-canvas-header': () => <VerticalCanvasHeaderBlock {...commonProps} />,
-      'quiz-intro-header': () => <QuizIntroHeaderBlock {...commonProps} />,
-      'quiz-question': () => <QuizQuestionBlock {...commonProps} />,
-      'quiz-progress': () => <QuizProgressBlock {...commonProps} />,
-      'quiz-transition': () => <QuizTransitionBlock {...commonProps} />,
-      'quiz-start-page': () => <QuizStartPageBlock {...commonProps} />,
-      'quiz-result-calculated': () => <FallbackBlock {...commonProps} blockType="quiz-result-calculated" />,
+      // === COMPONENTES DE RESULTADO ===
+      'result-header': () => <HeadingInlineBlock {...commonProps} />,
+      'result-description': () => <TextInlineBlock {...commonProps} />,
       
-      // === COMPONENTES DAS 21 ETAPAS DO FUNIL ===
-      'quiz-start-page-inline': () => <QuizStartPageBlock {...commonProps} />,
-      'strategic-question-main': () => <QuizQuestionBlock {...commonProps} />,
-      'quiz-final-results-inline': () => <FallbackBlock {...commonProps} blockType="quiz-final-results-inline" />,
-      'quiz-offer-pricing-inline': () => <FallbackBlock {...commonProps} blockType="quiz-offer-pricing-inline" />,
+      // === COMPONENTES DE OFERTA ===
+      'product-offer': () => <PricingCardInlineBlock {...commonProps} />,
+      'urgency-timer': () => <CountdownInlineBlock {...commonProps} />,
       
-      // === COMPONENTES MODERNOS CRIADOS 28/07 ===
-      'guarantee': () => <GuaranteeBlock {...commonProps} />,
-      'testimonials': () => <TestimonialsBlock {...commonProps} />,
-      'testimonials-grid': () => <TestimonialsGridBlock {...commonProps} />,
+      // === COMPONENTES ESPECIAIS ===
       'faq-section': () => <FAQSectionBlock {...commonProps} />,
+      testimonials: () => <TestimonialsGridBlock {...commonProps} />,
+      guarantee: () => <GuaranteeBlock {...commonProps} />,
+      'video-player': () => <VideoPlayerBlock {...commonProps} />,
       
-      // === COMPONENTES ADICIONAIS (agora com componentes reais) ===
-      'quiz-question-configurable': () => <QuizQuestionBlock {...commonProps} />,
-      'quiz-question-modern': () => <QuizQuestionBlock {...commonProps} />,
-      'progress-bar-modern': () => <ProgressInlineBlock {...commonProps} />,
-      'image-text-card': () => <TwoColumnsBlock {...commonProps} block={{...commonProps.block, type: 'two-columns'} as any} />,
-      'stats-counter': () => <StatsMetricsBlock {...commonProps} block={{...commonProps.block, type: 'stats-metrics'} as any} />,
-      'testimonial-card': () => <TestimonialInlineBlock {...commonProps} />,
-      'feature-highlight': () => <CTASectionInlineBlock {...commonProps} />,
-      'section-divider': () => <SectionDividerBlock {...commonProps} />,
-      'flex-container-horizontal': () => <TwoColumnsBlock {...commonProps} block={{...commonProps.block, type: 'two-columns'} as any} />,
-      'flex-container-vertical': () => <TwoColumnsBlock {...commonProps} block={{...commonProps.block, type: 'two-columns'} as any} />,
-      
-      // === COMPONENTES INLINE BÁSICOS (com fallback) ===
+      // === COMPONENTES INLINE ESSENCIAIS ===
       'text-inline': () => <TextInlineBlock {...commonProps} />,
       'heading-inline': () => <HeadingInlineBlock {...commonProps} />,
+      'button-inline': () => <ButtonInlineBlock {...commonProps} />,
       'badge-inline': () => <BadgeInlineBlock {...commonProps} />,
       'progress-inline': () => <ProgressInlineBlock {...commonProps} />,
       'image-display-inline': () => <ImageDisplayInlineBlock {...commonProps} />,
       'style-card-inline': () => <StyleCardInlineBlock {...commonProps} />,
-      'legal-notice-inline': () => <LegalNoticeInlineBlock {...commonProps} />,
-      'decorative-bar-inline': () => <DecorativeBarInlineBlock {...commonProps} />,
-      'countdown-timer-inline': () => CountdownInlineBlock ? <CountdownInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
-      'countdown-timer-real': () => CountdownInlineBlock ? <CountdownInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
-      'stat-inline': () => StatInlineBlock ? <StatInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
-      'pricing-card-inline': () => PricingCardInlineBlock ? <PricingCardInlineBlock {...commonProps} /> : <FallbackBlock {...commonProps} blockType="pricing-card-inline" />,
-      'price-highlight-inline': () => PricingCardInlineBlock ? <PricingCardInlineBlock {...commonProps} /> : <FallbackBlock {...commonProps} blockType="price-highlight-inline" />,
-      
-      // === COMPONENTES CTA MODERNOS ===
-      'cta-button-modern': () => <ButtonInlineBlock {...commonProps} />,
-      'cta-modern': () => <CTAInlineBlock {...commonProps} />,
-      
-      // === COMPONENTES DE LOADING ===
-      'loading-animation': () => LoadingAnimationBlock ? <LoadingAnimationBlock {...commonProps} /> : <FallbackBlock {...commonProps} blockType="loading-animation" />,
-
-      // === COMPONENTES INDIVIDUALIZADOS E MODULARES ===
-      'title-standalone': () => <HeadingInlineBlock {...commonProps} />,
-      'subtitle-standalone': () => <HeadingInlineBlock {...commonProps} />,
-      'single-button': () => <ButtonInlineBlock {...commonProps} />,
-      'single-image': () => <ImageInlineBlock {...commonProps} />,
-      'text-paragraph': () => <TextInlineBlock {...commonProps} />,
-      'icon-standalone': () => <BadgeInlineBlock {...commonProps} />,
-      'divider-line': () => <SectionDividerBlock {...commonProps} />,
-      'spacing-block': () => <SpacerBlock {...commonProps} />,
-      
-      // === COMPONENTES DE RESULTADO ===
-      'result-header-inline': () => <ResultHeaderInlineBlock {...commonProps} />,
       'result-card-inline': () => <ResultCardInlineBlock {...commonProps} />,
+      'result-header-inline': () => <ResultHeaderInlineBlock {...commonProps} />,
       'before-after-inline': () => <BeforeAfterInlineBlock {...commonProps} />,
       'bonus-list-inline': () => <BonusListInlineBlock {...commonProps} />,
       'step-header-inline': () => <StepHeaderInlineBlock {...commonProps} />,
+      'testimonial-card-inline': () => <TestimonialCardInlineBlock {...commonProps} />,
+      'countdown-inline': () => <CountdownInlineBlock {...commonProps} />,
+      'stat-inline': () => <StatInlineBlock {...commonProps} />,
+      'pricing-card-inline': () => <PricingCardInlineBlock {...commonProps} />,
+      
+      // === COMPONENTES QUIZ ===
+      'quiz-intro-header': () => <VerticalCanvasHeaderBlock {...commonProps} />,
+      'vertical-canvas-header': () => <VerticalCanvasHeaderBlock {...commonProps} />,
+      'loading-animation': () => <LoadingAnimationBlock {...commonProps} />,
+      'options-grid': () => <OptionsGridBlock {...commonProps} />,
+      'quiz-question': () => <QuizQuestionBlock {...commonProps} />,
+      'quiz-progress': () => <QuizProgressBlock {...commonProps} />,
+      
+      // === NOVA IMPLEMENTAÇÃO: Componentes das 21 Etapas Inline ===
+      // === COMPONENTES DAS 21 ETAPAS INLINE ===
+      'quiz-start-page-inline': () => <QuizStartPageInlineBlock {...commonProps} />,
+      'quiz-personal-info-inline': () => <QuizPersonalInfoInlineBlock {...commonProps} />,
+      'quiz-experience-inline': () => <QuizExperienceInlineBlock {...commonProps} />,
+      'quiz-skills-assessment-inline': () => <QuizSkillsAssessmentInlineBlock {...commonProps} />,
+      'quiz-leadership-style-inline': () => <QuizLeadershipStyleInlineBlock {...commonProps} />,
+      'quiz-communication-inline': () => <QuizCommunicationInlineBlock {...commonProps} />,
+      'quiz-problem-solving-inline': () => <QuizProblemSolvingInlineBlock {...commonProps} />,
+      'quiz-goals-inline': () => <QuizGoalsInlineBlock {...commonProps} />,
+      'quiz-motivation-inline': () => <QuizMotivationInlineBlock {...commonProps} />,
+      'quiz-work-style-inline': () => <QuizWorkStyleInlineBlock {...commonProps} />,
+      'quiz-feedback-inline': () => <QuizFeedbackInlineBlock {...commonProps} />,
+      'quiz-results-inline': () => <QuizResultsInlineBlock {...commonProps} />,
+      'quiz-certificate-inline': () => <QuizCertificateInlineBlock {...commonProps} />,
+      'quiz-leaderboard-inline': () => <QuizLeaderboardInlineBlock {...commonProps} />,
+      'quiz-badges-inline': () => <QuizBadgesInlineBlock {...commonProps} />,
+      'quiz-evolution-inline': () => <QuizEvolutionInlineBlock {...commonProps} />,
+      'quiz-networking-inline': () => <QuizNetworkingInlineBlock {...commonProps} />,
+      'quiz-development-plan-inline': () => <QuizDevelopmentPlanInlineBlock {...commonProps} />,
+      'quiz-goals-dashboard-inline': () => <QuizGoalsDashboardInlineBlock {...commonProps} />,
+      'quiz-final-results-inline': () => <QuizFinalResultsInlineBlock {...commonProps} />,
+      'quiz-offer-cta-inline': () => <QuizOfferCTAInlineBlock {...commonProps} />,
+      
+      // === COMPONENTES ETAPA 20/21 (sem duplicação) ===
+      'quiz-offer-pricing-inline': () => <QuizOfferPricingInlineBlock {...commonProps} />,
+      'divider-inline': () => <SpacerBlock {...commonProps} />,
+      
+      // === COMPONENTES ETAPA 21 ESPECÍFICOS ===
+      'hero-badge-inline': () => <BadgeInlineBlock {...commonProps} />,
+      'hero-title-inline': () => <HeadingInlineBlock {...commonProps} />,
+      'problem-list-inline': () => <ListBlock {...commonProps} />,
+      'highlight-box-inline': () => <BadgeInlineBlock {...commonProps} />,
+      'product-card-inline': () => <PricingCardInlineBlock {...commonProps} />,
+      'price-highlight-inline': () => <PricingCardInlineBlock {...commonProps} />,
+      'cta-button-inline': () => <ButtonInlineBlock {...commonProps} />,
+      'trust-elements-inline': () => <TestimonialsGridBlock {...commonProps} />,
+      'countdown-timer-inline': () => <CountdownInlineBlock {...commonProps} />,
+      'guarantee-seal-inline': () => <BadgeInlineBlock {...commonProps} />,
+      'faq-item-inline': () => <FAQSectionBlock {...commonProps} />,
+      'section-header-inline': () => <HeadingInlineBlock {...commonProps} />,
+      'sticky-header-inline': () => <VerticalCanvasHeaderBlock {...commonProps} />,
+      
+      // === COMPONENTES ESTRATÉGICOS ===
+      'strategic-question-image': () => <StrategicQuestionBlock {...commonProps} />,
+      'strategic-question-main': () => <StrategicQuestionBlock {...commonProps} />,
+      'strategic-question-inline': () => <StrategicQuestionBlock {...commonProps} />,
+      
+      // === BLOCOS QUIZ ESPECÍFICOS ===
+      QuizQuestionBlock: () => <QuizQuestionBlock {...commonProps} />,
+      QuestionMultipleBlock: () => <QuestionMultipleBlock {...commonProps} />,
+      StrategicQuestionBlock: () => <StrategicQuestionBlock {...commonProps} />,
+      QuizTransitionBlock: () => <QuizTransitionBlock {...commonProps} />,
+
+      
+      // === MAPEAMENTOS ADICIONAIS ===
+      'quiz-title': () => <HeadingInlineBlock {...commonProps} />,
+      'quiz-name-input': () => <FormInputBlock {...commonProps} />,
+      'quiz-result-header': () => <HeadingInlineBlock {...commonProps} />,
+      'quiz-result-card': () => <PricingCardInlineBlock {...commonProps} />,
+      'quiz-offer-title': () => <HeadingInlineBlock {...commonProps} />,
+      'quiz-offer-countdown': () => <CountdownInlineBlock {...commonProps} />,
+      'quiz-offer-faq': () => <FAQSectionBlock {...commonProps} />,
+      
+      // === NOVOS COMPONENTES MODULARES ===
+      'result-page-header': () => <HeadingInlineBlock {...commonProps} />,
+      'style-result-card': () => <StyleCardInlineBlock {...commonProps} />,
+      'result-cta': () => <CTAInlineBlock {...commonProps} />,
+      'offer-header': () => <HeadingInlineBlock {...commonProps} />,
+      'product-showcase': () => <PricingCardInlineBlock {...commonProps} />,
+      'offer-cta': () => <CTAInlineBlock {...commonProps} />
     };
 
-    // Renderizar com fallback
-    const ComponentToRender = componentMap[block.type];
-    if (ComponentToRender) {
-      try {
-        return ComponentToRender();
-      } catch (error) {
-        console.warn(`Erro ao renderizar componente ${block.type}:`, error);
-        return <FallbackBlock {...commonProps} blockType={block.type} />;
-      }
-    }
-
-    // Fallback padrão
-    return <FallbackBlock {...commonProps} blockType={block.type} />;
-  }, [block.type, commonProps]); // ES7+ Dependency array otimizado
+    // ES7+ Return com fallback usando optional chaining
+    return componentMap[block.type as keyof typeof componentMap]?.() ?? 
+           <TextInlineBlock {...commonProps} />;
+  };
 
   return (
     <div className={cn(
-      // Container principal responsivo
-      'universal-block-renderer w-full',
-      'transition-all duration-300 ease-out',
-      className
+      // ES7+ Container principal flexbox responsivo
+      'universal-block-renderer',
+      'flex flex-col w-full',
+      'transition-all duration-300 ease-out'
     )}>
-      {renderedComponent}
+      {renderComponent()}
     </div>
   );
 };
