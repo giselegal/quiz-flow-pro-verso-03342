@@ -49,6 +49,11 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
     const valid = !required || newValue.trim().length > 0;
     setIsValid(valid);
 
+    // Disparar evento customizado para outros componentes sempre
+    window.dispatchEvent(new CustomEvent('quiz-input-change', {
+      detail: { blockId: block.id, value: newValue.trim(), valid }
+    }));
+
     // Salvar automaticamente se válido
     if (valid && newValue.trim()) {
       try {
@@ -71,11 +76,6 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
         if (onValueChange) {
           onValueChange(newValue.trim());
         }
-
-        // Disparar evento customizado para outros componentes
-        window.dispatchEvent(new CustomEvent('quiz-input-change', {
-          detail: { blockId: block.id, value: newValue.trim(), valid }
-        }));
       } catch (error) {
         console.error('❌ Erro ao salvar resposta:', error);
       }
@@ -99,9 +99,9 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
       <div className={`space-y-3 ${fullWidth ? 'w-full' : 'w-auto'}`}>
         <div className="flex items-center gap-2">
           <TextCursorInput className="w-4 h-4 text-[#B89B7A]" />
-          <label className="text-sm font-medium text-[#432818]">
+          <label className="text-sm font-medium text-[#432818] uppercase tracking-wide">
             {label}
-            {required && <span className="text-red-500 ml-1">*</span>}
+            {required && <span className="text-[#B89B7A] ml-1">*</span>}
           </label>
         </div>
         
@@ -113,12 +113,12 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
           className={`
             w-full px-4 py-3 border-2 rounded-lg 
             focus:ring-2 focus:ring-[#B89B7A] focus:border-[#B89B7A] 
-            transition-all outline-none
+            transition-all outline-none text-[#432818] placeholder-[#B89B7A]/70
             ${isValid 
-              ? 'border-green-300 bg-green-50' 
+              ? 'border-[#B89B7A] bg-[#B89B7A]/10' 
               : value && !isValid 
-                ? 'border-red-300 bg-red-50' 
-                : 'border-gray-300 bg-white hover:border-[#B89B7A]/50'
+                ? 'border-[#432818]/30 bg-[#432818]/5' 
+                : 'border-[#B89B7A]/30 bg-white hover:border-[#B89B7A]/70'
             }
           `}
         />

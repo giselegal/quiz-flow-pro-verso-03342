@@ -797,13 +797,14 @@ class SchemaDrivenFunnelService {
           }
         },
         {
-          id: 'intro-decorative-spacer',
-          type: 'spacer',
+          id: 'intro-decorative-bar',
+          type: 'text-inline',
           properties: {
-            height: 4,
-            backgroundColor: '#B89B7A',
+            content: '<div style="width: 80px; height: 4px; background: linear-gradient(90deg, #B89B7A, #D4C2A8, #B89B7A); border-radius: 3px; box-shadow: 0 2px 6px rgba(184, 155, 122, 0.4); margin: 8px auto 24px auto; display: block;"></div>',
+            textAlign: 'text-center',
             marginTop: 0,
-            marginBottom: 24
+            marginBottom: 16,
+            fontSize: 'text-base'
           }
         },
         {
@@ -826,9 +827,9 @@ class SchemaDrivenFunnelService {
           properties: {
             src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.webp',
             alt: 'Transforme seu guarda-roupa',
-            width: 500,
-            height: 350,
-            className: 'object-cover w-full max-w-lg h-auto rounded-xl mx-auto shadow-lg',
+            width: 600,
+            height: 400,
+            className: 'object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg',
             textAlign: 'text-center',
             marginBottom: 32
           }

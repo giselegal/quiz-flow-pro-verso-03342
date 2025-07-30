@@ -56,7 +56,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
       onClick={onClick}
     >
       {/* Header Content - Visual Only */}
-      <div className="flex items-center justify-center mb-6 relative min-h-[120px]">
+      <div className="flex items-center justify-center mb-0 relative min-h-[120px]">
         {/* Back Button - Absolute positioned to not affect centering */}
         {showBackButton && (
           <button className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 rounded-lg hover:bg-gray-100 transition-colors">
@@ -65,7 +65,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
         )}
 
         {/* Logo - Perfectly Centered */}
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center w-full">
           <img 
             src={logoUrl}
             alt={logoAlt}
@@ -73,7 +73,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
               width: `${logoWidth}px`, 
               height: `${logoHeight}px` 
             }}
-            className="object-contain mx-auto"
+            className="object-contain mx-auto block"
             onError={(e) => {
               e.currentTarget.src = 'https://via.placeholder.com/96x96?text=Logo';
             }}
