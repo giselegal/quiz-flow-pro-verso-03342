@@ -5,11 +5,11 @@ import { ComponentsSidebar } from '../components/editor/sidebar/ComponentsSideba
 import { EditPreview } from '../components/editor/preview/EditPreview';
 import PropertiesPanel from '../components/editor/properties/PropertiesPanel';
 import { EditorToolbar } from '../components/editor/toolbar/EditorToolbar';
-import { useEditor } from '../hooks/useEditor';
-import { useEditorPersistence } from '../hooks/editor/useEditorPersistence';
-import { useAutoSaveWithDebounce } from '../hooks/editor/useAutoSaveWithDebounce';
-import { toast } from '../components/ui/use-toast';
-import { LoadingSpinner } from '../components/ui/loading-spinner';
+import { useEditor } from '@/hooks/useEditor';
+import { useEditorPersistence } from '@/hooks/editor/useEditorPersistence';
+import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
+import { toast } from '@/components/ui/use-toast';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { EditorQuizProvider } from '@/contexts/EditorQuizContext';
 import { schemaDrivenFunnelService } from '../services/schemaDrivenFunnelService';
 
