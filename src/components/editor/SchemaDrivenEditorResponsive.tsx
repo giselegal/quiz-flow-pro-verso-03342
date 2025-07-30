@@ -1077,7 +1077,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     } else {
       console.log(`✅ Etapa ${stepId} já tem ${selectedStep?.blocksCount || 0} blocos`);
     }
-  }, [steps, handlePopulateStep]);
+  }, [steps]); // Removido handlePopulateStep para evitar erro de dependência circular
 
   const handleStepAdd = useCallback(() => {
     const newStep: QuizStep = {
