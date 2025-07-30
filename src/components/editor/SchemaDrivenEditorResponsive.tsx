@@ -1079,64 +1079,609 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     console.log('Reorder step', draggedId, 'to', targetId);
   }, []);
 
-  // Handler para popular uma etapa com blocos padrão
+  // Handler para popular uma etapa com blocos padrão - TODAS AS 21 ETAPAS
   const handlePopulateStep = useCallback((stepId: string) => {
-    console.log(`🎯 Populando etapa ${stepId} com blocos padrão`);
+    console.log(`🎯 [21 ETAPAS] Populando etapa ${stepId} com blocos padrão`);
     
-    // Blocos padrão para uma etapa de quiz
-    const defaultBlocks = [
-      {
-        type: 'heading-inline',
-        properties: {
-          content: 'Nova Questão',
-          level: 'h2',
-          fontSize: 'text-2xl',
-          fontWeight: 'font-bold',
-          textAlign: 'text-center',
-          color: '#432818',
-          marginBottom: 8
-        }
-      },
-      {
-        type: 'text-inline',
-        properties: {
-          content: 'Descrição da questão',
-          fontSize: 'text-base',
-          textAlign: 'text-center',
-          color: '#6B7280',
-          marginBottom: 16
-        }
-      },
-      {
-        type: 'options-grid',
-        properties: {
-          options: [
-            { id: 'opt1', text: 'Opção 1', value: 'option1' },
-            { id: 'opt2', text: 'Opção 2', value: 'option2' },
-            { id: 'opt3', text: 'Opção 3', value: 'option3' }
-          ],
-          columns: 1,
-          showImages: false,
-          multipleSelection: false,
-          maxSelections: 1,
-          minSelections: 1
-        }
-      },
-      {
-        type: 'button-inline',
-        properties: {
-          text: 'Continuar',
-          variant: 'primary',
-          size: 'large',
-          fullWidth: true,
-          marginTop: 24
-        }
+    // Encontrar o índice da etapa pelo stepId
+    const stepIndex = steps.findIndex(step => step.id === stepId);
+    if (stepIndex === -1) {
+      console.error(`❌ Etapa não encontrada: ${stepId}`);
+      return;
+    }
+    
+    console.log(`🔧 [21 ETAPAS] Populando etapa ${stepIndex + 1}...`);
+    
+    try {
+      let defaultBlocks: any[] = [];
+      
+      if (stepIndex === 0) {
+        // ==========================================
+        // ETAPA 1: INTRODUÇÃO COM COLETA DE NOME
+        // ==========================================
+        defaultBlocks = [
+          {
+            type: 'quiz-intro-header',
+            properties: {
+              logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+              logoAlt: 'Logo Gisele Galvão',
+              logoWidth: 120,
+              logoHeight: 120,
+              progressValue: 0,
+              progressMax: 100,
+              showBackButton: false,
+              showProgress: false
+            }
+          },
+          {
+            type: 'decorative-bar-inline',
+            properties: {
+              width: '100%',
+              height: 4,
+              color: '#B89B7A',
+              gradientColors: ['#B89B7A', '#D4C2A8', '#B89B7A'],
+              borderRadius: 3,
+              marginTop: 8,
+              marginBottom: 24,
+              showShadow: true
+            }
+          },
+          {
+            type: 'text-inline',
+            properties: {
+              content: '<span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">Chega</span> <span style="font-family: \'Playfair Display\', serif;">de um guarda-roupa lotado e da sensação de que</span> <span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">nada combina com você.</span>',
+              fontSize: 'text-3xl',
+              fontWeight: 'font-bold',
+              fontFamily: 'Playfair Display, serif',
+              textAlign: 'text-center',
+              color: '#432818',
+              marginBottom: 32,
+              lineHeight: '1.2'
+            }
+          },
+          {
+            type: 'image-display-inline',
+            properties: {
+              src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.webp',
+              alt: 'Transforme seu guarda-roupa',
+              width: 600,
+              height: 400,
+              className: 'object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg',
+              textAlign: 'text-center',
+              marginBottom: 32
+            }
+          },
+          {
+            type: 'text-inline',
+            properties: {
+              content: 'Em poucos minutos, descubra seu <strong style="color: #B89B7A;">Estilo Predominante</strong> — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
+              fontSize: 'text-xl',
+              textAlign: 'text-center',
+              color: '#432818',
+              marginTop: 0,
+              marginBottom: 40,
+              lineHeight: '1.6'
+            }
+          },
+          {
+            type: 'form-input',
+            properties: {
+              label: 'COMO VOCÊ GOSTARIA DE SER CHAMADA?',
+              placeholder: 'Digite seu nome aqui...',
+              required: true,
+              inputType: 'text',
+              helperText: 'Seu nome será usado para personalizar sua experiência',
+              name: 'userName',
+              textAlign: 'text-center',
+              marginBottom: 32
+            }
+          },
+          {
+            type: 'button-inline',
+            properties: {
+              text: '✨ Quero Descobrir meu Estilo Agora! ✨',
+              variant: 'primary',
+              size: 'large',
+              fullWidth: true,
+              backgroundColor: '#B89B7A',
+              textColor: '#ffffff',
+              requiresValidInput: true,
+              textAlign: 'text-center',
+              borderRadius: 'rounded-full',
+              padding: 'py-4 px-8',
+              fontSize: 'text-lg',
+              fontWeight: 'font-bold',
+              boxShadow: 'shadow-xl',
+              hoverEffect: true
+            }
+          },
+          {
+            type: 'legal-notice-inline',
+            properties: {
+              privacyText: 'Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade',
+              copyrightText: '© 2025 Gisele Galvão - Todos os direitos reservados',
+              showIcon: true,
+              iconType: 'shield',
+              textAlign: 'text-center',
+              textSize: 'text-xs',
+              textColor: '#6B7280',
+              linkColor: '#B89B7A',
+              marginTop: 24,
+              marginBottom: 0,
+              backgroundColor: 'transparent'
+            }
+          }
+        ];
+      } else if (stepIndex >= 1 && stepIndex <= 10) {
+        // ==========================================
+        // ETAPAS 2-11: QUESTÕES PRINCIPAIS (10 QUESTÕES)
+        // ==========================================
+        const questionIndex = stepIndex - 1;
+        const currentProgress = 5 + (questionIndex + 1) * 5;
+        
+        defaultBlocks = [
+          {
+            type: 'quiz-intro-header',
+            properties: {
+              logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+              logoAlt: 'Logo Gisele Galvão',
+              logoWidth: 96,
+              logoHeight: 96,
+              progressValue: currentProgress,
+              progressMax: 100,
+              showBackButton: true
+            }
+          },
+          {
+            type: 'heading-inline',
+            properties: {
+              content: `Questão ${questionIndex + 1} - Como você se veste?`,
+              level: 'h2',
+              fontSize: 'text-2xl',
+              fontWeight: 'font-bold',
+              textAlign: 'text-center',
+              color: '#432818',
+              marginBottom: 8
+            }
+          },
+          {
+            type: 'text-inline',
+            properties: {
+              content: `Questão ${questionIndex + 1} de 10`,
+              fontSize: 'text-sm',
+              textAlign: 'text-center',
+              color: '#6B7280',
+              marginBottom: 24
+            }
+          },
+          {
+            type: 'options-grid',
+            properties: {
+              options: [
+                { id: '1', text: 'Prefiro roupas clássicas e atemporais', value: 'classico', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp' },
+                { id: '2', text: 'Gosto de tendências modernas', value: 'moderno', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_moderno.webp' },
+                { id: '3', text: 'Valorizo conforto acima de tudo', value: 'casual', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_casual.webp' },
+                { id: '4', text: 'Adoro peças românticas e delicadas', value: 'romantico', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_romantico.webp' }
+              ],
+              columns: 2,
+              showImages: true,
+              imageSize: 'large',
+              multipleSelection: false,
+              maxSelections: 1,
+              minSelections: 1,
+              validationMessage: 'Selecione 1 opção',
+              gridGap: 16,
+              responsiveColumns: true
+            }
+          },
+          {
+            type: 'button-inline',
+            properties: {
+              text: 'Continuar',
+              variant: 'primary',
+              size: 'large',
+              fullWidth: true,
+              backgroundColor: '#B89B7A',
+              textColor: '#ffffff',
+              disabled: true,
+              requiresValidSelection: true
+            }
+          }
+        ];
+      } else if (stepIndex === 11) {
+        // ==========================================
+        // ETAPA 12: TRANSIÇÃO PRINCIPAL
+        // ==========================================
+        defaultBlocks = [
+          {
+            type: 'quiz-intro-header',
+            properties: {
+              logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+              logoAlt: 'Logo Gisele Galvão',
+              logoWidth: 96,
+              logoHeight: 96,
+              progressValue: 60,
+              progressMax: 100,
+              showBackButton: true
+            }
+          },
+          {
+            type: 'heading-inline',
+            properties: {
+              content: 'Agora vamos conhecer você melhor',
+              level: 'h2',
+              fontSize: 'text-2xl',
+              fontWeight: 'font-bold',
+              textAlign: 'text-center',
+              color: '#432818',
+              marginBottom: 16
+            }
+          },
+          {
+            type: 'text-inline',
+            properties: {
+              content: 'Suas escolhas até agora já revelam muito sobre seu estilo. Agora vamos aprofundar para criar um perfil ainda mais preciso.',
+              fontSize: 'text-lg',
+              textAlign: 'text-center',
+              color: '#6B7280',
+              marginBottom: 32
+            }
+          },
+          {
+            type: 'progress-inline',
+            properties: {
+              progressValue: 60,
+              progressMax: 100,
+              showPercentage: true,
+              color: '#B89B7A',
+              backgroundColor: '#F5F5F5',
+              height: 8,
+              marginBottom: 32
+            }
+          },
+          {
+            type: 'button-inline',
+            properties: {
+              text: 'Continuar Análise',
+              variant: 'primary',
+              size: 'large',
+              fullWidth: true,
+              backgroundColor: '#B89B7A',
+              textColor: '#ffffff'
+            }
+          }
+        ];
+      } else if (stepIndex >= 12 && stepIndex <= 17) {
+        // ==========================================
+        // ETAPAS 13-18: QUESTÕES ESTRATÉGICAS (6 QUESTÕES)
+        // ==========================================
+        const strategicIndex = stepIndex - 12;
+        const currentProgress = 65 + (strategicIndex * 5);
+        
+        const strategicQuestions = [
+          'O que mais te incomoda no seu guarda-roupa atual?',
+          'Quanto você gasta por mês com roupas?',
+          'Qual sua maior dificuldade na hora de se vestir?',
+          'O que você mais gostaria de mudar?',
+          'Como você prefere receber orientação de estilo?',
+          'Você estaria disposta a investir em consultoria?'
+        ];
+        
+        defaultBlocks = [
+          {
+            type: 'quiz-intro-header',
+            properties: {
+              logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+              logoAlt: 'Logo Gisele Galvão',
+              logoWidth: 96,
+              logoHeight: 96,
+              progressValue: currentProgress,
+              progressMax: 100,
+              showBackButton: true
+            }
+          },
+          {
+            type: 'heading-inline',
+            properties: {
+              content: strategicQuestions[strategicIndex] || 'Questão estratégica',
+              level: 'h2',
+              fontSize: 'text-2xl',
+              fontWeight: 'font-bold',
+              textAlign: 'text-center',
+              color: '#432818',
+              marginBottom: 8
+            }
+          },
+          {
+            type: 'text-inline',
+            properties: {
+              content: `Questão estratégica ${strategicIndex + 1} de 6`,
+              fontSize: 'text-sm',
+              textAlign: 'text-center',
+              color: '#6B7280',
+              marginBottom: 24
+            }
+          },
+          {
+            type: 'options-grid',
+            properties: {
+              options: [
+                { id: '1', text: 'Opção A', value: 'a' },
+                { id: '2', text: 'Opção B', value: 'b' },
+                { id: '3', text: 'Opção C', value: 'c' },
+                { id: '4', text: 'Opção D', value: 'd' }
+              ],
+              columns: 1,
+              showImages: false,
+              multipleSelection: false,
+              maxSelections: 1,
+              minSelections: 1,
+              validationMessage: 'Selecione uma opção',
+              gridGap: 12,
+              responsiveColumns: true
+            }
+          },
+          {
+            type: 'button-inline',
+            properties: {
+              text: 'Continuar',
+              variant: 'primary',
+              size: 'large',
+              fullWidth: true,
+              backgroundColor: '#B89B7A',
+              textColor: '#ffffff',
+              disabled: true,
+              requiresValidSelection: true
+            }
+          }
+        ];
+      } else if (stepIndex === 18) {
+        // ==========================================
+        // ETAPA 19: TRANSIÇÃO FINAL
+        // ==========================================
+        defaultBlocks = [
+          {
+            type: 'quiz-intro-header',
+            properties: {
+              logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+              logoAlt: 'Logo Gisele Galvão',
+              logoWidth: 96,
+              logoHeight: 96,
+              progressValue: 95,
+              progressMax: 100,
+              showBackButton: false
+            }
+          },
+          {
+            type: 'heading-inline',
+            properties: {
+              content: 'Analisando suas respostas...',
+              level: 'h2',
+              fontSize: 'text-2xl',
+              fontWeight: 'font-bold',
+              textAlign: 'text-center',
+              color: '#432818',
+              marginBottom: 16
+            }
+          },
+          {
+            type: 'progress-inline',
+            properties: {
+              progressValue: 95,
+              progressMax: 100,
+              showPercentage: true,
+              animated: true,
+              color: '#B89B7A',
+              backgroundColor: '#F5F5F5',
+              height: 12,
+              marginBottom: 24
+            }
+          },
+          {
+            type: 'text-inline',
+            properties: {
+              content: 'Estamos criando seu perfil personalizado baseado nas suas 18 respostas...',
+              fontSize: 'text-lg',
+              textAlign: 'text-center',
+              color: '#6B7280',
+              marginBottom: 32
+            }
+          },
+          {
+            type: 'loading-animation',
+            properties: {
+              type: 'spinner',
+              size: 'large',
+              color: '#B89B7A',
+              duration: 3000
+            }
+          },
+          {
+            type: 'button-inline',
+            properties: {
+              text: 'Ver Meu Resultado Personalizado',
+              variant: 'primary',
+              size: 'large',
+              fullWidth: true,
+              backgroundColor: '#B89B7A',
+              textColor: '#ffffff',
+              delayShow: 3000
+            }
+          }
+        ];
+      } else if (stepIndex === 19) {
+        // ==========================================
+        // ETAPA 20: PÁGINA DE RESULTADO
+        // ==========================================
+        defaultBlocks = [
+          {
+            type: 'result-header-inline',
+            properties: {
+              logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+              logoAlt: 'Logo Gisele Galvão',
+              logoWidth: 96,
+              logoHeight: 96,
+              userName: 'dinamicUserName',
+              showProgress: false
+            }
+          },
+          {
+            type: 'result-card-inline',
+            properties: {
+              title: 'Seu Estilo Predominante',
+              styleName: 'Elegante',
+              percentage: 85,
+              description: 'Baseado nas suas respostas, identificamos que você tem características predominantes do estilo Elegante.',
+              imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp',
+              showMatch: true,
+              animateReveal: true
+            }
+          },
+          {
+            type: 'text-inline',
+            properties: {
+              content: `
+                <div class="characteristics-list">
+                  <h3 class="text-xl font-semibold mb-4 text-[#432818]">Suas principais características:</h3>
+                  <ul class="space-y-3">
+                    <li class="flex items-center">
+                      <span class="w-6 h-6 bg-[#B89B7A] rounded-full flex items-center justify-center text-white text-sm mr-3">✓</span>
+                      Elegância natural e sofisticação
+                    </li>
+                    <li class="flex items-center">
+                      <span class="w-6 h-6 bg-[#B89B7A] rounded-full flex items-center justify-center text-white text-sm mr-3">✓</span>
+                      Preferência por peças atemporais
+                    </li>
+                    <li class="flex items-center">
+                      <span class="w-6 h-6 bg-[#B89B7A] rounded-full flex items-center justify-center text-white text-sm mr-3">✓</span>
+                      Valoriza qualidade sobre quantidade
+                    </li>
+                  </ul>
+                </div>
+              `,
+              fontSize: 'text-base',
+              textAlign: 'text-left',
+              color: '#432818',
+              marginBottom: 32
+            }
+          },
+          {
+            type: 'image-display-inline',
+            properties: {
+              src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp',
+              alt: 'Guia de transformação do seu estilo',
+              width: 600,
+              height: 400,
+              className: 'object-cover w-full h-auto rounded-lg mx-auto shadow-lg'
+            }
+          },
+          {
+            type: 'button-inline',
+            properties: {
+              text: 'QUERO TRANSFORMAR MEU GUARDA-ROUPA AGORA',
+              variant: 'primary',
+              size: 'large',
+              fullWidth: true,
+              backgroundColor: '#B89B7A',
+              textColor: '#ffffff',
+              pulse: true
+            }
+          }
+        ];
+      } else if (stepIndex === 20) {
+        // ==========================================
+        // ETAPA 21: PÁGINA DE OFERTA
+        // ==========================================
+        defaultBlocks = [
+          {
+            type: 'heading-inline',
+            properties: {
+              content: 'Oferta Especial Para Você!',
+              level: 'h1',
+              fontSize: 'text-3xl',
+              fontWeight: 'font-bold',
+              textAlign: 'text-center',
+              color: '#432818',
+              marginBottom: 16
+            }
+          },
+          {
+            type: 'text-inline',
+            properties: {
+              content: 'Como você tem o estilo <strong class="text-[#B89B7A]">ELEGANTE</strong> predominante, criei uma oferta especial para você transformar seu guarda-roupa.',
+              fontSize: 'text-lg',
+              textAlign: 'text-center',
+              color: '#432818',
+              marginBottom: 24
+            }
+          },
+          {
+            type: 'image-display-inline',
+            properties: {
+              src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_COMPLETO_PRODUTO.webp',
+              alt: 'Guia Completo do Seu Estilo',
+              width: 500,
+              height: 400,
+              className: 'object-cover w-full h-auto rounded-lg mx-auto shadow-xl'
+            }
+          },
+          {
+            type: 'countdown-inline',
+            properties: {
+              title: 'Esta oferta expira em:',
+              targetMinutes: 15,
+              showLabels: true,
+              urgencyColor: 'red',
+              size: 'large',
+              centerAlign: true,
+              onExpire: 'redirect'
+            }
+          },
+          {
+            type: 'quiz-offer-pricing-inline',
+            properties: {
+              originalPrice: 197,
+              discountedPrice: 97,
+              discountPercentage: 51,
+              currency: 'BRL',
+              installments: {
+                number: 12,
+                value: 8.83
+              },
+              features: [
+                'Guia Completo do Seu Estilo (PDF)',
+                'Análise Personalizada Detalhada',
+                'Dicas de Combinações',
+                'Lista de Compras Estratégicas',
+                'Suporte por 30 dias'
+              ],
+              highlighted: true
+            }
+          },
+          {
+            type: 'button-inline',
+            properties: {
+              text: 'QUERO MEU GUIA PERSONALIZADO',
+              variant: 'primary',
+              size: 'large',
+              fullWidth: true,
+              backgroundColor: '#B89B7A',
+              textColor: '#ffffff',
+              pulse: true,
+              urgency: true
+            }
+          }
+        ];
       }
-    ];
-    
-    // Adicionar os blocos usando handleAddBlocksToStep
-    handleAddBlocksToStep(stepId, defaultBlocks);
-  }, [handleAddBlocksToStep]);
+
+      // Adicionar os blocos usando handleAddBlocksToStep
+      handleAddBlocksToStep(stepId, defaultBlocks);
+      
+      console.log(`✅ [21 ETAPAS] Etapa ${stepIndex + 1} populada com ${defaultBlocks.length} blocos`);
+    } catch (error) {
+      console.error(`❌ Erro ao popular etapa ${stepIndex + 1}:`, error);
+    }
+  }, [steps, handleAddBlocksToStep]);
 
   // Component selection handler
   const handleComponentSelect = useCallback((componentId: string) => {
