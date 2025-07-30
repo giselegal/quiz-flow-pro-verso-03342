@@ -10,12 +10,10 @@ import {
   Smartphone, 
   Tablet, 
   Monitor, 
-  LayoutGrid,
-  Trash2
+  LayoutGrid
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
-import { cleanEditorLocalStorage } from '@/utils/cleanStorage';
 
 interface EditorToolbarProps {
   isPreviewing: boolean;
