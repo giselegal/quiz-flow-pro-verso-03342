@@ -1224,13 +1224,16 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         // Gerar template real da questão usando generateRealQuestionTemplates
         const questionTemplates = generateRealQuestionTemplates();
         console.log(`📦 [DEBUG] Total de templates disponíveis: ${questionTemplates.length}`);
+        console.log(`📦 [DEBUG] Templates array:`, questionTemplates.map(t => ({ id: t.id, title: t.title, blocksCount: t.blocks?.length })));
         
         const questionTemplate = questionTemplates[questionIndex];
         console.log(`🔍 [DEBUG] Template da questão ${questionIndex + 1}:`, questionTemplate ? 'ENCONTRADO' : 'NÃO ENCONTRADO');
+        console.log(`🔍 [DEBUG] questionTemplate completo:`, questionTemplate);
         
-        if (questionTemplate) {
+        if (questionTemplate && questionTemplate.blocks && questionTemplate.blocks.length > 0) {
           console.log(`📝 Carregando questão ${questionIndex + 1}:`, questionTemplate.title);
-          console.log(`🧱 [DEBUG] Número de blocos no template: ${questionTemplate.blocks?.length || 0}`);
+          console.log(`🧱 [DEBUG] Número de blocos no template: ${questionTemplate.blocks.length}`);
+          console.log(`🧱 [DEBUG] Blocos do template:`, questionTemplate.blocks.map(b => ({ type: b.type, id: b.id })));
           defaultBlocks = questionTemplate.blocks;
         } else {
           console.error(`❌ Template da questão ${questionIndex + 1} não encontrado`);
