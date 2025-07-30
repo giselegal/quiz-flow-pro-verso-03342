@@ -1,6 +1,6 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import { cn } from '../../../../lib/utils';
+import type { BlockComponentProps } from '../../../../types/blocks';
 
 /**
  * ImageDisplayInlineBlock - Componente modular inline horizontal
@@ -21,7 +21,14 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
     showBadge = false,
     badgeText = 'Destaque',
     objectFit = 'cover',
-    borderRadius = 'lg'
+    borderRadius = 'lg',
+    // Propriedades específicas do template
+    width,
+    height,
+    className: customClassName = '',
+    textAlign = 'center',
+    marginTop = 0,
+    marginBottom = 0
   } = block.properties;
 
   // Tamanhos modulares responsivos
@@ -57,18 +64,52 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
     '2xl': 'rounded-2xl'
   };
 
+  // Text align classes
+  const textAlignClasses = {
+    left: 'text-left',
+    center: 'text-center',
+    right: 'text-right',
+    'text-left': 'text-left',
+    'text-center': 'text-center',
+    'text-right': 'text-right'
+  };
+
+  // Função para converter valores numéricos de margem em classes Tailwind
+  const getMarginClass = (value: number | string, type: 'top' | 'bottom') => {
+    if (typeof value === 'number' && value > 0) {
+      if (value <= 4) return `m${type[0]}-1`;
+      if (value <= 8) return `m${type[0]}-2`;
+      if (value <= 12) return `m${type[0]}-3`;
+      if (value <= 16) return `m${type[0]}-4`;
+      if (value <= 20) return `m${type[0]}-5`;
+      if (value <= 24) return `m${type[0]}-6`;
+      if (value <= 32) return `m${type[0]}-8`;
+      if (value <= 40) return `m${type[0]}-10`;
+      return `m${type[0]}-12`;
+    }
+    return '';
+  };
+
+  // Usar className customizada se fornecida, senão usar classes padrão
+  const containerClasses = cn(
+    // INLINE HORIZONTAL: Flexível e quebra linha automaticamente
+    'flex-shrink-0 flex-grow-0 relative',
+    // Centralização quando necessária
+    textAlign === 'center' || textAlign === 'text-center' ? 'mx-auto flex justify-center' : '',
+    // Usar classes customizadas ou responsivo modular
+    customClassName || sizeClasses[size as keyof typeof sizeClasses],
+    // Estados do editor
+    isSelected && 'ring-2 ring-blue-500 ring-offset-2',
+    'cursor-pointer transition-all duration-200',
+    // Margens
+    getMarginClass(marginTop, 'top'),
+    getMarginClass(marginBottom, 'bottom'),
+    className
+  );
+
   return (
     <div
-      className={cn(
-        // INLINE HORIZONTAL: Flexível e quebra linha automaticamente
-        'flex-shrink-0 flex-grow-0 relative',
-        // Responsivo modular
-        sizeClasses[size as keyof typeof sizeClasses],
-        // Estados do editor
-        isSelected && 'ring-2 ring-blue-500 ring-offset-2',
-        'cursor-pointer transition-all duration-200',
-        className
-      )}
+      className={containerClasses}
       onClick={onClick}
     >
       <div
@@ -81,9 +122,14 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
         <img
           src={src}
           alt={alt}
+          style={{
+            ...(width && { width: typeof width === 'number' ? `${width}px` : width }),
+            ...(height && { height: typeof height === 'number' ? `${height}px` : height })
+          }}
           className={cn(
             'w-full h-full transition-transform duration-500 hover:scale-105',
-            objectFitClasses[objectFit as keyof typeof objectFitClasses]
+            objectFitClasses[objectFit as keyof typeof objectFitClasses],
+            customClassName && 'w-auto h-auto' // Se tem className customizada, não forçar w-full h-full
           )}
         />
         

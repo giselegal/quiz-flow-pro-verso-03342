@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { blockDefinitions } from '@/config/blockDefinitions';
+import { blockDefinitions } from '../../../config/blockDefinitions.ts';
 
 interface SimpleSidebarProps {
   onComponentSelect: (type: string) => void;

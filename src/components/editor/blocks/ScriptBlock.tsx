@@ -1,6 +1,6 @@
 import React from 'react';
 import { Code } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { BlockComponentProps } from '../../../types/blocks';
 
 const ScriptBlock: React.FC<BlockComponentProps> = ({
   block,

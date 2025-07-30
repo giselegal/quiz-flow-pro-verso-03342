@@ -56,6 +56,7 @@ export interface StrategicQuestionBlockProps {
   onAnswer?: (answer: string | string[]) => void;
   selectedAnswer?: string | string[];
   disabled?: boolean;
+  onClick?: () => void;
 }
 
 const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
@@ -86,6 +87,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
   onAnswer,
   selectedAnswer = '',
   disabled = false,
+  onClick,
 }) => {
   const [currentAnswer, setCurrentAnswer] = useState<string | string[]>(selectedAnswer);
   const [freeTextAnswer, setFreeTextAnswer] = useState('');
@@ -231,14 +233,13 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
               </Button>
             ) : (
               <div className="space-y-4">
-                <textarea
-                  value={freeTextAnswer}
-                  onChange={(e) => setFreeTextAnswer(e.target.value)}
-                  placeholder={placeholder}
-                  className="w-full p-4 border-2 border-gray-300 rounded-lg focus:border-[#B89B7A] focus:ring-[#B89B7A] resize-none"
-                  rows={3}
-                  disabled={disabled}
-                />
+                <div 
+                  className="w-full p-4 border-2 border-gray-300 rounded-lg min-h-[80px] bg-gray-50 text-gray-500 flex items-center justify-center cursor-pointer hover:border-blue-300"
+                  onClick={onClick}
+                  title="Configure a área de texto no Painel de Propriedades"
+                >
+                  {freeTextAnswer || placeholder || "Área de texto configurável"}
+                </div>
                 <div className="flex gap-2">
                   <Button
                     onClick={handleFreeTextSubmit}

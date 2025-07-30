@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Editor Visual Avançado - Demo Completa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .feature-icon {
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 0.4; }
+            100% { transform: scale(0.8); opacity: 0.8; }
+        }
+        .pulse-ring {
+            animation: pulse-ring 2s infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Header -->
+    <header class="gradient-bg text-white py-12">
+        <div class="container mx-auto px-6 text-center">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-white bg-opacity-20 rounded-full mb-6 pulse-ring">
+                <span class="text-3xl">🚀</span>
+            </div>
+            <h1 class="text-5xl font-bold mb-4">Editor Visual Avançado</h1>
+            <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+                Sistema completo de edição visual com recursos modernos e interface intuitiva para criação de quizzes interativos
+            </p>
+            <div class="flex flex-wrap justify-center gap-4 mb-8">
+                <span class="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm">
+                    ✅ 10 Funcionalidades Principais
+                </span>
+                <span class="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm">
+                    🎯 100% Implementado
+                </span>
+                <span class="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm">
+                    ⚡ Performance Otimizada
+                </span>
+            </div>
+            <a href="/editor" class="inline-flex items-center px-8 py-4 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-all duration-300 transform hover:scale-105">
+                <span class="mr-2">🎨</span>
+                Acessar Editor
+            </a>
+        </div>
+    </header>
+
+    <!-- Status Cards -->
+    <section class="py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 -mt-16">
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center card-hover">
+                    <div class="w-12 h-12 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+                        <span class="text-2xl">📱</span>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Responsivo</h3>
+                    <p class="text-gray-600 text-sm">Desktop, Tablet, Mobile</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center card-hover">
+                    <div class="w-12 h-12 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                        <span class="text-2xl">⚙️</span>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Propriedades</h3>
+                    <p class="text-gray-600 text-sm">7 Seções Organizadas</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center card-hover">
+                    <div class="w-12 h-12 mx-auto mb-4 bg-purple-100 rounded-full flex items-center justify-center">
+                        <span class="text-2xl">🕒</span>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Histórico</h3>
+                    <p class="text-gray-600 text-sm">Undo/Redo Completo</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center card-hover">
+                    <div class="w-12 h-12 mx-auto mb-4 bg-orange-100 rounded-full flex items-center justify-center">
+                        <span class="text-2xl">🎨</span>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Temas</h3>
+                    <p class="text-gray-600 text-sm">Design Consistente</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold mb-4">🌟 Funcionalidades Implementadas</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Cada funcionalidade foi cuidadosamente desenvolvida para oferecer a melhor experiência de edição visual
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 card-hover">
+                    <div class="flex items-center mb-4">
+                        <span class="text-3xl mr-3">📱</span>
+                        <h3 class="text-xl font-semibold">Preview Responsivo</h3>
+                    </div>
+                    <p class="text-gray-700 mb-4">Sistema de preview que permite visualizar o design em diferentes dispositivos com transições suaves.</p>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center text-green-600">
+                            <span class="mr-2">✓</span> Botões Desktop/Tablet/Mobile
+                        </div>
+                        <div class="flex items-center text-green-600">
+                            <span class="mr-2">✓</span> Canvas adaptável
+                        </div>
+                        <div class="flex items-center text-green-600">
+                            <span class="mr-2">✓</span> Indicadores visuais
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 card-hover">
+                    <div class="flex items-center mb-4">
+                        <span class="text-3xl mr-3">⚙️</span>
+                        <h3 class="text-xl font-semibold">Painel Avançado</h3>
+                    </div>
+                    <p class="text-gray-700 mb-4">Painel modular com 7 seções especializadas para configuração completa de propriedades.</p>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center text-green-600">
+                            <span class="mr-2">✓</span> Layout e Styling
+                        </div>
+                        <div class="flex items-center text-green-600">
+                            <span class="mr-2">✓</span> Validações e Options
+                        </div>
+                        <div class="flex items-center text-green-600">
+                            <span class="mr-2">✓</span> Advanced e General
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 card-hover">
+                    <div class="flex items-center mb-4">
+                        <span class="text-3xl mr-3">🕒</span>
+                        <h3 class="text-xl font-semibold">Sistema Histórico</h3>
+                    </div>
+                    <p class="text-gray-700 mb-4">Controle completo do histórico de alterações com navegação temporal e atalhos de teclado.</p>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center text-green-600">
+                            <span class="mr-2">✓</span> Até 50 entradas
+                        </div>
+                        <div class="flex items-center text-green-600">
+                            <span class="mr-2">✓</span> Ctrl+Z / Ctrl+Y
+                        </div>
+                        <div class="flex items-center text-green-600">
+                            <span class="mr-2">✓</span> Interface visual
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6 card-hover">
+                    <div class="flex items-center mb-4">
+                        <span class="text-3xl mr-3">🎨</span>
+                        <h3 class="text-xl font-semibold">Color Picker</h3>
+                    </div>
+                    <p class="text-gray-700 mb-4">Seletor de cores avançado com presets personalizados e picker nativo integrado.</p>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center text-green-600">
+                            <span class="mr-2">✓</span> Presets de cores
+                        </div>
+                        <div class="flex items-center text-green-600">
+                            <span class="mr-2">✓</span> Picker nativo
+                        </div>
+                        <div class="flex items-center text-green-600">
+                            <span class="mr-2">✓</span> Preview em tempo real
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl p-6 card-hover">
+                    <div class="flex items-center mb-4">
+                        <span class="text-3xl mr-3">🔄</span>
+                        <h3 class="text-xl font-semibold">Drag & Drop</h3>
+                    </div>
+                    <p class="text-gray-700 mb-4">Sistema intuitivo de reordenação de elementos com feedback visual em tempo real.</p>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center text-green-600">
+                            <span class="mr-2">✓</span> DnD Kit integração
+                        </div>
+                        <div class="flex items-center text-green-600">
+                            <span class="mr-2">✓</span> Feedback visual
+                        </div>
+                        <div class="flex items-center text-green-600">
+                            <span class="mr-2">✓</span> Reordenação intuitiva
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="bg-gradient-to-br from-pink-50 to-pink-100 rounded-xl p-6 card-hover">
+                    <div class="flex items-center mb-4">
+                        <span class="text-3xl mr-3">⚡</span>
+                        <h3 class="text-xl font-semibold">Performance</h3>
+                    </div>
+                    <p class="text-gray-700 mb-4">Otimizações avançadas com debouncing, memoização e lazy loading para máxima eficiência.</p>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center text-green-600">
+                            <span class="mr-2">✓</span> Debouncing hooks
+                        </div>
+                        <div class="flex items-center text-green-600">
+                            <span class="mr-2">✓</span> Memoização inteligente
+                        </div>
+                        <div class="flex items-center text-green-600">
+                            <span class="mr-2">✓</span> Lazy loading
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Stack -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold mb-4">🛠️ Stack Tecnológico</h2>
+                <p class="text-gray-600">Tecnologias modernas para máxima performance e manutenibilidade</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white rounded-lg p-6 text-center shadow-sm card-hover">
+                    <div class="text-4xl mb-4">⚛️</div>
+                    <h3 class="font-semibold mb-2">React</h3>
+                    <p class="text-gray-600 text-sm">Hooks modernos e functional components</p>
+                </div>
+                <div class="bg-white rounded-lg p-6 text-center shadow-sm card-hover">
+                    <div class="text-4xl mb-4">📘</div>
+                    <h3 class="font-semibold mb-2">TypeScript</h3>
+                    <p class="text-gray-600 text-sm">Type safety e melhor DX</p>
+                </div>
+                <div class="bg-white rounded-lg p-6 text-center shadow-sm card-hover">
+                    <div class="text-4xl mb-4">🎨</div>
+                    <h3 class="font-semibold mb-2">Tailwind CSS</h3>
+                    <p class="text-gray-600 text-sm">Utility-first styling</p>
+                </div>
+                <div class="bg-white rounded-lg p-6 text-center shadow-sm card-hover">
+                    <div class="text-4xl mb-4">🎭</div>
+                    <h3 class="font-semibold mb-2">Radix UI</h3>
+                    <p class="text-gray-600 text-sm">Componentes acessíveis</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="gradient-bg text-white py-16">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold mb-4">🚀 Pronto para Testar?</h2>
+            <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+                Experimente todas as funcionalidades do editor visual mais avançado para criação de quizzes interativos
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/editor" class="inline-flex items-center px-8 py-4 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-all duration-300 transform hover:scale-105">
+                    <span class="mr-2">🎨</span>
+                    Acessar Editor
+                </a>
+                <a href="/showcase" class="inline-flex items-center px-8 py-4 bg-transparent border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-blue-600 transition-all duration-300">
+                    <span class="mr-2">👀</span>
+                    Ver Showcase
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 py-8">
+        <div class="container mx-auto px-6 text-center">
+            <div class="flex justify-center items-center mb-4">
+                <span class="text-2xl mr-3">🚀</span>
+                <span class="text-xl font-semibold">Editor Visual Avançado</span>
+            </div>
+            <p class="text-gray-400">
+                Sistema completo implementado com React, TypeScript e Tailwind CSS
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback } from 'react';
-import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import { cn } from '../../../lib/utils';
+import type { BlockComponentProps } from '../../../types/blocks';
 
 /**
  * TextInlineBlock - Componente modular inline horizontal
@@ -20,6 +20,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     content = 'Texto exemplo',
     fontSize = 'medium',
     fontWeight = 'normal',
+    fontFamily = 'inherit',
     textAlign = 'left',
     color = '#374151',
     backgroundColor = 'transparent',
@@ -28,7 +29,11 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     usernamePattern = '{userName}',
     // Propriedades do grid system
     gridColumns = 'auto', // 'auto', 'half', 'full'
-    spacing = 'normal'
+    spacing = 'normal',
+    // Propriedades de espaçamento
+    marginTop = 0,
+    marginBottom = 0,
+    lineHeight = 'leading-normal'
   } = block?.properties ?? {};
 
   // ES7+ Object property shorthand e computed property names
@@ -39,7 +44,15 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     lg: 'text-lg',
     xl: 'text-xl',
     '2xl': 'text-2xl',
-    '3xl': 'text-3xl'
+    '3xl': 'text-3xl',
+    // Suporte direto para classes Tailwind vindas do template
+    'text-xs': 'text-xs',
+    'text-sm': 'text-sm',
+    'text-base': 'text-base',
+    'text-lg': 'text-lg',
+    'text-xl': 'text-xl',
+    'text-2xl': 'text-2xl',
+    'text-3xl': 'text-3xl'
   } as const;
 
   // ES7+ Object spread com type assertion
@@ -48,7 +61,13 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     normal: 'font-normal',
     medium: 'font-medium',
     semibold: 'font-semibold',
-    bold: 'font-bold'
+    bold: 'font-bold',
+    // Suporte direto para classes Tailwind vindas do template
+    'font-light': 'font-light',
+    'font-normal': 'font-normal',
+    'font-medium': 'font-medium',
+    'font-semibold': 'font-semibold',
+    'font-bold': 'font-bold'
   } as const;
 
   // ES7+ Template literals implícitos nas keys
@@ -56,7 +75,12 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     left: 'text-left',
     center: 'text-center',
     right: 'text-right',
-    justify: 'text-justify'
+    justify: 'text-justify',
+    // Suporte direto para classes Tailwind vindas do template
+    'text-left': 'text-left',
+    'text-center': 'text-center',
+    'text-right': 'text-right',
+    'text-justify': 'text-justify'
   } as const;
 
   // ES7+ Arrow functions e object shorthand
@@ -72,6 +96,23 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     loose: 'p-6'
   } as const;
 
+  // Função para converter valores numéricos de margem em classes Tailwind
+  const getMarginClass = (value: number | string, type: 'top' | 'bottom') => {
+    if (typeof value === 'number' && value > 0) {
+      // Converter px para valores Tailwind aproximados
+      if (value <= 4) return `m${type[0]}-1`; // mt-1 ou mb-1
+      if (value <= 8) return `m${type[0]}-2`; // mt-2 ou mb-2
+      if (value <= 12) return `m${type[0]}-3`;
+      if (value <= 16) return `m${type[0]}-4`;
+      if (value <= 20) return `m${type[0]}-5`;
+      if (value <= 24) return `m${type[0]}-6`;
+      if (value <= 32) return `m${type[0]}-8`;
+      if (value <= 40) return `m${type[0]}-10`;
+      return `m${type[0]}-12`;
+    }
+    return '';
+  };
+
   // ES7+ useMemo para otimização de performance
   const personalizedContent = useMemo(() => {
     // ES7+ Optional chaining e nullish coalescing
@@ -80,6 +121,17 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     }
     return content;
   }, [content, useUsername, usernamePattern]);
+
+  // Verificar se o conteúdo contém HTML
+  const isHtmlContent = useMemo(() => {
+    const hasHtml = personalizedContent?.includes('<') && personalizedContent?.includes('>');
+    console.log('🔍 TextInlineBlock Debug:', {
+      content: personalizedContent,
+      hasHtml,
+      blockId: block?.id
+    });
+    return hasHtml;
+  }, [personalizedContent, block?.id]);
 
   // ES7+ useCallback para otimização de re-renders
   const handleClick = useCallback(() => {
@@ -104,6 +156,10 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         // SPACING - ES7+ Computed property com fallback
         spacingClasses[spacing as keyof typeof spacingClasses] ?? spacingClasses.normal,
         
+        // MARGIN SPACING
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        
         className
       )}
       style={{ backgroundColor }}
@@ -120,13 +176,26 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
           textAlignClasses[textAlign as keyof typeof textAlignClasses] ?? textAlignClasses.left,
           
           // Responsividade e quebra de texto
-          'leading-relaxed break-words whitespace-pre-wrap'
+          'break-words whitespace-pre-wrap',
+          
+          // Line height
+          lineHeight || 'leading-normal'
         )}
-        style={{ color }}
+        style={{ 
+          color,
+          ...(fontFamily !== 'inherit' && { fontFamily }),
+          ...(maxWidth !== 'auto' && { maxWidth })
+        }}
         // ES7+ Conditional data attributes
-        {...(maxWidth !== 'auto' && { style: { ...{ color }, maxWidth } })}
       >
-        {personalizedContent}
+        {isHtmlContent ? (
+          <div 
+            dangerouslySetInnerHTML={{ __html: personalizedContent }} 
+            style={{ display: 'contents' }}
+          />
+        ) : (
+          personalizedContent
+        )}
       </div>
     </div>
   );

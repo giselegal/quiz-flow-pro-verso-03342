@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { EditableContent } from '@/types/editor';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,7 @@ interface ButtonBlockProps {
   isEditing?: boolean;
   onUpdate?: (content: Partial<EditableContent>) => void;
   onSelect?: () => void;
+  onClick?: () => void;
   className?: string;
 }
 
@@ -20,59 +21,28 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
   isEditing = false,
   onUpdate,
   onSelect,
+  onClick,
   className
 }) => {
-  const [isInlineEditing, setIsInlineEditing] = useState(false);
   const [localButtonText, setLocalButtonText] = useState(content.buttonText || '');
-  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setLocalButtonText(content.buttonText || '');
   }, [content.buttonText]);
 
-  const handleDoubleClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (onUpdate) {
-      setIsInlineEditing(true);
-      setTimeout(() => {
-        buttonRef.current?.focus();
-      }, 0);
-    }
-  };
-
-  const handleBlur = () => {
-    setIsInlineEditing(false);
-    if (onUpdate && localButtonText !== content.buttonText) {
-      onUpdate({ buttonText: localButtonText });
-    }
-  };
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter') {
       e.preventDefault();
-      handleBlur();
     }
     if (e.key === 'Escape') {
       setLocalButtonText(content.buttonText || '');
-      setIsInlineEditing(false);
     }
   };
 
   const handleButtonClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    
-    if (isInlineEditing) {
-      return;
-    }
-    
-    if (content.buttonUrl) {
-      if (content.buttonUrl.startsWith('mailto:')) {
-        window.location.href = content.buttonUrl;
-      } else if (content.buttonUrl.startsWith('tel:')) {
-        window.location.href = content.buttonUrl;
-      } else {
-        window.open(content.buttonUrl, '_blank', 'noopener,noreferrer');
-      }
+    if (content.action === 'link' && content.url) {
+      window.open(content.url, '_blank');
     }
   };
 
@@ -105,13 +75,12 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
       className={cn(
         "relative p-4 rounded-lg transition-all duration-200",
         isSelected && "ring-2 ring-blue-400 ring-offset-2",
-        isInlineEditing && "ring-2 ring-green-400 ring-offset-2",
         "hover:bg-gray-50 cursor-pointer",
         content.style?.textAlign === 'center' && "text-center",
         content.style?.textAlign === 'right' && "text-right",
         className
       )}
-      onClick={onSelect}
+      onClick={onClick || onSelect}
       style={{
         backgroundColor: content.style?.backgroundColor,
         padding: content.style?.padding,
@@ -119,12 +88,10 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
       }}
     >
       <Button
-        ref={buttonRef}
         variant={getButtonVariant()}
         size="lg"
         className={cn(
           "relative transition-all duration-200",
-          isInlineEditing && "ring-2 ring-green-400",
           content.style?.width && `w-${content.style.width}`,
           content.style?.borderRadius && `rounded-${content.style.borderRadius}`
         )}
@@ -138,37 +105,10 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
           boxShadow: content.style?.boxShadow
         }}
         onClick={handleButtonClick}
-        onDoubleClick={handleDoubleClick}
-        onBlur={handleBlur}
-        onKeyDown={handleKeyDown}
       >
         {getButtonIcon()}
-        {isInlineEditing ? (
-          <span
-            contentEditable
-            suppressContentEditableWarning
-            className="outline-none"
-            onInput={(e) => {
-              setLocalButtonText(e.currentTarget.textContent || '');
-            }}
-            dangerouslySetInnerHTML={{ __html: localButtonText }}
-          />
-        ) : (
-          <span>{localButtonText || 'Clique para editar'}</span>
-        )}
+        <span>{localButtonText || 'Texto do botão'}</span>
       </Button>
-      
-      {isInlineEditing && (
-        <div className="absolute -top-8 left-0 bg-green-500 text-white px-2 py-1 rounded text-xs">
-          Editando - Enter para salvar, Esc para cancelar
-        </div>
-      )}
-      
-      {isSelected && !content.buttonUrl && (
-        <div className="absolute -bottom-6 left-0 bg-orange-500 text-white px-2 py-1 rounded text-xs">
-          Adicione uma URL no painel de propriedades
-        </div>
-      )}
     </div>
   );
 };

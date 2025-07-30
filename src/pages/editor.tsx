@@ -1,33 +1,93 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { ComponentsSidebar } from '@/components/editor/sidebar/ComponentsSidebar';
-import { EditPreview } from '@/components/editor/preview/EditPreview';
-import PropertiesPanel from '@/components/editor/properties/PropertiesPanel';
-import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
-import { useEditor } from '@/hooks/useEditor';
-import { useEditorPersistence } from '@/hooks/editor/useEditorPersistence';
-import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
-import { toast } from '@/components/ui/use-toast';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { EditorQuizProvider } from '@/contexts/EditorQuizContext';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../components/ui/resizable';
+import { ComponentsSidebar } from '../components/editor/sidebar/ComponentsSidebar';
+import { EditPreview } from '../components/editor/preview/EditPreview';
+import PropertiesPanel from '../components/editor/properties/PropertiesPanel';
+import { EditorToolbar } from '../components/editor/toolbar/EditorToolbar';
+import { useEditor } from '../hooks/useEditor';
+import { useEditorPersistence } from '../hooks/editor/useEditorPersistence';
+import { useAutoSaveWithDebounce } from '../hooks/editor/useAutoSaveWithDebounce';
+import { toast } from '../components/ui/use-toast';
+import { LoadingSpinner } from '../components/ui/loading-spinner';
+import { EditorQuizProvider } from '../contexts/EditorQuizContext';
+import { schemaDrivenFunnelService } from '../services/schemaDrivenFunnelService';
 
 const EditorPage: React.FC = () => {
   const [location, setLocation] = useLocation();
   const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
+  const [isLoadingFunnel, setIsLoadingFunnel] = useState(false);
+  
+  // Extract funnel ID from URL - MOVIDO PARA O INÍCIO
+  const urlParams = new URLSearchParams(window.location.search);
+  const funnelId = urlParams.get('id');
   
   const { config, addBlock, updateBlock, deleteBlock, setConfig } = useEditor();
   const { saveFunnel, loadFunnel, isSaving, isLoading } = useEditorPersistence();
+
+  // Load funnel data if ID is provided in URL
+  useEffect(() => {
+    const loadFunnelData = async () => {
+      if (!funnelId) return;
+      
+      setIsLoadingFunnel(true);
+      try {
+        console.log('🔍 Loading funnel from schema service:', funnelId);
+        const schemaDrivenData = await schemaDrivenFunnelService.loadFunnel(funnelId);
+        
+        if (schemaDrivenData) {
+          // Convert to editor format and load first page blocks
+          const firstPage = schemaDrivenData.pages[0];
+          if (firstPage && firstPage.blocks) {
+            setConfig({
+              blocks: firstPage.blocks,
+              title: firstPage.title,
+              description: schemaDrivenData.description
+            });
+            console.log('✅ Loaded funnel blocks:', firstPage.blocks.length);
+          }
+        } else {
+          console.warn('❌ Funnel not found with ID:', funnelId);
+          toast({
+            title: "Aviso",
+            description: "Funil não encontrado. Criando novo funil.",
+            variant: "default"
+          });
+        }
+      } catch (error) {
+        console.error('❌ Error loading funnel:', error);
+        toast({
+          title: "Erro",
+          description: "Erro ao carregar funil",
+          variant: "destructive"
+        });
+      } finally {
+        setIsLoadingFunnel(false);
+      }
+    };
+
+    loadFunnelData();
+  }, [funnelId, setConfig]);
   
   // ✅ AUTO-SAVE COM DEBOUNCE - Fase 1 
   const handleAutoSave = async (data: any) => {
+    // Preservar o ID original do funil carregado da URL
+    const preservedId = funnelId || data.id || `funnel_${Date.now()}`;
+    
+    console.log('🔍 DEBUG - handleAutoSave:', {
+      funnelId,
+      dataId: data.id,
+      preservedId,
+      url: window.location.href
+    });
+    
     const funnelData = {
-      id: data.id || `funnel_${Date.now()}`,
+      id: preservedId,
       name: data.title || 'Novo Funil',
       description: data.description || '',
       isPublished: false,
-      version: 1,
+      version: data.version || 1,
       settings: data.settings || {},
       pages: [{
         id: `page_${Date.now()}`,
@@ -49,106 +109,60 @@ const EditorPage: React.FC = () => {
     showToasts: false
   });
 
-  // Extract funnel ID from URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const funnelId = urlParams.get('id');
-
-  // Load funnel on mount if ID is provided
-  useEffect(() => {
-    if (funnelId) {
-      loadFunnel(funnelId).then(data => {
-        if (data) {
-          // Convert funnel data to editor config
-          const editorConfig = {
-            id: data.id,
-            title: data.name,
-            description: data.description || '',
-            blocks: data.pages.length > 0 ? data.pages[0].blocks : [],
-            settings: data.settings || {}
-          };
-          setConfig(editorConfig);
-        }
-      });
-    }
-  }, [funnelId, loadFunnel, setConfig]);
-
-  const handleSave = async () => {
-    // Usar forceSave para salvamento manual imediato
-    await forceSave();
-  };
-
-  const handleGoBack = () => {
-    setLocation('/admin/funis');
-  };
-
-  if (isLoading) {
+  // Show loading while loading funnel
+  if (isLoadingFunnel || isLoading) {
     return (
-      <div className="h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <LoadingSpinner size="lg" className="mb-4" />
-          <p className="text-muted-foreground">Carregando editor...</p>
-        </div>
+      <div className="flex items-center justify-center min-h-screen">
+        <LoadingSpinner />
+        <span className="ml-2">Carregando editor...</span>
       </div>
     );
   }
 
   return (
-    <div className="h-screen flex flex-col bg-background">
-      <EditorToolbar 
-        onSave={handleSave}
-        onGoBack={handleGoBack}
-        isPreviewing={isPreviewing}
-        onPreviewToggle={() => setIsPreviewing(!isPreviewing)}
-        isSaving={isSaving}
-        funnelTitle={config.title || 'Novo Funil'}
-      />
-      
-      <ResizablePanelGroup direction="horizontal" className="flex-1">
-        {/* Components Sidebar */}
-        <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-          <ComponentsSidebar 
-            onComponentSelect={(type) => {
-              const id = addBlock(type);
-              setSelectedComponentId(id);
-            }} 
-          />
-        </ResizablePanel>
-
-        <ResizableHandle withHandle />
-
-        {/* Preview Area */}
-        <ResizablePanel defaultSize={55}>
-          <EditPreview 
-            isPreviewing={isPreviewing}
-            onPreviewToggle={() => setIsPreviewing(!isPreviewing)}
-            onSelectComponent={setSelectedComponentId}
-            selectedComponentId={selectedComponentId}
-          />
-        </ResizablePanel>
-
-        <ResizableHandle withHandle />
-
-        {/* Properties Panel */}
-        <ResizablePanel defaultSize={25}>
-          <PropertiesPanel
-            selectedComponentId={selectedComponentId}
-            onClose={() => setSelectedComponentId(null)}
-            blocks={config.blocks}
-            onUpdate={(content) => {
-              if (selectedComponentId) {
-                updateBlock(selectedComponentId, content);
-              }
-            }}
-            onDelete={() => {
-              if (selectedComponentId) {
-                deleteBlock(selectedComponentId);
-                setSelectedComponentId(null);
-              }
-            }}
-          />
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </div>
+    <EditorQuizProvider>
+      <div className="flex flex-col h-screen bg-background">
+        <EditorToolbar
+          config={config}
+          isSaving={isSaving}
+          onPreview={() => setIsPreviewing(!isPreviewing)}
+          isPreviewing={isPreviewing}
+          onSave={() => forceSave()}
+        />
+        
+        <ResizablePanelGroup direction="horizontal" className="flex-1">
+          <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+            <ComponentsSidebar 
+              onAddBlock={addBlock}
+              selectedComponentId={selectedComponentId}
+            />
+          </ResizablePanel>
+          
+          <ResizableHandle />
+          
+          <ResizablePanel defaultSize={60} minSize={30}>
+            <EditPreview
+              config={config}
+              onSelectComponent={setSelectedComponentId}
+              selectedComponentId={selectedComponentId}
+              onUpdateBlock={updateBlock}
+              onDeleteBlock={deleteBlock}
+              isPreviewing={isPreviewing}
+            />
+          </ResizablePanel>
+          
+          <ResizableHandle />
+          
+          <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+            <PropertiesPanel
+              selectedComponentId={selectedComponentId}
+              config={config}
+              onUpdateBlock={updateBlock}
+            />
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </div>
+    </EditorQuizProvider>
   );
 };
 

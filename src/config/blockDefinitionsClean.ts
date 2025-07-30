@@ -3,7 +3,7 @@
 // Configuração moderna para sistema de blocos inline responsivos
 // =====================================================================
 
-import type { BlockDefinition } from '@/config/blockDefinitions';
+import type { BlockDefinition } from './blockDefinitions.ts';
 
 // Interface para PropertySchema ES7+
 export interface PropertySchema {

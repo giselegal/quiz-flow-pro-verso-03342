@@ -1,6 +1,6 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import React, { useMemo } from 'react';
+import { cn } from '../../../../lib/utils';
+import type { BlockComponentProps } from '../../../../types/blocks';
 
 /**
  * TextInlineBlock - Componente modular inline horizontal
@@ -18,6 +18,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     content = 'Texto editável com formatação elegante.',
     fontSize = 'medium',
     fontWeight = 'normal',
+    fontFamily = 'inherit',
     textAlign = 'left',
     color = '#374151',
     backgroundColor = 'transparent',
@@ -33,12 +34,34 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     ? content.replace(new RegExp(usernamePattern.replace(/[{}]/g, '\\$&'), 'g'), userName)
     : content;
 
+  // Verificar se o conteúdo contém HTML
+  const isHtmlContent = useMemo(() => {
+    const hasHtml = processedContent?.includes('<') && processedContent?.includes('>');
+    console.log('🔍 TextInlineBlock (inline) Debug:', {
+      content: processedContent,
+      hasHtml,
+      blockId: block?.id
+    });
+    return hasHtml;
+  }, [processedContent, block?.id]);
+
   // Tamanhos de fonte responsivos
   const fontSizeClasses = {
     small: 'text-xs sm:text-sm',
     medium: 'text-sm sm:text-base md:text-lg',
     large: 'text-base sm:text-lg md:text-xl lg:text-2xl',
-    xlarge: 'text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl'
+    xlarge: 'text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl',
+    // Suporte direto para classes Tailwind
+    'text-xs': 'text-xs',
+    'text-sm': 'text-sm',
+    'text-base': 'text-base',
+    'text-lg': 'text-lg',
+    'text-xl': 'text-xl',
+    'text-2xl': 'text-2xl',
+    'text-3xl': 'text-3xl',
+    'text-4xl': 'text-4xl',
+    'text-5xl': 'text-5xl',
+    'text-6xl': 'text-6xl'
   };
 
   // Pesos de fonte
@@ -98,9 +121,16 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
           // Quebra de palavras para textos longos
           'break-words hyphens-auto'
         )}
-        style={{ color }}
+        style={{ 
+          color,
+          ...(fontFamily !== 'inherit' && { fontFamily })
+        }}
       >
-        {processedContent}
+        {isHtmlContent ? (
+          <span dangerouslySetInnerHTML={{ __html: processedContent }} />
+        ) : (
+          processedContent
+        )}
       </p>
     </div>
   );

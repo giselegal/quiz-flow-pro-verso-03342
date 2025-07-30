@@ -81,35 +81,35 @@ interface FunnelTemplate {
 const FUNNEL_TEMPLATES: FunnelTemplate[] = [
   {
     id: 'default-quiz-funnel-21-steps',
-    name: 'Funil Completo de Descoberta Pessoal',
-    description: 'Funil completo para descoberta do estilo pessoal - 21 etapas modulares',
+    name: 'Quiz Completo: Descoberta de Estilo Pessoal (21 Etapas)',
+    description: 'Funil profissional completo com 21 etapas otimizadas para descoberta do estilo pessoal. Inclui 10 questões principais + perguntas estratégicas + páginas de resultado + ofertas personalizadas. Design responsivo e pronto para produção.',
     category: 'personalidade',
     steps: 21,
     icon: Target,
     difficulty: 'medium',
     estimatedTime: 15,
-    tags: ['descoberta', 'personalidade', 'completo'],
+    tags: ['profissional', 'completo', 'personalidade', 'conversão', 'pronto-uso'],
     stepTitles: [
-      'Boas-vindas e Introdução',
-      'Primeira Pergunta - Preferências Básicas',
-      'Exploração de Interesses',
-      'Análise de Comportamento',
-      'Preferências de Estilo',
-      'Avaliação de Personalidade',
-      'Gostos e Desgostos',
-      'Cenários Hipotéticos',
-      'Escolhas de Vida',
-      'Ambiente Ideal',
-      'Relacionamentos',
-      'Carreira e Trabalho',
-      'Hobbies e Lazer',
-      'Valores Pessoais',
-      'Desafios e Medos',
-      'Aspirações e Sonhos',
-      'Análise Comportamental',
-      'Preferências Detalhadas',
-      'Consolidação de Dados',
-      'Resultado Personalizado',
+      'Introdução e Coleta do Nome',
+      'Questão 1: Preferência de Cores',
+      'Questão 2: Estilo de Vida',
+      'Questão 3: Ocasiões Especiais',
+      'Questão 4: Conforto vs. Estilo',
+      'Questão 5: Padrões e Texturas',
+      'Questão 6: Inspiração de Moda',
+      'Questão 7: Acessórios Preferidos',
+      'Questão 8: Compras de Roupa',
+      'Questão 9: Estilo no Trabalho',
+      'Questão 10: Look Ideal',
+      'Transição: Conhecendo Você Melhor',
+      'Pergunta Estratégica 1: Problema Principal',
+      'Pergunta Estratégica 2: Orçamento Mensal',
+      'Pergunta Estratégica 3: Maior Dificuldade',
+      'Pergunta Estratégica 4: Forma do Corpo',
+      'Pergunta Estratégica 5: Meta Principal',
+      'Transição: Quase Terminando',
+      'Coleta de Contato',
+      'Resultado: Análise do Estilo',
       'Oferta Personalizada'
     ]
   },
@@ -228,7 +228,7 @@ const FunnelPanelPage: React.FC = () => {
 
   // Navegar para o editor com funil específico
   const navigateToEditor = (funnelId: string) => {
-    setLocation(`/editor/${funnelId}`);
+    setLocation(`/editor?id=${funnelId}`);
   };  // Carregar funis e estatísticas
   useEffect(() => {
     loadFunnels();
@@ -246,37 +246,6 @@ const FunnelPanelPage: React.FC = () => {
       aud: 'authenticated',
       created_at: new Date().toISOString()
     };
-  };
-
-  // Carregar template de 21 etapas existente ou navegar diretamente (modo offline)
-  const openDefaultTemplate = async () => {
-    try {
-      const templateId = 'default-quiz-funnel-21-steps';
-      console.log('🚀 Abrindo template de 21 etapas com ID fixo:', templateId);
-      
-      // Verificar se já existe o funil schema-driven para este template
-      const existingFunnel = await schemaDrivenFunnelService.loadFunnel(templateId);
-      
-      if (!existingFunnel) {
-        // Criar o template apenas uma vez com ID fixo
-        const funnelData = schemaDrivenFunnelService.createDefaultFunnel();
-        funnelData.id = templateId;
-        funnelData.name = 'Template: Funil Completo de Descoberta Pessoal';
-        funnelData.description = 'Template oficial de 21 etapas para descoberta de personalidade';
-        
-        await schemaDrivenFunnelService.saveFunnel(funnelData);
-        console.log('✅ Template de 21 etapas criado com ID fixo');
-      }
-      
-      // Navegar diretamente para o editor com o ID fixo
-      console.log('🧭 Navegando para o template no editor:', templateId);
-      navigateToEditor(templateId);
-      showToast('Abrindo template de 21 etapas...');
-      
-    } catch (error) {
-      console.error('❌ Erro ao abrir template:', error);
-      showToast('Erro ao carregar template', 'error');
-    }
   };
 
   // Criar NOVA CÓPIA do funil a partir de template (só quando duplicar)
@@ -358,62 +327,71 @@ const FunnelPanelPage: React.FC = () => {
     }
   };
 
-  // Criar funil a partir de template (modo offline) - só duplica quando necessário
+  // Criar funil a partir de template (modo offline) - SIMPLIFICADO
   const createFunnelFromTemplate = async (template: FunnelTemplate, isDuplicate = false) => {
-    console.log('🚀 Usando template (OFFLINE):', template.name, 'isDuplicate:', isDuplicate);
+    console.log('🚀 Usando template:', template.name, isDuplicate ? '(NOVA CÓPIA)' : '(EDITAR TEMPLATE)');
     
     try {
       const user = await ensureAuthenticatedUser();
-      console.log('✅ Usuário autenticado (OFFLINE):', user.id);
       
-      if (template.id === 'default-quiz-funnel-21-steps' && !isDuplicate) {
-        // Para o template de 21 etapas SEM duplicação, apenas abrir o existente
-        return openDefaultTemplate();
-      }
-      
-      if (template.id === 'default-quiz-funnel-21-steps' && isDuplicate) {
-        // Para DUPLICAÇÃO do template de 21 etapas, criar novo funil
-        console.log('📋 Criando CÓPIA do funil padrão de 21 etapas...');
-        const funnelData = schemaDrivenFunnelService.createDefaultFunnel();
-        
-        const newFunnel: Funnel = {
-          id: 'funnel-copy-' + Date.now(),
-          name: `Cópia - Quiz de Personalidade - ${new Date().toLocaleDateString('pt-BR')}`,
-          description: 'Cópia personalizada do template de 21 etapas',
-          status: 'draft',
-          is_published: false,
-          user_id: user.id,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          settings: {
-            pages_count: funnelData.pages.length,
-            template_type: 'custom',
-            based_on: 'default-21-steps'
+      if (template.id === 'default-quiz-funnel-21-steps') {
+        if (isDuplicate) {
+          // CRIAR NOVA CÓPIA com ID único
+          console.log('📋 Criando NOVA CÓPIA do template de 21 etapas...');
+          const funnelData = schemaDrivenFunnelService.createDefaultFunnel();
+          
+          const newFunnel: Funnel = {
+            id: 'quiz-copy-' + Date.now(),
+            name: `Quiz Personalidade - Cópia ${new Date().toLocaleDateString('pt-BR')}`,
+            description: 'Cópia editável do template de 21 etapas',
+            status: 'draft',
+            is_published: false,
+            user_id: user.id,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            settings: {
+              pages_count: funnelData.pages.length,
+              template_type: 'custom',
+              based_on: 'default-21-steps'
+            }
+          };
+          
+          // Salvar dados completos do funil com o ID correto
+          funnelData.id = newFunnel.id;
+          await schemaDrivenFunnelService.saveFunnel(funnelData);
+          
+          setFunnels(prev => [newFunnel, ...prev]);
+          showToast('Nova cópia criada com ID: ' + newFunnel.id);
+          
+          // Navegar para o editor da cópia
+          navigateToEditor(newFunnel.id);
+          
+        } else {
+          // EDITAR TEMPLATE ORIGINAL
+          console.log('✏️ Abrindo template original para edição...');
+          const templateId = 'default-quiz-funnel-21-steps';
+          
+          // Verificar se já existe o funil schema-driven para este template
+          const existingFunnel = await schemaDrivenFunnelService.loadFunnel(templateId);
+          
+          if (!existingFunnel) {
+            // Criar o template apenas uma vez com ID fixo
+            const funnelData = schemaDrivenFunnelService.createDefaultFunnel();
+            funnelData.id = templateId;
+            funnelData.name = 'Template: Quiz de Personalidade (21 Etapas)';
+            funnelData.description = 'Template oficial de 21 etapas';
+            
+            await schemaDrivenFunnelService.saveFunnel(funnelData);
           }
-        };
-        
-        console.log('✅ Cópia do funil criada (OFFLINE):', newFunnel);
-        
-        // Salvar dados completos do funil com o ID correto
-        funnelData.id = newFunnel.id;
-        await schemaDrivenFunnelService.saveFunnel(funnelData);
-        
-        console.log('✅ Dados completos salvos no serviço');
-        
-        setFunnels(prev => [newFunnel, ...prev]);
-        showToast('Cópia do template de 21 etapas criada! (OFFLINE)');
-        
-        // Navegar para o editor
-        console.log('🧭 Navegando para o editor:', newFunnel.id);
-        navigateToEditor(newFunnel.id);
-        
+          
+          showToast('Abrindo template para edição...');
+          navigateToEditor(templateId);
+        }
       } else {
-        // Criar funil baseado em outros templates (sempre novo)
-        console.log('📋 Criando funil para template:', template.name);
-        
+        // Outros templates - sempre criar novo
         const newFunnel: Funnel = {
           id: 'funnel-' + Date.now(),
-          name: `${template.name.replace(' (TEMPLATE)', '')} - ${new Date().toLocaleDateString('pt-BR')}`,
+          name: `${template.name} - ${new Date().toLocaleDateString('pt-BR')}`,
           description: template.description,
           status: 'draft',
           is_published: false,
@@ -423,27 +401,20 @@ const FunnelPanelPage: React.FC = () => {
           settings: {
             pages_count: template.steps,
             template_type: 'custom',
-            based_on: template.id,
-            category: template.category,
-            difficulty: template.difficulty
+            based_on: template.id
           }
         };
 
-        console.log('✅ Template personalizado criado (OFFLINE):', newFunnel);
-
         setFunnels(prev => [newFunnel, ...prev]);
-        showToast(`Funil "${template.name}" criado com sucesso! (OFFLINE)`);
-        
-        // Navegar para o editor
-        console.log('🧭 Navegando para o editor:', newFunnel.id);
+        showToast(`Funil "${template.name}" criado!`);
         navigateToEditor(newFunnel.id);
       }
 
       loadStats();
       
     } catch (error) {
-      console.error('❌ Erro ao criar funil do template:', error);
-      showToast('Erro ao criar funil do template. Tente novamente.', 'error');
+      console.error('❌ Erro ao usar template:', error);
+      showToast('Erro ao criar funil do template.', 'error');
     }
   };
 
@@ -894,7 +865,7 @@ const FunnelPanelPage: React.FC = () => {
                       }`}
                     >
                       <Eye className="w-4 h-4 mr-2" />
-                      {template.id === 'default-quiz-funnel-21-steps' ? 'Abrir Editor' : 'Usar Template'}
+                      {template.id === 'default-quiz-funnel-21-steps' ? 'Usar Template Completo' : 'Usar Template'}
                     </Button>
                     <Button
                       variant="outline"
@@ -1051,7 +1022,7 @@ const FunnelPanelPage: React.FC = () => {
                             <Button 
                               variant="outline" 
                               size="sm"
-                              className="border-[#EBE0D0] hover:border-[#D9C9B8] hover:bg-[#F5F1EC] text-red-600 hover:text-red-700 hover:border-red-300"
+                              className="border-[#EBE0D0] hover:border-red-300 hover:bg-red-50 text-red-600 hover:text-red-700"
                               onClick={() => handleDeleteFunnel(funnel.id)}
                             >
                               <Trash2 className="w-4 h-4" />
@@ -1252,9 +1223,12 @@ const FunnelPanelPage: React.FC = () => {
                     {template.id === 'default-quiz-funnel-21-steps' && (
                       <div className="mt-3 p-3 bg-[#B89B7A]/10 rounded-lg">
                         <p className="text-xs text-[#8F7A6A] mb-3">
-                          <strong>Funil Principal:</strong> Este é o funil padrão completo com 21 etapas modulares 
-                          para descoberta de personalidade e estilo pessoal.
+                          <strong>Template Completo:</strong> Funil profissional de 21 etapas pronto para uso.
                         </p>
+                        <div className="text-xs text-[#6B5B4F] mb-3 space-y-1">
+                          <div>🔹 <strong>Editar Template:</strong> Modifica o template base (ID: default-quiz-funnel-21-steps)</div>
+                          <div>🔹 <strong>Criar Nova Cópia:</strong> Gera novo funil com ID único (ex: quiz-copy-123456)</div>
+                        </div>
                         <div className="flex gap-2">
                           <Button
                             size="sm"
@@ -1263,10 +1237,10 @@ const FunnelPanelPage: React.FC = () => {
                               e.stopPropagation();
                               createFunnelFromTemplate(template, false);
                             }}
-                            className="flex-1 text-xs"
+                            className="flex-1 text-xs border-[#B89B7A] text-[#B89B7A] hover:bg-[#B89B7A] hover:text-white"
                           >
-                            <Eye className="w-3 h-3 mr-1" />
-                            Usar Template
+                            <Edit className="w-3 h-3 mr-1" />
+                            Editar Template
                           </Button>
                           <Button
                             size="sm"
@@ -1277,7 +1251,7 @@ const FunnelPanelPage: React.FC = () => {
                             className="flex-1 text-xs bg-[#B89B7A] hover:bg-[#9F836A] text-white"
                           >
                             <Copy className="w-3 h-3 mr-1" />
-                            Duplicar
+                            Criar Nova Cópia
                           </Button>
                         </div>
                       </div>

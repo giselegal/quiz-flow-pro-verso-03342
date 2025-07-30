@@ -1,7 +1,7 @@
-import type { BlockData } from '@/components/editor/blocks';
+import type { BlockData } from '../components/editor/blocks';
 import { QuizDataAdapter } from './quizDataAdapter';
 import { supabase } from '../lib/supabase';
-import { CORRECT_QUIZ_QUESTIONS } from '@/data/correctQuizQuestions';
+import { CORRECT_QUIZ_QUESTIONS } from '../data/correctQuizQuestions';
 
 // Usar as questões originais corrigidas
 const REAL_QUIZ_QUESTIONS = CORRECT_QUIZ_QUESTIONS;
@@ -579,8 +579,29 @@ class SchemaDrivenFunnelService {
       return null;
     }
 
+    // Para o template especial, priorizar funcionamento offline
+    if (funnelId === 'default-quiz-funnel-21-steps') {
+      console.log('📱 [DEBUG] Template especial detectado - forçando recriação com melhorias');
+      
+      // Força recriação para aplicar melhorias mais recentes
+      console.log('🔄 Criando novo template de 21 etapas...');
+      const defaultFunnel = this.createDefaultFunnel();
+      defaultFunnel.id = funnelId;
+      
+      // Salvar localmente primeiro
+      this.saveLocalFunnel(defaultFunnel);
+      
+      // Tentar salvar no Supabase em background (sem await)
+      this.saveFunnel(defaultFunnel).catch(error => {
+        console.warn('⚠️ Falha ao salvar no Supabase (funcionando offline):', error);
+      });
+      
+      console.log('✅ Template criado e funcionando offline');
+      return defaultFunnel;
+    }
+
     try {
-      // Tentar carregar do Supabase primeiro
+      // Para outros funis, tentar carregar do Supabase primeiro
       console.log('🌐 [DEBUG] Loading from Supabase...');
       const { data, error } = await supabase
         .from('quizzes')
@@ -767,33 +788,40 @@ class SchemaDrivenFunnelService {
           properties: {
             logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
             logoAlt: 'Logo Gisele Galvão',
-            logoWidth: 96,
-            logoHeight: 96,
+            logoWidth: 120,
+            logoHeight: 120,
             progressValue: 0,
             progressMax: 100,
-            showBackButton: false
+            showBackButton: false,
+            showProgress: false
           }
         },
         {
-          id: 'intro-decorative-spacer',
-          type: 'spacer',
+          id: 'intro-decorative-bar',
+          type: 'decorative-bar-inline',
           properties: {
+            width: '100%',
             height: 4,
-            backgroundColor: '#B89B7A',
-            marginTop: 0,
-            marginBottom: 24
+            color: '#B89B7A',
+            gradientColors: ['#B89B7A', '#D4C2A8', '#B89B7A'],
+            borderRadius: 3,
+            marginTop: 8,
+            marginBottom: 24,
+            showShadow: true
           }
         },
         {
           id: 'intro-main-heading',
           type: 'text-inline',
           properties: {
-            content: '<span style="color: #B89B7A; font-weight: 700;">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com você.',
+            content: '<span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">Chega</span> <span style="font-family: \'Playfair Display\', serif;">de um guarda-roupa lotado e da sensação de que</span> <span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">nada combina com você.</span>',
             fontSize: 'text-3xl',
             fontWeight: 'font-bold',
+            fontFamily: 'Playfair Display, serif',
             textAlign: 'text-center',
             color: '#432818',
-            marginBottom: 24
+            marginBottom: 32,
+            lineHeight: '1.2'
           }
         },
         {
@@ -804,44 +832,73 @@ class SchemaDrivenFunnelService {
             alt: 'Transforme seu guarda-roupa',
             width: 600,
             height: 400,
-            className: 'object-cover w-full h-auto rounded-lg mx-auto'
+            className: 'object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg',
+            textAlign: 'text-center',
+            marginBottom: 32
           }
         },
         {
           id: 'intro-subtitle',
           type: 'text-inline',
           properties: {
-            content: 'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
-            fontSize: 'text-lg',
+            content: 'Em poucos minutos, descubra seu <strong style="color: #B89B7A;">Estilo Predominante</strong> — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
+            fontSize: 'text-xl',
             textAlign: 'text-center',
             color: '#432818',
-            marginTop: 16,
-            marginBottom: 32
+            marginTop: 0,
+            marginBottom: 40,
+            lineHeight: '1.6'
           }
         },
         {
           id: 'intro-name-input',
           type: 'form-input',
           properties: {
-            label: 'NOME',
+            label: 'COMO VOCÊ GOSTARIA DE SER CHAMADA?',
             placeholder: 'Digite seu nome aqui...',
             required: true,
             inputType: 'text',
-            helperText: '',
-            name: 'userName'
+            helperText: 'Seu nome será usado para personalizar sua experiência',
+            name: 'userName',
+            textAlign: 'text-center',
+            marginBottom: 32
           }
         },
         {
           id: 'intro-cta-button',
           type: 'button-inline',
           properties: {
-            text: 'Quero Descobrir meu Estilo Agora!',
+            text: '✨ Quero Descobrir meu Estilo Agora! ✨',
             variant: 'primary',
             size: 'large',
             fullWidth: true,
             backgroundColor: '#B89B7A',
             textColor: '#ffffff',
-            requiresValidInput: true
+            requiresValidInput: true,
+            textAlign: 'text-center',
+            borderRadius: 'rounded-full',
+            padding: 'py-4 px-8',
+            fontSize: 'text-lg',
+            fontWeight: 'font-bold',
+            boxShadow: 'shadow-xl',
+            hoverEffect: true
+          }
+        },
+        {
+          id: 'intro-legal-notice',
+          type: 'legal-notice-inline',
+          properties: {
+            privacyText: 'Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade',
+            copyrightText: '© 2025 Gisele Galvão - Todos os direitos reservados',
+            showIcon: true,
+            iconType: 'shield',
+            textAlign: 'text-center',
+            textSize: 'text-xs',
+            textColor: '#6B7280',
+            linkColor: '#B89B7A',
+            marginTop: 24,
+            marginBottom: 0,
+            backgroundColor: 'transparent'
           }
         }
       ],
@@ -860,13 +917,13 @@ class SchemaDrivenFunnelService {
     // Componentes: quiz-intro-header + heading-inline + text-inline + options-grid + button-inline
     // ==========================================
     REAL_QUIZ_QUESTIONS.forEach((questionData, index) => {
-      console.log(`🎯 [ES7+] Criando questão ${index + 1}:`, questionData.question);
+      console.log(`🎯 [ES7+] Criando questão ${index + 1}:`, questionData.title);
       const currentProgress = 5 + (index + 1) * 5; // 5%, 10%, 15%... até 55%
       
       pages.push({
         id: this.generateUniquePageId(`etapa-${index + 2}-questao-${index + 1}`),
         name: `Questão ${index + 1}`,
-        title: `Etapa ${index + 2}: ${questionData.question}`,
+        title: `Etapa ${index + 2}: ${questionData.title}`,
         type: 'question',
         order: index + 2,
         blocks: [
@@ -889,7 +946,7 @@ class SchemaDrivenFunnelService {
             id: `question-${index + 1}-title`,
             type: 'heading-inline',
             properties: {
-              content: questionData.question,
+              content: questionData.title,
               level: 'h2',
               fontSize: 'text-2xl',
               fontWeight: 'font-bold',
@@ -925,10 +982,10 @@ class SchemaDrivenFunnelService {
               columns: questionData.type === 'both' ? 2 : 1,
               showImages: questionData.type === 'both' || questionData.type === undefined,
               imageSize: 'large',
-              multipleSelection: questionData.multipleSelection || false,
-              maxSelections: questionData.maxSelections || 1,
+              multipleSelection: questionData.multiSelect > 1 || false,
+              maxSelections: questionData.multiSelect || 1,
               minSelections: 1,
-              validationMessage: `Selecione ${questionData.maxSelections || 1} opç${(questionData.maxSelections || 1) > 1 ? 'ões' : 'ão'}`,
+              validationMessage: `Selecione ${questionData.multiSelect || 1} opç${(questionData.multiSelect || 1) > 1 ? 'ões' : 'ão'}`,
               gridGap: 16,
               responsiveColumns: true // Força máximo 2 colunas
             }
@@ -1861,8 +1918,11 @@ class SchemaDrivenFunnelService {
         blocks: [],
         order: 1,
         settings: {
-          showProgressBar: true,
-          backgroundColor: '#FFFFFF'
+          showProgress: true,
+          progressValue: 0,
+          backgroundColor: '#FFFFFF',
+          textColor: '#432818',
+          maxWidth: '100%'
         }
       }];
 

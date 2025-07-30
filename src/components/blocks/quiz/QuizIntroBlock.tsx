@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { useQuizTracking } from '@/hooks/useQuizTracking';
-import { InlineEditableText } from '../../editor/blocks/InlineEditableText';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { BlockComponentProps } from '../../../types/blocks';
 
 /**
  * QuizIntroBlock - Schema-driven compatible version
@@ -151,30 +150,41 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
       <div className="relative z-10 w-full max-w-2xl mx-auto space-y-8 text-center">
         {/* Título */}
         <div className="space-y-4">
-          <InlineEditableText
-            value={title}
-            onSave={(value) => handlePropertyChange('title', value)}
-            className="text-4xl md:text-5xl font-bold leading-tight"
+          <h1 
+            className={cn(
+              "text-4xl md:text-5xl font-bold leading-tight cursor-pointer p-2 rounded border-2 border-transparent hover:border-blue-300",
+              isSelected && "ring-2 ring-blue-500 ring-opacity-50"
+            )}
             style={{ color: textColor }}
-            placeholder="Título do quiz"
-          />
+            onClick={onClick}
+            title="Clique para editar no Painel de Propriedades"
+          >
+            {title || "Título do quiz"}
+          </h1>
           
-          <InlineEditableText
-            value={subtitle}
-            onSave={(value) => handlePropertyChange('subtitle', value)}
-            className="text-xl md:text-2xl text-opacity-80"
+          <h2 
+            className={cn(
+              "text-xl md:text-2xl text-opacity-80 cursor-pointer p-2 rounded border-2 border-transparent hover:border-blue-300",
+              isSelected && "ring-2 ring-blue-500 ring-opacity-50"
+            )}
             style={{ color: textColor }}
-            placeholder="Subtítulo explicativo"
-          />
+            onClick={onClick}
+            title="Clique para editar no Painel de Propriedades"
+          >
+            {subtitle || "Subtítulo explicativo"}
+          </h2>
           
-          <InlineEditableText
-            value={description}
-            onSave={(value) => handlePropertyChange('description', value)}
-            className="text-lg text-opacity-70"
+          <p 
+            className={cn(
+              "text-lg text-opacity-70 cursor-pointer p-2 rounded border-2 border-transparent hover:border-blue-300",
+              isSelected && "ring-2 ring-blue-500 ring-opacity-50"
+            )}
             style={{ color: textColor }}
-            placeholder="Descrição detalhada"
-            isTextArea={true}
-          />
+            onClick={onClick}
+            title="Clique para editar no Painel de Propriedades"
+          >
+            {description || "Descrição detalhada"}
+          </p>
         </div>
 
         {/* Benefícios */}
@@ -225,13 +235,9 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
                 ? 'bg-[#B89B7A] hover:bg-[#A38A69] text-white hover:scale-105 shadow-lg focus:ring-[#B89B7A]'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             )}
+            title="Texto do botão editável no Painel de Propriedades"
           >
-            <InlineEditableText
-              value={buttonText}
-              onSave={(value) => handlePropertyChange('buttonText', value)}
-              placeholder="Texto do botão"
-              disabled={!isEditing}
-            />
+            {buttonText || "Iniciar Quiz"}
           </button>
         </form>
 

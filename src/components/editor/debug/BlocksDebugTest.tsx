@@ -1,5 +1,5 @@
 import React from 'react';
-import { blockDefinitions, getCategories, getBlocksByCategory } from '@/config/blockDefinitions';
+import { blockDefinitions, getCategories, getBlocksByCategory } from '../../../config/blockDefinitions.ts';
 
 export const BlocksDebugTest: React.FC = () => {
   const categories = getCategories();

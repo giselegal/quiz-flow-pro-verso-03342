@@ -767,25 +767,23 @@ const DescubraSeuEstilo: React.FC = () => {
               </div>
 
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-playfair text-[#432818] text-center md:text-left leading-tight">
-                Chega de um guarda-roupa lotado e da sensação de que nada
-                combina com você.
+                <span style={{color: '#B89B7A', fontWeight: 700}}>Chega</span> de um guarda-roupa lotado e da sensação de que <span style={{color: '#B89B7A', fontWeight: 700}}>nada combina com você.</span>
               </h1>
 
               <p className="text-lg md:text-xl text-[#8F7A6A] text-center md:text-left">
-                Descubra seu Estilo e aprenda a montar looks que realmente
-                refletem sua essência, com praticidade e confiança.
+                Em poucos minutos, descubra seu <strong style={{color: '#B89B7A'}}>Estilo Predominante</strong> — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.
               </p>
 
               <div className="flex justify-center md:justify-start">
                 <Button
-                  onClick={handleCTAClick("hero-cta", "Descobrir Meu Estilo")}
+                  onClick={() => window.location.href = '/editor'}
                   size="lg"
                   className="bg-[#B89B7A] hover:bg-[#A68A6A] text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   <span className="hidden md:inline">
-                    Descobrir Meu Estilo - 5x R$ 8,83
+                    Quero Descobrir meu Estilo Agora!
                   </span>
-                  <span className="md:hidden">Descobrir Meu Estilo</span>
+                  <span className="md:hidden">Iniciar Quiz</span>
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </div>

@@ -1,7 +1,8 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
+import React, { useState, useEffect } from 'react';
+import { cn } from '../../../lib/utils';
 import { MousePointer2, Edit3, ArrowRight, Download, Play, Star } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { BlockComponentProps } from '../../../types/blocks';
+import { userResponseService } from '../../../services/userResponseService';
 
 /**
  * ButtonInlineBlock - Componente modular inline horizontal
@@ -37,8 +38,48 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     backgroundColor = '',
     textColor = '',
     borderColor = '',
-    borderRadius = 'medium'
+    borderRadius = 'medium',
+    requiresValidInput = false // Nova propriedade para validação
   } = block.properties;
+
+  // Estado para controlar se o botão deve estar habilitado
+  const [isValidated, setIsValidated] = useState(!requiresValidInput);
+
+  // Verificar se há um nome válido quando requiresValidInput for true
+  useEffect(() => {
+    if (requiresValidInput) {
+      // Verificar se há um nome salvo
+      const nameInput = userResponseService.getResponse('intro-name-input');
+      const hasValidName = nameInput && nameInput.trim().length > 0;
+      setIsValidated(hasValidName);
+
+      // Listener para mudanças via evento customizado
+      const handleQuizInputChange = (event: CustomEvent) => {
+        if (event.detail.blockId === 'intro-name-input') {
+          setIsValidated(event.detail.valid && event.detail.value.length > 0);
+        }
+      };
+
+      // Listener para mudanças no localStorage (backup)
+      const handleStorageChange = () => {
+        const updatedName = userResponseService.getResponse('intro-name-input');
+        const hasUpdatedValidName = updatedName && updatedName.trim().length > 0;
+        setIsValidated(hasUpdatedValidName);
+      };
+
+      // Adicionar listeners
+      window.addEventListener('quiz-input-change', handleQuizInputChange as EventListener);
+      window.addEventListener('storage', handleStorageChange);
+
+      return () => {
+        window.removeEventListener('quiz-input-change', handleQuizInputChange as EventListener);
+        window.removeEventListener('storage', handleStorageChange);
+      };
+    }
+  }, [requiresValidInput]);
+
+  // Determinar se o botão deve estar desabilitado
+  const isButtonDisabled = disabled || (requiresValidInput && !isValidated);
 
   // Ícones disponíveis
   const iconMap = {
@@ -116,14 +157,14 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
           // Border radius
           borderRadiusClasses[borderRadius as keyof typeof borderRadiusClasses],
           // Estados
-          disabled && 'opacity-50 cursor-not-allowed hover:scale-100',
+          isButtonDisabled && 'opacity-50 cursor-not-allowed hover:scale-100',
           fullWidth && 'w-full'
         )}
         style={hasCustomStyles ? customStyles : undefined}
-        disabled={disabled}
+        disabled={isButtonDisabled}
         onClick={(e) => {
           e.stopPropagation();
-          if (href) {
+          if (!isButtonDisabled && href) {
             window.open(href, target);
           }
         }}
