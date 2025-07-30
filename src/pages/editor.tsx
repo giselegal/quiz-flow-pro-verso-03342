@@ -11,13 +11,11 @@ import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce'
 import { toast } from '@/components/ui/use-toast';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { EditorQuizProvider } from '@/contexts/EditorQuizContext';
-import { schemaDrivenFunnelService } from '../services/schemaDrivenFunnelService';
 
 const EditorPage: React.FC = () => {
   const [location, setLocation] = useLocation();
   const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
-  const [isLoadingFunnel, setIsLoadingFunnel] = useState(false);
   
   // Extract funnel ID from URL - MOVIDO PARA O INÍCIO
   const urlParams = new URLSearchParams(window.location.search);
@@ -25,50 +23,6 @@ const EditorPage: React.FC = () => {
   
   const { config, addBlock, updateBlock, deleteBlock, setConfig } = useEditor();
   const { saveFunnel, loadFunnel, isSaving, isLoading } = useEditorPersistence();
-
-  // Load funnel data if ID is provided in URL
-  useEffect(() => {
-    const loadFunnelData = async () => {
-      if (!funnelId) return;
-      
-      setIsLoadingFunnel(true);
-      try {
-        console.log('🔍 Loading funnel from schema service:', funnelId);
-        const schemaDrivenData = await schemaDrivenFunnelService.loadFunnel(funnelId);
-        
-        if (schemaDrivenData) {
-          // Convert to editor format and load first page blocks
-          const firstPage = schemaDrivenData.pages[0];
-          if (firstPage && firstPage.blocks) {
-            setConfig({
-              blocks: firstPage.blocks,
-              title: firstPage.title,
-              description: schemaDrivenData.description
-            });
-            console.log('✅ Loaded funnel blocks:', firstPage.blocks.length);
-          }
-        } else {
-          console.warn('❌ Funnel not found with ID:', funnelId);
-          toast({
-            title: "Aviso",
-            description: "Funil não encontrado. Criando novo funil.",
-            variant: "default"
-          });
-        }
-      } catch (error) {
-        console.error('❌ Error loading funnel:', error);
-        toast({
-          title: "Erro",
-          description: "Erro ao carregar funil",
-          variant: "destructive"
-        });
-      } finally {
-        setIsLoadingFunnel(false);
-      }
-    };
-
-    loadFunnelData();
-  }, [funnelId, setConfig]);
   
   // ✅ AUTO-SAVE COM DEBOUNCE - Fase 1 
   const handleAutoSave = async (data: any) => {

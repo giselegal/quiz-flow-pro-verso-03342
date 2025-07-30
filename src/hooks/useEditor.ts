@@ -11,25 +11,12 @@ export const useEditor = () => {
     blocks: []
   });
   
-  // Load config from localStorage on initial load (with cleanup)
+  // Load config from localStorage on initial load
   useEffect(() => {
     try {
       const savedConfig = localStorage.getItem('editor_config');
       if (savedConfig) {
-        const parsedConfig = JSON.parse(savedConfig);
-        
-        // Remove quiz-question blocks from Step 1 (these should not be there)
-        if (parsedConfig.blocks) {
-          parsedConfig.blocks = parsedConfig.blocks.filter((block: any) => {
-            const isQuizQuestion = block.type === 'quiz-question';
-            if (isQuizQuestion) {
-              console.warn('🧹 Removing invalid quiz-question block from Step 1:', block.id);
-            }
-            return !isQuizQuestion;
-          });
-        }
-        
-        setConfig(parsedConfig);
+        setConfig(JSON.parse(savedConfig));
       }
     } catch (error) {
       console.error('Error loading editor config:', error);
