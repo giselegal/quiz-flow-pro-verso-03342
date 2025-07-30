@@ -93,5 +93,5 @@ properties: {
 
 ---
 
-**Status**: ✅ **CONCLUÍDO** - Título agora usa Playfair Display em todo o texto
-**Resultado**: Tipografia elegante e consistente com o design do quiz
+**Status**: ✅ **CONCLUÍDO** - Título agora usa Playfair Display em tamanho maior (text-4xl)
+**Resultado**: Tipografia elegante, impactante e profissional com destaque visual aprimorado
