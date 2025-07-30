@@ -226,7 +226,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         });
       }
     }
-  }, [selectedStepId, blocks.length, addBlock, updateBlock, toast]);
   React.useEffect(() => {
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -308,6 +307,32 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       }));
     }
   }, [blocks.length, selectedStepId]);
+
+  // Verificar se há dados salvos da Etapa 1 e carregar automaticamente
+  useEffect(() => {
+    const savedEtapa1Blocks = localStorage.getItem('quiz-step-etapa-1-blocks');
+    if (savedEtapa1Blocks && selectedStepId === 'etapa-1') {
+      const etapa1Blocks = JSON.parse(savedEtapa1Blocks);
+      if (etapa1Blocks.length > 0 && blocks.length === 0) {
+        console.log(`🔄 Recuperando ${etapa1Blocks.length} blocos salvos da Etapa 1`);
+        
+        // Carregar blocos salvos da Etapa 1
+        etapa1Blocks.forEach((savedBlock: any, index: number) => {
+          setTimeout(() => {
+            const newBlockId = addBlock(savedBlock.type as any);
+            if (savedBlock.properties) {
+              updateBlock(newBlockId, savedBlock.properties);
+            }
+          }, index * 50);
+        });
+        
+        toast({
+          title: "Dados da Etapa 1 Recuperados",
+          description: `${etapa1Blocks.length} blocos foram restaurados automaticamente.`,
+        });
+      }
+    }
+  }, [selectedStepId, blocks.length, addBlock, updateBlock, toast]);
 
   const handleAddBlock = useCallback((blockType: string) => {
     const newBlockId = addBlock(blockType as any);
@@ -770,6 +795,11 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-semibold text-gray-900">
               Editor Visual {funnelId ? `- ${funnelId}` : 'das 21 Etapas'}
+              {localStorage.getItem('quiz-step-etapa-1-blocks') && (
+                <span className="ml-2 text-sm bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                  Dados Preservados ✓
+                </span>
+              )}
             </h1>
             <div className="flex items-center gap-2">
               <Button
