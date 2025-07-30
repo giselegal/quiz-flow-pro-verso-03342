@@ -17,33 +17,71 @@ export const QUIZ_TEMPLATES = {
     progress: 0,
     showHeader: true,
     showProgress: false,
-    components: [
+    blocks: [
       {
-        id: "intro-title",
-        type: "heading",
-        data: {
-          text: "Descubra Seu Estilo Pessoal",
-          level: 1,
-          color: "#432818"
-        },
-        style: {
-          textAlign: "center",
-          marginBottom: "1rem"
+        id: 'intro-header',
+        type: 'quiz-intro-header',
+        properties: {
+          logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+          logoAlt: 'Logo Gisele Galvão',
+          logoWidth: 120,
+          logoHeight: 120,
+          progressValue: 0,
+          progressMax: 100,
+          showBackButton: false,
+          showProgress: false
         }
       },
       {
-        id: "intro-subtitle", 
-        type: "paragraph",
-        data: {
-          text: "Responda algumas perguntas rápidas e descubra qual estilo combina mais com você",
-          color: "#8F7A6A"
-        },
-        style: {
-          textAlign: "center",
-          fontSize: "1.1rem"
+        id: 'intro-decorative-bar',
+        type: 'decorative-bar-inline',
+        properties: {
+          width: '100%',
+          height: 4,
+          color: '#B89B7A',
+          gradientColors: ['#B89B7A', '#D4C2A8', '#B89B7A'],
+          borderRadius: 3,
+          marginTop: 8,
+          marginBottom: 24,
+          showShadow: true
+        }
+      },
+      {
+        id: 'intro-main-heading',
+        type: 'text-inline',
+        properties: {
+          content: '<span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">Descubra</span> <span style="font-family: \'Playfair Display\', serif;">Seu Estilo Pessoal</span>',
+          fontSize: 'text-3xl',
+          fontWeight: 'font-bold',
+          fontFamily: 'Playfair Display, serif',
+          textAlign: 'text-center',
+          color: '#432818',
+          marginBottom: 32,
+          lineHeight: '1.2'
+        }
+      },
+      {
+        id: 'intro-subtitle',
+        type: 'text-inline',
+        properties: {
+          content: 'Responda algumas perguntas rápidas e descubra qual estilo combina mais com você',
+          fontSize: 'text-xl',
+          textAlign: 'text-center',
+          color: '#8F7A6A',
+          marginTop: 0,
+          marginBottom: 40,
+          lineHeight: '1.6'
         }
       }
-    ]
+    ],
+    settings: {
+      showProgress: false,
+      progressValue: 0,
+      backgroundColor: '#ffffff',
+      textColor: '#432818',
+      maxWidth: 'max-w-4xl',
+      padding: 'p-6'
+    }
   },
   transition: {
     id: "transition",
@@ -52,17 +90,42 @@ export const QUIZ_TEMPLATES = {
     progress: 75,
     showHeader: true,
     showProgress: true,
-    components: [
+    blocks: [
       {
-        id: "transition-title",
-        type: "heading",
-        content: {
-          text: "Quase terminando!",
-          level: 2,
-          color: "#432818"
+        id: 'transition-header',
+        type: 'quiz-intro-header',
+        properties: {
+          logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+          logoAlt: 'Logo Gisele Galvão',
+          logoWidth: 96,
+          logoHeight: 96,
+          progressValue: 75,
+          progressMax: 100,
+          showBackButton: true
+        }
+      },
+      {
+        id: 'transition-title',
+        type: 'heading-inline',
+        properties: {
+          content: 'Quase terminando!',
+          level: 'h2',
+          fontSize: 'text-2xl',
+          fontWeight: 'font-bold',
+          textAlign: 'text-center',
+          color: '#432818',
+          marginBottom: 16
         }
       }
-    ]
+    ],
+    settings: {
+      showProgress: true,
+      progressValue: 75,
+      backgroundColor: '#ffffff',
+      textColor: '#432818',
+      maxWidth: 'max-w-4xl',
+      padding: 'p-6'
+    }
   },
   loading: {
     id: "loading",
@@ -71,15 +134,52 @@ export const QUIZ_TEMPLATES = {
     progress: 90,
     showHeader: true,
     showProgress: true,
-    components: [
+    blocks: [
       {
-        id: "loading-spinner",
-        type: "loading",
-        content: {
-          text: "Analisando suas respostas..."
+        id: 'loading-header',
+        type: 'quiz-intro-header',
+        properties: {
+          logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+          logoAlt: 'Logo Gisele Galvão',
+          logoWidth: 96,
+          logoHeight: 96,
+          progressValue: 90,
+          progressMax: 100,
+          showBackButton: false
+        }
+      },
+      {
+        id: 'loading-title',
+        type: 'heading-inline',
+        properties: {
+          content: 'Analisando suas respostas...',
+          level: 'h2',
+          fontSize: 'text-2xl',
+          fontWeight: 'font-bold',
+          textAlign: 'text-center',
+          color: '#432818',
+          marginBottom: 16
+        }
+      },
+      {
+        id: 'loading-animation',
+        type: 'loading-animation',
+        properties: {
+          type: 'spinner',
+          size: 'large',
+          color: '#B89B7A',
+          duration: 3000
         }
       }
-    ]
+    ],
+    settings: {
+      showProgress: true,
+      progressValue: 90,
+      backgroundColor: '#ffffff',
+      textColor: '#432818',
+      maxWidth: 'max-w-4xl',
+      padding: 'p-6'
+    }
   },
   result: {
     id: "result",
@@ -88,17 +188,41 @@ export const QUIZ_TEMPLATES = {
     progress: 100,
     showHeader: true,
     showProgress: false,
-    components: [
+    blocks: [
       {
-        id: "result-title",
-        type: "heading",
-        content: {
-          text: "Seu Estilo é...",
-          level: 1,
-          color: "#432818"
+        id: 'result-header',
+        type: 'result-header-inline',
+        properties: {
+          logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+          logoAlt: 'Logo Gisele Galvão',
+          logoWidth: 96,
+          logoHeight: 96,
+          userName: 'dinamicUserName',
+          showProgress: false
+        }
+      },
+      {
+        id: 'result-title',
+        type: 'heading-inline',
+        properties: {
+          content: 'Seu Estilo é...',
+          level: 'h1',
+          fontSize: 'text-3xl',
+          fontWeight: 'font-bold',
+          textAlign: 'text-center',
+          color: '#432818',
+          marginBottom: 24
         }
       }
-    ]
+    ],
+    settings: {
+      showProgress: false,
+      progressValue: 100,
+      backgroundColor: '#ffffff',
+      textColor: '#432818',
+      maxWidth: 'max-w-4xl',
+      padding: 'p-6'
+    }
   },
   offer: {
     id: "offer",
@@ -107,17 +231,51 @@ export const QUIZ_TEMPLATES = {
     progress: 100,
     showHeader: true,
     showProgress: false,
-    components: [
+    blocks: [
       {
-        id: "offer-title",
-        type: "heading",
-        content: {
-          text: "Oferta Especial Para Você",
-          level: 1,
-          color: "#432818"
+        id: 'offer-title',
+        type: 'heading-inline',
+        properties: {
+          content: 'Oferta Especial Para Você',
+          level: 'h1',
+          fontSize: 'text-3xl',
+          fontWeight: 'font-bold',
+          textAlign: 'text-center',
+          color: '#432818',
+          marginBottom: 16
+        }
+      },
+      {
+        id: 'offer-pricing',
+        type: 'quiz-offer-pricing-inline',
+        properties: {
+          originalPrice: 197,
+          discountedPrice: 97,
+          discountPercentage: 51,
+          currency: 'BRL',
+          installments: {
+            number: 12,
+            value: 8.83
+          },
+          features: [
+            'Guia Completo do Seu Estilo (PDF)',
+            'Análise Personalizada Detalhada',
+            'Dicas de Combinações',
+            'Lista de Compras Estratégicas',
+            'Suporte por 30 dias'
+          ],
+          highlighted: true
         }
       }
-    ]
+    ],
+    settings: {
+      showProgress: false,
+      progressValue: 100,
+      backgroundColor: '#ffffff',
+      textColor: '#432818',
+      maxWidth: 'max-w-4xl',
+      padding: 'p-6'
+    }
   }
 };
 
@@ -133,74 +291,140 @@ export const generateRealQuestionTemplates = () => {
       showProgress: true,
       questionType: "both", // texto + imagem
       multiSelect: 3,
-      components: [
+      blocks: [
         {
-          id: "q1-question",
-          type: "multipleChoice",
-          data: {
-            text: "QUAL O SEU TIPO DE ROUPA FAVORITA?",
-            maxSelections: 3,
+          id: 'q1-header',
+          type: 'quiz-intro-header',
+          properties: {
+            logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            logoAlt: 'Logo Gisele Galvão',
+            logoWidth: 96,
+            logoHeight: 96,
+            progressValue: 10,
+            progressMax: 100,
+            showBackButton: true
+          }
+        },
+        {
+          id: 'q1-title',
+          type: 'heading-inline',
+          properties: {
+            content: 'QUAL O SEU TIPO DE ROUPA FAVORITA?',
+            level: 'h2',
+            fontSize: 'text-2xl',
+            fontWeight: 'font-bold',
+            textAlign: 'text-center',
+            color: '#432818',
+            marginBottom: 8
+          }
+        },
+        {
+          id: 'q1-progress-label',
+          type: 'text-inline',
+          properties: {
+            content: 'Questão 1 de 10',
+            fontSize: 'text-sm',
+            textAlign: 'text-center',
+            color: '#6B7280',
+            marginBottom: 24
+          }
+        },
+        {
+          id: 'q1-options',
+          type: 'options-grid',
+          properties: {
             options: [
               { 
                 id: "1a", 
                 text: "Conforto, leveza e praticidade no vestir",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-                styleCategory: "Natural",
-                points: { natural: 1 }
+                value: "1a",
+                category: "Natural"
               },
               { 
                 id: "1b", 
                 text: "Discrição, caimento clássico e sobriedade",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-                styleCategory: "Clássico",
-                points: { classico: 1 }
+                value: "1b",
+                category: "Clássico"
               },
               { 
                 id: "1c", 
                 text: "Praticidade com um toque de estilo atual",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-                styleCategory: "Contemporâneo",
-                points: { contemporaneo: 1 }
+                value: "1c",
+                category: "Contemporâneo"
               },
               { 
                 id: "1d", 
                 text: "Elegância refinada, moderna e sem exageros",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-                styleCategory: "Elegante",
-                points: { elegante: 1 }
+                value: "1d",
+                category: "Elegante"
               },
               { 
                 id: "1e", 
                 text: "Delicadeza em tecidos suaves e fluidos",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
-                styleCategory: "Romântico",
-                points: { romantico: 1 }
+                value: "1e",
+                category: "Romântico"
               },
               { 
                 id: "1f", 
                 text: "Sensualidade com destaque para o corpo",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
-                styleCategory: "Sexy",
-                points: { sexy: 1 }
+                value: "1f",
+                category: "Sexy"
               },
               { 
                 id: "1g", 
                 text: "Impacto visual com peças estruturadas e assimétricas",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
-                styleCategory: "Dramático",
-                points: { dramatico: 1 }
+                value: "1g",
+                category: "Dramático"
               },
               { 
                 id: "1h", 
                 text: "Mix criativo com formas ousadas e originais",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
-                styleCategory: "Criativo",
-                points: { criativo: 1 }
+                value: "1h",
+                category: "Criativo"
               }
-            ]
+            ],
+            columns: 2,
+            showImages: true,
+            imageSize: 'large',
+            multipleSelection: true,
+            maxSelections: 3,
+            minSelections: 1,
+            validationMessage: 'Selecione até 3 opções',
+            gridGap: 16,
+            responsiveColumns: true
+          }
+        },
+        {
+          id: 'q1-continue',
+          type: 'button-inline',
+          properties: {
+            text: 'Continuar',
+            variant: 'primary',
+            size: 'large',
+            fullWidth: true,
+            backgroundColor: '#B89B7A',
+            textColor: '#ffffff',
+            disabled: true,
+            requiresValidSelection: true
           }
         }
-      ]
+      ],
+      settings: {
+        showProgress: true,
+        progressValue: 10,
+        backgroundColor: '#ffffff',
+        textColor: '#432818',
+        maxWidth: 'max-w-4xl',
+        padding: 'p-6'
+      }
     },
 
     // QUESTÃO 2: RESUMA A SUA PERSONALIDADE
@@ -213,26 +437,91 @@ export const generateRealQuestionTemplates = () => {
       showProgress: true,
       questionType: "text",
       multiSelect: 3,
-      components: [
+      blocks: [
         {
-          id: "q2-question",
-          type: "multipleChoice",
-          data: {
-            text: "RESUMA A SUA PERSONALIDADE:",
-            maxSelections: 3,
+          id: 'q2-header',
+          type: 'quiz-intro-header',
+          properties: {
+            logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            logoAlt: 'Logo Gisele Galvão',
+            logoWidth: 96,
+            logoHeight: 96,
+            progressValue: 20,
+            progressMax: 100,
+            showBackButton: true
+          }
+        },
+        {
+          id: 'q2-title',
+          type: 'heading-inline',
+          properties: {
+            content: 'RESUMA A SUA PERSONALIDADE:',
+            level: 'h2',
+            fontSize: 'text-2xl',
+            fontWeight: 'font-bold',
+            textAlign: 'text-center',
+            color: '#432818',
+            marginBottom: 8
+          }
+        },
+        {
+          id: 'q2-progress-label',
+          type: 'text-inline',
+          properties: {
+            content: 'Questão 2 de 10',
+            fontSize: 'text-sm',
+            textAlign: 'text-center',
+            color: '#6B7280',
+            marginBottom: 24
+          }
+        },
+        {
+          id: 'q2-options',
+          type: 'options-grid',
+          properties: {
             options: [
-              { id: "2a", text: "Informal, espontânea, alegre, essencialista", styleCategory: "Natural", points: { natural: 1 } },
-              { id: "2b", text: "Conservadora, séria, organizada", styleCategory: "Clássico", points: { classico: 1 } },
-              { id: "2c", text: "Informada, ativa, prática", styleCategory: "Contemporâneo", points: { contemporaneo: 1 } },
-              { id: "2d", text: "Exigente, sofisticada, seletiva", styleCategory: "Elegante", points: { elegante: 1 } },
-              { id: "2e", text: "Feminina, meiga, delicada, sensível", styleCategory: "Romântico", points: { romantico: 1 } },
-              { id: "2f", text: "Glamorosa, vaidosa, sensual", styleCategory: "Sexy", points: { sexy: 1 } },
-              { id: "2g", text: "Cosmopolita, moderna e audaciosa", styleCategory: "Dramático", points: { dramatico: 1 } },
-              { id: "2h", text: "Exótica, aventureira, livre", styleCategory: "Criativo", points: { criativo: 1 } }
-            ]
+              { id: "2a", text: "Informal, espontânea, alegre, essencialista", value: "2a", category: "Natural" },
+              { id: "2b", text: "Conservadora, séria, organizada", value: "2b", category: "Clássico" },
+              { id: "2c", text: "Informada, ativa, prática", value: "2c", category: "Contemporâneo" },
+              { id: "2d", text: "Exigente, sofisticada, seletiva", value: "2d", category: "Elegante" },
+              { id: "2e", text: "Feminina, meiga, delicada, sensível", value: "2e", category: "Romântico" },
+              { id: "2f", text: "Glamorosa, vaidosa, sensual", value: "2f", category: "Sexy" },
+              { id: "2g", text: "Cosmopolita, moderna e audaciosa", value: "2g", category: "Dramático" },
+              { id: "2h", text: "Exótica, aventureira, livre", value: "2h", category: "Criativo" }
+            ],
+            columns: 1,
+            showImages: false,
+            multipleSelection: true,
+            maxSelections: 3,
+            minSelections: 1,
+            validationMessage: 'Selecione até 3 opções',
+            gridGap: 12,
+            responsiveColumns: true
+          }
+        },
+        {
+          id: 'q2-continue',
+          type: 'button-inline',
+          properties: {
+            text: 'Continuar',
+            variant: 'primary',
+            size: 'large',
+            fullWidth: true,
+            backgroundColor: '#B89B7A',
+            textColor: '#ffffff',
+            disabled: true,
+            requiresValidSelection: true
           }
         }
-      ]
+      ],
+      settings: {
+        showProgress: true,
+        progressValue: 20,
+        backgroundColor: '#ffffff',
+        textColor: '#432818',
+        maxWidth: 'max-w-4xl',
+        padding: 'p-6'
+      }
     },
 
     // QUESTÃO 3: QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?
@@ -245,74 +534,140 @@ export const generateRealQuestionTemplates = () => {
       showProgress: true,
       questionType: "both",
       multiSelect: 3,
-      components: [
+      blocks: [
         {
-          id: "q3-question",
-          type: "multipleChoice",
-          data: {
-            text: "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
-            maxSelections: 3,
+          id: 'q3-header',
+          type: 'quiz-intro-header',
+          properties: {
+            logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            logoAlt: 'Logo Gisele Galvão',
+            logoWidth: 96,
+            logoHeight: 96,
+            progressValue: 30,
+            progressMax: 100,
+            showBackButton: true
+          }
+        },
+        {
+          id: 'q3-title',
+          type: 'heading-inline',
+          properties: {
+            content: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?',
+            level: 'h2',
+            fontSize: 'text-2xl',
+            fontWeight: 'font-bold',
+            textAlign: 'text-center',
+            color: '#432818',
+            marginBottom: 8
+          }
+        },
+        {
+          id: 'q3-progress-label',
+          type: 'text-inline',
+          properties: {
+            content: 'Questão 3 de 10',
+            fontSize: 'text-sm',
+            textAlign: 'text-center',
+            color: '#6B7280',
+            marginBottom: 24
+          }
+        },
+        {
+          id: 'q3-options',
+          type: 'options-grid',
+          properties: {
             options: [
               { 
                 id: "3a", 
                 text: "Visual leve, despojado e natural",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
-                styleCategory: "Natural",
-                points: { natural: 1 }
+                value: "3a",
+                category: "Natural"
               },
               { 
                 id: "3b", 
-                text: "Visual clássico e tradicional",
-                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
-                styleCategory: "Clássico",
-                points: { classico: 1 }
+                text: "Look sóbrio, elegante e atemporal",
+                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/3_vwxqcg.webp",
+                value: "3b",
+                category: "Clássico"
               },
               { 
                 id: "3c", 
-                text: "Visual casual com toque atual",
-                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
-                styleCategory: "Contemporâneo",
-                points: { contemporaneo: 1 }
+                text: "Estilo moderno com toques da moda",
+                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+                value: "3c",
+                category: "Contemporâneo"
               },
               { 
                 id: "3d", 
-                text: "Visual refinado e imponente",
-                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
-                styleCategory: "Elegante",
-                points: { elegante: 1 }
+                text: "Sofisticação refinada e impecável",
+                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_tbnajq.webp",
+                value: "3d",
+                category: "Elegante"
               },
               { 
                 id: "3e", 
-                text: "Visual romântico, feminino e delicado",
-                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
-                styleCategory: "Romântico",
-                points: { romantico: 1 }
+                text: "Feminilidade suave e delicada",
+                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/6_tblhsy.webp",
+                value: "3e",
+                category: "Romântico"
               },
               { 
                 id: "3f", 
-                text: "Visual sensual, com saia justa e decote",
-                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
-                styleCategory: "Sexy",
-                points: { sexy: 1 }
+                text: "Sensualidade marcante e provocante",
+                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/7_l9mywn.webp",
+                value: "3f",
+                category: "Sexy"
               },
               { 
                 id: "3g", 
-                text: "Visual marcante e urbano (jeans + jaqueta)",
-                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
-                styleCategory: "Dramático",
-                points: { dramatico: 1 }
+                text: "Drama e impacto visual forte",
+                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735318/8_xm6ifa.webp",
+                value: "3g",
+                category: "Dramático"
               },
               { 
                 id: "3h", 
-                text: "Visual criativo, colorido e ousado",
-                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
-                styleCategory: "Criativo",
-                points: { criativo: 1 }
+                text: "Criatividade e originalidade única",
+                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735318/9_ufomxb.webp",
+                value: "3h",
+                category: "Criativo"
               }
-            ]
+            ],
+            columns: 2,
+            showImages: true,
+            imageSize: 'large',
+            multipleSelection: true,
+            maxSelections: 3,
+            minSelections: 1,
+            validationMessage: 'Selecione até 3 opções',
+            gridGap: 16,
+            responsiveColumns: true
+          }
+        },
+        {
+          id: 'q3-continue',
+          type: 'button-inline',
+          properties: {
+            text: 'Continuar',
+            variant: 'primary',
+            size: 'large',
+            fullWidth: true,
+            backgroundColor: '#B89B7A',
+            textColor: '#ffffff',
+            disabled: true,
+            requiresValidSelection: true
           }
         }
-      ]
+      ],
+      settings: {
+        showProgress: true,
+        progressValue: 30,
+        backgroundColor: '#ffffff',
+        textColor: '#432818',
+        maxWidth: 'max-w-4xl',
+        padding: 'p-6'
+      }
     },
 
     // QUESTÃO 4: QUAIS DETALHES VOCÊ GOSTA?
@@ -325,26 +680,91 @@ export const generateRealQuestionTemplates = () => {
       showProgress: true,
       questionType: "text",
       multiSelect: 3,
-      components: [
+      blocks: [
         {
-          id: "q4-question",
-          type: "multipleChoice",
-          data: {
-            text: "QUAIS DETALHES VOCÊ GOSTA?",
-            maxSelections: 3,
+          id: 'q4-header',
+          type: 'quiz-intro-header',
+          properties: {
+            logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            logoAlt: 'Logo Gisele Galvão',
+            logoWidth: 96,
+            logoHeight: 96,
+            progressValue: 40,
+            progressMax: 100,
+            showBackButton: true
+          }
+        },
+        {
+          id: 'q4-title',
+          type: 'heading-inline',
+          properties: {
+            content: 'QUAIS DETALHES VOCÊ GOSTA?',
+            level: 'h2',
+            fontSize: 'text-2xl',
+            fontWeight: 'font-bold',
+            textAlign: 'text-center',
+            color: '#432818',
+            marginBottom: 8
+          }
+        },
+        {
+          id: 'q4-progress-label',
+          type: 'text-inline',
+          properties: {
+            content: 'Questão 4 de 10',
+            fontSize: 'text-sm',
+            textAlign: 'text-center',
+            color: '#6B7280',
+            marginBottom: 24
+          }
+        },
+        {
+          id: 'q4-options',
+          type: 'options-grid',
+          properties: {
             options: [
-              { id: "4a", text: "Poucos detalhes, básico e prático", styleCategory: "Natural", points: { natural: 1 } },
-              { id: "4b", text: "Bem discretos e sutis, clean e clássico", styleCategory: "Clássico", points: { classico: 1 } },
-              { id: "4c", text: "Básico, mas com um toque de estilo", styleCategory: "Contemporâneo", points: { contemporaneo: 1 } },
-              { id: "4d", text: "Detalhes refinados, chic e que deem status", styleCategory: "Elegante", points: { elegante: 1 } },
-              { id: "4e", text: "Detalhes delicados, laços, babados", styleCategory: "Romântico", points: { romantico: 1 } },
-              { id: "4f", text: "Roupas que valorizem meu corpo: couro, zíper, fendas", styleCategory: "Sexy", points: { sexy: 1 } },
-              { id: "4g", text: "Detalhes marcantes, firmeza e peso", styleCategory: "Dramático", points: { dramatico: 1 } },
-              { id: "4h", text: "Detalhes diferentes do convencional, produções ousadas", styleCategory: "Criativo", points: { criativo: 1 } }
-            ]
+              { id: "4a", text: "Poucos detalhes, básico e prático", value: "4a", category: "Natural" },
+              { id: "4b", text: "Bem discretos e sutis, clean e clássico", value: "4b", category: "Clássico" },
+              { id: "4c", text: "Básico, mas com um toque de estilo", value: "4c", category: "Contemporâneo" },
+              { id: "4d", text: "Detalhes refinados, chic e que deem status", value: "4d", category: "Elegante" },
+              { id: "4e", text: "Detalhes delicados, laços, babados", value: "4e", category: "Romântico" },
+              { id: "4f", text: "Roupas que valorizem meu corpo: couro, zíper, fendas", value: "4f", category: "Sexy" },
+              { id: "4g", text: "Detalhes marcantes, firmeza e peso", value: "4g", category: "Dramático" },
+              { id: "4h", text: "Detalhes diferentes do convencional, produções ousadas", value: "4h", category: "Criativo" }
+            ],
+            columns: 1,
+            showImages: false,
+            multipleSelection: true,
+            maxSelections: 3,
+            minSelections: 1,
+            validationMessage: 'Selecione até 3 opções',
+            gridGap: 12,
+            responsiveColumns: true
+          }
+        },
+        {
+          id: 'q4-continue',
+          type: 'button-inline',
+          properties: {
+            text: 'Continuar',
+            variant: 'primary',
+            size: 'large',
+            fullWidth: true,
+            backgroundColor: '#B89B7A',
+            textColor: '#ffffff',
+            disabled: true,
+            requiresValidSelection: true
           }
         }
-      ]
+      ],
+      settings: {
+        showProgress: true,
+        progressValue: 40,
+        backgroundColor: '#ffffff',
+        textColor: '#432818',
+        maxWidth: 'max-w-4xl',
+        padding: 'p-6'
+      }
     },
 
     // QUESTÃO 5: QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?
@@ -357,77 +777,143 @@ export const generateRealQuestionTemplates = () => {
       showProgress: true,
       questionType: "both",
       multiSelect: 3,
-      components: [
+      blocks: [
         {
-          id: "q5-question",
-          type: "multipleChoice",
-          data: {
-            text: "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?",
-            maxSelections: 3,
+          id: 'q5-header',
+          type: 'quiz-intro-header',
+          properties: {
+            logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            logoAlt: 'Logo Gisele Galvão',
+            logoWidth: 96,
+            logoHeight: 96,
+            progressValue: 50,
+            progressMax: 100,
+            showBackButton: true
+          }
+        },
+        {
+          id: 'q5-title',
+          type: 'heading-inline',
+          properties: {
+            content: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?',
+            level: 'h2',
+            fontSize: 'text-2xl',
+            fontWeight: 'font-bold',
+            textAlign: 'text-center',
+            color: '#432818',
+            marginBottom: 8
+          }
+        },
+        {
+          id: 'q5-progress-label',
+          type: 'text-inline',
+          properties: {
+            content: 'Questão 5 de 10',
+            fontSize: 'text-sm',
+            textAlign: 'text-center',
+            color: '#6B7280',
+            marginBottom: 24
+          }
+        },
+        {
+          id: 'q5-options',
+          type: 'options-grid',
+          properties: {
             options: [
               { 
                 id: "5a", 
                 text: "Estampas clean, com poucas informações",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/20_oh44vh.webp",
-                styleCategory: "Natural",
-                points: { natural: 1 }
+                value: "5a",
+                category: "Natural"
               },
               { 
                 id: "5b", 
                 text: "Estampas clássicas e atemporais",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735368/21_o7wkte.webp",
-                styleCategory: "Clássico",
-                points: { classico: 1 }
+                value: "5b",
+                category: "Clássico"
               },
               { 
                 id: "5c", 
                 text: "Atemporais, mas que tenham uma pegada de atual e moderna",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735369/22_siebw2.webp",
-                styleCategory: "Contemporâneo",
-                points: { contemporaneo: 1 }
+                value: "5c",
+                category: "Contemporâneo"
               },
               { 
                 id: "5d", 
                 text: "Estampas clássicas e atemporais, mas sofisticadas",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/23_bdfxrh.webp",
-                styleCategory: "Elegante",
-                points: { elegante: 1 }
+                value: "5d",
+                category: "Elegante"
               },
               { 
                 id: "5e", 
                 text: "Estampas florais e/ou delicadas como bolinhas, borboletas e corações",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/24_nptszu.webp",
-                styleCategory: "Romântico",
-                points: { romantico: 1 }
+                value: "5e",
+                category: "Romântico"
               },
               { 
                 id: "5f", 
                 text: "Estampas de animal print, como onça, zebra e cobra",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/25_motk6b.webp",
-                styleCategory: "Sexy",
-                points: { sexy: 1 }
+                value: "5f",
+                category: "Sexy"
               },
               { 
                 id: "5g", 
                 text: "Estampas geométricas, abstratas e exageradas como grandes poás",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp",
-                styleCategory: "Dramático",
-                points: { dramatico: 1 }
+                value: "5g",
+                category: "Dramático"
               },
               { 
                 id: "5h", 
                 text: "Estampas diferentes do usual, como africanas, xadrez grandes",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp",
-                styleCategory: "Criativo",
-                points: { criativo: 1 }
+                value: "5h",
+                category: "Criativo"
               }
-            ]
+            ],
+            columns: 2,
+            showImages: true,
+            imageSize: 'large',
+            multipleSelection: true,
+            maxSelections: 3,
+            minSelections: 1,
+            validationMessage: 'Selecione até 3 opções',
+            gridGap: 16,
+            responsiveColumns: true
+          }
+        },
+        {
+          id: 'q5-continue',
+          type: 'button-inline',
+          properties: {
+            text: 'Continuar',
+            variant: 'primary',
+            size: 'large',
+            fullWidth: true,
+            backgroundColor: '#B89B7A',
+            textColor: '#ffffff',
+            disabled: true,
+            requiresValidSelection: true
           }
         }
-      ]
+      ],
+      settings: {
+        showProgress: true,
+        progressValue: 50,
+        backgroundColor: '#ffffff',
+        textColor: '#432818',
+        maxWidth: 'max-w-4xl',
+        padding: 'p-6'
+      }
     },
 
-    // QUESTÃO 6: QUAL CASACO É SEU FAVORITO?
+        // QUESTÃO 6: QUAL CASACO É SEU FAVORITO?
     {
       id: "q6",
       title: "QUAL CASACO É SEU FAVORITO?",
@@ -437,74 +923,140 @@ export const generateRealQuestionTemplates = () => {
       showProgress: true,
       questionType: "both",
       multiSelect: 3,
-      components: [
+      blocks: [
         {
-          id: "q6-question",
-          type: "multipleChoice",
-          data: {
-            text: "QUAL CASACO É SEU FAVORITO?",
-            maxSelections: 3,
+          id: 'q6-header',
+          type: 'quiz-intro-header',
+          properties: {
+            logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            logoAlt: 'Logo Gisele Galvão',
+            logoWidth: 96,
+            logoHeight: 96,
+            progressValue: 60,
+            progressMax: 100,
+            showBackButton: true
+          }
+        },
+        {
+          id: 'q6-title',
+          type: 'heading-inline',
+          properties: {
+            content: 'QUAL CASACO É SEU FAVORITO?',
+            level: 'h2',
+            fontSize: 'text-2xl',
+            fontWeight: 'font-bold',
+            textAlign: 'text-center',
+            color: '#432818',
+            marginBottom: 8
+          }
+        },
+        {
+          id: 'q6-progress-label',
+          type: 'text-inline',
+          properties: {
+            content: 'Questão 6 de 10',
+            fontSize: 'text-sm',
+            textAlign: 'text-center',
+            color: '#6B7280',
+            marginBottom: 24
+          }
+        },
+        {
+          id: 'q6-options',
+          type: 'options-grid',
+          properties: {
             options: [
               { 
                 id: "6a", 
                 text: "Cardigã bege confortável e casual",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/29_sdogoy.webp",
-                styleCategory: "Natural",
-                points: { natural: 1 }
+                value: "6a",
+                category: "Natural"
               },
               { 
                 id: "6b", 
                 text: "Blazer verde estruturado",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/30_nfth8k.webp",
-                styleCategory: "Clássico",
-                points: { classico: 1 }
+                value: "6b",
+                category: "Clássico"
               },
               { 
                 id: "6c", 
                 text: "Trench coat bege tradicional",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/31_tcmhcl.webp",
-                styleCategory: "Contemporâneo",
-                points: { contemporaneo: 1 }
+                value: "6c",
+                category: "Contemporâneo"
               },
               { 
                 id: "6d", 
                 text: "Blazer branco refinado",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/32_h78pd8.webp",
-                styleCategory: "Elegante",
-                points: { elegante: 1 }
+                value: "6d",
+                category: "Elegante"
               },
               { 
                 id: "6e", 
                 text: "Casaco pink vibrante e moderno",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/33_u8pldd.webp",
-                styleCategory: "Romântico",
-                points: { romantico: 1 }
+                value: "6e",
+                category: "Romântico"
               },
               { 
                 id: "6f", 
                 text: "Jaqueta vinho de couro estilosa",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/34_peadir.webp",
-                styleCategory: "Sexy",
-                points: { sexy: 1 }
+                value: "6f",
+                category: "Sexy"
               },
               { 
                 id: "6g", 
                 text: "Jaqueta preta estilo rocker",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735379/35_pulzso.webp",
-                styleCategory: "Dramático",
-                points: { dramatico: 1 }
+                value: "6g",
+                category: "Dramático"
               },
               { 
                 id: "6h", 
                 text: "Casaco estampado criativo e colorido",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/36_cympaq.webp",
-                styleCategory: "Criativo",
-                points: { criativo: 1 }
+                value: "6h",
+                category: "Criativo"
               }
-            ]
+            ],
+            columns: 2,
+            showImages: true,
+            imageSize: 'large',
+            multipleSelection: true,
+            maxSelections: 3,
+            minSelections: 1,
+            validationMessage: 'Selecione até 3 opções',
+            gridGap: 16,
+            responsiveColumns: true
+          }
+        },
+        {
+          id: 'q6-continue',
+          type: 'button-inline',
+          properties: {
+            text: 'Continuar',
+            variant: 'primary',
+            size: 'large',
+            fullWidth: true,
+            backgroundColor: '#B89B7A',
+            textColor: '#ffffff',
+            disabled: true,
+            requiresValidSelection: true
           }
         }
-      ]
+      ],
+      settings: {
+        showProgress: true,
+        progressValue: 60,
+        backgroundColor: '#ffffff',
+        textColor: '#432818',
+        maxWidth: 'max-w-4xl',
+        padding: 'p-6'
+      }
     },
 
     // QUESTÃO 7: QUAL SUA CALÇA FAVORITA?
@@ -517,74 +1069,140 @@ export const generateRealQuestionTemplates = () => {
       showProgress: true,
       questionType: "both",
       multiSelect: 3,
-      components: [
+      blocks: [
         {
-          id: "q7-question",
-          type: "multipleChoice",
-          data: {
-            text: "QUAL SUA CALÇA FAVORITA?",
-            maxSelections: 3,
+          id: 'q7-header',
+          type: 'quiz-intro-header',
+          properties: {
+            logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            logoAlt: 'Logo Gisele Galvão',
+            logoWidth: 96,
+            logoHeight: 96,
+            progressValue: 70,
+            progressMax: 100,
+            showBackButton: true
+          }
+        },
+        {
+          id: 'q7-title',
+          type: 'heading-inline',
+          properties: {
+            content: 'QUAL SUA CALÇA FAVORITA?',
+            level: 'h2',
+            fontSize: 'text-2xl',
+            fontWeight: 'font-bold',
+            textAlign: 'text-center',
+            color: '#432818',
+            marginBottom: 8
+          }
+        },
+        {
+          id: 'q7-progress-label',
+          type: 'text-inline',
+          properties: {
+            content: 'Questão 7 de 10',
+            fontSize: 'text-sm',
+            textAlign: 'text-center',
+            color: '#6B7280',
+            marginBottom: 24
+          }
+        },
+        {
+          id: 'q7-options',
+          type: 'options-grid',
+          properties: {
             options: [
               { 
                 id: "7a", 
                 text: "Calça fluida acetinada bege",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/38_iilv0l.webp",
-                styleCategory: "Natural",
-                points: { natural: 1 }
+                value: "7a",
+                category: "Natural"
               },
               { 
                 id: "7b", 
                 text: "Calça de alfaiataria cinza",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735417/39_arsswu.webp",
-                styleCategory: "Clássico",
-                points: { classico: 1 }
+                value: "7b",
+                category: "Clássico"
               },
               { 
                 id: "7c", 
                 text: "Jeans reto e básico",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/40_beq52x.webp",
-                styleCategory: "Contemporâneo",
-                points: { contemporaneo: 1 }
+                value: "7c",
+                category: "Contemporâneo"
               },
               { 
                 id: "7d", 
                 text: "Calça reta bege de tecido",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/41_hconq4.webp",
-                styleCategory: "Elegante",
-                points: { elegante: 1 }
+                value: "7d",
+                category: "Elegante"
               },
               { 
                 id: "7e", 
                 text: "Calça ampla rosa alfaiatada",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735420/42_q8xws1.webp",
-                styleCategory: "Romântico",
-                points: { romantico: 1 }
+                value: "7e",
+                category: "Romântico"
               },
               { 
                 id: "7f", 
                 text: "Legging preta de couro",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/43_ljy7sh.webp",
-                styleCategory: "Sexy",
-                points: { sexy: 1 }
+                value: "7f",
+                category: "Sexy"
               },
               { 
                 id: "7g", 
                 text: "Calça reta preta de couro",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/44_nqgvoq.webp",
-                styleCategory: "Dramático",
-                points: { dramatico: 1 }
+                value: "7g",
+                category: "Dramático"
               },
               { 
                 id: "7h", 
                 text: "Calça estampada floral leve e ampla",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735425/45_lp64m8.webp",
-                styleCategory: "Criativo",
-                points: { criativo: 1 }
+                value: "7h",
+                category: "Criativo"
               }
-            ]
+            ],
+            columns: 2,
+            showImages: true,
+            imageSize: 'large',
+            multipleSelection: true,
+            maxSelections: 3,
+            minSelections: 1,
+            validationMessage: 'Selecione até 3 opções',
+            gridGap: 16,
+            responsiveColumns: true
+          }
+        },
+        {
+          id: 'q7-continue',
+          type: 'button-inline',
+          properties: {
+            text: 'Continuar',
+            variant: 'primary',
+            size: 'large',
+            fullWidth: true,
+            backgroundColor: '#B89B7A',
+            textColor: '#ffffff',
+            disabled: true,
+            requiresValidSelection: true
           }
         }
-      ]
+      ],
+      settings: {
+        showProgress: true,
+        progressValue: 70,
+        backgroundColor: '#ffffff',
+        textColor: '#432818',
+        maxWidth: 'max-w-4xl',
+        padding: 'p-6'
+      }
     },
 
     // QUESTÃO 8: QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?
@@ -597,74 +1215,140 @@ export const generateRealQuestionTemplates = () => {
       showProgress: true,
       questionType: "both",
       multiSelect: 3,
-      components: [
+      blocks: [
         {
-          id: "q8-question",
-          type: "multipleChoice",
-          data: {
-            text: "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?",
-            maxSelections: 3,
+          id: 'q8-header',
+          type: 'quiz-intro-header',
+          properties: {
+            logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            logoAlt: 'Logo Gisele Galvão',
+            logoWidth: 96,
+            logoHeight: 96,
+            progressValue: 80,
+            progressMax: 100,
+            showBackButton: true
+          }
+        },
+        {
+          id: 'q8-title',
+          type: 'heading-inline',
+          properties: {
+            content: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?',
+            level: 'h2',
+            fontSize: 'text-2xl',
+            fontWeight: 'font-bold',
+            textAlign: 'text-center',
+            color: '#432818',
+            marginBottom: 8
+          }
+        },
+        {
+          id: 'q8-progress-label',
+          type: 'text-inline',
+          properties: {
+            content: 'Questão 8 de 10',
+            fontSize: 'text-sm',
+            textAlign: 'text-center',
+            color: '#6B7280',
+            marginBottom: 24
+          }
+        },
+        {
+          id: 'q8-options',
+          type: 'options-grid',
+          properties: {
             options: [
               { 
                 id: "8a", 
                 text: "Tênis nude casual e confortável",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp",
-                styleCategory: "Natural",
-                points: { natural: 1 }
+                value: "8a",
+                category: "Natural"
               },
               { 
                 id: "8b", 
                 text: "Scarpin nude de salto baixo",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp",
-                styleCategory: "Clássico",
-                points: { classico: 1 }
+                value: "8b",
+                category: "Clássico"
               },
               { 
                 id: "8c", 
                 text: "Sandália dourada com salto bloco",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp",
-                styleCategory: "Contemporâneo",
-                points: { contemporaneo: 1 }
+                value: "8c",
+                category: "Contemporâneo"
               },
               { 
                 id: "8d", 
                 text: "Scarpin nude salto alto e fino",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp",
-                styleCategory: "Elegante",
-                points: { elegante: 1 }
+                value: "8d",
+                category: "Elegante"
               },
               { 
                 id: "8e", 
                 text: "Sandália anabela off white",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp",
-                styleCategory: "Romântico",
-                points: { romantico: 1 }
+                value: "8e",
+                category: "Romântico"
               },
               { 
                 id: "8f", 
                 text: "Sandália rosa de tiras finas",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp",
-                styleCategory: "Sexy",
-                points: { sexy: 1 }
+                value: "8f",
+                category: "Sexy"
               },
               { 
                 id: "8g", 
                 text: "Scarpin preto moderno com vinil transparente",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp",
-                styleCategory: "Dramático",
-                points: { dramatico: 1 }
+                value: "8g",
+                category: "Dramático"
               },
               { 
                 id: "8h", 
                 text: "Scarpin colorido estampado",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp",
-                styleCategory: "Criativo",
-                points: { criativo: 1 }
+                value: "8h",
+                category: "Criativo"
               }
-            ]
+            ],
+            columns: 2,
+            showImages: true,
+            imageSize: 'large',
+            multipleSelection: true,
+            maxSelections: 3,
+            minSelections: 1,
+            validationMessage: 'Selecione até 3 opções',
+            gridGap: 16,
+            responsiveColumns: true
+          }
+        },
+        {
+          id: 'q8-continue',
+          type: 'button-inline',
+          properties: {
+            text: 'Continuar',
+            variant: 'primary',
+            size: 'large',
+            fullWidth: true,
+            backgroundColor: '#B89B7A',
+            textColor: '#ffffff',
+            disabled: true,
+            requiresValidSelection: true
           }
         }
-      ]
+      ],
+      settings: {
+        showProgress: true,
+        progressValue: 80,
+        backgroundColor: '#ffffff',
+        textColor: '#432818',
+        maxWidth: 'max-w-4xl',
+        padding: 'p-6'
+      }
     },
 
     // QUESTÃO 9: QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?
@@ -675,28 +1359,142 @@ export const generateRealQuestionTemplates = () => {
       progress: 90,
       showHeader: true,
       showProgress: true,
-      questionType: "text",
+      questionType: "both",
       multiSelect: 3,
-      components: [
+      blocks: [
         {
-          id: "q9-question",
-          type: "multipleChoice",
-          data: {
-            text: "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?",
-            maxSelections: 3,
+          id: 'q9-header',
+          type: 'quiz-intro-header',
+          properties: {
+            logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            logoAlt: 'Logo Gisele Galvão',
+            logoWidth: 96,
+            logoHeight: 96,
+            progressValue: 90,
+            progressMax: 100,
+            showBackButton: true
+          }
+        },
+        {
+          id: 'q9-title',
+          type: 'heading-inline',
+          properties: {
+            content: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?',
+            level: 'h2',
+            fontSize: 'text-2xl',
+            fontWeight: 'font-bold',
+            textAlign: 'text-center',
+            color: '#432818',
+            marginBottom: 8
+          }
+        },
+        {
+          id: 'q9-progress-label',
+          type: 'text-inline',
+          properties: {
+            content: 'Questão 9 de 10',
+            fontSize: 'text-sm',
+            textAlign: 'text-center',
+            color: '#6B7280',
+            marginBottom: 24
+          }
+        },
+        {
+          id: 'q9-options',
+          type: 'options-grid',
+          properties: {
             options: [
-              { id: "9a", text: "Pequenos e discretos, às vezes nem uso", styleCategory: "Natural", points: { natural: 1 } },
-              { id: "9b", text: "Brincos pequenos e discretos. Corrente fininha", styleCategory: "Clássico", points: { classico: 1 } },
-              { id: "9c", text: "Acessórios que elevem meu look com um toque moderno", styleCategory: "Contemporâneo", points: { contemporaneo: 1 } },
-              { id: "9d", text: "Acessórios sofisticados, joias ou semijoias", styleCategory: "Elegante", points: { elegante: 1 } },
-              { id: "9e", text: "Peças delicadas e com um toque feminino", styleCategory: "Romântico", points: { romantico: 1 } },
-              { id: "9f", text: "Brincos longos, colares que valorizem minha beleza", styleCategory: "Sexy", points: { sexy: 1 } },
-              { id: "9g", text: "Acessórios pesados, que causem um impacto", styleCategory: "Dramático", points: { dramatico: 1 } },
-              { id: "9h", text: "Acessórios diferentes, grandes e marcantes", styleCategory: "Criativo", points: { criativo: 1 } }
-            ]
+              { 
+                id: "9a", 
+                text: "Pequenos e discretos, às vezes nem uso.",
+                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/56_htzoxy.webp",
+                value: "9a",
+                category: "Natural"
+              },
+              { 
+                id: "9b", 
+                text: "Brincos pequenos e discretos. Corrente fininha.",
+                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/57_whzmff.webp",
+                value: "9b",
+                category: "Clássico"
+              },
+              { 
+                id: "9c", 
+                text: "Acessórios que elevem meu look com um toque moderno.",
+                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/61_joafud.webp",
+                value: "9c",
+                category: "Contemporâneo"
+              },
+              { 
+                id: "9d", 
+                text: "Acessórios sofisticados, joias ou semijoias.",
+                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/60_vzsnps.webp",
+                value: "9d",
+                category: "Elegante"
+              },
+              { 
+                id: "9e", 
+                text: "Peças delicadas e com um toque feminino.",
+                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/59_dwaqrx.webp",
+                value: "9e",
+                category: "Romântico"
+              },
+              { 
+                id: "9f", 
+                text: "Brincos longos, colares que valorizem minha beleza.",
+                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735487/63_lwgokn.webp",
+                value: "9f",
+                category: "Sexy"
+              },
+              { 
+                id: "9g", 
+                text: "Acessórios pesados, que causem um impacto.",
+                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735485/62_mno8wg.webp",
+                value: "9g",
+                category: "Dramático"
+              },
+              { 
+                id: "9h", 
+                text: "Acessórios diferentes, grandes e marcantes.",
+                imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735480/58_njdjoh.webp",
+                value: "9h",
+                category: "Criativo"
+              }
+            ],
+            columns: 2,
+            showImages: true,
+            imageSize: 'large',
+            multipleSelection: true,
+            maxSelections: 3,
+            minSelections: 1,
+            validationMessage: 'Selecione até 3 opções',
+            gridGap: 16,
+            responsiveColumns: true
+          }
+        },
+        {
+          id: 'q9-continue',
+          type: 'button-inline',
+          properties: {
+            text: 'Continuar',
+            variant: 'primary',
+            size: 'large',
+            fullWidth: true,
+            backgroundColor: '#B89B7A',
+            textColor: '#ffffff',
+            disabled: true,
+            requiresValidSelection: true
           }
         }
-      ]
+      ],
+      settings: {
+        showProgress: true,
+        progressValue: 90,
+        backgroundColor: '#ffffff',
+        textColor: '#432818',
+        maxWidth: 'max-w-4xl',
+        padding: 'p-6'
+      }
     },
 
     // QUESTÃO 10: VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...
@@ -709,251 +1507,131 @@ export const generateRealQuestionTemplates = () => {
       showProgress: true,
       questionType: "text",
       multiSelect: 3,
-      components: [
+      blocks: [
         {
-          id: "q10-question",
-          type: "multipleChoice",
-          data: {
-            text: "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...",
+          id: 'q10-header',
+          type: 'quiz-intro-header',
+          properties: {
+            logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            logoAlt: 'Logo Gisele Galvão',
+            logoWidth: 96,
+            logoHeight: 96,
+            progressValue: 100,
+            progressMax: 100,
+            showBackButton: true
+          }
+        },
+        {
+          id: 'q10-title',
+          type: 'heading-inline',
+          properties: {
+            content: 'VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...',
+            level: 'h2',
+            fontSize: 'text-2xl',
+            fontWeight: 'font-bold',
+            textAlign: 'text-center',
+            color: '#432818',
+            marginBottom: 8
+          }
+        },
+        {
+          id: 'q10-progress-label',
+          type: 'text-inline',
+          properties: {
+            content: 'Questão 10 de 10',
+            fontSize: 'text-sm',
+            textAlign: 'text-center',
+            color: '#6B7280',
+            marginBottom: 24
+          }
+        },
+        {
+          id: 'q10-options',
+          type: 'options-grid',
+          properties: {
+            options: [
+              { 
+                id: "10a", 
+                text: "São fáceis de cuidar",
+                value: "10a",
+                category: "Natural"
+              },
+              { 
+                id: "10b", 
+                text: "São de excelente qualidade",
+                value: "10b",
+                category: "Clássico"
+              },
+              { 
+                id: "10c", 
+                text: "São fáceis de cuidar e modernos",
+                value: "10c",
+                category: "Contemporâneo"
+              },
+              { 
+                id: "10d", 
+                text: "São sofisticados",
+                value: "10d",
+                category: "Elegante"
+              },
+              { 
+                id: "10e", 
+                text: "São delicados",
+                value: "10e",
+                category: "Romântico"
+              },
+              { 
+                id: "10f", 
+                text: "São perfeitos ao meu corpo",
+                value: "10f",
+                category: "Sexy"
+              },
+              { 
+                id: "10g", 
+                text: "São diferentes, e trazem um efeito para minha roupa",
+                value: "10g",
+                category: "Dramático"
+              },
+              { 
+                id: "10h", 
+                text: "São exclusivos, criam identidade no look",
+                value: "10h",
+                category: "Criativo"
+              }
+            ],
+            columns: 1,
+            showImages: false,
+            multipleSelection: true,
             maxSelections: 3,
-            options: [
-              { id: "10a", text: "São fáceis de cuidar", styleCategory: "Natural", points: { natural: 1 } },
-              { id: "10b", text: "São de excelente qualidade", styleCategory: "Clássico", points: { classico: 1 } },
-              { id: "10c", text: "São fáceis de cuidar e modernos", styleCategory: "Contemporâneo", points: { contemporaneo: 1 } },
-              { id: "10d", text: "São sofisticados", styleCategory: "Elegante", points: { elegante: 1 } },
-              { id: "10e", text: "São delicados", styleCategory: "Romântico", points: { romantico: 1 } },
-              { id: "10f", text: "São perfeitos ao meu corpo", styleCategory: "Sexy", points: { sexy: 1 } },
-              { id: "10g", text: "São diferentes, e trazem um efeito para minha roupa", styleCategory: "Dramático", points: { dramatico: 1 } },
-              { id: "10h", text: "São exclusivos, criam identidade no look", styleCategory: "Criativo", points: { criativo: 1 } }
-            ]
+            minSelections: 1,
+            validationMessage: 'Selecione até 3 opções',
+            gridGap: 12,
+            responsiveColumns: true
           }
-        }
-      ]
-    }
-  ];
-};
-
-export const generateStrategicQuestionTemplates = () => {
-  return [
-    // ETAPA 11: Página de Transição 1
-    {
-      id: "transition1",
-      title: "🕐 Enquanto calculamos o seu resultado...",
-      type: "transition" as const,
-      progress: 75,
-      showHeader: true,
-      showProgress: true,
-      components: [
+        },
         {
-          id: "transition1-content",
-          type: "text",
-          data: {
-            text: "🕐 Enquanto calculamos o seu resultado...\n\nQueremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa.\nA ideia é simples: te ajudar a enxergar com mais clareza onde você está agora — e para onde pode ir com mais intenção, leveza e autenticidade.\n\n💬 Responda com sinceridade. Isso é só entre você e a sua nova versão.",
-            fontSize: "1.1rem",
-            textAlign: "center",
-            color: "#432818",
-            lineHeight: "1.6"
-          },
-          style: {
-            backgroundColor: "#f8f9fa",
-            padding: "2rem",
-            borderRadius: "12px",
-            textAlign: "center"
+          id: 'q10-continue',
+          type: 'button-inline',
+          properties: {
+            text: 'Continuar',
+            variant: 'primary',
+            size: 'large',
+            fullWidth: true,
+            backgroundColor: '#B89B7A',
+            textColor: '#ffffff',
+            disabled: true,
+            requiresValidSelection: true
           }
         }
-      ]
-    },
-
-    // QUESTÃO 12: Como você se vê hoje?
-    {
-      id: "s1",
-      title: "Como você se vê hoje?",
-      type: "question" as const,
-      progress: 78,
-      showHeader: true,
-      showProgress: true,
-      questionType: "text",
-      components: [
-        {
-          id: "s1-question",
-          type: "singleChoice",
-          data: {
-            text: "Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?",
-            options: [
-              { id: "s1a", text: "Me sinto desconectada da mulher que sou hoje", category: "low_confidence" },
-              { id: "s1b", text: "Tenho dúvidas sobre o que realmente me valoriza", category: "uncertain" },
-              { id: "s1c", text: "Às vezes acerto, às vezes erro", category: "moderate" },
-              { id: "s1d", text: "Me sinto segura, mas sei que posso evoluir", category: "confident" }
-            ],
-            isStrategic: true
-          },
-          style: {
-            backgroundColor: "#ffffff",
-            padding: "1.5rem",
-            borderRadius: "8px",
-            border: "1px solid #e5e7eb"
-          }
-        }
-      ]
-    },
-
-    // QUESTÃO 13: O que mais te desafia na hora de se vestir?
-    {
-      id: "s2",
-      title: "O que mais te desafia na hora de se vestir?",
-      type: "question" as const,
-      progress: 81,
-      showHeader: true,
-      showProgress: true,
-      questionType: "text",
-      components: [
-        {
-          id: "s2-question",
-          type: "singleChoice",
-          data: {
-            text: "O que mais te desafia na hora de se vestir?",
-            options: [
-              { id: "s2a", text: "Tenho peças, mas não sei como combiná-las", category: "combination" },
-              { id: "s2b", text: "Compro por impulso e me arrependo depois", category: "impulse_buying" },
-              { id: "s2c", text: "Minha imagem não reflete quem eu sou", category: "identity_mismatch" },
-              { id: "s2d", text: "Perco tempo e acabo usando sempre os mesmos looks", category: "routine" }
-            ],
-            isStrategic: true
-          }
-        }
-      ]
-    },
-
-    // QUESTÃO 14: Frequência do "Com que roupa eu vou?"
-    {
-      id: "s3",
-      title: "Com que frequência você se pega pensando...",
-      type: "question" as const,
-      progress: 84,
-      showHeader: true,
-      showProgress: true,
-      questionType: "text",
-      components: [
-        {
-          id: "s3-question",
-          type: "singleChoice",
-          data: {
-            text: "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?",
-            options: [
-              { id: "s3a", text: "Quase todos os dias — é sempre uma indecisão", category: "daily_struggle" },
-              { id: "s3b", text: "Sempre que tenho um compromisso importante", category: "special_occasions" },
-              { id: "s3c", text: "Às vezes, mas me sinto limitada nas escolhas", category: "sometimes_limited" },
-              { id: "s3d", text: "Raramente — já me sinto segura ao me vestir", category: "confident" }
-            ],
-            isStrategic: true
-          }
-        }
-      ]
-    },
-
-    // QUESTÃO 15: Interesse em material estratégico
-    {
-      id: "s4",
-      title: "Pense no quanto você já gastou...",
-      type: "question" as const,
-      progress: 87,
-      showHeader: true,
-      showProgress: true,
-      questionType: "text",
-      components: [
-        {
-          id: "s4-question",
-          type: "singleChoice",
-          data: {
-            text: "Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é...\nVocê acredita que ter acesso a um material estratégico, direto ao ponto, que te ensina a aplicar seu estilo com clareza, faria diferença?",
-            options: [
-              { id: "s4a", text: "Sim! Se existisse algo assim, eu quero", category: "very_interested" },
-              { id: "s4b", text: "Sim, mas teria que ser no momento certo", category: "timing_dependent" },
-              { id: "s4c", text: "Tenho dúvidas se funcionaria pra mim", category: "skeptical" },
-              { id: "s4d", text: "Não, prefiro continuar como estou", category: "not_interested" }
-            ],
-            isStrategic: true
-          }
-        }
-      ]
-    },
-
-    // QUESTÃO 16: Preço R$ 97,00
-    {
-      id: "s5",
-      title: "Se esse conteúdo completo custasse R$ 97,00...",
-      type: "question" as const,
-      progress: 90,
-      showHeader: true,
-      showProgress: true,
-      questionType: "text",
-      components: [
-        {
-          id: "s5-question",
-          type: "singleChoice",
-          data: {
-            text: "Se esse conteúdo completo custasse R$ 97,00 — incluindo Guia de Estilo, bônus especiais e um passo a passo prático para transformar sua imagem pessoal — você consideraria um bom investimento?",
-            options: [
-              { id: "s5a", text: "Sim! Por esse resultado, vale muito", category: "high_value" },
-              { id: "s5b", text: "Sim, mas só se eu tiver certeza de que funciona pra mim", category: "need_proof" },
-              { id: "s5c", text: "Talvez — depende do que está incluso", category: "need_details" },
-              { id: "s5d", text: "Não, ainda não estou pronta para investir", category: "not_ready" }
-            ],
-            isStrategic: true
-          }
-        }
-      ]
-    },
-
-    // QUESTÃO 17: Resultado desejado
-    {
-      id: "s6",
-      title: "Qual desses resultados você mais gostaria de alcançar?",
-      type: "question" as const,
-      progress: 93,
-      showHeader: true,
-      showProgress: true,
-      questionType: "text",
-      components: [
-        {
-          id: "s6-question",
-          type: "singleChoice",
-          data: {
-            text: "Qual desses resultados você mais gostaria de alcançar com os Guias de Estilo e Imagem?",
-            options: [
-              { id: "s6a", text: "Montar looks com mais facilidade e confiança", category: "confidence" },
-              { id: "s6b", text: "Usar o que já tenho e me sentir estilosa", category: "optimization" },
-              { id: "s6c", text: "Comprar com mais consciência e sem culpa", category: "conscious_shopping" },
-              { id: "s6d", text: "Ser admirada pela imagem que transmito", category: "recognition" },
-              { id: "s6e", text: "Resgatar peças esquecidas e criar novos looks com estilo", category: "creativity" }
-            ],
-            isStrategic: true
-          }
-        }
-      ]
-    },
-
-    // ETAPA 18: Transição 2 - Antes do resultado
-    {
-      id: "transition2",
-      title: "Obrigada por compartilhar...",
-      type: "transition" as const,
-      progress: 96,
-      showHeader: true,
-      showProgress: true,
-      components: [
-        {
-          id: "transition2-content",
-          type: "text",
-          data: {
-            text: "Obrigada por compartilhar...\n\nAgora vamos revelar seu resultado personalizado baseado em todas as suas respostas!\n\n✨ Preparando sua análise completa de estilo...",
-            fontSize: "1.1rem",
-            textAlign: "center",
-            color: "#432818",
-            lineHeight: "1.6"
-          }
-        }
-      ]
+      ],
+      settings: {
+        showProgress: true,
+        progressValue: 100,
+        backgroundColor: '#ffffff',
+        textColor: '#432818',
+        maxWidth: 'max-w-4xl',
+        padding: 'p-6'
+      }
     }
   ];
 };

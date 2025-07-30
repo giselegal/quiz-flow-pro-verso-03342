@@ -28,7 +28,7 @@ interface QuizStartPageBlockProps {
   style?: React.CSSProperties;
 }
 
-const QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
+const            QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
   block,
   isSelected = false,
   onClick,
