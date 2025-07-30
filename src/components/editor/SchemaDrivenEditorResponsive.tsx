@@ -338,6 +338,43 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       loadStepSpecificBlocks(stepId, step.type);
     }
   }, [steps, loadStepSpecificBlocks]);
+  // Função para carregar o template completo das 21 etapas
+  const handleLoadComplete21StepsTemplate = useCallback(async () => {
+    try {
+      console.log('🚀 Carregando template completo das 21 etapas...');
+      
+      // Limpar blocos existentes
+      blocks.forEach(block => {
+        deleteBlock(block.id);
+      });
+      
+      // Para cada etapa, carregar os blocos específicos
+      for (let i = 0; i < steps.length; i++) {
+        const step = steps[i];
+        if (step.type) {
+          setTimeout(() => {
+            loadStepSpecificBlocks(step.id, step.type);
+          }, i * 200); // Delay para evitar conflitos
+        }
+      }
+      
+      toast({
+        title: "Template das 21 Etapas Carregado!",
+        description: `${steps.length} etapas foram populadas com blocos específicos.`,
+      });
+      
+      console.log('✅ Template completo das 21 etapas carregado com sucesso!');
+      
+    } catch (error) {
+      console.error('❌ Erro ao carregar template das 21 etapas:', error);
+      toast({
+        title: "Erro ao carregar template",
+        description: "Não foi possível carregar o template completo.",
+        variant: "destructive",
+      });
+    }
+  }, [steps, blocks, deleteBlock, loadStepSpecificBlocks, toast]);
+
   const handleStepSelect = useCallback((stepId: string) => {
     setSelectedStepId(stepId);
     setSelectedBlockId(null); // Clear block selection when changing steps
@@ -658,11 +695,21 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               <Button
                 variant="outline"
                 size="sm"
+                onClick={handleLoadComplete21StepsTemplate}
+                className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 border-none"
+              >
+                <Download className="w-4 h-4" />
+                Carregar 21 Etapas
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={handleLoadTemplate}
                 className="flex items-center gap-2"
               >
                 <Download className="w-4 h-4" />
-                Carregar Blocos de Teste
+                Blocos de Teste
               </Button>
               
               {/* Preview Mode Buttons */}
@@ -835,6 +882,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                   onStepDuplicate={handleStepDuplicate}
                   onStepReorder={handleStepReorder}
                   onAddBlocksToStep={handleAddBlocksToStep}
+                  onPopulateStep={handlePopulateStep}
                   className="p-2"
                 />
               </ScrollArea>
