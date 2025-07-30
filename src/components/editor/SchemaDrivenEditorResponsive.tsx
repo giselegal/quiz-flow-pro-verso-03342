@@ -286,6 +286,17 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     }
   }, [blocks.length, selectedStepId]);
 
+  // 🚀 CORREÇÃO: Carregar automaticamente o conteúdo da etapa inicial se estiver vazia
+  useEffect(() => {
+    const currentStep = steps.find(step => step.id === selectedStepId);
+    if (currentStep && blocks.length === 0 && currentStep.blocksCount === 0) {
+      console.log(`🎯 Inicializando conteúdo da etapa ${selectedStepId}`);
+      setTimeout(() => {
+        handlePopulateStep(selectedStepId);
+      }, 500); // Delay para garantir que todos os hooks foram inicializados
+    }
+  }, [selectedStepId, steps, blocks.length]); // Removido handlePopulateStep para evitar loop infinito
+
   const handleAddBlock = useCallback((blockType: string) => {
     const newBlockId = addBlock(blockType as any);
     setSelectedBlockId(newBlockId);
@@ -1025,9 +1036,23 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   }, [steps, blocks, deleteBlock, loadStepSpecificBlocks, toast]);
 
   const handleStepSelect = useCallback((stepId: string) => {
+    console.log(`🎯 Selecionando etapa: ${stepId}`);
     setSelectedStepId(stepId);
     setSelectedBlockId(null); // Clear block selection when changing steps
-  }, []);
+    
+    // 🔧 CORREÇÃO: Carregar automaticamente o conteúdo da etapa selecionada
+    // Verificar se a etapa já tem blocos, se não tiver, popular automaticamente
+    const selectedStep = steps.find(step => step.id === stepId);
+    if (selectedStep && selectedStep.blocksCount === 0) {
+      console.log(`📝 Etapa ${stepId} está vazia, populando automaticamente...`);
+      // Carregar conteúdo da etapa automaticamente
+      setTimeout(() => {
+        handlePopulateStep(stepId);
+      }, 100); // Pequeno delay para garantir que o state foi atualizado
+    } else {
+      console.log(`✅ Etapa ${stepId} já tem ${selectedStep?.blocksCount || 0} blocos`);
+    }
+  }, [steps, handlePopulateStep]);
 
   const handleStepAdd = useCallback(() => {
     const newStep: QuizStep = {
