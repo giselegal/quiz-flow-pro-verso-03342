@@ -1251,10 +1251,13 @@ const FunnelPanelPage: React.FC = () => {
 
                     {template.id === 'default-quiz-funnel-21-steps' && (
                       <div className="mt-3 p-3 bg-[#B89B7A]/10 rounded-lg">
-                        <p className="text-xs text-[#8F7A6A] mb-3">
-                          <strong>Funil Principal:</strong> Este é o funil padrão completo com 21 etapas modulares 
-                          para descoberta de personalidade e estilo pessoal.
+                        <p className="text-xs text-[#8F7A6A] mb-2">
+                          <strong>Funil Principal:</strong> Template completo com 21 etapas para descoberta de personalidade.
                         </p>
+                        <div className="text-xs text-[#6B5B4F] mb-3 space-y-1">
+                          <div>• <strong>Editar Original:</strong> Altera o template base (afeta futuros usos)</div>
+                          <div>• <strong>Criar Cópia:</strong> Nova versão com ID único (recomendado para projetos)</div>
+                        </div>
                         <div className="flex gap-2">
                           <Button
                             size="sm"
