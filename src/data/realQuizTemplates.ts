@@ -291,6 +291,13 @@ export const generateRealQuestionTemplates = () => {
       showProgress: true,
       questionType: "both", // texto + imagem
       multiSelect: 3,
+      scoringEnabled: true,
+      validationRules: {
+        minSelections: 1,
+        maxSelections: 3,
+        required: true,
+        customMessage: 'Escolha de 1 a 3 tipos de roupa que mais combinam com você'
+      },
       blocks: [
         {
           id: 'q1-header',
@@ -339,56 +346,72 @@ export const generateRealQuestionTemplates = () => {
                 text: "Conforto, leveza e praticidade no vestir",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
                 value: "1a",
-                category: "Natural"
+                category: "Natural",
+                styleCategory: "Natural",
+                points: 1
               },
               { 
                 id: "1b", 
                 text: "Discrição, caimento clássico e sobriedade",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
                 value: "1b",
-                category: "Clássico"
+                category: "Clássico",
+                styleCategory: "Clássico",
+                points: 1
               },
               { 
                 id: "1c", 
                 text: "Praticidade com um toque de estilo atual",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
                 value: "1c",
-                category: "Contemporâneo"
+                category: "Contemporâneo",
+                styleCategory: "Contemporâneo",
+                points: 1
               },
               { 
                 id: "1d", 
                 text: "Elegância refinada, moderna e sem exageros",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
                 value: "1d",
-                category: "Elegante"
+                category: "Elegante",
+                styleCategory: "Elegante",
+                points: 1
               },
               { 
                 id: "1e", 
                 text: "Delicadeza em tecidos suaves e fluidos",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
                 value: "1e",
-                category: "Romântico"
+                category: "Romântico",
+                styleCategory: "Romântico",
+                points: 1
               },
               { 
                 id: "1f", 
                 text: "Sensualidade com destaque para o corpo",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
                 value: "1f",
-                category: "Sexy"
+                category: "Sexy",
+                styleCategory: "Sexy",
+                points: 1
               },
               { 
                 id: "1g", 
                 text: "Impacto visual com peças estruturadas e assimétricas",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
                 value: "1g",
-                category: "Dramático"
+                category: "Dramático",
+                styleCategory: "Dramático",
+                points: 1
               },
               { 
                 id: "1h", 
                 text: "Mix criativo com formas ousadas e originais",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
                 value: "1h",
-                category: "Criativo"
+                category: "Criativo",
+                styleCategory: "Criativo",
+                points: 1
               }
             ],
             columns: 2,
@@ -437,6 +460,13 @@ export const generateRealQuestionTemplates = () => {
       showProgress: true,
       questionType: "text",
       multiSelect: 3,
+      scoringEnabled: true,
+      validationRules: {
+        minSelections: 1,
+        maxSelections: 3,
+        required: true,
+        customMessage: 'Selecione de 1 a 3 características que melhor definem sua personalidade'
+      },
       blocks: [
         {
           id: 'q2-header',
@@ -480,14 +510,14 @@ export const generateRealQuestionTemplates = () => {
           type: 'options-grid',
           properties: {
             options: [
-              { id: "2a", text: "Informal, espontânea, alegre, essencialista", value: "2a", category: "Natural" },
-              { id: "2b", text: "Conservadora, séria, organizada", value: "2b", category: "Clássico" },
-              { id: "2c", text: "Informada, ativa, prática", value: "2c", category: "Contemporâneo" },
-              { id: "2d", text: "Exigente, sofisticada, seletiva", value: "2d", category: "Elegante" },
-              { id: "2e", text: "Feminina, meiga, delicada, sensível", value: "2e", category: "Romântico" },
-              { id: "2f", text: "Glamorosa, vaidosa, sensual", value: "2f", category: "Sexy" },
-              { id: "2g", text: "Cosmopolita, moderna e audaciosa", value: "2g", category: "Dramático" },
-              { id: "2h", text: "Exótica, aventureira, livre", value: "2h", category: "Criativo" }
+              { id: "2a", text: "Informal, espontânea, alegre, essencialista", value: "2a", category: "Natural", styleCategory: "Natural", points: 1 },
+              { id: "2b", text: "Conservadora, séria, organizada", value: "2b", category: "Clássico", styleCategory: "Clássico", points: 1 },
+              { id: "2c", text: "Informada, ativa, prática", value: "2c", category: "Contemporâneo", styleCategory: "Contemporâneo", points: 1 },
+              { id: "2d", text: "Exigente, sofisticada, seletiva", value: "2d", category: "Elegante", styleCategory: "Elegante", points: 1 },
+              { id: "2e", text: "Feminina, meiga, delicada, sensível", value: "2e", category: "Romântico", styleCategory: "Romântico", points: 1 },
+              { id: "2f", text: "Glamorosa, vaidosa, sensual", value: "2f", category: "Sexy", styleCategory: "Sexy", points: 1 },
+              { id: "2g", text: "Cosmopolita, moderna e audaciosa", value: "2g", category: "Dramático", styleCategory: "Dramático", points: 1 },
+              { id: "2h", text: "Exótica, aventureira, livre", value: "2h", category: "Criativo", styleCategory: "Criativo", points: 1 }
             ],
             columns: 1,
             showImages: false,
@@ -582,56 +612,72 @@ export const generateRealQuestionTemplates = () => {
                 text: "Visual leve, despojado e natural",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
                 value: "3a",
-                category: "Natural"
+                category: "Natural",
+                styleCategory: "Natural",
+                points: 1
               },
               { 
                 id: "3b", 
                 text: "Look sóbrio, elegante e atemporal",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/3_vwxqcg.webp",
                 value: "3b",
-                category: "Clássico"
+                category: "Clássico",
+                styleCategory: "Clássico",
+                points: 1
               },
               { 
                 id: "3c", 
                 text: "Estilo moderno com toques da moda",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
                 value: "3c",
-                category: "Contemporâneo"
+                category: "Contemporâneo",
+                styleCategory: "Contemporâneo",
+                points: 1
               },
               { 
                 id: "3d", 
                 text: "Sofisticação refinada e impecável",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_tbnajq.webp",
                 value: "3d",
-                category: "Elegante"
+                category: "Elegante",
+                styleCategory: "Elegante",
+                points: 1
               },
               { 
                 id: "3e", 
                 text: "Feminilidade suave e delicada",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/6_tblhsy.webp",
                 value: "3e",
-                category: "Romântico"
+                category: "Romântico",
+                styleCategory: "Romântico",
+                points: 1
               },
               { 
                 id: "3f", 
                 text: "Sensualidade marcante e provocante",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/7_l9mywn.webp",
                 value: "3f",
-                category: "Sexy"
+                category: "Sexy",
+                styleCategory: "Sexy",
+                points: 1
               },
               { 
                 id: "3g", 
                 text: "Drama e impacto visual forte",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735318/8_xm6ifa.webp",
                 value: "3g",
-                category: "Dramático"
+                category: "Dramático",
+                styleCategory: "Dramático",
+                points: 1
               },
               { 
                 id: "3h", 
                 text: "Criatividade e originalidade única",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735318/9_ufomxb.webp",
                 value: "3h",
-                category: "Criativo"
+                category: "Criativo",
+                styleCategory: "Criativo",
+                points: 1
               }
             ],
             columns: 2,
@@ -723,14 +769,14 @@ export const generateRealQuestionTemplates = () => {
           type: 'options-grid',
           properties: {
             options: [
-              { id: "4a", text: "Poucos detalhes, básico e prático", value: "4a", category: "Natural" },
-              { id: "4b", text: "Bem discretos e sutis, clean e clássico", value: "4b", category: "Clássico" },
-              { id: "4c", text: "Básico, mas com um toque de estilo", value: "4c", category: "Contemporâneo" },
-              { id: "4d", text: "Detalhes refinados, chic e que deem status", value: "4d", category: "Elegante" },
-              { id: "4e", text: "Detalhes delicados, laços, babados", value: "4e", category: "Romântico" },
-              { id: "4f", text: "Roupas que valorizem meu corpo: couro, zíper, fendas", value: "4f", category: "Sexy" },
-              { id: "4g", text: "Detalhes marcantes, firmeza e peso", value: "4g", category: "Dramático" },
-              { id: "4h", text: "Detalhes diferentes do convencional, produções ousadas", value: "4h", category: "Criativo" }
+              { id: "4a", text: "Poucos detalhes, básico e prático", value: "4a", category: "Natural", styleCategory: "Natural", points: 1 },
+              { id: "4b", text: "Bem discretos e sutis, clean e clássico", value: "4b", category: "Clássico", styleCategory: "Clássico", points: 1 },
+              { id: "4c", text: "Básico, mas com um toque de estilo", value: "4c", category: "Contemporâneo", styleCategory: "Contemporâneo", points: 1 },
+              { id: "4d", text: "Detalhes refinados, chic e que deem status", value: "4d", category: "Elegante", styleCategory: "Elegante", points: 1 },
+              { id: "4e", text: "Detalhes delicados, laços, babados", value: "4e", category: "Romântico", styleCategory: "Romântico", points: 1 },
+              { id: "4f", text: "Roupas que valorizem meu corpo: couro, zíper, fendas", value: "4f", category: "Sexy", styleCategory: "Sexy", points: 1 },
+              { id: "4g", text: "Detalhes marcantes, firmeza e peso", value: "4g", category: "Dramático", styleCategory: "Dramático", points: 1 },
+              { id: "4h", text: "Detalhes diferentes do convencional, produções ousadas", value: "4h", category: "Criativo", styleCategory: "Criativo", points: 1 }
             ],
             columns: 1,
             showImages: false,
@@ -825,56 +871,72 @@ export const generateRealQuestionTemplates = () => {
                 text: "Estampas clean, com poucas informações",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/20_oh44vh.webp",
                 value: "5a",
-                category: "Natural"
+                category: "Natural",
+                styleCategory: "Natural",
+                points: 1
               },
               { 
                 id: "5b", 
                 text: "Estampas clássicas e atemporais",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735368/21_o7wkte.webp",
                 value: "5b",
-                category: "Clássico"
+                category: "Clássico",
+                styleCategory: "Clássico",
+                points: 1
               },
               { 
                 id: "5c", 
                 text: "Atemporais, mas que tenham uma pegada de atual e moderna",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735369/22_siebw2.webp",
                 value: "5c",
-                category: "Contemporâneo"
+                category: "Contemporâneo",
+                styleCategory: "Contemporâneo",
+                points: 1
               },
               { 
                 id: "5d", 
                 text: "Estampas clássicas e atemporais, mas sofisticadas",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/23_bdfxrh.webp",
                 value: "5d",
-                category: "Elegante"
+                category: "Elegante",
+                styleCategory: "Elegante",
+                points: 1
               },
               { 
                 id: "5e", 
                 text: "Estampas florais e/ou delicadas como bolinhas, borboletas e corações",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/24_nptszu.webp",
                 value: "5e",
-                category: "Romântico"
+                category: "Romântico",
+                styleCategory: "Romântico",
+                points: 1
               },
               { 
                 id: "5f", 
                 text: "Estampas de animal print, como onça, zebra e cobra",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/25_motk6b.webp",
                 value: "5f",
-                category: "Sexy"
+                category: "Sexy",
+                styleCategory: "Sexy",
+                points: 1
               },
               { 
                 id: "5g", 
                 text: "Estampas geométricas, abstratas e exageradas como grandes poás",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp",
                 value: "5g",
-                category: "Dramático"
+                category: "Dramático",
+                styleCategory: "Dramático",
+                points: 1
               },
               { 
                 id: "5h", 
                 text: "Estampas diferentes do usual, como africanas, xadrez grandes",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp",
                 value: "5h",
-                category: "Criativo"
+                category: "Criativo",
+                styleCategory: "Criativo",
+                points: 1
               }
             ],
             columns: 2,
@@ -971,56 +1033,72 @@ export const generateRealQuestionTemplates = () => {
                 text: "Cardigã bege confortável e casual",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/29_sdogoy.webp",
                 value: "6a",
-                category: "Natural"
+                category: "Natural",
+                styleCategory: "Natural",
+                points: 1
               },
               { 
                 id: "6b", 
                 text: "Blazer verde estruturado",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/30_nfth8k.webp",
                 value: "6b",
-                category: "Clássico"
+                category: "Clássico",
+                styleCategory: "Clássico",
+                points: 1
               },
               { 
                 id: "6c", 
                 text: "Trench coat bege tradicional",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/31_tcmhcl.webp",
                 value: "6c",
-                category: "Contemporâneo"
+                category: "Contemporâneo",
+                styleCategory: "Contemporâneo",
+                points: 1
               },
               { 
                 id: "6d", 
                 text: "Blazer branco refinado",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/32_h78pd8.webp",
                 value: "6d",
-                category: "Elegante"
+                category: "Elegante",
+                styleCategory: "Elegante",
+                points: 1
               },
               { 
                 id: "6e", 
                 text: "Casaco pink vibrante e moderno",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/33_u8pldd.webp",
                 value: "6e",
-                category: "Romântico"
+                category: "Romântico",
+                styleCategory: "Romântico",
+                points: 1
               },
               { 
                 id: "6f", 
                 text: "Jaqueta vinho de couro estilosa",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/34_peadir.webp",
                 value: "6f",
-                category: "Sexy"
+                category: "Sexy",
+                styleCategory: "Sexy",
+                points: 1
               },
               { 
                 id: "6g", 
                 text: "Jaqueta preta estilo rocker",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735379/35_pulzso.webp",
                 value: "6g",
-                category: "Dramático"
+                category: "Dramático",
+                styleCategory: "Dramático",
+                points: 1
               },
               { 
                 id: "6h", 
                 text: "Casaco estampado criativo e colorido",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/36_cympaq.webp",
                 value: "6h",
-                category: "Criativo"
+                category: "Criativo",
+                styleCategory: "Criativo",
+                points: 1
               }
             ],
             columns: 2,
@@ -1117,56 +1195,72 @@ export const generateRealQuestionTemplates = () => {
                 text: "Calça fluida acetinada bege",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/38_iilv0l.webp",
                 value: "7a",
-                category: "Natural"
+                category: "Natural",
+                styleCategory: "Natural",
+                points: 1
               },
               { 
                 id: "7b", 
                 text: "Calça de alfaiataria cinza",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735417/39_arsswu.webp",
                 value: "7b",
-                category: "Clássico"
+                category: "Clássico",
+                styleCategory: "Clássico",
+                points: 1
               },
               { 
                 id: "7c", 
                 text: "Jeans reto e básico",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/40_beq52x.webp",
                 value: "7c",
-                category: "Contemporâneo"
+                category: "Contemporâneo",
+                styleCategory: "Contemporâneo",
+                points: 1
               },
               { 
                 id: "7d", 
                 text: "Calça reta bege de tecido",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/41_hconq4.webp",
                 value: "7d",
-                category: "Elegante"
+                category: "Elegante",
+                styleCategory: "Elegante",
+                points: 1
               },
               { 
                 id: "7e", 
                 text: "Calça ampla rosa alfaiatada",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735420/42_q8xws1.webp",
                 value: "7e",
-                category: "Romântico"
+                category: "Romântico",
+                styleCategory: "Romântico",
+                points: 1
               },
               { 
                 id: "7f", 
                 text: "Legging preta de couro",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/43_ljy7sh.webp",
                 value: "7f",
-                category: "Sexy"
+                category: "Sexy",
+                styleCategory: "Sexy",
+                points: 1
               },
               { 
                 id: "7g", 
                 text: "Calça reta preta de couro",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/44_nqgvoq.webp",
                 value: "7g",
-                category: "Dramático"
+                category: "Dramático",
+                styleCategory: "Dramático",
+                points: 1
               },
               { 
                 id: "7h", 
                 text: "Calça estampada floral leve e ampla",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735425/45_lp64m8.webp",
                 value: "7h",
-                category: "Criativo"
+                category: "Criativo",
+                styleCategory: "Criativo",
+                points: 1
               }
             ],
             columns: 2,
@@ -1263,56 +1357,72 @@ export const generateRealQuestionTemplates = () => {
                 text: "Tênis nude casual e confortável",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp",
                 value: "8a",
-                category: "Natural"
+                category: "Natural",
+                styleCategory: "Natural",
+                points: 1
               },
               { 
                 id: "8b", 
                 text: "Scarpin nude de salto baixo",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp",
                 value: "8b",
-                category: "Clássico"
+                category: "Clássico",
+                styleCategory: "Clássico",
+                points: 1
               },
               { 
                 id: "8c", 
                 text: "Sandália dourada com salto bloco",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp",
                 value: "8c",
-                category: "Contemporâneo"
+                category: "Contemporâneo",
+                styleCategory: "Contemporâneo",
+                points: 1
               },
               { 
                 id: "8d", 
                 text: "Scarpin nude salto alto e fino",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp",
                 value: "8d",
-                category: "Elegante"
+                category: "Elegante",
+                styleCategory: "Elegante",
+                points: 1
               },
               { 
                 id: "8e", 
                 text: "Sandália anabela off white",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp",
                 value: "8e",
-                category: "Romântico"
+                category: "Romântico",
+                styleCategory: "Romântico",
+                points: 1
               },
               { 
                 id: "8f", 
                 text: "Sandália rosa de tiras finas",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp",
                 value: "8f",
-                category: "Sexy"
+                category: "Sexy",
+                styleCategory: "Sexy",
+                points: 1
               },
               { 
                 id: "8g", 
                 text: "Scarpin preto moderno com vinil transparente",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp",
                 value: "8g",
-                category: "Dramático"
+                category: "Dramático",
+                styleCategory: "Dramático",
+                points: 1
               },
               { 
                 id: "8h", 
                 text: "Scarpin colorido estampado",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp",
                 value: "8h",
-                category: "Criativo"
+                category: "Criativo",
+                styleCategory: "Criativo",
+                points: 1
               }
             ],
             columns: 2,
@@ -1409,56 +1519,72 @@ export const generateRealQuestionTemplates = () => {
                 text: "Pequenos e discretos, às vezes nem uso.",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/56_htzoxy.webp",
                 value: "9a",
-                category: "Natural"
+                category: "Natural",
+                styleCategory: "Natural",
+                points: 1
               },
               { 
                 id: "9b", 
                 text: "Brincos pequenos e discretos. Corrente fininha.",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/57_whzmff.webp",
                 value: "9b",
-                category: "Clássico"
+                category: "Clássico",
+                styleCategory: "Clássico",
+                points: 1
               },
               { 
                 id: "9c", 
                 text: "Acessórios que elevem meu look com um toque moderno.",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/61_joafud.webp",
                 value: "9c",
-                category: "Contemporâneo"
+                category: "Contemporâneo",
+                styleCategory: "Contemporâneo",
+                points: 1
               },
               { 
                 id: "9d", 
                 text: "Acessórios sofisticados, joias ou semijoias.",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/60_vzsnps.webp",
                 value: "9d",
-                category: "Elegante"
+                category: "Elegante",
+                styleCategory: "Elegante",
+                points: 1
               },
               { 
                 id: "9e", 
                 text: "Peças delicadas e com um toque feminino.",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/59_dwaqrx.webp",
                 value: "9e",
-                category: "Romântico"
+                category: "Romântico",
+                styleCategory: "Romântico",
+                points: 1
               },
               { 
                 id: "9f", 
                 text: "Brincos longos, colares que valorizem minha beleza.",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735487/63_lwgokn.webp",
                 value: "9f",
-                category: "Sexy"
+                category: "Sexy",
+                styleCategory: "Sexy",
+                points: 1
               },
               { 
                 id: "9g", 
                 text: "Acessórios pesados, que causem um impacto.",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735485/62_mno8wg.webp",
                 value: "9g",
-                category: "Dramático"
+                category: "Dramático",
+                styleCategory: "Dramático",
+                points: 1
               },
               { 
                 id: "9h", 
                 text: "Acessórios diferentes, grandes e marcantes.",
                 imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735480/58_njdjoh.webp",
                 value: "9h",
-                category: "Criativo"
+                category: "Criativo",
+                styleCategory: "Criativo",
+                points: 1
               }
             ],
             columns: 2,
@@ -1554,49 +1680,65 @@ export const generateRealQuestionTemplates = () => {
                 id: "10a", 
                 text: "São fáceis de cuidar",
                 value: "10a",
-                category: "Natural"
+                category: "Natural",
+                styleCategory: "Natural",
+                points: 1
               },
               { 
                 id: "10b", 
                 text: "São de excelente qualidade",
                 value: "10b",
-                category: "Clássico"
+                category: "Clássico",
+                styleCategory: "Clássico",
+                points: 1
               },
               { 
                 id: "10c", 
                 text: "São fáceis de cuidar e modernos",
                 value: "10c",
-                category: "Contemporâneo"
+                category: "Contemporâneo",
+                styleCategory: "Contemporâneo",
+                points: 1
               },
               { 
                 id: "10d", 
                 text: "São sofisticados",
                 value: "10d",
-                category: "Elegante"
+                category: "Elegante",
+                styleCategory: "Elegante",
+                points: 1
               },
               { 
                 id: "10e", 
                 text: "São delicados",
                 value: "10e",
-                category: "Romântico"
+                category: "Romântico",
+                styleCategory: "Romântico",
+                points: 1
               },
               { 
                 id: "10f", 
                 text: "São perfeitos ao meu corpo",
                 value: "10f",
-                category: "Sexy"
+                category: "Sexy",
+                styleCategory: "Sexy",
+                points: 1
               },
               { 
                 id: "10g", 
                 text: "São diferentes, e trazem um efeito para minha roupa",
                 value: "10g",
-                category: "Dramático"
+                category: "Dramático",
+                styleCategory: "Dramático",
+                points: 1
               },
               { 
                 id: "10h", 
                 text: "São exclusivos, criam identidade no look",
                 value: "10h",
-                category: "Criativo"
+                category: "Criativo",
+                styleCategory: "Criativo",
+                points: 1
               }
             ],
             columns: 1,
@@ -1634,4 +1776,207 @@ export const generateRealQuestionTemplates = () => {
       }
     }
   ];
+};
+
+// Metadados de scoring e validação para as questões
+export const QUIZ_QUESTIONS_METADATA = {
+  "q1": {
+    "type": "normal",
+    "scoring": true,
+    "multiSelect": 3,
+    "minSelections": 3,
+    "maxSelections": 3,
+    "validationRequired": true,
+    "scoreWeight": 1,
+    "exactSelections": true
+  },
+  "q2": {
+    "type": "normal",
+    "scoring": true,
+    "multiSelect": 3,
+    "minSelections": 3,
+    "maxSelections": 3,
+    "validationRequired": true,
+    "scoreWeight": 1,
+    "exactSelections": true
+  },
+  "q3": {
+    "type": "normal",
+    "scoring": true,
+    "multiSelect": 3,
+    "minSelections": 3,
+    "maxSelections": 3,
+    "validationRequired": true,
+    "scoreWeight": 1,
+    "exactSelections": true
+  },
+  "q4": {
+    "type": "normal",
+    "scoring": true,
+    "multiSelect": 3,
+    "minSelections": 3,
+    "maxSelections": 3,
+    "validationRequired": true,
+    "scoreWeight": 1,
+    "exactSelections": true
+  },
+  "q5": {
+    "type": "normal",
+    "scoring": true,
+    "multiSelect": 3,
+    "minSelections": 3,
+    "maxSelections": 3,
+    "validationRequired": true,
+    "scoreWeight": 1,
+    "exactSelections": true
+  },
+  "q6": {
+    "type": "normal",
+    "scoring": true,
+    "multiSelect": 3,
+    "minSelections": 3,
+    "maxSelections": 3,
+    "validationRequired": true,
+    "scoreWeight": 1,
+    "exactSelections": true
+  },
+  "q7": {
+    "type": "normal",
+    "scoring": true,
+    "multiSelect": 3,
+    "minSelections": 3,
+    "maxSelections": 3,
+    "validationRequired": true,
+    "scoreWeight": 1,
+    "exactSelections": true
+  },
+  "q8": {
+    "type": "normal",
+    "scoring": true,
+    "multiSelect": 3,
+    "minSelections": 3,
+    "maxSelections": 3,
+    "validationRequired": true,
+    "scoreWeight": 1,
+    "exactSelections": true
+  },
+  "q9": {
+    "type": "normal",
+    "scoring": true,
+    "multiSelect": 3,
+    "minSelections": 3,
+    "maxSelections": 3,
+    "validationRequired": true,
+    "scoreWeight": 1,
+    "exactSelections": true
+  },
+  "q10": {
+    "type": "normal",
+    "scoring": true,
+    "multiSelect": 3,
+    "minSelections": 3,
+    "maxSelections": 3,
+    "validationRequired": true,
+    "scoreWeight": 1,
+    "exactSelections": true
+  }
+};
+
+// Categorias de estilo disponíveis
+export const STYLE_CATEGORIES = [
+  'Natural',
+  'Clássico', 
+  'Contemporâneo',
+  'Elegante',
+  'Romântico',
+  'Sexy',
+  'Dramático',
+  'Criativo'
+] as const;
+
+export type StyleCategory = typeof STYLE_CATEGORIES[number];
+
+// Configurações de pontuação
+export const SCORING_CONFIG = {
+  pointsPerSelection: 1,
+  maxSelectionsPerQuestion: 3,
+  minSelectionsPerQuestion: 3, // Obrigatório 3 seleções
+  exactSelectionsRequired: 3, // Exatamente 3 seleções obrigatórias
+  totalQuestions: 10,
+  passageThreshold: 1.0, // 100% das questões respondidas obrigatoriamente
+  tieBreakingMethod: 'firstSelection', // ou 'timestamp'
+  
+  // Configurações de validação
+  validation: {
+    requireAllQuestions: true,
+    allowPartialResults: false,
+    minimumSelectionPercentage: 100,
+    exactSelectionsRequired: true, // Exige exatamente 3 seleções por questão
+    enforceSelectionCount: true
+  },
+  
+  // Mapeamento de categorias para tipos de estilo
+  categoryMapping: {
+    'Natural': 'natural',
+    'Clássico': 'classico', 
+    'Contemporâneo': 'contemporaneo',
+    'Elegante': 'elegante',
+    'Romântico': 'romantico',
+    'Sexy': 'sensual',
+    'Dramático': 'dramatico',
+    'Criativo': 'criativo'
+  }
+};
+
+// Funções utilitárias para o sistema de quiz
+export const QuizUtils = {
+  /**
+   * Valida se uma questão tem seleções suficientes
+   */
+  validateQuestionResponse: (selectedOptions: string[], questionId: string) => {
+    const metadata = QUIZ_QUESTIONS_METADATA[questionId];
+    if (!metadata) return { isValid: false, error: 'Questão não encontrada' };
+    
+    const requiredSelections = 3; // Sempre 3 seleções obrigatórias
+    
+    // Validação específica: exatamente 3 seleções obrigatórias
+    if (selectedOptions.length !== requiredSelections) {
+      return { 
+        isValid: false, 
+        error: `Você deve selecionar exatamente ${requiredSelections} opções. Selecionadas: ${selectedOptions.length}` 
+      };
+    }
+    
+    return { isValid: true, error: null };
+  },
+
+  /**
+   * Calcula o progresso do quiz baseado nas respostas
+   */
+  calculateProgress: (answeredQuestions: string[]) => {
+    const totalQuestions = SCORING_CONFIG.totalQuestions;
+    const progress = (answeredQuestions.length / totalQuestions) * 100;
+    return Math.round(progress);
+  },
+
+  /**
+   * Verifica se o quiz está completo
+   */
+  isQuizComplete: (answeredQuestions: string[]) => {
+    return answeredQuestions.length === SCORING_CONFIG.totalQuestions;
+  },
+
+  /**
+   * Obtém metadados de uma questão específica
+   */
+  getQuestionMetadata: (questionId: string) => {
+    return QUIZ_QUESTIONS_METADATA[questionId] || null;
+  },
+
+  /**
+   * Mapeia categoria para tipo de estilo usado no cálculo
+   */
+  mapCategoryToStyleType: (category: StyleCategory) => {
+    return SCORING_CONFIG.categoryMapping[category] || category.toLowerCase();
+  }
 };
