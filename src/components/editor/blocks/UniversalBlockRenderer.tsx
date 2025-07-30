@@ -74,6 +74,7 @@ import BeforeAfterInlineBlock from './inline/BeforeAfterInlineBlock';
 import BonusListInlineBlock from './inline/BonusListInlineBlock';
 import StepHeaderInlineBlock from './inline/StepHeaderInlineBlock';
 import LegalNoticeInlineBlock from './LegalNoticeInlineBlock';
+import DecorativeBarInlineBlock from './DecorativeBarInlineBlock';
 
 // Novos componentes modulares para etapas 20 e 21 (temporariamente desabilitados)
 import ResultPageHeaderBlock from './ResultPageHeaderBlock';
@@ -217,6 +218,7 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'image-display-inline': () => <ImageDisplayInlineBlock {...commonProps} />,
       'style-card-inline': () => <StyleCardInlineBlock {...commonProps} />,
       'legal-notice-inline': () => <LegalNoticeInlineBlock {...commonProps} />,
+      'decorative-bar-inline': () => <DecorativeBarInlineBlock {...commonProps} />,
       'countdown-timer-inline': () => CountdownInlineBlock ? <CountdownInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
       'countdown-timer-real': () => CountdownInlineBlock ? <CountdownInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
       'stat-inline': () => StatInlineBlock ? <StatInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
