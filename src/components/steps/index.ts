@@ -3,11 +3,11 @@
 
 import { getStep01Template } from './Step01Intro';
 import { getStep02Template } from './Step02Question01';
-import { getStep03Template } from './Step03Template';
-import { getStep04Template } from './Step04Template';
-import { getStep05Template } from './Step05Template';
-import { getStep06Template } from './Step06Template';
-import { getStep07Template } from './Step07Template';
+import { getStep03Template } from './Step03Question02'; // Corrigido: usar Question02
+import { getStep04Template } from './Step04Question03'; // Corrigido: usar Question03
+import { getStep05Template } from './Step05Question04'; // Corrigido: usar Question04
+import { getStep06Template } from './Step06Question05'; // Corrigido: usar Question05
+import { getStep07Template } from './Step07Question06'; // Corrigido: usar Question06
 import { getStep08Template } from './Step08Template';
 import { getStep09Template } from './Step09Template';
 import { getStep10Template } from './Step10Template';
@@ -20,7 +20,7 @@ import { getStep16Template } from './Step16Template';
 import { getStep17Template } from './Step17Template';
 import { getStep18Template } from './Step18Template';
 import { getStep19Template } from './Step19Template';
-import { getStep20Template } from './Step20Template';
+import { getStep20Template } from './Step20Template'; // Corrigido: usar Template
 import { getStep21Template } from './Step21Template';
 
 export interface StepTemplate {
@@ -186,19 +186,39 @@ export const STEP_TEMPLATES = {
 
 // 🔧 FUNÇÃO PARA OBTER TEMPLATE DE QUALQUER ETAPA
 export const getStepTemplate = (stepId: string): any[] => {
-  const stepTemplate = STEP_TEMPLATES[stepId];
+  console.log(`🔍 [DEBUG] Buscando template para stepId: "${stepId}"`);
+  console.log(`🔍 [DEBUG] Tipo de stepId: ${typeof stepId}`);
+  console.log(`🔍 [DEBUG] Chaves disponíveis:`, Object.keys(STEP_TEMPLATES));
+  
+  // Converter stepId para número para acessar o objeto corretamente
+  const stepNumber = parseInt(stepId);
+  console.log(`🔍 [DEBUG] stepNumber convertido: ${stepNumber}`);
+  
+  const stepTemplate = STEP_TEMPLATES[stepNumber];
+  console.log(`🔍 [DEBUG] Template encontrado:`, stepTemplate ? stepTemplate.name : 'NENHUM');
+  
   if (!stepTemplate) {
-    console.error(`❌ Template não encontrado para etapa: ${stepId}`);
+    console.error(`❌ Template não encontrado para etapa: ${stepId} (número: ${stepNumber})`);
+    console.error(`❌ Chaves disponíveis:`, Object.keys(STEP_TEMPLATES));
     return [];
   }
   
   console.log(`✅ Carregando template da ${stepTemplate.name} (${stepId})`);
-  return stepTemplate.getTemplate();
+  
+  try {
+    const template = stepTemplate.getTemplate();
+    console.log(`🎯 [DEBUG] Template carregado com ${template.length} blocos`);
+    return template;
+  } catch (error) {
+    console.error(`❌ Erro ao executar getTemplate para step ${stepId}:`, error);
+    return [];
+  }
 };
 
 // 🗂️ FUNÇÃO PARA OBTER INFORMAÇÕES DA ETAPA
 export const getStepInfo = (stepId: string): StepTemplate | null => {
-  return STEP_TEMPLATES[stepId] || null;
+  const stepNumber = parseInt(stepId);
+  return STEP_TEMPLATES[stepNumber] || null;
 };
 
 // 📊 FUNÇÃO PARA LISTAR TODAS AS ETAPAS

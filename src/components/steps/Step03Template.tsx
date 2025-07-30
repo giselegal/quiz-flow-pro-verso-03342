@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 // Template para a Etapa 3
