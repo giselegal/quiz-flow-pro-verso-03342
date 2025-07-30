@@ -1910,6 +1910,77 @@ class SchemaDrivenFunnelService {
       throw error;
     }
   }
+
+  // 🚀 SUPABASE: Métodos de integração para coleta de dados do quiz
+  async trackQuizStart(userName: string, funnelId?: string) {
+    try {
+      await quizSupabaseService.createOrUpdateUser({
+        name: userName,
+        utm_source: new URLSearchParams(window.location.search).get('utm_source') || undefined,
+        utm_medium: new URLSearchParams(window.location.search).get('utm_medium') || undefined,
+        utm_campaign: new URLSearchParams(window.location.search).get('utm_campaign') || undefined,
+        referrer: document.referrer || undefined
+      });
+
+      await quizSupabaseService.startQuizSession({
+        started_from: 'schema-driven-funnel',
+        user_name: userName,
+        device_type: /Mobile|Android|iPhone|iPad/.test(navigator.userAgent) ? 'mobile' : 'desktop',
+        funnel_id: funnelId
+      });
+
+      console.log('🚀 Supabase: Quiz iniciado para', userName);
+    } catch (error) {
+      console.error('❌ Erro ao rastrear início do quiz no Supabase:', error);
+    }
+  }
+
+  async trackStepResponse(stepNumber: number, stepId: string, responseData: any) {
+    try {
+      await quizSupabaseService.saveStepResponse({
+        step_number: stepNumber,
+        step_id: stepId,
+        response_data: responseData
+      });
+
+      console.log(`🚀 Supabase: Resposta salva para etapa ${stepNumber}`);
+    } catch (error) {
+      console.error('❌ Erro ao salvar resposta da etapa no Supabase:', error);
+    }
+  }
+
+  async calculateAndSaveResults() {
+    try {
+      const results = await quizSupabaseService.calculateStyleResults();
+      console.log('🚀 Supabase: Resultados calculados:', results);
+      return results;
+    } catch (error) {
+      console.error('❌ Erro ao calcular resultados no Supabase:', error);
+      return null;
+    }
+  }
+
+  async trackConversion(event: 'purchase' | 'checkout_click' | 'email_capture' | 'whatsapp_click' | 'product_view', eventData: any = {}) {
+    try {
+      await quizSupabaseService.trackConversion(event);
+
+      console.log(`🚀 Supabase: Conversão rastreada - ${event}`);
+    } catch (error) {
+      console.error('❌ Erro ao rastrear conversão no Supabase:', error);
+    }
+  }
+
+  async getQuizAnalytics(sessionId?: string) {
+    try {
+      // Usar o método correto getQuizResult
+      const results = await quizSupabaseService.getQuizResult();
+      console.log('🚀 Supabase: Resultados obtidos:', results);
+      return results;
+    } catch (error) {
+      console.error('❌ Erro ao obter dados do Supabase:', error);
+      return null;
+    }
+  }
 }
 
 export const schemaDrivenFunnelService = new SchemaDrivenFunnelService();

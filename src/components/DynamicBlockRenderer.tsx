@@ -16,12 +16,19 @@ import {
   StretchHorizontal, Rows3, ShoppingCart, ArrowDown 
 } from 'lucide-react';
 
+// 🚀 SUPABASE: Integração de dados
+import { quizSupabaseService } from '../services/quizSupabaseService';
+
 interface DynamicBlockRendererProps {
   pageId: string;
   blockId: string;
   fallback?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  // 🚀 SUPABASE: Props para integração de dados
+  enableSupabaseTracking?: boolean;
+  stepNumber?: number;
+  userName?: string;
 }
 
 const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
@@ -29,10 +36,35 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
   blockId,
   fallback = null,
   className = '',
-  style = {}
+  style = {},
+  // 🚀 SUPABASE: Props de integração
+  enableSupabaseTracking = true,
+  stepNumber,
+  userName
 }) => {
   // Para fins de demonstração, vamos simular props baseadas no blockId
   const componentType = blockId || 'default';
+  
+  // 🚀 SUPABASE: Função helper para tracking de eventos
+  const trackEvent = async (eventName: string, eventData: any = {}) => {
+    if (enableSupabaseTracking) {
+      try {
+        await quizSupabaseService.trackEvent(eventName, {
+          step_number: stepNumber || 0,
+          step_id: pageId,
+          event_data: {
+            block_id: blockId,
+            user_name: userName,
+            ...eventData
+          }
+        });
+        console.log(`🚀 Supabase: Evento ${eventName} rastreado`);
+      } catch (error) {
+        console.error('❌ Erro ao rastrear evento:', error);
+      }
+    }
+  };
+  
   const props: any = {
     question: 'Qual dessas opções representa melhor seu estilo?',
     questionId: 'question-1',
@@ -597,7 +629,16 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
             </div>
             <button 
               className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
-              onClick={() => window.location.href = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912'}
+              onClick={async () => {
+                // 🚀 SUPABASE: Rastrear clique no botão de compra
+                await trackEvent('purchase_button_click', {
+                  button_text: 'Quero meu Guia de Estilo Agora',
+                  location: 'result_page_top'
+                });
+                
+                // Redirect para checkout
+                window.location.href = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912';
+              }}
             >
               <span className="flex items-center justify-center gap-2">
                 <ShoppingCart className="w-5 h-5" />
@@ -699,7 +740,17 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
 
             <button 
               className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-5 px-8 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg mb-4"
-              onClick={() => window.location.href = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912'}
+              onClick={async () => {
+                // 🚀 SUPABASE: Rastrear clique no botão de compra
+                await trackEvent('purchase_button_click', {
+                  button_text: 'Garantir Meu Guia + Bônus Especiais',
+                  location: 'offer_section_bottom',
+                  offer_price: 'R$ 39,00'
+                });
+                
+                // Redirect para checkout
+                window.location.href = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912';
+              }}
             >
               <span className="flex items-center justify-center gap-2">
                 <ShoppingCart className="w-5 h-5" />
