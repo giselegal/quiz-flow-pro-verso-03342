@@ -202,7 +202,31 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     loadFunnelData();
   }, [funnelId, setConfig, toast]);
 
-  // Detect mobile screen size
+  // Verificar se há dados salvos da Etapa 1 e carregar automaticamente
+  useEffect(() => {
+    const savedEtapa1Blocks = localStorage.getItem('quiz-step-etapa-1-blocks');
+    if (savedEtapa1Blocks && selectedStepId === 'etapa-1') {
+      const etapa1Blocks = JSON.parse(savedEtapa1Blocks);
+      if (etapa1Blocks.length > 0 && blocks.length === 0) {
+        console.log(`🔄 Recuperando ${etapa1Blocks.length} blocos salvos da Etapa 1`);
+        
+        // Carregar blocos salvos da Etapa 1
+        etapa1Blocks.forEach((savedBlock: any, index: number) => {
+          setTimeout(() => {
+            const newBlockId = addBlock(savedBlock.type as any);
+            if (savedBlock.properties) {
+              updateBlock(newBlockId, savedBlock.properties);
+            }
+          }, index * 50);
+        });
+        
+        toast({
+          title: "Dados da Etapa 1 Recuperados",
+          description: `${etapa1Blocks.length} blocos foram restaurados automaticamente.`,
+        });
+      }
+    }
+  }, [selectedStepId, blocks.length, addBlock, updateBlock, toast]);
   React.useEffect(() => {
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -415,9 +439,36 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   }, [steps, blocks, deleteBlock, loadStepSpecificBlocks, toast]);
 
   const handleStepSelect = useCallback((stepId: string) => {
+    // Salvar blocos da etapa atual antes de trocar
+    if (selectedStepId && blocks.length > 0) {
+      localStorage.setItem(`quiz-step-${selectedStepId}-blocks`, JSON.stringify(blocks));
+    }
+    
+    // Carregar blocos da nova etapa
+    const savedBlocks = localStorage.getItem(`quiz-step-${stepId}-blocks`);
+    if (savedBlocks) {
+      const stepBlocks = JSON.parse(savedBlocks);
+      console.log(`🔄 Carregando ${stepBlocks.length} blocos salvos da etapa ${stepId}`);
+      
+      // Limpar blocos atuais
+      blocks.forEach(block => deleteBlock(block.id));
+      
+      // Carregar blocos salvos
+      setTimeout(() => {
+        stepBlocks.forEach((savedBlock: any, index: number) => {
+          setTimeout(() => {
+            const newBlockId = addBlock(savedBlock.type as any);
+            if (savedBlock.properties) {
+              updateBlock(newBlockId, savedBlock.properties);
+            }
+          }, index * 50);
+        });
+      }, 100);
+    }
+    
     setSelectedStepId(stepId);
     setSelectedBlockId(null); // Clear block selection when changing steps
-  }, []);
+  }, [selectedStepId, blocks, deleteBlock, addBlock, updateBlock]);
 
   const handleStepAdd = useCallback(() => {
     const newStep: QuizStep = {
