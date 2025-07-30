@@ -33,19 +33,9 @@ import {
   CountdownInlineBlock,
   // Componentes especializados para Quiz
   LoadingAnimationBlock,
-  // NOVA IMPLEMENTAÇÃO: Componentes das 21 Etapas Inline
+  // NOVA IMPLEMENTAÇÃO: Componentes das 21 Etapas Inline - apenas os que existem
   QuizStartPageInlineBlock,
-  QuizPersonalInfoInlineBlock,
   QuizExperienceInlineBlock,
-  QuizSkillsAssessmentInlineBlock,
-  QuizLeadershipStyleInlineBlock,
-  QuizCommunicationInlineBlock,
-  QuizProblemSolvingInlineBlock,
-  QuizGoalsInlineBlock,
-  QuizMotivationInlineBlock,
-  QuizWorkStyleInlineBlock,
-  QuizFeedbackInlineBlock,
-  QuizResultsInlineBlock,
   QuizCertificateInlineBlock,
   QuizLeaderboardInlineBlock,
   QuizBadgesInlineBlock,
@@ -54,7 +44,19 @@ import {
   QuizDevelopmentPlanInlineBlock,
   QuizGoalsDashboardInlineBlock,
   QuizFinalResultsInlineBlock,
-  QuizOfferCTAInlineBlock
+  QuizOfferCTAInlineBlock,
+  // Componentes adicionais que existem
+  QuizActionPlanInlineBlock,
+  QuizAnalysisInlineBlock,
+  QuizCategoryInlineBlock,
+  QuizComparisonInlineBlock,
+  QuizLoadingInlineBlock,
+  QuizMetricsInlineBlock,
+  QuizProgressInlineBlock,
+  QuizQuestionInlineBlock,
+  QuizRecommendationInlineBlock,
+  QuizResultInlineBlock,
+  QuizTransitionInlineBlock
 } from './inline';
 
 // Componentes básicos (funcionais)
@@ -217,19 +219,9 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'quiz-progress': () => <QuizProgressBlock {...commonProps} />,
       
       // === NOVA IMPLEMENTAÇÃO: Componentes das 21 Etapas Inline ===
-      // === COMPONENTES DAS 21 ETAPAS INLINE ===
+      // === COMPONENTES DAS 21 ETAPAS INLINE - apenas os que existem ===
       'quiz-start-page-inline': () => <QuizStartPageInlineBlock {...commonProps} />,
-      'quiz-personal-info-inline': () => <QuizPersonalInfoInlineBlock {...commonProps} />,
       'quiz-experience-inline': () => <QuizExperienceInlineBlock {...commonProps} />,
-      'quiz-skills-assessment-inline': () => <QuizSkillsAssessmentInlineBlock {...commonProps} />,
-      'quiz-leadership-style-inline': () => <QuizLeadershipStyleInlineBlock {...commonProps} />,
-      'quiz-communication-inline': () => <QuizCommunicationInlineBlock {...commonProps} />,
-      'quiz-problem-solving-inline': () => <QuizProblemSolvingInlineBlock {...commonProps} />,
-      'quiz-goals-inline': () => <QuizGoalsInlineBlock {...commonProps} />,
-      'quiz-motivation-inline': () => <QuizMotivationInlineBlock {...commonProps} />,
-      'quiz-work-style-inline': () => <QuizWorkStyleInlineBlock {...commonProps} />,
-      'quiz-feedback-inline': () => <QuizFeedbackInlineBlock {...commonProps} />,
-      'quiz-results-inline': () => <QuizResultsInlineBlock {...commonProps} />,
       'quiz-certificate-inline': () => <QuizCertificateInlineBlock {...commonProps} />,
       'quiz-leaderboard-inline': () => <QuizLeaderboardInlineBlock {...commonProps} />,
       'quiz-badges-inline': () => <QuizBadgesInlineBlock {...commonProps} />,
@@ -239,6 +231,19 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'quiz-goals-dashboard-inline': () => <QuizGoalsDashboardInlineBlock {...commonProps} />,
       'quiz-final-results-inline': () => <QuizFinalResultsInlineBlock {...commonProps} />,
       'quiz-offer-cta-inline': () => <QuizOfferCTAInlineBlock {...commonProps} />,
+      
+      // === COMPONENTES ADICIONAIS QUE EXISTEM ===
+      'quiz-action-plan-inline': () => <QuizActionPlanInlineBlock {...commonProps} />,
+      'quiz-analysis-inline': () => <QuizAnalysisInlineBlock {...commonProps} />,
+      'quiz-category-inline': () => <QuizCategoryInlineBlock {...commonProps} />,
+      'quiz-comparison-inline': () => <QuizComparisonInlineBlock {...commonProps} />,
+      'quiz-loading-inline': () => <QuizLoadingInlineBlock {...commonProps} />,
+      'quiz-metrics-inline': () => <QuizMetricsInlineBlock {...commonProps} />,
+      'quiz-progress-inline': () => <QuizProgressInlineBlock {...commonProps} />,
+      'quiz-question-inline': () => <QuizQuestionInlineBlock {...commonProps} />,
+      'quiz-recommendation-inline': () => <QuizRecommendationInlineBlock {...commonProps} />,
+      'quiz-result-inline': () => <QuizResultInlineBlock {...commonProps} />,
+      'quiz-transition-inline': () => <QuizTransitionInlineBlock {...commonProps} />,
       
       // === COMPONENTES ETAPA 20/21 (sem duplicação) ===
       'quiz-offer-pricing-inline': () => <QuizOfferPricingInlineBlock {...commonProps} />,
