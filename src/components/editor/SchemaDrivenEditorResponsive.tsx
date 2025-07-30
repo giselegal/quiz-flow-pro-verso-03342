@@ -590,30 +590,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     }
   }, [handleAddBlocksToStep]);
 
-  // Função para popular uma etapa automaticamente
-  const handlePopulateStep = useCallback((stepId: string) => {
-    const step = steps.find(s => s.id === stepId);
-    if (step && step.type) {
-      // Verificar se é uma questão específica ou estratégica
-      if (step.type === 'question') {
-        const questionNumber = parseInt(stepId.replace('etapa-', '')) - 2; // Etapa 3 = Q1, Etapa 4 = Q2, etc.
-        if (questionNumber >= 1 && questionNumber <= 10) {
-          loadQuestionTemplate(stepId, questionNumber);
-          return;
-        }
-      } else if (step.type === 'strategic') {
-        const strategicNumber = parseInt(stepId.replace('etapa-', '')) - 13; // Etapa 14 = S1, Etapa 15 = S2, etc.
-        if (strategicNumber >= 1 && strategicNumber <= 6) {
-          loadStrategicQuestionTemplate(stepId, strategicNumber);
-          return;
-        }
-      }
-      
-      // Fallback para templates genéricos
-      loadStepSpecificBlocks(stepId, step.type);
-    }
-  }, [steps, loadStepSpecificBlocks, loadQuestionTemplate, loadStrategicQuestionTemplate]);
-
   // Função para carregar template específico de cada questão
   const loadQuestionTemplate = useCallback((stepId: string, questionNumber: number) => {
     console.log(`🎯 Carregando template da questão ${questionNumber} para ${stepId}`);
@@ -1010,6 +986,31 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       console.log(`✅ Template da questão estratégica ${strategicNumber} carregado para ${stepId}`);
     }
   }, [handleAddBlocksToStep]);
+
+  // Função para popular uma etapa automaticamente
+  const handlePopulateStep = useCallback((stepId: string) => {
+    const step = steps.find(s => s.id === stepId);
+    if (step && step.type) {
+      // Verificar se é uma questão específica ou estratégica
+      if (step.type === 'question') {
+        const questionNumber = parseInt(stepId.replace('etapa-', '')) - 2; // Etapa 3 = Q1, Etapa 4 = Q2, etc.
+        if (questionNumber >= 1 && questionNumber <= 10) {
+          loadQuestionTemplate(stepId, questionNumber);
+          return;
+        }
+      } else if (step.type === 'strategic') {
+        const strategicNumber = parseInt(stepId.replace('etapa-', '')) - 13; // Etapa 14 = S1, Etapa 15 = S2, etc.
+        if (strategicNumber >= 1 && strategicNumber <= 6) {
+          loadStrategicQuestionTemplate(stepId, strategicNumber);
+          return;
+        }
+      }
+      
+      // Fallback para templates genéricos
+      loadStepSpecificBlocks(stepId, step.type);
+    }
+  }, [steps, loadStepSpecificBlocks, loadQuestionTemplate, loadStrategicQuestionTemplate]);
+
   // Função para carregar o template completo das 21 etapas
   const handleLoadComplete21StepsTemplate = useCallback(async () => {
     try {
