@@ -1251,13 +1251,9 @@ const FunnelPanelPage: React.FC = () => {
 
                     {template.id === 'default-quiz-funnel-21-steps' && (
                       <div className="mt-3 p-3 bg-[#B89B7A]/10 rounded-lg">
-                        <p className="text-xs text-[#8F7A6A] mb-2">
-                          <strong>Funil Principal:</strong> Template completo com 21 etapas para descoberta de personalidade.
+                        <p className="text-xs text-[#8F7A6A] mb-3">
+                          <strong>Template Completo:</strong> Funil profissional de 21 etapas pronto para uso.
                         </p>
-                        <div className="text-xs text-[#6B5B4F] mb-3 space-y-1">
-                          <div>• <strong>Editar Original:</strong> Altera o template base (afeta futuros usos)</div>
-                          <div>• <strong>Criar Cópia:</strong> Nova versão com ID único (recomendado para projetos)</div>
-                        </div>
                         <div className="flex gap-2">
                           <Button
                             size="sm"
@@ -1266,11 +1262,10 @@ const FunnelPanelPage: React.FC = () => {
                               e.stopPropagation();
                               createFunnelFromTemplate(template, false);
                             }}
-                            className="flex-1 text-xs"
-                            title="Editar o template original"
+                            className="flex-1 text-xs border-[#B89B7A] text-[#B89B7A] hover:bg-[#B89B7A] hover:text-white"
                           >
-                            <Eye className="w-3 h-3 mr-1" />
-                            Editar Original
+                            <Edit className="w-3 h-3 mr-1" />
+                            Editar Template
                           </Button>
                           <Button
                             size="sm"
@@ -1279,10 +1274,9 @@ const FunnelPanelPage: React.FC = () => {
                               createFunnelFromTemplate(template, true);
                             }}
                             className="flex-1 text-xs bg-[#B89B7A] hover:bg-[#9F836A] text-white"
-                            title="Criar uma cópia editável com novo ID"
                           >
                             <Copy className="w-3 h-3 mr-1" />
-                            Criar Cópia
+                            Criar Nova Cópia
                           </Button>
                         </div>
                       </div>
