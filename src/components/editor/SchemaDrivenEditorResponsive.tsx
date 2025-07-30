@@ -1138,20 +1138,115 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
   // Handler para popular uma etapa com blocos padrão - TODAS AS 21 ETAPAS
   const handlePopulateStep = useCallback((stepId: string) => {
-    console.log(`🎯 [21 ETAPAS] Populando etapa ${stepId} com blocos padrão`);
+    console.log(`🎯 [NOVO SISTEMA] Populando etapa ${stepId} com template modular`);
     
-    // Encontrar o índice da etapa pelo stepId
-    const stepIndex = steps.findIndex(step => step.id === stepId);
-    if (stepIndex === -1) {
-      console.error(`❌ Etapa não encontrada: ${stepId}`);
+    // Extrair número da step (etapa-1 → 1, etapa-2 → 2, etc.)
+    const stepNumber = parseInt(stepId.replace('etapa-', ''));
+    if (isNaN(stepNumber) || stepNumber < 1 || stepNumber > 21) {
+      console.error(`❌ Step ID inválido: ${stepId}`);
       return;
     }
     
-    console.log(`🔧 [21 ETAPAS] Populando etapa ${stepIndex + 1} (stepId: ${stepId})...`);
-    console.log(`📊 [DEBUG] stepIndex calculado: ${stepIndex}, stepId recebido: ${stepId}`);
+    console.log(`🔧 [NOVO SISTEMA] Carregando template da Step ${stepNumber}...`);
     
     try {
-      let defaultBlocks: any[] = [];
+      // 🎯 Usar novo sistema de templates das steps
+      const stepTemplate = getStepTemplate(stepNumber);
+      
+      if (!stepTemplate || stepTemplate.length === 0) {
+        console.warn(`⚠️ Template vazio para Step ${stepNumber}, usando fallback`);
+        // Fallback simples
+        const fallbackBlocks = [
+          {
+            type: 'heading-inline',
+            properties: {
+              content: `Etapa ${stepNumber}`,
+              level: 'h2',
+              fontSize: 'text-2xl',
+              fontWeight: 'font-bold',
+              textAlign: 'text-center',
+              color: '#432818',
+              marginBottom: 16
+            }
+          },
+          {
+            type: 'text-inline',
+            properties: {
+              content: `Template da etapa ${stepNumber} em desenvolvimento`,
+              fontSize: 'text-lg',
+              textAlign: 'text-center',
+              color: '#6B7280',
+              marginBottom: 32
+            }
+          }
+        ];
+        
+        console.log(`🔄 Aplicando ${fallbackBlocks.length} blocos fallback...`);
+        fallbackBlocks.forEach((blockData, index) => {
+          const newBlockId = addBlock(blockData.type as any);
+          
+          setTimeout(() => {
+            updateBlock(newBlockId, blockData.properties);
+            console.log(`✅ Bloco fallback ${index + 1} aplicado:`, blockData.type);
+          }, index * 100);
+        });
+        
+        return;
+      }
+      
+      console.log(`� Template encontrado! ${stepTemplate.length} blocos para carregar`);
+      console.log(`🧱 Tipos de blocos:`, stepTemplate.map(b => b.type));
+      
+      // 🔄 Aplicar todos os blocos do template
+      stepTemplate.forEach((blockData, index) => {
+        console.log(`🧱 Adicionando bloco ${index + 1}/${stepTemplate.length}:`, blockData.type);
+        
+        const newBlockId = addBlock(blockData.type as any);
+        
+        // Aplicar propriedades com delay para evitar problemas de timing
+        setTimeout(() => {
+          updateBlock(newBlockId, blockData.properties);
+          console.log(`✅ Propriedades aplicadas para bloco ${index + 1}:`, blockData.type);
+        }, index * 100);
+      });
+      
+      // 📊 Atualizar contador de blocos da step
+      const updatedBlocksCount = stepTemplate.length;
+      setSteps(prevSteps => 
+        prevSteps.map(step => 
+          step.id === stepId 
+            ? { ...step, blocksCount: updatedBlocksCount, isActive: true }
+            : step
+        )
+      );
+      
+      console.log(`✅ Template da Step ${stepNumber} aplicado com sucesso! ${stepTemplate.length} blocos adicionados`);
+      
+    } catch (error) {
+      console.error(`❌ Erro ao aplicar template da Step ${stepNumber}:`, error);
+      
+      // 🚨 Fallback de emergência
+      const emergencyBlocks = [
+        {
+          type: 'text-inline',
+          properties: {
+            content: `Erro ao carregar template da Etapa ${stepNumber}`,
+            fontSize: 'text-lg',
+            textAlign: 'text-center',
+            color: '#EF4444',
+            marginBottom: 16
+          }
+        }
+      ];
+      
+      emergencyBlocks.forEach((blockData, index) => {
+        const newBlockId = addBlock(blockData.type as any);
+        setTimeout(() => {
+          updateBlock(newBlockId, blockData.properties);
+        }, index * 100);
+      });
+    }
+  }, [steps, getStepTemplate, addBlock, updateBlock, setSteps]);
       
       if (stepIndex === 0) {
         // ==========================================
