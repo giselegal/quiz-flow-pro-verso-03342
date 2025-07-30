@@ -1,17 +1,17 @@
 
 import React from 'react';
 import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { QuizComponentData } from '@/types/quizBuilder';
-import { Trash2 } from 'lucide-react';
+import { Trash2, X } from 'lucide-react';
+import { PropertyEditorRouter } from '@/components/live-editor/property-editors/PropertyEditorRouter';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface PropertyPanelProps {
   selectedComponentId: string | null;
   components: QuizComponentData[];
-  onUpdate: (id: string, data: Partial<QuizComponentData['data']>) => void;
+  onUpdate: (id: string, updates: Partial<QuizComponentData>) => void;
   onDelete: (id: string) => void;
   onClose: () => void;
 }
@@ -25,8 +25,15 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
 }) => {
   if (!selectedComponentId) {
     return (
-      <div className="p-4 text-center text-[#432818]/60">
-        Selecione um componente para editar suas propriedades
+      <div className="h-full bg-white flex flex-col">
+        <div className="p-4 border-b border-[#B89B7A]/20 flex justify-between items-center">
+          <h2 className="font-medium text-[#432818]">Propriedades</h2>
+        </div>
+        <div className="flex-1 flex items-center justify-center p-6 text-center">
+          <p className="text-[#8F7A6A]">
+            Selecione um componente para editar suas propriedades
+          </p>
+        </div>
       </div>
     );
   }
@@ -35,107 +42,85 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
 
   if (!component) {
     return (
-      <div className="p-4 text-center text-[#432818]/60">
-        Componente não encontrado
+      <div className="h-full bg-white flex flex-col">
+        <div className="p-4 border-b border-[#B89B7A]/20 flex justify-between items-center">
+          <h2 className="font-medium text-[#432818]">Propriedades</h2>
+          <Button variant="ghost" size="sm" onClick={onClose}>
+            <X className="w-4 h-4 text-[#8F7A6A]" />
+          </Button>
+        </div>
+        <div className="flex-1 flex items-center justify-center p-6 text-center">
+          <p className="text-[#8F7A6A]">
+            Componente não encontrado
+          </p>
+        </div>
       </div>
     );
   }
 
-  const handleUpdate = (field: string, value: any) => {
-    onUpdate(selectedComponentId, { 
-      ...component.data, 
-      [field]: value 
-    });
+  const getComponentTitle = () => {
+    switch (component.type) {
+      case 'headline': return 'Título';
+      case 'text': return 'Texto';
+      case 'image': return 'Imagem';
+      case 'button':
+      case 'cta': return 'Botão';
+      case 'video': return 'Vídeo';
+      case 'divider': return 'Divisória';
+      case 'spacer': return 'Espaçador';
+      case 'benefitsList': return 'Lista de Benefícios';
+      case 'faq': return 'FAQ';
+      case 'multipleChoice': return 'Múltipla Escolha';
+      case 'singleChoice': return 'Escolha Única';
+      case 'scale': return 'Escala';
+      case 'openEnded': return 'Resposta Aberta';
+      case 'date': return 'Data';
+      case 'stageCover': return 'Capa do Estágio';
+      case 'stageQuestion': return 'Questão do Estágio';
+      case 'stageResult': return 'Resultado do Estágio';
+      case 'quizResult': return 'Resultado do Quiz';
+      default: return component.type.charAt(0).toUpperCase() + component.type.slice(1);
+    }
   };
 
   return (
-    <div className="h-full p-4 space-y-4 bg-white">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-medium text-[#432818]">Propriedades</h3>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-red-500"
-          onClick={() => onDelete(selectedComponentId)}
-        >
-          <Trash2 className="w-4 h-4" />
+    <div className="h-full bg-white flex flex-col">
+      <div className="p-4 border-b border-[#B89B7A]/20 flex justify-between items-center">
+        <h2 className="font-medium text-[#432818]">
+          {getComponentTitle()}
+        </h2>
+        <Button variant="ghost" size="sm" onClick={onClose}>
+          <X className="w-4 h-4 text-[#8F7A6A]" />
         </Button>
       </div>
 
-      <Card className="p-4 space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="title">Título</Label>
-          <Input
-            id="title"
-            value={component.data.title || ''}
-            placeholder="Digite o título"
-            onChange={(e) => handleUpdate('title', e.target.value)}
-          />
+      <Tabs defaultValue="properties" className="flex-1 flex flex-col">
+        <div className="px-4 pt-2">
+          <TabsList className="w-full grid grid-cols-1">
+            <TabsTrigger value="properties">Propriedades</TabsTrigger>
+          </TabsList>
         </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="subtitle">Subtítulo</Label>
-          <Input
-            id="subtitle"
-            value={component.data.subtitle || ''}
-            placeholder="Digite o subtítulo"
-            onChange={(e) => handleUpdate('subtitle', e.target.value)}
-          />
-        </div>
-
-        {component.type === 'text' && (
-          <div className="space-y-2">
-            <Label htmlFor="text">Texto</Label>
-            <Textarea
-              id="text"
-              value={component.data.text || ''}
-              placeholder="Digite o texto"
-              className="min-h-[100px]"
-              onChange={(e) => handleUpdate('text', e.target.value)}
+        
+        <ScrollArea className="flex-1">
+          <TabsContent value="properties" className="p-4">
+            <PropertyEditorRouter 
+              component={component} 
+              onUpdate={onUpdate} 
             />
-          </div>
-        )}
-
-        {(component.type === 'image' || component.data.imageUrl !== undefined) && (
-          <div className="space-y-2">
-            <Label htmlFor="imageUrl">URL da Imagem</Label>
-            <Input
-              id="imageUrl"
-              value={component.data.imageUrl || ''}
-              placeholder="https://exemplo.com/imagem.jpg"
-              onChange={(e) => handleUpdate('imageUrl', e.target.value)}
-            />
-          </div>
-        )}
-
-        {component.type === 'stageQuestion' && (
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="question">Pergunta</Label>
-              <Textarea
-                id="question"
-                value={component.data.question || ''}
-                placeholder="Digite a pergunta"
-                className="min-h-[80px]"
-                onChange={(e) => handleUpdate('question', e.target.value)}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="multiSelect">Múltipla Escolha</Label>
-              <Input
-                id="multiSelect"
-                type="number"
-                min="0"
-                max="10"
-                value={component.data.multiSelect || 0}
-                onChange={(e) => handleUpdate('multiSelect', parseInt(e.target.value) || 0)}
-              />
-              <p className="text-xs text-[#8F7A6A]">0 para escolha única, 1+ para múltipla</p>
-            </div>
-          </div>
-        )}
-      </Card>
+          </TabsContent>
+        </ScrollArea>
+      </Tabs>
+      
+      <div className="p-4 border-t border-[#B89B7A]/20">
+        <Button 
+          variant="destructive" 
+          onClick={() => onDelete(selectedComponentId)} 
+          className="w-full"
+        >
+          <Trash2 className="w-4 h-4 mr-2" />
+          Excluir Componente
+        </Button>
+      </div>
     </div>
   );
 };
