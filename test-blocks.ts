@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 
 // Teste direto das definições dos blocos das etapas 20 e 21 - Versão TypeScript
-import { blockDefinitions, getCategories, getBlocksByCategory } from './client/src/config/blockDefinitionsClean';
+import { blockDefinitions, getCategories, getBlocksByCategory } from './src/config/blockDefinitionsClean';
 
 console.log('='.repeat(60));
 console.log('📊 VERIFICAÇÃO DOS COMPONENTES DAS ETAPAS 20 E 21 (TypeScript)');
