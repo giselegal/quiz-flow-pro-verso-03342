@@ -284,7 +284,7 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
             </h3>
             <div className="grid grid-cols-2 gap-3">
               {['Clássico', 'Moderno', 'Romântico'].map((style, index) => (
-                <div key={index} className="bg-card border border-border rounded-lg p-3 text-center">
+                <div key={`secondary-style-${style}-${index}`} className="bg-card border border-border rounded-lg p-3 text-center">
                   <div className="text-sm font-medium text-primary">{style}</div>
                   <div className="text-xs text-muted-foreground">{15 + index * 5}%</div>
                 </div>
