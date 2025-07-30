@@ -228,7 +228,7 @@ const FunnelPanelPage: React.FC = () => {
 
   // Navegar para o editor com funil específico
   const navigateToEditor = (funnelId: string) => {
-    setLocation(`/editor/${funnelId}`);
+    setLocation(`/editor?id=${funnelId}`);
   };  // Carregar funis e estatísticas
   useEffect(() => {
     loadFunnels();
@@ -1264,9 +1264,10 @@ const FunnelPanelPage: React.FC = () => {
                               createFunnelFromTemplate(template, false);
                             }}
                             className="flex-1 text-xs"
+                            title="Editar o template original"
                           >
                             <Eye className="w-3 h-3 mr-1" />
-                            Usar Template
+                            Editar Original
                           </Button>
                           <Button
                             size="sm"
@@ -1275,9 +1276,10 @@ const FunnelPanelPage: React.FC = () => {
                               createFunnelFromTemplate(template, true);
                             }}
                             className="flex-1 text-xs bg-[#B89B7A] hover:bg-[#9F836A] text-white"
+                            title="Criar uma cópia editável com novo ID"
                           >
                             <Copy className="w-3 h-3 mr-1" />
-                            Duplicar
+                            Criar Cópia
                           </Button>
                         </div>
                       </div>
