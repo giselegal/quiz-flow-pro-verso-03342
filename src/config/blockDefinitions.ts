@@ -995,6 +995,412 @@ export const blockDefinitions: BlockDefinition[] = [
       duration: 3000
     }
   },
+
+  // ===========================
+  // COMPONENTES ESPECÍFICOS DAS 21 ETAPAS
+  // Integração com sistema de templates
+  // ===========================
+
+  {
+    type: 'quiz-intro-header',
+    name: 'Cabeçalho do Quiz',
+    description: 'Cabeçalho principal para introdução do quiz com título e subtítulo',
+    icon: 'Crown',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título Principal',
+        type: 'text',
+        defaultValue: 'Descubra Seu Estilo'
+      },
+      {
+        key: 'subtitle',
+        label: 'Subtítulo',
+        type: 'textarea',
+        defaultValue: 'Responda algumas perguntas e descubra qual é o seu estilo predominante'
+      },
+      {
+        key: 'backgroundColor',
+        label: 'Cor de Fundo',
+        type: 'color',
+        defaultValue: '#ffffff'
+      },
+      {
+        key: 'textColor',
+        label: 'Cor do Texto',
+        type: 'color',
+        defaultValue: '#1a1a1a'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Descubra Seu Estilo',
+      subtitle: 'Responda algumas perguntas e descubra qual é o seu estilo predominante',
+      backgroundColor: '#ffffff',
+      textColor: '#1a1a1a',
+      enableSupabaseTracking: true,
+      stepCategory: 'intro'
+    }
+  },
+
+  {
+    type: 'decorative-bar-inline',
+    name: 'Barra Decorativa',
+    description: 'Barra decorativa inline para separação visual',
+    icon: 'StretchHorizontal',
+    category: 'Design',
+    propertiesSchema: [
+      {
+        key: 'width',
+        label: 'Largura (%)',
+        type: 'number',
+        defaultValue: 60
+      },
+      {
+        key: 'height',
+        label: 'Altura (px)',
+        type: 'number',
+        defaultValue: 4
+      },
+      {
+        key: 'color',
+        label: 'Cor',
+        type: 'color',
+        defaultValue: '#e11d48'
+      },
+      {
+        key: 'borderRadius',
+        label: 'Bordas Arredondadas (px)',
+        type: 'number',
+        defaultValue: 2
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      width: 60,
+      height: 4,
+      color: '#e11d48',
+      borderRadius: 2,
+      enableSupabaseTracking: false
+    }
+  },
+
+  {
+    type: 'text-inline',
+    name: 'Texto Inline',
+    description: 'Texto inline para conteúdo dentro de outros elementos',
+    icon: 'Type',
+    category: 'Content',
+    propertiesSchema: [
+      {
+        key: 'content',
+        label: 'Conteúdo',
+        type: 'textarea',
+        defaultValue: 'Texto inline editável'
+      },
+      {
+        key: 'fontSize',
+        label: 'Tamanho da Fonte',
+        type: 'select',
+        options: ['text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl'],
+        defaultValue: 'text-base'
+      },
+      {
+        key: 'fontWeight',
+        label: 'Peso da Fonte',
+        type: 'select',
+        options: ['font-normal', 'font-medium', 'font-semibold', 'font-bold'],
+        defaultValue: 'font-normal'
+      },
+      {
+        key: 'textAlign',
+        label: 'Alinhamento',
+        type: 'select',
+        options: ['text-left', 'text-center', 'text-right'],
+        defaultValue: 'text-center'
+      },
+      {
+        key: 'color',
+        label: 'Cor do Texto',
+        type: 'color',
+        defaultValue: '#1a1a1a'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      content: 'Texto inline editável',
+      fontSize: 'text-base',
+      fontWeight: 'font-normal',
+      textAlign: 'text-center',
+      color: '#1a1a1a',
+      enableSupabaseTracking: false
+    }
+  },
+
+  {
+    type: 'heading-inline',
+    name: 'Título Inline',
+    description: 'Título inline para cabeçalhos dentro de outros elementos',
+    icon: 'Heading1',
+    category: 'Content',
+    propertiesSchema: [
+      {
+        key: 'content',
+        label: 'Conteúdo',
+        type: 'text',
+        defaultValue: 'Título da Seção'
+      },
+      {
+        key: 'level',
+        label: 'Nível do Título',
+        type: 'select',
+        options: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+        defaultValue: 'h2'
+      },
+      {
+        key: 'fontSize',
+        label: 'Tamanho da Fonte',
+        type: 'select',
+        options: ['text-lg', 'text-xl', 'text-2xl', 'text-3xl', 'text-4xl'],
+        defaultValue: 'text-2xl'
+      },
+      {
+        key: 'fontWeight',
+        label: 'Peso da Fonte',
+        type: 'select',
+        options: ['font-medium', 'font-semibold', 'font-bold'],
+        defaultValue: 'font-bold'
+      },
+      {
+        key: 'textAlign',
+        label: 'Alinhamento',
+        type: 'select',
+        options: ['text-left', 'text-center', 'text-right'],
+        defaultValue: 'text-center'
+      },
+      {
+        key: 'color',
+        label: 'Cor do Texto',
+        type: 'color',
+        defaultValue: '#1a1a1a'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      content: 'Título da Seção',
+      level: 'h2',
+      fontSize: 'text-2xl',
+      fontWeight: 'font-bold',
+      textAlign: 'text-center',
+      color: '#1a1a1a',
+      enableSupabaseTracking: false
+    }
+  },
+
+  {
+    type: 'image-display-inline',
+    name: 'Imagem Inline',
+    description: 'Imagem inline para exibição dentro de outros elementos',
+    icon: 'Image',
+    category: 'Media',
+    propertiesSchema: [
+      {
+        key: 'src',
+        label: 'URL da Imagem',
+        type: 'image-url',
+        defaultValue: PlaceholderUtils.generateContentPlaceholder(400, 300)
+      },
+      {
+        key: 'alt',
+        label: 'Texto Alternativo',
+        type: 'text',
+        defaultValue: 'Descrição da imagem'
+      },
+      {
+        key: 'width',
+        label: 'Largura (px)',
+        type: 'number',
+        defaultValue: 400
+      },
+      {
+        key: 'height',
+        label: 'Altura (px)',
+        type: 'number',
+        defaultValue: 300
+      },
+      {
+        key: 'borderRadius',
+        label: 'Bordas Arredondadas (px)',
+        type: 'number',
+        defaultValue: 8
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      src: PlaceholderUtils.generateContentPlaceholder(400, 300),
+      alt: 'Descrição da imagem',
+      width: 400,
+      height: 300,
+      borderRadius: 8,
+      enableSupabaseTracking: false
+    }
+  },
+
+  {
+    type: 'form-input',
+    name: 'Campo de Formulário',
+    description: 'Campo de entrada para formulários com validação',
+    icon: 'Input',
+    category: 'Form',
+    propertiesSchema: [
+      {
+        key: 'label',
+        label: 'Rótulo',
+        type: 'text',
+        defaultValue: 'Seu nome'
+      },
+      {
+        key: 'placeholder',
+        label: 'Placeholder',
+        type: 'text',
+        defaultValue: 'Digite seu nome aqui'
+      },
+      {
+        key: 'inputType',
+        label: 'Tipo de Input',
+        type: 'select',
+        options: ['text', 'email', 'tel', 'number', 'password'],
+        defaultValue: 'text'
+      },
+      {
+        key: 'required',
+        label: 'Campo Obrigatório',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'validation',
+        label: 'Validação',
+        type: 'text',
+        defaultValue: ''
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      label: 'Seu nome',
+      placeholder: 'Digite seu nome aqui',
+      inputType: 'text',
+      required: true,
+      validation: '',
+      enableSupabaseTracking: true,
+      trackUserResponses: true
+    }
+  },
+
+  {
+    type: 'button-inline',
+    name: 'Botão Inline',
+    description: 'Botão inline para ações dentro de outros elementos',
+    icon: 'RectangleHorizontal',
+    category: 'Interactive',
+    propertiesSchema: [
+      {
+        key: 'text',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Continuar'
+      },
+      {
+        key: 'action',
+        label: 'Ação',
+        type: 'select',
+        options: ['next-step', 'submit-form', 'custom-url', 'calculate-result'],
+        defaultValue: 'next-step'
+      },
+      {
+        key: 'url',
+        label: 'URL (se ação for custom-url)',
+        type: 'url',
+        defaultValue: '#'
+      },
+      {
+        key: 'variant',
+        label: 'Variante',
+        type: 'select',
+        options: ['primary', 'secondary', 'outline', 'ghost'],
+        defaultValue: 'primary'
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: ['sm', 'md', 'lg', 'xl'],
+        defaultValue: 'lg'
+      },
+      {
+        key: 'fullWidth',
+        label: 'Largura Total',
+        type: 'boolean',
+        defaultValue: false
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      text: 'Continuar',
+      action: 'next-step',
+      url: '#',
+      variant: 'primary',
+      size: 'lg',
+      fullWidth: false,
+      enableSupabaseTracking: true,
+      trackAnalytics: true
+    }
+  },
+
+  {
+    type: 'legal-notice-inline',
+    name: 'Aviso Legal Inline',
+    description: 'Aviso legal inline com ícone e texto de proteção',
+    icon: 'Shield',
+    category: 'Legal',
+    propertiesSchema: [
+      {
+        key: 'content',
+        label: 'Texto do Aviso',
+        type: 'textarea',
+        defaultValue: 'Seus dados estão protegidos e não serão compartilhados.'
+      },
+      {
+        key: 'iconType',
+        label: 'Tipo de Ícone',
+        type: 'select',
+        options: ['shield', 'lock', 'check-circle', 'info'],
+        defaultValue: 'shield'
+      },
+      {
+        key: 'fontSize',
+        label: 'Tamanho da Fonte',
+        type: 'select',
+        options: ['text-xs', 'text-sm', 'text-base'],
+        defaultValue: 'text-sm'
+      },
+      {
+        key: 'color',
+        label: 'Cor do Texto',
+        type: 'color',
+        defaultValue: '#6b7280'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      content: 'Seus dados estão protegidos e não serão compartilhados.',
+      iconType: 'shield',
+      fontSize: 'text-sm',
+      color: '#6b7280',
+      enableSupabaseTracking: false
+    }
+  },
   
   // Blocos básicos existentes
   {
