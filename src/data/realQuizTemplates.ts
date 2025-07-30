@@ -1915,6 +1915,15 @@ export const SCORING_CONFIG = {
     enforceSelectionCount: true
   },
   
+  // Configurações de UX e Comportamento
+  behavior: {
+    enableButtonOnlyWhenValid: true, // Botão só ativa com 3 seleções
+    autoAdvanceOnComplete: true, // Autoavanço quando completar 3 seleções
+    autoAdvanceDelay: 800, // Delay em ms antes do autoavanço
+    showValidationFeedback: true, // Mostrar feedback visual
+    disableIncompleteNavigation: true // Impedir avanço sem completar
+  },
+  
   // Mapeamento de categorias para tipos de estilo
   categoryMapping: {
     'Natural': 'natural',
@@ -1967,10 +1976,72 @@ export const QuizUtils = {
   },
 
   /**
+   * Verifica se todas as questões têm exatamente 3 seleções
+   */
+  validateAllQuestions: (allAnswers: Record<string, string[]>) => {
+    const errors: string[] = [];
+    
+    for (let i = 1; i <= SCORING_CONFIG.totalQuestions; i++) {
+      const questionId = `q${i}`;
+      const answers = allAnswers[questionId] || [];
+      
+      if (answers.length !== 3) {
+        errors.push(`Questão ${i}: Selecione exatamente 3 opções (${answers.length} selecionadas)`);
+      }
+    }
+    
+    return {
+      isValid: errors.length === 0,
+      errors: errors,
+      canProceed: errors.length === 0
+    };
+  },
+
+  /**
    * Obtém metadados de uma questão específica
    */
   getQuestionMetadata: (questionId: string) => {
     return QUIZ_QUESTIONS_METADATA[questionId] || null;
+  },
+
+  /**
+   * Verifica se o botão "Avançar" deve estar habilitado
+   */
+  isAdvanceButtonEnabled: (selectedOptions: string[], questionId: string) => {
+    const validation = QuizUtils.validateQuestionResponse(selectedOptions, questionId);
+    return validation.isValid && selectedOptions.length === 3;
+  },
+
+  /**
+   * Verifica se deve fazer autoavanço automático
+   */
+  shouldAutoAdvance: (selectedOptions: string[], questionId: string) => {
+    if (!SCORING_CONFIG.behavior.autoAdvanceOnComplete) return false;
+    return QuizUtils.isAdvanceButtonEnabled(selectedOptions, questionId);
+  },
+
+  /**
+   * Obtém configurações de comportamento para uma questão
+   */
+  getQuestionBehaviorConfig: (questionId: string) => {
+    const metadata = QUIZ_QUESTIONS_METADATA[questionId];
+    if (!metadata) return null;
+    
+    return {
+      requireExactSelections: metadata.exactSelections,
+      requiredSelections: metadata.minSelections,
+      enableButtonOnlyWhenValid: SCORING_CONFIG.behavior.enableButtonOnlyWhenValid,
+      autoAdvanceOnComplete: SCORING_CONFIG.behavior.autoAdvanceOnComplete,
+      autoAdvanceDelay: SCORING_CONFIG.behavior.autoAdvanceDelay,
+      showValidationFeedback: SCORING_CONFIG.behavior.showValidationFeedback
+    };
+  },
+
+  /**
+   * Calcula o tempo de delay antes do autoavanço
+   */
+  getAutoAdvanceDelay: () => {
+    return SCORING_CONFIG.behavior.autoAdvanceDelay;
   },
 
   /**

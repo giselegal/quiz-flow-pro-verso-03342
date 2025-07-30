@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { InlineEditableText } from './InlineEditableText';
 import { Rows3, Check } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { BlockComponentProps } from '../../../types/blocks';
+import { QuizUtils } from '../../../data/realQuizTemplates';
 import { 
   OptionsGridUtils, 
   IMAGE_SIZE_CLASSES, 
@@ -13,7 +14,7 @@ import {
   VALIDATION_CONFIG,
   type OptionItem,
   type OptionsGridConfig 
-} from '@/config/optionsGridConfig';
+} from '../../../config/optionsGridConfig';
 const OptionsGridBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
@@ -36,12 +37,21 @@ const OptionsGridBlock: React.FC<BlockComponentProps> = ({
     minSelections = 1,
     validationMessage = 'Selecione uma opção',
     gridGap = 16,
-    selectedOptions = []
+    selectedOptions = [],
+    // Novas propriedades de autoavanço
+    autoAdvanceOnComplete = true,
+    enableButtonOnlyWhenValid = true,
+    autoAdvanceDelay = 800,
+    requiredSelections = 3,
+    showValidationFeedback = true,
+    questionId = ''
   } = block.properties;
 
-  // Estado local para gerenciar seleções
+  // Estado local para gerenciar seleções e autoavanço
   const [internalSelectedOptions, setInternalSelectedOptions] = useState<string[]>(selectedOptions || []);
   const [validationError, setValidationError] = useState<string>('');
+  const [isAdvanceButtonEnabled, setIsAdvanceButtonEnabled] = useState<boolean>(false);
+  const autoAdvanceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Sincronizar estado interno com propriedades do bloco apenas na inicialização
   useEffect(() => {
@@ -49,6 +59,50 @@ const OptionsGridBlock: React.FC<BlockComponentProps> = ({
       setInternalSelectedOptions(selectedOptions);
     }
   }, []); // Removido todas as dependências para evitar loop
+
+  // Verificar se deve habilitar botão e fazer autoavanço
+  useEffect(() => {
+    if (!isEditing) {
+      const isValidSelection = QuizUtils.isAdvanceButtonEnabled(internalSelectedOptions, questionId);
+      setIsAdvanceButtonEnabled(isValidSelection);
+      
+      // Autoavanço automático se configurado e seleção válida
+      if (autoAdvanceOnComplete && isValidSelection && QuizUtils.shouldAutoAdvance(internalSelectedOptions, questionId)) {
+        const delay = QuizUtils.getAutoAdvanceDelay();
+        
+        // Limpar timeout anterior se existir
+        if (autoAdvanceTimeoutRef.current) {
+          clearTimeout(autoAdvanceTimeoutRef.current);
+        }
+        
+        // Configurar novo timeout para autoavanço
+        autoAdvanceTimeoutRef.current = setTimeout(() => {
+          handleAutoAdvance();
+        }, delay);
+      }
+    }
+    
+    // Cleanup do timeout
+    return () => {
+      if (autoAdvanceTimeoutRef.current) {
+        clearTimeout(autoAdvanceTimeoutRef.current);
+      }
+    };
+  }, [internalSelectedOptions, isEditing, autoAdvanceOnComplete, questionId]);
+
+  const handleAutoAdvance = useCallback(() => {
+    // Aqui você pode implementar a lógica de navegação para a próxima questão
+    // Por exemplo, disparar um evento ou callback para o componente pai
+    console.log('🚀 Auto-avançando para a próxima questão');
+    
+    // Exemplo de como poderia ser implementado:
+    if (onPropertyChange) {
+      onPropertyChange('autoAdvanceTriggered', {
+        selectedOptions: internalSelectedOptions,
+        timestamp: Date.now()
+      });
+    }
+  }, [internalSelectedOptions, onPropertyChange]);
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {
@@ -61,33 +115,29 @@ const OptionsGridBlock: React.FC<BlockComponentProps> = ({
 
     let newSelectedOptions: string[] = [];
     
-    if (multipleSelection) {
-      // Seleção múltipla
-      if (internalSelectedOptions.includes(optionId)) {
-        // Desmarcar opção
-        newSelectedOptions = internalSelectedOptions.filter(id => id !== optionId);
-      } else {
-        // Marcar opção (respeitando limite máximo)
-        if (internalSelectedOptions.length < maxSelections) {
-          newSelectedOptions = [...internalSelectedOptions, optionId];
-        } else {
-          const errorMessage = VALIDATION_CONFIG.messages.selectMaximum(maxSelections);
-          setValidationError(errorMessage);
-          return;
-        }
-      }
+    // Sempre usar seleção múltipla com exatamente 3 opções obrigatórias
+    if (internalSelectedOptions.includes(optionId)) {
+      // Desmarcar opção
+      newSelectedOptions = internalSelectedOptions.filter(id => id !== optionId);
     } else {
-      // Seleção única
-      newSelectedOptions = internalSelectedOptions.includes(optionId) ? [] : [optionId];
+      // Marcar opção (respeitando limite de 3 seleções)
+      if (internalSelectedOptions.length < requiredSelections) {
+        newSelectedOptions = [...internalSelectedOptions, optionId];
+      } else {
+        // Já tem 3 seleções - substituir a primeira
+        newSelectedOptions = [...internalSelectedOptions.slice(1), optionId];
+      }
     }
 
     setInternalSelectedOptions(newSelectedOptions);
     handlePropertyChange('selectedOptions', newSelectedOptions);
     
-    // Validar seleção usando configuração de validação
-    if (newSelectedOptions.length < minSelections) {
-      const errorMessage = validationMessage || VALIDATION_CONFIG.messages.selectMinimum(minSelections);
-      setValidationError(errorMessage);
+    // Validar seleção usando QuizUtils
+    const validation = QuizUtils.validateQuestionResponse(newSelectedOptions, questionId);
+    if (!validation.isValid) {
+      if (showValidationFeedback) {
+        setValidationError(validation.error || `Selecione exatamente ${requiredSelections} opções`);
+      }
     } else {
       setValidationError('');
     }
@@ -241,19 +291,46 @@ const OptionsGridBlock: React.FC<BlockComponentProps> = ({
         );
       })()}
       
+      {/* Contador de seleções */}
+      {!isEditing && showValidationFeedback && (
+        <div className="mt-4 text-center">
+          <p className={`text-sm font-medium ${
+            internalSelectedOptions.length === requiredSelections 
+              ? 'text-green-600' 
+              : 'text-gray-600'
+          }`}>
+            {internalSelectedOptions.length} de {requiredSelections} opções selecionadas
+          </p>
+          
+          {/* Indicador de autoavanço */}
+          {autoAdvanceOnComplete && internalSelectedOptions.length === requiredSelections && (
+            <div className="flex items-center justify-center mt-2 text-green-600">
+              <div className="animate-pulse flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+                <span className="text-xs font-medium">Avançando automaticamente...</span>
+                <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+      
       {/* Mensagem de validação */}
-      {validationError && (
-        <div className={VALIDATION_CONFIG.styles.error.container}>
-          <p className={VALIDATION_CONFIG.styles.error.text}>{validationError}</p>
+      {validationError && showValidationFeedback && (
+        <div className="mt-3 text-center">
+          <p className="text-red-600 text-sm font-medium">{validationError}</p>
         </div>
       )}
       
       {/* Informações de seleção para modo de edição */}
       {isEditing && (
-        <div className={VALIDATION_CONFIG.styles.info.container}>
-          <p className={VALIDATION_CONFIG.styles.info.text}>
+        <div className="mt-3 text-center">
+          <p className="text-gray-500 text-sm">
             Modo de edição: {internalSelectedOptions.length} opção(ões) selecionada(s)
-            {multipleSelection && ` (máx: ${maxSelections}, mín: ${minSelections})`}
+            <br />
+            Configurado para: {requiredSelections} seleções obrigatórias
+            {autoAdvanceOnComplete && <br />}
+            {autoAdvanceOnComplete && `Auto-avanço: ${autoAdvanceDelay}ms de delay`}
           </p>
         </div>
       )}

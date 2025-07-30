@@ -783,12 +783,47 @@ export const blockDefinitions: BlockDefinition[] = [
         label: 'Opções',
         type: 'array',
         defaultValue: []
+      },
+      {
+        key: 'autoAdvanceOnComplete',
+        label: 'Auto-avanço ao completar',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'enableButtonOnlyWhenValid',
+        label: 'Ativar botão apenas quando válido',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'autoAdvanceDelay',
+        label: 'Delay do auto-avanço (ms)',
+        type: 'number',
+        defaultValue: 800
+      },
+      {
+        key: 'requiredSelections',
+        label: 'Seleções obrigatórias',
+        type: 'number',
+        defaultValue: 3
+      },
+      {
+        key: 'showValidationFeedback',
+        label: 'Mostrar feedback de validação',
+        type: 'boolean',
+        defaultValue: true
       }
     ],
     defaultProperties: {
       columns: 2,
       allowMultiple: true,
       showImages: true,
+      autoAdvanceOnComplete: true,
+      enableButtonOnlyWhenValid: true,
+      autoAdvanceDelay: 800,
+      requiredSelections: 3,
+      showValidationFeedback: true,
       options: [
         {
           id: '1',
