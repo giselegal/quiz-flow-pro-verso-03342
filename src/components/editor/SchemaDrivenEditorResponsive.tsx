@@ -1247,8 +1247,11 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       });
     }
   }, [steps, getStepTemplate, addBlock, updateBlock, setSteps]);
-      
-      if (stepIndex === 0) {
+
+  // Component selection handler
+  const handleComponentSelect = useCallback((componentId: string) => {
+    handleAddBlock(componentId);
+  }, [handleAddBlock]);
         // ==========================================
         // ETAPA 1: INTRODUÇÃO COM COLETA DE NOME
         // ==========================================
