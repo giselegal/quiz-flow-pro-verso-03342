@@ -3305,6 +3305,502 @@ export const blockDefinitions: BlockDefinition[] = [
     defaultProperties: {
       height: '20px'
     }
+  },
+
+  // ===========================
+  // COMPONENTES DA PÁGINA DE RESULTADO (STEP 20)
+  // ===========================
+
+  {
+    type: 'quiz-result-primary-style-card',
+    name: 'Card do Estilo Principal',
+    description: 'Card que exibe o resultado principal do quiz com estilo personalizado',
+    icon: 'Award',
+    category: 'Quiz Result',
+    propertiesSchema: [
+      {
+        key: 'showPercentage',
+        label: 'Mostrar Percentual',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showDescription',
+        label: 'Mostrar Descrição',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'cardStyle',
+        label: 'Estilo do Card',
+        type: 'select',
+        options: ['modern', 'classic', 'minimal', 'bold'],
+        defaultValue: 'modern'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      showPercentage: true,
+      showDescription: true,
+      cardStyle: 'modern',
+      enableSupabaseTracking: true,
+      stepCategory: 'resultado'
+    }
+  },
+
+  {
+    type: 'secondary-styles-section',
+    name: 'Seção de Estilos Secundários',
+    description: 'Seção que exibe os estilos secundários com percentuais menores',
+    icon: 'Layers',
+    category: 'Quiz Result',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título da Seção',
+        type: 'text',
+        defaultValue: 'Seus Estilos Secundários'
+      },
+      {
+        key: 'maxItems',
+        label: 'Máximo de Itens',
+        type: 'number',
+        defaultValue: 3
+      },
+      {
+        key: 'showPercentages',
+        label: 'Mostrar Percentuais',
+        type: 'boolean',
+        defaultValue: true
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Seus Estilos Secundários',
+      maxItems: 3,
+      showPercentages: true,
+      enableSupabaseTracking: true,
+      stepCategory: 'resultado'
+    }
+  },
+
+  {
+    type: 'transformation-before-after',
+    name: 'Transformação Antes e Depois',
+    description: 'Seção mostrando a transformação visual antes e depois',
+    icon: 'RotateCw',
+    category: 'Sales',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Sua Transformação'
+      },
+      {
+        key: 'beforeImage',
+        label: 'Imagem Antes',
+        type: 'image-url',
+        defaultValue: PlaceholderUtils.generateContentPlaceholder(300, 400)
+      },
+      {
+        key: 'afterImage',
+        label: 'Imagem Depois',
+        type: 'image-url',
+        defaultValue: PlaceholderUtils.generateContentPlaceholder(300, 400)
+      },
+      {
+        key: 'beforeText',
+        label: 'Texto Antes',
+        type: 'text',
+        defaultValue: 'Antes'
+      },
+      {
+        key: 'afterText',
+        label: 'Texto Depois',
+        type: 'text',
+        defaultValue: 'Depois'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Sua Transformação',
+      beforeImage: PlaceholderUtils.generateContentPlaceholder(300, 400),
+      afterImage: PlaceholderUtils.generateContentPlaceholder(300, 400),
+      beforeText: 'Antes',
+      afterText: 'Depois',
+      enableSupabaseTracking: true,
+      stepCategory: 'oferta'
+    }
+  },
+
+  {
+    type: 'motivation-section',
+    name: 'Seção de Motivação',
+    description: 'Seção motivacional com texto inspirador',
+    icon: 'Heart',
+    category: 'Content',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Você Pode Conseguir Isso!'
+      },
+      {
+        key: 'content',
+        label: 'Conteúdo Motivacional',
+        type: 'textarea',
+        defaultValue: 'Sua jornada de transformação começa agora. Com o estilo certo, você pode alcançar qualquer objetivo.'
+      },
+      {
+        key: 'backgroundColor',
+        label: 'Cor de Fundo',
+        type: 'color',
+        defaultValue: '#f8fafc'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Você Pode Conseguir Isso!',
+      content: 'Sua jornada de transformação começa agora. Com o estilo certo, você pode alcançar qualquer objetivo.',
+      backgroundColor: '#f8fafc',
+      enableSupabaseTracking: true,
+      stepCategory: 'oferta'
+    }
+  },
+
+  {
+    type: 'bonus-section',
+    name: 'Seção de Bônus',
+    description: 'Seção destacando bônus e benefícios extras',
+    icon: 'Gift',
+    category: 'Sales',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Bônus Exclusivos'
+      },
+      {
+        key: 'bonuses',
+        label: 'Lista de Bônus',
+        type: 'array',
+        defaultValue: [
+          'Guia de cores personalizado',
+          'Consultoria express',
+          'Acesso ao grupo VIP'
+        ]
+      },
+      {
+        key: 'highlightColor',
+        label: 'Cor de Destaque',
+        type: 'color',
+        defaultValue: '#10b981'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Bônus Exclusivos',
+      bonuses: [
+        'Guia de cores personalizado',
+        'Consultoria express',
+        'Acesso ao grupo VIP'
+      ],
+      highlightColor: '#10b981',
+      enableSupabaseTracking: true,
+      stepCategory: 'oferta'
+    }
+  },
+
+  {
+    type: 'testimonials',
+    name: 'Depoimentos',
+    description: 'Seção de depoimentos de clientes satisfeitos',
+    icon: 'MessageSquare',
+    category: 'Social Proof',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'O Que Nossos Clientes Dizem'
+      },
+      {
+        key: 'layout',
+        label: 'Layout',
+        type: 'select',
+        options: ['grid', 'carousel', 'list'],
+        defaultValue: 'grid'
+      },
+      {
+        key: 'showPhotos',
+        label: 'Mostrar Fotos',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'maxTestimonials',
+        label: 'Máximo de Depoimentos',
+        type: 'number',
+        defaultValue: 6
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'O Que Nossos Clientes Dizem',
+      layout: 'grid',
+      showPhotos: true,
+      maxTestimonials: 6,
+      enableSupabaseTracking: true,
+      stepCategory: 'oferta'
+    }
+  },
+
+  {
+    type: 'result-page-cta-pricing',
+    name: 'CTA com Preços',
+    description: 'Call-to-action com preços e oferta especial',
+    icon: 'CircleDollarSign',
+    category: 'Sales',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Oferta Especial Para Você'
+      },
+      {
+        key: 'originalPrice',
+        label: 'Preço Original',
+        type: 'text',
+        defaultValue: 'R$ 497,00'
+      },
+      {
+        key: 'salePrice',
+        label: 'Preço Promocional',
+        type: 'text',
+        defaultValue: 'R$ 197,00'
+      },
+      {
+        key: 'discount',
+        label: 'Desconto',
+        type: 'text',
+        defaultValue: '60% OFF'
+      },
+      {
+        key: 'ctaText',
+        label: 'Texto do CTA',
+        type: 'text',
+        defaultValue: 'Quero Minha Transformação'
+      },
+      {
+        key: 'urgencyText',
+        label: 'Texto de Urgência',
+        type: 'text',
+        defaultValue: 'Oferta válida apenas hoje!'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Oferta Especial Para Você',
+      originalPrice: 'R$ 497,00',
+      salePrice: 'R$ 197,00',
+      discount: '60% OFF',
+      ctaText: 'Quero Minha Transformação',
+      urgencyText: 'Oferta válida apenas hoje!',
+      enableSupabaseTracking: true,
+      stepCategory: 'oferta'
+    }
+  },
+
+  {
+    type: 'guarantee',
+    name: 'Garantia',
+    description: 'Seção de garantia com ícone e texto de segurança',
+    icon: 'Shield',
+    category: 'Trust',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Garantia de 30 Dias'
+      },
+      {
+        key: 'content',
+        label: 'Texto da Garantia',
+        type: 'textarea',
+        defaultValue: 'Se você não ficar 100% satisfeito, devolvemos seu dinheiro sem perguntas.'
+      },
+      {
+        key: 'iconStyle',
+        label: 'Estilo do Ícone',
+        type: 'select',
+        options: ['shield', 'check-circle', 'award', 'lock'],
+        defaultValue: 'shield'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Garantia de 30 Dias',
+      content: 'Se você não ficar 100% satisfeito, devolvemos seu dinheiro sem perguntas.',
+      iconStyle: 'shield',
+      enableSupabaseTracking: true,
+      stepCategory: 'oferta'
+    }
+  },
+
+  {
+    type: 'mentor-trust-section',
+    name: 'Seção de Confiança do Mentor',
+    description: 'Seção apresentando o mentor/especialista com credibilidade',
+    icon: 'User',
+    category: 'Trust',
+    propertiesSchema: [
+      {
+        key: 'mentorName',
+        label: 'Nome do Mentor',
+        type: 'text',
+        defaultValue: 'Ana Silva'
+      },
+      {
+        key: 'mentorTitle',
+        label: 'Título do Mentor',
+        type: 'text',
+        defaultValue: 'Consultora de Estilo Certificada'
+      },
+      {
+        key: 'mentorPhoto',
+        label: 'Foto do Mentor',
+        type: 'image-url',
+        defaultValue: PlaceholderUtils.generateContentPlaceholder(200, 200)
+      },
+      {
+        key: 'experience',
+        label: 'Anos de Experiência',
+        type: 'number',
+        defaultValue: 10
+      },
+      {
+        key: 'clientsHelped',
+        label: 'Clientes Atendidos',
+        type: 'number',
+        defaultValue: 500
+      },
+      {
+        key: 'bio',
+        label: 'Biografia',
+        type: 'textarea',
+        defaultValue: 'Especialista em transformação pessoal através do estilo há mais de 10 anos.'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      mentorName: 'Ana Silva',
+      mentorTitle: 'Consultora de Estilo Certificada',
+      mentorPhoto: PlaceholderUtils.generateContentPlaceholder(200, 200),
+      experience: 10,
+      clientsHelped: 500,
+      bio: 'Especialista em transformação pessoal através do estilo há mais de 10 anos.',
+      enableSupabaseTracking: true,
+      stepCategory: 'oferta'
+    }
+  },
+
+  {
+    type: 'result-page-final-offer',
+    name: 'Oferta Final',
+    description: 'Última chamada para ação com oferta especial',
+    icon: 'Zap',
+    category: 'Sales',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Última Chance!'
+      },
+      {
+        key: 'subtitle',
+        label: 'Subtítulo',
+        type: 'text',
+        defaultValue: 'Esta oferta expira em breve'
+      },
+      {
+        key: 'ctaText',
+        label: 'Texto do CTA',
+        type: 'text',
+        defaultValue: 'Sim, Quero Aproveitar'
+      },
+      {
+        key: 'showCountdown',
+        label: 'Mostrar Contador',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'urgencyLevel',
+        label: 'Nível de Urgência',
+        type: 'select',
+        options: ['low', 'medium', 'high', 'extreme'],
+        defaultValue: 'high'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Última Chance!',
+      subtitle: 'Esta oferta expira em breve',
+      ctaText: 'Sim, Quero Aproveitar',
+      showCountdown: true,
+      urgencyLevel: 'high',
+      enableSupabaseTracking: true,
+      stepCategory: 'oferta'
+    }
+  },
+
+  {
+    type: 'secure-purchase-badges',
+    name: 'Selos de Segurança',
+    description: 'Selos e badges de segurança para compra',
+    icon: 'Lock',
+    category: 'Trust',
+    propertiesSchema: [
+      {
+        key: 'showSSL',
+        label: 'Mostrar SSL',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showPaymentMethods',
+        label: 'Mostrar Formas de Pagamento',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showTrustBadges',
+        label: 'Mostrar Selos de Confiança',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'layout',
+        label: 'Layout',
+        type: 'select',
+        options: ['horizontal', 'vertical', 'grid'],
+        defaultValue: 'horizontal'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      showSSL: true,
+      showPaymentMethods: true,
+      showTrustBadges: true,
+      layout: 'horizontal',
+      enableSupabaseTracking: false
+    }
   }
 ];
 
