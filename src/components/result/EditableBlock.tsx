@@ -135,7 +135,7 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
             <div className="space-y-2">
               {content.benefits && content.benefits.length > 0 ? (
                 content.benefits.map((benefit: string, index: number) => (
-                  <div key={index} className="flex items-start gap-2">
+                  <div key={`benefit-${benefit.slice(0, 20)}-${index}`} className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
                     <p className="text-foreground">{benefit}</p>
                   </div>
@@ -186,7 +186,7 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
             <div className="space-y-4">
               {content.testimonials && content.testimonials.length > 0 ? (
                 content.testimonials.map((testimonial: any, index: number) => (
-                  <div key={index} className="bg-card border border-border rounded-lg p-4">
+                  <div key={`testimonial-${testimonial.name || 'anonymous'}-${index}`} className="bg-card border border-border rounded-lg p-4">
                     <p className="text-foreground mb-3">"{testimonial.text}"</p>
                     <div className="flex items-center gap-3">
                       {testimonial.image && (

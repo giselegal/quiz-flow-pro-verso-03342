@@ -47,7 +47,7 @@ const MultipleChoiceComponent: React.FC<MultipleChoiceComponentProps> = ({ data,
       <div className="space-y-2">
         {options.map((option, index) => (
           <div 
-            key={index}
+            key={`option-${option}-${index}`}
             className="border rounded-md p-3 cursor-pointer hover:bg-gray-50 transition-colors"
           >
             {(displayType === 'image' || displayType === 'both') && (
