@@ -1,13 +1,13 @@
 // 🎯 CENTRALIZADOR DE TODAS AS ETAPAS
 // Este arquivo mapeia cada etapa para seu respectivo template
 
-import { getStep01Template } from './Step01Intro';
-import { getStep02Template } from './Step02Question01';
-import { getStep03Template } from './Step03Question02'; // Corrigido: usar Question02
-import { getStep04Template } from './Step04Question03'; // Corrigido: usar Question03
-import { getStep05Template } from './Step05Question04'; // Corrigido: usar Question04
-import { getStep06Template } from './Step06Question05'; // Corrigido: usar Question05
-import { getStep07Template } from './Step07Question06'; // Corrigido: usar Question06
+import { getStep01Template } from './Step01Template';
+import { getStep02Template } from './Step02Template';
+import { getStep03Template } from './Step03Template';
+import { getStep04Template } from './Step04Template';
+import { getStep05Template } from './Step05Template';
+import { getStep06Template } from './Step06Template';
+import { getStep07Template } from './Step07Template';
 import { getStep08Template } from './Step08Template';
 import { getStep09Template } from './Step09Template';
 import { getStep10Template } from './Step10Template';
