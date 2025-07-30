@@ -3,6 +3,7 @@ import { InlineEditableText } from './InlineEditableText';
 import { Rows3, Check } from 'lucide-react';
 import type { BlockComponentProps } from '../../../types/blocks';
 import { QuizUtils } from '../../../data/realQuizTemplates';
+import { quizSupabaseService } from '../../../services/quizSupabaseService';
 import { 
   OptionsGridUtils, 
   IMAGE_SIZE_CLASSES, 
@@ -132,6 +133,9 @@ const OptionsGridBlock: React.FC<BlockComponentProps> = ({
     setInternalSelectedOptions(newSelectedOptions);
     handlePropertyChange('selectedOptions', newSelectedOptions);
     
+    // 🚀 INTEGRAÇÃO SUPABASE: Salvar resposta
+    saveResponseToSupabase(newSelectedOptions, optionId, optionValue);
+    
     // Validar seleção usando QuizUtils
     const validation = QuizUtils.validateQuestionResponse(newSelectedOptions, questionId);
     if (!validation.isValid) {
@@ -140,6 +144,55 @@ const OptionsGridBlock: React.FC<BlockComponentProps> = ({
       }
     } else {
       setValidationError('');
+    }
+  };
+
+  // 🚀 Função para salvar no Supabase
+  const saveResponseToSupabase = async (selectedOptions: string[], optionId: string, optionValue: string) => {
+    try {
+      // Encontrar a opção selecionada para obter category
+      const selectedOption = options.find(opt => opt.id === optionId);
+      const styleCategory = selectedOption?.category || selectedOption?.value || '';
+      
+      // Extrair número da etapa do block ID ou questionId
+      const stepNumber = questionId ? parseInt(questionId.replace('q', '')) + 1 : 1;
+      const stepId = `etapa-${stepNumber + 1}`; // +1 porque q1 = etapa-2
+      
+      // Dados da resposta
+      const responseData = {
+        selected_option_id: optionId,
+        selected_option_value: optionValue,
+        selected_option_text: selectedOption?.text || '',
+        all_selected_options: selectedOptions,
+        timestamp: Date.now()
+      };
+
+      // Salvar no Supabase
+      await quizSupabaseService.saveStepResponse({
+        step_number: stepNumber,
+        step_id: stepId,
+        question_id: questionId,
+        selected_options: selectedOptions,
+        response_data: responseData,
+        style_category: styleCategory,
+        time_taken_seconds: Math.floor((Date.now() - (parseInt(localStorage.getItem('quiz_start_time') || '0'))) / 1000)
+      });
+
+      // Analytics
+      await quizSupabaseService.trackEvent('option_select', {
+        step_number: stepNumber,
+        step_id: stepId,
+        event_data: {
+          option_id: optionId,
+          option_value: optionValue,
+          style_category: styleCategory,
+          total_selected: selectedOptions.length
+        }
+      });
+
+      console.log(`✅ Resposta salva no Supabase: ${stepId} - ${optionValue}`);
+    } catch (error) {
+      console.error('❌ Erro ao salvar resposta no Supabase:', error);
     }
   };
 
@@ -334,8 +387,7 @@ const OptionsGridBlock: React.FC<BlockComponentProps> = ({
           </p>
         </div>
       )}
-    </div>
-  );
+      );
 };
 
 export default OptionsGridBlock;
