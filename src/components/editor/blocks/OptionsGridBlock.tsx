@@ -387,8 +387,9 @@ const OptionsGridBlock: React.FC<BlockComponentProps> = ({
           </p>
         </div>
       )}
-      );
-{'}'};
+    </div>
+  );
+};
 
 export default OptionsGridBlock;
 

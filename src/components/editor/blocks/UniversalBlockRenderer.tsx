@@ -12,7 +12,7 @@ import QuizProgressBlock from './QuizProgressBlock';
 import QuestionMultipleBlock from './QuestionMultipleBlock';
 import StrategicQuestionBlock from './StrategicQuestionBlock';
 import QuizTransitionBlock from './QuizTransitionBlock';
-// import OptionsGridBlock from './OptionsGridBlock'; // Temporariamente desabilitado devido a erro de sintaxe
+import OptionsGridBlock from './OptionsGridBlock';
 import VerticalCanvasHeaderBlock from './VerticalCanvasHeaderBlock';
 
 // === COMPONENTES INLINE MODULARES (ES7+) ===
