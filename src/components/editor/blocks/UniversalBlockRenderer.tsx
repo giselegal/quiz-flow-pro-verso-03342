@@ -240,17 +240,8 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'quiz-offer-cta-inline': () => <CTAInlineBlock {...commonProps} />, // CTA para oferta
       
       // === COMPONENTES ESSENCIAIS PARA AS 21 ETAPAS ===
-      'quiz-intro-header': () => <VerticalCanvasHeaderBlock {...commonProps} />, // Header com logo e progresso
       'decorative-bar-inline': () => <SpacerBlock {...commonProps} />, // Barra decorativa
-      'form-input': () => <FormInputBlock {...commonProps} />, // Input de formulário
       'legal-notice-inline': () => <TextInlineBlock {...commonProps} />, // Aviso legal como texto
-      'progress-inline': () => <ProgressInlineBlock {...commonProps} />, // Barra de progresso
-      'loading-animation': () => <LoadingAnimationBlock {...commonProps} />, // Animação de carregamento
-      'result-header-inline': () => <HeadingInlineBlock {...commonProps} />, // Cabeçalho de resultado
-      'result-card-inline': () => <ResultCardInlineBlock {...commonProps} />, // Card de resultado
-      'countdown-inline': () => <CountdownInlineBlock {...commonProps} />, // Contador regressivo
-      'testimonial-card-inline': () => <TestimonialCardInlineBlock {...commonProps} />, // Card de depoimento
-      'badge-inline': () => <BadgeInlineBlock {...commonProps} />, // Badge inline
       
       // === COMPONENTES ETAPA 20/21 ===
       'quiz-offer-pricing-inline': () => <PricingCardInlineBlock {...commonProps} />, // Card de preços
@@ -281,45 +272,6 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       QuestionMultipleBlock: () => <QuestionMultipleBlock {...commonProps} />,
       StrategicQuestionBlock: () => <StrategicQuestionBlock {...commonProps} />,
       QuizTransitionBlock: () => <QuizTransitionBlock {...commonProps} />,
-      
-      // === MAPEAMENTOS ADICIONAIS ===
-      'quiz-title': () => <HeadingInlineBlock {...commonProps} />,
-      'quiz-name-input': () => <FormInputBlock {...commonProps} />,
-      'quiz-result-header': () => <HeadingInlineBlock {...commonProps} />,
-      'quiz-result-card': () => <PricingCardInlineBlock {...commonProps} />,
-      'quiz-offer-title': () => <HeadingInlineBlock {...commonProps} />,
-      'quiz-offer-countdown': () => <CountdownInlineBlock {...commonProps} />,
-      'quiz-offer-faq': () => <FAQSectionBlock {...commonProps} />,
-      
-      // === NOVOS COMPONENTES MODULARES ===
-      'result-page-header': () => <HeadingInlineBlock {...commonProps} />,
-      'style-result-card': () => <StyleCardInlineBlock {...commonProps} />,
-      'result-cta': () => <CTAInlineBlock {...commonProps} />,
-      'offer-header': () => <HeadingInlineBlock {...commonProps} />,
-      'product-showcase': () => <PricingCardInlineBlock {...commonProps} />,
-      'offer-cta': () => <CTAInlineBlock {...commonProps} />,
-      'highlight-box-inline': () => <BadgeInlineBlock {...commonProps} />,
-      'product-card-inline': () => <PricingCardInlineBlock {...commonProps} />,
-      'price-highlight-inline': () => <PricingCardInlineBlock {...commonProps} />,
-      'cta-button-inline': () => <ButtonInlineBlock {...commonProps} />,
-      'trust-elements-inline': () => <TestimonialsGridBlock {...commonProps} />,
-      'countdown-timer-inline': () => <CountdownInlineBlock {...commonProps} />,
-      'guarantee-seal-inline': () => <BadgeInlineBlock {...commonProps} />,
-      'faq-item-inline': () => <FAQSectionBlock {...commonProps} />,
-      'section-header-inline': () => <HeadingInlineBlock {...commonProps} />,
-      'sticky-header-inline': () => <VerticalCanvasHeaderBlock {...commonProps} />,
-      
-      // === COMPONENTES ESTRATÉGICOS ===
-      'strategic-question-image': () => <StrategicQuestionBlock {...commonProps} />,
-      'strategic-question-main': () => <StrategicQuestionBlock {...commonProps} />,
-      'strategic-question-inline': () => <StrategicQuestionBlock {...commonProps} />,
-      
-      // === BLOCOS QUIZ ESPECÍFICOS ===
-      QuizQuestionBlock: () => <QuizQuestionBlock {...commonProps} />,
-      QuestionMultipleBlock: () => <QuestionMultipleBlock {...commonProps} />,
-      StrategicQuestionBlock: () => <StrategicQuestionBlock {...commonProps} />,
-      QuizTransitionBlock: () => <QuizTransitionBlock {...commonProps} />,
-
       
       // === MAPEAMENTOS ADICIONAIS ===
       'quiz-title': () => <HeadingInlineBlock {...commonProps} />,
