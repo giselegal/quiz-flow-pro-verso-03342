@@ -76,6 +76,9 @@ import BeforeAfterInlineBlock from './inline/BeforeAfterInlineBlock';
 import BonusListInlineBlock from './inline/BonusListInlineBlock';
 import StepHeaderInlineBlock from './inline/StepHeaderInlineBlock';
 
+// 🚀 INTEGRAÇÃO SUPABASE: Serviços de dados
+import { quizSupabaseService } from '../../../services/quizSupabaseService';
+
 // Novos componentes modulares para etapas 20 e 21 (temporariamente desabilitados)
 import ResultPageHeaderBlock from './ResultPageHeaderBlock';
 
@@ -91,6 +94,10 @@ export interface BlockRendererProps {
   onSaveInline?: (blockId: string, updates: Partial<BlockData>) => void;
   disabled?: boolean;
   className?: string;
+  // 🚀 SUPABASE: Props para integração de dados
+  stepNumber?: number;
+  quizSessionId?: string;
+  userName?: string;
 }
 
 /**
@@ -105,7 +112,11 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
   onClick,
   onSaveInline,
   disabled = false,
-  className
+  className,
+  // 🚀 SUPABASE: Parâmetros de integração
+  stepNumber,
+  quizSessionId,
+  userName
 }) => {
   // ES7+ Props comuns padronizados para flexbox inline responsivo
   const commonProps = {
@@ -163,7 +174,25 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
         'border border-gray-200 rounded-lg shadow-sm bg-white',
         'hover:shadow-md hover:border-blue-300',
         isSelected && 'ring-2 ring-blue-500 border-blue-400 bg-blue-50'
-      )
+      ),
+      // 🚀 SUPABASE: Props passados para componentes filhos
+      stepNumber,
+      quizSessionId,
+      userName,
+      // 🚀 SUPABASE: Função helper para salvar dados
+      saveToSupabase: async (data: any) => {
+        try {
+          if (stepNumber && quizSessionId) {
+            await quizSupabaseService.saveStepResponse({
+              step_number: stepNumber,
+              step_id: `etapa-${stepNumber}`,
+              response_data: data
+            });
+          }
+        } catch (error) {
+          console.error('❌ Erro ao salvar no Supabase:', error);
+        }
+      }
     };
 
     const componentMap: Record<string, () => React.ReactNode> = {

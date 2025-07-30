@@ -13,6 +13,72 @@ export interface BlockDefinition {
   defaultProperties: Record<string, any>;
 }
 
+// 🚀 SUPABASE: Esquemas padrão para integração
+export const supabasePropertySchemas: PropertySchema[] = [
+  {
+    key: 'enableSupabaseTracking',
+    label: '🚀 Ativar Tracking Supabase',
+    type: 'boolean',
+    defaultValue: true,
+    description: 'Ativa o rastreamento de interações no Supabase'
+  },
+  {
+    key: 'trackUserResponses',
+    label: 'Rastrear Respostas do Usuário',
+    type: 'boolean',
+    defaultValue: true,
+    description: 'Salva as respostas do usuário no banco'
+  },
+  {
+    key: 'trackAnalytics',
+    label: 'Rastrear Analytics',
+    type: 'boolean',
+    defaultValue: true,
+    description: 'Coleta métricas de desempenho e comportamento'
+  },
+  {
+    key: 'stepCategory',
+    label: 'Categoria da Etapa',
+    type: 'select',
+    options: [
+      { value: 'intro', label: 'Introdução' },
+      { value: 'questao', label: 'Questão' },
+      { value: 'resultado', label: 'Resultado' },
+      { value: 'oferta', label: 'Oferta' }
+    ],
+    defaultValue: 'questao',
+    description: 'Define o tipo de etapa para analytics'
+  },
+  {
+    key: 'styleCategory',
+    label: 'Categoria de Estilo',
+    type: 'select',
+    options: [
+      { value: '', label: 'Nenhuma' },
+      { value: 'Visionário', label: '🔮 Visionário' },
+      { value: 'Estratégico', label: '🎯 Estratégico' },
+      { value: 'Executor', label: '⚡ Executor' },
+      { value: 'Inspirador', label: '✨ Inspirador' }
+    ],
+    defaultValue: '',
+    description: 'Categoria de estilo para cálculo de resultados'
+  },
+  {
+    key: 'autoSaveResponses',
+    label: 'Auto-salvar Respostas',
+    type: 'boolean',
+    defaultValue: true,
+    description: 'Salva automaticamente as respostas sem intervenção'
+  },
+  {
+    key: 'requireUserName',
+    label: 'Requerer Nome do Usuário',
+    type: 'boolean',
+    defaultValue: false,
+    description: 'Exige que o usuário forneça nome antes de continuar'
+  }
+];
+
 // Tipos para ícones Lucide React
 export type IconType =
   | 'Type'

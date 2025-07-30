@@ -84,6 +84,15 @@ interface BlockProperties {
   visible?: boolean;
   id?: string;
   className?: string;
+  
+  // 🚀 SUPABASE: Configurações de integração
+  enableSupabaseTracking?: boolean;
+  trackUserResponses?: boolean;
+  trackAnalytics?: boolean;
+  stepCategory?: 'intro' | 'questao' | 'resultado' | 'oferta';
+  styleCategory?: 'Visionário' | 'Estratégico' | 'Executor' | 'Inspirador';
+  autoSaveResponses?: boolean;
+  requireUserName?: boolean;
 }
 
 interface AdvancedPropertyPanelProps {
@@ -106,7 +115,8 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
     styling: true,
     customization: true,
     advanced: false,
-    general: true
+    general: true,
+    supabase: false
   });
 
   // Property history management
@@ -891,6 +901,122 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                     </div>
                   </div>
                 )}
+              </CardContent>
+            </CollapsibleContent>
+          </Collapsible>
+        </Card>
+
+        {/* 🚀 SUPABASE Integration Card */}
+        <Card className="shadow-sm border border-green-200 rounded-lg bg-green-50/30">
+          <Collapsible 
+            open={expandedSections.supabase} 
+            onOpenChange={() => toggleSection('supabase')}
+          >
+            <CollapsibleTrigger asChild>
+              <CardHeader className="pb-3 cursor-pointer hover:bg-green-100/50 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Globe className="w-5 h-5 text-green-600" />
+                    <CardTitle className="text-base text-green-800">🚀 Supabase</CardTitle>
+                    <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
+                      Dados
+                    </Badge>
+                  </div>
+                  {expandedSections.supabase ? 
+                    <ChevronDown className="w-4 h-4 text-green-600" /> : 
+                    <ChevronRight className="w-4 h-4 text-green-600" />
+                  }
+                </div>
+              </CardHeader>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <CardContent className="pt-0 space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-medium text-green-800">Ativar Tracking Supabase</Label>
+                  <Switch
+                    checked={properties.enableSupabaseTracking !== false}
+                    onCheckedChange={(checked) => onPropertyChange('enableSupabaseTracking', checked)}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-medium text-green-800">Rastrear Respostas do Usuário</Label>
+                  <Switch
+                    checked={properties.trackUserResponses !== false}
+                    onCheckedChange={(checked) => onPropertyChange('trackUserResponses', checked)}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-medium text-green-800">Rastrear Analytics</Label>
+                  <Switch
+                    checked={properties.trackAnalytics !== false}
+                    onCheckedChange={(checked) => onPropertyChange('trackAnalytics', checked)}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-medium text-green-800">Auto-salvar Respostas</Label>
+                  <Switch
+                    checked={properties.autoSaveResponses !== false}
+                    onCheckedChange={(checked) => onPropertyChange('autoSaveResponses', checked)}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-medium text-green-800">Requerer Nome do Usuário</Label>
+                  <Switch
+                    checked={properties.requireUserName === true}
+                    onCheckedChange={(checked) => onPropertyChange('requireUserName', checked)}
+                  />
+                </div>
+
+                <div>
+                  <Label className="text-sm font-medium text-green-800">Categoria da Etapa</Label>
+                  <Select 
+                    value={properties.stepCategory || 'questao'} 
+                    onValueChange={(value) => onPropertyChange('stepCategory', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="intro">Introdução</SelectItem>
+                      <SelectItem value="questao">Questão</SelectItem>
+                      <SelectItem value="resultado">Resultado</SelectItem>
+                      <SelectItem value="oferta">Oferta</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label className="text-sm font-medium text-green-800">Categoria de Estilo (para questões)</Label>
+                  <Select 
+                    value={properties.styleCategory || ''} 
+                    onValueChange={(value) => onPropertyChange('styleCategory', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecionar categoria..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">Nenhuma</SelectItem>
+                      <SelectItem value="Visionário">🔮 Visionário</SelectItem>
+                      <SelectItem value="Estratégico">🎯 Estratégico</SelectItem>
+                      <SelectItem value="Executor">⚡ Executor</SelectItem>
+                      <SelectItem value="Inspirador">✨ Inspirador</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="bg-green-50 p-3 rounded-lg border border-green-200">
+                  <p className="text-xs text-green-700 mb-2 font-medium">💡 Configurações do Supabase:</p>
+                  <ul className="text-xs text-green-600 space-y-1">
+                    <li>• Tracking: Rastreia interações do usuário</li>
+                    <li>• Respostas: Salva dados das questões</li>
+                    <li>• Analytics: Coleta métricas de desempenho</li>
+                    <li>• Categoria: Define tipo de dados coletados</li>
+                  </ul>
+                </div>
               </CardContent>
             </CollapsibleContent>
           </Collapsible>

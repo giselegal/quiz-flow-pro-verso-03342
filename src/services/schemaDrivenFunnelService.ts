@@ -2,6 +2,8 @@ import type { BlockData } from '../components/editor/blocks';
 import { QuizDataAdapter } from './quizDataAdapter';
 import { supabase } from '../lib/supabase';
 import { CORRECT_QUIZ_QUESTIONS } from '../data/correctQuizQuestions';
+// 🚀 SUPABASE: Integração com serviço de dados do quiz
+import { quizSupabaseService } from './quizSupabaseService';
 
 // Usar as questões originais corrigidas
 const REAL_QUIZ_QUESTIONS = CORRECT_QUIZ_QUESTIONS;
