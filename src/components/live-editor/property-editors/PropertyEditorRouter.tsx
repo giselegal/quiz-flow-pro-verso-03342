@@ -13,14 +13,8 @@ import { FAQPropertyEditor } from './FAQPropertyEditor';
 import { TestimonialPropertyEditor } from './TestimonialPropertyEditor';
 import { PricingPropertyEditor } from './PricingPropertyEditor';
 import { GuaranteePropertyEditor } from './GuaranteePropertyEditor';
-import { ComparisonPropertyEditor } from './ComparisonPropertyEditor';
-import { NewsletterPropertyEditor } from './NewsletterPropertyEditor';
-import { FeatureGridPropertyEditor } from './FeatureGridPropertyEditor';
-import { SocialProofPropertyEditor } from './SocialProofPropertyEditor';
-import { ContactPropertyEditor } from './ContactPropertyEditor';
-import { StatsPropertyEditor } from './StatsPropertyEditor';
-import { CountdownPropertyEditor } from './CountdownPropertyEditor';
-import { ChecklistPropertyEditor } from './ChecklistPropertyEditor';
+import { HeaderPropertyEditor } from './HeaderPropertyEditor';
+import { HeroSectionPropertyEditor } from './HeroSectionPropertyEditor';
 import { StyleResultPropertyEditor } from './StyleResultPropertyEditor';
 
 interface PropertyEditorRouterProps {
@@ -65,6 +59,12 @@ export const PropertyEditorRouter: React.FC<PropertyEditorRouterProps> = ({
     case 'image':
       return <ImagePropertyEditor {...commonProps} />;
     
+    case 'header':
+      return <HeaderPropertyEditor {...commonProps} />;
+    
+    case 'hero-section':
+      return <HeroSectionPropertyEditor {...commonProps} />;
+    
     case 'button':
     case 'cta':
       return <CTAPropertyEditor {...commonProps} />;
@@ -78,60 +78,34 @@ export const PropertyEditorRouter: React.FC<PropertyEditorRouterProps> = ({
     case 'spacer':
       return <SpacerPropertyEditor {...commonProps} />;
     
+    case 'benefits':
     case 'benefitsList':
       return <BenefitsPropertyEditor {...commonProps} />;
     
     case 'faq':
       return <FAQPropertyEditor {...commonProps} />;
     
-    case 'multipleChoice':
-    case 'singleChoice':
+    case 'testimonials':
       return <TestimonialPropertyEditor {...commonProps} />;
     
-    case 'scale':
+    case 'pricing':
       return <PricingPropertyEditor {...commonProps} />;
     
-    case 'openEnded':
+    case 'guarantee':
       return <GuaranteePropertyEditor {...commonProps} />;
     
-    case 'date':
-      return <ComparisonPropertyEditor {...commonProps} />;
-    
-    case 'stageCover':
-      return <NewsletterPropertyEditor {...commonProps} />;
-    
-    case 'stageQuestion':
-      return <FeatureGridPropertyEditor {...commonProps} />;
-    
-    case 'stageResult':
-      return <SocialProofPropertyEditor {...commonProps} />;
-    
+    case 'style-result':
     case 'quizResult':
-      return <StyleResultPropertyEditor {...commonProps} />;
-    
-    case 'header':
-      return <ContactPropertyEditor {...commonProps} />;
-    
-    case 'section':
-      return <StatsPropertyEditor {...commonProps} />;
-    
-    case 'columns':
-      return <CountdownPropertyEditor {...commonProps} />;
-    
-    case 'choice':
-      return <ChecklistPropertyEditor {...commonProps} />;
-    
-    case 'result':
       return <StyleResultPropertyEditor {...commonProps} />;
     
     default:
       return (
         <div className="p-4 border border-[#B89B7A]/20 rounded-md bg-[#FAF9F7]">
           <p className="text-[#8F7A6A] text-center">
-            Editor de propriedades não implementado para: <strong>{component.type}</strong>
+            Editor de propriedades para: <strong>{component.type}</strong>
           </p>
           <p className="text-xs text-[#8F7A6A] text-center mt-2">
-            Este tipo de componente ainda não possui um editor específico.
+            Use os campos básicos abaixo para editar este componente.
           </p>
         </div>
       );
