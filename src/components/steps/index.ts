@@ -3,8 +3,25 @@
 
 import { getStep01Template } from './Step01Intro';
 import { getStep02Template } from './Step02Question01';
-// import { getStep03Template } from './Step03Question02';
-// ... outros imports quando criarmos
+import { getStep03Template } from './Step03Template';
+import { getStep04Template } from './Step04Template';
+import { getStep05Template } from './Step05Template';
+import { getStep06Template } from './Step06Template';
+import { getStep07Template } from './Step07Template';
+import { getStep08Template } from './Step08Template';
+import { getStep09Template } from './Step09Template';
+import { getStep10Template } from './Step10Template';
+import { getStep11Template } from './Step11Template';
+import { getStep12Template } from './Step12Template';
+import { getStep13Template } from './Step13Template';
+import { getStep14Template } from './Step14Template';
+import { getStep15Template } from './Step15Template';
+import { getStep16Template } from './Step16Template';
+import { getStep17Template } from './Step17Template';
+import { getStep18Template } from './Step18Template';
+import { getStep19Template } from './Step19Template';
+import { getStep20Template } from './Step20Template';
+import { getStep21Template } from './Step21Template';
 
 export interface StepTemplate {
   id: string;
@@ -16,164 +33,154 @@ export interface StepTemplate {
   multiSelect?: number;
 }
 
-// 🗺️ MAPA COMPLETO DAS 21 ETAPAS
-export const STEP_TEMPLATES: Record<string, StepTemplate> = {
-  'etapa-1': {
-    id: 'etapa-1',
-    name: 'Introdução',
-    type: 'intro',
-    description: 'Apresentação do Quiz de Estilo',
+// ✅ MAPEAMENTO COMPLETO: 21 ETAPAS DO QUIZ
+export const STEP_TEMPLATES = {
+  1: {
+    id: "1",
+    name: "Bem-vindo ao Quiz",
+    type: "intro" as const,
+    description: "Página inicial de apresentação do quiz",
     getTemplate: getStep01Template
   },
-  'etapa-2': {
-    id: 'etapa-2',
-    name: 'Q1: Tipo de Roupa',
-    type: 'question',
-    description: 'QUAL O SEU TIPO DE ROUPA FAVORITA?',
-    multiSelect: 3,
+  2: {
+    id: "2",
+    name: "Questão 1: Setor de Atuação",
+    type: "question" as const,
+    description: "Identificação do setor principal de atuação da empresa",
     getTemplate: getStep02Template
   },
-  'etapa-3': {
-    id: 'etapa-3',
-    name: 'Q2: Personalidade',
-    type: 'question',
-    description: 'RESUMA A SUA PERSONALIDADE:',
-    multiSelect: 3,
-    getTemplate: () => [] // TODO: Criar Step03Question02.tsx
+  3: {
+    id: "3",
+    name: "Questão 2: Faturamento Mensal",
+    type: "question" as const,
+    description: "Definição da faixa de faturamento mensal da empresa",
+    getTemplate: getStep03Template
   },
-  'etapa-4': {
-    id: 'etapa-4',
-    name: 'Q3: Visual',
-    type: 'question',
-    description: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?',
-    multiSelect: 3,
-    getTemplate: () => [] // TODO: Criar Step04Question03.tsx
+  4: {
+    id: "4",
+    name: "Questão 3: Equipe",
+    type: "question" as const,
+    description: "Identificação do tamanho da equipe de trabalho",
+    getTemplate: getStep04Template
   },
-  'etapa-5': {
-    id: 'etapa-5',
-    name: 'Q4: Detalhes',
-    type: 'question',
-    description: 'QUAIS DETALHES VOCÊ GOSTA?',
-    multiSelect: 3,
-    getTemplate: () => [] // TODO: Criar Step05Question04.tsx
+  5: {
+    id: "5",
+    name: "Questão 4: Tempo no Mercado",
+    type: "question" as const,
+    description: "Definição do tempo de atuação no mercado",
+    getTemplate: getStep05Template
   },
-  'etapa-6': {
-    id: 'etapa-6',
-    name: 'Q5: Estampas',
-    type: 'question',
-    description: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?',
-    multiSelect: 3,
-    getTemplate: () => [] // TODO: Criar Step06Question05.tsx
+  6: {
+    id: "6",
+    name: "Questão 5: Principal Desafio",
+    type: "question" as const,
+    description: "Identificação do principal desafio enfrentado",
+    getTemplate: getStep06Template
   },
-  'etapa-7': {
-    id: 'etapa-7',
-    name: 'Q6: Casacos',
-    type: 'question',
-    description: 'QUAL CASACO É SEU FAVORITO?',
-    multiSelect: 3,
-    getTemplate: () => [] // TODO: Criar Step07Question06.tsx
+  7: {
+    id: "7",
+    name: "Questão 6: Estratégia Atual",
+    type: "question" as const,
+    description: "Definição da estratégia de marketing atual",
+    getTemplate: getStep07Template
   },
-  'etapa-8': {
-    id: 'etapa-8',
-    name: 'Q7: Calças',
-    type: 'question',
-    description: 'QUAL SUA CALÇA FAVORITA?',
-    multiSelect: 3,
-    getTemplate: () => [] // TODO: Criar Step08Question07.tsx
+  8: {
+    id: "8",
+    name: "Questão 7: Orçamento Marketing",
+    type: "question" as const,
+    description: "Identificação do orçamento destinado ao marketing",
+    getTemplate: getStep08Template
   },
-  'etapa-9': {
-    id: 'etapa-9',
-    name: 'Q8: Sapatos',
-    type: 'question',
-    description: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?',
-    multiSelect: 3,
-    getTemplate: () => [] // TODO: Criar Step09Question08.tsx
+  9: {
+    id: "9",
+    name: "Questão 8: Ferramentas Utilizadas",
+    type: "question" as const,
+    description: "Definição das ferramentas de marketing utilizadas",
+    getTemplate: getStep09Template
   },
-  'etapa-10': {
-    id: 'etapa-10',
-    name: 'Q9: Acessórios',
-    type: 'question',
-    description: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?',
-    multiSelect: 3,
-    getTemplate: () => [] // TODO: Criar Step10Question09.tsx
+  10: {
+    id: "10",
+    name: "Questão 9: Metas Principais",
+    type: "question" as const,
+    description: "Identificação das principais metas do negócio",
+    getTemplate: getStep10Template
   },
-  'etapa-11': {
-    id: 'etapa-11',
-    name: 'Q10: Tecidos',
-    type: 'question',
-    description: 'O QUE MAIS VALORIZAS NOS ACESSÓRIOS?',
-    multiSelect: 3,
-    getTemplate: () => [] // TODO: Criar Step11Question10.tsx
+  11: {
+    id: "11",
+    name: "Questão 10: Maior Frustração",
+    type: "question" as const,
+    description: "Definição da maior frustração com marketing atual",
+    getTemplate: getStep11Template
   },
-  'etapa-12': {
-    id: 'etapa-12',
-    name: 'Transição',
-    type: 'transition',
-    description: 'Análise dos resultados parciais',
-    getTemplate: () => [] // TODO: Criar Step12Transition.tsx
+  12: {
+    id: "12",
+    name: "Meio do Caminho!",
+    type: "transition" as const,
+    description: "Página de transição motivacional no meio do quiz",
+    getTemplate: getStep12Template
   },
-  'etapa-13': {
-    id: 'etapa-13',
-    name: 'S1: Dificuldades',
-    type: 'strategic',
-    description: 'Principal dificuldade com roupas',
-    getTemplate: () => [] // TODO: Criar Step13Strategic01.tsx
+  13: {
+    id: "13",
+    name: "Questão 11: Canais de Vendas",
+    type: "question" as const,
+    description: "Identificação dos principais canais de vendas",
+    getTemplate: getStep13Template
   },
-  'etapa-14': {
-    id: 'etapa-14',
-    name: 'S2: Problemas',
-    type: 'strategic',
-    description: 'Problemas frequentes de estilo',
-    getTemplate: () => [] // TODO: Criar Step14Strategic02.tsx
+  14: {
+    id: "14",
+    name: "Questão 12: Processo de Vendas",
+    type: "question" as const,
+    description: "Definição do processo de vendas atual",
+    getTemplate: getStep14Template
   },
-  'etapa-15': {
-    id: 'etapa-15',
-    name: 'S3: Frequência',
-    type: 'strategic',
-    description: '"Com que roupa eu vou?" - frequência',
-    getTemplate: () => [] // TODO: Criar Step15Strategic03.tsx
+  15: {
+    id: "15",
+    name: "Questão 13: Acompanhamento Leads",
+    type: "question" as const,
+    description: "Identificação do processo de acompanhamento de leads",
+    getTemplate: getStep15Template
   },
-  'etapa-16': {
-    id: 'etapa-16',
-    name: 'S4: Guia de Estilo',
-    type: 'strategic',
-    description: 'O que valoriza em um guia',
-    getTemplate: () => [] // TODO: Criar Step16Strategic04.tsx
+  16: {
+    id: "16",
+    name: "Questão 14: CRM Utilizado",
+    type: "question" as const,
+    description: "Definição do CRM ou ferramenta de gestão de clientes",
+    getTemplate: getStep16Template
   },
-  'etapa-17': {
-    id: 'etapa-17',
-    name: 'S5: Investimento',
-    type: 'strategic',
-    description: 'Quanto investiria em consultoria',
-    getTemplate: () => [] // TODO: Criar Step17Strategic05.tsx
+  17: {
+    id: "17",
+    name: "Questão 15: Conversão de Leads",
+    type: "question" as const,
+    description: "Identificação da taxa de conversão de leads",
+    getTemplate: getStep17Template
   },
-  'etapa-18': {
-    id: 'etapa-18',
-    name: 'S6: Ajuda Imediata',
-    type: 'strategic',
-    description: 'O que mais precisa de ajuda',
-    getTemplate: () => [] // TODO: Criar Step18Strategic06.tsx
+  18: {
+    id: "18",
+    name: "Questão 16: Ticket Médio",
+    type: "question" as const,
+    description: "Definição do ticket médio de vendas",
+    getTemplate: getStep18Template
   },
-  'etapa-19': {
-    id: 'etapa-19',
-    name: 'Transição Final',
-    type: 'transition',
-    description: 'Analisando suas respostas...',
-    getTemplate: () => [] // TODO: Criar Step19TransitionFinal.tsx
+  19: {
+    id: "19",
+    name: "Questão 17: Automação",
+    type: "question" as const,
+    description: "Identificação do nível de automação de processos",
+    getTemplate: getStep19Template
   },
-  'etapa-20': {
-    id: 'etapa-20',
-    name: 'Resultado',
-    type: 'result',
-    description: 'Página de resultado personalizada',
-    getTemplate: () => [] // TODO: Criar Step20Results.tsx
+  20: {
+    id: "20",
+    name: "Questão 18: Investimento em Marketing",
+    type: "question" as const,
+    description: "Definição da disposição para investir em marketing",
+    getTemplate: getStep20Template
   },
-  'etapa-21': {
-    id: 'etapa-21',
-    name: 'Oferta',
-    type: 'offer',
-    description: 'Apresentação da oferta final',
-    getTemplate: () => [] // TODO: Criar Step21Offer.tsx
+  21: {
+    id: "21",
+    name: "Resultado Final",
+    type: "result" as const,
+    description: "Página de resultado personalizado do quiz",
+    getTemplate: getStep21Template
   }
 };
 
