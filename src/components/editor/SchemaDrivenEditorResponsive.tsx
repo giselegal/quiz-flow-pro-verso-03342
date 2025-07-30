@@ -18,6 +18,7 @@ import { StepsPanel } from './StepsPanel';
 import { ComponentsPanel } from './ComponentsPanel';
 import { schemaDrivenFunnelService } from '../../services/schemaDrivenFunnelService';
 import { useToast } from '../../hooks/use-toast';
+import { generateRealQuestionTemplates } from '../../data/realQuizTemplates';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -1216,78 +1217,57 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         // ==========================================
         // ETAPAS 2-11: QUESTÕES PRINCIPAIS (10 QUESTÕES)
         // ==========================================
-        const questionIndex = stepIndex - 1;
-        const currentProgress = 5 + (questionIndex + 1) * 5;
+        const questionIndex = stepIndex - 1; // Ajustar para índice 0-9
         
-        defaultBlocks = [
-          {
-            type: 'quiz-intro-header',
-            properties: {
-              logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-              logoAlt: 'Logo Gisele Galvão',
-              logoWidth: 96,
-              logoHeight: 96,
-              progressValue: currentProgress,
-              progressMax: 100,
-              showBackButton: true
+        // Gerar template real da questão usando generateRealQuestionTemplates
+        const questionTemplates = generateRealQuestionTemplates();
+        const questionTemplate = questionTemplates[questionIndex];
+        
+        if (questionTemplate) {
+          console.log(`📝 Carregando questão ${questionIndex + 1}:`, questionTemplate.title);
+          defaultBlocks = questionTemplate.blocks;
+        } else {
+          console.error(`❌ Template da questão ${questionIndex + 1} não encontrado`);
+          // Fallback para template genérico
+          const currentProgress = 5 + (questionIndex + 1) * 5;
+          
+          defaultBlocks = [
+            {
+              type: 'quiz-intro-header',
+              properties: {
+                logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+                logoAlt: 'Logo Gisele Galvão',
+                logoWidth: 96,
+                logoHeight: 96,
+                progressValue: currentProgress,
+                progressMax: 100,
+                showBackButton: true
+              }
+            },
+            {
+              type: 'heading-inline',
+              properties: {
+                content: `Questão ${questionIndex + 1} - Erro ao carregar`,
+                level: 'h2',
+                fontSize: 'text-2xl',
+                fontWeight: 'font-bold',
+                textAlign: 'text-center',
+                color: '#432818',
+                marginBottom: 8
+              }
+            },
+            {
+              type: 'text-inline',
+              properties: {
+                content: 'Template não encontrado',
+                fontSize: 'text-sm',
+                textAlign: 'text-center',
+                color: '#6B7280',
+                marginBottom: 24
+              }
             }
-          },
-          {
-            type: 'heading-inline',
-            properties: {
-              content: `Questão ${questionIndex + 1} - Como você se veste?`,
-              level: 'h2',
-              fontSize: 'text-2xl',
-              fontWeight: 'font-bold',
-              textAlign: 'text-center',
-              color: '#432818',
-              marginBottom: 8
-            }
-          },
-          {
-            type: 'text-inline',
-            properties: {
-              content: `Questão ${questionIndex + 1} de 10`,
-              fontSize: 'text-sm',
-              textAlign: 'text-center',
-              color: '#6B7280',
-              marginBottom: 24
-            }
-          },
-          {
-            type: 'options-grid',
-            properties: {
-              options: [
-                { id: '1', text: 'Prefiro roupas clássicas e atemporais', value: 'classico', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp' },
-                { id: '2', text: 'Gosto de tendências modernas', value: 'moderno', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_moderno.webp' },
-                { id: '3', text: 'Valorizo conforto acima de tudo', value: 'casual', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_casual.webp' },
-                { id: '4', text: 'Adoro peças românticas e delicadas', value: 'romantico', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_romantico.webp' }
-              ],
-              columns: 2,
-              showImages: true,
-              imageSize: 'large',
-              multipleSelection: false,
-              maxSelections: 1,
-              minSelections: 1,
-              validationMessage: 'Selecione 1 opção',
-              gridGap: 16,
-              responsiveColumns: true
-            }
-          },
-          {
-            type: 'button-inline',
-            properties: {
-              text: 'Continuar',
-              variant: 'primary',
-              size: 'large',
-              fullWidth: true,
-              backgroundColor: '#B89B7A',
-              textColor: '#ffffff',
-              disabled: true,
-              requiresValidSelection: true
-            }
-          }
-        ];
+          ];
+        }
       } else if (stepIndex === 11) {
         // ==========================================
         // ETAPA 12: TRANSIÇÃO PRINCIPAL

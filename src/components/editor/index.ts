@@ -11,6 +11,8 @@ export { default as EditorLayout } from './EditorLayout';
 export { default as QuizEditorSteps } from './QuizEditorSteps';
 export { default as SchemaDrivenEditorResponsive } from './SchemaDrivenEditorResponsive';
 export { default as EnhancedEditor } from './EnhancedEditor';
+export { default as EditorWithQuizLogic } from './EditorWithQuizLogic';
+export { default as SalesPageEditor } from './SalesPageEditor';
 
 // Componentes com named exports
 export { PropertyPanel } from './PropertyPanel';
