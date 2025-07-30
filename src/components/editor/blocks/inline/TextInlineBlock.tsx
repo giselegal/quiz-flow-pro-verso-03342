@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
+import { cn } from '../../../../lib/utils';
+import type { BlockComponentProps } from '../../../../types/blocks';
 
 /**
  * TextInlineBlock - Componente modular inline horizontal
@@ -50,7 +50,18 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     small: 'text-xs sm:text-sm',
     medium: 'text-sm sm:text-base md:text-lg',
     large: 'text-base sm:text-lg md:text-xl lg:text-2xl',
-    xlarge: 'text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl'
+    xlarge: 'text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl',
+    // Suporte direto para classes Tailwind
+    'text-xs': 'text-xs',
+    'text-sm': 'text-sm',
+    'text-base': 'text-base',
+    'text-lg': 'text-lg',
+    'text-xl': 'text-xl',
+    'text-2xl': 'text-2xl',
+    'text-3xl': 'text-3xl',
+    'text-4xl': 'text-4xl',
+    'text-5xl': 'text-5xl',
+    'text-6xl': 'text-6xl'
   };
 
   // Pesos de fonte
