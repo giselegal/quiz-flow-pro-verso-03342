@@ -1011,6 +1011,57 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     }
   }, [steps, loadStepSpecificBlocks, loadQuestionTemplate, loadStrategicQuestionTemplate]);
 
+  // Função para carregar uma etapa individual com dados específicos
+  const handleLoadIndividualStep = useCallback((stepId: string) => {
+    const step = steps.find(s => s.id === stepId);
+    if (!step) return;
+
+    console.log(`🎯 Carregando etapa individual: ${stepId} (${step.name})`);
+    
+    // Limpar apenas os blocos da etapa atual
+    blocks.forEach(block => {
+      deleteBlock(block.id);
+    });
+
+    // Carregar template específico para a etapa
+    setTimeout(() => {
+      if (step.type === 'question') {
+        const questionNumber = parseInt(stepId.replace('etapa-', '')) - 2;
+        if (questionNumber >= 1 && questionNumber <= 10) {
+          loadQuestionTemplate(stepId, questionNumber);
+          
+          toast({
+            title: `Questão ${questionNumber} Carregada!`,
+            description: `${step.name} foi carregada com template específico.`,
+          });
+          return;
+        }
+      } else if (step.type === 'strategic') {
+        const strategicNumber = parseInt(stepId.replace('etapa-', '')) - 13;
+        if (strategicNumber >= 1 && strategicNumber <= 6) {
+          loadStrategicQuestionTemplate(stepId, strategicNumber);
+          
+          toast({
+            title: `Questão Estratégica ${strategicNumber} Carregada!`,
+            description: `${step.name} foi carregada com template específico.`,
+          });
+          return;
+        }
+      }
+      
+      // Fallback para templates genéricos
+      loadStepSpecificBlocks(stepId, step.type);
+      
+      toast({
+        title: `${step.name} Carregada!`,
+        description: `Etapa carregada com template ${step.type}.`,
+      });
+    }, 100);
+
+    // Selecionar a etapa carregada
+    setSelectedStepId(stepId);
+  }, [steps, blocks, deleteBlock, loadQuestionTemplate, loadStrategicQuestionTemplate, loadStepSpecificBlocks, toast, setSelectedStepId]);
+
   // Função para carregar o template completo das 21 etapas
   const handleLoadComplete21StepsTemplate = useCallback(async () => {
     try {
