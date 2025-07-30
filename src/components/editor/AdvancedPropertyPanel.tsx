@@ -44,13 +44,33 @@ const mapEditorTypeToComponentType = (type: string) => {
 
 export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
   selectedBlockId,
-  blocks,
+  blocks = [], // Default to empty array
   onClose,
   onUpdate,
   onDelete,
 }) => {
   console.log('🔍 [AdvancedPropertyPanel] selectedBlockId:', selectedBlockId);
   console.log('🔍 [AdvancedPropertyPanel] blocks:', blocks);
+
+  // Early return if blocks is not an array
+  if (!Array.isArray(blocks)) {
+    console.warn('🚨 [AdvancedPropertyPanel] blocks is not an array:', blocks);
+    return (
+      <div className="h-full bg-white flex flex-col">
+        <div className="p-4 border-b border-[#B89B7A]/20 flex justify-between items-center">
+          <h2 className="font-medium text-[#432818]">Propriedades</h2>
+          <Button variant="ghost" size="sm" onClick={onClose}>
+            <X className="w-4 h-4 text-[#8F7A6A]" />
+          </Button>
+        </div>
+        <div className="flex-1 flex items-center justify-center p-6 text-center">
+          <p className="text-[#8F7A6A]">
+            Erro: dados de blocos inválidos
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (!selectedBlockId) {
     return (
