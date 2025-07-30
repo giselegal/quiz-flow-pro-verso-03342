@@ -1,8 +1,8 @@
 // 🎯 CENTRALIZADOR DE TODAS AS ETAPAS - NOVA ARQUITETURA
 // Este arquivo mapeia cada etapa para seu respectivo template
 
-import { getStep01Template } from './Step01Intro';
-import { getStep02Template } from './Step02Question01';
+import { getStep01Template } from './Step01Template';
+import { getStep02Template } from './Step02Template';
 import { getStep03Template } from './Step03Template';
 import { getStep04Template } from './Step04Template';
 import { getStep05Template } from './Step05Template';
