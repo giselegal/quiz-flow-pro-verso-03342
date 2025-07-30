@@ -241,7 +241,7 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'quiz-intro-header': () => <VerticalCanvasHeaderBlock {...commonProps} />,
       'vertical-canvas-header': () => <VerticalCanvasHeaderBlock {...commonProps} />,
       'loading-animation': () => <LoadingAnimationBlock {...commonProps} />,
-      // 'options-grid': () => <OptionsGridBlock {...commonProps} />, // Temporariamente desabilitado
+      'options-grid': () => <OptionsGridBlock {...commonProps} />,
       'quiz-question': () => <QuizQuestionBlock {...commonProps} />,
       'quiz-progress': () => <QuizProgressBlock {...commonProps} />,
       

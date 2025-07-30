@@ -271,6 +271,12 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const [steps, setSteps] = useState(initialQuiz21Steps);
   const [selectedStepId, setSelectedStepId] = useState<string>('etapa-1');
 
+  // 🚀 SUPABASE: Dados do quiz atual para integração
+  const currentStep = steps.find(step => step.id === selectedStepId);
+  const currentStepNumber = currentStep?.order || 1;
+  const currentQuizSessionId = 'quiz-session-' + Date.now(); // Gerar ID real da sessão
+  const currentUserName = 'Editor User'; // Pegar nome real do usuário
+
   // Salvar automaticamente o estado das etapas
   useEffect(() => {
     localStorage.setItem('quiz-steps', JSON.stringify(steps));
@@ -2175,6 +2181,9 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                           >
                             <UniversalBlockRenderer
                               block={blockData}
+                              stepNumber={currentStepNumber}
+                              quizSessionId={currentQuizSessionId}
+                              userName={currentUserName}
                             />
                           </div>
                         );
@@ -2348,6 +2357,9 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                                 onClick={() => handleBlockClick(block.id)}
                                 onSaveInline={handleSaveInline}
                                 disabled={isPreviewing}
+                                stepNumber={currentStepNumber}
+                                quizSessionId={currentQuizSessionId}
+                                userName={currentUserName}
                               />
                             </div>
                           );
