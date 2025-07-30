@@ -1087,7 +1087,7 @@ export const blockDefinitions: BlockDefinition[] = [
   },
 
   {
-    type: 'text-inline',
+    type: 'text-inline-basic',
     name: 'Texto Inline',
     description: 'Texto inline para conteúdo dentro de outros elementos',
     icon: 'Type',
@@ -1139,7 +1139,7 @@ export const blockDefinitions: BlockDefinition[] = [
   },
 
   {
-    type: 'heading-inline',
+    type: 'heading-inline-basic',
     name: 'Título Inline',
     description: 'Título inline para cabeçalhos dentro de outros elementos',
     icon: 'Heading1',
@@ -1299,7 +1299,7 @@ export const blockDefinitions: BlockDefinition[] = [
   },
 
   {
-    type: 'button-inline',
+    type: 'button-inline-basic',
     name: 'Botão Inline',
     description: 'Botão inline para ações dentro de outros elementos',
     icon: 'RectangleHorizontal',
@@ -2339,7 +2339,7 @@ export const blockDefinitions: BlockDefinition[] = [
 
   // COMPONENTES INLINE BÁSICOS
   {
-    type: 'text-inline',
+    type: 'text-inline-modern',
     name: 'Texto Moderno',
     description: 'Texto responsivo com tipografia moderna',
     icon: 'Type',
@@ -2389,7 +2389,7 @@ export const blockDefinitions: BlockDefinition[] = [
   },
 
   {
-    type: 'heading-inline',
+    type: 'heading-inline-elegant',
     name: 'Título Elegante',
     description: 'Títulos com design moderno e destaque de palavras',
     icon: 'Heading',
@@ -2439,7 +2439,7 @@ export const blockDefinitions: BlockDefinition[] = [
   },
 
   {
-    type: 'button-inline',
+    type: 'button-inline-elegant',
     name: 'Botão Elegante',
     description: 'Botão responsivo com design moderno',
     icon: 'MousePointer',
@@ -2558,65 +2558,7 @@ export const blockDefinitions: BlockDefinition[] = [
     }
   },
 
-  {
-    type: 'quiz-start-page',
-    name: 'Página Inicial do Quiz',
-    description: 'Página de apresentação e início do quiz com coleta de nome',
-    icon: 'Play',
-    category: 'Quiz',
-    propertiesSchema: [
-      {
-        key: 'title',
-        label: 'Título Principal',
-        type: 'text',
-        defaultValue: 'Etapa 1: Descubra Seu Estilo Pessoal Único'
-      },
-      {
-        key: 'subtitle',
-        label: 'Subtítulo',
-        type: 'text',
-        defaultValue: 'Chega de guarda-roupa lotado e sensação de "não tenho nada para vestir"'
-      },
-      {
-        key: 'description',
-        label: 'Descrição',
-        type: 'textarea',
-        defaultValue: 'Um quiz personalizado que vai te ajudar a descobrir seu estilo predominante e como aplicá-lo no dia a dia com confiança.'
-      },
-      {
-        key: 'buttonText',
-        label: 'Texto do Botão',
-        type: 'text',
-        defaultValue: 'Começar Meu Quiz de Estilo'
-      },
-      {
-        key: 'showNameInput',
-        label: 'Mostrar Campo de Nome',
-        type: 'boolean',
-        defaultValue: true
-      },
-      {
-        key: 'nameInputPlaceholder',
-        label: 'Placeholder do Nome',
-        type: 'text',
-        defaultValue: 'Digite seu primeiro nome'
-      }
-    ],
-    defaultProperties: {
-      title: 'Etapa 1: Descubra Seu Estilo Pessoal Único',
-      subtitle: 'Chega de guarda-roupa lotado e sensação de "não tenho nada para vestir"',
-      description: 'Um quiz personalizado que vai te ajudar a descobrir seu estilo predominante e como aplicá-lo no dia a dia com confiança.',
-      buttonText: 'Começar Meu Quiz de Estilo',
-      showNameInput: true,
-      nameInputPlaceholder: 'Digite seu primeiro nome',
-      benefits: [
-        '✓ Descubra seu estilo predominante em apenas 5 minutos',
-        '✓ Receba dicas personalizadas para seu perfil único',
-        '✓ Aprenda a criar looks que combinam 100% com você',
-        '✓ Ganhe confiança para se vestir todos os dias'
-      ]
-    }
-  },
+
 
   {
     type: 'script',

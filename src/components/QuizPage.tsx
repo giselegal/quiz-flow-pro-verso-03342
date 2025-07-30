@@ -415,7 +415,11 @@ const QuizPage: React.FC = () => {
                 ) : (
                   actualCurrentQuestionData && ( 
                     <motion.div
-                      key={actualCurrentQuestionData.id || 'content'} 
+                      key={
+                        actualCurrentQuestionData.id 
+                          ? `question-${actualCurrentQuestionData.id}` 
+                          : `content-${showingStrategicQuestions ? 'strategic' : 'normal'}-${showingStrategicQuestions ? currentStrategicQuestionIndex : currentQuestionIndex}`
+                      } 
                       initial={{ opacity: 0, y: 20 }} 
                       animate={{ opacity: 1, y: 0 }} 
                       exit={{ opacity: 0, y: -20 }}

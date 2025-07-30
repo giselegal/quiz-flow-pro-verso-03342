@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface StaggeredOptionAnimationsProps {
@@ -15,6 +15,7 @@ const StaggeredOptionAnimations: React.FC<StaggeredOptionAnimationsProps> = ({
   className = "grid gap-3 h-full"
 }) => {
   const [showOptions, setShowOptions] = useState(false);
+  const instanceId = useRef(`options-${Math.random().toString(36).substr(2, 9)}`).current;
 
   useEffect(() => {
     if (isVisible) {
@@ -75,7 +76,7 @@ const StaggeredOptionAnimations: React.FC<StaggeredOptionAnimationsProps> = ({
     <AnimatePresence mode="wait">
       {showOptions && (
         <motion.div
-          key={questionId || 'options'}
+          key={questionId || instanceId}
           variants={containerVariants}
           initial="hidden"
           animate="visible"

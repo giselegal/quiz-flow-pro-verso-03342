@@ -188,7 +188,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                   <div className="space-y-2">
                     <Label>Opções</Label>
                     {component.data.options && component.data.options.map((option, index) => (
-                      <div key={index} className="flex gap-2 mb-2">
+                      <div key={`${component.id}-option-${index}`} className="flex gap-2 mb-2">
                         <Input 
                           value={option} 
                           onChange={(e) => {
