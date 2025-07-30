@@ -42,6 +42,7 @@ interface StepsPanelProps {
   onStepDuplicate: (stepId: string) => void;
   onStepReorder: (draggedId: string, targetId: string) => void;
   onAddBlocksToStep?: (stepId: string, blocks: any[]) => void;
+  onPopulateStep?: (stepId: string) => void;
   className?: string;
 }
 
@@ -55,6 +56,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
   onStepDuplicate,
   onStepReorder,
   onAddBlocksToStep,
+  onPopulateStep,
   className = ''
 }) => {
   const [editingStepId, setEditingStepId] = useState<string | null>(null);
@@ -191,8 +193,28 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                         </div>
                       </div>
                       <p className="text-xs text-gray-500 mt-1">
-                        Etapa {index + 1} • {step.blocksCount} componente{step.blocksCount !== 1 ? 's' : ''}
+                        {step.type && (
+                          <span className="inline-block px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-700 mr-2">
+                            {step.type === 'intro' ? '🚀 Intro' :
+                             step.type === 'name-input' ? '👤 Nome' :
+                             step.type === 'question' ? '❓ Questão' :
+                             step.type === 'strategic' ? '🎯 Estratégica' :
+                             step.type === 'transition' ? '🔄 Transição' :
+                             step.type === 'result' ? '🏆 Resultado' :
+                             step.type === 'offer' ? '💰 Oferta' :
+                             step.type}
+                          </span>
+                        )}
+                        {step.blocksCount} componente{step.blocksCount !== 1 ? 's' : ''}
+                        {step.multiSelect && (
+                          <span className="ml-2 text-purple-600">• Seleção múltipla: {step.multiSelect}</span>
+                        )}
                       </p>
+                      {step.description && (
+                        <p className="text-xs text-gray-400 mt-1 italic truncate">
+                          {step.description}
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>
@@ -216,6 +238,12 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                           <Edit2 className="w-4 h-4 mr-2" />
                           Renomear
                         </DropdownMenuItem>
+                        {onPopulateStep && step.type && (
+                          <DropdownMenuItem onClick={() => onPopulateStep(step.id)}>
+                            <Plus className="w-4 h-4 mr-2" />
+                            Popular Etapa
+                          </DropdownMenuItem>
+                        )}
                         <DropdownMenuItem onClick={() => onStepDuplicate(step.id)}>
                           <Copy className="w-4 h-4 mr-2" />
                           Duplicar
