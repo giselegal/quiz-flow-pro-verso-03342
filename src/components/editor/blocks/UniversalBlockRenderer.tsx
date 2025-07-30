@@ -272,6 +272,17 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'decorative-bar-inline': () => <SpacerBlock {...commonProps} />, // Barra decorativa
       'legal-notice-inline': () => <TextInlineBlock {...commonProps} />, // Aviso legal como texto
       
+      // === COMPONENTES DA PÁGINA DE RESULTADO (STEP 20) ===
+      'quiz-result-primary-style-card': () => <ResultCardInlineBlock {...commonProps} />,
+      'secondary-styles-section': () => <TestimonialsGridBlock {...commonProps} />,
+      'transformation-before-after': () => <BeforeAfterInlineBlock {...commonProps} />,
+      'motivation-section': () => <TextInlineBlock {...commonProps} />,
+      'bonus-section': () => <BonusListInlineBlock {...commonProps} />,
+      'result-page-cta-pricing': () => <PricingCardInlineBlock {...commonProps} />,
+      'mentor-trust-section': () => <TestimonialCardInlineBlock {...commonProps} />,
+      'result-page-final-offer': () => <CTAInlineBlock {...commonProps} />,
+      'secure-purchase-badges': () => <BadgeInlineBlock {...commonProps} />,
+      
       // === COMPONENTES ETAPA 20/21 ===
       'quiz-offer-pricing-inline': () => <PricingCardInlineBlock {...commonProps} />, // Card de preços
       'divider-inline': () => <SpacerBlock {...commonProps} />, // Divisor
