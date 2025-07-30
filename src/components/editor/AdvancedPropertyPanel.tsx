@@ -16,6 +16,32 @@ interface AdvancedPropertyPanelProps {
   onDelete: (id: string) => void;
 }
 
+// Map EditorBlock types to QuizComponentData types
+const mapEditorTypeToComponentType = (type: string) => {
+  const typeMap: Record<string, string> = {
+    'headline': 'headline',
+    'text': 'text', 
+    'image': 'image',
+    'header': 'header',
+    'hero-section': 'hero-section',
+    'benefits': 'benefits',
+    'pricing': 'pricing',
+    'guarantee': 'guarantee',
+    'cta': 'cta',
+    'button': 'button',
+    'testimonials': 'testimonials',
+    'style-result': 'style-result',
+    'secondary-styles': 'secondary-styles',
+    'products': 'products',
+    'spacer': 'spacer',
+    'video': 'video',
+    'divider': 'divider',
+    'faq': 'faq'
+  };
+  
+  return typeMap[type] || type;
+};
+
 export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
   selectedBlockId,
   blocks,
@@ -23,6 +49,9 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
   onUpdate,
   onDelete,
 }) => {
+  console.log('🔍 [AdvancedPropertyPanel] selectedBlockId:', selectedBlockId);
+  console.log('🔍 [AdvancedPropertyPanel] blocks:', blocks);
+
   if (!selectedBlockId) {
     return (
       <div className="h-full bg-white flex flex-col">
@@ -39,6 +68,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
   }
 
   const selectedBlock = blocks.find(block => block.id === selectedBlockId);
+  console.log('🔍 [AdvancedPropertyPanel] selectedBlock:', selectedBlock);
 
   if (!selectedBlock) {
     return (
@@ -68,12 +98,16 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
       case 'benefits': return 'Benefícios';
       case 'pricing': return 'Preço';
       case 'guarantee': return 'Garantia';
-      case 'cta': return 'Call to Action';
+      case 'cta': 
+      case 'button': return 'Call to Action';
       case 'testimonials': return 'Depoimentos';
       case 'style-result': return 'Resultado do Estilo';
       case 'secondary-styles': return 'Estilos Secundários';
       case 'products': return 'Produtos';
       case 'spacer': return 'Espaçador';
+      case 'video': return 'Vídeo';
+      case 'divider': return 'Divisória';
+      case 'faq': return 'FAQ';
       default: return selectedBlock.type.charAt(0).toUpperCase() + selectedBlock.type.slice(1);
     }
   };
@@ -81,21 +115,29 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
   // Convert EditorBlock to QuizComponentData format for PropertyEditorRouter
   const componentData = {
     id: selectedBlock.id,
-    type: selectedBlock.type,
-    data: selectedBlock.content,
-    style: selectedBlock.content.style || {},
+    type: mapEditorTypeToComponentType(selectedBlock.type),
+    data: selectedBlock.content || {},
+    style: selectedBlock.content?.style || {},
     order: selectedBlock.order || 0
   };
 
+  console.log('🔍 [AdvancedPropertyPanel] componentData:', componentData);
+
   const handleUpdate = (id: string, updates: any) => {
-    onUpdate(id, {
+    console.log('🔍 [AdvancedPropertyPanel] handleUpdate called with:', { id, updates });
+    
+    // Merge the updates with existing content
+    const newContent = {
       ...selectedBlock.content,
       ...updates.data,
       style: {
-        ...selectedBlock.content.style,
+        ...selectedBlock.content?.style,
         ...updates.style
       }
-    });
+    };
+    
+    console.log('🔍 [AdvancedPropertyPanel] calling onUpdate with:', newContent);
+    onUpdate(id, newContent);
   };
 
   return (
