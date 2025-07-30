@@ -162,10 +162,6 @@ export const getStep02Template = () => {
 };
 
 export default Step02Question01;
-                                                                                                                                                                                                                                                      marginBottom: 24
-                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                },
-                                                                                                                                                                                                                                                                    {
                                                                                                                                                                                                                                                                           type: 'options-grid',
                                                                                                                                                                                                                                                                                 properties: {
                                                                                                                                                                                                                                                                                         questionId: 'q1',
