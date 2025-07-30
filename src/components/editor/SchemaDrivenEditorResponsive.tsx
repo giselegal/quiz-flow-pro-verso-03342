@@ -283,7 +283,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         return step;
       }));
     }
-  }, [blocks.length, selectedStepId]);
+  }, [blocks, selectedStepId, setSteps]);
 
   const handleAddBlock = useCallback((blockType: string) => {
     const newBlockId = addBlock(blockType as any);
@@ -1021,19 +1021,50 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         deleteBlock(block.id);
       });
       
-      // Para cada etapa, carregar os blocos específicos
+      // Para cada etapa, carregar os blocos específicos usando os templates otimizados
       for (let i = 0; i < steps.length; i++) {
         const step = steps[i];
         if (step.type) {
           setTimeout(() => {
-            loadStepSpecificBlocks(step.id, step.type);
-          }, i * 200); // Delay para evitar conflitos
+            // Usar as funções específicas baseadas no tipo da etapa
+            if (step.type === 'question') {
+              const questionNumber = parseInt(step.id.replace('etapa-', '')) - 2;
+              if (questionNumber >= 1 && questionNumber <= 10) {
+                loadQuestionTemplate(step.id, questionNumber);
+              } else {
+                loadStepSpecificBlocks(step.id, step.type);
+              }
+            } else if (step.type === 'strategic') {
+              const strategicNumber = parseInt(step.id.replace('etapa-', '')) - 13;
+              if (strategicNumber >= 1 && strategicNumber <= 6) {
+                loadStrategicQuestionTemplate(step.id, strategicNumber);
+              } else {
+                loadStepSpecificBlocks(step.id, step.type);
+              }
+            } else {
+              loadStepSpecificBlocks(step.id, step.type);
+            }
+          }, i * 300); // Delay aumentado para evitar conflitos
         }
       }
       
+      // Atualizar contadores de blocos das etapas
+      setTimeout(() => {
+        setSteps(prev => prev.map(step => ({
+          ...step,
+          blocksCount: step.type === 'intro' ? 3 :
+                      step.type === 'name-input' ? 4 :
+                      step.type === 'question' ? 3 :
+                      step.type === 'strategic' ? 3 :
+                      step.type === 'transition' ? 3 :
+                      step.type === 'result' ? 4 :
+                      step.type === 'offer' ? 4 : 0
+        })));
+      }, steps.length * 300 + 1000);
+      
       toast({
         title: "Template das 21 Etapas Carregado!",
-        description: `${steps.length} etapas foram populadas com blocos específicos.`,
+        description: `${steps.length} etapas foram populadas com blocos otimizados específicos.`,
       });
       
       console.log('✅ Template completo das 21 etapas carregado com sucesso!');
@@ -1046,7 +1077,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         variant: "destructive",
       });
     }
-  }, [steps, blocks, deleteBlock, loadStepSpecificBlocks, toast]);
+  }, [steps, blocks, deleteBlock, loadStepSpecificBlocks, loadQuestionTemplate, loadStrategicQuestionTemplate, toast, setSteps]);
 
   const handleStepSelect = useCallback((stepId: string) => {
     setSelectedStepId(stepId);
