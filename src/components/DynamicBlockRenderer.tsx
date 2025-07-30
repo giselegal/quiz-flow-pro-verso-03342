@@ -46,7 +46,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
   const componentType = blockId || 'default';
   
   // 🚀 SUPABASE: Função helper para tracking de eventos
-  const trackEvent = async (eventName: string, eventData: any = {}) => {
+  const trackEvent = async (eventName: 'quiz_start' | 'quiz_complete' | 'checkout_click' | 'step_view' | 'step_complete' | 'quiz_abandon' | 'button_click' | 'option_select' | 'result_view', eventData: any = {}) => {
     if (enableSupabaseTracking) {
       try {
         await quizSupabaseService.trackEvent(eventName, {
@@ -631,7 +631,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
               onClick={async () => {
                 // 🚀 SUPABASE: Rastrear clique no botão de compra
-                await trackEvent('purchase_button_click', {
+                await trackEvent('checkout_click', {
                   button_text: 'Quero meu Guia de Estilo Agora',
                   location: 'result_page_top'
                 });
@@ -742,7 +742,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-5 px-8 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg mb-4"
               onClick={async () => {
                 // 🚀 SUPABASE: Rastrear clique no botão de compra
-                await trackEvent('purchase_button_click', {
+                await trackEvent('checkout_click', {
                   button_text: 'Garantir Meu Guia + Bônus Especiais',
                   location: 'offer_section_bottom',
                   offer_price: 'R$ 39,00'

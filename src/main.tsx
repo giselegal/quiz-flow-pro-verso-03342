@@ -9,7 +9,13 @@ import {
 } from "./utils/preloadResources";
 import { fixMainRoutes } from "./utils/fixMainRoutes";
 import { checkMainRoutes } from "./utils/routeChecker";
+// 🚀 SUPABASE: Inicialização do serviço de dados
+import { quizSupabaseService } from "./services/quizSupabaseService";
 // import "./utils/hotmartWebhookSimulator"; // Carregar simulador de webhook - temporariamente desabilitado
+
+// 🚀 SUPABASE: Configuração inicial do serviço
+console.log('🚀 Inicializando serviços Supabase...');
+// O serviço é inicializado automaticamente na importação
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

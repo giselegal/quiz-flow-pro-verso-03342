@@ -12,7 +12,7 @@ import QuizProgressBlock from './QuizProgressBlock';
 import QuestionMultipleBlock from './QuestionMultipleBlock';
 import StrategicQuestionBlock from './StrategicQuestionBlock';
 import QuizTransitionBlock from './QuizTransitionBlock';
-import OptionsGridBlock from './OptionsGridBlock';
+// import OptionsGridBlock from './OptionsGridBlock'; // Temporariamente desabilitado devido a erro de sintaxe
 import VerticalCanvasHeaderBlock from './VerticalCanvasHeaderBlock';
 
 // === COMPONENTES INLINE MODULARES (ES7+) ===
@@ -241,7 +241,7 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'quiz-intro-header': () => <VerticalCanvasHeaderBlock {...commonProps} />,
       'vertical-canvas-header': () => <VerticalCanvasHeaderBlock {...commonProps} />,
       'loading-animation': () => <LoadingAnimationBlock {...commonProps} />,
-      'options-grid': () => <OptionsGridBlock {...commonProps} />,
+      // 'options-grid': () => <OptionsGridBlock {...commonProps} />, // Temporariamente desabilitado
       'quiz-question': () => <QuizQuestionBlock {...commonProps} />,
       'quiz-progress': () => <QuizProgressBlock {...commonProps} />,
       
