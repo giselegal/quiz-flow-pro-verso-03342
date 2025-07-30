@@ -800,7 +800,7 @@ class SchemaDrivenFunnelService {
           id: 'intro-decorative-bar',
           type: 'text-inline',
           properties: {
-            content: '<div style="width: 80px; height: 4px; background: linear-gradient(90deg, #B89B7A, #D4C2A8, #B89B7A); border-radius: 3px; box-shadow: 0 2px 6px rgba(184, 155, 122, 0.4); margin: 8px auto 24px auto; display: block;"></div>',
+            content: '<div style="width: 100%; height: 4px; background: linear-gradient(90deg, #B89B7A, #D4C2A8, #B89B7A); border-radius: 3px; box-shadow: 0 2px 6px rgba(184, 155, 122, 0.4); margin: 8px 0 24px 0; display: block;"></div>',
             textAlign: 'text-center',
             marginTop: 0,
             marginBottom: 16,
