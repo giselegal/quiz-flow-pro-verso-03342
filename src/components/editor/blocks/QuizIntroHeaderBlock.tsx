@@ -1,13 +1,11 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils';
 import { ArrowLeft } from 'lucide-react';
 import { InlineEditText } from './InlineEditText';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { BlockComponentProps } from '../../../types/blocks';
 
 interface QuizIntroHeaderBlockProps extends BlockComponentProps {
-  onPropertyChange?: (key: string, value: any) => void;
   disabled?: boolean;
-  className?: string;
 }
 
 const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
@@ -58,15 +56,15 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
       onClick={onClick}
     >
       {/* Header Content - Visual Only */}
-      <div className="flex items-center justify-center mb-4 relative">
+      <div className="flex items-center justify-center mb-6 relative min-h-[120px]">
         {/* Back Button - Absolute positioned to not affect centering */}
         {showBackButton && (
-          <button className="absolute left-0 p-2 rounded-lg hover:bg-gray-100 transition-colors">
+          <button className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 rounded-lg hover:bg-gray-100 transition-colors">
             <ArrowLeft className="w-5 h-5 text-gray-600" />
           </button>
         )}
 
-        {/* Logo - Centered */}
+        {/* Logo - Perfectly Centered */}
         <div className="flex justify-center items-center">
           <img 
             src={logoUrl}
@@ -75,7 +73,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
               width: `${logoWidth}px`, 
               height: `${logoHeight}px` 
             }}
-            className="object-contain"
+            className="object-contain mx-auto"
             onError={(e) => {
               e.currentTarget.src = 'https://via.placeholder.com/96x96?text=Logo';
             }}
