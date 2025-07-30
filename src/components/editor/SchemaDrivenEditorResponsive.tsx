@@ -1091,7 +1091,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       return;
     }
     
-    console.log(`🔧 [21 ETAPAS] Populando etapa ${stepIndex + 1}...`);
+    console.log(`🔧 [21 ETAPAS] Populando etapa ${stepIndex + 1} (stepId: ${stepId})...`);
+    console.log(`📊 [DEBUG] stepIndex calculado: ${stepIndex}, stepId recebido: ${stepId}`);
     
     try {
       let defaultBlocks: any[] = [];
@@ -1218,16 +1219,22 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         // ETAPAS 2-11: QUESTÕES PRINCIPAIS (10 QUESTÕES)
         // ==========================================
         const questionIndex = stepIndex - 1; // Ajustar para índice 0-9
+        console.log(`📝 [DEBUG] Carregando questão para stepIndex: ${stepIndex}, questionIndex: ${questionIndex}`);
         
         // Gerar template real da questão usando generateRealQuestionTemplates
         const questionTemplates = generateRealQuestionTemplates();
+        console.log(`📦 [DEBUG] Total de templates disponíveis: ${questionTemplates.length}`);
+        
         const questionTemplate = questionTemplates[questionIndex];
+        console.log(`🔍 [DEBUG] Template da questão ${questionIndex + 1}:`, questionTemplate ? 'ENCONTRADO' : 'NÃO ENCONTRADO');
         
         if (questionTemplate) {
           console.log(`📝 Carregando questão ${questionIndex + 1}:`, questionTemplate.title);
+          console.log(`🧱 [DEBUG] Número de blocos no template: ${questionTemplate.blocks?.length || 0}`);
           defaultBlocks = questionTemplate.blocks;
         } else {
           console.error(`❌ Template da questão ${questionIndex + 1} não encontrado`);
+          console.log(`🔴 [DEBUG] questionIndex: ${questionIndex}, array length: ${questionTemplates.length}`);
           // Fallback para template genérico
           const currentProgress = 5 + (questionIndex + 1) * 5;
           
@@ -1655,6 +1662,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       }
 
       // Adicionar os blocos usando handleAddBlocksToStep
+      console.log(`🚀 [DEBUG] Iniciando adição de ${defaultBlocks.length} blocos para stepId: ${stepId}`);
+      console.log(`📋 [DEBUG] Tipos de blocos a serem adicionados:`, defaultBlocks.map(b => b.type));
       handleAddBlocksToStep(stepId, defaultBlocks);
       
       console.log(`✅ [21 ETAPAS] Etapa ${stepIndex + 1} populada com ${defaultBlocks.length} blocos`);
