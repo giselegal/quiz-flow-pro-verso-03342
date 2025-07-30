@@ -170,6 +170,7 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'text': () => <TextInlineBlock {...commonProps} />,
       'image': () => <ImageInlineBlock {...commonProps} />,
       'button': () => <ButtonInlineBlock {...commonProps} />,
+      'button-inline': () => <ButtonInlineBlock {...commonProps} />,
       'cta': () => <CTAInlineBlock {...commonProps} />,
       'spacer': () => <SpacerBlock {...commonProps} />,
       'form-input': () => <FormInputBlock {...commonProps} />,
