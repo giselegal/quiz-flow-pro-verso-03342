@@ -812,7 +812,7 @@ class SchemaDrivenFunnelService {
           type: 'text-inline',
           properties: {
             content: '<span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">Chega</span> <span style="font-family: \'Playfair Display\', serif;">de um guarda-roupa lotado e da sensação de que</span> <span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">nada combina com você.</span>',
-            fontSize: 'text-4xl',
+            fontSize: 'text-3xl',
             fontWeight: 'font-bold',
             fontFamily: 'Playfair Display, serif',
             textAlign: 'text-center',
