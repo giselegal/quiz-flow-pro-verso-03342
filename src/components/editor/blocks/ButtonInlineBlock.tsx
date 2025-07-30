@@ -3,6 +3,7 @@ import { cn } from '../../../lib/utils';
 import { MousePointer2, Edit3, ArrowRight, Download, Play, Star } from 'lucide-react';
 import type { BlockComponentProps } from '../../../types/blocks';
 import { userResponseService } from '../../../services/userResponseService';
+import { trackQuizStart } from '../../../utils/analytics';
 
 /**
  * ButtonInlineBlock - Componente modular inline horizontal
@@ -164,8 +165,34 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         disabled={isButtonDisabled}
         onClick={(e) => {
           e.stopPropagation();
-          if (!isButtonDisabled && href) {
-            window.open(href, target);
+          if (!isButtonDisabled) {
+            // Se for o botão de iniciar quiz (Step 1), fazer tracking e navegação
+            if (text && text.includes('Descobrir meu Estilo')) {
+              const userName = userResponseService.getResponse('intro-name-input') || 'Anônimo';
+              console.log('🚀 Iniciando tracking do quiz para:', userName);
+              
+              // Marcar início do quiz no analytics
+              trackQuizStart(userName);
+              
+              // Salvar timestamp de início
+              localStorage.setItem('quiz_start_time', Date.now().toString());
+              localStorage.setItem('quiz_start_tracked', 'true');
+              localStorage.setItem('userName', userName);
+              
+              // Disparar evento customizado para outras partes do sistema
+              window.dispatchEvent(new CustomEvent('quiz-start', {
+                detail: { userName, timestamp: Date.now() }
+              }));
+              
+              // Navegar para Step 2 (primeira questão)
+              window.dispatchEvent(new CustomEvent('navigate-to-step', {
+                detail: { stepId: 'etapa-2', source: 'step1-button' }
+              }));
+            }
+            
+            if (href) {
+              window.open(href, target);
+            }
           }
         }}
       >

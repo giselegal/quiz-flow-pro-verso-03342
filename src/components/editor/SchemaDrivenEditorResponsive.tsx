@@ -13,12 +13,14 @@ import type { BlockData } from '../../types/blocks';
 import { getInitialQuiz21EtapasTemplate } from '../../templates/quiz21EtapasTemplate';
 import { normalizeBlock } from '../../utils/blockTypeMapping';
 import { AdvancedPropertyPanel } from './AdvancedPropertyPanel';
+import { getStepById } from './steps'; // 🎯 NOVA ARQUITETURA LIMPA
 import { EditorStatus } from './components/EditorStatus';
 import { StepsPanel } from './StepsPanel';
 import { ComponentsPanel } from './ComponentsPanel';
 import { schemaDrivenFunnelService } from '../../services/schemaDrivenFunnelService';
 import { useToast } from '../../hooks/use-toast';
 import { generateRealQuestionTemplates } from '../../data/realQuizTemplates';
+import { getStepTemplate, getStepInfo, STEP_TEMPLATES } from '../steps';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -272,6 +274,29 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   // Salvar automaticamente o estado das etapas
   useEffect(() => {
     localStorage.setItem('quiz-steps', JSON.stringify(steps));
+  }, [steps]);
+
+  // 🚀 Listener para navegação entre steps via eventos
+  useEffect(() => {
+    const handleNavigateToStep = (event: CustomEvent) => {
+      const { stepId, source } = event.detail;
+      console.log(`🎯 Navegando para ${stepId} (origem: ${source})`);
+      
+      // Verificar se a step existe
+      const targetStep = steps.find(step => step.id === stepId);
+      if (targetStep) {
+        setSelectedStepId(stepId);
+        console.log(`✅ Navegação para ${stepId} concluída`);
+      } else {
+        console.warn(`⚠️ Step ${stepId} não encontrada`);
+      }
+    };
+
+    window.addEventListener('navigate-to-step', handleNavigateToStep as EventListener);
+    
+    return () => {
+      window.removeEventListener('navigate-to-step', handleNavigateToStep as EventListener);
+    };
   }, [steps]);
 
   // Atualizar contador de blocos das etapas quando blocos mudarem
@@ -1048,7 +1073,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       // Carregar conteúdo da etapa automaticamente
       setTimeout(() => {
         handlePopulateStep(stepId);
-      }, 100); // Pequeno delay para garantir que o state foi atualizado
+      }, 100);
     } else {
       console.log(`✅ Etapa ${stepId} já tem ${selectedStep?.blocksCount || 0} blocos`);
     }
@@ -1255,14 +1280,31 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         console.log(`🔍 [DEBUG] Template da questão ${questionIndex + 1}:`, questionTemplate ? 'ENCONTRADO' : 'NÃO ENCONTRADO');
         console.log(`🔍 [DEBUG] questionTemplate completo:`, questionTemplate);
         
+        // 🚨 DEBUGGING APRIMORADO: Verificar estrutura do template
+        if (questionTemplate) {
+          console.log(`✅ [DEBUG] Template existe:`, {
+            id: questionTemplate.id,
+            title: questionTemplate.title,
+            hasBlocks: !!questionTemplate.blocks,
+            blocksLength: questionTemplate.blocks?.length || 0,
+            blocksTypes: questionTemplate.blocks?.map(b => b.type) || []
+          });
+        }
+        
         if (questionTemplate && questionTemplate.blocks && questionTemplate.blocks.length > 0) {
           console.log(`📝 Carregando questão ${questionIndex + 1}:`, questionTemplate.title);
           console.log(`🧱 [DEBUG] Número de blocos no template: ${questionTemplate.blocks.length}`);
           console.log(`🧱 [DEBUG] Blocos do template:`, questionTemplate.blocks.map(b => ({ type: b.type, id: b.id })));
           defaultBlocks = questionTemplate.blocks;
         } else {
-          console.error(`❌ Template da questão ${questionIndex + 1} não encontrado`);
-          console.log(`🔴 [DEBUG] questionIndex: ${questionIndex}, array length: ${questionTemplates.length}`);
+          console.error(`❌ Template da questão ${questionIndex + 1} não encontrado ou sem blocos`);
+          console.log(`🔴 [DEBUG] Detalhes do erro:`, {
+            questionIndex,
+            arrayLength: questionTemplates.length,
+            templateExists: !!questionTemplate,
+            hasBlocks: questionTemplate?.blocks ? true : false,
+            blocksLength: questionTemplate?.blocks?.length || 0
+          });
           // Fallback para template genérico
           const currentProgress = 5 + (questionIndex + 1) * 5;
           
