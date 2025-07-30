@@ -1079,6 +1079,65 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     console.log('Reorder step', draggedId, 'to', targetId);
   }, []);
 
+  // Handler para popular uma etapa com blocos padrão
+  const handlePopulateStep = useCallback((stepId: string) => {
+    console.log(`🎯 Populando etapa ${stepId} com blocos padrão`);
+    
+    // Blocos padrão para uma etapa de quiz
+    const defaultBlocks = [
+      {
+        type: 'heading-inline',
+        properties: {
+          content: 'Nova Questão',
+          level: 'h2',
+          fontSize: 'text-2xl',
+          fontWeight: 'font-bold',
+          textAlign: 'text-center',
+          color: '#432818',
+          marginBottom: 8
+        }
+      },
+      {
+        type: 'text-inline',
+        properties: {
+          content: 'Descrição da questão',
+          fontSize: 'text-base',
+          textAlign: 'text-center',
+          color: '#6B7280',
+          marginBottom: 16
+        }
+      },
+      {
+        type: 'options-grid',
+        properties: {
+          options: [
+            { id: 'opt1', text: 'Opção 1', value: 'option1' },
+            { id: 'opt2', text: 'Opção 2', value: 'option2' },
+            { id: 'opt3', text: 'Opção 3', value: 'option3' }
+          ],
+          columns: 1,
+          showImages: false,
+          multipleSelection: false,
+          maxSelections: 1,
+          minSelections: 1
+        }
+      },
+      {
+        type: 'button-inline',
+        properties: {
+          text: 'Continuar',
+          variant: 'primary',
+          size: 'large',
+          fullWidth: true,
+          marginTop: 24
+        }
+      }
+    ];
+    
+    // Adicionar os blocos usando handleAddBlocksToStep
+    handleAddBlocksToStep(stepId, defaultBlocks);
+  }, [handleAddBlocksToStep]);
+
   // Component selection handler
   const handleComponentSelect = useCallback((componentId: string) => {
     handleAddBlock(componentId);
