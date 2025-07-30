@@ -227,7 +227,8 @@ class SchemaDrivenFunnelService {
 
   private async performAutoSave() {
     try {
-      const localData = this.getLocalFunnel();
+      const localData = this.
+      getLocalFunnel();
       if (localData) {
         await this.saveFunnel(localData, true);
         this.autoSaveState.pendingChanges = false;
@@ -579,20 +580,29 @@ class SchemaDrivenFunnelService {
       return null;
     }
 
-    // Para o template especial, priorizar funcionamento offline
-    if (funnelId === 'default-quiz-funnel-21-steps') {
-      console.log('📱 [DEBUG] Template especial detectado - forçando recriação com melhorias');
+    // PRIORIZAR FUNCIONAMENTO OFFLINE - Primeiro tentar dados locais
+    console.log('📱 [DEBUG] Verificando dados locais primeiro...');
+    
+    // Verificar localStorage primeiro para qualquer funnelId
+    const localData = this.getLocalFunnel();
+    if (localData && localData.id === funnelId) {
+      console.log('✅ [DEBUG] Dados encontrados localmente, usando cache');
+      return localData;
+    }
+
+    // Para o template especial ou qualquer funil, criar template padrão
+    if (funnelId === 'default-quiz-funnel-21-steps' || !funnelId.startsWith('user-')) {
+      console.log('� [DEBUG] Criando template padrão offline');
       
-      // Força recriação para aplicar melhorias mais recentes
-      console.log('🔄 Criando novo template de 21 etapas...');
       const defaultFunnel = this.createDefaultFunnel();
       defaultFunnel.id = funnelId;
       
       // Salvar localmente primeiro
       this.saveLocalFunnel(defaultFunnel);
       
-      // Tentar salvar no Supabase em background (sem await)
+      // Tentar salvar no Supabase em background (sem await para não bloquear)
       this.saveFunnel(defaultFunnel).catch(error => {
+
         console.warn('⚠️ Falha ao salvar no Supabase (funcionando offline):', error);
       });
       
@@ -600,59 +610,22 @@ class SchemaDrivenFunnelService {
       return defaultFunnel;
     }
 
-    try {
-      // Para outros funis, tentar carregar do Supabase primeiro
-      console.log('🌐 [DEBUG] Loading from Supabase...');
-      const { data, error } = await supabase
-        .from('quizzes')
-        .select('*')
-        .eq('id', funnelId)
-        .single();
-      
-      if (error) {
-        console.warn('⚠️ Supabase error:', error);
-        throw error;
-      }
-
-      if (data) {
-        console.log('✅ [DEBUG] Found in Supabase:', data);
-        
-        // Converter dados do Supabase para o formato esperado
-        const funnel: SchemaDrivenFunnelData = {
-          id: data.id,
-          name: data.title,
-          description: data.description || '',
-          pages: data.data?.pages || [],
-          config: data.data?.config || {},
-          theme: 'default',
-          isPublished: data.is_published || false,
-          version: 1,
-          lastModified: new Date(data.updated_at),
-          createdAt: new Date(data.created_at)
-        };
-        
-        // Atualizar localStorage com dados mais recentes
-        try {
-          this.saveLocalFunnel(funnel);
-        } catch (saveError) {
-          console.warn('⚠️ Failed to save to localStorage, continuing without cache:', saveError);
-        }
-        console.log('☁️ Funnel loaded from Supabase');
-        return funnel;
-      }
-    } catch (error) {
-      console.warn('⚠️ Supabase unavailable, trying local storage:', error);
-    }
-
-    // Fallback para localStorage
-    const localFunnel = this.getLocalFunnel();
-    if (localFunnel && localFunnel.id === funnelId) {
-      console.log('💾 Funnel loaded from local storage');
-      return localFunnel;
-    }
-
-    console.log('❌ Funnel not found in Supabase or localStorage');
-    return null;
+    // MODO OFFLINE - Sempre criar template padrão primeiro
+    console.log('📱 [DEBUG] Criando template padrão offline (Supabase como backup)');
+    
+    const defaultFunnel = this.createDefaultFunnel();
+    defaultFunnel.id = funnelId;
+    
+    // Salvar localmente primeiro
+    this.saveLocalFunnel(defaultFunnel);
+    
+    // Tentar salvar no Supabase em background (sem await para não bloquear)
+    this.saveFunnel(defaultFunnel).catch(error => {
+      console.warn('⚠️ Falha ao salvar no Supabase (funcionando offline):', error);
+    });
+    
+    console.log('✅ Template criado e funcionando offline');
+    return defaultFunnel;
   }
 
   async createFunnel(data: Omit<SchemaDrivenFunnelData, 'id' | 'version' | 'lastModified' | 'createdAt'>): Promise<SchemaDrivenFunnelData> {
