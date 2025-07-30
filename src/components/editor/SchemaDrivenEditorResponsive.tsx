@@ -338,6 +338,43 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       loadStepSpecificBlocks(stepId, step.type);
     }
   }, [steps, loadStepSpecificBlocks]);
+  // Função para carregar o template completo das 21 etapas
+  const handleLoadComplete21StepsTemplate = useCallback(async () => {
+    try {
+      console.log('🚀 Carregando template completo das 21 etapas...');
+      
+      // Limpar blocos existentes
+      blocks.forEach(block => {
+        deleteBlock(block.id);
+      });
+      
+      // Para cada etapa, carregar os blocos específicos
+      for (let i = 0; i < steps.length; i++) {
+        const step = steps[i];
+        if (step.type) {
+          setTimeout(() => {
+            loadStepSpecificBlocks(step.id, step.type);
+          }, i * 200); // Delay para evitar conflitos
+        }
+      }
+      
+      toast({
+        title: "Template das 21 Etapas Carregado!",
+        description: `${steps.length} etapas foram populadas com blocos específicos.`,
+      });
+      
+      console.log('✅ Template completo das 21 etapas carregado com sucesso!');
+      
+    } catch (error) {
+      console.error('❌ Erro ao carregar template das 21 etapas:', error);
+      toast({
+        title: "Erro ao carregar template",
+        description: "Não foi possível carregar o template completo.",
+        variant: "destructive",
+      });
+    }
+  }, [steps, blocks, deleteBlock, loadStepSpecificBlocks, toast]);
+
   const handleStepSelect = useCallback((stepId: string) => {
     setSelectedStepId(stepId);
     setSelectedBlockId(null); // Clear block selection when changing steps
@@ -658,11 +695,21 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               <Button
                 variant="outline"
                 size="sm"
+                onClick={handleLoadComplete21StepsTemplate}
+                className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 border-none"
+              >
+                <Download className="w-4 h-4" />
+                Carregar 21 Etapas
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={handleLoadTemplate}
                 className="flex items-center gap-2"
               >
                 <Download className="w-4 h-4" />
-                Carregar Blocos de Teste
+                Blocos de Teste
               </Button>
               
               {/* Preview Mode Buttons */}
@@ -776,11 +823,20 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                         </div>
                         <div>
                           <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                            Editor das 21 Etapas do Quiz
+                            Editor das 21 Etapas do Quiz CaktoQuiz
                           </h3>
                           <p className="text-gray-600 mb-4">
                             Selecione componentes acima para começar a construir sua etapa
                           </p>
+                          <div className="space-y-2">
+                            <Button
+                              onClick={handleLoadComplete21StepsTemplate}
+                              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                            >
+                              <Download className="w-4 h-4 mr-2" />
+                              Carregar 21 Etapas
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -835,6 +891,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                   onStepDuplicate={handleStepDuplicate}
                   onStepReorder={handleStepReorder}
                   onAddBlocksToStep={handleAddBlocksToStep}
+                  onPopulateStep={handlePopulateStep}
                   className="p-2"
                 />
               </ScrollArea>
@@ -893,47 +950,63 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                           </div>
                           <div>
                             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                              Editor das 21 Etapas do Quiz
+                              Editor das 21 Etapas do Quiz CaktoQuiz
                             </h3>
                             <p className="text-gray-600 mb-4">
-                              Crie um funil completo de quiz de estilo pessoal com 21 etapas otimizadas para conversão
+                              Sistema completo para criar um funil de quiz de estilo pessoal otimizado para conversão
                             </p>
                           </div>
                           <div className="space-y-2">
                             <Button
+                              onClick={handleLoadComplete21StepsTemplate}
+                              className="w-full mb-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                            >
+                              <Download className="w-4 h-4 mr-2" />
+                              Carregar Template Completo (21 Etapas)
+                            </Button>
+                            <Button
                               onClick={handleLoadTemplate}
-                              className="w-full mb-2"
+                              variant="outline"
+                              className="w-full"
                             >
                               <Download className="w-4 h-4 mr-2" />
                               Carregar Blocos de Teste
                             </Button>
-                            <p className="text-sm text-gray-500">
+                            <p className="text-sm text-gray-500 text-center">
                               Ou arraste componentes da barra lateral
                             </p>
                           </div>
                           <div className="grid grid-cols-2 gap-3 text-xs text-gray-500">
                             <div className="text-left">
-                              <p className="font-medium">✨ Inclui:</p>
+                              <p className="font-medium mb-2">📊 Estrutura Completa:</p>
                               <ul className="space-y-1">
+                                <li>• 1 página de introdução</li>
+                                <li>• 1 coleta de nome</li>
                                 <li>• 10 questões principais</li>
                                 <li>• 6 questões estratégicas</li>
-                                <li>• Página de resultado</li>
-                                <li>• Página de oferta</li>
+                                <li>• 1 transição</li>
+                                <li>• 1 página de resultado</li>
+                                <li>• 1 página de oferta</li>
                               </ul>
                             </div>
                             <div className="text-left">
-                              <p className="font-medium">🎯 Recursos:</p>
+                              <p className="font-medium mb-2">🎯 Recursos Inclusos:</p>
                               <ul className="space-y-1">
                                 <li>• Cálculos automáticos</li>
                                 <li>• Progress tracking</li>
                                 <li>• Transições suaves</li>
-                                <li>• Sistema completo</li>
+                                <li>• Questões estratégicas</li>
+                                <li>• Personalização completa</li>
+                                <li>• Sistema de ofertas</li>
                               </ul>
                             </div>
                           </div>
                           <div className="mt-4 p-3 bg-blue-50 rounded-lg">
                             <p className="text-xs text-blue-700">
-                              <strong>📊 Status:</strong> {AVAILABLE_BLOCKS.length} componentes disponíveis
+                              <strong>� Status:</strong> {steps.length} etapas configuradas | {AVAILABLE_BLOCKS.length} componentes disponíveis
+                            </p>
+                            <p className="text-xs text-blue-600 mt-1">
+                              Cada etapa pode ser populada individualmente através do menu de contexto (⋯)
                             </p>
                           </div>
                         </div>
