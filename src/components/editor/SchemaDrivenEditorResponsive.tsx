@@ -24,18 +24,6 @@ interface SchemaDrivenEditorResponsiveProps {
   className?: string;
 }
 
-// Interface para as etapas do quiz
-interface QuizStep {
-  id: string;
-  name: string;
-  order: number;
-  blocksCount: number;
-  isActive: boolean;
-  type: string;
-  description: string;
-  multiSelect?: number;
-}
-
 type PreviewMode = 'desktop' | 'tablet' | 'mobile';
 
 const PREVIEW_DIMENSIONS = {
@@ -168,18 +156,16 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           setConfig(editorConfig);
           
           // Atualizar steps baseado nas páginas
-          const funnelSteps: QuizStep[] = funnelData.pages.map((page, index) => ({
+          const funnelSteps = funnelData.pages.map((page, index) => ({
             id: page.id,
             name: page.title || `Etapa ${index + 1}`,
             order: index + 1,
             blocksCount: page.blocks?.length || 0,
-            isActive: index === 0,
-            type: 'custom',
-            description: `Página do funil: ${page.title || `Etapa ${index + 1}`}`
+            isActive: index === 0
           }));
           
           setSteps(funnelSteps);
-          setSelectedStepId(funnelSteps[0]?.id || 'etapa-1');
+          setSelectedStepId(funnelSteps[0]?.id || 'step-1');
           
           toast({
             title: 'Funil Carregado',
@@ -217,34 +203,13 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   // Safe access to blocks with fallback
   const blocks = config?.blocks || [];
 
-  // 21 Etapas do Quiz CaktoQuiz - Sistema Completo
-  const initialQuiz21Steps = [
-    { id: 'etapa-1', name: 'Introdução', order: 1, blocksCount: 0, isActive: true, type: 'intro', description: 'Apresentação do Quiz de Estilo' },
-    { id: 'etapa-2', name: 'Coleta de Nome', order: 2, blocksCount: 0, isActive: false, type: 'name-input', description: 'Captura do nome do participante' },
-    { id: 'etapa-3', name: 'Q1: Tipo de Roupa', order: 3, blocksCount: 0, isActive: false, type: 'question', description: 'QUAL O SEU TIPO DE ROUPA FAVORITA?', multiSelect: 3 },
-    { id: 'etapa-4', name: 'Q2: Personalidade', order: 4, blocksCount: 0, isActive: false, type: 'question', description: 'RESUMA A SUA PERSONALIDADE:', multiSelect: 3 },
-    { id: 'etapa-5', name: 'Q3: Visual', order: 5, blocksCount: 0, isActive: false, type: 'question', description: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?', multiSelect: 3 },
-    { id: 'etapa-6', name: 'Q4: Detalhes', order: 6, blocksCount: 0, isActive: false, type: 'question', description: 'QUAIS DETALHES VOCÊ GOSTA?', multiSelect: 3 },
-    { id: 'etapa-7', name: 'Q5: Estampas', order: 7, blocksCount: 0, isActive: false, type: 'question', description: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?', multiSelect: 3 },
-    { id: 'etapa-8', name: 'Q6: Casacos', order: 8, blocksCount: 0, isActive: false, type: 'question', description: 'QUAL CASACO É SEU FAVORITO?', multiSelect: 3 },
-    { id: 'etapa-9', name: 'Q7: Calças', order: 9, blocksCount: 0, isActive: false, type: 'question', description: 'QUAL SUA CALÇA FAVORITA?', multiSelect: 3 },
-    { id: 'etapa-10', name: 'Q8: Sapatos', order: 10, blocksCount: 0, isActive: false, type: 'question', description: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?', multiSelect: 3 },
-    { id: 'etapa-11', name: 'Q9: Acessórios', order: 11, blocksCount: 0, isActive: false, type: 'question', description: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?', multiSelect: 3 },
-    { id: 'etapa-12', name: 'Q10: Tecidos', order: 12, blocksCount: 0, isActive: false, type: 'question', description: 'O QUE MAIS VALORIZAS NOS ACESSÓRIOS?', multiSelect: 3 },
-    { id: 'etapa-13', name: 'Transição', order: 13, blocksCount: 0, isActive: false, type: 'transition', description: 'Análise dos resultados parciais' },
-    { id: 'etapa-14', name: 'S1: Dificuldades', order: 14, blocksCount: 0, isActive: false, type: 'strategic', description: 'Principal dificuldade com roupas' },
-    { id: 'etapa-15', name: 'S2: Problemas', order: 15, blocksCount: 0, isActive: false, type: 'strategic', description: 'Problemas frequentes de estilo' },
-    { id: 'etapa-16', name: 'S3: Frequência', order: 16, blocksCount: 0, isActive: false, type: 'strategic', description: '"Com que roupa eu vou?" - frequência' },
-    { id: 'etapa-17', name: 'S4: Guia de Estilo', order: 17, blocksCount: 0, isActive: false, type: 'strategic', description: 'O que valoriza em um guia' },
-    { id: 'etapa-18', name: 'S5: Investimento', order: 18, blocksCount: 0, isActive: false, type: 'strategic', description: 'Quanto investiria em consultoria' },
-    { id: 'etapa-19', name: 'S6: Ajuda Imediata', order: 19, blocksCount: 0, isActive: false, type: 'strategic', description: 'O que mais precisa de ajuda' },
-    { id: 'etapa-20', name: 'Resultado', order: 20, blocksCount: 0, isActive: false, type: 'result', description: 'Página de resultado personalizada' },
-    { id: 'etapa-21', name: 'Oferta', order: 21, blocksCount: 0, isActive: false, type: 'offer', description: 'Apresentação da oferta final' }
-  ];
-
-  // Steps state com as 21 etapas do quiz
-  const [steps, setSteps] = useState(initialQuiz21Steps);
-  const [selectedStepId, setSelectedStepId] = useState<string>('etapa-1');
+  // Steps state
+  const [steps, setSteps] = useState([
+    { id: 'step-1', name: 'Etapa 1', order: 1, blocksCount: 0, isActive: true },
+    { id: 'step-2', name: 'Etapa 2', order: 2, blocksCount: 0, isActive: false },
+    { id: 'step-3', name: 'Etapa 3', order: 3, blocksCount: 0, isActive: false },
+  ]);
+  const [selectedStepId, setSelectedStepId] = useState<string>('step-1');
 
   const handleAddBlock = useCallback((blockType: string) => {
     const newBlockId = addBlock(blockType as any);
@@ -278,85 +243,24 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     ));
   }, [addBlock, updateBlock]);
 
-  // Função para carregar blocos específicos de cada etapa
-  const loadStepSpecificBlocks = useCallback((stepId: string, stepType: string) => {
-    console.log(`🎯 Carregando blocos específicos para ${stepId} (tipo: ${stepType})`);
-    
-    // Definir blocos específicos para cada tipo de etapa
-    const stepTemplates: Record<string, any[]> = {
-      'intro': [
-        { type: 'heading-inline', properties: { content: 'Descubra Seu Estilo Pessoal', level: 'h1', textAlign: 'center' } },
-        { type: 'text-inline', properties: { content: 'Um quiz personalizado para descobrir o seu estilo único', textAlign: 'center' } },
-        { type: 'button-inline', properties: { content: 'Começar Quiz', size: 'large' } }
-      ],
-      'name-input': [
-        { type: 'heading-inline', properties: { content: 'Qual é o seu nome?', level: 'h2', textAlign: 'center' } },
-        { type: 'form-input', properties: { label: 'Nome', placeholder: 'Digite seu nome aqui', required: true } },
-        { type: 'button-inline', properties: { content: 'Continuar', size: 'medium' } }
-      ],
-      'question': [
-        { type: 'quiz-question', properties: { question: 'Pergunta do quiz', multiSelect: true, maxSelections: 3 } },
-        { type: 'options-grid', properties: { layout: 'grid', columns: 2 } },
-        { type: 'quiz-progress', properties: { showPercentage: true } }
-      ],
-      'strategic': [
-        { type: 'strategic-question-main', properties: { question: 'Questão estratégica', type: 'strategic' } },
-        { type: 'options-grid', properties: { layout: 'list', columns: 1 } },
-        { type: 'text-inline', properties: { content: 'Esta informação nos ajuda a personalizar sua experiência' } }
-      ],
-      'transition': [
-        { type: 'heading-inline', properties: { content: 'Analisando suas respostas...', level: 'h2', textAlign: 'center' } },
-        { type: 'loading-animation', properties: { duration: 3000 } },
-        { type: 'text-inline', properties: { content: 'Preparando questões especiais para você', textAlign: 'center' } }
-      ],
-      'result': [
-        { type: 'result-header-inline', properties: { title: 'Seu Resultado', subtitle: 'Personalizado para você' } },
-        { type: 'result-card-inline', properties: { showImage: true, showDescription: true } },
-        { type: 'before-after-inline', properties: { showComparison: true } },
-        { type: 'testimonials-inline', properties: { count: 3 } }
-      ],
-      'offer': [
-        { type: 'quiz-offer-cta-inline', properties: { title: 'Oferta Especial', urgency: true } },
-        { type: 'quiz-offer-pricing-inline', properties: { showDiscount: true, highlightValue: true } },
-        { type: 'bonus-list-inline', properties: { showBonuses: true } },
-        { type: 'button-inline', properties: { content: 'Quero Aproveitar', size: 'large', style: 'cta' } }
-      ]
-    };
-
-    const blocksToAdd = stepTemplates[stepType] || stepTemplates['question'];
-    
-    if (blocksToAdd && blocksToAdd.length > 0) {
-      handleAddBlocksToStep(stepId, blocksToAdd);
-      console.log(`✅ ${blocksToAdd.length} blocos adicionados à etapa ${stepId}`);
-    }
-  }, [handleAddBlocksToStep]);
-
-  // Função para popular uma etapa automaticamente
-  const handlePopulateStep = useCallback((stepId: string) => {
-    const step = steps.find(s => s.id === stepId);
-    if (step && step.type) {
-      loadStepSpecificBlocks(stepId, step.type);
-    }
-  }, [steps, loadStepSpecificBlocks]);
+  // Steps management functions
   const handleStepSelect = useCallback((stepId: string) => {
     setSelectedStepId(stepId);
     setSelectedBlockId(null); // Clear block selection when changing steps
   }, []);
 
   const handleStepAdd = useCallback(() => {
-    const newStep: QuizStep = {
-      id: `etapa-${Date.now()}`,
+    const newStep = {
+      id: `step-${Date.now()}`,
       name: `Etapa ${steps.length + 1}`,
       order: steps.length + 1,
       blocksCount: 0,
-      isActive: false,
-      type: 'custom',
-      description: `Etapa personalizada ${steps.length + 1}`
+      isActive: false
     };
     setSteps(prev => [...prev, newStep]);
   }, [steps.length]);
 
-  const handleStepUpdate = useCallback((stepId: string, updates: Partial<QuizStep>) => {
+  const handleStepUpdate = useCallback((stepId: string, updates: any) => {
     setSteps(prev => prev.map(step => 
       step.id === stepId ? { ...step, ...updates } : step
     ));
@@ -379,9 +283,9 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const handleStepDuplicate = useCallback((stepId: string) => {
     const stepToDuplicate = steps.find(step => step.id === stepId);
     if (stepToDuplicate) {
-      const newStep: QuizStep = {
+      const newStep = {
         ...stepToDuplicate,
-        id: `etapa-${Date.now()}`,
+        id: `step-${Date.now()}`,
         name: `${stepToDuplicate.name} (Cópia)`,
         order: steps.length + 1
       };

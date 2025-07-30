@@ -27,9 +27,6 @@ interface Step {
   order: number;
   blocksCount: number;
   isActive?: boolean;
-  type?: string;
-  description?: string;
-  multiSelect?: number;
 }
 
 interface StepsPanelProps {
