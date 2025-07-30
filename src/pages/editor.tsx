@@ -17,7 +17,7 @@ const EditorPage: React.FC = () => {
   const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
   
-  // Extract funnel ID from URL ANTES dos hooks
+  // Extract funnel ID from URL - MOVIDO PARA O INÍCIO
   const urlParams = new URLSearchParams(window.location.search);
   const funnelId = urlParams.get('id');
   
@@ -28,6 +28,13 @@ const EditorPage: React.FC = () => {
   const handleAutoSave = async (data: any) => {
     // Preservar o ID original do funil carregado da URL
     const preservedId = funnelId || data.id || `funnel_${Date.now()}`;
+    
+    console.log('🔍 DEBUG - handleAutoSave:', {
+      funnelId,
+      dataId: data.id,
+      preservedId,
+      url: window.location.href
+    });
     
     const funnelData = {
       id: preservedId,
@@ -55,104 +62,3 @@ const EditorPage: React.FC = () => {
     enabled: !!config?.blocks?.length,
     showToasts: false
   });
-
-  // Load funnel on mount if ID is provided
-  useEffect(() => {
-    if (funnelId) {
-      loadFunnel(funnelId).then(data => {
-        if (data) {
-          // Convert funnel data to editor config
-          const editorConfig = {
-            id: data.id,
-            title: data.name,
-            description: data.description || '',
-            blocks: data.pages.length > 0 ? data.pages[0].blocks : [],
-            settings: data.settings || {}
-          };
-          setConfig(editorConfig);
-        }
-      });
-    }
-  }, [funnelId, loadFunnel, setConfig]);
-
-  const handleSave = async () => {
-    // Usar forceSave para salvamento manual imediato
-    await forceSave();
-  };
-
-  const handleGoBack = () => {
-    setLocation('/admin/funis');
-  };
-
-  if (isLoading) {
-    return (
-      <div className="h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <LoadingSpinner size="lg" className="mb-4" />
-          <p className="text-muted-foreground">Carregando editor...</p>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="h-screen flex flex-col bg-background">
-      <EditorToolbar 
-        onSave={handleSave}
-        onGoBack={handleGoBack}
-        isPreviewing={isPreviewing}
-        onPreviewToggle={() => setIsPreviewing(!isPreviewing)}
-        isSaving={isSaving}
-        funnelTitle={config.title || 'Novo Funil'}
-      />
-      
-      <ResizablePanelGroup direction="horizontal" className="flex-1">
-        {/* Components Sidebar */}
-        <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-          <ComponentsSidebar 
-            onComponentSelect={(type) => {
-              const id = addBlock(type);
-              setSelectedComponentId(id);
-            }} 
-          />
-        </ResizablePanel>
-
-        <ResizableHandle withHandle />
-
-        {/* Preview Area */}
-        <ResizablePanel defaultSize={55}>
-          <EditPreview 
-            isPreviewing={isPreviewing}
-            onPreviewToggle={() => setIsPreviewing(!isPreviewing)}
-            onSelectComponent={setSelectedComponentId}
-            selectedComponentId={selectedComponentId}
-          />
-        </ResizablePanel>
-
-        <ResizableHandle withHandle />
-
-        {/* Properties Panel */}
-        <ResizablePanel defaultSize={25}>
-          <PropertiesPanel
-            selectedComponentId={selectedComponentId}
-            onClose={() => setSelectedComponentId(null)}
-            blocks={config.blocks}
-            onUpdate={(content) => {
-              if (selectedComponentId) {
-                updateBlock(selectedComponentId, content);
-              }
-            }}
-            onDelete={() => {
-              if (selectedComponentId) {
-                deleteBlock(selectedComponentId);
-                setSelectedComponentId(null);
-              }
-            }}
-          />
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </div>
-  );
-};
-
-export default EditorPage;
