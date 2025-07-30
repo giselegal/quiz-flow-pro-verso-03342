@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import type { BlockComponentProps } from '@/types/blocks';
 
@@ -32,6 +32,17 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   const processedContent = useUsername && usernamePattern 
     ? content.replace(new RegExp(usernamePattern.replace(/[{}]/g, '\\$&'), 'g'), userName)
     : content;
+
+  // Verificar se o conteúdo contém HTML
+  const isHtmlContent = useMemo(() => {
+    const hasHtml = processedContent?.includes('<') && processedContent?.includes('>');
+    console.log('🔍 TextInlineBlock (inline) Debug:', {
+      content: processedContent,
+      hasHtml,
+      blockId: block?.id
+    });
+    return hasHtml;
+  }, [processedContent, block?.id]);
 
   // Tamanhos de fonte responsivos
   const fontSizeClasses = {
@@ -100,7 +111,11 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         )}
         style={{ color }}
       >
-        {processedContent}
+        {isHtmlContent ? (
+          <span dangerouslySetInnerHTML={{ __html: processedContent }} />
+        ) : (
+          processedContent
+        )}
       </p>
     </div>
   );
