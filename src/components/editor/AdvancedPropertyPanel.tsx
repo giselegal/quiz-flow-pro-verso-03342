@@ -53,6 +53,14 @@ interface BlockProperties {
   autoAdvance?: boolean;
   maxSelections?: number;
   
+  // Novas configurações de autoavanço
+  autoAdvanceOnComplete?: boolean;
+  enableButtonOnlyWhenValid?: boolean;
+  autoAdvanceDelay?: number;
+  requiredSelections?: number;
+  showValidationFeedback?: boolean;
+  questionId?: string;
+  
   // Estilização
   backgroundColor?: string;
   textColor?: string;
@@ -549,31 +557,100 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                   />
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <Label className="text-sm font-medium">Auto-avançar</Label>
-                  <Switch
-                    checked={properties.autoAdvance || false}
-                    onCheckedChange={(checked) => onPropertyChange('autoAdvance', checked)}
-                  />
-                </div>
+                {/* === CONFIGURAÇÕES DE AUTOAVANÇO === */}
+                <Separator className="my-4" />
+                <div className="space-y-4">
+                  <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                    <Sparkles className="w-4 h-4" />
+                    Configurações de Auto-Avanço
+                  </h4>
 
-                {properties.multipleChoice && (
+                  <div className="flex items-center justify-between">
+                    <Label className="text-sm font-medium">Auto-avanço ao completar</Label>
+                    <Switch
+                      checked={properties.autoAdvanceOnComplete || false}
+                      onCheckedChange={(checked) => onPropertyChange('autoAdvanceOnComplete', checked)}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <Label className="text-sm font-medium">Botão apenas quando válido</Label>
+                    <Switch
+                      checked={properties.enableButtonOnlyWhenValid || false}
+                      onCheckedChange={(checked) => onPropertyChange('enableButtonOnlyWhenValid', checked)}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <Label className="text-sm font-medium">Mostrar feedback de validação</Label>
+                    <Switch
+                      checked={properties.showValidationFeedback || false}
+                      onCheckedChange={(checked) => onPropertyChange('showValidationFeedback', checked)}
+                    />
+                  </div>
+
                   <div>
-                    <Label className="text-sm font-medium">Máximo de Seleções</Label>
+                    <Label className="text-sm font-medium">Seleções obrigatórias</Label>
                     <div className="mt-2">
                       <Slider
-                        value={[properties.maxSelections || 3]}
-                        onValueChange={([value]) => onPropertyChange('maxSelections', value)}
+                        value={[properties.requiredSelections || 3]}
+                        onValueChange={([value]) => onPropertyChange('requiredSelections', value)}
                         min={1}
                         max={10}
                         step={1}
                       />
                       <div className="text-xs text-gray-500 mt-1 text-center">
-                        {properties.maxSelections || 3} seleções
+                        {properties.requiredSelections || 3} seleções obrigatórias
                       </div>
                     </div>
                   </div>
-                )}
+
+                  <div>
+                    <Label className="text-sm font-medium">Delay do auto-avanço (ms)</Label>
+                    <div className="mt-2">
+                      <Slider
+                        value={[properties.autoAdvanceDelay || 800]}
+                        onValueChange={([value]) => onPropertyChange('autoAdvanceDelay', value)}
+                        min={200}
+                        max={3000}
+                        step={100}
+                      />
+                      <div className="text-xs text-gray-500 mt-1 text-center">
+                        {properties.autoAdvanceDelay || 800}ms de delay
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* === CONFIGURAÇÕES LEGACY === */}
+                <Separator className="my-4" />
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-sm font-medium">Auto-avançar (legacy)</Label>
+                    <Switch
+                      checked={properties.autoAdvance || false}
+                      onCheckedChange={(checked) => onPropertyChange('autoAdvance', checked)}
+                    />
+                  </div>
+
+                  {properties.multipleChoice && (
+                    <div>
+                      <Label className="text-sm font-medium">Máximo de Seleções (legacy)</Label>
+                      <div className="mt-2">
+                        <Slider
+                          value={[properties.maxSelections || 3]}
+                          onValueChange={([value]) => onPropertyChange('maxSelections', value)}
+                          min={1}
+                          max={10}
+                          step={1}
+                        />
+                        <div className="text-xs text-gray-500 mt-1 text-center">
+                          {properties.maxSelections || 3} seleções
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </CollapsibleContent>
           </Collapsible>
