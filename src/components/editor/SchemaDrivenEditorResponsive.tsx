@@ -217,34 +217,73 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   // Safe access to blocks with fallback
   const blocks = config?.blocks || [];
 
-  // 21 Etapas do Quiz CaktoQuiz - Sistema Completo
-  const initialQuiz21Steps = [
-    { id: 'etapa-1', name: 'Introdução', order: 1, blocksCount: 0, isActive: true, type: 'intro', description: 'Apresentação do Quiz de Estilo' },
-    { id: 'etapa-2', name: 'Coleta de Nome', order: 2, blocksCount: 0, isActive: false, type: 'name-input', description: 'Captura do nome do participante' },
-    { id: 'etapa-3', name: 'Q1: Tipo de Roupa', order: 3, blocksCount: 0, isActive: false, type: 'question', description: 'QUAL O SEU TIPO DE ROUPA FAVORITA?', multiSelect: 3 },
-    { id: 'etapa-4', name: 'Q2: Personalidade', order: 4, blocksCount: 0, isActive: false, type: 'question', description: 'RESUMA A SUA PERSONALIDADE:', multiSelect: 3 },
-    { id: 'etapa-5', name: 'Q3: Visual', order: 5, blocksCount: 0, isActive: false, type: 'question', description: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?', multiSelect: 3 },
-    { id: 'etapa-6', name: 'Q4: Detalhes', order: 6, blocksCount: 0, isActive: false, type: 'question', description: 'QUAIS DETALHES VOCÊ GOSTA?', multiSelect: 3 },
-    { id: 'etapa-7', name: 'Q5: Estampas', order: 7, blocksCount: 0, isActive: false, type: 'question', description: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?', multiSelect: 3 },
-    { id: 'etapa-8', name: 'Q6: Casacos', order: 8, blocksCount: 0, isActive: false, type: 'question', description: 'QUAL CASACO É SEU FAVORITO?', multiSelect: 3 },
-    { id: 'etapa-9', name: 'Q7: Calças', order: 9, blocksCount: 0, isActive: false, type: 'question', description: 'QUAL SUA CALÇA FAVORITA?', multiSelect: 3 },
-    { id: 'etapa-10', name: 'Q8: Sapatos', order: 10, blocksCount: 0, isActive: false, type: 'question', description: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?', multiSelect: 3 },
-    { id: 'etapa-11', name: 'Q9: Acessórios', order: 11, blocksCount: 0, isActive: false, type: 'question', description: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?', multiSelect: 3 },
-    { id: 'etapa-12', name: 'Q10: Tecidos', order: 12, blocksCount: 0, isActive: false, type: 'question', description: 'O QUE MAIS VALORIZAS NOS ACESSÓRIOS?', multiSelect: 3 },
-    { id: 'etapa-13', name: 'Transição', order: 13, blocksCount: 0, isActive: false, type: 'transition', description: 'Análise dos resultados parciais' },
-    { id: 'etapa-14', name: 'S1: Dificuldades', order: 14, blocksCount: 0, isActive: false, type: 'strategic', description: 'Principal dificuldade com roupas' },
-    { id: 'etapa-15', name: 'S2: Problemas', order: 15, blocksCount: 0, isActive: false, type: 'strategic', description: 'Problemas frequentes de estilo' },
-    { id: 'etapa-16', name: 'S3: Frequência', order: 16, blocksCount: 0, isActive: false, type: 'strategic', description: '"Com que roupa eu vou?" - frequência' },
-    { id: 'etapa-17', name: 'S4: Guia de Estilo', order: 17, blocksCount: 0, isActive: false, type: 'strategic', description: 'O que valoriza em um guia' },
-    { id: 'etapa-18', name: 'S5: Investimento', order: 18, blocksCount: 0, isActive: false, type: 'strategic', description: 'Quanto investiria em consultoria' },
-    { id: 'etapa-19', name: 'S6: Ajuda Imediata', order: 19, blocksCount: 0, isActive: false, type: 'strategic', description: 'O que mais precisa de ajuda' },
-    { id: 'etapa-20', name: 'Resultado', order: 20, blocksCount: 0, isActive: false, type: 'result', description: 'Página de resultado personalizada' },
-    { id: 'etapa-21', name: 'Oferta', order: 21, blocksCount: 0, isActive: false, type: 'offer', description: 'Apresentação da oferta final' }
-  ];
+  // Função para preservar etapas existentes e mesclar com as 21 etapas
+  const mergeWith21Steps = useCallback((existingSteps: any[] = []) => {
+    const baseQuiz21Steps = [
+      { id: 'etapa-1', name: 'Introdução', order: 1, type: 'intro', description: 'Apresentação do Quiz de Estilo' },
+      { id: 'etapa-2', name: 'Coleta de Nome', order: 2, type: 'name-input', description: 'Captura do nome do participante' },
+      { id: 'etapa-3', name: 'Q1: Tipo de Roupa', order: 3, type: 'question', description: 'QUAL O SEU TIPO DE ROUPA FAVORITA?', multiSelect: 3 },
+      { id: 'etapa-4', name: 'Q2: Personalidade', order: 4, type: 'question', description: 'RESUMA A SUA PERSONALIDADE:', multiSelect: 3 },
+      { id: 'etapa-5', name: 'Q3: Visual', order: 5, type: 'question', description: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?', multiSelect: 3 },
+      { id: 'etapa-6', name: 'Q4: Detalhes', order: 6, type: 'question', description: 'QUAIS DETALHES VOCÊ GOSTA?', multiSelect: 3 },
+      { id: 'etapa-7', name: 'Q5: Estampas', order: 7, type: 'question', description: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?', multiSelect: 3 },
+      { id: 'etapa-8', name: 'Q6: Casacos', order: 8, type: 'question', description: 'QUAL CASACO É SEU FAVORITO?', multiSelect: 3 },
+      { id: 'etapa-9', name: 'Q7: Calças', order: 9, type: 'question', description: 'QUAL SUA CALÇA FAVORITA?', multiSelect: 3 },
+      { id: 'etapa-10', name: 'Q8: Sapatos', order: 10, type: 'question', description: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?', multiSelect: 3 },
+      { id: 'etapa-11', name: 'Q9: Acessórios', order: 11, type: 'question', description: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?', multiSelect: 3 },
+      { id: 'etapa-12', name: 'Q10: Tecidos', order: 12, type: 'question', description: 'O QUE MAIS VALORIZAS NOS ACESSÓRIOS?', multiSelect: 3 },
+      { id: 'etapa-13', name: 'Transição', order: 13, type: 'transition', description: 'Análise dos resultados parciais' },
+      { id: 'etapa-14', name: 'S1: Dificuldades', order: 14, type: 'strategic', description: 'Principal dificuldade com roupas' },
+      { id: 'etapa-15', name: 'S2: Problemas', order: 15, type: 'strategic', description: 'Problemas frequentes de estilo' },
+      { id: 'etapa-16', name: 'S3: Frequência', order: 16, type: 'strategic', description: '"Com que roupa eu vou?" - frequência' },
+      { id: 'etapa-17', name: 'S4: Guia de Estilo', order: 17, type: 'strategic', description: 'O que valoriza em um guia' },
+      { id: 'etapa-18', name: 'S5: Investimento', order: 18, type: 'strategic', description: 'Quanto investiria em consultoria' },
+      { id: 'etapa-19', name: 'S6: Ajuda Imediata', order: 19, type: 'strategic', description: 'O que mais precisa de ajuda' },
+      { id: 'etapa-20', name: 'Resultado', order: 20, type: 'result', description: 'Página de resultado personalizada' },
+      { id: 'etapa-21', name: 'Oferta', order: 21, type: 'offer', description: 'Apresentação da oferta final' }
+    ];
+
+    // Mesclar etapas existentes com as 21 etapas padrão
+    return baseQuiz21Steps.map(baseStep => {
+      const existingStep = existingSteps.find(step => step.id === baseStep.id);
+      return {
+        ...baseStep,
+        blocksCount: existingStep?.blocksCount || 0,
+        isActive: existingStep?.isActive || (baseStep.id === 'etapa-1'),
+        // Preservar nome customizado se existir
+        name: existingStep?.name || baseStep.name
+      };
+    });
+  }, []);
+
+  // 21 Etapas do Quiz CaktoQuiz - Sistema Completo (preservando dados existentes)
+  const initialQuiz21Steps = useMemo(() => {
+    // Se houver dados salvos, tentar recuperá-los
+    const savedSteps = localStorage.getItem('quiz-steps');
+    const existingSteps = savedSteps ? JSON.parse(savedSteps) : [];
+    return mergeWith21Steps(existingSteps);
+  }, [mergeWith21Steps]);
 
   // Steps state com as 21 etapas do quiz
   const [steps, setSteps] = useState(initialQuiz21Steps);
   const [selectedStepId, setSelectedStepId] = useState<string>('etapa-1');
+
+  // Salvar automaticamente o estado das etapas
+  useEffect(() => {
+    localStorage.setItem('quiz-steps', JSON.stringify(steps));
+  }, [steps]);
+
+  // Atualizar contador de blocos das etapas quando blocos mudarem
+  useEffect(() => {
+    if (blocks.length > 0) {
+      setSteps(prev => prev.map(step => {
+        if (step.id === selectedStepId) {
+          return { ...step, blocksCount: blocks.length };
+        }
+        return step;
+      }));
+    }
+  }, [blocks.length, selectedStepId]);
 
   const handleAddBlock = useCallback((blockType: string) => {
     const newBlockId = addBlock(blockType as any);
