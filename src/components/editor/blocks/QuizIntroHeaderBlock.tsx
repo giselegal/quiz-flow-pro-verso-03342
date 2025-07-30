@@ -36,6 +36,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
     progressValue = 0,
     progressMax = 100,
     showBackButton = true,
+    showProgress = true,
     logoWidth = 96,
     logoHeight = 96
   } = block.properties;
@@ -83,20 +84,24 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
         </div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="w-full bg-gray-200 rounded-full h-2">
-        <div 
-          className="bg-gradient-to-r from-[#B89B7A] to-[#8a7766] h-2 rounded-full transition-all duration-300"
-          style={{ width: `${Math.min(progressValue, progressMax)}%` }}
-        />
-      </div>
-      
-      {/* Progress Text */}
-      <div className="text-center mt-2">
-        <span className="text-sm text-gray-600">
-          {Math.round(progressValue)}% completo
-        </span>
-      </div>
+      {/* Progress Bar - Só mostra se showProgress for true */}
+      {showProgress && (
+        <>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div 
+              className="bg-gradient-to-r from-[#B89B7A] to-[#8a7766] h-2 rounded-full transition-all duration-300"
+              style={{ width: `${Math.min(progressValue, progressMax)}%` }}
+            />
+          </div>
+          
+          {/* Progress Text */}
+          <div className="text-center mt-2">
+            <span className="text-sm text-gray-600">
+              {Math.round(progressValue)}% completo
+            </span>
+          </div>
+        </>
+      )}
     </div>
   );
 };

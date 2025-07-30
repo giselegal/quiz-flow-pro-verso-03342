@@ -790,9 +790,10 @@ class SchemaDrivenFunnelService {
             logoAlt: 'Logo Gisele Galvão',
             logoWidth: 120,
             logoHeight: 120,
-            progressValue: 100,
+            progressValue: 0,
             progressMax: 100,
-            showBackButton: false
+            showBackButton: false,
+            showProgress: false
           }
         },
         {
