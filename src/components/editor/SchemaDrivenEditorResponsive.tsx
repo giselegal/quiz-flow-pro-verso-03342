@@ -128,6 +128,103 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const { toast } = useToast();
 
+  // Safe access to blocks with fallback
+  const blocks = config?.blocks || [];
+
+  // Função para preservar etapas existentes e mesclar com as 21 etapas
+  const mergeWith21Steps = useCallback((existingSteps: any[] = []) => {
+    const baseQuiz21Steps = [
+      { id: 'etapa-1', name: 'Introdução', order: 1, type: 'intro', description: 'Apresentação do Quiz de Estilo' },
+      { id: 'etapa-2', name: 'Coleta de Nome', order: 2, type: 'name-input', description: 'Captura do nome do participante' },
+      { id: 'etapa-3', name: 'Q1: Tipo de Roupa', order: 3, type: 'question', description: 'QUAL O SEU TIPO DE ROUPA FAVORITA?', multiSelect: 3 },
+      { id: 'etapa-4', name: 'Q2: Personalidade', order: 4, type: 'question', description: 'RESUMA A SUA PERSONALIDADE:', multiSelect: 3 },
+      { id: 'etapa-5', name: 'Q3: Visual', order: 5, type: 'question', description: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?', multiSelect: 3 },
+      { id: 'etapa-6', name: 'Q4: Detalhes', order: 6, type: 'question', description: 'QUAIS DETALHES VOCÊ GOSTA?', multiSelect: 3 },
+      { id: 'etapa-7', name: 'Q5: Estampas', order: 7, type: 'question', description: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?', multiSelect: 3 },
+      { id: 'etapa-8', name: 'Q6: Casacos', order: 8, type: 'question', description: 'QUAL CASACO É SEU FAVORITO?', multiSelect: 3 },
+      { id: 'etapa-9', name: 'Q7: Calças', order: 9, type: 'question', description: 'QUAL SUA CALÇA FAVORITA?', multiSelect: 3 },
+      { id: 'etapa-10', name: 'Q8: Sapatos', order: 10, type: 'question', description: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?', multiSelect: 3 },
+      { id: 'etapa-11', name: 'Q9: Acessórios', order: 11, type: 'question', description: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?', multiSelect: 3 },
+      { id: 'etapa-12', name: 'Q10: Tecidos', order: 12, type: 'question', description: 'O QUE MAIS VALORIZAS NOS ACESSÓRIOS?', multiSelect: 3 },
+      { id: 'etapa-13', name: 'Transição', order: 13, type: 'transition', description: 'Análise dos resultados parciais' },
+      { id: 'etapa-14', name: 'S1: Dificuldades', order: 14, type: 'strategic', description: 'Principal dificuldade com roupas' },
+      { id: 'etapa-15', name: 'S2: Problemas', order: 15, type: 'strategic', description: 'Problemas frequentes de estilo' },
+      { id: 'etapa-16', name: 'S3: Frequência', order: 16, type: 'strategic', description: '"Com que roupa eu vou?" - frequência' },
+      { id: 'etapa-17', name: 'S4: Guia de Estilo', order: 17, type: 'strategic', description: 'O que valoriza em um guia' },
+      { id: 'etapa-18', name: 'S5: Investimento', order: 18, type: 'strategic', description: 'Quanto investiria em consultoria' },
+      { id: 'etapa-19', name: 'S6: Ajuda Imediata', order: 19, type: 'strategic', description: 'O que mais precisa de ajuda' },
+      { id: 'etapa-20', name: 'Resultado', order: 20, type: 'result', description: 'Página de resultado personalizada' },
+      { id: 'etapa-21', name: 'Oferta', order: 21, type: 'offer', description: 'Apresentação da oferta final' }
+    ];
+
+    // Mesclar etapas existentes com as 21 etapas padrão
+    return baseQuiz21Steps.map(baseStep => {
+      const existingStep = existingSteps.find(step => step.id === baseStep.id);
+      return {
+        ...baseStep,
+        blocksCount: existingStep?.blocksCount || 0,
+        isActive: existingStep?.isActive || (baseStep.id === 'etapa-1'),
+        // Preservar nome customizado se existir
+        name: existingStep?.name || baseStep.name
+      };
+    });
+  }, []);
+
+  // 21 Etapas do Quiz CaktoQuiz - Sistema Completo (preservando dados existentes)
+  const initialQuiz21Steps = useMemo(() => {
+    // Se houver dados salvos, tentar recuperá-los
+    const savedSteps = localStorage.getItem('quiz-steps');
+    const existingSteps = savedSteps ? JSON.parse(savedSteps) : [];
+    return mergeWith21Steps(existingSteps);
+  }, [mergeWith21Steps]);
+
+  // Steps state com as 21 etapas do quiz
+  const [steps, setSteps] = useState(initialQuiz21Steps);
+  const [selectedStepId, setSelectedStepId] = useState<string>('etapa-1');
+
+  // Salvar automaticamente o estado das etapas
+  useEffect(() => {
+    localStorage.setItem('quiz-steps', JSON.stringify(steps));
+  }, [steps]);
+
+  // Atualizar contador de blocos das etapas quando blocos mudarem
+  useEffect(() => {
+    if (blocks.length > 0) {
+      setSteps(prev => prev.map(step => {
+        if (step.id === selectedStepId) {
+          return { ...step, blocksCount: blocks.length };
+        }
+        return step;
+      }));
+    }
+  }, [blocks.length, selectedStepId]);
+
+  // Verificar se há dados salvos da Etapa 1 e carregar automaticamente
+  useEffect(() => {
+    const savedEtapa1Blocks = localStorage.getItem('quiz-step-etapa-1-blocks');
+    if (savedEtapa1Blocks && selectedStepId === 'etapa-1') {
+      const etapa1Blocks = JSON.parse(savedEtapa1Blocks);
+      if (etapa1Blocks.length > 0 && blocks.length === 0) {
+        console.log(`🔄 Recuperando ${etapa1Blocks.length} blocos salvos da Etapa 1`);
+        
+        // Carregar blocos salvos da Etapa 1
+        etapa1Blocks.forEach((savedBlock: any, index: number) => {
+          setTimeout(() => {
+            const newBlockId = addBlock(savedBlock.type as any);
+            if (savedBlock.properties) {
+              updateBlock(newBlockId, savedBlock.properties);
+            }
+          }, index * 50);
+        });
+        
+        toast({
+          title: "Dados da Etapa 1 Recuperados",
+          description: `${etapa1Blocks.length} blocos foram restaurados automaticamente.`,
+        });
+      }
+    }
+  }, [selectedStepId, blocks.length, addBlock, updateBlock, toast]);
+
   // Carregar dados do funil quando funnelId mudar
   useEffect(() => {
     const loadFunnelData = async () => {
@@ -213,38 +310,210 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     
     return () => window.removeEventListener('resize', checkIsMobile);
   }, []);
+  useEffect(() => {
+    const loadFunnelData = async () => {
+      if (!funnelId) {
+        console.log('📝 Nenhum funnelId fornecido, usando dados padrão');
+        return;
+      }
+
+      setIsLoadingFunnel(true);
+      console.log('🚀 Carregando funil com ID:', funnelId);
+      
+      try {
+        const funnelData = await schemaDrivenFunnelService.loadFunnel(funnelId);
+        
+        if (!funnelData) {
+          console.log('⚠️ Funil não encontrado');
+          
+          toast({
+            title: 'Funil não encontrado',
+            description: 'O funil solicitado não existe',
+            variant: 'destructive',
+          });
+          return;
+        }
+
+        console.log('✅ Funil carregado:', funnelData.name);
+        console.log('📄 Páginas encontradas:', funnelData.pages.length);
+        
+        // Converter dados do funil para o formato do editor
+        if (funnelData.pages && funnelData.pages.length > 0) {
+          const firstPage = funnelData.pages[0];
+          
+          const editorConfig = {
+            blocks: firstPage.blocks || []
+          };
+          
+          // Usar o método do useEditor para atualizar
+          setConfig(editorConfig);
+          
+          // Atualizar steps baseado nas páginas
+          const funnelSteps: QuizStep[] = funnelData.pages.map((page, index) => ({
+            id: page.id,
+            name: page.title || `Etapa ${index + 1}`,
+            order: index + 1,
+            blocksCount: page.blocks?.length || 0,
+            isActive: index === 0,
+            type: 'custom',
+            description: `Página do funil: ${page.title || `Etapa ${index + 1}`}`
+          }));
+          
+          setSteps(funnelSteps);
+          setSelectedStepId(funnelSteps[0]?.id || 'etapa-1');
+          
+          toast({
+            title: 'Funil Carregado',
+            description: `${funnelData.name} - ${funnelData.pages.length} páginas`,
+          });
+        }
+        
+      } catch (error) {
+        console.error('❌ Erro ao carregar funil:', error);
+        toast({
+          title: 'Erro ao carregar funil',
+          description: 'Verifique se o ID do funil está correto',
+          variant: 'destructive',
+        });
+      } finally {
+        setIsLoadingFunnel(false);
+      }
+    };
+
+    loadFunnelData();
+  }, [funnelId, setConfig, toast]);
+
+  // Verificar se há dados salvos da Etapa 1 e carregar automaticamente
+  useEffect(() => {
+    const savedEtapa1Blocks = localStorage.getItem('quiz-step-etapa-1-blocks');
+    if (savedEtapa1Blocks && selectedStepId === 'etapa-1') {
+      const etapa1Blocks = JSON.parse(savedEtapa1Blocks);
+      if (etapa1Blocks.length > 0 && blocks.length === 0) {
+        console.log(`🔄 Recuperando ${etapa1Blocks.length} blocos salvos da Etapa 1`);
+        
+        // Carregar blocos salvos da Etapa 1
+        etapa1Blocks.forEach((savedBlock: any, index: number) => {
+          setTimeout(() => {
+            const newBlockId = addBlock(savedBlock.type as any);
+            if (savedBlock.properties) {
+              updateBlock(newBlockId, savedBlock.properties);
+            }
+          }, index * 50);
+        });
+        
+        toast({
+          title: "Dados da Etapa 1 Recuperados",
+          description: `${etapa1Blocks.length} blocos foram restaurados automaticamente.`,
+        });
+      }
+    }
+  React.useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    
+    return () => window.removeEventListener('resize', checkIsMobile);
+  }, []);
 
   // Safe access to blocks with fallback
   const blocks = config?.blocks || [];
 
-  // 21 Etapas do Quiz CaktoQuiz - Sistema Completo
-  const initialQuiz21Steps = [
-    { id: 'etapa-1', name: 'Introdução', order: 1, blocksCount: 0, isActive: true, type: 'intro', description: 'Apresentação do Quiz de Estilo' },
-    { id: 'etapa-2', name: 'Coleta de Nome', order: 2, blocksCount: 0, isActive: false, type: 'name-input', description: 'Captura do nome do participante' },
-    { id: 'etapa-3', name: 'Q1: Tipo de Roupa', order: 3, blocksCount: 0, isActive: false, type: 'question', description: 'QUAL O SEU TIPO DE ROUPA FAVORITA?', multiSelect: 3 },
-    { id: 'etapa-4', name: 'Q2: Personalidade', order: 4, blocksCount: 0, isActive: false, type: 'question', description: 'RESUMA A SUA PERSONALIDADE:', multiSelect: 3 },
-    { id: 'etapa-5', name: 'Q3: Visual', order: 5, blocksCount: 0, isActive: false, type: 'question', description: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?', multiSelect: 3 },
-    { id: 'etapa-6', name: 'Q4: Detalhes', order: 6, blocksCount: 0, isActive: false, type: 'question', description: 'QUAIS DETALHES VOCÊ GOSTA?', multiSelect: 3 },
-    { id: 'etapa-7', name: 'Q5: Estampas', order: 7, blocksCount: 0, isActive: false, type: 'question', description: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?', multiSelect: 3 },
-    { id: 'etapa-8', name: 'Q6: Casacos', order: 8, blocksCount: 0, isActive: false, type: 'question', description: 'QUAL CASACO É SEU FAVORITO?', multiSelect: 3 },
-    { id: 'etapa-9', name: 'Q7: Calças', order: 9, blocksCount: 0, isActive: false, type: 'question', description: 'QUAL SUA CALÇA FAVORITA?', multiSelect: 3 },
-    { id: 'etapa-10', name: 'Q8: Sapatos', order: 10, blocksCount: 0, isActive: false, type: 'question', description: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?', multiSelect: 3 },
-    { id: 'etapa-11', name: 'Q9: Acessórios', order: 11, blocksCount: 0, isActive: false, type: 'question', description: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?', multiSelect: 3 },
-    { id: 'etapa-12', name: 'Q10: Tecidos', order: 12, blocksCount: 0, isActive: false, type: 'question', description: 'O QUE MAIS VALORIZAS NOS ACESSÓRIOS?', multiSelect: 3 },
-    { id: 'etapa-13', name: 'Transição', order: 13, blocksCount: 0, isActive: false, type: 'transition', description: 'Análise dos resultados parciais' },
-    { id: 'etapa-14', name: 'S1: Dificuldades', order: 14, blocksCount: 0, isActive: false, type: 'strategic', description: 'Principal dificuldade com roupas' },
-    { id: 'etapa-15', name: 'S2: Problemas', order: 15, blocksCount: 0, isActive: false, type: 'strategic', description: 'Problemas frequentes de estilo' },
-    { id: 'etapa-16', name: 'S3: Frequência', order: 16, blocksCount: 0, isActive: false, type: 'strategic', description: '"Com que roupa eu vou?" - frequência' },
-    { id: 'etapa-17', name: 'S4: Guia de Estilo', order: 17, blocksCount: 0, isActive: false, type: 'strategic', description: 'O que valoriza em um guia' },
-    { id: 'etapa-18', name: 'S5: Investimento', order: 18, blocksCount: 0, isActive: false, type: 'strategic', description: 'Quanto investiria em consultoria' },
-    { id: 'etapa-19', name: 'S6: Ajuda Imediata', order: 19, blocksCount: 0, isActive: false, type: 'strategic', description: 'O que mais precisa de ajuda' },
-    { id: 'etapa-20', name: 'Resultado', order: 20, blocksCount: 0, isActive: false, type: 'result', description: 'Página de resultado personalizada' },
-    { id: 'etapa-21', name: 'Oferta', order: 21, blocksCount: 0, isActive: false, type: 'offer', description: 'Apresentação da oferta final' }
-  ];
+  // Função para preservar etapas existentes e mesclar com as 21 etapas
+  const mergeWith21Steps = useCallback((existingSteps: any[] = []) => {
+    const baseQuiz21Steps = [
+      { id: 'etapa-1', name: 'Introdução', order: 1, type: 'intro', description: 'Apresentação do Quiz de Estilo' },
+      { id: 'etapa-2', name: 'Coleta de Nome', order: 2, type: 'name-input', description: 'Captura do nome do participante' },
+      { id: 'etapa-3', name: 'Q1: Tipo de Roupa', order: 3, type: 'question', description: 'QUAL O SEU TIPO DE ROUPA FAVORITA?', multiSelect: 3 },
+      { id: 'etapa-4', name: 'Q2: Personalidade', order: 4, type: 'question', description: 'RESUMA A SUA PERSONALIDADE:', multiSelect: 3 },
+      { id: 'etapa-5', name: 'Q3: Visual', order: 5, type: 'question', description: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?', multiSelect: 3 },
+      { id: 'etapa-6', name: 'Q4: Detalhes', order: 6, type: 'question', description: 'QUAIS DETALHES VOCÊ GOSTA?', multiSelect: 3 },
+      { id: 'etapa-7', name: 'Q5: Estampas', order: 7, type: 'question', description: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?', multiSelect: 3 },
+      { id: 'etapa-8', name: 'Q6: Casacos', order: 8, type: 'question', description: 'QUAL CASACO É SEU FAVORITO?', multiSelect: 3 },
+      { id: 'etapa-9', name: 'Q7: Calças', order: 9, type: 'question', description: 'QUAL SUA CALÇA FAVORITA?', multiSelect: 3 },
+      { id: 'etapa-10', name: 'Q8: Sapatos', order: 10, type: 'question', description: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?', multiSelect: 3 },
+      { id: 'etapa-11', name: 'Q9: Acessórios', order: 11, type: 'question', description: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?', multiSelect: 3 },
+      { id: 'etapa-12', name: 'Q10: Tecidos', order: 12, type: 'question', description: 'O QUE MAIS VALORIZAS NOS ACESSÓRIOS?', multiSelect: 3 },
+      { id: 'etapa-13', name: 'Transição', order: 13, type: 'transition', description: 'Análise dos resultados parciais' },
+      { id: 'etapa-14', name: 'S1: Dificuldades', order: 14, type: 'strategic', description: 'Principal dificuldade com roupas' },
+      { id: 'etapa-15', name: 'S2: Problemas', order: 15, type: 'strategic', description: 'Problemas frequentes de estilo' },
+      { id: 'etapa-16', name: 'S3: Frequência', order: 16, type: 'strategic', description: '"Com que roupa eu vou?" - frequência' },
+      { id: 'etapa-17', name: 'S4: Guia de Estilo', order: 17, type: 'strategic', description: 'O que valoriza em um guia' },
+      { id: 'etapa-18', name: 'S5: Investimento', order: 18, type: 'strategic', description: 'Quanto investiria em consultoria' },
+      { id: 'etapa-19', name: 'S6: Ajuda Imediata', order: 19, type: 'strategic', description: 'O que mais precisa de ajuda' },
+      { id: 'etapa-20', name: 'Resultado', order: 20, type: 'result', description: 'Página de resultado personalizada' },
+      { id: 'etapa-21', name: 'Oferta', order: 21, type: 'offer', description: 'Apresentação da oferta final' }
+    ];
+
+    // Mesclar etapas existentes com as 21 etapas padrão
+    return baseQuiz21Steps.map(baseStep => {
+      const existingStep = existingSteps.find(step => step.id === baseStep.id);
+      return {
+        ...baseStep,
+        blocksCount: existingStep?.blocksCount || 0,
+        isActive: existingStep?.isActive || (baseStep.id === 'etapa-1'),
+        // Preservar nome customizado se existir
+        name: existingStep?.name || baseStep.name
+      };
+    });
+  }, []);
+
+  // 21 Etapas do Quiz CaktoQuiz - Sistema Completo (preservando dados existentes)
+  const initialQuiz21Steps = useMemo(() => {
+    // Se houver dados salvos, tentar recuperá-los
+    const savedSteps = localStorage.getItem('quiz-steps');
+    const existingSteps = savedSteps ? JSON.parse(savedSteps) : [];
+    return mergeWith21Steps(existingSteps);
+  }, [mergeWith21Steps]);
 
   // Steps state com as 21 etapas do quiz
   const [steps, setSteps] = useState(initialQuiz21Steps);
   const [selectedStepId, setSelectedStepId] = useState<string>('etapa-1');
+
+  // Salvar automaticamente o estado das etapas
+  useEffect(() => {
+    localStorage.setItem('quiz-steps', JSON.stringify(steps));
+  }, [steps]);
+
+  // Atualizar contador de blocos das etapas quando blocos mudarem
+  useEffect(() => {
+    if (blocks.length > 0) {
+      setSteps(prev => prev.map(step => {
+        if (step.id === selectedStepId) {
+          return { ...step, blocksCount: blocks.length };
+        }
+        return step;
+      }));
+    }
+  }, [blocks.length, selectedStepId]);
+
+  // Verificar se há dados salvos da Etapa 1 e carregar automaticamente
+  useEffect(() => {
+    const savedEtapa1Blocks = localStorage.getItem('quiz-step-etapa-1-blocks');
+    if (savedEtapa1Blocks && selectedStepId === 'etapa-1') {
+      const etapa1Blocks = JSON.parse(savedEtapa1Blocks);
+      if (etapa1Blocks.length > 0 && blocks.length === 0) {
+        console.log(`🔄 Recuperando ${etapa1Blocks.length} blocos salvos da Etapa 1`);
+        
+        // Carregar blocos salvos da Etapa 1
+        etapa1Blocks.forEach((savedBlock: any, index: number) => {
+          setTimeout(() => {
+            const newBlockId = addBlock(savedBlock.type as any);
+            if (savedBlock.properties) {
+              updateBlock(newBlockId, savedBlock.properties);
+            }
+          }, index * 50);
+        });
+        
+        toast({
+          title: "Dados da Etapa 1 Recuperados",
+          description: `${etapa1Blocks.length} blocos foram restaurados automaticamente.`,
+        });
+      }
+    }
+  }, [selectedStepId, blocks.length, addBlock, updateBlock, toast]);
 
   const handleAddBlock = useCallback((blockType: string) => {
     const newBlockId = addBlock(blockType as any);
@@ -376,9 +645,36 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   }, [steps, blocks, deleteBlock, loadStepSpecificBlocks, toast]);
 
   const handleStepSelect = useCallback((stepId: string) => {
+    // Salvar blocos da etapa atual antes de trocar
+    if (selectedStepId && blocks.length > 0) {
+      localStorage.setItem(`quiz-step-${selectedStepId}-blocks`, JSON.stringify(blocks));
+    }
+    
+    // Carregar blocos da nova etapa
+    const savedBlocks = localStorage.getItem(`quiz-step-${stepId}-blocks`);
+    if (savedBlocks) {
+      const stepBlocks = JSON.parse(savedBlocks);
+      console.log(`🔄 Carregando ${stepBlocks.length} blocos salvos da etapa ${stepId}`);
+      
+      // Limpar blocos atuais
+      blocks.forEach(block => deleteBlock(block.id));
+      
+      // Carregar blocos salvos
+      setTimeout(() => {
+        stepBlocks.forEach((savedBlock: any, index: number) => {
+          setTimeout(() => {
+            const newBlockId = addBlock(savedBlock.type as any);
+            if (savedBlock.properties) {
+              updateBlock(newBlockId, savedBlock.properties);
+            }
+          }, index * 50);
+        });
+      }, 100);
+    }
+    
     setSelectedStepId(stepId);
     setSelectedBlockId(null); // Clear block selection when changing steps
-  }, []);
+  }, [selectedStepId, blocks, deleteBlock, addBlock, updateBlock]);
 
   const handleStepAdd = useCallback(() => {
     const newStep: QuizStep = {
@@ -680,6 +976,11 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-semibold text-gray-900">
               Editor Visual {funnelId ? `- ${funnelId}` : 'das 21 Etapas'}
+              {localStorage.getItem('quiz-step-etapa-1-blocks') && (
+                <span className="ml-2 text-sm bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                  Dados Preservados ✓
+                </span>
+              )}
             </h1>
             <div className="flex items-center gap-2">
               <Button
