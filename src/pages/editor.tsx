@@ -22,12 +22,15 @@ const EditorPage: React.FC = () => {
   
   // ✅ AUTO-SAVE COM DEBOUNCE - Fase 1 
   const handleAutoSave = async (data: any) => {
+    // Preservar o ID original do funil carregado da URL
+    const preservedId = funnelId || data.id || `funnel_${Date.now()}`;
+    
     const funnelData = {
-      id: data.id || `funnel_${Date.now()}`,
+      id: preservedId,
       name: data.title || 'Novo Funil',
       description: data.description || '',
       isPublished: false,
-      version: 1,
+      version: data.version || 1,
       settings: data.settings || {},
       pages: [{
         id: `page_${Date.now()}`,
