@@ -24,18 +24,6 @@ interface SchemaDrivenEditorResponsiveProps {
   className?: string;
 }
 
-// Interface para as etapas do quiz
-interface QuizStep {
-  id: string;
-  name: string;
-  order: number;
-  blocksCount: number;
-  isActive: boolean;
-  type: string;
-  description: string;
-  multiSelect?: number;
-}
-
 type PreviewMode = 'desktop' | 'tablet' | 'mobile';
 
 const PREVIEW_DIMENSIONS = {
@@ -168,18 +156,16 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           setConfig(editorConfig);
           
           // Atualizar steps baseado nas páginas
-          const funnelSteps: QuizStep[] = funnelData.pages.map((page, index) => ({
+          const funnelSteps = funnelData.pages.map((page, index) => ({
             id: page.id,
             name: page.title || `Etapa ${index + 1}`,
             order: index + 1,
             blocksCount: page.blocks?.length || 0,
-            isActive: index === 0,
-            type: 'custom',
-            description: `Página do funil: ${page.title || `Etapa ${index + 1}`}`
+            isActive: index === 0
           }));
           
           setSteps(funnelSteps);
-          setSelectedStepId(funnelSteps[0]?.id || 'etapa-1');
+          setSelectedStepId(funnelSteps[0]?.id || 'step-1');
           
           toast({
             title: 'Funil Carregado',
@@ -202,31 +188,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     loadFunnelData();
   }, [funnelId, setConfig, toast]);
 
-  // Verificar se há dados salvos da Etapa 1 e carregar automaticamente
-  useEffect(() => {
-    const savedEtapa1Blocks = localStorage.getItem('quiz-step-etapa-1-blocks');
-    if (savedEtapa1Blocks && selectedStepId === 'etapa-1') {
-      const etapa1Blocks = JSON.parse(savedEtapa1Blocks);
-      if (etapa1Blocks.length > 0 && blocks.length === 0) {
-        console.log(`🔄 Recuperando ${etapa1Blocks.length} blocos salvos da Etapa 1`);
-        
-        // Carregar blocos salvos da Etapa 1
-        etapa1Blocks.forEach((savedBlock: any, index: number) => {
-          setTimeout(() => {
-            const newBlockId = addBlock(savedBlock.type as any);
-            if (savedBlock.properties) {
-              updateBlock(newBlockId, savedBlock.properties);
-            }
-          }, index * 50);
-        });
-        
-        toast({
-          title: "Dados da Etapa 1 Recuperados",
-          description: `${etapa1Blocks.length} blocos foram restaurados automaticamente.`,
-        });
-      }
-    }
-  }, [selectedStepId, blocks.length, addBlock, updateBlock, toast]);
+  // Detect mobile screen size
   React.useEffect(() => {
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -241,73 +203,13 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   // Safe access to blocks with fallback
   const blocks = config?.blocks || [];
 
-  // Função para preservar etapas existentes e mesclar com as 21 etapas
-  const mergeWith21Steps = useCallback((existingSteps: any[] = []) => {
-    const baseQuiz21Steps = [
-      { id: 'etapa-1', name: 'Introdução', order: 1, type: 'intro', description: 'Apresentação do Quiz de Estilo' },
-      { id: 'etapa-2', name: 'Coleta de Nome', order: 2, type: 'name-input', description: 'Captura do nome do participante' },
-      { id: 'etapa-3', name: 'Q1: Tipo de Roupa', order: 3, type: 'question', description: 'QUAL O SEU TIPO DE ROUPA FAVORITA?', multiSelect: 3 },
-      { id: 'etapa-4', name: 'Q2: Personalidade', order: 4, type: 'question', description: 'RESUMA A SUA PERSONALIDADE:', multiSelect: 3 },
-      { id: 'etapa-5', name: 'Q3: Visual', order: 5, type: 'question', description: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?', multiSelect: 3 },
-      { id: 'etapa-6', name: 'Q4: Detalhes', order: 6, type: 'question', description: 'QUAIS DETALHES VOCÊ GOSTA?', multiSelect: 3 },
-      { id: 'etapa-7', name: 'Q5: Estampas', order: 7, type: 'question', description: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?', multiSelect: 3 },
-      { id: 'etapa-8', name: 'Q6: Casacos', order: 8, type: 'question', description: 'QUAL CASACO É SEU FAVORITO?', multiSelect: 3 },
-      { id: 'etapa-9', name: 'Q7: Calças', order: 9, type: 'question', description: 'QUAL SUA CALÇA FAVORITA?', multiSelect: 3 },
-      { id: 'etapa-10', name: 'Q8: Sapatos', order: 10, type: 'question', description: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?', multiSelect: 3 },
-      { id: 'etapa-11', name: 'Q9: Acessórios', order: 11, type: 'question', description: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?', multiSelect: 3 },
-      { id: 'etapa-12', name: 'Q10: Tecidos', order: 12, type: 'question', description: 'O QUE MAIS VALORIZAS NOS ACESSÓRIOS?', multiSelect: 3 },
-      { id: 'etapa-13', name: 'Transição', order: 13, type: 'transition', description: 'Análise dos resultados parciais' },
-      { id: 'etapa-14', name: 'S1: Dificuldades', order: 14, type: 'strategic', description: 'Principal dificuldade com roupas' },
-      { id: 'etapa-15', name: 'S2: Problemas', order: 15, type: 'strategic', description: 'Problemas frequentes de estilo' },
-      { id: 'etapa-16', name: 'S3: Frequência', order: 16, type: 'strategic', description: '"Com que roupa eu vou?" - frequência' },
-      { id: 'etapa-17', name: 'S4: Guia de Estilo', order: 17, type: 'strategic', description: 'O que valoriza em um guia' },
-      { id: 'etapa-18', name: 'S5: Investimento', order: 18, type: 'strategic', description: 'Quanto investiria em consultoria' },
-      { id: 'etapa-19', name: 'S6: Ajuda Imediata', order: 19, type: 'strategic', description: 'O que mais precisa de ajuda' },
-      { id: 'etapa-20', name: 'Resultado', order: 20, type: 'result', description: 'Página de resultado personalizada' },
-      { id: 'etapa-21', name: 'Oferta', order: 21, type: 'offer', description: 'Apresentação da oferta final' }
-    ];
-
-    // Mesclar etapas existentes com as 21 etapas padrão
-    return baseQuiz21Steps.map(baseStep => {
-      const existingStep = existingSteps.find(step => step.id === baseStep.id);
-      return {
-        ...baseStep,
-        blocksCount: existingStep?.blocksCount || 0,
-        isActive: existingStep?.isActive || (baseStep.id === 'etapa-1'),
-        // Preservar nome customizado se existir
-        name: existingStep?.name || baseStep.name
-      };
-    });
-  }, []);
-
-  // 21 Etapas do Quiz CaktoQuiz - Sistema Completo (preservando dados existentes)
-  const initialQuiz21Steps = useMemo(() => {
-    // Se houver dados salvos, tentar recuperá-los
-    const savedSteps = localStorage.getItem('quiz-steps');
-    const existingSteps = savedSteps ? JSON.parse(savedSteps) : [];
-    return mergeWith21Steps(existingSteps);
-  }, [mergeWith21Steps]);
-
-  // Steps state com as 21 etapas do quiz
-  const [steps, setSteps] = useState(initialQuiz21Steps);
-  const [selectedStepId, setSelectedStepId] = useState<string>('etapa-1');
-
-  // Salvar automaticamente o estado das etapas
-  useEffect(() => {
-    localStorage.setItem('quiz-steps', JSON.stringify(steps));
-  }, [steps]);
-
-  // Atualizar contador de blocos das etapas quando blocos mudarem
-  useEffect(() => {
-    if (blocks.length > 0) {
-      setSteps(prev => prev.map(step => {
-        if (step.id === selectedStepId) {
-          return { ...step, blocksCount: blocks.length };
-        }
-        return step;
-      }));
-    }
-  }, [blocks.length, selectedStepId]);
+  // Steps state
+  const [steps, setSteps] = useState([
+    { id: 'step-1', name: 'Etapa 1', order: 1, blocksCount: 0, isActive: true },
+    { id: 'step-2', name: 'Etapa 2', order: 2, blocksCount: 0, isActive: false },
+    { id: 'step-3', name: 'Etapa 3', order: 3, blocksCount: 0, isActive: false },
+  ]);
+  const [selectedStepId, setSelectedStepId] = useState<string>('step-1');
 
   const handleAddBlock = useCallback((blockType: string) => {
     const newBlockId = addBlock(blockType as any);
@@ -341,149 +243,24 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     ));
   }, [addBlock, updateBlock]);
 
-  // Função para carregar blocos específicos de cada etapa
-  const loadStepSpecificBlocks = useCallback((stepId: string, stepType: string) => {
-    console.log(`🎯 Carregando blocos específicos para ${stepId} (tipo: ${stepType})`);
-    
-    // Definir blocos específicos para cada tipo de etapa
-    const stepTemplates: Record<string, any[]> = {
-      'intro': [
-        { type: 'heading-inline', properties: { content: 'Descubra Seu Estilo Pessoal', level: 'h1', textAlign: 'center' } },
-        { type: 'text-inline', properties: { content: 'Um quiz personalizado para descobrir o seu estilo único', textAlign: 'center' } },
-        { type: 'button-inline', properties: { content: 'Começar Quiz', size: 'large' } }
-      ],
-      'name-input': [
-        { type: 'heading-inline', properties: { content: 'Qual é o seu nome?', level: 'h2', textAlign: 'center' } },
-        { type: 'form-input', properties: { label: 'Nome', placeholder: 'Digite seu nome aqui', required: true } },
-        { type: 'button-inline', properties: { content: 'Continuar', size: 'medium' } }
-      ],
-      'question': [
-        { type: 'quiz-question', properties: { question: 'Pergunta do quiz', multiSelect: true, maxSelections: 3 } },
-        { type: 'options-grid', properties: { layout: 'grid', columns: 2 } },
-        { type: 'quiz-progress', properties: { showPercentage: true } }
-      ],
-      'strategic': [
-        { type: 'strategic-question-main', properties: { question: 'Questão estratégica', type: 'strategic' } },
-        { type: 'options-grid', properties: { layout: 'list', columns: 1 } },
-        { type: 'text-inline', properties: { content: 'Esta informação nos ajuda a personalizar sua experiência' } }
-      ],
-      'transition': [
-        { type: 'heading-inline', properties: { content: 'Analisando suas respostas...', level: 'h2', textAlign: 'center' } },
-        { type: 'loading-animation', properties: { duration: 3000 } },
-        { type: 'text-inline', properties: { content: 'Preparando questões especiais para você', textAlign: 'center' } }
-      ],
-      'result': [
-        { type: 'result-header-inline', properties: { title: 'Seu Resultado', subtitle: 'Personalizado para você' } },
-        { type: 'result-card-inline', properties: { showImage: true, showDescription: true } },
-        { type: 'before-after-inline', properties: { showComparison: true } },
-        { type: 'testimonials-inline', properties: { count: 3 } }
-      ],
-      'offer': [
-        { type: 'quiz-offer-cta-inline', properties: { title: 'Oferta Especial', urgency: true } },
-        { type: 'quiz-offer-pricing-inline', properties: { showDiscount: true, highlightValue: true } },
-        { type: 'bonus-list-inline', properties: { showBonuses: true } },
-        { type: 'button-inline', properties: { content: 'Quero Aproveitar', size: 'large', style: 'cta' } }
-      ]
-    };
-
-    const blocksToAdd = stepTemplates[stepType] || stepTemplates['question'];
-    
-    if (blocksToAdd && blocksToAdd.length > 0) {
-      handleAddBlocksToStep(stepId, blocksToAdd);
-      console.log(`✅ ${blocksToAdd.length} blocos adicionados à etapa ${stepId}`);
-    }
-  }, [handleAddBlocksToStep]);
-
-  // Função para popular uma etapa automaticamente
-  const handlePopulateStep = useCallback((stepId: string) => {
-    const step = steps.find(s => s.id === stepId);
-    if (step && step.type) {
-      loadStepSpecificBlocks(stepId, step.type);
-    }
-  }, [steps, loadStepSpecificBlocks]);
-  // Função para carregar o template completo das 21 etapas
-  const handleLoadComplete21StepsTemplate = useCallback(async () => {
-    try {
-      console.log('🚀 Carregando template completo das 21 etapas...');
-      
-      // Limpar blocos existentes
-      blocks.forEach(block => {
-        deleteBlock(block.id);
-      });
-      
-      // Para cada etapa, carregar os blocos específicos
-      for (let i = 0; i < steps.length; i++) {
-        const step = steps[i];
-        if (step.type) {
-          setTimeout(() => {
-            loadStepSpecificBlocks(step.id, step.type);
-          }, i * 200); // Delay para evitar conflitos
-        }
-      }
-      
-      toast({
-        title: "Template das 21 Etapas Carregado!",
-        description: `${steps.length} etapas foram populadas com blocos específicos.`,
-      });
-      
-      console.log('✅ Template completo das 21 etapas carregado com sucesso!');
-      
-    } catch (error) {
-      console.error('❌ Erro ao carregar template das 21 etapas:', error);
-      toast({
-        title: "Erro ao carregar template",
-        description: "Não foi possível carregar o template completo.",
-        variant: "destructive",
-      });
-    }
-  }, [steps, blocks, deleteBlock, loadStepSpecificBlocks, toast]);
-
+  // Steps management functions
   const handleStepSelect = useCallback((stepId: string) => {
-    // Salvar blocos da etapa atual antes de trocar
-    if (selectedStepId && blocks.length > 0) {
-      localStorage.setItem(`quiz-step-${selectedStepId}-blocks`, JSON.stringify(blocks));
-    }
-    
-    // Carregar blocos da nova etapa
-    const savedBlocks = localStorage.getItem(`quiz-step-${stepId}-blocks`);
-    if (savedBlocks) {
-      const stepBlocks = JSON.parse(savedBlocks);
-      console.log(`🔄 Carregando ${stepBlocks.length} blocos salvos da etapa ${stepId}`);
-      
-      // Limpar blocos atuais
-      blocks.forEach(block => deleteBlock(block.id));
-      
-      // Carregar blocos salvos
-      setTimeout(() => {
-        stepBlocks.forEach((savedBlock: any, index: number) => {
-          setTimeout(() => {
-            const newBlockId = addBlock(savedBlock.type as any);
-            if (savedBlock.properties) {
-              updateBlock(newBlockId, savedBlock.properties);
-            }
-          }, index * 50);
-        });
-      }, 100);
-    }
-    
     setSelectedStepId(stepId);
     setSelectedBlockId(null); // Clear block selection when changing steps
-  }, [selectedStepId, blocks, deleteBlock, addBlock, updateBlock]);
+  }, []);
 
   const handleStepAdd = useCallback(() => {
-    const newStep: QuizStep = {
-      id: `etapa-${Date.now()}`,
+    const newStep = {
+      id: `step-${Date.now()}`,
       name: `Etapa ${steps.length + 1}`,
       order: steps.length + 1,
       blocksCount: 0,
-      isActive: false,
-      type: 'custom',
-      description: `Etapa personalizada ${steps.length + 1}`
+      isActive: false
     };
     setSteps(prev => [...prev, newStep]);
   }, [steps.length]);
 
-  const handleStepUpdate = useCallback((stepId: string, updates: Partial<QuizStep>) => {
+  const handleStepUpdate = useCallback((stepId: string, updates: any) => {
     setSteps(prev => prev.map(step => 
       step.id === stepId ? { ...step, ...updates } : step
     ));
@@ -506,9 +283,9 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const handleStepDuplicate = useCallback((stepId: string) => {
     const stepToDuplicate = steps.find(step => step.id === stepId);
     if (stepToDuplicate) {
-      const newStep: QuizStep = {
+      const newStep = {
         ...stepToDuplicate,
-        id: `etapa-${Date.now()}`,
+        id: `step-${Date.now()}`,
         name: `${stepToDuplicate.name} (Cópia)`,
         order: steps.length + 1
       };
@@ -785,21 +562,11 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               <Button
                 variant="outline"
                 size="sm"
-                onClick={handleLoadComplete21StepsTemplate}
-                className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 border-none"
-              >
-                <Download className="w-4 h-4" />
-                Carregar 21 Etapas
-              </Button>
-              
-              <Button
-                variant="outline"
-                size="sm"
                 onClick={handleLoadTemplate}
                 className="flex items-center gap-2"
               >
                 <Download className="w-4 h-4" />
-                Blocos de Teste
+                Carregar Blocos de Teste
               </Button>
               
               {/* Preview Mode Buttons */}
@@ -913,20 +680,11 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                         </div>
                         <div>
                           <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                            Editor das 21 Etapas do Quiz CaktoQuiz
+                            Editor das 21 Etapas do Quiz
                           </h3>
                           <p className="text-gray-600 mb-4">
                             Selecione componentes acima para começar a construir sua etapa
                           </p>
-                          <div className="space-y-2">
-                            <Button
-                              onClick={handleLoadComplete21StepsTemplate}
-                              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-                            >
-                              <Download className="w-4 h-4 mr-2" />
-                              Carregar 21 Etapas
-                            </Button>
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -981,7 +739,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                   onStepDuplicate={handleStepDuplicate}
                   onStepReorder={handleStepReorder}
                   onAddBlocksToStep={handleAddBlocksToStep}
-                  onPopulateStep={handlePopulateStep}
                   className="p-2"
                 />
               </ScrollArea>
@@ -1040,63 +797,47 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                           </div>
                           <div>
                             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                              Editor das 21 Etapas do Quiz CaktoQuiz
+                              Editor das 21 Etapas do Quiz
                             </h3>
                             <p className="text-gray-600 mb-4">
-                              Sistema completo para criar um funil de quiz de estilo pessoal otimizado para conversão
+                              Crie um funil completo de quiz de estilo pessoal com 21 etapas otimizadas para conversão
                             </p>
                           </div>
                           <div className="space-y-2">
                             <Button
-                              onClick={handleLoadComplete21StepsTemplate}
-                              className="w-full mb-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-                            >
-                              <Download className="w-4 h-4 mr-2" />
-                              Carregar Template Completo (21 Etapas)
-                            </Button>
-                            <Button
                               onClick={handleLoadTemplate}
-                              variant="outline"
-                              className="w-full"
+                              className="w-full mb-2"
                             >
                               <Download className="w-4 h-4 mr-2" />
                               Carregar Blocos de Teste
                             </Button>
-                            <p className="text-sm text-gray-500 text-center">
+                            <p className="text-sm text-gray-500">
                               Ou arraste componentes da barra lateral
                             </p>
                           </div>
                           <div className="grid grid-cols-2 gap-3 text-xs text-gray-500">
                             <div className="text-left">
-                              <p className="font-medium mb-2">📊 Estrutura Completa:</p>
+                              <p className="font-medium">✨ Inclui:</p>
                               <ul className="space-y-1">
-                                <li>• 1 página de introdução</li>
-                                <li>• 1 coleta de nome</li>
                                 <li>• 10 questões principais</li>
                                 <li>• 6 questões estratégicas</li>
-                                <li>• 1 transição</li>
-                                <li>• 1 página de resultado</li>
-                                <li>• 1 página de oferta</li>
+                                <li>• Página de resultado</li>
+                                <li>• Página de oferta</li>
                               </ul>
                             </div>
                             <div className="text-left">
-                              <p className="font-medium mb-2">🎯 Recursos Inclusos:</p>
+                              <p className="font-medium">🎯 Recursos:</p>
                               <ul className="space-y-1">
                                 <li>• Cálculos automáticos</li>
                                 <li>• Progress tracking</li>
                                 <li>• Transições suaves</li>
-                                <li>• Questões estratégicas</li>
-                                <li>• Personalização completa</li>
-                                <li>• Sistema de ofertas</li>
+                                <li>• Sistema completo</li>
                               </ul>
                             </div>
                           </div>
                           <div className="mt-4 p-3 bg-blue-50 rounded-lg">
                             <p className="text-xs text-blue-700">
-                              <strong>� Status:</strong> {steps.length} etapas configuradas | {AVAILABLE_BLOCKS.length} componentes disponíveis
-                            </p>
-                            <p className="text-xs text-blue-600 mt-1">
-                              Cada etapa pode ser populada individualmente através do menu de contexto (⋯)
+                              <strong>📊 Status:</strong> {AVAILABLE_BLOCKS.length} componentes disponíveis
                             </p>
                           </div>
                         </div>
