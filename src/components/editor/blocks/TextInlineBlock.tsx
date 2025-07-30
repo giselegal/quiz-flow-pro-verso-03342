@@ -124,8 +124,14 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
 
   // Verificar se o conteúdo contém HTML
   const isHtmlContent = useMemo(() => {
-    return personalizedContent?.includes('<') && personalizedContent?.includes('>');
-  }, [personalizedContent]);
+    const hasHtml = personalizedContent?.includes('<') && personalizedContent?.includes('>');
+    console.log('🔍 TextInlineBlock Debug:', {
+      content: personalizedContent,
+      hasHtml,
+      blockId: block?.id
+    });
+    return hasHtml;
+  }, [personalizedContent, block?.id]);
 
   // ES7+ useCallback para otimização de re-renders
   const handleClick = useCallback(() => {
@@ -183,7 +189,10 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         // ES7+ Conditional data attributes
       >
         {isHtmlContent ? (
-          <div dangerouslySetInnerHTML={{ __html: personalizedContent }} />
+          <div 
+            dangerouslySetInnerHTML={{ __html: personalizedContent }} 
+            style={{ display: 'contents' }}
+          />
         ) : (
           personalizedContent
         )}
