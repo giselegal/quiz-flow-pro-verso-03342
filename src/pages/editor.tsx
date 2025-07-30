@@ -17,6 +17,10 @@ const EditorPage: React.FC = () => {
   const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
   
+  // Extract funnel ID from URL ANTES dos hooks
+  const urlParams = new URLSearchParams(window.location.search);
+  const funnelId = urlParams.get('id');
+  
   const { config, addBlock, updateBlock, deleteBlock, setConfig } = useEditor();
   const { saveFunnel, loadFunnel, isSaving, isLoading } = useEditorPersistence();
   
@@ -51,10 +55,6 @@ const EditorPage: React.FC = () => {
     enabled: !!config?.blocks?.length,
     showToasts: false
   });
-
-  // Extract funnel ID from URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const funnelId = urlParams.get('id');
 
   // Load funnel on mount if ID is provided
   useEffect(() => {
