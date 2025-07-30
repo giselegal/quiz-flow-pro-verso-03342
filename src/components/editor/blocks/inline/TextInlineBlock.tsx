@@ -18,6 +18,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     content = 'Texto editável com formatação elegante.',
     fontSize = 'medium',
     fontWeight = 'normal',
+    fontFamily = 'inherit',
     textAlign = 'left',
     color = '#374151',
     backgroundColor = 'transparent',
@@ -109,7 +110,10 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
           // Quebra de palavras para textos longos
           'break-words hyphens-auto'
         )}
-        style={{ color }}
+        style={{ 
+          color,
+          ...(fontFamily !== 'inherit' && { fontFamily })
+        }}
       >
         {isHtmlContent ? (
           <span dangerouslySetInnerHTML={{ __html: processedContent }} />

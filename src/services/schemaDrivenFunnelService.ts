@@ -810,7 +810,7 @@ class SchemaDrivenFunnelService {
           id: 'intro-main-heading',
           type: 'text-inline',
           properties: {
-            content: '<span style="color: #B89B7A; font-weight: 700;">Chega</span> de um guarda-roupa lotado e da sensação de que <span style="color: #B89B7A; font-weight: 700;">nada combina com você.</span>',
+            content: '<span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">Chega</span> <span style="font-family: \'Playfair Display\', serif;">de um guarda-roupa lotado e da sensação de que</span> <span style="color: #B89B7A; font-weight: 700; font-family: \'Playfair Display\', serif;">nada combina com você.</span>',
             fontSize: 'text-3xl',
             fontWeight: 'font-bold',
             fontFamily: 'Playfair Display, serif',
