@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../components/ui/resizable';
-import { ComponentsSidebar } from '../components/editor/sidebar/ComponentsSidebar';
-import { EditPreview } from '../components/editor/preview/EditPreview';
-import PropertiesPanel from '../components/editor/properties/PropertiesPanel';
-import { EditorToolbar } from '../components/editor/toolbar/EditorToolbar';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import { ComponentsSidebar } from '@/components/editor/sidebar/ComponentsSidebar';
+import { EditPreview } from '@/components/editor/preview/EditPreview';
+import PropertiesPanel from '@/components/editor/properties/PropertiesPanel';
+import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
 import { useEditor } from '@/hooks/useEditor';
 import { useEditorPersistence } from '@/hooks/editor/useEditorPersistence';
 import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
@@ -108,62 +108,3 @@ const EditorPage: React.FC = () => {
     enabled: !!config?.blocks?.length,
     showToasts: false
   });
-
-  // Show loading while loading funnel
-  if (isLoadingFunnel || isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <LoadingSpinner />
-        <span className="ml-2">Carregando editor...</span>
-      </div>
-    );
-  }
-
-  return (
-    <EditorQuizProvider>
-      <div className="flex flex-col h-screen bg-background">
-        <EditorToolbar
-          config={config}
-          isSaving={isSaving}
-          onPreview={() => setIsPreviewing(!isPreviewing)}
-          isPreviewing={isPreviewing}
-          onSave={() => forceSave()}
-        />
-        
-        <ResizablePanelGroup direction="horizontal" className="flex-1">
-          <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-            <ComponentsSidebar 
-              onAddBlock={addBlock}
-              selectedComponentId={selectedComponentId}
-            />
-          </ResizablePanel>
-          
-          <ResizableHandle />
-          
-          <ResizablePanel defaultSize={60} minSize={30}>
-            <EditPreview
-              config={config}
-              onSelectComponent={setSelectedComponentId}
-              selectedComponentId={selectedComponentId}
-              onUpdateBlock={updateBlock}
-              onDeleteBlock={deleteBlock}
-              isPreviewing={isPreviewing}
-            />
-          </ResizablePanel>
-          
-          <ResizableHandle />
-          
-          <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-            <PropertiesPanel
-              selectedComponentId={selectedComponentId}
-              config={config}
-              onUpdateBlock={updateBlock}
-            />
-          </ResizablePanel>
-        </ResizablePanelGroup>
-      </div>
-    </EditorQuizProvider>
-  );
-};
-
-export default EditorPage;
