@@ -135,7 +135,7 @@ const StageQuestionComponent: React.FC<StageQuestionComponentProps> = ({
           
           return (
             <div
-              key={index}
+              key={`option-${text.slice(0, 10).replace(/\s+/g, '-')}-${index}`}
               className={cn(
                 "relative rounded-lg overflow-hidden transition-all duration-200 cursor-pointer bg-white",
                 isSelected 
