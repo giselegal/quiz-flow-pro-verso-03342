@@ -92,12 +92,14 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
             />
           </div>
           
-          {/* Progress Text */}
+          {/* Progress Text - Oculto conforme solicitado */}
+          {/* 
           <div className="text-center mt-2">
             <span className="text-sm text-gray-600">
               {Math.round(progressValue)}% completo
             </span>
           </div>
+          */}
         </>
       )}
     </div>
