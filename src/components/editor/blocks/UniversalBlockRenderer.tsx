@@ -73,6 +73,7 @@ import ResultCardInlineBlock from './inline/ResultCardInlineBlock';
 import BeforeAfterInlineBlock from './inline/BeforeAfterInlineBlock';
 import BonusListInlineBlock from './inline/BonusListInlineBlock';
 import StepHeaderInlineBlock from './inline/StepHeaderInlineBlock';
+import LegalNoticeInlineBlock from './LegalNoticeInlineBlock';
 
 // Novos componentes modulares para etapas 20 e 21 (temporariamente desabilitados)
 import ResultPageHeaderBlock from './ResultPageHeaderBlock';
@@ -211,12 +212,11 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       // === COMPONENTES INLINE BÁSICOS (com fallback) ===
       'text-inline': () => <TextInlineBlock {...commonProps} />,
       'heading-inline': () => <HeadingInlineBlock {...commonProps} />,
-      'button-inline': () => <ButtonInlineBlock {...commonProps} />,
       'badge-inline': () => <BadgeInlineBlock {...commonProps} />,
       'progress-inline': () => <ProgressInlineBlock {...commonProps} />,
       'image-display-inline': () => <ImageDisplayInlineBlock {...commonProps} />,
       'style-card-inline': () => <StyleCardInlineBlock {...commonProps} />,
-      'countdown-inline': () => CountdownInlineBlock ? <CountdownInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
+      'legal-notice-inline': () => <LegalNoticeInlineBlock {...commonProps} />,
       'countdown-timer-inline': () => CountdownInlineBlock ? <CountdownInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
       'countdown-timer-real': () => CountdownInlineBlock ? <CountdownInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,
       'stat-inline': () => StatInlineBlock ? <StatInlineBlock {...commonProps} /> : <BasicTextBlock {...commonProps} />,

@@ -880,6 +880,23 @@ class SchemaDrivenFunnelService {
             boxShadow: 'shadow-xl',
             hoverEffect: true
           }
+        },
+        {
+          id: 'intro-legal-notice',
+          type: 'legal-notice-inline',
+          properties: {
+            privacyText: 'Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade',
+            copyrightText: '© 2025 Gisele Galvão - Todos os direitos reservados',
+            showIcon: true,
+            iconType: 'shield',
+            textAlign: 'text-center',
+            textSize: 'text-xs',
+            textColor: '#6B7280',
+            linkColor: '#B89B7A',
+            marginTop: 24,
+            marginBottom: 0,
+            backgroundColor: 'transparent'
+          }
         }
       ],
       settings: {
