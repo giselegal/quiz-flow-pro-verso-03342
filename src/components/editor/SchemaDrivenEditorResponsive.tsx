@@ -317,48 +317,268 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     ));
   }, [addBlock, updateBlock]);
 
-  // Função para carregar blocos específicos de cada etapa
+  // Função para carregar blocos específicos de cada etapa com templates detalhados
   const loadStepSpecificBlocks = useCallback((stepId: string, stepType: string) => {
     console.log(`🎯 Carregando blocos específicos para ${stepId} (tipo: ${stepType})`);
     
-    // Definir blocos específicos para cada tipo de etapa
+    // Templates específicos para cada etapa das 21 etapas
     const stepTemplates: Record<string, any[]> = {
       'intro': [
-        { type: 'heading-inline', properties: { content: 'Descubra Seu Estilo Pessoal', level: 'h1', textAlign: 'center' } },
-        { type: 'text-inline', properties: { content: 'Um quiz personalizado para descobrir o seu estilo único', textAlign: 'center' } },
-        { type: 'button-inline', properties: { content: 'Começar Quiz', size: 'large' } }
+        { 
+          type: 'vertical-canvas-header', 
+          properties: { 
+            title: 'Descubra Seu Estilo Único',
+            subtitle: 'Quiz Personalizado de Descoberta de Estilo',
+            description: 'Descubra qual estilo combina mais com você através deste quiz personalizado baseado em anos de experiência em consultoria de imagem.',
+            showBackButton: false,
+            showProgress: false
+          } 
+        },
+        { 
+          type: 'text-inline', 
+          properties: { 
+            content: '• São apenas 21 etapas rápidas\n• Leva menos de 5 minutos\n• Resultado personalizado instantâneo\n• Baseado em dados reais de consultoria',
+            fontSize: 'medium',
+            textAlign: 'left'
+          } 
+        },
+        { 
+          type: 'button-inline', 
+          properties: { 
+            text: 'Começar Quiz Agora',
+            variant: 'primary',
+            size: 'large',
+            fullWidth: true
+          } 
+        }
       ],
       'name-input': [
-        { type: 'heading-inline', properties: { content: 'Qual é o seu nome?', level: 'h2', textAlign: 'center' } },
-        { type: 'form-input', properties: { label: 'Nome', placeholder: 'Digite seu nome aqui', required: true } },
-        { type: 'button-inline', properties: { content: 'Continuar', size: 'medium' } }
+        { 
+          type: 'heading-inline', 
+          properties: { 
+            text: 'Vamos personalizar sua experiência!',
+            level: 2,
+            textAlign: 'center'
+          } 
+        },
+        { 
+          type: 'text-inline', 
+          properties: { 
+            content: 'Como podemos te chamar?',
+            fontSize: 'medium',
+            textAlign: 'center'
+          } 
+        },
+        { 
+          type: 'form-input', 
+          properties: { 
+            label: 'Seu nome',
+            placeholder: 'Digite seu primeiro nome',
+            required: true,
+            type: 'text'
+          } 
+        },
+        { 
+          type: 'button-inline', 
+          properties: { 
+            text: 'Continuar',
+            variant: 'primary',
+            size: 'large',
+            fullWidth: true
+          } 
+        }
       ],
       'question': [
-        { type: 'quiz-question', properties: { question: 'Pergunta do quiz', multiSelect: true, maxSelections: 3 } },
-        { type: 'options-grid', properties: { layout: 'grid', columns: 2 } },
-        { type: 'quiz-progress', properties: { showPercentage: true } }
+        { 
+          type: 'quiz-progress', 
+          properties: { 
+            currentStep: 3,
+            totalSteps: 21,
+            progress: 14
+          } 
+        },
+        { 
+          type: 'quiz-question', 
+          properties: { 
+            questionId: 'q1',
+            title: 'QUAL O SEU TIPO DE ROUPA FAVORITA?',
+            subtitle: 'Selecione até 3 opções que mais combinam com você',
+            type: 'both',
+            multiSelect: 3,
+            required: true
+          } 
+        },
+        { 
+          type: 'options-grid', 
+          properties: { 
+            layout: 'grid',
+            columns: 2,
+            options: [
+              {
+                id: '1a',
+                text: 'Conforto, leveza e praticidade no vestir.',
+                imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp',
+                styleCategory: 'Natural',
+                points: 1
+              },
+              {
+                id: '1b',
+                text: 'Discrição, caimento clássico e sobriedade.',
+                imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp',
+                styleCategory: 'Clássico',
+                points: 1
+              }
+            ]
+          } 
+        }
       ],
       'strategic': [
-        { type: 'strategic-question-main', properties: { question: 'Questão estratégica', type: 'strategic' } },
-        { type: 'options-grid', properties: { layout: 'list', columns: 1 } },
-        { type: 'text-inline', properties: { content: 'Esta informação nos ajuda a personalizar sua experiência' } }
+        { 
+          type: 'quiz-progress', 
+          properties: { 
+            currentStep: 14,
+            totalSteps: 21,
+            progress: 67
+          } 
+        },
+        { 
+          type: 'strategic-question-main', 
+          properties: { 
+            questionId: 's1',
+            title: 'QUAL A SUA PRINCIPAL DIFICULDADE COM ROUPAS?',
+            subtitle: 'Esta informação nos ajuda a personalizar sua experiência',
+            type: 'strategic',
+            multiSelect: 1,
+            required: true
+          } 
+        },
+        { 
+          type: 'options-grid', 
+          properties: { 
+            layout: 'list',
+            columns: 1,
+            options: [
+              {
+                id: 's1a',
+                text: 'Não sei o que combina comigo',
+                description: 'Dificuldade em identificar cores e estilos que valorizam',
+                points: 3
+              },
+              {
+                id: 's1b',
+                text: 'Sempre uso as mesmas roupas',
+                description: 'Falta de variedade no guarda-roupa',
+                points: 2
+              }
+            ]
+          } 
+        }
       ],
       'transition': [
-        { type: 'heading-inline', properties: { content: 'Analisando suas respostas...', level: 'h2', textAlign: 'center' } },
-        { type: 'loading-animation', properties: { duration: 3000 } },
-        { type: 'text-inline', properties: { content: 'Preparando questões especiais para você', textAlign: 'center' } }
+        { 
+          type: 'heading-inline', 
+          properties: { 
+            text: 'Analisando suas respostas...',
+            level: 2,
+            textAlign: 'center'
+          } 
+        },
+        { 
+          type: 'loading-animation', 
+          properties: { 
+            type: 'spinner',
+            duration: 3000,
+            message: 'Processando suas preferências de estilo'
+          } 
+        },
+        { 
+          type: 'text-inline', 
+          properties: { 
+            content: 'Preparando questões especiais para você baseadas nas suas respostas anteriores',
+            textAlign: 'center',
+            fontSize: 'medium'
+          } 
+        }
       ],
       'result': [
-        { type: 'result-header-inline', properties: { title: 'Seu Resultado', subtitle: 'Personalizado para você' } },
-        { type: 'result-card-inline', properties: { showImage: true, showDescription: true } },
-        { type: 'before-after-inline', properties: { showComparison: true } },
-        { type: 'testimonials-inline', properties: { count: 3 } }
+        { 
+          type: 'result-header-inline', 
+          properties: { 
+            title: 'Seu Resultado Personalizado',
+            subtitle: 'Baseado nas suas 19 respostas',
+            showConfetti: true
+          } 
+        },
+        { 
+          type: 'result-card-inline', 
+          properties: { 
+            styleType: 'Contemporâneo Elegante',
+            description: 'Você tem um estilo que combina modernidade com sofisticação',
+            showImage: true,
+            showDescription: true,
+            showCharacteristics: true
+          } 
+        },
+        { 
+          type: 'before-after-inline', 
+          properties: { 
+            title: 'Sua Transformação',
+            showComparison: true,
+            beforeText: 'Antes: Insegurança com roupas',
+            afterText: 'Depois: Confiança total no seu estilo'
+          } 
+        },
+        { 
+          type: 'testimonials-inline', 
+          properties: { 
+            title: 'Pessoas como você disseram:',
+            count: 3,
+            showRatings: true
+          } 
+        }
       ],
       'offer': [
-        { type: 'quiz-offer-cta-inline', properties: { title: 'Oferta Especial', urgency: true } },
-        { type: 'quiz-offer-pricing-inline', properties: { showDiscount: true, highlightValue: true } },
-        { type: 'bonus-list-inline', properties: { showBonuses: true } },
-        { type: 'button-inline', properties: { content: 'Quero Aproveitar', size: 'large', style: 'cta' } }
+        { 
+          type: 'quiz-offer-cta-inline', 
+          properties: { 
+            title: 'Transforme Seu Estilo Agora!',
+            subtitle: 'Oferta Especial Baseada no Seu Resultado',
+            urgency: true,
+            showTimer: true
+          } 
+        },
+        { 
+          type: 'quiz-offer-pricing-inline', 
+          properties: { 
+            originalPrice: 297,
+            discountPrice: 97,
+            showDiscount: true,
+            highlightValue: true,
+            installments: '3x de R$ 32,33'
+          } 
+        },
+        { 
+          type: 'bonus-list-inline', 
+          properties: { 
+            title: 'Bônus Exclusivos Inclusos:',
+            showBonuses: true,
+            bonuses: [
+              { name: 'Guia de Cores Personalizado', value: 'R$ 97' },
+              { name: 'Lista de Compras Inteligente', value: 'R$ 67' },
+              { name: 'Consultoria Online 1:1', value: 'R$ 197' }
+            ]
+          } 
+        },
+        { 
+          type: 'button-inline', 
+          properties: { 
+            text: 'Quero Transformar Meu Estilo',
+            variant: 'cta',
+            size: 'large',
+            fullWidth: true,
+            urgent: true
+          } 
+        }
       ]
     };
 
@@ -366,17 +586,406 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     
     if (blocksToAdd && blocksToAdd.length > 0) {
       handleAddBlocksToStep(stepId, blocksToAdd);
-      console.log(`✅ ${blocksToAdd.length} blocos adicionados à etapa ${stepId}`);
+      console.log(`✅ ${blocksToAdd.length} blocos detalhados adicionados à etapa ${stepId}`);
     }
   }, [handleAddBlocksToStep]);
 
-  // Função para popular uma etapa automaticamente
-  const handlePopulateStep = useCallback((stepId: string) => {
-    const step = steps.find(s => s.id === stepId);
-    if (step && step.type) {
-      loadStepSpecificBlocks(stepId, step.type);
+  // Função para carregar template específico de cada questão
+  const loadQuestionTemplate = useCallback((stepId: string, questionNumber: number) => {
+    console.log(`🎯 Carregando template da questão ${questionNumber} para ${stepId}`);
+    
+    // Templates específicos para cada questão das 21 etapas
+    const questionTemplates: Record<number, any[]> = {
+      1: [ // Q1: Tipo de Roupa
+        { 
+          type: 'quiz-progress', 
+          properties: { currentStep: 3, totalSteps: 21, progress: 14 } 
+        },
+        { 
+          type: 'quiz-question', 
+          properties: { 
+            questionId: 'q1',
+            title: 'QUAL O SEU TIPO DE ROUPA FAVORITA?',
+            subtitle: 'Selecione até 3 opções que mais combinam com você',
+            multiSelect: 3
+          } 
+        },
+        { 
+          type: 'options-grid', 
+          properties: { 
+            layout: 'grid',
+            columns: 2,
+            showImages: true
+          } 
+        }
+      ],
+      2: [ // Q2: Personalidade
+        { 
+          type: 'quiz-progress', 
+          properties: { currentStep: 4, totalSteps: 21, progress: 19 } 
+        },
+        { 
+          type: 'quiz-question', 
+          properties: { 
+            questionId: 'q2',
+            title: 'RESUMA A SUA PERSONALIDADE:',
+            subtitle: 'Escolha até 3 características que mais te definem',
+            multiSelect: 3
+          } 
+        },
+        { 
+          type: 'options-grid', 
+          properties: { 
+            layout: 'grid',
+            columns: 2,
+            showImages: true
+          } 
+        }
+      ],
+      3: [ // Q3: Visual
+        { 
+          type: 'quiz-progress', 
+          properties: { currentStep: 5, totalSteps: 21, progress: 24 } 
+        },
+        { 
+          type: 'quiz-question', 
+          properties: { 
+            questionId: 'q3',
+            title: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?',
+            subtitle: 'Selecione até 3 opções',
+            multiSelect: 3
+          } 
+        },
+        { 
+          type: 'options-grid', 
+          properties: { 
+            layout: 'grid',
+            columns: 2,
+            showImages: true
+          } 
+        }
+      ],
+      4: [ // Q4: Detalhes
+        { 
+          type: 'quiz-progress', 
+          properties: { currentStep: 6, totalSteps: 21, progress: 29 } 
+        },
+        { 
+          type: 'quiz-question', 
+          properties: { 
+            questionId: 'q4',
+            title: 'QUAIS DETALHES VOCÊ GOSTA?',
+            subtitle: 'Escolha até 3 elementos que mais te atraem',
+            multiSelect: 3
+          } 
+        },
+        { 
+          type: 'options-grid', 
+          properties: { 
+            layout: 'grid',
+            columns: 2,
+            showImages: true
+          } 
+        }
+      ],
+      5: [ // Q5: Estampas
+        { 
+          type: 'quiz-progress', 
+          properties: { currentStep: 7, totalSteps: 21, progress: 33 } 
+        },
+        { 
+          type: 'quiz-question', 
+          properties: { 
+            questionId: 'q5',
+            title: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?',
+            subtitle: 'Selecione até 3 estampas favoritas',
+            multiSelect: 3
+          } 
+        },
+        { 
+          type: 'options-grid', 
+          properties: { 
+            layout: 'grid',
+            columns: 2,
+            showImages: true
+          } 
+        }
+      ],
+      6: [ // Q6: Casacos
+        { 
+          type: 'quiz-progress', 
+          properties: { currentStep: 8, totalSteps: 21, progress: 38 } 
+        },
+        { 
+          type: 'quiz-question', 
+          properties: { 
+            questionId: 'q6',
+            title: 'QUAL CASACO É SEU FAVORITO?',
+            subtitle: 'Escolha até 3 modelos',
+            multiSelect: 3
+          } 
+        },
+        { 
+          type: 'options-grid', 
+          properties: { 
+            layout: 'grid',
+            columns: 2,
+            showImages: true
+          } 
+        }
+      ],
+      7: [ // Q7: Calças
+        { 
+          type: 'quiz-progress', 
+          properties: { currentStep: 9, totalSteps: 21, progress: 43 } 
+        },
+        { 
+          type: 'quiz-question', 
+          properties: { 
+            questionId: 'q7',
+            title: 'QUAL SUA CALÇA FAVORITA?',
+            subtitle: 'Selecione até 3 modelos preferidos',
+            multiSelect: 3
+          } 
+        },
+        { 
+          type: 'options-grid', 
+          properties: { 
+            layout: 'grid',
+            columns: 2,
+            showImages: true
+          } 
+        }
+      ],
+      8: [ // Q8: Sapatos
+        { 
+          type: 'quiz-progress', 
+          properties: { currentStep: 10, totalSteps: 21, progress: 48 } 
+        },
+        { 
+          type: 'quiz-question', 
+          properties: { 
+            questionId: 'q8',
+            title: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?',
+            subtitle: 'Escolha até 3 tipos de sapatos',
+            multiSelect: 3
+          } 
+        },
+        { 
+          type: 'options-grid', 
+          properties: { 
+            layout: 'grid',
+            columns: 2,
+            showImages: true
+          } 
+        }
+      ],
+      9: [ // Q9: Acessórios
+        { 
+          type: 'quiz-progress', 
+          properties: { currentStep: 11, totalSteps: 21, progress: 52 } 
+        },
+        { 
+          type: 'quiz-question', 
+          properties: { 
+            questionId: 'q9',
+            title: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?',
+            subtitle: 'Selecione até 3 tipos de acessórios',
+            multiSelect: 3
+          } 
+        },
+        { 
+          type: 'options-grid', 
+          properties: { 
+            layout: 'grid',
+            columns: 2,
+            showImages: true
+          } 
+        }
+      ],
+      10: [ // Q10: Tecidos/Valorização
+        { 
+          type: 'quiz-progress', 
+          properties: { currentStep: 12, totalSteps: 21, progress: 57 } 
+        },
+        { 
+          type: 'quiz-question', 
+          properties: { 
+            questionId: 'q10',
+            title: 'O QUE MAIS VALORIZAS NOS ACESSÓRIOS?',
+            subtitle: 'Escolha até 3 características importantes',
+            multiSelect: 3
+          } 
+        },
+        { 
+          type: 'options-grid', 
+          properties: { 
+            layout: 'grid',
+            columns: 2,
+            showImages: false
+          } 
+        }
+      ]
+    };
+
+    const template = questionTemplates[questionNumber];
+    if (template) {
+      handleAddBlocksToStep(stepId, template);
+      console.log(`✅ Template da questão ${questionNumber} carregado para ${stepId}`);
     }
-  }, [steps, loadStepSpecificBlocks]);
+  }, [handleAddBlocksToStep]);
+
+  // Função para carregar templates de questões estratégicas
+  const loadStrategicQuestionTemplate = useCallback((stepId: string, strategicNumber: number) => {
+    console.log(`🎯 Carregando template da questão estratégica ${strategicNumber} para ${stepId}`);
+    
+    const strategicTemplates: Record<number, any[]> = {
+      1: [ // S1: Dificuldades
+        { 
+          type: 'quiz-progress', 
+          properties: { currentStep: 14, totalSteps: 21, progress: 67 } 
+        },
+        { 
+          type: 'strategic-question-main', 
+          properties: { 
+            questionId: 's1',
+            title: 'QUAL A SUA PRINCIPAL DIFICULDADE COM ROUPAS?',
+            subtitle: 'Esta informação nos ajuda a personalizar sua experiência',
+            multiSelect: 1
+          } 
+        },
+        { 
+          type: 'options-grid', 
+          properties: { 
+            layout: 'list',
+            columns: 1,
+            showImages: false
+          } 
+        }
+      ],
+      2: [ // S2: Problemas
+        { 
+          type: 'quiz-progress', 
+          properties: { currentStep: 15, totalSteps: 21, progress: 71 } 
+        },
+        { 
+          type: 'strategic-question-main', 
+          properties: { 
+            questionId: 's2',
+            title: 'QUAL DESSES PROBLEMAS VOCÊ TEM COM MAIS FREQUÊNCIA?',
+            subtitle: 'Seja honesta, isso nos ajuda a criar um resultado mais preciso',
+            multiSelect: 1
+          } 
+        },
+        { 
+          type: 'options-grid', 
+          properties: { 
+            layout: 'list',
+            columns: 1,
+            showImages: false
+          } 
+        }
+      ],
+      3: [ // S3: Frequência "Com que roupa eu vou?"
+        { 
+          type: 'quiz-progress', 
+          properties: { currentStep: 16, totalSteps: 21, progress: 76 } 
+        },
+        { 
+          type: 'strategic-question-main', 
+          properties: { 
+            questionId: 's3',
+            title: 'COM QUE FREQUÊNCIA VOCÊ PENSA: "COM QUE ROUPA EU VOU?"',
+            subtitle: 'Queremos entender seus hábitos para personalizar melhor',
+            multiSelect: 1
+          } 
+        },
+        { 
+          type: 'options-grid', 
+          properties: { 
+            layout: 'list',
+            columns: 1,
+            showImages: false
+          } 
+        }
+      ],
+      4: [ // S4: Guia de Estilo
+        { 
+          type: 'quiz-progress', 
+          properties: { currentStep: 17, totalSteps: 21, progress: 81 } 
+        },
+        { 
+          type: 'strategic-question-main', 
+          properties: { 
+            questionId: 's4',
+            title: 'O QUE VOCÊ MAIS VALORIZA EM UM GUIA DE ESTILO?',
+            subtitle: 'Isso nos ajuda a criar a melhor experiência para você',
+            multiSelect: 1
+          } 
+        },
+        { 
+          type: 'options-grid', 
+          properties: { 
+            layout: 'list',
+            columns: 1,
+            showImages: false
+          } 
+        }
+      ],
+      5: [ // S5: Investimento
+        { 
+          type: 'quiz-progress', 
+          properties: { currentStep: 18, totalSteps: 21, progress: 86 } 
+        },
+        { 
+          type: 'strategic-question-main', 
+          properties: { 
+            questionId: 's5',
+            title: 'QUANTO VOCÊ INVESTIRIA EM UMA CONSULTORIA COMPLETA?',
+            subtitle: 'Seja realista sobre seu orçamento',
+            multiSelect: 1
+          } 
+        },
+        { 
+          type: 'options-grid', 
+          properties: { 
+            layout: 'list',
+            columns: 1,
+            showImages: false
+          } 
+        }
+      ],
+      6: [ // S6: Ajuda Imediata
+        { 
+          type: 'quiz-progress', 
+          properties: { currentStep: 19, totalSteps: 21, progress: 90 } 
+        },
+        { 
+          type: 'strategic-question-main', 
+          properties: { 
+            questionId: 's6',
+            title: 'O QUE VOCÊ MAIS PRECISA DE AJUDA AGORA?',
+            subtitle: 'Última pergunta! Vamos personalizar seu resultado',
+            multiSelect: 1
+          } 
+        },
+        { 
+          type: 'options-grid', 
+          properties: { 
+            layout: 'list',
+            columns: 1,
+            showImages: false
+          } 
+        }
+      ]
+    };
+
+    const template = strategicTemplates[strategicNumber];
+    if (template) {
+      handleAddBlocksToStep(stepId, template);
+      console.log(`✅ Template da questão estratégica ${strategicNumber} carregado para ${stepId}`);
+    }
+  }, [handleAddBlocksToStep]);
   // Função para carregar o template completo das 21 etapas
   const handleLoadComplete21StepsTemplate = useCallback(async () => {
     try {
