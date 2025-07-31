@@ -69,9 +69,6 @@ const ResultPage: React.FC = () => {
       applyStyles();
     }
   }, [pageConfig, configLoading, applyStyles]);
-
-  // Função para carregar dados mock durante desenvolvimento
-
   // Carregar dados mock durante desenvolvimento se não houver resultado
   useEffect(() => {
     if (!primaryStyle && process.env.NODE_ENV === 'development') {
@@ -81,11 +78,7 @@ const ResultPage: React.FC = () => {
       window.location.reload();
     }
   }, [primaryStyle]);
-    }
-  }, [primaryStyle]);
 
-  /**
-   * Renderiza um componente com configurações do editor se disponível,
    * caso contrário renderiza o componente original
    */
   const renderConfigurableComponent = (blockId: string, originalComponent: React.ReactNode) => {
