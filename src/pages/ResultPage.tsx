@@ -69,6 +69,20 @@ const ResultPage: React.FC = () => {
     }
   }, [pageConfig, configLoading, applyStyles]);
 
+  // Função para carregar dados mock durante desenvolvimento
+  const loadMockData = () => {
+    // Exemplo de mock: definir primaryStyle e secondaryStyles no localStorage
+    localStorage.setItem('primaryStyle', JSON.stringify({
+      category: 'Natural',
+      percentage: 85,
+      score: 0
+    }));
+    localStorage.setItem('secondaryStyles', JSON.stringify([
+      { category: 'Clássico', percentage: 10, score: 0 },
+      { category: 'Romântico', percentage: 5, score: 0 }
+    ]));
+  };
+
   // Carregar dados mock durante desenvolvimento se não houver resultado
   useEffect(() => {
     if (!primaryStyle && process.env.NODE_ENV === 'development') {
