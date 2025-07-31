@@ -46,6 +46,43 @@ interface StepsPanelProps {
   className?: string;
 }
 
+/**
+ * Renders a panel displaying the list of quiz steps, allowing users to select, add, edit, duplicate, reorder, and delete steps.
+ * 
+ * @remarks
+ * - Supports inline renaming of steps.
+ * - Displays step details, including name, type, and block count.
+ * - Provides contextual actions via a dropdown menu for each step.
+ * - Includes a button to add new steps.
+ * - Integrates with drag-and-drop UI for reordering (visual only, actual drag logic not included).
+ * 
+ * @param steps - Array of step objects to display in the panel.
+ * @param selectedStepId - The ID of the currently selected step.
+ * @param onStepSelect - Callback invoked when a step is selected.
+ * @param onStepAdd - Callback invoked to add a new step.
+ * @param onStepUpdate - Callback invoked to update a step's properties (e.g., name).
+ * @param onStepDelete - Callback invoked to delete a step.
+ * @param onStepDuplicate - Callback invoked to duplicate a step.
+ * @param onStepReorder - Callback invoked to reorder steps (not implemented in UI).
+ * @param onAddBlocksToStep - Callback to add blocks to a step (not used in UI).
+ * @param onPopulateStep - Optional callback to populate a step with predefined content.
+ * @param className - Optional additional CSS class names for the panel container.
+ * 
+ * @example
+ * ```tsx
+ * <StepsPanel
+ *   steps={steps}
+ *   selectedStepId={selectedStepId}
+ *   onStepSelect={handleStepSelect}
+ *   onStepAdd={handleStepAdd}
+ *   onStepUpdate={handleStepUpdate}
+ *   onStepDelete={handleStepDelete}
+ *   onStepDuplicate={handleStepDuplicate}
+ *   onStepReorder={handleStepReorder}
+ *   onPopulateStep={handlePopulateStep}
+ * />
+ * ```
+ */
 export const StepsPanel: React.FC<StepsPanelProps> = ({
   steps,
   selectedStepId,
