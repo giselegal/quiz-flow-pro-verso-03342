@@ -13,7 +13,7 @@ import type { BlockData } from '../../types/blocks';
 import { getInitialQuiz21EtapasTemplate } from '../../templates/quiz21EtapasTemplate';
 import { normalizeBlock } from '../../utils/blockTypeMapping';
 import { AdvancedPropertyPanel } from './AdvancedPropertyPanel';
-import { getStepById } from './steps'; // 🎯 NOVA ARQUITETURA LIMPA
+import { getStepById, getStepTemplate } from './steps'; // 🎯 NOVA ARQUITETURA LIMPA
 import { EditorStatus } from './components/EditorStatus';
 import { StepsPanel } from './StepsPanel';
 import { ComponentsPanel } from './ComponentsPanel';
