@@ -76,9 +76,6 @@ import BeforeAfterInlineBlock from './inline/BeforeAfterInlineBlock';
 import BonusListInlineBlock from './inline/BonusListInlineBlock';
 import StepHeaderInlineBlock from './inline/StepHeaderInlineBlock';
 
-// 🚀 INTEGRAÇÃO SUPABASE: Serviços de dados
-import { quizSupabaseService } from '../../../services/quizSupabaseService';
-
 // Novos componentes modulares para etapas 20 e 21 (temporariamente desabilitados)
 import ResultPageHeaderBlock from './ResultPageHeaderBlock';
 
@@ -94,10 +91,6 @@ export interface BlockRendererProps {
   onSaveInline?: (blockId: string, updates: Partial<BlockData>) => void;
   disabled?: boolean;
   className?: string;
-  // 🚀 SUPABASE: Props para integração de dados
-  stepNumber?: number;
-  quizSessionId?: string;
-  userName?: string;
 }
 
 /**
@@ -112,11 +105,7 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
   onClick,
   onSaveInline,
   disabled = false,
-  className,
-  // 🚀 SUPABASE: Parâmetros de integração
-  stepNumber,
-  quizSessionId,
-  userName
+  className
 }) => {
   // ES7+ Props comuns padronizados para flexbox inline responsivo
   const commonProps = {
@@ -174,25 +163,7 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
         'border border-gray-200 rounded-lg shadow-sm bg-white',
         'hover:shadow-md hover:border-blue-300',
         isSelected && 'ring-2 ring-blue-500 border-blue-400 bg-blue-50'
-      ),
-      // 🚀 SUPABASE: Props passados para componentes filhos
-      stepNumber,
-      quizSessionId,
-      userName,
-      // 🚀 SUPABASE: Função helper para salvar dados
-      saveToSupabase: async (data: any) => {
-        try {
-          if (stepNumber && quizSessionId) {
-            await quizSupabaseService.saveStepResponse({
-              step_number: stepNumber,
-              step_id: `etapa-${stepNumber}`,
-              response_data: data
-            });
-          }
-        } catch (error) {
-          console.error('❌ Erro ao salvar no Supabase:', error);
-        }
-      }
+      )
     };
 
     const componentMap: Record<string, () => React.ReactNode> = {
@@ -245,47 +216,33 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       'quiz-question': () => <QuizQuestionBlock {...commonProps} />,
       'quiz-progress': () => <QuizProgressBlock {...commonProps} />,
       
-      // === COMPONENTES DAS 21 ETAPAS (usando fallbacks inteligentes) ===
+      // === NOVA IMPLEMENTAÇÃO: Componentes das 21 Etapas Inline ===
+      // === COMPONENTES DAS 21 ETAPAS INLINE ===
       'quiz-start-page-inline': () => <QuizStartPageInlineBlock {...commonProps} />,
-      'quiz-personal-info-inline': () => <TextInlineBlock {...commonProps} />, // Fallback para coleta de informações
-      'quiz-experience-inline': () => <TextInlineBlock {...commonProps} />, // Fallback para experiência
-      'quiz-skills-assessment-inline': () => <TextInlineBlock {...commonProps} />, // Fallback para skills
-      'quiz-leadership-style-inline': () => <TextInlineBlock {...commonProps} />, // Fallback para liderança
-      'quiz-communication-inline': () => <TextInlineBlock {...commonProps} />, // Fallback para comunicação
-      'quiz-problem-solving-inline': () => <TextInlineBlock {...commonProps} />, // Fallback para solução de problemas
-      'quiz-goals-inline': () => <TextInlineBlock {...commonProps} />, // Fallback para objetivos
-      'quiz-motivation-inline': () => <TextInlineBlock {...commonProps} />, // Fallback para motivação
-      'quiz-work-style-inline': () => <TextInlineBlock {...commonProps} />, // Fallback para estilo de trabalho
-      'quiz-feedback-inline': () => <TextInlineBlock {...commonProps} />, // Fallback para feedback
-      'quiz-results-inline': () => <ResultCardInlineBlock {...commonProps} />, // Componente de resultado
-      'quiz-certificate-inline': () => <BadgeInlineBlock {...commonProps} />, // Badge para certificado
-      'quiz-leaderboard-inline': () => <TestimonialsGridBlock {...commonProps} />, // Grid para ranking
-      'quiz-badges-inline': () => <BadgeInlineBlock {...commonProps} />, // Badge para conquistas
-      'quiz-evolution-inline': () => <ProgressInlineBlock {...commonProps} />, // Progresso para evolução
-      'quiz-networking-inline': () => <TestimonialsGridBlock {...commonProps} />, // Grid para networking
-      'quiz-development-plan-inline': () => <ListBlock {...commonProps} />, // Lista para plano de desenvolvimento
-      'quiz-goals-dashboard-inline': () => <StatInlineBlock {...commonProps} />, // Stats para dashboard
-      'quiz-final-results-inline': () => <ResultCardInlineBlock {...commonProps} />, // Card de resultado final
-      'quiz-offer-cta-inline': () => <CTAInlineBlock {...commonProps} />, // CTA para oferta
+      'quiz-personal-info-inline': () => <QuizPersonalInfoInlineBlock {...commonProps} />,
+      'quiz-experience-inline': () => <QuizExperienceInlineBlock {...commonProps} />,
+      'quiz-skills-assessment-inline': () => <QuizSkillsAssessmentInlineBlock {...commonProps} />,
+      'quiz-leadership-style-inline': () => <QuizLeadershipStyleInlineBlock {...commonProps} />,
+      'quiz-communication-inline': () => <QuizCommunicationInlineBlock {...commonProps} />,
+      'quiz-problem-solving-inline': () => <QuizProblemSolvingInlineBlock {...commonProps} />,
+      'quiz-goals-inline': () => <QuizGoalsInlineBlock {...commonProps} />,
+      'quiz-motivation-inline': () => <QuizMotivationInlineBlock {...commonProps} />,
+      'quiz-work-style-inline': () => <QuizWorkStyleInlineBlock {...commonProps} />,
+      'quiz-feedback-inline': () => <QuizFeedbackInlineBlock {...commonProps} />,
+      'quiz-results-inline': () => <QuizResultsInlineBlock {...commonProps} />,
+      'quiz-certificate-inline': () => <QuizCertificateInlineBlock {...commonProps} />,
+      'quiz-leaderboard-inline': () => <QuizLeaderboardInlineBlock {...commonProps} />,
+      'quiz-badges-inline': () => <QuizBadgesInlineBlock {...commonProps} />,
+      'quiz-evolution-inline': () => <QuizEvolutionInlineBlock {...commonProps} />,
+      'quiz-networking-inline': () => <QuizNetworkingInlineBlock {...commonProps} />,
+      'quiz-development-plan-inline': () => <QuizDevelopmentPlanInlineBlock {...commonProps} />,
+      'quiz-goals-dashboard-inline': () => <QuizGoalsDashboardInlineBlock {...commonProps} />,
+      'quiz-final-results-inline': () => <QuizFinalResultsInlineBlock {...commonProps} />,
+      'quiz-offer-cta-inline': () => <QuizOfferCTAInlineBlock {...commonProps} />,
       
-      // === COMPONENTES ESSENCIAIS PARA AS 21 ETAPAS ===
-      'decorative-bar-inline': () => <SpacerBlock {...commonProps} />, // Barra decorativa
-      'legal-notice-inline': () => <TextInlineBlock {...commonProps} />, // Aviso legal como texto
-      
-      // === COMPONENTES DA PÁGINA DE RESULTADO (STEP 20) ===
-      'quiz-result-primary-style-card': () => <ResultCardInlineBlock {...commonProps} />,
-      'secondary-styles-section': () => <TestimonialsGridBlock {...commonProps} />,
-      'transformation-before-after': () => <BeforeAfterInlineBlock {...commonProps} />,
-      'motivation-section': () => <TextInlineBlock {...commonProps} />,
-      'bonus-section': () => <BonusListInlineBlock {...commonProps} />,
-      'result-page-cta-pricing': () => <PricingCardInlineBlock {...commonProps} />,
-      'mentor-trust-section': () => <TestimonialCardInlineBlock {...commonProps} />,
-      'result-page-final-offer': () => <CTAInlineBlock {...commonProps} />,
-      'secure-purchase-badges': () => <BadgeInlineBlock {...commonProps} />,
-      
-      // === COMPONENTES ETAPA 20/21 ===
-      'quiz-offer-pricing-inline': () => <PricingCardInlineBlock {...commonProps} />, // Card de preços
-      'divider-inline': () => <SpacerBlock {...commonProps} />, // Divisor
+      // === COMPONENTES ETAPA 20/21 (sem duplicação) ===
+      'quiz-offer-pricing-inline': () => <QuizOfferPricingInlineBlock {...commonProps} />,
+      'divider-inline': () => <SpacerBlock {...commonProps} />,
       
       // === COMPONENTES ETAPA 21 ESPECÍFICOS ===
       'hero-badge-inline': () => <BadgeInlineBlock {...commonProps} />,
@@ -312,6 +269,7 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       QuestionMultipleBlock: () => <QuestionMultipleBlock {...commonProps} />,
       StrategicQuestionBlock: () => <StrategicQuestionBlock {...commonProps} />,
       QuizTransitionBlock: () => <QuizTransitionBlock {...commonProps} />,
+
       
       // === MAPEAMENTOS ADICIONAIS ===
       'quiz-title': () => <HeadingInlineBlock {...commonProps} />,
