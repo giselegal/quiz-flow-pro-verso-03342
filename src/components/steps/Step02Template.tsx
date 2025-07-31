@@ -1,11 +1,9 @@
 import React from 'react';
-
 export interface Step02Question01Props {
   onNext?: () => void;
   onPrevious?: () => void;
   onBlockAdd?: (block: any) => void;
 }
-
 export const Step02Question01: React.FC<Step02Question01Props> = ({ onNext, onPrevious, onBlockAdd }) => {
   return (
     <div className="step-02-question-01">
@@ -13,7 +11,6 @@ export const Step02Question01: React.FC<Step02Question01Props> = ({ onNext, onPr
     </div>
   );
 };
-
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 2 - QUESTÃO 1: ROUPA FAVORITA (REAL)
 export const getStep02Template = () => {
   return [
@@ -159,5 +156,4 @@ export const getStep02Template = () => {
       }
     }
   ];
-
 // End of file

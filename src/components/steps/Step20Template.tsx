@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleResult } from '../../types/quiz';
 import { styleConfig } from '../../data/styleConfig';
-
 // --- Interfaces Necessárias ---
 // Interface para uma opção de quiz (mantida para consistência, embora não usada diretamente aqui)
 export interface QuizOption {
@@ -12,7 +11,6 @@ export interface QuizOption {
   keywords?: string[];
   imageUrl?: string;
 }
-
 // Interface para uma questão de quiz (mantida para consistência, embora não usada diretamente aqui)
 export interface QuizQuestion {
   id: string;
@@ -23,7 +21,6 @@ export interface QuizQuestion {
   options: QuizOption[];
   advanceMode?: 'manual' | 'auto';
 }
-
 // Interface simplificada para BlockData (representa um componente de UI)
 export interface BlockData {
   type: string;
@@ -31,14 +28,12 @@ export interface BlockData {
   id?: string;
   order?: number;
 }
-
 // Interface para os dados de estilo necessários para a página de resultados
 export interface Step20TemplateData {
   primaryStyle: StyleResult;
   secondaryStyles: StyleResult[];
   userName?: string;
 }
-
 /**
  * Gera conteúdo motivacional personalizado baseado no estilo predominante
  */
@@ -53,10 +48,8 @@ const getStyleMotivationContent = (styleCategory: string): string => {
     'Dramático': 'Seu estilo Dramático é impacto visual puro. Você não passa despercebida e isso é sua força. Ouse em contrastes, formas marcantes e combinações que causem a impressão desejada.',
     'Criativo': 'Seu estilo Criativo é liberdade de expressão. Você tem o dom de misturar o que ninguém pensou e criar algo único. Sua originalidade é inspiradora e autêntica.'
   };
-
   return motivationContent[styleCategory as keyof typeof motivationContent] || motivationContent['Natural'];
 };
-
 /**
  * Template de blocos para a Etapa 20 do quiz (Página de Resultados).
  * Esta etapa apresenta o resultado do estilo, seções de motivação, depoimentos e ofertas.
@@ -64,7 +57,6 @@ const getStyleMotivationContent = (styleCategory: string): string => {
  */
 export const getStep20Template = (data?: Step20TemplateData): BlockData[] => {
   const questionNumberInFullQuiz = 20; // Esta é a 20ª etapa do quiz completo
-  
   // Valores padrão caso os dados não sejam fornecidos
   const userName = data?.userName || 'Visitante';
   const primaryStyle = data?.primaryStyle || {
@@ -79,10 +71,8 @@ export const getStep20Template = (data?: Step20TemplateData): BlockData[] => {
     { category: 'Clássico', percentage: 20, score: 5, style: 'Clássico' as any, points: 5, rank: 2 },
     { category: 'Contemporâneo', percentage: 15, score: 3, style: 'Contemporâneo' as any, points: 3, rank: 3 }
   ];
-
   // Obter configurações do estilo a partir do styleConfig
   const styleData = styleConfig[primaryStyle.category as keyof typeof styleConfig] || styleConfig['Natural'];
-  
   const blocks: BlockData[] = [
     {
       // Cabeçalho da página de resultados com logo e progresso
@@ -331,5 +321,4 @@ export const getStep20Template = (data?: Step20TemplateData): BlockData[] => {
       }
     }
   ];
-
 // End of file

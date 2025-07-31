@@ -1,11 +1,9 @@
 import React from 'react';
-
 export interface Step05TemplateProps {
   onNext?: () => void;
   onPrevious?: () => void;
   onBlockAdd?: (block: any) => void;
 }
-
 export const Step05Template: React.FC<Step05TemplateProps> = ({ onNext, onPrevious, onBlockAdd }) => {
   return (
     <div className="step-05-template">
@@ -13,7 +11,6 @@ export const Step05Template: React.FC<Step05TemplateProps> = ({ onNext, onPrevio
     </div>
   );
 };
-
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 5 - QUESTÃO 5: QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?
 export const getStep05Template = () => {
   return [
@@ -159,5 +156,4 @@ export const getStep05Template = () => {
       }
     }
   ];
-
 // End of file

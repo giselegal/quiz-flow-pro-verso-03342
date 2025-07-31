@@ -1,5 +1,4 @@
 import React from 'react';
-
 // --- Interfaces Necessárias (Assumindo que viriam de '../types/quiz' e '../types/blocks') ---
 // Interface simplificada para BlockData (representa um componente de UI)
 export interface BlockData {
@@ -8,16 +7,13 @@ export interface BlockData {
   id?: string; // Opcional, pode ser gerado dinamicamente
   order?: number; // Opcional, pode ser inferido pela ordem no array
 }
-
 const TOTAL_QUIZ_QUESTIONS = 21; // Número total de questões no quiz completo
-
 /**
  * Template de blocos para a Etapa 12 do quiz (Apenas Transição).
  * Esta etapa contém o texto introdutório para as questões estratégicas.
  */
 export const getStep12Template = (): BlockData[] => {
   const questionNumberInFullQuiz = 12; // Esta é a 12ª etapa do quiz completo
-
   const blocks: BlockData[] = [
     {
       type: 'quiz-intro-header',
@@ -93,5 +89,4 @@ export const getStep12Template = (): BlockData[] => {
       }
     }
   ];
-
 // End of file
