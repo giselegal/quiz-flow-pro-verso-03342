@@ -145,4 +145,5 @@ export const getStep10Template = () => [
   }
 ];
 
+export { getStep10Template };
 export default getStep10Template;

@@ -139,4 +139,5 @@ export const getStep07Template = () => [
   }
 ];
 
+export { getStep07Template };
 export default getStep07Template;

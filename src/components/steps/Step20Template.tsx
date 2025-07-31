@@ -334,4 +334,5 @@ export const getStep20Template = (data?: Step20TemplateData): BlockData[] => {
   return blocks;
 };
 
+export { getStep20Template };
 export default getStep20Template;

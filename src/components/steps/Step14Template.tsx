@@ -104,4 +104,5 @@ export const getStep14Template = () => [
   }
 ];
 
+export { getStep14Template };
 export default getStep14Template;
