@@ -104,5 +104,4 @@ export const getStep16Template = () => [
   }
 ];
 
-export { getStep16Template };
 export default getStep16Template;

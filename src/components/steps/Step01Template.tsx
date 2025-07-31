@@ -130,5 +130,4 @@ export const getStep01Template = () => {
   ];
 };
 
-export { getStep01Template };
 export default Step01Intro;

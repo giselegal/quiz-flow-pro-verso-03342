@@ -114,5 +114,4 @@ export const getStep19Template = (): BlockData[] => {
   return blocks;
 };
 
-export { getStep19Template };
 export default getStep19Template;
