@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   AlertCircle,
@@ -71,15 +70,6 @@ export const renderLucideIcon = (
 export const getLucideIcon = (iconName: string, fallback: LucideIcon = AlertCircle): LucideIcon => {
   return iconMap[iconName] || fallback;
 };
-
-/**
- * Alias para getLucideIcon - mantém compatibilidade com código existente
- * 
- * @param iconName - Nome do ícone
- * @param fallback - Ícone padrão caso o nome não seja encontrado
- * @returns Componente do ícone
- */
-export const getIconByName = getLucideIcon;
 
 /**
  * Lista de todos os ícones disponíveis para uso no editor

@@ -1,231 +1,259 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
+// =====================================================================
+// components/editor/StepsPanel.tsx - Painel de Etapas do Quiz
+// =====================================================================
+
+import React, { useState, useCallback } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { ScrollArea } from '../ui/scroll-area';
+import { Badge } from '../ui/badge';
 import { 
-  Plus, 
-  Copy, 
-  Trash2, 
-  ChevronDown, 
-  ChevronRight,
-  Zap
+  GripVertical, Plus, MoreHorizontal, Edit2, 
+  Trash2, Copy, Check, X 
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
+import { cn } from '../../lib/utils';
 
 interface Step {
   id: string;
   name: string;
+  order: number;
+  blocksCount: number;
+  isActive?: boolean;
+  type?: string;
+  description?: string;
+  multiSelect?: number;
 }
 
 interface StepsPanelProps {
   steps: Step[];
-  activeStepId: string | null;
+  selectedStepId: string | null;
   onStepSelect: (stepId: string) => void;
   onStepAdd: () => void;
+  onStepUpdate: (stepId: string, updates: Partial<Step>) => void;
   onStepDelete: (stepId: string) => void;
   onStepDuplicate: (stepId: string) => void;
+  onStepReorder: (draggedId: string, targetId: string) => void;
+  onAddBlocksToStep?: (stepId: string, blocks: any[]) => void;
   onPopulateStep?: (stepId: string) => void;
-  onPopulateAllEmptySteps?: () => void;
+  className?: string;
 }
 
 export const StepsPanel: React.FC<StepsPanelProps> = ({
   steps,
-  activeStepId,
+  selectedStepId,
   onStepSelect,
   onStepAdd,
+  onStepUpdate,
   onStepDelete,
   onStepDuplicate,
+  onStepReorder,
+  onAddBlocksToStep,
   onPopulateStep,
-  onPopulateAllEmptySteps
+  className = ''
 }) => {
-  const [expanded, setExpanded] = useState(true);
+  const [editingStepId, setEditingStepId] = useState<string | null>(null);
+  const [editingName, setEditingName] = useState('');
 
-  const hasStepContent = (stepId: string): boolean => {
-    // Implemente a lógica para verificar se a etapa tem conteúdo
-    // Por exemplo, verificar se existem blocos associados a esta etapa
-    return true; // Altere para a lógica real
-  };
+  // 21 Etapas do Quiz CaktoQuiz com dados de produção reais
+  const realQuiz21Steps = [
+    { id: 'etapa-1', name: 'Introdução', description: 'Apresentação do Quiz de Estilo', type: 'intro' },
+    { id: 'etapa-2', name: 'Coleta de Nome', description: 'Captura do nome do participante', type: 'name-input' },
+    { id: 'etapa-3', name: 'Q1: Tipo de Roupa', description: 'QUAL O SEU TIPO DE ROUPA FAVORITA?', type: 'question', multiSelect: 3 },
+    { id: 'etapa-4', name: 'Q2: Personalidade', description: 'RESUMA A SUA PERSONALIDADE:', type: 'question', multiSelect: 3 },
+    { id: 'etapa-5', name: 'Q3: Visual', description: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?', type: 'question', multiSelect: 3 },
+    { id: 'etapa-6', name: 'Q4: Detalhes', description: 'QUAIS DETALHES VOCÊ GOSTA?', type: 'question', multiSelect: 3 },
+    { id: 'etapa-7', name: 'Q5: Estampas', description: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?', type: 'question', multiSelect: 3 },
+    { id: 'etapa-8', name: 'Q6: Casacos', description: 'QUAL CASACO É SEU FAVORITO?', type: 'question', multiSelect: 3 },
+    { id: 'etapa-9', name: 'Q7: Calças', description: 'QUAL SUA CALÇA FAVORITA?', type: 'question', multiSelect: 3 },
+    { id: 'etapa-10', name: 'Q8: Sapatos', description: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?', type: 'question', multiSelect: 3 },
+    { id: 'etapa-11', name: 'Q9: Acessórios', description: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?', type: 'question', multiSelect: 3 },
+    { id: 'etapa-12', name: 'Q10: Tecidos', description: 'O QUE MAIS VALORIZAS NOS ACESSÓRIOS?', type: 'question', multiSelect: 3 },
+    { id: 'etapa-13', name: 'Transição', description: 'Análise dos resultados parciais', type: 'transition' },
+    { id: 'etapa-14', name: 'S1: Dificuldades', description: 'Principal dificuldade com roupas', type: 'strategic' },
+    { id: 'etapa-15', name: 'S2: Problemas', description: 'Problemas frequentes de estilo', type: 'strategic' },
+    { id: 'etapa-16', name: 'S3: Frequência', description: '"Com que roupa eu vou?" - frequência', type: 'strategic' },
+    { id: 'etapa-17', name: 'S4: Guia de Estilo', description: 'O que valoriza em um guia', type: 'strategic' },
+    { id: 'etapa-18', name: 'S5: Investimento', description: 'Quanto investiria em consultoria', type: 'strategic' },
+    { id: 'etapa-19', name: 'S6: Ajuda Imediata', description: 'O que mais precisa de ajuda', type: 'strategic' },
+    { id: 'etapa-20', name: 'Resultado', description: 'Página de resultado personalizada', type: 'result' },
+    { id: 'etapa-21', name: 'Oferta', description: 'Apresentação da oferta final', type: 'offer' }
+  ];
 
-  const getBlockCount = (stepId: string): number => {
-    // Implemente a lógica para obter a contagem de blocos na etapa
-    return 5; // Altere para a lógica real
-  };
+  const handleEditStart = useCallback((step: Step) => {
+    setEditingStepId(step.id);
+    setEditingName(step.name);
+  }, []);
 
-  const getStepNumber = (stepId: string): number => {
-    const match = stepId.match(/(\d+)/);
-    return match ? parseInt(match[1]) : 0;
-  };
+  const handleEditSave = useCallback(() => {
+    if (editingStepId && editingName.trim()) {
+      onStepUpdate(editingStepId, { name: editingName.trim() });
+    }
+    setEditingStepId(null);
+    setEditingName('');
+  }, [editingStepId, editingName, onStepUpdate]);
+
+  const handleEditCancel = useCallback(() => {
+    setEditingStepId(null);
+    setEditingName('');
+  }, []);
+
+  const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleEditSave();
+    } else if (e.key === 'Escape') {
+      handleEditCancel();
+    }
+  }, [handleEditSave, handleEditCancel]);
 
   return (
-    <Card className="h-full flex flex-col">
+    <Card className={cn('h-full flex flex-col', className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-medium">Etapas do Quiz</CardTitle>
+          <CardTitle className="text-base font-semibold text-gray-900">
+            Etapas Quiz
+          </CardTitle>
           <Badge variant="secondary" className="text-xs">
-            {steps.length}/21
+            {steps.length}
           </Badge>
         </div>
-        
-        {/* Botões de ação */}
-        <div className="flex flex-col gap-2">
-          <Button
-            onClick={onStepAdd}
-            className="w-full text-xs h-8"
-            size="sm"
-          >
-            <Plus className="w-3 h-3 mr-1" />
-            Nova Etapa
-          </Button>
-          
-          {/* ✅ NOVO BOTÃO: Popular Todas Vazias */}
-          {onPopulateAllEmptySteps && (
-            <Button
-              onClick={onPopulateAllEmptySteps}
-              variant="outline"
-              className="w-full text-xs h-8"
-              size="sm"
-            >
-              <Zap className="w-3 h-3 mr-1" />
-              Popular Vazias
-            </Button>
-          )}
-        </div>
       </CardHeader>
-
+      
       <CardContent className="flex-1 p-0">
-        <ScrollArea className="h-full">
-          <div className="p-3 space-y-2">
-            {steps.map((step) => {
-              const isEmpty = !hasStepContent(step.id);
-              
-              return (
-                <div
-                  key={step.id}
-                  className={cn(
-                    "relative group rounded-lg border-2 transition-all cursor-pointer",
-                    activeStepId === step.id
-                      ? "border-blue-500 bg-blue-50 shadow-sm"
-                      : "border-gray-200 hover:border-gray-300",
-                    isEmpty && "border-dashed border-orange-300 bg-orange-50"
-                  )}
-                  onClick={() => onStepSelect(step.id)}
-                >
-                  <div className="p-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <div className={cn(
-                          "w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium",
-                          activeStepId === step.id
-                            ? "bg-blue-500 text-white"
-                            : "bg-gray-100 text-gray-600"
-                        )}>
-                          {getStepNumber(step.id)}
-                        </div>
-                        <span className="text-sm font-medium truncate">
-                          {step.name || `Etapa ${getStepNumber(step.id)}`}
-                        </span>
-                      </div>
-                      
-                      {/* Status da etapa */}
-                      {isEmpty ? (
-                        <Badge variant="outline" className="text-xs text-orange-600 border-orange-300">
-                          Vazia
-                        </Badge>
-                      ) : (
-                        <Badge variant="secondary" className="text-xs">
-                          {getBlockCount(step.id)} blocos
-                        </Badge>
-                      )}
-                    </div>
-
-                    {/* Descrição da etapa */}
-                    <p className="text-xs text-gray-500 mb-3">
-                      {getStepDescription(getStepNumber(step.id))}
-                    </p>
-
-                    {/* Botões de ação */}
-                    <div className="flex gap-1">
-                      {/* ✅ BOTÃO POPULAR ETAPA INDIVIDUAL */}
-                      {isEmpty && onPopulateStep && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="h-6 px-2 text-xs flex-1"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onPopulateStep(step.id);
-                          }}
-                        >
-                          <Zap className="w-3 h-3 mr-1" />
-                          Popular
-                        </Button>
-                      )}
-                      
-                      {/* Botão duplicar */}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onStepDuplicate(step.id);
-                        }}
-                      >
-                        <Copy className="w-3 h-3" />
-                      </Button>
-                      
-                      {/* Botão deletar */}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-red-500 hover:text-red-700"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onStepDelete(step.id);
-                        }}
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  </div>
+        <ScrollArea className="h-full px-4">
+          <div className="space-y-2 pb-4">
+            {steps.map((step, index) => (
+              <div
+                key={step.id}
+                className={cn(
+                  'group relative flex items-center p-3 rounded-lg border transition-all duration-200',
+                  'hover:shadow-sm cursor-pointer',
+                  selectedStepId === step.id
+                    ? 'bg-blue-50 border-blue-200 shadow-sm'
+                    : 'bg-white border-gray-200 hover:border-gray-300'
+                )}
+                onClick={() => onStepSelect(step.id)}
+              >
+                {/* Drag Handle */}
+                <div className="flex-shrink-0 mr-2 cursor-grab hover:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity">
+                  <GripVertical className="w-4 h-4 text-gray-400" />
                 </div>
-              );
-            })}
+
+                {/* Step Content */}
+                <div className="flex-1 min-w-0">
+                  {editingStepId === step.id ? (
+                    <div className="flex items-center space-x-2">
+                      <Input
+                        value={editingName}
+                        onChange={(e) => setEditingName(e.target.value)}
+                        onKeyDown={handleKeyPress}
+                        className="h-7 text-sm"
+                        autoFocus
+                        onBlur={handleEditSave}
+                      />
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-7 w-7 p-0"
+                        onClick={handleEditSave}
+                      >
+                        <Check className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-7 w-7 p-0"
+                        onClick={handleEditCancel}
+                      >
+                        <X className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-sm font-medium text-gray-900 truncate">
+                          {step.name}
+                        </h4>
+                        <div className="flex items-center space-x-1">
+                          {step.blocksCount > 0 && (
+                            <Badge variant="outline" className="text-xs px-1">
+                              {step.blocksCount}
+                            </Badge>
+                          )}
+                          {step.isActive && (
+                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          )}
+                        </div>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Etapa {index + 1} • {step.blocksCount} componente{step.blocksCount !== 1 ? 's' : ''}
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Step Actions */}
+                {editingStepId !== step.id && (
+                  <div className="flex-shrink-0 ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 w-7 p-0"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <MoreHorizontal className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48">
+                        <DropdownMenuItem onClick={() => handleEditStart(step)}>
+                          <Edit2 className="w-4 h-4 mr-2" />
+                          Renomear
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => onStepDuplicate(step.id)}>
+                          <Copy className="w-4 h-4 mr-2" />
+                          Duplicar
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem 
+                          onClick={() => onStepDelete(step.id)}
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Excluir
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                )}
+
+                {/* Selected Indicator */}
+                {selectedStepId === step.id && (
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-600 rounded-l-lg"></div>
+                )}
+              </div>
+            ))}
+
+            {/* Add New Step Button */}
+            <Button
+              variant="outline"
+              className="w-full flex items-center justify-center space-x-2 p-3 border-dashed border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+              onClick={onStepAdd}
+            >
+              <Plus className="w-4 h-4" />
+              <span>Adicionar Nova Etapa</span>
+            </Button>
           </div>
         </ScrollArea>
       </CardContent>
     </Card>
   );
 };
-
-// Função helper para obter descrição da etapa baseada no número
-const getStepDescription = (stepNumber: number): string => {
-  const descriptions = {
-    1: 'Introdução e coleta do nome',
-    2: 'Questão: Roupa favorita',
-    3: 'Questão: Como se descreve',
-    4: 'Questão: Silhueta preferida',
-    5: 'Questão: Estilo de vida',
-    6: 'Questão: Paleta de cores',
-    7: 'Questão: Inspiração de estilo',
-    8: 'Questão: Acessórios preferidos',
-    9: 'Questão: Tecidos favoritos',
-    10: 'Questão: Ocasiões principais',
-    11: 'Questão: Prioridade de estilo',
-    12: 'Transição: Conhecendo você melhor',
-    13: 'Estratégica: Seu guarda-roupa',
-    14: 'Estratégica: Dificuldades para se arrumar',
-    15: 'Estratégica: Frequência da indecisão',
-    16: 'Estratégica: Investimento em roupas',
-    17: 'Estratégica: Orçamento mensal',
-    18: 'Estratégica: Objetivo do novo estilo',
-    19: 'Transição: Preparando resultado',
-    20: 'Resultado personalizado completo',
-    21: 'Oferta exclusiva personalizada'
-  };
-  
-  return descriptions[stepNumber as keyof typeof descriptions] || 'Etapa do quiz';
-};
-
-export default StepsPanel;

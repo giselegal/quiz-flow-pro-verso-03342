@@ -1,98 +1,117 @@
-
 import React from 'react';
 
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 19 - TRANSIÇÃO FINAL
-export const getStep19Template = () => [
-  {
-    type: 'quiz-intro-header',
-    properties: {
-      logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-      logoAlt: 'Logo Gisele Galvão',
-      logoWidth: 96,
-      logoHeight: 96,
-      progressValue: 90,
-      progressMax: 100,
-      showBackButton: true
+// --- Interfaces Necessárias ---
+// Interface para uma opção de quiz
+export interface QuizOption {
+  id: string;
+  text: string;
+  styleCategory: string;
+  points?: number;
+  keywords?: string[];
+  imageUrl?: string;
+}
+
+// Interface para uma questão de quiz
+export interface QuizQuestion {
+  id: string;
+  title: string;
+  type: 'text';
+  multiSelect: number;
+  imageUrl?: string;
+  options: QuizOption[];
+  advanceMode?: 'manual' | 'auto';
+}
+
+// Interface simplificada para BlockData (representa um componente de UI)
+export interface BlockData {
+  type: string;
+  properties: Record<string, any>;
+  id?: string;
+  order?: number;
+}
+
+const TOTAL_QUIZ_QUESTIONS = 21; // Número total de questões no quiz completo
+
+/**
+ * Template de blocos para a Etapa 19 do quiz (Transição Final para o Resultado).
+ * Esta etapa agradece ao usuário e o prepara para a revelação do resultado.
+ */
+export const getStep19Template = (): BlockData[] => {
+  const questionNumberInFullQuiz = 19; // Esta é a 19ª etapa do quiz completo
+
+  const blocks: BlockData[] = [
+    {
+      type: 'quiz-intro-header',
+      properties: {
+        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
+        logoWidth: 96,
+        logoHeight: 96,
+        progressValue: (questionNumberInFullQuiz / TOTAL_QUIZ_QUESTIONS) * 100,
+        progressMax: 100,
+        showBackButton: true
+      }
+    },
+    {
+      type: 'heading-inline',
+      properties: {
+        content: 'Obrigada por compartilhar.'.toUpperCase(),
+        level: 'h2',
+        fontSize: 'text-2xl',
+        fontWeight: 'font-bold',
+        textAlign: 'text-center',
+        color: '#432818',
+        marginBottom: 16
+      }
+    },
+    {
+      type: 'text-inline',
+      properties: {
+        content: 'Chegar até aqui já mostra que você está pronta para se olhar com mais **amor**, se vestir com mais **intenção** e deixar sua imagem comunicar quem você é de verdade — com **leveza**, **presença** e **propósito**.',
+        fontSize: 'text-base',
+        textAlign: 'text-left',
+        color: '#3a3a3a',
+        marginBottom: 16
+      }
+    },
+    {
+      type: 'text-inline',
+      properties: {
+        content: 'Agora, é hora de revelar o seu **Estilo Predominante** — e os seus **Estilos Complementares**. E, mais do que isso, uma oportunidade real de aplicar o seu Estilo com **leveza** e **confiança** — todos os dias.',
+        fontSize: 'text-base',
+        textAlign: 'text-left',
+        color: '#3a3a3a',
+        marginBottom: 16
+      }
+    },
+    {
+      type: 'text-inline',
+      properties: {
+        content: 'Ah, e lembra do valor que mencionamos? Prepare-se para uma **surpresa**: o que você vai receber vale muito mais do que imagina — e vai custar muito menos do que você esperava.',
+        fontSize: 'text-base',
+        textAlign: 'text-left',
+        color: '#3a3a3a',
+        marginBottom: 24
+      }
+    },
+    {
+      type: 'button-inline',
+      properties: {
+        text: 'Vamos ao resultado?',
+        variant: 'primary',
+        size: 'large',
+        fullWidth: false,
+        backgroundColor: '#B89B7A',
+        textColor: '#ffffff',
+        disabled: false,
+        requiresValidSelection: false,
+        display: 'flex',
+        justifyContent: 'center',
+        margin: 'mx-auto'
+      }
     }
-  },
-  {
-    type: 'heading-inline',
-    properties: {
-      content: '🎉 Parabéns! Estamos quase lá...',
-      level: 'h2',
-      fontSize: 'text-3xl',
-      fontWeight: 'font-bold',
-      textAlign: 'text-center',
-      color: '#432818',
-      marginBottom: 16
-    }
-  },
-  {
-    type: 'text-inline',
-    properties: {
-      content: 'Agora vou analisar todas as suas respostas e preparar o seu resultado personalizado com o estilo que mais combina com você.',
-      fontSize: 'text-lg',
-      textAlign: 'text-center',
-      color: '#6B7280',
-      marginBottom: 24,
-      lineHeight: '1.6'
-    }
-  },
-  {
-    type: 'progress-inline',
-    properties: {
-      value: 90,
-      max: 100,
-      showPercentage: true,
-      color: '#B89B7A',
-      backgroundColor: '#F3F4F6',
-      height: 12,
-      borderRadius: 'rounded-full',
-      marginBottom: 32,
-      animationType: 'pulse'
-    }
-  },
-  {
-    type: 'loading-animation-inline',
-    properties: {
-      text: 'Analisando suas respostas...',
-      subtext: 'Criando seu perfil de estilo personalizado',
-      animationType: 'dots',
-      color: '#B89B7A',
-      duration: 3000,
-      showProgress: true,
-      marginBottom: 32
-    }
-  },
-  {
-    type: 'text-inline',
-    properties: {
-      content: 'Em instantes você descobrirá qual é o seu estilo predominante e receberá dicas exclusivas para transformar seu guarda-roupa.',
-      fontSize: 'text-base',
-      textAlign: 'text-center',
-      color: '#9CA3AF',
-      marginBottom: 32,
-      fontStyle: 'italic'
-    }
-  },
-  {
-    type: 'button-inline',
-    properties: {
-      text: 'Ver Meu Resultado Agora! 🎯',
-      variant: 'primary',
-      size: 'large',
-      fullWidth: true,
-      backgroundColor: '#B89B7A',
-      textColor: '#ffffff',
-      borderRadius: 'rounded-full',
-      padding: 'py-4 px-8',
-      fontSize: 'text-xl',
-      fontWeight: 'font-bold',
-      boxShadow: 'shadow-2xl',
-      hoverEffect: true,
-      pulse: true
-    }
-  }
-];
+  ];
+  return blocks;
+};
 
 export default getStep19Template;

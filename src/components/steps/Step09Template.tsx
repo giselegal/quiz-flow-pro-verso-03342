@@ -1,7 +1,6 @@
-
 import React from 'react';
 
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 9 - QUESTÃO 8: TECIDOS
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 9 - QUESTÃO 8: SAPATOS (REAL)
 export const getStep09Template = () => [
   {
     type: 'quiz-intro-header',
@@ -10,7 +9,7 @@ export const getStep09Template = () => [
       logoAlt: 'Logo Gisele Galvão',
       logoWidth: 96,
       logoHeight: 96,
-      progressValue: 43,
+      progressValue: 80,
       progressMax: 100,
       showBackButton: true
     }
@@ -18,7 +17,7 @@ export const getStep09Template = () => [
   {
     type: 'heading-inline',
     properties: {
-      content: 'QUAL TECIDO MAIS TE AGRADA?',
+      content: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?',
       level: 'h2',
       fontSize: 'text-2xl',
       fontWeight: 'font-bold',
@@ -30,7 +29,7 @@ export const getStep09Template = () => [
   {
     type: 'text-inline',
     properties: {
-      content: 'Questão 8 de 21',
+      content: 'Questão 8 de 10',
       fontSize: 'text-sm',
       textAlign: 'text-center',
       color: '#6B7280',
@@ -40,52 +39,93 @@ export const getStep09Template = () => [
   {
     type: 'options-grid',
     properties: {
-      questionId: 'question-8',
+      questionId: 'q8',
       options: [
-        {
-          id: "q8-natural",
-          text: "Algodão e linho - Leveza natural",
-          value: "natural",
+        { 
+          id: "8a", 
+          text: "Tênis nude casual e confortável",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp",
+          value: "8a",
           category: "Natural",
           styleCategory: "Natural",
-          points: 3
+          points: 1
         },
-        {
-          id: "q8-classico",
-          text: "Seda e lã - Elegância refinada",
-          value: "classico",
+        { 
+          id: "8b", 
+          text: "Scarpin nude de salto baixo",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp",
+          value: "8b",
           category: "Clássico",
           styleCategory: "Clássico",
-          points: 3
+          points: 1
         },
-        {
-          id: "q8-dramatico",
-          text: "Jersey e crepe - Caimento perfeito",
-          value: "dramatico",
-          category: "Dramático",
-          styleCategory: "Dramático",
-          points: 3
+        { 
+          id: "8c", 
+          text: "Sandália dourada com salto bloco",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp",
+          value: "8c",
+          category: "Contemporâneo",
+          styleCategory: "Contemporâneo",
+          points: 1
         },
-        {
-          id: "q8-romantico",
-          text: "Chiffon e renda - Delicadeza feminina",
-          value: "romantico",
+        { 
+          id: "8d", 
+          text: "Scarpin nude salto alto e fino",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp",
+          value: "8d",
+          category: "Elegante",
+          styleCategory: "Elegante",
+          points: 1
+        },
+        { 
+          id: "8e", 
+          text: "Sandália anabela off white",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp",
+          value: "8e",
           category: "Romântico",
           styleCategory: "Romântico",
-          points: 3
+          points: 1
+        },
+        { 
+          id: "8f", 
+          text: "Sandália rosa de tiras finas",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp",
+          value: "8f",
+          category: "Sexy",
+          styleCategory: "Sexy",
+          points: 1
+        },
+        { 
+          id: "8g", 
+          text: "Scarpin preto moderno com vinil transparente",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp",
+          value: "8g",
+          category: "Dramático",
+          styleCategory: "Dramático",
+          points: 1
+        },
+        { 
+          id: "8h", 
+          text: "Scarpin colorido estampado",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp",
+          value: "8h",
+          category: "Criativo",
+          styleCategory: "Criativo",
+          points: 1
         }
       ],
-      columns: 1,
-      showImages: false,
-      multipleSelection: false,
-      maxSelections: 1,
+      columns: 2,
+      showImages: true,
+      imageSize: 'large',
+      multipleSelection: true,
+      maxSelections: 3,
       minSelections: 1,
-      validationMessage: 'Selecione uma opção',
-      gridGap: 12,
+      validationMessage: 'Selecione até 3 opções',
+      gridGap: 16,
       responsiveColumns: true,
-      autoAdvanceOnComplete: false,
+      autoAdvanceOnComplete: true,
       autoAdvanceDelay: 800,
-      requiredSelections: 1,
+      requiredSelections: 3,
       enableButtonOnlyWhenValid: true,
       showValidationFeedback: true
     }
