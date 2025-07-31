@@ -198,43 +198,43 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
     const { active, over } = event;
     
     if (active.id !== over.id) {
-      const options = properties.options || [];
+      const options = safeProperties.options || [];
       const oldIndex = options.findIndex(item => item.id === active.id);
       const newIndex = options.findIndex(item => item.id === over.id);
       
       const newOptions = arrayMove(options, oldIndex, newIndex);
       handlePropertyChangeWithHistory('options', newOptions, 'Reordenação de opções');
     }
-  }, [properties.options, handlePropertyChangeWithHistory]);
+  }, [safeProperties.options, handlePropertyChangeWithHistory]);
 
   const addOption = useCallback(() => {
     const newOption = {
       id: `option-${Date.now()}`,
-      text: `Opção ${(properties.options?.length || 0) + 1}`,
-      value: `option_${(properties.options?.length || 0) + 1}`,
+      text: `Opção ${(safeProperties.options?.length || 0) + 1}`,
+      value: `option_${(safeProperties.options?.length || 0) + 1}`,
       image: ''
     };
     
-    const options = [...(properties.options || []), newOption];
+    const options = [...(safeProperties.options || []), newOption];
     handlePropertyChangeWithHistory('options', options, 'Adição de nova opção');
-  }, [properties.options, handlePropertyChangeWithHistory]);
+  }, [safeProperties.options, handlePropertyChangeWithHistory]);
 
   const updateOption = useCallback((optionId: string, field: string, value: string) => {
-    const options = properties.options?.map(option => 
+    const options = safeProperties.options?.map(option => 
       option.id === optionId ? { ...option, [field]: value } : option
     ) || [];
     handlePropertyChangeWithHistory('options', options, `Atualização de opção: ${field}`);
-  }, [properties.options, handlePropertyChangeWithHistory]);
+  }, [safeProperties.options, handlePropertyChangeWithHistory]);
 
   const removeOption = useCallback((optionId: string) => {
-    const options = properties.options?.filter(option => option.id !== optionId) || [];
+    const options = safeProperties.options?.filter(option => option.id !== optionId) || [];
     handlePropertyChangeWithHistory('options', options, 'Remoção de opção');
-  }, [properties.options, handlePropertyChangeWithHistory]);
+  }, [safeProperties.options, handlePropertyChangeWithHistory]);
 
   // Memoized options for better performance
   const sortedOptions = useMemo(() => {
-    return properties.options || [];
-  }, [properties.options]);
+    return safeProperties.options || [];
+  }, [safeProperties.options]);
 
   const handleApplyTemplate = useCallback((templateProperties: Record<string, any>) => {
     const newProperties = { ...properties, ...templateProperties };
@@ -329,7 +329,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                   <div>
                     <Label className="text-sm font-medium">Layout</Label>
                     <Select 
-                      value={properties.layout || 'vertical'} 
+                      value={safeProperties.layout || 'vertical'} 
                       onValueChange={(value) => onPropertyChange('layout', value)}
                     >
                       <SelectTrigger>
@@ -346,7 +346,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                   <div>
                     <Label className="text-sm font-medium">Direção</Label>
                     <Select 
-                      value={properties.direction || 'column'} 
+                      value={safeProperties.direction || 'column'} 
                       onValueChange={(value) => onPropertyChange('direction', value)}
                     >
                       <SelectTrigger>
@@ -363,7 +363,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div>
                   <Label className="text-sm font-medium">Alinhamento</Label>
                   <Select 
-                    value={properties.alignment || 'left'} 
+                    value={safeProperties.alignment || 'left'} 
                     onValueChange={(value) => onPropertyChange('alignment', value)}
                   >
                     <SelectTrigger>
@@ -382,24 +382,24 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                   <Label className="text-sm font-medium">Espaçamento</Label>
                   <div className="mt-2">
                     <Slider
-                      value={[properties.spacing || 16]}
+                      value={[safeProperties.spacing || 16]}
                       onValueChange={([value]) => onPropertyChange('spacing', value)}
                       min={0}
                       max={64}
                       step={4}
                     />
                     <div className="text-xs text-gray-500 mt-1 text-center">
-                      {properties.spacing || 16}px
+                      {safeProperties.spacing || 16}px
                     </div>
                   </div>
                 </div>
 
-                {properties.layout === 'grid' && (
+                {safeProperties.layout === 'grid' && (
                   <div>
                     <Label className="text-sm font-medium">Colunas</Label>
                     <Input
                       type="number"
-                      value={properties.columns || 2}
+                      value={safeProperties.columns || 2}
                       onChange={(e) => onPropertyChange('columns', parseInt(e.target.value))}
                       min={1}
                       max={6}
@@ -425,7 +425,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                     <Target className="w-5 h-5 text-green-600" />
                     <CardTitle className="text-base">Opções</CardTitle>
                     <Badge variant="secondary" className="text-xs">
-                      {properties.options?.length || 0}
+                      {safeProperties.options?.length || 0}
                     </Badge>
                   </div>
                   {expandedSections.options ? 
@@ -440,7 +440,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div>
                   <Label className="text-sm font-medium">Descrição</Label>
                   <RichTextEditor
-                    value={properties.description || ''}
+                    value={safeProperties.description || ''}
                     onChange={(value) => onPropertyChange('description', value)}
                     placeholder="Descrição das opções..."
                   />
@@ -554,7 +554,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div className="flex items-center justify-between">
                   <Label className="text-sm font-medium">Múltipla Escolha</Label>
                   <Switch
-                    checked={properties.multipleChoice || false}
+                    checked={safeProperties.multipleChoice || false}
                     onCheckedChange={(checked) => onPropertyChange('multipleChoice', checked)}
                   />
                 </div>
@@ -562,7 +562,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div className="flex items-center justify-between">
                   <Label className="text-sm font-medium">Obrigatório</Label>
                   <Switch
-                    checked={properties.required || false}
+                    checked={safeProperties.required || false}
                     onCheckedChange={(checked) => onPropertyChange('required', checked)}
                   />
                 </div>
@@ -578,7 +578,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                   <div className="flex items-center justify-between">
                     <Label className="text-sm font-medium">Auto-avanço ao completar</Label>
                     <Switch
-                      checked={properties.autoAdvanceOnComplete || false}
+                      checked={safeProperties.autoAdvanceOnComplete || false}
                       onCheckedChange={(checked) => onPropertyChange('autoAdvanceOnComplete', checked)}
                     />
                   </div>
@@ -586,7 +586,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                   <div className="flex items-center justify-between">
                     <Label className="text-sm font-medium">Botão apenas quando válido</Label>
                     <Switch
-                      checked={properties.enableButtonOnlyWhenValid || false}
+                      checked={safeProperties.enableButtonOnlyWhenValid || false}
                       onCheckedChange={(checked) => onPropertyChange('enableButtonOnlyWhenValid', checked)}
                     />
                   </div>
@@ -594,7 +594,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                   <div className="flex items-center justify-between">
                     <Label className="text-sm font-medium">Mostrar feedback de validação</Label>
                     <Switch
-                      checked={properties.showValidationFeedback || false}
+                      checked={safeProperties.showValidationFeedback || false}
                       onCheckedChange={(checked) => onPropertyChange('showValidationFeedback', checked)}
                     />
                   </div>
@@ -603,14 +603,14 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                     <Label className="text-sm font-medium">Seleções obrigatórias</Label>
                     <div className="mt-2">
                       <Slider
-                        value={[properties.requiredSelections || 3]}
+                        value={[safeProperties.requiredSelections || 3]}
                         onValueChange={([value]) => onPropertyChange('requiredSelections', value)}
                         min={1}
                         max={10}
                         step={1}
                       />
                       <div className="text-xs text-gray-500 mt-1 text-center">
-                        {properties.requiredSelections || 3} seleções obrigatórias
+                        {safeProperties.requiredSelections || 3} seleções obrigatórias
                       </div>
                     </div>
                   </div>
@@ -619,14 +619,14 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                     <Label className="text-sm font-medium">Delay do auto-avanço (ms)</Label>
                     <div className="mt-2">
                       <Slider
-                        value={[properties.autoAdvanceDelay || 800]}
+                        value={[safeProperties.autoAdvanceDelay || 800]}
                         onValueChange={([value]) => onPropertyChange('autoAdvanceDelay', value)}
                         min={200}
                         max={3000}
                         step={100}
                       />
                       <div className="text-xs text-gray-500 mt-1 text-center">
-                        {properties.autoAdvanceDelay || 800}ms de delay
+                        {safeProperties.autoAdvanceDelay || 800}ms de delay
                       </div>
                     </div>
                   </div>
@@ -638,24 +638,24 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                   <div className="flex items-center justify-between">
                     <Label className="text-sm font-medium">Auto-avançar (legacy)</Label>
                     <Switch
-                      checked={properties.autoAdvance || false}
+                      checked={safeProperties.autoAdvance || false}
                       onCheckedChange={(checked) => onPropertyChange('autoAdvance', checked)}
                     />
                   </div>
 
-                  {properties.multipleChoice && (
+                  {safeProperties.multipleChoice && (
                     <div>
                       <Label className="text-sm font-medium">Máximo de Seleções (legacy)</Label>
                       <div className="mt-2">
                         <Slider
-                          value={[properties.maxSelections || 3]}
+                          value={[safeProperties.maxSelections || 3]}
                           onValueChange={([value]) => onPropertyChange('maxSelections', value)}
                           min={1}
                           max={10}
                           step={1}
                         />
                         <div className="text-xs text-gray-500 mt-1 text-center">
-                          {properties.maxSelections || 3} seleções
+                          {safeProperties.maxSelections || 3} seleções
                         </div>
                       </div>
                     </div>
@@ -692,7 +692,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                   <div>
                     <Label className="text-sm font-medium">Cor de Fundo</Label>
                     <ColorPicker
-                      value={properties.backgroundColor || '#ffffff'}
+                      value={safeProperties.backgroundColor || '#ffffff'}
                       onChange={(color) => onPropertyChange('backgroundColor', color)}
                     />
                   </div>
@@ -700,7 +700,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                   <div>
                     <Label className="text-sm font-medium">Cor do Texto</Label>
                     <ColorPicker
-                      value={properties.textColor || '#000000'}
+                      value={safeProperties.textColor || '#000000'}
                       onChange={(color) => onPropertyChange('textColor', color)}
                     />
                   </div>
@@ -709,7 +709,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div>
                   <Label className="text-sm font-medium">Cor da Borda</Label>
                   <ColorPicker
-                    value={properties.borderColor || '#e5e7eb'}
+                    value={safeProperties.borderColor || '#e5e7eb'}
                     onChange={(color) => onPropertyChange('borderColor', color)}
                   />
                 </div>
@@ -719,14 +719,14 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                     <Label className="text-sm font-medium">Borda Arredondada</Label>
                     <div className="mt-2">
                       <Slider
-                        value={[properties.borderRadius || 8]}
+                        value={[safeProperties.borderRadius || 8]}
                         onValueChange={([value]) => onPropertyChange('borderRadius', value)}
                         min={0}
                         max={32}
                         step={2}
                       />
                       <div className="text-xs text-gray-500 mt-1 text-center">
-                        {properties.borderRadius || 8}px
+                        {safeProperties.borderRadius || 8}px
                       </div>
                     </div>
                   </div>
@@ -735,14 +735,14 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                     <Label className="text-sm font-medium">Espessura da Borda</Label>
                     <div className="mt-2">
                       <Slider
-                        value={[properties.borderWidth || 1]}
+                        value={[safeProperties.borderWidth || 1]}
                         onValueChange={([value]) => onPropertyChange('borderWidth', value)}
                         min={0}
                         max={8}
                         step={1}
                       />
                       <div className="text-xs text-gray-500 mt-1 text-center">
-                        {properties.borderWidth || 1}px
+                        {safeProperties.borderWidth || 1}px
                       </div>
                     </div>
                   </div>
@@ -751,7 +751,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div>
                   <Label className="text-sm font-medium">Sombra</Label>
                   <Select 
-                    value={properties.shadow || 'sm'} 
+                    value={safeProperties.shadow || 'sm'} 
                     onValueChange={(value) => onPropertyChange('shadow', value)}
                   >
                     <SelectTrigger>
@@ -796,7 +796,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div>
                   <Label className="text-sm font-medium">Título</Label>
                   <Input
-                    value={properties.title || ''}
+                    value={safeProperties.title || ''}
                     onChange={(e) => onPropertyChange('title', e.target.value)}
                     placeholder="Título do bloco"
                   />
@@ -805,7 +805,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div>
                   <Label className="text-sm font-medium">Subtítulo</Label>
                   <Input
-                    value={properties.subtitle || ''}
+                    value={safeProperties.subtitle || ''}
                     onChange={(e) => onPropertyChange('subtitle', e.target.value)}
                     placeholder="Subtítulo do bloco"
                   />
@@ -814,7 +814,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div>
                   <Label className="text-sm font-medium">Placeholder</Label>
                   <Input
-                    value={properties.placeholder || ''}
+                    value={safeProperties.placeholder || ''}
                     onChange={(e) => onPropertyChange('placeholder', e.target.value)}
                     placeholder="Texto de placeholder"
                   />
@@ -823,7 +823,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div>
                   <Label className="text-sm font-medium">Texto do Botão</Label>
                   <Input
-                    value={properties.buttonText || ''}
+                    value={safeProperties.buttonText || ''}
                     onChange={(e) => onPropertyChange('buttonText', e.target.value)}
                     placeholder="Texto do botão"
                   />
@@ -858,7 +858,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div>
                   <Label className="text-sm font-medium">CSS Personalizado</Label>
                   <Textarea
-                    value={properties.customCSS || ''}
+                    value={safeProperties.customCSS || ''}
                     onChange={(e) => onPropertyChange('customCSS', e.target.value)}
                     placeholder="/* CSS personalizado */"
                     rows={4}
@@ -869,7 +869,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div>
                   <Label className="text-sm font-medium">Animação</Label>
                   <Select 
-                    value={properties.animation || 'none'} 
+                    value={safeProperties.animation || 'none'} 
                     onValueChange={(value) => onPropertyChange('animation', value)}
                   >
                     <SelectTrigger>
@@ -884,19 +884,19 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                   </Select>
                 </div>
 
-                {properties.animation !== 'none' && (
+                {safeProperties.animation !== 'none' && (
                   <div>
                     <Label className="text-sm font-medium">Delay da Animação</Label>
                     <div className="mt-2">
                       <Slider
-                        value={[properties.delay || 0]}
+                        value={[safeProperties.delay || 0]}
                         onValueChange={([value]) => onPropertyChange('delay', value)}
                         min={0}
                         max={2000}
                         step={100}
                       />
                       <div className="text-xs text-gray-500 mt-1 text-center">
-                        {properties.delay || 0}ms
+                        {safeProperties.delay || 0}ms
                       </div>
                     </div>
                   </div>
@@ -934,7 +934,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div className="flex items-center justify-between">
                   <Label className="text-sm font-medium text-green-800">Ativar Tracking Supabase</Label>
                   <Switch
-                    checked={properties.enableSupabaseTracking !== false}
+                    checked={safeProperties.enableSupabaseTracking !== false}
                     onCheckedChange={(checked) => onPropertyChange('enableSupabaseTracking', checked)}
                   />
                 </div>
@@ -942,7 +942,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div className="flex items-center justify-between">
                   <Label className="text-sm font-medium text-green-800">Rastrear Respostas do Usuário</Label>
                   <Switch
-                    checked={properties.trackUserResponses !== false}
+                    checked={safeProperties.trackUserResponses !== false}
                     onCheckedChange={(checked) => onPropertyChange('trackUserResponses', checked)}
                   />
                 </div>
@@ -950,7 +950,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div className="flex items-center justify-between">
                   <Label className="text-sm font-medium text-green-800">Rastrear Analytics</Label>
                   <Switch
-                    checked={properties.trackAnalytics !== false}
+                    checked={safeProperties.trackAnalytics !== false}
                     onCheckedChange={(checked) => onPropertyChange('trackAnalytics', checked)}
                   />
                 </div>
@@ -958,7 +958,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div className="flex items-center justify-between">
                   <Label className="text-sm font-medium text-green-800">Auto-salvar Respostas</Label>
                   <Switch
-                    checked={properties.autoSaveResponses !== false}
+                    checked={safeProperties.autoSaveResponses !== false}
                     onCheckedChange={(checked) => onPropertyChange('autoSaveResponses', checked)}
                   />
                 </div>
@@ -966,7 +966,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div className="flex items-center justify-between">
                   <Label className="text-sm font-medium text-green-800">Requerer Nome do Usuário</Label>
                   <Switch
-                    checked={properties.requireUserName === true}
+                    checked={safeProperties.requireUserName === true}
                     onCheckedChange={(checked) => onPropertyChange('requireUserName', checked)}
                   />
                 </div>
@@ -974,7 +974,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div>
                   <Label className="text-sm font-medium text-green-800">Categoria da Etapa</Label>
                   <Select 
-                    value={properties.stepCategory || 'questao'} 
+                    value={safeProperties.stepCategory || 'questao'} 
                     onValueChange={(value) => onPropertyChange('stepCategory', value)}
                   >
                     <SelectTrigger>
@@ -992,7 +992,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div>
                   <Label className="text-sm font-medium text-green-800">Categoria de Estilo (para questões)</Label>
                   <Select 
-                    value={properties.styleCategory || ''} 
+                    value={safeProperties.styleCategory || ''} 
                     onValueChange={(value) => onPropertyChange('styleCategory', value)}
                   >
                     <SelectTrigger>
@@ -1047,7 +1047,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div className="flex items-center justify-between">
                   <Label className="text-sm font-medium">Visível</Label>
                   <Switch
-                    checked={properties.visible !== false}
+                    checked={safeProperties.visible !== false}
                     onCheckedChange={(checked) => onPropertyChange('visible', checked)}
                   />
                 </div>
@@ -1055,7 +1055,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div>
                   <Label className="text-sm font-medium">ID do Elemento</Label>
                   <Input
-                    value={properties.id || ''}
+                    value={safeProperties.id || ''}
                     onChange={(e) => onPropertyChange('id', e.target.value)}
                     placeholder="elemento-id"
                   />
@@ -1064,7 +1064,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
                 <div>
                   <Label className="text-sm font-medium">Classes CSS</Label>
                   <Input
-                    value={properties.className || ''}
+                    value={safeProperties.className || ''}
                     onChange={(e) => onPropertyChange('className', e.target.value)}
                     placeholder="classe-1 classe-2"
                   />
