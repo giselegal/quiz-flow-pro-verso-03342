@@ -1,99 +1,85 @@
+
 import React from 'react';
 
-// --- Interfaces Necessárias (Assumindo que viriam de '../types/quiz' e '../types/blocks') ---
-// Interface simplificada para BlockData (representa um componente de UI)
-export interface BlockData {
-  type: string;
-  properties: Record<string, any>;
-  id?: string; // Opcional, pode ser gerado dinamicamente
-  order?: number; // Opcional, pode ser inferido pela ordem no array
-}
-
-const TOTAL_QUIZ_QUESTIONS = 21; // Número total de questões no quiz completo
-
-/**
- * Template de blocos para a Etapa 12 do quiz (Apenas Transição).
- * Esta etapa contém o texto introdutório para as questões estratégicas.
- */
-export const getStep12Template = (): BlockData[] => {
-  const questionNumberInFullQuiz = 12; // Esta é a 12ª etapa do quiz completo
-
-  const blocks: BlockData[] = [
-    {
-      type: 'quiz-intro-header',
-      properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-        logoAlt: 'Logo Gisele Galvão',
-        logoWidth: 96,
-        logoHeight: 96,
-        progressValue: (questionNumberInFullQuiz / TOTAL_QUIZ_QUESTIONS) * 100,
-        progressMax: 100,
-        showBackButton: true
-      }
-    },
-    {
-      type: 'heading-inline',
-      properties: {
-        content: 'Enquanto calculamos o seu resultado...'.toUpperCase(),
-        level: 'h2',
-        fontSize: 'text-2xl',
-        fontWeight: 'font-semibold',
-        textAlign: 'text-center',
-        color: '#432818',
-        marginBottom: 8
-      }
-    },
-    {
-      type: 'text-inline',
-      properties: {
-        content: 'Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa.',
-        fontSize: 'text-base',
-        textAlign: 'text-left',
-        color: '#1A1818]/80',
-        marginBottom: 8
-      }
-    },
-    {
-      type: 'text-inline',
-      properties: {
-        content: 'A ideia é simples: te ajudar a enxergar com mais clareza onde você está agora — e para onde pode ir com mais intenção, leveza e autenticidade.',
-        fontSize: 'text-base',
-        textAlign: 'text-left',
-        color: '#1A1818]/80',
-        marginBottom: 16
-      }
-    },
-    {
-      type: 'text-inline', // Usando text-inline para o bloco itálico com fundo
-      properties: {
-        content: 'Responda com sinceridade. Isso é só entre você e a sua nova versão.',
-        fontSize: 'text-base',
-        textAlign: 'text-center',
-        color: '#432818',
-        fontStyle: 'italic',
-        backgroundColor: '#B89B7A]/10',
-        padding: 'p-6',
-        borderRadius: 'rounded-lg',
-        marginBottom: 24
-      }
-    },
-    {
-      type: 'button-inline',
-      properties: {
-        text: 'Continuar',
-        variant: 'primary',
-        size: 'large',
-        fullWidth: true,
-        backgroundColor: '#B89B7A',
-        textColor: '#ffffff',
-        // Este botão não depende de seleção, pois não há opções nesta etapa.
-        // Ele estará sempre habilitado para avançar a transição.
-        disabled: false,
-        requiresValidSelection: false
-      }
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 12 - TRANSIÇÃO PRINCIPAL
+export const getStep12Template = () => [
+  {
+    type: 'quiz-intro-header',
+    properties: {
+      logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+      logoAlt: 'Logo Gisele Galvão',
+      logoWidth: 96,
+      logoHeight: 96,
+      progressValue: 57,
+      progressMax: 100,
+      showBackButton: true
     }
-  ];
-  return blocks;
-};
+  },
+  {
+    type: 'heading-inline',
+    properties: {
+      content: 'Perfeito! Agora vamos conhecer você ainda melhor...',
+      level: 'h2',
+      fontSize: 'text-3xl',
+      fontWeight: 'font-bold',
+      textAlign: 'text-center',
+      color: '#432818',
+      marginBottom: 16
+    }
+  },
+  {
+    type: 'text-inline',
+    properties: {
+      content: 'Suas respostas já revelam muito sobre seu estilo predominante. As próximas questões vão nos ajudar a criar um perfil ainda mais preciso e personalizado para você.',
+      fontSize: 'text-lg',
+      textAlign: 'text-center',
+      color: '#6B7280',
+      marginBottom: 32,
+      lineHeight: '1.6'
+    }
+  },
+  {
+    type: 'progress-inline',
+    properties: {
+      value: 57,
+      max: 100,
+      showPercentage: true,
+      color: '#B89B7A',
+      backgroundColor: '#F3F4F6',
+      height: 8,
+      borderRadius: 'rounded-full',
+      marginBottom: 32
+    }
+  },
+  {
+    type: 'image-display-inline',
+    properties: {
+      src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/transicao-principal_z1c2up.webp',
+      alt: 'Descobrindo seu estilo único',
+      width: 400,
+      height: 300,
+      className: 'object-cover w-full max-w-md h-72 rounded-xl mx-auto shadow-lg',
+      textAlign: 'text-center',
+      marginBottom: 32
+    }
+  },
+  {
+    type: 'button-inline',
+    properties: {
+      text: 'Vamos Continuar! ✨',
+      variant: 'primary',
+      size: 'large',
+      fullWidth: true,
+      backgroundColor: '#B89B7A',
+      textColor: '#ffffff',
+      borderRadius: 'rounded-full',
+      padding: 'py-4 px-8',
+      fontSize: 'text-lg',
+      fontWeight: 'font-bold',
+      boxShadow: 'shadow-xl',
+      hoverEffect: true
+    }
+  }
+];
 
 export default getStep12Template;

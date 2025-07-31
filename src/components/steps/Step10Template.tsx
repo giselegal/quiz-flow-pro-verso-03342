@@ -1,6 +1,7 @@
+
 import React from 'react';
 
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 10 - QUESTÃO 9: ACESSÓRIOS (REAL)
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 10 - QUESTÃO 9: OCASIÕES
 export const getStep10Template = () => [
   {
     type: 'quiz-intro-header',
@@ -9,7 +10,7 @@ export const getStep10Template = () => [
       logoAlt: 'Logo Gisele Galvão',
       logoWidth: 96,
       logoHeight: 96,
-      progressValue: 90,
+      progressValue: 48,
       progressMax: 100,
       showBackButton: true
     }
@@ -17,7 +18,7 @@ export const getStep10Template = () => [
   {
     type: 'heading-inline',
     properties: {
-      content: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?',
+      content: 'PARA QUAL OCASIÃO VOCÊ MAIS PRECISA DE LOOKS?',
       level: 'h2',
       fontSize: 'text-2xl',
       fontWeight: 'font-bold',
@@ -29,7 +30,7 @@ export const getStep10Template = () => [
   {
     type: 'text-inline',
     properties: {
-      content: 'Questão 9 de 10',
+      content: 'Questão 9 de 21',
       fontSize: 'text-sm',
       textAlign: 'text-center',
       color: '#6B7280',
@@ -39,93 +40,52 @@ export const getStep10Template = () => [
   {
     type: 'options-grid',
     properties: {
-      questionId: 'q9',
+      questionId: 'question-9',
       options: [
-        { 
-          id: "9a", 
-          text: "Pequenos e discretos, às vezes nem uso.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/56_htzoxy.webp",
-          value: "9a",
+        {
+          id: "q9-natural",
+          text: "Dia a dia casual e fins de semana",
+          value: "natural",
           category: "Natural",
           styleCategory: "Natural",
-          points: 1
+          points: 3
         },
-        { 
-          id: "9b", 
-          text: "Brincos pequenos e discretos. Corrente fininha.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/57_whzmff.webp",
-          value: "9b",
+        {
+          id: "q9-classico",
+          text: "Ambiente corporativo e eventos formais",
+          value: "classico",
           category: "Clássico",
           styleCategory: "Clássico",
-          points: 1
+          points: 3
         },
-        { 
-          id: "9c", 
-          text: "Acessórios que elevem meu look com um toque moderno.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/61_joafud.webp",
-          value: "9c",
-          category: "Contemporâneo",
-          styleCategory: "Contemporâneo",
-          points: 1
-        },
-        { 
-          id: "9d", 
-          text: "Acessórios sofisticados, joias ou semijoias.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/60_vzsnps.webp",
-          value: "9d",
-          category: "Elegante",
-          styleCategory: "Elegante",
-          points: 1
-        },
-        { 
-          id: "9e", 
-          text: "Peças delicadas e com um toque feminino.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/59_dwaqrx.webp",
-          value: "9e",
-          category: "Romântico",
-          styleCategory: "Romântico",
-          points: 1
-        },
-        { 
-          id: "9f", 
-          text: "Brincos longos, colares que valorizem minha beleza.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735487/63_lwgokn.webp",
-          value: "9f",
-          category: "Sexy",
-          styleCategory: "Sexy",
-          points: 1
-        },
-        { 
-          id: "9g", 
-          text: "Acessórios pesados, que causem um impacto.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735485/62_mno8wg.webp",
-          value: "9g",
+        {
+          id: "q9-dramatico",
+          text: "Eventos sociais e noturenos",
+          value: "dramatico",
           category: "Dramático",
           styleCategory: "Dramático",
-          points: 1
+          points: 3
         },
-        { 
-          id: "9h", 
-          text: "Acessórios diferentes, grandes e marcantes.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735480/58_njdjoh.webp",
-          value: "9h",
-          category: "Criativo",
-          styleCategory: "Criativo",
-          points: 1
+        {
+          id: "q9-romantico",
+          text: "Encontros românticos e comemorações",
+          value: "romantico",
+          category: "Romântico",
+          styleCategory: "Romântico",
+          points: 3
         }
       ],
-      columns: 2,
-      showImages: true,
-      imageSize: 'large',
-      multipleSelection: true,
-      maxSelections: 3,
+      columns: 1,
+      showImages: false,
+      multipleSelection: false,
+      maxSelections: 1,
       minSelections: 1,
-      validationMessage: 'Selecione até 3 opções',
-      gridGap: 16,
+      validationMessage: 'Selecione uma opção',
+      gridGap: 12,
       responsiveColumns: true,
-      autoAdvanceOnComplete: true,
+      autoAdvanceOnComplete: false,
       autoAdvanceDelay: 800,
-      requiredSelections: 3,
+      requiredSelections: 1,
       enableButtonOnlyWhenValid: true,
       showValidationFeedback: true
     }

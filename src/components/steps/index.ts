@@ -1,6 +1,10 @@
-// 🎯 CENTRALIZADOR DE TODAS AS ETAPAS
-// Este arquivo mapeia cada etapa para seu respectivo template
 
+/**
+ * SISTEMA CENTRALIZADO DAS 21 ETAPAS DO QUIZ
+ * Arquivo otimizado com todas as importações e mapeamentos corretos
+ */
+
+// Importações de todos os templates das 21 etapas
 import { getStep01Template } from './Step01Template';
 import { getStep02Template } from './Step02Template';
 import { getStep03Template } from './Step03Template';
@@ -20,208 +24,187 @@ import { getStep16Template } from './Step16Template';
 import { getStep17Template } from './Step17Template';
 import { getStep18Template } from './Step18Template';
 import { getStep19Template } from './Step19Template';
-import { getStep20Template } from './Step20Template'; // Corrigido: usar Template
+import { getStep20Template } from './Step20Template';
 import { getStep21Template } from './Step21Template';
 
-export interface StepTemplate {
-  id: string;
-  name: string;
-  type: 'intro' | 'question' | 'strategic' | 'transition' | 'result' | 'offer';
-  description: string;
-  getTemplate: () => any[];
-  component?: React.ComponentType<any>;
-  multiSelect?: number;
-}
-
-// ✅ MAPEAMENTO COMPLETO: 21 ETAPAS DO QUIZ DE ESTILO GISELE GALVÃO
+/**
+ * MAPEAMENTO COMPLETO DAS 21 ETAPAS
+ * Cada etapa tem seu template correspondente
+ */
 export const STEP_TEMPLATES = {
-  1: {
-    id: "1",
-    name: "Bem-vinda ao Quiz",
-    type: "intro" as const,
-    description: "Página inicial de apresentação do quiz de estilo",
-    getTemplate: getStep01Template
-  },
-  2: {
-    id: "2",
-    name: "Questão 1: Tipo de Roupa Favorita",
-    type: "question" as const,
-    description: "Qual o seu tipo de roupa favorita?",
-    getTemplate: getStep02Template
-  },
-  3: {
-    id: "3",
-    name: "Questão 2: Personalidade",
-    type: "question" as const,
-    description: "Como você se definiria em termos de personalidade?",
-    getTemplate: getStep03Template
-  },
-  4: {
-    id: "4",
-    name: "Questão 3: Visual",
-    type: "question" as const,
-    description: "Qual visual você mais se identifica?",
-    getTemplate: getStep04Template
-  },
-  5: {
-    id: "5",
-    name: "Questão 4: Estampas",
-    type: "question" as const,
-    description: "Quais estampas você mais se identifica?",
-    getTemplate: getStep05Template
-  },
-  6: {
-    id: "6",
-    name: "Questão 5: Casaco Favorito",
-    type: "question" as const,
-    description: "Qual casaco é seu favorito?",
-    getTemplate: getStep06Template
-  },
-  7: {
-    id: "7",
-    name: "Questão 6: Calça Favorita",
-    type: "question" as const,
-    description: "Qual sua calça favorita?",
-    getTemplate: getStep07Template
-  },
-  8: {
-    id: "8",
-    name: "Questão 7: Sapatos",
-    type: "question" as const,
-    description: "Qual desses sapatos você tem ou mais gosta?",
-    getTemplate: getStep08Template
-  },
-  9: {
-    id: "9",
-    name: "Questão 8: Acessórios",
-    type: "question" as const,
-    description: "Quais acessórios você mais usa ou gostaria de usar?",
-    getTemplate: getStep09Template
-  },
-  10: {
-    id: "10",
-    name: "Questão 9: Tecidos",
-    type: "question" as const,
-    description: "Qual característica dos tecidos é mais importante para você?",
-    getTemplate: getStep10Template
-  },
-  11: {
-    id: "11",
-    name: "Questão 10: Características dos Tecidos",
-    type: "question" as const,
-    description: "O que mais valoriza nos tecidos das suas roupas?",
-    getTemplate: getStep11Template
-  },
-  12: {
-    id: "12",
-    name: "Meio do Caminho!",
-    type: "transition" as const,
-    description: "Página de transição motivacional no meio do quiz",
-    getTemplate: getStep12Template
-  },
-  13: {
-    id: "13",
-    name: "Questão 11: Guarda-roupa",
-    type: "strategic" as const,
-    description: "Quando você olha para o seu guarda-roupa, qual dessas frases te vem à cabeça?",
-    getTemplate: getStep13Template
-  },
-  14: {
-    id: "14",
-    name: "Questão 12: Dificuldades para se Arrumar",
-    type: "strategic" as const,
-    description: "Qual é a sua principal dificuldade na hora de se arrumar para sair?",
-    getTemplate: getStep14Template
-  },
-  15: {
-    id: "15",
-    name: "Questão 13: Prioridades nas Compras",
-    type: "strategic" as const,
-    description: "Quando você vai comprar roupas, o que mais prioriza?",
-    getTemplate: getStep15Template
-  },
-  16: {
-    id: "16",
-    name: "Questão 14: Critérios de Compra",
-    type: "strategic" as const,
-    description: "Qual critério é mais importante na hora de escolher uma peça?",
-    getTemplate: getStep16Template
-  },
-  17: {
-    id: "17",
-    name: "Questão 15: Orçamento Mensal",
-    type: "strategic" as const,
-    description: "Qual orçamento você costuma destinar para roupas por mês?",
-    getTemplate: getStep17Template
-  },
-  18: {
-    id: "18",
-    name: "Questão 16: Investimento em Consultoria",
-    type: "strategic" as const,
-    description: "Você investiria em consultoria de imagem e estilo?",
-    getTemplate: getStep18Template
-  },
-  19: {
-    id: "19",
-    name: "Análise do seu Estilo",
-    type: "transition" as const,
-    description: "Analisando suas respostas para definir seu perfil de estilo",
-    getTemplate: getStep19Template
-  },
-  20: {
-    id: "20",
-    name: "Seu Resultado Personalizado",
-    type: "result" as const,
-    description: "Resultado completo com seu perfil de estilo e dicas personalizadas",
-    getTemplate: getStep20Template
-  },
-  21: {
-    id: "21",
-    name: "Oferta Especial",
-    type: "offer" as const,
-    description: "Oferta especial do Guia de Estilo Gisele Galvão",
-    getTemplate: getStep21Template
-  }
+  1: getStep01Template,
+  2: getStep02Template,
+  3: getStep03Template,
+  4: getStep04Template,
+  5: getStep05Template,
+  6: getStep06Template,
+  7: getStep07Template,
+  8: getStep08Template,
+  9: getStep09Template,
+  10: getStep10Template,
+  11: getStep11Template,
+  12: getStep12Template,
+  13: getStep13Template,
+  14: getStep14Template,
+  15: getStep15Template,
+  16: getStep16Template,
+  17: getStep17Template,
+  18: getStep18Template,
+  19: getStep19Template,
+  20: getStep20Template,
+  21: getStep21Template
 };
 
-// 🔧 FUNÇÃO PARA OBTER TEMPLATE DE QUALQUER ETAPA
-export const getStepTemplate = (stepId: string): any[] => {
-  console.log(`🔍 [DEBUG] Buscando template para stepId: "${stepId}"`);
-  console.log(`🔍 [DEBUG] Tipo de stepId: ${typeof stepId}`);
-  console.log(`🔍 [DEBUG] Chaves disponíveis:`, Object.keys(STEP_TEMPLATES));
+/**
+ * INFORMAÇÕES DAS ETAPAS
+ * Metadados para cada etapa do quiz
+ */
+export const STEP_INFO = {
+  1: { title: 'Introdução', type: 'intro', progress: 0 },
+  2: { title: 'Roupa Favorita', type: 'question', progress: 10 },
+  3: { title: 'Personalidade', type: 'question', progress: 14 },
+  4: { title: 'Biotipo Corporal', type: 'question', progress: 19 },
+  5: { title: 'Estilo de Vida', type: 'question', progress: 24 },
+  6: { title: 'Cores Favoritas', type: 'question', progress: 29 },
+  7: { title: 'Inspirações', type: 'question', progress: 33 },
+  8: { title: 'Acessórios', type: 'question', progress: 38 },
+  9: { title: 'Tecidos', type: 'question', progress: 43 },
+  10: { title: 'Ocasiões', type: 'question', progress: 48 },
+  11: { title: 'Prioridade de Estilo', type: 'question', progress: 52 },
+  12: { title: 'Transição Principal', type: 'transition', progress: 57 },
+  13: { title: 'Questão Estratégica 1', type: 'strategic', progress: 62 },
+  14: { title: 'Questão Estratégica 2', type: 'strategic', progress: 67 },
+  15: { title: 'Questão Estratégica 3', type: 'strategic', progress: 71 },
+  16: { title: 'Questão Estratégica 4', type: 'strategic', progress: 76 },
+  17: { title: 'Questão Estratégica 5', type: 'strategic', progress: 81 },
+  18: { title: 'Questão Estratégica 6', type: 'strategic', progress: 86 },
+  19: { title: 'Transição Final', type: 'transition', progress: 90 },
+  20: { title: 'Resultado Personalizado', type: 'result', progress: 95 },
+  21: { title: 'Oferta Exclusiva', type: 'offer', progress: 100 }
+};
+
+/**
+ * Função principal para obter template de uma etapa
+ * @param stepNumber Número da etapa (1-21)
+ * @returns Template da etapa ou null se não encontrado
+ */
+export const getStepTemplate = (stepNumber: number) => {
+  console.log(`🎯 Carregando template da etapa ${stepNumber}`);
   
-  // Converter stepId para número para acessar o objeto corretamente
-  const stepNumber = parseInt(stepId);
-  console.log(`🔍 [DEBUG] stepNumber convertido: ${stepNumber}`);
-  
-  const stepTemplate = STEP_TEMPLATES[stepNumber];
-  console.log(`🔍 [DEBUG] Template encontrado:`, stepTemplate ? stepTemplate.name : 'NENHUM');
-  
-  if (!stepTemplate) {
-    console.error(`❌ Template não encontrado para etapa: ${stepId} (número: ${stepNumber})`);
-    console.error(`❌ Chaves disponíveis:`, Object.keys(STEP_TEMPLATES));
-    return [];
+  if (stepNumber < 1 || stepNumber > 21) {
+    console.error(`❌ Etapa ${stepNumber} fora do range válido (1-21)`);
+    return null;
   }
   
-  console.log(`✅ Carregando template da ${stepTemplate.name} (${stepId})`);
+  const templateFunction = STEP_TEMPLATES[stepNumber as keyof typeof STEP_TEMPLATES];
+  
+  if (!templateFunction) {
+    console.error(`❌ Template da etapa ${stepNumber} não encontrado`);
+    return null;
+  }
   
   try {
-    const template = stepTemplate.getTemplate();
-    console.log(`🎯 [DEBUG] Template carregado com ${template.length} blocos`);
+    const template = templateFunction();
+    console.log(`✅ Template da etapa ${stepNumber} carregado com sucesso`);
     return template;
   } catch (error) {
-    console.error(`❌ Erro ao executar getTemplate para step ${stepId}:`, error);
-    return [];
+    console.error(`❌ Erro ao carregar template da etapa ${stepNumber}:`, error);
+    return null;
   }
 };
 
-// 🗂️ FUNÇÃO PARA OBTER INFORMAÇÕES DA ETAPA
-export const getStepInfo = (stepId: string): StepTemplate | null => {
-  const stepNumber = parseInt(stepId);
-  return STEP_TEMPLATES[stepNumber] || null;
+/**
+ * Função para obter informações de uma etapa
+ * @param stepNumber Número da etapa (1-21)
+ * @returns Informações da etapa
+ */
+export const getStepInfo = (stepNumber: number) => {
+  if (stepNumber < 1 || stepNumber > 21) {
+    return { title: 'Etapa Inválida', type: 'unknown', progress: 0 };
+  }
+  
+  return STEP_INFO[stepNumber as keyof typeof STEP_INFO];
 };
 
-// 📊 FUNÇÃO PARA LISTAR TODAS AS ETAPAS
-export const getAllSteps = (): StepTemplate[] => {
-  return Object.values(STEP_TEMPLATES);
+/**
+ * Função para obter lista de todas as etapas
+ * @returns Array com informações de todas as 21 etapas
+ */
+export const getAllSteps = () => {
+  return Object.keys(STEP_TEMPLATES).map(stepNum => {
+    const num = parseInt(stepNum);
+    return {
+      stepNumber: num,
+      ...getStepInfo(num)
+    };
+  });
 };
+
+/**
+ * Função para verificar se uma etapa existe
+ * @param stepNumber Número da etapa
+ * @returns true se a etapa existe, false caso contrário
+ */
+export const stepExists = (stepNumber: number): boolean => {
+  return stepNumber >= 1 && stepNumber <= 21 && !!STEP_TEMPLATES[stepNumber as keyof typeof STEP_TEMPLATES];
+};
+
+/**
+ * Função para obter próxima etapa
+ * @param currentStep Etapa atual
+ * @returns Número da próxima etapa ou null se for a última
+ */
+export const getNextStep = (currentStep: number): number | null => {
+  if (currentStep >= 21) return null;
+  return currentStep + 1;
+};
+
+/**
+ * Função para obter etapa anterior
+ * @param currentStep Etapa atual
+ * @returns Número da etapa anterior ou null se for a primeira
+ */
+export const getPreviousStep = (currentStep: number): number | null => {
+  if (currentStep <= 1) return null;
+  return currentStep - 1;
+};
+
+// Exportações nomeadas para compatibilidade
+export {
+  getStep01Template,
+  getStep02Template,
+  getStep03Template,
+  getStep04Template,
+  getStep05Template,
+  getStep06Template,
+  getStep07Template,
+  getStep08Template,
+  getStep09Template,
+  getStep10Template,
+  getStep11Template,
+  getStep12Template,
+  getStep13Template,
+  getStep14Template,
+  getStep15Template,
+  getStep16Template,
+  getStep17Template,
+  getStep18Template,
+  getStep19Template,
+  getStep20Template,
+  getStep21Template
+};
+
+// Export default para facilitar importação
+export default {
+  getStepTemplate,
+  getStepInfo,
+  getAllSteps,
+  stepExists,
+  getNextStep,
+  getPreviousStep,
+  STEP_TEMPLATES,
+  STEP_INFO
+};
+
+console.log('✅ Sistema de 21 etapas carregado com sucesso!');
+console.log(`📊 Total de etapas disponíveis: ${Object.keys(STEP_TEMPLATES).length}`);

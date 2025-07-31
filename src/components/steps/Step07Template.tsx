@@ -1,6 +1,7 @@
+
 import React from 'react';
 
-// Template para a Etapa 7 - Questão 7: QUAL SUA CALÇA FAVORITA?
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 7 - QUESTÃO 6: INSPIRAÇÕES
 export const getStep07Template = () => [
   {
     type: 'quiz-intro-header',
@@ -9,7 +10,7 @@ export const getStep07Template = () => [
       logoAlt: 'Logo Gisele Galvão',
       logoWidth: 96,
       logoHeight: 96,
-      progressValue: 70,
+      progressValue: 33,
       progressMax: 100,
       showBackButton: true
     }
@@ -17,7 +18,7 @@ export const getStep07Template = () => [
   {
     type: 'heading-inline',
     properties: {
-      content: 'QUAL SUA CALÇA FAVORITA?',
+      content: 'QUAL REFERÊNCIA DE ESTILO TE INSPIRA?',
       level: 'h2',
       fontSize: 'text-2xl',
       fontWeight: 'font-bold',
@@ -29,7 +30,7 @@ export const getStep07Template = () => [
   {
     type: 'text-inline',
     properties: {
-      content: 'Questão 7 de 10',
+      content: 'Questão 6 de 21',
       fontSize: 'text-sm',
       textAlign: 'text-center',
       color: '#6B7280',
@@ -39,89 +40,58 @@ export const getStep07Template = () => [
   {
     type: 'options-grid',
     properties: {
+      questionId: 'question-6',
       options: [
-        { 
-          id: "7a", 
-          text: "Calça fluida acetinada bege",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/38_iilv0l.webp",
-          value: "7a",
+        {
+          id: "q6-natural",
+          text: "Jennifer Aniston - Casual chic",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/inspiracao-natural_z1c2up.webp",
+          value: "natural",
           category: "Natural",
           styleCategory: "Natural",
-          points: 1
+          points: 3
         },
-        { 
-          id: "7b", 
-          text: "Calça de alfaiataria cinza",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735417/39_arsswu.webp",
-          value: "7b",
+        {
+          id: "q6-classico",
+          text: "Meghan Markle - Elegância atemporal",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/inspiracao-classica_z1c2up.webp",
+          value: "classico",
           category: "Clássico",
           styleCategory: "Clássico",
-          points: 1
+          points: 3
         },
-        { 
-          id: "7c", 
-          text: "Jeans reto e básico",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/40_beq52x.webp",
-          value: "7c",
-          category: "Contemporâneo",
-          styleCategory: "Contemporâneo",
-          points: 1
-        },
-        { 
-          id: "7d", 
-          text: "Calça reta bege de tecido",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/41_hconq4.webp",
-          value: "7d",
-          category: "Elegante",
-          styleCategory: "Elegante",
-          points: 1
-        },
-        { 
-          id: "7e", 
-          text: "Calça ampla rosa alfaiatada",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735420/42_q8xws1.webp",
-          value: "7e",
-          category: "Romântico",
-          styleCategory: "Romântico",
-          points: 1
-        },
-        { 
-          id: "7f", 
-          text: "Legging preta de couro",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/43_ljy7sh.webp",
-          value: "7f",
-          category: "Sexy",
-          styleCategory: "Sexy",
-          points: 1
-        },
-        { 
-          id: "7g", 
-          text: "Calça reta preta de couro",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/44_nqgvoq.webp",
-          value: "7g",
+        {
+          id: "q6-dramatico",
+          text: "Victoria Beckham - Minimalismo moderno",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/inspiracao-dramatica_z1c2up.webp",
+          value: "dramatico",
           category: "Dramático",
           styleCategory: "Dramático",
-          points: 1
+          points: 3
         },
-        { 
-          id: "7h", 
-          text: "Calça estampada floral leve e ampla",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735425/45_lp64m8.webp",
-          value: "7h",
-          category: "Criativo",
-          styleCategory: "Criativo",
-          points: 1
+        {
+          id: "q6-romantico",
+          text: "Blake Lively - Feminilidade romântica",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/inspiracao-romantica_z1c2up.webp",
+          value: "romantico",
+          category: "Romântico",
+          styleCategory: "Romântico",
+          points: 3
         }
       ],
       columns: 2,
       showImages: true,
-      imageSize: 'large',
-      multipleSelection: true,
-      maxSelections: 3,
+      multipleSelection: false,
+      maxSelections: 1,
       minSelections: 1,
-      validationMessage: 'Selecione até 3 opções',
+      validationMessage: 'Selecione uma opção',
       gridGap: 16,
-      responsiveColumns: true
+      responsiveColumns: true,
+      autoAdvanceOnComplete: false,
+      autoAdvanceDelay: 800,
+      requiredSelections: 1,
+      enableButtonOnlyWhenValid: true,
+      showValidationFeedback: true
     }
   },
   {

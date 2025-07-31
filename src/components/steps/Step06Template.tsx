@@ -1,6 +1,7 @@
+
 import React from 'react';
 
-// Template para a Etapa 6 - Questão 6: QUAL CASACO É SEU FAVORITO?
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 6 - QUESTÃO 5: CORES FAVORITAS
 export const getStep06Template = () => [
   {
     type: 'quiz-intro-header',
@@ -9,7 +10,7 @@ export const getStep06Template = () => [
       logoAlt: 'Logo Gisele Galvão',
       logoWidth: 96,
       logoHeight: 96,
-      progressValue: 60,
+      progressValue: 29,
       progressMax: 100,
       showBackButton: true
     }
@@ -17,7 +18,7 @@ export const getStep06Template = () => [
   {
     type: 'heading-inline',
     properties: {
-      content: 'QUAL CASACO É SEU FAVORITO?',
+      content: 'QUAL PALETA DE CORES TE ATRAI MAIS?',
       level: 'h2',
       fontSize: 'text-2xl',
       fontWeight: 'font-bold',
@@ -29,7 +30,7 @@ export const getStep06Template = () => [
   {
     type: 'text-inline',
     properties: {
-      content: 'Questão 6 de 10',
+      content: 'Questão 5 de 21',
       fontSize: 'text-sm',
       textAlign: 'text-center',
       color: '#6B7280',
@@ -39,89 +40,58 @@ export const getStep06Template = () => [
   {
     type: 'options-grid',
     properties: {
+      questionId: 'question-5',
       options: [
-        { 
-          id: "6a", 
-          text: "Cardigã bege confortável e casual",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/29_sdogoy.webp",
-          value: "6a",
+        {
+          id: "q5-natural",
+          text: "Tons terrosos e neutros",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/paleta-natural_z1c2up.webp",
+          value: "natural",
           category: "Natural",
           styleCategory: "Natural",
-          points: 1
+          points: 3
         },
-        { 
-          id: "6b", 
-          text: "Blazer verde estruturado",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/30_nfth8k.webp",
-          value: "6b",
+        {
+          id: "q5-classico",
+          text: "Azul marinho, branco e bege",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/paleta-classica_z1c2up.webp",
+          value: "classico",
           category: "Clássico",
           styleCategory: "Clássico",
-          points: 1
+          points: 3
         },
-        { 
-          id: "6c", 
-          text: "Trench coat bege tradicional",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/31_tcmhcl.webp",
-          value: "6c",
-          category: "Contemporâneo",
-          styleCategory: "Contemporâneo",
-          points: 1
-        },
-        { 
-          id: "6d", 
-          text: "Blazer branco refinado",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/32_h78pd8.webp",
-          value: "6d",
-          category: "Elegante",
-          styleCategory: "Elegante",
-          points: 1
-        },
-        { 
-          id: "6e", 
-          text: "Casaco pink vibrante e moderno",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/33_u8pldd.webp",
-          value: "6e",
-          category: "Romântico",
-          styleCategory: "Romântico",
-          points: 1
-        },
-        { 
-          id: "6f", 
-          text: "Jaqueta vinho de couro estilosa",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/34_peadir.webp",
-          value: "6f",
-          category: "Sexy",
-          styleCategory: "Sexy",
-          points: 1
-        },
-        { 
-          id: "6g", 
-          text: "Jaqueta preta estilo rocker",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735379/35_pulzso.webp",
-          value: "6g",
+        {
+          id: "q5-dramatico",
+          text: "Preto, branco e vermelho",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/paleta-dramatica_z1c2up.webp",
+          value: "dramatico",
           category: "Dramático",
           styleCategory: "Dramático",
-          points: 1
+          points: 3
         },
-        { 
-          id: "6h", 
-          text: "Casaco estampado criativo e colorido",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/36_cympaq.webp",
-          value: "6h",
-          category: "Criativo",
-          styleCategory: "Criativo",
-          points: 1
+        {
+          id: "q5-romantico",
+          text: "Rosa, lavanda e tons suaves",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/paleta-romantica_z1c2up.webp",
+          value: "romantico",
+          category: "Romântico",
+          styleCategory: "Romântico",
+          points: 3
         }
       ],
       columns: 2,
       showImages: true,
-      imageSize: 'large',
-      multipleSelection: true,
-      maxSelections: 3,
+      multipleSelection: false,
+      maxSelections: 1,
       minSelections: 1,
-      validationMessage: 'Selecione até 3 opções',
+      validationMessage: 'Selecione uma opção',
       gridGap: 16,
-      responsiveColumns: true
+      responsiveColumns: true,
+      autoAdvanceOnComplete: false,
+      autoAdvanceDelay: 800,
+      requiredSelections: 1,
+      enableButtonOnlyWhenValid: true,
+      showValidationFeedback: true
     }
   },
   {

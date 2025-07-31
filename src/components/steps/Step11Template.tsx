@@ -1,6 +1,7 @@
+
 import React from 'react';
 
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 11 - QUESTÃO 10: TECIDOS (REAL)
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 11 - QUESTÃO 10: PRIORIDADE DE ESTILO
 export const getStep11Template = () => [
   {
     type: 'quiz-intro-header',
@@ -9,7 +10,7 @@ export const getStep11Template = () => [
       logoAlt: 'Logo Gisele Galvão',
       logoWidth: 96,
       logoHeight: 96,
-      progressValue: 100,
+      progressValue: 52,
       progressMax: 100,
       showBackButton: true
     }
@@ -17,7 +18,7 @@ export const getStep11Template = () => [
   {
     type: 'heading-inline',
     properties: {
-      content: 'VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...',
+      content: 'O QUE É MAIS IMPORTANTE NO SEU ESTILO PESSOAL?',
       level: 'h2',
       fontSize: 'text-2xl',
       fontWeight: 'font-bold',
@@ -29,7 +30,7 @@ export const getStep11Template = () => [
   {
     type: 'text-inline',
     properties: {
-      content: 'Questão 10 de 10',
+      content: 'Questão 10 de 21',
       fontSize: 'text-sm',
       textAlign: 'text-center',
       color: '#6B7280',
@@ -39,84 +40,52 @@ export const getStep11Template = () => [
   {
     type: 'options-grid',
     properties: {
-      questionId: 'q10',
+      questionId: 'question-10',
       options: [
-        { 
-          id: "10a", 
-          text: "São fáceis de cuidar",
-          value: "10a",
+        {
+          id: "q10-natural",
+          text: "Autenticidade e conforto acima de tudo",
+          value: "natural",
           category: "Natural",
           styleCategory: "Natural",
-          points: 1
+          points: 3
         },
-        { 
-          id: "10b", 
-          text: "São de excelente qualidade",
-          value: "10b",
+        {
+          id: "q10-classico",
+          text: "Elegância atemporal que nunca sai de moda",
+          value: "classico",
           category: "Clássico",
           styleCategory: "Clássico",
-          points: 1
+          points: 3
         },
-        { 
-          id: "10c", 
-          text: "São fáceis de cuidar e modernos",
-          value: "10c",
-          category: "Contemporâneo",
-          styleCategory: "Contemporâneo",
-          points: 1
-        },
-        { 
-          id: "10d", 
-          text: "São sofisticados",
-          value: "10d",
-          category: "Elegante",
-          styleCategory: "Elegante",
-          points: 1
-        },
-        { 
-          id: "10e", 
-          text: "São delicados",
-          value: "10e",
-          category: "Romântico",
-          styleCategory: "Romântico",
-          points: 1
-        },
-        { 
-          id: "10f", 
-          text: "São perfeitos ao meu corpo",
-          value: "10f",
-          category: "Sexy",
-          styleCategory: "Sexy",
-          points: 1
-        },
-        { 
-          id: "10g", 
-          text: "São diferentes, e trazem um efeito para minha roupa",
-          value: "10g",
+        {
+          id: "q10-dramatico",
+          text: "Impacto visual e presença marcante",
+          value: "dramatico",
           category: "Dramático",
           styleCategory: "Dramático",
-          points: 1
+          points: 3
         },
-        { 
-          id: "10h", 
-          text: "São exclusivos, criam identidade no look",
-          value: "10h",
-          category: "Criativo",
-          styleCategory: "Criativo",
-          points: 1
+        {
+          id: "q10-romantico",
+          text: "Feminilidade e delicadeza em cada detalhe",
+          value: "romantico",
+          category: "Romântico",
+          styleCategory: "Romântico",
+          points: 3
         }
       ],
       columns: 1,
       showImages: false,
-      multipleSelection: true,
-      maxSelections: 3,
+      multipleSelection: false,
+      maxSelections: 1,
       minSelections: 1,
-      validationMessage: 'Selecione até 3 opções',
+      validationMessage: 'Selecione uma opção',
       gridGap: 12,
       responsiveColumns: true,
-      autoAdvanceOnComplete: true,
+      autoAdvanceOnComplete: false,
       autoAdvanceDelay: 800,
-      requiredSelections: 3,
+      requiredSelections: 1,
       enableButtonOnlyWhenValid: true,
       showValidationFeedback: true
     }
@@ -124,7 +93,7 @@ export const getStep11Template = () => [
   {
     type: 'button-inline',
     properties: {
-      text: 'Finalizar Quiz',
+      text: 'Continuar',
       variant: 'primary',
       size: 'large',
       fullWidth: true,
