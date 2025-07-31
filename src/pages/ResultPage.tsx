@@ -79,8 +79,7 @@ const ResultPage: React.FC = () => {
     }
   }, [primaryStyle]);
 
-   * caso contrário renderiza o componente original
-   */
+  // caso contrário renderiza o componente original
   const renderConfigurableComponent = (blockId: string, originalComponent: React.ReactNode) => {
     if (pageConfig && !configLoading) {
       return <DynamicBlockRenderer 
