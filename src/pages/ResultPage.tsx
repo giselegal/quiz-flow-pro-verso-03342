@@ -22,6 +22,7 @@ import { useLoadingState } from '@/hooks/useLoadingState';
 import { useIsLowPerformanceDevice } from '@/hooks/use-mobile';
 import ResultSkeleton from '@/components/result/ResultSkeleton';
 import { trackButtonClick } from '@/utils/analytics';
+import { loadMockData } from '@/utils/mockResultData';
 import BuildInfo from '@/components/BuildInfo';
 import SecurePurchaseElement from '@/components/result/SecurePurchaseElement';
 import { useAuth } from '@/context/AuthContext';
@@ -87,7 +88,9 @@ const ResultPage: React.FC = () => {
   useEffect(() => {
     if (!primaryStyle && process.env.NODE_ENV === 'development') {
       console.log('Carregando dados mock para desenvolvimento...');
-      loadMockData();
+      async (params:type) => {
+        loadMockData
+      }();
       // Force reload dos dados após carregar mock
       window.location.reload();
     }
@@ -479,4 +482,3 @@ const ResultPage: React.FC = () => {
       <BuildInfo />
     </div>;
 };
-export default ResultPage;
