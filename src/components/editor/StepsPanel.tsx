@@ -222,6 +222,12 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                           <Copy className="w-4 h-4 mr-2" />
                           Duplicar
                         </DropdownMenuItem>
+                        {onPopulateStep && (
+                          <DropdownMenuItem onClick={() => onPopulateStep(step.id)}>
+                            <Plus className="w-4 h-4 mr-2" />
+                            Popular Etapa
+                          </DropdownMenuItem>
+                        )}
                         <DropdownMenuSeparator />
                         <DropdownMenuItem 
                           onClick={() => onStepDelete(step.id)}
