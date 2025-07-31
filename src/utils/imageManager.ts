@@ -1,4 +1,3 @@
-
 import { ImageOptimizationOptions, PreloadOptions } from './images/types';
 
 export const getOptimizedImageUrl = (src: string, options?: { width?: number; height?: number; quality?: number; format?: string }) => {
