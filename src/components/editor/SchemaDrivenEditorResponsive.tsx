@@ -20,7 +20,7 @@ import { ComponentsPanel } from './ComponentsPanel';
 import { schemaDrivenFunnelService } from '../../services/schemaDrivenFunnelService';
 import { useToast } from '../../hooks/use-toast';
 import { generateRealQuestionTemplates } from '../../data/realQuizTemplates';
-import { getStepTemplate, getStepInfo } from '../steps';
+// import { getStepTemplate, getStepInfo } from '../steps'; // Removido pois o módulo não existe
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
