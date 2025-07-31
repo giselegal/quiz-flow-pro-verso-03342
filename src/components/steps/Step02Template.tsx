@@ -159,7 +159,4 @@ export const getStep02Template = () => {
       }
     }
   ];
-};
 
-export { getStep02Template };
-export default Step02Question01;

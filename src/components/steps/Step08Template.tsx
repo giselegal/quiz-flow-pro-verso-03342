@@ -145,5 +145,4 @@ export const getStep08Template = () => [
   }
 ];
 
-export { getStep00Template };
 export default getStep08Template;

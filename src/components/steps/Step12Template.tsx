@@ -93,8 +93,3 @@ export const getStep12Template = (): BlockData[] => {
       }
     }
   ];
-  return blocks;
-};
-
-export { getStep12Template };
-export default getStep12Template;
