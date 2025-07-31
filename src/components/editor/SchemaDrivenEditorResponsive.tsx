@@ -1,471 +1,355 @@
-/**
- * EDITOR RESPONSIVO COM INTEGRAÇÃO DE FUNIL
- * Editor que se adapta a diferentes telas e se conecta com um funil de dados
- */
 
-import React, { useState, useCallback, useEffect } from 'react';
-import {
-  ResizablePanelGroup,
-  ResizablePanel,
-  ResizableHandle,
-} from "@/components/ui/resizable"
-import { useToast } from "@/components/ui/use-toast"
-import { cn } from "@/lib/utils"
-import { v4 as uuidv4 } from 'uuid';
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { Plus, Copy, Trash2, ChevronDown, ChevronRight, Zap } from 'lucide-react';
-import {
-  BlockRenderer,
-  ComponentsPanel,
-  StepsPanel
-} from './';
-import {
-  QuizComponentData,
-  QuizStage
-} from '@/types/quizBuilder';
-import {
-  DEFAULT_STAGE,
-  DEFAULT_COMPONENT_DATA
-} from '@/constants';
-import { useQuizBuilder } from '@/hooks/useQuizBuilder';
-import { useTypeformQuizBuilder } from '@/hooks/useTypeformQuizBuilder';
-import { generateInitialStages } from '@/services/quizBuilderService';
+import React, { useState, useEffect, useCallback } from 'react';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Save, Eye, EyeOff, Smartphone, Tablet, Monitor, Download } from 'lucide-react';
+import { toast } from '@/components/ui/use-toast';
 import { schemaDrivenFunnelService } from '@/services/schemaDrivenFunnelService';
+import { StepsPanel } from './sidebar/StepsPanel';
+import { ComponentsSidebar } from './sidebar/ComponentsSidebar';
+import { EditPreview } from './preview/EditPreview';
+import PropertiesPanel from './properties/PropertiesPanel';
+import { useEditor } from '@/hooks/useEditor';
+import { useEditorPersistence } from '@/hooks/editor/useEditorPersistence';
+import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
+import { cn } from '@/lib/utils';
+
+interface ViewportConfig {
+  width: string;
+  height: string;
+  icon: React.ElementType;
+  label: string;
+}
+
+const VIEWPORT_CONFIGS: Record<string, ViewportConfig> = {
+  mobile: { width: '375px', height: '812px', icon: Smartphone, label: 'Mobile' },
+  tablet: { width: '768px', height: '1024px', icon: Tablet, label: 'Tablet' },
+  desktop: { width: '100%', height: '100%', icon: Monitor, label: 'Desktop' }
+};
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
   className?: string;
-  onSave?: (project: any) => void;
   initialBlocks?: any[];
+  onSave?: (project: any) => void;
 }
 
-interface Step {
-  id: string;
-  name: string;
-  blocks: any[];
-}
-
-const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> = ({ 
+const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> = ({
   funnelId,
-  className,
-  onSave,
-  initialBlocks = []
+  className = '',
+  initialBlocks = [],
+  onSave
 }) => {
-  const [leftPanelTab, setLeftPanelTab] = useState<"steps" | "blocks">("steps");
-  const { toast } = useToast();
-  
-  const {
-    components,
-    stages,
-    activeStageId,
-    addComponent,
-    updateComponent,
-    deleteComponent,
-    moveComponent,
-    addStage,
-    updateStage,
-    deleteStage,
-    moveStage,
-    setActiveStage,
-    saveCurrentState,
-    initializeStages,
-    initializeComponents,
-    loading
-  } = useQuizBuilder();
+  const [currentStep, setCurrentStep] = useState(1);
+  const [viewMode, setViewMode] = useState<'steps' | 'components'>('steps');
+  const [isPreviewing, setIsPreviewing] = useState(false);
+  const [viewport, setViewport] = useState('desktop');
+  const [isLoadingStep, setIsLoadingStep] = useState(false);
+  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
 
-  const [blocks, setBlocks] = useState<any[]>(initialBlocks);
-  const [steps, setSteps] = useState<Step[]>([]);
-  const [activeStepId, setActiveStepId] = useState<string | null>(null);
-  const [isLoadingFunnel, setIsLoadingFunnel] = useState(false);
+  const { config, setConfig, addBlock, updateBlock, deleteBlock } = useEditor();
+  const { saveFunnel, loadFunnel, isSaving, isLoading } = useEditorPersistence();
 
-  // Load funnel data on component mount
+  // Auto-save com debounce
+  const handleAutoSave = async (data: any) => {
+    const preservedId = funnelId || data.id || `funnel_${Date.now()}`;
+    
+    const funnelData = {
+      id: preservedId,
+      name: data.title || 'Funil de 21 Etapas',
+      description: data.description || 'Quiz personalizado de estilo com 21 etapas',
+      isPublished: false,
+      version: data.version || 1,
+      settings: data.settings || {},
+      pages: [{
+        id: `page_${Date.now()}`,
+        pageType: 'landing',
+        pageOrder: 0,
+        title: data.title || 'Página Principal',
+        blocks: data.blocks || [],
+        metadata: {}
+      }]
+    };
+    
+    await saveFunnel(funnelData);
+  };
+
+  const { forceSave } = useAutoSaveWithDebounce({
+    data: config,
+    onSave: handleAutoSave,
+    delay: 1000,
+    enabled: !!config?.blocks?.length,
+    showToasts: false
+  });
+
+  // Carregar dados do funil se ID for fornecido
   useEffect(() => {
     const loadFunnelData = async () => {
       if (!funnelId) {
-        console.warn('Funnel ID is missing. Using default state.');
+        if (initialBlocks?.length > 0) {
+          setConfig({
+            blocks: initialBlocks,
+            title: 'Funil de 21 Etapas',
+            description: 'Quiz personalizado de estilo'
+          });
+        }
         return;
       }
-
-      setIsLoadingFunnel(true);
+      
       try {
-        // Check if the funnel exists
-        const funnelExists = await schemaDrivenFunnelService.funnelExists(funnelId);
+        console.log('🔍 Carregando funil:', funnelId);
+        const schemaDrivenData = await schemaDrivenFunnelService.loadFunnel(funnelId);
         
-        if (!funnelExists) {
-          console.log(`Funnel with ID "${funnelId}" does not exist. Creating a new one.`);
-          
-          // Create the funnel if it doesn't exist
-          const newFunnel = await schemaDrivenFunnelService.createFunnel(funnelId);
-          
-          if (newFunnel) {
-            toast({
-              title: "Funil Criado!",
-              description: `Funil "${funnelId}" criado com template padrão`,
-              duration: 3000,
+        if (schemaDrivenData) {
+          const firstPage = schemaDrivenData.pages[0];
+          if (firstPage && firstPage.blocks) {
+            setConfig({
+              blocks: firstPage.blocks,
+              title: firstPage.title || schemaDrivenData.name,
+              description: schemaDrivenData.description
             });
-          } else {
-            toast({
-              title: "Erro ao criar funil",
-              description: `Não foi possível criar o funil "${funnelId}"`,
-              variant: "destructive",
-            });
-            return;
+            console.log('✅ Funil carregado com', firstPage.blocks.length, 'blocos');
           }
-        }
-        
-        // Load the funnel data
-        const funnelData = await schemaDrivenFunnelService.getFunnel(funnelId);
-        
-        if (funnelData && funnelData.pages) {
-          console.log(`Funnel data loaded successfully for ID: ${funnelId}`);
-          
-          // Convert pages to steps
-          const initialSteps = funnelData.pages.map((page, index) => ({
-            id: page.id || `step-${index + 1}`,
-            name: page.name || `Etapa ${index + 1}`,
-            blocks: page.blocks || [],
-          }));
-          
-          setSteps(initialSteps);
-          setBlocks(initialSteps.flatMap(step => step.blocks));
-          
-          // Set the first step as active
-          if (initialSteps.length > 0) {
-            setActiveStepId(initialSteps[0].id);
-          }
-          
-          toast({
-            title: "Funil Carregado!",
-            description: `Funil "${funnelId}" carregado com ${initialSteps.length} etapas`,
-            duration: 3000,
-          });
-        } else {
-          console.warn(`Funnel data is empty or has no pages for ID: ${funnelId}`);
-          
-          // Initialize with default steps if funnel data is empty
-          const defaultSteps = generateInitialSteps();
-          setSteps(defaultSteps);
-          setBlocks(defaultSteps.flatMap(step => step.blocks));
-          
-          if (defaultSteps.length > 0) {
-            setActiveStepId(defaultSteps[0].id);
-          }
-          
-          toast({
-            title: "Funil Vazio",
-            description: `Funil "${funnelId}" está vazio. Usando template padrão`,
-            duration: 3000,
-          });
         }
       } catch (error) {
-        console.error('Error loading funnel data:', error);
+        console.error('❌ Erro ao carregar funil:', error);
         toast({
-          title: "Erro ao carregar funil",
-          description: `Não foi possível carregar o funil "${funnelId}"`,
-          variant: "destructive",
+          title: "Erro",
+          description: "Erro ao carregar funil",
+          variant: "destructive"
         });
-      } finally {
-        setIsLoadingFunnel(false);
       }
     };
 
     loadFunnelData();
-  }, [funnelId, toast]);
+  }, [funnelId, setConfig, initialBlocks]);
 
-  // Update document title with funnel ID
-  useEffect(() => {
-    document.title = funnelId ? `Editor - ${funnelId}` : 'Editor';
-  }, [funnelId]);
-
-  // Function to generate initial steps
-  const generateInitialSteps = (): Step[] => {
-    return [
-      {
-        id: 'step-1',
-        name: 'Etapa 1',
-        blocks: [
-          {
-            id: uuidv4(),
-            type: 'text',
-            content: { text: 'Bem-vindo!' }
-          }
-        ]
-      }
-    ];
-  };
-
-  const handleAddBlock = (type: string) => {
-    if (!activeStepId) {
-      toast({
-        title: "Erro",
-        description: "Selecione uma etapa para adicionar o bloco.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const newBlock = {
-      id: uuidv4(),
-      type: type,
-      content: { text: `Novo bloco de ${type}` }
-    };
-
-    setBlocks([...blocks, newBlock]);
-    setSteps(steps.map(step =>
-      step.id === activeStepId ? { ...step, blocks: [...step.blocks, newBlock] } : step
-    ));
-  };
-
-  const handleUpdateBlock = (blockId: string, newContent: any) => {
-    setBlocks(blocks.map(block =>
-      block.id === blockId ? { ...block, content: newContent } : block
-    ));
-
-    setSteps(steps.map(step => ({
-      ...step,
-      blocks: step.blocks.map(block =>
-        block.id === blockId ? { ...block, content: newContent } : block
-      )
-    })));
-  };
-
-  const handleDeleteBlock = (blockId: string) => {
-    setBlocks(blocks.filter(block => block.id !== blockId));
-    setSteps(steps.map(step => ({
-      ...step,
-      blocks: step.blocks.filter(block => block.id !== blockId)
-    })));
-  };
-
-  const handleAddStep = () => {
-    const newStepId = uuidv4();
-    const newStep = {
-      id: newStepId,
-      name: `Etapa ${steps.length + 1}`,
-      blocks: []
-    };
-
-    setSteps([...steps, newStep]);
-    setActiveStepId(newStepId);
-  };
-
-  const handleDuplicateStep = (stepId: string) => {
-    const stepToDuplicate = steps.find(step => step.id === stepId);
-    if (!stepToDuplicate) return;
-
-    const newStepId = uuidv4();
-    const newStep = {
-      id: newStepId,
-      name: `${stepToDuplicate.name} (Cópia)`,
-      blocks: stepToDuplicate.blocks.map(block => ({ ...block, id: uuidv4() }))
-    };
-
-    setSteps([...steps, newStep]);
-    setActiveStepId(newStepId);
-  };
-
-  const handleDeleteStep = (stepId: string) => {
-    setSteps(steps.filter(step => step.id !== stepId));
-    setBlocks(blocks.filter(block => !steps.find(step => step.id === stepId)?.blocks.find(b => b.id === block.id)));
-    setActiveStepId(null);
-  };
-
-  const handleSelectStep = (stepId: string) => {
-    setActiveStepId(stepId);
-  };
-
-  const handleAddBlocksToStep = useCallback((stepId: string, newBlocks: any[]) => {
-    setSteps(prevSteps => {
-      return prevSteps.map(step => {
-        if (step.id === stepId) {
-          const updatedBlocks = [...step.blocks, ...newBlocks];
-          return { ...step, blocks: updatedBlocks };
-        }
-        return step;
-      });
-    });
-    
-    setBlocks(prevBlocks => [...prevBlocks, ...newBlocks]);
-  }, []);
-
-  // Função otimizada para popular etapa com template correto
-  const handlePopulateStep = useCallback((stepId: string) => {
-    console.log(`🎯 Populando etapa ${stepId} com template correspondente`);
-    
+  // Função para popular uma etapa específica
+  const handlePopulateStep = async (stepNumber: number) => {
+    setIsLoadingStep(true);
     try {
-      // Extrair número da etapa do stepId
-      const stepMatch = stepId.match(/(\d+)/);
-      if (!stepMatch) {
-        console.error(`❌ Não foi possível extrair número da etapa de: ${stepId}`);
-        return;
+      console.log(`🎯 Populando etapa ${stepNumber}`);
+      
+      const stepData = await schemaDrivenFunnelService.getStepTemplate(stepNumber);
+      if (stepData && stepData.blocks) {
+        // Limpar blocos existentes e adicionar os novos
+        setConfig(prev => ({
+          ...prev,
+          blocks: stepData.blocks,
+          title: stepData.title || `Etapa ${stepNumber}`
+        }));
+        
+        toast({
+          title: "Etapa carregada",
+          description: `Etapa ${stepNumber} foi carregada com ${stepData.blocks.length} componentes`,
+        });
+      } else {
+        toast({
+          title: "Aviso",
+          description: `Template da etapa ${stepNumber} não encontrado`,
+          variant: "destructive"
+        });
       }
-      
-      const stepNumber = parseInt(stepMatch[0]);
-      console.log(`📋 Extraído número da etapa: ${stepNumber}`);
-      
-      // Importar e usar o template correto
-      import('../steps').then(stepsModule => {
-        const template = stepsModule.getStepTemplate(stepNumber);
-        
-        if (!template) {
-          console.error(`❌ Template não encontrado para etapa ${stepNumber}`);
-          return;
-        }
-        
-        console.log(`✅ Template carregado para etapa ${stepNumber}:`, template);
-        
-        // Adicionar os blocos do template à etapa
-        handleAddBlocksToStep(stepId, template);
-        
-        // Feedback visual para o usuário
-        toast({
-          title: "Etapa populada!",
-          description: `Etapa ${stepNumber} foi populada com ${template.length} componentes`,
-          duration: 3000,
-        });
-        
-      }).catch(error => {
-        console.error(`❌ Erro ao carregar template da etapa ${stepNumber}:`, error);
-        toast({
-          title: "Erro",
-          description: `Não foi possível carregar o template da etapa ${stepNumber}`,
-          variant: "destructive",
-        });
-      });
-      
     } catch (error) {
-      console.error('❌ Erro geral ao popular etapa:', error);
+      console.error('❌ Erro ao popular etapa:', error);
       toast({
         title: "Erro",
-        description: "Erro inesperado ao popular a etapa",
-        variant: "destructive",
+        description: `Erro ao carregar etapa ${stepNumber}`,
+        variant: "destructive"
       });
+    } finally {
+      setIsLoadingStep(false);
     }
-  }, [handleAddBlocksToStep]);
+  };
 
-  // Função para popular todas as etapas vazias
-  const handlePopulateAllEmptySteps = useCallback(() => {
-    console.log('🚀 Iniciando população de todas as etapas vazias...');
-    
-    let populatedCount = 0;
-    
-    steps.forEach(step => {
-      const stepBlocks = blocks.filter(block => block.stepId === step.id);
-      
-      // Se a etapa está vazia, popular ela
-      if (stepBlocks.length === 0) {
-        console.log(`📋 Populando etapa vazia: ${step.id}`);
-        handlePopulateStep(step.id);
-        populatedCount++;
-      }
-    });
-    
-    if (populatedCount > 0) {
+  const handleSave = async () => {
+    try {
+      await forceSave();
       toast({
-        title: "Etapas populadas!",
-        description: `${populatedCount} etapas vazias foram populadas com templates padrão`,
-        duration: 4000,
+        title: "Salvo",
+        description: "Funil salvo com sucesso",
       });
-    } else {
+      
+      if (onSave && typeof onSave === 'function') {
+        onSave({
+          id: funnelId,
+          blocks: config.blocks,
+          title: config.title,
+          description: config.description
+        });
+      }
+    } catch (error) {
+      console.error('❌ Erro ao salvar:', error);
       toast({
-        title: "Nenhuma etapa vazia",
-        description: "Todas as etapas já possuem conteúdo",
-        duration: 3000,
+        title: "Erro ao salvar",
+        description: "Ocorreu um erro ao salvar o funil",
+        variant: "destructive"
       });
     }
-  }, [steps, blocks, handlePopulateStep]);
+  };
+
+  const togglePreview = () => {
+    setIsPreviewing(!isPreviewing);
+    setSelectedComponentId(null);
+  };
+
+  const handleStepChange = (step: number) => {
+    setCurrentStep(step);
+    setSelectedComponentId(null);
+  };
+
+  const handleAddComponent = (type: string) => {
+    const newId = addBlock(type);
+    setSelectedComponentId(newId);
+  };
+
+  const handleSelectComponent = (id: string | null) => {
+    setSelectedComponentId(id);
+  };
+
+  const currentViewport = VIEWPORT_CONFIGS[viewport];
 
   return (
-    <div className={cn("w-full h-full flex flex-col bg-gray-50", className)}>
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b bg-white">
-        <h1 className="text-lg font-semibold">
-          {isLoadingFunnel ? 'Carregando...' : `Editor - ${funnelId || 'Novo Funil'}`}
-        </h1>
-        <Button onClick={saveCurrentState}>Salvar</Button>
+    <div className={cn("h-screen flex flex-col bg-[#FAF9F7]", className)}>
+      {/* Toolbar */}
+      <div className="flex items-center justify-between p-4 border-b bg-white shadow-sm">
+        <div className="flex items-center gap-4">
+          <h1 className="text-xl font-bold text-[#432818]">
+            Editor Visual de Funil
+          </h1>
+          <Badge variant="outline" className="text-[#432818] border-[#432818]">
+            21 Etapas Completas
+          </Badge>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          {/* Seletor de Viewport */}
+          <div className="flex items-center gap-1 border rounded-md p-1">
+            {Object.entries(VIEWPORT_CONFIGS).map(([key, config]) => (
+              <Button
+                key={key}
+                variant={viewport === key ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewport(key)}
+                className="h-8 px-2"
+              >
+                <config.icon className="w-4 h-4" />
+              </Button>
+            ))}
+          </div>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={togglePreview}
+            className="border-[#432818] text-[#432818] hover:bg-[#432818] hover:text-white"
+          >
+            {isPreviewing ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
+            {isPreviewing ? 'Editar' : 'Visualizar'}
+          </Button>
+          
+          <Button
+            onClick={handleSave}
+            disabled={isSaving}
+            className="bg-[#B89B7A] hover:bg-[#A08A73] text-white"
+          >
+            <Save className="w-4 h-4 mr-2" />
+            {isSaving ? 'Salvando...' : 'Salvar'}
+          </Button>
+        </div>
       </div>
 
-      {/* Loading State */}
-      {isLoadingFunnel && (
-        <div className="flex items-center justify-center h-full">
-          <p className="text-gray-500">Carregando funil...</p>
-        </div>
-      )}
+      <div className="flex-1 flex overflow-hidden">
+        <ResizablePanelGroup direction="horizontal" className="flex-1">
+          {/* Painel Esquerdo */}
+          <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+            <div className="h-full flex flex-col border-r border-gray-200">
+              {/* Tabs para alternar entre etapas e componentes */}
+              <div className="flex border-b">
+                <button
+                  onClick={() => setViewMode('steps')}
+                  className={cn(
+                    "flex-1 px-4 py-2 text-sm font-medium transition-colors",
+                    viewMode === 'steps' 
+                      ? "bg-[#B89B7A] text-white" 
+                      : "bg-gray-50 text-gray-600 hover:text-gray-800"
+                  )}
+                >
+                  Etapas Quiz
+                </button>
+                <button
+                  onClick={() => setViewMode('components')}
+                  className={cn(
+                    "flex-1 px-4 py-2 text-sm font-medium transition-colors",
+                    viewMode === 'components' 
+                      ? "bg-[#B89B7A] text-white" 
+                      : "bg-gray-50 text-gray-600 hover:text-gray-800"
+                  )}
+                >
+                  Componentes
+                </button>
+              </div>
 
-      <ResizablePanelGroup direction="horizontal" className="flex-1 min-h-0">
-        {/* Left Panel - Steps and Components */}
-        <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-          <div className="h-full flex flex-col border-r border-gray-200 bg-white">
-            <Tabs value={leftPanelTab} onValueChange={setLeftPanelTab} className="flex-1 flex flex-col">
-              <TabsList className="grid w-full grid-cols-2 m-2">
-                <TabsTrigger value="steps">Etapas Quiz</TabsTrigger>
-                <TabsTrigger value="blocks">Blocos</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="steps" className="flex-1 m-2 mt-0">
+              {/* Conteúdo do painel */}
+              {viewMode === 'steps' ? (
                 <StepsPanel
-                  steps={steps}
-                  activeStepId={activeStepId}
-                  onStepSelect={setActiveStepId}
-                  onStepAdd={handleAddStep}
-                  onStepDelete={handleDeleteStep}
-                  onStepDuplicate={handleDuplicateStep}
-                  onPopulateStep={handlePopulateStep} // ✅ FUNÇÃO CONECTADA
-                  onPopulateAllEmptySteps={handlePopulateAllEmptySteps} // ✅ NOVA FUNCIONALIDADE
+                  currentStep={currentStep}
+                  onStepChange={handleStepChange}
+                  onPopulateStep={handlePopulateStep}
+                  isLoading={isLoadingStep}
                 />
-              </TabsContent>
-              
-              <TabsContent value="blocks" className="flex-1 m-2 mt-0">
-                <ComponentsPanel onAddBlock={handleAddBlock} />
-              </TabsContent>
-            </Tabs>
-          </div>
-        </ResizablePanel>
+              ) : (
+                <ComponentsSidebar onComponentSelect={handleAddComponent} />
+              )}
+            </div>
+          </ResizablePanel>
 
-        <ResizableHandle className="bg-gray-100 border-r border-gray-200" />
+          <ResizableHandle withHandle />
 
-        {/* Central Panel - Editor Canvas */}
-        <ResizablePanel defaultSize={60}>
-          <div className="h-full p-4">
-            {activeStepId ? (
-              <div>
-                <h2 className="text-lg font-semibold mb-2">
-                  {steps.find(step => step.id === activeStepId)?.name || 'Editor Canvas'}
-                </h2>
-                {blocks.filter(block => steps.find(step => step.id === activeStepId)?.blocks.find(b => b.id === block.id)).map(block => (
-                  <BlockRenderer
-                    key={block.id}
-                    block={block}
-                    onUpdate={newContent => handleUpdateBlock(block.id, newContent)}
-                    onDelete={() => handleDeleteBlock(block.id)}
+          {/* Painel Central - Preview */}
+          <ResizablePanel defaultSize={55}>
+            <div className="h-full bg-gray-100 relative overflow-auto">
+              <div className="h-full flex items-center justify-center p-4">
+                <div 
+                  className="bg-white shadow-xl rounded-lg overflow-hidden transition-all duration-300"
+                  style={{
+                    width: currentViewport.width,
+                    height: currentViewport.height,
+                    maxWidth: '100%',
+                    maxHeight: '100%'
+                  }}
+                >
+                  <EditPreview
+                    isPreviewing={isPreviewing}
+                    onPreviewToggle={togglePreview}
+                    selectedComponentId={selectedComponentId}
+                    onSelectComponent={handleSelectComponent}
+                    funnelMode={true}
+                    currentStep={currentStep}
                   />
-                ))}
+                </div>
               </div>
-            ) : (
-              <div className="text-gray-500 text-center">
-                Selecione uma etapa para começar a editar.
-              </div>
-            )}
-          </div>
-        </ResizablePanel>
+            </div>
+          </ResizablePanel>
 
-        <ResizableHandle className="bg-gray-100 border-r border-gray-200" />
+          <ResizableHandle withHandle />
 
-        {/* Right Panel - Properties */}
-        <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-          <div className="h-full p-4 border-l border-gray-200 bg-white">
-            {activeStepId && (
-              <div>
-                <h2 className="text-sm font-semibold mb-2">Propriedades da Etapa</h2>
-                <p className="text-gray-500">
-                  Edite as propriedades da etapa selecionada aqui.
-                </p>
-              </div>
-            )}
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
+          {/* Painel Direito - Properties */}
+          <ResizablePanel defaultSize={25} minSize={20} maxSize={35}>
+            <PropertiesPanel
+              selectedComponentId={selectedComponentId}
+              onClose={() => setSelectedComponentId(null)}
+              blocks={config.blocks || []}
+              onUpdate={(id, content) => updateBlock(id, content)}
+              onDelete={(id) => {
+                deleteBlock(id);
+                setSelectedComponentId(null);
+              }}
+            />
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </div>
     </div>
   );
 };
