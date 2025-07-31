@@ -8,25 +8,25 @@
 import { ComponentType } from 'react';
 
 // Componentes que realmente existem (verificados)
-import QuizQuestionBlock from '@/components/editor/blocks/QuizQuestionBlock';
-import QuizQuestionBlockConfigurable from '@/components/editor/blocks/QuizQuestionBlockConfigurable';
-import QuizQuestionBlockFixed from '@/components/editor/blocks/QuizQuestionBlockFixed';
-import QuizResultCalculatedBlock from '@/components/editor/blocks/QuizResultCalculatedBlock';
-import QuizStartPageBlock from '@/components/editor/blocks/QuizStartPageBlock';
-import QuizOfferPageBlock from '@/components/editor/blocks/QuizOfferPageBlock';
-import ModernResultPageBlock from '@/components/editor/blocks/ModernResultPageBlock';
-import QuestionMultipleBlock from '@/components/editor/blocks/QuestionMultipleBlock';
-import StrategicQuestionBlock from '@/components/editor/blocks/StrategicQuestionBlock';
-import QuizTransitionBlock from '@/components/editor/blocks/QuizTransitionBlock';
-import HeaderBlock from '@/components/editor/blocks/HeaderBlock';
-import TextBlock from '@/components/editor/blocks/TextBlock';
-import ImageBlock from '@/components/editor/blocks/ImageBlock';
-import ButtonBlock from '@/components/editor/blocks/ButtonBlock';
-import SpacerBlock from '@/components/editor/blocks/SpacerBlock';
-import RichTextBlock from '@/components/editor/blocks/RichTextBlock';
-import FAQSectionBlock from '@/components/editor/blocks/FAQSectionBlock';
-import TestimonialsBlock from '@/components/editor/blocks/TestimonialsBlock';
-import GuaranteeBlock from '@/components/editor/blocks/GuaranteeBlock';
+import QuizQuestionBlock from "@/types/blocks"
+import QuizQuestionBlockConfigurable from "@/types/blocks"
+import QuizQuestionBlockFixed from "@/types/blocks"
+import QuizResultCalculatedBlock from "@/types/blocks"
+import QuizStartPageBlock from "@/types/blocks"
+import QuizOfferPageBlock from "@/types/blocks"
+import ModernResultPageBlock from "@/types/blocks"
+import QuestionMultipleBlock from "@/types/blocks"
+import StrategicQuestionBlock from "@/types/blocks"
+import QuizTransitionBlock from "@/types/blocks"
+import HeaderBlock from "@/types/blocks"
+import TextBlock from "@/types/blocks"
+import ImageBlock from "@/types/blocks"
+import ButtonBlock from "@/types/blocks"
+import SpacerBlock from "@/types/blocks"
+import RichTextBlock from "@/types/blocks"
+import FAQSectionBlock from "@/types/blocks"
+import TestimonialsBlock from "@/types/blocks"
+import GuaranteeBlock from "@/types/blocks"
 
 export const EDITOR_BLOCKS_MAP: Record<string, ComponentType<any>> = {
   // Blocos básicos

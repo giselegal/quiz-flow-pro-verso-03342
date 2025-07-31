@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
-import { InlineEditText } from '@/components/editor/blocks/InlineEditText';
+import { InlineEditText } from "@/types/blocks"
 import { LucideIcon } from 'lucide-react';
 import { getLucideIcon } from '@/utils/iconMap';
 

@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import QuizQuestionBlockConfigurable from '@/components/editor/blocks/QuizQuestionBlockConfigurable';
+import QuizQuestionBlockConfigurable from "@/types/blocks"
 import { Button } from '@/components/ui/button';
 
 // Exemplo de estrutura de dados para uma questão configurada

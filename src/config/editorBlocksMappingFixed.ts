@@ -8,33 +8,33 @@
 import { ComponentType } from 'react';
 
 // Blocos básicos do editor (confirmados como existentes)
-import HeaderBlock from '@/components/editor/blocks/HeaderBlock';
-import TextBlock from '@/components/editor/blocks/TextBlock';
-import ImageBlock from '@/components/editor/blocks/ImageBlock';
-import ButtonBlock from '@/components/editor/blocks/ButtonBlock';
-import SpacerBlock from '@/components/editor/blocks/SpacerBlock';
-import RichTextBlock from '@/components/editor/blocks/RichTextBlock';
+import HeaderBlock from "@/types/blocks"
+import TextBlock from "@/types/blocks"
+import ImageBlock from "@/types/blocks"
+import ButtonBlock from "@/types/blocks"
+import SpacerBlock from "@/types/blocks"
+import RichTextBlock from "@/types/blocks"
 
 // Blocos de quiz e resultado (confirmados como existentes)
-import QuizStartPageBlock from '@/components/editor/blocks/QuizStartPageBlock';
-import QuizQuestionBlock from '@/components/editor/blocks/QuizQuestionBlockFixed';
-import QuizQuestionBlockConfigurable from '@/components/editor/blocks/QuizQuestionBlockConfigurable';
-import QuizResultCalculatedBlock from '@/components/editor/blocks/QuizResultCalculatedBlock';
-import QuizStepBlock from '@/components/editor/blocks/QuizStepBlock';
-import QuestionMultipleBlock from '@/components/editor/blocks/QuestionMultipleBlock';
-import StrategicQuestionBlock from '@/components/editor/blocks/StrategicQuestionBlock';
-import QuizTransitionBlock from '@/components/editor/blocks/QuizTransitionBlock';
+import QuizStartPageBlock from "@/types/blocks"
+import QuizQuestionBlock from "@/types/blocks"
+import QuizQuestionBlockConfigurable from "@/types/blocks"
+import QuizResultCalculatedBlock from "@/types/blocks"
+import QuizStepBlock from "@/types/blocks"
+import QuestionMultipleBlock from "@/types/blocks"
+import StrategicQuestionBlock from "@/types/blocks"
+import QuizTransitionBlock from "@/types/blocks"
 
 // Blocos de resultado e oferta (confirmados como existentes)
-import ModernResultPageBlock from '@/components/editor/blocks/ModernResultPageBlock';
-import QuizOfferPageBlock from '@/components/editor/blocks/QuizOfferPageBlock';
-import ResultHeaderBlock from '@/components/editor/blocks/ResultHeaderBlock';
+import ModernResultPageBlock from "@/types/blocks"
+import QuizOfferPageBlock from "@/types/blocks"
+import ResultHeaderBlock from "@/types/blocks"
 
 // Blocos de seções (confirmados como existentes)
-import FAQSectionBlock from '@/components/editor/blocks/FAQSectionBlock';
-import TestimonialsBlock from '@/components/editor/blocks/TestimonialsBlock';
-import GuaranteeBlock from '@/components/editor/blocks/GuaranteeBlock';
-import VideoPlayerBlock from '@/components/editor/blocks/VideoPlayerBlock';
+import FAQSectionBlock from "@/types/blocks"
+import TestimonialsBlock from "@/types/blocks"
+import GuaranteeBlock from "@/types/blocks"
+import VideoPlayerBlock from "@/types/blocks"
 
 export const EDITOR_BLOCKS_MAP: Record<string, ComponentType<any>> = {
   // Blocos básicos

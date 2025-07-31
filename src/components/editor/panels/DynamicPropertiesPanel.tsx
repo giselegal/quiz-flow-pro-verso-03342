@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { PropertyInput } from './block-properties/PropertyInput';
 import { QuestionPropertiesPanel } from '../properties/QuestionPropertiesPanel';
 import { blockDefinitions, type PropertySchema as OriginalPropertySchema } from '../../../config/blockDefinitions.ts';
-import { type BlockData } from '@/components/editor/blocks';
+import { type BlockData } from "@/types/blocks"
 
 // Função auxiliar local
 const getBlockDefinition = (type: string) => 

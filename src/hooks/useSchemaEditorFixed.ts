@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { schemaDrivenFunnelService, type SchemaDrivenFunnelData, type SchemaDrivenPageData, type AutoSaveState } from '@/services/schemaDrivenFunnelService';
-import { type BlockData } from '@/components/editor/blocks';
+import { type BlockData } from "@/types/blocks"
 import { useToast } from '@/hooks/use-toast';
 import { useQuizLogic } from './useQuizLogic'; // ✅ IMPORTAR LÓGICA DE CÁLCULO
 

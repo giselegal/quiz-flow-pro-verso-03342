@@ -19,7 +19,7 @@ import {
 } from '@/components/quiz/components';
 
 // Import modern inline blocks
-import { UniversalBlockRenderer } from '@/components/editor/blocks/UniversalBlockRenderer';
+import { UniversalBlockRenderer } from "@/types/blocks"
 import { 
   TextInlineBlock,
   BadgeInlineBlock,
@@ -32,7 +32,7 @@ import {
   ImageDisplayInlineBlock,
   PricingCardInlineBlock,
   TestimonialCardInlineBlock
-} from '@/components/editor/blocks/inline';
+} from "@/types/blocks"
 
 interface PageEditorCanvasProps {
   currentPage: SimplePage | null;

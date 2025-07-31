@@ -8,18 +8,18 @@
 import { ComponentType } from 'react';
 
 // Blocos básicos do editor
-import HeaderBlock from '@/components/editor/blocks/HeaderBlock';
-import TextBlock from '@/components/editor/blocks/TextBlock';
-import ImageBlock from '@/components/editor/blocks/ImageBlock';
-import ButtonBlock from '@/components/editor/blocks/ButtonBlock';
-import SpacerBlock from '@/components/editor/blocks/SpacerBlock';
-import RichTextBlock from '@/components/editor/blocks/RichTextBlock';
+import HeaderBlock from "@/types/blocks"
+import TextBlock from "@/types/blocks"
+import ImageBlock from "@/types/blocks"
+import ButtonBlock from "@/types/blocks"
+import SpacerBlock from "@/types/blocks"
+import RichTextBlock from "@/types/blocks"
 
 // Blocos de quiz e resultado
-import QuizStepBlock from '@/components/editor/blocks/QuizStepBlock';
-import QuizStartPageBlock from '@/components/editor/blocks/QuizStartPageBlock';
-import QuizQuestionBlock from '@/components/editor/blocks/QuizQuestionBlock';
-import QuizQuestionBlockConfigurable from '@/components/editor/blocks/QuizQuestionBlockConfigurable';
+import QuizStepBlock from "@/types/blocks"
+import QuizStartPageBlock from "@/types/blocks"
+import QuizQuestionBlock from "@/types/blocks"
+import QuizQuestionBlockConfigurable from "@/types/blocks"
 import QuizResultCalculatedBlock from '../components/editor/blocks/QuizResultCalculatedBlock';
 
 export const EDITOR_BLOCKS_MAP: Record<string, ComponentType<any>> = {

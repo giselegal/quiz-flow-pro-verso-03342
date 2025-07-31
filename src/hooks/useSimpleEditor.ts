@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { BlockData } from '@/components/editor/blocks';
+import { BlockData } from "@/types/blocks"
 
 interface SimpleFunnelData {
   id: string;
