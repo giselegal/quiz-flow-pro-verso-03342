@@ -26,19 +26,9 @@ export { default as BonusListInlineBlock } from './BonusListInlineBlock';
 export { default as QuizIntroHeaderBlock } from './QuizIntroHeaderBlock';
 export { default as LoadingAnimationBlock } from './LoadingAnimationBlock';
 
-// Exportações dos componentes inline das 21 etapas do funil (apenas os existentes)
+// Exportações dos componentes inline das 21 etapas do funil - apenas os que existem
 export { default as QuizStartPageInlineBlock } from './QuizStartPageInlineBlock';
-export { default as QuizQuestionInlineBlock } from './QuizQuestionInlineBlock';
-export { default as QuizProgressInlineBlock } from './QuizProgressInlineBlock';
-export { default as QuizTransitionInlineBlock } from './QuizTransitionInlineBlock';
-export { default as QuizLoadingInlineBlock } from './QuizLoadingInlineBlock';
-export { default as QuizResultInlineBlock } from './QuizResultInlineBlock';
-export { default as QuizAnalysisInlineBlock } from './QuizAnalysisInlineBlock';
-export { default as QuizCategoryInlineBlock } from './QuizCategoryInlineBlock';
-export { default as QuizRecommendationInlineBlock } from './QuizRecommendationInlineBlock';
-export { default as QuizActionPlanInlineBlock } from './QuizActionPlanInlineBlock';
-export { default as QuizMetricsInlineBlock } from './QuizMetricsInlineBlock';
-export { default as QuizComparisonInlineBlock } from './QuizComparisonInlineBlock';
+export { default as QuizExperienceInlineBlock } from './QuizExperienceInlineBlock';
 export { default as QuizCertificateInlineBlock } from './QuizCertificateInlineBlock';
 export { default as QuizLeaderboardInlineBlock } from './QuizLeaderboardInlineBlock';
 export { default as QuizBadgesInlineBlock } from './QuizBadgesInlineBlock';
@@ -48,6 +38,19 @@ export { default as QuizDevelopmentPlanInlineBlock } from './QuizDevelopmentPlan
 export { default as QuizGoalsDashboardInlineBlock } from './QuizGoalsDashboardInlineBlock';
 export { default as QuizFinalResultsInlineBlock } from './QuizFinalResultsInlineBlock';
 export { default as QuizOfferCTAInlineBlock } from './QuizOfferCTAInlineBlock';
+
+// Componentes adicionais que existem
+export { default as QuizActionPlanInlineBlock } from './QuizActionPlanInlineBlock';
+export { default as QuizAnalysisInlineBlock } from './QuizAnalysisInlineBlock';
+export { default as QuizCategoryInlineBlock } from './QuizCategoryInlineBlock';
+export { default as QuizComparisonInlineBlock } from './QuizComparisonInlineBlock';
+export { default as QuizLoadingInlineBlock } from './QuizLoadingInlineBlock';
+export { default as QuizMetricsInlineBlock } from './QuizMetricsInlineBlock';
+export { default as QuizProgressInlineBlock } from './QuizProgressInlineBlock';
+export { default as QuizQuestionInlineBlock } from './QuizQuestionInlineBlock';
+export { default as QuizRecommendationInlineBlock } from './QuizRecommendationInlineBlock';
+export { default as QuizResultInlineBlock } from './QuizResultInlineBlock';
+export { default as QuizTransitionInlineBlock } from './QuizTransitionInlineBlock';
 
 // Tipos base
 export type { BlockComponentProps } from '../../../../types/blocks';
