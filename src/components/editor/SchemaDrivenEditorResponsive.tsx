@@ -315,6 +315,60 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     }
   }, [blocks.length, selectedStepId]);
 
+  // 🚀 Handler eficiente para popular etapas - usa sistema existente
+  const handlePopulateStep = useCallback((stepId: string) => {
+    console.log(`🎯 Populando etapa ${stepId} com template otimizado`);
+    
+    try {
+      // Encontrar a etapa atual
+      const targetStep = steps.find(step => step.id === stepId);
+      if (!targetStep) {
+        console.error(`❌ Etapa não encontrada: ${stepId}`);
+        return;
+      }
+
+      // Usar sistema existente loadStepSpecificBlocks que já funciona
+      if (targetStep.type && targetStep.type !== 'custom') {
+        console.log(`🔧 Carregando template do tipo: ${targetStep.type}`);
+        loadStepSpecificBlocks(stepId, targetStep.type);
+        return;
+      }
+
+      // Para etapas custom ou sem tipo, usar template baseado na ordem
+      const stepOrder = targetStep.order;
+      let stepType = 'question'; // default
+      
+      if (stepOrder === 1) stepType = 'intro';
+      else if (stepOrder === 2) stepType = 'name-input';
+      else if (stepOrder === 13) stepType = 'transition';
+      else if (stepOrder >= 14 && stepOrder <= 19) stepType = 'strategic';
+      else if (stepOrder === 20) stepType = 'result';
+      else if (stepOrder === 21) stepType = 'offer';
+      
+      console.log(`🔧 Atribuindo tipo '${stepType}' para etapa ${stepOrder}`);
+      loadStepSpecificBlocks(stepId, stepType);
+      
+    } catch (error) {
+      console.error(`❌ Erro ao popular etapa ${stepId}:`, error);
+      
+      // Fallback mínimo em caso de erro
+      const fallbackBlock = {
+        type: 'text-inline',
+        properties: {
+          content: `Etapa ${stepId} - Template não encontrado`,
+          fontSize: 'text-lg',
+          textAlign: 'text-center',
+          color: '#6B7280'
+        }
+      };
+      
+      const newBlockId = addBlock(fallbackBlock.type as any);
+      setTimeout(() => {
+        updateBlock(newBlockId, fallbackBlock.properties);
+      }, 100);
+    }
+  }, [steps, loadStepSpecificBlocks, addBlock, updateBlock]);
+
   // 🚀 CORREÇÃO: Carregar automaticamente o conteúdo da etapa inicial se estiver vazia
   useEffect(() => {
     const currentStep = steps.find(step => step.id === selectedStepId);
