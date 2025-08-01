@@ -6,12 +6,8 @@ import { componentTagger } from "lovable-tagger";
 export default defineConfig(({ mode }) => ({
   plugins: [
     react({
-      // Otimização para desenvolvimento
-      babel: mode === 'development' ? {
-        plugins: [
-          ['@babel/plugin-transform-react-jsx-development', { pure: false }]
-        ]
-      } : undefined
+      jsxRuntime: 'automatic',
+      jsxImportSource: 'react'
     }),
     // Desabilita componentTagger para reduzir overhead
     // mode === 'development' && componentTagger(),
@@ -26,6 +22,13 @@ export default defineConfig(({ mode }) => ({
       // Reduz a frequência de atualizações para melhorar performance
       timeout: 25000,
     },
+    // Configuração para lidar com domínios de preview
+    allowedHosts: [
+      'localhost',
+      '.lovable.app',
+      '.gitpod.io',
+      '.codespaces.github.com'
+    ],
     proxy: {
       '/api': {
         target: 'http://localhost:3001',
@@ -51,14 +54,17 @@ export default defineConfig(({ mode }) => ({
     },
   },
   optimizeDeps: {
-    // Reduz overhead de transformação durante desenvolvimento
-    exclude: ['clsx', 'wouter', 'lovable-tagger'],
+    // Força a inclusão do React para evitar problemas com forwardRef
     include: [
       'react', 
       'react-dom/client',
+      'react/jsx-runtime',
+      'react/jsx-dev-runtime',
       'use-sync-external-store/shim',
       '@radix-ui/react-slot'
     ],
+    // Remove exclusões problemáticas
+    exclude: ['lovable-tagger'],
     // Força rebuild apenas quando necessário
     force: false,
   },
