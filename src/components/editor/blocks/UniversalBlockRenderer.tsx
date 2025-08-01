@@ -66,36 +66,3 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
 };
 
 export default UniversalBlockRenderer;
-    switch (block.type) {
-      case 'quiz-question-interactive':
-        return (
-          <QuizQuestionInteractiveBlock
-            block={block}
-            isSelected={isSelected}
-            onClick={onSelect}
-            onPropertyChange={handleContentUpdate}
-          />
-        );
-      case 'quiz-result-calculated':
-        return (
-          <QuizResultCalculatedBlock
-            block={block}
-            isSelected={isSelected}
-            onClick={onSelect}
-            onPropertyChange={handleContentUpdate}
-          />
-        );
-      case 'progress-bar-modern':
-        return (
-          <ProgressBarModernBlock
-            block={block}
-            isSelected={isSelected}
-            onClick={onSelect}
-            onPropertyChange={handleContentUpdate}
-          />
-        );
-      default:
-        return null;
-    }
-
-export default UniversalBlockRenderer;
