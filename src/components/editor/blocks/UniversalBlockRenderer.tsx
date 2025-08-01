@@ -58,9 +58,7 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
         block={block}
         isSelected={isSelected}
         onClick={onSelect}
-        onPropertyChange={(key, value) =>
-          onUpdate({ content: { ...block.content, [key]: value } })
-        }
+        onPropertyChange={handleContentUpdate}
       />
       {!isPreview && isSelected && (
         <button
