@@ -315,3 +315,212 @@ const getStepTemplate = (stepId: string) => {
 ```
 
 Este mapeamento mostra exatamente onde estão os problemas e como corrigi-los!
+
+---
+
+## 🎨 ONDE AS ETAPAS SÃO CARREGADAS NO CANVAS?
+
+### 📍 **LOCALIZAÇÃO DO CANVAS**
+
+O canvas está localizado na **estrutura de layout dividida em 3 painéis**:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    SchemaDrivenEditorResponsive             │
+├─────────────┬─────────────────────────┬─────────────────────┤
+│   PAINEL 1  │       PAINEL 2          │      PAINEL 3       │
+│             │       🎨 CANVAS         │                     │
+│ StepsPanel  │  📱 Onde as etapas      │ DynamicProperties   │
+│ (Etapas)    │     são renderizadas    │ Panel               │
+│             │                         │ (Propriedades)      │
+│ComponentsP. │                         │                     │
+│ (Blocos)    │                         │                     │
+└─────────────┴─────────────────────────┴─────────────────────┘
+```
+
+### 🧱 **FLUXO DE RENDERIZAÇÃO NO CANVAS**
+
+```typescript
+// 📍 LINHA 2000-2080: Onde tudo acontece
+<ResizablePanel defaultSize={42}>  // 🎨 CANVAS PANEL
+  <div className="h-full bg-gray-50 overflow-hidden">
+    <ScrollArea className="h-full p-6">
+      
+      {/* 📱 Container Responsivo do Canvas */}
+      <div className="flex justify-center">
+        <div 
+          className="bg-white rounded-lg shadow-sm min-h-96"
+          style={{
+            width: PREVIEW_DIMENSIONS[previewMode].width,  // 📱💻🖥️
+            maxWidth: PREVIEW_DIMENSIONS[previewMode].maxWidth
+          }}
+        >
+          <div className="p-6">
+            
+            {/* 🔍 FILTRO POR ETAPA: sortedBlocks */}
+            {sortedBlocks.length === 0 ? (
+              
+              // 📦 CANVAS VAZIO
+              <div className="canvas-vazio">
+                <Button onClick={() => handlePopulateStep(selectedStepId)}>
+                  Popular Etapa  // 🎯 BOTÃO QUE CARREGA A ETAPA
+                </Button>
+              </div>
+              
+            ) : (
+              
+              // 🧱 RENDERIZAÇÃO DOS BLOCOS DA ETAPA
+              <div className="space-y-4">
+                {sortedBlocks.map((block) => (
+                  <UniversalBlockRenderer  // 🎨 RENDERIZADOR UNIVERSAL
+                    block={block}
+                    isSelected={selectedBlockId === block.id}
+                    onSelect={() => handleBlockClick(block.id)}
+                    onUpdate={(updates) => updateBlock(block.id, updates)}
+                    onDelete={() => deleteBlock(block.id)}
+                    isPreview={isPreviewing}
+                  />
+                ))}
+              </div>
+              
+            )}
+            
+          </div>
+        </div>
+      </div>
+    </ScrollArea>
+  </div>
+</ResizablePanel>
+```
+
+### 🔄 **FLUXO COMPLETO: DA ETAPA AO CANVAS**
+
+```
+1️⃣ USUÁRIO CLICA EM ETAPA NO STEPSPANEL
+        ↓
+2️⃣ handleStepSelect(stepId) 
+        ↓
+3️⃣ setSelectedStepId(stepId)  // 🎯 Muda etapa ativa
+        ↓
+4️⃣ sortedBlocks = useMemo(() => {
+     // 🔍 FILTRO CRUCIAL
+     const stepBlocks = blocks.filter(block => {
+       if (block.stepId) {
+         return block.stepId === selectedStepId;  // ✅ SÓ BLOCOS DESTA ETAPA
+       }
+       return !block.stepId;  // Blocos sem stepId (legado)
+     });
+   })
+        ↓
+5️⃣ SE sortedBlocks.length === 0:
+   📦 Mostra "Canvas Vazio" + Botão "Popular Etapa"
+        ↓
+6️⃣ SE sortedBlocks.length > 0:
+   🧱 Renderiza cada bloco via UniversalBlockRenderer
+        ↓
+7️⃣ CADA BLOCO É RENDERIZADO NO CANVAS
+   🎨 Com seleção, edição, preview, etc.
+```
+
+### 🎯 **PONTOS CRÍTICOS**
+
+#### **A. Filtro por stepId (LINHA 1618-1635)**
+```typescript
+const sortedBlocks = useMemo(() => {
+  const stepBlocks = blocks.filter(block => {
+    if (block.stepId) {
+      return block.stepId === selectedStepId;  // 🔑 CHAVE DO SISTEMA
+    }
+    return !block.stepId;
+  });
+  
+  // 🧱 Logs para debug
+  console.log(`🧱 [FILTRO] Etapa atual: ${selectedStepId}`);
+  console.log(`🧱 [FILTRO] Blocos da etapa: ${stepBlocks.length}`);
+  
+  return [...stepBlocks].sort((a, b) => (a.order || 0) - (b.order || 0));
+}, [blocks, selectedStepId]);
+```
+
+#### **B. Renderização Condicional (LINHA 2016-2070)**
+```typescript
+{sortedBlocks.length === 0 ? (
+  // 📦 ESTADO VAZIO
+  <div className="canvas-vazio">
+    <Button onClick={() => handlePopulateStep(selectedStepId)}>
+      Popular Etapa  // 🎯 CARREGA TEMPLATE DA ETAPA
+    </Button>
+  </div>
+) : (
+  // 🧱 BLOCOS DA ETAPA
+  <div className="space-y-4">
+    {sortedBlocks.map((block) => (
+      <UniversalBlockRenderer key={block.id} block={block} />
+    ))}
+  </div>
+)}
+```
+
+### 🚨 **PROBLEMAS IDENTIFICADOS**
+
+#### **1. Blocos sem stepId**
+```typescript
+// ❌ PROBLEMA: Blocos criados sem associação à etapa
+const newBlockId = addBlock(blockType);
+// Resultado: block.stepId = undefined
+
+// ✅ SOLUÇÃO: Sempre associar à etapa
+const newBlockId = addBlock(blockType);
+updateBlock(newBlockId, { stepId: selectedStepId });
+```
+
+#### **2. Templates não populam**
+```typescript
+// ❌ PROBLEMA: getStepTemplate() retorna vazio
+const stepTemplate = getStepTemplate(stepNumber.toString());
+// Resultado: stepTemplate = []
+
+// ✅ SOLUÇÃO: Debug e fallback
+console.log('🧪 [DEBUG] Template retornado:', stepTemplate);
+if (!stepTemplate || stepTemplate.length === 0) {
+  // Fallback básico
+}
+```
+
+#### **3. Filtro não funciona**
+```typescript
+// ❌ PROBLEMA: Todos os blocos aparecem em todas as etapas
+return blocks; // Sem filtro
+
+// ✅ SOLUÇÃO: Filtro por stepId
+return blocks.filter(block => 
+  block.stepId === selectedStepId || !block.stepId
+);
+```
+
+### 🎨 **CANVAS EM AÇÃO**
+
+```
+CANVAS STATE: selectedStepId = "etapa-1"
+                    ↓
+FILTRO: sortedBlocks = blocks.filter(b => b.stepId === "etapa-1")
+                    ↓
+RENDERIZAÇÃO:
+┌─────────────────────────────────────────────┐
+│                 CANVAS                      │
+│  ┌─────────────────────────────────────┐   │
+│  │ [BLOCK 1] heading-inline            │   │
+│  │ "Bem-vindo ao Quiz CaktoQuiz"       │   │
+│  └─────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────┐   │
+│  │ [BLOCK 2] text-inline               │   │
+│  │ "Descubra seu estilo único..."      │   │
+│  └─────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────┐   │
+│  │ [BLOCK 3] button-inline             │   │
+│  │ "Começar Quiz Agora"                │   │
+│  └─────────────────────────────────────┘   │
+└─────────────────────────────────────────────┘
+```
+
+**🎯 RESPOSTA DIRETA**: As etapas são carregadas no **CANVAS CENTRAL** (Painel 2 de 3), filtradas por `stepId`, e renderizadas via `UniversalBlockRenderer` na **LINHA 2043-2070** do arquivo `SchemaDrivenEditorResponsive.tsx`!
