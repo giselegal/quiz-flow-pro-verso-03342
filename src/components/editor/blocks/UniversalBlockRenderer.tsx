@@ -5,6 +5,7 @@
 // export default RegistryRenderer;
 import React from 'react';
 import { EditorBlock } from '@/types/editor';
+import { getBlockComponent } from './BlockRegistry';
 
 export interface BlockRendererProps {
   block: EditorBlock;
@@ -26,8 +27,9 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
 
   const toPascal = (s: string) =>
     s.split('-').map(p => p.charAt(0).toUpperCase() + p.slice(1)).join('');
-  const Blocks = require('./blocks');
-  const Dynamic = Blocks[`${toPascal(block.type)}Block`] as React.FC<any>;
+  
+  // Usando o registro de blocos importado
+  const Dynamic = getBlockComponent(block.type);
 
   if (!Dynamic) {
     return null;
