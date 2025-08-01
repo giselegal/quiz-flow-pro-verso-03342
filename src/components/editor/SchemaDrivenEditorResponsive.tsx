@@ -1235,6 +1235,10 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       // 🎯 Usar novo sistema de templates das steps
       const stepTemplate = getStepTemplate(stepNumber.toString());
       
+      console.log(`🧪 [DEBUG] Template retornado:`, stepTemplate);
+      console.log(`🧪 [DEBUG] Template é array?`, Array.isArray(stepTemplate));
+      console.log(`🧪 [DEBUG] Template length:`, stepTemplate?.length);
+      
       if (!stepTemplate || stepTemplate.length === 0) {
         console.warn(`⚠️ Template vazio para Step ${stepNumber}, usando fallback`);
         // Fallback simples
@@ -1281,6 +1285,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       // 🔄 Aplicar todos os blocos do template
       stepTemplate.forEach((blockData, index) => {
         console.log(`🧱 Adicionando bloco ${index + 1}/${stepTemplate.length}:`, blockData.type);
+        console.log(`🧪 [DEBUG] Dados do bloco:`, blockData);
         
         const newBlockId = addBlock(blockData.type as any);
         
