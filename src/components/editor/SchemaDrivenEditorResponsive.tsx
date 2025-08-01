@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 // import { DndProvider } from 'react-dnd';
 // import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -868,222 +867,222 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
   return (
     <div className={cn('h-full flex flex-col bg-gray-50', className)}>
-        {/* Loading Indicator */}
-        {isLoadingFunnel && (
-          <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center">
-            <div className="text-center">
-              <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-gray-600">Carregando funil{funnelId ? `: ${funnelId}` : ''}...</p>
-            </div>
-          </div>
-        )}
-        
-        {/* Header */}
-        <div className="flex-shrink-0 bg-white border-b border-gray-200 px-4 py-2">
-          <div className="flex items-center justify-between">
-            <h1 className="text-xl font-semibold text-gray-900">
-              Editor Visual {funnelId ? `- ${funnelId}` : 'das 21 Etapas'}
-            </h1>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => window.open('/demo', '_blank')}
-                className="flex items-center gap-2"
-              >
-                <PlayCircle className="w-4 h-4" />
-                Demo Interativo
-              </Button>
-              
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleLoadComplete21StepsTemplate}
-                className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 border-none"
-              >
-                <Download className="w-4 h-4" />
-                Carregar 21 Etapas
-              </Button>
-              
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleTemplateLoad}
-                className="flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                Blocos de Teste
-              </Button>
-              
-              {/* Preview Mode Buttons */}
-              <div className="flex items-center gap-1 border border-gray-200 rounded-md p-1">
-                <Button
-                  variant={previewMode === 'desktop' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setPreviewMode('desktop')}
-                  className="h-8 px-2"
-                  title="Preview Desktop"
-                >
-                  <Monitor className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant={previewMode === 'tablet' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setPreviewMode('tablet')}
-                  className="h-8 px-2"
-                  title="Preview Tablet"
-                >
-                  <Tablet className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant={previewMode === 'mobile' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setPreviewMode('mobile')}
-                  className="h-8 px-2"
-                  title="Preview Mobile"
-                >
-                  <Smartphone className="w-4 h-4" />
-                </Button>
-              </div>
-              
-              {blocks.length > 0 && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleClearAll}
-                  className="flex items-center gap-2 text-red-600 hover:text-red-700"
-                >
-                  <Trash2 className="w-4 h-4" />
-                  Limpar Tudo
-                </Button>
-              )}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsPreviewing(!isPreviewing)}
-                className="flex items-center gap-2"
-              >
-                {isPreviewing ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                {isPreviewing ? 'Editar' : 'Visualizar'}
-              </Button>
-              <Button onClick={saveConfig} size="sm">
-                Salvar
-              </Button>
-            </div>
+      {/* Loading Indicator */}
+      {isLoadingFunnel && (
+        <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-600">Carregando funil{funnelId ? `: ${funnelId}` : ''}...</p>
           </div>
         </div>
-
-        {/* Main Content Area */}
-        {isMobile ? (
-          /* Mobile Layout - Vertical Stack */
-          <div className="flex-1 flex flex-col">
-            {/* Mobile Components Panel - Horizontal */}
-            <div className="flex-shrink-0 border-b border-gray-200">
-              <ComponentsPanel
-                onComponentSelect={handleComponentSelect}
-                onTemplateLoad={handleTemplateLoad}
-                searchTerm={searchTerm}
-                onSearchChange={setSearchTerm}
-                layout="horizontal"
-                className="h-auto"
-              />
+      )}
+      
+      {/* Header */}
+      <div className="flex-shrink-0 bg-white border-b border-gray-200 px-4 py-2">
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-semibold text-gray-900">
+            Editor Visual {funnelId ? `- ${funnelId}` : 'das 21 Etapas'}
+          </h1>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.open('/demo', '_blank')}
+              className="flex items-center gap-2"
+            >
+              <PlayCircle className="w-4 h-4" />
+              Demo Interativo
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLoadComplete21StepsTemplate}
+              className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 border-none"
+            >
+              <Download className="w-4 h-4" />
+              Carregar 21 Etapas
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleTemplateLoad}
+              className="flex items-center gap-2"
+            >
+              <Download className="w-4 h-4" />
+              Blocos de Teste
+            </Button>
+            
+            {/* Preview Mode Buttons */}
+            <div className="flex items-center gap-1 border border-gray-200 rounded-md p-1">
+              <Button
+                variant={previewMode === 'desktop' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setPreviewMode('desktop')}
+                className="h-8 px-2"
+                title="Preview Desktop"
+              >
+                <Monitor className="w-4 h-4" />
+              </Button>
+              <Button
+                variant={previewMode === 'tablet' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setPreviewMode('tablet')}
+                className="h-8 px-2"
+                title="Preview Tablet"
+              >
+                <Tablet className="w-4 h-4" />
+              </Button>
+              <Button
+                variant={previewMode === 'mobile' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setPreviewMode('mobile')}
+                className="h-8 px-2"
+                title="Preview Mobile"
+              >
+                <Smartphone className="w-4 h-4" />
+              </Button>
             </div>
+            
+            {blocks.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleClearAll}
+                className="flex items-center gap-2 text-red-600 hover:text-red-700"
+              >
+                <Trash2 className="w-4 h-4" />
+                Limpar Tudo
+              </Button>
+            )}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsPreviewing(!isPreviewing)}
+              className="flex items-center gap-2"
+            >
+              {isPreviewing ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              {isPreviewing ? 'Editar' : 'Visualizar'}
+            </Button>
+            <Button onClick={saveConfig} size="sm">
+              Salvar
+            </Button>
+          </div>
+        </div>
+      </div>
 
-            {/* Mobile Steps Panel - Horizontal */}
-            <div className="flex-shrink-0 border-b border-gray-200 p-2">
-              <div className="flex space-x-2 overflow-x-auto">
-                {steps.map((step) => (
-                  <Button
-                    key={step.id}
-                    variant={selectedStepId === step.id ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => handleStepSelect(step.id)}
-                    className="whitespace-nowrap"
-                  >
-                    {step.name}
-                  </Button>
-                ))}
+      {/* Main Content Area */}
+      {isMobile ? (
+        /* Mobile Layout - Vertical Stack */
+        <div className="flex-1 flex flex-col">
+          {/* Mobile Components Panel - Horizontal */}
+          <div className="flex-shrink-0 border-b border-gray-200">
+            <ComponentsPanel
+              onComponentSelect={handleComponentSelect}
+              onTemplateLoad={handleTemplateLoad}
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              layout="horizontal"
+              className="h-auto"
+            />
+          </div>
+
+          {/* Mobile Steps Panel - Horizontal */}
+          <div className="flex-shrink-0 border-b border-gray-200 p-2">
+            <div className="flex space-x-2 overflow-x-auto">
+              {steps.map((step) => (
                 <Button
-                  variant="outline"
+                  key={step.id}
+                  variant={selectedStepId === step.id ? "default" : "outline"}
                   size="sm"
-                  onClick={handleStepAdd}
+                  onClick={() => handleStepSelect(step.id)}
                   className="whitespace-nowrap"
                 >
-                  <Plus className="w-4 h-4" />
+                  {step.name}
                 </Button>
-              </div>
+              ))}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleStepAdd}
+                className="whitespace-nowrap"
+              >
+                <Plus className="w-4 h-4" />
+              </Button>
             </div>
+          </div>
 
-            {/* Mobile Canvas */}
-            <div className="flex-1 bg-gray-50 overflow-hidden">
-              <ScrollArea className="h-full p-4">
-                <div className="bg-white rounded-lg shadow-sm min-h-96 p-6">
-                  {sortedBlocks.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center h-96 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
-                      <div className="text-center space-y-4 max-w-md">
-                        <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center">
-                          <Plus className="w-8 h-8 text-blue-600" />
-                        </div>
-                        <div>
-                          <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                            Editor das 21 Etapas do Quiz CaktoQuiz
-                          </h3>
-                          <p className="text-gray-600 mb-4">
-                            Selecione componentes acima para começar a construir sua etapa
-                          </p>
-                          <div className="space-y-2">
-                            <Button
-                              onClick={handleLoadComplete21StepsTemplate}
-                              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-                            >
-                              <Download className="w-4 h-4 mr-2" />
-                              Carregar 21 Etapas
-                            </Button>
-                          </div>
+          {/* Mobile Canvas */}
+          <div className="flex-1 bg-gray-50 overflow-hidden">
+            <ScrollArea className="h-full p-4">
+              <div className="bg-white rounded-lg shadow-sm min-h-96 p-6">
+                {sortedBlocks.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-96 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
+                    <div className="text-center space-y-4 max-w-md">
+                      <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center">
+                        <Plus className="w-8 h-8 text-blue-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                          Editor das 21 Etapas do Quiz CaktoQuiz
+                        </h3>
+                        <p className="text-gray-600 mb-4">
+                          Selecione componentes acima para começar a construir sua etapa
+                        </p>
+                        <div className="space-y-2">
+                          <Button
+                            onClick={handleLoadComplete21StepsTemplate}
+                            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                          >
+                            <Download className="w-4 h-4 mr-2" />
+                            Carregar 21 Etapas
+                          </Button>
                         </div>
                       </div>
                     </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {sortedBlocks.map((block) => {
-                        // Para blocos do funil, usar properties diretamente
-                        // Para blocos do editor antigo, converter content para properties  
-                        const blockData: BlockData = {
-                          id: block.id,
-                          type: block.type,
-                          properties: block.properties || { ...block.content || {}, order: block.order || 0 }
-                        };
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {sortedBlocks.map((block) => {
+                      // Para blocos do funil, usar properties diretamente
+                      // Para blocos do editor antigo, converter content para properties  
+                      const blockData: BlockData = {
+                        id: block.id,
+                        type: block.type,
+                        properties: block.properties || { ...block.content || {}, order: block.order || 0 }
+                      };
 
-                        return (
-                          <div
-                            key={block.id}
-                            onClick={() => setSelectedBlockId(block.id)}
-                            className={cn(
-                              'relative p-4 rounded-lg border-2 transition-all cursor-pointer',
-                              selectedBlockId === block.id
-                                ? 'border-blue-500 bg-blue-50'
-                                : 'border-gray-200 hover:border-gray-300'
-                            )}
-                          >
-                            <UniversalBlockRenderer
-                              block={blockData}
-                              isSelected={selectedBlockId === block.id}
-                              onSelect={() => setSelectedBlockId(block.id)}
-                              onUpdate={(properties) => updateBlock(block.id, properties)}
-                              onDelete={() => deleteBlock(block.id)}
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              </ScrollArea>
-            </div>
+                      return (
+                        <div
+                          key={block.id}
+                          onClick={() => setSelectedBlockId(block.id)}
+                          className={cn(
+                            'relative p-4 rounded-lg border-2 transition-all cursor-pointer',
+                            selectedBlockId === block.id
+                              ? 'border-blue-500 bg-blue-50'
+                              : 'border-gray-200 hover:border-gray-300'
+                          )}
+                        >
+                          <UniversalBlockRenderer
+                            block={blockData}
+                            isSelected={selectedBlockId === block.id}
+                            onSelect={() => setSelectedBlockId(block.id)}
+                            onUpdate={(properties) => updateBlock(block.id, properties)}
+                            onDelete={() => deleteBlock(block.id)}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
           </div>
-        ) : (
-          /* Desktop Layout - Horizontal Panels */
-          <ResizablePanelGroup direction="horizontal" className="flex-1">
+        </div>
+      ) : (
+        /* Desktop Layout - Horizontal Panels */
+        <ResizablePanelGroup direction="horizontal" className="flex-1">
           {/* Steps Panel */}
           <ResizablePanel defaultSize={18} minSize={15} maxSize={25}>
             <div className="h-full border-r border-gray-200 overflow-hidden">
@@ -1146,109 +1145,109 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                       minWidth: previewMode === 'mobile' ? '375px' : 'auto'
                     }}
                   >
-                  <div className="p-6">
-                    {sortedBlocks.length === 0 ? (
-                      <div className="flex flex-col items-center justify-center h-96 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
-                        <div className="text-center space-y-4 max-w-md">
-                          <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center">
-                            <Plus className="w-8 h-8 text-blue-600" />
-                          </div>
-                          <div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                              Editor das 21 Etapas do Quiz CaktoQuiz
-                            </h3>
-                            <p className="text-gray-600 mb-4">
-                              Sistema completo para criar um funil de quiz de estilo pessoal otimizado para conversão
-                            </p>
-                          </div>
-                          <div className="space-y-2">
-                            <Button
-                              onClick={handleLoadComplete21StepsTemplate}
-                              className="w-full mb-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-                            >
-                              <Download className="w-4 h-4 mr-2" />
-                              Carregar Template Completo (21 Etapas)
-                            </Button>
-                            <Button
-                              onClick={handleTemplateLoad}
-                              variant="outline"
-                              className="w-full"
-                            >
-                              <Download className="w-4 h-4 mr-2" />
-                              Carregar Blocos de Teste
-                            </Button>
-                            <p className="text-sm text-gray-500 text-center">
-                              Ou arraste componentes da barra lateral
-                            </p>
-                          </div>
-                          <div className="grid grid-cols-2 gap-3 text-xs text-gray-500">
-                            <div className="text-left">
-                              <p className="font-medium mb-2">📊 Estrutura Completa:</p>
-                              <ul className="space-y-1">
-                                <li>• 1 página de introdução</li>
-                                <li>• 1 coleta de nome</li>
-                                <li>• 10 questões principais</li>
-                                <li>• 6 questões estratégicas</li>
-                                <li>• 1 transição</li>
-                                <li>• 1 página de resultado</li>
-                                <li>• 1 página de oferta</li>
-                              </ul>
+                    <div className="p-6">
+                      {sortedBlocks.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center h-96 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
+                          <div className="text-center space-y-4 max-w-md">
+                            <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center">
+                              <Plus className="w-8 h-8 text-blue-600" />
                             </div>
-                            <div className="text-left">
-                              <p className="font-medium mb-2">🎯 Recursos Inclusos:</p>
-                              <ul className="space-y-1">
-                                <li>• Cálculos automáticos</li>
-                                <li>• Progress tracking</li>
-                                <li>• Transições suaves</li>
-                                <li>• Questões estratégicas</li>
-                                <li>• Personalização completa</li>
-                                <li>• Sistema de ofertas</li>
-                              </ul>
+                            <div>
+                              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                                Editor das 21 Etapas do Quiz CaktoQuiz
+                              </h3>
+                              <p className="text-gray-600 mb-4">
+                                Sistema completo para criar um funil de quiz de estilo pessoal otimizado para conversão
+                              </p>
                             </div>
-                          </div>
-                          <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                            <p className="text-xs text-blue-700">
-                              <strong>� Status:</strong> {steps.length} etapas configuradas | {AVAILABLE_BLOCKS.length} componentes disponíveis
-                            </p>
-                            <p className="text-xs text-blue-600 mt-1">
-                              Cada etapa pode ser populada individualmente através do menu de contexto (⋯)
-                            </p>
+                            <div className="space-y-2">
+                              <Button
+                                onClick={handleLoadComplete21StepsTemplate}
+                                className="w-full mb-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                              >
+                                <Download className="w-4 h-4 mr-2" />
+                                Carregar Template Completo (21 Etapas)
+                              </Button>
+                              <Button
+                                onClick={handleTemplateLoad}
+                                variant="outline"
+                                className="w-full"
+                              >
+                                <Download className="w-4 h-4 mr-2" />
+                                Carregar Blocos de Teste
+                              </Button>
+                              <p className="text-sm text-gray-500 text-center">
+                                Ou arraste componentes da barra lateral
+                              </p>
+                            </div>
+                            <div className="grid grid-cols-2 gap-3 text-xs text-gray-500">
+                              <div className="text-left">
+                                <p className="font-medium mb-2">📊 Estrutura Completa:</p>
+                                <ul className="space-y-1">
+                                  <li>• 1 página de introdução</li>
+                                  <li>• 1 coleta de nome</li>
+                                  <li>• 10 questões principais</li>
+                                  <li>• 6 questões estratégicas</li>
+                                  <li>• 1 transição</li>
+                                  <li>• 1 página de resultado</li>
+                                  <li>• 1 página de oferta</li>
+                                </ul>
+                              </div>
+                              <div className="text-left">
+                                <p className="font-medium mb-2">🎯 Recursos Inclusos:</p>
+                                <ul className="space-y-1">
+                                  <li>• Cálculos automáticos</li>
+                                  <li>• Progress tracking</li>
+                                  <li>• Transições suaves</li>
+                                  <li>• Questões estratégicas</li>
+                                  <li>• Personalização completa</li>
+                                  <li>• Sistema de ofertas</li>
+                                </ul>
+                              </div>
+                            </div>
+                            <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                              <p className="text-xs text-blue-700">
+                                <strong>Status:</strong> {steps.length} etapas configuradas | {AVAILABLE_BLOCKS.length} componentes disponíveis
+                              </p>
+                              <p className="text-xs text-blue-600 mt-1">
+                                Cada etapa pode ser populada individualmente através do menu de contexto (⋯)
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        {sortedBlocks.map((block) => {
-                          // Para blocos do funil, usar properties diretamente
-                          // Para blocos do editor antigo, converter content para properties
-                          const blockData: BlockData = {
-                            id: block.id,
-                            type: block.type,
-                            properties: block.properties || { ...block.content || {}, order: block.order || 0 }
-                          };
+                      ) : (
+                        <div className="space-y-4">
+                          {sortedBlocks.map((block) => {
+                            // Para blocos do funil, usar properties diretamente
+                            // Para blocos do editor antigo, converter content para properties
+                            const blockData: BlockData = {
+                              id: block.id,
+                              type: block.type,
+                              properties: block.properties || { ...block.content || {}, order: block.order || 0 }
+                            };
 
-                          return (
-                            <div
-                              key={block.id}
-                              className={cn(
-                                'transition-all duration-200',
-                                selectedBlockId === block.id && !isPreviewing && 
-                                'ring-2 ring-blue-500 rounded-lg'
-                              )}
-                            >
-                              <UniversalBlockRenderer
-                                block={blockData}
-                                isSelected={selectedBlockId === block.id}
-                                onSelect={() => setSelectedBlockId(block.id)}
-                                onUpdate={(properties) => updateBlock(block.id, properties)}
-                                onDelete={() => deleteBlock(block.id)}
-                              />
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
+                            return (
+                              <div
+                                key={block.id}
+                                className={cn(
+                                  'transition-all duration-200',
+                                  selectedBlockId === block.id && !isPreviewing && 
+                                  'ring-2 ring-blue-500 rounded-lg'
+                                )}
+                              >
+                                <UniversalBlockRenderer
+                                  block={blockData}
+                                  isSelected={selectedBlockId === block.id}
+                                  onSelect={() => setSelectedBlockId(block.id)}
+                                  onUpdate={(properties) => updateBlock(block.id, properties)}
+                                  onDelete={() => deleteBlock(block.id)}
+                                />
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </ScrollArea>
@@ -1272,21 +1271,20 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
             />
           </ResizablePanel>
         </ResizablePanelGroup>
-        )}
+      )}
         
-        {/* Editor Status Bar */}
-        <div className="flex-shrink-0">
-          <EditorStatus
-            selectedBlockId={selectedBlockId || undefined}
-            historyCount={10} // TODO: Get from property history
-            currentHistoryIndex={5} // TODO: Get from property history
-            canUndo={true} // TODO: Get from property history
-            canRedo={false} // TODO: Get from property history
-            lastAction="Propriedade alterada" // TODO: Get from property history
-            totalBlocks={blocks.length}
-            previewMode={previewMode}
-          />
-        </div>
+      {/* Editor Status Bar */}
+      <div className="flex-shrink-0">
+        <EditorStatus
+          selectedBlockId={selectedBlockId || undefined}
+          historyCount={10} // TODO: Get from property history
+          currentHistoryIndex={5} // TODO: Get from property history
+          canUndo={true} // TODO: Get from property history
+          canRedo={false} // TODO: Get from property history
+          lastAction="Propriedade alterada" // TODO: Get from property history
+          totalBlocks={blocks.length}
+          previewMode={previewMode}
+        />
       </div>
     </div>
   );
