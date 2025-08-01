@@ -1,11 +1,4 @@
 import React from 'react';import React from 'react';
-
-
-
-
-
-
-
 export default UniversalBlockRenderer;};    // ...existing rendering logic...const UniversalBlockRenderer = (block: EditorBlock) => {import { EditorBlock } from '@/types/editor';import { EditorBlock } from '@/types/editor';
 
 // Import existing inline components
