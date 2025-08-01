@@ -57,28 +57,23 @@ O editor `/editor` foi aprimorado com recursos avançados do arquivo backup `Sch
 - Containers, colunas, grids
 - Spacers, divisores
 - Estruturas organizacionais
-- `etapa-8`: Q6: Casaco Favorito
-- `etapa-9`: Q7: Calça Favorita
-- `etapa-10`: Q8: Sapatos Preferidos
-- `etapa-11`: Q9: Acessórios
-- `etapa-12`: Q10: Tecidos/Valorizações
 
-### **Etapa 13: Transição**
-- `etapa-13`: Transição - Análise dos resultados parciais
+### **Componentes de Formulário**
+- Inputs de texto, email, telefone
+- Checkboxes, radio buttons
+- Seletores e dropdowns
 
-### **Etapas 14-19: Questões Estratégicas (6 questões)**
-- `etapa-14`: S1: Dificuldades com roupas
-- `etapa-15`: S2: Problemas frequentes de estilo
-- `etapa-16`: S3: Frequência "Com que roupa eu vou?"
-- `etapa-17`: S4: O que valoriza em um guia
-- `etapa-18`: S5: Investimento em consultoria
-- `etapa-19`: S6: O que mais precisa de ajuda
+### **Componentes de Quiz**
+- Questões múltipla escolha
+- Elementos de resultado
+- Pontuação e feedback
 
-### **Etapas 20-21: Resultado e Oferta**
-- `etapa-20`: Resultado - Página personalizada
-- `etapa-21`: Oferta - Apresentação final
+### **Componentes de Oferta**
+- Pricing tables
+- Call-to-action buttons
+- Testimonials e depoimentos
 
-## 🛠️ **Componentes Específicos das 21 Etapas**
+## 🛠️ **Componentes Disponíveis por Categoria**
 
 ### **Componentes de Quiz**
 - `quiz-start-page-inline`: Página inicial do quiz
@@ -100,17 +95,16 @@ O editor `/editor` foi aprimorado com recursos avançados do arquivo backup `Sch
 ## 📱 **Interface Mobile-First**
 
 ### **Layout Mobile:**
-- Steps horizontais (scroll)
-- Componentes em chips compactos  
-- Canvas expandido verticalmente
+- Componentes em lista vertical
+- Canvas expandido para toda tela
 - Navegação simplificada
+- Busca e filtros otimizados
 
 ### **Layout Desktop:**
-- 4 painéis redimensionáveis:
-  1. **Steps Panel** (18%): Navegação entre etapas
-  2. **Components Panel** (20%): Biblioteca de componentes
-  3. **Canvas** (42%): Área de edição principal
-  4. **Properties Panel** (20%): Configurações do bloco
+- 3 painéis redimensionáveis:
+  1. **Components Panel** (25%): Biblioteca de componentes
+  2. **Canvas** (50%): Área de edição principal
+  3. **Properties Panel** (25%): Configurações do bloco
 
 ## 🎨 **Melhorias Visuais**
 
@@ -127,39 +121,39 @@ O editor `/editor` foi aprimorado com recursos avançados do arquivo backup `Sch
 ### **Status e Feedback**
 - Status bar com informações em tempo real
 - Indicadores de salvamento
-- Contadores de blocos e etapas
+- Contadores de blocos
 - Toast notifications para feedback
 
 ## 🔧 **Como Usar**
 
-### **1. Navegar entre Etapas**
-- Clique em uma etapa no painel lateral
-- Use os botões horizontais no mobile
-- Adicione novas etapas com o botão `+`
-
-### **2. Adicionar Componentes**
+### **1. Adicionar Componentes**
 - Use a busca para encontrar componentes
 - Filtre por categoria
 - Clique para adicionar ao canvas
 
-### **3. Editar Propriedades**
+### **2. Editar Propriedades**
 - Clique em um bloco no canvas
 - Use o painel de propriedades à direita
 - Edite em tempo real com auto-save
 
-### **4. Preview Responsivo**
+### **3. Preview Responsivo**
 - Use os botões Desktop/Tablet/Mobile
 - Teste em diferentes resoluções
 - Modo preview remove controles de edição
 
-### **5. Templates**
+### **4. Templates**
 - Clique em "Carregar Template" para blocos de teste
-- Templates específicos por etapa (futuro)
-- Auto-population de etapas (futuro)
+- Combine componentes livremente
+- Construa quiz/funil personalizado
+
+### **5. Organização**
+- Arraste e solte componentes
+- Reordene conforme necessário
+- Delete componentes não utilizados
 
 ## 🚀 **Recursos Avançados Implementados**
 
-- ✅ Sistema completo de 21 etapas
+- ✅ Editor livre de componentes (sem etapas)
 - ✅ 80+ componentes categorizados  
 - ✅ Interface responsiva multi-dispositivo
 - ✅ Busca e filtragem avançada
@@ -171,13 +165,16 @@ O editor `/editor` foi aprimorado com recursos avançados do arquivo backup `Sch
 
 ## 📈 **Próximos Passos**
 
-- **Template loader avançado** para cada etapa
-- **Integração com IA** para sugestões
+- **Template loader avançado** para diferentes tipos de quiz
+- **Integração com IA** para sugestões de componentes
+- **Drag & drop** entre componentes
+- **Validação** de formulários
+- **Export** para diferentes formatos
 - **Componentes drag & drop**
 - **Histórico de alterações**
 - **Colaboração em tempo real**
-- **Export/Import de funis**
+- **Export/Import de quiz/funis**
 
 ---
 
-**🎉 O editor agora possui todos os recursos essenciais para criar funis de quiz de 21 etapas profissionais e otimizados para conversão!**
+**🎉 O editor agora possui um sistema flexível para criar quiz/funis profissionais e otimizados para conversão, com edição livre de componentes!**
