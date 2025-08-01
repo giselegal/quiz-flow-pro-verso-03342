@@ -1335,6 +1335,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           />
         </div>
       </div>
+    </div>
   );
 };
 
