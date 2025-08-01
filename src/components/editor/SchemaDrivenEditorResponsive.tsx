@@ -13,6 +13,29 @@ import { StepsPanel } from './StepsPanel';
 import { ComponentsPanel } from './ComponentsPanel';
 import { schemaDrivenFunnelService } from '../../services/schemaDrivenFunnelService';
 import { useToast } from '../../hooks/use-toast';
+// Templates obsoletos removidos - usando SchemaDrivenFunnelService
+
+// Função para obter blocos de template de uma etapa específica
+const getStepTemplate = (stepId: string) => {
+  try {
+    // Criamos um funnel temporário e extraímos os blocos da etapa solicitada
+    const defaultFunnel = schemaDrivenFunnelService.createDefaultFunnel();
+    const stepNumber = parseInt(stepId.replace('step-', ''));
+    const page = defaultFunnel.pages.find(p => p.order === stepNumber);
+    
+    if (page && page.blocks) {
+      return page.blocks.map(block => ({
+        type: block.type,
+        properties: block.properties
+      }));
+    }
+    
+    return [];
+  } catch (error) {
+    console.error('❌ Erro ao obter template da etapa:', error);
+    return [];
+  }
+};
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -309,14 +332,29 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     }
   }, [blocks.length, selectedStepId]);
 
-  // 🚀 CORREÇÃO: Carregar automaticamente o conteúdo da etapa inicial se estiver vazia
+  // 🚀 TEMPLATE FIXO: Carregar template automaticamente quando trocar de etapa
   useEffect(() => {
-    const currentStep = steps.find(step => step.id === selectedStepId);
-    if (currentStep && blocks.length === 0 && currentStep.blocksCount === 0) {
-      console.log(`🎯 Inicializando conteúdo da etapa ${selectedStepId}`);
-      // Funcionalidade removida - handlePopulateStep excluída
+    const templateBlocks = getStepTemplate(selectedStepId);
+    if (templateBlocks.length > 0 && blocks.length === 0) {
+      console.log(`🎯 Carregando template da etapa ${selectedStepId} (${templateBlocks.length} blocos)`);
+      
+      const blocksToLoad = templateBlocks.map((template, index) => ({
+        id: `${selectedStepId}-block-${index + 1}`,
+        type: template.type,
+        content: template.properties,
+        order: index + 1
+      }));
+      
+      setConfig({ blocks: blocksToLoad });
+      
+      // Atualizar contador de blocos da etapa
+      setSteps(prev => prev.map(step => 
+        step.id === selectedStepId 
+          ? { ...step, blocksCount: templateBlocks.length }
+          : step
+      ));
     }
-  }, [selectedStepId, steps, blocks.length]);
+  }, [selectedStepId, blocks.length, setConfig]);
 
   const handleAddBlock = useCallback((blockType: string) => {
     const newBlockId = addBlock(blockType as any);

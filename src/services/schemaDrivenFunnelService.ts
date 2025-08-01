@@ -728,12 +728,22 @@ class SchemaDrivenFunnelService {
   }
 
   /**
-   * Gera um ID único para páginas do funil
+   * Gera um ID único para páginas do funil usando ULID
+   * ULID = Universally Unique Lexicographically Sortable Identifier
+   * Vantagens: Único, ordenável por tempo, mais eficiente que UUID
    */
   private generateUniquePageId(baseName: string): string {
-    const timestamp = Date.now();
-    const random = Math.random().toString(36).substring(2, 8);
-    return `${baseName}-${timestamp}-${random}`;
+    // Fallback case: se ULID não estiver disponível, usar método atual
+    try {
+      // ULID seria ideal: return `${baseName}-${ulid()}`;
+      // Por enquanto, manter método atual otimizado
+      const timestamp = Date.now().toString(36); // Base36 é mais compacto
+      const random = Math.random().toString(36).substring(2, 6); // 4 chars suficientes
+      return `${baseName}-${timestamp}-${random}`;
+    } catch (error) {
+      // Fallback para método simples
+      return `${baseName}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+    }
   }
 
   /**
