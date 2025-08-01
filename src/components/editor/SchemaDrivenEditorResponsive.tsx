@@ -1,8 +1,8 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { useSchemaEditor } from '@/hooks/useSchemaEditor';
-import { StepsPanel } from './sidebar/StepsPanel';
+import { useEditor } from '@/context/EditorContext';
+import { ComponentsSidebar } from './sidebar/ComponentsSidebar';
 import { EditorCanvas } from './canvas/EditorCanvas';
 import { AdvancedPropertyPanel } from './AdvancedPropertyPanel';
 
@@ -16,28 +16,22 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   className = ''
 }) => {
   const {
-    steps,
-    currentStepIndex,
+    blocks,
     selectedBlockId,
+    setSelectedBlockId,
     actions
-  } = useSchemaEditor(funnelId);
+  } = useEditor();
 
-  const currentStep = steps[currentStepIndex];
-  const currentBlocks = currentStep?.blocks || [];
+  const [isPreviewing, setIsPreviewing] = useState(false);
+
+  const selectedBlock = blocks.find(block => block.id === selectedBlockId);
 
   return (
     <div className={`h-full w-full ${className}`}>
       <ResizablePanelGroup direction="horizontal" className="h-full">
-        {/* Sidebar com steps */}
+        {/* Sidebar de componentes */}
         <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-          <StepsPanel
-            steps={steps}
-            currentStepIndex={currentStepIndex}
-            onSelectStep={actions.setCurrentStep}
-            onAddStep={actions.addStep}
-            onDeleteStep={actions.deleteStep}
-            onPopulateStep={actions.populateStep}
-          />
+          <ComponentsSidebar onComponentSelect={actions.addBlock} />
         </ResizablePanel>
 
         <ResizableHandle withHandle />
@@ -45,27 +39,26 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         {/* Canvas principal */}
         <ResizablePanel defaultSize={55}>
           <EditorCanvas
-            step={currentStep}
-            blocks={currentBlocks}
+            blocks={blocks}
             selectedBlockId={selectedBlockId}
-            onSelectBlock={actions.selectBlock}
+            onSelectBlock={setSelectedBlockId}
             onUpdateBlock={actions.updateBlock}
             onDeleteBlock={actions.deleteBlock}
-            onReorderBlocks={(stepId, startIndex, endIndex) => actions.reorderBlocks(startIndex, endIndex)}
-            isPreviewing={false}
+            onReorderBlocks={actions.reorderBlocks}
+            isPreviewing={isPreviewing}
             viewportSize="lg"
           />
         </ResizablePanel>
 
         <ResizableHandle withHandle />
 
-        {/* Panel de propriedades */}
+        {/* Painel de propriedades */}
         <ResizablePanel defaultSize={25}>
           <AdvancedPropertyPanel
-            selectedBlock={currentBlocks.find(b => b.id === selectedBlockId) || null}
+            selectedBlock={selectedBlock || null}
             onUpdateBlock={actions.updateBlock}
             onDeleteBlock={actions.deleteBlock}
-            onClose={() => actions.selectBlock(null)}
+            onClose={() => setSelectedBlockId(null)}
           />
         </ResizablePanel>
       </ResizablePanelGroup>

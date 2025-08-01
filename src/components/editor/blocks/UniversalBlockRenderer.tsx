@@ -1,14 +1,14 @@
 
 import React from 'react';
-import { FunnelBlock } from '@/types/funnel';
+import { EditorBlock } from '@/types/editor';
 
 interface UniversalBlockRendererProps {
-  block: FunnelBlock;
+  block: EditorBlock;
   isSelected: boolean;
   onSelect: () => void;
-  onUpdate: (updates: Partial<FunnelBlock>) => void;
+  onUpdate: (updates: any) => void;
   onDelete: () => void;
-  isPreview?: boolean;
+  isPreview: boolean;
 }
 
 export const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
@@ -17,151 +17,96 @@ export const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
   onSelect,
   onUpdate,
   onDelete,
-  isPreview = false
+  isPreview
 }) => {
-  // Basic fallback renderer for different block types
-  const renderBlock = () => {
+  const renderContent = () => {
     switch (block.type) {
-      case 'quiz-intro-header':
+      case 'header':
         return (
-          <div className="bg-white border rounded-lg p-4">
-            <div className="flex items-center justify-between mb-4">
-              <div className="text-lg font-bold text-[#432818]">Quiz Header</div>
-              <div className="text-sm text-gray-500">Progresso: 0%</div>
-            </div>
-            {block.properties?.title && (
-              <h1 className="text-2xl font-bold text-[#432818] mb-2">
-                {block.properties.title}
-              </h1>
-            )}
-            {block.properties?.subtitle && (
-              <p className="text-gray-600">{block.properties.subtitle}</p>
-            )}
-          </div>
+          <h1 className="text-2xl font-bold text-gray-800">
+            {block.content?.text || 'Título'}
+          </h1>
         );
-
-      case 'text-inline':
+        
       case 'text':
         return (
-          <div className="bg-white border rounded-lg p-4">
-            <p className="text-gray-700">
-              {block.properties?.text || 'Texto do componente'}
-            </p>
-          </div>
+          <p className="text-gray-700">
+            {block.content?.text || 'Texto do parágrafo'}
+          </p>
         );
-
-      case 'heading-inline':
-      case 'heading':
-        return (
-          <div className="bg-white border rounded-lg p-4">
-            <h2 className="text-xl font-bold text-[#432818]">
-              {block.properties?.text || 'Título do componente'}
-            </h2>
-          </div>
-        );
-
-      case 'button-inline':
-      case 'button':
-        return (
-          <div className="bg-white border rounded-lg p-4">
-            <button className="bg-[#D4C4A0] hover:bg-[#B89B7A] text-[#432818] font-semibold py-2 px-6 rounded-lg transition-colors">
-              {block.properties?.text || 'Botão'}
-            </button>
-          </div>
-        );
-
-      case 'image-display-inline':
+        
       case 'image':
         return (
-          <div className="bg-white border rounded-lg p-4">
-            {block.properties?.imageUrl ? (
+          <div className="bg-gray-200 h-48 flex items-center justify-center rounded">
+            {block.content?.imageUrl ? (
               <img 
-                src={block.properties.imageUrl} 
-                alt={block.properties?.imageAlt || 'Imagem'} 
-                className="max-w-full h-auto rounded-md"
+                src={block.content.imageUrl} 
+                alt="Imagem" 
+                className="max-h-full max-w-full object-contain"
               />
             ) : (
-              <div className="w-full h-48 bg-gray-100 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center">
-                <div className="text-center text-gray-400">
-                  <div className="text-4xl mb-2">🖼️</div>
-                  <p>Imagem não definida</p>
-                </div>
-              </div>
+              <span className="text-gray-500">Imagem</span>
             )}
           </div>
         );
-
-      case 'form-input':
+        
+      case 'button':
         return (
-          <div className="bg-white border rounded-lg p-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {block.properties?.label || 'Campo de entrada'}
-            </label>
-            <input
-              type={block.properties?.inputType || 'text'}
-              placeholder={block.properties?.placeholder || 'Digite aqui...'}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#B89B7A]"
-            />
-          </div>
+          <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+            {block.content?.text || 'Botão'}
+          </button>
         );
-
+        
       case 'spacer':
         return (
-          <div className="bg-white border rounded-lg p-4">
-            <div 
-              className="w-full bg-gray-100 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center"
-              style={{ height: block.properties?.height || 40 }}
-            >
-              <span className="text-gray-400 text-sm">Espaçador</span>
-            </div>
+          <div className="h-8 bg-gray-100 border-2 border-dashed border-gray-300 rounded flex items-center justify-center">
+            <span className="text-xs text-gray-400">Espaçador</span>
           </div>
         );
-
-      case 'options-grid':
+        
+      case 'quiz-question':
         return (
-          <div className="bg-white border rounded-lg p-4">
-            <h3 className="text-lg font-semibold mb-4 text-[#432818]">
-              {block.properties?.question || 'Pergunta do Quiz'}
+          <div className="bg-white p-4 border rounded-lg">
+            <h3 className="font-medium mb-2">
+              {block.content?.question || 'Pergunta do Quiz'}
             </h3>
-            <div className="grid grid-cols-2 gap-3">
-              {(block.properties?.options || ['Opção 1', 'Opção 2', 'Opção 3', 'Opção 4']).map((option: string, index: number) => (
-                <button
-                  key={index}
-                  className="p-3 border-2 border-[#D4C4A0] rounded-lg hover:bg-[#F5F2E9] transition-colors text-left"
-                >
-                  {option}
-                </button>
+            <div className="space-y-2">
+              {(block.content?.options || ['Opção 1', 'Opção 2']).map((option, index) => (
+                <label key={index} className="flex items-center space-x-2">
+                  <input type="radio" name={`question-${block.id}`} />
+                  <span>{option}</span>
+                </label>
               ))}
             </div>
           </div>
         );
-
+        
       default:
         return (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <div className="flex items-center mb-2">
-              <div className="text-yellow-600 text-sm font-medium">
-                Componente: {block.type}
-              </div>
-            </div>
-            <div className="text-xs text-gray-500">
-              Renderer não implementado para este tipo de bloco
-            </div>
+          <div className="bg-gray-100 p-4 rounded">
+            <span className="text-gray-500">Componente: {block.type}</span>
           </div>
         );
     }
   };
 
   return (
-    <div 
-      className={`
-        relative transition-all duration-200
-        ${isSelected ? 'ring-2 ring-blue-500' : ''}
-        ${!isPreview ? 'cursor-pointer hover:shadow-md' : ''}
-      `}
-      onClick={!isPreview ? onSelect : undefined}
-    >
-      {renderBlock()}
+    <div className="relative group">
+      {renderContent()}
+      
+      {!isPreview && isSelected && (
+        <div className="absolute top-2 right-2 bg-white shadow-md rounded flex">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete();
+            }}
+            className="p-1 text-red-500 hover:bg-red-50 rounded"
+          >
+            🗑️
+          </button>
+        </div>
+      )}
     </div>
   );
 };
