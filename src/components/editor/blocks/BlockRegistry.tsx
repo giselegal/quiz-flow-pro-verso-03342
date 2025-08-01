@@ -14,6 +14,11 @@ import AdvancedCTABlock from './AdvancedCTABlock';
 import StatsMetricsBlock from './StatsMetricsBlock';
 import QuizQuestionBlock from './QuizQuestionBlock';
 
+// Novos componentes independentes
+import ProgressBarStepBlock from './ProgressBarStepBlock';
+import AnimatedStatCounterBlock from './AnimatedStatCounterBlock';
+import QuizOfferCountdownBlock from './QuizOfferCountdownBlock';
+
 // Legacy blocks - can be imported if they exist
 // import OptionsGridBlock from './OptionsGridBlock';
 
@@ -37,6 +42,11 @@ export const BLOCK_COMPONENTS: Record<string, BlockComponent> = {
   
   // Quiz blocks
   'quiz-question': QuizQuestionBlock as BlockComponent,
+  
+  // Novos componentes independentes
+  'progress-bar-step': ProgressBarStepBlock as BlockComponent,
+  'animated-stat-counter': AnimatedStatCounterBlock as BlockComponent,
+  'quiz-offer-countdown': QuizOfferCountdownBlock as BlockComponent,
   
   // Legacy blocks (if they exist)
   // 'options-grid': OptionsGridBlock,

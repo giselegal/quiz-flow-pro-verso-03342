@@ -49,6 +49,11 @@ export { default as ProsConsBlock } from './ProsConsBlock';
 export { default as DynamicPricingBlock } from './DynamicPricingBlock';
 export { default as ValueAnchoringBlock } from './ValueAnchoringBlock';
 
+// Novos componentes independentes
+export { default as ProgressBarStepBlock } from './ProgressBarStepBlock';
+export { default as AnimatedStatCounterBlock } from './AnimatedStatCounterBlock';
+export { default as QuizOfferCountdownBlock } from './QuizOfferCountdownBlock';
+
 // Renderizador universal (principal)
 export { UniversalBlockRenderer } from './UniversalBlockRenderer';
 

@@ -1,41 +1,45 @@
 
 import React, { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
-import { EditableContent } from '@/types/editor';
+import { EditableContent, EditorBlock } from '../../../types/editor';
 
 interface TextBlockProps {
-  content: EditableContent;
+  block: EditorBlock;  // Mudado para receber o block inteiro
   isSelected?: boolean;
   isEditing?: boolean;
-  onUpdate?: (content: Partial<EditableContent>) => void;
+  onPropertyChange?: (key: string, value: any) => void;  // Mudado para corresponder ao padrão
   onSelect?: () => void;
   onClick?: () => void;
   className?: string;
 }
 
 export const TextBlock: React.FC<TextBlockProps> = ({
-  content,
+  block,
   isSelected = false,
   isEditing = false,
-  onUpdate,
+  onPropertyChange,
   onSelect,
   onClick,
   className
 }) => {
+  // Extraindo o content do block para manter compatibilidade
+  const content = block.content || {};
   const [localText, setLocalText] = useState(content.text || '');
 
   useEffect(() => {
     setLocalText(content.text || '');
   }, [content.text]);
 
+  const handleUpdate = (text: string) => {
+    if (onPropertyChange) {
+      onPropertyChange('text', text);
+    }
+  };
+
   return (
     <div
-      className={cn(
-        "relative p-4 rounded-lg transition-all duration-200",
-        isSelected && "ring-2 ring-blue-400 ring-offset-2",
-        "hover:bg-gray-50 cursor-pointer",
-        className
-      )}
+      className={`relative p-4 rounded-lg transition-all duration-200 ${
+        isSelected ? "ring-2 ring-blue-400 ring-offset-2" : ""
+      } hover:bg-gray-50 cursor-pointer ${className || ""}`}
       onClick={onClick || onSelect}
       style={{
         color: content.style?.color,
