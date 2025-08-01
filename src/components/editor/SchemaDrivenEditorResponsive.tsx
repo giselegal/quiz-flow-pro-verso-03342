@@ -1222,6 +1222,15 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const handlePopulateStep = useCallback((stepId: string) => {
     console.log(`🎯 [NOVO SISTEMA] Populando etapa ${stepId} com template modular`);
     
+    // 🧹 LIMPEZA: Remover blocos existentes antes de carregar novos
+    console.log(`🧹 Limpando blocos existentes antes de carregar template...`);
+    blocks.forEach(block => {
+      if (block.type === 'guarantee' || block.type === 'Garantia') {
+        console.log(`🗑️ Removendo bloco corrompido: ${block.type} (${block.id})`);
+        deleteBlock(block.id);
+      }
+    });
+    
     // Extrair número da step (etapa-1 → 1, etapa-2 → 2, etc.)
     const stepNumber = parseInt(stepId.replace('etapa-', ''));
     if (isNaN(stepNumber) || stepNumber < 1 || stepNumber > 21) {
@@ -1287,6 +1296,12 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         console.log(`🧱 Adicionando bloco ${index + 1}/${stepTemplate.length}:`, blockData.type);
         console.log(`🧪 [DEBUG] Dados do bloco:`, blockData);
         
+        // 🛡️ VALIDAÇÃO: Garantir que não é um bloco 'guarantee' indesejado
+        if (blockData.type === 'guarantee' || blockData.type === 'Garantia') {
+          console.warn(`⚠️ Bloco 'guarantee' detectado no template - pulando para evitar problema`);
+          return;
+        }
+        
         const newBlockId = addBlock(blockData.type as any);
         
         // Aplicar propriedades com delay para evitar problemas de timing
@@ -1297,7 +1312,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       });
       
       // 📊 Atualizar contador de blocos da step
-      const updatedBlocksCount = stepTemplate.length;
+      const updatedBlocksCount = stepTemplate.filter(b => b.type !== 'guarantee' && b.type !== 'Garantia').length;
       setSteps(prevSteps => 
         prevSteps.map(step => 
           step.id === stepId 
@@ -1306,7 +1321,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         )
       );
       
-      console.log(`✅ Template da Step ${stepNumber} aplicado com sucesso! ${stepTemplate.length} blocos adicionados`);
+      console.log(`✅ Template da Step ${stepNumber} aplicado com sucesso! ${updatedBlocksCount} blocos adicionados`);
       
     } catch (error) {
       console.error(`❌ Erro ao aplicar template da Step ${stepNumber}:`, error);
@@ -1332,7 +1347,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         }, index * 100);
       });
     }
-  }, [steps, getStepTemplate, addBlock, updateBlock, setSteps]);
+  }, [steps, getStepTemplate, addBlock, updateBlock, setSteps, blocks, deleteBlock]);
 
   // Component selection handler
   const handleComponentSelect = useCallback((componentId: string) => {
@@ -1516,9 +1531,43 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         deleteBlock(block.id);
       });
       setSelectedBlockId(null);
+      
+      // 🧹 LIMPEZA ADICIONAL: Remover dados corrompidos do localStorage
+      try {
+        localStorage.removeItem('editor_config');
+        localStorage.removeItem('quiz-steps');
+        console.log('🧹 Dados do localStorage limpos');
+      } catch (error) {
+        console.error('❌ Erro ao limpar localStorage:', error);
+      }
+      
       console.log('🗑️ Todos os blocos foram removidos');
     }
   }, [blocks, deleteBlock]);
+
+  // 🧹 FUNÇÃO ESPECIAL: Limpar apenas blocos 'guarantee' corrompidos
+  const handleClearGuaranteeBlocks = useCallback(() => {
+    console.log('🧹 Procurando blocos "guarantee" corrompidos...');
+    
+    let removedCount = 0;
+    blocks.forEach(block => {
+      if (block.type === 'guarantee' || block.type === 'Garantia') {
+        console.log(`🗑️ Removendo bloco corrompido: ${block.type} (${block.id})`);
+        deleteBlock(block.id);
+        removedCount++;
+      }
+    });
+    
+    if (removedCount > 0) {
+      console.log(`✅ ${removedCount} blocos "guarantee" removidos`);
+      toast({
+        title: 'Blocos corrompidos removidos',
+        description: `${removedCount} blocos "guarantee" foram removidos do editor.`,
+      });
+    } else {
+      console.log('✅ Nenhum bloco "guarantee" encontrado');
+    }
+  }, [blocks, deleteBlock, toast]);
 
   const handleSaveInline = useCallback((blockId: string, updates: Partial<BlockData>) => {
     updateBlock(blockId, updates.properties || {});
@@ -1593,6 +1642,16 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               >
                 <PlayCircle className="w-4 h-4" />
                 Demo Interativo
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleClearGuaranteeBlocks}
+                className="flex items-center gap-2 bg-red-50 text-red-600 border-red-200 hover:bg-red-100"
+              >
+                <Trash2 className="w-4 h-4" />
+                Limpar Garantias
               </Button>
               
               <Button
