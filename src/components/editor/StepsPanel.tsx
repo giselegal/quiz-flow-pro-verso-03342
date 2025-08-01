@@ -2,7 +2,7 @@
 // components/editor/StepsPanel.tsx - Painel de Etapas do Quiz
 // =====================================================================
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -20,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { cn } from '../../lib/utils';
+import { schemaDrivenFunnelService } from '../../services/schemaDrivenFunnelService';
 
 interface Step {
   id: string;
@@ -99,30 +100,31 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
   const [editingStepId, setEditingStepId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
 
-  // 21 Etapas do Quiz CaktoQuiz com dados de produção reais
-  const realQuiz21Steps = [
-    { id: 'etapa-1', name: 'Introdução', description: 'Apresentação do Quiz de Estilo', type: 'intro' },
-    { id: 'etapa-2', name: 'Coleta de Nome', description: 'Captura do nome do participante', type: 'name-input' },
-    { id: 'etapa-3', name: 'Q1: Tipo de Roupa', description: 'QUAL O SEU TIPO DE ROUPA FAVORITA?', type: 'question', multiSelect: 3 },
-    { id: 'etapa-4', name: 'Q2: Personalidade', description: 'RESUMA A SUA PERSONALIDADE:', type: 'question', multiSelect: 3 },
-    { id: 'etapa-5', name: 'Q3: Visual', description: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?', type: 'question', multiSelect: 3 },
-    { id: 'etapa-6', name: 'Q4: Detalhes', description: 'QUAIS DETALHES VOCÊ GOSTA?', type: 'question', multiSelect: 3 },
-    { id: 'etapa-7', name: 'Q5: Estampas', description: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?', type: 'question', multiSelect: 3 },
-    { id: 'etapa-8', name: 'Q6: Casacos', description: 'QUAL CASACO É SEU FAVORITO?', type: 'question', multiSelect: 3 },
-    { id: 'etapa-9', name: 'Q7: Calças', description: 'QUAL SUA CALÇA FAVORITA?', type: 'question', multiSelect: 3 },
-    { id: 'etapa-10', name: 'Q8: Sapatos', description: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?', type: 'question', multiSelect: 3 },
-    { id: 'etapa-11', name: 'Q9: Acessórios', description: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?', type: 'question', multiSelect: 3 },
-    { id: 'etapa-12', name: 'Q10: Tecidos', description: 'O QUE MAIS VALORIZAS NOS ACESSÓRIOS?', type: 'question', multiSelect: 3 },
-    { id: 'etapa-13', name: 'Transição', description: 'Análise dos resultados parciais', type: 'transition' },
-    { id: 'etapa-14', name: 'S1: Dificuldades', description: 'Principal dificuldade com roupas', type: 'strategic' },
-    { id: 'etapa-15', name: 'S2: Problemas', description: 'Problemas frequentes de estilo', type: 'strategic' },
-    { id: 'etapa-16', name: 'S3: Frequência', description: '"Com que roupa eu vou?" - frequência', type: 'strategic' },
-    { id: 'etapa-17', name: 'S4: Guia de Estilo', description: 'O que valoriza em um guia', type: 'strategic' },
-    { id: 'etapa-18', name: 'S5: Investimento', description: 'Quanto investiria em consultoria', type: 'strategic' },
-    { id: 'etapa-19', name: 'S6: Ajuda Imediata', description: 'O que mais precisa de ajuda', type: 'strategic' },
-    { id: 'etapa-20', name: 'Resultado', description: 'Página de resultado personalizada', type: 'result' },
-    { id: 'etapa-21', name: 'Oferta', description: 'Apresentação da oferta final', type: 'offer' }
-  ];
+  // 🎯 OBTER DEFINIÇÕES DAS ETAPAS DO SCHEMADRIVENFUNNELSERVICE (FONTE ÚNICA)
+  const serviceStepsReference = useMemo(() => {
+    try {
+      console.log('📋 StepsPanel: Obtendo referência das etapas do service...');
+      const defaultFunnel = schemaDrivenFunnelService.createDefaultFunnel();
+      
+      if (defaultFunnel && defaultFunnel.pages) {
+        const serviceSteps = defaultFunnel.pages.map(page => ({
+          id: `etapa-${page.order}`,
+          name: page.name,
+          order: page.order,
+          type: page.type,
+          description: page.title,
+          blocksCount: page.blocks?.length || 0
+        }));
+        
+        console.log(`✅ StepsPanel: ${serviceSteps.length} etapas de referência obtidas`);
+        return serviceSteps;
+      }
+    } catch (error) {
+      console.error('❌ StepsPanel: Erro ao obter referência do service:', error);
+    }
+    
+    return [];
+  }, []);
 
   const handleEditStart = useCallback((step: Step) => {
     setEditingStepId(step.id);
@@ -141,6 +143,27 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
     setEditingStepId(null);
     setEditingName('');
   }, []);
+
+  // 🔧 FUNÇÃO UTILITÁRIA: Obter informações da etapa do service
+  const getStepReferenceInfo = useCallback((stepId: string) => {
+    const serviceStep = serviceStepsReference.find(s => s.id === stepId);
+    if (serviceStep) {
+      return {
+        originalName: serviceStep.name,
+        originalDescription: serviceStep.description,
+        type: serviceStep.type,
+        hasTemplate: true
+      };
+    }
+    
+    // Fallback para etapas não encontradas no service
+    return {
+      originalName: `Etapa ${stepId.replace('etapa-', '')}`,
+      originalDescription: 'Etapa personalizada',
+      type: 'custom',
+      hasTemplate: false
+    };
+  }, [serviceStepsReference]);
 
   const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -230,7 +253,20 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                         </div>
                       </div>
                       <p className="text-xs text-gray-500 mt-1">
-                        Etapa {index + 1} • {step.blocksCount} componente{step.blocksCount !== 1 ? 's' : ''}
+                        {(() => {
+                          const stepInfo = getStepReferenceInfo(step.id);
+                          const typeLabel = {
+                            'intro': '🎯 Introdução',
+                            'question': '❓ Questão',
+                            'strategic': '🎪 Estratégica',
+                            'transition': '🔄 Transição',
+                            'result': '🏆 Resultado',
+                            'offer': '💎 Oferta',
+                            'custom': '⚙️ Personalizada'
+                          }[stepInfo.type] || '📄 Etapa';
+                          
+                          return `${typeLabel} • ${step.blocksCount} componente${step.blocksCount !== 1 ? 's' : ''}${stepInfo.hasTemplate ? ' • Template disponível' : ''}`;
+                        })()}
                       </p>
                     </div>
                   )}

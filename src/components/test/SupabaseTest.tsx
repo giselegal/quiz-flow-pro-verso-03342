@@ -452,21 +452,21 @@ export const SupabaseTest: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="pb-3">
+            <Card className="border-[#B89B7A]">
+              <CardHeader className="pb-3 bg-[#FFF7ED] rounded-t-md">
                 <div className="flex items-center gap-2">
-                  <Clipboard className="h-5 w-5 text-primary" />
-                  <CardTitle className="text-lg">Criação</CardTitle>
+                  <Clipboard className="h-5 w-5 text-[#aa6b5d]" />
+                  <CardTitle className="text-lg text-[#432818]">Criação</CardTitle>
                 </div>
-                <CardDescription>
+                <CardDescription className="text-[#6B4F43]">
                   Teste de criação de novo funil
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-4">
                 <div className="flex items-center gap-2">
                   {getTestStatus('create')}
                   <div className="space-y-1">
-                    <p className="font-medium text-sm">
+                    <p className="font-medium text-sm text-[#432818]">
                       {testResults.create 
                         ? testResults.create.success 
                           ? 'Funil criado com sucesso' 
@@ -483,21 +483,21 @@ export const SupabaseTest: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="pb-3">
+            <Card className="border-[#B89B7A]">
+              <CardHeader className="pb-3 bg-[#FFF7ED] rounded-t-md">
                 <div className="flex items-center gap-2">
-                  <Clipboard className="h-5 w-5 text-primary" />
-                  <CardTitle className="text-lg">Atualização</CardTitle>
+                  <Clipboard className="h-5 w-5 text-[#aa6b5d]" />
+                  <CardTitle className="text-lg text-[#432818]">Atualização</CardTitle>
                 </div>
-                <CardDescription>
+                <CardDescription className="text-[#6B4F43]">
                   Teste de atualização de funil
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-4">
                 <div className="flex items-center gap-2">
                   {getTestStatus('update')}
                   <div className="space-y-1">
-                    <p className="font-medium text-sm">
+                    <p className="font-medium text-sm text-[#432818]">
                       {testResults.update 
                         ? testResults.update.success 
                           ? 'Funil atualizado com sucesso' 
@@ -514,21 +514,21 @@ export const SupabaseTest: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="pb-3">
+            <Card className="border-[#B89B7A]">
+              <CardHeader className="pb-3 bg-[#FFF7ED] rounded-t-md">
                 <div className="flex items-center gap-2">
-                  <Clipboard className="h-5 w-5 text-primary" />
-                  <CardTitle className="text-lg">Duplicação</CardTitle>
+                  <Clipboard className="h-5 w-5 text-[#aa6b5d]" />
+                  <CardTitle className="text-lg text-[#432818]">Duplicação</CardTitle>
                 </div>
-                <CardDescription>
+                <CardDescription className="text-[#6B4F43]">
                   Teste de duplicação de funil
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-4">
                 <div className="flex items-center gap-2">
                   {getTestStatus('duplicate')}
                   <div className="space-y-1">
-                    <p className="font-medium text-sm">
+                    <p className="font-medium text-sm text-[#432818]">
                       {testResults.duplicate 
                         ? testResults.duplicate.success 
                           ? 'Funil duplicado com sucesso' 
@@ -545,21 +545,21 @@ export const SupabaseTest: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="pb-3">
+            <Card className="border-[#B89B7A]">
+              <CardHeader className="pb-3 bg-[#FFF7ED] rounded-t-md">
                 <div className="flex items-center gap-2">
-                  <Clipboard className="h-5 w-5 text-primary" />
-                  <CardTitle className="text-lg">Exclusão</CardTitle>
+                  <Clipboard className="h-5 w-5 text-[#aa6b5d]" />
+                  <CardTitle className="text-lg text-[#432818]">Exclusão</CardTitle>
                 </div>
-                <CardDescription>
+                <CardDescription className="text-[#6B4F43]">
                   Teste de exclusão de funil
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-4">
                 <div className="flex items-center gap-2">
                   {getTestStatus('delete')}
                   <div className="space-y-1">
-                    <p className="font-medium text-sm">
+                    <p className="font-medium text-sm text-[#432818]">
                       {testResults.delete 
                         ? testResults.delete.success 
                           ? 'Funil excluído com sucesso' 
@@ -580,43 +580,44 @@ export const SupabaseTest: React.FC = () => {
         
         <TabsContent value="supabase" className="space-y-4 pt-4">
           <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold">Funis no Supabase ({supabaseFunnels.length})</h3>
+            <h3 className="text-lg font-semibold text-[#432818]">Funis no Supabase ({supabaseFunnels.length})</h3>
             <Button 
               onClick={() => setShowDetails(!showDetails)} 
               variant="outline" 
               size="sm"
+              className="border-[#B89B7A] text-[#6B4F43] hover:bg-[#FDF6F0]"
             >
               <Eye className="h-4 w-4 mr-2" />
               {showDetails ? 'Esconder detalhes' : 'Mostrar detalhes'}
             </Button>
           </div>
           
-          <div className="border rounded-md">
+          <div className="border border-[#B89B7A] rounded-md overflow-hidden">
             {supabaseFunnels.length === 0 ? (
-              <div className="p-4 text-center text-muted-foreground">
+              <div className="p-4 text-center text-[#6B4F43] bg-[#FFF7ED]">
                 Nenhum funil encontrado no Supabase
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-border">
+                <table className="min-w-full divide-y divide-[#B89B7A]">
                   <thead>
-                    <tr className="bg-muted/50">
-                      <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">ID</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Nome</th>
+                    <tr className="bg-[#F4E9DD]">
+                      <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">ID</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Nome</th>
                       {showDetails && (
                         <>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Descrição</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Publicado</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Descrição</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Publicado</th>
                         </>
                       )}
-                      <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Criado em</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Criado em</th>
                     </tr>
                   </thead>
-                  <tbody className="bg-popover divide-y divide-border">
+                  <tbody className="bg-white divide-y divide-[#B89B7A]">
                     {supabaseFunnels.map((funnel) => (
-                      <tr key={funnel.id} className="hover:bg-muted/50 transition-colors">
-                        <td className="px-4 py-2 text-sm whitespace-nowrap truncate max-w-[100px]">{funnel.id}</td>
-                        <td className="px-4 py-2 text-sm">{funnel.name}</td>
+                      <tr key={funnel.id} className="hover:bg-[#FDF6F0] transition-colors">
+                        <td className="px-4 py-2 text-sm whitespace-nowrap truncate max-w-[100px] text-[#6B4F43]">{funnel.id}</td>
+                        <td className="px-4 py-2 text-sm text-[#432818]">{funnel.name}</td>
                         {showDetails && (
                           <>
                             <td className="px-4 py-2 text-sm">{funnel.description || '-'}</td>
@@ -639,35 +640,45 @@ export const SupabaseTest: React.FC = () => {
             )}
           </div>
           
-          <h3 className="text-lg font-semibold mt-6">Páginas no Supabase ({supabasePages.length})</h3>
-          <div className="border rounded-md">
+          <h3 className="text-lg font-semibold mt-6 text-[#432818]">Páginas no Supabase ({supabasePages.length})</h3>
+          <div className="border border-[#B89B7A] rounded-md overflow-hidden">
             {supabasePages.length === 0 ? (
-              <div className="p-4 text-center text-muted-foreground">
+              <div className="p-4 text-center text-[#6B4F43] bg-[#FFF7ED]">
                 Nenhuma página encontrada no Supabase
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-border">
+                <table className="min-w-full divide-y divide-[#B89B7A]">
                   <thead>
-                    <tr className="bg-muted/50">
-                      <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">ID</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Funil ID</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Título</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Ordem</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Tipo</th>
+                    <tr className="bg-[#F4E9DD]">
+                      <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">ID</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Funil ID</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Título</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Ordem</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Tipo</th>
                     </tr>
                   </thead>
-                  <tbody className="bg-popover divide-y divide-border">
+                  <tbody className="bg-white divide-y divide-[#B89B7A]">
                     {supabasePages.map((page) => (
-                      <tr key={page.id} className="hover:bg-muted/50 transition-colors">
-                        <td className="px-4 py-2 text-sm whitespace-nowrap truncate max-w-[100px]">{page.id}</td>
-                        <td className="px-4 py-2 text-sm whitespace-nowrap truncate max-w-[100px]">{page.funnel_id}</td>
-                        <td className="px-4 py-2 text-sm">{page.title || '-'}</td>
+                      <tr key={page.id} className="hover:bg-[#FDF6F0] transition-colors">
+                        <td className="px-4 py-2 text-sm whitespace-nowrap truncate max-w-[100px] text-[#6B4F43]">{page.id}</td>
+                        <td className="px-4 py-2 text-sm whitespace-nowrap truncate max-w-[100px] text-[#6B4F43]">{page.funnel_id}</td>
+                        <td className="px-4 py-2 text-sm text-[#432818]">{page.title || '-'}</td>
                         <td className="px-4 py-2 text-sm">
-                          <Badge variant="outline">{page.page_order}</Badge>
+                          <Badge 
+                            variant="outline" 
+                            className="border-[#B89B7A] text-[#432818]"
+                          >
+                            {page.page_order}
+                          </Badge>
                         </td>
                         <td className="px-4 py-2 text-sm">
-                          <Badge variant="secondary">{page.page_type || 'default'}</Badge>
+                          <Badge 
+                            variant="secondary"
+                            className="bg-[#F4E9DD] text-[#6B4F43] border-[#B89B7A]"
+                          >
+                            {page.page_type || 'default'}
+                          </Badge>
                         </td>
                       </tr>
                     ))}
@@ -679,36 +690,36 @@ export const SupabaseTest: React.FC = () => {
         </TabsContent>
         
         <TabsContent value="local" className="space-y-4 pt-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Funis no Estado Local ({funnels.length})</CardTitle>
-              <CardDescription>
+          <Card className="border-[#B89B7A]">
+            <CardHeader className="bg-[#FFF7ED] rounded-t-md">
+              <CardTitle className="text-[#432818]">Funis no Estado Local ({funnels.length})</CardTitle>
+              <CardDescription className="text-[#6B4F43]">
                 Estes são os funis carregados no estado do React via FunnelsContext
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="border rounded-md">
+            <CardContent className="pt-4">
+              <div className="border border-[#B89B7A] rounded-md overflow-hidden">
                 {funnels.length === 0 ? (
-                  <div className="p-4 text-center text-muted-foreground">
+                  <div className="p-4 text-center text-[#6B4F43] bg-[#FFF7ED]">
                     Nenhum funil carregado no estado local
                   </div>
                 ) : (
                   <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-border">
+                    <table className="min-w-full divide-y divide-[#B89B7A]">
                       <thead>
-                        <tr className="bg-muted/50">
-                          <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">ID</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Nome</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Publicado</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Etapas</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Atualizado</th>
+                        <tr className="bg-[#F4E9DD]">
+                          <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">ID</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Nome</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Publicado</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Etapas</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Atualizado</th>
                         </tr>
                       </thead>
-                      <tbody className="bg-popover divide-y divide-border">
+                      <tbody className="bg-white divide-y divide-[#B89B7A]">
                         {funnels.map((funnel) => (
-                          <tr key={funnel.id} className="hover:bg-muted/50 transition-colors">
-                            <td className="px-4 py-2 text-sm whitespace-nowrap truncate max-w-[100px]">{funnel.id}</td>
-                            <td className="px-4 py-2 text-sm">{funnel.name}</td>
+                          <tr key={funnel.id} className="hover:bg-[#FDF6F0] transition-colors">
+                            <td className="px-4 py-2 text-sm whitespace-nowrap truncate max-w-[100px] text-[#6B4F43]">{funnel.id}</td>
+                            <td className="px-4 py-2 text-sm text-[#432818]">{funnel.name}</td>
                             <td className="px-4 py-2 text-sm">
                               <Badge 
                                 variant={funnel.isPublished ? "default" : "secondary"}
@@ -718,9 +729,14 @@ export const SupabaseTest: React.FC = () => {
                               </Badge>
                             </td>
                             <td className="px-4 py-2 text-sm">
-                              <Badge variant="outline">{funnel.steps.length}</Badge>
+                              <Badge 
+                                variant="outline"
+                                className="border-[#B89B7A] text-[#432818]"
+                              >
+                                {funnel.steps.length}
+                              </Badge>
                             </td>
-                            <td className="px-4 py-2 text-sm">{new Date(funnel.updatedAt).toLocaleString()}</td>
+                            <td className="px-4 py-2 text-sm text-[#6B4F43]">{new Date(funnel.updatedAt).toLocaleString()}</td>
                           </tr>
                         ))}
                       </tbody>

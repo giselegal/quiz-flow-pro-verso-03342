@@ -9,7 +9,6 @@ import { cn } from '../../lib/utils';
 import { useEditor } from '../../hooks/useEditor';
 import { UniversalBlockRenderer } from './blocks/UniversalBlockRenderer';
 import type { BlockData } from '../../types/blocks';
-import { getInitialQuiz21EtapasTemplate } from '../../templates/quiz21EtapasTemplate';
 import { normalizeBlock } from '../../utils/blockTypeMapping';
 import { DynamicPropertiesPanel } from './panels/DynamicPropertiesPanel';
 import { getStepById } from './steps'; // 🎯 NOVA ARQUITETURA LIMPA
@@ -17,29 +16,32 @@ import { EditorStatus } from './components/EditorStatus';
 import { StepsPanel } from './StepsPanel';
 import { ComponentsPanel } from './ComponentsPanel';
 import { schemaDrivenFunnelService } from '../../services/schemaDrivenFunnelService';
+import { stepTemplateService } from '../../services/stepTemplateService';
 import { useToast } from '../../hooks/use-toast';
 
-// Função para obter blocos de template de uma etapa específica
+// 🎯 FUNÇÃO PARA OBTER TEMPLATE DE ETAPA USANDO STEPTEMPLATE SERVICE
 const getStepTemplate = (stepId: string) => {
   try {
-    // Criamos um funnel temporário e extraímos os blocos da etapa solicitada
-    const defaultFunnel = schemaDrivenFunnelService.createDefaultFunnel();
-    const stepNumber = parseInt(stepId.replace('step-', ''));
-    const page = defaultFunnel.pages.find(p => p.order === stepNumber);
+    console.log(`� Obtendo template da etapa "${stepId}" via stepTemplateService...`);
     
-    if (page && page.blocks) {
-      return page.blocks.map(block => ({
+    // Usar o novo serviço que acessa os templates individuais
+    const template = stepTemplateService.getStepTemplate(stepId);
+    
+    if (template && template.length > 0) {
+      console.log(`✅ Template encontrado para etapa ${stepId}: ${template.length} blocos`);
+      return template.map((block: any) => ({
         type: block.type,
         properties: block.properties
       }));
     }
     
-      return [];
-    } catch (error) {
-      console.error('❌ Erro ao obter template da etapa:', error);
-      return [];
-    }
-  };
+    console.warn(`⚠️ Nenhum template encontrado para etapa ${stepId}`);
+    return [];
+  } catch (error) {
+    console.error('❌ Erro ao obter template da etapa:', error);
+    return [];
+  }
+};
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -239,52 +241,75 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   // Safe access to blocks with fallback
   const blocks = config?.blocks || [];
 
-  // Função para preservar etapas existentes e mesclar com as 21 etapas
-  const mergeWith21Steps = useCallback((existingSteps: any[] = []) => {
-    const baseQuiz21Steps = [
-      { id: 'etapa-1', name: 'Introdução', order: 1, type: 'intro', description: 'Apresentação do Quiz de Estilo' },
-      { id: 'etapa-2', name: 'Coleta de Nome', order: 2, type: 'name-input', description: 'Captura do nome do participante' },
-      { id: 'etapa-3', name: 'Q1: Tipo de Roupa', order: 3, type: 'question', description: 'QUAL O SEU TIPO DE ROUPA FAVORITA?', multiSelect: 3 },
-      { id: 'etapa-4', name: 'Q2: Personalidade', order: 4, type: 'question', description: 'RESUMA A SUA PERSONALIDADE:', multiSelect: 3 },
-      { id: 'etapa-5', name: 'Q3: Visual', order: 5, type: 'question', description: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?', multiSelect: 3 },
-      { id: 'etapa-6', name: 'Q4: Detalhes', order: 6, type: 'question', description: 'QUAIS DETALHES VOCÊ GOSTA?', multiSelect: 3 },
-      { id: 'etapa-7', name: 'Q5: Estampas', order: 7, type: 'question', description: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?', multiSelect: 3 },
-      { id: 'etapa-8', name: 'Q6: Casacos', order: 8, type: 'question', description: 'QUAL CASACO É SEU FAVORITO?', multiSelect: 3 },
-      { id: 'etapa-9', name: 'Q7: Calças', order: 9, type: 'question', description: 'QUAL SUA CALÇA FAVORITA?', multiSelect: 3 },
-      { id: 'etapa-10', name: 'Q8: Sapatos', order: 10, type: 'question', description: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?', multiSelect: 3 },
-      { id: 'etapa-11', name: 'Q9: Acessórios', order: 11, type: 'question', description: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?', multiSelect: 3 },
-      { id: 'etapa-12', name: 'Q10: Tecidos', order: 12, type: 'question', description: 'O QUE MAIS VALORIZAS NOS ACESSÓRIOS?', multiSelect: 3 },
-      { id: 'etapa-13', name: 'Transição', order: 13, type: 'transition', description: 'Análise dos resultados parciais' },
-      { id: 'etapa-14', name: 'S1: Dificuldades', order: 14, type: 'strategic', description: 'Principal dificuldade com roupas' },
-      { id: 'etapa-15', name: 'S2: Problemas', order: 15, type: 'strategic', description: 'Problemas frequentes de estilo' },
-      { id: 'etapa-16', name: 'S3: Frequência', order: 16, type: 'strategic', description: '"Com que roupa eu vou?" - frequência' },
-      { id: 'etapa-17', name: 'S4: Guia de Estilo', order: 17, type: 'strategic', description: 'O que valoriza em um guia' },
-      { id: 'etapa-18', name: 'S5: Investimento', order: 18, type: 'strategic', description: 'Quanto investiria em consultoria' },
-      { id: 'etapa-19', name: 'S6: Ajuda Imediata', order: 19, type: 'strategic', description: 'O que mais precisa de ajuda' },
-      { id: 'etapa-20', name: 'Resultado', order: 20, type: 'result', description: 'Página de resultado personalizada' },
-      { id: 'etapa-21', name: 'Oferta', order: 21, type: 'offer', description: 'Apresentação da oferta final' }
-    ];
-
-    // Mesclar etapas existentes com as 21 etapas padrão
-    return baseQuiz21Steps.map(baseStep => {
-      const existingStep = existingSteps.find(step => step.id === baseStep.id);
-      return {
-        ...baseStep,
-        blocksCount: existingStep?.blocksCount || 0,
-        isActive: existingStep?.isActive || (baseStep.id === 'etapa-1'),
-        // Preservar nome customizado se existir
-        name: existingStep?.name || baseStep.name
-      };
-    });
+  // 🎯 FUNÇÃO PARA OBTER ETAPAS DO SCHEMADRIVENFUNNELSERVICE (FONTE ÚNICA)
+  const getStepsFromService = useCallback(() => {
+    try {
+      console.log('🔄 Obtendo etapas do schemaDrivenFunnelService...');
+      const defaultFunnel = schemaDrivenFunnelService.createDefaultFunnel();
+      
+      if (defaultFunnel && defaultFunnel.pages && defaultFunnel.pages.length > 0) {
+        const serviceSteps: QuizStep[] = defaultFunnel.pages.map((page, index) => ({
+          id: `etapa-${page.order}`,
+          name: page.name,
+          order: page.order,
+          blocksCount: page.blocks?.length || 0,
+          isActive: index === 0,
+          type: page.type || 'custom',
+          description: page.title || `Etapa ${page.order}`,
+          multiSelect: undefined // Será definido baseado no tipo da questão
+        }));
+        
+        console.log(`✅ ${serviceSteps.length} etapas obtidas do service`);
+        return serviceSteps;
+      } else {
+        console.warn('⚠️ Nenhuma página encontrada no defaultFunnel');
+        return [];
+      }
+    } catch (error) {
+      console.error('❌ Erro ao obter etapas do service:', error);
+      return [];
+    }
   }, []);
 
-  // 21 Etapas do Quiz CaktoQuiz - Sistema Completo (preservando dados existentes)
+  // Função para preservar etapas existentes e mesclar com as etapas do service
+  const mergeWithServiceSteps = useCallback((existingSteps: any[] = []) => {
+    // OBTER ETAPAS DO SERVICE como fonte da verdade
+    const serviceSteps = getStepsFromService();
+    
+    if (serviceSteps.length === 0) {
+      // Fallback caso o service falhe
+      console.warn('⚠️ Service falhou, usando fallback básico');
+      return Array.from({ length: 21 }, (_, i) => ({
+        id: `etapa-${i + 1}`,
+        name: `Etapa ${i + 1}`,
+        order: i + 1,
+        blocksCount: 0,
+        isActive: i === 0,
+        type: 'custom',
+        description: `Etapa ${i + 1} do quiz`
+      }));
+    }
+
+    // Mesclar etapas do service com dados existentes preservados
+    return serviceSteps.map(serviceStep => {
+      const existingStep = existingSteps.find(step => step.id === serviceStep.id);
+      return {
+        ...serviceStep,
+        blocksCount: existingStep?.blocksCount || serviceStep.blocksCount,
+        isActive: existingStep?.isActive || serviceStep.isActive,
+        // Preservar nome customizado se existir
+        name: existingStep?.name || serviceStep.name
+      };
+    });
+  }, [getStepsFromService]);
+
+  // 21 Etapas do Quiz CaktoQuiz - Sistema Completo usando SERVICE (preservando dados existentes)
   const initialQuiz21Steps = useMemo(() => {
     // Se houver dados salvos, tentar recuperá-los
     const savedSteps = localStorage.getItem('quiz-steps');
     const existingSteps = savedSteps ? JSON.parse(savedSteps) : [];
-    return mergeWith21Steps(existingSteps);
-  }, [mergeWith21Steps]);
+    return mergeWithServiceSteps(existingSteps);
+  }, [mergeWithServiceSteps]);
 
   // Steps state com as 21 etapas do quiz
   const [steps, setSteps] = useState(initialQuiz21Steps);
@@ -1170,7 +1195,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     
     try {
       // 🎯 Usar novo sistema de templates das steps
-      const stepTemplate = getStepTemplate(stepNumber);
+      const stepTemplate = getStepTemplate(stepNumber.toString());
       
       if (!stepTemplate || stepTemplate.length === 0) {
         console.warn(`⚠️ Template vazio para Step ${stepNumber}, usando fallback`);
