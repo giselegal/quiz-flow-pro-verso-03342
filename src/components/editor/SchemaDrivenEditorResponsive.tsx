@@ -1243,4 +1243,3 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 };
 
 export default SchemaDrivenEditorResponsive;
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
