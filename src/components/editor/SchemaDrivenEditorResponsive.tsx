@@ -152,27 +152,29 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const { toast } = useToast();
 
-  // Carregar dados do funil quando funnelId mudar
+  // 🎯 SISTEMA UNIFICADO: Resolver conflitos entre schemaService e stepTemplateService
   useEffect(() => {
-    const loadFunnelData = async () => {
+    const loadUnifiedData = async () => {
+      console.log('🔄 Iniciando carregamento unificado de dados...');
+      
       if (!funnelId) {
-        console.log('📝 Nenhum funnelId fornecido, usando dados padrão');
+        console.log('📝 Modo padrão: Usando stepTemplateService para 21 etapas');
+        // Modo padrão: usar apenas stepTemplateService
         return;
       }
 
       setIsLoadingFunnel(true);
-      console.log('🚀 Carregando funil com ID:', funnelId);
+      console.log('🚀 Modo funil: Carregando funil ID:', funnelId);
       
       try {
         const funnelData = await schemaDrivenFunnelService.loadFunnel(funnelId);
         
         if (!funnelData) {
-          console.log('⚠️ Funil não encontrado');
-          
+          console.log('⚠️ Funil não encontrado, mantendo stepTemplateService');
           toast({
             title: 'Funil não encontrado',
-            description: 'O funil solicitado não existe',
-            variant: 'destructive',
+            description: 'Usando templates padrão das 21 etapas',
+            variant: 'default',
           });
           return;
         }
@@ -180,7 +182,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         console.log('✅ Funil carregado:', funnelData.name);
         console.log('📄 Páginas encontradas:', funnelData.pages.length);
         
-        // Converter dados do funil para o formato do editor
+        // 🔧 SOLUÇÃO: Mesclar dados do funil COM templates do stepTemplateService
         if (funnelData.pages && funnelData.pages.length > 0) {
           const firstPage = funnelData.pages[0];
           
@@ -188,34 +190,60 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
             blocks: firstPage.blocks || []
           };
           
-          // Usar o método do useEditor para atualizar
+          // Usar o método do useEditor para atualizar blocos
           setConfig(editorConfig);
           
-          // Atualizar steps baseado nas páginas
-          const funnelSteps: QuizStep[] = funnelData.pages.map((page, index) => ({
-            id: page.id,
-            name: page.title || `Etapa ${index + 1}`,
-            order: index + 1,
-            blocksCount: page.blocks?.length || 0,
-            isActive: index === 0,
-            type: 'custom',
-            description: `Página do funil: ${page.title || `Etapa ${index + 1}`}`
-          }));
+          // 🎯 UNIFICAÇÃO: Usar stepTemplateService como base e mesclar com dados do funil
+          const templateSteps = stepTemplateService.getAllSteps();
+          const funnelSteps: QuizStep[] = funnelData.pages.map((page, index) => {
+            const templateStep = templateSteps.find(t => t.order === index + 1);
+            return {
+              id: page.id || `etapa-${index + 1}`,
+              name: page.title || templateStep?.name || `Etapa ${index + 1}`,
+              order: index + 1,
+              blocksCount: page.blocks?.length || 0,
+              isActive: index === 0,
+              type: templateStep?.type || 'custom',
+              description: page.description || templateStep?.description || `Página do funil: ${page.title || `Etapa ${index + 1}`}`,
+              multiSelect: templateStep?.multiSelect
+            };
+          });
+          
+          // Preencher etapas restantes com templates se o funil tiver menos de 21 etapas
+          if (funnelSteps.length < 21) {
+            const remainingSteps = templateSteps
+              .filter(t => t.order > funnelSteps.length)
+              .map(templateStep => ({
+                id: templateStep.id,
+                name: templateStep.name,
+                order: templateStep.order,
+                blocksCount: 0,
+                isActive: false,
+                type: templateStep.type,
+                description: templateStep.description,
+                multiSelect: templateStep.multiSelect
+              }));
+            
+            funnelSteps.push(...remainingSteps);
+          }
           
           setSteps(funnelSteps);
           setSelectedStepId(funnelSteps[0]?.id || 'etapa-1');
           
           toast({
-            title: 'Funil Carregado',
-            description: `${funnelData.name} - ${funnelData.pages.length} páginas`,
+            title: 'Funil Integrado',
+            description: `${funnelData.name} mesclado com templates das 21 etapas`,
           });
+          
+          console.log('🎯 Dados unificados: funil + templates aplicados com sucesso');
         }
         
       } catch (error) {
-        console.error('❌ Erro ao carregar funil:', error);
+        console.error('❌ Erro no carregamento unificado:', error);
+        console.log('🔄 Fallback: Mantendo stepTemplateService');
         toast({
           title: 'Erro ao carregar funil',
-          description: 'Verifique se o ID do funil está correto',
+          description: 'Usando templates padrão. Verifique o ID do funil.',
           variant: 'destructive',
         });
       } finally {
@@ -223,7 +251,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       }
     };
 
-    loadFunnelData();
+    loadUnifiedData();
   }, [funnelId, setConfig, toast]);
 
   // Detect mobile screen size
