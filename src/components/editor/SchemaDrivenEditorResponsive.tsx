@@ -722,10 +722,10 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
     const template = strategicTemplates[strategicNumber];
     if (template) {
-      handleAddBlocksToStep(stepId, template);
+      // Removido handleAddBlocksToStep - função excluída
       console.log(`✅ Template da questão estratégica ${strategicNumber} carregado para ${stepId}`);
     }
-  }, [handleAddBlocksToStep]);
+  }, []);
   // Função para carregar o template completo das 21 etapas
   const handleLoadComplete21StepsTemplate = useCallback(async () => {
     try {
@@ -1145,7 +1145,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                   onStepDelete={handleStepDelete}
                   onStepDuplicate={handleStepDuplicate}
                   onStepReorder={handleStepReorder}
-                  onAddBlocksToStep={handleAddBlocksToStep}
                   className="p-2"
                 />
               </ScrollArea>
