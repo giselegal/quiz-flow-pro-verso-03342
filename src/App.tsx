@@ -1,6 +1,8 @@
+
 import React from 'react';
 import { Router, Route, Switch } from 'wouter';
 import { Toaster } from '@/components/ui/toaster';
+import { AuthProvider } from '@/context/AuthContext';
 import SchemaDrivenEditorPage from '@/pages/SchemaDrivenEditorPage';
 import { ResultPage } from './pages/ResultPage';
 import { Home } from './pages/Home';
@@ -8,31 +10,32 @@ import { FunnelsPage } from './pages/FunnelsPage';
 import { QuizPage } from './pages/QuizPage';
 import { ResultConfigPage } from './pages/ResultConfigPage';
 import { Auth } from './components/auth/Auth';
-import { useAuth } from './hooks/useAuth';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 function App() {
   return (
-    <Router>
-      <div className="min-h-screen bg-background">
-        <Switch>
-          {/* Editor Routes */}
-          <Route path="/editor" component={SchemaDrivenEditorPage} />
-          <Route path="/editor/:id" component={SchemaDrivenEditorPage} />
-          
-          {/* Public Routes */}
-          <Route path="/" component={Home} />
-          <Route path="/quiz/:id" component={QuizPage} />
-          <Route path="/resultado/:resultId" component={ResultPage} />
-          <Route path="/auth" component={Auth} />
+    <AuthProvider>
+      <Router>
+        <div className="min-h-screen bg-background">
+          <Switch>
+            {/* Editor Routes */}
+            <Route path="/editor" component={SchemaDrivenEditorPage} />
+            <Route path="/editor/:id" component={SchemaDrivenEditorPage} />
+            
+            {/* Public Routes */}
+            <Route path="/" component={Home} />
+            <Route path="/quiz/:id" component={QuizPage} />
+            <Route path="/resultado/:resultId" component={ResultPage} />
+            <Route path="/auth" component={Auth} />
 
-          {/* Protected Routes */}
-          <ProtectedRoute path="/admin/funis" component={FunnelsPage} />
-          <ProtectedRoute path="/admin/resultados" component={ResultConfigPage} />
-        </Switch>
-        <Toaster />
-      </div>
-    </Router>
+            {/* Protected Routes */}
+            <ProtectedRoute path="/admin/funis" component={FunnelsPage} />
+            <ProtectedRoute path="/admin/resultados" component={ResultConfigPage} />
+          </Switch>
+          <Toaster />
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 
