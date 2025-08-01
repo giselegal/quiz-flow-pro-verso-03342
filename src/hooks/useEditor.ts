@@ -1,10 +1,10 @@
 
-import { useState, useCallback, useEffect } from 'react';
-import { Block, EditorConfig, EditableContent, BlockType, EditorBlock } from '@/types/editor';
-import { toast } from '@/components/ui/use-toast';
+import React, { useState, useCallback, useEffect } from 'react';
+import { Block, EditorConfig, EditableContent, BlockType, EditorBlock } from '../types/editor';
+import { toast } from '../components/ui/use-toast';
 import { useHistory } from './useHistory';
-import { getDefaultContentForType } from '@/utils/editorDefaults';
-import { generateId } from '@/utils/idGenerator';
+import { getDefaultContentForType } from '../utils/editorDefaults';
+import { generateId } from '../utils/idGenerator';
 
 export const useEditor = () => {
   const [config, setConfig] = useState<EditorConfig>({
