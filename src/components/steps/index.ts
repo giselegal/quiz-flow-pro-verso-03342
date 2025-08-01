@@ -10,9 +10,18 @@ import { getStep06Template } from './Step06Template';
 import { getStep07Template } from './Step07Template';
 import { getStep08Template } from './Step08Template';
 import { getStep09Template } from './Step09Template';
+import { getStep10Template } from './Step10Template';
+import { getStep11Template } from './Step11Template';
+import { getStep12Template } from './Step12Template';
+import { getStep13Template } from './Step13Template';
+import { getStep14Template } from './Step14Template';
 import { getStep15Template } from './Step15Template';
 import { getStep16Template } from './Step16Template';
 import { getStep17Template } from './Step17Template';
+import { getStep18Template } from './Step18Template';
+import { getStep19Template } from './Step19Template';
+import { getStep20Template } from './Step20Template';
+import { getStep21Template } from './Step21Template';
 
 export interface StepTemplate {
   id: string;
