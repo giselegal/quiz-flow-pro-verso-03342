@@ -5,9 +5,6 @@
 // export default RegistryRenderer;
 import React from 'react';
 import { EditorBlock } from '@/types/editor';
-import QuizQuestionInteractiveBlock from './QuizQuestionInteractiveBlock';
-import QuizResultCalculatedBlock from './QuizResultCalculatedBlock';
-import ProgressBarModernBlock from './ProgressBarModernBlock';
 
 export interface BlockRendererProps {
   block: EditorBlock;
@@ -29,43 +26,46 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
 
   const toPascal = (s: string) =>
     s.split('-').map(p => p.charAt(0).toUpperCase() + p.slice(1)).join('');
-  const componentName = `${toPascal(block.type)}Block`;
   const Blocks = require('./blocks');
-  const Dynamic = Blocks[componentName] as React.FC<any>;
+  const Dynamic = Blocks[`${toPascal(block.type)}Block`] as React.FC<any>;
 
-  if (Dynamic) {
-    return (
-      <div
-        onClick={onSelect}
-        className={`relative cursor-pointer transition-all duration-200 ${
-          isSelected
-            ? 'ring-2 ring-blue-500 ring-opacity-50 bg-blue-50'
-            : 'hover:bg-gray-50'
-        } ${isPreview ? '' : 'border border-transparent hover:border-gray-200 rounded-lg p-2'}`}
-      >
-        <Dynamic
-          block={block}
-          isSelected={isSelected}
-          onClick={onSelect}
-          onPropertyChange={handleContentUpdate}
-        />
-        {!isPreview && isSelected && (
-          <button
-            onClick={e => {
-              e.stopPropagation();
-              onDelete();
-            }}
-            className="absolute top-2 right-2 text-red-500"
-          >
-            ×
-          </button>
-        )}
-      </div>
-    );
+  if (!Dynamic) {
+    return null;
   }
-  // Envolve renderBlock() no container clicável
-  // Renderiza blocos específicos ou padrão
-  const renderBlock = () => {
+
+  return (
+    <div
+      onClick={onSelect}
+      className={`relative cursor-pointer transition-all duration-200 ${
+        isSelected
+          ? 'ring-2 ring-blue-500 ring-opacity-50 bg-blue-50'
+          : 'hover:bg-gray-50'
+      } ${isPreview ? '' : 'border border-transparent hover:border-gray-200 rounded-lg p-2'}`}
+    >
+      <Dynamic
+        block={block}
+        isSelected={isSelected}
+        onClick={onSelect}
+        onPropertyChange={(key, value) =>
+          onUpdate({ content: { ...block.content, [key]: value } })
+        }
+      />
+      {!isPreview && isSelected && (
+        <button
+          onClick={e => {
+            e.stopPropagation();
+            onDelete();
+          }}
+          className="absolute top-2 right-2 text-red-500"
+        >
+          ×
+        </button>
+      )}
+    </div>
+  );
+};
+
+export default UniversalBlockRenderer;
     switch (block.type) {
       case 'quiz-question-interactive':
         return (
