@@ -512,16 +512,138 @@ export const FunnelsProvider: React.FC<{children: React.ReactNode}> = ({ childre
   }, [funnels]);
 
   // Atualizar etapas de um funil
-  const updateFunnelSteps = useCallback((funnelId: string, steps: QuizStep[]) => {
-    setFunnels(prev => prev.map(funnel => 
-      funnel.id === funnelId 
-        ? { 
-            ...funnel, 
-            steps, 
-            updatedAt: new Date().toISOString() 
-          } 
-        : funnel
-    ));
+  const updateFunnelSteps = useCallback(async (funnelId: string, steps: QuizStep[]) => {
+    try {
+      const now = new Date().toISOString();
+      
+      // Carregar páginas existentes
+      const { data: existingPages, error: loadError } = await supabase
+        .from('funnel_pages')
+        .select('id')
+        .eq('funnel_id', funnelId);
+
+      if (loadError) {
+        throw loadError;
+      }
+
+      // Mapeamento de etapas para páginas do Supabase
+      const existingIds = existingPages?.map(page => page.id) || [];
+      const updates: any[] = [];
+      const inserts: any[] = [];
+      const deleteIds = [...existingIds];
+
+      for (const step of steps) {
+        const pageData = {
+          title: step.name,
+          page_order: step.order,
+          page_type: step.type,
+          metadata: {
+            description: step.description,
+            multiSelect: step.multiSelect
+          },
+          updated_at: now
+        };
+
+        if (existingIds.includes(step.id)) {
+          // Atualizar página existente
+          updates.push({
+            id: step.id,
+            ...pageData
+          });
+          
+          // Remover do array de IDs a excluir
+          const index = deleteIds.indexOf(step.id);
+          if (index > -1) {
+            deleteIds.splice(index, 1);
+          }
+        } else {
+          // Inserir nova página
+          inserts.push({
+            id: step.id,
+            funnel_id: funnelId,
+            ...pageData,
+            blocks: [],
+            created_at: now
+          });
+        }
+      }
+
+      // Executar operações no Supabase em paralelo
+      const operations: Promise<any>[] = [];
+
+      // 1. Inserir novas páginas
+      if (inserts.length > 0) {
+        operations.push(
+          supabase
+            .from('funnel_pages')
+            .insert(inserts)
+            .then(({ error }) => {
+              if (error) console.error('Erro ao inserir páginas:', error);
+              return null;
+            }) as Promise<any>
+        );
+      }
+
+      // 2. Atualizar páginas existentes
+      for (const update of updates) {
+        operations.push(
+          supabase
+            .from('funnel_pages')
+            .update(update)
+            .eq('id', update.id)
+            .then(({ error }) => {
+              if (error) console.error(`Erro ao atualizar página ${update.id}:`, error);
+              return null;
+            }) as Promise<any>
+        );
+      }
+
+      // 3. Excluir páginas que não existem mais
+      if (deleteIds.length > 0) {
+        operations.push(
+          supabase
+            .from('funnel_pages')
+            .delete()
+            .in('id', deleteIds)
+            .then(({ error }) => {
+              if (error) console.error('Erro ao excluir páginas:', error);
+              return null;
+            }) as Promise<any>
+        );
+      }
+
+      // Aguardar todas as operações
+      await Promise.all(operations);
+
+      // Atualizar estado local
+      setFunnels(prev => prev.map(funnel => 
+        funnel.id === funnelId 
+          ? { 
+              ...funnel, 
+              steps, 
+              updatedAt: now 
+            } 
+          : funnel
+      ));
+    } catch (error) {
+      console.error('Erro ao atualizar etapas do funil:', error);
+      toast({
+        title: 'Erro ao atualizar etapas',
+        description: 'Não foi possível atualizar as etapas do funil no banco de dados.',
+        variant: 'destructive'
+      });
+      
+      // Atualizar localmente como fallback
+      setFunnels(prev => prev.map(funnel => 
+        funnel.id === funnelId 
+          ? { 
+              ...funnel, 
+              steps, 
+              updatedAt: new Date().toISOString() 
+            } 
+          : funnel
+      ));
+    }
   }, []);
 
   return (
@@ -536,7 +658,8 @@ export const FunnelsProvider: React.FC<{children: React.ReactNode}> = ({ childre
         duplicateFunnel,
         getFunnelById,
         getFunnelSteps,
-        updateFunnelSteps
+        updateFunnelSteps,
+        isLoading
       }}
     >
       {children}
