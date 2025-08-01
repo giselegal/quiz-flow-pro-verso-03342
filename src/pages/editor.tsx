@@ -453,31 +453,6 @@ const EditorPage: React.FC = () => {
       {isMobile ? (
         /* Mobile Layout - Vertical Stack */
         <div className="flex-1 flex flex-col">
-          {/* Mobile Steps Panel - Horizontal */}
-          <div className="flex-shrink-0 border-b border-gray-200 p-2">
-            <div className="flex space-x-2 overflow-x-auto">
-              {steps.map((step) => (
-                <Button
-                  key={step.id}
-                  variant={selectedStepId === step.id ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => handleStepSelect(step.id)}
-                  className="whitespace-nowrap"
-                >
-                  {step.name}
-                </Button>
-              ))}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleStepAdd}
-                className="whitespace-nowrap"
-              >
-                <Plus className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-
           {/* Mobile Components Panel */}
           <div className="flex-shrink-0 border-b border-gray-200 p-2">
             <div className="space-y-2">
@@ -571,45 +546,8 @@ const EditorPage: React.FC = () => {
       ) : (
         /* Desktop Layout - Horizontal Panels */
         <ResizablePanelGroup direction="horizontal" className="flex-1">
-          {/* Steps Panel */}
-          <ResizablePanel defaultSize={18} minSize={15} maxSize={25}>
-            <div className="h-full border-r border-gray-200 overflow-hidden">
-              <ScrollArea className="h-full">
-                <div className="space-y-2 p-2">
-                  <div className="flex items-center justify-between p-2 border-b">
-                    <h3 className="font-semibold text-sm">Etapas (21)</h3>
-                    <Button onClick={handleStepAdd} size="sm" variant="outline">
-                      <Plus className="w-4 h-4" />
-                    </Button>
-                  </div>
-                  <div className="space-y-1">
-                    {steps.map((step) => (
-                      <Button
-                        key={step.id}
-                        variant={selectedStepId === step.id ? "default" : "ghost"}
-                        size="sm"
-                        onClick={() => handleStepSelect(step.id)}
-                        className="w-full justify-start text-left"
-                      >
-                        <div className="flex-1">
-                          <div className="font-medium">{step.name}</div>
-                          <div className="text-xs text-gray-500">{step.description}</div>
-                        </div>
-                        <div className="text-xs bg-gray-100 px-2 py-1 rounded">
-                          {step.blocksCount}
-                        </div>
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              </ScrollArea>
-            </div>
-          </ResizablePanel>
-
-          <ResizableHandle />
-
           {/* Components Panel */}
-          <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+          <ResizablePanel defaultSize={25} minSize={20} maxSize={35}>
             <div className="h-full border-r border-gray-200 overflow-hidden">
               <ScrollArea className="h-full">
                 <div className="space-y-4 p-2">
@@ -679,7 +617,7 @@ const EditorPage: React.FC = () => {
           <ResizableHandle />
 
           {/* Canvas */}
-          <ResizablePanel defaultSize={42}>
+          <ResizablePanel defaultSize={55}>
             <div className="h-full bg-gray-50 overflow-hidden">
               <ScrollArea className="h-full p-6">
                 {/* Preview Mode Indicator */}
@@ -730,7 +668,7 @@ const EditorPage: React.FC = () => {
                             </div>
                             <div className="mt-4 p-3 bg-blue-50 rounded-lg">
                               <p className="text-xs text-blue-700">
-                                <strong>🎯 Status:</strong> {steps.length} etapas configuradas | {AVAILABLE_BLOCKS.length} componentes disponíveis
+                                <strong>🎯 Status:</strong> {AVAILABLE_BLOCKS.length} componentes disponíveis
                               </p>
                             </div>
                           </div>
@@ -793,7 +731,6 @@ const EditorPage: React.FC = () => {
       <div className="flex-shrink-0 border-t bg-white px-4 py-2 text-xs text-gray-500 flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <span>Total de blocos: {blocks.length}</span>
-          <span>Etapa atual: {currentStep?.name || 'Nenhuma'}</span>
           <span>Modo: {previewMode}</span>
         </div>
         <div className="flex items-center space-x-2">
