@@ -1,6 +1,4 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
-// import { DndProvider } from 'react-dnd';
-// import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../ui/resizable';
 import { ScrollArea } from '../ui/scroll-area';
 import { Button } from '../ui/button';
@@ -9,15 +7,12 @@ import { cn } from '../../lib/utils';
 import { useEditor } from '../../hooks/useEditor';
 import { UniversalBlockRenderer } from './blocks/UniversalBlockRenderer';
 import type { BlockData } from '../../types/blocks';
-import { getInitialQuiz21EtapasTemplate } from '../../templates/quiz21EtapasTemplate';
-import { normalizeBlock } from '../../utils/blockTypeMapping';
 import { AdvancedPropertyPanel } from './AdvancedPropertyPanel';
 import { EditorStatus } from './components/EditorStatus';
 import { StepsPanel } from './StepsPanel';
 import { ComponentsPanel } from './ComponentsPanel';
 import { schemaDrivenFunnelService } from '../../services/schemaDrivenFunnelService';
 import { useToast } from '../../hooks/use-toast';
-import { generateRealQuestionTemplates } from '../../data/realQuizTemplates';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -1243,6 +1238,11 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           previewMode={previewMode}
         />
       </div>
+    </div>
+  );
+};
+
+export default SchemaDrivenEditorResponsive;
     </div>
   );
 };
