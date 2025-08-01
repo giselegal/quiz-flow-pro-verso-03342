@@ -13,10 +13,6 @@ import { getStep09Template } from './Step09Template';
 import { getStep15Template } from './Step15Template';
 import { getStep16Template } from './Step16Template';
 import { getStep17Template } from './Step17Template';
-import { getStep18Template } from './Step18Template';
-import { getStep19Template } from './Step19Template';
-import { getStep20Template } from './Step20Template'; // Corrigido: usar Template
-import { getStep21Template } from './Step21Template';
 
 export interface StepTemplate {
   id: string;
