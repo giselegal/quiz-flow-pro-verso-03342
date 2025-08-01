@@ -1,5 +1,4 @@
 import React from 'react';
-
 export interface Step05TemplateProps {
   onNext?: () => void;
   onPrevious?: () => void;
