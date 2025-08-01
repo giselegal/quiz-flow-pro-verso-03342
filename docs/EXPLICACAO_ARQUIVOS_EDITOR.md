@@ -227,12 +227,17 @@ const schema = getBlockPropertiesSchema('quiz-question');
 |---------|--------|-------------|
 | **blockDefinitions.ts** | 🔥 Define todos os componentes | SEMPRE - É o coração |
 | **UniversalBlockRenderer.tsx** | 🎯 Renderiza componentes no editor | SEMPRE - É o motor |
-| **PropertyPanel.tsx** | ⚙️ Edita propriedades automaticamente | SEMPRE - É o painel |
+| **PropertyPanel.tsx** | ⚙️ Edita propriedades elegantemente com SCHEMA | SEMPRE - É o painel elegante |
 | **DynamicBlockRenderer.tsx** | 📺 Preview/demonstração | Galeria, testes, demos |
-| **AdvancedPropertyPanel.tsx** | 🔧 Formulários customizados | Casos muito específicos |
+| **AdvancedPropertyPanel.tsx** | 🔧 Formulários customizados OBSOLETO | ❌ NÃO usar mais |
 | **index.ts** | 📁 Organização de imports | SEMPRE - Boa prática |
 
-**🎯 FOCO:** Para o editor funcionar, você precisa principalmente do **trio principal**: `blockDefinitions.ts` + `UniversalBlockRenderer.tsx` + `PropertyPanel.tsx`. O resto são **utilitários específicos**!
+**🎯 MUDANÇA IMPORTANTE:** O `PropertyPanel.tsx` agora combina **schema automático** + **interface elegante**! O `AdvancedPropertyPanel.tsx` se tornou obsoleto.
+
+**✅ NOVA ARQUITETURA:**
+- **PropertyPanel.tsx** = Schema-driven + Interface elegante (Cards, Labels, ícones)
+- **AdvancedPropertyPanel.tsx** = OBSOLETO - pode ser removido
+- **blockDefinitions.ts** = Fonte da verdade para todos os schemas
 
 ---
 
@@ -429,9 +434,110 @@ graph TB
 2. **AdvancedPropertyPanel.tsx** - Formulários manuais customizados
 
 ### **📊 PRIORIDADES:**
-- **CRÍTICO:** blockDefinitions + UniversalBlockRenderer + PropertyPanel
+- **CRÍTICO:** blockDefinitions + UniversalBlockRenderer + PropertyPanel (NOVO)
 - **ÚTIL:** DynamicBlockRenderer (para testes)
-- **OPCIONAL:** AdvancedPropertyPanel (para UX avançada)
+- **OBSOLETO:** AdvancedPropertyPanel (removido da arquitetura)
 - **SEMPRE:** index.ts (boa prática)
 
-**🎯 AGORA VOCÊ SABE:** Cada arquivo tem sua função específica na mecânica do editor. O **trio principal** faz tudo funcionar, o resto são **ferramentas auxiliares**!
+**🎯 AGORA VOCÊ SABE:** Cada arquivo tem sua função específica na mecânica do editor. O **trio principal** faz tudo funcionar, com o PropertyPanel agora sendo schema-driven + elegante!
+
+---
+
+## 🚀 **NOVA ARQUITETURA: PROPERTYPANEL MELHORADO**
+
+### **✅ O QUE MUDOU:**
+
+**ANTES:**
+- `PropertyPanel.tsx` = Schema automático mas interface básica
+- `AdvancedPropertyPanel.tsx` = Interface elegante mas manual
+
+**AGORA:**
+- `PropertyPanel.tsx` = **Schema automático + Interface elegante** 
+- `AdvancedPropertyPanel.tsx` = **OBSOLETO** (pode ser removido)
+
+### **🎯 NOVO PropertyPanel.tsx:**
+
+```typescript
+// ✅ BUSCA SCHEMA AUTOMATICAMENTE
+const schema = getBlockPropertiesSchema(selectedBlock.type) || [];
+
+// ✅ INTERFACE ELEGANTE COM CARDS
+<Card>
+  <CardHeader>
+    <CardTitle className="flex items-center gap-2">
+      <Settings className="w-4 h-4" />
+      Informações Gerais
+    </CardTitle>
+  </CardHeader>
+  <CardContent>
+    {/* Formulários baseados no schema */}
+  </CardContent>
+</Card>
+```
+
+### **🏆 BENEFÍCIOS:**
+
+1. **✅ Schema-driven:** Usa `blockDefinitions.ts` automaticamente
+2. **✅ Interface elegante:** Cards, ícones, categorização
+3. **✅ Categorização automática:** Cores, Tipografia, Mídia, etc.
+4. **✅ Tipos suportados:** text, textarea, number, boolean, select, color, image-url, array
+5. **✅ Preview de imagens:** Mostra preview das imagens
+6. **✅ Validação:** Min/max para números
+7. **✅ Organização:** Agrupa propriedades por categoria
+
+### **🔧 COMO FUNCIONA:**
+
+```typescript
+// 1. Detecta o tipo do bloco
+const blockType = selectedBlock.type;
+
+// 2. Busca o schema automaticamente 
+const schema = getBlockPropertiesSchema(blockType);
+
+// 3. Categoriza propriedades
+- "color" → Categoria "Cores" 
+- "font"/"text" → Categoria "Tipografia"
+- "image"/"url" → Categoria "Mídia"
+- outros → Categoria "Básicas"
+
+// 4. Renderiza inputs baseado no tipo
+switch (property.type) {
+  case 'text': return <Input />;
+  case 'color': return <ColorPicker />;
+  case 'boolean': return <Switch />;
+  // etc...
+}
+```
+
+### **📱 INTERFACE VISUAL:**
+
+```
+┌─────────────────────────────────────┐
+│ ⚙️ Informações Gerais              │
+├─────────────────────────────────────┤
+│ Tipo: quiz-question [disabled]      │
+│ ID: block-123 [disabled]           │
+└─────────────────────────────────────┘
+
+┌─────────────────────────────────────┐
+│ 🎨 Cores                           │
+├─────────────────────────────────────┤
+│ Cor Primária: [🎨] #ff0000         │
+│ Cor de Fundo: [🎨] #ffffff         │
+└─────────────────────────────────────┘
+
+┌─────────────────────────────────────┐
+│ 📝 Básicas                         │
+├─────────────────────────────────────┤
+│ Pergunta: [_______________]        │
+│ Mostrar Progresso: [🔘] Ativado    │
+└─────────────────────────────────────┘
+
+┌─────────────────────────────────────┐
+│ ⚠️ Zona de Perigo                  │
+├─────────────────────────────────────┤
+│ [🗑️ Deletar Bloco]                │
+└─────────────────────────────────────┘
+```
+
+**🎯 RESULTADO:** Interface elegante + Schema automático = Melhor dos dois mundos!
