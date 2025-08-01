@@ -193,17 +193,24 @@ class StepTemplateService {
     const stepNumber = typeof stepId === 'string' ? parseInt(stepId.replace(/\D/g, '')) : stepId;
     
     console.log(`🔍 [StepTemplateService] Buscando template para etapa ${stepNumber}`);
+    console.log(`🧪 [DEBUG] stepId original:`, stepId);
+    console.log(`🧪 [DEBUG] stepNumber convertido:`, stepNumber);
     
     const stepMapping = STEP_MAPPING[stepNumber];
     
     if (!stepMapping) {
       console.warn(`⚠️ Template não encontrado para etapa ${stepNumber}`);
+      console.log(`🧪 [DEBUG] STEP_MAPPING disponíveis:`, Object.keys(STEP_MAPPING));
       return this.getDefaultTemplate(stepNumber);
     }
+    
+    console.log(`✅ Mapping encontrado para etapa ${stepNumber}:`, stepMapping.name);
     
     try {
       const template = stepMapping.getTemplate();
       console.log(`✅ Template carregado para etapa ${stepNumber}: ${template.length} blocos`);
+      console.log(`🧱 [DEBUG] Primeiro bloco:`, template[0]);
+      console.log(`🧱 [DEBUG] Tipos de blocos:`, template.map(b => b.type));
       return template;
     } catch (error) {
       console.error(`❌ Erro ao carregar template da etapa ${stepNumber}:`, error);
@@ -268,7 +275,9 @@ class StepTemplateService {
    * Template padrão para etapas sem template específico
    */
   private getDefaultTemplate(stepNumber: number): any[] {
-    return [
+    console.log(`🔧 [StepTemplateService] Gerando template padrão para etapa ${stepNumber}`);
+    
+    const defaultTemplate = [
       {
         type: 'quiz-intro-header',
         properties: {
@@ -315,6 +324,11 @@ class StepTemplateService {
         }
       }
     ];
+    
+    console.log(`🧱 [DEBUG] Template padrão gerado com ${defaultTemplate.length} blocos`);
+    console.log(`🧱 [DEBUG] Tipos: ${defaultTemplate.map(b => b.type).join(', ')}`);
+    
+    return defaultTemplate;
   }
   
   /**
