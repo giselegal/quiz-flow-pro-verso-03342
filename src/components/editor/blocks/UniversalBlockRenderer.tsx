@@ -97,31 +97,5 @@ export default UniversalBlockRenderer;
       default:
         return null;
     }
-  };
-
-  return (
-    <div
-      onClick={onSelect}
-      className={`relative cursor-pointer transition-all duration-200 ${
-        isSelected
-          ? 'ring-2 ring-blue-500 ring-opacity-50 bg-blue-50'
-          : 'hover:bg-gray-50'
-      } ${isPreview ? '' : 'border border-transparent hover:border-gray-200 rounded-lg p-2'}`}
-    >
-      {renderBlock()}
-      {!isPreview && isSelected && (
-        <button
-          onClick={e => {
-            e.stopPropagation();
-            onDelete();
-          }}
-          className="absolute top-2 right-2 text-red-500"
-        >
-          ×
-        </button>
-      )}
-    </div>
-  );
-};
 
 export default UniversalBlockRenderer;
