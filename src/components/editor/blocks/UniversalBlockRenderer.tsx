@@ -184,7 +184,7 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
           </div>
         );
     }
-  };
+  }
 
   const handlePropertyChange = (key: string, value: any) =>
     onUpdate({ content: { ...block.content, [key]: value } });
