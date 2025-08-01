@@ -1291,7 +1291,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               <Button
                 variant="outline"
                 size="sm"
-                onClick={handleLoadTemplate}
+                onClick={handleTemplateLoad}
                 className="flex items-center gap-2"
               >
                 <Download className="w-4 h-4" />
@@ -1450,9 +1450,10 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                           >
                             <UniversalBlockRenderer
                               block={blockData}
-                              stepNumber={currentStepNumber}
-                              quizSessionId={currentQuizSessionId}
-                              userName={currentUserName}
+                              isSelected={selectedBlockId === block.id}
+                              onSelect={() => setSelectedBlockId(block.id)}
+                              onUpdate={(properties) => updateBlock(block.id, properties)}
+                              onDelete={() => deleteBlock(block.id)}
                             />
                           </div>
                         );
@@ -1554,7 +1555,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                               Carregar Template Completo (21 Etapas)
                             </Button>
                             <Button
-                              onClick={handleLoadTemplate}
+                              onClick={handleTemplateLoad}
                               variant="outline"
                               className="w-full"
                             >
