@@ -2063,7 +2063,16 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           {/* Properties Panel */}
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
             <DynamicPropertiesPanel
-              selectedBlock={selectedBlockId ? blocks.find(b => b.id === selectedBlockId) || null : null}
+              selectedBlock={selectedBlockId ? (() => {
+                const block = blocks.find(b => b.id === selectedBlockId);
+                if (!block) return null;
+                // Converter EditorBlock para BlockData
+                return {
+                  id: block.id,
+                  type: block.type,
+                  properties: { ...block.content || {}, order: block.order || 0 }
+                };
+              })() : null}
               funnelConfig={{
                 name: 'Quiz CaktoQuiz',
                 description: 'Funil de Quiz com 21 etapas',
