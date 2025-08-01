@@ -17,17 +17,17 @@ import StyleCardInlineBlock from './inline/StyleCardInlineBlock';
 import ResultCardInlineBlock from './inline/ResultCardInlineBlock';
 
 // Import other block components
-import HeadingInlineBlock from './inline/HeadingInlineBlock';
+import HeadingInlineBlock from './blocks/HeadingInlineBlock';
 import ButtonInlineBlock from './inline/ButtonInlineBlock';
-import { SpacerBlock } from './blocks/SpacerBlock';
-import { FormInputBlock } from './blocks/FormInputBlock';
-import { OptionsGridBlock } from './blocks/OptionsGridBlock';
-import { QuizQuestionBlock } from './blocks/QuizQuestionBlock';
-import { QuizProgressBlock } from './blocks/QuizProgressBlock';
-import { VerticalCanvasHeaderBlock } from './blocks/VerticalCanvasHeaderBlock';
+import SpacerBlock from './blocks/SpacerBlock';
+import FormInputBlock from './blocks/FormInputBlock';
+import OptionsGridBlock from './blocks/OptionsGridBlock';
+import QuizQuestionBlock from './blocks/QuizQuestionBlock';
+import QuizProgressBlock from './blocks/QuizProgressBlock';
+import VerticalCanvasHeaderBlock from './blocks/VerticalCanvasHeaderBlock';
 
 // Import quiz header component
-import { QuizIntroHeaderBlock } from './blocks/inline/QuizIntroHeaderBlock';
+import QuizIntroHeaderBlock from './blocks/inline/QuizIntroHeaderBlock';
 
 export interface BlockRendererProps {
   block: EditorBlock;
