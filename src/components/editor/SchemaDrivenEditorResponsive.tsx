@@ -1252,10 +1252,22 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const handleComponentSelect = useCallback((componentId: string) => {
     handleAddBlock(componentId);
   }, [handleAddBlock]);
-        // ==========================================
-        // ETAPA 1: INTRODUÇÃO COM COLETA DE NOME
-        // ==========================================
-        defaultBlocks = [
+
+  // 📱 Component categories for better organization
+  const componentCategories = useMemo(() => {
+    const categories = Object.keys(componentLibrary).map(cat => ({
+      id: cat,
+      name: cat === 'quiz' ? 'Quiz' :
+             cat === 'text' ? 'Texto' :
+             cat === 'media' ? 'Mídia' :
+             cat === 'interactive' ? 'Interativo' :
+             cat === 'layout' ? 'Layout' :
+             cat === 'form' ? 'Formulário' :
+             cat === 'content' ? 'Conteúdo' : cat
+    }));
+  }, []);
+
+  return (
           {
             type: 'quiz-intro-header',
             properties: {
