@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { EditorConfig, EditableContent, BlockType, EditorBlock } from '../types/editor';
 import { toast } from '../components/ui/use-toast';
 import { useHistory } from './useHistory';
@@ -7,13 +7,13 @@ import { getDefaultContentForType } from '../utils/editorDefaults';
 import { generateId } from '../utils/idGenerator';
 
 export const useEditor = () => {
-  // Certifique-se de que o React.useState está sendo usado corretamente
-  const [config, setConfig] = React.useState<EditorConfig>({
+  // Usando os hooks importados diretamente
+  const [config, setConfig] = useState<EditorConfig>({
     blocks: []
   });
   
   // Load config from localStorage on initial load (with cleanup)
-  React.useEffect(() => {
+  useEffect(() => {
     try {
       const savedConfig = localStorage.getItem('editor_config');
       if (savedConfig) {
@@ -40,13 +40,13 @@ export const useEditor = () => {
   // Setup history for undo/redo
   const { past, present, future, saveState, undo, redo } = useHistory<EditorConfig>(config);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (present && present !== config) {
       setConfig(present);
     }
   }, [present]);
 
-  const addBlock = React.useCallback((type: BlockType) => {
+  const addBlock = useCallback((type: BlockType) => {
     const newBlock: EditorBlock = {
       id: generateId(),
       type,
