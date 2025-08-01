@@ -27,7 +27,7 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
     onUpdate({
       content: { ...block.content, [key]: value }
     });
-  };
+  }
 
   const renderBlock = () => {
     switch (block.type) {
