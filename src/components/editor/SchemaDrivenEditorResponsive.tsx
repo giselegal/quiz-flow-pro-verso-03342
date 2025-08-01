@@ -18,7 +18,7 @@ import StyleCardInlineBlock from './inline/StyleCardInlineBlock';
 import ResultCardInlineBlock from './inline/ResultCardInlineBlock';
 
 // Import other block components
-import HeadingInlineBlock from './HeadingInlineBlock';
+import HeadingInlineBlock from './inline/HeadingInlineBlock';
 import ButtonInlineBlock from './ButtonInlineBlock';
 import SpacerBlock from './SpacerBlock';
 import FormInputBlock from './FormInputBlock';
