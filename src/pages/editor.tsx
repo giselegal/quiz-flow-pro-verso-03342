@@ -10,7 +10,7 @@ import { useEditorPersistence } from '../hooks/editor/useEditorPersistence';
 import { useAutoSaveWithDebounce } from '../hooks/editor/useAutoSaveWithDebounce';
 import { toast } from '../components/ui/use-toast';
 import { LoadingSpinner } from '../components/ui/loading-spinner';
-import { EditorQuizProvider } from '../contexts/EditorQuizContext';
+import { EditorQuizProvider } from '../context/EditorQuizContext';
 import { schemaDrivenFunnelService } from '../services/schemaDrivenFunnelService';
 
 const EditorPage: React.FC = () => {
