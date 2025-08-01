@@ -1205,16 +1205,16 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           const newBlockId = addBlock(blockData.type as any);
           
           setTimeout(() => {
-            updateBlock(newBlockId, blockData.properties);
-            console.log(`✅ Bloco fallback ${index + 1} aplicado:`, blockData.type);
-          }, index * 100);
-        
-        return;
-      }
-      
-      console.log(`� Template encontrado! ${stepTemplate.length} blocos para carregar`);
-      console.log(`🧱 Tipos de blocos:`, stepTemplate.map(b => b.type));
-      
+          updateBlock(newBlockId, blockData.properties);
+          console.log(`✅ Bloco fallback ${index + 1} aplicado:`, blockData.type);
+        }, index * 100);
+      });
+      return;
+    }
+    
+    console.log(`Template encontrado! ${stepTemplate.length} blocos para carregar`);
+    console.log(`🧱 Tipos de blocos:`, stepTemplate.map(b => b.type));
+       
       // 🔄 Aplicar todos os blocos do template
       stepTemplate.forEach((blockData, index) => {
         console.log(`🧱 Adicionando bloco ${index + 1}/${stepTemplate.length}:`, blockData.type);
