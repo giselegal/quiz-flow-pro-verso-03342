@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 // import { DndProvider } from 'react-dnd';
 // import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -1209,7 +1208,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
             updateBlock(newBlockId, blockData.properties);
             console.log(`✅ Bloco fallback ${index + 1} aplicado:`, blockData.type);
           }, index * 100);
-        });
         
         return;
       }
@@ -1393,45 +1391,204 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         // ETAPAS 2-11: QUESTÕES PRINCIPAIS (10 QUESTÕES)
         // ==========================================
         const questionIndex = stepIndex - 1; // Ajustar para índice 0-9
+        const currentProgress = 10 + (questionIndex * 5); // Progresso de 10% a 55%
+        
         console.log(`📝 [DEBUG] Carregando questão para stepIndex: ${stepIndex}, questionIndex: ${questionIndex}`);
         
-        // Gerar template real da questão usando generateRealQuestionTemplates
-        const questionTemplates = generateRealQuestionTemplates();
+        // Templates específicos para cada questão do quiz
+        const questionTemplates = [
+          // Q1: Tipo de Roupa Favorita
+          {
+            id: 'q1',
+            title: 'QUAL O SEU TIPO DE ROUPA FAVORITA?',
+            blocks: [
+              {
+                type: 'quiz-intro-header',
+                properties: {
+                  logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+                  logoAlt: 'Logo Gisele Galvão',
+                  logoWidth: 96,
+                  logoHeight: 96,
+                  progressValue: 15,
+                  progressMax: 100,
+                  showBackButton: true
+                }
+              },
+              {
+                type: 'heading-inline',
+                properties: {
+                  content: 'QUAL O SEU TIPO DE ROUPA FAVORITA?',
+                  level: 'h2',
+                  fontSize: 'text-2xl',
+                  fontWeight: 'font-bold',
+                  textAlign: 'text-center',
+                  color: '#432818',
+                  marginBottom: 8
+                }
+              },
+              {
+                type: 'text-inline',
+                properties: {
+                  content: 'Selecione até 3 opções que mais combinam com você',
+                  fontSize: 'text-base',
+                  textAlign: 'text-center',
+                  color: '#6B7280',
+                  marginBottom: 24
+                }
+              },
+              {
+                type: 'options-grid',
+                properties: {
+                  questionId: 'q1',
+                  options: [
+                    {
+                      id: '1a',
+                      text: 'Conforto, leveza e praticidade no vestir.',
+                      imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp',
+                      styleCategory: 'Natural',
+                      points: 1
+                    },
+                    {
+                      id: '1b',
+                      text: 'Discrição, caimento clássico e sobriedade.',
+                      imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp',
+                      styleCategory: 'Clássico',
+                      points: 1
+                    }
+                  ],
+                  columns: 2,
+                  showImages: true,
+                  multipleSelection: true,
+                  maxSelections: 3,
+                  minSelections: 1
+                }
+              }
+            ]
+          },
+          // Q2: Personalidade
+          {
+            id: 'q2',
+            title: 'RESUMA A SUA PERSONALIDADE:',
+            blocks: [
+              {
+                type: 'quiz-intro-header',
+                properties: {
+                  logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+                  logoAlt: 'Logo Gisele Galvão',
+                  logoWidth: 96,
+                  logoHeight: 96,
+                  progressValue: 20,
+                  progressMax: 100,
+                  showBackButton: true
+                }
+              },
+              {
+                type: 'heading-inline',
+                properties: {
+                  content: 'RESUMA A SUA PERSONALIDADE:',
+                  level: 'h2',
+                  fontSize: 'text-2xl',
+                  fontWeight: 'font-bold',
+                  textAlign: 'text-center',
+                  color: '#432818',
+                  marginBottom: 8
+                }
+              },
+              {
+                type: 'text-inline',
+                properties: {
+                  content: 'Escolha até 3 características que mais te definem',
+                  fontSize: 'text-base',
+                  textAlign: 'text-center',
+                  color: '#6B7280',
+                  marginBottom: 24
+                }
+              },
+              {
+                type: 'options-grid',
+                properties: {
+                  questionId: 'q2',
+                  options: [
+                    {
+                      id: '2a',
+                      text: 'Autêntica e verdadeira',
+                      styleCategory: 'Natural',
+                      points: 1
+                    },
+                    {
+                      id: '2b',
+                      text: 'Elegante e sofisticada',
+                      styleCategory: 'Elegante',
+                      points: 1
+                    }
+                  ],
+                  columns: 2,
+                  showImages: false,
+                  multipleSelection: true,
+                  maxSelections: 3,
+                  minSelections: 1
+                }
+              }
+            ]
+          },
+          // Q3-Q10: Templates similares com progresso crescente
+          ...Array.from({ length: 8 }, (_, i) => ({
+            id: `q${i + 3}`,
+            title: `QUESTÃO ${i + 3}`,
+            blocks: [
+              {
+                type: 'quiz-intro-header',
+                properties: {
+                  logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+                  logoAlt: 'Logo Gisele Galvão',
+                  logoWidth: 96,
+                  logoHeight: 96,
+                  progressValue: 25 + (i * 5),
+                  progressMax: 100,
+                  showBackButton: true
+                }
+              },
+              {
+                type: 'heading-inline',
+                properties: {
+                  content: `QUESTÃO ${i + 3}`,
+                  level: 'h2',
+                  fontSize: 'text-2xl',
+                  fontWeight: 'font-bold',
+                  textAlign: 'text-center',
+                  color: '#432818',
+                  marginBottom: 8
+                }
+              },
+              {
+                type: 'options-grid',
+                properties: {
+                  questionId: `q${i + 3}`,
+                  options: [
+                    { id: `${i + 3}a`, text: 'Opção A', points: 1 },
+                    { id: `${i + 3}b`, text: 'Opção B', points: 1 }
+                  ],
+                  columns: 2,
+                  maxSelections: 3
+                }
+              }
+            ]
+          }))
+        ];
+        
         console.log(`📦 [DEBUG] Total de templates disponíveis: ${questionTemplates.length}`);
-        console.log(`📦 [DEBUG] Templates array:`, questionTemplates.map(t => ({ id: t.id, title: t.title, blocksCount: t.blocks?.length })));
         
         const questionTemplate = questionTemplates[questionIndex];
         console.log(`🔍 [DEBUG] Template da questão ${questionIndex + 1}:`, questionTemplate ? 'ENCONTRADO' : 'NÃO ENCONTRADO');
-        console.log(`🔍 [DEBUG] questionTemplate completo:`, questionTemplate);
-        
-        // 🚨 DEBUGGING APRIMORADO: Verificar estrutura do template
-        if (questionTemplate) {
-          console.log(`✅ [DEBUG] Template existe:`, {
-            id: questionTemplate.id,
-            title: questionTemplate.title,
-            hasBlocks: !!questionTemplate.blocks,
-            blocksLength: questionTemplate.blocks?.length || 0,
-            blocksTypes: questionTemplate.blocks?.map(b => b.type) || []
-          });
-        }
         
         if (questionTemplate && questionTemplate.blocks && questionTemplate.blocks.length > 0) {
           console.log(`📝 Carregando questão ${questionIndex + 1}:`, questionTemplate.title);
           console.log(`🧱 [DEBUG] Número de blocos no template: ${questionTemplate.blocks.length}`);
-          console.log(`🧱 [DEBUG] Blocos do template:`, questionTemplate.blocks.map(b => ({ type: b.type, id: b.id })));
           defaultBlocks = questionTemplate.blocks;
         } else {
           console.error(`❌ Template da questão ${questionIndex + 1} não encontrado ou sem blocos`);
-          console.log(`🔴 [DEBUG] Detalhes do erro:`, {
-            questionIndex,
-            arrayLength: questionTemplates.length,
-            templateExists: !!questionTemplate,
-            hasBlocks: questionTemplate?.blocks ? true : false,
-            blocksLength: questionTemplate?.blocks?.length || 0
-          });
-          // Fallback para template genérico
-          const currentProgress = 5 + (questionIndex + 1) * 5;
           
+          // Fallback para template genérico
           defaultBlocks = [
             {
               type: 'quiz-intro-header',
@@ -1448,7 +1605,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
             {
               type: 'heading-inline',
               properties: {
-                content: `Questão ${questionIndex + 1} - Erro ao carregar`,
+                content: `Questão ${questionIndex + 1}`,
                 level: 'h2',
                 fontSize: 'text-2xl',
                 fontWeight: 'font-bold',
@@ -1460,7 +1617,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
             {
               type: 'text-inline',
               properties: {
-                content: 'Template não encontrado',
+                content: 'Template em desenvolvimento',
                 fontSize: 'text-sm',
                 textAlign: 'text-center',
                 color: '#6B7280',
