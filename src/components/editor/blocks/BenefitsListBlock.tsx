@@ -34,7 +34,7 @@ interface BenefitsListBlockProps extends BlockComponentProps {
   block: {
     id: string;
     type: 'benefits-list';
-    properties: {
+    properties?: {
       title?: string;
       subtitle?: string;
       benefits?: BenefitItem[];
