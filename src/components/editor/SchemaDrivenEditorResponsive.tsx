@@ -9,6 +9,7 @@ import { cn } from '../../lib/utils';
 import { useEditor } from '../../hooks/useEditor';
 import { UniversalBlockRenderer } from './blocks/UniversalBlockRenderer';
 import type { BlockData } from '../../types/blocks';
+import { EditorBlock } from '../../types/editor'; // 🎯 Importar tipo EditorBlock
 import { normalizeBlock } from '../../utils/blockTypeMapping';
 import { DynamicPropertiesPanel } from './panels/DynamicPropertiesPanel';
 import { getStepById } from './steps'; // 🎯 NOVA ARQUITETURA LIMPA
@@ -2018,12 +2019,14 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                     ) : (
                       <div className="space-y-4">
                         {sortedBlocks.map((block) => {
-                          // Para blocos do funil, usar properties diretamente
-                          // Para blocos do editor antigo, converter content para properties
-                          const blockData: BlockData = {
+                          // Converter EditorBlock para o formato esperado pelo UniversalBlockRenderer
+                          const editorBlock: EditorBlock = {
                             id: block.id,
                             type: block.type,
-                            properties: block.properties || { ...block.content || {}, order: block.order || 0 }
+                            content: block.content || {},
+                            order: block.order || 0,
+                            stepId: block.stepId,
+                            settings: block.settings
                           };
 
                           return (
@@ -2036,14 +2039,12 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                               )}
                             >
                               <UniversalBlockRenderer
-                                block={blockData}
+                                block={editorBlock}
                                 isSelected={selectedBlockId === block.id}
-                                onClick={() => handleBlockClick(block.id)}
-                                onSaveInline={handleSaveInline}
-                                disabled={isPreviewing}
-                                stepNumber={currentStepNumber}
-                                quizSessionId={currentQuizSessionId}
-                                userName={currentUserName}
+                                onSelect={() => handleBlockClick(block.id)}
+                                onUpdate={(updates) => updateBlock(block.id, updates)}
+                                onDelete={() => deleteBlock(block.id)}
+                                isPreview={isPreviewing}
                               />
                             </div>
                           );
