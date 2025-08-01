@@ -40,6 +40,7 @@ export interface EditorBlock extends Block {
   type: BlockType;
   content: EditableContent;
   order: number;
+  stepId?: string; // 🎯 Adicionar stepId para filtrar blocos por etapa
   settings?: Record<string, any>;
 }
 

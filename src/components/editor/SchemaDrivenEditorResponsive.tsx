@@ -413,7 +413,19 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const handleAddBlock = useCallback((blockType: string) => {
     const newBlockId = addBlock(blockType as any);
     setSelectedBlockId(newBlockId);
-  }, [addBlock]);
+    
+    // 🎯 CORREÇÃO: Associar bloco à etapa atual
+    if (newBlockId) {
+      setTimeout(() => {
+        const blockToUpdate = blocks.find(b => b.id === newBlockId);
+        if (blockToUpdate) {
+          blockToUpdate.stepId = selectedStepId;
+          updateBlock(newBlockId, { ...blockToUpdate.properties, stepId: selectedStepId });
+          console.log(`✅ Bloco ${blockType} adicionado à etapa ${selectedStepId}`);
+        }
+      }, 50);
+    }
+  }, [addBlock, selectedStepId, blocks, updateBlock]);
 
   // Função para adicionar múltiplos blocos a uma etapa específica
   const handleAddBlocksToStep = useCallback((stepId: string, blocksToAdd: any[]) => {
@@ -423,11 +435,21 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       setTimeout(() => {
         try {
           const newBlockId = addBlock(block.type as any);
-          if (newBlockId && block.properties) {
-            // Atualizar propriedades do bloco
-            updateBlock(newBlockId, block.properties);
+          if (newBlockId) {
+            // 🎯 CORREÇÃO: Adicionar stepId ao bloco para filtrar por etapa
+            const blockProperties = {
+              ...block.properties,
+              stepId: stepId // Associar bloco à etapa
+            };
+            updateBlock(newBlockId, blockProperties);
+            
+            // Também atualizar o bloco diretamente para ter stepId
+            const blockToUpdate = blocks.find(b => b.id === newBlockId);
+            if (blockToUpdate) {
+              blockToUpdate.stepId = stepId;
+            }
           }
-          console.log(`✅ Bloco ${index + 1}/${blocksToAdd.length} adicionado: ${block.type}`);
+          console.log(`✅ Bloco ${index + 1}/${blocksToAdd.length} adicionado à etapa ${stepId}: ${block.type}`);
         } catch (error) {
           console.error(`❌ Erro ao adicionar bloco ${block.type}:`, error);
         }
@@ -440,7 +462,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         ? { ...step, blocksCount: step.blocksCount + blocksToAdd.length }
         : step
     ));
-  }, [addBlock, updateBlock]);
+  }, [addBlock, updateBlock, blocks]);
 
   // Função para carregar blocos específicos de cada etapa com templates detalhados
   const loadStepSpecificBlocks = useCallback((stepId: string, stepType: string) => {
@@ -1579,9 +1601,22 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     }
   }, [isPreviewing]);
 
+  // 🎯 CORREÇÃO: Filtrar blocos apenas da etapa atual
   const sortedBlocks = useMemo(() => {
-    return [...blocks].sort((a, b) => (a.order || 0) - (b.order || 0));
-  }, [blocks]);
+    // Filtrar blocos que pertencem à etapa atual
+    const stepBlocks = blocks.filter(block => {
+      // Se o bloco tem stepId, verificar se corresponde à etapa atual
+      if (block.stepId) {
+        return block.stepId === selectedStepId;
+      }
+      // Se não tem stepId, verificar se foi adicionado recentemente e assumir etapa atual
+      // (para compatibilidade com blocos antigos)
+      return !block.stepId; // Mostrar blocos sem stepId apenas quando não há outros blocos
+    });
+    
+    console.log(`🧱 Blocos da etapa ${selectedStepId}:`, stepBlocks.length);
+    return [...stepBlocks].sort((a, b) => (a.order || 0) - (b.order || 0));
+  }, [blocks, selectedStepId]);
 
   // Filtrar blocos por categoria e termo de busca
   const filteredBlocks = useMemo(() => {
@@ -1805,12 +1840,14 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                   ) : (
                     <div className="space-y-4">
                       {sortedBlocks.map((block) => {
-                        // Para blocos do funil, usar properties diretamente
-                        // Para blocos do editor antigo, converter content para properties  
-                        const blockData: BlockData = {
+                        // Converter EditorBlock para o formato esperado pelo UniversalBlockRenderer
+                        const editorBlock: EditorBlock = {
                           id: block.id,
                           type: block.type,
-                          properties: block.properties || { ...block.content || {}, order: block.order || 0 }
+                          content: block.content || {},
+                          order: block.order || 0,
+                          stepId: block.stepId,
+                          settings: block.settings
                         };
 
                         return (
@@ -1825,10 +1862,12 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                             )}
                           >
                             <UniversalBlockRenderer
-                              block={blockData}
-                              stepNumber={currentStepNumber}
-                              quizSessionId={currentQuizSessionId}
-                              userName={currentUserName}
+                              block={editorBlock}
+                              isSelected={selectedBlockId === block.id}
+                              onSelect={() => setSelectedBlockId(block.id)}
+                              onUpdate={(updates) => updateBlock(block.id, updates)}
+                              onDelete={() => deleteBlock(block.id)}
+                              isPreview={isPreviewing}
                             />
                           </div>
                         );
