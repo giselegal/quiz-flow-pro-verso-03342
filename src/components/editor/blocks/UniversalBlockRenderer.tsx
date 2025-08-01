@@ -1,145 +1,167 @@
 
 import React from 'react';
-import { EditorBlock } from '@/types/editor';
+import { FunnelBlock } from '@/types/funnel';
 
-// Import existing inline components
-import TextInlineBlock from './inline/TextInlineBlock';
-import BadgeInlineBlock from './inline/BadgeInlineBlock';
-import ProgressInlineBlock from './inline/ProgressInlineBlock';
-import ImageDisplayInlineBlock from './inline/ImageDisplayInlineBlock';
-import PricingCardInlineBlock from './inline/PricingCardInlineBlock';
-import TestimonialCardInlineBlock from './inline/TestimonialCardInlineBlock';
-import ResultHeaderInlineBlock from './inline/ResultHeaderInlineBlock';
-import StepHeaderInlineBlock from './inline/StepHeaderInlineBlock';
-import StatInlineBlock from './inline/StatInlineBlock';
-import LoadingAnimationBlock from './inline/LoadingAnimationBlock';
-import CountdownInlineBlock from './inline/CountdownInlineBlock';
-import StyleCardInlineBlock from './inline/StyleCardInlineBlock';
-import ResultCardInlineBlock from './inline/ResultCardInlineBlock';
-
-// Import other block components
-import HeadingInlineBlock from './HeadingInlineBlock';
-import ButtonInlineBlock from './ButtonInlineBlock';
-import SpacerBlock from './SpacerBlock';
-import FormInputBlock from './FormInputBlock';
-import OptionsGridBlock from './OptionsGridBlock';
-import QuizQuestionBlock from './QuizQuestionBlock';
-import QuizProgressBlock from './QuizProgressBlock';
-import VerticalCanvasHeaderBlock from './VerticalCanvasHeaderBlock';
-
-// Import quiz header component
-import QuizIntroHeaderBlock from '../quiz/QuizIntroHeaderBlock';
-
-export interface BlockRendererProps {
-  block: EditorBlock;
-  isSelected?: boolean;
-  onClick?: () => void;
-  onUpdate?: (content: any) => void;
-  className?: string;
+interface UniversalBlockRendererProps {
+  block: FunnelBlock;
+  isSelected: boolean;
+  onSelect: () => void;
+  onUpdate: (updates: Partial<FunnelBlock>) => void;
+  onDelete: () => void;
+  isPreview?: boolean;
 }
 
-// Fallback component for unknown block types
-const FallbackBlock: React.FC<BlockRendererProps> = ({ block, onClick, className }) => (
-  <div 
-    className={`p-4 border-2 border-dashed border-yellow-400 bg-yellow-50 rounded-lg cursor-pointer ${className || ''}`}
-    onClick={onClick}
-  >
-    <div className="text-sm text-yellow-800">
-      <strong>Componente não encontrado</strong>
-      <br />
-      Tipo: {block.type}
-    </div>
-  </div>
-);
+export const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
+  block,
+  isSelected,
+  onSelect,
+  onUpdate,
+  onDelete,
+  isPreview = false
+}) => {
+  // Basic fallback renderer for different block types
+  const renderBlock = () => {
+    switch (block.type) {
+      case 'quiz-intro-header':
+        return (
+          <div className="bg-white border rounded-lg p-4">
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-lg font-bold text-[#432818]">Quiz Header</div>
+              <div className="text-sm text-gray-500">Progresso: 0%</div>
+            </div>
+            {block.properties?.title && (
+              <h1 className="text-2xl font-bold text-[#432818] mb-2">
+                {block.properties.title}
+              </h1>
+            )}
+            {block.properties?.subtitle && (
+              <p className="text-gray-600">{block.properties.subtitle}</p>
+            )}
+          </div>
+        );
 
-// Basic text block for simple fallbacks
-const BasicTextBlock: React.FC<BlockRendererProps> = ({ block, onClick, className }) => (
-  <div 
-    className={`p-4 cursor-pointer ${className || ''}`}
-    onClick={onClick}
-  >
-    <p className="text-gray-800">
-      {block.content?.text || block.content?.title || 'Texto do bloco'}
-    </p>
-  </div>
-);
+      case 'text-inline':
+      case 'text':
+        return (
+          <div className="bg-white border rounded-lg p-4">
+            <p className="text-gray-700">
+              {block.properties?.text || 'Texto do componente'}
+            </p>
+          </div>
+        );
 
-export const UniversalBlockRenderer: React.FC<{
-  type: string;
-  block: EditorBlock;
-  onClick?: () => void;
-  className?: string;
-}> = ({ type, block, onClick, className }) => {
-  const commonProps = {
-    block,
-    onClick,
-    className,
-    isSelected: false,
-    onUpdate: () => {}
-  };
+      case 'heading-inline':
+      case 'heading':
+        return (
+          <div className="bg-white border rounded-lg p-4">
+            <h2 className="text-xl font-bold text-[#432818]">
+              {block.properties?.text || 'Título do componente'}
+            </h2>
+          </div>
+        );
 
-  // Component mapping with fallbacks
-  const componentMap: Record<string, () => React.ReactElement> = {
-    // Basic components
-    'heading': () => <HeadingInlineBlock {...commonProps} />,
-    'text': () => <BasicTextBlock {...commonProps} />,
-    'button': () => <ButtonInlineBlock {...commonProps} />,
-    'spacer': () => <SpacerBlock {...commonProps} />,
-    'form-input': () => <FormInputBlock {...commonProps} />,
-    
-    // Quiz components
-    'quiz-intro-header': () => <QuizIntroHeaderBlock {...commonProps} />,
-    'quiz-question': () => <QuizQuestionBlock {...commonProps} />,
-    'quiz-progress': () => <QuizProgressBlock {...commonProps} />,
-    'options-grid': () => <OptionsGridBlock {...commonProps} />,
-    'vertical-canvas-header': () => <VerticalCanvasHeaderBlock {...commonProps} />,
-    
-    // Inline components with safe checks
-    'text-inline': () => <BasicTextBlock {...commonProps} />,
-    'heading-inline': () => <HeadingInlineBlock {...commonProps} />,
-    'button-inline': () => <ButtonInlineBlock {...commonProps} />,
-    'badge-inline': () => <BasicTextBlock {...commonProps} />,
-    'progress-inline': () => <FallbackBlock {...commonProps} />,
-    'image-display-inline': () => <FallbackBlock {...commonProps} />,
-    'style-card-inline': () => <FallbackBlock {...commonProps} />,
-    'countdown-inline': () => <BasicTextBlock {...commonProps} />,
-    'stat-inline': () => <BasicTextBlock {...commonProps} />,
-    'pricing-card-inline': () => <FallbackBlock {...commonProps} />,
-    'testimonial-card-inline': () => <FallbackBlock {...commonProps} />,
-    'result-header-inline': () => <FallbackBlock {...commonProps} />,
-    'step-header-inline': () => <BasicTextBlock {...commonProps} />,
-    'result-card-inline': () => <FallbackBlock {...commonProps} />,
-    'loading-animation': () => <FallbackBlock {...commonProps} />,
-  };
+      case 'button-inline':
+      case 'button':
+        return (
+          <div className="bg-white border rounded-lg p-4">
+            <button className="bg-[#D4C4A0] hover:bg-[#B89B7A] text-[#432818] font-semibold py-2 px-6 rounded-lg transition-colors">
+              {block.properties?.text || 'Botão'}
+            </button>
+          </div>
+        );
 
-  try {
-    const ComponentRenderer = componentMap[type];
-    
-    if (ComponentRenderer) {
-      return ComponentRenderer();
+      case 'image-display-inline':
+      case 'image':
+        return (
+          <div className="bg-white border rounded-lg p-4">
+            {block.properties?.imageUrl ? (
+              <img 
+                src={block.properties.imageUrl} 
+                alt={block.properties?.imageAlt || 'Imagem'} 
+                className="max-w-full h-auto rounded-md"
+              />
+            ) : (
+              <div className="w-full h-48 bg-gray-100 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center">
+                <div className="text-center text-gray-400">
+                  <div className="text-4xl mb-2">🖼️</div>
+                  <p>Imagem não definida</p>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+
+      case 'form-input':
+        return (
+          <div className="bg-white border rounded-lg p-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              {block.properties?.label || 'Campo de entrada'}
+            </label>
+            <input
+              type={block.properties?.inputType || 'text'}
+              placeholder={block.properties?.placeholder || 'Digite aqui...'}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#B89B7A]"
+            />
+          </div>
+        );
+
+      case 'spacer':
+        return (
+          <div className="bg-white border rounded-lg p-4">
+            <div 
+              className="w-full bg-gray-100 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center"
+              style={{ height: block.properties?.height || 40 }}
+            >
+              <span className="text-gray-400 text-sm">Espaçador</span>
+            </div>
+          </div>
+        );
+
+      case 'options-grid':
+        return (
+          <div className="bg-white border rounded-lg p-4">
+            <h3 className="text-lg font-semibold mb-4 text-[#432818]">
+              {block.properties?.question || 'Pergunta do Quiz'}
+            </h3>
+            <div className="grid grid-cols-2 gap-3">
+              {(block.properties?.options || ['Opção 1', 'Opção 2', 'Opção 3', 'Opção 4']).map((option: string, index: number) => (
+                <button
+                  key={index}
+                  className="p-3 border-2 border-[#D4C4A0] rounded-lg hover:bg-[#F5F2E9] transition-colors text-left"
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+
+      default:
+        return (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <div className="flex items-center mb-2">
+              <div className="text-yellow-600 text-sm font-medium">
+                Componente: {block.type}
+              </div>
+            </div>
+            <div className="text-xs text-gray-500">
+              Renderer não implementado para este tipo de bloco
+            </div>
+          </div>
+        );
     }
-    
-    // Fallback for unknown types
-    return <FallbackBlock {...commonProps} />;
-    
-  } catch (error) {
-    console.error(`Error rendering block type "${type}":`, error);
-    return <FallbackBlock {...commonProps} />;
-  }
-};
+  };
 
-// Export function to check if a block type is registered
-export const isBlockTypeRegistered = (type: string): boolean => {
-  const registeredTypes = [
-    'heading', 'text', 'button', 'spacer', 'form-input',
-    'quiz-intro-header', 'quiz-question', 'quiz-progress', 'options-grid', 'vertical-canvas-header',
-    'text-inline', 'heading-inline', 'button-inline', 'badge-inline', 'progress-inline',
-    'image-display-inline', 'style-card-inline', 'countdown-inline', 'stat-inline',
-    'pricing-card-inline', 'testimonial-card-inline', 'result-header-inline', 'step-header-inline',
-    'result-card-inline', 'loading-animation'
-  ];
-  
-  return registeredTypes.includes(type);
+  return (
+    <div 
+      className={`
+        relative transition-all duration-200
+        ${isSelected ? 'ring-2 ring-blue-500' : ''}
+        ${!isPreview ? 'cursor-pointer hover:shadow-md' : ''}
+      `}
+      onClick={!isPreview ? onSelect : undefined}
+    >
+      {renderBlock()}
+    </div>
+  );
 };
-
-export default UniversalBlockRenderer;
