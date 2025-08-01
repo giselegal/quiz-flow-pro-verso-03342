@@ -17,31 +17,57 @@ export interface BlockRendererProps {
 export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
   }
   // Retorno padrão usando renderBlock
-  return (
-    <div
-      onClick={onSelect}
-      className={
-        `relative cursor-pointer transition-all duration-200
-        ${isSelected ? 'ring-2 ring-blue-500 ring-opacity-50 bg-blue-50' : 'hover:bg-gray-50'}
-        ${isPreview ? '' : 'border border-transparent hover:border-gray-200 rounded-lg p-2'}`
-      }
-    >
-      {renderBlock()}
-      {!isPreview && isSelected && (
-        <div className="absolute top-2 right-2">
-          <Button
-            size="sm"
-            variant="destructive"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete();
-            }}
-            className="h-6 w-6 p-0"
-          >
-            ×
-          </Button>
-        </div>
-      )}
-    </div>
+  // Atualiza propriedades do bloco
+  const handleContentUpdate = (key: string, value: any) => {
+    onUpdate({ content: { ...block.content, [key]: value } });
+  };
+  const toPascal = (s: string) =>
+    s.split('-').map(part => part.charAt(0).toUpperCase() + part.slice(1)).join('');
+  const componentName = `${toPascal(block.type)}Block`;
+  const Blocks = require('./blocks');
+  const Dynamic = Blocks[componentName] as React.FC<any>;
+  if (Dynamic) {
+    return (
+      <div onClick={onSelect} className={`relative cursor-pointer transition-all duration-200 ${isSelected ? 'ring-2 ring-blue-500 ring-opacity-50 bg-blue-50' : 'hover:bg-gray-50'} ${isPreview ? '' : 'border border-transparent hover:border-gray-200 rounded-lg p-2'}`}>
+        <Dynamic block={block} isSelected={isSelected} onClick={onSelect} onPropertyChange={handlePropertyChange} />
+        {!isPreview && isSelected && (
+          <button onClick={e => { e.stopPropagation(); onDelete(); }} className="absolute top-2 right-2 text-red-500">×</button>
+        )}
+      </div>
+    );
+  }
+  // Envolve renderBlock() no container clicável
+  // Renderiza blocos específicos ou padrão
+  const renderBlock = () => {
+    switch (block.type) {
+      case 'quiz-question-interactive':
+        return (
+          <QuizQuestionInteractiveBlock
+            block={block}
+            isSelected={isSelected}
+            onClick={onSelect}
+            onPropertyChange={(key, value) => handleContentUpdate(key, value)}
+          />
+        );
+      case 'quiz-result-calculated':
+        return (
+          <QuizResultCalculatedBlock
+            block={block}
+            isSelected={isSelected}
+            onClick={onSelect}
+            onPropertyChange={(key, value) => handleContentUpdate(key, value)}
+          />
+        );
+      case 'progress-bar-modern':
+        return (
+          <ProgressBarModernBlock
+            block={block}
+            isSelected={isSelected}
+            onClick={onSelect}
+            onPropertyChange={(key, value) => handleContentUpdate(key, value)}
+          />
+        );
+    }
+  };
   );
 export default UniversalBlockRenderer;
