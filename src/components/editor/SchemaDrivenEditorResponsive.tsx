@@ -1,5 +1,5 @@
-import React from 'react';
-import { EditorBlock } from '@/types/editor';
+import React from 'react';import React from 'react';
+export default SchemaDrivenEditorResponsive;};    );        </div>            <UniversalBlockRenderer />            <h1>Schema Driven Editor</h1>        <div>    return (const SchemaDrivenEditorResponsive = () => {import { UniversalBlockRenderer } from './UniversalBlockRenderer';import { EditorBlock } from '@/types/editor';
 
 // Import existing inline components
 import TextInlineBlock from './inline/TextInlineBlock';
@@ -141,5 +141,4 @@ export const isBlockTypeRegistered = (type: string): boolean => {
   return registeredTypes.includes(type);
 };
 
-export default UniversalBlockRenderer;
 export default UniversalBlockRenderer;
