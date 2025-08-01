@@ -1,6 +1,6 @@
 
-import React, { useState, useCallback, useEffect } from 'react';
-import { Block, EditorConfig, EditableContent, BlockType, EditorBlock } from '../types/editor';
+import React from 'react';
+import { EditorConfig, EditableContent, BlockType, EditorBlock } from '../types/editor';
 import { toast } from '../components/ui/use-toast';
 import { useHistory } from './useHistory';
 import { getDefaultContentForType } from '../utils/editorDefaults';
@@ -40,13 +40,13 @@ export const useEditor = () => {
   // Setup history for undo/redo
   const { past, present, future, saveState, undo, redo } = useHistory<EditorConfig>(config);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (present && present !== config) {
       setConfig(present);
     }
   }, [present]);
 
-  const addBlock = useCallback((type: BlockType) => {
+  const addBlock = React.useCallback((type: BlockType) => {
     const newBlock: EditorBlock = {
       id: generateId(),
       type,

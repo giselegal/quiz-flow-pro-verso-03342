@@ -22,7 +22,7 @@ export { InlineEditableText } from './InlineEditableText';
 // Blocos específicos do Quiz (confirmados como funcionais)
 export { default as QuizStartPageBlock } from './QuizStartPageBlock';
 export { default as QuizQuestionBlock } from './QuizQuestionBlock';
-export { default as ResultPageBlock } from './ResultPageBlock';
+// export { default as ResultPageBlock } from './ResultPageBlock'; // Arquivo não encontrado
 export { default as QuizOfferPageBlock } from './QuizOfferPageBlock';
 export { default as QuestionMultipleBlock } from './QuestionMultipleBlock';
 export { default as StrategicQuestionBlock } from './StrategicQuestionBlock';
