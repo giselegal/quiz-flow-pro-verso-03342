@@ -365,8 +365,8 @@ export const SupabaseTest: React.FC = () => {
     <div className="container py-6 space-y-6 max-w-6xl">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Diagnóstico de Integração</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="text-3xl font-bold tracking-tight text-[#432818]">Diagnóstico de Integração</h1>
+          <p className="text-[#6B4F43] mt-1">
             Verifique a integração dos funis com o Supabase
           </p>
         </div>
@@ -376,6 +376,7 @@ export const SupabaseTest: React.FC = () => {
             variant="outline"
             size="sm"
             disabled={isRunningTests}
+            className="border-[#B89B7A] text-[#6B4F43] hover:bg-[#FDF6F0] hover:text-[#432818]"
           >
             <RefreshCw className="h-4 w-4 mr-2" />
             Atualizar dados
@@ -384,6 +385,7 @@ export const SupabaseTest: React.FC = () => {
             onClick={runAllTests} 
             disabled={isRunningTests} 
             size="sm"
+            className="bg-[#aa6b5d] hover:bg-[#965c50] text-white"
           >
             {isRunningTests ? (
               <>
@@ -403,37 +405,37 @@ export const SupabaseTest: React.FC = () => {
       {isRunningTests && (
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <span className="text-sm font-medium">Progresso dos testes</span>
-            <span className="text-sm text-muted-foreground">{progress}%</span>
+            <span className="text-sm font-medium text-[#432818]">Progresso dos testes</span>
+            <span className="text-sm text-[#6B4F43]">{progress}%</span>
           </div>
           <Progress value={progress} className="h-2" />
         </div>
       )}
 
       <Tabs defaultValue="tests" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="tests">Status dos Testes</TabsTrigger>
-          <TabsTrigger value="supabase">Dados no Supabase</TabsTrigger>
-          <TabsTrigger value="local">Estado Local</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3 bg-[#F4E9DD]">
+          <TabsTrigger value="tests" className="data-[state=active]:bg-white data-[state=active]:text-[#432818] text-[#6B4F43]">Status dos Testes</TabsTrigger>
+          <TabsTrigger value="supabase" className="data-[state=active]:bg-white data-[state=active]:text-[#432818] text-[#6B4F43]">Dados no Supabase</TabsTrigger>
+          <TabsTrigger value="local" className="data-[state=active]:bg-white data-[state=active]:text-[#432818] text-[#6B4F43]">Estado Local</TabsTrigger>
         </TabsList>
         
         <TabsContent value="tests" className="space-y-4 pt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card>
-              <CardHeader className="pb-3">
+            <Card className="border-[#B89B7A]">
+              <CardHeader className="pb-3 bg-[#FFF7ED] rounded-t-md">
                 <div className="flex items-center gap-2">
-                  <Database className="h-5 w-5 text-primary" />
-                  <CardTitle className="text-lg">Conexão</CardTitle>
+                  <Database className="h-5 w-5 text-[#aa6b5d]" />
+                  <CardTitle className="text-lg text-[#432818]">Conexão</CardTitle>
                 </div>
-                <CardDescription>
+                <CardDescription className="text-[#6B4F43]">
                   Teste de conectividade com Supabase
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-4">
                 <div className="flex items-center gap-2">
                   {getTestStatus('connection')}
                   <div className="space-y-1">
-                    <p className="font-medium text-sm">
+                    <p className="font-medium text-sm text-[#432818]">
                       {testResults.connection 
                         ? testResults.connection.success 
                           ? 'Conectado com sucesso' 
@@ -619,7 +621,10 @@ export const SupabaseTest: React.FC = () => {
                           <>
                             <td className="px-4 py-2 text-sm">{funnel.description || '-'}</td>
                             <td className="px-4 py-2 text-sm">
-                              <Badge variant={funnel.is_published ? "success" : "secondary"}>
+                              <Badge 
+                                variant={funnel.is_published ? "default" : "secondary"}
+                                className={funnel.is_published ? "bg-[#aa6b5d] hover:bg-[#965c50]" : "bg-[#F4E9DD] text-[#6B4F43]"}
+                              >
                                 {funnel.is_published ? 'Sim' : 'Não'}
                               </Badge>
                             </td>
@@ -705,7 +710,10 @@ export const SupabaseTest: React.FC = () => {
                             <td className="px-4 py-2 text-sm whitespace-nowrap truncate max-w-[100px]">{funnel.id}</td>
                             <td className="px-4 py-2 text-sm">{funnel.name}</td>
                             <td className="px-4 py-2 text-sm">
-                              <Badge variant={funnel.isPublished ? "success" : "secondary"}>
+                              <Badge 
+                                variant={funnel.isPublished ? "default" : "secondary"}
+                                className={funnel.isPublished ? "bg-[#aa6b5d] hover:bg-[#965c50]" : "bg-[#F4E9DD] text-[#6B4F43]"}
+                              >
                                 {funnel.isPublished ? 'Sim' : 'Não'}
                               </Badge>
                             </td>
