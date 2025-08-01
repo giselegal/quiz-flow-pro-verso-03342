@@ -914,8 +914,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   }, [handleAddBlock]);
 
   return (
-    // <DndProvider backend={HTML5Backend}>
-      <div className={cn('h-full flex flex-col bg-gray-50', className)}>
+    <div className={cn('h-full flex flex-col bg-gray-50', className)}>
         {/* Loading Indicator */}
         {isLoadingFunnel && (
           <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center">
@@ -1336,7 +1335,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           />
         </div>
       </div>
-    </DndProvider>
   );
 };
 
