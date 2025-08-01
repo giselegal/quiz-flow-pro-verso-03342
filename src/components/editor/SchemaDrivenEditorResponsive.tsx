@@ -1248,20 +1248,10 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     }
   }, [steps, getStepTemplate, addBlock, updateBlock, setSteps]);
 
-  // Template loading handler para 21 etapas
-          {
-            type: 'quiz-intro-header',
-            properties: {
-              logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-              logoAlt: 'Logo Gisele Galvão',
-              logoWidth: 120,
-              logoHeight: 120,
-              progressValue: 0,
-              progressMax: 100,
-              showBackButton: false,
-              showProgress: false
-            }
-          },
+  // Component selection handler
+  const handleComponentSelect = useCallback((componentId: string) => {
+    handleAddBlock(componentId);
+  }, [handleAddBlock]);
           {
             type: 'decorative-bar-inline',
             properties: {
