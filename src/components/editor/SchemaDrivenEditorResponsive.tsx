@@ -24,18 +24,27 @@ const getStepTemplate = (stepId: string) => {
   try {
     console.log(`� Obtendo template da etapa "${stepId}" via stepTemplateService...`);
     
+    // Converter stepId para número (etapa-1 → 1, ou "1" → 1)
+    const stepNumber = typeof stepId === 'string' 
+      ? parseInt(stepId.replace(/\D/g, '')) // Remove tudo que não é dígito
+      : stepId;
+    
+    console.log(`🔧 Convertido "${stepId}" para número: ${stepNumber}`);
+    
     // Usar o novo serviço que acessa os templates individuais
-    const template = stepTemplateService.getStepTemplate(stepId);
+    const template = stepTemplateService.getStepTemplate(stepNumber);
     
     if (template && template.length > 0) {
-      console.log(`✅ Template encontrado para etapa ${stepId}: ${template.length} blocos`);
+      console.log(`✅ Template encontrado para etapa ${stepNumber}: ${template.length} blocos`);
+      console.log(`🧱 Tipos de blocos:`, template.map(b => b.type));
+      
       return template.map((block: any) => ({
         type: block.type,
         properties: block.properties
       }));
     }
     
-    console.warn(`⚠️ Nenhum template encontrado para etapa ${stepId}`);
+    console.warn(`⚠️ Nenhum template encontrado para etapa ${stepNumber}`);
     return [];
   } catch (error) {
     console.error('❌ Erro ao obter template da etapa:', error);
