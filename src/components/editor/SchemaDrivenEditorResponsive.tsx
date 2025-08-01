@@ -2,7 +2,7 @@ import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../ui/resizable';
 import { ScrollArea } from '../ui/scroll-area';
 import { Button } from '../ui/button';
-import { Plus, Eye, EyeOff, Download, Upload, Trash2, Monitor, Tablet, Smartphone, PlayCircle, ExternalLink } from 'lucide-react';
+import { Plus, Eye, EyeOff, Download, Trash2, Monitor, Tablet, Smartphone, PlayCircle, ExternalLink } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { useEditor } from '../../hooks/useEditor';
 import { UniversalBlockRenderer } from './blocks/UniversalBlockRenderer';
@@ -323,436 +323,436 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     setSelectedBlockId(newBlockId);
   }, [addBlock]);
 
-
-  // Função para carregar template específico de cada questão
-  const loadQuestionTemplate = useCallback((stepId: string, questionNumber: number) => {
-    console.log(`🎯 Carregando template da questão ${questionNumber} para ${stepId}`);
+  // Template loading function
+  const handleTemplateLoad = useCallback(() => {
+    console.log('🔄 Carregando template básico...');
+    const basicTemplate = [
+      { type: 'heading-inline', properties: { content: 'Título de Exemplo', level: 'h2' } },
+      { type: 'text-inline', properties: { content: 'Texto de exemplo para demonstração' } }
+    ];
     
-    // Templates específicos para cada questão das 21 etapas
-    const questionTemplates: Record<number, any[]> = {
-      1: [ // Q1: Tipo de Roupa
-        { 
-          type: 'quiz-progress', 
-          properties: { currentStep: 3, totalSteps: 21, progress: 14 } 
-        },
-        { 
-          type: 'quiz-question', 
-          properties: { 
-            questionId: 'q1',
-            title: 'QUAL O SEU TIPO DE ROUPA FAVORITA?',
-            subtitle: 'Selecione até 3 opções que mais combinam com você',
-            multiSelect: 3
-          } 
-        },
-        { 
-          type: 'options-grid', 
-          properties: { 
-            layout: 'grid',
-            columns: 2,
-            showImages: true
-          } 
-        }
-      ],
-      2: [ // Q2: Personalidade
-        { 
-          type: 'quiz-progress', 
-          properties: { currentStep: 4, totalSteps: 21, progress: 19 } 
-        },
-        { 
-          type: 'quiz-question', 
-          properties: { 
-            questionId: 'q2',
-            title: 'RESUMA A SUA PERSONALIDADE:',
-            subtitle: 'Escolha até 3 características que mais te definem',
-            multiSelect: 3
-          } 
-        },
-        { 
-          type: 'options-grid', 
-          properties: { 
-            layout: 'grid',
-            columns: 2,
-            showImages: true
-          } 
-        }
-      ],
-      3: [ // Q3: Visual
-        { 
-          type: 'quiz-progress', 
-          properties: { currentStep: 5, totalSteps: 21, progress: 24 } 
-        },
-        { 
-          type: 'quiz-question', 
-          properties: { 
-            questionId: 'q3',
-            title: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?',
-            subtitle: 'Selecione até 3 opções',
-            multiSelect: 3
-          } 
-        },
-        { 
-          type: 'options-grid', 
-          properties: { 
-            layout: 'grid',
-            columns: 2,
-            showImages: true
-          } 
-        }
-      ],
-      4: [ // Q4: Detalhes
-        { 
-          type: 'quiz-progress', 
-          properties: { currentStep: 6, totalSteps: 21, progress: 29 } 
-        },
-        { 
-          type: 'quiz-question', 
-          properties: { 
-            questionId: 'q4',
-            title: 'QUAIS DETALHES VOCÊ GOSTA?',
-            subtitle: 'Escolha até 3 elementos que mais te atraem',
-            multiSelect: 3
-          } 
-        },
-        { 
-          type: 'options-grid', 
-          properties: { 
-            layout: 'grid',
-            columns: 2,
-            showImages: true
-          } 
-        }
-      ],
-      5: [ // Q5: Estampas
-        { 
-          type: 'quiz-progress', 
-          properties: { currentStep: 7, totalSteps: 21, progress: 33 } 
-        },
-        { 
-          type: 'quiz-question', 
-          properties: { 
-            questionId: 'q5',
-            title: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?',
-            subtitle: 'Selecione até 3 estampas favoritas',
-            multiSelect: 3
-          } 
-        },
-        { 
-          type: 'options-grid', 
-          properties: { 
-            layout: 'grid',
-            columns: 2,
-            showImages: true
-          } 
-        }
-      ],
-      6: [ // Q6: Casacos
-        { 
-          type: 'quiz-progress', 
-          properties: { currentStep: 8, totalSteps: 21, progress: 38 } 
-        },
-        { 
-          type: 'quiz-question', 
-          properties: { 
-            questionId: 'q6',
-            title: 'QUAL CASACO É SEU FAVORITO?',
-            subtitle: 'Escolha até 3 modelos',
-            multiSelect: 3
-          } 
-        },
-        { 
-          type: 'options-grid', 
-          properties: { 
-            layout: 'grid',
-            columns: 2,
-            showImages: true
-          } 
-        }
-      ],
-      7: [ // Q7: Calças
-        { 
-          type: 'quiz-progress', 
-          properties: { currentStep: 9, totalSteps: 21, progress: 43 } 
-        },
-        { 
-          type: 'quiz-question', 
-          properties: { 
-            questionId: 'q7',
-            title: 'QUAL SUA CALÇA FAVORITA?',
-            subtitle: 'Selecione até 3 modelos preferidos',
-            multiSelect: 3
-          } 
-        },
-        { 
-          type: 'options-grid', 
-          properties: { 
-            layout: 'grid',
-            columns: 2,
-            showImages: true
-          } 
-        }
-      ],
-      8: [ // Q8: Sapatos
-        { 
-          type: 'quiz-progress', 
-          properties: { currentStep: 10, totalSteps: 21, progress: 48 } 
-        },
-        { 
-          type: 'quiz-question', 
-          properties: { 
-            questionId: 'q8',
-            title: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?',
-            subtitle: 'Escolha até 3 tipos de sapatos',
-            multiSelect: 3
-          } 
-        },
-        { 
-          type: 'options-grid', 
-          properties: { 
-            layout: 'grid',
-            columns: 2,
-            showImages: true
-          } 
-        }
-      ],
-      9: [ // Q9: Acessórios
-        { 
-          type: 'quiz-progress', 
-          properties: { currentStep: 11, totalSteps: 21, progress: 52 } 
-        },
-        { 
-          type: 'quiz-question', 
-          properties: { 
-            questionId: 'q9',
-            title: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?',
-            subtitle: 'Selecione até 3 tipos de acessórios',
-            multiSelect: 3
-          } 
-        },
-        { 
-          type: 'options-grid', 
-          properties: { 
-            layout: 'grid',
-            columns: 2,
-            showImages: true
-          } 
-        }
-      ],
-      10: [ // Q10: Tecidos/Valorização
-        { 
-          type: 'quiz-progress', 
-          properties: { currentStep: 12, totalSteps: 21, progress: 57 } 
-        },
-        { 
-          type: 'quiz-question', 
-          properties: { 
-            questionId: 'q10',
-            title: 'O QUE MAIS VALORIZAS NOS ACESSÓRIOS?',
-            subtitle: 'Escolha até 3 características importantes',
-            multiSelect: 3
-          } 
-        },
-        { 
-          type: 'options-grid', 
-          properties: { 
-            layout: 'grid',
-            columns: 2,
-            showImages: false
-          } 
-        }
-      ]
-    };
+    basicTemplate.forEach((template, index) => {
+      setTimeout(() => {
+        const newBlockId = addBlock(template.type as any);
+        updateBlock(newBlockId, template.properties);
+      }, index * 100);
+    });
+  }, [addBlock, updateBlock]);
 
-    const template = questionTemplates[questionNumber];
-    if (template) {
-      // Removido handleAddBlocksToStep - função excluída
-      console.log(`✅ Template da questão ${questionNumber} carregado para ${stepId}`);
-    }
-  }, []);
+  // Component selection handler
+  const handleComponentSelect = useCallback((componentId: string) => {
+    handleAddBlock(componentId);
+  }, [handleAddBlock]);
 
-  // Função para carregar templates de questões estratégicas
-  const loadStrategicQuestionTemplate = useCallback((stepId: string, strategicNumber: number) => {
-    console.log(`🎯 Carregando template da questão estratégica ${strategicNumber} para ${stepId}`);
-    
-    const strategicTemplates: Record<number, any[]> = {
-      1: [ // S1: Dificuldades
-        { 
-          type: 'quiz-progress', 
-          properties: { currentStep: 14, totalSteps: 21, progress: 67 } 
-        },
-        { 
-          type: 'strategic-question-main', 
-          properties: { 
-            questionId: 's1',
-            title: 'QUAL A SUA PRINCIPAL DIFICULDADE COM ROUPAS?',
-            subtitle: 'Esta informação nos ajuda a personalizar sua experiência',
-            multiSelect: 1
-          } 
-        },
-        { 
-          type: 'options-grid', 
-          properties: { 
-            layout: 'list',
-            columns: 1,
-            showImages: false
-          } 
-        }
-      ],
-      2: [ // S2: Problemas
-        { 
-          type: 'quiz-progress', 
-          properties: { currentStep: 15, totalSteps: 21, progress: 71 } 
-        },
-        { 
-          type: 'strategic-question-main', 
-          properties: { 
-            questionId: 's2',
-            title: 'QUAL DESSES PROBLEMAS VOCÊ TEM COM MAIS FREQUÊNCIA?',
-            subtitle: 'Seja honesta, isso nos ajuda a criar um resultado mais preciso',
-            multiSelect: 1
-          } 
-        },
-        { 
-          type: 'options-grid', 
-          properties: { 
-            layout: 'list',
-            columns: 1,
-            showImages: false
-          } 
-        }
-      ],
-      3: [ // S3: Frequência "Com que roupa eu vou?"
-        { 
-          type: 'quiz-progress', 
-          properties: { currentStep: 16, totalSteps: 21, progress: 76 } 
-        },
-        { 
-          type: 'strategic-question-main', 
-          properties: { 
-            questionId: 's3',
-            title: 'COM QUE FREQUÊNCIA VOCÊ PENSA: "COM QUE ROUPA EU VOU?"',
-            subtitle: 'Queremos entender seus hábitos para personalizar melhor',
-            multiSelect: 1
-          } 
-        },
-        { 
-          type: 'options-grid', 
-          properties: { 
-            layout: 'list',
-            columns: 1,
-            showImages: false
-          } 
-        }
-      ],
-      4: [ // S4: Guia de Estilo
-        { 
-          type: 'quiz-progress', 
-          properties: { currentStep: 17, totalSteps: 21, progress: 81 } 
-        },
-        { 
-          type: 'strategic-question-main', 
-          properties: { 
-            questionId: 's4',
-            title: 'O QUE VOCÊ MAIS VALORIZA EM UM GUIA DE ESTILO?',
-            subtitle: 'Isso nos ajuda a criar a melhor experiência para você',
-            multiSelect: 1
-          } 
-        },
-        { 
-          type: 'options-grid', 
-          properties: { 
-            layout: 'list',
-            columns: 1,
-            showImages: false
-          } 
-        }
-      ],
-      5: [ // S5: Investimento
-        { 
-          type: 'quiz-progress', 
-          properties: { currentStep: 18, totalSteps: 21, progress: 86 } 
-        },
-        { 
-          type: 'strategic-question-main', 
-          properties: { 
-            questionId: 's5',
-            title: 'QUANTO VOCÊ INVESTIRIA EM UMA CONSULTORIA COMPLETA?',
-            subtitle: 'Seja realista sobre seu orçamento',
-            multiSelect: 1
-          } 
-        },
-        { 
-          type: 'options-grid', 
-          properties: { 
-            layout: 'list',
-            columns: 1,
-            showImages: false
-          } 
-        }
-      ],
-      6: [ // S6: Ajuda Imediata
-        { 
-          type: 'quiz-progress', 
-          properties: { currentStep: 19, totalSteps: 21, progress: 90 } 
-        },
-        { 
-          type: 'strategic-question-main', 
-          properties: { 
-            questionId: 's6',
-            title: 'O QUE VOCÊ MAIS PRECISA DE AJUDA AGORA?',
-            subtitle: 'Última pergunta! Vamos personalizar seu resultado',
-            multiSelect: 1
-          } 
-        },
-        { 
-          type: 'options-grid', 
-          properties: { 
-            layout: 'list',
-            columns: 1,
-            showImages: false
-          } 
-        }
-      ]
-    };
+  return (
+    <div className={cn('h-full flex flex-col bg-gray-50', className)}>
+      {/* Loading Indicator */}
+      {isLoadingFunnel && (
+        <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-600">Carregando funil{funnelId ? `: ${funnelId}` : ''}...</p>
+          </div>
+        </div>
+      )}
+      
+      {/* Header */}
+      <div className="flex-shrink-0 bg-white border-b border-gray-200 px-4 py-2">
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-semibold text-gray-900">
+            Editor Visual {funnelId ? `- ${funnelId}` : 'das 21 Etapas'}
+          </h1>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.open('/demo', '_blank')}
+              className="flex items-center gap-2"
+            >
+              <PlayCircle className="w-4 h-4" />
+              Demo Interativo
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleTemplateLoad}
+              className="flex items-center gap-2"
+            >
+              <Download className="w-4 h-4" />
+              Blocos de Teste
+            </Button>
+            
+            {/* Preview Mode Buttons */}
+            <div className="flex items-center gap-1 border border-gray-200 rounded-md p-1">
+              <Button
+                variant={previewMode === 'desktop' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setPreviewMode('desktop')}
+                className="h-8 px-2"
+                title="Preview Desktop"
+              >
+                <Monitor className="w-4 h-4" />
+              </Button>
+              <Button
+                variant={previewMode === 'tablet' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setPreviewMode('tablet')}
+                className="h-8 px-2"
+                title="Preview Tablet"
+              >
+                <Tablet className="w-4 h-4" />
+              </Button>
+              <Button
+                variant={previewMode === 'mobile' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setPreviewMode('mobile')}
+                className="h-8 px-2"
+                title="Preview Mobile"
+              >
+                <Smartphone className="w-4 h-4" />
+              </Button>
+            </div>
+            
+            {blocks.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleClearAll}
+                className="flex items-center gap-2 text-red-600 hover:text-red-700"
+              >
+                <Trash2 className="w-4 h-4" />
+                Limpar Tudo
+              </Button>
+            )}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsPreviewing(!isPreviewing)}
+              className="flex items-center gap-2"
+            >
+              {isPreviewing ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              {isPreviewing ? 'Editar' : 'Visualizar'}
+            </Button>
+            <Button onClick={saveConfig} size="sm">
+              Salvar
+            </Button>
+          </div>
+        </div>
+      </div>
 
-    const template = strategicTemplates[strategicNumber];
-    if (template) {
-      // Removido handleAddBlocksToStep - função excluída
-      console.log(`✅ Template da questão estratégica ${strategicNumber} carregado para ${stepId}`);
-    }
-  }, []);
+      {/* Main Content Area */}
+      {isMobile ? (
+        /* Mobile Layout - Vertical Stack */
+        <div className="flex-1 flex flex-col">
+          {/* Mobile Components Panel - Horizontal */}
+          <div className="flex-shrink-0 border-b border-gray-200">
+            <ComponentsPanel
+              onComponentSelect={handleComponentSelect}
+              onTemplateLoad={handleTemplateLoad}
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              layout="horizontal"
+              className="h-auto"
+            />
+          </div>
 
-  const handleStepSelect = useCallback((stepId: string) => {
-    console.log(`🎯 Selecionando etapa: ${stepId}`);
-    setSelectedStepId(stepId);
-    setSelectedBlockId(null); // Clear block selection when changing steps
-    
-    // 🔧 CORREÇÃO: Carregar automaticamente o conteúdo da etapa selecionada
-    // Verificar se a etapa já tem blocos, se não tiver, popular automaticamente
-    const selectedStep = steps.find(step => step.id === stepId);
-    if (selectedStep && selectedStep.blocksCount === 0) {
-      console.log(`📝 Etapa ${stepId} está vazia, populando automaticamente...`);
-      // Carregar conteúdo da etapa automaticamente (removido para eliminar dependência de step logic)
-    } else {
-      console.log(`✅ Etapa ${stepId} já tem ${selectedStep?.blocksCount || 0} blocos`);
-    }
-  }, [steps]); // Removido handlePopulateStep para evitar erro de dependência circular
+          {/* Mobile Steps Panel - Horizontal */}
+          <div className="flex-shrink-0 border-b border-gray-200 p-2">
+            <div className="flex space-x-2 overflow-x-auto">
+              {steps.map((step) => (
+                <Button
+                  key={step.id}
+                  variant={selectedStepId === step.id ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handleStepSelect(step.id)}
+                  className="whitespace-nowrap"
+                >
+                  {step.name}
+                </Button>
+              ))}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleStepAdd}
+                className="whitespace-nowrap"
+              >
+                <Plus className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
 
-  const handleStepAdd = useCallback(() => {
-    const newStep: QuizStep = {
-      id: `etapa-${Date.now()}`,
-      name: `Etapa ${steps.length + 1}`,
-      order: steps.length + 1,
-      blocksCount: 0,
-      isActive: false,
-      type: 'custom',
-      description: `Etapa personalizada ${steps.length + 1}`
-    };
-    setSteps(prev => [...prev, newStep]);
-  }, [steps.length]);
+          {/* Mobile Canvas */}
+          <div className="flex-1 bg-gray-50 overflow-hidden">
+            <ScrollArea className="h-full p-4">
+              <div className="bg-white rounded-lg shadow-sm min-h-96 p-6">
+                {sortedBlocks.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-96 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
+                    <div className="text-center space-y-4 max-w-md">
+                      <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center">
+                        <Plus className="w-8 h-8 text-blue-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                          Editor das 21 Etapas do Quiz CaktoQuiz
+                        </h3>
+                        <p className="text-gray-600 mb-4">
+                          Selecione componentes acima para começar a construir sua etapa
+                        </p>
+                        <div className="space-y-2">
+                          <Button
+                            onClick={handleTemplateLoad}
+                            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                          >
+                            <Download className="w-4 h-4 mr-2" />
+                            Carregar Blocos de Teste
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {sortedBlocks.map((block) => {
+                      // Para blocos do funil, usar properties diretamente
+                      // Para blocos do editor antigo, converter content para properties  
+                      const blockData: BlockData = {
+                        id: block.id,
+                        type: block.type,
+                        properties: block.properties || { ...block.content || {}, order: block.order || 0 }
+                      };
 
-  const handleStepUpdate = useCallback((stepId: string, updates: Partial<QuizStep>) => {
-    setSteps(prev => prev.map(step => 
-      step.id === stepId ? { ...step, ...updates } : step
+                      return (
+                        <div
+                          key={block.id}
+                          onClick={() => setSelectedBlockId(block.id)}
+                          className={cn(
+                            'relative p-4 rounded-lg border-2 transition-all cursor-pointer',
+                            selectedBlockId === block.id
+                              ? 'border-blue-500 bg-blue-50'
+                              : 'border-gray-200 hover:border-gray-300'
+                          )}
+                        >
+                          <UniversalBlockRenderer
+                            block={blockData}
+                            isSelected={selectedBlockId === block.id}
+                            onSelect={() => setSelectedBlockId(block.id)}
+                            onUpdate={(properties) => updateBlock(block.id, properties)}
+                            onDelete={() => deleteBlock(block.id)}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
+          </div>
+        </div>
+      ) : (
+        /* Desktop Layout - Horizontal Panels */
+        <ResizablePanelGroup direction="horizontal" className="flex-1">
+          {/* Steps Panel */}
+          <ResizablePanel defaultSize={18} minSize={15} maxSize={25}>
+            <div className="h-full border-r border-gray-200 overflow-hidden">
+              <ScrollArea className="h-full">
+                <StepsPanel
+                  steps={steps}
+                  selectedStepId={selectedStepId}
+                  onStepSelect={handleStepSelect}
+                  onStepAdd={handleStepAdd}
+                  onStepUpdate={handleStepUpdate}
+                  onStepDelete={handleStepDelete}
+                  onStepDuplicate={handleStepDuplicate}
+                  onStepReorder={handleStepReorder}
+                  className="p-2"
+                />
+              </ScrollArea>
+            </div>
+          </ResizablePanel>
+
+          <ResizableHandle withHandle />
+
+          {/* Components Panel */}
+          <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+            <div className="h-full border-r border-gray-200 overflow-hidden">
+              <ScrollArea className="h-full">
+                <ComponentsPanel
+                  onComponentSelect={handleComponentSelect}
+                  onTemplateLoad={handleTemplateLoad}
+                  searchTerm={searchTerm}
+                  onSearchChange={setSearchTerm}
+                  className="p-2"
+                  layout="vertical"
+                />
+              </ScrollArea>
+            </div>
+          </ResizablePanel>
+
+          <ResizableHandle withHandle />
+
+          {/* Canvas */}
+          <ResizablePanel defaultSize={42}>
+            <div className="h-full bg-gray-50 overflow-hidden">
+              <ScrollArea className="h-full p-6">
+                {/* Preview Mode Indicator */}
+                <div className="text-center mb-4">
+                  <div className="inline-flex items-center gap-2 bg-white rounded-md px-3 py-1 text-sm text-gray-600 shadow-sm border">
+                    {previewMode === 'desktop' && <><Monitor className="w-4 h-4" /> Desktop (1200px)</>}
+                    {previewMode === 'tablet' && <><Tablet className="w-4 h-4" /> Tablet (768px)</>}
+                    {previewMode === 'mobile' && <><Smartphone className="w-4 h-4" /> Mobile (375px)</>}
+                  </div>
+                </div>
+                
+                {/* Responsive Canvas Container */}
+                <div className="flex justify-center">
+                  <div 
+                    className="bg-white rounded-lg shadow-sm min-h-96 transition-all duration-300"
+                    style={{
+                      width: PREVIEW_DIMENSIONS[previewMode].width,
+                      maxWidth: PREVIEW_DIMENSIONS[previewMode].maxWidth,
+                      minWidth: previewMode === 'mobile' ? '375px' : 'auto'
+                    }}
+                  >
+                    <div className="p-6">
+                      {sortedBlocks.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center h-96 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
+                          <div className="text-center space-y-4 max-w-md">
+                            <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center">
+                              <Plus className="w-8 h-8 text-blue-600" />
+                            </div>
+                            <div>
+                              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                                Editor das 21 Etapas do Quiz CaktoQuiz
+                              </h3>
+                              <p className="text-gray-600 mb-4">
+                                Sistema completo para criar um funil de quiz de estilo pessoal otimizado para conversão
+                              </p>
+                            </div>
+                            <div className="space-y-2">
+                              <Button
+                                onClick={handleTemplateLoad}
+                                variant="outline"
+                                className="w-full"
+                              >
+                                <Download className="w-4 h-4 mr-2" />
+                                Carregar Blocos de Teste
+                              </Button>
+                              <p className="text-sm text-gray-500 text-center">
+                                Ou arraste componentes da barra lateral
+                              </p>
+                            </div>
+                            <div className="grid grid-cols-2 gap-3 text-xs text-gray-500">
+                              <div className="text-left">
+                                <p className="font-medium mb-2">📊 Estrutura Completa:</p>
+                                <ul className="space-y-1">
+                                  <li>• 1 página de introdução</li>
+                                  <li>• 1 coleta de nome</li>
+                                  <li>• 10 questões principais</li>
+                                  <li>• 6 questões estratégicas</li>
+                                  <li>• 1 transição</li>
+                                  <li>• 1 página de resultado</li>
+                                  <li>• 1 página de oferta</li>
+                                </ul>
+                              </div>
+                              <div className="text-left">
+                                <p className="font-medium mb-2">🎯 Recursos Inclusos:</p>
+                                <ul className="space-y-1">
+                                  <li>• Cálculos automáticos</li>
+                                  <li>• Progress tracking</li>
+                                  <li>• Transições suaves</li>
+                                  <li>• Questões estratégicas</li>
+                                  <li>• Personalização completa</li>
+                                  <li>• Sistema de ofertas</li>
+                                </ul>
+                              </div>
+                            </div>
+                            <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                              <p className="text-xs text-blue-700">
+                                <strong>Status:</strong> {steps.length} etapas configuradas | {AVAILABLE_BLOCKS.length} componentes disponíveis
+                              </p>
+                              <p className="text-xs text-blue-600 mt-1">
+                                Cada etapa pode ser populada individualmente através do menu de contexto (⋯)
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          {sortedBlocks.map((block) => {
+                            // Para blocos do funil, usar properties diretamente
+                            // Para blocos do editor antigo, converter content para properties
+                            const blockData: BlockData = {
+                              id: block.id,
+                              type: block.type,
+                              properties: block.properties || { ...block.content || {}, order: block.order || 0 }
+                            };
+
+                            return (
+                              <div
+                                key={block.id}
+                                className={cn(
+                                  'transition-all duration-200',
+                                  selectedBlockId === block.id && !isPreviewing && 
+                                  'ring-2 ring-blue-500 rounded-lg'
+                                )}
+                              >
+                                <UniversalBlockRenderer
+                                  block={blockData}
+                                  isSelected={selectedBlockId === block.id}
+                                  onSelect={() => setSelectedBlockId(block.id)}
+                                  onUpdate={(properties) => updateBlock(block.id, properties)}
+                                  onDelete={() => deleteBlock(block.id)}
+                                />
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </ScrollArea>
+            </div>
+          </ResizablePanel>
+
+          <ResizableHandle withHandle />
+
+          {/* Properties Panel */}
+          <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+            <AdvancedPropertyPanel
+              selectedBlock={selectedBlockId ? blocks.find(b => b.id === selectedBlockId) : null}
+              onUpdateBlock={(id: string, updates: any) => {
+                updateBlock(id, updates);
+              }}
+              onDeleteBlock={(id: string) => {
+                deleteBlock(id);
+                setSelectedBlockId(null);
+              }}
+              onClose={() => setSelectedBlockId(null)}
+            />
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      )}
+        
+      {/* Editor Status Bar */}
+      <div className="flex-shrink-0">
+        <EditorStatus
+          selectedBlockId={selectedBlockId || undefined}
+          historyCount={10} // TODO: Get from property history
+          currentHistoryIndex={5} // TODO: Get from property history
+          canUndo={true} // TODO: Get from property history
+          canRedo={false} // TODO: Get from property history
+          lastAction="Propriedade alterada" // TODO: Get from property history
+          totalBlocks={blocks.length}
+          previewMode={previewMode}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default SchemaDrivenEditorResponsive;
     ));
   }, []);
 

@@ -15,7 +15,8 @@ interface AdvancedPropertyPanelProps {
   onClose: () => void;
 }
 
-export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
+export const 
+AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
   selectedBlock,
   onUpdateBlock,
   onDeleteBlock,
