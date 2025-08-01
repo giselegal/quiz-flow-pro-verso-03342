@@ -1,3 +1,8 @@
+// UniversalBlockRenderer.tsx
+// Delegates block rendering to the centralized BlockRegistry renderer.
+import { UniversalBlockRenderer as RegistryRenderer } from './BlockRegistry';
+
+export default RegistryRenderer;
 import React from 'react';
 import { EditorBlock } from '@/types/editor';
 import { Button } from '@/components/ui/button';
