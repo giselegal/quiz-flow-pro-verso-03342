@@ -337,7 +337,7 @@ class StepTemplateService {
 }
 
 // 🚀 INSTÂNCIA SINGLETON
-export const stepTemplateService = new StepTemplateService();
+export const  stepTemplateService = new StepTemplateService();
 
 // 🎯 EXPORTS PARA COMPATIBILIDADE
 export { STEP_MAPPING };
