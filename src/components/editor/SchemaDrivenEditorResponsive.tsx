@@ -898,26 +898,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         }
       };
       
-      const newBlockId = addBlock(fallbackBlock.type as any);
-      setTimeout(() => {
-        updateBlock(newBlockId, fallbackBlock.properties);
-      }, 100);
-    }
-  }, [steps, loadStepSpecificBlocks, addBlock, updateBlock]);
-
-  // Component categories for better organization
-  const componentCategories = useMemo(() => {
-    const categories = [
-      { id: 'quiz', name: 'Quiz' },
-      { id: 'text', name: 'Texto' },
-      { id: 'media', name: 'Mídia' },
-      { id: 'interactive', name: 'Interativo' },
-      { id: 'layout', name: 'Layout' },
-      { id: 'form', name: 'Formulário' },
-      { id: 'content', name: 'Conteúdo' }
-    ];
-    return categories;
-  }, []);
 
   // Sorted blocks for rendering
   const sortedBlocks = useMemo(() => {
