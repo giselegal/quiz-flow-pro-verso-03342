@@ -57,16 +57,15 @@ export default defineConfig(({ mode }) => ({
     // Força a inclusão do React para evitar problemas com forwardRef
     include: [
       'react', 
+      'react-dom',
       'react-dom/client',
       'react/jsx-runtime',
-      'react/jsx-dev-runtime',
-      'use-sync-external-store/shim',
-      '@radix-ui/react-slot'
+      'react/jsx-dev-runtime'
     ],
     // Remove exclusões problemáticas
     exclude: ['lovable-tagger'],
-    // Força rebuild apenas quando necessário
-    force: false,
+    // Força rebuild para resolver problemas de forwardRef
+    force: true,
   },
   // Configurações para reduzir violações de setTimeout
   esbuild: {
