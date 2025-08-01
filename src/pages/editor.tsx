@@ -844,23 +844,15 @@ const EditorPage: React.FC = () => {
           {/* Properties Panel */}
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
             <AdvancedPropertyPanel
-              selectedBlockId={selectedComponentId}
-              properties={selectedComponentId ? blocks.find(b => b.id === selectedComponentId)?.properties || {} : {}}
-              onPropertyChange={(key, value) => {
-                if (selectedComponentId) {
-                  const block = blocks.find(b => b.id === selectedComponentId);
-                  if (block) {
-                    updateBlock(selectedComponentId, { 
-                      ...block, 
-                      properties: { ...block.properties, [key]: value } 
-                    });
-                  }
-                }
+              selectedBlock={selectedComponentId ? blocks.find(b => b.id === selectedComponentId) || null : null}
+              onUpdateBlock={(id: string, updates: any) => {
+                updateBlock(id, updates);
               }}
-              onDeleteBlock={selectedComponentId ? (id: string) => {
+              onDeleteBlock={(id: string) => {
                 deleteBlock(id);
                 setSelectedComponentId(null);
-              } : undefined}
+              }}
+              onClose={() => setSelectedComponentId(null)}
             />
           </ResizablePanel>
         </ResizablePanelGroup>
