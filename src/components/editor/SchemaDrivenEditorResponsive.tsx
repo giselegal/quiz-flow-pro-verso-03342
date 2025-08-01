@@ -1248,14 +1248,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     }
   }, [steps, getStepTemplate, addBlock, updateBlock, setSteps]);
 
-  // Component selection handler
-  const handleComponentSelect = useCallback((componentId: string) => {
-    handleAddBlock(componentId);
-  }, [handleAddBlock]);
-        // ==========================================
-        // ETAPA 1: INTRODUÇÃO COM COLETA DE NOME
-        // ==========================================
-        defaultBlocks = [
+  // Template loading handler para 21 etapas
           {
             type: 'quiz-intro-header',
             properties: {
