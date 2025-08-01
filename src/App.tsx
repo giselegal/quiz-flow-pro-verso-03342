@@ -33,8 +33,9 @@ function App() {
             <Route path="/auth" component={Auth} />
 
             {/* Protected Routes */}
-            <ProtectedRoute path="/admin/funis" component={FunnelsPage} />
-            <ProtectedRoute path="/admin/resultados" component={ResultConfigPage} />
+            {/* Rotas temporariamente públicas para desenvolvimento */}
+            <Route path="/admin/funis" component={FunnelsPage} />
+            <Route path="/admin/resultados" component={ResultConfigPage} />
           </Switch>
           <Toaster />
         </div>

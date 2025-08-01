@@ -16,6 +16,8 @@ export default defineConfig(({ mode }) => ({
     host: "0.0.0.0",
     port: 8080,
     strictPort: true,
+    // Configuração SPA fallback para rotas client-side
+    historyApiFallback: true,
     hmr: {
       port: 8080,
       overlay: false,
