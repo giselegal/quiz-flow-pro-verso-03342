@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { EditorBlock } from '@/types/editor';
 
@@ -19,7 +18,7 @@ import ResultCardInlineBlock from './inline/ResultCardInlineBlock';
 
 // Import other block components
 import HeadingInlineBlock from './inline/HeadingInlineBlock';
-import ButtonInlineBlock from './ButtonInlineBlock';
+import ButtonInlineBlock from './inline/ButtonInlineBlock';
 import SpacerBlock from './SpacerBlock';
 import FormInputBlock from './FormInputBlock';
 import OptionsGridBlock from './OptionsGridBlock';
@@ -142,4 +141,5 @@ export const isBlockTypeRegistered = (type: string): boolean => {
   return registeredTypes.includes(type);
 };
 
+export default UniversalBlockRenderer;
 export default UniversalBlockRenderer;
