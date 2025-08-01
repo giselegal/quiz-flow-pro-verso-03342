@@ -1756,15 +1756,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                   Limpar Tudo
                 </Button>
               )}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleClearGuaranteeBlocks}
-                className="flex items-center gap-2 text-orange-600 hover:text-orange-700"
-              >
-                🧹 Limpar Garantias
-              </Button>
-              <Button
+            <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setIsPreviewing(!isPreviewing)}

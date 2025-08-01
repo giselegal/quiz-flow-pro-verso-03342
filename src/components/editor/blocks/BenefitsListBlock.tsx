@@ -74,6 +74,9 @@ const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({
   onPropertyChange,
   className = ''
 }) => {
+  // 🛡️ PROTEÇÃO: Garantir que block.properties existe
+  const properties = block?.properties || {};
+  
   const {
     title = 'Por que escolher nosso produto?',
     subtitle = 'Descubra todos os benefícios inclusos',
@@ -120,7 +123,7 @@ const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({
     accentColor = '#B89B7A',
     cardStyle = 'elevated',
     spacing = 'normal'
-  } = block.properties;
+  } = properties;
 
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
 
@@ -213,6 +216,12 @@ const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({
   };
 
   const renderBenefit = (benefit: BenefitItem, index: number) => {
+    // 🛡️ PROTEÇÃO: Verificar se benefit tem as propriedades necessárias
+    if (!benefit || !benefit.id || !benefit.title) {
+      console.warn('BenefitsListBlock: benefit inválido encontrado:', benefit);
+      return null;
+    }
+    
     const isExpanded = expandedItems.has(benefit.id);
     const hasDescription = showDescriptions && benefit.description;
     const hasValue = showValues && benefit.value;
