@@ -1819,24 +1819,24 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                 <div className="bg-white rounded-lg shadow-sm min-h-96 p-6">
                   {sortedBlocks.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-96 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
-                      <div className="text-center space-y-4 max-w-md">
+                      <div className="text-center space-y-4">
                         <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center">
                           <Plus className="w-8 h-8 text-blue-600" />
                         </div>
                         <div>
-                          <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                            Editor das 21 Etapas do Quiz CaktoQuiz
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            Canvas Vazio
                           </h3>
-                          <p className="text-gray-600 mb-4">
-                            Selecione componentes acima para começar a construir sua etapa
+                          <p className="text-gray-600">
+                            Toque nos componentes acima para adicionar à etapa
                           </p>
                           <div className="space-y-2">
                             <Button
-                              onClick={handleLoadComplete21StepsTemplate}
-                              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                              onClick={() => handlePopulateStep(selectedStepId)}
+                              className="bg-blue-600 hover:bg-blue-700"
                             >
                               <Download className="w-4 h-4 mr-2" />
-                              Carregar 21 Etapas
+                              Popular Etapa
                             </Button>
                           </div>
                         </div>
@@ -1931,14 +1931,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           <ResizablePanel defaultSize={42}>
             <div className="h-full bg-gray-50 overflow-hidden">
               <ScrollArea className="h-full p-6">
-                {/* Preview Mode Indicator */}
-                <div className="text-center mb-4">
-                  <div className="inline-flex items-center gap-2 bg-white rounded-md px-3 py-1 text-sm text-gray-600 shadow-sm border">
-                    {previewMode === 'desktop' && <><Monitor className="w-4 h-4" /> Desktop (1200px)</>}
-                    {previewMode === 'tablet' && <><Tablet className="w-4 h-4" /> Tablet (768px)</>}
-                    {previewMode === 'mobile' && <><Smartphone className="w-4 h-4" /> Mobile (375px)</>}
-                  </div>
-                </div>
                 
                 {/* Responsive Canvas Container */}
                 <div className="flex justify-center">
@@ -1953,70 +1945,26 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                   <div className="p-6">
                     {sortedBlocks.length === 0 ? (
                       <div className="flex flex-col items-center justify-center h-96 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
-                        <div className="text-center space-y-4 max-w-md">
+                        <div className="text-center space-y-4">
                           <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center">
                             <Plus className="w-8 h-8 text-blue-600" />
                           </div>
                           <div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                              Editor das 21 Etapas do Quiz CaktoQuiz
+                            <h3 className="text-lg font-semibold text-gray-900">
+                              Canvas Vazio
                             </h3>
-                            <p className="text-gray-600 mb-4">
-                              Sistema completo para criar um funil de quiz de estilo pessoal otimizado para conversão
+                            <p className="text-gray-600">
+                              Adicione componentes do painel lateral ou use um template
                             </p>
                           </div>
                           <div className="space-y-2">
                             <Button
-                              onClick={handleLoadComplete21StepsTemplate}
-                              className="w-full mb-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                              onClick={() => handlePopulateStep(selectedStepId)}
+                              className="bg-blue-600 hover:bg-blue-700"
                             >
                               <Download className="w-4 h-4 mr-2" />
-                              Carregar Template Completo (21 Etapas)
+                              Popular Etapa
                             </Button>
-                            <Button
-                              onClick={handleLoadTemplate}
-                              variant="outline"
-                              className="w-full"
-                            >
-                              <Download className="w-4 h-4 mr-2" />
-                              Carregar Blocos de Teste
-                            </Button>
-                            <p className="text-sm text-gray-500 text-center">
-                              Ou arraste componentes da barra lateral
-                            </p>
-                          </div>
-                          <div className="grid grid-cols-2 gap-3 text-xs text-gray-500">
-                            <div className="text-left">
-                              <p className="font-medium mb-2">📊 Estrutura Completa:</p>
-                              <ul className="space-y-1">
-                                <li>• 1 página de introdução</li>
-                                <li>• 1 coleta de nome</li>
-                                <li>• 10 questões principais</li>
-                                <li>• 6 questões estratégicas</li>
-                                <li>• 1 transição</li>
-                                <li>• 1 página de resultado</li>
-                                <li>• 1 página de oferta</li>
-                              </ul>
-                            </div>
-                            <div className="text-left">
-                              <p className="font-medium mb-2">🎯 Recursos Inclusos:</p>
-                              <ul className="space-y-1">
-                                <li>• Cálculos automáticos</li>
-                                <li>• Progress tracking</li>
-                                <li>• Transições suaves</li>
-                                <li>• Questões estratégicas</li>
-                                <li>• Personalização completa</li>
-                                <li>• Sistema de ofertas</li>
-                              </ul>
-                            </div>
-                          </div>
-                          <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                            <p className="text-xs text-blue-700">
-                              <strong>� Status:</strong> {steps.length} etapas configuradas | {AVAILABLE_BLOCKS.length} componentes disponíveis
-                            </p>
-                            <p className="text-xs text-blue-600 mt-1">
-                              Cada etapa pode ser populada individualmente através do menu de contexto (⋯)
-                            </p>
                           </div>
                         </div>
                       </div>
