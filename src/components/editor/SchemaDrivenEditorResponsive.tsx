@@ -11,7 +11,7 @@ import { UniversalBlockRenderer } from './blocks/UniversalBlockRenderer';
 import type { BlockData } from '../../types/blocks';
 import { getInitialQuiz21EtapasTemplate } from '../../templates/quiz21EtapasTemplate';
 import { normalizeBlock } from '../../utils/blockTypeMapping';
-import { AdvancedPropertyPanel } from './AdvancedPropertyPanel';
+import { DynamicPropertiesPanel } from './panels/DynamicPropertiesPanel';
 import { getStepById } from './steps'; // 🎯 NOVA ARQUITETURA LIMPA
 import { EditorStatus } from './components/EditorStatus';
 import { StepsPanel } from './StepsPanel';
@@ -1895,10 +1895,15 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
           {/* Properties Panel */}
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-            <AdvancedPropertyPanel
-              selectedBlockId={selectedBlockId}
-              properties={selectedBlockId ? blocks.find(b => b.id === selectedBlockId)?.properties || {} : {}}
-              onPropertyChange={(key, value) => {
+            <DynamicPropertiesPanel
+              selectedBlock={selectedBlockId ? blocks.find(b => b.id === selectedBlockId) || null : null}
+              funnelConfig={{
+                name: 'Quiz CaktoQuiz',
+                description: 'Funil de Quiz com 21 etapas',
+                isPublished: false,
+                theme: 'default'
+              }}
+              onBlockPropertyChange={(key, value) => {
                 if (selectedBlockId) {
                   const block = blocks.find(b => b.id === selectedBlockId);
                   if (block) {
@@ -1908,6 +1913,34 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                     });
                   }
                 }
+              }}
+              onNestedPropertyChange={(path, value) => {
+                if (selectedBlockId) {
+                  const block = blocks.find(b => b.id === selectedBlockId);
+                  if (block) {
+                    const parts = path.split('.');
+                    const lastKey = parts.pop();
+                    let current = { ...block.properties };
+                    let temp = current;
+                    
+                    // Navegar para o objeto aninhado
+                    for (const key of parts) {
+                      if (!temp[key]) temp[key] = {};
+                      temp[key] = { ...temp[key] };
+                      temp = temp[key];
+                    }
+                    
+                    // Atualizar a propriedade
+                    if (lastKey) {
+                      temp[lastKey] = value;
+                      updateBlock(selectedBlockId, { ...block, properties: current });
+                    }
+                  }
+                }
+              }}
+              onFunnelConfigChange={(config) => {
+                console.log('Configuração do funil atualizada:', config);
+                // Implementar lógica para salvar a configuração do funil
               }}
               onDeleteBlock={selectedBlockId ? () => {
                 deleteBlock(selectedBlockId);
