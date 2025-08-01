@@ -7,12 +7,13 @@ import { getDefaultContentForType } from '../utils/editorDefaults';
 import { generateId } from '../utils/idGenerator';
 
 export const useEditor = () => {
-  const [config, setConfig] = useState<EditorConfig>({
+  // Certifique-se de que o React.useState está sendo usado corretamente
+  const [config, setConfig] = React.useState<EditorConfig>({
     blocks: []
   });
   
   // Load config from localStorage on initial load (with cleanup)
-  useEffect(() => {
+  React.useEffect(() => {
     try {
       const savedConfig = localStorage.getItem('editor_config');
       if (savedConfig) {
