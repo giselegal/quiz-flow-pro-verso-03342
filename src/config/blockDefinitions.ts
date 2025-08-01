@@ -1,6 +1,7 @@
 import React from 'react';
 import { PropertySchema } from '../types/editor';
 import { PlaceholderUtils } from '../utils/placeholderUtils';
+import { generatedBlockDefinitions } from './generatedBlockDefinitions';
 
 // Block Definition Interface
 export interface BlockDefinition {
@@ -3673,7 +3674,9 @@ export const blockDefinitions: BlockDefinition[] = [
       layout: 'horizontal',
       enableSupabaseTracking: false
     }
-  }
+  },
+  // Incluindo blocos gerados automaticamente
+  ...generatedBlockDefinitions
 ];
 
 // Utility functions
