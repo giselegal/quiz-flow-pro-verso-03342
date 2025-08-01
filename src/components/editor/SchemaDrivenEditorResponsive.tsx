@@ -9,10 +9,9 @@ import { cn } from '../../lib/utils';
 import { useEditor } from '../../hooks/useEditor';
 import { UniversalBlockRenderer } from './blocks/UniversalBlockRenderer';
 import type { BlockData } from '../../types/blocks';
-import { EditorBlock } from '../../types/editor'; // 🎯 Importar tipo EditorBlock
+import { EditorBlock, BlockType } from '../../types/editor'; // 🎯 Importar tipos EditorBlock e BlockType
 import { normalizeBlock } from '../../utils/blockTypeMapping';
 import { DynamicPropertiesPanel } from './panels/DynamicPropertiesPanel';
-import { getStepById } from './steps'; // 🎯 NOVA ARQUITETURA LIMPA
 import { EditorStatus } from './components/EditorStatus';
 import { StepsPanel } from './StepsPanel';
 import { ComponentsPanel } from './ComponentsPanel';
@@ -196,8 +195,21 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         if (funnelData.pages && funnelData.pages.length > 0) {
           const firstPage = funnelData.pages[0];
           
+          // Convert to EditorBlocks with proper content
+          const editorBlocks: EditorBlock[] = (firstPage.blocks || []).map((block, index) => ({
+            id: block.id,
+            type: block.type as BlockType,
+            content: {
+              title: block.properties?.title || '',
+              subtitle: block.properties?.subtitle || ''
+            },
+            order: index + 1,
+            properties: block.properties,
+            visible: true
+          }));
+          
           const editorConfig = {
-            blocks: firstPage.blocks || []
+            blocks: editorBlocks
           };
           
           // Usar o método do useEditor para atualizar blocos
@@ -214,7 +226,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               blocksCount: page.blocks?.length || 0,
               isActive: index === 0,
               type: templateStep?.type || 'custom',
-              description: page.description || templateStep?.description || `Página do funil: ${page.title || `Etapa ${index + 1}`}`,
+              description: templateStep?.description || `Página do funil: ${page.title || `Etapa ${index + 1}`}`,
               multiSelect: templateStep?.multiSelect
             };
           });
@@ -1687,11 +1699,27 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               <Button
                 variant="outline"
                 size="sm"
-                onClick={handleClearGuaranteeBlocks}
-                className="flex items-center gap-2 bg-red-50 text-red-600 border-red-200 hover:bg-red-100"
+                onClick={() => {
+                  // 🧪 TESTE DIRETO DE TEMPLATES
+                  console.log('🧪 [TESTE DIRETO] Testando stepTemplateService...');
+                  try {
+                    console.log('📊 Testando Step 1...');
+                    const step1Template = stepTemplateService.getStepTemplate(1);
+                    console.log('✅ Step 1 resultado:', step1Template);
+                    
+                    console.log('📊 Testando getAllSteps...');
+                    const allSteps = stepTemplateService.getAllSteps();
+                    console.log('✅ Todas as etapas:', allSteps);
+                    
+                    alert(`Teste concluído! Step 1: ${step1Template?.length || 0} blocos. Total: ${allSteps?.length || 0} etapas. Veja console para detalhes.`);
+                  } catch (error) {
+                    console.error('❌ Erro no teste:', error);
+                    alert(`Erro: ${error.message}`);
+                  }
+                }}
+                className="flex items-center gap-2 bg-purple-50 text-purple-600 border-purple-200 hover:bg-purple-100"
               >
-                <Trash2 className="w-4 h-4" />
-                Limpar Garantias
+                🧪 Teste Templates
               </Button>
               
               <Button
@@ -1712,6 +1740,48 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               >
                 <Download className="w-4 h-4" />
                 Blocos de Teste
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  console.log('🧪 [DEBUG] Testando sistema de templates...');
+                  console.log('🧪 [DEBUG] stepTemplateService:', stepTemplateService);
+                  
+                  // Testar template da etapa 1
+                  try {
+                    const template1 = stepTemplateService.getStepTemplate(1);
+                    console.log('🧪 [DEBUG] Template etapa 1:', template1);
+                    
+                    if (template1 && template1.length > 0) {
+                      toast({
+                        title: 'Template Funcionando!',
+                        description: `Etapa 1 tem ${template1.length} blocos`,
+                      });
+                    } else {
+                      toast({
+                        title: 'Template Vazio',
+                        description: 'Etapa 1 retornou template vazio',
+                        variant: 'destructive'
+                      });
+                    }
+                  } catch (error) {
+                    console.error('🧪 [DEBUG] Erro:', error);
+                    toast({
+                      title: 'Erro no Template',
+                      description: `Erro: ${error.message}`,
+                      variant: 'destructive'
+                    });
+                  }
+                  
+                  // Testar getStepTemplate
+                  const testTemplate = getStepTemplate('etapa-1');
+                  console.log('🧪 [DEBUG] getStepTemplate result:', testTemplate);
+                }}
+                className="flex items-center gap-2 bg-yellow-500 text-white hover:bg-yellow-600"
+              >
+                🧪 Debug Templates
               </Button>
               
               {/* Preview Mode Buttons */}
