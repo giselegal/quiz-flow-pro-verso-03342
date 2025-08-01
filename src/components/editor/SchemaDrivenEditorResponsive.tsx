@@ -344,6 +344,129 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     handleAddBlock(componentId);
   }, [handleAddBlock]);
 
+  // Step management handlers
+  const handleStepSelect = useCallback((stepId: string) => {
+    console.log(`🎯 Selecionando etapa: ${stepId}`);
+    setSelectedStepId(stepId);
+    setSelectedBlockId(null); // Clear block selection when switching steps
+    
+    // Load saved blocks for this step
+    const savedBlocks = localStorage.getItem(`step-blocks-${stepId}`);
+    if (savedBlocks) {
+      try {
+        const parsedBlocks = JSON.parse(savedBlocks);
+        setConfig({ blocks: parsedBlocks });
+      } catch (error) {
+        console.error('Erro ao carregar blocos da etapa:', error);
+      }
+    } else {
+      // Clear canvas for new step
+      setConfig({ blocks: [] });
+    }
+  }, [setConfig]);
+
+  const handleStepAdd = useCallback(() => {
+    const maxOrder = Math.max(...steps.map(s => s.order), 0);
+    const newStep: QuizStep = {
+      id: `etapa-${Date.now()}`,
+      name: `Nova Etapa ${maxOrder + 1}`,
+      order: maxOrder + 1,
+      blocksCount: 0,
+      isActive: false,
+      type: 'custom',
+      description: 'Etapa personalizada criada pelo usuário'
+    };
+    setSteps(prev => [...prev, newStep]);
+  }, [steps]);
+
+  const handleStepUpdate = useCallback((stepId: string, updates: Partial<QuizStep>) => {
+    setSteps(prev => prev.map(step => 
+      step.id === stepId ? { ...step, ...updates } : step
+    ));
+  }, []);
+
+  const handleStepDelete = useCallback((stepId: string) => {
+    if (steps.length <= 1) {
+      console.warn('Não é possível deletar a última etapa');
+      return;
+    }
+    
+    setSteps(prev => prev.filter(step => step.id !== stepId));
+    
+    // If deleting current step, select the first remaining step
+    if (selectedStepId === stepId) {
+      const remainingSteps = steps.filter(step => step.id !== stepId);
+      if (remainingSteps.length > 0) {
+        setSelectedStepId(remainingSteps[0].id);
+      }
+    }
+    
+    // Remove saved blocks for this step
+    localStorage.removeItem(`step-blocks-${stepId}`);
+  }, [steps, selectedStepId]);
+
+  const handleStepDuplicate = useCallback((stepId: string) => {
+    const stepToDuplicate = steps.find(step => step.id === stepId);
+    if (!stepToDuplicate) return;
+    
+    const maxOrder = Math.max(...steps.map(s => s.order), 0);
+    const newStep: QuizStep = {
+      ...stepToDuplicate,
+      id: `etapa-${Date.now()}`,
+      name: `${stepToDuplicate.name} (Cópia)`,
+      order: maxOrder + 1,
+      isActive: false
+    };
+    
+    setSteps(prev => [...prev, newStep]);
+    
+    // Copy blocks from original step
+    const originalBlocks = localStorage.getItem(`step-blocks-${stepId}`);
+    if (originalBlocks) {
+      localStorage.setItem(`step-blocks-${newStep.id}`, originalBlocks);
+    }
+  }, [steps]);
+
+  const handleStepReorder = useCallback((draggedId: string, targetId: string) => {
+    const draggedIndex = steps.findIndex(step => step.id === draggedId);
+    const targetIndex = steps.findIndex(step => step.id === targetId);
+    
+    if (draggedIndex === -1 || targetIndex === -1) return;
+    
+    const newSteps = [...steps];
+    const [draggedStep] = newSteps.splice(draggedIndex, 1);
+    newSteps.splice(targetIndex, 0, draggedStep);
+    
+    // Update order numbers
+    const reorderedSteps = newSteps.map((step, index) => ({
+      ...step,
+      order: index + 1
+    }));
+    
+    setSteps(reorderedSteps);
+  }, [steps]);
+
+  // Save current step blocks when switching steps
+  useEffect(() => {
+    if (selectedStepId && blocks.length > 0) {
+      localStorage.setItem(`step-blocks-${selectedStepId}`, JSON.stringify(blocks));
+    }
+  }, [selectedStepId, blocks]);
+
+  const handleClearAll = useCallback(() => {
+    setConfig({ blocks: [] });
+    setSelectedBlockId(null);
+    
+    // Clear saved blocks for current step
+    if (selectedStepId) {
+      localStorage.removeItem(`step-blocks-${selectedStepId}`);
+    }
+  }, [setConfig, selectedStepId]);
+
+  const sortedBlocks = useMemo(() => {
+    return [...blocks].sort((a, b) => (a.order || 0) - (b.order || 0));
+  }, [blocks]);
+
   return (
     <div className={cn('h-full flex flex-col bg-gray-50', className)}>
       {/* Loading Indicator */}
