@@ -1188,24 +1188,65 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     }
   }, [steps, loadStepSpecificBlocks, addBlock, updateBlock]);
 
+  // Component categories for better organization
+  const componentCategories = useMemo(() => {
+    const categories = [
+      { id: 'quiz', name: 'Quiz' },
+      { id: 'text', name: 'Texto' },
+      { id: 'media', name: 'Mídia' },
+      { id: 'interactive', name: 'Interativo' },
+      { id: 'layout', name: 'Layout' },
+      { id: 'form', name: 'Formulário' },
+      { id: 'content', name: 'Conteúdo' }
+    ];
+    return categories;
+  }, []);
+
+  // Sorted blocks for rendering
+  const sortedBlocks = useMemo(() => {
+    return blocks.sort((a, b) => (a.order || 0) - (b.order || 0));
+  }, [blocks]);
+
+  // Template loading function
+  const handleTemplateLoad = useCallback(() => {
+    console.log('🔄 Carregando template básico...');
+    const basicTemplate = [
+      { type: 'heading-inline', properties: { content: 'Título de Exemplo', level: 'h2' } },
+      { type: 'text-inline', properties: { content: 'Texto de exemplo para demonstração' } }
+    ];
+    
+    basicTemplate.forEach((template, index) => {
+      setTimeout(() => {
+        const newBlockId = addBlock(template.type as any);
+        updateBlock(newBlockId, template.properties);
+      }, index * 100);
+    });
+  }, [addBlock, updateBlock]);
+
+  // Block click handler
+  const handleBlockClick = useCallback((blockId: string) => {
+    if (!isPreviewing) {
+      setSelectedBlockId(blockId);
+    }
+  }, [isPreviewing]);
+
+  // Clear all blocks
+  const handleClearAll = useCallback(() => {
+    if (confirm('Tem certeza que deseja limpar todos os blocos?')) {
+      blocks.forEach(block => deleteBlock(block.id));
+      setSelectedBlockId(null);
+    }
+  }, [blocks, deleteBlock]);
+
+  // Save inline handler
+  const handleSaveInline = useCallback((blockId: string, properties: any) => {
+    updateBlock(blockId, properties);
+  }, [updateBlock]);
+
   // Component selection handler
   const handleComponentSelect = useCallback((componentId: string) => {
     handleAddBlock(componentId);
   }, [handleAddBlock]);
-
-  // 📱 Component categories for better organization
-  const componentCategories = useMemo(() => {
-    const categories = Object.keys(componentLibrary).map(cat => ({
-      id: cat,
-      name: cat === 'quiz' ? 'Quiz' :
-             cat === 'text' ? 'Texto' :
-             cat === 'media' ? 'Mídia' :
-             cat === 'interactive' ? 'Interativo' :
-             cat === 'layout' ? 'Layout' :
-             cat === 'form' ? 'Formulário' :
-             cat === 'content' ? 'Conteúdo' : cat
-    }));
-  }, []);
 
   return (
     // <DndProvider backend={HTML5Backend}>
