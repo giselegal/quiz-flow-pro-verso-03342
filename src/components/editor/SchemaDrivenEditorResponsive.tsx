@@ -1759,6 +1759,14 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
               <Button
                 variant="outline"
                 size="sm"
+                onClick={handleClearGuaranteeBlocks}
+                className="flex items-center gap-2 text-orange-600 hover:text-orange-700"
+              >
+                🧹 Limpar Garantias
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => setIsPreviewing(!isPreviewing)}
                 className="flex items-center gap-2"
               >
