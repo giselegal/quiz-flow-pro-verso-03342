@@ -77,6 +77,15 @@ const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({
   // 🛡️ PROTEÇÃO: Garantir que block.properties existe
   const properties = block?.properties || {};
   
+  // 🐛 DEBUG: Log das propriedades recebidas
+  console.log('🧱 BenefitsListBlock - Props recebidas:', {
+    blockId: block?.id,
+    blockType: block?.type,
+    hasProperties: !!properties,
+    propertiesKeys: Object.keys(properties),
+    properties: properties
+  });
+  
   const {
     title = 'Por que escolher nosso produto?',
     subtitle = 'Descubra todos os benefícios inclusos',
