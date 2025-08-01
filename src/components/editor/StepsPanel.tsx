@@ -20,7 +20,7 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { cn } from '../../lib/utils';
-import { schemaDrivenFunnelService } from '../../services/schemaDrivenFunnelService';
+import { stepTemplateService } from '../../services/stepTemplateService';
 
 interface Step {
   id: string;
@@ -100,27 +100,30 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
   const [editingStepId, setEditingStepId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
 
-  // 🎯 OBTER DEFINIÇÕES DAS ETAPAS DO SCHEMADRIVENFUNNELSERVICE (FONTE ÚNICA)
+  // 🎯 OBTER DEFINIÇÕES DAS ETAPAS DO STEPTEMPLATE SERVICE (FONTE ÚNICA)
   const serviceStepsReference = useMemo(() => {
     try {
-      console.log('📋 StepsPanel: Obtendo referência das etapas do service...');
-      const defaultFunnel = schemaDrivenFunnelService.createDefaultFunnel();
+      console.log('📋 StepsPanel: Obtendo referência das etapas do stepTemplateService...');
+      const allSteps = stepTemplateService.getAllSteps();
       
-      if (defaultFunnel && defaultFunnel.pages) {
-        const serviceSteps = defaultFunnel.pages.map(page => ({
-          id: `etapa-${page.order}`,
-          name: page.name,
-          order: page.order,
-          type: page.type,
-          description: page.title,
-          blocksCount: page.blocks?.length || 0
+      if (allSteps && allSteps.length > 0) {
+        const serviceSteps = allSteps.map(stepInfo => ({
+          id: stepInfo.id,
+          name: stepInfo.name,
+          order: stepInfo.order,
+          type: stepInfo.type,
+          description: stepInfo.description,
+          blocksCount: stepInfo.blocksCount,
+          hasTemplate: stepInfo.hasTemplate,
+          multiSelect: stepInfo.multiSelect
         }));
         
         console.log(`✅ StepsPanel: ${serviceSteps.length} etapas de referência obtidas`);
+        console.log('📊 StepsPanel: Estatísticas dos templates:', stepTemplateService.getTemplateStats());
         return serviceSteps;
       }
     } catch (error) {
-      console.error('❌ StepsPanel: Erro ao obter referência do service:', error);
+      console.error('❌ StepsPanel: Erro ao obter referência do stepTemplateService:', error);
     }
     
     return [];

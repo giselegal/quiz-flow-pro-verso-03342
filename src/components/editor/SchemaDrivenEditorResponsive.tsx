@@ -241,44 +241,45 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   // Safe access to blocks with fallback
   const blocks = config?.blocks || [];
 
-  // 🎯 FUNÇÃO PARA OBTER ETAPAS DO SCHEMADRIVENFUNNELSERVICE (FONTE ÚNICA)
+  // 🎯 FUNÇÃO PARA OBTER ETAPAS DO STEPTEMPLATE SERVICE (FONTE ÚNICA DE VERDADE)
   const getStepsFromService = useCallback(() => {
     try {
-      console.log('🔄 Obtendo etapas do schemaDrivenFunnelService...');
-      const defaultFunnel = schemaDrivenFunnelService.createDefaultFunnel();
+      console.log('🔄 Obtendo etapas do stepTemplateService...');
+      const allSteps = stepTemplateService.getAllSteps();
       
-      if (defaultFunnel && defaultFunnel.pages && defaultFunnel.pages.length > 0) {
-        const serviceSteps: QuizStep[] = defaultFunnel.pages.map((page, index) => ({
-          id: `etapa-${page.order}`,
-          name: page.name,
-          order: page.order,
-          blocksCount: page.blocks?.length || 0,
+      if (allSteps && allSteps.length > 0) {
+        const serviceSteps: QuizStep[] = allSteps.map((stepInfo, index) => ({
+          id: stepInfo.id,
+          name: stepInfo.name,
+          order: stepInfo.order,
+          blocksCount: stepInfo.blocksCount,
           isActive: index === 0,
-          type: page.type || 'custom',
-          description: page.title || `Etapa ${page.order}`,
-          multiSelect: undefined // Será definido baseado no tipo da questão
+          type: stepInfo.type,
+          description: stepInfo.description,
+          multiSelect: stepInfo.multiSelect
         }));
         
-        console.log(`✅ ${serviceSteps.length} etapas obtidas do service`);
+        console.log(`✅ ${serviceSteps.length} etapas obtidas do stepTemplateService`);
+        console.log('📊 Estatísticas:', stepTemplateService.getTemplateStats());
         return serviceSteps;
       } else {
-        console.warn('⚠️ Nenhuma página encontrada no defaultFunnel');
+        console.warn('⚠️ Nenhuma etapa encontrada no stepTemplateService');
         return [];
       }
     } catch (error) {
-      console.error('❌ Erro ao obter etapas do service:', error);
+      console.error('❌ Erro ao obter etapas do stepTemplateService:', error);
       return [];
     }
   }, []);
 
   // Função para preservar etapas existentes e mesclar com as etapas do service
   const mergeWithServiceSteps = useCallback((existingSteps: any[] = []) => {
-    // OBTER ETAPAS DO SERVICE como fonte da verdade
+    // OBTER ETAPAS DO STEPTEMPLATE SERVICE como fonte da verdade
     const serviceSteps = getStepsFromService();
     
     if (serviceSteps.length === 0) {
       // Fallback caso o service falhe
-      console.warn('⚠️ Service falhou, usando fallback básico');
+      console.warn('⚠️ stepTemplateService falhou, usando fallback básico');
       return Array.from({ length: 21 }, (_, i) => ({
         id: `etapa-${i + 1}`,
         name: `Etapa ${i + 1}`,
