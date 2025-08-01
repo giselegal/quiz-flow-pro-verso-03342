@@ -20,7 +20,6 @@ import { ComponentsPanel } from './ComponentsPanel';
 import { schemaDrivenFunnelService } from '../../services/schemaDrivenFunnelService';
 import { useToast } from '../../hooks/use-toast';
 import { generateRealQuestionTemplates } from '../../data/realQuizTemplates';
-import { getStepTemplate, getStepInfo, STEP_TEMPLATES } from '../steps';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
