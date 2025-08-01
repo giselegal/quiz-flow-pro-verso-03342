@@ -1149,15 +1149,13 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     console.log(`🔧 [NOVO SISTEMA] Carregando template da Step ${stepNumber}...`);
     
     try {
-      // 🎯 Usar novo sistema de templates das steps
-      const stepTemplate = getStepTemplate(stepNumber);
+      // Usar template simples para fallback
+      console.log(`🔧 [NOVO SISTEMA] Carregando template da Step ${stepNumber}...`);
       
-      if (!stepTemplate || stepTemplate.length === 0) {
-        console.warn(`⚠️ Template vazio para Step ${stepNumber}, usando fallback`);
-        // Fallback simples
-        const fallbackBlocks = [
-          {
-            type: 'heading-inline',
+      // Fallback simples
+      const fallbackBlocks = [
+        {
+          type: 'heading-inline',
             properties: {
               content: `Etapa ${stepNumber}`,
               level: 'h2',
