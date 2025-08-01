@@ -1,66 +1,21 @@
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface User {
-  userName: string;
-  email?: string; // Added email as optional property
-  role?: string;  // Added role property for admin access
+  id: string;
+  email: string;
+  name?: string;
 }
 
 interface AuthContextType {
   user: User | null;
-  login: (name: string, email?: string) => void;
+  loading: boolean;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  signup: (email: string, password: string, name?: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(() => {
-    const savedName = localStorage.getItem('userName');
-    const savedEmail = localStorage.getItem('userEmail');
-    const savedRole = localStorage.getItem('userRole');
-    
-    return savedName ? { 
-      userName: savedName,
-      ...(savedEmail && { email: savedEmail }),
-      ...(savedRole && { role: savedRole })
-    } : null;
-  });
-
-  const login = (name: string, email?: string) => {
-    const userData: User = { 
-      userName: name 
-    };
-    
-    if (email) {
-      userData.email = email;
-      localStorage.setItem('userEmail', email);
-    }
-    
-    // Preservar o status de admin caso exista
-    const savedRole = localStorage.getItem('userRole');
-    if (savedRole) {
-      userData.role = savedRole;
-    }
-    
-    setUser(userData);
-    localStorage.setItem('userName', name);
-  };
-
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userEmail');
-    localStorage.removeItem('userRole');
-  };
-
-  return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -68,4 +23,63 @@ export const useAuth = () => {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
+};
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simular verificação de autenticação
+    const checkAuth = () => {
+      const savedUser = localStorage.getItem('user');
+      if (savedUser) {
+        setUser(JSON.parse(savedUser));
+      }
+      setLoading(false);
+    };
+
+    checkAuth();
+  }, []);
+
+  const login = async (email: string, password: string) => {
+    setLoading(true);
+    // Simular login
+    const mockUser = { id: '1', email, name: 'Usuário' };
+    localStorage.setItem('user', JSON.stringify(mockUser));
+    setUser(mockUser);
+    setLoading(false);
+  };
+
+  const logout = () => {
+    localStorage.removeItem('user');
+    setUser(null);
+  };
+
+  const signup = async (email: string, password: string, name?: string) => {
+    setLoading(true);
+    // Simular signup
+    const mockUser = { id: '1', email, name: name || 'Usuário' };
+    localStorage.setItem('user', JSON.stringify(mockUser));
+    setUser(mockUser);
+    setLoading(false);
+  };
+
+  const value = {
+    user,
+    loading,
+    login,
+    logout,
+    signup
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

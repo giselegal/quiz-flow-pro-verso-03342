@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { useSchemaEditor } from '@/hooks/useSchemaEditor';
 import { EditorProvider } from '@/context/EditorContext';
 import SchemaDrivenEditorResponsive from './SchemaDrivenEditorResponsive';
 
@@ -15,7 +14,7 @@ export const SchemaDrivenEditorClean: React.FC<SchemaDrivenEditorCleanProps> = (
 }) => {
   return (
     <EditorProvider>
-      <div className={`h-full w-full ${className}`}>
+      <div className={`h-screen w-full overflow-hidden ${className}`}>
         <SchemaDrivenEditorResponsive funnelId={funnelId} />
       </div>
     </EditorProvider>

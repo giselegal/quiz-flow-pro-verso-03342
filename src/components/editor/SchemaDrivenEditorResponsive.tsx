@@ -27,7 +27,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   const selectedBlock = blocks.find(block => block.id === selectedBlockId);
 
   return (
-    <div className={`h-full w-full ${className}`}>
+    <div className={`h-full w-full bg-gray-50 ${className}`}>
       <ResizablePanelGroup direction="horizontal" className="h-full">
         {/* Sidebar de componentes */}
         <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>

@@ -3,7 +3,7 @@ import React from 'react';
 import { Router, Route, Switch } from 'wouter';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/context/AuthContext';
-import SchemaDrivenEditorPage from '@/pages/SchemaDrivenEditorPage';
+import { SchemaDrivenEditorClean } from '@/components/editor/SchemaDrivenEditorClean';
 import { ResultPage } from './pages/ResultPage';
 import { Home } from './pages/Home';
 import { FunnelsPage } from './pages/FunnelsPage';
@@ -18,9 +18,13 @@ function App() {
       <Router>
         <div className="min-h-screen bg-background">
           <Switch>
-            {/* Editor Routes */}
-            <Route path="/editor" component={SchemaDrivenEditorPage} />
-            <Route path="/editor/:id" component={SchemaDrivenEditorPage} />
+            {/* Editor Routes - usando SchemaDrivenEditorClean */}
+            <Route path="/editor">
+              {() => <SchemaDrivenEditorClean />}
+            </Route>
+            <Route path="/editor/:id">
+              {(params) => <SchemaDrivenEditorClean funnelId={params.id} />}
+            </Route>
             
             {/* Public Routes */}
             <Route path="/" component={Home} />
