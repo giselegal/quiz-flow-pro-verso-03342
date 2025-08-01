@@ -5,6 +5,8 @@ import "./index.css";
 
 // Otimizações de performance para desenvolvimento
 import "./utils/devPerformanceOptimizer";
+// Configuração de preview para evitar erros de React
+import "./utils/previewConfig";
 
 console.log('🚀 Aplicação iniciando...');
 
