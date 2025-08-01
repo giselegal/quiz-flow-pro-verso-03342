@@ -1188,8 +1188,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     console.log('Reorder step', draggedId, 'to', targetId);
   }, []);
 
-  // 🚀 Handler eficiente para popular etapas - usa sistema existente
-  const handlePopulateStep = useCallback((stepId: string) => {
+  // Component categories for better organization
     console.log(`🎯 Populando etapa ${stepId} com template otimizado`);
     
     try {
