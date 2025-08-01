@@ -35,12 +35,12 @@ const getStepTemplate = (stepId: string) => {
       }));
     }
     
-    return [];
-  } catch (error) {
-    console.error('❌ Erro ao obter template da etapa:', error);
-    return [];
-  }
-};
+      return [];
+    } catch (error) {
+      console.error('❌ Erro ao obter template da etapa:', error);
+      return [];
+    }
+  };
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
