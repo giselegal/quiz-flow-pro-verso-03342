@@ -725,32 +725,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       console.log(`✅ Template da questão estratégica ${strategicNumber} carregado para ${stepId}`);
     }
   }, []);
-  // Função para carregar o template completo das 21 etapas
-  const handleLoadComplete21StepsTemplate = useCallback(async () => {
-    try {
-      console.log('🚀 Carregando template completo das 21 etapas...');
-      
-      // Limpar blocos existentes
-      blocks.forEach(block => {
-        deleteBlock(block.id);
-      });
-      
-      toast({
-        title: "Template das 21 Etapas Carregado!",
-        description: `${steps.length} etapas foram populadas com blocos específicos.`,
-      });
-      
-      console.log('✅ Template completo das 21 etapas carregado com sucesso!');
-      
-    } catch (error) {
-      console.error('❌ Erro ao carregar template das 21 etapas:', error);
-      toast({
-        title: "Erro ao carregar template",
-        description: "Não foi possível carregar o template completo.",
-        variant: "destructive",
-      });
-    }
-  }, [steps, blocks, deleteBlock, toast]);
 
   const handleStepSelect = useCallback((stepId: string) => {
     console.log(`🎯 Selecionando etapa: ${stepId}`);
@@ -897,16 +871,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
             <Button
               variant="outline"
               size="sm"
-              onClick={handleLoadComplete21StepsTemplate}
-              className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 border-none"
-            >
-              <Download className="w-4 h-4" />
-              Carregar 21 Etapas
-            </Button>
-            
-            <Button
-              variant="outline"
-              size="sm"
               onClick={handleTemplateLoad}
               className="flex items-center gap-2"
             >
@@ -1032,11 +996,11 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                         </p>
                         <div className="space-y-2">
                           <Button
-                            onClick={handleLoadComplete21StepsTemplate}
+                            onClick={handleTemplateLoad}
                             className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
                           >
                             <Download className="w-4 h-4 mr-2" />
-                            Carregar 21 Etapas
+                            Carregar Blocos de Teste
                           </Button>
                         </div>
                       </div>
@@ -1162,13 +1126,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                             </div>
                             <div className="space-y-2">
                               <Button
-                                onClick={handleLoadComplete21StepsTemplate}
-                                className="w-full mb-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-                              >
-                                <Download className="w-4 h-4 mr-2" />
-                                Carregar Template Completo (21 Etapas)
-                              </Button>
-                              <Button
                                 onClick={handleTemplateLoad}
                                 variant="outline"
                                 className="w-full"
@@ -1248,6 +1205,49 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                         </div>
                       )}
                     </div>
+                  </div>
+                </div>
+              </ScrollArea>
+            </div>
+          </ResizablePanel>
+
+          <ResizableHandle withHandle />
+
+          {/* Properties Panel */}
+          <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+            <AdvancedPropertyPanel
+              selectedBlock={selectedBlockId ? blocks.find(b => b.id === selectedBlockId) : null}
+              onUpdateBlock={(id: string, updates: any) => {
+                updateBlock(id, updates);
+              }}
+              onDeleteBlock={(id: string) => {
+                deleteBlock(id);
+                setSelectedBlockId(null);
+              }}
+              onClose={() => setSelectedBlockId(null)}
+            />
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      )}
+        
+      {/* Editor Status Bar */}
+      <div className="flex-shrink-0">
+        <EditorStatus
+          selectedBlockId={selectedBlockId || undefined}
+          historyCount={10} // TODO: Get from property history
+          currentHistoryIndex={5} // TODO: Get from property history
+          canUndo={true} // TODO: Get from property history
+          canRedo={false} // TODO: Get from property history
+          lastAction="Propriedade alterada" // TODO: Get from property history
+          totalBlocks={blocks.length}
+          previewMode={previewMode}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default SchemaDrivenEditorResponsive;
                   </div>
                 </div>
               </ScrollArea>
