@@ -1,187 +1,307 @@
-
 import React from 'react';
-import { EditorBlock } from '@/types/editor';
-import { Button } from '@/components/ui/button';
+import { cn } from '../../../lib/utils';
+import type { BlockData } from '../../../types/blocks';
+
+// === COMPONENTES PRINCIPAIS DO SISTEMA ===
+// Componentes de página completa (funcionais)
+
+
+// Componentes de quiz (funcionais)
+import QuizQuestionBlock from './QuizQuestionBlock';
+import QuizProgressBlock from './QuizProgressBlock';
+import QuestionMultipleBlock from './QuestionMultipleBlock';
+import StrategicQuestionBlock from './StrategicQuestionBlock';
+import QuizTransitionBlock from './QuizTransitionBlock';
+import OptionsGridBlock from './OptionsGridBlock';
+import VerticalCanvasHeaderBlock from './VerticalCanvasHeaderBlock';
+
+// === COMPONENTES INLINE MODULARES (ES7+) ===
+// Importação corrigida e otimizada dos componentes inline
+import {
+  TextInlineBlock,
+  StyleCardInlineBlock,
+  StatInlineBlock,
+  BadgeInlineBlock,
+  ProgressInlineBlock,
+  ImageDisplayInlineBlock,
+  PricingCardInlineBlock,
+  TestimonialCardInlineBlock,
+  // Etapa 20 (Resultado)
+  TestimonialsInlineBlock,
+  // Etapa 21 (Oferta)
+  QuizOfferPricingInlineBlock,
+  CountdownInlineBlock,
+  // Componentes especializados para Quiz
+  LoadingAnimationBlock,
+    // NOVA IMPLEMENTAÇÃO: Componentes das 21 Etapas Inline (existentes)
+  QuizStartPageInlineBlock,
+  QuizQuestionInlineBlock,
+  QuizProgressInlineBlock,
+  QuizTransitionInlineBlock,
+  QuizLoadingInlineBlock,
+  QuizResultInlineBlock,
+  QuizAnalysisInlineBlock,
+  QuizCategoryInlineBlock,
+  QuizRecommendationInlineBlock,
+  QuizActionPlanInlineBlock,
+  QuizMetricsInlineBlock,
+  QuizComparisonInlineBlock,
+  QuizCertificateInlineBlock,
+  QuizLeaderboardInlineBlock,
+  QuizBadgesInlineBlock,
+  QuizEvolutionInlineBlock,
+  QuizNetworkingInlineBlock,
+  QuizDevelopmentPlanInlineBlock,
+  QuizGoalsDashboardInlineBlock,
+  QuizFinalResultsInlineBlock,
+  QuizOfferCTAInlineBlock
+} from './inline';
+
+// Componentes básicos (funcionais)
+import { SpacerBlock } from './SpacerBlock';
+import { VideoPlayerBlock } from './VideoPlayerBlock';
+import FormInputBlock from './FormInputBlock';
+import ListBlock from './ListBlock';
+
+// Componentes inline básicos e funcionais
+import HeadingInlineBlock from './HeadingInlineBlock';
+import ImageInlineBlock from './ImageInlineBlock';
+import ButtonInlineBlock from './ButtonInlineBlock';
+import CTAInlineBlock from './CTAInlineBlock';
+
+// Novos componentes inline criados
+import ResultHeaderInlineBlock from './inline/ResultHeaderInlineBlock';
+import ResultCardInlineBlock from './inline/ResultCardInlineBlock';
+import BeforeAfterInlineBlock from './inline/BeforeAfterInlineBlock';
+import BonusListInlineBlock from './inline/BonusListInlineBlock';
+import StepHeaderInlineBlock from './inline/StepHeaderInlineBlock';
+
+// Novos componentes modulares para etapas 20 e 21 (temporariamente desabilitados)
+import ResultPageHeaderBlock from './ResultPageHeaderBlock';
+
+// Componentes modernos (funcionais)
+import TestimonialsGridBlock from './TestimonialsGridBlock';
+import FAQSectionBlock from './FAQSectionBlock';
+import GuaranteeBlock from './GuaranteeBlock';
 
 export interface BlockRendererProps {
-  block: EditorBlock;
-  isSelected: boolean;
-  onSelect: () => void;
-  onUpdate: (updates: Partial<EditorBlock>) => void;
-  onDelete: () => void;
-  isPreview?: boolean;
+  block: BlockData;
+  isSelected?: boolean;
+  onClick?: () => void;
+  onSaveInline?: (blockId: string, updates: Partial<BlockData>) => void;
+  disabled?: boolean;
+  className?: string;
 }
 
+/**
+ * Universal Block Renderer for Schema-Driven Editor (ALL INLINE HORIZONTAL)
+ * Renders any block type based on its type property
+ * All components are now inline-editable with horizontal flexbox layout
+ * Implements responsive, mobile-first design with max 2 columns
+ */
 export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
   block,
-  isSelected,
-  onSelect,
-  onUpdate,
-  onDelete,
-  isPreview = false
+  isSelected = false,
+  onClick,
+  onSaveInline,
+  disabled = false,
+  className
 }) => {
-  const handleContentUpdate = (key: string, value: any) => {
-    onUpdate({
-      content: { ...block.content, [key]: value }
-    });
+  // ES7+ Props comuns padronizados para flexbox inline responsivo
+  const commonProps = {
+    block,
+    isSelected,
+    onClick,
+    onPropertyChange: (key: string, value: any) => {
+      if (onSaveInline) {
+        const updatedBlock = {
+          ...block,
+          properties: { ...block.properties, [key]: value }
+        };
+        onSaveInline(block.id, updatedBlock);
+      }
+    },
+    disabled,
+    className: cn(
+      // ES7+ Flexbox container responsivo padronizado
+      'flex flex-wrap items-start gap-2 sm:gap-4',
+      'w-full min-h-[60px] transition-all duration-300 ease-out',
+      // Background e padding responsivos
+      'bg-white p-2 sm:p-3 md:p-4 rounded-lg',
+      // Estados visuais modernos
+      isSelected && 'ring-2 ring-blue-500/50 bg-blue-50/30 shadow-md',
+      !disabled && 'hover:bg-gray-50/80 hover:shadow-sm cursor-pointer',
+      // Responsividade avançada
+      'max-w-full overflow-hidden',
+      className
+    )
   };
 
-  const renderBlock = () => {
-    switch (block.type) {
-      case 'header':
-        return (
-          <div className="text-center py-6">
-            {isPreview ? (
-              <>
-                <h1 className="text-3xl font-bold mb-2">{block.content.title || 'Título'}</h1>
-                {block.content.subtitle && (
-                  <p className="text-lg text-gray-600">{block.content.subtitle}</p>
-                )}
-              </>
-            ) : (
-              <>
-                <input
-                  type="text"
-                  value={block.content.title || ''}
-                  onChange={(e) => handleContentUpdate('title', e.target.value)}
-                  placeholder="Digite o título"
-                  className="text-3xl font-bold mb-2 w-full text-center bg-transparent border-none outline-none"
-                />
-                <input
-                  type="text"
-                  value={block.content.subtitle || ''}
-                  onChange={(e) => handleContentUpdate('subtitle', e.target.value)}
-                  placeholder="Digite o subtítulo"
-                  className="text-lg text-gray-600 w-full text-center bg-transparent border-none outline-none"
-                />
-              </>
-            )}
-          </div>
-        );
+  // TODOS os componentes são agora inline - removido conceito de não-inline
+  const isInlineBlock = (blockType: string): boolean => {
+    return true; // Todos são inline agora
+  };
 
-      case 'text':
-        return (
-          <div className="py-4">
-            {isPreview ? (
-              <p className="text-gray-800 leading-relaxed">{block.content.text || 'Texto'}</p>
-            ) : (
-              <textarea
-                value={block.content.text || ''}
-                onChange={(e) => handleContentUpdate('text', e.target.value)}
-                placeholder="Digite o texto aqui..."
-                className="w-full min-h-[100px] p-2 border border-gray-200 rounded resize-y"
-              />
-            )}
-          </div>
-        );
+  // ES7+ Sistema responsivo simplificado - SEM wrapper duplo
+  const renderComponent = () => {
+    const commonProps = {
+      block,
+      isSelected,
+      onClick,
+      onPropertyChange: (key: string, value: any) => {
+        if (onSaveInline) {
+          const updatedBlock = {
+            ...block,
+            properties: { ...block.properties, [key]: value }
+          };
+          onSaveInline(block.id, updatedBlock);
+        }
+      },
+      className: cn(
+        // Responsividade nativa mobile-first
+        'w-full transition-all duration-200',
+        'border border-gray-200 rounded-lg shadow-sm bg-white',
+        'hover:shadow-md hover:border-blue-300',
+        isSelected && 'ring-2 ring-blue-500 border-blue-400 bg-blue-50'
+      )
+    };
 
-      case 'image':
-        return (
-          <div className="py-4">
-            {block.content.imageUrl ? (
-              <div className="text-center">
-                <img
-                  src={block.content.imageUrl}
-                  alt={block.content.imageAlt || 'Imagem'}
-                  className="max-w-full h-auto mx-auto rounded"
-                />
-                {block.content.caption && (
-                  <p className="text-sm text-gray-600 mt-2">{block.content.caption}</p>
-                )}
-              </div>
-            ) : (
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                <div className="text-gray-400">
-                  <div className="text-4xl mb-2">🖼️</div>
-                  <p className="text-sm">Adicione uma URL de imagem no painel de propriedades</p>
-                </div>
-              </div>
-            )}
-          </div>
-        );
+    const componentMap: Record<string, () => React.ReactNode> = {
+      // === COMPONENTES BÁSICOS ===
+      header: () => <HeadingInlineBlock {...commonProps} />,
+      text: () => <TextInlineBlock {...commonProps} />,
+      image: () => <ImageInlineBlock {...commonProps} />,
+      button: () => <ButtonInlineBlock {...commonProps} />,
+      spacer: () => <SpacerBlock {...commonProps} />,
+      'form-input': () => <FormInputBlock {...commonProps} />,
+      list: () => <ListBlock {...commonProps} />,
+      
+      // === COMPONENTES DE RESULTADO ===
+      'result-header': () => <HeadingInlineBlock {...commonProps} />,
+      'result-description': () => <TextInlineBlock {...commonProps} />,
+      
+      // === COMPONENTES DE OFERTA ===
+      'product-offer': () => <PricingCardInlineBlock {...commonProps} />,
+      'urgency-timer': () => <CountdownInlineBlock {...commonProps} />,
+      
+      // === COMPONENTES ESPECIAIS ===
+      'faq-section': () => <FAQSectionBlock {...commonProps} />,
+      testimonials: () => <TestimonialsGridBlock {...commonProps} />,
+      guarantee: () => <GuaranteeBlock {...commonProps} />,
+      'video-player': () => <VideoPlayerBlock {...commonProps} />,
+      
+      // === COMPONENTES INLINE ESSENCIAIS ===
+      'text-inline': () => <TextInlineBlock {...commonProps} />,
+      'heading-inline': () => <HeadingInlineBlock {...commonProps} />,
+      'button-inline': () => <ButtonInlineBlock {...commonProps} />,
+      'badge-inline': () => <BadgeInlineBlock {...commonProps} />,
+      'progress-inline': () => <ProgressInlineBlock {...commonProps} />,
+      'image-display-inline': () => <ImageDisplayInlineBlock {...commonProps} />,
+      'style-card-inline': () => <StyleCardInlineBlock {...commonProps} />,
+      'result-card-inline': () => <ResultCardInlineBlock {...commonProps} />,
+      'result-header-inline': () => <ResultHeaderInlineBlock {...commonProps} />,
+      'before-after-inline': () => <BeforeAfterInlineBlock {...commonProps} />,
+      'bonus-list-inline': () => <BonusListInlineBlock {...commonProps} />,
+      'step-header-inline': () => <StepHeaderInlineBlock {...commonProps} />,
+      'testimonial-card-inline': () => <TestimonialCardInlineBlock {...commonProps} />,
+      'countdown-inline': () => <CountdownInlineBlock {...commonProps} />,
+      'stat-inline': () => <StatInlineBlock {...commonProps} />,
+      'pricing-card-inline': () => <PricingCardInlineBlock {...commonProps} />,
+      
+      // === COMPONENTES QUIZ ===
+      'quiz-intro-header': () => <VerticalCanvasHeaderBlock {...commonProps} />,
+      'vertical-canvas-header': () => <VerticalCanvasHeaderBlock {...commonProps} />,
+      'loading-animation': () => <LoadingAnimationBlock {...commonProps} />,
+      'options-grid': () => <OptionsGridBlock {...commonProps} />,
+      'quiz-question': () => <QuizQuestionBlock {...commonProps} />,
+      'quiz-progress': () => <QuizProgressBlock {...commonProps} />,
+      
+      // === NOVA IMPLEMENTAÇÃO: Componentes das 21 Etapas Inline ===
+      // === COMPONENTES DAS 21 ETAPAS INLINE ===
+      'quiz-start-page-inline': () => <QuizStartPageInlineBlock {...commonProps} />,
+      'quiz-personal-info-inline': () => <QuizPersonalInfoInlineBlock {...commonProps} />,
+      'quiz-experience-inline': () => <QuizExperienceInlineBlock {...commonProps} />,
+      'quiz-skills-assessment-inline': () => <QuizSkillsAssessmentInlineBlock {...commonProps} />,
+      'quiz-leadership-style-inline': () => <QuizLeadershipStyleInlineBlock {...commonProps} />,
+      'quiz-communication-inline': () => <QuizCommunicationInlineBlock {...commonProps} />,
+      'quiz-problem-solving-inline': () => <QuizProblemSolvingInlineBlock {...commonProps} />,
+      'quiz-goals-inline': () => <QuizGoalsInlineBlock {...commonProps} />,
+      'quiz-motivation-inline': () => <QuizMotivationInlineBlock {...commonProps} />,
+      'quiz-work-style-inline': () => <QuizWorkStyleInlineBlock {...commonProps} />,
+      'quiz-feedback-inline': () => <QuizFeedbackInlineBlock {...commonProps} />,
+      'quiz-results-inline': () => <QuizResultsInlineBlock {...commonProps} />,
+      'quiz-certificate-inline': () => <QuizCertificateInlineBlock {...commonProps} />,
+      'quiz-leaderboard-inline': () => <QuizLeaderboardInlineBlock {...commonProps} />,
+      'quiz-badges-inline': () => <QuizBadgesInlineBlock {...commonProps} />,
+      'quiz-evolution-inline': () => <QuizEvolutionInlineBlock {...commonProps} />,
+      'quiz-networking-inline': () => <QuizNetworkingInlineBlock {...commonProps} />,
+      'quiz-development-plan-inline': () => <QuizDevelopmentPlanInlineBlock {...commonProps} />,
+      'quiz-goals-dashboard-inline': () => <QuizGoalsDashboardInlineBlock {...commonProps} />,
+      'quiz-final-results-inline': () => <QuizFinalResultsInlineBlock {...commonProps} />,
+      'quiz-offer-cta-inline': () => <QuizOfferCTAInlineBlock {...commonProps} />,
+      
+      // === COMPONENTES ETAPA 20/21 (sem duplicação) ===
+      'quiz-offer-pricing-inline': () => <QuizOfferPricingInlineBlock {...commonProps} />,
+      'divider-inline': () => <SpacerBlock {...commonProps} />,
+      
+      // === COMPONENTES ETAPA 21 ESPECÍFICOS ===
+      'hero-badge-inline': () => <BadgeInlineBlock {...commonProps} />,
+      'hero-title-inline': () => <HeadingInlineBlock {...commonProps} />,
+      'problem-list-inline': () => <ListBlock {...commonProps} />,
+      'highlight-box-inline': () => <BadgeInlineBlock {...commonProps} />,
+      'product-card-inline': () => <PricingCardInlineBlock {...commonProps} />,
+      'price-highlight-inline': () => <PricingCardInlineBlock {...commonProps} />,
+      'cta-button-inline': () => <ButtonInlineBlock {...commonProps} />,
+      'trust-elements-inline': () => <TestimonialsGridBlock {...commonProps} />,
+      'countdown-timer-inline': () => <CountdownInlineBlock {...commonProps} />,
+      'guarantee-seal-inline': () => <BadgeInlineBlock {...commonProps} />,
+      'faq-item-inline': () => <FAQSectionBlock {...commonProps} />,
+      'section-header-inline': () => <HeadingInlineBlock {...commonProps} />,
+      'sticky-header-inline': () => <VerticalCanvasHeaderBlock {...commonProps} />,
+      
+      // === COMPONENTES ESTRATÉGICOS ===
+      'strategic-question-image': () => <StrategicQuestionBlock {...commonProps} />,
+      'strategic-question-main': () => <StrategicQuestionBlock {...commonProps} />,
+      'strategic-question-inline': () => <StrategicQuestionBlock {...commonProps} />,
+      
+      // === BLOCOS QUIZ ESPECÍFICOS ===
+      QuizQuestionBlock: () => <QuizQuestionBlock {...commonProps} />,
+      QuestionMultipleBlock: () => <QuestionMultipleBlock {...commonProps} />,
+      StrategicQuestionBlock: () => <StrategicQuestionBlock {...commonProps} />,
+      QuizTransitionBlock: () => <QuizTransitionBlock {...commonProps} />,
 
-      case 'button':
-        return (
-          <div className="py-4 text-center">
-            <Button
-              onClick={isPreview ? () => window.open(block.content.buttonUrl || '#', '_blank') : undefined}
-              className="px-6 py-2"
-            >
-              {block.content.buttonText || 'Clique aqui'}
-            </Button>
-          </div>
-        );
+      
+      // === MAPEAMENTOS ADICIONAIS ===
+      'quiz-title': () => <HeadingInlineBlock {...commonProps} />,
+      'quiz-name-input': () => <FormInputBlock {...commonProps} />,
+      'quiz-result-header': () => <HeadingInlineBlock {...commonProps} />,
+      'quiz-result-card': () => <PricingCardInlineBlock {...commonProps} />,
+      'quiz-offer-title': () => <HeadingInlineBlock {...commonProps} />,
+      'quiz-offer-countdown': () => <CountdownInlineBlock {...commonProps} />,
+      'quiz-offer-faq': () => <FAQSectionBlock {...commonProps} />,
+      
+      // === NOVOS COMPONENTES MODULARES ===
+      'result-page-header': () => <HeadingInlineBlock {...commonProps} />,
+      'style-result-card': () => <StyleCardInlineBlock {...commonProps} />,
+      'result-cta': () => <CTAInlineBlock {...commonProps} />,
+      'offer-header': () => <HeadingInlineBlock {...commonProps} />,
+      'product-showcase': () => <PricingCardInlineBlock {...commonProps} />,
+      'offer-cta': () => <CTAInlineBlock {...commonProps} />
+    };
 
-      case 'quiz-question':
-        return (
-          <div className="py-6 border border-gray-200 rounded-lg p-4">
-            <div className="mb-4">
-              {isPreview ? (
-                <h3 className="text-xl font-medium">{block.content.question || 'Pergunta do quiz'}</h3>
-              ) : (
-                <input
-                  type="text"
-                  value={block.content.question || ''}
-                  onChange={(e) => handleContentUpdate('question', e.target.value)}
-                  placeholder="Digite a pergunta"
-                  className="text-xl font-medium w-full bg-transparent border-none outline-none"
-                />
-              )}
-            </div>
-            
-            <div className="space-y-2">
-              {(block.content.options || []).map((option: any, index: number) => (
-                <div key={option.id || index} className="flex items-center gap-2">
-                  <input type="radio" name={`question-${block.id}`} disabled />
-                  <span className="flex-1">{option.text || `Opção ${index + 1}`}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-
-      case 'spacer':
-        return (
-          <div className="py-8">
-            <div className="border-t border-gray-200"></div>
-          </div>
-        );
-
-      default:
-        return (
-          <div className="py-4 text-center text-gray-500">
-            <p>Tipo de bloco: {block.type}</p>
-          </div>
-        );
-    }
+    // ES7+ Return com fallback usando optional chaining
+    return componentMap[block.type as keyof typeof componentMap]?.() ?? 
+           <TextInlineBlock {...commonProps} />;
   };
 
   return (
-    <div
-      onClick={onSelect}
-      className={`
-        relative cursor-pointer transition-all duration-200
-        ${isSelected ? 'ring-2 ring-blue-500 ring-opacity-50 bg-blue-50' : 'hover:bg-gray-50'}
-        ${isPreview ? '' : 'border border-transparent hover:border-gray-200 rounded-lg p-2'}
-      `}
-    >
-      {renderBlock()}
-      
-      {!isPreview && isSelected && (
-        <div className="absolute top-2 right-2 flex gap-1">
-          <Button
-            size="sm"
-            variant="destructive"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete();
-            }}
-            className="h-6 w-6 p-0"
-          >
-            ×
-          </Button>
-        </div>
-      )}
+    <div className={cn(
+      // ES7+ Container principal flexbox responsivo
+      'universal-block-renderer',
+      'flex flex-col w-full',
+      'transition-all duration-300 ease-out'
+    )}>
+      {renderComponent()}
     </div>
   );
 };
