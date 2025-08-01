@@ -1624,12 +1624,9 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                               <UniversalBlockRenderer
                                 block={blockData}
                                 isSelected={selectedBlockId === block.id}
-                                onClick={() => handleBlockClick(block.id)}
-                                onSaveInline={handleSaveInline}
-                                disabled={isPreviewing}
-                                stepNumber={currentStepNumber}
-                                quizSessionId={currentQuizSessionId}
-                                userName={currentUserName}
+                                onSelect={() => setSelectedBlockId(block.id)}
+                                onUpdate={(properties) => updateBlock(block.id, properties)}
+                                onDelete={() => deleteBlock(block.id)}
                               />
                             </div>
                           );
@@ -1648,23 +1645,15 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           {/* Properties Panel */}
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
             <AdvancedPropertyPanel
-              selectedBlockId={selectedBlockId}
-              properties={selectedBlockId ? blocks.find(b => b.id === selectedBlockId)?.properties || {} : {}}
-              onPropertyChange={(key, value) => {
-                if (selectedBlockId) {
-                  const block = blocks.find(b => b.id === selectedBlockId);
-                  if (block) {
-                    updateBlock(selectedBlockId, { 
-                      ...block, 
-                      properties: { ...block.properties, [key]: value } 
-                    });
-                  }
-                }
+              selectedBlock={selectedBlockId ? blocks.find(b => b.id === selectedBlockId) : null}
+              onUpdateBlock={(id: string, updates: any) => {
+                updateBlock(id, updates);
               }}
-              onDeleteBlock={selectedBlockId ? () => {
-                deleteBlock(selectedBlockId);
+              onDeleteBlock={(id: string) => {
+                deleteBlock(id);
                 setSelectedBlockId(null);
-              } : undefined}
+              }}
+              onClose={() => setSelectedBlockId(null)}
             />
           </ResizablePanel>
         </ResizablePanelGroup>
