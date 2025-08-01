@@ -1,22 +1,22 @@
-# Editor Aprimorado - Recursos das 21 Etapas do Quiz CaktoQuiz
+# Editor Aprimorado - Recursos de Componentes para Quiz Quest
 
 ## 🎯 **Resumo dos Recursos Adicionados**
 
-O editor `/editor` foi aprimorado com recursos avançados do arquivo backup `SchemaDrivenEditorResponsive.tsx.backup`, incluindo:
+O editor `/editor` foi aprimorado com recursos avançados do arquivo backup `SchemaDrivenEditorResponsive.tsx.backup`, focando em:
 
 ## 🚀 **Principais Funcionalidades Adicionadas**
 
-### **1. Sistema de 21 Etapas Completo**
-- **21 etapas pré-configuradas** para quiz de estilo pessoal
-- **Navegação entre etapas** com painel lateral dedicado
-- **Persistência local** das configurações das etapas
-- **Categorização** por tipo: intro, questions, strategic, result, offer
+### **1. Editor de Componentes Livre**
+- **Edição livre** de componentes sem estrutura de etapas
+- **Tela única** para construção de quiz/funil
+- **Persistência local** das configurações dos componentes
+- **Flexibilidade total** na organização do conteúdo
 
-### **2. Componentes Expandidos**
+### **2. Biblioteca de Componentes Expandida**
 - **80+ componentes disponíveis** organizados por categoria:
   - `text`, `media`, `interactive`, `layout`, `form`
-  - `quiz`, `inline`, `21-etapas`, `resultado`, `oferta`
-  - `content`, `strategic`
+  - `quiz`, `inline`, `content`, `strategic`
+  - `resultado`, `oferta`
 
 ### **3. Interface Responsiva Avançada**
 - **Preview multi-dispositivo**: Desktop (1200px), Tablet (768px), Mobile (375px)
@@ -36,18 +36,27 @@ O editor `/editor` foi aprimorado com recursos avançados do arquivo backup `Sch
 - **Status bar** com informações detalhadas
 - **Navegação melhorada** com botão voltar
 
-## 📋 **Estrutura das 21 Etapas**
+## 📋 **Categorias de Componentes Disponíveis**
 
-### **Etapas 1-2: Introdução**
-- `etapa-1`: Introdução - Apresentação do Quiz
-- `etapa-2`: Coleta de Nome - Captura do participante
+### **Componentes de Texto**
+- Títulos, parágrafos, listas
+- Text blocks com formatação
+- Elementos de tipografia
 
-### **Etapas 3-12: Questões Principais (10 questões)**
-- `etapa-3`: Q1: Tipo de Roupa Favorita
-- `etapa-4`: Q2: Personalidade
-- `etapa-5`: Q3: Visual que se Identifica  
-- `etapa-6`: Q4: Detalhes que Gosta
-- `etapa-7`: Q5: Estampas Preferidas
+### **Componentes de Mídia**
+- Imagens, vídeos, galerias
+- Media players
+- Elementos visuais
+
+### **Componentes Interativos**
+- Botões, formulários, inputs
+- Quiz components
+- Elementos de interação
+
+### **Componentes de Layout**
+- Containers, colunas, grids
+- Spacers, divisores
+- Estruturas organizacionais
 - `etapa-8`: Q6: Casaco Favorito
 - `etapa-9`: Q7: Calça Favorita
 - `etapa-10`: Q8: Sapatos Preferidos
