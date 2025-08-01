@@ -329,35 +329,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     setSelectedBlockId(newBlockId);
   }, [addBlock]);
 
-  // Função para adicionar múltiplos blocos a uma etapa específica
-  const handleAddBlocksToStep = useCallback((stepId: string, blocksToAdd: any[]) => {
-    console.log(`🎯 Adicionando ${blocksToAdd.length} blocos à etapa ${stepId}`);
-    
-    blocksToAdd.forEach((block, index) => {
-      setTimeout(() => {
-        try {
-          const newBlockId = addBlock(block.type as any);
-          if (newBlockId && block.properties) {
-            // Atualizar propriedades do bloco
-            updateBlock(newBlockId, block.properties);
-          }
-          console.log(`✅ Bloco ${index + 1}/${blocksToAdd.length} adicionado: ${block.type}`);
-        } catch (error) {
-          console.error(`❌ Erro ao adicionar bloco ${block.type}:`, error);
-        }
-      }, 100 * index); // Delay entre cada bloco
-    });
-
-    // Atualizar contador de blocos da etapa
-    setSteps(prev => prev.map(step => 
-      step.id === stepId 
-        ? { ...step, blocksCount: step.blocksCount + blocksToAdd.length }
-        : step
-    ));
-  }, [addBlock, updateBlock]);
-
-  // Função para carregar blocos específicos de cada etapa com templates detalhados
-
 
   // Função para carregar template específico de cada questão
   const loadQuestionTemplate = useCallback((stepId: string, questionNumber: number) => {
@@ -599,10 +570,10 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
     const template = questionTemplates[questionNumber];
     if (template) {
-      handleAddBlocksToStep(stepId, template);
+      // Removido handleAddBlocksToStep - função excluída
       console.log(`✅ Template da questão ${questionNumber} carregado para ${stepId}`);
     }
-  }, [handleAddBlocksToStep]);
+  }, []);
 
   // Função para carregar templates de questões estratégicas
   const loadStrategicQuestionTemplate = useCallback((stepId: string, strategicNumber: number) => {
@@ -792,10 +763,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     const selectedStep = steps.find(step => step.id === stepId);
     if (selectedStep && selectedStep.blocksCount === 0) {
       console.log(`📝 Etapa ${stepId} está vazia, populando automaticamente...`);
-      // Carregar conteúdo da etapa automaticamente
-      setTimeout(() => {
-        handlePopulateStep(stepId);
-      }, 100);
+      // Carregar conteúdo da etapa automaticamente (removido para eliminar dependência de step logic)
     } else {
       console.log(`✅ Etapa ${stepId} já tem ${selectedStep?.blocksCount || 0} blocos`);
     }
@@ -1178,7 +1146,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
                   onStepDuplicate={handleStepDuplicate}
                   onStepReorder={handleStepReorder}
                   onAddBlocksToStep={handleAddBlocksToStep}
-                  onPopulateStep={handlePopulateStep}
                   className="p-2"
                 />
               </ScrollArea>
@@ -1370,7 +1337,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           />
         </div>
       </div>
-    // </DndProvider>
+    </DndProvider>
   );
 };
 
