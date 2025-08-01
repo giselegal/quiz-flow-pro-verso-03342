@@ -258,7 +258,7 @@ export const ComponentsPanel: React.FC<ComponentsPanelProps> = ({
         </CardHeader>
         
         <CardContent className="p-0">
-          <ScrollArea className="w-full">
+          <ScrollArea className="w-full" key="horizontal-scroll">
             <div className="flex space-x-2 p-4">
               {filteredCategories.flatMap(category => category.items).map((item) => (
                 <ComponentButton key={item.id} item={item} />
@@ -288,7 +288,7 @@ export const ComponentsPanel: React.FC<ComponentsPanelProps> = ({
       </CardHeader>
       
       <CardContent className="flex-1 p-0">
-        <ScrollArea className="h-full px-4">
+        <ScrollArea className="h-full px-4" key="vertical-scroll">
           <div className="space-y-2 pb-4 pt-2">
             {filteredCategories.map((category) => (
               <Collapsible

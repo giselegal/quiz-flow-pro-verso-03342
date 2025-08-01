@@ -136,6 +136,11 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
+
+  // Ensure safe properties access
+  const safeProperties = useMemo(() => {
+    return properties || {};
+  }, [properties]);
     })
   );
 
@@ -186,6 +191,7 @@ export const AdvancedPropertyPanel: React.FC<AdvancedPropertyPanelProps> = ({
     onRedo: canRedo ? handleRedo : undefined,
     onDelete: onDeleteBlock
   });
+
 
   const toggleSection = useCallback((sectionKey: string) => {
     setExpandedSections(prev => ({

@@ -462,3 +462,6 @@ const ResultPage: React.FC = () => {
       <BuildInfo />
     </div>;
 };
+
+
+export default ResultPage;
