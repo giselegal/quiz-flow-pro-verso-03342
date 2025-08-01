@@ -10,11 +10,10 @@
 - Integração com Supabase configurada
 - Sistema de 21 etapas do funil definido
 
-### **❌ O QUE FALTA**
-- Componentes React físicos (arquivos .tsx)
-- Mapeamento completo no UniversalBlockRenderer
-- Testes de funcionamento no editor
-- Validações e tratamento de erros
+ ### **❌ O QUE FALTA**
+ - Componentes React físicos (arquivos .tsx)
+ - Testes de funcionamento no editor
+ - Validações e tratamento de erros
 
 ## 🚀 **FASE 1: COMPONENTES CRÍTICOS DO QUIZ (PRIORIDADE MÁXIMA)**
 

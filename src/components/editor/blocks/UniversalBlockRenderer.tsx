@@ -2,6 +2,9 @@
 import React from 'react';
 import { EditorBlock } from '@/types/editor';
 import { Button } from '@/components/ui/button';
+import QuizQuestionInteractiveBlock from './QuizQuestionInteractiveBlock';
+import QuizResultCalculatedBlock from './QuizResultCalculatedBlock';
+import ProgressBarModernBlock from './ProgressBarModernBlock';
 
 export interface BlockRendererProps {
   block: EditorBlock;
@@ -28,6 +31,33 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
 
   const renderBlock = () => {
     switch (block.type) {
+      case 'quiz-question-interactive':
+        return (
+          <QuizQuestionInteractiveBlock
+            block={block}
+            isSelected={isSelected}
+            onClick={onSelect}
+            onPropertyChange={(key, value) => onUpdate({ content: { ...block.content, [key]: value } })}
+          />
+        );
+      case 'quiz-result-calculated':
+        return (
+          <QuizResultCalculatedBlock
+            block={block}
+            isSelected={isSelected}
+            onClick={onSelect}
+            onPropertyChange={(key, value) => onUpdate({ content: { ...block.content, [key]: value } })}
+          />
+        );
+      case 'progress-bar-modern':
+        return (
+          <ProgressBarModernBlock
+            block={block}
+            isSelected={isSelected}
+            onClick={onSelect}
+            onPropertyChange={(key, value) => onUpdate({ content: { ...block.content, [key]: value } })}
+          />
+        );
       case 'header':
         return (
           <div className="text-center py-6">
@@ -156,6 +186,23 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
     }
   };
 
+  const handlePropertyChange = (key: string, value: any) =>
+    onUpdate({ content: { ...block.content, [key]: value } });
+  const toPascal = (s: string) =>
+    s.split('-').map(part => part.charAt(0).toUpperCase() + part.slice(1)).join('');
+  const componentName = `${toPascal(block.type)}Block`;
+  const Blocks = require('./blocks');
+  const Dynamic = Blocks[componentName] as React.FC<any>;
+  if (Dynamic) {
+    return (
+      <div onClick={onSelect} className={`relative cursor-pointer transition-all duration-200 ${isSelected ? 'ring-2 ring-blue-500 ring-opacity-50 bg-blue-50' : 'hover:bg-gray-50'} ${isPreview ? '' : 'border border-transparent hover:border-gray-200 rounded-lg p-2'}`}>
+        <Dynamic block={block} isSelected={isSelected} onClick={onSelect} onPropertyChange={handlePropertyChange} />
+      </div>
+    );
+  }
+  return (
+    <div onClick={onSelect} className={`py-4 text-center text-gray-500 cursor-pointer ${isSelected ? 'ring-2 ring-blue-500 ring-opacity-50 bg-blue-50' : 'hover:bg-gray-50'}`}>Tipo de bloco: {block.type}</div>
+  };
   return (
     <div
       onClick={onSelect}

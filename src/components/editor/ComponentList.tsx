@@ -110,6 +110,43 @@ const COMPONENT_CATEGORIES = {
     title: '🎯 INTERATIVOS',
     color: 'green',
     components: [
+      // Blocos críticos do quiz
+      {
+        id: 'quiz-question-interactive',
+        name: 'Questão Interativa',
+        icon: HelpCircle,
+        description: 'Pergunta do quiz com opções interativas',
+        category: 'quiz',
+        defaultProps: {
+          question: 'Qual dessas opções representa melhor seu estilo?',
+          questionNumber: 1,
+          totalQuestions: 10,
+          options: [
+            { id: 'opt1', text: 'Opção 1', value: 'option1' },
+            { id: 'opt2', text: 'Opção 2', value: 'option2' }
+          ],
+          allowMultiple: false,
+          showImages: true,
+          autoAdvance: true,
+          showProgress: true
+        }
+      },
+      {
+        id: 'quiz-result-calculated',
+        name: 'Resultado Calculado',
+        icon: Star,
+        description: 'Exibe o resultado calculado do quiz',
+        category: 'quiz',
+        defaultProps: { showPercentages: true, showSecondaryStyles: true, maxSecondaryStyles: 2 }
+      },
+      {
+        id: 'progress-bar-modern',
+        name: 'Barra de Progresso',
+        icon: BarChart3,
+        description: 'Barra de progresso moderna',
+        category: 'layout',
+        defaultProps: { percentage: 65, showLabel: true, showPercentage: true, color: '#3b82f6', backgroundColor: '#e5e7eb', height: 'md', animated: true, style: 'modern' }
+      },
       {
         id: 'progress',
         name: 'Barra de Progresso',
