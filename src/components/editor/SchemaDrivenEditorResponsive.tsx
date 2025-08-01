@@ -1615,7 +1615,11 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
       return !block.stepId; // Mostrar blocos sem stepId apenas quando não há outros blocos
     });
     
-    console.log(`🧱 Blocos da etapa ${selectedStepId}:`, stepBlocks.length);
+    console.log(`🧱 [FILTRO] Etapa atual: ${selectedStepId}`);
+    console.log(`🧱 [FILTRO] Total de blocos: ${blocks.length}`);
+    console.log(`🧱 [FILTRO] Blocos da etapa: ${stepBlocks.length}`);
+    console.log(`🧱 [FILTRO] Blocos com stepId:`, blocks.filter(b => b.stepId).map(b => `${b.id}:${b.stepId}`));
+    
     return [...stepBlocks].sort((a, b) => (a.order || 0) - (b.order || 0));
   }, [blocks, selectedStepId]);
 
