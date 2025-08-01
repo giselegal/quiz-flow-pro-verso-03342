@@ -1134,115 +1134,59 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     console.log('Reorder step', draggedId, 'to', targetId);
   }, []);
 
-  // Handler para popular uma etapa com blocos padrão - TODAS AS 21 ETAPAS
+  // 🚀 Handler eficiente para popular etapas - usa sistema existente
   const handlePopulateStep = useCallback((stepId: string) => {
-    console.log(`🎯 [NOVO SISTEMA] Populando etapa ${stepId} com template modular`);
-    
-    // Extrair número da step (etapa-1 → 1, etapa-2 → 2, etc.)
-    const stepNumber = parseInt(stepId.replace('etapa-', ''));
-    if (isNaN(stepNumber) || stepNumber < 1 || stepNumber > 21) {
-      console.error(`❌ Step ID inválido: ${stepId}`);
-      return;
-    }
-    
-    console.log(`🔧 [NOVO SISTEMA] Carregando template da Step ${stepNumber}...`);
+    console.log(`🎯 Populando etapa ${stepId} com template otimizado`);
     
     try {
-      // Usar template simples para fallback
-      console.log(`🔧 [NOVO SISTEMA] Carregando template da Step ${stepNumber}...`);
-      
-      // Fallback simples
-      const fallbackBlocks = [
-        {
-          type: 'heading-inline',
-            properties: {
-              content: `Etapa ${stepNumber}`,
-              level: 'h2',
-              fontSize: 'text-2xl',
-              fontWeight: 'font-bold',
-              textAlign: 'text-center',
-              color: '#432818',
-              marginBottom: 16
-            }
-          },
-          {
-            type: 'text-inline',
-            properties: {
-              content: `Template da etapa ${stepNumber} em desenvolvimento`,
-              fontSize: 'text-lg',
-              textAlign: 'text-center',
-              color: '#6B7280',
-              marginBottom: 32
-            }
-          }
-        ];
-        
-        console.log(`🔄 Aplicando ${fallbackBlocks.length} blocos fallback...`);
-        fallbackBlocks.forEach((blockData, index) => {
-          const newBlockId = addBlock(blockData.type as any);
-          
-          setTimeout(() => {
-            updateBlock(newBlockId, blockData.properties);
-            console.log(`✅ Bloco fallback ${index + 1} aplicado:`, blockData.type);
-          }, index * 100);
-        });
-        
+      // Encontrar a etapa atual
+      const targetStep = steps.find(step => step.id === stepId);
+      if (!targetStep) {
+        console.error(`❌ Etapa não encontrada: ${stepId}`);
         return;
       }
+
+      // Usar sistema existente loadStepSpecificBlocks que já funciona
+      if (targetStep.type && targetStep.type !== 'custom') {
+        console.log(`� Carregando template do tipo: ${targetStep.type}`);
+        loadStepSpecificBlocks(stepId, targetStep.type);
+        return;
+      }
+
+      // Para etapas custom ou sem tipo, usar template baseado na ordem
+      const stepOrder = targetStep.order;
+      let stepType = 'question'; // default
       
-      console.log(`� Template encontrado! ${stepTemplate.length} blocos para carregar`);
-      console.log(`🧱 Tipos de blocos:`, stepTemplate.map(b => b.type));
+      if (stepOrder === 1) stepType = 'intro';
+      else if (stepOrder === 2) stepType = 'name-input';
+      else if (stepOrder === 13) stepType = 'transition';
+      else if (stepOrder >= 14 && stepOrder <= 19) stepType = 'strategic';
+      else if (stepOrder === 20) stepType = 'result';
+      else if (stepOrder === 21) stepType = 'offer';
       
-      // 🔄 Aplicar todos os blocos do template
-      stepTemplate.forEach((blockData, index) => {
-        console.log(`🧱 Adicionando bloco ${index + 1}/${stepTemplate.length}:`, blockData.type);
-        
-        const newBlockId = addBlock(blockData.type as any);
-        
-        // Aplicar propriedades com delay para evitar problemas de timing
-        setTimeout(() => {
-          updateBlock(newBlockId, blockData.properties);
-          console.log(`✅ Propriedades aplicadas para bloco ${index + 1}:`, blockData.type);
-        }, index * 100);
-      });
-      
-      // 📊 Atualizar contador de blocos da step
-      const updatedBlocksCount = stepTemplate.length;
-      setSteps(prevSteps => 
-        prevSteps.map(step => 
-          step.id === stepId 
-            ? { ...step, blocksCount: updatedBlocksCount, isActive: true }
-            : step
-        )
-      );
-      
-      console.log(`✅ Template da Step ${stepNumber} aplicado com sucesso! ${stepTemplate.length} blocos adicionados`);
+      console.log(`🔧 Atribuindo tipo '${stepType}' para etapa ${stepOrder}`);
+      loadStepSpecificBlocks(stepId, stepType);
       
     } catch (error) {
-      console.error(`❌ Erro ao aplicar template da Step ${stepNumber}:`, error);
+      console.error(`❌ Erro ao popular etapa ${stepId}:`, error);
       
-      // 🚨 Fallback de emergência
-      const emergencyBlocks = [
-        {
-          type: 'text-inline',
-          properties: {
-            content: `Erro ao carregar template da Etapa ${stepNumber}`,
-            fontSize: 'text-lg',
-            textAlign: 'text-center',
-            color: '#EF4444',
-            marginBottom: 16
-          }
+      // Fallback mínimo em caso de erro
+      const fallbackBlock = {
+        type: 'text-inline',
+        properties: {
+          content: `Etapa ${stepId} - Template não encontrado`,
+          fontSize: 'text-lg',
+          textAlign: 'text-center',
+          color: '#6B7280'
         }
-      ];
+      };
       
-      emergencyBlocks.forEach((blockData, index) => {
-        const newBlockId = addBlock(blockData.type as any);
-        setTimeout(() => {
-          updateBlock(newBlockId, blockData.properties);
-        }, index * 100);
-      });
+      const newBlockId = addBlock(fallbackBlock.type as any);
+      setTimeout(() => {
+        updateBlock(newBlockId, fallbackBlock.properties);
+      }, 100);
     }
-  }, [steps, getStepTemplate, addBlock, updateBlock, setSteps]);
+  }, [steps, loadStepSpecificBlocks, addBlock, updateBlock]);
 
   // Component selection handler
   const handleComponentSelect = useCallback((componentId: string) => {
