@@ -21,12 +21,7 @@ export { default as SecondaryStylesInlineBlock } from './inline/SecondaryStylesI
 export { default as StyleCharacteristicsInlineBlock } from './inline/StyleCharacteristicsInlineBlock';
 
 // Componentes de quiz
-export { default as QuizIntroHeaderBlock } from './inline/QuizIntroHeaderBlock';
 export { default as LoadingAnimationBlock } from './inline/LoadingAnimationBlock';
-export { default as QuizPersonalInfoInlineBlock } from './inline/QuizPersonalInfoInlineBlock';
-export { default as QuizResultInlineBlock } from './inline/QuizResultInlineBlock';
-export { default as QuizStartPageInlineBlock } from './inline/QuizStartPageInlineBlock';
-export { default as QuizQuestionInlineBlock } from './inline/QuizQuestionInlineBlock';
 
 // Componentes que existem mas podem estar vazios
 export { default as CharacteristicsListInlineBlock } from './inline/CharacteristicsListInlineBlock';

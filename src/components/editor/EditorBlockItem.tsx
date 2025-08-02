@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -57,6 +58,10 @@ export const EditorBlockItem: React.FC<EditorBlockItemProps> = ({
     alert('Duplicar bloco não implementado ainda');
   };
 
+  const handleUpdateBlock = (blockId: string, properties: any) => {
+    onUpdate(properties);
+  };
+
   return (
     <Card
       ref={setNodeRef}
@@ -114,7 +119,7 @@ export const EditorBlockItem: React.FC<EditorBlockItemProps> = ({
         <div className="p-4 bg-white">
           <EditBlockContent
             block={block}
-            onUpdate={onUpdate}
+            onUpdateBlock={handleUpdateBlock}
           />
         </div>
       )}
