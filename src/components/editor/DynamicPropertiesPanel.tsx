@@ -22,7 +22,7 @@ interface DynamicPropertiesPanelProps {
   onClose: () => void;
 }
 
-export const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
+const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
   block,
   blockDefinition,
   onUpdateBlock,
@@ -120,3 +120,5 @@ export const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
     </Card>
   );
 };
+
+export default DynamicPropertiesPanel;
