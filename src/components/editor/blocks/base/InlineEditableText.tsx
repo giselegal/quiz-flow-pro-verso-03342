@@ -1,76 +1,102 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 interface InlineEditableTextProps {
   value: string;
-  onChange?: (value: string) => void;
+  onChange: (value: string) => void;
   placeholder?: string;
+  fontSize?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl';
+  fontWeight?: 'normal' | 'medium' | 'semibold' | 'bold';
   className?: string;
   multiline?: boolean;
-  maxLines?: number;
-  fontSize?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl';
-  fontWeight?: 'normal' | 'medium' | 'semibold' | 'bold';
-  textAlign?: 'left' | 'center' | 'right';
-  disabled?: boolean;
 }
 
-/**
- * Componente de texto somente visualização (edição desativada)
- * A edição agora é feita exclusivamente pelo painel de propriedades
- */
 const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   value,
   onChange,
   placeholder = 'Digite aqui...',
-  className = '',
-  multiline = false,
-  maxLines = 3,
   fontSize = 'base',
   fontWeight = 'normal',
-  textAlign = 'left',
-  disabled = false
+  className = '',
+  multiline = false
 }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [localValue, setLocalValue] = useState(value);
+
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+
+  const handleClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleBlur = () => {
+    setIsEditing(false);
+    onChange(localValue);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !multiline) {
+      e.preventDefault();
+      setIsEditing(false);
+      onChange(localValue);
+    }
+  };
+
+  const fontSizeClasses = {
+    xs: 'text-xs',
+    sm: 'text-sm',
+    base: 'text-base',
+    lg: 'text-lg',
+    xl: 'text-xl',
+    '2xl': 'text-2xl'
+  };
+
+  const fontWeightClasses = {
+    normal: 'font-normal',
+    medium: 'font-medium',
+    semibold: 'font-semibold',
+    bold: 'font-bold'
+  };
+
   const baseClasses = cn(
-    'w-full cursor-default select-none',
-    'text-gray-700',
-    
-    // Font size classes
-    {
-      'text-xs': fontSize === 'xs',
-      'text-sm': fontSize === 'sm',
-      'text-base': fontSize === 'base',
-      'text-lg': fontSize === 'lg',
-      'text-xl': fontSize === 'xl',
-      'text-2xl': fontSize === '2xl',
-      'text-3xl': fontSize === '3xl',
-    },
-    
-    // Font weight classes
-    {
-      'font-normal': fontWeight === 'normal',
-      'font-medium': fontWeight === 'medium',
-      'font-semibold': fontWeight === 'semibold',
-      'font-bold': fontWeight === 'bold',
-    },
-    
-    // Text alignment classes
-    {
-      'text-left': textAlign === 'left',
-      'text-center': textAlign === 'center',
-      'text-right': textAlign === 'right',
-    },
-    
-    // Disabled state
-    disabled && 'opacity-50',
-    
+    fontSizeClasses[fontSize],
+    fontWeightClasses[fontWeight],
+    'cursor-pointer hover:bg-gray-50 px-2 py-1 rounded transition-colors',
     className
   );
 
-  // Sempre renderiza como texto estático (sem edição inline)
+  if (isEditing) {
+    return multiline ? (
+      <textarea
+        value={localValue}
+        onChange={(e) => setLocalValue(e.target.value)}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
+        placeholder={placeholder}
+        className={cn(baseClasses, 'border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none')}
+        autoFocus
+        rows={3}
+      />
+    ) : (
+      <input
+        type="text"
+        value={localValue}
+        onChange={(e) => setLocalValue(e.target.value)}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
+        placeholder={placeholder}
+        className={cn(baseClasses, 'border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500')}
+        autoFocus
+      />
+    );
+  }
+
   return (
-    <div className={baseClasses}>
-      {value || <span className="text-gray-400">{placeholder}</span>}
+    <div onClick={handleClick} className={baseClasses}>
+      {value || placeholder}
     </div>
   );
 };

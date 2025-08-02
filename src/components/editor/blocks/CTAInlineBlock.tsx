@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import InlineBaseWrapper from './base/InlineBaseWrapper';
@@ -57,7 +58,7 @@ const CTAInlineBlock: React.FC<BlockComponentProps> = ({
     clickAction = 'redirect',
     redirectUrl = '#',
     conversionValue = 100
-  } = block.properties;
+  } = block.properties || {};
 
   const [isLoading, setIsLoading] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -138,9 +139,6 @@ const CTAInlineBlock: React.FC<BlockComponentProps> = ({
 
   return (
     <InlineBaseWrapper
-      block={block}
-      isSelected={isSelected}
-      onPropertyChange={onPropertyChange}
       className={cn(className, INLINE_ANIMATIONS[animation as keyof typeof INLINE_ANIMATIONS])}
       minHeight="4rem"
       editLabel="Editar CTA"

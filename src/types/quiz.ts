@@ -1,3 +1,4 @@
+
 export type StyleType = 
   | 'classico'
   | 'romantico'
@@ -48,6 +49,12 @@ export interface QuizComponentStyle {
 export interface QuizAnswer {
   questionId: string;
   optionId: string;
+}
+
+export interface UserResponse {
+  questionId: string;
+  optionId: string;
+  timestamp?: Date;
 }
 
 export interface StyleResult {
