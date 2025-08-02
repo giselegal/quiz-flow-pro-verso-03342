@@ -18,16 +18,20 @@ export interface PropertySchema {
         'boolean' | 'boolean-switch' | 'image-url' | 'image-upload' | 'video-url' | 
         'array-editor' | 'json-editor' | 'color-picker' | 'color' | 'url' | 'datetime-local' |
         'font-size-slider' | 'font-weight-buttons' | 'text-style-buttons' | 'text-align-buttons' |
-        'content-type-buttons' | 'color-palette' | 'array';
+        'content-type-buttons' | 'color-palette' | 'array' | 'range-slider' | 'file-upload';
   placeholder?: string;
   options?: { label: string; value: string }[];
   defaultValue?: any;
   rows?: number;
   min?: number;
   max?: number;
+  step?: number;
+  unit?: string;
+  required?: boolean;
   description?: string;
   nestedPath?: string;
   itemSchema?: PropertySchema[];
+  group?: 'content' | 'style' | 'layout' | 'advanced';
 }
 
 export const blockDefinitions: BlockDefinition[] = [

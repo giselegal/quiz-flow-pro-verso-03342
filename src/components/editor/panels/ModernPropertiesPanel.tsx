@@ -17,7 +17,7 @@ import {
   AlignRight, Bold, Italic, Underline, Link, Upload, Download,
   ChevronDown, ChevronRight, Info, CheckCircle, AlertCircle
 } from 'lucide-react';
-import { blockDefinitions, type PropertySchema } from '../../../config/blockDefinitions';
+import { blockDefinitions, type PropertySchema } from '../../../config/blockDefinitionsClean';
 import { type BlockData } from "../../../types/blocks";
 import { cn } from "@/lib/utils";
 
