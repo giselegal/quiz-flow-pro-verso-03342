@@ -1,38 +1,50 @@
 
 import React from 'react';
+import { DragEndEvent } from '@dnd-kit/core';
 import { Block } from '@/types/editor';
-import { BenefitsBlock } from '../preview/blocks';
 
 interface EditorContentProps {
   blocks: Block[];
-  selectedBlockId?: string;
-  onSelectBlock: (blockId: string) => void;
+  onDragEnd: (event: DragEndEvent) => void;
+  onAddBlock: (type: string) => void;
+  onUpdateBlock: (id: string, content: any) => void;
+  onDeleteBlock: (id: string) => void;
+  isPreviewing: boolean;
 }
 
 export const EditorContent: React.FC<EditorContentProps> = ({
   blocks,
-  selectedBlockId,
-  onSelectBlock
+  onDragEnd,
+  onAddBlock,
+  onUpdateBlock,
+  onDeleteBlock,
+  isPreviewing
 }) => {
   const renderBlock = (block: Block) => {
-    const isSelected = selectedBlockId === block.id;
+    const isSelected = false; // This would come from props in real implementation
 
     switch (block.type) {
       case 'benefits':
         // Ensure items is a string array for benefits
-        const items = Array.isArray(block.content.items) 
+        const items = Array.isArray(block.content?.items) 
           ? block.content.items.filter((item): item is string => typeof item === 'string')
           : [];
         
         return (
-          <BenefitsBlock
+          <div
             key={block.id}
-            content={{
-              ...block.content,
-              items
-            }}
-            onClick={() => onSelectBlock(block.id)}
-          />
+            className={`p-4 border rounded-lg cursor-pointer ${
+              isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
+            }`}
+            onClick={() => {}}
+          >
+            <h3 className="font-medium mb-2">{block.content?.title || 'Benefícios'}</h3>
+            <ul className="list-disc list-inside">
+              {items.map((item, index) => (
+                <li key={index} className="text-gray-700">{item}</li>
+              ))}
+            </ul>
+          </div>
         );
       
       default:
@@ -42,7 +54,6 @@ export const EditorContent: React.FC<EditorContentProps> = ({
             className={`p-4 border rounded-lg cursor-pointer ${
               isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
             }`}
-            onClick={() => onSelectBlock(block.id)}
           >
             <p className="text-gray-600">Tipo de bloco: {block.type}</p>
           </div>

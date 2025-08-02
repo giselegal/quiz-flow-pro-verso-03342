@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { InlineEditableText } from './InlineEditableText';
-import { Header } from 'lucide-react';
+import { Heading } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';
 
 const HeaderBlock: React.FC<BlockComponentProps> = ({
@@ -35,15 +35,15 @@ const HeaderBlock: React.FC<BlockComponentProps> = ({
     }
   };
 
-  // Convert style object to individual properties safely
-  const styleObj = block.content.style || {};
-  const safeStyle = typeof styleObj === 'object' ? styleObj : {};
+  // Safely handle style object
+  const styleObj = block.content?.style || {};
+  const safeStyle = typeof styleObj === 'object' && styleObj !== null ? styleObj : {};
 
   const containerStyle = {
-    backgroundColor: safeStyle.backgroundColor || backgroundColor || 'transparent',
-    padding: safeStyle.padding || padding || '2rem 1rem',
-    margin: safeStyle.margin || margin || '0',
-    textAlign: safeStyle.textAlign || textAlign || 'center'
+    backgroundColor: (safeStyle as any).backgroundColor || backgroundColor || 'transparent',
+    padding: (safeStyle as any).padding || padding || '2rem 1rem',
+    margin: (safeStyle as any).margin || margin || '0',
+    textAlign: (safeStyle as any).textAlign || textAlign || 'center'
   } as React.CSSProperties;
 
   return (
@@ -79,10 +79,10 @@ const HeaderBlock: React.FC<BlockComponentProps> = ({
         <h1 
           className="mb-4"
           style={{
-            fontSize: safeStyle.fontSize || fontSize || '2.5rem',
-            fontWeight: safeStyle.fontWeight || fontWeight || 'bold',
-            color: safeStyle.color || color || '#1f2937',
-            fontFamily: safeStyle.fontFamily || fontFamily || 'inherit',
+            fontSize: (safeStyle as any).fontSize || fontSize || '2.5rem',
+            fontWeight: (safeStyle as any).fontWeight || fontWeight || 'bold',
+            color: (safeStyle as any).color || color || '#1f2937',
+            fontFamily: (safeStyle as any).fontFamily || fontFamily || 'inherit',
             margin: 0,
             lineHeight: 1.2
           }}
@@ -99,10 +99,10 @@ const HeaderBlock: React.FC<BlockComponentProps> = ({
           <p 
             className="text-lg"
             style={{
-              fontSize: safeStyle.subtitleFontSize || '1.25rem',
-              color: safeStyle.subtitleColor || '#6b7280',
-              fontWeight: safeStyle.subtitleFontWeight || 'normal',
-              fontFamily: safeStyle.fontFamily || fontFamily || 'inherit',
+              fontSize: (safeStyle as any).subtitleFontSize || '1.25rem',
+              color: (safeStyle as any).subtitleColor || '#6b7280',
+              fontWeight: (safeStyle as any).subtitleFontWeight || 'normal',
+              fontFamily: (safeStyle as any).fontFamily || fontFamily || 'inherit',
               margin: 0
             }}
           >

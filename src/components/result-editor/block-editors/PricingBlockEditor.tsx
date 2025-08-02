@@ -9,58 +9,42 @@ interface PricingBlockEditorProps {
   onUpdate: (content: any) => void;
 }
 
-const PricingBlockEditor: React.FC<PricingBlockEditorProps> = ({ block, onUpdate }) => {
-  const content = block.content;
-
+const PricingBlockEditor: React.FC<PricingBlockEditorProps> = ({
+  block,
+  onUpdate
+}) => {
   return (
     <div className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="regularPrice">Preço Regular</Label>
+      <div>
+        <Label htmlFor={`${block.id}-price`}>Preço</Label>
         <Input
-          id="regularPrice"
-          value={content.regularPrice || ''}
-          onChange={(e) => onUpdate({ regularPrice: e.target.value })}
-          placeholder="175,00"
+          id={`${block.id}-price`}
+          value={block.content?.regularPrice || ''}
+          onChange={(e) => onUpdate({ ...block.content, regularPrice: e.target.value })}
+          className="mt-1"
+          placeholder="R$ 99,90"
         />
       </div>
       
-      <div className="space-y-2">
-        <Label htmlFor="salePrice">Preço Promocional</Label>
+      <div>
+        <Label htmlFor={`${block.id}-sale-price`}>Preço Promocional</Label>
         <Input
-          id="salePrice"
-          value={content.salePrice || ''}
-          onChange={(e) => onUpdate({ salePrice: e.target.value })}
-          placeholder="39,00"
+          id={`${block.id}-sale-price`}
+          value={block.content?.salePrice || ''}
+          onChange={(e) => onUpdate({ ...block.content, salePrice: e.target.value })}
+          className="mt-1"
+          placeholder="R$ 49,90"
         />
       </div>
       
-      <div className="space-y-2">
-        <Label htmlFor="buttonText">Texto do Botão</Label>
+      <div>
+        <Label htmlFor={`${block.id}-description`}>Descrição</Label>
         <Input
-          id="buttonText"
-          value={content.buttonText || ''}
-          onChange={(e) => onUpdate({ buttonText: e.target.value })}
-          placeholder="Quero Transformar Meu Estilo"
-        />
-      </div>
-      
-      <div className="space-y-2">
-        <Label htmlFor="ctaUrl">URL do Botão</Label>
-        <Input
-          id="ctaUrl"
-          value={content.ctaUrl || ''}
-          onChange={(e) => onUpdate({ ctaUrl: e.target.value })}
-          placeholder="https://pay.hotmart.com/..."
-        />
-      </div>
-      
-      <div className="space-y-2">
-        <Label htmlFor="urgencyText">Texto de Urgência</Label>
-        <Input
-          id="urgencyText"
-          value={content.urgencyText || ''}
-          onChange={(e) => onUpdate({ urgencyText: e.target.value })}
-          placeholder="Oferta por tempo limitado!"
+          id={`${block.id}-description`}
+          value={block.content?.description || ''}
+          onChange={(e) => onUpdate({ ...block.content, description: e.target.value })}
+          className="mt-1"
+          placeholder="Descrição do produto"
         />
       </div>
     </div>

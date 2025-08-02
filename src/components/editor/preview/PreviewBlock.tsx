@@ -1,65 +1,70 @@
 
 import React from 'react';
 import { Block } from '@/types/editor';
-import { HeadlineBlock, TextBlock, BenefitsBlock, CTABlock, PricingBlock, GuaranteeBlock, TestimonialsBlock, HeroBlock, HeaderBlock } from './blocks';
 
 interface PreviewBlockProps {
   block: Block;
   isSelected?: boolean;
   onClick?: () => void;
+  viewMode?: 'desktop' | 'mobile';
+  isPreview?: boolean;
 }
 
 export const PreviewBlock: React.FC<PreviewBlockProps> = ({
   block,
   isSelected = false,
-  onClick
+  onClick,
+  viewMode = 'desktop',
+  isPreview = false
 }) => {
   const baseClasses = `
     relative transition-all duration-200 cursor-pointer
     ${isSelected ? 'ring-2 ring-blue-500 ring-offset-2' : 'hover:shadow-md'}
+    ${isPreview ? 'pointer-events-none' : ''}
   `;
 
   const renderBlockContent = () => {
     switch (block.type) {
       case 'headline':
-        return <HeadlineBlock content={block.content} onClick={onClick || (() => {})} />;
+        return (
+          <div className="headline-block p-4 text-center">
+            <h2 className="text-2xl font-bold">{block.content?.title || 'Headline'}</h2>
+          </div>
+        );
       
       case 'text':
-        return <TextBlock content={block.content} onClick={onClick || (() => {})} />;
+        return (
+          <div className="text-block p-4">
+            <p>{block.content?.text || 'Texto do bloco'}</p>
+          </div>
+        );
       
       case 'header':
-        return <HeaderBlock content={block.content} onClick={onClick || (() => {})} />;
-      
-      case 'hero':
-        return <HeroBlock content={block.content} onClick={onClick || (() => {})} />;
+        return (
+          <div className="header-block p-4 text-center">
+            <h1 className="text-3xl font-bold">{block.content?.title || 'Cabeçalho'}</h1>
+            {block.content?.subtitle && (
+              <p className="text-gray-600 mt-2">{block.content.subtitle}</p>
+            )}
+          </div>
+        );
       
       case 'benefits':
         // Ensure items is a string array for benefits
-        const items = Array.isArray(block.content.items) 
+        const items = Array.isArray(block.content?.items) 
           ? block.content.items.filter((item): item is string => typeof item === 'string')
           : [];
         
         return (
-          <BenefitsBlock
-            content={{
-              ...block.content,
-              items
-            }}
-            onClick={onClick || (() => {})}
-          />
+          <div className="benefits-block p-4">
+            <h3 className="font-medium mb-2">{block.content?.title || 'Benefícios'}</h3>
+            <ul className="list-disc list-inside">
+              {items.map((item, index) => (
+                <li key={index} className="text-gray-700">{item}</li>
+              ))}
+            </ul>
+          </div>
         );
-      
-      case 'testimonials':
-        return <TestimonialsBlock content={block.content} onClick={onClick || (() => {})} />;
-      
-      case 'pricing':
-        return <PricingBlock content={block.content} onClick={onClick || (() => {})} />;
-      
-      case 'guarantee':
-        return <GuaranteeBlock content={block.content} onClick={onClick || (() => {})} />;
-      
-      case 'cta':
-        return <CTABlock content={block.content} onClick={onClick || (() => {})} />;
       
       default:
         return (

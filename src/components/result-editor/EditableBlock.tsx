@@ -1,16 +1,16 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronUp, ChevronDown, Trash2 } from 'lucide-react';
 import { EditorBlock } from '@/types/editor';
 import { BenefitsBlockEditor } from './block-editors/BenefitsBlockEditor';
-import { PricingBlockEditor } from './block-editors/PricingBlockEditor';
+import PricingBlockEditor from './block-editors/PricingBlockEditor';
 import { ImageBlockEditor } from '../editor/blocks/ImageBlockEditor';
 import FAQBlockEditor from './block-editors/FAQBlockEditor';
 
 interface EditableBlockProps {
   block: EditorBlock;
   isSelected: boolean;
-  onSelect: () => void;
   onUpdate: (content: any) => void;
   onDelete: () => void;
   onMove: (direction: 'up' | 'down') => void;
@@ -19,7 +19,6 @@ interface EditableBlockProps {
 const EditableBlock: React.FC<EditableBlockProps> = ({
   block,
   isSelected,
-  onSelect,
   onUpdate,
   onDelete,
   onMove
@@ -29,7 +28,7 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
       case 'text':
         return (
           <textarea
-            value={block.content.text || ''}
+            value={block.content?.text || ''}
             onChange={(e) => onUpdate({ text: e.target.value })}
             className="w-full p-2 border rounded"
             rows={4}
@@ -43,13 +42,13 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
         return (
           <div className="space-y-2">
             <input
-              value={block.content.title || ''}
+              value={block.content?.title || ''}
               onChange={(e) => onUpdate({ title: e.target.value })}
               className="w-full p-2 border rounded"
               placeholder="Título"
             />
             <input
-              value={block.content.subtitle || ''}
+              value={block.content?.subtitle || ''}
               onChange={(e) => onUpdate({ subtitle: e.target.value })}
               className="w-full p-2 border rounded"
               placeholder="Subtítulo"
@@ -59,7 +58,7 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
       
       case 'benefits':
         // Extract string items for benefits editor
-        const stringItems = Array.isArray(block.content.items) 
+        const stringItems = Array.isArray(block.content?.items) 
           ? block.content.items.filter((item): item is string => typeof item === 'string')
           : [];
         
@@ -76,7 +75,7 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
       case 'guarantee':
         return (
           <textarea
-            value={block.content.text || ''}
+            value={block.content?.text || ''}
             onChange={(e) => onUpdate({ text: e.target.value })}
             className="w-full p-2 border rounded"
             rows={3}
@@ -87,13 +86,13 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
         return (
           <div className="space-y-2">
             <input
-              value={block.content.title || ''}
+              value={block.content?.title || ''}
               onChange={(e) => onUpdate({ title: e.target.value })}
               className="w-full p-2 border rounded"
               placeholder="Título"
             />
             <input
-              value={block.content.buttonText || ''}
+              value={block.content?.buttonText || ''}
               onChange={(e) => onUpdate({ buttonText: e.target.value })}
               className="w-full p-2 border rounded"
               placeholder="Texto do botão"
@@ -102,7 +101,7 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
         );
       
       case 'faq':
-        return <FAQBlockEditor content={block.content} onUpdate={onUpdate} />;
+        return <FAQBlockEditor content={block.content || {}} onUpdate={onUpdate} />;
       
       default:
         return <p>Editor não disponível para o tipo: {block.type}</p>;
@@ -112,20 +111,20 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
   const renderPreview = () => {
     switch (block.type) {
       case 'text':
-        return <p className="text-gray-800">{block.content.text || 'Texto vazio'}</p>;
+        return <p className="text-gray-800">{block.content?.text || 'Texto vazio'}</p>;
       
       case 'header':
         return (
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-800">{block.content.title || 'Título'}</h1>
-            {block.content.subtitle && (
+            <h1 className="text-2xl font-bold text-gray-800">{block.content?.title || 'Título'}</h1>
+            {block.content?.subtitle && (
               <p className="text-gray-600">{block.content.subtitle}</p>
             )}
           </div>
         );
       
       case 'image':
-        return block.content.imageUrl ? (
+        return block.content?.imageUrl ? (
           <img
             src={block.content.imageUrl}
             alt={block.content.imageAlt || 'Imagem'}
@@ -138,13 +137,13 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
         );
       
       case 'benefits':
-        const items = Array.isArray(block.content.items) 
+        const items = Array.isArray(block.content?.items) 
           ? block.content.items.filter((item): item is string => typeof item === 'string')
           : [];
         
         return (
           <div>
-            <h3 className="font-medium mb-2">{block.content.title || 'Benefícios'}</h3>
+            <h3 className="font-medium mb-2">{block.content?.title || 'Benefícios'}</h3>
             <ul className="list-disc list-inside">
               {items.map((item, index) => (
                 <li key={index} className="text-gray-700">{item}</li>
@@ -163,7 +162,6 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
       className={`border-2 rounded-lg p-4 ${
         isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
       }`}
-      onClick={onSelect}
     >
       <div className="flex justify-between items-center mb-2">
         <span className="text-sm font-medium text-gray-600">{block.type}</span>

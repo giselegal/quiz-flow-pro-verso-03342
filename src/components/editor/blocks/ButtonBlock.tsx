@@ -54,24 +54,24 @@ const ButtonBlock: React.FC<BlockComponentProps> = ({
     }
   };
 
-  // Convert style object to individual properties safely
-  const styleObj = block.content.style || {};
-  const safeStyle = typeof styleObj === 'object' ? styleObj : {};
+  // Safely handle style object
+  const styleObj = block.content?.style || {};
+  const safeStyle = typeof styleObj === 'object' && styleObj !== null ? styleObj : {};
 
   const containerStyle = {
-    textAlign: safeStyle.textAlign || textAlign || 'center',
-    margin: safeStyle.margin || margin || '0'
+    textAlign: (safeStyle as any).textAlign || textAlign || 'center',
+    margin: (safeStyle as any).margin || margin || '0'
   } as React.CSSProperties;
 
   const buttonStyle = {
-    backgroundColor: safeStyle.backgroundColor || backgroundColor || '#3b82f6',
-    color: safeStyle.color || color || '#ffffff',
-    padding: safeStyle.padding || padding || '12px 24px',
-    fontSize: safeStyle.fontSize || fontSize || '16px',
-    fontWeight: safeStyle.fontWeight || fontWeight || '500',
-    borderRadius: safeStyle.borderRadius || borderRadius || '6px',
-    boxShadow: safeStyle.boxShadow || boxShadow || 'none',
-    width: safeStyle.width || width || 'auto',
+    backgroundColor: (safeStyle as any).backgroundColor || backgroundColor || '#3b82f6',
+    color: (safeStyle as any).color || color || '#ffffff',
+    padding: (safeStyle as any).padding || padding || '12px 24px',
+    fontSize: (safeStyle as any).fontSize || fontSize || '16px',
+    fontWeight: (safeStyle as any).fontWeight || fontWeight || '500',
+    borderRadius: (safeStyle as any).borderRadius || borderRadius || '6px',
+    boxShadow: (safeStyle as any).boxShadow || boxShadow || 'none',
+    width: (safeStyle as any).width || width || 'auto',
     border: 'none',
     cursor: 'pointer',
     display: 'inline-block',
