@@ -28,6 +28,9 @@ export { default as QuizIntroHeaderBlock } from './QuizIntroHeaderBlock';
 export { default as LoadingAnimationBlock } from './LoadingAnimationBlock';
 export { default as QuizPersonalInfoInlineBlock } from './QuizPersonalInfoInlineBlock';
 export { default as QuizResultInlineBlock } from './QuizResultInlineBlock';
+export { default as QuizStartPageInlineBlock } from './QuizStartPageInlineBlock';
+export { default as QuizQuestionInlineBlock } from './QuizQuestionInlineBlock';
+export { default as QuizOfferCTAInlineBlock } from './QuizOfferCTAInlineBlock';
 
 // Componentes que existem mas podem estar vazios
 export { default as CharacteristicsListInlineBlock } from './CharacteristicsListInlineBlock';
@@ -35,11 +38,6 @@ export { default as TestimonialsInlineBlock } from './TestimonialsInlineBlock';
 export { default as BeforeAfterInlineBlock } from './BeforeAfterInlineBlock';
 export { default as BonusListInlineBlock } from './BonusListInlineBlock';
 export { default as QuizOfferPricingInlineBlock } from './QuizOfferPricingInlineBlock';
-export { default as QuizOfferCTAInlineBlock } from './QuizOfferCTAInlineBlock';
-
-// Componentes das 21 etapas do funil que existem
-export { default as QuizStartPageInlineBlock } from './QuizStartPageInlineBlock';
-export { default as QuizQuestionInlineBlock } from './QuizQuestionInlineBlock';
 
 // Re-exportar tipos necessários
 export type { BlockComponentProps } from '../../../../types/blocks';
