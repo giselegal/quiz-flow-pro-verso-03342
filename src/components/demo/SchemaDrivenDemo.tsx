@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DynamicPropertiesPanel } from '../editor/panels/DynamicPropertiesPanel';
+import { ModernPropertiesPanel } from '../editor/panels/ModernPropertiesPanel';
 import { BlockRenderer, BlockData } from '../editor/blocks';
 import { blockDefinitions, getCategories, getBlocksByCategory } from '@/config/blockDefinitionsClean';
 import { Type, Image, ArrowRight, CheckCircle, Target, Play, Star, FileText, ShoppingCart, Clock, MessageSquare, HelpCircle, Shield, Video } from 'lucide-react';
@@ -236,7 +236,7 @@ export const SchemaDrivenDemo: React.FC = () => {
 
       {/* Sidebar Direita - Painel de Propriedades */}
       <div className="w-80 border-l bg-white">
-        <DynamicPropertiesPanel
+        <ModernPropertiesPanel
           selectedBlock={selectedBlock}
           funnelConfig={funnelConfig}
           onBlockPropertyChange={handleBlockPropertyChange}

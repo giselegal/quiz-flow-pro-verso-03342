@@ -4,7 +4,7 @@ import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/componen
 import { useEditor } from '@/context/EditorContext';
 import { ComponentsSidebar } from './sidebar/ComponentsSidebar';
 import { EditorCanvas } from './canvas/EditorCanvas';
-import { DynamicPropertiesPanel } from './panels/DynamicPropertiesPanel';
+import { ModernPropertiesPanel } from './panels/ModernPropertiesPanel';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -54,7 +54,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
         {/* Painel de propriedades */}
         <ResizablePanel defaultSize={25}>
-          <DynamicPropertiesPanel
+          <ModernPropertiesPanel
             selectedBlock={selectedBlock ? {
               id: selectedBlock.id,
               type: selectedBlock.type,

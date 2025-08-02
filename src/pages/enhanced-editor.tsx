@@ -3,7 +3,7 @@ import { useLocation } from 'wouter';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../components/ui/resizable';
 import { ComponentsSidebar } from '../components/editor/sidebar/ComponentsSidebar';
 import { EditPreview } from '../components/editor/preview/EditPreview';
-import { DynamicPropertiesPanel } from '../components/editor/panels/DynamicPropertiesPanel';
+import { ModernPropertiesPanel } from '../components/editor/panels/ModernPropertiesPanel';
 import { EditorToolbar } from '../components/editor/toolbar/EditorToolbar';
 import { ScrollArea } from '../components/ui/scroll-area';
 import { Button } from '../components/ui/button';
@@ -796,7 +796,7 @@ const EnhancedEditorPage: React.FC = () => {
 
             {/* Properties Panel */}
             <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-              <DynamicPropertiesPanel
+              <ModernPropertiesPanel
                 selectedBlock={selectedComponentId ? {
                   id: selectedComponentId,
                   type: blocks.find(b => b.id === selectedComponentId)?.type || '',
