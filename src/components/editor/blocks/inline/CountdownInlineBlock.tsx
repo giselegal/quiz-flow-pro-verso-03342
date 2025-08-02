@@ -15,20 +15,18 @@ const CountdownInlineBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = ''
 }) => {
-  // Validate and extract properties with default values
+  // Safely extract properties with comprehensive validation
   const properties = block?.properties || {};
   
-  const {
-    initialMinutes = 15,
-    title = 'Oferta por tempo limitado',
-    urgencyText = 'Esta oferta expira em:',
-    backgroundColor = '#ffffff',
-    textColor = '#432818',
-    accentColor = '#B89B7A',
-    // Propriedades de grid para responsividade
-    gridColumns = 1,
-    spacing = 'md'
-  } = properties;
+  // Extract properties with safe defaults - no destructuring that could fail
+  const initialMinutes = typeof properties.initialMinutes === 'number' ? properties.initialMinutes : 15;
+  const title = typeof properties.title === 'string' ? properties.title : 'Oferta por tempo limitado';
+  const urgencyText = typeof properties.urgencyText === 'string' ? properties.urgencyText : 'Esta oferta expira em:';
+  const backgroundColor = typeof properties.backgroundColor === 'string' ? properties.backgroundColor : '#ffffff';
+  const textColor = typeof properties.textColor === 'string' ? properties.textColor : '#432818';
+  const accentColor = typeof properties.accentColor === 'string' ? properties.accentColor : '#B89B7A';
+  const gridColumns = typeof properties.gridColumns === 'number' && [1, 2].includes(properties.gridColumns) ? properties.gridColumns : 1;
+  const spacing = typeof properties.spacing === 'string' && ['none', 'sm', 'md', 'lg', 'xl'].includes(properties.spacing) ? properties.spacing : 'md';
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [timer, setTimer] = useState({ minutes: initialMinutes, seconds: 0 });
