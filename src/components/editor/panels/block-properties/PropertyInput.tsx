@@ -47,6 +47,122 @@ export const PropertyInput: React.FC<PropertyInputProps> = ({
   };
 
   switch (schema.type) {
+    case 'url':
+      return (
+        <div className="space-y-2">
+          <Label htmlFor={schema.key}>{schema.label}</Label>
+          <Input
+            id={schema.key}
+            type="url"
+            value={currentValue || ''}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e.target.value)}
+            placeholder={schema.placeholder || 'https://exemplo.com'}
+          />
+          {schema.description && (
+            <p className="text-xs text-gray-500">{schema.description}</p>
+          )}
+        </div>
+      );
+
+    case 'datetime-local':
+      return (
+        <div className="space-y-2">
+          <Label htmlFor={schema.key}>{schema.label}</Label>
+          <Input
+            id={schema.key}
+            type="datetime-local"
+            value={currentValue || ''}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e.target.value)}
+          />
+          {schema.description && (
+            <p className="text-xs text-gray-500">{schema.description}</p>
+          )}
+        </div>
+      );
+
+    case 'color':
+      return (
+        <div className="space-y-2">
+          <Label htmlFor={schema.key}>{schema.label}</Label>
+          <div className="flex items-center space-x-2">
+            <Input
+              id={schema.key}
+              type="color"
+              value={currentValue || '#000000'}
+              onChange={(e) => handleInputChange(e.target.value)}
+              className="w-16 h-10 p-1 border rounded"
+            />
+            <Input
+              type="text"
+              value={currentValue || ''}
+              onChange={(e) => handleInputChange(e.target.value)}
+              placeholder="#000000"
+              className="flex-1"
+            />
+          </div>
+          {schema.description && (
+            <p className="text-xs text-gray-500">{schema.description}</p>
+          )}
+        </div>
+      );
+
+    case 'array':
+      return (
+        <div className="space-y-2">
+          <Label>{schema.label}</Label>
+          <div className="border rounded p-3 space-y-2">
+            {Array.isArray(currentValue) ? (
+              currentValue.map((item, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <Input
+                    value={typeof item === 'string' ? item : JSON.stringify(item)}
+                    onChange={(e) => {
+                      const newArray = [...currentValue];
+                      try {
+                        newArray[index] = JSON.parse(e.target.value);
+                      } catch {
+                        newArray[index] = e.target.value;
+                      }
+                      handleInputChange(newArray);
+                    }}
+                    className="flex-1"
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const newArray = currentValue.filter((_: any, i: number) => i !== index);
+                      handleInputChange(newArray);
+                    }}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              ))
+            ) : (
+              <p className="text-sm text-gray-500">Array vazio</p>
+            )}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const newArray = Array.isArray(currentValue) ? [...currentValue] : [];
+                newArray.push('');
+                handleInputChange(newArray);
+              }}
+              className="w-full"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Adicionar Item
+            </Button>
+          </div>
+          {schema.description && (
+            <p className="text-xs text-gray-500">{schema.description}</p>
+          )}
+        </div>
+      );
+
+    case 'text':
     case 'text-input':
       return (
         <div className="space-y-2">
@@ -81,6 +197,7 @@ export const PropertyInput: React.FC<PropertyInputProps> = ({
         </div>
       );
 
+    case 'number':
     case 'number-input':
       return (
         <div className="space-y-2">
@@ -100,6 +217,7 @@ export const PropertyInput: React.FC<PropertyInputProps> = ({
         </div>
       );
 
+    case 'boolean':
     case 'boolean-switch':
       return (
         <div className="flex items-center space-x-2">

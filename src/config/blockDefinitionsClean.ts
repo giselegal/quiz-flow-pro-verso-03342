@@ -3,14 +3,22 @@
 // Configuração moderna para sistema de blocos inline responsivos
 // =====================================================================
 
-import type { BlockDefinition } from './blockDefinitions.ts';
+import type { BlockDefinition as BaseBlockDefinition } from './blockDefinitions.ts';
+
+// Interface para BlockDefinition com defaultProperties opcional
+export interface BlockDefinition extends Omit<BaseBlockDefinition, 'defaultProperties'> {
+  defaultProperties?: Record<string, any>;
+}
 
 // Interface para PropertySchema ES7+
 export interface PropertySchema {
   key: string;
   label: string;
-  type: 'text-input' | 'textarea' | 'select' | 'number-input' | 'boolean-switch' | 
-        'image-url' | 'video-url' | 'array-editor' | 'text-area' | 'color-picker';
+  type: 'text' | 'text-input' | 'textarea' | 'text-area' | 'select' | 'number' | 'number-input' | 
+        'boolean' | 'boolean-switch' | 'image-url' | 'image-upload' | 'video-url' | 
+        'array-editor' | 'json-editor' | 'color-picker' | 'color' | 'url' | 'datetime-local' |
+        'font-size-slider' | 'font-weight-buttons' | 'text-style-buttons' | 'text-align-buttons' |
+        'content-type-buttons' | 'color-palette' | 'array';
   placeholder?: string;
   options?: { label: string; value: string }[];
   defaultValue?: any;
