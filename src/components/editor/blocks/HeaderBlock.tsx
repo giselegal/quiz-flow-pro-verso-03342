@@ -9,9 +9,9 @@ interface HeaderBlockProps {
   isEditing?: boolean;
   onUpdate?: (content: Partial<EditableContent>) => void;
   onSelect?: () => void;
+  onClick?: () => void;
   className?: string;
-  block?: any; // For compatibility with different calling patterns
-  onClick?: () => void; // For compatibility with different calling patterns
+  block?: any;
 }
 
 export const HeaderBlock: React.FC<HeaderBlockProps> = ({
@@ -24,7 +24,6 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = ({
   className,
   block
 }) => {
-  // Handle different prop patterns - sometimes content comes from block.content
   const actualContent = content || block?.content || {};
   
   const [isInlineEditing, setIsInlineEditing] = useState(false);
@@ -76,7 +75,14 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = ({
   };
 
   const getHeaderSize = () => {
-    switch (actualContent.style?.fontSize) {
+    const styleObj = typeof actualContent.style === 'string' 
+      ? (() => {
+          try { return JSON.parse(actualContent.style); } 
+          catch { return {}; }
+        })()
+      : actualContent.style || {};
+
+    switch (styleObj.fontSize) {
       case 'text-4xl': return 'h1';
       case 'text-3xl': return 'h2';
       case 'text-2xl': return 'h3';
@@ -84,6 +90,20 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = ({
       default: return 'h1';
     }
   };
+
+  // Parse style object if it's a string
+  const parseStyle = (styleString?: string) => {
+    if (!styleString) return {};
+    if (typeof styleString === 'object') return styleString;
+    
+    try {
+      return JSON.parse(styleString);
+    } catch {
+      return {};
+    }
+  };
+
+  const containerStyle = parseStyle(actualContent.style);
 
   return (
     <div
@@ -96,10 +116,10 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = ({
       )}
       onClick={handleClick}
       style={{
-        backgroundColor: actualContent.style?.backgroundColor,
-        padding: actualContent.style?.padding,
-        margin: actualContent.style?.margin,
-        textAlign: actualContent.style?.textAlign as any
+        backgroundColor: containerStyle.backgroundColor,
+        padding: containerStyle.padding,
+        margin: containerStyle.margin,
+        textAlign: containerStyle.textAlign as any
       }}
     >
       <div className="text-center">
@@ -125,12 +145,12 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = ({
             suppressContentEditableWarning: true,
             className: cn(
               "font-bold mb-2 outline-none",
-              actualContent.style?.fontSize || "text-3xl"
+              containerStyle.fontSize || "text-3xl"
             ),
             style: {
-              color: actualContent.style?.color,
-              fontWeight: actualContent.style?.fontWeight,
-              fontFamily: actualContent.style?.fontFamily
+              color: containerStyle.color,
+              fontWeight: containerStyle.fontWeight,
+              fontFamily: containerStyle.fontFamily
             },
             onDoubleClick: () => handleDoubleClick('title'),
             onBlur: handleBlur,
@@ -150,8 +170,8 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = ({
             suppressContentEditableWarning
             className="text-lg opacity-80 outline-none"
             style={{
-              color: actualContent.style?.color,
-              fontFamily: actualContent.style?.fontFamily
+              color: containerStyle.color,
+              fontFamily: containerStyle.fontFamily
             }}
             onDoubleClick={() => handleDoubleClick('subtitle')}
             onBlur={handleBlur}

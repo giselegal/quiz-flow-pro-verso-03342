@@ -2,10 +2,8 @@
 import React from 'react';
 import { BlockData, BlockComponentProps } from '@/types/blocks';
 import { BlockDefinition } from '@/types/editor';
+import { Type, Heading1, Video } from 'lucide-react';
 import VideoPlayerBlock from './VideoPlayerBlock';
-
-// Export BlockDefinition type for other components
-export type { BlockDefinition } from '@/types/editor';
 
 // Enhanced block registry with complete definitions
 const ENHANCED_BLOCK_REGISTRY: Record<string, BlockDefinition> = {
@@ -14,7 +12,7 @@ const ENHANCED_BLOCK_REGISTRY: Record<string, BlockDefinition> = {
     name: 'Texto',
     description: 'Bloco de texto editável',
     category: 'content',
-    icon: 'Type',
+    icon: Type,
     component: ({ block, onClick }) => (
       <div className="p-4 border border-gray-200 rounded cursor-pointer" onClick={onClick}>
         <p>{block.properties?.text || 'Clique para editar o texto'}</p>
@@ -24,7 +22,7 @@ const ENHANCED_BLOCK_REGISTRY: Record<string, BlockDefinition> = {
       text: {
         type: 'textarea',
         label: 'Texto',
-        defaultValue: 'Texto de exemplo'
+        default: 'Texto de exemplo'
       }
     },
     label: 'Texto',
@@ -38,7 +36,7 @@ const ENHANCED_BLOCK_REGISTRY: Record<string, BlockDefinition> = {
     name: 'Título',
     description: 'Título ou cabeçalho',
     category: 'content',
-    icon: 'Heading1',
+    icon: Heading1,
     component: ({ block, onClick }) => (
       <div className="p-4 border border-gray-200 rounded cursor-pointer" onClick={onClick}>
         <h2 className="text-xl font-bold">{block.properties?.text || 'Título'}</h2>
@@ -46,15 +44,22 @@ const ENHANCED_BLOCK_REGISTRY: Record<string, BlockDefinition> = {
     ),
     properties: {
       text: {
-        type: 'text',
+        type: 'string',
         label: 'Título',
-        defaultValue: 'Título'
+        default: 'Título'
       },
       level: {
         type: 'select',
         label: 'Nível',
-        options: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
-        defaultValue: 'h2'
+        options: [
+          { value: 'h1', label: 'H1' },
+          { value: 'h2', label: 'H2' },
+          { value: 'h3', label: 'H3' },
+          { value: 'h4', label: 'H4' },
+          { value: 'h5', label: 'H5' },
+          { value: 'h6', label: 'H6' }
+        ],
+        default: 'h2'
       }
     },
     label: 'Título',
@@ -69,18 +74,18 @@ const ENHANCED_BLOCK_REGISTRY: Record<string, BlockDefinition> = {
     name: 'Player de Vídeo',
     description: 'Reprodutor de vídeo incorporado',
     category: 'media',
-    icon: 'Video',
+    icon: Video,
     component: VideoPlayerBlock,
     properties: {
       videoUrl: {
-        type: 'text',
+        type: 'string',
         label: 'URL do Vídeo',
-        defaultValue: ''
+        default: ''
       },
       title: {
-        type: 'text',
+        type: 'string',
         label: 'Título',
-        defaultValue: 'Vídeo'
+        default: 'Vídeo'
       }
     },
     label: 'Player de Vídeo',
@@ -126,7 +131,7 @@ export const searchBlocks = (query: string): BlockDefinition[] => {
   return Object.values(ENHANCED_BLOCK_REGISTRY).filter(block => 
     block.name.toLowerCase().includes(lowerQuery) ||
     block.description.toLowerCase().includes(lowerQuery) ||
-    block.tags?.some(tag => tag.toLowerCase().includes(lowerQuery))
+    (block.tags && block.tags.some((tag: string) => tag.toLowerCase().includes(lowerQuery)))
   );
 };
 

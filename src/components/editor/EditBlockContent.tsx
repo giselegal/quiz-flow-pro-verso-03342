@@ -29,7 +29,7 @@ const EditBlockContent: React.FC<EditBlockContentProps> = ({
 }) => {
   const handlePropertyChange = (key: string, value: any) => {
     onUpdateBlock(block.id, {
-      ...block.properties,
+      ...(block.properties || {}),
       [key]: value
     });
   };
@@ -37,7 +37,7 @@ const EditBlockContent: React.FC<EditBlockContentProps> = ({
   // Ensure block has properties field for compatibility
   const blockWithProperties = {
     ...block,
-    properties: block.properties || {}
+    properties: block.properties || block.content || {}
   };
 
   const blockProps = {
@@ -65,6 +65,19 @@ const EditBlockContent: React.FC<EditBlockContentProps> = ({
         return <CountdownInlineBlock {...blockProps} />;
       case 'spacer-inline':
         return <SpacerInlineBlock {...blockProps} />;
+      case 'text':
+      case 'headline':
+      case 'image':
+      case 'button':
+      case 'spacer':
+        // Handle legacy block types
+        return (
+          <div className="p-4 border border-gray-300 bg-gray-50 rounded-lg">
+            <p className="text-gray-600">
+              Bloco tipo: <strong>{block.type}</strong>
+            </p>
+          </div>
+        );
       default:
         return (
           <div className="p-4 border border-gray-300 bg-gray-50 rounded-lg">

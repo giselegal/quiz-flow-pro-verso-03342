@@ -19,9 +19,10 @@ export interface BlockDefinition {
   properties: Record<string, PropertySchema>;
   label: string;
   defaultProps: Record<string, any>;
+  tags?: string[];
 }
 
-export type BlockType = 'headline' | 'text' | 'image' | 'button' | 'spacer';
+export type BlockType = 'headline' | 'text' | 'image' | 'button' | 'spacer' | 'text-inline' | 'image-display-inline' | 'badge-inline' | 'progress-inline' | 'stat-inline' | 'countdown-inline' | 'spacer-inline';
 
 export interface EditableContent {
   title?: string;
@@ -41,6 +42,22 @@ export interface EditableContent {
   borderColor?: string;
   type?: string;
   buttonColor?: string;
+  buttonText?: string;
+  buttonUrl?: string;
+  action?: string;
+  logo?: string;
+  logoAlt?: string;
+  logoWidth?: string;
+  logoHeight?: string;
+  backgroundColor?: string;
+  color?: string;
+  padding?: string;
+  margin?: string;
+  textAlign?: string;
+  fontWeight?: string;
+  fontFamily?: string;
+  boxShadow?: string;
+  [key: string]: any; // Add index signature for dynamic properties
 }
 
 export interface Block {
@@ -48,4 +65,8 @@ export interface Block {
   type: BlockType;
   content: EditableContent;
   order: number;
+  properties?: Record<string, any>; // Add properties field
 }
+
+// Export EditorBlock as alias for Block for backward compatibility
+export type EditorBlock = Block;
