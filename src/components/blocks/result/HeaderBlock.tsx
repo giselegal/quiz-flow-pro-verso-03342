@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Header } from '@/components/result/Header';
+import Header from '@/components/result/Header';
 
 /**
  * BLOCO EDITÁVEL: Header da Página de Resultado

@@ -39,5 +39,5 @@ export interface BlockDefinition {
   category: string;
   icon?: any; // Added icon property
   properties: { [key: string]: any };
-  defaultContent: any;
+  defaultContent?: any; // Made optional
 }
