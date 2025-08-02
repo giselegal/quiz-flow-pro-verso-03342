@@ -1,12 +1,14 @@
+
 import { QuizQuestion } from '../../types/quiz';
 
 export const styleExperienceQuestions: QuizQuestion[] = [
   {
     id: 'strategic-3',
+    order: 13,
+    question: 'Como você aprende melhor sobre estilo e moda?',
     title: 'Como você aprende melhor sobre estilo e moda?',
     type: 'text',
     multiSelect: 1,
-    // A questão 13 (strategic-3) não deve ter imagem
     options: [
       {
         id: 'strategic-3-1',
@@ -32,10 +34,11 @@ export const styleExperienceQuestions: QuizQuestion[] = [
   },
   {
     id: 'strategic-4',
+    order: 14,
+    question: 'O que você mais valoriza em um guia de estilo?',
     title: 'O que você mais valoriza em um guia de estilo?',
     type: 'text',
     multiSelect: 1,
-    // A questão 14 (strategic-4) não deve ter imagem
     options: [
       {
         id: 'strategic-4-1',

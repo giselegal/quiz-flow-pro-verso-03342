@@ -7,3 +7,18 @@ export interface EditorActions {
   deleteBlock: (id: string) => void;
   reorderBlocks: (startIndex: number, endIndex: number) => void;
 }
+
+export interface EditorThemeActions {
+  updateTheme: (theme: Partial<any>) => void;
+}
+
+export interface EditorTemplateActions {
+  saveAsTemplate: (name: string) => void;
+  loadTemplate: (name: string) => boolean;
+}
+
+export interface EditorConfig {
+  blocks: EditorBlock[];
+  globalStyles: Record<string, any>;
+  theme?: string;
+}
