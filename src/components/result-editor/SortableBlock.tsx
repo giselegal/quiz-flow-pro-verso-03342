@@ -38,18 +38,21 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
     transition,
   };
 
+  // Safely handle potentially undefined content
+  const content = block.content || {};
+
   const getBlockPreview = () => {
     switch (block.type as BlockType) {
       case 'heading':
-        return <h2 className="text-xl font-medium">{block.content.text || 'Título'}</h2>;
+        return <h2 className="text-xl font-medium">{content.text || 'Título'}</h2>;
       case 'paragraph':
-        return <p className="text-sm line-clamp-2">{block.content.text || 'Parágrafo de texto'}</p>;
+        return <p className="text-sm line-clamp-2">{content.text || 'Parágrafo de texto'}</p>;
       case 'image':
-        return block.content.imageUrl ? (
+        return content.imageUrl ? (
           <div className="h-20 bg-gray-100 flex items-center justify-center overflow-hidden">
             <img 
-              src={block.content.imageUrl} 
-              alt={block.content.alt || 'Imagem'} 
+              src={content.imageUrl} 
+              alt={content.alt || 'Imagem'} 
               className="max-h-full object-cover"
             />
           </div>
@@ -61,7 +64,7 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
       case 'button':
         return (
           <div className="inline-block px-4 py-2 bg-primary text-primary-foreground rounded-md">
-            {block.content.text || 'Botão'}
+            {content.text || 'Botão'}
           </div>
         );
       default:

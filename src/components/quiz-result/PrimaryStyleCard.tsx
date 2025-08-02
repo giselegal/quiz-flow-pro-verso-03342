@@ -2,31 +2,28 @@
 import React from 'react';
 import { StyleResult } from '@/types/quiz';
 
-interface PrimaryStyleCardProps {
-  style: StyleResult;
-  className?: string;
+export interface PrimaryStyleCardProps {
+  primaryStyle: StyleResult;
+  customDescription?: any;
+  customImage?: any;
 }
 
 export const PrimaryStyleCard: React.FC<PrimaryStyleCardProps> = ({ 
-  style, 
-  className = "" 
+  primaryStyle, 
+  customDescription, 
+  customImage 
 }) => {
   return (
-    <div className={`bg-white rounded-lg p-6 shadow-sm border ${className}`}>
-      <h3 className="text-xl font-bold text-[#432818] mb-2">
-        {style.category}
-      </h3>
-      <p className="text-[#8F7A6A] mb-4">
-        {style.percentage.toFixed(1)}% de compatibilidade
+    <div className="p-4 bg-white rounded-lg shadow-sm">
+      <h3 className="text-xl font-semibold mb-2">{primaryStyle.category}</h3>
+      <p className="text-gray-600 mb-4">
+        {customDescription || `Seu estilo predominante é ${primaryStyle.category}`}
       </p>
-      {style.description && (
-        <p className="text-sm text-[#8F7A6A]">
-          {style.description}
-        </p>
+      {customImage && (
+        <img src={customImage} alt={primaryStyle.category} className="w-full rounded-lg" />
       )}
     </div>
   );
 };
 
-// Also export as default for compatibility
 export default PrimaryStyleCard;

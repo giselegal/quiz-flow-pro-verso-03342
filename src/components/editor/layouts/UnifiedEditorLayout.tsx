@@ -74,7 +74,14 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
   };
 
   const config = resultPageConfig || defaultConfig;
-  const selectedBlock = selectedBlockId ? config.blocks?.find((b: any) => b.id === selectedBlockId) || null : null;
+  // Fix type compatibility by ensuring content is always defined
+  const selectedBlock = selectedBlockId ? 
+    config.blocks?.find((b: any) => b.id === selectedBlockId) || null : null;
+
+  const safeSelectedBlock = selectedBlock ? {
+    ...selectedBlock,
+    content: selectedBlock.content || {}
+  } : null;
 
   return (
     <EditorProvider>
@@ -113,7 +120,7 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
 
               <ResizablePanel defaultSize={25}>
                 <PropertiesPanel
-                  selectedBlock={selectedBlock}
+                  selectedBlock={safeSelectedBlock}
                   onUpdate={handleBlockUpdate}
                   onDelete={handleBlockDelete}
                   onClose={() => setSelectedBlockId(null)}
