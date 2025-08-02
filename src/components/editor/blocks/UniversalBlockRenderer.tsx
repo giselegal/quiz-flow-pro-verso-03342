@@ -1,14 +1,38 @@
+import React from 'react';
+import { TextBlock } from './TextBlock';
+import { HeaderBlock } from './HeaderBlock';
+import { ImageBlock } from './ImageBlock';
+import { ButtonBlock } from './ButtonBlock';
+import { SpacerBlock } from './SpacerBlock';
+import { ResultHeaderBlock } from './ResultHeaderBlock';
+import { ResultDescriptionBlock } from './ResultDescriptionBlock';
+import { ProductOfferBlock } from './ProductOfferBlock';
+import { UrgencyTimerBlock } from './UrgencyTimerBlock';
+import { FAQSectionBlock } from './FAQSectionBlock';
+import { TestimonialsBlock } from './TestimonialsBlock';
+import { GuaranteeBlock } from './GuaranteeBlock';
+import { VideoPlayerBlock } from './VideoPlayerBlock';
+import { ProductCarouselBlock } from './ProductCarouselBlock';
+import { BeforeAfterBlock } from './BeforeAfterBlock';
+import { TwoColumnsBlock } from './TwoColumnsBlock';
+import { ProsConsBlock } from './ProsConsBlock';
+import { DynamicPricingBlock } from './DynamicPricingBlock';
+import { ValueAnchoringBlock } from './ValueAnchoringBlock';
+import { ProgressBarStepBlock } from './ProgressBarStepBlock';
+import { AnimatedStatCounterBlock } from './AnimatedStatCounterBlock';
+import { QuizOfferCountdownBlock } from './QuizOfferCountdownBlock';
+import { ModernResultPageBlock } from './ModernResultPageBlock';
+import { QuizStepBlock } from './QuizStepBlock';
+import { QuizStartPageBlock } from './QuizStartPageBlock';
+import { QuizQuestionBlock } from './QuizQuestionBlock';
+import { QuizOfferPageBlock } from './QuizOfferPageBlock';
+import { QuestionMultipleBlock } from './QuestionMultipleBlock';
+import { StrategicQuestionBlock } from './StrategicQuestionBlock';
+import { QuizTransitionBlock } from './QuizTransitionBlock';
+import { InlineEditableText } from './InlineEditableText';
+import { BlockData } from '.';
 
-/**
- * UniversalBlockRenderer - Renderizador universal de blocos
- * Versão corrigida com importações adequadas e tratamento de erro robusto
- */
-
-import React, { Suspense } from 'react';
-import type { BlockComponentProps } from '@/types/blocks';
-import { initializeSafeBlock, logBlockDebug, createSafeFallback } from '@/utils/blockUtils';
-
-// Importações corretas dos componentes inline
+// Importações dos componentes inline
 import {
   TextInlineBlock,
   ImageDisplayInlineBlock,
@@ -17,6 +41,7 @@ import {
   StatInlineBlock,
   CountdownInlineBlock,
   SpacerInlineBlock,
+  ButtonInlineBlock,
   PricingCardInlineBlock,
   TestimonialCardInlineBlock,
   StyleCardInlineBlock,
@@ -39,148 +64,96 @@ import {
   QuizQuestionInlineBlock
 } from './inline';
 
-// Componentes não-inline existentes
-import { HeaderBlock } from './HeaderBlock';
-import { HeadingInlineBlock } from './HeadingInlineBlock';
-import { ButtonInlineBlock } from './ButtonInlineBlock';
-
-export interface BlockRendererProps extends BlockComponentProps {
-  block: any;
-  type?: string;
-  isSelected?: boolean;
-  onClick?: () => void;
-  onPropertyChange?: (key: string, value: any) => void;
+export interface BlockRendererProps {
+  block: BlockData;
   className?: string;
+  onClick?: () => void;
+  onUpdate?: (id: string, content: any) => void;
+  onDelete?: (id: string) => void;
 }
 
-// Componente de fallback para erros
-const ErrorFallback: React.FC<{ blockType: string; error?: string }> = ({ blockType, error }) => (
-  <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
-    <p className="font-medium">Erro no componente: {blockType}</p>
-    {error && <p className="text-sm mt-1">{error}</p>}
-  </div>
-);
+const blockComponentMap: { [key: string]: React.ComponentType<any> } = {
+  'text': TextBlock,
+  'header': HeaderBlock,
+  'image': ImageBlock,
+  'button': ButtonBlock,
+  'spacer': SpacerBlock,
+  'result-header': ResultHeaderBlock,
+  'result-description': ResultDescriptionBlock,
+  'product-offer': ProductOfferBlock,
+  'urgency-timer': UrgencyTimerBlock,
+  'faq-section': FAQSectionBlock,
+  'testimonials': TestimonialsBlock,
+  'guarantee': GuaranteeBlock,
+  'video-player': VideoPlayerBlock,
+  'product-carousel': ProductCarouselBlock,
+  'before-after': BeforeAfterBlock,
+  'two-columns': TwoColumnsBlock,
+  'pros-cons': ProsConsBlock,
+  'dynamic-pricing': DynamicPricingBlock,
+  'value-anchoring': ValueAnchoringBlock,
+  'progress-bar-step': ProgressBarStepBlock,
+  'animated-stat-counter': AnimatedStatCounterBlock,
+  'quiz-offer-countdown': QuizOfferCountdownBlock,
+  'modern-result-page': ModernResultPageBlock,
+  'quiz-step': QuizStepBlock,
+  'quiz-start-page': QuizStartPageBlock,
+  'quiz-question': QuizQuestionBlock,
+  'quiz-offer-page': QuizOfferPageBlock,
+  'question-multiple': QuestionMultipleBlock,
+  'strategic-question': StrategicQuestionBlock,
+  'quiz-transition': QuizTransitionBlock,
+  'inline-editable-text': InlineEditableText,
 
-// Componente de loading
-const LoadingFallback: React.FC = () => (
-  <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
-    <p className="text-gray-500">Carregando componente...</p>
-  </div>
-);
+  // Inline Blocks
+  'text-inline': TextInlineBlock,
+  'image-display-inline': ImageDisplayInlineBlock,
+  'badge-inline': BadgeInlineBlock,
+  'progress-inline': ProgressInlineBlock,
+  'stat-inline': StatInlineBlock,
+  'countdown-inline': CountdownInlineBlock,
+  'spacer-inline': SpacerInlineBlock,
+  'button-inline': ButtonInlineBlock,
+  'pricing-card-inline': PricingCardInlineBlock,
+  'testimonial-card-inline': TestimonialCardInlineBlock,
+  'style-card-inline': StyleCardInlineBlock,
+  'result-card-inline': ResultCardInlineBlock,
+  'result-header-inline': ResultHeaderInlineBlock,
+  'step-header-inline': StepHeaderInlineBlock,
+  'secondary-styles-inline': SecondaryStylesInlineBlock,
+  'style-characteristics-inline': StyleCharacteristicsInlineBlock,
+  'quiz-intro-header': QuizIntroHeaderBlock,
+  'loading-animation': LoadingAnimationBlock,
+  'quiz-personal-info-inline': QuizPersonalInfoInlineBlock,
+  'quiz-result-inline': QuizResultInlineBlock,
+  'characteristics-list-inline': CharacteristicsListInlineBlock,
+  'testimonials-inline': TestimonialsInlineBlock,
+  'before-after-inline': BeforeAfterInlineBlock,
+  'bonus-list-inline': BonusListInlineBlock,
+  'quiz-offer-pricing-inline': QuizOfferPricingInlineBlock,
+  'quiz-offer-cta-inline': QuizOfferCTAInlineBlock,
+  'quiz-start-page-inline': QuizStartPageInlineBlock,
+  'quiz-question-inline': QuizQuestionInlineBlock,
+};
 
-export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
-  block: rawBlock,
-  type,
-  isSelected = false,
-  onClick,
-  onPropertyChange,
-  className = '',
-  ...props
-}) => {
-  // Inicializar bloco com segurança
-  const block = initializeSafeBlock(rawBlock);
-  const blockType = type || block.type;
-  
-  // Debug logging
-  logBlockDebug('UniversalBlockRenderer', block);
-  
-  // Props comuns para todos os componentes
-  const commonProps: BlockComponentProps = {
-    block,
-    isSelected,
-    onClick,
-    onPropertyChange,
-    className,
-    ...props
-  };
-
-  try {
-    // Mapeamento de tipos para componentes
-    const componentMap: Record<string, () => JSX.Element> = {
-      // Componentes básicos
-      'text-inline': () => <TextInlineBlock {...commonProps} />,
-      'text': () => <TextInlineBlock {...commonProps} />,
-      'image-display-inline': () => <ImageDisplayInlineBlock {...commonProps} />,
-      'badge-inline': () => <BadgeInlineBlock {...commonProps} />,
-      'progress-inline': () => <ProgressInlineBlock {...commonProps} />,
-      'stat-inline': () => <StatInlineBlock {...commonProps} />,
-      'countdown-inline': () => <CountdownInlineBlock {...commonProps} />,
-      'spacer-inline': () => <SpacerInlineBlock {...commonProps} />,
-      'spacer': () => <SpacerInlineBlock {...commonProps} />,
-
-      // Componentes de cards
-      'pricing-card-inline': () => <PricingCardInlineBlock {...commonProps} />,
-      'testimonial-card-inline': () => <TestimonialCardInlineBlock {...commonProps} />,
-      'style-card-inline': () => <StyleCardInlineBlock {...commonProps} />,
-      'result-card-inline': () => <ResultCardInlineBlock {...commonProps} />,
-
-      // Componentes de resultado
-      'result-header-inline': () => <ResultHeaderInlineBlock {...commonProps} />,
-      'step-header-inline': () => <StepHeaderInlineBlock {...commonProps} />,
-      'secondary-styles-inline': () => <SecondaryStylesInlineBlock {...commonProps} />,
-      'style-characteristics-inline': () => <StyleCharacteristicsInlineBlock {...commonProps} />,
-
-      // Componentes de quiz
-      'quiz-intro-header': () => <QuizIntroHeaderBlock {...commonProps} />,
-      'loading-animation': () => <LoadingAnimationBlock {...commonProps} />,
-      'quiz-personal-info-inline': () => <QuizPersonalInfoInlineBlock {...commonProps} />,
-      'quiz-result-inline': () => <QuizResultInlineBlock {...commonProps} />,
-      'quiz-start-page-inline': () => <QuizStartPageInlineBlock {...commonProps} />,
-      'quiz-question-inline': () => <QuizQuestionInlineBlock {...commonProps} />,
-
-      // Componentes adicionais
-      'characteristics-list-inline': () => <CharacteristicsListInlineBlock {...commonProps} />,
-      'testimonials-inline': () => <TestimonialsInlineBlock {...commonProps} />,
-      'before-after-inline': () => <BeforeAfterInlineBlock {...commonProps} />,
-      'bonus-list-inline': () => <BonusListInlineBlock {...commonProps} />,
-      'quiz-offer-pricing-inline': () => <QuizOfferPricingInlineBlock {...commonProps} />,
-      'quiz-offer-cta-inline': () => <QuizOfferCTAInlineBlock {...commonProps} />,
-
-      // Componentes não-inline existentes
-      'header': () => <HeaderBlock {...commonProps} />,
-      'heading-inline': () => <HeadingInlineBlock {...commonProps} />,
-      'button-inline': () => <ButtonInlineBlock {...commonProps} />
-    };
-
-    // Renderizar componente baseado no tipo
-    const renderComponent = componentMap[blockType];
-    
-    if (renderComponent) {
-      return (
-        <Suspense fallback={<LoadingFallback />}>
-          {renderComponent()}
-        </Suspense>
-      );
-    }
-
-    // Fallback para tipos não reconhecidos
-    return (
-      <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-700">
-        <p className="font-medium">Componente não encontrado</p>
-        <p className="text-sm">Tipo: {blockType}</p>
-      </div>
-    );
-
-  } catch (error) {
-    console.error(`Erro ao renderizar bloco ${blockType}:`, error);
-    return <ErrorFallback blockType={blockType} error={error instanceof Error ? error.message : 'Erro desconhecido'} />;
+export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({ block, className, onClick }) => {
+  if (!block || !block.type) {
+    return <div className="text-red-500">Block type is undefined</div>;
   }
-};
 
-// Função para verificar se um tipo de bloco está registrado
-export const isBlockTypeRegistered = (blockType: string): boolean => {
-  const registeredTypes = [
-    'text-inline', 'text', 'image-display-inline', 'badge-inline',
-    'progress-inline', 'stat-inline', 'countdown-inline', 'spacer-inline', 'spacer',
-    'pricing-card-inline', 'testimonial-card-inline', 'style-card-inline', 'result-card-inline',
-    'result-header-inline', 'step-header-inline', 'secondary-styles-inline', 'style-characteristics-inline',
-    'quiz-intro-header', 'loading-animation', 'quiz-personal-info-inline', 'quiz-result-inline',
-    'quiz-start-page-inline', 'quiz-question-inline', 'characteristics-list-inline',
-    'testimonials-inline', 'before-after-inline', 'bonus-list-inline',
-    'quiz-offer-pricing-inline', 'quiz-offer-cta-inline', 'header', 'heading-inline', 'button-inline'
-  ];
-  
-  return registeredTypes.includes(blockType);
-};
+  const BlockComponent = blockComponentMap[block.type];
 
-export default UniversalBlockRenderer;
+  if (!BlockComponent) {
+    console.error(`Componente não encontrado para o tipo de bloco: ${block.type}`);
+    return <div className="text-red-500">Componente não encontrado: {block.type}</div>;
+  }
+
+  return (
+    <BlockComponent
+      {...block.properties}
+      block={block}
+      className={className}
+      onClick={onClick}
+    />
+  );
+};
