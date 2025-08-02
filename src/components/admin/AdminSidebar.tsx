@@ -50,13 +50,13 @@ const sidebarItems = [
     icon: TrendingUp
   },
   {
-    title: 'Análise de Métricas',
+    title: 'Analytics',
     href: '/admin/analytics',
     icon: BarChart3
   },
   {
     title: 'Editor',
-    href: '/admin/editor',
+    href: '/editor',
     icon: Code
   }
 ];

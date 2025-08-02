@@ -1,19 +1,46 @@
 
 import React, { useState } from 'react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { useEditor } from '@/context/EditorContext';
+import { EditorProvider } from '@/context/EditorContext';
 import { ComponentsSidebar } from './sidebar/ComponentsSidebar';
 import { EditorCanvas } from './canvas/EditorCanvas';
 import { AdvancedPropertyPanel } from './AdvancedPropertyPanel';
 
-interface SchemaDrivenEditorResponsiveProps {
+interface SchemaDrivenEditorCoreProps {
   funnelId?: string;
   className?: string;
 }
 
-const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> = ({
+export const SchemaDrivenEditorCore: React.FC<SchemaDrivenEditorCoreProps> = ({
   funnelId,
   className = ''
+}) => {
+  const [isPreviewing, setIsPreviewing] = useState(false);
+
+  return (
+    <EditorProvider>
+      <SchemaDrivenEditorCoreContent 
+        funnelId={funnelId}
+        className={className}
+        isPreviewing={isPreviewing}
+        setIsPreviewing={setIsPreviewing}
+      />
+    </EditorProvider>
+  );
+};
+
+interface SchemaDrivenEditorCoreContentProps {
+  funnelId?: string;
+  className: string;
+  isPreviewing: boolean;
+  setIsPreviewing: (value: boolean) => void;
+}
+
+const SchemaDrivenEditorCoreContent: React.FC<SchemaDrivenEditorCoreContentProps> = ({
+  funnelId,
+  className,
+  isPreviewing,
+  setIsPreviewing
 }) => {
   const {
     blocks,
@@ -21,8 +48,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     setSelectedBlockId,
     actions
   } = useEditor();
-
-  const [isPreviewing, setIsPreviewing] = useState(false);
 
   const selectedBlock = blocks.find(block => block.id === selectedBlockId);
 
@@ -66,4 +91,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   );
 };
 
-export default SchemaDrivenEditorResponsive;
+// Import necessário que estava faltando
+import { useEditor } from '@/context/EditorContext';
+
+export default SchemaDrivenEditorCore;

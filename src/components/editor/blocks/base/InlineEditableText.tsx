@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 
 interface InlineEditableTextProps {
   value: string;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
   placeholder?: string;
   className?: string;
   multiline?: boolean;
@@ -15,8 +16,8 @@ interface InlineEditableTextProps {
 }
 
 /**
- * Componente de texto editável inline otimizado para componentes horizontais
- * Suporte a diferentes tamanhos, pesos e alinhamentos
+ * Componente de texto somente visualização (edição desativada)
+ * A edição agora é feita exclusivamente pelo painel de propriedades
  */
 const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   value,
@@ -30,15 +31,9 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   textAlign = 'left',
   disabled = false
 }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    onChange(e.target.value);
-  };
-
   const baseClasses = cn(
-    'w-full bg-transparent outline-none resize-none',
-    'placeholder-gray-400 text-gray-700',
-    'transition-all duration-200',
-    'focus:placeholder-gray-300',
+    'w-full cursor-default select-none',
+    'text-gray-700',
     
     // Font size classes
     {
@@ -67,37 +62,16 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
     },
     
     // Disabled state
-    disabled && 'opacity-50 cursor-not-allowed',
+    disabled && 'opacity-50',
     
     className
   );
 
-  if (multiline) {
-    return (
-      <textarea
-        value={value}
-        onChange={handleChange}
-        placeholder={placeholder}
-        disabled={disabled}
-        className={baseClasses}
-        rows={maxLines}
-        style={{
-          minHeight: '1.5rem',
-          maxHeight: `${maxLines * 1.5}rem`
-        }}
-      />
-    );
-  }
-
+  // Sempre renderiza como texto estático (sem edição inline)
   return (
-    <input
-      type="text"
-      value={value}
-      onChange={handleChange}
-      placeholder={placeholder}
-      disabled={disabled}
-      className={baseClasses}
-    />
+    <div className={baseClasses}>
+      {value || <span className="text-gray-400">{placeholder}</span>}
+    </div>
   );
 };
 

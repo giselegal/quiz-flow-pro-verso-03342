@@ -16,7 +16,7 @@ interface ButtonBlockProps {
 }
 
 export const ButtonBlock: React.FC<ButtonBlockProps> = ({
-  content,
+  content: initialContent,
   isSelected = false,
   isEditing = false,
   onUpdate,
@@ -24,10 +24,13 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
   onClick,
   className
 }) => {
-  const [localButtonText, setLocalButtonText] = useState(content.buttonText || '');
+  // Ensure content is always an object with default values
+  const content = initialContent || {};
+  
+  const [localButtonText, setLocalButtonText] = useState(content.buttonText || 'Texto do botão');
 
   useEffect(() => {
-    setLocalButtonText(content.buttonText || '');
+    setLocalButtonText(content.buttonText || 'Texto do botão');
   }, [content.buttonText]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -35,7 +38,7 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
       e.preventDefault();
     }
     if (e.key === 'Escape') {
-      setLocalButtonText(content.buttonText || '');
+      setLocalButtonText(content.buttonText || 'Texto do botão');
     }
   };
 
@@ -107,7 +110,7 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
         onClick={handleButtonClick}
       >
         {getButtonIcon()}
-        <span>{localButtonText || 'Texto do botão'}</span>
+        <span>{localButtonText}</span>
       </Button>
     </div>
   );

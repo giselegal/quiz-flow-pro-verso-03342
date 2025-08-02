@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { cn } from '../../../lib/utils';
 import { Button } from '../../../components/ui/button';
@@ -7,7 +8,7 @@ interface QuizStartPageBlockProps {
   block: {
     id: string;
     type: string;
-    properties: {
+    properties?: {
       title?: string;
       subtitle?: string;
       description?: string;
@@ -28,7 +29,7 @@ interface QuizStartPageBlockProps {
   style?: React.CSSProperties;
 }
 
-const            QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
+const QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
   block,
   isSelected = false,
   onClick,
@@ -37,6 +38,8 @@ const            QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
   className,
   style
 }) => {
+  // Safe destructuring with fallback defaults
+  const properties = block.properties || {};
   const {
     title = 'Etapa 1: Descubra Seu Estilo Pessoal Único',
     subtitle = 'Chega de guarda-roupa lotado e sensação de "não tenho nada para vestir"',
@@ -53,7 +56,7 @@ const            QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
     imageUrl,
     backgroundColor = '#fffaf7',
     textColor = '#432818'
-  } = block.properties;
+  } = properties;
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {
@@ -72,7 +75,7 @@ const            QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
         className
       )}
       onClick={onClick}
-      style={{ backgroundColor, color: textColor }}
+      style={{ backgroundColor, color: textColor, ...style }}
     >
       {/* Header */}
       <div className="text-center mb-4">

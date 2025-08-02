@@ -16,13 +16,24 @@ interface ImageBlockProps {
 }
 
 export const ImageBlock: React.FC<ImageBlockProps> = ({
-  content,
+  content: initialContent,
   isSelected = false,
   isEditing = false,
   onUpdate,
   onSelect,
   className
 }) => {
+  // Ensure content is always an object with default values
+  const content = initialContent || {
+    imageUrl: '',
+    imageAlt: 'Imagem',
+    caption: '',
+    style: {
+      width: '100%',
+      borderRadius: '8px'
+    }
+  };
+
   const [isUploading, setIsUploading] = useState(false);
   const [showUrlInput, setShowUrlInput] = useState(false);
   const [urlInput, setUrlInput] = useState('');
@@ -72,6 +83,9 @@ export const ImageBlock: React.FC<ImageBlockProps> = ({
     }
   };
 
+  // Ensure style object exists
+  const style = content.style || {};
+
   return (
     <div
       className={cn(
@@ -82,10 +96,10 @@ export const ImageBlock: React.FC<ImageBlockProps> = ({
       )}
       onClick={onSelect}
       style={{
-        backgroundColor: content.style?.backgroundColor,
-        padding: content.style?.padding,
-        margin: content.style?.margin,
-        textAlign: content.style?.textAlign as any
+        backgroundColor: style.backgroundColor,
+        padding: style.padding,
+        margin: style.margin,
+        textAlign: style.textAlign as any
       }}
     >
       {content.imageUrl ? (
@@ -95,13 +109,13 @@ export const ImageBlock: React.FC<ImageBlockProps> = ({
             alt={content.imageAlt || 'Imagem'}
             className={cn(
               "max-w-full h-auto rounded-lg",
-              content.style?.width && `w-${content.style.width}`,
-              content.style?.height && `h-${content.style.height}`,
-              content.style?.objectFit && `object-${content.style.objectFit}`
+              style.width && `w-${style.width}`,
+              style.height && `h-${style.height}`,
+              style.objectFit && `object-${style.objectFit}`
             )}
             style={{
-              borderRadius: content.style?.borderRadius,
-              boxShadow: content.style?.boxShadow
+              borderRadius: style.borderRadius,
+              boxShadow: style.boxShadow
             }}
           />
           

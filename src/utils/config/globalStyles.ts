@@ -1,8 +1,20 @@
 
-export const createGlobalStyles = () => ({
-  primaryColor: '#B89B7A',
-  secondaryColor: '#432818',
-  textColor: '#1A1818',
-  backgroundColor: '#fffaf7',
-  fontFamily: 'Playfair Display'
-});
+export interface GlobalStylesConfig {
+  primaryColor: string;
+  secondaryColor: string;
+  textColor: string;
+  backgroundColor: string;
+  fontFamily: string;
+  logo?: string;
+}
+
+export const createGlobalStyles = (): GlobalStylesConfig => {
+  return {
+    primaryColor: '#B89B7A',
+    secondaryColor: '#432818',
+    textColor: '#1A1818',
+    backgroundColor: '#FAF9F7',
+    fontFamily: 'Inter, sans-serif',
+    logo: ''
+  };
+};

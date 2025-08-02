@@ -1,6 +1,6 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { useInlineEdit } from '@/hooks/useInlineEdit';
 
 interface InlineEditTextProps {
   value: string;
@@ -16,12 +16,14 @@ interface InlineEditTextProps {
   stopPropagation?: boolean;
   saveOnBlur?: boolean;
   validateOnSave?: (value: string) => boolean;
+  onClick?: () => void;
+  isSelected?: boolean;
 }
 
 export const InlineEditText: React.FC<InlineEditTextProps> = ({
   value,
   onSave,
-  placeholder = 'Clique para editar...',
+  placeholder = 'Clique para selecionar...',
   multiline = false,
   disabled = false,
   className = '',
@@ -31,113 +33,41 @@ export const InlineEditText: React.FC<InlineEditTextProps> = ({
   preventDefault = true,
   stopPropagation = true,
   saveOnBlur = true,
-  validateOnSave
+  validateOnSave,
+  onClick,
+  isSelected = false
 }) => {
-  const {
-    isEditing,
-    editValue,
-    mounted,
-    inputRef,
-    startEdit,
-    handleKeyDown,
-    handleBlur,
-    handleChange
-  } = useInlineEdit({
-    value,
-    onSave,
-    multiline,
-    autoSelect,
-    preventDefault,
-    stopPropagation,
-    saveOnBlur,
-    validateOnSave
-  });
-
-  // Estado de carregamento para SSR
-  if (!mounted) {
-    const Component = as;
-    return (
-      <Component className={className} style={style}>
-        {value || placeholder}
-      </Component>
-    );
-  }
-
-  // Estado desabilitado
-  if (disabled) {
-    const Component = as;
-    return (
-      <Component className={className} style={style}>
-        {value || placeholder}
-      </Component>
-    );
-  }
-
-  // Estado de edição
-  if (isEditing) {
-    if (multiline) {
-      return (
-        <textarea
-          ref={inputRef as React.RefObject<HTMLTextAreaElement>}
-          value={editValue}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          onKeyDown={handleKeyDown}
-          placeholder={placeholder}
-          className={cn(
-            'w-full resize-none border-2 border-blue-500 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white',
-            className
-          )}
-          style={{
-            ...style,
-            minHeight: '80px',
-            fontFamily: 'inherit',
-            fontSize: 'inherit',
-            fontWeight: 'inherit',
-            lineHeight: 'inherit'
-          }}
-          rows={3}
-        />
-      );
-    } else {
-      return (
-        <input
-          ref={inputRef as React.RefObject<HTMLInputElement>}
-          type="text"
-          value={editValue}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          onKeyDown={handleKeyDown}
-          placeholder={placeholder}
-          className={cn(
-            'w-full border-2 border-blue-500 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white',
-            className
-          )}
-          style={{
-            ...style,
-            fontFamily: 'inherit',
-            fontSize: 'inherit',
-            fontWeight: 'inherit',
-            lineHeight: 'inherit',
-            backgroundColor: 'white',
-            color: '#000'
-          }}
-        />
-      );
-    }
-  }
-
-  // Estado de exibição normal
+  // Component now works only for selection, no inline editing
+  // All editing happens in the properties panel
+  
   const Component = as;
+  
+  const handleClick = (e: React.MouseEvent) => {
+    if (preventDefault) {
+      e.preventDefault();
+    }
+    if (stopPropagation) {
+      e.stopPropagation();
+    }
+    
+    if (!disabled && onClick) {
+      onClick();
+    }
+  };
+
   return (
     <Component
       className={cn(
-        'cursor-pointer hover:bg-blue-50 hover:ring-1 hover:ring-blue-200 rounded px-2 py-1 transition-colors min-h-[1.5em] inline-block',
+        'cursor-pointer transition-all duration-200',
+        'hover:bg-blue-50 hover:ring-1 hover:ring-blue-200 rounded px-2 py-1',
+        'min-h-[1.5em] inline-block',
+        isSelected && 'bg-blue-50 ring-2 ring-blue-500',
+        disabled && 'cursor-not-allowed opacity-50',
         className
       )}
       style={style}
-      onClick={startEdit}
-      title="Clique para editar"
+      onClick={handleClick}
+      title="Clique para selecionar e editar no painel de propriedades"
     >
       {value || (
         <span className="text-gray-400 italic">{placeholder}</span>
