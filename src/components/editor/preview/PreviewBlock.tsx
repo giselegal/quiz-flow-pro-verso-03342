@@ -1,10 +1,11 @@
 
 import React from 'react';
-import { Block } from '@/types/editor';
+import { EditorBlock } from '@/types/editor';
 
 interface PreviewBlockProps {
-  block: Block;
+  block: EditorBlock;
   isSelected?: boolean;
+  onSelect?: () => void;
   onClick?: () => void;
   viewMode?: 'desktop' | 'mobile';
   isPreview?: boolean;
@@ -13,6 +14,7 @@ interface PreviewBlockProps {
 export const PreviewBlock: React.FC<PreviewBlockProps> = ({
   block,
   isSelected = false,
+  onSelect,
   onClick,
   viewMode = 'desktop',
   isPreview = false
@@ -22,6 +24,11 @@ export const PreviewBlock: React.FC<PreviewBlockProps> = ({
     ${isSelected ? 'ring-2 ring-blue-500 ring-offset-2' : 'hover:shadow-md'}
     ${isPreview ? 'pointer-events-none' : ''}
   `;
+
+  const handleClick = () => {
+    if (onClick) onClick();
+    if (onSelect) onSelect();
+  };
 
   const renderBlockContent = () => {
     switch (block.type) {
@@ -50,7 +57,6 @@ export const PreviewBlock: React.FC<PreviewBlockProps> = ({
         );
       
       case 'benefits':
-        // Ensure items is a string array for benefits
         const items = Array.isArray(block.content?.items) 
           ? block.content.items.filter((item): item is string => typeof item === 'string')
           : [];
@@ -76,7 +82,7 @@ export const PreviewBlock: React.FC<PreviewBlockProps> = ({
   };
 
   return (
-    <div className={baseClasses} onClick={onClick}>
+    <div className={baseClasses} onClick={handleClick}>
       {renderBlockContent()}
     </div>
   );

@@ -116,18 +116,15 @@ export interface EditableContent {
   imageAlt?: string;
   description?: string;
   customImage?: string;
-  items?: string[];
+  items?: string[] | FAQItem[];
   faqItems?: FAQItem[];
-  // FAQ specific properties
   regularPrice?: string;
   salePrice?: string;
   ctaUrl?: string;
-  // Hero properties
   heroImage?: string;
   heroImageAlt?: string;
   quote?: string;
   quoteAuthor?: string;
-  // Additional properties
   letterSpacing?: string;
   lineHeight?: string;
   display?: string;

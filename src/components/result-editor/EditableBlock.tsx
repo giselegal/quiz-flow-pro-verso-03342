@@ -11,18 +11,28 @@ import FAQBlockEditor from './block-editors/FAQBlockEditor';
 interface EditableBlockProps {
   block: EditorBlock;
   isSelected: boolean;
+  onSelect?: () => void;
   onUpdate: (content: any) => void;
   onDelete: () => void;
   onMove: (direction: 'up' | 'down') => void;
+  index?: number;
 }
 
 const EditableBlock: React.FC<EditableBlockProps> = ({
   block,
   isSelected,
+  onSelect,
   onUpdate,
   onDelete,
-  onMove
+  onMove,
+  index
 }) => {
+  const handleClick = () => {
+    if (onSelect) {
+      onSelect();
+    }
+  };
+
   const renderEditor = () => {
     switch (block.type) {
       case 'text':
@@ -57,7 +67,6 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
         );
       
       case 'benefits':
-        // Extract string items for benefits editor
         const stringItems = Array.isArray(block.content?.items) 
           ? block.content.items.filter((item): item is string => typeof item === 'string')
           : [];
@@ -162,6 +171,7 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
       className={`border-2 rounded-lg p-4 ${
         isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
       }`}
+      onClick={handleClick}
     >
       <div className="flex justify-between items-center mb-2">
         <span className="text-sm font-medium text-gray-600">{block.type}</span>

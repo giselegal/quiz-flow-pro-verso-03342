@@ -1,12 +1,12 @@
 
 import React from 'react';
 import { DragEndEvent } from '@dnd-kit/core';
-import { Block } from '@/types/editor';
+import { EditorBlock } from '@/types/editor';
 
 interface EditorContentProps {
-  blocks: Block[];
+  blocks: EditorBlock[];
   onDragEnd: (event: DragEndEvent) => void;
-  onAddBlock: (type: string) => void;
+  onAddBlock: (type: EditorBlock['type']) => void;
   onUpdateBlock: (id: string, content: any) => void;
   onDeleteBlock: (id: string) => void;
   isPreviewing: boolean;
@@ -20,12 +20,11 @@ export const EditorContent: React.FC<EditorContentProps> = ({
   onDeleteBlock,
   isPreviewing
 }) => {
-  const renderBlock = (block: Block) => {
-    const isSelected = false; // This would come from props in real implementation
+  const renderBlock = (block: EditorBlock) => {
+    const isSelected = false;
 
     switch (block.type) {
       case 'benefits':
-        // Ensure items is a string array for benefits
         const items = Array.isArray(block.content?.items) 
           ? block.content.items.filter((item): item is string => typeof item === 'string')
           : [];

@@ -8,6 +8,7 @@ import { ResultPageVisualEditor } from './ResultPageVisualEditor';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { EditorBlock } from '@/types/editor';
 
 interface EnhancedResultPageEditorProps {
   primaryStyle: StyleResult;
@@ -36,17 +37,25 @@ export const EnhancedResultPageEditor: React.FC<EnhancedResultPageEditorProps> =
   );
 
   const [showTemplates, setShowTemplates] = useState(false);
+  const [blocks, setBlocks] = useState<EditorBlock[]>([]);
+  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
 
   const handleStyleChange = (newStyle: StyleResult) => {
     setSelectedStyle(newStyle);
   };
 
-  // Safe access to styleConfig
+  const handleBlocksUpdate = (newBlocks: EditorBlock[]) => {
+    setBlocks(newBlocks);
+  };
+
+  const handleSelectBlock = (id: string) => {
+    setSelectedBlockId(id);
+  };
+
   const currentStyleConfig = (styleConfig as StyleConfigMap)[selectedStyle.category];
   
   return (
     <div className="h-screen flex flex-col">
-      {/* Header */}
       <div className="bg-white border-b p-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link to="/quiz-builder">
@@ -68,15 +77,17 @@ export const EnhancedResultPageEditor: React.FC<EnhancedResultPageEditorProps> =
         </div>
       </div>
 
-      {/* Editor */}
       <div className="flex-1">
         <ResultPageVisualEditor
+          blocks={blocks}
+          onBlocksUpdate={handleBlocksUpdate}
+          selectedBlockId={selectedBlockId}
+          onSelectBlock={handleSelectBlock}
           selectedStyle={selectedStyle}
           onShowTemplates={() => setShowTemplates(true)}
         />
       </div>
 
-      {/* Template modal would go here */}
       {showTemplates && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg max-w-2xl w-full mx-4">
