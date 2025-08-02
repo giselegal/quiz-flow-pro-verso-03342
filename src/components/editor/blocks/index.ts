@@ -1,73 +1,58 @@
-/**
- * Exports dos Blocos do Editor - Apenas Componentes Funcionais
- * 
- * Este arquivo exporta apenas os blocos que foram confirmados como existentes
- * e funcionais no sistema de editor visual.
- * 
- * ATUALIZADO: Janeiro 2025 - Limpeza de duplicidades e exports quebrados
- */
 
-// Blocos básicos modernos (confirmados como funcionais)
-export { default as HeaderBlock } from './HeaderBlock';
-export { default as TextBlock } from './TextBlock';
-export { ImageBlock } from './ImageBlock';
-export { default as ButtonBlock } from './ButtonBlock';
-export { SpacerBlock } from './SpacerBlock';
+// Export all block components for easy importing
+export { default as TextInlineBlock } from './inline/TextInlineBlock';
+export { default as ImageDisplayInlineBlock } from './inline/ImageDisplayInlineBlock';
+export { default as BadgeInlineBlock } from './inline/BadgeInlineBlock';
+export { default as ProgressInlineBlock } from './inline/ProgressInlineBlock';
+export { default as StatInlineBlock } from './inline/StatInlineBlock';
+export { default as CountdownInlineBlock } from './inline/CountdownInlineBlock';
+export { default as SpacerInlineBlock } from './inline/SpacerInlineBlock';
 
-// Blocos de conteúdo avançado (confirmados como funcionais)
-export { RichTextBlock } from './RichTextBlock';
-export { QuizStepBlock } from './QuizStepBlock';
-export { InlineEditableText } from './InlineEditableText';
+// Componentes de cards
+export { default as PricingCardInlineBlock } from './inline/PricingCardInlineBlock';
+export { default as TestimonialCardInlineBlock } from './inline/TestimonialCardInlineBlock';
+export { default as StyleCardInlineBlock } from './inline/StyleCardInlineBlock';
+export { default as ResultCardInlineBlock } from './inline/ResultCardInlineBlock';
 
-// Blocos específicos do Quiz (confirmados como funcionais)
-export { default as QuizStartPageBlock } from './QuizStartPageBlock';
-export { default as QuizQuestionBlock } from './QuizQuestionBlock';
-// export { default as ResultPageBlock } from './ResultPageBlock'; // Arquivo não encontrado
-export { default as QuizOfferPageBlock } from './QuizOfferPageBlock';
-export { default as QuestionMultipleBlock } from './QuestionMultipleBlock';
-export { default as StrategicQuestionBlock } from './StrategicQuestionBlock';
-export { default as QuizTransitionBlock } from './QuizTransitionBlock';
+// Componentes de resultado
+export { default as ResultHeaderInlineBlock } from './inline/ResultHeaderInlineBlock';
+export { default as StepHeaderInlineBlock } from './inline/StepHeaderInlineBlock';
+export { default as SecondaryStylesInlineBlock } from './inline/SecondaryStylesInlineBlock';
+export { default as StyleCharacteristicsInlineBlock } from './inline/StyleCharacteristicsInlineBlock';
 
-// Novos componentes específicos de páginas (Etapas 20 e 21)
-export { default as ModernResultPageBlock } from './ModernResultPageBlock';
+// Componentes de quiz
+export { default as QuizIntroHeaderBlock } from './inline/QuizIntroHeaderBlock';
+export { default as LoadingAnimationBlock } from './inline/LoadingAnimationBlock';
+export { default as QuizPersonalInfoInlineBlock } from './inline/QuizPersonalInfoInlineBlock';
+export { default as QuizResultInlineBlock } from './inline/QuizResultInlineBlock';
+export { default as QuizStartPageInlineBlock } from './inline/QuizStartPageInlineBlock';
+export { default as QuizQuestionInlineBlock } from './inline/QuizQuestionInlineBlock';
 
-// Blocos de resultado e oferta (confirmados como funcionais)
-export { default as ResultHeaderBlock } from './ResultHeaderBlock';
-export { default as ResultDescriptionBlock } from './ResultDescriptionBlock';
-export { default as ProductOfferBlock } from './ProductOfferBlock';
-export { default as UrgencyTimerBlock } from './UrgencyTimerBlock';
-export { default as FAQSectionBlock } from './FAQSectionBlock';
-export { default as TestimonialsBlock } from './TestimonialsBlock';
-export { default as GuaranteeBlock } from './GuaranteeBlock';
-export { VideoPlayerBlock } from './VideoPlayerBlock';
+// Componentes que existem mas podem estar vazios
+export { default as CharacteristicsListInlineBlock } from './inline/CharacteristicsListInlineBlock';
+export { default as TestimonialsInlineBlock } from './inline/TestimonialsInlineBlock';
+export { default as BeforeAfterInlineBlock } from './inline/BeforeAfterInlineBlock';
+export { default as BonusListInlineBlock } from './inline/BonusListInlineBlock';
+export { default as QuizOfferPricingInlineBlock } from './inline/QuizOfferPricingInlineBlock';
+export { default as QuizOfferCTAInlineBlock } from './inline/QuizOfferCTAInlineBlock';
 
-// Sales Components
-export { default as ProductCarouselBlock } from './ProductCarouselBlock';
-export { default as BeforeAfterBlock } from './BeforeAfterBlock';
-export { default as TwoColumnsBlock } from './TwoColumnsBlock';
-export { default as ProsConsBlock } from './ProsConsBlock';
+// Block components
+export { default as BenefitsListBlock } from './BenefitsListBlock';
 export { default as DynamicPricingBlock } from './DynamicPricingBlock';
-export { default as ValueAnchoringBlock } from './ValueAnchoringBlock';
-
-// Novos componentes independentes
+export { default as FAQSectionInlineBlock } from './FAQSectionInlineBlock';
+export { default as LegalNoticeInlineBlock } from './LegalNoticeInlineBlock';
+export { default as OptionsGridBlock } from './OptionsGridBlock';
 export { default as ProgressBarStepBlock } from './ProgressBarStepBlock';
-export { default as AnimatedStatCounterBlock } from './AnimatedStatCounterBlock';
-export { default as QuizOfferCountdownBlock } from './QuizOfferCountdownBlock';
+export { default as QuizTitleBlock } from './QuizTitleBlock';
+export { default as ResultHeaderBlock } from './ResultHeaderBlock';
+export { default as StrategicQuestionBlock } from './StrategicQuestionBlock';
+export { default as StyleCardBlock } from './StyleCardBlock';
+export { default as QuizResultCalculatedBlock } from './QuizResultCalculatedBlock';
+export { default as VerticalCanvasHeaderBlock } from './VerticalCanvasHeaderBlock';
 
-// Renderizador universal (principal)
-export { UniversalBlockRenderer } from './UniversalBlockRenderer';
-
-// Tipos relacionados aos blocos
+// Universal renderer
+export { default as UniversalBlockRenderer } from './UniversalBlockRenderer';
 export type { BlockRendererProps } from './UniversalBlockRenderer';
 
-// Re-export do tipo BlockData se necessário
-export interface BlockData {
-  id: string;
-  type: string;
-  properties: Record<string, any>;
-  order?: number;
-  visible?: boolean;
-}
-
-// Log para debug
-console.log('[BlocksIndex] Exports carregados - componentes modernos apenas');
+// Re-exports from BlockRenderer
+export { BlockRenderer } from './BlockRenderer';

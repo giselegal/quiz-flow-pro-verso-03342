@@ -2,7 +2,7 @@
 import React from 'react';
 import { Block } from '@/types/editor';
 
-// Import available inline components
+// Import available inline components with default imports
 import TextInlineBlock from './inline/TextInlineBlock';
 import BadgeInlineBlock from './inline/BadgeInlineBlock';
 import ProgressInlineBlock from './inline/ProgressInlineBlock';
@@ -22,6 +22,14 @@ import LoadingAnimationBlock from './inline/LoadingAnimationBlock';
 import CharacteristicsListInlineBlock from './inline/CharacteristicsListInlineBlock';
 import BeforeAfterInlineBlock from './inline/BeforeAfterInlineBlock';
 import BonusListInlineBlock from './inline/BonusListInlineBlock';
+
+export interface BlockRendererProps {
+  block: Block;
+  isSelected?: boolean;
+  onClick?: () => void;
+  onPropertyChange?: (key: string, value: any) => void;
+  disabled?: boolean;
+}
 
 interface UniversalBlockRendererProps {
   block: Block;

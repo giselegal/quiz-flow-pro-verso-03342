@@ -1,10 +1,15 @@
 
 import React from 'react';
 import { InlineBlockProps } from '@/types/inlineBlocks';
-import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 
-const ProgressInlineBlock: React.FC<InlineBlockProps> = ({ block, onUpdate, isSelected, onSelect }) => {
+const ProgressInlineBlock: React.FC<InlineBlockProps> = ({ 
+  block, 
+  isSelected, 
+  onClick,
+  onPropertyChange,
+  disabled = false 
+}) => {
   // Safety check for block and properties
   if (!block) {
     console.warn('⚠️ ProgressInlineBlock: block is undefined');
@@ -17,56 +22,76 @@ const ProgressInlineBlock: React.FC<InlineBlockProps> = ({ block, onUpdate, isSe
   const style = properties.style || {};
   
   const {
+    label = 'Progresso',
     value = 50,
     max = 100,
-    showValue = true,
-    label = '',
+    showPercentage = true,
+    showLabel = true
   } = content;
 
   const {
-    color = '#B89B7A',
-    height = 8,
-    animated = true
+    size = 'md',
+    color = 'blue',
+    backgroundColor = 'gray'
   } = style;
 
   const percentage = Math.min(100, Math.max(0, (value / max) * 100));
 
-  console.log('🔄 ProgressInlineBlock render:', {
-    blockId: block.id,
-    hasProperties: !!block.properties,
-    value,
-    max,
-    percentage
-  });
+  const getSizeClasses = (size: string) => {
+    switch (size) {
+      case 'sm': return 'h-2 text-sm';
+      case 'md': return 'h-3 text-base';
+      case 'lg': return 'h-4 text-lg';
+      default: return 'h-3 text-base';
+    }
+  };
+
+  const getColorClasses = (color: string) => {
+    switch (color) {
+      case 'blue': return 'bg-blue-500';
+      case 'green': return 'bg-green-500';
+      case 'red': return 'bg-red-500';
+      case 'yellow': return 'bg-yellow-500';
+      case 'purple': return 'bg-purple-500';
+      default: return 'bg-blue-500';
+    }
+  };
+
+  const getBackgroundClasses = (backgroundColor: string) => {
+    switch (backgroundColor) {
+      case 'gray': return 'bg-gray-200';
+      case 'light': return 'bg-gray-100';
+      case 'dark': return 'bg-gray-300';
+      default: return 'bg-gray-200';
+    }
+  };
+
+  const sizeClasses = getSizeClasses(size);
+  const colorClasses = getColorClasses(color);
+  const backgroundClasses = getBackgroundClasses(backgroundColor);
 
   return (
     <div
-      onClick={onSelect}
+      onClick={onClick}
       className={cn(
-        'w-full space-y-2 cursor-pointer p-2 rounded transition-all duration-200',
-        isSelected && 'ring-2 ring-blue-500 ring-offset-2'
+        'cursor-pointer p-4 rounded-lg transition-all duration-200',
+        isSelected && 'ring-2 ring-blue-500 ring-offset-2',
+        'space-y-2'
       )}
     >
-      {(label || showValue) && (
-        <div className="flex justify-between items-center text-sm">
-          {label && <span className="text-[#432818] font-medium">{label}</span>}
-          {showValue && <span className="text-[#8F7A6A]">{value}/{max}</span>}
+      {showLabel && (
+        <div className="flex justify-between items-center">
+          <span className={cn('font-medium text-gray-700', sizeClasses)}>{label}</span>
+          {showPercentage && (
+            <span className={cn('text-gray-600', sizeClasses)}>{Math.round(percentage)}%</span>
+          )}
         </div>
       )}
       
-      <div 
-        className="w-full bg-gray-200 rounded-full overflow-hidden"
-        style={{ height: `${height}px` }}
-      >
+      <div className={cn('w-full rounded-full overflow-hidden', sizeClasses, backgroundClasses)}>
         <div
-          className={cn(
-            "h-full transition-all duration-500 ease-out rounded-full",
-            animated && "transition-all duration-1000"
-          )}
-          style={{
-            width: `${percentage}%`,
-            backgroundColor: color
-          }}
+          className={cn('h-full transition-all duration-300 ease-out', colorClasses)}
+          style={{ width: `${percentage}%` }}
         />
       </div>
     </div>

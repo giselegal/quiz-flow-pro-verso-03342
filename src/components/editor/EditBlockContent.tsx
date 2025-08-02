@@ -1,86 +1,80 @@
 
 import React from 'react';
-import { EditorBlock } from '@/types/editor';
-import { HeaderBlockEditor } from './blocks/HeaderBlockEditor';
-import { HeroSectionBlockEditor } from './blocks/HeroSectionBlockEditor';
-import { BonusCarouselBlockEditor } from './blocks/BonusCarouselBlockEditor';
-import { HeadlineBlockEditor } from './blocks/HeadlineBlockEditor';
-import { TextBlockEditor } from './blocks/TextBlockEditor';
-import { ImageBlockEditor } from './blocks/ImageBlockEditor';
-import { BenefitsBlockEditor } from './blocks/BenefitsBlockEditor';
-import { PricingBlockEditor } from './blocks/PricingBlockEditor';
-import { GuaranteeBlockEditor } from './blocks/GuaranteeBlockEditor';
-import { CTABlockEditor } from './blocks/CTABlockEditor';
-import { StyleResultBlockEditor } from './blocks/StyleResultBlockEditor';
-import { SecondaryStylesBlockEditor } from './blocks/SecondaryStylesBlockEditor';
+import { Block } from '@/types/editor';
+import { StyleResult } from '@/types/quiz';
+
+// Import specific block editors
+import TextInlineBlock from './blocks/inline/TextInlineBlock';
+import ImageDisplayInlineBlock from './blocks/inline/ImageDisplayInlineBlock';
+import BadgeInlineBlock from './blocks/inline/BadgeInlineBlock';
+import ProgressInlineBlock from './blocks/inline/ProgressInlineBlock';
+import StatInlineBlock from './blocks/inline/StatInlineBlock';
+import CountdownInlineBlock from './blocks/inline/CountdownInlineBlock';
+import SpacerInlineBlock from './blocks/inline/SpacerInlineBlock';
 
 interface EditBlockContentProps {
-  block: EditorBlock;
-  onUpdate: (content: any) => void;
+  block: Block;
+  selectedStyle?: StyleResult;
+  onUpdateBlock: (blockId: string, properties: any) => void;
+  isSelected?: boolean;
+  onSelect?: () => void;
 }
 
-export const EditBlockContent: React.FC<EditBlockContentProps> = ({
+const EditBlockContent: React.FC<EditBlockContentProps> = ({
   block,
-  onUpdate
+  selectedStyle,
+  onUpdateBlock,
+  isSelected = false,
+  onSelect
 }) => {
-  switch (block.type) {
-    case 'header':
-      return <HeaderBlockEditor block={block} onUpdate={onUpdate} />;
-      
-    case 'hero-section':
-      return <HeroSectionBlockEditor block={block} onUpdate={onUpdate} />;
-      
-    case 'bonus-carousel':
-      return <BonusCarouselBlockEditor block={block} onUpdate={onUpdate} />;
-    
-    case 'headline':
-      return <HeadlineBlockEditor block={block} onUpdate={onUpdate} />;
-    
-    case 'text':
-      return <TextBlockEditor block={block} onUpdate={onUpdate} />;
-    
-    case 'image':
-      return <ImageBlockEditor block={block} onUpdate={onUpdate} />;
-    
-    case 'benefits':
-      return <BenefitsBlockEditor block={block} onUpdate={onUpdate} />;
-      
-    case 'pricing':
-      return <PricingBlockEditor block={block} onUpdate={onUpdate} />;
-      
-    case 'guarantee':
-      return <GuaranteeBlockEditor block={block} onUpdate={onUpdate} />;
-      
-    case 'cta':
-      return <CTABlockEditor block={block} onUpdate={onUpdate} />;
+  const handlePropertyChange = (key: string, value: any) => {
+    onUpdateBlock(block.id, {
+      ...block.properties,
+      [key]: value
+    });
+  };
 
-    case 'style-result':
-      return <StyleResultBlockEditor block={block} onUpdate={onUpdate} />;
+  const blockProps = {
+    block,
+    isSelected,
+    onClick: onSelect,
+    onPropertyChange: handlePropertyChange,
+    disabled: false
+  };
 
-    case 'secondary-styles':
-      return <SecondaryStylesBlockEditor block={block} onUpdate={onUpdate} />;
-      
-    case 'products':
-      return (
-        <div className="p-4 rounded-md bg-[#FAF9F7] border border-[#B89B7A]/20">
-          <p className="text-sm text-[#8F7A6A]">
-            Os produtos são carregados do banco de dados. Para gerenciar produtos, 
-            acesse o painel administrativo.
-          </p>
-        </div>
-      );
-      
-    case 'testimonials':
-      return (
-        <div className="p-4 rounded-md bg-[#FAF9F7] border border-[#B89B7A]/20">
-          <p className="text-sm text-[#8F7A6A]">
-            Os depoimentos são carregados do banco de dados. Para gerenciar depoimentos, 
-            acesse o painel administrativo.
-          </p>
-        </div>
-      );
-      
-    default:
-      return <p>Tipo de bloco não suportado: {block.type}</p>;
-  }
+  // Map block types to their respective editors
+  const renderBlock = () => {
+    switch (block.type) {
+      case 'text-inline':
+        return <TextInlineBlock {...blockProps} />;
+      case 'image-display-inline':
+        return <ImageDisplayInlineBlock {...blockProps} />;
+      case 'badge-inline':
+        return <BadgeInlineBlock {...blockProps} />;
+      case 'progress-inline':
+        return <ProgressInlineBlock {...blockProps} />;
+      case 'stat-inline':
+        return <StatInlineBlock {...blockProps} />;
+      case 'countdown-inline':
+        return <CountdownInlineBlock {...blockProps} />;
+      case 'spacer-inline':
+        return <SpacerInlineBlock {...blockProps} />;
+      default:
+        return (
+          <div className="p-4 border border-gray-300 bg-gray-50 rounded-lg">
+            <p className="text-gray-600">
+              Editor não implementado para o tipo: <strong>{block.type}</strong>
+            </p>
+          </div>
+        );
+    }
+  };
+
+  return (
+    <div className="w-full">
+      {renderBlock()}
+    </div>
+  );
 };
+
+export default EditBlockContent;
