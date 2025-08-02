@@ -17,7 +17,6 @@ import ResultHeaderInlineBlock from './inline/ResultHeaderInlineBlock';
 import StepHeaderInlineBlock from './inline/StepHeaderInlineBlock';
 import SecondaryStylesInlineBlock from './inline/SecondaryStylesInlineBlock';
 import StyleCharacteristicsInlineBlock from './inline/StyleCharacteristicsInlineBlock';
-import QuizIntroHeaderBlock from './inline/QuizIntroHeaderBlock';
 import LoadingAnimationBlock from './inline/LoadingAnimationBlock';
 import CharacteristicsListInlineBlock from './inline/CharacteristicsListInlineBlock';
 import BeforeAfterInlineBlock from './inline/BeforeAfterInlineBlock';
@@ -70,7 +69,6 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
     'step-header-inline': StepHeaderInlineBlock,
     'secondary-styles-inline': SecondaryStylesInlineBlock,
     'style-characteristics-inline': StyleCharacteristicsInlineBlock,
-    'quiz-intro-header': QuizIntroHeaderBlock,
     'loading-animation': LoadingAnimationBlock,
     'characteristics-list-inline': CharacteristicsListInlineBlock,
     'before-after-inline': BeforeAfterInlineBlock,
