@@ -1,103 +1,110 @@
 
 import React from 'react';
-import { Block } from '@/types/editor';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { X, Trash2 } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { X } from 'lucide-react';
 
 interface PropertiesPanelProps {
-  selectedBlockId: string | null;
-  blocks: Block[];
+  selectedBlock: any;
+  onUpdateBlock: (id: string, updates: any) => void;
+  onDeleteBlock: (id: string) => void;
   onClose: () => void;
-  onUpdate: (id: string, properties: Record<string, any>) => void;
-  onDelete: (id: string) => void;
 }
 
 const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
-  selectedBlockId,
-  blocks,
-  onClose,
-  onUpdate,
-  onDelete
+  selectedBlock,
+  onUpdateBlock,
+  onDeleteBlock,
+  onClose
 }) => {
-  const selectedBlock = blocks.find(block => block.id === selectedBlockId);
-
-  if (!selectedBlockId || !selectedBlock) {
+  if (!selectedBlock) {
     return (
-      <div className="h-full bg-gray-50 border-l flex items-center justify-center">
+      <div className="h-full bg-white border-l border-gray-200 p-4 flex items-center justify-center">
         <p className="text-gray-500">Selecione um bloco para editar suas propriedades</p>
       </div>
     );
   }
 
-  const handlePropertyChange = (property: string, value: any) => {
-    const content = selectedBlock.content || {};
-    onUpdate(selectedBlockId, {
-      ...content,
-      [property]: value
+  const handlePropertyChange = (key: string, value: any) => {
+    onUpdateBlock(selectedBlock.id, {
+      ...selectedBlock,
+      content: {
+        ...selectedBlock.content,
+        [key]: value
+      }
     });
   };
 
-  const renderPropertyEditor = () => {
-    const content = selectedBlock.content || {};
-    
-    switch (selectedBlock.type) {
-      case 'title':
-        return (
-          <div className="space-y-4">
+  return (
+    <div className="h-full bg-white border-l border-gray-200 flex flex-col">
+      <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+        <h3 className="text-lg font-medium">Propriedades</h3>
+        <Button variant="ghost" size="sm" onClick={onClose}>
+          <X className="w-4 h-4" />
+        </Button>
+      </div>
+      
+      <div className="flex-1 p-4 space-y-4 overflow-y-auto">
+        <div>
+          <Label htmlFor="block-type">Tipo</Label>
+          <Input 
+            id="block-type"
+            value={selectedBlock.type} 
+            disabled 
+            className="bg-gray-50"
+          />
+        </div>
+
+        {selectedBlock.type === 'text' && (
+          <div>
+            <Label htmlFor="text-content">Conteúdo</Label>
+            <Textarea
+              id="text-content"
+              value={selectedBlock.content?.text || ''}
+              onChange={(e) => handlePropertyChange('text', e.target.value)}
+              rows={4}
+            />
+          </div>
+        )}
+
+        {selectedBlock.type === 'heading' && (
+          <>
             <div>
-              <Label htmlFor="title-text">Título</Label>
+              <Label htmlFor="heading-text">Texto do Título</Label>
               <Input
-                id="title-text"
-                value={content.text || ''}
+                id="heading-text"
+                value={selectedBlock.content?.text || ''}
                 onChange={(e) => handlePropertyChange('text', e.target.value)}
-                placeholder="Digite o título"
               />
             </div>
-          </div>
-        );
-
-      case 'subtitle':
-        return (
-          <div className="space-y-4">
             <div>
-              <Label htmlFor="subtitle-text">Subtítulo</Label>
-              <Input
-                id="subtitle-text"
-                value={content.text || ''}
-                onChange={(e) => handlePropertyChange('text', e.target.value)}
-                placeholder="Digite o subtítulo"
-              />
+              <Label htmlFor="heading-level">Nível</Label>
+              <select
+                id="heading-level"
+                value={selectedBlock.content?.level || 'h2'}
+                onChange={(e) => handlePropertyChange('level', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              >
+                <option value="h1">H1</option>
+                <option value="h2">H2</option>
+                <option value="h3">H3</option>
+                <option value="h4">H4</option>
+                <option value="h5">H5</option>
+                <option value="h6">H6</option>
+              </select>
             </div>
-          </div>
-        );
+          </>
+        )}
 
-      case 'text':
-        return (
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="text-content">Texto</Label>
-              <Textarea
-                id="text-content"
-                value={content.text || ''}
-                onChange={(e) => handlePropertyChange('text', e.target.value)}
-                placeholder="Digite o texto"
-                rows={4}
-              />
-            </div>
-          </div>
-        );
-
-      case 'image':
-        return (
-          <div className="space-y-4">
+        {selectedBlock.type === 'image' && (
+          <>
             <div>
               <Label htmlFor="image-url">URL da Imagem</Label>
               <Input
                 id="image-url"
-                value={content.imageUrl || ''}
+                value={selectedBlock.content?.imageUrl || ''}
                 onChange={(e) => handlePropertyChange('imageUrl', e.target.value)}
                 placeholder="https://exemplo.com/imagem.jpg"
               />
@@ -106,71 +113,51 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <Label htmlFor="image-alt">Texto Alternativo</Label>
               <Input
                 id="image-alt"
-                value={content.imageAlt || ''}
-                onChange={(e) => handlePropertyChange('imageAlt', e.target.value)}
+                value={selectedBlock.content?.alt || ''}
+                onChange={(e) => handlePropertyChange('alt', e.target.value)}
                 placeholder="Descrição da imagem"
               />
             </div>
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <Label htmlFor="image-width">Largura</Label>
-                <Input
-                  id="image-width"
-                  value={content.width || ''}
-                  onChange={(e) => handlePropertyChange('width', e.target.value)}
-                  placeholder="100%"
-                />
-              </div>
-              <div>
-                <Label htmlFor="image-height">Altura</Label>
-                <Input
-                  id="image-height"
-                  value={content.height || ''}
-                  onChange={(e) => handlePropertyChange('height', e.target.value)}
-                  placeholder="auto"
-                />
-              </div>
+          </>
+        )}
+
+        {selectedBlock.type === 'button' && (
+          <>
+            <div>
+              <Label htmlFor="button-text">Texto do Botão</Label>
+              <Input
+                id="button-text"
+                value={selectedBlock.content?.text || ''}
+                onChange={(e) => handlePropertyChange('text', e.target.value)}
+              />
             </div>
-          </div>
-        );
+            <div>
+              <Label htmlFor="button-url">URL de Destino</Label>
+              <Input
+                id="button-url"
+                value={selectedBlock.content?.url || ''}
+                onChange={(e) => handlePropertyChange('url', e.target.value)}
+                placeholder="https://exemplo.com"
+              />
+            </div>
+          </>
+        )}
 
-      default:
-        return (
-          <div className="space-y-4">
-            <p className="text-sm text-gray-500">
-              Editor de propriedades para o tipo "{selectedBlock.type}" não está disponível ainda.
-            </p>
-          </div>
-        );
-    }
-  };
-
-  return (
-    <div className="h-full bg-white border-l flex flex-col">
-      <div className="p-4 border-b flex justify-between items-center">
-        <h3 className="font-medium text-gray-900">
-          Propriedades - {selectedBlock.type}
-        </h3>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onDelete(selectedBlockId)}
-            className="text-red-600 hover:text-red-700"
+        <div className="pt-4 border-t border-gray-200">
+          <Button 
+            variant="destructive" 
+            onClick={() => onDeleteBlock(selectedBlock.id)}
+            className="w-full"
           >
-            <Trash2 className="w-4 h-4" />
-          </Button>
-          <Button variant="ghost" size="sm" onClick={onClose}>
-            <X className="w-4 h-4" />
+            Deletar Bloco
           </Button>
         </div>
-      </div>
-      
-      <div className="p-4 flex-1 overflow-auto">
-        {renderPropertyEditor()}
       </div>
     </div>
   );
 };
 
 export default PropertiesPanel;
+
+// Named export for compatibility
+export { PropertiesPanel };

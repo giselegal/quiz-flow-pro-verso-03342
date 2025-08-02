@@ -1,9 +1,11 @@
+
 // Tipos base para o sistema de blocos schema-driven
 
 export interface BlockData {
   id: string;
   type: string;
   properties: Record<string, any>;
+  content?: Record<string, any>; // Added for compatibility
 }
 
 export interface BlockComponentProps {

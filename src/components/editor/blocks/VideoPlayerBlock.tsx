@@ -1,99 +1,58 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { Play } from 'lucide-react';
 
-interface VideoPlayerBlockProps {
-  block: {
-    id: string;
-    type: string;
-    properties: {
-      title?: string;
-      videoUrl?: string;
-      thumbnailUrl?: string;
-      description?: string;
-      autoplay?: boolean;
-      controls?: boolean;
-    };
-  };
-  isSelected?: boolean;
-  onClick?: () => void;
-  onSaveInline?: (blockId: string, key: string, newValue: string) => void;
-  disabled?: boolean;
-  className?: string;
+import React from 'react';
+import { BlockComponentProps } from '@/types/blocks';
+
+interface VideoPlayerBlockProps extends BlockComponentProps {
+  videoUrl?: string;
+  title?: string;
+  autoPlay?: boolean;
+  controls?: boolean;
 }
 
-export const VideoPlayerBlock: React.FC<VideoPlayerBlockProps> = ({ 
-  block,
-  isSelected = false,
-  onClick,
-  disabled = false,
-  className
+const VideoPlayerBlock: React.FC<VideoPlayerBlockProps> = ({ 
+  block, 
+  isSelected, 
+  onClick, 
+  onPropertyChange,
+  className = '' 
 }) => {
-  const { 
-    title = 'Vídeo Explicativo',
-    videoUrl = 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-    thumbnailUrl,
-    description = 'Assista ao vídeo para entender melhor nosso processo.',
-    autoplay = false,
-    controls = true
-  } = block?.properties || {};
-
-  const isYouTube = videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be');
-  const embedUrl = isYouTube 
-    ? videoUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')
-    : videoUrl;
+  const videoUrl = block.properties?.videoUrl || '';
+  const title = block.properties?.title || 'Vídeo';
 
   return (
     <div 
-      className={cn(
-        'relative w-full p-4 rounded-lg border-2 border-dashed',
-        isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white',
-        'cursor-pointer hover:border-gray-400 transition-colors',
-        className
-      )}
+      className={`p-4 border-2 border-dashed border-gray-300 rounded-lg ${
+        isSelected ? 'border-blue-500 bg-blue-50' : 'hover:border-gray-400'
+      } ${className}`}
       onClick={onClick}
     >
-      {/* Title Section - Visual Only */}
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold text-gray-800">
-          {title}
-        </h3>
-      </div>
-
-      {/* Video Section - Visual Only */}
-      <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden">
-        {thumbnailUrl ? (
-          <div className="relative w-full h-full">
-            <img 
-              src={thumbnailUrl} 
-              alt={title}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-              <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                <Play className="w-8 h-8 text-white ml-1" />
-              </div>
-            </div>
-          </div>
-        ) : (
+      {videoUrl ? (
+        <div className="aspect-video bg-black rounded-lg flex items-center justify-center">
           <iframe
-            src={embedUrl}
+            src={videoUrl}
             title={title}
-            className="w-full h-full border-0"
+            className="w-full h-full rounded-lg"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           />
-        )}
-      </div>
-
-      {/* Description Section - Visual Only */}
-      {description && (
-        <div className="mt-4">
-          <p className="text-sm text-gray-600">
-            {description}
-          </p>
         </div>
+      ) : (
+        <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-4xl text-gray-400 mb-2">📹</div>
+            <p className="text-gray-600">Clique para adicionar vídeo</p>
+          </div>
+        </div>
+      )}
+      
+      {title && (
+        <h3 className="mt-3 text-lg font-medium text-gray-900">{title}</h3>
       )}
     </div>
   );
 };
+
+export default VideoPlayerBlock;
+
+// Named export for backward compatibility
+export { VideoPlayerBlock };

@@ -9,7 +9,7 @@ const ImageDisplayInlineBlock = lazy(() => import('./inline/ImageDisplayInlineBl
 const ButtonInlineBlock = lazy(() => import('./inline/ButtonInlineBlock'));
 const HeadingInlineBlock = lazy(() => import('./inline/HeadingInlineBlock'));
 const SpacerBlock = lazy(() => import('./SpacerBlock'));
-const VideoPlayerBlock = lazy(() => import('./VideoPlayerBlock').then(module => ({ default: module.default || module.VideoPlayerBlock })));
+const VideoPlayerBlock = lazy(() => import('./VideoPlayerBlock').then(module => ({ default: module.VideoPlayerBlock || module.default })));
 
 // Enhanced fallback component for missing blocks
 const EnhancedFallbackBlock = lazy(() => Promise.resolve({
@@ -58,6 +58,7 @@ export const BLOCK_DEFINITIONS: Record<string, BlockDefinition> = {
     icon: 'Type',
     component: TextInlineBlock,
     label: 'Texto',
+    tags: ['texto', 'conteúdo', 'básico'],
     properties: {
       text: {
         type: 'textarea',
@@ -77,6 +78,7 @@ export const BLOCK_DEFINITIONS: Record<string, BlockDefinition> = {
     icon: 'Heading1',
     component: HeadingInlineBlock,
     label: 'Título',
+    tags: ['título', 'cabeçalho', 'heading'],
     properties: {
       text: {
         type: 'text',
@@ -103,6 +105,7 @@ export const BLOCK_DEFINITIONS: Record<string, BlockDefinition> = {
     icon: 'Image',
     component: ImageDisplayInlineBlock,
     label: 'Imagem',
+    tags: ['imagem', 'mídia', 'visual'],
     properties: {
       imageUrl: {
         type: 'image',
@@ -128,6 +131,7 @@ export const BLOCK_DEFINITIONS: Record<string, BlockDefinition> = {
     icon: 'MousePointer',
     component: ButtonInlineBlock,
     label: 'Botão',
+    tags: ['botão', 'link', 'ação'],
     properties: {
       text: {
         type: 'text',
@@ -153,6 +157,7 @@ export const BLOCK_DEFINITIONS: Record<string, BlockDefinition> = {
     icon: 'Minus',
     component: SpacerBlock,
     label: 'Espaçador',
+    tags: ['espaço', 'layout', 'separador'],
     properties: {
       height: {
         type: 'number',
@@ -163,6 +168,34 @@ export const BLOCK_DEFINITIONS: Record<string, BlockDefinition> = {
     defaultProps: {
       height: 40
     }
+  }
+};
+
+// Block categories for sidebar organization
+export const BLOCK_CATEGORIES = {
+  content: {
+    title: 'Conteúdo',
+    color: 'blue',
+    components: ['text', 'heading'],
+    description: 'Elementos de conteúdo básico'
+  },
+  media: {
+    title: 'Mídia',
+    color: 'green',
+    components: ['image', 'video'],
+    description: 'Imagens, vídeos e mídia'
+  },
+  interactive: {
+    title: 'Interativo',
+    color: 'purple',
+    components: ['button'],
+    description: 'Elementos interativos'
+  },
+  layout: {
+    title: 'Layout',
+    color: 'gray',
+    components: ['spacer'],
+    description: 'Elementos de estrutura e layout'
   }
 };
 
@@ -184,6 +217,28 @@ export const getBlockDefinition = (blockType: string): BlockDefinition | null =>
 // Get all available block types
 export const getAvailableBlockTypes = (): string[] => {
   return Object.keys(BLOCK_DEFINITIONS);
+};
+
+// Get all block types as array
+export const getAllBlockTypes = (): BlockDefinition[] => {
+  return Object.values(BLOCK_DEFINITIONS);
+};
+
+// Search blocks by text
+export const searchBlocks = (searchTerm: string): BlockDefinition[] => {
+  if (!searchTerm.trim()) return getAllBlockTypes();
+  
+  const term = searchTerm.toLowerCase();
+  return getAllBlockTypes().filter(block => 
+    block.name.toLowerCase().includes(term) ||
+    block.description.toLowerCase().includes(term) ||
+    block.tags?.some(tag => tag.toLowerCase().includes(term))
+  );
+};
+
+// Get blocks by category
+export const getBlocksByCategory = (category: string): BlockDefinition[] => {
+  return getAllBlockTypes().filter(block => block.category === category);
 };
 
 // Enhanced block renderer with error boundaries

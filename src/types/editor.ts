@@ -59,6 +59,7 @@ export interface BlockDefinition {
   };
   label: string;
   defaultProps: Record<string, any>;
+  tags?: string[];
 }
 
 export interface EditorConfig {
