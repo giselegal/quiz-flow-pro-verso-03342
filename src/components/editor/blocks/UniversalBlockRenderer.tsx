@@ -1,44 +1,36 @@
 // UniversalBlockRenderer.tsx
 // Renderizador universal para todos os componentes inline das 21 etapas
-import React from 'react';
+import React, { Suspense } from 'react';
 import { cn } from '../../../lib/utils';
 import { EditorBlock } from '../../../types/editor';
 import { getBlockComponent } from './BlockRegistry';
 
-// ===== IMPORTS DOS COMPONENTES INLINE =====
+// ===== IMPORTS DOS COMPONENTES INLINE (LAZY LOADING) =====
 import {
-  // Componentes básicos
+  // Componentes básicos (sempre carregados)
   TextInlineBlock,
   HeadingInlineBlock,
   ButtonInlineBlock,
-  ImageDisplayInlineBlock,
   BadgeInlineBlock,
+  
+  // Componentes lazy-loaded
+  ImageDisplayInlineBlock,
   ProgressInlineBlock,
   StatInlineBlock,
   CountdownInlineBlock,
-  
-  // Componentes de design
   StyleCardInlineBlock,
   ResultCardInlineBlock,
   PricingCardInlineBlock,
   TestimonialCardInlineBlock,
-  
-  // Componentes de resultado (Etapa 20)
   ResultHeaderInlineBlock,
   TestimonialsInlineBlock,
   BeforeAfterInlineBlock,
   StepHeaderInlineBlock,
-  
-  // Componentes de oferta (Etapa 21)
   QuizOfferPricingInlineBlock,
   QuizOfferCTAInlineBlock,
   BonusListInlineBlock,
-  
-  // Componentes especializados Quiz
   QuizIntroHeaderBlock,
   LoadingAnimationBlock,
-  
-  // Componentes das 21 etapas
   QuizStartPageInlineBlock,
   QuizPersonalInfoInlineBlock,
   QuizExperienceInlineBlock,
@@ -47,26 +39,19 @@ import {
   QuizTransitionInlineBlock,
   QuizLoadingInlineBlock,
   QuizResultInlineBlock,
-  QuizAnalysisInlineBlock,
-  QuizCategoryInlineBlock,
-  QuizRecommendationInlineBlock,
-  QuizMetricsInlineBlock,
-  QuizComparisonInlineBlock,
   QuizCertificateInlineBlock,
   QuizLeaderboardInlineBlock,
-  QuizBadgesInlineBlock,
-  QuizEvolutionInlineBlock,
-  QuizNetworkingInlineBlock,
-  QuizActionPlanInlineBlock,
-  QuizDevelopmentPlanInlineBlock,
-  QuizGoalsDashboardInlineBlock,
-  QuizFinalResultsInlineBlock,
-  
-  // Componentes adicionais
-  CharacteristicsListInlineBlock,
-  SecondaryStylesInlineBlock,
-  StyleCharacteristicsInlineBlock
-} from './inline';
+} from './inline/index.lazy';
+
+// ===== FALLBACK COMPONENT PARA LAZY LOADING =====
+const LazyFallback = () => (
+  <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg animate-pulse border-2 border-dashed border-gray-200">
+    <div className="flex items-center space-x-2">
+      <div className="w-4 h-4 bg-blue-500 rounded-full animate-bounce"></div>
+      <div className="text-sm text-gray-500">Carregando componente...</div>
+    </div>
+  </div>
+);
 
 // ===== MAPEAMENTO DE TIPOS PARA COMPONENTES =====
 const COMPONENT_MAP: Record<string, React.ComponentType<any>> = {
@@ -110,25 +95,8 @@ const COMPONENT_MAP: Record<string, React.ComponentType<any>> = {
   'quiz-transition-inline': QuizTransitionInlineBlock,
   'quiz-loading-inline': QuizLoadingInlineBlock,
   'quiz-result-inline': QuizResultInlineBlock,
-  'quiz-analysis-inline': QuizAnalysisInlineBlock,
-  'quiz-category-inline': QuizCategoryInlineBlock,
-  'quiz-recommendation-inline': QuizRecommendationInlineBlock,
-  'quiz-metrics-inline': QuizMetricsInlineBlock,
-  'quiz-comparison-inline': QuizComparisonInlineBlock,
   'quiz-certificate-inline': QuizCertificateInlineBlock,
   'quiz-leaderboard-inline': QuizLeaderboardInlineBlock,
-  'quiz-badges-inline': QuizBadgesInlineBlock,
-  'quiz-evolution-inline': QuizEvolutionInlineBlock,
-  'quiz-networking-inline': QuizNetworkingInlineBlock,
-  'quiz-action-plan-inline': QuizActionPlanInlineBlock,
-  'quiz-development-plan-inline': QuizDevelopmentPlanInlineBlock,
-  'quiz-goals-dashboard-inline': QuizGoalsDashboardInlineBlock,
-  'quiz-final-results-inline': QuizFinalResultsInlineBlock,
-  
-  // ===== COMPONENTES ADICIONAIS =====
-  'characteristics-list-inline': CharacteristicsListInlineBlock,
-  'secondary-styles-inline': SecondaryStylesInlineBlock,
-  'style-characteristics-inline': StyleCharacteristicsInlineBlock
 };
 
 // Fallback para compatibilidade com sistema antigo
@@ -220,14 +188,16 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
         !isPreview && 'border border-transparent hover:border-gray-200 p-2'
       )}
     >
-      <ComponentToRender
-        {...block.properties}
-        block={block}
-        isSelected={isSelected}
-        onClick={onSelect}
-        onPropertyChange={handleContentUpdate}
-        disabled={isPreview}
-      />
+      <Suspense fallback={<LazyFallback />}>
+        <ComponentToRender
+          {...block.properties}
+          block={block}
+          isSelected={isSelected}
+          onClick={onSelect}
+          onPropertyChange={handleContentUpdate}
+          disabled={isPreview}
+        />
+      </Suspense>
       
       {!isPreview && isSelected && (
         <div className="absolute -top-2 -right-2 flex gap-1">

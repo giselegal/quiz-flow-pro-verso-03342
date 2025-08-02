@@ -58,32 +58,17 @@ export const QuizLeaderboardInlineBlock = lazy(() => import('./QuizLeaderboardIn
 // Etapa 6: Carregamento
 export const QuizLoadingInlineBlock = lazy(() => import('./QuizLoadingInlineBlock'));
 
-// Etapa 7: Multi-escolha
-export const QuizMultiChoiceInlineBlock = lazy(() => import('./QuizMultiChoiceInlineBlock'));
-
-// Etapa 8: Questão única
+// Etapa 7: Questão
 export const QuizQuestionInlineBlock = lazy(() => import('./QuizQuestionInlineBlock'));
 
-// Etapa 9: Resultado
+// Etapa 8: Resultado
 export const QuizResultInlineBlock = lazy(() => import('./QuizResultInlineBlock'));
 
-// Etapa 10: Seletor de estilo
-export const QuizStyleSelectorInlineBlock = lazy(() => import('./QuizStyleSelectorInlineBlock'));
-
-// Etapa 11: Transição
+// Etapa 9: Transição
 export const QuizTransitionInlineBlock = lazy(() => import('./QuizTransitionInlineBlock'));
 
-// Etapas 12-21: Componentes adicionais
+// Etapa 10: Progresso
 export const QuizProgressInlineBlock = lazy(() => import('./QuizProgressInlineBlock'));
-export const QuizSummaryInlineBlock = lazy(() => import('./QuizSummaryInlineBlock'));
-export const QuizOptionsInlineBlock = lazy(() => import('./QuizOptionsInlineBlock'));
-
-// ===== FALLBACK COMPONENT PARA LAZY LOADING =====
-export const LazyFallback = () => (
-  <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg animate-pulse">
-    <div className="text-sm text-gray-500">Carregando componente...</div>
-  </div>
-);
 
 // ===== MAPEAMENTO PARA COMPATIBILIDADE =====
 export const INLINE_COMPONENTS_MAP = {
@@ -125,14 +110,10 @@ export const INLINE_COMPONENTS_MAP = {
   'quiz-certificate-inline': QuizCertificateInlineBlock,
   'quiz-leaderboard-inline': QuizLeaderboardInlineBlock,
   'quiz-loading-inline': QuizLoadingInlineBlock,
-  'quiz-multi-choice-inline': QuizMultiChoiceInlineBlock,
   'quiz-question-inline': QuizQuestionInlineBlock,
   'quiz-result-inline': QuizResultInlineBlock,
-  'quiz-style-selector-inline': QuizStyleSelectorInlineBlock,
   'quiz-transition-inline': QuizTransitionInlineBlock,
   'quiz-progress-inline': QuizProgressInlineBlock,
-  'quiz-summary-inline': QuizSummaryInlineBlock,
-  'quiz-options-inline': QuizOptionsInlineBlock,
 };
 
 // ===== LISTA DE TODOS OS COMPONENTES DISPONÍVEIS =====
