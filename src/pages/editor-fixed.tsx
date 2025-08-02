@@ -1,4 +1,19 @@
 import React, { useState } from 'react';
+import { BrandHeader } from '@/components/ui/BrandHeader';
+import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
+import { UniversalBlockRenderer } from '@/components/editor/blocks/UniversalBlockRenderer';
+import DynamicPropertiesPanel from '@/components/editor/DynamicPropertiesPanel';
+import { EditableContent } from '@/types/editor';
+import { getDefaultContentForType } from '@/utils/blockDefaults';
+import { Type } from 'lucide-react';
+
+interface Block {
+  id: string;
+  type: string;
+  properties: Record<string, any>;
+  content?: Record<string, any>;
+  order?: number;
+}{ useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BrandHeader from '@/components/ui/BrandHeader';
 import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
