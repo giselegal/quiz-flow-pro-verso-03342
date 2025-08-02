@@ -59,7 +59,7 @@ export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({
     }
   }, [resultPageConfig, updateBlocks, updateSection]);
 
-  const handleUpdateConfig = (newConfig: ResultPageConfig) => {
+  const handleUpdateConfig = (newConfig: any) => {
     if (newConfig) {
       try {
         importConfig(newConfig);

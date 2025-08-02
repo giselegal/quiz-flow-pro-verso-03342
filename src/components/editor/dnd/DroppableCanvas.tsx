@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { Block } from '@/types/editor';
@@ -21,7 +22,7 @@ const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
     const newBlock: Block = {
       id: `block-${Date.now()}`,
       type: blockType,
-      content: {}, // Add the required content property
+      content: {}, // Fixed: Add the required content property
       properties: {},
       order: blocks.length
     };

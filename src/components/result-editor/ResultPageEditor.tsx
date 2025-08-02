@@ -1,288 +1,88 @@
-
 import React, { useState } from 'react';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
+import { Card } from '@/components/ui/card';
+import { RefreshCw, Save, Eye } from 'lucide-react'; // Fixed: Changed Refresh to RefreshCw
 import { StyleResult } from '@/types/quiz';
-import { ResultPageConfig, Section } from '@/types/resultPageConfig';
-import { Eye, EyeOff, Save, Settings } from 'lucide-react';
+import EditableSection from './EditableSection'; // Fixed: Use default import
+import { useResultPageConfig } from '@/hooks/useResultPageConfig';
 
 interface ResultPageEditorProps {
-  primaryStyle: StyleResult;
-  secondaryStyles: StyleResult[];
+  selectedStyle: {
+    category: string;
+    score: number;
+    percentage: number;
+  };
+  onShowTemplates?: () => void;
 }
 
-export const ResultPageEditor: React.FC<ResultPageEditorProps> = ({
-  primaryStyle,
-  secondaryStyles
-}) => {
-  const [config, setConfig] = useState<ResultPageConfig>({
-    styleType: primaryStyle.category,
-    header: {
-      visible: true,
-      content: {
-        title: `Seu estilo é ${primaryStyle.category}`
-      },
-      style: {}
-    },
-    mainContent: {
-      visible: true,
-      content: {
-        description: `Descrição do estilo ${primaryStyle.category}`
-      },
-      style: {}
-    },
-    offer: {
-      hero: {
-        visible: true,
-        content: {
-          title: "Oferta Especial",
-          subtitle: "Descubra mais sobre seu estilo"
-        },
-        style: {}
-      },
-      benefits: {
-        visible: true,
-        content: {},
-        style: {}
-      },
-      products: {
-        visible: true,
-        content: {},
-        style: {}
-      },
-      pricing: {
-        visible: true,
-        content: {},
-        style: {}
-      },
-      testimonials: {
-        visible: true,
-        content: {},
-        style: {}
-      },
-      guarantee: {
-        visible: true,
-        content: {},
-        style: {}
-      }
-    },
-    blocks: []
-  });
-
+export const ResultPageEditor: React.FC<ResultPageEditorProps> = ({ selectedStyle }) => {
+  const { resultPageConfig, updateSection, saveConfig, resetConfig, loading } = useResultPageConfig(selectedStyle.category); // Fixed: Use the hook
   const [isPreviewMode, setIsPreviewMode] = useState(false);
 
-  const updateSection = (sectionPath: string, updates: Partial<Section>) => {
-    setConfig(prev => {
-      const newConfig = { ...prev };
-      const pathParts = sectionPath.split('.');
-      
-      let current: any = newConfig;
-      for (let i = 0; i < pathParts.length - 1; i++) {
-        current = current[pathParts[i]];
-      }
-      
-      const lastKey = pathParts[pathParts.length - 1];
-      current[lastKey] = { ...current[lastKey], ...updates };
-      
-      return newConfig;
-    });
+  const sectionTitles = {
+    header: 'Cabeçalho',
+    mainContent: 'Conteúdo Principal',
+    secondaryStyles: 'Estilos Secundários',
+    'offer.hero': 'Oferta - Hero',
+    'offer.products': 'Oferta - Produtos',
+    'offer.benefits': 'Oferta - Benefícios',
+    'offer.pricing': 'Oferta - Preços',
+    'offer.testimonials': 'Oferta - Depoimentos',
+    'offer.guarantee': 'Oferta - Garantia',
   };
 
-  const toggleVisibility = (sectionPath: string, visible: boolean) => {
-    updateSection(sectionPath, { visible });
+  const handleSave = async () => {
+    await saveConfig();
   };
 
-  const updateContent = (sectionPath: string, content: any) => {
-    updateSection(sectionPath, { content });
+  const handleReset = () => {
+    resetConfig();
   };
 
-  const handleSave = () => {
-    localStorage.setItem(`result_config_${primaryStyle.category}`, JSON.stringify(config));
-    console.log('Configuração salva:', config);
+  const togglePreviewMode = () => {
+    setIsPreviewMode(!isPreviewMode);
   };
+
+  if (loading) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <p className="text-[#1A1818]/70">Carregando configurações...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-[#FAF9F7]">
-      <div className="bg-white border-b p-4 flex justify-between items-center sticky top-0 z-10">
-        <h1 className="text-2xl font-playfair text-[#432818]">
-          Editor - {primaryStyle.category}
-        </h1>
-        
-        <div className="flex items-center gap-3">
-          <Button
-            variant="outline"
-            onClick={() => setIsPreviewMode(!isPreviewMode)}
-          >
-            {isPreviewMode ? (
-              <>
-                <Settings className="w-4 h-4 mr-2" />
-                Editar
-              </>
-            ) : (
-              <>
-                <Eye className="w-4 h-4 mr-2" />
-                Visualizar
-              </>
-            )}
+    <div className="h-full flex flex-col">
+      <div className="flex items-center justify-between p-4 border-b">
+        <h2 className="text-xl font-semibold">Editor de Resultados</h2>
+        <div className="flex items-center space-x-2">
+          <Button variant="ghost" onClick={togglePreviewMode}>
+            <Eye className="w-4 h-4 mr-2" />
+            {isPreviewMode ? 'Esconder Preview' : 'Mostrar Preview'}
           </Button>
-          
-          <Button onClick={handleSave} className="bg-[#B89B7A] hover:bg-[#A38A69]">
+          <Button variant="outline" onClick={handleReset}>
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Resetar
+          </Button>
+          <Button onClick={handleSave}>
             <Save className="w-4 h-4 mr-2" />
             Salvar
           </Button>
         </div>
       </div>
-
-      <div className="p-6 space-y-6">
-        {/* Header Section */}
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-medium text-[#432818]">Cabeçalho</h3>
-            <Switch
-              checked={config.header.visible}
-              onCheckedChange={(visible: boolean) => toggleVisibility('header', visible)}
-            />
-          </div>
-          
-          {config.header.visible && (
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="header-title">Título</Label>
-                <Input
-                  id="header-title"
-                  value={config.header.content.title || ''}
-                  onChange={(e) => updateContent('header', { 
-                    ...config.header.content, 
-                    title: e.target.value 
-                  })}
-                />
-              </div>
-            </div>
-          )}
-        </Card>
-
-        {/* Main Content Section */}
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-medium text-[#432818]">Conteúdo Principal</h3>
-            <Switch
-              checked={config.mainContent.visible}
-              onCheckedChange={(visible: boolean) => toggleVisibility('mainContent', visible)}
-            />
-          </div>
-          
-          {config.mainContent.visible && (
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="main-description">Descrição</Label>
-                <Textarea
-                  id="main-description"
-                  value={config.mainContent.content.description || ''}
-                  onChange={(e) => updateContent('mainContent', { 
-                    ...config.mainContent.content, 
-                    description: e.target.value 
-                  })}
-                />
-              </div>
-            </div>
-          )}
-        </Card>
-
-        {/* Offer Hero Section */}
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-medium text-[#432818]">Seção de Oferta - Hero</h3>
-            <Switch
-              checked={config.offer.hero.visible}
-              onCheckedChange={(visible: boolean) => toggleVisibility('offer.hero', visible)}
-            />
-          </div>
-          
-          {config.offer.hero.visible && (
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="offer-title">Título da Oferta</Label>
-                <Input
-                  id="offer-title"
-                  value={config.offer.hero.content.title || ''}
-                  onChange={(e) => updateContent('offer.hero', { 
-                    ...config.offer.hero.content, 
-                    title: e.target.value 
-                  })}
-                />
-              </div>
-            </div>
-          )}
-        </Card>
-
-        {/* Benefits Section */}
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-medium text-[#432818]">Benefícios</h3>
-            <Switch
-              checked={config.offer.benefits.visible}
-              onCheckedChange={(visible: boolean) => toggleVisibility('offer.benefits', visible)}
-            />
-          </div>
-          
-          {config.offer.benefits.visible && (
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="benefits-content">Conteúdo dos Benefícios</Label>
-                <Textarea
-                  id="benefits-content"
-                  value={JSON.stringify(config.offer.benefits.content, null, 2)}
-                  onChange={(e) => {
-                    try {
-                      const content = JSON.parse(e.target.value);
-                      updateContent('offer.benefits', content);
-                    } catch (error) {
-                      // Invalid JSON, ignore
-                    }
-                  }}
-                />
-              </div>
-            </div>
-          )}
-        </Card>
-
-        {/* Products Section */}
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-medium text-[#432818]">Produtos</h3>
-            <Switch
-              checked={config.offer.products.visible}
-              onCheckedChange={(visible: boolean) => toggleVisibility('offer.products', visible)}
-            />
-          </div>
-          
-          {config.offer.products.visible && (
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="products-content">Conteúdo dos Produtos</Label>
-                <Textarea
-                  id="products-content"
-                  value={JSON.stringify(config.offer.products.content, null, 2)}
-                  onChange={(e) => {
-                    try {
-                      const content = JSON.parse(e.target.value);
-                      updateContent('offer.products', content);
-                    } catch (error) {
-                      // Invalid JSON, ignore
-                    }
-                  }}
-                />
-              </div>
-            </div>
-          )}
-        </Card>
+      <div className="flex-1 overflow-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+          {Object.keys(sectionTitles).map((key) => (
+            <Card key={key} className="shadow-md">
+              <EditableSection
+                title={sectionTitles[key]}
+                content={resultPageConfig[key]}
+                onChange={(newContent) => updateSection(key, newContent)}
+              />
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   );
 };
-
-export default ResultPageEditor;
