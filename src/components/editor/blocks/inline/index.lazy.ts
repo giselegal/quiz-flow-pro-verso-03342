@@ -6,9 +6,13 @@ import { lazy } from 'react';
 
 // ===== COMPONENTES BÁSICOS (sempre carregados) =====
 export { default as TextInlineBlock } from './TextInlineBlock';
-export { default as HeadingInlineBlock } from '../HeadingInlineBlock';
-export { default as ButtonInlineBlock } from '../ButtonInlineBlock';
-export { default as BadgeInlineBlock } from './BadgeInlineBlock';
+
+// Import other basic components with fallback paths
+const HeadingInlineBlock = lazy(() => import('./HeadingInlineBlock').catch(() => import('../HeadingInlineBlock')));
+const ButtonInlineBlock = lazy(() => import('./ButtonInlineBlock').catch(() => import('../ButtonInlineBlock')));
+const BadgeInlineBlock = lazy(() => import('./BadgeInlineBlock'));
+
+export { HeadingInlineBlock, ButtonInlineBlock, BadgeInlineBlock };
 
 // ===== COMPONENTES LAZY-LOADED (carregados sob demanda) =====
 
@@ -72,9 +76,12 @@ export const QuizTransitionInlineBlock = lazy(() => import('./QuizTransitionInli
 export const QuizProgressInlineBlock = lazy(() => import('./QuizProgressInlineBlock'));
 
 // ===== MAPEAMENTO PARA COMPATIBILIDADE =====
+// Import TextInlineBlock to avoid the undefined error
+import TextInlineBlockComponent from './TextInlineBlock';
+
 export const INLINE_COMPONENTS_MAP = {
   // Componentes básicos (sempre carregados)
-  'text-inline': TextInlineBlock,
+  'text-inline': TextInlineBlockComponent,
   'heading-inline': HeadingInlineBlock,
   'button-inline': ButtonInlineBlock,
   'badge-inline': BadgeInlineBlock,
