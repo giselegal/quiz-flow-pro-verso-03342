@@ -1,32 +1,12 @@
 import React, { useState } from 'react';
-import { BrandHeader } from '@/components/ui/BrandHeader';
-import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
-import { UniversalBlockRenderer } from '@/components/editor/blocks/UniversalBlockRenderer';
-import DynamicPropertiesPanel from '@/components/editor/DynamicPropertiesPanel';
-import { EditableContent } from '@/types/editor';
-import { getDefaultContentForType } from '@/utils/blockDefaults';
-import { Type } from 'lucide-react';
-
-interface Block {
-  id: string;
-  type: string;
-  properties: Record<string, any>;
-  content?: Record<string, any>;
-  order?: number;
-}{ useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BrandHeader from '@/components/ui/BrandHeader';
 import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
 import { UniversalBlockRenderer } from '@/components/editor/blocks/UniversalBlockRenderer';
 import DynamicPropertiesPanel from '@/components/editor/DynamicPropertiesPanel';
-import { EditableContent } from '@/types/editor';
+import { EditableContent, Block } from '@/types/editor';
 import { getDefaultContentForType } from '@/utils/blockDefaults';
-
-interface Block {
-  id: string;
-  type: string;
-  properties: Record<string, any>;
-}
+import { Type } from 'lucide-react';
 
 const EditorFixedPage: React.FC = () => {
   const navigate = useNavigate();
@@ -37,17 +17,18 @@ const EditorFixedPage: React.FC = () => {
 
   return (
     <div className="h-screen flex flex-col">
-      <BrandHeader 
-        onBackClick={() => navigate('/')}
-      />
+      <BrandHeader />
       
       <div className="flex-1 flex">
         <EnhancedComponentsSidebar 
           onAddComponent={(type: string) => {
-            const newBlock = {
+            const defaultContent = getDefaultContentForType(type as any);
+            const newBlock: Block = {
               id: `block-${Date.now()}`,
-              type,
-              properties: getDefaultContentForType(type)
+              type: type as any,
+              content: defaultContent,
+              properties: {},
+              order: blocks.length
             };
             setBlocks(prev => [...prev, newBlock]);
           }}
@@ -73,24 +54,25 @@ const EditorFixedPage: React.FC = () => {
           </div>
         </div>
 
-        {selectedBlockId && (
+        {selectedBlockId && selectedBlock && (
           <DynamicPropertiesPanel
-            block={selectedBlock!}
+            block={selectedBlock}
             blockDefinition={{
-              type: selectedBlock!.type,
-              name: selectedBlock!.type,
-              description: `Componente ${selectedBlock!.type}`,
+              type: selectedBlock.type,
+              name: selectedBlock.type,
+              description: `Componente ${selectedBlock.type}`,
               category: 'basic',
-              icon: null,
+              icon: Type,
+              component: React.Fragment,
               defaultProps: {},
               properties: {},
-              label: selectedBlock!.type
+              label: selectedBlock.type
             }}
             onUpdateBlock={(blockId: string, properties: Partial<EditableContent>) => {
               setBlocks(prev => 
                 prev.map(block => 
                   block.id === blockId 
-                    ? { ...block, properties: { ...block.properties, ...properties } }
+                    ? { ...block, content: { ...block.content, ...properties } }
                     : block
                 )
               );
