@@ -1,310 +1,189 @@
-'use client';
 
 import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { sharedStyles } from '@/styles/sharedStyles';
+import { ContentContainer } from './shared/ContentContainer';
+import { Card, CardContent } from '@/components/ui/card';
+import { ArrowRight, Sparkles, Users, Award } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useQuizConfig } from '@/hooks/useQuizConfig';
-
-// Design tokens centralizados - apenas os essenciais
-const colors = {
-  primary: '#B89B7A',
-  primaryDark: '#A1835D',
-  secondary: '#432818',
-  background: '#FEFEFE',
-  backgroundAlt: '#F8F5F0',
-  text: '#432818',
-  textLight: '#6B7280',
-  border: '#E5E7EB',
-};
-
-// --- Constantes e funções movidas para o escopo do módulo ---
-const LOGO_BASE_URL = 'https://res.cloudinary.com/dqljyf76t/image/upload/';
-const LOGO_IMAGE_ID = 'v1744911572/LOGO_DA_MARCA_GISELE_r14oz2';
-
-const INTRO_IMAGE_BASE_URL = 'https://res.cloudinary.com/dqljyf76t/image/upload/';
-const INTRO_IMAGE_ID =
-  'v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up';
-
-// Otimizado para carregamento mais rápido - URLs pré-construídas
-const STATIC_LOGO_IMAGE_URLS = {
-  webp: `${LOGO_BASE_URL}f_webp,q_70,w_120,h_50,c_fit/${LOGO_IMAGE_ID}.webp`,
-  png: `${LOGO_BASE_URL}f_png,q_70,w_120,h_50,c_fit/${LOGO_IMAGE_ID}.png`,
-};
-
-// Imagem LCP: Otimizada para carregamento mais rápido - URLs pré-construídas
-const STATIC_INTRO_IMAGE_URLS = {
-  avif: `${INTRO_IMAGE_BASE_URL}f_avif,q_85,w_300,c_limit/${INTRO_IMAGE_ID}.avif`,
-  webp: `${INTRO_IMAGE_BASE_URL}f_webp,q_85,w_300,c_limit/${INTRO_IMAGE_ID}.webp`,
-  png: `${INTRO_IMAGE_BASE_URL}f_png,q_85,w_300,c_limit/${INTRO_IMAGE_ID}.png`,
-};
 
 interface QuizIntroProps {
-  onStart: (nome: string) => void;
+  onStart: (userName: string) => void;
+  globalStyles?: Record<string, any>;
 }
 
-/**
- * QuizIntro - Componente ultra-otimizado da página inicial do quiz
- * Renderização imediata sem estados de carregamento
- * Agora conectado com configurações do SimpleDragDropEditor
- */
-type QuizIntroComponent = React.FC<QuizIntroProps>;
-const QuizIntro: QuizIntroComponent = ({ onStart }) => {
-  const [nome, setNome] = useState('');
-  const [error, setError] = useState('');
-  
-  // Conecta com configurações do editor
-  const { getComponentText, isLoading: configLoading, quizConfig } = useQuizConfig();
-  
-  // Log para demonstrar a conexão funcionando
+const QuizIntro: React.FC<QuizIntroProps> = ({
+  onStart,
+  globalStyles = {}
+}) => {
+  const [userName, setUserName] = useState('');
+  const [isLoaded, setIsLoaded] = useState(false);
+
   useEffect(() => {
-    if (!configLoading && quizConfig) {
-      console.log('🎯 QuizIntro conectado com SimpleDragDropEditor:', {
-        configPages: quizConfig.pages?.length || 0,
-        introTitle: getComponentText('intro', 'title', 'Não configurado'),
-        hasEditorConfig: !!quizConfig
-      });
-    }
-  }, [configLoading, quizConfig, getComponentText]);
-  
-  // Função simplificada de submit
+    setIsLoaded(true);
+  }, []);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Verificar se o nome foi preenchido
-    if (!nome.trim()) {
-      setError('Por favor, digite seu nome para continuar');
-      return;
-    }
-    
-    // Limpar qualquer erro anterior
-    setError('');
-    
-    // Iniciar o quiz com o nome fornecido
-    onStart(nome);
-    
-    // Reportar Web Vitals após interação do usuário
-    if (typeof window !== 'undefined' && 'performance' in window) {
-      window.performance.mark('user-interaction');
+    if (userName.trim()) {
+      localStorage.setItem('userName', userName.trim());
+      onStart(userName.trim());
     }
   };
 
-  // Efeito de inicialização única - executa apenas uma vez
-  useEffect(() => {
-    // Reportar Web Vitals
-    if (typeof window !== 'undefined' && 'performance' in window) {
-      window.performance.mark('component-mounted');
-    }
-    
-    // Reportar que o LCP foi renderizado (para analytics)
-    const reportLcpRendered = () => {
-      if (typeof window !== 'undefined' && window.QUIZ_PERF) {
-        window.QUIZ_PERF.mark('lcp_rendered');
-      }
-    };
-    
-    // Usar requestAnimationFrame para garantir que o reporte aconteça após a renderização
-    requestAnimationFrame(() => {
-      requestAnimationFrame(reportLcpRendered);
-    });
-  }, []);
+  const backgroundStyle = {
+    background: globalStyles.backgroundColor || sharedStyles.colors.background,
+  };
 
-  // Renderizar diretamente o conteúdo principal sem estados de carregamento
+  const textStyle = {
+    color: globalStyles.textColor || sharedStyles.colors.textPrimary,
+  };
+
   return (
-    <main
-      className="flex flex-col items-center justify-start min-h-screen bg-gradient-to-b from-white to-gray-50 py-8"
-      data-section="intro"
+    <div 
+      className={cn(
+        "min-h-screen flex items-center justify-center p-4 transition-all duration-700",
+        isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-95"
+      )}
+      style={backgroundStyle}
     >
-      {/* Skip link para acessibilidade */}
-      <a 
-        href="#quiz-form" 
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 bg-white text-[#432818] px-4 py-2 rounded-md shadow-md"
-      >
-        Pular para o formulário
-      </a>
-      
-      <header className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 space-y-8 mx-auto">
-        {/* Logo centralizado - renderização imediata */}
-        <div className="flex flex-col items-center space-y-2">
-          <div className="relative">
-            <picture>
-              <source srcSet={STATIC_LOGO_IMAGE_URLS.webp} type="image/webp" />
-              <img
-                src={STATIC_LOGO_IMAGE_URLS.png}
-                alt="Logo Gisele Galvão"
-                className="h-auto mx-auto"
+      <ContentContainer size="md" className="text-center">
+        <div className="space-y-8">
+          {/* Header Section */}
+          <div className="space-y-6">
+            {/* Logo */}
+            <div className="flex justify-center mb-6">
+              <img 
+                src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744735333/Logomarca_Colorida_qahz04.webp"
+                alt="Logo Mayara Moda"
+                className="w-auto rounded-lg shadow-md transition-transform duration-300 hover:scale-105"
                 width={120}
                 height={50}
                 loading="eager"
-                fetchpriority="high"
+                fetchPriority="high"
                 decoding="async"
                 style={{
                   objectFit: 'contain',
-                  maxWidth: '100%',
-                  aspectRatio: '120 / 50',
+                  maxWidth: '120px',
+                  aspectRatio: '120 / 50'
                 }}
               />
-            </picture>
-            {/* Barra dourada */}
-            <div
-              className="h-[3px] bg-[#B89B7A] rounded-full mt-1.5"
-              style={{
-                width: '300px',
-                maxWidth: '90%',
-                margin: '0 auto',
-              }}
+            </div>
+
+            {/* Title */}
+            <h1 
+              className="text-3xl md:text-5xl font-playfair font-bold leading-tight"
+              style={textStyle}
+            >
+              Descubra Seu{' '}
+              <span className="bg-gradient-to-r from-[#B89B7A] to-[#D4B896] bg-clip-text text-transparent">
+                Estilo Pessoal
+              </span>
+            </h1>
+
+            {/* Subtitle */}
+            <p 
+              className="text-lg md:text-xl leading-relaxed max-w-2xl mx-auto opacity-90"
+              style={textStyle}
+            >
+              Um quiz personalizado para descobrir qual estilo de roupa combina mais com você e receber dicas exclusivas.
+            </p>
+          </div>
+
+          {/* Features Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
+            <Card className="border-[#B89B7A]/20 bg-white/10 backdrop-blur-sm">
+              <CardContent className="p-6 text-center">
+                <Sparkles className="w-8 h-8 text-[#B89B7A] mx-auto mb-3" />
+                <h3 className="font-semibold mb-2" style={textStyle}>Personalizado</h3>
+                <p className="text-sm opacity-80" style={textStyle}>
+                  Baseado nas suas preferências únicas
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-[#B89B7A]/20 bg-white/10 backdrop-blur-sm">
+              <CardContent className="p-6 text-center">
+                <Users className="w-8 h-8 text-[#B89B7A] mx-auto mb-3" />
+                <h3 className="font-semibold mb-2" style={textStyle}>+10.000</h3>
+                <p className="text-sm opacity-80" style={textStyle}>
+                  Pessoas já descobriram seu estilo
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-[#B89B7A]/20 bg-white/10 backdrop-blur-sm">
+              <CardContent className="p-6 text-center">
+                <Award className="w-8 h-8 text-[#B89B7A] mx-auto mb-3" />
+                <h3 className="font-semibold mb-2" style={textStyle}>Gratuito</h3>
+                <p className="text-sm opacity-80" style={textStyle}>
+                  Resultado completo sem custo
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Name Input Form */}
+          <Card className="max-w-md mx-auto border-[#B89B7A]/20 bg-white/10 backdrop-blur-sm">
+            <CardContent className="p-8">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-2">
+                  <label 
+                    htmlFor="userName" 
+                    className="block text-sm font-medium"
+                    style={textStyle}
+                  >
+                    Como você gostaria de ser chamada?
+                  </label>
+                  <Input
+                    id="userName"
+                    type="text"
+                    value={userName}
+                    onChange={(e) => setUserName(e.target.value)}
+                    placeholder="Digite seu primeiro nome"
+                    className="w-full bg-white/20 border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A] placeholder:text-gray-400"
+                    required
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-[#B89B7A] to-[#D4B896] hover:from-[#A38A69] hover:to-[#C4A686] text-white font-medium py-3 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                  disabled={!userName.trim()}
+                >
+                  Começar Quiz
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+
+          {/* Hero Image */}
+          <div className="mt-8">
+            <img
+              src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744735324/Sem_nome_1920_x_1080_px_1_c2qg9v.webp"
+              alt="Mulher elegante representando diferentes estilos de moda"
+              className="w-full max-w-4xl mx-auto rounded-2xl shadow-2xl"
+              width={800}
+              height={400}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              id="hero-image"
             />
           </div>
-        </div>
 
-        {/* Título principal com configuração dinâmica do editor */}
-        <h1
-          className="text-2xl font-bold text-center leading-tight px-2 sm:text-3xl md:text-4xl playfair-display text-[#432818]"
-          style={{
-            fontFamily: '"Playfair Display", serif',
-            fontWeight: 400,
-          }}
-        >
-          {/* Usa texto do editor ou fallback para o texto padrão */}
-          {!configLoading && getComponentText('intro', 'title') ? (
-            getComponentText('intro', 'title')
-          ) : (
-            <>
-              <span className="text-[#B89B7A]">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com{' '}
-              <span className="text-[#B89B7A]">Você</span>.
-            </>
-          )}
-        </h1>
-      </header>
-
-      <section className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 space-y-6 md:space-y-8 mx-auto">
-        {/* Imagem principal - renderização imediata e LCP */}
-        <div className="mt-2 w-full max-w-xs sm:max-w-md md:max-w-lg mx-auto">
-          <div
-            className="w-full overflow-hidden rounded-lg shadow-sm"
-            style={{ aspectRatio: '1.47', maxHeight: '204px' }}
+          {/* Footer Text */}
+          <p 
+            className="text-sm opacity-70 max-w-md mx-auto"
+            style={textStyle}
           >
-            <div className="relative w-full h-full bg-[#F8F5F0]">
-              <picture>
-                <source
-                  srcSet={STATIC_INTRO_IMAGE_URLS.avif}
-                  type="image/avif"
-                />
-                <source
-                  srcSet={STATIC_INTRO_IMAGE_URLS.webp}
-                  type="image/webp"
-                />
-                <img
-                  src={STATIC_INTRO_IMAGE_URLS.png}
-                  alt="Descubra seu estilo predominante e transforme seu guarda-roupa"
-                  className="w-full h-full object-contain"
-                  width={300}
-                  height={204}
-                  loading="eager"
-                  fetchpriority="high"
-                  decoding="async"
-                  id="lcp-image"
-                />
-              </picture>
-            </div>
-          </div>
+            ✨ Este quiz leva apenas 3 minutos e foi desenvolvido por especialistas em moda
+          </p>
         </div>
-
-        {/* Texto descritivo */}
-        <p className="text-sm text-center leading-relaxed px-2 sm:text-base text-gray-600">
-          Em poucos minutos, descubra seu{' '}
-          <span className="font-semibold text-[#B89B7A]">
-            Estilo Predominante
-          </span>{' '}
-          — e aprenda a montar looks que realmente refletem sua{' '}
-          <span className="font-semibold text-[#432818]">
-            essência
-          </span>, com
-          praticidade e{' '}
-          <span className="font-semibold text-[#432818]">
-            confiança
-          </span>.
-        </p>
-
-        {/* Formulário - renderização imediata */}
-        <div id="quiz-form" className="mt-8">
-          <form
-            onSubmit={handleSubmit}
-            className="w-full space-y-6"
-            autoComplete="off"
-          >
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-xs font-semibold text-[#432818] mb-1.5"
-              >
-                NOME <span className="text-red-500">*</span>
-              </label>
-              <Input
-                id="name"
-                placeholder="Digite seu nome"
-                value={nome}
-                onChange={(e) => {
-                  setNome(e.target.value);
-                  if (error) setError('');
-                }}
-                className={cn(
-                  "w-full p-2.5 bg-[#FEFEFE] rounded-md border-2 focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-offset-2 focus-visible:ring-offset-2 focus:ring-offset-[#FEFEFE] focus-visible:ring-offset-[#FEFEFE]",
-                  error 
-                    ? "border-red-500 focus:ring-red-500 focus-visible:ring-red-500" 
-                    : "border-[#B89B7A] focus:ring-[#A1835D] focus-visible:ring-[#A1835D]"
-                )}
-                autoFocus
-                aria-required="true"
-                autoComplete="off"
-                inputMode="text"
-                maxLength={32}
-                aria-invalid={!!error}
-                aria-describedby={error ? "name-error" : undefined}
-                required
-              />
-              {error && (
-                <p id="name-error" className="mt-1.5 text-sm text-red-500 font-medium">{error}</p>
-              )}
-            </div>
-            
-            <button
-              type="submit"
-              className={cn(
-                'w-full py-2 px-3 text-sm font-semibold rounded-md shadow-md transition-all duration-300',
-                'focus:outline-none focus:ring-2 focus:ring-[#B89B7A] focus:ring-offset-2',
-                'sm:py-3 sm:px-4 sm:text-base',
-                'md:py-3.5 md:text-lg',
-                nome.trim() 
-                  ? 'bg-[#B89B7A] text-white hover:bg-[#A1835D] active:bg-[#947645] hover:shadow-lg transform hover:scale-[1.01]' 
-                  : 'bg-[#B89B7A]/50 text-white/90 cursor-not-allowed'
-              )}
-              aria-disabled={!nome.trim()}
-            >
-              <span className="flex items-center justify-center gap-2">
-                {nome.trim() ? 'Quero Descobrir meu Estilo Agora!' : 'Digite seu nome para continuar'}
-              </span>
-            </button>
-
-            <p className="text-xs text-center text-gray-500 pt-1">
-              Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa{' '}
-              <a 
-                href="#" 
-                className="text-[#B89B7A] hover:text-[#A1835D] underline focus:outline-none focus:ring-1 focus:ring-[#B89B7A] rounded"
-              >
-                política de privacidade
-              </a>
-            </p>
-          </form>
-        </div>
-      </section>
-      
-      {/* Rodapé */}
-      <footer className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mt-auto pt-6 text-center mx-auto">
-        <p className="text-xs text-gray-500">
-          © {new Date().getFullYear()} Gisele Galvão - Todos os direitos reservados
-        </p>
-      </footer>
-    </main>
+      </ContentContainer>
+    </div>
   );
 };
 
