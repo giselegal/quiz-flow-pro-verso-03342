@@ -28,7 +28,7 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   // Get userName from context if not provided as prop
   const { user } = useAuth();
-  const displayName = userName || user?.userName || 'Visitante';
+  const displayName = userName || (user && 'userName' in user ? user.userName : user?.name) || 'Visitante';
   
   return (
     <Card className={`bg-white shadow-sm p-6 mb-6 ${className}`}>

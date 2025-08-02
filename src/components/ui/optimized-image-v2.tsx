@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { getOptimizedImageUrl, getLowQualityPlaceholder } from '@/utils/imageManager';
 
@@ -83,7 +84,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
           width={width}
           height={height}
           loading={lazy ? 'lazy' : 'eager'}
-          fetchpriority={priority ? 'high' : 'auto'}
+          fetchPriority={priority ? 'high' : 'auto'}
           onLoad={handleImageLoaded}
           onError={handleImageError}
           className={`absolute inset-0 w-full h-full object-${objectFit} transition-opacity duration-300 ${

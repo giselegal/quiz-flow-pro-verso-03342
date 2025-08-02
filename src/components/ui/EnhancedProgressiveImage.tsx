@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { optimizeCloudinaryUrl, normalizeCloudinaryUrl } from '@/utils/imageUtils';
@@ -107,7 +108,7 @@ const EnhancedProgressiveImage: React.FC<EnhancedProgressiveImageProps> = ({
             width={width}
             height={height}
             loading={loading}
-            fetchpriority={fetchpriority}
+            fetchPriority={fetchpriority}
             onLoad={handleLoad}
             onError={handleError}
             initial={{ opacity: 0 }}
