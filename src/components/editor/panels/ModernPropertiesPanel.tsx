@@ -1,335 +1,179 @@
 
 import React from 'react';
 import { Card } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { Trash2, Type, Palette, Layout, Zap } from 'lucide-react';
-import { blockDefinitions } from '@/config/blockDefinitionsClean';
+import { X, Trash2 } from 'lucide-react';
 import { PropertyField } from './PropertyField';
+import { blockDefinitions } from '@/config/blockDefinitionsClean';
+import { Block } from '@/types/editor';
 
 interface ModernPropertiesPanelProps {
-  selectedBlock: any | null;
-  funnelConfig?: any;
-  onBlockPropertyChange: (key: string, value: any) => void;
-  onNestedPropertyChange: (path: string, value: any) => void;
-  onFunnelConfigChange: (configUpdates: any) => void;
-  onDeleteBlock: (id: string) => void;
+  selectedBlockId: string | null;
+  blocks: Block[];
+  onClose: () => void;
+  onUpdate: (id: string, properties: any) => void;
+  onDelete: (id: string) => void;
 }
 
 export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
-  selectedBlock,
-  funnelConfig,
-  onBlockPropertyChange,
-  onNestedPropertyChange,
-  onFunnelConfigChange,
-  onDeleteBlock,
+  selectedBlockId,
+  blocks,
+  onClose,
+  onUpdate,
+  onDelete
 }) => {
-  if (!selectedBlock) {
+  const selectedBlock = blocks.find(block => block.id === selectedBlockId);
+
+  if (!selectedBlockId || !selectedBlock) {
     return (
-      <div className="h-full bg-gradient-to-br from-gray-50 to-white border-l border-gray-200">
-        <div className="p-6 space-y-6">
-          <div className="text-center space-y-3">
-            <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto">
-              <Zap className="w-6 h-6 text-white" />
+      <div className="h-full bg-white border-l border-[#E5E5E5] flex flex-col">
+        <div className="p-4 border-b border-[#E5E5E5] flex justify-between items-center">
+          <h2 className="font-medium text-[#1A1818]">Propriedades</h2>
+          <Button variant="ghost" size="sm" onClick={onClose}>
+            <X className="w-4 h-4 text-[#8F7A6A]" />
+          </Button>
+        </div>
+        <div className="flex-1 flex items-center justify-center p-6 text-center">
+          <div>
+            <div className="w-12 h-12 bg-[#FAF9F7] rounded-lg flex items-center justify-center mb-3 mx-auto">
+              <span className="text-2xl">🎯</span>
             </div>
-            <div>
-              <h3 className="font-semibold text-gray-900">Configurações do Funil</h3>
-              <p className="text-sm text-gray-500">Configure as propriedades globais</p>
-            </div>
+            <p className="text-[#8F7A6A] text-sm">
+              Selecione um elemento no canvas para editar suas propriedades
+            </p>
           </div>
-
-          <Card className="border-0 shadow-sm bg-white/70 backdrop-blur-sm">
-            <div className="p-4 space-y-4">
-              <PropertyField
-                property={{
-                  key: 'name',
-                  label: 'Nome do Funil',
-                  type: 'text-input',
-                  required: true,
-                  placeholder: 'Digite o nome do funil'
-                }}
-                value={funnelConfig?.name || ''}
-                onChange={(value) => onFunnelConfigChange({ name: value })}
-              />
-
-              <PropertyField
-                property={{
-                  key: 'description',
-                  label: 'Descrição',
-                  type: 'text-area',
-                  rows: 3,
-                  placeholder: 'Descreva o objetivo do funil'
-                }}
-                value={funnelConfig?.description || ''}
-                onChange={(value) => onFunnelConfigChange({ description: value })}
-              />
-
-              <PropertyField
-                property={{
-                  key: 'isPublished',
-                  label: 'Publicado',
-                  type: 'boolean-switch'
-                }}
-                value={funnelConfig?.isPublished || false}
-                onChange={(value) => onFunnelConfigChange({ isPublished: value })}
-              />
-
-              <PropertyField
-                property={{
-                  key: 'theme',
-                  label: 'Tema Visual',
-                  type: 'select',
-                  options: [
-                    { label: 'Padrão', value: 'default' },
-                    { label: 'Moderno', value: 'modern' },
-                    { label: 'Elegante', value: 'elegant' },
-                    { label: 'Minimalista', value: 'minimal' },
-                    { label: 'Vibrante', value: 'vibrant' },
-                    { label: 'Profissional', value: 'professional' }
-                  ]
-                }}
-                value={funnelConfig?.theme || 'default'}
-                onChange={(value) => onFunnelConfigChange({ theme: value })}
-              />
-            </div>
-          </Card>
         </div>
       </div>
     );
   }
 
-  const blockDefinition = blockDefinitions.find(def => def.type === selectedBlock.type);
-
-  if (!blockDefinition || !blockDefinition.properties) {
+  const blockDefinition = blockDefinitions[selectedBlock.type];
+  
+  if (!blockDefinition) {
     return (
-      <div className="h-full bg-gradient-to-br from-gray-50 to-white border-l border-gray-200 p-6">
-        <div className="text-center text-gray-500">
-          <p>Definição de bloco não encontrada para:</p>
-          <code className="bg-gray-100 px-2 py-1 rounded text-sm">{selectedBlock.type}</code>
+      <div className="h-full bg-white border-l border-[#E5E5E5] flex flex-col">
+        <div className="p-4 border-b border-[#E5E5E5] flex justify-between items-center">
+          <h2 className="font-medium text-[#1A1818]">Propriedades</h2>
+          <Button variant="ghost" size="sm" onClick={onClose}>
+            <X className="w-4 h-4 text-[#8F7A6A]" />
+          </Button>
+        </div>
+        <div className="p-4">
+          <p className="text-[#8F7A6A] text-sm">
+            Tipo de bloco não reconhecido: {selectedBlock.type}
+          </p>
         </div>
       </div>
     );
   }
 
-  const renderPropertyFields = (properties: any[], group: string) => {
-    return properties
-      .filter(prop => prop.group === group)
-      .map((property: any) => (
-        <PropertyField
-          key={property.key}
-          property={property}
-          value={selectedBlock.properties?.[property.key] || property.defaultValue}
-          onChange={(value) => onBlockPropertyChange(property.key, value)}
-        />
-      ));
+  const handlePropertyChange = (propertyPath: string, value: any) => {
+    console.log('🔄 Property change:', { blockId: selectedBlockId, propertyPath, value });
+    
+    // Criar uma cópia das propriedades atuais
+    const currentProperties = selectedBlock.properties || {};
+    
+    // Atualizar a propriedade usando o caminho
+    const updatedProperties = { ...currentProperties };
+    const keys = propertyPath.split('.');
+    
+    if (keys.length === 1) {
+      updatedProperties[keys[0]] = value;
+    } else {
+      // Para propriedades aninhadas como 'style.color'
+      let current = updatedProperties;
+      for (let i = 0; i < keys.length - 1; i++) {
+        if (!current[keys[i]]) current[keys[i]] = {};
+        current = current[keys[i]];
+      }
+      current[keys[keys.length - 1]] = value;
+    }
+    
+    console.log('📝 Updated properties:', updatedProperties);
+    
+    // Chamar o callback de atualização
+    onUpdate(selectedBlockId, updatedProperties);
   };
 
-  // Handle special quiz question blocks
-  const isQuizQuestionBlock = 
-    selectedBlock.type === 'quiz-question-inline' || 
-    selectedBlock.type === 'quiz-question-configurable' ||
-    selectedBlock.type.toLowerCase().includes('question');
-
-  const styleCategories = [
-    { id: 'Natural', color: '#8B7355', gradient: 'from-amber-100 to-stone-100' },
-    { id: 'Clássico', color: '#4A4A4A', gradient: 'from-slate-100 to-gray-100' },
-    { id: 'Contemporâneo', color: '#2563EB', gradient: 'from-blue-100 to-indigo-100' },
-    { id: 'Elegante', color: '#7C3AED', gradient: 'from-purple-100 to-violet-100' },
-    { id: 'Romântico', color: '#EC4899', gradient: 'from-pink-100 to-rose-100' },
-    { id: 'Sexy', color: '#EF4444', gradient: 'from-red-100 to-pink-100' },
-    { id: 'Dramático', color: '#1F2937', gradient: 'from-gray-100 to-slate-100' },
-    { id: 'Criativo', color: '#F59E0B', gradient: 'from-yellow-100 to-orange-100' }
-  ];
-
-  return (
-    <div className="h-full bg-gradient-to-br from-gray-50 to-white border-l border-gray-200">
-      <ScrollArea className="h-full">
-        {/* Header */}
-        <div className="p-4 border-b border-gray-100 bg-white/80 backdrop-blur-sm">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <Type className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">
-                  {blockDefinition.name || selectedBlock.type}
-                </h3>
-                <p className="text-xs text-gray-500">{blockDefinition.description}</p>
-              </div>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-red-500 hover:text-red-600 hover:bg-red-50"
-              onClick={() => onDeleteBlock(selectedBlock.id)}
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
+  const renderPropertyGroups = () => {
+    return Object.entries(blockDefinition.properties).map(([groupName, group]) => (
+      <Card key={groupName} className="mb-4">
+        <div className="p-4">
+          <h3 className="font-medium text-[#1A1818] mb-3 capitalize">
+            {groupName === 'content' ? 'Conteúdo' :
+             groupName === 'style' ? 'Estilo' :
+             groupName === 'layout' ? 'Layout' :
+             groupName === 'advanced' ? 'Avançado' : groupName}
+          </h3>
+          
+          <div className="space-y-3">
+            {Object.entries(group).map(([propertyKey, property]) => {
+              const propertyPath = `${groupName}.${propertyKey}`;
+              const currentValue = getCurrentValue(selectedBlock.properties, propertyPath);
+              
+              return (
+                <PropertyField
+                  key={propertyPath}
+                  label={property.label}
+                  type={property.type}
+                  value={currentValue || property.default}
+                  options={property.options}
+                  placeholder={property.placeholder}
+                  min={property.min}
+                  max={property.max}
+                  step={property.step}
+                  onChange={(value) => handlePropertyChange(propertyPath, value)}
+                  help={property.help}
+                />
+              );
+            })}
           </div>
         </div>
+      </Card>
+    ));
+  };
 
-        {/* Tabs */}
-        <Tabs defaultValue="content" className="p-4">
-          <TabsList className="grid grid-cols-4 w-full mb-6 bg-gray-100/50">
-            <TabsTrigger value="content" className="flex items-center gap-1.5 text-xs data-[state=active]:bg-white data-[state=active]:shadow-sm">
-              <Type className="w-3.5 h-3.5 text-blue-500" />
-              Conteúdo
-            </TabsTrigger>
-            <TabsTrigger value="style" className="flex items-center gap-1.5 text-xs data-[state=active]:bg-white data-[state=active]:shadow-sm">
-              <Palette className="w-3.5 h-3.5 text-purple-500" />
-              Estilo
-            </TabsTrigger>
-            <TabsTrigger value="layout" className="flex items-center gap-1.5 text-xs data-[state=active]:bg-white data-[state=active]:shadow-sm">
-              <Layout className="w-3.5 h-3.5 text-green-500" />
-              Layout
-            </TabsTrigger>
-            <TabsTrigger value="advanced" className="flex items-center gap-1.5 text-xs data-[state=active]:bg-white data-[state=active]:shadow-sm">
-              <Zap className="w-3.5 h-3.5 text-orange-500" />
-              Avançado
-            </TabsTrigger>
-          </TabsList>
+  const getCurrentValue = (properties: any, path: string) => {
+    if (!properties) return undefined;
+    
+    const keys = path.split('.');
+    let current = properties;
+    
+    for (const key of keys) {
+      if (current === null || current === undefined) return undefined;
+      current = current[key];
+    }
+    
+    return current;
+  };
 
-          <TabsContent value="content" className="space-y-4">
-            <Card className="border-0 shadow-sm bg-white/70 backdrop-blur-sm">
-              <div className="p-4 space-y-4">
-                {isQuizQuestionBlock ? (
-                  <div className="space-y-4">
-                    <PropertyField
-                      property={{
-                        key: 'question',
-                        label: 'Pergunta',
-                        type: 'text-area',
-                        required: true,
-                        rows: 2,
-                        placeholder: 'Digite a pergunta...'
-                      }}
-                      value={selectedBlock.properties?.question || ''}
-                      onChange={(value) => onBlockPropertyChange('question', value)}
-                    />
+  return (
+    <div className="h-full bg-white border-l border-[#E5E5E5] flex flex-col">
+      <div className="p-4 border-b border-[#E5E5E5] flex justify-between items-center">
+        <div>
+          <h2 className="font-medium text-[#1A1818]">{blockDefinition.name}</h2>
+          <p className="text-xs text-[#8F7A6A] mt-1">{selectedBlock.id}</p>
+        </div>
+        <div className="flex gap-1">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => onDelete(selectedBlockId)}
+            className="text-red-500 hover:text-red-700"
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+          <Button variant="ghost" size="sm" onClick={onClose}>
+            <X className="w-4 h-4 text-[#8F7A6A]" />
+          </Button>
+        </div>
+      </div>
 
-                    <PropertyField
-                      property={{
-                        key: 'subtitle',
-                        label: 'Subtítulo',
-                        type: 'text-input',
-                        placeholder: 'Subtítulo opcional...'
-                      }}
-                      value={selectedBlock.properties?.subtitle || ''}
-                      onChange={(value) => onBlockPropertyChange('subtitle', value)}
-                    />
-
-                    <div className="space-y-3">
-                      <h4 className="font-medium text-sm text-gray-700">Opções de Resposta</h4>
-                      {(selectedBlock.properties?.options || []).map((option: any, index: number) => (
-                        <Card key={index} className="p-3 border border-gray-200">
-                          <div className="space-y-3">
-                            <PropertyField
-                              property={{
-                                key: `option_${index}_text`,
-                                label: `Opção ${index + 1}`,
-                                type: 'text-area',
-                                rows: 2
-                              }}
-                              value={option.text || ''}
-                              onChange={(value) => {
-                                const newOptions = [...(selectedBlock.properties?.options || [])];
-                                newOptions[index] = { ...newOptions[index], text: value };
-                                onBlockPropertyChange('options', newOptions);
-                              }}
-                            />
-
-                            <div className="grid grid-cols-2 gap-3">
-                              <PropertyField
-                                property={{
-                                  key: `option_${index}_category`,
-                                  label: 'Categoria de Estilo',
-                                  type: 'select',
-                                  options: styleCategories.map(cat => ({ 
-                                    label: cat.id, 
-                                    value: cat.id 
-                                  }))
-                                }}
-                                value={option.styleCategory || 'Natural'}
-                                onChange={(value) => {
-                                  const newOptions = [...(selectedBlock.properties?.options || [])];
-                                  newOptions[index] = { ...newOptions[index], styleCategory: value };
-                                  onBlockPropertyChange('options', newOptions);
-                                }}
-                              />
-
-                              <PropertyField
-                                property={{
-                                  key: `option_${index}_points`,
-                                  label: 'Pontos',
-                                  type: 'number-input',
-                                  min: 0,
-                                  max: 10,
-                                  defaultValue: 1
-                                }}
-                                value={option.points || 1}
-                                onChange={(value) => {
-                                  const newOptions = [...(selectedBlock.properties?.options || [])];
-                                  newOptions[index] = { ...newOptions[index], points: value };
-                                  onBlockPropertyChange('options', newOptions);
-                                }}
-                              />
-                            </div>
-                          </div>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  renderPropertyFields(blockDefinition.properties, 'content')
-                )}
-              </div>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="style" className="space-y-4">
-            <Card className="border-0 shadow-sm bg-white/70 backdrop-blur-sm">
-              <div className="p-4 space-y-4">
-                {renderPropertyFields(blockDefinition.properties, 'style')}
-              </div>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="layout" className="space-y-4">
-            <Card className="border-0 shadow-sm bg-white/70 backdrop-blur-sm">
-              <div className="p-4 space-y-4">
-                {renderPropertyFields(blockDefinition.properties, 'layout')}
-              </div>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="advanced" className="space-y-4">
-            <Card className="border-0 shadow-sm bg-white/70 backdrop-blur-sm">
-              <div className="p-4 space-y-4">
-                {renderPropertyFields(blockDefinition.properties, 'advanced')}
-                
-                <div className="pt-4 border-t border-gray-200">
-                  <h4 className="font-medium text-sm text-gray-700 mb-3">Debug</h4>
-                  <div className="space-y-2">
-                    <div className="text-xs text-gray-500">
-                      <strong>ID:</strong> {selectedBlock.id}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      <strong>Tipo:</strong> {selectedBlock.type}
-                    </div>
-                    <details className="text-xs">
-                      <summary className="cursor-pointer text-gray-700">Propriedades</summary>
-                      <pre className="mt-2 p-2 bg-gray-100 rounded text-xs font-mono overflow-x-auto">
-                        {JSON.stringify(selectedBlock.properties, null, 2)}
-                      </pre>
-                    </details>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </TabsContent>
-        </Tabs>
+      <ScrollArea className="flex-1">
+        <div className="p-4">
+          {renderPropertyGroups()}
+        </div>
       </ScrollArea>
     </div>
   );

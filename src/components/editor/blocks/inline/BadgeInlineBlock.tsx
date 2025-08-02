@@ -1,64 +1,100 @@
 
 import React from 'react';
-import { InlineBlockProps } from '@/types/inlineBlocks';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
-const BadgeInlineBlock: React.FC<InlineBlockProps> = ({ block, onUpdate, isSelected, onSelect }) => {
-  const {
-    text = 'Novo',
-    variant = 'default',
-    size = 'sm',
-    shape = 'rounded'
-  } = block.properties;
+interface BadgeInlineBlockProps {
+  block?: {
+    id: string;
+    type: string;
+    properties?: {
+      content?: {
+        text?: string;
+        icon?: string;
+      };
+      style?: {
+        variant?: 'default' | 'secondary' | 'destructive' | 'outline';
+        backgroundColor?: string;
+        color?: string;
+        fontSize?: string;
+        padding?: string;
+        borderRadius?: string;
+      };
+      layout?: {
+        alignment?: 'left' | 'center' | 'right';
+        margin?: string;
+      };
+    };
+  };
+  className?: string;
+  onClick?: () => void;
+}
 
-  const getSizeClasses = (size: string) => {
-    switch (size) {
-      case 'sm': return 'text-xs px-2 py-1';
-      case 'md': return 'text-sm px-3 py-1.5';
-      case 'lg': return 'text-base px-4 py-2';
-      default: return 'text-xs px-2 py-1';
+export const BadgeInlineBlock: React.FC<BadgeInlineBlockProps> = ({ 
+  block, 
+  className, 
+  onClick 
+}) => {
+  console.log('🧱 BadgeInlineBlock render:', {
+    blockId: block?.id,
+    properties: block?.properties
+  });
+
+  const properties = block?.properties || {};
+  const content = properties.content || {};
+  const styleProps = properties.style || {};
+  const layoutProps = properties.layout || {};
+  
+  const text = content.text || 'Badge';
+  
+  // Determinar o variant
+  const getVariant = () => {
+    switch (styleProps.variant) {
+      case 'secondary': return 'secondary';
+      case 'destructive': return 'destructive';
+      case 'outline': return 'outline';
+      default: return 'default';
     }
   };
-
-  const getShapeClasses = (shape: string) => {
-    switch (shape) {
-      case 'pill': return 'rounded-full';
-      case 'square': return 'rounded-none';
-      case 'rounded': return 'rounded-md';
-      default: return 'rounded-md';
-    }
+  
+  // Estilos customizados
+  const customStyle: React.CSSProperties = {
+    backgroundColor: styleProps.backgroundColor,
+    color: styleProps.color,
+    fontSize: styleProps.fontSize,
+    padding: styleProps.padding,
+    borderRadius: styleProps.borderRadius,
+    margin: layoutProps.margin
   };
-
-  const getVariantClasses = (variant: string) => {
-    switch (variant) {
-      case 'success': return 'bg-green-100 text-green-800 border-green-300';
-      case 'warning': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
-      case 'error': return 'bg-red-100 text-red-800 border-red-300';
-      case 'info': return 'bg-blue-100 text-blue-800 border-blue-300';
-      case 'default': return 'bg-gray-100 text-gray-800 border-gray-300';
-      default: return 'bg-gray-100 text-gray-800 border-gray-300';
+  
+  // Container com alinhamento
+  const containerClass = cn(
+    "badge-container inline-block",
+    {
+      'text-left': layoutProps.alignment === 'left',
+      'text-center': layoutProps.alignment === 'center',
+      'text-right': layoutProps.alignment === 'right'
     }
-  };
+  );
 
   return (
-    <div
-      onClick={onSelect}
-      className={cn(
-        'inline-block cursor-pointer transition-all duration-200',
-        isSelected && 'ring-2 ring-blue-500 ring-offset-2'
-      )}
+    <div 
+      className={cn(containerClass, className)}
+      data-block-type="badge-inline"
+      data-block-id={block?.id}
+      onClick={onClick}
     >
-      <span
+      <Badge
+        variant={getVariant()}
+        style={customStyle}
         className={cn(
-          'inline-flex items-center font-medium border transition-all duration-200',
-          getSizeClasses(size),
-          getShapeClasses(shape),
-          getVariantClasses(variant)
+          "transition-all duration-200 cursor-pointer",
+          onClick && "hover:opacity-80"
         )}
       >
+        {content.icon && <span className="mr-1">{content.icon}</span>}
         {text}
-      </span>
+      </Badge>
     </div>
   );
 };
