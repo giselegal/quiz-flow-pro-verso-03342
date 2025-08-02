@@ -18,12 +18,14 @@ interface ModernPropertiesPanelProps {
 
 export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
   selectedBlockId,
-  blocks,
+  blocks = [], // Add default empty array to prevent undefined errors
   onClose,
   onUpdate,
   onDelete
 }) => {
-  const selectedBlock = blocks.find(block => block.id === selectedBlockId);
+  // Safety check for blocks array
+  const safeBlocks = Array.isArray(blocks) ? blocks : [];
+  const selectedBlock = safeBlocks.find(block => block.id === selectedBlockId);
 
   if (!selectedBlockId || !selectedBlock) {
     return (
