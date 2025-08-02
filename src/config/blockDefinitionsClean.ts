@@ -1147,3 +1147,37 @@ export const blockDefinitions: BlockDefinition[] = [
     ]
   }
 ];
+
+// Converter array de blockDefinitions para objeto indexado por tipo
+export const blockDefinitionsMap = blockDefinitions.reduce((acc, definition) => {
+  // Converter array de properties para objeto agrupado
+  const propertiesGroups: Record<string, Record<string, any>> = {};
+  
+  definition.properties.forEach(prop => {
+    const group = prop.group || 'general';
+    if (!propertiesGroups[group]) {
+      propertiesGroups[group] = {};
+    }
+    propertiesGroups[group][prop.key] = {
+      label: prop.label,
+      type: prop.type,
+      default: prop.defaultValue,
+      options: prop.options,
+      placeholder: prop.placeholder,
+      min: prop.min,
+      max: prop.max,
+      step: prop.step,
+      unit: prop.unit,
+      rows: prop.rows,
+      help: prop.description,
+      required: prop.required
+    };
+  });
+  
+  acc[definition.type] = {
+    ...definition,
+    properties: propertiesGroups
+  };
+  
+  return acc;
+}, {} as Record<string, any>);

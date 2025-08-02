@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { EditorBlock, EditableContent } from '@/types/editor';
-import { StyleControls } from '@/components/editor/controls/StyleControls';
+import { Button } from '../../ui/button';
+import { EditorBlock, EditableContent } from '../../../types/editor';
+import { StyleControls } from '../controls/StyleControls';
 
 interface PropertiesPanelProps {
   selectedComponentId: string | null;
