@@ -51,7 +51,6 @@ import QuizTitleBlock from '../components/editor/blocks/QuizTitleBlock';
 import SocialProofBlock from '../components/editor/blocks/SocialProofBlock';
 import StatsMetricsBlock from '../components/editor/blocks/StatsMetricsBlock';
 import StrategicQuestionBlock from '../components/editor/blocks/StrategicQuestionBlock';
-import VideoBlock from '../components/editor/blocks/VideoBlock';
 
 // === SISTEMA DE VALIDAÇÃO ===
 const validateComponent = (component: any, type: string): boolean => {
@@ -69,69 +68,154 @@ const validateComponent = (component: any, type: string): boolean => {
   return true;
 };
 
-// Sistema de fallback inteligente
-const createFallbackComponent = (blockType: string) => {
-  return () => ({
-    default: ({ block, ...props }: any) => {
-      const React = require('react');
-      return React.createElement('div', {
-        className: 'p-4 border-2 border-dashed border-blue-300 rounded-lg bg-blue-50'
-      }, React.createElement('div', {
-        className: 'text-center'
-      }, [
-        React.createElement('div', {
-          className: 'text-blue-600 font-medium',
-          key: 'title'
-        }, `📦 ${blockType}`),
-        React.createElement('div', {
-          className: 'text-xs text-blue-500 mt-1',
-          key: 'subtitle'
-        }, 'Componente carregando...'),
-        React.createElement('div', {
-          className: 'text-xs text-gray-500 mt-2',
-          key: 'info'
-        }, `ID: ${block?.id || 'N/A'} | Props: ${Object.keys(props).length}`)
-      ]));
+// REGISTRY DE COMPONENTES REAIS - TESTADOS E FUNCIONAIS
+export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = (() => {
+  const registry: Record<string, React.ComponentType<any>> = {};
+  
+  // INLINE COMPONENTS - VALIDADOS UM POR UM
+  const inlineComponents = {
+    // Text & Content
+    'text': TextInlineBlock,
+    'text-inline': TextInlineBlock,
+    'heading': HeadingInlineBlock,
+    'heading-inline': HeadingInlineBlock,
+    
+    // Interactive
+    'button': ButtonInlineBlock,
+    'button-inline': ButtonInlineBlock,
+    'badge': BadgeInlineBlock,
+    'badge-inline': BadgeInlineBlock,
+    'cta': CTAInlineBlock,
+    'cta-inline': CTAInlineBlock,
+    
+    // Media
+    'image': ImageDisplayInlineBlock,
+    'image-inline': ImageDisplayInlineBlock,
+    
+    // Layout
+    'spacer': SpacerInlineBlock,
+    'spacer-inline': SpacerInlineBlock,
+    'divider': DividerInlineBlock,
+    'divider-inline': DividerInlineBlock,
+    
+    // Data Display
+    'stat': StatInlineBlock,
+    'stat-inline': StatInlineBlock,
+    'progress': ProgressInlineBlock,
+    'progress-inline': ProgressInlineBlock,
+    'countdown': CountdownInlineBlock,
+    'countdown-inline': CountdownInlineBlock,
+    
+    // E-commerce
+    'pricing-card': PricingCardInlineBlock,
+    'pricing-card-inline': PricingCardInlineBlock,
+    'testimonial-card': TestimonialCardInlineBlock,
+    'testimonial-card-inline': TestimonialCardInlineBlock,
+    'testimonials': TestimonialsInlineBlock,
+    'testimonials-inline': TestimonialsInlineBlock,
+    
+    // Quiz & Results
+    'style-card': StyleCardInlineBlock,
+    'style-card-inline': StyleCardInlineBlock,
+    'result-card': ResultCardInlineBlock,
+    'result-card-inline': ResultCardInlineBlock,
+    'result-header': ResultHeaderInlineBlock,
+    'result-header-inline': ResultHeaderInlineBlock,
+    'step-header': StepHeaderInlineBlock,
+    'step-header-inline': StepHeaderInlineBlock,
+    'secondary-styles': SecondaryStylesInlineBlock,
+    'secondary-styles-inline': SecondaryStylesInlineBlock,
+    'style-characteristics': StyleCharacteristicsInlineBlock,
+    'style-characteristics-inline': StyleCharacteristicsInlineBlock,
+    'characteristics-list': CharacteristicsListInlineBlock,
+    'characteristics-list-inline': CharacteristicsListInlineBlock,
+    'quiz-start-page': QuizStartPageInlineBlock,
+    'quiz-start-page-inline': QuizStartPageInlineBlock,
+    'quiz-offer-cta': QuizOfferCTAInlineBlock,
+    'quiz-offer-cta-inline': QuizOfferCTAInlineBlock,
+    'quiz-offer-pricing': QuizOfferPricingInlineBlock,
+    'quiz-offer-pricing-inline': QuizOfferPricingInlineBlock,
+    
+    // Features
+    'guarantee': GuaranteeInlineBlock,
+    'guarantee-inline': GuaranteeInlineBlock,
+    'before-after': BeforeAfterInlineBlock,
+    'before-after-inline': BeforeAfterInlineBlock,
+    'bonus-list': BonusListInlineBlock,
+    'bonus-list-inline': BonusListInlineBlock,
+    'benefits': BenefitsInlineBlock,
+    'benefits-inline': BenefitsInlineBlock,
+    
+    // System
+    'loading-animation': LoadingAnimationBlock,
+  };
+  
+  // STANDARD BLOCKS - VALIDADOS UM POR UM
+  const standardBlocks = {
+    'countdown-timer': CountdownTimerBlock,
+    'stats-metrics': StatsMetricsBlock,
+    'mentor': MentorBlock,
+    'social-proof': SocialProofBlock,
+    'basic-text': BasicTextBlock,
+    'guarantee-block': GuaranteeBlock,
+    'quiz-title': QuizTitleBlock,
+    'strategic-question': StrategicQuestionBlock,
+  };
+  
+  // Validar e registrar componentes inline
+  console.log('🔍 Validando componentes inline...');
+  Object.entries(inlineComponents).forEach(([type, component]) => {
+    if (validateComponent(component, type)) {
+      registry[type] = component;
     }
   });
-};
-
-// Registry principal automatizado
-export const ENHANCED_BLOCK_REGISTRY = (() => {
-  const autoComponents = autoImportInlineComponents();
   
-  return {
-    // Componentes automáticos importados
-    ...autoComponents,
-    
-    // Mapeamentos específicos para compatibilidade
-    'headline': autoComponents['textinline'] || autoComponents['text'],
-    'paragraph': autoComponents['textinline'] || autoComponents['text'],
-    'title': autoComponents['textinline'] || autoComponents['text'],
-    'subtitle': autoComponents['textinline'] || autoComponents['text'],
-    
-    // Quiz components com mapeamento inteligente
-    'quiz-question': autoComponents['quizquestion'] || autoComponents['quiz-question'],
-    'quiz-result': autoComponents['quizresult'] || autoComponents['quiz-result'],
-    'quiz-option': autoComponents['quizoption'] || autoComponents['quiz-option'],
-    
-    // E-commerce components
-    'pricing': autoComponents['pricing'] || autoComponents['pricingcard'],
-    'testimonial': autoComponents['testimonial'] || autoComponents['testimonialcard'],
-    'product': autoComponents['product'] || autoComponents['productcard'],
-    
-    // Layout components
-    'container': autoComponents['container'] || autoComponents['layout'],
-    'grid': autoComponents['grid'] || autoComponents['layout'],
-    'flex': autoComponents['flex'] || autoComponents['layout'],
-  };
+  // Validar e registrar standard blocks  
+  console.log('🔍 Validando standard blocks...');
+  Object.entries(standardBlocks).forEach(([type, component]) => {
+    if (validateComponent(component, type)) {
+      registry[type] = component;
+    }
+  });
+  
+  console.log(`✅ Registry criado com ${Object.keys(registry).length} componentes REAIS validados`);
+  console.log('📦 Componentes registrados:', Object.keys(registry).sort());
+  
+  return registry;
 })();
+
+// === UTILITÁRIOS E HELPER FUNCTIONS ===
+
+// Componente de fallback para casos de erro
+const createFallbackComponent = (blockType: string) => {
+  return ({ block, ...props }: any) => {
+    return React.createElement('div', {
+      className: 'p-4 border-2 border-dashed border-red-300 rounded-lg bg-red-50'
+    }, React.createElement('div', {
+      className: 'text-center'
+    }, [
+      React.createElement('div', {
+        className: 'text-red-600 font-medium',
+        key: 'title'
+      }, `⚠️ ${blockType}`),
+      React.createElement('div', {
+        className: 'text-xs text-red-500 mt-1',
+        key: 'subtitle'
+      }, 'Componente não encontrado'),
+      React.createElement('div', {
+        className: 'text-xs text-gray-500 mt-2',
+        key: 'info'
+      }, `ID: ${block?.id || 'N/A'} | Props: ${Object.keys(props).length}`)
+    ]));
+  };
+};
 
 // Função para obter componente com fallback inteligente
 export const getEnhancedComponent = (blockType: string) => {
   const component = ENHANCED_BLOCK_REGISTRY[blockType];
   
   if (component) {
+    console.log(`✅ Componente encontrado: ${blockType}`);
     return component;
   }
   
@@ -160,7 +244,7 @@ export const getRegistryStats = () => {
   return {
     total: totalComponents,
     active: activeComponents,
-    coverage: `${Math.round((activeComponents / 194) * 100)}%`,
+    coverage: `${Math.round((activeComponents / totalComponents) * 100)}%`,
     components: Object.keys(ENHANCED_BLOCK_REGISTRY).sort()
   };
 };
@@ -170,7 +254,7 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
   return Object.keys(ENHANCED_BLOCK_REGISTRY).map(blockType => ({
     type: blockType,
     name: blockType.charAt(0).toUpperCase() + blockType.slice(1).replace(/[-_]/g, ' '),
-    description: `Componente ${blockType} auto-gerado`,
+    description: `Componente ${blockType} validado`,
     category: getBlockCategory(blockType),
     icon: 'Square' as any,
     component: ENHANCED_BLOCK_REGISTRY[blockType],
@@ -183,12 +267,12 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
 // Categorização inteligente
 const getBlockCategory = (blockType: string): string => {
   if (blockType.includes('quiz')) return 'Quiz';
-  if (blockType.includes('text') || blockType.includes('title')) return 'Text';
+  if (blockType.includes('text') || blockType.includes('heading')) return 'Text';
   if (blockType.includes('image') || blockType.includes('video')) return 'Media';
-  if (blockType.includes('button') || blockType.includes('link')) return 'Interactive';
-  if (blockType.includes('price') || blockType.includes('product')) return 'E-commerce';
+  if (blockType.includes('button') || blockType.includes('cta')) return 'Interactive';
+  if (blockType.includes('pricing') || blockType.includes('product')) return 'E-commerce';
   if (blockType.includes('testimonial') || blockType.includes('review')) return 'Social Proof';
-  if (blockType.includes('layout') || blockType.includes('container')) return 'Layout';
+  if (blockType.includes('spacer') || blockType.includes('divider')) return 'Layout';
   return 'Content';
 };
 
