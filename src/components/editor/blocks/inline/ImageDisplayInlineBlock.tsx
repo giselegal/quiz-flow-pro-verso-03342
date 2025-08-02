@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { cn } from '../../../../lib/utils';
 import type { BlockComponentProps } from '../../../../types/blocks';
@@ -13,6 +14,9 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
   onClick,
   className = ''
 }) => {
+  // Safely extract properties with fallbacks
+  const properties = block?.properties || {};
+  
   const {
     src = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp',
     alt = 'Imagem',
@@ -29,7 +33,7 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
     textAlign = 'center',
     marginTop = 0,
     marginBottom = 0
-  } = block.properties;
+  } = properties;
 
   // Tamanhos modulares responsivos
   const sizeClasses = {
