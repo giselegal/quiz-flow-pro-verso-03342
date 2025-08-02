@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Block } from '@/types/editor';
 import { StyleResult } from '@/types/quiz';
@@ -73,51 +74,54 @@ const EditableBlock: React.FC<EditableBlockProps> = ({
     zIndex: isSelected ? 1 : 0
   };
   
+  // Ensure content is always an object with default values
+  const safeContent = block.content || {};
+  
   // Render the appropriate block preview based on type
   const renderBlockPreview = () => {
     switch (block.type) {
       case 'header':
-        return <HeaderBlockPreview content={block.content} />;
+        return <HeaderBlockPreview content={safeContent} />;
       case 'headline':
-        return <HeadlineBlockPreview content={block.content} />;
+        return <HeadlineBlockPreview content={safeContent} />;
       case 'text':
-        return <TextBlockPreview content={block.content} />;
+        return <TextBlockPreview content={safeContent} />;
       case 'image':
-        return <ImageBlockPreview content={block.content} />;
+        return <ImageBlockPreview content={safeContent} />;
       case 'benefits':
-        return <BenefitsBlockPreview content={block.content} />;
+        return <BenefitsBlockPreview content={safeContent} />;
       case 'pricing':
-        return <PricingBlockPreview content={block.content} />;
+        return <PricingBlockPreview content={safeContent} />;
       case 'guarantee':
-        return <GuaranteeBlockPreview content={block.content} />;
+        return <GuaranteeBlockPreview content={safeContent} />;
       case 'cta':
-        return <CTABlockPreview content={block.content} />;
+        return <CTABlockPreview content={safeContent} />;
       case 'style-result':
-        return <StyleResultBlockPreview content={block.content} primaryStyle={primaryStyle} />;
+        return <StyleResultBlockPreview content={safeContent} primaryStyle={primaryStyle} />;
       case 'secondary-styles':
-        return <SecondaryStylesBlockPreview content={block.content} />;
+        return <SecondaryStylesBlockPreview content={safeContent} />;
       case 'hero-section':
-        return <HeroSectionBlockPreview content={block.content} primaryStyle={primaryStyle} />;
+        return <HeroSectionBlockPreview content={safeContent} primaryStyle={primaryStyle} />;
       case 'products':
-        return <ProductsBlockPreview content={block.content} />;
+        return <ProductsBlockPreview content={safeContent} />;
       case 'testimonials':
-        return <TestimonialsBlockPreview content={block.content} />;
+        return <TestimonialsBlockPreview content={safeContent} />;
       case 'spacer':
-        return <SpacerBlockPreview content={block.content} />;
+        return <SpacerBlockPreview content={safeContent} />;
       case 'video':
-        return <VideoBlockPreview content={block.content} />;
+        return <VideoBlockPreview content={safeContent} />;
       case 'two-column':
-        return <TwoColumnBlockPreview content={block.content} />;
+        return <TwoColumnBlockPreview content={safeContent} />;
       case 'icon':
-        return <IconBlockPreview content={block.content} />;
+        return <IconBlockPreview content={safeContent} />;
       case 'faq':
-        return <FAQBlockPreview content={block.content} />;
+        return <FAQBlockPreview content={safeContent} />;
       case 'carousel':
-        return <CarouselBlockPreview content={block.content} />;
+        return <CarouselBlockPreview content={safeContent} />;
       case 'custom-code':
-        return <CustomCodeBlockPreview content={block.content} />;
+        return <CustomCodeBlockPreview content={safeContent} />;
       case 'animation-block':
-        return <AnimationBlockPreview content={block.content} />;
+        return <AnimationBlockPreview content={safeContent} />;
       default:
         return <div>Tipo de bloco desconhecido: {block.type}</div>;
     }

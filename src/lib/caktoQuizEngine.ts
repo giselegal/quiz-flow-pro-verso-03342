@@ -1,10 +1,33 @@
 
-import { QuizQuestion, UserResponse, StyleResult, StyleType } from '@/types/quiz';
+import { QuizQuestion, UserResponse, StyleResult, StyleType, QuizResponse } from '@/types/quiz';
 
 export interface CaktoQuizEngine {
   calculateStyleScores: (responses: UserResponse[]) => StyleResult[];
   determineResult: (responses: UserResponse[], participantName: string) => any;
 }
+
+// Add the missing exported functions
+export const calculateCaktoQuizResult = (responses: UserResponse[], participantName: string) => {
+  const engine = createCaktoQuizEngine();
+  return engine.determineResult(responses, participantName);
+};
+
+export const processMultipleSelections = (selectedOptions: string[], questionId: string): UserResponse => {
+  return {
+    questionId,
+    selectedOptions,
+    timestamp: new Date()
+  };
+};
+
+export const validateQuestionResponse = (response: UserResponse, question: QuizQuestion): boolean => {
+  if (!response.selectedOptions || response.selectedOptions.length === 0) {
+    return false;
+  }
+  
+  const maxSelections = question.multiSelect || 3;
+  return response.selectedOptions.length <= maxSelections;
+};
 
 export const createCaktoQuizEngine = (): CaktoQuizEngine => {
   const calculateStyleScores = (responses: UserResponse[]): StyleResult[] => {

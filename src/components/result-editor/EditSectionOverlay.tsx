@@ -1,130 +1,102 @@
 
-import React, { useState, useEffect } from 'react';
-import { Card } from '@/components/ui/card';
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Check, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 interface EditSectionOverlayProps {
+  isOpen: boolean;
+  onClose: () => void;
   section: string;
-  data: any;
-  onSave: (data: any) => void;
-  onCancel: () => void;
+  content: Record<string, any>;
+  onSave: (content: Record<string, any>) => void;
 }
 
-export const EditSectionOverlay: React.FC<EditSectionOverlayProps> = ({
+const EditSectionOverlay: React.FC<EditSectionOverlayProps> = ({
+  isOpen,
+  onClose,
   section,
-  data,
-  onSave,
-  onCancel
+  content,
+  onSave
 }) => {
-  const [formData, setFormData] = useState<any>({});
-  
-  // Initialize form data with section data
-  useEffect(() => {
-    setFormData(data || {});
-  }, [data]);
-  
-  const handleChange = (key: string, value: any) => {
-    setFormData(prev => ({
+  const [editedContent, setEditedContent] = useState<Record<string, any>>(content || {});
+
+  if (!isOpen) return null;
+
+  const handleSave = () => {
+    onSave(editedContent);
+    onClose();
+  };
+
+  const handleFieldChange = (field: string, value: any) => {
+    setEditedContent((prev: Record<string, any>) => ({
       ...prev,
-      [key]: value
+      [field]: value
     }));
   };
-  
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSave(formData);
-  };
-  
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-      <Card className="w-full max-w-lg p-6 bg-white overflow-hidden max-h-[80vh] flex flex-col">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-lg font-semibold text-[#432818]">
-            Editar {getSectionTitle(section)}
-          </h3>
-          <Button variant="ghost" size="icon" onClick={onCancel}>
-            <X className="h-5 w-5" />
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+      <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-[#432818]">
+            Editar {section}
+          </h2>
+          <Button variant="ghost" size="icon" onClick={onClose}>
+            <X className="h-4 w-4" />
           </Button>
         </div>
-        
-        <div className="overflow-y-auto flex-1">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {Object.entries(formData).map(([key, value]) => {
-              // Skip rendering certain properties
-              if (key === 'id' || key === 'type' || key === 'order') {
-                return null;
-              }
-              
-              // Render different inputs based on value type
-              if (typeof value === 'string') {
+
+        <div className="space-y-4">
+          {/* Dynamic form fields based on section */}
+          {Object.keys(editedContent).map((key) => {
+            const value = editedContent[key];
+            
+            if (typeof value === 'string') {
+              if (value.length > 100) {
                 return (
-                  <div key={key} className="space-y-2">
-                    <label htmlFor={key} className="text-sm font-medium capitalize">
-                      {formatLabel(key)}
+                  <div key={key}>
+                    <label className="block text-sm font-medium mb-1 capitalize">
+                      {key.replace(/([A-Z])/g, ' $1').trim()}
                     </label>
-                    {value.length > 80 ? (
-                      <Textarea
-                        id={key}
-                        value={value as string}
-                        onChange={(e) => handleChange(key, e.target.value)}
-                        className="w-full min-h-[100px]"
-                      />
-                    ) : (
-                      <Input
-                        id={key}
-                        value={value as string}
-                        onChange={(e) => handleChange(key, e.target.value)}
-                      />
-                    )}
+                    <Textarea
+                      value={value}
+                      onChange={(e) => handleFieldChange(key, e.target.value)}
+                      rows={3}
+                    />
+                  </div>
+                );
+              } else {
+                return (
+                  <div key={key}>
+                    <label className="block text-sm font-medium mb-1 capitalize">
+                      {key.replace(/([A-Z])/g, ' $1').trim()}
+                    </label>
+                    <Input
+                      value={value}
+                      onChange={(e) => handleFieldChange(key, e.target.value)}
+                    />
                   </div>
                 );
               }
-              
-              // For arrays, objects, etc. - can be expanded in the future
-              return null;
-            })}
-          </form>
+            }
+            
+            return null;
+          })}
         </div>
-        
-        <div className="flex justify-end gap-2 mt-6 pt-4 border-t">
-          <Button variant="outline" onClick={onCancel}>
+
+        <div className="flex justify-end gap-2 mt-6">
+          <Button variant="outline" onClick={onClose}>
             Cancelar
           </Button>
-          <Button 
-            className="bg-[#B89B7A] hover:bg-[#A38A69]" 
-            onClick={handleSubmit}
-          >
-            <Check className="w-4 h-4 mr-2" />
-            Salvar Alterações
+          <Button onClick={handleSave} className="bg-[#B89B7A] hover:bg-[#A38A69] text-white">
+            Salvar
           </Button>
         </div>
-      </Card>
+      </div>
     </div>
   );
 };
 
-// Helper functions
-function getSectionTitle(section: string): string {
-  const sectionMap: Record<string, string> = {
-    'header.content': 'Cabeçalho',
-    'mainContent.content': 'Estilo Principal',
-    'offer.hero.content': 'Oferta Principal',
-    'offer.products.content': 'Produtos',
-    'offer.benefits.content': 'Benefícios',
-    'offer.pricing.content': 'Preço',
-    'offer.testimonials.content': 'Depoimentos',
-    'offer.guarantee.content': 'Garantia',
-  };
-  
-  return sectionMap[section] || section;
-}
-
-function formatLabel(key: string): string {
-  // Convert camelCase to Title Case with spaces
-  return key
-    .replace(/([A-Z])/g, ' $1')
-    .replace(/^./, (str) => str.toUpperCase());
-}
+export default EditSectionOverlay;
