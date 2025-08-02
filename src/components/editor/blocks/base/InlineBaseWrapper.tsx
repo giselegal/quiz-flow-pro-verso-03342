@@ -10,12 +10,16 @@ export interface InlineBaseWrapperProps {
   editLabel?: string;
   gap?: 'sm' | 'md' | 'lg';
   justify?: 'start' | 'center' | 'end';
-  align?: 'center' | 'start' | 'end';
+  align?: 'center' | 'start' | 'end' | 'stretch';
   direction?: 'row' | 'col';
   wrap?: boolean;
   trackingData?: Record<string, any>;
   isLoading?: boolean;
   onMove?: (direction: 'up' | 'down') => void;
+  // Additional compatibility props
+  block?: BlockData;
+  isSelected?: boolean;
+  onPropertyChange?: (key: string, value: any) => void;
 }
 
 const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
@@ -30,7 +34,11 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
   wrap = false,
   trackingData,
   isLoading = false,
-  onMove
+  onMove,
+  // Compatibility props (ignored for now)
+  block,
+  isSelected,
+  onPropertyChange
 }) => {
   const gapClasses = {
     sm: 'gap-2',
@@ -47,7 +55,8 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
   const alignClasses = {
     start: 'items-start',
     center: 'items-center',
-    end: 'items-end'
+    end: 'items-end',
+    stretch: 'items-stretch'
   };
 
   return (

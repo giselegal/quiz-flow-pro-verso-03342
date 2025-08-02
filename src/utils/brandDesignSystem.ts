@@ -4,7 +4,21 @@ export const BRAND_COLORS = {
   secondary: '#432818',
   accent: '#8F7A6A',
   text: '#432818',
-  background: '#FAF9F7'
+  background: '#FAF9F7',
+  // Additional color variants
+  main: {
+    light: '#D4C4A0',
+    default: '#B89B7A',
+    dark: '#8F7A6A'
+  },
+  neutral: {
+    50: '#FAF9F7',
+    100: '#F5F2E9',
+    200: '#E8E1D1',
+    300: '#D4C4A0',
+    400: '#8F7A6A',
+    500: '#432818'
+  }
 };
 
 export const TYPOGRAPHY = {
@@ -21,6 +35,20 @@ export const TYPOGRAPHY = {
     medium: '500',
     semibold: '600',
     bold: '700'
+  },
+  // Additional typography variants
+  heading: {
+    h1: '2.5rem',
+    h2: '2rem',
+    h3: '1.75rem',
+    h4: '1.5rem',
+    h5: '1.25rem',
+    h6: '1rem'
+  },
+  body: {
+    large: '1.125rem',
+    medium: '1rem',
+    small: '0.875rem'
   }
 };
 
@@ -55,6 +83,12 @@ export const EFFECTS = {
     md: 'shadow-md',
     lg: 'shadow-lg'
   },
+  shadows: [
+    'shadow-sm',
+    'shadow-md',
+    'shadow-lg',
+    'shadow-xl'
+  ],
   border: {
     default: 'border border-gray-200',
     focus: 'border-blue-500'

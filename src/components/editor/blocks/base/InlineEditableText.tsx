@@ -10,6 +10,9 @@ interface InlineEditableTextProps {
   fontWeight?: 'normal' | 'medium' | 'semibold' | 'bold';
   className?: string;
   multiline?: boolean;
+  // Additional compatibility props
+  textAlign?: 'left' | 'center' | 'right';
+  maxLines?: number;
 }
 
 const InlineEditableText: React.FC<InlineEditableTextProps> = ({
@@ -19,7 +22,9 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   fontSize = 'base',
   fontWeight = 'normal',
   className = '',
-  multiline = false
+  multiline = false,
+  textAlign = 'left',
+  maxLines = 3
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [localValue, setLocalValue] = useState(value);
@@ -61,9 +66,16 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
     bold: 'font-bold'
   };
 
+  const textAlignClasses = {
+    left: 'text-left',
+    center: 'text-center',
+    right: 'text-right'
+  };
+
   const baseClasses = cn(
     fontSizeClasses[fontSize],
     fontWeightClasses[fontWeight],
+    textAlignClasses[textAlign],
     'cursor-pointer hover:bg-gray-50 px-2 py-1 rounded transition-colors',
     className
   );
@@ -78,7 +90,7 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
         placeholder={placeholder}
         className={cn(baseClasses, 'border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none')}
         autoFocus
-        rows={3}
+        rows={maxLines}
       />
     ) : (
       <input
