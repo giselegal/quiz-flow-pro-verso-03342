@@ -3,7 +3,7 @@ export interface User {
   id: string;
   email: string;
   name?: string;
-  userName?: string; // Add userName property
+  userName?: string;
 }
 
 export interface AuthContextType {

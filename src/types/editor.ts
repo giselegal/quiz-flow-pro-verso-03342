@@ -1,79 +1,94 @@
+import { LucideIcon } from "lucide-react";
+import { SimpleComponent } from "./quiz";
 
-import { BlockType } from './quiz';
+export interface ComponentType {
+  type: SimpleComponent["type"];
+  name: string;
+  icon: LucideIcon;
+  description: string;
+  category?: string;
+  defaultData?: any;
+}
+
+export interface ComponentCategory {
+  title: string;
+  color: string;
+  components: ComponentType[];
+  description?: string;
+}
+
+export interface ComponentCategories {
+  [key: string]: ComponentCategory;
+}
+
+export interface ComponentInstance {
+  id: string;
+  componentId: string;
+  props: Record<string, any>;
+  order: number;
+}
+
+export interface EditorComponent {
+  id: string;
+  name: string;
+  icon: LucideIcon;
+  description: string;
+  category: string;
+  defaultProps: Record<string, any>;
+}
 
 export interface EditorState {
+  isDragging: boolean;
+  dragOverIndex: number | null;
+  selectedComponentId: string | null;
+  currentPageIndex: number;
+  deviceView: 'mobile' | 'tablet' | 'desktop';
+  activeTab: 'editor' | 'funis' | 'historico' | 'config';
+  activeConfigSection: string;
+  isPreviewMode: boolean;
+}
+
+export interface Version {
+  id: string;
+  timestamp: number;
+  version: number;
+  description: string;
+  isAutoSave: boolean;
+  changes: VersionChange[];
+}
+
+export interface VersionChange {
+  type: 'add' | 'remove' | 'edit';
+  component?: string;
+  page?: string;
+  description: string;
+}
+
+export interface VersionMetadata {
+  currentVersion: number;
+  totalVersions: number;
+  lastSavedAt: string;
+  autoSaveInterval: number;
+}
+// Interfaces adicionais que estavam faltando
+export interface FunnelManagerState {
+  isLoading: boolean;
+  error: string | null;
+  funnels: any[];
+  activeFunnelId: string | null;
+}
+
+export interface EditorStateExtended extends EditorState {
+  blocks: any[];
   selectedBlockId: string | null;
   isPreviewing: boolean;
-  blocks: Block[];
   isGlobalStylesOpen: boolean;
 }
 
-export interface BlockManipulationActions {
-  handleAddBlock: (type: BlockType) => string;
-  handleUpdateBlock: (id: string, content: any) => void;
-  handleDeleteBlock: (id: string) => void;
-  handleReorderBlocks: (sourceIndex: number, destinationIndex: number) => void;
+export interface PropertySchema {
+  type: 'string' | 'number' | 'boolean' | 'array' | 'object';
+  default?: any;
+  description?: string;
+  enum?: string[];
+  properties?: { [key: string]: PropertySchema };
 }
-
-export interface EditorProps {
-  selectedStyle: {
-    category: string;
-    score: number;
-    percentage: number;
-  };
-  onShowTemplates?: () => void;
-  initialConfig?: any;
-}
-
-export interface EditableContent {
-  [key: string]: any;
-}
-
-export interface EditorBlock {
-  id: string;
-  type: string;
-  content: EditableContent;
-  order: number;
-  properties?: Record<string, any>;
-  visible?: boolean;
-}
-
-export interface Block extends EditorBlock {
-  content: EditableContent;
-}
-
-export interface BlockDefinition {
-  type: string;
-  name: string;
-  description: string;
-  category: string;
-  icon: string;
-  component: React.ComponentType<any>;
-  properties: {
-    [key: string]: {
-      type: 'text' | 'textarea' | 'number' | 'boolean' | 'color' | 'image' | 'select';
-      label: string;
-      defaultValue?: any;
-      options?: string[];
-    };
-  };
-  label: string;
-  defaultProps: Record<string, any>;
-  tags?: string[];
-}
-
-export interface EditorConfig {
-  title: string;
-  description: string;
-  blocks: Block[];
-  globalStyles?: {
-    primaryColor?: string;
-    secondaryColor?: string;
-    textColor?: string;
-    backgroundColor?: string;
-    fontFamily?: string;
-  };
-}
-
-// Export BlockType from quiz types
-export type { BlockType } from './quiz';

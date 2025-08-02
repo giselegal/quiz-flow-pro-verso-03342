@@ -1,4 +1,3 @@
-
 // Tipos base para o sistema de blocos schema-driven
 
 export interface BlockData {
@@ -34,3 +33,12 @@ export interface QuizOption {
 
 // Re-export tipos existentes para compatibilidade
 // export type { BlockData as Block } from '@/services/funnelService';
+
+export interface BlockDefinition {
+  type: string;
+  name: string;
+  description: string;
+  category: string;
+  properties: { [key: string]: any };
+  defaultContent: any;
+}
