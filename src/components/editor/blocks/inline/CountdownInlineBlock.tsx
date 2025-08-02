@@ -11,16 +11,37 @@ interface TimeLeft {
 }
 
 const CountdownInlineBlock: React.FC<InlineBlockProps> = ({ block, onUpdate, isSelected, onSelect }) => {
+  // Safety check for block and properties
+  if (!block) {
+    console.warn('⚠️ CountdownInlineBlock: block is undefined');
+    return <div className="p-2 bg-red-50 text-red-600">Error: Block not found</div>;
+  }
+
+  // Safe destructuring with fallbacks
+  const properties = block.properties || {};
+  const content = properties.content || {};
+  const style = properties.style || {};
+  
   const {
     targetDate = '',
     format = 'full',
-    expiredMessage = 'Tempo esgotado!',
+    expiredMessage = 'Tempo esgotado!'
+  } = content;
+
+  const {
     size = 'md',
     theme = 'default'
-  } = block.properties;
+  } = style;
 
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isExpired, setIsExpired] = useState(false);
+
+  console.log('🔄 CountdownInlineBlock render:', {
+    blockId: block.id,
+    hasProperties: !!block.properties,
+    targetDate,
+    format
+  });
 
   useEffect(() => {
     if (!targetDate) return;
