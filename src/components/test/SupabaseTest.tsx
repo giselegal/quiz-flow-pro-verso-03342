@@ -1,753 +1,217 @@
-import React, { useEffect, useState } from 'react';
-import { useFunnels } from '../../context/FunnelsContext';
-import { Button } from '../../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '../../components/ui/card';
-import { Loader2, CheckCircle, XCircle, RefreshCw, Database, Server, Clipboard, AlertCircle, Eye } from 'lucide-react';
-import { supabase } from '../../integrations/supabase/client';
-import { toast } from '../../components/ui/use-toast';
-import { Badge } from '../../components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Separator } from '../../components/ui/separator';
-import { Progress } from '../../components/ui/progress';
 
-/**
- * Componente para testar integração com Supabase para funis
- */
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { supabase } from '@/integrations/supabase/client';
+
 export const SupabaseTest: React.FC = () => {
-  const { 
-    funnels, 
-    addFunnel, 
-    updateFunnel, 
-    deleteFunnel, 
-    duplicateFunnel,
-    isLoading 
-  } = useFunnels();
-  
-  const [testResults, setTestResults] = useState<Record<string, { success: boolean; message: string }>>({});
-  const [isRunningTests, setIsRunningTests] = useState(false);
-  const [supabaseFunnels, setSupabaseFunnels] = useState<any[]>([]);
-  const [supabasePages, setSupabasePages] = useState<any[]>([]);
-  const [progress, setProgress] = useState(0);
-  const [activeTest, setActiveTest] = useState('');
-  const [showDetails, setShowDetails] = useState(false);
-  
-  // Função para checar se o Supabase está conectado
-  const checkSupabaseConnection = async () => {
-    setActiveTest('connection');
+  const [loading, setLoading] = useState(false);
+  const [results, setResults] = useState<string[]>([]);
+  const [funnelId, setFunnelId] = useState('');
+
+  const addResult = (message: string) => {
+    setResults(prev => [...prev, `${new Date().toLocaleTimeString()}: ${message}`]);
+  };
+
+  const testConnection = async () => {
+    setLoading(true);
     try {
       const { data, error } = await supabase.from('funnels').select('count');
       if (error) throw error;
-      
-      setTestResults(prev => ({
-        ...prev,
-        connection: { 
-          success: true, 
-          message: 'Conexão com Supabase estabelecida com sucesso!'
-        }
-      }));
-      return true;
+      addResult(`✅ Conexão bem-sucedida. Dados encontrados: ${data?.length || 0}`);
     } catch (error) {
-      console.error('Erro ao conectar ao Supabase:', error);
-      setTestResults(prev => ({
-        ...prev,
-        connection: { 
-          success: false, 
-          message: `Erro ao conectar: ${error.message || 'Desconhecido'}`
-        }
-      }));
-      return false;
+      addResult(`❌ Erro na conexão: ${error instanceof Error ? error.message : String(error)}`);
     }
+    setLoading(false);
   };
 
-  // Função para testar a criação de um funil
-  const testCreateFunnel = async () => {
-    setActiveTest('create');
+  const testInsert = async () => {
+    setLoading(true);
     try {
-      const testName = `Funil Teste ${new Date().toISOString().slice(11, 19)}`;
-      const funnelId = await addFunnel(testName, 'quiz-estilo');
-      
-      // Verificar se o funil foi criado no Supabase
+      const { data, error } = await supabase
+        .from('funnels')
+        .insert([
+          { 
+            title: 'Teste Quiz', 
+            description: 'Quiz de teste criado automaticamente',
+            type: 'quiz'
+          }
+        ])
+        .select();
+
+      if (error) throw error;
+      addResult(`✅ Inserção bem-sucedida: ${JSON.stringify(data)}`);
+    } catch (error) {
+      addResult(`❌ Erro na inserção: ${error instanceof Error ? error.message : String(error)}`);
+    }
+    setLoading(false);
+  };
+
+  const testRead = async () => {
+    setLoading(true);
+    try {
       const { data, error } = await supabase
         .from('funnels')
         .select('*')
+        .limit(5);
+
+      if (error) throw error;
+      addResult(`✅ Leitura bem-sucedida: ${data?.length || 0} registros encontrados`);
+    } catch (error) {
+      addResult(`❌ Erro na leitura: ${error instanceof Error ? error.message : String(error)}`);
+    }
+    setLoading(false);
+  };
+
+  const testUpdate = async () => {
+    if (!funnelId) {
+      addResult('❌ Forneça um ID de funil para testar a atualização');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('funnels')
+        .update({ 
+          title: 'Teste Quiz Atualizado',
+          updated_at: new Date().toISOString()
+        })
         .eq('id', funnelId)
-        .single();
-      
+        .select();
+
       if (error) throw error;
-      
-      // Verificar se páginas foram criadas
-      const { data: pages, error: pagesError } = await supabase
-        .from('funnel_pages')
-        .select('*')
-        .eq('funnel_id', funnelId);
-      
-      if (pagesError) throw pagesError;
-      
-      setTestResults(prev => ({
-        ...prev,
-        create: { 
-          success: true, 
-          message: `Funil "${testName}" criado com ID: ${funnelId}. ${pages?.length || 0} páginas criadas.`
-        }
-      }));
-      
-      // Salvar o ID para teste de exclusão
-      localStorage.setItem('testFunnelId', funnelId);
-      
-      return funnelId;
+      addResult(`✅ Atualização bem-sucedida: ${JSON.stringify(data)}`);
     } catch (error) {
-      console.error('Erro ao criar funil de teste:', error);
-      setTestResults(prev => ({
-        ...prev,
-        create: { 
-          success: false, 
-          message: `Erro ao criar funil: ${error.message || 'Desconhecido'}`
-        }
-      }));
-      return null;
+      addResult(`❌ Erro na atualização: ${error instanceof Error ? error.message : String(error)}`);
     }
+    setLoading(false);
   };
 
-  // Função para testar a atualização de um funil
-  const testUpdateFunnel = async (funnelId: string) => {
-    setActiveTest('update');
-    try {
-      const updatedName = `Funil Atualizado ${new Date().toISOString().slice(11, 19)}`;
-      await updateFunnel(funnelId, {
-        name: updatedName,
-        description: 'Descrição atualizada via teste',
-        theme: 'dark'
-      });
-      
-      // Verificar se o funil foi atualizado no Supabase
-      const { data, error } = await supabase
-        .from('funnels')
-        .select('*')
-        .eq('id', funnelId)
-        .single();
-      
-      if (error) throw error;
-      
-      const success = data.name === updatedName;
-      
-      setTestResults(prev => ({
-        ...prev,
-        update: { 
-          success, 
-          message: success 
-            ? `Funil atualizado para "${updatedName}" com sucesso!` 
-            : `Falha na atualização: nome esperado "${updatedName}", mas encontrado "${data.name}"`
-        }
-      }));
-      
-      return success;
-    } catch (error) {
-      console.error('Erro ao atualizar funil de teste:', error);
-      setTestResults(prev => ({
-        ...prev,
-        update: { 
-          success: false, 
-          message: `Erro ao atualizar funil: ${error.message || 'Desconhecido'}`
-        }
-      }));
-      return false;
+  const testDelete = async () => {
+    if (!funnelId) {
+      addResult('❌ Forneça um ID de funil para testar a exclusão');
+      return;
     }
-  };
 
-  // Função para testar a duplicação de um funil
-  const testDuplicateFunnel = async (funnelId: string) => {
-    setActiveTest('duplicate');
+    setLoading(true);
     try {
-      const duplicateName = `Funil Duplicado ${new Date().toISOString().slice(11, 19)}`;
-      const newFunnelId = await duplicateFunnel(funnelId, duplicateName);
-      
-      if (!newFunnelId) throw new Error('ID do funil duplicado não retornado');
-      
-      // Verificar se o funil foi duplicado no Supabase
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('funnels')
-        .select('*')
-        .eq('id', newFunnelId)
-        .single();
-      
-      if (error) throw error;
-      
-      // Verificar se páginas foram duplicadas
-      const { data: pages, error: pagesError } = await supabase
-        .from('funnel_pages')
-        .select('*')
-        .eq('funnel_id', newFunnelId);
-      
-      if (pagesError) throw pagesError;
-      
-      setTestResults(prev => ({
-        ...prev,
-        duplicate: { 
-          success: true, 
-          message: `Funil duplicado como "${duplicateName}" com ID: ${newFunnelId}. ${pages?.length || 0} páginas duplicadas.`
-        }
-      }));
-      
-      // Salvar o ID do funil duplicado para teste de exclusão
-      localStorage.setItem('testDuplicateFunnelId', newFunnelId);
-      
-      return true;
-    } catch (error) {
-      console.error('Erro ao duplicar funil de teste:', error);
-      setTestResults(prev => ({
-        ...prev,
-        duplicate: { 
-          success: false, 
-          message: `Erro ao duplicar funil: ${error.message || 'Desconhecido'}`
-        }
-      }));
-      return false;
-    }
-  };
-
-  // Função para testar a exclusão de um funil
-  const testDeleteFunnel = async (funnelId: string) => {
-    setActiveTest('delete');
-    try {
-      await deleteFunnel(funnelId);
-      
-      // Verificar se o funil foi excluído do Supabase
-      const { data, error } = await supabase
-        .from('funnels')
-        .select('*')
+        .delete()
         .eq('id', funnelId);
-      
+
       if (error) throw error;
-      
-      const success = !data || data.length === 0;
-      
-      setTestResults(prev => ({
-        ...prev,
-        delete: { 
-          success, 
-          message: success 
-            ? `Funil com ID ${funnelId} excluído com sucesso!` 
-            : `Falha na exclusão: funil com ID ${funnelId} ainda existe no Supabase`
-        }
-      }));
-      
-      return success;
+      addResult(`✅ Exclusão bem-sucedida para ID: ${funnelId}`);
     } catch (error) {
-      console.error('Erro ao excluir funil de teste:', error);
-      setTestResults(prev => ({
-        ...prev,
-        delete: { 
-          success: false, 
-          message: `Erro ao excluir funil: ${error.message || 'Desconhecido'}`
-        }
-      }));
-      return false;
+      addResult(`❌ Erro na exclusão: ${error instanceof Error ? error.message : String(error)}`);
     }
+    setLoading(false);
   };
 
-  // Função para carregar dados do Supabase para verificação
-  const loadSupabaseData = async () => {
+  const testSteps = async () => {
+    setLoading(true);
     try {
-      const { data: funnelsData, error: funnelsError } = await supabase
-        .from('funnels')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(10);
-      
-      if (funnelsError) throw funnelsError;
-      setSupabaseFunnels(funnelsData || []);
-      
-      const { data: pagesData, error: pagesError } = await supabase
-        .from('funnel_pages')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(20);
-      
-      if (pagesError) throw pagesError;
-      setSupabasePages(pagesData || []);
-      
-      toast({
-        title: 'Dados atualizados',
-        description: `Carregados ${funnelsData?.length || 0} funis e ${pagesData?.length || 0} páginas`,
-        variant: 'default'
-      });
+      const { data, error } = await supabase
+        .from('funnel_steps')
+        .select(`
+          *,
+          funnels (
+            title
+          )
+        `)
+        .limit(3);
+
+      if (error) throw error;
+      addResult(`✅ Teste de steps bem-sucedido: ${data?.length || 0} steps encontrados`);
     } catch (error) {
-      console.error('Erro ao carregar dados do Supabase:', error);
-      toast({
-        title: 'Erro ao carregar dados',
-        description: `Não foi possível carregar dados do Supabase: ${error.message || 'Erro desconhecido'}`,
-        variant: 'destructive'
-      });
+      addResult(`❌ Erro no teste de steps: ${error instanceof Error ? error.message : String(error)}`);
     }
+    setLoading(false);
   };
 
-  // Executar todos os testes em sequência
-  const runAllTests = async () => {
-    setIsRunningTests(true);
-    setTestResults({});
-    setProgress(0);
-    
-    try {
-      // Testar conexão
-      setProgress(10);
-      const isConnected = await checkSupabaseConnection();
-      if (!isConnected) throw new Error('Falha na conexão com o Supabase');
-      setProgress(20);
-      
-      // Testar criação
-      const funnelId = await testCreateFunnel();
-      if (!funnelId) throw new Error('Falha na criação do funil');
-      setProgress(40);
-      
-      // Testar atualização
-      const updateSuccess = await testUpdateFunnel(funnelId);
-      if (!updateSuccess) throw new Error('Falha na atualização do funil');
-      setProgress(60);
-      
-      // Testar duplicação
-      const duplicateSuccess = await testDuplicateFunnel(funnelId);
-      if (!duplicateSuccess) throw new Error('Falha na duplicação do funil');
-      setProgress(80);
-      
-      // Testar exclusão do funil duplicado
-      const duplicateFunnelId = localStorage.getItem('testDuplicateFunnelId');
-      if (duplicateFunnelId) {
-        const deleteSuccess = await testDeleteFunnel(duplicateFunnelId);
-        if (!deleteSuccess) console.warn('Aviso: Falha na exclusão do funil duplicado');
-      }
-      
-      // Testar exclusão do funil original
-      const deleteSuccess = await testDeleteFunnel(funnelId);
-      if (!deleteSuccess) throw new Error('Falha na exclusão do funil');
-      setProgress(100);
-      
-      // Carregar dados atualizados
-      await loadSupabaseData();
-      
-      toast({
-        title: 'Testes concluídos',
-        description: 'Todos os testes foram executados com sucesso!',
-        variant: 'default'
+  const testRealTimeSubscription = () => {
+    const subscription = supabase
+      .channel('funnels-changes')
+      .on(
+        'postgres_changes',
+        { 
+          event: '*', 
+          schema: 'public', 
+          table: 'funnels' 
+        },
+        (payload) => {
+          addResult(`🔄 Mudança em tempo real detectada: ${payload.eventType}`);
+        }
+      )
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          addResult('✅ Subscrição em tempo real ativa');
+        } else if (status === 'CHANNEL_ERROR') {
+          addResult(`❌ Erro na subscrição: ${status}`);
+        }
       });
-    } catch (error) {
-      console.error('Erro nos testes:', error);
-      toast({
-        title: 'Erro nos testes',
-        description: `Ocorreu um erro durante os testes: ${error.message || 'Erro desconhecido'}`,
-        variant: 'destructive'
-      });
-    } finally {
-      setActiveTest('');
-      setIsRunningTests(false);
-    }
-  };
 
-  // Carregar dados do Supabase ao montar o componente
-  useEffect(() => {
-    if (!isLoading) {
-      loadSupabaseData();
-    }
-  }, [isLoading]);
-
-  const getTestIcon = (key: string) => {
-    if (!testResults[key]) return <AlertCircle className="h-5 w-5 text-gray-300" />;
-    return testResults[key].success 
-      ? <CheckCircle className="h-5 w-5 text-green-500" />
-      : <XCircle className="h-5 w-5 text-red-500" />;
-  };
-
-  const getTestStatus = (key: string) => {
-    if (isRunningTests && activeTest === key) return <Loader2 className="h-5 w-5 animate-spin text-blue-500" />;
-    return getTestIcon(key);
+    setTimeout(() => {
+      subscription.unsubscribe();
+      addResult('🔄 Subscrição em tempo real encerrada');
+    }, 10000);
   };
 
   return (
-    <div className="container py-6 space-y-6 max-w-6xl">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-[#432818]">Diagnóstico de Integração</h1>
-          <p className="text-[#6B4F43] mt-1">
-            Verifique a integração dos funis com o Supabase
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            onClick={loadSupabaseData}
-            variant="outline"
-            size="sm"
-            disabled={isRunningTests}
-            className="border-[#B89B7A] text-[#6B4F43] hover:bg-[#FDF6F0] hover:text-[#432818]"
-          >
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Atualizar dados
-          </Button>
-          <Button 
-            onClick={runAllTests} 
-            disabled={isRunningTests} 
-            size="sm"
-            className="bg-[#aa6b5d] hover:bg-[#965c50] text-white"
-          >
-            {isRunningTests ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Executando testes...
-              </>
-            ) : (
-              <>
-                <Server className="h-4 w-4 mr-2" />
-                Executar testes
-              </>
-            )}
-          </Button>
-        </div>
-      </div>
-
-      {isRunningTests && (
-        <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-medium text-[#432818]">Progresso dos testes</span>
-            <span className="text-sm text-[#6B4F43]">{progress}%</span>
-          </div>
-          <Progress value={progress} className="h-2" />
-        </div>
-      )}
-
-      <Tabs defaultValue="tests" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 bg-[#F4E9DD]">
-          <TabsTrigger value="tests" className="data-[state=active]:bg-white data-[state=active]:text-[#432818] text-[#6B4F43]">Status dos Testes</TabsTrigger>
-          <TabsTrigger value="supabase" className="data-[state=active]:bg-white data-[state=active]:text-[#432818] text-[#6B4F43]">Dados no Supabase</TabsTrigger>
-          <TabsTrigger value="local" className="data-[state=active]:bg-white data-[state=active]:text-[#432818] text-[#6B4F43]">Estado Local</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="tests" className="space-y-4 pt-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card className="border-[#B89B7A]">
-              <CardHeader className="pb-3 bg-[#FFF7ED] rounded-t-md">
-                <div className="flex items-center gap-2">
-                  <Database className="h-5 w-5 text-[#aa6b5d]" />
-                  <CardTitle className="text-lg text-[#432818]">Conexão</CardTitle>
-                </div>
-                <CardDescription className="text-[#6B4F43]">
-                  Teste de conectividade com Supabase
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-4">
-                <div className="flex items-center gap-2">
-                  {getTestStatus('connection')}
-                  <div className="space-y-1">
-                    <p className="font-medium text-sm text-[#432818]">
-                      {testResults.connection 
-                        ? testResults.connection.success 
-                          ? 'Conectado com sucesso' 
-                          : 'Falha na conexão'
-                        : 'Aguardando teste'}
-                    </p>
-                    {testResults.connection && (
-                      <p className={`text-sm ${testResults.connection.success ? 'text-green-600' : 'text-red-600'}`}>
-                        {testResults.connection.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-[#B89B7A]">
-              <CardHeader className="pb-3 bg-[#FFF7ED] rounded-t-md">
-                <div className="flex items-center gap-2">
-                  <Clipboard className="h-5 w-5 text-[#aa6b5d]" />
-                  <CardTitle className="text-lg text-[#432818]">Criação</CardTitle>
-                </div>
-                <CardDescription className="text-[#6B4F43]">
-                  Teste de criação de novo funil
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-4">
-                <div className="flex items-center gap-2">
-                  {getTestStatus('create')}
-                  <div className="space-y-1">
-                    <p className="font-medium text-sm text-[#432818]">
-                      {testResults.create 
-                        ? testResults.create.success 
-                          ? 'Funil criado com sucesso' 
-                          : 'Falha na criação'
-                        : 'Aguardando teste'}
-                    </p>
-                    {testResults.create && (
-                      <p className={`text-sm ${testResults.create.success ? 'text-green-600' : 'text-red-600'}`}>
-                        {testResults.create.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-[#B89B7A]">
-              <CardHeader className="pb-3 bg-[#FFF7ED] rounded-t-md">
-                <div className="flex items-center gap-2">
-                  <Clipboard className="h-5 w-5 text-[#aa6b5d]" />
-                  <CardTitle className="text-lg text-[#432818]">Atualização</CardTitle>
-                </div>
-                <CardDescription className="text-[#6B4F43]">
-                  Teste de atualização de funil
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-4">
-                <div className="flex items-center gap-2">
-                  {getTestStatus('update')}
-                  <div className="space-y-1">
-                    <p className="font-medium text-sm text-[#432818]">
-                      {testResults.update 
-                        ? testResults.update.success 
-                          ? 'Funil atualizado com sucesso' 
-                          : 'Falha na atualização'
-                        : 'Aguardando teste'}
-                    </p>
-                    {testResults.update && (
-                      <p className={`text-sm ${testResults.update.success ? 'text-green-600' : 'text-red-600'}`}>
-                        {testResults.update.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-[#B89B7A]">
-              <CardHeader className="pb-3 bg-[#FFF7ED] rounded-t-md">
-                <div className="flex items-center gap-2">
-                  <Clipboard className="h-5 w-5 text-[#aa6b5d]" />
-                  <CardTitle className="text-lg text-[#432818]">Duplicação</CardTitle>
-                </div>
-                <CardDescription className="text-[#6B4F43]">
-                  Teste de duplicação de funil
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-4">
-                <div className="flex items-center gap-2">
-                  {getTestStatus('duplicate')}
-                  <div className="space-y-1">
-                    <p className="font-medium text-sm text-[#432818]">
-                      {testResults.duplicate 
-                        ? testResults.duplicate.success 
-                          ? 'Funil duplicado com sucesso' 
-                          : 'Falha na duplicação'
-                        : 'Aguardando teste'}
-                    </p>
-                    {testResults.duplicate && (
-                      <p className={`text-sm ${testResults.duplicate.success ? 'text-green-600' : 'text-red-600'}`}>
-                        {testResults.duplicate.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-[#B89B7A]">
-              <CardHeader className="pb-3 bg-[#FFF7ED] rounded-t-md">
-                <div className="flex items-center gap-2">
-                  <Clipboard className="h-5 w-5 text-[#aa6b5d]" />
-                  <CardTitle className="text-lg text-[#432818]">Exclusão</CardTitle>
-                </div>
-                <CardDescription className="text-[#6B4F43]">
-                  Teste de exclusão de funil
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-4">
-                <div className="flex items-center gap-2">
-                  {getTestStatus('delete')}
-                  <div className="space-y-1">
-                    <p className="font-medium text-sm text-[#432818]">
-                      {testResults.delete 
-                        ? testResults.delete.success 
-                          ? 'Funil excluído com sucesso' 
-                          : 'Falha na exclusão'
-                        : 'Aguardando teste'}
-                    </p>
-                    {testResults.delete && (
-                      <p className={`text-sm ${testResults.delete.success ? 'text-green-600' : 'text-red-600'}`}>
-                        {testResults.delete.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="supabase" className="space-y-4 pt-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold text-[#432818]">Funis no Supabase ({supabaseFunnels.length})</h3>
-            <Button 
-              onClick={() => setShowDetails(!showDetails)} 
-              variant="outline" 
-              size="sm"
-              className="border-[#B89B7A] text-[#6B4F43] hover:bg-[#FDF6F0]"
-            >
-              <Eye className="h-4 w-4 mr-2" />
-              {showDetails ? 'Esconder detalhes' : 'Mostrar detalhes'}
+    <div className="p-4 space-y-4">
+      <Card>
+        <CardHeader>
+          <CardTitle>Teste de Integração Supabase</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex flex-wrap gap-2">
+            <Button onClick={testConnection} disabled={loading}>
+              Testar Conexão
+            </Button>
+            <Button onClick={testInsert} disabled={loading}>
+              Testar Inserção
+            </Button>
+            <Button onClick={testRead} disabled={loading}>
+              Testar Leitura
+            </Button>
+            <Button onClick={testSteps} disabled={loading}>
+              Testar Steps
+            </Button>
+            <Button onClick={testRealTimeSubscription} disabled={loading}>
+              Testar Real-time
             </Button>
           </div>
-          
-          <div className="border border-[#B89B7A] rounded-md overflow-hidden">
-            {supabaseFunnels.length === 0 ? (
-              <div className="p-4 text-center text-[#6B4F43] bg-[#FFF7ED]">
-                Nenhum funil encontrado no Supabase
+
+          <div className="flex gap-2">
+            <Input
+              placeholder="ID do funil para testes de Update/Delete"
+              value={funnelId}
+              onChange={(e) => setFunnelId(e.target.value)}
+            />
+            <Button onClick={testUpdate} disabled={loading || !funnelId}>
+              Testar Update
+            </Button>
+            <Button onClick={testDelete} disabled={loading || !funnelId} variant="destructive">
+              Testar Delete
+            </Button>
+          </div>
+
+          <div className="max-h-60 overflow-y-auto border rounded p-4 bg-gray-50">
+            {results.map((result, index) => (
+              <div key={index} className="text-sm font-mono">
+                {result}
               </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-[#B89B7A]">
-                  <thead>
-                    <tr className="bg-[#F4E9DD]">
-                      <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">ID</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Nome</th>
-                      {showDetails && (
-                        <>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Descrição</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Publicado</th>
-                        </>
-                      )}
-                      <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Criado em</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-[#B89B7A]">
-                    {supabaseFunnels.map((funnel) => (
-                      <tr key={funnel.id} className="hover:bg-[#FDF6F0] transition-colors">
-                        <td className="px-4 py-2 text-sm whitespace-nowrap truncate max-w-[100px] text-[#6B4F43]">{funnel.id}</td>
-                        <td className="px-4 py-2 text-sm text-[#432818]">{funnel.name}</td>
-                        {showDetails && (
-                          <>
-                            <td className="px-4 py-2 text-sm">{funnel.description || '-'}</td>
-                            <td className="px-4 py-2 text-sm">
-                              <Badge 
-                                variant={funnel.is_published ? "default" : "secondary"}
-                                className={funnel.is_published ? "bg-[#aa6b5d] hover:bg-[#965c50]" : "bg-[#F4E9DD] text-[#6B4F43]"}
-                              >
-                                {funnel.is_published ? 'Sim' : 'Não'}
-                              </Badge>
-                            </td>
-                          </>
-                        )}
-                        <td className="px-4 py-2 text-sm">{new Date(funnel.created_at).toLocaleString()}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            ))}
+            {results.length === 0 && (
+              <div className="text-gray-500 text-sm">
+                Nenhum teste executado ainda. Clique nos botões acima para começar.
               </div>
             )}
           </div>
-          
-          <h3 className="text-lg font-semibold mt-6 text-[#432818]">Páginas no Supabase ({supabasePages.length})</h3>
-          <div className="border border-[#B89B7A] rounded-md overflow-hidden">
-            {supabasePages.length === 0 ? (
-              <div className="p-4 text-center text-[#6B4F43] bg-[#FFF7ED]">
-                Nenhuma página encontrada no Supabase
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-[#B89B7A]">
-                  <thead>
-                    <tr className="bg-[#F4E9DD]">
-                      <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">ID</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Funil ID</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Título</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Ordem</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Tipo</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-[#B89B7A]">
-                    {supabasePages.map((page) => (
-                      <tr key={page.id} className="hover:bg-[#FDF6F0] transition-colors">
-                        <td className="px-4 py-2 text-sm whitespace-nowrap truncate max-w-[100px] text-[#6B4F43]">{page.id}</td>
-                        <td className="px-4 py-2 text-sm whitespace-nowrap truncate max-w-[100px] text-[#6B4F43]">{page.funnel_id}</td>
-                        <td className="px-4 py-2 text-sm text-[#432818]">{page.title || '-'}</td>
-                        <td className="px-4 py-2 text-sm">
-                          <Badge 
-                            variant="outline" 
-                            className="border-[#B89B7A] text-[#432818]"
-                          >
-                            {page.page_order}
-                          </Badge>
-                        </td>
-                        <td className="px-4 py-2 text-sm">
-                          <Badge 
-                            variant="secondary"
-                            className="bg-[#F4E9DD] text-[#6B4F43] border-[#B89B7A]"
-                          >
-                            {page.page_type || 'default'}
-                          </Badge>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="local" className="space-y-4 pt-4">
-          <Card className="border-[#B89B7A]">
-            <CardHeader className="bg-[#FFF7ED] rounded-t-md">
-              <CardTitle className="text-[#432818]">Funis no Estado Local ({funnels.length})</CardTitle>
-              <CardDescription className="text-[#6B4F43]">
-                Estes são os funis carregados no estado do React via FunnelsContext
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <div className="border border-[#B89B7A] rounded-md overflow-hidden">
-                {funnels.length === 0 ? (
-                  <div className="p-4 text-center text-[#6B4F43] bg-[#FFF7ED]">
-                    Nenhum funil carregado no estado local
-                  </div>
-                ) : (
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-[#B89B7A]">
-                      <thead>
-                        <tr className="bg-[#F4E9DD]">
-                          <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">ID</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Nome</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Publicado</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Etapas</th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-[#432818] uppercase tracking-wider">Atualizado</th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-[#B89B7A]">
-                        {funnels.map((funnel) => (
-                          <tr key={funnel.id} className="hover:bg-[#FDF6F0] transition-colors">
-                            <td className="px-4 py-2 text-sm whitespace-nowrap truncate max-w-[100px] text-[#6B4F43]">{funnel.id}</td>
-                            <td className="px-4 py-2 text-sm text-[#432818]">{funnel.name}</td>
-                            <td className="px-4 py-2 text-sm">
-                              <Badge 
-                                variant={funnel.isPublished ? "default" : "secondary"}
-                                className={funnel.isPublished ? "bg-[#aa6b5d] hover:bg-[#965c50]" : "bg-[#F4E9DD] text-[#6B4F43]"}
-                              >
-                                {funnel.isPublished ? 'Sim' : 'Não'}
-                              </Badge>
-                            </td>
-                            <td className="px-4 py-2 text-sm">
-                              <Badge 
-                                variant="outline"
-                                className="border-[#B89B7A] text-[#432818]"
-                              >
-                                {funnel.steps.length}
-                              </Badge>
-                            </td>
-                            <td className="px-4 py-2 text-sm text-[#6B4F43]">{new Date(funnel.updatedAt).toLocaleString()}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+        </CardContent>
+      </Card>
     </div>
   );
 };

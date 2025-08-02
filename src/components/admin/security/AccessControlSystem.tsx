@@ -1,19 +1,63 @@
 
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { createContext, useContext, useState } from 'react';
 
-export const AccessControlSystem: React.FC = () => {
+interface Permission {
+  id: string;
+  name: string;
+  resource: string;
+  action: string;
+}
+
+interface PermissionsContextType {
+  permissions: Permission[];
+  hasPermission: (resource: string, action: string) => boolean;
+  addPermission: (permission: Permission) => void;
+  removePermission: (id: string) => void;
+}
+
+const PermissionsContext = createContext<PermissionsContextType | undefined>(undefined);
+
+export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [permissions, setPermissions] = useState<Permission[]>([]);
+
+  const hasPermission = (resource: string, action: string) => {
+    return permissions.some(p => p.resource === resource && p.action === action);
+  };
+
+  const addPermission = (permission: Permission) => {
+    setPermissions(prev => [...prev, permission]);
+  };
+
+  const removePermission = (id: string) => {
+    setPermissions(prev => prev.filter(p => p.id !== id));
+  };
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Access Control System</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-sm text-gray-500">
-          Access control functionality will be implemented here.
-        </p>
-      </CardContent>
-    </Card>
+    <PermissionsContext.Provider value={{
+      permissions,
+      hasPermission,
+      addPermission,
+      removePermission
+    }}>
+      {children}
+    </PermissionsContext.Provider>
+  );
+};
+
+export const usePermissions = () => {
+  const context = useContext(PermissionsContext);
+  if (!context) {
+    throw new Error('usePermissions must be used within a PermissionsProvider');
+  }
+  return context;
+};
+
+const AccessControlSystem: React.FC = () => {
+  return (
+    <div className="p-4">
+      <h2 className="text-lg font-semibold mb-4">Sistema de Controle de Acesso</h2>
+      <p className="text-gray-600">Sistema de controle de acesso em desenvolvimento...</p>
+    </div>
   );
 };
 

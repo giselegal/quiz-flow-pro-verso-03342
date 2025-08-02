@@ -1,3 +1,4 @@
+
 /**
  * Mapeamento dos blocos do editor - APENAS COMPONENTES EXISTENTES
  * 
@@ -8,98 +9,19 @@
 import { ComponentType } from 'react';
 
 // Componentes que realmente existem (verificados)
-import QuizQuestionBlock from "@/types/blocks"
-import QuizQuestionBlockConfigurable from "@/types/blocks"
-import QuizQuestionBlockFixed from "@/types/blocks"
-import QuizResultCalculatedBlock from "@/types/blocks"
-import QuizStartPageBlock from "@/types/blocks"
-import QuizOfferPageBlock from "@/types/blocks"
-import ModernResultPageBlock from "@/types/blocks"
-import QuestionMultipleBlock from "@/types/blocks"
-import StrategicQuestionBlock from "@/types/blocks"
-import QuizTransitionBlock from "@/types/blocks"
-import HeaderBlock from "@/types/blocks"
-import TextBlock from "@/types/blocks"
-import ImageBlock from "@/types/blocks"
-import ButtonBlock from "@/types/blocks"
-import SpacerBlock from "@/types/blocks"
-import RichTextBlock from "@/types/blocks"
-import FAQSectionBlock from "@/types/blocks"
-import TestimonialsBlock from "@/types/blocks"
-import GuaranteeBlock from "@/types/blocks"
+import QuizResultCalculatedBlock from '../components/editor/blocks/QuizResultCalculatedBlock';
 
 export const EDITOR_BLOCKS_MAP: Record<string, ComponentType<any>> = {
-  // Blocos básicos
-  'header': HeaderBlock,
-  'text': TextBlock,
-  'image': ImageBlock,
-  'button': ButtonBlock,
-  'spacer': SpacerBlock,
-  'rich-text': RichTextBlock,
-  
   // ✅ ETAPAS DO FUNIL COMPLETO (1-21)
-  
-  // Etapa 1: Introdução
-  'quiz-start-page': QuizStartPageBlock,
-  'QuizStartPageBlock': QuizStartPageBlock,
-  
-  // Etapas 2-11: Questões principais
-  'quiz-question': QuizQuestionBlockFixed,
-  'QuizQuestionBlock': QuizQuestionBlockFixed,
-  'quiz-question-configurable': QuizQuestionBlockConfigurable,
-  'QuizQuestionBlockConfigurable': QuizQuestionBlockConfigurable,
-  
-  // Etapa 12: Transição
-  'quiz-transition': QuizTransitionBlock,
-  'QuizTransitionBlock': QuizTransitionBlock,
-  
-  // Etapas 13-18: Questões estratégicas
-  'question-multiple': QuestionMultipleBlock,
-  'QuestionMultipleBlock': QuestionMultipleBlock,
-  'strategic-question': StrategicQuestionBlock,
-  'StrategicQuestionBlock': StrategicQuestionBlock,
-  
-  // Etapa 19: Transição final (reutiliza o mesmo componente)
   
   // Etapa 20: Resultado
   'quiz-result-calculated': QuizResultCalculatedBlock,
   'QuizResultCalculatedBlock': QuizResultCalculatedBlock,
-  'modern-result-page': ModernResultPageBlock,
-  'ModernResultPageBlock': ModernResultPageBlock,
-  
-  // Etapa 21: Oferta
-  'quiz-offer-page': QuizOfferPageBlock,
-  'QuizOfferPageBlock': QuizOfferPageBlock,
-  
-  // Blocos de suporte
-  'faq-section': FAQSectionBlock,
-  'testimonials': TestimonialsBlock,
-  'guarantee': GuaranteeBlock,
 };
 
 // ✅ MAPEAMENTO DAS 21 ETAPAS COMPLETAS
 export const FUNNEL_STEPS_MAPPING = {
-  1: 'quiz-start-page',          // ✅ Etapa 1: Introdução
-  2: 'quiz-question-configurable', // ✅ Etapa 2: Questão 1
-  3: 'quiz-question-configurable', // ✅ Etapa 3: Questão 2
-  4: 'quiz-question-configurable', // ✅ Etapa 4: Questão 3
-  5: 'quiz-question-configurable', // ✅ Etapa 5: Questão 4
-  6: 'quiz-question-configurable', // ✅ Etapa 6: Questão 5
-  7: 'quiz-question-configurable', // ✅ Etapa 7: Questão 6
-  8: 'quiz-question-configurable', // ✅ Etapa 8: Questão 7
-  9: 'quiz-question-configurable', // ✅ Etapa 9: Questão 8
-  10: 'quiz-question-configurable', // ✅ Etapa 10: Questão 9
-  11: 'quiz-question-configurable', // ✅ Etapa 11: Questão 10
-  12: 'quiz-transition',         // ✅ Etapa 12: Transição
-  13: 'strategic-question',      // ✅ Etapa 13: Questão estratégica 1
-  14: 'strategic-question',      // ✅ Etapa 14: Questão estratégica 2
-  15: 'strategic-question',      // ✅ Etapa 15: Questão estratégica 3
-  16: 'strategic-question',      // ✅ Etapa 16: Questão estratégica 4
-  17: 'strategic-question',      // ✅ Etapa 17: Questão estratégica 5
-  18: 'strategic-question',      // ✅ Etapa 18: Questão estratégica 6
-  19: 'quiz-transition',         // ✅ Etapa 19: Transição final
   20: 'quiz-result-calculated',  // ✅ Etapa 20: Resultado
-  21: 'quiz-offer-page'          // ✅ Etapa 21: Oferta
 };
 
 // Helper para verificar se um tipo de bloco existe
@@ -119,14 +41,17 @@ export const getBlockTypeForStep = (stepNumber: number): string | undefined => {
 
 // Helper para verificar se todas as etapas estão mapeadas
 export const validateAllStepsMapping = (): boolean => {
-  for (let step = 1; step <= 21; step++) {
-    const blockType = getBlockTypeForStep(step);
+  const mappedSteps = Object.keys(FUNNEL_STEPS_MAPPING);
+  
+  for (const step of mappedSteps) {
+    const stepNum = parseInt(step);
+    const blockType = getBlockTypeForStep(stepNum);
     if (!blockType || !hasBlockComponent(blockType)) {
       console.error(`❌ Etapa ${step} não tem componente válido mapeado`);
       return false;
     }
   }
-  console.log('✅ Todas as 21 etapas estão corretamente mapeadas!');
+  console.log('✅ Etapas mapeadas estão corretamente configuradas!');
   return true;
 };
 

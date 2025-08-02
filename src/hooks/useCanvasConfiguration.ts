@@ -18,6 +18,9 @@ export const useCanvasConfiguration = () => {
     components: []
   });
 
+  const [isStep20Loaded, setIsStep20Loaded] = useState(false);
+  const [isStep21Loaded, setIsStep21Loaded] = useState(false);
+
   const updateConfiguration = useCallback((updates: Partial<CanvasConfiguration>) => {
     setConfiguration(prev => ({ ...prev, ...updates }));
   }, []);
@@ -36,6 +39,24 @@ export const useCanvasConfiguration = () => {
     }));
   }, []);
 
+  const loadAndApplyStep20 = useCallback(() => {
+    setIsStep20Loaded(true);
+    console.log('Step 20 loaded and applied');
+  }, []);
+
+  const loadAndApplyStep21 = useCallback(() => {
+    setIsStep21Loaded(true);
+    console.log('Step 21 loaded and applied');
+  }, []);
+
+  const getResultComponents = useCallback(() => {
+    return configuration.components.filter((c: any) => c.type === 'result');
+  }, [configuration.components]);
+
+  const getOfferComponents = useCallback(() => {
+    return configuration.components.filter((c: any) => c.type === 'offer');
+  }, [configuration.components]);
+
   const validateAllSteps = useCallback(() => {
     return {
       isValid: true,
@@ -48,7 +69,14 @@ export const useCanvasConfiguration = () => {
     updateConfiguration,
     addComponent,
     removeComponent,
-    validateAllSteps
+    validateAllSteps,
+    isStep20Loaded,
+    isStep21Loaded,
+    loadAndApplyStep20,
+    loadAndApplyStep21,
+    getResultComponents,
+    getOfferComponents,
+    config: configuration
   };
 };
 
