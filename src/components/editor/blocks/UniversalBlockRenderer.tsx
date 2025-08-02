@@ -53,16 +53,22 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
     disabled
   };
 
-  // Map block types to components
+  // Map block types to components - CONECTANDO blockDefinitions com componentes reais
   const componentMap: Record<string, React.ComponentType<any>> = {
+    // TIPOS DE blockDefinitions.ts - CONECTADOS AOS COMPONENTES REAIS
+    'headline': TextInlineBlock,  // headline -> TextInlineBlock (para títulos)
+    'text': TextInlineBlock,      // text -> TextInlineBlock (para parágrafos)
+    'image': StyleCardInlineBlock, // image -> StyleCardInlineBlock (para imagens com estilo)
+    'button': BadgeInlineBlock,   // button -> BadgeInlineBlock (para botões estilizados)
+    'spacer': SpacerInlineBlock,  // spacer -> SpacerInlineBlock (para espaçamento)
+    
+    // TIPOS INLINE EXISTENTES - MANTIDOS
     'text-inline': TextInlineBlock,
-    'text': TextInlineBlock,
     'badge-inline': BadgeInlineBlock,
     'progress-inline': ProgressInlineBlock,
     'stat-inline': StatInlineBlock,
     'countdown-inline': CountdownInlineBlock,
     'spacer-inline': SpacerInlineBlock,
-    'spacer': SpacerInlineBlock,
     'pricing-card-inline': PricingCardInlineBlock,
     'testimonial-card-inline': TestimonialCardInlineBlock,
     'style-card-inline': StyleCardInlineBlock,

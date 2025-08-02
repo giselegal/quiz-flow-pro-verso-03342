@@ -29,6 +29,16 @@ export interface BlockComponentProps {
   className?: string;
 }
 
+// Extended FAQ Item interface with all properties
+export interface ExtendedFAQItem {
+  id: string;
+  question: string;
+  answer: string;
+  category?: string;
+  isHighlight?: boolean;
+  tags?: string[];
+}
+
 // User response interface
 export interface UserResponse {
   questionId: string;
@@ -102,6 +112,9 @@ export interface FAQItem {
   id: string;
   question: string;
   answer: string;
+  category?: string;
+  isHighlight?: boolean;
+  tags?: string[];
 }
 
 export interface FAQBlock extends BlockData {
@@ -112,11 +125,14 @@ export interface FAQBlock extends BlockData {
     faqs?: FAQItem[];
     layout?: 'minimal' | 'cards' | 'accordion';
     showSearch?: boolean;
+    showCategories?: boolean;
     allowMultipleOpen?: boolean;
+    animateEntrance?: boolean;
     expandFirstItem?: boolean;
     backgroundColor?: string;
     textColor?: string;
     accentColor?: string;
+    cardStyle?: 'modern' | 'classic' | 'rounded' | 'flat';
     searchPlaceholder?: string;
   };
   properties: {
@@ -125,11 +141,14 @@ export interface FAQBlock extends BlockData {
     faqs?: FAQItem[];
     layout?: 'minimal' | 'cards' | 'accordion';
     showSearch?: boolean;
+    showCategories?: boolean;
     allowMultipleOpen?: boolean;
+    animateEntrance?: boolean;
     expandFirstItem?: boolean;
     backgroundColor?: string;
     textColor?: string;
     accentColor?: string;
+    cardStyle?: 'modern' | 'classic' | 'rounded' | 'flat';
     searchPlaceholder?: string;
   };
 }

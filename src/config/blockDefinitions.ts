@@ -2,8 +2,11 @@
 import { BlockDefinition } from '@/types/editor';
 import { Type, Image, AlignLeft, Square, Minus } from 'lucide-react';
 
-// Placeholder component for blocks that don't have specific components yet
-const PlaceholderComponent = () => null;
+// Import real components instead of placeholder
+import TextInlineBlock from '@/components/editor/blocks/inline/TextInlineBlock';
+import StyleCardInlineBlock from '@/components/editor/blocks/inline/StyleCardInlineBlock';
+import BadgeInlineBlock from '@/components/editor/blocks/inline/BadgeInlineBlock';
+import SpacerInlineBlock from '@/components/editor/blocks/inline/SpacerInlineBlock';
 
 export const blockDefinitions: BlockDefinition[] = [
   {
@@ -12,7 +15,7 @@ export const blockDefinitions: BlockDefinition[] = [
     description: 'Título principal e subtítulo',
     category: 'Text',
     icon: Type,
-    component: PlaceholderComponent,
+    component: TextInlineBlock, // ✅ CONECTADO ao componente real
     properties: {
       title: {
         type: 'string',
@@ -51,7 +54,7 @@ export const blockDefinitions: BlockDefinition[] = [
     description: 'Parágrafo de texto simples',
     category: 'Text',
     icon: AlignLeft,
-    component: PlaceholderComponent,
+    component: TextInlineBlock, // ✅ CONECTADO ao componente real
     properties: {
       text: {
         type: 'textarea',
@@ -96,7 +99,7 @@ export const blockDefinitions: BlockDefinition[] = [
     description: 'Componente de imagem',
     category: 'Media',
     icon: Image,
-    component: PlaceholderComponent,
+    component: StyleCardInlineBlock, // ✅ CONECTADO ao componente real
     properties: {
       url: {
         type: 'string',
@@ -157,7 +160,7 @@ export const blockDefinitions: BlockDefinition[] = [
     description: 'Botão de ação',
     category: 'Interactive',
     icon: Square,
-    component: PlaceholderComponent,
+    component: BadgeInlineBlock, // ✅ CONECTADO ao componente real
     properties: {
       text: {
         type: 'string',
@@ -196,7 +199,7 @@ export const blockDefinitions: BlockDefinition[] = [
     description: 'Espaço em branco vertical',
     category: 'Layout',
     icon: Minus,
-    component: PlaceholderComponent,
+    component: SpacerInlineBlock, // ✅ CONECTADO ao componente real
     properties: {
       height: {
         type: 'number',
