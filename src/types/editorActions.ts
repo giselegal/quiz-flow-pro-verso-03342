@@ -1,5 +1,5 @@
 
-import { EditorBlock, EditableContent } from './editor';
+import { EditorBlock, EditableContent, EditorConfig } from './editor';
 
 export interface EditorActions {
   addBlock: (type: EditorBlock['type']) => string;
@@ -15,10 +15,4 @@ export interface EditorThemeActions {
 export interface EditorTemplateActions {
   saveAsTemplate: (name: string) => void;
   loadTemplate: (name: string) => boolean;
-}
-
-export interface EditorConfig {
-  blocks: EditorBlock[];
-  globalStyles: Record<string, any>;
-  theme?: string;
 }

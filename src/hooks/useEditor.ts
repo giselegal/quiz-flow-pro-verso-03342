@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Block } from '@/types/editor';
+import { Block, BlockType } from '@/types/editor';
 
 export const useEditor = () => {
   const [blocks, setBlocks] = useState<Block[]>([]);
@@ -14,7 +14,7 @@ export const useEditor = () => {
   const addBlock = (type: string) => {
     const newBlock: Block = {
       id: Date.now().toString(),
-      type,
+      type: type as BlockType,
       content: {},
       order: blocks.length,
       properties: {}

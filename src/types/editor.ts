@@ -148,3 +148,9 @@ export interface Block {
 }
 
 export type EditorBlock = Block;
+
+export interface EditorConfig {
+  blocks: EditorBlock[];
+  globalStyles: Record<string, any>;
+  theme?: string;
+}

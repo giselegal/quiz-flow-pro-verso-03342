@@ -29,7 +29,7 @@ export const useEditorBlocks = (
   const updateBlock = useCallback((id: string, content: Partial<EditableContent>) => {
     setConfig({
       ...config,
-      blocks: config.blocks.map(block =>
+      blocks: config.blocks.map((block: EditorBlock) =>
         block.id === id
           ? { ...block, content: { ...block.content, ...content } }
           : block
@@ -41,8 +41,8 @@ export const useEditorBlocks = (
     setConfig({
       ...config,
       blocks: config.blocks
-        .filter(block => block.id !== id)
-        .map((block, index) => ({
+        .filter((block: EditorBlock) => block.id !== id)
+        .map((block: EditorBlock, index: number) => ({
           ...block,
           order: index
         }))
@@ -56,7 +56,7 @@ export const useEditorBlocks = (
     
     setConfig({
       ...config,
-      blocks: newBlocks.map((block, index) => ({
+      blocks: newBlocks.map((block: EditorBlock, index: number) => ({
         ...block,
         order: index
       }))

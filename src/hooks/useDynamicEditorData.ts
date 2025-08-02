@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { Block } from '@/types/editor';
+import { Block, BlockType } from '@/types/editor';
 
 interface DynamicEditorDataReturn {
   blocks: Block[];
@@ -19,7 +19,7 @@ export const useDynamicEditorData = (): DynamicEditorDataReturn => {
   const addBlock = useCallback((type: string): string => {
     const newBlock: Block = {
       id: `block-${Date.now()}`,
-      type,
+      type: type as BlockType,
       content: getDefaultContent(type),
       order: blocks.length,
       properties: {}

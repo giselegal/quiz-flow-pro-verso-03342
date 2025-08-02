@@ -7,15 +7,14 @@ export const useEditorTheme = (
   config: EditorConfig,
   setConfig: (config: EditorConfig) => void
 ): EditorThemeActions => {
-  const updateTheme = useCallback((theme: Partial<EditorConfig['globalStyles']>) => {
+  const updateTheme = useCallback((theme: Partial<any>) => {
     setConfig({
       ...config,
-      globalStyles: {
-        ...config.globalStyles,
-        ...theme
-      }
+      globalStyles: { ...config.globalStyles, ...theme }
     });
   }, [config, setConfig]);
 
-  return { updateTheme };
+  return {
+    updateTheme
+  };
 };

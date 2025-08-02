@@ -107,3 +107,14 @@ export interface QuizBuilderState {
   stages: QuizStage[];
   activeStageId?: string;
 }
+
+export interface QuizTemplate {
+  id: string;
+  title: string;
+  type: string;
+  progress: number;
+  multiSelect?: number;
+  blocks: any[];
+  validationRules?: any;
+  scoringEnabled?: boolean;
+}

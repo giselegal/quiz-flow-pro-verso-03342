@@ -8,18 +8,27 @@ export const useEditorTemplates = (
   setConfig: (config: EditorConfig) => void
 ): EditorTemplateActions => {
   const saveAsTemplate = useCallback((name: string) => {
-    const templates = JSON.parse(localStorage.getItem('editorTemplates') || '{}');
-    templates[name] = config;
-    localStorage.setItem('editorTemplates', JSON.stringify(templates));
+    try {
+      const templates = JSON.parse(localStorage.getItem('editor_templates') || '{}');
+      templates[name] = config;
+      localStorage.setItem('editor_templates', JSON.stringify(templates));
+    } catch (error) {
+      console.error('Error saving template:', error);
+    }
   }, [config]);
 
-  const loadTemplate = useCallback((name: string) => {
-    const templates = JSON.parse(localStorage.getItem('editorTemplates') || '{}');
-    if (templates[name]) {
-      setConfig(templates[name]);
-      return true;
+  const loadTemplate = useCallback((name: string): boolean => {
+    try {
+      const templates = JSON.parse(localStorage.getItem('editor_templates') || '{}');
+      if (templates[name]) {
+        setConfig(templates[name]);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error loading template:', error);
+      return false;
     }
-    return false;
   }, [setConfig]);
 
   return {
