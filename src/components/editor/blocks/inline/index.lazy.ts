@@ -1,3 +1,4 @@
+
 // Componentes Inline Modulares - Lazy Loading Otimizado
 // MODULAR | REUTILIZÁVEL | RESPONSIVO | LAZY-LOADED
 
