@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Filter, Tag, Grid3X3, List, ChevronDown, ChevronRight, Plus } from 'lucide-react';
+import { Search, Filter, Tag, Grid3X3, List, ChevronDown, ChevronRight, Plus, Play, Star, Target, Gift, CheckCircle } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { 
   BLOCK_CATEGORIES,
@@ -12,6 +12,50 @@ import {
 
 // 🎨 ENHANCED COMPONENTS SIDEBAR - Sidebar Moderna com Busca e Filtros
 // Sistema avançado de navegação de componentes baseado na auditoria completa
+
+// 🔥 ETAPAS DO FUNIL - Quiz Quest Challenge
+const FUNNEL_STEPS = [
+  {
+    id: 'start',
+    label: 'Página Inicial',
+    description: 'Início do quiz',
+    icon: <Play className="w-4 h-4" />,
+    blocks: ['quiz-start-page', 'quiz-start-page-inline', 'quiz-intro-header'],
+    color: 'bg-green-100 text-green-700 border-green-200'
+  },
+  {
+    id: 'questions',
+    label: 'Perguntas',
+    description: 'Quiz interativo',
+    icon: <Star className="w-4 h-4" />,
+    blocks: ['quiz-question', 'quiz-progress', 'options-grid', 'quiz-transition'],
+    color: 'bg-blue-100 text-blue-700 border-blue-200'
+  },
+  {
+    id: 'result',
+    label: 'Resultado',
+    description: 'Apresentação do resultado',
+    icon: <Target className="w-4 h-4" />,
+    blocks: ['quiz-result-calculated', 'quiz-title', 'result-header'],
+    color: 'bg-purple-100 text-purple-700 border-purple-200'
+  },
+  {
+    id: 'offer',
+    label: 'Oferta',
+    description: 'Página de vendas',
+    icon: <Gift className="w-4 h-4" />,
+    blocks: ['quiz-offer-hero', 'quiz-offer-pricing', 'quiz-offer-testimonials', 'quiz-offer-countdown'],
+    color: 'bg-orange-100 text-orange-700 border-orange-200'
+  },
+  {
+    id: 'conversion',
+    label: 'Conversão',
+    description: 'Finalização',
+    icon: <CheckCircle className="w-4 h-4" />,
+    blocks: ['final-cta', 'guarantee', 'testimonials-real'],
+    color: 'bg-emerald-100 text-emerald-700 border-emerald-200'
+  }
+];
 
 interface EnhancedComponentsSidebarProps {
   onAddBlock?: (blockType: string) => void;
@@ -49,6 +93,10 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = ({
   );
   const [showFilters, setShowFilters] = useState(false);
   const [activeTags, setActiveTags] = useState<Set<string>>(new Set());
+  
+  // 🎯 ESTADO DAS DUAS COLUNAS
+  const [selectedStep, setSelectedStep] = useState<string | null>(null);
+  const [activeColumn, setActiveColumn] = useState<'steps' | 'components'>('steps');
 
   // 📊 ESTATÍSTICAS DOS COMPONENTES
   const allBlockTypes = getAllBlockTypes();
@@ -221,55 +269,152 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = ({
 
   return (
     <div className="w-80 h-full bg-white border-r border-gray-200 flex flex-col">
-      {/* 📊 HEADER COM ESTATÍSTICAS */}
+      {/* 📊 HEADER COM NAVEGAÇÃO DAS COLUNAS */}
       <div className="p-4 border-b border-gray-200">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-lg font-semibold text-gray-800">Componentes</h2>
-          <div className="flex items-center gap-2">
-            {VIEW_MODES.map(mode => (
-              <button
-                key={mode.type}
-                onClick={() => setViewMode(mode.type)}
-                className={cn(
-                  'p-1.5 rounded transition-colors',
-                  viewMode === mode.type
-                    ? 'bg-blue-100 text-blue-600'
-                    : 'hover:bg-gray-100 text-gray-600'
-                )}
-                title={mode.label}
-              >
-                {mode.icon}
-              </button>
-            ))}
-            {onToggleCollapse && (
-              <button
-                onClick={onToggleCollapse}
-                className="p-1.5 hover:bg-gray-100 rounded transition-colors"
-              >
-                <ChevronRight className="w-4 h-4 text-gray-600" />
-              </button>
+        <h2 className="text-lg font-semibold text-gray-800 mb-3">Editor de Funil</h2>
+        
+        {/* Toggle entre Colunas */}
+        <div className="flex bg-gray-100 rounded-lg p-1 mb-3">
+          <button
+            onClick={() => setActiveColumn('steps')}
+            className={cn(
+              'flex-1 px-3 py-2 text-sm font-medium rounded-md transition-all',
+              activeColumn === 'steps'
+                ? 'bg-white text-blue-600 shadow-sm'
+                : 'text-gray-600 hover:text-gray-800'
             )}
-          </div>
+          >
+            Etapas do Funil
+          </button>
+          <button
+            onClick={() => setActiveColumn('components')}
+            className={cn(
+              'flex-1 px-3 py-2 text-sm font-medium rounded-md transition-all',
+              activeColumn === 'components'
+                ? 'bg-white text-blue-600 shadow-sm'
+                : 'text-gray-600 hover:text-gray-800'
+            )}
+          >
+            Componentes
+          </button>
         </div>
 
-        {/* Estatísticas */}
-        <div className="grid grid-cols-2 gap-2 text-sm">
-          <div className="bg-blue-50 p-2 rounded">
-            <div className="font-medium text-blue-800">{totalBlocks}</div>
-            <div className="text-blue-600">Total de Blocks</div>
+        {/* Estatísticas baseadas na coluna ativa */}
+        {activeColumn === 'steps' ? (
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <div className="bg-purple-50 p-2 rounded">
+              <div className="font-medium text-purple-800">{FUNNEL_STEPS.length}</div>
+              <div className="text-purple-600">Etapas</div>
+            </div>
+            <div className="bg-blue-50 p-2 rounded">
+              <div className="font-medium text-blue-800">
+                {selectedStep ? FUNNEL_STEPS.find(s => s.id === selectedStep)?.blocks.length || 0 : 0}
+              </div>
+              <div className="text-blue-600">Componentes</div>
+            </div>
           </div>
-          <div className="bg-green-50 p-2 rounded">
-            <div className="font-medium text-green-800">{filteredBlocks.length}</div>
-            <div className="text-green-600">Filtrados</div>
+        ) : (
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <div className="bg-blue-50 p-2 rounded">
+              <div className="font-medium text-blue-800">{totalBlocks}</div>
+              <div className="text-blue-600">Total de Blocks</div>
+            </div>
+            <div className="bg-green-50 p-2 rounded">
+              <div className="font-medium text-green-800">{filteredBlocks.length}</div>
+              <div className="text-green-600">Filtrados</div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* 🔍 BUSCA AVANÇADA */}
-      <div className="p-4 border-b border-gray-200">
-        <div className="relative mb-3">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input
+      {/* CONTEÚDO DAS COLUNAS */}
+      {activeColumn === 'steps' ? (
+        // 🎯 COLUNA 1: ETAPAS DO FUNIL
+        <div className="flex-1 overflow-hidden flex flex-col">
+          <div className="p-4 border-b border-gray-200">
+            <h3 className="text-sm font-medium text-gray-700 mb-2">Estrutura do Funil</h3>
+            <p className="text-xs text-gray-500">Selecione uma etapa para ver seus componentes</p>
+          </div>
+          
+          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            {FUNNEL_STEPS.map((step, index) => (
+              <div
+                key={step.id}
+                className={cn(
+                  'group relative p-4 rounded-lg border cursor-pointer transition-all duration-200',
+                  selectedStep === step.id
+                    ? `${step.color} border-current shadow-md`
+                    : 'border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50'
+                )}
+                onClick={() => setSelectedStep(selectedStep === step.id ? null : step.id)}
+              >
+                {/* Número da Etapa */}
+                <div className="absolute -top-2 -left-2 w-6 h-6 bg-gray-800 text-white text-xs rounded-full flex items-center justify-center font-semibold">
+                  {index + 1}
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className={cn(
+                    'p-2 rounded-lg',
+                    selectedStep === step.id
+                      ? 'bg-white/50'
+                      : 'bg-gray-100 group-hover:bg-gray-200'
+                  )}>
+                    {step.icon}
+                  </div>
+                  
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-semibold text-sm mb-1">{step.label}</h4>
+                    <p className="text-xs opacity-80 mb-2">{step.description}</p>
+                    
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-medium">
+                        {step.blocks.length} componente{step.blocks.length !== 1 ? 's' : ''}
+                      </span>
+                      <ChevronRight className={cn(
+                        'w-3 h-3 transition-transform',
+                        selectedStep === step.id && 'rotate-90'
+                      )} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Lista de Componentes da Etapa */}
+                {selectedStep === step.id && (
+                  <div className="mt-4 pt-3 border-t border-current/20 space-y-2">
+                    {step.blocks.map(blockType => {
+                      const blockDef = BLOCK_DEFINITIONS[blockType];
+                      if (!blockDef) return null;
+                      
+                      return (
+                        <div
+                          key={blockType}
+                          className="flex items-center gap-2 p-2 rounded bg-white/30 hover:bg-white/50 cursor-pointer transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddBlock(blockType);
+                          }}
+                        >
+                          <span className="text-sm">{blockDef.icon}</span>
+                          <span className="text-sm font-medium flex-1">{blockDef.label}</span>
+                          <Plus className="w-3 h-3 opacity-60" />
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        // 🎨 COLUNA 2: COMPONENTES (Estrutura Original)
+        <div className="flex-1 overflow-hidden flex flex-col">
+          {/* 🔍 BUSCA AVANÇADA */}
+          <div className="p-4 border-b border-gray-200">
+            <div className="relative mb-3">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
             type="text"
             placeholder="Buscar componentes..."
             value={searchQuery}
