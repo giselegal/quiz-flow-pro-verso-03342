@@ -1,205 +1,176 @@
 
 import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Switch } from '@/components/ui/switch';
 import { Block } from '@/types/editor';
-import { Trash2, RotateCcw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { X, Trash2 } from 'lucide-react';
 
 interface PropertiesPanelProps {
   selectedBlockId: string | null;
   blocks: Block[];
   onClose: () => void;
-  onUpdate: (id: string, content: any) => void;
+  onUpdate: (id: string, properties: Record<string, any>) => void;
   onDelete: (id: string) => void;
 }
 
-export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
+const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   selectedBlockId,
   blocks,
   onClose,
   onUpdate,
-  onDelete,
+  onDelete
 }) => {
   const selectedBlock = blocks.find(block => block.id === selectedBlockId);
 
   if (!selectedBlockId || !selectedBlock) {
     return (
-      <div className="h-full p-4 space-y-4 bg-white">
-        <div className="text-center text-[#432818]/60 mt-8">
-          <div className="text-4xl mb-4">🎯</div>
-          <h3 className="text-lg font-medium mb-2">Selecione um Componente</h3>
-          <p className="text-sm">Clique em qualquer bloco do canvas para editar suas propriedades aqui.</p>
-        </div>
+      <div className="h-full bg-gray-50 border-l flex items-center justify-center">
+        <p className="text-gray-500">Selecione um bloco para editar suas propriedades</p>
       </div>
     );
   }
 
-  const handleUpdate = (field: string, value: any) => {
+  const handlePropertyChange = (property: string, value: any) => {
+    const content = selectedBlock.content || {};
     onUpdate(selectedBlockId, {
-      ...selectedBlock.content,
-      [field]: value
+      ...content,
+      [property]: value
     });
   };
 
-  const getBlockTypeLabel = () => {
+  const renderPropertyEditor = () => {
+    const content = selectedBlock.content || {};
+    
     switch (selectedBlock.type) {
-      case 'headline': return 'Título';
-      case 'text': return 'Texto';
-      case 'image': return 'Imagem';
-      case 'benefits': return 'Benefícios';
-      case 'testimonials': return 'Depoimentos';
-      case 'quiz-result': return 'Resultado do Quiz';
-      default: return selectedBlock.type.charAt(0).toUpperCase() + selectedBlock.type.slice(1);
+      case 'title':
+        return (
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="title-text">Título</Label>
+              <Input
+                id="title-text"
+                value={content.text || ''}
+                onChange={(e) => handlePropertyChange('text', e.target.value)}
+                placeholder="Digite o título"
+              />
+            </div>
+          </div>
+        );
+
+      case 'subtitle':
+        return (
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="subtitle-text">Subtítulo</Label>
+              <Input
+                id="subtitle-text"
+                value={content.text || ''}
+                onChange={(e) => handlePropertyChange('text', e.target.value)}
+                placeholder="Digite o subtítulo"
+              />
+            </div>
+          </div>
+        );
+
+      case 'text':
+        return (
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="text-content">Texto</Label>
+              <Textarea
+                id="text-content"
+                value={content.text || ''}
+                onChange={(e) => handlePropertyChange('text', e.target.value)}
+                placeholder="Digite o texto"
+                rows={4}
+              />
+            </div>
+          </div>
+        );
+
+      case 'image':
+        return (
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="image-url">URL da Imagem</Label>
+              <Input
+                id="image-url"
+                value={content.imageUrl || ''}
+                onChange={(e) => handlePropertyChange('imageUrl', e.target.value)}
+                placeholder="https://exemplo.com/imagem.jpg"
+              />
+            </div>
+            <div>
+              <Label htmlFor="image-alt">Texto Alternativo</Label>
+              <Input
+                id="image-alt"
+                value={content.imageAlt || ''}
+                onChange={(e) => handlePropertyChange('imageAlt', e.target.value)}
+                placeholder="Descrição da imagem"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <Label htmlFor="image-width">Largura</Label>
+                <Input
+                  id="image-width"
+                  value={content.width || ''}
+                  onChange={(e) => handlePropertyChange('width', e.target.value)}
+                  placeholder="100%"
+                />
+              </div>
+              <div>
+                <Label htmlFor="image-height">Altura</Label>
+                <Input
+                  id="image-height"
+                  value={content.height || ''}
+                  onChange={(e) => handlePropertyChange('height', e.target.value)}
+                  placeholder="auto"
+                />
+              </div>
+            </div>
+          </div>
+        );
+
+      default:
+        return (
+          <div className="space-y-4">
+            <p className="text-sm text-gray-500">
+              Editor de propriedades para o tipo "{selectedBlock.type}" não está disponível ainda.
+            </p>
+          </div>
+        );
     }
   };
 
   return (
-    <div className="h-full bg-white flex flex-col">
-      {/* Header */}
-      <div className="p-4 border-b border-[#B89B7A]/20 flex justify-between items-center">
+    <div className="h-full bg-white border-l flex flex-col">
+      <div className="p-4 border-b flex justify-between items-center">
+        <h3 className="font-medium text-gray-900">
+          Propriedades - {selectedBlock.type}
+        </h3>
         <div className="flex items-center gap-2">
-          <h2 className="font-medium text-[#432818]">{getBlockTypeLabel()}</h2>
-          <Badge variant="secondary" className="text-xs">
-            {selectedBlock.type}
-          </Badge>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onDelete(selectedBlockId)}
+            className="text-red-600 hover:text-red-700"
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+          <Button variant="ghost" size="sm" onClick={onClose}>
+            <X className="w-4 h-4" />
+          </Button>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => onDelete(selectedBlockId)}
-          className="text-red-500"
-        >
-          <Trash2 className="w-4 h-4" />
-        </Button>
       </div>
-
-      <Tabs defaultValue="content" className="flex-1 flex flex-col">
-        <div className="px-4 pt-2">
-          <TabsList className="w-full grid grid-cols-2">
-            <TabsTrigger value="content">Conteúdo</TabsTrigger>
-            <TabsTrigger value="style">Estilo</TabsTrigger>
-          </TabsList>
-        </div>
-        
-        <div className="flex-1 overflow-auto">
-          <TabsContent value="content" className="p-4 space-y-4">
-            {/* Título */}
-            <div className="space-y-2">
-              <Label htmlFor="title">Título</Label>
-              <Input
-                id="title"
-                value={selectedBlock.content.title || ''}
-                onChange={(e) => handleUpdate('title', e.target.value)}
-                placeholder="Digite o título"
-              />
-            </div>
-
-            {/* Subtítulo */}
-            <div className="space-y-2">
-              <Label htmlFor="subtitle">Subtítulo</Label>
-              <Input
-                id="subtitle"
-                value={selectedBlock.content.subtitle || ''}
-                onChange={(e) => handleUpdate('subtitle', e.target.value)}
-                placeholder="Digite o subtítulo"
-              />
-            </div>
-
-            {/* Texto */}
-            <div className="space-y-2">
-              <Label htmlFor="text">Texto</Label>
-              <Textarea
-                id="text"
-                value={selectedBlock.content.text || ''}
-                onChange={(e) => handleUpdate('text', e.target.value)}
-                placeholder="Digite o texto"
-                className="min-h-[100px]"
-              />
-            </div>
-
-            {/* URL da Imagem */}
-            {(selectedBlock.type === 'image' || selectedBlock.content.imageUrl) && (
-              <div className="space-y-2">
-                <Label htmlFor="imageUrl">URL da Imagem</Label>
-                <Input
-                  id="imageUrl"
-                  value={selectedBlock.content.imageUrl || ''}
-                  onChange={(e) => handleUpdate('imageUrl', e.target.value)}
-                  placeholder="https://exemplo.com/imagem.jpg"
-                />
-              </div>
-            )}
-
-            {/* Configurações específicas do quiz result */}
-            {selectedBlock.type === 'quiz-result' && (
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="showPrimaryStyle">Mostrar Estilo Principal</Label>
-                  <Switch
-                    id="showPrimaryStyle"
-                    checked={selectedBlock.content.showPrimaryStyle !== false}
-                    onCheckedChange={(checked) => handleUpdate('showPrimaryStyle', checked)}
-                  />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="showSecondaryStyles">Mostrar Estilos Secundários</Label>
-                  <Switch
-                    id="showSecondaryStyles"
-                    checked={selectedBlock.content.showSecondaryStyles !== false}
-                    onCheckedChange={(checked) => handleUpdate('showSecondaryStyles', checked)}
-                  />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="showOfferSection">Mostrar Seção de Oferta</Label>
-                  <Switch
-                    id="showOfferSection"
-                    checked={selectedBlock.content.showOfferSection !== false}
-                    onCheckedChange={(checked) => handleUpdate('showOfferSection', checked)}
-                  />
-                </div>
-              </div>
-            )}
-          </TabsContent>
-
-          <TabsContent value="style" className="p-4 space-y-4">
-            <div className="space-y-3">
-              <div className="space-y-2">
-                <Label htmlFor="backgroundColor">Cor de Fundo</Label>
-                <Input
-                  id="backgroundColor"
-                  type="color"
-                  value={selectedBlock.content.style?.backgroundColor || '#ffffff'}
-                  onChange={(e) => handleUpdate('style', { 
-                    ...selectedBlock.content.style,
-                    backgroundColor: e.target.value 
-                  })}
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="textColor">Cor do Texto</Label>
-                <Input
-                  id="textColor"
-                  type="color"
-                  value={selectedBlock.content.style?.textColor || '#000000'}
-                  onChange={(e) => handleUpdate('style', { 
-                    ...selectedBlock.content.style,
-                    textColor: e.target.value 
-                  })}
-                />
-              </div>
-            </div>
-          </TabsContent>
-        </div>
-      </Tabs>
+      
+      <div className="p-4 flex-1 overflow-auto">
+        {renderPropertyEditor()}
+      </div>
     </div>
   );
 };
+
+export default PropertiesPanel;

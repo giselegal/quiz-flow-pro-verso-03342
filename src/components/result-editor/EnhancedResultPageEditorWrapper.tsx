@@ -110,7 +110,10 @@ export const EnhancedResultPageEditorPage: React.FC = () => {
           const defaultStyle: StyleResult = {
             category: 'Natural',
             score: 10,
-            percentage: 100
+            percentage: 100,
+            style: 'natural',
+            points: 10,
+            rank: 1
           };
           
           setPrimaryStyle(defaultStyle);
@@ -121,7 +124,10 @@ export const EnhancedResultPageEditorPage: React.FC = () => {
         const defaultStyle: StyleResult = {
           category: 'Natural',
           score: 10,
-          percentage: 100
+          percentage: 100,
+          style: 'natural',
+          points: 10,
+          rank: 1
         };
         
         setPrimaryStyle(defaultStyle);
@@ -133,7 +139,10 @@ export const EnhancedResultPageEditorPage: React.FC = () => {
       const defaultStyle: StyleResult = {
         category: 'Natural',
         score: 10,
-        percentage: 100
+        percentage: 100,
+        style: 'natural',
+        points: 10,
+        rank: 1
       };
       
       setPrimaryStyle(defaultStyle);

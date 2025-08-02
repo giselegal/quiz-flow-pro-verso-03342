@@ -2,7 +2,7 @@
 import React from 'react';
 import { StyleResult } from '@/types/quiz';
 import { ResultPageConfig } from '@/types/resultPageConfig';
-import QuizResult from '@/components/QuizResult';
+import { QuizResults } from '@/components/quiz/QuizResults';
 
 interface PreviewPanelProps {
   resultPageConfig: ResultPageConfig;
@@ -10,17 +10,23 @@ interface PreviewPanelProps {
 }
 
 const PreviewPanel: React.FC<PreviewPanelProps> = ({ resultPageConfig, selectedStyle }) => {
-  // Create secondary styles to simulate the real result
+  // Create complete StyleResult objects with all required properties
   const secondaryStyles: StyleResult[] = [
     {
       category: selectedStyle.category === 'Natural' ? 'Clássico' : 'Natural',
       score: 10,
-      percentage: 25
+      percentage: 25,
+      style: 'classico' as any,
+      points: 10,
+      rank: 2
     },
     {
       category: selectedStyle.category === 'Contemporâneo' ? 'Elegante' : 'Contemporâneo',
       score: 5,
-      percentage: 15
+      percentage: 15,
+      style: 'contemporaneo' as any,
+      points: 5,
+      rank: 3
     }
   ];
 
@@ -35,7 +41,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ resultPageConfig, selectedS
         </div>
         
         <div className="overflow-auto h-[calc(100vh-180px)]">
-          <QuizResult 
+          <QuizResults 
             primaryStyle={selectedStyle} 
             secondaryStyles={secondaryStyles}
           />

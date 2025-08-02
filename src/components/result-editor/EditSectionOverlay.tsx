@@ -1,96 +1,58 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { X } from 'lucide-react';
 
 interface EditSectionOverlayProps {
-  isOpen: boolean;
+  isVisible: boolean;
   onClose: () => void;
-  section: string;
-  content: Record<string, any>;
-  onSave: (content: Record<string, any>) => void;
+  onSave: (data: any) => void;
+  sectionTitle: string;
+  currentContent: any;
 }
 
 const EditSectionOverlay: React.FC<EditSectionOverlayProps> = ({
-  isOpen,
+  isVisible,
   onClose,
-  section,
-  content,
-  onSave
+  onSave,
+  sectionTitle,
+  currentContent
 }) => {
-  const [editedContent, setEditedContent] = useState<Record<string, any>>(content || {});
-
-  if (!isOpen) return null;
+  const [content, setContent] = useState(currentContent || {});
 
   const handleSave = () => {
-    onSave(editedContent);
+    onSave(content);
     onClose();
   };
 
-  const handleFieldChange = (field: string, value: any) => {
-    setEditedContent((prev: Record<string, any>) => ({
+  const handleContentChange = (field: string, value: any) => {
+    setContent((prev: any) => ({
       ...prev,
       [field]: value
     }));
   };
 
+  if (!isVisible) return null;
+
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-      <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-[#432818]">
-            Editar {section}
-          </h2>
-          <Button variant="ghost" size="icon" onClick={onClose}>
-            <X className="h-4 w-4" />
+          <h3 className="text-lg font-medium">{sectionTitle}</h3>
+          <Button variant="ghost" size="sm" onClick={onClose}>
+            <X className="w-4 h-4" />
           </Button>
         </div>
-
+        
+        {/* Content editing form goes here */}
         <div className="space-y-4">
-          {/* Dynamic form fields based on section */}
-          {Object.keys(editedContent).map((key) => {
-            const value = editedContent[key];
-            
-            if (typeof value === 'string') {
-              if (value.length > 100) {
-                return (
-                  <div key={key}>
-                    <label className="block text-sm font-medium mb-1 capitalize">
-                      {key.replace(/([A-Z])/g, ' $1').trim()}
-                    </label>
-                    <Textarea
-                      value={value}
-                      onChange={(e) => handleFieldChange(key, e.target.value)}
-                      rows={3}
-                    />
-                  </div>
-                );
-              } else {
-                return (
-                  <div key={key}>
-                    <label className="block text-sm font-medium mb-1 capitalize">
-                      {key.replace(/([A-Z])/g, ' $1').trim()}
-                    </label>
-                    <Input
-                      value={value}
-                      onChange={(e) => handleFieldChange(key, e.target.value)}
-                    />
-                  </div>
-                );
-              }
-            }
-            
-            return null;
-          })}
+          {/* Add form fields based on section type */}
         </div>
-
-        <div className="flex justify-end gap-2 mt-6">
+        
+        <div className="flex justify-end gap-2 mt-4">
           <Button variant="outline" onClick={onClose}>
             Cancelar
           </Button>
-          <Button onClick={handleSave} className="bg-[#B89B7A] hover:bg-[#A38A69] text-white">
+          <Button onClick={handleSave}>
             Salvar
           </Button>
         </div>
@@ -99,4 +61,6 @@ const EditSectionOverlay: React.FC<EditSectionOverlayProps> = ({
   );
 };
 
+// Export as both named and default export
+export { EditSectionOverlay };
 export default EditSectionOverlay;

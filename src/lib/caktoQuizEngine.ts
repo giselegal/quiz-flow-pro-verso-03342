@@ -6,7 +6,17 @@ export interface CaktoQuizEngine {
   determineResult: (responses: UserResponse[], participantName: string) => any;
 }
 
-// Add the missing exported functions
+// Convert UserResponse to QuizResponse format
+const convertUserResponseToQuizResponse = (userResponse: UserResponse): QuizResponse => {
+  return {
+    questionId: userResponse.questionId,
+    selectedOptionIds: userResponse.selectedOptions,
+    selectedStyles: [],
+    timestamp: userResponse.timestamp
+  };
+};
+
+// Updated function signatures to match usage
 export const calculateCaktoQuizResult = (responses: UserResponse[], participantName: string) => {
   const engine = createCaktoQuizEngine();
   return engine.determineResult(responses, participantName);
@@ -20,6 +30,7 @@ export const processMultipleSelections = (selectedOptions: string[], questionId:
   };
 };
 
+// Updated to only require 2 parameters
 export const validateQuestionResponse = (response: UserResponse, question: QuizQuestion): boolean => {
   if (!response.selectedOptions || response.selectedOptions.length === 0) {
     return false;
@@ -54,7 +65,7 @@ export const createCaktoQuizEngine = (): CaktoQuizEngine => {
       });
     });
 
-    // Convert to StyleResult array
+    // Convert to StyleResult array with all required properties
     const results: StyleResult[] = Object.entries(stylePoints).map(([style, points], index) => ({
       category: style.charAt(0).toUpperCase() + style.slice(1),
       score: points,
@@ -64,7 +75,7 @@ export const createCaktoQuizEngine = (): CaktoQuizEngine => {
       rank: index + 1
     }));
 
-    // Sort by score descending
+    // Sort by score descending and update ranks
     return results.sort((a, b) => b.score - a.score).map((result, index) => ({
       ...result,
       rank: index + 1
@@ -78,12 +89,12 @@ export const createCaktoQuizEngine = (): CaktoQuizEngine => {
     return {
       id: `result-${Date.now()}`,
       participantName,
-      responses,
+      responses: responses.map(convertUserResponseToQuizResponse),
       styleScores,
       predominantStyle: predominantStyle.style,
-      primaryStyle: predominantStyle.style,
+      primaryStyle: predominantStyle,
       complementaryStyles: styleScores.slice(1, 3).map(s => s.style),
-      secondaryStyles: styleScores.slice(1, 3).map(s => s.style),
+      secondaryStyles: styleScores.slice(1, 3),
       totalNormalQuestions: responses.length,
       calculatedAt: new Date()
     };
