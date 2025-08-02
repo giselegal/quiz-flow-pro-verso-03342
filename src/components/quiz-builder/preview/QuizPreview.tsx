@@ -4,14 +4,17 @@ import { QuizStage, QuizComponentData } from '@/types/quizBuilder';
 import { Button } from '@/components/ui/button';
 import { QuizContainer } from '@/components/quiz/QuizContainer';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { QuizResult } from '@/types/quiz';
+import { StyleResult } from '@/types/quiz';
 import ResultPreview from './ResultPreview';
 import StagePreview from './StagePreview';
 
 interface QuizPreviewProps {
   stages: QuizStage[];
   components: QuizComponentData[];
-  previewResult?: QuizResult | null;
+  previewResult?: {
+    primaryStyle: StyleResult;
+    secondaryStyles: StyleResult[];
+  } | null;
 }
 
 const QuizPreview: React.FC<QuizPreviewProps> = ({ 

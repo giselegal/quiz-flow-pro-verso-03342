@@ -1,10 +1,21 @@
 
-// Fix the error in HeroSection.tsx by removing any unexpected tokens at line 164
-// Note: Since I don't have the full file content, I will create a minimal fix
 import React from 'react';
 
-// Sample component to fix the error
-const HeroSection = ({ title, subtitle, imageUrl, ctaText, onCtaClick }) => {
+interface HeroSectionProps {
+  title: string;
+  subtitle: string;
+  imageUrl: string;
+  ctaText: string;
+  onCtaClick: () => void;
+}
+
+const HeroSection: React.FC<HeroSectionProps> = ({ 
+  title, 
+  subtitle, 
+  imageUrl, 
+  ctaText, 
+  onCtaClick 
+}) => {
   return (
     <div className="bg-gradient-to-b from-amber-50 to-white py-12 md:py-20">
       <div className="container mx-auto px-4">
