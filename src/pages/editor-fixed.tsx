@@ -23,7 +23,6 @@ const EditorFixedPage: React.FC = () => {
   return (
     <div className="h-screen flex flex-col">
       <BrandHeader 
-        showBackButton={true}
         onBackClick={() => navigate('/')}
       />
       

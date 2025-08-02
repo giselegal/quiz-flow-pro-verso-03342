@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { QuizQuestion } from '@/types/quiz';
+import { QuizQuestion, QuizOption } from '@/types/quiz';
 import { Trash, Plus } from 'lucide-react';
 
 interface QuestionEditorProps {
@@ -30,12 +30,13 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
     // Create a proper QuizQuestion object with all required properties
     return {
       id: `question-${Date.now()}`,
+      text: '', // Add required 'text' property  
       order: 0,
       question: '', // Add required 'question' property
       title: '', // Keep title for backward compatibility
       type: 'normal' as const,
       multiSelect: 3,
-      options: []
+      options: [] as QuizOption[]
     };
   });
 
