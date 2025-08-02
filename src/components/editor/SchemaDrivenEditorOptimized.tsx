@@ -1,10 +1,11 @@
+
 import React, { lazy, Suspense } from 'react';
 import { LoadingSpinner } from '../ui/loading-spinner';
 
 // 🚀 LAZY LOADING - Divide o bundle em chunks menores
-const SchemaDrivenEditorCore = lazy(() => 
-  import('./SchemaDrivenEditorCore').then(module => ({ 
-    default: module.SchemaDrivenEditorCore 
+const SchemaDrivenEditorResponsive = lazy(() => 
+  import('./SchemaDrivenEditorResponsive').then(module => ({ 
+    default: module.default 
   }))
 );
 
@@ -20,18 +21,18 @@ const EditorLoadingFallback = () => (
   </div>
 );
 
-interface SchemaDrivenEditorResponsiveProps {
+interface SchemaDrivenEditorOptimizedProps {
   funnelId?: string;
   className?: string;
 }
 
 // 🎯 COMPONENTE PRINCIPAL OTIMIZADO
-export const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> = (props) => {
+export const SchemaDrivenEditorOptimized: React.FC<SchemaDrivenEditorOptimizedProps> = (props) => {
   return (
     <Suspense fallback={<EditorLoadingFallback />}>
-      <SchemaDrivenEditorCore {...props} />
+      <SchemaDrivenEditorResponsive {...props} />
     </Suspense>
   );
 };
 
-export default SchemaDrivenEditorResponsive;
+export default SchemaDrivenEditorOptimized;

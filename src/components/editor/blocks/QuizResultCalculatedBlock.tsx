@@ -1,175 +1,97 @@
+
 import React from 'react';
-import { useEditorQuizContext } from '../../../contexts/EditorQuizContext';
-import { Card } from '../../ui/card';
-import { Badge } from '../../ui/badge';
-import { Crown, TrendingUp, User } from 'lucide-react';
+import type { BlockComponentProps } from '@/types/blocks';
 
-interface QuizResultCalculatedBlockProps {
-  blockId: string;
-  showUserName?: boolean;
-  showPercentages?: boolean;
-  showSecondaryStyles?: boolean;
-  maxSecondaryStyles?: number;
-  className?: string;
-  block?: any;
-  isSelected?: boolean;
-  onPropertyChange?: (key: string, value: any) => void;
-}
-
-/**
- * Componente de resultado que usa a LÓGICA REAL de cálculo
- * Conectado com useQuizLogic através do EditorQuizContext
- */
-export const QuizResultCalculatedBlock: React.FC<QuizResultCalculatedBlockProps> = ({
-  blockId,
-  showUserName = true,
-  showPercentages = true,
-  showSecondaryStyles = true,
-  maxSecondaryStyles = 3,
-  className,
+const QuizResultCalculatedBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
-  onPropertyChange
+  isEditing = false,
+  onClick,
+  onPropertyChange,
+  className = ''
 }) => {
-  // Tentar usar context do editor
-  const editorQuizContext = (() => {
-    try {
-      return useEditorQuizContext();
-    } catch {
-      return null; // Editor em modo preview
-    }
-  })();
+  const {
+    title = 'Seu Resultado',
+    showPercentages = true,
+    showSecondaryStyles = true,
+    backgroundColor = '#ffffff'
+  } = block.properties;
 
-  // Se não há context, mostrar preview
-  if (!editorQuizContext || !editorQuizContext.currentResults) {
-    return (
-      <div
-        className={`
-          w-full py-8 px-4 bg-gradient-to-br from-[#FAF9F7] to-[#F5F4F2] 
-          border-2 border-dashed border-gray-300 rounded-lg text-center
-          ${isSelected ? 'ring-2 ring-blue-500' : ''}
-          ${className}
-        `}
-      >
-        <div className="flex flex-col items-center gap-4">
-          <TrendingUp className="w-12 h-12 text-gray-400" />
-          <div>
-            <h3 className="text-lg font-semibold text-gray-600 mb-2">
-              Resultado do Quiz
-            </h3>
-            <p className="text-sm text-gray-500">
-              Complete as questões para ver o resultado calculado em tempo real
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Mock results for display
+  const mockResults = [
+    { style: 'Contemporâneo', percentage: 85, color: '#B89B7A' },
+    { style: 'Elegante', percentage: 72, color: '#8B7355' },
+    { style: 'Natural', percentage: 45, color: '#A68B5B' }
+  ];
 
-  const { currentResults, isCalculating } = editorQuizContext;
-  
-  // Usar dados de compatibilidade do QuizResult
-  const primaryStyle = currentResults.styleScores?.[0];
-  const secondaryStyles = currentResults.styleScores?.slice(1) || [];
-  const totalSelections = currentResults.styleScores?.reduce((total, style) => total + style.points, 0) || 0;
-  const userName = currentResults.participantName || 'Usuário';
-
-  if (isCalculating) {
-    return (
-      <div className={`w-full py-8 px-4 text-center ${className}`}>
-        <div className="animate-pulse">
-          <div className="w-16 h-16 bg-gray-200 rounded-full mx-auto mb-4"></div>
-          <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto mb-2"></div>
-          <div className="h-3 bg-gray-200 rounded w-1/2 mx-auto"></div>
-        </div>
-      </div>
-    );
-  }
+  const primaryResult = mockResults[0];
+  const secondaryResults = mockResults.slice(1);
 
   return (
     <div
       className={`
-        w-full py-8 px-4 transition-all duration-200
-        ${isSelected ? 'ring-2 ring-blue-500 ring-opacity-50' : ''}
+        py-8 px-4 cursor-pointer transition-all duration-200
+        ${isSelected 
+          ? 'ring-1 ring-gray-400/40 bg-gray-50/30' 
+          : 'hover:shadow-sm'
+        }
         ${className}
       `}
+      style={{ backgroundColor }}
+      onClick={onClick}
+      data-block-id={block.id}
+      data-block-type={block.type}
     >
-      <Card className="max-w-2xl mx-auto p-6 bg-gradient-to-br from-white to-[#FAF9F7]">
-        {/* Header */}
-        <div className="text-center mb-6">
-          <div className="flex items-center justify-center mb-4">
-            <Crown className="w-8 h-8 text-[#B89B7A] mr-2" />
-            <h2 className="text-2xl font-bold text-[#432818]">
-              Seu Estilo Predominante
-            </h2>
-          </div>
-          
-          {showUserName && userName && (
-            <div className="flex items-center justify-center mb-2">
-              <User className="w-4 h-4 text-gray-500 mr-1" />
-              <span className="text-gray-600">{userName}</span>
+      <div className="max-w-4xl mx-auto text-center">
+        <h2 className="text-3xl font-bold text-[#432818] mb-8">{title}</h2>
+        
+        {/* Primary Result */}
+        <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
+          <h3 className="text-2xl font-semibold mb-4" style={{ color: primaryResult.color }}>
+            Seu Estilo Principal: {primaryResult.style}
+          </h3>
+          {showPercentages && (
+            <div className="text-lg text-gray-600 mb-4">
+              {primaryResult.percentage}% de compatibilidade
             </div>
           )}
+          <div className="w-full bg-gray-200 rounded-full h-3">
+            <div 
+              className="h-3 rounded-full transition-all duration-500"
+              style={{ 
+                width: `${primaryResult.percentage}%`,
+                backgroundColor: primaryResult.color
+              }}
+            />
+          </div>
         </div>
 
-        {/* Estilo Primário */}
-        {primaryStyle && (
-          <div className="text-center mb-6">
-            <div className="mb-4">
-              <h3 className="text-3xl font-bold text-[#B89B7A] mb-2">
-                {primaryStyle.style}
-              </h3>
-              {showPercentages && (
-                <Badge variant="secondary" className="bg-[#B89B7A] text-white text-lg px-4 py-1">
-                  {primaryStyle.percentage}%
-                </Badge>
-              )}
-            </div>
-            
-            <p className="text-gray-600 mb-2">
-              {primaryStyle.points} de {totalSelections} seleções
-            </p>
-          </div>
-        )}
-
-        {/* Estilos Secundários */}
-        {showSecondaryStyles && secondaryStyles && secondaryStyles.length > 0 && (
-          <div className="border-t pt-4">
-            <h4 className="text-lg font-semibold text-[#432818] mb-3 text-center">
-              Estilos Complementares
-            </h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {secondaryStyles.slice(0, maxSecondaryStyles).map((style, index) => (
-                <div 
-                  key={style.style} 
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
-                >
-                  <span className="font-medium text-[#432818]">
-                    {style.style}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    {showPercentages && (
-                      <Badge variant="outline" className="text-xs">
-                        {style.percentage}%
-                      </Badge>
-                    )}
-                    <span className="text-sm text-gray-500">
-                      {style.points} pts
-                    </span>
-                  </div>
+        {/* Secondary Results */}
+        {showSecondaryStyles && (
+          <div className="space-y-4">
+            <h4 className="text-lg font-medium text-[#432818] mb-4">Outros estilos que combinam com você:</h4>
+            {secondaryResults.map((style: any, index: number) => (
+              <div key={index} className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-medium text-gray-800">{style.style}</span>
+                  {showPercentages && (
+                    <span className="text-gray-600">{style.percentage}%</span>
+                  )}
                 </div>
-              ))}
-            </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="h-2 rounded-full transition-all duration-500"
+                    style={{ 
+                      width: `${style.percentage}%`,
+                      backgroundColor: style.color
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
           </div>
         )}
-
-        {/* Footer com informações técnicas */}
-        <div className="mt-6 pt-4 border-t text-center">
-          <p className="text-xs text-gray-400">
-            ✅ Resultado calculado em tempo real • {totalSelections} seleções processadas
-          </p>
-        </div>
-      </Card>
+      </div>
     </div>
   );
 };
