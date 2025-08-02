@@ -1,60 +1,77 @@
 
 import React from 'react';
 import { InlineBlockProps } from '@/types/inlineBlocks';
-import { cn } from '@/lib/utils';
-import * as Icons from 'lucide-react';
+import { useInlineBlock } from '@/hooks/useInlineBlock';
+import { TrendingUp, Users, DollarSign, Target, Star, Award } from 'lucide-react';
 
-const StatInlineBlock: React.FC<InlineBlockProps> = ({ block, onUpdate, isSelected, onSelect }) => {
+const StatInlineBlock: React.FC<InlineBlockProps> = ({
+  block,
+  isSelected = false,
+  onClick,
+  onPropertyChange,
+  disabled = false,
+  className = ''
+}) => {
   const {
-    value = '1,234',
-    label = 'Estatística',
-    prefix = '',
-    suffix = '',
-    icon = '',
-    highlightColor = '#B89B7A',
-    size = 'md'
-  } = block.properties;
+    handlePropertyChange,
+    properties
+  } = useInlineBlock(block, isSelected, onClick, onPropertyChange, className);
 
-  const getSizeClasses = (size: string) => {
-    switch (size) {
-      case 'sm': return { value: 'text-2xl', label: 'text-sm', icon: 16 };
-      case 'md': return { value: 'text-3xl', label: 'text-base', icon: 20 };
-      case 'lg': return { value: 'text-4xl', label: 'text-lg', icon: 24 };
-      default: return { value: 'text-3xl', label: 'text-base', icon: 20 };
+  const {
+    value = '100',
+    label = 'Estatística',
+    trend = 'up',
+    trendValue = '+15%',
+    icon = 'trending-up',
+    color = 'primary',
+    showTrend = true
+  } = properties;
+
+  const getIcon = () => {
+    switch (icon) {
+      case 'users': return <Users className="w-6 h-6" />;
+      case 'dollar': return <DollarSign className="w-6 h-6" />;
+      case 'target': return <Target className="w-6 h-6" />;
+      case 'star': return <Star className="w-6 h-6" />;
+      case 'award': return <Award className="w-6 h-6" />;
+      default: return <TrendingUp className="w-6 h-6" />;
     }
   };
 
-  const sizeClasses = getSizeClasses(size);
+  const getColorClasses = () => {
+    switch (color) {
+      case 'success': return 'text-green-600 bg-green-50 border-green-200';
+      case 'warning': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+      case 'error': return 'text-red-600 bg-red-50 border-red-200';
+      case 'info': return 'text-blue-600 bg-blue-50 border-blue-200';
+      default: return 'text-[#B89B7A] bg-[#FFF7F3] border-[#B89B7A]/20';
+    }
+  };
 
-  // Get icon component if specified
-  const IconComponent = icon && Icons[icon as keyof typeof Icons] as React.ComponentType<any>;
+  const getTrendColor = () => {
+    return trend === 'up' ? 'text-green-600' : 'text-red-600';
+  };
 
   return (
     <div
-      onClick={onSelect}
-      className={cn(
-        'text-center space-y-2 cursor-pointer p-4 rounded-lg transition-all duration-200',
-        isSelected && 'ring-2 ring-blue-500 ring-offset-2'
-      )}
+      className={`p-6 rounded-lg border transition-all duration-200 hover:shadow-md cursor-pointer ${getColorClasses()} ${
+        isSelected ? 'ring-2 ring-[#B89B7A] ring-opacity-50' : ''
+      } ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
+      onClick={!disabled ? onClick : undefined}
     >
-      {IconComponent && (
-        <div className="flex justify-center">
-          <IconComponent 
-            size={sizeClasses.icon} 
-            style={{ color: highlightColor }}
-          />
+      <div className="flex items-center justify-between">
+        <div className="flex-1">
+          <div className="flex items-center gap-3 mb-2">
+            {getIcon()}
+            <div className="text-3xl font-bold">{value}</div>
+          </div>
+          <div className="text-sm opacity-75">{label}</div>
+          {showTrend && (
+            <div className={`text-xs font-medium mt-1 ${getTrendColor()}`}>
+              {trendValue}
+            </div>
+          )}
         </div>
-      )}
-      
-      <div 
-        className={cn('font-bold', sizeClasses.value)}
-        style={{ color: highlightColor }}
-      >
-        {prefix}{value}{suffix}
-      </div>
-      
-      <div className={cn('text-[#8F7A6A]', sizeClasses.label)}>
-        {label}
       </div>
     </div>
   );

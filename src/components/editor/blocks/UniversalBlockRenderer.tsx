@@ -2,7 +2,7 @@
 import React from 'react';
 import { Block } from '@/types/editor';
 
-// Import available inline components with default imports
+// Import available inline components
 import TextInlineBlock from './inline/TextInlineBlock';
 import BadgeInlineBlock from './inline/BadgeInlineBlock';
 import ProgressInlineBlock from './inline/ProgressInlineBlock';
@@ -56,11 +56,13 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
   // Map block types to components
   const componentMap: Record<string, React.ComponentType<any>> = {
     'text-inline': TextInlineBlock,
+    'text': TextInlineBlock,
     'badge-inline': BadgeInlineBlock,
     'progress-inline': ProgressInlineBlock,
     'stat-inline': StatInlineBlock,
     'countdown-inline': CountdownInlineBlock,
     'spacer-inline': SpacerInlineBlock,
+    'spacer': SpacerInlineBlock,
     'pricing-card-inline': PricingCardInlineBlock,
     'testimonial-card-inline': TestimonialCardInlineBlock,
     'style-card-inline': StyleCardInlineBlock,
@@ -89,3 +91,4 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
 };
 
 export default UniversalBlockRenderer;
+export { UniversalBlockRenderer };

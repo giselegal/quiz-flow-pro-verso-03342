@@ -1,21 +1,20 @@
 
 import React from 'react';
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { EditorBlock } from '@/types/editor';
-import { UniversalBlockRenderer } from '../blocks/UniversalBlockRenderer';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { DndContext, DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { Block } from '@/types/editor';
+import UniversalBlockRenderer from '../blocks/UniversalBlockRenderer';
+import { SortableBlockWrapper } from './SortableBlockWrapper';
 
 interface EditorCanvasProps {
-  blocks: EditorBlock[];
+  blocks: Block[];
   selectedBlockId: string | null;
-  onSelectBlock: (id: string | null) => void;
-  onUpdateBlock: (id: string, updates: Partial<EditorBlock>) => void;
-  onDeleteBlock: (id: string) => void;
-  onReorderBlocks: (startIndex: number, endIndex: number) => void;
-  isPreviewing: boolean;
-  viewportSize: 'sm' | 'md' | 'lg' | 'xl';
+  onSelectBlock: (blockId: string) => void;
+  onUpdateBlock: (blockId: string, properties: any) => void;
+  onDeleteBlock: (blockId: string) => void;
+  onReorderBlocks: (sourceIndex: number, destinationIndex: number) => void;
+  isPreviewing?: boolean;
+  viewportSize?: 'sm' | 'md' | 'lg';
 }
 
 export const EditorCanvas: React.FC<EditorCanvasProps> = ({
@@ -25,91 +24,77 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
   onUpdateBlock,
   onDeleteBlock,
   onReorderBlocks,
-  isPreviewing,
-  viewportSize
+  isPreviewing = false,
+  viewportSize = 'lg'
 }) => {
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-
-  const handleDragEnd = (event: any) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-
+    
     if (!over || active.id === over.id) return;
-
-    const activeIndex = blocks.findIndex(block => block.id === active.id);
-    const overIndex = blocks.findIndex(block => block.id === over.id);
-
-    if (activeIndex !== -1 && overIndex !== -1) {
-      onReorderBlocks(activeIndex, overIndex);
+    
+    const oldIndex = blocks.findIndex((block) => block.id === active.id);
+    const newIndex = blocks.findIndex((block) => block.id === over.id);
+    
+    if (oldIndex !== -1 && newIndex !== -1) {
+      onReorderBlocks(oldIndex, newIndex);
     }
   };
 
-  if (blocks.length === 0) {
+  const getViewportClasses = () => {
+    switch (viewportSize) {
+      case 'sm': return 'max-w-sm mx-auto';
+      case 'md': return 'max-w-md mx-auto';
+      case 'lg': return 'max-w-4xl mx-auto';
+      default: return 'max-w-4xl mx-auto';
+    }
+  };
+
+  const handleUpdateBlock = (blockId: string, updates: any) => {
+    onUpdateBlock(blockId, updates);
+  };
+
+  if (isPreviewing) {
     return (
-      <div className="h-full flex flex-col items-center justify-center p-8 bg-white">
-        <div className="text-center space-y-4">
-          <div className="text-4xl mb-4">🎨</div>
-          <h3 className="text-xl font-medium text-gray-900">Canvas vazio</h3>
-          <p className="text-gray-600 max-w-md">
-            Adicione componentes da barra lateral para começar a construir sua página
-          </p>
+      <div className={`p-4 ${getViewportClasses()}`}>
+        <div className="space-y-4">
+          {blocks.map((block) => (
+            <div key={block.id} className="w-full">
+              <UniversalBlockRenderer
+                block={block}
+                isSelected={false}
+                disabled={true}
+              />
+            </div>
+          ))}
         </div>
       </div>
     );
   }
 
   return (
-    <div className="h-full overflow-auto bg-gray-50">
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="bg-white rounded-lg shadow-sm min-h-[600px] p-6">
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext 
-              items={blocks.map(block => block.id)} 
-              strategy={verticalListSortingStrategy}
-            >
-              <div className="space-y-4">
-                {blocks.map((block) => (
-                  <div
-                    key={block.id}
-                    className={`
-                      relative transition-all duration-200
-                      ${selectedBlockId === block.id 
-                        ? 'ring-2 ring-blue-500 ring-opacity-50' 
-                        : 'hover:ring-1 hover:ring-gray-300'
-                      }
-                      ${isPreviewing ? '' : 'cursor-pointer'}
-                    `}
-                    onClick={() => !isPreviewing && onSelectBlock(block.id)}
-                  >
-                    <UniversalBlockRenderer
-                      block={block}
-                      isSelected={selectedBlockId === block.id}
-                      onSelect={() => onSelectBlock(block.id)}
-                      onUpdate={(updates) => onUpdateBlock(block.id, updates)}
-                      onDelete={() => onDeleteBlock(block.id)}
-                      isPreview={isPreviewing}
-                    />
-                  </div>
-                ))}
+    <div className={`p-4 ${getViewportClasses()}`}>
+      <DndContext onDragEnd={handleDragEnd}>
+        <SortableContext items={blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
+          <div className="space-y-4">
+            {blocks.map((block) => (
+              <SortableBlockWrapper
+                key={block.id}
+                block={block}
+                isSelected={selectedBlockId === block.id}
+                onSelect={() => onSelectBlock(block.id)}
+                onUpdate={(updates) => handleUpdateBlock(block.id, updates)}
+                onDelete={() => onDeleteBlock(block.id)}
+              />
+            ))}
+            {blocks.length === 0 && (
+              <div className="text-center py-12 text-gray-500">
+                <p>Nenhum componente adicionado ainda.</p>
+                <p className="text-sm">Arraste componentes da barra lateral para começar.</p>
               </div>
-            </SortableContext>
-          </DndContext>
-        </div>
-      </div>
+            )}
+          </div>
+        </SortableContext>
+      </DndContext>
     </div>
   );
 };
-
-export default EditorCanvas;
