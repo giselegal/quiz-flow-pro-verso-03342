@@ -62,11 +62,11 @@ export interface QuizAnswer {
 export interface UserResponse {
   questionId: string;
   optionId: string;
-  selectedOptions?: string[]; // For backward compatibility
+  selectedOptions?: string[];
   timestamp?: Date;
 }
 
-// Add missing QuizResponse export for compatibility
+// QuizResponse interface for compatibility
 export interface QuizResponse {
   questionId: string;
   selectedOptions: string[];

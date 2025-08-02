@@ -14,7 +14,7 @@ export interface BlockDefinition {
   category: string;
   icon: any;
   defaultProps: Record<string, any>;
-  properties?: Record<string, any>; // Make properties optional for BlockDefinition
+  properties: Record<string, any>;
 }
 
 export interface BlockComponentProps {
@@ -33,6 +33,7 @@ export interface BlockComponentProps {
 export interface UserResponse {
   questionId: string;
   optionId: string;
+  selectedOptions?: string[];
   timestamp?: Date;
 }
 
@@ -44,7 +45,7 @@ export const createBlockData = (type: string): BlockData => ({
   order: 0
 });
 
-// Extended interfaces for specific block types - properly extending BlockData
+// Extended interfaces for specific block types - all properly extending BlockData
 export interface CountdownTimerBlock extends BlockData {
   type: "countdown-timer";
   content: {
@@ -87,12 +88,18 @@ export interface CountdownTimerBlock extends BlockData {
   };
 }
 
+export interface FAQItem {
+  id: string;
+  question: string;
+  answer: string;
+}
+
 export interface FAQBlock extends BlockData {
   type: "faq";
   content: {
     title?: string;
     subtitle?: string;
-    faqs?: Array<{ id: string; question: string; answer: string }>;
+    faqs?: FAQItem[];
     layout?: 'minimal' | 'cards' | 'accordion';
     showSearch?: boolean;
     allowMultipleOpen?: boolean;
@@ -105,7 +112,7 @@ export interface FAQBlock extends BlockData {
   properties: {
     title?: string;
     subtitle?: string;
-    faqs?: Array<{ id: string; question: string; answer: string }>;
+    faqs?: FAQItem[];
     layout?: 'minimal' | 'cards' | 'accordion';
     showSearch?: boolean;
     allowMultipleOpen?: boolean;
@@ -117,21 +124,23 @@ export interface FAQBlock extends BlockData {
   };
 }
 
+export interface PricingPlan {
+  id: string;
+  name: string;
+  price: string;
+  originalPrice?: string;
+  features: string[];
+  isPopular?: boolean;
+  buttonText?: string;
+  buttonUrl?: string;
+}
+
 export interface PriceComparisonBlock extends BlockData {
   type: "price-comparison";
   content: {
     title?: string;
     subtitle?: string;
-    plans?: Array<{
-      id: string;
-      name: string;
-      price: string;
-      originalPrice?: string;
-      features: string[];
-      isPopular?: boolean;
-      buttonText?: string;
-      buttonUrl?: string;
-    }>;
+    plans?: PricingPlan[];
     layout?: 'table' | 'cards' | 'minimal';
     showPopularBadge?: boolean;
     showOriginalPrice?: boolean;
@@ -142,16 +151,7 @@ export interface PriceComparisonBlock extends BlockData {
   properties: {
     title?: string;
     subtitle?: string;
-    plans?: Array<{
-      id: string;
-      name: string;
-      price: string;
-      originalPrice?: string;
-      features: string[];
-      isPopular?: boolean;
-      buttonText?: string;
-      buttonUrl?: string;
-    }>;
+    plans?: PricingPlan[];
     layout?: 'table' | 'cards' | 'minimal';
     showPopularBadge?: boolean;
     showOriginalPrice?: boolean;
@@ -159,6 +159,13 @@ export interface PriceComparisonBlock extends BlockData {
     billingPeriod?: string;
     cardStyle?: 'modern' | 'classic' | 'minimal' | 'gradient';
   };
+}
+
+export interface ProsConsItem {
+  id: string;
+  text: string;
+  icon?: string;
+  highlight?: boolean;
 }
 
 export interface ProsConsBlock extends BlockData {
@@ -168,8 +175,8 @@ export interface ProsConsBlock extends BlockData {
     subtitle?: string;
     prosTitle?: string;
     consTitle?: string;
-    pros: Array<{ id: string; text: string; icon?: string; highlight?: boolean }>;
-    cons: Array<{ id: string; text: string; icon?: string; highlight?: boolean }>;
+    pros: ProsConsItem[];
+    cons: ProsConsItem[];
     layout?: 'side-by-side' | 'stacked';
     prosColor?: string;
     consColor?: string;
@@ -181,8 +188,8 @@ export interface ProsConsBlock extends BlockData {
     subtitle?: string;
     prosTitle?: string;
     consTitle?: string;
-    pros: Array<{ id: string; text: string; icon?: string; highlight?: boolean }>;
-    cons: Array<{ id: string; text: string; icon?: string; highlight?: boolean }>;
+    pros: ProsConsItem[];
+    cons: ProsConsItem[];
     layout?: 'side-by-side' | 'stacked';
     prosColor?: string;
     consColor?: string;
@@ -191,12 +198,20 @@ export interface ProsConsBlock extends BlockData {
   };
 }
 
+export interface Stat {
+  id: string;
+  value: string;
+  label: string;
+  icon?: string;
+  color?: string;
+}
+
 export interface StatsMetricsBlock extends BlockData {
   type: "stats-metrics";
   content: {
     title?: string;
     subtitle?: string;
-    stats?: Array<{ id: string; value: string; label: string; icon?: string; color?: string }>;
+    stats?: Stat[];
     layout?: 'grid' | 'horizontal' | 'vertical' | 'cards';
     columns?: number;
     showIcons?: boolean;
@@ -208,7 +223,7 @@ export interface StatsMetricsBlock extends BlockData {
   properties: {
     title?: string;
     subtitle?: string;
-    stats?: Array<{ id: string; value: string; label: string; icon?: string; color?: string }>;
+    stats?: Stat[];
     layout?: 'grid' | 'horizontal' | 'vertical' | 'cards';
     columns?: number;
     showIcons?: boolean;

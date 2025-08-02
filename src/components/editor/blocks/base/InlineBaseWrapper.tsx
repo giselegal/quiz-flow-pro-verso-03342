@@ -16,8 +16,9 @@ export interface InlineBaseWrapperProps {
   trackingData?: Record<string, any>;
   isLoading?: boolean;
   onMove?: (direction: 'up' | 'down') => void;
-  responsive?: boolean | Record<string, any>; // Allow both boolean and object
+  responsive?: boolean | Record<string, any>;
   onEdit?: () => void;
+  maxWidth?: string;
   // Additional compatibility props
   block?: BlockData;
   isSelected?: boolean;
@@ -39,6 +40,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
   onMove,
   responsive = false,
   onEdit,
+  maxWidth,
   // Compatibility props (ignored for now)
   block,
   isSelected,
@@ -79,7 +81,10 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
         isResponsive && 'w-full',
         className
       )}
-      style={{ minHeight }}
+      style={{ 
+        minHeight,
+        maxWidth: maxWidth || undefined
+      }}
     >
       {children}
     </div>
