@@ -19,6 +19,11 @@ export interface InlineBaseWrapperProps {
   responsive?: boolean | Record<string, any>;
   onEdit?: () => void;
   maxWidth?: string;
+  showControls?: boolean;
+  disabled?: boolean;
+  isDraggable?: boolean;
+  onDuplicate?: () => void;
+  onDelete?: () => void;
   // Additional compatibility props
   block?: BlockData;
   isSelected?: boolean;

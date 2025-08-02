@@ -3,7 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 
 export interface InlineEditableTextProps {
-  text: string;
+  text?: string;
+  value?: string; // Compatibilidade com props value
   onChange: (value: string) => void;
   placeholder?: string;
   className?: string;
@@ -24,10 +25,12 @@ export interface InlineEditableTextProps {
   minHeight?: string;
   maxWidth?: string;
   responsive?: boolean | Record<string, any>;
+  maxLines?: number;
 }
 
 const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   text,
+  value,
   onChange,
   placeholder = 'Digite aqui...',
   className = '',
@@ -42,29 +45,33 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   onFocus,
   onBlur,
   style,
-  isEditing = false,
+  isEditing: editingProp = false,
   onEdit,
   minHeight,
   maxWidth,
-  responsive
+  responsive,
+  maxLines = 3
 }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [value, setValue] = useState(text);
+  // Compatibilidade: usar value se fornecido, senão text
+  const displayText = value !== undefined ? value : text || '';
+  
+  const [isEditing, setIsEditing] = useState(editingProp);
+  const [internalValue, setInternalValue] = useState(displayText);
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    setValue(text);
-  }, [text]);
+    setInternalValue(displayText);
+  }, [displayText]);
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
       if (inputRef.current.setSelectionRange) {
-        const len = value.length;
+        const len = internalValue.length;
         inputRef.current.setSelectionRange(len, len);
       }
     }
-  }, [isEditing, value]);
+  }, [isEditing, internalValue]);
 
   const handleClick = () => {
     if (!disabled && !isEditing) {
@@ -76,13 +83,13 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const newValue = e.target.value;
     if (!maxLength || newValue.length <= maxLength) {
-      setValue(newValue);
+      setInternalValue(newValue);
     }
   };
 
   const handleBlur = () => {
     setIsEditing(false);
-    onChange(value);
+    onChange(internalValue);
     onBlur?.();
   };
 
@@ -92,7 +99,7 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
       handleBlur();
     }
     if (e.key === 'Escape') {
-      setValue(text);
+      setInternalValue(displayText);
       setIsEditing(false);
     }
   };
@@ -132,14 +139,14 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
     className
   );
 
-  const displayValue = value || placeholder;
+  const displayValue = internalValue || placeholder;
 
   if (isEditing) {
     const Component = multiline ? 'textarea' : 'input';
     return (
       <Component
         ref={inputRef as any}
-        value={value}
+        value={internalValue}
         onChange={handleChange}
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
