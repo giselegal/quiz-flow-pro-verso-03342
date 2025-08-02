@@ -11,7 +11,7 @@ interface QuizResultPropertiesProps {
   onUpdate: (data: any) => void;
 }
 
-const QuizResultProperties: React.FC<QuizResultPropertiesProps> = ({ data, onUpdate }) => {
+const QuizResultProperties: React.FC<QuizResultPropertiesProps> = ({ data = {}, onUpdate }) => {
   return (
     <div className="space-y-5">
       <div className="space-y-2">

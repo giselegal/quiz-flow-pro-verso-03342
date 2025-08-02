@@ -3,63 +3,67 @@ import React from 'react';
 import { QuizComponentData } from '@/types/quizBuilder';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Upload } from 'lucide-react';
 
 interface ImagePropertiesProps {
-  data: QuizComponentData['data'];
-  onUpdate: (data: any) => void;
+  component: QuizComponentData;
+  onUpdate: (id: string, data: any) => void;
 }
 
-const ImageProperties: React.FC<ImagePropertiesProps> = ({ data, onUpdate }) => {
+export const ImageProperties: React.FC<ImagePropertiesProps> = ({
+  component,
+  onUpdate
+}) => {
+  const data = component.data || {};
+
+  const handleUpdate = (field: string, value: any) => {
+    onUpdate(component.id, {
+      ...data,
+      [field]: value
+    });
+  };
+
   return (
     <div className="space-y-4">
-      <div className="space-y-2">
+      <div>
         <Label htmlFor="imageUrl">URL da Imagem</Label>
         <Input
           id="imageUrl"
           value={data.imageUrl || ''}
-          onChange={(e) => onUpdate({ ...data, imageUrl: e.target.value })}
+          onChange={(e) => handleUpdate('imageUrl', e.target.value)}
           placeholder="https://exemplo.com/imagem.jpg"
         />
-        
-        <div className="mt-2">
-          <Button 
-            variant="outline" 
-            className="w-full h-24 border-dashed flex flex-col gap-2"
-          >
-            <Upload className="w-5 h-5" />
-            <span className="text-xs">Upload de Imagem</span>
-          </Button>
-        </div>
-        
-        {data.imageUrl && (
-          <div className="mt-4">
-            <p className="text-xs text-gray-500 mb-1">Preview:</p>
-            <img 
-              src={data.imageUrl} 
-              alt={data.alt || 'Preview'} 
-              className="max-h-32 rounded-md object-contain"
-            />
-          </div>
-        )}
       </div>
       
-      <div className="space-y-2">
+      <div>
         <Label htmlFor="alt">Texto Alternativo</Label>
         <Input
           id="alt"
           value={data.alt || ''}
-          onChange={(e) => onUpdate({ ...data, alt: e.target.value })}
+          onChange={(e) => handleUpdate('alt', e.target.value)}
           placeholder="Descrição da imagem"
         />
-        <p className="text-xs text-gray-500 mt-1">
-          Forneça uma descrição da imagem para acessibilidade
-        </p>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-2">
+        <div>
+          <Label htmlFor="width">Largura</Label>
+          <Input
+            id="width"
+            value={data.width || ''}
+            onChange={(e) => handleUpdate('width', e.target.value)}
+            placeholder="100%"
+          />
+        </div>
+        <div>
+          <Label htmlFor="height">Altura</Label>
+          <Input
+            id="height"
+            value={data.height || ''}
+            onChange={(e) => handleUpdate('height', e.target.value)}
+            placeholder="auto"
+          />
+        </div>
       </div>
     </div>
   );
 };
-
-export default ImageProperties;

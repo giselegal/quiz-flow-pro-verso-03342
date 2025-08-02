@@ -9,7 +9,7 @@ import BuilderLayout from './components/BuilderLayout';
 import { StagesPanel } from './StagesPanel';
 import { PropertiesPanel } from './PropertiesPanel';
 import { QuizComponentType, QuizComponentData } from '@/types/quizBuilder';
-import { StyleResult } from '@/types/quiz';
+import { StyleResult, StyleType } from '@/types/quiz';
 
 const QuizBuilder: React.FC = () => {
   const {
@@ -46,23 +46,32 @@ const QuizBuilder: React.FC = () => {
     );
   }
 
-  // Mock data for preview
+  // Mock data for preview - properly formatted StyleResult objects
   const mockPrimaryStyle: StyleResult = {
     category: 'Natural',
     score: 85,
-    percentage: 45.2
+    percentage: 45.2,
+    style: 'natural' as StyleType,
+    points: 85,
+    rank: 1
   };
 
   const mockSecondaryStyles: StyleResult[] = [
     {
       category: 'Clássico',
       score: 70,
-      percentage: 32.1
+      percentage: 32.1,
+      style: 'classico' as StyleType,
+      points: 70,
+      rank: 2
     },
     {
       category: 'Romântico',
       score: 65,
-      percentage: 22.7
+      percentage: 22.7,
+      style: 'romantico' as StyleType,
+      points: 65,
+      rank: 3
     }
   ];
 
@@ -162,7 +171,6 @@ const QuizBuilder: React.FC = () => {
               onStageAdd={handleAddStage}
               onStageUpdate={updateStage}
               onStageDelete={deleteStage}
-              onStageMove={moveStage}
             />
           </ResizablePanel>
 

@@ -26,7 +26,6 @@ const StagePreview: React.FC<StagePreviewProps> = ({ stage, components }) => {
         <ComponentRenderer
           key={component.id}
           component={component}
-          isPreviewing={true}
           isSelected={false}
         />
       ))}

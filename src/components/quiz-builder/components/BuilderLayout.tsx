@@ -58,7 +58,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({
         <ResizablePanel defaultSize={55}>
           <PreviewPanel 
             components={stageComponents}
-            selectedComponentId={selectedComponentId}
+            selectedComponentId={selectedComponentId || undefined}
             onComponentSelect={handleComponentSelect}
           />
         </ResizablePanel>

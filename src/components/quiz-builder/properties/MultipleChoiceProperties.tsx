@@ -1,73 +1,61 @@
 
 import React from 'react';
+import { QuizComponentData } from '@/types/quizBuilder';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { QuizComponentData } from '@/types/quizBuilder';
+import { Textarea } from '@/components/ui/textarea';
 
 interface MultipleChoicePropertiesProps {
-  data: QuizComponentData['data'];
-  onUpdate: (id: string, updates: Partial<QuizComponentData>) => void;
-  componentId: string;
+  component: QuizComponentData;
+  onUpdate: (id: string, data: any) => void;
 }
 
 export const MultipleChoiceProperties: React.FC<MultipleChoicePropertiesProps> = ({
-  data,
-  onUpdate,
-  componentId
+  component,
+  onUpdate
 }) => {
+  const data = component.data || {};
+
+  const handleUpdate = (field: string, value: any) => {
+    onUpdate(component.id, {
+      ...data,
+      [field]: value
+    });
+  };
+
   return (
     <div className="space-y-4">
       <div>
-        <Label>Pergunta</Label>
-        <Input
+        <Label htmlFor="question">Pergunta</Label>
+        <Textarea
+          id="question"
           value={data.question || ''}
-          onChange={(e) => onUpdate(componentId, { 
-            data: { ...data, question: e.target.value } 
-          })}
-          placeholder="Digite a pergunta"
+          onChange={(e) => handleUpdate('question', e.target.value)}
+          placeholder="Digite sua pergunta"
+          rows={3}
         />
       </div>
-
+      
       <div>
-        <Label>Número mínimo de seleções</Label>
+        <Label htmlFor="options">Opções (uma por linha)</Label>
+        <Textarea
+          id="options"
+          value={(data.options || []).join('\n')}
+          onChange={(e) => handleUpdate('options', e.target.value.split('\n').filter(opt => opt.trim()))}
+          placeholder="Opção 1\nOpção 2\nOpção 3"
+          rows={4}
+        />
+      </div>
+      
+      <div>
+        <Label htmlFor="multiSelect">Máximo de seleções</Label>
         <Input
+          id="multiSelect"
           type="number"
-          value={data.minSelections || 1}
-          onChange={(e) => onUpdate(componentId, { 
-            data: { ...data, minSelections: Number(e.target.value) } 
-          })}
+          min="1"
+          value={data.multiSelect || 1}
+          onChange={(e) => handleUpdate('multiSelect', parseInt(e.target.value) || 1)}
         />
-      </div>
-
-      <div>
-        <Label>Número máximo de seleções</Label>
-        <Input
-          type="number"
-          value={data.maxSelections || 1}
-          onChange={(e) => onUpdate(componentId, { 
-            data: { ...data, maxSelections: Number(e.target.value) } 
-          })}
-        />
-      </div>
-
-      <div>
-        <Label>Tipo de exibição</Label>
-        <Select 
-          value={data.displayType || 'text'}
-          onValueChange={(value) => onUpdate(componentId, { 
-            data: { ...data, displayType: value as 'text' | 'image' | 'both' } 
-          })}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="text">Apenas texto</SelectItem>
-            <SelectItem value="image">Apenas imagem</SelectItem>
-            <SelectItem value="both">Texto e imagem</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
     </div>
   );
