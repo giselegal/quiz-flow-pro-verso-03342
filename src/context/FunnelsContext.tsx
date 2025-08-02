@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 
@@ -106,7 +107,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
     if (!template) return;
 
     setSteps(currentSteps => {
-      return currentSteps.map(step => {
+      return currentSteps.map((step: any) => {
         if (step.id === stepId) {
           return { ...step, ...updates };
         }
@@ -129,30 +130,25 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
     });
   }, []);
 
+  // Fix the Supabase upsert call - need to provide proper funnel data structure
   const saveFunnelToDatabase = useCallback(async (funnelData: any) => {
     setLoading(true);
     setError(null);
     
     try {
       const funnelRecord = {
-        name: funnelData.name || 'Sem nome',
+        id: currentFunnelId,
+        name: funnelData.name || 'Funnel sem nome',
         description: funnelData.description || '',
         is_published: funnelData.isPublished || false,
         settings: { theme: funnelData.theme || 'default' },
+        user_id: 'anonymous', // This should come from auth in real implementation
         updated_at: new Date().toISOString()
       };
 
-      const updateData: Record<string, any> = {};
-      Object.keys(funnelRecord).forEach(key => {
-        updateData[key] = (funnelRecord as any)[key];
-      });
-
       const { data, error: supabaseError } = await supabase
         .from('funnels')
-        .upsert([{
-          id: currentFunnelId,
-          ...updateData
-        }])
+        .upsert([funnelRecord])
         .select();
 
       if (supabaseError) {

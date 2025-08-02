@@ -4,6 +4,8 @@ import { QuizQuestion } from '../../types/quiz';
 export const accessoryStyleQuestions: QuizQuestion[] = [
   {
     id: '9',
+    order: 9,
+    question: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?',
     title: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?',
     type: 'both',
     multiSelect: 3,
