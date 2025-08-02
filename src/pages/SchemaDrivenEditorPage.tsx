@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useRoute } from 'wouter';
-import { SchemaDrivenEditorClean } from '@/components/editor/SchemaDrivenEditorClean';
+import SchemaDrivenEditorResponsive from '@/components/editor/SchemaDrivenEditorResponsive';
 
 const SchemaDrivenEditorPage: React.FC = () => {
   const [match, params] = useRoute('/editor/:id');
@@ -9,7 +9,7 @@ const SchemaDrivenEditorPage: React.FC = () => {
 
   return (
     <div className="h-screen w-full overflow-hidden bg-gray-50">
-      <SchemaDrivenEditorClean funnelId={funnelId} />
+      <SchemaDrivenEditorResponsive funnelId={funnelId} />
     </div>
   );
 };
