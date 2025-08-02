@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { InlineEditText } from './InlineEditText';
@@ -69,7 +70,7 @@ const QuizTitleBlock: React.FC<QuizTitleBlockProps> = ({
     >
       <InlineEditText
         value={title}
-        onChange={(value) => handlePropertyChange('title', value)}
+        onSave={(value: string) => handlePropertyChange('title', value)}
         placeholder="Título do quiz"
         className={cn(
           textAlignClass,

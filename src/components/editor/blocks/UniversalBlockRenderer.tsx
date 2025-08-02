@@ -1,94 +1,85 @@
+
 import React from 'react';
-import { EditorBlock } from '@/types/editor';
+import { Block } from '@/types/editor';
 
-// Importações existentes
-import HeaderBlock from './HeaderBlock';
-import TextBlock from './TextBlock';
-import { ImageBlock } from './ImageBlock';
-import ButtonBlock from './ButtonBlock';
-import { SpacerBlock } from './SpacerBlock';
+// Import available inline components
+import TextInlineBlock from './inline/TextInlineBlock';
+import BadgeInlineBlock from './inline/BadgeInlineBlock';
+import ProgressInlineBlock from './inline/ProgressInlineBlock';
+import StatInlineBlock from './inline/StatInlineBlock';
+import CountdownInlineBlock from './inline/CountdownInlineBlock';
+import SpacerInlineBlock from './inline/SpacerInlineBlock';
+import PricingCardInlineBlock from './inline/PricingCardInlineBlock';
+import TestimonialCardInlineBlock from './inline/TestimonialCardInlineBlock';
+import StyleCardInlineBlock from './inline/StyleCardInlineBlock';
+import ResultCardInlineBlock from './inline/ResultCardInlineBlock';
+import ResultHeaderInlineBlock from './inline/ResultHeaderInlineBlock';
+import StepHeaderInlineBlock from './inline/StepHeaderInlineBlock';
+import SecondaryStylesInlineBlock from './inline/SecondaryStylesInlineBlock';
+import StyleCharacteristicsInlineBlock from './inline/StyleCharacteristicsInlineBlock';
+import QuizIntroHeaderBlock from './inline/QuizIntroHeaderBlock';
+import LoadingAnimationBlock from './inline/LoadingAnimationBlock';
+import CharacteristicsListInlineBlock from './inline/CharacteristicsListInlineBlock';
+import BeforeAfterInlineBlock from './inline/BeforeAfterInlineBlock';
+import BonusListInlineBlock from './inline/BonusListInlineBlock';
 
-// Blocos inline
-import { TextInlineBlock } from './inline/TextInlineBlock';
-import { ImageDisplayInlineBlock } from './inline/ImageDisplayInlineBlock';
-import { ButtonInlineBlock } from './inline/ButtonInlineBlock';
-import { CountdownInlineBlock } from './inline/CountdownInlineBlock';
-import { ResultCardInlineBlock } from './inline/ResultCardInlineBlock';
-import { PricingCardInlineBlock } from './inline/PricingCardInlineBlock';
-import HeadingInlineBlock from './inline/HeadingInlineBlock';
-
-export interface BlockRendererProps {
-  block: EditorBlock;
+interface UniversalBlockRendererProps {
+  block: Block;
   isSelected?: boolean;
-  onSelect?: () => void;
-  onUpdate?: (content: any) => void;
-  onDelete?: () => void;
-  isPreviewing?: boolean;
-  viewportSize?: 'sm' | 'md' | 'lg' | 'xl';
-  primaryStyle?: any;
+  onClick?: () => void;
+  onPropertyChange?: (key: string, value: any) => void;
+  disabled?: boolean;
 }
 
-export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
+const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
   block,
   isSelected = false,
-  onSelect,
-  onUpdate,
-  onDelete,
-  isPreviewing = false,
-  viewportSize = 'lg',
-  primaryStyle
+  onClick,
+  onPropertyChange,
+  disabled = false
 }) => {
-  const commonProps = {
+  const blockProps = {
     block,
     isSelected,
-    onSelect,
-    onUpdate,
-    onDelete,
-    isPreviewing,
-    viewportSize,
-    primaryStyle
+    onClick,
+    onPropertyChange,
+    disabled
   };
 
-  // Mapeamento de componentes - incluindo o heading-inline
-  const componentMap: Record<string, () => JSX.Element> = {
-    // Componentes básicos
-    'header': () => <HeaderBlock {...commonProps} />,
-    'text': () => <TextBlock {...commonProps} />,
-    'image': () => <ImageBlock {...commonProps} />,
-    'button': () => <ButtonBlock {...commonProps} />,
-    'spacer': () => <SpacerBlock {...commonProps} />,
-
-    // Componentes inline - adicionando o heading-inline
-    'text-inline': () => <TextInlineBlock {...commonProps} />,
-    'heading-inline': () => <HeadingInlineBlock {...commonProps} />,
-    'image-display-inline': () => <ImageDisplayInlineBlock {...commonProps} />,
-    'button-inline': () => <ButtonInlineBlock {...commonProps} />,
-    'countdown-inline': () => <CountdownInlineBlock {...commonProps} />,
-    'result-card-inline': () => <ResultCardInlineBlock {...commonProps} />,
-    'pricing-card-inline': () => <PricingCardInlineBlock {...commonProps} />,
+  // Map block types to components
+  const componentMap: Record<string, React.ComponentType<any>> = {
+    'text-inline': TextInlineBlock,
+    'badge-inline': BadgeInlineBlock,
+    'progress-inline': ProgressInlineBlock,
+    'stat-inline': StatInlineBlock,
+    'countdown-inline': CountdownInlineBlock,
+    'spacer-inline': SpacerInlineBlock,
+    'pricing-card-inline': PricingCardInlineBlock,
+    'testimonial-card-inline': TestimonialCardInlineBlock,
+    'style-card-inline': StyleCardInlineBlock,
+    'result-card-inline': ResultCardInlineBlock,
+    'result-header-inline': ResultHeaderInlineBlock,
+    'step-header-inline': StepHeaderInlineBlock,
+    'secondary-styles-inline': SecondaryStylesInlineBlock,
+    'style-characteristics-inline': StyleCharacteristicsInlineBlock,
+    'quiz-intro-header': QuizIntroHeaderBlock,
+    'loading-animation': LoadingAnimationBlock,
+    'characteristics-list-inline': CharacteristicsListInlineBlock,
+    'before-after-inline': BeforeAfterInlineBlock,
+    'bonus-list-inline': BonusListInlineBlock
   };
 
-  const ComponentToRender = componentMap[block.type];
+  const Component = componentMap[block.type];
 
-  if (!ComponentToRender) {
-    console.error(`Componente não encontrado para o tipo de bloco: ${block.type}`);
+  if (!Component) {
     return (
-      <div className="p-4 border-2 border-dashed border-red-300 bg-red-50 rounded-lg text-center">
-        <p className="text-red-600 font-medium">Componente não encontrado</p>
-        <p className="text-sm text-red-500">Tipo: {block.type}</p>
+      <div className="p-4 border border-red-300 bg-red-50 rounded-lg text-red-600">
+        Componente não encontrado: {block.type}
       </div>
     );
   }
 
-  return (
-    <div 
-      className={`block-renderer ${isSelected ? 'selected' : ''}`}
-      data-block-type={block.type}
-      data-block-id={block.id}
-    >
-      <ComponentToRender />
-    </div>
-  );
+  return <Component {...blockProps} />;
 };
 
 export default UniversalBlockRenderer;

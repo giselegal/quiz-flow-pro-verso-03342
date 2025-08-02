@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -62,7 +63,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
         <div className="flex justify-between items-center mb-2">
           <InlineEditText
             value={progressLabel}
-            onChange={(value) => handlePropertyChange('progressLabel', value)}
+            onSave={(value: string) => handlePropertyChange('progressLabel', value)}
             placeholder="Label do progresso"
             className="text-sm font-medium opacity-70"
             disabled={disabled}
@@ -70,7 +71,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
           />
           <InlineEditText
             value={`${progressValue}%`}
-            onChange={(value) => {
+            onSave={(value: string) => {
               const numValue = parseInt(value.replace('%', ''));
               if (!isNaN(numValue)) {
                 handlePropertyChange('progressValue', numValue);
@@ -92,7 +93,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
         </Badge>
         <InlineEditText
           value={question}
-          onChange={(value) => handlePropertyChange('question', value)}
+          onSave={(value: string) => handlePropertyChange('question', value)}
           placeholder="Digite a questão estratégica..."
           className="text-2xl md:text-3xl font-bold mb-4"
           style={{ color: textColor }}
@@ -111,7 +112,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
           >
             <InlineEditText
               value={option.text}
-              onChange={(value) => handleOptionChange(index, 'text', value)}
+              onSave={(value: string) => handleOptionChange(index, 'text', value)}
               placeholder="Texto da opção"
               className="text-lg font-medium"
               style={{ color: textColor }}
@@ -123,7 +124,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
               <div className="mt-2">
                 <InlineEditText
                   value={option.category}
-                  onChange={(value) => handleOptionChange(index, 'category', value)}
+                  onSave={(value: string) => handleOptionChange(index, 'category', value)}
                   placeholder="Categoria"
                   className="text-xs"
                   disabled={disabled}

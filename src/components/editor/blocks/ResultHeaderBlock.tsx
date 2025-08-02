@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/AuthContext';
@@ -18,7 +19,7 @@ const ResultHeaderBlock: React.FC<ResultHeaderBlockProps> = ({
   className
 }) => {
   const { user } = useAuth();
-  const userName = user?.userName || localStorage.getItem('userName') || '';
+  const userName = (user as any)?.userName || localStorage.getItem('userName') || '';
 
   return (
     <div className={cn("text-center py-8 bg-gradient-to-b from-[#faf8f5] to-transparent", className)}>

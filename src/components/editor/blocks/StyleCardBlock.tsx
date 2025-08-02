@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { useQuiz } from '@/hooks/useQuiz';
@@ -27,8 +28,21 @@ const StyleCardBlock: React.FC<StyleCardBlockProps> = ({
     );
   }
 
-  const { category } = primaryStyle;
-  const { image, description } = styleConfig[category];
+  // Handle both string and object style types
+  const category = typeof primaryStyle === 'string' ? primaryStyle : (primaryStyle as any).category;
+  const percentage = typeof primaryStyle === 'object' ? (primaryStyle as any).percentage || 85 : 85;
+  
+  const styleData = styleConfig[category as keyof typeof styleConfig];
+  
+  if (!styleData) {
+    return (
+      <div className={cn("p-6 text-center text-[#432818]", className)}>
+        <p>Estilo não encontrado: {category}</p>
+      </div>
+    );
+  }
+
+  const { image, description } = styleData;
 
   return (
     <div className={cn("p-6 bg-white shadow-md border border-[#B89B7A]/20 rounded-lg card-elegant", className)}>
@@ -38,11 +52,11 @@ const StyleCardBlock: React.FC<StyleCardBlockProps> = ({
             <span className="text-sm text-[#8F7A6A]">
               Seu estilo predominante
             </span>
-            <span className="text-[#aa6b5d] font-medium">{primaryStyle.percentage}%</span>
+            <span className="text-[#aa6b5d] font-medium">{percentage}%</span>
           </div>
           {showProgress && (
             <Progress 
-              value={primaryStyle.percentage} 
+              value={percentage} 
               className="h-2 bg-[#F3E8E6]" 
               indicatorClassName="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d]" 
             />
