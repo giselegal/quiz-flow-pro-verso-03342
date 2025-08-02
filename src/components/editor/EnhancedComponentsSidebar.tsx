@@ -396,7 +396,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = ({
                           }}
                         >
                           <span className="text-sm">{blockDef.icon}</span>
-                          <span className="text-sm font-medium flex-1">{blockDef.label}</span>
+                          <span className="text-sm font-medium flex-1">{blockDef.name}</span>
                           <Plus className="w-3 h-3 opacity-60" />
                         </div>
                       );
@@ -415,138 +415,159 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = ({
             <div className="relative mb-3">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
-            type="text"
-            placeholder="Buscar componentes..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-        </div>
-
-        {/* Filtros Avançados */}
-        <div className="flex items-center justify-between">
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className={cn(
-              'flex items-center gap-2 px-3 py-1.5 rounded transition-colors text-sm',
-              showFilters 
-                ? 'bg-blue-100 text-blue-700' 
-                : 'hover:bg-gray-100 text-gray-600'
-            )}
-          >
-            <Filter className="w-4 h-4" />
-            Filtros
-            {showFilters ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
-          </button>
-          
-          {(searchQuery || activeTags.size > 0 || selectedCategory !== 'all') && (
-            <button
-              onClick={clearFilters}
-              className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 hover:bg-gray-100 rounded"
-            >
-              Limpar
-            </button>
-          )}
-        </div>
-
-        {/* Tags Filter Panel */}
-        {showFilters && (
-          <div className="mt-3 p-3 bg-gray-50 rounded-lg">
-            <div className="text-xs font-medium text-gray-700 mb-2">Tags:</div>
-            <div className="flex flex-wrap gap-1">
-              {availableTags.slice(0, 10).map(tag => (
-                <button
-                  key={tag}
-                  onClick={() => handleTagToggle(tag)}
-                  className={cn(
-                    'px-2 py-1 text-xs rounded transition-colors',
-                    activeTags.has(tag)
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-white text-gray-600 hover:bg-gray-100'
-                  )}
-                >
-                  {tag}
-                </button>
-              ))}
+                type="text"
+                placeholder="Buscar componentes..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              
+              {/* View Mode Toggle */}
+              <div className="flex items-center gap-2 mt-3">
+                {VIEW_MODES.map(mode => (
+                  <button
+                    key={mode.type}
+                    onClick={() => setViewMode(mode.type)}
+                    className={cn(
+                      'p-1.5 rounded transition-colors',
+                      viewMode === mode.type
+                        ? 'bg-blue-100 text-blue-600'
+                        : 'hover:bg-gray-100 text-gray-600'
+                    )}
+                    title={mode.label}
+                  >
+                    {mode.icon}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
-      </div>
 
-      {/* 📋 LISTA DE CATEGORIAS E COMPONENTES */}
-      <div className="flex-1 overflow-y-auto p-4">
-        {/* Resultados da Busca */}
-        {searchQuery && (
-          <div className="mb-6">
-            <h3 className="text-sm font-medium text-gray-700 mb-3">
-              Resultados da busca ({filteredBlocks.length})
-            </h3>
-            <div className={cn(
-              'gap-3',
-              viewMode === 'grid' 
-                ? 'grid grid-cols-2' 
-                : 'space-y-2'
-            )}>
-              {filteredBlocks.map(block => (
-                <BlockCard key={block.type} block={block} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Categorias */}
-        {!searchQuery && Object.entries(BLOCK_CATEGORIES).map(([categoryKey, category]) => {
-          const isExpanded = expandedCategories.has(categoryKey);
-          const blocksInCategory = getBlocksByCategory(categoryKey);
-          const count = blocksInCategory.length;
-
-          if (count === 0) return null;
-
-          return (
-            <div key={categoryKey} className="mb-4">
+            {/* Filtros Avançados */}
+            <div className="flex items-center justify-between">
               <button
-                onClick={() => handleCategoryToggle(categoryKey)}
-                className="w-full flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition-colors group"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-lg">{category.icon}</span>
-                  <span className="font-medium text-gray-800">{category.name}</span>
-                  <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-                    {count}
-                  </span>
-                </div>
-                {isExpanded ? (
-                  <ChevronDown className="w-4 h-4 text-gray-400" />
-                ) : (
-                  <ChevronRight className="w-4 h-4 text-gray-400" />
+                onClick={() => setShowFilters(!showFilters)}
+                className={cn(
+                  'flex items-center gap-2 px-3 py-1.5 rounded transition-colors text-sm',
+                  showFilters 
+                    ? 'bg-blue-100 text-blue-700' 
+                    : 'hover:bg-gray-100 text-gray-600'
                 )}
+              >
+                <Filter className="w-4 h-4" />
+                Filtros
+                {showFilters ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
               </button>
+              
+              {(searchQuery || activeTags.size > 0 || selectedCategory !== 'all') && (
+                <button
+                  onClick={clearFilters}
+                  className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 hover:bg-gray-100 rounded"
+                >
+                  Limpar
+                </button>
+              )}
+            </div>
 
-              {isExpanded && (
+            {/* Tags Filter Panel */}
+            {showFilters && (
+              <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+                <div className="text-xs font-medium text-gray-700 mb-2">Tags:</div>
+                <div className="flex flex-wrap gap-1">
+                  {availableTags.slice(0, 10).map(tag => (
+                    <button
+                      key={tag}
+                      onClick={() => handleTagToggle(tag)}
+                      className={cn(
+                        'px-2 py-1 text-xs rounded transition-colors',
+                        activeTags.has(tag)
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-white text-gray-600 hover:bg-gray-100'
+                      )}
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* 📋 LISTA DE CATEGORIAS E COMPONENTES */}
+          <div className="flex-1 overflow-y-auto p-4">
+            {/* Resultados da Busca */}
+            {searchQuery && (
+              <div className="mb-6">
+                <h3 className="text-sm font-medium text-gray-700 mb-3">
+                  Resultados da busca ({filteredBlocks.length})
+                </h3>
                 <div className={cn(
-                  'mt-2 ml-4 gap-3',
+                  'gap-3',
                   viewMode === 'grid' 
                     ? 'grid grid-cols-2' 
                     : 'space-y-2'
                 )}>
-                  {blocksInCategory.map(block => (
+                  {filteredBlocks.map(block => (
                     <BlockCard key={block.type} block={block} />
                   ))}
                 </div>
-              )}
-            </div>
-          );
-        })}
+              </div>
+            )}
 
-        {/* Estado Vazio */}
-        {filteredBlocks.length === 0 && (
-          <div className="text-center py-8 text-gray-500">
-            <div className="text-4xl mb-3">🔍</div>
-            <div className="font-medium mb-1">Nenhum componente encontrado</div>
-            <div className="text-sm">Tente ajustar os filtros ou busca</div>
+            {/* Categorias */}
+            {!searchQuery && Object.entries(BLOCK_CATEGORIES).map(([categoryKey, category]) => {
+              const isExpanded = expandedCategories.has(categoryKey);
+              const blocksInCategory = getBlocksByCategory(categoryKey);
+              const count = blocksInCategory.length;
+
+              if (count === 0) return null;
+
+              return (
+                <div key={categoryKey} className="mb-4">
+                  <button
+                    onClick={() => handleCategoryToggle(categoryKey)}
+                    className="w-full flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition-colors group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-lg">{category.icon}</span>
+                      <span className="font-medium text-gray-800">{category.name}</span>
+                      <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+                        {count}
+                      </span>
+                    </div>
+                    {isExpanded ? (
+                      <ChevronDown className="w-4 h-4 text-gray-400" />
+                    ) : (
+                      <ChevronRight className="w-4 h-4 text-gray-400" />
+                    )}
+                  </button>
+
+                  {isExpanded && (
+                    <div className={cn(
+                      'mt-2 ml-4 gap-3',
+                      viewMode === 'grid' 
+                        ? 'grid grid-cols-2' 
+                        : 'space-y-2'
+                    )}>
+                      {blocksInCategory.map(block => (
+                        <BlockCard key={block.type} block={block} />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Estado Vazio */}
+            {filteredBlocks.length === 0 && (
+              <div className="text-center py-8 text-gray-500">
+                <div className="text-4xl mb-3">🔍</div>
+                <div className="font-medium mb-1">Nenhum componente encontrado</div>
+                <div className="text-sm">Tente ajustar os filtros ou busca</div>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
