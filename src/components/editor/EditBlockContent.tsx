@@ -34,8 +34,14 @@ const EditBlockContent: React.FC<EditBlockContentProps> = ({
     });
   };
 
+  // Ensure block has properties field for compatibility
+  const blockWithProperties = {
+    ...block,
+    properties: block.properties || {}
+  };
+
   const blockProps = {
-    block,
+    block: blockWithProperties,
     isSelected,
     onClick: onSelect,
     onPropertyChange: handlePropertyChange,

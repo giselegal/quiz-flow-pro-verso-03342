@@ -10,7 +10,12 @@ interface TimeLeft {
   seconds: number;
 }
 
-const CountdownInlineBlock: React.FC<InlineBlockProps> = ({ block, onUpdate, isSelected, onSelect }) => {
+const CountdownInlineBlock: React.FC<InlineBlockProps> = ({ 
+  block, 
+  onPropertyChange, 
+  isSelected, 
+  onClick 
+}) => {
   // Safety check for block and properties
   if (!block) {
     console.warn('⚠️ CountdownInlineBlock: block is undefined');
@@ -101,7 +106,7 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({ block, onUpdate, isS
   if (isExpired) {
     return (
       <div
-        onClick={onSelect}
+        onClick={onClick}
         className={cn(
           'text-center cursor-pointer p-4 rounded-lg transition-all duration-200',
           'bg-gray-50 border border-gray-200',
@@ -115,7 +120,7 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({ block, onUpdate, isS
 
   return (
     <div
-      onClick={onSelect}
+      onClick={onClick}
       className={cn(
         'cursor-pointer transition-all duration-200',
         isSelected && 'ring-2 ring-blue-500 ring-offset-2'

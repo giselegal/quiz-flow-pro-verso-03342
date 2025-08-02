@@ -1,7 +1,8 @@
 export interface Block {
   id: string;
   type: string;
-  content: Record<string, any>;
+  properties: Record<string, any>; // Ensure properties field exists
+  content?: Record<string, any>;
   order: number; // Changed from optional to required to match EditorBlock
   settings?: Record<string, any>;
   [key: string]: any;

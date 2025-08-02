@@ -1,15 +1,29 @@
+
 import { useState, useCallback } from 'react';
+import { Block } from '@/types/editor';
 
 export interface UseInlineBlockReturn {
   isEditing: boolean;
   startEditing: () => void;
   stopEditing: () => void;
   handlePropertyChange: (key: string, value: any) => void;
+  // Additional properties for compatibility
+  properties: Record<string, any>;
+  commonProps: {
+    block: Block;
+    isSelected: boolean;
+    onClick?: () => void;
+    onPropertyChange?: (key: string, value: any) => void;
+    className?: string;
+  };
 }
 
 export const useInlineBlock = (
-  blockId: string,
-  onPropertyChange?: (key: string, value: any) => void
+  block: Block,
+  isSelected?: boolean,
+  onClick?: () => void,
+  onPropertyChange?: (key: string, value: any) => void,
+  className?: string
 ): UseInlineBlockReturn => {
   const [isEditing, setIsEditing] = useState(false);
 
@@ -27,10 +41,22 @@ export const useInlineBlock = (
     }
   }, [onPropertyChange]);
 
+  const properties = block?.properties || {};
+
+  const commonProps = {
+    block,
+    isSelected: isSelected || false,
+    onClick,
+    onPropertyChange,
+    className
+  };
+
   return {
     isEditing,
     startEditing,
     stopEditing,
-    handlePropertyChange
+    handlePropertyChange,
+    properties,
+    commonProps
   };
 };
