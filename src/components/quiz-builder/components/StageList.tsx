@@ -1,117 +1,127 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Plus, Trash2 } from 'lucide-react';
 import { QuizStage } from '@/types/quizBuilder';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Plus, Eye, Settings, Trash2 } from 'lucide-react';
 
 interface StageListProps {
   stages: QuizStage[];
-  activeStageId: string | null;
-  onStageAdd: (type: QuizStage['type']) => string;
+  activeStageId: string;
   onStageSelect: (id: string) => void;
+  onStageAdd: (type: QuizStage['type']) => void;
   onStageUpdate: (id: string, updates: Partial<QuizStage>) => void;
   onStageDelete: (id: string) => void;
-  onStageMove: (sourceId: string, targetId: string) => void;
 }
 
-export const StageList: React.FC<StageListProps> = ({
+const StageList: React.FC<StageListProps> = ({
   stages,
   activeStageId,
-  onStageAdd,
   onStageSelect,
+  onStageAdd,
   onStageUpdate,
-  onStageDelete,
-  onStageMove,
+  onStageDelete
 }) => {
-  const handleTitleChange = (id: string, title: string) => {
-    onStageUpdate(id, { title });
-  };
-
-  const handleDragEnd = (result) => {
-    if (!result.destination) return;
-    
-    const sourceId = stages[result.source.index].id;
-    const destinationId = stages[result.destination.index].id;
-    
-    if (sourceId !== destinationId) {
-      onStageMove(sourceId, destinationId);
+  const getStageIcon = (type: QuizStage['type']) => {
+    switch (type) {
+      case 'cover': return '📋';
+      case 'question': return '❓';
+      case 'result': return '🎯';
+      case 'strategic': return '⚡';
+      case 'welcome': return '👋';
+      default: return '📄';
     }
   };
 
-  const sortedStages = [...stages].sort((a, b) => a.order - b.order);
+  const handleResultPreview = (result: any) => {
+    // Handle result preview logic
+    console.log('Previewing result:', result);
+  };
 
   return (
-    <div className="space-y-4">
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="stages">
-          {(provided) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              className="space-y-2"
-            >
-              {sortedStages.map((stage, index) => (
-                <Draggable key={stage.id} draggableId={stage.id} index={index}>
-                  {(provided, snapshot) => (
-                    <Card
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className={`p-2 ${stage.id === activeStageId ? 'border-[#B89B7A] bg-[#FAF9F7]' : ''} ${
-                        snapshot.isDragging ? 'shadow-md' : ''
-                      }`}
-                      onClick={() => onStageSelect(stage.id)}
-                    >
-                      <div className="flex items-center justify-between">
-                        <Input
-                          value={stage.title}
-                          onChange={(e) => handleTitleChange(stage.id, e.target.value)}
-                          className="flex-1 mr-2"
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-red-500 h-8 w-8 p-0"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onStageDelete(stage.id);
-                          }}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </Card>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-
-      <div className="grid grid-cols-2 gap-2 pt-2">
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full"
-          onClick={() => onStageAdd('question')}
-        >
-          <Plus className="h-4 w-4 mr-2" /> Pergunta
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full"
-          onClick={() => onStageAdd('result')}
-        >
-          <Plus className="h-4 w-4 mr-2" /> Resultado
-        </Button>
+    <div className="p-4 space-y-3">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-medium text-[#432818]">Etapas do Quiz</h3>
+        <div className="flex gap-1">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => onStageAdd('cover')}
+            className="text-xs"
+          >
+            <Plus className="w-3 h-3" />
+          </Button>
+        </div>
       </div>
+
+      <div className="space-y-2">
+        {stages.map((stage) => (
+          <Card
+            key={stage.id}
+            className={`p-3 cursor-pointer transition-all ${
+              stage.id === activeStageId
+                ? 'border-[#B89B7A] bg-[#B89B7A]/5'
+                : 'border-gray-200 hover:border-[#B89B7A]/50'
+            }`}
+            onClick={() => onStageSelect(stage.id)}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <span className="text-lg">{getStageIcon(stage.type)}</span>
+                <div>
+                  <p className="font-medium text-sm text-[#432818]">
+                    {stage.title}
+                  </p>
+                  <p className="text-xs text-[#8F7A6A] capitalize">
+                    {stage.type}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-1">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleResultPreview(stage);
+                  }}
+                  className="text-[#8F7A6A] hover:text-[#432818] p-1 h-auto"
+                >
+                  <Eye className="w-3 h-3" />
+                </Button>
+                
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onStageDelete(stage.id);
+                  }}
+                  className="text-red-500 hover:text-red-700 p-1 h-auto"
+                >
+                  <Trash2 className="w-3 h-3" />
+                </Button>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      {stages.length === 0 && (
+        <div className="text-center py-8 text-[#8F7A6A]">
+          <p className="mb-3">Nenhuma etapa criada ainda</p>
+          <Button
+            onClick={() => onStageAdd('cover')}
+            className="bg-[#B89B7A] hover:bg-[#A38A69] text-white"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Criar Primeira Etapa
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
+
+export default StageList;

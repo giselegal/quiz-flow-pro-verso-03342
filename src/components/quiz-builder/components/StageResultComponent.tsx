@@ -1,77 +1,133 @@
 
 import React from 'react';
 import { QuizComponentData } from '@/types/quizBuilder';
-import { cn } from '@/lib/utils';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ContentContainer } from '@/components/shared/ContentContainer';
-import { GridLayout } from '@/components/shared/GridLayout';
-import { sharedStyles } from '@/styles/sharedStyles';
 
 interface StageResultComponentProps {
-  data: QuizComponentData['data'];
-  style: QuizComponentData['style'];
-  isSelected: boolean;
+  data?: QuizComponentData['data'];
+  style?: QuizComponentData['style'];
+  isSelected?: boolean;
+  onClick?: () => void;
 }
 
-const StageResultComponent: React.FC<StageResultComponentProps> = ({ 
-  data, 
-  style, 
-  isSelected 
+const StageResultComponent: React.FC<StageResultComponentProps> = ({
+  data = {},
+  style = {},
+  isSelected = false,
+  onClick
 }) => {
+  // Mock data for preview
+  const mockPrimaryStyle = {
+    category: 'Natural',
+    percentage: 45.2
+  };
+
+  const mockSecondaryStyles = [
+    { category: 'Clássico', percentage: 32.1 },
+    { category: 'Romântico', percentage: 22.7 }
+  ];
+
+  const {
+    title = 'Seu Resultado de Estilo Pessoal',
+    primaryStyleTitle = 'Seu estilo predominante é:',
+    secondaryStylesTitle = 'Seus estilos complementares:',
+    showPercentages = true,
+    showDescriptions = true,
+    callToActionText = 'Conhecer o Guia Completo',
+    callToActionUrl = '#',
+    backgroundColor = '#FFFAF0',
+    textColor = '#432818'
+  } = data;
+
+  const resultStyle = {
+    backgroundColor: backgroundColor || data.backgroundColor || '#FFFAF0',
+    color: textColor || data.textColor || '#432818',
+    ...style
+  };
+
   return (
-    <div 
-      className={cn(
-        "w-full",
-        isSelected && "ring-2 ring-inset ring-[#B89B7A]/20"
-      )}
-      style={{
-        backgroundColor: style?.backgroundColor || sharedStyles.colors.background,
-        color: style?.textColor || sharedStyles.colors.textPrimary,
-        borderRadius: `${style?.borderRadius || 0}px`,
-        padding: `${style?.paddingY || 16}px ${style?.paddingX || 16}px`,
-      }}
+    <Card 
+      className={`w-full min-h-[500px] p-6 cursor-pointer transition-all ${
+        isSelected ? 'ring-2 ring-blue-500' : ''
+      }`}
+      style={resultStyle}
+      onClick={onClick}
     >
-      <ContentContainer size="md">
-        <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-playfair mb-2">
-            {data.title || 'Seu Resultado de Estilo Pessoal'}
+      <div className="max-w-4xl mx-auto space-y-8">
+        {/* Header */}
+        <div className="text-center">
+          <h1 className="text-2xl md:text-3xl font-playfair font-bold mb-4">
+            {title || data.title || 'Seu Resultado de Estilo Pessoal'}
+          </h1>
+        </div>
+
+        {/* Primary Style */}
+        <div className="text-center">
+          <h2 className="text-xl font-medium mb-4">
+            {primaryStyleTitle || data.primaryStyleTitle || 'Seu estilo predominante é:'}
           </h2>
           
-          <p className="text-lg text-[#432818]/80">
-            {data.subtitle || 'Baseado nas suas escolhas, calculamos seu estilo predominante'}
-          </p>
+          <div className="inline-block bg-[#ffefec] px-6 py-4 rounded-lg">
+            <h3 className="text-2xl font-playfair text-[#aa6b5d] mb-2">
+              {mockPrimaryStyle.category.toUpperCase()}
+            </h3>
+            {(showPercentages || data.showPercentages) && (
+              <p className="text-lg text-[#432818]/80">
+                {mockPrimaryStyle.percentage}%
+              </p>
+            )}
+            {(showDescriptions || data.showDescriptions) && (
+              <p className="text-[#432818]/80 mt-2">
+                Você valoriza o conforto e a praticidade, com um visual descontraído e autêntico.
+              </p>
+            )}
+          </div>
         </div>
-        
-        <GridLayout columns={2} gap="lg" className="mb-8">
-          <div>
-            <img
-              src={data.offerImageUrl || "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/Espanhol_Portugu%C3%AAs_8_cgrhuw.webp"}
-              alt="Guia Completo de Estilo"
-              className="w-full rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
-            />
+
+        {/* Secondary Styles */}
+        <div>
+          <h2 className="text-xl font-medium text-center mb-6">
+            {secondaryStylesTitle || data.secondaryStylesTitle || 'Seus estilos complementares:'}
+          </h2>
+          
+          <div className="grid md:grid-cols-2 gap-4">
+            {mockSecondaryStyles.map((style, index) => (
+              <div key={index} className="bg-white p-4 rounded-lg border border-[#B89B7A]/20">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-medium text-[#432818]">{style.category}</span>
+                  {(showPercentages || data.showPercentages) && (
+                    <span className="text-[#B89B7A]">{Math.round(style.percentage)}%</span>
+                  )}
+                </div>
+                {(showPercentages || data.showPercentages) && (
+                  <div className="w-full h-2 bg-[#B89B7A]/20 rounded-full">
+                    <div 
+                      className="h-full bg-[#B89B7A] rounded-full" 
+                      style={{ width: `${style.percentage}%` }}
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
-          <div>
-            <img
-              src={data.authorImageUrl || "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921536/Sem_nome_1080_x_1000_px_z0chuv.webp"}
-              alt="Autor do Guia"
-              className="w-full rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
-            />
-          </div>
-        </GridLayout>
-        
-        <div className="flex justify-center">
-          <Button className="bg-[#B89B7A] hover:bg-[#A38A69] text-white px-6 py-3 rounded-md text-lg">
-            {data.callToActionText || 'Conhecer o Guia Completo'}
+        </div>
+
+        {/* Call to Action */}
+        <div className="text-center">
+          <Button 
+            className="bg-[#B89B7A] hover:bg-[#A38A69] text-white px-8 py-3 text-lg"
+            style={{
+              backgroundColor: data.accentColor || '#B89B7A',
+              color: data.buttonTextColor || 'white'
+            }}
+          >
+            {callToActionText || data.callToActionText || 'Conhecer o Guia Completo'}
           </Button>
         </div>
-        
-        <div className="mt-6 text-sm text-[#432818]/60 text-center">
-          {data.stageTitle || 'Resultado'} • {data.stageNumber || 7} de 7
-        </div>
-      </ContentContainer>
-    </div>
+      </div>
+    </Card>
   );
 };
 
 export default StageResultComponent;
-

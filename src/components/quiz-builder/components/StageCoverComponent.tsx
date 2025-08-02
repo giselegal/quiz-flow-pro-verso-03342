@@ -1,57 +1,70 @@
 
 import React from 'react';
 import { QuizComponentData } from '@/types/quizBuilder';
-import { cn } from '@/lib/utils';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 interface StageCoverComponentProps {
-  data: QuizComponentData['data'];
-  style: QuizComponentData['style'];
-  isSelected: boolean;
+  data?: QuizComponentData['data'];
+  style?: QuizComponentData['style'];
+  isSelected?: boolean;
+  onClick?: () => void;
 }
 
-const StageCoverComponent: React.FC<StageCoverComponentProps> = ({ data, style, isSelected }) => {
+const StageCoverComponent: React.FC<StageCoverComponentProps> = ({
+  data = {},
+  style = {},
+  isSelected = false,
+  onClick
+}) => {
+  const {
+    title = 'Título da Capa',
+    subtitle = 'Subtítulo da capa',
+    buttonText = 'Iniciar Quiz',
+    backgroundColor = '#FFFAF0',
+    textColor = '#432818'
+  } = data;
+
+  const backgroundStyle = {
+    backgroundColor: backgroundColor || data.backgroundColor || '#FFFAF0',
+    color: textColor || data.textColor || '#432818',
+    ...style
+  };
+
   return (
-    <div 
-      className={cn(
-        "w-full text-center py-8 px-4",
-        isSelected && "ring-2 ring-inset ring-[#B89B7A]/20"
-      )}
-      style={{
-        backgroundColor: style?.backgroundColor || data.backgroundColor || '#FFFAF0',
-        color: style?.textColor || data.textColor || '#432818',
-        borderRadius: style?.borderRadius ? `${style.borderRadius}px` : '0',
-        padding: `${style?.paddingY || 16}px ${style?.paddingX || 16}px`,
-      }}
+    <Card 
+      className={`w-full min-h-[400px] flex items-center justify-center cursor-pointer transition-all ${
+        isSelected ? 'ring-2 ring-blue-500' : ''
+      }`}
+      style={backgroundStyle}
+      onClick={onClick}
     >
-      {data.imageUrl && (
-        <div className="mb-6">
-          <img 
-            src={data.imageUrl} 
-            alt={data.title || 'Quiz cover'} 
-            className="max-w-full mx-auto rounded-lg shadow-lg max-h-64 object-cover"
-          />
-        </div>
-      )}
-      
-      <h1 className="text-3xl md:text-4xl font-playfair mb-3">
-        {data.title || 'Quiz de Estilo Pessoal'}
-      </h1>
-      
-      <p className="text-lg md:text-xl mb-8 text-[#432818]/80">
-        {data.subtitle || 'Descubra seu estilo predominante'}
-      </p>
-      
-      <Button 
-        className="bg-[#B89B7A] hover:bg-[#A38A69] text-white px-8 py-3 rounded-md text-lg"
-      >
-        {data.buttonText || 'Iniciar Quiz'}
-      </Button>
-      
-      <div className="mt-8 text-sm text-[#432818]/60">
-        {data.stageTitle || 'Início'} • {data.stageNumber || 1} de {data.totalStages || 7}
+      <div className="text-center space-y-6 p-8">
+        <h1 
+          className="text-3xl md:text-4xl font-playfair font-bold"
+          style={{ color: textColor || data.textColor || '#432818' }}
+        >
+          {title || data.title || 'Título da Capa'}
+        </h1>
+        
+        <p 
+          className="text-lg md:text-xl"
+          style={{ color: textColor || data.textColor || '#432818' }}
+        >
+          {subtitle || data.subtitle || 'Subtítulo da capa'}
+        </p>
+        
+        <Button 
+          className="bg-[#B89B7A] hover:bg-[#A38A69] text-white px-8 py-3 text-lg"
+          style={{
+            backgroundColor: data.buttonColor || '#B89B7A',
+            color: data.buttonTextColor || 'white'
+          }}
+        >
+          {buttonText || data.buttonText || 'Iniciar Quiz'}
+        </Button>
       </div>
-    </div>
+    </Card>
   );
 };
 

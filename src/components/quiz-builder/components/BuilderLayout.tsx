@@ -1,16 +1,16 @@
 
 import React, { useState } from 'react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { QuizComponentData, QuizStage } from '@/types/quizBuilder';
-import { ComponentsSidebar } from './ComponentsSidebar';
-import PreviewPanel from './PreviewPanel';
+import { QuizComponentData, QuizStage, QuizComponentType } from '@/types/quizBuilder';
+import { ComponentsSidebar } from '../ComponentsSidebar';
+import { PreviewPanel } from '../PreviewPanel';
 import { PropertyPanel } from './PropertyPanel';
 
 interface BuilderLayoutProps {
   components: QuizComponentData[];
   stages: QuizStage[];
   activeStageId: string;
-  onComponentAdd: (type: string) => void;
+  onComponentAdd: (type: QuizComponentType) => void;
   onComponentUpdate: (id: string, updates: Partial<QuizComponentData>) => void;
   onComponentDelete: (id: string) => void;
   onComponentSelect: (id: string | null) => void;
@@ -40,12 +40,16 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({
     onComponentSelect(id);
   };
 
+  const handleComponentAdd = (type: string) => {
+    onComponentAdd(type as QuizComponentType);
+  };
+
   return (
     <div className="h-full">
       <ResizablePanelGroup direction="horizontal" className="h-full">
         <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
           <ComponentsSidebar 
-            onComponentAdd={onComponentAdd}
+            onComponentAdd={handleComponentAdd}
           />
         </ResizablePanel>
 
