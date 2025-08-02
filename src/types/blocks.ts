@@ -59,12 +59,17 @@ export interface CountdownTimerBlock extends BlockData {
     showMinutes?: boolean;
     showSeconds?: boolean;
     size?: 'sm' | 'md' | 'lg';
-    theme?: 'default' | 'urgent' | 'elegant';
+    theme?: 'default' | 'urgent' | 'elegant' | 'minimal' | 'neon';
+    layout?: 'compact' | 'cards' | 'digital' | 'circular';
+    autoStart?: boolean;
+    showUrgencyMessages?: boolean;
+    urgencyThreshold?: number;
     backgroundColor?: string;
     textColor?: string;
     accentColor?: string;
     borderRadius?: string;
     padding?: string;
+    pulseAnimation?: boolean;
     showProgress?: boolean;
   };
   properties: {
@@ -78,12 +83,17 @@ export interface CountdownTimerBlock extends BlockData {
     showMinutes?: boolean;
     showSeconds?: boolean;
     size?: 'sm' | 'md' | 'lg';
-    theme?: 'default' | 'urgent' | 'elegant';
+    theme?: 'default' | 'urgent' | 'elegant' | 'minimal' | 'neon';
+    layout?: 'compact' | 'cards' | 'digital' | 'circular';
+    autoStart?: boolean;
+    showUrgencyMessages?: boolean;
+    urgencyThreshold?: number;
     backgroundColor?: string;
     textColor?: string;
     accentColor?: string;
     borderRadius?: string;
     padding?: string;
+    pulseAnimation?: boolean;
     showProgress?: boolean;
   };
 }

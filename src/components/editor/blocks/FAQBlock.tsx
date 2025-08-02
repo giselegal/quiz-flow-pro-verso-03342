@@ -9,42 +9,16 @@ import {
   CheckCircle,
   Info
 } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { BlockComponentProps, FAQBlock, FAQItem } from '@/types/blocks';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
-interface FAQItem {
-  id: string;
-  question: string;
-  answer: string;
-  category?: string;
-  isHighlight?: boolean;
-  tags?: string[];
-}
 
 interface FAQBlockProps extends BlockComponentProps {
-  block: {
-    id: string;
-    type: 'faq';
-    properties: {
-      title?: string;
-      subtitle?: string;
-      faqs?: FAQItem[];
-      layout?: 'accordion' | 'cards' | 'minimal';
-      showSearch?: boolean;
-      showCategories?: boolean;
-      allowMultipleOpen?: boolean;
-      animateEntrance?: boolean;
-      backgroundColor?: string;
-      textColor?: string;
-      accentColor?: string;
-      cardStyle?: 'modern' | 'classic' | 'borderless' | 'glassmorphism';
-      searchPlaceholder?: string;
-    };
-  };
+  block: FAQBlock;
 }
 
 const FAQBlock: React.FC<FAQBlockProps> = ({

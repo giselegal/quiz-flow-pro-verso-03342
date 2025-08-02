@@ -8,38 +8,14 @@ import {
   Timer,
   Calendar
 } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { BlockComponentProps, CountdownTimerBlock } from '@/types/blocks';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 interface CountdownTimerBlockProps extends BlockComponentProps {
-  block: {
-    id: string;
-    type: 'countdown-timer';
-    properties: {
-      title?: string;
-      subtitle?: string;
-      endDate?: string;
-      durationMinutes?: number;
-      urgencyText?: string;
-      showDays?: boolean;
-      showHours?: boolean;
-      showMinutes?: boolean;
-      showSeconds?: boolean;
-      layout?: 'compact' | 'cards' | 'digital' | 'circular';
-      theme?: 'urgent' | 'elegant' | 'minimal' | 'neon';
-      autoStart?: boolean;
-      showUrgencyMessages?: boolean;
-      urgencyThreshold?: number; // minutes
-      backgroundColor?: string;
-      textColor?: string;
-      accentColor?: string;
-      pulseAnimation?: boolean;
-      showProgress?: boolean;
-    };
-  };
+  block: CountdownTimerBlock;
 }
 
 interface TimeUnit {

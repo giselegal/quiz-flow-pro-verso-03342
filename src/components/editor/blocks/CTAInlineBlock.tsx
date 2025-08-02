@@ -148,7 +148,7 @@ const CTAInlineBlock: React.FC<BlockComponentProps> = ({
           "w-full flex items-center gap-4 rounded-lg",
           SPACING.padding.md,
           ANIMATIONS.transition,
-          ANIMATIONS.hover.lift,
+          "hover:shadow-lg hover:scale-105",
           styleClasses[buttonStyle as keyof typeof styleClasses] || styleClasses.brand
         )}
         onClick={handleClick}

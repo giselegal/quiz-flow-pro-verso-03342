@@ -153,7 +153,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
               onChange={(value) => handlePropertyChange('title', value)}
               placeholder="Título da seção FAQ..."
               className={cn(
-                TYPOGRAPHY.heading.h2,
+                "text-2xl font-bold",
                 `text-[${BRAND_COLORS.secondary.main}]`
               )}
               fontWeight="bold"
@@ -174,7 +174,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
                   cardStyles[cardStyle as keyof typeof cardStyles],
                   'rounded-lg overflow-hidden group relative',
                   ANIMATIONS.transition,
-                  ANIMATIONS.hover.lift
+                  "hover:shadow-lg hover:scale-[1.02]"
                 )}
               >
                 {/* Remove Button - Visible when selected */}
@@ -210,7 +210,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
                       onChange={(value) => updateQuestion(faq.id || index.toString(), 'question', value)}
                       placeholder="Pergunta da FAQ..."
                       className={cn(
-                        TYPOGRAPHY.heading.h6,
+                        "text-lg font-semibold",
                         `text-[${BRAND_COLORS.secondary.main}]`,
                         'w-full'
                       )}
@@ -276,7 +276,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
             >
               <div className="text-center text-gray-500 group-hover:text-gray-700">
                 <Plus className="w-6 h-6 md:w-8 md:h-8 mx-auto mb-2" />
-                <span className={TYPOGRAPHY.body.small}>
+                <span className="text-sm">
                   Adicionar Pergunta
                 </span>
               </div>
@@ -287,7 +287,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
         {/* Instructions - Only when selected */}
         {isSelected && (
           <div className="mt-6 md:mt-8 p-3 md:p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <p className={cn(TYPOGRAPHY.body.small, 'text-blue-700')}>
+            <p className={cn("text-sm", 'text-blue-700')}>
               💡 <strong>Dica:</strong> Clique nas perguntas para editá-las. Em mobile, o layout se adapta automaticamente para melhor legibilidade.
             </p>
           </div>
