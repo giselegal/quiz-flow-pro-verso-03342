@@ -1,17 +1,9 @@
 
 import React from 'react';
-import { SchemaDrivenEditorClean } from '../editor/SchemaDrivenEditorClean';
+import { EnhancedEditorLayout } from '../enhanced-editor/EnhancedEditorLayout';
 
-interface EnhancedEditorProps {
-  funnelId?: string;
-}
-
-const EnhancedEditor: React.FC<EnhancedEditorProps> = ({ funnelId }) => {
-  return (
-    <div className="h-screen w-full">
-      <SchemaDrivenEditorClean funnelId={funnelId} />
-    </div>
-  );
+const EnhancedEditor: React.FC = () => {
+  return <EnhancedEditorLayout />;
 };
 
 export default EnhancedEditor;

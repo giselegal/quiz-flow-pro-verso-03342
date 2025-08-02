@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PreviewBlock } from './PreviewBlock';
-import { Block } from '@/types/editor';
+import { EditorBlock } from '@/types/editor';
 
 interface PreviewContentProps {
   isPreviewing: boolean;
@@ -20,7 +20,7 @@ export function PreviewContent({
   onSelectComponent,
   viewMode
 }: PreviewContentProps) {
-  const { blocks, actions } = useEditor();
+  const { blocks, addBlock } = useEditor();
 
   if (!blocks.length) {
     return (
@@ -29,7 +29,7 @@ export function PreviewContent({
         <Button 
           variant="outline"
           onClick={() => {
-            const id = actions.addBlock('headline');
+            const id = addBlock('headline');
             onSelectComponent(id);
           }}
           className="border-[#B89B7A] text-[#B89B7A]"
@@ -47,7 +47,7 @@ export function PreviewContent({
       "transition-all duration-300"
     )}>
       <div className="space-y-6">
-        {blocks.map((block: Block) => (
+        {blocks.map((block: EditorBlock) => (
           <PreviewBlock
             key={block.id}
             block={block}

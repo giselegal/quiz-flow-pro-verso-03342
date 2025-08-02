@@ -1,149 +1,135 @@
-
 import React from 'react';
 import { QuizComponentData } from '@/types/quizBuilder';
-import { cn } from '@/lib/utils';
-import StageResultComponent from './components/StageResultComponent';
-import StageCoverComponent from './components/StageCoverComponent';
-import StageQuestionComponent from './components/StageQuestionComponent';
+import { HeaderComponent } from '../funnel/components/HeaderComponent';
+import { TextComponent } from '../funnel/components/TextComponent';
+import { ImageComponent } from '../funnel/components/ImageComponent';
+import { MultipleChoiceComponent } from '../funnel/components/MultipleChoiceComponent';
+import { SingleChoiceComponent } from '../funnel/components/SingleChoiceComponent';
+import { ScaleComponent } from '../funnel/components/ScaleComponent';
 
 interface ComponentRendererProps {
   component: QuizComponentData;
-  isPreview?: boolean;
   isSelected?: boolean;
+  onClick?: () => void;
 }
 
-export const ComponentRenderer: React.FC<ComponentRendererProps> = ({ 
-  component, 
-  isPreview = false,
-  isSelected = false
+const ComponentRenderer: React.FC<ComponentRendererProps> = ({
+  component,
+  isSelected = false,
+  onClick
 }) => {
-  const { type, data, style } = component;
+  const data = component.data || {};
+  
+  const renderComponent = () => {
+    switch (component.type) {
+      case 'header':
+        return (
+          <HeaderComponent 
+            data={{ 
+              title: data.title || 'Título',
+              subtitle: data.subtitle || 'Subtítulo'
+            }}
+            style={component.style}
+            isSelected={isSelected}
+          />
+        );
 
-  const getComponentStyles = () => {
-    return {
-      backgroundColor: style?.backgroundColor || 'transparent',
-      color: style?.textColor || 'inherit',
-      borderRadius: style?.borderRadius ? {
-        'sm': '0.25rem',
-        'md': '0.5rem',
-        'lg': '1rem',
-        'full': '9999px'
-      }[style.borderRadius] : '0',
-      padding: `${style?.paddingY ? `${parseInt(style.paddingY) * 0.25}rem` : '1rem'} ${style?.paddingX ? `${parseInt(style.paddingX) * 0.25}rem` : '1rem'}`,
-    };
+      case 'text':
+        return (
+          <TextComponent 
+            data={{ 
+              text: data.text || 'Texto padrão'
+            }}
+            style={component.style}
+            isSelected={isSelected}
+          />
+        );
+
+      case 'headline':
+        return (
+          <TextComponent 
+            isHeadline={true}
+            data={{ 
+              title: data.title || 'Título',
+              subtitle: data.subtitle || 'Subtítulo'
+            }}
+            style={component.style}
+            isSelected={isSelected}
+          />
+        );
+
+      case 'image':
+        return (
+          <ImageComponent 
+            data={{ 
+              imageUrl: data.imageUrl || '',
+              alt: data.alt || 'Imagem'
+            }}
+            style={component.style}
+            isSelected={isSelected}
+          />
+        );
+
+      case 'multipleChoice':
+        return (
+          <MultipleChoiceComponent
+            data={{
+              question: data.question || 'Pergunta',
+              options: data.options || [],
+              minSelections: data.minSelections || 1,
+              maxSelections: data.maxSelections || 1,
+              displayType: data.displayType || 'text'
+            }}
+            style={component.style}
+            isSelected={isSelected}
+          />
+        );
+
+      case 'singleChoice':
+        return (
+          <SingleChoiceComponent
+            data={{
+              question: data.question || 'Pergunta',
+              options: data.options || []
+            }}
+            style={component.style}
+            isSelected={isSelected}
+          />
+        );
+
+      case 'scale':
+        return (
+          <ScaleComponent
+            data={{
+              question: data.question || 'Pergunta',
+              minValue: data.minValue || 1,
+              maxValue: data.maxValue || 10,
+              minLabel: data.minLabel || 'Mínimo',
+              maxLabel: data.maxLabel || 'Máximo',
+              showNumbers: data.showNumbers !== false
+            }}
+            style={component.style}
+            isSelected={isSelected}
+          />
+        );
+
+      default:
+        return (
+          <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center">
+            <p className="text-gray-500">Tipo de componente desconhecido: {component.type}</p>
+          </div>
+        );
+    }
   };
 
-  switch (type) {
-    case 'header': 
-      return (
-        <div style={getComponentStyles()} className={cn("py-6", isSelected && !isPreview && "bg-opacity-90")}>
-          <h1 className="text-3xl font-bold text-center">{data.stageTitle || 'Título Principal'}</h1>
-          {data.subtitle && <p className="text-xl text-center mt-2">{data.subtitle}</p>}
-        </div>
-      );
-
-    case 'headline':
-      return (
-        <div style={getComponentStyles()} className={cn("py-4", isSelected && !isPreview && "bg-opacity-90")}>
-          <h2 className="text-2xl font-bold">{data.title || 'Título da Seção'}</h2>
-        </div>
-      );
-
-    case 'text':
-      return (
-        <div style={getComponentStyles()} className={cn("py-3", isSelected && !isPreview && "bg-opacity-90")}>
-          <p>{data.text || 'Texto do parágrafo que será exibido aqui. Edite este texto nas propriedades.'}</p>
-        </div>
-      );
-
-    case 'image':
-      return (
-        <div style={getComponentStyles()} className={cn("py-4 text-center", isSelected && !isPreview && "bg-opacity-90")}>
-          {data.imageUrl ? (
-            <img 
-              src={data.imageUrl} 
-              alt={data.alt || 'Quiz image'} 
-              className="max-w-full max-h-96 mx-auto rounded-md"
-            />
-          ) : (
-            <div className="bg-gray-200 h-48 flex items-center justify-center rounded-md">
-              <p className="text-gray-500">Imagem não configurada</p>
-            </div>
-          )}
-          {data.caption && (
-            <p className="text-sm text-gray-500 mt-2">{data.caption}</p>
-          )}
-        </div>
-      );
-
-    case 'multipleChoice':
-    case 'singleChoice':
-      return (
-        <StageQuestionComponent
-          data={{
-            ...data,
-            displayType: data.displayType || 'text',
-            multiSelect: type === 'multipleChoice' ? (data.multiSelect || 3) : 1,
-            layout: data.layout || { columns: 2, direction: 'vertical' },
-            imageSize: data.imageSize || 'medium',
-            selectionIndicator: data.selectionIndicator || 'border',
-          }}
-          style={style || {}}
-          isSelected={isSelected && !isPreview}
-        />
-      );
-
-    case 'quizResult':
-      return (
-        <div style={getComponentStyles()} className={cn("py-6 text-center", isSelected && !isPreview && "bg-opacity-90")}>
-          <h2 className="text-2xl font-bold mb-4">{data.resultTitle || 'Seu Estilo Predominante'}</h2>
-          <div className="inline-block bg-[#ffefec] px-4 py-2 rounded-md text-[#aa6b5d] mb-6">
-            Estilo exemplo: Natural
-          </div>
-          <p>{data.resultDescription || 'Descrição do resultado do quiz será exibida aqui.'}</p>
-        </div>
-      );
-
-    case 'stageCover':
-      return (
-        <StageCoverComponent 
-          data={data}
-          style={style}
-          isSelected={isSelected && !isPreview}
-        />
-      );
-      
-    case 'stageQuestion':
-      return (
-        <StageQuestionComponent
-          data={{
-            ...data,
-            displayType: data.displayType || 'text',
-            multiSelect: data.multiSelect || 3,
-            layout: data.layout || { columns: 2, direction: 'vertical' },
-            imageSize: data.imageSize || 'medium',
-            selectionIndicator: data.selectionIndicator || 'border',
-          }}
-          style={style || {}}
-          isSelected={isSelected && !isPreview}
-        />
-      );
-
-    case 'stageResult':
-      return (
-        <StageResultComponent 
-          data={data}
-          style={style}
-          isSelected={isSelected && !isPreview}
-        />
-      );
-
-    default:
-      return (
-        <div className="p-4 text-center border border-dashed border-gray-300 rounded-md">
-          <p className="text-gray-500">Componente tipo {type} não reconhecido</p>
-        </div>
-      );
-  }
+  return (
+    <div 
+      onClick={onClick}
+      className={`transition-all ${isSelected ? 'ring-2 ring-blue-500' : ''}`}
+    >
+      {renderComponent()}
+    </div>
+  );
 };
 
+export default ComponentRenderer;

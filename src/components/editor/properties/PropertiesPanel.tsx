@@ -1,209 +1,128 @@
 
 import React from 'react';
-import { X } from 'lucide-react';
-import { Button } from '../../ui/button';
-import { EditorBlock, EditableContent } from '../../../types/editor';
-import { StyleControls } from '../controls/StyleControls';
+import { EditorBlock } from '@/types/editor';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 interface PropertiesPanelProps {
-  selectedComponentId: string | null;
-  onClose: () => void;
-  onUpdate?: (content: Partial<EditableContent>) => void;
-  onDelete?: () => void;
+  selectedBlock: EditorBlock | null;
   blocks?: EditorBlock[];
+  onClose: () => void;
+  onUpdate: (updates: any) => void;
+  onDelete: () => void;
+  isMobile?: boolean;
 }
 
-const PropertiesPanel = ({ 
-  selectedComponentId, 
-  onClose, 
+export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
+  selectedBlock,
+  onClose,
   onUpdate,
   onDelete,
-  blocks 
-}: PropertiesPanelProps) => {
-  const selectedBlock = blocks?.find(block => block.id === selectedComponentId);
-
-  if (!selectedComponentId || !selectedBlock) {
+  isMobile = false
+}) => {
+  if (!selectedBlock) {
     return (
-      <div className="h-full p-4 bg-white">
-        <div className="flex justify-between items-center border-b pb-4 mb-4">
-          <h2 className="text-lg font-playfair text-[#432818]">Propriedades</h2>
-          <Button variant="ghost" size="sm" onClick={onClose}>
-            <X className="w-4 h-4" />
-          </Button>
-        </div>
-        <div className="flex flex-col items-center justify-center h-64 text-[#8F7A6A] text-sm">
-          <p>Selecione um componente para editar suas propriedades</p>
-        </div>
+      <div className="h-full bg-gray-50 p-4">
+        <h3 className="text-lg font-semibold mb-4">Properties</h3>
+        <p className="text-gray-500">Select a block to edit its properties</p>
       </div>
     );
   }
 
+  const handleContentUpdate = (key: string, value: any) => {
+    onUpdate({
+      content: {
+        ...selectedBlock.content,
+        [key]: value
+      }
+    });
+  };
+
   return (
-    <div className="h-full p-4 bg-white overflow-y-auto">
-      <div className="flex justify-between items-center border-b pb-4 mb-4">
-        <h2 className="text-lg font-playfair text-[#432818]">Propriedades</h2>
+    <div className="h-full bg-gray-50 p-4">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold">Properties</h3>
         <Button variant="ghost" size="sm" onClick={onClose}>
-          <X className="w-4 h-4" />
+          ×
         </Button>
       </div>
-      
-      <div className="space-y-6">
-        {/* Content Properties */}
-        <div className="space-y-4">
-          <h3 className="text-sm font-medium text-[#432818]">Conteúdo</h3>
-          
-          {selectedBlock.type === 'quiz-question' && (
-            <>
-              <div>
-                <label className="text-sm text-[#8F7A6A]">Pergunta</label>
-                <textarea
-                  className="w-full mt-1 p-2 border rounded"
-                  value={selectedBlock.content.question || ''}
-                  onChange={(e) => onUpdate?.({ question: e.target.value })}
-                  placeholder="Digite sua pergunta aqui..."
-                  rows={3}
-                />
-              </div>
-              
-              <div className="space-y-3">
-                <h4 className="text-sm font-medium text-[#432818]">Cabeçalho</h4>
-                <div>
-                  <label className="text-sm text-[#8F7A6A]">URL do Logo</label>
-                  <input
-                    type="text"
-                    className="w-full mt-1 p-2 border rounded"
-                    value={selectedBlock.content.logoUrl || ''}
-                    onChange={(e) => onUpdate?.({ logoUrl: e.target.value })}
-                    placeholder="https://exemplo.com/logo.png"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm text-[#8F7A6A]">Progresso (%)</label>
-                  <input
-                    type="number"
-                    min="0"
-                    max="100"
-                    className="w-full mt-1 p-2 border rounded"
-                    value={selectedBlock.content.progressPercent || 0}
-                    onChange={(e) => onUpdate?.({ progressPercent: parseInt(e.target.value) })}
-                  />
-                </div>
-                <div>
-                  <label className="text-sm text-[#8F7A6A]">Botão Voltar</label>
-                  <div className="flex items-center mt-1">
-                    <input
-                      type="checkbox"
-                      checked={selectedBlock.content.showBackButton || false}
-                      onChange={(e) => onUpdate?.({ showBackButton: e.target.checked })}
-                      className="mr-2"
-                    />
-                    <span className="text-sm">Mostrar botão voltar</span>
-                  </div>
-                </div>
-              </div>
 
-              <div className="space-y-3">
-                <h4 className="text-sm font-medium text-[#432818]">Configurações</h4>
-                <div>
-                  <label className="text-sm text-[#8F7A6A]">Múltipla Seleção</label>
-                  <div className="flex items-center mt-1">
-                    <input
-                      type="checkbox"
-                      checked={selectedBlock.content.multipleSelection || false}
-                      onChange={(e) => onUpdate?.({ multipleSelection: e.target.checked })}
-                      className="mr-2"
-                    />
-                    <span className="text-sm">Permitir múltiplas seleções</span>
-                  </div>
-                </div>
-                <div>
-                  <label className="text-sm text-[#8F7A6A]">Máximo de Seleções</label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="10"
-                    className="w-full mt-1 p-2 border rounded"
-                    value={selectedBlock.content.maxSelections || 3}
-                    onChange={(e) => onUpdate?.({ maxSelections: parseInt(e.target.value) })}
-                  />
-                </div>
-                <div>
-                  <label className="text-sm text-[#8F7A6A]">Layout das Opções</label>
-                  <select
-                    className="w-full mt-1 p-2 border rounded"
-                    value={selectedBlock.content.optionLayout || 'grid'}
-                    onChange={(e) => onUpdate?.({ optionLayout: e.target.value as 'vertical' | 'horizontal' | 'grid' })}
-                  >
-                    <option value="grid">Grid (2 colunas)</option>
-                    <option value="vertical">Vertical</option>
-                    <option value="horizontal">Horizontal</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="text-sm text-[#8F7A6A]">Mostrar Imagens</label>
-                  <div className="flex items-center mt-1">
-                    <input
-                      type="checkbox"
-                      checked={selectedBlock.content.showImages !== false}
-                      onChange={(e) => onUpdate?.({ showImages: e.target.checked })}
-                      className="mr-2"
-                    />
-                    <span className="text-sm">Exibir imagens nas opções</span>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
-
-          {selectedBlock.type === 'image' && (
-            <>
-              <div>
-                <label className="text-sm text-[#8F7A6A]">URL da Imagem</label>
-                <input 
-                  type="text"
-                  className="w-full mt-1 p-2 border rounded"
-                  value={selectedBlock.content.imageUrl || ''}
-                  onChange={(e) => onUpdate?.({ imageUrl: e.target.value })}
-                  placeholder="https://exemplo.com/imagem.jpg"
-                />
-              </div>
-              <div>
-                <label className="text-sm text-[#8F7A6A]">Texto Alternativo</label>
-                <input
-                  type="text"
-                  className="w-full mt-1 p-2 border rounded"
-                  value={selectedBlock.content.imageAlt || ''}
-                  onChange={(e) => onUpdate?.({ imageAlt: e.target.value })}
-                  placeholder="Descrição da imagem"
-                />
-              </div>
-            </>
-          )}
+      <div className="space-y-4">
+        <div>
+          <Label>Block Type</Label>
+          <div className="text-sm text-gray-600 bg-gray-100 p-2 rounded">
+            {selectedBlock.type}
+          </div>
         </div>
 
-        {/* Style Properties */}
-        <div className="space-y-4">
-          <h3 className="text-sm font-medium text-[#432818]">Estilos</h3>
-          <StyleControls
-            style={selectedBlock.content.style || {}}
-            onUpdate={(newStyle) => {
-              onUpdate?.({
-                ...selectedBlock.content,
-                style: newStyle
-              });
-            }}
-          />
-        </div>
+        {selectedBlock.type === 'text' && (
+          <div>
+            <Label htmlFor="text">Text Content</Label>
+            <Textarea
+              id="text"
+              value={selectedBlock.content?.text || ''}
+              onChange={(e) => handleContentUpdate('text', e.target.value)}
+              placeholder="Enter text content..."
+            />
+          </div>
+        )}
 
-        {/* Delete button */}
+        {selectedBlock.type === 'header' && (
+          <>
+            <div>
+              <Label htmlFor="title">Title</Label>
+              <Input
+                id="title"
+                value={selectedBlock.content?.title || ''}
+                onChange={(e) => handleContentUpdate('title', e.target.value)}
+                placeholder="Enter title..."
+              />
+            </div>
+            <div>
+              <Label htmlFor="subtitle">Subtitle</Label>
+              <Input
+                id="subtitle"
+                value={selectedBlock.content?.subtitle || ''}
+                onChange={(e) => handleContentUpdate('subtitle', e.target.value)}
+                placeholder="Enter subtitle..."
+              />
+            </div>
+          </>
+        )}
+
+        {selectedBlock.type === 'image' && (
+          <>
+            <div>
+              <Label htmlFor="imageUrl">Image URL</Label>
+              <Input
+                id="imageUrl"
+                value={selectedBlock.content?.imageUrl || ''}
+                onChange={(e) => handleContentUpdate('imageUrl', e.target.value)}
+                placeholder="Enter image URL..."
+              />
+            </div>
+            <div>
+              <Label htmlFor="imageAlt">Alt Text</Label>
+              <Input
+                id="imageAlt"
+                value={selectedBlock.content?.imageAlt || ''}
+                onChange={(e) => handleContentUpdate('imageAlt', e.target.value)}
+                placeholder="Enter alt text..."
+              />
+            </div>
+          </>
+        )}
+
         <div className="pt-4 border-t">
           <Button 
             variant="destructive" 
             size="sm" 
-            className="w-full"
             onClick={onDelete}
+            className="w-full"
           >
-            Excluir Componente
+            Delete Block
           </Button>
         </div>
       </div>

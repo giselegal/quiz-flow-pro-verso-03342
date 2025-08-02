@@ -1,112 +1,126 @@
 
 import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import { Card } from '@/components/ui/card';
 import { ComponentsSidebar } from './sidebar/ComponentsSidebar';
 import { EditorCanvas } from './canvas/EditorCanvas';
 import { PropertiesPanel } from './properties/PropertiesPanel';
 import { EditorProvider } from '@/contexts/EditorContext';
-import { useEditor } from '@/hooks/useEditor';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { Block } from '@/types/editor';
 
 interface EnhancedEditorLayoutProps {
   className?: string;
 }
 
-const EnhancedEditorLayout: React.FC<EnhancedEditorLayoutProps> = ({ className = '' }) => {
-  const [activeTab, setActiveTab] = useState<'quiz' | 'result' | 'sales'>('result');
+export const EnhancedEditorLayout: React.FC<EnhancedEditorLayoutProps> = ({ className = '' }) => {
+  const [blocks, setBlocks] = useState<Block[]>([]);
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
 
-  const {
-    blocks,
-    actions
-  } = useEditor();
-
   const handleComponentSelect = (type: string) => {
-    const newBlockId = actions.addBlock(type);
-    setSelectedBlockId(newBlockId);
+    const newBlock: Block = {
+      id: `block-${Date.now()}`,
+      type,
+      content: getDefaultContent(type),
+      order: blocks.length,
+      properties: {}
+    };
+    setBlocks(prev => [...prev, newBlock]);
+    setSelectedBlockId(newBlock.id);
   };
 
-  const handleBlockUpdate = (id: string, updates: any) => {
-    actions.updateBlock(id, updates);
+  const handleBlockUpdate = (updates: any) => {
+    if (selectedBlockId) {
+      setBlocks(prev => prev.map(block => 
+        block.id === selectedBlockId ? { ...block, ...updates } : block
+      ));
+    }
   };
 
-  const handleBlockDelete = (id: string) => {
-    actions.deleteBlock(id);
-    if (selectedBlockId === id) {
+  const handleBlockDelete = () => {
+    if (selectedBlockId) {
+      setBlocks(prev => prev.filter(block => block.id !== selectedBlockId));
       setSelectedBlockId(null);
     }
   };
 
   const handleReorderBlocks = (sourceIndex: number, destinationIndex: number) => {
-    actions.reorderBlocks(sourceIndex, destinationIndex);
+    setBlocks(prev => {
+      const result = Array.from(prev);
+      const [removed] = result.splice(sourceIndex, 1);
+      result.splice(destinationIndex, 0, removed);
+      return result;
+    });
   };
+
+  const getDefaultContent = (type: string) => {
+    switch (type) {
+      case 'header':
+        return { title: 'Novo Cabeçalho', subtitle: 'Subtítulo' };
+      case 'text':
+        return { text: 'Novo texto. Clique para editar.' };
+      case 'image':
+        return { imageUrl: '', imageAlt: 'Imagem', caption: '' };
+      default:
+        return {};
+    }
+  };
+
+  const selectedBlock = selectedBlockId ? blocks.find((b: any) => b.id === selectedBlockId) || null : null;
+
+  if (isMobile) {
+    return (
+      <EditorProvider>
+        <div className={`h-screen flex flex-col ${className}`}>
+          <div className="flex-1 overflow-hidden">
+            <EditorCanvas
+              blocks={blocks}
+              selectedBlockId={selectedBlockId}
+              onSelectBlock={setSelectedBlockId}
+              onUpdateBlock={handleBlockUpdate}
+              onDeleteBlock={handleBlockDelete}
+              onReorderBlocks={handleReorderBlocks}
+              isPreviewing={isPreviewing}
+              viewportSize="sm"
+            />
+          </div>
+        </div>
+      </EditorProvider>
+    );
+  }
 
   return (
     <EditorProvider>
-      <div className={`h-screen flex flex-col ${className}`}>
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as any)} className="flex-1">
-          <div className="border-b">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="quiz">Quiz Editor</TabsTrigger>
-              <TabsTrigger value="result">Result Page</TabsTrigger>
-              <TabsTrigger value="sales">Sales Page</TabsTrigger>
-            </TabsList>
+      <div className={`h-screen flex ${className}`}>
+        <Card className="w-64 h-full rounded-none border-r">
+          <ComponentsSidebar onComponentSelect={handleComponentSelect} />
+        </Card>
+
+        <div className="flex-1 flex">
+          <div className="flex-1">
+            <EditorCanvas
+              blocks={blocks}
+              selectedBlockId={selectedBlockId}
+              onSelectBlock={setSelectedBlockId}
+              onUpdateBlock={handleBlockUpdate}
+              onDeleteBlock={handleBlockDelete}
+              onReorderBlocks={handleReorderBlocks}
+              isPreviewing={isPreviewing}
+              viewportSize="lg"
+            />
           </div>
 
-          <TabsContent value="result" className="flex-1 mt-0">
-            <ResizablePanelGroup direction="horizontal" className="h-full">
-              <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-                <ComponentsSidebar onComponentSelect={handleComponentSelect} />
-              </ResizablePanel>
-
-              <ResizableHandle withHandle />
-
-              <ResizablePanel defaultSize={55}>
-                <EditorCanvas
-                  blocks={blocks}
-                  selectedBlockId={selectedBlockId}
-                  onSelectBlock={setSelectedBlockId}
-                  onUpdateBlock={handleBlockUpdate}
-                  onDeleteBlock={handleBlockDelete}
-                  onReorderBlocks={handleReorderBlocks}
-                  isPreviewing={isPreviewing}
-                  viewportSize="lg"
-                />
-              </ResizablePanel>
-
-              <ResizableHandle withHandle />
-
-              <ResizablePanel defaultSize={25}>
-                <PropertiesPanel
-                  selectedBlock={selectedBlockId ? blocks.find((b: any) => b.id === selectedBlockId) || null : null}
-                  blocks={blocks}
-                  onClose={() => setSelectedBlockId(null)}
-                  onUpdate={handleBlockUpdate}
-                  onDelete={handleBlockDelete}
-                  isMobile={isMobile}
-                />
-              </ResizablePanel>
-            </ResizablePanelGroup>
-          </TabsContent>
-
-          <TabsContent value="quiz" className="flex-1 mt-0">
-            <div className="h-full flex items-center justify-center">
-              <p className="text-gray-500">Quiz Editor - Em desenvolvimento</p>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="sales" className="flex-1 mt-0">
-            <div className="h-full flex items-center justify-center">
-              <p className="text-gray-500">Sales Page Editor - Em desenvolvimento</p>
-            </div>
-          </TabsContent>
-        </Tabs>
+          <Card className="w-80 h-full rounded-none border-l">
+            <PropertiesPanel
+              selectedBlock={selectedBlock}
+              onUpdate={handleBlockUpdate}
+              onDelete={handleBlockDelete}
+              onClose={() => setSelectedBlockId(null)}
+            />
+          </Card>
+        </div>
       </div>
     </EditorProvider>
   );
 };
-
-export default EnhancedEditorLayout;
