@@ -37,16 +37,16 @@ const DashboardPage: React.FC = () => {
             <Switch>
               {/* Rota principal - Overview */}
               <Route path="/admin" component={DashboardOverview} />
+              <Route path="/admin/" component={DashboardOverview} />
               
-              {/* Rotas do dashboard conforme solicitado */}
+              {/* Rotas do dashboard */}
               <Route path="/admin/quiz" component={QuizPage} />
               <Route path="/admin/funis" component={FunnelPanelPage} />
               <Route path="/admin/ab-tests" component={ABTestPage} />
               <Route path="/admin/settings" component={SettingsPage} />
               <Route path="/admin/criativos" component={CreativesPage} />
               <Route path="/admin/analytics" component={AnalyticsPage} />
-              {/* Editor agora é independente do dashboard - usa /editor em vez de /admin/editor */}
-              {/* <Route path="/admin/editor" component={EditorPage} /> */}
+              <Route path="/admin/editor" component={EditorPage} />
             </Switch>
           </Suspense>
         </main>
