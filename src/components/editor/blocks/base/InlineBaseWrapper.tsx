@@ -8,7 +8,7 @@ export interface InlineBaseWrapperProps {
   className?: string;
   minHeight?: string;
   editLabel?: string;
-  gap?: 'sm' | 'md' | 'lg';
+  gap?: 'none' | 'sm' | 'md' | 'lg';
   justify?: 'start' | 'center' | 'end';
   align?: 'center' | 'start' | 'end' | 'stretch';
   direction?: 'row' | 'col';
@@ -16,6 +16,8 @@ export interface InlineBaseWrapperProps {
   trackingData?: Record<string, any>;
   isLoading?: boolean;
   onMove?: (direction: 'up' | 'down') => void;
+  responsive?: boolean;
+  onEdit?: () => void;
   // Additional compatibility props
   block?: BlockData;
   isSelected?: boolean;
@@ -35,12 +37,15 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
   trackingData,
   isLoading = false,
   onMove,
+  responsive = false,
+  onEdit,
   // Compatibility props (ignored for now)
   block,
   isSelected,
   onPropertyChange
 }) => {
   const gapClasses = {
+    none: 'gap-0',
     sm: 'gap-2',
     md: 'gap-4',
     lg: 'gap-6'
@@ -68,6 +73,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
         justifyClasses[justify],
         alignClasses[align],
         wrap && 'flex-wrap',
+        responsive && 'w-full',
         className
       )}
       style={{ minHeight }}

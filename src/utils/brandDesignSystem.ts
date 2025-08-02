@@ -17,8 +17,13 @@ export const BRAND_COLORS = {
     200: '#E8E1D1',
     300: '#D4C4A0',
     400: '#8F7A6A',
-    500: '#432818'
-  }
+    500: '#432818',
+    600: '#2D1A10',
+    gray600: '#4A5568'
+  },
+  // Brand colors for compatibility
+  brand: ['#B89B7A', '#432818', '#8F7A6A'],
+  light: '#D4C4A0'
 };
 
 export const TYPOGRAPHY = {
@@ -28,7 +33,8 @@ export const TYPOGRAPHY = {
     base: '1rem',
     lg: '1.125rem',
     xl: '1.25rem',
-    '2xl': '1.5rem'
+    '2xl': '1.5rem',
+    '3xl': '1.875rem'
   },
   fontWeight: {
     normal: '400',

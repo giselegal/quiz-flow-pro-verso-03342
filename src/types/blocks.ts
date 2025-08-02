@@ -43,7 +43,7 @@ export const createBlockData = (type: string): BlockData => ({
   order: 0
 });
 
-// Extended interfaces for specific block types
+// Extended interfaces for specific block types - now properly extending BlockData
 export interface CountdownTimerBlock extends BlockData {
   type: "countdown-timer";
   properties: {
@@ -65,8 +65,6 @@ export interface CountdownTimerBlock extends BlockData {
     padding?: string;
     showProgress?: boolean;
   };
-  content: Record<string, any>;
-  order: number;
 }
 
 export interface FAQBlock extends BlockData {
@@ -84,8 +82,6 @@ export interface FAQBlock extends BlockData {
     accentColor?: string;
     searchPlaceholder?: string;
   };
-  content: Record<string, any>;
-  order: number;
 }
 
 export interface PriceComparisonBlock extends BlockData {
@@ -110,6 +106,37 @@ export interface PriceComparisonBlock extends BlockData {
     billingPeriod?: string;
     cardStyle?: 'modern' | 'classic' | 'minimal' | 'gradient';
   };
-  content: Record<string, any>;
-  order: number;
+}
+
+export interface ProsConsBlock extends BlockData {
+  type: "pros-cons";
+  properties: {
+    title?: string;
+    subtitle?: string;
+    prosTitle?: string;
+    consTitle?: string;
+    pros: Array<{ id: string; text: string; icon?: string; highlight?: boolean }>;
+    cons: Array<{ id: string; text: string; icon?: string; highlight?: boolean }>;
+    layout?: 'side-by-side' | 'stacked';
+    prosColor?: string;
+    consColor?: string;
+    backgroundColor?: string;
+    textColor?: string;
+  };
+}
+
+export interface StatsMetricsBlock extends BlockData {
+  type: "stats-metrics";
+  properties: {
+    title?: string;
+    subtitle?: string;
+    stats?: Array<{ id: string; value: string; label: string; icon?: string; color?: string }>;
+    layout?: 'grid' | 'horizontal' | 'vertical' | 'cards';
+    columns?: number;
+    showIcons?: boolean;
+    animateCountUp?: boolean;
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+  };
 }

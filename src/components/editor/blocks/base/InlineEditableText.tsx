@@ -6,7 +6,7 @@ interface InlineEditableTextProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
-  fontSize?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl';
+  fontSize?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl';
   fontWeight?: 'normal' | 'medium' | 'semibold' | 'bold';
   className?: string;
   multiline?: boolean;
@@ -56,7 +56,8 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
     base: 'text-base',
     lg: 'text-lg',
     xl: 'text-xl',
-    '2xl': 'text-2xl'
+    '2xl': 'text-2xl',
+    '3xl': 'text-3xl'
   };
 
   const fontWeightClasses = {

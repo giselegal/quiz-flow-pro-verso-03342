@@ -29,6 +29,8 @@ export interface QuizOption {
   style: StyleType;
   imageUrl?: string;
   weight?: number;
+  styleCategory?: string;
+  points?: Record<string, number>;
 }
 
 export interface QuizQuestion {
@@ -36,6 +38,12 @@ export interface QuizQuestion {
   text: string;
   options: QuizOption[];
   style?: QuizComponentStyle;
+  // Additional properties for editor compatibility
+  title?: string;
+  question?: string;
+  order?: number;
+  type?: string;
+  multiSelect?: number;
 }
 
 export interface QuizComponentStyle {
