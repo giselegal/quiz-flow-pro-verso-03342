@@ -12,7 +12,7 @@ import { EditorProps } from '@/types/editorTypes';
 import { toast } from '@/components/ui/use-toast';
 import { ResultPageConfig } from '@/types/resultPageConfig';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { StyleResult } from '@/types/quiz';
+import { StyleResult, StyleType } from '@/types/quiz';
 
 interface ResultPageVisualEditorProps extends EditorProps {
   initialConfig?: ResultPageConfig;
@@ -46,19 +46,16 @@ export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({
     actions: blockActions
   } = useBlockOperations();
 
-  // Apply initial config if provided
   useEffect(() => {
     if (initialConfig && importConfig) {
       importConfig(initialConfig);
     }
   }, [initialConfig, importConfig]);
 
-  // Sync blocks with config when needed
   useEffect(() => {
     if (resultPageConfig?.blocks) {
       updateBlocks(resultPageConfig.blocks);
     } else {
-      // Initialize with empty blocks if not present
       updateSection('blocks', []);
     }
   }, [resultPageConfig, updateBlocks, updateSection]);
@@ -70,7 +67,6 @@ export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({
         if (newConfig.blocks) {
           updateBlocks(newConfig.blocks);
         } else {
-          // Initialize with empty blocks if not present
           updateBlocks([]);
         }
         toast({
@@ -98,17 +94,15 @@ export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({
     );
   }
 
-  // Cast do tipo para garantir compatibilidade com o componente EditorPreview
   const primaryStyle: StyleResult = {
-    category: selectedStyle.category as any,
+    category: selectedStyle.category as StyleType,
     score: selectedStyle.score,
     percentage: selectedStyle.percentage,
-    style: selectedStyle.category,
+    style: selectedStyle.category as StyleType,
     points: selectedStyle.score,
     rank: 1
   };
 
-  // Find selected block
   const selectedBlock = selectedBlockId ? blocks.find(block => block.id === selectedBlockId) : null;
 
   return (

@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { StyleResult } from '@/types/quiz';
+import { StyleResult, StyleType } from '@/types/quiz';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { styleConfig } from '@/config/styleConfig';
+import { styleConfig, StyleConfigMap } from '@/config/styleConfig';
 
 interface StyleSelectorProps {
   selectedStyle: StyleResult;
@@ -12,16 +12,16 @@ interface StyleSelectorProps {
 const StyleSelector: React.FC<StyleSelectorProps> = ({ selectedStyle, onStyleChange }) => {
   const handleStyleChange = (value: string) => {
     onStyleChange({
-      category: value as StyleResult['category'],
+      category: value as StyleType,
       score: 0,
       percentage: 100,
-      style: value,
+      style: value as StyleType,
       points: 0,
       rank: 1
     });
   };
 
-  const currentStyleConfig = styleConfig[selectedStyle.category];
+  const currentStyleConfig = (styleConfig as StyleConfigMap)[selectedStyle.category];
 
   return (
     <div className="space-y-4">

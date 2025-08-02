@@ -5,10 +5,48 @@ import { Button } from '@/components/ui/button';
 import { Eye, EyeOff, Save, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from '@/components/ui/use-toast';
-import QuizResult from '../QuizResult';
 import EditableComponent from './EditableComponent';
 import { useQuizResultConfig } from '@/hooks/useQuizResultConfig';
 import { useAutosave } from '@/hooks/useAutosave';
+
+interface QuizResultProps {
+  primaryStyle: StyleResult;
+  secondaryStyles: StyleResult[];
+}
+
+// Create a simple QuizResult component since it's missing
+const QuizResult: React.FC<QuizResultProps> = ({ primaryStyle, secondaryStyles }) => {
+  return (
+    <div className="min-h-screen bg-[#FAF9F7] p-6">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl font-playfair text-[#432818] mb-6">
+          Seu estilo é {primaryStyle.category}
+        </h1>
+        <div className="space-y-6">
+          <div className="bg-white p-6 rounded-lg">
+            <h2 className="text-xl font-medium text-[#432818] mb-4">Estilo Principal</h2>
+            <p className="text-[#1A1818]/70">Score: {primaryStyle.score}</p>
+            <p className="text-[#1A1818]/70">Percentual: {primaryStyle.percentage}%</p>
+          </div>
+          
+          {secondaryStyles.length > 0 && (
+            <div className="bg-white p-6 rounded-lg">
+              <h2 className="text-xl font-medium text-[#432818] mb-4">Estilos Secundários</h2>
+              <div className="space-y-2">
+                {secondaryStyles.map((style, index) => (
+                  <div key={index} className="flex justify-between">
+                    <span>{style.category}</span>
+                    <span>{style.percentage}%</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 interface ResultPageEditorWithControlsProps {
   primaryStyle: StyleResult;
@@ -22,21 +60,18 @@ export const ResultPageEditorWithControls: React.FC<ResultPageEditorWithControls
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const { config, updateConfig, saveConfig } = useQuizResultConfig(primaryStyle.category);
   
-  // Use our new autosave hook
   const { isSaving, lastSaved, saveNow } = useAutosave({
     data: config,
     onSave: saveConfig,
     interval: 5000,
-    enabled: !isPreviewMode // Only enable autosave when not in preview mode
+    enabled: !isPreviewMode
   });
 
   const handleConfigUpdate = (sectionKey: string, data: any) => {
     updateConfig(sectionKey, data);
-    // No need to call save here, autosave will handle it
   };
   
   const togglePreviewMode = () => {
-    // If we're switching from edit to preview, save immediately
     if (!isPreviewMode) {
       saveNow();
     }
@@ -45,7 +80,6 @@ export const ResultPageEditorWithControls: React.FC<ResultPageEditorWithControls
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Barra de ferramentas do editor */}
       <div className="bg-white border-b p-4 flex justify-between items-center sticky top-0 z-10">
         <div className="flex items-center gap-3">
           <Link to="/resultado">
@@ -70,10 +104,7 @@ export const ResultPageEditorWithControls: React.FC<ResultPageEditorWithControls
             </div>
           )}
           
-          <Button
-            variant="outline"
-            onClick={togglePreviewMode}
-          >
+          <Button variant="outline" onClick={togglePreviewMode}>
             {isPreviewMode ? (
               <>
                 <EyeOff className="w-4 h-4 mr-2" />
@@ -98,16 +129,13 @@ export const ResultPageEditorWithControls: React.FC<ResultPageEditorWithControls
         </div>
       </div>
       
-      {/* Conteúdo da página */}
       <div className="flex-1">
         {isPreviewMode ? (
-          // Modo de visualização: mostra a página exatamente como o usuário verá
           <QuizResult 
             primaryStyle={primaryStyle} 
             secondaryStyles={secondaryStyles} 
           />
         ) : (
-          // Modo de edição: envolve cada seção com controles de edição
           <EditableComponent
             components={{
               primaryStyle,
