@@ -1,44 +1,69 @@
+
 import React from 'react';
-import { cn } from '../../../../lib/utils';
+import { safeGetBlockProperties } from '@/utils/blockUtils';
 
 interface HeadingInlineBlockProps {
-  content?: string;
-  level?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
-  fontSize?: string;
-  fontWeight?: string;
-  textAlign?: 'text-left' | 'text-center' | 'text-right';
-  color?: string;
-  className?: string;
-  [key: string]: any;
+  block: {
+    id: string;
+    type: string;
+    content?: any;
+  };
+  isSelected?: boolean;
+  onSelect?: () => void;
+  onUpdate?: (content: any) => void;
 }
 
-const HeadingInlineBlock: React.FC<HeadingInlineBlockProps> = ({
-  content = 'Título da Seção',
-  level = 'h2',
-  fontSize = 'text-2xl',
-  fontWeight = 'font-bold',
-  textAlign = 'text-center',
-  color = '#1a1a1a',
-  className,
-  ...props
+export const HeadingInlineBlock: React.FC<HeadingInlineBlockProps> = ({
+  block,
+  isSelected = false,
+  onSelect,
+  onUpdate
 }) => {
-  const Tag = level as keyof JSX.IntrinsicElements;
+  const properties = safeGetBlockProperties(block);
+  const text = properties.text || properties.title || 'Título';
+  const level = properties.level || 'h1';
+  const textAlign = properties.textAlign || 'center';
+  const color = properties.color || '#432818';
 
-  return (
-    <Tag
-      className={cn(
-        fontSize,
-        fontWeight,
-        textAlign,
-        "leading-tight",
-        className
-      )}
-      style={{ color }}
-      {...props}
-    >
-      {content}
-    </Tag>
-  );
+  const handleTextChange = (newText: string) => {
+    if (onUpdate) {
+      onUpdate({ text: newText, title: newText });
+    }
+  };
+
+  const headingProps = {
+    className: `font-bold cursor-pointer transition-all duration-200 ${
+      isSelected ? 'ring-2 ring-blue-500 ring-opacity-50' : ''
+    }`,
+    style: { 
+      textAlign: textAlign as any,
+      color,
+      fontSize: level === 'h1' ? '2rem' : level === 'h2' ? '1.5rem' : '1.25rem'
+    },
+    onClick: onSelect,
+    contentEditable: true,
+    suppressContentEditableWarning: true,
+    onBlur: (e: React.FocusEvent<HTMLElement>) => {
+      handleTextChange(e.target.textContent || '');
+    },
+    onKeyDown: (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        (e.target as HTMLElement).blur();
+      }
+    }
+  };
+
+  switch (level) {
+    case 'h1':
+      return <h1 {...headingProps}>{text}</h1>;
+    case 'h2':
+      return <h2 {...headingProps}>{text}</h2>;
+    case 'h3':
+      return <h3 {...headingProps}>{text}</h3>;
+    default:
+      return <h1 {...headingProps}>{text}</h1>;
+  }
 };
 
 export default HeadingInlineBlock;

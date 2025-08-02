@@ -1,7 +1,5 @@
-
 /**
- * Utilitários para manipulação segura de blocos
- * Versão aprimorada para prevenir erros de propriedades undefined
+ * Utilitários para manipulação segura de blocos do editor
  */
 
 /**
@@ -9,18 +7,35 @@
  * @param block - O bloco do qual extrair as propriedades
  * @returns As propriedades do bloco ou um objeto vazio se undefined
  */
-export const safeGetBlockProperties = (block: any) => {
+export const safeGetBlockProperties = (block: any): Record<string, any> => {
   if (!block) {
-    console.warn('⚠️ Bloco undefined recebido em safeGetBlockProperties');
+    console.warn('⚠️ Bloco undefined ou null');
     return {};
   }
+
+  const blockId = block.id || 'unknown';
   
-  if (!block.properties) {
-    console.warn(`⚠️ Propriedades undefined no bloco ${block.id} (tipo: ${block.type})`);
-    return {};
+  // Tentar diferentes caminhos para as propriedades
+  let properties = 
+    block.content || 
+    block.properties || 
+    block.data || 
+    {};
+
+  if (!properties || typeof properties !== 'object') {
+    console.warn(`⚠️ Propriedades undefined no bloco ${blockId} (tipo: ${block.type})`);
+    properties = {};
   }
-  
-  return block.properties;
+
+  // Debug log para entender a estrutura
+  console.log(`🧱 Block ${blockId} properties:`, {
+    hasContent: !!block.content,
+    hasProperties: !!block.properties,
+    hasData: !!block.data,
+    finalProps: properties
+  });
+
+  return properties;
 };
 
 /**
@@ -101,4 +116,30 @@ export const createSafeFallback = (blockType: string, error?: string) => {
       ].filter(Boolean).join('')
     }
   };
+};
+
+// Função helper para obter valores com fallback
+export const getBlockValue = (block: any, key: string, defaultValue: any = '') => {
+  const properties = safeGetBlockProperties(block);
+  return properties[key] !== undefined ? properties[key] : defaultValue;
+};
+
+// Função para atualizar propriedades de um bloco de forma segura
+export const updateBlockProperties = (block: any, updates: Record<string, any>) => {
+  if (!block) return block;
+
+  const currentProperties = safeGetBlockProperties(block);
+  const newProperties = { ...currentProperties, ...updates };
+
+  // Atualizar no caminho correto (content, properties, ou data)
+  if (block.content !== undefined) {
+    return { ...block, content: newProperties };
+  } else if (block.properties !== undefined) {
+    return { ...block, properties: newProperties };
+  } else if (block.data !== undefined) {
+    return { ...block, data: newProperties };
+  } else {
+    // Fallback - criar content se não existir
+    return { ...block, content: newProperties };
+  }
 };

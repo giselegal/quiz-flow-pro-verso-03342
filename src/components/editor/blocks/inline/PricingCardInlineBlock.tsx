@@ -1,85 +1,125 @@
 
 import React from 'react';
-import { InlineBlockProps } from '@/types/inlineBlocks';
 import { Button } from '@/components/ui/button';
-import { Check } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Card } from '@/components/ui/card';
+import { safeGetBlockProperties } from '@/utils/blockUtils';
 
-const PricingCardInlineBlock: React.FC<InlineBlockProps> = ({ block, onUpdate, isSelected, onSelect }) => {
-  const {
-    title = 'Plano Premium',
-    price = '39,00',
-    originalPrice = '97,00',
-    currency = 'R$',
-    period = '',
-    highlight = true,
-    features = ['Recurso 1', 'Recurso 2', 'Recurso 3'],
-    ctaText = 'Comprar Agora',
-    ctaUrl = '#'
-  } = block.properties;
+interface PricingCardInlineBlockProps {
+  block: {
+    id: string;
+    type: string;
+    content?: any;
+  };
+  isSelected?: boolean;
+  onSelect?: () => void;
+  onUpdate?: (content: any) => void;
+}
+
+export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
+  block,
+  isSelected = false,
+  onSelect,
+  onUpdate
+}) => {
+  const properties = safeGetBlockProperties(block);
+  
+  // Valores padrão para evitar undefined
+  const title = properties.title || 'Oferta Especial';
+  const subtitle = properties.subtitle || 'Aproveite esta oportunidade única';
+  const originalPrice = properties.originalPrice || 'R$ 497,00';
+  const currentPrice = properties.currentPrice || 'R$ 97,00';
+  const discount = properties.discount || '80% OFF';
+  const buttonText = properties.buttonText || 'QUERO APROVEITAR';
+  const buttonUrl = properties.buttonUrl || '#';
+
+  console.log('🛒 PricingCardInlineBlock render:', {
+    blockId: block.id,
+    hasProperties: !!properties,
+    title,
+    currentPrice
+  });
 
   return (
-    <div
+    <Card 
+      className={`p-6 max-w-md mx-auto border-2 transition-all duration-200 ${
+        isSelected ? 'border-blue-500 shadow-lg' : 'border-[#B89B7A]'
+      }`}
       onClick={onSelect}
-      className={cn(
-        'relative bg-white border rounded-lg p-6 cursor-pointer transition-all duration-200',
-        highlight ? 'border-[#B89B7A] shadow-lg scale-105' : 'border-gray-200',
-        isSelected && 'ring-2 ring-blue-500 ring-offset-2'
-      )}
     >
-      {highlight && (
-        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-          <span className="bg-[#B89B7A] text-white px-4 py-1 rounded-full text-sm font-medium">
-            Mais Popular
-          </span>
-        </div>
-      )}
-      
       <div className="text-center space-y-4">
-        <h3 className="text-xl font-bold text-[#432818]">{title}</h3>
-        
+        {/* Título */}
+        <h2 
+          className="text-2xl font-bold text-[#432818] cursor-text"
+          contentEditable
+          suppressContentEditableWarning
+          onBlur={(e) => onUpdate?.({ title: e.target.textContent })}
+        >
+          {title}
+        </h2>
+
+        {/* Subtítulo */}
+        <p 
+          className="text-[#8F7A6A] cursor-text"
+          contentEditable
+          suppressContentEditableWarning
+          onBlur={(e) => onUpdate?.({ subtitle: e.target.textContent })}
+        >
+          {subtitle}
+        </p>
+
+        {/* Preços */}
         <div className="space-y-2">
-          <div className="flex items-baseline justify-center space-x-2">
-            <span className="text-3xl font-bold text-[#432818]">
-              {currency}{price}
+          <div className="text-lg text-gray-500 line-through">
+            <span
+              contentEditable
+              suppressContentEditableWarning
+              onBlur={(e) => onUpdate?.({ originalPrice: e.target.textContent })}
+            >
+              {originalPrice}
             </span>
-            {period && <span className="text-[#8F7A6A]">/{period}</span>}
           </div>
           
-          {originalPrice && originalPrice !== price && (
-            <div className="text-center">
-              <span className="text-lg text-gray-400 line-through">
-                {currency}{originalPrice}
-              </span>
-            </div>
-          )}
+          <div className="text-4xl font-bold text-[#432818]">
+            <span
+              contentEditable
+              suppressContentEditableWarning
+              onBlur={(e) => onUpdate?.({ currentPrice: e.target.textContent })}
+            >
+              {currentPrice}
+            </span>
+          </div>
+          
+          <div className="inline-block bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+            <span
+              contentEditable
+              suppressContentEditableWarning
+              onBlur={(e) => onUpdate?.({ discount: e.target.textContent })}
+            >
+              {discount}
+            </span>
+          </div>
         </div>
-        
-        <div className="space-y-3">
-          {features.map((feature, index) => (
-            <div key={index} className="flex items-center space-x-2">
-              <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
-              <span className="text-[#432818]">{typeof feature === 'string' ? feature : feature.text}</span>
-            </div>
-          ))}
-        </div>
-        
+
+        {/* Botão CTA */}
         <Button 
-          className={cn(
-            'w-full',
-            highlight ? 'bg-[#B89B7A] hover:bg-[#aa6b5d]' : 'bg-gray-600 hover:bg-gray-700'
-          )}
+          className="w-full bg-[#B89B7A] hover:bg-[#A38A69] text-white font-bold py-3 px-6 text-lg"
           onClick={(e) => {
             e.stopPropagation();
-            if (ctaUrl && ctaUrl !== '#') {
-              window.open(ctaUrl, '_blank');
+            if (buttonUrl && buttonUrl !== '#') {
+              window.open(buttonUrl, '_blank');
             }
           }}
         >
-          {ctaText}
+          <span
+            contentEditable
+            suppressContentEditableWarning
+            onBlur={(e) => onUpdate?.({ buttonText: e.target.textContent })}
+          >
+            {buttonText}
+          </span>
         </Button>
       </div>
-    </div>
+    </Card>
   );
 };
 
