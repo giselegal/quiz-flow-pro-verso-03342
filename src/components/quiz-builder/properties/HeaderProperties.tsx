@@ -1,37 +1,46 @@
 
 import React from 'react';
+import { QuizComponentData } from '@/types/quizBuilder';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { QuizComponentData } from '@/types/quizBuilder';
 
 interface HeaderPropertiesProps {
-  data: QuizComponentData['data'];
-  onUpdate: (id: string, updates: Partial<QuizComponentData>) => void;
-  componentId: string;
+  component: QuizComponentData;
+  onUpdate: (id: string, data: any) => void;
 }
 
 export const HeaderProperties: React.FC<HeaderPropertiesProps> = ({
-  data,
-  onUpdate,
-  componentId
+  component,
+  onUpdate
 }) => {
+  const data = component.data || {};
+
+  const handleUpdate = (field: string, value: any) => {
+    onUpdate(component.id, {
+      ...data,
+      [field]: value
+    });
+  };
+
   return (
     <div className="space-y-4">
       <div>
-        <Label>Título</Label>
+        <Label htmlFor="title">Título</Label>
         <Input
+          id="title"
           value={data.title || ''}
-          onChange={(e) => onUpdate(componentId, { data: { ...data, title: e.target.value } })}
-          placeholder="Título do Quiz"
+          onChange={(e) => handleUpdate('title', e.target.value)}
+          placeholder="Digite o título"
         />
       </div>
       
       <div>
-        <Label>Subtítulo</Label>
+        <Label htmlFor="subtitle">Subtítulo</Label>
         <Input
+          id="subtitle"
           value={data.subtitle || ''}
-          onChange={(e) => onUpdate(componentId, { data: { ...data, subtitle: e.target.value } })}
-          placeholder="Descrição ou instruções do quiz"
+          onChange={(e) => handleUpdate('subtitle', e.target.value)}
+          placeholder="Digite o subtítulo"
         />
       </div>
     </div>

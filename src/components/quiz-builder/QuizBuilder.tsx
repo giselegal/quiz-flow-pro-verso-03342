@@ -9,6 +9,7 @@ import BuilderLayout from './components/BuilderLayout';
 import { StagesPanel } from './StagesPanel';
 import { PropertiesPanel } from './PropertiesPanel';
 import { QuizComponentType, QuizComponentData } from '@/types/quizBuilder';
+import { StyleResult } from '@/types/quiz';
 
 const QuizBuilder: React.FC = () => {
   const {
@@ -46,13 +47,13 @@ const QuizBuilder: React.FC = () => {
   }
 
   // Mock data for preview
-  const mockPrimaryStyle = {
+  const mockPrimaryStyle: StyleResult = {
     category: 'Natural',
     score: 85,
     percentage: 45.2
   };
 
-  const mockSecondaryStyles = [
+  const mockSecondaryStyles: StyleResult[] = [
     {
       category: 'Clássico',
       score: 70,
@@ -71,7 +72,7 @@ const QuizBuilder: React.FC = () => {
   };
 
   const activeStage = stages.find(stage => stage.id === activeStageId);
-  const stageComponents = components.filter(c => c.stageId === activeStageId);
+  const stageComponents = components.filter((c: QuizComponentData) => c.stageId === activeStageId);
 
   const handleComponentAdd = (type: QuizComponentType) => {
     if (!activeStageId) {
@@ -101,13 +102,17 @@ const QuizBuilder: React.FC = () => {
     setIsPreviewMode(!isPreviewMode);
   };
 
+  const handleAddStage = () => {
+    addStage('question');
+  };
+
   // Safely handle editor blocks
   const handleBlockOperations = () => {
     blocks.forEach(block => {
       const content = block.content || {};
-      const title = content.title || '';
-      const text = content.text || '';
-      const imageUrl = content.imageUrl || '';
+      const title = content?.title || '';
+      const text = content?.text || '';
+      const imageUrl = content?.imageUrl || '';
       
       // Process block with safe content access
       console.log('Processing block:', { title, text, imageUrl });
@@ -154,7 +159,7 @@ const QuizBuilder: React.FC = () => {
               stages={stages}
               activeStageId={activeStageId || ''}
               onStageSelect={setActiveStage}
-              onStageAdd={addStage}
+              onStageAdd={handleAddStage}
               onStageUpdate={updateStage}
               onStageDelete={deleteStage}
               onStageMove={moveStage}

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { QuizStage, QuizComponentData } from '@/types/quizBuilder';
-import { ComponentRenderer } from '../ComponentRenderer';
+import ComponentRenderer from '../ComponentRenderer';
 
 interface StagePreviewProps {
   stage: QuizStage;
@@ -26,7 +26,7 @@ const StagePreview: React.FC<StagePreviewProps> = ({ stage, components }) => {
         <ComponentRenderer
           key={component.id}
           component={component}
-          isPreview={true}
+          isPreviewing={true}
           isSelected={false}
         />
       ))}

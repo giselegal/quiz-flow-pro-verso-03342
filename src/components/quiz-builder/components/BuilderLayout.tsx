@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { QuizComponentData, QuizStage, QuizComponentType } from '@/types/quizBuilder';
 import { ComponentsSidebar } from '../ComponentsSidebar';
-import { PreviewPanel } from '../PreviewPanel';
+import PreviewPanel from '../PreviewPanel';
 import { PropertyPanel } from './PropertyPanel';
 
 interface BuilderLayoutProps {
@@ -40,8 +40,8 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({
     onComponentSelect(id);
   };
 
-  const handleComponentAdd = (type: string) => {
-    onComponentAdd(type as QuizComponentType);
+  const handleComponentAdd = (type: QuizComponentType) => {
+    onComponentAdd(type);
   };
 
   return (
@@ -49,7 +49,7 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({
       <ResizablePanelGroup direction="horizontal" className="h-full">
         <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
           <ComponentsSidebar 
-            onComponentAdd={handleComponentAdd}
+            onComponentSelect={handleComponentAdd}
           />
         </ResizablePanel>
 
