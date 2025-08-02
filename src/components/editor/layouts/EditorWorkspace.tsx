@@ -36,6 +36,10 @@ export function EditorWorkspace({ className }: EditorWorkspaceProps) {
     setIsPreviewing(!isPreviewing);
   };
 
+  const handleComponentSelect = (type: string) => {
+    console.log('Selected component:', type);
+  };
+
   return (
     <EditorProvider>
       <FunnelConfigProvider>
@@ -124,7 +128,7 @@ export function EditorWorkspace({ className }: EditorWorkspaceProps) {
           <ResizablePanelGroup direction="horizontal" className="flex-1">
             {/* Components Sidebar */}
             <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-              <ComponentsSidebar />
+              <ComponentsSidebar onComponentSelect={handleComponentSelect} />
             </ResizablePanel>
 
             <ResizableHandle withHandle />

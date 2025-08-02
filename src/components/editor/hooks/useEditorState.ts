@@ -32,6 +32,7 @@ export const useEditorState = (initialBlocks: EditorBlock[] = []) => {
       id: `block-${Date.now()}`,
       type,
       content: getDefaultContent(type),
+      properties: {}, // Add missing properties field
       order: state.blocks.length
     };
     
