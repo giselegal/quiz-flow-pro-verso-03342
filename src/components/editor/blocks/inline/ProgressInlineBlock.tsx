@@ -1,6 +1,8 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 import type { BlockComponentProps } from '@/types/blocks';
+import { safeGetBlockProperties, isValidBlock, logBlockDebug } from '@/utils/blockUtils';
 
 /**
  * ProgressInlineBlock - Componente modular inline horizontal
@@ -13,6 +15,17 @@ const ProgressInlineBlock: React.FC<BlockComponentProps> = ({
   onClick,
   className = ''
 }) => {
+  // 🛡️ Validação e logging de debug
+  if (!isValidBlock(block)) {
+    console.error('❌ ProgressInlineBlock: Bloco inválido recebido', block);
+    return <div className="p-2 bg-red-100 text-red-600 text-xs rounded">Erro: Bloco inválido</div>;
+  }
+
+  logBlockDebug('ProgressInlineBlock', block);
+
+  // 🛡️ Extração segura das propriedades
+  const properties = safeGetBlockProperties(block);
+
   const {
     value = 75,
     max = 100,
@@ -24,7 +37,7 @@ const ProgressInlineBlock: React.FC<BlockComponentProps> = ({
     backgroundColor = '#f3f4f6',
     animated = true,
     variant = 'horizontal' // horizontal, vertical, circular
-  } = block.properties;
+  } = properties;
 
   const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
 
