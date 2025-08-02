@@ -1,6 +1,6 @@
 
-import { BlockDefinition, PropertySchema } from '@/types/editor';
-import { Type, Image, AlignLeft, Button, Minus } from 'lucide-react';
+import { BlockDefinition } from '@/types/editor';
+import { Type, Image, AlignLeft, Square, Minus } from 'lucide-react';
 
 // Placeholder component for blocks that don't have specific components yet
 const PlaceholderComponent = () => null;
@@ -156,7 +156,7 @@ export const blockDefinitions: BlockDefinition[] = [
     name: 'Botão',
     description: 'Botão de ação',
     category: 'Interactive',
-    icon: Button,
+    icon: Square,
     component: PlaceholderComponent,
     properties: {
       text: {

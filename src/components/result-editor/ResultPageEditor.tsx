@@ -1,10 +1,10 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { RefreshCw, Save, Eye } from 'lucide-react'; // Fixed: Changed Refresh to RefreshCw
-import { StyleResult } from '@/types/quiz';
-import EditableSection from './EditableSection'; // Fixed: Use default import
-import { useResultPageConfig } from '@/hooks/useResultPageConfig';
+import { RefreshCw, Save, Eye } from 'lucide-react';
+import EditableSection from './EditableSection';
+import { useResultPageEditor } from '@/hooks/useResultPageEditor';
 
 interface ResultPageEditorProps {
   selectedStyle: {
@@ -16,10 +16,19 @@ interface ResultPageEditorProps {
 }
 
 export const ResultPageEditor: React.FC<ResultPageEditorProps> = ({ selectedStyle }) => {
-  const { resultPageConfig, updateSection, saveConfig, resetConfig, loading } = useResultPageConfig(selectedStyle.category); // Fixed: Use the hook
-  const [isPreviewMode, setIsPreviewMode] = useState(false);
-
-  const sectionTitles = {
+  const {
+    resultPageConfig,
+    loading,
+    isPreviewing,
+    actions: {
+      handleSave,
+      handleReset,
+      togglePreview,
+      updateSection
+    }
+  } = useResultPageEditor(selectedStyle.category);
+  
+  const sectionTitles: Record<string, string> = {
     header: 'Cabeçalho',
     mainContent: 'Conteúdo Principal',
     secondaryStyles: 'Estilos Secundários',
@@ -29,18 +38,6 @@ export const ResultPageEditor: React.FC<ResultPageEditorProps> = ({ selectedStyl
     'offer.pricing': 'Oferta - Preços',
     'offer.testimonials': 'Oferta - Depoimentos',
     'offer.guarantee': 'Oferta - Garantia',
-  };
-
-  const handleSave = async () => {
-    await saveConfig();
-  };
-
-  const handleReset = () => {
-    resetConfig();
-  };
-
-  const togglePreviewMode = () => {
-    setIsPreviewMode(!isPreviewMode);
   };
 
   if (loading) {
@@ -56,9 +53,9 @@ export const ResultPageEditor: React.FC<ResultPageEditorProps> = ({ selectedStyl
       <div className="flex items-center justify-between p-4 border-b">
         <h2 className="text-xl font-semibold">Editor de Resultados</h2>
         <div className="flex items-center space-x-2">
-          <Button variant="ghost" onClick={togglePreviewMode}>
+          <Button variant="ghost" onClick={togglePreview}>
             <Eye className="w-4 h-4 mr-2" />
-            {isPreviewMode ? 'Esconder Preview' : 'Mostrar Preview'}
+            {isPreviewing ? 'Esconder Preview' : 'Mostrar Preview'}
           </Button>
           <Button variant="outline" onClick={handleReset}>
             <RefreshCw className="w-4 h-4 mr-2" />
@@ -72,15 +69,18 @@ export const ResultPageEditor: React.FC<ResultPageEditorProps> = ({ selectedStyl
       </div>
       <div className="flex-1 overflow-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-          {Object.keys(sectionTitles).map((key) => (
-            <Card key={key} className="shadow-md">
-              <EditableSection
-                title={sectionTitles[key]}
-                content={resultPageConfig[key]}
-                onChange={(newContent) => updateSection(key, newContent)}
-              />
-            </Card>
-          ))}
+          {Object.keys(sectionTitles).map((key) => {
+            const sectionContent = (resultPageConfig as any)?.[key] || {};
+            return (
+              <Card key={key} className="shadow-md">
+                <EditableSection
+                  title={sectionTitles[key]}
+                  content={sectionContent}
+                  onChange={(newContent: any) => updateSection(key, newContent)}
+                />
+              </Card>
+            );
+          })}
         </div>
       </div>
     </div>

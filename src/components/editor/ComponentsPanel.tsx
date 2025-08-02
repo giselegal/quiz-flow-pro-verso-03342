@@ -1,62 +1,33 @@
 
 import React from 'react';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { blockDefinitions, getCategories, getBlocksByCategory } from '@/config/blockDefinitions';
-import { BlockDefinition } from '@/types/editor';
+import { blockDefinitions } from '@/config/blockDefinitions';
 
 interface ComponentsPanelProps {
-  onComponentSelect: (type: string) => void;
+  onAddComponent: (type: string) => void;
 }
 
-export const ComponentsPanel: React.FC<ComponentsPanelProps> = ({ onComponentSelect }) => {
-  const categories = getCategories();
-
+export const ComponentsPanel: React.FC<ComponentsPanelProps> = ({ onAddComponent }) => {
   return (
-    <div className="h-full border-r border-gray-200 bg-white">
-      <div className="p-4 border-b">
-        <h2 className="font-semibold text-gray-900">Componentes</h2>
-        <p className="text-sm text-gray-500 mt-1">Clique para adicionar</p>
+    <div className="bg-white border-r border-gray-200 p-4">
+      <h3 className="font-medium text-gray-900 mb-4">Componentes</h3>
+      <div className="space-y-2">
+        {blockDefinitions.map((block) => {
+          const IconComponent = block.icon;
+          return (
+            <button
+              key={block.type}
+              onClick={() => onAddComponent(block.type)}
+              className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-lg border border-gray-200 transition-colors"
+            >
+              <IconComponent size={20} />
+              <div>
+                <div className="font-medium text-sm text-gray-900">{block.name}</div>
+                <div className="text-xs text-gray-500">{block.description}</div>
+              </div>
+            </button>
+          );
+        })}
       </div>
-      
-      <ScrollArea className="h-full">
-        <div className="p-4 space-y-4">
-          {categories.map((category) => {
-            const categoryBlocks = getBlocksByCategory(category);
-            
-            return (
-              <Card key={category}>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-gray-700">
-                    {category}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  {categoryBlocks.map((block: BlockDefinition) => (
-                    <Button
-                      key={block.type}
-                      variant="ghost"
-                      className="w-full justify-start h-auto p-3 text-left"
-                      onClick={() => onComponentSelect(block.type)}
-                    >
-                      <block.icon className="w-4 h-4 mr-3 shrink-0" />
-                      <div className="min-w-0">
-                        <div className="font-medium text-sm">{block.name}</div>
-                        <div className="text-xs text-gray-500 truncate">
-                          {block.description}
-                        </div>
-                      </div>
-                    </Button>
-                  ))}
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      </ScrollArea>
     </div>
   );
 };
-
-export default ComponentsPanel;
