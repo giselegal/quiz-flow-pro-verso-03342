@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { safeGetBlockProperties, logBlockDebug, isValidBlock } from '@/utils/blockUtils';
 
@@ -12,6 +13,7 @@ interface QuestionBlockProps {
     styleCategory: string;
     points: number;
     keywords: string[];
+    imageUrl?: string; // Add optional imageUrl property
   }>;
   title: string;
   subtitle?: string;
@@ -24,7 +26,6 @@ interface QuestionBlockProps {
   fontSize?: string;
   fontWeight?: string;
   maxSecondaryStyles: number;
-  // Add missing properties
   height?: string | number;
   questionId?: string;
   autoAdvance?: boolean;
