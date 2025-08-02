@@ -6,6 +6,7 @@ export interface User {
   emailVerified?: Date;
   image?: string;
   role: string; // Required field
+  userName?: string; // Add userName property
   createdAt: Date;
   updatedAt: Date;
 }

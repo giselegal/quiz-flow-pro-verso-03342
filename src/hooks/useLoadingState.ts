@@ -1,39 +1,45 @@
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
-export interface LoadingState {
-  isLoading: boolean;
-  error: string | null;
+interface LoadingStateOptions {
+  initialState?: boolean;
+  timeout?: number;
 }
 
-export const useLoadingState = (initialState: boolean = false) => {
+export const useLoadingState = (options: LoadingStateOptions = {}) => {
+  const { initialState = false, timeout } = options;
   const [isLoading, setIsLoading] = useState(initialState);
   const [error, setError] = useState<string | null>(null);
 
-  const startLoading = () => {
-    setIsLoading(true);
-    setError(null);
-  };
+  const setLoading = useCallback((loading: boolean) => {
+    setIsLoading(loading);
+    if (loading) {
+      setError(null);
+    }
+  }, []);
 
-  const stopLoading = () => {
-    setIsLoading(false);
-  };
+  const setLoadingWithTimeout = useCallback((loading: boolean, timeoutMs?: number) => {
+    setLoading(loading);
+    
+    const timeoutValue = timeoutMs || timeout;
+    if (loading && timeoutValue) {
+      setTimeout(() => {
+        setLoading(false);
+      }, timeoutValue);
+    }
+  }, [setLoading, timeout]);
 
-  const setLoadingError = (errorMessage: string) => {
-    setIsLoading(false);
+  const handleError = useCallback((errorMessage: string) => {
     setError(errorMessage);
-  };
-
-  const clearError = () => {
-    setError(null);
-  };
+    setIsLoading(false);
+  }, []);
 
   return {
     isLoading,
     error,
-    startLoading,
-    stopLoading,
-    setLoadingError,
-    clearError
+    setLoading,
+    setLoadingWithTimeout,
+    handleError,
+    clearError: () => setError(null)
   };
 };

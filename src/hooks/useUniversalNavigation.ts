@@ -1,28 +1,44 @@
 
 import { useLocation } from 'wouter';
+import { useCallback } from 'react';
 
-export const useUniversalNavigation = () => {
-  const [, setLocation] = useLocation();
+interface NavigationOptions {
+  replace?: boolean;
+  preserveQuery?: boolean;
+}
 
-  const navigate = (path: string) => {
-    setLocation(path);
-  };
+export const useUniversalNavigation = (options: NavigationOptions = {}) => {
+  const [location, setLocation] = useLocation();
 
-  const goBack = () => {
-    if (window.history.length > 1) {
-      window.history.back();
+  const navigate = useCallback((path: string, navOptions?: NavigationOptions) => {
+    const finalOptions = { ...options, ...navOptions };
+    
+    if (finalOptions.replace) {
+      // For wouter, we use setLocation to navigate
+      setLocation(path);
     } else {
-      navigate('/');
+      setLocation(path);
     }
-  };
+  }, [setLocation, options]);
 
-  const replace = (path: string) => {
-    setLocation(path, { replace: true });
-  };
+  const goBack = useCallback(() => {
+    window.history.back();
+  }, []);
+
+  const goForward = useCallback(() => {
+    window.history.forward();
+  }, []);
+
+  const reload = useCallback(() => {
+    window.location.reload();
+  }, []);
 
   return {
+    location,
     navigate,
     goBack,
-    replace
+    goForward,
+    reload,
+    currentPath: location
   };
 };

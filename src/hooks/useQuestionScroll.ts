@@ -1,29 +1,18 @@
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
-export const useQuestionScroll = (shouldScroll: boolean = true) => {
-  const questionRef = useRef<HTMLDivElement>(null);
-
+export const useQuestionScroll = (questionIndex?: number) => {
   useEffect(() => {
-    if (shouldScroll && questionRef.current) {
-      questionRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-  }, [shouldScroll]);
+    // Scroll to top when question changes
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [questionIndex]);
 
-  const scrollToQuestion = () => {
-    if (questionRef.current) {
-      questionRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
+  const scrollToQuestion = (index: number) => {
+    const element = document.getElementById(`question-${index}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  return {
-    questionRef,
-    scrollToQuestion
-  };
+  return { scrollToQuestion };
 };
