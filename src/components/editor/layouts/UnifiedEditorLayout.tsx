@@ -4,10 +4,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { ComponentsSidebar } from '../sidebar/ComponentsSidebar';
 import { EditorCanvas } from '../canvas/EditorCanvas';
-import { PropertyPanel } from '../PropertyPanel';
+import { PropertiesPanel } from '../properties/PropertiesPanel';
 import { EditorProvider } from '@/contexts/EditorContext';
 import { useResultPageConfig } from '@/hooks/useResultPageConfig';
-import { ResultPageConfig } from '@/types/resultPageConfig';
 
 interface UnifiedEditorLayoutProps {
   className?: string;
@@ -37,7 +36,7 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
   };
 
   // Create default config with all required properties
-  const defaultConfig: ResultPageConfig = {
+  const defaultConfig = {
     styleType: 'Natural',
     header: {
       visible: true,
@@ -107,10 +106,10 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
               <ResizableHandle withHandle />
 
               <ResizablePanel defaultSize={25}>
-                <PropertyPanel
+                <PropertiesPanel
                   selectedBlock={config.blocks?.find(b => b.id === selectedBlockId) || null}
-                  onUpdateBlock={handleBlockUpdate}
-                  onDeleteBlock={handleBlockDelete}
+                  onUpdate={handleBlockUpdate}
+                  onDelete={handleBlockDelete}
                   onClose={() => setSelectedBlockId(null)}
                 />
               </ResizablePanel>

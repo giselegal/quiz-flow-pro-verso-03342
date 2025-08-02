@@ -1,34 +1,18 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Block } from '@/types/editor';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { X, Settings } from 'lucide-react';
-
-interface Block {
-  id: string;
-  type: string;
-  content?: {
-    title?: string;
-    subtitle?: string;
-    text?: string;
-    imageUrl?: string;
-    imageAlt?: string;
-    buttonText?: string;
-    buttonUrl?: string;
-    [key: string]: any;
-  };
-  properties?: Record<string, any>;
-}
 
 interface PropertiesPanelProps {
-  selectedBlock?: Block | null;
-  onClose?: () => void;
-  onUpdate?: (id: string, updates: any) => void;
-  onDelete?: (id: string) => void;
-  className?: string;
+  selectedBlock: Block | null;
+  blocks?: Block[];
+  onClose: () => void;
+  onUpdate: (id: string, updates: any) => void;
+  onDelete: (id: string) => void;
+  isMobile?: boolean;
 }
 
 export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
@@ -36,194 +20,111 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   onClose,
   onUpdate,
   onDelete,
-  className = ''
+  isMobile = false
 }) => {
   if (!selectedBlock) {
     return (
-      <div className={`h-full bg-gray-50 border-l border-gray-200 p-6 ${className}`}>
-        <div className="flex items-center justify-center h-full text-gray-500">
-          <div className="text-center">
-            <Settings className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-            <p className="text-sm">Selecione um bloco para editar suas propriedades</p>
-          </div>
-        </div>
+      <div className="h-full bg-gray-50 p-4">
+        <h3 className="text-lg font-semibold mb-4">Properties</h3>
+        <p className="text-gray-500">Select a block to edit its properties</p>
       </div>
     );
   }
 
-  const handleContentChange = (key: string, value: any) => {
-    if (onUpdate && selectedBlock) {
-      onUpdate(selectedBlock.id, {
-        content: {
-          ...selectedBlock.content,
-          [key]: value
-        }
-      });
-    }
+  const handleContentUpdate = (key: string, value: any) => {
+    onUpdate(selectedBlock.id, {
+      content: {
+        ...selectedBlock.content,
+        [key]: value
+      }
+    });
   };
-
-  const handlePropertyChange = (key: string, value: any) => {
-    if (onUpdate && selectedBlock) {
-      onUpdate(selectedBlock.id, {
-        properties: {
-          ...selectedBlock.properties,
-          [key]: value
-        }
-      });
-    }
-  };
-
-  const content = selectedBlock.content || {};
 
   return (
-    <div className={`h-full bg-white border-l border-gray-200 flex flex-col ${className}`}>
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b">
-        <h3 className="font-medium text-gray-900">Propriedades do Bloco</h3>
-        {onClose && (
-          <Button variant="ghost" size="sm" onClick={onClose}>
-            <X className="w-4 h-4" />
-          </Button>
-        )}
+    <div className="h-full bg-gray-50 p-4">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold">Properties</h3>
+        <Button variant="ghost" size="sm" onClick={onClose}>
+          ×
+        </Button>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-6">
-        {/* Block Info */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm">Informações do Bloco</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div>
-              <Label className="text-xs font-medium text-gray-500">Tipo</Label>
-              <p className="text-sm font-medium">{selectedBlock.type}</p>
-            </div>
-            <div>
-              <Label className="text-xs font-medium text-gray-500">ID</Label>
-              <p className="text-xs text-gray-600 font-mono">{selectedBlock.id}</p>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="space-y-4">
+        <div>
+          <Label>Block Type</Label>
+          <div className="text-sm text-gray-600 bg-gray-100 p-2 rounded">
+            {selectedBlock.type}
+          </div>
+        </div>
 
-        {/* Content Properties */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm">Conteúdo</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Title */}
-            {content.title !== undefined && (
-              <div>
-                <Label htmlFor="title" className="text-sm">Título</Label>
-                <Input
-                  id="title"
-                  value={content.title || ''}
-                  onChange={(e) => handleContentChange('title', e.target.value)}
-                  placeholder="Digite o título..."
-                />
-              </div>
-            )}
-
-            {/* Subtitle */}
-            {content.subtitle !== undefined && (
-              <div>
-                <Label htmlFor="subtitle" className="text-sm">Subtítulo</Label>
-                <Input
-                  id="subtitle"
-                  value={content.subtitle || ''}
-                  onChange={(e) => handleContentChange('subtitle', e.target.value)}
-                  placeholder="Digite o subtítulo..."
-                />
-              </div>
-            )}
-
-            {/* Text */}
-            {content.text !== undefined && (
-              <div>
-                <Label htmlFor="text" className="text-sm">Texto</Label>
-                <Textarea
-                  id="text"
-                  value={content.text || ''}
-                  onChange={(e) => handleContentChange('text', e.target.value)}
-                  placeholder="Digite o texto..."
-                  rows={4}
-                />
-              </div>
-            )}
-
-            {/* Image URL */}
-            {content.imageUrl !== undefined && (
-              <div>
-                <Label htmlFor="imageUrl" className="text-sm">URL da Imagem</Label>
-                <Input
-                  id="imageUrl"
-                  value={content.imageUrl || ''}
-                  onChange={(e) => handleContentChange('imageUrl', e.target.value)}
-                  placeholder="https://..."
-                />
-              </div>
-            )}
-
-            {/* Image Alt */}
-            {content.imageAlt !== undefined && (
-              <div>
-                <Label htmlFor="imageAlt" className="text-sm">Texto Alternativo</Label>
-                <Input
-                  id="imageAlt"
-                  value={content.imageAlt || ''}
-                  onChange={(e) => handleContentChange('imageAlt', e.target.value)}
-                  placeholder="Descrição da imagem..."
-                />
-              </div>
-            )}
-
-            {/* Button Text */}
-            {content.buttonText !== undefined && (
-              <div>
-                <Label htmlFor="buttonText" className="text-sm">Texto do Botão</Label>
-                <Input
-                  id="buttonText"
-                  value={content.buttonText || ''}
-                  onChange={(e) => handleContentChange('buttonText', e.target.value)}
-                  placeholder="Clique aqui..."
-                />
-              </div>
-            )}
-
-            {/* Button URL */}
-            {content.buttonUrl !== undefined && (
-              <div>
-                <Label htmlFor="buttonUrl" className="text-sm">URL do Botão</Label>
-                <Input
-                  id="buttonUrl"
-                  value={content.buttonUrl || ''}
-                  onChange={(e) => handleContentChange('buttonUrl', e.target.value)}
-                  placeholder="https://..."
-                />
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Actions */}
-        {onDelete && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm">Ações</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Button 
-                variant="destructive" 
-                size="sm" 
-                onClick={() => onDelete(selectedBlock.id)}
-                className="w-full"
-              >
-                Excluir Bloco
-              </Button>
-            </CardContent>
-          </Card>
+        {selectedBlock.type === 'text' && (
+          <div>
+            <Label htmlFor="text">Text Content</Label>
+            <Textarea
+              id="text"
+              value={selectedBlock.content?.text || ''}
+              onChange={(e) => handleContentUpdate('text', e.target.value)}
+              placeholder="Enter text content..."
+            />
+          </div>
         )}
+
+        {selectedBlock.type === 'header' && (
+          <>
+            <div>
+              <Label htmlFor="title">Title</Label>
+              <Input
+                id="title"
+                value={selectedBlock.content?.title || ''}
+                onChange={(e) => handleContentUpdate('title', e.target.value)}
+                placeholder="Enter title..."
+              />
+            </div>
+            <div>
+              <Label htmlFor="subtitle">Subtitle</Label>
+              <Input
+                id="subtitle"
+                value={selectedBlock.content?.subtitle || ''}
+                onChange={(e) => handleContentUpdate('subtitle', e.target.value)}
+                placeholder="Enter subtitle..."
+              />
+            </div>
+          </>
+        )}
+
+        {selectedBlock.type === 'image' && (
+          <>
+            <div>
+              <Label htmlFor="imageUrl">Image URL</Label>
+              <Input
+                id="imageUrl"
+                value={selectedBlock.content?.imageUrl || ''}
+                onChange={(e) => handleContentUpdate('imageUrl', e.target.value)}
+                placeholder="Enter image URL..."
+              />
+            </div>
+            <div>
+              <Label htmlFor="imageAlt">Alt Text</Label>
+              <Input
+                id="imageAlt"
+                value={selectedBlock.content?.imageAlt || ''}
+                onChange={(e) => handleContentUpdate('imageAlt', e.target.value)}
+                placeholder="Enter alt text..."
+              />
+            </div>
+          </>
+        )}
+
+        <div className="pt-4 border-t">
+          <Button 
+            variant="destructive" 
+            size="sm" 
+            onClick={() => onDelete(selectedBlock.id)}
+            className="w-full"
+          >
+            Delete Block
+          </Button>
+        </div>
       </div>
     </div>
   );

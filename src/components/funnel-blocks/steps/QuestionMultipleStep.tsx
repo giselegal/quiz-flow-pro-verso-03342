@@ -1,166 +1,133 @@
-import React, { useState } from 'react';
-import { cn } from '@/lib/utils';
-import { FunnelStepProps } from '@/types/funnel';
-import { Button } from '@/components/ui/button';
-import QuizOption from '../shared/QuizOption';
-import FunnelProgressBar from '../shared/FunnelProgressBar';
 
-/**
- * QuestionMultipleStep - Etapa 4-14: Perguntas de múltipla escolha
- * 
- * Este componente reutilizável representa uma pergunta de quiz
- * com opções de múltipla escolha, suportando imagens e categorização.
- */
-export const QuestionMultipleStep: React.FC<FunnelStepProps> = ({
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { FunnelStepProps } from '@/types/funnel';
+
+interface QuizOptionProps {
+  id: string;
+  text: string;
+  imageUrl?: string;
+  isSelected: boolean;
+  onSelect: () => void;
+  multiSelect: boolean;
+  disabled: boolean;
+}
+
+const QuizOption: React.FC<QuizOptionProps> = ({
   id,
-  className = '',
-  isEditable = false,
+  text,
+  imageUrl,
+  isSelected,
+  onSelect,
+  multiSelect,
+  disabled
+}) => {
+  return (
+    <button
+      onClick={onSelect}
+      disabled={disabled}
+      className={`p-4 border-2 rounded-lg transition-all ${
+        isSelected 
+          ? 'border-[#B89B7A] bg-[#B89B7A]/10' 
+          : 'border-gray-200 hover:border-[#B89B7A]/50'
+      } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+    >
+      {imageUrl && (
+        <img src={imageUrl} alt={text} className="w-full h-32 object-cover rounded mb-2" />
+      )}
+      <span className="text-sm font-medium">{text}</span>
+    </button>
+  );
+};
+
+interface QuestionMultipleStepProps extends FunnelStepProps {
+  data?: {
+    question?: string;
+    options?: Array<{
+      id: string;
+      text: string;
+      imageUrl?: string;
+    }>;
+    multiSelect?: boolean;
+    minAnswers?: number;
+    maxAnswers?: number;
+  };
+}
+
+const QuestionMultipleStep: React.FC<QuestionMultipleStepProps> = ({
+  stepNumber = 1,
+  totalSteps = 7,
   onNext,
-  onPrevious,
-  stepNumber,
-  totalSteps,
-  data = {},
-  onEdit
+  data = {}
 }) => {
   const {
-    question = 'Qual opção mais combina com você?',
-    imageUrl,
-    options = [
-      { id: '1', text: 'Opção 1', value: 'op1' },
-      { id: '2', text: 'Opção 2', value: 'op2' },
-      { id: '3', text: 'Opção 3', value: 'op3' },
-    ],
+    question = 'Selecione suas opções preferidas',
+    options = [],
     multiSelect = false,
-    maxSelections = 1,
-    buttonText = 'Próxima pergunta',
-    prevButtonText = 'Voltar',
-    backgroundColor = 'bg-white',
-    showProgress = true
+    minAnswers = 1,
+    maxAnswers = 1
   } = data;
-  
-  // Estado para seleções
+
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-  
-  // Função para selecionar opções
-  const handleSelect = (optionId: string) => {
-    if (isEditable) return;
-    
-    setSelectedOptions(prev => {
-      if (multiSelect) {
-        // Caso seja seleção múltipla
+
+  const handleOptionSelect = (optionId: string) => {
+    if (multiSelect) {
+      setSelectedOptions(prev => {
         if (prev.includes(optionId)) {
-          // Remover se já selecionado
           return prev.filter(id => id !== optionId);
         } else {
-          // Adicionar se não exceder limite
-          if (prev.length < maxSelections) {
+          if (prev.length < (maxAnswers || 99)) {
             return [...prev, optionId];
           }
           return prev;
         }
-      } else {
-        // Caso seja seleção única
-        return [optionId];
-      }
-    });
-  };
-  
-  // Verificar se pode avançar
-  const canContinue = selectedOptions.length > 0;
-  
-  // Função para avançar
-  const handleNext = () => {
-    if (!isEditable && canContinue && onNext) {
-      onNext();
-      // Reset seleções para próxima pergunta
-      setSelectedOptions([]);
+      });
+    } else {
+      setSelectedOptions([optionId]);
     }
   };
 
+  const canProceed = selectedOptions.length >= (minAnswers || 1) && 
+                    selectedOptions.length <= (maxAnswers || 99);
+
   return (
-    <div 
-      className={cn(
-        "relative rounded-xl shadow-md p-6",
-        backgroundColor,
-        className
-      )}
-      onClick={isEditable ? onEdit : undefined}
-      data-funnel-step-id={id}
-    >
-      {showProgress && (
-        <FunnelProgressBar 
-          currentStep={stepNumber} 
-          totalSteps={totalSteps} 
-          className="mb-6"
-        />
-      )}
-      
-      <div className="max-w-3xl mx-auto">
-        {/* Questão principal */}
-        <div className="mb-8 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+    <div className="min-h-screen flex flex-col p-6 bg-[#FFFAF0]">
+      <div className="max-w-4xl mx-auto flex-1">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-[#432818] mb-4">
             {question}
           </h2>
-          
-          {/* Imagem opcional */}
-          {imageUrl && (
-            <div className="mt-4 flex justify-center">
-              <img 
-                src={imageUrl} 
-                alt="" 
-                className="max-h-64 object-contain rounded-lg"
-              />
-            </div>
-          )}
+          <p className="text-[#8F7A6A]">
+            Pergunta {stepNumber} de {totalSteps}
+          </p>
         </div>
-        
-        {/* Opções de resposta */}
-        <div className="grid gap-3 mb-8">
-          {options.map((option) => (
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+          {options.map((option: any) => (
             <QuizOption
               key={option.id}
-              option={option}
+              id={option.id}
+              text={option.text}
+              imageUrl={option.imageUrl}
               isSelected={selectedOptions.includes(option.id)}
-              onSelect={() => handleSelect(option.id)}
+              onSelect={() => handleOptionSelect(option.id)}
               multiSelect={multiSelect}
-              disabled={isEditable}
+              disabled={false}
             />
           ))}
         </div>
-        
-        {/* Navegação */}
-        <div className="flex justify-between mt-8">
-          {onPrevious && (
-            <Button 
-              variant="outline"
-              onClick={isEditable ? undefined : onPrevious}
-              disabled={isEditable}
-            >
-              {prevButtonText}
-            </Button>
-          )}
-          
-          <div className={cn(
-            "flex-1",
-            onPrevious ? "ml-4" : ""
-          )}>
-            <Button
-              onClick={handleNext}
-              disabled={!canContinue || isEditable}
-              className="w-full"
-            >
-              {buttonText}
-            </Button>
-          </div>
+
+        <div className="flex justify-center">
+          <Button
+            onClick={onNext}
+            disabled={!canProceed}
+            size="lg"
+            className="bg-[#B89B7A] hover:bg-[#A38A69] text-white px-8 py-3"
+          >
+            Continuar
+          </Button>
         </div>
       </div>
-      
-      {/* Indicador de edição */}
-      {isEditable && (
-        <div className="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded">
-          Editar
-        </div>
-      )}
     </div>
   );
 };

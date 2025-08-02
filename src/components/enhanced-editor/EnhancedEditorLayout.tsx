@@ -1,10 +1,12 @@
+
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { ComponentsSidebar } from '../sidebar/ComponentsSidebar';
-import { EditorCanvas } from '../canvas/EditorCanvas';
-import { PropertiesPanel } from '../properties/PropertiesPanel';
+import { ComponentsSidebar } from './sidebar/ComponentsSidebar';
+import { EditorCanvas } from './canvas/EditorCanvas';
+import { PropertiesPanel } from './properties/PropertiesPanel';
 import { EditorProvider } from '@/contexts/EditorContext';
+import { useEditor } from '@/hooks/useEditor';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 interface EnhancedEditorLayoutProps {
@@ -23,19 +25,23 @@ const EnhancedEditorLayout: React.FC<EnhancedEditorLayoutProps> = ({ className =
   } = useEditor();
 
   const handleComponentSelect = (type: string) => {
-    console.log('Component selected:', type);
+    const newBlockId = actions.addBlock(type);
+    setSelectedBlockId(newBlockId);
   };
 
   const handleBlockUpdate = (id: string, updates: any) => {
-    console.log('Block updated:', id, updates);
+    actions.updateBlock(id, updates);
   };
 
   const handleBlockDelete = (id: string) => {
-    console.log('Block deleted:', id);
+    actions.deleteBlock(id);
+    if (selectedBlockId === id) {
+      setSelectedBlockId(null);
+    }
   };
 
   const handleReorderBlocks = (sourceIndex: number, destinationIndex: number) => {
-    console.log('Blocks reordered:', sourceIndex, destinationIndex);
+    actions.reorderBlocks(sourceIndex, destinationIndex);
   };
 
   return (
@@ -73,16 +79,16 @@ const EnhancedEditorLayout: React.FC<EnhancedEditorLayoutProps> = ({ className =
 
               <ResizableHandle withHandle />
 
-          <ResizablePanel defaultSize={25}>
-            <PropertiesPanel
-              selectedBlock={selectedBlockId ? blocks.find(b => b.id === selectedBlockId) || null : null}
-              blocks={blocks}
-              onClose={() => setSelectedBlockId(null)}
-              onUpdate={handleBlockUpdate}
-              onDelete={handleBlockDelete}
-              isMobile={isMobile}
-            />
-          </ResizablePanel>
+              <ResizablePanel defaultSize={25}>
+                <PropertiesPanel
+                  selectedBlock={selectedBlockId ? blocks.find((b: any) => b.id === selectedBlockId) || null : null}
+                  blocks={blocks}
+                  onClose={() => setSelectedBlockId(null)}
+                  onUpdate={handleBlockUpdate}
+                  onDelete={handleBlockDelete}
+                  isMobile={isMobile}
+                />
+              </ResizablePanel>
             </ResizablePanelGroup>
           </TabsContent>
 
