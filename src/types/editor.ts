@@ -1,3 +1,4 @@
+
 import { LucideIcon } from "lucide-react";
 import { SimpleComponent } from "./quiz";
 
@@ -70,6 +71,7 @@ export interface VersionMetadata {
   lastSavedAt: string;
   autoSaveInterval: number;
 }
+
 // Interfaces adicionais que estavam faltando
 export interface FunnelManagerState {
   isLoading: boolean;
@@ -86,9 +88,85 @@ export interface EditorStateExtended extends EditorState {
 }
 
 export interface PropertySchema {
-  type: 'string' | 'number' | 'boolean' | 'array' | 'object';
+  type: 'string' | 'number' | 'boolean' | 'array' | 'object' | 'text' | 'textarea' | 'select';
   default?: any;
+  defaultValue?: any;
   description?: string;
+  label?: string;
   enum?: string[];
+  options?: string[];
   properties?: { [key: string]: PropertySchema };
+}
+
+// Core editor types that were missing
+export interface EditorBlock {
+  id: string;
+  type: string;
+  content: Record<string, any>;
+  order: number;
+  properties?: Record<string, any>;
+}
+
+export interface Block {
+  id: string;
+  type: string;
+  content: Record<string, any>;
+  order: number;
+  properties: Record<string, any>;
+}
+
+export interface EditableContent {
+  title?: string;
+  subtitle?: string;
+  text?: string;
+  imageUrl?: string;
+  imageAlt?: string;
+  caption?: string;
+  buttonText?: string;
+  buttonUrl?: string;
+  logo?: string;
+  logoAlt?: string;
+  logoWidth?: number;
+  logoHeight?: number;
+  showProgress?: boolean;
+  currentStep?: number;
+  totalSteps?: number;
+  progressBar?: boolean;
+  style?: {
+    backgroundColor?: string;
+    color?: string;
+    fontSize?: string;
+    fontWeight?: string;
+    fontFamily?: string;
+    textAlign?: string;
+    padding?: string;
+    margin?: string;
+    width?: string;
+    height?: string;
+    borderRadius?: string;
+    boxShadow?: string;
+    objectFit?: string;
+  };
+}
+
+export interface BlockDefinition {
+  type: string;
+  name: string;
+  description: string;
+  category: string;
+  icon: string;
+  component: React.ComponentType<any>;
+  properties: Record<string, PropertySchema>;
+  label: string;
+  defaultProps: Record<string, any>;
+  tags?: string[];
+}
+
+export interface BlockType {
+  id: string;
+  name: string;
+  icon: LucideIcon;
+  description: string;
+  category: string;
+  defaultProps: Record<string, any>;
 }
