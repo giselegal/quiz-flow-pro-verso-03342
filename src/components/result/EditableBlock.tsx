@@ -1,434 +1,438 @@
-import React from 'react';
-import { Block } from '@/types/editor';
-import { StyleResult } from '@/types/quiz';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { GripVertical, Edit, Copy, Trash } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Pencil, Save, X, Plus, Trash2, Image as ImageIcon, Type, List, Quote } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface EditableBlockProps {
-  block: Block;
-  index: number;
-  isSelected: boolean;
-  onClick: () => void;
-  isPreviewMode: boolean;
-  onReorderBlocks: (sourceIndex: number, destinationIndex: number) => void;
-  primaryStyle?: StyleResult;
+  type: 'header' | 'text' | 'image' | 'benefits' | 'quote' | 'cta';
+  content: any;
+  onUpdate: (content: any) => void;
+  onDelete?: () => void;
+  className?: string;
+  isSelected?: boolean;
+  onClick?: () => void;
 }
 
-const EditableBlock: React.FC<EditableBlockProps> = ({
-  block,
-  index,
-  isSelected,
-  onClick,
-  isPreviewMode,
-  onReorderBlocks,
-  primaryStyle
+export const EditableBlock: React.FC<EditableBlockProps> = ({
+  type,
+  content,
+  onUpdate,
+  onDelete,
+  className,
+  isSelected = false,
+  onClick
 }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging
-  } = useSortable({
-    id: block.id,
-    data: {
-      index,
-      type: 'BLOCK'
-    }
-  });
+  const [isEditing, setIsEditing] = useState(false);
+  const [editContent, setEditContent] = useState(content);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-    cursor: isPreviewMode ? 'default' : 'pointer',
-    border: isSelected && !isPreviewMode ? '2px solid hsl(var(--primary))' : isPreviewMode ? 'none' : '2px dashed hsl(var(--border))',
-    borderRadius: '0.5rem',
-    backgroundColor: isPreviewMode ? 'transparent' : isDragging ? 'hsl(var(--accent))' : 'hsl(var(--background))',
-    position: 'relative' as const,
-    zIndex: isSelected ? 1 : 0
-  };
-  
-  // Render the appropriate block preview based on type
-  const renderBlockPreview = () => {
-    const content = block.content || {};
-    const blockStyle = content.style || {};
-    
-    switch (block.type) {
-      case 'header':
-        return (
-          <div style={blockStyle} className="text-center p-4">
-            {content.logo && (
-              <img
-                src={content.logo}
-                alt={content.logoAlt || 'Logo'}
-                className="mx-auto mb-4 max-w-24 h-auto"
-              />
-            )}
-            {content.title && (
-              <h1 className="text-xl md:text-2xl font-playfair font-semibold text-primary mb-2">
-                {content.title}
-              </h1>
-            )}
-            {content.subtitle && (
-              <p className="text-muted-foreground">{content.subtitle}</p>
-            )}
-          </div>
-        );
-        
-      case 'headline':
-        return (
-          <div style={blockStyle} className="p-4">
-            {content.title && (
-              <h2 className="text-lg md:text-xl font-playfair font-semibold text-primary mb-2" style={{ textAlign: content.alignment || 'left' }}>
-                {content.title}
-              </h2>
-            )}
-            {content.subtitle && (
-              <p className="text-muted-foreground" style={{ textAlign: content.alignment || 'left' }}>
-                {content.subtitle}
-              </p>
-            )}
-          </div>
-        );
-        
-      case 'text':
-        return (
-          <div style={blockStyle} className="p-4">
-            <p className="text-foreground leading-relaxed" style={{ textAlign: content.alignment || 'left' }}>
-              {content.text || 'Este é um bloco de texto. Clique para editar.'}
-            </p>
-          </div>
-        );
-        
-      case 'image':
-        return (
-          <div style={blockStyle} className="p-4" style={{ textAlign: content.alignment || 'center' }}>
-            {content.imageUrl ? (
-              <img
-                src={content.imageUrl}
-                alt={content.imageAlt || 'Imagem'}
-                className="max-w-full h-auto rounded-md"
-              />
-            ) : (
-              <div className="bg-muted h-40 w-full flex items-center justify-center rounded-md border-2 border-dashed border-border">
-                <p className="text-muted-foreground">Clique para adicionar uma imagem</p>
-              </div>
-            )}
-            {content.caption && (
-              <p className="text-sm text-muted-foreground mt-2">{content.caption}</p>
-            )}
-          </div>
-        );
-        
-      case 'benefits':
-        return (
-          <div style={blockStyle} className="p-4">
-            {content.title && (
-              <h3 className="text-lg font-playfair font-semibold text-primary mb-4" style={{ textAlign: content.alignment || 'left' }}>
-                {content.title}
-              </h3>
-            )}
-            <div className="space-y-2">
-              {content.benefits && content.benefits.length > 0 ? (
-                content.benefits.map((benefit: string, index: number) => (
-                  <div key={`benefit-${benefit.slice(0, 20)}-${index}`} className="flex items-start gap-2">
-                    <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                    <p className="text-foreground">{benefit}</p>
-                  </div>
-                ))
-              ) : (
-                <p className="text-muted-foreground">Adicione benefícios para exibir aqui</p>
-              )}
-            </div>
-          </div>
-        );
-        
-      case 'pricing':
-        return (
-          <div style={blockStyle} className="p-6 bg-card border border-border rounded-lg" style={{ textAlign: content.alignment || 'center' }}>
-            {content.title && (
-              <h3 className="text-lg font-playfair font-semibold text-primary mb-4">
-                {content.title}
-              </h3>
-            )}
-            <div className="mb-4">
-              {content.price && (
-                <div className="text-2xl font-bold text-primary">
-                  {content.price}
-                </div>
-              )}
-              {content.regularPrice && (
-                <div className="text-muted-foreground line-through">
-                  {content.regularPrice}
-                </div>
-              )}
-            </div>
-            {content.ctaText && (
-              <button className="bg-primary text-primary-foreground px-6 py-2 rounded-md font-medium hover:bg-primary/90 transition-colors">
-                {content.ctaText}
-              </button>
-            )}
-          </div>
-        );
-        
-      case 'testimonials':
-        return (
-          <div style={blockStyle} className="p-4">
-            {content.title && (
-              <h3 className="text-lg font-playfair font-semibold text-primary mb-4" style={{ textAlign: content.alignment || 'center' }}>
-                {content.title}
-              </h3>
-            )}
-            <div className="space-y-4">
-              {content.testimonials && content.testimonials.length > 0 ? (
-                content.testimonials.map((testimonial: any, index: number) => (
-                  <div key={`testimonial-${testimonial.name || 'anonymous'}-${index}`} className="bg-card border border-border rounded-lg p-4">
-                    <p className="text-foreground mb-3">"{testimonial.text}"</p>
-                    <div className="flex items-center gap-3">
-                      {testimonial.image && (
-                        <img 
-                          src={testimonial.image} 
-                          alt={testimonial.name}
-                          className="w-10 h-10 rounded-full object-cover"
-                        />
-                      )}
-                      <div>
-                        <p className="font-medium text-primary">{testimonial.name}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-muted-foreground">Adicione depoimentos para exibir aqui</p>
-              )}
-            </div>
-          </div>
-        );
-        
-      case 'guarantee':
-        return (
-          <div style={blockStyle} className="p-6 bg-card border border-border rounded-lg" style={{ textAlign: content.alignment || 'center' }}>
-            {content.imageUrl && (
-              <img 
-                src={content.imageUrl}
-                alt="Garantia"
-                className="mx-auto mb-4 max-w-32 h-auto"
-              />
-            )}
-            {content.title && (
-              <h3 className="text-lg font-playfair font-semibold text-primary mb-3">
-                {content.title}
-              </h3>
-            )}
-            {content.text && (
-              <p className="text-foreground">
-                {content.text}
-              </p>
-            )}
-          </div>
-        );
-        
-      case 'cta':
-        return (
-          <div style={blockStyle} className="p-6 bg-accent rounded-lg" style={{ textAlign: content.alignment || 'center' }}>
-            {content.title && (
-              <h3 className="text-lg font-playfair font-semibold text-primary mb-3">
-                {content.title}
-              </h3>
-            )}
-            {content.text && (
-              <p className="text-foreground mb-4">
-                {content.text}
-              </p>
-            )}
-            {content.buttonText && (
-              <button className="bg-primary text-primary-foreground px-6 py-3 rounded-md font-medium hover:bg-primary/90 transition-colors">
-                {content.buttonText}
-              </button>
-            )}
-          </div>
-        );
-        
-      case 'style-result':
-        return (
-          <div style={blockStyle} className="p-6 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg border border-primary/20">
-            <div className="text-center">
-              <h2 className="text-2xl font-playfair font-bold text-primary mb-2">
-                Seu Estilo Principal
-              </h2>
-              <div className="text-3xl font-bold text-primary mb-4">
-                {primaryStyle?.category || 'Natural'}
-              </div>
-              <div className="w-full bg-border rounded-full h-3 mb-4">
-                <div 
-                  className="bg-primary h-3 rounded-full transition-all duration-500"
-                  style={{ width: `${primaryStyle?.percentage || 85}%` }}
-                ></div>
-              </div>
-              <p className="text-muted-foreground">
-                {primaryStyle?.percentage || 85}% de compatibilidade
-              </p>
-            </div>
-          </div>
-        );
-        
-      case 'secondary-styles':
-        return (
-          <div style={blockStyle} className="p-4">
-            <h3 className="text-lg font-playfair font-semibold text-primary mb-4 text-center">
-              Estilos Secundários
-            </h3>
-            <div className="grid grid-cols-2 gap-3">
-              {['Clássico', 'Moderno', 'Romântico'].map((style, index) => (
-                <div key={`secondary-style-${style}-${index}`} className="bg-card border border-border rounded-lg p-3 text-center">
-                  <div className="text-sm font-medium text-primary">{style}</div>
-                  <div className="text-xs text-muted-foreground">{15 + index * 5}%</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-        
-      case 'spacer':
-        return (
-          <div style={blockStyle} className="flex items-center justify-center text-muted-foreground border-2 border-dashed border-border rounded-lg" style={{ height: content.height || '60px' }}>
-            <span className="text-sm">Espaçador ({content.height || '60px'})</span>
-          </div>
-        );
-        
-      case 'video':
-        return (
-          <div style={blockStyle} className="p-4" style={{ textAlign: content.alignment || 'center' }}>
-            {content.videoUrl ? (
-              <div className="aspect-video bg-muted rounded-lg border-2 border-border flex items-center justify-center">
-                <p className="text-muted-foreground">Vídeo: {content.videoUrl}</p>
-              </div>
-            ) : (
-              <div className="aspect-video bg-muted rounded-lg border-2 border-dashed border-border flex items-center justify-center">
-                <p className="text-muted-foreground">Clique para adicionar um vídeo</p>
-              </div>
-            )}
-          </div>
-        );
-        
-      case 'two-column':
-        return (
-          <div style={blockStyle} className="p-4">
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-card border border-border rounded-lg p-4">
-                <h4 className="font-medium text-primary mb-2">Coluna 1</h4>
-                <p className="text-sm text-muted-foreground">
-                  {content.leftContent || 'Conteúdo da primeira coluna'}
-                </p>
-              </div>
-              <div className="bg-card border border-border rounded-lg p-4">
-                <h4 className="font-medium text-primary mb-2">Coluna 2</h4>
-                <p className="text-sm text-muted-foreground">
-                  {content.rightContent || 'Conteúdo da segunda coluna'}
-                </p>
-              </div>
-            </div>
-          </div>
-        );
-        
-      case 'quiz-question':
-        return (
-          <div style={blockStyle} className="p-6">
-            <div className="mb-4">
-              {content.progressPercent && (
-                <div className="w-full bg-border rounded-full h-2 mb-4">
-                  <div 
-                    className="bg-primary h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${content.progressPercent}%` }}
-                  ></div>
-                </div>
-              )}
-            </div>
-            
-            {content.question && (
-              <h3 className="text-lg font-playfair font-semibold text-primary mb-6" style={{ textAlign: content.alignment || 'center' }}>
-                {content.question}
-              </h3>
-            )}
-            
-            <div className={`grid gap-3 ${content.optionLayout === 'grid' ? 'grid-cols-2' : 'grid-cols-1'}`}>
-              {content.options && content.options.length > 0 ? (
-                content.options.map((option: any, index: number) => (
-                  <div key={index} className="bg-card border border-border rounded-lg p-4 hover:bg-accent transition-colors cursor-pointer">
-                    {option.imageUrl && (
-                      <img 
-                        src={option.imageUrl}
-                        alt={option.text}
-                        className="w-full h-32 object-cover rounded-md mb-3"
-                      />
-                    )}
-                    <p className="text-foreground font-medium">{option.text}</p>
-                  </div>
-                ))
-              ) : (
-                <p className="text-muted-foreground col-span-full text-center">
-                  Configure as opções da pergunta
-                </p>
-              )}
-            </div>
-          </div>
-        );
-        
-      default:
-        return (
-          <div className="p-4 bg-muted border-2 border-dashed border-border rounded-lg">
-            <div className="text-center">
-              <p className="text-muted-foreground mb-2">Tipo de bloco: <span className="font-mono">{block.type}</span></p>
-              <p className="text-sm text-muted-foreground">Clique para configurar este componente</p>
-            </div>
-          </div>
-        );
+  useEffect(() => {
+    if (isEditing && textareaRef.current) {
+      textareaRef.current.focus();
+      textareaRef.current.setSelectionRange(
+        textareaRef.current.value.length,
+        textareaRef.current.value.length
+      );
     }
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.setSelectionRange(
+        inputRef.current.value.length,
+        inputRef.current.value.length
+      );
+    }
+  }, [isEditing]);
+
+  const handleSave = () => {
+    onUpdate(editContent);
+    setIsEditing(false);
   };
-  
-  if (isPreviewMode) {
-    return (
-      <div style={{ opacity: isDragging ? 0.5 : 1 }}>
-        {renderBlockPreview()}
-      </div>
-    );
-  }
-  
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      onClick={onClick}
-      className="p-3 group transition-all duration-200 hover:shadow-sm"
-      {...attributes}
-    >
-      {!isPreviewMode && (
-        <div className="absolute right-2 top-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-          <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-accent">
-            <Edit className="h-4 w-4 text-muted-foreground" />
-          </Button>
-          <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-accent">
-            <Copy className="h-4 w-4 text-muted-foreground" />
-          </Button>
-          <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-destructive/10 hover:text-destructive">
-            <Trash className="h-4 w-4" />
-          </Button>
-          <div
-            className="h-8 w-8 flex items-center justify-center cursor-move hover:bg-accent rounded-md"
-            {...listeners}
-          >
-            <GripVertical className="h-4 w-4 text-muted-foreground" />
+
+  const handleCancel = () => {
+    setEditContent(content);
+    setIsEditing(false);
+  };
+
+  const renderHeader = () => {
+    if (isEditing) {
+      return (
+        <div className="space-y-4">
+          <Input
+            ref={inputRef}
+            value={editContent.title || ''}
+            onChange={(e) => setEditContent({ ...editContent, title: e.target.value })}
+            placeholder="Título"
+            className="text-2xl font-bold"
+          />
+          <Input
+            value={editContent.subtitle || ''}
+            onChange={(e) => setEditContent({ ...editContent, subtitle: e.target.value })}
+            placeholder="Subtítulo"
+            className="text-lg"
+          />
+          <div className="flex gap-2">
+            <Button onClick={handleSave} size="sm">
+              <Save className="w-4 h-4 mr-2" />
+              Salvar
+            </Button>
+            <Button onClick={handleCancel} variant="outline" size="sm">
+              <X className="w-4 h-4 mr-2" />
+              Cancelar
+            </Button>
           </div>
         </div>
+      );
+    }
+
+    return (
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold text-[#432818]">
+          {content.title || 'Título'}
+        </h1>
+        {content.subtitle && (
+          <p className="text-lg text-gray-600">
+            {content.subtitle}
+          </p>
+        )}
+      </div>
+    );
+  };
+
+  const renderText = () => {
+    if (isEditing) {
+      return (
+        <div className="space-y-4">
+          <Textarea
+            ref={textareaRef}
+            value={editContent.text || ''}
+            onChange={(e) => setEditContent({ ...editContent, text: e.target.value })}
+            placeholder="Seu texto aqui..."
+            rows={4}
+          />
+          <div className="flex gap-2">
+            <Button onClick={handleSave} size="sm">
+              <Save className="w-4 h-4 mr-2" />
+              Salvar
+            </Button>
+            <Button onClick={handleCancel} variant="outline" size="sm">
+              <X className="w-4 h-4 mr-2" />
+              Cancelar
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <p className="text-base leading-relaxed text-gray-700">
+        {content.text || 'Clique para editar este texto...'}
+      </p>
+    );
+  };
+
+  const renderImage = () => {
+    if (isEditing) {
+      return (
+        <div className="space-y-4">
+          <Input
+            value={editContent.imageUrl || ''}
+            onChange={(e) => setEditContent({ ...editContent, imageUrl: e.target.value })}
+            placeholder="URL da imagem"
+          />
+          <Input
+            value={editContent.imageAlt || ''}
+            onChange={(e) => setEditContent({ ...editContent, imageAlt: e.target.value })}
+            placeholder="Texto alternativo"
+          />
+          <Input
+            value={editContent.caption || ''}
+            onChange={(e) => setEditContent({ ...editContent, caption: e.target.value })}
+            placeholder="Legenda (opcional)"
+          />
+          <div className="flex gap-2">
+            <Button onClick={handleSave} size="sm">
+              <Save className="w-4 h-4 mr-2" />
+              Salvar
+            </Button>
+            <Button onClick={handleCancel} variant="outline" size="sm">
+              <X className="w-4 h-4 mr-2" />
+              Cancelar
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="text-center">
+        {content.imageUrl ? (
+          <img
+            src={content.imageUrl}
+            alt={content.imageAlt || 'Imagem'}
+            className="mx-auto rounded-lg max-w-full h-auto"
+          />
+        ) : (
+          <div className="bg-gray-100 rounded-lg p-8 text-center">
+            <ImageIcon className="w-12 h-12 mx-auto text-gray-400 mb-2" />
+            <p className="text-gray-500">Clique para adicionar imagem</p>
+          </div>
+        )}
+        {content.caption && (
+          <p className="text-sm text-gray-600 mt-2">{content.caption}</p>
+        )}
+      </div>
+    );
+  };
+
+  const renderBenefits = () => {
+    if (isEditing) {
+      return (
+        <div className="space-y-4">
+          <Input
+            value={editContent.title || ''}
+            onChange={(e) => setEditContent({ ...editContent, title: e.target.value })}
+            placeholder="Título dos benefícios"
+          />
+          <div className="space-y-2">
+            {(editContent.items || ['']).map((item: string, index: number) => (
+              <div key={index} className="flex gap-2">
+                <Input
+                  value={item}
+                  onChange={(e) => {
+                    const newItems = [...(editContent.items || [''])];
+                    newItems[index] = e.target.value;
+                    setEditContent({ ...editContent, items: newItems });
+                  }}
+                  placeholder={`Benefício ${index + 1}`}
+                />
+                <Button
+                  onClick={() => {
+                    const newItems = (editContent.items || ['']).filter((_: any, i: number) => i !== index);
+                    setEditContent({ ...editContent, items: newItems });
+                  }}
+                  variant="outline"
+                  size="sm"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+            <Button
+              onClick={() => {
+                const newItems = [...(editContent.items || ['']), ''];
+                setEditContent({ ...editContent, items: newItems });
+              }}
+              variant="outline"
+              size="sm"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Adicionar item
+            </Button>
+          </div>
+          <div className="flex gap-2">
+            <Button onClick={handleSave} size="sm">
+              <Save className="w-4 h-4 mr-2" />
+              Salvar
+            </Button>
+            <Button onClick={handleCancel} variant="outline" size="sm">
+              <X className="w-4 h-4 mr-2" />
+              Cancelar
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        <h3 className="text-xl font-semibold mb-4 text-[#432818]">
+          {content.title || 'Benefícios'}
+        </h3>
+        <ul className="space-y-2">
+          {(content.items || []).map((item: string, index: number) => (
+            <li key={index} className="flex items-start gap-2">
+              <Badge variant="secondary" className="mt-1">✓</Badge>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+
+  const renderQuote = () => {
+    if (isEditing) {
+      return (
+        <div className="space-y-4">
+          <Textarea
+            value={editContent.quote || ''}
+            onChange={(e) => setEditContent({ ...editContent, quote: e.target.value })}
+            placeholder="Citação..."
+            rows={3}
+          />
+          <Input
+            value={editContent.author || ''}
+            onChange={(e) => setEditContent({ ...editContent, author: e.target.value })}
+            placeholder="Autor"
+          />
+          <div className="flex gap-2">
+            <Button onClick={handleSave} size="sm">
+              <Save className="w-4 h-4 mr-2" />
+              Salvar
+            </Button>
+            <Button onClick={handleCancel} variant="outline" size="sm">
+              <X className="w-4 h-4 mr-2" />
+              Cancelar
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <blockquote className="border-l-4 border-[#B89B7A] pl-6 italic">
+        <p className="text-lg text-gray-700 mb-2">
+          "{content.quote || 'Clique para adicionar uma citação...'}"
+        </p>
+        {content.author && (
+          <cite className="text-sm text-gray-600 font-medium">
+            — {content.author}
+          </cite>
+        )}
+      </blockquote>
+    );
+  };
+
+  const renderCTA = () => {
+    if (isEditing) {
+      return (
+        <div className="space-y-4">
+          <Input
+            value={editContent.text || ''}
+            onChange={(e) => setEditContent({ ...editContent, text: e.target.value })}
+            placeholder="Texto do botão"
+          />
+          <Input
+            value={editContent.href || ''}
+            onChange={(e) => setEditContent({ ...editContent, href: e.target.value })}
+            placeholder="URL do link"
+          />
+          <div className="flex gap-2">
+            <Button onClick={handleSave} size="sm">
+              <Save className="w-4 h-4 mr-2" />
+              Salvar
+            </Button>
+            <Button onClick={handleCancel} variant="outline" size="sm">
+              <X className="w-4 h-4 mr-2" />
+              Cancelar
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="text-center">
+        <Button
+          className="bg-[#B89B7A] hover:bg-[#A38A69] text-white px-8 py-3 text-lg"
+          onClick={() => content.href && window.open(content.href, '_blank')}
+        >
+          {content.text || 'Clique aqui'}
+        </Button>
+      </div>
+    );
+  };
+
+  const renderContent = () => {
+    switch (type) {
+      case 'header':
+        return renderHeader();
+      case 'text':
+        return renderText();
+      case 'image':
+        return renderImage();
+      case 'benefits':
+        return renderBenefits();
+      case 'quote':
+        return renderQuote();
+      case 'cta':
+        return renderCTA();
+      default:
+        return null;
+    }
+  };
+
+  const getIcon = () => {
+    switch (type) {
+      case 'header':
+        return <Type className="w-4 h-4" />;
+      case 'text':
+        return <Type className="w-4 h-4" />;
+      case 'image':
+        return <ImageIcon className="w-4 h-4" />;
+      case 'benefits':
+        return <List className="w-4 h-4" />;
+      case 'quote':
+        return <Quote className="w-4 h-4" />;
+      case 'cta':
+        return <Type className="w-4 h-4" />;
+      default:
+        return <Type className="w-4 h-4" />;
+    }
+  };
+
+  return (
+    <Card
+      className={cn(
+        'p-6 cursor-pointer transition-all duration-200 relative group',
+        isSelected && 'ring-2 ring-[#B89B7A] border-[#B89B7A]',
+        className
       )}
-      
-      {renderBlockPreview()}
-    </div>
+      onClick={onClick}
+    >
+      {/* Control buttons */}
+      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+        <Button
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsEditing(true);
+          }}
+          variant="secondary"
+          size="sm"
+          className="h-8 w-8 p-0"
+        >
+          <Pencil className="w-3 h-3" />
+        </Button>
+        {onDelete && (
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete();
+            }}
+            variant="secondary"
+            size="sm"
+            className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+          >
+            <Trash2 className="w-3 h-3" />
+          </Button>
+        )}
+      </div>
+
+      {/* Type indicator */}
+      <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <Badge variant="secondary" className="flex items-center gap-1">
+          {getIcon()}
+          {type}
+        </Badge>
+      </div>
+
+      {renderContent()}
+    </Card>
   );
 };
-
-export default EditableBlock;

@@ -1,8 +1,12 @@
 
 import React from 'react';
-import { EnhancedEditorLayout } from './enhanced-editor/EnhancedEditorLayout';
+import { EnhancedEditorLayout } from '../enhanced-editor/EnhancedEditorLayout';
 
-const EnhancedEditor: React.FC = () => {
+interface EnhancedEditorProps {
+  funnelId?: string;
+}
+
+const EnhancedEditor: React.FC<EnhancedEditorProps> = ({ funnelId }) => {
   return <EnhancedEditorLayout />;
 };
 

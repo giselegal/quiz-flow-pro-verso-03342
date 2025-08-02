@@ -1,185 +1,191 @@
-import React, { useState, useEffect, useMemo } from 'react';
+
+import React, { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { optimizeCloudinaryUrl, getResponsiveImageSources, getLowQualityPlaceholder } from '@/utils/imageUtils';
-import { getImageMetadata, isImagePreloaded, getOptimizedImage } from '@/utils/imageManager';
 
 interface OptimizedImageProps {
   src: string;
   alt: string;
+  className?: string;
   width?: number;
   height?: number;
-  className?: string;
   priority?: boolean;
   onLoad?: () => void;
-  objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
-  style?: React.CSSProperties;
   quality?: number;
-  placeholderColor?: string;
+  placeholder?: 'blur' | 'empty';
+  blurDataURL?: string;
+  sizes?: string;
+  fill?: boolean;
+  style?: React.CSSProperties;
 }
 
-/**
- * Componente de imagem otimizado com melhor experiência visual
- * - Carregamento progressivo com efeito blur
- * - Suporte para lazy loading e carregamento prioritário
- * - Tamanhos responsivos otimizados
- * - Fallback para imagens indisponíveis
- */
-export const OptimizedImage = ({
+export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   src,
   alt,
+  className,
   width,
   height,
-  className,
   priority = false,
   onLoad,
-  objectFit = 'cover',
-  style,
   quality = 85,
-  placeholderColor = '#f5f5f5'
-}: OptimizedImageProps) => {
-  const [loaded, setLoaded] = useState(false);
-  const [error, setError] = useState(false);
-  const [blurredLoaded, setBlurredLoaded] = useState(false);
+  placeholder = 'empty',
+  blurDataURL,
+  sizes = '100vw',
+  fill = false,
+  style = {}
+}) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const observerRef = useRef<IntersectionObserver>();
 
-  // Obter metadados da imagem do banco de imagens
-  const imageMetadata = useMemo(() => src ? getImageMetadata(src) : undefined, [src]);
-
-  // Gerar placeholders e URLs otimizadas apenas uma vez
-  const placeholderSrc = useMemo(() => {
-    if (!src) return '';
-    return getLowQualityPlaceholder(src);
-  }, [src]);
-
-  // Otimizar URLs do Cloudinary automaticamente
-  const optimizedSrc = useMemo(() => {
-    if (!src) return '';
-    
-    // Usar metadados width/height se disponíveis e não substituídos
-    const imgWidth = width || (imageMetadata?.width || undefined);
-    const imgHeight = height || (imageMetadata?.height || undefined);
-    
-    return getOptimizedImage(src, {
-      quality: quality,
-      format: 'auto',
-      width: imgWidth,
-      height: imgHeight
-    });
-  }, [src, width, height, imageMetadata, quality]);
-
-  // Obter atributos de imagem responsiva se necessário
-  const responsiveImageProps = useMemo(() => {
-    if (!src) return { srcSet: '', sizes: '' };
-    if (width && width > 300) {
-      return getResponsiveImageSources(src, [width/2, width, width*1.5]);
-    }
-    return { srcSet: '', sizes: '' };
-  }, [src, width]);
-
-  // Para imagens prioritárias, verificamos se já estão pré-carregadas
+  // Setup intersection observer for lazy loading
   useEffect(() => {
-    // Redefine estados quando src muda
-    setLoaded(false);
-    setBlurredLoaded(false);
-    setError(false);
-    
-    if (src && priority) {
-      if (isImagePreloaded(src)) {
-        setLoaded(true);
-        onLoad?.();
-      } else {
-        // Caso contrário, carrega-a agora
-        const img = new Image();
-        img.src = optimizedSrc;
-        img.onload = () => {
-          setLoaded(true);
-          onLoad?.();
-        };
-        img.onerror = () => setError(true);
-      }
-
-      // Sempre carrega a versão desfocada para transições mais suaves
-      const blurImg = new Image();
-      blurImg.src = placeholderSrc;
-      blurImg.onload = () => setBlurredLoaded(true);
+    if (priority) {
+      setIsInView(true);
+      return;
     }
-  }, [optimizedSrc, placeholderSrc, priority, src, onLoad]);
 
-  // Determina a proporção de aspecto se width e height forem fornecidos
-  const aspectRatio = width && height ? `${width} / ${height}` : undefined;
-  
+    const currentImgRef = imgRef.current;
+    if (!currentImgRef) return;
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observerRef.current?.disconnect();
+        }
+      },
+      {
+        rootMargin: '50px',
+        threshold: 0.1,
+      }
+    );
+
+    observerRef.current.observe(currentImgRef);
+
+    return () => {
+      observerRef.current?.disconnect();
+    };
+  }, [priority]);
+
+  // Generate optimized image URLs for different providers
+  const getOptimizedSrc = (originalSrc: string, targetWidth?: number) => {
+    if (originalSrc.includes('cloudinary.com')) {
+      const baseUrl = originalSrc.split('/upload/')[0];
+      const imagePath = originalSrc.split('/upload/')[1];
+      
+      const transformations = [
+        `q_${quality}`,
+        'f_auto',
+        ...(targetWidth ? [`w_${targetWidth}`] : []),
+        'c_limit'
+      ].join(',');
+      
+      return `${baseUrl}/upload/${transformations}/${imagePath}`;
+    }
+    
+    return originalSrc;
+  };
+
+  // Generate srcSet for responsive images
+  const generateSrcSet = () => {
+    if (!width || hasError) return undefined;
+    
+    const breakpoints = [480, 640, 768, 1024, 1280, 1536];
+    const relevantBreakpoints = breakpoints.filter(bp => bp <= (width * 2));
+    
+    return relevantBreakpoints
+      .map(bp => `${getOptimizedSrc(src, bp)} ${bp}w`)
+      .join(', ');
+  };
+
+  const handleLoad = () => {
+    setIsLoaded(true);
+    onLoad?.();
+  };
+
+  const handleError = () => {
+    setHasError(true);
+    console.warn(`Failed to load image: ${src}`);
+  };
+
+  // Don't render anything if not in view and not priority
+  if (!isInView && !priority) {
+    return (
+      <div
+        ref={imgRef}
+        className={cn(
+          'bg-gray-200 animate-pulse',
+          fill ? 'absolute inset-0' : '',
+          className
+        )}
+        style={fill ? { ...style } : { width, height, ...style }}
+      />
+    );
+  }
+
+  // Show error state
+  if (hasError) {
+    return (
+      <div
+        className={cn(
+          'bg-gray-100 flex items-center justify-center text-gray-400',
+          fill ? 'absolute inset-0' : '',
+          className
+        )}
+        style={fill ? { ...style } : { width, height, ...style }}
+      >
+        <span className="text-sm">Image failed to load</span>
+      </div>
+    );
+  }
+
   return (
-    <div 
+    <div
       className={cn(
-        "relative overflow-hidden",
+        'relative overflow-hidden',
+        fill ? 'absolute inset-0' : '',
         className
       )}
-      style={{
-        aspectRatio,
-        ...style
-      }} 
+      style={fill ? { ...style } : { width, height, ...style }}
     >
-      {!loaded && !error && (
-        <>
-          {/* Imagem de baixa qualidade como placeholder */}
-          {blurredLoaded && (
-            <img 
-              src={placeholderSrc} 
-              alt="" 
-              width={width} 
-              height={height} 
-              className={cn(
-                "absolute inset-0 w-full h-full",
-                objectFit === 'cover' && "object-cover",
-                objectFit === 'contain' && "object-contain",
-                objectFit === 'fill' && "object-fill",
-                objectFit === 'none' && "object-none",
-                objectFit === 'scale-down' && "object-scale-down",
-                "blur-sm scale-105" // Reduzi o blur para melhorar a percepção de qualidade
-              )}
-              aria-hidden="true"
-            />
-          )}
-          
-          {/* Efeito de carregamento */}
-          <div 
-            className="absolute inset-0 animate-pulse" 
-            style={{ backgroundColor: placeholderColor }}
-          />
-        </>
+      {/* Placeholder/blur effect */}
+      {placeholder === 'blur' && blurDataURL && !isLoaded && (
+        <img
+          src={blurDataURL}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover filter blur-sm scale-105"
+          aria-hidden="true"
+        />
       )}
       
-      <img 
-        src={optimizedSrc} 
-        alt={imageMetadata?.alt || alt}  // Usa metadados alt se disponíveis
-        width={width} 
+      {/* Loading placeholder */}
+      {!isLoaded && placeholder === 'empty' && (
+        <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+      )}
+
+      {/* Main image */}
+      <img
+        ref={imgRef}
+        src={getOptimizedSrc(src, width)}
+        alt={alt}
+        width={width}
         height={height}
-        loading={priority ? "eager" : "lazy"}
-        decoding={priority ? "sync" : "async"}
-        fetchpriority={priority ? "high" : "auto"}
-        srcSet={responsiveImageProps.srcSet || undefined}
-        sizes={responsiveImageProps.sizes || undefined}
-        onLoad={() => {
-          setLoaded(true);
-          onLoad?.();
-        }}
-        onError={() => setError(true)}
+        loading={priority ? 'eager' : 'lazy'}
+        decoding="async"
+        fetchPriority={priority ? 'high' : 'auto'}
+        srcSet={generateSrcSet()}
+        sizes={sizes}
+        onLoad={handleLoad}
+        onError={handleError}
         className={cn(
-          "w-full h-full transition-opacity duration-300",
-          !loaded && "opacity-0",
-          loaded && "opacity-100",
-          objectFit === 'cover' && "object-cover",
-          objectFit === 'contain' && "object-contain",
-          objectFit === 'fill' && "object-fill",
-          objectFit === 'none' && "object-none",
-          objectFit === 'scale-down' && "object-scale-down"
+          'transition-opacity duration-300',
+          fill ? 'absolute inset-0 w-full h-full object-cover' : 'w-full h-auto',
+          isLoaded ? 'opacity-100' : 'opacity-0'
         )}
       />
-      
-      {error && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded">
-          <span className="text-sm text-gray-500">Imagem não disponível</span>
-        </div>
-      )}
     </div>
   );
 };
