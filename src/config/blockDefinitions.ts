@@ -2894,6 +2894,986 @@ export const blockDefinitions: BlockDefinition[] = [
     }
   },
 
+  // ===== TODAS AS 21 ETAPAS DO FUNIL DE QUIZ =====
+  
+  {
+    type: 'quiz-personal-info-inline',
+    name: 'Informações Pessoais Quiz',
+    description: 'Formulário para coletar informações pessoais do usuário',
+    icon: 'User',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Vamos nos conhecer!'
+      },
+      {
+        key: 'subtitle',
+        label: 'Subtítulo',
+        type: 'text',
+        defaultValue: 'Para personalizar seus resultados'
+      },
+      {
+        key: 'fields',
+        label: 'Campos do Formulário',
+        type: 'array',
+        defaultValue: [
+          { id: 'name', label: 'Seu nome', type: 'text', required: true },
+          { id: 'email', label: 'Seu e-mail', type: 'email', required: true },
+          { id: 'age', label: 'Sua idade', type: 'select', options: ['18-25', '26-35', '36-45', '46+'] }
+        ]
+      },
+      {
+        key: 'progressValue',
+        label: 'Progresso (%)',
+        type: 'number',
+        defaultValue: 10
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Vamos nos conhecer!',
+      subtitle: 'Para personalizar seus resultados',
+      fields: [
+        { id: 'name', label: 'Seu nome', type: 'text', required: true },
+        { id: 'email', label: 'Seu e-mail', type: 'email', required: true },
+        { id: 'age', label: 'Sua idade', type: 'select', options: ['18-25', '26-35', '36-45', '46+'] }
+      ],
+      progressValue: 10,
+      enableSupabaseTracking: true,
+      stepCategory: 'intro'
+    }
+  },
+
+  {
+    type: 'quiz-experience-inline',
+    name: 'Experiência do Usuário',
+    description: 'Questão sobre experiência prévia do usuário',
+    icon: 'TrendingUp',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Qual sua experiência?'
+      },
+      {
+        key: 'question',
+        label: 'Pergunta',
+        type: 'textarea',
+        defaultValue: 'Como você classificaria seu nível de experiência com estilo?'
+      },
+      {
+        key: 'options',
+        label: 'Opções',
+        type: 'array',
+        defaultValue: [
+          { id: 'beginner', text: 'Iniciante - estou começando', weight: 1 },
+          { id: 'intermediate', text: 'Intermediário - sei o básico', weight: 2 },
+          { id: 'advanced', text: 'Avançado - tenho experiência', weight: 3 }
+        ]
+      },
+      {
+        key: 'progressValue',
+        label: 'Progresso (%)',
+        type: 'number',
+        defaultValue: 15
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Qual sua experiência?',
+      question: 'Como você classificaria seu nível de experiência com estilo?',
+      options: [
+        { id: 'beginner', text: 'Iniciante - estou começando', weight: 1 },
+        { id: 'intermediate', text: 'Intermediário - sei o básico', weight: 2 },
+        { id: 'advanced', text: 'Avançado - tenho experiência', weight: 3 }
+      ],
+      progressValue: 15,
+      enableSupabaseTracking: true,
+      stepCategory: 'questao'
+    }
+  },
+
+  {
+    type: 'quiz-question-inline',
+    name: 'Questão do Quiz',
+    description: 'Questão principal do quiz com múltiplas opções',
+    icon: 'HelpCircle',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título da Questão',
+        type: 'text',
+        defaultValue: 'Questão'
+      },
+      {
+        key: 'question',
+        label: 'Pergunta',
+        type: 'textarea',
+        defaultValue: 'Qual opção mais combina com você?'
+      },
+      {
+        key: 'options',
+        label: 'Opções de Resposta',
+        type: 'array',
+        defaultValue: [
+          { id: 'opt1', text: 'Opção 1', category: 'Visionário', weight: 2 },
+          { id: 'opt2', text: 'Opção 2', category: 'Estratégico', weight: 2 },
+          { id: 'opt3', text: 'Opção 3', category: 'Executor', weight: 2 },
+          { id: 'opt4', text: 'Opção 4', category: 'Inspirador', weight: 2 }
+        ]
+      },
+      {
+        key: 'allowMultiple',
+        label: 'Permitir Múltiplas Seleções',
+        type: 'boolean',
+        defaultValue: false
+      },
+      {
+        key: 'progressValue',
+        label: 'Progresso (%)',
+        type: 'number',
+        defaultValue: 50
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Questão',
+      question: 'Qual opção mais combina com você?',
+      options: [
+        { id: 'opt1', text: 'Opção 1', category: 'Visionário', weight: 2 },
+        { id: 'opt2', text: 'Opção 2', category: 'Estratégico', weight: 2 },
+        { id: 'opt3', text: 'Opção 3', category: 'Executor', weight: 2 },
+        { id: 'opt4', text: 'Opção 4', category: 'Inspirador', weight: 2 }
+      ],
+      allowMultiple: false,
+      progressValue: 50,
+      enableSupabaseTracking: true,
+      stepCategory: 'questao'
+    }
+  },
+
+  {
+    type: 'quiz-progress-inline',
+    name: 'Progresso do Quiz',
+    description: 'Barra de progresso visual do quiz',
+    icon: 'BarChart',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'currentStep',
+        label: 'Etapa Atual',
+        type: 'number',
+        defaultValue: 6
+      },
+      {
+        key: 'totalSteps',
+        label: 'Total de Etapas',
+        type: 'number',
+        defaultValue: 21
+      },
+      {
+        key: 'showPercentage',
+        label: 'Mostrar Porcentagem',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showStepNumbers',
+        label: 'Mostrar Números das Etapas',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Progresso do Quiz'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      currentStep: 6,
+      totalSteps: 21,
+      showPercentage: true,
+      showStepNumbers: true,
+      title: 'Progresso do Quiz',
+      enableSupabaseTracking: true,
+      stepCategory: 'questao'
+    }
+  },
+
+  {
+    type: 'quiz-transition-inline',
+    name: 'Transição Entre Etapas',
+    description: 'Tela de transição entre etapas do quiz',
+    icon: 'ArrowRight',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Ótima resposta!'
+      },
+      {
+        key: 'message',
+        label: 'Mensagem',
+        type: 'textarea',
+        defaultValue: 'Vamos continuar com a próxima pergunta...'
+      },
+      {
+        key: 'autoAdvance',
+        label: 'Avançar Automaticamente',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'delay',
+        label: 'Delay (segundos)',
+        type: 'number',
+        defaultValue: 2
+      },
+      {
+        key: 'showAnimation',
+        label: 'Mostrar Animação',
+        type: 'boolean',
+        defaultValue: true
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Ótima resposta!',
+      message: 'Vamos continuar com a próxima pergunta...',
+      autoAdvance: true,
+      delay: 2,
+      showAnimation: true,
+      enableSupabaseTracking: true,
+      stepCategory: 'questao'
+    }
+  },
+
+  {
+    type: 'quiz-loading-inline',
+    name: 'Carregamento do Quiz',
+    description: 'Tela de carregamento e processamento dos resultados',
+    icon: 'LoaderCircle',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Calculando seus resultados...'
+      },
+      {
+        key: 'messages',
+        label: 'Mensagens de Carregamento',
+        type: 'array',
+        defaultValue: [
+          'Analisando suas respostas...',
+          'Identificando seu estilo...',
+          'Preparando recomendações personalizadas...',
+          'Quase pronto!'
+        ]
+      },
+      {
+        key: 'duration',
+        label: 'Duração (segundos)',
+        type: 'number',
+        defaultValue: 8
+      },
+      {
+        key: 'animationType',
+        label: 'Tipo de Animação',
+        type: 'select',
+        options: ['spinner', 'progress', 'dots', 'pulse'],
+        defaultValue: 'progress'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Calculando seus resultados...',
+      messages: [
+        'Analisando suas respostas...',
+        'Identificando seu estilo...',
+        'Preparando recomendações personalizadas...',
+        'Quase pronto!'
+      ],
+      duration: 8,
+      animationType: 'progress',
+      enableSupabaseTracking: true,
+      stepCategory: 'questao'
+    }
+  },
+
+  {
+    type: 'quiz-result-inline',
+    name: 'Resultado do Quiz',
+    description: 'Exibição do resultado principal do quiz',
+    icon: 'Award',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Seu Resultado!'
+      },
+      {
+        key: 'showUserName',
+        label: 'Mostrar Nome do Usuário',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showPercentage',
+        label: 'Mostrar Porcentagem',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showDescription',
+        label: 'Mostrar Descrição',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showImage',
+        label: 'Mostrar Imagem do Estilo',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'ctaText',
+        label: 'Texto do CTA',
+        type: 'text',
+        defaultValue: 'Ver Análise Completa'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Seu Resultado!',
+      showUserName: true,
+      showPercentage: true,
+      showDescription: true,
+      showImage: true,
+      ctaText: 'Ver Análise Completa',
+      enableSupabaseTracking: true,
+      stepCategory: 'resultado'
+    }
+  },
+
+  {
+    type: 'quiz-analysis-inline',
+    name: 'Análise Detalhada',
+    description: 'Análise detalhada dos resultados do quiz',
+    icon: 'Brain',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Análise Detalhada'
+      },
+      {
+        key: 'showBreakdown',
+        label: 'Mostrar Detalhamento',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showCharts',
+        label: 'Mostrar Gráficos',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'analysisDepth',
+        label: 'Profundidade da Análise',
+        type: 'select',
+        options: ['basic', 'detailed', 'comprehensive'],
+        defaultValue: 'detailed'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Análise Detalhada',
+      showBreakdown: true,
+      showCharts: true,
+      analysisDepth: 'detailed',
+      enableSupabaseTracking: true,
+      stepCategory: 'resultado'
+    }
+  },
+
+  {
+    type: 'quiz-category-inline',
+    name: 'Categoria do Estilo',
+    description: 'Exibição da categoria principal do estilo identificado',
+    icon: 'Tag',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Sua Categoria'
+      },
+      {
+        key: 'showIcon',
+        label: 'Mostrar Ícone',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showCharacteristics',
+        label: 'Mostrar Características',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showCompatibility',
+        label: 'Mostrar Compatibilidade',
+        type: 'boolean',
+        defaultValue: true
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Sua Categoria',
+      showIcon: true,
+      showCharacteristics: true,
+      showCompatibility: true,
+      enableSupabaseTracking: true,
+      stepCategory: 'resultado'
+    }
+  },
+
+  {
+    type: 'quiz-recommendation-inline',
+    name: 'Recomendações Personalizadas',
+    description: 'Recomendações específicas baseadas no resultado',
+    icon: 'Lightbulb',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Recomendações Para Você'
+      },
+      {
+        key: 'maxRecommendations',
+        label: 'Máximo de Recomendações',
+        type: 'number',
+        defaultValue: 5
+      },
+      {
+        key: 'showPriority',
+        label: 'Mostrar Prioridade',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showImplementation',
+        label: 'Mostrar Como Implementar',
+        type: 'boolean',
+        defaultValue: true
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Recomendações Para Você',
+      maxRecommendations: 5,
+      showPriority: true,
+      showImplementation: true,
+      enableSupabaseTracking: true,
+      stepCategory: 'resultado'
+    }
+  },
+
+  {
+    type: 'quiz-metrics-inline',
+    name: 'Métricas do Quiz',
+    description: 'Métricas e estatísticas dos resultados',
+    icon: 'BarChart',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Suas Métricas'
+      },
+      {
+        key: 'showScores',
+        label: 'Mostrar Pontuações',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showComparison',
+        label: 'Mostrar Comparação',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'chartType',
+        label: 'Tipo de Gráfico',
+        type: 'select',
+        options: ['bar', 'radar', 'pie', 'line'],
+        defaultValue: 'radar'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Suas Métricas',
+      showScores: true,
+      showComparison: true,
+      chartType: 'radar',
+      enableSupabaseTracking: true,
+      stepCategory: 'resultado'
+    }
+  },
+
+  {
+    type: 'quiz-comparison-inline',
+    name: 'Comparação de Estilos',
+    description: 'Comparação entre diferentes estilos',
+    icon: 'Scale',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Comparação de Estilos'
+      },
+      {
+        key: 'showVs',
+        label: 'Mostrar Vs.',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'maxComparisons',
+        label: 'Máximo de Comparações',
+        type: 'number',
+        defaultValue: 3
+      },
+      {
+        key: 'comparisonType',
+        label: 'Tipo de Comparação',
+        type: 'select',
+        options: ['side-by-side', 'overlay', 'table'],
+        defaultValue: 'side-by-side'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Comparação de Estilos',
+      showVs: true,
+      maxComparisons: 3,
+      comparisonType: 'side-by-side',
+      enableSupabaseTracking: true,
+      stepCategory: 'resultado'
+    }
+  },
+
+  {
+    type: 'quiz-certificate-inline',
+    name: 'Certificado do Quiz',
+    description: 'Certificado personalizado do resultado',
+    icon: 'Award',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título do Certificado',
+        type: 'text',
+        defaultValue: 'Certificado de Estilo'
+      },
+      {
+        key: 'showName',
+        label: 'Mostrar Nome',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showDate',
+        label: 'Mostrar Data',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showScore',
+        label: 'Mostrar Pontuação',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'downloadable',
+        label: 'Permitir Download',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'shareble',
+        label: 'Permitir Compartilhamento',
+        type: 'boolean',
+        defaultValue: true
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Certificado de Estilo',
+      showName: true,
+      showDate: true,
+      showScore: true,
+      downloadable: true,
+      shareble: true,
+      enableSupabaseTracking: true,
+      stepCategory: 'resultado'
+    }
+  },
+
+  {
+    type: 'quiz-leaderboard-inline',
+    name: 'Ranking do Quiz',
+    description: 'Ranking e leaderboard dos participantes',
+    icon: 'Crown',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Ranking'
+      },
+      {
+        key: 'showUserPosition',
+        label: 'Mostrar Posição do Usuário',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'maxPositions',
+        label: 'Máximo de Posições',
+        type: 'number',
+        defaultValue: 10
+      },
+      {
+        key: 'showScores',
+        label: 'Mostrar Pontuações',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'anonymize',
+        label: 'Anonimizar Nomes',
+        type: 'boolean',
+        defaultValue: true
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Ranking',
+      showUserPosition: true,
+      maxPositions: 10,
+      showScores: true,
+      anonymize: true,
+      enableSupabaseTracking: true,
+      stepCategory: 'resultado'
+    }
+  },
+
+  {
+    type: 'quiz-badges-inline',
+    name: 'Badges do Quiz',
+    description: 'Badges e conquistas do usuário',
+    icon: 'Star',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Suas Conquistas'
+      },
+      {
+        key: 'showProgress',
+        label: 'Mostrar Progresso',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'maxBadges',
+        label: 'Máximo de Badges',
+        type: 'number',
+        defaultValue: 6
+      },
+      {
+        key: 'showRarity',
+        label: 'Mostrar Raridade',
+        type: 'boolean',
+        defaultValue: true
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Suas Conquistas',
+      showProgress: true,
+      maxBadges: 6,
+      showRarity: true,
+      enableSupabaseTracking: true,
+      stepCategory: 'resultado'
+    }
+  },
+
+  {
+    type: 'quiz-evolution-inline',
+    name: 'Evolução do Usuário',
+    description: 'Trajetória de evolução e crescimento',
+    icon: 'TrendingUp',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Sua Evolução'
+      },
+      {
+        key: 'showTimeline',
+        label: 'Mostrar Linha do Tempo',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showMilestones',
+        label: 'Mostrar Marcos',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showProjections',
+        label: 'Mostrar Projeções',
+        type: 'boolean',
+        defaultValue: true
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Sua Evolução',
+      showTimeline: true,
+      showMilestones: true,
+      showProjections: true,
+      enableSupabaseTracking: true,
+      stepCategory: 'resultado'
+    }
+  },
+
+  {
+    type: 'quiz-networking-inline',
+    name: 'Networking e Comunidade',
+    description: 'Conectar com outros usuários similares',
+    icon: 'Users',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Conecte-se'
+      },
+      {
+        key: 'showSimilarProfiles',
+        label: 'Mostrar Perfis Similares',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showCommunity',
+        label: 'Mostrar Comunidade',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'maxConnections',
+        label: 'Máximo de Conexões',
+        type: 'number',
+        defaultValue: 5
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Conecte-se',
+      showSimilarProfiles: true,
+      showCommunity: true,
+      maxConnections: 5,
+      enableSupabaseTracking: true,
+      stepCategory: 'resultado'
+    }
+  },
+
+  {
+    type: 'quiz-action-plan-inline',
+    name: 'Plano de Ação',
+    description: 'Plano de ação personalizado baseado no resultado',
+    icon: 'Target',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Seu Plano de Ação'
+      },
+      {
+        key: 'showSteps',
+        label: 'Mostrar Etapas',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showTimeline',
+        label: 'Mostrar Cronograma',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showPriorities',
+        label: 'Mostrar Prioridades',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'maxActions',
+        label: 'Máximo de Ações',
+        type: 'number',
+        defaultValue: 7
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Seu Plano de Ação',
+      showSteps: true,
+      showTimeline: true,
+      showPriorities: true,
+      maxActions: 7,
+      enableSupabaseTracking: true,
+      stepCategory: 'resultado'
+    }
+  },
+
+  {
+    type: 'quiz-development-plan-inline',
+    name: 'Plano de Desenvolvimento',
+    description: 'Plano de desenvolvimento de longo prazo',
+    icon: 'Rocket',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Plano de Desenvolvimento'
+      },
+      {
+        key: 'showGoals',
+        label: 'Mostrar Objetivos',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showResources',
+        label: 'Mostrar Recursos',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showMentorship',
+        label: 'Mostrar Mentoria',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'timeframe',
+        label: 'Prazo',
+        type: 'select',
+        options: ['30-days', '90-days', '6-months', '1-year'],
+        defaultValue: '90-days'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Plano de Desenvolvimento',
+      showGoals: true,
+      showResources: true,
+      showMentorship: true,
+      timeframe: '90-days',
+      enableSupabaseTracking: true,
+      stepCategory: 'resultado'
+    }
+  },
+
+  {
+    type: 'quiz-goals-dashboard-inline',
+    name: 'Dashboard de Objetivos',
+    description: 'Dashboard interativo de objetivos e progresso',
+    icon: 'Target',
+    category: 'Quiz',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Seus Objetivos'
+      },
+      {
+        key: 'showProgress',
+        label: 'Mostrar Progresso',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'showDeadlines',
+        label: 'Mostrar Prazos',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'interactive',
+        label: 'Interativo',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'maxGoals',
+        label: 'Máximo de Objetivos',
+        type: 'number',
+        defaultValue: 5
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Seus Objetivos',
+      showProgress: true,
+      showDeadlines: true,
+      interactive: true,
+      maxGoals: 5,
+      enableSupabaseTracking: true,
+      stepCategory: 'resultado'
+    }
+  },
+
   // ===== COMPONENTES INDIVIDUALIZADOS E MODULARES =====
   
   {
