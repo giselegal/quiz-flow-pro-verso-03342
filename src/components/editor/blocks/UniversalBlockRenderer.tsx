@@ -1,257 +1,186 @@
-// UniversalBlockRenderer.tsx
-// Renderizador universal para todos os componentes inline das 21 etapas
-import React, { Suspense } from 'react';
-import { cn } from '../../../lib/utils';
-import { EditorBlock } from '../../../types/editor';
-import { getBlockComponent } from './BlockRegistry';
 
-// ===== IMPORTS DOS COMPONENTES INLINE (LAZY LOADING) =====
+/**
+ * UniversalBlockRenderer - Renderizador universal de blocos
+ * Versão corrigida com importações adequadas e tratamento de erro robusto
+ */
+
+import React, { Suspense } from 'react';
+import type { BlockComponentProps } from '@/types/blocks';
+import { initializeSafeBlock, logBlockDebug, createSafeFallback } from '@/utils/blockUtils';
+
+// Importações corretas dos componentes inline
 import {
-  // 🔧 COMPONENTES BÁSICOS (sempre carregados)
   TextInlineBlock,
-  HeadingInlineBlock,
-  ButtonInlineBlock,
   ImageDisplayInlineBlock,
   BadgeInlineBlock,
   ProgressInlineBlock,
   StatInlineBlock,
   CountdownInlineBlock,
-  
-  // 🎨 COMPONENTES DE ESTILO E DESIGN
-  StyleCardInlineBlock,
-  ResultCardInlineBlock,
+  SpacerInlineBlock,
   PricingCardInlineBlock,
   TestimonialCardInlineBlock,
-  
-  // 🏆 COMPONENTES DE RESULTADO - ETAPA 20
+  StyleCardInlineBlock,
+  ResultCardInlineBlock,
   ResultHeaderInlineBlock,
-  TestimonialsInlineBlock,
-  BeforeAfterInlineBlock,
   StepHeaderInlineBlock,
-  
-  // 💰 COMPONENTES DE OFERTA - ETAPA 21
-  QuizOfferPricingInlineBlock,
-  QuizOfferCTAInlineBlock,
-  BonusListInlineBlock,
-  
-  // 🚀 COMPONENTES ESPECIALIZADOS QUIZ
+  SecondaryStylesInlineBlock,
+  StyleCharacteristicsInlineBlock,
   QuizIntroHeaderBlock,
   LoadingAnimationBlock,
-  
-  // 🎯 COMPONENTES DAS 21 ETAPAS DO FUNIL
-  QuizStartPageInlineBlock,
   QuizPersonalInfoInlineBlock,
-  QuizExperienceInlineBlock,
-  QuizQuestionInlineBlock,
-  QuizProgressInlineBlock,
-  QuizTransitionInlineBlock,
-  QuizLoadingInlineBlock,
   QuizResultInlineBlock,
-  QuizAnalysisInlineBlock,
-  QuizCategoryInlineBlock,
-  QuizRecommendationInlineBlock,
-  QuizMetricsInlineBlock,
-  QuizComparisonInlineBlock,
-  QuizCertificateInlineBlock,
-  QuizLeaderboardInlineBlock,
-  QuizBadgesInlineBlock,
-  QuizEvolutionInlineBlock,
-  QuizNetworkingInlineBlock,
-  QuizActionPlanInlineBlock,
-  QuizDevelopmentPlanInlineBlock,
-  QuizGoalsDashboardInlineBlock,
-  QuizFinalResultsInlineBlock,
-} from './inline/index.lazy';
+  CharacteristicsListInlineBlock,
+  TestimonialsInlineBlock,
+  BeforeAfterInlineBlock,
+  BonusListInlineBlock,
+  QuizOfferPricingInlineBlock,
+  QuizOfferCTAInlineBlock,
+  QuizStartPageInlineBlock,
+  QuizQuestionInlineBlock
+} from './inline';
 
-// ===== FALLBACK COMPONENT PARA LAZY LOADING =====
-const LazyFallback = () => (
-  <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg animate-pulse border-2 border-dashed border-gray-200">
-    <div className="flex items-center space-x-2">
-      <div className="w-4 h-4 bg-blue-500 rounded-full animate-bounce"></div>
-      <div className="text-sm text-gray-500">Carregando componente...</div>
-    </div>
+// Componentes não-inline existentes
+import { HeaderBlock } from './HeaderBlock';
+import { HeadingInlineBlock } from './HeadingInlineBlock';
+import { ButtonInlineBlock } from './ButtonInlineBlock';
+
+export interface BlockRendererProps extends BlockComponentProps {
+  block: any;
+  type?: string;
+  isSelected?: boolean;
+  onClick?: () => void;
+  onPropertyChange?: (key: string, value: any) => void;
+  className?: string;
+}
+
+// Componente de fallback para erros
+const ErrorFallback: React.FC<{ blockType: string; error?: string }> = ({ blockType, error }) => (
+  <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+    <p className="font-medium">Erro no componente: {blockType}</p>
+    {error && <p className="text-sm mt-1">{error}</p>}
   </div>
 );
 
-// ===== MAPEAMENTO COMPLETO DE TIPOS PARA COMPONENTES =====
-const COMPONENT_MAP: Record<string, React.ComponentType<any>> = {
-  // 🔧 COMPONENTES BÁSICOS
-  'text-inline': TextInlineBlock,
-  'heading-inline': HeadingInlineBlock,
-  'button-inline': ButtonInlineBlock,
-  'image-display-inline': ImageDisplayInlineBlock,
-  'badge-inline': BadgeInlineBlock,
-  'progress-inline': ProgressInlineBlock,
-  'stat-inline': StatInlineBlock,
-  'countdown-inline': CountdownInlineBlock,
-  
-  // 🎨 COMPONENTES DE ESTILO E DESIGN
-  'style-card-inline': StyleCardInlineBlock,
-  'result-card-inline': ResultCardInlineBlock,
-  'pricing-card-inline': PricingCardInlineBlock,
-  'testimonial-card-inline': TestimonialCardInlineBlock,
-  
-  // 🏆 COMPONENTES DE RESULTADO - ETAPA 20
-  'result-header-inline': ResultHeaderInlineBlock,
-  'testimonials-inline': TestimonialsInlineBlock,
-  'before-after-inline': BeforeAfterInlineBlock,
-  'step-header-inline': StepHeaderInlineBlock,
-  
-  // 💰 COMPONENTES DE OFERTA - ETAPA 21
-  'quiz-offer-pricing-inline': QuizOfferPricingInlineBlock,
-  'quiz-offer-cta-inline': QuizOfferCTAInlineBlock,
-  'bonus-list-inline': BonusListInlineBlock,
-  
-  // 🚀 COMPONENTES ESPECIALIZADOS QUIZ
-  'quiz-intro-header': QuizIntroHeaderBlock,
-  'loading-animation': LoadingAnimationBlock,
-  
-  // 🎯 COMPONENTES DAS 21 ETAPAS DO FUNIL
-  'quiz-start-page-inline': QuizStartPageInlineBlock,           // Etapa 1
-  'quiz-personal-info-inline': QuizPersonalInfoInlineBlock,     // Etapa 2
-  'quiz-experience-inline': QuizExperienceInlineBlock,          // Etapa 3
-  'quiz-question-inline': QuizQuestionInlineBlock,              // Etapas 4-13
-  'quiz-progress-inline': QuizProgressInlineBlock,
-  'quiz-transition-inline': QuizTransitionInlineBlock,
-  'quiz-loading-inline': QuizLoadingInlineBlock,
-  'quiz-result-inline': QuizResultInlineBlock,
-  'quiz-analysis-inline': QuizAnalysisInlineBlock,
-  'quiz-category-inline': QuizCategoryInlineBlock,
-  'quiz-recommendation-inline': QuizRecommendationInlineBlock,
-  'quiz-metrics-inline': QuizMetricsInlineBlock,
-  'quiz-comparison-inline': QuizComparisonInlineBlock,
-  'quiz-certificate-inline': QuizCertificateInlineBlock,
-  'quiz-leaderboard-inline': QuizLeaderboardInlineBlock,
-  'quiz-badges-inline': QuizBadgesInlineBlock,
-  'quiz-evolution-inline': QuizEvolutionInlineBlock,
-  'quiz-networking-inline': QuizNetworkingInlineBlock,
-  'quiz-action-plan-inline': QuizActionPlanInlineBlock,
-  'quiz-development-plan-inline': QuizDevelopmentPlanInlineBlock,
-  'quiz-goals-dashboard-inline': QuizGoalsDashboardInlineBlock,
-  'quiz-final-results-inline': QuizFinalResultsInlineBlock,
-};
-
-// Fallback para compatibilidade com sistema antigo
-import * as BlockComponents from './index';
-
-export interface BlockRendererProps {
-  block: EditorBlock;
-  isSelected: boolean;
-  onSelect: () => void;
-  onUpdate: (updates: Partial<EditorBlock>) => void;
-  onDelete: () => void;
-  isPreview?: boolean;
-}
+// Componente de loading
+const LoadingFallback: React.FC = () => (
+  <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+    <p className="text-gray-500">Carregando componente...</p>
+  </div>
+);
 
 export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
-  block, isSelected, onSelect, onUpdate, onDelete, isPreview
+  block: rawBlock,
+  type,
+  isSelected = false,
+  onClick,
+  onPropertyChange,
+  className = '',
+  ...props
 }) => {
-  console.log(`🔍 [UniversalBlockRenderer] Renderizando bloco tipo: ${block.type}`);
+  // Inicializar bloco com segurança
+  const block = initializeSafeBlock(rawBlock);
+  const blockType = type || block.type;
   
-  // 1. Buscar componente no mapeamento moderno
-  let ComponentToRender: React.ComponentType<any> | null = COMPONENT_MAP[block.type] || null;
+  // Debug logging
+  logBlockDebug('UniversalBlockRenderer', block);
   
-  if (ComponentToRender) {
-    console.log(`✅ [UniversalBlockRenderer] Componente encontrado no COMPONENT_MAP: ${block.type}`);
-  } else {
-    // 2. Fallback para BlockRegistry (sistema mais recente)
-    const registryComponent = getBlockComponent(block.type);
-    
-    if (registryComponent) {
-      ComponentToRender = registryComponent;
-      console.log(`✅ [UniversalBlockRenderer] Componente encontrado no BlockRegistry: ${block.type}`);
-    } else {
-      // 3. Fallback para sistema antigo (PascalCase)
-      const toPascal = (s: string) =>
-        s.split('-').map(p => p.charAt(0).toUpperCase() + p.slice(1)).join('');
-      
-      const componentName = `${toPascal(block.type)}Block`;
-      const legacyComponent = BlockComponents[componentName as keyof typeof BlockComponents];
-      
-      if (legacyComponent) {
-        ComponentToRender = legacyComponent as React.ComponentType<any>;
-        console.log(`✅ [UniversalBlockRenderer] Componente encontrado no sistema antigo: ${componentName}`);
-      }
-    }
-  }
-
-  // Se não encontrou o componente, mostrar placeholder informativo
-  if (!ComponentToRender) {
-    console.warn(`⚠️ [UniversalBlockRenderer] Componente não encontrado: ${block.type}`);
-    return (
-      <div 
-        onClick={onSelect}
-        className="p-4 border-2 border-dashed border-red-300 rounded-lg bg-red-50 cursor-pointer"
-      >
-        <div className="text-center">
-          <p className="text-red-600 text-sm font-medium">
-            ⚠️ Componente não encontrado
-          </p>
-          <p className="text-red-500 text-xs mt-1">
-            Tipo: <code className="bg-red-100 px-1 rounded">{block.type}</code>
-          </p>
-          <p className="text-red-400 text-xs mt-1">
-            Verifique se o componente está implementado e mapeado.
-          </p>
-        </div>
-      </div>
-    );
-  }
-  
-  // Função para atualizar propriedades do bloco
-  const handleContentUpdate = (key: string, value: any) => {
-    console.log(`🔧 [UniversalBlockRenderer] Atualizando propriedade ${key}:`, value);
-    onUpdate({ 
-      ...block,
-      properties: { ...block.properties, [key]: value } 
-    });
+  // Props comuns para todos os componentes
+  const commonProps: BlockComponentProps = {
+    block,
+    isSelected,
+    onClick,
+    onPropertyChange,
+    className,
+    ...props
   };
 
-  return (
-    <div
-      onClick={onSelect}
-      data-block-type={block.type}
-      data-block-id={block.id}
-      className={cn(
-        "relative cursor-pointer transition-all duration-200 rounded-lg",
-        isSelected
-          ? 'ring-2 ring-[#B89B7A] ring-opacity-50 bg-[#FAF9F7]'
-          : 'hover:bg-gray-50',
-        !isPreview && 'border border-transparent hover:border-gray-200 p-2'
-      )}
-    >
-      <Suspense fallback={<LazyFallback />}>
-        <ComponentToRender
-          {...block.properties}
-          block={block}
-          isSelected={isSelected}
-          onClick={onSelect}
-          onPropertyChange={handleContentUpdate}
-          disabled={isPreview}
-        />
-      </Suspense>
-      
-      {!isPreview && isSelected && (
-        <div className="absolute -top-2 -right-2 flex gap-1">
-          {/* Indicador do tipo do bloco */}
-          <span className="px-2 py-1 bg-[#B89B7A] text-white text-xs rounded-full">
-            {block.type}
-          </span>
-          {/* Botão de deletar */}
-          <button
-            onClick={e => {
-              e.stopPropagation();
-              onDelete();
-            }}
-            className="w-6 h-6 bg-red-500 text-white rounded-full text-xs hover:bg-red-600 transition-colors flex items-center justify-center"
-            title="Deletar bloco"
-          >
-            ×
-          </button>
-        </div>
-      )}
-    </div>
-  );
+  try {
+    // Mapeamento de tipos para componentes
+    const componentMap: Record<string, () => JSX.Element> = {
+      // Componentes básicos
+      'text-inline': () => <TextInlineBlock {...commonProps} />,
+      'text': () => <TextInlineBlock {...commonProps} />,
+      'image-display-inline': () => <ImageDisplayInlineBlock {...commonProps} />,
+      'badge-inline': () => <BadgeInlineBlock {...commonProps} />,
+      'progress-inline': () => <ProgressInlineBlock {...commonProps} />,
+      'stat-inline': () => <StatInlineBlock {...commonProps} />,
+      'countdown-inline': () => <CountdownInlineBlock {...commonProps} />,
+      'spacer-inline': () => <SpacerInlineBlock {...commonProps} />,
+      'spacer': () => <SpacerInlineBlock {...commonProps} />,
+
+      // Componentes de cards
+      'pricing-card-inline': () => <PricingCardInlineBlock {...commonProps} />,
+      'testimonial-card-inline': () => <TestimonialCardInlineBlock {...commonProps} />,
+      'style-card-inline': () => <StyleCardInlineBlock {...commonProps} />,
+      'result-card-inline': () => <ResultCardInlineBlock {...commonProps} />,
+
+      // Componentes de resultado
+      'result-header-inline': () => <ResultHeaderInlineBlock {...commonProps} />,
+      'step-header-inline': () => <StepHeaderInlineBlock {...commonProps} />,
+      'secondary-styles-inline': () => <SecondaryStylesInlineBlock {...commonProps} />,
+      'style-characteristics-inline': () => <StyleCharacteristicsInlineBlock {...commonProps} />,
+
+      // Componentes de quiz
+      'quiz-intro-header': () => <QuizIntroHeaderBlock {...commonProps} />,
+      'loading-animation': () => <LoadingAnimationBlock {...commonProps} />,
+      'quiz-personal-info-inline': () => <QuizPersonalInfoInlineBlock {...commonProps} />,
+      'quiz-result-inline': () => <QuizResultInlineBlock {...commonProps} />,
+      'quiz-start-page-inline': () => <QuizStartPageInlineBlock {...commonProps} />,
+      'quiz-question-inline': () => <QuizQuestionInlineBlock {...commonProps} />,
+
+      // Componentes adicionais
+      'characteristics-list-inline': () => <CharacteristicsListInlineBlock {...commonProps} />,
+      'testimonials-inline': () => <TestimonialsInlineBlock {...commonProps} />,
+      'before-after-inline': () => <BeforeAfterInlineBlock {...commonProps} />,
+      'bonus-list-inline': () => <BonusListInlineBlock {...commonProps} />,
+      'quiz-offer-pricing-inline': () => <QuizOfferPricingInlineBlock {...commonProps} />,
+      'quiz-offer-cta-inline': () => <QuizOfferCTAInlineBlock {...commonProps} />,
+
+      // Componentes não-inline existentes
+      'header': () => <HeaderBlock {...commonProps} />,
+      'heading-inline': () => <HeadingInlineBlock {...commonProps} />,
+      'button-inline': () => <ButtonInlineBlock {...commonProps} />
+    };
+
+    // Renderizar componente baseado no tipo
+    const renderComponent = componentMap[blockType];
+    
+    if (renderComponent) {
+      return (
+        <Suspense fallback={<LoadingFallback />}>
+          {renderComponent()}
+        </Suspense>
+      );
+    }
+
+    // Fallback para tipos não reconhecidos
+    return (
+      <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-700">
+        <p className="font-medium">Componente não encontrado</p>
+        <p className="text-sm">Tipo: {blockType}</p>
+      </div>
+    );
+
+  } catch (error) {
+    console.error(`Erro ao renderizar bloco ${blockType}:`, error);
+    return <ErrorFallback blockType={blockType} error={error instanceof Error ? error.message : 'Erro desconhecido'} />;
+  }
+};
+
+// Função para verificar se um tipo de bloco está registrado
+export const isBlockTypeRegistered = (blockType: string): boolean => {
+  const registeredTypes = [
+    'text-inline', 'text', 'image-display-inline', 'badge-inline',
+    'progress-inline', 'stat-inline', 'countdown-inline', 'spacer-inline', 'spacer',
+    'pricing-card-inline', 'testimonial-card-inline', 'style-card-inline', 'result-card-inline',
+    'result-header-inline', 'step-header-inline', 'secondary-styles-inline', 'style-characteristics-inline',
+    'quiz-intro-header', 'loading-animation', 'quiz-personal-info-inline', 'quiz-result-inline',
+    'quiz-start-page-inline', 'quiz-question-inline', 'characteristics-list-inline',
+    'testimonials-inline', 'before-after-inline', 'bonus-list-inline',
+    'quiz-offer-pricing-inline', 'quiz-offer-cta-inline', 'header', 'heading-inline', 'button-inline'
+  ];
+  
+  return registeredTypes.includes(blockType);
 };
 
 export default UniversalBlockRenderer;
