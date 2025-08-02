@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { ComponentsSidebar } from '@/components/editor/sidebar/ComponentsSidebar';
-import EditPreview from '@/components/editor/preview/EditPreview';
+import { EditorCanvas } from '@/components/editor/canvas/EditorCanvas';
 import PropertiesPanel from '@/components/editor/properties/PropertiesPanel';
 import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
 import { useEditor } from '@/hooks/useEditor';
@@ -13,6 +13,7 @@ import { toast } from '@/components/ui/use-toast';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { EditorQuizProvider } from '@/contexts/EditorQuizContext';
 import { schemaDrivenFunnelService } from '../services/schemaDrivenFunnelService';
+import type { EditorBlock } from '@/types/editor';
 
 const EditorPage: React.FC = () => {
   const [location, setLocation] = useLocation();
@@ -26,6 +27,14 @@ const EditorPage: React.FC = () => {
   
   const { blocks, actions } = useEditor();
   const { saveFunnel, loadFunnel, isSaving, isLoading } = useEditorPersistence();
+
+  // Helper para converter blocks do useEditor para formato esperado pelo EditorCanvas
+  const editorBlocks = blocks.map(block => ({
+    id: block.id,
+    type: block.type,
+    properties: block.content || block.properties || {},
+    order: block.order || 0
+  }));
 
   // Load funnel data if ID is provided in URL
   useEffect(() => {
@@ -123,29 +132,43 @@ const EditorPage: React.FC = () => {
     <EditorQuizProvider>
       <div className="flex flex-col h-screen bg-background">
         <EditorToolbar
-          config={{ blocks, title: 'Editor', description: '' }}
-          isSaving={isSaving}
-          onPreview={() => setIsPreviewing(!isPreviewing)}
           isPreviewing={isPreviewing}
+          onTogglePreview={() => setIsPreviewing(!isPreviewing)}
           onSave={() => forceSave()}
         />
         
         <ResizablePanelGroup direction="horizontal" className="flex-1">
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
             <ComponentsSidebar 
-              onAddBlock={actions.addBlock}
-              selectedComponentId={selectedComponentId}
+              onComponentSelect={(type) => {
+                const newBlockId = actions.addBlock(type);
+                setSelectedComponentId(newBlockId);
+              }}
             />
           </ResizablePanel>
           
           <ResizableHandle />
           
           <ResizablePanel defaultSize={60} minSize={30}>
-            <EditPreview
-              blocks={blocks}
+            <EditorCanvas
+              blocks={editorBlocks}
               selectedBlockId={selectedComponentId}
               onSelectBlock={setSelectedComponentId}
+              onUpdateBlock={(blockId, properties) => {
+                actions.updateBlock(blockId, properties);
+              }}
+              onDeleteBlock={(blockId) => {
+                actions.deleteBlock(blockId);
+                if (selectedComponentId === blockId) {
+                  setSelectedComponentId(null);
+                }
+              }}
+              onReorderBlocks={(sourceIndex, destinationIndex) => {
+                // Implementar reordenação se necessário
+                console.log('Reordering blocks:', sourceIndex, '->', destinationIndex);
+              }}
               isPreviewing={isPreviewing}
+              viewportSize="lg"
             />
           </ResizablePanel>
           
@@ -153,9 +176,24 @@ const EditorPage: React.FC = () => {
           
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
             <PropertiesPanel
-              selectedComponentId={selectedComponentId}
-              config={{ blocks }}
-              onUpdateBlock={actions.updateBlock}
+              selectedBlock={selectedComponentId ? {
+                id: selectedComponentId,
+                type: blocks.find(b => b.id === selectedComponentId)?.type || '',
+                content: blocks.find(b => b.id === selectedComponentId)?.content || {},
+                order: blocks.find(b => b.id === selectedComponentId)?.order || 0
+              } as EditorBlock : null}
+              onClose={() => setSelectedComponentId(null)}
+              onUpdate={(updates) => {
+                if (selectedComponentId) {
+                  actions.updateBlock(selectedComponentId, updates);
+                }
+              }}
+              onDelete={() => {
+                if (selectedComponentId) {
+                  actions.deleteBlock(selectedComponentId);
+                  setSelectedComponentId(null);
+                }
+              }}
             />
           </ResizablePanel>
         </ResizablePanelGroup>
