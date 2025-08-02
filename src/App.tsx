@@ -4,6 +4,7 @@ import { Router, Route, Switch } from 'wouter';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/context/AuthContext';
 import { AdminAuthProvider } from '@/context/AdminAuthContext';
+import { EditorProvider } from '@/context/EditorContext';
 import SchemaDrivenEditorResponsive from '@/components/editor/SchemaDrivenEditorResponsive';
 import { ResultPage } from './pages/ResultPage';
 import { Home } from './pages/Home';
@@ -21,12 +22,20 @@ function App() {
         <Router>
           <div className="min-h-screen bg-background">
             <Switch>
-              {/* Editor Routes - usando SchemaDrivenEditorResponsive */}
+              {/* Editor Routes - envolvidas com EditorProvider */}
               <Route path="/editor">
-                {() => <SchemaDrivenEditorResponsive />}
+                {() => (
+                  <EditorProvider>
+                    <SchemaDrivenEditorResponsive />
+                  </EditorProvider>
+                )}
               </Route>
               <Route path="/editor/:id">
-                {(params) => <SchemaDrivenEditorResponsive funnelId={params.id} />}
+                {(params) => (
+                  <EditorProvider>
+                    <SchemaDrivenEditorResponsive funnelId={params.id} />
+                  </EditorProvider>
+                )}
               </Route>
               
               {/* Admin Routes */}

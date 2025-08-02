@@ -1,54 +1,91 @@
 
 import React from 'react';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Type, Image, MousePointer, Layout, FileText, HelpCircle } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { EditorBlock } from '@/types/editor';
+import {
+  Type,
+  Heading1,
+  Image,
+  MousePointer,
+  Layout,
+  List,
+  Star,
+  CreditCard,
+  Award,
+  Users
+} from 'lucide-react';
 
 interface ComponentsSidebarProps {
-  onComponentSelect: (type: string) => void;
+  onComponentSelect: (type: EditorBlock['type']) => void;
 }
 
-const COMPONENT_TYPES = [
-  { type: 'header', name: 'Cabeçalho', icon: Type, description: 'Título principal' },
-  { type: 'text', name: 'Texto', icon: FileText, description: 'Parágrafo de texto' },
-  { type: 'image', name: 'Imagem', icon: Image, description: 'Imagem ou foto' },
-  { type: 'button', name: 'Botão', icon: MousePointer, description: 'Botão de ação' },
-  { type: 'spacer', name: 'Espaçador', icon: Layout, description: 'Espaço em branco' },
-  { type: 'quiz-question', name: 'Questão', icon: HelpCircle, description: 'Pergunta do quiz' },
-];
+export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect }) => {
+  const componentGroups = [
+    {
+      title: 'Conteúdo',
+      components: [
+        { type: 'header' as const, icon: <Heading1 size={16} />, label: 'Cabeçalho' },
+        { type: 'text' as const, icon: <Type size={16} />, label: 'Texto' },
+        { type: 'image' as const, icon: <Image size={16} />, label: 'Imagem' },
+        { type: 'button' as const, icon: <MousePointer size={16} />, label: 'Botão' },
+      ]
+    },
+    {
+      title: 'Layout',
+      components: [
+        { type: 'spacer' as const, icon: <Layout size={16} />, label: 'Espaçador' },
+        { type: 'divider' as const, icon: <Layout size={16} />, label: 'Divisor' },
+      ]
+    },
+    {
+      title: 'Marketing',
+      components: [
+        { type: 'benefits' as const, icon: <List size={16} />, label: 'Benefícios' },
+        { type: 'testimonials' as const, icon: <Users size={16} />, label: 'Depoimentos' },
+        { type: 'pricing' as const, icon: <CreditCard size={16} />, label: 'Preços' },
+        { type: 'guarantee' as const, icon: <Award size={16} />, label: 'Garantia' },
+        { type: 'cta' as const, icon: <Star size={16} />, label: 'Call to Action' },
+      ]
+    }
+  ];
 
-export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
-  onComponentSelect
-}) => {
   return (
-    <div className="h-full bg-white border-r border-gray-200 p-4">
-      <div className="mb-4">
-        <h3 className="font-medium text-gray-800 mb-2">Componentes</h3>
-        <p className="text-sm text-gray-600">Arraste para adicionar ao canvas</p>
+    <div className="h-full flex flex-col border-r border-gray-200 bg-white">
+      <div className="p-4 border-b border-gray-200">
+        <h2 className="text-lg font-semibold text-gray-900">Componentes</h2>
+        <p className="text-sm text-gray-600 mt-1">
+          Clique nos componentes para adicionar
+        </p>
       </div>
-
-      <div className="space-y-2">
-        {COMPONENT_TYPES.map((component) => {
-          const IconComponent = component.icon;
-          return (
-            <Card key={component.type} className="p-3 hover:shadow-md cursor-pointer transition-shadow">
-              <Button
-                variant="ghost"
-                className="w-full justify-start p-0 h-auto"
-                onClick={() => onComponentSelect(component.type)}
-              >
-                <div className="flex items-center gap-3">
-                  <IconComponent className="w-5 h-5 text-gray-600" />
-                  <div className="text-left">
-                    <div className="font-medium text-sm">{component.name}</div>
-                    <div className="text-xs text-gray-500">{component.description}</div>
-                  </div>
-                </div>
-              </Button>
-            </Card>
-          );
-        })}
-      </div>
+      
+      <ScrollArea className="flex-1">
+        <div className="p-4 space-y-6">
+          {componentGroups.map((group, groupIndex) => (
+            <div key={groupIndex} className="space-y-3">
+              <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                {group.title}
+              </h3>
+              <div className="grid grid-cols-2 gap-2">
+                {group.components.map((component, componentIndex) => (
+                  <Button
+                    key={componentIndex}
+                    variant="outline"
+                    size="sm"
+                    className="h-auto p-3 flex flex-col gap-1 hover:bg-blue-50 hover:border-blue-200"
+                    onClick={() => onComponentSelect(component.type)}
+                  >
+                    <span className="text-gray-600">{component.icon}</span>
+                    <span className="text-xs font-medium">{component.label}</span>
+                  </Button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </ScrollArea>
     </div>
   );
 };
+
+export default ComponentsSidebar;
