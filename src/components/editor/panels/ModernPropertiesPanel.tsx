@@ -70,6 +70,9 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
     );
   }
 
+  // Convert array-based properties to grouped structure
+  const groupedProperties = groupPropertiesByGroup(blockDefinition.properties || []);
+
   const handlePropertyChange = (propertyPath: string, value: any) => {
     console.log('🔄 Property change:', { blockId: selectedBlockId, propertyPath, value });
     
@@ -99,7 +102,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
   };
 
   const renderPropertyGroups = () => {
-    return Object.entries(blockDefinition.properties).map(([groupName, group]) => (
+    return Object.entries(groupedProperties).map(([groupName, properties]) => (
       <Card key={groupName} className="mb-4">
         <div className="p-4">
           <h3 className="font-medium text-[#1A1818] mb-3 capitalize">
@@ -110,16 +113,16 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
           </h3>
           
           <div className="space-y-3">
-            {Object.entries(group).map(([propertyKey, property]) => {
-              const propertyPath = `${groupName}.${propertyKey}`;
+            {properties.map((property) => {
+              const propertyPath = property.group ? `${property.group}.${property.key}` : property.key;
               const currentValue = getCurrentValue(selectedBlock.properties, propertyPath);
               
               return (
                 <PropertyField
-                  key={propertyPath}
+                  key={property.key}
                   label={property.label}
                   type={property.type}
-                  value={currentValue || property.default}
+                  value={currentValue !== undefined ? currentValue : property.defaultValue}
                   options={property.options}
                   placeholder={property.placeholder}
                   min={property.min}
@@ -148,6 +151,21 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
     }
     
     return current;
+  };
+
+  // Helper function to group properties by group field
+  const groupPropertiesByGroup = (propertiesArray: any[]) => {
+    const grouped: { [key: string]: any[] } = {};
+    
+    propertiesArray.forEach(property => {
+      const group = property.group || 'content';
+      if (!grouped[group]) {
+        grouped[group] = [];
+      }
+      grouped[group].push(property);
+    });
+    
+    return grouped;
   };
 
   return (
