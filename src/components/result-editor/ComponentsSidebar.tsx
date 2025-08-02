@@ -1,101 +1,119 @@
 
+
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BlockType } from '@/types/editor';
-import {
+import { 
+  Type, 
+  Image, 
+  MousePointer, 
+  Square,
   Heading1,
-  Type,
-  Image,
-  CreditCard,
-  CheckCircle,
-  MessageSquareQuote,
-  Award,
-  LayoutGrid,
-  PanelTop,
-  GripVertical,
+  Star,
+  DollarSign,
+  Shield,
+  MessageSquare,
   Video,
-  Columns,
-  BaggageClaim
+  BarChart,
+  Gift,
+  Palette,
+  Layers
 } from 'lucide-react';
 
 interface ComponentsSidebarProps {
-  onComponentSelect: (type: BlockType) => void;
+  onComponentSelect: (type: string) => void;
 }
 
-export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect }) => {
-  // Component category definitions
-  const componentCategories = [
+const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect }) => {
+  const blockTypes: Array<{
+    category: string;
+    blocks: Array<{
+      type: string;
+      name: string;
+      icon: React.ComponentType<{ className?: string }>;
+      description: string;
+    }>;
+  }> = [
     {
-      title: 'Estrutura',
-      components: [
-        { type: 'header', icon: <PanelTop size={16} />, label: 'Cabeçalho' },
-        { type: 'two-column', icon: <Columns size={16} />, label: 'Duas Colunas' },
-        { type: 'spacer', icon: <GripVertical size={16} />, label: 'Espaçador' },
+      category: "Básicos",
+      blocks: [
+        { type: "heading", name: "Título", icon: Heading1, description: "Títulos e subtítulos" },
+        { type: "paragraph", name: "Texto", icon: Type, description: "Parágrafo de texto" },
+        { type: "image", name: "Imagem", icon: Image, description: "Imagem com legenda" },
+        { type: "button", name: "Botão", icon: MousePointer, description: "Botão de ação" },
+        { type: "spacer", name: "Espaçador", icon: Square, description: "Espaço em branco" }
       ]
     },
     {
-      title: 'Conteúdo',
-      components: [
-        { type: 'headline', icon: <Heading1 size={16} />, label: 'Título' },
-        { type: 'text', icon: <Type size={16} />, label: 'Texto' },
-        { type: 'image', icon: <Image size={16} />, label: 'Imagem' },
-        { type: 'video', icon: <Video size={16} />, label: 'Vídeo' },
+      category: "Resultado do Quiz",
+      blocks: [
+        { type: "style-result", name: "Estilo Principal", icon: Star, description: "Resultado do estilo principal" },
+        { type: "secondary-styles", name: "Estilos Secundários", icon: Layers, description: "Outros estilos compatíveis" }
       ]
     },
     {
-      title: 'Resultado',
-      components: [
-        { type: 'style-result', icon: <BaggageClaim size={16} />, label: 'Estilo Principal' },
-        { type: 'secondary-styles', icon: <LayoutGrid size={16} />, label: 'Estilos Secundários' },
+      category: "Vendas",
+      blocks: [
+        { type: "pricing", name: "Preço", icon: DollarSign, description: "Seção de preços" },
+        { type: "guarantee", name: "Garantia", icon: Shield, description: "Garantia do produto" },
+        { type: "testimonials", name: "Depoimentos", icon: MessageSquare, description: "Depoimentos de clientes" },
+        { type: "cta", name: "Chamada para Ação", icon: MousePointer, description: "Botão principal de conversão" }
       ]
     },
     {
-      title: 'Vendas',
-      components: [
-        { type: 'pricing', icon: <CreditCard size={16} />, label: 'Preço' },
-        { type: 'benefits', icon: <CheckCircle size={16} />, label: 'Benefícios' },
-        { type: 'testimonials', icon: <MessageSquareQuote size={16} />, label: 'Depoimentos' },
-        { type: 'guarantee', icon: <Award size={16} />, label: 'Garantia' },
-        { type: 'cta', icon: <Award size={16} />, label: 'Chamada para Ação' },
+      category: "Avançado",
+      blocks: [
+        { type: "video", name: "Vídeo", icon: Video, description: "Player de vídeo" },
+        { type: "two-column", name: "Duas Colunas", icon: BarChart, description: "Layout de duas colunas" },
+        { type: "carousel", name: "Carrossel", icon: Gift, description: "Carrossel de conteúdo" },
+        { type: "custom-code", name: "Código Customizado", icon: Palette, description: "HTML/CSS personalizado" }
       ]
-    },
+    }
   ];
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full border-r border-gray-200 bg-white">
       <div className="p-4 border-b">
-        <h2 className="font-medium text-[#432818]">Componentes</h2>
-        <p className="text-sm text-gray-500 mt-1">
-          Arraste ou clique nos componentes para adicionar à sua página
-        </p>
+        <h2 className="font-semibold text-gray-900">Componentes</h2>
+        <p className="text-sm text-gray-500 mt-1">Arraste para adicionar</p>
       </div>
       
-      <ScrollArea className="flex-1 p-3">
-        <div className="space-y-6">
-          {componentCategories.map((category, index) => (
-            <div key={index} className="space-y-2">
-              <h3 className="text-xs text-[#8F7A6A] uppercase font-medium tracking-wide">
-                {category.title}
-              </h3>
-              <div className="grid grid-cols-2 gap-2">
-                {category.components.map((component, compIndex) => (
+      <ScrollArea className="h-full">
+        <div className="p-4 space-y-4">
+          {blockTypes.map((category) => (
+            <Card key={category.category}>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-gray-700">
+                  {category.category}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {category.blocks.map((block) => (
                   <Button
-                    key={compIndex}
-                    variant="outline"
-                    size="sm"
-                    className="h-auto py-3 px-3 justify-start gap-2 hover:bg-[#FAF9F7]"
-                    onClick={() => onComponentSelect(component.type as BlockType)}
+                    key={block.type}
+                    variant="ghost"
+                    className="w-full justify-start h-auto p-3 text-left"
+                    onClick={() => onComponentSelect(block.type)}
                   >
-                    <span className="text-[#B89B7A]">{component.icon}</span>
-                    <span className="text-xs">{component.label}</span>
+                    <block.icon className="w-4 h-4 mr-3 shrink-0" />
+                    <div className="min-w-0">
+                      <div className="font-medium text-sm">{block.name}</div>
+                      <div className="text-xs text-gray-500 truncate">
+                        {block.description}
+                      </div>
+                    </div>
                   </Button>
                 ))}
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </ScrollArea>
     </div>
   );
 };
+
+export default ComponentsSidebar;
+

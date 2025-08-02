@@ -1,4 +1,5 @@
 
+
 import { LucideIcon } from "lucide-react";
 import { SimpleComponent } from "./quiz";
 
@@ -104,7 +105,7 @@ export interface EditorBlock {
   type: string;
   content: Record<string, any>;
   order: number;
-  properties?: Record<string, any>;
+  properties: Record<string, any>; // Make properties required to match Block interface
 }
 
 export interface Block {
@@ -132,6 +133,31 @@ export interface EditableContent {
   currentStep?: number;
   totalSteps?: number;
   progressBar?: boolean;
+  // Additional properties for quiz questions
+  question?: string;
+  options?: any[];
+  multipleSelection?: boolean;
+  progressPercent?: number;
+  showImages?: boolean;
+  optionLayout?: string;
+  logoUrl?: string;
+  showBackButton?: boolean;
+  // Additional properties for buttons
+  action?: string;
+  url?: string;
+  // Additional properties for spacers
+  height?: number;
+  // Additional properties for text styling
+  textColor?: string;
+  alignment?: 'left' | 'center' | 'right';
+  // Additional properties for hero blocks
+  heroImage?: string;
+  heroImageAlt?: string;
+  quote?: string;
+  quoteAuthor?: string;
+  // Additional properties for pricing
+  salePrice?: string;
+  regularPrice?: string;
   style?: {
     backgroundColor?: string;
     color?: string;
@@ -146,6 +172,13 @@ export interface EditableContent {
     borderRadius?: string;
     boxShadow?: string;
     objectFit?: string;
+    lineHeight?: string;
+    letterSpacing?: string;
+    display?: string;
+    flexDirection?: string;
+    justifyContent?: string;
+    alignItems?: string;
+    gap?: string;
   };
 }
 
@@ -170,3 +203,4 @@ export interface BlockType {
   category: string;
   defaultProps: Record<string, any>;
 }
+

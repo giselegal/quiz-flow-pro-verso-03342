@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from 'react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { ComponentsSidebar } from './ComponentsSidebar';
@@ -105,6 +106,11 @@ export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({
 
   const selectedBlock = selectedBlockId ? blocks.find(block => block.id === selectedBlockId) : null;
 
+  // Handle component selection - convert string to proper type
+  const handleComponentSelect = (type: string) => {
+    blockActions.handleAddBlock(type);
+  };
+
   return (
     <div className="h-screen flex flex-col overflow-hidden">
       <EditorToolbar 
@@ -126,7 +132,7 @@ export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({
         <TabsContent value="editor" className="h-full">
           <ResizablePanelGroup direction="horizontal" className="h-full">
             <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-              <ComponentsSidebar onComponentSelect={blockActions.handleAddBlock} />
+              <ComponentsSidebar onComponentSelect={handleComponentSelect} />
             </ResizablePanel>
 
             <ResizableHandle withHandle />
@@ -169,3 +175,4 @@ export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({
     </div>
   );
 };
+

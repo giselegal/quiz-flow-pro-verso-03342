@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -62,6 +63,12 @@ export const EditorBlockItem: React.FC<EditorBlockItemProps> = ({
     onUpdate(properties);
   };
 
+  // Ensure block has properties defined
+  const blockWithProperties = {
+    ...block,
+    properties: block.properties || {}
+  };
+
   return (
     <Card
       ref={setNodeRef}
@@ -118,7 +125,7 @@ export const EditorBlockItem: React.FC<EditorBlockItemProps> = ({
       {isExpanded && (
         <div className="p-4 bg-white">
           <EditBlockContent
-            block={block}
+            block={blockWithProperties}
             onUpdateBlock={handleUpdateBlock}
           />
         </div>
@@ -126,3 +133,4 @@ export const EditorBlockItem: React.FC<EditorBlockItemProps> = ({
     </Card>
   );
 };
+
