@@ -5,7 +5,7 @@ export const BRAND_COLORS = {
   accent: '#8F7A6A',
   text: '#432818',
   background: '#FAF9F7',
-  // Additional color variants
+  // Color variants with proper structure
   main: {
     light: '#D4C4A0',
     default: '#B89B7A',
@@ -21,8 +21,12 @@ export const BRAND_COLORS = {
     600: '#2D1A10',
     gray600: '#4A5568'
   },
-  // Brand colors for compatibility
-  brand: ['#B89B7A', '#432818', '#8F7A6A'],
+  // Brand colors for compatibility - as object, not array
+  brand: {
+    0: '#B89B7A',
+    1: '#432818', 
+    2: '#8F7A6A'
+  },
   light: '#D4C4A0'
 };
 

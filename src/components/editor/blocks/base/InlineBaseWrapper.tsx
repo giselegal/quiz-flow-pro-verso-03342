@@ -16,7 +16,7 @@ export interface InlineBaseWrapperProps {
   trackingData?: Record<string, any>;
   isLoading?: boolean;
   onMove?: (direction: 'up' | 'down') => void;
-  responsive?: boolean;
+  responsive?: boolean | Record<string, any>; // Allow both boolean and object
   onEdit?: () => void;
   // Additional compatibility props
   block?: BlockData;
@@ -64,6 +64,9 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
     stretch: 'items-stretch'
   };
 
+  // Handle responsive as boolean or object
+  const isResponsive = typeof responsive === 'boolean' ? responsive : false;
+
   return (
     <div
       className={cn(
@@ -73,7 +76,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
         justifyClasses[justify],
         alignClasses[align],
         wrap && 'flex-wrap',
-        responsive && 'w-full',
+        isResponsive && 'w-full',
         className
       )}
       style={{ minHeight }}

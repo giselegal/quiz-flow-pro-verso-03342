@@ -14,6 +14,7 @@ export interface BlockDefinition {
   category: string;
   icon: any;
   defaultProps: Record<string, any>;
+  properties?: Record<string, any>; // Make properties optional for BlockDefinition
 }
 
 export interface BlockComponentProps {
@@ -43,9 +44,28 @@ export const createBlockData = (type: string): BlockData => ({
   order: 0
 });
 
-// Extended interfaces for specific block types - now properly extending BlockData
+// Extended interfaces for specific block types - properly extending BlockData
 export interface CountdownTimerBlock extends BlockData {
   type: "countdown-timer";
+  content: {
+    title?: string;
+    subtitle?: string;
+    endDate?: string;
+    durationMinutes?: number;
+    urgencyText?: string;
+    showDays?: boolean;
+    showHours?: boolean;
+    showMinutes?: boolean;
+    showSeconds?: boolean;
+    size?: 'sm' | 'md' | 'lg';
+    theme?: 'default' | 'urgent' | 'elegant';
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+    borderRadius?: string;
+    padding?: string;
+    showProgress?: boolean;
+  };
   properties: {
     title?: string;
     subtitle?: string;
@@ -69,6 +89,19 @@ export interface CountdownTimerBlock extends BlockData {
 
 export interface FAQBlock extends BlockData {
   type: "faq";
+  content: {
+    title?: string;
+    subtitle?: string;
+    faqs?: Array<{ id: string; question: string; answer: string }>;
+    layout?: 'minimal' | 'cards' | 'accordion';
+    showSearch?: boolean;
+    allowMultipleOpen?: boolean;
+    expandFirstItem?: boolean;
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+    searchPlaceholder?: string;
+  };
   properties: {
     title?: string;
     subtitle?: string;
@@ -86,6 +119,26 @@ export interface FAQBlock extends BlockData {
 
 export interface PriceComparisonBlock extends BlockData {
   type: "price-comparison";
+  content: {
+    title?: string;
+    subtitle?: string;
+    plans?: Array<{
+      id: string;
+      name: string;
+      price: string;
+      originalPrice?: string;
+      features: string[];
+      isPopular?: boolean;
+      buttonText?: string;
+      buttonUrl?: string;
+    }>;
+    layout?: 'table' | 'cards' | 'minimal';
+    showPopularBadge?: boolean;
+    showOriginalPrice?: boolean;
+    currency?: string;
+    billingPeriod?: string;
+    cardStyle?: 'modern' | 'classic' | 'minimal' | 'gradient';
+  };
   properties: {
     title?: string;
     subtitle?: string;
@@ -110,6 +163,19 @@ export interface PriceComparisonBlock extends BlockData {
 
 export interface ProsConsBlock extends BlockData {
   type: "pros-cons";
+  content: {
+    title?: string;
+    subtitle?: string;
+    prosTitle?: string;
+    consTitle?: string;
+    pros: Array<{ id: string; text: string; icon?: string; highlight?: boolean }>;
+    cons: Array<{ id: string; text: string; icon?: string; highlight?: boolean }>;
+    layout?: 'side-by-side' | 'stacked';
+    prosColor?: string;
+    consColor?: string;
+    backgroundColor?: string;
+    textColor?: string;
+  };
   properties: {
     title?: string;
     subtitle?: string;
@@ -127,6 +193,18 @@ export interface ProsConsBlock extends BlockData {
 
 export interface StatsMetricsBlock extends BlockData {
   type: "stats-metrics";
+  content: {
+    title?: string;
+    subtitle?: string;
+    stats?: Array<{ id: string; value: string; label: string; icon?: string; color?: string }>;
+    layout?: 'grid' | 'horizontal' | 'vertical' | 'cards';
+    columns?: number;
+    showIcons?: boolean;
+    animateCountUp?: boolean;
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+  };
   properties: {
     title?: string;
     subtitle?: string;

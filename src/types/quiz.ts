@@ -62,7 +62,15 @@ export interface QuizAnswer {
 export interface UserResponse {
   questionId: string;
   optionId: string;
+  selectedOptions?: string[]; // For backward compatibility
   timestamp?: Date;
+}
+
+// Add missing QuizResponse export for compatibility
+export interface QuizResponse {
+  questionId: string;
+  selectedOptions: string[];
+  timestamp: Date;
 }
 
 export interface StyleResult {
@@ -80,6 +88,11 @@ export interface QuizResult {
   totalQuestions: number;
   completedAt: Date;
   scores: Record<string, number>;
+  // Additional properties for compatibility
+  predominantStyle?: string;
+  complementaryStyles?: string[];
+  styleScores?: Record<string, number>;
+  participantName?: string;
 }
 
 export interface QuizFunnel {
@@ -103,3 +116,13 @@ export interface User {
   createdAt: Date;
   updatedAt: Date;
 }
+
+// Add BlockType export
+export type BlockType = 
+  | 'headline' 
+  | 'text' 
+  | 'image' 
+  | 'button' 
+  | 'heading'
+  | 'paragraph'
+  | 'spacer';
