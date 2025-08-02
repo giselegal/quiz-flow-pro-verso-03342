@@ -4,7 +4,6 @@ import { EditorBlock } from '@/types/editor';
 import { UniversalBlockRenderer, isBlockTypeRegistered } from '../blocks/BlockRegistry';
 import { HeaderBlock } from './blocks/HeaderBlock';
 import { HeroBlock } from './blocks/HeroBlock';
-import { BonusCarouselBlock } from './blocks/BonusCarouselBlock';
 import { HeadlineBlock } from './blocks/HeadlineBlock';
 import { TextBlock } from './blocks/TextBlock';
 import { BenefitsBlock } from './blocks/BenefitsBlock';
@@ -38,7 +37,15 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ block, onSelect })
     case 'hero-section':
       return <HeroBlock content={block.content} onClick={onSelect} />;
     case 'bonus-carousel':
-      return <BonusCarouselBlock content={block.content} onClick={onSelect} />;
+      return (
+        <div 
+          className="p-4 border-2 border-dashed border-[#B89B7A]/40 rounded-lg cursor-pointer hover:bg-[#FAF9F7]" 
+          onClick={onSelect}
+        >
+          <h3 className="font-medium text-[#432818]">Carrossel de Bônus</h3>
+          <p className="text-sm text-[#8F7A6A]">Clique para editar este carrossel</p>
+        </div>
+      );
     case 'headline':
       return <HeadlineBlock content={block.content} onClick={onSelect} />;
     case 'text':

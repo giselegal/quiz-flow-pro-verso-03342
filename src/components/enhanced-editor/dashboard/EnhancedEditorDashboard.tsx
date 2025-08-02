@@ -1,109 +1,258 @@
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-// Componente placeholder para a grade de métricas
-const EnhancedEditorMetricsGrid = () => (
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-    <div className="bg-gray-100 p-4 rounded-lg">
-      <h3 className="font-medium">Edições totais</h3>
-      <p className="text-2xl font-bold">238</p>
-    </div>
-    <div className="bg-gray-100 p-4 rounded-lg">
-      <h3 className="font-medium">Tempo médio de edição</h3>
-      <p className="text-2xl font-bold">12m 30s</p>
-    </div>
-    <div className="bg-gray-100 p-4 rounded-lg">
-      <h3 className="font-medium">Taxa de conclusão</h3>
-      <p className="text-2xl font-bold">87%</p>
-    </div>
-  </div>
-);
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { 
+  BarChart3, 
+  Users, 
+  TrendingUp, 
+  Eye,
+  Edit3,
+  Copy,
+  Trash2,
+  Plus
+} from 'lucide-react';
 
-// Componente placeholder para o cabeçalho do dashboard
-const EnhancedEditorDashboardHeader = ({ title, description }) => (
-  <div className="mb-4">
-    <h1 className="text-2xl font-bold">{title}</h1>
-    <p className="text-gray-500">{description}</p>
-  </div>
-);
+interface DashboardStats {
+  totalFunnels: number;
+  totalViews: number;
+  conversionRate: number;
+  activeUsers: number;
+}
 
-// Componentes placeholder para as abas
-const UsageTab = () => (
-  <Card>
-    <CardHeader>
-      <CardTitle>Estatísticas de Uso</CardTitle>
-      <CardDescription>Análise de como os usuários estão utilizando o editor</CardDescription>
-    </CardHeader>
-    <CardContent>
-      <p>Conteúdo detalhado das estatísticas de uso será implementado aqui.</p>
-    </CardContent>
-  </Card>
-);
+interface FunnelSummary {
+  id: string;
+  title: string;
+  description: string;
+  status: 'draft' | 'published' | 'archived';
+  views: number;
+  conversions: number;
+  lastModified: string;
+}
 
-const CompletionTab = () => (
-  <Card>
-    <CardHeader>
-      <CardTitle>Taxas de Conclusão</CardTitle>
-      <CardDescription>Análise de conclusão de quizzes pelos usuários</CardDescription>
-    </CardHeader>
-    <CardContent>
-      <p>Conteúdo detalhado das taxas de conclusão será implementado aqui.</p>
-    </CardContent>
-  </Card>
-);
+interface EnhancedEditorDashboardProps {
+  stats?: DashboardStats;
+  funnels?: FunnelSummary[];
+  onCreateFunnel?: () => void;
+  onEditFunnel?: (funnelId: string) => void;
+  onDuplicateFunnel?: (funnelId: string) => void;
+  onDeleteFunnel?: (funnelId: string) => void;
+  onPreviewFunnel?: (funnelId: string) => void;
+}
 
-const PerformanceTab = () => (
-  <Card>
-    <CardHeader>
-      <CardTitle>Desempenho</CardTitle>
-      <CardDescription>Métricas de desempenho do editor</CardDescription>
-    </CardHeader>
-    <CardContent>
-      <p>Conteúdo detalhado das métricas de desempenho será implementado aqui.</p>
-    </CardContent>
-  </Card>
-);
+const DEFAULT_STATS: DashboardStats = {
+  totalFunnels: 3,
+  totalViews: 1247,
+  conversionRate: 12.5,
+  activeUsers: 89
+};
 
-export function EnhancedEditorDashboard() {
+const DEFAULT_FUNNELS: FunnelSummary[] = [
+  {
+    id: '1',
+    title: 'Quiz de Estilo Pessoal',
+    description: 'Funil completo para descoberta de estilo',
+    status: 'published',
+    views: 856,
+    conversions: 107,
+    lastModified: '2 horas atrás'
+  },
+  {
+    id: '2', 
+    title: 'Guia de Cores Pessoais',
+    description: 'Quiz para análise de paleta de cores',
+    status: 'draft',
+    views: 234,
+    conversions: 31,
+    lastModified: '1 dia atrás'
+  },
+  {
+    id: '3',
+    title: 'Consultoria de Imagem',
+    description: 'Funil de vendas para consultoria',
+    status: 'published',
+    views: 157,
+    conversions: 19,
+    lastModified: '3 dias atrás'
+  }
+];
+
+export const EnhancedEditorDashboard: React.FC<EnhancedEditorDashboardProps> = ({
+  stats = DEFAULT_STATS,
+  funnels = DEFAULT_FUNNELS,
+  onCreateFunnel,
+  onEditFunnel,
+  onDuplicateFunnel,
+  onDeleteFunnel,
+  onPreviewFunnel
+}) => {
+  const [selectedFunnel, setSelectedFunnel] = useState<string | null>(null);
+
+  const getStatusColor = (status: FunnelSummary['status']) => {
+    switch (status) {
+      case 'published': return 'bg-green-100 text-green-700';
+      case 'draft': return 'bg-yellow-100 text-yellow-700';
+      case 'archived': return 'bg-gray-100 text-gray-700';
+      default: return 'bg-gray-100 text-gray-700';
+    }
+  };
+
+  const getStatusLabel = (status: FunnelSummary['status']) => {
+    switch (status) {
+      case 'published': return 'Publicado';
+      case 'draft': return 'Rascunho';
+      case 'archived': return 'Arquivado';
+      default: return 'Desconhecido';
+    }
+  };
+
   return (
-    <div className="space-y-4">
-      <EnhancedEditorDashboardHeader
-        title="Dashboard do Editor Avançado"
-        description="Monitore e analise o uso do editor avançado"
-      />
+    <div className="p-6 bg-gray-50 min-h-screen">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Dashboard de Funis</h1>
+          <p className="text-gray-600">Gerencie seus funis de conversão</p>
+        </div>
+        <Button onClick={onCreateFunnel} className="bg-[#B89B7A] hover:bg-[#A38A69]">
+          <Plus className="w-4 h-4 mr-2" />
+          Criar Funil
+        </Button>
+      </div>
 
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-gray-600">Total de Funis</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center">
+              <BarChart3 className="w-4 h-4 text-[#B89B7A] mr-2" />
+              <span className="text-2xl font-bold">{stats.totalFunnels}</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-gray-600">Visualizações</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center">
+              <Eye className="w-4 h-4 text-blue-500 mr-2" />
+              <span className="text-2xl font-bold">{stats.totalViews.toLocaleString()}</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-gray-600">Taxa de Conversão</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center">
+              <TrendingUp className="w-4 h-4 text-green-500 mr-2" />
+              <span className="text-2xl font-bold">{stats.conversionRate}%</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-gray-600">Usuários Ativos</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center">
+              <Users className="w-4 h-4 text-purple-500 mr-2" />
+              <span className="text-2xl font-bold">{stats.activeUsers}</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Funnels List */}
       <Card>
         <CardHeader>
-          <CardTitle>Métricas do Editor Avançado</CardTitle>
-          <CardDescription>
-            Métricas-chave para uso e desempenho do editor avançado
-          </CardDescription>
+          <CardTitle>Seus Funis</CardTitle>
         </CardHeader>
         <CardContent>
-          <EnhancedEditorMetricsGrid />
+          <div className="space-y-4">
+            {funnels.map((funnel) => (
+              <div 
+                key={funnel.id}
+                className={`p-4 border rounded-lg transition-all cursor-pointer hover:shadow-md ${
+                  selectedFunnel === funnel.id ? 'border-[#B89B7A] bg-[#B89B7A]/5' : 'border-gray-200'
+                }`}
+                onClick={() => setSelectedFunnel(funnel.id)}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <h3 className="font-medium text-gray-900">{funnel.title}</h3>
+                      <Badge className={getStatusColor(funnel.status)}>
+                        {getStatusLabel(funnel.status)}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-3">{funnel.description}</p>
+                    
+                    <div className="flex items-center space-x-4 text-xs text-gray-500">
+                      <span>{funnel.views} visualizações</span>
+                      <span>{funnel.conversions} conversões</span>
+                      <span>Modificado {funnel.lastModified}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onPreviewFunnel?.(funnel.id);
+                      }}
+                    >
+                      <Eye className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEditFunnel?.(funnel.id);
+                      }}
+                    >
+                      <Edit3 className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDuplicateFunnel?.(funnel.id);
+                      }}
+                    >
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="text-red-500 hover:text-red-700"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDeleteFunnel?.(funnel.id);
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </CardContent>
       </Card>
-
-      <Tabs defaultValue="usage">
-        <TabsList className="mb-4">
-          <TabsTrigger value="usage">Uso</TabsTrigger>
-          <TabsTrigger value="completion">Conclusão</TabsTrigger>
-          <TabsTrigger value="performance">Desempenho</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="usage">
-          <UsageTab />
-        </TabsContent>
-        
-        <TabsContent value="completion">
-          <CompletionTab />
-        </TabsContent>
-        
-        <TabsContent value="performance">
-          <PerformanceTab />
-        </TabsContent>
-      </Tabs>
     </div>
   );
-}
+};

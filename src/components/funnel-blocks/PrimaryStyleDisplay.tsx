@@ -1,169 +1,133 @@
 import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
-import { DeviceView, StyleProps } from './types';
+import { cn } from '@/lib/utils';
+import { StyleResult } from '@/types/quiz';
 
-interface PrimaryStyleDisplayProps extends StyleProps {
-  /** Estilo primário detectado */
-  primaryStyle: {
-    category: string;
-    percentage: number;
-    description?: string;
-  };
-  /** Estilos secundários */
-  secondaryStyles?: Array<{
-    category: string;
-    percentage: number;
-  }>;
-  /** URL da imagem do estilo */
-  styleImage: string;
-  /** URL da imagem do guia */
-  guideImage: string;
-  /** Configuração de animações */
-  animationConfig?: {
-    disabled?: boolean;
-    duration?: number;
-    delay?: number;
-  };
-  /** Configuração de viewport */
-  deviceView?: DeviceView;
-  /** Callback para clique na imagem */
-  onImageClick?: () => void;
+interface PrimaryStyleDisplayProps {
+  primaryStyle: StyleResult;
+  onClick?: () => void;
+  className?: string;
 }
 
-/**
- * PrimaryStyleDisplay - Exibe o resultado do estilo predominante com imagens e estilos secundários
- * Usado na página de resultados do quiz
- */
-export const PrimaryStyleDisplay: React.FC<PrimaryStyleDisplayProps> = ({
-  primaryStyle,
-  secondaryStyles = [],
-  styleImage,
-  guideImage,
-  animationConfig = {},
-  deviceView = 'desktop',
-  onImageClick,
-  className,
-  style,
-  customStyles
+const PrimaryStyleDisplay: React.FC<PrimaryStyleDisplayProps> = ({ 
+  primaryStyle, 
+  onClick,
+  className 
 }) => {
-  const { disabled: animationsDisabled, duration = 600, delay = 300 } = animationConfig;
-  const isLowPerformance = deviceView === 'mobile';
+  const getStyleConfig = (category: string) => {
+    const configs = {
+      natural: {
+        title: 'Natural',
+        description: 'Você valoriza o conforto e a praticidade no seu dia a dia.',
+        colors: ['#8B7355', '#A0956C', '#6B5B73'],
+        image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071347/MOCKUP_TABLETE_-_GUIA_DE_IMAGEM_E_ESTILO_ncctzi.webp'
+      },
+      classico: {
+        title: 'Clássico',
+        description: 'Você aprecia elegância atemporal e sofisticação.',
+        colors: ['#2C3E50', '#34495E', '#7F8C8D'],
+        image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071347/MOCKUP_TABLETE_-_GUIA_DE_IMAGEM_E_ESTILO_ncctzi.webp'
+      },
+      contemporaneo: {
+        title: 'Contemporâneo',
+        description: 'Você gosta de estar atualizado e seguir as tendências.',
+        colors: ['#3498DB', '#2980B9', '#1ABC9C'],
+        image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071347/MOCKUP_TABLETE_-_GUIA_DE_IMAGEM_E_ESTILO_ncctzi.webp'
+      },
+      elegante: {
+        title: 'Elegante',
+        description: 'Você valoriza a sofisticação e o requinte.',
+        colors: ['#8E44AD', '#9B59B6', '#6C3483'],
+        image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071347/MOCKUP_TABLETE_-_GUIA_DE_IMAGEM_E_ESTILO_ncctzi.webp'
+      },
+      romantico: {
+        title: 'Romântico',
+        description: 'Você aprecia detalhes delicados e femininos.',
+        colors: ['#E91E63', '#F06292', '#EC407A'],
+        image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071347/MOCKUP_TABLETE_-_GUIA_DE_IMAGEM_E_ESTILO_ncctzi.webp'
+      },
+      sexy: {
+        title: 'Sexy',
+        description: 'Você gosta de valorizar suas curvas.',
+        colors: ['#E74C3C', '#C0392B', '#922B21'],
+        image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071347/MOCKUP_TABLETE_-_GUIA_DE_IMAGEM_E_ESTILO_ncctzi.webp'
+      },
+      dramatico: {
+        title: 'Dramático',
+        description: 'Você busca impactar e chamar atenção.',
+        colors: ['#2C3E50', '#34495E', '#17202A'],
+        image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071347/MOCKUP_TABLETE_-_GUIA_DE_IMAGEM_E_ESTILO_ncctzi.webp'
+      },
+      criativo: {
+        title: 'Criativo',
+        description: 'Você adora expressar sua individualidade.',
+        colors: ['#F39C12', '#E67E22', '#D35400'],
+        image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071347/MOCKUP_TABLETE_-_GUIA_DE_IMAGEM_E_ESTILO_ncctzi.webp'
+      }
+    };
+
+    return configs[category.toLowerCase() as keyof typeof configs] || configs.natural;
+  };
+
+  const config = getStyleConfig(primaryStyle.category);
 
   return (
-    <Card className={`p-6 mb-10 bg-white shadow-md border border-[#B89B7A]/20 card-elegant ${className || ''}`} style={style}>
-      {customStyles && (
-        <style dangerouslySetInnerHTML={{ __html: customStyles }} />
+    <div 
+      className={cn(
+        "bg-gradient-to-br from-[#FAF9F7] via-[#F5F2ED] to-[#F0EDE6] p-8 rounded-2xl shadow-lg transition-all duration-300",
+        onClick && "cursor-pointer hover:shadow-xl hover:scale-[1.02]",
+        className
       )}
-      
-      <AnimatedWrapper 
-        animation={animationsDisabled || isLowPerformance ? 'none' : 'fade'} 
-        show={true} 
-        duration={duration} 
-        delay={delay}
-      >
-        <div className="text-center mb-8">
-          <div className="max-w-md mx-auto mb-6">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm text-[#8F7A6A]">
-                Seu estilo predominante
-              </span>
-              <span className="text-[#aa6b5d] font-medium">{primaryStyle.percentage}%</span>
-            </div>
-            <Progress 
-              value={primaryStyle.percentage} 
-              className="h-2 bg-[#F3E8E6]" 
-              indicatorClassName="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d]" 
-            />
-          </div>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-          <div className="space-y-4">
-            <AnimatedWrapper 
-              animation={isLowPerformance ? 'none' : 'fade'} 
-              show={true} 
-              duration={400} 
-              delay={delay + 100}
-            >
-              {primaryStyle.description && (
-                <p className="text-[#432818] leading-relaxed">{primaryStyle.description}</p>
-              )}
-            </AnimatedWrapper>
-            
-            {secondaryStyles.length > 0 && (
-              <AnimatedWrapper 
-                animation={isLowPerformance ? 'none' : 'fade'} 
-                show={true} 
-                duration={400} 
-                delay={delay + 300}
-              >
-                <div className="bg-white rounded-lg p-4 shadow-sm border border-[#B89B7A]/10 glass-panel">
-                  <h3 className="text-lg font-medium text-[#432818] mb-2">
-                    Estilos que Também Influenciam Você
-                  </h3>
-                  <div className="space-y-2">
-                    {secondaryStyles.map((style, index) => (
-                      <div key={index} className="flex justify-between items-center">
-                        <span className="text-sm text-[#432818] capitalize">{style.category}</span>
-                        <span className="text-sm text-[#aa6b5d] font-medium">{style.percentage}%</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </AnimatedWrapper>
-            )}
-          </div>
-          
-          <AnimatedWrapper 
-            animation={isLowPerformance ? 'none' : 'scale'} 
-            show={true} 
-            duration={500} 
-            delay={delay + 200}
-          >
-            <div className="max-w-[238px] mx-auto relative">
-              <img 
-                src={`${styleImage}?q=auto:best&f=auto&w=238`} 
-                alt={`Estilo ${primaryStyle.category}`} 
-                className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300 cursor-pointer" 
-                loading="eager" 
-                fetchpriority="high" 
-                width="238" 
-                height="auto"
-                onClick={onImageClick}
-              />
-              {/* Decorative corners */}
-              <div className="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[#B89B7A]"></div>
-              <div className="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-[#B89B7A]"></div>
-            </div>
-          </AnimatedWrapper>
+      onClick={onClick}
+    >
+      <div className="text-center mb-8">
+        <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-[#B89B7A] to-[#aa6b5d] rounded-full mb-6 shadow-lg">
+          <span className="text-2xl font-bold text-white">
+            {Math.round(primaryStyle.percentage)}%
+          </span>
         </div>
         
-        <AnimatedWrapper 
-          animation={isLowPerformance ? 'none' : 'fade'} 
-          show={true} 
-          duration={400} 
-          delay={delay + 500}
-        >
-          <div className="mt-8 max-w-[540px] mx-auto relative">
-            <img 
-              src={`${guideImage}?q=auto:best&f=auto&w=540`} 
-              alt={`Guia de Estilo ${primaryStyle.category}`} 
-              loading="lazy" 
-              className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300 cursor-pointer" 
-              width="540" 
-              height="auto"
-              onClick={onImageClick}
-            />
-            {/* Elegant badge */}
-            <div className="absolute -top-4 -right-4 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white px-4 py-2 rounded-full shadow-lg text-sm font-medium transform rotate-12">
-              Exclusivo
-            </div>
-          </div>
-        </AnimatedWrapper>
-      </AnimatedWrapper>
-    </Card>
+        <h2 className="text-3xl font-bold text-[#432818] mb-3">
+          {config.title}
+        </h2>
+        
+        <div className="w-16 h-1 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] mx-auto rounded-full mb-4" />
+        
+        <p className="text-lg text-[#6B5B4D] leading-relaxed max-w-md mx-auto">
+          {config.description}
+        </p>
+      </div>
+
+      <div className="flex justify-center mb-8">
+        <img 
+          src={config.image}
+          alt={`Estilo ${config.title}`}
+          className="max-w-full h-auto rounded-xl shadow-md transition-transform duration-300 hover:scale-105"
+          loading="eager"
+          fetchPriority="high"
+          width="400"
+          height="300"
+          onClick={onClick}
+        />
+      </div>
+
+      <div className="flex justify-center space-x-3 mb-6">
+        {config.colors.map((color, index) => (
+          <div
+            key={index}
+            className="w-8 h-8 rounded-full shadow-md border-2 border-white"
+            style={{ backgroundColor: color }}
+          />
+        ))}
+      </div>
+
+      <div className="text-center">
+        <div className="inline-flex items-center px-6 py-3 bg-white/70 backdrop-blur-sm rounded-full border border-[#B89B7A]/20 shadow-sm">
+          <span className="text-sm font-medium text-[#432818]">
+            Compatibilidade: <span className="font-bold">{Math.round(primaryStyle.percentage)}%</span>
+          </span>
+        </div>
+      </div>
+    </div>
   );
 };
 

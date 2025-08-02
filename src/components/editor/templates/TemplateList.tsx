@@ -11,15 +11,25 @@ interface TemplateListProps {
 }
 
 export const TemplateList: React.FC<TemplateListProps> = ({ onSelectTemplate }) => {
-  const { resultPageConfig, importConfig } = useResultPageConfig("Natural");
-  
-  // Use the styleType from the current config
-  const styleType = resultPageConfig?.styleType || "Natural";
+  const { resultPageConfig, updateSection } = useResultPageConfig("Natural");
 
   const handleSelectTemplate = (template: any) => {
     try {
-      if (importConfig) {
-        importConfig(template);
+      // Update sections individually since we don't have importConfig
+      if (template.header) {
+        updateSection('header', template.header);
+      }
+      if (template.mainContent) {
+        updateSection('mainContent', template.mainContent);
+      }
+      if (template.offer) {
+        updateSection('offer', template.offer);
+      }
+      if (template.globalStyles) {
+        updateSection('globalStyles', template.globalStyles);
+      }
+      if (template.blocks) {
+        updateSection('blocks', template.blocks);
       }
       
       toast({
