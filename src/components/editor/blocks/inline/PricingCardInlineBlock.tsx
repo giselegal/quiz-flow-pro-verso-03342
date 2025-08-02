@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { ShoppingCart, ArrowRight } from 'lucide-react';
@@ -13,15 +14,17 @@ const PricingCardInlineBlock: React.FC<BlockComponentProps> = ({
   onClick,
   className = ''
 }) => {
-  const {
-    productTitle = 'Guia de Estilo',
-    originalPrice = 'R$ 97,00',
-    offerPrice = 'R$ 39,90',
-    discount = '60% OFF',
-    badge = 'OFERTA ESPECIAL',
-    showBadge = true,
-    cardStyle = 'standard' // standard, highlight, minimal
-  } = block.properties;
+  // Safely extract properties with comprehensive validation
+  const properties = block?.properties || {};
+  
+  // Extract properties with safe defaults - no destructuring that could fail
+  const productTitle = typeof properties.productTitle === 'string' ? properties.productTitle : 'Guia de Estilo';
+  const originalPrice = typeof properties.originalPrice === 'string' ? properties.originalPrice : 'R$ 97,00';
+  const offerPrice = typeof properties.offerPrice === 'string' ? properties.offerPrice : 'R$ 39,90';
+  const discount = typeof properties.discount === 'string' ? properties.discount : '60% OFF';
+  const badge = typeof properties.badge === 'string' ? properties.badge : 'OFERTA ESPECIAL';
+  const showBadge = typeof properties.showBadge === 'boolean' ? properties.showBadge : true;
+  const cardStyle = typeof properties.cardStyle === 'string' && ['standard', 'highlight', 'minimal'].includes(properties.cardStyle) ? properties.cardStyle : 'standard';
 
   const styleClasses = {
     standard: 'bg-white border-[#B89B7A]/20',
