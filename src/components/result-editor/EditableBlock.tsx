@@ -1,169 +1,186 @@
-
 import React from 'react';
-import { Block } from '@/types/editor';
-import { StyleResult } from '@/types/quiz';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 import { Button } from '@/components/ui/button';
-import { GripVertical, Edit, Copy, Trash } from 'lucide-react';
-import HeaderBlockPreview from './block-previews/HeaderBlockPreview';
-import HeadlineBlockPreview from './block-previews/HeadlineBlockPreview';
-import TextBlockPreview from './block-previews/TextBlockPreview';
-import ImageBlockPreview from './block-previews/ImageBlockPreview';
-import BenefitsBlockPreview from './block-previews/BenefitsBlockPreview';
-import PricingBlockPreview from './block-previews/PricingBlockPreview';
-import GuaranteeBlockPreview from './block-previews/GuaranteeBlockPreview';
-import CTABlockPreview from './block-previews/CTABlockPreview';
-import StyleResultBlockPreview from './block-previews/StyleResultBlockPreview';
-import SecondaryStylesBlockPreview from './block-previews/SecondaryStylesBlockPreview';
-import HeroSectionBlockPreview from './block-previews/HeroSectionBlockPreview';
-import ProductsBlockPreview from './block-previews/ProductsBlockPreview';
-import TestimonialsBlockPreview from './block-previews/TestimonialsBlockPreview';
-import SpacerBlockPreview from './block-previews/SpacerBlockPreview';
-import VideoBlockPreview from './block-previews/VideoBlockPreview';
-import TwoColumnBlockPreview from './block-previews/TwoColumnBlockPreview';
-import IconBlockPreview from './block-previews/IconBlockPreview';
-import FAQBlockPreview from './block-previews/FAQBlockPreview';
-import CarouselBlockPreview from './block-previews/CarouselBlockPreview';
-import CustomCodeBlockPreview from './block-previews/CustomCodeBlockPreview';
-import AnimationBlockPreview from './block-previews/AnimationBlockPreview';
+import { ChevronUp, ChevronDown, Trash2 } from 'lucide-react';
+import { EditorBlock } from '@/types/editor';
+import { BenefitsBlockEditor } from './block-editors/BenefitsBlockEditor';
+import { PricingBlockEditor } from './block-editors/PricingBlockEditor';
+import { ImageBlockEditor } from '../editor/blocks/ImageBlockEditor';
+import FAQBlockEditor from './block-editors/FAQBlockEditor';
 
 interface EditableBlockProps {
-  block: Block;
-  index: number;
+  block: EditorBlock;
   isSelected: boolean;
-  onClick: () => void;
-  isPreviewMode: boolean;
-  onReorderBlocks: (sourceIndex: number, destinationIndex: number) => void;
-  primaryStyle: StyleResult;
+  onSelect: () => void;
+  onUpdate: (content: any) => void;
+  onDelete: () => void;
+  onMove: (direction: 'up' | 'down') => void;
 }
 
 const EditableBlock: React.FC<EditableBlockProps> = ({
   block,
-  index,
   isSelected,
-  onClick,
-  isPreviewMode,
-  onReorderBlocks,
-  primaryStyle
+  onSelect,
+  onUpdate,
+  onDelete,
+  onMove
 }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging
-  } = useSortable({
-    id: block.id,
-    data: {
-      index,
-      type: 'BLOCK'
-    }
-  });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-    cursor: isPreviewMode ? 'default' : 'pointer',
-    border: isSelected && !isPreviewMode ? '2px solid #B89B7A' : isPreviewMode ? 'none' : '2px dashed #e2e2e2',
-    borderRadius: '0.5rem',
-    backgroundColor: isPreviewMode ? 'transparent' : isDragging ? '#f9f3e9' : 'white',
-    position: 'relative' as const,
-    zIndex: isSelected ? 1 : 0
-  };
-  
-  // Ensure content is always an object with default values
-  const safeContent = block.content || {};
-  
-  // Render the appropriate block preview based on type
-  const renderBlockPreview = () => {
+  const renderEditor = () => {
     switch (block.type) {
-      case 'header':
-        return <HeaderBlockPreview content={safeContent} />;
-      case 'headline':
-        return <HeadlineBlockPreview content={safeContent} />;
       case 'text':
-        return <TextBlockPreview content={safeContent} />;
+        return (
+          <textarea
+            value={block.content.text || ''}
+            onChange={(e) => onUpdate({ text: e.target.value })}
+            className="w-full p-2 border rounded"
+            rows={4}
+          />
+        );
+      
       case 'image':
-        return <ImageBlockPreview content={safeContent} />;
+        return <ImageBlockEditor block={block} onUpdate={onUpdate} />;
+      
+      case 'header':
+        return (
+          <div className="space-y-2">
+            <input
+              value={block.content.title || ''}
+              onChange={(e) => onUpdate({ title: e.target.value })}
+              className="w-full p-2 border rounded"
+              placeholder="Título"
+            />
+            <input
+              value={block.content.subtitle || ''}
+              onChange={(e) => onUpdate({ subtitle: e.target.value })}
+              className="w-full p-2 border rounded"
+              placeholder="Subtítulo"
+            />
+          </div>
+        );
+      
       case 'benefits':
-        return <BenefitsBlockPreview content={safeContent} />;
+        // Extract string items for benefits editor
+        const stringItems = Array.isArray(block.content.items) 
+          ? block.content.items.filter((item): item is string => typeof item === 'string')
+          : [];
+        
+        const benefitsContent = {
+          ...block.content,
+          items: stringItems
+        };
+        
+        return <BenefitsBlockEditor block={{ ...block, content: benefitsContent }} onUpdate={onUpdate} />;
+      
       case 'pricing':
-        return <PricingBlockPreview content={safeContent} />;
+        return <PricingBlockEditor block={block} onUpdate={onUpdate} />;
+      
       case 'guarantee':
-        return <GuaranteeBlockPreview content={safeContent} />;
+        return (
+          <textarea
+            value={block.content.text || ''}
+            onChange={(e) => onUpdate({ text: e.target.value })}
+            className="w-full p-2 border rounded"
+            rows={3}
+          />
+        );
+      
       case 'cta':
-        return <CTABlockPreview content={safeContent} />;
-      case 'style-result':
-        return <StyleResultBlockPreview content={safeContent} primaryStyle={primaryStyle} />;
-      case 'secondary-styles':
-        return <SecondaryStylesBlockPreview content={safeContent} />;
-      case 'hero-section':
-        return <HeroSectionBlockPreview content={safeContent} primaryStyle={primaryStyle} />;
-      case 'products':
-        return <ProductsBlockPreview content={safeContent} />;
-      case 'testimonials':
-        return <TestimonialsBlockPreview content={safeContent} />;
-      case 'spacer':
-        return <SpacerBlockPreview content={safeContent} />;
-      case 'video':
-        return <VideoBlockPreview content={safeContent} />;
-      case 'two-column':
-        return <TwoColumnBlockPreview content={safeContent} />;
-      case 'icon':
-        return <IconBlockPreview content={safeContent} />;
+        return (
+          <div className="space-y-2">
+            <input
+              value={block.content.title || ''}
+              onChange={(e) => onUpdate({ title: e.target.value })}
+              className="w-full p-2 border rounded"
+              placeholder="Título"
+            />
+            <input
+              value={block.content.buttonText || ''}
+              onChange={(e) => onUpdate({ buttonText: e.target.value })}
+              className="w-full p-2 border rounded"
+              placeholder="Texto do botão"
+            />
+          </div>
+        );
+      
       case 'faq':
-        return <FAQBlockPreview content={safeContent} />;
-      case 'carousel':
-        return <CarouselBlockPreview content={safeContent} />;
-      case 'custom-code':
-        return <CustomCodeBlockPreview content={safeContent} />;
-      case 'animation-block':
-        return <AnimationBlockPreview content={safeContent} />;
+        return <FAQBlockEditor content={block.content} onUpdate={onUpdate} />;
+      
       default:
-        return <div>Tipo de bloco desconhecido: {block.type}</div>;
+        return <p>Editor não disponível para o tipo: {block.type}</p>;
     }
   };
-  
-  if (isPreviewMode) {
-    return (
-      <div style={{ opacity: isDragging ? 0.5 : 1 }}>
-        {renderBlockPreview()}
-      </div>
-    );
-  }
-  
+
+  const renderPreview = () => {
+    switch (block.type) {
+      case 'text':
+        return <p className="text-gray-800">{block.content.text || 'Texto vazio'}</p>;
+      
+      case 'header':
+        return (
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-800">{block.content.title || 'Título'}</h1>
+            {block.content.subtitle && (
+              <p className="text-gray-600">{block.content.subtitle}</p>
+            )}
+          </div>
+        );
+      
+      case 'image':
+        return block.content.imageUrl ? (
+          <img
+            src={block.content.imageUrl}
+            alt={block.content.imageAlt || 'Imagem'}
+            className="max-w-full h-auto rounded"
+          />
+        ) : (
+          <div className="bg-gray-100 h-32 flex items-center justify-center rounded">
+            <span className="text-gray-500">Sem imagem</span>
+          </div>
+        );
+      
+      case 'benefits':
+        const items = Array.isArray(block.content.items) 
+          ? block.content.items.filter((item): item is string => typeof item === 'string')
+          : [];
+        
+        return (
+          <div>
+            <h3 className="font-medium mb-2">{block.content.title || 'Benefícios'}</h3>
+            <ul className="list-disc list-inside">
+              {items.map((item, index) => (
+                <li key={index} className="text-gray-700">{item}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      
+      default:
+        return <p>Preview não disponível para: {block.type}</p>;
+    }
+  };
+
   return (
     <div
-      ref={setNodeRef}
-      style={style}
-      onClick={onClick}
-      className="p-3 group transition-all duration-200"
-      {...attributes}
+      className={`border-2 rounded-lg p-4 ${
+        isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+      }`}
+      onClick={onSelect}
     >
-      {!isPreviewMode && (
-        <div className="absolute right-2 top-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-[#f9f3e9]">
-            <Edit className="h-4 w-4 text-[#8F7A6A]" />
+      <div className="flex justify-between items-center mb-2">
+        <span className="text-sm font-medium text-gray-600">{block.type}</span>
+        <div className="flex gap-1">
+          <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); onMove('up'); }}>
+            <ChevronUp className="w-4 h-4" />
           </Button>
-          <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-[#f9f3e9]">
-            <Copy className="h-4 w-4 text-[#8F7A6A]" />
+          <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); onMove('down'); }}>
+            <ChevronDown className="w-4 h-4" />
           </Button>
-          <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-red-100 hover:text-red-600">
-            <Trash className="h-4 w-4" />
+          <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); onDelete(); }}>
+            <Trash2 className="w-4 h-4" />
           </Button>
-          <div
-            className="h-8 w-8 flex items-center justify-center cursor-move"
-            {...listeners}
-          >
-            <GripVertical className="h-4 w-4 text-[#8F7A6A]" />
-          </div>
         </div>
-      )}
+      </div>
       
-      {renderBlockPreview()}
+      {isSelected ? renderEditor() : renderPreview()}
     </div>
   );
 };

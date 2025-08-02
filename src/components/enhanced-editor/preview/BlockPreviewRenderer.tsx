@@ -5,12 +5,14 @@ import { EditorBlock } from '@/types/editor';
 interface BlockPreviewRendererProps {
   block: EditorBlock;
   isSelected?: boolean;
+  isPreviewing?: boolean;
   onSelect?: () => void;
 }
 
 export const BlockPreviewRenderer: React.FC<BlockPreviewRendererProps> = ({
   block,
   isSelected = false,
+  isPreviewing = false,
   onSelect
 }) => {
   // Safely handle style properties
@@ -89,12 +91,14 @@ export const BlockPreviewRenderer: React.FC<BlockPreviewRendererProps> = ({
 
   return (
     <div
-      className="block-preview cursor-pointer transition-all hover:shadow-sm"
+      className={`block-preview cursor-pointer transition-all hover:shadow-sm ${
+        isPreviewing ? 'pointer-events-none' : ''
+      }`}
       style={containerStyle}
       onClick={onSelect}
     >
       {renderBlockContent()}
-      {isSelected && (
+      {isSelected && !isPreviewing && (
         <div className="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 rounded text-xs">
           Selecionado
         </div>

@@ -10,21 +10,26 @@ export const BenefitsBlockEditor: React.FC<BlockEditorProps> = ({
   block,
   onUpdate
 }) => {
+  // Ensure items is always a string array for benefits
+  const items = Array.isArray(block.content.items) 
+    ? block.content.items.filter((item): item is string => typeof item === 'string')
+    : [];
+
   const addItem = () => {
-    const items = [...(block.content.items || []), ''];
-    onUpdate({ items });
+    const newItems = [...items, ''];
+    onUpdate({ items: newItems });
   };
 
   const removeItem = (index: number) => {
-    const items = [...(block.content.items || [])];
-    items.splice(index, 1);
-    onUpdate({ items });
+    const newItems = [...items];
+    newItems.splice(index, 1);
+    onUpdate({ items: newItems });
   };
 
   const updateItem = (index: number, value: string) => {
-    const items = [...(block.content.items || [])];
-    items[index] = value;
-    onUpdate({ items });
+    const newItems = [...items];
+    newItems[index] = value;
+    onUpdate({ items: newItems });
   };
 
   return (
@@ -42,7 +47,7 @@ export const BenefitsBlockEditor: React.FC<BlockEditorProps> = ({
       <div>
         <Label>Benefícios</Label>
         <div className="space-y-2 mt-2">
-          {(block.content.items || []).map((item: string, index: number) => (
+          {items.map((item: string, index: number) => (
             <div key={index} className="flex items-center gap-2">
               <Input
                 value={item}

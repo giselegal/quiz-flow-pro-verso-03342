@@ -10,13 +10,17 @@ interface ResultPageVisualEditorProps {
   onBlocksUpdate: (blocks: EditorBlock[]) => void;
   selectedBlockId?: string;
   onSelectBlock: (id: string) => void;
+  selectedStyle?: any;
+  onShowTemplates?: () => void;
 }
 
 export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({
   blocks,
   onBlocksUpdate,
   selectedBlockId,
-  onSelectBlock
+  onSelectBlock,
+  selectedStyle,
+  onShowTemplates
 }) => {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
@@ -114,9 +118,9 @@ export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({
               block={block}
               isSelected={selectedBlockId === block.id}
               onSelect={() => onSelectBlock(block.id)}
-              onUpdate={(content) => updateBlock(block.id, content)}
+              onUpdate={(content: any) => updateBlock(block.id, content)}
               onDelete={() => deleteBlock(block.id)}
-              onMove={(direction) => {
+              onMove={(direction: 'up' | 'down') => {
                 if (direction === 'up' && index > 0) {
                   moveBlock(index, index - 1);
                 } else if (direction === 'down' && index < blocks.length - 1) {

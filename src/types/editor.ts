@@ -36,6 +36,7 @@ export type BlockType =
   | 'countdown-inline' 
   | 'spacer-inline'
   | 'heading-inline'
+  | 'button-inline'
   | 'benefits'
   | 'testimonials'
   | 'pricing'
@@ -72,6 +73,12 @@ export type BlockType =
   | 'custom-code'
   | 'animation-block';
 
+export interface FAQItem {
+  id: string;
+  question: string;
+  answer: string;
+}
+
 export interface EditableContent {
   title?: string;
   text?: string;
@@ -84,7 +91,7 @@ export interface EditableContent {
   fontSize?: string;
   alignment?: 'left' | 'center' | 'right' | 'justify';
   subtitle?: string;
-  style?: Record<string, any>; // Changed from string to object
+  style?: Record<string, any>;
   borderWidth?: string;
   borderStyle?: string;
   borderColor?: string;
@@ -109,8 +116,29 @@ export interface EditableContent {
   imageAlt?: string;
   description?: string;
   customImage?: string;
-  items?: string[] | Array<{ id: string; question: string; answer: string }>;
-  faqItems?: Array<{ id: string; question: string; answer: string }>; // Add specific FAQ type
+  items?: string[];
+  faqItems?: FAQItem[];
+  // FAQ specific properties
+  regularPrice?: string;
+  salePrice?: string;
+  ctaUrl?: string;
+  // Hero properties
+  heroImage?: string;
+  heroImageAlt?: string;
+  quote?: string;
+  quoteAuthor?: string;
+  // Additional properties
+  letterSpacing?: string;
+  lineHeight?: string;
+  display?: string;
+  flexDirection?: string;
+  justifyContent?: string;
+  alignItems?: string;
+  gap?: string;
+  useIcons?: boolean;
+  icon?: string;
+  iconColor?: string;
+  options?: Array<{ id: string; text: string; imageUrl?: string }>;
   [key: string]: any;
 }
 
