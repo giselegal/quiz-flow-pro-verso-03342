@@ -103,17 +103,17 @@ export const EditorShowcase: React.FC = () => {
       ]
     },
     properties: {
-      title: 'Painel de Propriedades Avançado',
-      description: 'Painel modular com 7 seções especializadas para configuração completa.',
-      components: ['AdvancedPropertyPanel.tsx', 'ColorPicker.tsx', 'RichTextEditor.tsx'],
+      title: 'Painel de Propriedades Dinâmico',
+      description: 'Sistema schema-driven para configuração automática e completa de componentes.',
+      components: ['DynamicPropertiesPanel.tsx', 'PropertyInput.tsx', 'blockDefinitions.ts'],
       features: [
-        'Layout - Configurações de estrutura',
-        'Options - Gerenciamento de opções com drag & drop',
-        'Validations - Regras de validação',
-        'Styling - Cores, fontes e espaçamentos',
-        'Customization - CSS customizado',
-        'Advanced - Configurações avançadas',
-        'General - Configurações gerais'
+        'Schema automático baseado em blockDefinitions',
+        'Suporte a propriedades aninhadas',
+        'Validação automática de tipos',
+        'Interface responsiva e moderna',
+        'Configuração de funnel global',
+        'Suporte a todos os 44+ componentes inline',
+        'Configuração dinâmica por tipo de bloco'
       ]
     },
     history: {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useLocation } from 'wouter';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../components/ui/resizable';
-import { AdvancedPropertyPanel } from '../components/editor/AdvancedPropertyPanel';
+import { DynamicPropertiesPanel } from '../components/editor/panels/DynamicPropertiesPanel';
 import { ScrollArea } from '../components/ui/scroll-area';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -712,16 +712,53 @@ const EditorPage: React.FC = () => {
 
           {/* Properties Panel */}
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-            <AdvancedPropertyPanel
-              selectedBlock={selectedComponentId ? blocks.find(b => b.id === selectedComponentId) || null : null}
-              onUpdateBlock={(id: string, updates: any) => {
-                updateBlock(id, updates);
+            <DynamicPropertiesPanel
+              selectedBlock={selectedComponentId ? {
+                id: selectedComponentId,
+                type: blocks.find(b => b.id === selectedComponentId)?.type || '',
+                properties: blocks.find(b => b.id === selectedComponentId)?.content || {}
+              } : null}
+              funnelConfig={{
+                name: 'Novo Funil',
+                description: '',
+                isPublished: false,
+                theme: 'default'
+              }}
+              onBlockPropertyChange={(key: string, value: any) => {
+                if (selectedComponentId) {
+                  const currentBlock = blocks.find(b => b.id === selectedComponentId);
+                  updateBlock(selectedComponentId, { 
+                    content: { ...currentBlock?.content, [key]: value } 
+                  });
+                }
+              }}
+              onNestedPropertyChange={(path: string, value: any) => {
+                if (selectedComponentId) {
+                  const currentBlock = blocks.find(b => b.id === selectedComponentId);
+                  const pathParts = path.split('.');
+                  const newContent = { ...currentBlock?.content };
+                  
+                  // Criar estrutura aninhada se necessário
+                  let target = newContent;
+                  for (let i = 0; i < pathParts.length - 1; i++) {
+                    if (!target[pathParts[i]]) {
+                      target[pathParts[i]] = {};
+                    }
+                    target = target[pathParts[i]];
+                  }
+                  target[pathParts[pathParts.length - 1]] = value;
+                  
+                  updateBlock(selectedComponentId, { content: newContent });
+                }
+              }}
+              onFunnelConfigChange={(configUpdates: any) => {
+                // Para agora, não fazemos nada com configurações do funil
+                console.log('Config do funil atualizada:', configUpdates);
               }}
               onDeleteBlock={(id: string) => {
                 deleteBlock(id);
                 setSelectedComponentId(null);
               }}
-              onClose={() => setSelectedComponentId(null)}
             />
           </ResizablePanel>
         </ResizablePanelGroup>

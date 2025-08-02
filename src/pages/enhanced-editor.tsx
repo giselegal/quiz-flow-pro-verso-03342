@@ -3,7 +3,7 @@ import { useLocation } from 'wouter';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../components/ui/resizable';
 import { ComponentsSidebar } from '../components/editor/sidebar/ComponentsSidebar';
 import { EditPreview } from '../components/editor/preview/EditPreview';
-import { AdvancedPropertyPanel } from '../components/editor/AdvancedPropertyPanel';
+import { DynamicPropertiesPanel } from '../components/editor/panels/DynamicPropertiesPanel';
 import { EditorToolbar } from '../components/editor/toolbar/EditorToolbar';
 import { ScrollArea } from '../components/ui/scroll-area';
 import { Button } from '../components/ui/button';
@@ -796,10 +796,19 @@ const EnhancedEditorPage: React.FC = () => {
 
             {/* Properties Panel */}
             <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-              <AdvancedPropertyPanel
-                selectedBlockId={selectedComponentId}
-                properties={selectedComponentId ? blocks.find(b => b.id === selectedComponentId)?.properties || {} : {}}
-                onPropertyChange={(key, value) => {
+              <DynamicPropertiesPanel
+                selectedBlock={selectedComponentId ? {
+                  id: selectedComponentId,
+                  type: blocks.find(b => b.id === selectedComponentId)?.type || '',
+                  properties: blocks.find(b => b.id === selectedComponentId)?.properties || {}
+                } : null}
+                funnelConfig={{
+                  name: 'Novo Funil',
+                  description: '',
+                  isPublished: false,
+                  theme: 'default'
+                }}
+                onBlockPropertyChange={(key: string, value: any) => {
                   if (selectedComponentId) {
                     const block = blocks.find(b => b.id === selectedComponentId);
                     if (block) {
@@ -809,6 +818,34 @@ const EnhancedEditorPage: React.FC = () => {
                       });
                     }
                   }
+                }}
+                onNestedPropertyChange={(path: string, value: any) => {
+                  if (selectedComponentId) {
+                    const currentBlock = blocks.find(b => b.id === selectedComponentId);
+                    if (currentBlock) {
+                      const pathParts = path.split('.');
+                      const newProperties = { ...currentBlock.properties };
+                      
+                      // Criar estrutura aninhada se necessário
+                      let target = newProperties;
+                      for (let i = 0; i < pathParts.length - 1; i++) {
+                        if (!target[pathParts[i]]) {
+                          target[pathParts[i]] = {};
+                        }
+                        target = target[pathParts[i]];
+                      }
+                      target[pathParts[pathParts.length - 1]] = value;
+                      
+                      updateBlock(selectedComponentId, { 
+                        ...currentBlock,
+                        properties: newProperties 
+                      });
+                    }
+                  }
+                }}
+                onFunnelConfigChange={(configUpdates: any) => {
+                  // Para agora, não fazemos nada com configurações do funil
+                  console.log('Config do funil atualizada:', configUpdates);
                 }}
                 onDeleteBlock={selectedComponentId ? () => {
                   deleteBlock(selectedComponentId);
