@@ -6,19 +6,16 @@ import { lazy } from 'react';
 
 // ===== COMPONENTES BÁSICOS (sempre carregados) =====
 export { default as TextInlineBlock } from './TextInlineBlock';
+export { default as HeadingInlineBlock } from './HeadingInlineBlock';
+export { default as ButtonInlineBlock } from './ButtonInlineBlock';
 
 // Import other basic components with correct fallback paths
-const HeadingInlineBlock = lazy(() => import('../HeadingInlineBlock'));
-const ButtonInlineBlock = lazy(() => import('../ButtonInlineBlock').catch(() => {
-  // Fallback to a simple button component if not found
-  return { default: () => null };
-}));
 const BadgeInlineBlock = lazy(() => import('./BadgeInlineBlock').catch(() => {
   // Fallback to a simple badge component if not found
   return { default: () => null };
 }));
 
-export { HeadingInlineBlock, ButtonInlineBlock, BadgeInlineBlock };
+export { BadgeInlineBlock };
 
 // ===== COMPONENTES LAZY-LOADED (carregados sob demanda) =====
 
@@ -27,6 +24,15 @@ export const ImageDisplayInlineBlock = lazy(() => import('./ImageDisplayInlineBl
 export const ProgressInlineBlock = lazy(() => import('./ProgressInlineBlock'));
 export const StatInlineBlock = lazy(() => import('./StatInlineBlock'));
 export const CountdownInlineBlock = lazy(() => import('./CountdownInlineBlock'));
+
+// Componentes de Layout
+export const SpacerInlineBlock = lazy(() => import('./SpacerInlineBlock'));
+export const DividerInlineBlock = lazy(() => import('./DividerInlineBlock'));
+
+// Componentes de Marketing  
+export const BenefitsInlineBlock = lazy(() => import('./BenefitsInlineBlock'));
+export const GuaranteeInlineBlock = lazy(() => import('./GuaranteeInlineBlock'));
+export const CTAInlineBlock = lazy(() => import('./CTAInlineBlock'));
 
 // Componentes de Estilo e Design (pesados)
 export const StyleCardInlineBlock = lazy(() => import('./StyleCardInlineBlock'));
@@ -84,19 +90,30 @@ export const QuizProgressInlineBlock = lazy(() => import('./QuizProgressInlineBl
 // ===== MAPEAMENTO PARA COMPATIBILIDADE =====
 // Import TextInlineBlock to avoid the undefined error
 import TextInlineBlockComponent from './TextInlineBlock';
+import HeadingInlineBlockComponent from './HeadingInlineBlock';
+import ButtonInlineBlockComponent from './ButtonInlineBlock';
 
 export const INLINE_COMPONENTS_MAP = {
   // Componentes básicos (sempre carregados)
   'text-inline': TextInlineBlockComponent,
-  'heading-inline': HeadingInlineBlock,
-  'button-inline': ButtonInlineBlock,
+  'heading-inline': HeadingInlineBlockComponent,
+  'button-inline': ButtonInlineBlockComponent,
   'badge-inline': BadgeInlineBlock,
   
-  // Componentes lazy-loaded
+  // Componentes de imagem e mídia
   'image-display-inline': ImageDisplayInlineBlock,
   'progress-inline': ProgressInlineBlock,
   'stat-inline': StatInlineBlock,
   'countdown-inline': CountdownInlineBlock,
+  
+  // Componentes de layout
+  'spacer-inline': SpacerInlineBlock,
+  'divider-inline': DividerInlineBlock,
+  
+  // Componentes de marketing
+  'benefits-inline': BenefitsInlineBlock,
+  'guarantee-inline': GuaranteeInlineBlock,
+  'cta-inline': CTAInlineBlock,
   'style-card-inline': StyleCardInlineBlock,
   'result-card-inline': ResultCardInlineBlock,
   'pricing-card-inline': PricingCardInlineBlock,

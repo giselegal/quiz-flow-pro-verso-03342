@@ -1402,6 +1402,275 @@ export const blockDefinitions: BlockDefinition[] = [
       enableSupabaseTracking: false
     }
   },
+
+  // ===== COMPONENTES DE LAYOUT =====
+  {
+    type: 'spacer-inline',
+    name: 'Espaçador',
+    description: 'Espaçador para controlar espaçamento entre elementos',
+    icon: 'Minus',
+    category: 'Layout',
+    propertiesSchema: [
+      {
+        key: 'height',
+        label: 'Altura (px)',
+        type: 'number',
+        defaultValue: 40
+      },
+      {
+        key: 'width',
+        label: 'Largura (%)',
+        type: 'number',
+        defaultValue: 100
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      height: 40,
+      width: 100,
+      enableSupabaseTracking: false
+    }
+  },
+
+  {
+    type: 'divider-inline',
+    name: 'Divisor',
+    description: 'Linha divisória para separar seções de conteúdo',
+    icon: 'Minus',
+    category: 'Layout',
+    propertiesSchema: [
+      {
+        key: 'style',
+        label: 'Estilo da Linha',
+        type: 'select',
+        options: [
+          { value: 'solid', label: 'Sólida' },
+          { value: 'dashed', label: 'Tracejada' },
+          { value: 'dotted', label: 'Pontilhada' }
+        ],
+        defaultValue: 'solid'
+      },
+      {
+        key: 'thickness',
+        label: 'Espessura (px)',
+        type: 'number',
+        defaultValue: 1
+      },
+      {
+        key: 'color',
+        label: 'Cor',
+        type: 'color',
+        defaultValue: '#e2e8f0'
+      },
+      {
+        key: 'marginY',
+        label: 'Margem Vertical (px)',
+        type: 'number',
+        defaultValue: 20
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      style: 'solid',
+      thickness: 1,
+      color: '#e2e8f0',
+      marginY: 20,
+      enableSupabaseTracking: false
+    }
+  },
+
+  // ===== COMPONENTES DE MARKETING =====
+  {
+    type: 'benefits-inline',
+    name: 'Benefícios',
+    description: 'Lista de benefícios com ícones de check',
+    icon: 'CheckCircle',
+    category: 'Marketing',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Principais Benefícios'
+      },
+      {
+        key: 'benefits',
+        label: 'Lista de Benefícios',
+        type: 'array',
+        defaultValue: [
+          'Resultados comprovados em até 7 dias',
+          'Método validado por especialistas',
+          'Suporte personalizado incluído'
+        ]
+      },
+      {
+        key: 'iconColor',
+        label: 'Cor do Ícone',
+        type: 'color',
+        defaultValue: '#10b981'
+      },
+      {
+        key: 'titleColor',
+        label: 'Cor do Título',
+        type: 'color',
+        defaultValue: '#1f2937'
+      },
+      {
+        key: 'textColor',
+        label: 'Cor do Texto',
+        type: 'color',
+        defaultValue: '#374151'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Principais Benefícios',
+      benefits: [
+        'Resultados comprovados em até 7 dias',
+        'Método validado por especialistas',
+        'Suporte personalizado incluído'
+      ],
+      iconColor: '#10b981',
+      titleColor: '#1f2937',
+      textColor: '#374151',
+      enableSupabaseTracking: false
+    }
+  },
+
+  {
+    type: 'guarantee-inline',
+    name: 'Garantia',
+    description: 'Selo de garantia com ícone e período',
+    icon: 'Shield',
+    category: 'Marketing',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Garantia de Satisfação'
+      },
+      {
+        key: 'description',
+        label: 'Descrição',
+        type: 'textarea',
+        defaultValue: 'Se você não ficar satisfeito, devolvemos 100% do seu dinheiro'
+      },
+      {
+        key: 'period',
+        label: 'Período',
+        type: 'text',
+        defaultValue: '7 dias'
+      },
+      {
+        key: 'iconColor',
+        label: 'Cor do Ícone',
+        type: 'color',
+        defaultValue: '#10b981'
+      },
+      {
+        key: 'bgColor',
+        label: 'Cor de Fundo',
+        type: 'color',
+        defaultValue: '#f0fdf4'
+      },
+      {
+        key: 'borderColor',
+        label: 'Cor da Borda',
+        type: 'color',
+        defaultValue: '#bbf7d0'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Garantia de Satisfação',
+      description: 'Se você não ficar satisfeito, devolvemos 100% do seu dinheiro',
+      period: '7 dias',
+      iconColor: '#10b981',
+      bgColor: '#f0fdf4',
+      borderColor: '#bbf7d0',
+      enableSupabaseTracking: false
+    }
+  },
+
+  {
+    type: 'cta-inline',
+    name: 'Call to Action',
+    description: 'Botão de chamada para ação com título e subtítulo',
+    icon: 'Zap',
+    category: 'Marketing',
+    propertiesSchema: [
+      {
+        key: 'title',
+        label: 'Título',
+        type: 'text',
+        defaultValue: 'Não Perca Esta Oportunidade!'
+      },
+      {
+        key: 'subtitle',
+        label: 'Subtítulo',
+        type: 'text',
+        defaultValue: 'Comece sua transformação agora mesmo'
+      },
+      {
+        key: 'buttonText',
+        label: 'Texto do Botão',
+        type: 'text',
+        defaultValue: 'Começar Agora'
+      },
+      {
+        key: 'buttonAction',
+        label: 'Ação do Botão',
+        type: 'select',
+        options: [
+          { value: 'next-step', label: 'Próximo Passo' },
+          { value: 'custom-url', label: 'URL Personalizada' }
+        ],
+        defaultValue: 'next-step'
+      },
+      {
+        key: 'buttonUrl',
+        label: 'URL (se ação for custom-url)',
+        type: 'url',
+        defaultValue: '#'
+      },
+      {
+        key: 'variant',
+        label: 'Variante',
+        type: 'select',
+        options: [
+          { value: 'primary', label: 'Primária (Azul)' },
+          { value: 'secondary', label: 'Secundária (Cinza)' },
+          { value: 'urgent', label: 'Urgente (Vermelho)' }
+        ],
+        defaultValue: 'primary'
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: [
+          { value: 'sm', label: 'Pequeno' },
+          { value: 'md', label: 'Médio' },
+          { value: 'lg', label: 'Grande' },
+          { value: 'xl', label: 'Extra Grande' }
+        ],
+        defaultValue: 'lg'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      title: 'Não Perca Esta Oportunidade!',
+      subtitle: 'Comece sua transformação agora mesmo',
+      buttonText: 'Começar Agora',
+      buttonAction: 'next-step',
+      buttonUrl: '#',
+      variant: 'primary',
+      size: 'lg',
+      enableSupabaseTracking: true,
+      trackAnalytics: true
+    }
+  },
   
   // Blocos básicos existentes
   {

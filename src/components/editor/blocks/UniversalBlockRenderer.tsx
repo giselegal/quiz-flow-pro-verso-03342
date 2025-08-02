@@ -13,11 +13,20 @@ import {
   ButtonInlineBlock,
   BadgeInlineBlock,
   
-  // Componentes lazy-loaded
+  // Componentes de imagem e mídia
   ImageDisplayInlineBlock,
   ProgressInlineBlock,
   StatInlineBlock,
   CountdownInlineBlock,
+  
+  // Componentes de layout
+  SpacerInlineBlock,
+  DividerInlineBlock,
+  
+  // Componentes de marketing
+  BenefitsInlineBlock,
+  GuaranteeInlineBlock,
+  CTAInlineBlock,
   StyleCardInlineBlock,
   ResultCardInlineBlock,
   PricingCardInlineBlock,
@@ -64,6 +73,15 @@ const COMPONENT_MAP: Record<string, React.ComponentType<any>> = {
   'progress-inline': ProgressInlineBlock,
   'stat-inline': StatInlineBlock,
   'countdown-inline': CountdownInlineBlock,
+  
+  // ===== COMPONENTES DE LAYOUT =====
+  'spacer-inline': SpacerInlineBlock,
+  'divider-inline': DividerInlineBlock,
+  
+  // ===== COMPONENTES DE MARKETING =====
+  'benefits-inline': BenefitsInlineBlock,
+  'guarantee-inline': GuaranteeInlineBlock,
+  'cta-inline': CTAInlineBlock,
   
   // ===== COMPONENTES DE DESIGN =====
   'style-card-inline': StyleCardInlineBlock,
