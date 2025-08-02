@@ -4,32 +4,44 @@ import { cn } from '@/lib/utils';
 import { EditableContent } from '@/types/editor';
 
 interface HeaderBlockProps {
-  content: EditableContent;
+  content?: EditableContent;
   isSelected?: boolean;
   isEditing?: boolean;
   onUpdate?: (content: Partial<EditableContent>) => void;
   onSelect?: () => void;
   className?: string;
+  block?: any; // For compatibility with different calling patterns
+  onClick?: () => void; // For compatibility with different calling patterns
 }
 
 export const HeaderBlock: React.FC<HeaderBlockProps> = ({
-  content,
+  content = {},
   isSelected = false,
   isEditing = false,
   onUpdate,
   onSelect,
-  className
+  onClick,
+  className,
+  block
 }) => {
+  // Handle different prop patterns - sometimes content comes from block.content
+  const actualContent = content || block?.content || {};
+  
   const [isInlineEditing, setIsInlineEditing] = useState(false);
-  const [localTitle, setLocalTitle] = useState(content.title || '');
-  const [localSubtitle, setLocalSubtitle] = useState(content.subtitle || '');
+  const [localTitle, setLocalTitle] = useState(actualContent.title || '');
+  const [localSubtitle, setLocalSubtitle] = useState(actualContent.subtitle || '');
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
-    setLocalTitle(content.title || '');
-    setLocalSubtitle(content.subtitle || '');
-  }, [content.title, content.subtitle]);
+    setLocalTitle(actualContent.title || '');
+    setLocalSubtitle(actualContent.subtitle || '');
+  }, [actualContent.title, actualContent.subtitle]);
+
+  const handleClick = () => {
+    if (onSelect) onSelect();
+    if (onClick) onClick();
+  };
 
   const handleDoubleClick = (field: 'title' | 'subtitle') => {
     if (onUpdate) {
@@ -46,7 +58,7 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = ({
 
   const handleBlur = () => {
     setIsInlineEditing(false);
-    if (onUpdate && (localTitle !== content.title || localSubtitle !== content.subtitle)) {
+    if (onUpdate && (localTitle !== actualContent.title || localSubtitle !== actualContent.subtitle)) {
       onUpdate({ title: localTitle, subtitle: localSubtitle });
     }
   };
@@ -57,14 +69,14 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = ({
       handleBlur();
     }
     if (e.key === 'Escape') {
-      setLocalTitle(content.title || '');
-      setLocalSubtitle(content.subtitle || '');
+      setLocalTitle(actualContent.title || '');
+      setLocalSubtitle(actualContent.subtitle || '');
       setIsInlineEditing(false);
     }
   };
 
   const getHeaderSize = () => {
-    switch (content.style?.fontSize) {
+    switch (actualContent.style?.fontSize) {
       case 'text-4xl': return 'h1';
       case 'text-3xl': return 'h2';
       case 'text-2xl': return 'h3';
@@ -82,15 +94,29 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = ({
         "hover:bg-gray-50 cursor-pointer",
         className
       )}
-      onClick={onSelect}
+      onClick={handleClick}
       style={{
-        backgroundColor: content.style?.backgroundColor,
-        padding: content.style?.padding,
-        margin: content.style?.margin,
-        textAlign: content.style?.textAlign as any
+        backgroundColor: actualContent.style?.backgroundColor,
+        padding: actualContent.style?.padding,
+        margin: actualContent.style?.margin,
+        textAlign: actualContent.style?.textAlign as any
       }}
     >
       <div className="text-center">
+        {/* Logo */}
+        {actualContent.logo && (
+          <img 
+            src={actualContent.logo} 
+            alt={actualContent.logoAlt || 'Logo'} 
+            className="mx-auto w-36 mb-6" 
+            style={{
+              width: actualContent.logoWidth,
+              height: actualContent.logoHeight
+            }}
+          />
+        )}
+
+        {/* Title */}
         {React.createElement(
           getHeaderSize(),
           {
@@ -99,12 +125,12 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = ({
             suppressContentEditableWarning: true,
             className: cn(
               "font-bold mb-2 outline-none",
-              content.style?.fontSize || "text-3xl"
+              actualContent.style?.fontSize || "text-3xl"
             ),
             style: {
-              color: content.style?.color,
-              fontWeight: content.style?.fontWeight,
-              fontFamily: content.style?.fontFamily
+              color: actualContent.style?.color,
+              fontWeight: actualContent.style?.fontWeight,
+              fontFamily: actualContent.style?.fontFamily
             },
             onDoubleClick: () => handleDoubleClick('title'),
             onBlur: handleBlur,
@@ -113,18 +139,19 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = ({
               setLocalTitle(e.currentTarget.textContent || '');
             }
           },
-          localTitle || 'Título Principal'
+          localTitle || 'Novo Cabeçalho'
         )}
         
-        {(content.subtitle || isInlineEditing) && (
+        {/* Subtitle */}
+        {(actualContent.subtitle || localSubtitle || isInlineEditing) && (
           <p
             ref={subtitleRef}
             contentEditable={isInlineEditing}
             suppressContentEditableWarning
             className="text-lg opacity-80 outline-none"
             style={{
-              color: content.style?.color,
-              fontFamily: content.style?.fontFamily
+              color: actualContent.style?.color,
+              fontFamily: actualContent.style?.fontFamily
             }}
             onDoubleClick={() => handleDoubleClick('subtitle')}
             onBlur={handleBlur}

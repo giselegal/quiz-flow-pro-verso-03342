@@ -1,8 +1,22 @@
-
 import { EditableContent } from "@/types/editor";
 
 export const getDefaultContentForType = (type: string): EditableContent => {
   switch (type) {
+    case 'header':
+      return {
+        title: 'Novo Cabeçalho',
+        subtitle: 'Subtítulo opcional',
+        logo: '',
+        logoAlt: 'Logo',
+        logoWidth: 'auto',
+        logoHeight: 'auto',
+        style: {
+          textAlign: 'center',
+          fontSize: '2rem',
+          fontWeight: 'bold',
+          color: '#432818'
+        }
+      };
     case 'headline':
       return {
         title: 'Título do Bloco',
