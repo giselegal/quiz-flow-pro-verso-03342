@@ -1,150 +1,129 @@
 
-// Componentes Inline Modulares - Lazy Loading Otimizado
-// MODULAR | REUTILIZÁVEL | RESPONSIVO | LAZY-LOADED
+// 🚀 COMPONENTES INLINE COMPLETOS - Quiz Quest Challenge Verse
+// MODULAR | REUTILIZÁVEL | RESPONSIVO | LAZY-LOADED | SCHEMA-DRIVEN
 
 import { lazy } from 'react';
 
-// ===== COMPONENTES BÁSICOS (sempre carregados) =====
+// ===== 🔧 COMPONENTES BÁSICOS (sempre carregados) =====
 export { default as TextInlineBlock } from './TextInlineBlock';
 export { default as HeadingInlineBlock } from './HeadingInlineBlock';
 export { default as ButtonInlineBlock } from './ButtonInlineBlock';
+export { default as ImageDisplayInlineBlock } from './ImageDisplayInlineBlock';
+export { default as BadgeInlineBlock } from './BadgeInlineBlock';
+export { default as ProgressInlineBlock } from './ProgressInlineBlock';
+export { default as StatInlineBlock } from './StatInlineBlock';
+export { default as CountdownInlineBlock } from './CountdownInlineBlock';
 
-// Import other basic components with correct fallback paths
-const BadgeInlineBlock = lazy(() => import('./BadgeInlineBlock').catch(() => {
-  // Fallback to a simple badge component if not found
-  return { default: () => null };
-}));
-
-export { BadgeInlineBlock };
-
-// ===== COMPONENTES LAZY-LOADED (carregados sob demanda) =====
-
-// Componentes de Imagem e Mídia
-export const ImageDisplayInlineBlock = lazy(() => import('./ImageDisplayInlineBlock'));
-export const ProgressInlineBlock = lazy(() => import('./ProgressInlineBlock'));
-export const StatInlineBlock = lazy(() => import('./StatInlineBlock'));
-export const CountdownInlineBlock = lazy(() => import('./CountdownInlineBlock'));
-
-// Componentes de Layout
-export const SpacerInlineBlock = lazy(() => import('./SpacerInlineBlock'));
-export const DividerInlineBlock = lazy(() => import('./DividerInlineBlock'));
-
-// Componentes de Marketing  
-export const BenefitsInlineBlock = lazy(() => import('./BenefitsInlineBlock'));
-export const GuaranteeInlineBlock = lazy(() => import('./GuaranteeInlineBlock'));
-export const CTAInlineBlock = lazy(() => import('./CTAInlineBlock'));
-
-// Componentes de Estilo e Design (pesados)
+// ===== 🎨 COMPONENTES DE ESTILO E DESIGN (lazy-loaded) =====
 export const StyleCardInlineBlock = lazy(() => import('./StyleCardInlineBlock'));
 export const ResultCardInlineBlock = lazy(() => import('./ResultCardInlineBlock'));
 export const PricingCardInlineBlock = lazy(() => import('./PricingCardInlineBlock'));
 export const TestimonialCardInlineBlock = lazy(() => import('./TestimonialCardInlineBlock'));
 
-// Componentes de Resultado (Etapa 20)
+// ===== 🏆 COMPONENTES DE RESULTADO - ETAPA 20 (lazy-loaded) =====
 export const ResultHeaderInlineBlock = lazy(() => import('./ResultHeaderInlineBlock'));
 export const TestimonialsInlineBlock = lazy(() => import('./TestimonialsInlineBlock'));
 export const BeforeAfterInlineBlock = lazy(() => import('./BeforeAfterInlineBlock'));
 export const StepHeaderInlineBlock = lazy(() => import('./StepHeaderInlineBlock'));
 
-// Componentes de Oferta (Etapa 21)
+// ===== 💰 COMPONENTES DE OFERTA - ETAPA 21 (lazy-loaded) =====
 export const QuizOfferPricingInlineBlock = lazy(() => import('./QuizOfferPricingInlineBlock'));
 export const QuizOfferCTAInlineBlock = lazy(() => import('./QuizOfferCTAInlineBlock'));
 export const BonusListInlineBlock = lazy(() => import('./BonusListInlineBlock'));
 
-// Componentes Especializados Quiz
+// ===== 🚀 COMPONENTES ESPECIALIZADOS QUIZ (lazy-loaded) =====
 export const QuizIntroHeaderBlock = lazy(() => import('./QuizIntroHeaderBlock'));
 export const LoadingAnimationBlock = lazy(() => import('./LoadingAnimationBlock'));
 
-// ===== COMPONENTES DAS 21 ETAPAS DO FUNIL (LAZY-LOADED) =====
-
-// Etapa 1: Início
-export const QuizStartPageInlineBlock = lazy(() => import('./QuizStartPageInlineBlock'));
-
-// Etapa 2: Informações Pessoais  
-export const QuizPersonalInfoInlineBlock = lazy(() => import('./QuizPersonalInfoInlineBlock'));
-
-// Etapa 3: Experiência
-export const QuizExperienceInlineBlock = lazy(() => import('./QuizExperienceInlineBlock'));
-
-// Etapa 4: Certificado
-export const QuizCertificateInlineBlock = lazy(() => import('./QuizCertificateInlineBlock'));
-
-// Etapa 5: Leaderboard
-export const QuizLeaderboardInlineBlock = lazy(() => import('./QuizLeaderboardInlineBlock'));
-
-// Etapa 6: Carregamento
-export const QuizLoadingInlineBlock = lazy(() => import('./QuizLoadingInlineBlock'));
-
-// Etapa 7: Questão
-export const QuizQuestionInlineBlock = lazy(() => import('./QuizQuestionInlineBlock'));
-
-// Etapa 8: Resultado
-export const QuizResultInlineBlock = lazy(() => import('./QuizResultInlineBlock'));
-
-// Etapa 9: Transição
-export const QuizTransitionInlineBlock = lazy(() => import('./QuizTransitionInlineBlock'));
-
-// Etapa 10: Progresso
+// ===== 🎯 COMPONENTES DAS 21 ETAPAS DO FUNIL (lazy-loaded) =====
+export const QuizStartPageInlineBlock = lazy(() => import('./QuizStartPageInlineBlock'));        // Etapa 1
+export const QuizPersonalInfoInlineBlock = lazy(() => import('./QuizPersonalInfoInlineBlock'));  // Etapa 2
+export const QuizExperienceInlineBlock = lazy(() => import('./QuizExperienceInlineBlock'));      // Etapa 3
+export const QuizQuestionInlineBlock = lazy(() => import('./QuizQuestionInlineBlock'));          // Etapas 4-13
 export const QuizProgressInlineBlock = lazy(() => import('./QuizProgressInlineBlock'));
+export const QuizTransitionInlineBlock = lazy(() => import('./QuizTransitionInlineBlock'));
+export const QuizLoadingInlineBlock = lazy(() => import('./QuizLoadingInlineBlock'));
+export const QuizResultInlineBlock = lazy(() => import('./QuizResultInlineBlock'));
+export const QuizAnalysisInlineBlock = lazy(() => import('./QuizAnalysisInlineBlock'));
+export const QuizCategoryInlineBlock = lazy(() => import('./QuizCategoryInlineBlock'));
+export const QuizRecommendationInlineBlock = lazy(() => import('./QuizRecommendationInlineBlock'));
+export const QuizMetricsInlineBlock = lazy(() => import('./QuizMetricsInlineBlock'));
+export const QuizComparisonInlineBlock = lazy(() => import('./QuizComparisonInlineBlock'));
+export const QuizCertificateInlineBlock = lazy(() => import('./QuizCertificateInlineBlock'));
+export const QuizLeaderboardInlineBlock = lazy(() => import('./QuizLeaderboardInlineBlock'));
+export const QuizBadgesInlineBlock = lazy(() => import('./QuizBadgesInlineBlock'));
+export const QuizEvolutionInlineBlock = lazy(() => import('./QuizEvolutionInlineBlock'));
+export const QuizNetworkingInlineBlock = lazy(() => import('./QuizNetworkingInlineBlock'));
+export const QuizActionPlanInlineBlock = lazy(() => import('./QuizActionPlanInlineBlock'));
+export const QuizDevelopmentPlanInlineBlock = lazy(() => import('./QuizDevelopmentPlanInlineBlock'));
+export const QuizGoalsDashboardInlineBlock = lazy(() => import('./QuizGoalsDashboardInlineBlock'));
+export const QuizFinalResultsInlineBlock = lazy(() => import('./QuizFinalResultsInlineBlock'));
 
-// ===== MAPEAMENTO PARA COMPATIBILIDADE =====
-// Import TextInlineBlock to avoid the undefined error
+// ===== MAPEAMENTO COMPLETO PARA COMPATIBILIDADE =====
 import TextInlineBlockComponent from './TextInlineBlock';
 import HeadingInlineBlockComponent from './HeadingInlineBlock';
 import ButtonInlineBlockComponent from './ButtonInlineBlock';
+import ImageDisplayInlineBlockComponent from './ImageDisplayInlineBlock';
+import BadgeInlineBlockComponent from './BadgeInlineBlock';
+import ProgressInlineBlockComponent from './ProgressInlineBlock';
+import StatInlineBlockComponent from './StatInlineBlock';
+import CountdownInlineBlockComponent from './CountdownInlineBlock';
 
 export const INLINE_COMPONENTS_MAP = {
-  // Componentes básicos (sempre carregados)
+  // 🔧 COMPONENTES BÁSICOS (sempre carregados)
   'text-inline': TextInlineBlockComponent,
   'heading-inline': HeadingInlineBlockComponent,
   'button-inline': ButtonInlineBlockComponent,
-  'badge-inline': BadgeInlineBlock,
+  'image-display-inline': ImageDisplayInlineBlockComponent,
+  'badge-inline': BadgeInlineBlockComponent,
+  'progress-inline': ProgressInlineBlockComponent,
+  'stat-inline': StatInlineBlockComponent,
+  'countdown-inline': CountdownInlineBlockComponent,
   
-  // Componentes de imagem e mídia
-  'image-display-inline': ImageDisplayInlineBlock,
-  'progress-inline': ProgressInlineBlock,
-  'stat-inline': StatInlineBlock,
-  'countdown-inline': CountdownInlineBlock,
-  
-  // Componentes de layout
-  'spacer-inline': SpacerInlineBlock,
-  'divider-inline': DividerInlineBlock,
-  
-  // Componentes de marketing
-  'benefits-inline': BenefitsInlineBlock,
-  'guarantee-inline': GuaranteeInlineBlock,
-  'cta-inline': CTAInlineBlock,
+  // 🎨 COMPONENTES DE ESTILO E DESIGN
   'style-card-inline': StyleCardInlineBlock,
   'result-card-inline': ResultCardInlineBlock,
   'pricing-card-inline': PricingCardInlineBlock,
   'testimonial-card-inline': TestimonialCardInlineBlock,
   
-  // Componentes de resultado
+  // 🏆 COMPONENTES DE RESULTADO - ETAPA 20
   'result-header-inline': ResultHeaderInlineBlock,
   'testimonials-inline': TestimonialsInlineBlock,
   'before-after-inline': BeforeAfterInlineBlock,
   'step-header-inline': StepHeaderInlineBlock,
   
-  // Componentes de oferta
+  // 💰 COMPONENTES DE OFERTA - ETAPA 21
   'quiz-offer-pricing-inline': QuizOfferPricingInlineBlock,
   'quiz-offer-cta-inline': QuizOfferCTAInlineBlock,
   'bonus-list-inline': BonusListInlineBlock,
   
-  // Componentes especializados
+  // 🚀 COMPONENTES ESPECIALIZADOS QUIZ
   'quiz-intro-header': QuizIntroHeaderBlock,
   'loading-animation': LoadingAnimationBlock,
   
-  // 21 etapas do funil
-  'quiz-start-page-inline': QuizStartPageInlineBlock,
-  'quiz-personal-info-inline': QuizPersonalInfoInlineBlock,
-  'quiz-experience-inline': QuizExperienceInlineBlock,
+  // 🎯 COMPONENTES DAS 21 ETAPAS DO FUNIL
+  'quiz-start-page-inline': QuizStartPageInlineBlock,           // Etapa 1
+  'quiz-personal-info-inline': QuizPersonalInfoInlineBlock,     // Etapa 2
+  'quiz-experience-inline': QuizExperienceInlineBlock,          // Etapa 3
+  'quiz-question-inline': QuizQuestionInlineBlock,              // Etapas 4-13
+  'quiz-progress-inline': QuizProgressInlineBlock,
+  'quiz-transition-inline': QuizTransitionInlineBlock,
+  'quiz-loading-inline': QuizLoadingInlineBlock,
+  'quiz-result-inline': QuizResultInlineBlock,
+  'quiz-analysis-inline': QuizAnalysisInlineBlock,
+  'quiz-category-inline': QuizCategoryInlineBlock,
+  'quiz-recommendation-inline': QuizRecommendationInlineBlock,
+  'quiz-metrics-inline': QuizMetricsInlineBlock,
+  'quiz-comparison-inline': QuizComparisonInlineBlock,
   'quiz-certificate-inline': QuizCertificateInlineBlock,
   'quiz-leaderboard-inline': QuizLeaderboardInlineBlock,
-  'quiz-loading-inline': QuizLoadingInlineBlock,
-  'quiz-question-inline': QuizQuestionInlineBlock,
-  'quiz-result-inline': QuizResultInlineBlock,
-  'quiz-transition-inline': QuizTransitionInlineBlock,
-  'quiz-progress-inline': QuizProgressInlineBlock,
+  'quiz-badges-inline': QuizBadgesInlineBlock,
+  'quiz-evolution-inline': QuizEvolutionInlineBlock,
+  'quiz-networking-inline': QuizNetworkingInlineBlock,
+  'quiz-action-plan-inline': QuizActionPlanInlineBlock,
+  'quiz-development-plan-inline': QuizDevelopmentPlanInlineBlock,
+  'quiz-goals-dashboard-inline': QuizGoalsDashboardInlineBlock,
+  'quiz-final-results-inline': QuizFinalResultsInlineBlock,
 };
 
 // ===== LISTA DE TODOS OS COMPONENTES DISPONÍVEIS =====

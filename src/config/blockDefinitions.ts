@@ -1088,11 +1088,11 @@ export const blockDefinitions: BlockDefinition[] = [
   },
 
   {
-    type: 'text-inline-basic',
-    name: 'Texto Inline',
+    type: 'text-inline',
+    name: 'Texto',
     description: 'Texto inline para conteúdo dentro de outros elementos',
     icon: 'Type',
-    category: 'Content',
+    category: 'Básico',
     propertiesSchema: [
       {
         key: 'content',
@@ -1140,11 +1140,11 @@ export const blockDefinitions: BlockDefinition[] = [
   },
 
   {
-    type: 'heading-inline-basic',
-    name: 'Título Inline',
+    type: 'heading-inline',
+    name: 'Cabeçalho',
     description: 'Título inline para cabeçalhos dentro de outros elementos',
     icon: 'Heading1',
-    category: 'Content',
+    category: 'Básico',
     propertiesSchema: [
       {
         key: 'content',
@@ -1249,6 +1249,150 @@ export const blockDefinitions: BlockDefinition[] = [
   },
 
   {
+    type: 'badge-inline',
+    name: 'Badge',
+    description: 'Badge inline para destacar informações',
+    icon: 'Tag',
+    category: 'Básico',
+    propertiesSchema: [
+      {
+        key: 'text',
+        label: 'Texto',
+        type: 'text',
+        defaultValue: 'Novo'
+      },
+      {
+        key: 'variant',
+        label: 'Variante',
+        type: 'select',
+        options: ['default', 'primary', 'secondary', 'success', 'warning', 'error'],
+        defaultValue: 'primary'
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: ['sm', 'md', 'lg'],
+        defaultValue: 'md'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      text: 'Novo',
+      variant: 'primary',
+      size: 'md',
+      enableSupabaseTracking: false
+    }
+  },
+
+  {
+    type: 'progress-inline',
+    name: 'Progresso',
+    description: 'Barra de progresso inline',
+    icon: 'BarChart3',
+    category: 'Básico',
+    propertiesSchema: [
+      {
+        key: 'value',
+        label: 'Valor (%)',
+        type: 'number',
+        defaultValue: 65
+      },
+      {
+        key: 'showLabel',
+        label: 'Mostrar Rótulo',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'color',
+        label: 'Cor',
+        type: 'color',
+        defaultValue: '#3b82f6'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      value: 65,
+      showLabel: true,
+      color: '#3b82f6',
+      enableSupabaseTracking: false
+    }
+  },
+
+  {
+    type: 'stat-inline',
+    name: 'Estatística',
+    description: 'Exibição de estatística com número e rótulo',
+    icon: 'TrendingUp',
+    category: 'Básico',
+    propertiesSchema: [
+      {
+        key: 'value',
+        label: 'Valor',
+        type: 'text',
+        defaultValue: '1,234'
+      },
+      {
+        key: 'label',
+        label: 'Rótulo',
+        type: 'text',
+        defaultValue: 'Usuários Ativos'
+      },
+      {
+        key: 'trend',
+        label: 'Tendência',
+        type: 'select',
+        options: ['up', 'down', 'neutral'],
+        defaultValue: 'up'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      value: '1,234',
+      label: 'Usuários Ativos',
+      trend: 'up',
+      enableSupabaseTracking: false
+    }
+  },
+
+  {
+    type: 'countdown-inline',
+    name: 'Contador Regressivo',
+    description: 'Contador regressivo para criar urgência',
+    icon: 'Timer',
+    category: 'Básico',
+    propertiesSchema: [
+      {
+        key: 'endDate',
+        label: 'Data Final',
+        type: 'datetime-local',
+        defaultValue: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 16)
+      },
+      {
+        key: 'showDays',
+        label: 'Mostrar Dias',
+        type: 'boolean',
+        defaultValue: true
+      },
+      {
+        key: 'size',
+        label: 'Tamanho',
+        type: 'select',
+        options: ['sm', 'md', 'lg'],
+        defaultValue: 'md'
+      },
+      ...supabasePropertySchemas
+    ],
+    defaultProperties: {
+      endDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
+      showDays: true,
+      size: 'md',
+      enableSupabaseTracking: false
+    }
+  },
+
+  {
     type: 'form-input',
     name: 'Campo de Formulário',
     description: 'Campo de entrada para formulários com validação',
@@ -1300,11 +1444,11 @@ export const blockDefinitions: BlockDefinition[] = [
   },
 
   {
-    type: 'button-inline-basic',
-    name: 'Botão Inline',
+    type: 'button-inline',
+    name: 'Botão',
     description: 'Botão inline para ações dentro de outros elementos',
     icon: 'RectangleHorizontal',
-    category: 'Interactive',
+    category: 'Básico',
     propertiesSchema: [
       {
         key: 'text',

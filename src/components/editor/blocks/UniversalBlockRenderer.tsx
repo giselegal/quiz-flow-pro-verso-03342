@@ -7,39 +7,38 @@ import { getBlockComponent } from './BlockRegistry';
 
 // ===== IMPORTS DOS COMPONENTES INLINE (LAZY LOADING) =====
 import {
-  // Componentes básicos (sempre carregados)
+  // 🔧 COMPONENTES BÁSICOS (sempre carregados)
   TextInlineBlock,
   HeadingInlineBlock,
   ButtonInlineBlock,
-  BadgeInlineBlock,
-  
-  // Componentes de imagem e mídia
   ImageDisplayInlineBlock,
+  BadgeInlineBlock,
   ProgressInlineBlock,
   StatInlineBlock,
   CountdownInlineBlock,
   
-  // Componentes de layout
-  SpacerInlineBlock,
-  DividerInlineBlock,
-  
-  // Componentes de marketing
-  BenefitsInlineBlock,
-  GuaranteeInlineBlock,
-  CTAInlineBlock,
+  // 🎨 COMPONENTES DE ESTILO E DESIGN
   StyleCardInlineBlock,
   ResultCardInlineBlock,
   PricingCardInlineBlock,
   TestimonialCardInlineBlock,
+  
+  // 🏆 COMPONENTES DE RESULTADO - ETAPA 20
   ResultHeaderInlineBlock,
   TestimonialsInlineBlock,
   BeforeAfterInlineBlock,
   StepHeaderInlineBlock,
+  
+  // 💰 COMPONENTES DE OFERTA - ETAPA 21
   QuizOfferPricingInlineBlock,
   QuizOfferCTAInlineBlock,
   BonusListInlineBlock,
+  
+  // 🚀 COMPONENTES ESPECIALIZADOS QUIZ
   QuizIntroHeaderBlock,
   LoadingAnimationBlock,
+  
+  // 🎯 COMPONENTES DAS 21 ETAPAS DO FUNIL
   QuizStartPageInlineBlock,
   QuizPersonalInfoInlineBlock,
   QuizExperienceInlineBlock,
@@ -48,8 +47,20 @@ import {
   QuizTransitionInlineBlock,
   QuizLoadingInlineBlock,
   QuizResultInlineBlock,
+  QuizAnalysisInlineBlock,
+  QuizCategoryInlineBlock,
+  QuizRecommendationInlineBlock,
+  QuizMetricsInlineBlock,
+  QuizComparisonInlineBlock,
   QuizCertificateInlineBlock,
   QuizLeaderboardInlineBlock,
+  QuizBadgesInlineBlock,
+  QuizEvolutionInlineBlock,
+  QuizNetworkingInlineBlock,
+  QuizActionPlanInlineBlock,
+  QuizDevelopmentPlanInlineBlock,
+  QuizGoalsDashboardInlineBlock,
+  QuizFinalResultsInlineBlock,
 } from './inline/index.lazy';
 
 // ===== FALLBACK COMPONENT PARA LAZY LOADING =====
@@ -62,9 +73,9 @@ const LazyFallback = () => (
   </div>
 );
 
-// ===== MAPEAMENTO DE TIPOS PARA COMPONENTES =====
+// ===== MAPEAMENTO COMPLETO DE TIPOS PARA COMPONENTES =====
 const COMPONENT_MAP: Record<string, React.ComponentType<any>> = {
-  // ===== COMPONENTES BÁSICOS =====
+  // 🔧 COMPONENTES BÁSICOS
   'text-inline': TextInlineBlock,
   'heading-inline': HeadingInlineBlock,
   'button-inline': ButtonInlineBlock,
@@ -74,47 +85,50 @@ const COMPONENT_MAP: Record<string, React.ComponentType<any>> = {
   'stat-inline': StatInlineBlock,
   'countdown-inline': CountdownInlineBlock,
   
-  // ===== COMPONENTES DE LAYOUT =====
-  'spacer-inline': SpacerInlineBlock,
-  'divider-inline': DividerInlineBlock,
-  
-  // ===== COMPONENTES DE MARKETING =====
-  'benefits-inline': BenefitsInlineBlock,
-  'guarantee-inline': GuaranteeInlineBlock,
-  'cta-inline': CTAInlineBlock,
-  
-  // ===== COMPONENTES DE DESIGN =====
+  // 🎨 COMPONENTES DE ESTILO E DESIGN
   'style-card-inline': StyleCardInlineBlock,
   'result-card-inline': ResultCardInlineBlock,
   'pricing-card-inline': PricingCardInlineBlock,
   'testimonial-card-inline': TestimonialCardInlineBlock,
   
-  // ===== COMPONENTES DE RESULTADO (ETAPA 20) =====
+  // 🏆 COMPONENTES DE RESULTADO - ETAPA 20
   'result-header-inline': ResultHeaderInlineBlock,
   'testimonials-inline': TestimonialsInlineBlock,
   'before-after-inline': BeforeAfterInlineBlock,
   'step-header-inline': StepHeaderInlineBlock,
   
-  // ===== COMPONENTES DE OFERTA (ETAPA 21) =====
+  // 💰 COMPONENTES DE OFERTA - ETAPA 21
   'quiz-offer-pricing-inline': QuizOfferPricingInlineBlock,
   'quiz-offer-cta-inline': QuizOfferCTAInlineBlock,
   'bonus-list-inline': BonusListInlineBlock,
   
-  // ===== COMPONENTES ESPECIALIZADOS QUIZ =====
+  // 🚀 COMPONENTES ESPECIALIZADOS QUIZ
   'quiz-intro-header': QuizIntroHeaderBlock,
   'loading-animation': LoadingAnimationBlock,
   
-  // ===== COMPONENTES DAS 21 ETAPAS =====
-  'quiz-start-page-inline': QuizStartPageInlineBlock,
-  'quiz-personal-info-inline': QuizPersonalInfoInlineBlock,
-  'quiz-experience-inline': QuizExperienceInlineBlock,
-  'quiz-question-inline': QuizQuestionInlineBlock,
+  // 🎯 COMPONENTES DAS 21 ETAPAS DO FUNIL
+  'quiz-start-page-inline': QuizStartPageInlineBlock,           // Etapa 1
+  'quiz-personal-info-inline': QuizPersonalInfoInlineBlock,     // Etapa 2
+  'quiz-experience-inline': QuizExperienceInlineBlock,          // Etapa 3
+  'quiz-question-inline': QuizQuestionInlineBlock,              // Etapas 4-13
   'quiz-progress-inline': QuizProgressInlineBlock,
   'quiz-transition-inline': QuizTransitionInlineBlock,
   'quiz-loading-inline': QuizLoadingInlineBlock,
   'quiz-result-inline': QuizResultInlineBlock,
+  'quiz-analysis-inline': QuizAnalysisInlineBlock,
+  'quiz-category-inline': QuizCategoryInlineBlock,
+  'quiz-recommendation-inline': QuizRecommendationInlineBlock,
+  'quiz-metrics-inline': QuizMetricsInlineBlock,
+  'quiz-comparison-inline': QuizComparisonInlineBlock,
   'quiz-certificate-inline': QuizCertificateInlineBlock,
   'quiz-leaderboard-inline': QuizLeaderboardInlineBlock,
+  'quiz-badges-inline': QuizBadgesInlineBlock,
+  'quiz-evolution-inline': QuizEvolutionInlineBlock,
+  'quiz-networking-inline': QuizNetworkingInlineBlock,
+  'quiz-action-plan-inline': QuizActionPlanInlineBlock,
+  'quiz-development-plan-inline': QuizDevelopmentPlanInlineBlock,
+  'quiz-goals-dashboard-inline': QuizGoalsDashboardInlineBlock,
+  'quiz-final-results-inline': QuizFinalResultsInlineBlock,
 };
 
 // Fallback para compatibilidade com sistema antigo
