@@ -2,6 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { TrendingUp, Users, Award, Target, Zap, Heart } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';
+import { safeGetBlockProperties, isValidBlock, logBlockDebug } from '@/utils/blockUtils';
 
 /**
  * StatInlineBlock - Componente modular inline horizontal
@@ -14,6 +15,17 @@ const StatInlineBlock: React.FC<BlockComponentProps> = ({
   onClick,
   className = ''
 }) => {
+  // 🛡️ Validação e logging de debug
+  if (!isValidBlock(block)) {
+    console.error('❌ StatInlineBlock: Bloco inválido recebido', block);
+    return <div className="p-2 bg-red-100 text-red-600 text-xs rounded">Erro: Bloco inválido</div>;
+  }
+
+  logBlockDebug('StatInlineBlock', block);
+
+  // 🛡️ Extração segura das propriedades
+  const properties = safeGetBlockProperties(block);
+
   const {
     value = '95%',
     label = 'Satisfação',
@@ -23,7 +35,7 @@ const StatInlineBlock: React.FC<BlockComponentProps> = ({
     backgroundColor = 'white',
     size = 'medium',
     animated = true
-  } = block.properties;
+  } = properties;
 
   // Ícones disponíveis
   const iconMap = {
