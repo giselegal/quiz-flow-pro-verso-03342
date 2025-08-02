@@ -22,7 +22,49 @@ export interface BlockDefinition {
   tags?: string[];
 }
 
-export type BlockType = 'headline' | 'text' | 'image' | 'button' | 'spacer' | 'text-inline' | 'image-display-inline' | 'badge-inline' | 'progress-inline' | 'stat-inline' | 'countdown-inline' | 'spacer-inline';
+export type BlockType = 
+  | 'headline' 
+  | 'text' 
+  | 'image' 
+  | 'button' 
+  | 'spacer' 
+  | 'text-inline' 
+  | 'image-display-inline' 
+  | 'badge-inline' 
+  | 'progress-inline' 
+  | 'stat-inline' 
+  | 'countdown-inline' 
+  | 'spacer-inline'
+  | 'heading-inline'
+  | 'benefits'
+  | 'testimonials'
+  | 'pricing'
+  | 'guarantee'
+  | 'cta'
+  | 'header'
+  | 'hero'
+  | 'benefitsList'
+  | 'testimonial'
+  | 'styleResult'
+  | 'secondaryStylesTitle'
+  | 'offerHero'
+  | 'carousel'
+  | 'testimonialsSection'
+  | 'style-result'
+  | 'secondary-styles'
+  | 'hero-section'
+  | 'products'
+  | 'video'
+  | 'two-column'
+  | 'icon'
+  | 'faq'
+  | 'quiz-start-page-inline'
+  | 'pricing-card-inline'
+  | 'testimonial-card-inline'
+  | 'result-header-inline'
+  | 'step-header-inline'
+  | 'loading-animation'
+  | 'quiz-offer-cta-inline';
 
 export interface EditableContent {
   title?: string;
@@ -57,6 +99,11 @@ export interface EditableContent {
   fontWeight?: string;
   fontFamily?: string;
   boxShadow?: string;
+  imageUrl?: string;
+  imageAlt?: string;
+  description?: string;
+  customImage?: string;
+  items?: string[];
   [key: string]: any; // Add index signature for dynamic properties
 }
 

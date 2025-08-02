@@ -139,4 +139,7 @@ export const getBlocksByCategory = (category: string): BlockDefinition[] => {
   return Object.values(ENHANCED_BLOCK_REGISTRY).filter(block => block.category === category);
 };
 
+// Export BlockDefinition for external use
+export type { BlockDefinition } from '@/types/editor';
+
 export default ENHANCED_BLOCK_REGISTRY;
