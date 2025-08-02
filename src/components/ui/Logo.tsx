@@ -15,19 +15,18 @@ const Logo: React.FC<LogoProps> = ({
   onClick 
 }) => {
   const sizeClasses = {
-    sm: 'h-6 text-sm',
-    md: 'h-8 text-lg',
-    lg: 'h-10 text-xl',
-    xl: 'h-12 text-2xl'
+    sm: { height: 'h-6', width: 'w-6', iconText: 'text-xs', logoText: 'text-sm' },
+    md: { height: 'h-8', width: 'w-8', iconText: 'text-sm', logoText: 'text-lg' },
+    lg: { height: 'h-10', width: 'w-10', iconText: 'text-base', logoText: 'text-xl' },
+    xl: { height: 'h-12', width: 'w-12', iconText: 'text-lg', logoText: 'text-2xl' }
   };
 
   const logoIcon = (
     <div className={cn(
       "flex items-center justify-center bg-gradient-to-br from-purple-600 to-blue-600 text-white font-bold rounded-lg",
-      sizeClasses[size].split(' ')[0], // pega apenas a altura
-      size === 'sm' ? 'w-6 text-xs' : 
-      size === 'md' ? 'w-8 text-sm' : 
-      size === 'lg' ? 'w-10 text-base' : 'w-12 text-lg'
+      sizeClasses[size].height,
+      sizeClasses[size].width,
+      sizeClasses[size].iconText
     )}>
       CQ
     </div>
@@ -36,7 +35,7 @@ const Logo: React.FC<LogoProps> = ({
   const logoText = (
     <span className={cn(
       "font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent",
-      sizeClasses[size].split(' ')[1] // pega apenas o tamanho do texto
+      sizeClasses[size].logoText
     )}>
       CaktoQuiz
     </span>
