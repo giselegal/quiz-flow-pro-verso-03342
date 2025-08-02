@@ -1,4 +1,3 @@
-
 import { UnifiedVisualEditor, EditorTab } from '@/components/unified-editor/UnifiedVisualEditor';
 import { StyleResult } from '@/types/quiz';
 
@@ -36,11 +35,14 @@ export default {
       description: "Porcentagem do estilo principal"
     }
   },
-  render: (props) => {
+  render: (props: any) => {
     const primaryStyle: StyleResult = {
       category: props.styleCategory,
       score: props.styleScore,
-      percentage: props.stylePercentage
+      percentage: props.stylePercentage,
+      style: props.styleCategory.toLowerCase(),
+      points: props.styleScore,
+      rank: 1
     };
     
     return (

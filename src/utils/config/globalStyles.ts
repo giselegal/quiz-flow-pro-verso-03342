@@ -6,6 +6,8 @@ export interface GlobalStylesConfig {
   backgroundColor: string;
   fontFamily: string;
   logo?: string;
+  logoHeight?: string;
+  logoAlt?: string;
 }
 
 export const createGlobalStyles = (): GlobalStylesConfig => {
@@ -15,6 +17,8 @@ export const createGlobalStyles = (): GlobalStylesConfig => {
     textColor: '#1A1818',
     backgroundColor: '#FAF9F7',
     fontFamily: 'Inter, sans-serif',
-    logo: ''
+    logo: '',
+    logoHeight: 'auto',
+    logoAlt: 'Logo da marca'
   };
 };

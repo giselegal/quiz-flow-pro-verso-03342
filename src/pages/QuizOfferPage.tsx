@@ -278,6 +278,39 @@ const QuizOfferPage: React.FC = () => {
         applyStyles
     } = usePageConfig('quiz-offer-page');
 
+    const testimonials = [
+      {
+        rating: 5 as number,
+        text: "Transformou completamente meu guarda-roupa!",
+        author: "Maria Silva"
+      },
+      {
+        rating: 5 as number, 
+        text: "Finalmente entendi meu estilo pessoal.",
+        author: "Ana Costa"
+      }
+    ];
+
+    const renderStars = (num: number) => {
+      return Array.from({ length: 5 }, (_, index: number) => (
+        <span key={index} className={index < num ? "text-yellow-400" : "text-gray-300"}>
+          ★
+        </span>
+      ));
+    };
+
+    const benefits = [
+      "Análise personalizada do seu biotipo",
+      "Guia completo de peças que valorizam seu corpo", 
+      "Consultoria de 1 hora com nossa especialista",
+      "Acesso a materiais exclusivos"
+    ].map((benefit, index: number) => (
+      <li key={index} className="flex items-start space-x-3">
+        <span className="text-[#B89B7A] text-xl">✓</span>
+        <span>{benefit}</span>
+      </li>
+    ));
+
     useEffect(() => {
         // Inject custom styles
         const styleElement = document.createElement('style');

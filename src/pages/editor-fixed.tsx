@@ -1,205 +1,92 @@
-
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'wouter';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { BrandHeader } from '@/components/ui/BrandHeader';
 import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
-import { EditorCanvas } from '@/components/editor/canvas/EditorCanvas';
+import { UniversalBlockRenderer } from '@/components/editor/blocks/UniversalBlockRenderer';
 import DynamicPropertiesPanel from '@/components/editor/DynamicPropertiesPanel';
-import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
-import { useEditor } from '@/hooks/useEditor';
-import { useEditorPersistence } from '@/hooks/editor/useEditorPersistence';
-import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
-import { toast } from '@/components/ui/use-toast';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { EditorQuizProvider } from '@/contexts/EditorQuizContext';
-import { schemaDrivenFunnelService } from '../services/schemaDrivenFunnelService';
-import { getBlockDefinition, BLOCK_DEFINITIONS } from '@/components/editor/blocks/EnhancedBlockRegistry';
-import type { EditorBlock } from '@/types/editor';
+import { EditableContent } from '@/types/editor';
+import { getDefaultContentForType } from '@/utils/blockDefaults';
 
-const EditorPage: React.FC = () => {
-  const [location, setLocation] = useLocation();
-  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
-  const [isPreviewing, setIsPreviewing] = useState(false);
-  const [isLoadingFunnel, setIsLoadingFunnel] = useState(false);
-  
-  // Extract funnel ID from URL - MOVIDO PARA O INÍCIO
-  const urlParams = new URLSearchParams(window.location.search);
-  const funnelId = urlParams.get('id');
-  
-  const { blocks, actions } = useEditor();
-  const { saveFunnel, loadFunnel, isSaving, isLoading } = useEditorPersistence();
+interface Block {
+  id: string;
+  type: string;
+  properties: Record<string, any>;
+}
 
-  // Helper para converter blocks do useEditor para formato esperado pelo EditorCanvas
-  const editorBlocks = blocks.map(block => ({
-    id: block.id,
-    type: block.type,
-    properties: block.content || block.properties || {},
-    order: block.order || 0
-  }));
+const EditorFixedPage: React.FC = () => {
+  const navigate = useNavigate();
+  const [blocks, setBlocks] = useState<Block[]>([]);
+  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
 
-  // Load funnel data if ID is provided in URL
-  useEffect(() => {
-    const loadFunnelData = async () => {
-      if (!funnelId) return;
-      
-      setIsLoadingFunnel(true);
-      try {
-        console.log('🔍 Loading funnel from schema service:', funnelId);
-        const schemaDrivenData = await schemaDrivenFunnelService.loadFunnel(funnelId);
-        
-        if (schemaDrivenData) {
-          // Convert to editor format and load first page blocks
-          const firstPage = schemaDrivenData.pages[0];
-          if (firstPage && firstPage.blocks) {
-            // Update blocks using actions
-            firstPage.blocks.forEach((block: any) => {
-              actions.addBlock(block.type);
-            });
-            console.log('✅ Loaded funnel blocks:', firstPage.blocks.length);
-          }
-        } else {
-          console.warn('❌ Funnel not found with ID:', funnelId);
-          toast({
-            title: "Aviso",
-            description: "Funil não encontrado. Criando novo funil.",
-            variant: "default"
-          });
-        }
-      } catch (error) {
-        console.error('❌ Error loading funnel:', error);
-        toast({
-          title: "Erro",
-          description: "Erro ao carregar funil",
-          variant: "destructive"
-        });
-      } finally {
-        setIsLoadingFunnel(false);
-      }
-    };
-
-    loadFunnelData();
-  }, [funnelId, actions]);
-  
-  // ✅ AUTO-SAVE COM DEBOUNCE - Fase 1 
-  const handleAutoSave = async (data: any) => {
-    // Preservar o ID original do funil carregado da URL
-    const preservedId = funnelId || data.id || `funnel_${Date.now()}`;
-    
-    console.log('🔍 DEBUG - handleAutoSave:', {
-      funnelId,
-      dataId: data.id,
-      preservedId,
-      url: window.location.href
-    });
-    
-    const funnelData = {
-      id: preservedId,
-      name: data.title || 'Novo Funil',
-      description: data.description || '',
-      isPublished: false,
-      version: data.version || 1,
-      settings: data.settings || {},
-      pages: [{
-        id: `page_${Date.now()}`,
-        pageType: 'landing',
-        pageOrder: 0,
-        title: data.title || 'Página Principal',
-        blocks: blocks,
-        metadata: {}
-      }]
-    };
-    await saveFunnel(funnelData);
-  };
-  
-  const { forceSave } = useAutoSaveWithDebounce({
-    data: { blocks },
-    onSave: handleAutoSave,
-    delay: 500,
-    enabled: !!blocks?.length,
-    showToasts: false
-  });
-
-  // Show loading while loading funnel
-  if (isLoadingFunnel || isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <LoadingSpinner />
-        <span className="ml-2">Carregando editor...</span>
-      </div>
-    );
-  }
+  const selectedBlock = blocks.find(block => block.id === selectedBlockId);
 
   return (
-    <EditorQuizProvider>
-      <div className="flex flex-col h-screen bg-background">
-        <EditorToolbar
-          isPreviewing={isPreviewing}
-          onTogglePreview={() => setIsPreviewing(!isPreviewing)}
-          onSave={() => forceSave()}
+    <div className="h-screen flex flex-col">
+      <BrandHeader 
+        showBackButton={true}
+        onBackClick={() => navigate('/')}
+      />
+      
+      <div className="flex-1 flex">
+        <EnhancedComponentsSidebar 
+          onAddComponent={(type: string) => {
+            const newBlock = {
+              id: `block-${Date.now()}`,
+              type,
+              properties: getDefaultContentForType(type)
+            };
+            setBlocks(prev => [...prev, newBlock]);
+          }}
         />
-        
-        <ResizablePanelGroup direction="horizontal" className="flex-1">
-          <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-            <EnhancedComponentsSidebar 
-              onComponentSelect={(type) => {
-                const newBlockId = actions.addBlock(type);
-                setSelectedComponentId(newBlockId);
-              }}
-            />
-          </ResizablePanel>
-          
-          <ResizableHandle />
-          
-          <ResizablePanel defaultSize={60} minSize={30}>
-            <EditorCanvas
-              blocks={editorBlocks.map(block => ({
-                ...block,
-                content: block.properties || {}
-              }))}
-              selectedBlockId={selectedComponentId}
-              onSelectBlock={setSelectedComponentId}
-              onUpdateBlock={(blockId, properties) => {
-                actions.updateBlock(blockId, properties);
-              }}
-              onDeleteBlock={(blockId) => {
-                actions.deleteBlock(blockId);
-                if (selectedComponentId === blockId) {
-                  setSelectedComponentId(null);
-                }
-              }}
-              onReorderBlocks={(sourceIndex, destinationIndex) => {
-                // Implementar reordenação se necessário
-                console.log('Reordering blocks:', sourceIndex, '->', destinationIndex);
-              }}
-              isPreviewing={isPreviewing}
-              viewportSize="lg"
-            />
-          </ResizablePanel>
-          
-          <ResizableHandle />
-          
-          <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-            <DynamicPropertiesPanel
-              selectedBlock={selectedComponentId ? {
-                id: selectedComponentId,
-                type: editorBlocks.find(b => b.id === selectedComponentId)?.type || '',
-                properties: editorBlocks.find(b => b.id === selectedComponentId)?.properties || {}
-              } : null}
-              onUpdateBlock={(blockId, properties) => {
-                actions.updateBlock(blockId, properties);
-              }}
-              onDeleteBlock={(blockId) => {
-                actions.deleteBlock(blockId);
-                if (selectedComponentId === blockId) {
-                  setSelectedComponentId(null);
-                }
-              }}
-            />
-          </ResizablePanel>
-        </ResizablePanelGroup>
+
+        <div className="flex-1 p-4 overflow-auto">
+          <div className="max-w-4xl mx-auto space-y-4">
+            {blocks.map((block) => (
+              <div
+                key={block.id}
+                className={`border rounded-lg p-4 cursor-pointer hover:border-blue-300 ${
+                  selectedBlockId === block.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
+                }`}
+                onClick={() => setSelectedBlockId(block.id)}
+              >
+                <UniversalBlockRenderer
+                  block={block}
+                  isSelected={selectedBlockId === block.id}
+                  onClick={() => setSelectedBlockId(block.id)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {selectedBlockId && (
+          <DynamicPropertiesPanel
+            block={selectedBlock!}
+            blockDefinition={{
+              type: selectedBlock!.type,
+              name: selectedBlock!.type,
+              description: `Componente ${selectedBlock!.type}`,
+              category: 'basic',
+              icon: null,
+              defaultProps: {},
+              properties: {},
+              label: selectedBlock!.type
+            }}
+            onUpdateBlock={(blockId: string, properties: Partial<EditableContent>) => {
+              setBlocks(prev => 
+                prev.map(block => 
+                  block.id === blockId 
+                    ? { ...block, properties: { ...block.properties, ...properties } }
+                    : block
+                )
+              );
+            }}
+            onClose={() => setSelectedBlockId(null)}
+          />
+        )}
       </div>
-    </EditorQuizProvider>
+    </div>
   );
 };
 
-export default EditorPage;
+export default EditorFixedPage;
