@@ -23,29 +23,34 @@ interface ComponentsSidebarProps {
 export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect }) => {
   const componentGroups = [
     {
-      title: 'Conteúdo',
+      title: 'Básico',
       components: [
-        { type: 'header' as const, icon: <Heading1 size={16} />, label: 'Cabeçalho' },
-        { type: 'text' as const, icon: <Type size={16} />, label: 'Texto' },
-        { type: 'image' as const, icon: <Image size={16} />, label: 'Imagem' },
-        { type: 'button' as const, icon: <MousePointer size={16} />, label: 'Botão' },
+        { type: 'text-inline' as const, icon: <Type size={16} />, label: 'Texto' },
+        { type: 'heading-inline' as const, icon: <Heading1 size={16} />, label: 'Cabeçalho' },
+        { type: 'image-display-inline' as const, icon: <Image size={16} />, label: 'Imagem' },
+        { type: 'button-inline' as const, icon: <MousePointer size={16} />, label: 'Botão' },
+        { type: 'badge-inline' as const, icon: <Star size={16} />, label: 'Badge' },
+        { type: 'progress-inline' as const, icon: <Layout size={16} />, label: 'Progresso' },
+        { type: 'stat-inline' as const, icon: <Award size={16} />, label: 'Estatística' },
+        { type: 'countdown-inline' as const, icon: <Users size={16} />, label: 'Contador' },
       ]
     },
     {
-      title: 'Layout',
+      title: 'Design',
       components: [
-        { type: 'spacer' as const, icon: <Layout size={16} />, label: 'Espaçador' },
-        { type: 'divider' as const, icon: <Layout size={16} />, label: 'Divisor' },
+        { type: 'style-card-inline' as const, icon: <CreditCard size={16} />, label: 'Card de Estilo' },
+        { type: 'result-card-inline' as const, icon: <Award size={16} />, label: 'Card de Resultado' },
+        { type: 'pricing-card-inline' as const, icon: <CreditCard size={16} />, label: 'Preços' },
+        { type: 'testimonial-card-inline' as const, icon: <Users size={16} />, label: 'Depoimentos' },
       ]
     },
     {
-      title: 'Marketing',
+      title: 'Quiz',
       components: [
-        { type: 'benefits' as const, icon: <List size={16} />, label: 'Benefícios' },
-        { type: 'testimonials' as const, icon: <Users size={16} />, label: 'Depoimentos' },
-        { type: 'pricing' as const, icon: <CreditCard size={16} />, label: 'Preços' },
-        { type: 'guarantee' as const, icon: <Award size={16} />, label: 'Garantia' },
-        { type: 'cta' as const, icon: <Star size={16} />, label: 'Call to Action' },
+        { type: 'quiz-start-page-inline' as const, icon: <Star size={16} />, label: 'Página Inicial' },
+        { type: 'quiz-question-inline' as const, icon: <List size={16} />, label: 'Questão' },
+        { type: 'quiz-result-inline' as const, icon: <Award size={16} />, label: 'Resultado' },
+        { type: 'quiz-offer-cta-inline' as const, icon: <MousePointer size={16} />, label: 'Call to Action' },
       ]
     }
   ];
