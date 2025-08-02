@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { ComponentsSidebar } from '@/components/editor/sidebar/ComponentsSidebar';
+import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
 import { EditorCanvas } from '@/components/editor/canvas/EditorCanvas';
-import PropertiesPanel from '@/components/editor/properties/PropertiesPanel';
+import DynamicPropertiesPanel from '@/components/editor/DynamicPropertiesPanel';
 import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
 import { useEditor } from '@/hooks/useEditor';
 import { useEditorPersistence } from '@/hooks/editor/useEditorPersistence';
@@ -13,6 +13,7 @@ import { toast } from '@/components/ui/use-toast';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { EditorQuizProvider } from '@/contexts/EditorQuizContext';
 import { schemaDrivenFunnelService } from '../services/schemaDrivenFunnelService';
+import { getBlockDefinition, BLOCK_DEFINITIONS } from '@/components/editor/blocks/EnhancedBlockRegistry';
 import type { EditorBlock } from '@/types/editor';
 
 const EditorPage: React.FC = () => {
@@ -139,7 +140,7 @@ const EditorPage: React.FC = () => {
         
         <ResizablePanelGroup direction="horizontal" className="flex-1">
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-            <ComponentsSidebar 
+            <EnhancedComponentsSidebar 
               onComponentSelect={(type) => {
                 const newBlockId = actions.addBlock(type);
                 setSelectedComponentId(newBlockId);
@@ -151,7 +152,10 @@ const EditorPage: React.FC = () => {
           
           <ResizablePanel defaultSize={60} minSize={30}>
             <EditorCanvas
-              blocks={editorBlocks}
+              blocks={editorBlocks.map(block => ({
+                ...block,
+                content: block.properties || {}
+              }))}
               selectedBlockId={selectedComponentId}
               onSelectBlock={setSelectedComponentId}
               onUpdateBlock={(blockId, properties) => {
@@ -175,22 +179,18 @@ const EditorPage: React.FC = () => {
           <ResizableHandle />
           
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-            <PropertiesPanel
+            <DynamicPropertiesPanel
               selectedBlock={selectedComponentId ? {
                 id: selectedComponentId,
-                type: blocks.find(b => b.id === selectedComponentId)?.type || '',
-                content: blocks.find(b => b.id === selectedComponentId)?.content || {},
-                order: blocks.find(b => b.id === selectedComponentId)?.order || 0
-              } as EditorBlock : null}
-              onClose={() => setSelectedComponentId(null)}
-              onUpdate={(updates) => {
-                if (selectedComponentId) {
-                  actions.updateBlock(selectedComponentId, updates);
-                }
+                type: editorBlocks.find(b => b.id === selectedComponentId)?.type || '',
+                properties: editorBlocks.find(b => b.id === selectedComponentId)?.properties || {}
+              } : null}
+              onUpdateBlock={(blockId, properties) => {
+                actions.updateBlock(blockId, properties);
               }}
-              onDelete={() => {
-                if (selectedComponentId) {
-                  actions.deleteBlock(selectedComponentId);
+              onDeleteBlock={(blockId) => {
+                actions.deleteBlock(blockId);
+                if (selectedComponentId === blockId) {
                   setSelectedComponentId(null);
                 }
               }}
