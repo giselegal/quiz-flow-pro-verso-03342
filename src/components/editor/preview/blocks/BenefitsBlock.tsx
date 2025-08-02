@@ -1,26 +1,35 @@
-
 import React from 'react';
-import { EditableContent } from '@/types/editor';
+import { BlockComponentProps } from '@/types/blocks';
 
-interface BenefitsBlockProps {
-  content: EditableContent;
-  onClick: () => void;
+interface BenefitsBlockProps extends BlockComponentProps {
+  benefits?: Array<{
+    title: string;
+    description: string;
+  }>;
 }
 
-export const BenefitsBlock: React.FC<BenefitsBlockProps> = ({ content, onClick }) => {
+const BenefitsBlock: React.FC<BenefitsBlockProps> = ({ 
+  block, 
+  benefits = [],
+  ...props 
+}) => {
+  const blockBenefits = block?.content?.benefits || benefits || [];
+
   return (
-    <div className="p-4 border-2 border-dashed border-[#B89B7A]/40 rounded-lg cursor-pointer hover:bg-[#FAF9F7]" onClick={onClick}>
-      <h3 className="text-xl font-playfair text-[#B89B7A] mb-4">
-        {content.title || 'Benefícios'}
-      </h3>
-      <div className="space-y-2">
-        {(content.items || ['Benefício 1', 'Benefício 2', 'Benefício 3']).map((item, index) => (
-          <div key={index} className="flex items-start gap-2">
-            <div className="w-5 h-5 rounded-full bg-[#B89B7A] flex-shrink-0 mt-1" />
-            <p>{item}</p>
+    <div className="space-y-4">
+      {blockBenefits.map((item: any, index: number) => (
+        <div key={index} className="flex items-start space-x-3">
+          <div className="flex-shrink-0 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center mt-0.5">
+            <span className="text-white text-xs">✓</span>
           </div>
-        ))}
-      </div>
+          <div>
+            <h3 className="font-medium">{item.title}</h3>
+            <p className="text-gray-600 mt-1">{item.description}</p>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
+
+export default BenefitsBlock;

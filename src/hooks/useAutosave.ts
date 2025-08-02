@@ -1,9 +1,9 @@
 
-import { useEffect, useRef, useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 interface UseAutosaveOptions {
   data: any;
-  onSave: (data: any) => Promise<boolean>;
+  onSave: (data: any) => Promise<boolean | void>;
   interval?: number;
   enabled?: boolean;
 }
@@ -22,44 +22,27 @@ export const useAutosave = ({
 }: UseAutosaveOptions): UseAutosaveReturn => {
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const lastDataRef = useRef(data);
 
-  const saveNow = async () => {
+  const saveNow = useCallback(async () => {
     if (isSaving) return;
-    
+
     setIsSaving(true);
     try {
-      const success = await onSave(data);
-      if (success) {
-        setLastSaved(new Date());
-        lastDataRef.current = data;
-      }
+      await onSave(data);
+      setLastSaved(new Date());
     } catch (error) {
-      console.error('Autosave failed:', error);
+      console.error('Erro ao salvar:', error);
     } finally {
       setIsSaving(false);
     }
-  };
+  }, [data, onSave, isSaving]);
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || !data) return;
 
-    const hasChanged = JSON.stringify(data) !== JSON.stringify(lastDataRef.current);
-    if (!hasChanged) return;
-
-    if (intervalRef.current) {
-      clearTimeout(intervalRef.current);
-    }
-
-    intervalRef.current = setTimeout(saveNow, interval);
-
-    return () => {
-      if (intervalRef.current) {
-        clearTimeout(intervalRef.current);
-      }
-    };
-  }, [data, enabled, interval]);
+    const timer = setInterval(saveNow, interval);
+    return () => clearInterval(timer);
+  }, [data, interval, enabled, saveNow]);
 
   return {
     isSaving,
