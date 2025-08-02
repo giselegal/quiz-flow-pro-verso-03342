@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Clock, Timer } from 'lucide-react';
 import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
@@ -14,6 +15,9 @@ const CountdownInlineBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = ''
 }) => {
+  // Validate and extract properties with default values
+  const properties = block?.properties || {};
+  
   const {
     initialMinutes = 15,
     title = 'Oferta por tempo limitado',
@@ -24,7 +28,7 @@ const CountdownInlineBlock: React.FC<BlockComponentProps> = ({
     // Propriedades de grid para responsividade
     gridColumns = 1,
     spacing = 'md'
-  } = block.properties;
+  } = properties;
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [timer, setTimer] = useState({ minutes: initialMinutes, seconds: 0 });
@@ -86,8 +90,8 @@ const CountdownInlineBlock: React.FC<BlockComponentProps> = ({
       `}
       style={{ backgroundColor }}
       onClick={onClick}
-      data-block-id={block.id}
-      data-block-type={block.type}
+      data-block-id={block?.id || 'countdown-block'}
+      data-block-type={block?.type || 'countdown-inline'}
     >
       <AnimatedWrapper show={isLoaded}>
         <div className="text-center">
