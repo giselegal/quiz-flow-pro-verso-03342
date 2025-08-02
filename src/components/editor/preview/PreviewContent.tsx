@@ -47,16 +47,27 @@ export function PreviewContent({
       "transition-all duration-300"
     )}>
       <div className="space-y-6">
-        {blocks.map((block: EditorBlock) => (
-          <PreviewBlock
-            key={block.id}
-            block={block}
-            isSelected={block.id === selectedComponentId}
-            onSelect={() => !isPreviewing && onSelectComponent(block.id)}
-            viewMode={viewMode}
-            isPreview={isPreviewing}
-          />
-        ))}
+        {blocks.map((block) => {
+          // Convert Block to EditorBlock format
+          const editorBlock: EditorBlock = {
+            id: block.id,
+            type: block.type,
+            content: block.content || {},
+            order: block.order,
+            properties: block.properties || {}
+          };
+          
+          return (
+            <PreviewBlock
+              key={block.id}
+              block={editorBlock}
+              isSelected={block.id === selectedComponentId}
+              onSelect={() => !isPreviewing && onSelectComponent(block.id)}
+              viewMode={viewMode}
+              isPreview={isPreviewing}
+            />
+          );
+        })}
       </div>
     </div>
   );

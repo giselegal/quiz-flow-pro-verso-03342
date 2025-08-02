@@ -41,9 +41,11 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
     );
   }
 
+  const data = component.data || {};
+
   const handleUpdate = (field: string, value: any) => {
     onUpdate(selectedComponentId, { 
-      ...component.data, 
+      ...data, 
       [field]: value 
     });
   };
@@ -67,7 +69,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
           <Label htmlFor="title">Título</Label>
           <Input
             id="title"
-            value={component.data.title || ''}
+            value={data.title || ''}
             placeholder="Digite o título"
             onChange={(e) => handleUpdate('title', e.target.value)}
           />
@@ -77,7 +79,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
           <Label htmlFor="subtitle">Subtítulo</Label>
           <Input
             id="subtitle"
-            value={component.data.subtitle || ''}
+            value={data.subtitle || ''}
             placeholder="Digite o subtítulo"
             onChange={(e) => handleUpdate('subtitle', e.target.value)}
           />
@@ -88,7 +90,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
             <Label htmlFor="text">Texto</Label>
             <Textarea
               id="text"
-              value={component.data.text || ''}
+              value={data.text || ''}
               placeholder="Digite o texto"
               className="min-h-[100px]"
               onChange={(e) => handleUpdate('text', e.target.value)}
@@ -96,12 +98,12 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
           </div>
         )}
 
-        {(component.type === 'image' || component.data.imageUrl !== undefined) && (
+        {(component.type === 'image' || data.imageUrl !== undefined) && (
           <div className="space-y-2">
             <Label htmlFor="imageUrl">URL da Imagem</Label>
             <Input
               id="imageUrl"
-              value={component.data.imageUrl || ''}
+              value={data.imageUrl || ''}
               placeholder="https://exemplo.com/imagem.jpg"
               onChange={(e) => handleUpdate('imageUrl', e.target.value)}
             />
@@ -114,7 +116,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
               <Label htmlFor="question">Pergunta</Label>
               <Textarea
                 id="question"
-                value={component.data.question || ''}
+                value={data.question || ''}
                 placeholder="Digite a pergunta"
                 className="min-h-[80px]"
                 onChange={(e) => handleUpdate('question', e.target.value)}
@@ -128,7 +130,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
                 type="number"
                 min="0"
                 max="10"
-                value={component.data.multiSelect || 0}
+                value={data.multiSelect || 0}
                 onChange={(e) => handleUpdate('multiSelect', parseInt(e.target.value) || 0)}
               />
               <p className="text-xs text-[#8F7A6A]">0 para escolha única, 1+ para múltipla</p>
