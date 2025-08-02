@@ -1,3 +1,4 @@
+
 import { EditableContent } from "@/types/editor";
 
 export const getDefaultContentForType = (type: string): EditableContent => {
@@ -45,6 +46,19 @@ export const getDefaultContentForType = (type: string): EditableContent => {
         style: {
           width: '100%',
           borderRadius: '8px'
+        }
+      };
+    case 'button':
+      return {
+        buttonText: 'Clique Aqui',
+        buttonUrl: '#',
+        action: 'link',
+        style: {
+          backgroundColor: '#B89B7A',
+          color: '#FFFFFF',
+          padding: '0.75rem 2rem',
+          borderRadius: '8px',
+          textAlign: 'center'
         }
       };
     case 'style-result':
