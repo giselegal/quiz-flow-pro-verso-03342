@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { StyleResult } from '@/types/quiz';
+import { QuizFunnel } from '@/types/quizResult';
 import { styleConfig, StyleConfigMap } from '@/config/styleConfig';
 import StyleSelector from './StyleSelector';
 import { ResultPageVisualEditor } from './ResultPageVisualEditor';
@@ -9,14 +10,22 @@ import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface EnhancedResultPageEditorProps {
+  primaryStyle: StyleResult;
+  secondaryStyles: StyleResult[];
+  initialFunnel?: QuizFunnel;
+  onSave: (funnel: QuizFunnel) => void;
   initialStyle?: StyleResult;
 }
 
 export const EnhancedResultPageEditor: React.FC<EnhancedResultPageEditorProps> = ({
+  primaryStyle,
+  secondaryStyles,
+  initialFunnel,
+  onSave,
   initialStyle
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<StyleResult>(
-    initialStyle || {
+    initialStyle || primaryStyle || {
       category: 'Natural' as any,
       score: 100,
       percentage: 100,

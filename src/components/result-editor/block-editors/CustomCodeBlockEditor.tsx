@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
-import { Textarea } from '@/components/ui/textarea';
+import React from 'react';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertTriangle } from 'lucide-react';
 import { Block } from '@/types/editor';
@@ -11,32 +11,42 @@ interface CustomCodeBlockEditorProps {
   onUpdate: (content: any) => void;
 }
 
-const CustomCodeBlockEditor: React.FC<CustomCodeBlockEditorProps> = ({ block, onUpdate }) => {
-  const [showWarning, setShowWarning] = useState(true);
-  
+export const CustomCodeBlockEditor: React.FC<CustomCodeBlockEditorProps> = ({
+  block,
+  onUpdate
+}) => {
   return (
     <div className="space-y-4">
-      {showWarning && (
-        <Alert variant="warning" className="mb-4">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>
-            Cuidado ao inserir código HTML personalizado. Códigos incorretos podem causar problemas de renderização.
-          </AlertDescription>
-        </Alert>
-      )}
+      <Alert>
+        <AlertTriangle className="h-4 w-4" />
+        <AlertDescription>
+          Cuidado ao inserir código personalizado. Certifique-se de que o código seja seguro e válido.
+        </AlertDescription>
+      </Alert>
       
-      <div className="space-y-2">
-        <Label htmlFor="custom-code">Código HTML Personalizado</Label>
+      <div>
+        <Label htmlFor={`${block.id}-code`}>Código HTML/CSS/JS</Label>
         <Textarea
-          id="custom-code"
+          id={`${block.id}-code`}
           value={block.content.code || ''}
-          onChange={(e) => onUpdate({ code: e.target.value })}
-          placeholder="<div>Seu código HTML aqui</div>"
-          className="font-mono text-sm min-h-[200px]"
+          onChange={(e) => onUpdate({ ...block.content, code: e.target.value })}
+          placeholder="Cole seu código personalizado aqui..."
+          className="mt-1 font-mono text-sm"
+          rows={10}
+        />
+      </div>
+      
+      <div>
+        <Label htmlFor={`${block.id}-description`}>Descrição (opcional)</Label>
+        <Textarea
+          id={`${block.id}-description`}
+          value={block.content.description || ''}
+          onChange={(e) => onUpdate({ ...block.content, description: e.target.value })}
+          placeholder="Descreva o que este código faz..."
+          className="mt-1"
+          rows={3}
         />
       </div>
     </div>
   );
 };
-
-export default CustomCodeBlockEditor;

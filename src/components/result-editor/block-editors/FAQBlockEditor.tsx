@@ -4,9 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { PlusCircle, Trash2 } from 'lucide-react';
-import { Switch } from '@/components/ui/switch';
+import { Plus, Trash } from 'lucide-react';
 import { Block } from '@/types/editor';
 
 interface FAQBlockEditorProps {
@@ -14,90 +12,90 @@ interface FAQBlockEditorProps {
   onUpdate: (content: any) => void;
 }
 
-const FAQBlockEditor: React.FC<FAQBlockEditorProps> = ({ block, onUpdate }) => {
-  const { content = {} } = block;
-  const faqItems = content.faqItems || [];
+interface FAQItem {
+  question: string;
+  answer: string;
+}
 
-  const handleAddFAQ = () => {
-    const newFaqItems = [...faqItems, { question: 'Nova pergunta', answer: 'Nova resposta' }];
-    onUpdate({ ...content, faqItems: newFaqItems });
+export const FAQBlockEditor: React.FC<FAQBlockEditorProps> = ({
+  block,
+  onUpdate
+}) => {
+  const addItem = () => {
+    const items = [...(block.content.items || []), { question: '', answer: '' }];
+    onUpdate({ ...block.content, items });
   };
 
-  const handleRemoveFAQ = (index: number) => {
-    const newFaqItems = [...faqItems];
-    newFaqItems.splice(index, 1);
-    onUpdate({ ...content, faqItems: newFaqItems });
+  const removeItem = (index: number) => {
+    const items = [...(block.content.items || [])];
+    items.splice(index, 1);
+    onUpdate({ ...block.content, items });
   };
 
-  const handleQuestionChange = (index: number, question: string) => {
-    const newFaqItems = [...faqItems];
-    newFaqItems[index] = { ...newFaqItems[index], question };
-    onUpdate({ ...content, faqItems: newFaqItems });
-  };
-
-  const handleAnswerChange = (index: number, answer: string) => {
-    const newFaqItems = [...faqItems];
-    newFaqItems[index] = { ...newFaqItems[index], answer };
-    onUpdate({ ...content, faqItems: newFaqItems });
+  const updateItem = (index: number, field: string, value: string) => {
+    const items = [...(block.content.items || [])];
+    items[index] = { ...items[index], [field]: value };
+    onUpdate({ ...block.content, items });
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center space-x-2">
-        <Switch
-          id="defaultOpen"
-          checked={content.defaultOpen || false}
-          onCheckedChange={(checked) => onUpdate({ ...content, defaultOpen: checked })}
+    <div className="space-y-4">
+      <div>
+        <Label htmlFor={`${block.id}-title`}>Título da Seção</Label>
+        <Input
+          id={`${block.id}-title`}
+          value={block.content.title || ''}
+          onChange={(e) => onUpdate({ ...block.content, title: e.target.value })}
+          className="mt-1"
         />
-        <Label htmlFor="defaultOpen">Abrir primeiro item por padrão</Label>
       </div>
-
-      <div className="space-y-4">
-        <Label>Perguntas & Respostas</Label>
-        {faqItems.map((item, index) => (
-          <Card key={index} className="p-4 space-y-4">
-            <div className="flex justify-between items-center">
-              <h4 className="font-medium">Pergunta {index + 1}</h4>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => handleRemoveFAQ(index)}
-                className="h-7 w-7 p-0 text-red-500"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
+      
+      <div>
+        <Label>Perguntas e Respostas</Label>
+        <div className="space-y-4 mt-2">
+          {(block.content.items || []).map((item: FAQItem, index: number) => (
+            <div key={index} className="border p-4 rounded-lg space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="font-medium">FAQ {index + 1}</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => removeItem(index)}
+                  className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                >
+                  <Trash className="w-4 h-4" />
+                </Button>
+              </div>
+              <div>
+                <Label>Pergunta</Label>
+                <Input
+                  value={item.question || ''}
+                  onChange={(e) => updateItem(index, 'question', e.target.value)}
+                  placeholder="Digite a pergunta..."
+                />
+              </div>
+              <div>
+                <Label>Resposta</Label>
+                <Textarea
+                  value={item.answer || ''}
+                  onChange={(e) => updateItem(index, 'answer', e.target.value)}
+                  placeholder="Digite a resposta..."
+                  rows={3}
+                />
+              </div>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor={`question-${index}`}>Pergunta</Label>
-              <Input
-                id={`question-${index}`}
-                value={item.question}
-                onChange={(e) => handleQuestionChange(index, e.target.value)}
-                placeholder="Digite a pergunta"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor={`answer-${index}`}>Resposta</Label>
-              <Textarea
-                id={`answer-${index}`}
-                value={item.answer}
-                onChange={(e) => handleAnswerChange(index, e.target.value)}
-                placeholder="Digite a resposta"
-                className="min-h-[100px]"
-              />
-            </div>
-          </Card>
-        ))}
+          ))}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={addItem}
+            className="mt-2 w-full"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Adicionar FAQ
+          </Button>
+        </div>
       </div>
-
-      <Button onClick={handleAddFAQ} variant="outline" className="w-full">
-        <PlusCircle className="h-4 w-4 mr-2" />
-        Adicionar Pergunta
-      </Button>
     </div>
   );
 };
-
-export default FAQBlockEditor;
