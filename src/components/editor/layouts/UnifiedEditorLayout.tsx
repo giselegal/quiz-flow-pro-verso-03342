@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { ComponentsSidebar } from '../sidebar/ComponentsSidebar';
 import { EditorCanvas } from '../canvas/EditorCanvas';
-import { PropertiesPanel } from '../properties/PropertiesPanel';
+import { PropertyPanel } from '../PropertyPanel';
 import { EditorProvider } from '@/contexts/EditorContext';
 import { useResultPageConfig } from '@/hooks/useResultPageConfig';
 import { ResultPageConfig } from '@/types/resultPageConfig';
@@ -36,7 +36,7 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
     console.log('Blocks reordered:', sourceIndex, destinationIndex);
   };
 
-  // Create default config if needed
+  // Create default config with all required properties
   const defaultConfig: ResultPageConfig = {
     styleType: 'Natural',
     header: {
@@ -65,7 +65,8 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
       pricing: { visible: true, content: {} },
       testimonials: { visible: true, content: {} },
       guarantee: { visible: true, content: {} }
-    }
+    },
+    blocks: []
   };
 
   const config = resultPageConfig || defaultConfig;
@@ -106,12 +107,11 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
               <ResizableHandle withHandle />
 
               <ResizablePanel defaultSize={25}>
-                <PropertiesPanel
-                  selectedBlockId={selectedBlockId}
-                  blocks={config.blocks || []}
+                <PropertyPanel
+                  selectedBlock={config.blocks?.find(b => b.id === selectedBlockId) || null}
+                  onUpdateBlock={handleBlockUpdate}
+                  onDeleteBlock={handleBlockDelete}
                   onClose={() => setSelectedBlockId(null)}
-                  onUpdate={handleBlockUpdate}
-                  onDelete={handleBlockDelete}
                 />
               </ResizablePanel>
             </ResizablePanelGroup>

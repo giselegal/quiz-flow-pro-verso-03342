@@ -1,3 +1,4 @@
+
 /**
  * Componentes reutilizáveis para funis
  * 
@@ -27,8 +28,7 @@ export { default as ResultCard } from './shared/ResultCard';
 export { default as StyleGuideViewer } from './shared/StyleGuideViewer';
 export { default as OfferCard } from './shared/OfferCard';
 
-// Editor
-export { default as FunnelStepBlock } from './editor/FunnelStepBlock';
+// Editor components - removed missing FunnelStepBlock
 export { default as FunnelConfigProvider, useFunnelConfig } from './editor/FunnelConfigProvider';
 
 // Hooks

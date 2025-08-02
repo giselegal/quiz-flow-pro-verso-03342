@@ -46,3 +46,30 @@ export interface FunnelStepConfig extends FunnelStep {
     allowSkip?: boolean;
   };
 }
+
+// Add missing FunnelStepProps interface
+export interface FunnelStepProps {
+  id?: string;
+  className?: string;
+  style?: React.CSSProperties;
+  stepNumber?: number;
+  totalSteps?: number;
+  isEditable?: boolean;
+  onNext?: () => void;
+  onPrevious?: () => void;
+  onEdit?: () => void;
+  data?: any;
+}
+
+export type FunnelStepType = 
+  | 'intro'
+  | 'name-collect' 
+  | 'quiz-intro'
+  | 'question-multiple'
+  | 'quiz-transition'
+  | 'processing'
+  | 'result-intro'
+  | 'result-details'
+  | 'result-guide'
+  | 'offer-transition'
+  | 'offer-page';

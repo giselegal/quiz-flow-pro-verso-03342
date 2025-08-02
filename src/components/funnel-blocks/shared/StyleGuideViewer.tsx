@@ -1,165 +1,315 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Switch } from '@/components/ui/switch';
+import { Slider } from '@/components/ui/slider';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "@/components/ui/table"
 
 interface StyleGuideViewerProps {
-  styleData: {
-    category: string;
-    title: string;
-    description: string;
-    primaryColor: string;
-    secondaryColor: string;
-    accentColor?: string;
-    fontFamily?: string;
-    fontSize?: string;
-    sections: {
-      id: string;
-      title: string;
-      content: string;
-      imageUrl?: string;
-    }[];
-  };
   className?: string;
-  compact?: boolean;
 }
 
 /**
- * StyleGuideViewer - Componente para visualização de guias de estilo
+ * StyleGuideViewer - Visualizador de Guia de Estilos
  * 
- * Exibe um guia visual de estilo personalizado baseado no resultado
- * do quiz, com amostras de cores, tipografia e seções informativas.
+ * Este componente exibe uma variedade de elementos de estilo
+ * para garantir consistência visual em toda a aplicação.
  */
-export const StyleGuideViewer: React.FC<StyleGuideViewerProps> = ({
-  styleData,
-  className = '',
-  compact = false
-}) => {
-  const {
-    category,
-    title,
-    description,
-    primaryColor,
-    secondaryColor,
-    accentColor = '#f59e0b',
-    fontFamily = 'Inter, sans-serif',
-    fontSize = '16px',
-    sections = []
-  } = styleData;
-  
-  // Obter a primeira seção como padrão
-  const defaultTabId = sections[0]?.id || 'overview';
-
+export const StyleGuideViewer: React.FC<StyleGuideViewerProps> = ({ className = '' }) => {
   return (
-    <div 
-      className={cn(
-        "style-guide-viewer",
-        className
-      )}
-      style={{ 
-        fontFamily, 
-        fontSize,
-        '--primary-color': primaryColor,
-        '--secondary-color': secondaryColor,
-        '--accent-color': accentColor
-      } as React.CSSProperties}
-    >
-      {/* Cabeçalho */}
-      <div className="mb-6">
-        <div className="inline-block px-3 py-1 rounded-full text-xs font-medium mb-2" 
-          style={{ backgroundColor: primaryColor + '20', color: primaryColor }}>
-          {category}
-        </div>
-        
-        <h2 className="text-2xl font-bold mb-2" style={{ color: primaryColor }}>
-          {title}
+    <div className={cn("container py-10", className)}>
+      <h1 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
+        Guia de Estilos
+      </h1>
+      <p className="leading-7 [&:not(:first-child)]:mt-6">
+        Este guia apresenta os estilos e componentes reutilizáveis da aplicação.
+        Use-o como referência para manter a consistência visual.
+      </p>
+
+      {/* Cores */}
+      <section className="mt-8">
+        <h2 className="scroll-m-20 pb-2 text-2xl font-semibold tracking-tight">
+          Cores
         </h2>
-        
-        <p className="text-gray-700">
-          {description}
+        <p className="leading-7 [&:not(:first-child)]:mt-6">
+          Paleta de cores principal da aplicação.
         </p>
-      </div>
-      
-      {/* Amostras de cor */}
-      {!compact && (
-        <Card className="mb-6">
-          <CardHeader className="pb-2">
-            <h3 className="text-sm font-medium">Cores do seu estilo</h3>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-4">
-              <div className="space-y-1">
-                <div className="h-12 w-12 rounded-full border" style={{ backgroundColor: primaryColor }}></div>
-                <p className="text-xs text-center">Principal</p>
-              </div>
-              
-              <div className="space-y-1">
-                <div className="h-12 w-12 rounded-full border" style={{ backgroundColor: secondaryColor }}></div>
-                <p className="text-xs text-center">Secundária</p>
-              </div>
-              
-              {accentColor && (
-                <div className="space-y-1">
-                  <div className="h-12 w-12 rounded-full border" style={{ backgroundColor: accentColor }}></div>
-                  <p className="text-xs text-center">Destaque</p>
-                </div>
-              )}
+        <div className="style-viewer-grid">
+          <div className="p-4 rounded-lg shadow-sm bg-primary text-primary-foreground">
+            Primary
+          </div>
+          <div className="p-4 rounded-lg shadow-sm bg-secondary text-secondary-foreground">
+            Secondary
+          </div>
+          <div className="p-4 rounded-lg shadow-sm bg-muted text-muted-foreground">
+            Muted
+          </div>
+          <div className="p-4 rounded-lg shadow-sm bg-accent text-accent-foreground">
+            Accent
+          </div>
+          <div className="p-4 rounded-lg shadow-sm bg-destructive text-destructive-foreground">
+            Destructive
+          </div>
+        </div>
+      </section>
+
+      {/* Tipografia */}
+      <section className="mt-8">
+        <h2 className="scroll-m-20 pb-2 text-2xl font-semibold tracking-tight">
+          Tipografia
+        </h2>
+        <p className="leading-7 [&:not(:first-child)]:mt-6">
+          Estilos de texto comuns.
+        </p>
+        <div>
+          <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+            Título H1
+          </h1>
+          <p className="mt-2 text-lg text-muted-foreground">
+            Este é um exemplo de parágrafo com o estilo padrão.
+          </p>
+          <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight">
+            Título H2
+          </h2>
+          <p className="mt-2 text-lg text-muted-foreground">
+            Este é um exemplo de parágrafo com o estilo padrão.
+          </p>
+          <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+            Título H3
+          </h3>
+          <p className="mt-2 text-lg text-muted-foreground">
+            Este é um exemplo de parágrafo com o estilo padrão.
+          </p>
+          <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+            Título H4
+          </h4>
+          <p className="mt-2 text-lg text-muted-foreground">
+            Este é um exemplo de parágrafo com o estilo padrão.
+          </p>
+          <p className="leading-7 [&:not(:first-child)]:mt-6">
+            Este é um parágrafo de texto normal. Ele deve ser legível e
+            confortável para leitura prolongada.
+          </p>
+          <small className="text-sm font-medium leading-none">
+            Este é um texto pequeno.
+          </small>
+        </div>
+      </section>
+
+      {/* Componentes */}
+      <section className="mt-8">
+        <h2 className="scroll-m-20 pb-2 text-2xl font-semibold tracking-tight">
+          Componentes
+        </h2>
+        <p className="leading-7 [&:not(:first-child)]:mt-6">
+          Exemplos de componentes reutilizáveis.
+        </p>
+
+        {/* Botões */}
+        <div className="mt-4">
+          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+            Botões
+          </h3>
+          <div className="style-viewer-grid">
+            <Button>Padrão</Button>
+            <Button variant="primary">Primário</Button>
+            <Button variant="secondary">Secundário</Button>
+            <Button variant="outline">Contorno</Button>
+            <Button variant="ghost">Fantasma</Button>
+            <Button variant="link">Link</Button>
+            <Button disabled>Desabilitado</Button>
+          </div>
+        </div>
+
+        {/* Inputs */}
+        <div className="mt-4">
+          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+            Inputs
+          </h3>
+          <div className="space-y-2">
+            <Label htmlFor="input">Label</Label>
+            <Input id="input" placeholder="Digite algo..." />
+            <Textarea placeholder="Digite um texto longo..." />
+          </div>
+        </div>
+
+        {/* Cards */}
+        <div className="mt-4">
+          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+            Cards
+          </h3>
+          <Card>
+            <CardHeader>
+              <h4 className="text-lg font-semibold">Título do Card</h4>
+            </CardHeader>
+            <CardContent>
+              <p>Conteúdo do card. Pode conter texto, imagens, etc.</p>
+            </CardContent>
+            <CardFooter>
+              <Button>Ação</Button>
+            </CardFooter>
+          </Card>
+        </div>
+
+        {/* Badges */}
+        <div className="mt-4">
+          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+            Badges
+          </h3>
+          <div className="style-viewer-grid">
+            <Badge>Padrão</Badge>
+            <Badge variant="secondary">Secundário</Badge>
+            <Badge variant="outline">Contorno</Badge>
+          </div>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="mt-4">
+          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+            Progress Bar
+          </h3>
+          <Progress value={66} />
+        </div>
+
+        {/* Checkbox */}
+        <div className="mt-4">
+          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+            Checkbox
+          </h3>
+          <div className="flex items-center space-x-2">
+            <Checkbox id="terms" />
+            <Label htmlFor="terms">Aceito os termos e condições</Label>
+          </div>
+        </div>
+
+        {/* Radio Group */}
+        <div className="mt-4">
+          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+            Radio Group
+          </h3>
+          <RadioGroup defaultValue="default" className="flex flex-col space-y-1">
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="default" id="r1" />
+              <Label htmlFor="r1">Opção 1</Label>
             </div>
-          </CardContent>
-        </Card>
-      )}
-      
-      {/* Seções em abas */}
-      <Tabs defaultValue={defaultTabId} className="w-full">
-        {!compact && sections.length > 1 && (
-          <TabsList className="grid grid-cols-3 mb-4">
-            {sections.map(section => (
-              <TabsTrigger key={section.id} value={section.id}>
-                {section.title}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        )}
-        
-        {sections.map(section => (
-          <TabsContent key={section.id} value={section.id}>
-            <Card>
-              <CardContent className={cn(
-                "p-6",
-                compact ? "px-3 py-4" : ""
-              )}>
-                {!compact && (
-                  <h3 className="text-lg font-semibold mb-4" style={{ color: primaryColor }}>
-                    {section.title}
-                  </h3>
-                )}
-                
-                <div className="grid md:grid-cols-2 gap-6 items-center">
-                  <div className="prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: section.content }} />
-                  
-                  {section.imageUrl && (
-                    <div className={compact ? "hidden md:block" : ""}>
-                      <img 
-                        src={section.imageUrl} 
-                        alt={section.title}
-                        className="rounded-lg object-cover w-full h-auto"
-                      />
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        ))}
-      </Tabs>
-      
-      <style jsx>{`
-        .style-guide-viewer {
-          --primary-color: ${primaryColor};
-          --secondary-color: ${secondaryColor};
-          --accent-color: ${accentColor};
-        }
-      `}</style>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="secondary" id="r2" />
+              <Label htmlFor="r2">Opção 2</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="destructive" id="r3" />
+              <Label htmlFor="r3">Opção 3</Label>
+            </div>
+          </RadioGroup>
+        </div>
+
+        {/* Switch */}
+        <div className="mt-4">
+          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+            Switch
+          </h3>
+          <div className="flex items-center space-x-2">
+            <Switch id="airplane-mode" />
+            <Label htmlFor="airplane-mode">Modo avião</Label>
+          </div>
+        </div>
+
+        {/* Slider */}
+        <div className="mt-4">
+          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+            Slider
+          </h3>
+          <Slider defaultValue={[33]} max={100} step={1} />
+        </div>
+
+        {/* Avatar */}
+        <div className="mt-4">
+          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+            Avatar
+          </h3>
+          <Avatar>
+            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+        </div>
+
+        {/* Alert */}
+        <div className="mt-4">
+          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+            Alert
+          </h3>
+          <Alert>
+            <AlertTitle>Atenção!</AlertTitle>
+            <AlertDescription>
+              Esta é uma mensagem de alerta.
+            </AlertDescription>
+          </Alert>
+        </div>
+
+        {/* Table */}
+        <div className="mt-4">
+          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+            Table
+          </h3>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">Invoice</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Method</TableHead>
+                <TableHead className="text-right">Amount</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell className="font-medium">INV001</TableCell>
+                <TableCell>Paid</TableCell>
+                <TableCell>Credit Card</TableCell>
+                <TableCell className="text-right">$250.00</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium">INV002</TableCell>
+                <TableCell>Pending</TableCell>
+                <TableCell>PayPal</TableCell>
+                <TableCell className="text-right">$150.00</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium">INV003</TableCell>
+                <TableCell>Unpaid</TableCell>
+                <TableCell>Credit Card</TableCell>
+                <TableCell className="text-right">$300.00</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
+      </section>
+
+      <style dangerouslySetInnerHTML={{ __html: `
+          /* Responsive adjustments */
+          @media (max-width: 768px) {
+            .style-viewer-grid {
+              grid-template-columns: 1fr;
+              gap: 1rem;
+            }
+          }
+        ` }} />
     </div>
   );
 };
