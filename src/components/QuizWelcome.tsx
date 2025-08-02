@@ -7,7 +7,7 @@ interface QuizWelcomeProps {
 }
 
 const QuizWelcome: React.FC<QuizWelcomeProps> = ({ onStart }) => {
-  const [loading, setLoading] = useLoadingState(false);
+  const { isLoading, setLoading } = useLoadingState({ initialState: false });
 
   const handleStart = () => {
     setLoading(true);
@@ -25,10 +25,10 @@ const QuizWelcome: React.FC<QuizWelcomeProps> = ({ onStart }) => {
       
       <button
         onClick={handleStart}
-        disabled={loading}
+        disabled={isLoading}
         className="px-8 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50"
       >
-        {loading ? 'Carregando...' : 'Começar Quiz'}
+        {isLoading ? 'Carregando...' : 'Começar Quiz'}
       </button>
     </div>
   );

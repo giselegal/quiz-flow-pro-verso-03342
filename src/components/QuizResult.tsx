@@ -10,7 +10,7 @@ const QuizResult: React.FC<QuizResultProps> = ({ result }) => {
   const { user } = useAuth();
   
   // Safely get userName from user object
-  const userName = user?.userName || user?.name || 'Usuário';
+  const userName = user?.name || user?.email || 'Usuário';
 
   return (
     <div className="quiz-result p-6">

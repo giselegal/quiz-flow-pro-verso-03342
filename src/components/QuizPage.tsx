@@ -1,14 +1,14 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useLoadingState } from '@/hooks/useLoadingState';
 
 const QuizPage: React.FC = () => {
   const { user } = useAuth();
-  const [loading, setLoading] = useLoadingState(false);
+  const { isLoading, setLoading } = useLoadingState({ initialState: false });
   
   // Get userName safely from user object or localStorage
-  const userName = user?.userName || user?.name || localStorage.getItem('userName') || '';
+  const userName = user?.name || user?.email || localStorage.getItem('userName') || '';
   
   // Handle potential null values
   const safeUserName = userName || undefined;
@@ -22,7 +22,7 @@ const QuizPage: React.FC = () => {
     <div className="quiz-page">
       <h1>Quiz Page</h1>
       <p>Welcome, {userName}</p>
-      {loading && <div>Loading...</div>}
+      {isLoading && <div>Loading...</div>}
       <button onClick={() => handleSomeFunction('test', safeUserName)}>
         Start Quiz
       </button>

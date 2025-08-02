@@ -1,61 +1,66 @@
 
 import React from 'react';
-import { Card } from './ui/card';
-import { AnimatedWrapper } from './ui/animated-wrapper';
-import { QuizQuestion } from './QuizQuestion';
-import { strategicQuestions } from '../data/strategicQuestions';
-import { UserResponse } from '@/types/quiz';
+import { motion } from 'framer-motion';
+import { CheckCircle } from 'lucide-react';
+import QuizQuestion from './QuizQuestion';
 
 interface QuizTransitionProps {
-  onContinue: () => void;
-  onAnswer: (response: UserResponse) => void;
-  currentAnswers: string[];
+  isCompleting: boolean;
+  onComplete: () => void;
 }
 
-const QuizTransition: React.FC<QuizTransitionProps> = ({ onContinue, onAnswer, currentAnswers }) => {
-  const handleFirstStrategicAnswer = (response: UserResponse) => {
-    onAnswer(response);
-    // Reduzindo o delay para a transição ser mais rápida
-    setTimeout(() => {
-      onContinue();
-    }, 250); // Reduzido de 500ms para 250ms
-  };
+const QuizTransition: React.FC<QuizTransitionProps> = ({ isCompleting, onComplete }) => {
+  React.useEffect(() => {
+    if (isCompleting) {
+      const timer = setTimeout(() => {
+        onComplete();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isCompleting, onComplete]);
 
   return (
-    <div className="min-h-screen bg-[#FAF9F7] px-4 py-8">
-      <div className="max-w-3xl mx-auto">
-        <AnimatedWrapper show={true}>
-          <Card className="p-8 space-y-8 bg-white shadow-md mb-10 border-[#B89B7A]/20">
-            <h2 className="text-2xl font-playfair text-[#432818] text-center tracking-normal font-semibold">
-              Enquanto calculamos o seu resultado...
-            </h2>
-            
-            <p className="text-[#1A1818]/80 text-base">
-              Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa.
-            </p>
-            
-            <p className="text-[#1A1818]/80 text-base">
-              A ideia é simples: te ajudar a enxergar com mais clareza onde você está agora — e para onde pode ir com mais intenção, leveza e autenticidade.
-            </p>
-            
-            <div className="bg-[#B89B7A]/10 p-6 rounded-lg">
-              <p className="text-[#432818] italic text-center font-medium">
-                Responda com sinceridade. Isso é só entre você e a sua nova versão.
-              </p>
-            </div>
-          </Card>
-        </AnimatedWrapper>
-
-        <AnimatedWrapper show={true}>
-          <QuizQuestion
-            question={strategicQuestions[0]}
-            onAnswer={handleFirstStrategicAnswer}
-            currentAnswers={currentAnswers}
-            autoAdvance={true}
+    <motion.div
+      className="flex flex-col items-center justify-center min-h-screen p-8"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ type: "spring", stiffness: 200 }}
+        className="mb-8"
+      >
+        <CheckCircle className="w-24 h-24 text-green-500" />
+      </motion.div>
+      
+      <h2 className="text-2xl font-bold mb-4 text-center">
+        Quiz Concluído!
+      </h2>
+      
+      <p className="text-gray-600 text-center mb-8">
+        Aguarde enquanto preparamos seus resultados...
+      </p>
+      
+      <div className="flex space-x-2">
+        {[0, 1, 2].map((i) => (
+          <motion.div
+            key={i}
+            className="w-3 h-3 bg-blue-500 rounded-full"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.5, 1, 0.5]
+            }}
+            transition={{
+              duration: 1,
+              repeat: Infinity,
+              delay: i * 0.2
+            }}
           />
-        </AnimatedWrapper>
+        ))}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
