@@ -1,8 +1,6 @@
-
-
 import React, { useState, useEffect } from 'react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { ComponentsSidebar } from './ComponentsSidebar';
+import ComponentsSidebar from './ComponentsSidebar';
 import { EditorPreview } from './EditorPreview';
 import PropertiesPanel from './PropertiesPanel';
 import EditorToolbar from './EditorToolbar';
@@ -175,4 +173,3 @@ export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({
     </div>
   );
 };
-

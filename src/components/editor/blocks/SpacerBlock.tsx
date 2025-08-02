@@ -1,101 +1,61 @@
-
-import React, { useState } from 'react';
-import { cn } from '@/lib/utils';
+import React from 'react';
+import { Block } from '@/types/editor';
 import { EditableContent } from '@/types/editor';
-import { Move, Minus } from 'lucide-react';
 
 interface SpacerBlockProps {
-  content?: EditableContent;
+  block: Block;
   isSelected?: boolean;
-  isEditing?: boolean;
+  onClick?: () => void;
   onUpdate?: (content: Partial<EditableContent>) => void;
-  onSelect?: () => void;
-  className?: string;
 }
 
-export const SpacerBlock: React.FC<SpacerBlockProps> = ({
-  content = {},
-  isSelected = false,
-  isEditing = false,
-  onUpdate,
-  onSelect,
-  className
+const SpacerBlock: React.FC<SpacerBlockProps> = ({ 
+  block, 
+  isSelected, 
+  onClick, 
+  onUpdate 
 }) => {
-  const [isDragging, setIsDragging] = useState(false);
-  const [startY, setStartY] = useState(0);
+  const content = block.content as EditableContent;
+  const height = content.height || 40;
   
-  // Safely get height with fallback
-  const spacerHeight = content?.height || '40px';
-  const numericHeight = parseInt(spacerHeight);
-  
-  const [currentHeight, setCurrentHeight] = useState(numericHeight);
+  // Convert height to string for style
+  const heightStyle = typeof height === 'number' ? `${height}px` : height;
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (!onUpdate) return;
-    
-    setIsDragging(true);
-    setStartY(e.clientY);
-    
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!isDragging) return;
-      
-      const deltaY = e.clientY - startY;
-      const newHeight = Math.max(10, currentHeight + deltaY);
-      setCurrentHeight(newHeight);
-      
-      onUpdate({ height: `${newHeight}px` });
-    };
-    
-    const handleMouseUp = () => {
-      setIsDragging(false);
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-    
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
+  const handleHeightChange = (newHeight: number) => {
+    if (onUpdate) {
+      onUpdate({ height: newHeight }); // Keep as number for consistency
+    }
   };
 
   return (
     <div
-      className={cn(
-        "relative group transition-all duration-200",
-        isSelected && "ring-2 ring-blue-400 ring-offset-2",
-        "hover:bg-gray-50 cursor-pointer",
-        className
-      )}
-      onClick={onSelect}
-      style={{ height: spacerHeight }}
+      className={`w-full bg-gray-100 border-2 border-dashed border-gray-300 relative group cursor-pointer ${
+        isSelected ? 'border-blue-500 bg-blue-50' : 'hover:border-gray-400'
+      }`}
+      style={{ height: heightStyle }}
+      onClick={onClick}
     >
-      {/* Visual indicator */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="flex items-center gap-2 text-gray-400 text-sm">
-          <Minus className="h-4 w-4" />
-          <span>{numericHeight}px</span>
-          <Minus className="h-4 w-4" />
-        </div>
+        <span className="text-sm text-gray-500 font-medium">
+          Espaçador ({heightStyle})
+        </span>
       </div>
       
-      {/* Resize handle */}
       {isSelected && onUpdate && (
-        <div
-          className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-2 bg-blue-500 rounded-full cursor-ns-resize opacity-0 group-hover:opacity-100 transition-opacity"
-          onMouseDown={handleMouseDown}
-        >
-          <Move className="h-3 w-3 text-white absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute top-2 right-2 bg-white p-2 rounded shadow-lg border">
+          <label className="block text-xs font-medium text-gray-700 mb-1">
+            Altura (px)
+          </label>
+          <input
+            type="number"
+            value={typeof height === 'number' ? height : parseInt(height.replace('px', '')) || 40}
+            onChange={(e) => handleHeightChange(parseInt(e.target.value) || 40)}
+            className="w-20 px-2 py-1 text-xs border border-gray-300 rounded"
+            min="10"
+            max="500"
+          />
         </div>
       )}
-      
-      {/* Grid lines for better visual feedback */}
-      <div className="absolute inset-0 opacity-20">
-        {Array.from({ length: Math.floor(numericHeight / 10) }).map((_, i) => (
-          <div
-            key={i}
-            className="absolute left-0 right-0 border-t border-dashed border-gray-300"
-            style={{ top: `${(i + 1) * 10}px` }}
-          />
-        ))}
-      </div>
     </div>
   );
 };

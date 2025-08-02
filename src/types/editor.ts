@@ -1,5 +1,3 @@
-
-
 import { LucideIcon } from "lucide-react";
 import { SimpleComponent } from "./quiz";
 
@@ -95,7 +93,7 @@ export interface PropertySchema {
   description?: string;
   label?: string;
   enum?: string[];
-  options?: string[];
+  options?: Array<string | { value: string; label: string }>;
   properties?: { [key: string]: PropertySchema };
 }
 
@@ -146,7 +144,7 @@ export interface EditableContent {
   action?: string;
   url?: string;
   // Additional properties for spacers
-  height?: number;
+  height?: number | string; // Allow both number and string for flexibility
   // Additional properties for text styling
   textColor?: string;
   alignment?: 'left' | 'center' | 'right';
@@ -179,6 +177,10 @@ export interface EditableContent {
     justifyContent?: string;
     alignItems?: string;
     gap?: string;
+    borderWidth?: string;
+    borderStyle?: string;
+    borderColor?: string;
+    type?: string;
   };
 }
 
@@ -203,4 +205,3 @@ export interface BlockType {
   category: string;
   defaultProps: Record<string, any>;
 }
-
