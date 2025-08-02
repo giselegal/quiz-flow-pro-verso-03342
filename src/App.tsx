@@ -14,6 +14,7 @@ import { ResultConfigPage } from './pages/ResultConfigPage';
 import { Auth } from './components/auth/Auth';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import DashboardPage from './pages/admin/DashboardPage';
+import EnhancedEditorPage from './pages/enhanced-editor';
 
 function App() {
   return (
@@ -37,6 +38,9 @@ function App() {
                   </EditorProvider>
                 )}
               </Route>
+              
+              {/* Enhanced Editor Route */}
+              <Route path="/enhanced-editor" component={EnhancedEditorPage} />
               
               {/* Admin Routes */}
               <Route path="/admin" nest>

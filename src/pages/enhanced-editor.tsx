@@ -9,6 +9,7 @@ import { ScrollArea } from '../components/ui/scroll-area';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { cn } from '../lib/utils';
+import BrandHeader from '../components/ui/BrandHeader';
 import { useEditor } from '../hooks/useEditor';
 import { useEditorPersistence } from '../hooks/editor/useEditorPersistence';
 import { useAutoSaveWithDebounce } from '../hooks/editor/useAutoSaveWithDebounce';
@@ -517,64 +518,13 @@ const EnhancedEditorPage: React.FC = () => {
   return (
     <EditorQuizProvider>
       <div className="flex flex-col h-screen bg-background">
-        {/* Enhanced Toolbar */}
-        <div className="flex-shrink-0 border-b bg-white px-4 py-2 flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Button onClick={() => setLocation('/')} variant="ghost" size="sm">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Voltar
-            </Button>
-            <div className="flex items-center space-x-2">
-              <h1 className="font-semibold">Editor de Funil</h1>
-              {funnelId && (
-                <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
-                  ID: {funnelId}
-                </span>
-              )}
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-2">
-            {/* Preview Mode Selector */}
-            <div className="flex items-center space-x-1 border rounded">
-              <Button
-                variant={previewMode === 'desktop' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setPreviewMode('desktop')}
-              >
-                <Monitor className="w-4 h-4" />
-              </Button>
-              <Button
-                variant={previewMode === 'tablet' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setPreviewMode('tablet')}
-              >
-                <Tablet className="w-4 h-4" />
-              </Button>
-              <Button
-                variant={previewMode === 'mobile' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setPreviewMode('mobile')}
-              >
-                <Smartphone className="w-4 h-4" />
-              </Button>
-            </div>
-            
-            <Button
-              onClick={() => setIsPreviewing(!isPreviewing)}
-              variant={isPreviewing ? 'default' : 'outline'}
-              size="sm"
-            >
-              {isPreviewing ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
-              {isPreviewing ? 'Editar' : 'Preview'}
-            </Button>
-            
-            <Button onClick={() => forceSave()} disabled={isSaving} size="sm">
-              <Save className="w-4 h-4 mr-2" />
-              {isSaving ? 'Salvando...' : 'Salvar'}
-            </Button>
-          </div>
-        </div>
+        {/* Enhanced Toolbar with Brand Header */}
+        <BrandHeader
+          title="Editor das 21 Etapas"
+          subtitle="Crie seu quiz completo com componentes visuais"
+          showBackButton
+          onBackClick={() => setLocation('/')}
+        />
         
         {/* Layout Responsivo */}
         {isMobile ? (
@@ -622,7 +572,7 @@ const EnhancedEditorPage: React.FC = () => {
                         </div>
                         <div>
                           <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                            Editor das 21 Etapas do Quiz CaktoQuiz
+                            Construa Sua Etapa do Quiz
                           </h3>
                           <p className="text-gray-600 mb-4">
                             Selecione componentes acima para começar a construir sua etapa

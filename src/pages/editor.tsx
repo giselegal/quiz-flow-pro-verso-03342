@@ -6,6 +6,7 @@ import { ScrollArea } from '../components/ui/scroll-area';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { cn } from '../lib/utils';
+import BrandHeader from '../components/ui/BrandHeader';
 import { useEditor } from '../hooks/useEditor';
 import { useEditorPersistence } from '../hooks/editor/useEditorPersistence';
 import { useAutoSaveWithDebounce } from '../hooks/editor/useAutoSaveWithDebounce';
@@ -390,21 +391,22 @@ const EditorPage: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      {/* Enhanced Toolbar */}
+      {/* Enhanced Toolbar with Brand Header */}
+      <BrandHeader
+        title="Editor Principal"
+        subtitle="Construa seu funil de vendas com componentes visuais"
+        showBackButton
+        onBackClick={() => setLocation('/')}
+      />
+      
+      {/* Toolbar de Controles */}
       <div className="flex-shrink-0 border-b bg-white px-4 py-2 flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Button onClick={() => setLocation('/')} variant="ghost" size="sm">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Voltar
-          </Button>
-          <div className="flex items-center space-x-2">
-            <h1 className="font-semibold">Editor de Funil</h1>
-            {funnelId && (
-              <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
-                ID: {funnelId}
-              </span>
-            )}
-          </div>
+        <div className="flex items-center space-x-2">
+          {funnelId && (
+            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+              ID: {funnelId}
+            </span>
+          )}
         </div>
         
         <div className="flex items-center space-x-2">
@@ -497,7 +499,7 @@ const EditorPage: React.FC = () => {
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                          Editor das 21 Etapas do Quiz CaktoQuiz
+                          Construa Seu Funil
                         </h3>
                         <p className="text-gray-600 mb-4">
                           Selecione componentes acima para começar
@@ -648,7 +650,7 @@ const EditorPage: React.FC = () => {
                             </div>
                             <div>
                               <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                                Editor das 21 Etapas do Quiz CaktoQuiz
+                                Construa Seu Funil
                               </h3>
                               <p className="text-gray-600 mb-4">
                                 Sistema completo para criar um funil de quiz de estilo pessoal otimizado para conversão
