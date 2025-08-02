@@ -6,7 +6,7 @@ import { HeaderBlock } from './blocks/HeaderBlock';
 import { HeroBlock } from './blocks/HeroBlock';
 import { HeadlineBlock } from './blocks/HeadlineBlock';
 import { TextBlock } from './blocks/TextBlock';
-import { BenefitsBlock } from './blocks/BenefitsBlock';
+import BenefitsBlock from './blocks/BenefitsBlock';
 import { TestimonialsBlock } from './blocks/TestimonialsBlock';
 import { PricingBlock } from './blocks/PricingBlock';
 import { GuaranteeBlock } from './blocks/GuaranteeBlock';

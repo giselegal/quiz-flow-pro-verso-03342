@@ -14,9 +14,14 @@ const StyleSelector: React.FC<StyleSelectorProps> = ({ selectedStyle, onStyleCha
     onStyleChange({
       category: value as StyleResult['category'],
       score: 0,
-      percentage: 100
+      percentage: 100,
+      style: value,
+      points: 0,
+      rank: 1
     });
   };
+
+  const currentStyleConfig = styleConfig[selectedStyle.category];
 
   return (
     <div className="space-y-4">
@@ -38,21 +43,23 @@ const StyleSelector: React.FC<StyleSelectorProps> = ({ selectedStyle, onStyleCha
         </Select>
       </div>
       
-      <div className="p-4 border rounded-md bg-[#FAF9F7]">
-        <div className="flex items-center space-x-4">
-          <img 
-            src={styleConfig[selectedStyle.category].image} 
-            alt={`Estilo ${selectedStyle.category}`}
-            className="w-16 h-16 object-cover rounded-md"
-          />
-          <div>
-            <h3 className="font-medium text-[#432818]">{selectedStyle.category}</h3>
-            <p className="text-xs text-[#1A1818]/70 mt-1">
-              {styleConfig[selectedStyle.category].description.substring(0, 80)}...
-            </p>
+      {currentStyleConfig && (
+        <div className="p-4 border rounded-md bg-[#FAF9F7]">
+          <div className="flex items-center space-x-4">
+            <img 
+              src={currentStyleConfig.image} 
+              alt={`Estilo ${selectedStyle.category}`}
+              className="w-16 h-16 object-cover rounded-md"
+            />
+            <div>
+              <h3 className="font-medium text-[#432818]">{selectedStyle.category}</h3>
+              <p className="text-xs text-[#1A1818]/70 mt-1">
+                {currentStyleConfig.description.substring(0, 80)}...
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

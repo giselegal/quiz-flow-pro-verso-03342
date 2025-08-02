@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { ComponentsSidebar } from './ComponentsSidebar';
 import { EditorPreview } from './EditorPreview';
-import { PropertiesPanel } from './PropertiesPanel';
+import PropertiesPanel from './PropertiesPanel';
 import EditorToolbar from './EditorToolbar';
 import { GlobalStylesEditor } from './GlobalStylesEditor';
 import { useResultPageEditor } from '@/hooks/useResultPageEditor';
@@ -63,7 +63,7 @@ export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({
     }
   }, [resultPageConfig, updateBlocks, updateSection]);
 
-  const handleUpdateConfig = (newConfig) => {
+  const handleUpdateConfig = (newConfig: ResultPageConfig) => {
     if (newConfig) {
       try {
         importConfig(newConfig);
@@ -102,8 +102,14 @@ export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({
   const primaryStyle: StyleResult = {
     category: selectedStyle.category as any,
     score: selectedStyle.score,
-    percentage: selectedStyle.percentage
+    percentage: selectedStyle.percentage,
+    style: selectedStyle.category,
+    points: selectedStyle.score,
+    rank: 1
   };
+
+  // Find selected block
+  const selectedBlock = selectedBlockId ? blocks.find(block => block.id === selectedBlockId) : null;
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
@@ -146,11 +152,10 @@ export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({
 
             <ResizablePanel defaultSize={25}>
               <PropertiesPanel
-                selectedBlockId={selectedBlockId}
-                blocks={blocks}
+                selectedBlock={selectedBlock}
                 onClose={() => setSelectedBlockId(null)}
-                onUpdate={blockActions.handleUpdateBlock}
-                onDelete={blockActions.handleDeleteBlock}
+                onUpdateBlock={blockActions.handleUpdateBlock}
+                onDeleteBlock={blockActions.handleDeleteBlock}
               />
             </ResizablePanel>
           </ResizablePanelGroup>

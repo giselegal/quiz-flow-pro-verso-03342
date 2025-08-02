@@ -1,43 +1,39 @@
 
-export const styleConfig = {
+export interface StyleConfig {
+  image: string;
+  guideImage?: string;
+  description: string;
+  [key: string]: any; // Allow dynamic property access
+}
+
+export interface StyleConfigMap {
+  [key: string]: StyleConfig;
+}
+
+export const styleConfig: StyleConfigMap = {
   Natural: {
-    image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp',
-    guideImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp',
-    description: 'Você valoriza o conforto e a praticidade, com um visual descontraído e autêntico.'
+    image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+    guideImage: "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
+    description: "Você valoriza o conforto e a praticidade, com um visual descontraído e autêntico que reflete sua personalidade natural."
   },
   Clássico: {
-    image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp',
-    guideImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071343/GUIA_CL%C3%81SSICO_ux1yhf.webp',
-    description: 'Você aprecia a elegância atemporal, com peças de qualidade e caimento perfeito.'
+    image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/1_wzxvpz.webp",
+    description: "Você aprecia a elegância e a sofisticação, com peças atemporais que nunca saem de moda."
   },
-  Contemporâneo: {
-    image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp',
-    guideImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071343/GUIA_CONTEMPOR%C3%82NEO_vcklxe.webp',
-    description: 'Você busca um equilíbrio entre o clássico e o moderno, com peças práticas e atuais.'
-  },
-  Elegante: {
-    image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp',
-    guideImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071342/GUIA_ELEGANTE_asez1q.webp',
-    description: 'Você tem um olhar refinado para detalhes sofisticados e peças de alta qualidade.'
+  Moderno: {
+    image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_zt8qpb.webp", 
+    description: "Você está sempre na vanguarda da moda, com um estilo contemporâneo e inovador."
   },
   Romântico: {
-    image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp',
-    guideImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071343/GUIA_ROM%C3%82NTICO_ci4hgk.webp',
-    description: 'Você valoriza a delicadeza e os detalhes femininos, com muita suavidade.'
-  },
-  Sexy: {
-    image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp',
-    guideImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071349/GUIA_SEXY_t5x2ov.webp',
-    description: 'Você gosta de valorizar suas curvas e exibir sua sensualidade com confiança.'
-  },
-  Dramático: {
-    image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp',
-    guideImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745073346/GUIA_DRAM%C3%81TICO_mpn60d.webp',
-    description: 'Você tem personalidade forte e gosta de causar impacto com seu visual.'
+    image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_hbwgzt.webp",
+    description: "Você tem uma alma delicada e feminina, com preferência por peças suaves e detalhes encantadores."
   },
   Criativo: {
-    image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp',
-    guideImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071342/GUIA_CRIATIVO_ntbzph.webp',
-    description: 'Você aprecia a originalidade e não tem medo de ousar em combinações únicas.'
+    image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_vlvmgm.webp",
+    description: "Você expressa sua individualidade através da moda, com combinações únicas e artísticas."
+  },
+  Dramático: {
+    image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/6_j7vddl.webp",
+    description: "Você tem uma presença marcante e gosta de peças impactantes que chamam a atenção."
   }
 } as const;

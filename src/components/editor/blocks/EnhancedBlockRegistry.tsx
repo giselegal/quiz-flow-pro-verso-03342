@@ -1,263 +1,137 @@
 
-import React, { lazy, Suspense, ComponentType } from 'react';
+import React from 'react';
+import { BlockData, BlockComponentProps } from '@/types/blocks';
 import { BlockDefinition } from '@/types/editor';
-import { BlockComponentProps } from '@/types/blocks';
+import VideoPlayerBlock from './VideoPlayerBlock';
 
-// Import existing blocks that we know are available
-const TextInlineBlock = lazy(() => import('./inline/TextInlineBlock'));
-const ImageDisplayInlineBlock = lazy(() => import('./inline/ImageDisplayInlineBlock'));
-const ButtonInlineBlock = lazy(() => import('./inline/ButtonInlineBlock'));
-const HeadingInlineBlock = lazy(() => import('./inline/HeadingInlineBlock'));
-const SpacerBlock = lazy(() => import('./SpacerBlock'));
-const VideoPlayerBlock = lazy(() => import('./VideoPlayerBlock').then(module => ({ default: module.VideoPlayerBlock || module.default })));
+// Export BlockDefinition type for other components
+export type { BlockDefinition } from '@/types/editor';
 
-// Enhanced fallback component for missing blocks
-const EnhancedFallbackBlock = lazy(() => Promise.resolve({
-  default: ({ block, blockType = 'unknown' }: BlockComponentProps & { blockType?: string }) => (
-    <div className="p-4 bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg text-center">
-      <div className="text-gray-600 text-sm">
-        <div className="font-medium mb-1">Bloco: {blockType}</div>
-        <div className="text-xs text-gray-500">Componente não encontrado</div>
-      </div>
-    </div>
-  )
-}));
-
-// Registry of available blocks - only including blocks that actually exist
-const BLOCK_REGISTRY: Record<string, React.LazyExoticComponent<ComponentType<any>>> = {
-  // Text blocks
-  'text': TextInlineBlock,
-  'text-inline': TextInlineBlock,
-  'heading': HeadingInlineBlock,
-  'heading-inline': HeadingInlineBlock,
-  
-  // Media blocks
-  'image': ImageDisplayInlineBlock,
-  'image-display-inline': ImageDisplayInlineBlock,
-  'video': VideoPlayerBlock,
-  'video-player': VideoPlayerBlock,
-  
-  // Interactive blocks
-  'button': ButtonInlineBlock,
-  'button-inline': ButtonInlineBlock,
-  
-  // Layout blocks
-  'spacer': SpacerBlock,
-  
-  // Fallback for unknown blocks
-  'enhanced-fallback': EnhancedFallbackBlock,
-};
-
-// Block definitions with properties and labels
-export const BLOCK_DEFINITIONS: Record<string, BlockDefinition> = {
-  'text': {
-    type: 'text',
+// Enhanced block registry with complete definitions
+const ENHANCED_BLOCK_REGISTRY: Record<string, BlockDefinition> = {
+  'text-inline': {
+    type: 'text-inline',
     name: 'Texto',
-    description: 'Bloco de texto simples',
+    description: 'Bloco de texto editável',
     category: 'content',
     icon: 'Type',
-    component: TextInlineBlock,
-    label: 'Texto',
-    tags: ['texto', 'conteúdo', 'básico'],
+    component: ({ block, onClick }) => (
+      <div className="p-4 border border-gray-200 rounded cursor-pointer" onClick={onClick}>
+        <p>{block.properties?.text || 'Clique para editar o texto'}</p>
+      </div>
+    ),
     properties: {
       text: {
         type: 'textarea',
-        label: 'Conteúdo do texto',
-        defaultValue: 'Digite seu texto aqui...'
+        label: 'Texto',
+        defaultValue: 'Texto de exemplo'
       }
     },
+    label: 'Texto',
     defaultProps: {
-      text: 'Digite seu texto aqui...'
-    }
+      text: 'Texto de exemplo'
+    },
+    tags: ['text', 'content']
   },
-  'heading': {
-    type: 'heading',
+  'heading-inline': {
+    type: 'heading-inline',
     name: 'Título',
-    description: 'Bloco de título/cabeçalho',
+    description: 'Título ou cabeçalho',
     category: 'content',
     icon: 'Heading1',
-    component: HeadingInlineBlock,
-    label: 'Título',
-    tags: ['título', 'cabeçalho', 'heading'],
+    component: ({ block, onClick }) => (
+      <div className="p-4 border border-gray-200 rounded cursor-pointer" onClick={onClick}>
+        <h2 className="text-xl font-bold">{block.properties?.text || 'Título'}</h2>
+      </div>
+    ),
     properties: {
       text: {
         type: 'text',
-        label: 'Texto do título',
-        defaultValue: 'Novo título'
+        label: 'Título',
+        defaultValue: 'Título'
       },
       level: {
         type: 'select',
-        label: 'Nível do título',
-        defaultValue: 'h2',
-        options: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']
+        label: 'Nível',
+        options: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+        defaultValue: 'h2'
       }
     },
+    label: 'Título',
     defaultProps: {
-      text: 'Novo título',
+      text: 'Título',
       level: 'h2'
-    }
+    },
+    tags: ['heading', 'title']
   },
-  'image': {
-    type: 'image',
-    name: 'Imagem',
-    description: 'Bloco de imagem',
+  'video-player': {
+    type: 'video-player',
+    name: 'Player de Vídeo',
+    description: 'Reprodutor de vídeo incorporado',
     category: 'media',
-    icon: 'Image',
-    component: ImageDisplayInlineBlock,
-    label: 'Imagem',
-    tags: ['imagem', 'mídia', 'visual'],
+    icon: 'Video',
+    component: VideoPlayerBlock,
     properties: {
-      imageUrl: {
-        type: 'image',
-        label: 'URL da imagem',
+      videoUrl: {
+        type: 'text',
+        label: 'URL do Vídeo',
         defaultValue: ''
       },
-      alt: {
+      title: {
         type: 'text',
-        label: 'Texto alternativo',
-        defaultValue: 'Imagem'
+        label: 'Título',
+        defaultValue: 'Vídeo'
       }
     },
+    label: 'Player de Vídeo',
     defaultProps: {
-      imageUrl: '',
-      alt: 'Imagem'
-    }
-  },
-  'button': {
-    type: 'button',
-    name: 'Botão',
-    description: 'Bloco de botão clicável',
-    category: 'interactive',
-    icon: 'MousePointer',
-    component: ButtonInlineBlock,
-    label: 'Botão',
-    tags: ['botão', 'link', 'ação'],
-    properties: {
-      text: {
-        type: 'text',
-        label: 'Texto do botão',
-        defaultValue: 'Clique aqui'
-      },
-      url: {
-        type: 'text',
-        label: 'URL de destino',
-        defaultValue: '#'
-      }
+      videoUrl: '',
+      title: 'Vídeo'
     },
-    defaultProps: {
-      text: 'Clique aqui',
-      url: '#'
-    }
-  },
-  'spacer': {
-    type: 'spacer',
-    name: 'Espaçador',
-    description: 'Espaço em branco para layout',
-    category: 'layout',
-    icon: 'Minus',
-    component: SpacerBlock,
-    label: 'Espaçador',
-    tags: ['espaço', 'layout', 'separador'],
-    properties: {
-      height: {
-        type: 'number',
-        label: 'Altura (px)',
-        defaultValue: 40
-      }
-    },
-    defaultProps: {
-      height: 40
-    }
+    tags: ['video', 'media']
   }
 };
 
-// Block categories for sidebar organization
-export const BLOCK_CATEGORIES = {
-  content: {
+// Block categories with proper structure
+export const BLOCK_CATEGORIES = [
+  {
     title: 'Conteúdo',
     color: 'blue',
-    components: ['text', 'heading'],
-    description: 'Elementos de conteúdo básico'
+    components: ['text-inline', 'heading-inline'],
+    description: 'Elementos de texto e conteúdo',
+    icon: 'Type',
+    name: 'Conteúdo'
   },
-  media: {
+  {
     title: 'Mídia',
     color: 'green',
-    components: ['image', 'video'],
-    description: 'Imagens, vídeos e mídia'
-  },
-  interactive: {
-    title: 'Interativo',
-    color: 'purple',
-    components: ['button'],
-    description: 'Elementos interativos'
-  },
-  layout: {
-    title: 'Layout',
-    color: 'gray',
-    components: ['spacer'],
-    description: 'Elementos de estrutura e layout'
+    components: ['video-player'],
+    description: 'Elementos de mídia e vídeo',
+    icon: 'Video', 
+    name: 'Mídia'
   }
+];
+
+// Utility functions
+export const getAllBlockTypes = (): string[] => {
+  return Object.keys(ENHANCED_BLOCK_REGISTRY);
 };
 
-// Get block component with fallback
-export const getBlockComponent = (blockType: string): React.LazyExoticComponent<ComponentType<any>> => {
-  const component = BLOCK_REGISTRY[blockType];
-  if (!component) {
-    console.warn(`Block type "${blockType}" not found, using fallback`);
-    return BLOCK_REGISTRY['enhanced-fallback'];
-  }
-  return component;
+export const getBlockDefinition = (type: string): BlockDefinition | undefined => {
+  return ENHANCED_BLOCK_REGISTRY[type];
 };
 
-// Get block definition with proper typing
-export const getBlockDefinition = (blockType: string): BlockDefinition | null => {
-  return BLOCK_DEFINITIONS[blockType] || null;
-};
-
-// Get all available block types
-export const getAvailableBlockTypes = (): string[] => {
-  return Object.keys(BLOCK_DEFINITIONS);
-};
-
-// Get all block types as array
-export const getAllBlockTypes = (): BlockDefinition[] => {
-  return Object.values(BLOCK_DEFINITIONS);
-};
-
-// Search blocks by text
-export const searchBlocks = (searchTerm: string): BlockDefinition[] => {
-  if (!searchTerm.trim()) return getAllBlockTypes();
-  
-  const term = searchTerm.toLowerCase();
-  return getAllBlockTypes().filter(block => 
-    block.name.toLowerCase().includes(term) ||
-    block.description.toLowerCase().includes(term) ||
-    block.tags?.some(tag => tag.toLowerCase().includes(term))
+export const searchBlocks = (query: string): BlockDefinition[] => {
+  const lowerQuery = query.toLowerCase();
+  return Object.values(ENHANCED_BLOCK_REGISTRY).filter(block => 
+    block.name.toLowerCase().includes(lowerQuery) ||
+    block.description.toLowerCase().includes(lowerQuery) ||
+    block.tags?.some(tag => tag.toLowerCase().includes(lowerQuery))
   );
 };
 
-// Get blocks by category
 export const getBlocksByCategory = (category: string): BlockDefinition[] => {
-  return getAllBlockTypes().filter(block => block.category === category);
+  return Object.values(ENHANCED_BLOCK_REGISTRY).filter(block => block.category === category);
 };
 
-// Enhanced block renderer with error boundaries
-export const renderBlock = (
-  blockType: string, 
-  props: BlockComponentProps,
-  fallbackProps?: { blockType?: string }
-) => {
-  const Component = getBlockComponent(blockType);
-  
-  return (
-    <Suspense fallback={
-      <div className="animate-pulse bg-gray-100 h-20 rounded-lg flex items-center justify-center">
-        <span className="text-gray-500 text-sm">Carregando...</span>
-      </div>
-    }>
-      <Component {...props} {...(fallbackProps || {})} />
-    </Suspense>
-  );
-};
-
-export default BLOCK_REGISTRY;
+export default ENHANCED_BLOCK_REGISTRY;
