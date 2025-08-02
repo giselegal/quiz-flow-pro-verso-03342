@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { blockDefinitions, getCategories, getBlocksByCategory } from '../../../config/blockDefinitions.ts';
+import { blockDefinitions, getCategories, getBlocksByCategory } from '../../../config/blockDefinitions';
 
 export const BlocksDebugTest: React.FC = () => {
   const categories = getCategories();
@@ -15,7 +16,7 @@ export const BlocksDebugTest: React.FC = () => {
       <div className="mt-2">
         <p className="font-medium">Categories:</p>
         <ul className="list-disc list-inside">
-          {categories.map(cat => (
+          {categories.map((cat: string) => (
             <li key={cat}>
               {cat} ({getBlocksByCategory(cat).length} blocks)
             </li>

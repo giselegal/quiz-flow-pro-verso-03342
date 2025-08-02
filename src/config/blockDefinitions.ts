@@ -1,108 +1,148 @@
-import { BlockDefinition, PropertySchema } from '../types/editor';
 
-// Helper function to create property schema
-const createPropertySchema = (
-  type: PropertySchema['type'],
-  options: Partial<PropertySchema> = {}
-): PropertySchema => ({
-  type,
-  ...options
-});
+import { BlockDefinition, PropertySchema } from '@/types/editor';
+import { Type, Heading1, Image, MousePointer, Square, Star, Layers, DollarSign, Shield, MessageSquare, Video, BarChart, Gift, Palette } from 'lucide-react';
 
-const blockDefinitions: { [key: string]: BlockDefinition } = {
-  header: {
-    type: 'header',
-    name: 'Cabeçalho',
-    description: 'Título e subtítulo',
-    category: 'content',
+// Mock component for blocks that don't have actual components yet
+const MockBlockComponent = ({ block }: { block: any }) => (
+  <div className="p-4 border border-dashed border-gray-300 rounded">
+    <p className="text-sm text-gray-500">{block.type} block</p>
+  </div>
+);
+
+export const blockDefinitions: BlockDefinition[] = [
+  {
+    type: 'heading',
+    name: 'Título',
+    description: 'Adiciona títulos e subtítulos',
+    category: 'Básicos',
+    icon: Heading1,
+    component: MockBlockComponent,
     properties: {
-      title: createPropertySchema('string', {
+      title: {
+        type: 'text',
         label: 'Título',
-        default: 'Seu Título Aqui'
-      }),
-      subtitle: createPropertySchema('string', {
+        default: 'Seu título aqui'
+      },
+      subtitle: {
+        type: 'text',
         label: 'Subtítulo',
-        default: 'Subtítulo opcional'
-      }),
-      alignment: createPropertySchema('select', {
+        default: ''
+      },
+      alignment: {
+        type: 'select',
         label: 'Alinhamento',
-        default: 'center',
-        options: ['left', 'center', 'right']
-      })
+        options: [
+          { value: 'left', label: 'Esquerda' },
+          { value: 'center', label: 'Centro' },
+          { value: 'right', label: 'Direita' },
+          { value: 'justify', label: 'Justificado' }
+        ],
+        default: 'left'
+      }
     },
-    label: 'Cabeçalho',
+    label: 'Título',
     defaultProps: {
-      title: 'Seu Título Aqui',
-      subtitle: 'Subtítulo opcional',
-      alignment: 'center'
-    }
-  },
-  
-  text: {
-    type: 'text',
-    name: 'Texto',
-    description: 'Parágrafo de texto',
-    category: 'content',
-    properties: {
-      text: createPropertySchema('textarea', {
-        label: 'Texto',
-        default: 'Digite seu texto aqui...'
-      }),
-      fontSize: createPropertySchema('select', {
-        label: 'Tamanho da Fonte',
-        default: 'base',
-        options: ['sm', 'base', 'lg', 'xl', '2xl']
-      }),
-      alignment: createPropertySchema('select', {
-        label: 'Alinhamento',
-        default: 'left',
-        options: ['left', 'center', 'right', 'justify']
-      })
-    },
-    label: 'Texto',
-    defaultProps: {
-      text: 'Digite seu texto aqui...',
-      fontSize: 'base',
+      title: 'Seu título aqui',
+      subtitle: '',
       alignment: 'left'
     }
   },
 
-  image: {
+  {
+    type: 'paragraph',
+    name: 'Texto',
+    description: 'Adiciona parágrafos de texto',
+    category: 'Básicos',
+    icon: Type,
+    component: MockBlockComponent,
+    properties: {
+      text: {
+        type: 'textarea',
+        label: 'Texto',
+        default: 'Digite seu texto aqui...'
+      },
+      fontSize: {
+        type: 'select',
+        label: 'Tamanho da fonte',
+        options: [
+          { value: 'text-sm', label: 'Pequeno' },
+          { value: 'text-base', label: 'Normal' },
+          { value: 'text-lg', label: 'Grande' },
+          { value: 'text-xl', label: 'Extra Grande' },
+          { value: 'text-2xl', label: 'Muito Grande' }
+        ],
+        default: 'text-base'
+      },
+      alignment: {
+        type: 'select',
+        label: 'Alinhamento',
+        options: [
+          { value: 'text-left', label: 'Esquerda' },
+          { value: 'text-center', label: 'Centro' },
+          { value: 'text-right', label: 'Direita' },
+          { value: 'text-justify', label: 'Justificado' }
+        ],
+        default: 'text-left'
+      }
+    },
+    label: 'Texto',
+    defaultProps: {
+      text: 'Digite seu texto aqui...',
+      fontSize: 'text-base',
+      alignment: 'text-left'
+    }
+  },
+
+  {
     type: 'image',
     name: 'Imagem',
-    description: 'Imagem com legenda',
-    category: 'content',
+    description: 'Adiciona imagens com legenda',
+    category: 'Básicos',
+    icon: Image,
+    component: MockBlockComponent,
     properties: {
-      url: createPropertySchema('string', {
+      url: {
+        type: 'text',
         label: 'URL da Imagem',
         default: ''
-      }),
-      alt: createPropertySchema('string', {
+      },
+      alt: {
+        type: 'text',
         label: 'Texto Alternativo',
-        default: ''
-      }),
-      width: createPropertySchema('string', {
+        default: 'Imagem'
+      },
+      width: {
+        type: 'text',
         label: 'Largura',
         default: '100%'
-      }),
-      height: createPropertySchema('string', {
+      },
+      height: {
+        type: 'text',
         label: 'Altura',
         default: 'auto'
-      }),
-      borderRadius: createPropertySchema('string', {
-        label: 'Raio da Borda',
+      },
+      borderRadius: {
+        type: 'text',
+        label: 'Borda Arredondada',
         default: '0px'
-      }),
-      objectFit: createPropertySchema('select', {
+      },
+      objectFit: {
+        type: 'select',
         label: 'Ajuste da Imagem',
-        default: 'cover',
-        options: ['cover', 'contain', 'fill', 'none', 'scale-down']
-      })
+        options: [
+          { value: 'cover', label: 'Cobrir' },
+          { value: 'contain', label: 'Conter' },
+          { value: 'fill', label: 'Preencher' },
+          { value: 'none', label: 'Nenhum' },
+          { value: 'scale-down', label: 'Reduzir' }
+        ],
+        default: 'cover'
+      }
     },
     label: 'Imagem',
     defaultProps: {
       url: '',
-      alt: '',
+      alt: 'Imagem',
       width: '100%',
       height: 'auto',
       borderRadius: '0px',
@@ -110,57 +150,58 @@ const blockDefinitions: { [key: string]: BlockDefinition } = {
     }
   },
 
-  button: {
+  {
     type: 'button',
     name: 'Botão',
-    description: 'Botão de ação',
-    category: 'content',
+    description: 'Adiciona botões de ação',
+    category: 'Básicos',
+    icon: MousePointer,
+    component: MockBlockComponent,
     properties: {
-      text: createPropertySchema('string', {
+      text: {
+        type: 'text',
         label: 'Texto do Botão',
-        default: 'Clique Aqui'
-      }),
-      url: createPropertySchema('string', {
+        default: 'Clique aqui'
+      },
+      url: {
+        type: 'text',
         label: 'URL de Destino',
-        default: ''
-      }),
-      style: createPropertySchema('object', {
-        label: 'Estilo',
-        default: {
-          backgroundColor: '#B89B7A',
-          color: '#fff',
-          padding: '10px 20px',
-          borderRadius: '4px',
-          fontWeight: 'bold',
-          textAlign: 'center'
-        }
-      })
+        default: '#'
+      },
+      style: {
+        type: 'select',
+        label: 'Estilo do Botão',
+        options: [
+          { value: 'primary', label: 'Primário' },
+          { value: 'secondary', label: 'Secundário' },
+          { value: 'outline', label: 'Contorno' },
+          { value: 'ghost', label: 'Fantasma' },
+          { value: 'link', label: 'Link' }
+        ],
+        default: 'primary'
+      }
     },
     label: 'Botão',
     defaultProps: {
-      text: 'Clique Aqui',
-      url: '',
-      style: {
-        backgroundColor: '#B89B7A',
-        color: '#fff',
-        padding: '10px 20px',
-        borderRadius: '4px',
-        fontWeight: 'bold',
-        textAlign: 'center'
-      }
+      text: 'Clique aqui',
+      url: '#',
+      style: 'primary'
     }
   },
 
-  spacer: {
+  {
     type: 'spacer',
     name: 'Espaçador',
-    description: 'Espaço em branco',
-    category: 'layout',
+    description: 'Adiciona espaço em branco',
+    category: 'Básicos',
+    icon: Square,
+    component: MockBlockComponent,
     properties: {
-      height: createPropertySchema('number', {
+      height: {
+        type: 'text',
         label: 'Altura (px)',
-        default: 40
-      })
+        default: '40'
+      }
     },
     label: 'Espaçador',
     defaultProps: {
@@ -168,58 +209,69 @@ const blockDefinitions: { [key: string]: BlockDefinition } = {
     }
   },
 
-  'style-result': {
+  {
     type: 'style-result',
-    name: 'Estilo Principal',
-    description: 'Resultado do estilo principal',
-    category: 'result',
+    name: 'Resultado do Estilo',
+    description: 'Mostra o resultado principal do quiz de estilo',
+    category: 'Quiz',
+    icon: Star,
+    component: MockBlockComponent,
     properties: {
-      category: createPropertySchema('string', {
-        label: 'Categoria',
+      category: {
+        type: 'text',
+        label: 'Categoria do Estilo',
         default: ''
-      }),
-      score: createPropertySchema('number', {
+      },
+      score: {
+        type: 'text',
         label: 'Pontuação',
-        default: 0
-      }),
-      percentage: createPropertySchema('number', {
+        default: '0'
+      },
+      percentage: {
+        type: 'text',
         label: 'Porcentagem',
-        default: 0
-      }),
-      style: createPropertySchema('string', {
-        label: 'Estilo',
-        default: ''
-      }),
-      points: createPropertySchema('number', {
+        default: '0'
+      },
+      style: {
+        type: 'object',
+        label: 'Estilos CSS',
+        default: {}
+      },
+      points: {
+        type: 'text',
         label: 'Pontos',
-        default: 0
-      }),
-      rank: createPropertySchema('number', {
-        label: 'Ranking',
-        default: 1
-      })
+        default: '0'
+      },
+      rank: {
+        type: 'text',
+        label: 'Classificação',
+        default: '1'
+      }
     },
-    label: 'Estilo Principal',
+    label: 'Resultado do Estilo',
     defaultProps: {
       category: '',
       score: 0,
       percentage: 0,
-      style: '',
+      style: {},
       points: 0,
       rank: 1
     }
   },
 
-  'secondary-styles': {
+  {
     type: 'secondary-styles',
     name: 'Estilos Secundários',
-    description: 'Outros estilos compatíveis',
-    category: 'result',
+    description: 'Mostra estilos complementares',
+    category: 'Quiz',
+    icon: Layers,
+    component: MockBlockComponent,
     properties: {
-      styles: createPropertySchema('array', {
-        label: 'Estilos Secundários',
+      styles: {
+        type: 'array',
+        label: 'Lista de Estilos',
         default: []
-      })
+      }
     },
     label: 'Estilos Secundários',
     defaultProps: {
@@ -227,160 +279,150 @@ const blockDefinitions: { [key: string]: BlockDefinition } = {
     }
   },
 
-  pricing: {
+  {
     type: 'pricing',
     name: 'Preço',
-    description: 'Seção de preços',
-    category: 'sales',
+    description: 'Seção de preços do produto',
+    category: 'Vendas',
+    icon: DollarSign,
+    component: MockBlockComponent,
     properties: {
-      salePrice: createPropertySchema('string', {
-        label: 'Preço Promocional',
-        default: ''
-      }),
-      regularPrice: createPropertySchema('string', {
+      salePrice: {
+        type: 'text',
+        label: 'Preço de Venda',
+        default: '0'
+      },
+      regularPrice: {
+        type: 'text',
         label: 'Preço Regular',
-        default: ''
-      }),
-      style: createPropertySchema('object', {
-        label: 'Estilo',
-        default: {
-          color: '#000',
-          fontSize: '16px',
-          fontWeight: 'bold'
-        }
-      })
+        default: '0'
+      },
+      style: {
+        type: 'object',
+        label: 'Estilos CSS',
+        default: {}
+      }
     },
     label: 'Preço',
     defaultProps: {
-      salePrice: '',
-      regularPrice: '',
-      style: {
-        color: '#000',
-        fontSize: '16px',
-        fontWeight: 'bold'
-      }
+      salePrice: '0',
+      regularPrice: '0',
+      style: {}
     }
   },
 
-  guarantee: {
+  {
     type: 'guarantee',
     name: 'Garantia',
-    description: 'Garantia do produto',
-    category: 'sales',
+    description: 'Seção de garantia do produto',
+    category: 'Vendas',
+    icon: Shield,
+    component: MockBlockComponent,
     properties: {
-      text: createPropertySchema('string', {
+      text: {
+        type: 'textarea',
         label: 'Texto da Garantia',
-        default: 'Garantia de satisfação de 30 dias'
-      }),
-      style: createPropertySchema('object', {
-        label: 'Estilo',
-        default: {
-          color: '#555',
-          fontSize: '14px'
-        }
-      })
+        default: 'Garantia de 30 dias'
+      },
+      style: {
+        type: 'object',
+        label: 'Estilos CSS',
+        default: {}
+      }
     },
     label: 'Garantia',
     defaultProps: {
-      text: 'Garantia de satisfação de 30 dias',
-      style: {
-        color: '#555',
-        fontSize: '14px'
-      }
+      text: 'Garantia de 30 dias',
+      style: {}
     }
   },
 
-  testimonials: {
+  {
     type: 'testimonials',
     name: 'Depoimentos',
-    description: 'Depoimentos de clientes',
-    category: 'sales',
+    description: 'Seção de depoimentos de clientes',
+    category: 'Vendas',
+    icon: MessageSquare,
+    component: MockBlockComponent,
     properties: {
-      testimonials: createPropertySchema('array', {
-        label: 'Depoimentos',
+      testimonials: {
+        type: 'array',
+        label: 'Lista de Depoimentos',
         default: []
-      }),
-      style: createPropertySchema('object', {
-        label: 'Estilo',
-        default: {
-          color: '#333',
-          fontSize: '14px'
-        }
-      })
+      },
+      style: {
+        type: 'object',
+        label: 'Estilos CSS',
+        default: {}
+      }
     },
     label: 'Depoimentos',
     defaultProps: {
       testimonials: [],
-      style: {
-        color: '#333',
-        fontSize: '14px'
-      }
+      style: {}
     }
   },
 
-  cta: {
+  {
     type: 'cta',
     name: 'Chamada para Ação',
     description: 'Botão principal de conversão',
-    category: 'sales',
+    category: 'Vendas',
+    icon: MousePointer,
+    component: MockBlockComponent,
     properties: {
-      text: createPropertySchema('string', {
-        label: 'Texto do Botão',
+      text: {
+        type: 'text',
+        label: 'Texto do CTA',
         default: 'Comprar Agora'
-      }),
-      url: createPropertySchema('string', {
+      },
+      url: {
+        type: 'text',
         label: 'URL de Destino',
-        default: ''
-      }),
-      style: createPropertySchema('object', {
-        label: 'Estilo',
-        default: {
-          backgroundColor: '#B89B7A',
-          color: '#fff',
-          padding: '12px 24px',
-          borderRadius: '6px',
-          fontWeight: 'bold',
-          textAlign: 'center'
-        }
-      })
+        default: '#'
+      },
+      style: {
+        type: 'object',
+        label: 'Estilos CSS',
+        default: {}
+      }
     },
     label: 'Chamada para Ação',
     defaultProps: {
       text: 'Comprar Agora',
-      url: '',
-      style: {
-        backgroundColor: '#B89B7A',
-        color: '#fff',
-        padding: '12px 24px',
-        borderRadius: '6px',
-        fontWeight: 'bold',
-        textAlign: 'center'
-      }
+      url: '#',
+      style: {}
     }
   },
 
-  video: {
+  {
     type: 'video',
     name: 'Vídeo',
     description: 'Player de vídeo',
-    category: 'advanced',
+    category: 'Avançado',
+    icon: Video,
+    component: MockBlockComponent,
     properties: {
-      url: createPropertySchema('string', {
+      url: {
+        type: 'text',
         label: 'URL do Vídeo',
         default: ''
-      }),
-      autoplay: createPropertySchema('boolean', {
-        label: 'Autoplay',
+      },
+      autoplay: {
+        type: 'boolean',
+        label: 'Reprodução Automática',
         default: false
-      }),
-      controls: createPropertySchema('boolean', {
+      },
+      controls: {
+        type: 'boolean',
         label: 'Mostrar Controles',
         default: true
-      }),
-      loop: createPropertySchema('boolean', {
-        label: 'Loop',
+      },
+      loop: {
+        type: 'boolean',
+        label: 'Reproduzir em Loop',
         default: false
-      })
+      }
     },
     label: 'Vídeo',
     defaultProps: {
@@ -391,82 +433,109 @@ const blockDefinitions: { [key: string]: BlockDefinition } = {
     }
   },
 
-  'two-column': {
+  {
     type: 'two-column',
     name: 'Duas Colunas',
     description: 'Layout de duas colunas',
-    category: 'advanced',
+    category: 'Avançado',
+    icon: BarChart,
+    component: MockBlockComponent,
     properties: {
-      leftContent: createPropertySchema('object', {
-        label: 'Conteúdo Esquerdo',
-        default: {}
-      }),
-      rightContent: createPropertySchema('object', {
-        label: 'Conteúdo Direito',
-        default: {}
-      }),
-      gap: createPropertySchema('string', {
-        label: 'Espaçamento',
-        default: '20px'
-      })
+      leftContent: {
+        type: 'textarea',
+        label: 'Conteúdo Esquerda',
+        default: 'Conteúdo da coluna esquerda'
+      },
+      rightContent: {
+        type: 'textarea',
+        label: 'Conteúdo Direita',
+        default: 'Conteúdo da coluna direita'
+      },
+      gap: {
+        type: 'text',
+        label: 'Espaçamento entre colunas',
+        default: '2rem'
+      }
     },
     label: 'Duas Colunas',
     defaultProps: {
-      leftContent: {},
-      rightContent: {},
-      gap: '20px'
+      leftContent: 'Conteúdo da coluna esquerda',
+      rightContent: 'Conteúdo da coluna direita',
+      gap: '2rem'
     }
   },
 
-  carousel: {
+  {
     type: 'carousel',
     name: 'Carrossel',
     description: 'Carrossel de conteúdo',
-    category: 'advanced',
+    category: 'Avançado',
+    icon: Gift,
+    component: MockBlockComponent,
     properties: {
-      items: createPropertySchema('array', {
-        label: 'Itens',
+      items: {
+        type: 'array',
+        label: 'Itens do Carrossel',
         default: []
-      }),
-      autoplay: createPropertySchema('boolean', {
-        label: 'Autoplay',
-        default: true
-      }),
-      interval: createPropertySchema('number', {
+      },
+      autoplay: {
+        type: 'boolean',
+        label: 'Reprodução Automática',
+        default: false
+      },
+      interval: {
+        type: 'text',
         label: 'Intervalo (ms)',
-        default: 3000
-      })
+        default: '5000'
+      }
     },
     label: 'Carrossel',
     defaultProps: {
       items: [],
-      autoplay: true,
-      interval: 3000
+      autoplay: false,
+      interval: 5000
     }
   },
 
-  'custom-code': {
+  {
     type: 'custom-code',
     name: 'Código Customizado',
     description: 'HTML/CSS personalizado',
-    category: 'advanced',
+    category: 'Avançado',
+    icon: Palette,
+    component: MockBlockComponent,
     properties: {
-      html: createPropertySchema('text', {
+      html: {
+        type: 'textarea',
         label: 'HTML',
-        default: ''
-      }),
-      css: createPropertySchema('text', {
+        default: '<div>Seu código HTML aqui</div>'
+      },
+      css: {
+        type: 'textarea',
         label: 'CSS',
         default: ''
-      })
+      }
     },
     label: 'Código Customizado',
     defaultProps: {
-      html: '',
+      html: '<div>Seu código HTML aqui</div>',
       css: ''
     }
   }
+];
+
+// Utility functions for working with block definitions
+export const getCategories = (): string[] => {
+  const categories = new Set(blockDefinitions.map(block => block.category));
+  return Array.from(categories);
 };
 
-export { blockDefinitions };
+export const getBlocksByCategory = (category: string): BlockDefinition[] => {
+  return blockDefinitions.filter(block => block.category === category);
+};
+
+export const getBlockDefinition = (type: string): BlockDefinition | undefined => {
+  return blockDefinitions.find(block => block.type === type);
+};
+
 export default blockDefinitions;

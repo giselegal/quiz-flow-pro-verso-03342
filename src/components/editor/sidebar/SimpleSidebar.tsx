@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { blockDefinitions } from '../../../config/blockDefinitions.ts';
+import { blockDefinitions } from '../../../config/blockDefinitions';
 
 interface SimpleSidebarProps {
   onComponentSelect: (type: string) => void;
@@ -15,9 +16,9 @@ export const SimpleSidebar: React.FC<SimpleSidebarProps> = ({ onComponentSelect 
       <p className="text-sm text-gray-600 mb-4">Total: {blockDefinitions.length} blocos</p>
       
       <div className="space-y-2 max-h-96 overflow-y-auto">
-        {blockDefinitions.slice(0, 10).map((block: any) => (
+        {blockDefinitions.slice(0, 10).map((block) => (
           <Button
-            key={block.id}
+            key={block.type}
             variant="outline"
             className="w-full text-left justify-start"
             onClick={() => onComponentSelect(block.type)}
