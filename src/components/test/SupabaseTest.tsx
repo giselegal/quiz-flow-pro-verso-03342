@@ -33,9 +33,10 @@ export const SupabaseTest: React.FC = () => {
         .from('funnels')
         .insert([
           { 
-            title: 'Teste Quiz', 
+            id: `test-${Date.now()}`,
+            name: 'Teste Quiz', 
             description: 'Quiz de teste criado automaticamente',
-            type: 'quiz'
+            user_id: 'test-user'
           }
         ])
         .select();
@@ -75,7 +76,7 @@ export const SupabaseTest: React.FC = () => {
       const { data, error } = await supabase
         .from('funnels')
         .update({ 
-          title: 'Teste Quiz Atualizado',
+          name: 'Teste Quiz Atualizado',
           updated_at: new Date().toISOString()
         })
         .eq('id', funnelId)
@@ -114,19 +115,19 @@ export const SupabaseTest: React.FC = () => {
     setLoading(true);
     try {
       const { data, error } = await supabase
-        .from('funnel_steps')
+        .from('funnel_pages')
         .select(`
           *,
           funnels (
-            title
+            name
           )
         `)
         .limit(3);
 
       if (error) throw error;
-      addResult(`✅ Teste de steps bem-sucedido: ${data?.length || 0} steps encontrados`);
+      addResult(`✅ Teste de páginas bem-sucedido: ${data?.length || 0} páginas encontradas`);
     } catch (error) {
-      addResult(`❌ Erro no teste de steps: ${error instanceof Error ? error.message : String(error)}`);
+      addResult(`❌ Erro no teste de páginas: ${error instanceof Error ? error.message : String(error)}`);
     }
     setLoading(false);
   };
@@ -177,7 +178,7 @@ export const SupabaseTest: React.FC = () => {
               Testar Leitura
             </Button>
             <Button onClick={testSteps} disabled={loading}>
-              Testar Steps
+              Testar Páginas
             </Button>
             <Button onClick={testRealTimeSubscription} disabled={loading}>
               Testar Real-time

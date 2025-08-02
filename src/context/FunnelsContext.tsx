@@ -1,674 +1,194 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { QuizStep } from './StepsContext';
-import { supabase } from '../integrations/supabase/client';
-import { v4 as uuidv4 } from 'uuid';
-import { toast } from '../components/ui/use-toast';
+import { supabase } from '../lib/supabase';
 
-// Interface para um funil completo
-export interface Funnel {
+interface FunnelStep {
   id: string;
   name: string;
+  order: number;
+  blocksCount: number;
+  isActive: boolean;
+  type: string;
   description: string;
-  steps: QuizStep[];
-  isPublished: boolean;
-  theme?: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
-// Templates pré-definidos para funis
-const FUNNEL_TEMPLATES = {
+interface FunnelsContextType {
+  currentFunnelId: string;
+  setCurrentFunnelId: (id: string) => void;
+  steps: FunnelStep[];
+  setSteps: React.Dispatch<React.SetStateAction<FunnelStep[]>>;
+  getTemplate: (templateId: string) => any;
+  updateFunnelStep: (stepId: string, updates: any) => void;
+  addStepBlock: (stepId: string, blockData: any) => void;
+  saveFunnelToDatabase: (funnelData: any) => Promise<void>;
+  loading: boolean;
+  error: string | null;
+}
+
+interface FunnelsProviderProps {
+  children: React.ReactNode;
+  debug?: boolean;
+}
+
+const FunnelsContext = createContext<FunnelsContextType | undefined>(undefined);
+
+const FUNNEL_TEMPLATES: Record<string, {
+  name: string;
+  description: string;
+  defaultSteps: Array<{
+    id: string;
+    name: string;
+    order: number;
+    blocksCount: number;
+    isActive: boolean;
+    type: string;
+    description: string;
+  }>;
+}> = {
   'quiz-estilo': {
     name: 'Quiz de Estilo',
-    description: 'Funil de quiz para descoberta de estilo pessoal',
+    description: 'Quiz para descobrir o estilo pessoal',
     defaultSteps: [
-      { id: 'etapa-1', name: 'Introdução e Nome', order: 1, blocksCount: 0, isActive: true, type: 'intro-with-name', description: 'Apresentação do Quiz de Estilo e coleta do nome' },
-      // Adicione etapas pré-definidas conforme necessário
+      { id: 'step-1', name: 'Introdução', order: 1, blocksCount: 3, isActive: true, type: 'intro', description: 'Página inicial do quiz' },
+      { id: 'step-2', name: 'Pergunta 1', order: 2, blocksCount: 2, isActive: true, type: 'question', description: 'Primeira pergunta' },
+      { id: 'step-3', name: 'Pergunta 2', order: 3, blocksCount: 2, isActive: true, type: 'question', description: 'Segunda pergunta' },
+      { id: 'step-4', name: 'Resultado', order: 4, blocksCount: 4, isActive: true, type: 'result', description: 'Página de resultado' }
     ]
   },
   'quiz-personalidade': {
     name: 'Quiz de Personalidade',
-    description: 'Funil de quiz para descoberta de personalidade',
+    description: 'Quiz para descobrir traços de personalidade',
     defaultSteps: [
-      { id: 'etapa-1', name: 'Introdução', order: 1, blocksCount: 0, isActive: true, type: 'intro', description: 'Apresentação do Quiz de Personalidade' },
-      { id: 'etapa-2', name: 'Coleta de Nome', order: 2, blocksCount: 0, isActive: false, type: 'name-input', description: 'Captura do nome do participante' },
-      // Adicione etapas pré-definidas conforme necessário
+      { id: 'step-1', name: 'Boas-vindas', order: 1, blocksCount: 2, isActive: true, type: 'intro', description: 'Página de boas-vindas' },
+      { id: 'step-2', name: 'Pergunta A', order: 2, blocksCount: 3, isActive: true, type: 'question', description: 'Pergunta sobre comportamento' },
+      { id: 'step-3', name: 'Pergunta B', order: 3, blocksCount: 3, isActive: true, type: 'question', description: 'Pergunta sobre preferências' },
+      { id: 'step-4', name: 'Análise', order: 4, blocksCount: 5, isActive: true, type: 'result', description: 'Análise da personalidade' }
     ]
   },
   'quiz-vazio': {
     name: 'Quiz Vazio',
-    description: 'Funil de quiz sem etapas pré-definidas',
-    defaultSteps: []
+    description: 'Template básico para começar do zero',
+    defaultSteps: [
+      { id: 'step-1', name: 'Etapa 1', order: 1, blocksCount: 1, isActive: true, type: 'intro', description: 'Primeira etapa' }
+    ]
   }
 };
 
-// Modelo para um novo funil
-const createEmptyFunnel = (name: string, templateId: string = 'quiz-vazio'): Funnel => {
-  // Carrega template baseado no templateId ou usa template vazio
-  const template = FUNNEL_TEMPLATES[templateId] || FUNNEL_TEMPLATES['quiz-vazio'];
-  
-  return {
-    id: `funnel-${Date.now()}`,
-    name: name || template.name,
-    description: `Funil ${name || template.name}`,
-    steps: [...template.defaultSteps], // Clone das etapas do template
-    isPublished: false,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  };
-};
+export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debug = false }) => {
+  const [currentFunnelId, setCurrentFunnelId] = useState<string>('quiz-vazio');
+  const [steps, setSteps] = useState<FunnelStep[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-// Interface para o contexto de funis
-interface FunnelsContextType {
-  funnels: Funnel[];
-  activeFunnelId: string | null;
-  setActiveFunnelId: (id: string | null) => void;
-  addFunnel: (name: string, templateId?: string) => Promise<string>;
-  updateFunnel: (funnelId: string, updates: Partial<Funnel>) => Promise<void>;
-  deleteFunnel: (funnelId: string) => Promise<void>;
-  duplicateFunnel: (funnelId: string, newName?: string) => Promise<string | null>;
-  getFunnelById: (funnelId: string) => Funnel | undefined;
-  getFunnelSteps: (funnelId: string) => QuizStep[];
-  updateFunnelSteps: (funnelId: string, steps: QuizStep[]) => Promise<void>;
-  isLoading: boolean;
-}
+  const getTemplate = useCallback((templateId: string) => {
+    const template = FUNNEL_TEMPLATES[templateId as keyof typeof FUNNEL_TEMPLATES];
+    if (!template) {
+      console.warn(`Template ${templateId} não encontrado. Usando template padrão.`);
+      return FUNNEL_TEMPLATES['quiz-vazio'];
+    }
+    return template;
+  }, []);
 
-// Criar o contexto
-const FunnelsContext = createContext<FunnelsContextType | undefined>(undefined);
-
-// Provider Component
-export const FunnelsProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
-  const [funnels, setFunnels] = useState<Funnel[]>([]);
-  const [activeFunnelId, setActiveFunnelId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Carregar funis do Supabase
   useEffect(() => {
-    const loadFunnels = async () => {
-      setIsLoading(true);
-      try {
-        const { data, error } = await supabase
-          .from('funnels')
-          .select(`
-            id, 
-            name, 
-            description, 
-            is_published, 
-            created_at, 
-            updated_at,
-            settings
-          `)
-          .order('created_at', { ascending: false });
-
-        if (error) {
-          throw error;
-        }
-
-        if (data && data.length > 0) {
-          // Para cada funil, carregar suas etapas
-          const funnelsWithSteps = await Promise.all(
-            data.map(async (funnel) => {
-              const { data: pagesData, error: pagesError } = await supabase
-                .from('funnel_pages')
-                .select('*')
-                .eq('funnel_id', funnel.id)
-                .order('page_order', { ascending: true });
-
-              if (pagesError) {
-                console.error('Erro ao carregar páginas do funil:', pagesError);
-                return {
-                  id: funnel.id,
-                  name: funnel.name,
-                  description: funnel.description || '',
-                  steps: [],
-                  isPublished: funnel.is_published || false,
-                  theme: funnel.settings ? (funnel.settings as any).theme : undefined,
-                  createdAt: funnel.created_at || new Date().toISOString(),
-                  updatedAt: funnel.updated_at || new Date().toISOString()
-                };
-              }
-
-              // Converter páginas em etapas
-              const steps: QuizStep[] = pagesData?.map(page => ({
-                id: page.id,
-                name: page.title || `Etapa ${page.page_order}`,
-                order: page.page_order,
-                blocksCount: Array.isArray(page.blocks) ? page.blocks.length : 0,
-                isActive: page.page_order === 1,
-                type: page.page_type as any,
-                description: page.metadata ? (page.metadata as any).description || '' : ''
-              })) || [];
-
-              return {
-                id: funnel.id,
-                name: funnel.name,
-                description: funnel.description || '',
-                steps,
-                isPublished: funnel.is_published || false,
-                theme: funnel.settings ? (funnel.settings as any).theme : undefined,
-                createdAt: funnel.created_at || new Date().toISOString(),
-                updatedAt: funnel.updated_at || new Date().toISOString()
-              };
-            })
-          );
-
-          setFunnels(funnelsWithSteps);
-          // Definir o primeiro funil como ativo se não houver nenhum
-          if (!activeFunnelId && funnelsWithSteps.length > 0) {
-            setActiveFunnelId(funnelsWithSteps[0].id);
-          }
-        } else {
-          // Se não houver funis, criar um padrão
-          const defaultFunnelId = await addFunnel('Quiz de Estilo');
-          setActiveFunnelId(defaultFunnelId);
-        }
-      } catch (error) {
-        console.error('Erro ao carregar funis do Supabase:', error);
-        toast({
-          title: 'Erro ao carregar funis',
-          description: 'Não foi possível carregar os funis do banco de dados.',
-          variant: 'destructive'
-        });
-        
-        // Carregar do localStorage como fallback
-        const savedFunnels = localStorage.getItem('quiz-funnels');
-        if (savedFunnels) {
-          const parsedFunnels = JSON.parse(savedFunnels);
-          setFunnels(parsedFunnels);
-          if (!activeFunnelId && parsedFunnels.length > 0) {
-            setActiveFunnelId(parsedFunnels[0].id);
-          }
-        } else {
-          const defaultFunnel = createEmptyFunnel('Quiz de Estilo');
-          setFunnels([defaultFunnel]);
-          setActiveFunnelId(defaultFunnel.id);
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadFunnels();
-  }, []);
-
-  // Adicionar novo funil
-  const addFunnel = useCallback(async (name: string, templateId?: string): Promise<string> => {
-    const template = FUNNEL_TEMPLATES[templateId || 'quiz-vazio'] || FUNNEL_TEMPLATES['quiz-vazio'];
-    const newFunnelId = uuidv4();
-    const now = new Date().toISOString();
-    
-    try {
-      // Inserir o novo funil no Supabase
-      const { error: funnelError } = await supabase
-        .from('funnels')
-        .insert({
-          id: newFunnelId,
-          name: name || template.name,
-          description: `Funil ${name || template.name}`,
-          is_published: false,
-          settings: { theme: 'default' },
-          created_at: now,
-          updated_at: now
-        });
-
-      if (funnelError) {
-        throw funnelError;
-      }
-
-      // Inserir etapas do template
-      const pages = template.defaultSteps.map(step => ({
-        id: uuidv4(),
-        funnel_id: newFunnelId,
-        title: step.name,
-        page_order: step.order,
-        page_type: step.type,
-        blocks: [],
-        metadata: { 
-          description: step.description,
-          multiSelect: step.multiSelect
-        },
-        created_at: now,
-        updated_at: now
-      }));
-
-      if (pages.length > 0) {
-        const { error: pagesError } = await supabase
-          .from('funnel_pages')
-          .insert(pages);
-
-        if (pagesError) {
-          console.error('Erro ao inserir páginas:', pagesError);
-          // Continuar mesmo com erro nas páginas
-        }
-      }
-
-      // Adicionar ao estado local
-      const newFunnel: Funnel = {
-        id: newFunnelId,
-        name: name || template.name,
-        description: `Funil ${name || template.name}`,
-        steps: template.defaultSteps,
-        isPublished: false,
-        theme: 'default',
-        createdAt: now,
-        updatedAt: now
-      };
-
-      setFunnels(prev => [...prev, newFunnel]);
-      return newFunnelId;
-    } catch (error) {
-      console.error('Erro ao adicionar funil:', error);
-      toast({
-        title: 'Erro ao criar funil',
-        description: 'Não foi possível criar um novo funil.',
-        variant: 'destructive'
-      });
-      
-      // Criar localmente como fallback
-      const newFunnel = createEmptyFunnel(name, templateId);
-      setFunnels(prev => [...prev, newFunnel]);
-      return newFunnel.id;
-    }
-  }, []);
-
-  // Atualizar funil
-  const updateFunnel = useCallback(async (funnelId: string, updates: Partial<Funnel>) => {
-    try {
-      const now = new Date().toISOString();
-      
-      // Preparar dados para o Supabase
-      const supabaseUpdates = {
-        name: updates.name,
-        description: updates.description,
-        is_published: updates.isPublished,
-        settings: updates.theme ? { theme: updates.theme } : undefined,
-        updated_at: now
-      };
-
-      // Remover propriedades undefined
-      Object.keys(supabaseUpdates).forEach(key => 
-        supabaseUpdates[key] === undefined && delete supabaseUpdates[key]
-      );
-
-      // Atualizar no Supabase
-      const { error } = await supabase
-        .from('funnels')
-        .update(supabaseUpdates)
-        .eq('id', funnelId);
-
-      if (error) {
-        throw error;
-      }
-
-      // Atualizar etapas se fornecidas
-      if (updates.steps) {
-        await updateFunnelSteps(funnelId, updates.steps);
-      }
-
-      // Atualizar estado local
-      setFunnels(prev => prev.map(funnel => 
-        funnel.id === funnelId 
-          ? { 
-              ...funnel, 
-              ...updates, 
-              updatedAt: now 
-            } 
-          : funnel
-      ));
-    } catch (error) {
-      console.error('Erro ao atualizar funil:', error);
-      toast({
-        title: 'Erro ao atualizar funil',
-        description: 'Não foi possível atualizar o funil no banco de dados.',
-        variant: 'destructive'
-      });
-      
-      // Atualizar localmente como fallback
-      setFunnels(prev => prev.map(funnel => 
-        funnel.id === funnelId 
-          ? { 
-              ...funnel, 
-              ...updates, 
-              updatedAt: new Date().toISOString() 
-            } 
-          : funnel
-      ));
-    }
-  }, []);
-
-  // Excluir funil
-  const deleteFunnel = useCallback(async (funnelId: string) => {
-    if (funnels.length <= 1) {
-      toast({
-        title: 'Operação não permitida',
-        description: 'Não é possível excluir o último funil',
-        variant: 'destructive'
-      });
-      return;
+    if (debug) {
+      console.log('[FunnelsContext] Carregando template:', currentFunnelId);
     }
     
-    try {
-      // Excluir etapas do funil primeiro
-      const { error: pagesError } = await supabase
-        .from('funnel_pages')
-        .delete()
-        .eq('funnel_id', funnelId);
+    const template = getTemplate(currentFunnelId);
+    setSteps(template.defaultSteps);
+    
+    if (debug) {
+      console.log('[FunnelsContext] Steps carregados:', template.defaultSteps);
+    }
+  }, [currentFunnelId, getTemplate, debug]);
 
-      if (pagesError) {
-        console.error('Erro ao excluir páginas do funil:', pagesError);
-        // Continuar mesmo com erro
-      }
-      
-      // Excluir o funil
-      const { error } = await supabase
-        .from('funnels')
-        .delete()
-        .eq('id', funnelId);
+  const updateFunnelStep = useCallback((stepId: string, updates: any) => {
+    const template = FUNNEL_TEMPLATES[currentFunnelId as keyof typeof FUNNEL_TEMPLATES];
+    if (!template) return;
 
-      if (error) {
-        throw error;
-      }
-
-      // Atualizar estado local
-      setFunnels(prev => prev.filter(funnel => funnel.id !== funnelId));
-      
-      // Se o funil ativo foi excluído, selecionar outro
-      if (activeFunnelId === funnelId) {
-        const remainingFunnels = funnels.filter(funnel => funnel.id !== funnelId);
-        if (remainingFunnels.length > 0) {
-          setActiveFunnelId(remainingFunnels[0].id);
-        } else {
-          setActiveFunnelId(null);
+    setSteps(currentSteps => {
+      return currentSteps.map(step => {
+        if (step.id === stepId) {
+          return { ...step, ...updates };
         }
-      }
-    } catch (error) {
-      console.error('Erro ao excluir funil:', error);
-      toast({
-        title: 'Erro ao excluir funil',
-        description: 'Não foi possível excluir o funil do banco de dados.',
-        variant: 'destructive'
+        return step;
       });
-      
-      // Excluir localmente como fallback
-      setFunnels(prev => prev.filter(funnel => funnel.id !== funnelId));
-      if (activeFunnelId === funnelId) {
-        const remainingFunnels = funnels.filter(funnel => funnel.id !== funnelId);
-        if (remainingFunnels.length > 0) {
-          setActiveFunnelId(remainingFunnels[0].id);
-        } else {
-          setActiveFunnelId(null);
+    });
+  }, [currentFunnelId]);
+
+  const addStepBlock = useCallback((stepId: string, blockData: any) => {
+    setSteps(currentSteps => {
+      return currentSteps.map((step: any) => {
+        if (step.id === stepId) {
+          return {
+            ...step,
+            blocksCount: step.blocksCount + 1
+          };
         }
-      }
-    }
-  }, [funnels, activeFunnelId]);
-
-  // Duplicar funil
-  const duplicateFunnel = useCallback(async (funnelId: string, newName?: string): Promise<string | null> => {
-    const funnelToDuplicate = funnels.find(funnel => funnel.id === funnelId);
-    if (!funnelToDuplicate) {
-      return null;
-    }
-
-    try {
-      const newFunnelId = uuidv4();
-      const now = new Date().toISOString();
-      
-      // Inserir o novo funil no Supabase
-      const { error: funnelError } = await supabase
-        .from('funnels')
-        .insert({
-          id: newFunnelId,
-          name: newName || `${funnelToDuplicate.name} (cópia)`,
-          description: funnelToDuplicate.description,
-          is_published: false,
-          settings: { theme: funnelToDuplicate.theme || 'default' },
-          created_at: now,
-          updated_at: now
-        });
-
-      if (funnelError) {
-        throw funnelError;
-      }
-
-      // Carregar etapas do funil original
-      const { data: originalPages, error: pagesError } = await supabase
-        .from('funnel_pages')
-        .select('*')
-        .eq('funnel_id', funnelId)
-        .order('page_order', { ascending: true });
-
-      if (pagesError) {
-        console.error('Erro ao carregar páginas do funil original:', pagesError);
-        // Continuar mesmo com erro
-      }
-
-      // Duplicar etapas
-      if (originalPages && originalPages.length > 0) {
-        const newPages = originalPages.map(page => ({
-          id: uuidv4(),
-          funnel_id: newFunnelId,
-          title: page.title,
-          page_order: page.page_order,
-          page_type: page.page_type,
-          blocks: page.blocks,
-          metadata: page.metadata,
-          created_at: now,
-          updated_at: now
-        }));
-
-        const { error: insertError } = await supabase
-          .from('funnel_pages')
-          .insert(newPages);
-
-        if (insertError) {
-          console.error('Erro ao inserir páginas duplicadas:', insertError);
-          // Continuar mesmo com erro
-        }
-      }
-
-      // Criar objeto de funil para o estado local
-      const newFunnel: Funnel = {
-        ...funnelToDuplicate,
-        id: newFunnelId,
-        name: newName || `${funnelToDuplicate.name} (cópia)`,
-        isPublished: false,
-        createdAt: now,
-        updatedAt: now
-      };
-
-      setFunnels(prev => [...prev, newFunnel]);
-      return newFunnelId;
-    } catch (error) {
-      console.error('Erro ao duplicar funil:', error);
-      toast({
-        title: 'Erro ao duplicar funil',
-        description: 'Não foi possível duplicar o funil no banco de dados.',
-        variant: 'destructive'
+        return step;
       });
-      
-      // Duplicar localmente como fallback
-      const newFunnel: Funnel = {
-        ...funnelToDuplicate,
-        id: `funnel-${Date.now()}`,
-        name: newName || `${funnelToDuplicate.name} (cópia)`,
-        isPublished: false,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
-      setFunnels(prev => [...prev, newFunnel]);
-      return newFunnel.id;
-    }
-  }, [funnels]);
-
-  // Obter funil por ID
-  const getFunnelById = useCallback((funnelId: string) => {
-    return funnels.find(funnel => funnel.id === funnelId);
-  }, [funnels]);
-
-  // Obter etapas de um funil
-  const getFunnelSteps = useCallback((funnelId: string): QuizStep[] => {
-    const funnel = funnels.find(f => f.id === funnelId);
-    return funnel?.steps || [];
-  }, [funnels]);
-
-  // Atualizar etapas de um funil
-  const updateFunnelSteps = useCallback(async (funnelId: string, steps: QuizStep[]) => {
-    try {
-      const now = new Date().toISOString();
-      
-      // Carregar páginas existentes
-      const { data: existingPages, error: loadError } = await supabase
-        .from('funnel_pages')
-        .select('id')
-        .eq('funnel_id', funnelId);
-
-      if (loadError) {
-        throw loadError;
-      }
-
-      // Mapeamento de etapas para páginas do Supabase
-      const existingIds = existingPages?.map(page => page.id) || [];
-      const updates: any[] = [];
-      const inserts: any[] = [];
-      const deleteIds = [...existingIds];
-
-      for (const step of steps) {
-        const pageData = {
-          title: step.name,
-          page_order: step.order,
-          page_type: step.type,
-          metadata: {
-            description: step.description,
-            multiSelect: step.multiSelect
-          },
-          updated_at: now
-        };
-
-        if (existingIds.includes(step.id)) {
-          // Atualizar página existente
-          updates.push({
-            id: step.id,
-            ...pageData
-          });
-          
-          // Remover do array de IDs a excluir
-          const index = deleteIds.indexOf(step.id);
-          if (index > -1) {
-            deleteIds.splice(index, 1);
-          }
-        } else {
-          // Inserir nova página
-          inserts.push({
-            id: step.id,
-            funnel_id: funnelId,
-            ...pageData,
-            blocks: [],
-            created_at: now
-          });
-        }
-      }
-
-      // Executar operações no Supabase em paralelo
-      const operations: Promise<any>[] = [];
-
-      // 1. Inserir novas páginas
-      if (inserts.length > 0) {
-        operations.push(
-          supabase
-            .from('funnel_pages')
-            .insert(inserts)
-            .then(({ error }) => {
-              if (error) console.error('Erro ao inserir páginas:', error);
-              return null;
-            }) as Promise<any>
-        );
-      }
-
-      // 2. Atualizar páginas existentes
-      for (const update of updates) {
-        operations.push(
-          supabase
-            .from('funnel_pages')
-            .update(update)
-            .eq('id', update.id)
-            .then(({ error }) => {
-              if (error) console.error(`Erro ao atualizar página ${update.id}:`, error);
-              return null;
-            }) as Promise<any>
-        );
-      }
-
-      // 3. Excluir páginas que não existem mais
-      if (deleteIds.length > 0) {
-        operations.push(
-          supabase
-            .from('funnel_pages')
-            .delete()
-            .in('id', deleteIds)
-            .then(({ error }) => {
-              if (error) console.error('Erro ao excluir páginas:', error);
-              return null;
-            }) as Promise<any>
-        );
-      }
-
-      // Aguardar todas as operações
-      await Promise.all(operations);
-
-      // Atualizar estado local
-      setFunnels(prev => prev.map(funnel => 
-        funnel.id === funnelId 
-          ? { 
-              ...funnel, 
-              steps, 
-              updatedAt: now 
-            } 
-          : funnel
-      ));
-    } catch (error) {
-      console.error('Erro ao atualizar etapas do funil:', error);
-      toast({
-        title: 'Erro ao atualizar etapas',
-        description: 'Não foi possível atualizar as etapas do funil no banco de dados.',
-        variant: 'destructive'
-      });
-      
-      // Atualizar localmente como fallback
-      setFunnels(prev => prev.map(funnel => 
-        funnel.id === funnelId 
-          ? { 
-              ...funnel, 
-              steps, 
-              updatedAt: new Date().toISOString() 
-            } 
-          : funnel
-      ));
-    }
+    });
   }, []);
+
+  const saveFunnelToDatabase = useCallback(async (funnelData: any) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const funnelRecord = {
+        name: funnelData.name || 'Sem nome',
+        description: funnelData.description || '',
+        is_published: funnelData.isPublished || false,
+        settings: { theme: funnelData.theme || 'default' },
+        updated_at: new Date().toISOString()
+      };
+
+      const updateData: Record<string, any> = {};
+      Object.keys(funnelRecord).forEach(key => {
+        updateData[key] = (funnelRecord as any)[key];
+      });
+
+      const { data, error: supabaseError } = await supabase
+        .from('funnels')
+        .upsert([{
+          id: currentFunnelId,
+          ...updateData
+        }])
+        .select();
+
+      if (supabaseError) {
+        throw supabaseError;
+      }
+
+      console.log('Funil salvo com sucesso:', data);
+    } catch (error) {
+      console.error('Erro ao salvar funil:', error);
+      setError(error instanceof Error ? error.message : 'Erro desconhecido');
+    } finally {
+      setLoading(false);
+    }
+  }, [currentFunnelId]);
+
+  const contextValue: FunnelsContextType = {
+    currentFunnelId,
+    setCurrentFunnelId,
+    steps,
+    setSteps,
+    getTemplate,
+    updateFunnelStep,
+    addStepBlock,
+    saveFunnelToDatabase,
+    loading,
+    error
+  };
 
   return (
-    <FunnelsContext.Provider 
-      value={{ 
-        funnels, 
-        activeFunnelId, 
-        setActiveFunnelId,
-        addFunnel,
-        updateFunnel,
-        deleteFunnel,
-        duplicateFunnel,
-        getFunnelById,
-        getFunnelSteps,
-        updateFunnelSteps,
-        isLoading
-      }}
-    >
+    <FunnelsContext.Provider value={contextValue}>
       {children}
     </FunnelsContext.Provider>
   );
 };
 
-// Hook para usar o contexto
-export const useFunnels = () => {
+export const useFunnels = (): FunnelsContextType => {
   const context = useContext(FunnelsContext);
   if (context === undefined) {
     throw new Error('useFunnels must be used within a FunnelsProvider');
