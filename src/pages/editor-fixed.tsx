@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BrandHeader } from '@/components/ui/BrandHeader';
+import BrandHeader from '@/components/ui/BrandHeader';
 import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
 import { UniversalBlockRenderer } from '@/components/editor/blocks/UniversalBlockRenderer';
 import DynamicPropertiesPanel from '@/components/editor/DynamicPropertiesPanel';
