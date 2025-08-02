@@ -14,7 +14,7 @@ interface EditorPreviewProps {
   selectedBlockId: string | null;
   onSelectBlock: (id: string | null) => void;
   isPreviewing: boolean;
-  primaryStyle: StyleResult;
+  primaryStyle?: StyleResult;
   onReorderBlocks: (sourceIndex: number, destinationIndex: number) => void;
 }
 
@@ -31,7 +31,7 @@ export const EditorPreview: React.FC<EditorPreviewProps> = ({
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 5, // 5px
+        distance: 5,
       },
     })
   );
@@ -47,16 +47,26 @@ export const EditorPreview: React.FC<EditorPreviewProps> = ({
     }
   };
 
+  const handleBlockUpdate = (blockId: string, content: any) => {
+    // This would be handled by the parent component
+    console.log('Block update:', blockId, content);
+  };
+
+  const handleBlockDelete = (blockId: string) => {
+    // This would be handled by the parent component
+    console.log('Block delete:', blockId);
+  };
+
   return (
     <div className="h-full flex flex-col">
       {/* Preview Controls */}
-      <div className="border-b border-[#B89B7A]/20 p-4 bg-white flex items-center justify-between">
+      <div className="border-b border-gray-200 p-4 bg-white flex items-center justify-between">
         <div className="flex gap-2">
           <Button
             variant="outline"
             size="sm"
             onClick={() => setViewMode('desktop')}
-            className={viewMode === 'desktop' ? 'bg-[#FAF9F7]' : ''}
+            className={viewMode === 'desktop' ? 'bg-gray-100' : ''}
           >
             <Monitor className="w-4 h-4 mr-2" />
             Desktop
@@ -65,14 +75,14 @@ export const EditorPreview: React.FC<EditorPreviewProps> = ({
             variant="outline"
             size="sm"
             onClick={() => setViewMode('mobile')}
-            className={viewMode === 'mobile' ? 'bg-[#FAF9F7]' : ''}
+            className={viewMode === 'mobile' ? 'bg-gray-100' : ''}
           >
             <Smartphone className="w-4 h-4 mr-2" />
             Mobile
           </Button>
         </div>
 
-        <div className="flex items-center text-sm text-[#8F7A6A]">
+        <div className="flex items-center text-sm text-gray-600">
           {isPreviewing ? (
             <div className="flex items-center gap-1">
               <Eye className="w-4 h-4" />
@@ -89,15 +99,15 @@ export const EditorPreview: React.FC<EditorPreviewProps> = ({
 
       {/* Preview Content */}
       <div className={cn(
-        "flex-1 overflow-auto p-4 bg-[#FAF9F7]",
+        "flex-1 overflow-auto p-4 bg-gray-50",
         viewMode === 'mobile' && 'flex justify-center'
       )}>
         <div className={cn(
-          "min-h-full bg-white rounded-lg shadow-sm border border-[#B89B7A]/20 p-6",
+          "min-h-full bg-white rounded-lg shadow-sm border border-gray-200 p-6",
           viewMode === 'mobile' && 'max-w-md w-full'
         )}>
           {blocks.length === 0 ? (
-            <div className="h-64 flex flex-col items-center justify-center text-[#8F7A6A] border-2 border-dashed border-[#B89B7A]/20 rounded-lg">
+            <div className="h-64 flex flex-col items-center justify-center text-gray-500 border-2 border-dashed border-gray-200 rounded-lg">
               <p className="mb-2">Nenhum bloco adicionado.</p>
               <p>Use o painel da esquerda para adicionar blocos à página.</p>
             </div>
@@ -120,9 +130,11 @@ export const EditorPreview: React.FC<EditorPreviewProps> = ({
                       block={block}
                       index={index}
                       isSelected={selectedBlockId === block.id}
-                      onClick={() => onSelectBlock(block.id)}
-                      isPreviewMode={isPreviewing}
+                      onSelect={() => onSelectBlock(block.id)}
+                      onUpdate={(content) => handleBlockUpdate(block.id, content)}
+                      onDelete={() => handleBlockDelete(block.id)}
                       onReorderBlocks={onReorderBlocks}
+                      isPreviewMode={isPreviewing}
                       primaryStyle={primaryStyle}
                     />
                   ))}
@@ -135,3 +147,5 @@ export const EditorPreview: React.FC<EditorPreviewProps> = ({
     </div>
   );
 };
+
+export default EditorPreview;

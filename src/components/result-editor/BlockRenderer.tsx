@@ -1,232 +1,194 @@
 
 import React from 'react';
-import { Block } from '@/types/editor';
+import { Block, FAQItem } from '@/types/editor';
+import { StyleResult } from '@/types/quiz';
 
 interface BlockRendererProps {
   block: Block;
+  isEditing?: boolean;
+  onUpdate?: (content: any) => void;
+  primaryStyle?: StyleResult;
 }
 
-const BlockRenderer: React.FC<BlockRendererProps> = ({ block }) => {
+const BlockRenderer: React.FC<BlockRendererProps> = ({ 
+  block, 
+  isEditing = false, 
+  onUpdate,
+  primaryStyle 
+}) => {
   const content = block.content || {};
-  
-  const renderBlockContent = () => {
-    switch (block.type) {
-      case 'header':
-        return (
-          <header className="text-center py-8">
-            <h1 className="text-3xl font-bold text-[#432818] mb-2">
-              {content.title || 'Título'}
-            </h1>
-            <p className="text-[#8F7A6A]">
-              {content.subtitle || 'Subtítulo'}
-            </p>
-          </header>
-        );
-        
-      case 'hero':
-        return (
-          <section className="text-center py-12 bg-gradient-to-b from-[#FAF9F7] to-white">
-            <h2 className="text-4xl font-bold text-[#432818] mb-4">
-              {content.title || 'Título Hero'}
-            </h2>
-            <p className="text-xl text-[#8F7A6A] mb-6">
-              {content.subtitle || 'Subtítulo Hero'}
-            </p>
-          </section>
-        );
-        
-      case 'text':
-        return (
-          <div className="prose max-w-none">
-            <p className="text-[#432818]">
-              {content.text || 'Texto do bloco'}
-            </p>
-          </div>
-        );
-        
-      case 'image':
-        return (
-          <div className="text-center">
-            <img
-              src={content.imageUrl || 'https://via.placeholder.com/400x300'}
-              alt={content.imageAlt || 'Imagem'}
-              className="mx-auto rounded-lg shadow-md"
-              style={{
-                width: content.width || 'auto',
-                height: content.height || 'auto'
-              }}
-            />
-          </div>
-        );
-        
-      case 'benefitsList':
-        return (
-          <div className="bg-white rounded-lg p-6 border border-[#B89B7A]/20">
-            <h3 className="text-xl font-semibold text-[#432818] mb-4">
-              {content.title || 'Benefícios'}
-            </h3>
-            <ul className="space-y-2">
-              {(content.items || ['Benefício 1', 'Benefício 2']).map((item: string, index: number) => (
-                <li key={index} className="flex items-center text-[#432818]">
-                  <span className="mr-2 text-[#B89B7A]">✓</span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        );
-        
-      case 'pricing':
-        return (
-          <div className="bg-gradient-to-r from-[#B89B7A] to-[#A38A69] text-white rounded-lg p-6 text-center">
-            <div className="mb-4">
-              <span className="text-sm line-through opacity-75">
-                R$ {content.regularPrice || '97,00'}
-              </span>
-              <div className="text-3xl font-bold">
-                R$ {content.salePrice || '37,00'}
-              </div>
-            </div>
-            <button className="bg-white text-[#432818] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-              {content.buttonText || 'Comprar Agora'}
-            </button>
-            <p className="text-sm mt-2 opacity-90">
-              {content.urgencyText || 'Oferta por tempo limitado!'}
-            </p>
-          </div>
-        );
-        
-      case 'testimonial':
-        return (
-          <div className="bg-white rounded-lg p-6 border border-[#B89B7A]/20">
-            <h3 className="text-lg font-semibold text-[#432818] mb-3">
-              {content.title || 'Depoimento'}
-            </h3>
-            <p className="text-[#8F7A6A] mb-4">
-              "{content.text || 'Depoimento do cliente...'}"
-            </p>
-            {content.image && (
-              <img
-                src={content.image}
-                alt="Cliente"
-                className="w-12 h-12 rounded-full mx-auto"
-              />
-            )}
-          </div>
-        );
-        
-      case 'cta':
-        return (
-          <div className="text-center py-8">
-            <h3 className="text-2xl font-bold text-[#432818] mb-4">
-              {content.title || 'Chamada para Ação'}
-            </h3>
-            <button className="bg-[#B89B7A] hover:bg-[#A38A69] text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors">
-              {content.buttonText || 'Clique Aqui'}
-            </button>
-          </div>
-        );
-        
-      case 'styleResult':
-        return (
-          <div className="bg-white rounded-lg p-6 border border-[#B89B7A]/20">
-            <h3 className="text-xl font-semibold text-[#432818] mb-2">
-              Seu estilo é: {content.styleCategory || 'Natural'}
-            </h3>
-            <p className="text-[#8F7A6A]">
-              {content.description || 'Descrição do seu estilo pessoal...'}
-            </p>
-            {content.customImage && (
-              <img
-                src={content.customImage}
-                alt="Estilo"
-                className="mt-4 w-full rounded-lg"
-              />
-            )}
-          </div>
-        );
-        
-      case 'secondaryStylesTitle':
-        return (
-          <h3 className="text-lg font-semibold text-[#432818] mb-4">
-            {content.title || 'Seus outros estilos'}
-          </h3>
-        );
-        
-      case 'offerHero':
-        return (
-          <section className="bg-gradient-to-b from-[#FAF9F7] to-white py-12 text-center">
-            <h2 className="text-4xl font-bold text-[#432818] mb-4">
-              {content.title || 'Oferta Especial'}
-            </h2>
-            <p className="text-xl text-[#8F7A6A] mb-6">
-              {content.subtitle || 'Descubra seu estilo completo'}
-            </p>
-            {content.heroImage && (
-              <img
-                src={content.heroImage}
-                alt="Oferta"
-                className="mx-auto rounded-lg shadow-lg mb-4"
-                style={{ maxWidth: '400px' }}
-              />
-            )}
-          </section>
-        );
-        
-      case 'carousel':
-        return (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-[#432818]">
-              {content.title || 'Galeria'}
-            </h3>
-            <div className="flex gap-4 overflow-x-auto pb-2">
-              {(content.images || []).map((img: any, index: number) => (
-                <img
-                  key={index}
-                  src={img.url || 'https://via.placeholder.com/200x200'}
-                  alt={img.alt || `Imagem ${index + 1}`}
-                  className="flex-shrink-0 w-48 h-48 object-cover rounded-lg"
-                />
-              ))}
-            </div>
-          </div>
-        );
-        
-      case 'testimonialsSection':
-        return (
-          <div className="space-y-6">
-            <h3 className="text-2xl font-bold text-[#432818] text-center">
-              {content.title || 'Depoimentos'}
-            </h3>
-            {content.testimonialsImage && (
-              <img
-                src={content.testimonialsImage}
-                alt="Depoimentos"
-                className="w-full rounded-lg"
-              />
-            )}
-          </div>
-        );
-        
-      case 'spacer':
-        return (
-          <div style={{ height: content.height || '40px' }} />
-        );
-        
-      default:
-        return (
-          <div className="p-4 border border-dashed border-gray-300 rounded-lg text-center text-gray-500">
-            Bloco não reconhecido: {block.type}
-          </div>
-        );
+
+  const handleContentChange = (key: string, value: any) => {
+    if (onUpdate) {
+      onUpdate({ ...content, [key]: value });
     }
   };
 
-  return (
-    <div className="mb-6">
-      {renderBlockContent()}
-    </div>
-  );
+  // Type guard to check if items is string array or FAQItem array
+  const isStringArray = (items: any[]): items is string[] => {
+    return items.length === 0 || typeof items[0] === 'string';
+  };
+
+  const isFAQItemArray = (items: any[]): items is FAQItem[] => {
+    return items.length > 0 && typeof items[0] === 'object' && 'question' in items[0];
+  };
+
+  switch (block.type) {
+    case 'header':
+    case 'headline':
+      return (
+        <div className="text-center">
+          {isEditing ? (
+            <input
+              type="text"
+              value={content.title || ''}
+              onChange={(e) => handleContentChange('title', e.target.value)}
+              className="text-2xl font-bold w-full border-none outline-none bg-transparent"
+              placeholder="Digite o título"
+            />
+          ) : (
+            <h1 className="text-2xl font-bold text-gray-900">
+              {content.title || 'Título'}
+            </h1>
+          )}
+          {content.subtitle && (
+            <p className="text-lg text-gray-600 mt-2">{content.subtitle}</p>
+          )}
+        </div>
+      );
+
+    case 'text':
+      return (
+        <div>
+          {isEditing ? (
+            <textarea
+              value={content.text || ''}
+              onChange={(e) => handleContentChange('text', e.target.value)}
+              className="w-full p-2 border rounded resize-none"
+              rows={4}
+              placeholder="Digite o texto"
+            />
+          ) : (
+            <p className="text-gray-700 leading-relaxed">
+              {content.text || 'Texto de exemplo'}
+            </p>
+          )}
+        </div>
+      );
+
+    case 'image':
+      return (
+        <div className="text-center">
+          {content.imageUrl ? (
+            <img
+              src={content.imageUrl}
+              alt={content.imageAlt || 'Imagem'}
+              className="max-w-full h-auto rounded-lg mx-auto"
+            />
+          ) : (
+            <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
+              <span className="text-gray-500">Imagem</span>
+            </div>
+          )}
+          {content.description && (
+            <p className="text-sm text-gray-600 mt-2">{content.description}</p>
+          )}
+        </div>
+      );
+
+    case 'button':
+      return (
+        <div className="text-center">
+          <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+            {content.buttonText || 'Clique aqui'}
+          </button>
+        </div>
+      );
+
+    case 'benefits':
+      const benefitItems = content.items || [];
+      return (
+        <div>
+          <h3 className="text-xl font-semibold mb-4">
+            {content.title || 'Benefícios'}
+          </h3>
+          <ul className="space-y-2">
+            {benefitItems.length > 0 && isStringArray(benefitItems) ? 
+              benefitItems.map((item: string, index: number) => (
+                <li key={index} className="flex items-start gap-2">
+                  <span className="text-green-500 mt-1">✓</span>
+                  <span>{item}</span>
+                </li>
+              )) :
+              <li className="text-gray-500">Nenhum benefício adicionado</li>
+            }
+          </ul>
+        </div>
+      );
+
+    case 'faq':
+      const faqItems = content.faqItems || content.items || [];
+      return (
+        <div>
+          <h3 className="text-xl font-semibold mb-4">
+            {content.title || 'Perguntas Frequentes'}
+          </h3>
+          <div className="space-y-4">
+            {faqItems.length > 0 && isFAQItemArray(faqItems) ? 
+              faqItems.map((item: FAQItem, index: number) => (
+                <div key={index} className="border-b pb-3">
+                  <h4 className="font-medium text-gray-900 mb-2">
+                    {item.question}
+                  </h4>
+                  <p className="text-gray-600">
+                    {item.answer}
+                  </p>
+                </div>
+              )) :
+              <p className="text-gray-500">Nenhuma pergunta adicionada</p>
+            }
+          </div>
+        </div>
+      );
+
+    case 'testimonials':
+      return (
+        <div className="bg-gray-50 p-6 rounded-lg">
+          <blockquote className="text-lg italic text-gray-800 mb-4">
+            "{content.quote || 'Depoimento incrível sobre o produto...'}"
+          </blockquote>
+          <cite className="text-gray-600 font-medium">
+            — {content.quoteAuthor || 'Nome do Cliente'}
+          </cite>
+        </div>
+      );
+
+    case 'pricing':
+      return (
+        <div className="bg-white border-2 border-blue-200 rounded-lg p-6 text-center">
+          {content.regularPrice && (
+            <div className="text-gray-500 line-through text-lg">
+              R$ {content.regularPrice}
+            </div>
+          )}
+          <div className="text-3xl font-bold text-blue-600 mb-4">
+            R$ {content.salePrice || '97'}
+          </div>
+          <button className="bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-600 transition-colors">
+            Comprar Agora
+          </button>
+        </div>
+      );
+
+    default:
+      return (
+        <div className="p-4 bg-gray-100 rounded-lg text-center text-gray-600">
+          Bloco: {block.type}
+          {content.title && <div className="font-medium">{content.title}</div>}
+          {content.text && <div className="text-sm">{content.text}</div>}
+        </div>
+      );
+  }
 };
 
 export default BlockRenderer;

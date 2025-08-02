@@ -1,129 +1,87 @@
 
 import React, { useState } from 'react';
 import { StyleResult } from '@/types/quiz';
-import { QuizFunnel } from '@/types/quizResult';
-import { styleConfig, StyleConfigMap } from '@/config/styleConfig';
-import StyleSelector from './StyleSelector';
+import { Block, EditorBlock } from '@/types/editor';
 import { ResultPageVisualEditor } from './ResultPageVisualEditor';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { EditorBlock } from '@/types/editor';
+import { Eye, EyeOff, Save, RefreshCw } from 'lucide-react';
 
 interface EnhancedResultPageEditorProps {
-  primaryStyle: StyleResult;
-  secondaryStyles: StyleResult[];
-  initialFunnel?: QuizFunnel;
-  onSave: (funnel: QuizFunnel) => void;
-  initialStyle?: StyleResult;
+  selectedStyle: StyleResult;
+  onShowTemplates?: () => void;
 }
 
 export const EnhancedResultPageEditor: React.FC<EnhancedResultPageEditorProps> = ({
-  primaryStyle,
-  secondaryStyles,
-  initialFunnel,
-  onSave,
-  initialStyle
+  selectedStyle,
+  onShowTemplates
 }) => {
-  const [selectedStyle, setSelectedStyle] = useState<StyleResult>(
-    initialStyle || primaryStyle || {
-      category: 'Natural' as any,
-      score: 100,
-      percentage: 100,
-      style: 'Natural' as any,
-      points: 100,
-      rank: 1
-    }
-  );
-
-  const [showTemplates, setShowTemplates] = useState(false);
   const [blocks, setBlocks] = useState<EditorBlock[]>([]);
-  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
+  const [selectedBlockId, setSelectedBlockId] = useState<string>('');
+  const [isPreviewing, setIsPreviewing] = useState(false);
 
-  const handleStyleChange = (newStyle: StyleResult) => {
-    setSelectedStyle(newStyle);
-  };
-
-  const handleBlocksUpdate = (newBlocks: EditorBlock[]) => {
-    setBlocks(newBlocks);
+  const handleBlocksUpdate = (updatedBlocks: EditorBlock[]) => {
+    setBlocks(updatedBlocks);
   };
 
   const handleSelectBlock = (id: string) => {
     setSelectedBlockId(id);
   };
 
-  const currentStyleConfig = (styleConfig as StyleConfigMap)[selectedStyle.category];
-  
+  const handleSave = () => {
+    console.log('Saving blocks:', blocks);
+    // Implement save logic here
+  };
+
+  const handleReset = () => {
+    setBlocks([]);
+    setSelectedBlockId('');
+  };
+
+  const togglePreview = () => {
+    setIsPreviewing(!isPreviewing);
+  };
+
   return (
-    <div className="h-screen flex flex-col">
-      <div className="bg-white border-b p-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link to="/quiz-builder">
-            <Button variant="outline" size="sm">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Voltar
-            </Button>
-          </Link>
-          <h1 className="text-2xl font-playfair text-[#432818]">
-            Editor de Página de Resultado
-          </h1>
-        </div>
-        
-        <div className="flex items-center gap-4">
-          <StyleSelector
-            selectedStyle={selectedStyle}
-            onStyleChange={handleStyleChange}
-          />
+    <div className="h-full flex flex-col">
+      {/* Header */}
+      <div className="border-b border-gray-200 p-4 bg-white flex items-center justify-between">
+        <h2 className="text-xl font-semibold">Editor de Resultados Aprimorado</h2>
+        <div className="flex items-center space-x-2">
+          <Button variant="ghost" onClick={togglePreview}>
+            {isPreviewing ? (
+              <>
+                <EyeOff className="w-4 h-4 mr-2" />
+                Editar
+              </>
+            ) : (
+              <>
+                <Eye className="w-4 h-4 mr-2" />
+                Preview
+              </>
+            )}
+          </Button>
+          <Button variant="outline" onClick={handleReset}>
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Resetar
+          </Button>
+          <Button onClick={handleSave}>
+            <Save className="w-4 h-4 mr-2" />
+            Salvar
+          </Button>
         </div>
       </div>
 
+      {/* Content */}
       <div className="flex-1">
         <ResultPageVisualEditor
           blocks={blocks}
           onBlocksUpdate={handleBlocksUpdate}
-          selectedBlockId={selectedBlockId}
+          selectedBlockId={selectedBlockId || undefined}
           onSelectBlock={handleSelectBlock}
           selectedStyle={selectedStyle}
-          onShowTemplates={() => setShowTemplates(true)}
+          onShowTemplates={onShowTemplates}
         />
       </div>
-
-      {showTemplates && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg max-w-2xl w-full mx-4">
-            <h2 className="text-xl font-medium mb-4">Selecionar Template</h2>
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              {Object.keys(styleConfig).map((style) => (
-                <button
-                  key={style}
-                  className="p-4 border rounded-lg hover:border-[#B89B7A] transition-colors"
-                  onClick={() => {
-                    handleStyleChange({
-                      category: style as any,
-                      score: 100,
-                      percentage: 100,
-                      style: style as any,
-                      points: 100,
-                      rank: 1
-                    });
-                    setShowTemplates(false);
-                  }}
-                >
-                  <div className="text-left">
-                    <h3 className="font-medium">{style}</h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      {(styleConfig as StyleConfigMap)[style]?.description.substring(0, 50)}...
-                    </p>
-                  </div>
-                </button>
-              ))}
-            </div>
-            <Button variant="outline" onClick={() => setShowTemplates(false)}>
-              Cancelar
-            </Button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
