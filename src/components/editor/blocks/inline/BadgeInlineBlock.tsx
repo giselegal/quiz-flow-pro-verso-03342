@@ -1,7 +1,9 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Check, Star, Award, Shield, Zap, Heart } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';
+import { safeGetBlockProperties, isValidBlock, logBlockDebug } from '@/utils/blockUtils';
 
 /**
  * BadgeInlineBlock - Componente modular inline horizontal
@@ -15,6 +17,17 @@ const BadgeInlineBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = ''
 }) => {
+  // 🛡️ Validação e logging de debug
+  if (!isValidBlock(block)) {
+    console.error('❌ BadgeInlineBlock: Bloco inválido recebido', block);
+    return <div className="p-2 bg-red-100 text-red-600 text-xs rounded">Erro: Bloco inválido</div>;
+  }
+
+  logBlockDebug('BadgeInlineBlock', block);
+
+  // 🛡️ Extração segura das propriedades
+  const properties = safeGetBlockProperties(block);
+  
   const {
     text = 'Certificado',
     icon = 'check',
@@ -23,7 +36,7 @@ const BadgeInlineBlock: React.FC<BlockComponentProps> = ({
     showIcon = true,
     animated = true,
     isEditable = true
-  } = block.properties;
+  } = properties;
 
   // Ícones disponíveis
   const iconMap = {
