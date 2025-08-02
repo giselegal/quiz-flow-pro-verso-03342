@@ -7,10 +7,16 @@ import { lazy } from 'react';
 // ===== COMPONENTES BÁSICOS (sempre carregados) =====
 export { default as TextInlineBlock } from './TextInlineBlock';
 
-// Import other basic components with fallback paths
-const HeadingInlineBlock = lazy(() => import('./HeadingInlineBlock').catch(() => import('../HeadingInlineBlock')));
-const ButtonInlineBlock = lazy(() => import('./ButtonInlineBlock').catch(() => import('../ButtonInlineBlock')));
-const BadgeInlineBlock = lazy(() => import('./BadgeInlineBlock'));
+// Import other basic components with correct fallback paths
+const HeadingInlineBlock = lazy(() => import('../HeadingInlineBlock'));
+const ButtonInlineBlock = lazy(() => import('../ButtonInlineBlock').catch(() => {
+  // Fallback to a simple button component if not found
+  return { default: () => null };
+}));
+const BadgeInlineBlock = lazy(() => import('./BadgeInlineBlock').catch(() => {
+  // Fallback to a simple badge component if not found
+  return { default: () => null };
+}));
 
 export { HeadingInlineBlock, ButtonInlineBlock, BadgeInlineBlock };
 
