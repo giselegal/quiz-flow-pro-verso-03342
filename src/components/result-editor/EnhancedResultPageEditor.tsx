@@ -1,18 +1,26 @@
 
 import React, { useState } from 'react';
-import { StyleResult } from '@/types/quiz';
+import { StyleResult, QuizFunnel } from '@/types/quiz';
 import { Block, EditorBlock } from '@/types/editor';
 import { ResultPageVisualEditor } from './ResultPageVisualEditor';
 import { Button } from '@/components/ui/button';
 import { Eye, EyeOff, Save, RefreshCw } from 'lucide-react';
 
 interface EnhancedResultPageEditorProps {
-  selectedStyle: StyleResult;
+  selectedStyle?: StyleResult;
+  primaryStyle?: StyleResult;
+  secondaryStyles?: StyleResult[];
+  initialFunnel?: QuizFunnel;
+  onSave?: (funnel: QuizFunnel) => void;
   onShowTemplates?: () => void;
 }
 
 export const EnhancedResultPageEditor: React.FC<EnhancedResultPageEditorProps> = ({
   selectedStyle,
+  primaryStyle,
+  secondaryStyles = [],
+  initialFunnel,
+  onSave,
   onShowTemplates
 }) => {
   const [blocks, setBlocks] = useState<EditorBlock[]>([]);
@@ -29,7 +37,9 @@ export const EnhancedResultPageEditor: React.FC<EnhancedResultPageEditorProps> =
 
   const handleSave = () => {
     console.log('Saving blocks:', blocks);
-    // Implement save logic here
+    if (onSave && initialFunnel) {
+      onSave(initialFunnel);
+    }
   };
 
   const handleReset = () => {
@@ -40,6 +50,8 @@ export const EnhancedResultPageEditor: React.FC<EnhancedResultPageEditorProps> =
   const togglePreview = () => {
     setIsPreviewing(!isPreviewing);
   };
+
+  const style = selectedStyle || primaryStyle;
 
   return (
     <div className="h-full flex flex-col">
@@ -78,7 +90,7 @@ export const EnhancedResultPageEditor: React.FC<EnhancedResultPageEditorProps> =
           onBlocksUpdate={handleBlocksUpdate}
           selectedBlockId={selectedBlockId || undefined}
           onSelectBlock={handleSelectBlock}
-          selectedStyle={selectedStyle}
+          selectedStyle={style}
           onShowTemplates={onShowTemplates}
         />
       </div>

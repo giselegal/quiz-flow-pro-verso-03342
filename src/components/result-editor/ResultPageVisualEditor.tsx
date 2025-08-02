@@ -1,16 +1,14 @@
 
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
-import { BlockType, EditorBlock } from '@/types/editor';
-import EditableBlock from './EditableBlock';
+import React from 'react';
+import { StyleResult } from '@/types/quiz';
+import { EditorBlock } from '@/types/editor';
 
-interface ResultPageVisualEditorProps {
+export interface ResultPageVisualEditorProps {
   blocks: EditorBlock[];
   onBlocksUpdate: (blocks: EditorBlock[]) => void;
   selectedBlockId?: string;
   onSelectBlock: (id: string) => void;
-  selectedStyle?: any;
+  selectedStyle?: StyleResult;
   onShowTemplates?: () => void;
 }
 
@@ -22,114 +20,46 @@ export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({
   selectedStyle,
   onShowTemplates
 }) => {
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-
-  const addBlock = (type: string) => {
-    const newBlock: EditorBlock = {
-      id: `block-${Date.now()}`,
-      type: type as BlockType,
-      content: getDefaultContent(type as BlockType),
-      order: blocks.length,
-      properties: {}
-    };
-
-    onBlocksUpdate([...blocks, newBlock]);
-  };
-
-  const getDefaultContent = (type: BlockType) => {
-    switch (type) {
-      case 'header':
-        return { title: 'Novo Cabeçalho', subtitle: 'Subtítulo' };
-      case 'text':
-        return { text: 'Novo texto. Clique para editar.' };
-      case 'image':
-        return { imageUrl: '', imageAlt: 'Imagem', description: '' };
-      case 'button':
-        return { buttonText: 'Clique aqui', buttonUrl: '#' };
-      case 'benefits':
-        return { 
-          title: 'Benefícios',
-          items: ['Benefício 1', 'Benefício 2', 'Benefício 3']
-        };
-      default:
-        return { text: `Novo ${type}` };
-    }
-  };
-
-  const updateBlock = (id: string, content: any) => {
-    const updatedBlocks = blocks.map(block =>
-      block.id === id ? { ...block, content: { ...block.content, ...content } } : block
-    );
-    onBlocksUpdate(updatedBlocks);
-  };
-
-  const deleteBlock = (id: string) => {
-    const updatedBlocks = blocks.filter(block => block.id !== id);
-    onBlocksUpdate(updatedBlocks);
-  };
-
-  const moveBlock = (fromIndex: number, toIndex: number) => {
-    const newBlocks = [...blocks];
-    const [movedBlock] = newBlocks.splice(fromIndex, 1);
-    newBlocks.splice(toIndex, 0, movedBlock);
-    
-    // Update order property
-    const updatedBlocks = newBlocks.map((block, index) => ({
-      ...block,
-      order: index
-    }));
-    
-    onBlocksUpdate(updatedBlocks);
-  };
-
   return (
-    <div className="result-page-visual-editor">
-      <div className="toolbar mb-4 flex gap-2">
-        <Button onClick={() => addBlock('header')} size="sm">
-          + Cabeçalho
-        </Button>
-        <Button onClick={() => addBlock('text')} size="sm">
-          + Texto
-        </Button>
-        <Button onClick={() => addBlock('image')} size="sm">
-          + Imagem
-        </Button>
-        <Button onClick={() => addBlock('button')} size="sm">
-          + Botão
-        </Button>
-        <Button onClick={() => addBlock('benefits')} size="sm">
-          + Benefícios
-        </Button>
+    <div className="flex h-full">
+      {/* Sidebar */}
+      <div className="w-80 border-r border-gray-200 bg-white p-4">
+        <h3 className="text-lg font-semibold mb-4">Blocos</h3>
+        <div className="space-y-2">
+          <button 
+            onClick={onShowTemplates}
+            className="w-full p-2 text-left border rounded hover:bg-gray-50"
+          >
+            + Adicionar Bloco
+          </button>
+        </div>
       </div>
 
-      <div className="blocks-container space-y-4">
-        {blocks.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
-            <p className="mb-4">Nenhum bloco adicionado ainda</p>
-            <Button onClick={() => addBlock('text')}>
-              <Plus className="w-4 h-4 mr-2" />
-              Adicionar primeiro bloco
-            </Button>
-          </div>
-        ) : (
-          blocks.map((block, index) => (
-            <EditableBlock
-              key={block.id}
-              block={block}
-              isSelected={selectedBlockId === block.id}
-              onSelect={() => onSelectBlock(block.id)}
-              onUpdate={(content: any) => updateBlock(block.id, content)}
-              onDelete={() => deleteBlock(block.id)}
-              onMove={(direction: 'up' | 'down') => {
-                if (direction === 'up' && index > 0) {
-                  moveBlock(index, index - 1);
-                } else if (direction === 'down' && index < blocks.length - 1) {
-                  moveBlock(index, index + 1);
-                }
-              }}
-            />
-          ))
-        )}
+      {/* Main Content */}
+      <div className="flex-1 p-4">
+        <div className="bg-white rounded-lg border min-h-96 p-6">
+          {blocks.length === 0 ? (
+            <div className="text-center text-gray-500 py-12">
+              <p>Nenhum bloco adicionado ainda.</p>
+              <p>Use o painel da esquerda para adicionar blocos.</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {blocks.map((block) => (
+                <div 
+                  key={block.id}
+                  className={`p-4 border rounded cursor-pointer ${
+                    selectedBlockId === block.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
+                  }`}
+                  onClick={() => onSelectBlock(block.id)}
+                >
+                  <div className="font-medium">{block.type}</div>
+                  <div className="text-sm text-gray-500">ID: {block.id}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

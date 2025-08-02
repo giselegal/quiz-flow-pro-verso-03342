@@ -1,3 +1,4 @@
+
 // Tipos base para o sistema de blocos schema-driven
 
 export interface BlockData {
@@ -31,14 +32,12 @@ export interface QuizOption {
   weight?: number;
 }
 
-// Re-export tipos existentes para compatibilidade
-// export type { BlockData as Block } from '@/services/funnelService';
-
 export interface BlockDefinition {
   type: string;
   name: string;
   description: string;
   category: string;
+  icon?: any; // Added icon property
   properties: { [key: string]: any };
   defaultContent: any;
 }
