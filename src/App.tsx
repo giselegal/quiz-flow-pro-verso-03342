@@ -6,6 +6,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import { AdminAuthProvider } from '@/context/AdminAuthContext';
 import { EditorProvider } from '@/context/EditorContext';
 import SchemaDrivenEditorResponsive from '@/components/editor/SchemaDrivenEditorResponsive';
+import EditorPage from '@/pages/editor-fixed';
 import { ResultPage } from './pages/ResultPage';
 import { Home } from './pages/Home';
 import { FunnelsPage } from './pages/FunnelsPage';
@@ -38,6 +39,9 @@ function App() {
                   </EditorProvider>
                 )}
               </Route>
+              
+              {/* Editor Fixed Route - nova rota ativada */}
+              <Route path="/editor-fixed" component={EditorPage} />
               
               {/* Enhanced Editor Route */}
               <Route path="/enhanced-editor" component={EnhancedEditorPage} />
