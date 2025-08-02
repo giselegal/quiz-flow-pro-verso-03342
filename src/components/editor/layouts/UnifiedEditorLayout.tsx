@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
@@ -23,12 +22,17 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
     console.log('Component selected:', type);
   };
 
-  const handleBlockUpdate = (id: string, updates: any) => {
-    console.log('Block updated:', id, updates);
+  const handleBlockUpdate = (updates: any) => {
+    if (selectedBlockId) {
+      console.log('Block updated:', selectedBlockId, updates);
+    }
   };
 
-  const handleBlockDelete = (id: string) => {
-    console.log('Block deleted:', id);
+  const handleBlockDelete = () => {
+    if (selectedBlockId) {
+      console.log('Block deleted:', selectedBlockId);
+      setSelectedBlockId(null);
+    }
   };
 
   const handleReorderBlocks = (sourceIndex: number, destinationIndex: number) => {
@@ -69,6 +73,7 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
   };
 
   const config = resultPageConfig || defaultConfig;
+  const selectedBlock = selectedBlockId ? config.blocks?.find((b: any) => b.id === selectedBlockId) || null : null;
 
   return (
     <EditorProvider>
@@ -107,7 +112,7 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
 
               <ResizablePanel defaultSize={25}>
                 <PropertiesPanel
-                  selectedBlock={config.blocks?.find(b => b.id === selectedBlockId) || null}
+                  selectedBlock={selectedBlock}
                   onUpdate={handleBlockUpdate}
                   onDelete={handleBlockDelete}
                   onClose={() => setSelectedBlockId(null)}

@@ -2,245 +2,206 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { FunnelStepProps } from '@/types/funnel';
-import { CountdownTimer } from '../shared/CountdownTimer';
+import { CountdownTimer } from '@/components/ui/countdown-timer';
 
 interface OfferPageStepProps extends FunnelStepProps {
-  data?: {
-    title?: string;
-    subtitle?: string;
-    price?: {
-      original: number;
-      discounted: number;
-      currency: string;
-    };
-    features?: Array<{
+  data: {
+    title: string;
+    subtitle: string;
+    features: Array<{
+      icon: string;
       title: string;
       description: string;
-      included: boolean;
     }>;
-    bonuses?: Array<{
+    bonuses: Array<{
       title: string;
+      description: string;
       value: string;
-      description: string;
     }>;
-    testimonials?: Array<{
+    testimonials: Array<{
       name: string;
-      role: string;
-      content: string;
-      avatar?: string;
+      text: string;
+      image: string;
     }>;
-    guarantee?: {
-      days: number;
-      description: string;
-    };
-    urgency?: {
-      enabled: boolean;
-      message: string;
-      countdown?: number;
-    };
-    ctaText?: string;
+    originalPrice: string;
+    salePrice: string;
+    guaranteeText: string;
+    ctaText: string;
+    showCountdown: boolean;
+    countdownDuration: number;
   };
 }
 
-const OfferPageStep: React.FC<OfferPageStepProps> = ({ data, onNext }) => {
-  const [selectedVariant, setSelectedVariant] = useState<string>('basic');
-
-  const {
-    title = "Transforme Seu Estilo Agora!",
-    subtitle = "Uma oportunidade única para descobrir e elevar seu estilo pessoal",
-    price = {
-      original: 497,
-      discounted: 197,
-      currency: "R$"
-    },
-    features = [
-      { title: "Análise Completa de Estilo", description: "Descubra exatamente qual é o seu estilo único", included: true },
-      { title: "Guia de Cores Personalizado", description: "As cores que mais favorecem você", included: true },
-      { title: "Dicas de Montagem de Look", description: "Como criar combinações perfeitas", included: true }
-    ],
-    bonuses = [
-      { title: "E-book Exclusivo", value: "R$ 97", description: "Guia completo de estilo pessoal" },
-      { title: "Consultoria Online", value: "R$ 200", description: "1 hora de consultoria personalizada" }
-    ],
-    testimonials = [
-      { name: "Ana Silva", role: "Executiva", content: "Transformou completamente meu guarda-roupa!", avatar: "" },
-      { name: "Carla Santos", role: "Empreendedora", content: "Agora me sinto confiante em qualquer ocasião", avatar: "" }
-    ],
-    guarantee = {
-      days: 30,
-      description: "Se não ficar satisfeita, devolvemos 100% do seu dinheiro"
-    },
-    urgency = {
-      enabled: true,
-      message: "Oferta por tempo limitado!",
-      countdown: 3600
-    },
-    ctaText = "QUERO TRANSFORMAR MEU ESTILO AGORA!"
-  } = data || {};
-
-  const savings = price.original - price.discounted;
-  const savingsPercent = Math.round((savings / price.original) * 100);
+const OfferPageStep: React.FC<OfferPageStepProps> = ({
+  data,
+  onNext,
+  stepNumber,
+  totalSteps,
+  onEdit,
+  isEditable = false
+}) => {
+  const [timeExpired, setTimeExpired] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#FAF9F7] to-white">
-      <div className="max-w-4xl mx-auto px-6 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-4">
+      <div className="max-w-4xl mx-auto">
+        {/* Progress Bar */}
+        <div className="w-full bg-gray-200 rounded-full h-2 mb-8">
+          <div
+            className="bg-gradient-to-r from-purple-600 to-pink-600 h-2 rounded-full transition-all duration-500"
+            style={{ width: `${(stepNumber / totalSteps) * 100}%` }}
+          />
+        </div>
+
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#432818] mb-6 leading-tight">
-            {title}
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            {data.title}
           </h1>
-          <p className="text-xl text-[#8F7A6A] max-w-2xl mx-auto">
-            {subtitle}
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            {data.subtitle}
           </p>
         </div>
 
-        {/* Urgency */}
-        {urgency.enabled && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-8 text-center">
-            <p className="text-red-600 font-semibold mb-4">{urgency.message}</p>
-            {urgency.countdown && (
-              <CountdownTimer 
-                initialTime={urgency.countdown}
-                onComplete={() => console.log('Countdown completed')}
-              />
-            )}
+        {/* Countdown Timer */}
+        {data.showCountdown && (
+          <div className="text-center mb-12">
+            <CountdownTimer
+              duration={data.countdownDuration}
+              onComplete={() => setTimeExpired(true)}
+            />
           </div>
         )}
 
-        <div className="grid md:grid-cols-2 gap-12">
-          {/* Left Column - Features & Benefits */}
-          <div>
-            {/* Features */}
-            <div className="mb-8">
-              <h3 className="text-2xl font-bold text-[#432818] mb-6">O que você vai receber:</h3>
-              <div className="space-y-4">
-                {features.map((feature, index) => (
-                  <div key={index} className="flex items-start gap-3 p-4 bg-white rounded-lg border border-[#B89B7A]/20">
-                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-[#432818] mb-1">{feature.title}</h4>
-                      <p className="text-[#8F7A6A] text-sm">{feature.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+        {/* Features Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          <h2 className="text-2xl font-bold text-gray-900 md:col-span-2 lg:col-span-3 text-center mb-8">
+            O que você vai receber:
+          </h2>
+          
+          {data.features.map((feature: any, index: number) => (
+            <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-purple-100">
+              <div className="text-3xl mb-4">{feature.icon}</div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                {feature.title}
+              </h3>
+              <p className="text-gray-600">
+                {feature.description}
+              </p>
             </div>
-
-            {/* Bonuses */}
-            <div className="mb-8">
-              <h3 className="text-2xl font-bold text-[#432818] mb-6">Bônus Exclusivos:</h3>
-              <div className="space-y-4">
-                {bonuses.map((bonus, index) => (
-                  <div key={index} className="flex items-start gap-3 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
-                    <div className="bg-yellow-500 text-white px-2 py-1 rounded text-sm font-semibold">
-                      {bonus.value}
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-[#432818] mb-1">{bonus.title}</h4>
-                      <p className="text-[#8F7A6A] text-sm">{bonus.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column - Pricing & CTA */}
-          <div>
-            {/* Pricing Card */}
-            <div className="bg-white rounded-lg border-2 border-[#B89B7A] p-8 mb-8 sticky top-8">
-              <div className="text-center mb-6">
-                <div className="flex items-center justify-center gap-2 mb-4">
-                  <span className="text-3xl text-gray-400 line-through">
-                    {price.currency} {price.original}
-                  </span>
-                  <span className="bg-red-500 text-white px-2 py-1 rounded text-sm font-semibold">
-                    -{savingsPercent}%
-                  </span>
-                </div>
-                <div className="text-5xl font-bold text-[#432818] mb-2">
-                  {price.currency} {price.discounted}
-                </div>
-                <p className="text-green-600 font-semibold">
-                  Você economiza {price.currency} {savings}!
-                </p>
-              </div>
-
-              <Button 
-                onClick={onNext}
-                size="lg"
-                className="w-full bg-[#B89B7A] hover:bg-[#A68B6A] text-white font-bold py-4 text-lg mb-4"
-              >
-                {ctaText}
-              </Button>
-
-              <div className="text-center text-sm text-[#8F7A6A]">
-                <p>✅ Pagamento 100% Seguro</p>
-                <p>✅ Acesso Imediato</p>
-                <p>✅ Garantia de {guarantee.days} dias</p>
-              </div>
-            </div>
-
-            {/* Guarantee */}
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8 text-center">
-              <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <h4 className="font-bold text-green-800 mb-2">Garantia de {guarantee.days} Dias</h4>
-              <p className="text-green-700 text-sm">{guarantee.description}</p>
-            </div>
-          </div>
+          ))}
         </div>
+
+        {/* Bonuses */}
+        {data.bonuses && data.bonuses.length > 0 && (
+          <div className="bg-yellow-50 rounded-2xl p-8 mb-16 border-2 border-yellow-200">
+            <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">
+              🎁 Bônus Exclusivos
+            </h2>
+            <div className="space-y-6">
+              {data.bonuses.map((bonus: any, index: number) => (
+                <div key={index} className="bg-white rounded-lg p-6 shadow-sm">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                        {bonus.title}
+                      </h3>
+                      <p className="text-gray-600">
+                        {bonus.description}
+                      </p>
+                    </div>
+                    <div className="text-right ml-4">
+                      <span className="text-green-600 font-bold text-lg">
+                        {bonus.value}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Testimonials */}
-        <div className="mt-16">
-          <h3 className="text-3xl font-bold text-[#432818] text-center mb-12">
-            O que nossas clientes dizem:
-          </h3>
-          <div className="grid md:grid-cols-2 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-white rounded-lg p-6 border border-[#B89B7A]/20">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-[#B89B7A] rounded-full flex items-center justify-center text-white font-bold">
-                    {testimonial.name[0]}
-                  </div>
-                  <div className="ml-4">
-                    <h4 className="font-semibold text-[#432818]">{testimonial.name}</h4>
-                    <p className="text-[#8F7A6A] text-sm">{testimonial.role}</p>
+        {data.testimonials && data.testimonials.length > 0 && (
+          <div className="mb-16">
+            <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">
+              Veja o que dizem nossos clientes
+            </h2>
+            <div className="grid md:grid-cols-2 gap-8">
+              {data.testimonials.map((testimonial: any, index: number) => (
+                <div key={index} className="bg-white rounded-xl p-6 shadow-lg">
+                  <div className="flex items-start space-x-4">
+                    <img
+                      src={testimonial.image}
+                      alt={testimonial.name}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                    <div className="flex-1">
+                      <p className="text-gray-600 mb-4 italic">
+                        "{testimonial.text}"
+                      </p>
+                      <p className="font-semibold text-gray-900">
+                        {testimonial.name}
+                      </p>
+                    </div>
                   </div>
                 </div>
-                <p className="text-[#8F7A6A] italic">"{testimonial.content}"</p>
-                <div className="flex text-yellow-400 mt-2">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-5 h-5 fill-current" viewBox="0 0 20 20">
-                      <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                    </svg>
-                  ))}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Pricing */}
+        <div className="bg-white rounded-2xl p-8 shadow-xl border-2 border-purple-200 mb-12">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              Oferta Especial
+            </h2>
+            
+            <div className="mb-6">
+              <span className="text-2xl text-gray-500 line-through mr-4">
+                De {data.originalPrice}
+              </span>
+              <span className="text-4xl font-bold text-green-600">
+                Por apenas {data.salePrice}
+              </span>
+            </div>
+
+            <div className="bg-green-50 rounded-lg p-4 mb-8">
+              <p className="text-green-800 font-semibold">
+                {data.guaranteeText}
+              </p>
+            </div>
+
+            <Button
+              onClick={onNext}
+              disabled={timeExpired}
+              size="lg"
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-4 px-12 text-xl rounded-full shadow-lg transform hover:scale-105 transition-all duration-200"
+            >
+              {data.ctaText}
+            </Button>
+
+            {timeExpired && (
+              <p className="text-red-600 mt-4 font-semibold">
+                Oferta expirada
+              </p>
+            )}
           </div>
         </div>
 
-        {/* Final CTA */}
-        <div className="text-center mt-16">
-          <Button 
-            onClick={onNext}
-            size="lg"
-            className="bg-[#B89B7A] hover:bg-[#A68B6A] text-white font-bold py-4 px-12 text-xl"
-          >
-            {ctaText}
-          </Button>
-          <p className="text-[#8F7A6A] mt-4 text-sm">
-            Clique agora e transforme seu estilo hoje mesmo!
-          </p>
-        </div>
+        {isEditable && (
+          <div className="text-center">
+            <Button
+              onClick={onEdit}
+              variant="outline"
+              className="mt-4"
+            >
+              Editar Seção
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

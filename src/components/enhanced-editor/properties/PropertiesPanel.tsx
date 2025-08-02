@@ -10,8 +10,8 @@ interface PropertiesPanelProps {
   selectedBlock: Block | null;
   blocks?: Block[];
   onClose: () => void;
-  onUpdate: (id: string, updates: any) => void;
-  onDelete: (id: string) => void;
+  onUpdate: (content: Partial<any>) => void;
+  onDelete: () => void;
   isMobile?: boolean;
 }
 
@@ -32,7 +32,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   }
 
   const handleContentUpdate = (key: string, value: any) => {
-    onUpdate(selectedBlock.id, {
+    onUpdate({
       content: {
         ...selectedBlock.content,
         [key]: value
@@ -119,7 +119,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           <Button 
             variant="destructive" 
             size="sm" 
-            onClick={() => onDelete(selectedBlock.id)}
+            onClick={onDelete}
             className="w-full"
           >
             Delete Block
@@ -129,3 +129,5 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     </div>
   );
 };
+
+export default PropertiesPanel;

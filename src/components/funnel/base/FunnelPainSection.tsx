@@ -8,6 +8,10 @@ interface FunnelPainSectionProps {
   painPoints?: string[];
   ctaText?: string;
   onCTAClick?: () => void;
+  // Editor-specific props
+  isSelected?: boolean;
+  onClick?: () => void;
+  className?: string;
 }
 
 const FunnelPainSection: React.FC<FunnelPainSectionProps> = ({
@@ -19,10 +23,18 @@ const FunnelPainSection: React.FC<FunnelPainSectionProps> = ({
     "Insegurança com as próprias escolhas de moda"
   ],
   ctaText = "Descobrir Meu Estilo",
-  onCTAClick
+  onCTAClick,
+  isSelected = false,
+  onClick,
+  className = ""
 }) => {
   return (
-    <div className="bg-white rounded-lg p-8 shadow-sm border border-gray-100">
+    <div 
+      className={`bg-white rounded-lg p-8 shadow-sm border ${
+        isSelected ? 'border-blue-500' : 'border-gray-100'
+      } ${className}`}
+      onClick={onClick}
+    >
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-4">{title}</h2>
         <p className="text-gray-600 text-lg">{description}</p>

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
@@ -24,16 +23,20 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({ className = '' }) => 
     setSelectedBlockId(newBlockId);
   };
 
-  const handleBlockUpdate = (id: string, updates: any) => {
-    updateBlock(id, updates);
+  const handleBlockUpdate = (updates: any) => {
+    if (selectedBlockId) {
+      updateBlock(selectedBlockId, updates);
+    }
   };
 
-  const handleBlockDelete = (id: string) => {
-    deleteBlock(id);
-    if (selectedBlockId === id) {
+  const handleBlockDelete = () => {
+    if (selectedBlockId) {
+      deleteBlock(selectedBlockId);
       setSelectedBlockId(null);
     }
   };
+
+  const selectedBlock = selectedBlockId ? blocks.find(b => b.id === selectedBlockId) || null : null;
 
   return (
     <EditorProvider>
@@ -68,7 +71,7 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({ className = '' }) => 
 
               <ResizablePanel defaultSize={25}>
                 <PropertiesPanel
-                  selectedBlock={selectedBlockId ? blocks.find(b => b.id === selectedBlockId) || null : null}
+                  selectedBlock={selectedBlock}
                   onClose={() => setSelectedBlockId(null)}
                   onUpdate={handleBlockUpdate}
                   onDelete={handleBlockDelete}
