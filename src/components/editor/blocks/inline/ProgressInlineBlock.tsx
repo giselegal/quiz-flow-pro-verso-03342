@@ -5,17 +5,39 @@ import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 
 const ProgressInlineBlock: React.FC<InlineBlockProps> = ({ block, onUpdate, isSelected, onSelect }) => {
+  // Safety check for block and properties
+  if (!block) {
+    console.warn('⚠️ ProgressInlineBlock: block is undefined');
+    return <div className="p-2 bg-red-50 text-red-600">Error: Block not found</div>;
+  }
+
+  // Safe destructuring with fallbacks
+  const properties = block.properties || {};
+  const content = properties.content || {};
+  const style = properties.style || {};
+  
   const {
     value = 50,
     max = 100,
     showValue = true,
     label = '',
+  } = content;
+
+  const {
     color = '#B89B7A',
     height = 8,
     animated = true
-  } = block.properties;
+  } = style;
 
   const percentage = Math.min(100, Math.max(0, (value / max) * 100));
+
+  console.log('🔄 ProgressInlineBlock render:', {
+    blockId: block.id,
+    hasProperties: !!block.properties,
+    value,
+    max,
+    percentage
+  });
 
   return (
     <div
