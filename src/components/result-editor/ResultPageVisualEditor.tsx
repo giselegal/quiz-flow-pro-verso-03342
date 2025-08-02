@@ -1,175 +1,134 @@
-import React, { useState, useEffect } from 'react';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import ComponentsSidebar from './ComponentsSidebar';
-import { EditorPreview } from './EditorPreview';
-import PropertiesPanel from './PropertiesPanel';
-import EditorToolbar from './EditorToolbar';
-import { GlobalStylesEditor } from './GlobalStylesEditor';
-import { useResultPageEditor } from '@/hooks/useResultPageEditor';
-import { useBlockOperations } from '@/hooks/editor/useBlockOperations';
-import { EditorProps } from '@/types/editorTypes';
-import { toast } from '@/components/ui/use-toast';
-import { ResultPageConfig } from '@/types/resultPageConfig';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { StyleResult, StyleType } from '@/types/quiz';
 
-interface ResultPageVisualEditorProps extends EditorProps {
-  initialConfig?: ResultPageConfig;
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
+import { BlockType, EditorBlock } from '@/types/editor';
+import EditableBlock from './EditableBlock';
+
+interface ResultPageVisualEditorProps {
+  blocks: EditorBlock[];
+  onBlocksUpdate: (blocks: EditorBlock[]) => void;
+  selectedBlockId?: string;
+  onSelectBlock: (id: string) => void;
 }
 
-export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({ 
-  selectedStyle,
-  onShowTemplates,
-  initialConfig
+export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({
+  blocks,
+  onBlocksUpdate,
+  selectedBlockId,
+  onSelectBlock
 }) => {
-  const {
-    resultPageConfig,
-    loading,
-    isPreviewing,
-    isGlobalStylesOpen,
-    actions: {
-      handleSave,
-      handleReset,
-      toggleGlobalStyles,
-      togglePreview,
-      updateSection,
-      importConfig
-    }
-  } = useResultPageEditor(selectedStyle.category);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
-  const {
-    blocks,
-    selectedBlockId,
-    setSelectedBlockId,
-    updateBlocks,
-    actions: blockActions
-  } = useBlockOperations();
+  const addBlock = (type: string) => {
+    const newBlock: EditorBlock = {
+      id: `block-${Date.now()}`,
+      type: type as BlockType,
+      content: getDefaultContent(type as BlockType),
+      order: blocks.length,
+      properties: {}
+    };
 
-  useEffect(() => {
-    if (initialConfig && importConfig) {
-      importConfig(initialConfig);
-    }
-  }, [initialConfig, importConfig]);
+    onBlocksUpdate([...blocks, newBlock]);
+  };
 
-  useEffect(() => {
-    if (resultPageConfig?.blocks) {
-      updateBlocks(resultPageConfig.blocks);
-    } else {
-      updateSection('blocks', []);
-    }
-  }, [resultPageConfig, updateBlocks, updateSection]);
-
-  const handleUpdateConfig = (newConfig: any) => {
-    if (newConfig) {
-      try {
-        importConfig(newConfig);
-        if (newConfig.blocks) {
-          updateBlocks(newConfig.blocks);
-        } else {
-          updateBlocks([]);
-        }
-        toast({
-          title: "Configuração atualizada",
-          description: "A configuração foi aplicada com sucesso",
-          duration: 3000
-        });
-      } catch (error) {
-        console.error('Error updating config:', error);
-        toast({
-          title: "Erro ao atualizar configuração",
-          description: "Ocorreu um erro ao aplicar a configuração",
-          variant: "destructive",
-          duration: 5000
-        });
-      }
+  const getDefaultContent = (type: BlockType) => {
+    switch (type) {
+      case 'header':
+        return { title: 'Novo Cabeçalho', subtitle: 'Subtítulo' };
+      case 'text':
+        return { text: 'Novo texto. Clique para editar.' };
+      case 'image':
+        return { imageUrl: '', imageAlt: 'Imagem', description: '' };
+      case 'button':
+        return { buttonText: 'Clique aqui', buttonUrl: '#' };
+      case 'benefits':
+        return { 
+          title: 'Benefícios',
+          items: ['Benefício 1', 'Benefício 2', 'Benefício 3']
+        };
+      default:
+        return { text: `Novo ${type}` };
     }
   };
 
-  if (loading) {
-    return (
-      <div className="h-full flex items-center justify-center">
-        <p className="text-[#1A1818]/70">Carregando configurações...</p>
-      </div>
+  const updateBlock = (id: string, content: any) => {
+    const updatedBlocks = blocks.map(block =>
+      block.id === id ? { ...block, content: { ...block.content, ...content } } : block
     );
-  }
-
-  const primaryStyle: StyleResult = {
-    category: selectedStyle.category as StyleType,
-    score: selectedStyle.score,
-    percentage: selectedStyle.percentage,
-    style: selectedStyle.category as StyleType,
-    points: selectedStyle.score,
-    rank: 1
+    onBlocksUpdate(updatedBlocks);
   };
 
-  const selectedBlock = selectedBlockId ? blocks.find(block => block.id === selectedBlockId) : null;
+  const deleteBlock = (id: string) => {
+    const updatedBlocks = blocks.filter(block => block.id !== id);
+    onBlocksUpdate(updatedBlocks);
+  };
 
-  // Handle component selection - convert string to proper type
-  const handleComponentSelect = (type: string) => {
-    blockActions.handleAddBlock(type);
+  const moveBlock = (fromIndex: number, toIndex: number) => {
+    const newBlocks = [...blocks];
+    const [movedBlock] = newBlocks.splice(fromIndex, 1);
+    newBlocks.splice(toIndex, 0, movedBlock);
+    
+    // Update order property
+    const updatedBlocks = newBlocks.map((block, index) => ({
+      ...block,
+      order: index
+    }));
+    
+    onBlocksUpdate(updatedBlocks);
   };
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden">
-      <EditorToolbar 
-        onSave={handleSave}
-        isPreviewMode={isPreviewing}
-        onPreviewToggle={togglePreview}
-        onReset={handleReset}
-        onEditGlobalStyles={toggleGlobalStyles}
-        resultPageConfig={resultPageConfig}
-        onUpdateConfig={handleUpdateConfig}
-        onShowTemplates={onShowTemplates}
-      />
-      
-      <Tabs defaultValue="editor" className="flex-1">
-        <TabsList className="hidden">
-          <TabsTrigger value="editor">Editor</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="editor" className="h-full">
-          <ResizablePanelGroup direction="horizontal" className="h-full">
-            <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-              <ComponentsSidebar onComponentSelect={handleComponentSelect} />
-            </ResizablePanel>
+    <div className="result-page-visual-editor">
+      <div className="toolbar mb-4 flex gap-2">
+        <Button onClick={() => addBlock('header')} size="sm">
+          + Cabeçalho
+        </Button>
+        <Button onClick={() => addBlock('text')} size="sm">
+          + Texto
+        </Button>
+        <Button onClick={() => addBlock('image')} size="sm">
+          + Imagem
+        </Button>
+        <Button onClick={() => addBlock('button')} size="sm">
+          + Botão
+        </Button>
+        <Button onClick={() => addBlock('benefits')} size="sm">
+          + Benefícios
+        </Button>
+      </div>
 
-            <ResizableHandle withHandle />
-
-            <ResizablePanel defaultSize={55}>
-              <EditorPreview
-                blocks={blocks}
-                selectedBlockId={selectedBlockId}
-                onSelectBlock={setSelectedBlockId}
-                isPreviewing={isPreviewing}
-                primaryStyle={primaryStyle}
-                onReorderBlocks={blockActions.handleReorderBlocks}
-              />
-            </ResizablePanel>
-
-            <ResizableHandle withHandle />
-
-            <ResizablePanel defaultSize={25}>
-              <PropertiesPanel
-                selectedBlock={selectedBlock}
-                onClose={() => setSelectedBlockId(null)}
-                onUpdateBlock={blockActions.handleUpdateBlock}
-                onDeleteBlock={blockActions.handleDeleteBlock}
-              />
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        </TabsContent>
-      </Tabs>
-      
-      {isGlobalStylesOpen && (
-        <GlobalStylesEditor
-          globalStyles={resultPageConfig.globalStyles || {}}
-          onSave={(styles) => {
-            updateSection('globalStyles', styles);
-            toggleGlobalStyles();
-          }}
-          onCancel={toggleGlobalStyles}
-        />
-      )}
+      <div className="blocks-container space-y-4">
+        {blocks.length === 0 ? (
+          <div className="text-center py-12 text-gray-500">
+            <p className="mb-4">Nenhum bloco adicionado ainda</p>
+            <Button onClick={() => addBlock('text')}>
+              <Plus className="w-4 h-4 mr-2" />
+              Adicionar primeiro bloco
+            </Button>
+          </div>
+        ) : (
+          blocks.map((block, index) => (
+            <EditableBlock
+              key={block.id}
+              block={block}
+              isSelected={selectedBlockId === block.id}
+              onSelect={() => onSelectBlock(block.id)}
+              onUpdate={(content) => updateBlock(block.id, content)}
+              onDelete={() => deleteBlock(block.id)}
+              onMove={(direction) => {
+                if (direction === 'up' && index > 0) {
+                  moveBlock(index, index - 1);
+                } else if (direction === 'down' && index < blocks.length - 1) {
+                  moveBlock(index, index + 1);
+                }
+              }}
+            />
+          ))
+        )}
+      </div>
     </div>
   );
 };
+
+export default ResultPageVisualEditor;

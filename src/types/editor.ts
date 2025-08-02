@@ -64,7 +64,13 @@ export type BlockType =
   | 'result-header-inline'
   | 'step-header-inline'
   | 'loading-animation'
-  | 'quiz-offer-cta-inline';
+  | 'quiz-offer-cta-inline'
+  | 'style-card-inline'
+  | 'result-card-inline'
+  | 'quiz-question-inline'
+  | 'quiz-result-inline'
+  | 'custom-code'
+  | 'animation-block';
 
 export interface EditableContent {
   title?: string;
@@ -78,7 +84,7 @@ export interface EditableContent {
   fontSize?: string;
   alignment?: 'left' | 'center' | 'right' | 'justify';
   subtitle?: string;
-  style?: string;
+  style?: Record<string, any>; // Changed from string to object
   borderWidth?: string;
   borderStyle?: string;
   borderColor?: string;
@@ -103,8 +109,9 @@ export interface EditableContent {
   imageAlt?: string;
   description?: string;
   customImage?: string;
-  items?: string[];
-  [key: string]: any; // Add index signature for dynamic properties
+  items?: string[] | Array<{ id: string; question: string; answer: string }>;
+  faqItems?: Array<{ id: string; question: string; answer: string }>; // Add specific FAQ type
+  [key: string]: any;
 }
 
 export interface Block {
@@ -112,8 +119,7 @@ export interface Block {
   type: BlockType;
   content: EditableContent;
   order: number;
-  properties?: Record<string, any>; // Add properties field
+  properties?: Record<string, any>;
 }
 
-// Export EditorBlock as alias for Block for backward compatibility
 export type EditorBlock = Block;

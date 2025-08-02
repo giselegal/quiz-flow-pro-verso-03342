@@ -1,171 +1,106 @@
 
 import React from 'react';
-import { Block } from '@/types/editor';
-import { StyleResult } from '@/types/quiz';
-import { cn } from '@/lib/utils';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import InlineTextEditor from './editors/InlineTextEditor';
+import { EditorBlock } from '@/types/editor';
 
 interface BlockPreviewRendererProps {
-  block: Block;
-  isSelected: boolean;
-  isPreviewing: boolean;
-  onSelect: () => void;
-  primaryStyle?: StyleResult;
+  block: EditorBlock;
+  isSelected?: boolean;
+  onSelect?: () => void;
 }
 
-export function BlockPreviewRenderer({
+export const BlockPreviewRenderer: React.FC<BlockPreviewRendererProps> = ({
   block,
-  isSelected,
-  isPreviewing,
-  onSelect,
-  primaryStyle
-}: BlockPreviewRendererProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging
-  } = useSortable({
-    id: block.id,
-    disabled: isPreviewing
-  });
+  isSelected = false,
+  onSelect
+}) => {
+  // Safely handle style properties
+  const style = block.content.style || {};
+  const styleProps = typeof style === 'object' ? style : {};
+  
+  const containerStyle = {
+    padding: styleProps.padding || block.content.padding || '1rem',
+    backgroundColor: styleProps.backgroundColor || block.content.backgroundColor || 'transparent',
+    color: styleProps.color || block.content.color || 'inherit',
+    textAlign: (styleProps.textAlign || block.content.textAlign || 'left') as any,
+    borderRadius: styleProps.borderRadius || block.content.borderRadius || '0',
+    border: isSelected ? '2px solid #3b82f6' : '1px solid transparent'
+  };
 
-  const style = transform ? {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-    zIndex: isDragging ? 10 : 1
-  } : undefined;
+  const renderBlockContent = () => {
+    switch (block.type) {
+      case 'text':
+      case 'text-inline':
+        return (
+          <div className="text-block">
+            {block.content.title && (
+              <h3 className="font-medium mb-2">{block.content.title}</h3>
+            )}
+            <p>{block.content.text || 'Clique para editar o texto'}</p>
+          </div>
+        );
+      
+      case 'image':
+      case 'image-display-inline':
+        return (
+          <div className="image-block">
+            {block.content.imageUrl ? (
+              <img
+                src={block.content.imageUrl}
+                alt={block.content.alt || 'Imagem'}
+                className="max-w-full h-auto rounded"
+                style={{
+                  width: styleProps.width || block.content.width || 'auto',
+                  height: styleProps.height || block.content.height || 'auto',
+                  objectFit: (styleProps.objectFit || block.content.objectFit || 'cover') as any
+                }}
+              />
+            ) : (
+              <div className="bg-gray-100 h-40 flex items-center justify-center rounded">
+                <span className="text-gray-500">Clique para adicionar imagem</span>
+              </div>
+            )}
+          </div>
+        );
+      
+      case 'button':
+        return (
+          <div className="button-block">
+            <button
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+              style={{
+                backgroundColor: styleProps.backgroundColor || block.content.backgroundColor || '#3b82f6',
+                color: styleProps.color || block.content.color || '#ffffff',
+                borderRadius: styleProps.borderRadius || block.content.borderRadius || '0.375rem'
+              }}
+            >
+              {block.content.buttonText || 'Botão'}
+            </button>
+          </div>
+        );
+      
+      default:
+        return (
+          <div className="unknown-block bg-gray-50 p-4 rounded">
+            <p className="text-gray-600">Tipo de bloco: {block.type}</p>
+          </div>
+        );
+    }
+  };
 
   return (
     <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...(isPreviewing ? {} : listeners)}
-      onClick={isPreviewing ? undefined : onSelect}
-      className={cn(
-        "relative mb-4 transition-all duration-200",
-        !isPreviewing && "hover:outline-dashed hover:outline-2 hover:outline-[#B89B7A]/40",
-        isSelected && !isPreviewing && "outline-dashed outline-2 outline-[#B89B7A]",
-        isDragging && "opacity-50"
-      )}
+      className="block-preview cursor-pointer transition-all hover:shadow-sm"
+      style={containerStyle}
+      onClick={onSelect}
     >
-      {!isPreviewing && isSelected && (
-        <div className="absolute -top-3 left-2 bg-[#B89B7A] text-white text-xs px-2 py-1 rounded-sm z-10">
-          {block.type}
+      {renderBlockContent()}
+      {isSelected && (
+        <div className="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 rounded text-xs">
+          Selecionado
         </div>
       )}
-
-      {renderBlockContent(block, isPreviewing, primaryStyle)}
     </div>
   );
-}
+};
 
-function renderBlockContent(block: Block, isPreviewing: boolean, primaryStyle?: StyleResult) {
-  const defaultStyle = {
-    padding: block.content?.style?.padding || '1rem',
-    backgroundColor: block.content?.style?.backgroundColor || 'transparent',
-    color: block.content?.style?.color || 'inherit',
-    textAlign: block.content?.style?.textAlign as any || 'left',
-    borderRadius: block.content?.style?.borderRadius || '0.375rem'
-  };
-
-  switch (block.type) {
-    case 'headline':
-      return (
-        <div className="space-y-2" style={defaultStyle}>
-          {!isPreviewing ? (
-            <>
-              <InlineTextEditor
-                value={block.content?.title || 'Título Principal'}
-                placeholder="Digite o título principal..."
-                className="text-2xl font-playfair text-[#432818] w-full outline-none border-b border-transparent focus:border-[#B89B7A]/30 transition-all"
-              />
-              <InlineTextEditor
-                value={block.content?.subtitle || 'Subtítulo ou descrição'}
-                placeholder="Digite o subtítulo..."
-                className="text-lg text-[#8F7A6A] w-full outline-none border-b border-transparent focus:border-[#B89B7A]/30 transition-all"
-              />
-            </>
-          ) : (
-            <>
-              <h2 className="text-2xl font-playfair text-[#432818]">
-                {block.content?.title || 'Título Principal'}
-              </h2>
-              <p className="text-[#8F7A6A]">
-                {block.content?.subtitle || 'Subtítulo ou descrição'}
-              </p>
-            </>
-          )}
-        </div>
-      );
-    
-    case 'text':
-      return (
-        <div style={defaultStyle}>
-          {!isPreviewing ? (
-            <InlineTextEditor
-              value={block.content?.text || 'Digite seu texto aqui...'}
-              placeholder="Digite seu texto aqui..."
-              className="text-[#432818] w-full outline-none border-b border-transparent focus:border-[#B89B7A]/30 transition-all"
-              multiline
-            />
-          ) : (
-            <p className="text-[#432818]">
-              {block.content?.text || 'Digite seu texto aqui...'}
-            </p>
-          )}
-        </div>
-      );
-    
-    case 'image':
-      return (
-        <div 
-          className="flex flex-col items-center text-center"
-          style={defaultStyle}
-        >
-          {block.content?.imageUrl ? (
-            <img
-              src={block.content.imageUrl}
-              alt={block.content.imageAlt || 'Imagem'}
-              className="max-w-full rounded-md"
-            />
-          ) : (
-            <div className="w-full h-48 bg-[#FAF9F7] border border-[#B89B7A]/20 rounded-md flex flex-col items-center justify-center">
-              <span className="text-[#8F7A6A]">Selecione uma imagem</span>
-              {!isPreviewing && (
-                <button className="mt-2 px-3 py-1.5 bg-[#B89B7A] text-white text-sm rounded">
-                  Carregar Imagem
-                </button>
-              )}
-            </div>
-          )}
-          {!isPreviewing ? (
-            <InlineTextEditor
-              value={block.content?.caption || ''}
-              placeholder="Legenda da imagem..."
-              className="mt-2 text-sm text-[#8F7A6A] w-full outline-none border-b border-transparent focus:border-[#B89B7A]/30 transition-all text-center"
-            />
-          ) : (
-            block.content?.caption && (
-              <p className="mt-2 text-sm text-[#8F7A6A]">{block.content.caption}</p>
-            )
-          )}
-        </div>
-      );
-
-    // Add more block types here...
-    
-    default:
-      return (
-        <div className="p-4 border border-[#B89B7A]/20 rounded-md bg-[#FAF9F7]">
-          <p className="text-[#8F7A6A]">Tipo de bloco não implementado: {block.type}</p>
-        </div>
-      );
-  }
-}
+export default BlockPreviewRenderer;
