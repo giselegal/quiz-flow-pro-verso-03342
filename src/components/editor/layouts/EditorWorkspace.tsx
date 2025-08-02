@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { ComponentsSidebar } from '../sidebar/ComponentsSidebar';
-import { PropertiesPanel } from '../properties/PropertiesPanel';
+import PropertiesPanel from '../properties/PropertiesPanel';
 import EditPreview from '../preview/EditPreview';
 import { useEditorState } from '../hooks/useEditorState';
 import { EditorProvider } from '@/contexts/EditorContext';
@@ -17,7 +17,7 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({ className = '' }) => 
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
   
-  const { blocks, addBlock, updateBlock, deleteBlock, reorderBlocks } = useEditorState();
+  const { blocks, addBlock, updateBlock, deleteBlock } = useEditorState();
 
   const handleComponentSelect = (type: string) => {
     const newBlockId = addBlock(type);
@@ -33,10 +33,6 @@ const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({ className = '' }) => 
     if (selectedBlockId === id) {
       setSelectedBlockId(null);
     }
-  };
-
-  const handleReorderBlocks = (sourceIndex: number, destinationIndex: number) => {
-    reorderBlocks(sourceIndex, destinationIndex);
   };
 
   return (

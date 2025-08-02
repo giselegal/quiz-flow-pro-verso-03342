@@ -12,11 +12,7 @@ export { default as FunnelIntroStep } from './steps/FunnelIntroStep';
 export { default as NameCollectStep } from './steps/NameCollectStep';
 export { default as QuizIntroStep } from './steps/QuizIntroStep';
 export { default as QuestionMultipleStep } from './steps/QuestionMultipleStep';
-export { default as QuizTransitionStep } from './steps/QuizTransitionStep';
 export { default as ProcessingStep } from './steps/ProcessingStep';
-export { default as ResultIntroStep } from './steps/ResultIntroStep';
-export { default as ResultDetailsStep } from './steps/ResultDetailsStep';
-export { default as ResultGuideStep } from './steps/ResultGuideStep';
 export { default as OfferTransitionStep } from './steps/OfferTransitionStep';
 export { default as OfferPageStep } from './steps/OfferPageStep';
 
@@ -25,10 +21,10 @@ export { default as FunnelProgressBar } from './shared/FunnelProgressBar';
 export { default as QuizOption } from './shared/QuizOption';
 export { default as CountdownTimer } from './shared/CountdownTimer';
 export { default as ResultCard } from './shared/ResultCard';
-export { default as StyleGuideViewer } from './shared/StyleGuideViewer';
+export { StyleGuideViewer } from './shared/StyleGuideViewer';
 export { default as OfferCard } from './shared/OfferCard';
 
-// Editor components - removed missing FunnelStepBlock
+// Editor components
 export { default as FunnelConfigProvider, useFunnelConfig } from './editor/FunnelConfigProvider';
 
 // Hooks

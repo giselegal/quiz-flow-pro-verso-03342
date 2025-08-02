@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { ComponentsSidebar } from '@/components/editor/sidebar/ComponentsSidebar';
-import { EditPreview } from '@/components/editor/preview/EditPreview';
+import EditPreview from '@/components/editor/preview/EditPreview';
 import PropertiesPanel from '@/components/editor/properties/PropertiesPanel';
 import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
 import { useEditor } from '@/hooks/useEditor';
@@ -23,7 +24,7 @@ const EditorPage: React.FC = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const funnelId = urlParams.get('id');
   
-  const { config, addBlock, updateBlock, deleteBlock, setConfig } = useEditor();
+  const { blocks, actions } = useEditor();
   const { saveFunnel, loadFunnel, isSaving, isLoading } = useEditorPersistence();
 
   // Load funnel data if ID is provided in URL
@@ -40,10 +41,9 @@ const EditorPage: React.FC = () => {
           // Convert to editor format and load first page blocks
           const firstPage = schemaDrivenData.pages[0];
           if (firstPage && firstPage.blocks) {
-            setConfig({
-              blocks: firstPage.blocks,
-              title: firstPage.title,
-              description: schemaDrivenData.description
+            // Update blocks using actions
+            firstPage.blocks.forEach((block: any) => {
+              actions.addBlock(block.type);
             });
             console.log('✅ Loaded funnel blocks:', firstPage.blocks.length);
           }
@@ -68,7 +68,7 @@ const EditorPage: React.FC = () => {
     };
 
     loadFunnelData();
-  }, [funnelId, setConfig]);
+  }, [funnelId, actions]);
   
   // ✅ AUTO-SAVE COM DEBOUNCE - Fase 1 
   const handleAutoSave = async (data: any) => {
@@ -94,7 +94,7 @@ const EditorPage: React.FC = () => {
         pageType: 'landing',
         pageOrder: 0,
         title: data.title || 'Página Principal',
-        blocks: data.blocks,
+        blocks: blocks,
         metadata: {}
       }]
     };
@@ -102,10 +102,10 @@ const EditorPage: React.FC = () => {
   };
   
   const { forceSave } = useAutoSaveWithDebounce({
-    data: config,
+    data: { blocks },
     onSave: handleAutoSave,
     delay: 500,
-    enabled: !!config?.blocks?.length,
+    enabled: !!blocks?.length,
     showToasts: false
   });
 
@@ -123,7 +123,7 @@ const EditorPage: React.FC = () => {
     <EditorQuizProvider>
       <div className="flex flex-col h-screen bg-background">
         <EditorToolbar
-          config={config}
+          config={{ blocks, title: 'Editor', description: '' }}
           isSaving={isSaving}
           onPreview={() => setIsPreviewing(!isPreviewing)}
           isPreviewing={isPreviewing}
@@ -133,7 +133,7 @@ const EditorPage: React.FC = () => {
         <ResizablePanelGroup direction="horizontal" className="flex-1">
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
             <ComponentsSidebar 
-              onAddBlock={addBlock}
+              onAddBlock={actions.addBlock}
               selectedComponentId={selectedComponentId}
             />
           </ResizablePanel>
@@ -142,11 +142,9 @@ const EditorPage: React.FC = () => {
           
           <ResizablePanel defaultSize={60} minSize={30}>
             <EditPreview
-              config={config}
-              onSelectComponent={setSelectedComponentId}
-              selectedComponentId={selectedComponentId}
-              onUpdateBlock={updateBlock}
-              onDeleteBlock={deleteBlock}
+              blocks={blocks}
+              selectedBlockId={selectedComponentId}
+              onSelectBlock={setSelectedComponentId}
               isPreviewing={isPreviewing}
             />
           </ResizablePanel>
@@ -156,8 +154,8 @@ const EditorPage: React.FC = () => {
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
             <PropertiesPanel
               selectedComponentId={selectedComponentId}
-              config={config}
-              onUpdateBlock={updateBlock}
+              config={{ blocks }}
+              onUpdateBlock={actions.updateBlock}
             />
           </ResizablePanel>
         </ResizablePanelGroup>

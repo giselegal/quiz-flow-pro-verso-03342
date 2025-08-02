@@ -1,129 +1,106 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { FunnelStepProps } from '@/types/funnel';
-import { Button } from '@/components/ui/button';
-import { Check } from 'lucide-react';
 
-/**
- * OfferTransitionStep - Etapa 20: Transição para oferta
- * 
- * Este componente faz a transição entre o resultado e a oferta final,
- * explicando o valor da oferta e seus benefícios.
- */
-export const OfferTransitionStep: React.FC<FunnelStepProps> = ({
-  id,
-  className = '',
-  isEditable = false,
-  onNext,
-  onPrevious,
-  data = {},
-  onEdit
-}) => {
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { FunnelStepProps } from '@/types/funnel';
+
+interface OfferTransitionStepProps extends FunnelStepProps {
+  data?: {
+    title?: string;
+    subtitle?: string;
+    resultSummary?: string;
+    benefits?: Array<{
+      title: string;
+      description: string;
+    }>;
+    transitionMessage?: string;
+    ctaText?: string;
+  };
+}
+
+const OfferTransitionStep: React.FC<OfferTransitionStepProps> = ({ data, onNext }) => {
   const {
-    title = 'Leve sua experiência para o próximo nível',
-    subtitle = 'Descubra como potencializar seus resultados com nossa solução completa',
+    title = "Agora que você conhece seu estilo...",
+    subtitle = "É hora de colocá-lo em prática!",
+    resultSummary = "Baseado nas suas respostas, identificamos que você tem um estilo único que merece ser explorado.",
     benefits = [
-      'Acesso a conteúdo exclusivo e aprofundado',
-      'Suporte personalizado para suas necessidades específicas',
-      'Ferramentas profissionais para implementação prática',
-      'Comunidade de pessoas com perfil similar ao seu'
+      { title: "Autoconfiança", description: "Sinta-se confiante em qualquer ocasião" },
+      { title: "Economia", description: "Pare de comprar peças que não usa" },
+      { title: "Praticidade", description: "Monte looks incríveis em minutos" },
+      { title: "Estilo Único", description: "Desenvolva sua identidade visual" }
     ],
-    imageUrl = '/placeholder-transition.jpg',
-    buttonText = 'Quero conhecer a oferta',
-    prevButtonText = 'Voltar ao meu resultado',
-    backgroundColor = 'bg-gradient-to-br from-purple-50 to-indigo-100'
-  } = data;
+    transitionMessage = "Quer descobrir como elevar seu estilo para o próximo nível?",
+    ctaText = "SIM, QUERO ELEVAR MEU ESTILO!"
+  } = data || {};
 
   return (
-    <div 
-      className={cn(
-        "relative rounded-xl shadow-md p-6",
-        backgroundColor,
-        className
-      )}
-      onClick={isEditable ? onEdit : undefined}
-      data-funnel-step-id={id}
-    >
-      <div className="max-w-4xl mx-auto">
-        {/* Conteúdo em grid */}
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-          {/* Lado esquerdo - Texto e benefícios */}
-          <div className="space-y-8">
-            {/* Título e subtítulo */}
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                {title}
-              </h2>
-              
-              <p className="text-xl text-gray-700">
-                {subtitle}
-              </p>
-            </div>
-            
-            {/* Lista de benefícios */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Você vai ter acesso a:</h3>
-              
-              <ul className="space-y-3">
-                {benefits.map((benefit, index) => (
-                  <li key={index} className="flex items-start">
-                    <div className="flex-shrink-0 mr-3">
-                      <div className="bg-green-500 rounded-full p-1">
-                        <Check className="h-4 w-4 text-white" />
-                      </div>
-                    </div>
-                    <span className="text-gray-800">{benefit}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            
-            {/* Botão CTA */}
-            <Button
-              onClick={isEditable ? undefined : onNext}
-              size="lg"
-              className="w-full text-lg py-6"
-            >
-              {buttonText}
-            </Button>
-            
-            {/* Botão voltar */}
-            {onPrevious && (
-              <div className="text-center">
-                <button
-                  onClick={isEditable ? undefined : onPrevious}
-                  className="text-gray-600 hover:text-gray-900 text-sm underline"
-                >
-                  {prevButtonText}
-                </button>
+    <div className="min-h-screen bg-gradient-to-b from-[#FAF9F7] to-white flex items-center justify-center px-6">
+      <div className="max-w-4xl mx-auto text-center">
+        {/* Main Title */}
+        <h1 className="text-4xl md:text-5xl font-bold text-[#432818] mb-6 leading-tight">
+          {title}
+        </h1>
+        
+        <p className="text-2xl text-[#B89B7A] mb-8 font-semibold">
+          {subtitle}
+        </p>
+
+        {/* Result Summary */}
+        <div className="bg-white rounded-lg p-8 mb-12 border-2 border-[#B89B7A] max-w-2xl mx-auto">
+          <p className="text-[#8F7A6A] text-lg leading-relaxed">
+            {resultSummary}
+          </p>
+        </div>
+
+        {/* Benefits Grid */}
+        <div className="grid md:grid-cols-2 gap-6 mb-12">
+          {benefits.map((benefit, index) => (
+            <div key={index} className="bg-white rounded-lg p-6 border border-[#B89B7A]/20 text-left">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-[#B89B7A] rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-bold text-[#432818] text-xl mb-2">{benefit.title}</h3>
+                  <p className="text-[#8F7A6A]">{benefit.description}</p>
+                </div>
               </div>
-            )}
-          </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Transition Message */}
+        <div className="mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-[#432818] mb-6">
+            {transitionMessage}
+          </h2>
           
-          {/* Lado direito - Imagem */}
-          {imageUrl && (
-            <div className="relative">
-              <img 
-                src={imageUrl} 
-                alt="Oferta especial"
-                className="w-full rounded-lg shadow-md"
-              />
-              
-              {/* Badge de oferta especial */}
-              <div className="absolute -top-4 -right-4 bg-red-500 text-white rounded-full py-2 px-4 text-sm font-bold shadow-lg transform rotate-12">
-                Oferta Especial
-              </div>
-            </div>
-          )}
+          <p className="text-[#8F7A6A] text-lg mb-8">
+            Temos uma solução especial que vai transformar completamente sua relação com a moda...
+          </p>
+        </div>
+
+        {/* CTA */}
+        <Button 
+          onClick={onNext}
+          size="lg"
+          className="bg-[#B89B7A] hover:bg-[#A68B6A] text-white font-bold py-4 px-12 text-xl"
+        >
+          {ctaText}
+        </Button>
+
+        <p className="text-[#8F7A6A] mt-4 text-sm">
+          Clique para descobrir nossa solução exclusiva
+        </p>
+
+        {/* Visual Elements */}
+        <div className="mt-12 flex justify-center space-x-4">
+          <div className="w-4 h-4 bg-[#B89B7A] rounded-full animate-bounce"></div>
+          <div className="w-4 h-4 bg-[#B89B7A] rounded-full animate-bounce delay-100"></div>
+          <div className="w-4 h-4 bg-[#B89B7A] rounded-full animate-bounce delay-200"></div>
         </div>
       </div>
-      
-      {/* Indicador de edição */}
-      {isEditable && (
-        <div className="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded">
-          Editar
-        </div>
-      )}
     </div>
   );
 };

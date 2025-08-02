@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { ComponentsSidebar } from '../sidebar/ComponentsSidebar';
 import { EditorCanvas } from '../canvas/EditorCanvas';
-import { PropertiesPanel } from '../properties/PropertiesPanel';
+import PropertiesPanel from '../properties/PropertiesPanel';
 import { EditorProvider } from '@/contexts/EditorContext';
 import { useResultPageConfig } from '@/hooks/useResultPageConfig';
 
