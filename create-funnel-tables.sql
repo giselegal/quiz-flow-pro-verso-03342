@@ -1,3 +1,4 @@
+
 -- Criar tabelas para o Funnel Service
 
 -- Tabela de funnels
