@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Plus, GripVertical, Eye, Settings, Copy, Trash2 } from 'lucide-react';
+import { Plus, GripVertical, Eye, Settings, Copy, Trash2, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEditor } from '@/context/EditorContext';
 
@@ -16,6 +16,10 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   className,
   onStageSelect 
 }) => {
+  // ✅ ESTADO DE LOADING PARA DEBUG
+  const [isLoading, setIsLoading] = useState(true);
+  const [renderCount, setRenderCount] = useState(0);
+
   // ✅ USAR APENAS EDITORCONTEXT UNIFICADO
   const { 
     stages,
@@ -31,9 +35,26 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
     }
   } = useEditor();
 
-  // ✅ TIMESTAMP PARA DEBUG
+  // ✅ TIMESTAMP E DEBUG APRIMORADO
   const timestamp = new Date().toLocaleTimeString();
-  console.log(`🔍 [${timestamp}] FunnelStagesPanel - Stages:`, stages?.length || 0, 'ActiveStage:', activeStageId);
+  
+  // ✅ INCREMENTAR CONTADOR DE RENDER
+  useEffect(() => {
+    setRenderCount(prev => prev + 1);
+    console.log(`� [${timestamp}] FunnelStagesPanel - RENDER #${renderCount + 1} INICIADO`);
+    console.log(`🔍 [${timestamp}] FunnelStagesPanel - Stages:`, stages?.length || 0, 'ActiveStage:', activeStageId);
+    console.log(`🔍 [${timestamp}] FunnelStagesPanel - Stages Array:`, stages);
+    console.log(`🔍 [${timestamp}] FunnelStagesPanel - StageCount:`, stageCount);
+    
+    // ✅ SIMULAR DELAY DE LOADING PARA VERIFICAR TIMING
+    if (stages && stages.length > 0) {
+      console.log(`✅ [${timestamp}] FunnelStagesPanel - STAGES CARREGADAS, removendo loading`);
+      setTimeout(() => setIsLoading(false), 100);
+    } else {
+      console.warn(`⚠️ [${timestamp}] FunnelStagesPanel - STAGES VAZIAS ou UNDEFINED`);
+      setTimeout(() => setIsLoading(false), 500); // Maior delay para stages vazias
+    }
+  }, [stages, activeStageId, stageCount]);
 
   // ✅ HANDLER PARA ADICIONAR NOVA ETAPA
   const handleAddStage = (e: React.MouseEvent) => {
@@ -96,9 +117,34 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
     }
   };
 
-  // ✅ VALIDAÇÃO: VERIFICAR SE HÁ ETAPAS
+  // ✅ VALIDAÇÃO: VERIFICAR SE HÁ ETAPAS OU LOADING
+  if (isLoading) {
+    console.log(`🔄 [${timestamp}] FunnelStagesPanel - LOADING STATE`);
+    return (
+      <Card className={cn("h-full flex flex-col min-h-[400px] bg-blue-50/50 border-blue-200", className)}>
+        <CardHeader className="flex-shrink-0 pb-3 bg-blue-100/50">
+          <CardTitle className="text-lg font-semibold text-blue-700 flex items-center gap-2">
+            <Loader2 className="w-4 h-4 animate-spin" />
+            🔄 Carregando Etapas...
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex-1 p-4">
+          <div className="h-full flex items-center justify-center text-blue-600">
+            <div className="text-center space-y-4">
+              <div className="text-4xl animate-bounce">⏳</div>
+              <p className="font-medium">Inicializando contexto...</p>
+              <p className="text-sm">Render #{renderCount}</p>
+              <p className="text-xs">Stages: {stages?.length || 0}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   if (!stages || stages.length === 0) {
-    console.warn(`⚠️ [${timestamp}] FunnelStagesPanel - PROBLEMA: Nenhuma etapa encontrada!`);
+    console.warn(`⚠️ [${timestamp}] FunnelStagesPanel - PROBLEMA: Nenhuma etapa encontrada após loading!`);
+    console.warn(`⚠️ [${timestamp}] FunnelStagesPanel - Render #${renderCount}, Stages:`, stages);
     return (
       <Card className={cn("h-full flex flex-col min-h-[400px] bg-red-50/50 border-red-200", className)}>
         <CardHeader className="flex-shrink-0 pb-3 bg-red-100/50">
@@ -112,7 +158,10 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
             <div className="text-center space-y-4">
               <div className="text-4xl animate-bounce">🚨</div>
               <p className="font-medium">Etapas não carregaram</p>
-              <p className="text-sm">Verifique o console para detalhes</p>
+              <p className="text-sm">Render #{renderCount}</p>
+              <p className="text-xs">Stages: {stages ? stages.length : 'undefined'}</p>
+              <p className="text-xs">StageCount: {stageCount || 'undefined'}</p>
+              <p className="text-xs">ActiveStageId: {activeStageId || 'undefined'}</p>
               <Button 
                 onClick={() => window.location.reload()} 
                 variant="outline" 
