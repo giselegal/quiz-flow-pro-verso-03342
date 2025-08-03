@@ -8,7 +8,7 @@ import DynamicPropertiesPanel from '@/components/editor/DynamicPropertiesPanel';
 import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
 import { EditableContent, Block } from '@/types/editor';
 import { getDefaultContentForType } from '@/utils/blockDefaults';
-import { getRegistryStats } from '@/config/enhancedBlockRegistry';
+import { getRegistryStats, generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
 import { Type, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
