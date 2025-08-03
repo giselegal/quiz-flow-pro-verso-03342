@@ -1,4 +1,3 @@
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -130,7 +129,14 @@ export const SalesOffer: React.FC<SalesOfferProps> = (props) => {
     minimal: 'bg-white border border-gray-100 shadow-lg'
   };
 
-  const containerClasses = getOptimizedContainerClasses(deviceView || "desktop", "tight", "full", className);
+  const containerClasses = `
+    flex flex-col min-h-screen justify-center
+    ${deviceView === 'mobile' ? 'px-4 py-6' : 
+      deviceView === 'tablet' ? 'px-6 py-8' : 
+      'px-8 py-12'}
+    ${alignmentClasses[alignment as keyof typeof alignmentClasses]}
+    ${className}
+  `.trim();
 
   // Calcular desconto em porcentagem
   const calculateDiscountPercent = () => {
@@ -150,7 +156,7 @@ export const SalesOffer: React.FC<SalesOfferProps> = (props) => {
       style={style}
       data-testid={testId}
     >
-      <div className="max-w-full mx-auto w-full">
+      <div className="max-w-4xl mx-auto w-full">
         {/* Header da Oferta */}
         <div className="mb-8 text-center">
           <h1 className="text-3xl md:text-5xl font-bold text-[#432818] mb-4">

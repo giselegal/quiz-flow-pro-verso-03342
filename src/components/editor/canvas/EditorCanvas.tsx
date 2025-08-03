@@ -42,10 +42,10 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
 
   const getViewportClasses = () => {
     switch (viewportSize) {
-      case 'sm': return 'max-w-sm mx-auto';
-      case 'md': return 'max-w-md mx-auto';
-      case 'lg': return 'max-w-4xl mx-auto';
-      default: return 'max-w-4xl mx-auto';
+      case 'sm': return 'max-w-full mx-auto px-2';
+      case 'md': return 'max-w-full mx-auto px-4';
+      case 'lg': return 'max-w-full mx-auto px-6';
+      default: return 'max-w-full mx-auto px-6';
     }
   };
 
@@ -55,15 +55,17 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
 
   if (isPreviewing) {
     return (
-      <div className={`p-4 ${getViewportClasses()}`}>
-        <div className="space-y-4">
+      <div className={`py-2 ${getViewportClasses()}`}>
+        <div className="space-y-2">
           {blocks.map((block) => (
-            <div key={block.id} className="w-full">
-              <UniversalBlockRenderer
-                block={block}
-                isSelected={false}
-                disabled={true}
-              />
+            <div key={block.id} className="w-full flex justify-center">
+              <div className="w-full max-w-none">
+                <UniversalBlockRenderer
+                  block={block}
+                  isSelected={false}
+                  disabled={true}
+                />
+              </div>
             </div>
           ))}
         </div>
@@ -72,19 +74,23 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
   }
 
   return (
-    <div className={`p-4 ${getViewportClasses()}`}>
+    <div className={`py-2 ${getViewportClasses()}`}>
       <DndContext onDragEnd={handleDragEnd}>
         <SortableContext items={blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
-          <div className="space-y-4">
+          <div className="space-y-2">
             {blocks.map((block) => (
-              <SortableBlockWrapper
-                key={block.id}
-                block={block}
-                isSelected={selectedBlockId === block.id}
-                onSelect={() => onSelectBlock(block.id)}
-                onUpdate={(updates) => handleUpdateBlock(block.id, updates)}
-                onDelete={() => onDeleteBlock(block.id)}
-              />
+              <div key={block.id} className="w-full flex justify-center">
+                <div className="w-full max-w-none">
+                  <SortableBlockWrapper
+                    key={block.id}
+                    block={block}
+                    isSelected={selectedBlockId === block.id}
+                    onSelect={() => onSelectBlock(block.id)}
+                    onUpdate={(updates) => handleUpdateBlock(block.id, updates)}
+                    onDelete={() => onDeleteBlock(block.id)}
+                  />
+                </div>
+              </div>
             ))}
             {blocks.length === 0 && (
               <div className="text-center py-12 text-gray-500">

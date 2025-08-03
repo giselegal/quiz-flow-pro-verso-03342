@@ -1,4 +1,3 @@
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -126,19 +125,19 @@ export const IntroPage: React.FC<IntroPageProps> = ({
       title: 'text-2xl md:text-3xl',
       subtitle: 'text-lg',
       logo: 'w-16 h-16',
-      spacing: 'space-y-2'
+      spacing: 'space-y-4'
     },
     medium: {
       title: 'text-3xl md:text-4xl',
       subtitle: 'text-xl',
       logo: 'w-20 h-20',
-      spacing: 'space-y-2'
+      spacing: 'space-y-6'
     },
     large: {
       title: 'text-4xl md:text-5xl',
       subtitle: 'text-2xl',
       logo: 'w-24 h-24',
-      spacing: 'space-y-2'
+      spacing: 'space-y-8'
     }
   };
 
@@ -197,7 +196,15 @@ export const IntroPage: React.FC<IntroPageProps> = ({
     onSubmit?.({ name: name.trim() });
   };
 
-  const containerClasses = getOptimizedContainerClasses(deviceView || "desktop", "tight", "full", className);
+  const containerClasses = `
+    flex flex-col min-h-screen
+    ${deviceView === 'mobile' ? 'px-4 py-6' : 
+      deviceView === 'tablet' ? 'px-8 py-8' : 
+      'px-12 py-12'}
+    ${currentAlignmentClasses}
+    ${currentSizeClasses.spacing}
+    ${className}
+  `.trim();
 
   return (
     <div 

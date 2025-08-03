@@ -1,4 +1,3 @@
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -117,7 +116,7 @@ export const SocialProof: React.FC<SocialProofProps> = (props) => {
   // Classes de layout para stats
   const statsLayoutClasses = {
     horizontal: 'flex flex-wrap justify-center gap-8 md:gap-12',
-    vertical: 'flex flex-col space-y-2',
+    vertical: 'flex flex-col space-y-6',
     grid: deviceView === 'mobile' 
       ? 'grid grid-cols-1 gap-6'
       : deviceView === 'tablet'
@@ -163,7 +162,13 @@ export const SocialProof: React.FC<SocialProofProps> = (props) => {
     );
   };
 
-  const containerClasses = getOptimizedContainerClasses(deviceView || "desktop", "tight", "full", className);
+  const containerClasses = `
+    ${deviceView === 'mobile' ? 'px-4 py-8' : 
+      deviceView === 'tablet' ? 'px-6 py-12' : 
+      'px-8 py-16'}
+    ${alignmentClasses[alignment]}
+    ${className}
+  `.trim();
 
   return (
     <div 
@@ -171,7 +176,7 @@ export const SocialProof: React.FC<SocialProofProps> = (props) => {
       style={{ backgroundColor, color: textColor, ...style }}
       data-testid={testId}
     >
-      <div className="max-w-full mx-auto">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
         {(title || subtitle || description) && (
           <div className={`mb-12 ${alignmentClasses[alignment]}`}>

@@ -1,4 +1,3 @@
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -76,7 +75,7 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
 
   const getLayoutClasses = () => {
     if (layout === 'stacked' || deviceView === 'mobile') {
-      return 'space-y-2';
+      return 'space-y-6';
     }
     if (layout === 'table') {
       return 'overflow-x-auto';
@@ -224,7 +223,7 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
         </div>
 
         {/* Table comparison - implementação simplificada */}
-        <div className="max-w-full mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="overflow-x-auto">
             <div className="min-w-[800px] bg-white rounded-lg shadow-lg border border-gray-200">
               {/* Headers */}
@@ -297,7 +296,7 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
       </div>
 
       {/* Price options */}
-      <div className="max-w-full mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className={getLayoutClasses()}>
           {priceOptions.map((option, index) => renderPriceCard(option, index))}
         </div>

@@ -152,18 +152,22 @@ const EditorFixedPage: React.FC = () => {
       
       <FourColumnLayout
         stagesPanel={
-          <FunnelStagesPanel 
-            onStageSelect={handleStageSelect} 
-          />
+          !isPreviewing ? (
+            <FunnelStagesPanel 
+              onStageSelect={handleStageSelect} 
+            />
+          ) : null
         }
         componentsPanel={
-          <EnhancedComponentsSidebar 
-            onAddComponent={(type: string) => {
-              // ✅ USAR CONTEXT UNIFICADO
-              const blockId = addBlock(type);
-              console.log(`➕ Bloco ${type} adicionado à etapa ${activeStageId}`);
-            }}
-          />
+          !isPreviewing ? (
+            <EnhancedComponentsSidebar 
+              onAddComponent={(type: string) => {
+                // ✅ USAR CONTEXT UNIFICADO
+                const blockId = addBlock(type);
+                console.log(`➕ Bloco ${type} adicionado à etapa ${activeStageId}`);
+              }}
+            />
+          ) : null
         }
         canvas={
           <div className="p-6 overflow-auto h-full bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm">
@@ -172,7 +176,9 @@ const EditorFixedPage: React.FC = () => {
                 {currentBlocks.length === 0 ? (
                   <div className="text-center py-24">
                     <h3 className="text-2xl font-semibold text-stone-700 mb-3 font-serif">Etapa {activeStageId}</h3>
-                    <p className="text-stone-500 text-lg mb-2">Arraste componentes da sidebar para começar</p>
+                    <p className="text-stone-500 text-lg mb-2">
+                      {isPreviewing ? 'Modo Preview - Nenhum componente nesta etapa' : 'Arraste componentes da sidebar para começar'}
+                    </p>
                     <p className="text-xs text-stone-400 bg-stone-100/50 px-4 py-2 rounded-full inline-block">
                       Sistema integrado com {stageCount} etapas
                     </p>
@@ -183,38 +189,45 @@ const EditorFixedPage: React.FC = () => {
                       <div
                         key={block.id}
                         className={`
-                          group relative border-2 rounded-xl p-6 cursor-pointer transition-all duration-300 ease-out transform backdrop-blur-sm
-                          ${selectedBlockId === block.id 
-                            ? 'border-brand bg-gradient-to-br from-brand/10 to-white/80 shadow-xl shadow-brand/25 scale-[1.02] ring-1 ring-brand/30' 
-                            : 'border-stone-200/50 hover:border-brand/50 hover:shadow-lg hover:shadow-stone-300/30 hover:bg-white/90 hover:scale-[1.01]'
+                          group relative border-2 rounded-xl p-6 transition-all duration-300 ease-out transform backdrop-blur-sm
+                          ${isPreviewing 
+                            ? 'border-transparent bg-transparent cursor-default' 
+                            : selectedBlockId === block.id 
+                              ? 'border-brand bg-gradient-to-br from-brand/10 to-white/80 shadow-xl shadow-brand/25 scale-[1.02] ring-1 ring-brand/30 cursor-pointer' 
+                              : 'border-stone-200/50 hover:border-brand/50 hover:shadow-lg hover:shadow-stone-300/30 hover:bg-white/90 hover:scale-[1.01] cursor-pointer'
                           }
                           hover:transform-gpu
                         `}
-                        onClick={() => setSelectedBlockId(block.id)}
+                        onClick={() => !isPreviewing && setSelectedBlockId(block.id)}
                       >
-                        {/* Controles do bloco com design luxuoso */}
-                        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteBlock(block.id);
-                            }}
-                            className="h-9 w-9 p-0 text-amber-600 hover:text-amber-800 hover:bg-amber-100/60 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg backdrop-blur-sm border border-amber-300/40 hover:border-amber-500/60"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
+                        {/* Controles do bloco - ocultar no preview */}
+                        {!isPreviewing && (
+                          <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteBlock(block.id);
+                              }}
+                              className="h-9 w-9 p-0 text-amber-600 hover:text-amber-800 hover:bg-amber-100/60 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg backdrop-blur-sm border border-amber-300/40 hover:border-amber-500/60"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        )}
 
                         {/* Renderização do bloco */}
                         <UniversalBlockRenderer
                           block={block}
-                          isSelected={selectedBlockId === block.id}
-                          onClick={() => setSelectedBlockId(block.id)}
+                          isSelected={!isPreviewing && selectedBlockId === block.id}
+                          onClick={() => !isPreviewing && setSelectedBlockId(block.id)}
                           onPropertyChange={(key: string, value: any) => {
-                            updateBlock(block.id, { content: { [key]: value } });
+                            if (!isPreviewing) {
+                              updateBlock(block.id, { content: { [key]: value } });
+                            }
                           }}
+                          disabled={isPreviewing}
                         />
                       </div>
                     ))}
@@ -225,7 +238,7 @@ const EditorFixedPage: React.FC = () => {
           </div>
         }
         propertiesPanel={
-          selectedBlock ? (
+          !isPreviewing && selectedBlock ? (
             <EnhancedPropertiesPanel
               block={selectedBlock}
               blockDefinition={getBlockDefinitionForType(selectedBlock.type)}
@@ -234,7 +247,7 @@ const EditorFixedPage: React.FC = () => {
               }}
               onClose={() => setSelectedBlockId(null)}
             />
-          ) : (
+          ) : !isPreviewing ? (
             <div className="h-full p-4 flex items-center justify-center text-stone-500">
               <div className="text-center">
                 <p className="text-sm">Selecione um bloco para editar propriedades</p>

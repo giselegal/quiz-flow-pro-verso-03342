@@ -1,4 +1,3 @@
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { 
@@ -152,7 +151,12 @@ export const FAQSection: React.FC<FAQSectionProps> = (props) => {
     }
   };
 
-  const containerClasses = getOptimizedContainerClasses(deviceView || "desktop", "tight", "full", className);
+  const containerClasses = `
+    ${deviceView === 'mobile' ? 'px-4 py-8' : 
+      deviceView === 'tablet' ? 'px-6 py-12' : 
+      'px-8 py-16'}
+    ${className}
+  `.trim();
 
   return (
     <div 
@@ -160,7 +164,7 @@ export const FAQSection: React.FC<FAQSectionProps> = (props) => {
       style={style}
       data-testid={testId}
     >
-      <div className="max-w-full mx-auto">
+      <div className="max-w-4xl mx-auto">
         {/* Header */}
         {(title || subtitle) && (
           <div className={`mb-12 ${alignmentClasses[alignment]}`}>
@@ -179,7 +183,7 @@ export const FAQSection: React.FC<FAQSectionProps> = (props) => {
         )}
 
         {/* Lista de FAQs */}
-        <div className="space-y-2">
+        <div className="space-y-4">
           {faqs.map((faq, index) => {
             const faqId = faq.id || index.toString();
             const isOpen = openFAQs.has(faqId);

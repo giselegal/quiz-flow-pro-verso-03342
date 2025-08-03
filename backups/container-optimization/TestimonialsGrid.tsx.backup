@@ -1,4 +1,3 @@
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { 
@@ -203,7 +202,12 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = (props) => {
     </Card>
   );
 
-  const containerClasses = getOptimizedContainerClasses(deviceView || "desktop", "tight", "full", className);
+  const containerClasses = `
+    ${deviceView === 'mobile' ? 'px-4 py-8' : 
+      deviceView === 'tablet' ? 'px-6 py-12' : 
+      'px-8 py-16'}
+    ${className}
+  `.trim();
 
   return (
     <div 
@@ -240,7 +244,7 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = (props) => {
 
         {/* Lista de Depoimentos */}
         {layout === 'list' && (
-          <div className="space-y-2">
+          <div className="space-y-6">
             {testimonials.map((testimonial, index) => 
               renderTestimonial(testimonial, index)
             )}

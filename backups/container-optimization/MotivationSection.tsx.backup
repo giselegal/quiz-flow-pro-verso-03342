@@ -1,4 +1,3 @@
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -66,7 +65,7 @@ export const MotivationSection: React.FC<MotivationSectionProps> = ({
   const getLayoutClasses = () => {
     switch (layout) {
       case 'list':
-        return 'space-y-2';
+        return 'space-y-4';
       case 'horizontal':
         return 'grid grid-cols-1 md:grid-cols-3 gap-6';
       default:
@@ -105,7 +104,7 @@ export const MotivationSection: React.FC<MotivationSectionProps> = ({
       </div>
 
       {/* Content */}
-      <div className="max-w-full mx-auto">
+      <div className="max-w-4xl mx-auto">
         <div className={getLayoutClasses()}>
           {motivations.map((motivation, index) => (
             <AnimatedWrapper

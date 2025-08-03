@@ -1,4 +1,3 @@
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -71,7 +70,7 @@ export const MentorSection: React.FC<MentorSectionProps> = ({
 
   const getLayoutClasses = () => {
     if (layout === 'vertical' || deviceView === 'mobile') {
-      return 'flex flex-col items-center text-center space-y-2';
+      return 'flex flex-col items-center text-center space-y-6';
     }
     if (layout === 'card') {
       return 'text-center';
@@ -113,7 +112,7 @@ export const MentorSection: React.FC<MentorSectionProps> = ({
       )}
 
       {/* Content */}
-      <div className="max-w-full mx-auto">
+      <div className="max-w-4xl mx-auto">
         <AnimatedWrapper
           animation={animationsDisabled || isLowPerformance ? 'none' : 'fade'}
           show={true}
@@ -139,7 +138,7 @@ export const MentorSection: React.FC<MentorSectionProps> = ({
               </div>
 
               {/* Content */}
-              <div className={`space-y-2 ${layout === 'horizontal' && deviceView !== 'mobile' ? 'order-1' : ''}`}>
+              <div className={`space-y-4 ${layout === 'horizontal' && deviceView !== 'mobile' ? 'order-1' : ''}`}>
                 {/* Name and title */}
                 <div>
                   <h3 className="text-2xl font-semibold text-[#432818] mb-1 flex items-center gap-2 justify-center md:justify-start">
