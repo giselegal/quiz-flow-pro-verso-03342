@@ -136,11 +136,11 @@ class FunnelPersistenceService {
       const transformedFunnel: FunnelData = {
         id: funnel.id,
         name: funnel.name,
-        description: funnel.description,
-        userId: funnel.user_id,
-        isPublished: funnel.is_published,
-        version: funnel.version,
-        settings: funnel.settings || {},
+        description: funnel.description || undefined,
+        userId: funnel.user_id || undefined,
+        isPublished: funnel.is_published || false,
+        version: funnel.version || 1,
+        settings: (funnel.settings as Record<string, any>) || {},
         pages: funnel.funnel_pages?.map((page: any) => ({
           id: page.id,
           pageType: page.page_type,
@@ -149,8 +149,8 @@ class FunnelPersistenceService {
           blocks: page.blocks || [],
           metadata: page.metadata || {}
         })) || [],
-        createdAt: funnel.created_at,
-        updatedAt: funnel.updated_at
+        createdAt: funnel.created_at || undefined,
+        updatedAt: funnel.updated_at || undefined
       };
 
       // Also save to localStorage for offline access
@@ -182,21 +182,21 @@ class FunnelPersistenceService {
       return funnels.map(funnel => ({
         id: funnel.id,
         name: funnel.name,
-        description: funnel.description,
-        userId: funnel.user_id,
-        isPublished: funnel.is_published,
-        version: funnel.version,
-        settings: funnel.settings || {},
+        description: funnel.description || undefined,
+        userId: funnel.user_id || undefined,
+        isPublished: funnel.is_published || false,
+        version: funnel.version || 1,
+        settings: (funnel.settings as Record<string, any>) || {},
         pages: funnel.funnel_pages?.map((page: any) => ({
           id: page.id,
-          pageType: page.page_type,
+          pageType: page.page_type || undefined,
           pageOrder: page.page_order,
-          title: page.title,
+          title: page.title || undefined,
           blocks: page.blocks || [],
           metadata: page.metadata || {}
         })) || [],
-        createdAt: funnel.created_at,
-        updatedAt: funnel.updated_at
+        createdAt: funnel.created_at || undefined,
+        updatedAt: funnel.updated_at || undefined
       }));
     } catch (error) {
       console.error('Error listing funnels:', error);

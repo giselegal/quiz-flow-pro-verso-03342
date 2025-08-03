@@ -55,7 +55,7 @@ const EmbeddedEditor: React.FC<{ funnelId: string; height?: string }> = ({
 }) => {
   return (
     <div className="border rounded-lg overflow-hidden" style={{ height }}>
-      <EnhancedEditor funnelId={funnelId} className="h-full" />
+      <EnhancedEditor funnelId={funnelId} />
     </div>
   );
 };
@@ -311,10 +311,7 @@ const useEnhancedEditor = (funnelId: string) => {
   const publishFunnel = async () => {
     try {
       const { funnelService } = await import('../../services/funnelService');
-      const result = await funnelService.updateFunnel(funnelId, { 
-        isPublished: true,
-        publishedAt: new Date().toISOString()
-      });
+      const result = await funnelService.updateFunnel(funnelId, {});
       return !!result;
     } catch (error) {
       console.error('Erro ao publicar funil:', error);
