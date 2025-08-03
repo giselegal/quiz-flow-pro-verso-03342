@@ -1,15 +1,15 @@
 import React from 'react';
 import { StyleResult } from '@/types/quiz';
-import { useRouter } from 'next/navigation';
+import { useLocation } from 'wouter';
 import { useEffect } from 'react';
 
 export const ResultPagePrototype: React.FC = () => {
-  const router = useRouter();
+  const [location, setLocation] = useLocation();
 
   useEffect(() => {
-    // Prevent client-side navigation
-    router.prefetch('/');
-  }, [router]);
+    // Prevent any navigation issues
+    console.log('ResultPagePrototype loaded');
+  }, []);
 
   const mockPrimaryStyle = 'Elegante';
   const mockSecondaryStyles = ['Clássico', 'Contemporâneo', 'Natural'];

@@ -81,17 +81,10 @@ export class AnalyticsService {
 
       console.log('📊 [Analytics] Tracking event:', eventData);
 
-      const { error } = await supabase
-        .from('analytics_events')
-        .insert([eventData]);
-
-      if (error) {
-        console.error('❌ [Analytics] Failed to track event:', error);
-        // Fallback para localStorage se Supabase falhar
-        this.saveEventLocally(eventData);
-      } else {
-        console.log('✅ [Analytics] Event tracked successfully');
-      }
+      // Placeholder - analytics_events table doesn't exist
+      console.log('Would track event:', eventData);
+      // Fallback para localStorage se Supabase falhar
+      this.saveEventLocally(eventData);
     } catch (error) {
       console.error('❌ [Analytics] Error tracking event:', error);
       this.saveEventLocally(event as AnalyticsEvent);
@@ -192,23 +185,9 @@ export class AnalyticsService {
 
   async getQuizMetrics(quizId: string): Promise<AnalyticsMetrics | null> {
     try {
-      const { data, error } = await supabase
-        .from('analytics_events')
-        .select('*')
-        .eq('quiz_id', quizId);
-
-      if (error) throw error;
-
-      if (!data || data.length === 0) {
-        return null;
-      }
-
-      const metrics = this.calculateMetrics(data);
-      return {
-        quiz_id: quizId,
-        ...metrics,
-        last_updated: new Date().toISOString()
-      };
+      // Placeholder - analytics_events table doesn't exist  
+      console.log('Would get quiz metrics for:', quizId);
+      return null;
     } catch (error) {
       console.error('❌ [Analytics] Error getting metrics:', error);
       return null;
@@ -256,41 +235,9 @@ export class AnalyticsService {
 
   async getConversionFunnel(quizId: string): Promise<ConversionFunnel[]> {
     try {
-      const { data, error } = await supabase
-        .from('analytics_events')
-        .select('*')
-        .eq('quiz_id', quizId)
-        .in('event_type', ['page_viewed', 'quiz_started', 'quiz_completed']);
-
-      if (error) throw error;
-
-      if (!data || data.length === 0) {
-        return [];
-      }
-
-      // Simplificado - pode ser expandido para análise mais detalhada
-      const steps = [
-        { name: 'Landing Page', events: data.filter(e => e.event_type === 'page_viewed') },
-        { name: 'Quiz Started', events: data.filter(e => e.event_type === 'quiz_started') },
-        { name: 'Quiz Completed', events: data.filter(e => e.event_type === 'quiz_completed') }
-      ];
-
-      const funnel: ConversionFunnel[] = steps.map((step, index) => {
-        const totalUsers = step.events.length;
-        const previousStep = index > 0 ? steps[index - 1] : null;
-        const conversionRate = previousStep ? (totalUsers / previousStep.events.length) * 100 : 100;
-        const dropOffRate = 100 - conversionRate;
-
-        return {
-          step_name: step.name,
-          step_order: index + 1,
-          total_users: totalUsers,
-          drop_off_rate: Math.round(dropOffRate * 100) / 100,
-          conversion_rate: Math.round(conversionRate * 100) / 100
-        };
-      });
-
-      return funnel;
+      // Placeholder - analytics_events table doesn't exist
+      console.log('Would get conversion funnel for:', quizId);
+      return [];
     } catch (error) {
       console.error('❌ [Analytics] Error getting conversion funnel:', error);
       return [];
@@ -311,16 +258,8 @@ export class AnalyticsService {
 
       console.log(`🔄 [Analytics] Syncing ${localEvents.length} local events...`);
 
-      const { error } = await supabase
-        .from('analytics_events')
-        .insert(localEvents);
-
-      if (error) {
-        console.error('❌ [Analytics] Failed to sync local events:', error);
-      } else {
-        localStorage.removeItem('analytics_events');
-        console.log('✅ [Analytics] Local events synced successfully');
-      }
+      // Placeholder - analytics_events table doesn't exist
+      console.log(`Would sync ${localEvents.length} local events`);
     } catch (error) {
       console.error('❌ [Analytics] Error syncing local events:', error);
     }

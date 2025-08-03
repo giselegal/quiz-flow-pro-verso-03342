@@ -42,7 +42,7 @@ const TestStep20Integration: React.FC = () => {
   };
 
   // Testar o template diretamente
-  const templateBlocks = getStep20Template(mockData);
+  const templateBlocks = getStep20Template();
 
   return (
     <div className="min-h-screen bg-gray-50">
