@@ -231,54 +231,64 @@ export const getRegistryStats = () => {
   };
 };
 
-// Descrições específicas para cada componente
+// Descrições específicas para cada componente com foco em AIDA
 const getComponentDescription = (blockType: string): string => {
   const descriptions: Record<string, string> = {
-    // Inline Components
-    'badge': 'Distintivo visual para destacar informações importantes',
-    'before-after': 'Comparação visual entre situação atual e resultado desejado',
-    'benefits': 'Lista de benefícios e vantagens do produto ou serviço',
-    'bonus-list': 'Lista de bônus e ofertas especiais incluídas',
-    'button': 'Botão de ação para navegação ou submissão',
-    'characteristics-list': 'Lista de características e atributos principais',
-    'countdown': 'Contador regressivo para criar urgência',
-    'cta': 'Chamada para ação principal com destaque visual',
-    'decorative-bar': 'Barra decorativa para separação e design',
-    'divider': 'Divisor visual entre seções de conteúdo',
-    'guarantee': 'Selo de garantia para transmitir confiança',
-    'heading': 'Título ou cabeçalho para estruturar o conteúdo',
-    'image': 'Exibição de imagens com opções de layout',
-    'legal-notice': 'Aviso legal e termos de uso',
-    'loading-animation': 'Animação de carregamento para feedback visual',
-    'pricing-card': 'Cartão de preços com planos e valores',
-    'progress': 'Barra de progresso para mostrar avanço',
-    'quiz-offer-cta': 'Chamada para ação específica do quiz',
-    'quiz-offer-pricing': 'Oferta de preços exclusiva do quiz',
-    'quiz-start-page': 'Página inicial personalizada do quiz',
-    'result-card': 'Cartão para exibir resultados do quiz',
-    'result-header': 'Cabeçalho dos resultados com design especial',
-    'secondary-styles': 'Estilos secundários para variações visuais',
-    'spacer': 'Espaçamento ajustável entre elementos',
-    'stat': 'Estatística numérica com destaque visual',
-    'step-header': 'Cabeçalho para identificar etapas do processo',
-    'style-card': 'Cartão de estilo para apresentação visual',
-    'style-characteristics': 'Características de estilo e design',
-    'testimonial-card': 'Depoimento de cliente em formato de cartão',
-    'testimonials': 'Seção completa de depoimentos de clientes',
-    'text': 'Bloco de texto simples e editável',
-    
-    // Standard Blocks
-    'basic-text': 'Texto básico para conteúdo geral',
-    'countdown-timer': 'Timer com contagem regressiva avançada',
-    'form-input': 'Campo de entrada para formulários',
-    'guarantee-block': 'Bloco completo de garantia com detalhes',
-    'mentor': 'Apresentação do mentor ou especialista',
-    'options-grid': 'Grade de opções para seleção múltipla',
-    'quiz-intro-header': 'Cabeçalho de introdução do quiz',
+    // CABEÇALHO
+    'heading': 'Título ou cabeçalho para estruturar seções',
     'quiz-title': 'Título principal do quiz com design especial',
-    'social-proof': 'Prova social com números e depoimentos',
+    'quiz-intro-header': 'Cabeçalho de introdução e boas-vindas',
+    'step-header': 'Cabeçalho para identificar etapas do processo',
+    'result-header': 'Cabeçalho dos resultados com design especial',
+    
+    // QUIZ
+    'quiz-start-page': 'Página inicial personalizada do quiz',
+    'options-grid': 'Grade de opções para seleção no quiz',
+    'form-input': 'Campo de entrada para captura de dados',
+    'strategic-question': 'Pergunta estratégica para engajamento',
+    'progress': 'Barra de progresso para mostrar avanço',
+    'countdown-timer': 'Timer com contagem regressiva avançada',
+    'loading-animation': 'Animação de carregamento para transições',
+    'result-card': 'Cartão para exibir resultados personalizados',
     'stats-metrics': 'Métricas e estatísticas em destaque',
-    'strategic-question': 'Pergunta estratégica para engajamento'
+    
+    // VENDA - ATENÇÃO (A)
+    'badge': 'Distintivo para capturar atenção visual',
+    'countdown': 'Contador regressivo para criar urgência',
+    'stat': 'Estatística impactante para chamar atenção',
+    'image': 'Imagem para capturar atenção visual',
+    'decorative-bar': 'Elemento visual para quebrar padrões',
+    
+    // VENDA - INTERESSE (I)
+    'benefits': 'Lista de benefícios para despertar interesse',
+    'before-after': 'Comparação para mostrar transformação',
+    'characteristics-list': 'Características que geram interesse',
+    'style-card': 'Cartão visual para apresentar conceitos',
+    'style-characteristics': 'Elementos que despertam interesse',
+    'mentor': 'Apresentação do especialista/autoridade',
+    
+    // VENDA - DESEJO (D)
+    'testimonials': 'Depoimentos para criar desejo social',
+    'testimonial-card': 'Depoimento individual para validação',
+    'social-proof': 'Prova social para aumentar o desejo',
+    'bonus-list': 'Lista de bônus para ampliar o desejo',
+    'guarantee': 'Garantia para reduzir objeções',
+    'guarantee-block': 'Bloco completo de garantias',
+    'pricing-card': 'Oferta de preços para criar decisão',
+    'quiz-offer-pricing': 'Oferta personalizada baseada no quiz',
+    
+    // VENDA - AÇÃO (A)
+    'cta': 'Chamada para ação principal e decisiva',
+    'button': 'Botão de ação para conversão',
+    'quiz-offer-cta': 'CTA personalizado baseado nos resultados',
+    
+    // ESTRUTURA
+    'text': 'Bloco de texto simples e editável',
+    'basic-text': 'Texto básico para conteúdo geral',
+    'spacer': 'Espaçamento para organizar layout',
+    'divider': 'Divisor visual entre seções',
+    'secondary-styles': 'Estilos secundários para variações',
+    'legal-notice': 'Avisos legais e termos necessários'
   };
   
   return descriptions[blockType] || `Componente ${blockType} para personalização`;
