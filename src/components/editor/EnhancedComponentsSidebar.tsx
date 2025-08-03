@@ -131,7 +131,17 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = ({
                           <Button
                             size="sm"
                             onClick={() => onAddComponent(block.type)}
-                            className="w-full h-7 text-xs bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0 shadow-md hover:shadow-lg transition-all duration-200 font-medium"
+                            className="w-full h-7 text-xs text-white border-0 shadow-md hover:shadow-lg transition-all duration-200 font-medium"
+                            style={{ 
+                              backgroundColor: '#d1b586',
+                              boxShadow: '0 2px 4px rgba(209, 181, 134, 0.3)'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = '#c4a373';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor = '#d1b586';
+                            }}
                           >
                             <Plus className="h-3 w-3 mr-1" />
                             Adicionar

@@ -147,26 +147,7 @@ const EditorFixedPage: React.FC = () => {
       
       {/* Status bar elegante com sombra suave */}
       <div className="bg-gradient-to-r from-amber-50/95 via-yellow-50/90 to-amber-50/95 border-b border-amber-200/50 backdrop-blur-md px-6 py-3 shadow-sm">
-        <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center space-x-6">
-            <span className="text-amber-800 font-medium flex items-center">
-              <div className="w-2 h-2 bg-amber-600 rounded-full mr-2 animate-pulse shadow-sm ring-2 ring-amber-600/20"></div>
-              Editor Ativo
-            </span>
-            <span className="text-amber-700 font-medium">
-              {currentBlocks.length} blocos • {totalBlocks} total • {stageCount} etapas
-            </span>
-            <span className="text-amber-700 bg-amber-200/50 px-3 py-1.5 rounded-full text-xs font-medium border border-amber-300/30">
-              {activeStageId}
-            </span>
-            <span className="text-brand-dark bg-brand/20 px-3 py-1.5 rounded-full text-xs font-medium border border-brand/30">
-              {viewportSize.toUpperCase()}
-            </span>
-          </div>
-          <div className="text-xs text-amber-600 bg-amber-100/60 px-3 py-1.5 rounded-full border border-amber-200/50">
-            {registryStats.active} componentes ativos
-          </div>
-        </div>
+        {/* Status bar removida para interface mais limpa */}
       </div>
       
       <FourColumnLayout
