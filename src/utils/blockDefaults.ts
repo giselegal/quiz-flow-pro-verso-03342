@@ -86,9 +86,9 @@ export const getDefaultContentForType = (type: string): EditableContent => {
       return {
         title: 'Benefícios',
         items: [
-          { title: 'Benefício 1', description: 'Descrição do primeiro benefício' },
-          { title: 'Benefício 2', description: 'Descrição do segundo benefício' },
-          { title: 'Benefício 3', description: 'Descrição do terceiro benefício' }
+          { id: '1', question: 'Pergunta 1', answer: 'Descrição do primeiro benefício' },
+          { id: '2', question: 'Pergunta 2', answer: 'Descrição do segundo benefício' },
+          { id: '3', question: 'Pergunta 3', answer: 'Descrição do terceiro benefício' }
         ],
         style: {
           padding: '1rem'
