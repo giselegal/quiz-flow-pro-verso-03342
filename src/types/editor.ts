@@ -154,13 +154,14 @@ export interface FunnelStage {
   id: string;
   name: string;
   order: number;
-  type: 'intro' | 'question' | 'transition' | 'result' | 'lead' | 'offer' | 'final';
+  type: 'intro' | 'question' | 'transition' | 'processing' | 'result' | 'lead' | 'offer' | 'final';
   description?: string;
   isActive?: boolean;
   metadata?: {
     blocksCount?: number;
     lastModified?: Date;
     isCustom?: boolean;
+    templateBlocks?: any[]; // ✅ Adicionar suporte a blocos de template
   };
 }
 

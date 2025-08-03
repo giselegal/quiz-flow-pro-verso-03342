@@ -134,36 +134,197 @@ const initialStages = stageTemplates.map((template, index) => ({
 
 ---
 
-## 🔧 **COMO EDITAR AS ETAPAS**
+# � **FONTE DOS CÓDIGOS DAS ETAPAS DO FUNIL**
 
-### **Para Conteúdo/Configuração:**
-➡️ **Editar:** `/src/config/funnelSteps.ts`
-- Alterar `defaultContent` de cada etapa
-- Modificar títulos, descrições, campos obrigatórios
+## 🎯 **TEMPLATES ESPECÍFICOS IMPLEMENTADOS**
 
-### **Para Layout/Visual:**
-➡️ **Editar:** `/src/templates/stepTemplates.ts`
-- Ajustar templates de blocos
-- Modificar componentes visuais
+### ✅ **SISTEMA ATUALIZADO: TEMPLATES STEP01 a STEP21**
 
-### **Para Estrutura Base:**
-➡️ **Editar:** `/src/context/EditorContext.tsx`
-- Alterar nomes/tipos das etapas iniciais
-- Modificar metadados padrão
+Agora o sistema está configurado para usar os **templates específicos** de cada etapa:
+
+```
+📁 TEMPLATES ESPECÍFICOS
+├── /src/components/steps/Step01Template.tsx  ✅ IMPLEMENTADO
+├── /src/components/steps/Step02Template.tsx  ✅ IMPLEMENTADO
+├── /src/components/steps/Step03Template.tsx  ✅ IMPLEMENTADO
+├── ... (todas as 21 etapas)
+└── /src/components/steps/Step21Template.tsx  ✅ IMPLEMENTADO
+```
 
 ---
 
-## 🎯 **RESUMO**
+## 🔧 **NOVA ARQUITETURA IMPLEMENTADA**
 
-**ARQUIVO PRINCIPAL:** `/src/config/funnelSteps.ts`
-- ✅ **21 etapas completas** com configuração detalhada
-- ✅ **Conteúdo padrão** para cada tipo de etapa
-- ✅ **Funções utilitárias** para busca e filtragem
+### 📋 **1. MAPEAMENTO CENTRAL: `/src/config/stepTemplatesMapping.ts`**
 
-**ARQUIVO VISUAL:** `/src/templates/stepTemplates.ts`
-- ✅ **Templates de blocos** para montagem das páginas
-- ✅ **Layouts responsivos** e componentizados
+**NOVO ARQUIVO** que mapeia cada etapa para seu template específico:
 
-**ARQUIVO DE CONTEXTO:** `/src/context/EditorContext.tsx`
-- ✅ **Inicialização** das 21 etapas no editor
-- ✅ **Estados base** para o sistema de edição
+```typescript
+// ✅ IMPORTA TODOS OS TEMPLATES
+import { getStep01Template } from '@/components/steps/Step01Template';
+import { getStep02Template } from '@/components/steps/Step02Template';
+// ... até Step21Template
+
+// ✅ MAPEAMENTO COMPLETO
+export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
+  1: {
+    stepNumber: 1,
+    templateFunction: getStep01Template,
+    name: 'Introdução',
+    description: 'Página inicial do quiz'
+  },
+  2: {
+    stepNumber: 2,
+    templateFunction: getStep02Template,
+    name: 'Q1 - Tipo de Roupa',
+    description: 'Qual o seu tipo de roupa favorita?'
+  },
+  // ... todas as 21 etapas
+};
+```
+
+**🔧 FUNÇÕES UTILITÁRIAS:**
+- `getStepTemplate(stepNumber)` - Retorna blocos do template específico
+- `getStepInfo(stepNumber)` - Informações da etapa
+- `getAllSteps()` - Lista todas as etapas
+- `stepExists(stepNumber)` - Verifica se etapa existe
+
+---
+
+### 📋 **2. CONTEXT ATUALIZADO: `/src/context/EditorContext.tsx`**
+
+O **EditorContext** agora:
+
+✅ **Carrega templates automaticamente** quando uma etapa é selecionada  
+✅ **Inicializa com dados dos templates específicos**  
+✅ **Converte blocos de template para EditorBlocks**  
+
+```typescript
+// ✅ CARREGAMENTO AUTOMÁTICO
+const setActiveStage = useCallback((stageId: string) => {
+  // ... validações
+  
+  // ✅ CARREGAR TEMPLATE SE A ETAPA ESTIVER VAZIA
+  const currentBlocks = stageBlocks[stageId] || [];
+  if (currentBlocks.length === 0) {
+    loadStageTemplate(stageId); // ✅ CARREGA TEMPLATE ESPECÍFICO
+  }
+}, [validateStageId, stageBlocks]);
+
+// ✅ FUNÇÃO DE CARREGAMENTO
+const loadStageTemplate = useCallback((stageId: string) => {
+  const stepNumber = parseInt(stageId.replace('step-', ''));
+  const templateBlocks = getStepTemplate(stepNumber); // ✅ USA TEMPLATE ESPECÍFICO
+  
+  // Converte para EditorBlocks e adiciona à etapa
+}, [stages, updateStage]);
+```
+
+---
+
+### 📋 **3. TIPOS ATUALIZADOS: `/src/types/editor.ts`**
+
+```typescript
+export interface FunnelStage {
+  id: string;
+  name: string;
+  order: number;
+  type: 'intro' | 'question' | 'transition' | 'processing' | 'result' | 'lead' | 'offer' | 'final';
+  description?: string;
+  isActive?: boolean;
+  metadata?: {
+    blocksCount?: number;
+    lastModified?: Date;
+    isCustom?: boolean;
+    templateBlocks?: any[]; // ✅ NOVO: Suporte a blocos de template
+  };
+}
+```
+
+---
+
+## 🎯 **COMO FUNCIONA AGORA**
+
+### **1. Inicialização:**
+- O `EditorContext` carrega informações das 21 etapas
+- Cada etapa tem referência ao seu template específico
+- Metadados incluem blocos de template
+
+### **2. Seleção de Etapa:**
+- Usuário clica em uma etapa no `FunnelStagesPanel`
+- Se a etapa estiver vazia, carrega automaticamente o template específico
+- Blocos do template são convertidos para `EditorBlocks`
+
+### **3. Edição:**
+- Usuário pode editar os blocos carregados do template
+- Pode adicionar novos blocos via `EnhancedComponentsSidebar`
+- Mudanças são salvas no estado da etapa
+
+---
+
+## 📊 **ETAPAS E SEUS TEMPLATES**
+
+| Etapa | Template | Nome | Descrição |
+|-------|----------|------|-----------|
+| 1 | `Step01Template` | Introdução | Página inicial do quiz |
+| 2 | `Step02Template` | Q1 - Tipo de Roupa | Qual o seu tipo de roupa favorita? |
+| 3 | `Step03Template` | Q2 - Estilo Pessoal | Como você descreveria seu estilo? |
+| 4 | `Step04Template` | Q3 - Ocasiões | Para quais ocasiões você se veste? |
+| 5 | `Step05Template` | Q4 - Cores | Quais cores você mais usa? |
+| ... | ... | ... | ... |
+| 21 | `Step21Template` | Finalização | Conclusão e próximos passos |
+
+---
+
+## 🔧 **COMO EDITAR OS TEMPLATES**
+
+### **Para Modificar um Template Específico:**
+➡️ **Editar:** `/src/components/steps/StepXXTemplate.tsx`
+
+Exemplo para Step01:
+```typescript
+// src/components/steps/Step01Template.tsx
+export const getStep01Template = () => {
+  return [
+    {
+      type: 'quiz-intro-header',
+      properties: {
+        logoUrl: 'https://...',
+        title: 'Seu Título Personalizado',
+        // ... outras propriedades
+      }
+    },
+    // ... mais blocos
+  ];
+};
+```
+
+### **Para Modificar o Mapeamento:**
+➡️ **Editar:** `/src/config/stepTemplatesMapping.ts`
+- Alterar nomes das etapas
+- Modificar descrições
+- Ajustar metadados
+
+---
+
+## 🎯 **VANTAGENS DA NOVA IMPLEMENTAÇÃO**
+
+✅ **Templates Específicos**: Cada etapa tem seu próprio template otimizado  
+✅ **Carregamento Automático**: Templates são carregados quando necessário  
+✅ **Manutenção Fácil**: Cada template é um arquivo separado  
+✅ **Flexibilidade**: Pode combinar templates com edição manual  
+✅ **Performance**: Carrega apenas os templates necessários  
+✅ **Tipagem**: TypeScript garante consistência  
+
+---
+
+## 📈 **STATUS ATUAL**
+
+- ✅ **21 Templates**: Todos os StepXXTemplate implementados
+- ✅ **Mapeamento**: Sistema de mapeamento funcionando  
+- ✅ **Context**: EditorContext atualizado para usar templates
+- ✅ **Carregamento**: Automático quando etapa é selecionada
+- ✅ **Tipagem**: Tipos atualizados para suportar templates
+- ✅ **Integração**: Funciona com sistema de edição existente
+
+**O sistema agora usa seus templates específicos Step01Template a Step21Template automaticamente!** 🎉

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useCallback, useEffect } from 'react';
 import { EditorBlock, FunnelStage } from '@/types/editor';
+import { getStepTemplate, getStepInfo, getAllSteps } from '@/config/stepTemplatesMapping';
 
 // ✅ INTERFACE UNIFICADA DO CONTEXTO
 interface EditorContextType {
@@ -63,48 +64,35 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   // 🏗️ ESTADO PRINCIPAL CENTRALIZADO
   // ═══════════════════════════════════════════════
   const [stages, setStages] = useState<FunnelStage[]>(() => {
-    // ✅ INICIALIZAÇÃO SÍNCRONA NO ESTADO INICIAL
-    console.log('🚀 EditorProvider: Inicializando stages no useState');
+    // ✅ INICIALIZAÇÃO SÍNCRONA NO ESTADO INICIAL COM TEMPLATES ESPECÍFICOS
+    console.log('🚀 EditorProvider: Inicializando stages com templates específicos');
     
-    const stageTemplates = [
-      { name: 'Introdução', type: 'intro' as const, description: 'Página de apresentação do quiz' },
-      { name: 'Q1 - Profissão', type: 'question' as const, description: 'Qual é a sua profissão atual?' },
-      { name: 'Q2 - Experiência', type: 'question' as const, description: 'Anos de experiência profissional' },
-      { name: 'Q3 - Setor', type: 'question' as const, description: 'Em qual setor você trabalha?' },
-      { name: 'Q4 - Desafios', type: 'question' as const, description: 'Principais desafios profissionais' },
-      { name: 'Q5 - Objetivos', type: 'question' as const, description: 'Objetivos de carreira' },
-      { name: 'Q6 - Habilidades', type: 'question' as const, description: 'Habilidades que deseja desenvolver' },
-      { name: 'Q7 - Motivação', type: 'question' as const, description: 'O que mais te motiva no trabalho?' },
-      { name: 'Q8 - Aprendizado', type: 'question' as const, description: 'Preferência de aprendizado' },
-      { name: 'Q9 - Liderança', type: 'question' as const, description: 'Experiência em liderança' },
-      { name: 'Q10 - Futuro', type: 'question' as const, description: 'Visão de futuro profissional' },
-      { name: 'Transição', type: 'transition' as const, description: 'Preparando seus resultados...' },
-      { name: 'Resultado 1', type: 'result' as const, description: 'Resultado Inovador' },
-      { name: 'Resultado 2', type: 'result' as const, description: 'Resultado Estratégico' },
-      { name: 'Resultado 3', type: 'result' as const, description: 'Resultado Executivo' },
-      { name: 'Resultado 4', type: 'result' as const, description: 'Resultado Colaborativo' },
-      { name: 'Resultado 5', type: 'result' as const, description: 'Resultado Técnico' },
-      { name: 'Resultado 6', type: 'result' as const, description: 'Resultado Analítico' },
-      { name: 'Lead Magnet', type: 'lead' as const, description: 'Captura de email' },
-      { name: 'Oferta', type: 'offer' as const, description: 'Página de vendas' },
-      { name: 'Finalização', type: 'final' as const, description: 'Conclusão e próximos passos' }
-    ];
-
-    const initialStages = stageTemplates.map((template, index) => ({
-      id: `step-${index + 1}`,
-      name: template.name,
-      order: index + 1,
-      type: template.type,
-      description: template.description,
-      isActive: index === 0,
+    // ✅ USAR TEMPLATES ESPECÍFICOS DAS ETAPAS
+    const allStepTemplates = getAllSteps();
+    console.log('📋 EditorProvider: Templates carregados:', allStepTemplates.length);
+    
+    const initialStages = allStepTemplates.map((stepTemplate, index) => ({
+      id: `step-${stepTemplate.stepNumber}`,
+      name: stepTemplate.name,
+      order: stepTemplate.stepNumber,
+      type: stepTemplate.stepNumber === 1 ? 'intro' as const :
+            stepTemplate.stepNumber <= 14 ? 'question' as const :
+            stepTemplate.stepNumber === 15 ? 'transition' as const :
+            stepTemplate.stepNumber === 16 ? 'processing' as const :
+            stepTemplate.stepNumber >= 17 && stepTemplate.stepNumber <= 19 ? 'result' as const :
+            stepTemplate.stepNumber === 20 ? 'lead' as const :
+            'offer' as const,
+      description: stepTemplate.description,
+      isActive: stepTemplate.stepNumber === 1,
       metadata: {
         blocksCount: 0,
         lastModified: new Date(),
-        isCustom: false
+        isCustom: false,
+        templateBlocks: getStepTemplate(stepTemplate.stepNumber) // ✅ CARREGAR BLOCOS DO TEMPLATE
       }
     }));
     
-    console.log('✅ EditorProvider: 21 stages criadas no useState:', initialStages.length);
+    console.log('✅ EditorProvider: 21 stages criadas com templates específicos:', initialStages.length);
     return initialStages;
   });
   
@@ -150,6 +138,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   // ═══════════════════════════════════════════════
   // 🎯 STAGE ACTIONS (GERENCIAMENTO DE ETAPAS)
   // ═══════════════════════════════════════════════
+  
   const setActiveStage = useCallback((stageId: string) => {
     console.log('🔄 EditorContext: Mudando etapa ativa para:', stageId);
     
@@ -160,8 +149,17 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     
     setActiveStageId(stageId);
     setSelectedBlockId(null);
+    
+    // ✅ CARREGAR TEMPLATE SE A ETAPA ESTIVER VAZIA
+    const currentBlocks = stageBlocks[stageId] || [];
+    if (currentBlocks.length === 0) {
+      console.log(`🎨 EditorContext: Etapa ${stageId} vazia, carregando template...`);
+      // Usar timeout para garantir que updateStage esteja disponível
+      setTimeout(() => loadStageTemplate(stageId), 0);
+    }
+    
     console.log('✅ EditorContext: Etapa ativa alterada para:', stageId);
-  }, [validateStageId]);
+  }, [validateStageId, stageBlocks]);
 
   const addStage = useCallback((stageData?: Partial<FunnelStage>): string => {
     const newStageId = `step-${stages.length + 1}`;
@@ -223,6 +221,44 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
     console.log('📝 EditorContext: Etapa atualizada:', stageId, updates);
   }, [validateStageId]);
+
+  // ✅ FUNÇÃO PARA CARREGAR BLOCOS DE TEMPLATE
+  const loadStageTemplate = useCallback((stageId: string) => {
+    const stage = stages.find(s => s.id === stageId);
+    if (!stage) return;
+
+    const stepNumber = parseInt(stageId.replace('step-', ''));
+    const templateBlocks = getStepTemplate(stepNumber);
+    
+    if (templateBlocks && templateBlocks.length > 0) {
+      console.log(`🎨 EditorContext: Carregando ${templateBlocks.length} blocos de template para etapa ${stepNumber}`);
+      
+      // Converter blocos de template para EditorBlocks
+      const editorBlocks: EditorBlock[] = templateBlocks.map((block, index) => ({
+        id: `${stageId}-block-${index + 1}`,
+        type: block.type as any,
+        content: block.properties || block.content || {},
+        order: index + 1,
+        properties: block.properties || {}
+      }));
+
+      // Atualizar os blocos da etapa
+      setStageBlocks(prev => ({
+        ...prev,
+        [stageId]: editorBlocks
+      }));
+
+      // Atualizar contagem de blocos na metadata
+      updateStage(stageId, {
+        metadata: {
+          ...stage.metadata,
+          blocksCount: editorBlocks.length
+        }
+      });
+
+      console.log(`✅ EditorContext: ${editorBlocks.length} blocos carregados para etapa ${stepNumber}`);
+    }
+  }, [stages, updateStage]);
 
   // ═══════════════════════════════════════════════
   // 🧩 BLOCK ACTIONS (GERENCIAMENTO DE BLOCOS)
