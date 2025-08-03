@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/context/AuthContext';
 import { AdminAuthProvider } from '@/context/AdminAuthContext';
 import { EditorProvider } from '@/context/EditorContext';
+import { FunnelsProvider } from '@/context/FunnelsContext';
 import SchemaDrivenEditorResponsive from '@/components/editor/SchemaDrivenEditorResponsive';
 import EditorPage from '@/pages/editor-fixed';
 import { ResultPage } from './pages/ResultPage';
@@ -40,7 +41,13 @@ function App() {
               </Route>
               
               {/* Editor Fixed Route - nova rota ativada */}
-              <Route path="/editor-fixed" component={EditorPage} />
+              <Route path="/editor-fixed">
+                {() => (
+                  <FunnelsProvider>
+                    <EditorPage />
+                  </FunnelsProvider>
+                )}
+              </Route>
               
               {/* Admin Routes */}
               <Route path="/admin" nest>
