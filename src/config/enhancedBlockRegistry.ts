@@ -231,12 +231,65 @@ export const getRegistryStats = () => {
   };
 };
 
+// Descrições específicas para cada componente
+const getComponentDescription = (blockType: string): string => {
+  const descriptions: Record<string, string> = {
+    // Inline Components
+    'badge': 'Distintivo visual para destacar informações importantes',
+    'before-after': 'Comparação visual entre situação atual e resultado desejado',
+    'benefits': 'Lista de benefícios e vantagens do produto ou serviço',
+    'bonus-list': 'Lista de bônus e ofertas especiais incluídas',
+    'button': 'Botão de ação para navegação ou submissão',
+    'characteristics-list': 'Lista de características e atributos principais',
+    'countdown': 'Contador regressivo para criar urgência',
+    'cta': 'Chamada para ação principal com destaque visual',
+    'decorative-bar': 'Barra decorativa para separação e design',
+    'divider': 'Divisor visual entre seções de conteúdo',
+    'guarantee': 'Selo de garantia para transmitir confiança',
+    'heading': 'Título ou cabeçalho para estruturar o conteúdo',
+    'image': 'Exibição de imagens com opções de layout',
+    'legal-notice': 'Aviso legal e termos de uso',
+    'loading-animation': 'Animação de carregamento para feedback visual',
+    'pricing-card': 'Cartão de preços com planos e valores',
+    'progress': 'Barra de progresso para mostrar avanço',
+    'quiz-offer-cta': 'Chamada para ação específica do quiz',
+    'quiz-offer-pricing': 'Oferta de preços exclusiva do quiz',
+    'quiz-start-page': 'Página inicial personalizada do quiz',
+    'result-card': 'Cartão para exibir resultados do quiz',
+    'result-header': 'Cabeçalho dos resultados com design especial',
+    'secondary-styles': 'Estilos secundários para variações visuais',
+    'spacer': 'Espaçamento ajustável entre elementos',
+    'stat': 'Estatística numérica com destaque visual',
+    'step-header': 'Cabeçalho para identificar etapas do processo',
+    'style-card': 'Cartão de estilo para apresentação visual',
+    'style-characteristics': 'Características de estilo e design',
+    'testimonial-card': 'Depoimento de cliente em formato de cartão',
+    'testimonials': 'Seção completa de depoimentos de clientes',
+    'text': 'Bloco de texto simples e editável',
+    
+    // Standard Blocks
+    'basic-text': 'Texto básico para conteúdo geral',
+    'countdown-timer': 'Timer com contagem regressiva avançada',
+    'form-input': 'Campo de entrada para formulários',
+    'guarantee-block': 'Bloco completo de garantia com detalhes',
+    'mentor': 'Apresentação do mentor ou especialista',
+    'options-grid': 'Grade de opções para seleção múltipla',
+    'quiz-intro-header': 'Cabeçalho de introdução do quiz',
+    'quiz-title': 'Título principal do quiz com design especial',
+    'social-proof': 'Prova social com números e depoimentos',
+    'stats-metrics': 'Métricas e estatísticas em destaque',
+    'strategic-question': 'Pergunta estratégica para engajamento'
+  };
+  
+  return descriptions[blockType] || `Componente ${blockType} para personalização`;
+};
+
 // Auto-generate block definitions
 export const generateBlockDefinitions = (): BlockDefinition[] => {
   return Object.keys(ENHANCED_BLOCK_REGISTRY).map(blockType => ({
     type: blockType,
     name: blockType.charAt(0).toUpperCase() + blockType.slice(1).replace(/[-_]/g, ' '),
-    description: `Componente ${blockType} validado`,
+    description: getComponentDescription(blockType),
     category: getBlockCategory(blockType),
     icon: 'Square' as any,
     component: ENHANCED_BLOCK_REGISTRY[blockType],
@@ -395,16 +448,68 @@ const getPropertiesForBlockType = (blockType: string): Record<string, PropertySc
   };
 };
 
-// Categorização inteligente
+// Categorização por estratégia de vendas AIDA e funcionalidade
 const getBlockCategory = (blockType: string): string => {
-  if (blockType.includes('quiz')) return 'Quiz';
-  if (blockType.includes('text') || blockType.includes('heading')) return 'Text';
-  if (blockType.includes('image') || blockType.includes('video')) return 'Media';
-  if (blockType.includes('button') || blockType.includes('cta')) return 'Interactive';
-  if (blockType.includes('pricing') || blockType.includes('product')) return 'E-commerce';
-  if (blockType.includes('testimonial') || blockType.includes('review')) return 'Social Proof';
-  if (blockType.includes('spacer') || blockType.includes('divider')) return 'Layout';
-  return 'Content';
+  // Mapeamento específico para cada componente
+  const categoryMap: Record<string, string> = {
+    // CABEÇALHO
+    'heading': 'Cabeçalho',
+    'quiz-title': 'Cabeçalho',
+    'quiz-intro-header': 'Cabeçalho',
+    'step-header': 'Cabeçalho',
+    'result-header': 'Cabeçalho',
+    
+    // QUIZ - Componentes específicos do quiz
+    'quiz-start-page': 'Quiz',
+    'options-grid': 'Quiz',
+    'form-input': 'Quiz',
+    'strategic-question': 'Quiz',
+    'progress': 'Quiz',
+    'countdown-timer': 'Quiz',
+    'loading-animation': 'Quiz',
+    'result-card': 'Quiz',
+    'stats-metrics': 'Quiz',
+    
+    // PÁGINA DE VENDA - ATENÇÃO (A)
+    'badge': 'Venda - Atenção',
+    'countdown': 'Venda - Atenção',
+    'stat': 'Venda - Atenção',
+    'image': 'Venda - Atenção',
+    'decorative-bar': 'Venda - Atenção',
+    
+    // PÁGINA DE VENDA - INTERESSE (I)
+    'benefits': 'Venda - Interesse',
+    'before-after': 'Venda - Interesse',
+    'characteristics-list': 'Venda - Interesse',
+    'style-card': 'Venda - Interesse',
+    'style-characteristics': 'Venda - Interesse',
+    'mentor': 'Venda - Interesse',
+    
+    // PÁGINA DE VENDA - DESEJO (D)
+    'testimonials': 'Venda - Desejo',
+    'testimonial-card': 'Venda - Desejo',
+    'social-proof': 'Venda - Desejo',
+    'bonus-list': 'Venda - Desejo',
+    'guarantee': 'Venda - Desejo',
+    'guarantee-block': 'Venda - Desejo',
+    'pricing-card': 'Venda - Desejo',
+    'quiz-offer-pricing': 'Venda - Desejo',
+    
+    // PÁGINA DE VENDA - AÇÃO (A)
+    'cta': 'Venda - Ação',
+    'button': 'Venda - Ação',
+    'quiz-offer-cta': 'Venda - Ação',
+    
+    // ESTRUTURA E LAYOUT
+    'text': 'Estrutura',
+    'basic-text': 'Estrutura',
+    'spacer': 'Estrutura',
+    'divider': 'Estrutura',
+    'secondary-styles': 'Estrutura',
+    'legal-notice': 'Estrutura'
+  };
+  
+  return categoryMap[blockType] || 'Outros';
 };
 
 export default ENHANCED_BLOCK_REGISTRY;

@@ -54,12 +54,20 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = ({
           <div className="space-y-2">
             {filteredBlocks.map((block) => (
               <Card key={block.type} className="p-3 cursor-pointer hover:bg-muted/50">
-                <div className="flex items-center justify-between">
+                <div className="space-y-2">
+                  {/* Nome do componente */}
                   <h4 className="text-sm font-medium truncate">{block.name}</h4>
+                  
+                  {/* Descrição do componente */}
+                  <p className="text-xs text-muted-foreground leading-tight">
+                    {block.description}
+                  </p>
+                  
+                  {/* Botão adicionar */}
                   <Button
                     size="sm"
                     onClick={() => onAddComponent(block.type)}
-                    className="h-6 text-xs"
+                    className="w-full h-7 text-xs"
                   >
                     <Plus className="h-3 w-3 mr-1" />
                     Adicionar
