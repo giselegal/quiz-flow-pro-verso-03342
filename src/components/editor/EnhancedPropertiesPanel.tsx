@@ -94,10 +94,10 @@ const OptionsArrayEditor: React.FC<{
         </Button>
       </div>
 
-      <div className="space-y-2 max-h-80 overflow-y-auto">
+      <div className="space-y-1 max-h-80 overflow-y-auto">
         {value.map((option, index) => (
-          <Card key={option.id} className="p-3 border border-gray-200">
-            <div className="space-y-2">
+          <Card key={option.id} className="p-2 border border-gray-200">
+            <div className="space-y-1">
               {/* Header com controles */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -517,14 +517,14 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
   return (
     <div className="h-full w-full flex flex-col bg-gray-50">
       {/* 🎨 Header Premium */}
-      <div className="p-4 bg-gradient-to-r from-stone-700 to-yellow-700 text-white">
+      <div className="p-2 bg-gradient-to-r from-stone-700 to-yellow-700 text-white">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-              <Settings className="w-4 h-4" />
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
+              <Settings className="w-3 h-3" />
             </div>
             <div>
-              <h3 className="font-semibold">{blockDefinition.name}</h3>
+              <h3 className="font-semibold text-sm">{blockDefinition.name}</h3>
               <p className="text-xs text-white/80">ID: {block.id}</p>
             </div>
           </div>

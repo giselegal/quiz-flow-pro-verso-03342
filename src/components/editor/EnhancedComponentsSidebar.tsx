@@ -94,12 +94,12 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = ({
       <CardContent className="flex-1 overflow-hidden">
         <div ref={scrollRef} className="h-full overflow-y-auto overflow-x-hidden">
           {/* Categories */}
-          <div className="space-y-1 p-1">
+          <div className="space-y-1 p-0">
             {orderedCategories.map((category) => (
               <div key={category} className="space-y-1">
                 {/* Category Header */}
                 <div 
-                  className="flex items-center justify-between p-2 bg-muted/30 rounded-md cursor-pointer hover:bg-muted/50 transition-colors"
+                  className="flex items-center justify-between p-1 bg-muted/30 rounded-md cursor-pointer hover:bg-muted/50 transition-colors"
                   onClick={() => toggleCategory(category)}
                 >
                   <div className="flex items-center space-x-2">
@@ -117,10 +117,10 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = ({
 
                 {/* Category Components */}
                 {expandedCategories[category] && (
-                  <div className="pl-6 space-y-2">
+                  <div className="pl-4 space-y-1">
                     {groupedBlocks[category].map((block) => (
-                      <Card key={block.type} className="p-3 cursor-pointer hover:bg-muted/50">
-                        <div className="space-y-2">
+                      <Card key={block.type} className="p-2 cursor-pointer hover:bg-muted/50">
+                        <div className="space-y-1">
                           {/* Nome do componente */}
                           <h4 className="text-sm font-medium truncate">{block.name}</h4>
                           

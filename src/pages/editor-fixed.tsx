@@ -175,26 +175,26 @@ const EditorFixedPage: React.FC = () => {
           ) : null
         }
         canvas={
-          <div ref={scrollRef} className="p-6 overflow-auto h-full bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm">
+          <div ref={scrollRef} className="p-2 overflow-auto h-full bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm">
             <div className={getCanvasClassName()}>
-              <div className="p-8">
+              <div className="p-3">
                 {currentBlocks.length === 0 ? (
-                  <div className="text-center py-24">
+                  <div className="text-center py-12">
                     <h3 className="text-2xl font-semibold text-stone-700 mb-3 font-serif">Etapa {activeStageId}</h3>
                     <p className="text-stone-500 text-lg mb-2">
                       {isPreviewing ? 'Modo Preview - Nenhum componente nesta etapa' : 'Arraste componentes da sidebar para começar'}
                     </p>
-                    <p className="text-xs text-stone-400 bg-stone-100/50 px-4 py-2 rounded-full inline-block">
+                    <p className="text-xs text-stone-400 bg-stone-100/50 px-3 py-1 rounded-full inline-block">
                       Sistema integrado com {stageCount} etapas
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-6">
+                  <div className="space-y-3">
                     {currentBlocks.map((block) => (
                       <div
                         key={block.id}
                         className={`
-                          group relative border-2 rounded-xl p-6 transition-all duration-300 ease-out transform backdrop-blur-sm
+                          group relative border-2 rounded-xl p-3 transition-all duration-300 ease-out transform backdrop-blur-sm
                           ${isPreviewing 
                             ? 'border-transparent bg-transparent cursor-default' 
                             : selectedBlockId === block.id 
@@ -207,7 +207,7 @@ const EditorFixedPage: React.FC = () => {
                       >
                         {/* Controles do bloco - ocultar no preview */}
                         {!isPreviewing && (
-                          <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
+                          <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
                             <Button
                               variant="ghost"
                               size="sm"
@@ -215,9 +215,9 @@ const EditorFixedPage: React.FC = () => {
                                 e.stopPropagation();
                                 handleDeleteBlock(block.id);
                               }}
-                              className="h-9 w-9 p-0 text-amber-600 hover:text-amber-800 hover:bg-amber-100/60 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg backdrop-blur-sm border border-amber-300/40 hover:border-amber-500/60"
+                              className="h-8 w-8 p-0 text-amber-600 hover:text-amber-800 hover:bg-amber-100/60 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg backdrop-blur-sm border border-amber-300/40 hover:border-amber-500/60"
                             >
-                              <Trash2 className="h-4 w-4" />
+                              <Trash2 className="h-3 w-3" />
                             </Button>
                           </div>
                         )}
