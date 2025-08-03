@@ -44,9 +44,11 @@ function App() {
               {/* Editor Fixed Route - nova rota ativada */}
               <Route path="/editor-fixed">
                 {() => (
-                  <FunnelsProvider>
-                    <EditorPage />
-                  </FunnelsProvider>
+                  <EditorProvider>
+                    <FunnelsProvider>
+                      <EditorPage />
+                    </FunnelsProvider>
+                  </EditorProvider>
                 )}
               </Route>
               

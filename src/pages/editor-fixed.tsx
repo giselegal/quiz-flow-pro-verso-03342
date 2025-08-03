@@ -9,21 +9,24 @@ import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
 import { EditableContent, Block } from '@/types/editor';
 import { getDefaultContentForType } from '@/utils/blockDefaults';
 import { getRegistryStats, generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
+import { useEditor } from '@/context/EditorContext';
 import { Type, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const EditorFixedPage: React.FC = () => {
+  // ✅ INTEGRAÇÃO COM EDITOR CONTEXT
+  const { blocks, selectedBlockId, setSelectedBlockId, actions } = useEditor();
+  
   // ✅ BLOCOS POR ETAPA: Cada etapa tem seus próprios blocos
   const [stageBlocks, setStageBlocks] = useState<Record<string, Block[]>>({});
-  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [viewportSize, setViewportSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('lg');
   const [activeStageId, setActiveStageId] = useState<string>('step-1');
 
-  // ✅ BLOCOS ATUAIS: Blocos da etapa ativa
-  const blocks = stageBlocks[activeStageId] || [];
+  // ✅ BLOCOS ATUAIS: Usa EditorContext como fonte da verdade
+  const currentBlocks = stageBlocks[activeStageId] || blocks;
 
-  const selectedBlock = blocks.find(block => block.id === selectedBlockId);
+  const selectedBlock = currentBlocks.find(block => block.id === selectedBlockId);
   
   // Mostrar estatísticas do registry
   const registryStats = getRegistryStats();
@@ -78,17 +81,17 @@ const EditorFixedPage: React.FC = () => {
   };
 
   const handleSave = () => {
-    console.log('Salvando projeto...', blocks);
+    console.log('Salvando projeto...', currentBlocks);
   };
 
+  // ✅ INTEGRAÇÃO: Usar actions do EditorContext
   const handleDeleteBlock = (blockId: string) => {
+    actions.deleteBlock(blockId);
+    // Também remover do estado local da etapa
     setStageBlocks(prev => ({
       ...prev,
       [activeStageId]: (prev[activeStageId] || []).filter(block => block.id !== blockId)
     }));
-    if (selectedBlockId === blockId) {
-      setSelectedBlockId(null);
-    }
   };
 
   const getCanvasClassName = () => {
@@ -143,7 +146,7 @@ const EditorFixedPage: React.FC = () => {
               Editor Ativo
             </span>
             <span className="text-purple-600">
-              {blocks.length} blocos • {registryStats.active} componentes • Etapa: {activeStageId}
+              {currentBlocks.length} blocos • {registryStats.active} componentes • Etapa: {activeStageId}
             </span>
             <span className="text-purple-600">
               Viewport: {viewportSize.toUpperCase()}
@@ -160,22 +163,25 @@ const EditorFixedPage: React.FC = () => {
         componentsPanel={
           <EnhancedComponentsSidebar 
             onAddComponent={(type: string) => {
+              // ✅ INTEGRAÇÃO: Usar actions do EditorContext
+              const blockId = actions.addBlock(type as any);
+              
+              // Também adicionar ao estado local da etapa
               const defaultContent = getDefaultContentForType(type as any);
               const newBlock: Block = {
-                id: `block-${Date.now()}`,
+                id: blockId,
                 type: type as any,
                 content: defaultContent,
                 properties: {},
-                order: blocks.length
+                order: currentBlocks.length
               };
               
-              // ✅ ADICIONAR: Bloco à etapa ativa
               setStageBlocks(prev => ({
                 ...prev,
                 [activeStageId]: [...(prev[activeStageId] || []), newBlock]
               }));
               
-              console.log(`➕ Bloco ${type} adicionado à etapa ${activeStageId}`);
+              console.log(`➕ Bloco ${type} adicionado à etapa ${activeStageId} via EditorContext`);
             }}
           />
         }
@@ -183,7 +189,7 @@ const EditorFixedPage: React.FC = () => {
           <div className="p-6 overflow-auto h-full bg-gradient-to-br from-gray-50 to-slate-100">
             <div className={getCanvasClassName()}>
               <div className="p-6">
-                {blocks.length === 0 ? (
+                {currentBlocks.length === 0 ? (
                   <div className="text-center py-20">
                     <div className="text-gray-400 text-6xl mb-4">🎨</div>
                     <h3 className="text-xl font-semibold text-gray-700 mb-2">Etapa {activeStageId}</h3>
@@ -192,7 +198,7 @@ const EditorFixedPage: React.FC = () => {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {blocks.map((block) => (
+                    {currentBlocks.map((block) => (
                       <div
                         key={block.id}
                         className={`
@@ -238,6 +244,10 @@ const EditorFixedPage: React.FC = () => {
               block={selectedBlock}
               blockDefinition={getBlockDefinitionForType(selectedBlock.type)}
               onUpdateBlock={(blockId: string, properties: Partial<EditableContent>) => {
+                // ✅ INTEGRAÇÃO: Usar actions do EditorContext
+                actions.updateBlock(blockId, { content: properties });
+                
+                // Também atualizar estado local da etapa
                 setStageBlocks(prev => ({
                   ...prev,
                   [activeStageId]: (prev[activeStageId] || []).map(block => 
