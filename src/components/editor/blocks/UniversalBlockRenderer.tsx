@@ -39,7 +39,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
 
   if (!Component) {
     return (
-      <div className="p-4 border border-red-300 bg-red-50 rounded-lg text-red-600">
+      <div className="p-2 border border-red-300 bg-red-50 rounded-lg text-red-600">
         <div className="text-center">
           <div className="font-medium">⚠️ Componente não encontrado</div>
           <div className="text-sm mt-1">Tipo: {block.type}</div>

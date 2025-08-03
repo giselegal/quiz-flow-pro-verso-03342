@@ -557,7 +557,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="properties" className="p-4 space-y-4 mt-0">
+          <TabsContent value="properties" className="p-2 space-y-2 mt-0">
             {renderPropertyGroup("Geral", <Type className="w-4 h-4" />, categorizedProps.general)}
             {renderPropertyGroup("Conteúdo", <Type className="w-4 h-4" />, categorizedProps.content)}
             {renderPropertyGroup("Layout", <Layout className="w-4 h-4" />, categorizedProps.layout)}
@@ -565,7 +565,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
             {renderPropertyGroup("Validação", <CheckCircle className="w-4 h-4" />, categorizedProps.validation)}
           </TabsContent>
 
-          <TabsContent value="style" className="p-4 space-y-4 mt-0">
+          <TabsContent value="style" className="p-2 space-y-2 mt-0">
             {renderPropertyGroup("Estilização", <Palette className="w-4 h-4" />, categorizedProps.styling)}
             {renderPropertyGroup("Avançado", <Settings className="w-4 h-4" />, categorizedProps.advanced)}
           </TabsContent>
@@ -580,7 +580,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
               Este componente não possui propriedades editáveis
             </p>
           </div>
-        )}
+        )}9
       </div>
 
       {/* 🎯 Footer Actions */}
