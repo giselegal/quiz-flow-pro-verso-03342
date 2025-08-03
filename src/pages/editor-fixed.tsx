@@ -133,7 +133,7 @@ const EditorFixedPage: React.FC = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-stone-50 via-amber-50/30 to-stone-100">
+    <div className="h-screen flex flex-col bg-gradient-to-br from-stone-50 via-yellow-50/30 to-stone-100">
       <BrandHeader />
       
       <EditorToolbar
@@ -145,11 +145,11 @@ const EditorFixedPage: React.FC = () => {
       />
       
       {/* Status bar elegante com cores da marca */}
-      <div className="bg-gradient-to-r from-stone-100/80 via-amber-50/60 to-stone-100/80 border-b border-stone-200/60 backdrop-blur-sm px-6 py-3">
+      <div className="bg-gradient-to-r from-stone-100/80 via-yellow-50/60 to-stone-100/80 border-b border-stone-200/60 backdrop-blur-sm px-6 py-3">
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center space-x-6">
             <span className="text-stone-700 font-medium flex items-center">
-              <div className="w-2 h-2 bg-amber-500 rounded-full mr-2 animate-pulse shadow-sm"></div>
+              <div className="w-2 h-2 bg-yellow-600 rounded-full mr-2 animate-pulse shadow-sm"></div>
               Editor Ativo
             </span>
             <span className="text-stone-600 font-medium">
@@ -158,7 +158,7 @@ const EditorFixedPage: React.FC = () => {
             <span className="text-stone-600 bg-stone-200/50 px-2 py-1 rounded-full text-xs font-medium">
               {activeStageId}
             </span>
-            <span className="text-stone-600 bg-amber-100/50 px-2 py-1 rounded-full text-xs font-medium">
+            <span className="text-stone-600 bg-yellow-100/50 px-2 py-1 rounded-full text-xs font-medium">
               {viewportSize.toUpperCase()}
             </span>
           </div>
@@ -184,7 +184,7 @@ const EditorFixedPage: React.FC = () => {
           />
         }
         canvas={
-          <div className="p-6 overflow-auto h-full bg-gradient-to-br from-stone-50/50 via-amber-50/20 to-stone-100/30">
+          <div className="p-6 overflow-auto h-full bg-gradient-to-br from-stone-50/50 via-yellow-50/20 to-stone-100/30">
             <div className={getCanvasClassName()}>
               <div className="p-8">
                 {currentBlocks.length === 0 ? (
@@ -204,7 +204,7 @@ const EditorFixedPage: React.FC = () => {
                         className={`
                           group relative border-2 rounded-xl p-6 cursor-pointer transition-all duration-300 ease-out
                           ${selectedBlockId === block.id 
-                            ? 'border-amber-300 bg-gradient-to-br from-amber-50/80 to-stone-50/60 shadow-lg shadow-amber-100/50 scale-[1.02]' 
+                            ? 'border-yellow-300 bg-gradient-to-br from-yellow-50/80 to-stone-50/60 shadow-lg shadow-yellow-100/50 scale-[1.02]' 
                             : 'border-stone-200/60 hover:border-amber-200 hover:shadow-md hover:shadow-stone-200/50 hover:bg-stone-50/40'
                           }
                         `}
