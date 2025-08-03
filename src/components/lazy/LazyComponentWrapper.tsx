@@ -56,13 +56,15 @@ export const createLazyComponent = <T extends ComponentType<any>>(
 ) => {
   const LazyComponent = lazy(importFn);
 
-  return React.forwardRef<any, React.ComponentProps<T>>((props, ref) => (
+  const LazyWrapper = (props: React.ComponentProps<T>) => (
     <LazyErrorBoundary fallback={options.error}>
       <Suspense fallback={options.fallback || <DefaultFallback />}>
-        <LazyComponent {...props} ref={ref} />
+        <LazyComponent {...props} />
       </Suspense>
     </LazyErrorBoundary>
-  ));
+  );
+
+  return LazyWrapper;
 };
 
 // Hook para lazy loading com intersection observer

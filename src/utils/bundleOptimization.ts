@@ -69,20 +69,19 @@ export const markUnused = (exportName: string, moduleName: string) => {
 // Code splitting utilities
 export const splitRoutes = {
   // Main pages
-  QuizPage: () => dynamicImport(() => import('@/pages/QuizPage')),
   ResultPage: () => dynamicImport(() => import('@/pages/ResultPage')),
-  EditorPage: () => dynamicImport(() => import('@/pages/AdminPage')),
+  EditorPage: () => dynamicImport(() => import('@/pages/admin/EditorPage')),
   
   // Editor components
-  SchemaDrivenEditor: () => dynamicImport(() => import('@/components/editor/SchemaDrivenEditorOptimized')),
+  SchemaDrivenEditor: () => dynamicImport(() => import('@/components/editor/SchemaDrivenEditorResponsive')),
   
-  // Large components
-  PropertyPanel: () => dynamicImport(() => import('@/components/editor/PropertyPanel')),
-  ComponentsSidebar: () => dynamicImport(() => import('@/components/editor/sidebar/ComponentsSidebar')),
+  // Large components that exist
+  // PropertyPanel: () => dynamicImport(() => import('@/components/editor/PropertyPanel')),
+  // ComponentsSidebar: () => dynamicImport(() => import('@/components/editor/sidebar/ComponentsSidebar')),
   
-  // Modals and overlays
-  ImageBankModal: () => dynamicImport(() => import('@/components/editor/modals/ImageBankModal')),
-  TemplateModal: () => dynamicImport(() => import('@/components/editor/modals/TemplateModal'))
+  // Modals and overlays (to be created when needed)
+  // ImageBankModal: () => dynamicImport(() => import('@/components/editor/modals/ImageBankModal')),
+  // TemplateModal: () => dynamicImport(() => import('@/components/editor/modals/TemplateModal'))
 };
 
 // Bundle analyzer helper
