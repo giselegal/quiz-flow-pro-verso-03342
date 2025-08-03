@@ -44,7 +44,7 @@ const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
       className="w-full h-full p-4 border-2 border-dashed rounded-md bg-white"
     >
       {blocks.length === 0 ? (
-        <div className="text-gray-500 text-center">
+        <div className="text-stone-500 text-center">
           Arraste e solte componentes aqui
         </div>
       ) : (

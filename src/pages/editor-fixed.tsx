@@ -257,11 +257,11 @@ const EditorFixedPage: React.FC = () => {
               onClose={() => setSelectedBlockId(null)}
             />
           ) : (
-            <div className="h-full p-4 flex items-center justify-center text-gray-500">
+            <div className="h-full p-4 flex items-center justify-center text-stone-500">
               <div className="text-center">
                 <div className="text-4xl mb-2">⚙️</div>
                 <p className="text-sm">Selecione um bloco para editar propriedades</p>
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="text-xs text-stone-400 mt-1">
                   Painel aprimorado ativo
                 </p>
               </div>

@@ -15,7 +15,7 @@ import styles from '@/styles/editor.module.css';
 const COMPONENT_CATEGORIES = {
   basic: {
     title: '📝 BÁSICOS',
-    color: 'blue',
+    color: 'amber',
     components: [
       {
         id: 'title',
@@ -226,7 +226,7 @@ const COMPONENT_CATEGORIES = {
   },
   sales: {
     title: '💰 VENDAS',
-    color: 'orange',
+    color: 'stone',
     components: [
       {
         id: 'video',
@@ -398,7 +398,7 @@ const ComponentList: React.FC<ComponentListProps> = ({
           placeholder="Buscar componentes..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-stone-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
         />
       </div>
 

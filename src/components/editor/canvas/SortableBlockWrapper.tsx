@@ -59,7 +59,7 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           <Button
             variant="secondary"
             size="sm"
-            className="h-6 w-6 p-0 text-red-600 hover:text-red-700"
+            className="h-6 w-6 p-0 text-amber-700 hover:text-amber-800"
             onClick={(e) => {
               e.stopPropagation();
               onDelete();

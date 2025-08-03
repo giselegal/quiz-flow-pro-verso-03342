@@ -129,8 +129,8 @@ export const DndProvider: React.FC<DndProviderProps> = ({
       {createPortal(
         <DragOverlay>
           {activeBlock ? (
-            <div className="bg-white shadow-2xl rounded-lg border-2 border-blue-500 opacity-95 transform rotate-3 p-4">
-              <div className="text-sm font-medium text-gray-700">
+            <div className="bg-white shadow-2xl rounded-lg border-2 border-amber-500 opacity-95 transform rotate-3 p-4">
+              <div className="text-sm font-medium text-stone-700">
                 Movendo: {activeBlock.type}
               </div>
             </div>

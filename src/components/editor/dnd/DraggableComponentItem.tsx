@@ -50,7 +50,7 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
     <div
       ref={setNodeRef}
       className={cn(
-        'w-full h-auto p-3 flex flex-col items-start gap-2 text-left cursor-grab hover:bg-gray-50 transition-all duration-200 border border-gray-200 rounded-lg bg-white',
+        'w-full h-auto p-3 flex flex-col items-start gap-2 text-left cursor-grab hover:bg-stone-50 transition-all duration-200 border border-stone-200 rounded-lg bg-white',
         isDragging && 'opacity-50 cursor-grabbing scale-105',
         disabled && 'opacity-50 cursor-not-allowed',
         className
@@ -65,11 +65,11 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
           {icon}
         </div>
         <div className="flex-1 min-w-0">
-          <h4 className="text-sm font-medium text-gray-900 truncate">
+          <h4 className="text-sm font-medium text-stone-900 truncate">
             {title}
           </h4>
           {category && (
-            <span className="text-xs text-gray-500 uppercase tracking-wide">
+            <span className="text-xs text-stone-500 uppercase tracking-wide">
               {category}
             </span>
           )}
@@ -78,14 +78,14 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
 
       {/* Description */}
       {description && (
-        <p className="text-xs text-gray-600 line-clamp-2 w-full">
+        <p className="text-xs text-stone-600 line-clamp-2 w-full">
           {description}
         </p>
       )}
 
       {/* Drag Indicator */}
       {isDragging && (
-        <div className="absolute inset-0 bg-blue-500 bg-opacity-10 rounded-md border-2 border-blue-500 border-dashed" />
+        <div className="absolute inset-0 bg-amber-500 bg-opacity-10 rounded-md border-2 border-amber-500 border-dashed" />
       )}
     </div>
   );

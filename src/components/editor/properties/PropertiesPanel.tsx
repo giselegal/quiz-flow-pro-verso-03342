@@ -1,6 +1,8 @@
 
-import React from 'react';
-import { EditorBlock } from '@/types/editor';
+import React from 'react'      <div className="h-full bg-stone-50 p-4">
+        <h2 className="text-lg font-semibold mb-4">Propriedades</h2>
+        <p className="text-stone-500">Select a block to edit its properties</p>
+      </div>port { EditorBlock } from '@/types/editor';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

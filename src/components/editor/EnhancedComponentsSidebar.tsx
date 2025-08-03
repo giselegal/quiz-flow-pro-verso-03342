@@ -63,11 +63,11 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = ({
       
       <CardContent className="flex-1 overflow-hidden">
         {/* Stats do Registry */}
-        <div className="mb-4 p-2 bg-green-50 rounded-lg border border-green-200">
-          <div className="text-xs text-green-600 font-medium">
+        <div className="mb-4 p-3 bg-gradient-to-r from-stone-50 to-amber-50/50 rounded-lg border border-stone-200/60 backdrop-blur-sm">
+          <div className="text-xs text-amber-800 font-medium">
             ✅ Registry Validado
           </div>
-          <div className="text-xs text-gray-600">
+          <div className="text-xs text-stone-600">
             {registryStats.active} componentes • {registryStats.coverage} cobertura
           </div>
         </div>

@@ -27,13 +27,13 @@ export const DeleteBlockButton: React.FC<DeleteBlockButtonProps> = ({
       onClick={handleDelete}
       className={`
         w-8 h-8 
-        bg-red-500 hover:bg-red-600 
+        bg-amber-700 hover:bg-amber-800 
         text-white 
         rounded-md 
         flex items-center justify-center 
         shadow-sm hover:shadow-md 
         transition-all duration-200
-        border-2 border-red-600
+        border-2 border-amber-800
         ${className}
       `}
       title="Excluir Componente"
