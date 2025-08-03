@@ -5,7 +5,7 @@ import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/componen
 import { ComponentsSidebar } from '../sidebar/ComponentsSidebar';
 import { EditorCanvas } from '../canvas/EditorCanvas';
 import PropertiesPanel from '../properties/PropertiesPanel';
-import { EditorProvider } from '@/contexts/EditorContext';
+import { EditorProvider } from '@/context/EditorContext';
 import { useResultPageConfig } from '@/hooks/useResultPageConfig';
 
 interface UnifiedEditorLayoutProps {
