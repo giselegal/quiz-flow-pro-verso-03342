@@ -4,7 +4,7 @@ import { toast } from '@/components/ui/use-toast';
 import { useQuizStages } from './useQuizStages';
 import { useQuizComponents } from './useQuizComponents';
 import { generateInitialStages, createBuilderStateFromQuiz } from '@/services/quizBuilderService';
-import { quizQuestions } from '@/data/quizQuestions';
+import caktoquizQuestions from '@/data/caktoquizQuestions';
 
 const STORAGE_KEY = 'quiz_builder_data';
 
@@ -49,7 +49,7 @@ export const useQuizBuilder = () => {
         } else {
           // Initialize with existing quiz questions
           const { stages: initialStages, components: initialComponents } = createBuilderStateFromQuiz(
-            quizQuestions
+            caktoquizQuestions
           );
           
           initializeStages(initialStages);

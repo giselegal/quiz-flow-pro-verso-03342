@@ -3,8 +3,8 @@
  * Este arquivo mapeia exatamente as etapas que funcionam em /quiz, /resultado e /quiz-descubra-seu-estilo
  */
 
-import { quizQuestions } from './quizQuestions';
-import { strategicQuestions } from './strategicQuestions';
+import caktoquizQuestions from './caktoquizQuestions';
+import { QuizQuestion } from '@/types/quiz';
 
 // ETAPA 1: Quiz Intro (componente QuizIntro)
 export const LIVE_QUIZ_INTRO = {
@@ -28,33 +28,33 @@ export const LIVE_QUIZ_INTRO = {
 };
 
 // ETAPAS 2-10: Questões do Quiz (componente QuizContent)
-export const LIVE_QUIZ_QUESTIONS = quizQuestions.map((question, index) => ({
+export const LIVE_QUIZ_QUESTIONS = caktoquizQuestions.map((question: QuizQuestion, index: number) => ({
   id: `quiz-question-${question.id}`,
-  title: question.title,
+  title: question.text || 'Question',
   type: "question" as const,
   component: "QuizContent",
   route: "/quiz",
   questionIndex: index,
-  progress: Math.round(((index + 1) / quizQuestions.length) * 60), // 60% até as questões normais
+  progress: Math.round(((index + 1) / caktoquizQuestions.length) * 60), // 60% até as questões normais
   liveProps: {
     currentQuestion: question,
     currentQuestionIndex: index,
-    totalQuestions: quizQuestions.length,
+    totalQuestions: caktoquizQuestions.length,
     currentAnswers: "string[]",
     onAnswerSubmit: "(response: UserResponse) => void",
     onNextClick: "() => void",
     onPrevious: "() => void"
   },
   renderData: {
-    title: question.title,
-    type: question.type, // "both", "text", "image"
-    multiSelect: question.multiSelect,
-    options: question.options.map(opt => ({
+    title: question.text || question.question || 'Question',
+    type: 'both', // simplified
+    multiSelect: 1,
+    options: question.options.map((opt: any) => ({
       id: opt.id,
       text: opt.text,
       imageUrl: opt.imageUrl,
-      styleCategory: opt.styleCategory,
-      points: opt.points
+      styleCategory: opt.style,
+      points: opt.weight || 1
     })),
     showImages: question.type === "both" || question.type === "image",
     showText: question.type === "both" || question.type === "text"
@@ -84,7 +84,7 @@ export const LIVE_MAIN_TRANSITION = {
 };
 
 // ETAPAS 12-17: Questões Estratégicas (componente QuizTransition)
-export const LIVE_STRATEGIC_QUESTIONS = strategicQuestions.map((question, index) => ({
+export const LIVE_STRATEGIC_QUESTIONS = caktoquizQuestions.slice(0, 6).map((question: QuizQuestion, index: number) => ({
   id: `strategic-question-${index + 1}`,
   title: `Questão Estratégica ${index + 1}`,
   type: "strategic-question" as const,

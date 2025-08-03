@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { QuizQuestion, QuizResponse, UserResponse } from '@/types/quiz';
 // Simple validation function
 const validateResponse = (response: UserResponse, question: QuizQuestion): boolean => {
-  return response.selectedOptions.length > 0;
+  return !!(response.selectedOptions && response.selectedOptions.length > 0);
 };
 
 interface CaktoQuizQuestionProps {
