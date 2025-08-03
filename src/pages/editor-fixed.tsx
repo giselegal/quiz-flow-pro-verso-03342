@@ -115,7 +115,7 @@ const EditorFixedPage: React.FC = () => {
   };
 
   const getCanvasClassName = () => {
-    const baseClasses = "transition-all duration-300 mx-auto bg-white rounded-lg shadow-sm border";
+    const baseClasses = "transition-all duration-500 ease-out mx-auto bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20";
     switch (viewportSize) {
       case 'sm': return `${baseClasses} max-w-sm`; // 384px
       case 'md': return `${baseClasses} max-w-2xl`; // 672px  
@@ -133,7 +133,7 @@ const EditorFixedPage: React.FC = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-slate-50 to-gray-100">
+    <div className="h-screen flex flex-col bg-gradient-to-br from-stone-50 via-amber-50/30 to-stone-100">
       <BrandHeader />
       
       <EditorToolbar
@@ -144,23 +144,26 @@ const EditorFixedPage: React.FC = () => {
         onViewportSizeChange={setViewportSize}
       />
       
-      {/* Status bar moderno com dados unificados */}
-      <div className="bg-gradient-to-r from-purple-100 to-blue-100 border-b border-purple-200/50 px-4 py-2">
+      {/* Status bar elegante com cores da marca */}
+      <div className="bg-gradient-to-r from-stone-100/80 via-amber-50/60 to-stone-100/80 border-b border-stone-200/60 backdrop-blur-sm px-6 py-3">
         <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center space-x-4">
-            <span className="text-purple-700 font-medium flex items-center">
-              <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
-              Editor Ativo ✅ UNIFICADO
+          <div className="flex items-center space-x-6">
+            <span className="text-stone-700 font-medium flex items-center">
+              <div className="w-2 h-2 bg-amber-500 rounded-full mr-2 animate-pulse shadow-sm"></div>
+              Editor Ativo
             </span>
-            <span className="text-purple-600">
-              {currentBlocks.length} blocos • {totalBlocks} total • {stageCount} etapas • Ativa: {activeStageId}
+            <span className="text-stone-600 font-medium">
+              {currentBlocks.length} blocos • {totalBlocks} total • {stageCount} etapas
             </span>
-            <span className="text-purple-600">
-              Viewport: {viewportSize.toUpperCase()}
+            <span className="text-stone-600 bg-stone-200/50 px-2 py-1 rounded-full text-xs font-medium">
+              {activeStageId}
+            </span>
+            <span className="text-stone-600 bg-amber-100/50 px-2 py-1 rounded-full text-xs font-medium">
+              {viewportSize.toUpperCase()}
             </span>
           </div>
-          <div className="text-xs text-purple-500">
-            Context unificado ativo • {registryStats.active} componentes
+          <div className="text-xs text-stone-500 bg-stone-200/30 px-3 py-1 rounded-full">
+            {registryStats.active} componentes ativos
           </div>
         </div>
       </div>
@@ -181,34 +184,34 @@ const EditorFixedPage: React.FC = () => {
           />
         }
         canvas={
-          <div className="p-6 overflow-auto h-full bg-gradient-to-br from-gray-50 to-slate-100">
+          <div className="p-6 overflow-auto h-full bg-gradient-to-br from-stone-50/50 via-amber-50/20 to-stone-100/30">
             <div className={getCanvasClassName()}>
-              <div className="p-6">
+              <div className="p-8">
                 {currentBlocks.length === 0 ? (
-                  <div className="text-center py-20">
-                    <div className="text-gray-400 text-6xl mb-4">🎨</div>
-                    <h3 className="text-xl font-semibold text-gray-700 mb-2">Etapa {activeStageId}</h3>
-                    <p className="text-gray-500">Arraste componentes da sidebar para adicionar à esta etapa</p>
-                    <p className="text-xs text-gray-400 mt-2">
-                      Sistema unificado: {stageCount} etapas inicializadas
+                  <div className="text-center py-24">
+                    <div className="text-stone-300 text-6xl mb-6">✨</div>
+                    <h3 className="text-2xl font-semibold text-stone-700 mb-3 font-serif">Etapa {activeStageId}</h3>
+                    <p className="text-stone-500 text-lg mb-2">Arraste componentes da sidebar para começar</p>
+                    <p className="text-xs text-stone-400 bg-stone-100/50 px-4 py-2 rounded-full inline-block">
+                      Sistema integrado com {stageCount} etapas
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     {currentBlocks.map((block) => (
                       <div
                         key={block.id}
                         className={`
-                          group relative border-2 rounded-lg p-4 cursor-pointer transition-all duration-200
+                          group relative border-2 rounded-xl p-6 cursor-pointer transition-all duration-300 ease-out
                           ${selectedBlockId === block.id 
-                            ? 'border-purple-400 bg-purple-50 shadow-md' 
-                            : 'border-gray-200 hover:border-purple-300 hover:shadow-sm'
+                            ? 'border-amber-300 bg-gradient-to-br from-amber-50/80 to-stone-50/60 shadow-lg shadow-amber-100/50 scale-[1.02]' 
+                            : 'border-stone-200/60 hover:border-amber-200 hover:shadow-md hover:shadow-stone-200/50 hover:bg-stone-50/40'
                           }
                         `}
                         onClick={() => setSelectedBlockId(block.id)}
                       >
-                        {/* Controles do bloco */}
-                        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        {/* Controles do bloco elegantes */}
+                        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-200">
                           <Button
                             variant="ghost"
                             size="sm"
@@ -216,7 +219,7 @@ const EditorFixedPage: React.FC = () => {
                               e.stopPropagation();
                               handleDeleteBlock(block.id);
                             }}
-                            className="h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                            className="h-9 w-9 p-0 text-stone-400 hover:text-red-600 hover:bg-red-50/80 rounded-lg transition-all duration-200"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
