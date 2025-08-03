@@ -20,14 +20,41 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   console.log('🔍 FunnelStagesPanel - Steps carregadas:', steps);
   console.log('🔍 FunnelStagesPanel - Quantidade de steps:', steps?.length || 0);
 
-  const handleAddStage = () => {
+  const handleAddStage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('🎯 CLICK: Adicionar nova etapa');
     // Lógica para adicionar nova etapa
-    console.log('Adicionar nova etapa');
   };
 
-  const handleStageClick = (stageId: string) => {
+  const handleStageClick = (stageId: string, e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    console.log('🎯 CLICK: Navegar para etapa:', stageId);
     // Navegar para a etapa específica
-    console.log('Navegar para etapa:', stageId);
+  };
+
+  const handleActionClick = (action: string, stageId: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log(`🎯 CLICK: Ação ${action} na etapa ${stageId}`);
+    
+    switch (action) {
+      case 'view':
+        console.log('👁️ Visualizar etapa:', stageId);
+        break;
+      case 'settings':
+        console.log('⚙️ Configurar etapa:', stageId);
+        break;
+      case 'copy':
+        console.log('📋 Copiar etapa:', stageId);
+        break;
+      case 'delete':
+        console.log('🗑️ Excluir etapa:', stageId);
+        break;
+    }
   };
 
   // 🐛 DEBUG: Verificar se há steps para renderizar
@@ -73,13 +100,20 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
               <div
                 key={step.id}
                 className={cn(
-                  "group relative rounded-lg border transition-all duration-200 cursor-pointer",
-                  "hover:border-primary/50 hover:shadow-sm",
+                  "group relative rounded-lg border transition-all duration-200 cursor-pointer select-none",
+                  "hover:border-primary/50 hover:shadow-sm active:scale-[0.98]",
                   step.isActive 
                     ? "border-primary bg-primary/5 shadow-sm" 
-                    : "border-border bg-card/50"
+                    : "border-border bg-card/50 hover:bg-card"
                 )}
-                onClick={() => handleStageClick(step.id)}
+                onClick={(e) => handleStageClick(step.id, e)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleStageClick(step.id);
+                  }
+                }}
               >
                 <div className="p-3">
                   <div className="flex items-center gap-2 mb-2">
@@ -108,6 +142,8 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                       variant="ghost"
                       size="sm"
                       className="h-6 w-6 p-0 hover:bg-background/80"
+                      onClick={(e) => handleActionClick('view', step.id, e)}
+                      title="Visualizar etapa"
                     >
                       <Eye className="w-3 h-3" />
                     </Button>
@@ -115,6 +151,8 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                       variant="ghost"
                       size="sm"
                       className="h-6 w-6 p-0 hover:bg-background/80"
+                      onClick={(e) => handleActionClick('settings', step.id, e)}
+                      title="Configurações"
                     >
                       <Settings className="w-3 h-3" />
                     </Button>
@@ -122,6 +160,8 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                       variant="ghost"
                       size="sm"
                       className="h-6 w-6 p-0 hover:bg-background/80"
+                      onClick={(e) => handleActionClick('copy', step.id, e)}
+                      title="Copiar etapa"
                     >
                       <Copy className="w-3 h-3" />
                     </Button>
@@ -129,6 +169,8 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                       variant="ghost"
                       size="sm"
                       className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground"
+                      onClick={(e) => handleActionClick('delete', step.id, e)}
+                      title="Excluir etapa"
                     >
                       <Trash2 className="w-3 h-3" />
                     </Button>
@@ -140,8 +182,9 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
             {/* Botão Adicionar Etapa */}
             <Button
               variant="outline"
-              className="w-full h-12 border-dashed border-2 border-muted-foreground/30 hover:border-primary/50 hover:bg-primary/5 transition-colors"
+              className="w-full h-12 border-dashed border-2 border-muted-foreground/30 hover:border-primary/50 hover:bg-primary/5 transition-colors active:scale-[0.98]"
               onClick={handleAddStage}
+              title="Adicionar nova etapa"
             >
               <Plus className="w-4 h-4 mr-2" />
               Adicionar Etapa
