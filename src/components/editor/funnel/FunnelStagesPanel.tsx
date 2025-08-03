@@ -31,32 +31,44 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   };
 
   const handleStageClick = (stageId: string, e?: React.MouseEvent) => {
+    console.log('🚨 EVENTO CLICK RECEBIDO - StageID:', stageId);
+    console.log('🚨 Evento:', e);
+    console.log('🚨 Timestamp:', new Date().toLocaleTimeString());
+    
     if (e) {
       e.preventDefault();
       e.stopPropagation();
+      console.log('🚨 Evento prevenido');
     }
-    console.log('🎯 CLICK: Navegar para etapa:', stageId);
     
     // ✅ CONECTAR: Atualizar estado ativo das etapas
-    setSteps(currentSteps => 
-      currentSteps.map(step => ({
+    setSteps(currentSteps => {
+      console.log('🚨 Atualizando steps - Current:', currentSteps.length);
+      const newSteps = currentSteps.map(step => ({
         ...step,
         isActive: step.id === stageId
-      }))
-    );
+      }));
+      console.log('🚨 New steps criados');
+      return newSteps;
+    });
     
     // ✅ CONECTAR: Chamar callback para o editor principal
     if (onStageSelect) {
+      console.log('🚨 Chamando onStageSelect callback');
       onStageSelect(stageId);
+    } else {
+      console.log('🚨 ❌ onStageSelect NÃO EXISTE!');
     }
     
     console.log('✅ Etapa ativada:', stageId);
   };
 
   const handleActionClick = (action: string, stageId: string, e: React.MouseEvent) => {
+    console.log('🚨 ACTION CLICK RECEBIDO:', action, stageId);
+    console.log('🚨 Evento action:', e);
+    
     e.preventDefault();
     e.stopPropagation();
-    console.log(`🎯 CLICK: Ação ${action} na etapa ${stageId}`);
     
     switch (action) {
       case 'view':
@@ -69,7 +81,9 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
         console.log('📋 Copiar etapa:', stageId);
         break;
       case 'delete':
-        console.log('🗑️ Excluir etapa:', stageId);
+        console.log('🗑️ EXECUTANDO DELETE da etapa:', stageId);
+        // TODO: Implementar delete real
+        alert(`Deletar etapa ${stageId}?`);
         break;
     }
   };
@@ -123,88 +137,98 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
       <CardContent className="flex-1 p-0 overflow-hidden">
         <ScrollArea className="h-full">
           <div className="space-y-2 p-4">
-            {steps.map((step, index) => (
-              <div
-                key={step.id}
-                className={cn(
-                  "group relative rounded-lg border transition-all duration-200 cursor-pointer select-none",
-                  "hover:border-primary/50 hover:shadow-sm active:scale-[0.98]",
-                  step.isActive 
-                    ? "border-primary bg-primary/5 shadow-sm" 
-                    : "border-border bg-card/50 hover:bg-card"
-                )}
-                onClick={(e) => handleStageClick(step.id, e)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handleStageClick(step.id);
-                  }
-                }}
-              >
-                <div className="p-3">
-                  <div className="flex items-center gap-2 mb-2">
-                    <GripVertical className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-sm text-foreground">
-                          Etapa {index + 1}
-                        </span>
-                        <Badge 
-                          variant={step.isActive ? "default" : "secondary"}
-                          className="text-xs"
-                        >
-                          {step.blocksCount || 0} blocos
-                        </Badge>
+            {steps.map((step, index) => {
+              console.log('🚨 RENDERIZANDO STEP:', step.id, step.name);
+              return (
+                <div
+                  key={step.id}
+                  className={cn(
+                    "group relative rounded-lg border-2 transition-all duration-200 cursor-pointer select-none",
+                    "hover:border-red-500 hover:shadow-lg active:scale-[0.95] active:bg-blue-100",
+                    "min-h-[80px] bg-white", // ✅ Forçar altura e background
+                    step.isActive 
+                      ? "border-green-500 bg-green-50 shadow-md" 
+                      : "border-gray-300 bg-white hover:bg-gray-50"
+                  )}
+                  onClick={(e) => {
+                    console.log('🚨 CLICK DIRETO NO DIV - StageID:', step.id);
+                    handleStageClick(step.id, e);
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    console.log('🚨 KEYDOWN:', e.key);
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      handleStageClick(step.id);
+                    }
+                  }}
+                  onMouseDown={() => console.log('🚨 MOUSEDOWN:', step.id)}
+                  onMouseUp={() => console.log('🚨 MOUSEUP:', step.id)}
+                >
+                  <div className="p-4 relative z-10"> {/* ✅ Aumentar padding e z-index */}
+                    <div className="flex items-center gap-2 mb-2">
+                      <GripVertical className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium text-sm text-foreground">
+                            Etapa {index + 1}
+                          </span>
+                          <Badge 
+                            variant={step.isActive ? "default" : "secondary"}
+                            className="text-xs"
+                          >
+                            {step.blocksCount || 0} blocos
+                          </Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
+                          {step.name || step.description || 'Sem título'}
+                        </p>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
-                        {step.name || step.description || 'Sem título'}
-                      </p>
+                    </div>
+
+                    {/* Actions - Aparecem no hover */}
+                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0 hover:bg-background/80"
+                        onClick={(e) => handleActionClick('view', step.id, e)}
+                        title="Visualizar etapa"
+                      >
+                        <Eye className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0 hover:bg-background/80"
+                        onClick={(e) => handleActionClick('settings', step.id, e)}
+                        title="Configurações"
+                      >
+                        <Settings className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0 hover:bg-background/80"
+                        onClick={(e) => handleActionClick('copy', step.id, e)}
+                        title="Copiar etapa"
+                      >
+                        <Copy className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground"
+                        onClick={(e) => handleActionClick('delete', step.id, e)}
+                        title="Excluir etapa"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
                     </div>
                   </div>
-
-                  {/* Actions - Aparecem no hover */}
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 w-6 p-0 hover:bg-background/80"
-                      onClick={(e) => handleActionClick('view', step.id, e)}
-                      title="Visualizar etapa"
-                    >
-                      <Eye className="w-3 h-3" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 w-6 p-0 hover:bg-background/80"
-                      onClick={(e) => handleActionClick('settings', step.id, e)}
-                      title="Configurações"
-                    >
-                      <Settings className="w-3 h-3" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 w-6 p-0 hover:bg-background/80"
-                      onClick={(e) => handleActionClick('copy', step.id, e)}
-                      title="Copiar etapa"
-                    >
-                      <Copy className="w-3 h-3" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground"
-                      onClick={(e) => handleActionClick('delete', step.id, e)}
-                      title="Excluir etapa"
-                    >
-                      <Trash2 className="w-3 h-3" />
-                    </Button>
-                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
 
             {/* Botão Adicionar Etapa */}
             <Button
