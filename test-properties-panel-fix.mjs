@@ -22,8 +22,13 @@ const checkPropertiesFixApplied = () => {
     // Verificar se está usando generateBlockDefinitions
     const usesGenerateBlockDefinitions = editorContent.includes('generateBlockDefinitions');
     
-    // Verificar se não está mais usando properties: {} vazio
-    const noEmptyProperties = !editorContent.includes('properties: {},');
+    // Verificar se não está mais usando properties: {} vazio EM DEFINIÇÕES
+    // (ignorar uso em objetos Block que é correto)
+    const lines = editorContent.split('\n');
+    const hasEmptyPropertiesInDefinition = lines.some(line => 
+      line.includes('properties: {},') && 
+      (line.includes('type:') || line.includes('name:') || line.includes('description:'))
+    );
     
     // Verificar se está usando a função no DynamicPropertiesPanel
     const usesFunctionInPanel = editorContent.includes('getBlockDefinitionForType(selectedBlock.type)');
