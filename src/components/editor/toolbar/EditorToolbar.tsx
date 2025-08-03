@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { 
@@ -10,19 +9,16 @@ import {
   Smartphone, 
   Tablet, 
   Monitor, 
-  LayoutGrid,
-  Trash2
+  LayoutGrid
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Block } from '@/types/editor';
-import { cleanEditorLocalStorage } from '@/utils/cleanStorage';
 
 interface EditorToolbarProps {
   isPreviewing: boolean;
   onTogglePreview: () => void;
   onSave: () => void;
-  onUndo?: () => Block[];
-  onRedo?: () => Block[];
+  onUndo?: () => void;
+  onRedo?: () => void;
   canUndo?: boolean;
   canRedo?: boolean;
   viewportSize?: 'sm' | 'md' | 'lg' | 'xl';
@@ -41,8 +37,8 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
   onViewportSizeChange = () => {}
 }) => {
   return (
-    <div className="bg-white border-b border-[#B89B7A]/20 p-2 flex items-center justify-between">
-      <div className="flex items-center space-x-2">
+    <div className="bg-gradient-to-r from-purple-600 to-blue-600 border-b border-white/20 p-3 flex items-center justify-between shadow-lg">
+      <div className="flex items-center space-x-3">
         {onUndo && (
           <Button
             variant="ghost"
@@ -50,7 +46,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
             onClick={onUndo}
             disabled={!canUndo}
             title="Desfazer"
-            className="text-[#432818]"
+            className="text-white hover:bg-white/20 disabled:opacity-50"
           >
             <Undo className="h-4 w-4" />
           </Button>
@@ -63,21 +59,23 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
             onClick={onRedo}
             disabled={!canRedo}
             title="Refazer"
-            className="text-[#432818]"
+            className="text-white hover:bg-white/20 disabled:opacity-50"
           >
             <Redo className="h-4 w-4" />
           </Button>
         )}
 
+        <div className="h-6 w-px bg-white/30 mx-2" />
+
         <Button
           variant="ghost"
           size="sm"
           className={cn(
-            "text-[#432818]",
-            viewportSize === 'sm' && "bg-[#FAF9F7]"
+            "text-white hover:bg-white/20 transition-all",
+            viewportSize === 'sm' && "bg-white/30 shadow-md"
           )}
           onClick={() => onViewportSizeChange('sm')}
-          title="Visualização Mobile"
+          title="Mobile"
         >
           <Smartphone className="h-4 w-4" />
         </Button>
@@ -86,11 +84,11 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           variant="ghost"
           size="sm"
           className={cn(
-            "text-[#432818]",
-            viewportSize === 'md' && "bg-[#FAF9F7]"
+            "text-white hover:bg-white/20 transition-all",
+            viewportSize === 'md' && "bg-white/30 shadow-md"
           )}
           onClick={() => onViewportSizeChange('md')}
-          title="Visualização Tablet"
+          title="Tablet"
         >
           <Tablet className="h-4 w-4" />
         </Button>
@@ -99,11 +97,11 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           variant="ghost"
           size="sm"
           className={cn(
-            "text-[#432818]",
-            viewportSize === 'lg' && "bg-[#FAF9F7]"
+            "text-white hover:bg-white/20 transition-all",
+            viewportSize === 'lg' && "bg-white/30 shadow-md"
           )}
           onClick={() => onViewportSizeChange('lg')}
-          title="Visualização Desktop"
+          title="Desktop"
         >
           <Monitor className="h-4 w-4" />
         </Button>
@@ -112,22 +110,22 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           variant="ghost"
           size="sm"
           className={cn(
-            "text-[#432818]",
-            viewportSize === 'xl' && "bg-[#FAF9F7]"
+            "text-white hover:bg-white/20 transition-all",
+            viewportSize === 'xl' && "bg-white/30 shadow-md"
           )}
           onClick={() => onViewportSizeChange('xl')}
-          title="Visualização Desktop Grande"
+          title="Desktop Large"
         >
           <LayoutGrid className="h-4 w-4" />
         </Button>
       </div>
       
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-3">
         <Button
           variant="outline" 
           size="sm"
           onClick={onTogglePreview}
-          className="text-[#432818]"
+          className="border-white/30 text-white hover:bg-white/20 bg-transparent"
         >
           {isPreviewing ? (
             <>
@@ -137,7 +135,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           ) : (
             <>
               <Eye className="mr-2 h-4 w-4" />
-              Visualizar
+              Preview
             </>
           )}
         </Button>
@@ -145,7 +143,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
         <Button
           onClick={onSave}
           size="sm"
-          className="bg-[#B89B7A] hover:bg-[#A38A69] text-white"
+          className="bg-white text-purple-600 hover:bg-gray-100 font-medium px-6"
         >
           <Save className="mr-2 h-4 w-4" />
           Salvar

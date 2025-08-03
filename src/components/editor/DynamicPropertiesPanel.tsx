@@ -99,25 +99,45 @@ const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
   };
 
   return (
-    <Card className="w-80 h-fit">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-        <CardTitle className="text-lg">{blockDefinition.name}</CardTitle>
-        <Button variant="ghost" size="sm" onClick={onClose}>
-          <X className="w-4 h-4" />
-        </Button>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <div className="h-full w-full flex flex-col">
+      {/* Header do Properties Panel */}
+      <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-blue-50">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            {blockDefinition.name}
+          </h3>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={onClose}
+            className="text-purple-600 hover:text-purple-700 hover:bg-purple-100"
+          >
+            <X className="w-4 h-4" />
+          </Button>
+        </div>
+        <p className="text-sm text-purple-600 mt-1">Propriedades do componente</p>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 p-4 space-y-4 overflow-auto">
         {Object.entries(blockDefinition.properties).map(([key, property]) => (
           <div key={key} className="space-y-2">
-            <Label className="text-sm font-medium">{property.label}</Label>
+            <Label className="text-sm font-medium text-gray-700">{property.label}</Label>
             {renderPropertyInput(key, property)}
             {property.description && (
               <p className="text-xs text-gray-500">{property.description}</p>
             )}
           </div>
         ))}
-      </CardContent>
-    </Card>
+        
+        {Object.keys(blockDefinition.properties).length === 0 && (
+          <div className="text-center py-8 text-gray-500">
+            <div className="text-4xl mb-2">⚙️</div>
+            <p className="text-sm">Nenhuma propriedade disponível</p>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 
