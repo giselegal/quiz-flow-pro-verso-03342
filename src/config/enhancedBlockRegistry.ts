@@ -367,6 +367,46 @@ const getPropertiesForBlockType = (blockType: string): Record<string, PropertySc
     };
   }
   
+  if (blockType.includes('options-grid') || blockType.includes('options')) {
+    return {
+      options: {
+        type: 'array' as const,
+        label: 'Opções do Quiz',
+        default: [
+          {
+            id: '1',
+            text: 'Primeira opção',
+            value: 'option1',
+            category: 'Geral',
+            points: 1,
+            imageUrl: 'https://via.placeholder.com/150x150'
+          },
+          {
+            id: '2',
+            text: 'Segunda opção',
+            value: 'option2',
+            category: 'Geral',
+            points: 1,
+            imageUrl: 'https://via.placeholder.com/150x150'
+          }
+        ],
+        description: 'Configure as opções disponíveis para seleção no quiz',
+        category: 'content'
+      },
+      layout: {
+        type: 'select' as const,
+        label: 'Layout',
+        default: 'grid',
+        description: 'Como as opções serão exibidas',
+        options: [
+          { value: 'grid', label: 'Grade (2x2)' },
+          { value: 'list', label: 'Lista Vertical' }
+        ],
+        category: 'layout'
+      }
+    };
+  }
+  
   // Propriedades padrão para outros tipos
   return {
     text: {

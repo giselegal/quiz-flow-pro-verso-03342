@@ -44,7 +44,7 @@ export const getStep06Template = () => {
     {
       type: 'text-inline',
       properties: {
-        content: 'Questão 6 de 10',
+        content: 'Questão 5 de 10',
         fontSize: 'text-sm',
         textAlign: 'text-center',
         color: '#6B7280',
