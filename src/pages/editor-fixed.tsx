@@ -13,11 +13,15 @@ import { Type, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const EditorFixedPage: React.FC = () => {
-  const [blocks, setBlocks] = useState<Block[]>([]);
+  // ✅ BLOCOS POR ETAPA: Cada etapa tem seus próprios blocos
+  const [stageBlocks, setStageBlocks] = useState<Record<string, Block[]>>({});
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [viewportSize, setViewportSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('lg');
   const [activeStageId, setActiveStageId] = useState<string>('step-1');
+
+  // ✅ BLOCOS ATUAIS: Blocos da etapa ativa
+  const blocks = stageBlocks[activeStageId] || [];
 
   const selectedBlock = blocks.find(block => block.id === selectedBlockId);
   
@@ -78,7 +82,10 @@ const EditorFixedPage: React.FC = () => {
   };
 
   const handleDeleteBlock = (blockId: string) => {
-    setBlocks(prev => prev.filter(block => block.id !== blockId));
+    setStageBlocks(prev => ({
+      ...prev,
+      [activeStageId]: (prev[activeStageId] || []).filter(block => block.id !== blockId)
+    }));
     if (selectedBlockId === blockId) {
       setSelectedBlockId(null);
     }
@@ -96,12 +103,23 @@ const EditorFixedPage: React.FC = () => {
   };
 
   
-  // ✅ CONECTAR: Handler para mudança de etapa
+  // ✅ CONECTAR: Handler para mudança de etapa com carregamento de blocos
   const handleStageSelect = (stageId: string) => {
     console.log('🔄 Editor: Mudando para etapa:', stageId);
+    console.log('📦 Carregando blocos da etapa:', stageId);
+    console.log('🔢 Blocos disponíveis:', stageBlocks[stageId]?.length || 0);
+    
     setActiveStageId(stageId);
     setSelectedBlockId(null); // Limpar seleção de bloco
-    // TODO: Carregar blocos específicos da etapa
+    
+    // ✅ CARREGAMENTO: Inicializar etapa vazia se não existe
+    if (!stageBlocks[stageId]) {
+      setStageBlocks(prev => ({
+        ...prev,
+        [stageId]: []
+      }));
+      console.log(`📝 Etapa ${stageId} inicializada como vazia`);
+    }
   };
 
   return (
@@ -150,7 +168,14 @@ const EditorFixedPage: React.FC = () => {
                 properties: {},
                 order: blocks.length
               };
-              setBlocks(prev => [...prev, newBlock]);
+              
+              // ✅ ADICIONAR: Bloco à etapa ativa
+              setStageBlocks(prev => ({
+                ...prev,
+                [activeStageId]: [...(prev[activeStageId] || []), newBlock]
+              }));
+              
+              console.log(`➕ Bloco ${type} adicionado à etapa ${activeStageId}`);
             }}
           />
         }
@@ -161,8 +186,9 @@ const EditorFixedPage: React.FC = () => {
                 {blocks.length === 0 ? (
                   <div className="text-center py-20">
                     <div className="text-gray-400 text-6xl mb-4">🎨</div>
-                    <h3 className="text-xl font-semibold text-gray-700 mb-2">Canvas Vazio</h3>
-                    <p className="text-gray-500">Arraste componentes da sidebar para começar a criar</p>
+                    <h3 className="text-xl font-semibold text-gray-700 mb-2">Etapa {activeStageId}</h3>
+                    <p className="text-gray-500">Arraste componentes da sidebar para adicionar à esta etapa</p>
+                    <p className="text-xs text-gray-400 mt-2">Cada etapa tem seu próprio conteúdo</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -212,13 +238,14 @@ const EditorFixedPage: React.FC = () => {
               block={selectedBlock}
               blockDefinition={getBlockDefinitionForType(selectedBlock.type)}
               onUpdateBlock={(blockId: string, properties: Partial<EditableContent>) => {
-                setBlocks(prev => 
-                  prev.map(block => 
+                setStageBlocks(prev => ({
+                  ...prev,
+                  [activeStageId]: (prev[activeStageId] || []).map(block => 
                     block.id === blockId 
                       ? { ...block, content: { ...block.content, ...properties } }
                       : block
                   )
-                );
+                }));
               }}
               onClose={() => setSelectedBlockId(null)}
             />
