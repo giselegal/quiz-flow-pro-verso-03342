@@ -1,0 +1,37 @@
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/context/AuthContext';
+import { LogOut } from 'lucide-react';
+
+interface LogoutButtonProps {
+  variant?: 'default' | 'outline' | 'ghost';
+  size?: 'sm' | 'default' | 'lg';
+}
+
+export const LogoutButton: React.FC<LogoutButtonProps> = ({ 
+  variant = 'ghost', 
+  size = 'default' 
+}) => {
+  const { logout, loading } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      window.location.href = '/auth';
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
+  return (
+    <Button 
+      variant={variant} 
+      size={size}
+      onClick={handleLogout}
+      disabled={loading}
+    >
+      <LogOut className="h-4 w-4 mr-2" />
+      Sair
+    </Button>
+  );
+};

@@ -10,6 +10,7 @@ import SchemaDrivenEditorResponsive from '@/components/editor/SchemaDrivenEditor
 import EditorPage from '@/pages/editor-fixed';
 import ResultPage from './pages/ResultPage';
 import Home from './pages/Home';
+import AuthPage from './pages/AuthPage';
 import FunnelsPage from './pages/FunnelsPage';
 import { QuizPage } from './pages/QuizPage';
 import { ResultConfigPage } from './pages/ResultConfigPage';
@@ -58,7 +59,7 @@ function App() {
               <Route path="/" component={Home} />
               <Route path="/quiz/:id" component={QuizPage} />
               <Route path="/resultado/:resultId" component={ResultPage} />
-              <Route path="/auth" component={Auth} />
+              <Route path="/auth" component={AuthPage} />
 
               {/* Protected Routes */}
               <ProtectedRoute path="/admin/funis" component={FunnelsPage} />
