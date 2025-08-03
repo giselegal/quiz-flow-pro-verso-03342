@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useEffect, useState, StrictMode, useCallback } from 'react';
 import { 
   ChevronRight, 
