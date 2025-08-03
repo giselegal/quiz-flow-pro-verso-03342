@@ -12,7 +12,7 @@ import ResultPage from './pages/ResultPage';
 import Home from './pages/Home';
 import AuthPage from './pages/AuthPage';
 import FunnelsPage from './pages/FunnelsPage';
-import QuizPage from './components/QuizPage';
+import QuizPageComponent from './components/QuizPage';
 import { ResultConfigPage } from './pages/ResultConfigPage';
 import { Auth } from './components/auth/Auth';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
@@ -57,7 +57,7 @@ function App() {
               
               {/* Public Routes */}
               <Route path="/" component={Home} />
-              <Route path="/quiz/:id" component={QuizPage} />
+              <Route path="/quiz/:id" component={QuizPageComponent} />
               <Route path="/resultado/:resultId" component={ResultPage} />
               <Route path="/auth" component={AuthPage} />
 

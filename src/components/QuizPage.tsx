@@ -3,7 +3,7 @@ import React from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLoadingState } from '@/hooks/useLoadingState';
 
-const QuizPage: React.FC = () => {
+const QuizPageComponent: React.FC = () => {
   const { user } = useAuth();
   const { isLoading, setLoading } = useLoadingState({ initialState: false });
   
@@ -30,4 +30,4 @@ const QuizPage: React.FC = () => {
   );
 };
 
-export default QuizPage;
+export default QuizPageComponent;
