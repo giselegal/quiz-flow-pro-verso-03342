@@ -28,6 +28,10 @@ export { useImageBank } from './useImageBank';
 export { useUtmParameters } from './useUtmParameters';
 export { useDynamicData } from './useDynamicData';
 
+// ✅ PERFORMANCE HOOKS (otimização)
+export { useGlobalLoading } from './useGlobalLoading';
+export { usePerformanceOptimization, useComponentOptimization } from './usePerformanceOptimization';
+
 // ✅ A/B TESTING
 export { useABTest } from './useABTest';
 
