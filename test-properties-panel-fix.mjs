@@ -44,7 +44,7 @@ const checkPropertiesFixApplied = () => {
     console.log(`✅ Tem propriedades padrão: ${hasDefaultProperties ? 'SIM' : 'NÃO'}`);
     
     return hasGetBlockDefinitionFunction && usesGenerateBlockDefinitions && 
-           noEmptyProperties && usesFunctionInPanel && hasDefaultProperties;
+           !hasEmptyPropertiesInDefinition && usesFunctionInPanel && hasDefaultProperties;
            
   } catch (error) {
     console.log('❌ Erro ao verificar correção:', error.message);
