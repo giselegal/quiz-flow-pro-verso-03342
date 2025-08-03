@@ -75,6 +75,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     return {
       type: type,
       name: type.charAt(0).toUpperCase() + type.slice(1).replace(/[-_]/g, ' '),
+      label: type.charAt(0).toUpperCase() + type.slice(1).replace(/[-_]/g, ' '),
       description: `Componente ${type}`,
       category: 'basic',
       icon: Type,
@@ -179,7 +180,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             onTogglePreview={() => setIsPreviewing(!isPreviewing)}
             onSave={handleSave}
             viewportSize={viewportSize}
-            onViewportChange={setViewportSize}
+            onViewportSizeChange={setViewportSize}
           />
 
           {/* Top Bar - Otimizado */}

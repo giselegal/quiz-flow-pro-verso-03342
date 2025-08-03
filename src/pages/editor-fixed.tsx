@@ -234,10 +234,6 @@ const EditorFixedPage: React.FC = () => {
                       />
                     ))}
                   </div>
-                        />
-                      </div>
-                    ))}
-                  </div>
                 )}
               </div>
             </div>
