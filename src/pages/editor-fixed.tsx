@@ -8,11 +8,15 @@ import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
 import { EditableContent } from '@/types/editor';
 import { getRegistryStats, generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
 import { useEditor } from '@/context/EditorContext';
+import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 import { Type, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const EditorFixedPage: React.FC = () => {
   console.log('🔥 EditorFixedPage: PÁGINA RENDERIZANDO!');
+  
+  // Hook para scroll sincronizado
+  const { scrollRef } = useSyncedScroll({ source: 'canvas' });
   
   // ✅ USAR NOVA ESTRUTURA UNIFICADA DO EDITORCONTEXT
   const { 
@@ -170,7 +174,7 @@ const EditorFixedPage: React.FC = () => {
           ) : null
         }
         canvas={
-          <div className="p-6 overflow-auto h-full bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm">
+          <div ref={scrollRef} className="p-6 overflow-auto h-full bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm">
             <div className={getCanvasClassName()}>
               <div className="p-8">
                 {currentBlocks.length === 0 ? (

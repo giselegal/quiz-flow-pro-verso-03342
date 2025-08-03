@@ -7,6 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
 import { BlockDefinition } from '@/types/editor';
+import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 
 interface EnhancedComponentsSidebarProps {
   onAddComponent: (type: string) => void;
@@ -15,6 +16,7 @@ interface EnhancedComponentsSidebarProps {
 const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = ({
   onAddComponent
 }) => {
+  const { scrollRef } = useSyncedScroll({ source: 'components' });
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
     'Cabeçalho': true,
@@ -90,9 +92,9 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = ({
       </CardHeader>
       
       <CardContent className="flex-1 overflow-hidden">
-        <ScrollArea className="h-full">
+        <div ref={scrollRef} className="h-full overflow-y-auto overflow-x-hidden">
           {/* Categories */}
-          <div className="space-y-1">
+          <div className="space-y-1 p-1">
             {orderedCategories.map((category) => (
               <div key={category} className="space-y-1">
                 {/* Category Header */}
@@ -154,7 +156,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = ({
               </div>
             ))}
           </div>
-        </ScrollArea>
+        </div>
       </CardContent>
     </Card>
   );

@@ -13,6 +13,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { HexColorPicker } from 'react-colorful';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 import { 
   X, 
   Info, 
@@ -328,6 +329,8 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
   onUpdateBlock,
   onClose
 }) => {
+  const { scrollRef } = useSyncedScroll({ source: 'properties' });
+  
   const handlePropertyChange = (key: string, value: any) => {
     onUpdateBlock(block.id, {
       ...block.content,
@@ -541,7 +544,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
       </div>
 
       {/* 🎛️ Properties Content */}
-      <div className="flex-1 overflow-auto">
+      <div ref={scrollRef} className="flex-1 overflow-auto">
         <Tabs defaultValue="properties" className="h-full">
           <TabsList className="grid w-full grid-cols-2 mx-4 mt-4">
             <TabsTrigger value="properties" className="text-xs">
