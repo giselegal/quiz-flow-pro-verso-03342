@@ -121,15 +121,15 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   if (isLoading) {
     console.log(`🔄 [${timestamp}] FunnelStagesPanel - LOADING STATE`);
     return (
-      <Card className={cn("h-full flex flex-col min-h-[400px] bg-blue-50/50 border-blue-200", className)}>
-        <CardHeader className="flex-shrink-0 pb-3 bg-blue-100/50">
-          <CardTitle className="text-lg font-semibold text-blue-700 flex items-center gap-2">
+      <Card className={cn("h-full flex flex-col min-h-[400px] bg-stone-50/50 border-stone-200", className)}>
+        <CardHeader className="flex-shrink-0 pb-3 bg-stone-100/50">
+          <CardTitle className="text-lg font-semibold text-stone-700 flex items-center gap-2">
             <Loader2 className="w-4 h-4 animate-spin" />
             🔄 Carregando Etapas...
           </CardTitle>
         </CardHeader>
         <CardContent className="flex-1 p-4">
-          <div className="h-full flex items-center justify-center text-blue-600">
+          <div className="h-full flex items-center justify-center text-stone-600">
             <div className="text-center space-y-4">
               <div className="text-4xl animate-bounce">⏳</div>
               <p className="font-medium">Inicializando contexto...</p>
@@ -146,15 +146,15 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
     console.warn(`⚠️ [${timestamp}] FunnelStagesPanel - PROBLEMA: Nenhuma etapa encontrada após loading!`);
     console.warn(`⚠️ [${timestamp}] FunnelStagesPanel - Render #${renderCount}, Stages:`, stages);
     return (
-      <Card className={cn("h-full flex flex-col min-h-[400px] bg-red-50/50 border-red-200", className)}>
-        <CardHeader className="flex-shrink-0 pb-3 bg-red-100/50">
-          <CardTitle className="text-lg font-semibold text-red-700 flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+      <Card className={cn("h-full flex flex-col min-h-[400px] bg-brand-dark/5 border-brand-dark/30", className)}>
+        <CardHeader className="flex-shrink-0 pb-3 bg-brand-dark/10">
+          <CardTitle className="text-lg font-semibold text-brand-dark flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-brand-dark animate-pulse"></div>
             ⚠️ Erro nas Etapas
           </CardTitle>
         </CardHeader>
         <CardContent className="flex-1 p-4">
-          <div className="h-full flex items-center justify-center text-red-600">
+          <div className="h-full flex items-center justify-center text-brand-dark">
             <div className="text-center space-y-4">
               <div className="text-4xl animate-bounce">🚨</div>
               <p className="font-medium">Etapas não carregaram</p>
@@ -165,7 +165,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
               <Button 
                 onClick={() => window.location.reload()} 
                 variant="outline" 
-                className="border-red-300 text-red-700 hover:bg-red-50"
+                className="border-brand-dark/40 text-brand-dark hover:bg-brand-dark/10"
               >
                 🔄 Recarregar
               </Button>
@@ -180,12 +180,12 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   console.log(`✅ [${timestamp}] FunnelStagesPanel - SUCESSO: Renderizando ${stages.length} etapas`);
 
   return (
-    <Card className={cn("h-full flex flex-col min-h-[400px] border-2 bg-green-50/30 border-green-200", className)}>
-      <CardHeader className="flex-shrink-0 pb-3 bg-green-100/50 border-b border-green-200">
-        <CardTitle className="text-lg font-semibold text-green-800 flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+    <Card className={cn("h-full flex flex-col min-h-[400px] border-2 bg-brand/5 border-brand/30", className)}>
+      <CardHeader className="flex-shrink-0 pb-3 bg-brand/10 border-b border-brand/30">
+        <CardTitle className="text-lg font-semibold text-brand-dark flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-brand animate-pulse"></div>
           ✅ Etapas do Funil
-          <span className="ml-auto text-sm bg-green-200 text-green-800 px-2 py-1 rounded font-bold">
+          <span className="ml-auto text-sm bg-brand/20 text-brand-dark px-2 py-1 rounded font-bold">
             {stageCount}/21 etapas
           </span>
         </CardTitle>
@@ -201,11 +201,11 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                   key={stage.id}
                   className={cn(
                     "group relative rounded-lg border-2 transition-all duration-200 cursor-pointer select-none",
-                    "hover:border-purple-400 hover:shadow-lg active:scale-[0.95]",
+                    "hover:border-brand/60 hover:shadow-lg active:scale-[0.95]",
                     "min-h-[80px] bg-white",
                     // ✅ USAR activeStageId DO EDITORCONTEXT PARA HIGHLIGHT
                     activeStageId === stage.id
-                      ? "border-purple-500 bg-purple-50 shadow-md ring-2 ring-purple-200" 
+                      ? "border-brand bg-brand/10 shadow-md ring-2 ring-brand/30" 
                       : "border-gray-300 bg-white hover:bg-gray-50"
                   )}
                   onClick={(e) => {
@@ -228,7 +228,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                         <div className="flex items-center justify-between">
                           <span className={cn(
                             "font-medium text-sm",
-                            activeStageId === stage.id ? "text-purple-700" : "text-foreground"
+                            activeStageId === stage.id ? "text-brand-dark" : "text-foreground"
                           )}>
                             Etapa {stage.order}
                           </span>
@@ -245,8 +245,8 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                         {/* ✅ INDICADOR VISUAL DE ETAPA ATIVA */}
                         {activeStageId === stage.id && (
                           <div className="flex items-center gap-1 mt-1">
-                            <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
-                            <span className="text-xs text-purple-600 font-medium">ATIVA</span>
+                            <div className="w-2 h-2 bg-brand rounded-full animate-pulse"></div>
+                            <span className="text-xs text-brand-dark font-medium">ATIVA</span>
                           </div>
                         )}
                       </div>

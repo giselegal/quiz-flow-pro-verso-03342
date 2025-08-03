@@ -14,7 +14,7 @@ export const Step06Question05: React.FC<Step06Question05Props> = ({ onNext, onPr
   );
 };
 
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 6 - QUESTÃO 5: QUAL CASACO É SEU FAVORITO?
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 6 - QUESTÃO 5: QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?
 export const getStep06Template = () => {
   return [
     {
@@ -24,7 +24,7 @@ export const getStep06Template = () => {
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
-        progressValue: 60,
+        progressValue: 50,
         progressMax: 100,
         showBackButton: true
       }
@@ -32,7 +32,7 @@ export const getStep06Template = () => {
     {
       type: 'heading-inline',
       properties: {
-        content: 'QUAL CASACO É SEU FAVORITO?',
+        content: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?',
         level: 'h2',
         fontSize: 'text-2xl',
         fontWeight: 'font-bold',
