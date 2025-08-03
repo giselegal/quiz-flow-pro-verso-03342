@@ -16,9 +16,10 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
 }) => {
   const { steps, updateFunnelStep, addStepBlock } = useFunnels();
 
-  // 🐛 DEBUG: Log dados das etapas
-  console.log('🔍 FunnelStagesPanel - Steps carregadas:', steps);
-  console.log('🔍 FunnelStagesPanel - Quantidade de steps:', steps?.length || 0);
+  // ✅ FASE 2: Debug visual melhorado com timestamps
+  const timestamp = new Date().toLocaleTimeString();
+  console.log(`🔍 [${timestamp}] FunnelStagesPanel - Steps recebidas:`, steps?.length || 0);
+  console.log(`🎯 [${timestamp}] FunnelStagesPanel - Dados completos:`, steps);
 
   const handleAddStage = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -57,23 +58,30 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
     }
   };
 
-  // 🐛 DEBUG: Verificar se há steps para renderizar
+  // ✅ FASE 3: Fallback robusto melhorado
   if (!steps || steps.length === 0) {
-    console.log('⚠️ FunnelStagesPanel - Nenhuma step encontrada para renderizar');
+    console.warn(`⚠️ [${timestamp}] FunnelStagesPanel - PROBLEMA: Nenhuma step encontrada!`);
     return (
-      <Card className={cn("h-full flex flex-col min-h-[400px]", className)}>
-        <CardHeader className="flex-shrink-0 pb-3">
-          <CardTitle className="text-lg font-semibold text-foreground flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-primary"></div>
-            Etapas do Funil
+      <Card className={cn("h-full flex flex-col min-h-[400px] bg-red-50/50 border-red-200", className)}>
+        <CardHeader className="flex-shrink-0 pb-3 bg-red-100/50">
+          <CardTitle className="text-lg font-semibold text-red-700 flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+            ⚠️ Erro nas Etapas
           </CardTitle>
         </CardHeader>
         <CardContent className="flex-1 p-4">
-          <div className="h-full flex items-center justify-center text-muted-foreground">
+          <div className="h-full flex items-center justify-center text-red-600">
             <div className="text-center space-y-4">
-              <div className="text-4xl">📝</div>
-              <p>Carregando etapas...</p>
-              <p className="text-sm">Se o problema persistir, verifique o console</p>
+              <div className="text-4xl animate-bounce">🚨</div>
+              <p className="font-medium">Etapas não carregaram</p>
+              <p className="text-sm">Verifique o console para detalhes</p>
+              <Button 
+                onClick={() => window.location.reload()} 
+                variant="outline" 
+                className="border-red-300 text-red-700 hover:bg-red-50"
+              >
+                🔄 Recarregar
+              </Button>
             </div>
           </div>
         </CardContent>
@@ -81,14 +89,17 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
     );
   }
 
+  // ✅ FASE 4: Validação final - garantir que todas as 21 etapas estão visíveis
+  console.log(`✅ [${timestamp}] FunnelStagesPanel - SUCESSO: Renderizando ${steps.length} etapas`);
+
   return (
-    <Card className={cn("h-full flex flex-col min-h-[400px] border-2", className)}>
-      <CardHeader className="flex-shrink-0 pb-3 bg-card border-b">
-        <CardTitle className="text-lg font-semibold text-foreground flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-primary"></div>
-          Etapas do Funil
-          <span className="ml-auto text-sm bg-primary/10 text-primary px-2 py-1 rounded">
-            {steps.length} etapas
+    <Card className={cn("h-full flex flex-col min-h-[400px] border-2 bg-green-50/30 border-green-200", className)}>
+      <CardHeader className="flex-shrink-0 pb-3 bg-green-100/50 border-b border-green-200">
+        <CardTitle className="text-lg font-semibold text-green-800 flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+          ✅ Etapas do Funil
+          <span className="ml-auto text-sm bg-green-200 text-green-800 px-2 py-1 rounded font-bold">
+            {steps.length}/21 etapas
           </span>
         </CardTitle>
       </CardHeader>

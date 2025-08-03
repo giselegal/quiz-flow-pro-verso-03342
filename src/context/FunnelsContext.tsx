@@ -103,9 +103,16 @@ const FUNNEL_TEMPLATES: Record<string, {
 
 export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debug = true }) => {
   const [currentFunnelId, setCurrentFunnelId] = useState<string>('funil-21-etapas');
-  const [steps, setSteps] = useState<FunnelStep[]>([]);
+  // ✅ FASE 1: Inicialização imediata com dados pré-carregados
+  const [steps, setSteps] = useState<FunnelStep[]>(() => {
+    const initialTemplate = FUNNEL_TEMPLATES['funil-21-etapas'];
+    console.log('🚀 FunnelsContext: Inicialização IMEDIATA com template completo');
+    console.log('📊 Steps carregadas na inicialização:', initialTemplate.defaultSteps.length);
+    return initialTemplate.defaultSteps;
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [renderCount, setRenderCount] = useState(0);
 
   const getTemplate = useCallback((templateId: string) => {
     const template = FUNNEL_TEMPLATES[templateId as keyof typeof FUNNEL_TEMPLATES];
@@ -116,20 +123,34 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
     return template;
   }, []);
 
+  // ✅ FASE 2: Debug visual melhorado + controle de re-renders  
   useEffect(() => {
+    const timestamp = new Date().toLocaleTimeString();
+    setRenderCount(prev => prev + 1);
+    
     if (FUNNEL_TEMPLATES[currentFunnelId]) {
       const template = FUNNEL_TEMPLATES[currentFunnelId];
-      setSteps(template.defaultSteps);
       
-      console.log('🔧 FunnelsContext: Carregando template:', currentFunnelId);
-      console.log('📋 Template encontrado:', template.name);
-      console.log('📊 Steps carregadas:', template.defaultSteps.length);
-      console.log('🎯 Dados das steps:', template.defaultSteps);
+      // ✅ FASE 3: Fallback robusto - só atualiza se realmente necessário
+      if (steps.length === 0 || steps[0]?.id !== template.defaultSteps[0]?.id) {
+        setSteps(template.defaultSteps);
+        console.log(`🔄 [${timestamp}] FunnelsContext: Atualizando template:`, currentFunnelId);
+      } else {
+        console.log(`✅ [${timestamp}] FunnelsContext: Template já carregado:`, currentFunnelId);
+      }
+      
+      console.log(`📊 [${timestamp}] Re-render #${renderCount + 1} - Steps disponíveis:`, template.defaultSteps.length);
+      console.log(`🎯 [${timestamp}] Dados das steps:`, template.defaultSteps.map(s => s.name));
     } else {
-      console.error('❌ FunnelsContext: Template não encontrado:', currentFunnelId);
-      console.log('📁 Templates disponíveis:', Object.keys(FUNNEL_TEMPLATES));
+      console.error(`❌ [${timestamp}] FunnelsContext: Template não encontrado:`, currentFunnelId);
+      console.log(`📁 [${timestamp}] Templates disponíveis:`, Object.keys(FUNNEL_TEMPLATES));
+      
+      // ✅ FASE 3: Fallback para template padrão
+      const fallbackTemplate = FUNNEL_TEMPLATES['funil-21-etapas'];
+      setSteps(fallbackTemplate.defaultSteps);
+      console.log(`🔄 [${timestamp}] Aplicando fallback para template padrão`);
     }
-  }, [currentFunnelId, debug]);
+  }, [currentFunnelId, debug, renderCount]);
 
   const updateFunnelStep = useCallback((stepId: string, updates: any) => {
     const template = FUNNEL_TEMPLATES[currentFunnelId as keyof typeof FUNNEL_TEMPLATES];
