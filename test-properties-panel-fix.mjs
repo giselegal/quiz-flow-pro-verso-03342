@@ -39,7 +39,7 @@ const checkPropertiesFixApplied = () => {
     
     console.log(`✅ Função getBlockDefinitionForType: ${hasGetBlockDefinitionFunction ? 'SIM' : 'NÃO'}`);
     console.log(`✅ Usa generateBlockDefinitions: ${usesGenerateBlockDefinitions ? 'SIM' : 'NÃO'}`);
-    console.log(`✅ Removeu properties vazias: ${noEmptyProperties ? 'SIM' : 'NÃO'}`);
+    console.log(`✅ Removeu properties vazias: ${!hasEmptyPropertiesInDefinition ? 'SIM' : 'NÃO'}`);
     console.log(`✅ Usa função no painel: ${usesFunctionInPanel ? 'SIM' : 'NÃO'}`);
     console.log(`✅ Tem propriedades padrão: ${hasDefaultProperties ? 'SIM' : 'NÃO'}`);
     
