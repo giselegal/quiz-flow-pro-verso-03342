@@ -256,7 +256,7 @@ const EditorFixedPage: React.FC = () => {
                 </p>
               </div>
             </div>
-          )
+          ) : null
         }
       />
       </div>
