@@ -1,15 +1,18 @@
 
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import AdminLayout from '@/components/admin/AdminLayout';
 import QuizEditor from '@/components/quiz-editor/QuizEditor';
 import { LoadingState } from '@/components/ui/loading-state';
 import { getTemplateById } from '@/services/templates/templateService';
 import { QuizTemplate } from '@/types/quizTemplate';
 
-const QuizEditorPage = () => {
-  const { templateId } = useParams();
-  const navigate = useNavigate();
+interface QuizEditorPageProps {
+  templateId?: string;
+}
+
+const QuizEditorPage: React.FC<QuizEditorPageProps> = ({ templateId }) => {
+  const [, setLocation] = useLocation();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [template, setTemplate] = useState<QuizTemplate | null>(null);
@@ -21,21 +24,21 @@ const QuizEditorPage = () => {
           const template = await getTemplateById(templateId);
           if (!template) {
             setError('Template não encontrado');
-            navigate('/admin/quiz-editor');
+            setLocation('/admin/quiz-editor');
             return;
           }
           setTemplate(template);
         } catch (err) {
           console.error('Error loading template:', err);
           setError('Erro ao carregar template');
-          navigate('/admin/quiz-editor');
+          setLocation('/admin/quiz-editor');
         }
       }
       setLoading(false);
     };
 
     loadTemplate();
-  }, [templateId, navigate]);
+  }, [templateId, setLocation]);
 
   if (loading) {
     return (

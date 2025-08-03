@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "wouter";
 import { LANDING_PAGE_AB_TEST, getABTestRedirectUrl } from "../utils/abtest";
 
 interface ABTestRedirectProps {
@@ -11,12 +11,11 @@ interface ABTestRedirectProps {
  * Redireciona automaticamente apenas da rota raiz, mas permite acesso direto ao quiz
  */
 const ABTestRedirect: React.FC<ABTestRedirectProps> = ({ children }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const [location, setLocation] = useLocation();
 
   useEffect(() => {
-    const currentPath = location.pathname;
-    const urlParams = new URLSearchParams(location.search);
+    const currentPath = location;
+    const urlParams = new URLSearchParams(window.location.search);
 
     // Verifica se há parâmetro para forçar exibição do quiz
     const forceQuiz =
@@ -33,8 +32,8 @@ const ABTestRedirect: React.FC<ABTestRedirectProps> = ({ children }) => {
       );
 
       // Preserva query parameters na URL
-      const searchParams = location.search;
-      navigate(redirectUrl + searchParams, { replace: true });
+      const searchParams = window.location.search;
+      setLocation(redirectUrl + searchParams);
     } else if (forceQuiz || skipAbTest) {
       console.log(
         `🎯 Acesso direto ao quiz solicitado - parâmetro: ${
@@ -42,7 +41,7 @@ const ABTestRedirect: React.FC<ABTestRedirectProps> = ({ children }) => {
         }`
       );
     }
-  }, [location, navigate]);
+  }, [location, setLocation]);
 
   return <>{children}</>;
 };

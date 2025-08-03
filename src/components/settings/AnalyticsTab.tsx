@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { toast } from '@/components/ui/use-toast';
-import { Link } from 'react-router-dom';
+import { Link } from 'wouter';
 import { BarChartHorizontal } from 'lucide-react';
 
 export const AnalyticsTab: React.FC = () => {

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'wouter';
 import { Button } from './button';
 import { Edit } from 'lucide-react';
 

@@ -1,13 +1,13 @@
 
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import LiveQuizEditor from '@/components/live-editor/LiveQuizEditor';
 import { useLiveEditor } from '@/hooks/useLiveEditor';
 
 const LiveEditorPage: React.FC = () => {
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   const { loadEditor, stages, addStage } = useLiveEditor();
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const LiveEditorPage: React.FC = () => {
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
-              onClick={() => navigate('/admin')}
+              onClick={() => setLocation('/admin')}
               className="text-[#432818] hover:text-[#B89B7A]"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />

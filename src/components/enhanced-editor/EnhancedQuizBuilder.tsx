@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useQuizBuilder } from '@/hooks/useQuizBuilder';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 
 /**
@@ -9,10 +9,10 @@ import { Button } from '@/components/ui/button';
  * que direciona o usuário para o editor unificado
  */
 const EnhancedQuizBuilder: React.FC = () => {
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   
   const handleOpenUnifiedEditor = () => {
-    navigate('/editor');
+    setLocation('/editor');
   };
   
   return (

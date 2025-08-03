@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import { Edit } from 'lucide-react';
 
 interface EditResultPageButtonProps {
@@ -8,10 +8,10 @@ interface EditResultPageButtonProps {
 }
 
 export const EditResultPageButton: React.FC<EditResultPageButtonProps> = ({ className }) => {
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
 
   const handleClick = () => {
-    navigate('/resultado/editor');
+    setLocation('/resultado/editor');
   };
 
   return (

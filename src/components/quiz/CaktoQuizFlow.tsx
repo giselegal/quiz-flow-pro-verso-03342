@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import { QuizResponse, UserResponse } from '@/types/quiz';
 import { calculateQuizResult } from '@/lib/quizEngine';
 
 const CaktoQuizFlow: React.FC = () => {
   const [responses, setResponses] = useState<QuizResponse[]>([]);
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
 
   // Convert QuizResponse to UserResponse format
   const convertResponsesToUserResponses = (quizResponses: QuizResponse[]): UserResponse[] => {

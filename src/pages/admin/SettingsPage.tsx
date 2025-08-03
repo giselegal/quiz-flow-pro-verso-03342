@@ -9,17 +9,19 @@ import { ApiIntegrationsTab } from '@/components/settings/ApiIntegrationsTab';
 import { AdvancedTab } from '@/components/settings/AdvancedTab';
 import { FacebookAdsTab } from '@/components/settings/FacebookAdsTab';
 import { UtmSettingsTab } from '@/components/settings/UtmSettingsTab';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 
 const SettingsPage = () => {
-  const [searchParams] = useSearchParams();
+  const [location, setLocation] = useLocation();
+  
+  // Extrair query params manualmente da URL
+  const searchParams = new URLSearchParams(window.location.search);
   const defaultTab = searchParams.get('tab') || 'appearance';
   const [activeTab, setActiveTab] = useState(defaultTab);
-  const navigate = useNavigate();
   
   const handleTabChange = (value: string) => {
     setActiveTab(value);
-    navigate(`/admin/settings?tab=${value}`, { replace: true });
+    setLocation(`/admin/settings?tab=${value}`);
   };
   
   return (

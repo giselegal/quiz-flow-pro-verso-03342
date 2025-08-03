@@ -1,9 +1,11 @@
 import React from 'react';
 import FileLoadingSimulator from '@/components/loading/FileLoadingSimulator';
-import { useParams } from 'react-router-dom';
 
-const LoadingAccessPage = () => {
-  const { route } = useParams();
+interface LoadingAccessPageProps {
+  route?: string;
+}
+
+const LoadingAccessPage: React.FC<LoadingAccessPageProps> = ({ route }) => {
   
   // Definir as rotas disponíveis e seus redirecionamentos
   const routeMap: Record<string, string> = {
