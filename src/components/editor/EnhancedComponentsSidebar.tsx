@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Search, Plus } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { BlockDefinition, BLOCK_CATEGORIES, getAllBlockTypes, searchBlocks, getBlocksByCategory, getBlockDefinition } from './blocks/EnhancedBlockRegistry';
+import { generateBlockDefinitions, getRegistryStats, ENHANCED_BLOCK_REGISTRY } from '@/config/enhancedBlockRegistry';
+import { BlockDefinition } from '@/types/editor';
 
 interface EnhancedComponentsSidebarProps {
   onAddComponent: (type: string) => void;
@@ -17,21 +18,33 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
+  // Obter todas as definições de blocos do registry validado
+  const allBlocks = generateBlockDefinitions();
+  const registryStats = getRegistryStats();
+  
+  // Categorias baseadas nos tipos do registry
+  const BLOCK_CATEGORIES = ['All', 'Text', 'Interactive', 'Media', 'Layout', 'E-commerce', 'Quiz', 'Content'];
+
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     setSelectedCategory(null);
   };
 
   const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category);
+    setSelectedCategory(category === 'All' ? null : category);
     setSearchQuery('');
   };
 
-  const filteredBlocks = searchQuery 
-    ? searchBlocks(searchQuery)
-    : selectedCategory 
-      ? getBlocksByCategory(selectedCategory)
-      : Object.values(getAllBlockTypes()).map(type => getBlockDefinition(type)).filter(Boolean) as BlockDefinition[];
+  // Filtrar blocos baseado na busca e categoria
+  const filteredBlocks = allBlocks.filter(block => {
+    const matchesSearch = !searchQuery || 
+      block.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      block.type.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesCategory = !selectedCategory || block.category === selectedCategory;
+    
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <Card className="h-full flex flex-col">
