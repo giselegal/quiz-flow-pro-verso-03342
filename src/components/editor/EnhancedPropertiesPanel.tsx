@@ -219,7 +219,6 @@ const OptionsArrayEditor: React.FC<{
 
       {value.length === 0 && (
         <div className="text-center py-6 text-gray-500">
-          <div className="text-lg mb-2">📝</div>
           <p className="text-sm">Nenhuma opção adicionada</p>
           <p className="text-xs text-gray-400 mt-1">
             Clique em "Adicionar" para criar a primeira opção

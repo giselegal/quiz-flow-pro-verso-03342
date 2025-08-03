@@ -39,7 +39,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
   onViewportSizeChange = () => {}
 }) => {
   return (
-    <div className="bg-gradient-to-r from-amber-500 to-amber-600 border-b border-amber-700/30 p-3 flex items-center justify-between shadow-lg backdrop-blur-sm">
+    <div className="border-b border-amber-700/30 p-3 flex items-center justify-between shadow-lg backdrop-blur-sm" style={{ backgroundColor: '#d1b586' }}>
       {/* Logo à esquerda com animação Framer Motion */}
       <div className="flex items-center">
         <motion.div

@@ -190,7 +190,6 @@ const EditorFixedPage: React.FC = () => {
               <div className="p-8">
                 {currentBlocks.length === 0 ? (
                   <div className="text-center py-24">
-                    <div className="text-stone-300 text-6xl mb-6">✨</div>
                     <h3 className="text-2xl font-semibold text-stone-700 mb-3 font-serif">Etapa {activeStageId}</h3>
                     <p className="text-stone-500 text-lg mb-2">Arraste componentes da sidebar para começar</p>
                     <p className="text-xs text-stone-400 bg-stone-100/50 px-4 py-2 rounded-full inline-block">
@@ -257,7 +256,6 @@ const EditorFixedPage: React.FC = () => {
           ) : (
             <div className="h-full p-4 flex items-center justify-center text-stone-500">
               <div className="text-center">
-                <div className="text-4xl mb-2">⚙️</div>
                 <p className="text-sm">Selecione um bloco para editar propriedades</p>
                 <p className="text-xs text-stone-400 mt-1">
                   Painel aprimorado ativo
