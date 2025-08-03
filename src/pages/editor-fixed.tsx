@@ -9,7 +9,9 @@ import { EditableContent } from '@/types/editor';
 import { getRegistryStats, generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
 import { useEditor } from '@/context/EditorContext';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
-import { Type, Trash2 } from 'lucide-react';
+import { DndProvider } from '@/components/editor/dnd/DndProvider';
+import { SortableBlockWrapper } from '@/components/editor/canvas/SortableBlockWrapper';
+import { Type, Trash2, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const EditorFixedPage: React.FC = () => {
@@ -136,7 +138,30 @@ const EditorFixedPage: React.FC = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-stone-50/80 via-stone-100/60 to-stone-150/40 relative">
+    <DndProvider
+      blocks={(currentBlocks || []).map(block => ({
+        id: block.id,
+        type: block.type,
+        properties: block.properties || {}
+      }))}
+      onBlocksReorder={(newBlocks) => {
+        // Atualizar ordem dos blocos
+        console.log('🔄 Reordenando blocos:', newBlocks);
+        // Implementar lógica de reordenação via EditorContext
+      }}
+      onBlockAdd={(blockType, position) => {
+        const blockId = addBlock(blockType);
+        console.log(`➕ Bloco ${blockType} adicionado via drag&drop na posição ${position}`);
+      }}
+      onBlockSelect={(blockId) => {
+        setSelectedBlockId(blockId);
+      }}
+      selectedBlockId={selectedBlockId || undefined}
+      onBlockUpdate={(blockId, updates) => {
+        updateBlock(blockId, updates as any);
+      }}
+    >
+      <div className="h-screen flex flex-col bg-gradient-to-br from-stone-50/80 via-stone-100/60 to-stone-150/40 relative">
       {/* Overlay sutil para mais elegância */}
       <div className="absolute inset-0 bg-gradient-to-br from-brand/[0.02] via-transparent to-brand-dark/[0.01] pointer-events-none"></div>
       
@@ -266,6 +291,7 @@ const EditorFixedPage: React.FC = () => {
       />
       </div>
     </div>
+    </DndProvider>
   );
 };
 

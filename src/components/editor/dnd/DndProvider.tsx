@@ -68,6 +68,12 @@ export const DndProvider: React.FC<DndProviderProps> = ({
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
+    
+    // 🎯 Haptic feedback para dispositivos móveis
+    if ('vibrate' in navigator) {
+      navigator.vibrate(50);
+    }
+    
     const activeBlockData = blocks.find(block => block.id === active.id);
     setActiveBlock(activeBlockData || null);
   };
@@ -125,13 +131,29 @@ export const DndProvider: React.FC<DndProviderProps> = ({
         {children}
       </SortableContext>
       
-      {/* Drag Overlay para preview durante o drag */}
+      {/* Drag Overlay aprimorado para preview premium */}
       {createPortal(
         <DragOverlay>
           {activeBlock ? (
-            <div className="bg-white shadow-2xl rounded-lg border-2 border-amber-500 opacity-95 transform rotate-3 p-4">
-              <div className="text-sm font-medium text-stone-700">
-                Movendo: {activeBlock.type}
+            <div className="
+              bg-white/95 backdrop-blur-md shadow-2xl rounded-xl 
+              border-2 border-brand/60 ring-1 ring-brand/30
+              transform rotate-2 scale-105 p-4
+              animate-pulse transition-all duration-200
+              min-w-[200px]
+            ">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-brand/10 rounded-lg flex items-center justify-center">
+                  <div className="w-4 h-4 bg-brand rounded-sm"></div>
+                </div>
+                <div>
+                  <div className="text-sm font-semibold text-stone-800">
+                    {activeBlock.type}
+                  </div>
+                  <div className="text-xs text-stone-500">
+                    Arrastando componente...
+                  </div>
+                </div>
               </div>
             </div>
           ) : null}
