@@ -31,7 +31,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
             <div
               key={block.id}
               className={`p-4 border rounded cursor-pointer ${
-                selectedBlockId === block.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
+                selectedBlockId === block.id ? 'border-[#B89B7A] bg-[#B89B7A]/10' : 'border-gray-200'
               }`}
               onClick={() => !isPreviewing && onSelectBlock(block.id)}
             >

@@ -71,7 +71,7 @@ export const BlockPreviewRenderer: React.FC<BlockPreviewRendererProps> = ({
         return (
           <div className="button-block">
             <button
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+              className="px-4 py-2 bg-[#B89B7A] text-white rounded hover:bg-[#8F7A6A] transition-colors"
               style={{
                 backgroundColor: styleProps.backgroundColor || block.content?.backgroundColor || '#3b82f6',
                 color: styleProps.color || block.content?.color || '#ffffff',
@@ -102,7 +102,7 @@ export const BlockPreviewRenderer: React.FC<BlockPreviewRendererProps> = ({
     >
       {renderBlockContent()}
       {isSelected && !isPreviewing && (
-        <div className="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 rounded text-xs">
+        <div className="absolute top-2 right-2 bg-[#B89B7A] text-white px-2 py-1 rounded text-xs">
           Selecionado
         </div>
       )}

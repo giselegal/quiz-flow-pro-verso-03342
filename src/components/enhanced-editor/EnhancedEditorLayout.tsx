@@ -57,7 +57,7 @@ export const EnhancedEditorLayout: React.FC<EnhancedEditorLayoutProps> = ({
             <button
               onClick={() => setActiveTab('editor')}
               className={`px-3 py-1 rounded ${
-                activeTab === 'editor' ? 'bg-blue-500 text-white' : 'bg-gray-100'
+                activeTab === 'editor' ? 'bg-[#B89B7A] text-white' : 'bg-gray-100'
               }`}
             >
               Editor
@@ -65,7 +65,7 @@ export const EnhancedEditorLayout: React.FC<EnhancedEditorLayoutProps> = ({
             <button
               onClick={() => setActiveTab('preview')}
               className={`px-3 py-1 rounded ${
-                activeTab === 'preview' ? 'bg-blue-500 text-white' : 'bg-gray-100'
+                activeTab === 'preview' ? 'bg-[#B89B7A] text-white' : 'bg-gray-100'
               }`}
             >
               Preview
@@ -86,7 +86,7 @@ export const EnhancedEditorLayout: React.FC<EnhancedEditorLayoutProps> = ({
                   key={block.id}
                   className={`border rounded p-4 cursor-pointer ${
                     selectedBlockId === block.id
-                      ? 'border-blue-500 bg-blue-50'
+                      ? 'border-[#B89B7A] bg-[#B89B7A]/10'
                       : 'border-gray-200 hover:border-gray-300'
                   }`}
                   onClick={() => onBlockSelect?.(block.id)}
