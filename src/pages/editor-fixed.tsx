@@ -44,25 +44,25 @@ const EditorFixedPage: React.FC = () => {
       defaultProps: {},
       properties: {
         text: {
-          type: 'string',
+          type: 'string' as const,
           label: 'Texto',
           default: '',
           description: 'Conteúdo de texto do componente'
         },
         title: {
-          type: 'string',
+          type: 'string' as const,
           label: 'Título',
           default: '',
           description: 'Título do componente'
         },
         visible: {
-          type: 'boolean',
+          type: 'boolean' as const,
           label: 'Visível',
           default: true,
           description: 'Controla se o componente está visível'
         },
         className: {
-          type: 'string',
+          type: 'string' as const,
           label: 'Classes CSS',
           default: '',
           description: 'Classes CSS adicionais'
