@@ -23,7 +23,6 @@ export { useKeyboardShortcuts } from './useKeyboardShortcuts';
 export { useBlockForm } from './useBlockForm';
 
 // ✅ UTILITY HOOKS (validados)
-export { useAuth } from './useAuth';
 export { useImageBank } from './useImageBank';
 export { useUtmParameters } from './useUtmParameters';
 export { useDynamicData } from './useDynamicData';
