@@ -17,9 +17,9 @@ export const userResponseService = {
     };
   },
 
-  async getResponse(id: string): Promise<UserResponse | null> {
+  getResponse(id: string): string {
     console.log('Would get response:', id);
-    return null;
+    return '';
   },
 
   async getResponses(userId: string): Promise<UserResponse[]> {
@@ -27,11 +27,11 @@ export const userResponseService = {
     return [];
   },
 
-  async saveStepResponse(stepId: string, response: any): Promise<void> {
+  saveStepResponse(stepId: string, response: any): void {
     console.log('Would save step response:', stepId, response);
   },
 
-  async saveUserName(userId: string, name: string): Promise<void> {
+  saveUserName(userId: string, name: string): void {
     console.log('Would save user name:', userId, name);
   },
 
