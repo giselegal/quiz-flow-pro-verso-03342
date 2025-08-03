@@ -1,20 +1,20 @@
 import React from 'react';
 
-export interface Step07Question06Props {
+export interface Step06Question05Props {
   onNext?: () => void;
   onPrevious?: () => void;
   onBlockAdd?: (block: any) => void;
 }
 
-export const Step07Question06: React.FC<Step07Question06Props> = ({ onNext, onPrevious, onBlockAdd }) => {
+export const Step06Question05: React.FC<Step06Question05Props> = ({ onNext, onPrevious, onBlockAdd }) => {
   return (
-    <div className="step-07-question-06">
-      {/* Conteúdo da Etapa 7 renderizado aqui */}
+    <div className="step-06-question-05">
+      {/* Conteúdo da Etapa 6 renderizado aqui */}
     </div>
   );
 };
 
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 7 - QUESTÃO 6: QUAL CASACO É SEU FAVORITO?
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 6 - QUESTÃO 5: QUAL CASACO É SEU FAVORITO?
 export const getStep06Template = () => {
   return [
     {
@@ -54,75 +54,75 @@ export const getStep06Template = () => {
     {
       type: 'options-grid',
       properties: {
-        questionId: 'q6',
+        questionId: 'q5',
         options: [
-          { 
-            id: "6a", 
-            text: "Cardigã bege confortável e casual", 
-            value: "6a", 
-            category: "Natural", 
+          {
+            id: "5a",
+            text: "Cardigã bege confortável e casual",
+            value: "5a",
+            category: "Natural",
             styleCategory: "Natural", 
             points: 1,
             imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/29_sdogoy.webp'
           },
           { 
-            id: "6b", 
+            id: "5b", 
             text: "Blazer clássico e elegante", 
-            value: "6b", 
+            value: "5b", 
             category: "Clássico", 
             styleCategory: "Clássico", 
             points: 1,
             imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735374/30_lbfjk5.webp'
           },
           { 
-            id: "6c", 
+            id: "5c", 
             text: "Blazer moderno e atual", 
-            value: "6c", 
+            value: "5c", 
             category: "Contemporâneo", 
             styleCategory: "Contemporâneo", 
             points: 1,
             imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735375/31_d6xo3f.webp'
           },
           { 
-            id: "6d", 
+            id: "5d",
             text: "Casaco elegante e sofisticado", 
-            value: "6d", 
+            value: "5d", 
             category: "Elegante", 
             styleCategory: "Elegante", 
             points: 1,
             imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735376/32_dxhxon.webp'
           },
           { 
-            id: "6e", 
+            id: "5e", 
             text: "Casaco rosa romântico e delicado", 
-            value: "6e", 
+            value: "5e", 
             category: "Romântico", 
             styleCategory: "Romântico", 
             points: 1,
             imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/33_ejhsra.webp'
           },
           { 
-            id: "6f", 
+            id: "5f", 
             text: "Jaqueta vinho de couro estilosa", 
-            value: "6f", 
+            value: "5f", 
             category: "Sexy", 
             styleCategory: "Sexy", 
             points: 1,
             imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/34_peadir.webp'
           },
           { 
-            id: "6g", 
+            id: "5g", 
             text: "Jaqueta preta estilo rocker", 
-            value: "6g", 
+            value: "5g", 
             category: "Dramático", 
             styleCategory: "Dramático", 
             points: 1,
             imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735379/35_pulzso.webp'
           },
           { 
-            id: "6h", 
+            id: "5h", 
             text: "Casaco estampado criativo e colorido", 
-            value: "6h", 
+            value: "5h", 
             category: "Criativo", 
             styleCategory: "Criativo", 
             points: 1,
@@ -160,4 +160,4 @@ export const getStep06Template = () => {
   ];
 };
 
-export default Step07Question06;
+export default Step06Question05;
