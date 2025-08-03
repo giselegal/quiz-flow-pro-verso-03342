@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import BrandHeader from '@/components/ui/BrandHeader';
 import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
 import { UniversalBlockRenderer } from '@/components/editor/blocks/UniversalBlockRenderer';
@@ -10,7 +9,6 @@ import { getRegistryStats, generateBlockDefinitions } from '@/config/enhancedBlo
 import { Type } from 'lucide-react';
 
 const EditorFixedPage: React.FC = () => {
-  const navigate = useNavigate();
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
 
