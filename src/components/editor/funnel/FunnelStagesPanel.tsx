@@ -16,6 +16,10 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
 }) => {
   const { steps, updateFunnelStep, addStepBlock } = useFunnels();
 
+  // 🐛 DEBUG: Log dados das etapas
+  console.log('🔍 FunnelStagesPanel - Steps carregadas:', steps);
+  console.log('🔍 FunnelStagesPanel - Quantidade de steps:', steps?.length || 0);
+
   const handleAddStage = () => {
     // Lógica para adicionar nova etapa
     console.log('Adicionar nova etapa');
@@ -26,18 +30,45 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
     console.log('Navegar para etapa:', stageId);
   };
 
+  // 🐛 DEBUG: Verificar se há steps para renderizar
+  if (!steps || steps.length === 0) {
+    console.log('⚠️ FunnelStagesPanel - Nenhuma step encontrada para renderizar');
+    return (
+      <Card className={cn("h-full flex flex-col min-h-[400px]", className)}>
+        <CardHeader className="flex-shrink-0 pb-3">
+          <CardTitle className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-primary"></div>
+            Etapas do Funil
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex-1 p-4">
+          <div className="h-full flex items-center justify-center text-muted-foreground">
+            <div className="text-center space-y-4">
+              <div className="text-4xl">📝</div>
+              <p>Carregando etapas...</p>
+              <p className="text-sm">Se o problema persistir, verifique o console</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <Card className={cn("h-full flex flex-col", className)}>
-      <CardHeader className="flex-shrink-0 pb-3">
+    <Card className={cn("h-full flex flex-col min-h-[400px] border-2", className)}>
+      <CardHeader className="flex-shrink-0 pb-3 bg-card border-b">
         <CardTitle className="text-lg font-semibold text-foreground flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-primary"></div>
           Etapas do Funil
+          <span className="ml-auto text-sm bg-primary/10 text-primary px-2 py-1 rounded">
+            {steps.length} etapas
+          </span>
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="flex-1 p-0">
-        <ScrollArea className="h-full px-4">
-          <div className="space-y-2 pb-4">
+      <CardContent className="flex-1 p-0 overflow-hidden">
+        <ScrollArea className="h-full">
+          <div className="space-y-2 p-4">
             {steps.map((step, index) => (
               <div
                 key={step.id}

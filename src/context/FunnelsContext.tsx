@@ -101,7 +101,7 @@ const FUNNEL_TEMPLATES: Record<string, {
   }
 };
 
-export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debug = false }) => {
+export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debug = true }) => {
   const [currentFunnelId, setCurrentFunnelId] = useState<string>('funil-21-etapas');
   const [steps, setSteps] = useState<FunnelStep[]>([]);
   const [loading, setLoading] = useState(false);
@@ -117,17 +117,19 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
   }, []);
 
   useEffect(() => {
-    if (debug) {
-      console.log('[FunnelsContext] Carregando template:', currentFunnelId);
+    if (FUNNEL_TEMPLATES[currentFunnelId]) {
+      const template = FUNNEL_TEMPLATES[currentFunnelId];
+      setSteps(template.defaultSteps);
+      
+      console.log('🔧 FunnelsContext: Carregando template:', currentFunnelId);
+      console.log('📋 Template encontrado:', template.name);
+      console.log('📊 Steps carregadas:', template.defaultSteps.length);
+      console.log('🎯 Dados das steps:', template.defaultSteps);
+    } else {
+      console.error('❌ FunnelsContext: Template não encontrado:', currentFunnelId);
+      console.log('📁 Templates disponíveis:', Object.keys(FUNNEL_TEMPLATES));
     }
-    
-    const template = getTemplate(currentFunnelId);
-    setSteps(template.defaultSteps);
-    
-    if (debug) {
-      console.log('[FunnelsContext] Steps carregados:', template.defaultSteps);
-    }
-  }, [currentFunnelId, getTemplate, debug]);
+  }, [currentFunnelId, debug]);
 
   const updateFunnelStep = useCallback((stepId: string, updates: any) => {
     const template = FUNNEL_TEMPLATES[currentFunnelId as keyof typeof FUNNEL_TEMPLATES];
