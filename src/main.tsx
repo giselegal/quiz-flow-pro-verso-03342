@@ -20,10 +20,8 @@ console.log('🔧 DEBUG: main.tsx carregado');
 
 console.log('🔧 DEBUG: Criando root do React...');
 createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <ClientLayout>
-      <App />
-    </ClientLayout>
-  </React.StrictMode>
+  <ClientLayout>
+    <App />
+  </ClientLayout>
 );
 console.log('✅ DEBUG: App renderizado com sucesso');
