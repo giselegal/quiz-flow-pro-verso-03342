@@ -43,7 +43,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
         <div className="text-center">
           <div className="font-medium">⚠️ Componente não encontrado</div>
           <div className="text-sm mt-1">Tipo: {block.type}</div>
-          <div className="text-xs text-gray-500 mt-2">ID: {block.id}</div>
+          <div className="text-xs text-stone-500 mt-2">ID: {block.id}</div>
         </div>
       </div>
     );

@@ -133,9 +133,12 @@ const EditorFixedPage: React.FC = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-stone-50 via-stone-50/30 to-stone-100">
-      <BrandHeader />
+    <div className="h-screen flex flex-col bg-gradient-to-br from-stone-50/80 via-stone-100/60 to-stone-150/40 relative">
+      {/* Overlay sutil para mais elegância */}
+      <div className="absolute inset-0 bg-gradient-to-br from-brand/[0.02] via-transparent to-brand-dark/[0.01] pointer-events-none"></div>
       
+      <div className="relative z-10">
+        <BrandHeader />
       <EditorToolbar
         isPreviewing={isPreviewing}
         onTogglePreview={() => setIsPreviewing(!isPreviewing)}
@@ -144,25 +147,25 @@ const EditorFixedPage: React.FC = () => {
         onViewportSizeChange={setViewportSize}
       />
       
-      {/* Status bar elegante com cores da marca */}
-      <div className="bg-gradient-to-r from-stone-100/80 via-stone-50/60 to-stone-100/80 border-b border-stone-200/60 backdrop-blur-sm px-6 py-3">
+      {/* Status bar elegante com sombra suave */}
+      <div className="bg-gradient-to-r from-stone-50/90 via-white/80 to-stone-50/90 border-b border-stone-200/60 backdrop-blur-md px-6 py-3 shadow-sm">
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center space-x-6">
             <span className="text-stone-700 font-medium flex items-center">
-              <div className="w-2 h-2 bg-brand rounded-full mr-2 animate-pulse shadow-sm"></div>
+              <div className="w-2 h-2 bg-brand rounded-full mr-2 animate-pulse shadow-sm ring-2 ring-brand/20"></div>
               Editor Ativo
             </span>
             <span className="text-stone-600 font-medium">
               {currentBlocks.length} blocos • {totalBlocks} total • {stageCount} etapas
             </span>
-            <span className="text-stone-600 bg-stone-200/50 px-2 py-1 rounded-full text-xs font-medium">
+            <span className="text-stone-600 bg-stone-200/50 px-3 py-1.5 rounded-full text-xs font-medium border border-stone-300/30">
               {activeStageId}
             </span>
-            <span className="text-stone-600 bg-brand/20 px-2 py-1 rounded-full text-xs font-medium">
+            <span className="text-brand-dark bg-brand/20 px-3 py-1.5 rounded-full text-xs font-medium border border-brand/30">
               {viewportSize.toUpperCase()}
             </span>
           </div>
-          <div className="text-xs text-stone-500 bg-stone-200/30 px-3 py-1 rounded-full">
+          <div className="text-xs text-stone-500 bg-stone-100/60 px-3 py-1.5 rounded-full border border-stone-200/50">
             {registryStats.active} componentes ativos
           </div>
         </div>
@@ -184,7 +187,7 @@ const EditorFixedPage: React.FC = () => {
           />
         }
         canvas={
-          <div className="p-6 overflow-auto h-full bg-gradient-to-br from-stone-50/50 via-stone-50/20 to-stone-100/30">
+          <div className="p-6 overflow-auto h-full bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm">
             <div className={getCanvasClassName()}>
               <div className="p-8">
                 {currentBlocks.length === 0 ? (
@@ -202,16 +205,17 @@ const EditorFixedPage: React.FC = () => {
                       <div
                         key={block.id}
                         className={`
-                          group relative border-2 rounded-xl p-6 cursor-pointer transition-all duration-300 ease-out
+                          group relative border-2 rounded-xl p-6 cursor-pointer transition-all duration-300 ease-out transform backdrop-blur-sm
                           ${selectedBlockId === block.id 
-                            ? 'border-brand bg-gradient-to-br from-brand/10 to-stone-50/60 shadow-lg shadow-brand/20 scale-[1.02]' 
-                            : 'border-stone-200/60 hover:border-brand/60 hover:shadow-md hover:shadow-stone-200/50 hover:bg-stone-50/40'
+                            ? 'border-brand bg-gradient-to-br from-brand/10 to-white/80 shadow-xl shadow-brand/25 scale-[1.02] ring-1 ring-brand/30' 
+                            : 'border-stone-200/50 hover:border-brand/50 hover:shadow-lg hover:shadow-stone-300/30 hover:bg-white/90 hover:scale-[1.01]'
                           }
+                          hover:transform-gpu
                         `}
                         onClick={() => setSelectedBlockId(block.id)}
                       >
-                        {/* Controles do bloco elegantes */}
-                        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-200">
+                        {/* Controles do bloco com design luxuoso */}
+                        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
                           <Button
                             variant="ghost"
                             size="sm"
@@ -219,7 +223,7 @@ const EditorFixedPage: React.FC = () => {
                               e.stopPropagation();
                               handleDeleteBlock(block.id);
                             }}
-                            className="h-9 w-9 p-0 text-stone-400 hover:text-brand-dark hover:bg-brand/10 rounded-lg transition-all duration-200"
+                            className="h-9 w-9 p-0 text-stone-400 hover:text-brand-dark hover:bg-brand/10 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg backdrop-blur-sm border border-stone-200/50 hover:border-brand/30"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -265,6 +269,7 @@ const EditorFixedPage: React.FC = () => {
           )
         }
       />
+      </div>
     </div>
   );
 };

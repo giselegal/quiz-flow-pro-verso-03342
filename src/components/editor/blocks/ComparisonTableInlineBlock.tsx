@@ -58,7 +58,7 @@ const ComparisonTableInlineBlock: React.FC<BlockComponentProps> = ({
                 {item.features.map((feature: string, featureIndex: number) => (
                   <li key={featureIndex} className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    <span className="text-sm text-gray-700">{feature}</span>
+                    <span className="text-sm text-stone-700">{feature}</span>
                   </li>
                 ))}
               </ul>
