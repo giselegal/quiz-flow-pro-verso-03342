@@ -14,18 +14,28 @@ import { Type, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const EditorFixedPage: React.FC = () => {
-  // ✅ INTEGRAÇÃO COM EDITOR CONTEXT
-  const { blocks, selectedBlockId, setSelectedBlockId, actions } = useEditor();
+  // ✅ CONTEXTO UNIFICADO - ÚNICA FONTE DA VERDADE
+  const { 
+    stageBlocks, 
+    activeStageId, 
+    selectedBlockId,
+    actions: {
+      setActiveStage,
+      addBlock,
+      getBlocksForStage,
+      setSelectedBlockId,
+      deleteBlock,
+      updateBlock
+    },
+    isPreviewing,
+    setIsPreviewing
+  } = useEditor();
   
-  // ✅ BLOCOS POR ETAPA: Cada etapa tem seus próprios blocos
-  const [stageBlocks, setStageBlocks] = useState<Record<string, Block[]>>({});
-  const [isPreviewing, setIsPreviewing] = useState(false);
+  // ✅ ESTADO UI LOCAL APENAS
   const [viewportSize, setViewportSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('lg');
-  const [activeStageId, setActiveStageId] = useState<string>('step-1');
 
-  // ✅ BLOCOS ATUAIS: Usa EditorContext como fonte da verdade
-  const currentBlocks = stageBlocks[activeStageId] || blocks;
-
+  // ✅ BLOCOS ATUAIS DA ETAPA ATIVA
+  const currentBlocks = getBlocksForStage(activeStageId);
   const selectedBlock = currentBlocks.find(block => block.id === selectedBlockId);
   
   // Mostrar estatísticas do registry
@@ -84,14 +94,9 @@ const EditorFixedPage: React.FC = () => {
     console.log('Salvando projeto...', currentBlocks);
   };
 
-  // ✅ INTEGRAÇÃO: Usar actions do EditorContext
+  // ✅ USAR CONTEXT UNIFICADO PARA DELETAR
   const handleDeleteBlock = (blockId: string) => {
-    actions.deleteBlock(blockId);
-    // Também remover do estado local da etapa
-    setStageBlocks(prev => ({
-      ...prev,
-      [activeStageId]: (prev[activeStageId] || []).filter(block => block.id !== blockId)
-    }));
+    deleteBlock(blockId);
   };
 
   const getCanvasClassName = () => {
@@ -106,23 +111,10 @@ const EditorFixedPage: React.FC = () => {
   };
 
   
-  // ✅ CONECTAR: Handler para mudança de etapa com carregamento de blocos
+  // ✅ NAVEGAÇÃO SIMPLIFICADA
   const handleStageSelect = (stageId: string) => {
     console.log('🔄 Editor: Mudando para etapa:', stageId);
-    console.log('📦 Carregando blocos da etapa:', stageId);
-    console.log('🔢 Blocos disponíveis:', stageBlocks[stageId]?.length || 0);
-    
-    setActiveStageId(stageId);
-    setSelectedBlockId(null); // Limpar seleção de bloco
-    
-    // ✅ CARREGAMENTO: Inicializar etapa vazia se não existe
-    if (!stageBlocks[stageId]) {
-      setStageBlocks(prev => ({
-        ...prev,
-        [stageId]: []
-      }));
-      console.log(`📝 Etapa ${stageId} inicializada como vazia`);
-    }
+    setActiveStage(stageId); // Context faz TODAS as validações
   };
 
   return (
@@ -163,25 +155,9 @@ const EditorFixedPage: React.FC = () => {
         componentsPanel={
           <EnhancedComponentsSidebar 
             onAddComponent={(type: string) => {
-              // ✅ INTEGRAÇÃO: Usar actions do EditorContext
-              const blockId = actions.addBlock(type as any);
-              
-              // Também adicionar ao estado local da etapa
-              const defaultContent = getDefaultContentForType(type as any);
-              const newBlock: Block = {
-                id: blockId,
-                type: type as any,
-                content: defaultContent,
-                properties: {},
-                order: currentBlocks.length
-              };
-              
-              setStageBlocks(prev => ({
-                ...prev,
-                [activeStageId]: [...(prev[activeStageId] || []), newBlock]
-              }));
-              
-              console.log(`➕ Bloco ${type} adicionado à etapa ${activeStageId} via EditorContext`);
+              // ✅ USAR CONTEXT UNIFICADO
+              const blockId = addBlock(type);
+              console.log(`➕ Bloco ${type} adicionado à etapa ${activeStageId}`);
             }}
           />
         }
@@ -244,18 +220,8 @@ const EditorFixedPage: React.FC = () => {
               block={selectedBlock}
               blockDefinition={getBlockDefinitionForType(selectedBlock.type)}
               onUpdateBlock={(blockId: string, properties: Partial<EditableContent>) => {
-                // ✅ INTEGRAÇÃO: Usar actions do EditorContext
-                actions.updateBlock(blockId, { content: properties });
-                
-                // Também atualizar estado local da etapa
-                setStageBlocks(prev => ({
-                  ...prev,
-                  [activeStageId]: (prev[activeStageId] || []).map(block => 
-                    block.id === blockId 
-                      ? { ...block, content: { ...block.content, ...properties } }
-                      : block
-                  )
-                }));
+                // ✅ USAR CONTEXT UNIFICADO
+                updateBlock(blockId, { content: properties });
               }}
               onClose={() => setSelectedBlockId(null)}
             />
