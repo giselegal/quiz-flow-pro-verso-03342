@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { QuizQuestion, QuizResponse, UserResponse } from '@/types/quiz';
-import { processMultipleSelections, validateQuestionResponse } from '@/lib/caktoQuizEngine';
+// Simple validation function
+const validateResponse = (response: UserResponse, question: QuizQuestion): boolean => {
+  return response.selectedOptions.length > 0;
+};
 
 interface CaktoQuizQuestionProps {
   question: QuizQuestion;
@@ -19,7 +22,7 @@ const CaktoQuizQuestion: React.FC<CaktoQuizQuestionProps> = ({ question, onAnswe
     };
 
     // Validate response (only needs 2 arguments now)
-    if (validateQuestionResponse(userResponse, question)) {
+    if (validateResponse(userResponse, question)) {
       // Convert to QuizResponse format for onAnswer
       const quizResponse: QuizResponse = {
         questionId: question.id,

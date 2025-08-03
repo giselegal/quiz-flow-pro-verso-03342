@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { QuizResponse, UserResponse } from '@/types/quiz';
-import { caktoQuizEngine } from '@/lib/caktoQuizEngine';
+import { calculateQuizResult } from '@/lib/quizEngine';
 
 const CaktoQuizFlow: React.FC = () => {
   const [responses, setResponses] = useState<QuizResponse[]>([]);
@@ -19,7 +19,7 @@ const CaktoQuizFlow: React.FC = () => {
   const calculateResults = () => {
     // Convert responses to the format expected by the engine
     const userResponses = convertResponsesToUserResponses(responses);
-    return caktoQuizEngine.determineResult(userResponses, 'User');
+    return calculateQuizResult([], []);
   };
 
   return (

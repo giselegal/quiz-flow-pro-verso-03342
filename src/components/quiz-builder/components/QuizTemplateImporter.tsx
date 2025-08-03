@@ -8,8 +8,8 @@ import { styleQuizTemplate2 } from '@/services/templates/styleQuizTemplate2';
 import { QuizBuilderState } from '@/types/quizBuilder';
 import { QuizTemplate } from '@/types/quizTemplate';
 import { createBuilderStateFromQuiz } from '@/services/quizBuilderService';
-import { quizQuestions } from '@/data/quizQuestions'; 
-import { strategicQuestions } from '@/data/strategicQuestions';
+import caktoquizQuestions from '@/data/caktoquizQuestions';
+import { QuizQuestion } from '@/types/quiz';
 import { toast } from '@/components/ui/use-toast';
 import { Loader2 } from 'lucide-react';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
@@ -130,7 +130,7 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
       if (sourceId === 'current-quiz') {
         // Import from the current live quiz
         builderState = createBuilderStateFromQuiz(
-          [...quizQuestions, ...strategicQuestions],
+          caktoquizQuestions,
           'Quiz de Estilo Pessoal',
           'Descubra seu estilo predominante respondendo às perguntas a seguir',
           'Seu Resultado de Estilo Pessoal'

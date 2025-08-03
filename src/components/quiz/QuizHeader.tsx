@@ -2,7 +2,7 @@
 import React from 'react';
 import { Progress } from '../ui/progress';
 import { AnimatedWrapper } from '../ui/animated-wrapper';
-import { strategicQuestions } from '@/data/strategicQuestions'; // Importar strategicQuestions
+import caktoquizQuestions from '@/data/caktoquizQuestions';
 
 interface QuizHeaderProps {
   userName: string | null;
@@ -19,7 +19,7 @@ export const QuizHeader: React.FC<QuizHeaderProps> = ({
   showingStrategicQuestions,
   currentStrategicQuestionIndex,
 }) => {
-  const totalNumberOfStrategicQuestions = strategicQuestions.length;
+  const totalNumberOfStrategicQuestions = caktoquizQuestions.length;
 
   const progressValue = showingStrategicQuestions
     ? Math.round(((totalQuestions + currentStrategicQuestionIndex + 1) / (totalQuestions + totalNumberOfStrategicQuestions)) * 100)
