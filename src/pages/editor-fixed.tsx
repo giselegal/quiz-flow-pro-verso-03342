@@ -150,7 +150,8 @@ const EditorFixedPage: React.FC = () => {
       />
       
       {/* Status bar elegante com sombra suave */}
-      <div className="bg-gradient-to-r from-amber-50/95 via-yellow-50/90 to-amber-50/95 border-b border-amber-200/50 backdrop-blur-md px-6 py-3 shadow-sm">
+            {/* Top Bar - Otimizado */}
+      <div className="bg-gradient-to-r from-amber-50/95 via-yellow-50/90 to-amber-50/95 border-b border-amber-200/50 backdrop-blur-md px-3 py-2 shadow-sm">
         {/* Status bar removida para interface mais limpa */}
       </div>
       
