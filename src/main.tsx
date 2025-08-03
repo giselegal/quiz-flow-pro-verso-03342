@@ -15,8 +15,10 @@ import { saveUserSession } from "./services/quizSupabaseService";
 
 // 🚀 SUPABASE: Configuração inicial do serviço
 console.log('🚀 Inicializando serviços Supabase...');
+console.log('🔧 DEBUG: main.tsx carregado');
 // O serviço é inicializado automaticamente na importação
 
+console.log('🔧 DEBUG: Criando root do React...');
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ClientLayout>
@@ -24,3 +26,4 @@ createRoot(document.getElementById("root")!).render(
     </ClientLayout>
   </React.StrictMode>
 );
+console.log('✅ DEBUG: App renderizado com sucesso');

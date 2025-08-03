@@ -20,6 +20,7 @@ import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import DashboardPage from './pages/admin/DashboardPage';
 
 function App() {
+  console.log('🔧 DEBUG: App component iniciado');
   return (
     <ErrorBoundary
       onError={(error, errorInfo) => {
