@@ -34,8 +34,8 @@ const SectionDividerBlock: React.FC<BlockComponentProps> = ({
     <div
       className={cn(
         'w-full flex items-center justify-center transition-all duration-200',
-        'hover:bg-gray-50 rounded-lg',
-        isSelected && 'bg-yellow-50 ring-2 ring-yellow-200',
+        'hover:bg-stone-50 rounded-lg',
+        isSelected && 'bg-brand/10 ring-2 ring-brand/30',
         className
       )}
       style={{ marginTop: margin / 2, marginBottom: margin / 2 }}

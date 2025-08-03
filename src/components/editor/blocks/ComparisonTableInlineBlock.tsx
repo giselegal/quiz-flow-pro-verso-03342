@@ -22,13 +22,13 @@ const ComparisonTableInlineBlock: React.FC<BlockComponentProps> = ({
         w-full flex flex-col items-center
         p-4 rounded-lg transition-all duration-200
         ${isSelected 
-          ? 'border-2 border-yellow-500 bg-yellow-50' 
-          : 'border-2 border-dashed border-transparent hover:border-yellow-300 hover:bg-yellow-50/30'
+          ? 'border-2 border-brand bg-brand/10' 
+          : 'border-2 border-dashed border-transparent hover:border-brand/40 hover:bg-brand/5'
         }
         ${className}
       `}
     >
-      <h3 className="text-xl font-bold text-center mb-4 text-gray-800">
+      <h3 className="text-xl font-bold text-center mb-4 text-brand-dark">
         {title}
       </h3>
       
@@ -46,7 +46,7 @@ const ComparisonTableInlineBlock: React.FC<BlockComponentProps> = ({
               `}
             >
               <div className="text-center mb-4">
-                <h4 className="text-lg font-semibold text-gray-800 mb-2">
+                <h4 className="text-lg font-semibold text-brand-dark mb-2">
                   {item.name}
                 </h4>
                 <div className="text-2xl font-bold text-[#B89B7A]">

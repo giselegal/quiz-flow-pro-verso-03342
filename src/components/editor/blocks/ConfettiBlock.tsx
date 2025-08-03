@@ -36,7 +36,7 @@ const ConfettiBlock: React.FC<BlockComponentProps> = ({
       className={`
         py-12 text-center bg-brand/10 rounded-lg border border-brand/30 cursor-pointer transition-all duration-200
         ${isSelected 
-          ? 'ring-1 ring-gray-400/40 bg-gray-50/30' 
+          ? 'ring-1 ring-brand/40 bg-brand/10' 
           : 'hover:shadow-sm hover:bg-brand/20'
         }
         ${className}
@@ -47,10 +47,10 @@ const ConfettiBlock: React.FC<BlockComponentProps> = ({
     >
       <Sparkles className="w-16 h-16 mx-auto text-brand mb-4 animate-pulse" />
       <p className="text-lg text-brand-dark font-semibold">🎉 Efeito de Confete! 🎉</p>
-      <p className="text-sm text-gray-600 mt-2">
+      <p className="text-sm text-stone-600 mt-2">
         (Visível na página publicada ou ao simular)
       </p>
-      <div className="text-xs text-gray-500 mt-2">
+      <div className="text-xs text-stone-500 mt-2">
         Partículas: {particleCount} | Duração: {duration / 1000}s
       </div>
     </div>

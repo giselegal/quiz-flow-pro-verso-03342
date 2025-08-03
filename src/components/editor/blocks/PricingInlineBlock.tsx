@@ -178,7 +178,7 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
                     placeholder="R$ 47,00"
                     fontSize="sm"
                     textAlign="right"
-                    className="text-gray-500 line-through"
+                    className="text-stone-500 line-through"
                   />
                 )}
               </div>
@@ -191,7 +191,7 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
                   placeholder="Período..."
                   fontSize="xs"
                   textAlign="right"
-                  className="text-gray-600"
+                  className="text-stone-600"
                 />
               </div>
             </div>
@@ -200,7 +200,7 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
 
         {/* Hover Effect Indicator */}
         {isHovered && (
-          <div className="absolute inset-0 border-2 border-yellow-500 rounded-lg pointer-events-none" />
+          <div className="absolute inset-0 border-2 border-brand rounded-lg pointer-events-none" />
         )}
       </div>
     </InlineBaseWrapper>

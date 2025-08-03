@@ -59,9 +59,9 @@ export const InlineEditText: React.FC<InlineEditTextProps> = ({
     <Component
       className={cn(
         'cursor-pointer transition-all duration-200',
-        'hover:bg-yellow-50 hover:ring-1 hover:ring-yellow-200 rounded px-2 py-1',
+        'hover:bg-brand/10 hover:ring-1 hover:ring-brand/30 rounded px-2 py-1',
         'min-h-[1.5em] inline-block',
-        isSelected && 'bg-yellow-50 ring-2 ring-yellow-500',
+        isSelected && 'bg-brand/10 ring-2 ring-brand',
         disabled && 'cursor-not-allowed opacity-50',
         className
       )}
@@ -70,7 +70,7 @@ export const InlineEditText: React.FC<InlineEditTextProps> = ({
       title="Clique para selecionar e editar no painel de propriedades"
     >
       {value || (
-        <span className="text-gray-400 italic">{placeholder}</span>
+        <span className="text-stone-400 italic">{placeholder}</span>
       )}
     </Component>
   );
