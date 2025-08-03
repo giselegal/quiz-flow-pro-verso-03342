@@ -92,7 +92,10 @@ export const getDefaultStyle = (): StyleResult => {
   return {
     category: 'Natural' as StyleCategory,
     score: 100,
-    percentage: 100
+    percentage: 100,
+    style: 'natural',
+    points: 100,
+    rank: 1
   };
 };
 
@@ -104,6 +107,9 @@ export const createStyleResult = (category: string, score: number): StyleResult 
   return {
     category: validatedCategory,
     score,
-    percentage: Math.round((score / 10) * 100)
+    percentage: Math.round((score / 10) * 100),
+    style: validatedCategory.toLowerCase(),
+    points: score,
+    rank: 1
   };
 };

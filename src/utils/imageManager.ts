@@ -168,7 +168,7 @@ export const preloadCriticalImages = async (
   }
 
   // Remove duplicates
-  imageUrls = [...new Set(imageUrls)];
+  imageUrls = Array.from(new Set(imageUrls));
 
   return preloadImagesByUrls(imageUrls, { quality, batchSize, format });
 };

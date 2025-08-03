@@ -278,7 +278,7 @@ export class HotmartWebhookManager {
   }
 
   // Recuperar dados do usuário
-  private getUserData(email: string): UserAnalyticsData | null {
+  private getUserData(email: string): UserAnalyticsData | undefined {
     // Primeiro, tentar do cache em memória
     let userData = this.userDataStore.get(email);
 
@@ -290,21 +290,21 @@ export class HotmartWebhookManager {
       }
     }
 
-    return userData || null;
+    return userData ?? undefined;
   }
 
   // Recuperar dados do localStorage
-  private retrieveUserDataFromStorage(email: string): UserAnalyticsData | null {
+  private retrieveUserDataFromStorage(email: string): UserAnalyticsData | undefined {
     try {
       const key = `user_data_${email}`;
       const stored = localStorage.getItem(key);
-      return stored ? JSON.parse(stored) : null;
+      return stored ? JSON.parse(stored) : undefined;
     } catch (error) {
       console.error(
         "[Hotmart Webhook] Erro ao recuperar dados do storage:",
         error
       );
-      return null;
+      return undefined;
     }
   }
 
@@ -370,7 +370,7 @@ export class HotmartWebhookManager {
   // Notificar sistemas externos (CRM, etc.)
   private async notifyExternalSystems(
     data: HotmartWebhookData,
-    userData?: UserAnalyticsData | null
+    userData?: UserAnalyticsData | undefined
   ): Promise<void> {
     try {
       // Aqui você pode adicionar integrações com CRM, Email Marketing, etc.
@@ -415,7 +415,7 @@ export class HotmartWebhookManager {
       const cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate() - daysToKeep);
 
-      for (const [email, userData] of this.userDataStore) {
+      for (const [email, userData] of Array.from(this.userDataStore.entries())) {
         const dataDate = new Date(userData.timestamp);
         if (dataDate < cutoffDate) {
           this.userDataStore.delete(email);

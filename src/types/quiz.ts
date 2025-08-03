@@ -73,6 +73,13 @@ export interface QuizResponse {
   timestamp: Date;
 }
 
+export interface StyleScore {
+  style: StyleType;
+  points: number;
+  percentage: number;
+  rank: number;
+}
+
 export interface StyleResult {
   category: string;
   score: number;

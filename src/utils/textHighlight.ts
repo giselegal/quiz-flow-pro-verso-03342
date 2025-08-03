@@ -29,7 +29,7 @@ export const highlightStrategicWords = (text: string): React.ReactNode => {
   ];
 
   // Remove duplicates and sort by length (longer words first to prevent partial matches)
-  const uniqueSortedWords = [...new Set(strategicWords)]
+  const uniqueSortedWords = Array.from(new Set(strategicWords))
     .sort((a, b) => b.length - a.length);
 
   const pattern = new RegExp(`(${uniqueSortedWords.join('|')})`, 'gi');

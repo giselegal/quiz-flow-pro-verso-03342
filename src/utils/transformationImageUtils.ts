@@ -4,7 +4,7 @@ import { preloadCriticalImages, getLowQualityPlaceholder } from '@/utils/imageMa
  * Pré-carrega imagens de antes e depois para melhorar a experiência do usuário
  * @param transformations Array de transformações com URLs de imagens antes/depois
  */
-export const preloadTransformationImages = (transformations) => {
+export const preloadTransformationImages = (transformations: any[]) => {
   if (!transformations || !Array.isArray(transformations) || transformations.length === 0) {
     console.warn('Não foi possível pré-carregar imagens de transformação: dados inválidos');
     return;
@@ -18,7 +18,7 @@ export const preloadTransformationImages = (transformations) => {
     if (firstTransformation.beforeImage) {
       const imgBefore = new Image();
       imgBefore.src = `${firstTransformation.beforeImage}?q=85&f=auto&w=400&e_sharpen:60`;
-      imgBefore.fetchpriority = "high";
+      imgBefore.fetchPriority = "high";
       imgBefore.decoding = "sync"; // Decodificação síncrona para a primeira imagem
     }
     
@@ -26,7 +26,7 @@ export const preloadTransformationImages = (transformations) => {
     if (firstTransformation.afterImage) {
       const imgAfter = new Image();
       imgAfter.src = `${firstTransformation.afterImage}?q=85&f=auto&w=400&e_sharpen:60`;
-      imgAfter.fetchpriority = "high";
+      imgAfter.fetchPriority = "high";
       imgAfter.decoding = "sync"; // Decodificação síncrona para a primeira imagem
     }
   }
@@ -56,7 +56,7 @@ export const preloadTransformationImages = (transformations) => {
  * @param url URL da imagem do Cloudinary
  * @returns URL otimizada
  */
-export const getHighQualityImageUrl = (url) => {
+export const getHighQualityImageUrl = (url: string) => {
   if (!url || !url.includes('cloudinary.com')) return url;
   
   // Remove qualquer transformação existente que possa estar causando baixa qualidade
@@ -82,7 +82,7 @@ export const getHighQualityImageUrl = (url) => {
  * Corrige problemas comuns em imagens embaçadas
  * @param imageElement Elemento DOM da imagem
  */
-export const fixBlurryImage = (imageElement) => {
+export const fixBlurryImage = (imageElement: HTMLImageElement) => {
   if (!imageElement || !imageElement.src) return;
   
   const currentSrc = imageElement.src;
