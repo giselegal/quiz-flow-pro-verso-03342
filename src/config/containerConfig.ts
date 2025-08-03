@@ -29,19 +29,19 @@ export interface ContainerConfig {
 export const containerConfig: ContainerConfig = {
   base: 'w-full mx-auto flex flex-col',
   padding: {
-    mobile: 'px-2 py-2',
-    tablet: 'px-4 py-3', 
-    desktop: 'px-6 py-4'
+    mobile: 'px-1 py-1',
+    tablet: 'px-2 py-1', 
+    desktop: 'px-2 py-1'
   },
   spacing: {
-    tight: 'space-y-2',
-    normal: 'space-y-4',
-    loose: 'space-y-6'
+    tight: 'space-y-1',
+    normal: 'space-y-2',
+    loose: 'space-y-3'
   },
   maxWidth: {
     full: 'max-w-full',
-    content: 'max-w-6xl',
-    narrow: 'max-w-4xl'
+    content: 'max-w-7xl',
+    narrow: 'max-w-5xl'
   }
 };
 
@@ -82,8 +82,8 @@ export const getResponsiveContainerClasses = (
 ): string => {
   return `
     w-full mx-auto
-    ${deviceView === 'mobile' ? 'px-2 py-1' : 
-      deviceView === 'tablet' ? 'px-3 py-2' : 
-      'px-4 py-2'}
+    ${deviceView === 'mobile' ? 'px-1 py-0' : 
+      deviceView === 'tablet' ? 'px-1 py-0' : 
+      'px-2 py-1'}
   `.trim();
 };
