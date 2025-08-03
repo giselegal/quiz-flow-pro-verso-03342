@@ -18,10 +18,10 @@ export const useQuizTracking = (questionIndex?: number) => {
   // Inicializar sessão automaticamente e tracking de página
   useEffect(() => {
     const currentSession = getCurrentSession();
-    if (!currentSession && user?.userName) {
-      startSession(user.userName, user.email);
+    if (!currentSession && user?.name) {
+      startSession(user.name, user.email);
       // Track início do quiz
-      quizDataService.trackQuizStart(user.userName, user.email);
+      quizDataService.trackQuizStart(user.name, user.email);
     }
 
     // Track page view apenas uma vez

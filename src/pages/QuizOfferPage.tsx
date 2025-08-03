@@ -90,7 +90,7 @@ const GUARANTEE_COMPLEMENTARY_IMAGE_URL = "https://res.cloudinary.com/dqljyf76t/
 const FAQ_IMAGE_URL = "https://res.cloudinary.com/dqljyf76t/image/upload/v1745515862/Sem_nome_1000_x_1000_px_1280_x_720_px_vmqk3j.webp";
 
 // Componente de estrelas para avaliações (mantido)
-const RatingStars = ({ rating }) => {
+const RatingStars = ({ rating }: { rating: number }) => {
     return (
         <div className="flex">
             {[...Array(5)].map((_, i) => (
@@ -130,7 +130,7 @@ const CountdownTimer = () => {
         return () => clearInterval(interval);
     }, []);
 
-    const formatNumber = (num) => num.toString().padStart(2, '0');
+    const formatNumber = (num: number) => num.toString().padStart(2, '0');
 
     return (
         <div className="flex flex-col items-center">
@@ -157,7 +157,7 @@ const CountdownTimer = () => {
 
 // Componente FAQ (mantido)
 const FaqSectionNew = () => {
-    const [openItem, setOpenItem] = useState(null);
+    const [openItem, setOpenItem] = useState<number | null>(null);
 
     const faqItems = [
         {
@@ -194,7 +194,7 @@ const FaqSectionNew = () => {
         }
     ];
 
-    const toggleItem = (index) => {
+    const toggleItem = (index: number) => {
         setOpenItem(openItem === index ? null : index);
     };
 
@@ -273,9 +273,7 @@ const QuizOfferPage: React.FC = () => {
     // Integração com o editor visual
     const { 
         config: pageConfig, 
-        isLoading: configLoading, 
-        getBlockProps,
-        applyStyles
+        loading: configLoading
     } = usePageConfig('quiz-offer-page');
 
     const testimonials = [
@@ -367,12 +365,13 @@ const QuizOfferPage: React.FC = () => {
         return originalComponent;
     };
 
-    // Aplicar estilos do editor quando disponível
+    // Editor integration placeholder
     useEffect(() => {
         if (pageConfig && !configLoading) {
-            applyStyles();
+            // Apply editor styles if available
+            console.log('Page config loaded:', pageConfig);
         }
-    }, [pageConfig, configLoading, applyStyles]);
+    }, [pageConfig, configLoading]);
 
     return (
         <div className="min-h-screen bg-[var(--background)]" style={{ fontFamily: 'Inter, sans-serif' }}>

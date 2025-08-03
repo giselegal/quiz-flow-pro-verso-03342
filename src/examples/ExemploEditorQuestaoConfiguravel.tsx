@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import QuizQuestionBlockConfigurable from "@/types/blocks"
+import { BlockData } from "@/types/blocks"
 import { Button } from '@/components/ui/button';
 
 // Exemplo de estrutura de dados para uma questão configurada
@@ -147,14 +147,10 @@ const ExemploEditorQuestao: React.FC = () => {
 
       {/* Componente configurável */}
       <div className="relative">
-        <QuizQuestionBlockConfigurable
-          {...block.props}
-          block={block}
-          isEditing={isEditing}
-          showPropertiesPanel={showProperties}
-          onPropertyChange={handlePropertyChange}
-          className="min-h-screen"
-        />
+        <div className="min-h-screen p-4">
+          <p className="text-gray-500">Component placeholder - QuizQuestionBlockConfigurable not available</p>
+          <pre className="text-sm">{JSON.stringify(block, null, 2)}</pre>
+        </div>
       </div>
 
       {/* Debug info (apenas no modo edição) */}
