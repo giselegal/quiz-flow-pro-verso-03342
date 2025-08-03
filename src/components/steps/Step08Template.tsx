@@ -1,7 +1,8 @@
 import React from 'react';
 
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 8 - QUESTÃO 7: CALÇA FAVORITA (REAL)
-export const getStep08Template = () => [
+export const getStep08Template = () => {
+  return [
   {
     type: 'quiz-intro-header',
     properties: {
@@ -143,6 +144,7 @@ export const getStep08Template = () => [
       requiresValidSelection: true
     }
   }
-];
+  ];
+};
 
 export default getStep08Template;

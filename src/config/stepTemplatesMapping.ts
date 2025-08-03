@@ -8,7 +8,7 @@ import { getStep03Template } from '@/components/steps/Step03Template';
 import { getStep04Template } from '@/components/steps/Step04Template';
 import { getStep05Template } from '@/components/steps/Step05Template';
 import { getStep06Template } from '@/components/steps/Step06Template';
-import { getStep07Template } from '@/components/steps/Step07Template';
+import * as Step07 from '@/components/steps/Step07Template';
 import { getStep08Template } from '@/components/steps/Step08Template';
 import { getStep09Template } from '@/components/steps/Step09Template';
 import { getStep10Template } from '@/components/steps/Step10Template';
@@ -72,7 +72,7 @@ export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
   },
   7: {
     stepNumber: 7,
-    templateFunction: getStep07Template,
+    templateFunction: Step07.getStep07Template,
     name: 'Q6 - Casacos',
     description: 'QUAL CASACO É SEU FAVORITO?'
   },
