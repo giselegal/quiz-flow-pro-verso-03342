@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { QuizQuestion, QuizAnswer, QuizResult, StyleResult } from '@/types/quiz';
 import { getStyleColor } from '@/utils/styleUtils';
+import caktoquizQuestions from '@/data/caktoquizQuestions';
 
 interface UseQuizLogicProps {
   questions: QuizQuestion[];
@@ -50,11 +51,11 @@ export const useQuizLogic = () => {
     const styleScores: { [style: string]: number } = {};
 
     answers.forEach(answer => {
-      const question = questions.find(q => q.id === answer.questionId);
-      const option = question?.options.find(opt => opt.id === answer.optionId);
+      const question = caktoquizQuestions.find((q: any) => q.id === answer.questionId);
+      const option = question?.options.find((opt: any) => opt.id === answer.optionId);
 
       if (option?.style) {
-        styleScores[option.style] = (styleScores[option.style] || 0) + option.weight;
+        styleScores[option.style] = (styleScores[option.style] || 0) + (option.weight || 1);
       }
     });
 

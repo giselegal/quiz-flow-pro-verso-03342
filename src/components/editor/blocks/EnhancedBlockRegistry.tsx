@@ -423,7 +423,13 @@ export const UniversalBlockRendererV2: React.FC<BlockRendererProps> = ({
   if (!Component || !blockDef) {
     return (
       <FallbackBlock 
-        block={block}
+        block={{
+          id: block.id,
+          type: block.type,
+          properties: block.properties,
+          content: {},
+          order: 0
+        }}
         blockType={block.type}
         isSelected={isSelected}
         onClick={onClick}

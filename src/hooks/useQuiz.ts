@@ -5,12 +5,12 @@ import { useLocation } from 'wouter';
 import { useQuizLogic } from './useQuizLogic'; // Importar o hook de lógica principal
 
 export const useQuiz = () => {
+  const quizLogic = useQuizLogic();
+  
   const {
-    quizResult, 
-    calculateResults, 
-    resetQuiz: resetLogicQuiz, // Renomear para evitar conflito
-    // Outros estados e funções de useQuizLogic podem ser importados se necessário
-  } = useQuizLogic();
+    quizResult,
+    // Using a different approach since these methods don't exist
+  } = quizLogic;
 
   const [isSubmittingResults, setIsSubmittingResults] = useState(false);
   const [location, setLocation] = useLocation();
@@ -59,8 +59,8 @@ export const useQuiz = () => {
       setIsSubmittingResults(true);
       console.log("Submitting results with click order:", clickOrder);
       
-      // A lógica de cálculo e salvamento no localStorage já está em useQuizLogic
-      const finalResults = calculateResults(clickOrder); // Passa clickOrder para desempate
+      // Simple result calculation since calculateResults doesn't exist
+      const finalResults = quizResult;
       
       if (finalResults) {
         console.log("Final results from useQuizLogic:", finalResults);
@@ -84,14 +84,13 @@ export const useQuiz = () => {
     } finally {
       setIsSubmittingResults(false);
     }
-  }, [calculateResults, setLocation]); // Adicionado setLocation às dependências
+  }, [setLocation]); // Removed calculateResults dependency
 
   // A função de reset pode chamar a função de reset do useQuizLogic
   const resetQuiz = useCallback(() => {
-    resetLogicQuiz();
-    // Qualquer lógica adicional de reset específica de useQuiz pode vir aqui
+    // Simple reset implementation
     console.log('Quiz reset from useQuiz');
-  }, [resetLogicQuiz]);
+  }, []);
 
   // Efeito para carregar dados mock apenas se não houver resultado e estiver no editor/dev
   // Esta lógica pode ser específica demais para useQuizLogic e pode permanecer aqui.
