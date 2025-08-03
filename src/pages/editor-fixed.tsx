@@ -22,6 +22,55 @@ const EditorFixedPage: React.FC = () => {
   
   // Mostrar estatísticas do registry
   const registryStats = getRegistryStats();
+  
+  // Obter todas as definições de blocos para properties
+  const allBlockDefinitions = generateBlockDefinitions();
+  
+  // Função para obter blockDefinition com propriedades reais
+  const getBlockDefinitionForType = (type: string) => {
+    const definition = allBlockDefinitions.find(def => def.type === type);
+    if (definition) {
+      return definition;
+    }
+    
+    // Fallback com propriedades padrão para qualquer componente
+    return {
+      type: type,
+      name: type.charAt(0).toUpperCase() + type.slice(1).replace(/[-_]/g, ' '),
+      description: `Componente ${type}`,
+      category: 'basic',
+      icon: Type,
+      component: React.Fragment,
+      defaultProps: {},
+      properties: {
+        text: {
+          type: 'string',
+          label: 'Texto',
+          default: '',
+          description: 'Conteúdo de texto do componente'
+        },
+        title: {
+          type: 'string',
+          label: 'Título',
+          default: '',
+          description: 'Título do componente'
+        },
+        visible: {
+          type: 'boolean',
+          label: 'Visível',
+          default: true,
+          description: 'Controla se o componente está visível'
+        },
+        className: {
+          type: 'string',
+          label: 'Classes CSS',
+          default: '',
+          description: 'Classes CSS adicionais'
+        }
+      },
+      label: type
+    };
+  };
 
   const handleSave = () => {
     console.log('Salvando projeto...', blocks);
@@ -151,17 +200,7 @@ const EditorFixedPage: React.FC = () => {
           selectedBlockId && selectedBlock ? (
             <DynamicPropertiesPanel
               block={selectedBlock}
-              blockDefinition={{
-                type: selectedBlock.type,
-                name: selectedBlock.type,
-                description: `Componente ${selectedBlock.type}`,
-                category: 'basic',
-                icon: Type,
-                component: React.Fragment,
-                defaultProps: {},
-                properties: {},
-                label: selectedBlock.type
-              }}
+              blockDefinition={getBlockDefinitionForType(selectedBlock.type)}
               onUpdateBlock={(blockId: string, properties: Partial<EditableContent>) => {
                 setBlocks(prev => 
                   prev.map(block => 
