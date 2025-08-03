@@ -17,6 +17,7 @@ const EditorFixedPage: React.FC = () => {
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [viewportSize, setViewportSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('lg');
+  const [activeStageId, setActiveStageId] = useState<string>('step-1');
 
   const selectedBlock = blocks.find(block => block.id === selectedBlockId);
   
@@ -94,6 +95,15 @@ const EditorFixedPage: React.FC = () => {
     }
   };
 
+  
+  // ✅ CONECTAR: Handler para mudança de etapa
+  const handleStageSelect = (stageId: string) => {
+    console.log('🔄 Editor: Mudando para etapa:', stageId);
+    setActiveStageId(stageId);
+    setSelectedBlockId(null); // Limpar seleção de bloco
+    // TODO: Carregar blocos específicos da etapa
+  };
+
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-slate-50 to-gray-100">
       <BrandHeader />
@@ -115,7 +125,7 @@ const EditorFixedPage: React.FC = () => {
               Editor Ativo
             </span>
             <span className="text-purple-600">
-              {blocks.length} blocos • {registryStats.active} componentes
+              {blocks.length} blocos • {registryStats.active} componentes • Etapa: {activeStageId}
             </span>
             <span className="text-purple-600">
               Viewport: {viewportSize.toUpperCase()}
@@ -128,7 +138,7 @@ const EditorFixedPage: React.FC = () => {
       </div>
       
       <FourColumnLayout
-        stagesPanel={<FunnelStagesPanel />}
+        stagesPanel={<FunnelStagesPanel onStageSelect={handleStageSelect} />}
         componentsPanel={
           <EnhancedComponentsSidebar 
             onAddComponent={(type: string) => {

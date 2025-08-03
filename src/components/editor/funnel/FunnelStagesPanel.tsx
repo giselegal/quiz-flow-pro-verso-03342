@@ -9,12 +9,14 @@ import { useFunnels } from '@/context/FunnelsContext';
 
 interface FunnelStagesPanelProps {
   className?: string;
+  onStageSelect?: (stageId: string) => void;
 }
 
 export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({ 
-  className 
+  className,
+  onStageSelect 
 }) => {
-  const { steps, updateFunnelStep, addStepBlock } = useFunnels();
+  const { steps, updateFunnelStep, addStepBlock, setSteps } = useFunnels();
 
   // ✅ FASE 2: Debug visual melhorado com timestamps
   const timestamp = new Date().toLocaleTimeString();
@@ -34,7 +36,21 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
       e.stopPropagation();
     }
     console.log('🎯 CLICK: Navegar para etapa:', stageId);
-    // Navegar para a etapa específica
+    
+    // ✅ CONECTAR: Atualizar estado ativo das etapas
+    setSteps(currentSteps => 
+      currentSteps.map(step => ({
+        ...step,
+        isActive: step.id === stageId
+      }))
+    );
+    
+    // ✅ CONECTAR: Chamar callback para o editor principal
+    if (onStageSelect) {
+      onStageSelect(stageId);
+    }
+    
+    console.log('✅ Etapa ativada:', stageId);
   };
 
   const handleActionClick = (action: string, stageId: string, e: React.MouseEvent) => {
