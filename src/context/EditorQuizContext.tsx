@@ -1,101 +1,105 @@
-/**
- * INTEGRAÇÃO DE LÓGICA DE CÁLCULOS NO EDITOR
- * Conecta os componentes do editor com a mesma lógica do funil em produção
- */
+import React, { createContext, useContext, useState, useCallback } from 'react';
+import { QuizQuestion, QuizAnswer, QuizResult } from '@/types/quiz';
+import { calculateQuizResult } from '@/lib/quizEngine';
 
-import React, { useState, useCallback, useContext, createContext } from 'react';
-import { useQuizLogic } from '../hooks/useQuizLogic';
-import { QuizResult, StyleResult } from '../types/quiz';
-
-// Context para compartilhar lógica de cálculo entre componentes do editor
-export interface EditorQuizContext {
-  // Estados do quiz
-  answers: Record<string, string[]>;
-  strategicAnswers: Record<string, string[]>;
-  currentResults: QuizResult | null;
-  
-  // Funções de cálculo (mesmas do produção)
-  handleAnswer: (questionId: string, selectedOptions: string[]) => void;
-  handleStrategicAnswer: (questionId: string, selectedOptions: string[]) => void;
-  calculateResults: (clickOrder?: string[]) => QuizResult;
-  
-  // Estados de UI
-  isCalculating: boolean;
-  resultsReady: boolean;
+interface EditorQuizContextType {
+  currentQuestionIndex: number;
+  answers: QuizAnswer[];
+  quizCompleted: boolean;
+  quizResult: QuizResult | null;
+  totalQuestions: number;
+  initializeQuiz: (questions: QuizQuestion[]) => void;
+  answerQuestion: (questionId: string, optionId: string) => void;
+  previousQuestion: () => void;
+  nextQuestion: () => void;
+  resetQuiz: () => void;
+  completeQuiz: () => void;
 }
 
-// Hook personalizado para usar no editor
-export const useEditorQuizLogic = (): EditorQuizContext => {
-  const {
-    strategicAnswers,
-    quizResult,
-    handleAnswer,
-    handleStrategicAnswer,
-    calculateResults,
-    isInitialLoadComplete
-  } = useQuizLogic();
+const EditorQuizContext = createContext<EditorQuizContextType | undefined>(undefined);
 
-  // Extrair answers do localStorage ou state interno
-  const [answers, setAnswers] = useState<Record<string, string[]>>({});
-  const [isCalculating, setIsCalculating] = useState(false);
+interface EditorQuizProviderProps {
+  children: React.ReactNode;
+}
 
-  const handleAnswerWithPreview = useCallback(
-    (questionId: string, selectedOptions: string[]) => {
-      // Atualizar state local
-      setAnswers(prev => ({
-        ...prev,
-        [questionId]: selectedOptions
-      }));
+export const EditorQuizProvider: React.FC<EditorQuizProviderProps> = ({ children }) => {
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [answers, setAnswers] = useState<QuizAnswer[]>([]);
+  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
+
+  const initializeQuiz = useCallback((quizQuestions: QuizQuestion[]) => {
+    setQuestions(quizQuestions);
+    setCurrentQuestionIndex(0);
+    setAnswers([]);
+    setQuizCompleted(false);
+    setQuizResult(null);
+  }, []);
+
+  const answerQuestion = useCallback((questionId: string, optionId: string) => {
+    setAnswers(prev => {
+      const existingAnswerIndex = prev.findIndex(a => a.questionId === questionId);
+      const newAnswer: QuizAnswer = { questionId, optionId };
       
-      // Chamar função original
-      handleAnswer(questionId, selectedOptions);
-      
-      // Calcular resultados em tempo real para preview
-      setIsCalculating(true);
-      setTimeout(() => {
-        calculateResults();
-        setIsCalculating(false);
-      }, 100);
-    },
-    [handleAnswer, calculateResults]
-  );
+      if (existingAnswerIndex >= 0) {
+        const updated = [...prev];
+        updated[existingAnswerIndex] = newAnswer;
+        return updated;
+      } else {
+        return [...prev, newAnswer];
+      }
+    });
+  }, []);
 
-  const handleStrategicAnswerWithPreview = useCallback(
-    (questionId: string, selectedOptions: string[]) => {
-      handleStrategicAnswer(questionId, selectedOptions);
-    },
-    [handleStrategicAnswer]
-  );
+  const previousQuestion = useCallback(() => {
+    setCurrentQuestionIndex(prev => Math.max(0, prev - 1));
+  }, []);
 
-  return {
+  const nextQuestion = useCallback(() => {
+    setCurrentQuestionIndex(prev => Math.min(questions.length - 1, prev + 1));
+  }, [questions.length]);
+
+  const resetQuiz = useCallback(() => {
+    setCurrentQuestionIndex(0);
+    setAnswers([]);
+    setQuizCompleted(false);
+    setQuizResult(null);
+  }, []);
+
+  const completeQuiz = useCallback(() => {
+    if (answers.length > 0) {
+      const result = calculateQuizResult(answers, questions);
+      setQuizResult(result);
+      setQuizCompleted(true);
+    }
+  }, [answers, questions]);
+
+  const value: EditorQuizContextType = {
+    currentQuestionIndex,
     answers,
-    strategicAnswers,
-    currentResults: quizResult,
-    handleAnswer: handleAnswerWithPreview,
-    handleStrategicAnswer: handleStrategicAnswerWithPreview,
-    calculateResults,
-    isCalculating,
-    resultsReady: !!quizResult && isInitialLoadComplete
+    quizCompleted,
+    quizResult,
+    totalQuestions: questions.length,
+    initializeQuiz,
+    answerQuestion,
+    previousQuestion,
+    nextQuestion,
+    resetQuiz,
+    completeQuiz
   };
-};
 
-// Provider para compartilhar context entre componentes
-export const EditorQuizProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const contextValue = useEditorQuizLogic();
-  
   return (
-    <EditorQuizContext.Provider value={contextValue}>
+    <EditorQuizContext.Provider value={value}>
       {children}
     </EditorQuizContext.Provider>
   );
 };
 
-export const EditorQuizContext = createContext<EditorQuizContext | null>(null);
-
-export const useEditorQuizContext = () => {
+export const useEditorQuiz = (): EditorQuizContextType => {
   const context = useContext(EditorQuizContext);
-  if (!context) {
-    throw new Error('useEditorQuizContext must be used within EditorQuizProvider');
+  if (context === undefined) {
+    throw new Error('useEditorQuiz must be used within an EditorQuizProvider');
   }
   return context;
 };
