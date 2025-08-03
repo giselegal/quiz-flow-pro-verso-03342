@@ -454,7 +454,7 @@ console.log('✅ Registry Stats:', { active: componentsCount, total: totalKeys }
 ps aux | grep "npm run dev"
 
 # Testar conectividade
-curl -s -o /dev/null -w "%{http_code}" "http://localhost:8080/editor-fixed"
+curl -s -o /dev/null -w "%{http_code}" "http://localhost:8081/editor-fixed"
 
 # Verificar logs em tempo real
 tail -f vite.log
@@ -515,7 +515,7 @@ ls -la src/components/editor/blocks/inline/
 
 O Editor Fixed representa uma solução robusta e escalável para criação de funis de quiz, com arquitetura modular, sistema de componentes validados e interface moderna. A estrutura atual suporta 21 etapas completas com mais de 25 tipos de componentes diferentes, todos com propriedades editáveis e preview em tempo real.
 
-**URL para acesso:** http://localhost:8080/editor-fixed
+**URL para acesso:** http://localhost:8081/editor-fixed
 
 **Data da documentação:** 03 de Agosto de 2025
 **Versão:** 2.0.0 - Editor Fixed Completo
@@ -529,7 +529,7 @@ O Editor Fixed representa uma solução robusta e escalável para criação de f
 ```
                     ┌─────────────────────────────────────────────────────────────┐
                     │                         BROWSER                             │
-                    │                   http://localhost:8080/editor-fixed       │
+                    │                   http://localhost:8081/editor-fixed       │
                     └─────────────────────────┬───────────────────────────────────┘
                                               │
                     ┌─────────────────────────▼───────────────────────────────────┐

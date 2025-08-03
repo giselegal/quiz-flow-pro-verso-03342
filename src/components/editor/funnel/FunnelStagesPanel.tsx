@@ -6,6 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Plus, GripVertical, Eye, Settings, Copy, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useFunnels } from '@/context/FunnelsContext';
+import { useEditor } from '@/context/EditorContext';
 
 interface FunnelStagesPanelProps {
   className?: string;
@@ -17,11 +18,12 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   onStageSelect 
 }) => {
   const { steps, updateFunnelStep, addStepBlock, setSteps } = useFunnels();
+  // ✅ CORREÇÃO: Também usar EditorContext para sincronização
+  const { activeStageId } = useEditor();
 
   // ✅ FASE 2: Debug visual melhorado com timestamps
   const timestamp = new Date().toLocaleTimeString();
-  console.log(`🔍 [${timestamp}] FunnelStagesPanel - Steps recebidas:`, steps?.length || 0);
-  console.log(`🎯 [${timestamp}] FunnelStagesPanel - Dados completos:`, steps);
+  console.log(`🔍 [${timestamp}] FunnelStagesPanel - Steps:`, steps?.length || 0, 'ActiveStage:', activeStageId);
 
   const handleAddStage = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -32,35 +34,30 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
 
   const handleStageClick = (stageId: string, e?: React.MouseEvent) => {
     console.log('🚨 EVENTO CLICK RECEBIDO - StageID:', stageId);
-    console.log('🚨 Evento:', e);
-    console.log('🚨 Timestamp:', new Date().toLocaleTimeString());
+    console.log('🚨 Current ActiveStageId:', activeStageId);
     
     if (e) {
       e.preventDefault();
       e.stopPropagation();
-      console.log('🚨 Evento prevenido');
     }
     
-    // ✅ CONECTAR: Atualizar estado ativo das etapas
+    // ✅ CORREÇÃO: Sincronizar FunnelsContext
     setSteps(currentSteps => {
-      console.log('🚨 Atualizando steps - Current:', currentSteps.length);
-      const newSteps = currentSteps.map(step => ({
+      return currentSteps.map(step => ({
         ...step,
         isActive: step.id === stageId
       }));
-      console.log('🚨 New steps criados');
-      return newSteps;
     });
     
-    // ✅ CONECTAR: Chamar callback para o editor principal
+    // ✅ CORREÇÃO: Chamar callback para sincronizar EditorContext
     if (onStageSelect) {
-      console.log('🚨 Chamando onStageSelect callback');
+      console.log('🚨 Chamando onStageSelect para sincronizar EditorContext');
       onStageSelect(stageId);
     } else {
       console.log('🚨 ❌ onStageSelect NÃO EXISTE!');
     }
     
-    console.log('✅ Etapa ativada:', stageId);
+    console.log('✅ Etapa ativada e sincronizada:', stageId);
   };
 
   const handleActionClick = (action: string, stageId: string, e: React.MouseEvent) => {
@@ -144,37 +141,39 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                   key={step.id}
                   className={cn(
                     "group relative rounded-lg border-2 transition-all duration-200 cursor-pointer select-none",
-                    "hover:border-red-500 hover:shadow-lg active:scale-[0.95] active:bg-blue-100",
-                    "min-h-[80px] bg-white", // ✅ Forçar altura e background
-                    step.isActive 
-                      ? "border-green-500 bg-green-50 shadow-md" 
+                    "hover:border-purple-400 hover:shadow-lg active:scale-[0.95]",
+                    "min-h-[80px] bg-white",
+                    // ✅ CORREÇÃO: Usar activeStageId do EditorContext para highlight
+                    activeStageId === step.id
+                      ? "border-purple-500 bg-purple-50 shadow-md ring-2 ring-purple-200" 
                       : "border-gray-300 bg-white hover:bg-gray-50"
                   )}
                   onClick={(e) => {
                     console.log('🚨 CLICK DIRETO NO DIV - StageID:', step.id);
+                    console.log('🚨 Current activeStageId:', activeStageId);
                     handleStageClick(step.id, e);
                   }}
                   role="button"
                   tabIndex={0}
                   onKeyDown={(e) => {
-                    console.log('🚨 KEYDOWN:', e.key);
                     if (e.key === 'Enter' || e.key === ' ') {
                       handleStageClick(step.id);
                     }
                   }}
-                  onMouseDown={() => console.log('🚨 MOUSEDOWN:', step.id)}
-                  onMouseUp={() => console.log('🚨 MOUSEUP:', step.id)}
                 >
-                  <div className="p-4 relative z-10"> {/* ✅ Aumentar padding e z-index */}
+                  <div className="p-4 relative z-10">
                     <div className="flex items-center gap-2 mb-2">
                       <GripVertical className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
-                          <span className="font-medium text-sm text-foreground">
+                          <span className={cn(
+                            "font-medium text-sm",
+                            activeStageId === step.id ? "text-purple-700" : "text-foreground"
+                          )}>
                             Etapa {index + 1}
                           </span>
                           <Badge 
-                            variant={step.isActive ? "default" : "secondary"}
+                            variant={activeStageId === step.id ? "default" : "secondary"}
                             className="text-xs"
                           >
                             {step.blocksCount || 0} blocos
@@ -183,6 +182,13 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                         <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
                           {step.name || step.description || 'Sem título'}
                         </p>
+                        {/* ✅ INDICADOR VISUAL DE ETAPA ATIVA */}
+                        {activeStageId === step.id && (
+                          <div className="flex items-center gap-1 mt-1">
+                            <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+                            <span className="text-xs text-purple-600 font-medium">ATIVA</span>
+                          </div>
+                        )}
                       </div>
                     </div>
 
