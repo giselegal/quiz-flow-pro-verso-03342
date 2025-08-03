@@ -1,5 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import Logo from '@/components/ui/logo';
+import { motion } from 'framer-motion';
 import { 
   Save, 
   Eye, 
@@ -37,7 +39,52 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
   onViewportSizeChange = () => {}
 }) => {
   return (
-    <div className="bg-gradient-to-r from-purple-600 to-blue-600 border-b border-white/20 p-3 flex items-center justify-between shadow-lg">
+    <div className="bg-gradient-to-r from-amber-700 to-stone-600 border-b border-white/20 p-3 flex items-center justify-between shadow-lg">
+      {/* Logo à esquerda com animação Framer Motion */}
+      <div className="flex items-center">
+        <motion.div
+          className="relative group cursor-pointer"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          whileHover={{ 
+            scale: 1.05,
+            rotate: [0, -1, 1, 0],
+            transition: { duration: 0.3 }
+          }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <motion.div
+            animate={{ 
+              filter: [
+                "brightness(1) saturate(1)",
+                "brightness(1.1) saturate(1.1)", 
+                "brightness(1) saturate(1)"
+              ]
+            }}
+            transition={{ 
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          >
+            <Logo className="h-8 w-auto transform-gpu" />
+          </motion.div>
+          
+          {/* Glow effect animado */}
+          <motion.div 
+            className="absolute inset-0 rounded-lg bg-white/10 blur-sm -z-10"
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileHover={{ 
+              opacity: 0.3, 
+              scale: 1.1,
+              transition: { duration: 0.2 }
+            }}
+          />
+        </motion.div>
+      </div>
+
+      {/* Ferramentas no centro */}
       <div className="flex items-center space-x-3">
         {onUndo && (
           <Button
@@ -120,6 +167,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
         </Button>
       </div>
       
+      {/* Botões de ação à direita */}
       <div className="flex items-center space-x-3">
         <Button
           variant="outline" 
@@ -143,7 +191,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
         <Button
           onClick={onSave}
           size="sm"
-          className="bg-white text-purple-600 hover:bg-gray-100 font-medium px-6"
+          className="bg-white text-amber-700 hover:bg-stone-100 font-medium px-6"
         >
           <Save className="mr-2 h-4 w-4" />
           Salvar

@@ -1,5 +1,4 @@
 import React from 'react';
-import BrandHeader from '@/components/ui/BrandHeader';
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
@@ -138,7 +137,6 @@ const EditorFixedPage: React.FC = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-brand/[0.02] via-transparent to-brand-dark/[0.01] pointer-events-none"></div>
       
       <div className="relative z-10">
-        <BrandHeader />
       <EditorToolbar
         isPreviewing={isPreviewing}
         onTogglePreview={() => setIsPreviewing(!isPreviewing)}

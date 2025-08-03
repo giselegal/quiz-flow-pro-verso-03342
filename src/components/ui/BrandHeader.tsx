@@ -8,7 +8,7 @@ interface BrandHeaderProps {
 
 const BrandHeader: React.FC<BrandHeaderProps> = ({ className }) => {
   return (
-    <div className={`flex justify-center items-center py-6 ${className}`}>
+    <div className={`flex justify-center items-center py-4 ${className}`}>
       <Logo />
     </div>
   );
