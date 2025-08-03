@@ -140,7 +140,7 @@ export const createBuilderStateFromQuiz = (
     
     // Add options
     if (question.options && Array.isArray(question.options)) {
-      question.options.forEach((option, oIndex) => {
+      question.options.forEach((option: any, oIndex: number) => {
         questionComponents.push({
           id: generateId(),
           type: 'multipleChoice',
@@ -148,7 +148,7 @@ export const createBuilderStateFromQuiz = (
           data: {
             text: option.text || `Opção ${oIndex + 1}`,
             value: option.value || String(oIndex),
-            image: option.image || '',
+            options: [option.text || `Opção ${oIndex + 1}`],
             alignment: 'center'
           },
           order: oIndex + 1
