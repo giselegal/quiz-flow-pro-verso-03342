@@ -11,7 +11,7 @@ const CaktoQuizFlow: React.FC = () => {
   const convertResponsesToUserResponses = (quizResponses: QuizResponse[]): UserResponse[] => {
     return quizResponses.map(response => ({
       questionId: response.questionId,
-      selectedOptions: response.selectedOptionIds,
+      selectedOptions: response.selectedOptions,
       timestamp: response.timestamp
     }));
   };

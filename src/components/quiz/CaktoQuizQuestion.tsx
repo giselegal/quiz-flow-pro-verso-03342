@@ -23,8 +23,8 @@ const CaktoQuizQuestion: React.FC<CaktoQuizQuestionProps> = ({ question, onAnswe
       // Convert to QuizResponse format for onAnswer
       const quizResponse: QuizResponse = {
         questionId: question.id,
-        selectedOptionIds: selectedOptions,
-        selectedStyles: [],
+        selectedOptions: selectedOptions,
+        
         timestamp: new Date()
       };
       

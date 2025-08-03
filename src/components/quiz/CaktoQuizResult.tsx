@@ -1,218 +1,180 @@
 import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Sparkles, Heart, Crown } from 'lucide-react';
-import type { QuizResult } from '@/types/quiz';
+import { QuizResult, StyleType } from '@/types/quiz';
 import { getStyleById } from '@/data/styles';
 
 interface CaktoQuizResultProps {
   result: QuizResult;
-  onContinue?: () => void;
+  onContinue: () => void;
 }
 
-export const CaktoQuizResult: React.FC<CaktoQuizResultProps> = ({
+const CaktoQuizResult: React.FC<CaktoQuizResultProps> = ({
   result,
   onContinue
 }) => {
-  const predominantStyleData = getStyleById(result.predominantStyle);
-  const complementaryStylesData = result.complementaryStyles.map(styleId => 
-    getStyleById(styleId)
-  );
-
-  const predominantScore = result.styleScores.find(s => s.style === result.predominantStyle);
-  const complementaryScores = result.complementaryStyles.map(styleId =>
-    result.styleScores.find(s => s.style === styleId)
-  ).filter(Boolean);
+  // Safe property access with defaults
+  const primaryStyle = result.predominantStyle ? getStyleById(result.predominantStyle as StyleType) : null;
+  const complementaryStyles = result.complementaryStyles?.map(styleId => getStyleById(styleId as StyleType)).filter(Boolean) || [];
+  
+  const styleScores = result.styleScores || {};
+  const sortedScores = Object.entries(styleScores).sort(([,a], [,b]) => (b as number) - (a as number));
+  const topSecondaryStyles = complementaryStyles.slice(0, 3);
+  const totalScore = Object.values(styleScores).reduce((sum, score) => sum + (score as number), 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50 p-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Crown className="w-8 h-8 text-yellow-500" />
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
-              Parabéns, {result.participantName}!
-            </h1>
-          </div>
-          <p className="text-xl text-gray-600">
-            Descobrimos seu perfil de estilo único
+    <div className="min-h-screen bg-[#FAF9F7] flex items-center justify-center p-4">
+      <div className="max-w-4xl w-full">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-playfair text-[#432818] mb-4">
+            Seu Resultado
+          </h1>
+          <p className="text-[#8F7A6A] text-lg">
+            Descobrimos seu estilo único baseado em suas respostas
           </p>
         </div>
-
-        {/* Predominant Style */}
-        <Card className="mb-8 overflow-hidden shadow-xl">
-          <div 
-            className="relative p-8 text-white"
-            style={{ 
-              background: `linear-gradient(135deg, ${predominantStyleData.colors.primary} 0%, ${predominantStyleData.colors.accent} 100%)` 
-            }}
-          >
-            <div className="absolute top-4 right-4">
-              <Sparkles className="w-8 h-8 text-yellow-300" />
-            </div>
-            
+        
+        {/* Primary Style Result */}
+        {primaryStyle && (
+          <div className="bg-white rounded-lg shadow-sm border border-[#B89B7A]/20 p-8 mb-6">
             <div className="text-center mb-6">
-              <h2 className="text-3xl md:text-4xl font-bold mb-2">
-                SEU ESTILO É
+              <h2 className="text-3xl font-playfair text-[#432818] mb-2">
+                Seu Estilo Principal
               </h2>
-              <h3 className="text-4xl md:text-5xl font-black uppercase tracking-wide">
-                {predominantStyleData.name}
+              <h3 className="text-2xl font-semibold text-[#B89B7A] mb-4">
+                {primaryStyle.name}
               </h3>
-            </div>
-
-            {/* Percentage */}
-            <div className="mb-6">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-lg font-semibold">Compatibilidade</span>
-                <span className="text-2xl font-bold">{predominantScore?.percentage}%</span>
-              </div>
-              <Progress 
-                value={predominantScore?.percentage || 0} 
-                className="h-3 bg-white/20"
-              />
-            </div>
-
-            {/* Description */}
-            <p className="text-lg leading-relaxed opacity-95">
-              {predominantStyleData.description}
-            </p>
-          </div>
-
-          {/* Style Images */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-            {/* Personal Style Image */}
-            <div className="relative">
-              <img
-                src={predominantStyleData.imageUrl}
-                alt={`Estilo ${predominantStyleData.name} - Imagem Pessoal`}
-                className="w-full h-64 md:h-80 object-cover"
-                loading="lazy"
-              />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                <h4 className="text-white font-semibold text-lg">
-                  Seu Estilo Pessoal
-                </h4>
-              </div>
-            </div>
-
-            {/* Style Guide Image */}
-            <div className="relative">
-              <img
-                src={predominantStyleData.guideImageUrl}
-                alt={`Estilo ${predominantStyleData.name} - Guia`}
-                className="w-full h-64 md:h-80 object-cover"
-                loading="lazy"
-              />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                <h4 className="text-white font-semibold text-lg">
-                  Guia de Estilo
-                </h4>
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        {/* Complementary Styles */}
-        {complementaryStylesData.length > 0 && (
-          <div className="mb-8">
-            <div className="text-center mb-6">
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                Seus Estilos Complementares
-              </h3>
-              <p className="text-gray-600">
-                Estes estilos também fazem parte da sua personalidade
+              <p className="text-[#8F7A6A] text-lg leading-relaxed">
+                {primaryStyle.description}
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {complementaryStylesData.map((style, index) => {
-                const score = complementaryScores[index];
-                return (
-                  <Card key={style.id} className="p-6 shadow-lg">
-                    <div className="flex items-center gap-2 mb-4">
-                      <Heart className="w-5 h-5 text-pink-500" />
-                      <h4 className="text-xl font-bold" style={{ color: style.colors.primary }}>
-                        {style.name}
-                      </h4>
-                    </div>
-                    
-                    <div className="mb-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-gray-600">Compatibilidade</span>
-                        <span className="font-semibold">{score?.percentage}%</span>
-                      </div>
-                      <Progress 
-                        value={score?.percentage || 0} 
-                        className="h-2"
-                      />
-                    </div>
+            {primaryStyle.imageUrl && (
+              <div className="mb-6">
+                <img 
+                  src={primaryStyle.imageUrl} 
+                  alt={`Estilo ${primaryStyle.name}`}
+                  className="w-full max-w-md mx-auto rounded-lg shadow-sm"
+                />
+              </div>
+            )}
 
-                    <div className="flex gap-2">
-                      {style.keywords.slice(0, 3).map((keyword, i) => (
-                        <span
-                          key={i}
-                          className="px-3 py-1 text-xs font-medium rounded-full"
-                          style={{ 
-                            backgroundColor: style.colors.secondary,
-                            color: style.colors.primary
-                          }}
-                        >
-                          {keyword}
-                        </span>
-                      ))}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div className="text-center p-4 bg-[#FAF9F7] rounded-lg">
+                <div 
+                  className="w-12 h-12 rounded-full mx-auto mb-2"
+                  style={{ backgroundColor: primaryStyle.colors.primary }}
+                ></div>
+                <p className="text-sm text-[#8F7A6A]">Cor Principal</p>
+              </div>
+              <div className="text-center p-4 bg-[#FAF9F7] rounded-lg">
+                <div 
+                  className="w-12 h-12 rounded-full mx-auto mb-2"
+                  style={{ backgroundColor: primaryStyle.colors.secondary }}
+                ></div>
+                <p className="text-sm text-[#8F7A6A]">Cor Secundária</p>
+              </div>
+              <div className="text-center p-4 bg-[#FAF9F7] rounded-lg">
+                <div 
+                  className="w-12 h-12 rounded-full mx-auto mb-2"
+                  style={{ backgroundColor: primaryStyle.colors.accent }}
+                ></div>
+                <p className="text-sm text-[#8F7A6A]">Cor de Destaque</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Secondary Styles */}
+        {topSecondaryStyles.length > 0 && (
+          <div className="bg-white rounded-lg shadow-sm border border-[#B89B7A]/20 p-8 mb-6">
+            <h3 className="text-2xl font-playfair text-[#432818] mb-6 text-center">
+              Estilos Complementares
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {topSecondaryStyles.map((style, index) => (
+                <div key={style?.id || index} className="text-center">
+                  <h4 className="text-lg font-semibold text-[#B89B7A] mb-2">
+                    {style?.name}
+                  </h4>
+                  <p className="text-sm text-[#8F7A6A]">
+                    {style?.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Stats */}
+        <div className="bg-white rounded-lg shadow-sm border border-[#B89B7A]/20 p-8 mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div>
+              <div className="text-2xl font-bold text-[#432818]">
+                {result.totalQuestions || 0}
+              </div>
+              <div className="text-sm text-[#8F7A6A]">Perguntas</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-[#432818]">
+                {sortedScores.length}
+              </div>
+              <div className="text-sm text-[#8F7A6A]">Estilos Avaliados</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-[#432818]">
+                {Math.round(totalScore)}
+              </div>
+              <div className="text-sm text-[#8F7A6A]">Pontuação Total</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-[#432818]">
+                {primaryStyle ? Math.round(((styleScores[primaryStyle.id] as number) || 0) / totalScore * 100) : 0}%
+              </div>
+              <div className="text-sm text-[#8F7A6A]">Compatibilidade</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Style Scores Breakdown */}
+        {sortedScores.length > 0 && (
+          <div className="bg-white rounded-lg shadow-sm border border-[#B89B7A]/20 p-8 mb-6">
+            <h3 className="text-xl font-playfair text-[#432818] mb-6 text-center">
+              Compatibilidade por Estilo
+            </h3>
+            <div className="space-y-4">
+              {sortedScores.map(([styleId, score]) => {
+                const style = getStyleById(styleId as StyleType);
+                const percentage = Math.round((score as number) / totalScore * 100);
+                
+                return (
+                  <div key={styleId} className="flex items-center gap-4">
+                    <div className="w-20 text-sm text-[#8F7A6A] font-medium">
+                      {style?.name}
                     </div>
-                  </Card>
+                    <div className="flex-1 bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-[#B89B7A] h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${percentage}%` }}
+                      ></div>
+                    </div>
+                    <div className="w-12 text-sm text-[#432818] font-semibold">
+                      {percentage}%
+                    </div>
+                  </div>
                 );
               })}
             </div>
           </div>
         )}
 
-        {/* Statistics */}
-        <Card className="p-6 mb-8 bg-gradient-to-r from-gray-50 to-gray-100">
-          <h4 className="text-lg font-semibold text-gray-800 mb-4">
-            Resumo da Análise
-          </h4>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            <div>
-              <div className="text-2xl font-bold text-purple-600">
-                {result.totalNormalQuestions}
-              </div>
-              <div className="text-sm text-gray-600">Questões Analisadas</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-pink-600">
-                {predominantScore?.points}
-              </div>
-              <div className="text-sm text-gray-600">Pontos Predominante</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-blue-600">
-                {result.styleScores.filter(s => s.points > 0).length}
-              </div>
-              <div className="text-sm text-gray-600">Estilos Identificados</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-green-600">
-                {predominantScore?.percentage}%
-              </div>
-              <div className="text-sm text-gray-600">Precisão</div>
-            </div>
-          </div>
-        </Card>
-
-        {/* Call to Action */}
-        {onContinue && (
-          <div className="text-center">
-            <button
-              onClick={onContinue}
-              className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-            >
-              Descobrir Como Aplicar Meu Estilo
-            </button>
-          </div>
-        )}
+        {/* Continue Button */}
+        <div className="text-center">
+          <button
+            onClick={onContinue}
+            className="bg-[#B89B7A] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#A08972] transition-colors"
+          >
+            Continuar
+          </button>
+        </div>
       </div>
     </div>
   );

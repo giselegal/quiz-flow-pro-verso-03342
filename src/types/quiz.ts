@@ -36,11 +36,11 @@ export interface QuizOption {
 export interface QuizQuestion {
   id: string;
   text: string;
+  question?: string; // Make optional for backward compatibility
   options: QuizOption[];
   style?: QuizComponentStyle;
   // Additional properties for editor compatibility
   title?: string;
-  question?: string;
   order?: number;
   type?: string;
   multiSelect?: number;
