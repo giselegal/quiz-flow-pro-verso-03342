@@ -1,5 +1,5 @@
 import React from 'react';
-import { BlockDefinition } from '@/types/editor';
+import { BlockDefinition, PropertySchema } from '@/types/editor';
 
 /**
  * ENHANCED BLOCK REGISTRY - COMPONENTES REAIS E VALIDADOS
@@ -258,10 +258,119 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
     category: getBlockCategory(blockType),
     icon: 'Square' as any,
     component: ENHANCED_BLOCK_REGISTRY[blockType],
-    properties: {},
+    properties: getPropertiesForBlockType(blockType),
     label: blockType,
     defaultProps: {}
   }));
+};
+
+// Gerar propriedades específicas para cada tipo de bloco
+const getPropertiesForBlockType = (blockType: string): Record<string, PropertySchema> => {
+  // Propriedades específicas por categoria
+  if (blockType.includes('text') || blockType.includes('heading')) {
+    return {
+      text: {
+        type: 'textarea' as const,
+        label: 'Conteúdo',
+        default: 'Digite seu texto aqui...',
+        description: 'Texto principal do componente'
+      },
+      fontSize: {
+        type: 'select' as const,
+        label: 'Tamanho da Fonte',
+        default: 'medium',
+        description: 'Tamanho da fonte do texto',
+        options: [
+          { value: 'small', label: 'Pequeno' },
+          { value: 'medium', label: 'Médio' },
+          { value: 'large', label: 'Grande' }
+        ]
+      },
+      alignment: {
+        type: 'select' as const,
+        label: 'Alinhamento',
+        default: 'left',
+        description: 'Alinhamento do texto',
+        options: [
+          { value: 'left', label: 'Esquerda' },
+          { value: 'center', label: 'Centro' },
+          { value: 'right', label: 'Direita' }
+        ]
+      }
+    };
+  }
+  
+  if (blockType.includes('button') || blockType.includes('cta')) {
+    return {
+      text: {
+        type: 'string' as const,
+        label: 'Texto do Botão',
+        default: 'Clique aqui',
+        description: 'Texto exibido no botão'
+      },
+      variant: {
+        type: 'select' as const,
+        label: 'Variante',
+        default: 'primary',
+        description: 'Estilo visual do botão',
+        options: [
+          { value: 'primary', label: 'Primário' },
+          { value: 'secondary', label: 'Secundário' },
+          { value: 'outline', label: 'Contorno' }
+        ]
+      },
+      fullWidth: {
+        type: 'boolean' as const,
+        label: 'Largura Total',
+        default: false,
+        description: 'Botão ocupa toda a largura disponível'
+      }
+    };
+  }
+  
+  if (blockType.includes('image')) {
+    return {
+      src: {
+        type: 'string' as const,
+        label: 'URL da Imagem',
+        default: 'https://via.placeholder.com/400x300',
+        description: 'URL da imagem a ser exibida'
+      },
+      alt: {
+        type: 'string' as const,
+        label: 'Texto Alternativo',
+        default: 'Descrição da imagem',
+        description: 'Texto alternativo para acessibilidade'
+      }
+    };
+  }
+  
+  if (blockType.includes('spacer')) {
+    return {
+      height: {
+        type: 'string' as const,
+        label: 'Altura',
+        default: '40px',
+        description: 'Altura do espaçamento'
+      }
+    };
+  }
+  
+  // Propriedades padrão para outros tipos
+  return {
+    text: {
+      type: 'string' as const,
+      label: 'Texto',
+      default: '',
+      description: 'Conteúdo de texto do componente'
+    },
+    visible: {
+      type: 'boolean' as const,
+      label: 'Visível',
+      default: true,
+      description: 'Controla se o componente está visível'
+    }
+  };
 };
 
 // Categorização inteligente
