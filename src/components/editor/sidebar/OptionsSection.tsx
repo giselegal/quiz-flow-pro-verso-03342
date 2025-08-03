@@ -7,7 +7,7 @@ import { OptionItem } from './Sidebar';
 
 interface OptionsSectionProps {
   options: OptionItem[];
-  onOptionUpdate: (id: string, updates: Partial<OptionItem>) => void;
+  onOptionUpdate: (id: string, updates: any) => void;
   onAddOption: () => void;
   onRemoveOption: (id: string) => void;
 }

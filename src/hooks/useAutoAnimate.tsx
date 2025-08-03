@@ -19,7 +19,7 @@ export const AnimatedOptionsEditor: React.FC<{
   options: any[];
   onOptionsChange: (options: any[]) => void;
 }> = ({ options, onOptionsChange }) => {
-  const listRef = useAutoAnimate<HTMLDivElement>();
+  const listRef = useAutoAnimate();
 
   const addOption = () => {
     const newOption = {
@@ -44,7 +44,7 @@ export const AnimatedOptionsEditor: React.FC<{
       </button>
       
       {/* Lista com animação automática */}
-      <div ref={listRef} className="space-y-2">
+      <div ref={listRef as any} className="space-y-2">
         {options.map((option, index) => (
           <div 
             key={option.id}

@@ -351,7 +351,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
 
     Object.entries(properties).forEach(([key, prop]) => {
       const category = (prop as any).category || 'general';
-      categories[category as keyof typeof categories][key] = prop;
+      (categories as any)[category][key] = prop;
     });
 
     return categories;
