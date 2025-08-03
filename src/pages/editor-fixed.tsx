@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import BrandHeader from '@/components/ui/BrandHeader';
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
@@ -6,8 +6,7 @@ import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSid
 import { UniversalBlockRenderer } from '@/components/editor/blocks/UniversalBlockRenderer';
 import DynamicPropertiesPanel from '@/components/editor/DynamicPropertiesPanel';
 import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
-import { EditableContent, Block } from '@/types/editor';
-import { getDefaultContentForType } from '@/utils/blockDefaults';
+import { EditableContent } from '@/types/editor';
 import { getRegistryStats, generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
 import { useEditor } from '@/context/EditorContext';
 import { Type, Trash2 } from 'lucide-react';
