@@ -8,6 +8,7 @@ import { EditorProvider } from '@/context/EditorContext';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
 import SchemaDrivenEditorResponsive from '@/components/editor/SchemaDrivenEditorResponsive';
 import EditorPage from '@/pages/editor-fixed';
+import DebugEditorContext from '@/pages/debug-editor';
 import ResultPage from './pages/ResultPage';
 import Home from './pages/Home';
 import AuthPage from './pages/AuthPage';
@@ -57,6 +58,17 @@ function App() {
                     <ErrorBoundary>
                       <EditorProvider>
                         <EditorPage />
+                      </EditorProvider>
+                    </ErrorBoundary>
+                  )}
+                </Route>
+                
+                {/* Debug Editor Route */}
+                <Route path="/debug-editor">
+                  {() => (
+                    <ErrorBoundary>
+                      <EditorProvider>
+                        <DebugEditorContext />
                       </EditorProvider>
                     </ErrorBoundary>
                   )}

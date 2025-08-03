@@ -14,6 +14,8 @@ import { Type, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const EditorFixedPage: React.FC = () => {
+  console.log('🔥 EditorFixedPage: PÁGINA RENDERIZANDO!');
+  
   // ✅ USAR NOVA ESTRUTURA UNIFICADA DO EDITORCONTEXT
   const { 
     stages,
@@ -42,6 +44,15 @@ const EditorFixedPage: React.FC = () => {
       stageCount
     }
   } = useEditor();
+
+  console.log('🔥 EditorFixedPage: Dados do editor:', {
+    stages: stages?.length || 0,
+    activeStageId,
+    selectedBlockId,
+    currentBlocks: currentBlocks?.length || 0,
+    totalBlocks,
+    stageCount
+  });
   
   // Mostrar estatísticas do registry
   const registryStats = getRegistryStats();

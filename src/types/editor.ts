@@ -150,6 +150,20 @@ export interface Block {
 
 export type EditorBlock = Block;
 
+export interface FunnelStage {
+  id: string;
+  name: string;
+  order: number;
+  type: 'intro' | 'question' | 'transition' | 'result' | 'lead' | 'offer' | 'final';
+  description?: string;
+  isActive?: boolean;
+  metadata?: {
+    blocksCount?: number;
+    lastModified?: Date;
+    isCustom?: boolean;
+  };
+}
+
 export interface EditorConfig {
   blocks: EditorBlock[];
   globalStyles: Record<string, any>;
