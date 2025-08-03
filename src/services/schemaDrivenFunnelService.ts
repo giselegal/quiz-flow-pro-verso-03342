@@ -27,8 +27,8 @@ export interface AutoSaveState {
   enabled: boolean;
   lastSaved?: Date;
   hasUnsavedChanges: boolean;
-  pendingChanges?: number;
-  errorCount?: number;
+  pendingChanges: number;
+  errorCount: number;
   interval?: number;
   isEnabled?: boolean;
   lastSave?: Date;
