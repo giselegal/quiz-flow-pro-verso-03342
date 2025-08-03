@@ -3,12 +3,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { supabase } from '@/integrations/supabase/client';
 import { useLocation } from 'wouter';
 import { Loader2 } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 export default function AuthPage() {
-  const [location] = useLocation();
+  const [, setLocation] = useLocation();
+  const { user, loading: authLoading, login, signup } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,33 +19,11 @@ export default function AuthPage() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    // Verificar se usuário já está logado
-    const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        window.location.href = '/';
-      }
-    };
-    checkUser();
-  }, []);
-
-  const cleanupAuthState = () => {
-    try {
-      Object.keys(localStorage).forEach((key) => {
-        if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
-          localStorage.removeItem(key);
-        }
-      });
-      // Also clear sessionStorage if used
-      Object.keys(sessionStorage || {}).forEach((key) => {
-        if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
-          sessionStorage.removeItem(key);
-        }
-      });
-    } catch (error) {
-      console.warn('Error during auth cleanup:', error);
+    // Redirect if already logged in - using AuthContext
+    if (user && !authLoading) {
+      setLocation('/');
     }
-  };
+  }, [user, authLoading, setLocation]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,50 +33,13 @@ export default function AuthPage() {
 
     try {
       if (isLogin) {
-        // Login
-        cleanupAuthState();
-        try {
-          await supabase.auth.signOut({ scope: 'global' });
-        } catch (err) {
-          // Continue mesmo se falhar
-        }
-
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-
-        if (error) throw error;
-        
-        if (data.user) {
-          window.location.href = '/';
-        }
+        // Use AuthContext login
+        await login(email, password);
+        // Navigation handled by AuthContext
       } else {
-        // Signup
-        const redirectUrl = `${window.location.origin}/`;
-        
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: redirectUrl,
-            data: {
-              name: name || email
-            }
-          }
-        });
-
-        if (error) throw error;
-
-        if (data.user) {
-          if (data.user.email_confirmed_at) {
-            // Email já confirmado, redirecionar
-            window.location.href = '/';
-          } else {
-            // Email precisa ser confirmado
-            setMessage('Verifique seu email para confirmar a conta!');
-          }
-        }
+        // Use AuthContext signup
+        await signup(email, password, name);
+        setMessage('Verifique seu email para confirmar a conta!');
       }
     } catch (error: any) {
       setError(error.message || 'Erro durante autenticação');

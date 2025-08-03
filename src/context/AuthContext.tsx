@@ -40,11 +40,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     // Configurar listener de auth PRIMEIRO
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         setSession(session);
         
         if (session?.user) {
-          // Buscar dados do profile se disponível
+          // Buscar dados do profile se disponível - defer to avoid deadlock
           setTimeout(async () => {
             try {
               const { data: profile } = await supabase
