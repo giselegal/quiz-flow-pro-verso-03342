@@ -12,7 +12,7 @@ import ResultPage from './pages/ResultPage';
 import Home from './pages/Home';
 import AuthPage from './pages/AuthPage';
 import FunnelsPage from './pages/FunnelsPage';
-import { QuizPage } from './pages/QuizPage';
+import QuizPage from './components/QuizPage';
 import { ResultConfigPage } from './pages/ResultConfigPage';
 import { Auth } from './components/auth/Auth';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
