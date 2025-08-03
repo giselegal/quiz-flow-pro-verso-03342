@@ -77,82 +77,53 @@ const validateComponent = (component: any, type: string): boolean => {
 export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = (() => {
   const registry: Record<string, React.ComponentType<any>> = {};
   
-  // INLINE COMPONENTS - VALIDADOS UM POR UM
+  // INLINE COMPONENTS - VALIDADOS UM POR UM (REMOVIDAS DUPLICATAS)
   const inlineComponents = {
     // Text & Content
     'text': TextInlineBlock,
-    'text-inline': TextInlineBlock,
     'heading': HeadingInlineBlock,
-    'heading-inline': HeadingInlineBlock,
     
     // Interactive
     'button': ButtonInlineBlock,
-    'button-inline': ButtonInlineBlock,
     'badge': BadgeInlineBlock,
-    'badge-inline': BadgeInlineBlock,
     'cta': CTAInlineBlock,
-    'cta-inline': CTAInlineBlock,
     
     // Media
     'image': ImageDisplayInlineBlock,
-    'image-inline': ImageDisplayInlineBlock,
-    'image-display-inline': ImageDisplayInlineBlock,
     
     // Layout
     'spacer': SpacerInlineBlock,
-    'spacer-inline': SpacerInlineBlock,
     'divider': DividerInlineBlock,
-    'divider-inline': DividerInlineBlock,
-    'decorative-bar-inline': DecorativeBarInlineBlock,
+    'decorative-bar': DecorativeBarInlineBlock,
     
     // Data Display
     'stat': StatInlineBlock,
-    'stat-inline': StatInlineBlock,
     'progress': ProgressInlineBlock,
-    'progress-inline': ProgressInlineBlock,
     'countdown': CountdownInlineBlock,
-    'countdown-inline': CountdownInlineBlock,
     
     // E-commerce
     'pricing-card': PricingCardInlineBlock,
-    'pricing-card-inline': PricingCardInlineBlock,
     'testimonial-card': TestimonialCardInlineBlock,
-    'testimonial-card-inline': TestimonialCardInlineBlock,
     'testimonials': TestimonialsInlineBlock,
-    'testimonials-inline': TestimonialsInlineBlock,
     
     // Quiz & Results
     'style-card': StyleCardInlineBlock,
-    'style-card-inline': StyleCardInlineBlock,
     'result-card': ResultCardInlineBlock,
-    'result-card-inline': ResultCardInlineBlock,
     'result-header': ResultHeaderInlineBlock,
-    'result-header-inline': ResultHeaderInlineBlock,
     'step-header': StepHeaderInlineBlock,
-    'step-header-inline': StepHeaderInlineBlock,
     'secondary-styles': SecondaryStylesInlineBlock,
-    'secondary-styles-inline': SecondaryStylesInlineBlock,
     'style-characteristics': StyleCharacteristicsInlineBlock,
-    'style-characteristics-inline': StyleCharacteristicsInlineBlock,
     'characteristics-list': CharacteristicsListInlineBlock,
-    'characteristics-list-inline': CharacteristicsListInlineBlock,
     'quiz-start-page': QuizStartPageInlineBlock,
-    'quiz-start-page-inline': QuizStartPageInlineBlock,
     'quiz-offer-cta': QuizOfferCTAInlineBlock,
-    'quiz-offer-cta-inline': QuizOfferCTAInlineBlock,
     'quiz-offer-pricing': QuizOfferPricingInlineBlock,
-    'quiz-offer-pricing-inline': QuizOfferPricingInlineBlock,
     
     // Features
     'guarantee': GuaranteeInlineBlock,
-    'guarantee-inline': GuaranteeInlineBlock,
     'before-after': BeforeAfterInlineBlock,
-    'before-after-inline': BeforeAfterInlineBlock,
     'bonus-list': BonusListInlineBlock,
-    'bonus-list-inline': BonusListInlineBlock,
     'benefits': BenefitsInlineBlock,
-    'benefits-inline': BenefitsInlineBlock,
-    'legal-notice-inline': LegalNoticeInlineBlock,
+    'legal-notice': LegalNoticeInlineBlock,
     
     // System
     'loading-animation': LoadingAnimationBlock,
