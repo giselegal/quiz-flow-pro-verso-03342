@@ -56,10 +56,10 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponen
   ];
 
   return (
-    <div className="h-full flex flex-col border-r border-gray-200 bg-white">
-      <div className="p-4 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-900">Componentes</h2>
-        <p className="text-sm text-gray-600 mt-1">
+    <div className="h-full flex flex-col border-r border-stone-200 bg-white">
+      <div className="p-4 border-b border-stone-200">
+        <h2 className="text-lg font-semibold text-stone-900">Componentes</h2>
+        <p className="text-sm text-stone-600 mt-1">
           Clique nos componentes para adicionar
         </p>
       </div>

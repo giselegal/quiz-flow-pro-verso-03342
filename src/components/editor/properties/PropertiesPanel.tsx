@@ -1,8 +1,6 @@
 
-import React from 'react'      <div className="h-full bg-stone-50 p-4">
-        <h2 className="text-lg font-semibold mb-4">Propriedades</h2>
-        <p className="text-stone-500">Select a block to edit its properties</p>
-      </div>port { EditorBlock } from '@/types/editor';
+import React from 'react';
+import { EditorBlock } from '@/types/editor';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -26,9 +24,9 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 }) => {
   if (!selectedBlock) {
     return (
-      <div className="h-full bg-gray-50 p-4">
+      <div className="h-full bg-stone-50 p-4">
         <h3 className="text-lg font-semibold mb-4">Properties</h3>
-        <p className="text-gray-500">Select a block to edit its properties</p>
+        <p className="text-stone-500">Select a block to edit its properties</p>
       </div>
     );
   }
@@ -43,7 +41,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   };
 
   return (
-    <div className="h-full bg-gray-50 p-4">
+    <div className="h-full bg-stone-50 p-4">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold">Properties</h3>
         <Button variant="ghost" size="sm" onClick={onClose}>
@@ -54,7 +52,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
       <div className="space-y-4">
         <div>
           <Label>Block Type</Label>
-          <div className="text-sm text-gray-600 bg-gray-100 p-2 rounded">
+          <div className="text-sm text-stone-600 bg-stone-100 p-2 rounded">
             {selectedBlock.type}
           </div>
         </div>
