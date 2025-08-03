@@ -216,48 +216,67 @@ const EditorFixedPage: React.FC = () => {
                 ) : (
                   <div className="space-y-3">
                     {currentBlocks.map((block) => (
-                      <div
+                      <SortableBlockWrapper
                         key={block.id}
-                        className={`
-                          group relative border-2 rounded-xl p-3 transition-all duration-300 ease-out transform backdrop-blur-sm
-                          ${isPreviewing 
-                            ? 'border-transparent bg-transparent cursor-default' 
-                            : selectedBlockId === block.id 
-                              ? 'border-brand bg-gradient-to-br from-brand/10 to-white/80 shadow-xl shadow-brand/25 scale-[1.02] ring-1 ring-brand/30 cursor-pointer' 
-                              : 'border-stone-200/50 hover:border-brand/50 hover:shadow-lg hover:shadow-stone-300/30 hover:bg-white/90 hover:scale-[1.01] cursor-pointer'
-                          }
-                          hover:transform-gpu
-                        `}
+                        id={block.id}
+                        block={block}
+                        isSelected={!isPreviewing && selectedBlockId === block.id}
                         onClick={() => !isPreviewing && setSelectedBlockId(block.id)}
+                        isPreviewing={isPreviewing}
                       >
-                        {/* Controles do bloco - ocultar no preview */}
-                        {!isPreviewing && (
-                          <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteBlock(block.id);
-                              }}
-                              className="h-8 w-8 p-0 text-amber-600 hover:text-amber-800 hover:bg-amber-100/60 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg backdrop-blur-sm border border-amber-300/40 hover:border-amber-500/60"
-                            >
-                              <Trash2 className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        )}
-
-                        {/* Renderização do bloco */}
-                        <UniversalBlockRenderer
-                          block={block}
-                          isSelected={!isPreviewing && selectedBlockId === block.id}
-                          onClick={() => !isPreviewing && setSelectedBlockId(block.id)}
-                          onPropertyChange={(key: string, value: any) => {
-                            if (!isPreviewing) {
-                              updateBlock(block.id, { content: { [key]: value } });
+                        <div
+                          className={`
+                            group relative border-2 rounded-xl p-3 transition-all duration-300 ease-out transform backdrop-blur-sm
+                            ${isPreviewing 
+                              ? 'border-transparent bg-transparent cursor-default' 
+                              : selectedBlockId === block.id 
+                                ? 'border-brand bg-gradient-to-br from-brand/10 to-white/80 shadow-xl shadow-brand/25 scale-[1.02] ring-1 ring-brand/30 cursor-pointer' 
+                                : 'border-stone-200/50 hover:border-brand/50 hover:shadow-lg hover:shadow-stone-300/30 hover:bg-white/90 hover:scale-[1.01] cursor-pointer'
                             }
-                          }}
-                          disabled={isPreviewing}
+                            hover:transform-gpu
+                          `}
+                          onClick={() => !isPreviewing && setSelectedBlockId(block.id)}
+                        >
+                          {/* Drag Handle - visível apenas quando não estiver em preview */}
+                          {!isPreviewing && (
+                            <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                              <div className="flex items-center justify-center w-6 h-6 text-stone-400 hover:text-brand cursor-grab active:cursor-grabbing">
+                                <GripVertical className="h-4 w-4" />
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Controles do bloco - ocultar no preview */}
+                          {!isPreviewing && (
+                            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteBlock(block.id);
+                                }}
+                                className="h-8 w-8 p-0 text-amber-600 hover:text-amber-800 hover:bg-amber-100/60 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg backdrop-blur-sm border border-amber-300/40 hover:border-amber-500/60"
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          )}
+
+                          {/* Renderização do bloco */}
+                          <UniversalBlockRenderer
+                            block={block}
+                            isSelected={!isPreviewing && selectedBlockId === block.id}
+                            onClick={() => !isPreviewing && setSelectedBlockId(block.id)}
+                            onPropertyChange={(key: string, value: any) => {
+                              if (!isPreviewing) {
+                                updateBlock(block.id, { content: { [key]: value } });
+                              }
+                            }}
+                            disabled={isPreviewing}
+                          />
+                        </div>
+                      </SortableBlockWrapper>
                         />
                       </div>
                     ))}
