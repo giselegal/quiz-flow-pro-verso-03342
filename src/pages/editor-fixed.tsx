@@ -145,9 +145,32 @@ const EditorFixedPage: React.FC = () => {
         properties: block.properties || {}
       }))}
       onBlocksReorder={(newBlocks) => {
-        // Atualizar ordem dos blocos
-        console.log('🔄 Reordenando blocos:', newBlocks);
-        // Implementar lógica de reordenação via EditorContext
+        // ✅ Implementar reordenação real dos blocos
+        console.log('🔄 Recebendo nova ordem de blocos:', newBlocks.map(b => ({ id: b.id, type: b.type })));
+        
+        if (!activeStageId || !currentBlocks) {
+          console.warn('⚠️ Dados insuficientes para reordenação');
+          return;
+        }
+        
+        // Implementar reordenação através de setState direto (hack temporário)
+        try {
+          // Atualizar cada bloco com sua nova posição
+          newBlocks.forEach((block, index) => {
+            const originalBlock = currentBlocks.find(b => b.id === block.id);
+            if (originalBlock) {
+              // Atualizar a propriedade order do bloco
+              updateBlock(block.id, { 
+                ...originalBlock,
+                order: index + 1
+              });
+            }
+          });
+          
+          console.log('✅ Blocos reordenados com sucesso! Nova ordem aplicada.');
+        } catch (error) {
+          console.error('❌ Erro ao reordenar blocos:', error);
+        }
       }}
       onBlockAdd={(blockType, position) => {
         const blockId = addBlock(blockType);

@@ -97,13 +97,23 @@ export const DndProvider: React.FC<DndProviderProps> = ({
 
     if (!over) return;
 
-    // Reordenar blocos existentes
+    console.log('🔄 DragEnd:', { 
+      active: active.id, 
+      over: over.id,
+      activeType: active.data.current?.type,
+      overType: over.data.current?.type 
+    });
+
+    // Reordenar blocos existentes no canvas
     if (active.data.current?.type === 'canvas-block' && over.data.current?.type === 'canvas-block') {
       const activeIndex = blocks.findIndex(block => block.id === active.id);
       const overIndex = blocks.findIndex(block => block.id === over.id);
 
-      if (activeIndex !== overIndex) {
+      console.log(`🔄 Reordenando: ${active.id} (${activeIndex}) -> ${over.id} (${overIndex})`);
+
+      if (activeIndex !== overIndex && activeIndex !== -1 && overIndex !== -1) {
         const newBlocks = arrayMove(blocks, activeIndex, overIndex);
+        console.log('📦 Nova ordem dos blocos:', newBlocks.map(b => b.id));
         onBlocksReorder(newBlocks);
       }
       return;

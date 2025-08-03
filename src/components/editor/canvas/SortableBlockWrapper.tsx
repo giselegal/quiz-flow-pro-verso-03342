@@ -30,7 +30,13 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     transform,
     transition,
     isDragging
-  } = useSortable({ id: block.id });
+  } = useSortable({ 
+    id: block.id,
+    data: {
+      type: 'canvas-block',
+      block: block
+    }
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
