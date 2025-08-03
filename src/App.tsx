@@ -5,7 +5,6 @@ import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/context/AuthContext';
 import { AdminAuthProvider } from '@/context/AdminAuthContext';
 import { EditorProvider } from '@/context/EditorContext';
-import { FunnelsProvider } from '@/context/FunnelsContext';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
 import SchemaDrivenEditorResponsive from '@/components/editor/SchemaDrivenEditorResponsive';
 import EditorPage from '@/pages/editor-fixed';
@@ -57,9 +56,7 @@ function App() {
                   {() => (
                     <ErrorBoundary>
                       <EditorProvider>
-                        <FunnelsProvider>
-                          <EditorPage />
-                        </FunnelsProvider>
+                        <EditorPage />
                       </EditorProvider>
                     </ErrorBoundary>
                   )}
