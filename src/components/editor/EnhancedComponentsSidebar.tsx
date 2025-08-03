@@ -131,7 +131,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = ({
                           <Button
                             size="sm"
                             onClick={() => onAddComponent(block.type)}
-                            className="w-full h-7 text-xs bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white border-0 shadow-md hover:shadow-lg transition-all duration-200 font-medium"
+                            className="w-full h-7 text-xs bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0 shadow-md hover:shadow-lg transition-all duration-200 font-medium"
                           >
                             <Plus className="h-3 w-3 mr-1" />
                             Adicionar
