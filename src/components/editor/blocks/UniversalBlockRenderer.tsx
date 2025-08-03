@@ -1,26 +1,7 @@
 
 import React from 'react';
 import { Block } from '@/types/editor';
-
-// Import available inline components
-import TextInlineBlock from './inline/TextInlineBlock';
-import BadgeInlineBlock from './inline/BadgeInlineBlock';
-import ProgressInlineBlock from './inline/ProgressInlineBlock';
-import StatInlineBlock from './inline/StatInlineBlock';
-import CountdownInlineBlock from './inline/CountdownInlineBlock';
-import SpacerInlineBlock from './inline/SpacerInlineBlock';
-import PricingCardInlineBlock from './inline/PricingCardInlineBlock';
-import TestimonialCardInlineBlock from './inline/TestimonialCardInlineBlock';
-import StyleCardInlineBlock from './inline/StyleCardInlineBlock';
-import ResultCardInlineBlock from './inline/ResultCardInlineBlock';
-import ResultHeaderInlineBlock from './inline/ResultHeaderInlineBlock';
-import StepHeaderInlineBlock from './inline/StepHeaderInlineBlock';
-import SecondaryStylesInlineBlock from './inline/SecondaryStylesInlineBlock';
-import StyleCharacteristicsInlineBlock from './inline/StyleCharacteristicsInlineBlock';
-import LoadingAnimationBlock from './inline/LoadingAnimationBlock';
-import CharacteristicsListInlineBlock from './inline/CharacteristicsListInlineBlock';
-import BeforeAfterInlineBlock from './inline/BeforeAfterInlineBlock';
-import BonusListInlineBlock from './inline/BonusListInlineBlock';
+import { getEnhancedComponent } from '@/config/enhancedBlockRegistry';
 
 export interface BlockRendererProps {
   block: Block;
@@ -53,48 +34,22 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
     disabled
   };
 
-  // Map block types to components - CONECTANDO blockDefinitions com componentes reais
-  const componentMap: Record<string, React.ComponentType<any>> = {
-    // TIPOS DE blockDefinitions.ts - CONECTADOS AOS COMPONENTES REAIS
-    'headline': TextInlineBlock,  // headline -> TextInlineBlock (para títulos)
-    'text': TextInlineBlock,      // text -> TextInlineBlock (para parágrafos)
-    'image': StyleCardInlineBlock, // image -> StyleCardInlineBlock (para imagens com estilo)
-    'button': BadgeInlineBlock,   // button -> BadgeInlineBlock (para botões estilizados)
-    'spacer': SpacerInlineBlock,  // spacer -> SpacerInlineBlock (para espaçamento)
-    
-    // TIPOS INLINE EXISTENTES - MANTIDOS
-    'text-inline': TextInlineBlock,
-    'badge-inline': BadgeInlineBlock,
-    'progress-inline': ProgressInlineBlock,
-    'stat-inline': StatInlineBlock,
-    'countdown-inline': CountdownInlineBlock,
-    'spacer-inline': SpacerInlineBlock,
-    'pricing-card-inline': PricingCardInlineBlock,
-    'testimonial-card-inline': TestimonialCardInlineBlock,
-    'style-card-inline': StyleCardInlineBlock,
-    'result-card-inline': ResultCardInlineBlock,
-    'result-header-inline': ResultHeaderInlineBlock,
-    'step-header-inline': StepHeaderInlineBlock,
-    'secondary-styles-inline': SecondaryStylesInlineBlock,
-    'style-characteristics-inline': StyleCharacteristicsInlineBlock,
-    'loading-animation': LoadingAnimationBlock,
-    'characteristics-list-inline': CharacteristicsListInlineBlock,
-    'before-after-inline': BeforeAfterInlineBlock,
-    'bonus-list-inline': BonusListInlineBlock
-  };
-
-  const Component = componentMap[block.type];
+  // Usar o Enhanced Block Registry validado
+  const Component = getEnhancedComponent(block.type);
 
   if (!Component) {
     return (
       <div className="p-4 border border-red-300 bg-red-50 rounded-lg text-red-600">
-        Componente não encontrado: {block.type}
+        <div className="text-center">
+          <div className="font-medium">⚠️ Componente não encontrado</div>
+          <div className="text-sm mt-1">Tipo: {block.type}</div>
+          <div className="text-xs text-gray-500 mt-2">ID: {block.id}</div>
+        </div>
       </div>
     );
   }
 
   return <Component {...blockProps} />;
 };
-
 export default UniversalBlockRenderer;
 export { UniversalBlockRenderer };
