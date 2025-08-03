@@ -58,17 +58,11 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
     if (valid && newValue.trim()) {
       try {
         // Salvar resposta específica
-        await userResponseService.saveStepResponse(
-          1, // Etapa 1
-          block.id,
-          'form-input',
-          newValue.trim(),
-          funnelId
-        );
+        userResponseService.saveStepResponse(block.id, newValue.trim());
 
         // Se for o campo de nome, salvar também como nome do usuário
         if (name === 'userName' || block.id === 'intro-name-input') {
-          await userResponseService.saveUserName(newValue.trim(), funnelId);
+          userResponseService.saveUserName('userId', newValue.trim());
           console.log('✅ Nome do usuário salvo:', newValue.trim());
         }
 

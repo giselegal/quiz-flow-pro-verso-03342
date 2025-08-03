@@ -1,5 +1,5 @@
 
-import { QuizComponentData } from './quiz';
+import { QuizComponentData } from './quizBuilder';
 import { Block } from './editor';
 
 export interface UnifiedEditorState {

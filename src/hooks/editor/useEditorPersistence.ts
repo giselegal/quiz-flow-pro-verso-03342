@@ -106,8 +106,8 @@ export const useEditorPersistence = () => {
         id: schemaDrivenData.id,
         name: schemaDrivenData.name,
         description: schemaDrivenData.description || '',
-        isPublished: schemaDrivenData.isPublished,
-        version: schemaDrivenData.version,
+        isPublished: schemaDrivenData.isPublished || false,
+        version: schemaDrivenData.version || 1,
         settings: schemaDrivenData.config || {},
         pages: schemaDrivenData.pages.map(page => ({
           id: page.id,

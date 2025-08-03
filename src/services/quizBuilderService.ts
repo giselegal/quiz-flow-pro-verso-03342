@@ -189,7 +189,7 @@ export const createBuilderStateFromResultPage = (config: ResultPageConfig): Quiz
   };
   
   // Convert blocks from ResultPageConfig to QuizComponentData
-  const components: QuizComponentData[] = config.blocks?.map((block, index) => ({
+  const components: QuizComponentData[] = (config.blocks || []).map((block: any, index: number) => ({
     id: generateId(),
     type: block.type as QuizComponentType, // Fixing this line to use the imported QuizComponentType
     stageId: resultStageId,

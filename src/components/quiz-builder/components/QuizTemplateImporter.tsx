@@ -51,7 +51,16 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
       title: 'Quiz de Estilo Pessoal',
       description: 'Template padrão com perguntas sobre preferências de estilo e personalidade.',
       image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp',
-      template: styleQuizTemplate,
+      template: {
+        id: 'style-quiz-1',
+        name: 'Quiz de Estilo Pessoal',
+        description: 'Template padrão com perguntas sobre preferências de estilo e personalidade.',
+        questions: [],
+        resultPageSettings: { styleType: 'classic', blocks: [], headerConfig: {}, mainContentConfig: {}, offerConfig: {} },
+        isPublished: false,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      },
       type: 'quizTemplate'
     },
     {

@@ -12,13 +12,31 @@ const loadTemplates = (): QuizTemplate[] => {
     if (saved) {
       return JSON.parse(saved);
     }
-    // Se não existir, inicializa com o template padrão
-    const defaultTemplates = [styleQuizTemplate];
+    // Se não existir, inicializa com template padrão vazio
+    const defaultTemplates: QuizTemplate[] = [{
+      id: 'default',
+      name: 'Template Padrão',
+      description: 'Template básico',
+      questions: [],
+      resultPageSettings: { styleType: 'classic', blocks: [], headerConfig: {}, mainContentConfig: {}, offerConfig: {} },
+      isPublished: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }];
     localStorage.setItem(TEMPLATES_STORAGE_KEY, JSON.stringify(defaultTemplates));
     return defaultTemplates;
   } catch (error) {
     console.error('Erro ao carregar templates:', error);
-    return [styleQuizTemplate];
+    return [{
+      id: 'default',
+      name: 'Template Padrão',
+      description: 'Template básico',
+      questions: [],
+      resultPageSettings: { styleType: 'classic', blocks: [], headerConfig: {}, mainContentConfig: {}, offerConfig: {} },
+      isPublished: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }];
   }
 };
 

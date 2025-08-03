@@ -202,7 +202,7 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
                               <div className="mt-2 text-xs text-gray-600">
                                 <span>
                                   {version.data.pages.length} página{version.data.pages.length !== 1 ? 's' : ''} • {' '}
-                                  {version.data.pages.reduce((total, page) => total + page.blocks.length, 0)} bloco{version.data.pages.reduce((total, page) => total + page.blocks.length, 0) !== 1 ? 's' : ''}
+                                  {version.data.pages.reduce((total: number, page: any) => total + page.blocks.length, 0)} bloco{version.data.pages.reduce((total: number, page: any) => total + page.blocks.length, 0) !== 1 ? 's' : ''}
                                 </span>
                               </div>
                             </div>

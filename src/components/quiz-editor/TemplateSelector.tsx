@@ -48,11 +48,13 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate })
 
     try {
       const newTemplate = {
-        ...styleQuizTemplate,
         name: newTemplateName,
         description: newTemplateDescription,
         isPublished: false,
-        questions: [...styleQuizTemplate.questions]  // Clone para evitar referências
+        questions: [],
+        resultPageSettings: { styleType: 'classic', blocks: [], headerConfig: {}, mainContentConfig: {}, offerConfig: {} },
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       };
       
       const newTemplateId = createTemplate(newTemplate);
