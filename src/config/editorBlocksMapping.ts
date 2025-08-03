@@ -1,28 +1,67 @@
 
 /**
- * Mapeamento dos blocos do editor para seus respectivos componentes
+ * SISTEMA UNIFICADO DE MAPEAMENTO DE BLOCOS - Pós Limpeza 2025
  * 
- * Este arquivo mapeia os tipos de bloco para os componentes React que os renderizam.
- * Atualizado para incluir os novos componentes de funil reutilizáveis.
+ * Integra EnhancedBlockRegistry como sistema principal
+ * Mantém apenas componentes validados e funcionais
  */
 
 import { ComponentType } from 'react';
+import { 
+  UniversalBlockRendererV2,
+  getBlockComponent as getEnhancedComponent,
+  getBlockDefinition,
+  getAllBlockTypes
+} from '../components/editor/blocks/EnhancedBlockRegistry';
 
-// Blocos de quiz e resultado
+// Blocos básicos consolidados (mais completos)
+import HeaderBlock from '../components/editor/blocks/HeaderBlock';
+import TextBlock from '../components/editor/blocks/TextBlock';
+import ImageBlock from '../components/editor/blocks/ImageBlock';
+import RichTextBlock from '../components/editor/blocks/RichTextBlock';
+
+// Blocos de quiz (validados)
 import QuizResultCalculatedBlock from '../components/editor/blocks/QuizResultCalculatedBlock';
 
-export const EDITOR_BLOCKS_MAP: Record<string, ComponentType<any>> = {
-  // Blocos de quiz e resultado
+// SISTEMA UNIFICADO - Prioriza EnhancedBlockRegistry + Fallbacks validados
+export const UNIFIED_BLOCK_MAP: Record<string, ComponentType<any>> = {
+  // Blocos básicos (versões mais completas)
+  'header': HeaderBlock,
+  'heading': HeaderBlock,
+  'text': TextBlock,
+  'image': ImageBlock,
+  'rich-text': RichTextBlock,
+  
+  // Blocos de quiz e resultado (funcionais)
   'quiz-result-calculated': QuizResultCalculatedBlock,
   'QuizResultCalculatedBlock': QuizResultCalculatedBlock,
 };
 
-// Helper para verificar se um tipo de bloco existe
-export const hasBlockComponent = (blockType: string): boolean => {
-  return blockType in EDITOR_BLOCKS_MAP;
+// FUNÇÃO PRINCIPAL - Busca primeiro no Enhanced Registry, depois no Unified Map
+export const getBlockComponent = (blockType: string): ComponentType<any> | undefined => {
+  // 1. Tentar Enhanced Registry primeiro (sistema principal)
+  const enhancedComponent = getEnhancedComponent(blockType);
+  if (enhancedComponent) {
+    return enhancedComponent;
+  }
+  
+  // 2. Fallback para componentes validados
+  return UNIFIED_BLOCK_MAP[blockType];
 };
 
-// Helper para obter o componente de um tipo
-export const getBlockComponent = (blockType: string): ComponentType<any> | undefined => {
-  return EDITOR_BLOCKS_MAP[blockType];
+// Helper para verificar se um tipo de bloco existe
+export const hasBlockComponent = (blockType: string): boolean => {
+  return !!getBlockComponent(blockType);
 };
+
+// Re-export do sistema Enhanced para compatibilidade
+export { 
+  UniversalBlockRendererV2 as UniversalBlockRenderer,
+  getBlockDefinition,
+  getAllBlockTypes
+};
+
+// Mantém compatibilidade com código legado
+export const EDITOR_BLOCKS_MAP = UNIFIED_BLOCK_MAP;
+
+export default UNIFIED_BLOCK_MAP;
