@@ -200,7 +200,7 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
 
         {/* Hover Effect Indicator */}
         {isHovered && (
-          <div className="absolute inset-0 border-2 border-blue-500 rounded-lg pointer-events-none" />
+          <div className="absolute inset-0 border-2 border-yellow-500 rounded-lg pointer-events-none" />
         )}
       </div>
     </InlineBaseWrapper>

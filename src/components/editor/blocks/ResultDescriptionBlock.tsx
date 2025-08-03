@@ -27,7 +27,7 @@ const ResultDescriptionBlock: React.FC<BlockComponentProps> = ({
       className={`
         p-6 rounded-lg cursor-pointer transition-all duration-200
         ${isSelected 
-          ? 'border-2 border-blue-500 bg-blue-50' 
+          ? 'border-2 border-yellow-500 bg-yellow-50' 
           : 'border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]'
         }
         ${className}

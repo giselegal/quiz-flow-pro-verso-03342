@@ -22,8 +22,8 @@ const ComparisonTableInlineBlock: React.FC<BlockComponentProps> = ({
         w-full flex flex-col items-center
         p-4 rounded-lg transition-all duration-200
         ${isSelected 
-          ? 'border-2 border-blue-500 bg-blue-50' 
-          : 'border-2 border-dashed border-transparent hover:border-blue-300 hover:bg-blue-50/30'
+          ? 'border-2 border-yellow-500 bg-yellow-50' 
+          : 'border-2 border-dashed border-transparent hover:border-yellow-300 hover:bg-yellow-50/30'
         }
         ${className}
       `}

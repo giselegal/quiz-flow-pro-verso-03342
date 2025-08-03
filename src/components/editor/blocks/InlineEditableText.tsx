@@ -25,9 +25,9 @@ export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   return (
     <span
       className={cn(
-        'cursor-pointer hover:bg-blue-50 hover:outline hover:outline-1 hover:outline-blue-300 rounded px-1 transition-all duration-200',
+        'cursor-pointer hover:bg-yellow-50 hover:outline hover:outline-1 hover:outline-yellow-300 rounded px-1 transition-all duration-200',
         !value && 'text-gray-400 italic',
-        isSelected && 'bg-blue-50 outline outline-1 outline-blue-500',
+        isSelected && 'bg-yellow-50 outline outline-1 outline-yellow-500',
         disabled && 'cursor-not-allowed opacity-50',
         className
       )}

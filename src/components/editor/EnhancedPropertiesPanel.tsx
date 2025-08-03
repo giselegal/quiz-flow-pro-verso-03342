@@ -515,7 +515,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
   return (
     <div className="h-full w-full flex flex-col bg-gray-50">
       {/* 🎨 Header Premium */}
-      <div className="p-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white">
+      <div className="p-4 bg-gradient-to-r from-stone-700 to-yellow-700 text-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">

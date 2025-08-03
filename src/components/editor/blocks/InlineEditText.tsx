@@ -59,9 +59,9 @@ export const InlineEditText: React.FC<InlineEditTextProps> = ({
     <Component
       className={cn(
         'cursor-pointer transition-all duration-200',
-        'hover:bg-blue-50 hover:ring-1 hover:ring-blue-200 rounded px-2 py-1',
+        'hover:bg-yellow-50 hover:ring-1 hover:ring-yellow-200 rounded px-2 py-1',
         'min-h-[1.5em] inline-block',
-        isSelected && 'bg-blue-50 ring-2 ring-blue-500',
+        isSelected && 'bg-yellow-50 ring-2 ring-yellow-500',
         disabled && 'cursor-not-allowed opacity-50',
         className
       )}
