@@ -3,19 +3,19 @@ import PlaceholderUtils from "./placeholderUtils";
 
 // Dados padrão para componentes
 export const defaultImageData = {
-  src: PlaceholderUtils.generateContentPlaceholder(400, 300),
+  src: PlaceholderUtils.generatePlaceholderImage(400, 300),
   alt: 'Imagem padrão'
 };
 
 export const defaultAvatarData = {
-  avatar: PlaceholderUtils.generateAvatarPlaceholder(64, '👤'),
+  avatar: PlaceholderUtils.generatePlaceholderImage(64, 64),
   name: 'Nome do usuário'
 };
 
 export const defaultTestimonialData = {
   text: 'Este é um depoimento de exemplo que demonstra como o componente funciona.',
   author: 'João Silva',
-  avatar: PlaceholderUtils.generateAvatarPlaceholder(48, 'JS'),
+  avatar: PlaceholderUtils.generatePlaceholderImage(48, 48),
   role: 'Cliente satisfeito'
 };
 
@@ -38,7 +38,7 @@ export const getDefaultData = (type: SimpleComponent["type"]): SimpleComponent["
       return { text: "Parágrafo de texto editável.", fontSize: "1rem" };
     case "image":
       return {
-        src: PlaceholderUtils.generateContentPlaceholder(400, 300, "Nova Imagem"),
+        src: PlaceholderUtils.generatePlaceholderImage(400, 300),
         alt: "Nova imagem",
         width: 400,
         height: 300,
@@ -75,7 +75,7 @@ export const getDefaultData = (type: SimpleComponent["type"]): SimpleComponent["
         text: "Este produto mudou minha vida completamente! Recomendo para todos que querem resultados reais.",
         name: "Cliente Satisfeito",
         role: "Cliente verificado",
-        avatar: PlaceholderUtils.generateAvatarPlaceholder(60, "👤"),
+        avatar: PlaceholderUtils.generatePlaceholderImage(60, 60),
       };
     case "price":
       return {
