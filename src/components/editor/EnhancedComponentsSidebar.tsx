@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Search, Plus } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { generateBlockDefinitions, getRegistryStats, ENHANCED_BLOCK_REGISTRY } from '@/config/enhancedBlockRegistry';
+import { generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
 import { BlockDefinition } from '@/types/editor';
 
 interface EnhancedComponentsSidebarProps {
@@ -16,34 +16,21 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = ({
   onAddComponent
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   // Obter todas as definições de blocos do registry validado
   const allBlocks = generateBlockDefinitions();
-  const registryStats = getRegistryStats();
-  
-  // Categorias baseadas nos tipos do registry
-  const BLOCK_CATEGORIES = ['All', 'Text', 'Interactive', 'Media', 'Layout', 'E-commerce', 'Quiz', 'Content'];
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    setSelectedCategory(null);
   };
 
-  const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category === 'All' ? null : category);
-    setSearchQuery('');
-  };
-
-  // Filtrar blocos baseado na busca e categoria
+  // Filtrar blocos baseado apenas na busca
   const filteredBlocks = allBlocks.filter(block => {
     const matchesSearch = !searchQuery || 
       block.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       block.type.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesCategory = !selectedCategory || block.category === selectedCategory;
-    
-    return matchesSearch && matchesCategory;
+    return matchesSearch;
   });
 
   return (
@@ -62,69 +49,21 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = ({
       </CardHeader>
       
       <CardContent className="flex-1 overflow-hidden">
-        {/* Stats do Registry */}
-        <div className="mb-4 p-3 bg-gradient-to-r from-stone-50 to-amber-50/50 rounded-lg border border-stone-200/60 backdrop-blur-sm">
-          <div className="text-xs text-amber-800 font-medium">
-            ✅ Registry Validado
-          </div>
-          <div className="text-xs text-stone-600">
-            {registryStats.active} componentes • {registryStats.coverage} cobertura
-          </div>
-        </div>
-        
         <ScrollArea className="h-full">
-          {/* Categories */}
-          {!searchQuery && (
-            <div className="mb-4">
-              <h3 className="text-sm font-medium mb-2">Categorias</h3>
-              <div className="grid grid-cols-2 gap-2">
-                {BLOCK_CATEGORIES.map((category) => (
-                  <Button
-                    key={category}
-                    variant={selectedCategory === category ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => handleCategorySelect(category)}
-                    className="justify-start h-auto p-2"
-                  >
-                    <div className="text-left">
-                      <div className="font-medium">{category}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {allBlocks.filter(b => b.category === category).length} itens
-                      </div>
-                    </div>
-                  </Button>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Components */}
           <div className="space-y-2">
             {filteredBlocks.map((block) => (
               <Card key={block.type} className="p-3 cursor-pointer hover:bg-muted/50">
-                <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-md bg-primary/10">
-                    <Plus className="h-4 w-4 text-primary" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h4 className="text-sm font-medium truncate">{block.name}</h4>
-                      <Badge variant="secondary" className="text-xs">
-                        {block.category}
-                      </Badge>
-                    </div>
-                    <p className="text-xs text-muted-foreground mb-2">
-                      {block.description}
-                    </p>
-                    <Button
-                      size="sm"
-                      onClick={() => onAddComponent(block.type)}
-                      className="h-6 text-xs"
-                    >
-                      <Plus className="h-3 w-3 mr-1" />
-                      Adicionar
-                    </Button>
-                  </div>
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-medium truncate">{block.name}</h4>
+                  <Button
+                    size="sm"
+                    onClick={() => onAddComponent(block.type)}
+                    className="h-6 text-xs"
+                  >
+                    <Plus className="h-3 w-3 mr-1" />
+                    Adicionar
+                  </Button>
                 </div>
               </Card>
             ))}

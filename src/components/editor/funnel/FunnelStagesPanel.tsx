@@ -202,7 +202,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                   className={cn(
                     "group relative rounded-lg border-2 transition-all duration-200 cursor-pointer select-none",
                     "hover:border-brand/60 hover:shadow-lg active:scale-[0.95]",
-                    "min-h-[80px] bg-white",
+                    "min-h-[60px] bg-white",
                     // ✅ USAR activeStageId DO EDITORCONTEXT PARA HIGHLIGHT
                     activeStageId === stage.id
                       ? "border-brand bg-brand/10 shadow-md ring-2 ring-brand/30" 
@@ -222,38 +222,24 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                   }}
                 >
                   <div className="p-4 relative z-10">
-                    <div className="flex items-center gap-2 mb-2">
-                      <GripVertical className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
-                          <span className={cn(
-                            "font-medium text-sm",
-                            activeStageId === stage.id ? "text-brand-dark" : "text-foreground"
-                          )}>
-                            Etapa {stage.order}
-                          </span>
-                          <Badge 
-                            variant={activeStageId === stage.id ? "default" : "secondary"}
-                            className="text-xs"
-                          >
-                            {stage.metadata?.blocksCount || 0} blocos
-                          </Badge>
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
-                          {stage.name || stage.description || 'Sem título'}
-                        </p>
-                        {/* ✅ INDICADOR VISUAL DE ETAPA ATIVA */}
-                        {activeStageId === stage.id && (
-                          <div className="flex items-center gap-1 mt-1">
-                            <div className="w-2 h-2 bg-brand rounded-full animate-pulse"></div>
-                            <span className="text-xs text-brand-dark font-medium">ATIVA</span>
-                          </div>
-                        )}
-                      </div>
+                    <div className="flex items-center justify-center">
+                      <span className={cn(
+                        "font-medium text-lg",
+                        activeStageId === stage.id ? "text-brand-dark" : "text-foreground"
+                      )}>
+                        Etapa {stage.order}
+                      </span>
                     </div>
 
+                    {/* ✅ INDICADOR VISUAL DE ETAPA ATIVA - MINIMALISTA */}
+                    {activeStageId === stage.id && (
+                      <div className="flex justify-center mt-2">
+                        <div className="w-2 h-2 bg-brand rounded-full animate-pulse"></div>
+                      </div>
+                    )}
+
                     {/* Actions - Aparecem no hover */}
-                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity mt-2">
                       <Button
                         variant="ghost"
                         size="sm"
