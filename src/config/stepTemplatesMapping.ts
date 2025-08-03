@@ -49,68 +49,68 @@ export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
   3: {
     stepNumber: 3,
     templateFunction: getStep03Template,
-    name: 'Q2 - Estilo Pessoal',
-    description: 'Como você descreveria seu estilo pessoal?'
+    name: 'Q2 - Personalidade',
+    description: 'RESUMA A SUA PERSONALIDADE:'
   },
   4: {
     stepNumber: 4,
     templateFunction: getStep04Template,
-    name: 'Q3 - Ocasiões',
-    description: 'Para quais ocasiões você mais se veste?'
+    name: 'Q3 - Visual',
+    description: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?'
   },
   5: {
     stepNumber: 5,
     templateFunction: getStep05Template,
-    name: 'Q4 - Cores',
-    description: 'Quais cores você mais usa?'
+    name: 'Q4 - Detalhes',
+    description: 'QUAIS DETALHES VOCÊ GOSTA?'
   },
   6: {
     stepNumber: 6,
     templateFunction: getStep06Template,
-    name: 'Q5 - Conforto',
-    description: 'O que é mais importante: conforto ou aparência?'
+    name: 'Q5 - Estampas',
+    description: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?'
   },
   7: {
     stepNumber: 7,
     templateFunction: getStep07Template,
-    name: 'Q6 - Inspiração',
-    description: 'Onde você busca inspiração de moda?'
+    name: 'Q6 - Casacos',
+    description: 'QUAL CASACO É SEU FAVORITO?'
   },
   8: {
     stepNumber: 8,
     templateFunction: getStep08Template,
-    name: 'Q7 - Investimento',
-    description: 'Quanto você investe em roupas mensalmente?'
+    name: 'Q7 - Calças',
+    description: 'QUAL SUA CALÇA FAVORITA?'
   },
   9: {
     stepNumber: 9,
     templateFunction: getStep09Template,
-    name: 'Q8 - Dificuldades',
-    description: 'Qual sua maior dificuldade com roupas?'
+    name: 'Q8 - Sapatos',
+    description: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?'
   },
   10: {
     stepNumber: 10,
     templateFunction: getStep10Template,
-    name: 'Q9 - Biotipo',
-    description: 'Como você se vê fisicamente?'
+    name: 'Q9 - Acessórios',
+    description: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?'
   },
   11: {
     stepNumber: 11,
     templateFunction: getStep11Template,
-    name: 'Q10 - Personalidade',
-    description: 'Como as pessoas te descrevem?'
+    name: 'Q10 - Tecidos',
+    description: 'VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...'
   },
   12: {
     stepNumber: 12,
     templateFunction: getStep12Template,
-    name: 'Q11 - Profissão',
-    description: 'Qual sua área profissional?'
+    name: 'Transição Pessoal',
+    description: 'Agora vamos conhecer você melhor'
   },
   13: {
     stepNumber: 13,
     templateFunction: getStep13Template,
-    name: 'Q12 - Objetivo',
-    description: 'O que você quer alcançar com seu estilo?'
+    name: 'Q11 - Guarda-Roupa',
+    description: 'QUANDO VOCÊ OLHA PARA O SEU GUARDA-ROUPA, QUAL DESSAS FRASES TE VEM A CABEÇA?'
   },
   14: {
     stepNumber: 14,

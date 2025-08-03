@@ -20,10 +20,12 @@ import ButtonInlineBlock from '../components/editor/blocks/inline/ButtonInlineBl
 import CTAInlineBlock from '../components/editor/blocks/inline/CTAInlineBlock';
 import CharacteristicsListInlineBlock from '../components/editor/blocks/inline/CharacteristicsListInlineBlock';
 import CountdownInlineBlock from '../components/editor/blocks/inline/CountdownInlineBlock';
+import DecorativeBarInlineBlock from '../components/editor/blocks/DecorativeBarInlineBlock';
 import DividerInlineBlock from '../components/editor/blocks/inline/DividerInlineBlock';
 import GuaranteeInlineBlock from '../components/editor/blocks/inline/GuaranteeInlineBlock';
 import HeadingInlineBlock from '../components/editor/blocks/inline/HeadingInlineBlock';
 import ImageDisplayInlineBlock from '../components/editor/blocks/inline/ImageDisplayInlineBlock';
+import LegalNoticeInlineBlock from '../components/editor/blocks/LegalNoticeInlineBlock';
 import LoadingAnimationBlock from '../components/editor/blocks/inline/LoadingAnimationBlock';
 import PricingCardInlineBlock from '../components/editor/blocks/inline/PricingCardInlineBlock';
 import ProgressInlineBlock from '../components/editor/blocks/inline/ProgressInlineBlock';
@@ -45,8 +47,11 @@ import TextInlineBlock from '../components/editor/blocks/inline/TextInlineBlock'
 // STANDARD BLOCKS - TESTADOS E FUNCIONAIS
 import BasicTextBlock from '../components/editor/blocks/BasicTextBlock';
 import CountdownTimerBlock from '../components/editor/blocks/CountdownTimerBlock';
+import FormInputBlock from '../components/editor/blocks/FormInputBlock';
 import GuaranteeBlock from '../components/editor/blocks/GuaranteeBlock';
 import MentorBlock from '../components/editor/blocks/MentorBlock';
+import OptionsGridBlock from '../components/editor/blocks/OptionsGridBlock';
+import QuizIntroHeaderBlock from '../components/editor/blocks/QuizIntroHeaderBlock';
 import QuizTitleBlock from '../components/editor/blocks/QuizTitleBlock';
 import SocialProofBlock from '../components/editor/blocks/SocialProofBlock';
 import StatsMetricsBlock from '../components/editor/blocks/StatsMetricsBlock';
@@ -91,12 +96,14 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
     // Media
     'image': ImageDisplayInlineBlock,
     'image-inline': ImageDisplayInlineBlock,
+    'image-display-inline': ImageDisplayInlineBlock,
     
     // Layout
     'spacer': SpacerInlineBlock,
     'spacer-inline': SpacerInlineBlock,
     'divider': DividerInlineBlock,
     'divider-inline': DividerInlineBlock,
+    'decorative-bar-inline': DecorativeBarInlineBlock,
     
     // Data Display
     'stat': StatInlineBlock,
@@ -145,6 +152,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
     'bonus-list-inline': BonusListInlineBlock,
     'benefits': BenefitsInlineBlock,
     'benefits-inline': BenefitsInlineBlock,
+    'legal-notice-inline': LegalNoticeInlineBlock,
     
     // System
     'loading-animation': LoadingAnimationBlock,
@@ -153,6 +161,9 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   // STANDARD BLOCKS - VALIDADOS UM POR UM
   const standardBlocks = {
     'countdown-timer': CountdownTimerBlock,
+    'form-input': FormInputBlock,
+    'options-grid': OptionsGridBlock,
+    'quiz-intro-header': QuizIntroHeaderBlock,
     'stats-metrics': StatsMetricsBlock,
     'mentor': MentorBlock,
     'social-proof': SocialProofBlock,

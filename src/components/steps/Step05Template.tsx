@@ -1,19 +1,20 @@
 import React from 'react';
-export interface Step05TemplateProps {
+
+export interface Step05Question04Props {
   onNext?: () => void;
   onPrevious?: () => void;
   onBlockAdd?: (block: any) => void;
 }
 
-export const Step05Template: React.FC<Step05TemplateProps> = ({ onNext, onPrevious, onBlockAdd }) => {
+export const Step05Question04: React.FC<Step05Question04Props> = ({ onNext, onPrevious, onBlockAdd }) => {
   return (
-    <div className="step-05-template">
+    <div className="step-05-question-04">
       {/* Conteúdo da Etapa 5 renderizado aqui */}
     </div>
   );
 };
 
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 5 - QUESTÃO 5: QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 5 - QUESTÃO 4: QUAIS DETALHES VOCÊ GOSTA?
 export const getStep05Template = () => {
   return [
     {
@@ -23,7 +24,7 @@ export const getStep05Template = () => {
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
-        progressValue: 50,
+        progressValue: 40,
         progressMax: 100,
         showBackButton: true
       }
@@ -31,7 +32,7 @@ export const getStep05Template = () => {
     {
       type: 'heading-inline',
       properties: {
-        content: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?',
+        content: 'QUAIS DETALHES VOCÊ GOSTA?',
         level: 'h2',
         fontSize: 'text-2xl',
         fontWeight: 'font-bold',
@@ -43,7 +44,7 @@ export const getStep05Template = () => {
     {
       type: 'text-inline',
       properties: {
-        content: 'Questão 5 de 10',
+        content: 'Questão 4 de 10',
         fontSize: 'text-sm',
         textAlign: 'text-center',
         color: '#6B7280',
@@ -53,93 +54,84 @@ export const getStep05Template = () => {
     {
       type: 'options-grid',
       properties: {
-        questionId: 'q5',
+        questionId: 'q4',
         options: [
           { 
-            id: "5a", 
-            text: "Sem estampas, prefiro liso",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/21_liso_natural.webp",
-            value: "5a", 
+            id: "4a", 
+            text: "Poucos detalhes, básico e prático", 
+            value: "4a", 
             category: "Natural", 
             styleCategory: "Natural", 
             points: 1 
           },
           { 
-            id: "5b", 
-            text: "Listras clássicas e discretas",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/22_listras_classico.webp",
-            value: "5b", 
+            id: "4b", 
+            text: "Bem discretos e sutis, clean e clássico", 
+            value: "4b", 
             category: "Clássico", 
             styleCategory: "Clássico", 
             points: 1 
           },
           { 
-            id: "5c", 
-            text: "Estampas geométricas modernas",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/23_geometrico_contemporaneo.webp",
-            value: "5c", 
+            id: "4c", 
+            text: "Básico, mas com um toque de estilo", 
+            value: "4c", 
             category: "Contemporâneo", 
             styleCategory: "Contemporâneo", 
             points: 1 
           },
           { 
-            id: "5d", 
-            text: "Estampas sofisticadas e elegantes",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/24_sofisticado_elegante.webp",
-            value: "5d", 
+            id: "4d", 
+            text: "Detalhes refinados, chic e que deem status", 
+            value: "4d", 
             category: "Elegante", 
             styleCategory: "Elegante", 
             points: 1 
           },
           { 
-            id: "5e", 
-            text: "Estampas florais delicadas",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/25_floral_romantico.webp",
-            value: "5e", 
+            id: "4e", 
+            text: "Detalhes delicados, laços, babados", 
+            value: "4e", 
             category: "Romântico", 
             styleCategory: "Romântico", 
             points: 1 
           },
           { 
-            id: "5f", 
-            text: "Animal print e estampas marcantes",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/26_animal_print_sexy.webp",
-            value: "5f", 
+            id: "4f", 
+            text: "Roupas que valorizem meu corpo: couro, zíper, fendas", 
+            value: "4f", 
             category: "Sexy", 
             styleCategory: "Sexy", 
             points: 1 
           },
           { 
-            id: "5g", 
-            text: "Estampas grandes e impactantes",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735379/27_impactante_dramatico.webp",
-            value: "5g", 
+            id: "4g", 
+            text: "Detalhes marcantes, firmeza e peso", 
+            value: "4g", 
             category: "Dramático", 
             styleCategory: "Dramático", 
             points: 1 
           },
           { 
-            id: "5h", 
-            text: "Estampas únicas e diferentes",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/28_unico_criativo.webp",
-            value: "5h", 
+            id: "4h", 
+            text: "Detalhes diferentes do convencional, produções ousadas", 
+            value: "4h", 
             category: "Criativo", 
             styleCategory: "Criativo", 
             points: 1 
           }
         ],
-        columns: 2,
-        showImages: true,
-        imageSize: 'large',
+        columns: 1,
+        showImages: false,
         multipleSelection: true,
         maxSelections: 3,
         minSelections: 1,
         validationMessage: 'Selecione até 3 opções',
-        gridGap: 16,
+        gridGap: 12,
         responsiveColumns: true,
-        autoAdvanceOnComplete: false,
+        autoAdvanceOnComplete: true,
         autoAdvanceDelay: 800,
-        requiredSelections: 1,
+        requiredSelections: 3,
         enableButtonOnlyWhenValid: true,
         showValidationFeedback: true
       }
@@ -160,4 +152,4 @@ export const getStep05Template = () => {
   ];
 };
 
-export default getStep05Template;
+export default Step05Question04;

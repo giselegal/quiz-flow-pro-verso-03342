@@ -14,7 +14,7 @@ export const Step04Template: React.FC<Step04TemplateProps> = ({ onNext, onPrevio
   );
 };
 
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 4 - QUESTÃO 4: QUAIS DETALHES VOCÊ GOSTA?
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 4 - QUESTÃO 3: QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?
 export const getStep04Template = () => {
   return [
     {
@@ -24,7 +24,7 @@ export const getStep04Template = () => {
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
-        progressValue: 40,
+        progressValue: 30,
         progressMax: 100,
         showBackButton: true
       }
@@ -32,7 +32,7 @@ export const getStep04Template = () => {
     {
       type: 'heading-inline',
       properties: {
-        content: 'QUAIS DETALHES VOCÊ GOSTA?',
+        content: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?',
         level: 'h2',
         fontSize: 'text-2xl',
         fontWeight: 'font-bold',
@@ -44,7 +44,7 @@ export const getStep04Template = () => {
     {
       type: 'text-inline',
       properties: {
-        content: 'Questão 4 de 10',
+        content: 'Questão 3 de 10',
         fontSize: 'text-sm',
         textAlign: 'text-center',
         color: '#6B7280',
@@ -54,80 +54,88 @@ export const getStep04Template = () => {
     {
       type: 'options-grid',
       properties: {
-        questionId: 'q4',
+        questionId: 'q3',
         options: [
           { 
-            id: "4a", 
-            text: "Poucos detalhes, básico e prático", 
-            value: "4a", 
+            id: "3a", 
+            text: "Visual leve, despojado e natural", 
+            value: "3a", 
             category: "Natural", 
             styleCategory: "Natural", 
-            points: 1 
+            points: 1,
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp'
           },
           { 
-            id: "4b", 
-            text: "Bem discretos e sutis, clean e clássico", 
-            value: "4b", 
+            id: "3b", 
+            text: "Visual clássico e tradicional", 
+            value: "3b", 
             category: "Clássico", 
             styleCategory: "Clássico", 
-            points: 1 
+            points: 1,
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp'
           },
           { 
-            id: "4c", 
-            text: "Básico, mas com um toque de estilo", 
-            value: "4c", 
+            id: "3c", 
+            text: "Visual casual com toque atual", 
+            value: "3c", 
             category: "Contemporâneo", 
             styleCategory: "Contemporâneo", 
-            points: 1 
+            points: 1,
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp'
           },
           { 
-            id: "4d", 
-            text: "Detalhes refinados, chic e que deem status", 
-            value: "4d", 
+            id: "3d", 
+            text: "Visual refinado e imponente", 
+            value: "3d", 
             category: "Elegante", 
             styleCategory: "Elegante", 
-            points: 1 
+            points: 1,
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp'
           },
           { 
-            id: "4e", 
-            text: "Detalhes delicados, laços, babados", 
-            value: "4e", 
+            id: "3e", 
+            text: "Visual romântico, feminino e delicado", 
+            value: "3e", 
             category: "Romântico", 
             styleCategory: "Romântico", 
-            points: 1 
+            points: 1,
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp'
           },
           { 
-            id: "4f", 
-            text: "Roupas que valorizem meu corpo: couro, zíper, fendas", 
-            value: "4f", 
+            id: "3f", 
+            text: "Visual sensual, com saia justa e decote", 
+            value: "3f", 
             category: "Sexy", 
             styleCategory: "Sexy", 
-            points: 1 
+            points: 1,
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp'
           },
           { 
-            id: "4g", 
-            text: "Detalhes marcantes, firmeza e peso", 
-            value: "4g", 
+            id: "3g", 
+            text: "Visual marcante e urbano (jeans + jaqueta)", 
+            value: "3g", 
             category: "Dramático", 
             styleCategory: "Dramático", 
-            points: 1 
+            points: 1,
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp'
           },
           { 
-            id: "4h", 
-            text: "Detalhes diferentes do convencional, produções ousadas", 
-            value: "4h", 
+            id: "3h", 
+            text: "Visual criativo, colorido e ousado", 
+            value: "3h", 
             category: "Criativo", 
             styleCategory: "Criativo", 
-            points: 1 
+            points: 1,
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp'
           }
         ],
-        columns: 1,
-        showImages: false,
+        columns: 2,
+        showImages: true,
         multipleSelection: true,
         maxSelections: 3,
-        minSelections: 3,
-        validationMessage: 'Selecione exatamente 3 opções',
-        gridGap: 12,
+        minSelections: 1,
+        validationMessage: 'Selecione até 3 opções',
+        gridGap: 16,
         responsiveColumns: true,
         autoAdvanceOnComplete: true,
         autoAdvanceDelay: 800,
@@ -152,4 +160,4 @@ export const getStep04Template = () => {
   ];
 };
 
-export default getStep04Template;
+export default Step04Template;

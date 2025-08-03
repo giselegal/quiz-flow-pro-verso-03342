@@ -2,11 +2,18 @@
 import { LucideIcon } from 'lucide-react';
 
 export interface PropertySchema {
-  type: 'string' | 'number' | 'boolean' | 'select' | 'textarea' | 'array';
+  type: 'string' | 'number' | 'boolean' | 'select' | 'textarea' | 'array' | 'color' | 'range';
   default: any;
   label: string;
   description?: string;
+  category?: 'general' | 'layout' | 'styling' | 'content' | 'behavior' | 'validation' | 'advanced';
+  required?: boolean;
+  placeholder?: string;
   options?: Array<{ value: string; label: string }>;
+  min?: number;
+  max?: number;
+  step?: number;
+  rows?: number;
 }
 
 export interface BlockDefinition {

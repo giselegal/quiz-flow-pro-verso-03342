@@ -4,7 +4,7 @@ import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
 import { UniversalBlockRenderer } from '@/components/editor/blocks/UniversalBlockRenderer';
-import DynamicPropertiesPanel from '@/components/editor/DynamicPropertiesPanel';
+import EnhancedPropertiesPanel from '@/components/editor/EnhancedPropertiesPanel';
 import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
 import { EditableContent } from '@/types/editor';
 import { getRegistryStats, generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
@@ -241,7 +241,7 @@ const EditorFixedPage: React.FC = () => {
         }
         propertiesPanel={
           selectedBlock ? (
-            <DynamicPropertiesPanel
+            <EnhancedPropertiesPanel
               block={selectedBlock}
               blockDefinition={getBlockDefinitionForType(selectedBlock.type)}
               onUpdateBlock={(blockId: string, updates: Partial<EditableContent>) => {
@@ -255,7 +255,7 @@ const EditorFixedPage: React.FC = () => {
                 <div className="text-4xl mb-2">⚙️</div>
                 <p className="text-sm">Selecione um bloco para editar propriedades</p>
                 <p className="text-xs text-gray-400 mt-1">
-                  Context unificado ativo
+                  Painel aprimorado ativo
                 </p>
               </div>
             </div>
