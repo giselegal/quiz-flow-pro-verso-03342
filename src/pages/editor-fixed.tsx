@@ -205,7 +205,7 @@ const EditorFixedPage: React.FC = () => {
                           group relative border-2 rounded-xl p-6 cursor-pointer transition-all duration-300 ease-out
                           ${selectedBlockId === block.id 
                             ? 'border-yellow-300 bg-gradient-to-br from-yellow-50/80 to-stone-50/60 shadow-lg shadow-yellow-100/50 scale-[1.02]' 
-                            : 'border-stone-200/60 hover:border-amber-200 hover:shadow-md hover:shadow-stone-200/50 hover:bg-stone-50/40'
+                            : 'border-stone-200/60 hover:border-yellow-200 hover:shadow-md hover:shadow-stone-200/50 hover:bg-stone-50/40'
                           }
                         `}
                         onClick={() => setSelectedBlockId(block.id)}
