@@ -19,6 +19,7 @@ export interface BlockDefinition {
   properties: Record<string, PropertySchema>;
   label: string;
   defaultProps: Record<string, any>;
+  defaultContent?: Record<string, any>;
   tags?: string[];
 }
 

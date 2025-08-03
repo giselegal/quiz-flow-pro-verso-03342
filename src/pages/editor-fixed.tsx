@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import BrandHeader from '@/components/ui/BrandHeader';
+import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
+import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
 import { UniversalBlockRenderer } from '@/components/editor/blocks/UniversalBlockRenderer';
 import DynamicPropertiesPanel from '@/components/editor/DynamicPropertiesPanel';
 import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
 import { EditableContent, Block } from '@/types/editor';
 import { getDefaultContentForType } from '@/utils/blockDefaults';
-import { getRegistryStats, generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
+import { getRegistryStats } from '@/config/enhancedBlockRegistry';
 import { Type, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -76,9 +78,9 @@ const EditorFixedPage: React.FC = () => {
         </div>
       </div>
       
-      <div className="flex-1 flex">
-        {/* Sidebar com design moderno */}
-        <div className="w-80 bg-white border-r border-gray-200 shadow-sm">
+      <FourColumnLayout
+        stagesPanel={<FunnelStagesPanel />}
+        componentsPanel={
           <EnhancedComponentsSidebar 
             onAddComponent={(type: string) => {
               const defaultContent = getDefaultContentForType(type as any);
@@ -92,63 +94,61 @@ const EditorFixedPage: React.FC = () => {
               setBlocks(prev => [...prev, newBlock]);
             }}
           />
-        </div>
-
-        {/* Canvas principal */}
-        <div className="flex-1 p-6 overflow-auto bg-gradient-to-br from-gray-50 to-slate-100">
-          <div className={getCanvasClassName()}>
-            <div className="p-6">
-              {blocks.length === 0 ? (
-                <div className="text-center py-20">
-                  <div className="text-gray-400 text-6xl mb-4">🎨</div>
-                  <h3 className="text-xl font-semibold text-gray-700 mb-2">Canvas Vazio</h3>
-                  <p className="text-gray-500">Arraste componentes da sidebar para começar a criar</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {blocks.map((block) => (
-                    <div
-                      key={block.id}
-                      className={`
-                        group relative border-2 rounded-lg p-4 cursor-pointer transition-all duration-200
-                        ${selectedBlockId === block.id 
-                          ? 'border-purple-400 bg-purple-50 shadow-md' 
-                          : 'border-gray-200 hover:border-purple-300 hover:shadow-sm'
-                        }
-                      `}
-                      onClick={() => setSelectedBlockId(block.id)}
-                    >
-                      {/* Controles do bloco */}
-                      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteBlock(block.id);
-                          }}
-                          className="h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-
-                      <UniversalBlockRenderer
-                        block={block}
-                        isSelected={selectedBlockId === block.id}
+        }
+        canvas={
+          <div className="p-6 overflow-auto h-full bg-gradient-to-br from-gray-50 to-slate-100">
+            <div className={getCanvasClassName()}>
+              <div className="p-6">
+                {blocks.length === 0 ? (
+                  <div className="text-center py-20">
+                    <div className="text-gray-400 text-6xl mb-4">🎨</div>
+                    <h3 className="text-xl font-semibold text-gray-700 mb-2">Canvas Vazio</h3>
+                    <p className="text-gray-500">Arraste componentes da sidebar para começar a criar</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {blocks.map((block) => (
+                      <div
+                        key={block.id}
+                        className={`
+                          group relative border-2 rounded-lg p-4 cursor-pointer transition-all duration-200
+                          ${selectedBlockId === block.id 
+                            ? 'border-purple-400 bg-purple-50 shadow-md' 
+                            : 'border-gray-200 hover:border-purple-300 hover:shadow-sm'
+                          }
+                        `}
                         onClick={() => setSelectedBlockId(block.id)}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
+                      >
+                        {/* Controles do bloco */}
+                        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteBlock(block.id);
+                            }}
+                            className="h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+
+                        <UniversalBlockRenderer
+                          block={block}
+                          isSelected={selectedBlockId === block.id}
+                          onClick={() => setSelectedBlockId(block.id)}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* Properties Panel */}
-        {selectedBlockId && selectedBlock && (
-          <div className="w-80 bg-white border-l border-gray-200 shadow-sm">
+        }
+        propertiesPanel={
+          selectedBlockId && selectedBlock ? (
             <DynamicPropertiesPanel
               block={selectedBlock}
               blockDefinition={{
@@ -173,9 +173,13 @@ const EditorFixedPage: React.FC = () => {
               }}
               onClose={() => setSelectedBlockId(null)}
             />
-          </div>
-        )}
-      </div>
+          ) : (
+            <div className="p-4 text-center text-muted-foreground">
+              Selecione um bloco para editar suas propriedades
+            </div>
+          )
+        }
+      />
     </div>
   );
 };

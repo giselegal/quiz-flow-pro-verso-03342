@@ -26,7 +26,7 @@ export interface Style {
 export interface QuizOption {
   id: string;
   text: string;
-  style: StyleType;
+  style?: StyleType;
   imageUrl?: string;
   weight?: number;
   styleCategory?: string;
@@ -61,7 +61,7 @@ export interface QuizAnswer {
 
 export interface UserResponse {
   questionId: string;
-  optionId: string;
+  optionId?: string;
   selectedOptions?: string[];
   timestamp?: Date;
 }
