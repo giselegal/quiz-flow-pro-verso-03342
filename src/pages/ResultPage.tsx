@@ -2,7 +2,7 @@
 import React from 'react';
 import { useRoute } from 'wouter';
 
-export const ResultPage: React.FC = () => {
+const ResultPage: React.FC = () => {
   const [match, params] = useRoute('/resultado/:resultId');
   const resultId = params?.resultId;
 
@@ -25,3 +25,5 @@ export const ResultPage: React.FC = () => {
     </div>
   );
 };
+
+export default ResultPage;

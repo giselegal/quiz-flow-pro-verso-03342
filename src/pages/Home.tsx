@@ -3,7 +3,7 @@ import React from 'react';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 
-export const Home: React.FC = () => {
+const Home: React.FC = () => {
   const [, setLocation] = useLocation();
 
   const handleStartQuiz = () => {
@@ -39,3 +39,5 @@ export const Home: React.FC = () => {
     </div>
   );
 };
+
+export default Home;

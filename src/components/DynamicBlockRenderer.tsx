@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 
 // 🚀 SUPABASE: Integração de dados
-import { quizSupabaseService } from '../services/quizSupabaseService';
+import { saveQuizResponse } from '../services/quizSupabaseService';
 
 interface DynamicBlockRendererProps {
   pageId: string;
@@ -49,8 +49,8 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
   const trackEvent = async (eventName: 'quiz_start' | 'quiz_complete' | 'checkout_click' | 'step_view' | 'step_complete' | 'quiz_abandon' | 'button_click' | 'option_select' | 'result_view', eventData: any = {}) => {
     if (enableSupabaseTracking) {
       try {
-        await quizSupabaseService.trackEvent(eventName, {
-          step_number: stepNumber || 0,
+        await saveQuizResponse({
+          eventName,
           step_id: pageId,
           event_data: {
             block_id: blockId,

@@ -28,8 +28,8 @@ export class ErrorBoundary extends Component<Props, State> {
     this.setState({ error, errorInfo });
     
     // Track error in performance monitoring
-    if (window.PerformanceMonitor) {
-      window.PerformanceMonitor.getInstance().trackEvent('error', 'error', {
+    if (typeof window !== 'undefined' && (window as any).PerformanceMonitor) {
+      (window as any).PerformanceMonitor.getInstance().trackEvent('error', 'error', {
         message: error.message,
         stack: error.stack,
         componentStack: errorInfo.componentStack

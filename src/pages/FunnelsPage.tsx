@@ -3,7 +3,7 @@ import React from 'react';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 
-export const FunnelsPage: React.FC = () => {
+const FunnelsPage: React.FC = () => {
   const [, setLocation] = useLocation();
 
   return (
@@ -33,3 +33,5 @@ export const FunnelsPage: React.FC = () => {
     </div>
   );
 };
+
+export default FunnelsPage;

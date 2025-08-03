@@ -4,7 +4,7 @@ import { MousePointer2, Edit3, ArrowRight, Download, Play, Star } from 'lucide-r
 import type { BlockComponentProps } from '../../../types/blocks';
 import { userResponseService } from '../../../services/userResponseService';
 import { trackQuizStart } from '../../../utils/analytics';
-import { quizSupabaseService } from '../../../services/quizSupabaseService';
+import { saveQuizResponse } from '../../../services/quizSupabaseService';
 
 /**
  * ButtonInlineBlock - Componente modular inline horizontal
@@ -59,31 +59,10 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   // 🚀 Função para inicializar quiz no Supabase
   const initializeQuizWithSupabase = async (userName: string) => {
     try {
-      // Criar/atualizar usuário
-      await quizSupabaseService.createOrUpdateUser({
+      // Placeholder - Supabase integration will be implemented later
+      console.log('Supabase integration placeholder:', {
         name: userName,
-        utm_source: new URLSearchParams(window.location.search).get('utm_source') || undefined,
-        utm_medium: new URLSearchParams(window.location.search).get('utm_medium') || undefined,
-        utm_campaign: new URLSearchParams(window.location.search).get('utm_campaign') || undefined,
-        referrer: document.referrer || undefined
-      });
-
-      // Iniciar sessão de quiz
-      await quizSupabaseService.startQuizSession({
-        started_from: 'step1-button',
-        user_name: userName,
-        device_type: /Mobile|Android|iPhone|iPad/.test(navigator.userAgent) ? 'mobile' : 'desktop'
-      });
-
-      // Registrar evento de início
-      await quizSupabaseService.trackEvent('quiz_start', {
-        step_number: 1,
-        step_id: 'etapa-1',
-        event_data: {
-          user_name: userName,
-          button_text: text,
-          session_id: quizSupabaseService.getSessionId()
-        }
+        utm_source: new URLSearchParams(window.location.search).get('utm_source') || undefined
       });
 
       console.log('✅ Quiz inicializado no Supabase com sucesso');

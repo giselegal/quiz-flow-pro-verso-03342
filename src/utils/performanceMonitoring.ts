@@ -1,3 +1,5 @@
+import React from 'react';
+
 // Performance monitoring e analytics
 interface PerformanceMetrics {
   fps: number;
@@ -143,7 +145,7 @@ class PerformanceMonitor {
       // First Input Delay (FID)
       const fidObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
-          const fid = entry.processingStart - entry.startTime;
+          const fid = (entry as any).processingStart - entry.startTime;
           
           this.trackEvent('fid', 'performance', {
             value: fid,
