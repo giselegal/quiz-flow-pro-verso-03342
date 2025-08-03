@@ -21,7 +21,7 @@ import {
   Zap
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { BlockComponentProps, BlockData } from '@/types/blocks';
 
 interface Stat {
   id: string;
@@ -40,8 +40,7 @@ interface Stat {
 }
 
 interface StatsBlockProps extends BlockComponentProps {
-  block: {
-    id: string;
+  block: BlockData & {
     type: 'stats-metrics';
     properties: {
       title?: string;
