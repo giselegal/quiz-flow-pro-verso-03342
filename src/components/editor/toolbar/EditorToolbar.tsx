@@ -39,7 +39,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
   onViewportSizeChange = () => {}
 }) => {
   return (
-    <div className="bg-gradient-to-r from-amber-700 to-stone-600 border-b border-white/20 p-3 flex items-center justify-between shadow-lg">
+    <div className="bg-gradient-to-r from-amber-500 to-amber-600 border-b border-amber-700/30 p-3 flex items-center justify-between shadow-lg backdrop-blur-sm">
       {/* Logo à esquerda com animação Framer Motion */}
       <div className="flex items-center">
         <motion.div
@@ -191,7 +191,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
         <Button
           onClick={onSave}
           size="sm"
-          className="bg-white text-amber-700 hover:bg-stone-100 font-medium px-6"
+          className="bg-white text-amber-600 hover:bg-amber-50 font-medium px-6 shadow-md"
         >
           <Save className="mr-2 h-4 w-4" />
           Salvar
