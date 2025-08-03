@@ -14,29 +14,34 @@ import { Type, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const EditorFixedPage: React.FC = () => {
-  // ✅ CONTEXTO UNIFICADO - ÚNICA FONTE DA VERDADE
+  // ✅ USAR NOVA ESTRUTURA UNIFICADA DO EDITORCONTEXT
   const { 
-    stageBlocks, 
-    activeStageId, 
+    stages,
+    activeStageId,
     selectedBlockId,
-    actions: {
-      setActiveStage,
+    stageActions: {
+      setActiveStage
+    },
+    blockActions: {
       addBlock,
       getBlocksForStage,
       setSelectedBlockId,
       deleteBlock,
       updateBlock
     },
-    isPreviewing,
-    setIsPreviewing
+    uiState: {
+      isPreviewing,
+      setIsPreviewing,
+      viewportSize,
+      setViewportSize
+    },
+    computed: {
+      currentBlocks,
+      selectedBlock,
+      totalBlocks,
+      stageCount
+    }
   } = useEditor();
-  
-  // ✅ ESTADO UI LOCAL APENAS
-  const [viewportSize, setViewportSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('lg');
-
-  // ✅ BLOCOS ATUAIS DA ETAPA ATIVA
-  const currentBlocks = getBlocksForStage(activeStageId);
-  const selectedBlock = currentBlocks.find(block => block.id === selectedBlockId);
   
   // Mostrar estatísticas do registry
   const registryStats = getRegistryStats();
@@ -110,11 +115,11 @@ const EditorFixedPage: React.FC = () => {
     }
   };
 
-  
-  // ✅ NAVEGAÇÃO SIMPLIFICADA
+  // ✅ NAVEGAÇÃO SIMPLIFICADA (CALLBACK OPCIONAL)
   const handleStageSelect = (stageId: string) => {
-    console.log('🔄 Editor: Mudando para etapa:', stageId);
-    setActiveStage(stageId); // Context faz TODAS as validações
+    console.log('🔄 Editor: Callback de mudança de etapa recebido:', stageId);
+    // O EditorContext já gerencia tudo internamente
+    // Este callback é apenas para compatibilidade
   };
 
   return (
@@ -129,29 +134,33 @@ const EditorFixedPage: React.FC = () => {
         onViewportSizeChange={setViewportSize}
       />
       
-      {/* Status bar moderno */}
+      {/* Status bar moderno com dados unificados */}
       <div className="bg-gradient-to-r from-purple-100 to-blue-100 border-b border-purple-200/50 px-4 py-2">
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center space-x-4">
             <span className="text-purple-700 font-medium flex items-center">
               <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
-              Editor Ativo
+              Editor Ativo ✅ UNIFICADO
             </span>
             <span className="text-purple-600">
-              {currentBlocks.length} blocos • {registryStats.active} componentes • Etapa: {activeStageId}
+              {currentBlocks.length} blocos • {totalBlocks} total • {stageCount} etapas • Ativa: {activeStageId}
             </span>
             <span className="text-purple-600">
               Viewport: {viewportSize.toUpperCase()}
             </span>
           </div>
           <div className="text-xs text-purple-500">
-            Sistema de validação em runtime ativo
+            Context unificado ativo • {registryStats.active} componentes
           </div>
         </div>
       </div>
       
       <FourColumnLayout
-        stagesPanel={<FunnelStagesPanel onStageSelect={handleStageSelect} />}
+        stagesPanel={
+          <FunnelStagesPanel 
+            onStageSelect={handleStageSelect} 
+          />
+        }
         componentsPanel={
           <EnhancedComponentsSidebar 
             onAddComponent={(type: string) => {
@@ -170,7 +179,9 @@ const EditorFixedPage: React.FC = () => {
                     <div className="text-gray-400 text-6xl mb-4">🎨</div>
                     <h3 className="text-xl font-semibold text-gray-700 mb-2">Etapa {activeStageId}</h3>
                     <p className="text-gray-500">Arraste componentes da sidebar para adicionar à esta etapa</p>
-                    <p className="text-xs text-gray-400 mt-2">Cada etapa tem seu próprio conteúdo</p>
+                    <p className="text-xs text-gray-400 mt-2">
+                      Sistema unificado: {stageCount} etapas inicializadas
+                    </p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -201,10 +212,14 @@ const EditorFixedPage: React.FC = () => {
                           </Button>
                         </div>
 
+                        {/* Renderização do bloco */}
                         <UniversalBlockRenderer
                           block={block}
                           isSelected={selectedBlockId === block.id}
                           onClick={() => setSelectedBlockId(block.id)}
+                          onPropertyChange={(key: string, value: any) => {
+                            updateBlock(block.id, { content: { [key]: value } });
+                          }}
                         />
                       </div>
                     ))}
@@ -215,19 +230,24 @@ const EditorFixedPage: React.FC = () => {
           </div>
         }
         propertiesPanel={
-          selectedBlockId && selectedBlock ? (
+          selectedBlock ? (
             <DynamicPropertiesPanel
               block={selectedBlock}
               blockDefinition={getBlockDefinitionForType(selectedBlock.type)}
-              onUpdateBlock={(blockId: string, properties: Partial<EditableContent>) => {
-                // ✅ USAR CONTEXT UNIFICADO
-                updateBlock(blockId, { content: properties });
+              onUpdateBlock={(blockId: string, updates: Partial<EditableContent>) => {
+                updateBlock(blockId, { content: updates });
               }}
               onClose={() => setSelectedBlockId(null)}
             />
           ) : (
-            <div className="p-4 text-center text-muted-foreground">
-              Selecione um bloco para editar suas propriedades
+            <div className="h-full p-4 flex items-center justify-center text-gray-500">
+              <div className="text-center">
+                <div className="text-4xl mb-2">⚙️</div>
+                <p className="text-sm">Selecione um bloco para editar propriedades</p>
+                <p className="text-xs text-gray-400 mt-1">
+                  Context unificado ativo
+                </p>
+              </div>
             </div>
           )
         }
