@@ -32,6 +32,10 @@ export { useDynamicData } from './useDynamicData';
 export { useGlobalLoading } from './useGlobalLoading';
 export { usePerformanceOptimization, useComponentOptimization } from './usePerformanceOptimization';
 
+// ✅ MEMORY & MONITORING HOOKS
+export { useMemoryCleanup, useWeakRef, useMemoryMonitor, useHeavyCleanup } from '../utils/memoryManagement';
+export { usePerformanceMonitoring } from '../utils/performanceMonitoring';
+
 // ✅ A/B TESTING
 export { useABTest } from './useABTest';
 
