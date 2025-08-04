@@ -8,7 +8,8 @@ import {
   Smartphone, 
   Tablet, 
   Monitor, 
-  Maximize2
+  Maximize2,
+  Settings
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
@@ -19,6 +20,7 @@ interface EditorToolbarProps {
   onViewportSizeChange: (size: 'sm' | 'md' | 'lg' | 'xl') => void;
   onTogglePreview: () => void;
   onSave: () => void;
+  onShowFunnelSettings?: () => void;
 }
 
 export function EditorToolbar({
@@ -26,7 +28,8 @@ export function EditorToolbar({
   viewportSize,
   onViewportSizeChange,
   onTogglePreview,
-  onSave
+  onSave,
+  onShowFunnelSettings
 }: EditorToolbarProps) {
   return (
     <div className="border-b border-[#B89B7A]/20 p-4 bg-white flex items-center justify-between">
@@ -107,6 +110,18 @@ export function EditorToolbar({
       </div>
       
       <div className="flex gap-2">
+        {onShowFunnelSettings && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onShowFunnelSettings}
+            className="border-[#B89B7A] text-[#432818]"
+          >
+            <Settings className="w-4 h-4 mr-2" />
+            Configurações
+          </Button>
+        )}
+        
         <Button
           variant="outline"
           size="sm"

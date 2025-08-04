@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
 import { UniversalBlockRenderer } from '@/components/editor/blocks/UniversalBlockRenderer';
 import EnhancedPropertiesPanel from '@/components/editor/EnhancedPropertiesPanel';
-import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
+import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
+import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
 import { EditableContent } from '@/types/editor';
 import { getRegistryStats, generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
 import { useEditor } from '@/context/EditorContext';
@@ -20,6 +21,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   
   // Hook para scroll sincronizado
   const { scrollRef } = useSyncedScroll({ source: 'canvas' });
+  
+  // Estado para controlar o painel de configurações
+  const [showFunnelSettings, setShowFunnelSettings] = useState(false);
   
   // ✅ USAR NOVA ESTRUTURA UNIFICADA DO EDITORCONTEXT
   const { 
@@ -182,6 +186,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             onSave={handleSave}
             viewportSize={viewportSize}
             onViewportSizeChange={setViewportSize}
+            onShowFunnelSettings={() => setShowFunnelSettings(true)}
           />
 
           {/* Top Bar - Otimizado */}
@@ -246,6 +251,15 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             }
           />
         </div>
+        
+        {/* Painel de Configurações do Funil */}
+        {showFunnelSettings && (
+          <FunnelSettingsPanel
+            funnelId={activeStageId || 'default'}
+            isOpen={showFunnelSettings}
+            onClose={() => setShowFunnelSettings(false)}
+          />
+        )}
       </div>
     </DndProvider>
   );
