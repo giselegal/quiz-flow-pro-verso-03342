@@ -1,10 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Block } from "@/types/editor";
 import { useDroppable } from "@dnd-kit/core";
-import {
-    SortableContext,
-    verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import React from "react";
 import { SortableBlockWrapper } from "./SortableBlockWrapper";
 
@@ -50,10 +47,8 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
       ref={setNodeRef}
       className={cn(
         "p-3 min-h-[400px] transition-all duration-200",
-        isOver &&
-          !isPreviewing &&
-          "bg-brand/5 ring-2 ring-brand/20 ring-dashed",
-        className,
+        isOver && !isPreviewing && "bg-brand/5 ring-2 ring-brand/20 ring-dashed",
+        className
       )}
     >
       {blocks.length === 0 ? (
@@ -77,17 +72,17 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
         </div>
       ) : (
         <SortableContext
-          items={blocks.map((block) => block.id)}
+          items={blocks.map(block => block.id)}
           strategy={verticalListSortingStrategy}
         >
           <div className="space-y-3">
-            {blocks.map((block) => (
+            {blocks.map(block => (
               <SortableBlockWrapper
                 key={block.id}
                 block={block}
                 isSelected={!isPreviewing && selectedBlockId === block.id}
                 onSelect={() => !isPreviewing && onSelectBlock(block.id)}
-                onUpdate={(updates) => {
+                onUpdate={updates => {
                   if (!isPreviewing) {
                     onUpdateBlock(block.id, updates);
                   }
@@ -101,9 +96,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
             ))}
             {isOver && !isPreviewing && (
               <div className="p-4 border-2 border-dashed border-brand/30 rounded-lg bg-brand/5 text-center">
-                <p className="text-brand font-medium">
-                  Solte o componente aqui
-                </p>
+                <p className="text-brand font-medium">Solte o componente aqui</p>
               </div>
             )}
           </div>

@@ -25,17 +25,16 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
   disabled = false,
   className,
 }) => {
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id: `sidebar-${blockType}`,
-      data: {
-        type: "sidebar-component",
-        blockType,
-        title,
-        category,
-      },
-      disabled,
-    });
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: `sidebar-${blockType}`,
+    data: {
+      type: "sidebar-component",
+      blockType,
+      title,
+      category,
+    },
+    disabled,
+  });
 
   // Debug: verificar se o draggable está sendo configurado
   React.useEffect(() => {
@@ -69,7 +68,7 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
         "w-full h-auto p-3 flex flex-col items-start gap-2 text-left cursor-grab hover:bg-stone-50 transition-all duration-200 border border-stone-200 rounded-lg bg-white touch-none", // touch-none adicionado para melhor controle mobile
         isDragging && "opacity-50 cursor-grabbing scale-105 z-50", // z-50 para garantir que fica por cima
         disabled && "opacity-50 cursor-not-allowed",
-        className,
+        className
       )}
       style={style}
       onMouseDown={handleMouseDown}
@@ -81,23 +80,15 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
       <div className="flex items-center gap-2 w-full">
         <div className="flex-shrink-0 text-primary">{icon}</div>
         <div className="flex-1 min-w-0">
-          <h4 className="text-sm font-medium text-stone-900 truncate">
-            {title}
-          </h4>
+          <h4 className="text-sm font-medium text-stone-900 truncate">{title}</h4>
           {category && (
-            <span className="text-xs text-stone-500 uppercase tracking-wide">
-              {category}
-            </span>
+            <span className="text-xs text-stone-500 uppercase tracking-wide">{category}</span>
           )}
         </div>
       </div>
 
       {/* Description */}
-      {description && (
-        <p className="text-xs text-stone-600 line-clamp-2 w-full">
-          {description}
-        </p>
-      )}
+      {description && <p className="text-xs text-stone-600 line-clamp-2 w-full">{description}</p>}
 
       {/* Drag Indicator */}
       {isDragging && (

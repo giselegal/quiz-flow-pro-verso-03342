@@ -1,20 +1,17 @@
 import {
-    closestCenter,
-    DndContext,
-    DragEndEvent,
-    DragOverEvent,
-    DragOverlay,
-    DragStartEvent,
-    KeyboardSensor,
-    PointerSensor,
-    TouchSensor,
-    useSensor,
-    useSensors
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  DragOverEvent,
+  DragOverlay,
+  DragStartEvent,
+  KeyboardSensor,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
-import {
-    arrayMove,
-    sortableKeyboardCoordinates
-} from "@dnd-kit/sortable";
+import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import React from "react";
 import { createPortal } from "react-dom";
 
@@ -54,7 +51,7 @@ export const DndProvider: React.FC<DndProviderProps> = ({
   React.useEffect(() => {
     console.log(
       "📦 Blocks atualizados no DndProvider:",
-      blocks.map((b) => ({ id: b.id, type: b.type })),
+      blocks.map(b => ({ id: b.id, type: b.type }))
     );
   }, [blocks]);
 
@@ -72,7 +69,7 @@ export const DndProvider: React.FC<DndProviderProps> = ({
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    }),
+    })
   );
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -111,7 +108,7 @@ export const DndProvider: React.FC<DndProviderProps> = ({
       });
     } else {
       // Para blocos existentes, buscar no array
-      const activeBlockData = blocks.find((block) => block.id === active.id);
+      const activeBlockData = blocks.find(block => block.id === active.id);
       setActiveBlock(activeBlockData || null);
     }
   };
@@ -120,9 +117,7 @@ export const DndProvider: React.FC<DndProviderProps> = ({
     const { active, over } = event;
 
     if (!over) {
-      console.log(
-        "🟡 DragOver: over é null - não está sobre nenhuma drop zone",
-      );
+      console.log("🟡 DragOver: over é null - não está sobre nenhuma drop zone");
       return;
     }
 
@@ -168,18 +163,16 @@ export const DndProvider: React.FC<DndProviderProps> = ({
       active.data.current?.type === "canvas-block" &&
       over.data.current?.type === "canvas-block"
     ) {
-      const activeIndex = blocks.findIndex((block) => block.id === active.id);
-      const overIndex = blocks.findIndex((block) => block.id === over.id);
+      const activeIndex = blocks.findIndex(block => block.id === active.id);
+      const overIndex = blocks.findIndex(block => block.id === over.id);
 
-      console.log(
-        `🔄 Reordenando: ${active.id} (${activeIndex}) -> ${over.id} (${overIndex})`,
-      );
+      console.log(`🔄 Reordenando: ${active.id} (${activeIndex}) -> ${over.id} (${overIndex})`);
 
       if (activeIndex !== overIndex && activeIndex !== -1 && overIndex !== -1) {
         const newBlocks = arrayMove(blocks, activeIndex, overIndex);
         console.log(
           "📦 Nova ordem dos blocos:",
-          newBlocks.map((b) => b.id),
+          newBlocks.map(b => b.id)
         );
         onBlocksReorder(newBlocks);
       }
@@ -194,9 +187,9 @@ export const DndProvider: React.FC<DndProviderProps> = ({
       const blockType = active.data.current.blockType;
       const position = over.data.current?.position || blocks.length;
       console.log("✅ SUCESSO: Adicionando bloco:", blockType, "na posição:", position);
-      
+
       // Garantir que o callback existe
-      if (typeof onBlockAdd === 'function') {
+      if (typeof onBlockAdd === "function") {
         onBlockAdd(blockType, position);
         console.log("✅ onBlockAdd chamado com sucesso");
       } else {
@@ -243,18 +236,14 @@ export const DndProvider: React.FC<DndProviderProps> = ({
                   <div className="w-4 h-4 bg-brand rounded-sm"></div>
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-stone-800">
-                    {activeBlock.type}
-                  </div>
-                  <div className="text-xs text-stone-500">
-                    Arrastando componente...
-                  </div>
+                  <div className="text-sm font-semibold text-stone-800">{activeBlock.type}</div>
+                  <div className="text-xs text-stone-500">Arrastando componente...</div>
                 </div>
               </div>
             </div>
           ) : null}
         </DragOverlay>,
-        document.body,
+        document.body
       )}
     </DndContext>
   );

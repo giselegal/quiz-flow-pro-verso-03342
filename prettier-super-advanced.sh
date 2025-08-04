@@ -31,7 +31,7 @@ cat > .prettierrc.super-beautiful.json << 'EOF'
 }
 EOF
 
-echo "✅ Configuração SUPER BONITA criada: .prettierrc.super-beautiful"
+echo "✅ Configuração SUPER BONITA criada: .prettierrc.super-beautiful.json"
 echo ""
 
 echo "🎯 2. PRETTIER + ESLINT (Combo Perfeito):"
@@ -99,7 +99,7 @@ echo "Adicione estes scripts ao seu package.json:"
 cat << 'EOF'
 {
   "scripts": {
-    "format:super": "prettier --config .prettierrc.super-beautiful --write .",
+    "format:super": "prettier --config .prettierrc.super-beautiful.json --write .",
     "format:react": "prettier --write 'src/**/*.{jsx,tsx}'",
     "format:styles": "prettier --write 'src/**/*.{css,scss,less}'",
     "format:config": "prettier --write '*.{json,js,ts}'",
@@ -205,8 +205,8 @@ cp src/components/editor/OptimizedPropertiesPanel.tsx backup/ 2>/dev/null
 
 # 2. Formatação com configuração premium
 echo "✨ Aplicando formatação premium..."
-prettier --config .prettierrc.super-beautiful --write "src/**/*editor-fixed*"
-prettier --config .prettierrc.super-beautiful --write "src/components/editor/OptimizedPropertiesPanel.tsx"
+prettier --config .prettierrc.super-beautiful.json --write "src/**/*editor-fixed*"
+prettier --config .prettierrc.super-beautiful.json --write "src/components/editor/OptimizedPropertiesPanel.tsx"
 
 # 3. Organizar imports (se plugin instalado)
 echo "🔄 Organizando imports..."
@@ -237,7 +237,7 @@ cat > .vscode/settings.json << 'EOF'
     "source.fixAll.eslint": true,
     "source.organizeImports": true
   },
-  "prettier.configPath": ".prettierrc.super-beautiful",
+  "prettier.configPath": ".prettierrc.super-beautiful.json",
   "prettier.requireConfig": true,
   "editor.rulers": [100],
   "editor.wordWrap": "bounded",
