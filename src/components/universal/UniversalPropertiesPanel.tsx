@@ -14,7 +14,7 @@ import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { UnifiedBlock, useUnifiedProperties } from "@/hooks/useUnifiedProperties";
+import { UnifiedBlock } from "@/hooks/useUnifiedProperties";
 import {
   EyeOff,
   Layout,
@@ -38,6 +38,326 @@ interface UniversalPropertiesPanelProps {
 }
 
 // -----------------------------------------------------------------------------
+// Mapeamento de propriedades por tipo de componente
+// -----------------------------------------------------------------------------
+const getComponentProperties = (block: UnifiedBlock) => {
+  const baseProps = {
+    id: {
+      key: "id",
+      label: "ID",
+      type: "text",
+      category: "advanced",
+      value: block.id,
+      required: true,
+    },
+    type: {
+      key: "type",
+      label: "Tipo",
+      type: "text",
+      category: "advanced",
+      value: block.type,
+      disabled: true,
+    },
+  };
+
+  // Propriedades específicas por tipo
+  const typeSpecificProps: Record<string, any> = {
+    text: {
+      content: {
+        key: "content",
+        label: "Texto",
+        type: "textarea",
+        category: "content",
+        value: block.content || "",
+      },
+      fontSize: {
+        key: "fontSize",
+        label: "Tamanho da Fonte",
+        type: "range",
+        category: "style",
+        value: 16,
+        min: 12,
+        max: 72,
+      },
+      fontWeight: {
+        key: "fontWeight",
+        label: "Peso da Fonte",
+        type: "select",
+        category: "style",
+        value: "normal",
+        options: ["normal", "bold", "100", "200", "300", "400", "500", "600", "700", "800", "900"],
+      },
+      color: {
+        key: "color",
+        label: "Cor do Texto",
+        type: "color",
+        category: "style",
+        value: "#000000",
+      },
+      textAlign: {
+        key: "textAlign",
+        label: "Alinhamento",
+        type: "select",
+        category: "style",
+        value: "left",
+        options: ["left", "center", "right", "justify"],
+      },
+    },
+    heading: {
+      content: {
+        key: "content",
+        label: "Título",
+        type: "text",
+        category: "content",
+        value: block.content || "",
+      },
+      level: {
+        key: "level",
+        label: "Nível (H1-H6)",
+        type: "select",
+        category: "content",
+        value: "h2",
+        options: ["h1", "h2", "h3", "h4", "h5", "h6"],
+      },
+      fontSize: {
+        key: "fontSize",
+        label: "Tamanho da Fonte",
+        type: "range",
+        category: "style",
+        value: 24,
+        min: 16,
+        max: 48,
+      },
+      color: {
+        key: "color",
+        label: "Cor do Texto",
+        type: "color",
+        category: "style",
+        value: "#000000",
+      },
+      textAlign: {
+        key: "textAlign",
+        label: "Alinhamento",
+        type: "select",
+        category: "style",
+        value: "left",
+        options: ["left", "center", "right"],
+      },
+    },
+    button: {
+      text: {
+        key: "text",
+        label: "Texto do Botão",
+        type: "text",
+        category: "content",
+        value: block.text || "Botão",
+      },
+      variant: {
+        key: "variant",
+        label: "Variante",
+        type: "select",
+        category: "style",
+        value: "default",
+        options: ["default", "destructive", "outline", "secondary", "ghost", "link"],
+      },
+      size: {
+        key: "size",
+        label: "Tamanho",
+        type: "select",
+        category: "style",
+        value: "default",
+        options: ["default", "sm", "lg", "icon"],
+      },
+      backgroundColor: {
+        key: "backgroundColor",
+        label: "Cor de Fundo",
+        type: "color",
+        category: "style",
+        value: "#007bff",
+      },
+      textColor: {
+        key: "textColor",
+        label: "Cor do Texto",
+        type: "color",
+        category: "style",
+        value: "#ffffff",
+      },
+      disabled: {
+        key: "disabled",
+        label: "Desabilitado",
+        type: "boolean",
+        category: "advanced",
+        value: false,
+      },
+    },
+    image: {
+      src: {
+        key: "src",
+        label: "URL da Imagem",
+        type: "text",
+        category: "content",
+        value: block.src || "",
+      },
+      alt: {
+        key: "alt",
+        label: "Texto Alternativo",
+        type: "text",
+        category: "content",
+        value: block.alt || "",
+      },
+      width: {
+        key: "width",
+        label: "Largura",
+        type: "number",
+        category: "layout",
+        value: block.width || 200,
+      },
+      height: {
+        key: "height",
+        label: "Altura",
+        type: "number",
+        category: "layout",
+        value: block.height || 200,
+      },
+      objectFit: {
+        key: "objectFit",
+        label: "Ajuste da Imagem",
+        type: "select",
+        category: "style",
+        value: "cover",
+        options: ["cover", "contain", "fill", "scale-down", "none"],
+      },
+    },
+    input: {
+      placeholder: {
+        key: "placeholder",
+        label: "Placeholder",
+        type: "text",
+        category: "content",
+        value: block.placeholder || "",
+      },
+      type: {
+        key: "inputType",
+        label: "Tipo do Input",
+        type: "select",
+        category: "content",
+        value: "text",
+        options: ["text", "email", "password", "number", "tel", "url"],
+      },
+      required: {
+        key: "required",
+        label: "Obrigatório",
+        type: "boolean",
+        category: "advanced",
+        value: false,
+      },
+      disabled: {
+        key: "disabled",
+        label: "Desabilitado",
+        type: "boolean",
+        category: "advanced",
+        value: false,
+      },
+    },
+    container: {
+      backgroundColor: {
+        key: "backgroundColor",
+        label: "Cor de Fundo",
+        type: "color",
+        category: "style",
+        value: "#ffffff",
+      },
+      padding: {
+        key: "padding",
+        label: "Padding",
+        type: "range",
+        category: "layout",
+        value: 16,
+        min: 0,
+        max: 64,
+      },
+      margin: {
+        key: "margin",
+        label: "Margin",
+        type: "range",
+        category: "layout",
+        value: 0,
+        min: 0,
+        max: 64,
+      },
+      borderRadius: {
+        key: "borderRadius",
+        label: "Border Radius",
+        type: "range",
+        category: "style",
+        value: 0,
+        min: 0,
+        max: 32,
+      },
+      borderWidth: {
+        key: "borderWidth",
+        label: "Espessura da Borda",
+        type: "range",
+        category: "style",
+        value: 0,
+        min: 0,
+        max: 8,
+      },
+      borderColor: {
+        key: "borderColor",
+        label: "Cor da Borda",
+        type: "color",
+        category: "style",
+        value: "#000000",
+      },
+    },
+  };
+
+  // Propriedades de layout comuns para todos os componentes
+  const layoutProps = {
+    width: {
+      key: "width",
+      label: "Largura",
+      type: "text",
+      category: "layout",
+      value: block.width || "auto",
+    },
+    height: {
+      key: "height",
+      label: "Altura",
+      type: "text",
+      category: "layout",
+      value: block.height || "auto",
+    },
+    display: {
+      key: "display",
+      label: "Display",
+      type: "select",
+      category: "layout",
+      value: "block",
+      options: ["block", "inline", "inline-block", "flex", "grid", "none"],
+    },
+    position: {
+      key: "position",
+      label: "Position",
+      type: "select",
+      category: "layout",
+      value: "relative",
+      options: ["relative", "absolute", "fixed", "sticky"],
+    },
+  };
+
+  // Combinar propriedades
+  const componentProps = typeSpecificProps[block.type] || {};
+
+  return {
+    ...baseProps,
+    ...componentProps,
+    ...layoutProps,
+  };
+};
+
+// -----------------------------------------------------------------------------
 // Componente UniversalPropertiesPanel
 // -----------------------------------------------------------------------------
 export const UniversalPropertiesPanel: React.FC<UniversalPropertiesPanelProps> = ({
@@ -46,15 +366,76 @@ export const UniversalPropertiesPanel: React.FC<UniversalPropertiesPanelProps> =
   onDelete,
   onClose,
 }) => {
-  const {
-    properties,
-    updateProperty,
-    resetProperties,
-    validateProperties,
-    getPropertiesByCategory,
-    applyBrandColors,
-  } = useUnifiedProperties(selectedBlock, onUpdate); // Renderizar campo de propriedade
+  const [properties, setProperties] = React.useState<Record<string, any>>({});
 
+  // Atualizar propriedades quando o bloco selecionado muda
+  React.useEffect(() => {
+    if (selectedBlock) {
+      const props = getComponentProperties(selectedBlock);
+      setProperties(props);
+    }
+  }, [selectedBlock]);
+
+  // Função para atualizar propriedade
+  const updateProperty = (key: string, value: any) => {
+    setProperties(prev => ({
+      ...prev,
+      [key]: { ...prev[key], value },
+    }));
+
+    if (onUpdate && selectedBlock) {
+      onUpdate(selectedBlock.id, { [key]: value });
+    }
+  };
+
+  // Função para obter propriedades por categoria
+  const getPropertiesByCategory = (category: string) => {
+    return Object.values(properties).filter((prop: any) => prop.category === category);
+  };
+
+  // Função para validar propriedades
+  const validateProperties = () => {
+    return Object.values(properties).every((prop: any) => {
+      if (prop.required) {
+        return prop.value !== null && prop.value !== undefined && prop.value !== "";
+      }
+      return true;
+    });
+  };
+
+  // Função para resetar propriedades
+  const resetProperties = () => {
+    if (selectedBlock) {
+      const props = getComponentProperties(selectedBlock);
+      setProperties(props);
+    }
+  };
+
+  // Função para aplicar cores da marca
+  const applyBrandColors = () => {
+    const brandColors = {
+      primary: "#B89B7A",
+      secondary: "#432818",
+      accent: "#E8D5C4",
+    };
+
+    const updates: Record<string, any> = {};
+    Object.entries(properties).forEach(([key, prop]: [string, any]) => {
+      if (prop.type === "color") {
+        if (key.includes("background") || key.includes("Background")) {
+          updates[key] = brandColors.primary;
+        } else if (key.includes("text") || key.includes("color")) {
+          updates[key] = brandColors.secondary;
+        }
+      }
+    });
+
+    Object.entries(updates).forEach(([key, value]) => {
+      updateProperty(key, value);
+    });
+  };
+
+  // Renderizar campo de propriedade
   const renderPropertyField = (property: any) => {
     const { key, value, type, label, required, options, min, max, step } = property;
 
