@@ -327,7 +327,16 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
   const debouncedValues = useDebounce(watchedValues, 300);
 
   React.useEffect(() => {
+    console.log('🔍 OptimizedPropertiesPanel: watchedValues changed:', watchedValues);
+  }, [watchedValues]);
+
+  React.useEffect(() => {
+    console.log('⏱️  OptimizedPropertiesPanel: debouncedValues changed:', debouncedValues);
     if (debouncedValues) {
+      console.log('🚀 OptimizedPropertiesPanel: Calling onUpdateBlock with:', {
+        blockId: block.id,
+        updates: debouncedValues
+      });
       onUpdateBlock(block.id, debouncedValues);
     }
   }, [debouncedValues, block.id, onUpdateBlock]);
