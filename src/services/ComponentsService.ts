@@ -364,7 +364,7 @@ export class ComponentsService {
    */
   static setOnlineStatus(online: boolean): void {
     this.isOnline = online;
-    console.log(`Serviço agora está ${online ? 'online' : 'offline'}`);
+    console.log(`Serviço agora está ${online ? "online" : "offline"}`);
   }
 }
 
