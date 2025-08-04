@@ -36,8 +36,10 @@ export const DragDropTestPage: React.FC = () => {
   ];
 
   const handleBlockAdd = (blockType: string, position?: number) => {
+    // 🎯 SISTEMA 1: ID Semântico para blocos de teste
+    const blockNumber = blocks.length + 1;
     const newBlock: Block = {
-      id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      id: `test-block-${blockType}-${blockNumber}`,
       type: blockType as BlockType,
       content: {
         text: `Novo bloco ${blockType}`,

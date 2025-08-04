@@ -2,6 +2,8 @@
  * Utilitários para manipulação segura de blocos do editor
  */
 
+import { generateSemanticId } from './semanticIdGenerator';
+
 /**
  * Extrai propriedades de forma segura de um bloco
  * @param block - O bloco do qual extrair as propriedades
@@ -61,7 +63,24 @@ export const initializeSafeBlock = (block: any) => {
 
   return {
     ...block,
-    id: block.id || `block-${Date.now()}`,
+import { generateSemanticId } from './semanticIdGenerator';
+
+// ... existing imports and code ...
+
+// Replace the Date.now() usage
+const generateBlockId = (block: any): string => {
+  if (block.id) return block.id;
+  
+  return generateSemanticId({
+    context: 'editor',
+    type: 'block',
+    identifier: block.type || 'unknown',
+    index: 1
+  });
+};
+
+// Update the line that uses Date.now()
+id: block.id || generateBlockId(block),
     type: block.type || "text-inline",
     properties: block.properties || {},
   };

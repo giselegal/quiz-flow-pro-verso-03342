@@ -1,3 +1,6 @@
+import { generateSemanticId } from "../utils/semanticIdGenerator";
+import { Block, BlockType } from "./editor";
+
 export interface BlockData {
   id: string;
   type: string;
@@ -46,13 +49,24 @@ export interface UserResponse {
   timestamp?: Date;
 }
 
-export const createBlockData = (type: string): BlockData => ({
-  id: `block-${Date.now()}`,
-  type,
-  properties: {},
-  content: {},
-  order: 0,
-});
+export const createDefaultBlock = (type: BlockType, stageId: string): Block => {
+  // Gerar ID semântico baseado no contexto
+  const semanticId = generateSemanticId({
+    context: stageId,
+    type: "block",
+    identifier: type,
+    index: 1, // Será atualizado pelo EditorContext com a ordem correta
+  });
+
+  return {
+    id: semanticId,
+    type,
+    properties: {}, // Propriedades serão definidas pelo componente
+    content: {}, // Conteúdo será definido pelo componente
+    order: 1, // Ordem será atualizada pelo EditorContext
+    stageId,
+  } as Block;
+};
 
 // Extended interfaces for specific block types - all properly extending BlockData
 export interface CountdownTimerBlock extends BlockData {
