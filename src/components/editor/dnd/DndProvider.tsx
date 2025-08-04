@@ -77,6 +77,12 @@ export const DndProvider: React.FC<DndProviderProps> = ({
       data: active.data.current
     });
     
+    // Garantir que o tipo seja reconhecido
+    if (!active.data.current?.type) {
+      console.error('❌ DragStart: active.data.current.type está undefined!');
+      return;
+    }
+    
     // 🎯 Haptic feedback para dispositivos móveis
     if ('vibrate' in navigator) {
       navigator.vibrate(50);
@@ -100,13 +106,17 @@ export const DndProvider: React.FC<DndProviderProps> = ({
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
     
-    if (!over) return;
+    if (!over) {
+      console.log('🟡 DragOver: over é null - não está sobre nenhuma drop zone');
+      return;
+    }
 
     console.log('🟡 DragOver:', {
       activeId: active.id,
       overId: over.id,
       activeType: active.data.current?.type,
-      overType: over.data.current?.type
+      overType: over.data.current?.type,
+      overData: over.data.current
     });
 
     // Se estamos arrastando de um sidebar (componente novo)
@@ -171,9 +181,8 @@ export const DndProvider: React.FC<DndProviderProps> = ({
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <SortableContext items={blocks.map(block => block.id)} strategy={verticalListSortingStrategy}>
-        {children}
-      </SortableContext>
+      {/* Remover SortableContext temporariamente para testar se há conflito */}
+      {children}
       
       {/* Drag Overlay aprimorado para preview premium */}
       {createPortal(
