@@ -1,9 +1,15 @@
-
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { TrendingUp, Users, Target, DollarSign, BarChart3, Zap } from 'lucide-react';
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import {
+  TrendingUp,
+  Users,
+  Target,
+  DollarSign,
+  BarChart3,
+  Zap,
+} from "lucide-react";
 
 const OverviewPage: React.FC = () => {
   return (
@@ -11,14 +17,18 @@ const OverviewPage: React.FC = () => {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Dashboard Overview</h1>
-        <p className="text-gray-600 mt-1">Visão geral do desempenho dos seus quizzes e campanhas</p>
+        <p className="text-gray-600 mt-1">
+          Visão geral do desempenho dos seus quizzes e campanhas
+        </p>
       </div>
 
       {/* Métricas Principais */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total de Respostas</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total de Respostas
+            </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -31,7 +41,9 @@ const OverviewPage: React.FC = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Taxa de Conversão</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Taxa de Conversão
+            </CardTitle>
             <Target className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -44,7 +56,9 @@ const OverviewPage: React.FC = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Receita Gerada</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Receita Gerada
+            </CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -128,7 +142,7 @@ const OverviewPage: React.FC = () => {
                 </div>
                 <Badge variant="secondary">+127</Badge>
               </div>
-              
+
               <div className="flex items-start space-x-4">
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium text-gray-900">
@@ -138,7 +152,7 @@ const OverviewPage: React.FC = () => {
                 </div>
                 <Badge className="bg-green-100 text-green-800">+2.1%</Badge>
               </div>
-              
+
               <div className="flex items-start space-x-4">
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium text-gray-900">

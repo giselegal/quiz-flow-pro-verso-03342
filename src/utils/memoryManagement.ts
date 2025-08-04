@@ -1,13 +1,19 @@
 // Memory management utilities e cleanup automático
-import React, { useEffect, useRef, useCallback, useState } from 'react';
+import React, { useEffect, useRef, useCallback, useState } from "react";
 
 // Gerenciador de memory leaks
 class MemoryManager {
   private static instance: MemoryManager;
-  private eventListeners = new Set<{ element: Element | Window | Document; event: string; handler: EventListener }>();
+  private eventListeners = new Set<{
+    element: Element | Window | Document;
+    event: string;
+    handler: EventListener;
+  }>();
   private intervals = new Set<number>();
   private timeouts = new Set<number>();
-  private observers = new Set<IntersectionObserver | MutationObserver | ResizeObserver>();
+  private observers = new Set<
+    IntersectionObserver | MutationObserver | ResizeObserver
+  >();
 
   static getInstance() {
     if (!MemoryManager.instance) {
@@ -21,7 +27,7 @@ class MemoryManager {
     element: Element | Window | Document,
     event: string,
     handler: EventListener,
-    options?: boolean | AddEventListenerOptions
+    options?: boolean | AddEventListenerOptions,
   ) {
     element.addEventListener(event, handler, options);
     this.eventListeners.add({ element, event, handler });
@@ -42,7 +48,9 @@ class MemoryManager {
   }
 
   // Registrar observer para cleanup automático
-  addObserver(observer: IntersectionObserver | MutationObserver | ResizeObserver) {
+  addObserver(
+    observer: IntersectionObserver | MutationObserver | ResizeObserver,
+  ) {
     this.observers.add(observer);
     return observer;
   }
@@ -56,20 +64,24 @@ class MemoryManager {
     this.eventListeners.clear();
 
     // Limpar intervals
-    this.intervals.forEach(id => window.clearInterval(id));
+    this.intervals.forEach((id) => window.clearInterval(id));
     this.intervals.clear();
 
     // Limpar timeouts
-    this.timeouts.forEach(id => window.clearTimeout(id));
+    this.timeouts.forEach((id) => window.clearTimeout(id));
     this.timeouts.clear();
 
     // Desconectar observers
-    this.observers.forEach(observer => observer.disconnect());
+    this.observers.forEach((observer) => observer.disconnect());
     this.observers.clear();
   }
 
   // Remover item específico
-  removeEventListener(element: Element | Window | Document, event: string, handler: EventListener) {
+  removeEventListener(
+    element: Element | Window | Document,
+    event: string,
+    handler: EventListener,
+  ) {
     element.removeEventListener(event, handler);
     this.eventListeners.delete({ element, event, handler });
   }
@@ -98,7 +110,7 @@ export const useMemoryCleanup = () => {
     setInterval: manager.setInterval.bind(manager),
     setTimeout: manager.setTimeout.bind(manager),
     addObserver: manager.addObserver.bind(manager),
-    cleanup: manager.cleanup.bind(manager)
+    cleanup: manager.cleanup.bind(manager),
   };
 };
 
@@ -123,12 +135,13 @@ export const useMemoryMonitor = (threshold = 50) => {
   const [isHighUsage, setIsHighUsage] = useState(false);
 
   useEffect(() => {
-    if (!('memory' in performance)) return;
+    if (!("memory" in performance)) return;
 
     const checkMemory = () => {
       const memory = (performance as any).memory;
-      const usagePercent = (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100;
-      
+      const usagePercent =
+        (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100;
+
       setMemoryUsage(usagePercent);
       setIsHighUsage(usagePercent > threshold);
 
@@ -148,7 +161,7 @@ export const useMemoryMonitor = (threshold = 50) => {
 
 // Garbage collection forçado (se disponível)
 export const forceGarbageCollection = () => {
-  if ('gc' in window && typeof (window as any).gc === 'function') {
+  if ("gc" in window && typeof (window as any).gc === "function") {
     (window as any).gc();
   }
 };
@@ -162,7 +175,7 @@ export const useHeavyCleanup = (cleanupFn: () => void) => {
     return () => {
       cleanupRef.current();
       // Force cleanup on unmount
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         setTimeout(() => {
           forceGarbageCollection();
         }, 100);
@@ -174,18 +187,18 @@ export const useHeavyCleanup = (cleanupFn: () => void) => {
 // Performance observer para detectar memory leaks
 export const useMemoryLeakDetector = () => {
   useEffect(() => {
-    if (!('PerformanceObserver' in window)) return;
+    if (!("PerformanceObserver" in window)) return;
 
     const observer = new PerformanceObserver((list) => {
       const entries = list.getEntries();
       entries.forEach((entry) => {
-        if (entry.entryType === 'measure' && entry.name.includes('memory')) {
-          console.log('Memory measurement:', entry);
+        if (entry.entryType === "measure" && entry.name.includes("memory")) {
+          console.log("Memory measurement:", entry);
         }
       });
     });
 
-    observer.observe({ entryTypes: ['measure'] });
+    observer.observe({ entryTypes: ["measure"] });
 
     return () => observer.disconnect();
   }, []);

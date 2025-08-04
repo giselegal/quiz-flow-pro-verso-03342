@@ -1,11 +1,11 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import OptimizedImage from '@/components/ui/OptimizedImage';
-import { ShoppingCart, Star, Users } from 'lucide-react';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import OptimizedImage from "@/components/ui/OptimizedImage";
+import { ShoppingCart, Star, Users } from "lucide-react";
 
 /**
  * BLOCO EDITÁVEL: Hero da Página de Oferta
- * 
+ *
  * Props Editáveis:
  * - title: string (título principal)
  * - subtitle: string (subtítulo)
@@ -17,9 +17,9 @@ import { ShoppingCart, Star, Users } from 'lucide-react';
  * - socialProofText: string (texto da prova social)
  * - backgroundColor: string
  * - textColor: string
- * 
+ *
  * Exemplo de Uso:
- * <HeroSectionBlock 
+ * <HeroSectionBlock
  *   title="Descubra Seu Estilo Pessoal"
  *   subtitle="Transforme seu guarda-roupa"
  *   buttonText="Começar agora"
@@ -43,60 +43,60 @@ export interface HeroSectionBlockProps {
 }
 
 const HeroSectionBlock: React.FC<HeroSectionBlockProps> = ({
-  blockId = 'hero-section',
-  title = 'Descubra Seu Estilo Pessoal e Transforme Seu Guarda-Roupa',
-  subtitle = 'Quiz personalizado com análise completa',
-  description = 'Descubra qual é o seu estilo predominante e receba dicas personalizadas para montar looks incríveis.',
-  heroImage = 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=400&fit=crop',
-  buttonText = 'Fazer o Quiz Agora',
-  buttonUrl = '#',
+  blockId = "hero-section",
+  title = "Descubra Seu Estilo Pessoal e Transforme Seu Guarda-Roupa",
+  subtitle = "Quiz personalizado com análise completa",
+  description = "Descubra qual é o seu estilo predominante e receba dicas personalizadas para montar looks incríveis.",
+  heroImage = "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=400&fit=crop",
+  buttonText = "Fazer o Quiz Agora",
+  buttonUrl = "#",
   showSocialProof = true,
-  socialProofText = '3000+ mulheres já descobriram seu estilo',
-  backgroundColor = '#F9F7F4',
-  textColor = '#432818',
-  className = '',
+  socialProofText = "3000+ mulheres já descobriram seu estilo",
+  backgroundColor = "#F9F7F4",
+  textColor = "#432818",
+  className = "",
 }) => {
   const handleButtonClick = () => {
-    if (buttonUrl && buttonUrl !== '#') {
-      window.open(buttonUrl, '_blank');
+    if (buttonUrl && buttonUrl !== "#") {
+      window.open(buttonUrl, "_blank");
     }
   };
 
   return (
-    <div 
-      className={`hero-section-block py-16 px-6 ${className}`} 
+    <div
+      className={`hero-section-block py-16 px-6 ${className}`}
       data-block-id={blockId}
-      style={{ 
+      style={{
         backgroundColor,
-        color: textColor 
+        color: textColor,
       }}
     >
       <div className="max-w-6xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Conteúdo */}
           <div className="text-center md:text-left">
-            <h1 
+            <h1
               className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6"
-              style={{ 
-                fontFamily: 'Playfair Display, serif',
-                color: textColor 
+              style={{
+                fontFamily: "Playfair Display, serif",
+                color: textColor,
               }}
             >
               {title}
             </h1>
-            
+
             {subtitle && (
               <h2 className="text-xl md:text-2xl text-[#6B5B73] mb-6 font-medium">
                 {subtitle}
               </h2>
             )}
-            
+
             {description && (
               <p className="text-lg text-gray-700 mb-8 leading-relaxed">
                 {description}
               </p>
             )}
-            
+
             <Button
               onClick={handleButtonClick}
               size="lg"
@@ -105,7 +105,7 @@ const HeroSectionBlock: React.FC<HeroSectionBlockProps> = ({
               <ShoppingCart className="w-5 h-5 mr-2" />
               {buttonText}
             </Button>
-            
+
             {showSocialProof && socialProofText && (
               <div className="mt-8 flex items-center justify-center md:justify-start gap-2 text-sm text-gray-600">
                 <div className="flex items-center gap-1">
@@ -120,7 +120,7 @@ const HeroSectionBlock: React.FC<HeroSectionBlockProps> = ({
               </div>
             )}
           </div>
-          
+
           {/* Imagem */}
           <div className="relative">
             <OptimizedImage
@@ -130,7 +130,7 @@ const HeroSectionBlock: React.FC<HeroSectionBlockProps> = ({
               height={400}
               className="rounded-lg shadow-xl"
             />
-            
+
             {/* Badge flutuante */}
             <div className="absolute -top-4 -right-4 bg-[#B89B7A] text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
               ✨ Resultado instantâneo

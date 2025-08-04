@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface StaggeredOptionAnimationsProps {
   children: React.ReactNode[];
@@ -12,10 +12,12 @@ const StaggeredOptionAnimations: React.FC<StaggeredOptionAnimationsProps> = ({
   children,
   isVisible,
   questionId,
-  className = "grid gap-3 h-full"
+  className = "grid gap-3 h-full",
 }) => {
   const [showOptions, setShowOptions] = useState(false);
-  const instanceId = useRef(`options-${Math.random().toString(36).substr(2, 9)}`).current;
+  const instanceId = useRef(
+    `options-${Math.random().toString(36).substr(2, 9)}`,
+  ).current;
 
   useEffect(() => {
     if (isVisible) {
@@ -34,19 +36,19 @@ const StaggeredOptionAnimations: React.FC<StaggeredOptionAnimationsProps> = ({
       transition: {
         staggerChildren: 0.1,
         delayChildren: 0.2,
-      }
+      },
     },
     exit: {
       opacity: 0,
       transition: {
         staggerChildren: 0.05,
         staggerDirection: -1,
-      }
-    }
+      },
+    },
   };
 
   const itemVariants = {
-    hidden: { 
+    hidden: {
       y: 20,
       opacity: 0,
       scale: 0.95,
@@ -60,7 +62,7 @@ const StaggeredOptionAnimations: React.FC<StaggeredOptionAnimationsProps> = ({
         stiffness: 100,
         damping: 15,
         mass: 1,
-      }
+      },
     },
     exit: {
       y: -10,
@@ -68,8 +70,8 @@ const StaggeredOptionAnimations: React.FC<StaggeredOptionAnimationsProps> = ({
       scale: 0.95,
       transition: {
         duration: 0.2,
-      }
-    }
+      },
+    },
   };
 
   return (
@@ -84,11 +86,7 @@ const StaggeredOptionAnimations: React.FC<StaggeredOptionAnimationsProps> = ({
           className={className}
         >
           {children.map((child, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              className="h-full"
-            >
+            <motion.div key={index} variants={itemVariants} className="h-full">
               {child}
             </motion.div>
           ))}

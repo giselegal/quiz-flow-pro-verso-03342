@@ -1,11 +1,13 @@
 # 🗄️ ESTRUTURA DA TABELA DE FUNIS
 
 ## Problema Encontrado
+
 O serviço `schemaDrivenFunnelService.ts` está tentando salvar na tabela `quizzes` que **NÃO EXISTE** no schema do Supabase.
 
 ## Estrutura Correta do Banco de Dados
 
 ### 1. Tabela `funnels` (Principal)
+
 ```sql
 CREATE TABLE funnels (
   id TEXT PRIMARY KEY,
@@ -21,6 +23,7 @@ CREATE TABLE funnels (
 ```
 
 **Campos:**
+
 - `id`: Identificador único do funil
 - `name`: Nome do funil
 - `description`: Descrição opcional
@@ -31,6 +34,7 @@ CREATE TABLE funnels (
 - `created_at/updated_at`: Timestamps
 
 ### 2. Tabela `funnel_pages` (Etapas/Páginas)
+
 ```sql
 CREATE TABLE funnel_pages (
   id TEXT PRIMARY KEY,
@@ -46,6 +50,7 @@ CREATE TABLE funnel_pages (
 ```
 
 **Campos:**
+
 - `id`: Identificador único da página
 - `funnel_id`: Referência ao funil (FK)
 - `title`: Título da página/etapa
@@ -57,12 +62,14 @@ CREATE TABLE funnel_pages (
 ## Como o Funil com 21 Etapas Deve Ser Salvo
 
 ### Estrutura de Salvamento:
+
 1. **Funil Principal** → tabela `funnels`
 2. **21 Etapas** → 21 registros na tabela `funnel_pages`
 
 ### Exemplo de Dados:
 
 **Tabela `funnels`:**
+
 ```json
 {
   "id": "funnel_123",
@@ -79,6 +86,7 @@ CREATE TABLE funnel_pages (
 ```
 
 **Tabela `funnel_pages` (exemplo das primeiras etapas):**
+
 ```json
 [
   {
@@ -88,19 +96,19 @@ CREATE TABLE funnel_pages (
     "page_type": "intro",
     "page_order": 1,
     "blocks": [
-      {"type": "title", "content": "Bem-vindo ao Quiz!"},
-      {"type": "button", "text": "Começar"}
+      { "type": "title", "content": "Bem-vindo ao Quiz!" },
+      { "type": "button", "text": "Começar" }
     ]
   },
   {
-    "id": "page_2", 
+    "id": "page_2",
     "funnel_id": "funnel_123",
     "title": "Primeira Pergunta",
     "page_type": "question",
     "page_order": 2,
     "blocks": [
-      {"type": "question", "text": "Qual sua idade?"},
-      {"type": "options", "options": ["18-25", "26-35", "36+"]}
+      { "type": "question", "text": "Qual sua idade?" },
+      { "type": "options", "options": ["18-25", "26-35", "36+"] }
     ]
   }
   // ... até page_21
@@ -110,10 +118,12 @@ CREATE TABLE funnel_pages (
 ## Correção Necessária
 
 O arquivo `src/services/schemaDrivenFunnelService.ts` precisa ser corrigido para:
+
 1. Usar tabela `funnels` em vez de `quizzes`
-2. Salvar as páginas na tabela `funnel_pages` 
+2. Salvar as páginas na tabela `funnel_pages`
 3. Manter a relação entre funil e páginas via `funnel_id`
 
 ## Status
+
 ❌ **ERRO CRÍTICO**: Serviço salvando na tabela errada
 ✅ **SOLUÇÃO**: Corrigir o serviço para usar as tabelas corretas

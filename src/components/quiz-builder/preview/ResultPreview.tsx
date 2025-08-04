@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { StyleResult } from '@/types/quiz';
+import React from "react";
+import { StyleResult } from "@/types/quiz";
 
 interface ResultPreviewProps {
   result: {
@@ -25,7 +24,7 @@ const ResultPreview: React.FC<ResultPreviewProps> = ({ result }) => {
           </p>
         </div>
       </div>
-      
+
       {result.secondaryStyles.length > 0 && (
         <div>
           <h4 className="text-lg font-medium text-[#432818] mb-3">
@@ -33,7 +32,10 @@ const ResultPreview: React.FC<ResultPreviewProps> = ({ result }) => {
           </h4>
           <div className="grid gap-3">
             {result.secondaryStyles.map((style, index) => (
-              <div key={index} className="bg-white rounded-lg p-4 border border-[#B89B7A]/20">
+              <div
+                key={index}
+                className="bg-white rounded-lg p-4 border border-[#B89B7A]/20"
+              >
                 <div className="flex justify-between items-center">
                   <span className="font-medium text-[#432818]">
                     {style.category}

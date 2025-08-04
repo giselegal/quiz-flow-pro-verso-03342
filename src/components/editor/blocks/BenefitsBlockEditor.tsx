@@ -1,22 +1,23 @@
-
-import React from 'react';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Plus, Trash } from 'lucide-react';
-import { BlockEditorProps } from './types';
+import React from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Plus, Trash } from "lucide-react";
+import { BlockEditorProps } from "./types";
 
 export const BenefitsBlockEditor: React.FC<BlockEditorProps> = ({
   block,
-  onUpdate
+  onUpdate,
 }) => {
   // Ensure items is always a string array for benefits
-  const items = Array.isArray(block.content.items) 
-    ? block.content.items.filter((item): item is string => typeof item === 'string')
+  const items = Array.isArray(block.content.items)
+    ? block.content.items.filter(
+        (item): item is string => typeof item === "string",
+      )
     : [];
 
   const addItem = () => {
-    const newItems = [...items, ''];
+    const newItems = [...items, ""];
     onUpdate({ items: newItems });
   };
 
@@ -38,12 +39,12 @@ export const BenefitsBlockEditor: React.FC<BlockEditorProps> = ({
         <Label htmlFor={`${block.id}-title`}>Título</Label>
         <Input
           id={`${block.id}-title`}
-          value={block.content.title || ''}
+          value={block.content.title || ""}
           onChange={(e) => onUpdate({ title: e.target.value })}
           className="mt-1"
         />
       </div>
-      
+
       <div>
         <Label>Benefícios</Label>
         <div className="space-y-2 mt-2">

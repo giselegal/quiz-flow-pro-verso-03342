@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 // import { MainTransition } from './MainTransition'; // Removido, não é mais usado aqui
-import QuizFinalTransition from '../QuizFinalTransition';
+import QuizFinalTransition from "../QuizFinalTransition";
 // import { UserResponse } from '@/types/quiz'; // Removido
 // import { Spinner } from '@/components/ui/spinner'; // Removido se não for usado em QuizFinalTransition
 
@@ -37,8 +37,8 @@ const QuizTransitionManager: React.FC<QuizTransitionManagerProps> = ({
   //           {/* ...existing counter logic / JSX... */}
   //         </div>
   //       )}
-  //       <Spinner /> 
-  //       <Spinner /> 
+  //       <Spinner />
+  //       <Spinner />
   //     </div>
   //   );
   // }

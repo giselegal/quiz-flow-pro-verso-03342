@@ -15,7 +15,7 @@ rcce → React Class Component Export
 */
 
 // Exemplo usando "rafce":
-import React from 'react';
+import React from "react";
 
 const ComponenteExemplo = () => {
   return (
@@ -46,25 +46,25 @@ useDebugValue → useDebugValue Hook
 const ExemploHooks = () => {
   // useState - Digite "useState" + Tab
   const [count, setCount] = React.useState(0);
-  
+
   // useEffect - Digite "useEffect" + Tab
   React.useEffect(() => {
     document.title = `Count: ${count}`;
   }, [count]);
-  
+
   // useCallback - Digite "useCallback" + Tab
   const handleClick = React.useCallback(() => {
-    setCount(prev => prev + 1);
+    setCount((prev) => prev + 1);
   }, []);
-  
+
   // useMemo - Digite "useMemo" + Tab
   const expensiveValue = React.useMemo(() => {
     return count * 2;
   }, [count]);
-  
+
   // useRef - Digite "useRef" + Tab
   const inputRef = React.useRef(null);
-  
+
   return (
     <div>
       <p>Count: {count}</p>
@@ -112,13 +112,13 @@ cte → console.timeEnd()
 
 const exemploConsole = () => {
   // clg + Tab
-  console.log('Hello World');
-  
+  console.log("Hello World");
+
   // clo + Tab
-  console.log('count', count);
-  
+  console.log("count", count);
+
   // ctr + Tab
-  console.trace('trace');
+  console.trace("trace");
 };
 
 // ===== FUNCTION SNIPPETS =====
@@ -133,17 +133,17 @@ iife → (() => {})()
 
 // anfn + Tab
 const minhaFuncao = () => {
-  console.log('Função arrow');
+  console.log("Função arrow");
 };
 
 // nfn + Tab
-const minhaFuncao2 = function() {
-  console.log('Função normal');
+const minhaFuncao2 = function () {
+  console.log("Função normal");
 };
 
 // fn + Tab
 function minhaFuncao3() {
-  console.log('Function declaration');
+  console.log("Function declaration");
 }
 
 // ===== DESTRUCTURING SNIPPETS =====
@@ -157,23 +157,23 @@ si → setInterval(() => {}, intervalInms)
 */
 
 const exemploDestructuring = () => {
-  const user = { name: 'João', age: 30 };
+  const user = { name: "João", age: 30 };
   const numbers = [1, 2, 3, 4, 5];
-  
+
   // dob + Tab
   const { name, age } = user;
-  
+
   // dar + Tab
   const [first, second] = numbers;
-  
+
   // sti + Tab
   setTimeout(() => {
-    console.log('Timeout executado');
+    console.log("Timeout executado");
   }, 1000);
-  
+
   // si + Tab
   setInterval(() => {
-    console.log('Interval executado');
+    console.log("Interval executado");
   }, 1000);
 };
 
@@ -199,19 +199,19 @@ rxreducer → const initialState = {}; export default (state = initialState, act
 // 10. CUSTOM HOOKS
 const useCounter = (initialValue = 0) => {
   const [count, setCount] = React.useState(initialValue);
-  
+
   const increment = React.useCallback(() => {
-    setCount(prev => prev + 1);
+    setCount((prev) => prev + 1);
   }, []);
-  
+
   const decrement = React.useCallback(() => {
-    setCount(prev => prev - 1);
+    setCount((prev) => prev - 1);
   }, []);
-  
+
   const reset = React.useCallback(() => {
     setCount(initialValue);
   }, [initialValue]);
-  
+
   return { count, increment, decrement, reset };
 };
 
@@ -219,12 +219,12 @@ const useCounter = (initialValue = 0) => {
 const ThemeContext = React.createContext();
 
 const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = React.useState('light');
-  
+  const [theme, setTheme] = React.useState("light");
+
   const toggleTheme = React.useCallback(() => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
   }, []);
-  
+
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
@@ -237,11 +237,11 @@ const initialState = { count: 0 };
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'increment':
+    case "increment":
       return { count: state.count + 1 };
-    case 'decrement':
+    case "decrement":
       return { count: state.count - 1 };
-    case 'reset':
+    case "reset":
       return initialState;
     default:
       throw new Error();
@@ -250,13 +250,13 @@ const reducer = (state, action) => {
 
 const ExemploReducer = () => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
-  
+
   return (
     <div>
       Count: {state.count}
-      <button onClick={() => dispatch({ type: 'increment' })}>+</button>
-      <button onClick={() => dispatch({ type: 'decrement' })}>-</button>
-      <button onClick={() => dispatch({ type: 'reset' })}>Reset</button>
+      <button onClick={() => dispatch({ type: "increment" })}>+</button>
+      <button onClick={() => dispatch({ type: "decrement" })}>-</button>
+      <button onClick={() => dispatch({ type: "reset" })}>Reset</button>
     </div>
   );
 };
@@ -268,7 +268,7 @@ const CustomInput = React.forwardRef((props, ref) => {
 
 // 14. memo Example
 const MemoizedComponent = React.memo(({ title, count }) => {
-  console.log('MemoizedComponent renderizado');
+  console.log("MemoizedComponent renderizado");
   return (
     <div>
       <h3>{title}</h3>
@@ -289,7 +289,7 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('Error caught:', error, errorInfo);
+    console.error("Error caught:", error, errorInfo);
   }
 
   render() {
@@ -331,28 +331,27 @@ const QuizComponent = () => {
   const [currentQuestion, setCurrentQuestion] = React.useState(0);
   const [answers, setAnswers] = React.useState([]);
   const [isCompleted, setIsCompleted] = React.useState(false);
-  
-  const handleAnswer = React.useCallback((answer) => {
-    setAnswers(prev => [...prev, answer]);
-    
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(prev => prev + 1);
-    } else {
-      setIsCompleted(true);
-    }
-  }, [currentQuestion]);
-  
+
+  const handleAnswer = React.useCallback(
+    (answer) => {
+      setAnswers((prev) => [...prev, answer]);
+
+      if (currentQuestion < questions.length - 1) {
+        setCurrentQuestion((prev) => prev + 1);
+      } else {
+        setIsCompleted(true);
+      }
+    },
+    [currentQuestion],
+  );
+
   const resetQuiz = React.useCallback(() => {
     setCurrentQuestion(0);
     setAnswers([]);
     setIsCompleted(false);
   }, []);
-  
-  return (
-    <div>
-      {/* Quiz UI aqui */}
-    </div>
-  );
+
+  return <div>{/* Quiz UI aqui */}</div>;
 };
 
 // Para hooks personalizados:
@@ -360,26 +359,26 @@ const useQuizState = () => {
   const [questions, setQuestions] = React.useState([]);
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const [userAnswers, setUserAnswers] = React.useState([]);
-  
+
   const nextQuestion = React.useCallback(() => {
-    setCurrentIndex(prev => prev + 1);
+    setCurrentIndex((prev) => prev + 1);
   }, []);
-  
+
   const previousQuestion = React.useCallback(() => {
-    setCurrentIndex(prev => prev - 1);
+    setCurrentIndex((prev) => prev - 1);
   }, []);
-  
+
   const saveAnswer = React.useCallback((answer) => {
-    setUserAnswers(prev => [...prev, answer]);
+    setUserAnswers((prev) => [...prev, answer]);
   }, []);
-  
+
   return {
     questions,
     currentIndex,
     userAnswers,
     nextQuestion,
     previousQuestion,
-    saveAnswer
+    saveAnswer,
   };
 };
 
@@ -392,5 +391,5 @@ export {
   ErrorBoundary,
   QuizComponent,
   useCounter,
-  useQuizState
+  useQuizState,
 };

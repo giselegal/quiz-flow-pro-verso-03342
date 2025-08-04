@@ -1,11 +1,11 @@
 /**
  * 🚀 OptimizedPropertiesPanel - MELHOR DE TODOS OS MUNDOS
- * 
+ *
  * Combina:
  * - EnhancedPropertiesPanel: Interface completa e moderna
  * - ModernPropertyPanel: React Hook Form + performance
  * - DynamicPropertiesPanel: Simplicidade e funcionalidade
- * 
+ *
  * OTIMIZAÇÕES:
  * - Performance com React Hook Form
  * - Interface moderna do Enhanced
@@ -22,7 +22,13 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -32,19 +38,19 @@ import { HexColorPicker } from 'react-colorful';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
-import { 
-  X, 
-  Info, 
-  Plus, 
-  Trash2, 
-  GripVertical, 
+import {
+  X,
+  Info,
+  Plus,
+  Trash2,
+  GripVertical,
   Palette,
   Settings,
   Layout,
   Type,
   CheckCircle,
   Edit3,
-  Zap
+  Zap,
 } from 'lucide-react';
 import { BlockDefinition, EditableContent } from '@/types/editor';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -75,7 +81,7 @@ interface OptimizedPropertiesPanelProps {
 // 🔧 SCHEMA DE VALIDAÇÃO DINÂMICO
 const createValidationSchema = (properties: Record<string, any>) => {
   const schemaFields: Record<string, any> = {};
-  
+
   Object.entries(properties).forEach(([key, property]) => {
     switch (property.type) {
       case 'text':
@@ -94,7 +100,7 @@ const createValidationSchema = (properties: Record<string, any>) => {
         schemaFields[key] = z.any().optional();
     }
   });
-  
+
   return z.object(schemaFields);
 };
 
@@ -115,27 +121,31 @@ const OptimizedOptionsArrayEditor: React.FC<{
       category: 'Geral',
       styleCategory: 'Geral',
       points: 1,
-      imageUrl: 'https://via.placeholder.com/100x100'
+      imageUrl: 'https://via.placeholder.com/100x100',
     };
     onChange([...value, newOption]);
   }, [value, onChange]);
 
-  const removeOption = useCallback((index: number) => {
-    onChange(value.filter((_, i) => i !== index));
-  }, [value, onChange]);
+  const removeOption = useCallback(
+    (index: number) => {
+      onChange(value.filter((_, i) => i !== index));
+    },
+    [value, onChange],
+  );
 
-  const updateOption = useCallback((index: number, field: keyof OptionItem, newValue: string | number) => {
-    const newOptions = [...value];
-    newOptions[index] = { ...newOptions[index], [field]: newValue };
-    onChange(newOptions);
-  }, [value, onChange]);
+  const updateOption = useCallback(
+    (index: number, field: keyof OptionItem, newValue: string | number) => {
+      const newOptions = [...value];
+      newOptions[index] = { ...newOptions[index], [field]: newValue };
+      onChange(newOptions);
+    },
+    [value, onChange],
+  );
 
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-gray-700">
-          Opções ({value.length})
-        </span>
+        <span className="text-sm font-medium text-gray-700">Opções ({value.length})</span>
         <Button onClick={addOption} size="sm" variant="outline">
           <Plus className="w-3 h-3 mr-1" />
           Adicionar
@@ -147,9 +157,7 @@ const OptimizedOptionsArrayEditor: React.FC<{
           <Card key={option.id} className="p-3 border border-gray-200">
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-gray-600">
-                  Opção {index + 1}
-                </span>
+                <span className="text-xs font-medium text-gray-600">Opção {index + 1}</span>
                 <Button
                   onClick={() => removeOption(index)}
                   size="sm"
@@ -159,7 +167,7 @@ const OptimizedOptionsArrayEditor: React.FC<{
                   <Trash2 className="w-3 h-3" />
                 </Button>
               </div>
-              
+
               <div className="grid gap-2">
                 <Controller
                   control={control}
@@ -169,14 +177,14 @@ const OptimizedOptionsArrayEditor: React.FC<{
                       {...field}
                       placeholder="Texto da opção"
                       className="text-xs"
-                      onChange={(e) => {
+                      onChange={e => {
                         field.onChange(e);
                         updateOption(index, 'text', e.target.value);
                       }}
                     />
                   )}
                 />
-                
+
                 <Controller
                   control={control}
                   name={`${name}.${index}.value`}
@@ -185,7 +193,7 @@ const OptimizedOptionsArrayEditor: React.FC<{
                       {...field}
                       placeholder="Valor da opção"
                       className="text-xs"
-                      onChange={(e) => {
+                      onChange={e => {
                         field.onChange(e);
                         updateOption(index, 'value', e.target.value);
                       }}
@@ -225,16 +233,16 @@ const OptimizedColorPicker: React.FC<{
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-3">
-            <HexColorPicker 
-              color={field.value || '#ffffff'} 
-              onChange={(color) => {
+            <HexColorPicker
+              color={field.value || '#ffffff'}
+              onChange={color => {
                 field.onChange(color);
                 onChange(color);
-              }} 
+              }}
             />
             <Input
               value={field.value || ''}
-              onChange={(e) => {
+              onChange={e => {
                 field.onChange(e.target.value);
                 onChange(e.target.value);
               }}
@@ -263,9 +271,7 @@ const OptimizedPropertyGroup: React.FC<{
         {title}
       </CardTitle>
     </CardHeader>
-    <CardContent className="pt-0 space-y-3">
-      {children}
-    </CardContent>
+    <CardContent className="pt-0 space-y-3">{children}</CardContent>
   </Card>
 );
 
@@ -306,20 +312,25 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
   block,
   blockDefinition,
   onUpdateBlock,
-  onClose
+  onClose,
 }) => {
   const { scrollRef } = useSyncedScroll({ source: 'properties' });
-  
+
   // 🔧 SETUP DO REACT HOOK FORM
-  const validationSchema = useMemo(() => 
-    createValidationSchema(blockDefinition.properties), 
-    [blockDefinition.properties]
+  const validationSchema = useMemo(
+    () => createValidationSchema(blockDefinition.properties),
+    [blockDefinition.properties],
   );
-  
-  const { control, watch, handleSubmit, formState: { errors } } = useForm({
+
+  const {
+    control,
+    watch,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(validationSchema),
     defaultValues: block.content,
-    mode: 'onChange'
+    mode: 'onChange',
   });
 
   // 🔄 DEBOUNCED UPDATE
@@ -335,7 +346,7 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
     if (debouncedValues) {
       console.log('🚀 OptimizedPropertiesPanel: Calling onUpdateBlock with:', {
         blockId: block.id,
-        updates: debouncedValues
+        updates: debouncedValues,
       });
       onUpdateBlock(block.id, debouncedValues);
     }
@@ -351,7 +362,7 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
       styling: {},
       behavior: {},
       validation: {},
-      advanced: {}
+      advanced: {},
     };
 
     Object.entries(properties).forEach(([key, prop]) => {
@@ -365,170 +376,173 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
   const categorizedProps = categorizeProperties();
 
   // 🎨 Renderizar input baseado no tipo
-  const renderPropertyInput = useCallback((key: string, property: any) => {
-    switch (property.type) {
-      case 'text':
-        return (
-          <Controller
-            control={control}
-            name={key}
-            render={({ field }) => (
-              <Input
-                {...field}
-                placeholder={property.placeholder || property.label}
-                className="text-sm"
-              />
-            )}
-          />
-        );
-
-      case 'textarea':
-        return (
-          <Controller
-            control={control}
-            name={key}
-            render={({ field }) => (
-              <Textarea
-                {...field}
-                placeholder={property.placeholder || property.label}
-                rows={property.rows || 3}
-                className="text-sm"
-              />
-            )}
-          />
-        );
-
-      case 'boolean':
-        return (
-          <Controller
-            control={control}
-            name={key}
-            render={({ field }) => (
-              <div className="flex items-center space-x-2">
-                <Switch
-                  checked={field.value || false}
-                  onCheckedChange={field.onChange}
-                />
-                <span className="text-sm text-gray-600">
-                  {field.value ? 'Ativado' : 'Desativado'}
-                </span>
-              </div>
-            )}
-          />
-        );
-
-      case 'select':
-        return (
-          <Controller
-            control={control}
-            name={key}
-            render={({ field }) => (
-              <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger className="text-sm">
-                  <SelectValue placeholder={`Selecione ${property.label.toLowerCase()}`} />
-                </SelectTrigger>
-                <SelectContent>
-                  {property.options?.map((option: any) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          />
-        );
-
-      case 'range':
-        return (
-          <Controller
-            control={control}
-            name={key}
-            render={({ field }) => (
-              <div className="space-y-2">
-                <Slider
-                  value={[field.value || property.default || 0]}
-                  onValueChange={(value) => field.onChange(value[0])}
-                  max={property.max || 100}
-                  min={property.min || 0}
-                  step={property.step || 1}
-                  className="w-full"
-                />
-                <div className="flex justify-between text-xs text-gray-500">
-                  <span>{property.min || 0}</span>
-                  <span className="font-medium">{field.value || property.default || 0}</span>
-                  <span>{property.max || 100}</span>
-                </div>
-              </div>
-            )}
-          />
-        );
-
-      case 'color':
-        return (
-          <OptimizedColorPicker
-            value={watchedValues[key] || property.default}
-            onChange={(color) => {}}
-            label={property.label}
-            control={control}
-            name={key}
-          />
-        );
-
-      case 'array':
-        if (key === 'options') {
+  const renderPropertyInput = useCallback(
+    (key: string, property: any) => {
+      switch (property.type) {
+        case 'text':
           return (
-            <OptimizedOptionsArrayEditor 
-              value={watchedValues[key] || []} 
-              onChange={() => {}}
+            <Controller
+              control={control}
+              name={key}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  placeholder={property.placeholder || property.label}
+                  className="text-sm"
+                />
+              )}
+            />
+          );
+
+        case 'textarea':
+          return (
+            <Controller
+              control={control}
+              name={key}
+              render={({ field }) => (
+                <Textarea
+                  {...field}
+                  placeholder={property.placeholder || property.label}
+                  rows={property.rows || 3}
+                  className="text-sm"
+                />
+              )}
+            />
+          );
+
+        case 'boolean':
+          return (
+            <Controller
+              control={control}
+              name={key}
+              render={({ field }) => (
+                <div className="flex items-center space-x-2">
+                  <Switch checked={field.value || false} onCheckedChange={field.onChange} />
+                  <span className="text-sm text-gray-600">
+                    {field.value ? 'Ativado' : 'Desativado'}
+                  </span>
+                </div>
+              )}
+            />
+          );
+
+        case 'select':
+          return (
+            <Controller
+              control={control}
+              name={key}
+              render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger className="text-sm">
+                    <SelectValue placeholder={`Selecione ${property.label.toLowerCase()}`} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {property.options?.map((option: any) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          );
+
+        case 'range':
+          return (
+            <Controller
+              control={control}
+              name={key}
+              render={({ field }) => (
+                <div className="space-y-2">
+                  <Slider
+                    value={[field.value || property.default || 0]}
+                    onValueChange={value => field.onChange(value[0])}
+                    max={property.max || 100}
+                    min={property.min || 0}
+                    step={property.step || 1}
+                    className="w-full"
+                  />
+                  <div className="flex justify-between text-xs text-gray-500">
+                    <span>{property.min || 0}</span>
+                    <span className="font-medium">{field.value || property.default || 0}</span>
+                    <span>{property.max || 100}</span>
+                  </div>
+                </div>
+              )}
+            />
+          );
+
+        case 'color':
+          return (
+            <OptimizedColorPicker
+              value={watchedValues[key] || property.default}
+              onChange={color => {}}
+              label={property.label}
               control={control}
               name={key}
             />
           );
-        }
-        return (
-          <div className="text-xs text-gray-500">
-            Editor de array genérico (em desenvolvimento)
-          </div>
-        );
 
-      default:
-        return (
-          <Controller
-            control={control}
-            name={key}
-            render={({ field }) => (
-              <Input
-                {...field}
-                placeholder={property.placeholder || property.label}
-                className="text-sm"
+        case 'array':
+          if (key === 'options') {
+            return (
+              <OptimizedOptionsArrayEditor
+                value={watchedValues[key] || []}
+                onChange={() => {}}
+                control={control}
+                name={key}
               />
-            )}
-          />
-        );
-    }
-  }, [control, watchedValues]);
+            );
+          }
+          return (
+            <div className="text-xs text-gray-500">
+              Editor de array genérico (em desenvolvimento)
+            </div>
+          );
+
+        default:
+          return (
+            <Controller
+              control={control}
+              name={key}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  placeholder={property.placeholder || property.label}
+                  className="text-sm"
+                />
+              )}
+            />
+          );
+      }
+    },
+    [control, watchedValues],
+  );
 
   // 🎯 Renderizar grupo de propriedades
-  const renderPropertyGroup = useCallback((title: string, icon: React.ReactNode, properties: Record<string, any>) => {
-    if (Object.keys(properties).length === 0) return null;
+  const renderPropertyGroup = useCallback(
+    (title: string, icon: React.ReactNode, properties: Record<string, any>) => {
+      if (Object.keys(properties).length === 0) return null;
 
-    return (
-      <OptimizedPropertyGroup title={title} icon={icon}>
-        {Object.entries(properties).map(([key, property]) => (
-          <OptimizedPropertyField
-            key={key}
-            label={property.label}
-            description={property.description}
-            required={property.required}
-            error={errors[key]?.message}
-          >
-            {renderPropertyInput(key, property)}
-          </OptimizedPropertyField>
-        ))}
-      </OptimizedPropertyGroup>
-    );
-  }, [renderPropertyInput, errors]);
+      return (
+        <OptimizedPropertyGroup title={title} icon={icon}>
+          {Object.entries(properties).map(([key, property]) => (
+            <OptimizedPropertyField
+              key={key}
+              label={property.label}
+              description={property.description}
+              required={property.required}
+              error={errors[key]?.message}
+            >
+              {renderPropertyInput(key, property)}
+            </OptimizedPropertyField>
+          ))}
+        </OptimizedPropertyGroup>
+      );
+    },
+    [renderPropertyInput, errors],
+  );
 
   return (
     <div className="h-full w-full flex flex-col bg-gray-50">
@@ -544,16 +558,16 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
               <p className="text-xs text-white/80">ID: {block.id}</p>
             </div>
           </div>
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={onClose}
             className="text-white hover:bg-white/20"
           >
             <X className="w-4 h-4" />
           </Button>
         </div>
-        
+
         {blockDefinition.description && (
           <p className="text-sm text-white/90 mt-2">{blockDefinition.description}</p>
         )}
@@ -574,16 +588,36 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
           </TabsList>
 
           <TabsContent value="properties" className="p-4 space-y-4 mt-0">
-            {renderPropertyGroup("Geral", <Type className="w-4 h-4" />, categorizedProps.general)}
-            {renderPropertyGroup("Conteúdo", <Edit3 className="w-4 h-4" />, categorizedProps.content)}
-            {renderPropertyGroup("Layout", <Layout className="w-4 h-4" />, categorizedProps.layout)}
-            {renderPropertyGroup("Comportamento", <CheckCircle className="w-4 h-4" />, categorizedProps.behavior)}
-            {renderPropertyGroup("Validação", <CheckCircle className="w-4 h-4" />, categorizedProps.validation)}
+            {renderPropertyGroup('Geral', <Type className="w-4 h-4" />, categorizedProps.general)}
+            {renderPropertyGroup(
+              'Conteúdo',
+              <Edit3 className="w-4 h-4" />,
+              categorizedProps.content,
+            )}
+            {renderPropertyGroup('Layout', <Layout className="w-4 h-4" />, categorizedProps.layout)}
+            {renderPropertyGroup(
+              'Comportamento',
+              <CheckCircle className="w-4 h-4" />,
+              categorizedProps.behavior,
+            )}
+            {renderPropertyGroup(
+              'Validação',
+              <CheckCircle className="w-4 h-4" />,
+              categorizedProps.validation,
+            )}
           </TabsContent>
 
           <TabsContent value="style" className="p-4 space-y-4 mt-0">
-            {renderPropertyGroup("Estilização", <Palette className="w-4 h-4" />, categorizedProps.styling)}
-            {renderPropertyGroup("Avançado", <Zap className="w-4 h-4" />, categorizedProps.advanced)}
+            {renderPropertyGroup(
+              'Estilização',
+              <Palette className="w-4 h-4" />,
+              categorizedProps.styling,
+            )}
+            {renderPropertyGroup(
+              'Avançado',
+              <Zap className="w-4 h-4" />,
+              categorizedProps.advanced,
+            )}
           </TabsContent>
         </Tabs>
 

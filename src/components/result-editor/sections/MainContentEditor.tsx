@@ -1,9 +1,8 @@
-
-import React from 'react';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
+import React from "react";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 
 interface MainContentEditorProps {
   content: {
@@ -21,30 +20,29 @@ export const MainContentEditor: React.FC<MainContentEditorProps> = ({
   content,
   visible,
   onUpdate,
-  onToggleVisibility
+  onToggleVisibility,
 }) => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-medium">Conteúdo Principal</h3>
-        <Switch
-          checked={visible}
-          onCheckedChange={onToggleVisibility}
-        />
+        <Switch checked={visible} onCheckedChange={onToggleVisibility} />
       </div>
-      
+
       {visible && (
         <>
           <div className="space-y-2">
             <Label htmlFor="introText">Texto de Introdução</Label>
             <Textarea
               id="introText"
-              value={content.introText || ''}
-              onChange={(e) => onUpdate({ ...content, introText: e.target.value })}
+              value={content.introText || ""}
+              onChange={(e) =>
+                onUpdate({ ...content, introText: e.target.value })
+              }
               rows={4}
             />
           </div>
-          
+
           <div className="space-y-2">
             <Label>Benefícios</Label>
             {content.benefits?.map((benefit, index) => (
@@ -60,18 +58,20 @@ export const MainContentEditor: React.FC<MainContentEditorProps> = ({
               />
             ))}
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="tabletImage">Imagem do Tablet</Label>
             <Input
               id="tabletImage"
-              value={content.tabletImage || ''}
-              onChange={(e) => onUpdate({ ...content, tabletImage: e.target.value })}
+              value={content.tabletImage || ""}
+              onChange={(e) =>
+                onUpdate({ ...content, tabletImage: e.target.value })
+              }
             />
             {content.tabletImage && (
-              <img 
-                src={content.tabletImage} 
-                alt="Preview do tablet" 
+              <img
+                src={content.tabletImage}
+                alt="Preview do tablet"
                 className="h-32 object-contain mt-2"
               />
             )}

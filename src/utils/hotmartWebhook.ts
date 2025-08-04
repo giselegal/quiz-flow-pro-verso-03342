@@ -1,4 +1,3 @@
-
 // Sistema de Webhook Hotmart
 // ID: agQzTLUehWUfhPzjhdwntVQz0JNT5E0216ae0d-00a9-48ae-85d1-f0d14bd8e0df
 
@@ -110,7 +109,7 @@ export class HotmartWebhookManager {
     } catch (error) {
       console.error(
         "[Hotmart Webhook] Erro ao armazenar dados do usuário:",
-        error
+        error,
       );
     }
   }
@@ -124,7 +123,7 @@ export class HotmartWebhookManager {
       if (!this.validateWebhookId(webhookData.webhook_id)) {
         console.warn(
           "[Hotmart Webhook] ID do webhook inválido:",
-          webhookData.webhook_id
+          webhookData.webhook_id,
         );
         return;
       }
@@ -147,7 +146,7 @@ export class HotmartWebhookManager {
         default:
           console.log(
             "[Hotmart Webhook] Evento não tratado:",
-            webhookData.event
+            webhookData.event,
           );
       }
     } catch (error) {
@@ -157,7 +156,7 @@ export class HotmartWebhookManager {
 
   // Tratar compra aprovada
   private async handlePurchaseApproved(
-    data: HotmartWebhookData
+    data: HotmartWebhookData,
   ): Promise<void> {
     console.log("[Hotmart Webhook] Compra aprovada:", data.data.transaction.id);
 
@@ -169,7 +168,7 @@ export class HotmartWebhookManager {
       if (!userData) {
         console.warn(
           "[Hotmart Webhook] Dados do usuário não encontrados para:",
-          userEmail
+          userEmail,
         );
         // Mesmo assim, processar a venda sem UTMs
       }
@@ -190,7 +189,7 @@ export class HotmartWebhookManager {
         window.fbq("track", "Purchase", purchaseEventData);
         console.log(
           "[Hotmart Webhook] Evento Purchase enviado ao Facebook Pixel:",
-          purchaseEventData
+          purchaseEventData,
         );
       }
 
@@ -211,7 +210,7 @@ export class HotmartWebhookManager {
           ...userData?.utm_parameters,
         });
         console.log(
-          "[Hotmart Webhook] Evento purchase enviado ao Google Analytics"
+          "[Hotmart Webhook] Evento purchase enviado ao Google Analytics",
         );
       }
 
@@ -219,7 +218,7 @@ export class HotmartWebhookManager {
       trackSaleConversion(
         data.data.purchase.price.value,
         data.data.purchase.price.currency_value,
-        data.data.purchase.product.name
+        data.data.purchase.product.name,
       );
 
       // Notificar outros sistemas se necessário
@@ -227,18 +226,18 @@ export class HotmartWebhookManager {
     } catch (error) {
       console.error(
         "[Hotmart Webhook] Erro ao processar compra aprovada:",
-        error
+        error,
       );
     }
   }
 
   // Tratar cancelamento de compra
   private async handlePurchaseCanceled(
-    data: HotmartWebhookData
+    data: HotmartWebhookData,
   ): Promise<void> {
     console.log(
       "[Hotmart Webhook] Compra cancelada:",
-      data.data.transaction.id
+      data.data.transaction.id,
     );
 
     // Enviar evento de cancelamento se necessário
@@ -254,11 +253,11 @@ export class HotmartWebhookManager {
 
   // Tratar reembolso de compra
   private async handlePurchaseRefunded(
-    data: HotmartWebhookData
+    data: HotmartWebhookData,
   ): Promise<void> {
     console.log(
       "[Hotmart Webhook] Compra reembolsada:",
-      data.data.transaction.id
+      data.data.transaction.id,
     );
 
     // Enviar evento de reembolso se necessário
@@ -294,7 +293,9 @@ export class HotmartWebhookManager {
   }
 
   // Recuperar dados do localStorage
-  private retrieveUserDataFromStorage(email: string): UserAnalyticsData | undefined {
+  private retrieveUserDataFromStorage(
+    email: string,
+  ): UserAnalyticsData | undefined {
     try {
       const key = `user_data_${email}`;
       const stored = localStorage.getItem(key);
@@ -302,7 +303,7 @@ export class HotmartWebhookManager {
     } catch (error) {
       console.error(
         "[Hotmart Webhook] Erro ao recuperar dados do storage:",
-        error
+        error,
       );
       return undefined;
     }
@@ -357,12 +358,12 @@ export class HotmartWebhookManager {
       }
       console.log(
         "[Hotmart Webhook] Dados de usuário carregados:",
-        this.userDataStore.size
+        this.userDataStore.size,
       );
     } catch (error) {
       console.error(
         "[Hotmart Webhook] Erro ao carregar dados iniciais:",
-        error
+        error,
       );
     }
   }
@@ -370,7 +371,7 @@ export class HotmartWebhookManager {
   // Notificar sistemas externos (CRM, etc.)
   private async notifyExternalSystems(
     data: HotmartWebhookData,
-    userData?: UserAnalyticsData | undefined
+    userData?: UserAnalyticsData | undefined,
   ): Promise<void> {
     try {
       // Aqui você pode adicionar integrações com CRM, Email Marketing, etc.
@@ -384,7 +385,7 @@ export class HotmartWebhookManager {
     } catch (error) {
       console.error(
         "[Hotmart Webhook] Erro ao notificar sistemas externos:",
-        error
+        error,
       );
     }
   }
@@ -392,7 +393,7 @@ export class HotmartWebhookManager {
   // Método público para armazenar dados quando o usuário completa o quiz
   public storeQuizCompletionData(
     email: string,
-    quizResults: Record<string, unknown>
+    quizResults: Record<string, unknown>,
   ): void {
     this.storeUserData(email, {
       quiz_results: quizResults,
@@ -415,7 +416,9 @@ export class HotmartWebhookManager {
       const cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate() - daysToKeep);
 
-      for (const [email, userData] of Array.from(this.userDataStore.entries())) {
+      for (const [email, userData] of Array.from(
+        this.userDataStore.entries(),
+      )) {
         const dataDate = new Date(userData.timestamp);
         if (dataDate < cutoffDate) {
           this.userDataStore.delete(email);
@@ -436,7 +439,7 @@ export const hotmartWebhookManager = new HotmartWebhookManager();
 // Função utilitária para fácil uso nos componentes
 export const storeUserForHotmart = (
   email: string,
-  additionalData?: Partial<UserAnalyticsData>
+  additionalData?: Partial<UserAnalyticsData>,
 ) => {
   hotmartWebhookManager.storeUserData(email, additionalData || {});
 };
@@ -444,11 +447,11 @@ export const storeUserForHotmart = (
 // Função para simular webhook em desenvolvimento (apenas para testes)
 export const simulateHotmartWebhook = (
   email: string,
-  transactionId?: string
+  transactionId?: string,
 ) => {
   if (process.env.NODE_ENV !== "development") {
     console.warn(
-      "[Hotmart Webhook] Simulação disponível apenas em desenvolvimento"
+      "[Hotmart Webhook] Simulação disponível apenas em desenvolvimento",
     );
     return;
   }

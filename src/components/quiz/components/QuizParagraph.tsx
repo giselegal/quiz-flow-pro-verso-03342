@@ -1,9 +1,9 @@
-import React from 'react';
-import quizStyles from '@/styles/quiz.module.css';
+import React from "react";
+import quizStyles from "@/styles/quiz.module.css";
 
 interface QuizParagraphProps {
-  text?:string;
-  alignment?: 'left' | 'center' | 'right' | 'justify';
+  text?: string;
+  alignment?: "left" | "center" | "right" | "justify";
   color?: string;
   fontSize?: string;
   lineHeight?: string | number;
@@ -11,23 +11,23 @@ interface QuizParagraphProps {
 }
 
 const QuizParagraph: React.FC<QuizParagraphProps> = ({
-  text = '',
-  alignment = 'left',
-  color = '#432818',
-  fontSize = '1rem',
+  text = "",
+  alignment = "left",
+  color = "#432818",
+  fontSize = "1rem",
   lineHeight = 1.6,
-  className = '',
+  className = "",
 }) => {
   const style: React.CSSProperties = {
     textAlign: alignment,
     color,
     fontSize,
     lineHeight,
-    margin: '0 0 1rem 0',
+    margin: "0 0 1rem 0",
   };
 
   return (
-    <p 
+    <p
       className={`${quizStyles.quizDescription} ${className}`}
       style={style}
       dangerouslySetInnerHTML={{ __html: text }}

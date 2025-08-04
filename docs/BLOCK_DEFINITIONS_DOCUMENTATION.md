@@ -22,11 +22,11 @@ graph LR
 ```typescript
 // CADA COMPONENTE PRECISA DESTA ESTRUTURA EXATA:
 interface BlockDefinition {
-  type: string;                    // ID único - OBRIGATÓRIO
-  name: string;                    // Nome no painel lateral - OBRIGATÓRIO  
-  description: string;             // Tooltip explicativo - OBRIGATÓRIO
-  icon: string;                   // Ícone Lucide React - OBRIGATÓRIO
-  category: string;               // Categoria de agrupamento - OBRIGATÓRIO
+  type: string; // ID único - OBRIGATÓRIO
+  name: string; // Nome no painel lateral - OBRIGATÓRIO
+  description: string; // Tooltip explicativo - OBRIGATÓRIO
+  icon: string; // Ícone Lucide React - OBRIGATÓRIO
+  category: string; // Categoria de agrupamento - OBRIGATÓRIO
   propertiesSchema: PropertySchema[]; // Schema de propriedades - OBRIGATÓRIO
   defaultProperties: Record<string, any>; // Valores padrão - OBRIGATÓRIO
 }
@@ -44,13 +44,13 @@ const inlineBlocks = getBlocksByCategory('inline');
 
 // 2. RENDERIZA cada item clicável
 {quizBlocks.map(blockDef => (
-  <div 
+  <div
     key={blockDef.type}
     onClick={() => addBlock(blockDef.type)} // ← CRIA NOVO BLOCO
     className="component-item"
   >
     <Icon name={blockDef.icon} />        // ← ÍCONE do blockDefinitions
-    <span>{blockDef.name}</span>         // ← NOME do blockDefinitions  
+    <span>{blockDef.name}</span>         // ← NOME do blockDefinitions
     <Tooltip>{blockDef.description}</Tooltip> // ← DESCRIÇÃO
   </div>
 ))}
@@ -86,58 +86,58 @@ const addBlock = (type: string) => {
 ```typescript
 // SWITCH GIGANTE que mapeia type → Componente React
 const UniversalBlockRenderer = ({ block, isSelected, onClick, onSaveInline }) => {
-  
+
   switch (block.type) {
     // QUIZ COMPONENTS
     case 'quiz-question-interactive':
-      return <QuizQuestionBlock 
-        block={block} 
+      return <QuizQuestionBlock
+        block={block}
         isSelected={isSelected}
         onClick={onClick}
-        onPropertyChange={(key, value) => onSaveInline(block.id, { 
+        onPropertyChange={(key, value) => onSaveInline(block.id, {
           properties: { ...block.properties, [key]: value }
         })}
       />;
-      
+
     case 'quiz-intro-header':
       return <QuizIntroHeaderBlock {...props} />;
-      
+
     case 'progress-bar-modern':
       return <ProgressBarModernBlock {...props} />;
-    
-    // CONTENT COMPONENTS  
+
+    // CONTENT COMPONENTS
     case 'heading':
       return <HeadingBlock {...props} />;
-      
+
     case 'text':
       return <TextBlock {...props} />;
-      
+
     case 'button':
       return <ButtonBlock {...props} />;
-      
+
     case 'image':
       return <ImageBlock {...props} />;
-    
+
     // INLINE COMPONENTS
     case 'text-inline':
       return <TextInlineBlock {...props} />;
-      
+
     case 'button-inline':
       return <ButtonInlineBlock {...props} />;
-      
+
     case 'badge-inline':
       return <BadgeInlineBlock {...props} />;
-    
+
     // E-COMMERCE COMPONENTS
     case 'pricing-card':
       return <PricingCardBlock {...props} />;
-      
+
     case 'testimonial-card':
       return <TestimonialCardBlock {...props} />;
-      
+
     case 'countdown-timer':
       return <CountdownTimerBlock {...props} />;
-    
+
     default:
       return <div>Componente não encontrado: {block.type}</div>;
   }
@@ -155,22 +155,22 @@ const schema = getBlockPropertiesSchema(selectedBlock.type); // ← USA blockDef
 {schema?.map(prop => {
   switch (prop.type) {
     case 'text':
-      return <input 
+      return <input
         type="text"
         value={selectedBlock.properties[prop.key]}
         onChange={(e) => updateBlockProperty(prop.key, e.target.value)}
         placeholder={prop.defaultValue}
       />;
-      
+
     case 'textarea':
-      return <textarea 
+      return <textarea
         value={selectedBlock.properties[prop.key]}
         onChange={(e) => updateBlockProperty(prop.key, e.target.value)}
         placeholder={prop.defaultValue}
       />;
-      
+
     case 'select':
-      return <select 
+      return <select
         value={selectedBlock.properties[prop.key]}
         onChange={(e) => updateBlockProperty(prop.key, e.target.value)}
       >
@@ -178,23 +178,23 @@ const schema = getBlockPropertiesSchema(selectedBlock.type); // ← USA blockDef
           <option key={opt} value={opt}>{opt}</option>
         ))}
       </select>;
-      
+
     case 'boolean':
-      return <input 
+      return <input
         type="checkbox"
         checked={selectedBlock.properties[prop.key]}
         onChange={(e) => updateBlockProperty(prop.key, e.target.checked)}
       />;
-      
+
     case 'color':
-      return <input 
+      return <input
         type="color"
         value={selectedBlock.properties[prop.key]}
         onChange={(e) => updateBlockProperty(prop.key, e.target.value)}
       />;
-      
+
     case 'number':
-      return <input 
+      return <input
         type="number"
         value={selectedBlock.properties[prop.key]}
         onChange={(e) => updateBlockProperty(prop.key, Number(e.target.value))}
@@ -222,7 +222,7 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
   onClick,         // ← Callback para selecionar
   onPropertyChange // ← Callback para atualizar propriedades
 }) => {
-  
+
   // 1. EXTRAIR propriedades do block
   const {
     question = 'Pergunta padrão',
@@ -231,10 +231,10 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
     showImages = true,
     options = []
   } = block.properties;
-  
-  // 2. ESTADO local do componente  
+
+  // 2. ESTADO local do componente
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
-  
+
   // 3. HANDLERS para interação
   const handleOptionClick = (optionId: string) => {
     if (allowMultiple) {
@@ -246,10 +246,10 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
       setSelectedAnswers([optionId]);
     }
   };
-  
+
   // 4. RENDERIZAÇÃO com classes condicionais
   return (
-    <div 
+    <div
       className={cn(
         'quiz-question-block p-6 rounded-lg border-2',
         isSelected ? 'border-blue-500 ring-2 ring-blue-200' : 'border-gray-200',
@@ -261,7 +261,7 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
       <div className="mb-4">
         <h2 className="text-2xl font-bold text-gray-800">{question}</h2>
       </div>
-      
+
       {/* GRID DE OPÇÕES */}
       <div className={cn(
         'grid gap-4',
@@ -283,29 +283,29 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
           >
             {/* IMAGEM (se habilitada) */}
             {showImages && option.image && (
-              <img 
-                src={option.image} 
+              <img
+                src={option.image}
                 alt={option.text}
                 className="w-full h-32 object-cover rounded mb-3"
               />
             )}
-            
+
             {/* TEXTO DA OPÇÃO */}
             <p className="text-gray-700 font-medium">{option.text}</p>
           </div>
         ))}
       </div>
-      
+
       {/* BOTÃO CONTINUAR */}
       <div className="mt-6">
-        <button 
+        <button
           className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
           disabled={selectedAnswers.length === 0}
         >
           Continuar
         </button>
       </div>
-      
+
       {/* OVERLAY DE EDIÇÃO (apenas no editor) */}
       {isSelected && (
         <div className="absolute top-2 right-2 bg-blue-600 text-white px-2 py-1 rounded text-xs">
@@ -319,7 +319,6 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
 export default QuizQuestionBlock;
 ```
 
-
 ## � **DEFINIÇÃO NO BLOCKDEFINITIONS.TS**
 
 ```typescript
@@ -330,7 +329,7 @@ export default QuizQuestionBlock;
   description: 'Questão com opções clicáveis e imagens', // ← Tooltip
   icon: 'HelpCircle',                 // ← Ícone Lucide React
   category: 'Quiz',                   // ← Categoria de agrupamento
-  
+
   // SCHEMA que gera o painel de propriedades AUTOMATICAMENTE
   propertiesSchema: [
     {
@@ -368,7 +367,7 @@ export default QuizQuestionBlock;
       ]
     }
   ],
-  
+
   // PROPRIEDADES padrão quando o bloco é criado
   defaultProperties: {
     question: 'Qual o seu estilo preferido?',
@@ -386,6 +385,7 @@ export default QuizQuestionBlock;
 ## ⚙️ **TIPOS DE PROPRIEDADES E INPUTS GERADOS**
 
 ### **Campo de Texto (`type: 'text'`)**
+
 ```typescript
 {
   key: 'title',
@@ -397,7 +397,8 @@ export default QuizQuestionBlock;
 <input type="text" placeholder="Meu título" />
 ```
 
-### **Área de Texto (`type: 'textarea'`)**  
+### **Área de Texto (`type: 'textarea'`)**
+
 ```typescript
 {
   key: 'description',
@@ -410,6 +411,7 @@ export default QuizQuestionBlock;
 ```
 
 ### **Número (`type: 'number'`)**
+
 ```typescript
 {
   key: 'maxOptions',
@@ -422,6 +424,7 @@ export default QuizQuestionBlock;
 ```
 
 ### **Checkbox (`type: 'boolean'`)**
+
 ```typescript
 {
   key: 'isRequired',
@@ -434,6 +437,7 @@ export default QuizQuestionBlock;
 ```
 
 ### **Dropdown (`type: 'select'`)**
+
 ```typescript
 {
   key: 'alignment',
@@ -451,6 +455,7 @@ export default QuizQuestionBlock;
 ```
 
 ### **Seletor de Cores (`type: 'color'`)**
+
 ```typescript
 {
   key: 'backgroundColor',
@@ -463,6 +468,7 @@ export default QuizQuestionBlock;
 ```
 
 ### **Upload de Imagem (`type: 'image-url'`)**
+
 ```typescript
 {
   key: 'heroImage',
@@ -480,30 +486,30 @@ export default QuizQuestionBlock;
 // CADA TIPO precisa ser mapeado no switch:
 const UniversalBlockRenderer = ({ block }) => {
   switch (block.type) {
-    
+
     case 'quiz-question-interactive':  // ← MESMO TYPE do blockDefinitions
       return <QuizQuestionBlock {...props} />;
-      
+
     case 'quiz-intro-header':
       return <QuizIntroHeaderBlock {...props} />;
-      
+
     case 'progress-bar-modern':
       return <ProgressBarModernBlock {...props} />;
-      
+
     case 'heading':
       return <HeadingBlock {...props} />;
-      
+
     case 'text':
       return <TextBlock {...props} />;
-      
+
     case 'button':
       return <ButtonBlock {...props} />;
-      
+
     case 'text-inline':
       return <TextInlineBlock {...props} />;
-      
+
     // ... todos os outros tipos
-    
+
     default:
       return <div>Componente não encontrado: {block.type}</div>;
   }
@@ -513,22 +519,24 @@ const UniversalBlockRenderer = ({ block }) => {
 ## � **PROPS OBRIGATÓRIAS DOS COMPONENTES**
 
 ### **Interface BlockComponentProps**
+
 ```typescript
 interface BlockComponentProps {
   block: {
-    id: string;                    // ID único do bloco
-    type: string;                  // Tipo do componente
+    id: string; // ID único do bloco
+    type: string; // Tipo do componente
     properties: Record<string, any>; // Propriedades editáveis
-    order?: number;                // Ordem na página
+    order?: number; // Ordem na página
   };
-  isSelected?: boolean;            // Se está selecionado no editor
-  onClick?: () => void;            // Callback para selecionar
+  isSelected?: boolean; // Se está selecionado no editor
+  onClick?: () => void; // Callback para selecionar
   onPropertyChange?: (key: string, value: any) => void; // Callback para editar
-  className?: string;              // Classes CSS extras
+  className?: string; // Classes CSS extras
 }
 ```
 
 ### **Uso nas Props do Componente**
+
 ```typescript
 const MeuComponente: React.FC<BlockComponentProps> = ({
   block,           // ← DADOS do bloco
@@ -536,17 +544,17 @@ const MeuComponente: React.FC<BlockComponentProps> = ({
   onClick,         // ← Selecionar no editor
   onPropertyChange // ← Atualizar propriedades
 }) => {
-  
+
   // EXTRAIR propriedades do block
   const {
     title = 'Título padrão',
     color = '#000000',
     showIcon = true
   } = block.properties;
-  
+
   // RENDERIZAR com estado visual do editor
   return (
-    <div 
+    <div
       className={cn(
         'meu-componente',
         isSelected && 'ring-2 ring-blue-500' // ← Visual de seleção
@@ -563,43 +571,49 @@ const MeuComponente: React.FC<BlockComponentProps> = ({
 ## � **FLUXO DE ATUALIZAÇÃO DE PROPRIEDADES**
 
 ### **1. Usuário Edita no PropertyPanel**
+
 ```typescript
 // PropertyPanel.tsx
-<input 
+<input
   value={block.properties.title}
   onChange={(e) => onPropertyChange('title', e.target.value)}
 />
 ```
 
 ### **2. Editor Atualiza o State**
+
 ```typescript
 // EditorPreview.tsx
 const handlePropertyChange = (blockId: string, key: string, value: any) => {
-  setBlocks(blocks => blocks.map(block => 
-    block.id === blockId 
-      ? { 
-          ...block, 
-          properties: { ...block.properties, [key]: value } 
-        }
-      : block
-  ));
+  setBlocks((blocks) =>
+    blocks.map((block) =>
+      block.id === blockId
+        ? {
+            ...block,
+            properties: { ...block.properties, [key]: value },
+          }
+        : block,
+    ),
+  );
 };
 ```
 
 ### **3. Componente Re-renderiza**
+
 ```typescript
 // O componente recebe as novas properties automaticamente
 const { title } = block.properties; // ← Novo valor atualizado
 ```
 
 ### **4. Auto-save (Opcional)**
+
 ```typescript
 // useEffect para salvar automaticamente
 useEffect(() => {
   const timer = setTimeout(() => {
     saveToSupabase(blocks);
   }, 2000); // Salva 2s após a última edição
-  
+
   return () => clearTimeout(timer);
 }, [blocks]);
 ```
@@ -635,6 +649,7 @@ src/
 ## � **CHECKLIST OBRIGATÓRIO PARA CADA COMPONENTE**
 
 ### **✅ 1. Definição no blockDefinitions.ts**
+
 - [ ] `type` único e descritivo
 - [ ] `name` claro para o usuário
 - [ ] `description` explicativa
@@ -644,6 +659,7 @@ src/
 - [ ] `defaultProperties` válidas
 
 ### **✅ 2. Componente React**
+
 - [ ] Recebe `BlockComponentProps`
 - [ ] Extrai propriedades de `block.properties`
 - [ ] Implementa visual de seleção (`isSelected`)
@@ -653,11 +669,13 @@ src/
 - [ ] TypeScript tipado
 
 ### **✅ 3. Registro no UniversalBlockRenderer**
+
 - [ ] Case no switch com o mesmo `type`
 - [ ] Passa todas as props necessárias
 - [ ] Tratamento de erro (default case)
 
 ### **✅ 4. Testes de Funcionamento**
+
 - [ ] Aparece no ComponentsList
 - [ ] Pode ser adicionado ao canvas
 - [ ] Pode ser selecionado

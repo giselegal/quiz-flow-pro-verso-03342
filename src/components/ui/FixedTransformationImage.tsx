@@ -1,5 +1,5 @@
-import React from 'react';
-import { OptimizedImage } from './optimized-image-v2';
+import React from "react";
+import { OptimizedImage } from "./optimized-image-v2";
 
 interface FixedTransformationImageProps {
   src: string;
@@ -14,14 +14,9 @@ interface FixedTransformationImageProps {
  * FixedTransformationImage - Componente específico para exibição de imagens de transformação
  * com configurações já otimizadas para esse caso de uso
  */
-export const FixedTransformationImage: React.FC<FixedTransformationImageProps> = ({
-  src,
-  alt,
-  width,
-  height,
-  className = '',
-  priority = false
-}) => {
+export const FixedTransformationImage: React.FC<
+  FixedTransformationImageProps
+> = ({ src, alt, width, height, className = "", priority = false }) => {
   return (
     <OptimizedImage
       src={src}

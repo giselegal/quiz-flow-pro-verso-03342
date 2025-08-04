@@ -1,6 +1,6 @@
-import React from 'react';
-import { Upload } from 'lucide-react';
-import { EditableContent } from '@/types/editor';
+import React from "react";
+import { Upload } from "lucide-react";
+import { EditableContent } from "@/types/editor";
 
 interface ImageBlockProps {
   content: EditableContent;
@@ -13,7 +13,7 @@ export const ImageBlock: React.FC<ImageBlockProps> = ({
   content,
   isSelected,
   onContentChange,
-  onClick
+  onClick,
 }) => {
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -22,7 +22,7 @@ export const ImageBlock: React.FC<ImageBlockProps> = ({
       reader.onload = (e) => {
         onContentChange({
           url: e.target?.result as string,
-          alt: content.alt || 'Uploaded image'
+          alt: content.alt || "Uploaded image",
         });
       };
       reader.readAsDataURL(file);
@@ -31,41 +31,43 @@ export const ImageBlock: React.FC<ImageBlockProps> = ({
 
   // Create a proper style object with default values
   const containerStyle = {
-    backgroundColor: content.backgroundColor || 'transparent',
-    padding: content.padding || '0',
-    margin: content.margin || '0',
-    textAlign: (content.textAlign as any) || 'center',
+    backgroundColor: content.backgroundColor || "transparent",
+    padding: content.padding || "0",
+    margin: content.margin || "0",
+    textAlign: (content.textAlign as any) || "center",
   };
 
   const imageStyle = {
-    width: content.width || '100%',
-    height: content.height || 'auto',
-    objectFit: (content.objectFit as any) || 'cover',
-    display: 'block',
-    margin: '0 auto',
-    borderRadius: content.borderRadius || '0.5rem',
-    boxShadow: content.boxShadow || 'none',
+    width: content.width || "100%",
+    height: content.height || "auto",
+    objectFit: (content.objectFit as any) || "cover",
+    display: "block",
+    margin: "0 auto",
+    borderRadius: content.borderRadius || "0.5rem",
+    boxShadow: content.boxShadow || "none",
   };
 
   return (
-    <div 
-      className={`relative ${isSelected ? 'ring-2 ring-brand' : ''}`}
+    <div
+      className={`relative ${isSelected ? "ring-2 ring-brand" : ""}`}
       style={containerStyle}
       onClick={onClick}
     >
       {content.url ? (
         <img
           src={content.url}
-          alt={content.alt || 'Image'}
+          alt={content.alt || "Image"}
           style={imageStyle}
           className="cursor-pointer"
         />
       ) : (
         <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                    <div className="text-stone-400 mb-4">
+          <div className="text-stone-400 mb-4">
             <Upload size={48} />
           </div>
-          <p className="text-stone-600 mb-4">Clique para adicionar uma imagem</p>
+          <p className="text-stone-600 mb-4">
+            Clique para adicionar uma imagem
+          </p>
           <input
             type="file"
             accept="image/*"

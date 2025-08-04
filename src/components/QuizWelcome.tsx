@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { useLoadingState } from '@/hooks/useLoadingState';
+import React from "react";
+import { useLoadingState } from "@/hooks/useLoadingState";
 
 interface QuizWelcomeProps {
   onStart: () => void;
@@ -21,14 +20,16 @@ const QuizWelcome: React.FC<QuizWelcomeProps> = ({ onStart }) => {
   return (
     <div className="quiz-welcome p-6 text-center">
       <h1 className="text-3xl font-bold mb-6">Bem-vindo ao Quiz de Estilo</h1>
-      <p className="text-lg mb-8">Descubra seu estilo pessoal em alguns minutos</p>
-      
+      <p className="text-lg mb-8">
+        Descubra seu estilo pessoal em alguns minutos
+      </p>
+
       <button
         onClick={handleStart}
         disabled={isLoading}
         className="px-8 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50"
       >
-        {isLoading ? 'Carregando...' : 'Começar Quiz'}
+        {isLoading ? "Carregando..." : "Começar Quiz"}
       </button>
     </div>
   );

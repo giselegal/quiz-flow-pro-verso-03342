@@ -1,14 +1,17 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+const fs = require("fs");
+const path = require("path");
+const { execSync } = require("child_process");
 
-console.log('🔍 Analisando dependências do projeto...\n');
+console.log("🔍 Analisando dependências do projeto...\n");
 
 // Ler package.json
-const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-const dependencies = { ...packageJson.dependencies, ...packageJson.devDependencies };
+const packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"));
+const dependencies = {
+  ...packageJson.dependencies,
+  ...packageJson.devDependencies,
+};
 
 console.log(`📦 Total de dependências: ${Object.keys(dependencies).length}\n`);
 
@@ -21,23 +24,39 @@ const categories = {
   testing: [],
   utilities: [],
   react: [],
-  typescript: []
+  typescript: [],
 };
 
-Object.keys(dependencies).forEach(dep => {
-  if (dep.includes('radix') || dep.includes('ui') || dep.includes('tailwind')) {
+Object.keys(dependencies).forEach((dep) => {
+  if (dep.includes("radix") || dep.includes("ui") || dep.includes("tailwind")) {
     categories.ui.push(dep);
-  } else if (dep.includes('zustand') || dep.includes('redux') || dep.includes('context')) {
+  } else if (
+    dep.includes("zustand") ||
+    dep.includes("redux") ||
+    dep.includes("context")
+  ) {
     categories.state.push(dep);
-  } else if (dep.includes('vite') || dep.includes('build') || dep.includes('esbuild')) {
+  } else if (
+    dep.includes("vite") ||
+    dep.includes("build") ||
+    dep.includes("esbuild")
+  ) {
     categories.build.push(dep);
-  } else if (dep.includes('supabase') || dep.includes('database') || dep.includes('pg')) {
+  } else if (
+    dep.includes("supabase") ||
+    dep.includes("database") ||
+    dep.includes("pg")
+  ) {
     categories.database.push(dep);
-  } else if (dep.includes('test') || dep.includes('jest') || dep.includes('vitest')) {
+  } else if (
+    dep.includes("test") ||
+    dep.includes("jest") ||
+    dep.includes("vitest")
+  ) {
     categories.testing.push(dep);
-  } else if (dep.includes('react') || dep.includes('@types/react')) {
+  } else if (dep.includes("react") || dep.includes("@types/react")) {
     categories.react.push(dep);
-  } else if (dep.includes('typescript') || dep.includes('@types/')) {
+  } else if (dep.includes("typescript") || dep.includes("@types/")) {
     categories.typescript.push(dep);
   } else {
     categories.utilities.push(dep);
@@ -48,8 +67,8 @@ Object.keys(dependencies).forEach(dep => {
 Object.entries(categories).forEach(([category, deps]) => {
   if (deps.length > 0) {
     console.log(`📂 ${category.toUpperCase()}: ${deps.length} pacotes`);
-    deps.forEach(dep => console.log(`   - ${dep}: ${dependencies[dep]}`));
-    console.log('');
+    deps.forEach((dep) => console.log(`   - ${dep}: ${dependencies[dep]}`));
+    console.log("");
   }
 });
 
@@ -63,11 +82,11 @@ const analysis = {
     recommendations: {
       toRemove: [],
       toUpdate: [],
-      toOptimize: []
-    }
+      toOptimize: [],
+    },
   },
-  lastAnalysis: new Date().toISOString()
+  lastAnalysis: new Date().toISOString(),
 };
 
-fs.writeFileSync('package-analyzer.json', JSON.stringify(analysis, null, 2));
-console.log('✅ Análise salva em package-analyzer.json');
+fs.writeFileSync("package-analyzer.json", JSON.stringify(analysis, null, 2));
+console.log("✅ Análise salva em package-analyzer.json");

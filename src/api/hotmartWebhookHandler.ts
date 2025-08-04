@@ -22,7 +22,7 @@ import {
 // Exemplo de implementação para Vercel Serverless Functions
 // Arquivo: /api/webhook/hotmart.ts (se usando Vercel)
 export async function handleHotmartWebhook(
-  request: Request
+  request: Request,
 ): Promise<Response> {
   try {
     // Verificar método HTTP

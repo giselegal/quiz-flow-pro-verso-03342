@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface LiveQuizEditorProps {
   quizId?: string;
@@ -9,7 +8,7 @@ interface LiveQuizEditorProps {
 
 export const LiveQuizEditor: React.FC<LiveQuizEditorProps> = ({
   quizId,
-  onSave
+  onSave,
 }) => {
   return (
     <div className="h-full bg-[#FAF9F7]">
@@ -29,9 +28,7 @@ export const LiveQuizEditor: React.FC<LiveQuizEditorProps> = ({
               Esta funcionalidade estará disponível em breve
             </p>
             {quizId && (
-              <p className="text-sm text-[#8F7A6A] mt-2">
-                Quiz ID: {quizId}
-              </p>
+              <p className="text-sm text-[#8F7A6A] mt-2">Quiz ID: {quizId}</p>
             )}
           </div>
         </CardContent>

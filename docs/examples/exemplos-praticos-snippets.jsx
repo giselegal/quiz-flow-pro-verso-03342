@@ -1,20 +1,26 @@
 // ===== SNIPPETS PRÁTICOS PARA SEU PROJETO QUIZ =====
 
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 
 // ===== 1. COMPONENTE DE PERGUNTA (usando rafce) =====
-const QuizQuestion = ({ question, options, onAnswer, currentIndex, totalQuestions }) => {
+const QuizQuestion = ({
+  question,
+  options,
+  onAnswer,
+  currentIndex,
+  totalQuestions,
+}) => {
   // useState para resposta selecionada
   const [selectedAnswer, setSelectedAnswer] = React.useState(null);
-  
+
   // useCallback para otimizar performance
   const handleAnswerSelect = React.useCallback((answer) => {
     setSelectedAnswer(answer);
   }, []);
-  
+
   // useCallback para enviar resposta
   const handleSubmitAnswer = React.useCallback(() => {
     if (selectedAnswer) {
@@ -22,12 +28,12 @@ const QuizQuestion = ({ question, options, onAnswer, currentIndex, totalQuestion
       setSelectedAnswer(null);
     }
   }, [selectedAnswer, onAnswer]);
-  
+
   // useMemo para calcular progresso
   const progress = React.useMemo(() => {
     return ((currentIndex + 1) / totalQuestions) * 100;
   }, [currentIndex, totalQuestions]);
-  
+
   return (
     <Card className="p-6 max-w-2xl mx-auto">
       <div className="mb-6">
@@ -39,33 +45,33 @@ const QuizQuestion = ({ question, options, onAnswer, currentIndex, totalQuestion
         </div>
         <Progress value={progress} className="h-2" />
       </div>
-      
-      <h2 className="text-2xl font-bold mb-6 text-center">
-        {question.text}
-      </h2>
-      
+
+      <h2 className="text-2xl font-bold mb-6 text-center">{question.text}</h2>
+
       <div className="space-y-3 mb-6">
         {options.map((option, index) => (
           <button
             key={index}
             onClick={() => handleAnswerSelect(option)}
             className={`w-full p-4 text-left rounded-lg border-2 transition-all ${
-              selectedAnswer === option 
-                ? 'border-blue-500 bg-blue-50' 
-                : 'border-gray-200 hover:border-gray-300'
+              selectedAnswer === option
+                ? "border-blue-500 bg-blue-50"
+                : "border-gray-200 hover:border-gray-300"
             }`}
           >
             {option.text}
           </button>
         ))}
       </div>
-      
-      <Button 
+
+      <Button
         onClick={handleSubmitAnswer}
         disabled={!selectedAnswer}
         className="w-full"
       >
-        {currentIndex < totalQuestions - 1 ? 'Próxima Pergunta' : 'Finalizar Quiz'}
+        {currentIndex < totalQuestions - 1
+          ? "Próxima Pergunta"
+          : "Finalizar Quiz"}
       </Button>
     </Card>
   );
@@ -75,66 +81,69 @@ const QuizQuestion = ({ question, options, onAnswer, currentIndex, totalQuestion
 const useQuizLogic = (questions) => {
   // useState para índice atual
   const [currentQuestionIndex, setCurrentQuestionIndex] = React.useState(0);
-  
+
   // useState para respostas
   const [answers, setAnswers] = React.useState([]);
-  
+
   // useState para status do quiz
-  const [quizStatus, setQuizStatus] = React.useState('active'); // 'active', 'completed', 'paused'
-  
+  const [quizStatus, setQuizStatus] = React.useState("active"); // 'active', 'completed', 'paused'
+
   // useCallback para próxima pergunta
   const nextQuestion = React.useCallback(() => {
-    setCurrentQuestionIndex(prev => {
+    setCurrentQuestionIndex((prev) => {
       const newIndex = prev + 1;
       if (newIndex >= questions.length) {
-        setQuizStatus('completed');
+        setQuizStatus("completed");
         return prev;
       }
       return newIndex;
     });
   }, [questions.length]);
-  
+
   // useCallback para pergunta anterior
   const previousQuestion = React.useCallback(() => {
-    setCurrentQuestionIndex(prev => Math.max(0, prev - 1));
+    setCurrentQuestionIndex((prev) => Math.max(0, prev - 1));
   }, []);
-  
+
   // useCallback para salvar resposta
-  const saveAnswer = React.useCallback((answer) => {
-    setAnswers(prev => {
-      const newAnswers = [...prev];
-      newAnswers[currentQuestionIndex] = answer;
-      return newAnswers;
-    });
-    
-    if (currentQuestionIndex < questions.length - 1) {
-      nextQuestion();
-    } else {
-      setQuizStatus('completed');
-    }
-  }, [currentQuestionIndex, questions.length, nextQuestion]);
-  
+  const saveAnswer = React.useCallback(
+    (answer) => {
+      setAnswers((prev) => {
+        const newAnswers = [...prev];
+        newAnswers[currentQuestionIndex] = answer;
+        return newAnswers;
+      });
+
+      if (currentQuestionIndex < questions.length - 1) {
+        nextQuestion();
+      } else {
+        setQuizStatus("completed");
+      }
+    },
+    [currentQuestionIndex, questions.length, nextQuestion],
+  );
+
   // useCallback para resetar quiz
   const resetQuiz = React.useCallback(() => {
     setCurrentQuestionIndex(0);
     setAnswers([]);
-    setQuizStatus('active');
+    setQuizStatus("active");
   }, []);
-  
+
   // useMemo para pergunta atual
   const currentQuestion = React.useMemo(() => {
     return questions[currentQuestionIndex];
   }, [questions, currentQuestionIndex]);
-  
+
   // useMemo para progresso
   const progress = React.useMemo(() => {
     return {
       current: currentQuestionIndex + 1,
       total: questions.length,
-      percentage: ((currentQuestionIndex + 1) / questions.length) * 100
+      percentage: ((currentQuestionIndex + 1) / questions.length) * 100,
     };
   }, [currentQuestionIndex, questions.length]);
-  
+
   return {
     currentQuestion,
     currentQuestionIndex,
@@ -144,7 +153,7 @@ const useQuizLogic = (questions) => {
     nextQuestion,
     previousQuestion,
     saveAnswer,
-    resetQuiz
+    resetQuiz,
   };
 };
 
@@ -156,29 +165,29 @@ const QuizResult = ({ answers, questions, onRestart }) => {
     const score = answers.reduce((total, answer) => {
       return total + (answer.points || 0);
     }, 0);
-    
+
     return {
       score,
       totalQuestions: questions.length,
-      percentage: (score / questions.length) * 100
+      percentage: (score / questions.length) * 100,
     };
   }, [answers, questions]);
-  
+
   // useEffect para analytics
   React.useEffect(() => {
     // Enviar resultado para analytics
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', 'quiz_completed', {
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "quiz_completed", {
         score: result.score,
-        percentage: result.percentage
+        percentage: result.percentage,
       });
     }
   }, [result]);
-  
+
   return (
     <Card className="p-8 max-w-2xl mx-auto text-center">
       <h2 className="text-3xl font-bold mb-6">Quiz Finalizado!</h2>
-      
+
       <div className="mb-8">
         <div className="text-6xl font-bold text-blue-600 mb-2">
           {Math.round(result.percentage)}%
@@ -187,12 +196,12 @@ const QuizResult = ({ answers, questions, onRestart }) => {
           Você acertou {result.score} de {result.totalQuestions} perguntas
         </p>
       </div>
-      
+
       <div className="space-y-4">
         <Button onClick={onRestart} className="w-full">
           Refazer Quiz
         </Button>
-        
+
         <Button variant="outline" className="w-full">
           Compartilhar Resultado
         </Button>
@@ -204,27 +213,30 @@ const QuizResult = ({ answers, questions, onRestart }) => {
 // ===== 4. COMPONENTE PRINCIPAL DO QUIZ (usando rafce) =====
 const QuizApp = () => {
   // Dados mockados das perguntas
-  const questions = React.useMemo(() => [
-    {
-      id: 1,
-      text: "Qual é seu estilo de roupa preferido?",
-      options: [
-        { text: "Clássico e elegante", points: 1, category: "elegante" },
-        { text: "Moderno e descolado", points: 2, category: "moderno" },
-        { text: "Romântico e delicado", points: 3, category: "romantico" }
-      ]
-    },
-    {
-      id: 2,
-      text: "Que tipo de cores você prefere?",
-      options: [
-        { text: "Tons neutros", points: 1, category: "elegante" },
-        { text: "Cores vibrantes", points: 2, category: "moderno" },
-        { text: "Cores pastel", points: 3, category: "romantico" }
-      ]
-    }
-  ], []);
-  
+  const questions = React.useMemo(
+    () => [
+      {
+        id: 1,
+        text: "Qual é seu estilo de roupa preferido?",
+        options: [
+          { text: "Clássico e elegante", points: 1, category: "elegante" },
+          { text: "Moderno e descolado", points: 2, category: "moderno" },
+          { text: "Romântico e delicado", points: 3, category: "romantico" },
+        ],
+      },
+      {
+        id: 2,
+        text: "Que tipo de cores você prefere?",
+        options: [
+          { text: "Tons neutros", points: 1, category: "elegante" },
+          { text: "Cores vibrantes", points: 2, category: "moderno" },
+          { text: "Cores pastel", points: 3, category: "romantico" },
+        ],
+      },
+    ],
+    [],
+  );
+
   // Usar hook personalizado
   const {
     currentQuestion,
@@ -233,25 +245,28 @@ const QuizApp = () => {
     quizStatus,
     progress,
     saveAnswer,
-    resetQuiz
+    resetQuiz,
   } = useQuizLogic(questions);
-  
+
   // useCallback para lidar com resposta
-  const handleAnswer = React.useCallback((answer) => {
-    saveAnswer(answer);
-  }, [saveAnswer]);
-  
+  const handleAnswer = React.useCallback(
+    (answer) => {
+      saveAnswer(answer);
+    },
+    [saveAnswer],
+  );
+
   // Renderização condicional baseada no status
-  if (quizStatus === 'completed') {
+  if (quizStatus === "completed") {
     return (
-      <QuizResult 
+      <QuizResult
         answers={answers}
         questions={questions}
         onRestart={resetQuiz}
       />
     );
   }
-  
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
@@ -275,22 +290,26 @@ const useLocalStorage = (key, initialValue) => {
       const item = window.localStorage.getItem(key);
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
-      console.error('Error reading localStorage:', error);
+      console.error("Error reading localStorage:", error);
       return initialValue;
     }
   });
-  
+
   // useCallback para salvar valor
-  const setValue = React.useCallback((value) => {
-    try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
-      setStoredValue(valueToStore);
-      window.localStorage.setItem(key, JSON.stringify(valueToStore));
-    } catch (error) {
-      console.error('Error setting localStorage:', error);
-    }
-  }, [key, storedValue]);
-  
+  const setValue = React.useCallback(
+    (value) => {
+      try {
+        const valueToStore =
+          value instanceof Function ? value(storedValue) : value;
+        setStoredValue(valueToStore);
+        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+      } catch (error) {
+        console.error("Error setting localStorage:", error);
+      }
+    },
+    [key, storedValue],
+  );
+
   return [storedValue, setValue];
 };
 
@@ -309,7 +328,7 @@ const useFetch = (url) => {
   const [data, setData] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
-  
+
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -326,10 +345,10 @@ const useFetch = (url) => {
         setLoading(false);
       }
     };
-    
+
     fetchData();
   }, [url]);
-  
+
   return { data, loading, error };
 };
 
@@ -339,15 +358,15 @@ class QuizErrorBoundary extends React.Component {
     super(props);
     this.state = { hasError: false, error: null };
   }
-  
+
   static getDerivedStateFromError(error) {
     return { hasError: true, error };
   }
-  
+
   componentDidCatch(error, errorInfo) {
-    console.error('Quiz Error:', error, errorInfo);
+    console.error("Quiz Error:", error, errorInfo);
   }
-  
+
   render() {
     if (this.state.hasError) {
       return (
@@ -366,7 +385,7 @@ class QuizErrorBoundary extends React.Component {
         </div>
       );
     }
-    
+
     return this.props.children;
   }
 }
@@ -389,5 +408,5 @@ export {
   useQuizLogic,
   useLocalStorage,
   useFetch,
-  App
+  App,
 };

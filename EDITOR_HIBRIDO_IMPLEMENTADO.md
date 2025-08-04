@@ -13,6 +13,7 @@ Combinei com sucesso o **Editor-Fixed** (funcionalidades completas) com o **Sche
 ### **1. SUBSTITUIÇÃO DE COMPONENTES**
 
 #### ❌ **ANTES** - Componentes Limitados:
+
 ```typescript
 import EditPreview from '@/components/editor/preview/EditPreview';
 
@@ -26,6 +27,7 @@ import EditPreview from '@/components/editor/preview/EditPreview';
 ```
 
 #### ✅ **DEPOIS** - Componentes Avançados:
+
 ```typescript
 import { EditorCanvas } from '@/components/editor/canvas/EditorCanvas';
 
@@ -45,11 +47,13 @@ import { EditorCanvas } from '@/components/editor/canvas/EditorCanvas';
 ### **2. SISTEMA DE RENDERIZAÇÃO MELHORADO**
 
 #### ✅ **UniversalBlockRenderer Integrado**:
+
 - **20+ componentes inline** renderizados corretamente
 - **Fallback inteligente** para componentes não encontrados
 - **Mapeamento robusto** de tipos de bloco
 
 #### ✅ **Drag & Drop Funcional**:
+
 - **DndContext** para reordenação
 - **SortableBlockWrapper** para cada bloco
 - **Feedback visual** durante arrastar
@@ -57,6 +61,7 @@ import { EditorCanvas } from '@/components/editor/canvas/EditorCanvas';
 ### **3. INTERFACES CORRIGIDAS**
 
 #### ✅ **ComponentsSidebar**:
+
 ```typescript
 // ANTES: Props incorretos
 onAddBlock={actions.addBlock}
@@ -70,18 +75,20 @@ onComponentSelect={(type) => {
 ```
 
 #### ✅ **EditorToolbar**:
+
 ```typescript
 // ANTES: Props não existentes
 config={{ blocks, title: 'Editor', description: '' }}
 isSaving={isSaving}
 
-// DEPOIS: Interface correta  
+// DEPOIS: Interface correta
 isPreviewing={isPreviewing}
 onTogglePreview={() => setIsPreviewing(!isPreviewing)}
 onSave={() => forceSave()}
 ```
 
 #### ✅ **PropertiesPanel**:
+
 ```typescript
 // ANTES: Props incompatíveis
 selectedComponentId={selectedComponentId}
@@ -103,13 +110,14 @@ onDelete={() => actions.deleteBlock(selectedComponentId)}
 ### **4. CONVERSÃO DE DADOS**
 
 #### ✅ **Helper de Conversão de Blocos**:
+
 ```typescript
 // Converter blocks do useEditor para formato esperado pelo EditorCanvas
-const editorBlocks = blocks.map(block => ({
+const editorBlocks = blocks.map((block) => ({
   id: block.id,
   type: block.type,
   properties: block.content || block.properties || {},
-  order: block.order || 0
+  order: block.order || 0,
 }));
 ```
 
@@ -118,6 +126,7 @@ const editorBlocks = blocks.map(block => ({
 ## 🎯 **FUNCIONALIDADES DO EDITOR HÍBRIDO**
 
 ### ✅ **DO EDITOR-FIXED (Mantidas)**:
+
 1. **🔧 Toolbar completa** - Preview, save, viewport
 2. **💾 Auto-save avançado** - Debounce, persistência
 3. **🔗 Carregamento por URL** - schemaDrivenFunnelService
@@ -127,6 +136,7 @@ const editorBlocks = blocks.map(block => ({
 7. **🔄 Persistência robusta** - useEditorPersistence
 
 ### ✅ **DO SCHEMADRIVENEDITOR (Adicionadas)**:
+
 1. **🎨 UniversalBlockRenderer** - Renderização robusta de 20+ tipos
 2. **↕️ Drag & Drop** - Reordenação de blocos
 3. **🖼️ Canvas avançado** - EditorCanvas com SortableBlockWrapper
@@ -138,26 +148,28 @@ const editorBlocks = blocks.map(block => ({
 
 ## 📊 **COMPARAÇÃO ANTES vs DEPOIS**
 
-| Funcionalidade | Antes | Depois | Melhoria |
-|----------------|-------|---------|----------|
-| **Renderização** | ⭐⭐ Preview básico | ⭐⭐⭐⭐⭐ UniversalRenderer | **+150%** |
-| **Interatividade** | ⭐⭐ Seleção apenas | ⭐⭐⭐⭐⭐ Drag & Drop | **+150%** |
-| **Componentes Suportados** | ⭐⭐ ~4 tipos | ⭐⭐⭐⭐⭐ 20+ tipos | **+400%** |
-| **UX/UI** | ⭐⭐⭐⭐ Muito bom | ⭐⭐⭐⭐⭐ Excelente | **+25%** |
-| **Backend Integration** | ⭐⭐⭐⭐⭐ Perfeito | ⭐⭐⭐⭐⭐ Perfeito | **Mantido** |
-| **Funcionalidades** | ⭐⭐⭐⭐⭐ Completo | ⭐⭐⭐⭐⭐ Completo | **Mantido** |
+| Funcionalidade             | Antes               | Depois                       | Melhoria    |
+| -------------------------- | ------------------- | ---------------------------- | ----------- |
+| **Renderização**           | ⭐⭐ Preview básico | ⭐⭐⭐⭐⭐ UniversalRenderer | **+150%**   |
+| **Interatividade**         | ⭐⭐ Seleção apenas | ⭐⭐⭐⭐⭐ Drag & Drop       | **+150%**   |
+| **Componentes Suportados** | ⭐⭐ ~4 tipos       | ⭐⭐⭐⭐⭐ 20+ tipos         | **+400%**   |
+| **UX/UI**                  | ⭐⭐⭐⭐ Muito bom  | ⭐⭐⭐⭐⭐ Excelente         | **+25%**    |
+| **Backend Integration**    | ⭐⭐⭐⭐⭐ Perfeito | ⭐⭐⭐⭐⭐ Perfeito          | **Mantido** |
+| **Funcionalidades**        | ⭐⭐⭐⭐⭐ Completo | ⭐⭐⭐⭐⭐ Completo          | **Mantido** |
 
 ---
 
 ## 🎯 **RESULTADOS ALCANÇADOS**
 
 ### ✅ **PROBLEMAS RESOLVIDOS**:
+
 1. ❌ ~~Preview básico~~ → ✅ **Canvas robusto com UniversalBlockRenderer**
 2. ❌ ~~Sem drag & drop~~ → ✅ **Sistema completo de reordenação**
 3. ❌ ~~Renderização limitada~~ → ✅ **20+ tipos de bloco suportados**
 4. ❌ ~~Interfaces incompatíveis~~ → ✅ **Todas as props corrigidas**
 
 ### ✅ **FUNCIONALIDADES MANTIDAS**:
+
 1. ✅ **Auto-save com debounce**
 2. ✅ **Carregamento de funnels por URL**
 3. ✅ **Sistema de persistência**
@@ -166,6 +178,7 @@ const editorBlocks = blocks.map(block => ({
 6. ✅ **Context de Quiz**
 
 ### ✅ **NOVAS CAPACIDADES**:
+
 1. 🆕 **Drag & Drop de blocos**
 2. 🆕 **Renderização de 20+ tipos inline**
 3. 🆕 **Canvas responsivo com viewports**
@@ -177,6 +190,7 @@ const editorBlocks = blocks.map(block => ({
 ## 🚀 **PRÓXIMOS PASSOS POSSÍVEIS**
 
 ### **MELHORIAS ADICIONAIS**:
+
 1. **Expandir ComponentsSidebar** - Adicionar mais tipos de bloco
 2. **Integrar BlockRegistry** - Conectar 150+ componentes físicos
 3. **Sistema de templates** - Templates pré-definidos

@@ -1,13 +1,15 @@
 /**
  * Schemas de Validação para Blocos do Editor
- * 
+ *
  * Define as validações Zod para todos os tipos de blocos
  */
 
-import { z } from 'zod';
+import { z } from "zod";
 
 // Tipos comuns
-const colorSchema = z.string().regex(/^#[0-9A-F]{6}$/i, "Cor deve estar no formato #RRGGBB");
+const colorSchema = z
+  .string()
+  .regex(/^#[0-9A-F]{6}$/i, "Cor deve estar no formato #RRGGBB");
 const urlSchema = z.string().url("URL inválida").or(z.literal(""));
 const positiveNumberSchema = z.number().min(0, "Deve ser um número positivo");
 
@@ -17,26 +19,35 @@ const positiveNumberSchema = z.number().min(0, "Deve ser um número positivo");
 
 export const textBlockSchema = z.object({
   content: z.string().min(1, "Conteúdo é obrigatório"),
-  fontSize: z.number().min(8, "Tamanho mínimo: 8px").max(72, "Tamanho máximo: 72px"),
+  fontSize: z
+    .number()
+    .min(8, "Tamanho mínimo: 8px")
+    .max(72, "Tamanho máximo: 72px"),
   textColor: colorSchema,
-  textAlign: z.enum(['left', 'center', 'right'], {
-    errorMap: () => ({ message: "Alinhamento deve ser left, center ou right" })
+  textAlign: z.enum(["left", "center", "right"], {
+    errorMap: () => ({ message: "Alinhamento deve ser left, center ou right" }),
   }),
 });
 
 export const richTextBlockSchema = z.object({
   content: z.string().min(1, "Conteúdo é obrigatório"),
-  minHeight: z.number().min(50, "Altura mínima: 50px").max(500, "Altura máxima: 500px"),
+  minHeight: z
+    .number()
+    .min(50, "Altura mínima: 50px")
+    .max(500, "Altura máxima: 500px"),
   placeholder: z.string().optional(),
 });
 
 export const headerBlockSchema = z.object({
   content: z.string().min(1, "Título é obrigatório"),
-  level: z.enum(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
-  fontSize: z.number().min(12, "Tamanho mínimo: 12px").max(96, "Tamanho máximo: 96px"),
+  level: z.enum(["h1", "h2", "h3", "h4", "h5", "h6"]),
+  fontSize: z
+    .number()
+    .min(12, "Tamanho mínimo: 12px")
+    .max(96, "Tamanho máximo: 96px"),
   textColor: colorSchema,
-  textAlign: z.enum(['left', 'center', 'right']),
-  fontWeight: z.enum(['normal', 'bold', 'lighter', 'bolder']).optional(),
+  textAlign: z.enum(["left", "center", "right"]),
+  fontWeight: z.enum(["normal", "bold", "lighter", "bolder"]).optional(),
 });
 
 export const buttonBlockSchema = z.object({
@@ -48,8 +59,10 @@ export const buttonBlockSchema = z.object({
   paddingY: positiveNumberSchema,
   borderRadius: positiveNumberSchema,
   fullWidth: z.boolean(),
-  size: z.enum(['sm', 'md', 'lg']).optional(),
-  variant: z.enum(['default', 'destructive', 'outline', 'secondary', 'ghost', 'link']).optional(),
+  size: z.enum(["sm", "md", "lg"]).optional(),
+  variant: z
+    .enum(["default", "destructive", "outline", "secondary", "ghost", "link"])
+    .optional(),
 });
 
 export const imageBlockSchema = z.object({
@@ -58,13 +71,18 @@ export const imageBlockSchema = z.object({
   width: z.number().min(1, "Largura deve ser maior que 0").optional(),
   height: z.number().min(1, "Altura deve ser maior que 0").optional(),
   borderRadius: positiveNumberSchema.optional(),
-  objectFit: z.enum(['contain', 'cover', 'fill', 'none', 'scale-down']).optional(),
+  objectFit: z
+    .enum(["contain", "cover", "fill", "none", "scale-down"])
+    .optional(),
 });
 
 export const spacerBlockSchema = z.object({
-  height: z.number().min(1, "Altura mínima: 1px").max(200, "Altura máxima: 200px"),
+  height: z
+    .number()
+    .min(1, "Altura mínima: 1px")
+    .max(200, "Altura máxima: 200px"),
   backgroundColor: z.string().optional(),
-  borderStyle: z.enum(['none', 'solid', 'dashed', 'dotted']),
+  borderStyle: z.enum(["none", "solid", "dashed", "dotted"]),
   borderColor: colorSchema.optional(),
   borderWidth: positiveNumberSchema.optional(),
 });
@@ -88,43 +106,49 @@ export const quizStepBlockSchema = z.object({
   logoUrl: urlSchema.optional(),
   showProgressBar: z.boolean(),
   showBackButton: z.boolean(),
-  
+
   // Question
   questionText: z.string().min(1, "Texto da pergunta é obrigatório"),
   questionTextColor: colorSchema,
-  questionTextSize: z.number().min(12, "Tamanho mínimo: 12px").max(48, "Tamanho máximo: 48px"),
-  questionTextAlign: z.enum(['left', 'center', 'right']),
-  
+  questionTextSize: z
+    .number()
+    .min(12, "Tamanho mínimo: 12px")
+    .max(48, "Tamanho máximo: 48px"),
+  questionTextAlign: z.enum(["left", "center", "right"]),
+
   // Layout
-  layout: z.enum(['1-column', '2-columns', '3-columns', '4-columns']),
-  direction: z.enum(['vertical', 'horizontal']),
-  disposition: z.enum(['image-text', 'text-image', 'text-only', 'image-only']),
-  
+  layout: z.enum(["1-column", "2-columns", "3-columns", "4-columns"]),
+  direction: z.enum(["vertical", "horizontal"]),
+  disposition: z.enum(["image-text", "text-image", "text-only", "image-only"]),
+
   // Options
   options: z.array(quizOptionSchema).min(2, "Deve ter pelo menos 2 opções"),
-  
+
   // Validation
   isMultipleChoice: z.boolean(),
   isRequired: z.boolean(),
   autoProceed: z.boolean(),
   minSelections: z.number().min(0).optional(),
   maxSelections: z.number().min(1).optional(),
-  
+
   // Styling
-  borderRadius: z.enum(['none', 'small', 'medium', 'large']),
-  boxShadow: z.enum(['none', 'small', 'medium', 'large']),
-  spacing: z.enum(['small', 'medium', 'large']),
-  detail: z.enum(['none', 'line', 'dot']),
-  optionStyle: z.enum(['simple', 'card']),
-  
+  borderRadius: z.enum(["none", "small", "medium", "large"]),
+  boxShadow: z.enum(["none", "small", "medium", "large"]),
+  spacing: z.enum(["small", "medium", "large"]),
+  detail: z.enum(["none", "line", "dot"]),
+  optionStyle: z.enum(["simple", "card"]),
+
   // Colors
   primaryColor: colorSchema,
   secondaryColor: colorSchema,
   borderColor: colorSchema,
-  
+
   // Advanced
   componentId: z.string().optional(),
-  maxWidth: z.number().min(10, "Largura mínima: 10%").max(100, "Largura máxima: 100%"),
+  maxWidth: z
+    .number()
+    .min(10, "Largura mínima: 10%")
+    .max(100, "Largura máxima: 100%"),
 });
 
 export const quizIntroBlockSchema = z.object({
@@ -153,19 +177,19 @@ export const quizProgressBlockSchema = z.object({
 
 export const blockSchemas = {
   // Básicos
-  'text': textBlockSchema,
-  'rich-text': richTextBlockSchema,
-  'header': headerBlockSchema,
-  'heading': headerBlockSchema, // Alias
-  'button': buttonBlockSchema,
-  'image': imageBlockSchema,
-  'spacer': spacerBlockSchema,
-  
+  text: textBlockSchema,
+  "rich-text": richTextBlockSchema,
+  header: headerBlockSchema,
+  heading: headerBlockSchema, // Alias
+  button: buttonBlockSchema,
+  image: imageBlockSchema,
+  spacer: spacerBlockSchema,
+
   // Quiz
-  'quiz-step': quizStepBlockSchema,
-  'quiz-intro': quizIntroBlockSchema,
-  'quiz-progress': quizProgressBlockSchema,
-  'quiz-question': quizStepBlockSchema, // Usa o mesmo schema
+  "quiz-step": quizStepBlockSchema,
+  "quiz-intro": quizIntroBlockSchema,
+  "quiz-progress": quizProgressBlockSchema,
+  "quiz-question": quizStepBlockSchema, // Usa o mesmo schema
 } as const;
 
 export type BlockType = keyof typeof blockSchemas;
@@ -197,7 +221,9 @@ export function safeValidateBlockData(blockType: BlockType, data: unknown) {
   if (!schema) {
     return {
       success: false as const,
-      error: { message: `Schema não encontrado para o tipo de bloco: ${blockType}` }
+      error: {
+        message: `Schema não encontrado para o tipo de bloco: ${blockType}`,
+      },
     };
   }
   return schema.safeParse(data);

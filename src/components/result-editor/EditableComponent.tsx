@@ -1,7 +1,6 @@
-
-import React from 'react';
-import { StyleResult } from '@/types/quiz';
-import { Card } from '@/components/ui/card';
+import React from "react";
+import { StyleResult } from "@/types/quiz";
+import { Card } from "@/components/ui/card";
 
 interface EditableComponentProps {
   components: {
@@ -14,7 +13,7 @@ interface EditableComponentProps {
 
 const EditableComponent: React.FC<EditableComponentProps> = ({
   components,
-  onUpdate
+  onUpdate,
 }) => {
   const { primaryStyle, secondaryStyles, config } = components;
 
@@ -25,7 +24,8 @@ const EditableComponent: React.FC<EditableComponentProps> = ({
         <Card className="p-6">
           <div className="text-center">
             <h1 className="text-3xl font-playfair text-[#432818] mb-4">
-              {config?.header?.content?.title || `Seu estilo é ${primaryStyle.category}`}
+              {config?.header?.content?.title ||
+                `Seu estilo é ${primaryStyle.category}`}
             </h1>
             <p className="text-lg text-[#1A1818]/80">
               Descubra as características únicas do seu estilo pessoal
@@ -41,8 +41,8 @@ const EditableComponent: React.FC<EditableComponentProps> = ({
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <p className="text-[#1A1818]/70 mb-4">
-                {config?.mainContent?.content?.description || 
-                 `Você tem um estilo ${primaryStyle.category.toLowerCase()} único e autêntico.`}
+                {config?.mainContent?.content?.description ||
+                  `Você tem um estilo ${primaryStyle.category.toLowerCase()} único e autêntico.`}
               </p>
               <div className="space-y-2">
                 <div className="flex justify-between">
@@ -51,7 +51,9 @@ const EditableComponent: React.FC<EditableComponentProps> = ({
                 </div>
                 <div className="flex justify-between">
                   <span>Percentual:</span>
-                  <span className="font-medium">{primaryStyle.percentage}%</span>
+                  <span className="font-medium">
+                    {primaryStyle.percentage}%
+                  </span>
                 </div>
               </div>
             </div>
@@ -98,7 +100,8 @@ const EditableComponent: React.FC<EditableComponentProps> = ({
                 {config.offer.hero.content.title || "Oferta Especial"}
               </h2>
               <p className="text-lg text-[#1A1818]/80 mb-6">
-                {config.offer.hero.content.subtitle || "Descubra mais sobre seu estilo"}
+                {config.offer.hero.content.subtitle ||
+                  "Descubra mais sobre seu estilo"}
               </p>
               <button className="bg-[#B89B7A] text-white px-8 py-3 rounded-lg hover:bg-[#A38A69] transition-colors">
                 Saiba Mais

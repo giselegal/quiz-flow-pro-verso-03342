@@ -32,11 +32,7 @@ export function AdminHeader({ title }: AdminHeaderProps) {
             <Bell className="w-5 h-5 text-[#B89B7A]" />
           </Button>
 
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex items-center gap-2"
-          >
+          <Button variant="ghost" size="sm" className="flex items-center gap-2">
             <User className="w-5 h-5 text-[#B89B7A]" />
             <span className="text-sm text-[#432818]">Admin</span>
           </Button>

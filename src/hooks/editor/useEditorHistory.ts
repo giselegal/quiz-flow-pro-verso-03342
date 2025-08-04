@@ -1,7 +1,6 @@
-
-import { useState } from 'react';
-import { EditorBlock } from '@/types/editor';
-import { useToast } from '@/components/ui/use-toast';
+import { useState } from "react";
+import { EditorBlock } from "@/types/editor";
+import { useToast } from "@/components/ui/use-toast";
 
 export const useEditorHistory = (initialBlocks: EditorBlock[]) => {
   const { toast } = useToast();
@@ -23,7 +22,7 @@ export const useEditorHistory = (initialBlocks: EditorBlock[]) => {
       toast({
         title: "Não é possível desfazer",
         description: "Você já está no início do histórico.",
-        variant: "destructive"
+        variant: "destructive",
       });
       return history[historyIndex];
     }
@@ -37,7 +36,7 @@ export const useEditorHistory = (initialBlocks: EditorBlock[]) => {
       toast({
         title: "Não é possível refazer",
         description: "Você já está no fim do histórico.",
-        variant: "destructive"
+        variant: "destructive",
       });
       return history[historyIndex];
     }
@@ -48,6 +47,6 @@ export const useEditorHistory = (initialBlocks: EditorBlock[]) => {
     undo,
     redo,
     canUndo: historyIndex > 0,
-    canRedo: historyIndex < history.length - 1
+    canRedo: historyIndex < history.length - 1,
   };
 };

@@ -2,22 +2,24 @@
 
 ## 📊 **MAPEAMENTO OFICIAL CONFIRMADO**
 
-| Step | Questão | Título | Tipo | Observações |
-|------|---------|--------|------|-------------|
-| **Step02** | **q1** | QUAL O SEU TIPO DE ROUPA FAVORITA? | both (texto + imagem) | ✅ Correto |
-| **Step03** | **q2** | RESUMA A SUA PERSONALIDADE | text only | ✅ Correto |
-| **Step04** | **q3** | QUAL VISUAL VOCÊ MAIS SE IDENTIFICA? | both (texto + imagem) | ✅ Correto |
-| **Step05** | **q4** | QUAIS DETALHES VOCÊ GOSTA? | text only | ✅ **Corrigido** |
+| Step       | Questão | Título                               | Tipo                  | Observações      |
+| ---------- | ------- | ------------------------------------ | --------------------- | ---------------- |
+| **Step02** | **q1**  | QUAL O SEU TIPO DE ROUPA FAVORITA?   | both (texto + imagem) | ✅ Correto       |
+| **Step03** | **q2**  | RESUMA A SUA PERSONALIDADE           | text only             | ✅ Correto       |
+| **Step04** | **q3**  | QUAL VISUAL VOCÊ MAIS SE IDENTIFICA? | both (texto + imagem) | ✅ Correto       |
+| **Step05** | **q4**  | QUAIS DETALHES VOCÊ GOSTA?           | text only             | ✅ **Corrigido** |
 
 ---
 
 ## ✅ **CORREÇÃO REALIZADA NO STEP05**
 
 ### **ANTES:**
+
 - ❌ Arquivo vazio
 - ❌ Sem implementação
 
 ### **DEPOIS:**
+
 - ✅ **Questão q4**: "QUAIS DETALHES VOCÊ GOSTA?"
 - ✅ **8 opções**: 4a-4h (detalhes de roupas)
 - ✅ **Tipo**: text only (sem imagens)
@@ -31,7 +33,7 @@
 ```typescript
 Opções implementadas:
 - 4a: "Poucos detalhes, básico e prático" → Natural
-- 4b: "Bem discretos e sutis, clean e clássico" → Clássico  
+- 4b: "Bem discretos e sutis, clean e clássico" → Clássico
 - 4c: "Básico, mas com um toque de estilo" → Contemporâneo
 - 4d: "Detalhes refinados, chic e que deem status" → Elegante
 - 4e: "Detalhes delicados, laços, babados" → Romântico
@@ -45,7 +47,8 @@ Opções implementadas:
 ## 🔄 **PRÓXIMOS STEPS A IMPLEMENTAR**
 
 Para manter a sequência correta:
-- **Step06** → **q5** (Estampas) 
+
+- **Step06** → **q5** (Estampas)
 - **Step07** → **q6** (Casacos)
 - **Step08** → **q7** (Calças)
 - **Step09** → **q8** (Sapatos)

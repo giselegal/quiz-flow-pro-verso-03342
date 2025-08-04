@@ -1,4 +1,4 @@
-import { useCallback, useRef, useEffect, useState } from 'react';
+import { useCallback, useRef, useEffect, useState } from "react";
 
 /**
  * Hook para debounce de auto-save com controle inteligente
@@ -7,11 +7,13 @@ import { useCallback, useRef, useEffect, useState } from 'react';
 export const useAutoSaveDebounce = (
   saveFunction: () => Promise<void>,
   delay: number = 1000,
-  maxInterval: number = 10000
+  maxInterval: number = 10000,
 ) => {
   const [isActive, setIsActive] = useState(true);
   const [lastSave, setLastSave] = useState<Date | null>(null);
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle');
+  const [saveStatus, setSaveStatus] = useState<
+    "idle" | "saving" | "success" | "error"
+  >("idle");
   const debounceRef = useRef<NodeJS.Timeout>();
   const maxDelayRef = useRef<NodeJS.Timeout>();
   const lastSaveRef = useRef<number>(0);
@@ -40,40 +42,53 @@ export const useAutoSaveDebounce = (
 
       // Evitar saves muito frequentes (mínimo 5 segundos entre saves)
       if (now - lastSaveRef.current < 5000) {
-        console.log('[AutoSave] Save ignorado - muito recente');
+        console.log("[AutoSave] Save ignorado - muito recente");
         return;
       }
 
       try {
-        setSaveStatus('saving');
+        setSaveStatus("saving");
         await saveFunction();
         lastSaveRef.current = now;
         setLastSave(new Date());
-        setSaveStatus('success');
-        console.log(`✅ Auto-save successful: ${new Date().toLocaleTimeString()}`);
+        setSaveStatus("success");
+        console.log(
+          `✅ Auto-save successful: ${new Date().toLocaleTimeString()}`,
+        );
       } catch (error) {
-        setSaveStatus('error');
-        console.error('❌ Auto-save failed:', error);
+        setSaveStatus("error");
+        console.error("❌ Auto-save failed:", error);
 
         // Se for erro de localStorage, tentar limpeza
-        if (error instanceof DOMException && error.name === 'QuotaExceededError') {
-          console.warn('⚠️ LocalStorage quota exceeded, attempting cleanup...');
+        if (
+          error instanceof DOMException &&
+          error.name === "QuotaExceededError"
+        ) {
+          console.warn("⚠️ LocalStorage quota exceeded, attempting cleanup...");
           try {
             // Limpar dados antigos do localStorage
             const keysToRemove = [];
             for (let i = 0; i < localStorage.length; i++) {
               const key = localStorage.key(i);
-              if (key && (key.startsWith('quiz-versions-') || key.startsWith('caktoquiz-'))) {
+              if (
+                key &&
+                (key.startsWith("quiz-versions-") ||
+                  key.startsWith("caktoquiz-"))
+              ) {
                 keysToRemove.push(key);
               }
             }
             // Remover apenas versões antigas, manter as mais recentes
-            keysToRemove.slice(0, -3).forEach(key => {
-              try { localStorage.removeItem(key); } catch (e) { /* ignore */ }
+            keysToRemove.slice(0, -3).forEach((key) => {
+              try {
+                localStorage.removeItem(key);
+              } catch (e) {
+                /* ignore */
+              }
             });
-            console.log('🧹 Cleaned up old localStorage data');
+            console.log("🧹 Cleaned up old localStorage data");
           } catch (cleanupError) {
-            console.warn('Failed to cleanup localStorage:', cleanupError);
+            console.warn("Failed to cleanup localStorage:", cleanupError);
           }
         }
       }
@@ -90,11 +105,11 @@ export const useAutoSaveDebounce = (
       // Só fazer save forçado se passou tempo suficiente
       if (now - lastSaveRef.current >= maxInterval - 1000) {
         try {
-          console.log('[AutoSave] Save forçado por tempo máximo');
+          console.log("[AutoSave] Save forçado por tempo máximo");
           await saveFunction();
           lastSaveRef.current = now;
         } catch (error) {
-          console.error('[AutoSave] Erro no save forçado:', error);
+          console.error("[AutoSave] Erro no save forçado:", error);
         }
       }
     }, maxInterval);
@@ -109,11 +124,11 @@ export const useAutoSaveDebounce = (
     if (maxDelayRef.current) clearTimeout(maxDelayRef.current);
 
     try {
-      console.log('[AutoSave] Save imediato executado');
+      console.log("[AutoSave] Save imediato executado");
       await saveFunction();
       lastSaveRef.current = Date.now();
     } catch (error) {
-      console.error('[AutoSave] Erro no save imediato:', error);
+      console.error("[AutoSave] Erro no save imediato:", error);
     }
   }, [saveFunction]);
 
@@ -122,12 +137,12 @@ export const useAutoSaveDebounce = (
     isActiveRef.current = false;
     if (debounceRef.current) clearTimeout(debounceRef.current);
     if (maxDelayRef.current) clearTimeout(maxDelayRef.current);
-    console.log('[AutoSave] Auto-save pausado');
+    console.log("[AutoSave] Auto-save pausado");
   }, []);
 
   const resumeAutoSave = useCallback(() => {
     isActiveRef.current = true;
-    console.log('[AutoSave] Auto-save resumido');
+    console.log("[AutoSave] Auto-save resumido");
   }, []);
 
   return {
@@ -135,7 +150,7 @@ export const useAutoSaveDebounce = (
     saveNow,
     pauseAutoSave,
     resumeAutoSave,
-    isActive: isActiveRef.current
+    isActive: isActiveRef.current,
   };
 };
 

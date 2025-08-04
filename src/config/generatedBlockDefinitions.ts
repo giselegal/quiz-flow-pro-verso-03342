@@ -1,5 +1,4 @@
-
-import { blockDefinitions } from './blockDefinitions';
+import { blockDefinitions } from "./blockDefinitions";
 
 export { blockDefinitions };
 export default blockDefinitions;

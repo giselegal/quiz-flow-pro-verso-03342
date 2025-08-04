@@ -3,6 +3,7 @@
 ## 🎯 **PARA QUE SERVEM ESSES CÓDIGOS**
 
 ### **1. DynamicBlockRenderer.tsx**
+
 **🎯 FUNÇÃO:** Renderizador de demonstração/preview para componentes
 
 ```typescript
@@ -12,6 +13,7 @@
 ```
 
 **📋 O QUE FAZ:**
+
 - **NÃO é o renderizador principal do editor**
 - É um sistema de **demonstração/preview**
 - Usado para mostrar componentes isoladamente
@@ -19,6 +21,7 @@
 - Simula props para demonstração
 
 **🔄 FLUXO:**
+
 ```mermaid
 graph LR
     A[pageId + blockId] --> B[DynamicBlockRenderer]
@@ -27,6 +30,7 @@ graph LR
 ```
 
 **⚠️ LIMITAÇÕES:**
+
 - Props simuladas (não vem do blockDefinitions)
 - Estilos hardcoded
 - Não integra com sistema de propriedades
@@ -35,6 +39,7 @@ graph LR
 ---
 
 ### **2. AdvancedPropertyPanel.tsx**
+
 **🎯 FUNÇÃO:** Painel de propriedades manual/específico
 
 ```typescript
@@ -44,12 +49,14 @@ graph LR
 ```
 
 **📋 O QUE FAZ:**
+
 - Painel lateral para editar propriedades
 - **Formulários manuais** para cada tipo de componente
 - Não usa `blockDefinitions.propertiesSchema`
 - Tem casos específicos hardcoded
 
 **🔄 FLUXO:**
+
 ```mermaid
 graph LR
     A[Bloco Selecionado] --> B[AdvancedPropertyPanel]
@@ -59,6 +66,7 @@ graph LR
 ```
 
 **📝 EXEMPLOS DE USO:**
+
 ```typescript
 // Para cada tipo, formulário manual:
 {selectedBlock.type === 'header' && (
@@ -79,6 +87,7 @@ graph LR
 ---
 
 ### **3. Index Files (index.ts)**
+
 **🎯 FUNÇÃO:** Centralizadores de importação/exportação
 
 ```typescript
@@ -88,23 +97,21 @@ graph LR
 ```
 
 **📋 O QUE FAZ:**
+
 - **Barrel exports** - centraliza exportações
 - Facilita importação de múltiplos componentes
 - Organiza componentes por categoria
 
 **🔄 EXEMPLO:**
+
 ```typescript
 // Ao invés de:
-import QuizQuestionBlock from './quiz/QuizQuestionBlock';
-import QuizProgressBlock from './quiz/QuizProgressBlock';
-import QuizResultBlock from './quiz/QuizResultBlock';
+import QuizQuestionBlock from "./quiz/QuizQuestionBlock";
+import QuizProgressBlock from "./quiz/QuizProgressBlock";
+import QuizResultBlock from "./quiz/QuizResultBlock";
 
 // Você pode:
-import { 
-  QuizQuestionBlock, 
-  QuizProgressBlock, 
-  QuizResultBlock 
-} from './quiz';
+import { QuizQuestionBlock, QuizProgressBlock, QuizResultBlock } from "./quiz";
 ```
 
 ---
@@ -119,10 +126,10 @@ graph TB
     B --> C[EditorPreview.tsx]
     C --> D[UniversalBlockRenderer.tsx]
     D --> E[Componentes React]
-    
+
     F[PropertyPanel.tsx] --> G[Schema-driven forms]
     G --> H[Auto-generated inputs]
-    
+
     style A fill:#ff9999
     style D fill:#99ff99
     style F fill:#9999ff
@@ -131,6 +138,7 @@ graph TB
 ### **COMPONENTES PRINCIPAIS:**
 
 #### **1. blockDefinitions.ts** (🔥 CORAÇÃO)
+
 ```typescript
 // Define TODOS os componentes disponíveis
 // Gera automaticamente:
@@ -140,6 +148,7 @@ graph TB
 ```
 
 #### **2. UniversalBlockRenderer.tsx** (🎯 RENDERIZADOR PRINCIPAL)
+
 ```typescript
 // Switch gigante que mapeia block.type → Componente React
 case 'quiz-question':
@@ -150,6 +159,7 @@ case 'heading':
 ```
 
 #### **3. PropertyPanel.tsx** (⚙️ EDITOR DE PROPRIEDADES)
+
 ```typescript
 // Gera formulários automaticamente baseado em:
 const schema = getBlockPropertiesSchema(block.type);
@@ -161,15 +171,18 @@ const schema = getBlockPropertiesSchema(block.type);
 ## 🤔 **QUAL USAR?**
 
 ### **✅ PARA O EDITOR PRINCIPAL:**
+
 - **UniversalBlockRenderer.tsx** (renderizador principal)
 - **PropertyPanel.tsx** (painel automático)
 - **blockDefinitions.ts** (definições centrais)
 
 ### **⚠️ PARA CASOS ESPECÍFICOS:**
+
 - **DynamicBlockRenderer.tsx** (preview/demonstração)
 - **AdvancedPropertyPanel.tsx** (formulários customizados)
 
 ### **📁 SEMPRE:**
+
 - **index.ts** files (organização)
 
 ---
@@ -177,6 +190,7 @@ const schema = getBlockPropertiesSchema(block.type);
 ## 🚀 **EXEMPLO PRÁTICO: COMO TUDO SE CONECTA**
 
 ### **1. DEFINIÇÃO (blockDefinitions.ts)**
+
 ```typescript
 {
   type: 'quiz-question',
@@ -193,6 +207,7 @@ const schema = getBlockPropertiesSchema(block.type);
 ```
 
 ### **2. COMPONENTE REACT (QuizQuestionBlock.tsx)**
+
 ```typescript
 const QuizQuestionBlock = ({ block, isSelected, onClick }) => {
   const { question } = block.properties;
@@ -201,19 +216,22 @@ const QuizQuestionBlock = ({ block, isSelected, onClick }) => {
 ```
 
 ### **3. RENDERIZAÇÃO (UniversalBlockRenderer.tsx)**
+
 ```typescript
 case 'quiz-question':
   return <QuizQuestionBlock {...props} />;
 ```
 
 ### **4. PROPRIEDADES (PropertyPanel.tsx)**
+
 ```typescript
 // Busca schema automaticamente:
-const schema = getBlockPropertiesSchema('quiz-question');
+const schema = getBlockPropertiesSchema("quiz-question");
 // Gera textarea automaticamente baseado no schema
 ```
 
 ### **5. RESULTADO FINAL:**
+
 - ✅ Componente aparece na lista
 - ✅ Pode ser arrastado para o canvas
 - ✅ Quando selecionado, mostra propriedades editáveis
@@ -223,18 +241,19 @@ const schema = getBlockPropertiesSchema('quiz-question');
 
 ## 💡 **RESUMO EXECUTIVO**
 
-| Arquivo | Função | Quando Usar |
-|---------|--------|-------------|
-| **blockDefinitions.ts** | 🔥 Define todos os componentes | SEMPRE - É o coração |
-| **UniversalBlockRenderer.tsx** | 🎯 Renderiza componentes no editor | SEMPRE - É o motor |
-| **PropertyPanel.tsx** | ⚙️ Edita propriedades elegantemente com SCHEMA | SEMPRE - É o painel elegante |
-| **DynamicBlockRenderer.tsx** | 📺 Preview/demonstração | Galeria, testes, demos |
-| **AdvancedPropertyPanel.tsx** | 🔧 Formulários customizados OBSOLETO | ❌ NÃO usar mais |
-| **index.ts** | 📁 Organização de imports | SEMPRE - Boa prática |
+| Arquivo                        | Função                                         | Quando Usar                  |
+| ------------------------------ | ---------------------------------------------- | ---------------------------- |
+| **blockDefinitions.ts**        | 🔥 Define todos os componentes                 | SEMPRE - É o coração         |
+| **UniversalBlockRenderer.tsx** | 🎯 Renderiza componentes no editor             | SEMPRE - É o motor           |
+| **PropertyPanel.tsx**          | ⚙️ Edita propriedades elegantemente com SCHEMA | SEMPRE - É o painel elegante |
+| **DynamicBlockRenderer.tsx**   | 📺 Preview/demonstração                        | Galeria, testes, demos       |
+| **AdvancedPropertyPanel.tsx**  | 🔧 Formulários customizados OBSOLETO           | ❌ NÃO usar mais             |
+| **index.ts**                   | 📁 Organização de imports                      | SEMPRE - Boa prática         |
 
 **🎯 MUDANÇA IMPORTANTE:** O `PropertyPanel.tsx` agora combina **schema automático** + **interface elegante**! O `AdvancedPropertyPanel.tsx` se tornou obsoleto.
 
 **✅ NOVA ARQUITETURA:**
+
 - **PropertyPanel.tsx** = Schema-driven + Interface elegante (Cards, Labels, ícones)
 - **AdvancedPropertyPanel.tsx** = OBSOLETO - pode ser removido
 - **blockDefinitions.ts** = Fonte da verdade para todos os schemas
@@ -255,7 +274,7 @@ const DynamicBlockRenderer = ({
   enableSupabaseTracking
 }) => {
   const componentType = blockId || 'default'; // ← SIMULA tipo
-  
+
   // Props hardcoded para demonstração
   const props: any = {
     question: 'Qual dessas opções representa melhor seu estilo?',
@@ -285,6 +304,7 @@ const DynamicBlockRenderer = ({
 ```
 
 **🎯 FUNÇÃO REAL:**
+
 - ✅ **Preview/Galeria** de componentes
 - ✅ **Demonstração** de layouts
 - ✅ **Testes visuais** de componentes
@@ -307,28 +327,29 @@ const AdvancedPropertyPanel = ({
   {selectedBlock.type === 'header' && (
     <div>
       <Label>Título</Label>
-      <Input 
+      <Input
         value={selectedBlock.content.title || ''}
         onChange={(e) => updateContent('title', e.target.value)}
       />
     </div>
   )}
-  
+
   {selectedBlock.type === 'quiz-question' && (
     <div>
       <Label>Pergunta</Label>
-      <Textarea 
+      <Textarea
         value={selectedBlock.content.question || ''}
         onChange={(e) => updateContent('question', e.target.value)}
       />
     </div>
   )}
-  
+
   // ... formulários manuais para cada tipo
 };
 ```
 
 **🎯 FUNÇÃO REAL:**
+
 - ✅ **Formulários customizados** para tipos específicos
 - ✅ **UI avançada** com Cards e Labels
 - ✅ **Botão de deletar** integrado
@@ -342,18 +363,19 @@ const AdvancedPropertyPanel = ({
 
 ```typescript
 // src/components/blocks/quiz/index.ts
-export { default as QuizQuestionBlock } from './QuizQuestionBlock';
-export { default as QuizProgressBlock } from './QuizProgressBlock';
-export { default as QuizResultBlock } from './QuizResultBlock';
+export { default as QuizQuestionBlock } from "./QuizQuestionBlock";
+export { default as QuizProgressBlock } from "./QuizProgressBlock";
+export { default as QuizResultBlock } from "./QuizResultBlock";
 
 // Facilita importações:
-import { QuizQuestionBlock, QuizProgressBlock } from './quiz';
+import { QuizQuestionBlock, QuizProgressBlock } from "./quiz";
 // Ao invés de:
-import QuizQuestionBlock from './quiz/QuizQuestionBlock';
-import QuizProgressBlock from './quiz/QuizProgressBlock';
+import QuizQuestionBlock from "./quiz/QuizQuestionBlock";
+import QuizProgressBlock from "./quiz/QuizProgressBlock";
 ```
 
 **🎯 FUNÇÃO REAL:**
+
 - ✅ **Organização** de imports/exports
 - ✅ **Barrel pattern** para facilitar importações
 - ✅ **Estrutura** de pastas limpa
@@ -364,13 +386,14 @@ import QuizProgressBlock from './quiz/QuizProgressBlock';
 ## 🏗️ **DIFERENÇA ENTRE OS RENDERIZADORES**
 
 ### **A. DynamicBlockRenderer (DEMO)**
+
 ```typescript
 // Recebe: pageId + blockId
 // Simula: props hardcoded
 // Renderiza: JSX inline
 // Uso: Preview/demonstração
 
-<DynamicBlockRenderer 
+<DynamicBlockRenderer
   pageId="etapa-1"
   blockId="quiz-question"
   enableSupabaseTracking={true}
@@ -378,6 +401,7 @@ import QuizProgressBlock from './quiz/QuizProgressBlock';
 ```
 
 ### **B. UniversalBlockRenderer (EDITOR REAL)**
+
 ```typescript
 // Recebe: block com type + properties
 // Busca: blockDefinitions para schema
@@ -401,6 +425,7 @@ import QuizProgressBlock from './quiz/QuizProgressBlock';
 ## 🔄 **FLUXO REAL DO EDITOR (O QUE IMPORTA)**
 
 ### **SISTEMA PRINCIPAL:**
+
 ```mermaid
 graph TB
     A[blockDefinitions.ts] -->|define| B[ComponentsList.tsx]
@@ -412,6 +437,7 @@ graph TB
 ```
 
 ### **SISTEMAS AUXILIARES:**
+
 ```mermaid
 graph TB
     H[DynamicBlockRenderer.tsx] -->|preview| I[Demonstração]
@@ -424,16 +450,19 @@ graph TB
 ## 💡 **RESUMO EXECUTIVO FINAL**
 
 ### **🚀 PARA O EDITOR FUNCIONAR:**
+
 1. **blockDefinitions.ts** - Define componentes e schemas
 2. **UniversalBlockRenderer.tsx** - Renderiza no editor
 3. **PropertyPanel.tsx** - Edita propriedades automaticamente
 4. **index.ts** - Organiza imports
 
 ### **🛠️ PARA CASOS ESPECÍFICOS:**
+
 1. **DynamicBlockRenderer.tsx** - Preview/demo de componentes
 2. **AdvancedPropertyPanel.tsx** - Formulários manuais customizados
 
 ### **📊 PRIORIDADES:**
+
 - **CRÍTICO:** blockDefinitions + UniversalBlockRenderer + PropertyPanel (NOVO)
 - **ÚTIL:** DynamicBlockRenderer (para testes)
 - **OBSOLETO:** AdvancedPropertyPanel (removido da arquitetura)
@@ -448,11 +477,13 @@ graph TB
 ### **✅ O QUE MUDOU:**
 
 **ANTES:**
+
 - `PropertyPanel.tsx` = Schema automático mas interface básica
 - `AdvancedPropertyPanel.tsx` = Interface elegante mas manual
 
 **AGORA:**
-- `PropertyPanel.tsx` = **Schema automático + Interface elegante** 
+
+- `PropertyPanel.tsx` = **Schema automático + Interface elegante**
 - `AdvancedPropertyPanel.tsx` = **OBSOLETO** (pode ser removido)
 
 ### **🎯 NOVO PropertyPanel.tsx:**
@@ -491,11 +522,11 @@ const schema = getBlockPropertiesSchema(selectedBlock.type) || [];
 // 1. Detecta o tipo do bloco
 const blockType = selectedBlock.type;
 
-// 2. Busca o schema automaticamente 
+// 2. Busca o schema automaticamente
 const schema = getBlockPropertiesSchema(blockType);
 
 // 3. Categoriza propriedades
-- "color" → Categoria "Cores" 
+- "color" → Categoria "Cores"
 - "font"/"text" → Categoria "Tipografia"
 - "image"/"url" → Categoria "Mídia"
 - outros → Categoria "Básicas"

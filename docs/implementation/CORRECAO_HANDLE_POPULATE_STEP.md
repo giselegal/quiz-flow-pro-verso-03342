@@ -9,42 +9,48 @@
 ## 🔧 Solução Implementada
 
 ### 1. **Função handlePopulateStep Criada** ✅
+
 ```typescript
-const handlePopulateStep = useCallback((stepId: string) => {
-  console.log(`🎯 Populando etapa ${stepId} com blocos padrão`);
-  
-  // Blocos padrão para uma etapa de quiz
-  const defaultBlocks = [
-    {
-      type: 'heading-inline',
-      properties: {
-        content: 'Nova Questão',
-        level: 'h2',
-        fontSize: 'text-2xl',
-        fontWeight: 'font-bold',
-        textAlign: 'text-center',
-        color: '#432818',
-        marginBottom: 8
-      }
-    },
-    // ... outros blocos padrão
-  ];
-  
-  // Adicionar os blocos usando handleAddBlocksToStep
-  handleAddBlocksToStep(stepId, defaultBlocks);
-}, [handleAddBlocksToStep]);
+const handlePopulateStep = useCallback(
+  (stepId: string) => {
+    console.log(`🎯 Populando etapa ${stepId} com blocos padrão`);
+
+    // Blocos padrão para uma etapa de quiz
+    const defaultBlocks = [
+      {
+        type: "heading-inline",
+        properties: {
+          content: "Nova Questão",
+          level: "h2",
+          fontSize: "text-2xl",
+          fontWeight: "font-bold",
+          textAlign: "text-center",
+          color: "#432818",
+          marginBottom: 8,
+        },
+      },
+      // ... outros blocos padrão
+    ];
+
+    // Adicionar os blocos usando handleAddBlocksToStep
+    handleAddBlocksToStep(stepId, defaultBlocks);
+  },
+  [handleAddBlocksToStep],
+);
 ```
 
 ### 2. **Interface StepsPanelProps Atualizada** ✅
+
 ```typescript
 interface StepsPanelProps {
   // ... props existentes
-  onPopulateStep?: (stepId: string) => void;  // ✅ NOVA PROP
+  onPopulateStep?: (stepId: string) => void; // ✅ NOVA PROP
   // ... outras props
 }
 ```
 
 ### 3. **Componente StepsPanel Atualizado** ✅
+
 ```typescript
 export const StepsPanel: React.FC<StepsPanelProps> = ({
   // ... props existentes
@@ -62,6 +68,7 @@ A função `handlePopulateStep` permite:
 - **Agilizar criação** de conteúdo no editor
 
 ### Blocos Padrão Incluídos:
+
 1. **Heading**: Título da questão
 2. **Text**: Descrição/instrução
 3. **Options Grid**: Grade de opções de resposta
@@ -78,6 +85,7 @@ A função `handlePopulateStep` permite:
 ## 📋 Próximos Passos
 
 A função está pronta para ser utilizada quando:
+
 1. **Usuário clica** em "Popular Etapa" no painel de etapas
 2. **Sistema precisa** criar template padrão para nova questão
 3. **Editor necessite** adicionar blocos em lote a uma etapa

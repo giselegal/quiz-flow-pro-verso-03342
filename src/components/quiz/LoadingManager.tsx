@@ -1,7 +1,6 @@
-
-import React from 'react';
-import { LoadingState } from '../ui/loading-state';
-import { motion } from 'framer-motion';
+import React from "react";
+import { LoadingState } from "../ui/loading-state";
+import { motion } from "framer-motion";
 
 interface LoadingManagerProps {
   isLoading: boolean;
@@ -12,7 +11,7 @@ interface LoadingManagerProps {
 const LoadingManager: React.FC<LoadingManagerProps> = ({
   isLoading,
   children,
-  message = 'Carregando o quiz...'
+  message = "Carregando o quiz...",
 }) => {
   // If loading, show loading state
   if (isLoading) {

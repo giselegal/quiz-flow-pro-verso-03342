@@ -1,15 +1,17 @@
-
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { TrendingUp, Users, Target, Eye, Clock } from 'lucide-react';
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { TrendingUp, Users, Target, Eye, Clock } from "lucide-react";
 
 const AnalyticsPage: React.FC = () => {
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-[#432818]" style={{ fontFamily: 'Playfair Display, serif' }}>
+        <h1
+          className="text-3xl font-bold text-[#432818]"
+          style={{ fontFamily: "Playfair Display, serif" }}
+        >
           Analytics & Métricas
         </h1>
         <p className="text-[#8F7A6A] mt-2">
@@ -28,9 +30,7 @@ const AnalyticsPage: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-[#432818]">3,542</div>
-            <p className="text-xs text-green-600">
-              +15.2% vs mês anterior
-            </p>
+            <p className="text-xs text-green-600">+15.2% vs mês anterior</p>
           </CardContent>
         </Card>
 
@@ -43,9 +43,7 @@ const AnalyticsPage: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-[#432818]">24.8%</div>
-            <p className="text-xs text-green-600">
-              +3.1% vs mês anterior
-            </p>
+            <p className="text-xs text-green-600">+3.1% vs mês anterior</p>
           </CardContent>
         </Card>
 
@@ -58,9 +56,7 @@ const AnalyticsPage: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-[#432818]">12,847</div>
-            <p className="text-xs text-green-600">
-              +8.7% vs mês anterior
-            </p>
+            <p className="text-xs text-green-600">+8.7% vs mês anterior</p>
           </CardContent>
         </Card>
 
@@ -73,9 +69,7 @@ const AnalyticsPage: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-[#432818]">4:23</div>
-            <p className="text-xs text-red-600">
-              -0:12 vs mês anterior
-            </p>
+            <p className="text-xs text-red-600">-0:12 vs mês anterior</p>
           </CardContent>
         </Card>
 
@@ -88,9 +82,7 @@ const AnalyticsPage: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-[#432818]">R$ 28,945</div>
-            <p className="text-xs text-green-600">
-              +22.4% vs mês anterior
-            </p>
+            <p className="text-xs text-green-600">+22.4% vs mês anterior</p>
           </CardContent>
         </Card>
       </div>
@@ -98,22 +90,30 @@ const AnalyticsPage: React.FC = () => {
       {/* Análise por Funil */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-[#432818]">Performance por Funil</CardTitle>
+          <CardTitle className="text-[#432818]">
+            Performance por Funil
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="flex items-center justify-between p-4 border border-[#D4C4A0] rounded-lg">
               <div>
-                <h3 className="font-semibold text-[#432818]">Funil de Descoberta de Estilo</h3>
+                <h3 className="font-semibold text-[#432818]">
+                  Funil de Descoberta de Estilo
+                </h3>
                 <div className="flex items-center gap-4 mt-2 text-sm">
                   <span className="text-[#8F7A6A]">2,847 visitantes</span>
-                  <Badge className="bg-green-100 text-green-800">87.2% conversão</Badge>
+                  <Badge className="bg-green-100 text-green-800">
+                    87.2% conversão
+                  </Badge>
                   <span className="text-[#8F7A6A]">R$ 18,745 receita</span>
                 </div>
               </div>
               <div className="text-right">
                 <div className="text-lg font-bold text-green-600">+15.8%</div>
-                <div className="text-xs text-[#8F7A6A]">vs período anterior</div>
+                <div className="text-xs text-[#8F7A6A]">
+                  vs período anterior
+                </div>
               </div>
             </div>
           </div>

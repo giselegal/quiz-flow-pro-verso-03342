@@ -1,7 +1,7 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { BarChart3, FileText, Plus, Settings } from 'lucide-react';
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { BarChart3, FileText, Plus, Settings } from "lucide-react";
 
 const QuizPage: React.FC = () => {
   return (
@@ -9,7 +9,10 @@ const QuizPage: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-[#432818]" style={{ fontFamily: 'Playfair Display, serif' }}>
+          <h1
+            className="text-3xl font-bold text-[#432818]"
+            style={{ fontFamily: "Playfair Display, serif" }}
+          >
             Quiz Manager
           </h1>
           <p className="text-[#8F7A6A] mt-2">
@@ -33,9 +36,7 @@ const QuizPage: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-[#432818]">2,543</div>
-            <p className="text-xs text-[#8F7A6A]">
-              +12% desde ontem
-            </p>
+            <p className="text-xs text-[#8F7A6A]">+12% desde ontem</p>
           </CardContent>
         </Card>
 
@@ -48,9 +49,7 @@ const QuizPage: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-[#432818]">89.2%</div>
-            <p className="text-xs text-[#8F7A6A]">
-              +5.1% desde ontem
-            </p>
+            <p className="text-xs text-[#8F7A6A]">+5.1% desde ontem</p>
           </CardContent>
         </Card>
 
@@ -63,9 +62,7 @@ const QuizPage: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-[#432818]">3:42</div>
-            <p className="text-xs text-[#8F7A6A]">
-              -0:15 desde ontem
-            </p>
+            <p className="text-xs text-[#8F7A6A]">-0:15 desde ontem</p>
           </CardContent>
         </Card>
 
@@ -78,9 +75,7 @@ const QuizPage: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-[#432818]">156</div>
-            <p className="text-xs text-[#8F7A6A]">
-              +8% desde ontem
-            </p>
+            <p className="text-xs text-[#8F7A6A]">+8% desde ontem</p>
           </CardContent>
         </Card>
       </div>
@@ -94,24 +89,36 @@ const QuizPage: React.FC = () => {
           <div className="space-y-4">
             <div className="flex items-center justify-between p-4 border border-[#D4C4A0] rounded-lg">
               <div>
-                <h3 className="font-semibold text-[#432818]">Quiz de Estilo Predominante</h3>
-                <p className="text-sm text-[#8F7A6A]">Descoberta de estilo pessoal</p>
+                <h3 className="font-semibold text-[#432818]">
+                  Quiz de Estilo Predominante
+                </h3>
+                <p className="text-sm text-[#8F7A6A]">
+                  Descoberta de estilo pessoal
+                </p>
               </div>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Ativo</span>
+                <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
+                  Ativo
+                </span>
                 <Button variant="outline" size="sm">
                   Editar
                 </Button>
               </div>
             </div>
-            
+
             <div className="flex items-center justify-between p-4 border border-[#D4C4A0] rounded-lg">
               <div>
-                <h3 className="font-semibold text-[#432818]">Quiz de Personalidade Fashion</h3>
-                <p className="text-sm text-[#8F7A6A]">Identificação de preferências</p>
+                <h3 className="font-semibold text-[#432818]">
+                  Quiz de Personalidade Fashion
+                </h3>
+                <p className="text-sm text-[#8F7A6A]">
+                  Identificação de preferências
+                </p>
               </div>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">Rascunho</span>
+                <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">
+                  Rascunho
+                </span>
                 <Button variant="outline" size="sm">
                   Editar
                 </Button>

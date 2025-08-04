@@ -1,10 +1,12 @@
-
-import React from 'react';
-import { useDroppable } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { Monitor, Tablet, Smartphone } from 'lucide-react';
-import { ComponentRenderers } from './ComponentRenderers';
-import { SortableCanvasItem } from './SortableCanvasItem';
+import React from "react";
+import { useDroppable } from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { Monitor, Tablet, Smartphone } from "lucide-react";
+import { ComponentRenderers } from "./ComponentRenderers";
+import { SortableCanvasItem } from "./SortableCanvasItem";
 
 interface CanvasItem {
   id: string;
@@ -15,14 +17,14 @@ interface CanvasItem {
 
 interface DropZoneCanvasProps {
   items: CanvasItem[];
-  previewMode: 'desktop' | 'tablet' | 'mobile';
+  previewMode: "desktop" | "tablet" | "mobile";
   selectedItemId?: string | null;
   onSelectItem: (id: string) => void;
   onDeleteItem: (id: string) => void;
 }
 
-const BasicComponentRenderer: React.FC<{ 
-  type: string; 
+const BasicComponentRenderer: React.FC<{
+  type: string;
   props: Record<string, any>;
   isSelected?: boolean;
   onSelect?: () => void;
@@ -33,85 +35,85 @@ const BasicComponentRenderer: React.FC<{
   };
 
   switch (type) {
-    case 'heading':
+    case "heading":
       return (
-        <div 
-          className={`cursor-pointer ${isSelected ? 'ring-2 ring-blue-500 ring-offset-2' : ''}`}
+        <div
+          className={`cursor-pointer ${isSelected ? "ring-2 ring-blue-500 ring-offset-2" : ""}`}
           onClick={handleClick}
           style={{ marginBottom: props.marginBottom || 20 }}
         >
-          <h1 
+          <h1
             style={{
               fontSize: props.fontSize || 32,
-              fontWeight: props.fontWeight || 'bold',
-              textAlign: props.textAlign || 'center',
-              color: props.color || '#1a1a1a',
-              margin: 0
+              fontWeight: props.fontWeight || "bold",
+              textAlign: props.textAlign || "center",
+              color: props.color || "#1a1a1a",
+              margin: 0,
             }}
           >
-            {props.content || 'Título'}
+            {props.content || "Título"}
           </h1>
         </div>
       );
-    case 'text':
+    case "text":
       return (
-        <div 
-          className={`cursor-pointer ${isSelected ? 'ring-2 ring-blue-500 ring-offset-2' : ''}`}
+        <div
+          className={`cursor-pointer ${isSelected ? "ring-2 ring-blue-500 ring-offset-2" : ""}`}
           onClick={handleClick}
           style={{ marginBottom: props.marginBottom || 16 }}
         >
-          <p 
+          <p
             style={{
               fontSize: props.fontSize || 16,
               lineHeight: props.lineHeight || 1.6,
-              textAlign: props.textAlign || 'left',
-              color: props.color || '#4a4a4a',
-              margin: 0
+              textAlign: props.textAlign || "left",
+              color: props.color || "#4a4a4a",
+              margin: 0,
             }}
           >
-            {props.content || 'Adicione seu texto aqui...'}
+            {props.content || "Adicione seu texto aqui..."}
           </p>
         </div>
       );
-    case 'button':
+    case "button":
       return (
-        <div 
-          className={`cursor-pointer ${isSelected ? 'ring-2 ring-blue-500 ring-offset-2' : ''}`}
+        <div
+          className={`cursor-pointer ${isSelected ? "ring-2 ring-blue-500 ring-offset-2" : ""}`}
           onClick={handleClick}
           style={{ marginTop: props.marginTop || 20 }}
         >
           <button
             style={{
-              backgroundColor: props.backgroundColor || '#3b82f6',
-              color: props.textColor || '#ffffff',
+              backgroundColor: props.backgroundColor || "#3b82f6",
+              color: props.textColor || "#ffffff",
               borderRadius: props.borderRadius || 8,
-              padding: props.padding || '12px 24px',
-              fontWeight: props.fontWeight || 'semibold',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'block',
-              margin: props.textAlign === 'center' ? '0 auto' : 0
+              padding: props.padding || "12px 24px",
+              fontWeight: props.fontWeight || "semibold",
+              border: "none",
+              cursor: "pointer",
+              display: "block",
+              margin: props.textAlign === "center" ? "0 auto" : 0,
             }}
           >
-            {props.text || 'Clique Aqui'}
+            {props.text || "Clique Aqui"}
           </button>
         </div>
       );
-    case 'image':
+    case "image":
       return (
-        <div 
-          className={`cursor-pointer ${isSelected ? 'ring-2 ring-blue-500 ring-offset-2' : ''}`}
+        <div
+          className={`cursor-pointer ${isSelected ? "ring-2 ring-blue-500 ring-offset-2" : ""}`}
           onClick={handleClick}
         >
           <img
-            src={props.src || 'https://via.placeholder.com/400x200'}
-            alt={props.alt || 'Imagem'}
+            src={props.src || "https://via.placeholder.com/400x200"}
+            alt={props.alt || "Imagem"}
             style={{
               width: props.width || 400,
               height: props.height || 200,
-              objectFit: props.objectFit || 'cover',
+              objectFit: props.objectFit || "cover",
               borderRadius: props.borderRadius || 8,
-              display: 'block'
+              display: "block",
             }}
           />
         </div>
@@ -120,12 +122,14 @@ const BasicComponentRenderer: React.FC<{
       return (
         <div
           className={`p-4 border-2 border-dashed border-gray-300 rounded-lg text-center cursor-pointer ${
-            isSelected ? 'ring-2 ring-blue-500 ring-offset-2' : ''
+            isSelected ? "ring-2 ring-blue-500 ring-offset-2" : ""
           }`}
           onClick={handleClick}
         >
           <p className="text-gray-500">Componente: {type}</p>
-          <p className="text-xs text-gray-400 mt-1">Renderizador não encontrado</p>
+          <p className="text-xs text-gray-400 mt-1">
+            Renderizador não encontrado
+          </p>
         </div>
       );
   }
@@ -136,31 +140,31 @@ export const DropZoneCanvas: React.FC<DropZoneCanvasProps> = ({
   previewMode,
   selectedItemId,
   onSelectItem,
-  onDeleteItem
+  onDeleteItem,
 }) => {
   const { setNodeRef, isOver } = useDroppable({
-    id: 'canvas',
+    id: "canvas",
     data: {
-      type: 'canvas'
-    }
+      type: "canvas",
+    },
   });
 
   const getPreviewStyles = () => {
     switch (previewMode) {
-      case 'mobile':
-        return { maxWidth: '375px', margin: '0 auto' };
-      case 'tablet':
-        return { maxWidth: '768px', margin: '0 auto' };
+      case "mobile":
+        return { maxWidth: "375px", margin: "0 auto" };
+      case "tablet":
+        return { maxWidth: "768px", margin: "0 auto" };
       default:
-        return { maxWidth: '1200px', margin: '0 auto' };
+        return { maxWidth: "1200px", margin: "0 auto" };
     }
   };
 
   const getPreviewIcon = () => {
     switch (previewMode) {
-      case 'mobile':
+      case "mobile":
         return <Smartphone className="w-4 h-4" />;
-      case 'tablet':
+      case "tablet":
         return <Tablet className="w-4 h-4" />;
       default:
         return <Monitor className="w-4 h-4" />;
@@ -169,8 +173,9 @@ export const DropZoneCanvas: React.FC<DropZoneCanvasProps> = ({
 
   const renderComponent = (item: CanvasItem) => {
     const isSelected = selectedItemId === item.id;
-    
-    const SpecificRenderer = ComponentRenderers[item.type as keyof typeof ComponentRenderers];
+
+    const SpecificRenderer =
+      ComponentRenderers[item.type as keyof typeof ComponentRenderers];
     if (SpecificRenderer) {
       return (
         <SpecificRenderer
@@ -200,15 +205,15 @@ export const DropZoneCanvas: React.FC<DropZoneCanvasProps> = ({
             <span className="font-medium capitalize">{previewMode}</span>
           </div>
           <div className="text-sm text-[#B89B7A]">
-            {items.length} {items.length === 1 ? 'componente' : 'componentes'}
+            {items.length} {items.length === 1 ? "componente" : "componentes"}
           </div>
         </div>
       </div>
 
-      <div 
+      <div
         ref={setNodeRef}
         className={`min-h-[calc(100vh-200px)] p-6 transition-all duration-200 ${
-          isOver ? 'bg-blue-50 ring-2 ring-blue-300' : ''
+          isOver ? "bg-blue-50 ring-2 ring-blue-300" : ""
         }`}
         style={getPreviewStyles()}
       >
@@ -230,7 +235,10 @@ export const DropZoneCanvas: React.FC<DropZoneCanvasProps> = ({
             </div>
           </div>
         ) : (
-          <SortableContext items={items.map(item => item.id)} strategy={verticalListSortingStrategy}>
+          <SortableContext
+            items={items.map((item) => item.id)}
+            strategy={verticalListSortingStrategy}
+          >
             <div className="space-y-4">
               {items
                 .sort((a, b) => a.position - b.position)

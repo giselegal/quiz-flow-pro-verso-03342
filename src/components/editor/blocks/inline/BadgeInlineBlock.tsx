@@ -1,7 +1,6 @@
-
-import React from 'react';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 interface BadgeInlineBlockProps {
   block?: {
@@ -13,7 +12,7 @@ interface BadgeInlineBlockProps {
         icon?: string;
       };
       style?: {
-        variant?: 'default' | 'secondary' | 'destructive' | 'outline';
+        variant?: "default" | "secondary" | "destructive" | "outline";
         backgroundColor?: string;
         color?: string;
         fontSize?: string;
@@ -21,7 +20,7 @@ interface BadgeInlineBlockProps {
         borderRadius?: string;
       };
       layout?: {
-        alignment?: 'left' | 'center' | 'right';
+        alignment?: "left" | "center" | "right";
         margin?: string;
       };
     };
@@ -30,33 +29,37 @@ interface BadgeInlineBlockProps {
   onClick?: () => void;
 }
 
-export const BadgeInlineBlock: React.FC<BadgeInlineBlockProps> = ({ 
-  block, 
-  className, 
-  onClick 
+export const BadgeInlineBlock: React.FC<BadgeInlineBlockProps> = ({
+  block,
+  className,
+  onClick,
 }) => {
-  console.log('🧱 BadgeInlineBlock render:', {
+  console.log("🧱 BadgeInlineBlock render:", {
     blockId: block?.id,
-    properties: block?.properties
+    properties: block?.properties,
   });
 
   const properties = block?.properties || {};
   const content = properties.content || {};
   const styleProps = properties.style || {};
   const layoutProps = properties.layout || {};
-  
-  const text = content.text || 'Badge';
-  
+
+  const text = content.text || "Badge";
+
   // Determinar o variant
   const getVariant = () => {
     switch (styleProps.variant) {
-      case 'secondary': return 'secondary';
-      case 'destructive': return 'destructive';
-      case 'outline': return 'outline';
-      default: return 'default';
+      case "secondary":
+        return "secondary";
+      case "destructive":
+        return "destructive";
+      case "outline":
+        return "outline";
+      default:
+        return "default";
     }
   };
-  
+
   // Estilos customizados
   const customStyle: React.CSSProperties = {
     backgroundColor: styleProps.backgroundColor,
@@ -64,21 +67,18 @@ export const BadgeInlineBlock: React.FC<BadgeInlineBlockProps> = ({
     fontSize: styleProps.fontSize,
     padding: styleProps.padding,
     borderRadius: styleProps.borderRadius,
-    margin: layoutProps.margin
+    margin: layoutProps.margin,
   };
-  
+
   // Container com alinhamento
-  const containerClass = cn(
-    "badge-container inline-block",
-    {
-      'text-left': layoutProps.alignment === 'left',
-      'text-center': layoutProps.alignment === 'center',
-      'text-right': layoutProps.alignment === 'right'
-    }
-  );
+  const containerClass = cn("badge-container inline-block", {
+    "text-left": layoutProps.alignment === "left",
+    "text-center": layoutProps.alignment === "center",
+    "text-right": layoutProps.alignment === "right",
+  });
 
   return (
-    <div 
+    <div
       className={cn(containerClass, className)}
       data-block-type="badge-inline"
       data-block-id={block?.id}
@@ -89,7 +89,7 @@ export const BadgeInlineBlock: React.FC<BadgeInlineBlockProps> = ({
         style={customStyle}
         className={cn(
           "transition-all duration-200 cursor-pointer",
-          onClick && "hover:opacity-80"
+          onClick && "hover:opacity-80",
         )}
       >
         {content.icon && <span className="mr-1">{content.icon}</span>}

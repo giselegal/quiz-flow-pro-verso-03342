@@ -1,17 +1,18 @@
-
-import React from 'react';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { Button } from "@/components/ui/button";
 
 interface ComponentsSidebarProps {
   onComponentSelect: (type: string) => void;
 }
 
-export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect }) => {
+export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
+  onComponentSelect,
+}) => {
   const components = [
-    { type: 'header', label: 'Header' },
-    { type: 'text', label: 'Text' },
-    { type: 'image', label: 'Image' },
-    { type: 'cta', label: 'Call to Action' }
+    { type: "header", label: "Header" },
+    { type: "text", label: "Text" },
+    { type: "image", label: "Image" },
+    { type: "cta", label: "Call to Action" },
   ];
 
   return (

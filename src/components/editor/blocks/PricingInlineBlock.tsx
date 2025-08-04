@@ -1,52 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
-import InlineBaseWrapper from './base/InlineBaseWrapper';
-import InlineEditableText from './base/InlineEditableText';
-import type { BlockComponentProps } from '@/types/blocks';
-import { 
-  getPersonalizedText, 
-  trackComponentView, 
+import React, { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
+import InlineBaseWrapper from "./base/InlineBaseWrapper";
+import InlineEditableText from "./base/InlineEditableText";
+import type { BlockComponentProps } from "@/types/blocks";
+import {
+  getPersonalizedText,
+  trackComponentView,
   trackComponentClick,
   trackComponentConversion,
   RESPONSIVE_PATTERNS,
-  INLINE_ANIMATIONS
-} from '@/utils/inlineComponentUtils';
-import { Crown, Star, TrendingUp, CheckCircle, Sparkles } from 'lucide-react';
+  INLINE_ANIMATIONS,
+} from "@/utils/inlineComponentUtils";
+import { Crown, Star, TrendingUp, CheckCircle, Sparkles } from "lucide-react";
 
 const PricingInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onPropertyChange,
-  className = ''
+  className = "",
 }) => {
   const {
-    title = 'Plano Premium',
-    badge = 'Mais Popular',
-    price = 'R$ 39,90',
-    originalPrice = 'R$ 47,00',
-    discount = '15% Off',
-    period = 'à vista',
+    title = "Plano Premium",
+    badge = "Mais Popular",
+    price = "R$ 39,90",
+    originalPrice = "R$ 47,00",
+    discount = "15% Off",
+    period = "à vista",
     isPopular = true,
-    icon = 'crown',
+    icon = "crown",
     showIcon = true,
     useUsername = false,
-    usernamePattern = 'Perfeito para {{username}}!',
+    usernamePattern = "Perfeito para {{username}}!",
     trackingEnabled = false,
-    animation = 'scaleIn',
-    theme = 'primary',
+    animation = "scaleIn",
+    theme = "primary",
     showDiscount = true,
     showOriginalPrice = true,
-    conversionValue = 39.90
+    conversionValue = 39.9,
   } = block.properties;
 
   const [isHovered, setIsHovered] = useState(false);
-  
+
   // Get username from context (placeholder)
-  const username = 'Usuário';
+  const username = "Usuário";
 
   useEffect(() => {
     if (trackingEnabled) {
-      trackComponentView(block.id, 'pricing-inline');
+      trackComponentView(block.id, "pricing-inline");
     }
   }, [trackingEnabled, block.id]);
 
@@ -58,11 +58,11 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
 
   const getIcon = () => {
     const iconMap = {
-      'crown': Crown,
-      'star': Star,
-      'trending-up': TrendingUp,
-      'check-circle': CheckCircle,
-      'sparkles': Sparkles
+      crown: Crown,
+      star: Star,
+      "trending-up": TrendingUp,
+      "check-circle": CheckCircle,
+      sparkles: Sparkles,
     };
     const IconComponent = iconMap[icon as keyof typeof iconMap] || Crown;
     return <IconComponent className="w-5 h-5 text-[#B89B7A]" />;
@@ -70,8 +70,8 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
 
   const handleClick = async () => {
     if (trackingEnabled) {
-      trackComponentClick(block.id, 'pricing-inline', 'pricing_click');
-      trackComponentConversion(block.id, 'pricing-inline', conversionValue);
+      trackComponentClick(block.id, "pricing-inline", "pricing_click");
+      trackComponentConversion(block.id, "pricing-inline", conversionValue);
     }
   };
 
@@ -79,14 +79,14 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
     title,
     usernamePattern,
     username,
-    useUsername
+    useUsername,
   );
 
   const personalizedBadge = getPersonalizedText(
     badge,
     badge,
     username,
-    useUsername
+    useUsername,
   );
 
   return (
@@ -94,11 +94,14 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
       block={block}
       isSelected={isSelected}
       onPropertyChange={onPropertyChange}
-      className={cn(className, INLINE_ANIMATIONS[animation as keyof typeof INLINE_ANIMATIONS])}
+      className={cn(
+        className,
+        INLINE_ANIMATIONS[animation as keyof typeof INLINE_ANIMATIONS],
+      )}
       minHeight="5rem"
       editLabel="Editar Preço"
     >
-      <div 
+      <div
         className="w-full border border-zinc-200 rounded-lg bg-white overflow-hidden hover:shadow-lg transition-all duration-300"
         onClick={handleClick}
         onMouseEnter={() => setIsHovered(true)}
@@ -109,7 +112,7 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
           <div className="w-full bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] flex items-center justify-center py-2">
             <InlineEditableText
               value={personalizedBadge}
-              onChange={(value) => handlePropertyChange('badge', value)}
+              onChange={(value) => handlePropertyChange("badge", value)}
               placeholder="Badge do plano..."
               fontSize="sm"
               fontWeight="bold"
@@ -123,16 +126,12 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
         <div className="p-4 flex items-center justify-between">
           {/* Title Section */}
           <div className="flex items-center gap-3">
-            {showIcon && (
-              <div className="flex-shrink-0">
-                {getIcon()}
-              </div>
-            )}
-            
+            {showIcon && <div className="flex-shrink-0">{getIcon()}</div>}
+
             <div>
               <InlineEditableText
                 value={personalizedTitle}
-                onChange={(value) => handlePropertyChange('title', value)}
+                onChange={(value) => handlePropertyChange("title", value)}
                 placeholder="Título do plano..."
                 fontSize="xl"
                 fontWeight="bold"
@@ -149,7 +148,9 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
                 <div className="mb-1">
                   <InlineEditableText
                     value={discount}
-                    onChange={(value) => handlePropertyChange('discount', value)}
+                    onChange={(value) =>
+                      handlePropertyChange("discount", value)
+                    }
                     placeholder="Desconto..."
                     fontSize="xs"
                     fontWeight="medium"
@@ -158,23 +159,25 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
                   />
                 </div>
               )}
-              
+
               {/* Price and Original Price */}
               <div className="flex items-center justify-end gap-2">
                 <InlineEditableText
                   value={price}
-                  onChange={(value) => handlePropertyChange('price', value)}
+                  onChange={(value) => handlePropertyChange("price", value)}
                   placeholder="R$ 39,90"
                   fontSize="xl"
                   fontWeight="bold"
                   textAlign="right"
                   className="text-[#432818]"
                 />
-                
+
                 {showOriginalPrice && originalPrice && (
                   <InlineEditableText
                     value={originalPrice}
-                    onChange={(value) => handlePropertyChange('originalPrice', value)}
+                    onChange={(value) =>
+                      handlePropertyChange("originalPrice", value)
+                    }
                     placeholder="R$ 47,00"
                     fontSize="sm"
                     textAlign="right"
@@ -182,12 +185,12 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
                   />
                 )}
               </div>
-              
+
               {/* Period */}
               <div className="mt-1">
                 <InlineEditableText
                   value={period}
-                  onChange={(value) => handlePropertyChange('period', value)}
+                  onChange={(value) => handlePropertyChange("period", value)}
                   placeholder="Período..."
                   fontSize="xs"
                   textAlign="right"

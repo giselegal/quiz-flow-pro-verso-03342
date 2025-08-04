@@ -1,7 +1,12 @@
-
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import type { User as SupabaseUser, Session } from '@supabase/supabase-js';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import { supabase } from "@/integrations/supabase/client";
+import type { User as SupabaseUser, Session } from "@supabase/supabase-js";
 
 interface User {
   id: string;
@@ -23,7 +28,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
@@ -39,41 +44,41 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     // Configurar listener de auth PRIMEIRO
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        
-        if (session?.user) {
-          // Buscar dados do profile se disponível - defer to avoid deadlock
-          setTimeout(async () => {
-            try {
-              const { data: profile } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('id', session.user.id)
-                .single();
-              
-              setUser({
-                id: session.user.id,
-                email: session.user.email!,
-                name: profile?.name || session.user.user_metadata?.name
-              });
-            } catch (error) {
-              // Fallback para dados básicos do usuário
-              setUser({
-                id: session.user.id,
-                email: session.user.email!,
-                name: session.user.user_metadata?.name
-              });
-            }
-          }, 0);
-        } else {
-          setUser(null);
-        }
-        
-        setLoading(false);
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      setSession(session);
+
+      if (session?.user) {
+        // Buscar dados do profile se disponível - defer to avoid deadlock
+        setTimeout(async () => {
+          try {
+            const { data: profile } = await supabase
+              .from("profiles")
+              .select("*")
+              .eq("id", session.user.id)
+              .single();
+
+            setUser({
+              id: session.user.id,
+              email: session.user.email!,
+              name: profile?.name || session.user.user_metadata?.name,
+            });
+          } catch (error) {
+            // Fallback para dados básicos do usuário
+            setUser({
+              id: session.user.id,
+              email: session.user.email!,
+              name: session.user.user_metadata?.name,
+            });
+          }
+        }, 0);
+      } else {
+        setUser(null);
       }
-    );
+
+      setLoading(false);
+    });
 
     // DEPOIS verificar sessão existente
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -82,7 +87,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser({
           id: session.user.id,
           email: session.user.email!,
-          name: session.user.user_metadata?.name
+          name: session.user.user_metadata?.name,
         });
       }
       setLoading(false);
@@ -93,7 +98,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const cleanupAuthState = () => {
     Object.keys(localStorage).forEach((key) => {
-      if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
+      if (key.startsWith("supabase.auth.") || key.includes("sb-")) {
         localStorage.removeItem(key);
       }
     });
@@ -104,7 +109,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       cleanupAuthState();
       try {
-        await supabase.auth.signOut({ scope: 'global' });
+        await supabase.auth.signOut({ scope: "global" });
       } catch (err) {
         // Continue mesmo se falhar
       }
@@ -124,11 +129,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = async () => {
     try {
       cleanupAuthState();
-      await supabase.auth.signOut({ scope: 'global' });
+      await supabase.auth.signOut({ scope: "global" });
       setUser(null);
       setSession(null);
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
       // Forçar limpeza local mesmo com erro
       setUser(null);
       setSession(null);
@@ -139,16 +144,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setLoading(true);
     try {
       const redirectUrl = `${window.location.origin}/`;
-      
+
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           emailRedirectTo: redirectUrl,
           data: {
-            name: name || email
-          }
-        }
+            name: name || email,
+          },
+        },
       });
 
       if (error) throw error;
@@ -164,12 +169,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     loading,
     login,
     logout,
-    signup
+    signup,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

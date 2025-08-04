@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { cn } from '../../../../lib/utils';
+import React from "react";
+import { cn } from "../../../../lib/utils";
 
 interface SpacerInlineBlockProps {
   height?: string;
@@ -10,17 +9,17 @@ interface SpacerInlineBlockProps {
 }
 
 const SpacerInlineBlock: React.FC<SpacerInlineBlockProps> = ({
-  height = '2rem',
-  backgroundColor = 'transparent',
+  height = "2rem",
+  backgroundColor = "transparent",
   className,
   ...props
 }) => {
   return (
     <div
-      className={cn('w-full', className)}
+      className={cn("w-full", className)}
       style={{
         height,
-        backgroundColor
+        backgroundColor,
       }}
       {...props}
     />

@@ -1,12 +1,11 @@
-
-import React from 'react';
+import React from "react";
 
 interface LoadingFallbackProps {
   message?: string;
 }
 
-export const LoadingFallback: React.FC<LoadingFallbackProps> = ({ 
-  message = "Carregando..." 
+export const LoadingFallback: React.FC<LoadingFallbackProps> = ({
+  message = "Carregando...",
 }) => {
   return (
     <div className="flex h-screen w-full items-center justify-center bg-[#FAF9F7]">

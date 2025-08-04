@@ -1,16 +1,21 @@
-import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
-import { useFunnelSettingsHistory } from '@/hooks/editor/useFunnelSettingsHistory';
-import { SEOSettings } from './sections/SEOSettings';
-import { AnalyticsSettings } from './sections/AnalyticsSettings';
-import { WebhookSettings } from './sections/WebhookSettings';
-import { DomainSettings } from './sections/DomainSettings';
-import { FunnelSettings, defaultFunnelSettings } from '@/types/funnelSettings';
-import { FunnelSettingsService } from '@/services/funnelSettingsService';
-import { Save, Undo, Redo, RotateCcw } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { useFunnelSettingsHistory } from "@/hooks/editor/useFunnelSettingsHistory";
+import { SEOSettings } from "./sections/SEOSettings";
+import { AnalyticsSettings } from "./sections/AnalyticsSettings";
+import { WebhookSettings } from "./sections/WebhookSettings";
+import { DomainSettings } from "./sections/DomainSettings";
+import { FunnelSettings, defaultFunnelSettings } from "@/types/funnelSettings";
+import { FunnelSettingsService } from "@/services/funnelSettingsService";
+import { Save, Undo, Redo, RotateCcw } from "lucide-react";
 
 interface FunnelSettingsPanelProps {
   funnelId: string;
@@ -21,10 +26,10 @@ interface FunnelSettingsPanelProps {
 export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
   funnelId,
   isOpen,
-  onClose
+  onClose,
 }) => {
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState('seo');
+  const [activeTab, setActiveTab] = useState("seo");
   const [isSaving, setIsSaving] = useState(false);
 
   // Inicializar com configurações padrão
@@ -36,7 +41,7 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
     redo,
     reset,
     canUndo,
-    canRedo
+    canRedo,
   } = useFunnelSettingsHistory(funnelId, defaultFunnelSettings);
 
   const handleSave = async () => {
@@ -49,11 +54,11 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
         description: "Todas as configurações foram salvas com sucesso.",
       });
     } catch (error) {
-      console.error('Erro ao salvar configurações:', error);
+      console.error("Erro ao salvar configurações:", error);
       toast({
         title: "Erro ao salvar",
         description: "Não foi possível salvar as configurações.",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setIsSaving(false);
@@ -79,44 +84,53 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
   };
 
   const handleReset = () => {
-    if (window.confirm('Tem certeza que deseja resetar todas as configurações?')) {
+    if (
+      window.confirm("Tem certeza que deseja resetar todas as configurações?")
+    ) {
       reset();
       updateSettings(defaultFunnelSettings);
       toast({
         title: "Configurações resetadas",
-        description: "Todas as configurações foram resetadas para os valores padrão.",
+        description:
+          "Todas as configurações foram resetadas para os valores padrão.",
       });
     }
   };
 
-  const updateSEOSettings = (seoSettings: Partial<FunnelSettings['seo']>) => {
+  const updateSEOSettings = (seoSettings: Partial<FunnelSettings["seo"]>) => {
     const newSettings = {
       ...settings,
-      seo: { ...settings.seo, ...seoSettings }
+      seo: { ...settings.seo, ...seoSettings },
     };
     updateSettings(newSettings);
   };
 
-  const updateAnalyticsSettings = (analyticsSettings: Partial<FunnelSettings['analytics']>) => {
+  const updateAnalyticsSettings = (
+    analyticsSettings: Partial<FunnelSettings["analytics"]>,
+  ) => {
     const newSettings = {
       ...settings,
-      analytics: { ...settings.analytics, ...analyticsSettings }
+      analytics: { ...settings.analytics, ...analyticsSettings },
     };
     updateSettings(newSettings);
   };
 
-  const updateWebhookSettings = (webhookSettings: Partial<FunnelSettings['webhooks']>) => {
+  const updateWebhookSettings = (
+    webhookSettings: Partial<FunnelSettings["webhooks"]>,
+  ) => {
     const newSettings = {
       ...settings,
-      webhooks: { ...settings.webhooks, ...webhookSettings }
+      webhooks: { ...settings.webhooks, ...webhookSettings },
     };
     updateSettings(newSettings);
   };
 
-  const updateDomainSettings = (domainSettings: Partial<FunnelSettings['domain']>) => {
+  const updateDomainSettings = (
+    domainSettings: Partial<FunnelSettings["domain"]>,
+  ) => {
     const newSettings = {
       ...settings,
-      domain: { ...settings.domain, ...domainSettings }
+      domain: { ...settings.domain, ...domainSettings },
     };
     updateSettings(newSettings);
   };
@@ -144,55 +158,51 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
               >
                 <Redo className="w-4 h-4" />
               </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleReset}
-              >
+              <Button variant="outline" size="sm" onClick={handleReset}>
                 <RotateCcw className="w-4 h-4" />
               </Button>
-              <Button
-                onClick={handleSave}
-                disabled={isSaving}
-                size="sm"
-              >
+              <Button onClick={handleSave} disabled={isSaving} size="sm">
                 <Save className="w-4 h-4 mr-2" />
-                {isSaving ? 'Salvando...' : 'Salvar'}
+                {isSaving ? "Salvando..." : "Salvar"}
               </Button>
             </div>
           </DialogTitle>
         </DialogHeader>
 
         <div className="overflow-y-auto">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="seo">SEO</TabsTrigger>
               <TabsTrigger value="analytics">Analytics</TabsTrigger>
               <TabsTrigger value="webhooks">Webhooks</TabsTrigger>
               <TabsTrigger value="domain">Domínio</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="seo" className="mt-4">
               <SEOSettings
                 settings={settings.seo}
                 onUpdate={updateSEOSettings}
               />
             </TabsContent>
-            
+
             <TabsContent value="analytics" className="mt-4">
               <AnalyticsSettings
                 settings={settings.analytics}
                 onUpdate={updateAnalyticsSettings}
               />
             </TabsContent>
-            
+
             <TabsContent value="webhooks" className="mt-4">
               <WebhookSettings
                 settings={settings.webhooks}
                 onUpdate={updateWebhookSettings}
               />
             </TabsContent>
-            
+
             <TabsContent value="domain" className="mt-4">
               <DomainSettings
                 settings={settings.domain}

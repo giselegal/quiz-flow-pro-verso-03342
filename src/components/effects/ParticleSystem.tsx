@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Particle {
   id: number;
@@ -14,7 +14,7 @@ interface Particle {
 interface ParticleSystemProps {
   trigger: boolean;
   origin: { x: number; y: number };
-  type: 'selection' | 'celebration' | 'strategic';
+  type: "selection" | "celebration" | "strategic";
   onComplete?: () => void;
 }
 
@@ -22,20 +22,21 @@ export const ParticleSystem: React.FC<ParticleSystemProps> = ({
   trigger,
   origin,
   type,
-  onComplete
+  onComplete,
 }) => {
   const [particles, setParticles] = useState<Particle[]>([]);
 
   const createParticles = () => {
-    const particleCount = type === 'celebration' ? 20 : type === 'strategic' ? 15 : 8;
+    const particleCount =
+      type === "celebration" ? 20 : type === "strategic" ? 15 : 8;
     const colors = {
-      selection: ['#8B5CF6', '#A78BFA', '#C4B5FD'],
-      celebration: ['#F59E0B', '#EAB308', '#FDE047', '#84CC16'],
-      strategic: ['#EF4444', '#F97316', '#F59E0B', '#EAB308']
+      selection: ["#8B5CF6", "#A78BFA", "#C4B5FD"],
+      celebration: ["#F59E0B", "#EAB308", "#FDE047", "#84CC16"],
+      strategic: ["#EF4444", "#F97316", "#F59E0B", "#EAB308"],
     };
 
     const newParticles: Particle[] = [];
-    
+
     for (let i = 0; i < particleCount; i++) {
       newParticles.push({
         id: Date.now() + i,
@@ -45,31 +46,33 @@ export const ParticleSystem: React.FC<ParticleSystemProps> = ({
         color: colors[type][Math.floor(Math.random() * colors[type].length)],
         velocity: {
           x: (Math.random() - 0.5) * 200,
-          y: (Math.random() - 0.5) * 200 - 50
+          y: (Math.random() - 0.5) * 200 - 50,
         },
-        life: 1
+        life: 1,
       });
     }
-    
+
     setParticles(newParticles);
   };
 
   useEffect(() => {
     if (trigger) {
       createParticles();
-      
+
       const interval = setInterval(() => {
-        setParticles(prev => 
-          prev.map(particle => ({
-            ...particle,
-            x: particle.x + particle.velocity.x * 0.016,
-            y: particle.y + particle.velocity.y * 0.016,
-            velocity: {
-              x: particle.velocity.x * 0.98,
-              y: particle.velocity.y * 0.98 + 300 * 0.016 // gravity
-            },
-            life: particle.life - 0.02
-          })).filter(particle => particle.life > 0)
+        setParticles((prev) =>
+          prev
+            .map((particle) => ({
+              ...particle,
+              x: particle.x + particle.velocity.x * 0.016,
+              y: particle.y + particle.velocity.y * 0.016,
+              velocity: {
+                x: particle.velocity.x * 0.98,
+                y: particle.velocity.y * 0.98 + 300 * 0.016, // gravity
+              },
+              life: particle.life - 0.02,
+            }))
+            .filter((particle) => particle.life > 0),
         );
       }, 16);
 
@@ -88,7 +91,7 @@ export const ParticleSystem: React.FC<ParticleSystemProps> = ({
   return (
     <div className="fixed inset-0 pointer-events-none z-50">
       <AnimatePresence>
-        {particles.map(particle => (
+        {particles.map((particle) => (
           <motion.div
             key={particle.id}
             className="absolute rounded-full"
@@ -99,7 +102,7 @@ export const ParticleSystem: React.FC<ParticleSystemProps> = ({
               height: particle.size,
               backgroundColor: particle.color,
               opacity: particle.life,
-              filter: `drop-shadow(0 0 ${particle.size}px ${particle.color}40)`
+              filter: `drop-shadow(0 0 ${particle.size}px ${particle.color}40)`,
             }}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}

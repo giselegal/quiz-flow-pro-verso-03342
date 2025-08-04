@@ -1,9 +1,12 @@
-import React from 'react';
-import { useDroppable } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { SortableBlockWrapper } from './SortableBlockWrapper';
-import { Block } from '@/types/editor';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { useDroppable } from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { SortableBlockWrapper } from "./SortableBlockWrapper";
+import { Block } from "@/types/editor";
+import { cn } from "@/lib/utils";
 
 interface CanvasDropZoneProps {
   blocks: Block[];
@@ -26,23 +29,25 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   onSelectBlock,
   onUpdateBlock,
   onDeleteBlock,
-  className
+  className,
 }) => {
   const { setNodeRef, isOver } = useDroppable({
-    id: 'canvas-drop-zone',
+    id: "canvas-drop-zone",
     data: {
-      type: 'canvas-drop-zone',
-      accepts: ['component']
-    }
+      type: "canvas-drop-zone",
+      accepts: ["component"],
+    },
   });
 
   return (
-    <div 
+    <div
       ref={setNodeRef}
       className={cn(
         "p-3 min-h-[400px] transition-all duration-200",
-        isOver && !isPreviewing && "bg-brand/5 ring-2 ring-brand/20 ring-dashed",
-        className
+        isOver &&
+          !isPreviewing &&
+          "bg-brand/5 ring-2 ring-brand/20 ring-dashed",
+        className,
       )}
     >
       {blocks.length === 0 ? (
@@ -51,10 +56,9 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
             Etapa {activeStageId}
           </h3>
           <p className="text-stone-500 text-lg mb-2">
-            {isPreviewing 
-              ? 'Modo Preview - Nenhum componente nesta etapa' 
-              : 'Arraste componentes da sidebar para começar'
-            }
+            {isPreviewing
+              ? "Modo Preview - Nenhum componente nesta etapa"
+              : "Arraste componentes da sidebar para começar"}
           </p>
           <p className="text-xs text-stone-400 bg-stone-100/50 px-3 py-1 rounded-full inline-block">
             Sistema integrado com {stageCount} etapas • Drag & Drop ativo
@@ -67,7 +71,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
         </div>
       ) : (
         <SortableContext
-          items={blocks.map(block => block.id)}
+          items={blocks.map((block) => block.id)}
           strategy={verticalListSortingStrategy}
         >
           <div className="space-y-3">
@@ -91,7 +95,9 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
             ))}
             {isOver && !isPreviewing && (
               <div className="p-4 border-2 border-dashed border-brand/30 rounded-lg bg-brand/5 text-center">
-                <p className="text-brand font-medium">Solte o componente aqui</p>
+                <p className="text-brand font-medium">
+                  Solte o componente aqui
+                </p>
               </div>
             )}
           </div>

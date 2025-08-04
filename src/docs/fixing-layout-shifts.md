@@ -19,13 +19,13 @@ Sempre defina largura e altura em imagens, especialmente na imagem do logo e na 
 
 ```tsx
 // Antes
-<img 
+<img
   src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp"
   alt="Logo Gisele Galvão"
 />
 
 // Depois
-<img 
+<img
   src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp"
   alt="Logo Gisele Galvão"
   width={112}
@@ -56,18 +56,18 @@ Utilize a técnica de Low Quality Image Placeholder para manter a estrutura da p
 <div className="relative w-full" style={{ aspectRatio: "1/1" }}>
   {/* Imagem de baixa qualidade (carrega rapidamente) */}
   {!imageLoaded && (
-    <img 
-      src={lowQualityUrl} 
+    <img
+      src={lowQualityUrl}
       alt={alt}
       className="absolute inset-0 w-full h-full object-cover blur-sm"
       width={width}
       height={height}
     />
   )}
-  
+
   {/* Imagem de alta qualidade (carrega mais lentamente) */}
-  <img 
-    src={highQualityUrl} 
+  <img
+    src={highQualityUrl}
     alt={alt}
     className="w-full h-full object-cover"
     width={width}
@@ -84,8 +84,8 @@ Adicione a propriedade `font-display: swap` às suas declarações de fonte para
 
 ```css
 @font-face {
-  font-family: 'Playfair Display';
-  src: url('/fonts/PlayfairDisplay-Regular.woff2') format('woff2');
+  font-family: "Playfair Display";
+  src: url("/fonts/PlayfairDisplay-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap; /* Permite que o texto seja exibido com uma fonte alternativa enquanto a personalizada carrega */
@@ -97,9 +97,9 @@ Adicione a propriedade `font-display: swap` às suas declarações de fonte para
 Adicione tags `<link rel="preload">` para carregar fontes críticas com antecedência:
 
 ```html
-<link 
-  rel="preload" 
-  href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" 
+<link
+  rel="preload"
+  href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap"
   as="style"
 />
 ```
@@ -120,7 +120,7 @@ Para contêineres que terão altura dinâmica, defina uma altura mínima:
 
 ```tsx
 <div className="w-28 h-14 mb-8 flex items-center justify-center">
-  <img 
+  <img
     src="https://res.cloudinary.com/dqljyf76t/image/upload/f_auto,q_auto:good/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp"
     alt="Logo Gisele Galvão"
     width={112}
@@ -133,10 +133,13 @@ Para contêineres que terão altura dinâmica, defina uma altura mínima:
 ### Para a Imagem Principal
 
 ```tsx
-<div className="w-full max-w-md relative bg-white shadow-sm rounded-lg overflow-hidden" style={{ aspectRatio: "1/1" }}>
-  <img 
+<div
+  className="w-full max-w-md relative bg-white shadow-sm rounded-lg overflow-hidden"
+  style={{ aspectRatio: "1/1" }}
+>
+  <img
     src={optimizedImageUrl}
-    alt="Mulher elegante com roupas estilosas" 
+    alt="Mulher elegante com roupas estilosas"
     className="w-full h-full object-cover"
     width={800}
     height={800}

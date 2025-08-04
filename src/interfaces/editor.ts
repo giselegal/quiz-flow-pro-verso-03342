@@ -42,8 +42,8 @@ export interface EditorState {
   dragOverIndex: number | null;
   selectedComponentId: string | null;
   currentPageIndex: number;
-  deviceView: 'mobile' | 'tablet' | 'desktop';
-  activeTab: 'editor' | 'funis' | 'historico' | 'config';
+  deviceView: "mobile" | "tablet" | "desktop";
+  activeTab: "editor" | "funis" | "historico" | "config";
   activeConfigSection: string;
   isPreviewMode: boolean;
 }
@@ -58,7 +58,7 @@ export interface Version {
 }
 
 export interface VersionChange {
-  type: 'add' | 'remove' | 'edit';
+  type: "add" | "remove" | "edit";
   component?: string;
   page?: string;
   description: string;

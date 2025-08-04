@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface AspectRatioContainerProps {
   ratio?: string;
@@ -13,19 +13,19 @@ interface AspectRatioContainerProps {
  * para evitar mudanças de layout (CLS) durante o carregamento da página
  */
 export const AspectRatioContainer: React.FC<AspectRatioContainerProps> = ({
-  ratio = '1/1',
-  className = '',
+  ratio = "1/1",
+  className = "",
   children,
-  minHeight = '0',
-  bgColor = 'transparent'
+  minHeight = "0",
+  bgColor = "transparent",
 }) => {
   return (
-    <div 
-      className={`relative ${className}`} 
-      style={{ 
+    <div
+      className={`relative ${className}`}
+      style={{
         aspectRatio: ratio,
         minHeight: minHeight,
-        backgroundColor: bgColor
+        backgroundColor: bgColor,
       }}
     >
       {children}

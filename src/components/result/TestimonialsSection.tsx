@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { Quote } from 'lucide-react';
+import React from "react";
+import { Quote } from "lucide-react";
 
 interface Testimonial {
   text: string;
@@ -15,7 +14,7 @@ interface TestimonialsSectionProps {
 
 export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
   title,
-  testimonials
+  testimonials,
 }) => {
   return (
     <section className="py-12 px-4 bg-[#FAF9F7]">
@@ -25,7 +24,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
         </h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {testimonials.map((testimonial, index) => (
-            <div 
+            <div
               key={index}
               className="bg-white p-6 rounded-lg shadow-sm space-y-4"
             >
@@ -33,8 +32,8 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
               <p className="text-[#432818]">{testimonial.text}</p>
               <div className="flex items-center gap-3">
                 {testimonial.image && (
-                  <img 
-                    src={testimonial.image} 
+                  <img
+                    src={testimonial.image}
                     alt={testimonial.author}
                     className="w-10 h-10 rounded-full object-cover"
                   />

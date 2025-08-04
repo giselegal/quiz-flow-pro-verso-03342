@@ -1,23 +1,23 @@
 /**
  * ImageUploader - Componente de upload/seleção de imagem melhorado
- * 
+ *
  * Suporta upload por arquivo, URL e drag & drop
  */
 
-import React, { useState, useRef, useCallback } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import React, { useState, useRef, useCallback } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Upload, Image as ImageIcon, Link, X, Eye } from 'lucide-react';
-import { cn } from '@/lib/utils';
+} from "@/components/ui/dialog";
+import { Upload, Image as ImageIcon, Link, X, Eye } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ImageUploaderProps {
   value: string;
@@ -35,10 +35,10 @@ export function ImageUploader({
   onChange,
   label,
   disabled = false,
-  accept = 'image/*',
+  accept = "image/*",
   maxSize = 5,
   aspectRatio,
-  placeholder = 'Selecione uma imagem'
+  placeholder = "Selecione uma imagem",
 }: ImageUploaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [urlValue, setUrlValue] = useState(value);
@@ -46,30 +46,36 @@ export function ImageUploader({
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileSelect = useCallback((file: File) => {
-    if (file.size > maxSize * 1024 * 1024) {
-      alert(`Arquivo muito grande. Máximo: ${maxSize}MB`);
-      return;
-    }
+  const handleFileSelect = useCallback(
+    (file: File) => {
+      if (file.size > maxSize * 1024 * 1024) {
+        alert(`Arquivo muito grande. Máximo: ${maxSize}MB`);
+        return;
+      }
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const result = e.target?.result as string;
-      onChange(result);
-      setIsOpen(false);
-    };
-    reader.readAsDataURL(file);
-  }, [maxSize, onChange]);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        onChange(result);
+        setIsOpen(false);
+      };
+      reader.readAsDataURL(file);
+    },
+    [maxSize, onChange],
+  );
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setDragActive(false);
-    
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-      handleFileSelect(file);
-    }
-  }, [handleFileSelect]);
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setDragActive(false);
+
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith("image/")) {
+        handleFileSelect(file);
+      }
+    },
+    [handleFileSelect],
+  );
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -82,15 +88,18 @@ export function ImageUploader({
   }, []);
 
   const handleUrlSubmit = () => {
-    if (urlValue && urlValue.match(/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i)) {
+    if (
+      urlValue &&
+      urlValue.match(/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i)
+    ) {
       onChange(urlValue);
       setIsOpen(false);
     }
   };
 
   const clearImage = () => {
-    onChange('');
-    setUrlValue('');
+    onChange("");
+    setUrlValue("");
   };
 
   const openPreview = () => {
@@ -99,22 +108,20 @@ export function ImageUploader({
 
   return (
     <div className="space-y-2">
-      {label && (
-        <Label className="text-sm font-medium">{label}</Label>
-      )}
-      
+      {label && <Label className="text-sm font-medium">{label}</Label>}
+
       <div className="flex gap-2">
         {/* Preview da imagem atual */}
-        <div 
+        <div
           className={cn(
             "w-20 h-20 rounded-md border border-gray-300 flex-shrink-0 overflow-hidden bg-gray-50",
-            aspectRatio && "aspect-square"
+            aspectRatio && "aspect-square",
           )}
         >
           {value ? (
-            <img 
-              src={value} 
-              alt="Preview" 
+            <img
+              src={value}
+              alt="Preview"
               className="w-full h-full object-cover cursor-pointer hover:opacity-80 transition-opacity"
               onClick={openPreview}
             />
@@ -130,33 +137,35 @@ export function ImageUploader({
           <div className="flex gap-2">
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
               <DialogTrigger asChild>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="sm"
                   disabled={disabled}
                   className="flex-1"
                 >
                   <Upload className="w-4 h-4 mr-2" />
-                  {value ? 'Alterar' : 'Selecionar'}
+                  {value ? "Alterar" : "Selecionar"}
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-md">
                 <DialogHeader>
                   <DialogTitle>Selecionar Imagem</DialogTitle>
                 </DialogHeader>
-                
+
                 <Tabs defaultValue="upload" className="w-full">
                   <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="upload">Upload</TabsTrigger>
                     <TabsTrigger value="url">URL</TabsTrigger>
                   </TabsList>
-                  
+
                   <TabsContent value="upload" className="space-y-4">
                     <div
                       className={cn(
                         "border-2 border-dashed rounded-lg p-6 text-center transition-colors",
-                        dragActive ? "border-blue-500 bg-blue-50" : "border-gray-300",
-                        "hover:border-gray-400"
+                        dragActive
+                          ? "border-blue-500 bg-blue-50"
+                          : "border-gray-300",
+                        "hover:border-gray-400",
                       )}
                       onDrop={handleDrop}
                       onDragOver={handleDragOver}
@@ -189,7 +198,7 @@ export function ImageUploader({
                       </p>
                     </div>
                   </TabsContent>
-                  
+
                   <TabsContent value="url" className="space-y-4">
                     <div className="space-y-3">
                       <Input
@@ -197,7 +206,7 @@ export function ImageUploader({
                         value={urlValue}
                         onChange={(e) => setUrlValue(e.target.value)}
                       />
-                      <Button 
+                      <Button
                         onClick={handleUrlSubmit}
                         className="w-full"
                         disabled={!urlValue}
@@ -213,11 +222,7 @@ export function ImageUploader({
 
             {value && (
               <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={openPreview}
-                >
+                <Button variant="outline" size="sm" onClick={openPreview}>
                   <Eye className="w-4 h-4" />
                 </Button>
                 <Button
@@ -231,10 +236,8 @@ export function ImageUploader({
               </>
             )}
           </div>
-          
-          {!value && (
-            <p className="text-xs text-gray-500">{placeholder}</p>
-          )}
+
+          {!value && <p className="text-xs text-gray-500">{placeholder}</p>}
         </div>
       </div>
 
@@ -246,9 +249,9 @@ export function ImageUploader({
           </DialogHeader>
           {previewUrl && (
             <div className="max-h-96 overflow-auto">
-              <img 
-                src={previewUrl} 
-                alt="Preview" 
+              <img
+                src={previewUrl}
+                alt="Preview"
                 className="w-full h-auto rounded-md"
               />
             </div>

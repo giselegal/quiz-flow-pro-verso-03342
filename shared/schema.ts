@@ -44,7 +44,9 @@ export const funnels = sqliteTable("funnels", {
 
 export const funnelPages = sqliteTable("funnel_pages", {
   id: text("id").primaryKey(),
-  funnelId: text("funnel_id").notNull().references(() => funnels.id, { onDelete: "cascade" }),
+  funnelId: text("funnel_id")
+    .notNull()
+    .references(() => funnels.id, { onDelete: "cascade" }),
   pageType: text("page_type").notNull(), // 'intro', 'question', 'main-transition', etc.
   pageOrder: integer("page_order").notNull(),
   title: text("title"),
@@ -56,7 +58,9 @@ export const funnelPages = sqliteTable("funnel_pages", {
 
 export const funnelVersions = sqliteTable("funnel_versions", {
   id: text("id").primaryKey(),
-  funnelId: text("funnel_id").notNull().references(() => funnels.id, { onDelete: "cascade" }),
+  funnelId: text("funnel_id")
+    .notNull()
+    .references(() => funnels.id, { onDelete: "cascade" }),
   version: integer("version").notNull(),
   funnelData: text("funnel_data", { mode: "json" }).notNull(), // complete funnel snapshot
   createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
@@ -115,8 +119,12 @@ export const hotmartPurchases = sqliteTable("hotmart_purchases", {
   affiliateEmail: text("affiliate_email"),
   webhookEventId: text("webhook_event_id"),
   rawWebhookData: text("raw_webhook_data", { mode: "json" }),
-  facebookEventSent: integer("facebook_event_sent", { mode: "boolean" }).default(false),
-  conversionEventId: text("conversion_event_id").references(() => conversionEvents.id),
+  facebookEventSent: integer("facebook_event_sent", {
+    mode: "boolean",
+  }).default(false),
+  conversionEventId: text("conversion_event_id").references(
+    () => conversionEvents.id,
+  ),
   createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
   updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow(),
 });
@@ -135,7 +143,9 @@ export const insertUtmAnalyticsSchema = createInsertSchema(utmAnalytics).pick({
   participantId: true,
 });
 
-export const insertQuizParticipantSchema = createInsertSchema(quizParticipants).pick({
+export const insertQuizParticipantSchema = createInsertSchema(
+  quizParticipants,
+).pick({
   name: true,
   email: true,
   quizId: true,
@@ -160,14 +170,18 @@ export const insertFunnelPageSchema = createInsertSchema(funnelPages).pick({
   metadata: true,
 });
 
-export const insertFunnelVersionSchema = createInsertSchema(funnelVersions).pick({
+export const insertFunnelVersionSchema = createInsertSchema(
+  funnelVersions,
+).pick({
   funnelId: true,
   version: true,
   funnelData: true,
   createdBy: true,
 });
 
-export const insertConversionEventSchema = createInsertSchema(conversionEvents).pick({
+export const insertConversionEventSchema = createInsertSchema(
+  conversionEvents,
+).pick({
   eventType: true,
   eventSource: true,
   participantId: true,
@@ -198,7 +212,9 @@ export const insertQuizResultSchema = createInsertSchema(quizResults).pick({
   browserData: true,
 });
 
-export const insertHotmartPurchaseSchema = createInsertSchema(hotmartPurchases).pick({
+export const insertHotmartPurchaseSchema = createInsertSchema(
+  hotmartPurchases,
+).pick({
   transactionId: true,
   status: true,
   buyerEmail: true,

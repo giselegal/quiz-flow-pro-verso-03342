@@ -39,8 +39,8 @@ export interface ReportData {
 }
 
 export interface PDFOptions {
-  format: 'A4' | 'Letter';
-  orientation: 'portrait' | 'landscape';
+  format: "A4" | "Letter";
+  orientation: "portrait" | "landscape";
   includeCharts: boolean;
   includeRawData: boolean;
   watermark?: string;
@@ -52,28 +52,26 @@ export interface PDFOptions {
 // =============================================================================
 
 export class ReportService {
-  
   // Gerar relatório completo em PDF
   static async generateAnalyticsReport(
     quizId: string,
     options: PDFOptions = {
-      format: 'A4',
-      orientation: 'portrait',
+      format: "A4",
+      orientation: "portrait",
       includeCharts: true,
-      includeRawData: false
-    }
+      includeRawData: false,
+    },
   ): Promise<Blob> {
     try {
       // Buscar dados do relatório
       const reportData = await this.gatherReportData(quizId);
-      
+
       // Criar documento PDF
       const pdfBlob = await this.createPDFDocument(reportData, options);
-      
-      return pdfBlob;
 
+      return pdfBlob;
     } catch (error) {
-      console.error('Erro ao gerar relatório:', error);
+      console.error("Erro ao gerar relatório:", error);
       throw error;
     }
   }
@@ -82,14 +80,13 @@ export class ReportService {
   static async generateSummaryReport(quizId: string): Promise<Blob> {
     try {
       const reportData = await this.gatherReportData(quizId);
-      
+
       const summaryHTML = this.generateSummaryHTML(reportData);
       const pdfBlob = await this.htmlToPDF(summaryHTML);
-      
-      return pdfBlob;
 
+      return pdfBlob;
     } catch (error) {
-      console.error('Erro ao gerar relatório resumido:', error);
+      console.error("Erro ao gerar relatório resumido:", error);
       throw error;
     }
   }
@@ -98,19 +95,18 @@ export class ReportService {
   static async generateResultsReport(
     quizId: string,
     userId: string,
-    sessionId: string
+    sessionId: string,
   ): Promise<Blob> {
     try {
       // Buscar dados da sessão específica
       const sessionData = await this.getSessionData(quizId, userId, sessionId);
-      
+
       const resultsHTML = this.generateResultsHTML(sessionData);
       const pdfBlob = await this.htmlToPDF(resultsHTML);
-      
-      return pdfBlob;
 
+      return pdfBlob;
     } catch (error) {
-      console.error('Erro ao gerar relatório de resultados:', error);
+      console.error("Erro ao gerar relatório de resultados:", error);
       throw error;
     }
   }
@@ -123,13 +119,13 @@ export class ReportService {
       subtitle: "Análise de Performance e Engajamento",
       period: {
         start: "2025-01-01",
-        end: "2025-01-25"
+        end: "2025-01-25",
       },
       summary: {
         totalViews: 1250,
         totalCompletions: 892,
         conversionRate: 71.36,
-        averageTime: 4.2
+        averageTime: 4.2,
       },
       charts: {
         completionTrend: [
@@ -137,50 +133,54 @@ export class ReportService {
           { date: "2025-01-02", completions: 32 },
           { date: "2025-01-03", completions: 28 },
           { date: "2025-01-04", completions: 45 },
-          { date: "2025-01-05", completions: 38 }
+          { date: "2025-01-05", completions: 38 },
         ],
         deviceBreakdown: [
           { device: "Desktop", percentage: 45.2 },
           { device: "Mobile", percentage: 42.8 },
-          { device: "Tablet", percentage: 12.0 }
+          { device: "Tablet", percentage: 12.0 },
         ],
         sourceBreakdown: [
           { source: "Direct", visitors: 485 },
           { source: "Social Media", visitors: 312 },
           { source: "Email", visitors: 287 },
-          { source: "Search", visitors: 166 }
-        ]
+          { source: "Search", visitors: 166 },
+        ],
       },
       topQuestions: [
         {
           question: "Qual seu estilo de vida preferido?",
           correctRate: 85.2,
-          totalAnswers: 892
+          totalAnswers: 892,
         },
         {
           question: "Como você gosta de passar o tempo livre?",
           correctRate: 78.9,
-          totalAnswers: 856
+          totalAnswers: 856,
         },
         {
           question: "Qual ambiente é mais atrativo para você?",
           correctRate: 71.3,
-          totalAnswers: 798
-        }
+          totalAnswers: 798,
+        },
       ],
       userInsights: {
         totalUsers: 1250,
         returningUsers: 287,
         newUsers: 963,
-        averageScore: 78.5
-      }
+        averageScore: 78.5,
+      },
     };
 
     return mockData;
   }
 
   // Buscar dados de uma sessão específica
-  private static async getSessionData(quizId: string, userId: string, sessionId: string) {
+  private static async getSessionData(
+    quizId: string,
+    userId: string,
+    sessionId: string,
+  ) {
     // Simular dados de sessão
     return {
       quiz_title: "Quiz de Personalidade",
@@ -196,32 +196,40 @@ export class ReportService {
           user_answer: "Minimalista",
           correct_answer: "Minimalista",
           is_correct: true,
-          explanation: "Ótima escolha! O estilo minimalista valoriza simplicidade e funcionalidade."
+          explanation:
+            "Ótima escolha! O estilo minimalista valoriza simplicidade e funcionalidade.",
         },
         {
           question: "Como você gosta de passar o tempo livre?",
           user_answer: "Lendo um livro",
           correct_answer: "Lendo um livro",
           is_correct: true,
-          explanation: "A leitura é uma excelente forma de relaxamento e aprendizado."
-        }
+          explanation:
+            "A leitura é uma excelente forma de relaxamento e aprendizado.",
+        },
       ],
       recommendations: [
         "Explore mais conteúdos sobre minimalismo",
         "Participe de grupos de leitura online",
-        "Considere criar um ambiente de leitura em casa"
-      ]
+        "Considere criar um ambiente de leitura em casa",
+      ],
     };
   }
 
   // Criar documento PDF
-  private static async createPDFDocument(data: ReportData, options: PDFOptions): Promise<Blob> {
+  private static async createPDFDocument(
+    data: ReportData,
+    options: PDFOptions,
+  ): Promise<Blob> {
     const html = this.generateReportHTML(data, options);
     return await this.htmlToPDF(html, options);
   }
 
   // Gerar HTML do relatório completo
-  private static generateReportHTML(data: ReportData, options: PDFOptions): string {
+  private static generateReportHTML(
+    data: ReportData,
+    options: PDFOptions,
+  ): string {
     return `
     <!DOCTYPE html>
     <html>
@@ -338,15 +346,15 @@ export class ReportService {
       </style>
     </head>
     <body>
-      ${options.watermark ? `<div class="watermark">${options.watermark}</div>` : ''}
+      ${options.watermark ? `<div class="watermark">${options.watermark}</div>` : ""}
       
       <div class="header">
         <h1>${data.title}</h1>
-        <h2>${data.subtitle || ''}</h2>
+        <h2>${data.subtitle || ""}</h2>
       </div>
 
       <div class="period">
-        <strong>Período:</strong> ${new Date(data.period.start).toLocaleDateString('pt-BR')} - ${new Date(data.period.end).toLocaleDateString('pt-BR')}
+        <strong>Período:</strong> ${new Date(data.period.start).toLocaleDateString("pt-BR")} - ${new Date(data.period.end).toLocaleDateString("pt-BR")}
       </div>
 
       <div class="summary">
@@ -368,7 +376,9 @@ export class ReportService {
         </div>
       </div>
 
-      ${options.includeCharts ? `
+      ${
+        options.includeCharts
+          ? `
       <div class="section">
         <h3>Gráficos de Performance</h3>
         <div class="chart-placeholder">
@@ -380,7 +390,9 @@ export class ReportService {
           <br><small>(Gráfico seria renderizado aqui com biblioteca de charts)</small>
         </div>
       </div>
-      ` : ''}
+      `
+          : ""
+      }
 
       <div class="section">
         <h3>Top Perguntas por Performance</h3>
@@ -393,13 +405,17 @@ export class ReportService {
             </tr>
           </thead>
           <tbody>
-            ${data.topQuestions.map(q => `
+            ${data.topQuestions
+              .map(
+                (q) => `
               <tr>
                 <td>${q.question}</td>
                 <td>${q.correctRate}%</td>
                 <td>${q.totalAnswers}</td>
               </tr>
-            `).join('')}
+            `,
+              )
+              .join("")}
           </tbody>
         </table>
       </div>
@@ -427,7 +443,7 @@ export class ReportService {
       </div>
 
       <div class="footer">
-        <p>Relatório gerado em ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}</p>
+        <p>Relatório gerado em ${new Date().toLocaleDateString("pt-BR")} às ${new Date().toLocaleTimeString("pt-BR")}</p>
         <p>Quiz Quest - Sistema de Analytics Avançado</p>
       </div>
     </body>
@@ -454,7 +470,7 @@ export class ReportService {
     <body>
       <div class="header">
         <h1>Relatório Resumido</h1>
-        <p>Período: ${new Date(data.period.start).toLocaleDateString('pt-BR')} - ${new Date(data.period.end).toLocaleDateString('pt-BR')}</p>
+        <p>Período: ${new Date(data.period.start).toLocaleDateString("pt-BR")} - ${new Date(data.period.end).toLocaleDateString("pt-BR")}</p>
       </div>
       <div class="summary">
         <div class="metric">
@@ -500,7 +516,7 @@ export class ReportService {
       <div class="header">
         <h1>${sessionData.quiz_title}</h1>
         <p>Resultado para: ${sessionData.user_name}</p>
-        <p>Concluído em: ${new Date(sessionData.completed_at).toLocaleString('pt-BR')}</p>
+        <p>Concluído em: ${new Date(sessionData.completed_at).toLocaleString("pt-BR")}</p>
       </div>
       
       <div class="score">
@@ -510,18 +526,22 @@ export class ReportService {
       </div>
 
       <h3>Respostas Detalhadas:</h3>
-      ${sessionData.answers.map((answer: any) => `
-        <div class="answer ${answer.is_correct ? 'correct' : 'incorrect'}">
+      ${sessionData.answers
+        .map(
+          (answer: any) => `
+        <div class="answer ${answer.is_correct ? "correct" : "incorrect"}">
           <h4>${answer.question}</h4>
           <p><strong>Sua resposta:</strong> ${answer.user_answer}</p>
           <p><strong>Resposta correta:</strong> ${answer.correct_answer}</p>
-          ${answer.explanation ? `<p><strong>Explicação:</strong> ${answer.explanation}</p>` : ''}
+          ${answer.explanation ? `<p><strong>Explicação:</strong> ${answer.explanation}</p>` : ""}
         </div>
-      `).join('')}
+      `,
+        )
+        .join("")}
 
       <h3>Recomendações:</h3>
       <ul>
-        ${sessionData.recommendations.map((rec: string) => `<li>${rec}</li>`).join('')}
+        ${sessionData.recommendations.map((rec: string) => `<li>${rec}</li>`).join("")}
       </ul>
     </body>
     </html>
@@ -529,10 +549,13 @@ export class ReportService {
   }
 
   // Converter HTML para PDF
-  private static async htmlToPDF(html: string, options?: PDFOptions): Promise<Blob> {
+  private static async htmlToPDF(
+    html: string,
+    options?: PDFOptions,
+  ): Promise<Blob> {
     // Simulação de conversão HTML para PDF
     // Em produção, usaria uma biblioteca como Puppeteer, jsPDF ou similar
-    
+
     const pdfContent = `
     %PDF-1.4
     1 0 obj
@@ -590,13 +613,13 @@ export class ReportService {
     `;
 
     // Retornar blob simulado
-    return new Blob([pdfContent], { type: 'application/pdf' });
+    return new Blob([pdfContent], { type: "application/pdf" });
   }
 
   // Download do relatório
   static downloadReport(blob: Blob, filename: string) {
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
@@ -608,28 +631,42 @@ export class ReportService {
   // Gerar múltiplos formatos
   static async generateMultipleFormats(quizId: string) {
     const reportData = await this.gatherReportData(quizId);
-    
+
     return {
       pdf: await this.generateAnalyticsReport(quizId),
-      json: new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' }),
+      json: new Blob([JSON.stringify(reportData, null, 2)], {
+        type: "application/json",
+      }),
       csv: await this.generateCSVReport(reportData),
-      html: new Blob([this.generateReportHTML(reportData, { format: 'A4', orientation: 'portrait', includeCharts: true, includeRawData: false })], { type: 'text/html' })
+      html: new Blob(
+        [
+          this.generateReportHTML(reportData, {
+            format: "A4",
+            orientation: "portrait",
+            includeCharts: true,
+            includeRawData: false,
+          }),
+        ],
+        { type: "text/html" },
+      ),
     };
   }
 
   // Gerar relatório CSV
   private static async generateCSVReport(data: ReportData): Promise<Blob> {
     const csvContent = [
-      'Métrica,Valor',
+      "Métrica,Valor",
       `Total de Visualizações,${data.summary.totalViews}`,
       `Total de Conclusões,${data.summary.totalCompletions}`,
       `Taxa de Conversão,${data.summary.conversionRate}%`,
       `Tempo Médio,${data.summary.averageTime} min`,
-      '',
-      'Pergunta,Taxa de Acerto,Total de Respostas',
-      ...data.topQuestions.map(q => `"${q.question}",${q.correctRate}%,${q.totalAnswers}`)
-    ].join('\n');
+      "",
+      "Pergunta,Taxa de Acerto,Total de Respostas",
+      ...data.topQuestions.map(
+        (q) => `"${q.question}",${q.correctRate}%,${q.totalAnswers}`,
+      ),
+    ].join("\n");
 
-    return new Blob([csvContent], { type: 'text/csv' });
+    return new Blob([csvContent], { type: "text/csv" });
   }
 }

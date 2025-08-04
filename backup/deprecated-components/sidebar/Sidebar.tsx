@@ -1,10 +1,22 @@
-import React, { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
-import LayoutSection from './LayoutSection';
-import OptionsSection from './OptionsSection';
+import React, { useState } from "react";
+import { Card } from "@/components/ui/card";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import LayoutSection from "./LayoutSection";
+import OptionsSection from "./OptionsSection";
 
 export interface SidebarProps {
   className?: string;
@@ -15,9 +27,9 @@ export interface SidebarProps {
 }
 
 export interface LayoutConfig {
-  layout: 'grid' | 'list' | 'masonry';
-  direction: 'horizontal' | 'vertical';
-  arrangement: 'start' | 'center' | 'end' | 'space-between';
+  layout: "grid" | "list" | "masonry";
+  direction: "horizontal" | "vertical";
+  arrangement: "start" | "center" | "end" | "space-between";
 }
 
 export interface OptionItem {
@@ -30,19 +42,19 @@ export interface OptionItem {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
-  className = '',
+  className = "",
   onLayoutChange,
   onOptionsChange,
   initialOptions = [],
   initialLayout = {
-    layout: 'grid',
-    direction: 'vertical',
-    arrangement: 'start'
-  }
+    layout: "grid",
+    direction: "vertical",
+    arrangement: "start",
+  },
 }) => {
   // ✅ Estado do Layout
   const [layoutConfig, setLayoutConfig] = useState<LayoutConfig>(initialLayout);
-  
+
   // ✅ Estado das Opções
   const [options, setOptions] = useState<OptionItem[]>(initialOptions);
 
@@ -55,7 +67,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   // ✅ Handler para mudanças no layout
@@ -83,9 +95,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   // ✅ Handler para edição de opções
   const handleOptionUpdate = (id: string, updates: Partial<OptionItem>) => {
     setOptions((items) =>
-      items.map((item) =>
-        item.id === id ? { ...item, ...updates } : item
-      )
+      items.map((item) => (item.id === id ? { ...item, ...updates } : item)),
     );
   };
 
@@ -93,13 +103,13 @@ const Sidebar: React.FC<SidebarProps> = ({
   const handleAddOption = () => {
     const newOption: OptionItem = {
       id: `option-${Date.now()}`,
-      text: 'Nova opção',
-      imageUrl: 'https://via.placeholder.com/100x100',
+      text: "Nova opção",
+      imageUrl: "https://via.placeholder.com/100x100",
       value: `value-${Date.now()}`,
-      category: 'Geral',
-      points: 1
+      category: "Geral",
+      points: 1,
     };
-    
+
     const newOptions = [...options, newOption];
     setOptions(newOptions);
     onOptionsChange?.(newOptions);
@@ -113,7 +123,9 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <div className={`w-[24rem] h-full bg-card border-l border-border overflow-auto hidden md:block ${className}`}>
+    <div
+      className={`w-[24rem] h-full bg-card border-l border-border overflow-auto hidden md:block ${className}`}
+    >
       <div className="px-4 pb-4 pt-2 space-y-4">
         {/* ✅ Header do Painel */}
         <div className="border-b border-border pb-4">
@@ -139,7 +151,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           modifiers={[restrictToVerticalAxis]}
         >
           <SortableContext
-            items={options.map(item => item.id)}
+            items={options.map((item) => item.id)}
             strategy={verticalListSortingStrategy}
           >
             <OptionsSection
@@ -157,10 +169,20 @@ const Sidebar: React.FC<SidebarProps> = ({
             📋 Preview Configuração
           </h3>
           <div className="text-xs text-muted-foreground space-y-1">
-            <div>Layout: <span className="font-mono">{layoutConfig.layout}</span></div>
-            <div>Direção: <span className="font-mono">{layoutConfig.direction}</span></div>
-            <div>Disposição: <span className="font-mono">{layoutConfig.arrangement}</span></div>
-            <div>Opções: <span className="font-mono">{options.length} itens</span></div>
+            <div>
+              Layout: <span className="font-mono">{layoutConfig.layout}</span>
+            </div>
+            <div>
+              Direção:{" "}
+              <span className="font-mono">{layoutConfig.direction}</span>
+            </div>
+            <div>
+              Disposição:{" "}
+              <span className="font-mono">{layoutConfig.arrangement}</span>
+            </div>
+            <div>
+              Opções: <span className="font-mono">{options.length} itens</span>
+            </div>
           </div>
         </Card>
       </div>

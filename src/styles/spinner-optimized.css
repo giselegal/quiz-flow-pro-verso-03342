@@ -1,12 +1,14 @@
 @keyframes spin-optimized {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Estilos otimizados para o spinner de carregamento */
 .loading-spinner-optimized {
   width: 48px;
   height: 48px;
-  border: 3px solid #B89B7A; /* Reduzido de 4px para 3px */
+  border: 3px solid #b89b7a; /* Reduzido de 4px para 3px */
   border-radius: 50%;
   border-top-color: transparent;
   animation: spin-optimized 0.8s linear infinite; /* Reduzido de 1s para 0.8s */

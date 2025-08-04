@@ -1,13 +1,19 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Grid, List, Layers } from 'lucide-react';
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Grid, List, Layers } from "lucide-react";
 
 export interface LayoutConfig {
-  layout: 'grid' | 'list' | 'masonry';
-  direction: 'horizontal' | 'vertical';
-  arrangement: 'start' | 'center' | 'end' | 'space-between';
+  layout: "grid" | "list" | "masonry";
+  direction: "horizontal" | "vertical";
+  arrangement: "start" | "center" | "end" | "space-between";
 }
 
 interface LayoutSectionProps {
@@ -15,7 +21,10 @@ interface LayoutSectionProps {
   onLayoutChange: (layout: LayoutConfig) => void;
 }
 
-const LayoutSection: React.FC<LayoutSectionProps> = ({ layout, onLayoutChange }) => {
+const LayoutSection: React.FC<LayoutSectionProps> = ({
+  layout,
+  onLayoutChange,
+}) => {
   // ✅ Handler para mudança de layout
   const handleLayoutChange = (key: keyof LayoutConfig, value: string) => {
     const newLayout = { ...layout, [key]: value };
@@ -25,11 +34,11 @@ const LayoutSection: React.FC<LayoutSectionProps> = ({ layout, onLayoutChange })
   // ✅ Ícones para os layouts
   const getLayoutIcon = (layoutType: string) => {
     switch (layoutType) {
-      case 'grid':
+      case "grid":
         return <Grid className="w-4 h-4" />;
-      case 'list':
+      case "list":
         return <List className="w-4 h-4" />;
-      case 'masonry':
+      case "masonry":
         return <Layers className="w-4 h-4" />;
       default:
         return <Grid className="w-4 h-4" />;
@@ -51,7 +60,7 @@ const LayoutSection: React.FC<LayoutSectionProps> = ({ layout, onLayoutChange })
           </Label>
           <Select
             value={layout.layout}
-            onValueChange={(value) => handleLayoutChange('layout', value)}
+            onValueChange={(value) => handleLayoutChange("layout", value)}
           >
             <SelectTrigger id="layout-select">
               <div className="flex items-center gap-2">
@@ -89,7 +98,7 @@ const LayoutSection: React.FC<LayoutSectionProps> = ({ layout, onLayoutChange })
           </Label>
           <Select
             value={layout.direction}
-            onValueChange={(value) => handleLayoutChange('direction', value)}
+            onValueChange={(value) => handleLayoutChange("direction", value)}
           >
             <SelectTrigger id="direction-select">
               <SelectValue placeholder="Selecione a direção" />
@@ -108,7 +117,7 @@ const LayoutSection: React.FC<LayoutSectionProps> = ({ layout, onLayoutChange })
           </Label>
           <Select
             value={layout.arrangement}
-            onValueChange={(value) => handleLayoutChange('arrangement', value)}
+            onValueChange={(value) => handleLayoutChange("arrangement", value)}
           >
             <SelectTrigger id="arrangement-select">
               <SelectValue placeholder="Selecione a disposição" />

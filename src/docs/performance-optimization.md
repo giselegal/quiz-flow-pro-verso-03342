@@ -15,9 +15,9 @@ Use formatos modernos de imagem como WebP ou AVIF em vez de PNG ou JPEG:
 <img src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/imagem.png" />
 
 // Depois (otimizado)
-<img 
+<img
   src="https://res.cloudinary.com/dqljyf76t/image/upload/f_auto,q_auto:good/v1744920983/imagem.png"
-  alt="Descrição da imagem" 
+  alt="Descrição da imagem"
 />
 ```
 
@@ -31,7 +31,8 @@ Para imagens hospedadas no Cloudinary, adicione parâmetros de transformação n
 
 ```tsx
 // URL otimizada para Cloudinary
-src="https://res.cloudinary.com/dqljyf76t/image/upload/f_auto,q_auto:good,w_320/v1744920983/imagem.png"
+src =
+  "https://res.cloudinary.com/dqljyf76t/image/upload/f_auto,q_auto:good,w_320/v1744920983/imagem.png";
 ```
 
 ### Dimensões Explícitas
@@ -39,7 +40,7 @@ src="https://res.cloudinary.com/dqljyf76t/image/upload/f_auto,q_auto:good,w_320/
 Sempre defina os atributos `width` e `height` para evitar mudanças de layout durante o carregamento:
 
 ```tsx
-<img 
+<img
   src="https://res.cloudinary.com/dqljyf76t/image/upload/f_auto,q_auto:good,w_320/v1744920983/imagem.png"
   alt="Descrição da imagem"
   width={320}
@@ -53,7 +54,7 @@ Sempre defina os atributos `width` e `height` para evitar mudanças de layout du
 Use o atributo `loading="lazy"` para imagens abaixo da dobra:
 
 ```tsx
-<img 
+<img
   src="https://res.cloudinary.com/dqljyf76t/image/upload/f_auto,q_auto:good,w_320/v1744920983/imagem.png"
   alt="Descrição da imagem"
   width={320}
@@ -69,20 +70,22 @@ Para imagens críticas acima da dobra, use `loading="eager"` ou omita o atributo
 Reduza o tamanho do JavaScript para melhorar o desempenho:
 
 1. **Importe apenas o necessário**:
+
    ```tsx
    // Ruim - importa toda a biblioteca
-   import * as Lucide from 'lucide-react';
-   
+   import * as Lucide from "lucide-react";
+
    // Bom - importa apenas os ícones necessários
-   import { ShoppingCart, Clock } from 'lucide-react';
+   import { ShoppingCart, Clock } from "lucide-react";
    ```
 
 2. **Use lazy loading para componentes grandes**:
+
    ```tsx
-   import React, { lazy, Suspense } from 'react';
-   
-   const HeavyComponent = lazy(() => import('./HeavyComponent'));
-   
+   import React, { lazy, Suspense } from "react";
+
+   const HeavyComponent = lazy(() => import("./HeavyComponent"));
+
    const MyComponent = () => (
      <Suspense fallback={<LoadingSpinner />}>
        <HeavyComponent />
@@ -95,8 +98,9 @@ Reduza o tamanho do JavaScript para melhorar o desempenho:
 Evite importar CSS que não é utilizado:
 
 1. Use classes condicionais:
+
    ```tsx
-   <div className={isActive ? 'active-class' : 'inactive-class'} />
+   <div className={isActive ? "active-class" : "inactive-class"} />
    ```
 
 2. Remova imports de CSS não utilizados.

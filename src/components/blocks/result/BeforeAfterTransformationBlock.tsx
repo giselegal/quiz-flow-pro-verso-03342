@@ -1,9 +1,9 @@
-import React from 'react';
-import BeforeAfterTransformation from '@/components/result/BeforeAfterTransformation';
+import React from "react";
+import BeforeAfterTransformation from "@/components/result/BeforeAfterTransformation";
 
 /**
  * BLOCO EDITÁVEL: Transformação Antes e Depois
- * 
+ *
  * Props Editáveis:
  * - title: string (título da seção)
  * - beforeTitle: string (título do "antes")
@@ -13,9 +13,9 @@ import BeforeAfterTransformation from '@/components/result/BeforeAfterTransforma
  * - description: string (descrição da transformação)
  * - showCTA: boolean (mostrar call-to-action)
  * - ctaText: string (texto do botão)
- * 
+ *
  * Exemplo de Uso:
- * <BeforeAfterTransformationBlock 
+ * <BeforeAfterTransformationBlock
  *   title="Sua Transformação"
  *   beforeTitle="Antes"
  *   afterTitle="Depois"
@@ -37,22 +37,24 @@ export interface BeforeAfterTransformationBlockProps {
   className?: string;
 }
 
-const BeforeAfterTransformationBlock: React.FC<BeforeAfterTransformationBlockProps> = ({
-  blockId = 'before-after-transformation',
-  title = 'Sua Transformação Começa Agora',
-  beforeTitle = 'Antes',
-  afterTitle = 'Depois',
-  beforeImage = 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=600&fit=crop',
-  afterImage = 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=400&h=600&fit=crop',
-  description = 'Descubra como pequenas mudanças podem criar uma transformação incrível no seu estilo.',
+const BeforeAfterTransformationBlock: React.FC<
+  BeforeAfterTransformationBlockProps
+> = ({
+  blockId = "before-after-transformation",
+  title = "Sua Transformação Começa Agora",
+  beforeTitle = "Antes",
+  afterTitle = "Depois",
+  beforeImage = "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=600&fit=crop",
+  afterImage = "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=400&h=600&fit=crop",
+  description = "Descubra como pequenas mudanças podem criar uma transformação incrível no seu estilo.",
   showCTA = true,
-  ctaText = 'Quero me transformar',
-  backgroundColor = '#ffffff',
-  className = '',
+  ctaText = "Quero me transformar",
+  backgroundColor = "#ffffff",
+  className = "",
 }) => {
   return (
-    <div 
-      className={`before-after-transformation-block ${className}`} 
+    <div
+      className={`before-after-transformation-block ${className}`}
       data-block-id={blockId}
       style={{ backgroundColor }}
     >

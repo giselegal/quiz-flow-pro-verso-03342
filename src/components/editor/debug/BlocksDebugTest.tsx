@@ -1,13 +1,16 @@
-
-import React from 'react';
-import { blockDefinitions, getCategories, getBlocksByCategory } from '../../../config/blockDefinitions';
+import React from "react";
+import {
+  blockDefinitions,
+  getCategories,
+  getBlocksByCategory,
+} from "../../../config/blockDefinitions";
 
 export const BlocksDebugTest: React.FC = () => {
   const categories = getCategories();
-  
-  console.log('BlocksDebugTest - blockDefinitions:', blockDefinitions.length);
-  console.log('BlocksDebugTest - categories:', categories);
-  
+
+  console.log("BlocksDebugTest - blockDefinitions:", blockDefinitions.length);
+  console.log("BlocksDebugTest - categories:", categories);
+
   return (
     <div className="p-4 bg-red-100 border border-red-300">
       <h3 className="font-bold text-red-800">DEBUG: Blocks Test</h3>

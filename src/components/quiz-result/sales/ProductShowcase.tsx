@@ -1,8 +1,7 @@
-
-import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Check, Sparkles, Star } from 'lucide-react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { Card } from "@/components/ui/card";
+import { Check, Sparkles, Star } from "lucide-react";
+import { motion } from "framer-motion";
 
 const benefits = [
   {
@@ -11,8 +10,8 @@ const benefits = [
     items: [
       "Descubra seu estilo com precisão",
       "Aprenda a criar looks autênticos",
-      "Técnicas de composição visual"
-    ]
+      "Técnicas de composição visual",
+    ],
   },
   {
     title: "Bônus Exclusivos",
@@ -20,9 +19,9 @@ const benefits = [
     items: [
       "Visagismo Facial Estratégico",
       "Peças-Chave do Guarda-Roupa",
-      "Consultoria em Grupo"
-    ]
-  }
+      "Consultoria em Grupo",
+    ],
+  },
 ];
 
 const ProductShowcase = () => {
@@ -32,23 +31,23 @@ const ProductShowcase = () => {
       opacity: 1,
       transition: {
         staggerChildren: 0.2,
-        delayChildren: 0.3
-      }
-    }
+        delayChildren: 0.3,
+      },
+    },
   };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1 }
+    visible: { y: 0, opacity: 1 },
   };
 
   const checkItemVariants = {
     hidden: { opacity: 0, x: -10 },
-    visible: { opacity: 1, x: 0 }
+    visible: { opacity: 1, x: 0 },
   };
 
   return (
-    <motion.div 
+    <motion.div
       className="space-y-10 py-4"
       initial="hidden"
       whileInView="visible"
@@ -67,14 +66,14 @@ const ProductShowcase = () => {
             alt="Guia de Estilo - 3 Revistas"
             className="w-full rounded-xl shadow-xl relative z-10"
           />
-          <motion.div 
+          <motion.div
             className="absolute -inset-1 bg-gradient-to-r from-amber-200 to-amber-400 rounded-xl blur opacity-30 
                       group-hover:opacity-50 transition duration-700 z-0"
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.3 }}
             transition={{ delay: 0.5, duration: 0.8 }}
           />
-          <motion.div 
+          <motion.div
             className="absolute top-4 right-4 bg-amber-100 text-amber-700 rounded-full px-3 py-1 text-xs font-bold"
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -83,20 +82,17 @@ const ProductShowcase = () => {
             COMPLETO
           </motion.div>
         </motion.div>
-        
-        <motion.div 
-          className="space-y-7"
-          variants={itemVariants}
-        >
+
+        <motion.div className="space-y-7" variants={itemVariants}>
           <motion.div className="space-y-2">
-            <motion.h2 
+            <motion.h2
               className="text-3xl font-playfair text-[#aa6b5d] relative inline-block"
               variants={itemVariants}
               whileHover={{ x: 3 }}
               transition={{ type: "spring" }}
             >
               Transforme seu Estilo
-              <motion.div 
+              <motion.div
                 className="absolute -bottom-2 left-0 h-[3px] bg-gradient-to-r from-amber-400 to-transparent rounded-full"
                 initial={{ width: 0 }}
                 whileInView={{ width: "100%" }}
@@ -104,14 +100,14 @@ const ProductShowcase = () => {
                 transition={{ delay: 0.8, duration: 0.8 }}
               />
             </motion.h2>
-            <motion.p 
+            <motion.p
               className="text-[#8F7A6A] text-lg"
               variants={itemVariants}
             >
               Tudo o que você precisa para transformar seu visual
             </motion.p>
           </motion.div>
-          
+
           {benefits.map((section, index) => (
             <motion.div
               key={index}
@@ -121,7 +117,7 @@ const ProductShowcase = () => {
             >
               <Card className="p-6 bg-white border-[#aa6b5d]/20 hover:shadow-lg transition-shadow duration-300">
                 <div className="flex items-center gap-3 mb-4">
-                  <motion.div 
+                  <motion.div
                     className="p-2 bg-amber-50 rounded-full"
                     whileHover={{ rotate: 10 }}
                   >
@@ -131,14 +127,11 @@ const ProductShowcase = () => {
                     {section.title}
                   </h3>
                 </div>
-                
-                <motion.div 
-                  className="space-y-3"
-                  variants={containerVariants}
-                >
+
+                <motion.div className="space-y-3" variants={containerVariants}>
                   {section.items.map((item, idx) => (
-                    <motion.div 
-                      key={idx} 
+                    <motion.div
+                      key={idx}
                       className="flex items-start gap-3 group"
                       variants={checkItemVariants}
                       custom={idx}

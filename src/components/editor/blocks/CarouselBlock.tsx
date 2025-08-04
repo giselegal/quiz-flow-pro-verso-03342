@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { GalleryHorizontalEnd } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
+import React, { useState, useEffect } from "react";
+import { GalleryHorizontalEnd } from "lucide-react";
+import type { BlockComponentProps } from "@/types/blocks";
 
 const CarouselBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -8,13 +8,9 @@ const CarouselBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = ''
+  className = "",
 }) => {
-  const {
-    images = [],
-    autoplay = true,
-    interval = 5000
-  } = block.properties;
+  const { images = [], autoplay = true, interval = 5000 } = block.properties;
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -33,9 +29,10 @@ const CarouselBlock: React.FC<BlockComponentProps> = ({
       <div
         className={`
           bg-gray-100 p-8 rounded-lg text-gray-500 flex flex-col items-center justify-center min-h-[200px] cursor-pointer transition-all duration-200
-          ${isSelected 
-            ? 'ring-1 ring-gray-400/40 bg-gray-50/30' 
-            : 'hover:shadow-sm'
+          ${
+            isSelected
+              ? "ring-1 ring-gray-400/40 bg-gray-50/30"
+              : "hover:shadow-sm"
           }
           ${className}
         `}
@@ -55,9 +52,10 @@ const CarouselBlock: React.FC<BlockComponentProps> = ({
     <div
       className={`
         relative w-full overflow-hidden rounded-lg shadow-md cursor-pointer transition-all duration-200
-        ${isSelected 
-          ? 'ring-1 ring-gray-400/40 bg-gray-50/30' 
-          : 'hover:shadow-lg'
+        ${
+          isSelected
+            ? "ring-1 ring-gray-400/40 bg-gray-50/30"
+            : "hover:shadow-lg"
         }
         ${className}
       `}
@@ -69,14 +67,17 @@ const CarouselBlock: React.FC<BlockComponentProps> = ({
         src={currentImage.src}
         alt={currentImage.alt}
         className="w-full h-auto object-cover aspect-video"
-        onError={(e) => (e.currentTarget.src = 'https://placehold.co/600x400/cccccc/333333?text=Erro+Imagem')}
+        onError={(e) =>
+          (e.currentTarget.src =
+            "https://placehold.co/600x400/cccccc/333333?text=Erro+Imagem")
+        }
       />
       {images.length > 1 && (
         <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
           {images.map((_: any, idx: number) => (
             <span
               key={idx}
-              className={`block w-2 h-2 rounded-full ${currentIndex === idx ? 'bg-white' : 'bg-gray-400 opacity-75'}`}
+              className={`block w-2 h-2 rounded-full ${currentIndex === idx ? "bg-white" : "bg-gray-400 opacity-75"}`}
             ></span>
           ))}
         </div>

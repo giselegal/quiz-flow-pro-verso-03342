@@ -1,9 +1,8 @@
-
-import React from 'react';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { GripVertical, Trash2, Copy } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { GripVertical, Trash2, Copy } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface SortableCanvasItemProps {
   id: string;
@@ -20,7 +19,7 @@ export const SortableCanvasItem: React.FC<SortableCanvasItemProps> = ({
   isSelected,
   onSelect,
   onDelete,
-  onDuplicate
+  onDuplicate,
 }) => {
   const {
     attributes,
@@ -32,8 +31,8 @@ export const SortableCanvasItem: React.FC<SortableCanvasItemProps> = ({
   } = useSortable({
     id,
     data: {
-      type: 'canvas-item'
-    }
+      type: "canvas-item",
+    },
   });
 
   const style = {
@@ -47,8 +46,8 @@ export const SortableCanvasItem: React.FC<SortableCanvasItemProps> = ({
       style={style}
       className={`
         relative group bg-white rounded-lg transition-all duration-200
-        ${isSelected ? 'ring-2 ring-blue-500 shadow-lg' : 'hover:shadow-md'}
-        ${isDragging ? 'opacity-50 z-50' : ''}
+        ${isSelected ? "ring-2 ring-blue-500 shadow-lg" : "hover:shadow-md"}
+        ${isDragging ? "opacity-50 z-50" : ""}
       `}
       onClick={(e) => {
         e.stopPropagation();
@@ -69,7 +68,7 @@ export const SortableCanvasItem: React.FC<SortableCanvasItemProps> = ({
               Componente selecionado
             </span>
           </div>
-          
+
           <div className="flex items-center gap-1">
             {onDuplicate && (
               <Button
@@ -98,11 +97,9 @@ export const SortableCanvasItem: React.FC<SortableCanvasItemProps> = ({
           </div>
         </div>
       )}
-      
-      <div className="p-4">
-        {children}
-      </div>
-      
+
+      <div className="p-4">{children}</div>
+
       {!isSelected && (
         <div className="absolute inset-0 border-2 border-transparent group-hover:border-[#B89B7A] rounded-lg pointer-events-none transition-colors duration-200" />
       )}

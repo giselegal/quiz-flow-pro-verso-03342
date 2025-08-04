@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 // Tipos para configuração do quiz editável
 export interface QuizStep {
   id: string;
   title: string;
-  type: 'intro' | 'question' | 'transition' | 'loading' | 'result' | 'offer';
+  type: "intro" | "question" | "transition" | "loading" | "result" | "offer";
   progress: number;
   showHeader: boolean;
   showProgress: boolean;
@@ -47,22 +47,22 @@ export const useQuizConfig = () => {
   // Carrega configurações do localStorage (salvas pelo editor)
   const loadQuizConfig = () => {
     try {
-      const savedConfig = localStorage.getItem('quiz_funnel_config');
+      const savedConfig = localStorage.getItem("quiz_funnel_config");
       if (savedConfig) {
         const config = JSON.parse(savedConfig);
         setQuizConfig(config);
-        
+
         // Extrai questões das páginas configuradas
         const questions = extractQuestionsFromConfig(config);
         setQuizQuestions(questions);
-        
-        console.log('📥 Configuração do quiz carregada:', {
+
+        console.log("📥 Configuração do quiz carregada:", {
           pages: config.pages?.length || 0,
-          questions: questions.length
+          questions: questions.length,
         });
       }
     } catch (error) {
-      console.warn('Erro ao carregar configuração do quiz:', error);
+      console.warn("Erro ao carregar configuração do quiz:", error);
     } finally {
       setIsLoading(false);
     }
@@ -73,20 +73,20 @@ export const useQuizConfig = () => {
     if (!config.pages) return [];
 
     const questions: QuizQuestion[] = [];
-    
-    config.pages.forEach(page => {
-      if (page.type === 'question' && page.components) {
+
+    config.pages.forEach((page) => {
+      if (page.type === "question" && page.components) {
         // Procura por componentes de questão
-        page.components.forEach(component => {
-          if (component.type === 'options' && component.data?.options) {
+        page.components.forEach((component) => {
+          if (component.type === "options" && component.data?.options) {
             const question: QuizQuestion = {
               id: page.id,
               text: component.data.text || `Questão ${questions.length + 1}`,
               options: component.data.options.map((opt: any) => ({
                 id: opt.id || `${page.id}_${opt.text}`,
                 text: opt.text,
-                points: opt.points || {}
-              }))
+                points: opt.points || {},
+              })),
             };
             questions.push(question);
           }
@@ -99,17 +99,23 @@ export const useQuizConfig = () => {
 
   // Busca uma página específica por tipo
   const getPageByType = (type: string) => {
-    return quizConfig?.pages?.find(page => page.type === type) || null;
+    return quizConfig?.pages?.find((page) => page.type === type) || null;
   };
 
   // Busca componentes de uma página por tipo
   const getComponentsByType = (pageType: string, componentType: string) => {
     const page = getPageByType(pageType);
-    return page?.components?.filter(comp => comp.type === componentType) || [];
+    return (
+      page?.components?.filter((comp) => comp.type === componentType) || []
+    );
   };
 
   // Busca texto de um componente específico
-  const getComponentText = (pageType: string, componentType: string, defaultText = '') => {
+  const getComponentText = (
+    pageType: string,
+    componentType: string,
+    defaultText = "",
+  ) => {
     const components = getComponentsByType(pageType, componentType);
     return components[0]?.data?.text || defaultText;
   };
@@ -120,13 +126,13 @@ export const useQuizConfig = () => {
 
     // Listen for storage changes (quando editor salva)
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'quiz_funnel_config') {
+      if (e.key === "quiz_funnel_config") {
         loadQuizConfig();
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   return {
@@ -136,6 +142,6 @@ export const useQuizConfig = () => {
     getPageByType,
     getComponentsByType,
     getComponentText,
-    reloadConfig: loadQuizConfig
+    reloadConfig: loadQuizConfig,
   };
 };

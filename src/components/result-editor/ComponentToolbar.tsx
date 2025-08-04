@@ -1,12 +1,15 @@
-
-import React, { useState } from 'react';
-import { useDraggable } from '@dnd-kit/core';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Search, Lock } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
-import { getAvailableComponents, COMPONENT_CATEGORIES, type ComponentDefinition } from './ComponentRegistry';
+import React, { useState } from "react";
+import { useDraggable } from "@dnd-kit/core";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Search, Lock } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import {
+  getAvailableComponents,
+  COMPONENT_CATEGORIES,
+  type ComponentDefinition,
+} from "./ComponentRegistry";
 
 interface ComponentToolbarProps {
   categories: any[];
@@ -19,19 +22,25 @@ interface DraggableComponentProps {
   isLocked?: boolean;
 }
 
-const DraggableComponent: React.FC<DraggableComponentProps> = ({ component, isLocked = false }) => {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-    id: component.id,
-    data: {
-      type: 'component',
-      component: component
-    },
-    disabled: isLocked
-  });
+const DraggableComponent: React.FC<DraggableComponentProps> = ({
+  component,
+  isLocked = false,
+}) => {
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: component.id,
+      data: {
+        type: "component",
+        component: component,
+      },
+      disabled: isLocked,
+    });
 
-  const style = transform ? {
-    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-  } : undefined;
+  const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+      }
+    : undefined;
 
   const Icon = component.icon;
 
@@ -42,64 +51,82 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({ component, isLo
       {...(isLocked ? {} : { ...listeners, ...attributes })}
       className={`
         p-3 border border-[#D4C4A0] rounded-lg transition-all duration-200 
-        ${isLocked 
-          ? 'cursor-not-allowed opacity-50 bg-gray-100' 
-          : 'cursor-grab hover:shadow-md hover:border-[#B89B7A] bg-white active:cursor-grabbing'
+        ${
+          isLocked
+            ? "cursor-not-allowed opacity-50 bg-gray-100"
+            : "cursor-grab hover:shadow-md hover:border-[#B89B7A] bg-white active:cursor-grabbing"
         }
-        ${isDragging ? 'opacity-50' : ''}
+        ${isDragging ? "opacity-50" : ""}
       `}
     >
       <div className="flex items-center gap-2 mb-2">
-        <Icon className={`w-4 h-4 ${isLocked ? 'text-gray-400' : 'text-[#B89B7A]'}`} />
-        <span className={`font-medium text-sm ${isLocked ? 'text-gray-400' : 'text-[#432818]'}`}>
+        <Icon
+          className={`w-4 h-4 ${isLocked ? "text-gray-400" : "text-[#B89B7A]"}`}
+        />
+        <span
+          className={`font-medium text-sm ${isLocked ? "text-gray-400" : "text-[#432818]"}`}
+        >
           {component.label}
         </span>
         {component.isPremium && (
-          <Badge 
-            variant="outline" 
-            className={`text-xs ${isLocked ? 'border-gray-300 text-gray-400' : 'border-yellow-400 text-yellow-700'}`}
+          <Badge
+            variant="outline"
+            className={`text-xs ${isLocked ? "border-gray-300 text-gray-400" : "border-yellow-400 text-yellow-700"}`}
           >
-            {isLocked ? <Lock className="w-3 h-3" /> : 'PRO'}
+            {isLocked ? <Lock className="w-3 h-3" /> : "PRO"}
           </Badge>
         )}
       </div>
-      <p className={`text-xs ${isLocked ? 'text-gray-400' : 'text-[#B89B7A]'}`}>
+      <p className={`text-xs ${isLocked ? "text-gray-400" : "text-[#B89B7A]"}`}>
         {component.description}
       </p>
     </div>
   );
 };
 
-export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({ 
-  categories, 
-  components, 
-  collapsed = false 
+export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
+  categories,
+  components,
+  collapsed = false,
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
   const { user } = useAuth();
 
   // Mock auth features for now
-  const hasPremiumFeatures = user?.email?.includes('premium') || false;
-  const userFeatures = ['basic_components'];
-  const userPlan = 'FREE';
-  
-  const availableComponents = getAvailableComponents(userFeatures, hasPremiumFeatures);
-  
-  const { available, locked } = components.reduce((acc, component) => {
-    const isAvailable = availableComponents.find(c => c.id === component.id);
-    if (isAvailable) {
-      acc.available.push(component);
-    } else if (component.isPremium) {
-      acc.locked.push(component);
-    }
-    return acc;
-  }, { available: [] as ComponentDefinition[], locked: [] as ComponentDefinition[] });
+  const hasPremiumFeatures = user?.email?.includes("premium") || false;
+  const userFeatures = ["basic_components"];
+  const userPlan = "FREE";
 
-  const filteredComponents = [...available, ...locked].filter(component => {
-    const matchesCategory = selectedCategory === 'all' || component.category === selectedCategory;
-    const matchesSearch = component.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         component.description.toLowerCase().includes(searchTerm.toLowerCase());
+  const availableComponents = getAvailableComponents(
+    userFeatures,
+    hasPremiumFeatures,
+  );
+
+  const { available, locked } = components.reduce(
+    (acc, component) => {
+      const isAvailable = availableComponents.find(
+        (c) => c.id === component.id,
+      );
+      if (isAvailable) {
+        acc.available.push(component);
+      } else if (component.isPremium) {
+        acc.locked.push(component);
+      }
+      return acc;
+    },
+    {
+      available: [] as ComponentDefinition[],
+      locked: [] as ComponentDefinition[],
+    },
+  );
+
+  const filteredComponents = [...available, ...locked].filter((component) => {
+    const matchesCategory =
+      selectedCategory === "all" || component.category === selectedCategory;
+    const matchesSearch =
+      component.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      component.description.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
@@ -133,15 +160,15 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
             <span className="text-sm font-medium text-[#432818]">
               Plano: {userPlan}
             </span>
-            <Badge 
+            <Badge
               variant="outline"
               className={`${
-                hasPremiumFeatures 
-                  ? 'border-green-500 text-green-700 bg-green-50' 
-                  : 'border-yellow-500 text-yellow-700 bg-yellow-50'
+                hasPremiumFeatures
+                  ? "border-green-500 text-green-700 bg-green-50"
+                  : "border-yellow-500 text-yellow-700 bg-yellow-50"
               }`}
             >
-              {hasPremiumFeatures ? 'Premium' : 'Básico'}
+              {hasPremiumFeatures ? "Premium" : "Básico"}
             </Badge>
           </div>
           <p className="text-xs text-[#B89B7A] mt-1">
@@ -151,27 +178,29 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
 
         <div className="flex flex-wrap gap-2">
           <button
-            onClick={() => setSelectedCategory('all')}
+            onClick={() => setSelectedCategory("all")}
             className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-              selectedCategory === 'all'
-                ? 'bg-[#B89B7A] text-[#432818]'
-                : 'bg-[#F5F2E9] text-[#B89B7A] hover:bg-[#D4C4A0]'
+              selectedCategory === "all"
+                ? "bg-[#B89B7A] text-[#432818]"
+                : "bg-[#F5F2E9] text-[#B89B7A] hover:bg-[#D4C4A0]"
             }`}
           >
             Todos ({filteredComponents.length})
           </button>
           {COMPONENT_CATEGORIES.map((category) => {
-            const categoryCount = filteredComponents.filter(c => c.category === category.id).length;
+            const categoryCount = filteredComponents.filter(
+              (c) => c.category === category.id,
+            ).length;
             if (categoryCount === 0) return null;
-            
+
             return (
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
                 className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                   selectedCategory === category.id
-                    ? 'bg-[#B89B7A] text-[#432818]'
-                    : 'bg-[#F5F2E9] text-[#B89B7A] hover:bg-[#D4C4A0]'
+                    ? "bg-[#B89B7A] text-[#432818]"
+                    : "bg-[#F5F2E9] text-[#B89B7A] hover:bg-[#D4C4A0]"
                 }`}
               >
                 {category.name} ({categoryCount})
@@ -190,24 +219,31 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
         ) : (
           <div className="space-y-3">
             {filteredComponents
-              .filter(c => available.find(a => a.id === c.id))
+              .filter((c) => available.find((a) => a.id === c.id))
               .map((component) => (
                 <DraggableComponent key={component.id} component={component} />
               ))}
-            
+
             {filteredComponents
-              .filter(c => locked.find(l => l.id === c.id))
+              .filter((c) => locked.find((l) => l.id === c.id))
               .map((component) => (
-                <DraggableComponent key={component.id} component={component} isLocked={true} />
+                <DraggableComponent
+                  key={component.id}
+                  component={component}
+                  isLocked={true}
+                />
               ))}
           </div>
         )}
 
         {locked.length > 0 && !hasPremiumFeatures && (
           <div className="mt-6 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg">
-            <h4 className="font-semibold text-yellow-800 mb-2">🚀 Desbloqueie Mais Componentes</h4>
+            <h4 className="font-semibold text-yellow-800 mb-2">
+              🚀 Desbloqueie Mais Componentes
+            </h4>
             <p className="text-sm text-yellow-700 mb-3">
-              Upgrade para o plano Professional e tenha acesso a {locked.length} componentes premium:
+              Upgrade para o plano Professional e tenha acesso a {locked.length}{" "}
+              componentes premium:
             </p>
             <ul className="text-xs text-yellow-600 mb-3 space-y-1">
               <li>• Vídeos e áudios</li>

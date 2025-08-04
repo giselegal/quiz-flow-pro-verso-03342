@@ -1,5 +1,4 @@
-
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
 interface CanvasConfiguration {
   width: number;
@@ -13,54 +12,57 @@ export const useCanvasConfiguration = () => {
   const [configuration, setConfiguration] = useState<CanvasConfiguration>({
     width: 800,
     height: 600,
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     padding: 20,
-    components: []
+    components: [],
   });
 
   const [isStep20Loaded, setIsStep20Loaded] = useState(false);
   const [isStep21Loaded, setIsStep21Loaded] = useState(false);
 
-  const updateConfiguration = useCallback((updates: Partial<CanvasConfiguration>) => {
-    setConfiguration(prev => ({ ...prev, ...updates }));
-  }, []);
+  const updateConfiguration = useCallback(
+    (updates: Partial<CanvasConfiguration>) => {
+      setConfiguration((prev) => ({ ...prev, ...updates }));
+    },
+    [],
+  );
 
   const addComponent = useCallback((component: any) => {
-    setConfiguration(prev => ({
+    setConfiguration((prev) => ({
       ...prev,
-      components: [...prev.components, component]
+      components: [...prev.components, component],
     }));
   }, []);
 
   const removeComponent = useCallback((index: number) => {
-    setConfiguration(prev => ({
+    setConfiguration((prev) => ({
       ...prev,
-      components: prev.components.filter((_, i) => i !== index)
+      components: prev.components.filter((_, i) => i !== index),
     }));
   }, []);
 
   const loadAndApplyStep20 = useCallback(() => {
     setIsStep20Loaded(true);
-    console.log('Step 20 loaded and applied');
+    console.log("Step 20 loaded and applied");
   }, []);
 
   const loadAndApplyStep21 = useCallback(() => {
     setIsStep21Loaded(true);
-    console.log('Step 21 loaded and applied');
+    console.log("Step 21 loaded and applied");
   }, []);
 
   const getResultComponents = useCallback(() => {
-    return configuration.components.filter((c: any) => c.type === 'result');
+    return configuration.components.filter((c: any) => c.type === "result");
   }, [configuration.components]);
 
   const getOfferComponents = useCallback(() => {
-    return configuration.components.filter((c: any) => c.type === 'offer');
+    return configuration.components.filter((c: any) => c.type === "offer");
   }, [configuration.components]);
 
   const validateAllSteps = useCallback(() => {
     return {
       isValid: true,
-      errors: []
+      errors: [],
     };
   }, []);
 
@@ -76,7 +78,7 @@ export const useCanvasConfiguration = () => {
     loadAndApplyStep21,
     getResultComponents,
     getOfferComponents,
-    config: configuration
+    config: configuration,
   };
 };
 

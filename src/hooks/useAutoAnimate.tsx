@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react';
-import autoAnimate from '@formkit/auto-animate';
+import React, { useRef, useEffect } from "react";
+import autoAnimate from "@formkit/auto-animate";
 
 // Hook personalizado para auto-animate
 export const useAutoAnimate = () => {
@@ -24,8 +24,8 @@ export const AnimatedOptionsEditor: React.FC<{
   const addOption = () => {
     const newOption = {
       id: `option-${Date.now()}`,
-      text: 'Nova opção',
-      imageUrl: 'https://via.placeholder.com/150'
+      text: "Nova opção",
+      imageUrl: "https://via.placeholder.com/150",
     };
     onOptionsChange([...options, newOption]);
   };
@@ -36,17 +36,17 @@ export const AnimatedOptionsEditor: React.FC<{
 
   return (
     <div className="space-y-4">
-      <button 
+      <button
         onClick={addOption}
         className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
       >
         ✨ Adicionar Opção (com animação)
       </button>
-      
+
       {/* Lista com animação automática */}
       <div ref={listRef as any} className="space-y-2">
         {options.map((option, index) => (
-          <div 
+          <div
             key={option.id}
             className="p-4 bg-card border border-border rounded-lg shadow-sm"
           >

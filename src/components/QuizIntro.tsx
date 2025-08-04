@@ -1,12 +1,11 @@
-
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { sharedStyles } from '@/styles/sharedStyles';
-import { ContentContainer } from './shared/ContentContainer';
-import { Card, CardContent } from '@/components/ui/card';
-import { ArrowRight, Sparkles, Users, Award } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { sharedStyles } from "@/styles/sharedStyles";
+import { ContentContainer } from "./shared/ContentContainer";
+import { Card, CardContent } from "@/components/ui/card";
+import { ArrowRight, Sparkles, Users, Award } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface QuizIntroProps {
   onStart: (userName: string) => void;
@@ -15,9 +14,9 @@ interface QuizIntroProps {
 
 const QuizIntro: React.FC<QuizIntroProps> = ({
   onStart,
-  globalStyles = {}
+  globalStyles = {},
 }) => {
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -27,7 +26,7 @@ const QuizIntro: React.FC<QuizIntroProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (userName.trim()) {
-      localStorage.setItem('userName', userName.trim());
+      localStorage.setItem("userName", userName.trim());
       onStart(userName.trim());
     }
   };
@@ -41,10 +40,10 @@ const QuizIntro: React.FC<QuizIntroProps> = ({
   };
 
   return (
-    <div 
+    <div
       className={cn(
         "min-h-screen flex items-center justify-center p-4 transition-all duration-700",
-        isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-95"
+        isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-95",
       )}
       style={backgroundStyle}
     >
@@ -54,7 +53,7 @@ const QuizIntro: React.FC<QuizIntroProps> = ({
           <div className="space-y-6">
             {/* Logo */}
             <div className="flex justify-center mb-6">
-              <img 
+              <img
                 src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744735333/Logomarca_Colorida_qahz04.webp"
                 alt="Logo Mayara Moda"
                 className="w-auto rounded-lg shadow-md transition-transform duration-300 hover:scale-105"
@@ -64,30 +63,31 @@ const QuizIntro: React.FC<QuizIntroProps> = ({
                 fetchPriority="high"
                 decoding="async"
                 style={{
-                  objectFit: 'contain',
-                  maxWidth: '120px',
-                  aspectRatio: '120 / 50'
+                  objectFit: "contain",
+                  maxWidth: "120px",
+                  aspectRatio: "120 / 50",
                 }}
               />
             </div>
 
             {/* Title */}
-            <h1 
+            <h1
               className="text-3xl md:text-5xl font-playfair font-bold leading-tight"
               style={textStyle}
             >
-              Descubra Seu{' '}
+              Descubra Seu{" "}
               <span className="bg-gradient-to-r from-[#B89B7A] to-[#D4B896] bg-clip-text text-transparent">
                 Estilo Pessoal
               </span>
             </h1>
 
             {/* Subtitle */}
-            <p 
+            <p
               className="text-lg md:text-xl leading-relaxed max-w-2xl mx-auto opacity-90"
               style={textStyle}
             >
-              Um quiz personalizado para descobrir qual estilo de roupa combina mais com você e receber dicas exclusivas.
+              Um quiz personalizado para descobrir qual estilo de roupa combina
+              mais com você e receber dicas exclusivas.
             </p>
           </div>
 
@@ -96,7 +96,9 @@ const QuizIntro: React.FC<QuizIntroProps> = ({
             <Card className="border-[#B89B7A]/20 bg-white/10 backdrop-blur-sm">
               <CardContent className="p-6 text-center">
                 <Sparkles className="w-8 h-8 text-[#B89B7A] mx-auto mb-3" />
-                <h3 className="font-semibold mb-2" style={textStyle}>Personalizado</h3>
+                <h3 className="font-semibold mb-2" style={textStyle}>
+                  Personalizado
+                </h3>
                 <p className="text-sm opacity-80" style={textStyle}>
                   Baseado nas suas preferências únicas
                 </p>
@@ -106,7 +108,9 @@ const QuizIntro: React.FC<QuizIntroProps> = ({
             <Card className="border-[#B89B7A]/20 bg-white/10 backdrop-blur-sm">
               <CardContent className="p-6 text-center">
                 <Users className="w-8 h-8 text-[#B89B7A] mx-auto mb-3" />
-                <h3 className="font-semibold mb-2" style={textStyle}>+10.000</h3>
+                <h3 className="font-semibold mb-2" style={textStyle}>
+                  +10.000
+                </h3>
                 <p className="text-sm opacity-80" style={textStyle}>
                   Pessoas já descobriram seu estilo
                 </p>
@@ -116,7 +120,9 @@ const QuizIntro: React.FC<QuizIntroProps> = ({
             <Card className="border-[#B89B7A]/20 bg-white/10 backdrop-blur-sm">
               <CardContent className="p-6 text-center">
                 <Award className="w-8 h-8 text-[#B89B7A] mx-auto mb-3" />
-                <h3 className="font-semibold mb-2" style={textStyle}>Gratuito</h3>
+                <h3 className="font-semibold mb-2" style={textStyle}>
+                  Gratuito
+                </h3>
                 <p className="text-sm opacity-80" style={textStyle}>
                   Resultado completo sem custo
                 </p>
@@ -129,8 +135,8 @@ const QuizIntro: React.FC<QuizIntroProps> = ({
             <CardContent className="p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
-                  <label 
-                    htmlFor="userName" 
+                  <label
+                    htmlFor="userName"
                     className="block text-sm font-medium"
                     style={textStyle}
                   >
@@ -175,11 +181,9 @@ const QuizIntro: React.FC<QuizIntroProps> = ({
           </div>
 
           {/* Footer Text */}
-          <p 
-            className="text-sm opacity-70 max-w-md mx-auto"
-            style={textStyle}
-          >
-            ✨ Este quiz leva apenas 3 minutos e foi desenvolvido por especialistas em moda
+          <p className="text-sm opacity-70 max-w-md mx-auto" style={textStyle}>
+            ✨ Este quiz leva apenas 3 minutos e foi desenvolvido por
+            especialistas em moda
           </p>
         </div>
       </ContentContainer>

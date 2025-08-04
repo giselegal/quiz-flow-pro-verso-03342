@@ -1,8 +1,8 @@
-import React from 'react';
-import { useDraggable, useDroppable } from '@dnd-kit/core';
-import { CSS } from '@dnd-kit/utilities';
-import { QuizComponentData } from '@/types/quizBuilder';
-import ComponentRenderer from './ComponentRenderer';
+import React from "react";
+import { useDraggable, useDroppable } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
+import { QuizComponentData } from "@/types/quizBuilder";
+import ComponentRenderer from "./ComponentRenderer";
 
 interface DraggableComponentProps {
   component: QuizComponentData;
@@ -19,7 +19,12 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
   onMove,
   isPreviewing = false,
 }) => {
-  const { attributes, listeners, setNodeRef: setDragNodeRef, transform } = useDraggable({
+  const {
+    attributes,
+    listeners,
+    setNodeRef: setDragNodeRef,
+    transform,
+  } = useDraggable({
     id: component.id,
     disabled: isPreviewing,
   });
@@ -28,10 +33,12 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
     id: component.id,
   });
 
-  const style = transform ? {
-    transform: CSS.Transform.toString(transform),
-    zIndex: 999,
-  } : undefined;
+  const style = transform
+    ? {
+        transform: CSS.Transform.toString(transform),
+        zIndex: 999,
+      }
+    : undefined;
 
   const setNodeRef = (node: HTMLElement | null) => {
     setDragNodeRef(node);

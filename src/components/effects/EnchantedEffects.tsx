@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface FloatingElement {
   id: number;
@@ -11,37 +11,39 @@ interface FloatingElement {
 }
 
 interface EnchantedBackgroundProps {
-  phase: 'intro' | 'quiz' | 'strategic' | 'results';
+  phase: "intro" | "quiz" | "strategic" | "results";
   intensity?: number;
 }
 
 export const EnchantedBackground: React.FC<EnchantedBackgroundProps> = ({
   phase,
-  intensity = 0.5
+  intensity = 0.5,
 }) => {
-  const [floatingElements, setFloatingElements] = useState<FloatingElement[]>([]);
+  const [floatingElements, setFloatingElements] = useState<FloatingElement[]>(
+    [],
+  );
 
   const phaseConfig = {
     intro: {
-      emojis: ['✨', '🌟', '💫', '⭐'],
+      emojis: ["✨", "🌟", "💫", "⭐"],
       count: 3,
-      colors: ['#8B5CF6', '#A78BFA']
+      colors: ["#8B5CF6", "#A78BFA"],
     },
     quiz: {
-      emojis: ['💭', '🤔', '💡', '🧠'],
+      emojis: ["💭", "🤔", "💡", "🧠"],
       count: 2,
-      colors: ['#6366F1', '#8B5CF6']
+      colors: ["#6366F1", "#8B5CF6"],
     },
     strategic: {
-      emojis: ['🎯', '💎', '🚀', '⚡'],
+      emojis: ["🎯", "💎", "🚀", "⚡"],
       count: 4,
-      colors: ['#EF4444', '#F97316']
+      colors: ["#EF4444", "#F97316"],
     },
     results: {
-      emojis: ['🎉', '🎊', '🌟', '✨'],
+      emojis: ["🎉", "🎊", "🌟", "✨"],
       count: 6,
-      colors: ['#10B981', '#34D399']
-    }
+      colors: ["#10B981", "#34D399"],
+    },
   };
 
   useEffect(() => {
@@ -56,18 +58,18 @@ export const EnchantedBackground: React.FC<EnchantedBackgroundProps> = ({
         y: Math.random() * 100,
         emoji: config.emojis[Math.floor(Math.random() * config.emojis.length)],
         scale: 0.5 + Math.random() * 0.5,
-        duration: 3 + Math.random() * 4
+        duration: 3 + Math.random() * 4,
       });
     }
 
     setFloatingElements(newElements);
 
     const interval = setInterval(() => {
-      setFloatingElements(prev => {
-        const updated = prev.map(el => ({
+      setFloatingElements((prev) => {
+        const updated = prev.map((el) => ({
           ...el,
           y: (el.y - 1) % 120,
-          x: el.x + Math.sin(Date.now() * 0.001 + el.id) * 0.1
+          x: el.x + Math.sin(Date.now() * 0.001 + el.id) * 0.1,
         }));
         return updated;
       });
@@ -79,20 +81,20 @@ export const EnchantedBackground: React.FC<EnchantedBackgroundProps> = ({
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden">
       <AnimatePresence>
-        {floatingElements.map(element => (
+        {floatingElements.map((element) => (
           <motion.div
             key={element.id}
             className="absolute text-2xl opacity-20"
             style={{
               left: `${element.x}%`,
               top: `${element.y}%`,
-              transform: `scale(${element.scale})`
+              transform: `scale(${element.scale})`,
             }}
-            initial={{ opacity: 0, y: '100vh' }}
-            animate={{ 
+            initial={{ opacity: 0, y: "100vh" }}
+            animate={{
               opacity: 0.2,
-              y: '-10vh',
-              rotate: [0, 5, -5, 0]
+              y: "-10vh",
+              rotate: [0, 5, -5, 0],
             }}
             exit={{ opacity: 0 }}
             transition={{
@@ -101,8 +103,8 @@ export const EnchantedBackground: React.FC<EnchantedBackgroundProps> = ({
               rotate: {
                 duration: 2,
                 repeat: Infinity,
-                ease: 'easeInOut'
-              }
+                ease: "easeInOut",
+              },
             }}
           >
             {element.emoji}
@@ -115,17 +117,17 @@ export const EnchantedBackground: React.FC<EnchantedBackgroundProps> = ({
 
 interface MorphingProgressProps {
   progress: number;
-  phase: 'normal' | 'strategic' | 'complete';
+  phase: "normal" | "strategic" | "complete";
 }
 
 export const MorphingProgress: React.FC<MorphingProgressProps> = ({
   progress,
-  phase
+  phase,
 }) => {
   const phaseColors = {
-    normal: 'from-[#B89B7A] to-[#A1835D]',        // Cores da marca: bege principal para bege escuro
-    strategic: 'from-[#aa6b5d] to-[#B89B7A]',     // Cores da marca: terracota para bege
-    complete: 'from-[#B89B7A] to-[#D4B79F]'       // Cores da marca: bege principal para bege claro
+    normal: "from-[#B89B7A] to-[#A1835D]", // Cores da marca: bege principal para bege escuro
+    strategic: "from-[#aa6b5d] to-[#B89B7A]", // Cores da marca: terracota para bege
+    complete: "from-[#B89B7A] to-[#D4B79F]", // Cores da marca: bege principal para bege claro
   };
 
   return (
@@ -134,7 +136,7 @@ export const MorphingProgress: React.FC<MorphingProgressProps> = ({
         className={`h-full bg-gradient-to-r ${phaseColors[phase]} relative`}
         initial={{ width: 0 }}
         animate={{ width: `${progress}%` }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
       >
         {/* Shimmer effect */}
         <motion.div
@@ -143,20 +145,20 @@ export const MorphingProgress: React.FC<MorphingProgressProps> = ({
           transition={{
             duration: 2,
             repeat: Infinity,
-            ease: 'linear'
+            ease: "linear",
           }}
-          style={{ width: '100px' }}
+          style={{ width: "100px" }}
         />
-        
+
         {/* Pulse on strategic questions */}
-        {phase === 'strategic' && (
+        {phase === "strategic" && (
           <motion.div
             className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-red-500"
             animate={{ opacity: [0.3, 0.7, 0.3] }}
             transition={{
               duration: 1,
               repeat: Infinity,
-              ease: 'easeInOut'
+              ease: "easeInOut",
             }}
           />
         )}

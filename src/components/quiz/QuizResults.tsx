@@ -1,7 +1,6 @@
-
-import React from 'react';
-import { StyleResult } from '@/types/quiz';
-import { useQuizHooks } from '@/hooks/useQuizHooks';
+import React from "react";
+import { StyleResult } from "@/types/quiz";
+import { useQuizHooks } from "@/hooks/useQuizHooks";
 
 interface QuizResultsProps {
   primaryStyle: StyleResult;
@@ -10,7 +9,7 @@ interface QuizResultsProps {
 
 export const QuizResults: React.FC<QuizResultsProps> = ({
   primaryStyle,
-  secondaryStyles
+  secondaryStyles,
 }) => {
   return (
     <div className="space-y-6">
@@ -27,7 +26,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
           </p>
         </div>
       </div>
-      
+
       {secondaryStyles.length > 0 && (
         <div>
           <h4 className="text-lg font-medium text-[#432818] mb-3">
@@ -35,7 +34,10 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
           </h4>
           <div className="grid gap-3">
             {secondaryStyles.map((style, index) => (
-              <div key={index} className="bg-white rounded-lg p-4 border border-[#B89B7A]/20">
+              <div
+                key={index}
+                className="bg-white rounded-lg p-4 border border-[#B89B7A]/20"
+              >
                 <div className="flex justify-between items-center">
                   <span className="font-medium text-[#432818]">
                     {style.category}

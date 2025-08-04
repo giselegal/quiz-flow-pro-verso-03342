@@ -1,4 +1,3 @@
-
 export interface ImageMetadata {
   url: string;
   width?: number;
@@ -6,8 +5,8 @@ export interface ImageMetadata {
   format?: string;
   size?: number;
   quality?: number;
-  natural?: { width: number; height: number; };
-  display?: { width: number; height: number; };
+  natural?: { width: number; height: number };
+  display?: { width: number; height: number };
 }
 
 export interface ImageCacheEntry {
@@ -16,12 +15,12 @@ export interface ImageCacheEntry {
   metadata: ImageMetadata;
   blob?: Blob;
   lastAccessed?: number;
-  loadStatus?: 'loading' | 'loaded' | 'error';
+  loadStatus?: "loading" | "loaded" | "error";
 }
 
 export interface ImageSettings {
   quality: number;
-  format: 'webp' | 'jpeg' | 'png' | 'auto';
+  format: "webp" | "jpeg" | "png" | "auto";
   maxWidth?: number;
   maxHeight?: number;
   width?: number;
@@ -34,7 +33,7 @@ export interface ImageOptimizationOptions {
   quality?: number;
   width?: number;
   height?: number;
-  format?: 'webp' | 'jpeg' | 'png' | 'auto';
+  format?: "webp" | "jpeg" | "png" | "auto";
   crop?: boolean;
 }
 
@@ -59,8 +58,8 @@ export interface ImageAnalysis {
   dimensions: {
     width: number;
     height: number;
-    natural?: { width: number; height: number; };
-    display?: { width: number; height: number; };
+    natural?: { width: number; height: number };
+    display?: { width: number; height: number };
   };
   format: string;
   size: number;
@@ -72,7 +71,7 @@ export interface ImageAnalysis {
 
 export interface ImageDiagnosticResult {
   url: string;
-  status: 'success' | 'error' | 'loading';
+  status: "success" | "error" | "loading";
   analysis?: ImageAnalysis;
   error?: string;
   loadTime?: number;
@@ -88,11 +87,16 @@ export interface ImageDiagnosticResult {
   };
   detailedIssues?: Array<{
     type: string;
-    severity: 'low' | 'medium' | 'high';
+    severity: "low" | "medium" | "high";
     description: string;
     recommendation: string;
     url?: string;
-    dimensions?: { width: number; height: number; natural?: { width: number; height: number; }; display?: { width: number; height: number; }; };
+    dimensions?: {
+      width: number;
+      height: number;
+      natural?: { width: number; height: number };
+      display?: { width: number; height: number };
+    };
     issues?: any[];
   }>;
 }

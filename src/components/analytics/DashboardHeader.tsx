@@ -1,15 +1,39 @@
-
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { RefreshCcw, Download, Trash2, Filter, LayoutGrid, LayoutList } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuCheckboxItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  RefreshCcw,
+  Download,
+  Trash2,
+  Filter,
+  LayoutGrid,
+  LayoutList,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuCheckboxItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface DashboardHeaderProps {
-  timeRange: '7d' | '30d' | 'all';
-  onTimeRangeChange: (range: '7d' | '30d' | 'all') => void;
+  timeRange: "7d" | "30d" | "all";
+  onTimeRangeChange: (range: "7d" | "30d" | "all") => void;
   onRefresh: () => void;
   onExportData: () => void;
   onClearData: () => void;
@@ -28,7 +52,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   onEventSelectionChange,
   selectedEvents,
   compactView = false,
-  onToggleCompactView
+  onToggleCompactView,
 }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -41,25 +65,25 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   };
 
   const handleTimeRangeChange = (value: string) => {
-    onTimeRangeChange(value as '7d' | '30d' | 'all');
+    onTimeRangeChange(value as "7d" | "30d" | "all");
   };
 
   const toggleEvent = (eventType: string) => {
     if (selectedEvents.includes(eventType)) {
-      onEventSelectionChange(selectedEvents.filter(e => e !== eventType));
+      onEventSelectionChange(selectedEvents.filter((e) => e !== eventType));
     } else {
       onEventSelectionChange([...selectedEvents, eventType]);
     }
   };
 
   const eventLabels: Record<string, string> = {
-    quiz_start: 'Início do Quiz',
-    quiz_complete: 'Quiz Completo',
-    quiz_answer: 'Respostas',
-    result_view: 'Visualização de Resultado',
-    lead_generated: 'Leads Gerados',
-    sale: 'Vendas',
-    button_click: 'Cliques em Botões'
+    quiz_start: "Início do Quiz",
+    quiz_complete: "Quiz Completo",
+    quiz_answer: "Respostas",
+    result_view: "Visualização de Resultado",
+    lead_generated: "Leads Gerados",
+    sale: "Vendas",
+    button_click: "Cliques em Botões",
   };
 
   return (
@@ -68,7 +92,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-semibold">Analytics</h1>
-            
+
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -78,24 +102,24 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                     className="h-8 w-8 p-0"
                     onClick={onToggleCompactView}
                   >
-                    {compactView ? 
-                      <LayoutGrid className="h-4 w-4" /> : 
+                    {compactView ? (
+                      <LayoutGrid className="h-4 w-4" />
+                    ) : (
                       <LayoutList className="h-4 w-4" />
-                    }
+                    )}
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  {compactView ? "Expandir visualização" : "Compactar visualização"}
+                  {compactView
+                    ? "Expandir visualização"
+                    : "Compactar visualização"}
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </div>
-          
+
           <div className="flex flex-wrap items-center gap-2">
-            <Select
-              value={timeRange}
-              onValueChange={handleTimeRangeChange}
-            >
+            <Select value={timeRange} onValueChange={handleTimeRangeChange}>
               <SelectTrigger className="h-8 w-[130px] text-xs">
                 <SelectValue placeholder="Período" />
               </SelectTrigger>
@@ -105,7 +129,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                 <SelectItem value="all">Todo o período</SelectItem>
               </SelectContent>
             </Select>
-            
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="h-8">
@@ -127,7 +151,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-            
+
             <Button
               variant="outline"
               size="sm"
@@ -135,10 +159,12 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               onClick={handleRefresh}
               disabled={isRefreshing}
             >
-              <RefreshCcw className={`h-3.5 w-3.5 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <RefreshCcw
+                className={`h-3.5 w-3.5 mr-2 ${isRefreshing ? "animate-spin" : ""}`}
+              />
               <span className="text-xs">Atualizar</span>
             </Button>
-            
+
             <Button
               variant="outline"
               size="sm"
@@ -148,7 +174,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               <Download className="h-3.5 w-3.5 mr-2" />
               <span className="text-xs">Exportar</span>
             </Button>
-            
+
             <Button
               variant="outline"
               size="sm"

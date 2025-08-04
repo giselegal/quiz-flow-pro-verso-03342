@@ -1,9 +1,24 @@
-
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Trash2, RefreshCcw, Info, Play, CheckCircle, Eye, Users, ShoppingCart, MousePointer } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Trash2,
+  RefreshCcw,
+  Info,
+  Play,
+  CheckCircle,
+  Eye,
+  Users,
+  ShoppingCart,
+  MousePointer,
+} from "lucide-react";
 
 interface LoggedEvent {
   type: string;
@@ -17,11 +32,11 @@ export const EventLogger: React.FC = () => {
 
   const loadEvents = () => {
     try {
-      const eventsJson = localStorage.getItem('fb_pixel_event_log');
+      const eventsJson = localStorage.getItem("fb_pixel_event_log");
       const loadedEvents = eventsJson ? JSON.parse(eventsJson) : [];
       setEvents(loadedEvents);
     } catch (error) {
-      console.error('Erro ao carregar eventos:', error);
+      console.error("Erro ao carregar eventos:", error);
       setEvents([]);
     }
   };
@@ -38,25 +53,25 @@ export const EventLogger: React.FC = () => {
   }, []);
 
   const clearEvents = () => {
-    localStorage.removeItem('fb_pixel_event_log');
+    localStorage.removeItem("fb_pixel_event_log");
     setEvents([]);
   };
 
   const getEventIcon = (type: string) => {
     switch (type) {
-      case 'QuizStart':
+      case "QuizStart":
         return <Play className="h-4 w-4" />;
-      case 'QuizAnswer':
+      case "QuizAnswer":
         return <Info className="h-4 w-4" />;
-      case 'QuizComplete':
+      case "QuizComplete":
         return <CheckCircle className="h-4 w-4" />;
-      case 'ResultView':
+      case "ResultView":
         return <Eye className="h-4 w-4" />;
-      case 'Lead':
+      case "Lead":
         return <Users className="h-4 w-4" />;
-      case 'Purchase':
+      case "Purchase":
         return <ShoppingCart className="h-4 w-4" />;
-      case 'ButtonClick':
+      case "ButtonClick":
         return <MousePointer className="h-4 w-4" />;
       default:
         return <Info className="h-4 w-4" />;
@@ -65,27 +80,27 @@ export const EventLogger: React.FC = () => {
 
   const getEventColor = (type: string) => {
     switch (type) {
-      case 'QuizStart':
-        return 'bg-blue-500';
-      case 'QuizAnswer':
-        return 'bg-purple-500';
-      case 'QuizComplete':
-        return 'bg-green-500';
-      case 'ResultView':
-        return 'bg-yellow-500';
-      case 'Lead':
-        return 'bg-indigo-500';
-      case 'Purchase':
-        return 'bg-red-500';
-      case 'ButtonClick':
-        return 'bg-orange-500';
+      case "QuizStart":
+        return "bg-blue-500";
+      case "QuizAnswer":
+        return "bg-purple-500";
+      case "QuizComplete":
+        return "bg-green-500";
+      case "ResultView":
+        return "bg-yellow-500";
+      case "Lead":
+        return "bg-indigo-500";
+      case "Purchase":
+        return "bg-red-500";
+      case "ButtonClick":
+        return "bg-orange-500";
       default:
-        return 'bg-gray-500';
+        return "bg-gray-500";
     }
   };
 
-  const filteredEvents = filter 
-    ? events.filter(event => event.type === filter)
+  const filteredEvents = filter
+    ? events.filter((event) => event.type === filter)
     : events;
 
   return (
@@ -93,24 +108,26 @@ export const EventLogger: React.FC = () => {
       <CardHeader className="pb-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <CardTitle className="text-base">Log de Eventos Facebook Pixel</CardTitle>
+            <CardTitle className="text-base">
+              Log de Eventos Facebook Pixel
+            </CardTitle>
             <CardDescription className="text-xs mt-0.5">
               Eventos enviados para o Facebook Pixel
             </CardDescription>
           </div>
           <div className="flex gap-2">
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               className="h-7 text-xs"
               onClick={() => loadEvents()}
             >
               <RefreshCcw className="h-3.5 w-3.5 mr-1" />
               Atualizar
             </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               className="h-7 text-xs"
               onClick={() => clearEvents()}
             >
@@ -120,59 +137,59 @@ export const EventLogger: React.FC = () => {
           </div>
         </div>
         <div className="flex flex-wrap gap-1 mt-2">
-          <Badge 
+          <Badge
             variant={filter === null ? "default" : "outline"}
             className="cursor-pointer text-[10px] h-5"
             onClick={() => setFilter(null)}
           >
             Todos
           </Badge>
-          <Badge 
-            variant={filter === 'QuizStart' ? "default" : "outline"}
+          <Badge
+            variant={filter === "QuizStart" ? "default" : "outline"}
             className="cursor-pointer text-[10px] h-5"
-            onClick={() => setFilter('QuizStart')}
+            onClick={() => setFilter("QuizStart")}
           >
             Início Quiz
           </Badge>
-          <Badge 
-            variant={filter === 'QuizAnswer' ? "default" : "outline"}
+          <Badge
+            variant={filter === "QuizAnswer" ? "default" : "outline"}
             className="cursor-pointer text-[10px] h-5"
-            onClick={() => setFilter('QuizAnswer')}
+            onClick={() => setFilter("QuizAnswer")}
           >
             Respostas
           </Badge>
-          <Badge 
-            variant={filter === 'QuizComplete' ? "default" : "outline"}
+          <Badge
+            variant={filter === "QuizComplete" ? "default" : "outline"}
             className="cursor-pointer text-[10px] h-5"
-            onClick={() => setFilter('QuizComplete')}
+            onClick={() => setFilter("QuizComplete")}
           >
             Conclusão
           </Badge>
-          <Badge 
-            variant={filter === 'ResultView' ? "default" : "outline"}
+          <Badge
+            variant={filter === "ResultView" ? "default" : "outline"}
             className="cursor-pointer text-[10px] h-5"
-            onClick={() => setFilter('ResultView')}
+            onClick={() => setFilter("ResultView")}
           >
             Resultados
           </Badge>
-          <Badge 
-            variant={filter === 'Lead' ? "default" : "outline"}
+          <Badge
+            variant={filter === "Lead" ? "default" : "outline"}
             className="cursor-pointer text-[10px] h-5"
-            onClick={() => setFilter('Lead')}
+            onClick={() => setFilter("Lead")}
           >
             Leads
           </Badge>
-          <Badge 
-            variant={filter === 'Purchase' ? "default" : "outline"}
+          <Badge
+            variant={filter === "Purchase" ? "default" : "outline"}
             className="cursor-pointer text-[10px] h-5"
-            onClick={() => setFilter('Purchase')}
+            onClick={() => setFilter("Purchase")}
           >
             Compras
           </Badge>
-          <Badge 
-            variant={filter === 'ButtonClick' ? "default" : "outline"}
+          <Badge
+            variant={filter === "ButtonClick" ? "default" : "outline"}
             className="cursor-pointer text-[10px] h-5"
-            onClick={() => setFilter('ButtonClick')}
+            onClick={() => setFilter("ButtonClick")}
           >
             Cliques
           </Badge>
@@ -182,23 +199,24 @@ export const EventLogger: React.FC = () => {
         <div className="space-y-2">
           {filteredEvents.length === 0 ? (
             <div className="text-center py-8 text-sm text-muted-foreground">
-              {filter ? `Nenhum evento "${filter}" registrado` : "Nenhum evento registrado"}
+              {filter
+                ? `Nenhum evento "${filter}" registrado`
+                : "Nenhum evento registrado"}
             </div>
           ) : (
             filteredEvents.map((event, index) => (
-              <div 
-                key={index} 
-                className="text-xs border rounded-md p-2"
-              >
+              <div key={index} className="text-xs border rounded-md p-2">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <div className={`rounded-full p-1.5 ${getEventColor(event.type)}`}>
+                    <div
+                      className={`rounded-full p-1.5 ${getEventColor(event.type)}`}
+                    >
                       {getEventIcon(event.type)}
                     </div>
                     <div>
                       <div className="font-medium">{event.type}</div>
                       <div className="text-[10px] text-muted-foreground">
-                        {new Date(event.timestamp).toLocaleString('pt-BR')}
+                        {new Date(event.timestamp).toLocaleString("pt-BR")}
                       </div>
                     </div>
                   </div>

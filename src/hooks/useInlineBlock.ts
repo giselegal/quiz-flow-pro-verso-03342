@@ -1,6 +1,5 @@
-
-import { useState, useCallback } from 'react';
-import { Block } from '@/types/editor';
+import { useState, useCallback } from "react";
+import { Block } from "@/types/editor";
 
 export interface UseInlineBlockReturn {
   isEditing: boolean;
@@ -23,7 +22,7 @@ export const useInlineBlock = (
   isSelected?: boolean,
   onClick?: () => void,
   onPropertyChange?: (key: string, value: any) => void,
-  className?: string
+  className?: string,
 ): UseInlineBlockReturn => {
   const [isEditing, setIsEditing] = useState(false);
 
@@ -35,11 +34,14 @@ export const useInlineBlock = (
     setIsEditing(false);
   }, []);
 
-  const handlePropertyChange = useCallback((key: string, value: any) => {
-    if (onPropertyChange) {
-      onPropertyChange(key, value);
-    }
-  }, [onPropertyChange]);
+  const handlePropertyChange = useCallback(
+    (key: string, value: any) => {
+      if (onPropertyChange) {
+        onPropertyChange(key, value);
+      }
+    },
+    [onPropertyChange],
+  );
 
   const properties = block?.properties || {};
 
@@ -48,7 +50,7 @@ export const useInlineBlock = (
     isSelected: isSelected || false,
     onClick,
     onPropertyChange,
-    className
+    className,
   };
 
   return {
@@ -57,6 +59,6 @@ export const useInlineBlock = (
     stopEditing,
     handlePropertyChange,
     properties,
-    commonProps
+    commonProps,
   };
 };

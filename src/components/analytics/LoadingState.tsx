@@ -1,8 +1,7 @@
-
-import React from 'react';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import React from "react";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export const AnalyticsLoadingState: React.FC = () => {
   return (
@@ -19,22 +18,24 @@ export const AnalyticsLoadingState: React.FC = () => {
           <Skeleton className="h-9 w-9" />
         </div>
       </div>
-      
+
       {/* Metrics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {Array(4).fill(0).map((_, i) => (
-          <Card key={i} className="overflow-hidden">
-            <CardHeader className="pb-1">
-              <Skeleton className="h-4 w-24" />
-            </CardHeader>
-            <CardContent className="pt-2">
-              <Skeleton className="h-8 w-16 mb-1" />
-              <Skeleton className="h-3 w-32" />
-            </CardContent>
-          </Card>
-        ))}
+        {Array(4)
+          .fill(0)
+          .map((_, i) => (
+            <Card key={i} className="overflow-hidden">
+              <CardHeader className="pb-1">
+                <Skeleton className="h-4 w-24" />
+              </CardHeader>
+              <CardContent className="pt-2">
+                <Skeleton className="h-8 w-16 mb-1" />
+                <Skeleton className="h-3 w-32" />
+              </CardContent>
+            </Card>
+          ))}
       </div>
-      
+
       {/* Chart Skeleton */}
       <Card>
         <CardHeader>
@@ -47,7 +48,7 @@ export const AnalyticsLoadingState: React.FC = () => {
           </div>
         </CardContent>
       </Card>
-      
+
       {/* Data Grid Skeleton */}
       <Card>
         <CardHeader>
@@ -55,12 +56,14 @@ export const AnalyticsLoadingState: React.FC = () => {
         </CardHeader>
         <CardContent className="pt-0">
           <div className="space-y-2">
-            {Array(5).fill(0).map((_, i) => (
-              <div key={i} className="flex justify-between">
-                <Skeleton className="h-5 w-40" />
-                <Skeleton className="h-5 w-20" />
-              </div>
-            ))}
+            {Array(5)
+              .fill(0)
+              .map((_, i) => (
+                <div key={i} className="flex justify-between">
+                  <Skeleton className="h-5 w-40" />
+                  <Skeleton className="h-5 w-20" />
+                </div>
+              ))}
           </div>
         </CardContent>
       </Card>

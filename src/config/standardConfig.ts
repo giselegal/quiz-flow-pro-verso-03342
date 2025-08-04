@@ -90,13 +90,14 @@ export interface CanvasLayoutConfig {
 
 export const STANDARD_CANVAS_CONFIG: CanvasLayoutConfig = {
   container: {
-    className: "flex flex-col gap-4 md:gap-6 h-full justify-between p-3 group-[.screen-mobile]:p-3 md:p-5 pb-10",
+    className:
+      "flex flex-col gap-4 md:gap-6 h-full justify-between p-3 group-[.screen-mobile]:p-3 md:p-5 pb-10",
     padding: "p-3 md:p-5",
     gap: "gap-4 md:gap-6",
     height: "h-full",
     justifyContent: "justify-between",
   },
-  
+
   header: {
     className: "grid gap-4 opacity-100",
     logo: {
@@ -110,26 +111,29 @@ export const STANDARD_CANVAS_CONFIG: CanvasLayoutConfig = {
       backgroundColor: "bg-zinc-300",
     },
     backButton: {
-      className: "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ghost hover:bg-primary hover:text-foreground h-10 w-10 absolute left-0",
+      className:
+        "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ghost hover:bg-primary hover:text-foreground h-10 w-10 absolute left-0",
       position: "absolute left-0",
     },
   },
-  
+
   mainContent: {
     className: "main-content w-full relative mx-auto customizable-width h-full",
     maxWidth: "customizable-width",
     height: "h-full",
   },
-  
+
   canvasItems: {
     wrapper: {
-      className: "group/canvas-item max-w-full canvas-item min-h-[1.25rem] relative self-auto mr-auto",
+      className:
+        "group/canvas-item max-w-full canvas-item min-h-[1.25rem] relative self-auto mr-auto",
       minHeight: "min-h-[1.25rem]",
       position: "relative",
       flexBasis: "flex-basis: 100%",
     },
     container: {
-      className: "min-h-[1.25rem] min-w-full relative self-auto box-border customizable-gap group-hover/canvas-item:border-2 border-dashed hover:border-2 border-blue-500 rounded-md",
+      className:
+        "min-h-[1.25rem] min-w-full relative self-auto box-border customizable-gap group-hover/canvas-item:border-2 border-dashed hover:border-2 border-blue-500 rounded-md",
       minHeight: "min-h-[1.25rem]",
       minWidth: "min-w-full",
       border: {
@@ -139,7 +143,7 @@ export const STANDARD_CANVAS_CONFIG: CanvasLayoutConfig = {
       },
     },
   },
-  
+
   components: {
     heading: {
       className: "min-w-full text-3xl font-bold text-center",
@@ -147,32 +151,36 @@ export const STANDARD_CANVAS_CONFIG: CanvasLayoutConfig = {
       fontWeight: "font-bold",
       textAlign: "text-center",
     },
-    
+
     spacer: {
-      className: "min-w-full py-2 border-dashed border-yellow-500 border rounded-lg",
+      className:
+        "min-w-full py-2 border-dashed border-yellow-500 border rounded-lg",
       padding: "py-2",
       border: "border-dashed border-yellow-500 border rounded-lg",
     },
-    
+
     options: {
       container: {
         className: "flex flex-col items-start justify-start gap-2",
         gap: "gap-2",
       },
       button: {
-        className: "whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 option border-zinc-200 bg-background hover:bg-primary hover:text-foreground h-10 px-4 hover:shadow-2xl overflow-hidden min-w-full gap-2 flex py-8 flex-row items-center justify-between border drop-shadow-none",
+        className:
+          "whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 option border-zinc-200 bg-background hover:bg-primary hover:text-foreground h-10 px-4 hover:shadow-2xl overflow-hidden min-w-full gap-2 flex py-8 flex-row items-center justify-between border drop-shadow-none",
         height: "h-10 py-8",
         padding: "px-4",
         hover: "hover:bg-primary hover:text-foreground hover:shadow-2xl",
       },
       content: {
-        className: "py-2 px-4 w-full flex flex-row text-base items-center text-full-primary justify-between",
+        className:
+          "py-2 px-4 w-full flex flex-row text-base items-center text-full-primary justify-between",
         textAlign: "justify-between",
       },
     },
-    
+
     button: {
-      className: "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 min-w-full h-14",
+      className:
+        "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 min-w-full h-14",
       height: "h-14",
       width: "min-w-full",
       padding: "px-4 py-2",
@@ -209,7 +217,7 @@ export const EDITABLE_COMPONENT_CONFIG = {
     editableProps: ["text", "fontSize", "fontWeight", "textAlign", "color"],
     defaultContent: "Digite seu título aqui",
   },
-  
+
   options: {
     editableProps: ["options", "multipleSelection", "columns", "showImages"],
     defaultOptions: [
@@ -217,12 +225,12 @@ export const EDITABLE_COMPONENT_CONFIG = {
       { id: "2", text: "Opção 2", value: "opcao2" },
     ],
   },
-  
+
   button: {
     editableProps: ["text", "variant", "size", "action"],
     defaultContent: "Continuar",
   },
-  
+
   spacer: {
     editableProps: ["height", "borderStyle", "borderColor"],
     defaultHeight: "py-2",
@@ -240,7 +248,7 @@ export const ACCESSIBILITY_CONFIG = {
     ariaRoleDescription: "sortable",
     ariaDescribedBy: "DndDescribedBy-0",
   },
-  
+
   progressBar: {
     role: "progressbar",
     ariaValueMax: "100",
@@ -260,7 +268,7 @@ export const DND_CONFIG = {
     transform: "translate3d(0px, 0px, 0px) scaleX(1) scaleY(1)",
     willChange: "transform",
   },
-  
+
   motionDiv: {
     opacity: 1,
     willChange: "transform",
@@ -279,7 +287,7 @@ export const COLOR_THEMES = {
     background: "#ffffff",
     text: "#1f2937",
   },
-  
+
   brand: {
     primary: "#B89B7A",
     secondary: "#8F7A6A",
@@ -299,7 +307,7 @@ export class CanvasConfigUtils {
   static getResponsiveClasses(
     mobile: string,
     tablet: string = mobile,
-    desktop: string = tablet
+    desktop: string = tablet,
   ): string {
     return `${mobile} md:${tablet} lg:${desktop}`;
   }
@@ -309,7 +317,7 @@ export class CanvasConfigUtils {
    */
   static mergeConfig(
     defaultConfig: Partial<CanvasLayoutConfig>,
-    customConfig: Partial<CanvasLayoutConfig>
+    customConfig: Partial<CanvasLayoutConfig>,
   ): CanvasLayoutConfig {
     return {
       ...defaultConfig,
@@ -322,20 +330,20 @@ export class CanvasConfigUtils {
    */
   static validateConfig(config: Partial<CanvasLayoutConfig>): boolean {
     const requiredPaths = [
-      'container.className',
-      'mainContent.className',
-      'canvasItems.wrapper.className',
+      "container.className",
+      "mainContent.className",
+      "canvasItems.wrapper.className",
     ];
-    
-    return requiredPaths.every(path => {
-      const keys = path.split('.');
+
+    return requiredPaths.every((path) => {
+      const keys = path.split(".");
       let current: any = config;
-      
+
       for (const key of keys) {
         if (!current || !current[key]) return false;
         current = current[key];
       }
-      
+
       return true;
     });
   }
@@ -343,9 +351,11 @@ export class CanvasConfigUtils {
   /**
    * Gera configuração otimizada para dispositivo específico
    */
-  static getDeviceOptimizedConfig(device: 'mobile' | 'tablet' | 'desktop'): Partial<CanvasLayoutConfig> {
+  static getDeviceOptimizedConfig(
+    device: "mobile" | "tablet" | "desktop",
+  ): Partial<CanvasLayoutConfig> {
     const responsive = RESPONSIVE_BREAKPOINTS[device];
-    
+
     return {
       container: {
         ...STANDARD_CANVAS_CONFIG.container,

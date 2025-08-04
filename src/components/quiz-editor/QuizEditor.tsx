@@ -1,10 +1,9 @@
-
-import React, { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { QuizQuestion } from '@/types/quiz';
-import QuestionEditor from './QuestionEditor';
-import { Plus } from 'lucide-react';
+import React, { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { QuizQuestion } from "@/types/quiz";
+import QuestionEditor from "./QuestionEditor";
+import { Plus } from "lucide-react";
 
 interface QuizEditorProps {
   initialTemplate?: any;
@@ -12,7 +11,9 @@ interface QuizEditorProps {
 
 const QuizEditor: React.FC<QuizEditorProps> = ({ initialTemplate }) => {
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
-  const [editingQuestion, setEditingQuestion] = useState<QuizQuestion | null>(null);
+  const [editingQuestion, setEditingQuestion] = useState<QuizQuestion | null>(
+    null,
+  );
   const [isCreatingNew, setIsCreatingNew] = useState(false);
 
   const handleAddQuestion = () => {
@@ -27,20 +28,23 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ initialTemplate }) => {
         ...question,
         id: `question-${Date.now()}`,
         order: questions.length,
-        question: question.title || question.question || '', // Ensure question property is set
-        type: 'normal'
+        question: question.title || question.question || "", // Ensure question property is set
+        type: "normal",
       };
-      setQuestions(prev => [...prev, newQuestion]);
+      setQuestions((prev) => [...prev, newQuestion]);
     } else {
-      setQuestions(prev => 
-        prev.map(q => 
-          q.id === question.id 
-            ? { ...question, question: question.title || question.question || '' }
-            : q
-        )
+      setQuestions((prev) =>
+        prev.map((q) =>
+          q.id === question.id
+            ? {
+                ...question,
+                question: question.title || question.question || "",
+              }
+            : q,
+        ),
       );
     }
-    
+
     setEditingQuestion(null);
     setIsCreatingNew(false);
   };
@@ -51,7 +55,7 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ initialTemplate }) => {
   };
 
   const handleDeleteQuestion = (questionId: string) => {
-    setQuestions(prev => prev.filter(q => q.id !== questionId));
+    setQuestions((prev) => prev.filter((q) => q.id !== questionId));
     setEditingQuestion(null);
   };
 
@@ -94,7 +98,9 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ initialTemplate }) => {
       <div className="grid gap-4">
         {questions.length === 0 ? (
           <Card className="p-8 text-center">
-            <p className="text-[#8F7A6A] mb-4">Nenhuma pergunta adicionada ainda.</p>
+            <p className="text-[#8F7A6A] mb-4">
+              Nenhuma pergunta adicionada ainda.
+            </p>
             <Button
               onClick={handleAddQuestion}
               variant="outline"
@@ -105,14 +111,18 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ initialTemplate }) => {
           </Card>
         ) : (
           questions.map((question, index) => (
-            <Card key={question.id} className="p-4 hover:shadow-md transition-shadow">
+            <Card
+              key={question.id}
+              className="p-4 hover:shadow-md transition-shadow"
+            >
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <h3 className="font-medium text-[#432818] mb-2">
                     Pergunta {index + 1}: {question.title || question.question}
                   </h3>
                   <p className="text-sm text-[#8F7A6A] mb-2">
-                    {question.options.length} opções • {question.multiSelect || 3} seleções permitidas
+                    {question.options.length} opções •{" "}
+                    {question.multiSelect || 3} seleções permitidas
                   </p>
                 </div>
                 <Button

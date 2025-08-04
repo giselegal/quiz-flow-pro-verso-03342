@@ -1,5 +1,4 @@
-
-export type ABTestVariant = 'A' | 'B';
+export type ABTestVariant = "A" | "B";
 
 export interface ABTestConfig {
   testName: string;
@@ -18,5 +17,8 @@ export interface ABTestResult {
   variant: ABTestVariant;
   route: string;
   description: string;
-  trackConversion: (conversionType: string, additionalData?: Record<string, any>) => void;
+  trackConversion: (
+    conversionType: string,
+    additionalData?: Record<string, any>,
+  ) => void;
 }

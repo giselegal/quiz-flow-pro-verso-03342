@@ -1,29 +1,40 @@
-import React from 'react';
-import { Check, X } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
+import React from "react";
+import { Check, X } from "lucide-react";
+import type { BlockComponentProps } from "@/types/blocks";
 
-const ComparisonTableInlineBlock: React.FC<BlockComponentProps> = ({ 
+const ComparisonTableInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onPropertyChange,
-  className = ''
+  className = "",
 }) => {
-  const { 
-    title = 'Comparação de Opções',
+  const {
+    title = "Comparação de Opções",
     items = [
-      { name: 'Opção Básica', price: 'R$ 97', features: ['Recurso 1', 'Recurso 2'], highlight: false },
-      { name: 'Opção Premium', price: 'R$ 197', features: ['Recurso 1', 'Recurso 2', 'Recurso 3'], highlight: true }
-    ]
+      {
+        name: "Opção Básica",
+        price: "R$ 97",
+        features: ["Recurso 1", "Recurso 2"],
+        highlight: false,
+      },
+      {
+        name: "Opção Premium",
+        price: "R$ 197",
+        features: ["Recurso 1", "Recurso 2", "Recurso 3"],
+        highlight: true,
+      },
+    ],
   } = block.properties;
 
   return (
-    <div 
+    <div
       className={`
         w-full flex flex-col items-center
         p-4 rounded-lg transition-all duration-200
-        ${isSelected 
-          ? 'border-2 border-brand bg-brand/10' 
-          : 'border-2 border-dashed border-transparent hover:border-brand/40 hover:bg-brand/5'
+        ${
+          isSelected
+            ? "border-2 border-brand bg-brand/10"
+            : "border-2 border-dashed border-transparent hover:border-brand/40 hover:bg-brand/5"
         }
         ${className}
       `}
@@ -31,17 +42,18 @@ const ComparisonTableInlineBlock: React.FC<BlockComponentProps> = ({
       <h3 className="text-xl font-bold text-center mb-4 text-brand-dark">
         {title}
       </h3>
-      
+
       <div className="w-full overflow-x-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {items.map((item: any, index: number) => (
-            <div 
+            <div
               key={index}
               className={`
                 p-6 rounded-lg border-2 transition-all duration-200
-                ${item.highlight 
-                  ? 'border-[#B89B7A] bg-gradient-to-br from-[#B89B7A]/10 to-[#B89B7A]/5 shadow-lg' 
-                  : 'border-gray-200 bg-white'
+                ${
+                  item.highlight
+                    ? "border-[#B89B7A] bg-gradient-to-br from-[#B89B7A]/10 to-[#B89B7A]/5 shadow-lg"
+                    : "border-gray-200 bg-white"
                 }
               `}
             >
@@ -53,7 +65,7 @@ const ComparisonTableInlineBlock: React.FC<BlockComponentProps> = ({
                   {item.price}
                 </div>
               </div>
-              
+
               <ul className="space-y-2">
                 {item.features.map((feature: string, featureIndex: number) => (
                   <li key={featureIndex} className="flex items-center gap-2">
@@ -62,7 +74,7 @@ const ComparisonTableInlineBlock: React.FC<BlockComponentProps> = ({
                   </li>
                 ))}
               </ul>
-              
+
               {item.highlight && (
                 <div className="mt-4 text-center">
                   <span className="inline-block bg-[#B89B7A] text-white px-3 py-1 rounded-full text-xs font-medium">

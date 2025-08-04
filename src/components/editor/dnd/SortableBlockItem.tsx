@@ -1,9 +1,8 @@
-
-import React from 'react';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { Block } from '@/types/editor';
-import UniversalBlockRenderer from '../blocks/UniversalBlockRenderer';
+import React from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { Block } from "@/types/editor";
+import UniversalBlockRenderer from "../blocks/UniversalBlockRenderer";
 
 interface SortableBlockItemProps {
   block: Block;
@@ -16,15 +15,10 @@ export const SortableBlockItem: React.FC<SortableBlockItemProps> = ({
   block,
   isSelected = false,
   onClick,
-  onPropertyChange
+  onPropertyChange,
 }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-  } = useSortable({ id: block.id });
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: block.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),

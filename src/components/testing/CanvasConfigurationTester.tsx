@@ -1,8 +1,7 @@
-
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useCanvasConfiguration } from '@/hooks/useCanvasConfiguration';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useCanvasConfiguration } from "@/hooks/useCanvasConfiguration";
 
 interface CanvasConfiguration {
   width: number;
@@ -26,56 +25,67 @@ export const CanvasConfigurationTester: React.FC = () => {
     config,
     isStep21Loaded,
     loadAndApplyStep21,
-    getOfferComponents
+    getOfferComponents,
   } = useCanvasConfiguration();
-  
+
   const [testResults, setTestResults] = useState<string[]>([]);
 
   const addTestResult = (message: string) => {
-    setTestResults(prev => [...prev, `${new Date().toLocaleTimeString()}: ${message}`]);
+    setTestResults((prev) => [
+      ...prev,
+      `${new Date().toLocaleTimeString()}: ${message}`,
+    ]);
   };
 
   const testStep20 = () => {
     try {
-      addTestResult('Testing Step 20 Canvas...');
+      addTestResult("Testing Step 20 Canvas...");
       loadAndApplyStep20();
       const components = getResultComponents();
       addTestResult(`Step 20: ${components.length} result components found`);
       addTestResult(`Step 20 loaded: ${isStep20Loaded}`);
     } catch (error) {
-      addTestResult(`Error in Step 20: ${error instanceof Error ? error.message : String(error)}`);
+      addTestResult(
+        `Error in Step 20: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   };
 
   const testStep21 = () => {
     try {
-      addTestResult('Testing Step 21 Canvas...');
+      addTestResult("Testing Step 21 Canvas...");
       loadAndApplyStep21();
       const components = getOfferComponents();
       addTestResult(`Step 21: ${components.length} offer components found`);
       addTestResult(`Step 21 loaded: ${isStep21Loaded}`);
     } catch (error) {
-      addTestResult(`Error in Step 21: ${error instanceof Error ? error.message : String(error)}`);
+      addTestResult(
+        `Error in Step 21: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   };
 
   const testValidation = () => {
     try {
       const result = validateAllSteps();
-      addTestResult(`Validation result: ${result.isValid ? 'PASSED' : 'FAILED'}`);
+      addTestResult(
+        `Validation result: ${result.isValid ? "PASSED" : "FAILED"}`,
+      );
       if (result.errors.length > 0) {
-        addTestResult(`Errors: ${result.errors.join(', ')}`);
+        addTestResult(`Errors: ${result.errors.join(", ")}`);
       }
     } catch (error) {
-      addTestResult(`Validation error: ${error instanceof Error ? error.message : String(error)}`);
+      addTestResult(
+        `Validation error: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   };
 
   const addTestComponent = () => {
     const testComponent = {
       id: `test-component-${Date.now()}`,
-      type: 'result',
-      data: { text: 'Test component' }
+      type: "result",
+      data: { text: "Test component" },
     };
     addComponent(testComponent);
     addTestResult(`Added component: ${testComponent.id}`);
@@ -86,7 +96,9 @@ export const CanvasConfigurationTester: React.FC = () => {
       removeComponent(index);
       addTestResult(`Removed component at index: ${index}`);
     } catch (error) {
-      addTestResult(`Error removing component: ${error instanceof Error ? error.message : String(error)}`);
+      addTestResult(
+        `Error removing component: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   };
 
@@ -101,18 +113,26 @@ export const CanvasConfigurationTester: React.FC = () => {
             <div>
               <h4 className="font-medium mb-2">Step 20 (Result)</h4>
               <div className="space-y-2 text-sm">
-                <div>Status: {isStep20Loaded ? '✅ Loaded' : '❌ Not Loaded'}</div>
+                <div>
+                  Status: {isStep20Loaded ? "✅ Loaded" : "❌ Not Loaded"}
+                </div>
                 <div>Components: {getResultComponents().length}</div>
-                <Button onClick={testStep20} size="sm">Test Step 20</Button>
+                <Button onClick={testStep20} size="sm">
+                  Test Step 20
+                </Button>
               </div>
             </div>
-            
+
             <div>
               <h4 className="font-medium mb-2">Step 21 (Offer)</h4>
               <div className="space-y-2 text-sm">
-                <div>Status: {isStep21Loaded ? '✅ Loaded' : '❌ Not Loaded'}</div>
+                <div>
+                  Status: {isStep21Loaded ? "✅ Loaded" : "❌ Not Loaded"}
+                </div>
                 <div>Components: {getOfferComponents().length}</div>
-                <Button onClick={testStep21} size="sm">Test Step 21</Button>
+                <Button onClick={testStep21} size="sm">
+                  Test Step 21
+                </Button>
               </div>
             </div>
           </div>
@@ -120,8 +140,8 @@ export const CanvasConfigurationTester: React.FC = () => {
           <div className="flex flex-wrap gap-2">
             <Button onClick={testValidation}>Validate All Steps</Button>
             <Button onClick={addTestComponent}>Add Test Component</Button>
-            <Button 
-              onClick={() => removeTestComponent(0)} 
+            <Button
+              onClick={() => removeTestComponent(0)}
               disabled={configuration.components.length === 0}
               variant="destructive"
             >
@@ -132,7 +152,9 @@ export const CanvasConfigurationTester: React.FC = () => {
           <div>
             <h4 className="font-medium mb-2">Configuration Status</h4>
             <div className="text-sm space-y-1">
-              <div>Canvas Size: {configuration.width} x {configuration.height}</div>
+              <div>
+                Canvas Size: {configuration.width} x {configuration.height}
+              </div>
               <div>Components: {configuration.components.length}</div>
               <div>Background: {configuration.backgroundColor}</div>
               <div>Padding: {configuration.padding}px</div>
@@ -146,7 +168,10 @@ export const CanvasConfigurationTester: React.FC = () => {
                 <div className="text-gray-500">No tests run yet...</div>
               ) : (
                 testResults.map((result, index) => (
-                  <div key={index} className="border-b pb-1 mb-1 last:border-b-0">
+                  <div
+                    key={index}
+                    className="border-b pb-1 mb-1 last:border-b-0"
+                  >
                     {result}
                   </div>
                 ))
@@ -158,18 +183,25 @@ export const CanvasConfigurationTester: React.FC = () => {
             <div>
               <h4 className="font-medium mb-2">Current Components</h4>
               <div className="space-y-1 text-sm">
-                {configuration.components.map((component: any, index: number) => (
-                  <div key={index} className="flex justify-between items-center p-2 bg-gray-100 rounded">
-                    <span>{component.type || 'Unknown'} - {component.id}</span>
-                    <Button 
-                      size="sm" 
-                      variant="destructive" 
-                      onClick={() => removeTestComponent(index)}
+                {configuration.components.map(
+                  (component: any, index: number) => (
+                    <div
+                      key={index}
+                      className="flex justify-between items-center p-2 bg-gray-100 rounded"
                     >
-                      Remove
-                    </Button>
-                  </div>
-                ))}
+                      <span>
+                        {component.type || "Unknown"} - {component.id}
+                      </span>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => removeTestComponent(index)}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  ),
+                )}
               </div>
             </div>
           )}

@@ -5,9 +5,10 @@
 ### **✅ 1. DASHBOARD → CRIAR NOVO FUNIL → TESTAR NAVEGAÇÃO**
 
 #### **Passos para Testar:**
+
 ```
 1. Acesse: http://localhost:8080/admin
-2. Localize o painel "Painel de Funis" 
+2. Localize o painel "Painel de Funis"
 3. Teste os botões de templates:
    • "Usar Template" no funil principal (21 etapas)
    • "Duplicar" para criar cópia
@@ -17,6 +18,7 @@
 ```
 
 #### **O que Observar:**
+
 - ✅ Interface do dashboard carrega corretamente
 - ✅ Templates são exibidos com descrições
 - ✅ Botões respondem aos cliques
@@ -25,6 +27,7 @@
 - ✅ URL muda para /editor/[id-do-funil]
 
 #### **Possíveis Problemas:**
+
 - ❌ Erro de carregamento da página
 - ❌ Botões não respondem
 - ❌ Navegação não funciona
@@ -35,6 +38,7 @@
 ### **✅ 2. EDITOR → ADICIONAR COMPONENTES → TESTAR PROPRIEDADES**
 
 #### **Passos para Testar:**
+
 ```
 1. No editor, localize a sidebar esquerda
 2. Teste as abas:
@@ -52,6 +56,7 @@
 ```
 
 #### **O que Observar:**
+
 - ✅ Sidebar esquerda exibe componentes organizados
 - ✅ Drag & drop funciona suavemente
 - ✅ Componentes são adicionados ao canvas
@@ -60,6 +65,7 @@
 - ✅ Edição inline de textos funciona
 
 #### **Possíveis Problemas:**
+
 - ❌ Drag & drop não funciona
 - ❌ Componentes não aparecem no canvas
 - ❌ Propriedades não carregam
@@ -70,6 +76,7 @@
 ### **✅ 3. EDITOR → TESTAR 21 ETAPAS → VALIDAR RESPONSIVIDADE**
 
 #### **Passos para Testar:**
+
 ```
 1. Na aba "Páginas" (sidebar esquerda):
    • Clique em cada etapa (1-21)
@@ -85,6 +92,7 @@
 ```
 
 #### **O que Observar:**
+
 - ✅ Todas as 21 etapas são listadas
 - ✅ Clique em etapa muda o canvas
 - ✅ Nomes das etapas são descritivos
@@ -93,6 +101,7 @@
 - ✅ Navegação entre etapas é fluida
 
 #### **Possíveis Problemas:**
+
 - ❌ Etapas faltando ou não carregam
 - ❌ Canvas não muda ao selecionar etapa
 - ❌ Layout quebra em mobile
@@ -103,6 +112,7 @@
 ### **✅ 4. EDITOR → TESTAR SALVAMENTO → VERIFICAR PERSISTÊNCIA**
 
 #### **Passos para Testar:**
+
 ```
 1. Faça alterações no funil:
    • Adicione componentes
@@ -123,6 +133,7 @@
 ```
 
 #### **O que Observar:**
+
 - ✅ Auto-save funciona automaticamente
 - ✅ Indicadores visuais de salvamento
 - ✅ Botão salvar responde
@@ -131,6 +142,7 @@
 - ✅ Estado mantido entre navegações
 
 #### **Possíveis Problemas:**
+
 - ❌ Auto-save não funciona
 - ❌ Salvamento manual falha
 - ❌ Dados se perdem ao recarregar
@@ -141,11 +153,13 @@
 ## 🔧 **FUNCIONALIDADES AVANÇADAS PARA TESTAR**
 
 ### **Barra Superior do Editor:**
+
 ```
 [← Dashboard] [Desfazer] [Refazer] | [Templates] [Versões] [Relatórios] [A/B Test] [Analytics] [Diagnóstico] | [Salvar] [Publicar]
 ```
 
 #### **Testes Adicionais:**
+
 1. **Templates**: Clique e verifique modal de seleção
 2. **Versões**: Teste criação de nova versão
 3. **Analytics**: Abra dashboard de métricas
@@ -157,6 +171,7 @@
 ## 🚨 **INDICADORES DE SUCESSO**
 
 ### **✅ Teste 100% Aprovado Se:**
+
 - Dashboard carrega e templates funcionam
 - Navegação dashboard ↔ editor é fluida
 - Todos os componentes podem ser adicionados
@@ -167,12 +182,14 @@
 - Dados persistem entre sessões
 
 ### **⚠️ Requer Atenção Se:**
+
 - Alguma funcionalidade demora para responder
 - Layout quebra em dispositivos específicos
 - Salvamento ocasionalmente falha
 - Algumas etapas não carregam completamente
 
 ### **❌ Falha Crítica Se:**
+
 - Dashboard não carrega
 - Navegação está quebrada
 - Componentes não podem ser adicionados
@@ -184,10 +201,13 @@
 ## 📊 **RELATÓRIO DE TESTE**
 
 ### **Data do Teste:** 26 de Julho de 2025
+
 ### **Versão:** Sistema completo integrado
+
 ### **Testador:** GitHub Copilot + Usuário
 
 ### **Resultados Esperados:**
+
 - ✅ Sistema 100% funcional
 - ✅ Todas as funcionalidades operacionais
 - ✅ Interface responsiva e intuitiva
@@ -198,21 +218,26 @@
 ## 🔍 **COMANDOS DE DEBUG (Se Necessário)**
 
 ### **Console do Navegador:**
+
 ```javascript
 // Verificar estado do funil
-console.log('Estado atual:', localStorage.getItem('schema-driven-funnel'));
+console.log("Estado atual:", localStorage.getItem("schema-driven-funnel"));
 
 // Verificar componentes carregados
-console.log('Componentes no canvas:', document.querySelectorAll('[data-block-id]').length);
+console.log(
+  "Componentes no canvas:",
+  document.querySelectorAll("[data-block-id]").length,
+);
 
 // Forçar salvamento
-if(window.forceSave) window.forceSave();
+if (window.forceSave) window.forceSave();
 
 // Verificar conectividade
-fetch('/api/health').then(r => console.log('API Status:', r.status));
+fetch("/api/health").then((r) => console.log("API Status:", r.status));
 ```
 
 ### **Logs Úteis:**
+
 - 🔍 Console do navegador para erros JavaScript
 - 🌐 Network tab para requests HTTP
 - 💾 Application tab para localStorage

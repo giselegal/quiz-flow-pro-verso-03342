@@ -1,7 +1,6 @@
-
-import React from 'react';
-import { StyleResult } from '@/types/quiz';
-import { EditorBlock } from '@/types/editor';
+import React from "react";
+import { StyleResult } from "@/types/quiz";
+import { EditorBlock } from "@/types/editor";
 
 export interface ResultPageVisualEditorProps {
   blocks: EditorBlock[];
@@ -18,7 +17,7 @@ export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({
   selectedBlockId,
   onSelectBlock,
   selectedStyle,
-  onShowTemplates
+  onShowTemplates,
 }) => {
   return (
     <div className="flex h-full">
@@ -26,7 +25,7 @@ export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({
       <div className="w-80 border-r border-gray-200 bg-white p-4">
         <h3 className="text-lg font-semibold mb-4">Blocos</h3>
         <div className="space-y-2">
-          <button 
+          <button
             onClick={onShowTemplates}
             className="w-full p-2 text-left border rounded hover:bg-gray-50"
           >
@@ -46,10 +45,12 @@ export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({
           ) : (
             <div className="space-y-4">
               {blocks.map((block) => (
-                <div 
+                <div
                   key={block.id}
                   className={`p-4 border rounded cursor-pointer ${
-                    selectedBlockId === block.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
+                    selectedBlockId === block.id
+                      ? "border-blue-500 bg-blue-50"
+                      : "border-gray-200"
                   }`}
                   onClick={() => onSelectBlock(block.id)}
                 >

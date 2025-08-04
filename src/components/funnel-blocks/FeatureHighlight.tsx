@@ -1,10 +1,10 @@
 import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Star, Zap, CheckCircle, Award, TrendingUp, Heart } from 'lucide-react';
-import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
-import { DeviceView, StyleProps } from './types';
+import React from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Star, Zap, CheckCircle, Award, TrendingUp, Heart } from "lucide-react";
+import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
+import { DeviceView, StyleProps } from "./types";
 
 interface FeatureItem {
   id: string;
@@ -24,7 +24,7 @@ interface FeatureHighlightProps extends StyleProps {
   /** Lista de recursos/benefícios */
   features: FeatureItem[];
   /** Layout da seção */
-  layout?: 'grid' | 'list' | 'cards' | 'alternating';
+  layout?: "grid" | "list" | "cards" | "alternating";
   /** Número de colunas no grid */
   columns?: 1 | 2 | 3 | 4;
   /** Mostrar ícones */
@@ -57,37 +57,42 @@ export const FeatureHighlight: React.FC<FeatureHighlightProps> = ({
   title = "Por Que Escolher Nossa Solução?",
   subtitle = "Descubra os benefícios únicos que oferecemos:",
   features,
-  layout = 'grid',
+  layout = "grid",
   columns = 3,
   showIcons = true,
   showImages = true,
   animationConfig = {},
-  deviceView = 'desktop',
+  deviceView = "desktop",
   onFeatureClick,
   onAction,
   actionText = "Começar Agora",
   showAction = true,
   className,
   style,
-  customStyles
+  customStyles,
 }) => {
-  const { disabled: animationsDisabled, duration = 400, staggerDelay = 200 } = animationConfig;
-  const isLowPerformance = deviceView === 'mobile';
+  const {
+    disabled: animationsDisabled,
+    duration = 400,
+    staggerDelay = 200,
+  } = animationConfig;
+  const isLowPerformance = deviceView === "mobile";
 
   const getGridColumns = () => {
-    if (deviceView === 'mobile') return 'grid-cols-1';
-    if (deviceView === 'tablet') return columns > 2 ? 'grid-cols-2' : `grid-cols-${columns}`;
+    if (deviceView === "mobile") return "grid-cols-1";
+    if (deviceView === "tablet")
+      return columns > 2 ? "grid-cols-2" : `grid-cols-${columns}`;
     return `grid-cols-${Math.min(columns, features.length)}`;
   };
 
   const getLayoutClasses = () => {
     switch (layout) {
-      case 'list':
-        return 'space-y-2';
-      case 'cards':
-        return 'space-y-2';
-      case 'alternating':
-        return 'space-y-12';
+      case "list":
+        return "space-y-2";
+      case "cards":
+        return "space-y-2";
+      case "alternating":
+        return "space-y-12";
       default:
         return `grid ${getGridColumns()} gap-6`;
     }
@@ -100,48 +105,53 @@ export const FeatureHighlight: React.FC<FeatureHighlightProps> = ({
       <Award className="w-6 h-6" />,
       <TrendingUp className="w-6 h-6" />,
       <Heart className="w-6 h-6" />,
-      <CheckCircle className="w-6 h-6" />
+      <CheckCircle className="w-6 h-6" />,
     ];
     return icons[index % icons.length];
   };
 
   const renderFeature = (feature: FeatureItem, index: number) => {
     const isEven = index % 2 === 0;
-    
-    if (layout === 'alternating') {
+
+    if (layout === "alternating") {
       return (
         <div
           key={feature.id}
-          className={`flex flex-col md:flex-row items-center gap-8 ${!isEven ? 'md:flex-row-reverse' : ''}`}
+          className={`flex flex-col md:flex-row items-center gap-8 ${!isEven ? "md:flex-row-reverse" : ""}`}
         >
           {/* Image/Icon */}
-          {(showImages && feature.imageUrl) || (showIcons && !feature.imageUrl) && (
-            <div className="flex-shrink-0 w-full md:w-1/2">
-              {feature.imageUrl && showImages ? (
-                <div className="relative">
-                  <img
-                    src={feature.imageUrl}
-                    alt={feature.title}
-                    className="w-full h-64 object-cover rounded-lg shadow-md"
-                    loading="lazy"
-                  />
-                  {feature.badge && (
-                    <div className="absolute top-4 left-4 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white px-3 py-1 rounded-full text-sm font-medium">
-                      {feature.badge}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="flex justify-center">
-                  <div className={`w-32 h-32 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full flex items-center justify-center text-white ${
-                    feature.isHighlighted ? 'ring-4 ring-[#B89B7A] ring-opacity-30' : ''
-                  }`}>
-                    {feature.icon || getDefaultIcon(index)}
+          {(showImages && feature.imageUrl) ||
+            (showIcons && !feature.imageUrl && (
+              <div className="flex-shrink-0 w-full md:w-1/2">
+                {feature.imageUrl && showImages ? (
+                  <div className="relative">
+                    <img
+                      src={feature.imageUrl}
+                      alt={feature.title}
+                      className="w-full h-64 object-cover rounded-lg shadow-md"
+                      loading="lazy"
+                    />
+                    {feature.badge && (
+                      <div className="absolute top-4 left-4 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white px-3 py-1 rounded-full text-sm font-medium">
+                        {feature.badge}
+                      </div>
+                    )}
                   </div>
-                </div>
-              )}
-            </div>
-          )}
+                ) : (
+                  <div className="flex justify-center">
+                    <div
+                      className={`w-32 h-32 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full flex items-center justify-center text-white ${
+                        feature.isHighlighted
+                          ? "ring-4 ring-[#B89B7A] ring-opacity-30"
+                          : ""
+                      }`}
+                    >
+                      {feature.icon || getDefaultIcon(index)}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
 
           {/* Content */}
           <div className="flex-1 text-center md:text-left">
@@ -163,7 +173,7 @@ export const FeatureHighlight: React.FC<FeatureHighlightProps> = ({
       );
     }
 
-    if (layout === 'list') {
+    if (layout === "list") {
       return (
         <div
           key={feature.id}
@@ -173,9 +183,13 @@ export const FeatureHighlight: React.FC<FeatureHighlightProps> = ({
           {/* Icon */}
           {showIcons && (
             <div className="flex-shrink-0">
-              <div className={`w-12 h-12 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full flex items-center justify-center text-white ${
-                feature.isHighlighted ? 'ring-2 ring-[#B89B7A] ring-opacity-30' : ''
-              }`}>
+              <div
+                className={`w-12 h-12 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full flex items-center justify-center text-white ${
+                  feature.isHighlighted
+                    ? "ring-2 ring-[#B89B7A] ring-opacity-30"
+                    : ""
+                }`}
+              >
                 {feature.icon || getDefaultIcon(index)}
               </div>
             </div>
@@ -201,12 +215,14 @@ export const FeatureHighlight: React.FC<FeatureHighlightProps> = ({
       );
     }
 
-    if (layout === 'cards') {
+    if (layout === "cards") {
       return (
         <Card
           key={feature.id}
           className={`p-8 text-center cursor-pointer hover:shadow-lg transition-all duration-300 border-0 ${
-            feature.isHighlighted ? 'ring-2 ring-[#B89B7A] ring-opacity-50 bg-gradient-to-br from-white to-[#f9f4ef]' : ''
+            feature.isHighlighted
+              ? "ring-2 ring-[#B89B7A] ring-opacity-50 bg-gradient-to-br from-white to-[#f9f4ef]"
+              : ""
           }`}
           onClick={() => onFeatureClick?.(feature)}
         >
@@ -229,14 +245,20 @@ export const FeatureHighlight: React.FC<FeatureHighlightProps> = ({
                 loading="lazy"
               />
             </div>
-          ) : showIcons && (
-            <div className="mb-6">
-              <div className={`w-16 h-16 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full flex items-center justify-center text-white mx-auto ${
-                feature.isHighlighted ? 'ring-4 ring-[#B89B7A] ring-opacity-30' : ''
-              }`}>
-                {feature.icon || getDefaultIcon(index)}
+          ) : (
+            showIcons && (
+              <div className="mb-6">
+                <div
+                  className={`w-16 h-16 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full flex items-center justify-center text-white mx-auto ${
+                    feature.isHighlighted
+                      ? "ring-4 ring-[#B89B7A] ring-opacity-30"
+                      : ""
+                  }`}
+                >
+                  {feature.icon || getDefaultIcon(index)}
+                </div>
               </div>
-            </div>
+            )
           )}
 
           {/* Content */}
@@ -255,7 +277,9 @@ export const FeatureHighlight: React.FC<FeatureHighlightProps> = ({
       <Card
         key={feature.id}
         className={`p-6 text-center cursor-pointer hover:shadow-md transition-all duration-300 border-0 ${
-          feature.isHighlighted ? 'ring-2 ring-[#B89B7A] ring-opacity-50 bg-gradient-to-br from-white to-[#f9f4ef]' : ''
+          feature.isHighlighted
+            ? "ring-2 ring-[#B89B7A] ring-opacity-50 bg-gradient-to-br from-white to-[#f9f4ef]"
+            : ""
         }`}
         onClick={() => onFeatureClick?.(feature)}
       >
@@ -271,9 +295,13 @@ export const FeatureHighlight: React.FC<FeatureHighlightProps> = ({
         {/* Icon */}
         {showIcons && (
           <div className="mb-4">
-            <div className={`w-12 h-12 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full flex items-center justify-center text-white mx-auto ${
-              feature.isHighlighted ? 'ring-2 ring-[#B89B7A] ring-opacity-30' : ''
-            }`}>
+            <div
+              className={`w-12 h-12 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full flex items-center justify-center text-white mx-auto ${
+                feature.isHighlighted
+                  ? "ring-2 ring-[#B89B7A] ring-opacity-30"
+                  : ""
+              }`}
+            >
               {feature.icon || getDefaultIcon(index)}
             </div>
           </div>
@@ -291,11 +319,11 @@ export const FeatureHighlight: React.FC<FeatureHighlightProps> = ({
   };
 
   return (
-    <div className={`py-12 ${className || ''}`} style={style}>
+    <div className={`py-12 ${className || ""}`} style={style}>
       {customStyles && (
         <style dangerouslySetInnerHTML={{ __html: customStyles }} />
       )}
-      
+
       {/* Header */}
       <div className="text-center mb-10">
         <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-2">
@@ -315,7 +343,9 @@ export const FeatureHighlight: React.FC<FeatureHighlightProps> = ({
           {features.map((feature, index) => (
             <AnimatedWrapper
               key={feature.id}
-              animation={animationsDisabled || isLowPerformance ? 'none' : 'fade'}
+              animation={
+                animationsDisabled || isLowPerformance ? "none" : "fade"
+              }
               show={true}
               duration={duration}
               delay={staggerDelay * index}
@@ -328,7 +358,7 @@ export const FeatureHighlight: React.FC<FeatureHighlightProps> = ({
         {/* Action */}
         {showAction && onAction && (
           <AnimatedWrapper
-            animation={animationsDisabled || isLowPerformance ? 'none' : 'fade'}
+            animation={animationsDisabled || isLowPerformance ? "none" : "fade"}
             show={true}
             duration={duration}
             delay={staggerDelay * features.length}

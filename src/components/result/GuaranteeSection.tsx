@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const GuaranteeSection: React.FC = () => {
   return (
@@ -8,7 +8,9 @@ const GuaranteeSection: React.FC = () => {
         <div className="relative w-24 h-24 md:w-32 md:h-32 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full flex items-center justify-center">
           <div className="absolute inset-0 border-4 border-transparent border-t-[#B89B7A] border-b-[#aa6b5d] rounded-full animate-spin-slow"></div>
           <span className="text-white text-sm md:text-lg font-bold text-center">
-            7 dias<br />de Garantia
+            7 dias
+            <br />
+            de Garantia
           </span>
         </div>
       </div>
@@ -17,17 +19,16 @@ const GuaranteeSection: React.FC = () => {
         <h2 className="text-2xl font-playfair text-[#432818] font-bold leading-tight mb-2">
           Sua Satisfação 100% Garantida
         </h2>
-        
-        <p className="text-lg text-[#aa6b5d] font-medium mb-4">
-          Risco Zero
-        </p>
-        
+
+        <p className="text-lg text-[#aa6b5d] font-medium mb-4">Risco Zero</p>
+
         <div className="max-w-xl mx-auto">
           <p className="text-[#6B5B4E] leading-relaxed mb-6">
-            Se por qualquer motivo você não ficar 100% satisfeita, reembolsamos o valor integral sem perguntas.
+            Se por qualquer motivo você não ficar 100% satisfeita, reembolsamos
+            o valor integral sem perguntas.
           </p>
         </div>
-        
+
         <div className="flex justify-center items-center space-x-4 text-[#432818] text-sm">
           <div className="flex items-center">
             <span className="text-[#B89B7A] mr-2">✓</span>

@@ -1,148 +1,157 @@
-import React from 'react';
+import React from "react";
 
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 10 - QUESTÃO 9: ACESSÓRIOS (REAL)
 export const getStep10Template = () => [
   {
-    type: 'quiz-intro-header',
+    type: "quiz-intro-header",
     properties: {
-      logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-      logoAlt: 'Logo Gisele Galvão',
+      logoUrl:
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+      logoAlt: "Logo Gisele Galvão",
       logoWidth: 96,
       logoHeight: 96,
       progressValue: 90,
       progressMax: 100,
-      showBackButton: true
-    }
+      showBackButton: true,
+    },
   },
   {
-    type: 'heading-inline',
+    type: "heading-inline",
     properties: {
-      content: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?',
-      level: 'h2',
-      fontSize: 'text-2xl',
-      fontWeight: 'font-bold',
-      textAlign: 'text-center',
-      color: '#432818',
-      marginBottom: 8
-    }
+      content: "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?",
+      level: "h2",
+      fontSize: "text-2xl",
+      fontWeight: "font-bold",
+      textAlign: "text-center",
+      color: "#432818",
+      marginBottom: 8,
+    },
   },
   {
-    type: 'text-inline',
+    type: "text-inline",
     properties: {
-      content: 'Questão 9 de 10',
-      fontSize: 'text-sm',
-      textAlign: 'text-center',
-      color: '#6B7280',
-      marginBottom: 24
-    }
+      content: "Questão 9 de 10",
+      fontSize: "text-sm",
+      textAlign: "text-center",
+      color: "#6B7280",
+      marginBottom: 24,
+    },
   },
   {
-    type: 'options-grid',
+    type: "options-grid",
     properties: {
-      questionId: 'q9',
+      questionId: "q9",
       options: [
-        { 
-          id: "9a", 
+        {
+          id: "9a",
           text: "Pequenos e discretos, às vezes nem uso.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/56_htzoxy.webp",
+          imageUrl:
+            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/56_htzoxy.webp",
           value: "9a",
           category: "Natural",
           styleCategory: "Natural",
-          points: 1
+          points: 1,
         },
-        { 
-          id: "9b", 
+        {
+          id: "9b",
           text: "Brincos pequenos e discretos. Corrente fininha.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/57_whzmff.webp",
+          imageUrl:
+            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/57_whzmff.webp",
           value: "9b",
           category: "Clássico",
           styleCategory: "Clássico",
-          points: 1
+          points: 1,
         },
-        { 
-          id: "9c", 
+        {
+          id: "9c",
           text: "Acessórios que elevem meu look com um toque moderno.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/61_joafud.webp",
+          imageUrl:
+            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/61_joafud.webp",
           value: "9c",
           category: "Contemporâneo",
           styleCategory: "Contemporâneo",
-          points: 1
+          points: 1,
         },
-        { 
-          id: "9d", 
+        {
+          id: "9d",
           text: "Acessórios sofisticados, joias ou semijoias.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/60_vzsnps.webp",
+          imageUrl:
+            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/60_vzsnps.webp",
           value: "9d",
           category: "Elegante",
           styleCategory: "Elegante",
-          points: 1
+          points: 1,
         },
-        { 
-          id: "9e", 
+        {
+          id: "9e",
           text: "Peças delicadas e com um toque feminino.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/59_dwaqrx.webp",
+          imageUrl:
+            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/59_dwaqrx.webp",
           value: "9e",
           category: "Romântico",
           styleCategory: "Romântico",
-          points: 1
+          points: 1,
         },
-        { 
-          id: "9f", 
+        {
+          id: "9f",
           text: "Brincos longos, colares que valorizem minha beleza.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735487/63_lwgokn.webp",
+          imageUrl:
+            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735487/63_lwgokn.webp",
           value: "9f",
           category: "Sexy",
           styleCategory: "Sexy",
-          points: 1
+          points: 1,
         },
-        { 
-          id: "9g", 
+        {
+          id: "9g",
           text: "Acessórios pesados, que causem um impacto.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735485/62_mno8wg.webp",
+          imageUrl:
+            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735485/62_mno8wg.webp",
           value: "9g",
           category: "Dramático",
           styleCategory: "Dramático",
-          points: 1
+          points: 1,
         },
-        { 
-          id: "9h", 
+        {
+          id: "9h",
           text: "Acessórios diferentes, grandes e marcantes.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735480/58_njdjoh.webp",
+          imageUrl:
+            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735480/58_njdjoh.webp",
           value: "9h",
           category: "Criativo",
           styleCategory: "Criativo",
-          points: 1
-        }
+          points: 1,
+        },
       ],
       columns: 2,
       showImages: true,
-      imageSize: 'large',
+      imageSize: "large",
       multipleSelection: true,
       maxSelections: 3,
       minSelections: 1,
-      validationMessage: 'Selecione até 3 opções',
+      validationMessage: "Selecione até 3 opções",
       gridGap: 16,
       responsiveColumns: true,
       autoAdvanceOnComplete: true,
       autoAdvanceDelay: 800,
       requiredSelections: 3,
       enableButtonOnlyWhenValid: true,
-      showValidationFeedback: true
-    }
+      showValidationFeedback: true,
+    },
   },
   {
-    type: 'button-inline',
+    type: "button-inline",
     properties: {
-      text: 'Continuar',
-      variant: 'primary',
-      size: 'large',
+      text: "Continuar",
+      variant: "primary",
+      size: "large",
       fullWidth: true,
-      backgroundColor: '#B89B7A',
-      textColor: '#ffffff',
+      backgroundColor: "#B89B7A",
+      textColor: "#ffffff",
       disabled: true,
-      requiresValidSelection: true
-    }
-  }
+      requiresValidSelection: true,
+    },
+  },
 ];
 
 export default getStep10Template;

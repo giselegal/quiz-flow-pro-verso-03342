@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Plus, Trash2 } from 'lucide-react';
-import SortableOptionItem from './SortableOptionItem';
-import { OptionItem } from './Sidebar';
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Plus, Trash2 } from "lucide-react";
+import SortableOptionItem from "./SortableOptionItem";
+import { OptionItem } from "./Sidebar";
 
 interface OptionsSectionProps {
   options: OptionItem[];
@@ -16,9 +16,11 @@ const OptionsSection: React.FC<OptionsSectionProps> = ({
   options,
   onOptionUpdate,
   onAddOption,
-  onRemoveOption
+  onRemoveOption,
 }) => {
-  const [expandedOptions, setExpandedOptions] = useState<Set<string>>(new Set());
+  const [expandedOptions, setExpandedOptions] = useState<Set<string>>(
+    new Set(),
+  );
 
   // ✅ Toggle de expansão de opções
   const toggleExpanded = (id: string) => {
@@ -80,7 +82,7 @@ const OptionsSection: React.FC<OptionsSectionProps> = ({
                 variant="outline"
                 onClick={() => {
                   if (confirm(`Remover todas as ${options.length} opções?`)) {
-                    options.forEach(option => onRemoveOption(option.id));
+                    options.forEach((option) => onRemoveOption(option.id));
                   }
                 }}
                 className="flex-1 text-xs"
@@ -107,9 +109,26 @@ const OptionsSection: React.FC<OptionsSectionProps> = ({
             <div className="text-xs text-muted-foreground">
               <div className="grid grid-cols-2 gap-2">
                 <div>Total: {options.length}</div>
-                <div>Com imagem: {options.filter(o => o.imageUrl && o.imageUrl !== 'https://via.placeholder.com/100x100').length}</div>
-                <div>Categorias: {new Set(options.map(o => o.category || 'Sem categoria')).size}</div>
-                <div>Pontos: {options.reduce((sum, o) => sum + (o.points || 0), 0)}</div>
+                <div>
+                  Com imagem:{" "}
+                  {
+                    options.filter(
+                      (o) =>
+                        o.imageUrl &&
+                        o.imageUrl !== "https://via.placeholder.com/100x100",
+                    ).length
+                  }
+                </div>
+                <div>
+                  Categorias:{" "}
+                  {
+                    new Set(options.map((o) => o.category || "Sem categoria"))
+                      .size
+                  }
+                </div>
+                <div>
+                  Pontos: {options.reduce((sum, o) => sum + (o.points || 0), 0)}
+                </div>
               </div>
             </div>
           </div>

@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { Shield } from 'lucide-react';
+import React from "react";
+import { Shield } from "lucide-react";
 
 const GuaranteeSection = () => (
   <div className="bg-white p-6 rounded-xl shadow-md border border-[#B89B7A]/20 h-full">
@@ -10,7 +9,8 @@ const GuaranteeSection = () => (
         Garantia de 7 Dias
       </h3>
       <p className="text-[#432818] text-sm leading-relaxed">
-        Se não ficar satisfeita, devolvemos 100% do seu dinheiro. Sem perguntas, sem complicação.
+        Se não ficar satisfeita, devolvemos 100% do seu dinheiro. Sem perguntas,
+        sem complicação.
       </p>
     </div>
   </div>

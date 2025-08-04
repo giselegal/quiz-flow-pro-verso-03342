@@ -5,34 +5,31 @@
 ### ❌ **REMOVIDO COMPLETAMENTE:**
 
 #### 1. **Stats do Registry:**
+
 ```tsx
 // ❌ REMOVIDO
 <div className="mb-4 p-3 bg-gradient-to-r from-stone-50 to-amber-50/50">
-  <div className="text-xs text-amber-800 font-medium">
-    ✅ Registry Validado
-  </div>
-  <div className="text-xs text-stone-600">
-    71 componentes • 100% cobertura
-  </div>
+  <div className="text-xs text-amber-800 font-medium">✅ Registry Validado</div>
+  <div className="text-xs text-stone-600">71 componentes • 100% cobertura</div>
 </div>
 ```
 
 #### 2. **Seção de Categorias Completa:**
+
 ```tsx
 // ❌ REMOVIDO
 <div className="mb-4">
   <h3 className="text-sm font-medium mb-2">Categorias</h3>
   <div className="grid grid-cols-2 gap-2">
     {BLOCK_CATEGORIES.map((category) => (
-      <Button key={category}>
-        {category}
-      </Button>
+      <Button key={category}>{category}</Button>
     ))}
   </div>
 </div>
 ```
 
 #### 3. **Lógica de Categorias:**
+
 ```tsx
 // ❌ REMOVIDO
 const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -42,21 +39,23 @@ const matchesCategory = !selectedCategory || block.category === selectedCategory
 ```
 
 #### 4. **Importações Desnecessárias:**
+
 ```tsx
 // ❌ REMOVIDO
-import { getRegistryStats, ENHANCED_BLOCK_REGISTRY } from '...';
+import { getRegistryStats, ENHANCED_BLOCK_REGISTRY } from "...";
 ```
 
 ## ✅ **RESULTADO FINAL:**
 
 ### **Interface Ultra-Limpa:**
+
 ```
 ┌─────────────────────────────────────┐
 │ Componentes                         │
 │ [🔍] Buscar componentes...          │
 ├─────────────────────────────────────┤
 │ Título                 [+ Adicionar]│
-│ Subtítulo             [+ Adicionar]│ 
+│ Subtítulo             [+ Adicionar]│
 │ Botão                 [+ Adicionar]│
 │ Imagem                [+ Adicionar]│
 │ ...                               │
@@ -64,19 +63,22 @@ import { getRegistryStats, ENHANCED_BLOCK_REGISTRY } from '...';
 ```
 
 ### **Código Simplificado:**
+
 ```tsx
 const EnhancedComponentsSidebar = ({ onAddComponent }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const allBlocks = generateBlockDefinitions();
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
 
-  const filteredBlocks = allBlocks.filter(block => {
-    return !searchQuery || 
+  const filteredBlocks = allBlocks.filter((block) => {
+    return (
+      !searchQuery ||
       block.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      block.type.toLowerCase().includes(searchQuery.toLowerCase());
+      block.type.toLowerCase().includes(searchQuery.toLowerCase())
+    );
   });
 
   return (
@@ -93,12 +95,15 @@ const EnhancedComponentsSidebar = ({ onAddComponent }) => {
           />
         </div>
       </CardHeader>
-      
+
       <CardContent className="flex-1 overflow-hidden">
         <ScrollArea className="h-full">
           <div className="space-y-2">
             {filteredBlocks.map((block) => (
-              <Card key={block.type} className="p-3 cursor-pointer hover:bg-muted/50">
+              <Card
+                key={block.type}
+                className="p-3 cursor-pointer hover:bg-muted/50"
+              >
                 <div className="flex items-center justify-between">
                   <h4 className="text-sm font-medium truncate">{block.name}</h4>
                   <Button
@@ -123,18 +128,21 @@ const EnhancedComponentsSidebar = ({ onAddComponent }) => {
 ## 🎯 **BENEFÍCIOS DA LIMPEZA:**
 
 ### ✅ **Interface:**
+
 - **Minimalista:** Apenas busca + lista de componentes
 - **Focada:** Sem distrações visuais
 - **Rápida:** Menos elementos para renderizar
 - **Intuitiva:** Buscar → Encontrar → Adicionar
 
 ### ✅ **Código:**
+
 - **-50 linhas** de código removidas
 - **-3 estados** desnecessários eliminados
 - **-2 handlers** não utilizados removidos
 - **-1 import** desnecessário limpo
 
 ### ✅ **Performance:**
+
 - **Menos re-renders** (menos estados)
 - **DOM mais leve** (menos elementos)
 - **Bundle menor** (menos imports)

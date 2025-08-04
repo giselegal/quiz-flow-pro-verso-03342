@@ -1,13 +1,15 @@
+import React from "react";
+import { BlockComponentProps } from "@/types/blocks";
 
-import React from 'react';
-import { BlockComponentProps } from '@/types/blocks';
-
-const RichTextBlock: React.FC<BlockComponentProps> = ({ block, className = '' }) => {
+const RichTextBlock: React.FC<BlockComponentProps> = ({
+  block,
+  className = "",
+}) => {
   return (
-    <div 
+    <div
       className={`rich-text-block ${className}`}
-      dangerouslySetInnerHTML={{ 
-        __html: block.properties?.html || '<p>Rich text content</p>' 
+      dangerouslySetInnerHTML={{
+        __html: block.properties?.html || "<p>Rich text content</p>",
       }}
     />
   );

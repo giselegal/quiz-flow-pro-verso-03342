@@ -1,16 +1,15 @@
-
-import React from 'react';
-import { Block } from '@/types/editor';
-import { StyleResult } from '@/types/quiz';
+import React from "react";
+import { Block } from "@/types/editor";
+import { StyleResult } from "@/types/quiz";
 
 // Import specific block editors
-import TextInlineBlock from './blocks/inline/TextInlineBlock';
-import ImageDisplayInlineBlock from './blocks/inline/ImageDisplayInlineBlock';
-import BadgeInlineBlock from './blocks/inline/BadgeInlineBlock';
-import ProgressInlineBlock from './blocks/inline/ProgressInlineBlock';
-import StatInlineBlock from './blocks/inline/StatInlineBlock';
-import CountdownInlineBlock from './blocks/inline/CountdownInlineBlock';
-import SpacerInlineBlock from './blocks/inline/SpacerInlineBlock';
+import TextInlineBlock from "./blocks/inline/TextInlineBlock";
+import ImageDisplayInlineBlock from "./blocks/inline/ImageDisplayInlineBlock";
+import BadgeInlineBlock from "./blocks/inline/BadgeInlineBlock";
+import ProgressInlineBlock from "./blocks/inline/ProgressInlineBlock";
+import StatInlineBlock from "./blocks/inline/StatInlineBlock";
+import CountdownInlineBlock from "./blocks/inline/CountdownInlineBlock";
+import SpacerInlineBlock from "./blocks/inline/SpacerInlineBlock";
 
 interface EditBlockContentProps {
   block: Block;
@@ -25,19 +24,19 @@ const EditBlockContent: React.FC<EditBlockContentProps> = ({
   selectedStyle,
   onUpdateBlock,
   isSelected = false,
-  onSelect
+  onSelect,
 }) => {
   const handlePropertyChange = (key: string, value: any) => {
     onUpdateBlock(block.id, {
       ...(block.properties || {}),
-      [key]: value
+      [key]: value,
     });
   };
 
   // Ensure block has properties field for compatibility
   const blockWithProperties = {
     ...block,
-    properties: block.properties || block.content || {}
+    properties: block.properties || block.content || {},
   };
 
   const blockProps = {
@@ -45,31 +44,31 @@ const EditBlockContent: React.FC<EditBlockContentProps> = ({
     isSelected,
     onClick: onSelect,
     onPropertyChange: handlePropertyChange,
-    disabled: false
+    disabled: false,
   };
 
   // Map block types to their respective editors
   const renderBlock = () => {
     switch (block.type) {
-      case 'text-inline':
+      case "text-inline":
         return <TextInlineBlock {...blockProps} />;
-      case 'image-display-inline':
+      case "image-display-inline":
         return <ImageDisplayInlineBlock {...blockProps} />;
-      case 'badge-inline':
+      case "badge-inline":
         return <BadgeInlineBlock {...blockProps} />;
-      case 'progress-inline':
+      case "progress-inline":
         return <ProgressInlineBlock {...blockProps} />;
-      case 'stat-inline':
+      case "stat-inline":
         return <StatInlineBlock {...blockProps} />;
-      case 'countdown-inline':
+      case "countdown-inline":
         return <CountdownInlineBlock {...blockProps} />;
-      case 'spacer-inline':
+      case "spacer-inline":
         return <SpacerInlineBlock {...blockProps} />;
-      case 'text':
-      case 'headline':
-      case 'image':
-      case 'button':
-      case 'spacer':
+      case "text":
+      case "headline":
+      case "image":
+      case "button":
+      case "spacer":
         // Handle legacy block types
         return (
           <div className="p-4 border border-gray-300 bg-gray-50 rounded-lg">
@@ -89,11 +88,7 @@ const EditBlockContent: React.FC<EditBlockContentProps> = ({
     }
   };
 
-  return (
-    <div className="w-full">
-      {renderBlock()}
-    </div>
-  );
+  return <div className="w-full">{renderBlock()}</div>;
 };
 
 export default EditBlockContent;

@@ -1,6 +1,5 @@
-
-import { useState, useCallback } from 'react';
-import { ResultPageConfig } from '@/types/resultPageConfig';
+import { useState, useCallback } from "react";
+import { ResultPageConfig } from "@/types/resultPageConfig";
 
 interface UseQuizResultConfigReturn {
   config: ResultPageConfig;
@@ -9,74 +8,79 @@ interface UseQuizResultConfigReturn {
   resetConfig: () => void;
 }
 
-export const useQuizResultConfig = (category: string): UseQuizResultConfigReturn => {
+export const useQuizResultConfig = (
+  category: string,
+): UseQuizResultConfigReturn => {
   const [config, setConfig] = useState<ResultPageConfig>({
     styleType: category,
     header: {
       visible: true,
       content: {
-        title: `Seu estilo é ${category}`
+        title: `Seu estilo é ${category}`,
       },
-      style: {}
+      style: {},
     },
     mainContent: {
       visible: true,
       content: {
-        description: `Descrição do estilo ${category}`
+        description: `Descrição do estilo ${category}`,
       },
-      style: {}
+      style: {},
     },
     offer: {
       hero: {
         visible: true,
         content: {
           title: "Oferta Especial",
-          subtitle: "Descubra mais sobre seu estilo"
+          subtitle: "Descubra mais sobre seu estilo",
         },
-        style: {}
+        style: {},
       },
       benefits: {
         visible: true,
         content: {},
-        style: {}
+        style: {},
       },
       products: {
         visible: true,
         content: {},
-        style: {}
+        style: {},
       },
       pricing: {
         visible: true,
         content: {},
-        style: {}
+        style: {},
       },
       testimonials: {
         visible: true,
         content: {},
-        style: {}
+        style: {},
       },
       guarantee: {
         visible: true,
         content: {},
-        style: {}
-      }
+        style: {},
+      },
     },
-    blocks: []
+    blocks: [],
   });
 
   const updateConfig = useCallback((section: string, data: any) => {
-    setConfig(prev => ({
+    setConfig((prev) => ({
       ...prev,
-      [section]: data
+      [section]: data,
     }));
   }, []);
 
   const saveConfig = useCallback(async (): Promise<boolean> => {
     try {
-      localStorage.setItem(`quiz_result_config_${category}`, JSON.stringify(config));
+      localStorage.setItem(
+        `quiz_result_config_${category}`,
+        JSON.stringify(config),
+      );
       return true;
     } catch (error) {
-      console.error('Error saving config:', error);
+      console.error("Error saving config:", error);
       return false;
     }
   }, [category, config]);
@@ -87,53 +91,53 @@ export const useQuizResultConfig = (category: string): UseQuizResultConfigReturn
       header: {
         visible: true,
         content: {
-          title: `Seu estilo é ${category}`
+          title: `Seu estilo é ${category}`,
         },
-        style: {}
+        style: {},
       },
       mainContent: {
         visible: true,
         content: {
-          description: `Descrição do estilo ${category}`
+          description: `Descrição do estilo ${category}`,
         },
-        style: {}
+        style: {},
       },
       offer: {
         hero: {
           visible: true,
           content: {
             title: "Oferta Especial",
-            subtitle: "Descubra mais sobre seu estilo"
+            subtitle: "Descubra mais sobre seu estilo",
           },
-          style: {}
+          style: {},
         },
         benefits: {
           visible: true,
           content: {},
-          style: {}
+          style: {},
         },
         products: {
           visible: true,
           content: {},
-          style: {}
+          style: {},
         },
         pricing: {
           visible: true,
           content: {},
-          style: {}
+          style: {},
         },
         testimonials: {
           visible: true,
           content: {},
-          style: {}
+          style: {},
         },
         guarantee: {
           visible: true,
           content: {},
-          style: {}
-        }
+          style: {},
+        },
       },
-      blocks: []
+      blocks: [],
     });
   }, [category]);
 
@@ -141,6 +145,6 @@ export const useQuizResultConfig = (category: string): UseQuizResultConfigReturn
     config,
     updateConfig,
     saveConfig,
-    resetConfig
+    resetConfig,
   };
 };

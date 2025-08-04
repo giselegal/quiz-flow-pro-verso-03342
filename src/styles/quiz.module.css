@@ -1,8 +1,8 @@
 /* Quiz Styles - Idêntico ao quiz real */
 
 /* Importação das fontes */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap");
 
 /* Variáveis CSS idênticas ao quiz real */
 :root {
@@ -18,9 +18,10 @@
   --quiz-success: #059669;
   --quiz-warning: #dc2626;
   --quiz-neutral: #6b7280;
-  
+
   /* Tipografia */
-  --quiz-font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --quiz-font:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --quiz-font-display: "Playfair Display", serif;
   --quiz-text-title: 1.875rem;
   --quiz-text-subtitle: 1.25rem;
@@ -32,7 +33,7 @@
   --quiz-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
   --quiz-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
   --quiz-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
-  
+
   /* Espaçamentos */
   --quiz-space-xs: 0.5rem;
   --quiz-space-sm: 1rem;
@@ -133,7 +134,7 @@
 }
 
 .quizOption.selected::after {
-  content: '✓';
+  content: "✓";
   position: absolute;
   right: 1rem;
   color: var(--quiz-primary);
@@ -339,8 +340,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Responsive Design */
@@ -348,20 +353,20 @@
   .quizContainer {
     padding: var(--quiz-space-sm);
   }
-  
+
   .quizCard {
     padding: var(--quiz-space-md);
   }
-  
+
   .quizTitle {
     font-size: 1.5rem;
   }
-  
+
   .quizOption {
     padding: 0.875rem 1rem;
     font-size: var(--quiz-text-small);
   }
-  
+
   .resultCharacteristics {
     grid-template-columns: 1fr;
   }
@@ -371,11 +376,11 @@
   .quizTitle {
     font-size: 1.25rem;
   }
-  
+
   .resultTitle {
     font-size: 1.75rem;
   }
-  
+
   .quizButton {
     padding: 0.75rem 1.5rem;
     font-size: var(--quiz-text-small);

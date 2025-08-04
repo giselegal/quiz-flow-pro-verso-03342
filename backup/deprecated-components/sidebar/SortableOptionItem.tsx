@@ -1,8 +1,8 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Trash2, ChevronDown, ChevronRight } from 'lucide-react';
-import { OptionItem } from './Sidebar';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Trash2, ChevronDown, ChevronRight } from "lucide-react";
+import { OptionItem } from "./Sidebar";
 
 interface SortableOptionItemProps {
   option: OptionItem;
@@ -19,7 +19,7 @@ const SortableOptionItem: React.FC<SortableOptionItemProps> = ({
   isExpanded,
   onToggleExpanded,
   onUpdate,
-  onRemove
+  onRemove,
 }) => {
   return (
     <div className="border rounded-lg p-3 bg-white">
@@ -42,13 +42,13 @@ const SortableOptionItem: React.FC<SortableOptionItemProps> = ({
           <Trash2 size={16} />
         </Button>
       </div>
-      
+
       {isExpanded && (
         <div className="mt-3 space-y-3">
           <div>
             <label className="text-sm font-medium">Text</label>
             <Input
-              value={option.text || ''}
+              value={option.text || ""}
               onChange={(e) => onUpdate({ text: e.target.value })}
               placeholder="Option text"
             />
@@ -56,7 +56,7 @@ const SortableOptionItem: React.FC<SortableOptionItemProps> = ({
           <div>
             <label className="text-sm font-medium">Image URL</label>
             <Input
-              value={option.imageUrl || ''}
+              value={option.imageUrl || ""}
               onChange={(e) => onUpdate({ imageUrl: e.target.value })}
               placeholder="Image URL"
             />

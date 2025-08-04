@@ -1,10 +1,9 @@
-
-import React, { useState, useEffect, useRef } from 'react';
-import { cn } from '@/lib/utils';
+import React, { useState, useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
 
 interface ProgressiveImageProps {
   src: string;
-  lowQualitySrc?: string; 
+  lowQualitySrc?: string;
   alt: string;
   className?: string;
   style?: React.CSSProperties;
@@ -34,7 +33,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
     // Reset state when src changes
     setIsLoaded(false);
     setHasError(false);
-    
+
     // Check if image is already in browser cache
     if (imageRef.current?.complete && imageRef.current?.naturalWidth > 0) {
       setIsLoaded(true);
@@ -45,20 +44,20 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   const handleLoad = () => {
     setIsLoaded(true);
     if (onLoad) onLoad();
-    
+
     // Log performance metrics for priority images only
     if (priority) {
       console.log(`Priority image loaded: ${src.substring(0, 50)}...`);
-      
+
       // Report to performance observer if available
-      if ('performance' in window && 'mark' in performance) {
+      if ("performance" in window && "mark" in performance) {
         try {
           performance.mark(`img-loaded-${src.substring(0, 20)}`);
-          
+
           // If we have the PerformanceObserver API available, use it to track LCP
-          if ('PerformanceObserver' in window) {
+          if ("PerformanceObserver" in window) {
             // This is just for monitoring, no actual dependency
-            console.log('Image loaded that might affect LCP');
+            console.log("Image loaded that might affect LCP");
           }
         } catch (e) {
           // Ignore errors with performance marking
@@ -85,7 +84,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
           alt={`Carregando ${alt}`}
           className={cn(
             "w-full h-full object-cover absolute inset-0 blur-sm transition-opacity duration-300",
-            isLowQualityLoaded ? "opacity-100" : "opacity-0"
+            isLowQualityLoaded ? "opacity-100" : "opacity-0",
           )}
           width={width || "100%"}
           height={height || "auto"}
@@ -94,7 +93,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
           decoding="sync"
         />
       )}
-      
+
       {/* Actual image with improved loading attributes */}
       <img
         ref={imageRef}
@@ -102,7 +101,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
         alt={alt}
         className={cn(
           "w-full h-full object-cover transition-all duration-500",
-          isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-[1.02]"
+          isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-[1.02]",
         )}
         width={width || "100%"}
         height={height || "auto"}
@@ -112,14 +111,14 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
         onLoad={handleLoad}
         onError={handleError}
       />
-      
+
       {/* Error fallback */}
       {hasError && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
           <span className="text-gray-500">Imagem indisponível</span>
         </div>
       )}
-      
+
       {/* Loading skeleton when neither image is loaded */}
       {!isLoaded && !isLowQualityLoaded && (
         <div className="absolute inset-0 bg-gray-100 animate-pulse" />

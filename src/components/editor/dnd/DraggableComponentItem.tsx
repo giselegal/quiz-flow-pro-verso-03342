@@ -1,9 +1,9 @@
-import React from 'react';
-import { useDraggable } from '@dnd-kit/core';
+import React from "react";
+import { useDraggable } from "@dnd-kit/core";
 
 // Utility function for class names
 const cn = (...classes: (string | undefined | boolean)[]): string => {
-  return classes.filter(Boolean).join(' ');
+  return classes.filter(Boolean).join(" ");
 };
 
 interface DraggableComponentItemProps {
@@ -23,56 +23,53 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
   icon,
   category,
   disabled = false,
-  className
+  className,
 }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    isDragging
-  } = useDraggable({
-    id: `sidebar-${blockType}`,
-    data: {
-      type: 'sidebar-component',
-      blockType,
-      title,
-      category
-    },
-    disabled
-  });
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: `sidebar-${blockType}`,
+      data: {
+        type: "sidebar-component",
+        blockType,
+        title,
+        category,
+      },
+      disabled,
+    });
 
   // Debug: verificar se o draggable está sendo configurado
   React.useEffect(() => {
-    console.log('🔧 DraggableComponentItem configurado:', {
+    console.log("🔧 DraggableComponentItem configurado:", {
       id: `sidebar-${blockType}`,
       blockType,
       disabled,
-      isDragging
+      isDragging,
     });
   }, [blockType, disabled, isDragging]);
 
   // Debug: eventos de mouse para testar interação
   const handleMouseDown = (e: React.MouseEvent) => {
-    console.log('🖱️ MouseDown em DraggableComponentItem:', blockType);
+    console.log("🖱️ MouseDown em DraggableComponentItem:", blockType);
   };
 
   const handlePointerDown = (e: React.PointerEvent) => {
-    console.log('👆 PointerDown em DraggableComponentItem:', blockType);
+    console.log("👆 PointerDown em DraggableComponentItem:", blockType);
   };
 
-  const style = transform ? {
-    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-  } : undefined;
+  const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+      }
+    : undefined;
 
   return (
     <div
       ref={setNodeRef}
       className={cn(
-        'w-full h-auto p-3 flex flex-col items-start gap-2 text-left cursor-grab hover:bg-stone-50 transition-all duration-200 border border-stone-200 rounded-lg bg-white',
-        isDragging && 'opacity-50 cursor-grabbing scale-105',
-        disabled && 'opacity-50 cursor-not-allowed',
-        className
+        "w-full h-auto p-3 flex flex-col items-start gap-2 text-left cursor-grab hover:bg-stone-50 transition-all duration-200 border border-stone-200 rounded-lg bg-white",
+        isDragging && "opacity-50 cursor-grabbing scale-105",
+        disabled && "opacity-50 cursor-not-allowed",
+        className,
       )}
       style={style}
       onMouseDown={handleMouseDown}
@@ -82,9 +79,7 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
     >
       {/* Icon and Title */}
       <div className="flex items-center gap-2 w-full">
-        <div className="flex-shrink-0 text-primary">
-          {icon}
-        </div>
+        <div className="flex-shrink-0 text-primary">{icon}</div>
         <div className="flex-1 min-w-0">
           <h4 className="text-sm font-medium text-stone-900 truncate">
             {title}

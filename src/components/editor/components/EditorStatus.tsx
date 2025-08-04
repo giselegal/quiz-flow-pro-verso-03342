@@ -2,14 +2,20 @@
 // components/editor/components/EditorStatus.tsx - Status do editor
 // =====================================================================
 
-import React from 'react';
-import { Badge } from '../../ui/badge';
-import { Card, CardContent } from '../../ui/card';
-import { Separator } from '../../ui/separator';
-import { 
-  Clock, Save, Eye, Layers, Palette, 
-  Target, CheckCircle, AlertCircle 
-} from 'lucide-react';
+import React from "react";
+import { Badge } from "../../ui/badge";
+import { Card, CardContent } from "../../ui/card";
+import { Separator } from "../../ui/separator";
+import {
+  Clock,
+  Save,
+  Eye,
+  Layers,
+  Palette,
+  Target,
+  CheckCircle,
+  AlertCircle,
+} from "lucide-react";
 
 interface EditorStatusProps {
   selectedBlockId?: string;
@@ -19,7 +25,7 @@ interface EditorStatusProps {
   canRedo: boolean;
   lastAction?: string;
   totalBlocks?: number;
-  previewMode?: 'desktop' | 'tablet' | 'mobile';
+  previewMode?: "desktop" | "tablet" | "mobile";
 }
 
 export const EditorStatus: React.FC<EditorStatusProps> = ({
@@ -30,19 +36,22 @@ export const EditorStatus: React.FC<EditorStatusProps> = ({
   canRedo,
   lastAction,
   totalBlocks = 0,
-  previewMode = 'desktop'
+  previewMode = "desktop",
 }) => {
   const getPreviewIcon = () => {
     switch (previewMode) {
-      case 'mobile': return '📱';
-      case 'tablet': return '📱';
-      default: return '🖥️';
+      case "mobile":
+        return "📱";
+      case "tablet":
+        return "📱";
+      default:
+        return "🖥️";
     }
   };
 
   const getStatusColor = () => {
-    if (!selectedBlockId) return 'text-gray-500';
-    return 'text-green-600';
+    if (!selectedBlockId) return "text-gray-500";
+    return "text-green-600";
   };
 
   return (
@@ -52,9 +61,13 @@ export const EditorStatus: React.FC<EditorStatusProps> = ({
           <div className="flex items-center space-x-4">
             {/* Block Status */}
             <div className="flex items-center space-x-2">
-              <div className={`w-2 h-2 rounded-full ${selectedBlockId ? 'bg-green-500' : 'bg-gray-400'}`} />
+              <div
+                className={`w-2 h-2 rounded-full ${selectedBlockId ? "bg-green-500" : "bg-gray-400"}`}
+              />
               <span className={getStatusColor()}>
-                {selectedBlockId ? `Bloco: ${selectedBlockId}` : 'Nenhum bloco selecionado'}
+                {selectedBlockId
+                  ? `Bloco: ${selectedBlockId}`
+                  : "Nenhum bloco selecionado"}
               </span>
             </div>
 
@@ -81,7 +94,9 @@ export const EditorStatus: React.FC<EditorStatusProps> = ({
               <>
                 <div className="flex items-center space-x-1 text-gray-600">
                   <Clock className="w-3 h-3" />
-                  <span className="text-xs truncate max-w-32">{lastAction}</span>
+                  <span className="text-xs truncate max-w-32">
+                    {lastAction}
+                  </span>
                 </div>
                 <Separator orientation="vertical" className="h-4" />
               </>
@@ -96,10 +111,14 @@ export const EditorStatus: React.FC<EditorStatusProps> = ({
 
             {/* Undo/Redo Status */}
             <div className="flex items-center space-x-1">
-              <div className={`w-2 h-2 rounded-full ${canUndo ? 'bg-blue-500' : 'bg-gray-300'}`} 
-                   title={canUndo ? 'Desfazer disponível' : 'Nada para desfazer'} />
-              <div className={`w-2 h-2 rounded-full ${canRedo ? 'bg-green-500' : 'bg-gray-300'}`}
-                   title={canRedo ? 'Refazer disponível' : 'Nada para refazer'} />
+              <div
+                className={`w-2 h-2 rounded-full ${canUndo ? "bg-blue-500" : "bg-gray-300"}`}
+                title={canUndo ? "Desfazer disponível" : "Nada para desfazer"}
+              />
+              <div
+                className={`w-2 h-2 rounded-full ${canRedo ? "bg-green-500" : "bg-gray-300"}`}
+                title={canRedo ? "Refazer disponível" : "Nada para refazer"}
+              />
             </div>
 
             {/* Save Status */}
@@ -113,7 +132,9 @@ export const EditorStatus: React.FC<EditorStatusProps> = ({
         {/* Keyboard Shortcuts Hint */}
         <div className="mt-2 pt-2 border-t border-gray-200">
           <div className="flex items-center justify-between text-xs text-gray-500">
-            <span>Atalhos: Ctrl+Z (Desfazer) • Ctrl+Y (Refazer) • Del (Excluir)</span>
+            <span>
+              Atalhos: Ctrl+Z (Desfazer) • Ctrl+Y (Refazer) • Del (Excluir)
+            </span>
             <div className="flex items-center space-x-2">
               <Badge variant="secondary" className="text-xs px-1 py-0">
                 {historyCount} ações

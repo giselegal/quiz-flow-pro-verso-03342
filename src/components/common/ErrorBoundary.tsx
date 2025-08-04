@@ -1,6 +1,6 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { AlertTriangle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React, { Component, ErrorInfo, ReactNode } from "react";
+import { AlertTriangle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   children: ReactNode;
@@ -15,7 +15,7 @@ interface State {
 
 export class ErrorBoundary extends Component<Props, State> {
   public state: State = {
-    hasError: false
+    hasError: false,
   };
 
   public static getDerivedStateFromError(error: Error): State {
@@ -23,12 +23,12 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('🚨 ErrorBoundary capturou um erro:', error);
-    console.error('🔍 Informações do erro:', errorInfo);
-    
+    console.error("🚨 ErrorBoundary capturou um erro:", error);
+    console.error("🔍 Informações do erro:", errorInfo);
+
     this.setState({
       error,
-      errorInfo
+      errorInfo,
     });
 
     // Notificar callback se fornecido
@@ -53,26 +53,27 @@ export class ErrorBoundary extends Component<Props, State> {
             <div className="text-red-500 mb-4">
               <AlertTriangle size={48} className="mx-auto" />
             </div>
-            
+
             <h2 className="text-xl font-bold text-gray-800 mb-2">
               Oops! Algo deu errado
             </h2>
-            
+
             <p className="text-gray-600 mb-6">
-              O editor encontrou um erro inesperado. Não se preocupe, seus dados estão seguros.
+              O editor encontrou um erro inesperado. Não se preocupe, seus dados
+              estão seguros.
             </p>
 
             <div className="space-y-3">
-              <Button 
-                onClick={this.handleReset} 
+              <Button
+                onClick={this.handleReset}
                 className="w-full"
                 variant="default"
               >
                 Tentar Novamente
               </Button>
-              
-              <Button 
-                onClick={this.handleReload} 
+
+              <Button
+                onClick={this.handleReload}
                 className="w-full"
                 variant="outline"
               >
@@ -80,7 +81,7 @@ export class ErrorBoundary extends Component<Props, State> {
               </Button>
             </div>
 
-            {process.env.NODE_ENV === 'development' && this.state.error && (
+            {process.env.NODE_ENV === "development" && this.state.error && (
               <details className="mt-6 text-left">
                 <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
                   Detalhes do erro (desenvolvimento)

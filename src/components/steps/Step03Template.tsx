@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export interface Step03Question02Props {
   onNext?: () => void;
@@ -6,7 +6,11 @@ export interface Step03Question02Props {
   onBlockAdd?: (block: any) => void;
 }
 
-export const Step03Question02: React.FC<Step03Question02Props> = ({ onNext, onPrevious, onBlockAdd }) => {
+export const Step03Question02: React.FC<Step03Question02Props> = ({
+  onNext,
+  onPrevious,
+  onBlockAdd,
+}) => {
   return (
     <div className="step-03-question-02">
       {/* Conteúdo da Etapa 3 renderizado aqui */}
@@ -18,137 +22,138 @@ export const Step03Question02: React.FC<Step03Question02Props> = ({ onNext, onPr
 export const getStep03Template = () => {
   return [
     {
-      type: 'quiz-intro-header',
+      type: "quiz-intro-header",
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-        logoAlt: 'Logo Gisele Galvão',
+        logoUrl:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        logoAlt: "Logo Gisele Galvão",
         logoWidth: 96,
         logoHeight: 96,
         progressValue: 20,
         progressMax: 100,
-        showBackButton: true
-      }
+        showBackButton: true,
+      },
     },
     {
-      type: 'heading-inline',
+      type: "heading-inline",
       properties: {
-        content: 'RESUMA A SUA PERSONALIDADE:',
-        level: 'h2',
-        fontSize: 'text-2xl',
-        fontWeight: 'font-bold',
-        textAlign: 'text-center',
-        color: '#432818',
-        marginBottom: 8
-      }
+        content: "RESUMA A SUA PERSONALIDADE:",
+        level: "h2",
+        fontSize: "text-2xl",
+        fontWeight: "font-bold",
+        textAlign: "text-center",
+        color: "#432818",
+        marginBottom: 8,
+      },
     },
     {
-      type: 'text-inline',
+      type: "text-inline",
       properties: {
-        content: 'Questão 2 de 10',
-        fontSize: 'text-sm',
-        textAlign: 'text-center',
-        color: '#6B7280',
-        marginBottom: 24
-      }
+        content: "Questão 2 de 10",
+        fontSize: "text-sm",
+        textAlign: "text-center",
+        color: "#6B7280",
+        marginBottom: 24,
+      },
     },
     {
-      type: 'options-grid',
+      type: "options-grid",
       properties: {
-        questionId: 'q2',
+        questionId: "q2",
         options: [
-          { 
-            id: "2a", 
-            text: "Informal, espontânea, alegre, essencialista", 
-            value: "2a", 
-            category: "Natural", 
-            styleCategory: "Natural", 
-            points: 1 
+          {
+            id: "2a",
+            text: "Informal, espontânea, alegre, essencialista",
+            value: "2a",
+            category: "Natural",
+            styleCategory: "Natural",
+            points: 1,
           },
-          { 
-            id: "2b", 
-            text: "Conservadora, séria, organizada", 
-            value: "2b", 
-            category: "Clássico", 
-            styleCategory: "Clássico", 
-            points: 1 
+          {
+            id: "2b",
+            text: "Conservadora, séria, organizada",
+            value: "2b",
+            category: "Clássico",
+            styleCategory: "Clássico",
+            points: 1,
           },
-          { 
-            id: "2c", 
-            text: "Informada, ativa, prática", 
-            value: "2c", 
-            category: "Contemporâneo", 
-            styleCategory: "Contemporâneo", 
-            points: 1 
+          {
+            id: "2c",
+            text: "Informada, ativa, prática",
+            value: "2c",
+            category: "Contemporâneo",
+            styleCategory: "Contemporâneo",
+            points: 1,
           },
-          { 
-            id: "2d", 
-            text: "Exigente, sofisticada, seletiva", 
-            value: "2d", 
-            category: "Elegante", 
-            styleCategory: "Elegante", 
-            points: 1 
+          {
+            id: "2d",
+            text: "Exigente, sofisticada, seletiva",
+            value: "2d",
+            category: "Elegante",
+            styleCategory: "Elegante",
+            points: 1,
           },
-          { 
-            id: "2e", 
-            text: "Feminina, meiga, delicada, sensível", 
-            value: "2e", 
-            category: "Romântico", 
-            styleCategory: "Romântico", 
-            points: 1 
+          {
+            id: "2e",
+            text: "Feminina, meiga, delicada, sensível",
+            value: "2e",
+            category: "Romântico",
+            styleCategory: "Romântico",
+            points: 1,
           },
-          { 
-            id: "2f", 
-            text: "Glamorosa, vaidosa, sensual", 
-            value: "2f", 
-            category: "Sexy", 
-            styleCategory: "Sexy", 
-            points: 1 
+          {
+            id: "2f",
+            text: "Glamorosa, vaidosa, sensual",
+            value: "2f",
+            category: "Sexy",
+            styleCategory: "Sexy",
+            points: 1,
           },
-          { 
-            id: "2g", 
-            text: "Cosmopolita, moderna e audaciosa", 
-            value: "2g", 
-            category: "Dramático", 
-            styleCategory: "Dramático", 
-            points: 1 
+          {
+            id: "2g",
+            text: "Cosmopolita, moderna e audaciosa",
+            value: "2g",
+            category: "Dramático",
+            styleCategory: "Dramático",
+            points: 1,
           },
-          { 
-            id: "2h", 
-            text: "Exótica, aventureira, livre", 
-            value: "2h", 
-            category: "Criativo", 
-            styleCategory: "Criativo", 
-            points: 1 
-          }
+          {
+            id: "2h",
+            text: "Exótica, aventureira, livre",
+            value: "2h",
+            category: "Criativo",
+            styleCategory: "Criativo",
+            points: 1,
+          },
         ],
         columns: 1,
         showImages: false,
         multipleSelection: true,
         maxSelections: 3,
         minSelections: 1,
-        validationMessage: 'Selecione até 3 opções',
+        validationMessage: "Selecione até 3 opções",
         gridGap: 12,
         responsiveColumns: true,
         autoAdvanceOnComplete: true,
         autoAdvanceDelay: 800,
         requiredSelections: 3,
         enableButtonOnlyWhenValid: true,
-        showValidationFeedback: true
-      }
+        showValidationFeedback: true,
+      },
     },
     {
-      type: 'button-inline',
+      type: "button-inline",
       properties: {
-        text: 'Continuar',
-        variant: 'primary',
-        size: 'large',
+        text: "Continuar",
+        variant: "primary",
+        size: "large",
         fullWidth: true,
-        backgroundColor: '#B89B7A',
-        textColor: '#ffffff',
+        backgroundColor: "#B89B7A",
+        textColor: "#ffffff",
         disabled: true,
-        requiresValidSelection: true
-      }
-    }
+        requiresValidSelection: true,
+      },
+    },
   ];
 };
 

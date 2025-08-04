@@ -1,10 +1,10 @@
 import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import React, { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Users, Quote } from 'lucide-react';
-import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
-import { DeviceView, StyleProps } from './types';
+import React, { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight, Users, Quote } from "lucide-react";
+import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
+import { DeviceView, StyleProps } from "./types";
 
 interface TransformationItem {
   id: string;
@@ -26,7 +26,7 @@ interface BeforeAfterSectionProps extends StyleProps {
   /** Lista de transformações */
   transformations: TransformationItem[];
   /** Modo de exibição */
-  displayMode?: 'carousel' | 'grid' | 'single';
+  displayMode?: "carousel" | "grid" | "single";
   /** Mostrar depoimentos junto com as imagens */
   showTestimonials?: boolean;
   /** Mostrar resultados/benefícios */
@@ -54,25 +54,30 @@ export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
   title = "Transformações Reais de Nossas Clientes",
   subtitle = "Veja como outras mulheres transformaram seu estilo e autoestima:",
   transformations,
-  displayMode = 'carousel',
+  displayMode = "carousel",
   showTestimonials = true,
   showResults = true,
   animationConfig = {},
-  deviceView = 'desktop',
+  deviceView = "desktop",
   onTransformationClick,
   onContinue,
   className,
   style,
-  customStyles
+  customStyles,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { disabled: animationsDisabled, duration = 400, autoPlay = false, autoPlayInterval = 5000 } = animationConfig;
-  const isLowPerformance = deviceView === 'mobile';
+  const {
+    disabled: animationsDisabled,
+    duration = 400,
+    autoPlay = false,
+    autoPlayInterval = 5000,
+  } = animationConfig;
+  const isLowPerformance = deviceView === "mobile";
 
   // Auto-play carousel
   React.useEffect(() => {
-    if (!autoPlay || displayMode !== 'carousel') return;
-    
+    if (!autoPlay || displayMode !== "carousel") return;
+
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % transformations.length);
     }, autoPlayInterval);
@@ -85,11 +90,16 @@ export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
   };
 
   const prevTransformation = () => {
-    setCurrentIndex((prev) => (prev - 1 + transformations.length) % transformations.length);
+    setCurrentIndex(
+      (prev) => (prev - 1 + transformations.length) % transformations.length,
+    );
   };
 
-  const renderTransformation = (transformation: TransformationItem, index: number) => (
-    <div 
+  const renderTransformation = (
+    transformation: TransformationItem,
+    index: number,
+  ) => (
+    <div
       key={transformation.id}
       className="w-full"
       onClick={() => onTransformationClick?.(transformation)}
@@ -102,7 +112,9 @@ export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
           </h3>
           {(transformation.age || transformation.location) && (
             <p className="text-sm text-[#6B4F43]">
-              {[transformation.age, transformation.location].filter(Boolean).join(' • ')}
+              {[transformation.age, transformation.location]
+                .filter(Boolean)
+                .join(" • ")}
             </p>
           )}
         </div>
@@ -168,29 +180,36 @@ export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
         )}
 
         {/* Results */}
-        {showResults && transformation.results && transformation.results.length > 0 && (
-          <div className="space-y-2">
-            <h4 className="text-sm font-semibold text-[#aa6b5d] mb-2">Resultados alcançados:</h4>
-            <ul className="space-y-1">
-              {transformation.results.map((result, idx) => (
-                <li key={idx} className="text-sm text-[#432818] flex items-start">
-                  <span className="text-[#B89B7A] mr-2">•</span>
-                  {result}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        {showResults &&
+          transformation.results &&
+          transformation.results.length > 0 && (
+            <div className="space-y-2">
+              <h4 className="text-sm font-semibold text-[#aa6b5d] mb-2">
+                Resultados alcançados:
+              </h4>
+              <ul className="space-y-1">
+                {transformation.results.map((result, idx) => (
+                  <li
+                    key={idx}
+                    className="text-sm text-[#432818] flex items-start"
+                  >
+                    <span className="text-[#B89B7A] mr-2">•</span>
+                    {result}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
       </Card>
     </div>
   );
 
   return (
-    <div className={`py-10 ${className || ''}`} style={style}>
+    <div className={`py-10 ${className || ""}`} style={style}>
       {customStyles && (
         <style dangerouslySetInnerHTML={{ __html: customStyles }} />
       )}
-      
+
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-2">
@@ -206,15 +225,20 @@ export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
 
       {/* Content */}
       <div className="max-w-full mx-auto">
-        {displayMode === 'carousel' ? (
+        {displayMode === "carousel" ? (
           <div className="relative">
             {/* Carousel content */}
             <AnimatedWrapper
-              animation={animationsDisabled || isLowPerformance ? 'none' : 'fade'}
+              animation={
+                animationsDisabled || isLowPerformance ? "none" : "fade"
+              }
               show={true}
               duration={duration}
             >
-              {renderTransformation(transformations[currentIndex], currentIndex)}
+              {renderTransformation(
+                transformations[currentIndex],
+                currentIndex,
+              )}
             </AnimatedWrapper>
 
             {/* Navigation */}
@@ -249,12 +273,16 @@ export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
               </div>
             )}
           </div>
-        ) : displayMode === 'grid' ? (
-          <div className={`grid ${deviceView === 'mobile' ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'} gap-6`}>
+        ) : displayMode === "grid" ? (
+          <div
+            className={`grid ${deviceView === "mobile" ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"} gap-6`}
+          >
             {transformations.map((transformation, index) => (
               <AnimatedWrapper
                 key={transformation.id}
-                animation={animationsDisabled || isLowPerformance ? 'none' : 'fade'}
+                animation={
+                  animationsDisabled || isLowPerformance ? "none" : "fade"
+                }
                 show={true}
                 duration={duration}
                 delay={200 * index}
@@ -267,7 +295,9 @@ export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
           // Single mode
           transformations.length > 0 && (
             <AnimatedWrapper
-              animation={animationsDisabled || isLowPerformance ? 'none' : 'fade'}
+              animation={
+                animationsDisabled || isLowPerformance ? "none" : "fade"
+              }
               show={true}
               duration={duration}
             >

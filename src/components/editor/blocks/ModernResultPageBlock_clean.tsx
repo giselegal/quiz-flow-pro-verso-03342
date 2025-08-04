@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
 import { Award, Star, CheckCircle, ArrowRight } from "lucide-react";
-import type { BlockComponentProps } from '@/types/blocks';
+import type { BlockComponentProps } from "@/types/blocks";
 
 /**
  * ModernResultPageBlock - Componente de página de resultado moderna (Etapa 20)
@@ -14,45 +14,46 @@ const ModernResultPageBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  className = ''
+  className = "",
 }) => {
   const {
-    title = 'Parabéns! Descobrimos seu estilo',
-    subtitle = 'Aqui está seu resultado personalizado',
-    resultStyle = 'Elegante',
-    description = 'Você tem um estilo único que combina elegância com modernidade...',
-    imageUrl = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp',
-    guideImageUrl = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp',
+    title = "Parabéns! Descobrimos seu estilo",
+    subtitle = "Aqui está seu resultado personalizado",
+    resultStyle = "Elegante",
+    description = "Você tem um estilo único que combina elegância com modernidade...",
+    imageUrl = "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+    guideImageUrl = "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
     percentage = 85,
     showSecondaryStyles = true,
-    backgroundColor = 'bg-gradient-to-br from-[#fffaf7] to-[#f9f4ef]',
-    padding = 'large'
+    backgroundColor = "bg-gradient-to-br from-[#fffaf7] to-[#f9f4ef]",
+    padding = "large",
   } = block.properties;
 
   // Get username from context (placeholder)
-  const username = 'Usuário';
+  const username = "Usuário";
 
   // Classes de padding
   const paddingClasses = {
-    'none': 'p-0',
-    'small': 'p-4 sm:p-6',
-    'medium': 'p-6 sm:p-8 lg:p-12',
-    'large': 'p-8 sm:p-12 lg:p-16'
+    none: "p-0",
+    small: "p-4 sm:p-6",
+    medium: "p-6 sm:p-8 lg:p-12",
+    large: "p-8 sm:p-12 lg:p-16",
   };
 
   return (
     <div
       className={cn(
         // Layout responsivo base
-        'w-full h-full min-h-screen flex flex-col',
+        "w-full h-full min-h-screen flex flex-col",
         // Background
-        backgroundColor || 'bg-gradient-to-br from-[#fffaf7] to-[#f9f4ef]',
+        backgroundColor || "bg-gradient-to-br from-[#fffaf7] to-[#f9f4ef]",
         // Padding responsivo
-        paddingClasses[padding as keyof typeof paddingClasses] || paddingClasses.large,
+        paddingClasses[padding as keyof typeof paddingClasses] ||
+          paddingClasses.large,
         // Estados visuais
-        'transition-all duration-200',
-        isSelected && 'ring-2 ring-blue-500',
-        className
+        "transition-all duration-200",
+        isSelected && "ring-2 ring-blue-500",
+        className,
       )}
       onClick={onClick}
     >
@@ -109,9 +110,9 @@ const ModernResultPageBlock: React.FC<BlockComponentProps> = ({
                     key={star}
                     className={cn(
                       "w-6 h-6",
-                      star <= Math.floor(percentage / 20) 
-                        ? "text-yellow-400 fill-current" 
-                        : "text-gray-300"
+                      star <= Math.floor(percentage / 20)
+                        ? "text-yellow-400 fill-current"
+                        : "text-gray-300",
                     )}
                   />
                 ))}
@@ -129,12 +130,14 @@ const ModernResultPageBlock: React.FC<BlockComponentProps> = ({
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
             </div>
-            
+
             {/* Badge flutuante */}
             <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-full shadow-lg">
               <div className="flex items-center space-x-2">
                 <CheckCircle className="w-4 h-4 text-green-500" />
-                <span className="text-sm font-medium text-[#432818]">Seu Estilo</span>
+                <span className="text-sm font-medium text-[#432818]">
+                  Seu Estilo
+                </span>
               </div>
             </div>
           </div>
@@ -161,16 +164,17 @@ const ModernResultPageBlock: React.FC<BlockComponentProps> = ({
                   Seu Guia de Estilo Personalizado
                 </h3>
                 <p className="text-[#5D4A3A] mb-6">
-                  Descubra todas as peças que combinam perfeitamente com seu estilo único.
+                  Descubra todas as peças que combinam perfeitamente com seu
+                  estilo único.
                 </p>
-                
+
                 {/* CTA */}
                 <button className="inline-flex items-center space-x-2 bg-[#432818] hover:bg-[#5a3520] text-white px-6 py-3 rounded-lg font-medium transition-colors">
                   <span>Ver Guia Completo</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
-              
+
               <div className="relative">
                 <img
                   src={guideImageUrl}

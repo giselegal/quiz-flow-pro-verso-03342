@@ -1,23 +1,29 @@
 // components/editor/StepsPanel.tsx - Versão Refatorada
-import React, { useState, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { ScrollArea } from '../ui/scroll-area';
-import { Badge } from '../ui/badge';
-import { 
-  GripVertical, Plus, MoreHorizontal, Edit2, 
-  Trash2, Copy, Check, X 
-} from 'lucide-react';
+import React, { useState, useCallback } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { ScrollArea } from "../ui/scroll-area";
+import { Badge } from "../ui/badge";
+import {
+  GripVertical,
+  Plus,
+  MoreHorizontal,
+  Edit2,
+  Trash2,
+  Copy,
+  Check,
+  X,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
-import { cn } from '../../lib/utils';
-import { useSteps, QuizStep } from '../../context/StepsContext';
+} from "../ui/dropdown-menu";
+import { cn } from "../../lib/utils";
+import { useSteps, QuizStep } from "../../context/StepsContext";
 
 interface StepsPanelProps {
   className?: string;
@@ -26,29 +32,29 @@ interface StepsPanelProps {
 
 /**
  * Painel de Etapas do Quiz - Versão refatorada usando Context API
- * 
+ *
  * Este componente utiliza o StepsContext para gerenciar o estado das etapas,
  * simplificando a interface e removendo a necessidade de passar múltiplos callbacks.
  */
 export const StepsPanel: React.FC<StepsPanelProps> = ({
-  className = '',
+  className = "",
   onPopulateStep,
 }) => {
   // Consumir o contexto de etapas
-  const { 
-    steps, 
-    selectedStepId, 
-    setSelectedStepId, 
-    addStep, 
+  const {
+    steps,
+    selectedStepId,
+    setSelectedStepId,
+    addStep,
     updateStep,
     deleteStep,
     duplicateStep,
     reorderStep,
-    populateStep
+    populateStep,
   } = useSteps();
 
   const [editingStepId, setEditingStepId] = useState<string | null>(null);
-  const [editingName, setEditingName] = useState('');
+  const [editingName, setEditingName] = useState("");
 
   const handleEditStart = useCallback((step: QuizStep) => {
     setEditingStepId(step.id);
@@ -60,24 +66,27 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
       updateStep(editingStepId, { name: editingName.trim() });
     }
     setEditingStepId(null);
-    setEditingName('');
+    setEditingName("");
   }, [editingStepId, editingName, updateStep]);
 
   const handleEditCancel = useCallback(() => {
     setEditingStepId(null);
-    setEditingName('');
+    setEditingName("");
   }, []);
 
-  const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleEditSave();
-    } else if (e.key === 'Escape') {
-      handleEditCancel();
-    }
-  }, [handleEditSave, handleEditCancel]);
+  const handleKeyPress = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter") {
+        handleEditSave();
+      } else if (e.key === "Escape") {
+        handleEditCancel();
+      }
+    },
+    [handleEditSave, handleEditCancel],
+  );
 
   return (
-    <Card className={cn('h-full flex flex-col', className)}>
+    <Card className={cn("h-full flex flex-col", className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base font-semibold text-gray-900">
@@ -88,7 +97,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
           </Badge>
         </div>
       </CardHeader>
-      
+
       <CardContent className="flex-1 p-0">
         <ScrollArea className="h-full px-4">
           <div className="space-y-2 pb-4">
@@ -96,11 +105,11 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
               <div
                 key={step.id}
                 className={cn(
-                  'group relative flex items-center p-3 rounded-lg border transition-all duration-200',
-                  'hover:shadow-sm cursor-pointer',
+                  "group relative flex items-center p-3 rounded-lg border transition-all duration-200",
+                  "hover:shadow-sm cursor-pointer",
                   selectedStepId === step.id
-                    ? 'bg-blue-50 border-blue-200 shadow-sm'
-                    : 'bg-white border-gray-200 hover:border-gray-300'
+                    ? "bg-blue-50 border-blue-200 shadow-sm"
+                    : "bg-white border-gray-200 hover:border-gray-300",
                 )}
                 onClick={() => setSelectedStepId(step.id)}
               >
@@ -156,7 +165,8 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                         </div>
                       </div>
                       <p className="text-xs text-gray-500 mt-1">
-                        Etapa {index + 1} • {step.blocksCount} componente{step.blocksCount !== 1 ? 's' : ''}
+                        Etapa {index + 1} • {step.blocksCount} componente
+                        {step.blocksCount !== 1 ? "s" : ""}
                       </p>
                     </div>
                   )}
@@ -181,18 +191,22 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                           <Edit2 className="w-4 h-4 mr-2" />
                           Renomear
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => duplicateStep(step.id)}>
+                        <DropdownMenuItem
+                          onClick={() => duplicateStep(step.id)}
+                        >
                           <Copy className="w-4 h-4 mr-2" />
                           Duplicar
                         </DropdownMenuItem>
                         {onPopulateStep && (
-                          <DropdownMenuItem onClick={() => onPopulateStep(step.id)}>
+                          <DropdownMenuItem
+                            onClick={() => onPopulateStep(step.id)}
+                          >
                             <Plus className="w-4 h-4 mr-2" />
                             Popular Etapa
                           </DropdownMenuItem>
                         )}
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
                           onClick={() => deleteStep(step.id)}
                           className="text-red-600 hover:text-red-700"
                         >

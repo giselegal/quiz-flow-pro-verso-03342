@@ -1,5 +1,4 @@
-
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
 interface LoadingStateOptions {
   initialState?: boolean;
@@ -18,16 +17,19 @@ export const useLoadingState = (options: LoadingStateOptions = {}) => {
     }
   }, []);
 
-  const setLoadingWithTimeout = useCallback((loading: boolean, timeoutMs?: number) => {
-    setLoading(loading);
-    
-    const timeoutValue = timeoutMs || timeout;
-    if (loading && timeoutValue) {
-      setTimeout(() => {
-        setLoading(false);
-      }, timeoutValue);
-    }
-  }, [setLoading, timeout]);
+  const setLoadingWithTimeout = useCallback(
+    (loading: boolean, timeoutMs?: number) => {
+      setLoading(loading);
+
+      const timeoutValue = timeoutMs || timeout;
+      if (loading && timeoutValue) {
+        setTimeout(() => {
+          setLoading(false);
+        }, timeoutValue);
+      }
+    },
+    [setLoading, timeout],
+  );
 
   const handleError = useCallback((errorMessage: string) => {
     setError(errorMessage);
@@ -40,6 +42,6 @@ export const useLoadingState = (options: LoadingStateOptions = {}) => {
     setLoading,
     setLoadingWithTimeout,
     handleError,
-    clearError: () => setError(null)
+    clearError: () => setError(null),
   };
 };

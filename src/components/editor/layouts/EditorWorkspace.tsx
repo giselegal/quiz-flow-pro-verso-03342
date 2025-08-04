@@ -1,8 +1,7 @@
-
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
-import { BlockType } from '@/types/editor';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { BlockType } from "@/types/editor";
 
 interface EditorWorkspaceProps {
   blocks: any[];
@@ -15,7 +14,7 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
   blocks,
   onAddBlock,
   onSelectBlock,
-  selectedBlockId
+  selectedBlockId,
 }) => {
   const handleAddBlock = (type: string) => {
     // Ensure the type is valid before calling onAddBlock
@@ -28,7 +27,7 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
         <div className="flex flex-col items-center justify-center h-full text-center">
           <p className="text-gray-500 mb-4">Nenhum bloco adicionado ainda</p>
           <Button
-            onClick={() => handleAddBlock('text')}
+            onClick={() => handleAddBlock("text")}
             className="flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
@@ -42,8 +41,8 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
               key={block.id}
               className={`block-item p-4 border rounded-lg cursor-pointer transition-colors ${
                 selectedBlockId === block.id
-                  ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-200 hover:border-gray-300'
+                  ? "border-blue-500 bg-blue-50"
+                  : "border-gray-200 hover:border-gray-300"
               }`}
               onClick={() => onSelectBlock(block.id)}
             >

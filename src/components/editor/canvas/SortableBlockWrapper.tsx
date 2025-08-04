@@ -1,12 +1,11 @@
-
-import React from 'react';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { Block } from '@/types/editor';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { GripVertical, Trash2 } from 'lucide-react';
-import UniversalBlockRenderer from '../blocks/UniversalBlockRenderer';
+import React from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { Block } from "@/types/editor";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { GripVertical, Trash2 } from "lucide-react";
+import UniversalBlockRenderer from "../blocks/UniversalBlockRenderer";
 
 interface SortableBlockWrapperProps {
   block: Block;
@@ -21,7 +20,7 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   isSelected,
   onSelect,
   onUpdate,
-  onDelete
+  onDelete,
 }) => {
   const {
     attributes,
@@ -29,13 +28,13 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     setNodeRef,
     transform,
     transition,
-    isDragging
-  } = useSortable({ 
+    isDragging,
+  } = useSortable({
     id: block.id,
     data: {
-      type: 'canvas-block',
-      block: block
-    }
+      type: "canvas-block",
+      block: block,
+    },
   });
 
   const style = {
@@ -50,7 +49,9 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
 
   return (
     <div ref={setNodeRef} style={style}>
-      <Card className={`relative group ${isSelected ? 'ring-2 ring-[#B89B7A]' : ''}`}>
+      <Card
+        className={`relative group ${isSelected ? "ring-2 ring-[#B89B7A]" : ""}`}
+      >
         {/* Drag handle and controls - only show on hover */}
         <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex items-center gap-1">
           <Button

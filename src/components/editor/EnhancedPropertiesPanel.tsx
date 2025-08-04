@@ -1,26 +1,41 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { HexColorPicker } from 'react-colorful';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useSyncedScroll } from '@/hooks/useSyncedScroll';
-import { 
-  X, 
-  Info, 
-  Plus, 
-  Trash2, 
-  GripVertical, 
-  Eye, 
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { HexColorPicker } from "react-colorful";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useSyncedScroll } from "@/hooks/useSyncedScroll";
+import {
+  X,
+  Info,
+  Plus,
+  Trash2,
+  GripVertical,
+  Eye,
   EyeOff,
   Palette,
   Settings,
@@ -28,9 +43,9 @@ import {
   Type,
   CheckCircle,
   Upload,
-  Edit3
-} from 'lucide-react';
-import { BlockDefinition, EditableContent } from '@/types/editor';
+  Edit3,
+} from "lucide-react";
+import { BlockDefinition, EditableContent } from "@/types/editor";
 
 // 🎯 Interface para uma opção
 interface OptionItem {
@@ -51,12 +66,12 @@ const OptionsArrayEditor: React.FC<{
   const addOption = () => {
     const newOption: OptionItem = {
       id: `option-${Date.now()}`,
-      text: 'Nova opção',
+      text: "Nova opção",
       value: `value-${Date.now()}`,
-      category: 'Geral',
-      styleCategory: 'Geral',
+      category: "Geral",
+      styleCategory: "Geral",
       points: 1,
-      imageUrl: 'https://via.placeholder.com/100x100'
+      imageUrl: "https://via.placeholder.com/100x100",
     };
     onChange([...value, newOption]);
   };
@@ -66,18 +81,25 @@ const OptionsArrayEditor: React.FC<{
     onChange(newOptions);
   };
 
-  const updateOption = (index: number, field: keyof OptionItem, newValue: string | number) => {
+  const updateOption = (
+    index: number,
+    field: keyof OptionItem,
+    newValue: string | number,
+  ) => {
     const newOptions = [...value];
     newOptions[index] = { ...newOptions[index], [field]: newValue };
     onChange(newOptions);
   };
 
-  const moveOption = (index: number, direction: 'up' | 'down') => {
+  const moveOption = (index: number, direction: "up" | "down") => {
     const newOptions = [...value];
-    const targetIndex = direction === 'up' ? index - 1 : index + 1;
-    
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+
     if (targetIndex >= 0 && targetIndex < newOptions.length) {
-      [newOptions[index], newOptions[targetIndex]] = [newOptions[targetIndex], newOptions[index]];
+      [newOptions[index], newOptions[targetIndex]] = [
+        newOptions[targetIndex],
+        newOptions[index],
+      ];
       onChange(newOptions);
     }
   };
@@ -108,7 +130,7 @@ const OptionsArrayEditor: React.FC<{
                 </div>
                 <div className="flex items-center gap-1">
                   <Button
-                    onClick={() => moveOption(index, 'up')}
+                    onClick={() => moveOption(index, "up")}
                     disabled={index === 0}
                     size="sm"
                     variant="ghost"
@@ -117,7 +139,7 @@ const OptionsArrayEditor: React.FC<{
                     ↑
                   </Button>
                   <Button
-                    onClick={() => moveOption(index, 'down')}
+                    onClick={() => moveOption(index, "down")}
                     disabled={index === value.length - 1}
                     size="sm"
                     variant="ghost"
@@ -142,18 +164,22 @@ const OptionsArrayEditor: React.FC<{
                   <Label className="text-xs">Texto</Label>
                   <Input
                     value={option.text}
-                    onChange={(e) => updateOption(index, 'text', e.target.value)}
+                    onChange={(e) =>
+                      updateOption(index, "text", e.target.value)
+                    }
                     placeholder="Texto da opção"
                     className="text-xs"
                   />
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <Label className="text-xs">Valor</Label>
                     <Input
                       value={option.value}
-                      onChange={(e) => updateOption(index, 'value', e.target.value)}
+                      onChange={(e) =>
+                        updateOption(index, "value", e.target.value)
+                      }
                       placeholder="Valor único"
                       className="text-xs"
                     />
@@ -161,8 +187,10 @@ const OptionsArrayEditor: React.FC<{
                   <div>
                     <Label className="text-xs">Categoria</Label>
                     <Input
-                      value={option.category || ''}
-                      onChange={(e) => updateOption(index, 'category', e.target.value)}
+                      value={option.category || ""}
+                      onChange={(e) =>
+                        updateOption(index, "category", e.target.value)
+                      }
                       placeholder="Categoria"
                       className="text-xs"
                     />
@@ -175,7 +203,13 @@ const OptionsArrayEditor: React.FC<{
                     <Input
                       type="number"
                       value={option.points || 1}
-                      onChange={(e) => updateOption(index, 'points', parseInt(e.target.value) || 1)}
+                      onChange={(e) =>
+                        updateOption(
+                          index,
+                          "points",
+                          parseInt(e.target.value) || 1,
+                        )
+                      }
                       min="1"
                       max="10"
                       className="text-xs"
@@ -184,8 +218,10 @@ const OptionsArrayEditor: React.FC<{
                   <div>
                     <Label className="text-xs">Estilo</Label>
                     <Input
-                      value={option.styleCategory || ''}
-                      onChange={(e) => updateOption(index, 'styleCategory', e.target.value)}
+                      value={option.styleCategory || ""}
+                      onChange={(e) =>
+                        updateOption(index, "styleCategory", e.target.value)
+                      }
                       placeholder="Categoria de estilo"
                       className="text-xs"
                     />
@@ -196,15 +232,17 @@ const OptionsArrayEditor: React.FC<{
                   <Label className="text-xs">URL da Imagem</Label>
                   <div className="flex gap-2">
                     <Input
-                      value={option.imageUrl || ''}
-                      onChange={(e) => updateOption(index, 'imageUrl', e.target.value)}
+                      value={option.imageUrl || ""}
+                      onChange={(e) =>
+                        updateOption(index, "imageUrl", e.target.value)
+                      }
                       placeholder="https://exemplo.com/imagem.jpg"
                       className="text-xs flex-1"
                     />
                     {option.imageUrl && (
                       <div className="w-8 h-8 rounded overflow-hidden flex-shrink-0">
-                        <img 
-                          src={option.imageUrl} 
+                        <img
+                          src={option.imageUrl}
                           alt={option.text}
                           className="w-full h-full object-cover"
                         />
@@ -254,22 +292,22 @@ const ColorPicker: React.FC<{
         <Button
           variant="outline"
           className="w-8 h-8 p-0 border-2"
-          style={{ backgroundColor: value || '#ffffff' }}
+          style={{ backgroundColor: value || "#ffffff" }}
         >
           <Palette className="w-4 h-4 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-3">
-        <HexColorPicker color={value || '#ffffff'} onChange={onChange} />
+        <HexColorPicker color={value || "#ffffff"} onChange={onChange} />
         <Input
-          value={value || ''}
+          value={value || ""}
           onChange={(e) => onChange(e.target.value)}
           placeholder="#ffffff"
           className="mt-2"
         />
       </PopoverContent>
     </Popover>
-    <span className="text-xs text-gray-500">{value || 'Nenhuma cor'}</span>
+    <span className="text-xs text-gray-500">{value || "Nenhuma cor"}</span>
   </div>
 );
 
@@ -287,9 +325,7 @@ const PropertyGroup: React.FC<{
         {title}
       </CardTitle>
     </CardHeader>
-    <CardContent className="pt-0 space-y-4">
-      {children}
-    </CardContent>
+    <CardContent className="pt-0 space-y-4">{children}</CardContent>
   </Card>
 );
 
@@ -327,14 +363,14 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
   block,
   blockDefinition,
   onUpdateBlock,
-  onClose
+  onClose,
 }) => {
-  const { scrollRef } = useSyncedScroll({ source: 'properties' });
-  
+  const { scrollRef } = useSyncedScroll({ source: "properties" });
+
   const handlePropertyChange = (key: string, value: any) => {
     onUpdateBlock(block.id, {
       ...block.content,
-      [key]: value
+      [key]: value,
     });
   };
 
@@ -348,11 +384,11 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
       content: {},
       behavior: {},
       validation: {},
-      advanced: {}
+      advanced: {},
     };
 
     Object.entries(properties).forEach(([key, prop]) => {
-      const category = (prop as any).category || 'general';
+      const category = (prop as any).category || "general";
       (categories as any)[category][key] = prop;
     });
 
@@ -366,20 +402,20 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
     const currentValue = (block.content as any)[key] || property.default;
 
     switch (property.type) {
-      case 'string':
+      case "string":
         return (
           <Input
-            value={currentValue || ''}
+            value={currentValue || ""}
             onChange={(e) => handlePropertyChange(key, e.target.value)}
             placeholder={property.placeholder || property.label}
             className="text-sm"
           />
         );
 
-      case 'textarea':
+      case "textarea":
         return (
           <Textarea
-            value={currentValue || ''}
+            value={currentValue || ""}
             onChange={(e) => handlePropertyChange(key, e.target.value)}
             placeholder={property.placeholder || property.label}
             rows={property.rows || 3}
@@ -387,11 +423,11 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           />
         );
 
-      case 'boolean':
+      case "boolean":
         return (
           <div className="flex items-center justify-between">
             <span className="text-sm text-gray-600">
-              {currentValue ? 'Ativado' : 'Desativado'}
+              {currentValue ? "Ativado" : "Desativado"}
             </span>
             <Switch
               checked={currentValue || false}
@@ -400,14 +436,16 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           </div>
         );
 
-      case 'select':
+      case "select":
         return (
-          <Select 
-            value={currentValue || property.default} 
+          <Select
+            value={currentValue || property.default}
             onValueChange={(value) => handlePropertyChange(key, value)}
           >
             <SelectTrigger className="text-sm">
-              <SelectValue placeholder={`Selecione ${property.label.toLowerCase()}`} />
+              <SelectValue
+                placeholder={`Selecione ${property.label.toLowerCase()}`}
+              />
             </SelectTrigger>
             <SelectContent>
               {property.options?.map((option: any) => (
@@ -419,12 +457,14 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           </Select>
         );
 
-      case 'number':
+      case "number":
         return (
           <Input
             type="number"
-            value={currentValue || ''}
-            onChange={(e) => handlePropertyChange(key, parseFloat(e.target.value) || 0)}
+            value={currentValue || ""}
+            onChange={(e) =>
+              handlePropertyChange(key, parseFloat(e.target.value) || 0)
+            }
             placeholder={property.placeholder || property.label}
             min={property.min}
             max={property.max}
@@ -433,7 +473,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           />
         );
 
-      case 'range':
+      case "range":
         return (
           <div className="space-y-2">
             <Slider
@@ -446,13 +486,15 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
             />
             <div className="flex justify-between text-xs text-gray-500">
               <span>{property.min || 0}</span>
-              <span className="font-medium">{currentValue || property.default || 0}</span>
+              <span className="font-medium">
+                {currentValue || property.default || 0}
+              </span>
               <span>{property.max || 100}</span>
             </div>
           </div>
         );
 
-      case 'color':
+      case "color":
         return (
           <ColorPicker
             value={currentValue || property.default}
@@ -461,15 +503,17 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           />
         );
 
-      case 'array':
+      case "array":
         // Para o caso específico de 'options' do options-grid
-        if (key === 'options') {
-          return <OptionsArrayEditor 
-            value={currentValue || []} 
-            onChange={(newOptions) => handlePropertyChange(key, newOptions)}
-          />;
+        if (key === "options") {
+          return (
+            <OptionsArrayEditor
+              value={currentValue || []}
+              onChange={(newOptions) => handlePropertyChange(key, newOptions)}
+            />
+          );
         }
-        
+
         return (
           <div className="space-y-2">
             <Button variant="outline" size="sm" className="w-full">
@@ -485,7 +529,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
       default:
         return (
           <Input
-            value={currentValue || ''}
+            value={currentValue || ""}
             onChange={(e) => handlePropertyChange(key, e.target.value)}
             placeholder={property.placeholder || property.label}
             className="text-sm"
@@ -495,7 +539,11 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
   };
 
   // 🎯 Renderizar grupo de propriedades
-  const renderPropertyGroup = (title: string, icon: React.ReactNode, properties: Record<string, any>) => {
+  const renderPropertyGroup = (
+    title: string,
+    icon: React.ReactNode,
+    properties: Record<string, any>,
+  ) => {
     if (Object.keys(properties).length === 0) return null;
 
     return (
@@ -528,18 +576,20 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
               <p className="text-xs text-white/80">ID: {block.id}</p>
             </div>
           </div>
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={onClose}
             className="text-white hover:bg-white/20"
           >
             <X className="w-4 h-4" />
           </Button>
         </div>
-        
+
         {blockDefinition.description && (
-          <p className="text-sm text-white/90 mt-2">{blockDefinition.description}</p>
+          <p className="text-sm text-white/90 mt-2">
+            {blockDefinition.description}
+          </p>
         )}
       </div>
 
@@ -558,29 +608,59 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           </TabsList>
 
           <TabsContent value="properties" className="p-2 space-y-2 mt-0">
-            {renderPropertyGroup("Geral", <Type className="w-4 h-4" />, categorizedProps.general)}
-            {renderPropertyGroup("Conteúdo", <Type className="w-4 h-4" />, categorizedProps.content)}
-            {renderPropertyGroup("Layout", <Layout className="w-4 h-4" />, categorizedProps.layout)}
-            {renderPropertyGroup("Comportamento", <CheckCircle className="w-4 h-4" />, categorizedProps.behavior)}
-            {renderPropertyGroup("Validação", <CheckCircle className="w-4 h-4" />, categorizedProps.validation)}
+            {renderPropertyGroup(
+              "Geral",
+              <Type className="w-4 h-4" />,
+              categorizedProps.general,
+            )}
+            {renderPropertyGroup(
+              "Conteúdo",
+              <Type className="w-4 h-4" />,
+              categorizedProps.content,
+            )}
+            {renderPropertyGroup(
+              "Layout",
+              <Layout className="w-4 h-4" />,
+              categorizedProps.layout,
+            )}
+            {renderPropertyGroup(
+              "Comportamento",
+              <CheckCircle className="w-4 h-4" />,
+              categorizedProps.behavior,
+            )}
+            {renderPropertyGroup(
+              "Validação",
+              <CheckCircle className="w-4 h-4" />,
+              categorizedProps.validation,
+            )}
           </TabsContent>
 
           <TabsContent value="style" className="p-2 space-y-2 mt-0">
-            {renderPropertyGroup("Estilização", <Palette className="w-4 h-4" />, categorizedProps.styling)}
-            {renderPropertyGroup("Avançado", <Settings className="w-4 h-4" />, categorizedProps.advanced)}
+            {renderPropertyGroup(
+              "Estilização",
+              <Palette className="w-4 h-4" />,
+              categorizedProps.styling,
+            )}
+            {renderPropertyGroup(
+              "Avançado",
+              <Settings className="w-4 h-4" />,
+              categorizedProps.advanced,
+            )}
           </TabsContent>
         </Tabs>
-
         {/* 🚨 Fallback para propriedades não categorizadas */}
         {Object.keys(blockDefinition.properties).length === 0 && (
           <div className="text-center py-12 text-gray-500">
             <Settings className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-            <p className="text-sm font-medium">Nenhuma propriedade disponível</p>
+            <p className="text-sm font-medium">
+              Nenhuma propriedade disponível
+            </p>
             <p className="text-xs text-gray-400 mt-1">
               Este componente não possui propriedades editáveis
             </p>
           </div>
-        )}9
+        )}
+        9
       </div>
 
       {/* 🎯 Footer Actions */}

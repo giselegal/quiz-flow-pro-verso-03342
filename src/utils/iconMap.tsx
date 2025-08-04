@@ -1,5 +1,5 @@
-import React from 'react';
-import { 
+import React from "react";
+import {
   AlertCircle,
   Heart,
   ShoppingBag,
@@ -18,8 +18,8 @@ import {
   TrendingUp,
   Eye,
   BadgeCheck,
-  type LucideIcon
-} from 'lucide-react';
+  type LucideIcon,
+} from "lucide-react";
 
 // Mapa de nomes de ícones para componentes
 const iconMap: Record<string, LucideIcon> = {
@@ -45,16 +45,16 @@ const iconMap: Record<string, LucideIcon> = {
 
 /**
  * Renderiza um ícone Lucide baseado no nome fornecido
- * 
+ *
  * @param iconName - Nome do ícone (ex: 'Heart', 'ShoppingBag')
  * @param className - Classes CSS para aplicar ao ícone
  * @param fallback - Ícone padrão caso o nome não seja encontrado
  * @returns Componente do ícone ou ícone padrão
  */
 export const renderLucideIcon = (
-  iconName: string, 
-  className?: string, 
-  fallback: LucideIcon = AlertCircle
+  iconName: string,
+  className?: string,
+  fallback: LucideIcon = AlertCircle,
 ): React.ReactElement => {
   const IconComponent = iconMap[iconName] || fallback;
   return React.createElement(IconComponent, { className });
@@ -62,12 +62,15 @@ export const renderLucideIcon = (
 
 /**
  * Obtém o componente do ícone baseado no nome
- * 
+ *
  * @param iconName - Nome do ícone
  * @param fallback - Ícone padrão caso o nome não seja encontrado
  * @returns Componente do ícone
  */
-export const getLucideIcon = (iconName: string, fallback: LucideIcon = AlertCircle): LucideIcon => {
+export const getLucideIcon = (
+  iconName: string,
+  fallback: LucideIcon = AlertCircle,
+): LucideIcon => {
   return iconMap[iconName] || fallback;
 };
 

@@ -1,8 +1,7 @@
-
-import React from 'react';
+import React from "react";
 
 interface AnimatedWrapperProps {
-  animation?: 'fade' | 'scale' | 'none';
+  animation?: "fade" | "scale" | "none";
   show: boolean;
   duration?: number;
   delay?: number;
@@ -11,12 +10,12 @@ interface AnimatedWrapperProps {
 }
 
 export const AnimatedWrapper: React.FC<AnimatedWrapperProps> = ({
-  animation = 'fade',
+  animation = "fade",
   show,
   duration = 300,
   delay = 0,
-  className = '',
-  children
+  className = "",
+  children,
 }) => {
   const [mounted, setMounted] = React.useState(false);
 
@@ -29,11 +28,15 @@ export const AnimatedWrapper: React.FC<AnimatedWrapperProps> = ({
 
   if (!show || !mounted) return null;
 
-  const animationClass = animation === 'fade' ? 'animate-fade-in' : 
-                        animation === 'scale' ? 'animate-scale-in' : '';
+  const animationClass =
+    animation === "fade"
+      ? "animate-fade-in"
+      : animation === "scale"
+        ? "animate-scale-in"
+        : "";
 
   return (
-    <div 
+    <div
       className={`${animationClass} ${className}`}
       style={{ animationDuration: `${duration}ms` }}
     >
@@ -57,9 +60,9 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   alt,
   width,
   height,
-  className = '',
+  className = "",
   priority = false,
-  style
+  style,
 }) => {
   return (
     <img
@@ -69,7 +72,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
       height={height}
       className={className}
       style={style}
-      loading={priority ? 'eager' : 'lazy'}
+      loading={priority ? "eager" : "lazy"}
     />
   );
 };

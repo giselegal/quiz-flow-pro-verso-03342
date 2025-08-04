@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
+import React, { useState } from "react";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 interface GlobalStylesEditorProps {
   globalStyles: {
@@ -20,22 +25,22 @@ interface GlobalStylesEditorProps {
 export const GlobalStylesEditor: React.FC<GlobalStylesEditorProps> = ({
   globalStyles,
   onSave,
-  onCancel
+  onCancel,
 }) => {
   const [styles, setStyles] = useState(globalStyles);
 
   // Handle color change safely
   const handleColorChange = (colorType: string, hexColor: string) => {
-    setStyles(prev => ({
+    setStyles((prev) => ({
       ...prev,
-      [colorType]: hexColor || '#FFFFFF' // Default to white if color is undefined
+      [colorType]: hexColor || "#FFFFFF", // Default to white if color is undefined
     }));
   };
 
   const handleChange = (key: string, value: string) => {
-    setStyles(prev => ({
+    setStyles((prev) => ({
       ...prev,
-      [key]: value
+      [key]: value,
     }));
   };
 
@@ -48,8 +53,15 @@ export const GlobalStylesEditor: React.FC<GlobalStylesEditorProps> = ({
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
       <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-xl max-h-[90vh] overflow-auto">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-medium text-[#432818]">Estilos Globais</h2>
-          <Button variant="ghost" size="sm" onClick={onCancel} className="text-[#8F7A6A]">
+          <h2 className="text-xl font-medium text-[#432818]">
+            Estilos Globais
+          </h2>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onCancel}
+            className="text-[#8F7A6A]"
+          >
             Fechar
           </Button>
         </div>
@@ -67,8 +79,8 @@ export const GlobalStylesEditor: React.FC<GlobalStylesEditorProps> = ({
               <Input
                 id="primaryColor"
                 type="text"
-                value={styles.primaryColor || ''}
-                onChange={(e) => handleChange('primaryColor', e.target.value)}
+                value={styles.primaryColor || ""}
+                onChange={(e) => handleChange("primaryColor", e.target.value)}
                 placeholder="#B89B7A"
               />
             </div>
@@ -84,8 +96,8 @@ export const GlobalStylesEditor: React.FC<GlobalStylesEditorProps> = ({
               <Input
                 id="secondaryColor"
                 type="text"
-                value={styles.secondaryColor || ''}
-                onChange={(e) => handleChange('secondaryColor', e.target.value)}
+                value={styles.secondaryColor || ""}
+                onChange={(e) => handleChange("secondaryColor", e.target.value)}
                 placeholder="#432818"
               />
             </div>
@@ -101,8 +113,8 @@ export const GlobalStylesEditor: React.FC<GlobalStylesEditorProps> = ({
               <Input
                 id="textColor"
                 type="text"
-                value={styles.textColor || ''}
-                onChange={(e) => handleChange('textColor', e.target.value)}
+                value={styles.textColor || ""}
+                onChange={(e) => handleChange("textColor", e.target.value)}
                 placeholder="#3A3A3A"
               />
             </div>
@@ -118,8 +130,10 @@ export const GlobalStylesEditor: React.FC<GlobalStylesEditorProps> = ({
               <Input
                 id="backgroundColor"
                 type="text"
-                value={styles.backgroundColor || ''}
-                onChange={(e) => handleChange('backgroundColor', e.target.value)}
+                value={styles.backgroundColor || ""}
+                onChange={(e) =>
+                  handleChange("backgroundColor", e.target.value)
+                }
                 placeholder="#FAF9F7"
               />
             </div>
@@ -130,8 +144,8 @@ export const GlobalStylesEditor: React.FC<GlobalStylesEditorProps> = ({
             <Input
               id="fontFamily"
               type="text"
-              value={styles.fontFamily || ''}
-              onChange={(e) => handleChange('fontFamily', e.target.value)}
+              value={styles.fontFamily || ""}
+              onChange={(e) => handleChange("fontFamily", e.target.value)}
               placeholder="Playfair Display, serif"
             />
           </div>
@@ -140,7 +154,10 @@ export const GlobalStylesEditor: React.FC<GlobalStylesEditorProps> = ({
             <Button type="button" variant="outline" onClick={onCancel}>
               Cancelar
             </Button>
-            <Button type="submit" className="bg-[#B89B7A] hover:bg-[#A38A69] text-white">
+            <Button
+              type="submit"
+              className="bg-[#B89B7A] hover:bg-[#A38A69] text-white"
+            >
               Salvar Estilos
             </Button>
           </div>

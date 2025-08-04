@@ -1,4 +1,3 @@
-
 // Global type declarations
 
 interface Window {
@@ -28,4 +27,3 @@ interface EventTarget {
   getAttribute?: (name: string) => string | null;
   textContent?: string | null;
 }
-

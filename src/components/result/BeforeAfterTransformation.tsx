@@ -1,8 +1,7 @@
-
-import React, { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { OptimizedImage } from '@/components/ui/optimized-image';
-import { cn } from '@/lib/utils';
+import React, { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { OptimizedImage } from "@/components/ui/optimized-image";
+import { cn } from "@/lib/utils";
 
 interface BeforeAfterTransformationProps {
   beforeImage?: string;
@@ -17,7 +16,7 @@ const BeforeAfterTransformation: React.FC<BeforeAfterTransformationProps> = ({
   afterImage = "https://res.cloudinary.com/dqljyf76t/image/upload/v1745459978/20250423_1704_Transforma%C3%A7%C3%A3o_no_Closet_Moderno_simple_compose_01jsj3xvy6fpfb6pyd5shg5eak_1_appany.webp",
   title = "Transformação Real",
   description = "Veja como o guia pode transformar seu estilo",
-  className
+  className,
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -27,7 +26,7 @@ const BeforeAfterTransformation: React.FC<BeforeAfterTransformationProps> = ({
         <h3 className="text-2xl font-bold text-[#432818] mb-2">{title}</h3>
         <p className="text-[#8F7A6A]">{description}</p>
       </div>
-      
+
       <div className="grid md:grid-cols-2 gap-6">
         <div className="text-center">
           <h4 className="text-lg font-semibold text-[#432818] mb-3">Antes</h4>
@@ -42,7 +41,7 @@ const BeforeAfterTransformation: React.FC<BeforeAfterTransformationProps> = ({
             quality={90}
           />
         </div>
-        
+
         <div className="text-center">
           <h4 className="text-lg font-semibold text-[#432818] mb-3">Depois</h4>
           <OptimizedImage

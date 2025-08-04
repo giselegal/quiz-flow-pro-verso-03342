@@ -1,7 +1,7 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Save, Eye, RefreshCw, Palette } from 'lucide-react';
-import { JsonConfigEditor } from './JsonConfigEditor';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Save, Eye, RefreshCw, Palette } from "lucide-react";
+import { JsonConfigEditor } from "./JsonConfigEditor";
 
 interface EditorToolbarProps {
   onSave: () => void;
@@ -22,7 +22,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
   onEditGlobalStyles,
   resultPageConfig,
   onUpdateConfig,
-  onShowTemplates
+  onShowTemplates,
 }) => {
   return (
     <div className="border-b border-[#B89B7A]/20 p-4 bg-white flex items-center justify-between">
@@ -36,31 +36,23 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
             Modelos de Página
           </Button>
         )}
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onPreviewToggle}
-        >
+        <Button variant="outline" size="sm" onClick={onPreviewToggle}>
           <Eye className="w-4 h-4 mr-2" />
-          {isPreviewMode ? 'Modo Edição' : 'Visualizar'}
+          {isPreviewMode ? "Modo Edição" : "Visualizar"}
         </Button>
-        
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onEditGlobalStyles}
-        >
+
+        <Button variant="outline" size="sm" onClick={onEditGlobalStyles}>
           <Palette className="w-4 h-4 mr-2" />
           Estilos Globais
         </Button>
 
         {resultPageConfig && onUpdateConfig && (
-          <JsonConfigEditor 
+          <JsonConfigEditor
             config={resultPageConfig}
             onUpdate={onUpdateConfig}
           />
         )}
-        
+
         <Button
           variant="outline"
           size="sm"
@@ -70,7 +62,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
           <RefreshCw className="w-4 h-4 mr-2" />
           Resetar
         </Button>
-        
+
         <Button
           variant="default"
           size="sm"

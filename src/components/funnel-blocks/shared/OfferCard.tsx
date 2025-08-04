@@ -1,9 +1,14 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
-import { Check, Star } from 'lucide-react';
-import CountdownTimer from './CountdownTimer';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Check, Star } from "lucide-react";
+import CountdownTimer from "./CountdownTimer";
 
 interface OfferCardProps {
   title: string;
@@ -33,7 +38,7 @@ interface OfferCardProps {
 
 /**
  * OfferCard - Card para exibição de ofertas
- * 
+ *
  * Componente reutilizável para exibir ofertas e produtos,
  * com suporte para preços, descontos, features e contagem regressiva.
  */
@@ -46,36 +51,40 @@ export const OfferCard: React.FC<OfferCardProps> = ({
   discount,
   installments,
   features = [],
-  buttonText = 'Garantir agora',
+  buttonText = "Garantir agora",
   buttonUrl,
   onButtonClick,
-  className = '',
+  className = "",
   style,
   isHighlighted = false,
   showBadge = false,
-  badgeText = 'Mais Popular',
+  badgeText = "Mais Popular",
   showCountdown = false,
   countdownHours = 24,
   rating,
-  reviewCount
+  reviewCount,
 }) => {
   // Renderizar estrelas de avaliação
   const renderRating = () => {
     if (!rating) return null;
-    
+
     const ratingValue = Math.min(5, Math.max(0, rating));
-    
+
     return (
       <div className="flex items-center gap-1 mb-3">
-        {Array(5).fill(0).map((_, index) => (
-          <Star 
-            key={index} 
-            className={cn(
-              "w-4 h-4",
-              index < ratingValue ? "text-yellow-500 fill-yellow-500" : "text-gray-300"
-            )} 
-          />
-        ))}
+        {Array(5)
+          .fill(0)
+          .map((_, index) => (
+            <Star
+              key={index}
+              className={cn(
+                "w-4 h-4",
+                index < ratingValue
+                  ? "text-yellow-500 fill-yellow-500"
+                  : "text-gray-300",
+              )}
+            />
+          ))}
         {reviewCount && (
           <span className="text-xs text-gray-500 ml-1">({reviewCount})</span>
         )}
@@ -84,11 +93,13 @@ export const OfferCard: React.FC<OfferCardProps> = ({
   };
 
   return (
-    <Card 
+    <Card
       className={cn(
         "overflow-hidden transition-shadow duration-300 hover:shadow-lg",
-        isHighlighted ? "border-2 border-primary shadow-md" : "border border-gray-200",
-        className
+        isHighlighted
+          ? "border-2 border-primary shadow-md"
+          : "border border-gray-200",
+        className,
       )}
       style={style}
     >
@@ -98,16 +109,16 @@ export const OfferCard: React.FC<OfferCardProps> = ({
           {badgeText}
         </div>
       )}
-      
+
       {/* Imagem */}
       {imageUrl && (
         <div className="relative w-full h-48">
-          <img 
-            src={imageUrl} 
+          <img
+            src={imageUrl}
             alt={title}
             className="w-full h-full object-cover"
           />
-          
+
           {/* Desconto sobre imagem */}
           {discount && (
             <div className="absolute top-2 left-2 bg-red-500 text-white py-1 px-2 rounded text-xs font-bold">
@@ -116,31 +127,21 @@ export const OfferCard: React.FC<OfferCardProps> = ({
           )}
         </div>
       )}
-      
-      <CardHeader className={cn(
-        "relative",
-        imageUrl ? "pt-4 pb-2" : ""
-      )}>
+
+      <CardHeader className={cn("relative", imageUrl ? "pt-4 pb-2" : "")}>
         {/* Título */}
-        <h3 className={cn(
-          "font-bold",
-          isHighlighted ? "text-xl" : "text-lg"
-        )}>
+        <h3 className={cn("font-bold", isHighlighted ? "text-xl" : "text-lg")}>
           {title}
         </h3>
-        
+
         {/* Avaliação */}
         {renderRating()}
       </CardHeader>
-      
+
       <CardContent className="space-y-4 pt-0">
         {/* Descrição */}
-        {description && (
-          <p className="text-gray-700 text-sm">
-            {description}
-          </p>
-        )}
-        
+        {description && <p className="text-gray-700 text-sm">{description}</p>}
+
         {/* Preço */}
         {price && (
           <div className="space-y-1">
@@ -149,12 +150,12 @@ export const OfferCard: React.FC<OfferCardProps> = ({
                 De R$ {originalPrice}
               </div>
             )}
-            
+
             <div className="flex items-end gap-2">
               <span className="text-2xl font-bold text-primary">
                 R$ {price}
               </span>
-              
+
               {installments && (
                 <span className="text-xs text-gray-600">
                   ou {installments.count}x de R$ {installments.value}
@@ -163,7 +164,7 @@ export const OfferCard: React.FC<OfferCardProps> = ({
             </div>
           </div>
         )}
-        
+
         {/* Features */}
         {features.length > 0 && (
           <ul className="space-y-2 mt-4">
@@ -177,35 +178,31 @@ export const OfferCard: React.FC<OfferCardProps> = ({
             ))}
           </ul>
         )}
-        
+
         {/* Contagem regressiva */}
         {showCountdown && (
           <div className="pt-2">
             <p className="text-xs text-center text-gray-500 mb-2">
               Esta oferta expira em:
             </p>
-            <CountdownTimer 
-              hours={countdownHours} 
-              variant="compact" 
+            <CountdownTimer
+              hours={countdownHours}
+              variant="compact"
               className="mx-auto"
             />
           </div>
         )}
       </CardContent>
-      
+
       <CardFooter>
-        <Button 
+        <Button
           className="w-full"
           variant={isHighlighted ? "default" : "outline"}
           asChild={!!buttonUrl}
           onClick={!buttonUrl ? onButtonClick : undefined}
           size="lg"
         >
-          {buttonUrl ? (
-            <a href={buttonUrl}>{buttonText}</a>
-          ) : (
-            buttonText
-          )}
+          {buttonUrl ? <a href={buttonUrl}>{buttonText}</a> : buttonText}
         </Button>
       </CardFooter>
     </Card>

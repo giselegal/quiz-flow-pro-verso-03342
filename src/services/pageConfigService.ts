@@ -1,5 +1,5 @@
-import type { BlockData } from './funnelService';
-import { getDefaultPageConfig } from '../data/defaultPageConfigs';
+import type { BlockData } from "./funnelService";
+import { getDefaultPageConfig } from "../data/defaultPageConfigs";
 
 export interface PageStyles {
   backgroundColor?: string;
@@ -46,7 +46,7 @@ class PageConfigService {
   private cache: Map<string, PageConfig> = new Map();
 
   constructor() {
-    this.baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+    this.baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
   }
 
   /**
@@ -70,16 +70,15 @@ class PageConfigService {
 
       // Se não encontrou no localStorage, usar configuração padrão
       const defaultConfig = this.getDefaultPageConfig(pageId);
-      
+
       // Salvar a configuração padrão no localStorage para próximas vezes
       this.saveToLocalStorage(pageId, defaultConfig);
       this.cache.set(cacheKey, defaultConfig);
-      
-      return defaultConfig;
 
+      return defaultConfig;
     } catch (error) {
-      console.error('Erro ao buscar configuração da página:', error);
-      
+      console.error("Erro ao buscar configuração da página:", error);
+
       // Em caso de erro, retornar configuração padrão
       const defaultConfig = this.getDefaultPageConfig(pageId);
       return defaultConfig;
@@ -91,36 +90,42 @@ class PageConfigService {
    */
   async savePageConfig(config: PageConfig): Promise<boolean> {
     try {
-      const response = await fetch(`${this.baseUrl}/page-configs/${config.pageId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${this.baseUrl}/page-configs/${config.pageId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...config,
+            lastModified: new Date().toISOString(),
+            version: config.version + 1,
+          }),
         },
-        body: JSON.stringify({
-          ...config,
-          lastModified: new Date().toISOString(),
-          version: config.version + 1
-        }),
-      });
+      );
 
       if (!response.ok) {
-        throw new Error('Failed to save page config');
+        throw new Error("Failed to save page config");
       }
 
       // Atualizar cache
       this.cache.set(config.pageId, config);
-      
+
       return true;
     } catch (error) {
-      console.error('Error saving page config:', error);
-      
+      console.error("Error saving page config:", error);
+
       // Fallback para localStorage
       try {
-        localStorage.setItem(`page-config-${config.pageId}`, JSON.stringify(config));
+        localStorage.setItem(
+          `page-config-${config.pageId}`,
+          JSON.stringify(config),
+        );
         this.cache.set(config.pageId, config);
         return true;
       } catch (localError) {
-        console.error('Failed to save to localStorage:', localError);
+        console.error("Failed to save to localStorage:", localError);
         return false;
       }
     }
@@ -131,35 +136,35 @@ class PageConfigService {
    */
   convertFunnelToPageConfig(funnelData: any, pageId: string): PageConfig {
     const page = funnelData.pages?.find((p: any) => p.id === pageId);
-    
+
     if (!page) {
       return this.getDefaultPageConfig(pageId);
     }
 
     return {
       pageId: page.id,
-      pageName: page.name || page.title || 'Página sem nome',
+      pageName: page.name || page.title || "Página sem nome",
       blocks: this.convertBlocks(page.blocks || []),
       styles: {
-        backgroundColor: page.settings?.backgroundColor || '#fffaf7',
-        textColor: page.settings?.textColor || '#432818',
-        fontFamily: page.settings?.fontFamily || 'Inter, sans-serif',
-        customCSS: page.settings?.customCSS || ''
+        backgroundColor: page.settings?.backgroundColor || "#fffaf7",
+        textColor: page.settings?.textColor || "#432818",
+        fontFamily: page.settings?.fontFamily || "Inter, sans-serif",
+        customCSS: page.settings?.customCSS || "",
       },
       metadata: {
-        title: page.title || '',
-        description: page.description || '',
+        title: page.title || "",
+        description: page.description || "",
         keywords: page.keywords || [],
-        ogImage: page.ogImage || ''
+        ogImage: page.ogImage || "",
       },
       settings: {
         showProgress: page.settings?.showProgress || false,
         progressValue: page.settings?.progressValue || 0,
-        abTestVariant: page.settings?.abTestVariant || 'A',
-        customScripts: page.settings?.customScripts || []
+        abTestVariant: page.settings?.abTestVariant || "A",
+        customScripts: page.settings?.customScripts || [],
       },
       lastModified: new Date().toISOString(),
-      version: 1
+      version: 1,
     };
   }
 
@@ -167,7 +172,7 @@ class PageConfigService {
    * Converter blocos do editor para blocos de configuração
    */
   private convertBlocks(blocks: any[]): ConfigBlock[] {
-    return blocks.map(block => ({
+    return blocks.map((block) => ({
       id: block.id,
       type: block.type,
       order: block.order,
@@ -176,7 +181,7 @@ class PageConfigService {
       styles: block.styles || {},
       componentType: this.getComponentType(block.type),
       props: this.extractProps(block),
-      children: block.children ? this.convertBlocks(block.children) : undefined
+      children: block.children ? this.convertBlocks(block.children) : undefined,
     }));
   }
 
@@ -185,24 +190,24 @@ class PageConfigService {
    */
   private getComponentType(blockType: string): string {
     const typeMap: Record<string, string> = {
-      'header-component-real': 'Header',
-      'card-component-real': 'Card',
-      'testimonials-component-real': 'Testimonials',
-      'button-component-real': 'Button',
-      'fixed-intro-image-component-real': 'FixedIntroImage',
-      'countdown-timer-component-real': 'CountdownTimer',
-      'pricing-section-component-real': 'PricingSection',
-      'guarantee-component-real': 'GuaranteeSection',
-      'faq-section-component-real': 'FaqSectionNew',
-      'header': 'HeaderBlock',
-      'text': 'TextBlock',
-      'image': 'ImageBlock',
-      'button': 'ButtonBlock',
-      'question-multiple': 'QuestionBlock',
-      'question-strategic': 'StrategicQuestionBlock'
+      "header-component-real": "Header",
+      "card-component-real": "Card",
+      "testimonials-component-real": "Testimonials",
+      "button-component-real": "Button",
+      "fixed-intro-image-component-real": "FixedIntroImage",
+      "countdown-timer-component-real": "CountdownTimer",
+      "pricing-section-component-real": "PricingSection",
+      "guarantee-component-real": "GuaranteeSection",
+      "faq-section-component-real": "FaqSectionNew",
+      header: "HeaderBlock",
+      text: "TextBlock",
+      image: "ImageBlock",
+      button: "ButtonBlock",
+      "question-multiple": "QuestionBlock",
+      "question-strategic": "StrategicQuestionBlock",
     };
 
-    return typeMap[blockType] || 'GenericBlock';
+    return typeMap[blockType] || "GenericBlock";
   }
 
   /**
@@ -213,43 +218,43 @@ class PageConfigService {
 
     // Props específicas por tipo de componente
     switch (block.type) {
-      case 'header-component-real':
-        props.primaryStyle = block.settings?.props?.primaryStyle || 'dynamic';
-        props.logo = block.settings?.props?.logo || '';
-        props.logoAlt = block.settings?.props?.logoAlt || '';
-        props.userName = block.settings?.props?.userName || '';
+      case "header-component-real":
+        props.primaryStyle = block.settings?.props?.primaryStyle || "dynamic";
+        props.logo = block.settings?.props?.logo || "";
+        props.logoAlt = block.settings?.props?.logoAlt || "";
+        props.userName = block.settings?.props?.userName || "";
         break;
 
-      case 'button-component-real':
-        props.className = block.settings?.className || '';
+      case "button-component-real":
+        props.className = block.settings?.className || "";
         props.style = block.settings?.style || {};
-        props.onClick = block.settings?.onClick || 'handleClick';
-        props.children = block.settings?.children || 'Clique aqui';
+        props.onClick = block.settings?.onClick || "handleClick";
+        props.children = block.settings?.children || "Clique aqui";
         break;
 
-      case 'fixed-intro-image-component-real':
-        props.src = block.settings?.props?.src || '';
-        props.alt = block.settings?.props?.alt || '';
+      case "fixed-intro-image-component-real":
+        props.src = block.settings?.props?.src || "";
+        props.alt = block.settings?.props?.alt || "";
         props.width = block.settings?.props?.width || 200;
         props.height = block.settings?.props?.height || 100;
         break;
 
-      case 'pricing-section-component-real':
-        props.title = block.settings?.title || '';
-        props.installments = block.settings?.installments || '';
-        props.fullPrice = block.settings?.fullPrice || '';
-        props.savings = block.settings?.savings || '';
-        props.className = block.settings?.className || '';
+      case "pricing-section-component-real":
+        props.title = block.settings?.title || "";
+        props.installments = block.settings?.installments || "";
+        props.fullPrice = block.settings?.fullPrice || "";
+        props.savings = block.settings?.savings || "";
+        props.className = block.settings?.className || "";
         break;
 
       default:
         // Props genéricas
-        props.title = block.settings?.title || '';
-        props.content = block.settings?.content || block.content || '';
-        props.text = block.settings?.text || '';
-        props.src = block.settings?.src || '';
-        props.alt = block.settings?.alt || '';
-        props.className = block.settings?.className || '';
+        props.title = block.settings?.title || "";
+        props.content = block.settings?.content || block.content || "";
+        props.text = block.settings?.text || "";
+        props.src = block.settings?.src || "";
+        props.alt = block.settings?.alt || "";
+        props.className = block.settings?.className || "";
         props.style = block.settings?.style || {};
     }
 
@@ -266,7 +271,7 @@ class PageConfigService {
         return JSON.parse(stored);
       }
     } catch (error) {
-      console.warn('Erro ao ler do localStorage:', error);
+      console.warn("Erro ao ler do localStorage:", error);
     }
     return null;
   }
@@ -278,7 +283,7 @@ class PageConfigService {
     try {
       localStorage.setItem(`page-config-${pageId}`, JSON.stringify(config));
     } catch (error) {
-      console.warn('Erro ao salvar no localStorage:', error);
+      console.warn("Erro ao salvar no localStorage:", error);
     }
   }
 
@@ -297,8 +302,8 @@ class PageConfigService {
     const cacheTime = new Date(config.lastModified).getTime();
     const now = new Date().getTime();
     const oneHour = 60 * 60 * 1000;
-    
-    return (now - cacheTime) < oneHour;
+
+    return now - cacheTime < oneHour;
   }
 
   /**

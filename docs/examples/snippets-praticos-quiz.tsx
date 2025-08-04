@@ -1,9 +1,9 @@
 // ===== SNIPPETS PRÁTICOS PARA SEU PROJETO DE QUIZ =====
 // Como usar os snippets ES7 React/Redux/React-Native/JS no seu projeto
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { trackButtonClick } from '@/utils/analytics';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { trackButtonClick } from "@/utils/analytics";
 
 // ===== 1. COMPONENTE DE PERGUNTA DO QUIZ =====
 // Digite "rafce" + Tab para criar este componente:
@@ -23,28 +23,35 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
   selectedAnswer,
   onAnswerSelect,
   questionNumber,
-  totalQuestions
+  totalQuestions,
 }) => {
   // Digite "useState" + Tab:
   const [isAnimating, setIsAnimating] = React.useState(false);
-  
+
   // Digite "useCallback" + Tab:
-  const handleAnswerClick = React.useCallback((answer: string) => {
-    if (isAnimating) return;
-    
-    setIsAnimating(true);
-    
-    // Digite "clg" + Tab para debug:
-    console.log(`Resposta selecionada: ${answer}`);
-    
-    // Tracking com analytics
-    trackButtonClick('quiz_answer_selected', `Pergunta ${questionNumber}`, 'quiz_page');
-    
-    setTimeout(() => {
-      onAnswerSelect(answer);
-      setIsAnimating(false);
-    }, 300);
-  }, [isAnimating, onAnswerSelect, questionNumber]);
+  const handleAnswerClick = React.useCallback(
+    (answer: string) => {
+      if (isAnimating) return;
+
+      setIsAnimating(true);
+
+      // Digite "clg" + Tab para debug:
+      console.log(`Resposta selecionada: ${answer}`);
+
+      // Tracking com analytics
+      trackButtonClick(
+        "quiz_answer_selected",
+        `Pergunta ${questionNumber}`,
+        "quiz_page",
+      );
+
+      setTimeout(() => {
+        onAnswerSelect(answer);
+        setIsAnimating(false);
+      }, 300);
+    },
+    [isAnimating, onAnswerSelect, questionNumber],
+  );
 
   // Digite "useMemo" + Tab:
   const progressPercentage = React.useMemo(() => {
@@ -56,11 +63,13 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
       {/* Progress Bar */}
       <div className="mb-6">
         <div className="flex justify-between text-sm text-gray-600 mb-2">
-          <span>Pergunta {questionNumber} de {totalQuestions}</span>
+          <span>
+            Pergunta {questionNumber} de {totalQuestions}
+          </span>
           <span>{Math.round(progressPercentage)}%</span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
-          <div 
+          <div
             className="bg-blue-500 h-2 rounded-full transition-all duration-300"
             style={{ width: `${progressPercentage}%` }}
           />
@@ -77,12 +86,14 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
             key={index}
             variant={selectedAnswer === option ? "default" : "outline"}
             className={`w-full p-4 text-left justify-start transition-all duration-200 ${
-              isAnimating ? 'pointer-events-none opacity-50' : ''
+              isAnimating ? "pointer-events-none opacity-50" : ""
             }`}
             onClick={() => handleAnswerClick(option)}
             disabled={isAnimating}
           >
-            <span className="mr-3 font-bold">{String.fromCharCode(65 + index)})</span>
+            <span className="mr-3 font-bold">
+              {String.fromCharCode(65 + index)})
+            </span>
             {option}
           </Button>
         ))}
@@ -109,37 +120,37 @@ const useQuizState = (totalQuestions: number) => {
     answers: {},
     isCompleted: false,
     startTime: Date.now(),
-    score: 0
+    score: 0,
   });
 
   // Digite "useCallback" + Tab:
   const selectAnswer = React.useCallback((answer: string) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       answers: {
         ...prev.answers,
-        [prev.currentQuestion]: answer
-      }
+        [prev.currentQuestion]: answer,
+      },
     }));
   }, []);
 
   const nextQuestion = React.useCallback(() => {
-    setState(prev => {
+    setState((prev) => {
       const nextQuestionIndex = prev.currentQuestion + 1;
       const isCompleted = nextQuestionIndex >= totalQuestions;
-      
+
       return {
         ...prev,
         currentQuestion: nextQuestionIndex,
-        isCompleted
+        isCompleted,
       };
     });
   }, [totalQuestions]);
 
   const previousQuestion = React.useCallback(() => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
-      currentQuestion: Math.max(0, prev.currentQuestion - 1)
+      currentQuestion: Math.max(0, prev.currentQuestion - 1),
     }));
   }, []);
 
@@ -149,7 +160,7 @@ const useQuizState = (totalQuestions: number) => {
       answers: {},
       isCompleted: false,
       startTime: Date.now(),
-      score: 0
+      score: 0,
     });
   }, []);
 
@@ -169,7 +180,7 @@ const useQuizState = (totalQuestions: number) => {
     selectAnswer,
     nextQuestion,
     previousQuestion,
-    resetQuiz
+    resetQuiz,
   };
 };
 
@@ -182,7 +193,11 @@ interface QuizTimerProps {
   isActive: boolean;
 }
 
-const QuizTimer: React.FC<QuizTimerProps> = ({ duration, onTimeUp, isActive }) => {
+const QuizTimer: React.FC<QuizTimerProps> = ({
+  duration,
+  onTimeUp,
+  isActive,
+}) => {
   // Digite "useState" + Tab:
   const [timeLeft, setTimeLeft] = React.useState(duration);
 
@@ -191,7 +206,7 @@ const QuizTimer: React.FC<QuizTimerProps> = ({ duration, onTimeUp, isActive }) =
     if (!isActive) return;
 
     const interval = setInterval(() => {
-      setTimeLeft(prev => {
+      setTimeLeft((prev) => {
         if (prev <= 1) {
           onTimeUp();
           return 0;
@@ -207,7 +222,7 @@ const QuizTimer: React.FC<QuizTimerProps> = ({ duration, onTimeUp, isActive }) =
   const formattedTime = React.useMemo(() => {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   }, [timeLeft]);
 
   const progressPercentage = React.useMemo(() => {
@@ -221,9 +236,9 @@ const QuizTimer: React.FC<QuizTimerProps> = ({ duration, onTimeUp, isActive }) =
       </div>
       <div className="flex-1">
         <div className="w-full bg-gray-300 rounded-full h-2">
-          <div 
+          <div
             className={`h-2 rounded-full transition-all duration-1000 ${
-              timeLeft < 30 ? 'bg-red-500' : 'bg-green-500'
+              timeLeft < 30 ? "bg-red-500" : "bg-green-500"
             }`}
             style={{ width: `${progressPercentage}%` }}
           />
@@ -251,7 +266,7 @@ const QuizResult: React.FC<QuizResultProps> = ({
   timeSpent,
   answers,
   onRestart,
-  onShareResult
+  onShareResult,
 }) => {
   // Digite "useState" + Tab:
   const [isSharing, setIsSharing] = React.useState(false);
@@ -277,17 +292,21 @@ const QuizResult: React.FC<QuizResultProps> = ({
   // Digite "useCallback" + Tab:
   const handleShare = React.useCallback(async () => {
     setIsSharing(true);
-    
+
     try {
       // Digite "clg" + Tab:
-      console.log('Compartilhando resultado...');
-      
+      console.log("Compartilhando resultado...");
+
       await onShareResult();
-      
+
       // Tracking
-      trackButtonClick('quiz_result_shared', `Score: ${percentage}%`, 'quiz_result');
+      trackButtonClick(
+        "quiz_result_shared",
+        `Score: ${percentage}%`,
+        "quiz_result",
+      );
     } catch (error) {
-      console.error('Erro ao compartilhar:', error);
+      console.error("Erro ao compartilhar:", error);
     } finally {
       setIsSharing(false);
     }
@@ -295,9 +314,9 @@ const QuizResult: React.FC<QuizResultProps> = ({
 
   const handleRestart = React.useCallback(() => {
     // Digite "clg" + Tab:
-    console.log('Reiniciando quiz...');
-    
-    trackButtonClick('quiz_restart', 'Quiz Reiniciado', 'quiz_result');
+    console.log("Reiniciando quiz...");
+
+    trackButtonClick("quiz_restart", "Quiz Reiniciado", "quiz_result");
     onRestart();
   }, [onRestart]);
 
@@ -338,26 +357,20 @@ const QuizResult: React.FC<QuizResultProps> = ({
             />
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-2xl font-bold text-gray-800">{percentage}%</span>
+            <span className="text-2xl font-bold text-gray-800">
+              {percentage}%
+            </span>
           </div>
         </div>
       </div>
 
       {/* Botões de ação */}
       <div className="flex gap-4 justify-center">
-        <Button
-          onClick={handleRestart}
-          variant="outline"
-          size="lg"
-        >
+        <Button onClick={handleRestart} variant="outline" size="lg">
           Tentar Novamente
         </Button>
-        <Button
-          onClick={handleShare}
-          disabled={isSharing}
-          size="lg"
-        >
-          {isSharing ? 'Compartilhando...' : 'Compartilhar Resultado'}
+        <Button onClick={handleShare} disabled={isSharing} size="lg">
+          {isSharing ? "Compartilhando..." : "Compartilhar Resultado"}
         </Button>
       </div>
     </Card>
@@ -388,21 +401,24 @@ const useQuizProgress = (quizId: string) => {
   });
 
   // Digite "useCallback" + Tab:
-  const saveProgress = React.useCallback((progressData: QuizProgress) => {
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(progressData));
-      setProgress(progressData);
-    } catch (error) {
-      console.error('Erro ao salvar progresso:', error);
-    }
-  }, [storageKey]);
+  const saveProgress = React.useCallback(
+    (progressData: QuizProgress) => {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(progressData));
+        setProgress(progressData);
+      } catch (error) {
+        console.error("Erro ao salvar progresso:", error);
+      }
+    },
+    [storageKey],
+  );
 
   const clearProgress = React.useCallback(() => {
     try {
       localStorage.removeItem(storageKey);
       setProgress(null);
     } catch (error) {
-      console.error('Erro ao limpar progresso:', error);
+      console.error("Erro ao limpar progresso:", error);
     }
   }, [storageKey]);
 
@@ -414,7 +430,7 @@ const useQuizProgress = (quizId: string) => {
     progress,
     saveProgress,
     clearProgress,
-    hasProgress
+    hasProgress,
   };
 };
 
@@ -434,7 +450,10 @@ interface QuizData {
 
 interface QuizAppProps {
   quizData: QuizData;
-  onComplete: (result: { score: number; answers: Record<number, string> }) => void;
+  onComplete: (result: {
+    score: number;
+    answers: Record<number, string>;
+  }) => void;
 }
 
 const QuizApp: React.FC<QuizAppProps> = ({ quizData, onComplete }) => {
@@ -445,7 +464,8 @@ const QuizApp: React.FC<QuizAppProps> = ({ quizData, onComplete }) => {
   const [startTime] = React.useState(Date.now());
 
   // Usando hooks customizados
-  const { progress, saveProgress, clearProgress, hasProgress } = useQuizProgress(quizData.id);
+  const { progress, saveProgress, clearProgress, hasProgress } =
+    useQuizProgress(quizData.id);
 
   // Digite "useEffect" + Tab - Restaurar progresso salvo:
   React.useEffect(() => {
@@ -456,26 +476,29 @@ const QuizApp: React.FC<QuizAppProps> = ({ quizData, onComplete }) => {
   }, [hasProgress, progress]);
 
   // Digite "useCallback" + Tab:
-  const handleAnswerSelect = React.useCallback((answer: string) => {
-    const newAnswers = { ...answers, [currentQuestion]: answer };
-    setAnswers(newAnswers);
+  const handleAnswerSelect = React.useCallback(
+    (answer: string) => {
+      const newAnswers = { ...answers, [currentQuestion]: answer };
+      setAnswers(newAnswers);
 
-    // Salvar progresso
-    saveProgress({
-      currentQuestion,
-      answers: newAnswers,
-      startTime,
-      quizId: quizData.id
-    });
-  }, [answers, currentQuestion, saveProgress, startTime, quizData.id]);
+      // Salvar progresso
+      saveProgress({
+        currentQuestion,
+        answers: newAnswers,
+        startTime,
+        quizId: quizData.id,
+      });
+    },
+    [answers, currentQuestion, saveProgress, startTime, quizData.id],
+  );
 
   const handleNext = React.useCallback(() => {
     if (currentQuestion < quizData.questions.length - 1) {
-      setCurrentQuestion(prev => prev + 1);
+      setCurrentQuestion((prev) => prev + 1);
     } else {
       // Quiz completo
       setIsCompleted(true);
-      
+
       // Calcular score
       const score = quizData.questions.reduce((acc, question, index) => {
         return acc + (answers[index] === question.correctAnswer ? 1 : 0);
@@ -491,7 +514,7 @@ const QuizApp: React.FC<QuizAppProps> = ({ quizData, onComplete }) => {
 
   const handlePrevious = React.useCallback(() => {
     if (currentQuestion > 0) {
-      setCurrentQuestion(prev => prev - 1);
+      setCurrentQuestion((prev) => prev - 1);
     }
   }, [currentQuestion]);
 
@@ -525,7 +548,7 @@ const QuizApp: React.FC<QuizAppProps> = ({ quizData, onComplete }) => {
         onRestart={handleRestart}
         onShareResult={async () => {
           // Implementar compartilhamento
-          console.log('Compartilhando resultado...');
+          console.log("Compartilhando resultado...");
         }}
       />
     );
@@ -534,8 +557,10 @@ const QuizApp: React.FC<QuizAppProps> = ({ quizData, onComplete }) => {
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-center mb-2">{quizData.title}</h1>
-        
+        <h1 className="text-3xl font-bold text-center mb-2">
+          {quizData.title}
+        </h1>
+
         {/* Timer se houver limite de tempo */}
         {quizData.timeLimit && (
           <QuizTimer
@@ -564,12 +589,11 @@ const QuizApp: React.FC<QuizAppProps> = ({ quizData, onComplete }) => {
         >
           Anterior
         </Button>
-        
-        <Button
-          onClick={handleNext}
-          disabled={!canProceed}
-        >
-          {currentQuestion === quizData.questions.length - 1 ? 'Finalizar' : 'Próxima'}
+
+        <Button onClick={handleNext} disabled={!canProceed}>
+          {currentQuestion === quizData.questions.length - 1
+            ? "Finalizar"
+            : "Próxima"}
         </Button>
       </div>
     </div>
@@ -582,5 +606,5 @@ export {
   QuizResult,
   QuizApp,
   useQuizState,
-  useQuizProgress
+  useQuizProgress,
 };

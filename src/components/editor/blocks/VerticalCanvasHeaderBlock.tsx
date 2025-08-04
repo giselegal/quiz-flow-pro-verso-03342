@@ -1,8 +1,7 @@
-
-import React from 'react';
-import { Progress } from '@/components/ui/progress';
-import { Button } from '@/components/ui/button';
-import { ChevronLeft } from 'lucide-react';
+import React from "react";
+import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft } from "lucide-react";
 
 interface VerticalCanvasHeaderProps {
   logoSrc?: string;
@@ -20,8 +19,8 @@ interface VerticalCanvasHeaderProps {
 }
 
 const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
-  logoSrc = '',
-  logoAlt = 'Logo',
+  logoSrc = "",
+  logoAlt = "Logo",
   logoWidth = 120,
   logoHeight = 40,
   progressValue = 0,
@@ -29,21 +28,19 @@ const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
   showProgress = true,
   showBackButton = false,
   onBackClick = () => {},
-  containerWidth = '100%',
-  gap = '1rem',
-  className = ''
+  containerWidth = "100%",
+  gap = "1rem",
+  className = "",
 }) => {
-  const progressPercentage = progressMax > 0 ? (progressValue / progressMax) * 100 : 0;
+  const progressPercentage =
+    progressMax > 0 ? (progressValue / progressMax) * 100 : 0;
 
   return (
-    <header 
+    <header
       className={`bg-white border-b border-gray-200 px-4 py-3 ${className}`}
       style={{ width: containerWidth }}
     >
-      <div 
-        className="flex items-center justify-between"
-        style={{ gap }}
-      >
+      <div className="flex items-center justify-between" style={{ gap }}>
         {/* Logo Section */}
         <div className="flex items-center space-x-3">
           {showBackButton && (
@@ -56,7 +53,7 @@ const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
               <ChevronLeft className="h-4 w-4" />
             </Button>
           )}
-          
+
           {logoSrc ? (
             <img
               src={logoSrc}
@@ -66,7 +63,7 @@ const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
               className="object-contain"
             />
           ) : (
-            <div 
+            <div
               className="bg-gray-200 rounded flex items-center justify-center text-gray-500 text-sm"
               style={{ width: logoWidth, height: logoHeight }}
             >
@@ -82,10 +79,7 @@ const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
               <span>Progresso</span>
               <span>{Math.round(progressPercentage)}%</span>
             </div>
-            <Progress 
-              value={progressPercentage} 
-              className="h-2"
-            />
+            <Progress value={progressPercentage} className="h-2" />
           </div>
         )}
       </div>

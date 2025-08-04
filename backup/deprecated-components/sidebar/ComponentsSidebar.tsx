@@ -1,8 +1,7 @@
-
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { EditorBlock } from '@/types/editor';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { EditorBlock } from "@/types/editor";
 import {
   Type,
   Heading1,
@@ -13,46 +12,112 @@ import {
   Star,
   CreditCard,
   Award,
-  Users
-} from 'lucide-react';
+  Users,
+} from "lucide-react";
 
 interface ComponentsSidebarProps {
-  onComponentSelect: (type: EditorBlock['type']) => void;
+  onComponentSelect: (type: EditorBlock["type"]) => void;
 }
 
-export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect }) => {
+export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
+  onComponentSelect,
+}) => {
   const componentGroups = [
     {
-      title: 'Básico',
+      title: "Básico",
       components: [
-        { type: 'text-inline' as const, icon: <Type size={16} />, label: 'Texto' },
-        { type: 'heading-inline' as const, icon: <Heading1 size={16} />, label: 'Cabeçalho' },
-        { type: 'image-display-inline' as const, icon: <Image size={16} />, label: 'Imagem' },
-        { type: 'button-inline' as const, icon: <MousePointer size={16} />, label: 'Botão' },
-        { type: 'badge-inline' as const, icon: <Star size={16} />, label: 'Badge' },
-        { type: 'progress-inline' as const, icon: <Layout size={16} />, label: 'Progresso' },
-        { type: 'stat-inline' as const, icon: <Award size={16} />, label: 'Estatística' },
-        { type: 'countdown-inline' as const, icon: <Users size={16} />, label: 'Contador' },
-      ]
+        {
+          type: "text-inline" as const,
+          icon: <Type size={16} />,
+          label: "Texto",
+        },
+        {
+          type: "heading-inline" as const,
+          icon: <Heading1 size={16} />,
+          label: "Cabeçalho",
+        },
+        {
+          type: "image-display-inline" as const,
+          icon: <Image size={16} />,
+          label: "Imagem",
+        },
+        {
+          type: "button-inline" as const,
+          icon: <MousePointer size={16} />,
+          label: "Botão",
+        },
+        {
+          type: "badge-inline" as const,
+          icon: <Star size={16} />,
+          label: "Badge",
+        },
+        {
+          type: "progress-inline" as const,
+          icon: <Layout size={16} />,
+          label: "Progresso",
+        },
+        {
+          type: "stat-inline" as const,
+          icon: <Award size={16} />,
+          label: "Estatística",
+        },
+        {
+          type: "countdown-inline" as const,
+          icon: <Users size={16} />,
+          label: "Contador",
+        },
+      ],
     },
     {
-      title: 'Design',
+      title: "Design",
       components: [
-        { type: 'style-card-inline' as const, icon: <CreditCard size={16} />, label: 'Card de Estilo' },
-        { type: 'result-card-inline' as const, icon: <Award size={16} />, label: 'Card de Resultado' },
-        { type: 'pricing-card-inline' as const, icon: <CreditCard size={16} />, label: 'Preços' },
-        { type: 'testimonial-card-inline' as const, icon: <Users size={16} />, label: 'Depoimentos' },
-      ]
+        {
+          type: "style-card-inline" as const,
+          icon: <CreditCard size={16} />,
+          label: "Card de Estilo",
+        },
+        {
+          type: "result-card-inline" as const,
+          icon: <Award size={16} />,
+          label: "Card de Resultado",
+        },
+        {
+          type: "pricing-card-inline" as const,
+          icon: <CreditCard size={16} />,
+          label: "Preços",
+        },
+        {
+          type: "testimonial-card-inline" as const,
+          icon: <Users size={16} />,
+          label: "Depoimentos",
+        },
+      ],
     },
     {
-      title: 'Quiz',
+      title: "Quiz",
       components: [
-        { type: 'quiz-start-page-inline' as const, icon: <Star size={16} />, label: 'Página Inicial' },
-        { type: 'quiz-question-inline' as const, icon: <List size={16} />, label: 'Questão' },
-        { type: 'quiz-result-inline' as const, icon: <Award size={16} />, label: 'Resultado' },
-        { type: 'quiz-offer-cta-inline' as const, icon: <MousePointer size={16} />, label: 'Call to Action' },
-      ]
-    }
+        {
+          type: "quiz-start-page-inline" as const,
+          icon: <Star size={16} />,
+          label: "Página Inicial",
+        },
+        {
+          type: "quiz-question-inline" as const,
+          icon: <List size={16} />,
+          label: "Questão",
+        },
+        {
+          type: "quiz-result-inline" as const,
+          icon: <Award size={16} />,
+          label: "Resultado",
+        },
+        {
+          type: "quiz-offer-cta-inline" as const,
+          icon: <MousePointer size={16} />,
+          label: "Call to Action",
+        },
+      ],
+    },
   ];
 
   return (
@@ -63,7 +128,7 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponen
           Clique nos componentes para adicionar
         </p>
       </div>
-      
+
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-6">
           {componentGroups.map((group, groupIndex) => (
@@ -81,7 +146,9 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponen
                     onClick={() => onComponentSelect(component.type)}
                   >
                     <span className="text-gray-600">{component.icon}</span>
-                    <span className="text-xs font-medium">{component.label}</span>
+                    <span className="text-xs font-medium">
+                      {component.label}
+                    </span>
                   </Button>
                 ))}
               </div>

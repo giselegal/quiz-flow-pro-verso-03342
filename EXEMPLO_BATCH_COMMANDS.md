@@ -31,40 +31,50 @@
 ## 🔧 FUNÇÕES DISPONÍVEIS
 
 ### 📥 Atualizar Main
+
 ```bash
 ./git-batch-commands-v2.sh update_main
 ```
+
 - Muda para branch main
 - Puxa mudanças do origin/main
 - Confirma atualização
 
 ### 🌿 Criar Branch
+
 ```bash
 ./git-batch-commands-v2.sh create_branch nome-da-branch
 ```
+
 - Cria nova branch a partir da main
 - Faz push da branch para o repositório
 - Deixa você na nova branch
 
 ### 📝 Commit e Push
+
 ```bash
 ./git-batch-commands-v2.sh commit_and_push "Sua mensagem aqui"
 ```
+
 - Adiciona todos os arquivos (git add .)
 - Faz commit com a mensagem fornecida
 - Faz push para a branch atual
 
 ### 🏠 Voltar para Main
+
 ```bash
 ./git-batch-commands-v2.sh back_to_main
 ```
+
 - Muda para a branch main
 - Confirma a mudança
 
 ### 🔄 Merge para Main
+
 ```bash
 ./git-batch-commands-v2.sh merge_to_main
 ```
+
 - Faz commit de mudanças pendentes
 - Muda para main e puxa atualizações
 - Faz merge da branch atual
@@ -108,6 +118,7 @@
 ## 💡 EXEMPLOS PRÁTICOS
 
 ### Exemplo 1: Nova Feature
+
 ```bash
 ./git-batch-commands-v2.sh update_main
 ./git-batch-commands-v2.sh create_branch feature/login-system
@@ -117,6 +128,7 @@
 ```
 
 ### Exemplo 2: Bug Fix
+
 ```bash
 ./git-batch-commands-v2.sh update_main
 ./git-batch-commands-v2.sh create_branch bugfix/header-responsivo
@@ -126,6 +138,7 @@
 ```
 
 ### Exemplo 3: Experimento
+
 ```bash
 ./git-batch-commands-v2.sh update_main
 ./git-batch-commands-v2.sh create_branch experiment/new-ui

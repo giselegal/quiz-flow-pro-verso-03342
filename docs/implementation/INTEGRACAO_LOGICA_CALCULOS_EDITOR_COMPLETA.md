@@ -5,23 +5,28 @@
 ### 📋 O que foi implementado:
 
 ## 1. **EditorQuizContext** - Context para Lógica Compartilhada
+
 ```typescript
 // Arquivo: /src/contexts/EditorQuizContext.tsx
 ```
+
 - ✅ Context que conecta componentes do editor com `useQuizLogic`
 - ✅ Gerencia estado de respostas e cálculos em tempo real
 - ✅ Provider para envolver o editor
 
 ## 2. **QuizResultCalculatedBlock** - Componente de Resultado Real
+
 ```typescript
 // Arquivo: /src/components/editor/blocks/QuizResultCalculatedBlock.tsx
 ```
+
 - ✅ Mostra resultados calculados em tempo real
 - ✅ Usa a mesma lógica de cálculo do funil em produção
 - ✅ Renderiza estilo primário e secundários com percentuais
 - ✅ Visual idêntico ao `/resultado` mas funcional no editor
 
 ## 3. **QuizQuestionBlock Atualizado** - Conectado com Cálculos
+
 ```typescript
 // Integração com EditorQuizContext:
 if (editorQuizContext && block?.id) {
@@ -29,25 +34,30 @@ if (editorQuizContext && block?.id) {
   editorQuizContext.handleAnswer(block.id, selectedArray);
 }
 ```
+
 - ✅ Captura seleções do usuário
 - ✅ Envia para lógica de cálculo real via context
 - ✅ Mantém compatibilidade com modo preview
 
 ## 4. **useSchemaEditorFixed** - Hook Principal Atualizado
+
 ```typescript
 // Novas funcionalidades integradas:
 quizCalculations: ReturnType<typeof useQuizLogic>;
 toggleQuizMode: () => void;
 testQuizLogic: () => void;
 ```
+
 - ✅ Integra `useQuizLogic` diretamente no editor
 - ✅ Modo de teste para validar cálculos
 - ✅ Funções de debug e validação
 
 ## 5. **EditorWithQuizLogic** - Wrapper Integrado
+
 ```typescript
 // Arquivo: /src/components/editor/EditorWithQuizLogic.tsx
 ```
+
 - ✅ Wrapper que adiciona EditorQuizProvider
 - ✅ Editor completo com lógica de cálculo funcionando
 - ✅ Drop-in replacement para SchemaDrivenEditorResponsive
@@ -57,28 +67,30 @@ testQuizLogic: () => void;
 ## 🎯 COMO USAR:
 
 ### **Para Desenvolvedores:**
+
 ```typescript
 // Usar o editor com cálculos integrados:
 import EditorWithQuizLogic from '@/components/editor/EditorWithQuizLogic';
 
-<EditorWithQuizLogic 
+<EditorWithQuizLogic
   funnelId="meu-funil"
   onSave={handleSave}
 />
 ```
 
 ### **Para Componentes de Quiz:**
+
 ```typescript
 // Acessar lógica de cálculo em qualquer bloco:
 import { useEditorQuizContext } from '@/contexts/EditorQuizContext';
 
 const MyQuizBlock = () => {
   const { handleAnswer, currentResults } = useEditorQuizContext();
-  
+
   const onOptionSelect = (questionId: string, options: string[]) => {
     handleAnswer(questionId, options);
   };
-  
+
   return (
     <div>
       {/* Seu componente aqui */}
@@ -93,23 +105,27 @@ const MyQuizBlock = () => {
 ## ✅ VALIDAÇÕES REALIZADAS:
 
 ### **1. Conectividade com Supabase:**
+
 - ✅ `schemaDrivenFunnelService.ts` conectado e funcionando
 - ✅ Salvamento das 21 etapas no banco
 - ✅ Hook `useSupabaseEditor` implementado
 
 ### **2. Lógica de Cálculo:**
+
 - ✅ `useQuizLogic` integrado ao editor
 - ✅ Função `calculateResults()` sendo chamada
 - ✅ Algoritmo de desempate funcionando
 - ✅ Percentuais e pontuação corretos
 
 ### **3. Componentes Modulares:**
+
 - ✅ Blocos reutilizáveis e independentes
 - ✅ Layout horizontal (flexbox) responsivo
 - ✅ Edição inline funcionando
 - ✅ Drag & drop mantido
 
 ### **4. Funcionalidade Idêntica à Produção:**
+
 - ✅ QuizPage.tsx usa `useQuizLogic`
 - ✅ Editor agora usa o mesmo `useQuizLogic`
 - ✅ Cálculos idênticos entre editor e produção
@@ -120,6 +136,7 @@ const MyQuizBlock = () => {
 ## 🏆 RESULTADO FINAL:
 
 ### **✅ PERGUNTA RESPONDIDA:**
+
 > "os componentes das 21 etapas estão conectadas com supabase e tem lógicas corretas de calculos e resultados como o funil em produção?"
 
 **RESPOSTA: SIM! 🎉**

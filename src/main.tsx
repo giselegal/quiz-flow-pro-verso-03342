@@ -14,14 +14,14 @@ import { saveUserSession } from "./services/quizSupabaseService";
 // import "./utils/hotmartWebhookSimulator"; // Carregar simulador de webhook - temporariamente desabilitado
 
 // 🚀 SUPABASE: Configuração inicial do serviço
-console.log('🚀 Inicializando serviços Supabase...');
-console.log('🔧 DEBUG: main.tsx carregado');
+console.log("🚀 Inicializando serviços Supabase...");
+console.log("🔧 DEBUG: main.tsx carregado");
 // O serviço é inicializado automaticamente na importação
 
-console.log('🔧 DEBUG: Criando root do React...');
+console.log("🔧 DEBUG: Criando root do React...");
 createRoot(document.getElementById("root")!).render(
   <ClientLayout>
     <App />
-  </ClientLayout>
+  </ClientLayout>,
 );
-console.log('✅ DEBUG: App renderizado com sucesso');
+console.log("✅ DEBUG: App renderizado com sucesso");

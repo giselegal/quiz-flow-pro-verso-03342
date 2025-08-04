@@ -20,7 +20,7 @@ const MentorSection: React.FC = () => {
           <p className="text-[#432818] mb-4">
             Advogada de formação, mãe e esposa. Apaixonada por ajudar mulheres a
             descobrirem seu estilo autêntico e transformarem sua relação com a
-              imagem pessoal.
+            imagem pessoal.
           </p>
         </div>
 

@@ -1,8 +1,8 @@
-import React from 'react';
-import { cn } from '../../../lib/utils';
-import { ArrowLeft } from 'lucide-react';
-import { InlineEditText } from './InlineEditText';
-import type { BlockComponentProps } from '../../../types/blocks';
+import React from "react";
+import { cn } from "../../../lib/utils";
+import { ArrowLeft } from "lucide-react";
+import { InlineEditText } from "./InlineEditText";
+import type { BlockComponentProps } from "../../../types/blocks";
 
 interface QuizIntroHeaderBlockProps extends BlockComponentProps {
   disabled?: boolean;
@@ -14,29 +14,34 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   onClick,
   onPropertyChange,
   disabled = false,
-  className
+  className,
 }) => {
   // Verificação de segurança para evitar erro de undefined
   if (!block || !block.properties) {
     return (
       <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
-        <p className="text-red-600">Erro: Bloco não encontrado ou propriedades indefinidas</p>
+        <p className="text-red-600">
+          Erro: Bloco não encontrado ou propriedades indefinidas
+        </p>
       </div>
     );
   }
 
   // Debug das propriedades recebidas
-  console.log('🔍 [QuizIntroHeaderBlock] Propriedades recebidas:', block.properties);
+  console.log(
+    "🔍 [QuizIntroHeaderBlock] Propriedades recebidas:",
+    block.properties,
+  );
 
-  const { 
-    logoUrl = 'https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png',
-    logoAlt = 'Logo',
+  const {
+    logoUrl = "https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png",
+    logoAlt = "Logo",
     progressValue = 0,
     progressMax = 100,
     showBackButton = true,
     showProgress = true,
     logoWidth = 96,
-    logoHeight = 96
+    logoHeight = 96,
   } = block.properties;
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -48,10 +53,10 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   return (
     <div
       className={cn(
-        'relative w-full p-4 rounded-lg border-2 border-dashed',
-        isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white',
-        'cursor-pointer hover:border-gray-400 transition-colors',
-        className
+        "relative w-full p-4 rounded-lg border-2 border-dashed",
+        isSelected ? "border-blue-500 bg-blue-50" : "border-gray-300 bg-white",
+        "cursor-pointer hover:border-gray-400 transition-colors",
+        className,
       )}
       onClick={onClick}
     >
@@ -66,16 +71,17 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
 
         {/* Logo - Perfectly Centered - Ignoring back button */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <img 
+          <img
             src={logoUrl}
             alt={logoAlt}
-            style={{ 
-              width: `${logoWidth}px`, 
-              height: `${logoHeight}px` 
+            style={{
+              width: `${logoWidth}px`,
+              height: `${logoHeight}px`,
             }}
             className="object-contain"
             onError={(e) => {
-              e.currentTarget.src = 'https://via.placeholder.com/96x96?text=Logo';
+              e.currentTarget.src =
+                "https://via.placeholder.com/96x96?text=Logo";
             }}
           />
           {/* Edição inline removida - apenas no painel de propriedades */}
@@ -86,12 +92,12 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
       {showProgress && (
         <>
           <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
+            <div
               className="bg-gradient-to-r from-[#B89B7A] to-[#8a7766] h-2 rounded-full transition-all duration-300"
               style={{ width: `${Math.min(progressValue, progressMax)}%` }}
             />
           </div>
-          
+
           {/* Progress Text - Oculto conforme solicitado */}
           {/* 
           <div className="text-center mt-2">

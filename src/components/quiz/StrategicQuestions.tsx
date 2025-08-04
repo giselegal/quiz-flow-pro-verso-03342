@@ -1,7 +1,6 @@
-
-import React from 'react';
-import QuizQuestion from '../QuizQuestion';
-import { UserResponse } from '@/types/quiz';
+import React from "react";
+import QuizQuestion from "../QuizQuestion";
+import { UserResponse } from "@/types/quiz";
 
 export interface StrategicQuestionsProps {
   currentQuestionIndex: number;
@@ -12,24 +11,24 @@ export interface StrategicQuestionsProps {
 export const StrategicQuestions: React.FC<StrategicQuestionsProps> = ({
   currentQuestionIndex,
   answers,
-  onAnswer
+  onAnswer,
 }) => {
   // Simplified strategic questions implementation
   const strategicQuestions = [
     {
-      id: 'strategic-1',
-      question: 'Qual é o seu nome?',
-      type: 'text' as const,
-      options: []
-    }
+      id: "strategic-1",
+      question: "Qual é o seu nome?",
+      type: "text" as const,
+      options: [],
+    },
   ];
-  
+
   const currentQuestion = strategicQuestions[currentQuestionIndex];
-  
+
   if (!currentQuestion) {
     return null;
   }
-  
+
   return (
     <QuizQuestion
       question={currentQuestion}

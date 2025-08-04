@@ -17,6 +17,7 @@ Sistema avançado de criação de quizzes interativos e funis de conversão com 
 ## 🏗️ Arquitetura
 
 ### Estrutura de Pastas
+
 ```
 client/
 ├── src/
@@ -34,12 +35,14 @@ client/
 ### Componentes Principais
 
 #### SchemaDrivenEditorResponsive
+
 - **Localização**: `/client/src/components/editor/`
 - **Função**: Editor visual principal com suporte completo a mobile/tablet/desktop
 - **Recursos**: Drag & drop, sistema de propriedades dinâmicas, preview em tempo real
 - **Persistência**: Sistema v2.0 com cross-compatibility
 
 #### Sistema de Blocos
+
 - **Localização**: `/client/src/components/blocks/`
 - **Tipos**: Componentes modulares para quiz, resultado, CTA, depoimentos
 - **Flexibilidade**: Sistema schema-driven com propriedades dinâmicas
@@ -47,10 +50,12 @@ client/
 ## 🔧 Configuração e Instalação
 
 ### Pré-requisitos
+
 - Node.js 18+
 - npm ou yarn
 
 ### Instalação
+
 ```bash
 # Clone o repositório
 git clone [repository-url]
@@ -64,6 +69,7 @@ npm run dev
 ```
 
 ### Scripts Disponíveis
+
 ```bash
 npm run dev        # Servidor de desenvolvimento (localhost:5000)
 npm run build      # Build para produção
@@ -73,6 +79,7 @@ npm run preview    # Preview do build
 ## 📱 Funcionalidades
 
 ### Editor Visual
+
 - **Responsividade**: Layout adaptativo para mobile, tablet e desktop
 - **Drag & Drop**: Arraste componentes para criar layouts
 - **Preview em Tempo Real**: Veja mudanças instantaneamente
@@ -80,6 +87,7 @@ npm run preview    # Preview do build
 - **Publicação**: Sistema integrado de publish/unpublish
 
 ### Componentes Disponíveis
+
 - **Quiz**: Perguntas múltipla escolha, progressão, validação
 - **Resultados**: Exibição personalizada de resultados
 - **CTA**: Botões de call-to-action configuráveis
@@ -87,6 +95,7 @@ npm run preview    # Preview do build
 - **Layout**: Headers, divisores, espaçamentos
 
 ### Persistência de Dados
+
 - **localStorage v2.0**: Sistema dual de compatibilidade
 - **Cross-editor**: Compatibilidade entre diferentes versões do editor
 - **Auto-recovery**: Recuperação automática de dados
@@ -101,6 +110,7 @@ npm run preview    # Preview do build
 ## 📊 Sistema de Dados
 
 ### Estrutura de Projeto
+
 ```typescript
 interface Project {
   id: string;
@@ -122,6 +132,7 @@ interface Block {
 ```
 
 ### Tipos de Blocos Suportados
+
 - `quiz-question`: Perguntas de quiz
 - `headline`, `text`: Conteúdo textual
 - `image`: Componentes de imagem
@@ -149,11 +160,13 @@ interface Block {
 ## 🐛 Debugging e Logs
 
 ### Console de Debug
+
 - Estados do editor disponíveis no console
 - Logs detalhados de persistência
 - Informações de performance
 
 ### Ferramentas de Desenvolvimento
+
 - React DevTools compatível
 - Hot reload para desenvolvimento ágil
 - Source maps para debugging

@@ -1,20 +1,20 @@
-import React from 'react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-  Cloud, 
-  CloudOff, 
-  Loader2, 
-  Save, 
-  Clock, 
-  AlertCircle, 
+import React from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Cloud,
+  CloudOff,
+  Loader2,
+  Save,
+  Clock,
+  AlertCircle,
   CheckCircle,
   History,
   Wifi,
-  WifiOff
-} from 'lucide-react';
-import { type AutoSaveState } from '@/services/schemaDrivenFunnelService';
+  WifiOff,
+} from "lucide-react";
+import { type AutoSaveState } from "@/services/schemaDrivenFunnelService";
 
 interface SyncStatusProps {
   autoSaveState: AutoSaveState;
@@ -34,48 +34,50 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
   onManualSave,
   onSync,
   onToggleAutoSave,
-  className = '',
-  compact = false
+  className = "",
+  compact = false,
 }) => {
   const getStatusIcon = () => {
     if (isSaving) {
       return <Loader2 className="w-4 h-4 animate-spin" />;
     }
-    
+
     if (!isOnline) {
       return <CloudOff className="w-4 h-4 text-orange-500" />;
     }
-    
+
     if (autoSaveState.pendingChanges) {
       return <Clock className="w-4 h-4 text-yellow-500" />;
     }
-    
+
     if (autoSaveState.errorCount > 0) {
       return <AlertCircle className="w-4 h-4 text-red-500" />;
     }
-    
+
     return <CheckCircle className="w-4 h-4 text-green-500" />;
   };
 
   const getStatusText = () => {
     if (isSaving) {
-      return 'Salvando...';
+      return "Salvando...";
     }
-    
+
     if (!isOnline) {
-      return 'Offline';
+      return "Offline";
     }
-    
+
     if (autoSaveState.pendingChanges) {
-      return 'Mudanças pendentes';
+      return "Mudanças pendentes";
     }
-    
+
     if (autoSaveState.errorCount > 0) {
       return `Erro no auto-save (${autoSaveState.errorCount})`;
     }
-    
+
     if (autoSaveState.lastSave) {
-      const timeDiff = Math.floor((Date.now() - autoSaveState.lastSave.getTime()) / 1000);
+      const timeDiff = Math.floor(
+        (Date.now() - autoSaveState.lastSave.getTime()) / 1000,
+      );
       if (timeDiff < 60) {
         return `Salvo há ${timeDiff}s`;
       } else if (timeDiff < 3600) {
@@ -84,16 +86,16 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
         return `Salvo há ${Math.floor(timeDiff / 3600)}h`;
       }
     }
-    
-    return 'Aguardando mudanças';
+
+    return "Aguardando mudanças";
   };
 
   const getStatusBadgeVariant = () => {
-    if (isSaving) return 'secondary';
-    if (!isOnline) return 'destructive';
-    if (autoSaveState.pendingChanges) return 'secondary';
-    if (autoSaveState.errorCount > 0) return 'destructive';
-    return 'default';
+    if (isSaving) return "secondary";
+    if (!isOnline) return "destructive";
+    if (autoSaveState.pendingChanges) return "secondary";
+    if (autoSaveState.errorCount > 0) return "destructive";
+    return "default";
   };
 
   if (compact) {
@@ -130,7 +132,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
           >
             <Save className="w-3 h-3" />
           </Button>
-          
+
           {!isOnline && (
             <Button
               size="sm"
@@ -157,7 +159,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
           {isOnline && <Wifi className="w-4 h-4 text-green-500" />}
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         {/* Status principal */}
         <div className="flex items-center justify-between">
@@ -166,14 +168,17 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
             <span className="text-sm">{getStatusText()}</span>
           </div>
           <Badge variant={getStatusBadgeVariant()}>
-            {isOnline ? 'Online' : 'Offline'}
+            {isOnline ? "Online" : "Offline"}
           </Badge>
         </div>
 
         {/* Auto-save settings */}
         <div className="flex items-center justify-between">
           <div className="text-sm text-gray-600">
-            Auto-save: {autoSaveState.isEnabled ? `${autoSaveState.interval}s` : 'Desabilitado'}
+            Auto-save:{" "}
+            {autoSaveState.isEnabled
+              ? `${autoSaveState.interval}s`
+              : "Desabilitado"}
           </div>
           <Button
             size="sm"
@@ -181,7 +186,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
             onClick={onToggleAutoSave}
             className="h-7 text-xs"
           >
-            {autoSaveState.isEnabled ? 'Desabilitar' : 'Habilitar'}
+            {autoSaveState.isEnabled ? "Desabilitar" : "Habilitar"}
           </Button>
         </div>
 
@@ -203,7 +208,8 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
           <div className="text-xs text-gray-500 flex items-center space-x-1">
             <History className="w-3 h-3" />
             <span>
-              Última sincronização: {autoSaveState.lastSave.toLocaleTimeString()}
+              Última sincronização:{" "}
+              {autoSaveState.lastSave.toLocaleTimeString()}
             </span>
           </div>
         )}
@@ -228,7 +234,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
               </>
             )}
           </Button>
-          
+
           <Button
             size="sm"
             variant="outline"

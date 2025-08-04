@@ -28,7 +28,7 @@ const ABTestRedirect: React.FC<ABTestRedirectProps> = ({ children }) => {
       const redirectUrl = getABTestRedirectUrl(LANDING_PAGE_AB_TEST);
 
       console.log(
-        `🔄 A/B Test: Redirecionando de ${currentPath} para ${redirectUrl}`
+        `🔄 A/B Test: Redirecionando de ${currentPath} para ${redirectUrl}`,
       );
 
       // Preserva query parameters na URL
@@ -38,7 +38,7 @@ const ABTestRedirect: React.FC<ABTestRedirectProps> = ({ children }) => {
       console.log(
         `🎯 Acesso direto ao quiz solicitado - parâmetro: ${
           forceQuiz ? "quiz=true" : "skip-ab=true"
-        }`
+        }`,
       );
     }
   }, [location, setLocation]);

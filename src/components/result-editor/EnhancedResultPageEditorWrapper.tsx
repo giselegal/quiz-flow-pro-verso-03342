@@ -1,7 +1,6 @@
-
-import React from 'react';
-import { StyleResult, QuizFunnel } from '@/types/quiz';
-import { EnhancedResultPageEditor } from './EnhancedResultPageEditor';
+import React from "react";
+import { StyleResult, QuizFunnel } from "@/types/quiz";
+import { EnhancedResultPageEditor } from "./EnhancedResultPageEditor";
 
 interface EnhancedResultPageEditorWrapperProps {
   primaryStyle?: StyleResult;
@@ -10,9 +9,11 @@ interface EnhancedResultPageEditorWrapperProps {
   onSave?: (funnel: QuizFunnel) => void;
 }
 
-export const EnhancedResultPageEditorWrapper: React.FC<EnhancedResultPageEditorWrapperProps> = (props) => {
+export const EnhancedResultPageEditorWrapper: React.FC<
+  EnhancedResultPageEditorWrapperProps
+> = (props) => {
   return (
-    <EnhancedResultPageEditor 
+    <EnhancedResultPageEditor
       selectedStyle={props.primaryStyle}
       primaryStyle={props.primaryStyle}
       secondaryStyles={props.secondaryStyles}

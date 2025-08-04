@@ -1,11 +1,10 @@
-
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { InlineEditText } from './InlineEditText';
-import type { BlockComponentProps } from '@/types/blocks';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { InlineEditText } from "./InlineEditText";
+import type { BlockComponentProps } from "@/types/blocks";
 
 interface StrategicQuestionBlockProps extends BlockComponentProps {
   onPropertyChange?: (key: string, value: any) => void;
@@ -19,19 +18,34 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
   onClick,
   onPropertyChange,
   disabled = false,
-  className
+  className,
 }) => {
   const {
-    question = 'Como você se vê hoje?',
+    question = "Como você se vê hoje?",
     options = [
-      { id: '1', text: 'Alguém que já tem um estilo bem definido', value: 'defined', category: 'confiante' },
-      { id: '2', text: 'Alguém em busca do seu estilo pessoal', value: 'searching', category: 'explorando' },
-      { id: '3', text: 'Alguém que quer renovar completamente', value: 'renovating', category: 'transformação' }
+      {
+        id: "1",
+        text: "Alguém que já tem um estilo bem definido",
+        value: "defined",
+        category: "confiante",
+      },
+      {
+        id: "2",
+        text: "Alguém em busca do seu estilo pessoal",
+        value: "searching",
+        category: "explorando",
+      },
+      {
+        id: "3",
+        text: "Alguém que quer renovar completamente",
+        value: "renovating",
+        category: "transformação",
+      },
     ],
-    progressLabel = 'Questão Estratégica',
+    progressLabel = "Questão Estratégica",
     progressValue = 80,
-    backgroundColor = '#ffffff',
-    textColor = '#432818'
+    backgroundColor = "#ffffff",
+    textColor = "#432818",
   } = block.properties;
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -40,20 +54,24 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
     }
   };
 
-  const handleOptionChange = (optionIndex: number, field: string, value: any) => {
-    const updatedOptions = options.map((option: any, index: number) => 
-      index === optionIndex ? { ...option, [field]: value } : option
+  const handleOptionChange = (
+    optionIndex: number,
+    field: string,
+    value: any,
+  ) => {
+    const updatedOptions = options.map((option: any, index: number) =>
+      index === optionIndex ? { ...option, [field]: value } : option,
     );
-    handlePropertyChange('options', updatedOptions);
+    handlePropertyChange("options", updatedOptions);
   };
 
   return (
     <div
       className={cn(
-        'relative w-full min-h-[400px] p-8 rounded-lg border-2 border-dashed',
-        isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white',
-        'cursor-pointer hover:border-gray-400 transition-colors',
-        className
+        "relative w-full min-h-[400px] p-8 rounded-lg border-2 border-dashed",
+        isSelected ? "border-blue-500 bg-blue-50" : "border-gray-300 bg-white",
+        "cursor-pointer hover:border-gray-400 transition-colors",
+        className,
       )}
       onClick={onClick}
       style={{ backgroundColor, color: textColor }}
@@ -63,7 +81,9 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
         <div className="flex justify-between items-center mb-2">
           <InlineEditText
             value={progressLabel}
-            onSave={(value: string) => handlePropertyChange('progressLabel', value)}
+            onSave={(value: string) =>
+              handlePropertyChange("progressLabel", value)
+            }
             placeholder="Label do progresso"
             className="text-sm font-medium opacity-70"
             disabled={disabled}
@@ -72,9 +92,9 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
           <InlineEditText
             value={`${progressValue}%`}
             onSave={(value: string) => {
-              const numValue = parseInt(value.replace('%', ''));
+              const numValue = parseInt(value.replace("%", ""));
               if (!isNaN(numValue)) {
-                handlePropertyChange('progressValue', numValue);
+                handlePropertyChange("progressValue", numValue);
               }
             }}
             placeholder="0%"
@@ -93,7 +113,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
         </Badge>
         <InlineEditText
           value={question}
-          onSave={(value: string) => handlePropertyChange('question', value)}
+          onSave={(value: string) => handlePropertyChange("question", value)}
           placeholder="Digite a questão estratégica..."
           className="text-2xl md:text-3xl font-bold mb-4"
           style={{ color: textColor }}
@@ -112,7 +132,9 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
           >
             <InlineEditText
               value={option.text}
-              onSave={(value: string) => handleOptionChange(index, 'text', value)}
+              onSave={(value: string) =>
+                handleOptionChange(index, "text", value)
+              }
               placeholder="Texto da opção"
               className="text-lg font-medium"
               style={{ color: textColor }}
@@ -124,7 +146,9 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
               <div className="mt-2">
                 <InlineEditText
                   value={option.category}
-                  onSave={(value: string) => handleOptionChange(index, 'category', value)}
+                  onSave={(value: string) =>
+                    handleOptionChange(index, "category", value)
+                  }
                   placeholder="Categoria"
                   className="text-xs"
                   disabled={disabled}

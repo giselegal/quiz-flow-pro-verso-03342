@@ -5,21 +5,24 @@
 O motivo pelo qual **as etapas do funil não salvam** é que o serviço `schemaDrivenFunnelService.ts` está tentando salvar na tabela **`quizzes`** que **NÃO EXISTE** no banco de dados Supabase.
 
 ### Tabela Incorreta (sendo usada):
+
 ```typescript
-await supabase.from('quizzes') // ❌ Esta tabela não existe!
+await supabase.from("quizzes"); // ❌ Esta tabela não existe!
 ```
 
 ### Tabelas Corretas (que existem):
+
 ```typescript
-await supabase.from('funnels')      // ✅ Tabela principal do funil
-await supabase.from('funnel_pages') // ✅ Tabela das etapas/páginas
+await supabase.from("funnels"); // ✅ Tabela principal do funil
+await supabase.from("funnel_pages"); // ✅ Tabela das etapas/páginas
 ```
 
 ## 🗄️ Estrutura Correta do Banco
 
 ### Tabela `funnels` (Dados principais)
+
 - `id`: Identificador único
-- `name`: Nome do funil  
+- `name`: Nome do funil
 - `description`: Descrição
 - `is_published`: Status de publicação
 - `settings`: Configurações (JSON)
@@ -28,6 +31,7 @@ await supabase.from('funnel_pages') // ✅ Tabela das etapas/páginas
 - `created_at`, `updated_at`: Timestamps
 
 ### Tabela `funnel_pages` (21 Etapas)
+
 - `id`: Identificador da página
 - `funnel_id`: Referência ao funil (FK)
 - `title`: Título da etapa
@@ -48,6 +52,7 @@ Criei o arquivo `/src/services/correctedSchemaDrivenFunnelService.ts` com:
 ## 🔧 Como Corrigir
 
 ### Opção 1: Substituir o serviço atual
+
 ```bash
 # Fazer backup
 mv src/services/schemaDrivenFunnelService.ts src/services/schemaDrivenFunnelService.ts.backup
@@ -57,12 +62,13 @@ mv src/services/correctedSchemaDrivenFunnelService.ts src/services/schemaDrivenF
 ```
 
 ### Opção 2: Atualizar o hook para usar serviço corrigido
+
 ```typescript
 // Em useSchemaEditorFixed.ts
-import { correctedSchemaDrivenFunnelService } from './correctedSchemaDrivenFunnelService';
+import { correctedSchemaDrivenFunnelService } from "./correctedSchemaDrivenFunnelService";
 
 // Substituir todas as chamadas:
-// schemaDrivenFunnelService.saveFunnel() 
+// schemaDrivenFunnelService.saveFunnel()
 // por:
 // correctedSchemaDrivenFunnelService.saveFunnel()
 ```
@@ -87,6 +93,7 @@ import { correctedSchemaDrivenFunnelService } from './correctedSchemaDrivenFunne
 ## 🎯 Resultado Esperado
 
 Após a correção:
+
 - ✅ Etapas salvam no Supabase
 - ✅ Dados persistem entre sessões
 - ✅ Funil completo com 21 etapas

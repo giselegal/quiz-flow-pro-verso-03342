@@ -1,6 +1,6 @@
-import React, { Suspense, lazy, ComponentType } from 'react';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { usePerformanceOptimization } from '@/hooks/usePerformanceOptimization';
+import React, { Suspense, lazy, ComponentType } from "react";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
 
 interface LazyComponentWrapperProps {
   fallback?: React.ReactNode;
@@ -33,15 +33,17 @@ class LazyErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('[LazyComponent] Error loading component:', error, errorInfo);
+    console.error("[LazyComponent] Error loading component:", error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
-      return this.props.fallback || (
-        <div className="p-8 text-center">
-          <p className="text-destructive">Erro ao carregar componente</p>
-        </div>
+      return (
+        this.props.fallback || (
+          <div className="p-8 text-center">
+            <p className="text-destructive">Erro ao carregar componente</p>
+          </div>
+        )
       );
     }
 
@@ -52,7 +54,7 @@ class LazyErrorBoundary extends React.Component<
 // Factory para criar componentes lazy otimizados
 export const createLazyComponent = <T extends ComponentType<any>>(
   importFn: () => Promise<{ default: T }>,
-  options: LazyComponentWrapperProps = {}
+  options: LazyComponentWrapperProps = {},
 ) => {
   const LazyComponent = lazy(importFn);
 
@@ -82,7 +84,7 @@ export const useLazyLoad = (threshold = 0.1) => {
           observer.disconnect();
         }
       },
-      { threshold }
+      { threshold },
     );
 
     if (ref.current) {

@@ -2,25 +2,31 @@
 // components/editor/StepsPanel.tsx - Painel de Etapas do Quiz
 // =====================================================================
 
-import React, { useState, useCallback, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { ScrollArea } from '../ui/scroll-area';
-import { Badge } from '../ui/badge';
-import { 
-  GripVertical, Plus, MoreHorizontal, Edit2, 
-  Trash2, Copy, Check, X 
-} from 'lucide-react';
+import React, { useState, useCallback, useMemo } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { ScrollArea } from "../ui/scroll-area";
+import { Badge } from "../ui/badge";
+import {
+  GripVertical,
+  Plus,
+  MoreHorizontal,
+  Edit2,
+  Trash2,
+  Copy,
+  Check,
+  X,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
-import { cn } from '../../lib/utils';
-import { stepTemplateService } from '../../services/stepTemplateService';
+} from "../ui/dropdown-menu";
+import { cn } from "../../lib/utils";
+import { stepTemplateService } from "../../services/stepTemplateService";
 
 interface Step {
   id: string;
@@ -49,14 +55,14 @@ interface StepsPanelProps {
 
 /**
  * Renders a panel displaying the list of quiz steps, allowing users to select, add, edit, duplicate, reorder, and delete steps.
- * 
+ *
  * @remarks
  * - Supports inline renaming of steps.
  * - Displays step details, including name, type, and block count.
  * - Provides contextual actions via a dropdown menu for each step.
  * - Includes a button to add new steps.
  * - Integrates with drag-and-drop UI for reordering (visual only, actual drag logic not included).
- * 
+ *
  * @param steps - Array of step objects to display in the panel.
  * @param selectedStepId - The ID of the currently selected step.
  * @param onStepSelect - Callback invoked when a step is selected.
@@ -68,7 +74,7 @@ interface StepsPanelProps {
  * @param onAddBlocksToStep - Callback to add blocks to a step (not used in UI).
  * @param onPopulateStep - Optional callback to populate a step with predefined content.
  * @param className - Optional additional CSS class names for the panel container.
- * 
+ *
  * @example
  * ```tsx
  * <StepsPanel
@@ -95,19 +101,21 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
   onStepReorder,
   onAddBlocksToStep,
   onPopulateStep,
-  className = ''
+  className = "",
 }) => {
   const [editingStepId, setEditingStepId] = useState<string | null>(null);
-  const [editingName, setEditingName] = useState('');
+  const [editingName, setEditingName] = useState("");
 
   // 🎯 OBTER DEFINIÇÕES DAS ETAPAS DO STEPTEMPLATE SERVICE (FONTE ÚNICA)
   const serviceStepsReference = useMemo(() => {
     try {
-      console.log('📋 StepsPanel: Obtendo referência das etapas do stepTemplateService...');
+      console.log(
+        "📋 StepsPanel: Obtendo referência das etapas do stepTemplateService...",
+      );
       const allSteps = stepTemplateService.getAllSteps();
-      
+
       if (allSteps && allSteps.length > 0) {
-        const serviceSteps = allSteps.map(stepInfo => ({
+        const serviceSteps = allSteps.map((stepInfo) => ({
           id: stepInfo.id,
           name: stepInfo.name,
           order: stepInfo.order,
@@ -115,17 +123,25 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
           description: stepInfo.description,
           blocksCount: stepInfo.blocksCount,
           hasTemplate: stepInfo.hasTemplate,
-          multiSelect: stepInfo.multiSelect
+          multiSelect: stepInfo.multiSelect,
         }));
-        
-        console.log(`✅ StepsPanel: ${serviceSteps.length} etapas de referência obtidas`);
-        console.log('📊 StepsPanel: Estatísticas dos templates:', stepTemplateService.getTemplateStats());
+
+        console.log(
+          `✅ StepsPanel: ${serviceSteps.length} etapas de referência obtidas`,
+        );
+        console.log(
+          "📊 StepsPanel: Estatísticas dos templates:",
+          stepTemplateService.getTemplateStats(),
+        );
         return serviceSteps;
       }
     } catch (error) {
-      console.error('❌ StepsPanel: Erro ao obter referência do stepTemplateService:', error);
+      console.error(
+        "❌ StepsPanel: Erro ao obter referência do stepTemplateService:",
+        error,
+      );
     }
-    
+
     return [];
   }, []);
 
@@ -139,45 +155,51 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
       onStepUpdate(editingStepId, { name: editingName.trim() });
     }
     setEditingStepId(null);
-    setEditingName('');
+    setEditingName("");
   }, [editingStepId, editingName, onStepUpdate]);
 
   const handleEditCancel = useCallback(() => {
     setEditingStepId(null);
-    setEditingName('');
+    setEditingName("");
   }, []);
 
   // 🔧 FUNÇÃO UTILITÁRIA: Obter informações da etapa do service
-  const getStepReferenceInfo = useCallback((stepId: string) => {
-    const serviceStep = serviceStepsReference.find(s => s.id === stepId);
-    if (serviceStep) {
-      return {
-        originalName: serviceStep.name,
-        originalDescription: serviceStep.description,
-        type: serviceStep.type,
-        hasTemplate: true
-      };
-    }
-    
-    // Fallback para etapas não encontradas no service
-    return {
-      originalName: `Etapa ${stepId.replace('etapa-', '')}`,
-      originalDescription: 'Etapa personalizada',
-      type: 'custom',
-      hasTemplate: false
-    };
-  }, [serviceStepsReference]);
+  const getStepReferenceInfo = useCallback(
+    (stepId: string) => {
+      const serviceStep = serviceStepsReference.find((s) => s.id === stepId);
+      if (serviceStep) {
+        return {
+          originalName: serviceStep.name,
+          originalDescription: serviceStep.description,
+          type: serviceStep.type,
+          hasTemplate: true,
+        };
+      }
 
-  const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleEditSave();
-    } else if (e.key === 'Escape') {
-      handleEditCancel();
-    }
-  }, [handleEditSave, handleEditCancel]);
+      // Fallback para etapas não encontradas no service
+      return {
+        originalName: `Etapa ${stepId.replace("etapa-", "")}`,
+        originalDescription: "Etapa personalizada",
+        type: "custom",
+        hasTemplate: false,
+      };
+    },
+    [serviceStepsReference],
+  );
+
+  const handleKeyPress = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter") {
+        handleEditSave();
+      } else if (e.key === "Escape") {
+        handleEditCancel();
+      }
+    },
+    [handleEditSave, handleEditCancel],
+  );
 
   return (
-    <Card className={cn('h-full flex flex-col', className)}>
+    <Card className={cn("h-full flex flex-col", className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base font-semibold text-gray-900">
@@ -188,7 +210,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
           </Badge>
         </div>
       </CardHeader>
-      
+
       <CardContent className="flex-1 p-0">
         <ScrollArea className="h-full px-4">
           <div className="space-y-2 pb-4">
@@ -196,11 +218,11 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
               <div
                 key={step.id}
                 className={cn(
-                  'group relative flex items-center p-3 rounded-lg border transition-all duration-200',
-                  'hover:shadow-sm cursor-pointer',
+                  "group relative flex items-center p-3 rounded-lg border transition-all duration-200",
+                  "hover:shadow-sm cursor-pointer",
                   selectedStepId === step.id
-                    ? 'bg-blue-50 border-blue-200 shadow-sm'
-                    : 'bg-white border-gray-200 hover:border-gray-300'
+                    ? "bg-blue-50 border-blue-200 shadow-sm"
+                    : "bg-white border-gray-200 hover:border-gray-300",
                 )}
                 onClick={() => onStepSelect(step.id)}
               >
@@ -258,17 +280,18 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                       <p className="text-xs text-gray-500 mt-1">
                         {(() => {
                           const stepInfo = getStepReferenceInfo(step.id);
-                          const typeLabel = {
-                            'intro': '🎯 Introdução',
-                            'question': '❓ Questão',
-                            'strategic': '🎪 Estratégica',
-                            'transition': '🔄 Transição',
-                            'result': '🏆 Resultado',
-                            'offer': '💎 Oferta',
-                            'custom': '⚙️ Personalizada'
-                          }[stepInfo.type] || '📄 Etapa';
-                          
-                          return `${typeLabel} • ${step.blocksCount} componente${step.blocksCount !== 1 ? 's' : ''}${stepInfo.hasTemplate ? ' • Template disponível' : ''}`;
+                          const typeLabel =
+                            {
+                              intro: "🎯 Introdução",
+                              question: "❓ Questão",
+                              strategic: "🎪 Estratégica",
+                              transition: "🔄 Transição",
+                              result: "🏆 Resultado",
+                              offer: "💎 Oferta",
+                              custom: "⚙️ Personalizada",
+                            }[stepInfo.type] || "📄 Etapa";
+
+                          return `${typeLabel} • ${step.blocksCount} componente${step.blocksCount !== 1 ? "s" : ""}${stepInfo.hasTemplate ? " • Template disponível" : ""}`;
                         })()}
                       </p>
                     </div>
@@ -294,18 +317,22 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                           <Edit2 className="w-4 h-4 mr-2" />
                           Renomear
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => onStepDuplicate(step.id)}>
+                        <DropdownMenuItem
+                          onClick={() => onStepDuplicate(step.id)}
+                        >
                           <Copy className="w-4 h-4 mr-2" />
                           Duplicar
                         </DropdownMenuItem>
                         {onPopulateStep && (
-                          <DropdownMenuItem onClick={() => onPopulateStep(step.id)}>
+                          <DropdownMenuItem
+                            onClick={() => onPopulateStep(step.id)}
+                          >
                             <Plus className="w-4 h-4 mr-2" />
                             Popular Etapa
                           </DropdownMenuItem>
                         )}
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
                           onClick={() => onStepDelete(step.id)}
                           className="text-red-600 hover:text-red-700"
                         >

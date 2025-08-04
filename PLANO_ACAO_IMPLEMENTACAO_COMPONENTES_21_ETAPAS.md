@@ -74,28 +74,28 @@ import {
   ProgressInlineBlock,
   StatInlineBlock,
   CountdownInlineBlock,
-  
+
   // Componentes de design
   StyleCardInlineBlock,
   ResultCardInlineBlock,
   PricingCardInlineBlock,
   TestimonialCardInlineBlock,
-  
+
   // Componentes de resultado (Etapa 20)
   ResultHeaderInlineBlock,
   TestimonialsInlineBlock,
   BeforeAfterInlineBlock,
   StepHeaderInlineBlock,
-  
+
   // Componentes de oferta (Etapa 21)
   QuizOfferPricingInlineBlock,
   QuizOfferCTAInlineBlock,
   BonusListInlineBlock,
-  
+
   // Componentes especializados Quiz
   QuizIntroHeaderBlock,
   LoadingAnimationBlock,
-  
+
   // Componentes das 21 etapas
   QuizStartPageInlineBlock,
   QuizPersonalInfoInlineBlock,
@@ -118,8 +118,8 @@ import {
   QuizActionPlanInlineBlock,
   QuizDevelopmentPlanInlineBlock,
   QuizGoalsDashboardInlineBlock,
-  QuizFinalResultsInlineBlock
-} from './inline';
+  QuizFinalResultsInlineBlock,
+} from "./inline";
 ```
 
 #### **1.2 Criar Mapeamento de Tipos para Componentes**
@@ -127,59 +127,59 @@ import {
 ```typescript
 const COMPONENT_MAP: Record<string, React.ComponentType<any>> = {
   // ===== COMPONENTES BÁSICOS =====
-  'text-inline': TextInlineBlock,
-  'heading-inline': HeadingInlineBlock,
-  'button-inline': ButtonInlineBlock,
-  'image-display-inline': ImageDisplayInlineBlock,
-  'badge-inline': BadgeInlineBlock,
-  'progress-inline': ProgressInlineBlock,
-  'stat-inline': StatInlineBlock,
-  'countdown-inline': CountdownInlineBlock,
-  
+  "text-inline": TextInlineBlock,
+  "heading-inline": HeadingInlineBlock,
+  "button-inline": ButtonInlineBlock,
+  "image-display-inline": ImageDisplayInlineBlock,
+  "badge-inline": BadgeInlineBlock,
+  "progress-inline": ProgressInlineBlock,
+  "stat-inline": StatInlineBlock,
+  "countdown-inline": CountdownInlineBlock,
+
   // ===== COMPONENTES DE DESIGN =====
-  'style-card-inline': StyleCardInlineBlock,
-  'result-card-inline': ResultCardInlineBlock,
-  'pricing-card-inline': PricingCardInlineBlock,
-  'testimonial-card-inline': TestimonialCardInlineBlock,
-  
+  "style-card-inline": StyleCardInlineBlock,
+  "result-card-inline": ResultCardInlineBlock,
+  "pricing-card-inline": PricingCardInlineBlock,
+  "testimonial-card-inline": TestimonialCardInlineBlock,
+
   // ===== COMPONENTES DE RESULTADO (ETAPA 20) =====
-  'result-header-inline': ResultHeaderInlineBlock,
-  'testimonials-inline': TestimonialsInlineBlock,
-  'before-after-inline': BeforeAfterInlineBlock,
-  'step-header-inline': StepHeaderInlineBlock,
-  
+  "result-header-inline": ResultHeaderInlineBlock,
+  "testimonials-inline": TestimonialsInlineBlock,
+  "before-after-inline": BeforeAfterInlineBlock,
+  "step-header-inline": StepHeaderInlineBlock,
+
   // ===== COMPONENTES DE OFERTA (ETAPA 21) =====
-  'quiz-offer-pricing-inline': QuizOfferPricingInlineBlock,
-  'quiz-offer-cta-inline': QuizOfferCTAInlineBlock,
-  'bonus-list-inline': BonusListInlineBlock,
-  
+  "quiz-offer-pricing-inline": QuizOfferPricingInlineBlock,
+  "quiz-offer-cta-inline": QuizOfferCTAInlineBlock,
+  "bonus-list-inline": BonusListInlineBlock,
+
   // ===== COMPONENTES ESPECIALIZADOS QUIZ =====
-  'quiz-intro-header': QuizIntroHeaderBlock,
-  'loading-animation': LoadingAnimationBlock,
-  
+  "quiz-intro-header": QuizIntroHeaderBlock,
+  "loading-animation": LoadingAnimationBlock,
+
   // ===== COMPONENTES DAS 21 ETAPAS =====
-  'quiz-start-page-inline': QuizStartPageInlineBlock,
-  'quiz-personal-info-inline': QuizPersonalInfoInlineBlock,
-  'quiz-experience-inline': QuizExperienceInlineBlock,
-  'quiz-question-inline': QuizQuestionInlineBlock,
-  'quiz-progress-inline': QuizProgressInlineBlock,
-  'quiz-transition-inline': QuizTransitionInlineBlock,
-  'quiz-loading-inline': QuizLoadingInlineBlock,
-  'quiz-result-inline': QuizResultInlineBlock,
-  'quiz-analysis-inline': QuizAnalysisInlineBlock,
-  'quiz-category-inline': QuizCategoryInlineBlock,
-  'quiz-recommendation-inline': QuizRecommendationInlineBlock,
-  'quiz-metrics-inline': QuizMetricsInlineBlock,
-  'quiz-comparison-inline': QuizComparisonInlineBlock,
-  'quiz-certificate-inline': QuizCertificateInlineBlock,
-  'quiz-leaderboard-inline': QuizLeaderboardInlineBlock,
-  'quiz-badges-inline': QuizBadgesInlineBlock,
-  'quiz-evolution-inline': QuizEvolutionInlineBlock,
-  'quiz-networking-inline': QuizNetworkingInlineBlock,
-  'quiz-action-plan-inline': QuizActionPlanInlineBlock,
-  'quiz-development-plan-inline': QuizDevelopmentPlanInlineBlock,
-  'quiz-goals-dashboard-inline': QuizGoalsDashboardInlineBlock,
-  'quiz-final-results-inline': QuizFinalResultsInlineBlock
+  "quiz-start-page-inline": QuizStartPageInlineBlock,
+  "quiz-personal-info-inline": QuizPersonalInfoInlineBlock,
+  "quiz-experience-inline": QuizExperienceInlineBlock,
+  "quiz-question-inline": QuizQuestionInlineBlock,
+  "quiz-progress-inline": QuizProgressInlineBlock,
+  "quiz-transition-inline": QuizTransitionInlineBlock,
+  "quiz-loading-inline": QuizLoadingInlineBlock,
+  "quiz-result-inline": QuizResultInlineBlock,
+  "quiz-analysis-inline": QuizAnalysisInlineBlock,
+  "quiz-category-inline": QuizCategoryInlineBlock,
+  "quiz-recommendation-inline": QuizRecommendationInlineBlock,
+  "quiz-metrics-inline": QuizMetricsInlineBlock,
+  "quiz-comparison-inline": QuizComparisonInlineBlock,
+  "quiz-certificate-inline": QuizCertificateInlineBlock,
+  "quiz-leaderboard-inline": QuizLeaderboardInlineBlock,
+  "quiz-badges-inline": QuizBadgesInlineBlock,
+  "quiz-evolution-inline": QuizEvolutionInlineBlock,
+  "quiz-networking-inline": QuizNetworkingInlineBlock,
+  "quiz-action-plan-inline": QuizActionPlanInlineBlock,
+  "quiz-development-plan-inline": QuizDevelopmentPlanInlineBlock,
+  "quiz-goals-dashboard-inline": QuizGoalsDashboardInlineBlock,
+  "quiz-final-results-inline": QuizFinalResultsInlineBlock,
 };
 ```
 
@@ -191,7 +191,7 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
 }) => {
   // Buscar componente no mapeamento
   const ComponentToRender = COMPONENT_MAP[block.type];
-  
+
   if (!ComponentToRender) {
     return (
       <div className="p-4 border-2 border-dashed border-red-300 rounded-lg bg-red-50">
@@ -204,11 +204,11 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
       </div>
     );
   }
-  
+
   const handleContentUpdate = (key: string, value: any) => {
-    onUpdate({ 
+    onUpdate({
       ...block,
-      properties: { ...block.properties, [key]: value } 
+      properties: { ...block.properties, [key]: value }
     });
   };
 
@@ -231,7 +231,7 @@ export const UniversalBlockRenderer: React.FC<BlockRendererProps> = ({
         onPropertyChange={handleContentUpdate}
         disabled={isPreview}
       />
-      
+
       {!isPreview && isSelected && (
         <button
           onClick={e => {
@@ -290,7 +290,7 @@ const CharacteristicsListInlineBlock: React.FC<BlockComponentProps> = ({
   ];
 
   return (
-    <div 
+    <div
       className="characteristics-list p-4 border border-gray-200 rounded-lg"
       onClick={onClick}
     >
@@ -333,15 +333,15 @@ A função `getStepTemplate` já está implementada e integrada:
 // Já implementado em SchemaDrivenEditorResponsive.tsx
 const getStepTemplate = (stepId: string) => {
   try {
-    const stepNumber = parseInt(stepId.replace(/\D/g, ''));
+    const stepNumber = parseInt(stepId.replace(/\D/g, ""));
     const template = stepTemplateService.getStepTemplate(stepNumber);
-    
+
     return template.map((block: any) => ({
       type: block.type,
-      properties: block.properties
+      properties: block.properties,
     }));
   } catch (error) {
-    console.error('❌ Erro ao obter template da etapa:', error);
+    console.error("❌ Erro ao obter template da etapa:", error);
     return [];
   }
 };
@@ -399,23 +399,28 @@ echo "🎯 TESTE CONCLUÍDO"
 #### **4.2 Ordem de Implementação**
 
 **Prioridade 1: Componentes Críticos (Etapas 1-3)**
+
 - `QuizStartPageInlineBlock` ✅
-- `QuizPersonalInfoInlineBlock` ✅ 
+- `QuizPersonalInfoInlineBlock` ✅
 - `QuizExperienceInlineBlock` ✅
 
 **Prioridade 2: Componentes de Questões (Etapas 4-13)**
+
 - `QuizQuestionInlineBlock` ✅
 
 **Prioridade 3: Componentes de Transição (Etapas 12, 19)**
+
 - `QuizTransitionInlineBlock` ✅
 - `QuizLoadingInlineBlock` ✅
 
 **Prioridade 4: Componentes de Resultado (Etapa 20)**
+
 - `QuizResultInlineBlock` ✅
 - `QuizAnalysisInlineBlock` ✅
 - `ResultCardInlineBlock` ✅
 
 **Prioridade 5: Componentes de Oferta (Etapa 21)**
+
 - `QuizOfferPricingInlineBlock` ✅
 - `QuizOfferCTAInlineBlock` ✅
 
@@ -431,18 +436,18 @@ echo "🎯 TESTE CONCLUÍDO"
 // Testar navegação para etapa 1
 window.testStepNavigation = (stepId) => {
   console.log(`🧪 Testando navegação para etapa ${stepId}`);
-  
+
   // Simular seleção de etapa
-  const event = new CustomEvent('stepSelect', { 
-    detail: { stepId: `etapa-${stepId}` } 
+  const event = new CustomEvent("stepSelect", {
+    detail: { stepId: `etapa-${stepId}` },
   });
   document.dispatchEvent(event);
-  
+
   setTimeout(() => {
-    const blocks = document.querySelectorAll('[data-block-type]');
+    const blocks = document.querySelectorAll("[data-block-type]");
     console.log(`📊 ${blocks.length} blocos renderizados`);
-    blocks.forEach(block => {
-      console.log(`  - ${block.getAttribute('data-block-type')}`);
+    blocks.forEach((block) => {
+      console.log(`  - ${block.getAttribute("data-block-type")}`);
     });
   }, 500);
 };
@@ -459,20 +464,20 @@ for (let i = 1; i <= 21; i++) {
 // Teste individual de componentes
 const testComponentRendering = (componentType) => {
   const testBlock = {
-    id: 'test-block',
+    id: "test-block",
     type: componentType,
     properties: {
-      content: 'Teste',
-      title: 'Título de Teste'
-    }
+      content: "Teste",
+      title: "Título de Teste",
+    },
   };
-  
+
   console.log(`🧪 Testando componente: ${componentType}`);
-  
+
   // Verificar se o componente está mapeado
   const isMapping = COMPONENT_MAP.hasOwnProperty(componentType);
-  console.log(`📋 Mapeamento: ${isMapping ? '✅' : '❌'}`);
-  
+  console.log(`📋 Mapeamento: ${isMapping ? "✅" : "❌"}`);
+
   return isMapping;
 };
 ```
@@ -482,8 +487,9 @@ const testComponentRendering = (componentType) => {
 ## 📊 **CHECKLIST DE IMPLEMENTAÇÃO**
 
 ### **✅ Concluído**
+
 - [x] Análise da arquitetura atual
-- [x] Identificação dos 41 componentes inline  
+- [x] Identificação dos 41 componentes inline
 - [x] Verificação do `stepTemplateService`
 - [x] Verificação do `index.ts` dos componentes
 - [x] Implementação do `COMPONENT_MAP` no `UniversalBlockRenderer`
@@ -492,11 +498,13 @@ const testComponentRendering = (componentType) => {
 - [x] Testes de verificação da integração
 
 ### **🔄 Em Andamento**
+
 - [x] ~~Implementação do `COMPONENT_MAP` no `UniversalBlockRenderer`~~
 - [x] ~~Implementação dos 3 componentes vazios~~
 - [ ] Teste de navegação entre etapas no browser
 
 ### **⏳ Pendente**
+
 - [ ] Implementação de editores de propriedades específicos
 - [ ] Implementação de validação de componentes
 - [ ] Implementação de testes automatizados
@@ -507,6 +515,7 @@ const testComponentRendering = (componentType) => {
 ## 🎉 **STATUS DA IMPLEMENTAÇÃO**
 
 ### **📈 ESTATÍSTICAS FINAIS**
+
 - **Total de componentes inline**: 44 ✅
 - **Componentes com export default**: 44 ✅ (100%)
 - **Componentes mapeados no renderer**: 46 ✅
@@ -516,22 +525,26 @@ const testComponentRendering = (componentType) => {
 ### **🚀 IMPLEMENTAÇÕES CONCLUÍDAS**
 
 #### **1. UniversalBlockRenderer Atualizado**
+
 - ✅ Mapeamento completo dos 44 componentes
 - ✅ Sistema de fallback para compatibilidade
 - ✅ Logging detalhado para debug
 - ✅ Placeholder informativo para componentes não encontrados
 
 #### **2. Componentes Novos Implementados**
+
 - ✅ `CharacteristicsListInlineBlock` - Lista de características com ícones
 - ✅ `SecondaryStylesInlineBlock` - Grid de estilos secundários com porcentagens
 - ✅ `StyleCharacteristicsInlineBlock` - Detalhes completos do estilo com paleta
 
 #### **3. Sistema de Templates Integrado**
+
 - ✅ `stepTemplateService` funcionando para 21 etapas
 - ✅ Integração com `SchemaDrivenEditorResponsive`
 - ✅ Sistema de fallback para templates não encontrados
 
 #### **4. Exports e Importações**
+
 - ✅ `index.ts` atualizado com todos os componentes
 - ✅ Imports corrigidos no `UniversalBlockRenderer`
 - ✅ Tipos TypeScript funcionais
@@ -541,16 +554,19 @@ const testComponentRendering = (componentType) => {
 ## 🎯 **PRÓXIMOS PASSOS IMEDIATOS**
 
 ### **1. ✅ Implementar COMPONENT_MAP (CONCLUÍDO)**
+
 - ✅ COMPONENT_MAP implementado com 46 componentes
 - ✅ Sistema de fallback para compatibilidade
 - ✅ Logging detalhado para debug
 
 ### **2. ✅ Implementar Componentes Vazios (CONCLUÍDO)**
+
 - ✅ CharacteristicsListInlineBlock.tsx criado
 - ✅ SecondaryStylesInlineBlock.tsx criado
 - ✅ StyleCharacteristicsInlineBlock.tsx criado
 
 ### **3. ⏳ Testar Navegação (EM ANDAMENTO)**
+
 ```bash
 # Servidor rodando em: http://localhost:8081
 # Abrir: http://localhost:8081/editor ou http://localhost:8081
@@ -559,6 +575,7 @@ const testComponentRendering = (componentType) => {
 ```
 
 ### **4. ✅ Validar Integração (CONCLUÍDO)**
+
 ```bash
 # Script executado com sucesso:
 # - 44 componentes inline verificados
@@ -572,39 +589,44 @@ const testComponentRendering = (componentType) => {
 ## 🧪 **COMO TESTAR A IMPLEMENTAÇÃO**
 
 ### **1. Acessar o Editor**
+
 ```
 URL: http://localhost:8081/editor
 ```
 
 ### **2. Executar Teste no Console**
+
 ```javascript
 // Abrir DevTools (F12) e executar:
 
 // Testar componente específico
 window.testComponent = (componentType) => {
   console.log(`🧪 Testando componente: ${componentType}`);
-  
+
   const testBlock = {
-    id: 'test-block',
+    id: "test-block",
     type: componentType,
     properties: {
-      content: 'Teste',
-      title: 'Título de Teste'
-    }
+      content: "Teste",
+      title: "Título de Teste",
+    },
   };
-  
+
   // Verificar se está mapeado
-  const renderer = document.querySelector('[data-block-type]');
-  console.log(`📊 Renderizado: ${renderer ? '✅' : '❌'}`);
+  const renderer = document.querySelector("[data-block-type]");
+  console.log(`📊 Renderizado: ${renderer ? "✅" : "❌"}`);
 };
 
 // Testar componentes críticos
-['text-inline', 'quiz-start-page-inline', 'quiz-question-inline'].forEach(type => {
-  window.testComponent(type);
-});
+["text-inline", "quiz-start-page-inline", "quiz-question-inline"].forEach(
+  (type) => {
+    window.testComponent(type);
+  },
+);
 ```
 
 ### **3. Verificar Logs do Console**
+
 ```
 🔍 [UniversalBlockRenderer] Renderizando bloco tipo: text-inline
 ✅ [UniversalBlockRenderer] Componente encontrado no COMPONENT_MAP: text-inline
@@ -615,6 +637,7 @@ window.testComponent = (componentType) => {
 ## 🚨 **POSSÍVEIS PROBLEMAS E SOLUÇÕES**
 
 ### **Problema 1: Componente não renderiza**
+
 ```typescript
 // Verificar:
 // 1. Se está no COMPONENT_MAP
@@ -624,6 +647,7 @@ window.testComponent = (componentType) => {
 ```
 
 ### **Problema 2: Props não chegam corretamente**
+
 ```typescript
 // Verificar:
 // 1. Estrutura do template no stepTemplateService
@@ -632,6 +656,7 @@ window.testComponent = (componentType) => {
 ```
 
 ### **Problema 3: Navegação entre etapas falha**
+
 ```typescript
 // Verificar:
 // 1. Se o stepId está sendo passado corretamente
@@ -644,14 +669,16 @@ window.testComponent = (componentType) => {
 ## 📚 **RECURSOS ADICIONAIS**
 
 ### **Documentação Relacionada**
+
 - [ANALISE_INDEX_INLINE_BLOCKS.md](/workspaces/quiz-quest-challenge-verse/ANALISE_INDEX_INLINE_BLOCKS.md)
 - [COMPONENTES_BLOCKS_ATUALIZADOS.md](/workspaces/quiz-quest-challenge-verse/COMPONENTES_BLOCKS_ATUALIZADOS.md)
 - [MAPEAMENTO_IMPORTS_E_FLUXO.md](/workspaces/quiz-quest-challenge-verse/MAPEAMENTO_IMPORTS_E_FLUXO.md)
 
 ### **Arquivos Chave**
+
 - `src/components/editor/SchemaDrivenEditorResponsive.tsx` - Editor principal
 - `src/components/editor/blocks/UniversalBlockRenderer.tsx` - Renderizador
-- `src/components/editor/blocks/inline/index.ts` - Exports centralizados  
+- `src/components/editor/blocks/inline/index.ts` - Exports centralizados
 - `src/services/stepTemplateService.ts` - Templates das etapas
 
 ---
@@ -664,6 +691,7 @@ window.testComponent = (componentType) => {
 ✅ **Templates das etapas integrados com sucesso**
 
 ### **📊 PRÓXIMA FASE:** Teste Final no Browser
+
 1. Acesse: http://localhost:8081/editor
 2. Teste navegação entre etapas 1-21
 3. Verifique renderização de cada componente

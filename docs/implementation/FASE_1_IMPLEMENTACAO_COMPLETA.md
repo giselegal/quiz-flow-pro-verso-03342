@@ -5,6 +5,7 @@
 ### ✅ Funcionalidades Implementadas
 
 #### 1. **Infraestrutura Básica**
+
 - ✅ Configuração do Supabase (com fallback para modo mock)
 - ✅ Sistema de autenticação completo
 - ✅ Definições de tipos TypeScript
@@ -12,6 +13,7 @@
 - ✅ Sistema de hooks personalizados
 
 #### 2. **Componentes de UI Base**
+
 - ✅ Button (botões com múltiplas variantes)
 - ✅ Input (campos de entrada)
 - ✅ Select (seletores dropdown)
@@ -21,6 +23,7 @@
 - ✅ DropdownMenu (menu suspenso)
 
 #### 3. **Dashboard Principal**
+
 - ✅ **QuizDashboard** - Interface principal de gerenciamento
   - Listagem de quizzes do usuário
   - Filtros por categoria, status e busca textual
@@ -29,6 +32,7 @@
   - Ações: editar, visualizar, duplicar, excluir
 
 #### 4. **Componentes de Quiz**
+
 - ✅ **QuizCard** - Card visual para modo grid
 - ✅ **QuizList** - Linha para modo lista
 - ✅ **CreateQuizModal** - Modal de criação de quiz
@@ -36,6 +40,7 @@
 - ✅ **QuizPreview** - Visualização do quiz
 
 #### 5. **Sistema de Dados Mock**
+
 - ✅ Dados de exemplo para desenvolvimento local
 - ✅ Fallback automático quando Supabase não está configurado
 - ✅ Autenticação mock com usuário de teste
@@ -45,7 +50,7 @@
 A aplicação agora apresenta:
 
 1. **Header do Dashboard**
-   - Título "Meus Quizzes" 
+   - Título "Meus Quizzes"
    - Contador de quizzes criados
    - Botão "Novo Quiz"
 
@@ -74,11 +79,13 @@ A aplicação agora apresenta:
 ### 🚀 Como Executar
 
 1. **Instalar dependências:**
+
    ```bash
    npm install
    ```
 
 2. **Executar em modo desenvolvimento:**
+
    ```bash
    npm run dev
    ```

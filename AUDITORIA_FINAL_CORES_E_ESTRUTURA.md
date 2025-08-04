@@ -5,12 +5,14 @@
 ### 1. Cores Não Permitidas Removidas
 
 **Antes:**
+
 - `text-red-600`, `bg-red-500` → Corrigido para `text-amber-700`, `bg-amber-700`
 - `text-gray-500`, `bg-gray-50` → Corrigido para `text-stone-500`, `bg-stone-50`
 - `text-blue-600`, `bg-blue-500` → Corrigido para `text-amber-700`, `bg-amber-500`
 - `text-green-600`, `bg-green-50` → Corrigido para `text-amber-800`, `bg-gradient-to-r from-stone-50 to-amber-50/50`
 
 **Paleta Aprovada (SOMENTE):**
+
 - `#B89B7A` (Amber/Dourado)
 - `#432818` (Marrom Escuro)
 - `#8B7355` (Stone/Pedra)
@@ -59,6 +61,7 @@
 ## 📋 ESTRUTURA DA COLUNA DE COMPONENTES
 
 ### Layout Principal
+
 ```tsx
 // /src/pages/editor-fixed.tsx
 <FourColumnLayout
@@ -70,6 +73,7 @@
 ```
 
 ### Estrutura de Colunas
+
 ```
 ┌─────────────┬─────────────┬─────────────┬─────────────┐
 │   Etapas    │ Componentes │   Canvas    │Propriedades │
@@ -86,12 +90,14 @@
 **Localização:** `/src/components/editor/EnhancedComponentsSidebar.tsx`
 
 **Funcionalidades:**
+
 1. **Busca de Componentes** - Campo de pesquisa com ícone
 2. **Categorias Dinâmicas** - Filtros por categoria
 3. **Stats do Registry** - Validação e cobertura
 4. **Lista de Componentes** - Cards com drag & drop
 
 **Props:**
+
 ```tsx
 interface EnhancedComponentsSidebarProps {
   onAddComponent: (type: string) => void;
@@ -99,6 +105,7 @@ interface EnhancedComponentsSidebarProps {
 ```
 
 **Integração:**
+
 - Conectado ao `enhancedBlockRegistry` validado
 - Usa stats de componentes ativos
 - Callback para adicionar componentes ao canvas
@@ -106,11 +113,13 @@ interface EnhancedComponentsSidebarProps {
 ## 🎯 DESIGN SYSTEM FINAL
 
 ### Cores Permitidas SOMENTE:
+
 - **Amber:** `amber-50`, `amber-500`, `amber-700`, `amber-800`
 - **Stone:** `stone-50`, `stone-200`, `stone-400`, `stone-500`, `stone-600`, `stone-900`
 - **Especiais:** `bg-gradient-to-r from-stone-50 to-amber-50/50`
 
 ### Efeitos Visuais:
+
 - `backdrop-blur-sm`
 - `shadow-2xl`
 - `transform-gpu`

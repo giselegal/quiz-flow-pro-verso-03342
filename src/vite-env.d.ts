@@ -4,7 +4,7 @@ declare global {
   interface Window {
     fixBlurryIntroQuizImages?: (
       rootElement?: HTMLElement | null,
-      opts?: { selector?: string; onFixed?: (img: HTMLImageElement) => void }
+      opts?: { selector?: string; onFixed?: (img: HTMLImageElement) => void },
     ) => HTMLImageElement[];
     QUIZ_PERF?: {
       startTime: number;

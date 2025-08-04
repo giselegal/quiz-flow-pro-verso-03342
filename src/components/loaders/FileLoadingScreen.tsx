@@ -1,6 +1,5 @@
-
-import React, { useState, useEffect } from 'react';
-import { Progress } from '@/components/ui/progress';
+import React, { useState, useEffect } from "react";
+import { Progress } from "@/components/ui/progress";
 
 interface FileLoadingScreenProps {
   fileUrl?: string;
@@ -8,17 +7,17 @@ interface FileLoadingScreenProps {
   onError?: (error: Error) => void;
 }
 
-const FileLoadingScreen: React.FC<FileLoadingScreenProps> = ({ 
-  fileUrl = '', 
-  onFileLoaded = () => {}, 
-  onError = () => {} 
+const FileLoadingScreen: React.FC<FileLoadingScreenProps> = ({
+  fileUrl = "",
+  onFileLoaded = () => {},
+  onError = () => {},
 }) => {
   const [progress, setProgress] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setProgress(prev => {
+      setProgress((prev) => {
         const newProgress = prev + Math.random() * 15;
         if (newProgress >= 100) {
           setIsComplete(true);
@@ -46,7 +45,7 @@ const FileLoadingScreen: React.FC<FileLoadingScreenProps> = ({
             Preparando sua experiência personalizada...
           </p>
         </div>
-        
+
         <div className="space-y-4">
           <Progress value={progress} className="h-2" />
           <div className="text-center">
@@ -55,7 +54,7 @@ const FileLoadingScreen: React.FC<FileLoadingScreenProps> = ({
             </span>
           </div>
         </div>
-        
+
         {isComplete && (
           <div className="text-center mt-4">
             <p className="text-[#432818] font-medium">

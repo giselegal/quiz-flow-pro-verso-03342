@@ -3,15 +3,18 @@
 ## 🎯 **1. LISTA DE BOTÕES DE ETAPAS**
 
 ### 📂 **Arquivo Principal:**
+
 ```
 /src/components/editor/funnel/FunnelStagesPanel.tsx
 ```
 
 ### 🔍 **Localização no Código:**
+
 - **Linhas 200-280:** Renderização dos botões de etapas
 - **Container:** `<ScrollArea>` dentro do `<CardContent>`
 
 ### 📋 **Estrutura dos Botões de Etapas:**
+
 ```tsx
 // Linha 199-203: Container principal
 <div className="space-y-2 p-4">
@@ -28,6 +31,7 @@
 ```
 
 ### 🎨 **Elementos de Cada Botão de Etapa:**
+
 1. **Header** (Linhas 220-235):
    - `<GripVertical>` - Ícone de arrastar
    - `Etapa {stage.order}` - Número da etapa
@@ -41,21 +45,22 @@
 
 4. **Botões de Ação** (Linhas 249-280):
    - `<Eye>` - Visualizar
-   - `<Settings>` - Configurações  
+   - `<Settings>` - Configurações
    - `<Copy>` - Copiar
    - `<Trash2>` - Deletar
 
 ### 🔄 **Handler Principal:**
+
 ```tsx
 // Linha 74-83: Função que gerencia cliques
 const handleStageClick = (stageId: string, e?: React.MouseEvent) => {
-  console.log('🚨 EVENTO CLICK RECEBIDO - StageID:', stageId);
-  
+  console.log("🚨 EVENTO CLICK RECEBIDO - StageID:", stageId);
+
   if (e) {
     e.preventDefault();
     e.stopPropagation();
   }
-  
+
   setActiveStage(stageId); // EditorContext unificado
 };
 ```
@@ -65,15 +70,18 @@ const handleStageClick = (stageId: string, e?: React.MouseEvent) => {
 ## 🧩 **2. LISTA DE BOTÕES DE COMPONENTES**
 
 ### 📂 **Arquivo Principal:**
+
 ```
 /src/components/editor/EnhancedComponentsSidebar.tsx
 ```
 
 ### 🔍 **Localização no Código:**
+
 - **Linhas 80-95:** Botões de categorias
 - **Linhas 100-135:** Botões de componentes individuais
 
 ### 📋 **Estrutura dos Botões de Categorias:**
+
 ```tsx
 // Linhas 80-95: Grid de categorias
 <div className="grid grid-cols-2 gap-2">
@@ -86,7 +94,7 @@ const handleStageClick = (stageId: string, e?: React.MouseEvent) => {
       <div className="text-left">
         <div className="font-medium">{category}</div>
         <div className="text-xs text-muted-foreground">
-          {allBlocks.filter(b => b.category === category).length} itens
+          {allBlocks.filter((b) => b.category === category).length} itens
         </div>
       </div>
     </Button>
@@ -95,6 +103,7 @@ const handleStageClick = (stageId: string, e?: React.MouseEvent) => {
 ```
 
 ### 🎨 **Estrutura dos Botões de Componentes:**
+
 ```tsx
 // Linhas 100-135: Lista de componentes
 <div className="space-y-2">
@@ -105,7 +114,7 @@ const handleStageClick = (stageId: string, e?: React.MouseEvent) => {
         <div className="p-2 rounded-md bg-primary/10">
           <Plus className="h-4 w-4 text-primary" />
         </div>
-        
+
         {/* Conteúdo */}
         <div className="flex-1 min-w-0">
           {/* Nome + Badge */}
@@ -113,12 +122,12 @@ const handleStageClick = (stageId: string, e?: React.MouseEvent) => {
             <h4 className="text-sm font-medium truncate">{block.name}</h4>
             <Badge variant="secondary">{block.category}</Badge>
           </div>
-          
+
           {/* Descrição */}
           <p className="text-xs text-muted-foreground mb-2">
             {block.description}
           </p>
-          
+
           {/* Botão Adicionar */}
           <Button
             size="sm"
@@ -136,6 +145,7 @@ const handleStageClick = (stageId: string, e?: React.MouseEvent) => {
 ```
 
 ### 🔄 **Handlers Principais:**
+
 ```tsx
 // Linha 29-32: Busca de componentes
 const handleSearch = (query: string) => {
@@ -145,8 +155,8 @@ const handleSearch = (query: string) => {
 
 // Linha 34-37: Seleção de categoria
 const handleCategorySelect = (category: string) => {
-  setSelectedCategory(category === 'All' ? null : category);
-  setSearchQuery('');
+  setSelectedCategory(category === "All" ? null : category);
+  setSearchQuery("");
 };
 ```
 
@@ -166,7 +176,7 @@ const handleCategorySelect = (category: string) => {
     │       ├── ➕ Botão adicionar etapa
     │       └── 📜 Lista de etapas (linhas 200-280)
     │           ├── 🎯 Botão Etapa 1
-    │           ├── 🎯 Botão Etapa 2 
+    │           ├── 🎯 Botão Etapa 2
     │           └── 🎯 Botão Etapa N...
     │
     ├── 🧩 COMPONENTES (Coluna 2)
@@ -188,17 +198,20 @@ const handleCategorySelect = (category: string) => {
 ## 🎯 **RESUMO DOS ARQUIVOS**
 
 ### 📑 **Lista de Etapas:**
+
 - **Arquivo:** `/src/components/editor/funnel/FunnelStagesPanel.tsx`
 - **Linhas:** 200-280 (renderização dos botões)
 - **Handler:** `handleStageClick()` (linha 74-83)
 
 ### 🧩 **Lista de Componentes:**
+
 - **Arquivo:** `/src/components/editor/EnhancedComponentsSidebar.tsx`
 - **Categorias:** Linhas 80-95
 - **Componentes:** Linhas 100-135
 - **Handlers:** `handleCategorySelect()` e `onAddComponent()`
 
 ### 🔗 **Integração:**
+
 Ambos os componentes são integrados no `editor-fixed.tsx` através do `<FourColumnLayout>` e usam o `EditorContext` para gerenciamento de estado unificado.
 
 ---

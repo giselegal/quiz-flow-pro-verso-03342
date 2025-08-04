@@ -24,16 +24,16 @@ model Quiz {
 */
 
 // routes/quizzes.ts (exemplo com Express)
-import express from 'express';
-import { PrismaClient } from '@prisma/client';
-import { authenticate } from '../middleware/auth';
-import { validateQuiz } from '../middleware/validation';
+import express from "express";
+import { PrismaClient } from "@prisma/client";
+import { authenticate } from "../middleware/auth";
+import { validateQuiz } from "../middleware/validation";
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
 // GET /api/quizzes - Listar quizzes do usuário
-router.get('/', authenticate, async (req, res) => {
+router.get("/", authenticate, async (req, res) => {
   try {
     const userId = req.user?.id;
     const page = parseInt(req.query.page as string) || 1;
@@ -42,7 +42,7 @@ router.get('/', authenticate, async (req, res) => {
 
     const quizzes = await prisma.quiz.findMany({
       where: { userId },
-      orderBy: { updatedAt: 'desc' },
+      orderBy: { updatedAt: "desc" },
       skip,
       take: limit,
       select: {
@@ -56,9 +56,9 @@ router.get('/', authenticate, async (req, res) => {
         _count: {
           select: {
             // Aqui você poderia contar relacionamentos como respostas
-          }
-        }
-      }
+          },
+        },
+      },
     });
 
     const total = await prisma.quiz.count({ where: { userId } });
@@ -70,53 +70,53 @@ router.get('/', authenticate, async (req, res) => {
         page,
         limit,
         total,
-        pages: Math.ceil(total / limit)
-      }
+        pages: Math.ceil(total / limit),
+      },
     });
   } catch (error) {
-    console.error('Error fetching quizzes:', error);
+    console.error("Error fetching quizzes:", error);
     res.status(500).json({
       success: false,
-      error: 'Erro interno do servidor'
+      error: "Erro interno do servidor",
     });
   }
 });
 
 // GET /api/quizzes/:id - Buscar quiz por ID
-router.get('/:id', authenticate, async (req, res) => {
+router.get("/:id", authenticate, async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.user?.id;
 
     const quiz = await prisma.quiz.findFirst({
-      where: { 
-        id, 
-        userId // Garantir que o usuário só acesse seus próprios quizzes
-      }
+      where: {
+        id,
+        userId, // Garantir que o usuário só acesse seus próprios quizzes
+      },
     });
 
     if (!quiz) {
       return res.status(404).json({
         success: false,
-        error: 'Quiz não encontrado'
+        error: "Quiz não encontrado",
       });
     }
 
     res.json({
       success: true,
-      data: quiz
+      data: quiz,
     });
   } catch (error) {
-    console.error('Error fetching quiz:', error);
+    console.error("Error fetching quiz:", error);
     res.status(500).json({
       success: false,
-      error: 'Erro interno do servidor'
+      error: "Erro interno do servidor",
     });
   }
 });
 
 // POST /api/quizzes - Criar novo quiz
-router.post('/', authenticate, validateQuiz, async (req, res) => {
+router.post("/", authenticate, validateQuiz, async (req, res) => {
   try {
     const userId = req.user?.id;
     const { title, description, questions, isPublished, metadata } = req.body;
@@ -132,26 +132,26 @@ router.post('/', authenticate, validateQuiz, async (req, res) => {
           ...metadata,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          version: 1
-        }
-      }
+          version: 1,
+        },
+      },
     });
 
     res.status(201).json({
       success: true,
-      data: quiz
+      data: quiz,
     });
   } catch (error) {
-    console.error('Error creating quiz:', error);
+    console.error("Error creating quiz:", error);
     res.status(500).json({
       success: false,
-      error: 'Erro ao criar quiz'
+      error: "Erro ao criar quiz",
     });
   }
 });
 
 // PUT /api/quizzes/:id - Atualizar quiz
-router.put('/:id', authenticate, validateQuiz, async (req, res) => {
+router.put("/:id", authenticate, validateQuiz, async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.user?.id;
@@ -159,13 +159,13 @@ router.put('/:id', authenticate, validateQuiz, async (req, res) => {
 
     // Verificar se o quiz existe e pertence ao usuário
     const existingQuiz = await prisma.quiz.findFirst({
-      where: { id, userId }
+      where: { id, userId },
     });
 
     if (!existingQuiz) {
       return res.status(404).json({
         success: false,
-        error: 'Quiz não encontrado'
+        error: "Quiz não encontrado",
       });
     }
 
@@ -179,38 +179,38 @@ router.put('/:id', authenticate, validateQuiz, async (req, res) => {
         metadata: {
           ...metadata,
           updatedAt: new Date().toISOString(),
-          version: (existingQuiz.version || 1) + 1
-        }
-      }
+          version: (existingQuiz.version || 1) + 1,
+        },
+      },
     });
 
     res.json({
       success: true,
-      data: updatedQuiz
+      data: updatedQuiz,
     });
   } catch (error) {
-    console.error('Error updating quiz:', error);
+    console.error("Error updating quiz:", error);
     res.status(500).json({
       success: false,
-      error: 'Erro ao atualizar quiz'
+      error: "Erro ao atualizar quiz",
     });
   }
 });
 
 // DELETE /api/quizzes/:id - Deletar quiz
-router.delete('/:id', authenticate, async (req, res) => {
+router.delete("/:id", authenticate, async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.user?.id;
 
     const quiz = await prisma.quiz.findFirst({
-      where: { id, userId }
+      where: { id, userId },
     });
 
     if (!quiz) {
       return res.status(404).json({
         success: false,
-        error: 'Quiz não encontrado'
+        error: "Quiz não encontrado",
       });
     }
 
@@ -218,31 +218,31 @@ router.delete('/:id', authenticate, async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Quiz deletado com sucesso'
+      message: "Quiz deletado com sucesso",
     });
   } catch (error) {
-    console.error('Error deleting quiz:', error);
+    console.error("Error deleting quiz:", error);
     res.status(500).json({
       success: false,
-      error: 'Erro ao deletar quiz'
+      error: "Erro ao deletar quiz",
     });
   }
 });
 
 // POST /api/quizzes/:id/duplicate - Duplicar quiz
-router.post('/:id/duplicate', authenticate, async (req, res) => {
+router.post("/:id/duplicate", authenticate, async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.user?.id;
 
     const originalQuiz = await prisma.quiz.findFirst({
-      where: { id, userId }
+      where: { id, userId },
     });
 
     if (!originalQuiz) {
       return res.status(404).json({
         success: false,
-        error: 'Quiz não encontrado'
+        error: "Quiz não encontrado",
       });
     }
 
@@ -258,20 +258,20 @@ router.post('/:id/duplicate', authenticate, async (req, res) => {
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           version: 1,
-          originalQuizId: originalQuiz.id
-        }
-      }
+          originalQuizId: originalQuiz.id,
+        },
+      },
     });
 
     res.status(201).json({
       success: true,
-      data: duplicatedQuiz
+      data: duplicatedQuiz,
     });
   } catch (error) {
-    console.error('Error duplicating quiz:', error);
+    console.error("Error duplicating quiz:", error);
     res.status(500).json({
       success: false,
-      error: 'Erro ao duplicar quiz'
+      error: "Erro ao duplicar quiz",
     });
   }
 });
@@ -281,12 +281,12 @@ export default router;
 // middleware/auth.ts
 export const authenticate = async (req: any, res: any, next: any) => {
   try {
-    const token = req.headers.authorization?.replace('Bearer ', '');
-    
+    const token = req.headers.authorization?.replace("Bearer ", "");
+
     if (!token) {
       return res.status(401).json({
         success: false,
-        error: 'Token de autenticação necessário'
+        error: "Token de autenticação necessário",
       });
     }
 
@@ -297,7 +297,7 @@ export const authenticate = async (req: any, res: any, next: any) => {
   } catch (error) {
     res.status(401).json({
       success: false,
-      error: 'Token inválido'
+      error: "Token inválido",
     });
   }
 };
@@ -306,17 +306,17 @@ export const authenticate = async (req: any, res: any, next: any) => {
 export const validateQuiz = (req: any, res: any, next: any) => {
   const { title, questions } = req.body;
 
-  if (!title || typeof title !== 'string') {
+  if (!title || typeof title !== "string") {
     return res.status(400).json({
       success: false,
-      error: 'Título é obrigatório'
+      error: "Título é obrigatório",
     });
   }
 
   if (!questions || !Array.isArray(questions)) {
     return res.status(400).json({
       success: false,
-      error: 'Questões são obrigatórias'
+      error: "Questões são obrigatórias",
     });
   }
 
@@ -325,7 +325,7 @@ export const validateQuiz = (req: any, res: any, next: any) => {
     if (!question.id || !question.title || !Array.isArray(question.options)) {
       return res.status(400).json({
         success: false,
-        error: 'Estrutura de questão inválida'
+        error: "Estrutura de questão inválida",
       });
     }
   }
@@ -334,41 +334,43 @@ export const validateQuiz = (req: any, res: any, next: any) => {
 };
 
 // app.ts (configuração principal)
-import express from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import rateLimit from 'express-rate-limit';
-import quizzesRouter from './routes/quizzes';
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+import quizzesRouter from "./routes/quizzes";
 
 const app = express();
 
 // Middleware de segurança
 app.use(helmet());
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    credentials: true,
+  }),
+);
 
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+  max: 100, // limit each IP to 100 requests per windowMs
 });
-app.use('/api/', limiter);
+app.use("/api/", limiter);
 
 // Body parser
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.use('/api/quizzes', quizzesRouter);
+app.use("/api/quizzes", quizzesRouter);
 
 // Error handling
 app.use((err: any, req: any, res: any, next: any) => {
   console.error(err.stack);
   res.status(500).json({
     success: false,
-    error: 'Erro interno do servidor'
+    error: "Erro interno do servidor",
   });
 });
 

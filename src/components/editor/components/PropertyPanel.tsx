@@ -1,25 +1,32 @@
-
-import React from 'react';
-import { Input } from '../../ui/input';
-import { Label } from '../../ui/label';
-import { Textarea } from '../../ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
+import React from "react";
+import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
+import { Textarea } from "../../ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../ui/select";
 
 interface PropertyPanelProps {
   selectedComponent: any | null;
   onChange: (updatedComponent: any) => void;
 }
 
-export default function PropertyPanel({ 
+export default function PropertyPanel({
   selectedComponent,
-  onChange 
+  onChange,
 }: PropertyPanelProps) {
   if (!selectedComponent) {
     return (
       <div className="p-4 text-center text-gray-500">
         <div className="mb-4 text-4xl">🎯</div>
         <h3 className="mb-2 font-medium">Propriedades</h3>
-        <p className="text-sm">Selecione um componente para editar suas propriedades</p>
+        <p className="text-sm">
+          Selecione um componente para editar suas propriedades
+        </p>
       </div>
     );
   }
@@ -29,8 +36,8 @@ export default function PropertyPanel({
       ...selectedComponent,
       props: {
         ...selectedComponent.props,
-        [key]: value
-      }
+        [key]: value,
+      },
     };
     onChange(updated);
   };
@@ -38,45 +45,49 @@ export default function PropertyPanel({
   return (
     <div className="p-4 space-y-4">
       <h3 className="font-medium">Propriedades</h3>
-      
+
       <div>
         <Label htmlFor="component-type">Tipo</Label>
         <div className="mt-1 rounded border bg-gray-50 p-2 text-sm capitalize">
-          {selectedComponent.type || 'Componente'}
+          {selectedComponent.type || "Componente"}
         </div>
       </div>
 
       <div>
         <Label htmlFor="component-id">ID</Label>
-        <Input 
+        <Input
           id="component-id"
-          type="text" 
-          value={selectedComponent.id || ''}
-          onChange={(e) => onChange({...selectedComponent, id: e.target.value})}
+          type="text"
+          value={selectedComponent.id || ""}
+          onChange={(e) =>
+            onChange({ ...selectedComponent, id: e.target.value })
+          }
           placeholder="ID único do componente"
         />
       </div>
 
       {/* Propriedades específicas para texto */}
-      {(selectedComponent.type === 'heading' || selectedComponent.type === 'paragraph' || selectedComponent.type === 'button') && (
+      {(selectedComponent.type === "heading" ||
+        selectedComponent.type === "paragraph" ||
+        selectedComponent.type === "button") && (
         <div>
           <Label htmlFor="component-text">Texto</Label>
-          <Textarea 
+          <Textarea
             id="component-text"
-            value={selectedComponent.props?.text || ''}
-            onChange={(e) => updateProperty('text', e.target.value)}
+            value={selectedComponent.props?.text || ""}
+            onChange={(e) => updateProperty("text", e.target.value)}
             placeholder="Digite o texto aqui"
           />
         </div>
       )}
 
       {/* Propriedades específicas para heading */}
-      {selectedComponent.type === 'heading' && (
+      {selectedComponent.type === "heading" && (
         <div>
           <Label htmlFor="heading-level">Nível do Título</Label>
-          <Select 
-            value={selectedComponent.props?.level?.toString() || '1'}
-            onValueChange={(value) => updateProperty('level', parseInt(value))}
+          <Select
+            value={selectedComponent.props?.level?.toString() || "1"}
+            onValueChange={(value) => updateProperty("level", parseInt(value))}
           >
             <SelectTrigger>
               <SelectValue placeholder="Selecione o nível" />
@@ -92,12 +103,12 @@ export default function PropertyPanel({
       )}
 
       {/* Propriedades específicas para button */}
-      {selectedComponent.type === 'button' && (
+      {selectedComponent.type === "button" && (
         <div>
           <Label htmlFor="button-variant">Estilo do Botão</Label>
-          <Select 
-            value={selectedComponent.props?.variant || 'primary'}
-            onValueChange={(value) => updateProperty('variant', value)}
+          <Select
+            value={selectedComponent.props?.variant || "primary"}
+            onValueChange={(value) => updateProperty("variant", value)}
           >
             <SelectTrigger>
               <SelectValue placeholder="Selecione o estilo" />
@@ -113,25 +124,25 @@ export default function PropertyPanel({
       )}
 
       {/* Propriedades específicas para image */}
-      {selectedComponent.type === 'image' && (
+      {selectedComponent.type === "image" && (
         <>
           <div>
             <Label htmlFor="image-src">URL da Imagem</Label>
-            <Input 
+            <Input
               id="image-src"
-              type="url" 
-              value={selectedComponent.props?.src || ''}
-              onChange={(e) => updateProperty('src', e.target.value)}
+              type="url"
+              value={selectedComponent.props?.src || ""}
+              onChange={(e) => updateProperty("src", e.target.value)}
               placeholder="https://exemplo.com/imagem.jpg"
             />
           </div>
           <div>
             <Label htmlFor="image-alt">Texto Alternativo</Label>
-            <Input 
+            <Input
               id="image-alt"
-              type="text" 
-              value={selectedComponent.props?.alt || ''}
-              onChange={(e) => updateProperty('alt', e.target.value)}
+              type="text"
+              value={selectedComponent.props?.alt || ""}
+              onChange={(e) => updateProperty("alt", e.target.value)}
               placeholder="Descrição da imagem"
             />
           </div>

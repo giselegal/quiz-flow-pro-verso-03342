@@ -1,19 +1,18 @@
+"use client";
 
-'use client';
-
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { EditorProvider, useEditor } from '@/contexts/EditorContext';
-import QuestionEditor from '@/components/editor/QuestionEditor';
-import { Plus, Save, Eye, Settings } from 'lucide-react';
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { EditorProvider, useEditor } from "@/contexts/EditorContext";
+import QuestionEditor from "@/components/editor/QuestionEditor";
+import { Plus, Save, Eye, Settings } from "lucide-react";
 
 interface Question {
   id: string;
   title: string;
-  type: 'multiple_choice' | 'single_choice' | 'text' | 'rating';
+  type: "multiple_choice" | "single_choice" | "text" | "rating";
   options: Array<{
     id: string;
     text: string;
@@ -27,19 +26,26 @@ interface Question {
 }
 
 const QuizEditorContent: React.FC = () => {
-  const { activeTab, setActiveTab, blockSearch, setBlockSearch, availableBlocks, handleAddBlock } = useEditor();
+  const {
+    activeTab,
+    setActiveTab,
+    blockSearch,
+    setBlockSearch,
+    availableBlocks,
+    handleAddBlock,
+  } = useEditor();
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [quizTitle, setQuizTitle] = useState('Novo Quiz');
-  const [quizDescription, setQuizDescription] = useState('');
+  const [quizTitle, setQuizTitle] = useState("Novo Quiz");
+  const [quizDescription, setQuizDescription] = useState("");
 
   const addQuestion = () => {
     const newQuestion: Question = {
       id: `question-${Date.now()}`,
-      title: '',
-      type: 'multiple_choice',
+      title: "",
+      type: "multiple_choice",
       options: [],
       required: true,
-      tags: []
+      tags: [],
     };
     setQuestions([...questions, newQuestion]);
   };
@@ -59,15 +65,20 @@ const QuizEditorContent: React.FC = () => {
     const updatedQuestions = [...questions];
     const newOption = {
       id: `option-${Date.now()}`,
-      text: '',
+      text: "",
       isCorrect: false,
-      points: 1
+      points: 1,
     };
     updatedQuestions[questionIndex].options.push(newOption);
     setQuestions(updatedQuestions);
   };
 
-  const updateOption = (questionIndex: number, optionIndex: number, option: any, optIndex: number) => {
+  const updateOption = (
+    questionIndex: number,
+    optionIndex: number,
+    option: any,
+    optIndex: number,
+  ) => {
     const updatedQuestions = [...questions];
     updatedQuestions[questionIndex].options[optionIndex] = option;
     setQuestions(updatedQuestions);
@@ -80,7 +91,11 @@ const QuizEditorContent: React.FC = () => {
   };
 
   const saveQuiz = () => {
-    console.log('Saving quiz:', { title: quizTitle, description: quizDescription, questions });
+    console.log("Saving quiz:", {
+      title: quizTitle,
+      description: quizDescription,
+      questions,
+    });
   };
 
   return (
@@ -90,7 +105,9 @@ const QuizEditorContent: React.FC = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Editor de Quiz</h1>
+              <h1 className="text-2xl font-bold text-gray-900">
+                Editor de Quiz
+              </h1>
               <p className="text-gray-600">Crie e edite suas perguntas</p>
             </div>
             <div className="flex items-center gap-2">
@@ -119,16 +136,16 @@ const QuizEditorContent: React.FC = () => {
               <CardContent>
                 <div className="space-y-2">
                   <Button
-                    variant={activeTab === 'editor' ? 'default' : 'ghost'}
+                    variant={activeTab === "editor" ? "default" : "ghost"}
                     className="w-full justify-start"
-                    onClick={() => setActiveTab('editor')}
+                    onClick={() => setActiveTab("editor")}
                   >
                     Editor
                   </Button>
                   <Button
-                    variant={activeTab === 'settings' ? 'default' : 'ghost'}
+                    variant={activeTab === "settings" ? "default" : "ghost"}
                     className="w-full justify-start"
-                    onClick={() => setActiveTab('settings')}
+                    onClick={() => setActiveTab("settings")}
                   >
                     Configurações
                   </Button>
@@ -136,7 +153,7 @@ const QuizEditorContent: React.FC = () => {
               </CardContent>
             </Card>
 
-            {activeTab === 'editor' && (
+            {activeTab === "editor" && (
               <Card className="mt-4">
                 <CardHeader>
                   <CardTitle>Blocos Disponíveis</CardTitle>
@@ -148,59 +165,89 @@ const QuizEditorContent: React.FC = () => {
                       value={blockSearch}
                       onChange={(e) => setBlockSearch(e.target.value)}
                     />
-                    
+
                     {/* Content Blocks */}
                     <div className="space-y-1">
-                      <h4 className="font-medium text-sm text-gray-700">Conteúdo</h4>
-                      {availableBlocks.filter((block: any) => block.category === 'content' && block.name.toLowerCase().includes(blockSearch.toLowerCase())).map((block: any) => (
-                        <Button
-                          key={block.type}
-                          variant="ghost"
-                          size="sm"
-                          className="w-full justify-start"
-                          onClick={() => handleAddBlock(block.type)}
-                        >
-                          <span className="mr-2">{block.icon}</span>
-                          {block.name}
-                        </Button>
-                      ))}
+                      <h4 className="font-medium text-sm text-gray-700">
+                        Conteúdo
+                      </h4>
+                      {availableBlocks
+                        .filter(
+                          (block: any) =>
+                            block.category === "content" &&
+                            block.name
+                              .toLowerCase()
+                              .includes(blockSearch.toLowerCase()),
+                        )
+                        .map((block: any) => (
+                          <Button
+                            key={block.type}
+                            variant="ghost"
+                            size="sm"
+                            className="w-full justify-start"
+                            onClick={() => handleAddBlock(block.type)}
+                          >
+                            <span className="mr-2">{block.icon}</span>
+                            {block.name}
+                          </Button>
+                        ))}
                     </div>
 
                     {/* Layout Blocks */}
                     <div className="space-y-1">
-                      <h4 className="font-medium text-sm text-gray-700">Layout</h4>
-                      {availableBlocks.filter((block: any) => block.category === 'layout' && block.name.toLowerCase().includes(blockSearch.toLowerCase())).map((block: any) => (
-                        <Button
-                          key={block.type}
-                          variant="ghost"
-                          size="sm"
-                          className="w-full justify-start"
-                          onClick={() => handleAddBlock(block.type)}
-                        >
-                          <span className="mr-2">{block.icon}</span>
-                          {block.name}
-                        </Button>
-                      ))}
+                      <h4 className="font-medium text-sm text-gray-700">
+                        Layout
+                      </h4>
+                      {availableBlocks
+                        .filter(
+                          (block: any) =>
+                            block.category === "layout" &&
+                            block.name
+                              .toLowerCase()
+                              .includes(blockSearch.toLowerCase()),
+                        )
+                        .map((block: any) => (
+                          <Button
+                            key={block.type}
+                            variant="ghost"
+                            size="sm"
+                            className="w-full justify-start"
+                            onClick={() => handleAddBlock(block.type)}
+                          >
+                            <span className="mr-2">{block.icon}</span>
+                            {block.name}
+                          </Button>
+                        ))}
                     </div>
 
                     {/* Quiz Blocks */}
                     <div className="space-y-1">
-                      <h4 className="font-medium text-sm text-gray-700">Quiz</h4>
-                      {availableBlocks.filter((block: any) => block.category === 'quiz' && block.name.toLowerCase().includes(blockSearch.toLowerCase())).map((block: any) => (
-                        <Button
-                          key={block.type}
-                          variant="ghost"
-                          size="sm"
-                          className="w-full justify-start"
-                          onClick={() => handleAddBlock(block.type)}
-                        >
-                          <span className="mr-2">{block.icon}</span>
-                          {block.name}
-                        </Button>
-                      ))}
+                      <h4 className="font-medium text-sm text-gray-700">
+                        Quiz
+                      </h4>
+                      {availableBlocks
+                        .filter(
+                          (block: any) =>
+                            block.category === "quiz" &&
+                            block.name
+                              .toLowerCase()
+                              .includes(blockSearch.toLowerCase()),
+                        )
+                        .map((block: any) => (
+                          <Button
+                            key={block.type}
+                            variant="ghost"
+                            size="sm"
+                            className="w-full justify-start"
+                            onClick={() => handleAddBlock(block.type)}
+                          >
+                            <span className="mr-2">{block.icon}</span>
+                            {block.name}
+                          </Button>
+                        ))}
                     </div>
                   </div>
-                  
+
                   <div className="mt-4 pt-4 border-t">
                     <Button
                       onClick={addQuestion}
@@ -218,7 +265,7 @@ const QuizEditorContent: React.FC = () => {
 
           {/* Main Editor Area */}
           <div className="lg:col-span-3">
-            {activeTab === 'editor' && (
+            {activeTab === "editor" && (
               <div className="space-y-6">
                 {/* Quiz Settings */}
                 <Card>
@@ -253,15 +300,19 @@ const QuizEditorContent: React.FC = () => {
                     <QuestionEditor
                       key={question.id}
                       question={question}
-                      onUpdate={(updatedQuestion) => updateQuestion(updatedQuestion, index)}
+                      onUpdate={(updatedQuestion) =>
+                        updateQuestion(updatedQuestion, index)
+                      }
                       onDelete={() => deleteQuestion(index)}
                     />
                   ))}
-                  
+
                   {questions.length === 0 && (
                     <Card>
                       <CardContent className="py-12 text-center">
-                        <p className="text-gray-500 mb-4">Nenhuma pergunta adicionada ainda</p>
+                        <p className="text-gray-500 mb-4">
+                          Nenhuma pergunta adicionada ainda
+                        </p>
                         <Button onClick={addQuestion}>
                           <Plus className="w-4 h-4 mr-2" />
                           Adicionar Primeira Pergunta
@@ -273,13 +324,15 @@ const QuizEditorContent: React.FC = () => {
               </div>
             )}
 
-            {activeTab === 'settings' && (
+            {activeTab === "settings" && (
               <Card>
                 <CardHeader>
                   <CardTitle>Configurações Avançadas</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">Configurações avançadas do quiz serão implementadas aqui.</p>
+                  <p className="text-gray-600">
+                    Configurações avançadas do quiz serão implementadas aqui.
+                  </p>
                 </CardContent>
               </Card>
             )}

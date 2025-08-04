@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export interface Step02Question01Props {
   onNext?: () => void;
@@ -6,7 +6,11 @@ export interface Step02Question01Props {
   onBlockAdd?: (block: any) => void;
 }
 
-export const Step02Question01: React.FC<Step02Question01Props> = ({ onNext, onPrevious, onBlockAdd }) => {
+export const Step02Question01: React.FC<Step02Question01Props> = ({
+  onNext,
+  onPrevious,
+  onBlockAdd,
+}) => {
   return (
     <div className="step-02-question-01">
       {/* Conteúdo da Etapa 2 renderizado aqui */}
@@ -18,157 +22,167 @@ export const Step02Question01: React.FC<Step02Question01Props> = ({ onNext, onPr
 export const getStep02Template = () => {
   return [
     {
-      type: 'quiz-intro-header',
+      type: "quiz-intro-header",
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-        logoAlt: 'Logo Gisele Galvão',
+        logoUrl:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        logoAlt: "Logo Gisele Galvão",
         logoWidth: 96,
         logoHeight: 96,
         progressValue: 10,
         progressMax: 100,
-        showBackButton: true
-      }
+        showBackButton: true,
+      },
     },
     {
-      type: 'heading-inline',
+      type: "heading-inline",
       properties: {
-        content: 'QUAL O SEU TIPO DE ROUPA FAVORITA?',
-        level: 'h2',
-        fontSize: 'text-2xl',
-        fontWeight: 'font-bold',
-        textAlign: 'text-center',
-        color: '#432818',
-        marginBottom: 8
-      }
+        content: "QUAL O SEU TIPO DE ROUPA FAVORITA?",
+        level: "h2",
+        fontSize: "text-2xl",
+        fontWeight: "font-bold",
+        textAlign: "text-center",
+        color: "#432818",
+        marginBottom: 8,
+      },
     },
     {
-      type: 'text-inline',
+      type: "text-inline",
       properties: {
-        content: 'Questão 1 de 10',
-        fontSize: 'text-sm',
-        textAlign: 'text-center',
-        color: '#6B7280',
-        marginBottom: 24
-      }
+        content: "Questão 1 de 10",
+        fontSize: "text-sm",
+        textAlign: "text-center",
+        color: "#6B7280",
+        marginBottom: 24,
+      },
     },
     {
-      type: 'image-display-inline',
+      type: "image-display-inline",
       properties: {
-        src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1687095491/style-quiz/elegante-6_u1ghdr.jpg',
-        alt: 'Tipos de roupas e estilos',
+        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1687095491/style-quiz/elegante-6_u1ghdr.jpg",
+        alt: "Tipos de roupas e estilos",
         width: 500,
         height: 300,
-        className: 'object-cover w-full max-w-lg h-64 rounded-xl mx-auto shadow-lg',
-        textAlign: 'text-center',
-        marginBottom: 32
-      }
+        className:
+          "object-cover w-full max-w-lg h-64 rounded-xl mx-auto shadow-lg",
+        textAlign: "text-center",
+        marginBottom: 32,
+      },
     },
     {
-      type: 'options-grid',
+      type: "options-grid",
       properties: {
-        questionId: 'q1',
+        questionId: "q1",
         options: [
-          { 
-            id: "1a", 
-            text: "Conforto, leveza e praticidade no vestir", 
-            value: "1a", 
-            category: "Natural", 
-            styleCategory: "Natural", 
+          {
+            id: "1a",
+            text: "Conforto, leveza e praticidade no vestir",
+            value: "1a",
+            category: "Natural",
+            styleCategory: "Natural",
             points: 1,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp'
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
           },
-          { 
-            id: "1b", 
-            text: "Discrição, caimento clássico e sobriedade", 
-            value: "1b", 
-            category: "Clássico", 
-            styleCategory: "Clássico", 
+          {
+            id: "1b",
+            text: "Discrição, caimento clássico e sobriedade",
+            value: "1b",
+            category: "Clássico",
+            styleCategory: "Clássico",
             points: 1,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp'
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
           },
-          { 
-            id: "1c", 
-            text: "Praticidade com um toque de estilo atual", 
-            value: "1c", 
-            category: "Contemporâneo", 
-            styleCategory: "Contemporâneo", 
+          {
+            id: "1c",
+            text: "Praticidade com um toque de estilo atual",
+            value: "1c",
+            category: "Contemporâneo",
+            styleCategory: "Contemporâneo",
             points: 1,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp'
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
           },
-          { 
-            id: "1d", 
-            text: "Sofisticação em looks estruturados e refinados", 
-            value: "1d", 
-            category: "Elegante", 
-            styleCategory: "Elegante", 
+          {
+            id: "1d",
+            text: "Sofisticação em looks estruturados e refinados",
+            value: "1d",
+            category: "Elegante",
+            styleCategory: "Elegante",
             points: 1,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_mjrfcl.webp'
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_mjrfcl.webp",
           },
-          { 
-            id: "1e", 
-            text: "Delicadeza em tecidos suaves e fluidos", 
-            value: "1e", 
-            category: "Romântico", 
-            styleCategory: "Romântico", 
+          {
+            id: "1e",
+            text: "Delicadeza em tecidos suaves e fluidos",
+            value: "1e",
+            category: "Romântico",
+            styleCategory: "Romântico",
             points: 1,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp'
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
           },
-          { 
-            id: "1f", 
-            text: "Sensualidade com destaque para o corpo", 
-            value: "1f", 
-            category: "Sexy", 
-            styleCategory: "Sexy", 
+          {
+            id: "1f",
+            text: "Sensualidade com destaque para o corpo",
+            value: "1f",
+            category: "Sexy",
+            styleCategory: "Sexy",
             points: 1,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp'
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
           },
-          { 
-            id: "1g", 
-            text: "Impacto visual com peças estruturadas e assimétricas", 
-            value: "1g", 
-            category: "Dramático", 
-            styleCategory: "Dramático", 
+          {
+            id: "1g",
+            text: "Impacto visual com peças estruturadas e assimétricas",
+            value: "1g",
+            category: "Dramático",
+            styleCategory: "Dramático",
             points: 1,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp'
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
           },
-          { 
-            id: "1h", 
-            text: "Mix criativo com formas ousadas e originais", 
-            value: "1h", 
-            category: "Criativo", 
-            styleCategory: "Criativo", 
+          {
+            id: "1h",
+            text: "Mix criativo com formas ousadas e originais",
+            value: "1h",
+            category: "Criativo",
+            styleCategory: "Criativo",
             points: 1,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp'
-          }
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
+          },
         ],
         columns: 2,
         showImages: true,
         multipleSelection: true,
         maxSelections: 3,
         minSelections: 1,
-        validationMessage: 'Selecione até 3 opções',
+        validationMessage: "Selecione até 3 opções",
         gridGap: 16,
         responsiveColumns: true,
         autoAdvanceOnComplete: true,
         autoAdvanceDelay: 800,
         requiredSelections: 3,
         enableButtonOnlyWhenValid: true,
-        showValidationFeedback: true
-      }
+        showValidationFeedback: true,
+      },
     },
     {
-      type: 'button-inline',
+      type: "button-inline",
       properties: {
-        text: 'Continuar',
-        variant: 'primary',
-        size: 'large',
+        text: "Continuar",
+        variant: "primary",
+        size: "large",
         fullWidth: true,
-        backgroundColor: '#B89B7A',
-        textColor: '#ffffff',
+        backgroundColor: "#B89B7A",
+        textColor: "#ffffff",
         disabled: true,
-        requiresValidSelection: true
-      }
-    }
+        requiresValidSelection: true,
+      },
+    },
   ];
 };
 

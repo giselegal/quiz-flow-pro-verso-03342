@@ -1,30 +1,40 @@
-import React, { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Search, Plus, ChevronDown, ChevronRight, GripVertical } from 'lucide-react';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
-import { generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
-import { BlockDefinition } from '@/types/editor';
-import { useSyncedScroll } from '@/hooks/useSyncedScroll';
-import { DraggableComponentItem } from '@/components/editor/dnd/DraggableComponentItem';
+import React, { useState } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Search,
+  Plus,
+  ChevronDown,
+  ChevronRight,
+  GripVertical,
+} from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
+import { generateBlockDefinitions } from "@/config/enhancedBlockRegistry";
+import { BlockDefinition } from "@/types/editor";
+import { useSyncedScroll } from "@/hooks/useSyncedScroll";
+import { DraggableComponentItem } from "@/components/editor/dnd/DraggableComponentItem";
 
 interface EnhancedComponentsSidebarProps {
   // Props removidas - agora usa drag and drop
 }
 
-export const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () => {
-  const { scrollRef } = useSyncedScroll({ source: 'components' });
-  const [searchQuery, setSearchQuery] = useState('');
-  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
-    'Cabeçalho': true,
-    'Quiz': true,
-    'Venda - Atenção': true,
-    'Venda - Interesse': false,
-    'Venda - Desejo': false,
-    'Venda - Ação': true,
-    'Estrutura': false
+export const EnhancedComponentsSidebar: React.FC<
+  EnhancedComponentsSidebarProps
+> = () => {
+  const { scrollRef } = useSyncedScroll({ source: "components" });
+  const [searchQuery, setSearchQuery] = useState("");
+  const [expandedCategories, setExpandedCategories] = useState<
+    Record<string, boolean>
+  >({
+    Cabeçalho: true,
+    Quiz: true,
+    "Venda - Atenção": true,
+    "Venda - Interesse": false,
+    "Venda - Desejo": false,
+    "Venda - Ação": true,
+    Estrutura: false,
   });
 
   // Obter todas as definições de blocos do registry validado
@@ -35,45 +45,49 @@ export const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps>
   };
 
   const toggleCategory = (category: string) => {
-    setExpandedCategories(prev => ({
+    setExpandedCategories((prev) => ({
       ...prev,
-      [category]: !prev[category]
+      [category]: !prev[category],
     }));
   };
 
   // Filtrar blocos baseado na busca
-  const filteredBlocks = allBlocks.filter(block => {
-    const matchesSearch = !searchQuery || 
+  const filteredBlocks = allBlocks.filter((block) => {
+    const matchesSearch =
+      !searchQuery ||
       block.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       block.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
       block.description.toLowerCase().includes(searchQuery.toLowerCase());
-    
+
     return matchesSearch;
   });
 
   // Agrupar blocos por categoria
-  const groupedBlocks = filteredBlocks.reduce((groups, block) => {
-    const category = block.category;
-    if (!groups[category]) {
-      groups[category] = [];
-    }
-    groups[category].push(block);
-    return groups;
-  }, {} as Record<string, BlockDefinition[]>);
+  const groupedBlocks = filteredBlocks.reduce(
+    (groups, block) => {
+      const category = block.category;
+      if (!groups[category]) {
+        groups[category] = [];
+      }
+      groups[category].push(block);
+      return groups;
+    },
+    {} as Record<string, BlockDefinition[]>,
+  );
 
   // Ordenar categorias na ordem AIDA
   const categoryOrder = [
-    'Cabeçalho',
-    'Quiz', 
-    'Venda - Atenção',
-    'Venda - Interesse', 
-    'Venda - Desejo',
-    'Venda - Ação',
-    'Estrutura',
-    'Outros'
+    "Cabeçalho",
+    "Quiz",
+    "Venda - Atenção",
+    "Venda - Interesse",
+    "Venda - Desejo",
+    "Venda - Ação",
+    "Estrutura",
+    "Outros",
   ];
 
-  const orderedCategories = categoryOrder.filter(cat => groupedBlocks[cat]);
+  const orderedCategories = categoryOrder.filter((cat) => groupedBlocks[cat]);
 
   return (
     <Card className="h-full flex flex-col">
@@ -89,15 +103,18 @@ export const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps>
           />
         </div>
       </CardHeader>
-      
+
       <CardContent className="flex-1 overflow-hidden">
-        <div ref={scrollRef} className="h-full overflow-y-auto overflow-x-hidden">
+        <div
+          ref={scrollRef}
+          className="h-full overflow-y-auto overflow-x-hidden"
+        >
           {/* Categories */}
           <div className="space-y-1 p-0">
             {orderedCategories.map((category) => (
               <div key={category} className="space-y-1">
                 {/* Category Header */}
-                <div 
+                <div
                   className="flex items-center justify-between p-1 bg-muted/30 rounded-md cursor-pointer hover:bg-muted/50 transition-colors"
                   onClick={() => toggleCategory(category)}
                 >

@@ -1,7 +1,6 @@
-
-import React from 'react';
-import { useDroppable } from '@dnd-kit/core';
-import { Block } from '@/types/editor';
+import React from "react";
+import { useDroppable } from "@dnd-kit/core";
+import { Block } from "@/types/editor";
 
 interface DroppableCanvasProps {
   blocks: Block[];
@@ -16,15 +15,15 @@ const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
   onBlocksChange,
   selectedBlockId,
   onSelectBlock,
-  isPreviewing = false
+  isPreviewing = false,
 }) => {
-  const handleDrop = (blockType: Block['type']) => {
+  const handleDrop = (blockType: Block["type"]) => {
     const newBlock: Block = {
       id: `block-${Date.now()}`,
       type: blockType,
       content: {}, // Fixed: Add the required content property
       properties: {},
-      order: blocks.length
+      order: blocks.length,
     };
 
     onBlocksChange([...blocks, newBlock]);
@@ -32,9 +31,9 @@ const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
   };
 
   const { setNodeRef } = useDroppable({
-    id: 'droppable-canvas',
+    id: "droppable-canvas",
     data: {
-      accepts: ['text', 'image', 'button', 'spacer', 'heading'],
+      accepts: ["text", "image", "button", "spacer", "heading"],
     },
   });
 
@@ -50,9 +49,7 @@ const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
       ) : (
         <div>
           {blocks.map((block) => (
-            <div key={block.id}>
-              {block.type}
-            </div>
+            <div key={block.id}>{block.type}</div>
           ))}
         </div>
       )}

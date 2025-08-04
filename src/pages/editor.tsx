@@ -1,83 +1,107 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useLocation } from 'wouter';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../components/ui/resizable';
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { useLocation } from "wouter";
+import {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from "../components/ui/resizable";
 // import { ModernPropertiesPanel } from '../components/editor/panels/ModernPropertiesPanel';
-import { ScrollArea } from '../components/ui/scroll-area';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { cn } from '../lib/utils';
-import BrandHeader from '../components/ui/BrandHeader';
-import { useEditor } from '../hooks/useEditor';
-import { useEditorPersistence } from '../hooks/editor/useEditorPersistence';
-import { useAutoSaveWithDebounce } from '../hooks/editor/useAutoSaveWithDebounce';
-import { toast } from '../components/ui/use-toast';
-import { LoadingSpinner } from '../components/ui/loading-spinner';
-import { schemaDrivenFunnelService } from '../services/schemaDrivenFunnelService';
-import { normalizeBlock } from '../utils/blockTypeMapping';
+import { ScrollArea } from "../components/ui/scroll-area";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { cn } from "../lib/utils";
+import BrandHeader from "../components/ui/BrandHeader";
+import { useEditor } from "../hooks/useEditor";
+import { useEditorPersistence } from "../hooks/editor/useEditorPersistence";
+import { useAutoSaveWithDebounce } from "../hooks/editor/useAutoSaveWithDebounce";
+import { toast } from "../components/ui/use-toast";
+import { LoadingSpinner } from "../components/ui/loading-spinner";
+import { schemaDrivenFunnelService } from "../services/schemaDrivenFunnelService";
+import { normalizeBlock } from "../utils/blockTypeMapping";
 
 // Componente simples para renderizar blocos
-const SimpleBlockRenderer: React.FC<{ 
+const SimpleBlockRenderer: React.FC<{
   block: any;
   isSelected?: boolean;
   onClick?: () => void;
 }> = ({ block, isSelected, onClick }) => {
-  const content = block.properties?.content || block.content || 'Conteúdo do bloco';
-  
+  const content =
+    block.properties?.content || block.content || "Conteúdo do bloco";
+
   return (
-    <div 
+    <div
       onClick={onClick}
       className={cn(
-        'p-4 border rounded-lg cursor-pointer transition-all',
-        isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
+        "p-4 border rounded-lg cursor-pointer transition-all",
+        isSelected
+          ? "border-blue-500 bg-blue-50"
+          : "border-gray-200 hover:border-gray-300",
       )}
     >
       <div className="flex items-center justify-between mb-2">
         <span className="text-xs bg-gray-100 px-2 py-1 rounded font-mono">
           {block.type}
         </span>
-        <span className="text-xs text-gray-500">
-          #{block.id}
-        </span>
+        <span className="text-xs text-gray-500">#{block.id}</span>
       </div>
-      
-      {block.type === 'heading' && (
+
+      {block.type === "heading" && (
         <h1 className="text-2xl font-bold">{content}</h1>
       )}
-      
-      {block.type === 'text' && (
-        <p className="text-gray-700">{content}</p>
-      )}
-      
-      {block.type === 'button' && (
+
+      {block.type === "text" && <p className="text-gray-700">{content}</p>}
+
+      {block.type === "button" && (
         <Button variant="outline" disabled>
-          {content || 'Botão'}
+          {content || "Botão"}
         </Button>
       )}
-      
-      {block.type.includes('inline') && (
+
+      {block.type.includes("inline") && (
         <div className="p-3 bg-gradient-to-r from-purple-50 to-blue-50 rounded">
-          <div className="font-medium text-purple-800 mb-1">Componente Inline</div>
+          <div className="font-medium text-purple-800 mb-1">
+            Componente Inline
+          </div>
           <div className="text-sm text-gray-600">{content}</div>
         </div>
       )}
-      
-      {!['heading', 'text', 'button'].includes(block.type) && !block.type.includes('inline') && (
-        <div className="p-3 bg-gray-50 rounded">
-          <div className="font-medium mb-1">Bloco: {block.type}</div>
-          <div className="text-sm text-gray-600">{content}</div>
-        </div>
-      )}
+
+      {!["heading", "text", "button"].includes(block.type) &&
+        !block.type.includes("inline") && (
+          <div className="p-3 bg-gray-50 rounded">
+            <div className="font-medium mb-1">Bloco: {block.type}</div>
+            <div className="text-sm text-gray-600">{content}</div>
+          </div>
+        )}
     </div>
   );
 };
 
 // Ícones Lucide
-import { 
-  Plus, Eye, EyeOff, Download, Upload, Trash2, 
-  Monitor, Tablet, Smartphone, PlayCircle, ExternalLink,
-  Search, Filter, Grid, List, Settings, Save,
-  Copy, Scissors, Home, ArrowLeft, ArrowRight
-} from 'lucide-react';
+import {
+  Plus,
+  Eye,
+  EyeOff,
+  Download,
+  Upload,
+  Trash2,
+  Monitor,
+  Tablet,
+  Smartphone,
+  PlayCircle,
+  ExternalLink,
+  Search,
+  Filter,
+  Grid,
+  List,
+  Settings,
+  Save,
+  Copy,
+  Scissors,
+  Home,
+  ArrowLeft,
+  ArrowRight,
+} from "lucide-react";
 
 // ===== INTERFACES E TIPOS =====
 interface QuizStep {
@@ -91,242 +115,398 @@ interface QuizStep {
   multiSelect?: number;
 }
 
-type PreviewMode = 'desktop' | 'tablet' | 'mobile';
+type PreviewMode = "desktop" | "tablet" | "mobile";
 
 const PREVIEW_DIMENSIONS = {
-  desktop: { width: '100%', maxWidth: '1200px' },
-  tablet: { width: '768px', maxWidth: '768px' },
-  mobile: { width: '375px', maxWidth: '375px' }
+  desktop: { width: "100%", maxWidth: "1200px" },
+  tablet: { width: "768px", maxWidth: "768px" },
+  mobile: { width: "375px", maxWidth: "375px" },
 };
 
 // ===== COMPONENTES DISPONÍVEIS =====
 const AVAILABLE_BLOCKS = [
   // COMPONENTES BÁSICOS
-  { type: 'heading', name: 'Título', icon: '📝', category: 'text' },
-  { type: 'text', name: 'Texto', icon: '📄', category: 'text' },
-  { type: 'image', name: 'Imagem', icon: '🖼️', category: 'media' },
-  { type: 'button', name: 'Botão', icon: '🔘', category: 'interactive' },
-  { type: 'cta', name: 'Call to Action', icon: '🎯', category: 'interactive' },
-  { type: 'spacer', name: 'Espaçador', icon: '➖', category: 'layout' },
-  { type: 'form-input', name: 'Campo de Entrada', icon: '📝', category: 'form' },
-  { type: 'list', name: 'Lista', icon: '📋', category: 'text' },
+  { type: "heading", name: "Título", icon: "📝", category: "text" },
+  { type: "text", name: "Texto", icon: "📄", category: "text" },
+  { type: "image", name: "Imagem", icon: "🖼️", category: "media" },
+  { type: "button", name: "Botão", icon: "🔘", category: "interactive" },
+  { type: "cta", name: "Call to Action", icon: "🎯", category: "interactive" },
+  { type: "spacer", name: "Espaçador", icon: "➖", category: "layout" },
+  {
+    type: "form-input",
+    name: "Campo de Entrada",
+    icon: "📝",
+    category: "form",
+  },
+  { type: "list", name: "Lista", icon: "📋", category: "text" },
 
   // COMPONENTES QUIZ PRINCIPAIS
-  { type: 'options-grid', name: 'Grade de Opções', icon: '⚏', category: 'quiz' },
-  { type: 'vertical-canvas-header', name: 'Cabeçalho Quiz', icon: '🏷️', category: 'quiz' },
-  { type: 'quiz-question', name: 'Questão do Quiz', icon: '❓', category: 'quiz' },
-  { type: 'quiz-progress', name: 'Progresso', icon: '📊', category: 'quiz' },
-  { type: 'quiz-transition', name: 'Transição', icon: '🔄', category: 'quiz' },
+  {
+    type: "options-grid",
+    name: "Grade de Opções",
+    icon: "⚏",
+    category: "quiz",
+  },
+  {
+    type: "vertical-canvas-header",
+    name: "Cabeçalho Quiz",
+    icon: "🏷️",
+    category: "quiz",
+  },
+  {
+    type: "quiz-question",
+    name: "Questão do Quiz",
+    icon: "❓",
+    category: "quiz",
+  },
+  { type: "quiz-progress", name: "Progresso", icon: "📊", category: "quiz" },
+  { type: "quiz-transition", name: "Transição", icon: "🔄", category: "quiz" },
 
   // COMPONENTES INLINE ESSENCIAIS
-  { type: 'text-inline', name: 'Texto Inline', icon: '📝', category: 'inline' },
-  { type: 'heading-inline', name: 'Título Inline', icon: '📰', category: 'inline' },
-  { type: 'button-inline', name: 'Botão Inline', icon: '🔘', category: 'inline' },
-  { type: 'badge-inline', name: 'Badge Inline', icon: '🏷️', category: 'inline' },
-  { type: 'progress-inline', name: 'Progresso Inline', icon: '📈', category: 'inline' },
-  { type: 'image-display-inline', name: 'Imagem Inline', icon: '🖼️', category: 'inline' },
-  { type: 'style-card-inline', name: 'Card de Estilo', icon: '🎨', category: 'inline' },
-  { type: 'result-card-inline', name: 'Card de Resultado', icon: '🏆', category: 'inline' },
-  { type: 'countdown-inline', name: 'Countdown', icon: '⏱️', category: 'inline' },
-  { type: 'stat-inline', name: 'Estatística', icon: '📊', category: 'inline' },
-  { type: 'pricing-card-inline', name: 'Card de Preço', icon: '💰', category: 'inline' },
+  { type: "text-inline", name: "Texto Inline", icon: "📝", category: "inline" },
+  {
+    type: "heading-inline",
+    name: "Título Inline",
+    icon: "📰",
+    category: "inline",
+  },
+  {
+    type: "button-inline",
+    name: "Botão Inline",
+    icon: "🔘",
+    category: "inline",
+  },
+  {
+    type: "badge-inline",
+    name: "Badge Inline",
+    icon: "🏷️",
+    category: "inline",
+  },
+  {
+    type: "progress-inline",
+    name: "Progresso Inline",
+    icon: "📈",
+    category: "inline",
+  },
+  {
+    type: "image-display-inline",
+    name: "Imagem Inline",
+    icon: "🖼️",
+    category: "inline",
+  },
+  {
+    type: "style-card-inline",
+    name: "Card de Estilo",
+    icon: "🎨",
+    category: "inline",
+  },
+  {
+    type: "result-card-inline",
+    name: "Card de Resultado",
+    icon: "🏆",
+    category: "inline",
+  },
+  {
+    type: "countdown-inline",
+    name: "Countdown",
+    icon: "⏱️",
+    category: "inline",
+  },
+  { type: "stat-inline", name: "Estatística", icon: "📊", category: "inline" },
+  {
+    type: "pricing-card-inline",
+    name: "Card de Preço",
+    icon: "💰",
+    category: "inline",
+  },
 
   // COMPONENTES DAS 21 ETAPAS
-  { type: 'quiz-start-page-inline', name: 'Página Inicial do Quiz', icon: '🚀', category: '21-etapas' },
-  { type: 'quiz-personal-info-inline', name: 'Informações Pessoais', icon: '👤', category: '21-etapas' },
-  { type: 'quiz-experience-inline', name: 'Experiência', icon: '📚', category: '21-etapas' },
-  { type: 'quiz-certificate-inline', name: 'Certificado', icon: '🏅', category: '21-etapas' },
-  { type: 'quiz-leaderboard-inline', name: 'Ranking', icon: '🏆', category: '21-etapas' },
+  {
+    type: "quiz-start-page-inline",
+    name: "Página Inicial do Quiz",
+    icon: "🚀",
+    category: "21-etapas",
+  },
+  {
+    type: "quiz-personal-info-inline",
+    name: "Informações Pessoais",
+    icon: "👤",
+    category: "21-etapas",
+  },
+  {
+    type: "quiz-experience-inline",
+    name: "Experiência",
+    icon: "📚",
+    category: "21-etapas",
+  },
+  {
+    type: "quiz-certificate-inline",
+    name: "Certificado",
+    icon: "🏅",
+    category: "21-etapas",
+  },
+  {
+    type: "quiz-leaderboard-inline",
+    name: "Ranking",
+    icon: "🏆",
+    category: "21-etapas",
+  },
 
   // COMPONENTES DE RESULTADO
-  { type: 'result-header-inline', name: 'Cabeçalho do Resultado', icon: '🎊', category: 'resultado' },
-  { type: 'before-after-inline', name: 'Antes e Depois', icon: '🔄', category: 'resultado' },
-  { type: 'bonus-list-inline', name: 'Lista de Bônus', icon: '🎁', category: 'resultado' },
-  { type: 'testimonial-card-inline', name: 'Card de Depoimento', icon: '💭', category: 'resultado' },
+  {
+    type: "result-header-inline",
+    name: "Cabeçalho do Resultado",
+    icon: "🎊",
+    category: "resultado",
+  },
+  {
+    type: "before-after-inline",
+    name: "Antes e Depois",
+    icon: "🔄",
+    category: "resultado",
+  },
+  {
+    type: "bonus-list-inline",
+    name: "Lista de Bônus",
+    icon: "🎁",
+    category: "resultado",
+  },
+  {
+    type: "testimonial-card-inline",
+    name: "Card de Depoimento",
+    icon: "💭",
+    category: "resultado",
+  },
 
   // COMPONENTES DE OFERTA
-  { type: 'quiz-offer-pricing-inline', name: 'Preço da Oferta', icon: '💰', category: 'oferta' },
-  { type: 'loading-animation', name: 'Animação de Carregamento', icon: '⏳', category: 'oferta' },
+  {
+    type: "quiz-offer-pricing-inline",
+    name: "Preço da Oferta",
+    icon: "💰",
+    category: "oferta",
+  },
+  {
+    type: "loading-animation",
+    name: "Animação de Carregamento",
+    icon: "⏳",
+    category: "oferta",
+  },
 
   // COMPONENTES MODERNOS
-  { type: 'video-player', name: 'Player de Vídeo', icon: '🎬', category: 'media' },
-  { type: 'faq-section', name: 'Seção de FAQ', icon: '❓', category: 'content' },
-  { type: 'testimonials', name: 'Grade de Depoimentos', icon: '🌟', category: 'content' },
-  { type: 'guarantee', name: 'Garantia', icon: '✅', category: 'content' },
+  {
+    type: "video-player",
+    name: "Player de Vídeo",
+    icon: "🎬",
+    category: "media",
+  },
+  {
+    type: "faq-section",
+    name: "Seção de FAQ",
+    icon: "❓",
+    category: "content",
+  },
+  {
+    type: "testimonials",
+    name: "Grade de Depoimentos",
+    icon: "🌟",
+    category: "content",
+  },
+  { type: "guarantee", name: "Garantia", icon: "✅", category: "content" },
 ];
 
 const EditorPage: React.FC = () => {
   const [location, setLocation] = useLocation();
-  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
+  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(
+    null,
+  );
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [isLoadingFunnel, setIsLoadingFunnel] = useState(false);
-  const [previewMode, setPreviewMode] = useState<PreviewMode>('desktop');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [previewMode, setPreviewMode] = useState<PreviewMode>("desktop");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [isMobile, setIsMobile] = useState(false);
-  
+
   // Extract funnel ID from URL
   const urlParams = new URLSearchParams(window.location.search);
-  const funnelId = urlParams.get('id');
-  
+  const funnelId = urlParams.get("id");
+
   const { config, addBlock, updateBlock, deleteBlock } = useEditor();
-  const { saveFunnel, loadFunnel, isSaving, isLoading } = useEditorPersistence();
+  const { saveFunnel, loadFunnel, isSaving, isLoading } =
+    useEditorPersistence();
 
   // ===== DETECÇÃO DE MOBILE =====
   useEffect(() => {
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkIsMobile();
-    window.addEventListener('resize', checkIsMobile);
-    
-    return () => window.removeEventListener('resize', checkIsMobile);
+    window.addEventListener("resize", checkIsMobile);
+
+    return () => window.removeEventListener("resize", checkIsMobile);
   }, []);
 
   // ===== HANDLERS =====
   const blocks = config?.blocks || [];
   const sortedBlocks = blocks.sort((a, b) => (a.order || 0) - (b.order || 0));
 
-  const handleAddBlock = useCallback((blockType: string) => {
-    const newBlockId = addBlock(blockType as any);
-    setSelectedComponentId(newBlockId);
-    return newBlockId;
-  }, [addBlock, setSelectedComponentId]);
+  const handleAddBlock = useCallback(
+    (blockType: string) => {
+      const newBlockId = addBlock(blockType as any);
+      setSelectedComponentId(newBlockId);
+      return newBlockId;
+    },
+    [addBlock, setSelectedComponentId],
+  );
 
-  const handleBlockClick = useCallback((blockId: string) => {
-    if (!isPreviewing) {
-      setSelectedComponentId(blockId);
-    }
-  }, [isPreviewing]);
+  const handleBlockClick = useCallback(
+    (blockId: string) => {
+      if (!isPreviewing) {
+        setSelectedComponentId(blockId);
+      }
+    },
+    [isPreviewing],
+  );
 
   const handleLoadTemplate = useCallback(async () => {
     try {
       setSelectedComponentId(null);
-      
-      console.log('🔄 Carregando blocos de teste básicos...');
-      
+
+      console.log("🔄 Carregando blocos de teste básicos...");
+
       const testBlocks = [
-        { 
-          id: 'test-1',
-          type: 'heading', 
-          properties: { 
-            content: 'Bem-vindo ao Editor Visual das 21 Etapas',
-            level: 'h1',
-            textAlign: 'center',
-            color: '#1f2937'
-          } 
+        {
+          id: "test-1",
+          type: "heading",
+          properties: {
+            content: "Bem-vindo ao Editor Visual das 21 Etapas",
+            level: "h1",
+            textAlign: "center",
+            color: "#1f2937",
+          },
         },
-        { 
-          id: 'test-2',
-          type: 'text', 
-          properties: { 
-            content: 'Este é um exemplo de texto editável. Clique neste bloco para configurar suas propriedades.',
-            textAlign: 'left'
-          } 
+        {
+          id: "test-2",
+          type: "text",
+          properties: {
+            content:
+              "Este é um exemplo de texto editável. Clique neste bloco para configurar suas propriedades.",
+            textAlign: "left",
+          },
         },
-        { 
-          id: 'test-3',
-          type: 'button', 
-          properties: { 
-            content: 'Botão de Exemplo',
-            backgroundColor: '#3b82f6',
-            textColor: '#ffffff',
-            size: 'medium'
-          } 
+        {
+          id: "test-3",
+          type: "button",
+          properties: {
+            content: "Botão de Exemplo",
+            backgroundColor: "#3b82f6",
+            textColor: "#ffffff",
+            size: "medium",
+          },
         },
-        { 
-          id: 'test-4',
-          type: 'text-inline', 
-          properties: { 
-            content: 'Componente de texto inline - totalmente responsivo e editável'
-          } 
+        {
+          id: "test-4",
+          type: "text-inline",
+          properties: {
+            content:
+              "Componente de texto inline - totalmente responsivo e editável",
+          },
         },
-        { 
-          id: 'test-5',
-          type: 'heading-inline', 
-          properties: { 
-            content: 'Título Responsivo',
-            level: 'h2',
-            color: '#059669'
-          } 
-        }
+        {
+          id: "test-5",
+          type: "heading-inline",
+          properties: {
+            content: "Título Responsivo",
+            level: "h2",
+            color: "#059669",
+          },
+        },
       ];
-      
+
       let addedCount = 0;
       for (const block of testBlocks) {
         try {
           const normalizedBlock = normalizeBlock(block);
-          console.log(`📦 Adicionando bloco ${addedCount + 1}:`, normalizedBlock.type);
-          
+          console.log(
+            `📦 Adicionando bloco ${addedCount + 1}:`,
+            normalizedBlock.type,
+          );
+
           const newBlockId = addBlock(normalizedBlock.type as any);
           addedCount++;
-          
+
           setTimeout(() => {
             updateBlock(newBlockId, normalizedBlock.properties);
           }, 100);
-          
         } catch (blockError) {
           console.warn(`⚠️ Erro ao adicionar bloco ${block.type}:`, blockError);
         }
       }
-      
+
       toast({
         title: "Template Carregado",
         description: `${addedCount} blocos de teste adicionados com sucesso`,
       });
-      
     } catch (error) {
-      console.error('❌ Erro ao carregar template:', error);
+      console.error("❌ Erro ao carregar template:", error);
       toast({
         title: "Erro",
         description: "Erro ao carregar template de teste",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   }, [addBlock, updateBlock]);
 
   // ===== COMPONENTE FILTRADO DE COMPONENTES =====
-  const filteredBlocks = AVAILABLE_BLOCKS.filter(block => {
-    const matchesSearch = block.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         block.type.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || block.category === selectedCategory;
+  const filteredBlocks = AVAILABLE_BLOCKS.filter((block) => {
+    const matchesSearch =
+      block.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      block.type.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "all" || block.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
-  const categories = ['all', ...Array.from(new Set(AVAILABLE_BLOCKS.map(block => block.category)))];
+  const categories = [
+    "all",
+    ...Array.from(new Set(AVAILABLE_BLOCKS.map((block) => block.category))),
+  ];
 
   // Load funnel data if ID is provided in URL
   useEffect(() => {
     const loadFunnelData = async () => {
       if (!funnelId) return;
-      
+
       setIsLoadingFunnel(true);
       try {
-        console.log('🔍 Loading funnel from schema service:', funnelId);
-        const schemaDrivenData = await schemaDrivenFunnelService.loadFunnel(funnelId);
-        
+        console.log("🔍 Loading funnel from schema service:", funnelId);
+        const schemaDrivenData =
+          await schemaDrivenFunnelService.loadFunnel(funnelId);
+
         if (schemaDrivenData) {
           // Convert to editor format and load first page blocks
           const firstPage = schemaDrivenData.pages[0];
           if (firstPage && firstPage.blocks) {
             // setConfig not available in current hook
-            console.log('✅ Would load funnel blocks:', firstPage.blocks.length);
+            console.log(
+              "✅ Would load funnel blocks:",
+              firstPage.blocks.length,
+            );
           }
         } else {
-          console.warn('❌ Funnel not found with ID:', funnelId);
+          console.warn("❌ Funnel not found with ID:", funnelId);
           toast({
             title: "Aviso",
             description: "Funil não encontrado. Criando novo funil.",
-            variant: "default"
+            variant: "default",
           });
         }
       } catch (error) {
-        console.error('❌ Error loading funnel:', error);
+        console.error("❌ Error loading funnel:", error);
         toast({
           title: "Erro",
           description: "Erro ao carregar funil",
-          variant: "destructive"
+          variant: "destructive",
         });
       } finally {
         setIsLoadingFunnel(false);
@@ -335,44 +515,46 @@ const EditorPage: React.FC = () => {
 
     loadFunnelData();
   }, [funnelId]);
-  
-  // ✅ AUTO-SAVE COM DEBOUNCE - Fase 1 
+
+  // ✅ AUTO-SAVE COM DEBOUNCE - Fase 1
   const handleAutoSave = async (data: any) => {
     // Preservar o ID original do funil carregado da URL
     const preservedId = funnelId || data.id || `funnel_${Date.now()}`;
-    
-    console.log('🔍 DEBUG - handleAutoSave:', {
+
+    console.log("🔍 DEBUG - handleAutoSave:", {
       funnelId,
       dataId: data.id,
       preservedId,
-      url: window.location.href
+      url: window.location.href,
     });
-    
+
     const funnelData = {
       id: preservedId,
-      name: data.title || 'Novo Funil',
-      description: data.description || '',
+      name: data.title || "Novo Funil",
+      description: data.description || "",
       isPublished: false,
       version: data.version || 1,
       settings: data.settings || {},
-      pages: [{
-        id: `page_${Date.now()}`,
-        pageType: 'landing',
-        pageOrder: 0,
-        title: data.title || 'Página Principal',
-        blocks: data.blocks,
-        metadata: {}
-      }]
+      pages: [
+        {
+          id: `page_${Date.now()}`,
+          pageType: "landing",
+          pageOrder: 0,
+          title: data.title || "Página Principal",
+          blocks: data.blocks,
+          metadata: {},
+        },
+      ],
     };
     await saveFunnel(funnelData);
   };
-  
+
   const { forceSave } = useAutoSaveWithDebounce({
     data: config,
     onSave: handleAutoSave,
     delay: 500,
     enabled: !!config?.blocks?.length,
-    showToasts: false
+    showToasts: false,
   });
 
   // Show loading while loading funnel
@@ -389,7 +571,7 @@ const EditorPage: React.FC = () => {
     <div className="flex flex-col h-screen bg-background">
       {/* Enhanced Toolbar with Brand Header */}
       <BrandHeader />
-      
+
       {/* Toolbar de Controles */}
       <div className="flex-shrink-0 border-b bg-white px-4 py-2 flex items-center justify-between">
         <div className="flex items-center space-x-2">
@@ -399,49 +581,53 @@ const EditorPage: React.FC = () => {
             </span>
           )}
         </div>
-        
+
         <div className="flex items-center space-x-2">
           {/* Preview Mode Selector */}
           <div className="flex items-center space-x-1 border rounded">
             <Button
-              variant={previewMode === 'desktop' ? 'default' : 'ghost'}
+              variant={previewMode === "desktop" ? "default" : "ghost"}
               size="sm"
-              onClick={() => setPreviewMode('desktop')}
+              onClick={() => setPreviewMode("desktop")}
             >
               <Monitor className="w-4 h-4" />
             </Button>
             <Button
-              variant={previewMode === 'tablet' ? 'default' : 'ghost'}
+              variant={previewMode === "tablet" ? "default" : "ghost"}
               size="sm"
-              onClick={() => setPreviewMode('tablet')}
+              onClick={() => setPreviewMode("tablet")}
             >
               <Tablet className="w-4 h-4" />
             </Button>
             <Button
-              variant={previewMode === 'mobile' ? 'default' : 'ghost'}
+              variant={previewMode === "mobile" ? "default" : "ghost"}
               size="sm"
-              onClick={() => setPreviewMode('mobile')}
+              onClick={() => setPreviewMode("mobile")}
             >
               <Smartphone className="w-4 h-4" />
             </Button>
           </div>
-          
+
           <Button
             onClick={() => setIsPreviewing(!isPreviewing)}
-            variant={isPreviewing ? 'default' : 'outline'}
+            variant={isPreviewing ? "default" : "outline"}
             size="sm"
           >
-            {isPreviewing ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
-            {isPreviewing ? 'Editar' : 'Preview'}
+            {isPreviewing ? (
+              <EyeOff className="w-4 h-4 mr-2" />
+            ) : (
+              <Eye className="w-4 h-4 mr-2" />
+            )}
+            {isPreviewing ? "Editar" : "Preview"}
           </Button>
-          
+
           <Button onClick={() => forceSave()} disabled={isSaving} size="sm">
             <Save className="w-4 h-4 mr-2" />
-            {isSaving ? 'Salvando...' : 'Salvar'}
+            {isSaving ? "Salvando..." : "Salvar"}
           </Button>
         </div>
       </div>
-      
+
       {/* Layout Responsivo */}
       {isMobile ? (
         /* Mobile Layout - Vertical Stack */
@@ -456,11 +642,15 @@ const EditorPage: React.FC = () => {
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="text-sm"
                 />
-                <Button onClick={handleLoadTemplate} size="sm" variant="outline">
+                <Button
+                  onClick={handleLoadTemplate}
+                  size="sm"
+                  variant="outline"
+                >
                   <Download className="w-4 h-4" />
                 </Button>
               </div>
-              
+
               <div className="flex space-x-1 overflow-x-auto">
                 {filteredBlocks.slice(0, 10).map((block) => (
                   <Button
@@ -508,7 +698,10 @@ const EditorPage: React.FC = () => {
                       const blockData = {
                         id: block.id,
                         type: block.type,
-                        properties: block.properties || { ...block.content || {}, order: block.order || 0 }
+                        properties: block.properties || {
+                          ...(block.content || {}),
+                          order: block.order || 0,
+                        },
                       };
 
                       return (
@@ -516,10 +709,10 @@ const EditorPage: React.FC = () => {
                           key={block.id}
                           onClick={() => setSelectedComponentId(block.id)}
                           className={cn(
-                            'relative p-4 rounded-lg border-2 transition-all cursor-pointer',
+                            "relative p-4 rounded-lg border-2 transition-all cursor-pointer",
                             selectedComponentId === block.id
-                              ? 'border-blue-500 bg-blue-50'
-                              : 'border-gray-200 hover:border-gray-300'
+                              ? "border-blue-500 bg-blue-50"
+                              : "border-gray-200 hover:border-gray-300",
                           )}
                         >
                           <SimpleBlockRenderer
@@ -546,7 +739,7 @@ const EditorPage: React.FC = () => {
                 <div className="space-y-4 p-2">
                   <div className="p-2 border-b space-y-2">
                     <h3 className="font-semibold text-sm">Componentes</h3>
-                    
+
                     {/* Search */}
                     <div className="relative">
                       <Search className="absolute left-2 top-2.5 w-4 h-4 text-gray-400" />
@@ -557,21 +750,23 @@ const EditorPage: React.FC = () => {
                         className="pl-8 text-sm"
                       />
                     </div>
-                    
+
                     {/* Category Filter */}
                     <select
                       value={selectedCategory}
                       onChange={(e) => setSelectedCategory(e.target.value)}
                       className="w-full p-2 border rounded text-sm"
                     >
-                      {categories.map(category => (
+                      {categories.map((category) => (
                         <option key={category} value={category}>
-                          {category === 'all' ? 'Todas as Categorias' : category}
+                          {category === "all"
+                            ? "Todas as Categorias"
+                            : category}
                         </option>
                       ))}
                     </select>
                   </div>
-                  
+
                   {/* Template Buttons */}
                   <div className="p-2 space-y-2">
                     <Button
@@ -583,7 +778,7 @@ const EditorPage: React.FC = () => {
                       Carregar Template
                     </Button>
                   </div>
-                  
+
                   {/* Components Grid */}
                   <div className="p-2 space-y-1">
                     {filteredBlocks.map((block) => (
@@ -596,8 +791,12 @@ const EditorPage: React.FC = () => {
                       >
                         <span className="mr-2">{block.icon}</span>
                         <div className="flex-1">
-                          <div className="font-medium text-xs">{block.name}</div>
-                          <div className="text-xs text-gray-500">{block.category}</div>
+                          <div className="font-medium text-xs">
+                            {block.name}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            {block.category}
+                          </div>
                         </div>
                       </Button>
                     ))}
@@ -616,20 +815,32 @@ const EditorPage: React.FC = () => {
                 {/* Preview Mode Indicator */}
                 <div className="text-center mb-4">
                   <div className="inline-flex items-center gap-2 bg-white rounded-md px-3 py-1 text-sm text-gray-600 shadow-sm border">
-                    {previewMode === 'desktop' && <><Monitor className="w-4 h-4" /> Desktop (1200px)</>}
-                    {previewMode === 'tablet' && <><Tablet className="w-4 h-4" /> Tablet (768px)</>}
-                    {previewMode === 'mobile' && <><Smartphone className="w-4 h-4" /> Mobile (375px)</>}
+                    {previewMode === "desktop" && (
+                      <>
+                        <Monitor className="w-4 h-4" /> Desktop (1200px)
+                      </>
+                    )}
+                    {previewMode === "tablet" && (
+                      <>
+                        <Tablet className="w-4 h-4" /> Tablet (768px)
+                      </>
+                    )}
+                    {previewMode === "mobile" && (
+                      <>
+                        <Smartphone className="w-4 h-4" /> Mobile (375px)
+                      </>
+                    )}
                   </div>
                 </div>
-                
+
                 {/* Responsive Canvas Container */}
                 <div className="flex justify-center">
-                  <div 
+                  <div
                     className="bg-white rounded-lg shadow-sm min-h-96 transition-all duration-300"
                     style={{
                       width: PREVIEW_DIMENSIONS[previewMode].width,
                       maxWidth: PREVIEW_DIMENSIONS[previewMode].maxWidth,
-                      minWidth: previewMode === 'mobile' ? '375px' : 'auto'
+                      minWidth: previewMode === "mobile" ? "375px" : "auto",
                     }}
                   >
                     <div className="p-6">
@@ -644,7 +855,8 @@ const EditorPage: React.FC = () => {
                                 Construa Seu Funil
                               </h3>
                               <p className="text-gray-600 mb-4">
-                                Sistema completo para criar um funil de quiz de estilo pessoal otimizado para conversão
+                                Sistema completo para criar um funil de quiz de
+                                estilo pessoal otimizado para conversão
                               </p>
                             </div>
                             <div className="space-y-2">
@@ -661,7 +873,9 @@ const EditorPage: React.FC = () => {
                             </div>
                             <div className="mt-4 p-3 bg-blue-50 rounded-lg">
                               <p className="text-xs text-blue-700">
-                                <strong>🎯 Status:</strong> {AVAILABLE_BLOCKS.length} componentes disponíveis
+                                <strong>🎯 Status:</strong>{" "}
+                                {AVAILABLE_BLOCKS.length} componentes
+                                disponíveis
                               </p>
                             </div>
                           </div>
@@ -672,16 +886,20 @@ const EditorPage: React.FC = () => {
                             const blockData = {
                               id: block.id,
                               type: block.type,
-                              properties: block.properties || { ...block.content || {}, order: block.order || 0 }
+                              properties: block.properties || {
+                                ...(block.content || {}),
+                                order: block.order || 0,
+                              },
                             };
 
                             return (
                               <div
                                 key={block.id}
                                 className={cn(
-                                  'transition-all duration-200',
-                                  selectedComponentId === block.id && !isPreviewing && 
-                                  'ring-2 ring-blue-500 rounded-lg'
+                                  "transition-all duration-200",
+                                  selectedComponentId === block.id &&
+                                    !isPreviewing &&
+                                    "ring-2 ring-blue-500 rounded-lg",
                                 )}
                               >
                                 <SimpleBlockRenderer
@@ -710,7 +928,10 @@ const EditorPage: React.FC = () => {
                 <p className="mb-2">Painel de Propriedades</p>
                 {selectedComponentId ? (
                   <div className="text-left space-y-2">
-                    <p className="text-sm">Selecionado: {blocks.find(b => b.id === selectedComponentId)?.type}</p>
+                    <p className="text-sm">
+                      Selecionado:{" "}
+                      {blocks.find((b) => b.id === selectedComponentId)?.type}
+                    </p>
                     <p className="text-xs text-gray-400">
                       ModernPropertiesPanel não disponível
                     </p>
@@ -723,7 +944,7 @@ const EditorPage: React.FC = () => {
           </ResizablePanel>
         </ResizablePanelGroup>
       )}
-      
+
       {/* Status Bar */}
       <div className="flex-shrink-0 border-t bg-white px-4 py-2 text-xs text-gray-500 flex items-center justify-between">
         <div className="flex items-center space-x-4">
@@ -733,7 +954,8 @@ const EditorPage: React.FC = () => {
         <div className="flex items-center space-x-2">
           {selectedComponentId && (
             <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded">
-              Selecionado: {blocks.find(b => b.id === selectedComponentId)?.type}
+              Selecionado:{" "}
+              {blocks.find((b) => b.id === selectedComponentId)?.type}
             </span>
           )}
           {isSaving && (

@@ -1,12 +1,11 @@
-
-import React from 'react';
+import React from "react";
 
 const TransformationsBlock = () => (
   <div className="bg-white p-8 rounded-xl shadow-md border border-[#B89B7A]/20 mb-12">
     <h3 className="text-2xl font-medium text-[#aa6b5d] mb-8 text-center">
       Transformação Antes e Depois
     </h3>
-    
+
     <div className="grid md:grid-cols-2 gap-8">
       <div className="text-center">
         <div className="bg-[#f9f6f3] p-6 rounded-lg mb-4">
@@ -19,7 +18,7 @@ const TransformationsBlock = () => (
           </ul>
         </div>
       </div>
-      
+
       <div className="text-center">
         <div className="bg-[#B89B7A]/10 p-6 rounded-lg mb-4">
           <h4 className="font-semibold text-[#432818] mb-3">Depois</h4>

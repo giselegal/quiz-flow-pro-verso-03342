@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { getLowQualityPlaceholder } from '@/utils/imageUtils';
+import React, { useState, useEffect } from "react";
+import { getLowQualityPlaceholder } from "@/utils/imageUtils";
 
 interface ProgressiveImageProps {
   src: string;
@@ -9,40 +9,41 @@ interface ProgressiveImageProps {
   width?: number;
   height?: number;
   onLoad?: () => void;
-  loading?: 'lazy' | 'eager';
-  fetchpriority?: 'high' | 'low' | 'auto';
+  loading?: "lazy" | "eager";
+  fetchpriority?: "high" | "low" | "auto";
   sizes?: string;
   style?: React.CSSProperties;
-  fit?: 'cover' | 'contain' | 'fill';
+  fit?: "cover" | "contain" | "fill";
 }
 
 const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   src,
   lowQualitySrc,
   alt,
-  className = '',
+  className = "",
   width,
   height,
   onLoad,
-  loading = 'lazy',
-  fetchpriority = 'auto',
+  loading = "lazy",
+  fetchpriority = "auto",
   sizes,
   style,
-  fit = 'cover'
+  fit = "cover",
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
   const [loadStartTime] = useState(Date.now());
 
   // Gerar placeholder de baixa qualidade se não for fornecido
-  const placeholder = lowQualitySrc || getLowQualityPlaceholder(src, { width: 30, quality: 15 });
+  const placeholder =
+    lowQualitySrc || getLowQualityPlaceholder(src, { width: 30, quality: 15 });
 
   // Controlar o carregamento da imagem
   const handleLoad = () => {
     // Log do tempo de carregamento para otimizações futuras
     const loadTime = Date.now() - loadStartTime;
     console.debug(`[Image] Carregada em ${loadTime}ms: ${src}`);
-    
+
     setLoaded(true);
     if (onLoad) onLoad();
   };
@@ -72,15 +73,18 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   }, [loaded, error, src, onLoad]);
 
   return (
-    <div className={`progressive-image-container relative overflow-hidden ${className}`} style={style}>
+    <div
+      className={`progressive-image-container relative overflow-hidden ${className}`}
+      style={style}
+    >
       {/* Imagem de baixa qualidade para carregamento progressivo */}
       {!loaded && !error && (
         <div className="absolute inset-0 overflow-hidden">
-          <img 
-            src={placeholder} 
-            alt={alt} 
-            className="w-full h-full blur-lg scale-110 transition-opacity" 
-            style={{ objectFit: fit }} 
+          <img
+            src={placeholder}
+            alt={alt}
+            className="w-full h-full blur-lg scale-110 transition-opacity"
+            style={{ objectFit: fit }}
             aria-hidden="true"
             width={width}
             height={height}
@@ -91,9 +95,9 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
 
       {/* Imagem principal com efeito de fade-in */}
       {!error ? (
-        <img 
-          src={src} 
-          alt={alt} 
+        <img
+          src={src}
+          alt={alt}
           width={width}
           height={height}
           loading={loading}
@@ -101,7 +105,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
           sizes={sizes}
           onLoad={handleLoad}
           onError={handleError}
-          className={`w-full h-full transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+          className={`w-full h-full transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"}`}
           style={{ objectFit: fit }}
         />
       ) : (

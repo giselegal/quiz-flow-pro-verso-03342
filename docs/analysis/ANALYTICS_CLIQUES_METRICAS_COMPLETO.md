@@ -7,6 +7,7 @@ O sistema possui **múltiplas camadas** para capturar e analisar interações do
 ## 📋 ESTRUTURA DAS TABELAS DE ANALYTICS
 
 ### 1️⃣ Tabela `quiz_analytics` (Eventos gerais)
+
 ```sql
 CREATE TABLE quiz_analytics (
   id UUID PRIMARY KEY,
@@ -22,7 +23,7 @@ CREATE TABLE quiz_analytics (
   city TEXT,
   referrer TEXT,
   utm_source TEXT,
-  utm_medium TEXT, 
+  utm_medium TEXT,
   utm_campaign TEXT,
   metadata JSONB DEFAULT '{}',
   created_at TIMESTAMP DEFAULT NOW()
@@ -30,6 +31,7 @@ CREATE TABLE quiz_analytics (
 ```
 
 ### 2️⃣ Tabela `quiz_attempts` (Tentativas de quiz)
+
 ```sql
 CREATE TABLE quiz_attempts (
   id UUID PRIMARY KEY,
@@ -46,6 +48,7 @@ CREATE TABLE quiz_attempts (
 ```
 
 ### 3️⃣ Tabela `question_responses` (Respostas individuais)
+
 ```sql
 CREATE TABLE question_responses (
   id UUID PRIMARY KEY,
@@ -62,13 +65,19 @@ CREATE TABLE question_responses (
 ## 🖱️ TIPOS DE EVENTOS RASTREADOS
 
 ### Eventos do AnalyticsService:
+
 ```typescript
 export interface AnalyticsEvent {
   quiz_id: string;
   user_id?: string;
   session_id: string;
-  event_type: 'quiz_started' | 'question_answered' | 'quiz_completed' | 
-              'page_viewed' | 'button_clicked' | 'form_submitted';
+  event_type:
+    | "quiz_started"
+    | "question_answered"
+    | "quiz_completed"
+    | "page_viewed"
+    | "button_clicked"
+    | "form_submitted";
   event_data: Record<string, any>;
   timestamp: string;
   user_agent?: string;
@@ -82,6 +91,7 @@ export interface AnalyticsEvent {
 ### 🔥 1. Evento: Usuário clica no botão "Começar Quiz"
 
 **Tabela `quiz_analytics`:**
+
 ```json
 {
   "id": "event_001",
@@ -99,10 +109,11 @@ export interface AnalyticsEvent {
 ```
 
 **Tabela `quiz_attempts`:**
+
 ```json
 {
   "id": "attempt_001",
-  "quiz_id": "quiz_quest_challenge_v1", 
+  "quiz_id": "quiz_quest_challenge_v1",
   "user_id": "user_12345",
   "status": "in_progress",
   "started_at": "2025-07-25T10:15:30Z",
@@ -116,24 +127,26 @@ export interface AnalyticsEvent {
 ### 🎯 2. Evento: Usuário responde uma pergunta
 
 **Via AnalyticsService:**
+
 ```javascript
 // No frontend, quando usuário clica em uma opção:
 analyticsService.trackQuestionAnswer(
   "quiz_quest_challenge_v1",
-  "question_1", 
+  "question_1",
   "mountains", // resposta selecionada
-  "user_12345"
+  "user_12345",
 );
 
 analyticsService.trackButtonClick(
   "quiz_quest_challenge_v1",
   "option_mountains",
   "🏔️ Montanhas geladas",
-  "user_12345"
+  "user_12345",
 );
 ```
 
 **Resultado na tabela `question_responses`:**
+
 ```json
 {
   "id": "response_001",
@@ -142,7 +155,7 @@ analyticsService.trackButtonClick(
   "answer": {
     "selected_option": "mountains",
     "option_text": "🏔️ Montanhas geladas",
-    "points": {"warrior": 2, "mage": 1}
+    "points": { "warrior": 2, "mage": 1 }
   },
   "points_earned": 2,
   "time_spent": 15, // segundos para responder
@@ -153,6 +166,7 @@ analyticsService.trackButtonClick(
 ### 🏆 3. Evento: Usuário completa o quiz
 
 **Tabela `quiz_analytics`:**
+
 ```json
 {
   "event_type": "complete",
@@ -166,6 +180,7 @@ analyticsService.trackButtonClick(
 ```
 
 **Tabela `quiz_attempts` (atualizada):**
+
 ```json
 {
   "id": "attempt_001",
@@ -185,21 +200,22 @@ analyticsService.trackButtonClick(
 ## 📈 CÁLCULOS DE MÉTRICAS E RESULTADOS
 
 ### 1️⃣ **Taxa de Conversão por Etapa:**
+
 ```sql
 -- Funil de conversão das 21 etapas
-SELECT 
+SELECT
   step_order,
   step_name,
   COUNT(DISTINCT user_id) as users_reached,
   LAG(COUNT(DISTINCT user_id)) OVER (ORDER BY step_order) as previous_step_users,
-  (COUNT(DISTINCT user_id)::float / 
+  (COUNT(DISTINCT user_id)::float /
    LAG(COUNT(DISTINCT user_id)) OVER (ORDER BY step_order)) * 100 as conversion_rate
 FROM (
-  SELECT 
+  SELECT
     qa.user_id,
     JSON_EXTRACT_PATH_TEXT(qa.metadata, 'current_step')::int as step_order,
     'Etapa ' || JSON_EXTRACT_PATH_TEXT(qa.metadata, 'current_step') as step_name
-  FROM quiz_analytics qa 
+  FROM quiz_analytics qa
   WHERE qa.quiz_id = 'quiz_quest_challenge_v1'
   AND qa.event_type = 'view'
 ) steps
@@ -208,9 +224,10 @@ ORDER BY step_order;
 ```
 
 ### 2️⃣ **Análise de Abandonos:**
+
 ```sql
 -- Onde os usuários mais abandonam
-SELECT 
+SELECT
   JSON_EXTRACT_PATH_TEXT(metadata, 'page_id') as abandon_page,
   COUNT(*) as abandon_count,
   AVG(EXTRACT(EPOCH FROM (created_at - started_at))) as avg_time_before_abandon
@@ -222,9 +239,10 @@ ORDER BY abandon_count DESC;
 ```
 
 ### 3️⃣ **Tempo por Pergunta:**
+
 ```sql
 -- Tempo médio de resposta por pergunta
-SELECT 
+SELECT
   qr.question_id,
   AVG(qr.time_spent) as avg_response_time,
   COUNT(*) as total_responses,
@@ -237,13 +255,14 @@ ORDER BY avg_response_time DESC;
 ```
 
 ### 4️⃣ **Distribuição de Resultados:**
+
 ```sql
 -- Qual perfil de herói é mais comum
-SELECT 
+SELECT
   JSON_EXTRACT_PATH_TEXT(answers, 'final_result') as hero_type,
   COUNT(*) as count,
   ROUND(COUNT(*)::numeric / (SELECT COUNT(*) FROM quiz_attempts WHERE status = 'completed') * 100, 2) as percentage
-FROM quiz_attempts 
+FROM quiz_attempts
 WHERE quiz_id = 'quiz_quest_challenge_v1'
 AND status = 'completed'
 GROUP BY hero_type
@@ -251,14 +270,15 @@ ORDER BY count DESC;
 ```
 
 ### 5️⃣ **Análise de Cliques por Botão:**
+
 ```sql
 -- Quais botões são mais clicados
-SELECT 
+SELECT
   JSON_EXTRACT_PATH_TEXT(metadata, 'button_text') as button_text,
   JSON_EXTRACT_PATH_TEXT(metadata, 'page_id') as page_id,
   COUNT(*) as click_count,
   COUNT(DISTINCT user_id) as unique_users
-FROM quiz_analytics 
+FROM quiz_analytics
 WHERE event_type = 'start' -- ou outros eventos de clique
 AND quiz_id = 'quiz_quest_challenge_v1'
 GROUP BY button_text, page_id
@@ -268,42 +288,41 @@ ORDER BY click_count DESC;
 ## 🎯 IMPLEMENTAÇÃO NO CÓDIGO
 
 ### Rastreamento automático no editor:
+
 ```typescript
 // Em SchemaDrivenEditorResponsive.tsx
 const handleSave = async () => {
   // Rastrear clique no botão salvar
   await analyticsService.trackButtonClick(
-    funnel?.id || '',
-    'save_button',
-    'Salvar Funil'
+    funnel?.id || "",
+    "save_button",
+    "Salvar Funil",
   );
-  
+
   // Salvar funil
   await saveFunnel(true);
-  
+
   // Rastrear sucesso
   await analyticsService.trackEvent({
-    quiz_id: funnel?.id || '',
-    event_type: 'form_submitted',
+    quiz_id: funnel?.id || "",
+    event_type: "form_submitted",
     event_data: {
-      action: 'funnel_saved',
-      pages_count: funnel?.pages?.length || 0
-    }
+      action: "funnel_saved",
+      pages_count: funnel?.pages?.length || 0,
+    },
   });
 };
 ```
 
 ### Rastreamento de navegação:
+
 ```typescript
 // Quando usuário muda de página/etapa
 const setCurrentPage = (pageId: string) => {
   setCurrentPageId(pageId);
-  
+
   // Rastrear visualização da página
-  analyticsService.trackPageView(
-    funnel?.id || '',
-    pageId
-  );
+  analyticsService.trackPageView(funnel?.id || "", pageId);
 };
 ```
 
@@ -313,7 +332,7 @@ O sistema gera automaticamente:
 
 1. **Taxa de Conclusão** = (Completos / Iniciados) × 100
 2. **Tempo Médio** = Média de `time_taken` dos completos
-3. **Taxa de Abandono** = (Abandonos / Iniciados) × 100  
+3. **Taxa de Abandono** = (Abandonos / Iniciados) × 100
 4. **Conversão por Etapa** = Usuários que passaram / Usuários que chegaram
 5. **Distribuição de Resultados** = % de cada tipo de resultado
 6. **Cliques por Elemento** = Heatmap de interações

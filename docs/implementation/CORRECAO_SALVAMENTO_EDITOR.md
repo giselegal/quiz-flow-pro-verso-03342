@@ -11,19 +11,22 @@ As alterações no editor `/editor` (SchemaDrivenEditorResponsive) não estavam 
 ## ✅ SOLUÇÕES IMPLEMENTADAS
 
 ### 1. **Integração com Supabase Corrigida**
+
 - **Arquivo**: `src/services/schemaDrivenFunnelService.ts`
 - **Mudança**: Substituído fetch para backend inexistente por chamadas diretas ao Supabase
 - **Funções corrigidas**:
   - `saveFunnel()` - Agora salva no Supabase
-  - `loadFunnel()` - Agora carrega do Supabase  
+  - `loadFunnel()` - Agora carrega do Supabase
   - `createFunnel()` - Agora cria no Supabase
 
 ### 2. **Sistema de Diagnóstico Implementado**
+
 - **Arquivo**: `src/utils/saveDiagnostic.ts`
 - **Funcionalidade**: Testa conexão e operações CRUD do Supabase
 - **Acesso**: Botão "Diagnóstico" no editor
 
 ### 3. **Interface de Debug Melhorada**
+
 - **Arquivo**: `src/components/editor/SchemaDrivenEditorResponsive.tsx`
 - **Adicionado**: Botão de diagnóstico na toolbar
 - **Logs**: Mensagens detalhadas para debug
@@ -31,11 +34,13 @@ As alterações no editor `/editor` (SchemaDrivenEditorResponsive) não estavam 
 ## 🔄 FLUXO DE SALVAMENTO CORRIGIDO
 
 ### Antes (❌ Não funcionava)
+
 ```
 Editor → schemaDrivenFunnelService → fetch(localhost:3001) → FALHA → localStorage
 ```
 
 ### Depois (✅ Funcionando)
+
 ```
 Editor → schemaDrivenFunnelService → Supabase → SUCESSO → localStorage (backup)
 ```
@@ -65,12 +70,14 @@ O sistema salva no formato:
 ## 🎯 COMO USAR
 
 ### 1. **Salvamento Normal**
+
 - Edite qualquer elemento no canvas das 21 etapas
 - Clique no botão "Salvar" (ícone de disquete)
 - O sistema tentará salvar no Supabase
 - Se falhar, fará fallback para localStorage
 
 ### 2. **Diagnóstico do Sistema**
+
 - Clique no botão "Diagnóstico" (ícone de bug)
 - O sistema testará:
   - ✅ Conexão com Supabase
@@ -79,6 +86,7 @@ O sistema salva no formato:
 - Resultados aparecem no console e toast
 
 ### 3. **Monitoramento**
+
 - Abra DevTools (F12) → Console
 - Logs detalhados mostram cada etapa do salvamento
 - Procure por:

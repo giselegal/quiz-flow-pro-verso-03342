@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
-import { QuizQuestion, QuizResponse, UserResponse } from '@/types/quiz';
+import React, { useState } from "react";
+import { QuizQuestion, QuizResponse, UserResponse } from "@/types/quiz";
 // Simple validation function
-const validateResponse = (response: UserResponse, question: QuizQuestion): boolean => {
+const validateResponse = (
+  response: UserResponse,
+  question: QuizQuestion,
+): boolean => {
   return !!(response.selectedOptions && response.selectedOptions.length > 0);
 };
 
@@ -10,7 +13,10 @@ interface CaktoQuizQuestionProps {
   onAnswer: (response: QuizResponse) => void;
 }
 
-const CaktoQuizQuestion: React.FC<CaktoQuizQuestionProps> = ({ question, onAnswer }) => {
+const CaktoQuizQuestion: React.FC<CaktoQuizQuestionProps> = ({
+  question,
+  onAnswer,
+}) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
   const handleSubmit = () => {
@@ -18,7 +24,7 @@ const CaktoQuizQuestion: React.FC<CaktoQuizQuestionProps> = ({ question, onAnswe
     const userResponse: UserResponse = {
       questionId: question.id,
       selectedOptions,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     // Validate response (only needs 2 arguments now)
@@ -27,10 +33,10 @@ const CaktoQuizQuestion: React.FC<CaktoQuizQuestionProps> = ({ question, onAnswe
       const quizResponse: QuizResponse = {
         questionId: question.id,
         selectedOptions: selectedOptions,
-        
-        timestamp: new Date()
+
+        timestamp: new Date(),
       };
-      
+
       onAnswer(quizResponse);
     }
   };
@@ -39,19 +45,19 @@ const CaktoQuizQuestion: React.FC<CaktoQuizQuestionProps> = ({ question, onAnswe
   return (
     <div>
       <h3>{question.question}</h3>
-      {question.options.map(option => (
+      {question.options.map((option) => (
         <div key={option.id}>
           <label>
             <input
               type="checkbox"
               value={option.id}
               checked={selectedOptions.includes(option.id)}
-              onChange={e => {
+              onChange={(e) => {
                 const optionId = option.id;
-                setSelectedOptions(prev =>
+                setSelectedOptions((prev) =>
                   e.target.checked
                     ? [...prev, optionId]
-                    : prev.filter(id => id !== optionId)
+                    : prev.filter((id) => id !== optionId),
                 );
               }}
             />

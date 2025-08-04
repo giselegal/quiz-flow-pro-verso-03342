@@ -1,31 +1,37 @@
-import React from 'react';
-import { useEditor } from '@/context/EditorContext';
+import React from "react";
+import { useEditor } from "@/context/EditorContext";
 
 const DebugEditorContext: React.FC = () => {
-  console.log('🔥 DebugEditorContext: COMPONENTE RENDERIZANDO!');
-  
-  const { 
+  console.log("🔥 DebugEditorContext: COMPONENTE RENDERIZANDO!");
+
+  const {
     stages,
     activeStageId,
-    computed: { stageCount }
+    computed: { stageCount },
   } = useEditor();
 
-  console.log('🔥 DebugEditorContext: Dados do context:', {
+  console.log("🔥 DebugEditorContext: Dados do context:", {
     stages: stages?.length || 0,
-    stagesIds: stages?.map(s => s.id) || [],
+    stagesIds: stages?.map((s) => s.id) || [],
     activeStageId,
-    stageCount
+    stageCount,
   });
 
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
       <h1 className="text-2xl font-bold mb-4">Debug Editor Context</h1>
-      
+
       <div className="bg-white p-4 rounded-lg shadow mb-4">
         <h2 className="text-lg font-semibold mb-2">Estado do Context</h2>
-        <p><strong>Total de Etapas:</strong> {stages?.length || 0}</p>
-        <p><strong>Etapa Ativa:</strong> {activeStageId}</p>
-        <p><strong>Stage Count (computed):</strong> {stageCount}</p>
+        <p>
+          <strong>Total de Etapas:</strong> {stages?.length || 0}
+        </p>
+        <p>
+          <strong>Etapa Ativa:</strong> {activeStageId}
+        </p>
+        <p>
+          <strong>Stage Count (computed):</strong> {stageCount}
+        </p>
       </div>
 
       <div className="bg-white p-4 rounded-lg shadow">
@@ -35,7 +41,9 @@ const DebugEditorContext: React.FC = () => {
             {stages.map((stage, index) => (
               <li key={stage.id} className="p-2 border rounded">
                 <strong>{stage.id}</strong>: {stage.name} ({stage.type})
-                {stage.id === activeStageId && <span className=" ml-2 text-green-600">← ATIVA</span>}
+                {stage.id === activeStageId && (
+                  <span className=" ml-2 text-green-600">← ATIVA</span>
+                )}
               </li>
             ))}
           </ul>

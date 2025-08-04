@@ -1,12 +1,18 @@
-
-import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
-import { toast } from '@/components/ui/use-toast';
+import React, { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import { toast } from "@/components/ui/use-toast";
 
 interface WebhookCardProps {
   initialUrl?: string;
@@ -14,25 +20,26 @@ interface WebhookCardProps {
 }
 
 export const WebhookCard: React.FC<WebhookCardProps> = ({
-  initialUrl = '',
-  initialEnabled = false
+  initialUrl = "",
+  initialEnabled = false,
 }) => {
   const [webhookUrl, setWebhookUrl] = useState(initialUrl);
   const [webhookEnabled, setWebhookEnabled] = useState(initialEnabled);
 
   const handleSaveWebhook = () => {
     try {
-      localStorage.setItem('webhook_url', webhookUrl);
-      localStorage.setItem('webhook_enabled', String(webhookEnabled));
+      localStorage.setItem("webhook_url", webhookUrl);
+      localStorage.setItem("webhook_enabled", String(webhookEnabled));
       toast({
         title: "Webhook settings saved",
-        description: "Your webhook integration settings have been updated."
+        description: "Your webhook integration settings have been updated.",
       });
     } catch (error) {
       toast({
         title: "Error saving settings",
-        description: "There was an error saving your settings. Please try again.",
-        variant: "destructive"
+        description:
+          "There was an error saving your settings. Please try again.",
+        variant: "destructive",
       });
     }
   };
@@ -40,18 +47,21 @@ export const WebhookCard: React.FC<WebhookCardProps> = ({
   const handleTestConnection = () => {
     toast({
       title: "Testing Webhook connection",
-      description: "Connection test initiated. Please check the console for results."
+      description:
+        "Connection test initiated. Please check the console for results.",
     });
     console.log("Testing connection to Webhook...");
   };
-  
+
   return (
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
             <CardTitle>Custom Webhook</CardTitle>
-            <CardDescription>Send analytics events to your own endpoint</CardDescription>
+            <CardDescription>
+              Send analytics events to your own endpoint
+            </CardDescription>
           </div>
           <Badge variant={webhookEnabled ? "default" : "outline"}>
             {webhookEnabled ? "Active" : "Inactive"}
@@ -61,9 +71,9 @@ export const WebhookCard: React.FC<WebhookCardProps> = ({
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="webhook-url">Webhook URL</Label>
-          <Input 
-            id="webhook-url" 
-            placeholder="https://your-api.com/analytics-webhook" 
+          <Input
+            id="webhook-url"
+            placeholder="https://your-api.com/analytics-webhook"
             value={webhookUrl}
             onChange={(e) => setWebhookUrl(e.target.value)}
           />
@@ -71,9 +81,9 @@ export const WebhookCard: React.FC<WebhookCardProps> = ({
             Your endpoint that will receive analytics events
           </p>
         </div>
-        
+
         <div className="flex items-center space-x-2">
-          <Switch 
+          <Switch
             id="webhook-enabled"
             checked={webhookEnabled}
             onCheckedChange={setWebhookEnabled}
@@ -85,9 +95,7 @@ export const WebhookCard: React.FC<WebhookCardProps> = ({
         <Button variant="outline" onClick={handleTestConnection}>
           Test Webhook
         </Button>
-        <Button onClick={handleSaveWebhook}>
-          Save Settings
-        </Button>
+        <Button onClick={handleSaveWebhook}>Save Settings</Button>
       </CardFooter>
     </Card>
   );

@@ -9,21 +9,19 @@
  */
 export const safeGetBlockProperties = (block: any): Record<string, any> => {
   if (!block) {
-    console.warn('⚠️ Bloco undefined ou null');
+    console.warn("⚠️ Bloco undefined ou null");
     return {};
   }
 
-  const blockId = block.id || 'unknown';
-  
-  // Tentar diferentes caminhos para as propriedades
-  let properties = 
-    block.content || 
-    block.properties || 
-    block.data || 
-    {};
+  const blockId = block.id || "unknown";
 
-  if (!properties || typeof properties !== 'object') {
-    console.warn(`⚠️ Propriedades undefined no bloco ${blockId} (tipo: ${block.type})`);
+  // Tentar diferentes caminhos para as propriedades
+  let properties = block.content || block.properties || block.data || {};
+
+  if (!properties || typeof properties !== "object") {
+    console.warn(
+      `⚠️ Propriedades undefined no bloco ${blockId} (tipo: ${block.type})`,
+    );
     properties = {};
   }
 
@@ -32,7 +30,7 @@ export const safeGetBlockProperties = (block: any): Record<string, any> => {
     hasContent: !!block.content,
     hasProperties: !!block.properties,
     hasData: !!block.data,
-    finalProps: properties
+    finalProps: properties,
   });
 
   return properties;
@@ -55,17 +53,17 @@ export const isValidBlock = (block: any): boolean => {
 export const initializeSafeBlock = (block: any) => {
   if (!block) {
     return {
-      id: 'default-block',
-      type: 'text-inline',
-      properties: {}
+      id: "default-block",
+      type: "text-inline",
+      properties: {},
     };
   }
 
   return {
     ...block,
     id: block.id || `block-${Date.now()}`,
-    type: block.type || 'text-inline',
-    properties: block.properties || {}
+    type: block.type || "text-inline",
+    properties: block.properties || {},
   };
 };
 
@@ -75,10 +73,10 @@ export const initializeSafeBlock = (block: any) => {
  * @returns true se são seguras, false caso contrário
  */
 export const validateBlockProperties = (properties: any): boolean => {
-  if (!properties || typeof properties !== 'object') {
+  if (!properties || typeof properties !== "object") {
     return false;
   }
-  
+
   return true;
 };
 
@@ -88,13 +86,13 @@ export const validateBlockProperties = (properties: any): boolean => {
  * @param block - O bloco sendo renderizado
  */
 export const logBlockDebug = (componentName: string, block: any) => {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === "development") {
     console.log(`🧱 ${componentName} - Debug:`, {
       blockId: block?.id,
       blockType: block?.type,
       hasProperties: !!block?.properties,
       propertiesKeys: block?.properties ? Object.keys(block.properties) : [],
-      isValid: isValidBlock(block)
+      isValid: isValidBlock(block),
     });
   }
 };
@@ -107,25 +105,31 @@ export const logBlockDebug = (componentName: string, block: any) => {
  */
 export const createSafeFallback = (blockType: string, error?: string) => {
   return {
-    type: 'div',
+    type: "div",
     props: {
-      className: 'p-4 bg-red-50 border border-red-200 rounded-lg text-red-700',
-      children: [
-        `Erro no componente: ${blockType}`,
-        error && ` - ${error}`
-      ].filter(Boolean).join('')
-    }
+      className: "p-4 bg-red-50 border border-red-200 rounded-lg text-red-700",
+      children: [`Erro no componente: ${blockType}`, error && ` - ${error}`]
+        .filter(Boolean)
+        .join(""),
+    },
   };
 };
 
 // Função helper para obter valores com fallback
-export const getBlockValue = (block: any, key: string, defaultValue: any = '') => {
+export const getBlockValue = (
+  block: any,
+  key: string,
+  defaultValue: any = "",
+) => {
   const properties = safeGetBlockProperties(block);
   return properties[key] !== undefined ? properties[key] : defaultValue;
 };
 
 // Função para atualizar propriedades de um bloco de forma segura
-export const updateBlockProperties = (block: any, updates: Record<string, any>) => {
+export const updateBlockProperties = (
+  block: any,
+  updates: Record<string, any>,
+) => {
   if (!block) return block;
 
   const currentProperties = safeGetBlockProperties(block);

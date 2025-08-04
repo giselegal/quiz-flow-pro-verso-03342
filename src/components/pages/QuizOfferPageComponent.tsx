@@ -1,52 +1,57 @@
-import React from 'react';
-import { Check, Star } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { Check, Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const QuizOfferPageComponent: React.FC = () => {
   const benefits = [
     {
       title: "Consultoria de Estilo Personalizada",
-      description: "Receba orientações exclusivas para realçar sua beleza natural e expressar sua individualidade."
+      description:
+        "Receba orientações exclusivas para realçar sua beleza natural e expressar sua individualidade.",
     },
     {
       title: "Guia de Cores Ideal",
-      description: "Descubra as cores que harmonizam com seu tom de pele e cabelo, criando looks radiantes."
+      description:
+        "Descubra as cores que harmonizam com seu tom de pele e cabelo, criando looks radiantes.",
     },
     {
       title: "Análise de Biotipo",
-      description: "Aprenda a valorizar suas curvas e proporções, escolhendo peças que modelam sua silhueta."
-    }
+      description:
+        "Aprenda a valorizar suas curvas e proporções, escolhendo peças que modelam sua silhueta.",
+    },
   ];
 
   const testimonials = [
     {
       name: "Maria Silva",
       text: "A consultoria transformou minha autoestima! Agora me sinto confiante e elegante em todas as ocasiões.",
-      rating: 5
+      rating: 5,
     },
     {
       name: "Ana Oliveira",
       text: "O guia de cores foi um divisor de águas no meu guarda-roupa. As combinações ficaram mais fáceis e assertivas.",
-      rating: 5
-    }
+      rating: 5,
+    },
   ];
 
   const guaranteeItems = [
     {
       icon: "🔒",
       title: "Compra Segura",
-      description: "Seus dados protegidos com criptografia de ponta a ponta."
+      description: "Seus dados protegidos com criptografia de ponta a ponta.",
     },
     {
       icon: "⏱️",
       title: "Entrega Rápida",
-      description: "Acesso imediato ao conteúdo após a confirmação do pagamento."
+      description:
+        "Acesso imediato ao conteúdo após a confirmação do pagamento.",
     },
     {
       icon: "💯",
       title: "Satisfação Garantida",
-      description: "Se não estiver satisfeita, devolvemos seu dinheiro em até 7 dias."
-    }
+      description:
+        "Se não estiver satisfeita, devolvemos seu dinheiro em até 7 dias.",
+    },
   ];
 
   return (
@@ -57,7 +62,8 @@ const QuizOfferPageComponent: React.FC = () => {
           Sua Jornada de Estilo Começa Agora!
         </h1>
         <p className="text-lg text-gray-600">
-          Aproveite nossa oferta exclusiva e transforme seu visual com a ajuda de especialistas.
+          Aproveite nossa oferta exclusiva e transforme seu visual com a ajuda
+          de especialistas.
         </p>
       </div>
 
@@ -67,17 +73,27 @@ const QuizOfferPageComponent: React.FC = () => {
           O que você vai receber:
         </h3>
         <div className="grid md:grid-cols-2 gap-6">
-          {benefits.map((benefit: { title: string; description: string }, index: number) => (
-            <div key={index} className="flex items-start gap-4 p-4 bg-white rounded-lg shadow-sm">
-              <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <Check className="w-3 h-3" />
+          {benefits.map(
+            (
+              benefit: { title: string; description: string },
+              index: number,
+            ) => (
+              <div
+                key={index}
+                className="flex items-start gap-4 p-4 bg-white rounded-lg shadow-sm"
+              >
+                <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                  <Check className="w-3 h-3" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-2">
+                    {benefit.title}
+                  </h4>
+                  <p className="text-gray-600">{benefit.description}</p>
+                </div>
               </div>
-              <div>
-                <h4 className="font-semibold text-gray-900 mb-2">{benefit.title}</h4>
-                <p className="text-gray-600">{benefit.description}</p>
-              </div>
-            </div>
-          ))}
+            ),
+          )}
         </div>
       </div>
 
@@ -100,17 +116,27 @@ const QuizOfferPageComponent: React.FC = () => {
           O que nossas clientes dizem:
         </h3>
         <div className="grid md:grid-cols-2 gap-8">
-          {testimonials.map((testimonial: { name: string; text: string; rating: number }, index: number) => (
-            <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
-              <div className="flex mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                ))}
+          {testimonials.map(
+            (
+              testimonial: { name: string; text: string; rating: number },
+              index: number,
+            ) => (
+              <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
+                <div className="flex mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className="w-5 h-5 fill-yellow-400 text-yellow-400"
+                    />
+                  ))}
+                </div>
+                <p className="text-gray-700 mb-4">"{testimonial.text}"</p>
+                <p className="font-semibold text-gray-900">
+                  - {testimonial.name}
+                </p>
               </div>
-              <p className="text-gray-700 mb-4">"{testimonial.text}"</p>
-              <p className="font-semibold text-gray-900">- {testimonial.name}</p>
-            </div>
-          ))}
+            ),
+          )}
         </div>
       </div>
 
@@ -120,18 +146,26 @@ const QuizOfferPageComponent: React.FC = () => {
           Nossa Garantia Incondicional
         </h3>
         <p className="text-lg text-gray-600 text-center mb-8">
-          Estamos tão confiantes de que você vai amar nossos serviços, que oferecemos uma garantia de 7 dias.
-          Se por qualquer motivo você não estiver satisfeita, devolvemos seu dinheiro sem perguntas.
+          Estamos tão confiantes de que você vai amar nossos serviços, que
+          oferecemos uma garantia de 7 dias. Se por qualquer motivo você não
+          estiver satisfeita, devolvemos seu dinheiro sem perguntas.
         </p>
 
         <div className="grid md:grid-cols-3 gap-4 mb-8">
-          {guaranteeItems.map((item: { icon: string; title: string; description: string }, index: number) => (
-            <div key={index} className="text-center">
-              <div className="text-4xl mb-2">{item.icon}</div>
-              <h4 className="font-semibold text-gray-900 mb-2">{item.title}</h4>
-              <p className="text-sm text-gray-600">{item.description}</p>
-            </div>
-          ))}
+          {guaranteeItems.map(
+            (
+              item: { icon: string; title: string; description: string },
+              index: number,
+            ) => (
+              <div key={index} className="text-center">
+                <div className="text-4xl mb-2">{item.icon}</div>
+                <h4 className="font-semibold text-gray-900 mb-2">
+                  {item.title}
+                </h4>
+                <p className="text-sm text-gray-600">{item.description}</p>
+              </div>
+            ),
+          )}
         </div>
 
         <p className="text-sm text-gray-500 text-center">

@@ -1,5 +1,4 @@
-
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from "react";
 
 interface UseAutoSaveOptions {
   data: any;
@@ -8,7 +7,12 @@ interface UseAutoSaveOptions {
   enabled?: boolean;
 }
 
-export const useAutoSave = ({ data, onSave, delay = 3000, enabled = true }: UseAutoSaveOptions) => {
+export const useAutoSave = ({
+  data,
+  onSave,
+  delay = 3000,
+  enabled = true,
+}: UseAutoSaveOptions) => {
   const timeoutRef = useRef<NodeJS.Timeout>();
   const lastDataRef = useRef(data);
 
@@ -17,7 +21,7 @@ export const useAutoSave = ({ data, onSave, delay = 3000, enabled = true }: UseA
       await onSave(data);
       lastDataRef.current = data;
     } catch (error) {
-      console.error('Auto-save error:', error);
+      console.error("Auto-save error:", error);
     }
   }, [data, onSave]);
 
@@ -25,7 +29,7 @@ export const useAutoSave = ({ data, onSave, delay = 3000, enabled = true }: UseA
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
-    
+
     timeoutRef.current = setTimeout(() => {
       save();
     }, delay);
@@ -33,7 +37,7 @@ export const useAutoSave = ({ data, onSave, delay = 3000, enabled = true }: UseA
 
   useEffect(() => {
     if (!enabled) return;
-    
+
     // Only save if data has actually changed
     if (JSON.stringify(data) !== JSON.stringify(lastDataRef.current)) {
       debouncedSave();

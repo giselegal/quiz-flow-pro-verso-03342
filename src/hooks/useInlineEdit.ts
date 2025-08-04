@@ -1,5 +1,4 @@
-
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback } from "react";
 
 interface UseInlineEditProps {
   value: string;
@@ -20,7 +19,7 @@ export const useInlineEdit = ({
   preventDefault = true,
   stopPropagation = true,
   saveOnBlur = true,
-  validateOnSave
+  validateOnSave,
 }: UseInlineEditProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(value);
@@ -44,15 +43,18 @@ export const useInlineEdit = ({
     }
   }, [isEditing, autoSelect]);
 
-  const startEdit = useCallback((e?: React.MouseEvent) => {
-    if (preventDefault && e) {
-      e.preventDefault();
-    }
-    if (stopPropagation && e) {
-      e.stopPropagation();
-    }
-    setIsEditing(true);
-  }, [preventDefault, stopPropagation]);
+  const startEdit = useCallback(
+    (e?: React.MouseEvent) => {
+      if (preventDefault && e) {
+        e.preventDefault();
+      }
+      if (stopPropagation && e) {
+        e.stopPropagation();
+      }
+      setIsEditing(true);
+    },
+    [preventDefault, stopPropagation],
+  );
 
   const saveEdit = useCallback(() => {
     if (validateOnSave && !validateOnSave(editValue)) {
@@ -68,15 +70,18 @@ export const useInlineEdit = ({
     setIsEditing(false);
   }, [value]);
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey && !multiline) {
-      e.preventDefault();
-      saveEdit();
-    } else if (e.key === 'Escape') {
-      e.preventDefault();
-      cancelEdit();
-    }
-  }, [multiline, saveEdit, cancelEdit]);
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter" && !e.shiftKey && !multiline) {
+        e.preventDefault();
+        saveEdit();
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        cancelEdit();
+      }
+    },
+    [multiline, saveEdit, cancelEdit],
+  );
 
   const handleBlur = useCallback(() => {
     if (saveOnBlur) {
@@ -84,9 +89,12 @@ export const useInlineEdit = ({
     }
   }, [saveOnBlur, saveEdit]);
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setEditValue(e.target.value);
-  }, []);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setEditValue(e.target.value);
+    },
+    [],
+  );
 
   return {
     isEditing,
@@ -98,6 +106,6 @@ export const useInlineEdit = ({
     cancelEdit,
     handleKeyDown,
     handleBlur,
-    handleChange
+    handleChange,
   };
 };

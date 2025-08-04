@@ -6,14 +6,14 @@ Este documento fornece diretrizes para reduzir o tamanho e melhorar o desempenho
 
 Segundo o relatório do Lighthouse, os seguintes arquivos JavaScript estão consumindo mais bytes:
 
-| Arquivo | Tamanho |
-|---------|---------|
+| Arquivo                | Tamanho  |
+| ---------------------- | -------- |
 | fbevents.js (Facebook) | 68,3 KiB |
-| react-vendor | 51,0 KiB |
-| QuizPage | 45,3 KiB |
-| ui | 34,4 KiB |
-| gptengineer.js | 28,9 KiB |
-| client | 27,2 KiB |
+| react-vendor           | 51,0 KiB |
+| QuizPage               | 45,3 KiB |
+| ui                     | 34,4 KiB |
+| gptengineer.js         | 28,9 KiB |
+| client                 | 27,2 KiB |
 
 ## Estratégias de Otimização
 
@@ -26,7 +26,11 @@ Para scripts como o Facebook Pixel e analytics, carregue de forma assíncrona e 
 <script src="https://connect.facebook.net/en_US/fbevents.js"></script>
 
 <!-- Depois -->
-<script async defer src="https://connect.facebook.net/en_US/fbevents.js"></script>
+<script
+  async
+  defer
+  src="https://connect.facebook.net/en_US/fbevents.js"
+></script>
 ```
 
 ### 2. Code Splitting
@@ -35,11 +39,11 @@ Dividir o código em chunks menores para carregar sob demanda:
 
 ```tsx
 // Antes - Importação direta
-import { HeavyComponent } from './HeavyComponent';
+import { HeavyComponent } from "./HeavyComponent";
 
 // Depois - Importação dinâmica
-import React, { lazy, Suspense } from 'react';
-const HeavyComponent = lazy(() => import('./HeavyComponent'));
+import React, { lazy, Suspense } from "react";
+const HeavyComponent = lazy(() => import("./HeavyComponent"));
 
 function App() {
   return (
@@ -56,10 +60,10 @@ Importar apenas o necessário de bibliotecas:
 
 ```tsx
 // Ruim - Importa tudo
-import * as Lucide from 'lucide-react';
+import * as Lucide from "lucide-react";
 
 // Bom - Importa apenas componentes específicos
-import { ShoppingCart, Clock } from 'lucide-react';
+import { ShoppingCart, Clock } from "lucide-react";
 ```
 
 ### 4. Lazy Loading de Componentes
@@ -68,8 +72,8 @@ Carregar componentes apenas quando necessário:
 
 ```tsx
 // Em App.tsx
-const QuizPage = lazy(() => import('./pages/QuizPage'));
-const ResultPage = lazy(() => import('./pages/ResultPage'));
+const QuizPage = lazy(() => import("./pages/QuizPage"));
+const ResultPage = lazy(() => import("./pages/ResultPage"));
 ```
 
 ### 5. Diferir Scripts Não Críticos
@@ -92,7 +96,7 @@ npm install --save-dev rollup-plugin-visualizer
 E adicione ao arquivo vite.config.ts:
 
 ```typescript
-import { visualizer } from 'rollup-plugin-visualizer';
+import { visualizer } from "rollup-plugin-visualizer";
 
 export default defineConfig({
   plugins: [
@@ -117,7 +121,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
+          vendor: ["react", "react-dom", "react-router-dom"],
           ui: [
             // Listar componentes da UI que podem ser agrupados
           ],
@@ -134,10 +138,18 @@ Os scripts externos devem ser carregados de forma assíncrona no `index.html`:
 
 ```html
 <!-- Facebook Pixel -->
-<script async defer src="https://connect.facebook.net/en_US/fbevents.js"></script>
+<script
+  async
+  defer
+  src="https://connect.facebook.net/en_US/fbevents.js"
+></script>
 
 <!-- Cloudflare Analytics -->
-<script async defer src="https://static.cloudflareinsights.com/beacon.min.js"></script>
+<script
+  async
+  defer
+  src="https://static.cloudflareinsights.com/beacon.min.js"
+></script>
 
 <!-- GPT Engineer -->
 <script async defer src="https://cdn.gpteng.co/gptengineer.js"></script>

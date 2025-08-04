@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef } from 'react';
-import { useToast } from '@/hooks/use-toast';
+import { useCallback, useEffect, useRef } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 interface UseAutoSaveWithDebounceOptions {
   data: any;
@@ -13,12 +13,12 @@ interface UseAutoSaveWithDebounceOptions {
  * ✅ HOOK DE AUTO-SAVE COM DEBOUNCE - Fase 1
  * Melhoria crítica para evitar salvamentos excessivos
  */
-export const useAutoSaveWithDebounce = ({ 
-  data, 
-  onSave, 
+export const useAutoSaveWithDebounce = ({
+  data,
+  onSave,
   delay = 500, // 500ms debounce - mais responsivo
   enabled = true,
-  showToasts = false
+  showToasts = false,
 }: UseAutoSaveWithDebounceOptions) => {
   const timeoutRef = useRef<NodeJS.Timeout>();
   const lastDataRef = useRef(data);
@@ -27,12 +27,12 @@ export const useAutoSaveWithDebounce = ({
 
   const save = useCallback(async () => {
     if (isSavingRef.current) return; // Evitar múltiplos saves simultâneos
-    
+
     try {
       isSavingRef.current = true;
       await onSave(data);
       lastDataRef.current = data;
-      
+
       if (showToasts) {
         toast({
           title: "Salvamento automático",
@@ -41,8 +41,8 @@ export const useAutoSaveWithDebounce = ({
         });
       }
     } catch (error) {
-      console.error('Auto-save error:', error);
-      
+      console.error("Auto-save error:", error);
+
       if (showToasts) {
         toast({
           title: "Erro no salvamento",
@@ -59,7 +59,7 @@ export const useAutoSaveWithDebounce = ({
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
-    
+
     timeoutRef.current = setTimeout(() => {
       save();
     }, delay);
@@ -75,11 +75,11 @@ export const useAutoSaveWithDebounce = ({
 
   useEffect(() => {
     if (!enabled) return;
-    
+
     // Só salvar se os dados realmente mudaram
     const currentDataString = JSON.stringify(data);
     const lastDataString = JSON.stringify(lastDataRef.current);
-    
+
     if (currentDataString !== lastDataString) {
       debouncedSave();
     }
@@ -91,8 +91,8 @@ export const useAutoSaveWithDebounce = ({
     };
   }, [data, enabled, debouncedSave]);
 
-  return { 
-    forceSave, 
-    isSaving: isSavingRef.current 
+  return {
+    forceSave,
+    isSaving: isSavingRef.current,
   };
 };

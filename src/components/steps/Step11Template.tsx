@@ -1,139 +1,140 @@
-import React from 'react';
+import React from "react";
 
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 11 - QUESTÃO 10: TECIDOS (REAL)
 export const getStep11Template = () => [
   {
-    type: 'quiz-intro-header',
+    type: "quiz-intro-header",
     properties: {
-      logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-      logoAlt: 'Logo Gisele Galvão',
+      logoUrl:
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+      logoAlt: "Logo Gisele Galvão",
       logoWidth: 96,
       logoHeight: 96,
       progressValue: 100,
       progressMax: 100,
-      showBackButton: true
-    }
+      showBackButton: true,
+    },
   },
   {
-    type: 'heading-inline',
+    type: "heading-inline",
     properties: {
-      content: 'VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...',
-      level: 'h2',
-      fontSize: 'text-2xl',
-      fontWeight: 'font-bold',
-      textAlign: 'text-center',
-      color: '#432818',
-      marginBottom: 8
-    }
+      content: "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...",
+      level: "h2",
+      fontSize: "text-2xl",
+      fontWeight: "font-bold",
+      textAlign: "text-center",
+      color: "#432818",
+      marginBottom: 8,
+    },
   },
   {
-    type: 'text-inline',
+    type: "text-inline",
     properties: {
-      content: 'Questão 10 de 10',
-      fontSize: 'text-sm',
-      textAlign: 'text-center',
-      color: '#6B7280',
-      marginBottom: 24
-    }
+      content: "Questão 10 de 10",
+      fontSize: "text-sm",
+      textAlign: "text-center",
+      color: "#6B7280",
+      marginBottom: 24,
+    },
   },
   {
-    type: 'options-grid',
+    type: "options-grid",
     properties: {
-      questionId: 'q10',
+      questionId: "q10",
       options: [
-        { 
-          id: "10a", 
+        {
+          id: "10a",
           text: "São fáceis de cuidar",
           value: "10a",
           category: "Natural",
           styleCategory: "Natural",
-          points: 1
+          points: 1,
         },
-        { 
-          id: "10b", 
+        {
+          id: "10b",
           text: "São de excelente qualidade",
           value: "10b",
           category: "Clássico",
           styleCategory: "Clássico",
-          points: 1
+          points: 1,
         },
-        { 
-          id: "10c", 
+        {
+          id: "10c",
           text: "São fáceis de cuidar e modernos",
           value: "10c",
           category: "Contemporâneo",
           styleCategory: "Contemporâneo",
-          points: 1
+          points: 1,
         },
-        { 
-          id: "10d", 
+        {
+          id: "10d",
           text: "São sofisticados",
           value: "10d",
           category: "Elegante",
           styleCategory: "Elegante",
-          points: 1
+          points: 1,
         },
-        { 
-          id: "10e", 
+        {
+          id: "10e",
           text: "São delicados",
           value: "10e",
           category: "Romântico",
           styleCategory: "Romântico",
-          points: 1
+          points: 1,
         },
-        { 
-          id: "10f", 
+        {
+          id: "10f",
           text: "São perfeitos ao meu corpo",
           value: "10f",
           category: "Sexy",
           styleCategory: "Sexy",
-          points: 1
+          points: 1,
         },
-        { 
-          id: "10g", 
+        {
+          id: "10g",
           text: "São diferentes, e trazem um efeito para minha roupa",
           value: "10g",
           category: "Dramático",
           styleCategory: "Dramático",
-          points: 1
+          points: 1,
         },
-        { 
-          id: "10h", 
+        {
+          id: "10h",
           text: "São exclusivos, criam identidade no look",
           value: "10h",
           category: "Criativo",
           styleCategory: "Criativo",
-          points: 1
-        }
+          points: 1,
+        },
       ],
       columns: 1,
       showImages: false,
       multipleSelection: true,
       maxSelections: 3,
       minSelections: 1,
-      validationMessage: 'Selecione até 3 opções',
+      validationMessage: "Selecione até 3 opções",
       gridGap: 12,
       responsiveColumns: true,
       autoAdvanceOnComplete: true,
       autoAdvanceDelay: 800,
       requiredSelections: 3,
       enableButtonOnlyWhenValid: true,
-      showValidationFeedback: true
-    }
+      showValidationFeedback: true,
+    },
   },
   {
-    type: 'button-inline',
+    type: "button-inline",
     properties: {
-      text: 'Finalizar Quiz',
-      variant: 'primary',
-      size: 'large',
+      text: "Finalizar Quiz",
+      variant: "primary",
+      size: "large",
       fullWidth: true,
-      backgroundColor: '#B89B7A',
-      textColor: '#ffffff',
+      backgroundColor: "#B89B7A",
+      textColor: "#ffffff",
       disabled: true,
-      requiresValidSelection: true
-    }
-  }
+      requiresValidSelection: true,
+    },
+  },
 ];
 
 export default getStep11Template;

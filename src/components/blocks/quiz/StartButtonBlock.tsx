@@ -1,9 +1,9 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { cn } from "@/lib/utils";
 
 /**
  * StartButtonBlock - Botão de início isolado para uso no editor visual
- * 
+ *
  * Props editáveis via editor visual:
  * - text: string - Texto do botão
  * - icon: string - Ícone do botão (classe CSS ou nome)
@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
  * - fullWidth: boolean - Se o botão ocupa toda a largura
  * - colors: object - Paleta de cores customizável
  * - onClick: function - Callback ao clicar
- * 
+ *
  * @example
  * <StartButtonBlock
  *   blockId="start-button-main"
@@ -41,10 +41,10 @@ export interface StartButtonBlockProps {
   loading?: boolean;
 
   // Estilo
-  size?: 'sm' | 'md' | 'lg';
-  variant?: 'primary' | 'secondary' | 'outline';
+  size?: "sm" | "md" | "lg";
+  variant?: "primary" | "secondary" | "outline";
   fullWidth?: boolean;
-  alignment?: 'left' | 'center' | 'right';
+  alignment?: "left" | "center" | "right";
 
   // Cores customizáveis
   colors?: {
@@ -58,7 +58,7 @@ export interface StartButtonBlockProps {
   // Funcionalidade
   onClick?: () => void;
   href?: string;
-  target?: '_blank' | '_self';
+  target?: "_blank" | "_self";
 
   // Animações
   enableHoverEffect?: boolean;
@@ -66,38 +66,38 @@ export interface StartButtonBlockProps {
 }
 
 const StartButtonBlock: React.FC<StartButtonBlockProps> = ({
-  blockId = 'start-button-block',
-  className = '',
+  blockId = "start-button-block",
+  className = "",
   style = {},
 
   // Conteúdo padrão
-  text = 'Começar Quiz',
-  icon = '',
-  loadingText = 'Carregando...',
+  text = "Começar Quiz",
+  icon = "",
+  loadingText = "Carregando...",
 
   // Estados
   disabled = false,
   loading = false,
 
   // Estilo
-  size = 'md',
-  variant = 'primary',
+  size = "md",
+  variant = "primary",
   fullWidth = false,
-  alignment = 'center',
+  alignment = "center",
 
   // Cores padrão (iguais ao tema original)
   colors = {
-    primary: '#B89B7A',
-    primaryDark: '#A1835D',
-    text: '#FFFFFF',
-    background: '#FEFEFE',
-    border: '#B89B7A',
+    primary: "#B89B7A",
+    primaryDark: "#A1835D",
+    text: "#FFFFFF",
+    background: "#FEFEFE",
+    border: "#B89B7A",
   },
 
   // Funcionalidade
   onClick,
   href,
-  target = '_self',
+  target = "_self",
 
   // Animações
   enableHoverEffect = true,
@@ -105,29 +105,31 @@ const StartButtonBlock: React.FC<StartButtonBlockProps> = ({
 }) => {
   // Classes de tamanho
   const sizeClasses = {
-    sm: 'py-2 px-4 text-sm',
-    md: 'py-3 px-6 text-base',
-    lg: 'py-4 px-8 text-lg',
+    sm: "py-2 px-4 text-sm",
+    md: "py-3 px-6 text-base",
+    lg: "py-4 px-8 text-lg",
   };
 
   // Classes de alinhamento do container
   const alignmentClasses = {
-    left: 'text-left',
-    center: 'text-center',
-    right: 'text-right',
+    left: "text-left",
+    center: "text-center",
+    right: "text-right",
   };
 
   // Classes base do botão
   const baseClasses = cn(
-    'font-semibold rounded-md shadow-md transition-all duration-300',
-    'focus:outline-none focus:ring-2 focus:ring-offset-2',
-    'inline-flex items-center justify-center gap-2',
+    "font-semibold rounded-md shadow-md transition-all duration-300",
+    "focus:outline-none focus:ring-2 focus:ring-offset-2",
+    "inline-flex items-center justify-center gap-2",
     sizeClasses[size],
-    fullWidth ? 'w-full' : 'w-auto',
-    disabled || loading ? 'cursor-not-allowed opacity-60' : 'cursor-pointer',
-    enableHoverEffect && !disabled && !loading ? 'hover:shadow-lg transform hover:scale-[1.02]' : '',
-    enablePulseEffect && !disabled && !loading ? 'animate-pulse' : '',
-    className
+    fullWidth ? "w-full" : "w-auto",
+    disabled || loading ? "cursor-not-allowed opacity-60" : "cursor-pointer",
+    enableHoverEffect && !disabled && !loading
+      ? "hover:shadow-lg transform hover:scale-[1.02]"
+      : "",
+    enablePulseEffect && !disabled && !loading ? "animate-pulse" : "",
+    className,
   );
 
   // Estilos do botão baseados na variante
@@ -139,7 +141,7 @@ const StartButtonBlock: React.FC<StartButtonBlockProps> = ({
     };
 
     switch (variant) {
-      case 'secondary':
+      case "secondary":
         return {
           ...baseStyle,
           backgroundColor: colors.background,
@@ -147,10 +149,10 @@ const StartButtonBlock: React.FC<StartButtonBlockProps> = ({
           borderColor: colors.border,
           border: `2px solid ${colors.border}`,
         };
-      case 'outline':
+      case "outline":
         return {
           ...baseStyle,
-          backgroundColor: 'transparent',
+          backgroundColor: "transparent",
           color: colors.primary,
           borderColor: colors.border,
           border: `2px solid ${colors.border}`,
@@ -158,9 +160,10 @@ const StartButtonBlock: React.FC<StartButtonBlockProps> = ({
       default: // primary
         return {
           ...baseStyle,
-          backgroundColor: disabled || loading ? `${colors.primary}80` : colors.primary,
+          backgroundColor:
+            disabled || loading ? `${colors.primary}80` : colors.primary,
           color: colors.text,
-          border: 'none',
+          border: "none",
         };
     }
   };
@@ -177,19 +180,31 @@ const StartButtonBlock: React.FC<StartButtonBlockProps> = ({
     }
 
     // Web Vitals reporting
-    if (typeof window !== 'undefined' && 'performance' in window) {
-      window.performance.mark('button-interaction');
+    if (typeof window !== "undefined" && "performance" in window) {
+      window.performance.mark("button-interaction");
     }
   };
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
-    if (variant === 'primary' && enableHoverEffect && !disabled && !loading && colors.primaryDark) {
+    if (
+      variant === "primary" &&
+      enableHoverEffect &&
+      !disabled &&
+      !loading &&
+      colors.primaryDark
+    ) {
       e.currentTarget.style.backgroundColor = colors.primaryDark;
     }
   };
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
-    if (variant === 'primary' && enableHoverEffect && !disabled && !loading && colors.primary) {
+    if (
+      variant === "primary" &&
+      enableHoverEffect &&
+      !disabled &&
+      !loading &&
+      colors.primary
+    ) {
       e.currentTarget.style.backgroundColor = colors.primary;
     }
   };
@@ -206,31 +221,29 @@ const StartButtonBlock: React.FC<StartButtonBlockProps> = ({
       {loading && (
         <span className="flex-shrink-0">
           <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-            <circle 
-              className="opacity-25" 
-              cx="12" 
-              cy="12" 
-              r="10" 
-              stroke="currentColor" 
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
               strokeWidth="4"
             />
-            <path 
-              className="opacity-75" 
-              fill="currentColor" 
+            <path
+              className="opacity-75"
+              fill="currentColor"
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             />
           </svg>
         </span>
       )}
-      <span className="flex-grow">
-        {loading ? loadingText : text}
-      </span>
+      <span className="flex-grow">{loading ? loadingText : text}</span>
     </>
   );
 
   // Container wrapper
   const Container = ({ children }: { children: React.ReactNode }) => (
-    <div 
+    <div
       className={alignmentClasses[alignment]}
       data-block-id={blockId}
       data-component-type="StartButtonBlock"

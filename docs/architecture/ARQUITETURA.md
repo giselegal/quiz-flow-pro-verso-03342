@@ -3,6 +3,7 @@
 ## 🏛️ Visão Geral da Arquitetura
 
 ### Stack Tecnológico
+
 ```
 Frontend: React 18 + TypeScript + Vite
 ├── UI Framework: Tailwind CSS
@@ -18,6 +19,7 @@ Frontend: React 18 + TypeScript + Vite
 ### 1. Editor System (`/client/src/components/editor/`)
 
 #### SchemaDrivenEditorResponsive.tsx
+
 ```typescript
 // Editor principal com responsividade completa
 - Mobile-first design
@@ -30,6 +32,7 @@ Frontend: React 18 + TypeScript + Vite
 ```
 
 #### Hooks Principais
+
 - `useSchemaEditorFixed`: Estado global do editor
 - `useDragAndDrop`: Lógica de arrastar e soltar
 - `useResponsiveLayout`: Adaptação de layout
@@ -37,6 +40,7 @@ Frontend: React 18 + TypeScript + Vite
 ### 2. Block System (`/client/src/components/blocks/`)
 
 #### Hierarquia de Componentes
+
 ```
 blocks/
 ├── quiz/                    # Componentes de quiz
@@ -61,6 +65,7 @@ blocks/
 ### 3. UI Components (`/client/src/components/ui/`)
 
 #### Design System
+
 ```typescript
 // Componentes base reutilizáveis
 - Button: Variações primary/secondary/outline
@@ -74,21 +79,22 @@ blocks/
 ## 🔄 Fluxo de Dados
 
 ### 1. Estado Global
+
 ```typescript
 interface EditorState {
   // Projeto atual
   currentProject: Project | null;
-  
+
   // Blocos ativos
   blocks: Block[];
-  
+
   // Configurações do editor
   editorSettings: {
-    viewMode: 'mobile' | 'tablet' | 'desktop';
+    viewMode: "mobile" | "tablet" | "desktop";
     sidebarOpen: boolean;
     previewMode: boolean;
   };
-  
+
   // Estados de UI
   isDragging: boolean;
   selectedBlockId: string | null;
@@ -97,6 +103,7 @@ interface EditorState {
 ```
 
 ### 2. Sistema de Persistência v2.0
+
 ```typescript
 // Dual storage para compatibilidade
 localStorage keys:
@@ -107,6 +114,7 @@ localStorage keys:
 ```
 
 ### 3. Fluxo de Salvamento
+
 ```
 User Action → State Update → Auto-save (3s delay) → localStorage
                           ↓
@@ -118,32 +126,20 @@ User Action → State Update → Auto-save (3s delay) → localStorage
 ## 🎨 Sistema de Design
 
 ### 1. Tokens de Design
+
 ```css
 /* Cores principais */
---primary-brown: #432818
---secondary-beige: #B89B7A
---background-light: #F9F5F1
---background-white: #ffffff
-
-/* Tipografia */
---font-primary: Inter, system-ui
---font-weights: 400, 500, 600, 700
-
-/* Espaçamentos */
---spacing-xs: 4px
---spacing-sm: 8px
---spacing-md: 16px
---spacing-lg: 24px
---spacing-xl: 32px
-
-/* Border radius */
---radius-sm: 4px
---radius-md: 8px
---radius-lg: 12px
---radius-full: 9999px
+--primary-brown:
+  #432818 --secondary-beige: #b89b7a --background-light: #f9f5f1
+    --background-white: #ffffff /* Tipografia */ --font-primary: Inter,
+  system-ui --font-weights: 400, 500, 600,
+  700 /* Espaçamentos */ --spacing-xs: 4px --spacing-sm: 8px --spacing-md: 16px
+    --spacing-lg: 24px --spacing-xl: 32px /* Border radius */ --radius-sm: 4px
+    --radius-md: 8px --radius-lg: 12px --radius-full: 9999px;
 ```
 
 ### 2. Breakpoints Responsivos
+
 ```css
 /* Mobile first approach */
 sm: 640px   /* Mobile landscape */
@@ -155,6 +151,7 @@ xl: 1280px  /* Large desktop */
 ## 🧩 Extensibilidade
 
 ### 1. Criação de Novos Blocos
+
 ```typescript
 // 1. Definir tipo no sistema
 export type NewBlockType = 'my-custom-block';
@@ -180,41 +177,44 @@ case 'my-custom-block':
 ```
 
 ### 2. Propriedades Dinâmicas
+
 ```typescript
 // Sistema automático de propriedades baseado no content
 interface BlockContent {
   // Propriedades são inferidas automaticamente
-  text?: string;          // → Text input
-  alignment?: Alignment;  // → Select dropdown
-  style?: BlockStyle;     // → Style panel
-  imageUrl?: string;      // → Image uploader
+  text?: string; // → Text input
+  alignment?: Alignment; // → Select dropdown
+  style?: BlockStyle; // → Style panel
+  imageUrl?: string; // → Image uploader
 }
 ```
 
 ## 🔧 Sistema de Build
 
 ### 1. Configuração Vite
+
 ```javascript
 // vite.config.ts
 export default defineConfig({
   plugins: [react()],
   server: { port: 5000 },
   build: {
-    target: 'esnext',
+    target: "esnext",
     sourcemap: true,
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          editor: ['@dnd-kit/core', '@dnd-kit/sortable']
-        }
-      }
-    }
-  }
+          vendor: ["react", "react-dom"],
+          editor: ["@dnd-kit/core", "@dnd-kit/sortable"],
+        },
+      },
+    },
+  },
 });
 ```
 
 ### 2. Otimizações
+
 - **Code splitting**: Componentes carregados sob demanda
 - **Tree shaking**: Eliminação de código não utilizado
 - **Bundle analysis**: Otimização de tamanho
@@ -223,17 +223,19 @@ export default defineConfig({
 ## 🔍 Debugging e Monitoring
 
 ### 1. Debug Tools
+
 ```typescript
 // Console helpers disponíveis globalmente
 window.editorDebug = {
   getState: () => editorState,
   exportProject: () => JSON.stringify(currentProject),
   clearStorage: () => localStorage.clear(),
-  logBlocks: () => console.table(blocks)
+  logBlocks: () => console.table(blocks),
 };
 ```
 
 ### 2. Error Boundaries
+
 ```typescript
 // Captura de erros em componentes
 <ErrorBoundary fallback={<ErrorFallback />}>
@@ -244,12 +246,14 @@ window.editorDebug = {
 ## 📊 Performance
 
 ### 1. Métricas
+
 - **Lighthouse Score**: 90+ em todas as categorias
 - **Bundle Size**: < 500KB gzipped
 - **Load Time**: < 2s em 3G
 - **First Paint**: < 1s
 
 ### 2. Otimizações Implementadas
+
 - **Lazy loading**: Componentes e imagens
 - **Memoization**: React.memo nos componentes
 - **Virtual scrolling**: Para listas grandes
@@ -258,12 +262,14 @@ window.editorDebug = {
 ## 🚀 Deploy e CI/CD
 
 ### 1. Build Process
+
 ```bash
 npm run build     # → dist/ folder
 npm run preview   # Test build locally
 ```
 
 ### 2. Environment Variables
+
 ```env
 VITE_API_URL=https://api.example.com
 VITE_CLOUDINARY_URL=https://cloudinary.com
@@ -273,14 +279,16 @@ VITE_ENV=production
 ## 🔮 Roadmap Técnico
 
 ### Próximas Melhorias
+
 - [ ] **PWA Support**: Service workers + cache offline
-- [ ] **Real-time Collaboration**: WebSockets + operational transforms  
+- [ ] **Real-time Collaboration**: WebSockets + operational transforms
 - [ ] **Plugin System**: API para extensões de terceiros
 - [ ] **Advanced Analytics**: Tracking detalhado de uso
 - [ ] **Export Options**: PDF, HTML, JSON
 - [ ] **Theme System**: Múltiplos temas visuais
 
 ### Melhorias de Performance
+
 - [ ] **Web Workers**: Processamento pesado em background
 - [ ] **CDN Integration**: Assets otimizados
 - [ ] **GraphQL**: Query otimizada de dados

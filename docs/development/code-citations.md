@@ -1,22 +1,23 @@
 # Code Citations
 
 ## License: CC0-1.0
+
 https://github.com/kitcharoenp/kitcharoenp.github.io/blob/55e1cdd731062657486721bd6f2c3741430777a5/_posts/2021-09-08-mariadb-maxscale.md
 
 ```
 ────────────┴─────────────
 ```
 
-
 ## License: CC0-1.0
+
 https://github.com/kitcharoenp/kitcharoenp.github.io/blob/55e1cdd731062657486721bd6f2c3741430777a5/_posts/2021-09-08-mariadb-maxscale.md
 
 ```
 ────────────┴─────────────────┴─────────────────┘
 ```
 
-
 ## License: CC0-1.0
+
 https://github.com/kitcharoenp/kitcharoenp.github.io/blob/55e1cdd731062657486721bd6f2c3741430777a5/_posts/2021-09-08-mariadb-maxscale.md
 
 ```
@@ -24,18 +25,22 @@ https://github.com/kitcharoenp/kitcharoenp.github.io/blob/55e1cdd731062657486721
 ```
 
 ###
+
 # Estimativa de Desenvolvimento - Editor Visual Completo
 
 ## 🎯 **Editor Básico Funcional (já temos ~70%)**
+
 **Tempo restante: 2-3 dias**
 
 ### Funcionalidades atuais:
+
 - ✅ Layout com sidebars
 - ✅ Preview em tempo real
 - ✅ Controles básicos (cores, tipografia)
 - ✅ Sistema de salvamento
 
 ### Para completar:
+
 - 🔨 Melhorar drag & drop (4-6h)
 - 🔨 Adicionar mais componentes (6-8h)
 - 🔨 Polish da interface (4-6h)
@@ -43,9 +48,11 @@ https://github.com/kitcharoenp/kitcharoenp.github.io/blob/55e1cdd731062657486721
 ---
 
 ## 🚀 **Editor Avançado (nível Cakto)**
+
 **Tempo total: 2-3 semanas**
 
 ### Semana 1: Core Features (40h)
+
 ```
 ┌─────────────────────────────────────────────┐
 │ • Sistema de etapas multi-step       (8h)  │
@@ -57,6 +64,7 @@ https://github.com/kitcharoenp/kitcharoenp.github.io/blob/55e1cdd731062657486721
 ```
 
 ### Semana 2: Advanced Features (40h)
+
 ```
 ┌─────────────────────────────────────────────┐
 │ • Sistema de templates               (10h) │
@@ -68,6 +76,7 @@ https://github.com/kitcharoenp/kitcharoenp.github.io/blob/55e1cdd731062657486721
 ```
 
 ### Semana 3: Polish & Extras (30h)
+
 ```
 ┌─────────────────────────────────────────────┐
 │ • UI/UX refinements                  (10h) │
@@ -80,9 +89,11 @@ https://github.com/kitcharoenp/kitcharoenp.github.io/blob/55e1cdd731062657486721
 ---
 
 ## ⚡ **Versão MVP Rápida**
+
 **Tempo: 3-5 dias**
 
 ### Foco em essenciais:
+
 - 🎯 5-8 componentes principais
 - 🎯 Drag & drop funcional
 - 🎯 Preview em tempo real
@@ -94,12 +105,14 @@ https://github.com/kitcharoenp/kitcharoenp.github.io/blob/55e1cdd731062657486721
 ## 📊 **Fatores que impactam o tempo:**
 
 ### ✅ **Aceleram o desenvolvimento:**
+
 - Base React/TypeScript já pronta
 - Componentes UI (shadcn) implementados
 - Sistema de estados funcionando
 - Preview já funcional
 
 ### ⚠️ **Podem atrasar:**
+
 - Complexidade do drag & drop
 - Performance com muitos componentes
 - Cross-browser compatibility
@@ -111,6 +124,7 @@ https://github.com/kitcharoenp/kitcharoenp.github.io/blob/55e1cdd731062657486721
 ## 🛠️ **Recomendação:**
 
 ### **Abordagem Incremental:**
+
 ```typescript
 // Fase 1 (2-3 dias): Editor Básico Melhorado
 ✅ Drag & drop aprimorado
@@ -132,6 +146,7 @@ https://github.com/kitcharoenp/kitcharoenp.github.io/blob/55e1cdd731062657486721
 ```
 
 ### **Cronograma Realista:**
+
 - **MVP Funcional**: 3-5 dias
 - **Versão Profissional**: 2-3 semanas
 - **Versão Enterprise**: 1-2 meses
@@ -141,9 +156,9 @@ https://github.com/kitcharoenp/kitcharoenp.github.io/blob/55e1cdd731062657486721
 ## 💡 **Conclusão:**
 
 Para um **editor funcional e profissional** similar ao Cakto Quiz:
+
 - **Mínimo viável**: 1 semana
 - **Versão completa**: 3 semanas
 - **Version enterprise**: 6-8 semanas
 
 **Considerando nossa base atual, podemos ter algo impressionante em 2-3 semanas! 🚀**
-

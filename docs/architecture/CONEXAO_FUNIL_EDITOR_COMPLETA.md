@@ -9,7 +9,8 @@ O template de 21 etapas para descoberta de estilo pessoal foi totalmente impleme
 ### 🔗 **Conexão Funil ↔ Editor**
 
 #### **1. Painel Administrativo (`FunnelPanelPage.tsx`)**
-- ✅ Template "Quiz Completo: Descoberta de Estilo Pessoal (21 Etapas)" 
+
+- ✅ Template "Quiz Completo: Descoberta de Estilo Pessoal (21 Etapas)"
 - ✅ Descrição detalhada: "Funil profissional completo com 21 etapas otimizadas..."
 - ✅ Tags: `['profissional', 'completo', 'personalidade', 'conversão', 'pronto-uso']`
 - ✅ Badge "PRINCIPAL" destacando o template
@@ -17,11 +18,13 @@ O template de 21 etapas para descoberta de estilo pessoal foi totalmente impleme
 - ✅ Funcionalidade de duplicação para criar cópias personalizadas
 
 #### **2. Roteamento (`App.tsx`)**
+
 - ✅ Rota `/editor/:id` configurada
 - ✅ `SchemaDrivenEditorPage` recebe o `funnelId` como parâmetro
 - ✅ Passa o `funnelId` para `SchemaDrivenEditorResponsive`
 
 #### **3. Editor (`SchemaDrivenEditorResponsive.tsx`)**
+
 - ✅ **NOVO**: Importação do `schemaDrivenFunnelService`
 - ✅ **NOVO**: Hook `useEffect` para carregar dados do funil
 - ✅ **NOVO**: Estado `isLoadingFunnel` com indicador visual
@@ -32,6 +35,7 @@ O template de 21 etapas para descoberta de estilo pessoal foi totalmente impleme
 - ✅ **NOVO**: Título dinâmico mostrando o ID do funil
 
 #### **4. Serviço de Dados (`schemaDrivenFunnelService.ts`)**
+
 - ✅ Template completo com 21 etapas pré-configuradas
 - ✅ ID fixo: `default-quiz-funnel-21-steps`
 - ✅ 10 questões principais + perguntas estratégicas + resultado + oferta
@@ -59,7 +63,7 @@ O template de 21 etapas para descoberta de estilo pessoal foi totalmente impleme
   description: 'Funil completo para descoberta do estilo pessoal - 21 etapas modulares',
   pages: [
     // Etapa 1: Introdução + coleta de nome
-    // Etapas 2-11: 10 questões principais  
+    // Etapas 2-11: 10 questões principais
     // Etapa 12: Transição principal
     // Etapas 13-17: Perguntas estratégicas
     // Etapa 18: Transição final

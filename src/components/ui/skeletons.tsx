@@ -1,6 +1,6 @@
 // Loading skeletons universais
-import React from 'react';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { cn } from "@/lib/utils";
 
 interface SkeletonProps {
   className?: string;

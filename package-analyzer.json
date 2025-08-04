@@ -47,10 +47,7 @@
         "tailwindcss"
       ],
       "state": [],
-      "build": [
-        "@vitejs/plugin-react",
-        "vite"
-      ],
+      "build": ["@vitejs/plugin-react", "vite"],
       "database": [
         "@neondatabase/serverless",
         "@supabase/supabase-js",

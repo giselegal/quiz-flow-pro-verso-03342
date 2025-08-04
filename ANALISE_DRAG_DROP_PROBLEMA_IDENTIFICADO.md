@@ -3,6 +3,7 @@
 ## 📋 **SITUAÇÃO ATUAL IDENTIFICADA**
 
 ### **1. PROBLEMA PRINCIPAL**
+
 O drag-and-drop não está funcionando corretamente porque existe uma **inconsistência na implementação** entre os dois editores:
 
 - **`/editor`** (SchemaDrivenEditorResponsive): Usa `ComponentsSidebar` **simples com BOTÕES**
@@ -11,21 +12,25 @@ O drag-and-drop não está funcionando corretamente porque existe uma **inconsis
 ### **2. COMPONENTES PROBLEMÁTICOS IDENTIFICADOS**
 
 #### **❌ /editor (SchemaDrivenEditorResponsive)**
+
 ```tsx
 // src/components/editor/SchemaDrivenEditorResponsive.tsx
 <ComponentsSidebar onComponentSelect={addBlock} />
 ```
 
 #### **✅ /editor-fixed (EditorFixedPageWithDragDrop)**
+
 ```tsx
 // src/pages/editor-fixed-dragdrop.tsx
-<EnhancedComponentsSidebar />  // Tem DraggableComponentItem
+<EnhancedComponentsSidebar /> // Tem DraggableComponentItem
 ```
 
 ### **3. ANÁLISE DOS COMPONENTES**
 
 #### **ComponentsSidebar (SIMPLES - SEM DRAG-AND-DROP)**
+
 📍 Arquivo: `src/components/editor/sidebar/ComponentsSidebar.tsx`
+
 ```tsx
 // ❌ Usando BOTÕES ao invés de drag-and-drop
 <Button onClick={() => onComponentSelect(component.type)}>
@@ -35,7 +40,9 @@ O drag-and-drop não está funcionando corretamente porque existe uma **inconsis
 ```
 
 #### **EnhancedComponentsSidebar (AVANÇADO - COM DRAG-AND-DROP)**
+
 📍 Arquivo: `src/components/editor/EnhancedComponentsSidebar.tsx`
+
 ```tsx
 // ✅ Usando DraggableComponentItem
 <DraggableComponentItem
@@ -52,20 +59,26 @@ O drag-and-drop não está funcionando corretamente porque existe uma **inconsis
 ### **4. SISTEMA DE DRAG-AND-DROP FUNCIONANDO**
 
 #### **DndProvider** ✅ Configurado corretamente
+
 📍 Arquivo: `src/components/editor/dnd/DndProvider.tsx`
+
 - ✅ Sensores configurados (PointerSensor, TouchSensor)
 - ✅ Collision detection ativa
 - ✅ Eventos handleDragStart, handleDragOver, handleDragEnd
 - ✅ Debug logs funcionando
 
 #### **DraggableComponentItem** ✅ Configurado corretamente
+
 📍 Arquivo: `src/components/editor/dnd/DraggableComponentItem.tsx`
+
 - ✅ useDraggable configurado
 - ✅ Data type: 'sidebar-component'
 - ✅ Feedback visual durante drag
 
 #### **CanvasDropZone** ✅ Configurado corretamente
+
 📍 Arquivo: `src/components/editor/canvas/CanvasDropZone.tsx`
+
 - ✅ useDroppable configurado
 - ✅ Data type: 'canvas-drop-zone'
 - ✅ SortableContext para reordenação
@@ -73,37 +86,42 @@ O drag-and-drop não está funcionando corretamente porque existe uma **inconsis
 ### **5. SOLUÇÃO NECESSÁRIA**
 
 #### **PROBLEMA ROOT CAUSE:**
+
 O `/editor` (SchemaDrivenEditorResponsive) está usando o **ComponentsSidebar ERRADO** - o que tem botões simples ao invés de drag-and-drop.
 
 #### **SOLUÇÃO:**
+
 Substituir `ComponentsSidebar` por `EnhancedComponentsSidebar` no `SchemaDrivenEditorResponsive.tsx`
 
 ## 🔧 **IMPLEMENTAÇÃO DA CORREÇÃO**
 
 ### **PASSO 1: Corrigir SchemaDrivenEditorResponsive**
+
 ```tsx
 // ANTES ❌
-import { ComponentsSidebar } from './sidebar/ComponentsSidebar';
+import { ComponentsSidebar } from "./sidebar/ComponentsSidebar";
 
-// DEPOIS ✅  
-import EnhancedComponentsSidebar from './EnhancedComponentsSidebar';
+// DEPOIS ✅
+import EnhancedComponentsSidebar from "./EnhancedComponentsSidebar";
 ```
 
 ### **PASSO 2: Integrar DndProvider**
+
 O `SchemaDrivenEditorResponsive` precisa ser envolvido com `DndProvider` para funcionar corretamente.
 
 ### **PASSO 3: Sincronizar Schema Integration**
+
 Garantir que os eventos do DndProvider sejam integrados com o sistema de schemas existente.
 
 ## 📊 **COMPARAÇÃO FINAL**
 
-| **Aspecto** | **SchemaDrivenEditorResponsive (/editor)** | **EditorFixedPageWithDragDrop (/editor-fixed)** |
-|-------------|---------------------------------------------|--------------------------------------------------|
-| **Sidebar** | ❌ ComponentsSidebar (botões) | ✅ EnhancedComponentsSidebar (drag-drop) |
-| **DndProvider** | ❌ Não envolvido | ✅ Envolvido corretamente |
-| **Canvas** | ✅ EditorCanvas (DndContext local) | ✅ CanvasDropZone (Integrado) |
-| **Schema** | ✅ Integrado | ✅ Integrado |
-| **Drag&Drop** | ❌ NÃO FUNCIONA | ✅ FUNCIONA |
+| **Aspecto**     | **SchemaDrivenEditorResponsive (/editor)** | **EditorFixedPageWithDragDrop (/editor-fixed)** |
+| --------------- | ------------------------------------------ | ----------------------------------------------- |
+| **Sidebar**     | ❌ ComponentsSidebar (botões)              | ✅ EnhancedComponentsSidebar (drag-drop)        |
+| **DndProvider** | ❌ Não envolvido                           | ✅ Envolvido corretamente                       |
+| **Canvas**      | ✅ EditorCanvas (DndContext local)         | ✅ CanvasDropZone (Integrado)                   |
+| **Schema**      | ✅ Integrado                               | ✅ Integrado                                    |
+| **Drag&Drop**   | ❌ NÃO FUNCIONA                            | ✅ FUNCIONA                                     |
 
 ## 🎯 **PLANO DE AÇÃO**
 

@@ -1,5 +1,5 @@
-import React from 'react';
-import { EditableContent } from '@/types/editor';
+import React from "react";
+import { EditableContent } from "@/types/editor";
 
 interface SpacerBlockProps {
   content: EditableContent;
@@ -12,15 +12,18 @@ export const SpacerBlock: React.FC<SpacerBlockProps> = ({
   content,
   isSelected,
   onContentChange,
-  onClick
+  onClick,
 }) => {
   // Convert height to string if it's a number
-  const height = typeof content.height === 'number' ? `${content.height}px` : (content.height || '40px');
+  const height =
+    typeof content.height === "number"
+      ? `${content.height}px`
+      : content.height || "40px";
 
   return (
     <div
       className={`w-full border border-dashed border-gray-300 rounded cursor-pointer hover:border-gray-400 transition-colors ${
-        isSelected ? 'border-blue-500 bg-blue-50' : 'bg-gray-50'
+        isSelected ? "border-blue-500 bg-blue-50" : "bg-gray-50"
       }`}
       style={{ height }}
       onClick={onClick}

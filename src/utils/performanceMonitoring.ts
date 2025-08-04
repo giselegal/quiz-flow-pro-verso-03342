@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 // Performance monitoring e analytics
 interface PerformanceMetrics {
@@ -12,7 +12,7 @@ interface PerformanceMetrics {
 
 interface AnalyticsEvent {
   name: string;
-  category: 'performance' | 'user' | 'error' | 'bundle';
+  category: "performance" | "user" | "error" | "bundle";
   data: Record<string, any>;
   timestamp: number;
 }
@@ -25,7 +25,7 @@ class PerformanceMonitor {
     loadTime: 0,
     bundleSize: 0,
     renderTime: 0,
-    interactionTime: 0
+    interactionTime: 0,
   };
   private events: AnalyticsEvent[] = [];
   private isMonitoring = false;
@@ -43,22 +43,22 @@ class PerformanceMonitor {
 
     // FPS monitoring
     this.monitorFPS();
-    
+
     // Memory monitoring
     this.monitorMemory();
-    
+
     // Bundle size monitoring
     this.monitorBundleSize();
-    
+
     // Core Web Vitals
     this.monitorWebVitals();
 
-    console.log('🚀 Performance monitoring started');
+    console.log("🚀 Performance monitoring started");
   }
 
   stopMonitoring() {
     this.isMonitoring = false;
-    console.log('⏹️ Performance monitoring stopped');
+    console.log("⏹️ Performance monitoring stopped");
   }
 
   private monitorFPS() {
@@ -68,11 +68,13 @@ class PerformanceMonitor {
     const countFrame = () => {
       frames++;
       const currentTime = performance.now();
-      
+
       if (currentTime >= lastTime + 1000) {
-        this.metrics.fps = Math.round((frames * 1000) / (currentTime - lastTime));
-        this.trackEvent('fps-update', 'performance', { fps: this.metrics.fps });
-        
+        this.metrics.fps = Math.round(
+          (frames * 1000) / (currentTime - lastTime),
+        );
+        this.trackEvent("fps-update", "performance", { fps: this.metrics.fps });
+
         frames = 0;
         lastTime = currentTime;
       }
@@ -86,20 +88,21 @@ class PerformanceMonitor {
   }
 
   private monitorMemory() {
-    if (!('memory' in performance)) return;
+    if (!("memory" in performance)) return;
 
     const checkMemory = () => {
       const memory = (performance as any).memory;
-      const usagePercent = (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100;
-      
+      const usagePercent =
+        (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100;
+
       this.metrics.memoryUsage = usagePercent;
-      
+
       if (usagePercent > 80) {
-        this.trackEvent('high-memory-usage', 'performance', {
+        this.trackEvent("high-memory-usage", "performance", {
           usage: usagePercent,
           usedHeap: memory.usedJSHeapSize,
           totalHeap: memory.totalJSHeapSize,
-          limit: memory.jsHeapSizeLimit
+          limit: memory.jsHeapSizeLimit,
         });
       }
     };
@@ -108,53 +111,64 @@ class PerformanceMonitor {
   }
 
   private monitorBundleSize() {
-    if (!('getEntriesByType' in performance)) return;
+    if (!("getEntriesByType" in performance)) return;
 
-    const resources = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
-    const jsResources = resources.filter(r => r.name.includes('.js'));
-    
-    const totalSize = jsResources.reduce((total, resource) => total + resource.transferSize, 0);
+    const resources = performance.getEntriesByType(
+      "resource",
+    ) as PerformanceResourceTiming[];
+    const jsResources = resources.filter((r) => r.name.includes(".js"));
+
+    const totalSize = jsResources.reduce(
+      (total, resource) => total + resource.transferSize,
+      0,
+    );
     this.metrics.bundleSize = totalSize;
 
-    this.trackEvent('bundle-size', 'performance', {
+    this.trackEvent("bundle-size", "performance", {
       totalSize,
       resourceCount: jsResources.length,
-      resources: jsResources.map(r => ({
+      resources: jsResources.map((r) => ({
         name: r.name,
         size: r.transferSize,
-        loadTime: r.responseEnd - r.fetchStart
-      }))
+        loadTime: r.responseEnd - r.fetchStart,
+      })),
     });
   }
 
   private monitorWebVitals() {
     // Largest Contentful Paint (LCP)
-    if ('PerformanceObserver' in window) {
+    if ("PerformanceObserver" in window) {
       const lcpObserver = new PerformanceObserver((list) => {
         const entries = list.getEntries();
         const lastEntry = entries[entries.length - 1];
-        
-        this.trackEvent('lcp', 'performance', {
+
+        this.trackEvent("lcp", "performance", {
           value: lastEntry.startTime,
-          rating: lastEntry.startTime > 4000 ? 'poor' : lastEntry.startTime > 2500 ? 'needs-improvement' : 'good'
+          rating:
+            lastEntry.startTime > 4000
+              ? "poor"
+              : lastEntry.startTime > 2500
+                ? "needs-improvement"
+                : "good",
         });
       });
 
-      lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+      lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] });
 
       // First Input Delay (FID)
       const fidObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
           const fid = (entry as any).processingStart - entry.startTime;
-          
-          this.trackEvent('fid', 'performance', {
+
+          this.trackEvent("fid", "performance", {
             value: fid,
-            rating: fid > 300 ? 'poor' : fid > 100 ? 'needs-improvement' : 'good'
+            rating:
+              fid > 300 ? "poor" : fid > 100 ? "needs-improvement" : "good",
           });
         }
       });
 
-      fidObserver.observe({ entryTypes: ['first-input'] });
+      fidObserver.observe({ entryTypes: ["first-input"] });
 
       // Cumulative Layout Shift (CLS)
       let clsValue = 0;
@@ -164,23 +178,32 @@ class PerformanceMonitor {
             clsValue += (entry as any).value;
           }
         }
-        
-        this.trackEvent('cls', 'performance', {
+
+        this.trackEvent("cls", "performance", {
           value: clsValue,
-          rating: clsValue > 0.25 ? 'poor' : clsValue > 0.1 ? 'needs-improvement' : 'good'
+          rating:
+            clsValue > 0.25
+              ? "poor"
+              : clsValue > 0.1
+                ? "needs-improvement"
+                : "good",
         });
       });
 
-      clsObserver.observe({ entryTypes: ['layout-shift'] });
+      clsObserver.observe({ entryTypes: ["layout-shift"] });
     }
   }
 
-  trackEvent(name: string, category: AnalyticsEvent['category'], data: Record<string, any>) {
+  trackEvent(
+    name: string,
+    category: AnalyticsEvent["category"],
+    data: Record<string, any>,
+  ) {
     const event: AnalyticsEvent = {
       name,
       category,
       data,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     this.events.push(event);
@@ -191,18 +214,21 @@ class PerformanceMonitor {
     }
 
     // Log critical events
-    if (category === 'error' || (category === 'performance' && this.isCriticalMetric(name, data))) {
+    if (
+      category === "error" ||
+      (category === "performance" && this.isCriticalMetric(name, data))
+    ) {
       console.warn(`[Performance] ${name}:`, data);
     }
   }
 
   private isCriticalMetric(name: string, data: any): boolean {
     return (
-      (name === 'fps-update' && data.fps < 30) ||
-      (name === 'high-memory-usage' && data.usage > 90) ||
-      (name === 'lcp' && data.rating === 'poor') ||
-      (name === 'fid' && data.rating === 'poor') ||
-      (name === 'cls' && data.rating === 'poor')
+      (name === "fps-update" && data.fps < 30) ||
+      (name === "high-memory-usage" && data.usage > 90) ||
+      (name === "lcp" && data.rating === "poor") ||
+      (name === "fid" && data.rating === "poor") ||
+      (name === "cls" && data.rating === "poor")
     );
   }
 
@@ -210,9 +236,9 @@ class PerformanceMonitor {
     return { ...this.metrics };
   }
 
-  getEvents(category?: AnalyticsEvent['category']): AnalyticsEvent[] {
-    return category 
-      ? this.events.filter(event => event.category === category)
+  getEvents(category?: AnalyticsEvent["category"]): AnalyticsEvent[] {
+    return category
+      ? this.events.filter((event) => event.category === category)
       : [...this.events];
   }
 
@@ -224,8 +250,8 @@ class PerformanceMonitor {
       userAgent: navigator.userAgent,
       viewport: {
         width: window.innerWidth,
-        height: window.innerHeight
-      }
+        height: window.innerHeight,
+      },
     };
   }
 
@@ -233,41 +259,46 @@ class PerformanceMonitor {
   generateReport() {
     const metrics = this.getMetrics();
     const events = this.getEvents();
-    
+
     const report = {
       summary: {
         fps: metrics.fps,
         memoryUsage: metrics.memoryUsage,
         bundleSize: Math.round(metrics.bundleSize / 1024), // KB
-        overallScore: this.calculateScore(metrics)
+        overallScore: this.calculateScore(metrics),
       },
       issues: this.findIssues(events),
-      recommendations: this.getRecommendations(metrics, events)
+      recommendations: this.getRecommendations(metrics, events),
     };
 
-    console.log('📊 Performance Report:', report);
+    console.log("📊 Performance Report:", report);
     return report;
   }
 
   private calculateScore(metrics: PerformanceMetrics): number {
     let score = 100;
-    
-    if (metrics.fps < 60) score -= (60 - metrics.fps);
-    if (metrics.memoryUsage > 50) score -= (metrics.memoryUsage - 50);
-    if (metrics.bundleSize > 500000) score -= Math.round((metrics.bundleSize - 500000) / 10000);
-    
+
+    if (metrics.fps < 60) score -= 60 - metrics.fps;
+    if (metrics.memoryUsage > 50) score -= metrics.memoryUsage - 50;
+    if (metrics.bundleSize > 500000)
+      score -= Math.round((metrics.bundleSize - 500000) / 10000);
+
     return Math.max(0, score);
   }
 
   private findIssues(events: AnalyticsEvent[]): string[] {
     const issues = [];
-    
-    const highMemoryEvents = events.filter(e => e.name === 'high-memory-usage');
+
+    const highMemoryEvents = events.filter(
+      (e) => e.name === "high-memory-usage",
+    );
     if (highMemoryEvents.length > 0) {
       issues.push(`Memory usage exceeded 80% ${highMemoryEvents.length} times`);
     }
 
-    const lowFpsEvents = events.filter(e => e.name === 'fps-update' && e.data.fps < 30);
+    const lowFpsEvents = events.filter(
+      (e) => e.name === "fps-update" && e.data.fps < 30,
+    );
     if (lowFpsEvents.length > 0) {
       issues.push(`FPS dropped below 30 ${lowFpsEvents.length} times`);
     }
@@ -275,21 +306,28 @@ class PerformanceMonitor {
     return issues;
   }
 
-  private getRecommendations(metrics: PerformanceMetrics, events: AnalyticsEvent[]): string[] {
+  private getRecommendations(
+    metrics: PerformanceMetrics,
+    events: AnalyticsEvent[],
+  ): string[] {
     const recommendations = [];
-    
+
     if (metrics.fps < 45) {
-      recommendations.push('Consider implementing React.memo for heavy components');
+      recommendations.push(
+        "Consider implementing React.memo for heavy components",
+      );
     }
-    
+
     if (metrics.memoryUsage > 70) {
-      recommendations.push('Review component cleanup and event listener removal');
+      recommendations.push(
+        "Review component cleanup and event listener removal",
+      );
     }
-    
+
     if (metrics.bundleSize > 1000000) {
-      recommendations.push('Implement code splitting and lazy loading');
+      recommendations.push("Implement code splitting and lazy loading");
     }
-    
+
     return recommendations;
   }
 }
@@ -299,7 +337,7 @@ export const usePerformanceMonitoring = () => {
   React.useEffect(() => {
     const monitor = PerformanceMonitor.getInstance();
     monitor.startMonitoring();
-    
+
     return () => monitor.stopMonitoring();
   }, []);
 

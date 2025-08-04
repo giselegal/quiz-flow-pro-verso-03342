@@ -1,15 +1,17 @@
-
-import React from 'react';
-import { motion } from 'framer-motion';
-import { CheckCircle } from 'lucide-react';
-import QuizQuestion from './QuizQuestion';
+import React from "react";
+import { motion } from "framer-motion";
+import { CheckCircle } from "lucide-react";
+import QuizQuestion from "./QuizQuestion";
 
 interface QuizTransitionProps {
   isCompleting: boolean;
   onComplete: () => void;
 }
 
-const QuizTransition: React.FC<QuizTransitionProps> = ({ isCompleting, onComplete }) => {
+const QuizTransition: React.FC<QuizTransitionProps> = ({
+  isCompleting,
+  onComplete,
+}) => {
   React.useEffect(() => {
     if (isCompleting) {
       const timer = setTimeout(() => {
@@ -34,15 +36,13 @@ const QuizTransition: React.FC<QuizTransitionProps> = ({ isCompleting, onComplet
       >
         <CheckCircle className="w-24 h-24 text-green-500" />
       </motion.div>
-      
-      <h2 className="text-2xl font-bold mb-4 text-center">
-        Quiz Concluído!
-      </h2>
-      
+
+      <h2 className="text-2xl font-bold mb-4 text-center">Quiz Concluído!</h2>
+
       <p className="text-gray-600 text-center mb-8">
         Aguarde enquanto preparamos seus resultados...
       </p>
-      
+
       <div className="flex space-x-2">
         {[0, 1, 2].map((i) => (
           <motion.div
@@ -50,12 +50,12 @@ const QuizTransition: React.FC<QuizTransitionProps> = ({ isCompleting, onComplet
             className="w-3 h-3 bg-blue-500 rounded-full"
             animate={{
               scale: [1, 1.2, 1],
-              opacity: [0.5, 1, 0.5]
+              opacity: [0.5, 1, 0.5],
             }}
             transition={{
               duration: 1,
               repeat: Infinity,
-              delay: i * 0.2
+              delay: i * 0.2,
             }}
           />
         ))}

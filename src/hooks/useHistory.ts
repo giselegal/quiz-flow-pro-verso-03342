@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
 export interface HistoryState<T> {
   past: T[];
@@ -10,43 +10,46 @@ export const useHistory = <T>(initialState: T) => {
   const [history, setHistory] = useState<HistoryState<T>>({
     past: [],
     present: initialState,
-    future: []
+    future: [],
   });
 
   const saveState = useCallback((newState: T) => {
-    setHistory(currentHistory => ({
+    setHistory((currentHistory) => ({
       past: [...currentHistory.past, currentHistory.present],
       present: newState,
-      future: []
+      future: [],
     }));
   }, []);
 
   const undo = useCallback(() => {
-    setHistory(currentHistory => {
+    setHistory((currentHistory) => {
       if (currentHistory.past.length === 0) return currentHistory;
-      
+
       const previous = currentHistory.past[currentHistory.past.length - 1];
-      const newPast = currentHistory.past.slice(0, currentHistory.past.length - 1);
-      
+      const newPast = currentHistory.past.slice(
+        0,
+        currentHistory.past.length - 1,
+      );
+
       return {
         past: newPast,
         present: previous,
-        future: [currentHistory.present, ...currentHistory.future]
+        future: [currentHistory.present, ...currentHistory.future],
       };
     });
   }, []);
 
   const redo = useCallback(() => {
-    setHistory(currentHistory => {
+    setHistory((currentHistory) => {
       if (currentHistory.future.length === 0) return currentHistory;
-      
+
       const next = currentHistory.future[0];
       const newFuture = currentHistory.future.slice(1);
-      
+
       return {
         past: [...currentHistory.past, currentHistory.present],
         present: next,
-        future: newFuture
+        future: newFuture,
       };
     });
   }, []);
@@ -55,7 +58,7 @@ export const useHistory = <T>(initialState: T) => {
     setHistory({
       past: [],
       present: initialState,
-      future: []
+      future: [],
     });
   }, [initialState]);
 
@@ -70,6 +73,6 @@ export const useHistory = <T>(initialState: T) => {
     reset,
     canUndo,
     canRedo,
-    history
+    history,
   };
 };

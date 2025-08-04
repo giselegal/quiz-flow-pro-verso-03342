@@ -1,18 +1,14 @@
 import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { 
-  BlockComponentProps, 
-  Testimonial, 
-  Alignment 
-} from './types';
+import React from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { BlockComponentProps, Testimonial, Alignment } from "./types";
 
 /**
  * TestimonialsGrid - Componente de grade de depoimentos configurável
- * 
+ *
  * Renderiza uma grade responsiva de depoimentos com fotos, nomes, profissões,
  * avaliações em estrelas e textos personalizáveis.
- * 
+ *
  * @example
  * <TestimonialsGrid
  *   title="O que nossas clientes estão dizendo"
@@ -35,22 +31,22 @@ export interface TestimonialsGridProps extends BlockComponentProps {
   title?: string;
   subtitle?: string;
   testimonials: Testimonial[];
-  
+
   // Layout
-  layout?: 'grid' | 'carousel' | 'list';
+  layout?: "grid" | "carousel" | "list";
   columns?: 1 | 2 | 3 | 4;
   alignment?: Alignment;
-  
+
   // Configurações visuais
   showRatings?: boolean;
   showAvatars?: boolean;
   showRoles?: boolean;
   showCompany?: boolean;
-  
+
   // Estilo dos cards
-  cardStyle?: 'elegant' | 'minimal' | 'bordered' | 'shadow';
-  avatarSize?: 'small' | 'medium' | 'large';
-  
+  cardStyle?: "elegant" | "minimal" | "bordered" | "shadow";
+  avatarSize?: "small" | "medium" | "large";
+
   // Configurações responsivas
   mobileColumns?: 1 | 2;
   tabletColumns?: 1 | 2 | 3;
@@ -62,47 +58,47 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = (props) => {
     title = "Depoimentos de Clientes",
     subtitle,
     testimonials,
-    
+
     // Layout
-    layout = 'grid',
+    layout = "grid",
     columns = 3,
-    alignment = 'center',
-    
+    alignment = "center",
+
     // Configurações
     showRatings = true,
     showAvatars = true,
     showRoles = true,
     showCompany = false,
-    
+
     // Estilo
-    cardStyle = 'elegant',
-    avatarSize = 'medium',
-    
+    cardStyle = "elegant",
+    avatarSize = "medium",
+
     // Responsivo
     mobileColumns = 1,
     tabletColumns = 2,
-    
+
     // Props base
-    deviceView = 'desktop',
-    className = '',
+    deviceView = "desktop",
+    className = "",
     style = {},
-    testId = 'testimonials-grid'
+    testId = "testimonials-grid",
   } = props;
 
   // Classes de alinhamento
   const alignmentClasses = {
-    left: 'text-left',
-    center: 'text-center',
-    right: 'text-right'
+    left: "text-left",
+    center: "text-center",
+    right: "text-right",
   };
 
   // Classes de layout da grade
   const getGridClasses = () => {
-    const baseClasses = 'grid gap-6';
-    
-    if (deviceView === 'mobile') {
+    const baseClasses = "grid gap-6";
+
+    if (deviceView === "mobile") {
       return `${baseClasses} grid-cols-${mobileColumns}`;
-    } else if (deviceView === 'tablet') {
+    } else if (deviceView === "tablet") {
       return `${baseClasses} grid-cols-${tabletColumns}`;
     } else {
       return `${baseClasses} grid-cols-${columns}`;
@@ -111,17 +107,21 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = (props) => {
 
   // Classes de estilo do card
   const cardStyleClasses = {
-    elegant: 'bg-white shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300',
-    minimal: 'bg-gray-50 border-none hover:bg-white transition-colors duration-300',
-    bordered: 'bg-white border-2 border-gray-200 hover:border-[#B89B7A] transition-colors duration-300',
-    shadow: 'bg-white shadow-xl border-none hover:shadow-2xl transition-shadow duration-300'
+    elegant:
+      "bg-white shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300",
+    minimal:
+      "bg-gray-50 border-none hover:bg-white transition-colors duration-300",
+    bordered:
+      "bg-white border-2 border-gray-200 hover:border-[#B89B7A] transition-colors duration-300",
+    shadow:
+      "bg-white shadow-xl border-none hover:shadow-2xl transition-shadow duration-300",
   };
 
   // Classes de tamanho do avatar
   const avatarSizeClasses = {
-    small: 'w-12 h-12',
-    medium: 'w-16 h-16',
-    large: 'w-20 h-20'
+    small: "w-12 h-12",
+    medium: "w-16 h-16",
+    large: "w-20 h-20",
   };
 
   // Renderizar estrelas
@@ -132,7 +132,7 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = (props) => {
           <svg
             key={index}
             className={`w-5 h-5 ${
-              index < rating ? 'text-yellow-400' : 'text-gray-300'
+              index < rating ? "text-yellow-400" : "text-gray-300"
             }`}
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -146,8 +146,8 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = (props) => {
 
   // Renderizar um depoimento
   const renderTestimonial = (testimonial: Testimonial, index: number) => (
-    <Card 
-      key={testimonial.id || index} 
+    <Card
+      key={testimonial.id || index}
       className={`${cardStyleClasses[cardStyle]} overflow-hidden`}
       data-testid={`testimonial-${index}`}
     >
@@ -162,55 +162,56 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = (props) => {
               className={`${avatarSizeClasses[avatarSize]} rounded-full object-cover`}
             />
           )}
-          
+
           {/* Info do Cliente */}
           <div className="flex-1">
             <h4 className="font-semibold text-[#432818] text-lg">
               {testimonial.author}
             </h4>
-            
+
             {showRoles && testimonial.role && (
               <p className="text-gray-600 text-sm">
                 {testimonial.role}
-                {showCompany && testimonial.company && ` • ${testimonial.company}`}
+                {showCompany &&
+                  testimonial.company &&
+                  ` • ${testimonial.company}`}
               </p>
             )}
-            
+
             {testimonial.location && (
-              <p className="text-gray-500 text-xs">
-                📍 {testimonial.location}
-              </p>
+              <p className="text-gray-500 text-xs">📍 {testimonial.location}</p>
             )}
           </div>
         </div>
 
         {/* Avaliação */}
         {showRatings && testimonial.rating && (
-          <div className="mb-4">
-            {renderStars(testimonial.rating)}
-          </div>
+          <div className="mb-4">{renderStars(testimonial.rating)}</div>
         )}
 
         {/* Texto do Depoimento */}
         <blockquote className="text-gray-700 leading-relaxed">
-          <span className="text-[#B89B7A] text-4xl font-serif leading-none">"</span>
-          <span className="text-base">
-            {testimonial.text}
+          <span className="text-[#B89B7A] text-4xl font-serif leading-none">
+            "
           </span>
-          <span className="text-[#B89B7A] text-4xl font-serif leading-none">"</span>
+          <span className="text-base">{testimonial.text}</span>
+          <span className="text-[#B89B7A] text-4xl font-serif leading-none">
+            "
+          </span>
         </blockquote>
       </CardContent>
     </Card>
   );
 
-  const containerClasses = getOptimizedContainerClasses(deviceView || "desktop", "tight", "full", className);
+  const containerClasses = getOptimizedContainerClasses(
+    deviceView || "desktop",
+    "tight",
+    "full",
+    className,
+  );
 
   return (
-    <div 
-      className={containerClasses}
-      style={style}
-      data-testid={testId}
-    >
+    <div className={containerClasses} style={style} data-testid={testId}>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         {(title || subtitle) && (
@@ -220,7 +221,7 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = (props) => {
                 {title}
               </h2>
             )}
-            
+
             {subtitle && (
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
                 {subtitle}
@@ -230,32 +231,35 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = (props) => {
         )}
 
         {/* Grid de Depoimentos */}
-        {layout === 'grid' && (
+        {layout === "grid" && (
           <div className={getGridClasses()}>
-            {testimonials.map((testimonial, index) => 
-              renderTestimonial(testimonial, index)
+            {testimonials.map((testimonial, index) =>
+              renderTestimonial(testimonial, index),
             )}
           </div>
         )}
 
         {/* Lista de Depoimentos */}
-        {layout === 'list' && (
+        {layout === "list" && (
           <div className="space-y-2">
-            {testimonials.map((testimonial, index) => 
-              renderTestimonial(testimonial, index)
+            {testimonials.map((testimonial, index) =>
+              renderTestimonial(testimonial, index),
             )}
           </div>
         )}
 
         {/* Carousel de Depoimentos (versão simplificada) */}
-        {layout === 'carousel' && (
+        {layout === "carousel" && (
           <div className="overflow-x-auto">
-            <div className="flex space-x-6 pb-4" style={{ width: 'max-content' }}>
+            <div
+              className="flex space-x-6 pb-4"
+              style={{ width: "max-content" }}
+            >
               {testimonials.map((testimonial, index) => (
-                <div 
+                <div
                   key={testimonial.id || index}
                   className="flex-shrink-0"
-                  style={{ width: deviceView === 'mobile' ? '280px' : '320px' }}
+                  style={{ width: deviceView === "mobile" ? "280px" : "320px" }}
                 >
                   {renderTestimonial(testimonial, index)}
                 </div>
@@ -268,8 +272,16 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = (props) => {
         {testimonials.length > 0 && (
           <div className="mt-12 text-center">
             <div className="inline-flex items-center space-x-2 px-6 py-3 bg-green-50 border border-green-200 rounded-full">
-              <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              <svg
+                className="w-6 h-6 text-green-600"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clipRule="evenodd"
+                />
               </svg>
               <span className="text-green-800 font-semibold">
                 Mais de {testimonials.length * 100}+ clientes satisfeitas

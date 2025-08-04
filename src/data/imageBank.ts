@@ -1,5 +1,4 @@
-
-import { BankImage, ImageBank } from './imageBank.d';
+import { BankImage, ImageBank } from "./imageBank.d";
 
 // Imagens do banco
 const images: BankImage[] = [];
@@ -18,7 +17,7 @@ export const getAllImages = (): BankImage[] => {
  * @returns Imagem ou undefined se não encontrada
  */
 export const getImageById = (id: string): BankImage | undefined => {
-  return images.find(img => img.id === id);
+  return images.find((img) => img.id === id);
 };
 
 /**
@@ -27,8 +26,8 @@ export const getImageById = (id: string): BankImage | undefined => {
  * @returns Array de imagens da categoria
  */
 export const getImagesByCategory = (category: string): BankImage[] => {
-  return images.filter(img => 
-    img.category === category || img.categories?.includes(category)
+  return images.filter(
+    (img) => img.category === category || img.categories?.includes(category),
   );
 };
 
@@ -38,7 +37,9 @@ export const getImagesByCategory = (category: string): BankImage[] => {
  * @param styleCategory Categoria de estilo para filtrar
  * @returns Array de imagens da categoria de estilo
  */
-export const getImagesByStyleCategory = (styleCategory: string): BankImage[] => {
+export const getImagesByStyleCategory = (
+  styleCategory: string,
+): BankImage[] => {
   return getImagesByCategory(styleCategory);
 };
 
@@ -48,7 +49,7 @@ export const getImagesByStyleCategory = (styleCategory: string): BankImage[] => 
  * @returns A imagem adicionada
  */
 export const addImage = (image: BankImage): BankImage => {
-  const exists = images.some(img => img.id === image.id);
+  const exists = images.some((img) => img.id === image.id);
   if (!exists) {
     images.push(image);
   }
@@ -65,7 +66,7 @@ export const imageBank: ImageBank = {
   preloadCategory: async (category: string) => {
     // Implementação simples de preload
     return Promise.resolve(true);
-  }
+  },
 };
 
 // Re-export BankImage type so it can be imported from this file

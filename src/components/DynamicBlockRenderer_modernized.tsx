@@ -1,6 +1,9 @@
-
-import React from 'react';
-import { safeGetBlockProperties, logBlockDebug, isValidBlock } from '@/utils/blockUtils';
+import React from "react";
+import {
+  safeGetBlockProperties,
+  logBlockDebug,
+  isValidBlock,
+} from "@/utils/blockUtils";
 
 interface QuestionBlockProps {
   question: string;
@@ -34,11 +37,15 @@ interface QuestionBlockProps {
 const DynamicBlockRenderer: React.FC<{ block: any }> = ({ block }) => {
   // Validate block first
   if (!isValidBlock(block)) {
-    console.warn('⚠️ Invalid block received:', block);
-    return <div className="p-4 bg-red-50 border border-red-200 rounded text-red-700">Block inválido</div>;
+    console.warn("⚠️ Invalid block received:", block);
+    return (
+      <div className="p-4 bg-red-50 border border-red-200 rounded text-red-700">
+        Block inválido
+      </div>
+    );
   }
 
-  logBlockDebug('DynamicBlockRenderer', block);
+  logBlockDebug("DynamicBlockRenderer", block);
   const properties = safeGetBlockProperties(block);
 
   const renderQuestionBlock = (questionProps: QuestionBlockProps) => {
@@ -48,7 +55,7 @@ const DynamicBlockRenderer: React.FC<{ block: any }> = ({ block }) => {
       allowMultiple = false,
       maxSelections = 1,
       showImages = false,
-      height = 'auto',
+      height = "auto",
       questionId = block.id,
       autoAdvance = false,
       title,
@@ -61,28 +68,34 @@ const DynamicBlockRenderer: React.FC<{ block: any }> = ({ block }) => {
       margin,
       fontSize,
       fontWeight,
-      maxSecondaryStyles
+      maxSecondaryStyles,
     } = questionProps;
 
     return (
-      <div 
+      <div
         className="question-block p-6 bg-white rounded-lg shadow-sm border"
         style={{ height }}
       >
         <h3 className="text-xl font-medium mb-4">{question}</h3>
         <div className="space-y-3">
           {options.map((option) => (
-            <div 
+            <div
               key={option.id}
               className="p-3 border rounded hover:bg-gray-50 cursor-pointer transition-colors"
               onClick={() => {
                 if (autoAdvance) {
-                  console.log(`Auto-advancing from question ${questionId} with option ${option.id}`);
+                  console.log(
+                    `Auto-advancing from question ${questionId} with option ${option.id}`,
+                  );
                 }
               }}
             >
               {showImages && option.imageUrl && (
-                <img src={option.imageUrl} alt={option.text} className="w-16 h-16 object-cover rounded mb-2" />
+                <img
+                  src={option.imageUrl}
+                  alt={option.text}
+                  className="w-16 h-16 object-cover rounded mb-2"
+                />
               )}
               <span>{option.text}</span>
             </div>
@@ -94,24 +107,24 @@ const DynamicBlockRenderer: React.FC<{ block: any }> = ({ block }) => {
 
   // Handle different block types
   switch (block.type) {
-    case 'question':
-    case 'quiz-question':
+    case "question":
+    case "quiz-question":
       return renderQuestionBlock(properties as QuestionBlockProps);
-    
-    case 'text':
+
+    case "text":
       return (
         <div className="text-block p-4">
-          <p>{properties.text || 'Texto não definido'}</p>
+          <p>{properties.text || "Texto não definido"}</p>
         </div>
       );
-    
-    case 'image':
+
+    case "image":
       return (
         <div className="image-block">
           {properties.imageUrl ? (
-            <img 
-              src={properties.imageUrl} 
-              alt={properties.alt || 'Imagem'} 
+            <img
+              src={properties.imageUrl}
+              alt={properties.alt || "Imagem"}
               className="max-w-full h-auto rounded"
             />
           ) : (
@@ -121,11 +134,13 @@ const DynamicBlockRenderer: React.FC<{ block: any }> = ({ block }) => {
           )}
         </div>
       );
-    
+
     default:
       return (
         <div className="unknown-block p-4 bg-gray-50 border border-gray-200 rounded">
-          <p className="text-gray-600">Tipo de bloco desconhecido: {block.type}</p>
+          <p className="text-gray-600">
+            Tipo de bloco desconhecido: {block.type}
+          </p>
         </div>
       );
   }

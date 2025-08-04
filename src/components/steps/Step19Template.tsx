@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 // --- Interfaces Necessárias ---
 // Interface para uma opção de quiz
@@ -15,11 +15,11 @@ export interface QuizOption {
 export interface QuizQuestion {
   id: string;
   title: string;
-  type: 'text';
+  type: "text";
   multiSelect: number;
   imageUrl?: string;
   options: QuizOption[];
-  advanceMode?: 'manual' | 'auto';
+  advanceMode?: "manual" | "auto";
 }
 
 // Interface simplificada para BlockData (representa um componente de UI)
@@ -41,75 +41,79 @@ export const getStep19Template = (): BlockData[] => {
 
   const blocks: BlockData[] = [
     {
-      type: 'quiz-intro-header',
+      type: "quiz-intro-header",
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-        logoAlt: 'Logo Gisele Galvão',
+        logoUrl:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        logoAlt: "Logo Gisele Galvão",
         logoWidth: 96,
         logoHeight: 96,
         progressValue: (questionNumberInFullQuiz / TOTAL_QUIZ_QUESTIONS) * 100,
         progressMax: 100,
-        showBackButton: true
-      }
+        showBackButton: true,
+      },
     },
     {
-      type: 'heading-inline',
+      type: "heading-inline",
       properties: {
-        content: 'Obrigada por compartilhar.'.toUpperCase(),
-        level: 'h2',
-        fontSize: 'text-2xl',
-        fontWeight: 'font-bold',
-        textAlign: 'text-center',
-        color: '#432818',
-        marginBottom: 16
-      }
+        content: "Obrigada por compartilhar.".toUpperCase(),
+        level: "h2",
+        fontSize: "text-2xl",
+        fontWeight: "font-bold",
+        textAlign: "text-center",
+        color: "#432818",
+        marginBottom: 16,
+      },
     },
     {
-      type: 'text-inline',
+      type: "text-inline",
       properties: {
-        content: 'Chegar até aqui já mostra que você está pronta para se olhar com mais **amor**, se vestir com mais **intenção** e deixar sua imagem comunicar quem você é de verdade — com **leveza**, **presença** e **propósito**.',
-        fontSize: 'text-base',
-        textAlign: 'text-left',
-        color: '#3a3a3a',
-        marginBottom: 16
-      }
+        content:
+          "Chegar até aqui já mostra que você está pronta para se olhar com mais **amor**, se vestir com mais **intenção** e deixar sua imagem comunicar quem você é de verdade — com **leveza**, **presença** e **propósito**.",
+        fontSize: "text-base",
+        textAlign: "text-left",
+        color: "#3a3a3a",
+        marginBottom: 16,
+      },
     },
     {
-      type: 'text-inline',
+      type: "text-inline",
       properties: {
-        content: 'Agora, é hora de revelar o seu **Estilo Predominante** — e os seus **Estilos Complementares**. E, mais do que isso, uma oportunidade real de aplicar o seu Estilo com **leveza** e **confiança** — todos os dias.',
-        fontSize: 'text-base',
-        textAlign: 'text-left',
-        color: '#3a3a3a',
-        marginBottom: 16
-      }
+        content:
+          "Agora, é hora de revelar o seu **Estilo Predominante** — e os seus **Estilos Complementares**. E, mais do que isso, uma oportunidade real de aplicar o seu Estilo com **leveza** e **confiança** — todos os dias.",
+        fontSize: "text-base",
+        textAlign: "text-left",
+        color: "#3a3a3a",
+        marginBottom: 16,
+      },
     },
     {
-      type: 'text-inline',
+      type: "text-inline",
       properties: {
-        content: 'Ah, e lembra do valor que mencionamos? Prepare-se para uma **surpresa**: o que você vai receber vale muito mais do que imagina — e vai custar muito menos do que você esperava.',
-        fontSize: 'text-base',
-        textAlign: 'text-left',
-        color: '#3a3a3a',
-        marginBottom: 24
-      }
+        content:
+          "Ah, e lembra do valor que mencionamos? Prepare-se para uma **surpresa**: o que você vai receber vale muito mais do que imagina — e vai custar muito menos do que você esperava.",
+        fontSize: "text-base",
+        textAlign: "text-left",
+        color: "#3a3a3a",
+        marginBottom: 24,
+      },
     },
     {
-      type: 'button-inline',
+      type: "button-inline",
       properties: {
-        text: 'Vamos ao resultado?',
-        variant: 'primary',
-        size: 'large',
+        text: "Vamos ao resultado?",
+        variant: "primary",
+        size: "large",
         fullWidth: false,
-        backgroundColor: '#B89B7A',
-        textColor: '#ffffff',
+        backgroundColor: "#B89B7A",
+        textColor: "#ffffff",
         disabled: false,
         requiresValidSelection: false,
-        display: 'flex',
-        justifyContent: 'center',
-        margin: 'mx-auto'
-      }
-    }
+        display: "flex",
+        justifyContent: "center",
+        margin: "mx-auto",
+      },
+    },
   ];
   return blocks;
 };

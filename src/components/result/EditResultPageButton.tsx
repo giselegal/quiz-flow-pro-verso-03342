@@ -1,17 +1,19 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { useLocation } from 'wouter';
-import { Edit } from 'lucide-react';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { useLocation } from "wouter";
+import { Edit } from "lucide-react";
 
 interface EditResultPageButtonProps {
   className?: string;
 }
 
-export const EditResultPageButton: React.FC<EditResultPageButtonProps> = ({ className }) => {
+export const EditResultPageButton: React.FC<EditResultPageButtonProps> = ({
+  className,
+}) => {
   const [, setLocation] = useLocation();
 
   const handleClick = () => {
-    setLocation('/resultado/editor');
+    setLocation("/resultado/editor");
   };
 
   return (

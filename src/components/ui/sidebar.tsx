@@ -1,15 +1,14 @@
+"use client";
 
-"use client"
-
-import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { cn } from "@/lib/utils"
+} from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 const sidebarVariants = cva(
   "fixed left-0 top-0 z-40 flex h-screen flex-col border-r bg-background transition-all dark:border-slate-700 lg:left-0",
@@ -33,46 +32,46 @@ const sidebarVariants = cva(
       isMobile: false,
       isCollapsed: false,
     },
-  }
-)
+  },
+);
 
 interface SidebarProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof sidebarVariants> {
-  isCollapsed?: boolean
-  isMobile?: boolean
-  size?: "sm" | "md"
+  isCollapsed?: boolean;
+  isMobile?: boolean;
+  size?: "sm" | "md";
 }
 
 interface SidebarContextValue {
-  isCollapsed: boolean
-  setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>
-  isMobile: boolean
-  setIsMobile: React.Dispatch<React.SetStateAction<boolean>>
-  isOpen: boolean
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  isCollapsed: boolean;
+  setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
+  isMobile: boolean;
+  setIsMobile: React.Dispatch<React.SetStateAction<boolean>>;
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const SidebarContext = React.createContext<SidebarContextValue | undefined>(
-  undefined
-)
+  undefined,
+);
 
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
-  const [isCollapsed, setIsCollapsed] = React.useState(false)
-  const [isMobile, setIsMobile] = React.useState(false)
-  const [isOpen, setIsOpen] = React.useState(false)
+  const [isCollapsed, setIsCollapsed] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
 
   // Check if the device is a mobile device
   React.useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024)
-    }
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
+      setIsMobile(window.innerWidth < 1024);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
     return () => {
-      window.removeEventListener("resize", checkMobile)
-    }
-  }, [])
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
 
   return (
     <SidebarContext.Provider
@@ -87,24 +86,26 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
     >
       {children}
     </SidebarContext.Provider>
-  )
+  );
 }
 
 export const useSidebar = () => {
-  const context = React.useContext(SidebarContext)
+  const context = React.useContext(SidebarContext);
   if (!context) {
-    throw new Error("useSidebar must be used within a SidebarProvider")
+    throw new Error("useSidebar must be used within a SidebarProvider");
   }
-  return context
-}
+  return context;
+};
 
 export function SidebarTrigger() {
   const { isCollapsed, setIsCollapsed, isMobile, isOpen, setIsOpen } =
-    useSidebar()
+    useSidebar();
 
   return (
     <button
-      onClick={() => (isMobile ? setIsOpen(!isOpen) : setIsCollapsed(!isCollapsed))}
+      onClick={() =>
+        isMobile ? setIsOpen(!isOpen) : setIsCollapsed(!isCollapsed)
+      }
       className="inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
     >
       <span className="sr-only">Toggle Sidebar</span>
@@ -127,7 +128,7 @@ export function SidebarTrigger() {
         <line x1="15" y1="9" x2="15" y2="15" />
       </svg>
     </button>
-  )
+  );
 }
 
 export function Sidebar({
@@ -137,11 +138,14 @@ export function Sidebar({
   size = "md",
   ...props
 }: SidebarProps) {
-  const { isCollapsed: isContextCollapsed, isOpen, isMobile: isContextMobile } =
-    useSidebar()
+  const {
+    isCollapsed: isContextCollapsed,
+    isOpen,
+    isMobile: isContextMobile,
+  } = useSidebar();
 
-  const collapsed = isCollapsed || isContextCollapsed
-  const mobile = isMobile || isContextMobile
+  const collapsed = isCollapsed || isContextCollapsed;
+  const mobile = isMobile || isContextMobile;
 
   return (
     <aside
@@ -151,107 +155,107 @@ export function Sidebar({
           isMobile: mobile && !isOpen ? false : mobile && isOpen ? true : false,
           size,
         }),
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 export function SidebarHeader({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
-  const { isCollapsed } = useSidebar()
+  const { isCollapsed } = useSidebar();
 
   return (
     <div
       className={cn(
         "flex h-14 items-center border-b px-4 transition-all dark:border-slate-700",
         isCollapsed ? "lg:justify-center lg:px-0" : "",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 export function SidebarContent({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("flex-1 overflow-y-auto", className)} {...props} />
+  return <div className={cn("flex-1 overflow-y-auto", className)} {...props} />;
 }
 
 export function SidebarFooter({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
-  const { isCollapsed } = useSidebar()
+  const { isCollapsed } = useSidebar();
 
   return (
     <div
       className={cn(
         "flex items-center border-t p-4 transition-all dark:border-slate-700",
         isCollapsed ? "lg:justify-center lg:px-0" : "",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 export function SidebarGroup({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("space-y-2 py-2", className)} {...props} />
+  return <div className={cn("space-y-2 py-2", className)} {...props} />;
 }
 
 export function SidebarGroupLabel({
   className,
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
-  const { isCollapsed } = useSidebar()
+  const { isCollapsed } = useSidebar();
 
   if (isCollapsed) {
-    return <span className="sr-only" {...props} />
+    return <span className="sr-only" {...props} />;
   }
 
   return (
     <p
       className={cn(
         "mx-2 text-xs font-medium tracking-tight text-muted-foreground",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 export function SidebarGroupContent({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("space-y-1", className)} {...props} />
+  return <div className={cn("space-y-1", className)} {...props} />;
 }
 
 export function SidebarMenu({
   className,
   ...props
 }: React.HTMLAttributes<HTMLUListElement>) {
-  return <ul className={cn("", className)} role="list" {...props} />
+  return <ul className={cn("", className)} role="list" {...props} />;
 }
 
 export function SidebarMenuItem({
   className,
   ...props
 }: React.HTMLAttributes<HTMLLIElement>) {
-  return <li className={cn("", className)} {...props} />
+  return <li className={cn("", className)} {...props} />;
 }
 
 interface SidebarMenuButtonProps extends React.HTMLAttributes<HTMLDivElement> {
-  asChild?: boolean
+  asChild?: boolean;
 }
 
 export function SidebarMenuButton({
@@ -259,8 +263,8 @@ export function SidebarMenuButton({
   asChild = false,
   ...props
 }: SidebarMenuButtonProps) {
-  const { isCollapsed } = useSidebar()
-  const Comp = asChild ? React.Fragment : "div"
+  const { isCollapsed } = useSidebar();
+  const Comp = asChild ? React.Fragment : "div";
 
   if (isCollapsed) {
     return (
@@ -270,7 +274,7 @@ export function SidebarMenuButton({
             <Comp
               className={cn(
                 "group inline-flex h-9 w-9 items-center justify-center rounded-md px-0 py-2 hover:bg-accent hover:text-accent-foreground",
-                className
+                className,
               )}
               {...props}
             />
@@ -280,24 +284,24 @@ export function SidebarMenuButton({
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-    )
+    );
   }
 
   return (
     <Comp
       className={cn(
         "group flex h-9 items-center rounded-md px-3 py-2 hover:bg-accent hover:text-accent-foreground",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 interface SidebarMenuLinkProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
-  icon?: React.ComponentType<{ className?: string }>
-  active?: boolean
+  icon?: React.ComponentType<{ className?: string }>;
+  active?: boolean;
 }
 
 export function SidebarMenuLink({
@@ -306,7 +310,7 @@ export function SidebarMenuLink({
   icon: Icon,
   ...props
 }: SidebarMenuLinkProps) {
-  const { isCollapsed } = useSidebar()
+  const { isCollapsed } = useSidebar();
 
   if (isCollapsed) {
     return (
@@ -317,7 +321,7 @@ export function SidebarMenuLink({
               className={cn(
                 "group inline-flex h-9 w-9 items-center justify-center rounded-md px-0 py-2 hover:bg-accent hover:text-accent-foreground",
                 active && "bg-accent",
-                className
+                className,
               )}
               {...props}
             >
@@ -330,7 +334,7 @@ export function SidebarMenuLink({
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-    )
+    );
   }
 
   return (
@@ -338,13 +342,12 @@ export function SidebarMenuLink({
       className={cn(
         "group flex h-9 items-center rounded-md px-3 py-2 hover:bg-accent hover:text-accent-foreground",
         active && "bg-accent",
-        className
+        className,
       )}
       {...props}
     >
       {Icon && <Icon className={cn("mr-2 h-5 w-5")} />}
       <span>{props.children}</span>
     </a>
-  )
+  );
 }
-

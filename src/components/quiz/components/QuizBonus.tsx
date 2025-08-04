@@ -1,6 +1,6 @@
-import React from 'react';
-import { ComponentProps } from '@/interfaces/quiz';
-import styles from '@/styles/quiz.module.css';
+import React from "react";
+import { ComponentProps } from "@/interfaces/quiz";
+import styles from "@/styles/quiz.module.css";
 
 interface BonusItem {
   name: string;
@@ -13,11 +13,11 @@ interface QuizBonusProps extends ComponentProps {
 }
 
 const QuizBonus: React.FC<QuizBonusProps> = ({
-  title = 'Bônus Exclusivos',
+  title = "Bônus Exclusivos",
   items = [
-    { name: 'E-book Gratuito', value: 'R$ 47' },
-    { name: 'Consultoria Grátis', value: 'R$ 197' },
-    { name: 'Acesso VIP', value: 'R$ 97' },
+    { name: "E-book Gratuito", value: "R$ 47" },
+    { name: "Consultoria Grátis", value: "R$ 197" },
+    { name: "Acesso VIP", value: "R$ 97" },
   ],
   isSelected,
   onClick,
@@ -29,26 +29,25 @@ const QuizBonus: React.FC<QuizBonusProps> = ({
 
   const getTotalValue = () => {
     return items.reduce((total, item) => {
-      const value = parseFloat(item.value.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+      const value =
+        parseFloat(item.value.replace(/[^\d,]/g, "").replace(",", ".")) || 0;
       return total + value;
     }, 0);
   };
 
   return (
-    <div 
-      className={`${styles.quizComponent} ${styles.bonus} ${isSelected ? styles.selected : ''}`}
+    <div
+      className={`${styles.quizComponent} ${styles.bonus} ${isSelected ? styles.selected : ""}`}
       onClick={handleClick}
     >
       <div className={styles.bonusCard}>
         <div className={styles.bonusHeader}>
-          <h3 className={styles.bonusTitle}>
-            🎁 {title}
-          </h3>
+          <h3 className={styles.bonusTitle}>🎁 {title}</h3>
           <div className={styles.bonusSubtitle}>
             Você ganha GRÁTIS ao adquirir hoje:
           </div>
         </div>
-        
+
         <div className={styles.bonusList}>
           {items.map((item, index) => (
             <div key={index} className={styles.bonusItem}>
@@ -60,10 +59,12 @@ const QuizBonus: React.FC<QuizBonusProps> = ({
             </div>
           ))}
         </div>
-        
+
         <div className={styles.bonusTotal}>
           <div className={styles.totalLabel}>Valor total dos bônus:</div>
-          <div className={styles.totalValue}>R$ {getTotalValue().toFixed(0)}</div>
+          <div className={styles.totalValue}>
+            R$ {getTotalValue().toFixed(0)}
+          </div>
           <div className={styles.totalText}>GRÁTIS para você!</div>
         </div>
       </div>

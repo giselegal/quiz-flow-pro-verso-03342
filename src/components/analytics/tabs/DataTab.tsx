@@ -1,19 +1,29 @@
-
-import React from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { FileText } from 'lucide-react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { FileText } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface DataTabProps {
   analyticsData: any;
   loading: boolean;
 }
 
-export const DataTab: React.FC<DataTabProps> = ({
-  analyticsData,
-  loading
-}) => {
+export const DataTab: React.FC<DataTabProps> = ({ analyticsData, loading }) => {
   const events = analyticsData?.events?.slice(0, 50) || [];
 
   return (
@@ -39,15 +49,30 @@ export const DataTab: React.FC<DataTabProps> = ({
                 {events.map((event: any, index: number) => (
                   <TableRow key={index}>
                     <TableCell className="font-medium">{event.type}</TableCell>
-                    <TableCell>{new Date(event.timestamp).toLocaleString('pt-BR')}</TableCell>
-                    <TableCell>{event.userName || 'N/A'}</TableCell>
-                    <TableCell>{event.userEmail || event.email || 'N/A'}</TableCell>
+                    <TableCell>
+                      {new Date(event.timestamp).toLocaleString("pt-BR")}
+                    </TableCell>
+                    <TableCell>{event.userName || "N/A"}</TableCell>
+                    <TableCell>
+                      {event.userEmail || event.email || "N/A"}
+                    </TableCell>
                     <TableCell className="max-w-[12rem] truncate">
                       {Object.entries(event)
-                        .filter(([key]) => !['type', 'timestamp', 'userName', 'userEmail', 'email', 'sessionId'].includes(key))
+                        .filter(
+                          ([key]) =>
+                            ![
+                              "type",
+                              "timestamp",
+                              "userName",
+                              "userEmail",
+                              "email",
+                              "sessionId",
+                            ].includes(key),
+                        )
                         .map(([key, value]) => (
                           <div key={key} className="text-xs">
-                            <span className="font-medium">{key}:</span> {JSON.stringify(value)}
+                            <span className="font-medium">{key}:</span>{" "}
+                            {JSON.stringify(value)}
                           </div>
                         ))}
                     </TableCell>
@@ -55,8 +80,13 @@ export const DataTab: React.FC<DataTabProps> = ({
                 ))}
                 {events.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-6 text-muted-foreground">
-                      {loading ? 'Carregando dados...' : 'Nenhum dado de analytics encontrado'}
+                    <TableCell
+                      colSpan={5}
+                      className="text-center py-6 text-muted-foreground"
+                    >
+                      {loading
+                        ? "Carregando dados..."
+                        : "Nenhum dado de analytics encontrado"}
                     </TableCell>
                   </TableRow>
                 )}
@@ -65,12 +95,17 @@ export const DataTab: React.FC<DataTabProps> = ({
           </div>
           {analyticsData?.events?.length > 50 && (
             <div className="text-center mt-4 text-sm text-gray-500">
-              Mostrando os 50 eventos mais recentes. Exporte o CSV para visualizar todos os dados.
+              Mostrando os 50 eventos mais recentes. Exporte o CSV para
+              visualizar todos os dados.
             </div>
           )}
         </CardContent>
         <CardFooter className="flex justify-end">
-          <Button variant="outline" size="sm" onClick={() => analyticsData?.onExportData?.()}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => analyticsData?.onExportData?.()}
+          >
             <FileText className="h-4 w-4 mr-2" />
             Exportar todos os dados
           </Button>

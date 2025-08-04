@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'wouter';
-import { QuizResponse, UserResponse } from '@/types/quiz';
-import { calculateQuizResult } from '@/lib/quizEngine';
+import React, { useState, useEffect } from "react";
+import { useLocation } from "wouter";
+import { QuizResponse, UserResponse } from "@/types/quiz";
+import { calculateQuizResult } from "@/lib/quizEngine";
 
 const CaktoQuizFlow: React.FC = () => {
   const [responses, setResponses] = useState<QuizResponse[]>([]);
   const [, setLocation] = useLocation();
 
   // Convert QuizResponse to UserResponse format
-  const convertResponsesToUserResponses = (quizResponses: QuizResponse[]): UserResponse[] => {
-    return quizResponses.map(response => ({
+  const convertResponsesToUserResponses = (
+    quizResponses: QuizResponse[],
+  ): UserResponse[] => {
+    return quizResponses.map((response) => ({
       questionId: response.questionId,
       selectedOptions: response.selectedOptions,
-      timestamp: response.timestamp
+      timestamp: response.timestamp,
     }));
   };
 
@@ -33,7 +35,7 @@ const CaktoQuizFlow: React.FC = () => {
             Descubra seu estilo único respondendo algumas perguntas
           </p>
         </div>
-        
+
         <div className="bg-white rounded-lg shadow-sm border border-[#B89B7A]/20 p-8">
           {/* Quiz content would go here */}
           <p className="text-center text-[#8F7A6A]">

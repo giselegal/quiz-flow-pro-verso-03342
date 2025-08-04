@@ -1,13 +1,12 @@
-
-import React from 'react';
+import React from "react";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '@/components/ui/carousel';
-import { cn } from '@/lib/utils';
+} from "@/components/ui/carousel";
+import { cn } from "@/lib/utils";
 
 interface CarouselBlockPreviewProps {
   content: {
@@ -24,28 +23,30 @@ interface CarouselBlockPreviewProps {
   };
 }
 
-const CarouselBlockPreview: React.FC<CarouselBlockPreviewProps> = ({ content }) => {
-  const { 
-    carouselImages = [], 
-    autoPlay = false, 
-    interval = 5000, 
-    showArrows = true, 
+const CarouselBlockPreview: React.FC<CarouselBlockPreviewProps> = ({
+  content,
+}) => {
+  const {
+    carouselImages = [],
+    autoPlay = false,
+    interval = 5000,
+    showArrows = true,
     showDots = true,
-    style = {} 
+    style = {},
   } = content;
 
   // Referência para o API do carrossel para autoplay
   const [api, setApi] = React.useState<any>(null);
-  
+
   // Configurar autoplay
   React.useEffect(() => {
     if (!api || !autoPlay) return;
-    
+
     // Função para avançar para o próximo slide
     const autoPlayInterval = setInterval(() => {
       api.scrollNext();
     }, interval);
-    
+
     // Limpar intervalo quando o componente é desmontado
     return () => clearInterval(autoPlayInterval);
   }, [api, autoPlay, interval]);
@@ -64,26 +65,36 @@ const CarouselBlockPreview: React.FC<CarouselBlockPreviewProps> = ({ content }) 
                 <div className="p-1">
                   <div className="overflow-hidden rounded-lg">
                     <img
-                      src={image.url || '/placeholder.svg'}
+                      src={image.url || "/placeholder.svg"}
                       alt={image.alt}
                       className="w-full h-auto aspect-[16/9] object-cover"
                     />
                     {image.caption && (
-                      <div className="p-2 text-center text-sm">{image.caption}</div>
+                      <div className="p-2 text-center text-sm">
+                        {image.caption}
+                      </div>
                     )}
                   </div>
                 </div>
               </CarouselItem>
             ))}
           </CarouselContent>
-          
+
           {showArrows && carouselImages.length > 1 && (
             <>
-              <CarouselPrevious className={cn("absolute left-2 top-1/2 transform -translate-y-1/2")} />
-              <CarouselNext className={cn("absolute right-2 top-1/2 transform -translate-y-1/2")} />
+              <CarouselPrevious
+                className={cn(
+                  "absolute left-2 top-1/2 transform -translate-y-1/2",
+                )}
+              />
+              <CarouselNext
+                className={cn(
+                  "absolute right-2 top-1/2 transform -translate-y-1/2",
+                )}
+              />
             </>
           )}
-          
+
           {showDots && carouselImages.length > 1 && (
             <div className="flex justify-center gap-1 mt-2">
               {carouselImages.map((_, index) => (

@@ -3,6 +3,7 @@
 ## ✅ PROBLEMA IDENTIFICADO E CORRIGIDO
 
 **Problema:** Os botões de etapas não funcionavam porque:
+
 1. Os blocos NÃO eram filtrados por etapa
 2. Todos os blocos apareciam em todas as etapas
 3. Não havia associação entre blocos e etapas (`stepId`)
@@ -10,6 +11,7 @@
 ## 🚀 CORREÇÕES IMPLEMENTADAS
 
 ### 1. **Adicionada propriedade `stepId` ao tipo EditorBlock**
+
 ```typescript
 // src/types/editor.ts
 export interface EditorBlock extends Block {
@@ -18,10 +20,11 @@ export interface EditorBlock extends Block {
 ```
 
 ### 2. **Filtro de blocos por etapa atual**
+
 ```typescript
 // Agora o canvas só mostra blocos da etapa selecionada
 const sortedBlocks = useMemo(() => {
-  const stepBlocks = blocks.filter(block => {
+  const stepBlocks = blocks.filter((block) => {
     if (block.stepId) {
       return block.stepId === selectedStepId;
     }
@@ -32,28 +35,34 @@ const sortedBlocks = useMemo(() => {
 ```
 
 ### 3. **Associação automática de blocos à etapa atual**
+
 ```typescript
 // Quando um bloco é adicionado, ele recebe o stepId da etapa atual
-const handleAddBlocksToStep = useCallback((stepId: string, blocksToAdd: any[]) => {
-  const blockProperties = {
-    ...block.properties,
-    stepId: stepId // ✅ Associar bloco à etapa
-  };
-});
+const handleAddBlocksToStep = useCallback(
+  (stepId: string, blocksToAdd: any[]) => {
+    const blockProperties = {
+      ...block.properties,
+      stepId: stepId, // ✅ Associar bloco à etapa
+    };
+  },
+);
 ```
 
 ## 🧪 COMO TESTAR
 
 ### **Passo 1: Abrir o Editor**
+
 1. Acesse: http://localhost:8081
 2. Navegue até o editor visual das 21 etapas
 
 ### **Passo 2: Testar Navegação entre Etapas**
+
 1. Clique em diferentes botões de etapas (Etapa 1, Etapa 2, etc.)
 2. ✅ **ESPERADO:** Canvas deve mostrar apenas blocos da etapa selecionada
 3. ✅ **ESPERADO:** Etapas vazias devem mostrar canvas vazio
 
 ### **Passo 3: Testar Adição de Blocos**
+
 1. Selecione uma etapa (ex: Etapa 1)
 2. Adicione um bloco qualquer do painel lateral
 3. Mude para outra etapa (ex: Etapa 2)
@@ -62,11 +71,13 @@ const handleAddBlocksToStep = useCallback((stepId: string, blocksToAdd: any[]) =
 6. ✅ **ESPERADO:** O bloco deve reaparecer
 
 ### **Passo 4: Testar Templates de Etapas**
+
 1. Clique com botão direito em uma etapa
 2. Selecione "Popular Etapa" ou use o botão "⋯"
 3. ✅ **ESPERADO:** Blocos devem aparecer apenas nessa etapa
 
 ### **Passo 5: Verificar Console**
+
 1. Abra Developer Tools (F12)
 2. Vá para aba Console
 3. Clique em diferentes etapas
@@ -91,4 +102,3 @@ const handleAddBlocksToStep = useCallback((stepId: string, blocksToAdd: any[]) =
 - [ ] Navegação entre etapas funciona
 - [ ] Templates de etapas carregam na etapa correta
 - [ ] Console mostra logs de filtro corretos
-

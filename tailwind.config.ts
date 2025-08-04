@@ -8,7 +8,7 @@ export default {
   theme: {
     extend: {
       screens: {
-        'xs': '475px',
+        xs: "475px",
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -1,7 +1,9 @@
-
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { optimizeCloudinaryUrl, normalizeCloudinaryUrl } from '@/utils/imageUtils';
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  optimizeCloudinaryUrl,
+  normalizeCloudinaryUrl,
+} from "@/utils/imageUtils";
 
 interface EnhancedProgressiveImageProps {
   src: string;
@@ -10,8 +12,8 @@ interface EnhancedProgressiveImageProps {
   width?: number;
   height?: number;
   onLoad?: () => void;
-  loading?: 'lazy' | 'eager';
-  fetchpriority?: 'high' | 'low' | 'auto';
+  loading?: "lazy" | "eager";
+  fetchpriority?: "high" | "low" | "auto";
   style?: React.CSSProperties;
   fallbackSrc?: string;
 }
@@ -19,14 +21,14 @@ interface EnhancedProgressiveImageProps {
 const EnhancedProgressiveImage: React.FC<EnhancedProgressiveImageProps> = ({
   src,
   alt,
-  className = '',
+  className = "",
   width,
   height,
   onLoad,
-  loading = 'lazy',
-  fetchpriority = 'auto',
+  loading = "lazy",
+  fetchpriority = "auto",
   style,
-  fallbackSrc
+  fallbackSrc,
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
@@ -36,8 +38,15 @@ const EnhancedProgressiveImage: React.FC<EnhancedProgressiveImageProps> = ({
 
   // URLs otimizadas
   const normalizedSrc = normalizeCloudinaryUrl(src);
-  const optimizedSrc = optimizeCloudinaryUrl(normalizedSrc, { quality: 85, format: 'auto' });
-  const placeholderSrc = optimizeCloudinaryUrl(normalizedSrc, { quality: 25, width: 40, format: 'auto' });
+  const optimizedSrc = optimizeCloudinaryUrl(normalizedSrc, {
+    quality: 85,
+    format: "auto",
+  });
+  const placeholderSrc = optimizeCloudinaryUrl(normalizedSrc, {
+    quality: 25,
+    width: 40,
+    format: "auto",
+  });
 
   const handleLoad = () => {
     setLoaded(true);
@@ -47,15 +56,18 @@ const EnhancedProgressiveImage: React.FC<EnhancedProgressiveImageProps> = ({
 
   const handleError = () => {
     console.warn(`[EnhancedProgressiveImage] Erro ao carregar: ${src}`);
-    
+
     if (retryCount < maxRetries) {
       // Tenta novamente após um delay
-      setTimeout(() => {
-        setRetryCount(prev => prev + 1);
-        if (imgRef.current) {
-          imgRef.current.src = optimizedSrc + `?retry=${retryCount + 1}`;
-        }
-      }, 1000 * (retryCount + 1));
+      setTimeout(
+        () => {
+          setRetryCount((prev) => prev + 1);
+          if (imgRef.current) {
+            imgRef.current.src = optimizedSrc + `?retry=${retryCount + 1}`;
+          }
+        },
+        1000 * (retryCount + 1),
+      );
     } else {
       setError(true);
       if (onLoad) onLoad(); // Chama onLoad mesmo em erro para não travar o fluxo
@@ -83,15 +95,18 @@ const EnhancedProgressiveImage: React.FC<EnhancedProgressiveImageProps> = ({
   }, [loaded, error, src, onLoad]);
 
   return (
-    <div className={`enhanced-progressive-image relative overflow-hidden ${className}`} style={style}>
+    <div
+      className={`enhanced-progressive-image relative overflow-hidden ${className}`}
+      style={style}
+    >
       {/* Placeholder blur */}
       {!loaded && !error && (
         <div className="absolute inset-0">
-          <img 
+          <img
             src={placeholderSrc}
             alt=""
             className="w-full h-full object-cover blur-sm scale-110 transition-opacity duration-300"
-            style={{ filter: 'blur(8px)' }}
+            style={{ filter: "blur(8px)" }}
             aria-hidden="true"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-gray-100/50 to-gray-200/50 animate-pulse"></div>
@@ -101,7 +116,7 @@ const EnhancedProgressiveImage: React.FC<EnhancedProgressiveImageProps> = ({
       {/* Main image */}
       <AnimatePresence>
         {!error ? (
-          <motion.img 
+          <motion.img
             ref={imgRef}
             src={optimizedSrc}
             alt={alt}
@@ -117,7 +132,7 @@ const EnhancedProgressiveImage: React.FC<EnhancedProgressiveImageProps> = ({
             className="w-full h-full object-cover"
           />
         ) : fallbackSrc ? (
-          <motion.img 
+          <motion.img
             src={fallbackSrc}
             alt={alt}
             width={width}
@@ -129,16 +144,30 @@ const EnhancedProgressiveImage: React.FC<EnhancedProgressiveImageProps> = ({
             onLoad={handleLoad}
           />
         ) : (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="flex flex-col items-center justify-center w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 text-gray-400 py-8"
           >
-            <svg className="w-12 h-12 mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            <svg
+              className="w-12 h-12 mb-3 text-gray-300"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
             </svg>
-            <span className="text-sm font-medium text-gray-500">Imagem não disponível</span>
-            <span className="text-xs text-gray-400 mt-1">Tentativas: {retryCount}/{maxRetries}</span>
+            <span className="text-sm font-medium text-gray-500">
+              Imagem não disponível
+            </span>
+            <span className="text-xs text-gray-400 mt-1">
+              Tentativas: {retryCount}/{maxRetries}
+            </span>
           </motion.div>
         )}
       </AnimatePresence>

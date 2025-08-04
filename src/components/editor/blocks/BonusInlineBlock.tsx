@@ -1,6 +1,6 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { Gift, Edit3 } from 'lucide-react';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { Gift, Edit3 } from "lucide-react";
 
 interface BonusInlineBlockProps {
   title?: string;
@@ -14,23 +14,23 @@ interface BonusInlineBlockProps {
 }
 
 const BonusInlineBlock: React.FC<BonusInlineBlockProps> = ({
-  title = 'Bônus Exclusivo',
-  value = 'R$ 97,00',
-  description = 'Material adicional incluso gratuitamente',
+  title = "Bônus Exclusivo",
+  value = "R$ 97,00",
+  description = "Material adicional incluso gratuitamente",
   showIcon = true,
   onClick,
   className,
   onPropertyChange,
-  disabled = false
+  disabled = false,
 }) => {
   return (
-    <div 
+    <div
       className={cn(
         "inline-flex items-center gap-3 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border-l-4 border-green-500",
         "transition-all duration-200 hover:shadow-md hover:scale-105 cursor-pointer",
         "w-full",
         disabled && "opacity-75 cursor-not-allowed",
-        className
+        className,
       )}
       onClick={!disabled ? onClick : undefined}
     >
@@ -40,54 +40,55 @@ const BonusInlineBlock: React.FC<BonusInlineBlockProps> = ({
           <Gift className="w-4 h-4 text-white" />
         </div>
       )}
-      
+
       {/* Content */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between">
-          <h4 
+          <h4
             className="font-semibold text-green-800 text-sm truncate"
             onClick={(e) => {
               e.stopPropagation();
               if (onPropertyChange && !disabled) {
-                const newTitle = prompt('Novo título do bônus:', title);
-                if (newTitle !== null) onPropertyChange('title', newTitle);
+                const newTitle = prompt("Novo título do bônus:", title);
+                if (newTitle !== null) onPropertyChange("title", newTitle);
               }
             }}
           >
             {title}
           </h4>
-          <span 
+          <span
             className="text-green-600 font-bold text-sm ml-2"
             onClick={(e) => {
               e.stopPropagation();
               if (onPropertyChange && !disabled) {
-                const newValue = prompt('Novo valor:', value);
-                if (newValue !== null) onPropertyChange('value', newValue);
+                const newValue = prompt("Novo valor:", value);
+                if (newValue !== null) onPropertyChange("value", newValue);
               }
             }}
           >
             {value}
           </span>
         </div>
-        
-        <p 
+
+        <p
           className="text-xs text-green-700 mt-1 line-clamp-2"
           onClick={(e) => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
-              const newDescription = prompt('Nova descrição:', description);
-              if (newDescription !== null) onPropertyChange('description', newDescription);
+              const newDescription = prompt("Nova descrição:", description);
+              if (newDescription !== null)
+                onPropertyChange("description", newDescription);
             }
           }}
         >
           {description}
         </p>
-        
+
         <div className="text-xs text-green-600 font-medium mt-1">
           GRÁTIS para você!
         </div>
       </div>
-      
+
       {/* Edit indicator */}
       {!disabled && (
         <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">

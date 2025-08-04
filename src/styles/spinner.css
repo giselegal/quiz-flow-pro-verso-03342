@@ -5,7 +5,7 @@
   width: 20px;
   height: 20px;
   border: 2px solid #f3f3f3;
-  border-top: 2px solid #B89B7A;
+  border-top: 2px solid #b89b7a;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -37,11 +37,11 @@
 
 /* Spinner Colors */
 .spinner-primary {
-  border-top-color: #B89B7A;
+  border-top-color: #b89b7a;
 }
 
 .spinner-secondary {
-  border-top-color: #8F7A6A;
+  border-top-color: #8f7a6a;
 }
 
 .spinner-white {
@@ -63,7 +63,7 @@
   width: 13px;
   height: 13px;
   border-radius: 50%;
-  background: #B89B7A;
+  background: #b89b7a;
   animation-timing-function: cubic-bezier(0, 1, 1, 0);
 }
 
@@ -88,18 +88,30 @@
 }
 
 @keyframes dots1 {
-  0% { transform: scale(0); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 @keyframes dots3 {
-  0% { transform: scale(1); }
-  100% { transform: scale(0); }
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
 }
 
 @keyframes dots2 {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(24px, 0); }
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
 }
 
 /* Pulse Spinner */
@@ -107,9 +119,9 @@
   display: inline-block;
   width: 40px;
   height: 40px;
-  background-color: #B89B7A;
+  background-color: #b89b7a;
   border-radius: 100%;
-  animation: pulse-scale 1.0s infinite ease-in-out;
+  animation: pulse-scale 1s infinite ease-in-out;
 }
 
 @keyframes pulse-scale {
@@ -117,7 +129,7 @@
     transform: scale(0);
   }
   100% {
-    transform: scale(1.0);
+    transform: scale(1);
     opacity: 0;
   }
 }
@@ -145,7 +157,7 @@
 
 .loading-text {
   margin-left: 10px;
-  color: #8F7A6A;
+  color: #8f7a6a;
   font-size: 14px;
 }
 
@@ -156,7 +168,7 @@
   align-items: center;
   justify-content: center;
   height: 200px;
-  color: #8F7A6A;
+  color: #8f7a6a;
 }
 
 .editor-loading-panel .spinner {
@@ -170,7 +182,7 @@
 }
 
 .editor-saving::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -178,7 +190,7 @@
   height: 20px;
   margin: -10px 0 0 -10px;
   border: 2px solid #f3f3f3;
-  border-top: 2px solid #B89B7A;
+  border-top: 2px solid #b89b7a;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }

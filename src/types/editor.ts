@@ -1,12 +1,26 @@
-
-import { LucideIcon } from 'lucide-react';
+import { LucideIcon } from "lucide-react";
 
 export interface PropertySchema {
-  type: 'string' | 'number' | 'boolean' | 'select' | 'textarea' | 'array' | 'color' | 'range';
+  type:
+    | "string"
+    | "number"
+    | "boolean"
+    | "select"
+    | "textarea"
+    | "array"
+    | "color"
+    | "range";
   default: any;
   label: string;
   description?: string;
-  category?: 'general' | 'layout' | 'styling' | 'content' | 'behavior' | 'validation' | 'advanced';
+  category?:
+    | "general"
+    | "layout"
+    | "styling"
+    | "content"
+    | "behavior"
+    | "validation"
+    | "advanced";
   required?: boolean;
   placeholder?: string;
   options?: Array<{ value: string; label: string }>;
@@ -30,56 +44,56 @@ export interface BlockDefinition {
   tags?: string[];
 }
 
-export type BlockType = 
-  | 'headline' 
-  | 'text' 
-  | 'image' 
-  | 'button' 
-  | 'spacer' 
-  | 'text-inline' 
-  | 'image-display-inline' 
-  | 'badge-inline' 
-  | 'progress-inline' 
-  | 'stat-inline' 
-  | 'countdown-inline' 
-  | 'spacer-inline'
-  | 'heading-inline'
-  | 'button-inline'
-  | 'benefits'
-  | 'testimonials'
-  | 'pricing'
-  | 'guarantee'
-  | 'cta'
-  | 'header'
-  | 'hero'
-  | 'benefitsList'
-  | 'testimonial'
-  | 'styleResult'
-  | 'secondaryStylesTitle'
-  | 'offerHero'
-  | 'carousel'
-  | 'testimonialsSection'
-  | 'style-result'
-  | 'secondary-styles'
-  | 'hero-section'
-  | 'products'
-  | 'video'
-  | 'two-column'
-  | 'icon'
-  | 'faq'
-  | 'quiz-start-page-inline'
-  | 'pricing-card-inline'
-  | 'testimonial-card-inline'
-  | 'result-header-inline'
-  | 'step-header-inline'
-  | 'loading-animation'
-  | 'quiz-offer-cta-inline'
-  | 'style-card-inline'
-  | 'result-card-inline'
-  | 'quiz-question-inline'
-  | 'quiz-result-inline'
-  | 'custom-code'
-  | 'animation-block';
+export type BlockType =
+  | "headline"
+  | "text"
+  | "image"
+  | "button"
+  | "spacer"
+  | "text-inline"
+  | "image-display-inline"
+  | "badge-inline"
+  | "progress-inline"
+  | "stat-inline"
+  | "countdown-inline"
+  | "spacer-inline"
+  | "heading-inline"
+  | "button-inline"
+  | "benefits"
+  | "testimonials"
+  | "pricing"
+  | "guarantee"
+  | "cta"
+  | "header"
+  | "hero"
+  | "benefitsList"
+  | "testimonial"
+  | "styleResult"
+  | "secondaryStylesTitle"
+  | "offerHero"
+  | "carousel"
+  | "testimonialsSection"
+  | "style-result"
+  | "secondary-styles"
+  | "hero-section"
+  | "products"
+  | "video"
+  | "two-column"
+  | "icon"
+  | "faq"
+  | "quiz-start-page-inline"
+  | "pricing-card-inline"
+  | "testimonial-card-inline"
+  | "result-header-inline"
+  | "step-header-inline"
+  | "loading-animation"
+  | "quiz-offer-cta-inline"
+  | "style-card-inline"
+  | "result-card-inline"
+  | "quiz-question-inline"
+  | "quiz-result-inline"
+  | "custom-code"
+  | "animation-block";
 
 export interface FAQItem {
   id: string;
@@ -95,9 +109,9 @@ export interface EditableContent {
   width?: string;
   height?: string;
   borderRadius?: string;
-  objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
+  objectFit?: "cover" | "contain" | "fill" | "none" | "scale-down";
   fontSize?: string;
-  alignment?: 'left' | 'center' | 'right' | 'justify';
+  alignment?: "left" | "center" | "right" | "justify";
   subtitle?: string;
   style?: Record<string, any>;
   borderWidth?: string;
@@ -161,7 +175,15 @@ export interface FunnelStage {
   id: string;
   name: string;
   order: number;
-  type: 'intro' | 'question' | 'transition' | 'processing' | 'result' | 'lead' | 'offer' | 'final';
+  type:
+    | "intro"
+    | "question"
+    | "transition"
+    | "processing"
+    | "result"
+    | "lead"
+    | "offer"
+    | "final";
   description?: string;
   isActive?: boolean;
   metadata?: {

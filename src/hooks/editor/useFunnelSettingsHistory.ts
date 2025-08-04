@@ -1,12 +1,15 @@
-import { useState, useCallback, useEffect } from 'react';
-import { useHistory } from '@/hooks/useHistory';
-import { FunnelSettings, defaultFunnelSettings } from '@/types/funnelSettings';
-import { FunnelSettingsService } from '@/services/funnelSettingsService';
-import { useAutoSaveWithDebounce } from './useAutoSaveWithDebounce';
+import { useState, useCallback, useEffect } from "react";
+import { useHistory } from "@/hooks/useHistory";
+import { FunnelSettings, defaultFunnelSettings } from "@/types/funnelSettings";
+import { FunnelSettingsService } from "@/services/funnelSettingsService";
+import { useAutoSaveWithDebounce } from "./useAutoSaveWithDebounce";
 
-export const useFunnelSettingsHistory = (funnelId: string, initialSettings: FunnelSettings) => {
+export const useFunnelSettingsHistory = (
+  funnelId: string,
+  initialSettings: FunnelSettings,
+) => {
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // Usar o hook useHistory para gerenciar histórico
   const {
     state: settings,
@@ -15,13 +18,16 @@ export const useFunnelSettingsHistory = (funnelId: string, initialSettings: Funn
     redo,
     reset,
     canUndo,
-    canRedo
+    canRedo,
   } = useHistory<FunnelSettings>(initialSettings);
 
   // Função para atualizar configurações
-  const updateSettings = useCallback((newSettings: FunnelSettings) => {
-    saveState(newSettings);
-  }, [saveState]);
+  const updateSettings = useCallback(
+    (newSettings: FunnelSettings) => {
+      saveState(newSettings);
+    },
+    [saveState],
+  );
 
   // Auto-save com debounce
   const { forceSave } = useAutoSaveWithDebounce({
@@ -29,27 +35,28 @@ export const useFunnelSettingsHistory = (funnelId: string, initialSettings: Funn
     onSave: async (data: FunnelSettings) => {
       try {
         await FunnelSettingsService.saveSettings(funnelId, data);
-        console.log('✅ Configurações salvas automaticamente');
+        console.log("✅ Configurações salvas automaticamente");
       } catch (error) {
-        console.error('❌ Erro no auto-save das configurações:', error);
+        console.error("❌ Erro no auto-save das configurações:", error);
         throw error;
       }
     },
     delay: 2000, // 2 segundos de debounce para configurações
     enabled: !isLoading,
-    showToasts: false // Não mostrar toasts para auto-save
+    showToasts: false, // Não mostrar toasts para auto-save
   });
 
   // Carregar configurações iniciais
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const loadedSettings = await FunnelSettingsService.loadSettings(funnelId);
+        const loadedSettings =
+          await FunnelSettingsService.loadSettings(funnelId);
         if (loadedSettings) {
           saveState(loadedSettings);
         }
       } catch (error) {
-        console.error('Erro ao carregar configurações:', error);
+        console.error("Erro ao carregar configurações:", error);
         // Usar configurações padrão em caso de erro
         saveState(defaultFunnelSettings);
       } finally {
@@ -86,6 +93,6 @@ export const useFunnelSettingsHistory = (funnelId: string, initialSettings: Funn
     canUndo,
     canRedo,
     isLoading,
-    forceSave
+    forceSave,
   };
 };

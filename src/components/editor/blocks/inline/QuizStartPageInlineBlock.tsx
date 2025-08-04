@@ -1,7 +1,7 @@
-import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { ChevronRight, Play, Star } from 'lucide-react';
+import React from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ChevronRight, Play, Star } from "lucide-react";
 
 interface QuizStartPageInlineBlockProps {
   title?: string;
@@ -16,7 +16,7 @@ const QuizStartPageInlineBlock: React.FC<QuizStartPageInlineBlockProps> = ({
   subtitle = "Responda algumas perguntas rápidas e descubra o que combina com você",
   buttonText = "Começar Quiz",
   onStart,
-  className = ""
+  className = "",
 }) => {
   return (
     <Card className={`p-8 text-center space-y-6 ${className}`}>
@@ -26,11 +26,9 @@ const QuizStartPageInlineBlock: React.FC<QuizStartPageInlineBlockProps> = ({
             <Star className="w-8 h-8 text-primary" />
           </div>
         </div>
-        
-        <h1 className="text-3xl font-bold text-foreground">
-          {title}
-        </h1>
-        
+
+        <h1 className="text-3xl font-bold text-foreground">{title}</h1>
+
         <p className="text-lg text-muted-foreground max-w-md mx-auto">
           {subtitle}
         </p>
@@ -46,11 +44,9 @@ const QuizStartPageInlineBlock: React.FC<QuizStartPageInlineBlockProps> = ({
           {buttonText}
           <ChevronRight className="w-5 h-5 ml-2" />
         </Button>
-        
+
         <p className="text-sm text-muted-foreground">
-          • Apenas 5 minutos
-          • Completamente gratuito
-          • Resultado personalizado
+          • Apenas 5 minutos • Completamente gratuito • Resultado personalizado
         </p>
       </div>
     </Card>

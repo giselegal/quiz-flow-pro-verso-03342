@@ -1,4 +1,10 @@
-import { sqliteTable, text, integer, blob, real } from "drizzle-orm/sqlite-core";
+import {
+  sqliteTable,
+  text,
+  integer,
+  blob,
+  real,
+} from "drizzle-orm/sqlite-core";
 
 export const users = sqliteTable("users", {
   id: integer("id").primaryKey({ autoIncrement: true }),
@@ -33,7 +39,7 @@ export const funnels = sqliteTable("funnels", {
   name: text("name").notNull(),
   description: text("description"),
   userId: integer("user_id"),
-  isPublished: integer("is_published", { mode: 'boolean' }).default(false),
+  isPublished: integer("is_published", { mode: "boolean" }).default(false),
   version: integer("version").default(1),
   settings: text("settings"), // JSON text
   createdAt: text("created_at"),

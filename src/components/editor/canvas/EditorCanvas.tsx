@@ -1,10 +1,12 @@
-
-import React from 'react';
-import { DndContext, DragEndEvent } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { Block } from '@/types/editor';
-import UniversalBlockRenderer from '../blocks/UniversalBlockRenderer';
-import { SortableBlockWrapper } from './SortableBlockWrapper';
+import React from "react";
+import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { Block } from "@/types/editor";
+import UniversalBlockRenderer from "../blocks/UniversalBlockRenderer";
+import { SortableBlockWrapper } from "./SortableBlockWrapper";
 
 interface EditorCanvasProps {
   blocks: Block[];
@@ -14,7 +16,7 @@ interface EditorCanvasProps {
   onDeleteBlock: (blockId: string) => void;
   onReorderBlocks: (sourceIndex: number, destinationIndex: number) => void;
   isPreviewing?: boolean;
-  viewportSize?: 'sm' | 'md' | 'lg';
+  viewportSize?: "sm" | "md" | "lg";
 }
 
 export const EditorCanvas: React.FC<EditorCanvasProps> = ({
@@ -25,16 +27,16 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
   onDeleteBlock,
   onReorderBlocks,
   isPreviewing = false,
-  viewportSize = 'lg'
+  viewportSize = "lg",
 }) => {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    
+
     if (!over || active.id === over.id) return;
-    
+
     const oldIndex = blocks.findIndex((block) => block.id === active.id);
     const newIndex = blocks.findIndex((block) => block.id === over.id);
-    
+
     if (oldIndex !== -1 && newIndex !== -1) {
       onReorderBlocks(oldIndex, newIndex);
     }
@@ -42,10 +44,14 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
 
   const getViewportClasses = () => {
     switch (viewportSize) {
-      case 'sm': return 'max-w-full mx-auto px-2';
-      case 'md': return 'max-w-full mx-auto px-4';
-      case 'lg': return 'max-w-full mx-auto px-6';
-      default: return 'max-w-full mx-auto px-6';
+      case "sm":
+        return "max-w-full mx-auto px-2";
+      case "md":
+        return "max-w-full mx-auto px-4";
+      case "lg":
+        return "max-w-full mx-auto px-6";
+      default:
+        return "max-w-full mx-auto px-6";
     }
   };
 
@@ -76,7 +82,10 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
   return (
     <div className={`py-2 ${getViewportClasses()}`}>
       <DndContext onDragEnd={handleDragEnd}>
-        <SortableContext items={blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
+        <SortableContext
+          items={blocks.map((b) => b.id)}
+          strategy={verticalListSortingStrategy}
+        >
           <div className="space-y-2">
             {blocks.map((block) => (
               <div key={block.id} className="w-full flex justify-center">
@@ -95,7 +104,9 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
             {blocks.length === 0 && (
               <div className="text-center py-12 text-gray-500">
                 <p>Nenhum componente adicionado ainda.</p>
-                <p className="text-sm">Arraste componentes da barra lateral para começar.</p>
+                <p className="text-sm">
+                  Arraste componentes da barra lateral para começar.
+                </p>
               </div>
             )}
           </div>

@@ -1,8 +1,7 @@
-
-import React from 'react';
-import { QuizComponentData } from '@/types/quizBuilder';
-import { Card } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { QuizComponentData } from "@/types/quizBuilder";
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 interface ComponentRendererProps {
   component: QuizComponentData;
@@ -13,40 +12,38 @@ interface ComponentRendererProps {
 const ComponentRenderer: React.FC<ComponentRendererProps> = ({
   component,
   isSelected = false,
-  onClick
+  onClick,
 }) => {
   const data = component.data || {};
-  
+
   const renderComponent = () => {
     switch (component.type) {
-      case 'header':
+      case "header":
         return (
           <div className="space-y-2">
-            <h2 className="text-2xl font-bold">{data.title || 'Título'}</h2>
-            <p className="text-lg">{data.subtitle || 'Subtítulo'}</p>
+            <h2 className="text-2xl font-bold">{data.title || "Título"}</h2>
+            <p className="text-lg">{data.subtitle || "Subtítulo"}</p>
           </div>
         );
 
-      case 'text':
+      case "text":
         return (
-          <div className="prose max-w-none">
-            {data.text || 'Texto padrão'}
-          </div>
+          <div className="prose max-w-none">{data.text || "Texto padrão"}</div>
         );
 
-      case 'headline':
+      case "headline":
         return (
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold">{data.title || 'Título'}</h1>
+            <h1 className="text-3xl font-bold">{data.title || "Título"}</h1>
             {data.subtitle && <p className="text-xl">{data.subtitle}</p>}
           </div>
         );
 
-      case 'image':
+      case "image":
         return data.imageUrl ? (
           <img
             src={data.imageUrl}
-            alt={data.alt || 'Imagem'}
+            alt={data.alt || "Imagem"}
             className="max-w-full h-auto rounded"
           />
         ) : (
@@ -55,15 +52,17 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
           </div>
         );
 
-      case 'multipleChoice':
+      case "multipleChoice":
         return (
           <div className="space-y-2">
-            <h3 className="font-medium">{data.question || 'Pergunta'}</h3>
-            {(data.options && data.options.length > 0) ? (
+            <h3 className="font-medium">{data.question || "Pergunta"}</h3>
+            {data.options && data.options.length > 0 ? (
               data.options.map((option: string, index: number) => (
                 <div key={index} className="flex items-center space-x-2">
                   <input type="checkbox" id={`opt-${component.id}-${index}`} />
-                  <label htmlFor={`opt-${component.id}-${index}`}>{option}</label>
+                  <label htmlFor={`opt-${component.id}-${index}`}>
+                    {option}
+                  </label>
                 </div>
               ))
             ) : (
@@ -72,15 +71,21 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
           </div>
         );
 
-      case 'singleChoice':
+      case "singleChoice":
         return (
           <div className="space-y-2">
-            <h3 className="font-medium">{data.question || 'Pergunta'}</h3>
-            {(data.options && data.options.length > 0) ? (
+            <h3 className="font-medium">{data.question || "Pergunta"}</h3>
+            {data.options && data.options.length > 0 ? (
               data.options.map((option: string, index: number) => (
                 <div key={index} className="flex items-center space-x-2">
-                  <input type="radio" name={`opt-${component.id}`} id={`opt-${component.id}-${index}`} />
-                  <label htmlFor={`opt-${component.id}-${index}`}>{option}</label>
+                  <input
+                    type="radio"
+                    name={`opt-${component.id}`}
+                    id={`opt-${component.id}-${index}`}
+                  />
+                  <label htmlFor={`opt-${component.id}-${index}`}>
+                    {option}
+                  </label>
                 </div>
               ))
             ) : (
@@ -89,23 +94,26 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
           </div>
         );
 
-      case 'scale':
+      case "scale":
         return (
           <div className="space-y-4">
-            <h3 className="font-medium">{data.question || 'Pergunta'}</h3>
+            <h3 className="font-medium">{data.question || "Pergunta"}</h3>
             <div className="flex justify-between items-center">
-              <span className="text-sm">{data.minLabel || 'Mínimo'}</span>
+              <span className="text-sm">{data.minLabel || "Mínimo"}</span>
               <div className="flex space-x-2">
-                {Array.from({ length: (data.maxValue || 10) - (data.minValue || 1) + 1 }, (_, i) => (
-                  <button
-                    key={i}
-                    className="w-10 h-10 border rounded hover:bg-gray-100"
-                  >
-                    {(data.minValue || 1) + i}
-                  </button>
-                ))}
+                {Array.from(
+                  { length: (data.maxValue || 10) - (data.minValue || 1) + 1 },
+                  (_, i) => (
+                    <button
+                      key={i}
+                      className="w-10 h-10 border rounded hover:bg-gray-100"
+                    >
+                      {(data.minValue || 1) + i}
+                    </button>
+                  ),
+                )}
               </div>
-              <span className="text-sm">{data.maxLabel || 'Máximo'}</span>
+              <span className="text-sm">{data.maxLabel || "Máximo"}</span>
             </div>
           </div>
         );
@@ -113,23 +121,23 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
       default:
         return (
           <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center">
-            <p className="text-gray-500">Tipo de componente desconhecido: {component.type}</p>
+            <p className="text-gray-500">
+              Tipo de componente desconhecido: {component.type}
+            </p>
           </div>
         );
     }
   };
 
   return (
-    <div 
+    <div
       onClick={onClick}
       className={cn(
         "transition-all cursor-pointer",
-        isSelected ? 'ring-2 ring-blue-500' : ''
+        isSelected ? "ring-2 ring-blue-500" : "",
       )}
     >
-      <Card className="p-4">
-        {renderComponent()}
-      </Card>
+      <Card className="p-4">{renderComponent()}</Card>
     </div>
   );
 };

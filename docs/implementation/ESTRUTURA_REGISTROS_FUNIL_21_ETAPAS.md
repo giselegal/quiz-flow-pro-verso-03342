@@ -12,6 +12,7 @@ O serviço está tentando usar `quizzes` (que existe), mas a estrutura correta p
 ## 📋 ESTRUTURA 1: Tabela `quizzes` (Atual/Incorreta para Funis)
 
 ### Campos da tabela `quizzes`:
+
 ```sql
 CREATE TABLE quizzes (
   id UUID PRIMARY KEY,
@@ -28,17 +29,24 @@ CREATE TABLE quizzes (
 ```
 
 ### ❌ Como o serviço está tentando salvar (INCORRETO):
+
 ```json
 {
   "id": "funnel_abc123",
-  "title": "Quiz Quest Challenge - 21 Etapas", 
+  "title": "Quiz Quest Challenge - 21 Etapas",
   "description": "Funil interativo com 21 etapas",
   "category": "geral",
   "difficulty": "medium",
   "data": {
-    "funnel": { /* todo o objeto funnel */ },
-    "pages": [ /* array com 21 páginas */ ],
-    "config": { /* configurações */ }
+    "funnel": {
+      /* todo o objeto funnel */
+    },
+    "pages": [
+      /* array com 21 páginas */
+    ],
+    "config": {
+      /* configurações */
+    }
   },
   "is_published": false
 }
@@ -49,6 +57,7 @@ CREATE TABLE quizzes (
 ## 🗄️ ESTRUTURA 2: Tabelas `funnels` + `funnel_pages` (Correta)
 
 ### Tabela `funnels` (Dados principais):
+
 ```sql
 CREATE TABLE funnels (
   id TEXT PRIMARY KEY,
@@ -64,6 +73,7 @@ CREATE TABLE funnels (
 ```
 
 ### Tabela `funnel_pages` (21 Etapas separadas):
+
 ```sql
 CREATE TABLE funnel_pages (
   id TEXT PRIMARY KEY,
@@ -81,6 +91,7 @@ CREATE TABLE funnel_pages (
 ## 📝 EXEMPLO PRÁTICO: Quiz Quest Challenge com 21 Etapas
 
 ### 1️⃣ Registro na tabela `funnels`:
+
 ```json
 {
   "id": "quiz_quest_challenge_v1",
@@ -104,6 +115,7 @@ CREATE TABLE funnel_pages (
 ### 2️⃣ Registros na tabela `funnel_pages` (21 registros):
 
 #### Etapa 1 - Boas-vindas:
+
 ```json
 {
   "id": "page_welcome",
@@ -119,13 +131,13 @@ CREATE TABLE funnel_pages (
       "style": { "fontSize": "2xl", "color": "primary" }
     },
     {
-      "id": "block_text_1", 
+      "id": "block_text_1",
       "type": "text",
       "content": "Responda 20 perguntas e descubra qual tipo de herói você seria em uma aventura épica."
     },
     {
       "id": "block_button_1",
-      "type": "button", 
+      "type": "button",
       "text": "Começar Aventura",
       "action": "next_page"
     }
@@ -138,10 +150,11 @@ CREATE TABLE funnel_pages (
 ```
 
 #### Etapa 2 - Primeira Pergunta:
+
 ```json
 {
   "id": "page_q1",
-  "funnel_id": "quiz_quest_challenge_v1", 
+  "funnel_id": "quiz_quest_challenge_v1",
   "page_type": "question",
   "page_order": 2,
   "title": "Qual ambiente você prefere?",
@@ -156,28 +169,57 @@ CREATE TABLE funnel_pages (
       "id": "block_options_1",
       "type": "options",
       "options": [
-        { "id": "opt1", "text": "🏔️ Montanhas geladas", "value": "mountains", "points": { "warrior": 2, "mage": 1 } },
-        { "id": "opt2", "text": "🌊 Oceanos profundos", "value": "ocean", "points": { "explorer": 2, "healer": 1 } },
-        { "id": "opt3", "text": "🌲 Florestas místicas", "value": "forest", "points": { "ranger": 2, "druid": 2 } },
-        { "id": "opt4", "text": "🏜️ Desertos áridos", "value": "desert", "points": { "nomad": 2, "warrior": 1 } }
+        {
+          "id": "opt1",
+          "text": "🏔️ Montanhas geladas",
+          "value": "mountains",
+          "points": { "warrior": 2, "mage": 1 }
+        },
+        {
+          "id": "opt2",
+          "text": "🌊 Oceanos profundos",
+          "value": "ocean",
+          "points": { "explorer": 2, "healer": 1 }
+        },
+        {
+          "id": "opt3",
+          "text": "🌲 Florestas místicas",
+          "value": "forest",
+          "points": { "ranger": 2, "druid": 2 }
+        },
+        {
+          "id": "opt4",
+          "text": "🏜️ Desertos áridos",
+          "value": "desert",
+          "points": { "nomad": 2, "warrior": 1 }
+        }
       ]
     }
   ],
   "metadata": {
     "scoring": {
       "type": "points",
-      "categories": ["warrior", "mage", "explorer", "healer", "ranger", "druid", "nomad"]
+      "categories": [
+        "warrior",
+        "mage",
+        "explorer",
+        "healer",
+        "ranger",
+        "druid",
+        "nomad"
+      ]
     }
   }
 }
 ```
 
 #### Etapa 3-20 - Perguntas do Quiz:
+
 ```json
 {
   "id": "page_q2",
   "funnel_id": "quiz_quest_challenge_v1",
-  "page_type": "question", 
+  "page_type": "question",
   "page_order": 3,
   "title": "Qual sua arma preferida?",
   "blocks": [
@@ -188,13 +230,33 @@ CREATE TABLE funnel_pages (
       "questionType": "single_choice"
     },
     {
-      "id": "block_options_2", 
+      "id": "block_options_2",
       "type": "options",
       "options": [
-        { "id": "opt1", "text": "⚔️ Espada longa", "value": "sword", "points": { "warrior": 3 } },
-        { "id": "opt2", "text": "🏹 Arco élfico", "value": "bow", "points": { "ranger": 3 } },
-        { "id": "opt3", "text": "🔮 Cajado mágico", "value": "staff", "points": { "mage": 3 } },
-        { "id": "opt4", "text": "🛡️ Escudo protetor", "value": "shield", "points": { "healer": 3 } }
+        {
+          "id": "opt1",
+          "text": "⚔️ Espada longa",
+          "value": "sword",
+          "points": { "warrior": 3 }
+        },
+        {
+          "id": "opt2",
+          "text": "🏹 Arco élfico",
+          "value": "bow",
+          "points": { "ranger": 3 }
+        },
+        {
+          "id": "opt3",
+          "text": "🔮 Cajado mágico",
+          "value": "staff",
+          "points": { "mage": 3 }
+        },
+        {
+          "id": "opt4",
+          "text": "🛡️ Escudo protetor",
+          "value": "shield",
+          "points": { "healer": 3 }
+        }
       ]
     }
   ]
@@ -202,6 +264,7 @@ CREATE TABLE funnel_pages (
 ```
 
 #### Etapa 21 - Resultado:
+
 ```json
 {
   "id": "page_result",
@@ -227,7 +290,7 @@ CREATE TABLE funnel_pages (
             "image": "/images/warrior.png"
           },
           "mage": {
-            "title": "🔮 Mago Sábio", 
+            "title": "🔮 Mago Sábio",
             "description": "Sua inteligência e conhecimento místico fazem de você um poderoso aliado!",
             "image": "/images/mage.png"
           },
@@ -252,14 +315,16 @@ CREATE TABLE funnel_pages (
 ## 📊 COMPARAÇÃO DOS MÉTODOS
 
 ### ❌ Método Atual (quizzes - JSON único):
+
 - **Vantagem**: Simples, 1 tabela
-- **Desvantagens**: 
+- **Desvantagens**:
   - JSON gigante difícil de consultar
   - Sem relações estruturadas
   - Difícil buscar etapas específicas
   - Performance ruim para grandes funis
 
 ### ✅ Método Correto (funnels + funnel_pages):
+
 - **Vantagens**:
   - Estrutura relacional limpa
   - Fácil consultar etapas específicas

@@ -1,4 +1,13 @@
-import { pgTable, text, serial, integer, boolean, timestamp, uuid, jsonb } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  serial,
+  integer,
+  boolean,
+  timestamp,
+  uuid,
+  jsonb,
+} from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -33,7 +42,9 @@ export const funnels = pgTable("funnels", {
 
 export const funnelPages = pgTable("funnel_pages", {
   id: uuid("id").defaultRandom().primaryKey(),
-  funnelId: uuid("funnel_id").notNull().references(() => funnels.id, { onDelete: "cascade" }),
+  funnelId: uuid("funnel_id")
+    .notNull()
+    .references(() => funnels.id, { onDelete: "cascade" }),
   pageType: text("page_type").notNull(), // 'intro', 'question', 'main-transition', etc.
   pageOrder: integer("page_order").notNull(),
   title: text("title"),
@@ -45,7 +56,9 @@ export const funnelPages = pgTable("funnel_pages", {
 
 export const funnelVersions = pgTable("funnel_versions", {
   id: uuid("id").defaultRandom().primaryKey(),
-  funnelId: uuid("funnel_id").notNull().references(() => funnels.id, { onDelete: "cascade" }),
+  funnelId: uuid("funnel_id")
+    .notNull()
+    .references(() => funnels.id, { onDelete: "cascade" }),
   version: integer("version").notNull(),
   funnelData: jsonb("funnel_data").notNull(), // complete funnel snapshot
   createdAt: timestamp("created_at").defaultNow(),
@@ -82,7 +95,9 @@ export const insertFunnelPageSchema = createInsertSchema(funnelPages).pick({
   metadata: true,
 });
 
-export const insertFunnelVersionSchema = createInsertSchema(funnelVersions).pick({
+export const insertFunnelVersionSchema = createInsertSchema(
+  funnelVersions,
+).pick({
   funnelId: true,
   version: true,
   funnelData: true,

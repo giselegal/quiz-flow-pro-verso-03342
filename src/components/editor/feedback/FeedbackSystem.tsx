@@ -1,24 +1,24 @@
 // Sistema de Feedback Visual Avançado
-import React, { useState, useEffect, useCallback } from 'react';
-import { createPortal } from 'react-dom';
-import { 
-  CheckCircle, 
-  AlertCircle, 
-  AlertTriangle, 
-  Info, 
-  X, 
+import React, { useState, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
+import {
+  CheckCircle,
+  AlertCircle,
+  AlertTriangle,
+  Info,
+  X,
   Loader2,
   Wifi,
   WifiOff,
   Save,
   Undo,
   Redo,
-  Clock
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+  Clock,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Tipos para o sistema de feedback
-export type FeedbackType = 'success' | 'error' | 'warning' | 'info' | 'loading';
+export type FeedbackType = "success" | "error" | "warning" | "info" | "loading";
 
 export interface ToastMessage {
   id: string;
@@ -40,7 +40,7 @@ export interface LoadingState {
 }
 
 export interface AutoSaveState {
-  status: 'idle' | 'saving' | 'saved' | 'error';
+  status: "idle" | "saving" | "saved" | "error";
   lastSaved?: Date;
   pendingChanges?: number;
 }
@@ -55,15 +55,15 @@ export interface ConnectionState {
 export const useToast = () => {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
-  const addToast = useCallback((toast: Omit<ToastMessage, 'id'>) => {
+  const addToast = useCallback((toast: Omit<ToastMessage, "id">) => {
     const id = `toast-${Date.now()}-${Math.random()}`;
     const newToast: ToastMessage = {
       id,
       duration: 5000,
-      ...toast
+      ...toast,
     };
 
-    setToasts(prev => [...prev, newToast]);
+    setToasts((prev) => [...prev, newToast]);
 
     // Auto remove se não for persistente
     if (!newToast.persistent && newToast.duration) {
@@ -76,7 +76,7 @@ export const useToast = () => {
   }, []);
 
   const removeToast = useCallback((id: string) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id));
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
   }, []);
 
   const clearToasts = useCallback(() => {
@@ -87,14 +87,14 @@ export const useToast = () => {
     toasts,
     addToast,
     removeToast,
-    clearToasts
+    clearToasts,
   };
 };
 
 // Hook para estado de loading
 export const useLoadingState = () => {
   const [loadingState, setLoadingState] = useState<LoadingState>({
-    isLoading: false
+    isLoading: false,
   });
 
   const startLoading = useCallback((message?: string) => {
@@ -102,7 +102,7 @@ export const useLoadingState = () => {
   }, []);
 
   const updateProgress = useCallback((progress: number, message?: string) => {
-    setLoadingState(prev => ({ ...prev, progress, message }));
+    setLoadingState((prev) => ({ ...prev, progress, message }));
   }, []);
 
   const stopLoading = useCallback(() => {
@@ -113,7 +113,7 @@ export const useLoadingState = () => {
     loadingState,
     startLoading,
     updateProgress,
-    stopLoading
+    stopLoading,
   };
 };
 
@@ -121,11 +121,11 @@ export const useLoadingState = () => {
 export const useAutoSave = (
   saveFunction: () => Promise<void>,
   deps: any[],
-  options: { interval?: number; enabled?: boolean } = {}
+  options: { interval?: number; enabled?: boolean } = {},
 ) => {
   const { interval = 3000, enabled = true } = options;
   const [autoSaveState, setAutoSaveState] = useState<AutoSaveState>({
-    status: 'idle'
+    status: "idle",
   });
 
   const [pendingChanges, setPendingChanges] = useState(0);
@@ -134,7 +134,7 @@ export const useAutoSave = (
   // Detectar mudanças
   useEffect(() => {
     if (enabled) {
-      setPendingChanges(prev => prev + 1);
+      setPendingChanges((prev) => prev + 1);
     }
   }, deps);
 
@@ -143,32 +143,32 @@ export const useAutoSave = (
     if (!enabled || pendingChanges === 0) return;
 
     const timer = setTimeout(async () => {
-      setAutoSaveState(prev => ({ ...prev, status: 'saving' }));
-      
+      setAutoSaveState((prev) => ({ ...prev, status: "saving" }));
+
       try {
         await saveFunction();
         setAutoSaveState({
-          status: 'saved',
+          status: "saved",
           lastSaved: new Date(),
-          pendingChanges: 0
+          pendingChanges: 0,
         });
         setPendingChanges(0);
-        
+
         addToast({
-          type: 'success',
-          title: 'Salvo automaticamente',
-          duration: 2000
+          type: "success",
+          title: "Salvo automaticamente",
+          duration: 2000,
         });
       } catch (error) {
-        setAutoSaveState(prev => ({ ...prev, status: 'error' }));
+        setAutoSaveState((prev) => ({ ...prev, status: "error" }));
         addToast({
-          type: 'error',
-          title: 'Erro ao salvar',
-          description: 'Suas alterações não foram salvas',
+          type: "error",
+          title: "Erro ao salvar",
+          description: "Suas alterações não foram salvas",
           action: {
-            label: 'Tentar novamente',
-            onClick: () => saveFunction()
-          }
+            label: "Tentar novamente",
+            onClick: () => saveFunction(),
+          },
         });
       }
     }, interval);
@@ -178,7 +178,7 @@ export const useAutoSave = (
 
   return {
     autoSaveState,
-    pendingChanges: pendingChanges > 0
+    pendingChanges: pendingChanges > 0,
   };
 };
 
@@ -186,24 +186,24 @@ export const useAutoSave = (
 export const useConnectionState = () => {
   const [connectionState, setConnectionState] = useState<ConnectionState>({
     isOnline: navigator.onLine,
-    isConnected: true
+    isConnected: true,
   });
 
   useEffect(() => {
     const handleOnline = () => {
-      setConnectionState(prev => ({ ...prev, isOnline: true }));
+      setConnectionState((prev) => ({ ...prev, isOnline: true }));
     };
 
     const handleOffline = () => {
-      setConnectionState(prev => ({ ...prev, isOnline: false }));
+      setConnectionState((prev) => ({ ...prev, isOnline: false }));
     };
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
 
@@ -217,21 +217,31 @@ const Toast: React.FC<{
 }> = ({ toast, onRemove }) => {
   const getIcon = () => {
     switch (toast.type) {
-      case 'success': return <CheckCircle className="h-5 w-5 text-green-500" />;
-      case 'error': return <AlertCircle className="h-5 w-5 text-red-500" />;
-      case 'warning': return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
-      case 'info': return <Info className="h-5 w-5 text-blue-500" />;
-      case 'loading': return <Loader2 className="h-5 w-5 text-gray-500 animate-spin" />;
+      case "success":
+        return <CheckCircle className="h-5 w-5 text-green-500" />;
+      case "error":
+        return <AlertCircle className="h-5 w-5 text-red-500" />;
+      case "warning":
+        return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
+      case "info":
+        return <Info className="h-5 w-5 text-blue-500" />;
+      case "loading":
+        return <Loader2 className="h-5 w-5 text-gray-500 animate-spin" />;
     }
   };
 
   const getBgColor = () => {
     switch (toast.type) {
-      case 'success': return 'bg-green-50 border-green-200';
-      case 'error': return 'bg-red-50 border-red-200';
-      case 'warning': return 'bg-yellow-50 border-yellow-200';
-      case 'info': return 'bg-blue-50 border-blue-200';
-      case 'loading': return 'bg-gray-50 border-gray-200';
+      case "success":
+        return "bg-green-50 border-green-200";
+      case "error":
+        return "bg-red-50 border-red-200";
+      case "warning":
+        return "bg-yellow-50 border-yellow-200";
+      case "info":
+        return "bg-blue-50 border-blue-200";
+      case "loading":
+        return "bg-gray-50 border-gray-200";
     }
   };
 
@@ -243,17 +253,11 @@ const Toast: React.FC<{
       className={`max-w-sm w-full bg-white rounded-lg shadow-lg border ${getBgColor()} p-4`}
     >
       <div className="flex items-start">
-        <div className="flex-shrink-0">
-          {getIcon()}
-        </div>
+        <div className="flex-shrink-0">{getIcon()}</div>
         <div className="ml-3 w-0 flex-1">
-          <p className="text-sm font-medium text-gray-900">
-            {toast.title}
-          </p>
+          <p className="text-sm font-medium text-gray-900">{toast.title}</p>
           {toast.description && (
-            <p className="mt-1 text-sm text-gray-500">
-              {toast.description}
-            </p>
+            <p className="mt-1 text-sm text-gray-500">{toast.description}</p>
           )}
           {toast.action && (
             <div className="mt-3">
@@ -286,16 +290,12 @@ export const ToastContainer: React.FC = () => {
   return createPortal(
     <div className="fixed bottom-0 right-0 z-50 p-6 space-y-4">
       <AnimatePresence>
-        {toasts.map(toast => (
-          <Toast
-            key={toast.id}
-            toast={toast}
-            onRemove={removeToast}
-          />
+        {toasts.map((toast) => (
+          <Toast key={toast.id} toast={toast} onRemove={removeToast} />
         ))}
       </AnimatePresence>
     </div>,
-    document.body
+    document.body,
   );
 };
 
@@ -306,36 +306,38 @@ export const AutoSaveIndicator: React.FC<{
 }> = ({ autoSaveState, pendingChanges }) => {
   const getStatusIcon = () => {
     switch (autoSaveState.status) {
-      case 'saving':
+      case "saving":
         return <Loader2 className="h-4 w-4 animate-spin text-blue-500" />;
-      case 'saved':
+      case "saved":
         return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case 'error':
+      case "error":
         return <AlertCircle className="h-4 w-4 text-red-500" />;
       default:
-        return pendingChanges ? <Clock className="h-4 w-4 text-yellow-500" /> : <Save className="h-4 w-4 text-gray-400" />;
+        return pendingChanges ? (
+          <Clock className="h-4 w-4 text-yellow-500" />
+        ) : (
+          <Save className="h-4 w-4 text-gray-400" />
+        );
     }
   };
 
   const getStatusText = () => {
     switch (autoSaveState.status) {
-      case 'saving':
-        return 'Salvando...';
-      case 'saved':
-        return `Salvo ${autoSaveState.lastSaved ? autoSaveState.lastSaved.toLocaleTimeString() : ''}`;
-      case 'error':
-        return 'Erro ao salvar';
+      case "saving":
+        return "Salvando...";
+      case "saved":
+        return `Salvo ${autoSaveState.lastSaved ? autoSaveState.lastSaved.toLocaleTimeString() : ""}`;
+      case "error":
+        return "Erro ao salvar";
       default:
-        return pendingChanges ? 'Alterações pendentes' : 'Tudo salvo';
+        return pendingChanges ? "Alterações pendentes" : "Tudo salvo";
     }
   };
 
   return (
     <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-md border text-sm">
       {getStatusIcon()}
-      <span className="text-gray-600">
-        {getStatusText()}
-      </span>
+      <span className="text-gray-600">{getStatusText()}</span>
     </div>
   );
 };
@@ -352,7 +354,7 @@ export const ConnectionIndicator: React.FC<{
     <div className="flex items-center gap-2 px-3 py-1 bg-red-50 border border-red-200 rounded-md text-sm">
       <WifiOff className="h-4 w-4 text-red-500" />
       <span className="text-red-600">
-        {!connectionState.isOnline ? 'Sem conexão' : 'Conectando...'}
+        {!connectionState.isOnline ? "Sem conexão" : "Conectando..."}
       </span>
     </div>
   );
@@ -362,14 +364,14 @@ export const ConnectionIndicator: React.FC<{
 export const SkeletonLoader: React.FC<{
   className?: string;
   lines?: number;
-}> = ({ className = '', lines = 3 }) => {
+}> = ({ className = "", lines = 3 }) => {
   return (
     <div className={`animate-pulse ${className}`}>
       {Array.from({ length: lines }).map((_, index) => (
         <div
           key={index}
           className={`h-4 bg-gray-200 rounded mb-3 ${
-            index === lines - 1 ? 'w-3/4' : 'w-full'
+            index === lines - 1 ? "w-3/4" : "w-full"
           }`}
         />
       ))}
@@ -391,9 +393,7 @@ export const LoadingOverlay: React.FC<{
         <div className="flex items-center justify-center mb-4">
           <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
         </div>
-        {message && (
-          <p className="text-center text-gray-700 mb-4">{message}</p>
-        )}
+        {message && <p className="text-center text-gray-700 mb-4">{message}</p>}
         {progress !== undefined && (
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div
@@ -452,13 +452,13 @@ export const useFeedbackSystem = () => {
     connectionState,
     // Métodos de conveniência
     showSuccess: (title: string, description?: string) =>
-      toast.addToast({ type: 'success', title, description }),
+      toast.addToast({ type: "success", title, description }),
     showError: (title: string, description?: string) =>
-      toast.addToast({ type: 'error', title, description }),
+      toast.addToast({ type: "error", title, description }),
     showWarning: (title: string, description?: string) =>
-      toast.addToast({ type: 'warning', title, description }),
+      toast.addToast({ type: "warning", title, description }),
     showInfo: (title: string, description?: string) =>
-      toast.addToast({ type: 'info', title, description })
+      toast.addToast({ type: "info", title, description }),
   };
 };
 

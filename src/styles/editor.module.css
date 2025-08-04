@@ -818,7 +818,7 @@
   .fourColumnLayout {
     grid-template-columns: 260px 1fr 350px;
   }
-  
+
   .quizPreview {
     display: none;
   }
@@ -828,7 +828,7 @@
   .fourColumnLayout {
     grid-template-columns: 1fr 300px;
   }
-  
+
   .componentPanel {
     display: none;
   }
@@ -838,7 +838,7 @@
   .fourColumnLayout {
     grid-template-columns: 1fr;
   }
-  
+
   .propertiesPanel {
     display: none;
   }

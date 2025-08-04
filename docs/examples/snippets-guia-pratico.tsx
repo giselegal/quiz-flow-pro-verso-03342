@@ -1,9 +1,9 @@
 /**
  * GUIA PRÁTICO: ES7 React/Redux/React-Native/JS Snippets
- * 
+ *
  * Este arquivo demonstra como usar os snippets mais úteis da extensão
  * ES7+ React/Redux/React-Native snippets no VS Code
- * 
+ *
  * COMO USAR:
  * 1. Digite o snippet (ex: rafce)
  * 2. Pressione Tab ou Enter
@@ -11,7 +11,7 @@
  * 4. Use Tab para navegar entre placeholders
  */
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 
 // ===== COMPONENTES BÁSICOS =====
 
@@ -50,17 +50,17 @@ function ComponenteFuncao() {
 export const ExemplosHooks = () => {
   // 4. Digite: useState + Tab
   const [count, setCount] = useState(0);
-  
+
   // 5. Digite: useEffect + Tab
   useEffect(() => {
-    console.log('Component mounted');
+    console.log("Component mounted");
   }, []);
-  
+
   // 6. Digite: useCallback + Tab
   const handleClick = useCallback(() => {
-    setCount(prev => prev + 1);
+    setCount((prev) => prev + 1);
   }, []);
-  
+
   // 7. Digite: useMemo + Tab
   const expensiveValue = useMemo(() => {
     return count * 2;
@@ -81,30 +81,30 @@ export const ExemplosHooks = () => {
 // Digite: const use + Tab para começar
 const useCounter = (initialValue = 0) => {
   const [count, setCount] = useState(initialValue);
-  
+
   const increment = useCallback(() => {
-    setCount(prev => prev + 1);
+    setCount((prev) => prev + 1);
   }, []);
-  
+
   const decrement = useCallback(() => {
-    setCount(prev => prev - 1);
+    setCount((prev) => prev - 1);
   }, []);
-  
+
   const reset = useCallback(() => {
     setCount(initialValue);
   }, [initialValue]);
-  
+
   return { count, increment, decrement, reset };
 };
 
 // 9. Hook para toggle
 const useToggle = (initialValue = false) => {
   const [value, setValue] = useState(initialValue);
-  
+
   const toggle = useCallback(() => {
-    setValue(prev => !prev);
+    setValue((prev) => !prev);
   }, []);
-  
+
   return [value, toggle] as const;
 };
 
@@ -119,14 +119,17 @@ const useLocalStorage = (key: string, initialValue: string) => {
     }
   });
 
-  const setValue = useCallback((value: string) => {
-    try {
-      setStoredValue(value);
-      window.localStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-      console.error('Erro ao salvar no localStorage:', error);
-    }
-  }, [key]);
+  const setValue = useCallback(
+    (value: string) => {
+      try {
+        setStoredValue(value);
+        window.localStorage.setItem(key, JSON.stringify(value));
+      } catch (error) {
+        console.error("Erro ao salvar no localStorage:", error);
+      }
+    },
+    [key],
+  );
 
   return [storedValue, setValue] as const;
 };
@@ -136,23 +139,23 @@ const useLocalStorage = (key: string, initialValue: string) => {
 // 11. Componente de Quiz Question usando snippets
 export const QuizQuestion = () => {
   // Digite: useState + Tab
-  const [selectedAnswer, setSelectedAnswer] = useState('');
+  const [selectedAnswer, setSelectedAnswer] = useState("");
   const [isAnswered, setIsAnswered] = useState(false);
-  
+
   // Digite: useCallback + Tab
   const handleAnswerSelect = useCallback((answer: string) => {
     setSelectedAnswer(answer);
     setIsAnswered(true);
   }, []);
-  
+
   // Digite: useEffect + Tab
   useEffect(() => {
     if (isAnswered) {
-      console.log('Answer selected:', selectedAnswer);
+      console.log("Answer selected:", selectedAnswer);
     }
   }, [isAnswered, selectedAnswer]);
 
-  const options = ['Elegante', 'Casual', 'Romântico', 'Moderno'];
+  const options = ["Elegante", "Casual", "Romântico", "Moderno"];
 
   return (
     <div className="quiz-question">
@@ -162,7 +165,7 @@ export const QuizQuestion = () => {
           <button
             key={option}
             onClick={() => handleAnswerSelect(option)}
-            className={selectedAnswer === option ? 'selected' : ''}
+            className={selectedAnswer === option ? "selected" : ""}
           >
             {option}
           </button>
@@ -176,14 +179,14 @@ export const QuizQuestion = () => {
 export const Timer = () => {
   const [time, setTime] = useState(300); // 5 minutos
   const [isRunning, toggleRunning] = useToggle(false);
-  
+
   // Digite: useEffect + Tab
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
-    
+
     if (isRunning && time > 0) {
       interval = setInterval(() => {
-        setTime(prevTime => prevTime - 1);
+        setTime((prevTime) => prevTime - 1);
       }, 1000);
     } else if (time === 0) {
       toggleRunning(); // Para o timer quando chega a zero
@@ -198,14 +201,14 @@ export const Timer = () => {
   const formattedTime = useMemo(() => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   }, [time]);
 
   return (
     <div className="timer">
       <h2>Tempo restante: {formattedTime}</h2>
       <button onClick={toggleRunning}>
-        {isRunning ? 'Pausar' : 'Iniciar'}
+        {isRunning ? "Pausar" : "Iniciar"}
       </button>
     </div>
   );
@@ -213,36 +216,39 @@ export const Timer = () => {
 
 // 13. Componente de Formulário usando hooks customizados
 export const FormularioContato = () => {
-  const [nome, setNome] = useLocalStorage('nome', '');
-  const [email, setEmail] = useLocalStorage('email', '');
-  const [errors, setErrors] = useState<{[key: string]: string}>({});
-  
+  const [nome, setNome] = useLocalStorage("nome", "");
+  const [email, setEmail] = useLocalStorage("email", "");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
   // Digite: useCallback + Tab
   const validate = useCallback(() => {
-    const newErrors: {[key: string]: string} = {};
-    
+    const newErrors: { [key: string]: string } = {};
+
     if (!nome.trim()) {
-      newErrors.nome = 'Nome é obrigatório';
+      newErrors.nome = "Nome é obrigatório";
     }
-    
+
     if (!email.trim()) {
-      newErrors.email = 'Email é obrigatório';
+      newErrors.email = "Email é obrigatório";
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'Email inválido';
+      newErrors.email = "Email inválido";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }, [nome, email]);
-  
-  const handleSubmit = useCallback((e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (validate()) {
-      console.log('Formulário válido:', { nome, email });
-      // Aqui você pode enviar para sua API
-    }
-  }, [nome, email, validate]);
+
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+
+      if (validate()) {
+        console.log("Formulário válido:", { nome, email });
+        // Aqui você pode enviar para sua API
+      }
+    },
+    [nome, email, validate],
+  );
 
   return (
     <form onSubmit={handleSubmit} className="formulario">
@@ -253,11 +259,11 @@ export const FormularioContato = () => {
           type="text"
           value={nome}
           onChange={(e) => setNome(e.target.value)}
-          className={errors.nome ? 'error' : ''}
+          className={errors.nome ? "error" : ""}
         />
         {errors.nome && <span className="error-text">{errors.nome}</span>}
       </div>
-      
+
       <div className="form-group">
         <label htmlFor="email">Email:</label>
         <input
@@ -265,11 +271,11 @@ export const FormularioContato = () => {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className={errors.email ? 'error' : ''}
+          className={errors.email ? "error" : ""}
         />
         {errors.email && <span className="error-text">{errors.email}</span>}
       </div>
-      
+
       <button type="submit">Enviar</button>
     </form>
   );
@@ -300,7 +306,7 @@ export const FormularioContato = () => {
 // ===== SNIPPETS PARA DEBUGGING =====
 
 // 20. Digite: clg + Tab
-console.log('Debug message');
+console.log("Debug message");
 
 // 21. Digite: clo + Tab
 // console.log('object', object);
@@ -331,38 +337,38 @@ export const AplicacaoCompleta = () => {
   // Usando múltiplos hooks customizados
   const { count, increment, decrement, reset } = useCounter(0);
   const [isVisible, toggleVisible] = useToggle(false);
-  const [userName, setUserName] = useLocalStorage('userName', '');
-  
+  const [userName, setUserName] = useLocalStorage("userName", "");
+
   // Digite: useEffect + Tab
   useEffect(() => {
-    console.log('Componente montado');
+    console.log("Componente montado");
   }, []);
-  
+
   // Digite: useCallback + Tab
   const handleSaveUser = useCallback(() => {
     if (userName.trim()) {
-      console.log('Usuário salvo:', userName);
+      console.log("Usuário salvo:", userName);
     }
   }, [userName]);
-  
+
   return (
     <div className="aplicacao-completa">
       <h1>Aplicação Completa com Snippets</h1>
-      
+
       <div className="contador">
         <h2>Contador: {count}</h2>
         <button onClick={increment}>+</button>
         <button onClick={decrement}>-</button>
         <button onClick={reset}>Reset</button>
       </div>
-      
+
       <div className="toggle">
         <button onClick={toggleVisible}>
-          {isVisible ? 'Ocultar' : 'Mostrar'}
+          {isVisible ? "Ocultar" : "Mostrar"}
         </button>
         {isVisible && <p>Conteúdo visível!</p>}
       </div>
-      
+
       <div className="user-form">
         <input
           type="text"
@@ -372,7 +378,7 @@ export const AplicacaoCompleta = () => {
         />
         <button onClick={handleSaveUser}>Salvar</button>
       </div>
-      
+
       <QuizQuestion />
       <Timer />
       <FormularioContato />

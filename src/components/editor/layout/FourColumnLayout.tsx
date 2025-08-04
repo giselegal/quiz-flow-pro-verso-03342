@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { cn } from '@/lib/utils';
-import { ScrollSyncProvider } from '@/context/ScrollSyncContext';
+import React, { useState } from "react";
+import {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from "@/components/ui/resizable";
+import { cn } from "@/lib/utils";
+import { ScrollSyncProvider } from "@/context/ScrollSyncContext";
 
 interface FourColumnLayoutProps {
   stagesPanel: React.ReactNode;
@@ -16,12 +20,12 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
   componentsPanel,
   canvas,
   propertiesPanel,
-  className
+  className,
 }) => {
   const [collapsedPanels, setCollapsedPanels] = useState({
     stages: false,
     components: false,
-    properties: false
+    properties: false,
   });
 
   return (
@@ -29,9 +33,9 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
       <div className={cn("h-full w-full bg-background", className)}>
         <ResizablePanelGroup direction="horizontal" className="h-full">
           {/* Coluna 1: Etapas do Funil */}
-          <ResizablePanel 
-            defaultSize={15} 
-            minSize={12} 
+          <ResizablePanel
+            defaultSize={15}
+            minSize={12}
             maxSize={25}
             className="min-w-[200px]"
           >
@@ -43,9 +47,9 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
           <ResizableHandle withHandle />
 
           {/* Coluna 2: Componentes */}
-          <ResizablePanel 
-            defaultSize={20} 
-            minSize={15} 
+          <ResizablePanel
+            defaultSize={20}
+            minSize={15}
             maxSize={30}
             className="min-w-[250px]"
           >
@@ -57,22 +61,20 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
           <ResizableHandle withHandle />
 
           {/* Coluna 3: Canvas Principal */}
-          <ResizablePanel 
-            defaultSize={40} 
+          <ResizablePanel
+            defaultSize={40}
             minSize={30}
             className="min-w-[400px]"
           >
-            <div className="h-full bg-background">
-              {canvas}
-            </div>
+            <div className="h-full bg-background">{canvas}</div>
           </ResizablePanel>
 
           <ResizableHandle withHandle />
 
           {/* Coluna 4: Painel de Propriedades */}
-          <ResizablePanel 
-            defaultSize={25} 
-            minSize={20} 
+          <ResizablePanel
+            defaultSize={25}
+            minSize={20}
             maxSize={35}
             className="min-w-[300px]"
           >

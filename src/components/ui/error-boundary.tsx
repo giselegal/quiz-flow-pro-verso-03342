@@ -1,6 +1,6 @@
 // Error Boundary com analytics e recovery
-import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { Button } from './button';
+import React, { Component, ErrorInfo, ReactNode } from "react";
+import { Button } from "./button";
 
 interface Props {
   children: ReactNode;
@@ -15,7 +15,7 @@ interface State {
 
 export class ErrorBoundary extends Component<Props, State> {
   public state: State = {
-    hasError: false
+    hasError: false,
   };
 
   public static getDerivedStateFromError(error: Error): State {
@@ -23,17 +23,21 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
-    
+    console.error("ErrorBoundary caught an error:", error, errorInfo);
+
     this.setState({ error, errorInfo });
-    
+
     // Track error in performance monitoring
-    if (typeof window !== 'undefined' && (window as any).PerformanceMonitor) {
-      (window as any).PerformanceMonitor.getInstance().trackEvent('error', 'error', {
-        message: error.message,
-        stack: error.stack,
-        componentStack: errorInfo.componentStack
-      });
+    if (typeof window !== "undefined" && (window as any).PerformanceMonitor) {
+      (window as any).PerformanceMonitor.getInstance().trackEvent(
+        "error",
+        "error",
+        {
+          message: error.message,
+          stack: error.stack,
+          componentStack: errorInfo.componentStack,
+        },
+      );
     }
   }
 
@@ -55,21 +59,32 @@ export class ErrorBoundary extends Component<Props, State> {
         <div className="min-h-screen flex items-center justify-center bg-background p-4">
           <div className="max-w-md w-full text-center space-y-6">
             <div className="text-destructive">
-              <svg className="w-16 h-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              <svg
+                className="w-16 h-16 mx-auto mb-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+                />
               </svg>
             </div>
-            
+
             <div>
               <h1 className="text-2xl font-bold text-foreground mb-2">
                 Oops! Algo deu errado
               </h1>
               <p className="text-muted-foreground">
-                Encontramos um erro inesperado. Tente novamente ou recarregue a página.
+                Encontramos um erro inesperado. Tente novamente ou recarregue a
+                página.
               </p>
             </div>
 
-            {process.env.NODE_ENV === 'development' && this.state.error && (
+            {process.env.NODE_ENV === "development" && this.state.error && (
               <details className="text-left bg-muted p-4 rounded text-xs">
                 <summary className="cursor-pointer font-semibold mb-2">
                   Detalhes do erro (desenvolvimento)
@@ -82,16 +97,10 @@ export class ErrorBoundary extends Component<Props, State> {
             )}
 
             <div className="flex gap-3 justify-center">
-              <Button 
-                onClick={this.handleRetry} 
-                variant="outline"
-              >
+              <Button onClick={this.handleRetry} variant="outline">
                 Tentar Novamente
               </Button>
-              <Button 
-                onClick={this.handleReload}
-                variant="default"
-              >
+              <Button onClick={this.handleReload} variant="default">
                 Recarregar Página
               </Button>
             </div>

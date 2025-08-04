@@ -3,6 +3,7 @@
 ## 📍 **LOCALIZAÇÃO DO CÓDIGO**
 
 ### **Arquivo Principal**: `/src/pages/editor-fixed.tsx`
+
 ```tsx
 // Linha 2: Importação
 import BrandHeader from '@/components/ui/BrandHeader';
@@ -10,7 +11,7 @@ import BrandHeader from '@/components/ui/BrandHeader';
 // Linha 137: Renderização
 <div className="h-screen flex flex-col bg-gradient-to-br from-stone-50 via-stone-50/30 to-stone-100">
   <BrandHeader />  {/* 🎯 AQUI ESTÁ O LOGO */}
-  
+
   <EditorToolbar
     isPreviewing={isPreviewing}
     onTogglePreview={() => setIsPreviewing(!isPreviewing)}
@@ -25,9 +26,10 @@ import BrandHeader from '@/components/ui/BrandHeader';
 ## 🧩 **COMPONENTES ENVOLVIDOS**
 
 ### **1. BrandHeader** (`/src/components/ui/BrandHeader.tsx`)
+
 ```tsx
-import React from 'react';
-import Logo from './logo';
+import React from "react";
+import Logo from "./logo";
 
 interface BrandHeaderProps {
   className?: string;
@@ -36,7 +38,7 @@ interface BrandHeaderProps {
 const BrandHeader: React.FC<BrandHeaderProps> = ({ className }) => {
   return (
     <div className={`flex justify-center items-center py-6 ${className}`}>
-      <Logo />  {/* 🎯 COMPONENTE DO LOGO */}
+      <Logo /> {/* 🎯 COMPONENTE DO LOGO */}
     </div>
   );
 };
@@ -45,6 +47,7 @@ export default BrandHeader;
 ```
 
 **Função:**
+
 - Container centralizado para o logo
 - Padding vertical de `py-6` (24px)
 - Flexbox para centralizacao
@@ -52,9 +55,10 @@ export default BrandHeader;
 ---
 
 ### **2. Logo** (`/src/components/ui/logo.tsx`)
+
 ```tsx
-import React from 'react';
-import { OptimizedImage } from './optimized-image';
+import React from "react";
+import { OptimizedImage } from "./optimized-image";
 
 interface LogoProps {
   src?: string;
@@ -66,14 +70,14 @@ interface LogoProps {
   height?: number;
 }
 
-const Logo: React.FC<LogoProps> = ({ 
+const Logo: React.FC<LogoProps> = ({
   src = "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
   alt = "Logo Gisele Galvão",
-  className = "h-14 mx-auto", 
+  className = "h-14 mx-auto",
   style,
   priority = true,
   width = 200,
-  height = 100
+  height = 100,
 }) => {
   return (
     <div className="flex justify-center items-center w-full">
@@ -81,7 +85,7 @@ const Logo: React.FC<LogoProps> = ({
         src={src}
         alt={alt}
         className={`${className} mx-auto`}
-        style={{ ...style, objectFit: 'contain' }}
+        style={{ ...style, objectFit: "contain" }}
         priority={priority}
         width={width}
         height={height}
@@ -95,6 +99,7 @@ export default Logo;
 ```
 
 **Especificações:**
+
 - **URL da Imagem**: `https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp`
 - **Alt Text**: "Logo Gisele Galvão"
 - **Tamanho Padrão**: `h-14` (56px altura)
@@ -139,26 +144,30 @@ export default Logo;
 ## 🔧 **COMO MODIFICAR O LOGO**
 
 ### **Opção 1: Mudar apenas a imagem**
+
 ```tsx
 // Em /src/components/ui/logo.tsx, linha 12
-src = "NOVA_URL_DA_IMAGEM.webp"
+src = "NOVA_URL_DA_IMAGEM.webp";
 ```
 
 ### **Opção 2: Ajustar tamanho**
+
 ```tsx
 // Em /src/components/ui/logo.tsx, linha 14
-className = "h-16 mx-auto"  // Aumentar altura
+className = "h-16 mx-auto"; // Aumentar altura
 // ou
-className = "h-12 mx-auto"  // Diminuir altura
+className = "h-12 mx-auto"; // Diminuir altura
 ```
 
 ### **Opção 3: Remover completamente**
+
 ```tsx
 // Em /src/pages/editor-fixed.tsx, remover linha 137
 // <BrandHeader />  <!-- Comentar ou remover -->
 ```
 
 ### **Opção 4: Substituir por texto**
+
 ```tsx
 // Criar um novo componente TextBrand
 const TextBrand = () => (
@@ -170,7 +179,7 @@ const TextBrand = () => (
 );
 
 // Usar no editor-fixed.tsx
-<TextBrand />
+<TextBrand />;
 ```
 
 ---
@@ -188,6 +197,7 @@ const TextBrand = () => (
 ## 🎯 **RESUMO**
 
 O logo está localizado em:
+
 1. **Arquivo Principal**: `/src/pages/editor-fixed.tsx` (linha 137)
 2. **Componente Container**: `/src/components/ui/BrandHeader.tsx`
 3. **Componente Logo**: `/src/components/ui/logo.tsx`

@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React from "react";
 
 interface HeaderProps {
   logo?: string;
@@ -12,14 +11,16 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({
   logo,
-  logoAlt = 'Logo',
+  logoAlt = "Logo",
   logoHeight = 40,
-  logoWidth = 'auto',
+  logoWidth = "auto",
   userName,
-  className = ''
+  className = "",
 }) => {
   return (
-    <header className={`w-full py-4 px-6 bg-white border-b border-gray-200 ${className}`}>
+    <header
+      className={`w-full py-4 px-6 bg-white border-b border-gray-200 ${className}`}
+    >
       <div className="max-w-6xl mx-auto flex items-center justify-between">
         {logo && (
           <div className="flex items-center">
@@ -27,14 +28,18 @@ export const Header: React.FC<HeaderProps> = ({
               src={logo}
               alt={logoAlt}
               style={{
-                height: typeof logoHeight === 'number' ? `${logoHeight}px` : logoHeight,
-                width: typeof logoWidth === 'number' ? `${logoWidth}px` : logoWidth
+                height:
+                  typeof logoHeight === "number"
+                    ? `${logoHeight}px`
+                    : logoHeight,
+                width:
+                  typeof logoWidth === "number" ? `${logoWidth}px` : logoWidth,
               }}
               className="object-contain"
             />
           </div>
         )}
-        
+
         {userName && (
           <div className="text-right">
             <p className="text-sm text-gray-600">Olá,</p>

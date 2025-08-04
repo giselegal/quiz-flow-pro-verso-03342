@@ -1,10 +1,9 @@
-
-import React, { useState } from 'react';
-import { StyleResult, QuizFunnel } from '@/types/quiz';
-import { Block, EditorBlock } from '@/types/editor';
-import { ResultPageVisualEditor } from './ResultPageVisualEditor';
-import { Button } from '@/components/ui/button';
-import { Eye, EyeOff, Save, RefreshCw } from 'lucide-react';
+import React, { useState } from "react";
+import { StyleResult, QuizFunnel } from "@/types/quiz";
+import { Block, EditorBlock } from "@/types/editor";
+import { ResultPageVisualEditor } from "./ResultPageVisualEditor";
+import { Button } from "@/components/ui/button";
+import { Eye, EyeOff, Save, RefreshCw } from "lucide-react";
 
 interface EnhancedResultPageEditorProps {
   selectedStyle?: StyleResult;
@@ -15,16 +14,18 @@ interface EnhancedResultPageEditorProps {
   onShowTemplates?: () => void;
 }
 
-export const EnhancedResultPageEditor: React.FC<EnhancedResultPageEditorProps> = ({
+export const EnhancedResultPageEditor: React.FC<
+  EnhancedResultPageEditorProps
+> = ({
   selectedStyle,
   primaryStyle,
   secondaryStyles = [],
   initialFunnel,
   onSave,
-  onShowTemplates
+  onShowTemplates,
 }) => {
   const [blocks, setBlocks] = useState<EditorBlock[]>([]);
-  const [selectedBlockId, setSelectedBlockId] = useState<string>('');
+  const [selectedBlockId, setSelectedBlockId] = useState<string>("");
   const [isPreviewing, setIsPreviewing] = useState(false);
 
   const handleBlocksUpdate = (updatedBlocks: EditorBlock[]) => {
@@ -36,7 +37,7 @@ export const EnhancedResultPageEditor: React.FC<EnhancedResultPageEditorProps> =
   };
 
   const handleSave = () => {
-    console.log('Saving blocks:', blocks);
+    console.log("Saving blocks:", blocks);
     if (onSave && initialFunnel) {
       onSave(initialFunnel);
     }
@@ -44,7 +45,7 @@ export const EnhancedResultPageEditor: React.FC<EnhancedResultPageEditorProps> =
 
   const handleReset = () => {
     setBlocks([]);
-    setSelectedBlockId('');
+    setSelectedBlockId("");
   };
 
   const togglePreview = () => {
@@ -57,7 +58,9 @@ export const EnhancedResultPageEditor: React.FC<EnhancedResultPageEditorProps> =
     <div className="h-full flex flex-col">
       {/* Header */}
       <div className="border-b border-gray-200 p-4 bg-white flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Editor de Resultados Aprimorado</h2>
+        <h2 className="text-xl font-semibold">
+          Editor de Resultados Aprimorado
+        </h2>
         <div className="flex items-center space-x-2">
           <Button variant="ghost" onClick={togglePreview}>
             {isPreviewing ? (

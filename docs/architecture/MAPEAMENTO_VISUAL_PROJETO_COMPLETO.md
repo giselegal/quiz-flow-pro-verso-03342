@@ -1,6 +1,7 @@
 # 🗺️ MAPEAMENTO VISUAL COMPLETO DO PROJETO
 
 ## 📋 **VISÃO GERAL**
+
 ```
 📦 quiz-quest-challenge-verse/
 ├── 🎯 CLIENT (Aplicação React)
@@ -15,6 +16,7 @@
 ## 🎯 **ESTRUTURA PRINCIPAL DO CLIENT**
 
 ### **📁 CLIENT STRUCTURE**
+
 ```
 client/
 ├── 📱 src/
@@ -39,6 +41,7 @@ client/
 ## 🎯 **EDITORES - ANÁLISE DETALHADA**
 
 ### **🚀 EDITOR PRINCIPAL** ⭐
+
 ```
 📍 /client/src/app/editor/page.tsx
 ├── ✅ FUNCIONAL E IMPLEMENTADO
@@ -49,6 +52,7 @@ client/
 ```
 
 ### **📁 OUTROS EDITORES** (Sprawl detectado)
+
 ```
 ❌ /client/src/app/editor/[id]/page.tsx     # Vazio
 ❌ /client/src/app/schema-editor/page.tsx   # Básico
@@ -62,6 +66,7 @@ client/
 ## 🧩 **COMPONENTES - MAPEAMENTO DETALHADO**
 
 ### **🎯 COMPONENTES PRINCIPAIS DE EDITOR**
+
 ```
 📁 components/editor/
 ├── 🎨 ModernQuizEditor.tsx           # Editor moderno
@@ -74,6 +79,7 @@ client/
 ```
 
 ### **🔥 BLOCOS PRINCIPAIS** ⭐
+
 ```
 📁 components/editor/blocks/
 ├── ⚡ OptionsGridBlock.tsx           # PRINCIPAL - Grid opções
@@ -86,6 +92,7 @@ client/
 ```
 
 ### **🎭 VISUAL EDITOR**
+
 ```
 📁 components/visual-editor/
 ├── 👁️ VisualEditor.tsx              # Editor visual
@@ -96,6 +103,7 @@ client/
 ```
 
 ### **🎯 UNIFIED EDITOR**
+
 ```
 📁 components/unified-editor/
 ├── 🌐 UnifiedEditor.tsx              # Editor unificado
@@ -113,6 +121,7 @@ client/
 ## 📊 **HOOKS - SISTEMA DE ESTADO**
 
 ### **🎣 HOOKS PRINCIPAIS**
+
 ```
 📁 hooks/
 ├── ⚡ useBlockOperations.ts          # PRINCIPAL - Operações blocos
@@ -125,6 +134,7 @@ client/
 ```
 
 ### **🎯 HOOKS DE EDITOR**
+
 ```
 📁 hooks/editor/
 ├── ⚡ useBlockOperations.ts          # Operações blocos
@@ -140,6 +150,7 @@ client/
 ## 🔧 **SERVIÇOS - BACKEND INTEGRATION**
 
 ### **📡 SERVIÇOS PRINCIPAIS**
+
 ```
 📁 services/
 ├── 🌐 quizApiService.ts              # PRINCIPAL - API Quiz
@@ -155,6 +166,7 @@ client/
 ## 📋 **PÁGINAS - ROTAS DISPONÍVEIS**
 
 ### **🏠 PÁGINAS PRINCIPAIS**
+
 ```
 📁 pages/
 ├── 🏠 Index.tsx                      # Página inicial
@@ -166,6 +178,7 @@ client/
 ```
 
 ### **🔧 PÁGINAS ADMIN**
+
 ```
 📁 pages/admin/
 ├── 📊 DashboardPage.tsx              # Dashboard
@@ -180,6 +193,7 @@ client/
 ## 📊 **TYPES - SISTEMA DE TIPOS**
 
 ### **🎯 TIPOS PRINCIPAIS**
+
 ```
 📁 types/
 ├── 🎯 quiz.ts                        # Tipos quiz
@@ -195,6 +209,7 @@ client/
 ## 🗂️ **DATA - DADOS E CONFIGURAÇÕES**
 
 ### **📊 DADOS PRINCIPAIS**
+
 ```
 📁 data/
 ├── 🎯 quizQuestions.ts               # Perguntas quiz
@@ -210,6 +225,7 @@ client/
 ## ⚙️ **CONFIG - CONFIGURAÇÕES**
 
 ### **🔧 CONFIGURAÇÕES PRINCIPAIS**
+
 ```
 📁 config/
 ├── 🎯 blockDefinitions.ts            # Definições blocos
@@ -224,6 +240,7 @@ client/
 ## 🎨 **DESIGN SYSTEM**
 
 ### **🎨 UI COMPONENTS**
+
 ```
 📁 components/ui/
 ├── 🔘 button.tsx                     # Botão
@@ -241,6 +258,7 @@ client/
 ## 🧪 **SYSTEM STATUS**
 
 ### **✅ FUNCIONANDO**
+
 - ✅ Editor principal (`/editor`)
 - ✅ OptionsGridBlock com callbacks
 - ✅ Sistema de tipos TypeScript
@@ -248,11 +266,13 @@ client/
 - ✅ Auto-save e persistência
 
 ### **⚠️ EM DESENVOLVIMENTO**
+
 - ⚠️ API real para persistência
 - ⚠️ Sistema de templates
 - ⚠️ Analytics avançados
 
 ### **❌ PROBLEMAS IDENTIFICADOS**
+
 - ❌ **Sprawl de editores** (múltiplos editores vazios)
 - ❌ **Duplicação de código** em blocos
 - ❌ **Páginas não utilizadas**
@@ -263,6 +283,7 @@ client/
 ## 🚀 **EDITOR PRINCIPAL - DETALHAMENTO**
 
 ### **🎯 ARQUIVO PRINCIPAL:** `/client/src/app/editor/page.tsx`
+
 ```typescript
 📍 FUNCIONALIDADES:
 ├── 🎨 Layout ResponsivePanels (3 colunas)
@@ -275,11 +296,12 @@ client/
 ```
 
 ### **🔗 FLUXO DE DADOS FUNCIONANDO:**
+
 ```
 📊 OptionsGridBlock
     ↓ handlePropertyChange
 🔗 UniversalBlockRenderer
-    ↓ onPropertyChange  
+    ↓ onPropertyChange
 👁️ EditorPreview
     ↓ onSaveInline
 🎯 Editor Principal
@@ -294,6 +316,7 @@ client/
 ## 📈 **MÉTRICAS DO PROJETO**
 
 ### **📊 ESTATÍSTICAS**
+
 ```
 📁 ARQUIVOS TOTAIS:        ~800+
 📝 COMPONENTES REACT:      ~400+
@@ -306,9 +329,10 @@ client/
 ```
 
 ### **🎯 COMPLEXIDADE**
+
 ```
 🟢 BAIXA:     UI Components, Types
-🟡 MÉDIA:     Hooks, Services  
+🟡 MÉDIA:     Hooks, Services
 🔴 ALTA:      Editor System, Block System
 ⚫ CRÍTICA:   Unified Editor, Data Flow
 ```
@@ -318,14 +342,16 @@ client/
 ## 🎯 **PRÓXIMOS PASSOS RECOMENDADOS**
 
 ### **1. 🧹 LIMPEZA IMEDIATA**
+
 ```
 ❌ Remover editores vazios
-❌ Consolidar blocos duplicados  
+❌ Consolidar blocos duplicados
 ❌ Limpar páginas não utilizadas
 ❌ Unificar configurações
 ```
 
 ### **2. 🚀 MELHORIAS FUNCIONAIS**
+
 ```
 ✅ Integrar API real
 ✅ Sistema de templates
@@ -334,6 +360,7 @@ client/
 ```
 
 ### **3. 🎨 OTIMIZAÇÕES**
+
 ```
 ⚡ Code splitting
 ⚡ Lazy loading
@@ -346,6 +373,7 @@ client/
 ## 🎯 **CONCLUSÃO**
 
 ### **✅ PONTOS FORTES:**
+
 - ✅ **Editor principal funcionando** (`/editor`)
 - ✅ **Sistema de tipos robusto**
 - ✅ **UI/UX profissional** (Radix + Tailwind)
@@ -353,15 +381,17 @@ client/
 - ✅ **Modularidade** bem estruturada
 
 ### **❌ PONTOS DE MELHORIA:**
+
 - ❌ **Project sprawl** (múltiplos editores)
 - ❌ **Duplicação de código**
 - ❌ **Configurações fragmentadas**
 - ❌ **Documentação incompleta**
 
 ### **🎯 FOCO RECOMENDADO:**
+
 **Manter apenas o editor principal (`/editor`) e limpar o resto do projeto para ter uma base sólida e sustentável.**
 
 ---
 
-*📅 Gerado em: 15 de Julho de 2025*  
-*🎯 Estado: Editor principal funcionando, projeto precisa de limpeza*
+_📅 Gerado em: 15 de Julho de 2025_  
+_🎯 Estado: Editor principal funcionando, projeto precisa de limpeza_

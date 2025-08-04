@@ -1,12 +1,15 @@
 # Remoção do Sistema de Salvamento Automático
 
 ## 🎯 Problema
+
 O sistema de salvamento automático estava causando problemas e conflitos no editor.
 
 ## 🔧 Mudanças Realizadas
 
 ### 1. useSchemaEditorFixed.ts
+
 **Linha 196-210**: Removido o `useEffect` que fazia auto-save com debounce
+
 ```typescript
 // ANTES
 useEffect(() => {
@@ -31,6 +34,7 @@ useEffect(() => {
 ```
 
 **Linha 441**: Removido auto-save automático na inicialização
+
 ```typescript
 // ANTES
 useEffect(() => {
@@ -38,7 +42,7 @@ useEffect(() => {
   // ...
 }, []);
 
-// DEPOIS  
+// DEPOIS
 useEffect(() => {
   // schemaDrivenFunnelService.enableAutoSave(60); // Auto-save removido
   // ...
@@ -46,7 +50,9 @@ useEffect(() => {
 ```
 
 ### 2. useSchemaEditor.ts
+
 **Linha 397**: Removido auto-save automático na inicialização
+
 ```typescript
 // ANTES
 useEffect(() => {
@@ -62,7 +68,9 @@ useEffect(() => {
 ```
 
 ### 3. schemaDrivenFunnelService.ts
+
 **Linha 97**: Auto-save desabilitado por padrão
+
 ```typescript
 // ANTES
 private autoSaveState: AutoSaveState = {
@@ -86,12 +94,14 @@ private autoSaveState: AutoSaveState = {
 ## ✅ Resultado
 
 ### Antes da Remoção
+
 - ⚠️ Salvamento automático a cada 1 segundo após alterações
 - ⚠️ Auto-save habilitado por padrão no service
 - ⚠️ Auto-save habilitado automaticamente nos hooks
 - ⚠️ Conflitos e problemas de performance
 
 ### Depois da Remoção
+
 - ✅ Salvamento apenas manual via botão "💾 Salvar"
 - ✅ Auto-save desabilitado por padrão
 - ✅ Sem conflitos de salvamento
@@ -100,11 +110,13 @@ private autoSaveState: AutoSaveState = {
 ## 🎮 Como Funciona Agora
 
 ### Salvamento Manual
+
 1. **Botão Salvar**: Usuário clica no botão "💾 Salvar" no header do editor
 2. **Confirmação**: Toast mostra "Funil salvo com sucesso!"
 3. **Controle**: Usuário decide quando salvar
 
 ### Funções Mantidas
+
 - ✅ `saveFunnel(true)` - Salvamento manual
 - ✅ `enableAutoSave()` - Ainda disponível se necessário
 - ✅ `disableAutoSave()` - Função para desabilitar
@@ -113,25 +125,31 @@ private autoSaveState: AutoSaveState = {
 ## 🔍 Como Testar
 
 ### 1. Acesse o Editor
+
 ```
 http://localhost:8080/editor
 ```
 
 ### 2. Faça Alterações
+
 - Adicione blocos
 - Modifique propriedades
 - Edite conteúdo
 
 ### 3. Verifique
+
 - ❌ Não deve salvar automaticamente
 - ✅ Deve salvar apenas quando clicar no botão "💾 Salvar"
 
 ### 4. Salvamento Manual
+
 - Clique no botão "💾 Salvar" no header
 - ✅ Deve mostrar toast "Funil salvo com sucesso!"
 
 ## ⚙️ Se Precisar Reativar
+
 Para reativar o auto-save em algum componente específico:
+
 ```typescript
 const { enableAutoSave } = useSchemaEditor();
 
@@ -140,6 +158,7 @@ enableAutoSave(30); // 30 segundos
 ```
 
 ## ✅ Status Final
-🎉 **Auto-save removido com sucesso!** 
+
+🎉 **Auto-save removido com sucesso!**
 
 O editor agora funciona exclusivamente com salvamento manual, dando controle total ao usuário sobre quando salvar as alterações.

@@ -1,14 +1,23 @@
-
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
-import { X, Plus, Trash2, GripVertical, Upload } from 'lucide-react';
-import { BlockDefinition, EditableContent, PropertySchema } from '@/types/editor';
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { X, Plus, Trash2, GripVertical, Upload } from "lucide-react";
+import {
+  BlockDefinition,
+  EditableContent,
+  PropertySchema,
+} from "@/types/editor";
 
 // ✅ Componente para editar arrays (especialmente opções de quiz)
 interface ArrayEditorProps {
@@ -17,19 +26,24 @@ interface ArrayEditorProps {
   property: PropertySchema;
 }
 
-const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) => {
+const ArrayEditor: React.FC<ArrayEditorProps> = ({
+  value,
+  onChange,
+  property,
+}) => {
   const handleAddItem = () => {
-    const newItem = property.label.includes('opções') || property.label.includes('options') 
-      ? {
-          id: `option-${Date.now()}`,
-          text: 'Nova opção',
-          imageUrl: 'https://via.placeholder.com/150x150',
-          value: `value-${Date.now()}`,
-          category: 'Geral',
-          points: 1
-        }
-      : property.default || '';
-    
+    const newItem =
+      property.label.includes("opções") || property.label.includes("options")
+        ? {
+            id: `option-${Date.now()}`,
+            text: "Nova opção",
+            imageUrl: "https://via.placeholder.com/150x150",
+            value: `value-${Date.now()}`,
+            category: "Geral",
+            points: 1,
+          }
+        : property.default || "";
+
     onChange([...value, newItem]);
   };
 
@@ -39,17 +53,21 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
 
   const handleUpdateItem = (index: number, updates: any) => {
     const newValue = [...value];
-    newValue[index] = typeof newValue[index] === 'object' 
-      ? { ...newValue[index], ...updates }
-      : updates;
+    newValue[index] =
+      typeof newValue[index] === "object"
+        ? { ...newValue[index], ...updates }
+        : updates;
     onChange(newValue);
   };
 
-  const handleMoveItem = (index: number, direction: 'up' | 'down') => {
-    const newIndex = direction === 'up' ? index - 1 : index + 1;
+  const handleMoveItem = (index: number, direction: "up" | "down") => {
+    const newIndex = direction === "up" ? index - 1 : index + 1;
     if (newIndex >= 0 && newIndex < value.length) {
       const newValue = [...value];
-      [newValue[index], newValue[newIndex]] = [newValue[newIndex], newValue[index]];
+      [newValue[index], newValue[newIndex]] = [
+        newValue[newIndex],
+        newValue[index],
+      ];
       onChange(newValue);
     }
   };
@@ -58,7 +76,8 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="text-sm font-medium">
-          {property.label} ({value.length} {value.length === 1 ? 'item' : 'itens'})
+          {property.label} ({value.length}{" "}
+          {value.length === 1 ? "item" : "itens"})
         </span>
         <Button size="sm" onClick={handleAddItem} className="text-xs">
           <Plus className="h-3 w-3 mr-1" />
@@ -77,26 +96,26 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
                   <span className="text-sm font-medium">Item {index + 1}</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     variant="ghost"
-                    onClick={() => handleMoveItem(index, 'up')}
+                    onClick={() => handleMoveItem(index, "up")}
                     disabled={index === 0}
                     className="h-6 w-6 p-0"
                   >
                     ↑
                   </Button>
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     variant="ghost"
-                    onClick={() => handleMoveItem(index, 'down')}
+                    onClick={() => handleMoveItem(index, "down")}
                     disabled={index === value.length - 1}
                     className="h-6 w-6 p-0"
                   >
                     ↓
                   </Button>
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     variant="ghost"
                     onClick={() => handleRemoveItem(index)}
                     className="h-6 w-6 p-0 text-red-600 hover:text-red-700"
@@ -107,25 +126,29 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
               </div>
 
               {/* Edição do Item - Se for objeto (opção de quiz) */}
-              {typeof item === 'object' && item !== null ? (
+              {typeof item === "object" && item !== null ? (
                 <div className="space-y-2">
                   <div>
                     <Label className="text-xs">Texto</Label>
                     <Textarea
-                      value={item.text || ''}
-                      onChange={(e) => handleUpdateItem(index, { text: e.target.value })}
+                      value={item.text || ""}
+                      onChange={(e) =>
+                        handleUpdateItem(index, { text: e.target.value })
+                      }
                       placeholder="Texto da opção..."
                       rows={2}
                       className="text-sm"
                     />
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-2">
                     <div>
                       <Label className="text-xs">Valor</Label>
                       <Input
-                        value={item.value || ''}
-                        onChange={(e) => handleUpdateItem(index, { value: e.target.value })}
+                        value={item.value || ""}
+                        onChange={(e) =>
+                          handleUpdateItem(index, { value: e.target.value })
+                        }
                         placeholder="valor"
                         className="text-sm"
                       />
@@ -133,8 +156,10 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
                     <div>
                       <Label className="text-xs">Categoria</Label>
                       <Input
-                        value={item.category || ''}
-                        onChange={(e) => handleUpdateItem(index, { category: e.target.value })}
+                        value={item.category || ""}
+                        onChange={(e) =>
+                          handleUpdateItem(index, { category: e.target.value })
+                        }
                         placeholder="categoria"
                         className="text-sm"
                       />
@@ -145,8 +170,10 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
                     <Label className="text-xs">URL da Imagem</Label>
                     <div className="flex gap-2">
                       <Input
-                        value={item.imageUrl || ''}
-                        onChange={(e) => handleUpdateItem(index, { imageUrl: e.target.value })}
+                        value={item.imageUrl || ""}
+                        onChange={(e) =>
+                          handleUpdateItem(index, { imageUrl: e.target.value })
+                        }
                         placeholder="https://..."
                         className="text-sm"
                       />
@@ -155,8 +182,8 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
                       </Button>
                     </div>
                     {item.imageUrl && (
-                      <img 
-                        src={item.imageUrl} 
+                      <img
+                        src={item.imageUrl}
                         alt={item.text}
                         className="w-16 h-16 object-cover rounded border mt-2"
                       />
@@ -164,13 +191,19 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
                   </div>
 
                   <div>
-                    <Label className="text-xs">Pontos: {item.points || 1}</Label>
+                    <Label className="text-xs">
+                      Pontos: {item.points || 1}
+                    </Label>
                     <Input
                       type="range"
                       min="1"
                       max="10"
                       value={item.points || 1}
-                      onChange={(e) => handleUpdateItem(index, { points: parseInt(e.target.value) })}
+                      onChange={(e) =>
+                        handleUpdateItem(index, {
+                          points: parseInt(e.target.value),
+                        })
+                      }
                       className="text-sm"
                     />
                   </div>
@@ -178,7 +211,7 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
               ) : (
                 /* Edição Simples - Se for string ou primitivo */
                 <Input
-                  value={item || ''}
+                  value={item || ""}
                   onChange={(e) => handleUpdateItem(index, e.target.value)}
                   placeholder="Digite o valor..."
                   className="text-sm"
@@ -219,12 +252,12 @@ const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
   block,
   blockDefinition,
   onUpdateBlock,
-  onClose
+  onClose,
 }) => {
   const handlePropertyChange = (key: string, value: any) => {
     onUpdateBlock(block.id, {
       ...block.content,
-      [key]: value
+      [key]: value,
     });
   };
 
@@ -232,33 +265,36 @@ const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
     const currentValue = (block.content as any)[key] || property.default;
 
     switch (property.type) {
-      case 'string':
+      case "string":
         return (
           <Input
-            value={currentValue || ''}
+            value={currentValue || ""}
             onChange={(e) => handlePropertyChange(key, e.target.value)}
             placeholder={property.label}
           />
         );
-      case 'textarea':
+      case "textarea":
         return (
           <Textarea
-            value={currentValue || ''}
+            value={currentValue || ""}
             onChange={(e) => handlePropertyChange(key, e.target.value)}
             placeholder={property.label}
             rows={3}
           />
         );
-      case 'boolean':
+      case "boolean":
         return (
           <Switch
             checked={currentValue || false}
             onCheckedChange={(checked) => handlePropertyChange(key, checked)}
           />
         );
-      case 'select':
+      case "select":
         return (
-          <Select value={currentValue || property.default} onValueChange={(value) => handlePropertyChange(key, value)}>
+          <Select
+            value={currentValue || property.default}
+            onValueChange={(value) => handlePropertyChange(key, value)}
+          >
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
@@ -271,16 +307,18 @@ const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
             </SelectContent>
           </Select>
         );
-      case 'number':
+      case "number":
         return (
           <Input
             type="number"
-            value={currentValue || ''}
-            onChange={(e) => handlePropertyChange(key, parseFloat(e.target.value) || 0)}
+            value={currentValue || ""}
+            onChange={(e) =>
+              handlePropertyChange(key, parseFloat(e.target.value) || 0)
+            }
             placeholder={property.label}
           />
         );
-      case 'array':
+      case "array":
         return (
           <ArrayEditor
             value={currentValue || []}
@@ -291,7 +329,7 @@ const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
       default:
         return (
           <Input
-            value={currentValue || ''}
+            value={currentValue || ""}
             onChange={(e) => handlePropertyChange(key, e.target.value)}
             placeholder={property.label}
           />
@@ -307,30 +345,34 @@ const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
           <h3 className="text-lg font-semibold text-foreground">
             {blockDefinition.name}
           </h3>
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={onClose}
             className="text-muted-foreground hover:text-foreground"
           >
             <X className="w-4 h-4" />
           </Button>
         </div>
-        <p className="text-sm text-muted-foreground mt-1">Propriedades do componente</p>
+        <p className="text-sm text-muted-foreground mt-1">
+          Propriedades do componente
+        </p>
       </div>
 
       {/* Content */}
       <div className="flex-1 p-4 space-y-4 overflow-auto">
         {Object.entries(blockDefinition.properties).map(([key, property]) => (
           <div key={key} className="space-y-2">
-            <Label className="text-sm font-medium text-gray-700">{property.label}</Label>
+            <Label className="text-sm font-medium text-gray-700">
+              {property.label}
+            </Label>
             {renderPropertyInput(key, property)}
             {property.description && (
               <p className="text-xs text-gray-500">{property.description}</p>
             )}
           </div>
         ))}
-        
+
         {Object.keys(blockDefinition.properties).length === 0 && (
           <div className="text-center py-8 text-gray-500">
             <div className="text-4xl mb-2">⚙️</div>

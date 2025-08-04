@@ -1,15 +1,18 @@
-
-import React, { useState } from 'react';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { Button } from '@/components/ui/button';
-import { useQuizBuilder } from '@/hooks/useQuizBuilder';
-import { useEditor } from '@/hooks/useEditor';
-import { ComponentsSidebar } from './ComponentsSidebar';
-import BuilderLayout from './components/BuilderLayout';
-import { StagesPanel } from './StagesPanel';
-import { PropertiesPanel } from './PropertiesPanel';
-import { QuizComponentType, QuizComponentData } from '@/types/quizBuilder';
-import { StyleResult, StyleType } from '@/types/quiz';
+import React, { useState } from "react";
+import {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from "@/components/ui/resizable";
+import { Button } from "@/components/ui/button";
+import { useQuizBuilder } from "@/hooks/useQuizBuilder";
+import { useEditor } from "@/hooks/useEditor";
+import { ComponentsSidebar } from "./ComponentsSidebar";
+import BuilderLayout from "./components/BuilderLayout";
+import { StagesPanel } from "./StagesPanel";
+import { PropertiesPanel } from "./PropertiesPanel";
+import { QuizComponentType, QuizComponentData } from "@/types/quizBuilder";
+import { StyleResult, StyleType } from "@/types/quiz";
 
 const QuizBuilder: React.FC = () => {
   const {
@@ -28,7 +31,7 @@ const QuizBuilder: React.FC = () => {
     setActiveStage,
     setSelectedComponentId,
     saveCurrentState,
-    loading
+    loading,
   } = useQuizBuilder();
 
   const { blocks, actions } = useEditor();
@@ -48,51 +51,56 @@ const QuizBuilder: React.FC = () => {
 
   // Mock data for preview - properly formatted StyleResult objects
   const mockPrimaryStyle: StyleResult = {
-    category: 'Natural',
+    category: "Natural",
     score: 85,
     percentage: 45.2,
-    style: 'natural' as StyleType,
+    style: "natural" as StyleType,
     points: 85,
-    rank: 1
+    rank: 1,
   };
 
   const mockSecondaryStyles: StyleResult[] = [
     {
-      category: 'Clássico',
+      category: "Clássico",
       score: 70,
       percentage: 32.1,
-      style: 'classico' as StyleType,
+      style: "classico" as StyleType,
       points: 70,
-      rank: 2
+      rank: 2,
     },
     {
-      category: 'Romântico',
+      category: "Romântico",
       score: 65,
       percentage: 22.7,
-      style: 'romantico' as StyleType,
+      style: "romantico" as StyleType,
       points: 65,
-      rank: 3
-    }
+      rank: 3,
+    },
   ];
 
   const mockQuizResult = {
     primaryStyle: mockPrimaryStyle,
-    secondaryStyles: mockSecondaryStyles
+    secondaryStyles: mockSecondaryStyles,
   };
 
-  const activeStage = stages.find(stage => stage.id === activeStageId);
-  const stageComponents = components.filter((c: QuizComponentData) => c.stageId === activeStageId);
+  const activeStage = stages.find((stage) => stage.id === activeStageId);
+  const stageComponents = components.filter(
+    (c: QuizComponentData) => c.stageId === activeStageId,
+  );
 
   const handleComponentAdd = (type: QuizComponentType) => {
     if (!activeStageId) {
-      console.warn('No active stage selected');
+      console.warn("No active stage selected");
       return;
     }
 
     addComponent(type, activeStageId);
   };
 
-  const handleComponentUpdate = (id: string, updates: Partial<QuizComponentData>) => {
+  const handleComponentUpdate = (
+    id: string,
+    updates: Partial<QuizComponentData>,
+  ) => {
     updateComponent(id, updates);
   };
 
@@ -106,25 +114,25 @@ const QuizBuilder: React.FC = () => {
   const handlePreview = () => {
     // Save current state before preview
     saveCurrentState();
-    
+
     // For now, just toggle preview mode
     setIsPreviewMode(!isPreviewMode);
   };
 
   const handleAddStage = () => {
-    addStage('question');
+    addStage("question");
   };
 
   // Safely handle editor blocks
   const handleBlockOperations = () => {
-    blocks.forEach(block => {
+    blocks.forEach((block) => {
       const content = block.content || {};
-      const title = content?.title || '';
-      const text = content?.text || '';
-      const imageUrl = content?.imageUrl || '';
-      
+      const title = content?.title || "";
+      const text = content?.text || "";
+      const imageUrl = content?.imageUrl || "";
+
       // Process block with safe content access
-      console.log('Processing block:', { title, text, imageUrl });
+      console.log("Processing block:", { title, text, imageUrl });
     });
   };
 
@@ -134,7 +142,9 @@ const QuizBuilder: React.FC = () => {
       <div className="bg-white border-b border-[#B89B7A]/20 p-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-playfair text-[#432818]">Quiz Builder</h1>
+            <h1 className="text-2xl font-playfair text-[#432818]">
+              Quiz Builder
+            </h1>
             {activeStage && (
               <p className="text-sm text-[#8F7A6A] mt-1">
                 Editando: {activeStage.title}
@@ -147,7 +157,7 @@ const QuizBuilder: React.FC = () => {
               onClick={handlePreview}
               className="border-[#B89B7A] text-[#432818]"
             >
-              {isPreviewMode ? 'Editar' : 'Visualizar'}
+              {isPreviewMode ? "Editar" : "Visualizar"}
             </Button>
             <Button
               onClick={saveCurrentState}
@@ -166,7 +176,7 @@ const QuizBuilder: React.FC = () => {
           <ResizablePanel defaultSize={20} minSize={15} maxSize={25}>
             <StagesPanel
               stages={stages}
-              activeStageId={activeStageId || ''}
+              activeStageId={activeStageId || ""}
               onStageSelect={setActiveStage}
               onStageAdd={handleAddStage}
               onStageUpdate={updateStage}
@@ -181,7 +191,7 @@ const QuizBuilder: React.FC = () => {
             <BuilderLayout
               components={stageComponents}
               stages={stages}
-              activeStageId={activeStageId || ''}
+              activeStageId={activeStageId || ""}
               onComponentAdd={handleComponentAdd}
               onComponentUpdate={handleComponentUpdate}
               onComponentDelete={handleComponentDelete}

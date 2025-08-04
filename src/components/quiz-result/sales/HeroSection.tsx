@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React from "react";
 
 interface HeroSectionProps {
   title: string;
@@ -9,12 +8,12 @@ interface HeroSectionProps {
   onCtaClick: () => void;
 }
 
-const HeroSection: React.FC<HeroSectionProps> = ({ 
-  title, 
-  subtitle, 
-  imageUrl, 
-  ctaText, 
-  onCtaClick 
+const HeroSection: React.FC<HeroSectionProps> = ({
+  title,
+  subtitle,
+  imageUrl,
+  ctaText,
+  onCtaClick,
 }) => {
   return (
     <div className="bg-gradient-to-b from-amber-50 to-white py-12 md:py-20">
@@ -24,10 +23,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
               {title}
             </h1>
-            <p className="text-lg md:text-xl text-gray-600 mb-6">
-              {subtitle}
-            </p>
-            <button 
+            <p className="text-lg md:text-xl text-gray-600 mb-6">{subtitle}</p>
+            <button
               onClick={onCtaClick}
               className="px-8 py-4 bg-[#B89B7A] hover:bg-[#a38a6a] text-white font-medium rounded-lg shadow transition-colors"
             >
@@ -35,9 +32,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             </button>
           </div>
           <div className="md:w-1/2">
-            <img 
-              src={imageUrl} 
-              alt="Hero image" 
+            <img
+              src={imageUrl}
+              alt="Hero image"
               className="rounded-lg shadow-lg w-full h-auto"
             />
           </div>

@@ -1,12 +1,12 @@
-import { 
-  pgTable, 
-  uuid, 
-  text, 
-  boolean, 
-  integer, 
-  jsonb, 
-  timestamp, 
-  decimal 
+import {
+  pgTable,
+  uuid,
+  text,
+  boolean,
+  integer,
+  jsonb,
+  timestamp,
+  decimal,
 } from "drizzle-orm/pg-core";
 
 // Users table
@@ -58,7 +58,9 @@ export const funnels = pgTable("funnels", {
 // Funnel Pages table
 export const funnelPages = pgTable("funnel_pages", {
   id: uuid("id").primaryKey().defaultRandom(),
-  funnelId: uuid("funnel_id").references(() => funnels.id, { onDelete: "cascade" }).notNull(),
+  funnelId: uuid("funnel_id")
+    .references(() => funnels.id, { onDelete: "cascade" })
+    .notNull(),
   pageType: text("page_type").notNull(),
   pageOrder: integer("page_order").notNull(),
   title: text("title"),
@@ -71,7 +73,9 @@ export const funnelPages = pgTable("funnel_pages", {
 // Funnel Versions table
 export const funnelVersions = pgTable("funnel_versions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  funnelId: uuid("funnel_id").references(() => funnels.id, { onDelete: "cascade" }).notNull(),
+  funnelId: uuid("funnel_id")
+    .references(() => funnels.id, { onDelete: "cascade" })
+    .notNull(),
   version: integer("version").notNull(),
   funnelData: jsonb("funnel_data").notNull(),
   createdAt: timestamp("created_at").defaultNow(),

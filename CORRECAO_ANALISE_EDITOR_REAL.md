@@ -8,10 +8,12 @@ Você estava certo! A análise anterior estava **incorreta**. Analisei o arquivo
 
 ## 📍 **ROTA `/editor/` REAL**
 
-### **ARQUIVO CORRETO**: 
+### **ARQUIVO CORRETO**:
+
 `/src/components/editor/SchemaDrivenEditorResponsive.tsx`
 
 ### **DEFINIÇÃO DE ROTA** (App.tsx):
+
 ```typescript
 <Route path="/editor">
   {() => (
@@ -81,6 +83,7 @@ const SchemaDrivenEditorResponsive: React.FC = ({ funnelId }) => {
 ## ✅ **COMPONENTES REAIS USADOS**
 
 ### 1. **ComponentsSidebar** (`/src/components/editor/sidebar/ComponentsSidebar.tsx`)
+
 ```typescript
 const componentGroups = [
   {
@@ -116,6 +119,7 @@ const componentGroups = [
 ```
 
 ### 2. **EditorCanvas** (`/src/components/editor/canvas/EditorCanvas.tsx`)
+
 ```typescript
 // Usa UniversalBlockRenderer - MUITO MELHOR que SimpleBlockRenderer!
 import UniversalBlockRenderer from '../blocks/UniversalBlockRenderer';
@@ -140,6 +144,7 @@ const EditorCanvas: React.FC = ({ blocks, selectedBlockId, onSelectBlock, ... })
 ```
 
 ### 3. **PropertyPanel** (`/src/components/editor/PropertyPanel.tsx`)
+
 ```typescript
 export const PropertyPanel: React.FC = ({ selectedBlock, onUpdateBlock, onDeleteBlock, onClose }) => {
   const handlePropertyChange = (key: string, value: any) => {
@@ -166,6 +171,7 @@ export const PropertyPanel: React.FC = ({ selectedBlock, onUpdateBlock, onDelete
 ## 🎯 **STATUS REAL DO EDITOR `/editor/`**
 
 ### ✅ **FUNCIONALIDADES CORRETAS**:
+
 1. **Sidebar funcional** com componentes organizados por categoria
 2. **Canvas com drag & drop** usando DndContext
 3. **UniversalBlockRenderer** (não SimpleBlockRenderer!)
@@ -174,11 +180,13 @@ export const PropertyPanel: React.FC = ({ selectedBlock, onUpdateBlock, onDelete
 6. **Integração com EditorProvider** e context
 
 ### ✅ **COMPONENTES DISPONÍVEIS**:
+
 - **Básico**: 8 tipos inline (text-inline, heading-inline, etc.)
 - **Design**: 4 tipos inline (style-card-inline, result-card-inline, etc.)
 - **Quiz**: Vários tipos inline para quiz
 
 ### ✅ **RENDERER ROBUSTO**:
+
 - Usa `UniversalBlockRenderer` que suporta 20+ tipos
 - Sistema de mapeamento de componentes
 - Fallback inteligente para tipos não encontrados
@@ -188,15 +196,18 @@ export const PropertyPanel: React.FC = ({ selectedBlock, onUpdateBlock, onDelete
 ## 🔍 **PROBLEMAS REAIS IDENTIFICADOS**
 
 ### 1. **COMPONENTES LIMITADOS NO SIDEBAR**
+
 - Apenas ~15 tipos listados no ComponentsSidebar
 - Focado principalmente em componentes "-inline"
 - Não usa os 150+ componentes físicos disponíveis
 
 ### 2. **FALTA DE INTEGRAÇÃO COM BLOCK REGISTRY**
+
 - Não utiliza o sistema BlockRegistry existente
 - Não aproveita os componentes não-inline
 
 ### 3. **PROPERTY PANEL GENÉRICO**
+
 - Editor básico de propriedades
 - Não usa schema dinâmico do blockDefinitions
 

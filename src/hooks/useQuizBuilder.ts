@@ -1,17 +1,21 @@
+import { useState, useCallback, useEffect } from "react";
+import { toast } from "@/components/ui/use-toast";
+import { useQuizStages } from "./useQuizStages";
+import { useQuizComponents } from "./useQuizComponents";
+import {
+  generateInitialStages,
+  createBuilderStateFromQuiz,
+} from "@/services/quizBuilderService";
+import caktoquizQuestions from "@/data/caktoquizQuestions";
 
-import { useState, useCallback, useEffect } from 'react';
-import { toast } from '@/components/ui/use-toast';
-import { useQuizStages } from './useQuizStages';
-import { useQuizComponents } from './useQuizComponents';
-import { generateInitialStages, createBuilderStateFromQuiz } from '@/services/quizBuilderService';
-import caktoquizQuestions from '@/data/caktoquizQuestions';
-
-const STORAGE_KEY = 'quiz_builder_data';
+const STORAGE_KEY = "quiz_builder_data";
 
 export const useQuizBuilder = () => {
   const [loading, setLoading] = useState(true);
-  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
-  
+  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(
+    null,
+  );
+
   const {
     stages,
     activeStageId,
@@ -20,16 +24,16 @@ export const useQuizBuilder = () => {
     deleteStage,
     moveStage,
     setActiveStage,
-    initializeStages
+    initializeStages,
   } = useQuizStages();
-  
+
   const {
     components,
     addComponent,
     updateComponent,
     deleteComponent,
     moveComponent,
-    initializeComponents
+    initializeComponents,
   } = useQuizComponents();
 
   // Load data from localStorage on initialization
@@ -42,16 +46,15 @@ export const useQuizBuilder = () => {
           const parsedData = JSON.parse(savedData);
           initializeStages(parsedData.stages);
           initializeComponents(parsedData.components);
-          
+
           if (parsedData.stages && parsedData.stages.length > 0) {
             setActiveStage(parsedData.stages[0].id);
           }
         } else {
           // Initialize with existing quiz questions
-          const { stages: initialStages, components: initialComponents } = createBuilderStateFromQuiz(
-            caktoquizQuestions
-          );
-          
+          const { stages: initialStages, components: initialComponents } =
+            createBuilderStateFromQuiz(caktoquizQuestions);
+
           initializeStages(initialStages);
           initializeComponents(initialComponents);
           if (initialStages.length > 0) {
@@ -59,9 +62,10 @@ export const useQuizBuilder = () => {
           }
         }
       } catch (error) {
-        console.error('Error loading quiz data:', error);
+        console.error("Error loading quiz data:", error);
         // Fallback to generated stages if there's an error
-        const { stages: initialStages, components: initialComponents } = generateInitialStages();
+        const { stages: initialStages, components: initialComponents } =
+          generateInitialStages();
         initializeStages(initialStages);
         initializeComponents(initialComponents);
         if (initialStages.length > 0) {
@@ -84,12 +88,15 @@ export const useQuizBuilder = () => {
   useEffect(() => {
     if (!loading) {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({
-          components,
-          stages
-        }));
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify({
+            components,
+            stages,
+          }),
+        );
       } catch (error) {
-        console.error('Error saving quiz data:', error);
+        console.error("Error saving quiz data:", error);
         toast({
           title: "Error saving",
           description: "Could not save quiz changes.",
@@ -101,13 +108,16 @@ export const useQuizBuilder = () => {
 
   const saveCurrentState = useCallback(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        components,
-        stages
-      }));
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          components,
+          stages,
+        }),
+      );
       return true;
     } catch (error) {
-      console.error('Error saving quiz data:', error);
+      console.error("Error saving quiz data:", error);
       toast({
         title: "Error saving",
         description: "Could not save quiz changes.",
@@ -135,6 +145,6 @@ export const useQuizBuilder = () => {
     saveCurrentState,
     initializeStages,
     initializeComponents,
-    loading
+    loading,
   };
 };

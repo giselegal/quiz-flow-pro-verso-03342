@@ -3,7 +3,7 @@
 // Upload de imagens, vídeos e outros arquivos para Supabase Storage
 // =============================================================================
 
-import { supabase } from '../lib/supabase';
+import { supabase } from "../lib/supabase";
 
 // =============================================================================
 // TIPOS
@@ -26,25 +26,34 @@ export interface UploadProgress {
   percentage: number;
 }
 
-export type FileType = 'image' | 'video' | 'audio' | 'document' | 'other';
+export type FileType = "image" | "video" | "audio" | "document" | "other";
 
 // =============================================================================
 // CONFIGURAÇÕES
 // =============================================================================
 
-const STORAGE_BUCKET = 'media-uploads';
+const STORAGE_BUCKET = "media-uploads";
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
-const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/mov'];
-const ALLOWED_AUDIO_TYPES = ['audio/mp3', 'audio/wav', 'audio/ogg'];
-const ALLOWED_DOCUMENT_TYPES = ['application/pdf', 'text/plain', 'application/msword'];
+const ALLOWED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+];
+const ALLOWED_VIDEO_TYPES = ["video/mp4", "video/webm", "video/mov"];
+const ALLOWED_AUDIO_TYPES = ["audio/mp3", "audio/wav", "audio/ogg"];
+const ALLOWED_DOCUMENT_TYPES = [
+  "application/pdf",
+  "text/plain",
+  "application/msword",
+];
 
 // =============================================================================
 // SERVIÇO DE UPLOAD
 // =============================================================================
 
 export class MediaUploadService {
-  
   // =============================================================================
   // VALIDAÇÃO DE ARQUIVOS
   // =============================================================================
@@ -54,7 +63,7 @@ export class MediaUploadService {
     if (file.size > MAX_FILE_SIZE) {
       return {
         valid: false,
-        error: `Arquivo muito grande. Máximo permitido: ${MAX_FILE_SIZE / (1024 * 1024)}MB`
+        error: `Arquivo muito grande. Máximo permitido: ${MAX_FILE_SIZE / (1024 * 1024)}MB`,
       };
     }
 
@@ -63,13 +72,13 @@ export class MediaUploadService {
       ...ALLOWED_IMAGE_TYPES,
       ...ALLOWED_VIDEO_TYPES,
       ...ALLOWED_AUDIO_TYPES,
-      ...ALLOWED_DOCUMENT_TYPES
+      ...ALLOWED_DOCUMENT_TYPES,
     ];
 
     if (!allowedTypes.includes(file.type)) {
       return {
         valid: false,
-        error: `Tipo de arquivo não permitido: ${file.type}`
+        error: `Tipo de arquivo não permitido: ${file.type}`,
       };
     }
 
@@ -77,24 +86,24 @@ export class MediaUploadService {
   }
 
   static getFileType(file: File): FileType {
-    if (ALLOWED_IMAGE_TYPES.includes(file.type)) return 'image';
-    if (ALLOWED_VIDEO_TYPES.includes(file.type)) return 'video';
-    if (ALLOWED_AUDIO_TYPES.includes(file.type)) return 'audio';
-    if (ALLOWED_DOCUMENT_TYPES.includes(file.type)) return 'document';
-    return 'other';
+    if (ALLOWED_IMAGE_TYPES.includes(file.type)) return "image";
+    if (ALLOWED_VIDEO_TYPES.includes(file.type)) return "video";
+    if (ALLOWED_AUDIO_TYPES.includes(file.type)) return "audio";
+    if (ALLOWED_DOCUMENT_TYPES.includes(file.type)) return "document";
+    return "other";
   }
 
   // =============================================================================
   // GERAÇÃO DE NOMES DE ARQUIVO
   // =============================================================================
 
-  static generateFileName(file: File, prefix: string = ''): string {
+  static generateFileName(file: File, prefix: string = ""): string {
     const timestamp = Date.now();
     const randomId = Math.random().toString(36).substring(2, 15);
-    const fileExtension = file.name.split('.').pop();
-    const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-    
-    return `${prefix}${prefix ? '_' : ''}${timestamp}_${randomId}_${sanitizedName}`;
+    const fileExtension = file.name.split(".").pop();
+    const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+
+    return `${prefix}${prefix ? "_" : ""}${timestamp}_${randomId}_${sanitizedName}`;
   }
 
   static getStoragePath(fileType: FileType, fileName: string): string {
@@ -111,7 +120,7 @@ export class MediaUploadService {
       folder?: string;
       prefix?: string;
       onProgress?: (progress: UploadProgress) => void;
-    } = {}
+    } = {},
   ): Promise<UploadResult> {
     try {
       // Validar arquivo
@@ -119,22 +128,22 @@ export class MediaUploadService {
       if (!validation.valid) {
         return {
           success: false,
-          error: validation.error
+          error: validation.error,
         };
       }
 
       // Gerar nome e caminho do arquivo
       const fileName = this.generateFileName(file, options.prefix);
       const fileType = this.getFileType(file);
-      const storagePath = options.folder 
+      const storagePath = options.folder
         ? `${options.folder}/${fileName}`
         : this.getStoragePath(fileType, fileName);
 
-      console.log('📤 [Upload] Starting upload:', {
+      console.log("📤 [Upload] Starting upload:", {
         fileName,
         fileType,
         storagePath,
-        fileSize: file.size
+        fileSize: file.size,
       });
 
       // Simular progresso (Supabase não tem callback de progresso nativo)
@@ -146,21 +155,25 @@ export class MediaUploadService {
       const { data, error } = await supabase.storage
         .from(STORAGE_BUCKET)
         .upload(storagePath, file, {
-          cacheControl: '3600',
-          upsert: false
+          cacheControl: "3600",
+          upsert: false,
         });
 
       if (error) {
-        console.error('❌ [Upload] Supabase upload failed:', error);
+        console.error("❌ [Upload] Supabase upload failed:", error);
         return {
           success: false,
-          error: error.message
+          error: error.message,
         };
       }
 
       // Simular progresso completo
       if (options.onProgress) {
-        options.onProgress({ loaded: file.size, total: file.size, percentage: 100 });
+        options.onProgress({
+          loaded: file.size,
+          total: file.size,
+          percentage: 100,
+        });
       }
 
       // Obter URL pública
@@ -168,9 +181,9 @@ export class MediaUploadService {
         .from(STORAGE_BUCKET)
         .getPublicUrl(storagePath);
 
-      console.log('✅ [Upload] Upload successful:', {
+      console.log("✅ [Upload] Upload successful:", {
         path: data.path,
-        publicUrl: publicUrlData.publicUrl
+        publicUrl: publicUrlData.publicUrl,
       });
 
       return {
@@ -180,14 +193,16 @@ export class MediaUploadService {
         url: publicUrlData.publicUrl,
         fileName,
         fileSize: file.size,
-        fileType: file.type
+        fileType: file.type,
       };
-
     } catch (error) {
-      console.error('❌ [Upload] Upload error:', error);
+      console.error("❌ [Upload] Upload error:", error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Erro desconhecido no upload'
+        error:
+          error instanceof Error
+            ? error.message
+            : "Erro desconhecido no upload",
       };
     }
   }
@@ -203,27 +218,31 @@ export class MediaUploadService {
       prefix?: string;
       onProgress?: (fileIndex: number, progress: UploadProgress) => void;
       onFileComplete?: (fileIndex: number, result: UploadResult) => void;
-    } = {}
+    } = {},
   ): Promise<UploadResult[]> {
     const results: UploadResult[] = [];
     const fileArray = Array.from(files);
 
-    console.log(`📤 [Upload] Starting batch upload of ${fileArray.length} files`);
+    console.log(
+      `📤 [Upload] Starting batch upload of ${fileArray.length} files`,
+    );
 
     for (let i = 0; i < fileArray.length; i++) {
       const file = fileArray[i];
-      
+
       const result = await this.uploadFile(file, {
         folder: options.folder,
         prefix: options.prefix,
-        onProgress: (progress) => options.onProgress?.(i, progress)
+        onProgress: (progress) => options.onProgress?.(i, progress),
       });
 
       results.push(result);
       options.onFileComplete?.(i, result);
     }
 
-    console.log(`✅ [Upload] Batch upload complete. Success: ${results.filter(r => r.success).length}/${results.length}`);
+    console.log(
+      `✅ [Upload] Batch upload complete. Success: ${results.filter((r) => r.success).length}/${results.length}`,
+    );
     return results;
   }
 
@@ -240,14 +259,14 @@ export class MediaUploadService {
       maxHeight?: number;
       quality?: number;
       onProgress?: (progress: UploadProgress) => void;
-    } = {}
+    } = {},
   ): Promise<UploadResult> {
     try {
       // Verificar se é imagem
       if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
         return {
           success: false,
-          error: 'Arquivo não é uma imagem válida'
+          error: "Arquivo não é uma imagem válida",
         };
       }
 
@@ -258,21 +277,21 @@ export class MediaUploadService {
         processedFile = await this.optimizeImage(file, {
           maxWidth: options.maxWidth || 1920,
           maxHeight: options.maxHeight || 1080,
-          quality: options.quality || 0.8
+          quality: options.quality || 0.8,
         });
       }
 
       return await this.uploadFile(processedFile, {
-        folder: options.folder || 'images',
+        folder: options.folder || "images",
         prefix: options.prefix,
-        onProgress: options.onProgress
+        onProgress: options.onProgress,
       });
-
     } catch (error) {
-      console.error('❌ [Upload] Image upload error:', error);
+      console.error("❌ [Upload] Image upload error:", error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Erro no upload da imagem'
+        error:
+          error instanceof Error ? error.message : "Erro no upload da imagem",
       };
     }
   }
@@ -287,22 +306,22 @@ export class MediaUploadService {
       maxWidth: number;
       maxHeight: number;
       quality: number;
-    }
+    },
   ): Promise<File> {
     return new Promise((resolve, reject) => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
       const img = new Image();
 
       img.onload = () => {
         // Calcular dimensões mantendo proporção
         let { width, height } = img;
-        
+
         if (width > options.maxWidth) {
           height = (height * options.maxWidth) / width;
           width = options.maxWidth;
         }
-        
+
         if (height > options.maxHeight) {
           width = (width * options.maxHeight) / height;
           height = options.maxHeight;
@@ -311,7 +330,7 @@ export class MediaUploadService {
         // Redimensionar no canvas
         canvas.width = width;
         canvas.height = height;
-        
+
         ctx?.drawImage(img, 0, 0, width, height);
 
         // Converter para blob
@@ -320,19 +339,19 @@ export class MediaUploadService {
             if (blob) {
               const optimizedFile = new File([blob], file.name, {
                 type: file.type,
-                lastModified: Date.now()
+                lastModified: Date.now(),
               });
               resolve(optimizedFile);
             } else {
-              reject(new Error('Falha na otimização da imagem'));
+              reject(new Error("Falha na otimização da imagem"));
             }
           },
           file.type,
-          options.quality
+          options.quality,
         );
       };
 
-      img.onerror = () => reject(new Error('Falha ao carregar imagem'));
+      img.onerror = () => reject(new Error("Falha ao carregar imagem"));
       img.src = URL.createObjectURL(file);
     });
   }
@@ -341,25 +360,27 @@ export class MediaUploadService {
   // REMOÇÃO DE ARQUIVOS
   // =============================================================================
 
-  static async deleteFile(path: string): Promise<{ success: boolean; error?: string }> {
+  static async deleteFile(
+    path: string,
+  ): Promise<{ success: boolean; error?: string }> {
     try {
       const { error } = await supabase.storage
         .from(STORAGE_BUCKET)
         .remove([path]);
 
       if (error) {
-        console.error('❌ [Upload] Delete failed:', error);
+        console.error("❌ [Upload] Delete failed:", error);
         return { success: false, error: error.message };
       }
 
-      console.log('🗑️ [Upload] File deleted successfully:', path);
+      console.log("🗑️ [Upload] File deleted successfully:", path);
       return { success: true };
-
     } catch (error) {
-      console.error('❌ [Upload] Delete error:', error);
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Erro ao deletar arquivo' 
+      console.error("❌ [Upload] Delete error:", error);
+      return {
+        success: false,
+        error:
+          error instanceof Error ? error.message : "Erro ao deletar arquivo",
       };
     }
   }
@@ -368,24 +389,26 @@ export class MediaUploadService {
   // LISTAGEM DE ARQUIVOS
   // =============================================================================
 
-  static async listFiles(folder: string = ''): Promise<{ success: boolean; files?: any[]; error?: string }> {
+  static async listFiles(
+    folder: string = "",
+  ): Promise<{ success: boolean; files?: any[]; error?: string }> {
     try {
       const { data, error } = await supabase.storage
         .from(STORAGE_BUCKET)
         .list(folder);
 
       if (error) {
-        console.error('❌ [Upload] List failed:', error);
+        console.error("❌ [Upload] List failed:", error);
         return { success: false, error: error.message };
       }
 
       return { success: true, files: data };
-
     } catch (error) {
-      console.error('❌ [Upload] List error:', error);
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Erro ao listar arquivos' 
+      console.error("❌ [Upload] List error:", error);
+      return {
+        success: false,
+        error:
+          error instanceof Error ? error.message : "Erro ao listar arquivos",
       };
     }
   }
@@ -403,6 +426,6 @@ export const useMediaUpload = () => {
     deleteFile: MediaUploadService.deleteFile,
     listFiles: MediaUploadService.listFiles,
     validateFile: MediaUploadService.validateFile,
-    getFileType: MediaUploadService.getFileType
+    getFileType: MediaUploadService.getFileType,
   };
 };

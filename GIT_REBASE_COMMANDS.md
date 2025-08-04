@@ -3,6 +3,7 @@
 ## 📋 **COMANDOS BÁSICOS DE REBASE**
 
 ### 1. **Rebase Interativo (Mais Usado)**
+
 ```bash
 # Rebase dos últimos N commits
 git rebase -i HEAD~3  # Para os últimos 3 commits
@@ -16,6 +17,7 @@ git rebase -i --root
 ```
 
 ### 2. **Rebase com Branch Principal**
+
 ```bash
 # Rebase da branch atual com main
 git rebase main
@@ -28,6 +30,7 @@ git rebase origin/main
 ```
 
 ### 3. **Comandos Durante o Rebase Interativo**
+
 ```bash
 # Opções no editor (vi/nano):
 pick    # Usar commit como está
@@ -41,6 +44,7 @@ drop    # Remover commit completamente
 ## 🛠️ **COMANDOS DE CONTROLE DO REBASE**
 
 ### 4. **Continuar/Parar Rebase**
+
 ```bash
 # Continuar após resolver conflitos
 git rebase --continue
@@ -56,6 +60,7 @@ git rebase --edit-todo
 ```
 
 ### 5. **Resolver Conflitos Durante Rebase**
+
 ```bash
 # 1. Ver arquivos com conflito
 git status
@@ -72,6 +77,7 @@ git rebase --continue
 ## 🚀 **COMANDOS AVANÇADOS**
 
 ### 6. **Rebase com Estratégias**
+
 ```bash
 # Rebase preferindo mudanças da branch atual
 git rebase -X ours main
@@ -84,6 +90,7 @@ git rebase --ignore-whitespace main
 ```
 
 ### 7. **Rebase Específico**
+
 ```bash
 # Rebase apenas um range de commits
 git rebase --onto main commit1 commit2
@@ -98,6 +105,7 @@ git rebase --no-ff main
 ## 📝 **FLUXO TÍPICO DE REBASE**
 
 ### 8. **Workflow Completo**
+
 ```bash
 # 1. Fazer backup da branch (recomendado)
 git branch backup-branch
@@ -126,6 +134,7 @@ git rebase --abort     # Cancelar tudo
 ## 🔍 **COMANDOS DE INSPEÇÃO**
 
 ### 9. **Ver Estado do Rebase**
+
 ```bash
 # Ver commits que serão afetados
 git log --oneline HEAD~5..HEAD
@@ -143,6 +152,7 @@ git reflog
 ## ⚠️ **COMANDOS DE SEGURANÇA**
 
 ### 10. **Backup e Recuperação**
+
 ```bash
 # Criar backup antes de rebase
 git branch backup-$(date +%Y%m%d-%H%M%S)
@@ -160,6 +170,7 @@ git reset --hard HEAD@{2}
 ## 🎯 **COMANDOS ESPECÍFICOS PARA SEU PROJETO**
 
 ### 11. **Para Quiz Quest Challenge Verse**
+
 ```bash
 # Rebase da branch atual com main
 git checkout main
@@ -177,6 +188,7 @@ git push --force-with-lease origin sua-branch
 ## 🚨 **COMANDOS DE EMERGÊNCIA**
 
 ### 12. **Se Tudo Der Errado**
+
 ```bash
 # Abortar rebase em andamento
 git rebase --abort
@@ -199,6 +211,7 @@ git cherry-pick <commits-que-quer>
 ## 📚 **COMANDOS ÚTEIS EXTRAS**
 
 ### 13. **Verificações e Limpeza**
+
 ```bash
 # Ver diferença entre branches
 git log main..sua-branch --oneline
@@ -224,6 +237,7 @@ git count-objects -vH
 5. Teste em branch separada primeiro se não tiver certeza
 
 ## 🔧 **ALIAS ÚTEIS PARA .gitconfig**
+
 ```bash
 git config --global alias.rb "rebase -i"
 git config --global alias.rbc "rebase --continue"

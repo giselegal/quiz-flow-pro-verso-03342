@@ -9,25 +9,27 @@ Este é o **arquivo central** que contém a configuração de todas as 21 etapas
 ```typescript
 export const FUNNEL_STEPS_CONFIG: FunnelStepConfig[] = [
   {
-    id: 'step-1',           // ✅ ID único da etapa
-    stepNumber: 1,          // ✅ Número sequencial
-    stepType: 'intro',      // ✅ Tipo da etapa
-    title: 'Introdução ao Quiz',
-    description: 'Página inicial que apresenta o quiz',
-    defaultContent: {       // ✅ CONTEÚDO PADRÃO
-      title: 'Descubra Seu Estilo Pessoal',
-      subtitle: 'Um quiz personalizado...',
-      buttonText: 'Iniciar Quiz',
-      backgroundColor: '#faf8f5',
-      textColor: '#432818'
+    id: "step-1", // ✅ ID único da etapa
+    stepNumber: 1, // ✅ Número sequencial
+    stepType: "intro", // ✅ Tipo da etapa
+    title: "Introdução ao Quiz",
+    description: "Página inicial que apresenta o quiz",
+    defaultContent: {
+      // ✅ CONTEÚDO PADRÃO
+      title: "Descubra Seu Estilo Pessoal",
+      subtitle: "Um quiz personalizado...",
+      buttonText: "Iniciar Quiz",
+      backgroundColor: "#faf8f5",
+      textColor: "#432818",
     },
-    requiredFields: ['title', 'buttonText']
+    requiredFields: ["title", "buttonText"],
   },
   // ... mais 20 etapas
 ];
 ```
 
 **🔧 FUNÇÕES UTILITÁRIAS:**
+
 - `getStepConfig(stepNumber)` - Busca configuração por número
 - `getStepsByType(stepType)` - Filtra por tipo de etapa
 - `getTotalSteps()` - Total de etapas (21)
@@ -74,9 +76,17 @@ As etapas são **inicializadas no contexto** com templates básicos:
 
 ```typescript
 const stageTemplates = [
-  { name: 'Introdução', type: 'intro', description: 'Página de apresentação' },
-  { name: 'Q1 - Profissão', type: 'question', description: 'Qual é a sua profissão?' },
-  { name: 'Q2 - Experiência', type: 'question', description: 'Anos de experiência' },
+  { name: "Introdução", type: "intro", description: "Página de apresentação" },
+  {
+    name: "Q1 - Profissão",
+    type: "question",
+    description: "Qual é a sua profissão?",
+  },
+  {
+    name: "Q2 - Experiência",
+    type: "question",
+    description: "Anos de experiência",
+  },
   // ... 18 etapas mais
 ];
 
@@ -87,7 +97,7 @@ const initialStages = stageTemplates.map((template, index) => ({
   type: template.type,
   description: template.description,
   isActive: index === 0,
-  metadata: { blocksCount: 0, lastModified: new Date(), isCustom: false }
+  metadata: { blocksCount: 0, lastModified: new Date(), isCustom: false },
 }));
 ```
 
@@ -118,19 +128,19 @@ const initialStages = stageTemplates.map((template, index) => ({
 
 ## 📊 **TIPOS DE ETAPAS DISPONÍVEIS**
 
-| Tipo | Descrição | Etapas |
-|------|-----------|--------|
-| `intro` | Introdução ao quiz | 1 |
-| `name-collect` | Coleta de nome | 2 |
-| `quiz-intro` | Introdução às perguntas | 3 |
-| `question-multiple` | Perguntas principais | 4-14 |
-| `quiz-transition` | Transição | 15 |
-| `processing` | Processamento | 16 |
-| `result-intro` | Introdução ao resultado | 17 |
-| `result-details` | Detalhes do resultado | 18 |
-| `result-guide` | Guia do resultado | 19 |
-| `offer-transition` | Transição para oferta | 20 |
-| `offer-page` | Página da oferta | 21 |
+| Tipo                | Descrição               | Etapas |
+| ------------------- | ----------------------- | ------ |
+| `intro`             | Introdução ao quiz      | 1      |
+| `name-collect`      | Coleta de nome          | 2      |
+| `quiz-intro`        | Introdução às perguntas | 3      |
+| `question-multiple` | Perguntas principais    | 4-14   |
+| `quiz-transition`   | Transição               | 15     |
+| `processing`        | Processamento           | 16     |
+| `result-intro`      | Introdução ao resultado | 17     |
+| `result-details`    | Detalhes do resultado   | 18     |
+| `result-guide`      | Guia do resultado       | 19     |
+| `offer-transition`  | Transição para oferta   | 20     |
+| `offer-page`        | Página da oferta        | 21     |
 
 ---
 
@@ -161,8 +171,8 @@ Agora o sistema está configurado para usar os **templates específicos** de cad
 
 ```typescript
 // ✅ IMPORTA TODOS OS TEMPLATES
-import { getStep01Template } from '@/components/steps/Step01Template';
-import { getStep02Template } from '@/components/steps/Step02Template';
+import { getStep01Template } from "@/components/steps/Step01Template";
+import { getStep02Template } from "@/components/steps/Step02Template";
 // ... até Step21Template
 
 // ✅ MAPEAMENTO COMPLETO
@@ -170,20 +180,21 @@ export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
   1: {
     stepNumber: 1,
     templateFunction: getStep01Template,
-    name: 'Introdução',
-    description: 'Página inicial do quiz'
+    name: "Introdução",
+    description: "Página inicial do quiz",
   },
   2: {
     stepNumber: 2,
     templateFunction: getStep02Template,
-    name: 'Q1 - Tipo de Roupa',
-    description: 'Qual o seu tipo de roupa favorita?'
+    name: "Q1 - Tipo de Roupa",
+    description: "Qual o seu tipo de roupa favorita?",
   },
   // ... todas as 21 etapas
 };
 ```
 
 **🔧 FUNÇÕES UTILITÁRIAS:**
+
 - `getStepTemplate(stepNumber)` - Retorna blocos do template específico
 - `getStepInfo(stepNumber)` - Informações da etapa
 - `getAllSteps()` - Lista todas as etapas
@@ -197,27 +208,33 @@ O **EditorContext** agora:
 
 ✅ **Carrega templates automaticamente** quando uma etapa é selecionada  
 ✅ **Inicializa com dados dos templates específicos**  
-✅ **Converte blocos de template para EditorBlocks**  
+✅ **Converte blocos de template para EditorBlocks**
 
 ```typescript
 // ✅ CARREGAMENTO AUTOMÁTICO
-const setActiveStage = useCallback((stageId: string) => {
-  // ... validações
-  
-  // ✅ CARREGAR TEMPLATE SE A ETAPA ESTIVER VAZIA
-  const currentBlocks = stageBlocks[stageId] || [];
-  if (currentBlocks.length === 0) {
-    loadStageTemplate(stageId); // ✅ CARREGA TEMPLATE ESPECÍFICO
-  }
-}, [validateStageId, stageBlocks]);
+const setActiveStage = useCallback(
+  (stageId: string) => {
+    // ... validações
+
+    // ✅ CARREGAR TEMPLATE SE A ETAPA ESTIVER VAZIA
+    const currentBlocks = stageBlocks[stageId] || [];
+    if (currentBlocks.length === 0) {
+      loadStageTemplate(stageId); // ✅ CARREGA TEMPLATE ESPECÍFICO
+    }
+  },
+  [validateStageId, stageBlocks],
+);
 
 // ✅ FUNÇÃO DE CARREGAMENTO
-const loadStageTemplate = useCallback((stageId: string) => {
-  const stepNumber = parseInt(stageId.replace('step-', ''));
-  const templateBlocks = getStepTemplate(stepNumber); // ✅ USA TEMPLATE ESPECÍFICO
-  
-  // Converte para EditorBlocks e adiciona à etapa
-}, [stages, updateStage]);
+const loadStageTemplate = useCallback(
+  (stageId: string) => {
+    const stepNumber = parseInt(stageId.replace("step-", ""));
+    const templateBlocks = getStepTemplate(stepNumber); // ✅ USA TEMPLATE ESPECÍFICO
+
+    // Converte para EditorBlocks e adiciona à etapa
+  },
+  [stages, updateStage],
+);
 ```
 
 ---
@@ -229,7 +246,15 @@ export interface FunnelStage {
   id: string;
   name: string;
   order: number;
-  type: 'intro' | 'question' | 'transition' | 'processing' | 'result' | 'lead' | 'offer' | 'final';
+  type:
+    | "intro"
+    | "question"
+    | "transition"
+    | "processing"
+    | "result"
+    | "lead"
+    | "offer"
+    | "final";
   description?: string;
   isActive?: boolean;
   metadata?: {
@@ -246,16 +271,19 @@ export interface FunnelStage {
 ## 🎯 **COMO FUNCIONA AGORA**
 
 ### **1. Inicialização:**
+
 - O `EditorContext` carrega informações das 21 etapas
 - Cada etapa tem referência ao seu template específico
 - Metadados incluem blocos de template
 
 ### **2. Seleção de Etapa:**
+
 - Usuário clica em uma etapa no `FunnelStagesPanel`
 - Se a etapa estiver vazia, carrega automaticamente o template específico
 - Blocos do template são convertidos para `EditorBlocks`
 
 ### **3. Edição:**
+
 - Usuário pode editar os blocos carregados do template
 - Pode adicionar novos blocos via `EnhancedComponentsSidebar`
 - Mudanças são salvas no estado da etapa
@@ -264,35 +292,37 @@ export interface FunnelStage {
 
 ## 📊 **ETAPAS E SEUS TEMPLATES**
 
-| Etapa | Template | Nome | Descrição |
-|-------|----------|------|-----------|
-| 1 | `Step01Template` | Introdução | Página inicial do quiz |
-| 2 | `Step02Template` | Q1 - Tipo de Roupa | Qual o seu tipo de roupa favorita? |
-| 3 | `Step03Template` | Q2 - Estilo Pessoal | Como você descreveria seu estilo? |
-| 4 | `Step04Template` | Q3 - Ocasiões | Para quais ocasiões você se veste? |
-| 5 | `Step05Template` | Q4 - Cores | Quais cores você mais usa? |
-| ... | ... | ... | ... |
-| 21 | `Step21Template` | Finalização | Conclusão e próximos passos |
+| Etapa | Template         | Nome                | Descrição                          |
+| ----- | ---------------- | ------------------- | ---------------------------------- |
+| 1     | `Step01Template` | Introdução          | Página inicial do quiz             |
+| 2     | `Step02Template` | Q1 - Tipo de Roupa  | Qual o seu tipo de roupa favorita? |
+| 3     | `Step03Template` | Q2 - Estilo Pessoal | Como você descreveria seu estilo?  |
+| 4     | `Step04Template` | Q3 - Ocasiões       | Para quais ocasiões você se veste? |
+| 5     | `Step05Template` | Q4 - Cores          | Quais cores você mais usa?         |
+| ...   | ...              | ...                 | ...                                |
+| 21    | `Step21Template` | Finalização         | Conclusão e próximos passos        |
 
 ---
 
 ## 🔧 **COMO EDITAR OS TEMPLATES**
 
 ### **Para Modificar um Template Específico:**
+
 ➡️ **Editar:** `/src/components/steps/StepXXTemplate.tsx`
 
 Exemplo para Step01:
+
 ```typescript
 // src/components/steps/Step01Template.tsx
 export const getStep01Template = () => {
   return [
     {
-      type: 'quiz-intro-header',
+      type: "quiz-intro-header",
       properties: {
-        logoUrl: 'https://...',
-        title: 'Seu Título Personalizado',
+        logoUrl: "https://...",
+        title: "Seu Título Personalizado",
         // ... outras propriedades
-      }
+      },
     },
     // ... mais blocos
   ];
@@ -300,7 +330,9 @@ export const getStep01Template = () => {
 ```
 
 ### **Para Modificar o Mapeamento:**
+
 ➡️ **Editar:** `/src/config/stepTemplatesMapping.ts`
+
 - Alterar nomes das etapas
 - Modificar descrições
 - Ajustar metadados
@@ -314,14 +346,14 @@ export const getStep01Template = () => {
 ✅ **Manutenção Fácil**: Cada template é um arquivo separado  
 ✅ **Flexibilidade**: Pode combinar templates com edição manual  
 ✅ **Performance**: Carrega apenas os templates necessários  
-✅ **Tipagem**: TypeScript garante consistência  
+✅ **Tipagem**: TypeScript garante consistência
 
 ---
 
 ## 📈 **STATUS ATUAL**
 
 - ✅ **21 Templates**: Todos os StepXXTemplate implementados
-- ✅ **Mapeamento**: Sistema de mapeamento funcionando  
+- ✅ **Mapeamento**: Sistema de mapeamento funcionando
 - ✅ **Context**: EditorContext atualizado para usar templates
 - ✅ **Carregamento**: Automático quando etapa é selecionada
 - ✅ **Tipagem**: Tipos atualizados para suportar templates

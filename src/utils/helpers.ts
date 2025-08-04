@@ -1,25 +1,32 @@
-import { SimpleComponent, QuizOption, BonusItem, FaqItem } from "@/interfaces/quiz";
+import {
+  SimpleComponent,
+  QuizOption,
+  BonusItem,
+  FaqItem,
+} from "@/interfaces/quiz";
 import PlaceholderUtils from "./placeholderUtils";
 
 // Dados padrão para componentes
 export const defaultImageData = {
   src: PlaceholderUtils.generatePlaceholderImage(400, 300),
-  alt: 'Imagem padrão'
+  alt: "Imagem padrão",
 };
 
 export const defaultAvatarData = {
   avatar: PlaceholderUtils.generatePlaceholderImage(64, 64),
-  name: 'Nome do usuário'
+  name: "Nome do usuário",
 };
 
 export const defaultTestimonialData = {
-  text: 'Este é um depoimento de exemplo que demonstra como o componente funciona.',
-  author: 'João Silva',
+  text: "Este é um depoimento de exemplo que demonstra como o componente funciona.",
+  author: "João Silva",
   avatar: PlaceholderUtils.generatePlaceholderImage(48, 48),
-  role: 'Cliente satisfeito'
+  role: "Cliente satisfeito",
 };
 
-export const getDefaultData = (type: SimpleComponent["type"]): SimpleComponent["data"] => {
+export const getDefaultData = (
+  type: SimpleComponent["type"],
+): SimpleComponent["data"] => {
   switch (type) {
     case "logo":
       return {
@@ -141,7 +148,9 @@ export const getDefaultData = (type: SimpleComponent["type"]): SimpleComponent["
   }
 };
 
-export const getDefaultStyle = (type: SimpleComponent["type"]): SimpleComponent["style"] => {
+export const getDefaultStyle = (
+  type: SimpleComponent["type"],
+): SimpleComponent["style"] => {
   switch (type) {
     case "title":
       return {

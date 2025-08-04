@@ -1,57 +1,75 @@
 /* Keyframes para animações encantadoras */
 @keyframes breathe {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 @keyframes sparkle {
-  0%, 100% { 
+  0%,
+  100% {
     opacity: 0.3;
     transform: scale(0.8) rotate(0deg);
   }
-  50% { 
+  50% {
     opacity: 1;
     transform: scale(1.2) rotate(180deg);
   }
 }
 
 @keyframes shimmer {
-  0% { transform: translateX(-100%) skewX(-15deg); }
-  100% { transform: translateX(200%) skewX(-15deg); }
+  0% {
+    transform: translateX(-100%) skewX(-15deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-15deg);
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  25% { transform: translateY(-10px) rotate(1deg); }
-  75% { transform: translateY(-5px) rotate(-1deg); }
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+  75% {
+    transform: translateY(-5px) rotate(-1deg);
+  }
 }
 
 @keyframes glow-pulse {
-  0%, 100% { 
+  0%,
+  100% {
     box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
     filter: brightness(1);
   }
-  50% { 
+  50% {
     box-shadow: 0 0 40px rgba(139, 92, 246, 0.6);
     filter: brightness(1.1);
   }
 }
 
 @keyframes magical-border {
-  0% { 
-    border-image: linear-gradient(45deg, #8B5CF6, #A78BFA, #C4B5FD, #8B5CF6) 1;
+  0% {
+    border-image: linear-gradient(45deg, #8b5cf6, #a78bfa, #c4b5fd, #8b5cf6) 1;
   }
-  25% { 
-    border-image: linear-gradient(135deg, #A78BFA, #C4B5FD, #8B5CF6, #A78BFA) 1;
+  25% {
+    border-image: linear-gradient(135deg, #a78bfa, #c4b5fd, #8b5cf6, #a78bfa) 1;
   }
-  50% { 
-    border-image: linear-gradient(225deg, #C4B5FD, #8B5CF6, #A78BFA, #C4B5FD) 1;
+  50% {
+    border-image: linear-gradient(225deg, #c4b5fd, #8b5cf6, #a78bfa, #c4b5fd) 1;
   }
-  75% { 
-    border-image: linear-gradient(315deg, #8B5CF6, #A78BFA, #C4B5FD, #8B5CF6) 1;
+  75% {
+    border-image: linear-gradient(315deg, #8b5cf6, #a78bfa, #c4b5fd, #8b5cf6) 1;
   }
-  100% { 
-    border-image: linear-gradient(45deg, #8B5CF6, #A78BFA, #C4B5FD, #8B5CF6) 1;
+  100% {
+    border-image: linear-gradient(45deg, #8b5cf6, #a78bfa, #c4b5fd, #8b5cf6) 1;
   }
 }
 
@@ -89,13 +107,18 @@
 }
 
 .enchanted-hover::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -2px;
   left: -2px;
   right: -2px;
   bottom: -2px;
-  background: linear-gradient(45deg, transparent, rgba(139, 92, 246, 0.3), transparent);
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(139, 92, 246, 0.3),
+    transparent
+  );
   border-radius: inherit;
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -115,8 +138,9 @@
 .strategic-glow {
   animation: glow-pulse 2s ease-in-out infinite;
   border: 2px solid transparent;
-  background: linear-gradient(white, white) padding-box,
-              linear-gradient(45deg, #EF4444, #F97316, #F59E0B) border-box;
+  background:
+    linear-gradient(white, white) padding-box,
+    linear-gradient(45deg, #ef4444, #f97316, #f59e0b) border-box;
 }
 
 .magical-entrance {
@@ -150,18 +174,22 @@
 
 /* Gradientes encantados */
 .enchanted-gradient {
-  background: linear-gradient(135deg, 
+  background: linear-gradient(
+    135deg,
     rgba(139, 92, 246, 0.1) 0%,
     rgba(167, 139, 250, 0.1) 25%,
     rgba(196, 181, 253, 0.1) 50%,
-    rgba(139, 92, 246, 0.1) 100%);
+    rgba(139, 92, 246, 0.1) 100%
+  );
 }
 
 .strategic-gradient {
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     rgba(239, 68, 68, 0.1) 0%,
     rgba(249, 115, 22, 0.1) 50%,
-    rgba(245, 158, 11, 0.1) 100%);
+    rgba(245, 158, 11, 0.1) 100%
+  );
 }
 
 /* Efeitos de loading encantadores */
@@ -171,16 +199,18 @@
 }
 
 .enchanted-loading::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, 
-    transparent, 
-    rgba(255, 255, 255, 0.2), 
-    transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   animation: shimmer 1.5s infinite;
 }
 
@@ -188,7 +218,7 @@
 
 /* Efeito hover para opções de texto com cor da marca */
 .quiz-text-option-hover {
-  border-color: #B89B7A !important;
+  border-color: #b89b7a !important;
   background-color: rgba(184, 155, 122, 0.05) !important;
   box-shadow: 0 4px 12px rgba(184, 155, 122, 0.15) !important;
 }
@@ -201,16 +231,18 @@
 
 /* Efeito de seleção com cor da marca */
 .quiz-option-selected-brand {
-  border-color: #B89B7A;
+  border-color: #b89b7a;
   box-shadow: 0 6px 16px rgba(184, 155, 122, 0.25);
 }
 
 /* Gradiente sutil da marca para opções selecionadas */
 .quiz-option-brand-gradient {
-  background: linear-gradient(135deg, 
+  background: linear-gradient(
+    135deg,
     rgba(184, 155, 122, 0.05) 0%,
     rgba(184, 155, 122, 0.02) 50%,
-    rgba(184, 155, 122, 0.05) 100%);
+    rgba(184, 155, 122, 0.05) 100%
+  );
 }
 
 /* Animação suave para interações */
@@ -228,7 +260,7 @@
   .sparkle-effect {
     animation: none;
   }
-  
+
   .enchanted-hover:hover {
     transform: none;
   }
@@ -237,10 +269,12 @@
 /* Modo escuro para efeitos */
 @media (prefers-color-scheme: dark) {
   .enchanted-gradient {
-    background: linear-gradient(135deg, 
+    background: linear-gradient(
+      135deg,
       rgba(139, 92, 246, 0.2) 0%,
       rgba(167, 139, 250, 0.2) 25%,
       rgba(196, 181, 253, 0.2) 50%,
-      rgba(139, 92, 246, 0.2) 100%);
+      rgba(139, 92, 246, 0.2) 100%
+    );
   }
 }

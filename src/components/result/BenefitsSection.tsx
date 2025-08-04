@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { Check } from 'lucide-react';
+import React from "react";
+import { Check } from "lucide-react";
 
 interface Benefit {
   icon?: React.ReactNode;
@@ -14,7 +13,7 @@ interface BenefitsSectionProps {
 
 export const BenefitsSection: React.FC<BenefitsSectionProps> = ({
   title,
-  benefits
+  benefits,
 }) => {
   return (
     <section className="py-12 px-4 bg-white">
@@ -24,14 +23,12 @@ export const BenefitsSection: React.FC<BenefitsSectionProps> = ({
         </h2>
         <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {benefits.map((benefit, index) => (
-            <div 
+            <div
               key={index}
               className="flex items-start gap-3 p-4 rounded-lg bg-[#FAF9F7]"
             >
               <div className="mt-1">
-                {benefit.icon || (
-                  <Check className="h-5 w-5 text-[#B89B7A]" />
-                )}
+                {benefit.icon || <Check className="h-5 w-5 text-[#B89B7A]" />}
               </div>
               <p className="text-[#432818]">{benefit.text}</p>
             </div>

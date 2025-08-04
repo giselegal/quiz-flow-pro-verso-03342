@@ -9,14 +9,14 @@ Este documento descreve os padrões de carregamento padronizados para o projeto 
 Um spinner de carregamento simples e customizável para uso em qualquer contexto.
 
 ```tsx
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
-<LoadingSpinner 
-  size="md"           // Tamanhos: xs, sm, md, lg, xl
-  color="#B89B7A"     // Cor personalizada (opcional)
-  className="mb-4"    // Classes adicionais (opcional)
-  thickness="normal"  // Espessura: thin, normal, thick (opcional)
-/>
+<LoadingSpinner
+  size="md" // Tamanhos: xs, sm, md, lg, xl
+  color="#B89B7A" // Cor personalizada (opcional)
+  className="mb-4" // Classes adicionais (opcional)
+  thickness="normal" // Espessura: thin, normal, thick (opcional)
+/>;
 ```
 
 ### 2. LoadingState
@@ -24,12 +24,12 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 Um estado de carregamento em tela cheia, ideal para carregamento inicial de páginas.
 
 ```tsx
-import { LoadingState } from '@/components/ui/loading-state';
+import { LoadingState } from "@/components/ui/loading-state";
 
-<LoadingState 
-  message="Carregando quiz..."  // Mensagem personalizada (opcional)
-  showLogo={true}               // Mostrar ou não o logo (opcional)
-/>
+<LoadingState
+  message="Carregando quiz..." // Mensagem personalizada (opcional)
+  showLogo={true} // Mostrar ou não o logo (opcional)
+/>;
 ```
 
 ### 3. Skeleton Loading
@@ -45,6 +45,7 @@ Para componentes específicos (como a página de resultados), utilizamos o padr�
 1. **Evite implementar spinners personalizados**. Sempre use `LoadingSpinner` ou `LoadingState`.
 
 2. Para indicadores de carregamento em botões, use:
+
    ```tsx
    <Button disabled={isLoading}>
      {isLoading ? (
@@ -55,7 +56,7 @@ Para componentes específicos (como a página de resultados), utilizamos o padr�
          Carregando...
        </>
      ) : (
-       'Salvar'
+       "Salvar"
      )}
    </Button>
    ```
@@ -67,7 +68,7 @@ Para componentes específicos (como a página de resultados), utilizamos o padr�
 ## Animações Disponíveis
 
 1. `animate-spin` - Rotação 360°
-2. `animate-pulse` - Efeito de pulsação 
+2. `animate-pulse` - Efeito de pulsação
 3. `animate-loading-bar` - Barra de progresso animada
 
 ## Benefícios

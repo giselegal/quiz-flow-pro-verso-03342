@@ -1,7 +1,6 @@
-
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { FunnelStepProps } from '@/types/funnel';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { FunnelStepProps } from "@/types/funnel";
 
 interface QuizOptionProps {
   id: string;
@@ -20,20 +19,24 @@ const QuizOption: React.FC<QuizOptionProps> = ({
   isSelected,
   onSelect,
   multiSelect,
-  disabled
+  disabled,
 }) => {
   return (
     <button
       onClick={onSelect}
       disabled={disabled}
       className={`p-4 border-2 rounded-lg transition-all ${
-        isSelected 
-          ? 'border-[#B89B7A] bg-[#B89B7A]/10' 
-          : 'border-gray-200 hover:border-[#B89B7A]/50'
-      } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+        isSelected
+          ? "border-[#B89B7A] bg-[#B89B7A]/10"
+          : "border-gray-200 hover:border-[#B89B7A]/50"
+      } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
     >
       {imageUrl && (
-        <img src={imageUrl} alt={text} className="w-full h-32 object-cover rounded mb-2" />
+        <img
+          src={imageUrl}
+          alt={text}
+          className="w-full h-32 object-cover rounded mb-2"
+        />
       )}
       <span className="text-sm font-medium">{text}</span>
     </button>
@@ -58,23 +61,23 @@ const QuestionMultipleStep: React.FC<QuestionMultipleStepProps> = ({
   stepNumber = 1,
   totalSteps = 7,
   onNext,
-  data = {}
+  data = {},
 }) => {
   const {
-    question = 'Selecione suas opções preferidas',
+    question = "Selecione suas opções preferidas",
     options = [],
     multiSelect = false,
     minAnswers = 1,
-    maxAnswers = 1
+    maxAnswers = 1,
   } = data;
 
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
   const handleOptionSelect = (optionId: string) => {
     if (multiSelect) {
-      setSelectedOptions(prev => {
+      setSelectedOptions((prev) => {
         if (prev.includes(optionId)) {
-          return prev.filter(id => id !== optionId);
+          return prev.filter((id) => id !== optionId);
         } else {
           if (prev.length < (maxAnswers || 99)) {
             return [...prev, optionId];
@@ -87,8 +90,9 @@ const QuestionMultipleStep: React.FC<QuestionMultipleStepProps> = ({
     }
   };
 
-  const canProceed = selectedOptions.length >= (minAnswers || 1) && 
-                    selectedOptions.length <= (maxAnswers || 99);
+  const canProceed =
+    selectedOptions.length >= (minAnswers || 1) &&
+    selectedOptions.length <= (maxAnswers || 99);
 
   return (
     <div className="min-h-screen flex flex-col p-6 bg-[#FFFAF0]">

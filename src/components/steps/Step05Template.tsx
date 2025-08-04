@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export interface Step05Question04Props {
   onNext?: () => void;
@@ -6,7 +6,11 @@ export interface Step05Question04Props {
   onBlockAdd?: (block: any) => void;
 }
 
-export const Step05Question04: React.FC<Step05Question04Props> = ({ onNext, onPrevious, onBlockAdd }) => {
+export const Step05Question04: React.FC<Step05Question04Props> = ({
+  onNext,
+  onPrevious,
+  onBlockAdd,
+}) => {
   return (
     <div className="step-05-question-04">
       {/* Conteúdo da Etapa 5 renderizado aqui */}
@@ -18,137 +22,138 @@ export const Step05Question04: React.FC<Step05Question04Props> = ({ onNext, onPr
 export const getStep05Template = () => {
   return [
     {
-      type: 'quiz-intro-header',
+      type: "quiz-intro-header",
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-        logoAlt: 'Logo Gisele Galvão',
+        logoUrl:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        logoAlt: "Logo Gisele Galvão",
         logoWidth: 96,
         logoHeight: 96,
         progressValue: 40,
         progressMax: 100,
-        showBackButton: true
-      }
+        showBackButton: true,
+      },
     },
     {
-      type: 'heading-inline',
+      type: "heading-inline",
       properties: {
-        content: 'QUAIS DETALHES VOCÊ GOSTA?',
-        level: 'h2',
-        fontSize: 'text-2xl',
-        fontWeight: 'font-bold',
-        textAlign: 'text-center',
-        color: '#432818',
-        marginBottom: 8
-      }
+        content: "QUAIS DETALHES VOCÊ GOSTA?",
+        level: "h2",
+        fontSize: "text-2xl",
+        fontWeight: "font-bold",
+        textAlign: "text-center",
+        color: "#432818",
+        marginBottom: 8,
+      },
     },
     {
-      type: 'text-inline',
+      type: "text-inline",
       properties: {
-        content: 'Questão 4 de 10',
-        fontSize: 'text-sm',
-        textAlign: 'text-center',
-        color: '#6B7280',
-        marginBottom: 24
-      }
+        content: "Questão 4 de 10",
+        fontSize: "text-sm",
+        textAlign: "text-center",
+        color: "#6B7280",
+        marginBottom: 24,
+      },
     },
     {
-      type: 'options-grid',
+      type: "options-grid",
       properties: {
-        questionId: 'q4',
+        questionId: "q4",
         options: [
-          { 
-            id: "4a", 
-            text: "Poucos detalhes, básico e prático", 
-            value: "4a", 
-            category: "Natural", 
-            styleCategory: "Natural", 
-            points: 1 
+          {
+            id: "4a",
+            text: "Poucos detalhes, básico e prático",
+            value: "4a",
+            category: "Natural",
+            styleCategory: "Natural",
+            points: 1,
           },
-          { 
-            id: "4b", 
-            text: "Bem discretos e sutis, clean e clássico", 
-            value: "4b", 
-            category: "Clássico", 
-            styleCategory: "Clássico", 
-            points: 1 
+          {
+            id: "4b",
+            text: "Bem discretos e sutis, clean e clássico",
+            value: "4b",
+            category: "Clássico",
+            styleCategory: "Clássico",
+            points: 1,
           },
-          { 
-            id: "4c", 
-            text: "Básico, mas com um toque de estilo", 
-            value: "4c", 
-            category: "Contemporâneo", 
-            styleCategory: "Contemporâneo", 
-            points: 1 
+          {
+            id: "4c",
+            text: "Básico, mas com um toque de estilo",
+            value: "4c",
+            category: "Contemporâneo",
+            styleCategory: "Contemporâneo",
+            points: 1,
           },
-          { 
-            id: "4d", 
-            text: "Detalhes refinados, chic e que deem status", 
-            value: "4d", 
-            category: "Elegante", 
-            styleCategory: "Elegante", 
-            points: 1 
+          {
+            id: "4d",
+            text: "Detalhes refinados, chic e que deem status",
+            value: "4d",
+            category: "Elegante",
+            styleCategory: "Elegante",
+            points: 1,
           },
-          { 
-            id: "4e", 
-            text: "Detalhes delicados, laços, babados", 
-            value: "4e", 
-            category: "Romântico", 
-            styleCategory: "Romântico", 
-            points: 1 
+          {
+            id: "4e",
+            text: "Detalhes delicados, laços, babados",
+            value: "4e",
+            category: "Romântico",
+            styleCategory: "Romântico",
+            points: 1,
           },
-          { 
-            id: "4f", 
-            text: "Roupas que valorizem meu corpo: couro, zíper, fendas", 
-            value: "4f", 
-            category: "Sexy", 
-            styleCategory: "Sexy", 
-            points: 1 
+          {
+            id: "4f",
+            text: "Roupas que valorizem meu corpo: couro, zíper, fendas",
+            value: "4f",
+            category: "Sexy",
+            styleCategory: "Sexy",
+            points: 1,
           },
-          { 
-            id: "4g", 
-            text: "Detalhes marcantes, firmeza e peso", 
-            value: "4g", 
-            category: "Dramático", 
-            styleCategory: "Dramático", 
-            points: 1 
+          {
+            id: "4g",
+            text: "Detalhes marcantes, firmeza e peso",
+            value: "4g",
+            category: "Dramático",
+            styleCategory: "Dramático",
+            points: 1,
           },
-          { 
-            id: "4h", 
-            text: "Detalhes diferentes do convencional, produções ousadas", 
-            value: "4h", 
-            category: "Criativo", 
-            styleCategory: "Criativo", 
-            points: 1 
-          }
+          {
+            id: "4h",
+            text: "Detalhes diferentes do convencional, produções ousadas",
+            value: "4h",
+            category: "Criativo",
+            styleCategory: "Criativo",
+            points: 1,
+          },
         ],
         columns: 1,
         showImages: false,
         multipleSelection: true,
         maxSelections: 3,
         minSelections: 1,
-        validationMessage: 'Selecione até 3 opções',
+        validationMessage: "Selecione até 3 opções",
         gridGap: 12,
         responsiveColumns: true,
         autoAdvanceOnComplete: true,
         autoAdvanceDelay: 800,
         requiredSelections: 3,
         enableButtonOnlyWhenValid: true,
-        showValidationFeedback: true
-      }
+        showValidationFeedback: true,
+      },
     },
     {
-      type: 'button-inline',
+      type: "button-inline",
       properties: {
-        text: 'Continuar',
-        variant: 'primary',
-        size: 'large',
+        text: "Continuar",
+        variant: "primary",
+        size: "large",
         fullWidth: true,
-        backgroundColor: '#B89B7A',
-        textColor: '#ffffff',
+        backgroundColor: "#B89B7A",
+        textColor: "#ffffff",
         disabled: true,
-        requiresValidSelection: true
-      }
-    }
+        requiresValidSelection: true,
+      },
+    },
   ];
 };
 

@@ -1,4 +1,3 @@
-
 // Simulador de Webhook Hotmart para testes
 // Este arquivo simula o recebimento de webhooks da Hotmart no frontend
 
@@ -24,7 +23,7 @@ export class HotmartWebhookSimulator {
       | "PURCHASE_APPROVED"
       | "PURCHASE_CANCELED"
       | "PURCHASE_REFUNDED",
-    transactionId?: string
+    transactionId?: string,
   ): Promise<void> {
     const webhookData: HotmartWebhookData = {
       event,
@@ -47,7 +46,7 @@ export class HotmartWebhookSimulator {
         buyer: {
           email,
           name: "Usuário Teste",
-          document: "000.000.000-00"
+          document: "000.000.000-00",
         },
         transaction: {
           id: transactionId || `T${Date.now()}`,
@@ -93,12 +92,12 @@ export const webhookSimulator = HotmartWebhookSimulator.getInstance();
 // Funções utilitárias para uso direto
 export const simulateHotmartPurchase = (
   email: string,
-  transactionId?: string
+  transactionId?: string,
 ) => {
   return webhookSimulator.simulateWebhook(
     email,
     "PURCHASE_COMPLETE",
-    transactionId
+    transactionId,
   );
 };
 

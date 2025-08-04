@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
-import { Edit3 } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
+import { Edit3 } from "lucide-react";
 
 interface LoaderInlineBlockProps {
   title?: string;
@@ -15,15 +15,15 @@ interface LoaderInlineBlockProps {
 }
 
 const LoaderInlineBlock: React.FC<LoaderInlineBlockProps> = ({
-  title = 'Carregando...',
+  title = "Carregando...",
   percentage = 60,
-  description = 'Analisando seu estilo pessoal...',
+  description = "Analisando seu estilo pessoal...",
   animated = true,
-  color = '#B89B7A',
+  color = "#B89B7A",
   onClick,
   className,
   onPropertyChange,
-  disabled = false
+  disabled = false,
 }) => {
   const [currentProgress, setCurrentProgress] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -40,7 +40,7 @@ const LoaderInlineBlock: React.FC<LoaderInlineBlockProps> = ({
   }, [percentage, animated]);
 
   return (
-    <div 
+    <div
       role="button"
       tabIndex={0}
       className={cn(
@@ -49,7 +49,7 @@ const LoaderInlineBlock: React.FC<LoaderInlineBlockProps> = ({
         "hover:border-2 hover:border-blue-500 transition-all cursor-pointer",
         isHovered ? "border-blue-500" : "border-gray-300",
         disabled && "opacity-75 cursor-not-allowed",
-        className
+        className,
       )}
       onClick={!disabled ? onClick : undefined}
       onMouseEnter={() => setIsHovered(true)}
@@ -58,21 +58,17 @@ const LoaderInlineBlock: React.FC<LoaderInlineBlockProps> = ({
       <div className="grid w-full items-center gap-1.5">
         {/* Header */}
         <div className="w-full flex justify-between flex-row">
-          <div className="font-bold text-[#432818]">
-            {title}
-          </div>
-          <div className="font-normal text-[#8F7A6A]">
-            {percentage}%
-          </div>
+          <div className="font-bold text-[#432818]">{title}</div>
+          <div className="font-normal text-[#8F7A6A]">{percentage}%</div>
         </div>
 
         {/* Progress Bar */}
         <div className="relative h-4 w-full overflow-hidden rounded-full bg-zinc-300">
-          <div 
+          <div
             className="h-full w-full flex-1 transition-all duration-1000 ease-out rounded-full"
             style={{
               backgroundColor: color,
-              transform: `translateX(-${100 - currentProgress}%)`
+              transform: `translateX(-${100 - currentProgress}%)`,
             }}
           />
         </div>

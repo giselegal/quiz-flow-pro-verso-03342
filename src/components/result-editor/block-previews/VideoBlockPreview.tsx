@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React from "react";
 
 interface VideoBlockPreviewProps {
   content: {
@@ -15,31 +14,33 @@ interface VideoBlockPreviewProps {
 
 const VideoBlockPreview: React.FC<VideoBlockPreviewProps> = ({ content }) => {
   const getVideoId = (url: string) => {
-    if (!url) return '';
-    
+    if (!url) return "";
+
     // For YouTube URLs
-    const youtubeRegex = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    const youtubeRegex =
+      /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
     const youtubeMatch = url.match(youtubeRegex);
     if (youtubeMatch) return youtubeMatch[1];
-    
+
     // For Vimeo URLs
-    const vimeoRegex = /(?:vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|album\/(?:\d+)\/video\/|)(\d+)(?:$|\/|\?))/;
+    const vimeoRegex =
+      /(?:vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|album\/(?:\d+)\/video\/|)(\d+)(?:$|\/|\?))/;
     const vimeoMatch = url.match(vimeoRegex);
     if (vimeoMatch) return vimeoMatch[1];
-    
-    return '';
+
+    return "";
   };
 
   const getEmbedUrl = (url: string) => {
-    if (!url) return '';
+    if (!url) return "";
     const videoId = getVideoId(url);
-    
-    if (url.includes('youtube')) {
+
+    if (url.includes("youtube")) {
       return `https://www.youtube.com/embed/${videoId}`;
-    } else if (url.includes('vimeo')) {
+    } else if (url.includes("vimeo")) {
       return `https://player.vimeo.com/video/${videoId}`;
     }
-    
+
     return url;
   };
 
@@ -60,11 +61,13 @@ const VideoBlockPreview: React.FC<VideoBlockPreviewProps> = ({ content }) => {
           <p className="text-gray-400">Prévia do vídeo</p>
         </div>
       )}
-      
+
       {content.videoTitle && (
-        <h3 className="text-lg font-medium text-[#432818]">{content.videoTitle}</h3>
+        <h3 className="text-lg font-medium text-[#432818]">
+          {content.videoTitle}
+        </h3>
       )}
-      
+
       {content.videoDescription && (
         <p className="text-[#8F7A6A]">{content.videoDescription}</p>
       )}

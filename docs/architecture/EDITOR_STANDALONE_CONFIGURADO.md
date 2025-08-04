@@ -3,12 +3,15 @@
 ## ✅ Configuração Atual
 
 ### 🎯 Acesso ao Editor
+
 - **URL**: http://localhost:8080/editor
 - **Rota específica**: http://localhost:8080/editor/:id (para editar funnel específico)
 - **Layout**: Independente do dashboard, tela cheia
 
 ### 🔙 Botão Voltar ao Dashboard
+
 O editor já possui um botão "Dashboard" no canto superior esquerdo que:
+
 - **Ícone**: ArrowLeft (seta para esquerda)
 - **Texto**: "Dashboard" (visível em telas maiores)
 - **Função**: Redireciona para `/admin/funis`
@@ -17,12 +20,14 @@ O editor já possui um botão "Dashboard" no canto superior esquerdo que:
 ### 🖥️ Servidores Necessários
 
 #### Frontend (Vite)
+
 ```bash
 npm run dev
 # Roda na porta 8080
 ```
 
 #### Backend (Express + Supabase)
+
 ```bash
 npm run dev:server
 # Roda na porta 3001
@@ -31,6 +36,7 @@ npm run dev:server
 ### 📱 Features do Editor Standalone
 
 #### Interface Completa
+
 - ✅ Header com botão voltar ao dashboard
 - ✅ Barra lateral de componentes (arrastar e soltar)
 - ✅ Canvas principal para edição
@@ -39,6 +45,7 @@ npm run dev:server
 - ✅ Botões de salvar e prévia
 
 #### Funcionalidades
+
 - ✅ Arrastar e soltar componentes
 - ✅ Edição de propriedades em tempo real
 - ✅ Visualização responsiva
@@ -49,19 +56,22 @@ npm run dev:server
 ## 🚀 Como Usar
 
 ### 1. Iniciar Servidores
+
 ```bash
 # Terminal 1 - Frontend
 npm run dev
 
-# Terminal 2 - Backend  
+# Terminal 2 - Backend
 npm run dev:server
 ```
 
 ### 2. Acessar Editor
+
 - **Novo Funil**: http://localhost:8080/editor
 - **Editar Existente**: http://localhost:8080/editor/[id-do-funil]
 
 ### 3. Voltar ao Dashboard
+
 - Clique no botão "Dashboard" (←) no canto superior esquerdo
 - Ou navegue para: http://localhost:8080/admin
 
@@ -85,6 +95,7 @@ npm run dev:server
 ## 🔧 Configuração Técnica
 
 ### Roteamento (App.tsx)
+
 ```tsx
 // Rota independente do dashboard
 <Route path="/editor" component={SchemaDrivenEditorPage} />
@@ -92,6 +103,7 @@ npm run dev:server
 ```
 
 ### Layout (SchemaDrivenEditorPage.tsx)
+
 ```tsx
 // Container de tela cheia
 <div className="h-screen w-screen overflow-hidden bg-gray-50">
@@ -100,6 +112,7 @@ npm run dev:server
 ```
 
 ### Botão Voltar (SchemaDrivenEditorResponsive.tsx)
+
 ```tsx
 <Button onClick={handleBackToDashboard}>
   <ArrowLeft className="w-4 h-4" />
@@ -108,6 +121,7 @@ npm run dev:server
 ```
 
 ## ✅ Status
+
 - 🟢 **Frontend**: Rodando na porta 8080
 - 🟢 **Backend**: Rodando na porta 3001
 - 🟢 **Supabase**: Conectado e funcionando

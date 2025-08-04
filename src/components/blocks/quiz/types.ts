@@ -1,4 +1,3 @@
-
 export interface QuizBlockProps {
   id: string;
   type: string;

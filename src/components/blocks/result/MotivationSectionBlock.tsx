@@ -1,9 +1,9 @@
-import React from 'react';
-import MotivationSection from '@/components/result/MotivationSection';
+import React from "react";
+import MotivationSection from "@/components/result/MotivationSection";
 
 /**
  * BLOCO EDITÁVEL: Seção de Motivação
- * 
+ *
  * Props Editáveis:
  * - title: string (título da seção)
  * - subtitle: string (subtítulo)
@@ -13,9 +13,9 @@ import MotivationSection from '@/components/result/MotivationSection';
  * - buttonColor: string (cor do botão)
  * - backgroundColor: string
  * - textAlign: 'left' | 'center' | 'right'
- * 
+ *
  * Exemplo de Uso:
- * <MotivationSectionBlock 
+ * <MotivationSectionBlock
  *   title="Sua transformação começa agora"
  *   subtitle="Descubra seu potencial"
  *   content="Com o CaktoQuiz, você terá todas as ferramentas..."
@@ -33,29 +33,29 @@ export interface MotivationSectionBlockProps {
   buttonText?: string;
   buttonColor?: string;
   backgroundColor?: string;
-  textAlign?: 'left' | 'center' | 'right';
+  textAlign?: "left" | "center" | "right";
   className?: string;
 }
 
 const MotivationSectionBlock: React.FC<MotivationSectionBlockProps> = ({
-  blockId = 'motivation-section',
-  title = 'Sua transformação começa agora',
-  subtitle = 'Descubra seu potencial único',
-  content = 'Com as estratégias certas, você pode transformar completamente seu estilo e autoestima.',
+  blockId = "motivation-section",
+  title = "Sua transformação começa agora",
+  subtitle = "Descubra seu potencial único",
+  content = "Com as estratégias certas, você pode transformar completamente seu estilo e autoestima.",
   showButton = true,
-  buttonText = 'Quero me transformar',
-  buttonColor = '#B89B7A',
-  backgroundColor = '#ffffff',
-  textAlign = 'center',
-  className = '',
+  buttonText = "Quero me transformar",
+  buttonColor = "#B89B7A",
+  backgroundColor = "#ffffff",
+  textAlign = "center",
+  className = "",
 }) => {
   return (
-    <div 
-      className={`motivation-section-block ${className}`} 
+    <div
+      className={`motivation-section-block ${className}`}
       data-block-id={blockId}
-      style={{ 
+      style={{
         backgroundColor,
-        textAlign 
+        textAlign,
       }}
     >
       <MotivationSection />

@@ -1,12 +1,17 @@
-
-import React from 'react';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { Button } from '@/components/ui/button';
-import { Trash2 } from 'lucide-react';
+import React from "react";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 
 interface PropertyPanelProps {
   selectedBlock: any;
@@ -19,7 +24,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
   selectedBlock,
   onUpdateBlock,
   onDeleteBlock,
-  onClose
+  onClose,
 }) => {
   if (!selectedBlock) {
     return (
@@ -32,21 +37,25 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
   const handlePropertyChange = (key: string, value: any) => {
     onUpdateBlock(selectedBlock.id, {
       ...selectedBlock.properties,
-      [key]: value
+      [key]: value,
     });
   };
 
-  const renderPropertyEditor = (key: string, value: any, type: string = 'text') => {
+  const renderPropertyEditor = (
+    key: string,
+    value: any,
+    type: string = "text",
+  ) => {
     switch (type) {
-      case 'textarea':
+      case "textarea":
         return (
           <Textarea
-            value={value || ''}
+            value={value || ""}
             onChange={(e) => handlePropertyChange(key, e.target.value)}
             className="mt-1"
           />
         );
-      case 'boolean':
+      case "boolean":
         return (
           <Switch
             checked={value || false}
@@ -54,10 +63,10 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
             className="mt-1"
           />
         );
-      case 'select':
+      case "select":
         return (
-          <Select 
-            value={value || ''} 
+          <Select
+            value={value || ""}
             onValueChange={(newValue) => handlePropertyChange(key, newValue)}
           >
             <SelectTrigger className="mt-1">
@@ -72,7 +81,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
       default:
         return (
           <Input
-            value={value || ''}
+            value={value || ""}
             onChange={(e) => handlePropertyChange(key, e.target.value)}
             className="mt-1"
           />

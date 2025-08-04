@@ -1,9 +1,9 @@
-import React from 'react';
-import QuizQuestion from '../QuizQuestion';
-import { UserResponse } from '@/types/quiz';
-import { QuizHeader } from './QuizHeader';
-import { StrategicQuestions } from './StrategicQuestions';
-import { useScrollTracking } from '@/hooks/useScrollTracking';
+import React from "react";
+import QuizQuestion from "../QuizQuestion";
+import { UserResponse } from "@/types/quiz";
+import { QuizHeader } from "./QuizHeader";
+import { StrategicQuestions } from "./StrategicQuestions";
+import { useScrollTracking } from "@/hooks/useScrollTracking";
 
 interface QuizContentWithTrackingProps {
   user: any;
@@ -16,7 +16,9 @@ interface QuizContentWithTrackingProps {
   handleAnswerSubmit: (response: UserResponse) => void;
 }
 
-export const QuizContentWithTracking: React.FC<QuizContentWithTrackingProps> = ({
+export const QuizContentWithTracking: React.FC<
+  QuizContentWithTrackingProps
+> = ({
   user,
   currentQuestionIndex,
   totalQuestions,
@@ -27,19 +29,21 @@ export const QuizContentWithTracking: React.FC<QuizContentWithTrackingProps> = (
   handleAnswerSubmit,
 }) => {
   const { scrollY, scrollDirection, isScrolling } = useScrollTracking();
-  
+
   // Get user name from localStorage if not provided in props
-  const userName = user?.userName || localStorage.getItem('userName') || '';
-  
+  const userName = user?.userName || localStorage.getItem("userName") || "";
+
   // Determine the required selections based on question type
-  const requiredSelections = showingStrategicQuestions ? 1 : (currentQuestion?.multiSelect || 3);
-  
+  const requiredSelections = showingStrategicQuestions
+    ? 1
+    : currentQuestion?.multiSelect || 3;
+
   // Check if we have enough selections to proceed
   const canProceed = currentAnswers?.length === requiredSelections;
 
   return (
     <>
-      <QuizHeader 
+      <QuizHeader
         userName={userName}
         currentQuestionIndex={currentQuestionIndex}
         totalQuestions={totalQuestions}

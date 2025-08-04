@@ -7,6 +7,7 @@ CAUSA: Filtro sortedBlocks não filtra por stepId corretamente + dependência de
 CORREÇÕES ESPECÍFICAS:
 
 1. EM SchemaDrivenEditorResponsive.tsx - CORRIGIR handleAddBlock:
+
 ```typescript
 // ADICIONAR stepId aos blocos SEMPRE
 if (newBlockId) {
@@ -17,26 +18,29 @@ if (newBlockId) {
 ```
 
 2. EM sortedBlocks - CORRIGIR filtro:
+
 ```typescript
-const stepBlocks = blocks.filter(block => {
+const stepBlocks = blocks.filter((block) => {
   if (block.stepId) {
     return block.stepId === selectedStepId; // APENAS da etapa atual
   }
-  return selectedStepId === 'etapa-1'; // Fallback
+  return selectedStepId === "etapa-1"; // Fallback
 });
 ```
 
 3. EM useEffect - PRIORIZAR dados locais:
+
 ```typescript
 // SEMPRE carregar stepTemplateService primeiro
 const serviceSteps = stepTemplateService.getAllSteps();
 setSteps(serviceSteps);
-setSelectedStepId('etapa-1');
+setSelectedStepId("etapa-1");
 
 // Supabase opcional em background
 ```
 
 4. CRIAR src/hooks/useHistory.ts:
+
 ```typescript
 export const useHistory = <T>(initialState: T) => {
   // implementação básica de undo/redo

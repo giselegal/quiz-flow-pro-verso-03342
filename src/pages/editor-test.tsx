@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
 const EditorTestPage: React.FC = () => {
-  console.log('🚀 EditorTestPage: RENDERIZANDO!');
-  
+  console.log("🚀 EditorTestPage: RENDERIZANDO!");
+
   return (
     <div className="p-4">
       <h1>Teste de Editor</h1>

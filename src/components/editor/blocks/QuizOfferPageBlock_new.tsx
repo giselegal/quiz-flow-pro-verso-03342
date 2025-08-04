@@ -1,1 +1,1 @@
-export { default } from '@/components/pages/QuizOfferPageComponent';
+export { default } from "@/components/pages/QuizOfferPageComponent";

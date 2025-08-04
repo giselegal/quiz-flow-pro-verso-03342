@@ -1,7 +1,14 @@
-
 "use client";
-import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, Volume2, VolumeX, ChevronLeft, ChevronRight, CheckCircle } from 'lucide-react';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
+  ChevronLeft,
+  ChevronRight,
+  CheckCircle,
+} from "lucide-react";
 
 interface ComponentProps {
   props: Record<string, any>;
@@ -10,7 +17,11 @@ interface ComponentProps {
 }
 
 // Componente de Vídeo
-export const VideoComponent: React.FC<ComponentProps> = ({ props, isSelected, onSelect }) => {
+export const VideoComponent: React.FC<ComponentProps> = ({
+  props,
+  isSelected,
+  onSelect,
+}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(props.muted || false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -34,8 +45,8 @@ export const VideoComponent: React.FC<ComponentProps> = ({ props, isSelected, on
   };
 
   return (
-    <div 
-      className={`relative ${isSelected ? 'ring-2 ring-blue-500' : ''}`}
+    <div
+      className={`relative ${isSelected ? "ring-2 ring-blue-500" : ""}`}
       onClick={onSelect}
       style={{ marginBottom: props.marginBottom }}
     >
@@ -52,20 +63,28 @@ export const VideoComponent: React.FC<ComponentProps> = ({ props, isSelected, on
         className="rounded-lg"
         style={{ borderRadius: props.borderRadius }}
       />
-      
+
       {!props.controls && (
         <div className="absolute bottom-4 left-4 flex gap-2">
           <button
             onClick={togglePlay}
             className="bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70"
           >
-            {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+            {isPlaying ? (
+              <Pause className="w-4 h-4" />
+            ) : (
+              <Play className="w-4 h-4" />
+            )}
           </button>
           <button
             onClick={toggleMute}
             className="bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70"
           >
-            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            {isMuted ? (
+              <VolumeX className="w-4 h-4" />
+            ) : (
+              <Volume2 className="w-4 h-4" />
+            )}
           </button>
         </div>
       )}
@@ -74,7 +93,11 @@ export const VideoComponent: React.FC<ComponentProps> = ({ props, isSelected, on
 };
 
 // Componente de Áudio
-export const AudioComponent: React.FC<ComponentProps> = ({ props, isSelected, onSelect }) => {
+export const AudioComponent: React.FC<ComponentProps> = ({
+  props,
+  isSelected,
+  onSelect,
+}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -85,13 +108,13 @@ export const AudioComponent: React.FC<ComponentProps> = ({ props, isSelected, on
     if (audio) {
       const updateTime = () => setCurrentTime(audio.currentTime);
       const updateDuration = () => setDuration(audio.duration);
-      
-      audio.addEventListener('timeupdate', updateTime);
-      audio.addEventListener('loadedmetadata', updateDuration);
-      
+
+      audio.addEventListener("timeupdate", updateTime);
+      audio.addEventListener("loadedmetadata", updateDuration);
+
       return () => {
-        audio.removeEventListener('timeupdate', updateTime);
-        audio.removeEventListener('loadedmetadata', updateDuration);
+        audio.removeEventListener("timeupdate", updateTime);
+        audio.removeEventListener("loadedmetadata", updateDuration);
       };
     }
   }, []);
@@ -110,41 +133,45 @@ export const AudioComponent: React.FC<ComponentProps> = ({ props, isSelected, on
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
   return (
     <div
-      className={`p-4 rounded-lg ${isSelected ? 'ring-2 ring-blue-500' : ''}`}
+      className={`p-4 rounded-lg ${isSelected ? "ring-2 ring-blue-500" : ""}`}
       onClick={onSelect}
-      style={{ 
+      style={{
         backgroundColor: props.backgroundColor,
-        marginBottom: props.marginBottom 
+        marginBottom: props.marginBottom,
       }}
     >
       <audio ref={audioRef} src={props.src} />
-      
+
       <div className="flex items-center gap-4">
         <button
           onClick={togglePlay}
           className="p-3 rounded-full"
-          style={{ backgroundColor: props.accentColor, color: 'white' }}
+          style={{ backgroundColor: props.accentColor, color: "white" }}
         >
-          {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+          {isPlaying ? (
+            <Pause className="w-5 h-5" />
+          ) : (
+            <Play className="w-5 h-5" />
+          )}
         </button>
-        
+
         <div className="flex-1">
           <h4 className="font-semibold text-sm">{props.title}</h4>
           <p className="text-xs text-gray-600">{props.description}</p>
-          
+
           <div className="flex items-center gap-2 mt-2">
             <span className="text-xs">{formatTime(currentTime)}</span>
             <div className="flex-1 bg-gray-200 rounded-full h-1">
-              <div 
+              <div
                 className="h-1 rounded-full"
-                style={{ 
+                style={{
                   backgroundColor: props.accentColor,
-                  width: `${duration ? (currentTime / duration) * 100 : 0}%` 
+                  width: `${duration ? (currentTime / duration) * 100 : 0}%`,
                 }}
               />
             </div>
@@ -157,7 +184,11 @@ export const AudioComponent: React.FC<ComponentProps> = ({ props, isSelected, on
 };
 
 // Componente de Carrossel
-export const ImageCarouselComponent: React.FC<ComponentProps> = ({ props, isSelected, onSelect }) => {
+export const ImageCarouselComponent: React.FC<ComponentProps> = ({
+  props,
+  isSelected,
+  onSelect,
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(props.autoplay);
 
@@ -171,7 +202,9 @@ export const ImageCarouselComponent: React.FC<ComponentProps> = ({ props, isSele
   }, [isAutoPlaying, props.images.length, props.autoplaySpeed]);
 
   const goToPrevious = () => {
-    setCurrentIndex((prev) => prev === 0 ? props.images.length - 1 : prev - 1);
+    setCurrentIndex((prev) =>
+      prev === 0 ? props.images.length - 1 : prev - 1,
+    );
   };
 
   const goToNext = () => {
@@ -184,20 +217,20 @@ export const ImageCarouselComponent: React.FC<ComponentProps> = ({ props, isSele
 
   return (
     <div
-      className={`relative ${isSelected ? 'ring-2 ring-blue-500' : ''}`}
+      className={`relative ${isSelected ? "ring-2 ring-blue-500" : ""}`}
       onClick={onSelect}
       style={{ marginBottom: props.marginBottom }}
       onMouseEnter={() => setIsAutoPlaying(false)}
       onMouseLeave={() => setIsAutoPlaying(props.autoplay)}
     >
-      <div 
+      <div
         className="relative overflow-hidden"
-        style={{ 
+        style={{
           height: props.height,
-          borderRadius: props.borderRadius 
+          borderRadius: props.borderRadius,
         }}
       >
-        <div 
+        <div
           className="flex transition-transform duration-500 ease-in-out h-full"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
@@ -241,7 +274,7 @@ export const ImageCarouselComponent: React.FC<ComponentProps> = ({ props, isSele
                 key={index}
                 onClick={() => goToSlide(index)}
                 className={`w-2 h-2 rounded-full transition-colors ${
-                  index === currentIndex ? 'bg-white' : 'bg-white bg-opacity-50'
+                  index === currentIndex ? "bg-white" : "bg-white bg-opacity-50"
                 }`}
               />
             ))}
@@ -253,10 +286,14 @@ export const ImageCarouselComponent: React.FC<ComponentProps> = ({ props, isSele
 };
 
 // Componente de Lista de Benefícios
-export const BenefitsListComponent: React.FC<ComponentProps> = ({ props, isSelected, onSelect }) => {
+export const BenefitsListComponent: React.FC<ComponentProps> = ({
+  props,
+  isSelected,
+  onSelect,
+}) => {
   return (
     <div
-      className={`p-6 rounded-lg ${isSelected ? 'ring-2 ring-blue-500' : ''}`}
+      className={`p-6 rounded-lg ${isSelected ? "ring-2 ring-blue-500" : ""}`}
       onClick={onSelect}
       style={{
         backgroundColor: props.backgroundColor,
@@ -268,8 +305,8 @@ export const BenefitsListComponent: React.FC<ComponentProps> = ({ props, isSelec
       <ul className="space-y-3">
         {props.benefits.map((benefit: string, index: number) => (
           <li key={index} className="flex items-center gap-3">
-            <CheckCircle 
-              className="w-5 h-5 flex-shrink-0" 
+            <CheckCircle
+              className="w-5 h-5 flex-shrink-0"
               style={{ color: props.checkColor }}
             />
             <span className="font-medium">{benefit}</span>
@@ -284,6 +321,6 @@ export const BenefitsListComponent: React.FC<ComponentProps> = ({ props, isSelec
 export const ComponentRenderers = {
   video: VideoComponent,
   audio: AudioComponent,
-  'image-carousel': ImageCarouselComponent,
-  'benefits-list': BenefitsListComponent,
+  "image-carousel": ImageCarouselComponent,
+  "benefits-list": BenefitsListComponent,
 };

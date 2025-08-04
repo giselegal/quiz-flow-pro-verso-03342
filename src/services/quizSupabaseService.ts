@@ -1,20 +1,25 @@
-import { supabase } from '@/integrations/supabase/client';
-import type { Database } from '@/integrations/supabase/types';
+import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
 
 // Type definitions
-type QuizUser = Database['public']['Tables']['quiz_users']['Row'];
-type QuizSession = Database['public']['Tables']['quiz_sessions']['Row'];
-type QuizStepResponse = Database['public']['Tables']['quiz_step_responses']['Row'];
-type QuizResult = Database['public']['Tables']['quiz_results']['Row'];
-type QuizAnalytics = Database['public']['Tables']['quiz_analytics']['Row'];
-type QuizConversion = Database['public']['Tables']['quiz_conversions']['Row'];
+type QuizUser = Database["public"]["Tables"]["quiz_users"]["Row"];
+type QuizSession = Database["public"]["Tables"]["quiz_sessions"]["Row"];
+type QuizStepResponse =
+  Database["public"]["Tables"]["quiz_step_responses"]["Row"];
+type QuizResult = Database["public"]["Tables"]["quiz_results"]["Row"];
+type QuizAnalytics = Database["public"]["Tables"]["quiz_analytics"]["Row"];
+type QuizConversion = Database["public"]["Tables"]["quiz_conversions"]["Row"];
 
-type InsertQuizUser = Database['public']['Tables']['quiz_users']['Insert'];
-type InsertQuizSession = Database['public']['Tables']['quiz_sessions']['Insert'];
-type InsertQuizStepResponse = Database['public']['Tables']['quiz_step_responses']['Insert'];
-type InsertQuizResult = Database['public']['Tables']['quiz_results']['Insert'];
-type InsertQuizAnalytics = Database['public']['Tables']['quiz_analytics']['Insert'];
-type InsertQuizConversion = Database['public']['Tables']['quiz_conversions']['Insert'];
+type InsertQuizUser = Database["public"]["Tables"]["quiz_users"]["Insert"];
+type InsertQuizSession =
+  Database["public"]["Tables"]["quiz_sessions"]["Insert"];
+type InsertQuizStepResponse =
+  Database["public"]["Tables"]["quiz_step_responses"]["Insert"];
+type InsertQuizResult = Database["public"]["Tables"]["quiz_results"]["Insert"];
+type InsertQuizAnalytics =
+  Database["public"]["Tables"]["quiz_analytics"]["Insert"];
+type InsertQuizConversion =
+  Database["public"]["Tables"]["quiz_conversions"]["Insert"];
 
 export interface QuizParticipant {
   id: string;
@@ -33,7 +38,7 @@ export interface QuizSessionData {
   id: string;
   funnelId: string;
   userId: string;
-  status: 'started' | 'in_progress' | 'completed' | 'abandoned';
+  status: "started" | "in_progress" | "completed" | "abandoned";
   currentStep: number;
   totalSteps: number;
   score: number;
@@ -58,7 +63,8 @@ export interface QuizResponse {
   metadata?: any;
 }
 
-const generateSessionId = () => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+const generateSessionId = () =>
+  `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
 export const quizSupabaseService = {
   // ========== USER MANAGEMENT ==========
@@ -74,7 +80,7 @@ export const quizSupabaseService = {
   }): Promise<QuizParticipant> {
     try {
       const sessionId = userData.sessionId || generateSessionId();
-      
+
       const insertData: InsertQuizUser = {
         session_id: sessionId,
         email: userData.email,
@@ -87,7 +93,7 @@ export const quizSupabaseService = {
       };
 
       const { data, error } = await supabase
-        .from('quiz_users')
+        .from("quiz_users")
         .insert([insertData])
         .select()
         .single();
@@ -104,23 +110,25 @@ export const quizSupabaseService = {
         utmSource: data.utm_source || undefined,
         utmMedium: data.utm_medium || undefined,
         utmCampaign: data.utm_campaign || undefined,
-        createdAt: new Date(data.created_at!)
+        createdAt: new Date(data.created_at!),
       };
     } catch (error) {
-      console.error('Erro ao criar usuário de quiz:', error);
+      console.error("Erro ao criar usuário de quiz:", error);
       throw error;
     }
   },
 
-  async getQuizUserBySessionId(sessionId: string): Promise<QuizParticipant | null> {
+  async getQuizUserBySessionId(
+    sessionId: string,
+  ): Promise<QuizParticipant | null> {
     try {
       const { data, error } = await supabase
-        .from('quiz_users')
-        .select('*')
-        .eq('session_id', sessionId)
+        .from("quiz_users")
+        .select("*")
+        .eq("session_id", sessionId)
         .single();
 
-      if (error && error.code !== 'PGRST116') throw error;
+      if (error && error.code !== "PGRST116") throw error;
       if (!data) return null;
 
       return {
@@ -133,10 +141,10 @@ export const quizSupabaseService = {
         utmSource: data.utm_source || undefined,
         utmMedium: data.utm_medium || undefined,
         utmCampaign: data.utm_campaign || undefined,
-        createdAt: new Date(data.created_at!)
+        createdAt: new Date(data.created_at!),
       };
     } catch (error) {
-      console.error('Erro ao buscar usuário por session ID:', error);
+      console.error("Erro ao buscar usuário por session ID:", error);
       return null;
     }
   },
@@ -153,16 +161,16 @@ export const quizSupabaseService = {
       const insertData: InsertQuizSession = {
         funnel_id: sessionData.funnelId,
         quiz_user_id: sessionData.quizUserId,
-        status: 'started',
+        status: "started",
         current_step: 0,
         total_steps: sessionData.totalSteps || 0,
         score: 0,
         max_score: sessionData.maxScore || 0,
-        metadata: sessionData.metadata || {}
+        metadata: sessionData.metadata || {},
       };
 
       const { data, error } = await supabase
-        .from('quiz_sessions')
+        .from("quiz_sessions")
         .insert([insertData])
         .select()
         .single();
@@ -179,41 +187,49 @@ export const quizSupabaseService = {
         score: data.score || 0,
         maxScore: data.max_score || 0,
         startedAt: new Date(data.started_at!),
-        completedAt: data.completed_at ? new Date(data.completed_at) : undefined,
+        completedAt: data.completed_at
+          ? new Date(data.completed_at)
+          : undefined,
         lastActivity: new Date(data.last_activity!),
-        metadata: data.metadata
+        metadata: data.metadata,
       };
     } catch (error) {
-      console.error('Erro ao criar sessão de quiz:', error);
+      console.error("Erro ao criar sessão de quiz:", error);
       throw error;
     }
   },
 
-  async updateQuizSession(sessionId: string, updates: {
-    status?: 'started' | 'in_progress' | 'completed' | 'abandoned';
-    currentStep?: number;
-    score?: number;
-    completedAt?: Date;
-    metadata?: any;
-  }): Promise<boolean> {
+  async updateQuizSession(
+    sessionId: string,
+    updates: {
+      status?: "started" | "in_progress" | "completed" | "abandoned";
+      currentStep?: number;
+      score?: number;
+      completedAt?: Date;
+      metadata?: any;
+    },
+  ): Promise<boolean> {
     try {
       const updateData: any = {};
-      
+
       if (updates.status !== undefined) updateData.status = updates.status;
-      if (updates.currentStep !== undefined) updateData.current_step = updates.currentStep;
+      if (updates.currentStep !== undefined)
+        updateData.current_step = updates.currentStep;
       if (updates.score !== undefined) updateData.score = updates.score;
-      if (updates.completedAt !== undefined) updateData.completed_at = updates.completedAt.toISOString();
-      if (updates.metadata !== undefined) updateData.metadata = updates.metadata;
+      if (updates.completedAt !== undefined)
+        updateData.completed_at = updates.completedAt.toISOString();
+      if (updates.metadata !== undefined)
+        updateData.metadata = updates.metadata;
 
       const { error } = await supabase
-        .from('quiz_sessions')
+        .from("quiz_sessions")
         .update(updateData)
-        .eq('id', sessionId);
+        .eq("id", sessionId);
 
       if (error) throw error;
       return true;
     } catch (error) {
-      console.error('Erro ao atualizar sessão:', error);
+      console.error("Erro ao atualizar sessão:", error);
       return false;
     }
   },
@@ -221,12 +237,12 @@ export const quizSupabaseService = {
   async getQuizSession(sessionId: string): Promise<QuizSessionData | null> {
     try {
       const { data, error } = await supabase
-        .from('quiz_sessions')
-        .select('*')
-        .eq('id', sessionId)
+        .from("quiz_sessions")
+        .select("*")
+        .eq("id", sessionId)
         .single();
 
-      if (error && error.code !== 'PGRST116') throw error;
+      if (error && error.code !== "PGRST116") throw error;
       if (!data) return null;
 
       return {
@@ -239,12 +255,14 @@ export const quizSupabaseService = {
         score: data.score || 0,
         maxScore: data.max_score || 0,
         startedAt: new Date(data.started_at!),
-        completedAt: data.completed_at ? new Date(data.completed_at) : undefined,
+        completedAt: data.completed_at
+          ? new Date(data.completed_at)
+          : undefined,
         lastActivity: new Date(data.last_activity!),
-        metadata: data.metadata
+        metadata: data.metadata,
       };
     } catch (error) {
-      console.error('Erro ao buscar sessão:', error);
+      console.error("Erro ao buscar sessão:", error);
       return null;
     }
   },
@@ -271,11 +289,11 @@ export const quizSupabaseService = {
         answer_text: responseData.answerText,
         score_earned: responseData.scoreEarned || 0,
         response_time_ms: responseData.responseTimeMs,
-        metadata: responseData.metadata || {}
+        metadata: responseData.metadata || {},
       };
 
       const { data, error } = await supabase
-        .from('quiz_step_responses')
+        .from("quiz_step_responses")
         .insert([insertData])
         .select()
         .single();
@@ -293,10 +311,10 @@ export const quizSupabaseService = {
         scoreEarned: data.score_earned || 0,
         responseTimeMs: data.response_time_ms || undefined,
         respondedAt: new Date(data.responded_at!),
-        metadata: data.metadata
+        metadata: data.metadata,
       };
     } catch (error) {
-      console.error('Erro ao salvar resposta:', error);
+      console.error("Erro ao salvar resposta:", error);
       throw error;
     }
   },
@@ -304,14 +322,14 @@ export const quizSupabaseService = {
   async getQuizResponses(sessionId: string): Promise<QuizResponse[]> {
     try {
       const { data, error } = await supabase
-        .from('quiz_step_responses')
-        .select('*')
-        .eq('session_id', sessionId)
-        .order('step_number');
+        .from("quiz_step_responses")
+        .select("*")
+        .eq("session_id", sessionId)
+        .order("step_number");
 
       if (error) throw error;
 
-      return (data || []).map(response => ({
+      return (data || []).map((response) => ({
         id: response.id,
         sessionId: response.session_id,
         stepNumber: response.step_number,
@@ -322,10 +340,10 @@ export const quizSupabaseService = {
         scoreEarned: response.score_earned || 0,
         responseTimeMs: response.response_time_ms || undefined,
         respondedAt: new Date(response.responded_at!),
-        metadata: response.metadata
+        metadata: response.metadata,
       }));
     } catch (error) {
-      console.error('Erro ao buscar respostas:', error);
+      console.error("Erro ao buscar respostas:", error);
       return [];
     }
   },
@@ -348,19 +366,19 @@ export const quizSupabaseService = {
         result_description: resultData.resultDescription,
         result_data: resultData.resultData || {},
         recommendation: resultData.recommendation,
-        next_steps: resultData.nextSteps || []
+        next_steps: resultData.nextSteps || [],
       };
 
       const { data, error } = await supabase
-        .from('quiz_results')
+        .from("quiz_results")
         .insert([insertData])
-        .select('id')
+        .select("id")
         .single();
 
       if (error) throw error;
       return data.id;
     } catch (error) {
-      console.error('Erro ao salvar resultado:', error);
+      console.error("Erro ao salvar resultado:", error);
       throw error;
     }
   },
@@ -368,15 +386,15 @@ export const quizSupabaseService = {
   async getQuizResult(resultId: string): Promise<any> {
     try {
       const { data, error } = await supabase
-        .from('quiz_results')
-        .select('*')
-        .eq('id', resultId)
+        .from("quiz_results")
+        .select("*")
+        .eq("id", resultId)
         .single();
 
-      if (error && error.code !== 'PGRST116') throw error;
+      if (error && error.code !== "PGRST116") throw error;
       return data;
     } catch (error) {
-      console.error('Erro ao buscar resultado:', error);
+      console.error("Erro ao buscar resultado:", error);
       return null;
     }
   },
@@ -395,16 +413,16 @@ export const quizSupabaseService = {
         event_type: eventData.eventType,
         event_data: eventData.eventData || {},
         session_id: eventData.sessionId,
-        user_id: eventData.userId
+        user_id: eventData.userId,
       };
 
       const { error } = await supabase
-        .from('quiz_analytics')
+        .from("quiz_analytics")
         .insert([insertData]);
 
       if (error) throw error;
     } catch (error) {
-      console.error('Erro ao rastrear evento:', error);
+      console.error("Erro ao rastrear evento:", error);
       // Não fazer throw aqui para não quebrar o fluxo principal
     }
   },
@@ -426,27 +444,27 @@ export const quizSupabaseService = {
         session_id: conversionData.sessionId,
         conversion_type: conversionData.conversionType,
         conversion_value: conversionData.conversionValue,
-        currency: conversionData.currency || 'BRL',
+        currency: conversionData.currency || "BRL",
         product_id: conversionData.productId,
         product_name: conversionData.productName,
         commission_rate: conversionData.commissionRate,
         affiliate_id: conversionData.affiliateId,
-        conversion_data: conversionData.conversionData || {}
+        conversion_data: conversionData.conversionData || {},
       };
 
       const { data, error } = await supabase
-        .from('quiz_conversions')
+        .from("quiz_conversions")
         .insert([insertData])
-        .select('id')
+        .select("id")
         .single();
 
       if (error) throw error;
       return data.id;
     } catch (error) {
-      console.error('Erro ao registrar conversão:', error);
+      console.error("Erro ao registrar conversão:", error);
       throw error;
     }
-  }
+  },
 };
 
 // Legacy functions for backwards compatibility
@@ -458,19 +476,19 @@ export const saveUserSession = async (sessionData: any) => {
       name: sessionData.name,
       utmSource: sessionData.utmSource,
       utmMedium: sessionData.utmMedium,
-      utmCampaign: sessionData.utmCampaign
+      utmCampaign: sessionData.utmCampaign,
     });
-    
+
     const session = await quizSupabaseService.createQuizSession({
       funnelId: sessionData.funnelId,
       quizUserId: user.id,
       totalSteps: sessionData.totalSteps,
-      maxScore: sessionData.maxScore
+      maxScore: sessionData.maxScore,
     });
-    
+
     return { success: true, userId: user.id, sessionId: session.id };
   } catch (error) {
-    console.error('Erro ao salvar sessão:', error);
+    console.error("Erro ao salvar sessão:", error);
     return { success: false, error: error };
   }
 };
@@ -480,7 +498,7 @@ export const saveQuizResponse = async (responseData: any) => {
     await quizSupabaseService.saveQuizResponse(responseData);
     return { success: true };
   } catch (error) {
-    console.error('Erro ao salvar resposta:', error);
+    console.error("Erro ao salvar resposta:", error);
     return { success: false, error: error };
   }
 };
@@ -489,28 +507,32 @@ export const getQuizAnalytics = async (funnelId: string) => {
   try {
     // Implementar analytics básicas baseadas nas tabelas criadas
     const { data: sessions, error } = await supabase
-      .from('quiz_sessions')
-      .select('status, score, max_score')
-      .eq('funnel_id', funnelId);
+      .from("quiz_sessions")
+      .select("status, score, max_score")
+      .eq("funnel_id", funnelId);
 
     if (error) throw error;
 
     const totalSessions = sessions?.length || 0;
-    const completedSessions = sessions?.filter(s => s.status === 'completed').length || 0;
-    const averageScore = sessions?.length ? 
-      sessions.reduce((acc, s) => acc + (s.score || 0), 0) / sessions.length : 0;
-    
+    const completedSessions =
+      sessions?.filter((s) => s.status === "completed").length || 0;
+    const averageScore = sessions?.length
+      ? sessions.reduce((acc, s) => acc + (s.score || 0), 0) / sessions.length
+      : 0;
+
     return {
       totalResponses: totalSessions,
       averageScore: Math.round(averageScore * 100) / 100,
-      completionRate: totalSessions ? Math.round((completedSessions / totalSessions) * 100) : 0
+      completionRate: totalSessions
+        ? Math.round((completedSessions / totalSessions) * 100)
+        : 0,
     };
   } catch (error) {
-    console.error('Erro ao buscar analytics:', error);
+    console.error("Erro ao buscar analytics:", error);
     return {
       totalResponses: 0,
       averageScore: 0,
-      completionRate: 0
+      completionRate: 0,
     };
   }
 };

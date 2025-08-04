@@ -1,16 +1,24 @@
-
-import React from 'react';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Block } from '@/types/editor';
+import React from "react";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Block } from "@/types/editor";
 
 interface TextBlockEditorProps {
   block: Block;
   onUpdate: (content: any) => void;
 }
 
-const TextBlockEditor: React.FC<TextBlockEditorProps> = ({ block, onUpdate }) => {
+const TextBlockEditor: React.FC<TextBlockEditorProps> = ({
+  block,
+  onUpdate,
+}) => {
   const content = block.content;
 
   return (
@@ -20,16 +28,16 @@ const TextBlockEditor: React.FC<TextBlockEditorProps> = ({ block, onUpdate }) =>
         <Textarea
           id="text"
           rows={6}
-          value={content.text || ''}
+          value={content.text || ""}
           onChange={(e) => onUpdate({ text: e.target.value })}
           placeholder="Digite seu texto aqui..."
         />
       </div>
-      
+
       <div className="space-y-2">
         <Label htmlFor="alignment">Alinhamento</Label>
         <Select
-          defaultValue={content.alignment || 'left'}
+          defaultValue={content.alignment || "left"}
           onValueChange={(value) => onUpdate({ alignment: value })}
         >
           <SelectTrigger className="w-full">

@@ -1,6 +1,6 @@
-import React from 'react';
-import FunnelProgressBar from '../shared/FunnelProgressBar';
-import { CountdownTimer } from '@/components/ui/countdown-timer';
+import React from "react";
+import FunnelProgressBar from "../shared/FunnelProgressBar";
+import { CountdownTimer } from "@/components/ui/countdown-timer";
 
 interface OfferPageStepProps {
   stepNumber?: number;
@@ -27,14 +27,14 @@ const OfferPageStep: React.FC<OfferPageStepProps> = ({
   totalSteps = 1,
   offerData = {},
   onNext,
-  onBack
+  onBack,
 }) => {
   const {
     title = "Oferta Especial",
     subtitle = "Aproveite esta oportunidade única",
     features = [],
     price = {},
-    countdown = {}
+    countdown = {},
   } = offerData;
 
   return (
@@ -58,7 +58,7 @@ const OfferPageStep: React.FC<OfferPageStepProps> = ({
             <div className="mb-8">
               <CountdownTimer
                 duration={countdown.duration}
-                onComplete={() => console.log('Countdown completed')}
+                onComplete={() => console.log("Countdown completed")}
               />
             </div>
           )}
@@ -66,7 +66,9 @@ const OfferPageStep: React.FC<OfferPageStepProps> = ({
           {/* Features */}
           {features.length > 0 && (
             <div className="mb-8">
-              <h2 className="text-2xl font-semibold mb-4">O que você vai receber:</h2>
+              <h2 className="text-2xl font-semibold mb-4">
+                O que você vai receber:
+              </h2>
               <ul className="space-y-3">
                 {features.map((feature, index) => (
                   <li key={index} className="flex items-center">
@@ -83,10 +85,10 @@ const OfferPageStep: React.FC<OfferPageStepProps> = ({
             {price.original && price.discounted && (
               <div className="mb-4">
                 <span className="text-2xl text-gray-500 line-through mr-4">
-                  {price.currency || 'R$'} {price.original}
+                  {price.currency || "R$"} {price.original}
                 </span>
                 <span className="text-4xl font-bold text-green-600">
-                  {price.currency || 'R$'} {price.discounted}
+                  {price.currency || "R$"} {price.discounted}
                 </span>
               </div>
             )}

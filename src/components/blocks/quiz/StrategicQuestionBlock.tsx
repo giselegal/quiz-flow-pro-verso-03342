@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 /**
  * StrategicQuestionBlock - Componente para questões estratégicas (Etapas 13-18)
- * 
+ *
  * Props editáveis via editor visual:
  * - question: string - Pergunta estratégica
  * - description: string - Descrição adicional
@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
  * - placeholder: string - Placeholder para resposta livre
  * - allowFreeText: boolean - Permitir resposta livre
  * - onAnswer: function - Callback de resposta
- * 
+ *
  * @example
  * <StrategicQuestionBlock
  *   blockId="strategic-1"
@@ -45,14 +45,14 @@ export interface StrategicQuestionBlockProps {
   singleSelection?: boolean;
   allowFreeText?: boolean;
   required?: boolean;
-  
+
   // Visual
   backgroundColor?: string;
   textColor?: string;
-  optionStyle?: 'cards' | 'buttons' | 'list';
-  alignment?: 'left' | 'center' | 'right';
+  optionStyle?: "cards" | "buttons" | "list";
+  alignment?: "left" | "center" | "right";
 
-  // Funcionalidade  
+  // Funcionalidade
   onAnswer?: (answer: string | string[]) => void;
   selectedAnswer?: string | string[];
   disabled?: boolean;
@@ -60,51 +60,53 @@ export interface StrategicQuestionBlockProps {
 }
 
 const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
-  blockId = 'strategic-question-block',
-  className = '',
+  blockId = "strategic-question-block",
+  className = "",
   style = {},
-  
-  question = 'Como você gostaria de se sentir ao se vestir?',
+
+  question = "Como você gostaria de se sentir ao se vestir?",
   description,
   options = [
-    'Confiante e poderosa',
-    'Feminina e delicada', 
-    'Confortável e prática',
-    'Elegante e sofisticada'
+    "Confiante e poderosa",
+    "Feminina e delicada",
+    "Confortável e prática",
+    "Elegante e sofisticada",
   ],
-  category = 'motivation',
-  placeholder = 'Digite sua resposta...',
+  category = "motivation",
+  placeholder = "Digite sua resposta...",
 
   singleSelection = true,
   allowFreeText = false,
   required = true,
-  
-  backgroundColor = '#ffffff',
-  textColor = '#432818',
-  optionStyle = 'cards',
-  alignment = 'center',
+
+  backgroundColor = "#ffffff",
+  textColor = "#432818",
+  optionStyle = "cards",
+  alignment = "center",
 
   onAnswer,
-  selectedAnswer = '',
+  selectedAnswer = "",
   disabled = false,
   onClick,
 }) => {
-  const [currentAnswer, setCurrentAnswer] = useState<string | string[]>(selectedAnswer);
-  const [freeTextAnswer, setFreeTextAnswer] = useState('');
+  const [currentAnswer, setCurrentAnswer] = useState<string | string[]>(
+    selectedAnswer,
+  );
+  const [freeTextAnswer, setFreeTextAnswer] = useState("");
   const [showFreeText, setShowFreeText] = useState(false);
 
   const handleOptionSelect = (option: string) => {
     if (disabled) return;
 
     let newAnswer: string | string[];
-    
+
     if (singleSelection) {
       newAnswer = option;
       setCurrentAnswer(option);
     } else {
       const currentArray = Array.isArray(currentAnswer) ? currentAnswer : [];
       if (currentArray.includes(option)) {
-        newAnswer = currentArray.filter(a => a !== option);
+        newAnswer = currentArray.filter((a) => a !== option);
       } else {
         newAnswer = [...currentArray, option];
       }
@@ -134,41 +136,42 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
   };
 
   const getOptionClasses = (option: string) => {
-    const baseClasses = "w-full p-4 rounded-lg transition-all duration-200 border-2 cursor-pointer";
-    
-    if (optionStyle === 'cards') {
+    const baseClasses =
+      "w-full p-4 rounded-lg transition-all duration-200 border-2 cursor-pointer";
+
+    if (optionStyle === "cards") {
       return `${baseClasses} ${
         isSelected(option)
-          ? 'bg-[#B89B7A] text-white border-[#B89B7A] shadow-lg'
-          : 'bg-white text-gray-700 border-gray-300 hover:border-[#B89B7A] hover:shadow-md'
+          ? "bg-[#B89B7A] text-white border-[#B89B7A] shadow-lg"
+          : "bg-white text-gray-700 border-gray-300 hover:border-[#B89B7A] hover:shadow-md"
       }`;
     }
-    
-    if (optionStyle === 'buttons') {
+
+    if (optionStyle === "buttons") {
       return `${baseClasses} ${
         isSelected(option)
-          ? 'bg-[#B89B7A] text-white border-[#B89B7A]'
-          : 'bg-gray-50 text-gray-700 border-gray-300 hover:bg-gray-100'
+          ? "bg-[#B89B7A] text-white border-[#B89B7A]"
+          : "bg-gray-50 text-gray-700 border-gray-300 hover:bg-gray-100"
       }`;
     }
-    
+
     // list style
     return `${baseClasses} ${
       isSelected(option)
-        ? 'bg-blue-50 border-blue-300 text-blue-900'
-        : 'bg-white border-gray-200 hover:bg-gray-50'
+        ? "bg-blue-50 border-blue-300 text-blue-900"
+        : "bg-white border-gray-200 hover:bg-gray-50"
     }`;
   };
 
   return (
-    <div 
+    <div
       className={`strategic-question-block py-12 px-6 ${className}`}
       data-block-id={blockId}
-      style={{ 
+      style={{
         backgroundColor,
         color: textColor,
         textAlign: alignment,
-        ...style 
+        ...style,
       }}
     >
       <div className="max-w-3xl mx-auto">
@@ -182,11 +185,11 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
         )}
 
         {/* Pergunta */}
-        <h2 
+        <h2
           className="text-2xl md:text-3xl font-bold mb-6"
-          style={{ 
-            fontFamily: 'Playfair Display, serif',
-            color: textColor 
+          style={{
+            fontFamily: "Playfair Display, serif",
+            color: textColor,
           }}
         >
           {question}
@@ -233,12 +236,14 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
               </Button>
             ) : (
               <div className="space-y-4">
-                <div 
+                <div
                   className="w-full p-4 border-2 border-gray-300 rounded-lg min-h-[80px] bg-gray-50 text-gray-500 flex items-center justify-center cursor-pointer hover:border-blue-300"
                   onClick={onClick}
                   title="Configure a área de texto no Painel de Propriedades"
                 >
-                  {freeTextAnswer || placeholder || "Área de texto configurável"}
+                  {freeTextAnswer ||
+                    placeholder ||
+                    "Área de texto configurável"}
                 </div>
                 <div className="flex gap-2">
                   <Button
@@ -262,7 +267,9 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
 
         {/* Informação adicional */}
         <div className="mt-8 text-sm text-gray-500 text-center">
-          <p>💭 Esta pergunta nos ajuda a personalizar ainda mais seu resultado</p>
+          <p>
+            💭 Esta pergunta nos ajuda a personalizar ainda mais seu resultado
+          </p>
         </div>
       </div>
     </div>

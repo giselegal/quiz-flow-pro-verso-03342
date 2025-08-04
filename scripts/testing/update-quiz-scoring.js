@@ -1,17 +1,20 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
-console.log('🔧 Atualizando configurações de pontuação do quiz...');
+console.log("🔧 Atualizando configurações de pontuação do quiz...");
 
-const filePath = path.join(__dirname, 'src/data/realQuizTemplates.ts');
-let content = fs.readFileSync(filePath, 'utf8');
+const filePath = path.join(__dirname, "src/data/realQuizTemplates.ts");
+let content = fs.readFileSync(filePath, "utf8");
 
 // Questão 5 - Estampas
-const q5OldPattern = /{\s*id:\s*"5([a-h])",\s*text:\s*"([^"]+)",\s*imageUrl:\s*"([^"]+)",\s*value:\s*"5\1",\s*category:\s*"([^"]+)"\s*}/g;
-content = content.replace(q5OldPattern, (match, letter, text, imageUrl, category) => {
-  return `{ 
+const q5OldPattern =
+  /{\s*id:\s*"5([a-h])",\s*text:\s*"([^"]+)",\s*imageUrl:\s*"([^"]+)",\s*value:\s*"5\1",\s*category:\s*"([^"]+)"\s*}/g;
+content = content.replace(
+  q5OldPattern,
+  (match, letter, text, imageUrl, category) => {
+    return `{ 
                 id: "5${letter}", 
                 text: "${text}",
                 imageUrl: "${imageUrl}",
@@ -20,12 +23,16 @@ content = content.replace(q5OldPattern, (match, letter, text, imageUrl, category
                 styleCategory: "${category}",
                 points: 1
               }`;
-});
+  },
+);
 
 // Questão 6 - Casacos
-const q6OldPattern = /{\s*id:\s*"6([a-h])",\s*text:\s*"([^"]+)",\s*imageUrl:\s*"([^"]+)",\s*value:\s*"6\1",\s*category:\s*"([^"]+)"\s*}/g;
-content = content.replace(q6OldPattern, (match, letter, text, imageUrl, category) => {
-  return `{ 
+const q6OldPattern =
+  /{\s*id:\s*"6([a-h])",\s*text:\s*"([^"]+)",\s*imageUrl:\s*"([^"]+)",\s*value:\s*"6\1",\s*category:\s*"([^"]+)"\s*}/g;
+content = content.replace(
+  q6OldPattern,
+  (match, letter, text, imageUrl, category) => {
+    return `{ 
                 id: "6${letter}", 
                 text: "${text}",
                 imageUrl: "${imageUrl}",
@@ -34,12 +41,16 @@ content = content.replace(q6OldPattern, (match, letter, text, imageUrl, category
                 styleCategory: "${category}",
                 points: 1
               }`;
-});
+  },
+);
 
 // Questão 7 - Calças
-const q7OldPattern = /{\s*id:\s*"7([a-h])",\s*text:\s*"([^"]+)",\s*imageUrl:\s*"([^"]+)",\s*value:\s*"7\1",\s*category:\s*"([^"]+)"\s*}/g;
-content = content.replace(q7OldPattern, (match, letter, text, imageUrl, category) => {
-  return `{ 
+const q7OldPattern =
+  /{\s*id:\s*"7([a-h])",\s*text:\s*"([^"]+)",\s*imageUrl:\s*"([^"]+)",\s*value:\s*"7\1",\s*category:\s*"([^"]+)"\s*}/g;
+content = content.replace(
+  q7OldPattern,
+  (match, letter, text, imageUrl, category) => {
+    return `{ 
                 id: "7${letter}", 
                 text: "${text}",
                 imageUrl: "${imageUrl}",
@@ -48,12 +59,16 @@ content = content.replace(q7OldPattern, (match, letter, text, imageUrl, category
                 styleCategory: "${category}",
                 points: 1
               }`;
-});
+  },
+);
 
 // Questão 8 - Sapatos
-const q8OldPattern = /{\s*id:\s*"8([a-h])",\s*text:\s*"([^"]+)",\s*imageUrl:\s*"([^"]+)",\s*value:\s*"8\1",\s*category:\s*"([^"]+)"\s*}/g;
-content = content.replace(q8OldPattern, (match, letter, text, imageUrl, category) => {
-  return `{ 
+const q8OldPattern =
+  /{\s*id:\s*"8([a-h])",\s*text:\s*"([^"]+)",\s*imageUrl:\s*"([^"]+)",\s*value:\s*"8\1",\s*category:\s*"([^"]+)"\s*}/g;
+content = content.replace(
+  q8OldPattern,
+  (match, letter, text, imageUrl, category) => {
+    return `{ 
                 id: "8${letter}", 
                 text: "${text}",
                 imageUrl: "${imageUrl}",
@@ -62,12 +77,16 @@ content = content.replace(q8OldPattern, (match, letter, text, imageUrl, category
                 styleCategory: "${category}",
                 points: 1
               }`;
-});
+  },
+);
 
 // Questão 9 - Acessórios
-const q9OldPattern = /{\s*id:\s*"9([a-h])",\s*text:\s*"([^"]+)",\s*imageUrl:\s*"([^"]+)",\s*value:\s*"9\1",\s*category:\s*"([^"]+)"\s*}/g;
-content = content.replace(q9OldPattern, (match, letter, text, imageUrl, category) => {
-  return `{ 
+const q9OldPattern =
+  /{\s*id:\s*"9([a-h])",\s*text:\s*"([^"]+)",\s*imageUrl:\s*"([^"]+)",\s*value:\s*"9\1",\s*category:\s*"([^"]+)"\s*}/g;
+content = content.replace(
+  q9OldPattern,
+  (match, letter, text, imageUrl, category) => {
+    return `{ 
                 id: "9${letter}", 
                 text: "${text}",
                 imageUrl: "${imageUrl}",
@@ -76,10 +95,12 @@ content = content.replace(q9OldPattern, (match, letter, text, imageUrl, category
                 styleCategory: "${category}",
                 points: 1
               }`;
-});
+  },
+);
 
 // Questão 10 - Tecidos (sem imagem)
-const q10OldPattern = /{\s*id:\s*"10([a-h])",\s*text:\s*"([^"]+)",\s*value:\s*"10\1",\s*category:\s*"([^"]+)"\s*}/g;
+const q10OldPattern =
+  /{\s*id:\s*"10([a-h])",\s*text:\s*"([^"]+)",\s*value:\s*"10\1",\s*category:\s*"([^"]+)"\s*}/g;
 content = content.replace(q10OldPattern, (match, letter, text, category) => {
   return `{ 
                 id: "10${letter}", 
@@ -93,96 +114,96 @@ content = content.replace(q10OldPattern, (match, letter, text, category) => {
 
 // Adicionar metadados de scoring para cada questão
 const questionsMetadata = {
-  'q1': { 
-    type: 'normal',
+  q1: {
+    type: "normal",
     scoring: true,
     multiSelect: 3,
     minSelections: 1,
     maxSelections: 3,
     validationRequired: true,
-    scoreWeight: 1
+    scoreWeight: 1,
   },
-  'q2': { 
-    type: 'normal',
+  q2: {
+    type: "normal",
     scoring: true,
     multiSelect: 3,
     minSelections: 1,
     maxSelections: 3,
     validationRequired: true,
-    scoreWeight: 1
+    scoreWeight: 1,
   },
-  'q3': { 
-    type: 'normal',
+  q3: {
+    type: "normal",
     scoring: true,
     multiSelect: 3,
     minSelections: 1,
     maxSelections: 3,
     validationRequired: true,
-    scoreWeight: 1
+    scoreWeight: 1,
   },
-  'q4': { 
-    type: 'normal',
+  q4: {
+    type: "normal",
     scoring: true,
     multiSelect: 3,
     minSelections: 1,
     maxSelections: 3,
     validationRequired: true,
-    scoreWeight: 1
+    scoreWeight: 1,
   },
-  'q5': { 
-    type: 'normal',
+  q5: {
+    type: "normal",
     scoring: true,
     multiSelect: 3,
     minSelections: 1,
     maxSelections: 3,
     validationRequired: true,
-    scoreWeight: 1
+    scoreWeight: 1,
   },
-  'q6': { 
-    type: 'normal',
+  q6: {
+    type: "normal",
     scoring: true,
     multiSelect: 3,
     minSelections: 1,
     maxSelections: 3,
     validationRequired: true,
-    scoreWeight: 1
+    scoreWeight: 1,
   },
-  'q7': { 
-    type: 'normal',
+  q7: {
+    type: "normal",
     scoring: true,
     multiSelect: 3,
     minSelections: 1,
     maxSelections: 3,
     validationRequired: true,
-    scoreWeight: 1
+    scoreWeight: 1,
   },
-  'q8': { 
-    type: 'normal',
+  q8: {
+    type: "normal",
     scoring: true,
     multiSelect: 3,
     minSelections: 1,
     maxSelections: 3,
     validationRequired: true,
-    scoreWeight: 1
+    scoreWeight: 1,
   },
-  'q9': { 
-    type: 'normal',
+  q9: {
+    type: "normal",
     scoring: true,
     multiSelect: 3,
     minSelections: 1,
     maxSelections: 3,
     validationRequired: true,
-    scoreWeight: 1
+    scoreWeight: 1,
   },
-  'q10': { 
-    type: 'normal',
+  q10: {
+    type: "normal",
     scoring: true,
     multiSelect: 3,
     minSelections: 1,
     maxSelections: 3,
     validationRequired: true,
-    scoreWeight: 1
-  }
+    scoreWeight: 1,
+  },
 };
 
 // Adicionar metadados no final do arquivo
@@ -217,16 +238,16 @@ export const SCORING_CONFIG = {
 `;
 
 // Verificar se os metadados já existem para evitar duplicação
-if (!content.includes('QUIZ_QUESTIONS_METADATA')) {
+if (!content.includes("QUIZ_QUESTIONS_METADATA")) {
   content += metadataExport;
 }
 
 fs.writeFileSync(filePath, content);
 
-console.log('✅ Configurações de pontuação atualizadas com sucesso!');
-console.log('\n📋 Recursos implementados:');
-console.log('  • styleCategory e points adicionados a todas as opções');
-console.log('  • Metadados de validação para cada questão');
-console.log('  • Configurações de scoring globais');
-console.log('  • Constantes de categorias de estilo');
-console.log('  • Sistema de desempate configurado');
+console.log("✅ Configurações de pontuação atualizadas com sucesso!");
+console.log("\n📋 Recursos implementados:");
+console.log("  • styleCategory e points adicionados a todas as opções");
+console.log("  • Metadados de validação para cada questão");
+console.log("  • Configurações de scoring globais");
+console.log("  • Constantes de categorias de estilo");
+console.log("  • Sistema de desempate configurado");

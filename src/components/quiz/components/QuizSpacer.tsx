@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface QuizSpacerProps {
   height?: string;
@@ -7,15 +7,15 @@ interface QuizSpacerProps {
 }
 
 const QuizSpacer: React.FC<QuizSpacerProps> = ({
-  height = '2rem',
-  backgroundColor = 'transparent',
-  className = '',
+  height = "2rem",
+  backgroundColor = "transparent",
+  className = "",
 }) => {
   const style: React.CSSProperties = {
     height,
     backgroundColor,
-    width: '100%',
-    display: 'block',
+    width: "100%",
+    display: "block",
   };
 
   return <div style={style} className={className} />;

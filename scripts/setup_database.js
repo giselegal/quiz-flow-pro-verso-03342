@@ -1,18 +1,18 @@
-import Database from 'better-sqlite3';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import Database from "better-sqlite3";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Criar banco SQLite
-const dbPath = path.join(__dirname, '..', 'dev.db');
+const dbPath = path.join(__dirname, "..", "dev.db");
 const db = new Database(dbPath);
 
-console.log('🔧 Configurando banco de dados SQLite...');
+console.log("🔧 Configurando banco de dados SQLite...");
 
 // Habilitar WAL mode
-db.pragma('journal_mode = WAL');
+db.pragma("journal_mode = WAL");
 
 // Criar tabelas
 const createTables = `
@@ -130,9 +130,9 @@ CREATE TABLE IF NOT EXISTS hotmart_purchases (
 // Executar criação das tabelas
 try {
   db.exec(createTables);
-  console.log('✅ Tabelas criadas com sucesso!');
+  console.log("✅ Tabelas criadas com sucesso!");
 } catch (error) {
-  console.error('❌ Erro ao criar tabelas:', error);
+  console.error("❌ Erro ao criar tabelas:", error);
   process.exit(1);
 }
 
@@ -144,7 +144,7 @@ const insertUser = db.prepare(`
   INSERT OR IGNORE INTO users (username, password) 
   VALUES (?, ?)
 `);
-insertUser.run('admin', 'admin123');
+insertUser.run("admin", "admin123");
 
 // Participantes de exemplo
 const insertParticipant = db.prepare(`
@@ -153,12 +153,39 @@ const insertParticipant = db.prepare(`
 `);
 
 const participants = [
-  ['part_001', 'João Silva', 'joao@email.com', 'quiz_001', 'google', 'cpc', 'campanha_teste', now],
-  ['part_002', 'Maria Santos', 'maria@email.com', 'quiz_001', 'facebook', 'social', 'promo_natal', now],
-  ['part_003', 'Pedro Costa', 'pedro@email.com', 'quiz_002', 'instagram', 'story', 'black_friday', now],
+  [
+    "part_001",
+    "João Silva",
+    "joao@email.com",
+    "quiz_001",
+    "google",
+    "cpc",
+    "campanha_teste",
+    now,
+  ],
+  [
+    "part_002",
+    "Maria Santos",
+    "maria@email.com",
+    "quiz_001",
+    "facebook",
+    "social",
+    "promo_natal",
+    now,
+  ],
+  [
+    "part_003",
+    "Pedro Costa",
+    "pedro@email.com",
+    "quiz_002",
+    "instagram",
+    "story",
+    "black_friday",
+    now,
+  ],
 ];
 
-participants.forEach(p => insertParticipant.run(...p));
+participants.forEach((p) => insertParticipant.run(...p));
 
 // Resultados de quiz de exemplo
 const insertQuizResult = db.prepare(`
@@ -168,32 +195,32 @@ const insertQuizResult = db.prepare(`
 
 const quizResults = [
   [
-    'result_001', 
-    'part_001', 
-    'quiz_001',
+    "result_001",
+    "part_001",
+    "quiz_001",
     JSON.stringify([
-      { questionId: 'q1', selectedOption: 'option_a', score: 10 },
-      { questionId: 'q2', selectedOption: 'option_b', score: 15 }
+      { questionId: "q1", selectedOption: "option_a", score: 10 },
+      { questionId: "q2", selectedOption: "option_b", score: 15 },
     ]),
     JSON.stringify({ total: 25, breakdown: { analytical: 15, creative: 10 } }),
-    'analytical',
-    now
+    "analytical",
+    now,
   ],
   [
-    'result_002', 
-    'part_002', 
-    'quiz_001',
+    "result_002",
+    "part_002",
+    "quiz_001",
     JSON.stringify([
-      { questionId: 'q1', selectedOption: 'option_c', score: 8 },
-      { questionId: 'q2', selectedOption: 'option_a', score: 12 }
+      { questionId: "q1", selectedOption: "option_c", score: 8 },
+      { questionId: "q2", selectedOption: "option_a", score: 12 },
     ]),
     JSON.stringify({ total: 20, breakdown: { analytical: 8, creative: 12 } }),
-    'creative',
-    now
-  ]
+    "creative",
+    now,
+  ],
 ];
 
-quizResults.forEach(r => insertQuizResult.run(...r));
+quizResults.forEach((r) => insertQuizResult.run(...r));
 
 // Analytics UTM de exemplo
 const insertUtm = db.prepare(`
@@ -202,12 +229,39 @@ const insertUtm = db.prepare(`
 `);
 
 const utmData = [
-  ['utm_001', 'google', 'cpc', 'campanha_teste', 'anuncio_a', 'quiz personalidade', 'part_001', now],
-  ['utm_002', 'facebook', 'social', 'promo_natal', 'post_organico', 'teste gratis', 'part_002', now],
-  ['utm_003', 'instagram', 'story', 'black_friday', 'story_1', 'desconto especial', 'part_003', now],
+  [
+    "utm_001",
+    "google",
+    "cpc",
+    "campanha_teste",
+    "anuncio_a",
+    "quiz personalidade",
+    "part_001",
+    now,
+  ],
+  [
+    "utm_002",
+    "facebook",
+    "social",
+    "promo_natal",
+    "post_organico",
+    "teste gratis",
+    "part_002",
+    now,
+  ],
+  [
+    "utm_003",
+    "instagram",
+    "story",
+    "black_friday",
+    "story_1",
+    "desconto especial",
+    "part_003",
+    now,
+  ],
 ];
 
-utmData.forEach(u => insertUtm.run(...u));
+utmData.forEach((u) => insertUtm.run(...u));
 
 // Eventos de conversão de exemplo
 const insertEvent = db.prepare(`
@@ -216,12 +270,42 @@ const insertEvent = db.prepare(`
 `);
 
 const events = [
-  ['event_001', 'quiz_completed', 'joao@email.com', 0, 'google', 'cpc', 'campanha_teste', JSON.stringify({ quiz_id: 'quiz_001', score: 25 }), now],
-  ['event_002', 'lead_captured', 'maria@email.com', 0, 'facebook', 'social', 'promo_natal', JSON.stringify({ form_id: 'form_001' }), now],
-  ['event_003', 'purchase', 'pedro@email.com', 297.00, 'instagram', 'story', 'black_friday', JSON.stringify({ product: 'curso_premium' }), now],
+  [
+    "event_001",
+    "quiz_completed",
+    "joao@email.com",
+    0,
+    "google",
+    "cpc",
+    "campanha_teste",
+    JSON.stringify({ quiz_id: "quiz_001", score: 25 }),
+    now,
+  ],
+  [
+    "event_002",
+    "lead_captured",
+    "maria@email.com",
+    0,
+    "facebook",
+    "social",
+    "promo_natal",
+    JSON.stringify({ form_id: "form_001" }),
+    now,
+  ],
+  [
+    "event_003",
+    "purchase",
+    "pedro@email.com",
+    297.0,
+    "instagram",
+    "story",
+    "black_friday",
+    JSON.stringify({ product: "curso_premium" }),
+    now,
+  ],
 ];
 
-events.forEach(e => insertEvent.run(...e));
+events.forEach((e) => insertEvent.run(...e));
 
 // Compras Hotmart de exemplo
 const insertPurchase = db.prepare(`
@@ -230,11 +314,37 @@ const insertPurchase = db.prepare(`
 `);
 
 const purchases = [
-  ['purchase_001', 'HOT123456789', 'joao@email.com', 'João Silva', 'PROD001', 'Curso Premium de Marketing', 297.00, 'approved', 'PURCHASE_COMPLETE', now, now, now],
-  ['purchase_002', 'HOT987654321', 'maria@email.com', 'Maria Santos', 'PROD002', 'Mentoria Individual', 497.00, 'approved', 'PURCHASE_COMPLETE', now, now, now],
+  [
+    "purchase_001",
+    "HOT123456789",
+    "joao@email.com",
+    "João Silva",
+    "PROD001",
+    "Curso Premium de Marketing",
+    297.0,
+    "approved",
+    "PURCHASE_COMPLETE",
+    now,
+    now,
+    now,
+  ],
+  [
+    "purchase_002",
+    "HOT987654321",
+    "maria@email.com",
+    "Maria Santos",
+    "PROD002",
+    "Mentoria Individual",
+    497.0,
+    "approved",
+    "PURCHASE_COMPLETE",
+    now,
+    now,
+    now,
+  ],
 ];
 
-purchases.forEach(p => insertPurchase.run(...p));
+purchases.forEach((p) => insertPurchase.run(...p));
 
 // Funnels de exemplo
 const insertFunnel = db.prepare(`
@@ -244,45 +354,49 @@ const insertFunnel = db.prepare(`
 
 const funnels = [
   [
-    'funnel_001', 
-    'Quiz de Personalidade', 
-    'Funil completo com quiz de personalidade para segmentação de leads',
+    "funnel_001",
+    "Quiz de Personalidade",
+    "Funil completo com quiz de personalidade para segmentação de leads",
     1,
     1,
     1,
     JSON.stringify({ tracking_enabled: true, utm_tracking: true }),
     now,
-    now
+    now,
   ],
   [
-    'funnel_002',
-    'Captação Black Friday',
-    'Funil de captação especial para promoção de Black Friday',
+    "funnel_002",
+    "Captação Black Friday",
+    "Funil de captação especial para promoção de Black Friday",
     1,
     1,
     2,
-    JSON.stringify({ tracking_enabled: true, discount_code: 'BLACK50' }),
+    JSON.stringify({ tracking_enabled: true, discount_code: "BLACK50" }),
     now,
-    now
-  ]
+    now,
+  ],
 ];
 
-funnels.forEach(f => insertFunnel.run(...f));
+funnels.forEach((f) => insertFunnel.run(...f));
 
-console.log('✅ Dados de exemplo inseridos com sucesso!');
+console.log("✅ Dados de exemplo inseridos com sucesso!");
 
 // Verificar se os dados foram inseridos
 const counts = {
-  users: db.prepare('SELECT COUNT(*) as count FROM users').get().count,
-  participants: db.prepare('SELECT COUNT(*) as count FROM quiz_participants').get().count,
-  results: db.prepare('SELECT COUNT(*) as count FROM quiz_results').get().count,
-  utm: db.prepare('SELECT COUNT(*) as count FROM utm_analytics').get().count,
-  events: db.prepare('SELECT COUNT(*) as count FROM conversion_events').get().count,
-  purchases: db.prepare('SELECT COUNT(*) as count FROM hotmart_purchases').get().count,
-  funnels: db.prepare('SELECT COUNT(*) as count FROM funnels').get().count,
+  users: db.prepare("SELECT COUNT(*) as count FROM users").get().count,
+  participants: db
+    .prepare("SELECT COUNT(*) as count FROM quiz_participants")
+    .get().count,
+  results: db.prepare("SELECT COUNT(*) as count FROM quiz_results").get().count,
+  utm: db.prepare("SELECT COUNT(*) as count FROM utm_analytics").get().count,
+  events: db.prepare("SELECT COUNT(*) as count FROM conversion_events").get()
+    .count,
+  purchases: db.prepare("SELECT COUNT(*) as count FROM hotmart_purchases").get()
+    .count,
+  funnels: db.prepare("SELECT COUNT(*) as count FROM funnels").get().count,
 };
 
-console.log('\n📊 Resumo dos dados:');
+console.log("\n📊 Resumo dos dados:");
 console.log(`• Usuários: ${counts.users}`);
 console.log(`• Participantes: ${counts.participants}`);
 console.log(`• Resultados de Quiz: ${counts.results}`);
@@ -292,4 +406,4 @@ console.log(`• Compras Hotmart: ${counts.purchases}`);
 console.log(`• Funnels: ${counts.funnels}`);
 
 db.close();
-console.log('\n🎉 Banco de dados configurado e pronto para uso!');
+console.log("\n🎉 Banco de dados configurado e pronto para uso!");

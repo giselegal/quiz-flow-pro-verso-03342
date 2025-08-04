@@ -1,6 +1,5 @@
-
-import { useState, useCallback } from 'react';
-import { EditorBlock } from '@/types/editor';
+import { useState, useCallback } from "react";
+import { EditorBlock } from "@/types/editor";
 
 interface EditorState {
   blocks: EditorBlock[];
@@ -12,58 +11,65 @@ export const useEditorState = (initialBlocks: EditorBlock[] = []) => {
   const [state, setState] = useState<EditorState>({
     blocks: initialBlocks,
     selectedBlockId: null,
-    isPreviewing: false
+    isPreviewing: false,
   });
 
   const updateBlocks = useCallback((blocks: EditorBlock[]) => {
-    setState(prev => ({ ...prev, blocks }));
+    setState((prev) => ({ ...prev, blocks }));
   }, []);
 
   const selectBlock = useCallback((blockId: string | null) => {
-    setState(prev => ({ ...prev, selectedBlockId: blockId }));
+    setState((prev) => ({ ...prev, selectedBlockId: blockId }));
   }, []);
 
   const togglePreview = useCallback(() => {
-    setState(prev => ({ ...prev, isPreviewing: !prev.isPreviewing }));
+    setState((prev) => ({ ...prev, isPreviewing: !prev.isPreviewing }));
   }, []);
 
-  const addBlock = useCallback((type: EditorBlock['type']) => {
-    const newBlock: EditorBlock = {
-      id: `block-${Date.now()}`,
-      type,
-      content: getDefaultContent(type),
-      properties: {}, // Add missing properties field
-      order: state.blocks.length
-    };
-    
-    setState(prev => ({
-      ...prev,
-      blocks: [...prev.blocks, newBlock]
-    }));
-    
-    return newBlock.id;
-  }, [state.blocks.length]);
+  const addBlock = useCallback(
+    (type: EditorBlock["type"]) => {
+      const newBlock: EditorBlock = {
+        id: `block-${Date.now()}`,
+        type,
+        content: getDefaultContent(type),
+        properties: {}, // Add missing properties field
+        order: state.blocks.length,
+      };
 
-  const updateBlock = useCallback((id: string, updates: Partial<EditorBlock>) => {
-    setState(prev => ({
-      ...prev,
-      blocks: prev.blocks.map(block => 
-        block.id === id ? { ...block, ...updates } : block
-      )
-    }));
-  }, []);
+      setState((prev) => ({
+        ...prev,
+        blocks: [...prev.blocks, newBlock],
+      }));
+
+      return newBlock.id;
+    },
+    [state.blocks.length],
+  );
+
+  const updateBlock = useCallback(
+    (id: string, updates: Partial<EditorBlock>) => {
+      setState((prev) => ({
+        ...prev,
+        blocks: prev.blocks.map((block) =>
+          block.id === id ? { ...block, ...updates } : block,
+        ),
+      }));
+    },
+    [],
+  );
 
   const deleteBlock = useCallback((id: string) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
-      blocks: prev.blocks.filter(block => block.id !== id),
-      selectedBlockId: prev.selectedBlockId === id ? null : prev.selectedBlockId
+      blocks: prev.blocks.filter((block) => block.id !== id),
+      selectedBlockId:
+        prev.selectedBlockId === id ? null : prev.selectedBlockId,
     }));
   }, []);
 
   const setCurrentStep = useCallback((step: number) => {
     // Implementation for step navigation if needed
-    console.log('Setting current step:', step);
+    console.log("Setting current step:", step);
   }, []);
 
   return {
@@ -74,20 +80,20 @@ export const useEditorState = (initialBlocks: EditorBlock[] = []) => {
     addBlock,
     updateBlock,
     deleteBlock,
-    setCurrentStep
+    setCurrentStep,
   };
 };
 
-const getDefaultContent = (type: EditorBlock['type']) => {
+const getDefaultContent = (type: EditorBlock["type"]) => {
   switch (type) {
-    case 'headline':
-      return { title: 'Novo Título', subtitle: '' };
-    case 'text':
-      return { text: 'Novo texto' };
-    case 'image':
-      return { imageUrl: '', imageAlt: '', caption: '' };
-    case 'benefits':
-      return { title: 'Benefícios', items: [] };
+    case "headline":
+      return { title: "Novo Título", subtitle: "" };
+    case "text":
+      return { text: "Novo texto" };
+    case "image":
+      return { imageUrl: "", imageAlt: "", caption: "" };
+    case "benefits":
+      return { title: "Benefícios", items: [] };
     default:
       return {};
   }

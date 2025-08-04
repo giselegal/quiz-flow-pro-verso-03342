@@ -1,9 +1,9 @@
 import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Gift, Star } from 'lucide-react';
-import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
-import { DeviceView, StyleProps } from './types';
+import React from "react";
+import { Card } from "@/components/ui/card";
+import { Gift, Star } from "lucide-react";
+import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
+import { DeviceView, StyleProps } from "./types";
 
 interface BonusItem {
   id: string;
@@ -23,7 +23,7 @@ interface BonusSectionProps extends StyleProps {
   /** Lista de bônus */
   bonuses: BonusItem[];
   /** Configuração de layout */
-  layout?: 'grid' | 'list' | 'carousel';
+  layout?: "grid" | "list" | "carousel";
   /** Número de colunas no grid (apenas layout grid) */
   columns?: 1 | 2 | 3 | 4;
   /** Configuração de animações */
@@ -46,41 +46,46 @@ export const BonusSection: React.FC<BonusSectionProps> = ({
   title = "Bônus Exclusivos para Você",
   subtitle = "Além do produto principal, você receberá estas ferramentas complementares:",
   bonuses,
-  layout = 'grid',
+  layout = "grid",
   columns = 2,
   animationConfig = {},
-  deviceView = 'desktop',
+  deviceView = "desktop",
   onBonusClick,
   className,
   style,
-  customStyles
+  customStyles,
 }) => {
-  const { disabled: animationsDisabled, duration = 400, staggerDelay = 200 } = animationConfig;
-  const isLowPerformance = deviceView === 'mobile';
+  const {
+    disabled: animationsDisabled,
+    duration = 400,
+    staggerDelay = 200,
+  } = animationConfig;
+  const isLowPerformance = deviceView === "mobile";
 
   const getGridColumns = () => {
-    if (deviceView === 'mobile') return 'grid-cols-1';
-    if (deviceView === 'tablet') return columns > 2 ? 'grid-cols-2' : `grid-cols-${columns}`;
+    if (deviceView === "mobile") return "grid-cols-1";
+    if (deviceView === "tablet")
+      return columns > 2 ? "grid-cols-2" : `grid-cols-${columns}`;
     return `grid-cols-${Math.min(columns, bonuses.length)}`;
   };
 
   const getLayoutClasses = () => {
     switch (layout) {
-      case 'list':
-        return 'space-y-2';
-      case 'carousel':
-        return 'flex overflow-x-auto gap-6 pb-4 snap-x snap-mandatory';
+      case "list":
+        return "space-y-2";
+      case "carousel":
+        return "flex overflow-x-auto gap-6 pb-4 snap-x snap-mandatory";
       default:
         return `grid ${getGridColumns()} gap-6`;
     }
   };
 
   return (
-    <div className={`py-10 ${className || ''}`} style={style}>
+    <div className={`py-10 ${className || ""}`} style={style}>
       {customStyles && (
         <style dangerouslySetInnerHTML={{ __html: customStyles }} />
       )}
-      
+
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-2">
@@ -100,15 +105,19 @@ export const BonusSection: React.FC<BonusSectionProps> = ({
           {bonuses.map((bonus, index) => (
             <AnimatedWrapper
               key={bonus.id}
-              animation={animationsDisabled || isLowPerformance ? 'none' : 'fade'}
+              animation={
+                animationsDisabled || isLowPerformance ? "none" : "fade"
+              }
               show={true}
               duration={duration}
               delay={staggerDelay * index}
             >
-              <Card 
+              <Card
                 className={`p-4 bg-white shadow-sm hover:shadow-md transition-all duration-300 border-0 cursor-pointer transform-3d hover:scale-[1.02] ${
-                  bonus.isHighlighted ? 'ring-2 ring-[#B89B7A] ring-opacity-50' : ''
-                } ${layout === 'carousel' ? 'min-w-[280px] snap-start' : ''}`}
+                  bonus.isHighlighted
+                    ? "ring-2 ring-[#B89B7A] ring-opacity-50"
+                    : ""
+                } ${layout === "carousel" ? "min-w-[280px] snap-start" : ""}`}
                 onClick={() => onBonusClick?.(bonus)}
               >
                 {/* Badge */}
@@ -146,7 +155,7 @@ export const BonusSection: React.FC<BonusSectionProps> = ({
                   <p className="text-sm text-[#6B4F43] leading-relaxed mb-3">
                     {bonus.description}
                   </p>
-                  
+
                   {/* Value */}
                   {bonus.value && (
                     <div className="text-center">

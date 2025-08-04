@@ -1,23 +1,33 @@
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { SEOSettings as SEOSettingsType } from '@/types/funnelSettings';
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { SEOSettings as SEOSettingsType } from "@/types/funnelSettings";
 
 interface SEOSettingsProps {
   settings: SEOSettingsType;
   onUpdate: (settings: Partial<SEOSettingsType>) => void;
 }
 
-export const SEOSettings: React.FC<SEOSettingsProps> = ({ settings, onUpdate }) => {
+export const SEOSettings: React.FC<SEOSettingsProps> = ({
+  settings,
+  onUpdate,
+}) => {
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader>
           <CardTitle>Meta Tags Básicas</CardTitle>
           <CardDescription>
-            Configure as meta tags principais para otimização dos mecanismos de busca
+            Configure as meta tags principais para otimização dos mecanismos de
+            busca
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -69,7 +79,8 @@ export const SEOSettings: React.FC<SEOSettingsProps> = ({ settings, onUpdate }) 
         <CardHeader>
           <CardTitle>Open Graph</CardTitle>
           <CardDescription>
-            Configure como seu funil aparece quando compartilhado nas redes sociais
+            Configure como seu funil aparece quando compartilhado nas redes
+            sociais
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -103,7 +114,8 @@ export const SEOSettings: React.FC<SEOSettingsProps> = ({ settings, onUpdate }) 
               placeholder="https://exemplo.com/imagem.jpg"
             />
             <p className="text-sm text-muted-foreground">
-              Imagem que aparece quando o funil é compartilhado (1200x630px recomendado)
+              Imagem que aparece quando o funil é compartilhado (1200x630px
+              recomendado)
             </p>
           </div>
         </CardContent>
@@ -112,9 +124,7 @@ export const SEOSettings: React.FC<SEOSettingsProps> = ({ settings, onUpdate }) 
       <Card>
         <CardHeader>
           <CardTitle>Configurações Avançadas</CardTitle>
-          <CardDescription>
-            Configurações adicionais de SEO
-          </CardDescription>
+          <CardDescription>Configurações adicionais de SEO</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">

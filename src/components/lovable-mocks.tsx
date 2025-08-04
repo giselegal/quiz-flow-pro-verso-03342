@@ -1,8 +1,9 @@
-
-import React from 'react';
+import React from "react";
 
 // Mock components for Lovable functionality
-export const LovableComponent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const LovableComponent: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   return <div className="lovable-component">{children}</div>;
 };
 

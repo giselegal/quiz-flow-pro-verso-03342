@@ -1,11 +1,10 @@
-
-import React, { useState, useEffect } from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { QuizQuestion, QuizOption } from '@/types/quiz';
-import { Trash, Plus } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { QuizQuestion, QuizOption } from "@/types/quiz";
+import { Trash, Plus } from "lucide-react";
 
 interface QuestionEditorProps {
   question: QuizQuestion | null;
@@ -20,23 +19,23 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
   onSave,
   onCancel,
   onDelete,
-  isNew = false
+  isNew = false,
 }) => {
   const [editedQuestion, setEditedQuestion] = useState<QuizQuestion>(() => {
     if (question) {
       return question;
     }
-    
+
     // Create a proper QuizQuestion object with all required properties
     return {
       id: `question-${Date.now()}`,
-      text: '', // Add required 'text' property  
+      text: "", // Add required 'text' property
       order: 0,
-      question: '', // Add required 'question' property
-      title: '', // Keep title for backward compatibility
-      type: 'normal' as const,
+      question: "", // Add required 'question' property
+      title: "", // Keep title for backward compatibility
+      type: "normal" as const,
       multiSelect: 3,
-      options: [] as QuizOption[]
+      options: [] as QuizOption[],
     };
   });
 
@@ -50,40 +49,40 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
     // Ensure we have both question and title populated
     const questionToSave: QuizQuestion = {
       ...editedQuestion,
-      question: editedQuestion.question || editedQuestion.title || '',
-      title: editedQuestion.title || editedQuestion.question || ''
+      question: editedQuestion.question || editedQuestion.title || "",
+      title: editedQuestion.title || editedQuestion.question || "",
     };
-    
+
     onSave(questionToSave);
   };
 
   const handleAddOption = () => {
-    setEditedQuestion(prev => ({
+    setEditedQuestion((prev) => ({
       ...prev,
       options: [
         ...prev.options,
         {
           id: `option-${Date.now()}`,
-          text: '',
-          style: 'natural'
-        }
-      ]
+          text: "",
+          style: "natural",
+        },
+      ],
     }));
   };
 
   const handleRemoveOption = (index: number) => {
-    setEditedQuestion(prev => ({
+    setEditedQuestion((prev) => ({
       ...prev,
-      options: prev.options.filter((_, i) => i !== index)
+      options: prev.options.filter((_, i) => i !== index),
     }));
   };
 
   const handleOptionChange = (index: number, field: string, value: string) => {
-    setEditedQuestion(prev => ({
+    setEditedQuestion((prev) => ({
       ...prev,
-      options: prev.options.map((option, i) => 
-        i === index ? { ...option, [field]: value } : option
-      )
+      options: prev.options.map((option, i) =>
+        i === index ? { ...option, [field]: value } : option,
+      ),
     }));
   };
 
@@ -91,7 +90,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
     <div className="space-y-6 p-6 bg-white rounded-lg border border-[#B89B7A]/20">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-medium text-[#432818]">
-          {isNew ? 'Nova Pergunta' : 'Editar Pergunta'}
+          {isNew ? "Nova Pergunta" : "Editar Pergunta"}
         </h3>
         {onDelete && !isNew && (
           <Button
@@ -110,12 +109,14 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
           <Label htmlFor="question-title">Título da Pergunta</Label>
           <Input
             id="question-title"
-            value={editedQuestion.title || ''}
-            onChange={(e) => setEditedQuestion(prev => ({ 
-              ...prev, 
-              title: e.target.value,
-              question: e.target.value // Keep in sync
-            }))}
+            value={editedQuestion.title || ""}
+            onChange={(e) =>
+              setEditedQuestion((prev) => ({
+                ...prev,
+                title: e.target.value,
+                question: e.target.value, // Keep in sync
+              }))
+            }
             placeholder="Digite o título da pergunta"
             className="mt-1"
           />
@@ -129,10 +130,12 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
             min="1"
             max="10"
             value={editedQuestion.multiSelect || 3}
-            onChange={(e) => setEditedQuestion(prev => ({ 
-              ...prev, 
-              multiSelect: parseInt(e.target.value) || 3
-            }))}
+            onChange={(e) =>
+              setEditedQuestion((prev) => ({
+                ...prev,
+                multiSelect: parseInt(e.target.value) || 3,
+              }))
+            }
             className="mt-1"
           />
         </div>
@@ -154,11 +157,16 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
 
           <div className="space-y-3">
             {editedQuestion.options.map((option, index) => (
-              <div key={option.id || index} className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg">
+              <div
+                key={option.id || index}
+                className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg"
+              >
                 <div className="flex-1">
                   <Input
                     value={option.text}
-                    onChange={(e) => handleOptionChange(index, 'text', e.target.value)}
+                    onChange={(e) =>
+                      handleOptionChange(index, "text", e.target.value)
+                    }
                     placeholder={`Opção ${index + 1}`}
                   />
                 </div>

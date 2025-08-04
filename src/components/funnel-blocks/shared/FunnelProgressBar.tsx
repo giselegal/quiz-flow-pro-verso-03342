@@ -1,5 +1,5 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { cn } from "@/lib/utils";
 
 interface FunnelProgressBarProps {
   currentStep: number;
@@ -7,53 +7,53 @@ interface FunnelProgressBarProps {
   showLabels?: boolean;
   className?: string;
   color?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
   animated?: boolean;
   showPercentage?: boolean;
 }
 
 /**
  * Barra de progresso reutilizável para funis
- * 
+ *
  * Exibe o progresso atual no funil, com opções de personalização.
  */
 const FunnelProgressBar: React.FC<FunnelProgressBarProps> = ({
   currentStep,
   totalSteps,
   showLabels = false,
-  className = '',
-  color = '#B89B7A',
-  size = 'md',
+  className = "",
+  color = "#B89B7A",
+  size = "md",
   animated = true,
-  showPercentage = false
+  showPercentage = false,
 }) => {
   // Calcular a porcentagem de progresso
   const progressPercentage = Math.round((currentStep / totalSteps) * 100);
-  
+
   // Classes baseadas no tamanho
   const sizeClasses = {
-    sm: 'h-1',
-    md: 'h-2',
-    lg: 'h-3'
+    sm: "h-1",
+    md: "h-2",
+    lg: "h-3",
   };
 
   return (
     <div className={cn("w-full", className)}>
       {/* Barra principal */}
       <div className="w-full bg-gray-100 rounded-full overflow-hidden">
-        <div 
+        <div
           className={cn(
             "bg-current rounded-full",
             sizeClasses[size],
-            animated && "transition-all duration-500"
+            animated && "transition-all duration-500",
           )}
-          style={{ 
+          style={{
             width: `${progressPercentage}%`,
-            color: color 
+            color: color,
           }}
         />
       </div>
-      
+
       {/* Labels e porcentagem */}
       {(showLabels || showPercentage) && (
         <div className="flex justify-between mt-2 text-xs text-gray-500">
@@ -63,7 +63,7 @@ const FunnelProgressBar: React.FC<FunnelProgressBarProps> = ({
               <span>Total: {totalSteps}</span>
             </div>
           )}
-          
+
           {showPercentage && !showLabels && (
             <span className="ml-auto">{progressPercentage}% completo</span>
           )}

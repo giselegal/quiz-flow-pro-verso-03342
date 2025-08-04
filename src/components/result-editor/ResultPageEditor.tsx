@@ -1,10 +1,9 @@
-
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { RefreshCw, Save, Eye } from 'lucide-react';
-import EditableSection from './EditableSection';
-import { useResultPageEditor } from '@/hooks/useResultPageEditor';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { RefreshCw, Save, Eye } from "lucide-react";
+import EditableSection from "./EditableSection";
+import { useResultPageEditor } from "@/hooks/useResultPageEditor";
 
 interface ResultPageEditorProps {
   selectedStyle: {
@@ -15,29 +14,26 @@ interface ResultPageEditorProps {
   onShowTemplates?: () => void;
 }
 
-export const ResultPageEditor: React.FC<ResultPageEditorProps> = ({ selectedStyle }) => {
+export const ResultPageEditor: React.FC<ResultPageEditorProps> = ({
+  selectedStyle,
+}) => {
   const {
     resultPageConfig,
     loading,
     isPreviewing,
-    actions: {
-      handleSave,
-      handleReset,
-      togglePreview,
-      updateSection
-    }
+    actions: { handleSave, handleReset, togglePreview, updateSection },
   } = useResultPageEditor(selectedStyle.category);
-  
+
   const sectionTitles: Record<string, string> = {
-    header: 'Cabeçalho',
-    mainContent: 'Conteúdo Principal',
-    secondaryStyles: 'Estilos Secundários',
-    'offer.hero': 'Oferta - Hero',
-    'offer.products': 'Oferta - Produtos',
-    'offer.benefits': 'Oferta - Benefícios',
-    'offer.pricing': 'Oferta - Preços',
-    'offer.testimonials': 'Oferta - Depoimentos',
-    'offer.guarantee': 'Oferta - Garantia',
+    header: "Cabeçalho",
+    mainContent: "Conteúdo Principal",
+    secondaryStyles: "Estilos Secundários",
+    "offer.hero": "Oferta - Hero",
+    "offer.products": "Oferta - Produtos",
+    "offer.benefits": "Oferta - Benefícios",
+    "offer.pricing": "Oferta - Preços",
+    "offer.testimonials": "Oferta - Depoimentos",
+    "offer.guarantee": "Oferta - Garantia",
   };
 
   if (loading) {
@@ -55,7 +51,7 @@ export const ResultPageEditor: React.FC<ResultPageEditorProps> = ({ selectedStyl
         <div className="flex items-center space-x-2">
           <Button variant="ghost" onClick={togglePreview}>
             <Eye className="w-4 h-4 mr-2" />
-            {isPreviewing ? 'Esconder Preview' : 'Mostrar Preview'}
+            {isPreviewing ? "Esconder Preview" : "Mostrar Preview"}
           </Button>
           <Button variant="outline" onClick={handleReset}>
             <RefreshCw className="w-4 h-4 mr-2" />

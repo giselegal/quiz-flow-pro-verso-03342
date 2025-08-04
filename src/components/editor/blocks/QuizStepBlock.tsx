@@ -1,6 +1,6 @@
 /**
  * QuizStepBlock - Componente completo de etapa de quiz
- * 
+ *
  * Baseado no modelo fornecido, com todas as funcionalidades:
  * - Header configurável
  * - Pergunta editável
@@ -10,11 +10,11 @@
  * - Estilos customizáveis
  */
 
-import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Plus, Minus, GripVertical } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import RichTextBlock from './RichTextBlock';
+import React, { useState, useEffect, useRef } from "react";
+import { ArrowLeft, Plus, Minus, GripVertical } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import RichTextBlock from "./RichTextBlock";
 
 export interface QuizOption {
   id: string;
@@ -32,44 +32,44 @@ export interface QuizStepBlockProps {
   showProgressBar?: boolean;
   showBackButton?: boolean;
   progressValue?: number;
-  
+
   // Question
   questionText: string;
   questionTextSize?: number;
   questionTextColor?: string;
-  questionTextAlign?: 'left' | 'center' | 'right';
-  
+  questionTextAlign?: "left" | "center" | "right";
+
   // Layout
-  layout?: '1-column' | '2-columns' | '3-columns' | '4-columns';
-  direction?: 'vertical' | 'horizontal';
-  disposition?: 'image-text' | 'text-image' | 'text-only' | 'image-only';
-  
+  layout?: "1-column" | "2-columns" | "3-columns" | "4-columns";
+  direction?: "vertical" | "horizontal";
+  disposition?: "image-text" | "text-image" | "text-only" | "image-only";
+
   // Options
   options: QuizOption[];
-  
+
   // Validation
   isMultipleChoice?: boolean;
   isRequired?: boolean;
   autoProceed?: boolean;
   minSelections?: number;
   maxSelections?: number;
-  
+
   // Styling
-  borderRadius?: 'none' | 'small' | 'medium' | 'large';
-  boxShadow?: 'none' | 'small' | 'medium' | 'large';
-  spacing?: 'small' | 'medium' | 'large';
-  optionStyle?: 'simple' | 'card' | 'modern' | 'minimal';
-  
+  borderRadius?: "none" | "small" | "medium" | "large";
+  boxShadow?: "none" | "small" | "medium" | "large";
+  spacing?: "small" | "medium" | "large";
+  optionStyle?: "simple" | "card" | "modern" | "minimal";
+
   // Colors
   primaryColor?: string;
   secondaryColor?: string;
   borderColor?: string;
   hoverColor?: string;
-  
+
   // Advanced
   componentId?: string;
   maxWidth?: number;
-  
+
   // Interaction
   isSelected?: boolean;
   isEditing?: boolean;
@@ -83,121 +83,147 @@ export const QuizStepBlock: React.FC<QuizStepBlockProps> = ({
   blockId,
   // Header
   headerEnabled = true,
-  logoUrl = '',
+  logoUrl = "",
   showProgressBar = true,
   showBackButton = true,
   progressValue = 25,
-  
+
   // Question
-  questionText = 'Qual é o seu tipo de roupa favorita?',
+  questionText = "Qual é o seu tipo de roupa favorita?",
   questionTextSize = 28,
-  questionTextColor = '#000000',
-  questionTextAlign = 'center',
-  
+  questionTextColor = "#000000",
+  questionTextAlign = "center",
+
   // Layout
-  layout = '2-columns',
-  direction = 'vertical',
-  disposition = 'image-text',
-  
+  layout = "2-columns",
+  direction = "vertical",
+  disposition = "image-text",
+
   // Options
   options = [],
-  
+
   // Validation
   isMultipleChoice = false,
   isRequired = true,
   autoProceed = false,
   minSelections = 1,
   maxSelections = 3,
-  
+
   // Styling
-  borderRadius = 'small',
-  boxShadow = 'medium',
-  spacing = 'medium',
-  optionStyle = 'card',
-  
+  borderRadius = "small",
+  boxShadow = "medium",
+  spacing = "medium",
+  optionStyle = "card",
+
   // Colors
-  primaryColor = '#B89B7A',
-  secondaryColor = '#ffffff',
-  borderColor = '#e5e7eb',
-  hoverColor = '#a08965',
-  
+  primaryColor = "#B89B7A",
+  secondaryColor = "#ffffff",
+  borderColor = "#e5e7eb",
+  hoverColor = "#a08965",
+
   // Advanced
-  componentId = '',
+  componentId = "",
   maxWidth = 90,
-  
+
   // Interaction
   isSelected = false,
   isEditing = false,
   onEdit,
   onSelect,
   onChange,
-  className = ''
+  className = "",
 }) => {
-  const [selectedOptions, setSelectedOptions] = useState<Set<string>>(new Set());
+  const [selectedOptions, setSelectedOptions] = useState<Set<string>>(
+    new Set(),
+  );
   const [isEditingQuestion, setIsEditingQuestion] = useState(false);
 
   // Helper functions para classes CSS
   const getLayoutClasses = (layout: string) => {
     switch (layout) {
-      case '1-column': return 'grid-cols-1';
-      case '2-columns': return 'grid-cols-1 md:grid-cols-2';
-      case '3-columns': return 'grid-cols-1 md:grid-cols-2';
-      case '4-columns': return 'grid-cols-1 md:grid-cols-2';
-      default: return 'grid-cols-1 md:grid-cols-2';
+      case "1-column":
+        return "grid-cols-1";
+      case "2-columns":
+        return "grid-cols-1 md:grid-cols-2";
+      case "3-columns":
+        return "grid-cols-1 md:grid-cols-2";
+      case "4-columns":
+        return "grid-cols-1 md:grid-cols-2";
+      default:
+        return "grid-cols-1 md:grid-cols-2";
     }
   };
 
   const getBorderRadiusClass = (radius: string) => {
     switch (radius) {
-      case 'small': return 'rounded-md';
-      case 'medium': return 'rounded-lg';
-      case 'large': return 'rounded-xl';
-      case 'none': return 'rounded-none';
-      default: return 'rounded-md';
+      case "small":
+        return "rounded-md";
+      case "medium":
+        return "rounded-lg";
+      case "large":
+        return "rounded-xl";
+      case "none":
+        return "rounded-none";
+      default:
+        return "rounded-md";
     }
   };
 
   const getShadowClass = (shadow: string) => {
     switch (shadow) {
-      case 'small': return 'shadow-sm';
-      case 'medium': return 'shadow-md';
-      case 'large': return 'shadow-lg';
-      case 'none': return 'shadow-none';
-      default: return 'shadow-md';
+      case "small":
+        return "shadow-sm";
+      case "medium":
+        return "shadow-md";
+      case "large":
+        return "shadow-lg";
+      case "none":
+        return "shadow-none";
+      default:
+        return "shadow-md";
     }
   };
 
   const getSpacingClass = (spacing: string) => {
     switch (spacing) {
-      case 'small': return 'gap-2';
-      case 'medium': return 'gap-4';
-      case 'large': return 'gap-6';
-      default: return 'gap-4';
+      case "small":
+        return "gap-2";
+      case "medium":
+        return "gap-4";
+      case "large":
+        return "gap-6";
+      default:
+        return "gap-4";
     }
   };
 
   const getDispositionClasses = (disposition: string) => {
     switch (disposition) {
-      case 'image-text': return 'flex-col items-center justify-start';
-      case 'text-image': return 'flex-col-reverse items-center justify-start';
-      case 'text-only': return 'flex-col items-center justify-center';
-      case 'image-only': return 'flex-col items-center justify-center';
-      default: return 'flex-col items-center justify-start';
+      case "image-text":
+        return "flex-col items-center justify-start";
+      case "text-image":
+        return "flex-col-reverse items-center justify-start";
+      case "text-only":
+        return "flex-col items-center justify-center";
+      case "image-only":
+        return "flex-col items-center justify-center";
+      default:
+        return "flex-col items-center justify-start";
     }
   };
 
   const getOptionStyleClasses = (style: string) => {
-    const baseClasses = 'transition-all duration-200 cursor-pointer border';
+    const baseClasses = "transition-all duration-200 cursor-pointer border";
     switch (style) {
-      case 'simple': 
+      case "simple":
         return `${baseClasses} bg-white hover:bg-gray-50 text-gray-800`;
-      case 'card': 
+      case "card":
         return `${baseClasses} bg-white hover:bg-gray-50 text-gray-800 shadow-md`;
-      case 'modern': 
+      case "modern":
         return `${baseClasses} bg-gradient-to-r from-white to-gray-50 hover:from-gray-50 hover:to-gray-100 text-gray-800 shadow-sm`;
-      case 'minimal': 
+      case "minimal":
         return `${baseClasses} bg-transparent hover:bg-gray-100 text-gray-800 border-gray-200`;
-      default: 
+      default:
         return `${baseClasses} bg-white hover:bg-gray-50 text-gray-800 shadow-md`;
     }
   };
@@ -216,7 +242,7 @@ export const QuizStepBlock: React.FC<QuizStepBlockProps> = ({
       setSelectedOptions(new Set([optionId]));
       if (autoProceed) {
         // Auto advance logic would go here
-        console.log('Auto proceeding to next step');
+        console.log("Auto proceeding to next step");
       }
     }
   };
@@ -233,32 +259,37 @@ export const QuizStepBlock: React.FC<QuizStepBlockProps> = ({
     onEdit?.();
   };
 
-  const canProceed = isRequired ? 
-    (selectedOptions.size >= minSelections && selectedOptions.size <= maxSelections) : 
-    true;
+  const canProceed = isRequired
+    ? selectedOptions.size >= minSelections &&
+      selectedOptions.size <= maxSelections
+    : true;
 
   return (
     <div
       className={`relative transition-all duration-200 ${
-        isSelected ? 'ring-2 ring-blue-500 ring-opacity-50' : ''
+        isSelected ? "ring-2 ring-blue-500 ring-opacity-50" : ""
       } ${className}`}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
     >
       <div
         className={`p-3 md:p-5 pb-10 flex flex-col gap-4 md:gap-6 h-full justify-between rounded-lg bg-white ${getShadowClass(boxShadow)}`}
-        style={{ borderColor: isSelected ? primaryColor : 'transparent' }}
+        style={{ borderColor: isSelected ? primaryColor : "transparent" }}
       >
         {/* Header Section */}
         {headerEnabled && (
           <div className="grid gap-4">
             <div className="flex flex-row w-full h-auto justify-center relative">
               {showBackButton && (
-                <Button variant="ghost" size="icon" className="h-10 w-10 absolute left-0">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-10 w-10 absolute left-0"
+                >
                   <ArrowLeft className="h-4 w-4" />
                 </Button>
               )}
-              
+
               <div className="flex flex-col w-full justify-start items-center gap-4">
                 {logoUrl && (
                   <img
@@ -269,15 +300,17 @@ export const QuizStepBlock: React.FC<QuizStepBlockProps> = ({
                     src={logoUrl}
                   />
                 )}
-                
+
                 {showProgressBar && (
                   <div className="w-full max-w-md">
-                    <Progress 
-                      value={progressValue} 
+                    <Progress
+                      value={progressValue}
                       className="h-2"
-                      style={{ 
-                        '--progress-background': primaryColor 
-                      } as React.CSSProperties}
+                      style={
+                        {
+                          "--progress-background": primaryColor,
+                        } as React.CSSProperties
+                      }
                     />
                   </div>
                 )}
@@ -287,8 +320,8 @@ export const QuizStepBlock: React.FC<QuizStepBlockProps> = ({
         )}
 
         {/* Main Content Area */}
-        <div 
-          className="main-content w-full relative mx-auto" 
+        <div
+          className="main-content w-full relative mx-auto"
           style={{ maxWidth: `${maxWidth}%` }}
         >
           <div className="flex flex-col pb-10">
@@ -306,10 +339,12 @@ export const QuizStepBlock: React.FC<QuizStepBlockProps> = ({
             </div>
 
             {/* Options Grid */}
-            <div className={`grid ${getLayoutClasses(layout)} ${getSpacingClass(spacing)} w-full`}>
+            <div
+              className={`grid ${getLayoutClasses(layout)} ${getSpacingClass(spacing)} w-full`}
+            >
               {options.map((option) => {
                 const isOptionSelected = selectedOptions.has(option.id);
-                
+
                 return (
                   <button
                     key={option.id}
@@ -318,32 +353,48 @@ export const QuizStepBlock: React.FC<QuizStepBlockProps> = ({
                       ${getBorderRadiusClass(borderRadius)}
                       ${getDispositionClasses(disposition)}
                       p-4 min-h-[80px] flex gap-3 overflow-hidden
-                      ${isOptionSelected ? 'ring-2 ring-offset-2' : ''}
+                      ${isOptionSelected ? "ring-2 ring-offset-2" : ""}
                     `}
-                    style={{
-                      borderColor: isOptionSelected ? primaryColor : borderColor,
-                      backgroundColor: isOptionSelected ? `${primaryColor}20` : undefined,
-                      '--tw-ring-color': primaryColor,
-                    } as React.CSSProperties}
+                    style={
+                      {
+                        borderColor: isOptionSelected
+                          ? primaryColor
+                          : borderColor,
+                        backgroundColor: isOptionSelected
+                          ? `${primaryColor}20`
+                          : undefined,
+                        "--tw-ring-color": primaryColor,
+                      } as React.CSSProperties
+                    }
                     onClick={() => handleOptionClick(option.id)}
                   >
                     {/* Imagem da opção */}
-                    {((disposition === 'image-text' || disposition === 'text-image' || disposition === 'image-only') && option.imageUrl) && (
-                      <div className="flex-shrink-0">
-                        <img 
-                          src={option.imageUrl} 
-                          alt="Opção" 
-                          className={`w-full h-32 object-cover ${getBorderRadiusClass(borderRadius)}`}
-                          style={{ maxWidth: disposition === 'image-only' ? '100%' : '120px' }}
-                        />
-                      </div>
-                    )}
-                    
+                    {(disposition === "image-text" ||
+                      disposition === "text-image" ||
+                      disposition === "image-only") &&
+                      option.imageUrl && (
+                        <div className="flex-shrink-0">
+                          <img
+                            src={option.imageUrl}
+                            alt="Opção"
+                            className={`w-full h-32 object-cover ${getBorderRadiusClass(borderRadius)}`}
+                            style={{
+                              maxWidth:
+                                disposition === "image-only" ? "100%" : "120px",
+                            }}
+                          />
+                        </div>
+                      )}
+
                     {/* Texto da opção */}
-                    {(disposition === 'image-text' || disposition === 'text-image' || disposition === 'text-only') && (
-                      <div 
+                    {(disposition === "image-text" ||
+                      disposition === "text-image" ||
+                      disposition === "text-only") && (
+                      <div
                         className="flex-1 text-left flex items-center"
-                        style={{ color: isOptionSelected ? primaryColor : '#374151' }}
+                        style={{
+                          color: isOptionSelected ? primaryColor : "#374151",
+                        }}
                       >
                         <div
                           className="rich-text-content"
@@ -359,16 +410,19 @@ export const QuizStepBlock: React.FC<QuizStepBlockProps> = ({
             {/* Continue Button */}
             {(!autoProceed || isMultipleChoice) && (
               <div className="w-full mt-6">
-                <Button 
+                <Button
                   className="w-full h-14 text-lg font-semibold disabled:opacity-50"
-                  style={{ 
-                    backgroundColor: primaryColor, 
-                    color: secondaryColor 
+                  style={{
+                    backgroundColor: primaryColor,
+                    color: secondaryColor,
                   }}
                   disabled={!canProceed}
                   onClick={() => {
                     if (canProceed) {
-                      console.log('Proceeding with selections:', Array.from(selectedOptions));
+                      console.log(
+                        "Proceeding with selections:",
+                        Array.from(selectedOptions),
+                      );
                       // Proceed logic here
                     }
                   }}
@@ -386,11 +440,9 @@ export const QuizStepBlock: React.FC<QuizStepBlockProps> = ({
             {/* Validation message */}
             {isRequired && isMultipleChoice && (
               <div className="text-center mt-2 text-sm text-gray-600">
-                {minSelections === maxSelections ? (
-                  `Selecione ${minSelections} opções`
-                ) : (
-                  `Selecione entre ${minSelections} e ${maxSelections} opções`
-                )}
+                {minSelections === maxSelections
+                  ? `Selecione ${minSelections} opções`
+                  : `Selecione entre ${minSelections} e ${maxSelections} opções`}
               </div>
             )}
           </div>

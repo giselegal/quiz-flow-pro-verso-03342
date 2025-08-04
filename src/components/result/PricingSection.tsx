@@ -1,7 +1,6 @@
-
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { ShieldCheck } from 'lucide-react';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { ShieldCheck } from "lucide-react";
 
 interface PricingSectionProps {
   regularPrice: number;
@@ -21,7 +20,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
   installments,
   ctaText,
   ctaUrl,
-  guaranteeText
+  guaranteeText,
 }) => {
   return (
     <section className="py-12 px-4 bg-white">
@@ -40,15 +39,15 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
               </p>
             )}
           </div>
-          
-          <Button 
+
+          <Button
             size="lg"
             className="w-full max-w-md bg-[#B89B7A] hover:bg-[#8F7A6A] text-white text-lg py-6"
-            onClick={() => window.location.href = ctaUrl}
+            onClick={() => (window.location.href = ctaUrl)}
           >
             {ctaText}
           </Button>
-          
+
           {guaranteeText && (
             <div className="mt-6 flex items-center justify-center gap-2 text-[#8F7A6A]">
               <ShieldCheck className="h-5 w-5" />

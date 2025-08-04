@@ -1,14 +1,13 @@
-
-import React from 'react';
-import { Block } from '@/types/editor';
-import { StyleResult } from '@/types/quiz';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { GripVertical, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import BlockRenderer from './BlockRenderer';
+import React from "react";
+import { Block } from "@/types/editor";
+import { StyleResult } from "@/types/quiz";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { GripVertical, Trash2, ArrowUp, ArrowDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+import BlockRenderer from "./BlockRenderer";
 
 export interface EditableBlockProps {
   block: Block;
@@ -18,7 +17,7 @@ export interface EditableBlockProps {
   onClick?: () => void;
   onUpdate: (content: any) => void;
   onDelete: () => void;
-  onMove?: (direction: 'up' | 'down') => void;
+  onMove?: (direction: "up" | "down") => void;
   onReorderBlocks?: (sourceIndex: number, destinationIndex: number) => void;
   isPreviewMode?: boolean;
   primaryStyle?: StyleResult;
@@ -34,7 +33,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
   onDelete,
   onMove,
   isPreviewMode = false,
-  primaryStyle
+  primaryStyle,
 }) => {
   const {
     attributes,
@@ -42,16 +41,16 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
     setNodeRef,
     transform,
     transition,
-    isDragging
+    isDragging,
   } = useSortable({
     id: block.id,
-    disabled: isPreviewMode
+    disabled: isPreviewMode,
   });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.5 : 1
+    opacity: isDragging ? 0.5 : 1,
   };
 
   const handleClick = () => {
@@ -62,10 +61,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
   if (isPreviewMode) {
     return (
       <div ref={setNodeRef} style={style}>
-        <BlockRenderer 
-          block={block} 
-          primaryStyle={primaryStyle}
-        />
+        <BlockRenderer block={block} primaryStyle={primaryStyle} />
       </div>
     );
   }
@@ -76,9 +72,9 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
       style={style}
       className={cn(
         "relative border-2 cursor-pointer transition-all duration-200",
-        isSelected 
-          ? "border-blue-500 shadow-lg" 
-          : "border-gray-200 hover:border-gray-300"
+        isSelected
+          ? "border-blue-500 shadow-lg"
+          : "border-gray-200 hover:border-gray-300",
       )}
       onClick={handleClick}
     >
@@ -97,7 +93,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
               {block.type}
             </span>
           </div>
-          
+
           <div className="flex items-center gap-1">
             {onMove && (
               <>
@@ -106,7 +102,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
                   variant="ghost"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onMove('up');
+                    onMove("up");
                   }}
                   className="h-8 w-8 p-0"
                 >
@@ -117,7 +113,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
                   variant="ghost"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onMove('down');
+                    onMove("down");
                   }}
                   className="h-8 w-8 p-0"
                 >
@@ -139,10 +135,10 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
           </div>
         </div>
       )}
-      
+
       <div className="p-4">
-        <BlockRenderer 
-          block={block} 
+        <BlockRenderer
+          block={block}
           isEditing={isSelected}
           onUpdate={onUpdate}
           primaryStyle={primaryStyle}

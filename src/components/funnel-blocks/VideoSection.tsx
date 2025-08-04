@@ -1,10 +1,10 @@
 import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Star, Play, Pause, Volume2, VolumeX } from 'lucide-react';
-import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
-import { DeviceView, StyleProps } from './types';
+import React from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Star, Play, Pause, Volume2, VolumeX } from "lucide-react";
+import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
+import { DeviceView, StyleProps } from "./types";
 
 interface VideoSectionProps extends StyleProps {
   /** Título da seção */
@@ -16,7 +16,7 @@ interface VideoSectionProps extends StyleProps {
   /** URL do thumbnail/poster */
   thumbnailUrl?: string;
   /** Tipo de vídeo */
-  videoType?: 'youtube' | 'vimeo' | 'mp4' | 'embedded';
+  videoType?: "youtube" | "vimeo" | "mp4" | "embedded";
   /** Autoplay */
   autoPlay?: boolean;
   /** Controles customizados */
@@ -54,13 +54,13 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
   subtitle,
   videoUrl,
   thumbnailUrl,
-  videoType = 'mp4',
+  videoType = "mp4",
   autoPlay = false,
   customControls = true,
   showDuration = true,
   duration,
   animationConfig = {},
-  deviceView = 'desktop',
+  deviceView = "desktop",
   onVideoStart,
   onVideoEnd,
   onAction,
@@ -68,20 +68,24 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
   showAction = true,
   className,
   style,
-  customStyles
+  customStyles,
 }) => {
   const [isPlaying, setIsPlaying] = React.useState(autoPlay);
   const [isMuted, setIsMuted] = React.useState(false);
   const [currentTime, setCurrentTime] = React.useState(0);
   const videoRef = React.useRef<HTMLVideoElement>(null);
-  
-  const { disabled: animationsDisabled, duration: animationDuration = 400, delay = 0 } = animationConfig;
-  const isLowPerformance = deviceView === 'mobile';
+
+  const {
+    disabled: animationsDisabled,
+    duration: animationDuration = 400,
+    delay = 0,
+  } = animationConfig;
+  const isLowPerformance = deviceView === "mobile";
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   const handlePlayPause = () => {
@@ -108,21 +112,25 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
   };
 
   const getEmbedUrl = () => {
-    if (videoType === 'youtube') {
-      const videoId = videoUrl.includes('watch?v=') 
-        ? videoUrl.split('watch?v=')[1]?.split('&')[0]
-        : videoUrl.split('/').pop();
+    if (videoType === "youtube") {
+      const videoId = videoUrl.includes("watch?v=")
+        ? videoUrl.split("watch?v=")[1]?.split("&")[0]
+        : videoUrl.split("/").pop();
       return `https://www.youtube.com/embed/${videoId}?autoplay=${autoPlay ? 1 : 0}&rel=0`;
     }
-    if (videoType === 'vimeo') {
-      const videoId = videoUrl.split('/').pop();
+    if (videoType === "vimeo") {
+      const videoId = videoUrl.split("/").pop();
       return `https://player.vimeo.com/video/${videoId}?autoplay=${autoPlay ? 1 : 0}`;
     }
     return videoUrl;
   };
 
   const renderVideoPlayer = () => {
-    if (videoType === 'youtube' || videoType === 'vimeo' || videoType === 'embedded') {
+    if (
+      videoType === "youtube" ||
+      videoType === "vimeo" ||
+      videoType === "embedded"
+    ) {
       return (
         <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
           <iframe
@@ -177,7 +185,7 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
               <div className="flex-1 mr-4">
                 {duration && (
                   <div className="w-full bg-white bg-opacity-30 rounded-full h-1">
-                    <div 
+                    <div
                       className="bg-white h-1 rounded-full transition-all duration-300"
                       style={{ width: `${(currentTime / duration) * 100}%` }}
                     />
@@ -218,11 +226,11 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
   };
 
   return (
-    <div className={`py-12 ${className || ''}`} style={style}>
+    <div className={`py-12 ${className || ""}`} style={style}>
       {customStyles && (
         <style dangerouslySetInnerHTML={{ __html: customStyles }} />
       )}
-      
+
       {/* Header */}
       {(title || subtitle) && (
         <div className="text-center mb-8">
@@ -243,22 +251,27 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
       {/* Video */}
       <div className="max-w-full mx-auto">
         <AnimatedWrapper
-          animation={animationsDisabled || isLowPerformance ? 'none' : 'fade'}
+          animation={animationsDisabled || isLowPerformance ? "none" : "fade"}
           show={true}
           duration={animationDuration}
           delay={delay}
         >
           <Card className="p-6 bg-white shadow-lg border border-[#B89B7A]/20">
             {renderVideoPlayer()}
-            
+
             {/* Video info */}
             <div className="mt-6 text-center">
               {/* Rating */}
               <div className="flex justify-center items-center gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                  <Star
+                    key={i}
+                    className="w-4 h-4 text-yellow-500 fill-yellow-500"
+                  />
                 ))}
-                <span className="text-sm text-[#6B4F43] ml-2">Avaliação 5.0 - Mais de 1000 visualizações</span>
+                <span className="text-sm text-[#6B4F43] ml-2">
+                  Avaliação 5.0 - Mais de 1000 visualizações
+                </span>
               </div>
 
               {/* Action */}

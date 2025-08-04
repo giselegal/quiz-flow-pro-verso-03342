@@ -1,8 +1,8 @@
-import React from 'react';
-import { cn } from '../../../../lib/utils';
+import React from "react";
+import { cn } from "../../../../lib/utils";
 
 interface DividerInlineBlockProps {
-  style?: 'solid' | 'dashed' | 'dotted';
+  style?: "solid" | "dashed" | "dotted";
   thickness?: number;
   color?: string;
   marginY?: number;
@@ -11,9 +11,9 @@ interface DividerInlineBlockProps {
 }
 
 const DividerInlineBlock: React.FC<DividerInlineBlockProps> = ({
-  style = 'solid',
+  style = "solid",
   thickness = 1,
-  color = '#e2e8f0',
+  color = "#e2e8f0",
   marginY = 20,
   className,
   ...props
@@ -30,7 +30,7 @@ const DividerInlineBlock: React.FC<DividerInlineBlockProps> = ({
           borderStyle: style,
           borderWidth: `${thickness}px 0 0 0`,
           borderColor: color,
-          margin: 0
+          margin: 0,
         }}
       />
     </div>

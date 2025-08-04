@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { cn } from '@/lib/utils';
-import { ArrowLeftRight, Edit3 } from 'lucide-react';
+import React, { useState } from "react";
+import { cn } from "@/lib/utils";
+import { ArrowLeftRight, Edit3 } from "lucide-react";
 
 interface ComparisonInlineBlockProps {
   beforeTitle?: string;
@@ -15,21 +15,21 @@ interface ComparisonInlineBlockProps {
 }
 
 const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
-  beforeTitle = 'Antes',
-  afterTitle = 'Depois',
-  beforeText = 'Sem direção de estilo, compras por impulso',
-  afterText = 'Estilo definido, compras certeiras',
+  beforeTitle = "Antes",
+  afterTitle = "Depois",
+  beforeText = "Sem direção de estilo, compras por impulso",
+  afterText = "Estilo definido, compras certeiras",
   dividerPosition = 50,
   onClick,
   className,
   onPropertyChange,
-  disabled = false
+  disabled = false,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [dragPosition, setDragPosition] = useState(dividerPosition);
 
   return (
-    <div 
+    <div
       role="button"
       tabIndex={0}
       className={cn(
@@ -39,36 +39,36 @@ const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
         "hover:border-blue-500 transition-all",
         isHovered ? "border-blue-500" : "border-gray-300",
         disabled && "opacity-75 cursor-not-allowed",
-        className
+        className,
       )}
       onClick={!disabled ? onClick : undefined}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Before Section */}
-      <div 
+      <div
         className="absolute top-0 left-0 h-full bg-red-50 border-r border-red-200 flex flex-col justify-center items-center p-4"
         style={{ width: `${dragPosition}%` }}
       >
-        <h4 
+        <h4
           className="font-bold text-red-800 mb-2 cursor-pointer text-center"
           onClick={(e) => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
               const newTitle = prompt('Novo título "Antes":', beforeTitle);
-              if (newTitle !== null) onPropertyChange('beforeTitle', newTitle);
+              if (newTitle !== null) onPropertyChange("beforeTitle", newTitle);
             }
           }}
         >
           {beforeTitle}
         </h4>
-        <p 
+        <p
           className="text-sm text-red-700 text-center cursor-pointer"
           onClick={(e) => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
               const newText = prompt('Novo texto "Antes":', beforeText);
-              if (newText !== null) onPropertyChange('beforeText', newText);
+              if (newText !== null) onPropertyChange("beforeText", newText);
             }
           }}
         >
@@ -77,29 +77,29 @@ const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
       </div>
 
       {/* After Section */}
-      <div 
+      <div
         className="absolute top-0 right-0 h-full bg-green-50 border-l border-green-200 flex flex-col justify-center items-center p-4"
         style={{ width: `${100 - dragPosition}%` }}
       >
-        <h4 
+        <h4
           className="font-bold text-green-800 mb-2 cursor-pointer text-center"
           onClick={(e) => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
               const newTitle = prompt('Novo título "Depois":', afterTitle);
-              if (newTitle !== null) onPropertyChange('afterTitle', newTitle);
+              if (newTitle !== null) onPropertyChange("afterTitle", newTitle);
             }
           }}
         >
           {afterTitle}
         </h4>
-        <p 
+        <p
           className="text-sm text-green-700 text-center cursor-pointer"
           onClick={(e) => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
               const newText = prompt('Novo texto "Depois":', afterText);
-              if (newText !== null) onPropertyChange('afterText', newText);
+              if (newText !== null) onPropertyChange("afterText", newText);
             }
           }}
         >
@@ -108,9 +108,9 @@ const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
       </div>
 
       {/* Divider */}
-      <div 
+      <div
         className="h-full w-px absolute top-0 m-auto z-30 bg-gradient-to-b from-transparent from-[5%] to-[95%] via-indigo-500 to-transparent"
-        style={{ left: `${dragPosition}%`, top: '0px', zIndex: 40 }}
+        style={{ left: `${dragPosition}%`, top: "0px", zIndex: 40 }}
       >
         <div className="w-36 h-full flex items-center justify-center">
           <div className="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center shadow-lg">

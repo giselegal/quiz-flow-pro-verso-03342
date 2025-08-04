@@ -13,6 +13,7 @@
 ### **SchemaDrivenEditorResponsive** `/src/components/editor/SchemaDrivenEditorResponsive.tsx`
 
 #### ✅ **PONTOS FORTES**:
+
 ```typescript
 ✅ Usa UniversalBlockRenderer (robusto)
 ✅ Sistema drag & drop com DndContext
@@ -23,6 +24,7 @@
 ```
 
 #### ❌ **PONTOS FRACOS**:
+
 ```typescript
 ❌ Sidebar limitada (~15 componentes inline)
 ❌ Sem toolbar (falta funcionalidades de salvamento, preview, etc.)
@@ -34,6 +36,7 @@
 ```
 
 #### 📏 **MÉTRICAS**:
+
 - **Linhas de código**: ~70
 - **Componentes**: 3 (Sidebar, Canvas, PropertyPanel)
 - **Funcionalidades**: 5/10
@@ -44,11 +47,12 @@
 ### **Editor-Fixed** `/src/pages/editor-fixed.tsx`
 
 #### ✅ **PONTOS FORTES**:
+
 ```typescript
 ✅ Toolbar completa com EditorToolbar
 ✅ Sistema de auto-save com debounce
 ✅ Carregamento de funnels por URL
-✅ Integração com schemaDrivenFunnelService  
+✅ Integração com schemaDrivenFunnelService
 ✅ Estados de loading avançados
 ✅ Context específico para Quiz (EditorQuizProvider)
 ✅ Sistema de toast para feedback
@@ -58,6 +62,7 @@
 ```
 
 #### ❌ **PONTOS FRACOS**:
+
 ```typescript
 ❌ EditPreview muito básico (só mostra "Block: {type}")
 ❌ Sem drag & drop
@@ -66,41 +71,48 @@
 ```
 
 #### 📏 **MÉTRICAS**:
+
 - **Linhas de código**: ~140
 - **Componentes**: 5 (Sidebar, Preview, Properties, Toolbar, QuizProvider)
-- **Funcionalidades**: 9/10  
+- **Funcionalidades**: 9/10
 - **Complexidade**: Média-Alta
 
 ---
 
 ## 🎯 COMPARAÇÃO POR CATEGORIA
 
-### **1. ARQUITETURA** 
+### **1. ARQUITETURA**
+
 - **SchemaDriven**: ⭐⭐⭐⭐⭐ (Excelente - limpa e moderna)
 - **Editor-Fixed**: ⭐⭐⭐⭐⭐ (Excelente - bem estruturada)
 - **🏆 EMPATE**: Ambos bem arquitetados
 
 ### **2. FUNCIONALIDADES**
+
 - **SchemaDriven**: ⭐⭐⭐ (Básico - só editor)
 - **Editor-Fixed**: ⭐⭐⭐⭐⭐ (Completo - persistência, loading, auto-save)
 - **🏆 VENCEDOR: Editor-Fixed**
 
 ### **3. SISTEMA DE RENDERIZAÇÃO**
+
 - **SchemaDriven**: ⭐⭐⭐⭐⭐ (UniversalBlockRenderer + Drag&Drop)
 - **Editor-Fixed**: ⭐⭐ (Preview básico)
 - **🏆 VENCEDOR: SchemaDriven**
 
 ### **4. UX/UI**
+
 - **SchemaDriven**: ⭐⭐⭐ (Básico - sem toolbar)
 - **Editor-Fixed**: ⭐⭐⭐⭐⭐ (Completo - toolbar, loading, toasts)
 - **🏆 VENCEDOR: Editor-Fixed**
 
 ### **5. INTEGRAÇÃO COM BACKEND**
+
 - **SchemaDriven**: ⭐ (Zero integração)
 - **Editor-Fixed**: ⭐⭐⭐⭐⭐ (schemaDrivenFunnelService, auto-save)
 - **🏆 VENCEDOR: Editor-Fixed**
 
 ### **6. MANUTENIBILIDADE**
+
 - **SchemaDriven**: ⭐⭐⭐⭐ (Código limpo mas limitado)
 - **Editor-Fixed**: ⭐⭐⭐⭐⭐ (Bem estruturado e extensível)
 - **🏆 VENCEDOR: Editor-Fixed**
@@ -110,6 +122,7 @@
 ## 🔧 COMPONENTES UTILIZADOS
 
 ### **SchemaDriven**:
+
 ```typescript
 ├── ComponentsSidebar (limitado a inline)
 ├── EditorCanvas (drag&drop + UniversalBlockRenderer)
@@ -117,6 +130,7 @@
 ```
 
 ### **Editor-Fixed**:
+
 ```typescript
 ├── ComponentsSidebar (mesmo limitado?)
 ├── EditPreview (muito básico)
@@ -130,6 +144,7 @@
 ## 💡 SOLUÇÃO HÍBRIDA IDEAL
 
 ### **Combinar o melhor dos dois**:
+
 ```typescript
 Editor-Fixed (base) + SchemaDriven (renderização) = EDITOR PERFEITO
 
@@ -138,7 +153,7 @@ Manter de Editor-Fixed:
 ✅ Integração com backend
 ✅ UX completa
 
-Adicionar de SchemaDriven:  
+Adicionar de SchemaDriven:
 ✅ UniversalBlockRenderer
 ✅ Sistema drag & drop
 ✅ EditorCanvas robusto
@@ -151,12 +166,14 @@ Adicionar de SchemaDriven:
 ### **🥇 USAR: Editor-Fixed**
 
 **Razões**:
+
 1. **Mais completo** - Sistema de persistência, auto-save, loading
 2. **Melhor UX** - Toolbar, toasts, feedback visual
 3. **Produção ready** - Integração com backend
 4. **Extensível** - Fácil adicionar melhorias
 
 ### **🔧 MELHORIAS SUGERIDAS**:
+
 1. **Substituir EditPreview** por EditorCanvas do SchemaDriven
 2. **Adicionar drag & drop** do SchemaDriven
 3. **Integrar UniversalBlockRenderer** no lugar do preview básico

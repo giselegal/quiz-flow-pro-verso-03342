@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 interface PageConfig {
   title?: string;
@@ -19,20 +18,23 @@ export const usePageConfig = (pageType: string) => {
       try {
         setConfig(JSON.parse(savedConfig));
       } catch (error) {
-        console.error('Error loading page config:', error);
+        console.error("Error loading page config:", error);
       }
     }
     setLoading(false);
   }, [pageType]);
 
   const updateConfig = (updates: Partial<PageConfig>) => {
-    setConfig(prev => ({ ...prev, ...updates }));
-    localStorage.setItem(`page_config_${pageType}`, JSON.stringify({ ...config, ...updates }));
+    setConfig((prev) => ({ ...prev, ...updates }));
+    localStorage.setItem(
+      `page_config_${pageType}`,
+      JSON.stringify({ ...config, ...updates }),
+    );
   };
 
   return {
     config,
     updateConfig,
-    loading
+    loading,
   };
 };

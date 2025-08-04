@@ -1,7 +1,6 @@
-
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
 interface HeroSectionProps {
   title: string;
@@ -17,7 +16,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   title,
   subtitle,
   image,
-  cta
+  cta,
 }) => {
   return (
     <section className="py-12 px-4 bg-gradient-to-b from-[#FAF9F7] to-white">
@@ -27,13 +26,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <h1 className="text-4xl md:text-5xl font-playfair text-[#432818]">
               {title}
             </h1>
-            <p className="text-xl text-[#8F7A6A]">
-              {subtitle}
-            </p>
-            <Button 
+            <p className="text-xl text-[#8F7A6A]">{subtitle}</p>
+            <Button
               size="lg"
               className="bg-[#B89B7A] hover:bg-[#8F7A6A] text-white"
-              onClick={() => window.location.href = cta.url}
+              onClick={() => (window.location.href = cta.url)}
             >
               {cta.text}
               <ArrowRight className="ml-2 h-4 w-4" />
@@ -41,8 +38,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
           {image && (
             <div className="relative">
-              <img 
-                src={image} 
+              <img
+                src={image}
                 alt="Hero Image"
                 className="rounded-lg shadow-lg"
               />

@@ -512,7 +512,7 @@ const handleCTAClick = (buttonId: string, action: string = "Comprar Agora") => {
   return (event: React.MouseEvent) => {
     event.preventDefault();
     const emailInput = document.querySelector(
-      'input[type="email"]'
+      'input[type="email"]',
     ) as HTMLInputElement;
     trackButtonClick(buttonId, action, "quiz_offer_page");
 
@@ -738,7 +738,7 @@ const DescubraSeuEstilo: React.FC = () => {
         BONUS_2_VISAGISM_IMAGE_URL,
         GUARANTEE_IMAGE_URL,
       ],
-      { quality: 95 }
+      { quality: 95 },
     );
 
     if (typeof window !== "undefined" && "performance" in window) {
@@ -767,16 +767,25 @@ const DescubraSeuEstilo: React.FC = () => {
               </div>
 
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-playfair text-[#432818] text-center md:text-left leading-tight">
-                <span style={{color: '#B89B7A', fontWeight: 700}}>Chega</span> de um guarda-roupa lotado e da sensação de que <span style={{color: '#B89B7A', fontWeight: 700}}>nada combina com você.</span>
+                <span style={{ color: "#B89B7A", fontWeight: 700 }}>Chega</span>{" "}
+                de um guarda-roupa lotado e da sensação de que{" "}
+                <span style={{ color: "#B89B7A", fontWeight: 700 }}>
+                  nada combina com você.
+                </span>
               </h1>
 
               <p className="text-lg md:text-xl text-[#8F7A6A] text-center md:text-left">
-                Em poucos minutos, descubra seu <strong style={{color: '#B89B7A'}}>Estilo Predominante</strong> — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.
+                Em poucos minutos, descubra seu{" "}
+                <strong style={{ color: "#B89B7A" }}>
+                  Estilo Predominante
+                </strong>{" "}
+                — e aprenda a montar looks que realmente refletem sua essência,
+                com praticidade e confiança.
               </p>
 
               <div className="flex justify-center md:justify-start">
                 <Button
-                  onClick={() => window.location.href = '/editor-fixed'}
+                  onClick={() => (window.location.href = "/editor-fixed")}
                   size="lg"
                   className="bg-[#B89B7A] hover:bg-[#A68A6A] text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
                 >
@@ -1151,7 +1160,7 @@ const DescubraSeuEstilo: React.FC = () => {
           <Button
             onClick={handleCTAClick(
               "final-cta",
-              "Quero Transformar Minha Imagem"
+              "Quero Transformar Minha Imagem",
             )}
             size="lg"
             className="bg-[#B89B7A] hover:bg-[#A68A6A] text-white px-8 py-4 text-xl font-semibold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 w-full md:w-auto"

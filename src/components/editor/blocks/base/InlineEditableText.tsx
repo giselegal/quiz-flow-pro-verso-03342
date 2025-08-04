@@ -1,6 +1,5 @@
-
-import React, { useState, useEffect, useRef } from 'react';
-import { cn } from '@/lib/utils';
+import React, { useState, useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
 
 export interface InlineEditableTextProps {
   text?: string;
@@ -8,10 +7,10 @@ export interface InlineEditableTextProps {
   onChange: (value: string) => void;
   placeholder?: string;
   className?: string;
-  fontSize?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl';
-  fontWeight?: 'light' | 'normal' | 'medium' | 'semibold' | 'bold';
+  fontSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl";
+  fontWeight?: "light" | "normal" | "medium" | "semibold" | "bold";
   color?: string;
-  textAlign?: 'left' | 'center' | 'right' | 'justify';
+  textAlign?: "left" | "center" | "right" | "justify";
   multiline?: boolean;
   maxLength?: number;
   disabled?: boolean;
@@ -32,12 +31,12 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   text,
   value,
   onChange,
-  placeholder = 'Digite aqui...',
-  className = '',
-  fontSize = 'base',
-  fontWeight = 'normal',
+  placeholder = "Digite aqui...",
+  className = "",
+  fontSize = "base",
+  fontWeight = "normal",
   color,
-  textAlign = 'left',
+  textAlign = "left",
   multiline = false,
   maxLength,
   disabled = false,
@@ -50,11 +49,11 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   minHeight,
   maxWidth,
   responsive,
-  maxLines = 3
+  maxLines = 3,
 }) => {
   // Compatibilidade: usar value se fornecido, senão text
-  const displayText = value !== undefined ? value : text || '';
-  
+  const displayText = value !== undefined ? value : text || "";
+
   const [isEditing, setIsEditing] = useState(editingProp);
   const [internalValue, setInternalValue] = useState(displayText);
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
@@ -80,7 +79,9 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const newValue = e.target.value;
     if (!maxLength || newValue.length <= maxLength) {
       setInternalValue(newValue);
@@ -94,55 +95,55 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !multiline) {
+    if (e.key === "Enter" && !multiline) {
       e.preventDefault();
       handleBlur();
     }
-    if (e.key === 'Escape') {
+    if (e.key === "Escape") {
       setInternalValue(displayText);
       setIsEditing(false);
     }
   };
 
   const fontSizeClasses = {
-    'xs': 'text-xs',
-    'sm': 'text-sm',
-    'base': 'text-base',
-    'lg': 'text-lg',
-    'xl': 'text-xl',
-    '2xl': 'text-2xl',
-    '3xl': 'text-3xl'
+    xs: "text-xs",
+    sm: "text-sm",
+    base: "text-base",
+    lg: "text-lg",
+    xl: "text-xl",
+    "2xl": "text-2xl",
+    "3xl": "text-3xl",
   };
 
   const fontWeightClasses = {
-    'light': 'font-light',
-    'normal': 'font-normal',
-    'medium': 'font-medium',
-    'semibold': 'font-semibold',
-    'bold': 'font-bold'
+    light: "font-light",
+    normal: "font-normal",
+    medium: "font-medium",
+    semibold: "font-semibold",
+    bold: "font-bold",
   };
 
   const textAlignClasses = {
-    'left': 'text-left',
-    'center': 'text-center',
-    'right': 'text-right',
-    'justify': 'text-justify'
+    left: "text-left",
+    center: "text-center",
+    right: "text-right",
+    justify: "text-justify",
   };
 
   const baseClasses = cn(
-    'transition-all duration-200 outline-none',
+    "transition-all duration-200 outline-none",
     fontSizeClasses[fontSize],
     fontWeightClasses[fontWeight],
     textAlignClasses[textAlign],
-    disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
-    isEditing ? 'cursor-text' : '',
-    className
+    disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer",
+    isEditing ? "cursor-text" : "",
+    className,
   );
 
   const displayValue = internalValue || placeholder;
 
   if (isEditing) {
-    const Component = multiline ? 'textarea' : 'input';
+    const Component = multiline ? "textarea" : "input";
     return (
       <Component
         ref={inputRef as any}
@@ -153,14 +154,14 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
         onFocus={onFocus}
         className={cn(
           baseClasses,
-          'border-none bg-transparent resize-none',
-          multiline ? 'min-h-[1.5em]' : 'h-auto'
+          "border-none bg-transparent resize-none",
+          multiline ? "min-h-[1.5em]" : "h-auto",
         )}
         style={{
           color,
           minHeight,
           maxWidth,
-          ...style
+          ...style,
         }}
         placeholder={placeholder}
         maxLength={maxLength}
@@ -172,13 +173,13 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
 
   return (
     <div
-      className={cn(baseClasses, 'min-h-[1em]')}
+      className={cn(baseClasses, "min-h-[1em]")}
       onClick={handleClick}
       style={{
         color,
         minHeight,
         maxWidth,
-        ...style
+        ...style,
       }}
     >
       {displayValue}

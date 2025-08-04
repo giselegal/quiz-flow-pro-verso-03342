@@ -1,14 +1,13 @@
+import { ImageCacheEntry } from "./types";
 
-import { ImageCacheEntry } from './types';
-
-const IMAGE_CACHE_KEY = 'image_cache';
+const IMAGE_CACHE_KEY = "image_cache";
 
 export const getImageCache = (): { [url: string]: ImageCacheEntry } => {
   try {
     const cache = localStorage.getItem(IMAGE_CACHE_KEY);
     return cache ? JSON.parse(cache) : {};
   } catch (error) {
-    console.warn('Could not load image cache from localStorage:', error);
+    console.warn("Could not load image cache from localStorage:", error);
     return {};
   }
 };
@@ -27,7 +26,7 @@ export const getImageFromCache = (url: string): ImageCacheEntry | undefined => {
     try {
       localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
     } catch (error) {
-      console.warn('Could not update cache timestamp:', error);
+      console.warn("Could not update cache timestamp:", error);
     }
   }
   return entry;
@@ -39,31 +38,37 @@ export const addToCache = (url: string, metadata: any): ImageCacheEntry => {
     timestamp: Date.now(),
     metadata,
     lastAccessed: Date.now(),
-    loadStatus: 'loaded'
+    loadStatus: "loaded",
   };
-  
+
   try {
     const cache = getImageCache();
     cache[url] = cacheEntry;
-    localStorage.setItem('image_cache', JSON.stringify(cache));
+    localStorage.setItem("image_cache", JSON.stringify(cache));
   } catch (error) {
-    console.warn('Could not save to cache:', error);
+    console.warn("Could not save to cache:", error);
   }
-  
+
   return cacheEntry;
 };
 
-export const updateImageCache = (url: string, updates: Partial<ImageCacheEntry>): void => {
+export const updateImageCache = (
+  url: string,
+  updates: Partial<ImageCacheEntry>,
+): void => {
   try {
     const cache = getImageCache();
     cache[url] = { ...cache[url], ...updates };
     localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
   } catch (error) {
-    console.warn('Could not update image cache:', error);
+    console.warn("Could not update image cache:", error);
   }
 };
 
-export const hasImageWithStatus = (url: string, status: 'loading' | 'loaded' | 'error'): boolean => {
+export const hasImageWithStatus = (
+  url: string,
+  status: "loading" | "loaded" | "error",
+): boolean => {
   const entry = getImageFromCache(url);
   return entry?.loadStatus === status || false;
 };
@@ -72,7 +77,7 @@ export const clearImageCache = (): void => {
   try {
     localStorage.removeItem(IMAGE_CACHE_KEY);
   } catch (error) {
-    console.warn('Could not clear image cache:', error);
+    console.warn("Could not clear image cache:", error);
   }
 };
 
@@ -82,6 +87,6 @@ export const removeImageFromCache = (url: string): void => {
     delete cache[url];
     localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
   } catch (error) {
-    console.warn('Could not remove image from cache:', error);
+    console.warn("Could not remove image from cache:", error);
   }
 };

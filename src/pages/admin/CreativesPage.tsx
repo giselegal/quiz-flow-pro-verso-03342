@@ -1,8 +1,7 @@
-
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Plus, Image, Video, FileText } from 'lucide-react';
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Plus, Image, Video, FileText } from "lucide-react";
 
 const CreativesPage: React.FC = () => {
   return (
@@ -10,7 +9,10 @@ const CreativesPage: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-[#432818]" style={{ fontFamily: 'Playfair Display, serif' }}>
+          <h1
+            className="text-3xl font-bold text-[#432818]"
+            style={{ fontFamily: "Playfair Display, serif" }}
+          >
             Biblioteca de Criativos
           </h1>
           <p className="text-[#8F7A6A] mt-2">
@@ -34,9 +36,7 @@ const CreativesPage: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-[#432818]">47</div>
-            <p className="text-xs text-[#8F7A6A]">
-              arquivos de imagem
-            </p>
+            <p className="text-xs text-[#8F7A6A]">arquivos de imagem</p>
           </CardContent>
         </Card>
 
@@ -49,9 +49,7 @@ const CreativesPage: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-[#432818]">12</div>
-            <p className="text-xs text-[#8F7A6A]">
-              arquivos de vídeo
-            </p>
+            <p className="text-xs text-[#8F7A6A]">arquivos de vídeo</p>
           </CardContent>
         </Card>
 
@@ -64,9 +62,7 @@ const CreativesPage: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-[#432818]">8</div>
-            <p className="text-xs text-[#8F7A6A]">
-              documentos
-            </p>
+            <p className="text-xs text-[#8F7A6A]">documentos</p>
           </CardContent>
         </Card>
       </div>
@@ -79,7 +75,10 @@ const CreativesPage: React.FC = () => {
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center border border-[#D4C4A0]">
+              <div
+                key={i}
+                className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center border border-[#D4C4A0]"
+              >
                 <Image className="w-8 h-8 text-[#B89B7A]" />
               </div>
             ))}

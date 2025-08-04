@@ -1,49 +1,57 @@
 // 🎯 HOOKS CENTRALIZADOS - Consolidação Final
 
 // ✅ HOOKS ESSENCIAIS (validados)
-export { useEditor } from './useEditor';
-export { useToast } from './use-toast';
-export { useIsMobile } from './use-mobile';
-export { useDebounce } from './useDebounce';
+export { useEditor } from "./useEditor";
+export { useToast } from "./use-toast";
+export { useIsMobile } from "./use-mobile";
+export { useDebounce } from "./useDebounce";
 
 // ✅ QUIZ HOOKS (validados)
-export { useQuiz } from './useQuiz';
-export { useQuizBuilder } from './useQuizBuilder';
-export { useQuizConfig } from './useQuizConfig';
-export { useQuizLogic } from './useQuizLogic';
-export { useQuizResult } from './useQuizResult';
-export { useQuizStages } from './useQuizStages';
-export { useQuizTracking } from './useQuizTracking';
-export { useQuizResultConfig } from './useQuizResultConfig';
+export { useQuiz } from "./useQuiz";
+export { useQuizBuilder } from "./useQuizBuilder";
+export { useQuizConfig } from "./useQuizConfig";
+export { useQuizLogic } from "./useQuizLogic";
+export { useQuizResult } from "./useQuizResult";
+export { useQuizStages } from "./useQuizStages";
+export { useQuizTracking } from "./useQuizTracking";
+export { useQuizResultConfig } from "./useQuizResultConfig";
 
 // ✅ EDITOR HOOKS (validados)
-export { useAutoSaveDebounce } from './useAutoSaveDebounce';
-export { usePropertyHistory } from './usePropertyHistory';
-export { useKeyboardShortcuts } from './useKeyboardShortcuts';
-export { useBlockForm } from './useBlockForm';
+export { useAutoSaveDebounce } from "./useAutoSaveDebounce";
+export { usePropertyHistory } from "./usePropertyHistory";
+export { useKeyboardShortcuts } from "./useKeyboardShortcuts";
+export { useBlockForm } from "./useBlockForm";
 
 // ✅ UTILITY HOOKS (validados)
-export { useImageBank } from './useImageBank';
-export { useUtmParameters } from './useUtmParameters';
-export { useDynamicData } from './useDynamicData';
+export { useImageBank } from "./useImageBank";
+export { useUtmParameters } from "./useUtmParameters";
+export { useDynamicData } from "./useDynamicData";
 
 // ✅ PERFORMANCE HOOKS (otimização)
-export { useGlobalLoading } from './useGlobalLoading';
-export { usePerformanceOptimization, useComponentOptimization } from './usePerformanceOptimization';
+export { useGlobalLoading } from "./useGlobalLoading";
+export {
+  usePerformanceOptimization,
+  useComponentOptimization,
+} from "./usePerformanceOptimization";
 
 // ✅ MEMORY & MONITORING HOOKS
-export { useMemoryCleanup, useWeakRef, useMemoryMonitor, useHeavyCleanup } from '../utils/memoryManagement';
-export { usePerformanceMonitoring } from '../utils/performanceMonitoring';
+export {
+  useMemoryCleanup,
+  useWeakRef,
+  useMemoryMonitor,
+  useHeavyCleanup,
+} from "../utils/memoryManagement";
+export { usePerformanceMonitoring } from "../utils/performanceMonitoring";
 
 // ✅ A/B TESTING
-export { useABTest } from './useABTest';
+export { useABTest } from "./useABTest";
 
 // ✅ EDITOR SUB-HOOKS (quando necessário)
-export { useEditorActions } from './editor/useEditorActions';
-export { useEditorBlocks } from './editor/useEditorBlocks';
-export { useEditorHistory } from './editor/useEditorHistory';
-export { useEditorPersistence } from './editor/useEditorPersistence';
-export { useEditorTemplates } from './editor/useEditorTemplates';
-export { useEditorTheme } from './editor/useEditorTheme';
-export { useBlockOperations } from './editor/useBlockOperations';
-export { useAutoSaveWithDebounce } from './editor/useAutoSaveWithDebounce';
+export { useEditorActions } from "./editor/useEditorActions";
+export { useEditorBlocks } from "./editor/useEditorBlocks";
+export { useEditorHistory } from "./editor/useEditorHistory";
+export { useEditorPersistence } from "./editor/useEditorPersistence";
+export { useEditorTemplates } from "./editor/useEditorTemplates";
+export { useEditorTheme } from "./editor/useEditorTheme";
+export { useBlockOperations } from "./editor/useBlockOperations";
+export { useAutoSaveWithDebounce } from "./editor/useAutoSaveWithDebounce";

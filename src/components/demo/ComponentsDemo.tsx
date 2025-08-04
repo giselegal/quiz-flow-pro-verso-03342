@@ -1,96 +1,102 @@
 /**
  * Demonstração do Sistema Modernizado de Componentes
- * 
+ *
  * Este arquivo mostra como usar os novos componentes criados
  */
 
-import React, { useState } from 'react';
-import { ModernPropertyPanel } from '@/components/editor/ModernPropertyPanel';
-import { Block } from '@/hooks/useBlockForm';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
+import React, { useState } from "react";
+import { ModernPropertyPanel } from "@/components/editor/ModernPropertyPanel";
+import { Block } from "@/hooks/useBlockForm";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
 // Dados de exemplo para teste
 const sampleBlocks: Block[] = [
   {
-    id: 'text-1',
-    type: 'text',
+    id: "text-1",
+    type: "text",
     properties: {
-      content: 'Este é um texto de exemplo',
+      content: "Este é um texto de exemplo",
       fontSize: 16,
-      textColor: '#000000',
-      textAlign: 'left'
-    }
+      textColor: "#000000",
+      textAlign: "left",
+    },
   },
   {
-    id: 'button-1',
-    type: 'button',
+    id: "button-1",
+    type: "button",
     properties: {
-      text: 'Clique Aqui',
-      link: 'https://exemplo.com',
-      backgroundColor: '#3b82f6',
-      textColor: '#ffffff',
+      text: "Clique Aqui",
+      link: "https://exemplo.com",
+      backgroundColor: "#3b82f6",
+      textColor: "#ffffff",
       paddingX: 16,
       paddingY: 8,
       borderRadius: 6,
-      fullWidth: false
-    }
+      fullWidth: false,
+    },
   },
   {
-    id: 'quiz-step-1',
-    type: 'quiz-step',
+    id: "quiz-step-1",
+    type: "quiz-step",
     properties: {
       headerEnabled: true,
-      logoUrl: '',
+      logoUrl: "",
       showProgressBar: true,
       showBackButton: true,
-      questionText: 'Qual é sua cor favorita?',
-      questionTextColor: '#000000',
+      questionText: "Qual é sua cor favorita?",
+      questionTextColor: "#000000",
       questionTextSize: 24,
-      questionTextAlign: 'center',
-      layout: '2-columns',
-      direction: 'vertical',
-      disposition: 'image-text',
+      questionTextAlign: "center",
+      layout: "2-columns",
+      direction: "vertical",
+      disposition: "image-text",
       options: [
-        { id: '1', text: 'Azul', imageUrl: '', value: 'blue' },
-        { id: '2', text: 'Vermelho', imageUrl: '', value: 'red' },
-        { id: '3', text: 'Verde', imageUrl: '', value: 'green' }
+        { id: "1", text: "Azul", imageUrl: "", value: "blue" },
+        { id: "2", text: "Vermelho", imageUrl: "", value: "red" },
+        { id: "3", text: "Verde", imageUrl: "", value: "green" },
       ],
       isMultipleChoice: false,
       isRequired: true,
       autoProceed: false,
-      borderRadius: 'medium',
-      boxShadow: 'medium',
-      spacing: 'medium',
-      detail: 'none',
-      optionStyle: 'card',
-      primaryColor: '#3b82f6',
-      secondaryColor: '#ffffff',
-      borderColor: '#e5e7eb',
-      maxWidth: 100
-    }
-  }
+      borderRadius: "medium",
+      boxShadow: "medium",
+      spacing: "medium",
+      detail: "none",
+      optionStyle: "card",
+      primaryColor: "#3b82f6",
+      secondaryColor: "#ffffff",
+      borderColor: "#e5e7eb",
+      maxWidth: 100,
+    },
+  },
 ];
 
 export function ComponentsDemo() {
-  const [selectedBlock, setSelectedBlock] = useState<Block | null>(sampleBlocks[0]);
+  const [selectedBlock, setSelectedBlock] = useState<Block | null>(
+    sampleBlocks[0],
+  );
   const [blocks, setBlocks] = useState<Block[]>(sampleBlocks);
 
   const handleBlockUpdate = (updates: Partial<Block>) => {
     if (!selectedBlock) return;
 
-    setBlocks(prevBlocks => 
-      prevBlocks.map(block => 
-        block.id === selectedBlock.id 
-          ? { ...block, ...updates }
-          : block
-      )
+    setBlocks((prevBlocks) =>
+      prevBlocks.map((block) =>
+        block.id === selectedBlock.id ? { ...block, ...updates } : block,
+      ),
     );
 
     // Atualiza o selectedBlock também
-    setSelectedBlock(prev => prev ? { ...prev, ...updates } : null);
+    setSelectedBlock((prev) => (prev ? { ...prev, ...updates } : null));
   };
 
   return (
@@ -103,19 +109,22 @@ export function ComponentsDemo() {
               Demo - Sistema Modernizado
             </h2>
             <p className="text-sm text-gray-600">
-              Teste os novos componentes criados com Shadcn UI + React Hook Form + Zod
+              Teste os novos componentes criados com Shadcn UI + React Hook Form
+              + Zod
             </p>
           </div>
-          
+
           <Separator />
-          
+
           <div className="space-y-2">
-            <h3 className="text-sm font-medium text-gray-700">Blocos Disponíveis</h3>
+            <h3 className="text-sm font-medium text-gray-700">
+              Blocos Disponíveis
+            </h3>
             {blocks.map((block) => (
-              <Card 
+              <Card
                 key={block.id}
                 className={`cursor-pointer transition-all ${
-                  selectedBlock?.id === block.id ? 'ring-2 ring-blue-500' : ''
+                  selectedBlock?.id === block.id ? "ring-2 ring-blue-500" : ""
                 }`}
                 onClick={() => setSelectedBlock(block)}
               >
@@ -137,7 +146,9 @@ export function ComponentsDemo() {
           <Separator />
 
           <div className="space-y-2">
-            <h3 className="text-sm font-medium text-gray-700">Funcionalidades</h3>
+            <h3 className="text-sm font-medium text-gray-700">
+              Funcionalidades
+            </h3>
             <div className="text-xs space-y-1">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
@@ -172,7 +183,7 @@ export function ComponentsDemo() {
       <div className="w-96 border-l border-gray-200 bg-white p-4">
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-gray-900">Preview</h3>
-          
+
           {selectedBlock && (
             <Card>
               <CardHeader>
@@ -208,14 +219,14 @@ export function ComponentsDemo() {
 
 function getBlockDescription(block: Block): string {
   switch (block.type) {
-    case 'text':
-      return `"${(block.properties.content || '').substring(0, 30)}..."`;
-    case 'button':
+    case "text":
+      return `"${(block.properties.content || "").substring(0, 30)}..."`;
+    case "button":
       return `Botão: "${block.properties.text}"`;
-    case 'quiz-step':
-      return `Quiz: "${(block.properties.questionText || '').substring(0, 30)}..."`;
+    case "quiz-step":
+      return `Quiz: "${(block.properties.questionText || "").substring(0, 30)}..."`;
     default:
-      return 'Bloco personalizado';
+      return "Bloco personalizado";
   }
 }
 

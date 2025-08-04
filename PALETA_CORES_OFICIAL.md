@@ -3,6 +3,7 @@
 ## 🎯 **CORES APROVADAS - USO EXCLUSIVO**
 
 ### **1. Cores Principais da Marca**
+
 ```css
 /* 🤎 Marrom Principal */
 #B89B7A  /* text-brand, bg-brand */
@@ -18,16 +19,30 @@
 ```
 
 ### **2. Classes CSS Oficiais**
+
 ```css
-.text-brand { color: #B89B7A; }
-.text-brand-dark { color: #432818; }
-.bg-brand { background-color: #B89B7A; }
-.bg-brand-dark { background-color: #432818; }
-.bg-brand-gradient { background: linear-gradient(135deg, #B89B7A 0%, #8B7355 100%); }
-.text-brand-gradient { /* Gradiente de texto */ }
+.text-brand {
+  color: #b89b7a;
+}
+.text-brand-dark {
+  color: #432818;
+}
+.bg-brand {
+  background-color: #b89b7a;
+}
+.bg-brand-dark {
+  background-color: #432818;
+}
+.bg-brand-gradient {
+  background: linear-gradient(135deg, #b89b7a 0%, #8b7355 100%);
+}
+.text-brand-gradient {
+  /* Gradiente de texto */
+}
 ```
 
 ### **3. Tons Neutros Permitidos (Derivados)**
+
 ```css
 /* 🎨 Variações do Marrom com Opacidade */
 rgba(184, 155, 122, 0.1)  /* bg-brand/10 - Fundos sutis */
@@ -46,6 +61,7 @@ rgba(67, 40, 24, 0.3)     /* Cinza médio */
 ## ❌ **CORES PROIBIDAS - REMOÇÃO OBRIGATÓRIA**
 
 ### **Cores que devem ser REMOVIDAS:**
+
 - 🟣 **Purple** (purple-50, purple-500, purple-600, etc.)
 - 🔵 **Blue** (blue-50, blue-500, blue-600, etc.)
 - 🟢 **Green** (green-50, green-500, green-600, etc.)
@@ -58,6 +74,7 @@ rgba(67, 40, 24, 0.3)     /* Cinza médio */
 ## 🔄 **MAPEAMENTO DE SUBSTITUIÇÕES**
 
 ### **Estados de Interação:**
+
 ```css
 /* ✅ CORRETO - Hover States */
 hover:bg-brand/20        /* Hover sutil */
@@ -76,6 +93,7 @@ focus:border-brand      /* Borda em foco */
 ```
 
 ### **Substituições Específicas:**
+
 ```css
 /* 🔴 ANTES → ✅ DEPOIS */
 purple-500    → brand
@@ -95,6 +113,7 @@ red-50        → brand/10
 ## 🎨 **GUIA DE USO POR COMPONENTE**
 
 ### **1. Botões**
+
 ```css
 /* Botão Principal */
 bg-brand text-white hover:bg-brand/90
@@ -107,6 +126,7 @@ border-brand-dark text-brand-dark hover:bg-brand-dark/10
 ```
 
 ### **2. Cards e Painéis**
+
 ```css
 /* Card Normal */
 border-brand/20 bg-white
@@ -119,6 +139,7 @@ hover:border-brand/40 hover:shadow-lg
 ```
 
 ### **3. Estados de Seleção**
+
 ```css
 /* Selecionado */
 border-brand bg-brand/10 ring-2 ring-brand/30
@@ -135,14 +156,16 @@ focus:ring-2 focus:ring-brand/50
 ## 🛠️ **IMPLEMENTAÇÃO PRIORITÁRIA**
 
 ### **Arquivos para Correção Imediata:**
+
 1. `/src/pages/editor-fixed.tsx`
 2. `/src/components/editor/funnel/FunnelStagesPanel.tsx`
 3. `/src/components/editor/blocks/*.tsx`
 4. `/src/components/editor/properties/*.tsx`
 
 ### **Checklist de Validação:**
+
 - [ ] ❌ Purple removido
-- [ ] ❌ Blue removido  
+- [ ] ❌ Blue removido
 - [ ] ❌ Green removido
 - [ ] ❌ Orange removido
 - [ ] ❌ Red removido

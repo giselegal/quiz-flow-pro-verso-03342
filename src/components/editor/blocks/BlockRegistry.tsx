@@ -1,23 +1,23 @@
-import React from 'react';
+import React from "react";
 
 // Import all block components
-import ProductCarouselBlock from './ProductCarouselBlock';
-import BeforeAfterBlock from './BeforeAfterBlock';
-import BenefitsListBlock from './BenefitsListBlock';
-import PriceComparisonBlock from './PriceComparisonBlock';
-import CountdownTimerBlock from './CountdownTimerBlock';
-import FAQBlock from './FAQBlock';
-import TestimonialsBlock from './TestimonialsBlock';
-import ComparisonTableBlock from './ComparisonTableBlock';
-import SocialProofBlock from './SocialProofBlock';
-import AdvancedCTABlock from './AdvancedCTABlock';
-import StatsMetricsBlock from './StatsMetricsBlock';
-import QuizQuestionBlock from './QuizQuestionBlock';
+import ProductCarouselBlock from "./ProductCarouselBlock";
+import BeforeAfterBlock from "./BeforeAfterBlock";
+import BenefitsListBlock from "./BenefitsListBlock";
+import PriceComparisonBlock from "./PriceComparisonBlock";
+import CountdownTimerBlock from "./CountdownTimerBlock";
+import FAQBlock from "./FAQBlock";
+import TestimonialsBlock from "./TestimonialsBlock";
+import ComparisonTableBlock from "./ComparisonTableBlock";
+import SocialProofBlock from "./SocialProofBlock";
+import AdvancedCTABlock from "./AdvancedCTABlock";
+import StatsMetricsBlock from "./StatsMetricsBlock";
+import QuizQuestionBlock from "./QuizQuestionBlock";
 
 // Novos componentes independentes
-import ProgressBarStepBlock from './ProgressBarStepBlock';
-import AnimatedStatCounterBlock from './AnimatedStatCounterBlock';
-import QuizOfferCountdownBlock from './QuizOfferCountdownBlock';
+import ProgressBarStepBlock from "./ProgressBarStepBlock";
+import AnimatedStatCounterBlock from "./AnimatedStatCounterBlock";
+import QuizOfferCountdownBlock from "./QuizOfferCountdownBlock";
 
 // Legacy blocks - can be imported if they exist
 // import OptionsGridBlock from './OptionsGridBlock';
@@ -28,26 +28,26 @@ export type BlockComponent = React.FC<any>;
 // Registry of all available block components
 export const BLOCK_COMPONENTS: Record<string, BlockComponent> = {
   // Modern blocks
-  'product-carousel': ProductCarouselBlock as BlockComponent,
-  'before-after': BeforeAfterBlock as BlockComponent,
-  'benefits-list': BenefitsListBlock as BlockComponent,
-  'price-comparison': PriceComparisonBlock as BlockComponent,
-  'countdown-timer': CountdownTimerBlock as BlockComponent,
-  'faq-section': FAQBlock as BlockComponent,
-  'testimonials-grid': TestimonialsBlock as BlockComponent,
-  'comparison-table': ComparisonTableBlock as BlockComponent,
-  'social-proof': SocialProofBlock as BlockComponent,
-  'advanced-cta': AdvancedCTABlock as BlockComponent,
-  'stats-metrics': StatsMetricsBlock as BlockComponent,
-  
+  "product-carousel": ProductCarouselBlock as BlockComponent,
+  "before-after": BeforeAfterBlock as BlockComponent,
+  "benefits-list": BenefitsListBlock as BlockComponent,
+  "price-comparison": PriceComparisonBlock as BlockComponent,
+  "countdown-timer": CountdownTimerBlock as BlockComponent,
+  "faq-section": FAQBlock as BlockComponent,
+  "testimonials-grid": TestimonialsBlock as BlockComponent,
+  "comparison-table": ComparisonTableBlock as BlockComponent,
+  "social-proof": SocialProofBlock as BlockComponent,
+  "advanced-cta": AdvancedCTABlock as BlockComponent,
+  "stats-metrics": StatsMetricsBlock as BlockComponent,
+
   // Quiz blocks
-  'quiz-question': QuizQuestionBlock as BlockComponent,
-  
+  "quiz-question": QuizQuestionBlock as BlockComponent,
+
   // Novos componentes independentes
-  'progress-bar-step': ProgressBarStepBlock as BlockComponent,
-  'animated-stat-counter': AnimatedStatCounterBlock as BlockComponent,
-  'quiz-offer-countdown': QuizOfferCountdownBlock as BlockComponent,
-  
+  "progress-bar-step": ProgressBarStepBlock as BlockComponent,
+  "animated-stat-counter": AnimatedStatCounterBlock as BlockComponent,
+  "quiz-offer-countdown": QuizOfferCountdownBlock as BlockComponent,
+
   // Legacy blocks (if they exist)
   // 'options-grid': OptionsGridBlock,
 } as const;
@@ -86,13 +86,15 @@ export const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
   ...props
 }) => {
   const Component = getBlockComponent(type);
-  
+
   if (!Component) {
     return (
       <div className="p-6 bg-yellow-50 border border-yellow-200 rounded-lg">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-4 h-4 bg-yellow-500 rounded-full" />
-          <h3 className="font-medium text-yellow-800">Componente não encontrado</h3>
+          <h3 className="font-medium text-yellow-800">
+            Componente não encontrado
+          </h3>
         </div>
         <p className="text-sm text-yellow-700">
           O tipo de bloco "{type}" não está registrado no sistema.
@@ -103,7 +105,7 @@ export const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
       </div>
     );
   }
-  
+
   return <Component {...props} />;
 };
 
@@ -111,46 +113,43 @@ export const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
 export function useBlockComponent(type: string) {
   const component = getBlockComponent(type);
   const isRegistered = isBlockTypeRegistered(type);
-  
+
   return {
     component,
     isRegistered,
-    render: (props: any) => (
-      <UniversalBlockRenderer type={type} {...props} />
-    )
+    render: (props: any) => <UniversalBlockRenderer type={type} {...props} />,
   };
 }
 
 // Categories for organizing blocks in the UI
 export const BLOCK_CATEGORIES = {
-  'Vendas': [
-    'product-carousel',
-    'price-comparison', 
-    'comparison-table',
-    'advanced-cta'
+  Vendas: [
+    "product-carousel",
+    "price-comparison",
+    "comparison-table",
+    "advanced-cta",
   ] as string[],
-  'Credibilidade': [
-    'testimonials-grid',
-    'social-proof',
-    'before-after',
-    'stats-metrics'
+  Credibilidade: [
+    "testimonials-grid",
+    "social-proof",
+    "before-after",
+    "stats-metrics",
   ] as string[],
-  'Conteúdo': [
-    'benefits-list',
-    'faq-section'
-  ] as string[],
-  'Urgência': [
-    'countdown-timer'
-  ] as string[]
+  Conteúdo: ["benefits-list", "faq-section"] as string[],
+  Urgência: ["countdown-timer"] as string[],
 } as const;
 
 // Function to get blocks by category
-export function getBlocksByCategory(category: keyof typeof BLOCK_CATEGORIES): string[] {
+export function getBlocksByCategory(
+  category: keyof typeof BLOCK_CATEGORIES,
+): string[] {
   return [...(BLOCK_CATEGORIES[category] || [])];
 }
 
 // Function to get category for a block type
-export function getBlockCategory(type: string): keyof typeof BLOCK_CATEGORIES | null {
+export function getBlockCategory(
+  type: string,
+): keyof typeof BLOCK_CATEGORIES | null {
   for (const [category, blocks] of Object.entries(BLOCK_CATEGORIES)) {
     if (blocks.includes(type)) {
       return category as keyof typeof BLOCK_CATEGORIES;
@@ -171,78 +170,78 @@ export interface BlockMetadata {
 }
 
 export const BLOCK_METADATA: Record<string, BlockMetadata> = {
-  'product-carousel': {
-    name: 'Carrossel de Produtos',
-    description: 'Showcase interativo de produtos com animações e filtros',
-    icon: 'ShoppingCart',
+  "product-carousel": {
+    name: "Carrossel de Produtos",
+    description: "Showcase interativo de produtos com animações e filtros",
+    icon: "ShoppingCart",
     isNew: true,
-    tags: ['vendas', 'produtos', 'carrossel']
+    tags: ["vendas", "produtos", "carrossel"],
   },
-  'before-after': {
-    name: 'Antes e Depois',
-    description: 'Demonstre transformações com comparações visuais',
-    icon: 'ArrowRightLeft',
-    tags: ['transformação', 'comparação', 'visual']
+  "before-after": {
+    name: "Antes e Depois",
+    description: "Demonstre transformações com comparações visuais",
+    icon: "ArrowRightLeft",
+    tags: ["transformação", "comparação", "visual"],
   },
-  'benefits-list': {
-    name: 'Lista de Benefícios',
-    description: 'Liste vantagens e benefícios de forma atrativa',
-    icon: 'CheckCircle',
-    tags: ['benefícios', 'lista', 'vantagens']
+  "benefits-list": {
+    name: "Lista de Benefícios",
+    description: "Liste vantagens e benefícios de forma atrativa",
+    icon: "CheckCircle",
+    tags: ["benefícios", "lista", "vantagens"],
   },
-  'price-comparison': {
-    name: 'Comparação de Preços',
-    description: 'Compare diferentes opções de preços e planos',
-    icon: 'Scale',
-    tags: ['preços', 'comparação', 'planos']
+  "price-comparison": {
+    name: "Comparação de Preços",
+    description: "Compare diferentes opções de preços e planos",
+    icon: "Scale",
+    tags: ["preços", "comparação", "planos"],
   },
-  'countdown-timer': {
-    name: 'Timer de Urgência',
-    description: 'Crie senso de urgência com countdown personalizado',
-    icon: 'Clock',
-    tags: ['urgência', 'timer', 'limitado']
+  "countdown-timer": {
+    name: "Timer de Urgência",
+    description: "Crie senso de urgência com countdown personalizado",
+    icon: "Clock",
+    tags: ["urgência", "timer", "limitado"],
   },
-  'faq-section': {
-    name: 'Perguntas Frequentes',
-    description: 'Seção de FAQ com acordeão expansível',
-    icon: 'HelpCircle',
-    tags: ['faq', 'perguntas', 'ajuda']
+  "faq-section": {
+    name: "Perguntas Frequentes",
+    description: "Seção de FAQ com acordeão expansível",
+    icon: "HelpCircle",
+    tags: ["faq", "perguntas", "ajuda"],
   },
-  'testimonials-grid': {
-    name: 'Grade de Depoimentos',
-    description: 'Exiba depoimentos de clientes de forma profissional',
-    icon: 'Quote',
-    tags: ['depoimentos', 'clientes', 'social']
+  "testimonials-grid": {
+    name: "Grade de Depoimentos",
+    description: "Exiba depoimentos de clientes de forma profissional",
+    icon: "Quote",
+    tags: ["depoimentos", "clientes", "social"],
   },
-  'comparison-table': {
-    name: 'Tabela de Comparação',
-    description: 'Compare recursos entre diferentes planos ou produtos',
-    icon: 'Scale',
+  "comparison-table": {
+    name: "Tabela de Comparação",
+    description: "Compare recursos entre diferentes planos ou produtos",
+    icon: "Scale",
     isNew: true,
-    tags: ['comparação', 'tabela', 'recursos']
+    tags: ["comparação", "tabela", "recursos"],
   },
-  'social-proof': {
-    name: 'Prova Social',
-    description: 'Mostre estatísticas e atividades em tempo real',
-    icon: 'Users',
+  "social-proof": {
+    name: "Prova Social",
+    description: "Mostre estatísticas e atividades em tempo real",
+    icon: "Users",
     isNew: true,
-    tags: ['social', 'prova', 'estatísticas']
+    tags: ["social", "prova", "estatísticas"],
   },
-  'advanced-cta': {
-    name: 'CTA Avançado',
-    description: 'Call-to-action com countdown, garantias e animações',
-    icon: 'Zap',
+  "advanced-cta": {
+    name: "CTA Avançado",
+    description: "Call-to-action com countdown, garantias e animações",
+    icon: "Zap",
     isNew: true,
     isPremium: true,
-    tags: ['cta', 'conversão', 'avançado']
+    tags: ["cta", "conversão", "avançado"],
   },
-  'stats-metrics': {
-    name: 'Estatísticas e Métricas',
-    description: 'Exiba números e conquistas de forma impactante',
-    icon: 'TrendingUp',
+  "stats-metrics": {
+    name: "Estatísticas e Métricas",
+    description: "Exiba números e conquistas de forma impactante",
+    icon: "TrendingUp",
     isNew: true,
-    tags: ['estatísticas', 'métricas', 'números']
-  }
+    tags: ["estatísticas", "métricas", "números"],
+  },
 };
 
 // Function to get metadata for a block
@@ -253,14 +252,15 @@ export function getBlockMetadata(type: string): BlockMetadata | null {
 // Function to search blocks by name or tags
 export function searchBlocks(query: string): string[] {
   const lowercaseQuery = query.toLowerCase();
-  return getRegisteredBlockTypes().filter(type => {
+  return getRegisteredBlockTypes().filter((type) => {
     const metadata = getBlockMetadata(type);
     if (!metadata) return false;
-    
+
     return (
       metadata.name.toLowerCase().includes(lowercaseQuery) ||
       metadata.description.toLowerCase().includes(lowercaseQuery) ||
-      (metadata.tags && metadata.tags.some(tag => tag.includes(lowercaseQuery)))
+      (metadata.tags &&
+        metadata.tags.some((tag) => tag.includes(lowercaseQuery)))
     );
   });
 }

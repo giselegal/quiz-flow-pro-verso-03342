@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { Button } from '../../ui/button';
+import React from "react";
+import { Button } from "../../ui/button";
 
 interface Component {
   id: string;
@@ -16,64 +15,66 @@ export function ComponentRenderer({ component }: ComponentRendererProps) {
   const { type, props } = component;
 
   switch (type) {
-    case 'heading':
+    case "heading":
       const HeadingTag = `h${props.level || 1}` as keyof JSX.IntrinsicElements;
       return (
-        <HeadingTag 
-          className={`font-bold ${getHeadingClasses(props.level)} ${props.className || ''}`}
+        <HeadingTag
+          className={`font-bold ${getHeadingClasses(props.level)} ${props.className || ""}`}
           style={props.style}
         >
-          {props.text || 'Título'}
+          {props.text || "Título"}
         </HeadingTag>
       );
 
-    case 'paragraph':
+    case "paragraph":
       return (
-        <p 
-          className={`text-gray-700 leading-relaxed ${props.className || ''}`}
+        <p
+          className={`text-gray-700 leading-relaxed ${props.className || ""}`}
           style={props.style}
         >
-          {props.text || 'Parágrafo de texto.'}
+          {props.text || "Parágrafo de texto."}
         </p>
       );
 
-    case 'button':
+    case "button":
       return (
         <Button
-          variant={props.variant || 'default'}
-          size={props.size || 'default'}
+          variant={props.variant || "default"}
+          size={props.size || "default"}
           className={props.className}
           onClick={(e) => e.preventDefault()}
         >
-          {props.text || 'Botão'}
+          {props.text || "Botão"}
         </Button>
       );
 
-    case 'image':
+    case "image":
       return (
         <img
-          src={props.src || 'https://via.placeholder.com/400x200'}
-          alt={props.alt || 'Imagem'}
-          className={`max-w-full h-auto rounded ${props.className || ''}`}
+          src={props.src || "https://via.placeholder.com/400x200"}
+          alt={props.alt || "Imagem"}
+          className={`max-w-full h-auto rounded ${props.className || ""}`}
           style={props.style}
         />
       );
 
-    case 'divider':
+    case "divider":
       return (
-        <hr 
-          className={`border-gray-300 ${props.className || ''}`}
+        <hr
+          className={`border-gray-300 ${props.className || ""}`}
           style={props.style}
         />
       );
 
-    case 'container':
+    case "container":
       return (
         <div
-          className={`rounded border-2 border-dashed border-gray-300 min-h-[100px] flex items-center justify-center ${props.className || ''}`}
+          className={`rounded border-2 border-dashed border-gray-300 min-h-[100px] flex items-center justify-center ${props.className || ""}`}
           style={props.style}
         >
-          <span className="text-gray-400">Container - Arraste componentes aqui</span>
+          <span className="text-gray-400">
+            Container - Arraste componentes aqui
+          </span>
         </div>
       );
 
@@ -88,12 +89,19 @@ export function ComponentRenderer({ component }: ComponentRendererProps) {
 
 function getHeadingClasses(level: number): string {
   switch (level) {
-    case 1: return 'text-4xl';
-    case 2: return 'text-3xl';
-    case 3: return 'text-2xl';
-    case 4: return 'text-xl';
-    case 5: return 'text-lg';
-    case 6: return 'text-base';
-    default: return 'text-4xl';
+    case 1:
+      return "text-4xl";
+    case 2:
+      return "text-3xl";
+    case 3:
+      return "text-2xl";
+    case 4:
+      return "text-xl";
+    case 5:
+      return "text-lg";
+    case 6:
+      return "text-base";
+    default:
+      return "text-4xl";
   }
 }

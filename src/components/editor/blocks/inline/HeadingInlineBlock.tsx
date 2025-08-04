@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { safeGetBlockProperties } from '@/utils/blockUtils';
+import React from "react";
+import { safeGetBlockProperties } from "@/utils/blockUtils";
 
 interface HeadingInlineBlockProps {
   block: {
@@ -17,13 +16,13 @@ export const HeadingInlineBlock: React.FC<HeadingInlineBlockProps> = ({
   block,
   isSelected = false,
   onSelect,
-  onUpdate
+  onUpdate,
 }) => {
   const properties = safeGetBlockProperties(block);
-  const text = properties.text || properties.title || 'Título';
-  const level = properties.level || 'h1';
-  const textAlign = properties.textAlign || 'center';
-  const color = properties.color || '#432818';
+  const text = properties.text || properties.title || "Título";
+  const level = properties.level || "h1";
+  const textAlign = properties.textAlign || "center";
+  const color = properties.color || "#432818";
 
   const handleTextChange = (newText: string) => {
     if (onUpdate) {
@@ -33,33 +32,33 @@ export const HeadingInlineBlock: React.FC<HeadingInlineBlockProps> = ({
 
   const headingProps = {
     className: `font-bold cursor-pointer transition-all duration-200 ${
-      isSelected ? 'ring-2 ring-blue-500 ring-opacity-50' : ''
+      isSelected ? "ring-2 ring-blue-500 ring-opacity-50" : ""
     }`,
-    style: { 
+    style: {
       textAlign: textAlign as any,
       color,
-      fontSize: level === 'h1' ? '2rem' : level === 'h2' ? '1.5rem' : '1.25rem'
+      fontSize: level === "h1" ? "2rem" : level === "h2" ? "1.5rem" : "1.25rem",
     },
     onClick: onSelect,
     contentEditable: true,
     suppressContentEditableWarning: true,
     onBlur: (e: React.FocusEvent<HTMLElement>) => {
-      handleTextChange(e.target.textContent || '');
+      handleTextChange(e.target.textContent || "");
     },
     onKeyDown: (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter') {
+      if (e.key === "Enter") {
         e.preventDefault();
         (e.target as HTMLElement).blur();
       }
-    }
+    },
   };
 
   switch (level) {
-    case 'h1':
+    case "h1":
       return <h1 {...headingProps}>{text}</h1>;
-    case 'h2':
+    case "h2":
       return <h2 {...headingProps}>{text}</h2>;
-    case 'h3':
+    case "h3":
       return <h3 {...headingProps}>{text}</h3>;
     default:
       return <h1 {...headingProps}>{text}</h1>;

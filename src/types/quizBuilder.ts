@@ -1,29 +1,28 @@
-
-export type QuizComponentType = 
-  | 'header' 
-  | 'section' 
-  | 'columns' 
-  | 'headline' 
-  | 'text' 
-  | 'image' 
-  | 'multipleChoice' 
-  | 'singleChoice' 
-  | 'scale' 
-  | 'openEnded' 
-  | 'date' 
-  | 'benefitsList' 
-  | 'faq' 
-  | 'quizResult'
-  | 'stageCover'
-  | 'stageQuestion'
-  | 'stageResult'
-  | 'button'
-  | 'choice'
-  | 'result'
-  | 'divider'
-  | 'spacer'
-  | 'video'
-  | 'cta';
+export type QuizComponentType =
+  | "header"
+  | "section"
+  | "columns"
+  | "headline"
+  | "text"
+  | "image"
+  | "multipleChoice"
+  | "singleChoice"
+  | "scale"
+  | "openEnded"
+  | "date"
+  | "benefitsList"
+  | "faq"
+  | "quizResult"
+  | "stageCover"
+  | "stageQuestion"
+  | "stageResult"
+  | "button"
+  | "choice"
+  | "result"
+  | "divider"
+  | "spacer"
+  | "video"
+  | "cta";
 
 export interface QuizComponentStyle {
   backgroundColor?: string;
@@ -38,7 +37,7 @@ export interface QuizStage {
   id: string;
   title: string;
   order: number;
-  type: 'cover' | 'question' | 'result' | 'strategic' | 'welcome';
+  type: "cover" | "question" | "result" | "strategic" | "welcome";
   isEnabled?: boolean;
   componentId?: string;
   config?: Record<string, any>; // Add config property to fix errors
@@ -46,7 +45,7 @@ export interface QuizStage {
 
 export interface QuizComponentLayout {
   columns: 1 | 2 | 3 | 4;
-  direction: 'vertical' | 'horizontal';
+  direction: "vertical" | "horizontal";
 }
 
 export interface QuizComponentData {
@@ -66,29 +65,29 @@ export interface QuizComponentData {
     options?: string[];
     stageTitle?: string;
     stageNumber?: number;
-    
+
     // Question properties
     autoAdvance?: boolean;
     minSelections?: number;
     maxSelections?: number;
     multiSelect?: number;
     required?: boolean;
-    displayType?: 'text' | 'image' | 'both';
-    imageSize?: 'small' | 'medium' | 'large';
+    displayType?: "text" | "image" | "both";
+    imageSize?: "small" | "medium" | "large";
     layout?: QuizComponentLayout;
     optionImages?: string[];
     optionStyleCategories?: string[];
     backgroundColorQuestion?: string;
     textColorQuestion?: string;
-    selectionIndicator?: 'border' | 'checkbox' | 'highlight';
-    
+    selectionIndicator?: "border" | "checkbox" | "highlight";
+
     // Cover properties
     buttonText?: string;
     backgroundColor?: string;
     textColor?: string;
-    
+
     // Result properties
-    resultLayout?: 'classic' | 'modern' | 'minimal';
+    resultLayout?: "classic" | "modern" | "minimal";
     primaryStyleTitle?: string;
     secondaryStylesTitle?: string;
     showPercentages?: boolean;

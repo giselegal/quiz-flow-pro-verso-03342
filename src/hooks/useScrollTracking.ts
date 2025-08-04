@@ -1,9 +1,8 @@
-
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 export const useScrollTracking = () => {
   const [scrollY, setScrollY] = useState(0);
-  const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('down');
+  const [scrollDirection, setScrollDirection] = useState<"up" | "down">("down");
   const [isScrolling, setIsScrolling] = useState(false);
 
   useEffect(() => {
@@ -13,25 +12,25 @@ export const useScrollTracking = () => {
     const updateScrollInfo = () => {
       const currentScrollY = window.scrollY;
       setScrollY(currentScrollY);
-      
+
       if (currentScrollY > lastScrollY) {
-        setScrollDirection('down');
+        setScrollDirection("down");
       } else if (currentScrollY < lastScrollY) {
-        setScrollDirection('up');
+        setScrollDirection("up");
       }
-      
+
       lastScrollY = currentScrollY;
       setIsScrolling(true);
-      
+
       clearTimeout(scrollTimeout);
       scrollTimeout = setTimeout(() => {
         setIsScrolling(false);
       }, 150);
     };
 
-    window.addEventListener('scroll', updateScrollInfo);
+    window.addEventListener("scroll", updateScrollInfo);
     return () => {
-      window.removeEventListener('scroll', updateScrollInfo);
+      window.removeEventListener("scroll", updateScrollInfo);
       clearTimeout(scrollTimeout);
     };
   }, []);
@@ -39,6 +38,6 @@ export const useScrollTracking = () => {
   return {
     scrollY,
     scrollDirection,
-    isScrolling
+    isScrolling,
   };
 };

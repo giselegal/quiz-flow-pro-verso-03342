@@ -2,17 +2,23 @@
 // components/editor/components/PropertyHistory.tsx - Histórico de propriedades
 // =====================================================================
 
-import React, { useState } from 'react';
-import { Button } from '../../ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
-import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
-import { ScrollArea } from '../../ui/scroll-area';
-import { Badge } from '../../ui/badge';
-import { Separator } from '../../ui/separator';
-import { 
-  History, Undo2, Redo2, RotateCcw, Clock, 
-  CheckCircle, Circle, Trash2 
-} from 'lucide-react';
+import React, { useState } from "react";
+import { Button } from "../../ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
+import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
+import { ScrollArea } from "../../ui/scroll-area";
+import { Badge } from "../../ui/badge";
+import { Separator } from "../../ui/separator";
+import {
+  History,
+  Undo2,
+  Redo2,
+  RotateCcw,
+  Clock,
+  CheckCircle,
+  Circle,
+  Trash2,
+} from "lucide-react";
 
 interface HistoryEntry {
   id: string;
@@ -40,7 +46,7 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
   onUndo,
   onRedo,
   onGoToEntry,
-  onClearHistory
+  onClearHistory,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -50,7 +56,7 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
     if (diffInSeconds < 60) {
-      return 'Agora mesmo';
+      return "Agora mesmo";
     } else if (diffInSeconds < 3600) {
       const minutes = Math.floor(diffInSeconds / 60);
       return `${minutes} min atrás`;
@@ -58,25 +64,28 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
       const hours = Math.floor(diffInSeconds / 3600);
       return `${hours}h atrás`;
     } else {
-      return date.toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
+      return date.toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
       });
     }
   };
 
-  const getChangedProperties = (current: Record<string, any>, previous?: Record<string, any>) => {
+  const getChangedProperties = (
+    current: Record<string, any>,
+    previous?: Record<string, any>,
+  ) => {
     if (!previous) return [];
-    
+
     const changes: string[] = [];
-    Object.keys(current).forEach(key => {
+    Object.keys(current).forEach((key) => {
       if (current[key] !== previous[key]) {
         changes.push(key);
       }
     });
-    
+
     return changes.slice(0, 3); // Máximo 3 propriedades
   };
 
@@ -93,7 +102,7 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
       >
         <Undo2 className="w-4 h-4" />
       </Button>
-      
+
       <Button
         variant="ghost"
         size="sm"
@@ -121,7 +130,9 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
           <Card className="border-0 shadow-none">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-base">Histórico de Propriedades</CardTitle>
+                <CardTitle className="text-base">
+                  Histórico de Propriedades
+                </CardTitle>
                 <div className="flex items-center space-x-1">
                   <Badge variant="secondary" className="text-xs">
                     {history.length} entradas
@@ -145,8 +156,8 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
                     const isCurrentEntry = index === currentIndex;
                     const isFutureEntry = index > currentIndex;
                     const changes = getChangedProperties(
-                      entry.properties, 
-                      history[index - 1]?.properties
+                      entry.properties,
+                      history[index - 1]?.properties,
                     );
 
                     return (
@@ -157,11 +168,11 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
                             setIsOpen(false);
                           }}
                           className={`w-full text-left p-2 rounded-md transition-colors ${
-                            isCurrentEntry 
-                              ? 'bg-blue-50 border border-blue-200' 
+                            isCurrentEntry
+                              ? "bg-blue-50 border border-blue-200"
                               : isFutureEntry
-                              ? 'opacity-50 hover:bg-gray-50'
-                              : 'hover:bg-gray-50'
+                                ? "opacity-50 hover:bg-gray-50"
+                                : "hover:bg-gray-50"
                           }`}
                         >
                           <div className="flex items-center space-x-2">
@@ -185,17 +196,21 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
                               {changes.length > 0 && (
                                 <div className="flex items-center space-x-1 mt-1">
                                   {changes.map((prop) => (
-                                    <Badge 
-                                      key={prop} 
-                                      variant="outline" 
+                                    <Badge
+                                      key={prop}
+                                      variant="outline"
                                       className="text-xs py-0 px-1"
                                     >
                                       {prop}
                                     </Badge>
                                   ))}
                                   {Object.keys(entry.properties).length > 3 && (
-                                    <Badge variant="outline" className="text-xs py-0 px-1">
-                                      +{Object.keys(entry.properties).length - 3}
+                                    <Badge
+                                      variant="outline"
+                                      className="text-xs py-0 px-1"
+                                    >
+                                      +
+                                      {Object.keys(entry.properties).length - 3}
                                     </Badge>
                                   )}
                                 </div>
@@ -211,10 +226,12 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
                   })}
                 </div>
               </ScrollArea>
-              
+
               <div className="p-3 border-t border-gray-200 bg-gray-50">
                 <div className="flex items-center justify-between text-xs text-gray-600">
-                  <span>Posição: {currentIndex + 1} de {history.length}</span>
+                  <span>
+                    Posição: {currentIndex + 1} de {history.length}
+                  </span>
                   <div className="flex items-center space-x-2">
                     <span>Ctrl+Z</span>
                     <span>•</span>
@@ -229,4 +246,3 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
     </div>
   );
 };
-

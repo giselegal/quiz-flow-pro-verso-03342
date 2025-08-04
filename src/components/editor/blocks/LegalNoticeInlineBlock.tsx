@@ -1,6 +1,5 @@
-
-import React from 'react';
-import type { BlockComponentProps } from '@/types/blocks';
+import React from "react";
+import type { BlockComponentProps } from "@/types/blocks";
 
 const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -8,13 +7,13 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = ''
+  className = "",
 }) => {
   const {
-    title = 'Aviso Legal',
-    content = 'Este é um aviso legal padrão.',
-    backgroundColor = '#f8f9fa',
-    textColor = '#6c757d'
+    title = "Aviso Legal",
+    content = "Este é um aviso legal padrão.",
+    backgroundColor = "#f8f9fa",
+    textColor = "#6c757d",
   } = block.properties;
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -24,15 +23,16 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
   };
 
   // Split content into parts for rendering
-  const parts = content.split('\n').filter((part: string) => part.trim());
+  const parts = content.split("\n").filter((part: string) => part.trim());
 
   return (
     <div
       className={`
         py-6 px-4 cursor-pointer transition-all duration-200
-        ${isSelected 
-          ? 'ring-1 ring-gray-400/40 bg-gray-50/30' 
-          : 'hover:shadow-sm'
+        ${
+          isSelected
+            ? "ring-1 ring-gray-400/40 bg-gray-50/30"
+            : "hover:shadow-sm"
         }
         ${className}
       `}

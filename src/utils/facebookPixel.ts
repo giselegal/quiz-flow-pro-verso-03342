@@ -1,4 +1,3 @@
-
 // Facebook Pixel utility functions
 import {
   getPixelId,
@@ -55,7 +54,7 @@ export const initFacebookPixel = (pixelId: string): boolean => {
  */
 export const trackPixelEvent = (
   eventName: string,
-  params?: Record<string, unknown>
+  params?: Record<string, unknown>,
 ): void => {
   try {
     if (typeof window === "undefined" || !window.fbq) {
@@ -102,7 +101,7 @@ export const loadFacebookPixel = (): void => {
     if (pixelId) {
       initFacebookPixel(pixelId);
       console.log(
-        `Loaded Facebook Pixel for funnel: ${funnelConfig.funnelName} (${pixelId})`
+        `Loaded Facebook Pixel for funnel: ${funnelConfig.funnelName} (${pixelId})`,
       );
 
       // Dispara evento de inicialização específico do funil

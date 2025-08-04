@@ -1,11 +1,10 @@
-
 // src/types.ts
 export interface PageProps {
-  params: { 
+  params: {
     id: string;
-    [key: string]: string; 
+    [key: string]: string;
   };
-  searchParams?: { 
-    [key: string]: string | string[] | undefined; 
+  searchParams?: {
+    [key: string]: string | string[] | undefined;
   };
 }

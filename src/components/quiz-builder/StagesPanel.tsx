@@ -1,11 +1,10 @@
-
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { QuizStage } from '@/types/quizBuilder';
-import { Plus, Trash2 } from 'lucide-react';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { QuizStage } from "@/types/quizBuilder";
+import { Plus, Trash2 } from "lucide-react";
 
 interface StagesPanelProps {
   stages: QuizStage[];
@@ -24,7 +23,11 @@ export const StagesPanel: React.FC<StagesPanelProps> = ({
   onStageDelete,
   onStageUpdate,
 }) => {
-  const handleStageEdit = (stage: QuizStage, field: keyof QuizStage, value: any) => {
+  const handleStageEdit = (
+    stage: QuizStage,
+    field: keyof QuizStage,
+    value: any,
+  ) => {
     onStageUpdate(stage.id, { [field]: value });
   };
 
@@ -53,8 +56,8 @@ export const StagesPanel: React.FC<StagesPanelProps> = ({
             key={stage.id}
             className={`p-3 cursor-pointer transition-colors ${
               activeStageId === stage.id
-                ? 'bg-[#B89B7A]/10 border-[#B89B7A]'
-                : 'hover:bg-gray-50'
+                ? "bg-[#B89B7A]/10 border-[#B89B7A]"
+                : "hover:bg-gray-50"
             }`}
             onClick={() => onStageSelect(stage.id)}
           >
@@ -68,20 +71,22 @@ export const StagesPanel: React.FC<StagesPanelProps> = ({
                     Ordem: {stage.order}
                   </span>
                 </div>
-                
+
                 <Label htmlFor={`stage-title-${stage.id}`} className="text-xs">
                   Título da Etapa
                 </Label>
                 <Input
                   id={`stage-title-${stage.id}`}
                   value={stage.title}
-                  onChange={(e) => handleStageEdit(stage, 'title', e.target.value)}
+                  onChange={(e) =>
+                    handleStageEdit(stage, "title", e.target.value)
+                  }
                   className="text-sm mt-1"
                   placeholder="Nome da etapa"
                   onClick={(e) => e.stopPropagation()}
                 />
               </div>
-              
+
               <Button
                 variant="ghost"
                 size="sm"

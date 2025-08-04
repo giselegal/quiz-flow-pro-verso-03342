@@ -1,7 +1,6 @@
-
-import React from 'react';
-import { QuizComponentData } from '@/types/quizBuilder';
-import ComponentRenderer from './ComponentRenderer';
+import React from "react";
+import { QuizComponentData } from "@/types/quizBuilder";
+import ComponentRenderer from "./ComponentRenderer";
 
 interface PreviewPanelProps {
   components: QuizComponentData[];
@@ -12,7 +11,7 @@ interface PreviewPanelProps {
 const PreviewPanel: React.FC<PreviewPanelProps> = ({
   components,
   selectedComponentId,
-  onComponentSelect
+  onComponentSelect,
 }) => {
   return (
     <div className="h-full overflow-auto p-4">
@@ -25,7 +24,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
             onClick={() => onComponentSelect?.(component.id)}
           />
         ))}
-        
+
         {components.length === 0 && (
           <div className="flex items-center justify-center h-64 text-gray-500">
             <p>Nenhum componente adicionado ainda</p>

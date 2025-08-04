@@ -28,7 +28,7 @@ export interface BankImage {
    * Permite que uma imagem pertença a múltiplas categorias
    */
   categories?: string[];
-  
+
   /**
    * Seção específica da aplicação
    */
@@ -37,7 +37,7 @@ export interface BankImage {
   /**
    * Prioridade de carregamento
    */
-  priority?: 'high' | 'medium' | 'low';
+  priority?: "high" | "medium" | "low";
 
   /**
    * Largura original da imagem em pixels
@@ -63,12 +63,12 @@ export interface BankImage {
    * Indicador de pré-carregamento
    */
   preload?: boolean;
-  
+
   /**
    * Tags para classificação de imagens
    */
   tags?: string[];
-  
+
   /**
    * Prioridade de pré-carregamento (numérica)
    */

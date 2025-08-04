@@ -2,22 +2,28 @@
 // components/editor/components/PropertyTemplates.tsx - Templates de propriedades
 // =====================================================================
 
-import React from 'react';
-import { Button } from '../../ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
-import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
-import { Badge } from '../../ui/badge';
-import { 
-  Palette, Layout, Target, Sparkles, 
-  FileText, PieChart, MessageSquare, Star 
-} from 'lucide-react';
+import React from "react";
+import { Button } from "../../ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
+import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
+import { Badge } from "../../ui/badge";
+import {
+  Palette,
+  Layout,
+  Target,
+  Sparkles,
+  FileText,
+  PieChart,
+  MessageSquare,
+  Star,
+} from "lucide-react";
 
 interface PropertyTemplate {
   id: string;
   name: string;
   description: string;
   icon: React.ComponentType<any>;
-  category: 'layout' | 'styling' | 'content' | 'interaction';
+  category: "layout" | "styling" | "content" | "interaction";
   properties: Record<string, any>;
 }
 
@@ -27,158 +33,163 @@ interface PropertyTemplatesProps {
 
 const templates: PropertyTemplate[] = [
   {
-    id: 'quiz-card',
-    name: 'Card de Quiz',
-    description: 'Layout moderno para questões de quiz',
+    id: "quiz-card",
+    name: "Card de Quiz",
+    description: "Layout moderno para questões de quiz",
     icon: Target,
-    category: 'layout',
+    category: "layout",
     properties: {
-      layout: 'vertical',
-      backgroundColor: '#ffffff',
+      layout: "vertical",
+      backgroundColor: "#ffffff",
       borderRadius: 12,
       borderWidth: 1,
-      borderColor: '#e5e7eb',
-      shadow: 'md',
+      borderColor: "#e5e7eb",
+      shadow: "md",
       spacing: 20,
-      required: true
-    }
+      required: true,
+    },
   },
   {
-    id: 'minimal-clean',
-    name: 'Minimalista',
-    description: 'Design limpo e minimalista',
+    id: "minimal-clean",
+    name: "Minimalista",
+    description: "Design limpo e minimalista",
     icon: Layout,
-    category: 'styling',
+    category: "styling",
     properties: {
-      backgroundColor: '#fafafa',
-      textColor: '#374151',
+      backgroundColor: "#fafafa",
+      textColor: "#374151",
       borderRadius: 8,
       borderWidth: 0,
-      shadow: 'none',
-      spacing: 16
-    }
+      shadow: "none",
+      spacing: 16,
+    },
   },
   {
-    id: 'colorful-modern',
-    name: 'Moderno Colorido',
-    description: 'Visual vibrante e moderno',
+    id: "colorful-modern",
+    name: "Moderno Colorido",
+    description: "Visual vibrante e moderno",
     icon: Palette,
-    category: 'styling',
+    category: "styling",
     properties: {
-      backgroundColor: '#3b82f6',
-      textColor: '#ffffff',
+      backgroundColor: "#3b82f6",
+      textColor: "#ffffff",
       borderRadius: 16,
       borderWidth: 0,
-      shadow: 'lg',
+      shadow: "lg",
       spacing: 24,
-      animation: 'fade',
-      delay: 200
-    }
+      animation: "fade",
+      delay: 200,
+    },
   },
   {
-    id: 'grid-layout',
-    name: 'Layout em Grade',
-    description: 'Organização em grade responsiva',
+    id: "grid-layout",
+    name: "Layout em Grade",
+    description: "Organização em grade responsiva",
     icon: Layout,
-    category: 'layout',
+    category: "layout",
     properties: {
-      layout: 'grid',
+      layout: "grid",
       columns: 2,
       spacing: 16,
-      alignment: 'center'
-    }
+      alignment: "center",
+    },
   },
   {
-    id: 'survey-style',
-    name: 'Estilo Pesquisa',
-    description: 'Formato tradicional de pesquisa',
+    id: "survey-style",
+    name: "Estilo Pesquisa",
+    description: "Formato tradicional de pesquisa",
     icon: FileText,
-    category: 'content',
+    category: "content",
     properties: {
-      layout: 'vertical',
+      layout: "vertical",
       multipleChoice: false,
       required: true,
       autoAdvance: true,
-      backgroundColor: '#f9fafb',
+      backgroundColor: "#f9fafb",
       borderRadius: 6,
-      spacing: 12
-    }
+      spacing: 12,
+    },
   },
   {
-    id: 'assessment-quiz',
-    name: 'Quiz de Avaliação',
-    description: 'Para avaliações e testes',
+    id: "assessment-quiz",
+    name: "Quiz de Avaliação",
+    description: "Para avaliações e testes",
     icon: PieChart,
-    category: 'interaction',
+    category: "interaction",
     properties: {
       multipleChoice: true,
       maxSelections: 1,
       required: true,
       autoAdvance: false,
-      backgroundColor: '#ffffff',
-      borderColor: '#d1d5db',
+      backgroundColor: "#ffffff",
+      borderColor: "#d1d5db",
       borderWidth: 2,
-      borderRadius: 8
-    }
+      borderRadius: 8,
+    },
   },
   {
-    id: 'feedback-form',
-    name: 'Formulário de Feedback',
-    description: 'Para coletar opiniões',
+    id: "feedback-form",
+    name: "Formulário de Feedback",
+    description: "Para coletar opiniões",
     icon: MessageSquare,
-    category: 'content',
+    category: "content",
     properties: {
       multipleChoice: true,
       maxSelections: 3,
       required: false,
-      backgroundColor: '#fef3c7',
-      textColor: '#92400e',
+      backgroundColor: "#fef3c7",
+      textColor: "#92400e",
       borderRadius: 10,
-      spacing: 18
-    }
+      spacing: 18,
+    },
   },
   {
-    id: 'premium-style',
-    name: 'Estilo Premium',
-    description: 'Design sofisticado e elegante',
+    id: "premium-style",
+    name: "Estilo Premium",
+    description: "Design sofisticado e elegante",
     icon: Star,
-    category: 'styling',
+    category: "styling",
     properties: {
-      backgroundColor: '#1f2937',
-      textColor: '#f9fafb',
-      borderColor: '#6b7280',
+      backgroundColor: "#1f2937",
+      textColor: "#f9fafb",
+      borderColor: "#6b7280",
       borderWidth: 1,
       borderRadius: 12,
-      shadow: 'xl',
+      shadow: "xl",
       spacing: 24,
-      animation: 'slide',
-      delay: 300
-    }
-  }
+      animation: "slide",
+      delay: 300,
+    },
+  },
 ];
 
 const categoryColors = {
-  layout: 'bg-blue-100 text-blue-800',
-  styling: 'bg-purple-100 text-purple-800',
-  content: 'bg-green-100 text-green-800',
-  interaction: 'bg-orange-100 text-orange-800'
+  layout: "bg-blue-100 text-blue-800",
+  styling: "bg-purple-100 text-purple-800",
+  content: "bg-green-100 text-green-800",
+  interaction: "bg-orange-100 text-orange-800",
 };
 
 const categoryIcons = {
   layout: Layout,
   styling: Palette,
   content: FileText,
-  interaction: Target
+  interaction: Target,
 };
 
-export const PropertyTemplates: React.FC<PropertyTemplatesProps> = ({ onApplyTemplate }) => {
-  const categorizedTemplates = templates.reduce((acc, template) => {
-    if (!acc[template.category]) {
-      acc[template.category] = [];
-    }
-    acc[template.category].push(template);
-    return acc;
-  }, {} as Record<string, PropertyTemplate[]>);
+export const PropertyTemplates: React.FC<PropertyTemplatesProps> = ({
+  onApplyTemplate,
+}) => {
+  const categorizedTemplates = templates.reduce(
+    (acc, template) => {
+      if (!acc[template.category]) {
+        acc[template.category] = [];
+      }
+      acc[template.category].push(template);
+      return acc;
+    },
+    {} as Record<string, PropertyTemplate[]>,
+  );
 
   return (
     <Popover>
@@ -191,59 +202,68 @@ export const PropertyTemplates: React.FC<PropertyTemplatesProps> = ({ onApplyTem
       <PopoverContent className="w-96 p-4" align="start">
         <div className="space-y-4">
           <div>
-            <h3 className="font-semibold text-gray-900 mb-1">Templates de Propriedades</h3>
-            <p className="text-sm text-gray-600">Aplique configurações predefinidas rapidamente</p>
+            <h3 className="font-semibold text-gray-900 mb-1">
+              Templates de Propriedades
+            </h3>
+            <p className="text-sm text-gray-600">
+              Aplique configurações predefinidas rapidamente
+            </p>
           </div>
-          
-          {Object.entries(categorizedTemplates).map(([category, categoryTemplates]) => {
-            const CategoryIcon = categoryIcons[category as keyof typeof categoryIcons];
-            
-            return (
-              <div key={category}>
-                <div className="flex items-center space-x-2 mb-3">
-                  <CategoryIcon className="w-4 h-4" />
-                  <h4 className="font-medium text-sm capitalize">{category}</h4>
-                  <Badge 
-                    variant="secondary" 
-                    className={`text-xs ${categoryColors[category as keyof typeof categoryColors]}`}
-                  >
-                    {categoryTemplates.length}
-                  </Badge>
-                </div>
-                
-                <div className="grid grid-cols-1 gap-2 mb-4">
-                  {categoryTemplates.map((template) => {
-                    const TemplateIcon = template.icon;
-                    
-                    return (
-                      <Card 
-                        key={template.id} 
-                        className="cursor-pointer hover:shadow-md transition-shadow border border-gray-200"
-                        onClick={() => onApplyTemplate(template.properties)}
-                      >
-                        <CardContent className="p-3">
-                          <div className="flex items-start space-x-3">
-                            <div className="flex-shrink-0">
-                              <TemplateIcon className="w-5 h-5 text-gray-600" />
+
+          {Object.entries(categorizedTemplates).map(
+            ([category, categoryTemplates]) => {
+              const CategoryIcon =
+                categoryIcons[category as keyof typeof categoryIcons];
+
+              return (
+                <div key={category}>
+                  <div className="flex items-center space-x-2 mb-3">
+                    <CategoryIcon className="w-4 h-4" />
+                    <h4 className="font-medium text-sm capitalize">
+                      {category}
+                    </h4>
+                    <Badge
+                      variant="secondary"
+                      className={`text-xs ${categoryColors[category as keyof typeof categoryColors]}`}
+                    >
+                      {categoryTemplates.length}
+                    </Badge>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-2 mb-4">
+                    {categoryTemplates.map((template) => {
+                      const TemplateIcon = template.icon;
+
+                      return (
+                        <Card
+                          key={template.id}
+                          className="cursor-pointer hover:shadow-md transition-shadow border border-gray-200"
+                          onClick={() => onApplyTemplate(template.properties)}
+                        >
+                          <CardContent className="p-3">
+                            <div className="flex items-start space-x-3">
+                              <div className="flex-shrink-0">
+                                <TemplateIcon className="w-5 h-5 text-gray-600" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h5 className="font-medium text-sm text-gray-900 mb-1">
+                                  {template.name}
+                                </h5>
+                                <p className="text-xs text-gray-600 line-clamp-2">
+                                  {template.description}
+                                </p>
+                              </div>
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <h5 className="font-medium text-sm text-gray-900 mb-1">
-                                {template.name}
-                              </h5>
-                              <p className="text-xs text-gray-600 line-clamp-2">
-                                {template.description}
-                              </p>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-          
+              );
+            },
+          )}
+
           <div className="pt-3 border-t border-gray-200">
             <p className="text-xs text-gray-500 text-center">
               Clique em um template para aplicar as propriedades

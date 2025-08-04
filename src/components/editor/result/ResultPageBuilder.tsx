@@ -1,22 +1,27 @@
-
-import React from 'react';
-import { StyleResult } from '@/types/quiz';
-import { Card } from '@/components/ui/card';
-import { useEditor } from '@/hooks/useEditor';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { ComponentsSidebar } from '../sidebar/ComponentsSidebar';
-import { PreviewPanel } from './PreviewPanel';
-import { PropertiesPanel } from './PropertiesPanel';
+import React from "react";
+import { StyleResult } from "@/types/quiz";
+import { Card } from "@/components/ui/card";
+import { useEditor } from "@/hooks/useEditor";
+import {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from "@/components/ui/resizable";
+import { ComponentsSidebar } from "../sidebar/ComponentsSidebar";
+import { PreviewPanel } from "./PreviewPanel";
+import { PropertiesPanel } from "./PropertiesPanel";
 
 interface ResultPageBuilderProps {
   primaryStyle: StyleResult;
 }
 
 export const ResultPageBuilder: React.FC<ResultPageBuilderProps> = ({
-  primaryStyle
+  primaryStyle,
 }) => {
   const { config, addBlock, updateBlock, deleteBlock } = useEditor();
-  const [selectedComponent, setSelectedComponent] = React.useState<string | null>(null);
+  const [selectedComponent, setSelectedComponent] = React.useState<
+    string | null
+  >(null);
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
@@ -29,30 +34,30 @@ export const ResultPageBuilder: React.FC<ResultPageBuilderProps> = ({
       <ResizablePanelGroup direction="horizontal" className="flex-1">
         {/* Left Sidebar - Components */}
         <ResizablePanel defaultSize={20} minSize={15} maxSize={25}>
-          <ComponentsSidebar 
+          <ComponentsSidebar
             onComponentSelect={(type) => {
               const newId = addBlock(type);
               setSelectedComponent(newId);
             }}
           />
         </ResizablePanel>
-        
+
         <ResizableHandle withHandle />
-        
+
         {/* Central Preview */}
         <ResizablePanel defaultSize={55}>
-          <PreviewPanel 
+          <PreviewPanel
             primaryStyle={primaryStyle}
             onSelectComponent={setSelectedComponent}
             selectedComponentId={selectedComponent}
           />
         </ResizablePanel>
-        
+
         <ResizableHandle withHandle />
-        
+
         {/* Right Properties Panel */}
         <ResizablePanel defaultSize={25} minSize={20} maxSize={35}>
-          <PropertiesPanel 
+          <PropertiesPanel
             selectedComponentId={selectedComponent}
             onClose={() => setSelectedComponent(null)}
             onUpdate={(content) => {

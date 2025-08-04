@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   DndContext,
   DragEndEvent,
@@ -11,16 +11,19 @@ import {
   closestCenter,
   KeyboardSensor,
   TouchSensor,
-  rectIntersection
-} from '@dnd-kit/core';
+  rectIntersection,
+} from "@dnd-kit/core";
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy
-} from '@dnd-kit/sortable';
-import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
-import { createPortal } from 'react-dom';
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import {
+  restrictToVerticalAxis,
+  restrictToWindowEdges,
+} from "@dnd-kit/modifiers";
+import { createPortal } from "react-dom";
 
 // Tipo local para BlockData
 interface BlockData {
@@ -46,17 +49,20 @@ export const DndProvider: React.FC<DndProviderProps> = ({
   onBlockAdd,
   onBlockSelect,
   selectedBlockId,
-  onBlockUpdate
+  onBlockUpdate,
 }) => {
   const [activeBlock, setActiveBlock] = React.useState<BlockData | null>(null);
 
   // Debug: Log de inicialização
   React.useEffect(() => {
-    console.log('🚀 DndProvider montado! Blocks:', blocks.length);
+    console.log("🚀 DndProvider montado! Blocks:", blocks.length);
   }, []);
 
   React.useEffect(() => {
-    console.log('📦 Blocks atualizados no DndProvider:', blocks.map(b => ({ id: b.id, type: b.type })));
+    console.log(
+      "📦 Blocks atualizados no DndProvider:",
+      blocks.map((b) => ({ id: b.id, type: b.type })),
+    );
   }, [blocks]);
 
   const sensors = useSensors(
@@ -70,112 +76,128 @@ export const DndProvider: React.FC<DndProviderProps> = ({
         delay: 100, // Reduzido de 200 para 100
         tolerance: 5, // Reduzido de 8 para 5
       },
-    })
+    }),
   );
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
-    
-    console.log('🟢 DragStart:', {
+
+    console.log("🟢 DragStart:", {
       id: active.id,
       type: active.data.current?.type,
       blockType: active.data.current?.blockType,
-      data: active.data.current
+      data: active.data.current,
     });
-    
+
     // Garantir que o tipo seja reconhecido
     if (!active.data.current?.type) {
-      console.error('❌ DragStart: active.data.current.type está undefined!');
+      console.error("❌ DragStart: active.data.current.type está undefined!");
       return;
     }
-    
+
     // 🎯 Haptic feedback para dispositivos móveis
-    if ('vibrate' in navigator) {
+    if ("vibrate" in navigator) {
       navigator.vibrate(50);
     }
-    
+
     // Configurar activeBlock baseado no tipo
-    if (active.data.current?.type === 'sidebar-component') {
+    if (active.data.current?.type === "sidebar-component") {
       // Para componentes do sidebar, criar um objeto temporário
       setActiveBlock({
         id: active.id.toString(),
         type: active.data.current.blockType,
-        properties: {}
+        properties: {},
       });
     } else {
       // Para blocos existentes, buscar no array
-      const activeBlockData = blocks.find(block => block.id === active.id);
+      const activeBlockData = blocks.find((block) => block.id === active.id);
       setActiveBlock(activeBlockData || null);
     }
   };
 
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
-    
+
     if (!over) {
-      console.log('🟡 DragOver: over é null - não está sobre nenhuma drop zone');
+      console.log(
+        "🟡 DragOver: over é null - não está sobre nenhuma drop zone",
+      );
       return;
     }
 
-    console.log('🟡 DragOver:', {
+    console.log("🟡 DragOver:", {
       activeId: active.id,
       overId: over.id,
       activeType: active.data.current?.type,
       overType: over.data.current?.type,
-      overData: over.data.current
+      overData: over.data.current,
     });
 
     // Se estamos arrastando de um sidebar (componente novo)
-    if (active.data.current?.type === 'sidebar-component' && over.data.current?.type === 'canvas-drop-zone') {
-      console.log('✅ Sidebar -> Canvas detectado durante DragOver');
+    if (
+      active.data.current?.type === "sidebar-component" &&
+      over.data.current?.type === "canvas-drop-zone"
+    ) {
+      console.log("✅ Sidebar -> Canvas detectado durante DragOver");
       return;
     }
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    
+
     setActiveBlock(null);
 
     if (!over) return;
 
-    console.log('🔄 DragEnd:', { 
-      active: active.id, 
+    console.log("🔄 DragEnd:", {
+      active: active.id,
       over: over.id,
       activeType: active.data.current?.type,
-      overType: over.data.current?.type 
+      overType: over.data.current?.type,
     });
 
     // Reordenar blocos existentes no canvas
-    if (active.data.current?.type === 'canvas-block' && over.data.current?.type === 'canvas-block') {
-      const activeIndex = blocks.findIndex(block => block.id === active.id);
-      const overIndex = blocks.findIndex(block => block.id === over.id);
+    if (
+      active.data.current?.type === "canvas-block" &&
+      over.data.current?.type === "canvas-block"
+    ) {
+      const activeIndex = blocks.findIndex((block) => block.id === active.id);
+      const overIndex = blocks.findIndex((block) => block.id === over.id);
 
-      console.log(`🔄 Reordenando: ${active.id} (${activeIndex}) -> ${over.id} (${overIndex})`);
+      console.log(
+        `🔄 Reordenando: ${active.id} (${activeIndex}) -> ${over.id} (${overIndex})`,
+      );
 
       if (activeIndex !== overIndex && activeIndex !== -1 && overIndex !== -1) {
         const newBlocks = arrayMove(blocks, activeIndex, overIndex);
-        console.log('📦 Nova ordem dos blocos:', newBlocks.map(b => b.id));
+        console.log(
+          "📦 Nova ordem dos blocos:",
+          newBlocks.map((b) => b.id),
+        );
         onBlocksReorder(newBlocks);
       }
       return;
     }
 
     // Adicionar novo bloco do sidebar
-    if (active.data.current?.type === 'sidebar-component' && over.data.current?.type === 'canvas-drop-zone') {
+    if (
+      active.data.current?.type === "sidebar-component" &&
+      over.data.current?.type === "canvas-drop-zone"
+    ) {
       const blockType = active.data.current.blockType;
       const position = over.data.current.position || blocks.length;
-      console.log('➕ Adicionando bloco:', blockType, 'na posição:', position);
+      console.log("➕ Adicionando bloco:", blockType, "na posição:", position);
       onBlockAdd(blockType, position);
       return;
     }
 
     // Debug: Log quando não há match
-    console.log('⚠️ Nenhuma condição de drop atendida:', {
+    console.log("⚠️ Nenhuma condição de drop atendida:", {
       activeType: active.data.current?.type,
       overType: over.data.current?.type,
       activeId: active.id,
-      overId: over.id
+      overId: over.id,
     });
   };
 
@@ -189,18 +211,20 @@ export const DndProvider: React.FC<DndProviderProps> = ({
     >
       {/* Remover SortableContext temporariamente para testar se há conflito */}
       {children}
-      
+
       {/* Drag Overlay aprimorado para preview premium */}
       {createPortal(
         <DragOverlay>
           {activeBlock ? (
-            <div className="
+            <div
+              className="
               bg-white/95 backdrop-blur-md shadow-2xl rounded-xl 
               border-2 border-brand/60 ring-1 ring-brand/30
               transform rotate-2 scale-105 p-4
               animate-pulse transition-all duration-200
               min-w-[200px]
-            ">
+            "
+            >
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-brand/10 rounded-lg flex items-center justify-center">
                   <div className="w-4 h-4 bg-brand rounded-sm"></div>
@@ -217,7 +241,7 @@ export const DndProvider: React.FC<DndProviderProps> = ({
             </div>
           ) : null}
         </DragOverlay>,
-        document.body
+        document.body,
       )}
     </DndContext>
   );

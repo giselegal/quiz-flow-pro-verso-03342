@@ -1,6 +1,6 @@
-import React from 'react';
-import FunnelHeroSection from '@/components/funnel/base/FunnelHeroSection';
-import FunnelPainSection from '@/components/funnel/base/FunnelPainSection';
+import React from "react";
+import FunnelHeroSection from "@/components/funnel/base/FunnelHeroSection";
+import FunnelPainSection from "@/components/funnel/base/FunnelPainSection";
 
 // Interface que todos os blocos do editor devem implementar
 interface BlockComponentProps {
@@ -16,7 +16,7 @@ interface BlockComponentProps {
 
 /**
  * UnifiedFunnelHeroBlock - Wrapper que adapta FunnelHeroSection para o editor
- * 
+ *
  * Este wrapper conecta nosso componente base reutilizável com a interface
  * esperada pelo sistema de blocos do editor, mantendo 100% de fidelidade visual.
  */
@@ -29,7 +29,9 @@ export const UnifiedFunnelHeroBlock: React.FC<BlockComponentProps> = ({
   if (!block || !block.properties) {
     return (
       <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
-        <p className="text-red-600 font-medium">Erro: Propriedades do bloco inválidas</p>
+        <p className="text-red-600 font-medium">
+          Erro: Propriedades do bloco inválidas
+        </p>
       </div>
     );
   }
@@ -41,9 +43,9 @@ export const UnifiedFunnelHeroBlock: React.FC<BlockComponentProps> = ({
   // Usar o componente base exatamente como no funil real
   return (
     <FunnelHeroSection
-      title={block.properties.title || 'Título do Hero'}
-      description={block.properties.description || 'Descrição do hero section'}
-      ctaText={block.properties.ctaText || 'Call to Action'}
+      title={block.properties.title || "Título do Hero"}
+      description={block.properties.description || "Descrição do hero section"}
+      ctaText={block.properties.ctaText || "Call to Action"}
       {...block.properties}
       isSelected={isSelected}
       onClick={handleClick}
@@ -53,7 +55,7 @@ export const UnifiedFunnelHeroBlock: React.FC<BlockComponentProps> = ({
 
 /**
  * UnifiedFunnelPainBlock - Wrapper que adapta FunnelPainSection para o editor
- * 
+ *
  * Este wrapper conecta nosso componente base reutilizável com a interface
  * esperada pelo sistema de blocos do editor, mantendo 100% de fidelidade visual.
  */
@@ -66,7 +68,9 @@ export const UnifiedFunnelPainBlock: React.FC<BlockComponentProps> = ({
   if (!block || !block.properties) {
     return (
       <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
-        <p className="text-red-600 font-medium">Erro: Propriedades do bloco inválidas</p>
+        <p className="text-red-600 font-medium">
+          Erro: Propriedades do bloco inválidas
+        </p>
       </div>
     );
   }
@@ -76,14 +80,14 @@ export const UnifiedFunnelPainBlock: React.FC<BlockComponentProps> = ({
   };
 
   // Garantir que painPoints seja um array válido
-  const painPoints = Array.isArray(block.properties.painPoints) 
-    ? block.properties.painPoints 
+  const painPoints = Array.isArray(block.properties.painPoints)
+    ? block.properties.painPoints
     : [];
 
   // Usar o componente base exatamente como no funil real
   return (
     <FunnelPainSection
-      title={block.properties.title || 'Seção de Problemas'}
+      title={block.properties.title || "Seção de Problemas"}
       painPoints={painPoints}
       {...block.properties}
       isSelected={isSelected}

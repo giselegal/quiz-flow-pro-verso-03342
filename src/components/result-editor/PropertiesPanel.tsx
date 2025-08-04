@@ -1,10 +1,9 @@
-
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { X } from 'lucide-react';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { X } from "lucide-react";
 
 interface PropertiesPanelProps {
   selectedBlock: any;
@@ -17,12 +16,14 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   selectedBlock,
   onUpdateBlock,
   onDeleteBlock,
-  onClose
+  onClose,
 }) => {
   if (!selectedBlock) {
     return (
       <div className="h-full bg-white border-l border-gray-200 p-4 flex items-center justify-center">
-        <p className="text-gray-500">Selecione um bloco para editar suas propriedades</p>
+        <p className="text-gray-500">
+          Selecione um bloco para editar suas propriedades
+        </p>
       </div>
     );
   }
@@ -32,8 +33,8 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
       ...selectedBlock,
       content: {
         ...selectedBlock.content,
-        [key]: value
-      }
+        [key]: value,
+      },
     });
   };
 
@@ -45,46 +46,46 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           <X className="w-4 h-4" />
         </Button>
       </div>
-      
+
       <div className="flex-1 p-4 space-y-4 overflow-y-auto">
         <div>
           <Label htmlFor="block-type">Tipo</Label>
-          <Input 
+          <Input
             id="block-type"
-            value={selectedBlock.type} 
-            disabled 
+            value={selectedBlock.type}
+            disabled
             className="bg-gray-50"
           />
         </div>
 
-        {selectedBlock.type === 'text' && (
+        {selectedBlock.type === "text" && (
           <div>
             <Label htmlFor="text-content">Conteúdo</Label>
             <Textarea
               id="text-content"
-              value={selectedBlock.content?.text || ''}
-              onChange={(e) => handlePropertyChange('text', e.target.value)}
+              value={selectedBlock.content?.text || ""}
+              onChange={(e) => handlePropertyChange("text", e.target.value)}
               rows={4}
             />
           </div>
         )}
 
-        {selectedBlock.type === 'heading' && (
+        {selectedBlock.type === "heading" && (
           <>
             <div>
               <Label htmlFor="heading-text">Texto do Título</Label>
               <Input
                 id="heading-text"
-                value={selectedBlock.content?.text || ''}
-                onChange={(e) => handlePropertyChange('text', e.target.value)}
+                value={selectedBlock.content?.text || ""}
+                onChange={(e) => handlePropertyChange("text", e.target.value)}
               />
             </div>
             <div>
               <Label htmlFor="heading-level">Nível</Label>
               <select
                 id="heading-level"
-                value={selectedBlock.content?.level || 'h2'}
-                onChange={(e) => handlePropertyChange('level', e.target.value)}
+                value={selectedBlock.content?.level || "h2"}
+                onChange={(e) => handlePropertyChange("level", e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
               >
                 <option value="h1">H1</option>
@@ -98,14 +99,16 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           </>
         )}
 
-        {selectedBlock.type === 'image' && (
+        {selectedBlock.type === "image" && (
           <>
             <div>
               <Label htmlFor="image-url">URL da Imagem</Label>
               <Input
                 id="image-url"
-                value={selectedBlock.content?.imageUrl || ''}
-                onChange={(e) => handlePropertyChange('imageUrl', e.target.value)}
+                value={selectedBlock.content?.imageUrl || ""}
+                onChange={(e) =>
+                  handlePropertyChange("imageUrl", e.target.value)
+                }
                 placeholder="https://exemplo.com/imagem.jpg"
               />
             </div>
@@ -113,30 +116,30 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <Label htmlFor="image-alt">Texto Alternativo</Label>
               <Input
                 id="image-alt"
-                value={selectedBlock.content?.alt || ''}
-                onChange={(e) => handlePropertyChange('alt', e.target.value)}
+                value={selectedBlock.content?.alt || ""}
+                onChange={(e) => handlePropertyChange("alt", e.target.value)}
                 placeholder="Descrição da imagem"
               />
             </div>
           </>
         )}
 
-        {selectedBlock.type === 'button' && (
+        {selectedBlock.type === "button" && (
           <>
             <div>
               <Label htmlFor="button-text">Texto do Botão</Label>
               <Input
                 id="button-text"
-                value={selectedBlock.content?.text || ''}
-                onChange={(e) => handlePropertyChange('text', e.target.value)}
+                value={selectedBlock.content?.text || ""}
+                onChange={(e) => handlePropertyChange("text", e.target.value)}
               />
             </div>
             <div>
               <Label htmlFor="button-url">URL de Destino</Label>
               <Input
                 id="button-url"
-                value={selectedBlock.content?.url || ''}
-                onChange={(e) => handlePropertyChange('url', e.target.value)}
+                value={selectedBlock.content?.url || ""}
+                onChange={(e) => handlePropertyChange("url", e.target.value)}
                 placeholder="https://exemplo.com"
               />
             </div>
@@ -144,8 +147,8 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         )}
 
         <div className="pt-4 border-t border-gray-200">
-          <Button 
-            variant="destructive" 
+          <Button
+            variant="destructive"
             onClick={() => onDeleteBlock(selectedBlock.id)}
             className="w-full"
           >

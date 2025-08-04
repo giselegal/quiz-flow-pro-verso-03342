@@ -629,7 +629,7 @@ const QuizOfferPageV2: React.FC = () => {
         BONUS_2_VISAGISM_IMAGE_URL,
         GUARANTEE_IMAGE_URL,
       ],
-      { quality: 95 }
+      { quality: 95 },
     );
 
     if (typeof window !== "undefined" && "performance" in window) {
@@ -643,7 +643,7 @@ const QuizOfferPageV2: React.FC = () => {
 
   const handleCtaClick = (
     buttonId: string,
-    action: string = "Comprar Agora"
+    action: string = "Comprar Agora",
   ) => {
     trackButtonClick(buttonId, action, "quiz_offer_page_v2");
   };

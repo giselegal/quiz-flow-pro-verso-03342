@@ -1,6 +1,5 @@
-
-import { useLocation } from 'wouter';
-import { useCallback } from 'react';
+import { useLocation } from "wouter";
+import { useCallback } from "react";
 
 interface NavigationOptions {
   replace?: boolean;
@@ -10,16 +9,19 @@ interface NavigationOptions {
 export const useUniversalNavigation = (options: NavigationOptions = {}) => {
   const [location, setLocation] = useLocation();
 
-  const navigate = useCallback((path: string, navOptions?: NavigationOptions) => {
-    const finalOptions = { ...options, ...navOptions };
-    
-    if (finalOptions.replace) {
-      // For wouter, we use setLocation to navigate
-      setLocation(path);
-    } else {
-      setLocation(path);
-    }
-  }, [setLocation, options]);
+  const navigate = useCallback(
+    (path: string, navOptions?: NavigationOptions) => {
+      const finalOptions = { ...options, ...navOptions };
+
+      if (finalOptions.replace) {
+        // For wouter, we use setLocation to navigate
+        setLocation(path);
+      } else {
+        setLocation(path);
+      }
+    },
+    [setLocation, options],
+  );
 
   const goBack = useCallback(() => {
     window.history.back();
@@ -39,6 +41,6 @@ export const useUniversalNavigation = (options: NavigationOptions = {}) => {
     goBack,
     goForward,
     reload,
-    currentPath: location
+    currentPath: location,
   };
 };

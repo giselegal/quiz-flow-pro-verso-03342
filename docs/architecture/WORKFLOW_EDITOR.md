@@ -25,16 +25,17 @@ O editor é um sistema completo de criação de funis/quizzes com interface drag
 ```typescript
 // Hook principal: useSchemaEditorFixed
 const {
-  funnel,           // Estado do funil atual
-  currentPage,      // Página sendo editada
-  selectedBlock,    // Bloco selecionado
-  isLoading,        // Estado de carregamento
-  isSaving,         // Estado de salvamento
+  funnel, // Estado do funil atual
+  currentPage, // Página sendo editada
+  selectedBlock, // Bloco selecionado
+  isLoading, // Estado de carregamento
+  isSaving, // Estado de salvamento
   // ... métodos de manipulação
 } = useSchemaEditor(funnelId);
 ```
 
 **Processo:**
+
 1. 🚀 Editor carrega com `funnelId` (se fornecido)
 2. 📥 `loadFunnel()` busca dados do Supabase ou cria novo funil
 3. 🎨 Interface renderiza com 3 painéis principais
@@ -50,6 +51,7 @@ const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
 ```
 
 **Fluxo de Dados:**
+
 ```
 Ação do Usuário → Hook useSchemaEditor → Estado Local → Supabase
                                       ↓
@@ -59,21 +61,23 @@ Ação do Usuário → Hook useSchemaEditor → Estado Local → Supabase
 ### 3. **Sistema Drag & Drop**
 
 #### **Sidebar de Componentes**
+
 ```typescript
 // Componentes disponíveis
 const blockTypes = [
-  'heading-inline',      // Títulos
-  'text-inline',         // Textos
-  'image-display-inline', // Imagens
-  'form-input',          // Campos de entrada
-  'options-grid',        // Grade de opções
-  'quiz-intro-header',   // Cabeçalho do quiz
-  'style-card-inline',   // Cards de estilo
-  'button-inline'        // Botões
+  "heading-inline", // Títulos
+  "text-inline", // Textos
+  "image-display-inline", // Imagens
+  "form-input", // Campos de entrada
+  "options-grid", // Grade de opções
+  "quiz-intro-header", // Cabeçalho do quiz
+  "style-card-inline", // Cards de estilo
+  "button-inline", // Botões
 ];
 ```
 
 #### **Canvas Droppable**
+
 ```typescript
 // DroppableCanvas.tsx
 <div ref={setNodeRef} className="canvas-drop-zone">
@@ -91,53 +95,63 @@ const blockTypes = [
 ### 4. **Operações CRUD**
 
 #### **Criar Bloco**
+
 ```typescript
-const addBlock = (blockData: Omit<BlockData, 'id'>) => {
+const addBlock = (blockData: Omit<BlockData, "id">) => {
   const newBlock = {
     ...blockData,
-    id: `block-${Date.now()}`
+    id: `block-${Date.now()}`,
   };
-  
-  updateFunnelState(prev => ({
+
+  updateFunnelState((prev) => ({
     ...prev,
-    pages: prev.pages.map(page =>
+    pages: prev.pages.map((page) =>
       page.id === currentPageId
         ? { ...page, blocks: [...page.blocks, newBlock] }
-        : page
-    )
+        : page,
+    ),
   }));
 };
 ```
 
 #### **Atualizar Bloco**
+
 ```typescript
 const updateBlock = (blockId: string, updates: Partial<BlockData>) => {
-  updateFunnelState(prev => ({
+  updateFunnelState((prev) => ({
     ...prev,
-    pages: prev.pages.map(page => ({
+    pages: prev.pages.map((page) => ({
       ...page,
-      blocks: page.blocks.map(block =>
-        block.id === blockId ? { ...block, ...updates } : block
-      )
-    }))
+      blocks: page.blocks.map((block) =>
+        block.id === blockId ? { ...block, ...updates } : block,
+      ),
+    })),
   }));
 };
 ```
 
 #### **Deletar Bloco**
+
 ```typescript
 const deleteBlock = async (blockId: string) => {
   // 1. Deletar no backend
-  await schemaDrivenFunnelService.deleteBlock(funnel.id, currentPage.id, blockId);
-  
+  await schemaDrivenFunnelService.deleteBlock(
+    funnel.id,
+    currentPage.id,
+    blockId,
+  );
+
   // 2. Atualizar estado local
-  updateFunnelState(prev => ({
+  updateFunnelState((prev) => ({
     ...prev,
-    pages: prev.pages.map(page =>
+    pages: prev.pages.map((page) =>
       page.id === currentPage.id
-        ? { ...page, blocks: page.blocks.filter(block => block.id !== blockId) }
-        : page
-    )
+        ? {
+            ...page,
+            blocks: page.blocks.filter((block) => block.id !== blockId),
+          }
+        : page,
+    ),
   }));
 };
 ```
@@ -145,15 +159,22 @@ const deleteBlock = async (blockId: string) => {
 ### 5. **Sistema de Persistência**
 
 #### **Salvamento Manual**
+
 ```typescript
 const saveFunnel = async (manual: boolean = true) => {
   setIsSaving(true);
   try {
-    const savedFunnel = await schemaDrivenFunnelService.saveFunnel(funnel, !manual);
+    const savedFunnel = await schemaDrivenFunnelService.saveFunnel(
+      funnel,
+      !manual,
+    );
     setFunnel(savedFunnel);
-    
+
     if (manual) {
-      toast({ title: "Funil salvo!", description: "Todas as alterações foram salvas." });
+      toast({
+        title: "Funil salvo!",
+        description: "Todas as alterações foram salvas.",
+      });
     }
   } catch (error) {
     toast({ title: "Erro ao salvar", variant: "destructive" });
@@ -164,14 +185,15 @@ const saveFunnel = async (manual: boolean = true) => {
 ```
 
 #### **Backup Local**
+
 ```typescript
 const saveToLocal = (funnelData: SchemaDrivenFunnelData) => {
   try {
-    localStorage.setItem('schema-driven-funnel', JSON.stringify(funnelData));
+    localStorage.setItem("schema-driven-funnel", JSON.stringify(funnelData));
   } catch (error) {
     // Limpeza automática se quota excedida
-    localStorage.removeItem('schema-driven-versions');
-    localStorage.setItem('schema-driven-funnel', JSON.stringify(funnelData));
+    localStorage.removeItem("schema-driven-versions");
+    localStorage.setItem("schema-driven-funnel", JSON.stringify(funnelData));
   }
 };
 ```
@@ -179,6 +201,7 @@ const saveToLocal = (funnelData: SchemaDrivenFunnelData) => {
 ### 6. **Renderização de Blocos**
 
 #### **Sistema de Blocos Modulares**
+
 ```typescript
 // Cada bloco tem estrutura padronizada
 interface BlockData {
@@ -195,6 +218,7 @@ interface BlockData {
 ```
 
 #### **Renderização Responsiva**
+
 ```typescript
 // Layout vertical centralizado
 <div className="flex flex-col items-center gap-6 w-full max-w-2xl mx-auto">
@@ -214,12 +238,12 @@ interface BlockData {
 // DynamicPropertiesPanel.tsx
 const updateBlockProperty = (key: string, value: any) => {
   if (!selectedBlockId) return;
-  
+
   const newProperties = {
     ...selectedBlock.properties,
-    [key]: value
+    [key]: value,
   };
-  
+
   updateBlock(selectedBlockId, { properties: newProperties });
 };
 ```
@@ -227,6 +251,7 @@ const updateBlockProperty = (key: string, value: any) => {
 ### 8. **Funcionalidades Avançadas**
 
 #### **Undo/Redo**
+
 ```typescript
 const [undoStack, setUndoStack] = useState<any[]>([]);
 const [redoStack, setRedoStack] = useState<any[]>([]);
@@ -234,14 +259,15 @@ const [redoStack, setRedoStack] = useState<any[]>([]);
 const handleUndo = () => {
   if (undoStack.length > 0) {
     const prevState = undoStack[undoStack.length - 1];
-    setUndoStack(prev => prev.slice(0, -1));
-    setRedoStack(prev => [...prev, currentPage]);
+    setUndoStack((prev) => prev.slice(0, -1));
+    setRedoStack((prev) => [...prev, currentPage]);
     updatePage(prevState.id, prevState);
   }
 };
 ```
 
 #### **Versionamento**
+
 ```typescript
 // Histórico de versões automático
 const saveVersion = (funnel: SchemaDrivenFunnelData) => {
@@ -249,27 +275,31 @@ const saveVersion = (funnel: SchemaDrivenFunnelData) => {
     id: `v-${Date.now()}`,
     timestamp: new Date(),
     data: funnel,
-    description: `Auto-save ${new Date().toLocaleString()}`
+    description: `Auto-save ${new Date().toLocaleString()}`,
   };
-  
+
   const versions = getVersionHistory();
   versions.push(version);
-  localStorage.setItem('schema-driven-versions', JSON.stringify(versions));
+  localStorage.setItem("schema-driven-versions", JSON.stringify(versions));
 };
 ```
 
 #### **Preview em Tempo Real**
+
 ```typescript
 // Visualização responsiva
-const deviceViews = ['mobile', 'tablet', 'desktop'];
-const [deviceView, setDeviceView] = useState<DeviceView>('desktop');
+const deviceViews = ["mobile", "tablet", "desktop"];
+const [deviceView, setDeviceView] = useState<DeviceView>("desktop");
 
 // CSS responsivo automático
 const getDeviceStyles = () => {
   switch (deviceView) {
-    case 'mobile': return 'max-w-sm';
-    case 'tablet': return 'max-w-2xl';
-    case 'desktop': return 'max-w-4xl';
+    case "mobile":
+      return "max-w-sm";
+    case "tablet":
+      return "max-w-2xl";
+    case "desktop":
+      return "max-w-4xl";
   }
 };
 ```
@@ -277,12 +307,14 @@ const getDeviceStyles = () => {
 ## 🎯 Fluxo Completo de Uso
 
 ### **1. Usuário Acessa Editor**
+
 ```
 /editor/:id → Carrega funil existente
 /editor     → Cria novo funil
 ```
 
 ### **2. Interface Carrega**
+
 ```
 ┌─ Sidebar ─┐ ┌─── Canvas ───┐ ┌─ Properties ─┐
 │ • Heading │ │              │ │              │
@@ -293,6 +325,7 @@ const getDeviceStyles = () => {
 ```
 
 ### **3. Usuário Arrasta Componente**
+
 ```
 Sidebar → Canvas: Drag & Drop
                 ↓
@@ -304,6 +337,7 @@ Sidebar → Canvas: Drag & Drop
 ```
 
 ### **4. Usuário Edita Propriedades**
+
 ```
 Clica no bloco → Seleciona → Properties Panel abre
                                       ↓
@@ -315,6 +349,7 @@ Clica no bloco → Seleciona → Properties Panel abre
 ```
 
 ### **5. Salvamento**
+
 ```
 Manual: Botão Save → saveFunnel() → Supabase + localStorage
 Auto:   Mudança detectada → Debounce → Save automático
@@ -347,7 +382,7 @@ interface SchemaDrivenPageData {
   id: string;
   name: string;
   title: string;
-  type: 'intro' | 'question' | 'transition' | 'result' | 'offer';
+  type: "intro" | "question" | "transition" | "result" | "offer";
   order: number;
   blocks: BlockData[];
   settings: PageSettings;

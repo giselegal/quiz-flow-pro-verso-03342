@@ -7,23 +7,25 @@
  * @param css CSS crítico a ser injetado
  * @param id Identificador opcional para o CSS crítico
  */
-export const injectCriticalCSS = (css: string, id = 'critical') => {
-  if (typeof document !== 'undefined') {
+export const injectCriticalCSS = (css: string, id = "critical") => {
+  if (typeof document !== "undefined") {
     // Verificar se já existe um estilo com este ID
-    const existingStyle = document.querySelector(`style[data-critical-id="${id}"]`);
+    const existingStyle = document.querySelector(
+      `style[data-critical-id="${id}"]`,
+    );
     if (existingStyle) {
       existingStyle.textContent = css;
       return;
     }
-    
+
     // Criar novo elemento de estilo
-    const styleEl = document.createElement('style');
-    styleEl.setAttribute('data-critical', 'true');
-    styleEl.setAttribute('data-critical-id', id);
+    const styleEl = document.createElement("style");
+    styleEl.setAttribute("data-critical", "true");
+    styleEl.setAttribute("data-critical-id", id);
     styleEl.textContent = css;
     document.head.appendChild(styleEl);
-    
-    if (process.env.NODE_ENV !== 'production') {
+
+    if (process.env.NODE_ENV !== "production") {
       console.log(`Critical CSS "${id}" injected, ${css.length} chars`);
     }
   }
@@ -34,16 +36,16 @@ export const injectCriticalCSS = (css: string, id = 'critical') => {
  * @param id Identificador opcional do CSS crítico a remover
  */
 export const removeCriticalCSS = (id?: string) => {
-  if (typeof document !== 'undefined') {
-    const selector = id 
+  if (typeof document !== "undefined") {
+    const selector = id
       ? `style[data-critical="true"][data-critical-id="${id}"]`
       : 'style[data-critical="true"]';
-      
+
     const criticalStyles = document.querySelectorAll(selector);
-    criticalStyles.forEach(style => {
+    criticalStyles.forEach((style) => {
       style.remove();
-      if (process.env.NODE_ENV !== 'production') {
-        console.log(`Critical CSS ${id ? `"${id}"` : ''} removed`);
+      if (process.env.NODE_ENV !== "production") {
+        console.log(`Critical CSS ${id ? `"${id}"` : ""} removed`);
       }
     });
   }
@@ -162,5 +164,5 @@ export default {
   removeCriticalCSS,
   initialCriticalCSS,
   heroCriticalCSS,
-  resultPageCriticalCSS
+  resultPageCriticalCSS,
 };

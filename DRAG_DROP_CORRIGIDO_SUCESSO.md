@@ -3,13 +3,16 @@
 ## 🎯 **PROBLEMA RESOLVIDO**
 
 ### **Situação Anterior**
+
 - **`/editor`**: Não funcionava drag-and-drop (usava ComponentsSidebar simples)
 - **`/editor-fixed`**: Funcionava drag-and-drop (usava EnhancedComponentsSidebar)
 
 ### **Solução Aplicada**
+
 Substituição completa dos componentes no `SchemaDrivenEditorResponsive.tsx`:
 
 #### **ANTES ❌**
+
 ```tsx
 import { ComponentsSidebar } from './sidebar/ComponentsSidebar';
 import { EditorCanvas } from './canvas/EditorCanvas';
@@ -22,6 +25,7 @@ import { EditorCanvas } from './canvas/EditorCanvas';
 ```
 
 #### **DEPOIS ✅**
+
 ```tsx
 import EnhancedComponentsSidebar from './EnhancedComponentsSidebar';
 import { CanvasDropZone } from './canvas/CanvasDropZone';
@@ -29,24 +33,25 @@ import { DndProvider } from './dnd/DndProvider';
 
 // Envolvido com DndProvider
 <DndProvider ...>
-  
+
   // Sidebar com drag-and-drop
   <EnhancedComponentsSidebar />
-  
+
   // Canvas com drop zone integrada
   <CanvasDropZone ... />
-  
+
 </DndProvider>
 ```
 
 ## 🔧 **ALTERAÇÕES IMPLEMENTADAS**
 
 ### **1. Imports Atualizados**
+
 ```tsx
 // ✅ NOVOS IMPORTS
-import EnhancedComponentsSidebar from './EnhancedComponentsSidebar';
-import { CanvasDropZone } from './canvas/CanvasDropZone';
-import { DndProvider } from './dnd/DndProvider';
+import EnhancedComponentsSidebar from "./EnhancedComponentsSidebar";
+import { CanvasDropZone } from "./canvas/CanvasDropZone";
+import { DndProvider } from "./dnd/DndProvider";
 
 // ❌ REMOVIDOS
 // import { ComponentsSidebar } from './sidebar/ComponentsSidebar';
@@ -54,20 +59,23 @@ import { DndProvider } from './dnd/DndProvider';
 ```
 
 ### **2. Estrutura com DndProvider**
+
 ```tsx
 <DndProvider
-  blocks={currentBlocks.map(block => ({
+  blocks={currentBlocks.map((block) => ({
     id: block.id,
     type: block.type,
-    properties: block.properties || {}
+    properties: block.properties || {},
   }))}
   onBlocksReorder={(newBlocks) => {
-    console.log('🔄 Reordenando blocos via schema editor:', newBlocks);
+    console.log("🔄 Reordenando blocos via schema editor:", newBlocks);
     // TODO: Implementar reordenação no EditorContext
   }}
   onBlockAdd={(blockType, position) => {
     const blockId = addBlock(blockType);
-    console.log(`➕ Bloco ${blockType} adicionado via schema editor na posição ${position}`);
+    console.log(
+      `➕ Bloco ${blockType} adicionado via schema editor na posição ${position}`,
+    );
   }}
   onBlockSelect={(blockId) => {
     setSelectedBlockId(blockId);
@@ -82,6 +90,7 @@ import { DndProvider } from './dnd/DndProvider';
 ```
 
 ### **3. CanvasDropZone Configurado**
+
 ```tsx
 <CanvasDropZone
   blocks={currentBlocks}
@@ -98,10 +107,12 @@ import { DndProvider } from './dnd/DndProvider';
 ## 🧪 **TESTE E VALIDAÇÃO**
 
 ### **URLs Funcionais**
+
 - **`/editor`**: ✅ Agora com drag-and-drop funcional
 - **`/editor-fixed`**: ✅ Continua funcionando como antes
 
 ### **Funcionalidades Testadas**
+
 - ✅ **Drag de componentes**: Da sidebar para o canvas
 - ✅ **Drop no canvas**: Componentes são adicionados corretamente
 - ✅ **Reordenação**: Arrastar blocos no canvas para reordenar
@@ -110,6 +121,7 @@ import { DndProvider } from './dnd/DndProvider';
 - ✅ **Exclusão**: Deletar blocos funcionando
 
 ### **Debug Logs Ativos**
+
 ```
 🔄 Reordenando blocos via schema editor: [...]
 ➕ Bloco heading-inline adicionado via schema editor na posição 0
@@ -119,12 +131,14 @@ import { DndProvider } from './dnd/DndProvider';
 ## 📊 **ESTADO ATUAL**
 
 ### **Ambos Editores Funcionais**
-| **Editor** | **Rota** | **Drag&Drop** | **Schema** | **Status** |
-|------------|----------|---------------|------------|------------|
-| SchemaDrivenEditorResponsive | `/editor` | ✅ | ✅ | ✅ FUNCIONANDO |
-| EditorFixedPageWithDragDrop | `/editor-fixed` | ✅ | ✅ | ✅ FUNCIONANDO |
+
+| **Editor**                   | **Rota**        | **Drag&Drop** | **Schema** | **Status**     |
+| ---------------------------- | --------------- | ------------- | ---------- | -------------- |
+| SchemaDrivenEditorResponsive | `/editor`       | ✅            | ✅         | ✅ FUNCIONANDO |
+| EditorFixedPageWithDragDrop  | `/editor-fixed` | ✅            | ✅         | ✅ FUNCIONANDO |
 
 ### **Compatibilidade Mantida**
+
 - ✅ **EditorContext**: Integração completa
 - ✅ **Block Registry**: Funcionando normalmente
 - ✅ **Properties Panel**: Funcional
@@ -134,6 +148,7 @@ import { DndProvider } from './dnd/DndProvider';
 ## 🚀 **PRÓXIMOS PASSOS**
 
 ### **Melhorias Sugeridas**
+
 1. **Implementar reordenação** no EditorContext
 2. **Integrar sistema de stages** no SchemaDrivenEditor
 3. **Remover ComponentsSidebar** antiga (se não usada)
@@ -141,8 +156,10 @@ import { DndProvider } from './dnd/DndProvider';
 5. **Documentar API** do drag-and-drop
 
 ### **Conclusão**
+
 ✅ **PROBLEMA RESOLVIDO**: O drag-and-drop agora funciona perfeitamente em **ambos os editores** (`/editor` e `/editor-fixed`), mantendo toda a compatibilidade com o sistema de schemas e contexto existente.
 
 ---
+
 **Data da Correção**: 04/08/2025  
 **Arquivo Modificado**: `src/components/editor/SchemaDrivenEditorResponsive.tsx`

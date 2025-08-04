@@ -1,6 +1,6 @@
-import React from 'react';
-import { ComponentProps } from '@/interfaces/quiz';
-import styles from '@/styles/quiz.module.css';
+import React from "react";
+import { ComponentProps } from "@/interfaces/quiz";
+import styles from "@/styles/quiz.module.css";
 
 interface QuizEmailProps extends ComponentProps {
   label?: string;
@@ -10,10 +10,10 @@ interface QuizEmailProps extends ComponentProps {
 }
 
 const QuizEmail: React.FC<QuizEmailProps> = ({
-  label = 'Seu email',
-  placeholder = 'seu@email.com',
+  label = "Seu email",
+  placeholder = "seu@email.com",
   required = true,
-  width = '100%',
+  width = "100%",
   isSelected,
   onClick,
 }) => {
@@ -27,8 +27,8 @@ const QuizEmail: React.FC<QuizEmailProps> = ({
   };
 
   return (
-    <div 
-      className={`${styles.quizComponent} ${styles.inputField} ${isSelected ? styles.selected : ''}`}
+    <div
+      className={`${styles.quizComponent} ${styles.inputField} ${isSelected ? styles.selected : ""}`}
       onClick={handleClick}
       style={{ width }}
     >
@@ -37,7 +37,7 @@ const QuizEmail: React.FC<QuizEmailProps> = ({
           {label}
           {required && <span className={styles.required}>*</span>}
         </label>
-        
+
         <div className={styles.inputWrapper}>
           <span className={styles.inputIcon}>📧</span>
           <input
@@ -48,12 +48,8 @@ const QuizEmail: React.FC<QuizEmailProps> = ({
             readOnly
           />
         </div>
-        
-        {required && (
-          <div className={styles.inputHint}>
-            Campo obrigatório
-          </div>
-        )}
+
+        {required && <div className={styles.inputHint}>Campo obrigatório</div>}
       </div>
     </div>
   );

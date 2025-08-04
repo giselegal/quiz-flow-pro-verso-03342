@@ -1,10 +1,25 @@
-import React, { useState } from 'react';
-import { Block } from '@/types/editor';
-import { SortableBlock } from './SortableBlock';
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
-import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { restrictToVerticalAxis, restrictToParentElement } from '@dnd-kit/modifiers';
-import { ResultPageBlock } from '@/types/quizResult';
+import React, { useState } from "react";
+import { Block } from "@/types/editor";
+import { SortableBlock } from "./SortableBlock";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import {
+  restrictToVerticalAxis,
+  restrictToParentElement,
+} from "@dnd-kit/modifiers";
+import { ResultPageBlock } from "@/types/quizResult";
 
 interface DraggableBlockListProps {
   blocks: Block[];
@@ -23,7 +38,7 @@ export const DraggableBlockList: React.FC<DraggableBlockListProps> = ({
   onSelectBlock,
   onReorderBlocks,
   onDuplicateBlock,
-  onDeleteBlock
+  onDeleteBlock,
 }) => {
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -33,16 +48,16 @@ export const DraggableBlockList: React.FC<DraggableBlockListProps> = ({
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    
+
     if (over && active.id !== over.id) {
       const oldIndex = blocks.findIndex((block) => block.id === active.id);
       const newIndex = blocks.findIndex((block) => block.id === over.id);
-      
+
       if (oldIndex !== -1 && newIndex !== -1) {
         onReorderBlocks(oldIndex, newIndex);
       }
@@ -57,7 +72,7 @@ export const DraggableBlockList: React.FC<DraggableBlockListProps> = ({
       modifiers={[restrictToVerticalAxis, restrictToParentElement]}
     >
       <SortableContext
-        items={blocks.map(block => block.id)}
+        items={blocks.map((block) => block.id)}
         strategy={verticalListSortingStrategy}
       >
         <div className="space-y-4 p-4">
@@ -68,8 +83,12 @@ export const DraggableBlockList: React.FC<DraggableBlockListProps> = ({
               isSelected={selectedBlockId === block.id}
               isPreviewing={isPreviewing}
               onSelect={() => onSelectBlock(block.id)}
-              onDuplicate={onDuplicateBlock ? () => onDuplicateBlock(block.id) : undefined}
-              onDelete={onDeleteBlock ? () => onDeleteBlock(block.id) : undefined}
+              onDuplicate={
+                onDuplicateBlock ? () => onDuplicateBlock(block.id) : undefined
+              }
+              onDelete={
+                onDeleteBlock ? () => onDeleteBlock(block.id) : undefined
+              }
             />
           ))}
         </div>

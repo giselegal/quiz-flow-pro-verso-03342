@@ -23,7 +23,7 @@
       "icons": [{ "src": "/favicon.ico", "sizes": "192x192" }]
     },
     {
-      "name": "View Funnels", 
+      "name": "View Funnels",
       "short_name": "Funnels",
       "url": "/admin/funis",
       "icons": [{ "src": "/favicon.ico", "sizes": "192x192" }]

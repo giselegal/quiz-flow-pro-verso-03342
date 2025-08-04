@@ -1,10 +1,10 @@
 /**
  * Blocos de Oferta Reutilizáveis - ETAPA 21 DO FUNIL COMPLETO
- * 
+ *
  * Página de oferta baseada em QuizOfferPage com componentes implementados:
  * - Hero section com introdução ao quiz ✅
  * - Títulos de seção configuráveis ✅
- * 
+ *
  * TODO: Implementar blocos adicionais baseados na QuizOfferPage:
  * - Seções de problemas e motivação
  * - Demonstração da solução (quiz)
@@ -19,8 +19,8 @@
  */
 
 // Blocos implementados
-export { default as HeroSectionBlock } from './HeroSectionBlock';
-export { default as SectionTitleBlock } from './SectionTitleBlock';
+export { default as HeroSectionBlock } from "./HeroSectionBlock";
+export { default as SectionTitleBlock } from "./SectionTitleBlock";
 
 // TODO: Implementar conforme necessário
 // export { default as ProblemIdentificationBlock } from './ProblemIdentificationBlock';
@@ -35,5 +35,5 @@ export { default as SectionTitleBlock } from './SectionTitleBlock';
 // export { default as SocialProofBlock } from './SocialProofBlock';
 
 // Re-export types para facilitar importação
-export type { HeroSectionBlockProps } from './HeroSectionBlock';
-export type { SectionTitleBlockProps } from './SectionTitleBlock';
+export type { HeroSectionBlockProps } from "./HeroSectionBlock";
+export type { SectionTitleBlockProps } from "./SectionTitleBlock";

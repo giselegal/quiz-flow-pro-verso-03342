@@ -2,10 +2,10 @@
 // components/editor/components/SimpleSortableItem.tsx - Item ordenável simples
 // =====================================================================
 
-import React from 'react';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { GripVertical } from 'lucide-react';
+import React from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { GripVertical } from "lucide-react";
 
 interface SimpleSortableItemProps {
   id: string;
@@ -16,7 +16,7 @@ interface SimpleSortableItemProps {
 export const SimpleSortableItem: React.FC<SimpleSortableItemProps> = ({
   id,
   children,
-  className = ''
+  className = "",
 }) => {
   const {
     attributes,
@@ -37,7 +37,7 @@ export const SimpleSortableItem: React.FC<SimpleSortableItemProps> = ({
       ref={setNodeRef}
       style={style}
       className={`flex items-center space-x-2 p-2 bg-white border border-gray-200 rounded-md ${
-        isDragging ? 'opacity-50 shadow-lg' : 'hover:shadow-sm'
+        isDragging ? "opacity-50 shadow-lg" : "hover:shadow-sm"
       } ${className}`}
     >
       <div
@@ -47,9 +47,7 @@ export const SimpleSortableItem: React.FC<SimpleSortableItemProps> = ({
       >
         <GripVertical className="w-4 h-4" />
       </div>
-      <div className="flex-1">
-        {children}
-      </div>
+      <div className="flex-1">{children}</div>
     </div>
   );
 };

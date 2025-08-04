@@ -1,16 +1,35 @@
-import React, { useState } from 'react';
-import { ResultPageBlock, StyleResultBlock, CTABlock, TestimonialBlock, CarouselBlock } from '@/types/quizResult';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { PlusCircle, Trash2, Copy, Eye, EyeOff } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  ResultPageBlock,
+  StyleResultBlock,
+  CTABlock,
+  TestimonialBlock,
+  CarouselBlock,
+} from "@/types/quizResult";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { PlusCircle, Trash2, Copy, Eye, EyeOff } from "lucide-react";
 
 interface ResultPageBlockEditorProps {
   block: ResultPageBlock;
@@ -27,14 +46,16 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
   onDelete,
   onDuplicate,
   abTestVariants = [],
-  abTestEnabled = false
+  abTestEnabled = false,
 }) => {
-  const [activeTab, setActiveTab] = useState('content');
+  const [activeTab, setActiveTab] = useState("content");
 
-  const handleContentChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleContentChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     onUpdate({
       ...block,
-      content: e.target.value
+      content: e.target.value,
     });
   };
 
@@ -43,34 +64,34 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
       ...block,
       settings: {
         ...block.settings,
-        [key]: value
-      }
+        [key]: value,
+      },
     });
   };
 
   const handleVisibilityToggle = () => {
     onUpdate({
       ...block,
-      isVisible: block.isVisible === undefined ? false : !block.isVisible
+      isVisible: block.isVisible === undefined ? false : !block.isVisible,
     });
   };
 
   const handleAbTestVariantChange = (variant: string) => {
     onUpdate({
       ...block,
-      abTestVariant: variant
+      abTestVariant: variant,
     });
   };
 
   const renderSpecificBlockEditor = () => {
     switch (block.type) {
-      case 'styleResult':
+      case "styleResult":
         return renderStyleResultEditor(block as StyleResultBlock);
-      case 'cta':
+      case "cta":
         return renderCTAEditor(block as CTABlock);
-      case 'testimonial':
+      case "testimonial":
         return renderTestimonialEditor(block as TestimonialBlock);
-      case 'carousel':
+      case "carousel":
         return renderCarouselEditor(block as CarouselBlock);
       default:
         return renderDefaultEditor();
@@ -83,7 +104,9 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
         <Label htmlFor="styleCategory">Categoria de Estilo</Label>
         <Select
           value={styleBlock.styleCategory}
-          onValueChange={(value) => onUpdate({ ...styleBlock, styleCategory: value })}
+          onValueChange={(value) =>
+            onUpdate({ ...styleBlock, styleCategory: value })
+          }
         >
           <SelectTrigger id="styleCategory">
             <SelectValue placeholder="Selecione a categoria" />
@@ -109,7 +132,9 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
           min="0"
           max="100"
           value={styleBlock.percentage || 0}
-          onChange={(e) => onUpdate({ ...styleBlock, percentage: Number(e.target.value) })}
+          onChange={(e) =>
+            onUpdate({ ...styleBlock, percentage: Number(e.target.value) })
+          }
         />
       </div>
 
@@ -117,8 +142,10 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
         <Label htmlFor="description">Descrição</Label>
         <Textarea
           id="description"
-          value={styleBlock.description || ''}
-          onChange={(e) => onUpdate({ ...styleBlock, description: e.target.value })}
+          value={styleBlock.description || ""}
+          onChange={(e) =>
+            onUpdate({ ...styleBlock, description: e.target.value })
+          }
           rows={4}
         />
       </div>
@@ -132,7 +159,9 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
         <Input
           id="buttonText"
           value={ctaBlock.buttonText}
-          onChange={(e) => onUpdate({ ...ctaBlock, buttonText: e.target.value })}
+          onChange={(e) =>
+            onUpdate({ ...ctaBlock, buttonText: e.target.value })
+          }
         />
       </div>
 
@@ -149,7 +178,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
         <Label htmlFor="pixelId">ID do Pixel (opcional)</Label>
         <Input
           id="pixelId"
-          value={ctaBlock.pixelId || ''}
+          value={ctaBlock.pixelId || ""}
           onChange={(e) => onUpdate({ ...ctaBlock, pixelId: e.target.value })}
         />
       </div>
@@ -161,12 +190,16 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
             id="backgroundColor"
             type="color"
             className="w-12 h-10 p-1"
-            value={ctaBlock.backgroundColor || '#000000'}
-            onChange={(e) => onUpdate({ ...ctaBlock, backgroundColor: e.target.value })}
+            value={ctaBlock.backgroundColor || "#000000"}
+            onChange={(e) =>
+              onUpdate({ ...ctaBlock, backgroundColor: e.target.value })
+            }
           />
           <Input
-            value={ctaBlock.backgroundColor || '#000000'}
-            onChange={(e) => onUpdate({ ...ctaBlock, backgroundColor: e.target.value })}
+            value={ctaBlock.backgroundColor || "#000000"}
+            onChange={(e) =>
+              onUpdate({ ...ctaBlock, backgroundColor: e.target.value })
+            }
             className="flex-1"
           />
         </div>
@@ -179,12 +212,16 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
             id="textColor"
             type="color"
             className="w-12 h-10 p-1"
-            value={ctaBlock.textColor || '#ffffff'}
-            onChange={(e) => onUpdate({ ...ctaBlock, textColor: e.target.value })}
+            value={ctaBlock.textColor || "#ffffff"}
+            onChange={(e) =>
+              onUpdate({ ...ctaBlock, textColor: e.target.value })
+            }
           />
           <Input
-            value={ctaBlock.textColor || '#ffffff'}
-            onChange={(e) => onUpdate({ ...ctaBlock, textColor: e.target.value })}
+            value={ctaBlock.textColor || "#ffffff"}
+            onChange={(e) =>
+              onUpdate({ ...ctaBlock, textColor: e.target.value })
+            }
             className="flex-1"
           />
         </div>
@@ -209,7 +246,9 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
         <Input
           id="author"
           value={testimonialBlock.author}
-          onChange={(e) => onUpdate({ ...testimonialBlock, author: e.target.value })}
+          onChange={(e) =>
+            onUpdate({ ...testimonialBlock, author: e.target.value })
+          }
         />
       </div>
 
@@ -217,8 +256,10 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
         <Label htmlFor="authorImage">Imagem do Autor (URL)</Label>
         <Input
           id="authorImage"
-          value={testimonialBlock.authorImage || ''}
-          onChange={(e) => onUpdate({ ...testimonialBlock, authorImage: e.target.value })}
+          value={testimonialBlock.authorImage || ""}
+          onChange={(e) =>
+            onUpdate({ ...testimonialBlock, authorImage: e.target.value })
+          }
         />
       </div>
 
@@ -230,7 +271,9 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
           min="1"
           max="5"
           value={testimonialBlock.rating || 5}
-          onChange={(e) => onUpdate({ ...testimonialBlock, rating: Number(e.target.value) })}
+          onChange={(e) =>
+            onUpdate({ ...testimonialBlock, rating: Number(e.target.value) })
+          }
         />
       </div>
     </div>
@@ -240,13 +283,13 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
     const addCarouselItem = () => {
       const newItem = {
         id: `item-${Date.now()}`,
-        imageUrl: '',
-        caption: ''
+        imageUrl: "",
+        caption: "",
       };
-      
+
       onUpdate({
         ...carouselBlock,
-        items: [...(carouselBlock.items || []), newItem]
+        items: [...(carouselBlock.items || []), newItem],
       });
     };
 
@@ -254,22 +297,22 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
       const updatedItems = [...(carouselBlock.items || [])];
       updatedItems[index] = {
         ...updatedItems[index],
-        [key]: value
+        [key]: value,
       };
-      
+
       onUpdate({
         ...carouselBlock,
-        items: updatedItems
+        items: updatedItems,
       });
     };
 
     const removeCarouselItem = (index: number) => {
       const updatedItems = [...(carouselBlock.items || [])];
       updatedItems.splice(index, 1);
-      
+
       onUpdate({
         ...carouselBlock,
-        items: updatedItems
+        items: updatedItems,
       });
     };
 
@@ -303,7 +346,9 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
                     <Input
                       id={`item-${index}-image`}
                       value={item.imageUrl}
-                      onChange={(e) => updateCarouselItem(index, 'imageUrl', e.target.value)}
+                      onChange={(e) =>
+                        updateCarouselItem(index, "imageUrl", e.target.value)
+                      }
                     />
                   </div>
 
@@ -311,8 +356,10 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
                     <Label htmlFor={`item-${index}-caption`}>Legenda</Label>
                     <Input
                       id={`item-${index}-caption`}
-                      value={item.caption || ''}
-                      onChange={(e) => updateCarouselItem(index, 'caption', e.target.value)}
+                      value={item.caption || ""}
+                      onChange={(e) =>
+                        updateCarouselItem(index, "caption", e.target.value)
+                      }
                     />
                   </div>
                 </div>
@@ -336,12 +383,12 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
         />
       </div>
 
-      {block.type === 'image' && (
+      {block.type === "image" && (
         <div className="space-y-2">
           <Label htmlFor="imageUrl">URL da Imagem</Label>
           <Input
             id="imageUrl"
-            value={block.imageUrl || ''}
+            value={block.imageUrl || ""}
             onChange={(e) => onUpdate({ ...block, imageUrl: e.target.value })}
           />
         </div>
@@ -358,7 +405,9 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
             size="sm"
             variant="ghost"
             onClick={handleVisibilityToggle}
-            title={block.isVisible === false ? "Mostrar bloco" : "Ocultar bloco"}
+            title={
+              block.isVisible === false ? "Mostrar bloco" : "Ocultar bloco"
+            }
           >
             {block.isVisible === false ? (
               <EyeOff className="h-4 w-4" />
@@ -393,7 +442,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
               <div className="space-y-2">
                 <Label htmlFor="abTestVariant">Variante de Teste A/B</Label>
                 <Select
-                  value={block.abTestVariant || ''}
+                  value={block.abTestVariant || ""}
                   onValueChange={handleAbTestVariantChange}
                 >
                   <SelectTrigger id="abTestVariant">

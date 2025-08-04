@@ -3,6 +3,7 @@
 ## 📋 **RESPOSTA DIRETA:**
 
 ### **✅ EDITOR ATUALMENTE ATIVO:**
+
 ```
 📍 Rota: /editor
 🎭 Componente: SchemaDrivenEditorPage
@@ -15,24 +16,26 @@
 ## 🎪 **ESTRUTURA COMPLETA:**
 
 ### **🔗 FLUXO DE ROTEAMENTO:**
+
 ```
 1. App.tsx (Roteador principal)
-   ↓ 
+   ↓
 2. Route "/editor" → SchemaDrivenEditorPage
    ↓
-3. SchemaDrivenEditorPage → SchemaDrivenEditorResponsive 
+3. SchemaDrivenEditorPage → SchemaDrivenEditorResponsive
    ↓
 4. SchemaDrivenEditorResponsive (Editor final)
 ```
 
 ### **📄 CONFIGURAÇÃO NO App.tsx:**
+
 ```tsx
 // Editor Principal - ÚNICO EDITOR para Quiz e Funis Completos
 <Route
   path="/editor"
   component={SchemaDrivenEditorPage}
 />
-// Editor com ID específico  
+// Editor com ID específico
 <Route
   path="/editor/:id"
   component={SchemaDrivenEditorPage}
@@ -44,11 +47,12 @@
 ## 🧩 **COMPONENTE WRAPPER:**
 
 ### **📁 /src/pages/SchemaDrivenEditorPage.tsx:**
+
 ```tsx
-import SchemaDrivenEditorResponsive from '@/components/editor/SchemaDrivenEditorResponsive';
+import SchemaDrivenEditorResponsive from "@/components/editor/SchemaDrivenEditorResponsive";
 
 const SchemaDrivenEditorPage: React.FC = () => {
-  const [match, params] = useRoute('/editor/:id');
+  const [match, params] = useRoute("/editor/:id");
   const funnelId = params?.id;
 
   return (
@@ -64,6 +68,7 @@ const SchemaDrivenEditorPage: React.FC = () => {
 ## 🎨 **EDITOR FINAL ATIVO:**
 
 ### **✅ SchemaDrivenEditorResponsive:**
+
 ```
 📁 Localização: /client/src/components/editor/SchemaDrivenEditorResponsive.tsx
 🔧 Funcionalidades:
@@ -81,12 +86,14 @@ const SchemaDrivenEditorPage: React.FC = () => {
 ## ❌ **PROBLEMA ENCONTRADO:**
 
 ### **📄 /client/src/app/editor/page.tsx ESTÁ VAZIO:**
+
 ```bash
 $ wc -l /client/src/app/editor/page.tsx
 0 /client/src/app/editor/page.tsx
 ```
 
 ### **🎯 CAUSA:**
+
 O projeto usa **Wouter para roteamento** (não Next.js App Router), então o arquivo `/client/src/app/editor/page.tsx` não é utilizado.
 
 ---
@@ -94,6 +101,7 @@ O projeto usa **Wouter para roteamento** (não Next.js App Router), então o arq
 ## 🎪 **SISTEMA DE ROTEAMENTO:**
 
 ### **✅ ATIVO - WOUTER:**
+
 ```tsx
 // /src/App.tsx
 import { Router, Route, Switch } from "wouter";
@@ -101,10 +109,11 @@ import { Router, Route, Switch } from "wouter";
 <Router>
   <Route path="/editor" component={SchemaDrivenEditorPage} />
   <Route path="/editor/:id" component={SchemaDrivenEditorPage} />
-</Router>
+</Router>;
 ```
 
 ### **❌ NÃO USADO - NEXT.JS APP ROUTER:**
+
 ```
 /client/src/app/editor/page.tsx (vazio, não utilizado)
 ```
@@ -114,10 +123,11 @@ import { Router, Route, Switch } from "wouter";
 ## 🚀 **FUNCIONALIDADES DO EDITOR ATIVO:**
 
 ### **🎨 SchemaDrivenEditorResponsive:**
+
 ```
 ✅ Sistema responsivo completo (mobile/tablet/desktop)
 ✅ Sidebars retráteis e móveis
-✅ Preview em tempo real  
+✅ Preview em tempo real
 ✅ Propriedades editáveis inline
 ✅ Sistema save/publish integrado
 ✅ Supabase como backend (PostgreSQL)
@@ -133,15 +143,17 @@ import { Router, Route, Switch } from "wouter";
 ## 🎯 **CONCLUSÃO:**
 
 ### **📊 RESUMO:**
+
 **O editor ativo em `/editor` é o `SchemaDrivenEditorResponsive`, acessado via `SchemaDrivenEditorPage`, usando roteamento Wouter, com backend Supabase e funcionalidades completas de mobile/desktop.**
 
 ### **🔧 PARA TESTAR:**
+
 ```bash
 # Acessar no navegador:
 http://localhost:5000/editor
 
 # Usa: SchemaDrivenEditorResponsive
-# Backend: Supabase (PostgreSQL) 
+# Backend: Supabase (PostgreSQL)
 # Roteamento: Wouter
 ```
 
@@ -150,6 +162,7 @@ http://localhost:5000/editor
 ## 🗂️ **ARQUIVOS RELEVANTES:**
 
 ### **✅ USADOS:**
+
 ```
 /src/App.tsx                                           # Roteador principal
 /src/pages/SchemaDrivenEditorPage.tsx                 # Wrapper do editor
@@ -157,16 +170,17 @@ http://localhost:5000/editor
 ```
 
 ### **❌ IGNORADOS:**
+
 ```
 /client/src/app/editor/page.tsx                       # Vazio (Next.js não usado)
 ```
 
 ---
 
-*🎯 **Status:** Editor SchemaDrivenEditorResponsive ATIVO via roteamento Wouter*  
-*📊 **Backend:** Supabase PostgreSQL*  
-*🎨 **Interface:** Mobile/Desktop responsiva completa*
+_🎯 **Status:** Editor SchemaDrivenEditorResponsive ATIVO via roteamento Wouter_  
+_📊 **Backend:** Supabase PostgreSQL_  
+_🎨 **Interface:** Mobile/Desktop responsiva completa_
 
 ---
 
-*📅 Análise realizada em: 21 de Julho de 2025*
+_📅 Análise realizada em: 21 de Julho de 2025_

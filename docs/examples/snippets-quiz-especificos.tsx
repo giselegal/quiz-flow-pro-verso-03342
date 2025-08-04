@@ -1,11 +1,11 @@
 /**
  * SNIPPETS ESPECÍFICOS PARA O PROJETO QUIZ
- * 
+ *
  * Este arquivo mostra como usar os snippets ES7 React especificamente
  * para acelerar o desenvolvimento do seu projeto de quiz de estilo
  */
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 
 // ===== SNIPPETS PARA COMPONENTES DE QUIZ =====
 
@@ -17,23 +17,26 @@ interface QuizQuestionProps {
   selectedAnswer?: string;
 }
 
-export const QuizQuestionComponent = ({ 
-  question, 
-  options, 
-  onAnswer, 
-  selectedAnswer 
+export const QuizQuestionComponent = ({
+  question,
+  options,
+  onAnswer,
+  selectedAnswer,
 }: QuizQuestionProps) => {
   // Digite: useState + Tab
   const [isAnswered, setIsAnswered] = useState(false);
-  
+
   // Digite: useCallback + Tab
-  const handleOptionClick = useCallback((option: string) => {
-    if (!isAnswered) {
-      setIsAnswered(true);
-      onAnswer(option);
-    }
-  }, [isAnswered, onAnswer]);
-  
+  const handleOptionClick = useCallback(
+    (option: string) => {
+      if (!isAnswered) {
+        setIsAnswered(true);
+        onAnswer(option);
+      }
+    },
+    [isAnswered, onAnswer],
+  );
+
   return (
     <div className="quiz-question">
       <h3>{question}</h3>
@@ -42,7 +45,7 @@ export const QuizQuestionComponent = ({
           <button
             key={index}
             onClick={() => handleOptionClick(option)}
-            className={`option ${selectedAnswer === option ? 'selected' : ''}`}
+            className={`option ${selectedAnswer === option ? "selected" : ""}`}
             disabled={isAnswered}
           >
             {option}
@@ -64,18 +67,17 @@ export const ProgressBar = ({ currentStep, totalSteps }: ProgressBarProps) => {
   const percentage = useMemo(() => {
     return Math.round((currentStep / totalSteps) * 100);
   }, [currentStep, totalSteps]);
-  
+
   return (
     <div className="progress-bar">
       <div className="progress-info">
-        <span>Pergunta {currentStep} de {totalSteps}</span>
+        <span>
+          Pergunta {currentStep} de {totalSteps}
+        </span>
         <span>{percentage}%</span>
       </div>
       <div className="progress-track">
-        <div 
-          className="progress-fill"
-          style={{ width: `${percentage}%` }}
-        />
+        <div className="progress-fill" style={{ width: `${percentage}%` }} />
       </div>
     </div>
   );
@@ -90,32 +92,32 @@ interface QuizTimerProps {
 export const QuizTimer = ({ duration, onTimeUp }: QuizTimerProps) => {
   // Digite: useState + Tab
   const [timeLeft, setTimeLeft] = useState(duration);
-  
+
   // Digite: useEffect + Tab
   useEffect(() => {
     if (timeLeft <= 0) {
       onTimeUp();
       return;
     }
-    
+
     const timer = setInterval(() => {
-      setTimeLeft(prev => prev - 1);
+      setTimeLeft((prev) => prev - 1);
     }, 1000);
-    
+
     return () => clearInterval(timer);
   }, [timeLeft, onTimeUp]);
-  
+
   // Digite: useMemo + Tab
   const formattedTime = useMemo(() => {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   }, [timeLeft]);
-  
+
   return (
     <div className="quiz-timer">
       <span className="timer-label">Tempo restante:</span>
-      <span className={`timer-value ${timeLeft <= 30 ? 'warning' : ''}`}>
+      <span className={`timer-value ${timeLeft <= 30 ? "warning" : ""}`}>
         {formattedTime}
       </span>
     </div>
@@ -138,47 +140,47 @@ const useQuiz = (totalQuestions: number) => {
     currentQuestion: 0,
     answers: {},
     score: 0,
-    isComplete: false
+    isComplete: false,
   });
-  
+
   // Digite: useCallback + Tab
   const answerQuestion = useCallback((answer: string) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       answers: {
         ...prev.answers,
-        [prev.currentQuestion]: answer
-      }
+        [prev.currentQuestion]: answer,
+      },
     }));
   }, []);
-  
+
   // Digite: useCallback + Tab
   const nextQuestion = useCallback(() => {
-    setState(prev => {
+    setState((prev) => {
       const nextQuestionIndex = prev.currentQuestion + 1;
       return {
         ...prev,
         currentQuestion: nextQuestionIndex,
-        isComplete: nextQuestionIndex >= totalQuestions
+        isComplete: nextQuestionIndex >= totalQuestions,
       };
     });
   }, [totalQuestions]);
-  
+
   // Digite: useCallback + Tab
   const resetQuiz = useCallback(() => {
     setState({
       currentQuestion: 0,
       answers: {},
       score: 0,
-      isComplete: false
+      isComplete: false,
     });
   }, []);
-  
+
   return {
     ...state,
     answerQuestion,
     nextQuestion,
-    resetQuiz
+    resetQuiz,
   };
 };
 
@@ -186,7 +188,7 @@ const useQuiz = (totalQuestions: number) => {
 const useQuizProgress = (quizId: string) => {
   // Digite: useState + Tab
   const [progress, setProgress] = useState<QuizState | null>(null);
-  
+
   // Digite: useEffect + Tab
   useEffect(() => {
     const savedProgress = localStorage.getItem(`quiz-${quizId}`);
@@ -194,27 +196,30 @@ const useQuizProgress = (quizId: string) => {
       try {
         setProgress(JSON.parse(savedProgress));
       } catch (error) {
-        console.error('Erro ao carregar progresso:', error);
+        console.error("Erro ao carregar progresso:", error);
       }
     }
   }, [quizId]);
-  
+
   // Digite: useCallback + Tab
-  const saveProgress = useCallback((state: QuizState) => {
-    setProgress(state);
-    localStorage.setItem(`quiz-${quizId}`, JSON.stringify(state));
-  }, [quizId]);
-  
+  const saveProgress = useCallback(
+    (state: QuizState) => {
+      setProgress(state);
+      localStorage.setItem(`quiz-${quizId}`, JSON.stringify(state));
+    },
+    [quizId],
+  );
+
   // Digite: useCallback + Tab
   const clearProgress = useCallback(() => {
     setProgress(null);
     localStorage.removeItem(`quiz-${quizId}`);
   }, [quizId]);
-  
+
   return {
     progress,
     saveProgress,
-    clearProgress
+    clearProgress,
   };
 };
 
@@ -241,11 +246,11 @@ export const Quiz = ({ questions, onComplete }: QuizProps) => {
     isComplete,
     answerQuestion,
     nextQuestion,
-    resetQuiz
+    resetQuiz,
   } = useQuiz(questions.length);
-  
-  const { saveProgress, clearProgress } = useQuizProgress('style-quiz');
-  
+
+  const { saveProgress, clearProgress } = useQuizProgress("style-quiz");
+
   // Digite: useEffect + Tab
   useEffect(() => {
     if (isComplete) {
@@ -254,24 +259,34 @@ export const Quiz = ({ questions, onComplete }: QuizProps) => {
     } else {
       saveProgress({ currentQuestion, answers, score: 0, isComplete });
     }
-  }, [isComplete, answers, currentQuestion, onComplete, saveProgress, clearProgress]);
-  
+  }, [
+    isComplete,
+    answers,
+    currentQuestion,
+    onComplete,
+    saveProgress,
+    clearProgress,
+  ]);
+
   // Digite: useCallback + Tab
-  const handleAnswer = useCallback((answer: string) => {
-    answerQuestion(answer);
-    
-    // Delay para mostrar resposta selecionada
-    setTimeout(() => {
-      nextQuestion();
-    }, 1000);
-  }, [answerQuestion, nextQuestion]);
-  
+  const handleAnswer = useCallback(
+    (answer: string) => {
+      answerQuestion(answer);
+
+      // Delay para mostrar resposta selecionada
+      setTimeout(() => {
+        nextQuestion();
+      }, 1000);
+    },
+    [answerQuestion, nextQuestion],
+  );
+
   // Digite: useCallback + Tab
   const handleRestart = useCallback(() => {
     resetQuiz();
     clearProgress();
   }, [resetQuiz, clearProgress]);
-  
+
   if (isComplete) {
     return (
       <div className="quiz-complete">
@@ -281,21 +296,21 @@ export const Quiz = ({ questions, onComplete }: QuizProps) => {
       </div>
     );
   }
-  
+
   const currentQ = questions[currentQuestion];
-  
+
   return (
     <div className="quiz-container">
-      <ProgressBar 
-        currentStep={currentQuestion + 1} 
-        totalSteps={questions.length} 
+      <ProgressBar
+        currentStep={currentQuestion + 1}
+        totalSteps={questions.length}
       />
-      
-      <QuizTimer 
+
+      <QuizTimer
         duration={300} // 5 minutos
         onTimeUp={handleRestart}
       />
-      
+
       <QuizQuestionComponent
         question={currentQ.text}
         options={currentQ.options}
@@ -324,18 +339,18 @@ interface QuizResultProps {
 export const QuizResultComponent = ({ result, onRetake }: QuizResultProps) => {
   // Digite: useState + Tab
   const [showDetails, setShowDetails] = useState(false);
-  
+
   // Digite: useCallback + Tab
   const toggleDetails = useCallback(() => {
-    setShowDetails(prev => !prev);
+    setShowDetails((prev) => !prev);
   }, []);
-  
+
   // Digite: useEffect + Tab
   useEffect(() => {
     // Scroll para o topo quando o resultado é mostrado
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
-  
+
   return (
     <div className="quiz-result">
       <div className="result-header">
@@ -343,11 +358,11 @@ export const QuizResultComponent = ({ result, onRetake }: QuizResultProps) => {
         <h1 className="dominant-style">{result.dominantStyle}</h1>
         <div className="percentage">{result.percentage}%</div>
       </div>
-      
+
       <div className="result-description">
         <p>{result.description}</p>
       </div>
-      
+
       <div className="recommendations">
         <h3>Recomendações para você:</h3>
         <ul>
@@ -356,16 +371,16 @@ export const QuizResultComponent = ({ result, onRetake }: QuizResultProps) => {
           ))}
         </ul>
       </div>
-      
+
       <div className="result-actions">
         <button onClick={toggleDetails} className="btn-secondary">
-          {showDetails ? 'Ocultar Detalhes' : 'Ver Detalhes'}
+          {showDetails ? "Ocultar Detalhes" : "Ver Detalhes"}
         </button>
         <button onClick={onRetake} className="btn-primary">
           Refazer Quiz
         </button>
       </div>
-      
+
       {showDetails && (
         <div className="result-details">
           <h3>Análise Detalhada</h3>
@@ -381,37 +396,43 @@ export const QuizResultComponent = ({ result, onRetake }: QuizResultProps) => {
 // 8. Hook para tracking de eventos
 const useAnalytics = () => {
   // Digite: useCallback + Tab
-  const trackEvent = useCallback((eventName: string, properties?: Record<string, any>) => {
-    // Digite: clg + Tab
-    console.log('Tracking event:', eventName, properties);
-    
-    // Aqui você pode integrar com Google Analytics, Hotjar, etc.
-    if (window.gtag) {
-      window.gtag('event', eventName, properties);
-    }
-  }, []);
-  
+  const trackEvent = useCallback(
+    (eventName: string, properties?: Record<string, any>) => {
+      // Digite: clg + Tab
+      console.log("Tracking event:", eventName, properties);
+
+      // Aqui você pode integrar com Google Analytics, Hotjar, etc.
+      if (window.gtag) {
+        window.gtag("event", eventName, properties);
+      }
+    },
+    [],
+  );
+
   // Digite: useCallback + Tab
   const trackQuizStart = useCallback(() => {
-    trackEvent('quiz_started', {
+    trackEvent("quiz_started", {
       timestamp: Date.now(),
-      page: window.location.pathname
+      page: window.location.pathname,
     });
   }, [trackEvent]);
-  
+
   // Digite: useCallback + Tab
-  const trackQuizComplete = useCallback((answers: Record<number, string>) => {
-    trackEvent('quiz_completed', {
-      answers,
-      timestamp: Date.now(),
-      total_questions: Object.keys(answers).length
-    });
-  }, [trackEvent]);
-  
+  const trackQuizComplete = useCallback(
+    (answers: Record<number, string>) => {
+      trackEvent("quiz_completed", {
+        answers,
+        timestamp: Date.now(),
+        total_questions: Object.keys(answers).length,
+      });
+    },
+    [trackEvent],
+  );
+
   return {
     trackEvent,
     trackQuizStart,
-    trackQuizComplete
+    trackQuizComplete,
   };
 };
 
@@ -422,70 +443,73 @@ const QuizApplication = () => {
   // Digite: useState + Tab
   const [quizStarted, setQuizStarted] = useState(false);
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
-  
+
   // Hook customizado para analytics
   const { trackQuizStart, trackQuizComplete } = useAnalytics();
-  
+
   // Digite: useCallback + Tab
   const handleStartQuiz = useCallback(() => {
     setQuizStarted(true);
     trackQuizStart();
   }, [trackQuizStart]);
-  
+
   // Digite: useCallback + Tab
-  const handleQuizComplete = useCallback((answers: Record<number, string>) => {
-    trackQuizComplete(answers);
-    
-    // Simular cálculo do resultado
-    const result: QuizResult = {
-      dominantStyle: 'Elegante',
-      percentage: 85,
-      description: 'Você tem um estilo elegante e sofisticado...',
-      recommendations: ['Invista em peças clássicas', 'Prefira cores neutras']
-    };
-    
-    setQuizResult(result);
-  }, [trackQuizComplete]);
-  
+  const handleQuizComplete = useCallback(
+    (answers: Record<number, string>) => {
+      trackQuizComplete(answers);
+
+      // Simular cálculo do resultado
+      const result: QuizResult = {
+        dominantStyle: "Elegante",
+        percentage: 85,
+        description: "Você tem um estilo elegante e sofisticado...",
+        recommendations: [
+          "Invista em peças clássicas",
+          "Prefira cores neutras",
+        ],
+      };
+
+      setQuizResult(result);
+    },
+    [trackQuizComplete],
+  );
+
   // Digite: useCallback + Tab
   const handleRetake = useCallback(() => {
     setQuizStarted(false);
     setQuizResult(null);
   }, []);
-  
+
   // Dados de exemplo das perguntas
   const questions: Question[] = [
     {
       id: 1,
-      text: 'Qual dessas peças você usaria para um evento importante?',
-      options: ['Vestido clássico', 'Conjunto casual', 'Look romântico', 'Peça moderna'],
-      category: 'formal'
+      text: "Qual dessas peças você usaria para um evento importante?",
+      options: [
+        "Vestido clássico",
+        "Conjunto casual",
+        "Look romântico",
+        "Peça moderna",
+      ],
+      category: "formal",
     },
     // ... mais perguntas
   ];
-  
+
   if (quizResult) {
-    return (
-      <QuizResultComponent 
-        result={quizResult} 
-        onRetake={handleRetake}
-      />
-    );
+    return <QuizResultComponent result={quizResult} onRetake={handleRetake} />;
   }
-  
+
   if (quizStarted) {
-    return (
-      <Quiz 
-        questions={questions}
-        onComplete={handleQuizComplete}
-      />
-    );
+    return <Quiz questions={questions} onComplete={handleQuizComplete} />;
   }
-  
+
   return (
     <div className="quiz-intro">
       <h1>Descubra Seu Estilo Pessoal</h1>
-      <p>Responda algumas perguntas e descubra qual é seu estilo predominante!</p>
+      <p>
+        Responda algumas perguntas e descubra qual é seu estilo predominante!
+      </p>
       <button onClick={handleStartQuiz} className="btn-primary">
         Começar Quiz
       </button>

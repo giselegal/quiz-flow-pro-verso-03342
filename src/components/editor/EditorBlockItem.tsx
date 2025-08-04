@@ -1,14 +1,18 @@
-
-
-import React, { useState } from 'react';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { EditorBlock } from '@/types/editor';
-import { Card } from '../ui/card';
-import { Button } from '../ui/button';
-import { Trash2, GripVertical, ChevronDown, ChevronUp, Copy } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import EditBlockContent from './EditBlockContent';
+import React, { useState } from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { EditorBlock } from "@/types/editor";
+import { Card } from "../ui/card";
+import { Button } from "../ui/button";
+import {
+  Trash2,
+  GripVertical,
+  ChevronDown,
+  ChevronUp,
+  Copy,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import EditBlockContent from "./EditBlockContent";
 
 interface EditorBlockItemProps {
   block: EditorBlock;
@@ -19,44 +23,53 @@ interface EditorBlockItemProps {
 export const EditorBlockItem: React.FC<EditorBlockItemProps> = ({
   block,
   onUpdate,
-  onDelete
+  onDelete,
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
-  
+
   const {
     attributes,
     listeners,
     setNodeRef,
     transform,
     transition,
-    isDragging
+    isDragging,
   } = useSortable({ id: block.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-    position: 'relative' as const,
-    zIndex: isDragging ? 1 : 0
+    position: "relative" as const,
+    zIndex: isDragging ? 1 : 0,
   };
 
   const getBlockTitle = () => {
     switch (block.type) {
-      case 'headline': return 'Título';
-      case 'text': return 'Texto';
-      case 'image': return 'Imagem';
-      case 'benefits': return 'Benefícios';
-      case 'testimonials': return 'Depoimentos';
-      case 'pricing': return 'Preço';
-      case 'guarantee': return 'Garantia';
-      case 'cta': return 'Botão CTA';
-      default: return 'Bloco';
+      case "headline":
+        return "Título";
+      case "text":
+        return "Texto";
+      case "image":
+        return "Imagem";
+      case "benefits":
+        return "Benefícios";
+      case "testimonials":
+        return "Depoimentos";
+      case "pricing":
+        return "Preço";
+      case "guarantee":
+        return "Garantia";
+      case "cta":
+        return "Botão CTA";
+      default:
+        return "Bloco";
     }
   };
 
   const handleDuplicate = () => {
     // This would be handled by the parent component
-    alert('Duplicar bloco não implementado ainda');
+    alert("Duplicar bloco não implementado ainda");
   };
 
   const handleUpdateBlock = (blockId: string, properties: any) => {
@@ -66,7 +79,7 @@ export const EditorBlockItem: React.FC<EditorBlockItemProps> = ({
   // Ensure block has properties defined
   const blockWithProperties = {
     ...block,
-    properties: block.properties || {}
+    properties: block.properties || {},
   };
 
   return (
@@ -75,7 +88,7 @@ export const EditorBlockItem: React.FC<EditorBlockItemProps> = ({
       style={style}
       className={cn(
         "border-2 overflow-hidden",
-        isDragging ? "border-[#B89B7A]" : "border-[#B89B7A]/20"
+        isDragging ? "border-[#B89B7A]" : "border-[#B89B7A]/20",
       )}
     >
       {/* Block Header */}
@@ -93,11 +106,7 @@ export const EditorBlockItem: React.FC<EditorBlockItemProps> = ({
           <span className="font-medium text-[#432818]">{getBlockTitle()}</span>
         </div>
         <div className="flex items-center gap-1">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleDuplicate}
-          >
+          <Button variant="ghost" size="sm" onClick={handleDuplicate}>
             <Copy className="w-4 h-4 text-[#8F7A6A]" />
           </Button>
           <Button
@@ -105,10 +114,11 @@ export const EditorBlockItem: React.FC<EditorBlockItemProps> = ({
             size="sm"
             onClick={() => setIsExpanded(!isExpanded)}
           >
-            {isExpanded ? 
-              <ChevronUp className="w-4 h-4 text-[#8F7A6A]" /> : 
+            {isExpanded ? (
+              <ChevronUp className="w-4 h-4 text-[#8F7A6A]" />
+            ) : (
               <ChevronDown className="w-4 h-4 text-[#8F7A6A]" />
-            }
+            )}
           </Button>
           <Button
             variant="ghost"
@@ -120,7 +130,7 @@ export const EditorBlockItem: React.FC<EditorBlockItemProps> = ({
           </Button>
         </div>
       </div>
-      
+
       {/* Block Content */}
       {isExpanded && (
         <div className="p-4 bg-white">
@@ -133,4 +143,3 @@ export const EditorBlockItem: React.FC<EditorBlockItemProps> = ({
     </Card>
   );
 };
-

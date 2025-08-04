@@ -1,5 +1,5 @@
-import React from 'react';
-import { Trash2 } from 'lucide-react';
+import React from "react";
+import { Trash2 } from "lucide-react";
 
 interface DeleteBlockButtonProps {
   blockId: string;
@@ -10,13 +10,13 @@ interface DeleteBlockButtonProps {
 export const DeleteBlockButton: React.FC<DeleteBlockButtonProps> = ({
   blockId,
   onDelete,
-  className = ''
+  className = "",
 }) => {
   const handleDelete = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    if (typeof onDelete === 'function') {
+
+    if (typeof onDelete === "function") {
       onDelete(blockId);
     }
   };

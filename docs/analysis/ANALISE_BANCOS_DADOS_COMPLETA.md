@@ -7,7 +7,7 @@
 O projeto possui **3 sistemas de banco de dados diferentes** configurados:
 
 1. **✅ Supabase (PostgreSQL)** - Principal/Produção
-2. **✅ Better-SQLite3** - Desenvolvimento local 
+2. **✅ Better-SQLite3** - Desenvolvimento local
 3. **✅ SQLite3** - Servidor criado manualmente
 
 ---
@@ -15,6 +15,7 @@ O projeto possui **3 sistemas de banco de dados diferentes** configurados:
 ## 🏗️ **1. SUPABASE (PostgreSQL) - PRINCIPAL**
 
 ### **📁 CONFIGURAÇÃO:**
+
 ```
 📍 URL: https://txqljpitotmcxntprxiu.supabase.co
 📄 Cliente: /src/integrations/supabase/client.ts
@@ -24,16 +25,18 @@ O projeto possui **3 sistemas de banco de dados diferentes** configurados:
 ```
 
 ### **🔧 DEPENDÊNCIAS:**
+
 ```json
 "@supabase/supabase-js": "^2.52.0"
 ```
 
 ### **📊 ESTRUTURA PRINCIPAL:**
+
 ```sql
 -- Tabelas Supabase:
 funnels (
-  id, name, description, user_id, 
-  is_published, version, settings, 
+  id, name, description, user_id,
+  is_published, version, settings,
   created_at, updated_at
 )
 
@@ -45,6 +48,7 @@ funnel_pages (
 ```
 
 ### **✅ STATUS: ATIVO E FUNCIONAL**
+
 - ✅ Cliente configurado corretamente
 - ✅ Migrações estruturadas
 - ✅ Sistema completo de funnels
@@ -55,6 +59,7 @@ funnel_pages (
 ## 🏠 **2. BETTER-SQLITE3 - DESENVOLVIMENTO LOCAL**
 
 ### **📁 CONFIGURAÇÃO:**
+
 ```
 📄 Setup: /scripts/setup_database.js
 📊 Banco: /dev.db, /dev.db-shm, /dev.db-wal
@@ -62,12 +67,14 @@ funnel_pages (
 ```
 
 ### **🔧 DEPENDÊNCIAS:**
+
 ```json
 "better-sqlite3": "^12.2.0",
 "@types/better-sqlite3": "^7.6.13"
 ```
 
 ### **📊 ESTRUTURA:**
+
 ```sql
 -- Tabelas Better-SQLite3:
 users (id, username, password)
@@ -77,6 +84,7 @@ funnels_local (...)
 ```
 
 ### **✅ STATUS: ATIVO PARA DESENVOLVIMENTO**
+
 - ✅ Arquivos .db existentes no projeto
 - ✅ Script de setup configurado
 - ✅ WAL mode habilitado
@@ -87,20 +95,23 @@ funnels_local (...)
 ## 🆕 **3. SQLITE3 - SERVIDOR MANUAL**
 
 ### **📁 CONFIGURAÇÃO:**
+
 ```
 📄 Servidor: /server/index.ts (criado agora)
 📊 Banco: dev.db (reutilizado)
 ```
 
 ### **🔧 DEPENDÊNCIAS (NECESSÁRIAS):**
+
 ```json
 // FALTANDO - precisa instalar:
 "express": "^4.x.x",
-"cors": "^2.x.x", 
+"cors": "^2.x.x",
 "sqlite3": "^5.x.x"
 ```
 
 ### **📊 ESTRUTURA:**
+
 ```sql
 -- Tabelas SQLite3 (servidor):
 quizzes (
@@ -115,6 +126,7 @@ quiz_responses (
 ```
 
 ### **⚠️ STATUS: CRIADO MAS DEPENDÊNCIAS FALTANTES**
+
 - ❌ Dependências não instaladas
 - ❌ Erro ao executar servidor
 - ✅ Estrutura criada e funcional
@@ -124,6 +136,7 @@ quiz_responses (
 ## 🎯 **ANÁLISE DE USO ATUAL**
 
 ### **🚀 EM PRODUÇÃO:**
+
 ```
 ✅ Supabase (PostgreSQL)
 ├── SchemaDrivenEditorResponsive
@@ -133,6 +146,7 @@ quiz_responses (
 ```
 
 ### **🏠 EM DESENVOLVIMENTO:**
+
 ```
 ✅ Better-SQLite3
 ├── Scripts de desenvolvimento
@@ -142,6 +156,7 @@ quiz_responses (
 ```
 
 ### **❌ TENTATIVA ATUAL:**
+
 ```
 ❌ SQLite3 + Express
 ├── Servidor manual criado
@@ -155,12 +170,14 @@ quiz_responses (
 ## 🔍 **PROBLEMA ATUAL**
 
 ### **❌ ERRO DO SERVIDOR:**
+
 ```bash
 Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'cors'
 Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'sqlite3'
 ```
 
 ### **🎯 CAUSA:**
+
 O projeto já possui **sistemas de banco funcionais**, mas o servidor manual criado precisa de dependências adicionais que não estão instaladas.
 
 ---
@@ -168,15 +185,17 @@ O projeto já possui **sistemas de banco funcionais**, mas o servidor manual cri
 ## 💡 **RECOMENDAÇÕES**
 
 ### **✅ OPÇÃO 1: USAR SUPABASE (RECOMENDADO)**
+
 ```typescript
 // Usar o sistema existente:
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from "@/integrations/supabase/client";
 
 // Já configurado e funcionando
 // Sem necessidade de servidor adicional
 ```
 
 ### **✅ OPÇÃO 2: USAR BETTER-SQLITE3**
+
 ```typescript
 // Sistema local já configurado
 // Scripts prontos em /scripts/
@@ -184,6 +203,7 @@ import { supabase } from '@/integrations/supabase/client';
 ```
 
 ### **❌ OPÇÃO 3: INSTALAR DEPENDÊNCIAS DO SERVIDOR**
+
 ```bash
 # Necessário para servidor manual:
 npm install express cors sqlite3
@@ -195,14 +215,17 @@ npm install --save-dev @types/express @types/cors @types/sqlite3
 ## 🎯 **CONCLUSÃO E PRÓXIMOS PASSOS**
 
 ### **📊 SITUAÇÃO ATUAL:**
+
 - ✅ **Supabase**: Sistema principal funcionando
-- ✅ **Better-SQLite3**: Desenvolvimento local ativo  
+- ✅ **Better-SQLite3**: Desenvolvimento local ativo
 - ❌ **Servidor manual**: Dependências faltantes
 
 ### **🚀 RECOMENDAÇÃO IMEDIATA:**
+
 **Usar o Supabase existente** que já está configurado e funcional, ao invés de criar um novo servidor.
 
 ### **🔧 ALTERNATIVAS:**
+
 1. **Instalar dependências** para servidor manual
 2. **Remover servidor manual** e usar sistemas existentes
 3. **Configurar ambiente híbrido** (Supabase prod + SQLite dev)
@@ -212,18 +235,21 @@ npm install --save-dev @types/express @types/cors @types/sqlite3
 ## 📋 **COMANDOS PARA CORREÇÃO**
 
 ### **✅ USAR SISTEMA EXISTENTE:**
+
 ```bash
 # Não precisa de nada - Supabase já funciona
 # Editor em /editor já usa o sistema correto
 ```
 
 ### **🔧 INSTALAR DEPENDÊNCIAS (SE NECESSÁRIO):**
+
 ```bash
 npm install express cors sqlite3
 npm install --save-dev @types/express @types/cors @types/sqlite3
 ```
 
 ### **🧹 LIMPAR SERVIDOR MANUAL (ALTERNATIVA):**
+
 ```bash
 # Remover pasta server/ se não for usar
 rm -rf server/
@@ -231,9 +257,9 @@ rm -rf server/
 
 ---
 
-*🗃️ **RESUMO:** O projeto tem Supabase (principal) e Better-SQLite3 (dev) funcionando. O servidor SQLite3 manual foi criado mas precisa de dependências. **Recomendo usar o Supabase existente**.*
+_🗃️ **RESUMO:** O projeto tem Supabase (principal) e Better-SQLite3 (dev) funcionando. O servidor SQLite3 manual foi criado mas precisa de dependências. **Recomendo usar o Supabase existente**._
 
 ---
 
-*📊 Análise realizada em: 20 de Julho de 2025*  
-*🎯 Status: Supabase ativo, Better-SQLite3 funcional, servidor manual incompleto*
+_📊 Análise realizada em: 20 de Julho de 2025_  
+_🎯 Status: Supabase ativo, Better-SQLite3 funcional, servidor manual incompleto_

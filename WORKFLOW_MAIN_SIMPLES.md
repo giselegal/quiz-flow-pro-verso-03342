@@ -3,12 +3,14 @@
 ## ✅ Comandos Essenciais para Trabalhar com Main
 
 ### 📥 1. Atualizar Local com Remoto
+
 ```bash
 # Puxar mudanças do origin/main para main local
 git pull origin main
 ```
 
 ### 📝 2. Fazer Mudanças no Código
+
 ```bash
 # Após editar arquivos...
 git add .
@@ -16,6 +18,7 @@ git status  # verificar arquivos modificados
 ```
 
 ### 🚀 3. Commit e Push Direto para Main
+
 ```bash
 # Commit com mensagem descritiva
 git commit -m "✅ FEAT: Sua descrição da mudança aqui"
@@ -25,6 +28,7 @@ git push origin main
 ```
 
 ### 🔄 4. Verificar Status
+
 ```bash
 # Ver status atual
 git status
@@ -71,6 +75,7 @@ git log --oneline -3
 ## 🛠️ COMANDOS ÚTEIS EXTRAS
 
 ### 📊 Verificar Diferenças
+
 ```bash
 # Ver mudanças não commitadas
 git diff
@@ -83,6 +88,7 @@ git diff --name-only
 ```
 
 ### 🔍 Informações do Repositório
+
 ```bash
 # Status detalhado
 git status -v
@@ -95,6 +101,7 @@ git show --stat
 ```
 
 ### 🆘 Comandos de Emergência
+
 ```bash
 # Descartar mudanças não commitadas
 git restore .

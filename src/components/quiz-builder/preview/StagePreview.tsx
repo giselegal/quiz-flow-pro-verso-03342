@@ -1,7 +1,6 @@
-
-import React from 'react';
-import { QuizStage, QuizComponentData } from '@/types/quizBuilder';
-import ComponentRenderer from '../ComponentRenderer';
+import React from "react";
+import { QuizStage, QuizComponentData } from "@/types/quizBuilder";
+import ComponentRenderer from "../ComponentRenderer";
 
 interface StagePreviewProps {
   stage: QuizStage;
@@ -16,20 +15,20 @@ const StagePreview: React.FC<StagePreviewProps> = ({ stage, components }) => {
       </div>
     );
   }
-  
+
   // Ordenar os componentes por ordem
   const sortedComponents = [...components].sort((a, b) => a.order - b.order);
-  
+
   return (
     <div className="space-y-4">
-      {sortedComponents.map(component => (
+      {sortedComponents.map((component) => (
         <ComponentRenderer
           key={component.id}
           component={component}
           isSelected={false}
         />
       ))}
-      
+
       {sortedComponents.length === 0 && (
         <div className="text-center p-8 border border-dashed border-[#B89B7A]/40 rounded-lg">
           <p className="text-[#8F7A6A]">

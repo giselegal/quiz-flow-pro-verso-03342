@@ -1,13 +1,12 @@
-
-export type StyleType = 
-  | 'classico'
-  | 'romantico'
-  | 'dramatico'
-  | 'natural'
-  | 'criativo'
-  | 'elegante'
-  | 'sensual'
-  | 'contemporaneo';
+export type StyleType =
+  | "classico"
+  | "romantico"
+  | "dramatico"
+  | "natural"
+  | "criativo"
+  | "elegante"
+  | "sensual"
+  | "contemporaneo";
 
 export interface Style {
   id: StyleType;
@@ -125,11 +124,11 @@ export interface User {
 }
 
 // Add BlockType export
-export type BlockType = 
-  | 'headline' 
-  | 'text' 
-  | 'image' 
-  | 'button' 
-  | 'heading'
-  | 'paragraph'
-  | 'spacer';
+export type BlockType =
+  | "headline"
+  | "text"
+  | "image"
+  | "button"
+  | "heading"
+  | "paragraph"
+  | "spacer";

@@ -1,24 +1,24 @@
-import React from 'react';
-import { ShoppingCart, Check } from 'lucide-react';
-import { InlineEditableText } from './InlineEditableText';
-import type { BlockComponentProps } from '@/types/blocks';
+import React from "react";
+import { ShoppingCart, Check } from "lucide-react";
+import { InlineEditableText } from "./InlineEditableText";
+import type { BlockComponentProps } from "@/types/blocks";
 
-const ProductOfferBlock: React.FC<BlockComponentProps> = ({ 
+const ProductOfferBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = ''
+  className = "",
 }) => {
-  const { 
-    productName = 'Produto Incrível',
-    productImage = '',
-    originalPrice = 'R$ 297,00',
-    discountPrice = 'R$ 197,00',
-    buttonText = 'ADQUIRIR AGORA',
-    buttonUrl = '',
-    features = []
+  const {
+    productName = "Produto Incrível",
+    productImage = "",
+    originalPrice = "R$ 297,00",
+    discountPrice = "R$ 197,00",
+    buttonText = "ADQUIRIR AGORA",
+    buttonUrl = "",
+    features = [],
   } = block.properties;
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -28,12 +28,13 @@ const ProductOfferBlock: React.FC<BlockComponentProps> = ({
   };
 
   return (
-    <div 
+    <div
       className={`
         p-6 rounded-lg cursor-pointer transition-all duration-200
-        ${isSelected 
-          ? 'border-2 border-blue-500 bg-blue-50' 
-          : 'border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]'
+        ${
+          isSelected
+            ? "border-2 border-blue-500 bg-blue-50"
+            : "border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]"
         }
         ${className}
       `}
@@ -45,39 +46,45 @@ const ProductOfferBlock: React.FC<BlockComponentProps> = ({
         {/* Imagem do Produto */}
         {productImage && (
           <div className="aspect-video bg-gray-100">
-            <img 
-              src={productImage} 
+            <img
+              src={productImage}
               alt={productName}
               className="w-full h-full object-cover"
             />
           </div>
         )}
-        
+
         <div className="p-6">
           {/* Nome do Produto */}
           <InlineEditableText
             value={productName}
-            onChange={(value: string) => handlePropertyChange('productName', value)}
+            onChange={(value: string) =>
+              handlePropertyChange("productName", value)
+            }
             className="text-xl font-bold text-[#432818] mb-4"
             placeholder="Nome do produto"
           />
-          
+
           {/* Preços */}
           <div className="flex items-center space-x-3 mb-4">
             <InlineEditableText
               value={originalPrice}
-              onChange={(value: string) => handlePropertyChange('originalPrice', value)}
+              onChange={(value: string) =>
+                handlePropertyChange("originalPrice", value)
+              }
               className="text-sm text-gray-500 line-through"
               placeholder="Preço original"
             />
             <InlineEditableText
               value={discountPrice}
-              onChange={(value: string) => handlePropertyChange('discountPrice', value)}
+              onChange={(value: string) =>
+                handlePropertyChange("discountPrice", value)
+              }
               className="text-2xl font-bold text-[#B89B7A]"
               placeholder="Preço com desconto"
             />
           </div>
-          
+
           {/* Benefícios */}
           {features.length > 0 && (
             <div className="space-y-2 mb-6">
@@ -88,30 +95,33 @@ const ProductOfferBlock: React.FC<BlockComponentProps> = ({
                     <InlineEditableText
                       value={feature.text}
                       onChange={(value: string) => {
-                        const updatedFeatures = features.map((feat: any, i: number) => 
-                          i === index ? { ...feat, text: value } : feat
+                        const updatedFeatures = features.map(
+                          (feat: any, i: number) =>
+                            i === index ? { ...feat, text: value } : feat,
                         );
-                        handlePropertyChange('features', updatedFeatures);
+                        handlePropertyChange("features", updatedFeatures);
                       }}
                       className="text-sm text-gray-700"
                       placeholder="Benefício do produto"
                     />
                   ) : (
-                    <span className="text-sm text-gray-700">{feature.text}</span>
+                    <span className="text-sm text-gray-700">
+                      {feature.text}
+                    </span>
                   )}
                 </div>
               ))}
             </div>
           )}
-          
+
           {/* Botão */}
-          <button 
-            className="w-full bg-[#B89B7A] hover:bg-[#a08965] text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
-          >
+          <button className="w-full bg-[#B89B7A] hover:bg-[#a08965] text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2">
             <ShoppingCart className="w-5 h-5" />
             <InlineEditableText
               value={buttonText}
-              onChange={(value: string) => handlePropertyChange('buttonText', value)}
+              onChange={(value: string) =>
+                handlePropertyChange("buttonText", value)
+              }
               className="text-white font-bold"
               placeholder="Texto do botão"
             />

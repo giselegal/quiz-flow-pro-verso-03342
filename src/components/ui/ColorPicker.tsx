@@ -1,19 +1,19 @@
 /**
  * ColorPicker - Componente de seleção de cor melhorado
- * 
+ *
  * Usa Shadcn UI Popover com seletor de cor avançado
  */
 
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Palette, Check } from 'lucide-react';
+} from "@/components/ui/popover";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Palette, Check } from "lucide-react";
 
 interface ColorPickerProps {
   value: string;
@@ -25,18 +25,37 @@ interface ColorPickerProps {
 
 // Cores predefinidas comuns
 const DEFAULT_PRESET_COLORS = [
-  '#000000', '#ffffff', '#f3f4f6', '#9ca3af', '#6b7280', '#4b5563',
-  '#ef4444', '#f97316', '#f59e0b', '#eab308', '#84cc16', '#22c55e',
-  '#10b981', '#14b8a6', '#06b6d4', '#0ea5e9', '#3b82f6', '#6366f1',
-  '#8b5cf6', '#a855f7', '#d946ef', '#ec4899', '#f43f5e'
+  "#000000",
+  "#ffffff",
+  "#f3f4f6",
+  "#9ca3af",
+  "#6b7280",
+  "#4b5563",
+  "#ef4444",
+  "#f97316",
+  "#f59e0b",
+  "#eab308",
+  "#84cc16",
+  "#22c55e",
+  "#10b981",
+  "#14b8a6",
+  "#06b6d4",
+  "#0ea5e9",
+  "#3b82f6",
+  "#6366f1",
+  "#8b5cf6",
+  "#a855f7",
+  "#d946ef",
+  "#ec4899",
+  "#f43f5e",
 ];
 
-export function ColorPicker({ 
-  value, 
-  onChange, 
-  label, 
+export function ColorPicker({
+  value,
+  onChange,
+  label,
   disabled = false,
-  presetColors = DEFAULT_PRESET_COLORS 
+  presetColors = DEFAULT_PRESET_COLORS,
 }: ColorPickerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState(value);
@@ -58,15 +77,13 @@ export function ColorPicker({
 
   return (
     <div className="space-y-2">
-      {label && (
-        <Label className="text-sm font-medium">{label}</Label>
-      )}
-      
+      {label && <Label className="text-sm font-medium">{label}</Label>}
+
       <div className="flex gap-2">
         {/* Preview da cor atual */}
-        <div 
+        <div
           className="w-10 h-10 rounded-md border border-gray-300 flex-shrink-0 cursor-pointer"
-          style={{ backgroundColor: isValidColor ? value : '#transparent' }}
+          style={{ backgroundColor: isValidColor ? value : "#transparent" }}
           onClick={() => !disabled && setIsOpen(true)}
         >
           {!isValidColor && (
@@ -88,8 +105,8 @@ export function ColorPicker({
         {/* Popover com seletor */}
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger asChild>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="icon"
               disabled={disabled}
               className="flex-shrink-0"
@@ -125,7 +142,7 @@ export function ColorPicker({
                 </Label>
                 <input
                   type="color"
-                  value={isValidColor ? value : '#000000'}
+                  value={isValidColor ? value : "#000000"}
                   onChange={(e) => handlePresetClick(e.target.value)}
                   className="w-full h-10 rounded-md border border-gray-300 cursor-pointer"
                 />

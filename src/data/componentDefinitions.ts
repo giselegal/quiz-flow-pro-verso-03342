@@ -19,7 +19,7 @@ import {
   Award,
   Mail,
   Phone,
-  BarChart
+  BarChart,
 } from "lucide-react";
 
 export const COMPONENT_CATEGORIES: ComponentCategories = {
@@ -37,9 +37,9 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
           alt: "Logo da marca",
           style: {
             width: "180px",
-            margin: "0 auto"
-          }
-        }
+            margin: "0 auto",
+          },
+        },
       },
       {
         type: "title",
@@ -52,9 +52,9 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
             fontSize: "2rem",
             fontWeight: "700",
             textAlign: "center",
-            color: "#432818"
-          }
-        }
+            color: "#432818",
+          },
+        },
       },
       {
         type: "subtitle",
@@ -67,9 +67,9 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
             fontSize: "1.5rem",
             fontWeight: "600",
             textAlign: "center",
-            color: "#432818"
-          }
-        }
+            color: "#432818",
+          },
+        },
       },
       {
         type: "text",
@@ -82,9 +82,9 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
             fontSize: "1rem",
             fontWeight: "normal",
             textAlign: "left",
-            color: "#432818"
-          }
-        }
+            color: "#432818",
+          },
+        },
       },
       {
         type: "image",
@@ -105,8 +105,8 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
         description: "Espaçamento vertical",
         defaultData: {
           height: 40,
-          style: {}
-        }
+          style: {},
+        },
       },
     ],
   },
@@ -124,9 +124,9 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
           gridSize: "auto",
           style: {
             fontSize: "1rem",
-            color: "#432818"
-          }
-        }
+            color: "#432818",
+          },
+        },
       },
       {
         type: "badge-inline",
@@ -136,8 +136,8 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
         defaultData: {
           text: "Badge",
           variant: "default",
-          gridSize: "auto"
-        }
+          gridSize: "auto",
+        },
       },
       {
         type: "stat-inline",
@@ -147,8 +147,8 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
         defaultData: {
           value: "95%",
           label: "Satisfação",
-          gridSize: "auto"
-        }
+          gridSize: "auto",
+        },
       },
       {
         type: "progress-inline",
@@ -158,8 +158,8 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
         defaultData: {
           value: 75,
           showPercentage: true,
-          gridSize: "auto"
-        }
+          gridSize: "auto",
+        },
       },
       {
         type: "image-display",
@@ -169,8 +169,8 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
         defaultData: {
           src: "https://placehold.co/400x300?text=Imagem",
           alt: "Imagem responsiva",
-          gridSize: "auto"
-        }
+          gridSize: "auto",
+        },
       },
       {
         type: "style-card",
@@ -180,8 +180,8 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
         defaultData: {
           title: "Estilo Elegante",
           percentage: "85%",
-          gridSize: "half"
-        }
+          gridSize: "half",
+        },
       },
       {
         type: "pricing-card",
@@ -192,8 +192,8 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
           title: "Produto Premium",
           price: "R$ 97",
           originalPrice: "R$ 197",
-          gridSize: "half"
-        }
+          gridSize: "half",
+        },
       },
       {
         type: "testimonial-card",
@@ -204,8 +204,8 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
           name: "Cliente Satisfeito",
           text: "Excelente resultado!",
           rating: 5,
-          gridSize: "auto"
-        }
+          gridSize: "auto",
+        },
       },
       {
         type: "result-card",
@@ -216,8 +216,8 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
           title: "Seu Estilo",
           percentage: "85%",
           description: "Baseado em suas respostas",
-          gridSize: "half"
-        }
+          gridSize: "half",
+        },
       },
       {
         type: "countdown",
@@ -227,8 +227,8 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
         defaultData: {
           title: "Oferta especial",
           minutes: 15,
-          gridSize: "auto"
-        }
+          gridSize: "auto",
+        },
       },
     ],
   },
@@ -247,9 +247,9 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
           style: {
             width: "100%",
             maxWidth: "600px",
-            margin: "0 auto"
-          }
-        }
+            margin: "0 auto",
+          },
+        },
       },
       {
         type: "input",
@@ -264,9 +264,9 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
           style: {
             width: "100%",
             maxWidth: "500px",
-            margin: "0 auto"
-          }
-        }
+            margin: "0 auto",
+          },
+        },
       },
       {
         type: "options",
@@ -278,12 +278,32 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
           multiSelect: true,
           normalSelectionLimit: 3,
           options: [
-            { id: "opt1", text: "Opção 1", value: "option1", category: "Categoria A" },
-            { id: "opt2", text: "Opção 2", value: "option2", category: "Categoria B" },
-            { id: "opt3", text: "Opção 3", value: "option3", category: "Categoria A" },
-            { id: "opt4", text: "Opção 4", value: "option4", category: "Categoria C" }
-          ]
-        }
+            {
+              id: "opt1",
+              text: "Opção 1",
+              value: "option1",
+              category: "Categoria A",
+            },
+            {
+              id: "opt2",
+              text: "Opção 2",
+              value: "option2",
+              category: "Categoria B",
+            },
+            {
+              id: "opt3",
+              text: "Opção 3",
+              value: "option3",
+              category: "Categoria A",
+            },
+            {
+              id: "opt4",
+              text: "Opção 4",
+              value: "option4",
+              category: "Categoria C",
+            },
+          ],
+        },
       },
     ],
   },
@@ -316,12 +336,12 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
         description: "Timer de urgência",
         defaultData: {
           title: "Oferta por tempo limitado",
-          endDate: new Date(Date.now() + 24*60*60*1000).toISOString(), // 24h from now
+          endDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24h from now
           style: {
             textAlign: "center",
-            color: "#DC2626"
-          }
-        }
+            color: "#DC2626",
+          },
+        },
       },
       {
         type: "guarantee",
@@ -352,5 +372,5 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
 };
 
 export const ALL_COMPONENTS: ComponentType[] = Object.values(
-  COMPONENT_CATEGORIES
+  COMPONENT_CATEGORIES,
 ).flatMap((category) => category.components);

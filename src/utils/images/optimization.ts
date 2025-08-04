@@ -1,5 +1,4 @@
-
-import { ImageOptimizationOptions } from './types';
+import { ImageOptimizationOptions } from "./types";
 
 /**
  * Otimiza URLs do Cloudinary aplicando transformações para melhor qualidade e performance
@@ -9,21 +8,21 @@ import { ImageOptimizationOptions } from './types';
  */
 export const optimizeCloudinaryUrl = (
   url: string,
-  options: ImageOptimizationOptions = {}
+  options: ImageOptimizationOptions = {},
 ): string => {
-  if (!url || !url.includes('cloudinary.com')) return url;
+  if (!url || !url.includes("cloudinary.com")) return url;
 
   // Configurações padrão
   const {
     width,
     height,
     quality = 85,
-    format = 'auto',
-    crop = false
+    format = "auto",
+    crop = false,
   } = options;
 
   // Extrair partes da URL do Cloudinary
-  const parts = url.split('/image/upload/');
+  const parts = url.split("/image/upload/");
   if (parts.length !== 2) return url;
 
   // Verificar se a URL já tem transformações
@@ -32,34 +31,34 @@ export const optimizeCloudinaryUrl = (
 
   // Construir parâmetros de transformação
   const transformations = [];
-  
+
   // Formato (webp, avif, etc)
   transformations.push(`f_${format}`);
-  
+
   // Qualidade
   if (quality) {
     transformations.push(`q_${quality}`);
   }
-  
+
   // Dimensões
   if (width) {
     transformations.push(`w_${width}`);
   }
-  
+
   if (height) {
     transformations.push(`h_${height}`);
   }
-  
+
   // Modo de corte
   if (crop) {
-    transformations.push('c_fill');
+    transformations.push("c_fill");
   }
-  
+
   // Otimizar para retina display
-  transformations.push('dpr_auto');
+  transformations.push("dpr_auto");
 
   // Construir URL final
-  const transformString = transformations.join(',');
+  const transformString = transformations.join(",");
   return `${parts[0]}/image/upload/${transformString}/${parts[1]}`;
 };
 
@@ -71,7 +70,7 @@ export const optimizeCloudinaryUrl = (
  */
 export const getOptimizedImage = (
   url: string,
-  options: ImageOptimizationOptions = {}
+  options: ImageOptimizationOptions = {},
 ): string => {
   return optimizeCloudinaryUrl(url, options);
 };
@@ -82,14 +81,14 @@ export const getOptimizedImage = (
  * @returns URL para o placeholder de baixa qualidade
  */
 export const getLowQualityPlaceholder = (url: string): string => {
-  if (!url) return '';
-  
+  if (!url) return "";
+
   return optimizeCloudinaryUrl(url, {
     width: 20,
     height: 20,
     quality: 10,
-    format: 'auto',
-    crop: true
+    format: "auto",
+    crop: true,
   });
 };
 
@@ -103,18 +102,18 @@ export const getLowQualityPlaceholder = (url: string): string => {
 export const getOptimizedImageUrl = (
   url: string,
   width: number,
-  height?: number
+  height?: number,
 ): string => {
   const options: ImageOptimizationOptions = {
     width,
     quality: 85,
-    format: 'auto'
+    format: "auto",
   };
-  
+
   if (height) {
     options.height = height;
   }
-  
+
   return optimizeCloudinaryUrl(url, options);
 };
 
@@ -126,11 +125,11 @@ export const getOptimizedImageUrl = (
  */
 export const getResponsiveImageSources = (
   url: string,
-  widths: number[] = [640, 768, 1024, 1280, 1536]
+  widths: number[] = [640, 768, 1024, 1280, 1536],
 ): Array<{ srcset: string; width: number }> => {
-  return widths.map(width => ({
+  return widths.map((width) => ({
     srcset: getOptimizedImageUrl(url, width),
-    width
+    width,
   }));
 };
 
@@ -140,23 +139,26 @@ export const getResponsiveImageSources = (
  * @param options Opções de otimização
  * @returns URL otimizada
  */
-export const optimizeImageUrl = (url: string, options: ImageOptimizationOptions = {}) => {
+export const optimizeImageUrl = (
+  url: string,
+  options: ImageOptimizationOptions = {},
+) => {
   const {
     quality = 80,
     width,
     height,
-    format = 'auto',
-    crop = false
+    format = "auto",
+    crop = false,
   } = options;
 
   // Simplified optimization logic
   const params = new URLSearchParams();
-  
-  if (quality !== 80) params.append('q', quality.toString());
-  if (width) params.append('w', width.toString());
-  if (height) params.append('h', height.toString());
-  if (format !== 'auto') params.append('f', format);
-  if (crop) params.append('c', 'fill');
+
+  if (quality !== 80) params.append("q", quality.toString());
+  if (width) params.append("w", width.toString());
+  if (height) params.append("h", height.toString());
+  if (format !== "auto") params.append("f", format);
+  if (crop) params.append("c", "fill");
 
   const paramString = params.toString();
   return paramString ? `${url}?${paramString}` : url;

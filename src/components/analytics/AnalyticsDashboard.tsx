@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
+import React, { useState, useEffect } from "react";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
 import {
   BarChart3,
   Users,
@@ -10,9 +10,13 @@ import {
   Clock,
   RefreshCw,
   Download,
-  AlertCircle
-} from 'lucide-react';
-import { useAnalytics, AnalyticsMetrics, ConversionFunnel } from '../../services/analyticsService';
+  AlertCircle,
+} from "lucide-react";
+import {
+  useAnalytics,
+  AnalyticsMetrics,
+  ConversionFunnel,
+} from "../../services/analyticsService";
 
 interface AnalyticsDashboardProps {
   quizId: string;
@@ -21,40 +25,46 @@ interface AnalyticsDashboardProps {
 
 const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   quizId,
-  className = ''
+  className = "",
 }) => {
   const [metrics, setMetrics] = useState<AnalyticsMetrics | null>(null);
   const [funnel, setFunnel] = useState<ConversionFunnel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState("overview");
 
-  const { getQuizMetrics, getConversionFunnel, syncLocalEvents } = useAnalytics();
+  const { getQuizMetrics, getConversionFunnel, syncLocalEvents } =
+    useAnalytics();
 
   // Carregar dados analytics
   const loadAnalytics = async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
-      console.log('📊 [Analytics Dashboard] Loading data for quiz:', quizId);
-      
+      console.log("📊 [Analytics Dashboard] Loading data for quiz:", quizId);
+
       // Sincronizar eventos locais primeiro
       await syncLocalEvents();
-      
+
       // Carregar métricas e funil
       const [metricsData, funnelData] = await Promise.all([
         getQuizMetrics(quizId),
-        getConversionFunnel(quizId)
+        getConversionFunnel(quizId),
       ]);
 
       setMetrics(metricsData);
       setFunnel(funnelData);
-      
-      console.log('✅ [Analytics Dashboard] Data loaded:', { metricsData, funnelData });
+
+      console.log("✅ [Analytics Dashboard] Data loaded:", {
+        metricsData,
+        funnelData,
+      });
     } catch (err) {
-      console.error('❌ [Analytics Dashboard] Error loading data:', err);
-      setError(err instanceof Error ? err.message : 'Erro ao carregar analytics');
+      console.error("❌ [Analytics Dashboard] Error loading data:", err);
+      setError(
+        err instanceof Error ? err.message : "Erro ao carregar analytics",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -101,9 +111,14 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           <div className="flex items-center space-x-2">
             <AlertCircle className="h-5 w-5 text-red-500" />
             <div>
-              <p className="font-medium text-red-900">Erro ao carregar analytics</p>
+              <p className="font-medium text-red-900">
+                Erro ao carregar analytics
+              </p>
               <p className="text-sm text-red-600">{error}</p>
-              <Button onClick={loadAnalytics} className="mt-2 bg-red-600 hover:bg-red-700">
+              <Button
+                onClick={loadAnalytics}
+                className="mt-2 bg-red-600 hover:bg-red-700"
+              >
                 Tentar novamente
               </Button>
             </div>
@@ -118,7 +133,9 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       <div className={`p-6 ${className}`}>
         <div className="bg-white border rounded-lg p-12 text-center">
           <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900">Nenhum dado disponível</h3>
+          <h3 className="text-lg font-medium text-gray-900">
+            Nenhum dado disponível
+          </h3>
           <p className="text-sm text-gray-600 mt-2">
             Ainda não há dados de analytics para este quiz.
             <br />
@@ -136,7 +153,8 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         <div>
           <h2 className="text-2xl font-bold">Analytics Dashboard</h2>
           <p className="text-gray-600">
-            Última atualização: {new Date(metrics.last_updated).toLocaleString('pt-BR')}
+            Última atualização:{" "}
+            {new Date(metrics.last_updated).toLocaleString("pt-BR")}
           </p>
         </div>
         <div className="flex space-x-2">
@@ -183,46 +201,60 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       <div className="w-full">
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex space-x-8">
-            {['overview', 'funnel', 'performance'].map((tab) => (
+            {["overview", "funnel", "performance"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`py-2 px-1 border-b-2 font-medium text-sm ${
                   activeTab === tab
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? "border-blue-500 text-blue-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
-                {tab === 'overview' ? 'Visão Geral' : 
-                 tab === 'funnel' ? 'Funil de Conversão' : 'Performance'}
+                {tab === "overview"
+                  ? "Visão Geral"
+                  : tab === "funnel"
+                    ? "Funil de Conversão"
+                    : "Performance"}
               </button>
             ))}
           </nav>
         </div>
 
         <div className="mt-6">
-          {activeTab === 'overview' && (
+          {activeTab === "overview" && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Métricas detalhadas */}
               <div className="bg-white border rounded-lg p-6">
-                <h3 className="text-lg font-medium mb-4">Métricas Detalhadas</h3>
+                <h3 className="text-lg font-medium mb-4">
+                  Métricas Detalhadas
+                </h3>
                 <div className="space-y-4">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Taxa de Conversão:</span>
-                    <Badge variant={metrics.conversion_rate > 10 ? 'default' : 'secondary'}>
+                    <Badge
+                      variant={
+                        metrics.conversion_rate > 10 ? "default" : "secondary"
+                      }
+                    >
                       {metrics.conversion_rate}%
                     </Badge>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Taxa de Rejeição:</span>
-                    <Badge variant={metrics.bounce_rate < 50 ? 'default' : 'destructive'}>
+                    <Badge
+                      variant={
+                        metrics.bounce_rate < 50 ? "default" : "destructive"
+                      }
+                    >
                       {metrics.bounce_rate}%
                     </Badge>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Tempo Médio:</span>
                     <span className="font-medium">
-                      {Math.floor(metrics.average_time / 60)}m {metrics.average_time % 60}s
+                      {Math.floor(metrics.average_time / 60)}m{" "}
+                      {metrics.average_time % 60}s
                     </span>
                   </div>
                 </div>
@@ -234,17 +266,32 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span>Performance:</span>
-                    <Badge variant={metrics.completion_rate > 50 ? 'default' : 'secondary'}>
-                      {metrics.completion_rate > 70 ? 'Excelente' : 
-                       metrics.completion_rate > 50 ? 'Boa' : 
-                       metrics.completion_rate > 30 ? 'Regular' : 'Baixa'}
+                    <Badge
+                      variant={
+                        metrics.completion_rate > 50 ? "default" : "secondary"
+                      }
+                    >
+                      {metrics.completion_rate > 70
+                        ? "Excelente"
+                        : metrics.completion_rate > 50
+                          ? "Boa"
+                          : metrics.completion_rate > 30
+                            ? "Regular"
+                            : "Baixa"}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Engajamento:</span>
-                    <Badge variant={metrics.bounce_rate < 30 ? 'default' : 'secondary'}>
-                      {metrics.bounce_rate < 30 ? 'Alto' : 
-                       metrics.bounce_rate < 60 ? 'Médio' : 'Baixo'}
+                    <Badge
+                      variant={
+                        metrics.bounce_rate < 30 ? "default" : "secondary"
+                      }
+                    >
+                      {metrics.bounce_rate < 30
+                        ? "Alto"
+                        : metrics.bounce_rate < 60
+                          ? "Médio"
+                          : "Baixo"}
                     </Badge>
                   </div>
                 </div>
@@ -252,11 +299,13 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
             </div>
           )}
 
-          {activeTab === 'funnel' && (
+          {activeTab === "funnel" && (
             <div className="bg-white border rounded-lg p-6">
               <h3 className="text-lg font-medium mb-4">Funil de Conversão</h3>
-              <p className="text-gray-600 mb-6">Visualize onde os usuários abandonam o processo</p>
-              
+              <p className="text-gray-600 mb-6">
+                Visualize onde os usuários abandonam o processo
+              </p>
+
               {funnel.length > 0 ? (
                 <div className="space-y-4">
                   {funnel.map((step, index) => (
@@ -264,12 +313,18 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                       <div className="flex items-center justify-between p-4 bg-gray-50 border rounded-lg">
                         <div className="flex-1">
                           <h4 className="font-medium">{step.step_name}</h4>
-                          <p className="text-sm text-gray-600">{step.total_users} usuários</p>
+                          <p className="text-sm text-gray-600">
+                            {step.total_users} usuários
+                          </p>
                         </div>
                         <div className="text-right">
-                          <div className="text-lg font-bold">{step.conversion_rate}%</div>
+                          <div className="text-lg font-bold">
+                            {step.conversion_rate}%
+                          </div>
                           {step.drop_off_rate > 0 && (
-                            <div className="text-sm text-red-600">-{step.drop_off_rate}% drop-off</div>
+                            <div className="text-sm text-red-600">
+                              -{step.drop_off_rate}% drop-off
+                            </div>
                           )}
                         </div>
                       </div>
@@ -284,15 +339,19 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               ) : (
                 <div className="text-center py-8">
                   <Target className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600">Dados do funil não disponíveis</p>
+                  <p className="text-gray-600">
+                    Dados do funil não disponíveis
+                  </p>
                 </div>
               )}
             </div>
           )}
 
-          {activeTab === 'performance' && (
+          {activeTab === "performance" && (
             <div className="bg-white border rounded-lg p-6">
-              <h3 className="text-lg font-medium mb-4">Análise de Performance</h3>
+              <h3 className="text-lg font-medium mb-4">
+                Análise de Performance
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <h4 className="font-medium mb-2">Recomendações</h4>
@@ -300,19 +359,26 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                     {metrics.completion_rate < 50 && (
                       <li className="flex items-start space-x-2">
                         <AlertCircle className="h-4 w-4 text-yellow-500 mt-0.5" />
-                        <span>Taxa de conclusão baixa. Considere simplificar o quiz.</span>
+                        <span>
+                          Taxa de conclusão baixa. Considere simplificar o quiz.
+                        </span>
                       </li>
                     )}
                     {metrics.bounce_rate > 60 && (
                       <li className="flex items-start space-x-2">
                         <AlertCircle className="h-4 w-4 text-red-500 mt-0.5" />
-                        <span>Taxa de rejeição alta. Melhore a primeira impressão.</span>
+                        <span>
+                          Taxa de rejeição alta. Melhore a primeira impressão.
+                        </span>
                       </li>
                     )}
                     {metrics.average_time > 300 && (
                       <li className="flex items-start space-x-2">
                         <Clock className="h-4 w-4 text-blue-500 mt-0.5" />
-                        <span>Quiz muito longo. Considere reduzir o número de perguntas.</span>
+                        <span>
+                          Quiz muito longo. Considere reduzir o número de
+                          perguntas.
+                        </span>
                       </li>
                     )}
                   </ul>

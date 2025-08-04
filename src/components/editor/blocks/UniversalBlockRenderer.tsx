@@ -1,7 +1,6 @@
-
-import React from 'react';
-import { Block } from '@/types/editor';
-import { getEnhancedComponent } from '@/config/enhancedBlockRegistry';
+import React from "react";
+import { Block } from "@/types/editor";
+import { getEnhancedComponent } from "@/config/enhancedBlockRegistry";
 
 export interface BlockRendererProps {
   block: Block;
@@ -24,14 +23,14 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
   isSelected = false,
   onClick,
   onPropertyChange,
-  disabled = false
+  disabled = false,
 }) => {
   const blockProps = {
     block,
     isSelected,
     onClick,
     onPropertyChange,
-    disabled
+    disabled,
   };
 
   // Usar o Enhanced Block Registry validado

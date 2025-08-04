@@ -1,6 +1,6 @@
-import React from 'react';
-import Step20Result from '../components/steps/Step20Result';
-import { getStep20Template } from '../components/steps/Step20Template';
+import React from "react";
+import Step20Result from "../components/steps/Step20Result";
+import { getStep20Template } from "../components/steps/Step20Template";
 
 /**
  * Página de teste para verificar a integração do Step20 com dados reais
@@ -8,37 +8,37 @@ import { getStep20Template } from '../components/steps/Step20Template';
 const TestStep20Integration: React.FC = () => {
   // Dados de teste simulando um resultado real do quiz
   const mockPrimaryStyle = {
-    style: 'Natural' as any,
-    category: 'Natural',
+    style: "Natural" as any,
+    category: "Natural",
     score: 25,
     points: 25,
     percentage: 85,
-    rank: 1
+    rank: 1,
   };
 
   const mockSecondaryStyles = [
     {
-      style: 'Clássico' as any,
-      category: 'Clássico',
+      style: "Clássico" as any,
+      category: "Clássico",
       score: 8,
       points: 8,
       percentage: 25,
-      rank: 2
+      rank: 2,
     },
     {
-      style: 'Contemporâneo' as any,
-      category: 'Contemporâneo',
+      style: "Contemporâneo" as any,
+      category: "Contemporâneo",
       score: 5,
       points: 5,
       percentage: 15,
-      rank: 3
-    }
+      rank: 3,
+    },
   ];
 
   const mockData = {
     primaryStyle: mockPrimaryStyle,
     secondaryStyles: mockSecondaryStyles,
-    userName: 'Maria Silva'
+    userName: "Maria Silva",
   };
 
   // Testar o template diretamente
@@ -67,12 +67,19 @@ const TestStep20Integration: React.FC = () => {
           <div className="grid md:grid-cols-3 gap-4">
             <div className="bg-white p-3 rounded">
               <h3 className="font-medium text-blue-700">Estilo Principal:</h3>
-              <p><strong>{mockPrimaryStyle.category}</strong> ({mockPrimaryStyle.percentage}%)</p>
+              <p>
+                <strong>{mockPrimaryStyle.category}</strong> (
+                {mockPrimaryStyle.percentage}%)
+              </p>
             </div>
             <div className="bg-white p-3 rounded">
-              <h3 className="font-medium text-blue-700">Estilos Secundários:</h3>
-              {mockSecondaryStyles.map(style => (
-                <p key={style.category}>{style.category} ({style.percentage}%)</p>
+              <h3 className="font-medium text-blue-700">
+                Estilos Secundários:
+              </h3>
+              {mockSecondaryStyles.map((style) => (
+                <p key={style.category}>
+                  {style.category} ({style.percentage}%)
+                </p>
               ))}
             </div>
             <div className="bg-white p-3 rounded">
@@ -90,9 +97,13 @@ const TestStep20Integration: React.FC = () => {
           <div className="space-y-2">
             {templateBlocks.map((block, index) => (
               <div key={index} className="bg-white p-2 rounded text-sm border">
-                <strong>{index + 1}. {block.type}</strong>
+                <strong>
+                  {index + 1}. {block.type}
+                </strong>
                 {block.properties.title && (
-                  <span className="text-gray-600 ml-2">- {block.properties.title}</span>
+                  <span className="text-gray-600 ml-2">
+                    - {block.properties.title}
+                  </span>
                 )}
               </div>
             ))}

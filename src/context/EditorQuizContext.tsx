@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
-import { QuizQuestion, QuizAnswer, QuizResult } from '@/types/quiz';
-import { calculateQuizResult } from '@/lib/quizEngine';
+import React, { createContext, useContext, useState, useCallback } from "react";
+import { QuizQuestion, QuizAnswer, QuizResult } from "@/types/quiz";
+import { calculateQuizResult } from "@/lib/quizEngine";
 
 interface EditorQuizContextType {
   currentQuestionIndex: number;
@@ -16,13 +16,17 @@ interface EditorQuizContextType {
   completeQuiz: () => void;
 }
 
-const EditorQuizContext = createContext<EditorQuizContextType | undefined>(undefined);
+const EditorQuizContext = createContext<EditorQuizContextType | undefined>(
+  undefined,
+);
 
 interface EditorQuizProviderProps {
   children: React.ReactNode;
 }
 
-export const EditorQuizProvider: React.FC<EditorQuizProviderProps> = ({ children }) => {
+export const EditorQuizProvider: React.FC<EditorQuizProviderProps> = ({
+  children,
+}) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<QuizAnswer[]>([]);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
@@ -38,10 +42,12 @@ export const EditorQuizProvider: React.FC<EditorQuizProviderProps> = ({ children
   }, []);
 
   const answerQuestion = useCallback((questionId: string, optionId: string) => {
-    setAnswers(prev => {
-      const existingAnswerIndex = prev.findIndex(a => a.questionId === questionId);
+    setAnswers((prev) => {
+      const existingAnswerIndex = prev.findIndex(
+        (a) => a.questionId === questionId,
+      );
       const newAnswer: QuizAnswer = { questionId, optionId };
-      
+
       if (existingAnswerIndex >= 0) {
         const updated = [...prev];
         updated[existingAnswerIndex] = newAnswer;
@@ -53,11 +59,11 @@ export const EditorQuizProvider: React.FC<EditorQuizProviderProps> = ({ children
   }, []);
 
   const previousQuestion = useCallback(() => {
-    setCurrentQuestionIndex(prev => Math.max(0, prev - 1));
+    setCurrentQuestionIndex((prev) => Math.max(0, prev - 1));
   }, []);
 
   const nextQuestion = useCallback(() => {
-    setCurrentQuestionIndex(prev => Math.min(questions.length - 1, prev + 1));
+    setCurrentQuestionIndex((prev) => Math.min(questions.length - 1, prev + 1));
   }, [questions.length]);
 
   const resetQuiz = useCallback(() => {
@@ -86,7 +92,7 @@ export const EditorQuizProvider: React.FC<EditorQuizProviderProps> = ({ children
     previousQuestion,
     nextQuestion,
     resetQuiz,
-    completeQuiz
+    completeQuiz,
   };
 
   return (
@@ -99,7 +105,7 @@ export const EditorQuizProvider: React.FC<EditorQuizProviderProps> = ({ children
 export const useEditorQuiz = (): EditorQuizContextType => {
   const context = useContext(EditorQuizContext);
   if (context === undefined) {
-    throw new Error('useEditorQuiz must be used within an EditorQuizProvider');
+    throw new Error("useEditorQuiz must be used within an EditorQuizProvider");
   }
   return context;
 };

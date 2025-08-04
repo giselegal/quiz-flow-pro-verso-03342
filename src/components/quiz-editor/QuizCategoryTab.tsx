@@ -1,10 +1,13 @@
-
-import React from 'react';
-import { ChevronDown, ChevronRight, Edit } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { QuizCategory, QUIZ_CATEGORIES } from '@/types/quizEditor';
-import { QuizQuestion } from '@/types/quiz';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import React from "react";
+import { ChevronDown, ChevronRight, Edit } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { QuizCategory, QUIZ_CATEGORIES } from "@/types/quizEditor";
+import { QuizQuestion } from "@/types/quiz";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 interface CategoryInfo {
   id: QuizCategory;
@@ -27,7 +30,7 @@ const QuizCategoryTab: React.FC<QuizCategoryTabProps> = ({
   isActive,
   onClick,
   questions,
-  onEditQuestion
+  onEditQuestion,
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -38,11 +41,13 @@ const QuizCategoryTab: React.FC<QuizCategoryTabProps> = ({
   }, [isActive]);
 
   return (
-    <div className={`rounded-md border ${isActive ? 'border-[#B89B7A]' : 'border-gray-200'}`}>
+    <div
+      className={`rounded-md border ${isActive ? "border-[#B89B7A]" : "border-gray-200"}`}
+    >
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CollapsibleTrigger asChild>
-          <div 
-            className={`p-3 flex justify-between items-center cursor-pointer ${isActive ? 'bg-[#FAF9F7]' : 'bg-white'}`}
+          <div
+            className={`p-3 flex justify-between items-center cursor-pointer ${isActive ? "bg-[#FAF9F7]" : "bg-white"}`}
             onClick={onClick}
           >
             <div>
@@ -59,8 +64,8 @@ const QuizCategoryTab: React.FC<QuizCategoryTabProps> = ({
         <CollapsibleContent>
           <div className="p-2 space-y-1 bg-[#FAF9F7] rounded-b-md">
             {questions.length > 0 ? (
-              questions.map(question => (
-                <div 
+              questions.map((question) => (
+                <div
                   key={question.id}
                   className="p-2 rounded-md hover:bg-white flex justify-between items-center group"
                 >

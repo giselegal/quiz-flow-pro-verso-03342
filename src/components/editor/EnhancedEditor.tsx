@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { EnhancedEditorLayout } from '../enhanced-editor/EnhancedEditorLayout';
+import React from "react";
+import { EnhancedEditorLayout } from "../enhanced-editor/EnhancedEditorLayout";
 
 interface EnhancedEditorProps {
   funnelId?: string;

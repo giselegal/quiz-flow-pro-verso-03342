@@ -1,7 +1,6 @@
-
-import React from 'react';
-import { Block, FAQItem } from '@/types/editor';
-import { StyleResult } from '@/types/quiz';
+import React from "react";
+import { Block, FAQItem } from "@/types/editor";
+import { StyleResult } from "@/types/quiz";
 
 interface BlockRendererProps {
   block: Block;
@@ -10,11 +9,11 @@ interface BlockRendererProps {
   primaryStyle?: StyleResult;
 }
 
-const BlockRenderer: React.FC<BlockRendererProps> = ({ 
-  block, 
-  isEditing = false, 
+const BlockRenderer: React.FC<BlockRendererProps> = ({
+  block,
+  isEditing = false,
   onUpdate,
-  primaryStyle 
+  primaryStyle,
 }) => {
   const content = block.content || {};
 
@@ -26,29 +25,31 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
 
   // Type guard to check if items is string array or FAQItem array
   const isStringArray = (items: any[]): items is string[] => {
-    return items.length === 0 || typeof items[0] === 'string';
+    return items.length === 0 || typeof items[0] === "string";
   };
 
   const isFAQItemArray = (items: any[]): items is FAQItem[] => {
-    return items.length > 0 && typeof items[0] === 'object' && 'question' in items[0];
+    return (
+      items.length > 0 && typeof items[0] === "object" && "question" in items[0]
+    );
   };
 
   switch (block.type) {
-    case 'header':
-    case 'headline':
+    case "header":
+    case "headline":
       return (
         <div className="text-center">
           {isEditing ? (
             <input
               type="text"
-              value={content.title || ''}
-              onChange={(e) => handleContentChange('title', e.target.value)}
+              value={content.title || ""}
+              onChange={(e) => handleContentChange("title", e.target.value)}
               className="text-2xl font-bold w-full border-none outline-none bg-transparent"
               placeholder="Digite o título"
             />
           ) : (
             <h1 className="text-2xl font-bold text-gray-900">
-              {content.title || 'Título'}
+              {content.title || "Título"}
             </h1>
           )}
           {content.subtitle && (
@@ -57,32 +58,32 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
         </div>
       );
 
-    case 'text':
+    case "text":
       return (
         <div>
           {isEditing ? (
             <textarea
-              value={content.text || ''}
-              onChange={(e) => handleContentChange('text', e.target.value)}
+              value={content.text || ""}
+              onChange={(e) => handleContentChange("text", e.target.value)}
               className="w-full p-2 border rounded resize-none"
               rows={4}
               placeholder="Digite o texto"
             />
           ) : (
             <p className="text-gray-700 leading-relaxed">
-              {content.text || 'Texto de exemplo'}
+              {content.text || "Texto de exemplo"}
             </p>
           )}
         </div>
       );
 
-    case 'image':
+    case "image":
       return (
         <div className="text-center">
           {content.imageUrl ? (
             <img
               src={content.imageUrl}
-              alt={content.imageAlt || 'Imagem'}
+              alt={content.imageAlt || "Imagem"}
               className="max-w-full h-auto rounded-lg mx-auto"
             />
           ) : (
@@ -96,74 +97,74 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
         </div>
       );
 
-    case 'button':
+    case "button":
       return (
         <div className="text-center">
           <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-            {content.buttonText || 'Clique aqui'}
+            {content.buttonText || "Clique aqui"}
           </button>
         </div>
       );
 
-    case 'benefits':
+    case "benefits":
       const benefitItems = content.items || [];
       return (
         <div>
           <h3 className="text-xl font-semibold mb-4">
-            {content.title || 'Benefícios'}
+            {content.title || "Benefícios"}
           </h3>
           <ul className="space-y-2">
-            {benefitItems.length > 0 && isStringArray(benefitItems) ? 
+            {benefitItems.length > 0 && isStringArray(benefitItems) ? (
               benefitItems.map((item: string, index: number) => (
                 <li key={index} className="flex items-start gap-2">
                   <span className="text-green-500 mt-1">✓</span>
                   <span>{item}</span>
                 </li>
-              )) :
+              ))
+            ) : (
               <li className="text-gray-500">Nenhum benefício adicionado</li>
-            }
+            )}
           </ul>
         </div>
       );
 
-    case 'faq':
+    case "faq":
       const faqItems = content.faqItems || content.items || [];
       return (
         <div>
           <h3 className="text-xl font-semibold mb-4">
-            {content.title || 'Perguntas Frequentes'}
+            {content.title || "Perguntas Frequentes"}
           </h3>
           <div className="space-y-4">
-            {faqItems.length > 0 && isFAQItemArray(faqItems) ? 
+            {faqItems.length > 0 && isFAQItemArray(faqItems) ? (
               faqItems.map((item: FAQItem, index: number) => (
                 <div key={index} className="border-b pb-3">
                   <h4 className="font-medium text-gray-900 mb-2">
                     {item.question}
                   </h4>
-                  <p className="text-gray-600">
-                    {item.answer}
-                  </p>
+                  <p className="text-gray-600">{item.answer}</p>
                 </div>
-              )) :
+              ))
+            ) : (
               <p className="text-gray-500">Nenhuma pergunta adicionada</p>
-            }
+            )}
           </div>
         </div>
       );
 
-    case 'testimonials':
+    case "testimonials":
       return (
         <div className="bg-gray-50 p-6 rounded-lg">
           <blockquote className="text-lg italic text-gray-800 mb-4">
-            "{content.quote || 'Depoimento incrível sobre o produto...'}"
+            "{content.quote || "Depoimento incrível sobre o produto..."}"
           </blockquote>
           <cite className="text-gray-600 font-medium">
-            — {content.quoteAuthor || 'Nome do Cliente'}
+            — {content.quoteAuthor || "Nome do Cliente"}
           </cite>
         </div>
       );
 
-    case 'pricing':
+    case "pricing":
       return (
         <div className="bg-white border-2 border-blue-200 rounded-lg p-6 text-center">
           {content.regularPrice && (
@@ -172,7 +173,7 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
             </div>
           )}
           <div className="text-3xl font-bold text-blue-600 mb-4">
-            R$ {content.salePrice || '97'}
+            R$ {content.salePrice || "97"}
           </div>
           <button className="bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-600 transition-colors">
             Comprar Agora

@@ -1,16 +1,15 @@
-
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { Block } from '@/types/editor';
-import { LucideIcon } from 'lucide-react';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { Block } from "@/types/editor";
+import { LucideIcon } from "lucide-react";
 
 interface ComponentItemProps {
-  type: Block['type'];
+  type: Block["type"];
   label: string;
   icon: LucideIcon;
   description: string;
-  onSelect: (type: Block['type']) => void;
+  onSelect: (type: Block["type"]) => void;
 }
 
 export function ComponentItem({
@@ -18,10 +17,10 @@ export function ComponentItem({
   label,
   icon: Icon,
   description,
-  onSelect
+  onSelect,
 }: ComponentItemProps) {
   return (
-    <div 
+    <div
       className="border border-[#B89B7A]/20 rounded-md bg-white hover:bg-[#FAF9F7] transition-colors cursor-pointer overflow-hidden"
       onClick={() => onSelect(type)}
     >

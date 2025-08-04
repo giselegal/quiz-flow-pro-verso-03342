@@ -1,10 +1,9 @@
-
-import React from 'react';
-import { EditorBlock } from '@/types/editor';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import React from "react";
+import { EditorBlock } from "@/types/editor";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 interface PropertiesPanelProps {
   selectedBlock: EditorBlock | null;
@@ -20,7 +19,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   onClose,
   onUpdate,
   onDelete,
-  isMobile = false
+  isMobile = false,
 }) => {
   if (!selectedBlock) {
     return (
@@ -35,8 +34,8 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     onUpdate({
       content: {
         ...selectedBlock.content,
-        [key]: value
-      }
+        [key]: value,
+      },
     });
   };
 
@@ -57,26 +56,26 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           </div>
         </div>
 
-        {selectedBlock.type === 'text' && (
+        {selectedBlock.type === "text" && (
           <div>
             <Label htmlFor="text">Text Content</Label>
             <Textarea
               id="text"
-              value={selectedBlock.content?.text || ''}
-              onChange={(e) => handleContentUpdate('text', e.target.value)}
+              value={selectedBlock.content?.text || ""}
+              onChange={(e) => handleContentUpdate("text", e.target.value)}
               placeholder="Enter text content..."
             />
           </div>
         )}
 
-        {selectedBlock.type === 'header' && (
+        {selectedBlock.type === "header" && (
           <>
             <div>
               <Label htmlFor="title">Title</Label>
               <Input
                 id="title"
-                value={selectedBlock.content?.title || ''}
-                onChange={(e) => handleContentUpdate('title', e.target.value)}
+                value={selectedBlock.content?.title || ""}
+                onChange={(e) => handleContentUpdate("title", e.target.value)}
                 placeholder="Enter title..."
               />
             </div>
@@ -84,22 +83,26 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <Label htmlFor="subtitle">Subtitle</Label>
               <Input
                 id="subtitle"
-                value={selectedBlock.content?.subtitle || ''}
-                onChange={(e) => handleContentUpdate('subtitle', e.target.value)}
+                value={selectedBlock.content?.subtitle || ""}
+                onChange={(e) =>
+                  handleContentUpdate("subtitle", e.target.value)
+                }
                 placeholder="Enter subtitle..."
               />
             </div>
           </>
         )}
 
-        {selectedBlock.type === 'image' && (
+        {selectedBlock.type === "image" && (
           <>
             <div>
               <Label htmlFor="imageUrl">Image URL</Label>
               <Input
                 id="imageUrl"
-                value={selectedBlock.content?.imageUrl || ''}
-                onChange={(e) => handleContentUpdate('imageUrl', e.target.value)}
+                value={selectedBlock.content?.imageUrl || ""}
+                onChange={(e) =>
+                  handleContentUpdate("imageUrl", e.target.value)
+                }
                 placeholder="Enter image URL..."
               />
             </div>
@@ -107,8 +110,10 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <Label htmlFor="imageAlt">Alt Text</Label>
               <Input
                 id="imageAlt"
-                value={selectedBlock.content?.imageAlt || ''}
-                onChange={(e) => handleContentUpdate('imageAlt', e.target.value)}
+                value={selectedBlock.content?.imageAlt || ""}
+                onChange={(e) =>
+                  handleContentUpdate("imageAlt", e.target.value)
+                }
                 placeholder="Enter alt text..."
               />
             </div>
@@ -116,9 +121,9 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         )}
 
         <div className="pt-4 border-t">
-          <Button 
-            variant="destructive" 
-            size="sm" 
+          <Button
+            variant="destructive"
+            size="sm"
             onClick={onDelete}
             className="w-full"
           >

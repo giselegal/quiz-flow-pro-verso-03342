@@ -1,15 +1,14 @@
-
-import React from 'react';
-import { QuizStage } from '@/types/quizBuilder';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Plus, Eye, Settings, Trash2 } from 'lucide-react';
+import React from "react";
+import { QuizStage } from "@/types/quizBuilder";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Plus, Eye, Settings, Trash2 } from "lucide-react";
 
 interface StageListProps {
   stages: QuizStage[];
   activeStageId: string;
   onStageSelect: (id: string) => void;
-  onStageAdd: (type: QuizStage['type']) => void;
+  onStageAdd: (type: QuizStage["type"]) => void;
   onStageUpdate: (id: string, updates: Partial<QuizStage>) => void;
   onStageDelete: (id: string) => void;
 }
@@ -20,22 +19,28 @@ const StageList: React.FC<StageListProps> = ({
   onStageSelect,
   onStageAdd,
   onStageUpdate,
-  onStageDelete
+  onStageDelete,
 }) => {
-  const getStageIcon = (type: QuizStage['type']) => {
+  const getStageIcon = (type: QuizStage["type"]) => {
     switch (type) {
-      case 'cover': return '📋';
-      case 'question': return '❓';
-      case 'result': return '🎯';
-      case 'strategic': return '⚡';
-      case 'welcome': return '👋';
-      default: return '📄';
+      case "cover":
+        return "📋";
+      case "question":
+        return "❓";
+      case "result":
+        return "🎯";
+      case "strategic":
+        return "⚡";
+      case "welcome":
+        return "👋";
+      default:
+        return "📄";
     }
   };
 
   const handleResultPreview = (result: any) => {
     // Handle result preview logic
-    console.log('Previewing result:', result);
+    console.log("Previewing result:", result);
   };
 
   return (
@@ -46,7 +51,7 @@ const StageList: React.FC<StageListProps> = ({
           <Button
             size="sm"
             variant="outline"
-            onClick={() => onStageAdd('cover')}
+            onClick={() => onStageAdd("cover")}
             className="text-xs"
           >
             <Plus className="w-3 h-3" />
@@ -60,8 +65,8 @@ const StageList: React.FC<StageListProps> = ({
             key={stage.id}
             className={`p-3 cursor-pointer transition-all ${
               stage.id === activeStageId
-                ? 'border-[#B89B7A] bg-[#B89B7A]/5'
-                : 'border-gray-200 hover:border-[#B89B7A]/50'
+                ? "border-[#B89B7A] bg-[#B89B7A]/5"
+                : "border-gray-200 hover:border-[#B89B7A]/50"
             }`}
             onClick={() => onStageSelect(stage.id)}
           >
@@ -77,7 +82,7 @@ const StageList: React.FC<StageListProps> = ({
                   </p>
                 </div>
               </div>
-              
+
               <div className="flex items-center space-x-1">
                 <Button
                   size="sm"
@@ -90,7 +95,7 @@ const StageList: React.FC<StageListProps> = ({
                 >
                   <Eye className="w-3 h-3" />
                 </Button>
-                
+
                 <Button
                   size="sm"
                   variant="ghost"
@@ -112,7 +117,7 @@ const StageList: React.FC<StageListProps> = ({
         <div className="text-center py-8 text-[#8F7A6A]">
           <p className="mb-3">Nenhuma etapa criada ainda</p>
           <Button
-            onClick={() => onStageAdd('cover')}
+            onClick={() => onStageAdd("cover")}
             className="bg-[#B89B7A] hover:bg-[#A38A69] text-white"
           >
             <Plus className="w-4 h-4 mr-2" />

@@ -1,10 +1,10 @@
 import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { User, Award, Star, Heart, Users, TrendingUp } from 'lucide-react';
-import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
-import { DeviceView, StyleProps } from './types';
+import React from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { User, Award, Star, Heart, Users, TrendingUp } from "lucide-react";
+import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
+import { DeviceView, StyleProps } from "./types";
 
 interface MentorInfo {
   name: string;
@@ -25,7 +25,7 @@ interface MentorSectionProps extends StyleProps {
   /** Subtítulo/descrição da seção */
   subtitle?: string;
   /** Layout da seção */
-  layout?: 'horizontal' | 'vertical' | 'card';
+  layout?: "horizontal" | "vertical" | "card";
   /** Mostrar credenciais */
   showCredentials?: boolean;
   /** Mostrar conquistas */
@@ -54,47 +54,51 @@ export const MentorSection: React.FC<MentorSectionProps> = ({
   mentor,
   title = "Conheça sua Mentora",
   subtitle,
-  layout = 'horizontal',
+  layout = "horizontal",
   showCredentials = true,
   showAchievements = true,
   showSpecialties = true,
   animationConfig = {},
-  deviceView = 'desktop',
+  deviceView = "desktop",
   onAction,
   actionText = "Quero Começar Agora",
   className,
   style,
-  customStyles
+  customStyles,
 }) => {
-  const { disabled: animationsDisabled, duration = 400, delay = 0 } = animationConfig;
-  const isLowPerformance = deviceView === 'mobile';
+  const {
+    disabled: animationsDisabled,
+    duration = 400,
+    delay = 0,
+  } = animationConfig;
+  const isLowPerformance = deviceView === "mobile";
 
   const getLayoutClasses = () => {
-    if (layout === 'vertical' || deviceView === 'mobile') {
-      return 'flex flex-col items-center text-center space-y-2';
+    if (layout === "vertical" || deviceView === "mobile") {
+      return "flex flex-col items-center text-center space-y-2";
     }
-    if (layout === 'card') {
-      return 'text-center';
+    if (layout === "card") {
+      return "text-center";
     }
-    return 'grid md:grid-cols-2 gap-8 items-center';
+    return "grid md:grid-cols-2 gap-8 items-center";
   };
 
   const getImageClasses = () => {
-    if (layout === 'card') {
-      return 'w-24 h-24 mx-auto';
+    if (layout === "card") {
+      return "w-24 h-24 mx-auto";
     }
-    if (layout === 'vertical' || deviceView === 'mobile') {
-      return 'w-32 h-32 mx-auto';
+    if (layout === "vertical" || deviceView === "mobile") {
+      return "w-32 h-32 mx-auto";
     }
-    return 'w-48 h-48';
+    return "w-48 h-48";
   };
 
   return (
-    <div className={`py-12 ${className || ''}`} style={style}>
+    <div className={`py-12 ${className || ""}`} style={style}>
       {customStyles && (
         <style dangerouslySetInnerHTML={{ __html: customStyles }} />
       )}
-      
+
       {/* Header */}
       {(title || subtitle) && (
         <div className="text-center mb-10">
@@ -115,16 +119,22 @@ export const MentorSection: React.FC<MentorSectionProps> = ({
       {/* Content */}
       <div className="max-w-full mx-auto">
         <AnimatedWrapper
-          animation={animationsDisabled || isLowPerformance ? 'none' : 'fade'}
+          animation={animationsDisabled || isLowPerformance ? "none" : "fade"}
           show={true}
           duration={duration}
           delay={delay}
         >
-          <Card className={`p-8 bg-white shadow-lg border border-[#B89B7A]/20 ${layout === 'card' ? 'max-w-sm mx-auto' : ''}`}>
+          <Card
+            className={`p-8 bg-white shadow-lg border border-[#B89B7A]/20 ${layout === "card" ? "max-w-sm mx-auto" : ""}`}
+          >
             <div className={getLayoutClasses()}>
               {/* Image */}
-              <div className={`relative ${layout === 'horizontal' && deviceView !== 'mobile' ? 'order-2' : ''}`}>
-                <div className={`${getImageClasses()} rounded-full overflow-hidden border-4 border-[#B89B7A] shadow-lg relative`}>
+              <div
+                className={`relative ${layout === "horizontal" && deviceView !== "mobile" ? "order-2" : ""}`}
+              >
+                <div
+                  className={`${getImageClasses()} rounded-full overflow-hidden border-4 border-[#B89B7A] shadow-lg relative`}
+                >
                   <img
                     src={mentor.imageUrl}
                     alt={mentor.name}
@@ -139,7 +149,9 @@ export const MentorSection: React.FC<MentorSectionProps> = ({
               </div>
 
               {/* Content */}
-              <div className={`space-y-2 ${layout === 'horizontal' && deviceView !== 'mobile' ? 'order-1' : ''}`}>
+              <div
+                className={`space-y-2 ${layout === "horizontal" && deviceView !== "mobile" ? "order-1" : ""}`}
+              >
                 {/* Name and title */}
                 <div>
                   <h3 className="text-2xl font-semibold text-[#432818] mb-1 flex items-center gap-2 justify-center md:justify-start">
@@ -161,67 +173,89 @@ export const MentorSection: React.FC<MentorSectionProps> = ({
                   <div className="bg-[#f9f4ef] p-4 rounded-lg">
                     <div className="flex items-center gap-2 mb-2">
                       <TrendingUp className="w-4 h-4 text-[#B89B7A]" />
-                      <span className="font-semibold text-[#432818] text-sm">Experiência</span>
+                      <span className="font-semibold text-[#432818] text-sm">
+                        Experiência
+                      </span>
                     </div>
-                    <p className="text-sm text-[#432818]">{mentor.experience}</p>
+                    <p className="text-sm text-[#432818]">
+                      {mentor.experience}
+                    </p>
                   </div>
                 )}
 
                 {/* Credentials */}
-                {showCredentials && mentor.credentials && mentor.credentials.length > 0 && (
-                  <div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Star className="w-4 h-4 text-[#B89B7A]" />
-                      <span className="font-semibold text-[#432818] text-sm">Credenciais</span>
+                {showCredentials &&
+                  mentor.credentials &&
+                  mentor.credentials.length > 0 && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-3">
+                        <Star className="w-4 h-4 text-[#B89B7A]" />
+                        <span className="font-semibold text-[#432818] text-sm">
+                          Credenciais
+                        </span>
+                      </div>
+                      <ul className="space-y-1">
+                        {mentor.credentials.map((credential, index) => (
+                          <li
+                            key={index}
+                            className="text-sm text-[#432818] flex items-start"
+                          >
+                            <span className="text-[#B89B7A] mr-2">•</span>
+                            {credential}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                    <ul className="space-y-1">
-                      {mentor.credentials.map((credential, index) => (
-                        <li key={index} className="text-sm text-[#432818] flex items-start">
-                          <span className="text-[#B89B7A] mr-2">•</span>
-                          {credential}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                  )}
 
                 {/* Achievements */}
-                {showAchievements && mentor.achievements && mentor.achievements.length > 0 && (
-                  <div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Award className="w-4 h-4 text-[#B89B7A]" />
-                      <span className="font-semibold text-[#432818] text-sm">Conquistas</span>
+                {showAchievements &&
+                  mentor.achievements &&
+                  mentor.achievements.length > 0 && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-3">
+                        <Award className="w-4 h-4 text-[#B89B7A]" />
+                        <span className="font-semibold text-[#432818] text-sm">
+                          Conquistas
+                        </span>
+                      </div>
+                      <ul className="space-y-1">
+                        {mentor.achievements.map((achievement, index) => (
+                          <li
+                            key={index}
+                            className="text-sm text-[#432818] flex items-start"
+                          >
+                            <span className="text-[#B89B7A] mr-2">•</span>
+                            {achievement}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                    <ul className="space-y-1">
-                      {mentor.achievements.map((achievement, index) => (
-                        <li key={index} className="text-sm text-[#432818] flex items-start">
-                          <span className="text-[#B89B7A] mr-2">•</span>
-                          {achievement}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                  )}
 
                 {/* Specialties */}
-                {showSpecialties && mentor.specialties && mentor.specialties.length > 0 && (
-                  <div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Heart className="w-4 h-4 text-[#B89B7A]" />
-                      <span className="font-semibold text-[#432818] text-sm">Especialidades</span>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {mentor.specialties.map((specialty, index) => (
-                        <span
-                          key={index}
-                          className="bg-[#B89B7A]/10 text-[#432818] px-3 py-1 rounded-full text-xs font-medium"
-                        >
-                          {specialty}
+                {showSpecialties &&
+                  mentor.specialties &&
+                  mentor.specialties.length > 0 && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-3">
+                        <Heart className="w-4 h-4 text-[#B89B7A]" />
+                        <span className="font-semibold text-[#432818] text-sm">
+                          Especialidades
                         </span>
-                      ))}
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {mentor.specialties.map((specialty, index) => (
+                          <span
+                            key={index}
+                            className="bg-[#B89B7A]/10 text-[#432818] px-3 py-1 rounded-full text-xs font-medium"
+                          >
+                            {specialty}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
                 {/* Action */}
                 {onAction && (

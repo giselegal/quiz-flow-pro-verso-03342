@@ -1,23 +1,25 @@
-
-import React from 'react';
-import { Block, FAQItem } from '@/types/editor';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Plus, Trash2 } from 'lucide-react';
+import React from "react";
+import { Block, FAQItem } from "@/types/editor";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Plus, Trash2 } from "lucide-react";
 
 interface BenefitsBlockEditorProps {
   block: Block;
   onUpdate: (updates: Partial<Block>) => void;
 }
 
-const BenefitsBlockEditor: React.FC<BenefitsBlockEditorProps> = ({ block, onUpdate }) => {
+const BenefitsBlockEditor: React.FC<BenefitsBlockEditorProps> = ({
+  block,
+  onUpdate,
+}) => {
   const content = block.content || {};
   const items = content.items || [];
 
   // Type guard to ensure we're working with string array
   const isStringArray = (items: any[]): items is string[] => {
-    return items.length === 0 || typeof items[0] === 'string';
+    return items.length === 0 || typeof items[0] === "string";
   };
 
   // Ensure items is a string array for benefits
@@ -26,15 +28,15 @@ const BenefitsBlockEditor: React.FC<BenefitsBlockEditorProps> = ({ block, onUpda
   const handleTitleChange = (title: string) => {
     onUpdate({
       ...block,
-      content: { ...content, title }
+      content: { ...content, title },
     });
   };
 
   const handleAddItem = () => {
-    const newItems = [...benefitItems, 'Novo benefício'];
+    const newItems = [...benefitItems, "Novo benefício"];
     onUpdate({
       ...block,
-      content: { ...content, items: newItems }
+      content: { ...content, items: newItems },
     });
   };
 
@@ -43,7 +45,7 @@ const BenefitsBlockEditor: React.FC<BenefitsBlockEditorProps> = ({ block, onUpda
     newItems[index] = value;
     onUpdate({
       ...block,
-      content: { ...content, items: newItems }
+      content: { ...content, items: newItems },
     });
   };
 
@@ -51,7 +53,7 @@ const BenefitsBlockEditor: React.FC<BenefitsBlockEditorProps> = ({ block, onUpda
     const newItems = benefitItems.filter((_, i) => i !== index);
     onUpdate({
       ...block,
-      content: { ...content, items: newItems }
+      content: { ...content, items: newItems },
     });
   };
 
@@ -61,7 +63,7 @@ const BenefitsBlockEditor: React.FC<BenefitsBlockEditorProps> = ({ block, onUpda
         <Label htmlFor="benefits-title">Título</Label>
         <Input
           id="benefits-title"
-          value={content.title || ''}
+          value={content.title || ""}
           onChange={(e) => handleTitleChange(e.target.value)}
           placeholder="Título da seção"
         />
@@ -70,11 +72,7 @@ const BenefitsBlockEditor: React.FC<BenefitsBlockEditorProps> = ({ block, onUpda
       <div>
         <div className="flex items-center justify-between mb-2">
           <Label>Benefícios</Label>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={handleAddItem}
-          >
+          <Button size="sm" variant="outline" onClick={handleAddItem}>
             <Plus className="w-4 h-4 mr-1" />
             Adicionar
           </Button>

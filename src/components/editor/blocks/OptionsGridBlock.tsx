@@ -1,5 +1,5 @@
-import React from 'react';
-import type { BlockComponentProps } from '@/types/blocks';
+import React from "react";
+import type { BlockComponentProps } from "@/types/blocks";
 
 interface Option {
   id: string;
@@ -22,18 +22,18 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = ''
+  className = "",
 }) => {
   const {
-    question = 'Escolha uma opção',
+    question = "Escolha uma opção",
     options = [],
     columns = 2,
-    selectedOption
+    selectedOption,
   } = block.properties;
 
   const handleOptionSelect = (optionId: string) => {
     if (onPropertyChange) {
-      onPropertyChange('selectedOption', optionId);
+      onPropertyChange("selectedOption", optionId);
     }
   };
 
@@ -41,9 +41,10 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     <div
       className={`
         py-8 px-4 cursor-pointer transition-all duration-200
-        ${isSelected 
-          ? 'ring-1 ring-gray-400/40 bg-gray-50/30' 
-          : 'hover:shadow-sm'
+        ${
+          isSelected
+            ? "ring-1 ring-gray-400/40 bg-gray-50/30"
+            : "hover:shadow-sm"
         }
         ${className}
       `}
@@ -55,12 +56,16 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
         <h2 className="text-2xl font-bold text-center mb-8 text-[#432818]">
           {question}
         </h2>
-        
-        <div className={`grid gap-4 ${
-          columns === 1 ? 'grid-cols-1' :
-          columns === 2 ? 'grid-cols-1 md:grid-cols-2' :
-          'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
-        }`}>
+
+        <div
+          className={`grid gap-4 ${
+            columns === 1
+              ? "grid-cols-1"
+              : columns === 2
+                ? "grid-cols-1 md:grid-cols-2"
+                : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+          }`}
+        >
           {(options || []).map((opt: any) => (
             <div
               key={opt.id}
@@ -68,8 +73,8 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
               onClick={() => handleOptionSelect(opt.id)}
             >
               {opt.imageUrl && (
-                <img 
-                  src={opt.imageUrl} 
+                <img
+                  src={opt.imageUrl}
                   alt={opt.text}
                   className="w-full h-32 object-cover rounded-md mb-3"
                 />

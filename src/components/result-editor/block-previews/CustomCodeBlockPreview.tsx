@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React from "react";
 
 interface CustomCodeBlockPreviewProps {
   content: {
@@ -8,9 +7,11 @@ interface CustomCodeBlockPreviewProps {
   };
 }
 
-const CustomCodeBlockPreview: React.FC<CustomCodeBlockPreviewProps> = ({ content }) => {
-  const { code = '', style = {} } = content;
-  
+const CustomCodeBlockPreview: React.FC<CustomCodeBlockPreviewProps> = ({
+  content,
+}) => {
+  const { code = "", style = {} } = content;
+
   if (!code.trim()) {
     return (
       <div className="p-6 text-center text-gray-400 border border-dashed rounded-md">
@@ -18,7 +19,7 @@ const CustomCodeBlockPreview: React.FC<CustomCodeBlockPreviewProps> = ({ content
       </div>
     );
   }
-  
+
   return (
     <div style={style} className="w-full">
       <div dangerouslySetInnerHTML={{ __html: code }} />

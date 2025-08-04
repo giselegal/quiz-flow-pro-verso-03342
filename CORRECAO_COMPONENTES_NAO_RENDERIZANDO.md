@@ -9,10 +9,12 @@ Vários componentes das etapas não estavam renderizando porque **os tipos de bl
 ## 🔍 **DIAGNÓSTICO REALIZADO**
 
 ### **1. Análise dos Templates**
+
 Extraí todos os tipos únicos usados nos templates Step01-Step21:
+
 ```
 type: 'button-inline'           ✅ JÁ REGISTRADO
-type: 'decorative-bar-inline'   ❌ FALTANDO  
+type: 'decorative-bar-inline'   ❌ FALTANDO
 type: 'form-input'              ❌ FALTANDO
 type: 'heading-inline'          ✅ JÁ REGISTRADO
 type: 'image-display-inline'    ❌ FALTANDO
@@ -26,14 +28,17 @@ type: 'text-inline'             ✅ JÁ REGISTRADO
 ```
 
 ### **2. Verificação de Componentes**
+
 Confirmei que todos os componentes **existem** no projeto:
+
 - ✅ `QuizIntroHeaderBlock.tsx`
-- ✅ `DecorativeBarInlineBlock.tsx`  
+- ✅ `DecorativeBarInlineBlock.tsx`
 - ✅ `FormInputBlock.tsx`
 - ✅ `OptionsGridBlock.tsx`
 - ✅ `LegalNoticeInlineBlock.tsx`
 
 ### **3. Problema no UniversalBlockRenderer**
+
 O `UniversalBlockRenderer` estava retornando erro "Componente não encontrado" porque o `getEnhancedComponent()` não encontrava os tipos nos registros.
 
 ---
@@ -41,32 +46,34 @@ O `UniversalBlockRenderer` estava retornando erro "Componente não encontrado" p
 ## ✅ **CORREÇÕES IMPLEMENTADAS**
 
 ### **1. Imports Adicionados**
+
 ```typescript
 // NOVOS IMPORTS ADICIONADOS
-import DecorativeBarInlineBlock from '../components/editor/blocks/DecorativeBarInlineBlock';
-import FormInputBlock from '../components/editor/blocks/FormInputBlock';
-import LegalNoticeInlineBlock from '../components/editor/blocks/LegalNoticeInlineBlock';
-import OptionsGridBlock from '../components/editor/blocks/OptionsGridBlock';
-import QuizIntroHeaderBlock from '../components/editor/blocks/QuizIntroHeaderBlock';
+import DecorativeBarInlineBlock from "../components/editor/blocks/DecorativeBarInlineBlock";
+import FormInputBlock from "../components/editor/blocks/FormInputBlock";
+import LegalNoticeInlineBlock from "../components/editor/blocks/LegalNoticeInlineBlock";
+import OptionsGridBlock from "../components/editor/blocks/OptionsGridBlock";
+import QuizIntroHeaderBlock from "../components/editor/blocks/QuizIntroHeaderBlock";
 ```
 
 ### **2. Registry Atualizado**
+
 ```typescript
 // INLINE COMPONENTS
 const inlineComponents = {
   // ... componentes existentes
-  'decorative-bar-inline': DecorativeBarInlineBlock,
-  'image-display-inline': ImageDisplayInlineBlock,
-  'legal-notice-inline': LegalNoticeInlineBlock,
+  "decorative-bar-inline": DecorativeBarInlineBlock,
+  "image-display-inline": ImageDisplayInlineBlock,
+  "legal-notice-inline": LegalNoticeInlineBlock,
   // ...
 };
 
-// STANDARD BLOCKS  
+// STANDARD BLOCKS
 const standardBlocks = {
   // ... componentes existentes
-  'form-input': FormInputBlock,
-  'options-grid': OptionsGridBlock,
-  'quiz-intro-header': QuizIntroHeaderBlock,
+  "form-input": FormInputBlock,
+  "options-grid": OptionsGridBlock,
+  "quiz-intro-header": QuizIntroHeaderBlock,
   // ...
 };
 ```
@@ -76,13 +83,15 @@ const standardBlocks = {
 ## 🎯 **RESULTADO**
 
 ### **ANTES:**
+
 - ❌ Componentes mostravam "⚠️ Componente não encontrado"
 - ❌ Templates não renderizavam corretamente
 - ❌ Etapas apareciam vazias ou com erro
 
 ### **DEPOIS:**
+
 - ✅ **Todos os tipos de blocos registrados**
-- ✅ **Templates renderizam corretamente**  
+- ✅ **Templates renderizam corretamente**
 - ✅ **Etapas carregam com conteúdo visual**
 - ✅ **UniversalBlockRenderer encontra todos os componentes**
 
@@ -90,14 +99,14 @@ const standardBlocks = {
 
 ## 🔧 **COMPONENTES AGORA FUNCIONAIS**
 
-| Tipo | Componente | Status |
-|------|------------|--------|
-| `quiz-intro-header` | QuizIntroHeaderBlock | ✅ FUNCIONANDO |
+| Tipo                    | Componente               | Status         |
+| ----------------------- | ------------------------ | -------------- |
+| `quiz-intro-header`     | QuizIntroHeaderBlock     | ✅ FUNCIONANDO |
 | `decorative-bar-inline` | DecorativeBarInlineBlock | ✅ FUNCIONANDO |
-| `form-input` | FormInputBlock | ✅ FUNCIONANDO |
-| `image-display-inline` | ImageDisplayInlineBlock | ✅ FUNCIONANDO |
-| `legal-notice-inline` | LegalNoticeInlineBlock | ✅ FUNCIONANDO |
-| `options-grid` | OptionsGridBlock | ✅ FUNCIONANDO |
+| `form-input`            | FormInputBlock           | ✅ FUNCIONANDO |
+| `image-display-inline`  | ImageDisplayInlineBlock  | ✅ FUNCIONANDO |
+| `legal-notice-inline`   | LegalNoticeInlineBlock   | ✅ FUNCIONANDO |
+| `options-grid`          | OptionsGridBlock         | ✅ FUNCIONANDO |
 
 ---
 

@@ -1,9 +1,8 @@
-
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Plus, Play, Pause, TrendingUp } from 'lucide-react';
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Plus, Play, Pause, TrendingUp } from "lucide-react";
 
 const ABTestPage: React.FC = () => {
   return (
@@ -11,7 +10,10 @@ const ABTestPage: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-[#432818]" style={{ fontFamily: 'Playfair Display, serif' }}>
+          <h1
+            className="text-3xl font-bold text-[#432818]"
+            style={{ fontFamily: "Playfair Display, serif" }}
+          >
             Testes A/B
           </h1>
           <p className="text-[#8F7A6A] mt-2">
@@ -34,18 +36,30 @@ const ABTestPage: React.FC = () => {
             <div className="flex items-center justify-between p-4 border border-[#D4C4A0] rounded-lg">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
-                  <h3 className="font-semibold text-[#432818]">Título da Página de Resultado</h3>
+                  <h3 className="font-semibold text-[#432818]">
+                    Título da Página de Resultado
+                  </h3>
                   <Badge className="bg-green-100 text-green-800">Ativo</Badge>
                 </div>
-                <p className="text-sm text-[#8F7A6A] mb-3">Testando dois títulos diferentes na página de resultado</p>
+                <p className="text-sm text-[#8F7A6A] mb-3">
+                  Testando dois títulos diferentes na página de resultado
+                </p>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-3 bg-gray-50 rounded">
-                    <div className="text-sm font-medium text-gray-700">Variante A</div>
-                    <div className="text-xs text-gray-600 mt-1">43.2% conversão (234 visitantes)</div>
+                    <div className="text-sm font-medium text-gray-700">
+                      Variante A
+                    </div>
+                    <div className="text-xs text-gray-600 mt-1">
+                      43.2% conversão (234 visitantes)
+                    </div>
                   </div>
                   <div className="p-3 bg-blue-50 rounded">
-                    <div className="text-sm font-medium text-blue-700">Variante B</div>
-                    <div className="text-xs text-blue-600 mt-1">47.8% conversão (221 visitantes)</div>
+                    <div className="text-sm font-medium text-blue-700">
+                      Variante B
+                    </div>
+                    <div className="text-xs text-blue-600 mt-1">
+                      47.8% conversão (221 visitantes)
+                    </div>
                   </div>
                 </div>
               </div>

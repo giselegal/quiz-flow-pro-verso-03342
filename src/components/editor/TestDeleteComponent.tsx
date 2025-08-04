@@ -1,10 +1,12 @@
-import React from 'react';
-import { Trash2 } from 'lucide-react';
+import React from "react";
+import { Trash2 } from "lucide-react";
 
 // Componente de teste simples para verificar se a exclusão funciona
-export const TestDeleteComponent: React.FC<{ onDelete: () => void }> = ({ onDelete }) => {
+export const TestDeleteComponent: React.FC<{ onDelete: () => void }> = ({
+  onDelete,
+}) => {
   const handleClick = () => {
-    console.log('🗑️ Botão de exclusão clicado!');
+    console.log("🗑️ Botão de exclusão clicado!");
     onDelete();
   };
 
@@ -16,7 +18,7 @@ export const TestDeleteComponent: React.FC<{ onDelete: () => void }> = ({ onDele
       <div className="text-sm text-gray-600 mb-4">
         Este é um componente especial apenas para testar a exclusão.
       </div>
-      
+
       {/* Botão de exclusão sempre visível */}
       <button
         onClick={handleClick}
@@ -26,7 +28,7 @@ export const TestDeleteComponent: React.FC<{ onDelete: () => void }> = ({ onDele
         <Trash2 className="w-4 h-4 mr-2" />
         Excluir Este Componente
       </button>
-      
+
       <div className="mt-2 text-xs text-gray-500">
         Se este botão não funcionar, há um problema na função onDelete
       </div>

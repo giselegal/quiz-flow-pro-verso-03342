@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { Card } from '@/components/ui/card';
+import React from "react";
+import { Card } from "@/components/ui/card";
 
 interface QuizOption {
   id: string;
@@ -19,11 +18,13 @@ interface QuizEditorStepsProps {
   }>;
 }
 
-export const QuizEditorSteps: React.FC<QuizEditorStepsProps> = ({ questions = [] }) => {
+export const QuizEditorSteps: React.FC<QuizEditorStepsProps> = ({
+  questions = [],
+}) => {
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-semibold">Etapas do Quiz</h2>
-      
+
       {questions.map((question, index) => (
         <Card key={question.id} className="p-4">
           <div className="flex items-center gap-2 mb-2">
@@ -32,13 +33,16 @@ export const QuizEditorSteps: React.FC<QuizEditorStepsProps> = ({ questions = []
             </span>
             <h3 className="font-medium">{question.title}</h3>
           </div>
-          
+
           <div className="space-y-2">
             {question.options.map((option) => (
-              <div key={option.id} className="flex items-center gap-2 p-2 bg-gray-50 rounded">
+              <div
+                key={option.id}
+                className="flex items-center gap-2 p-2 bg-gray-50 rounded"
+              >
                 {option.imageUrl && (
-                  <img 
-                    src={option.imageUrl} 
+                  <img
+                    src={option.imageUrl}
                     alt={option.text}
                     className="w-8 h-8 object-cover rounded"
                   />
@@ -52,7 +56,7 @@ export const QuizEditorSteps: React.FC<QuizEditorStepsProps> = ({ questions = []
           </div>
         </Card>
       ))}
-      
+
       {questions.length === 0 && (
         <Card className="p-8 text-center text-gray-500">
           <p>Nenhuma questão configurada ainda</p>

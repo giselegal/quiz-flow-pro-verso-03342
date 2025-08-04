@@ -5,6 +5,7 @@
 O Editor Fixed é uma aplicação React moderna para criação de funis de quiz com 21 etapas, utilizando uma arquitetura em 4 colunas com sistema de contextos unificado.
 
 ### 🎯 URL DE ACESSO
+
 ```
 http://localhost:8081/editor-fixed
 ```
@@ -16,6 +17,7 @@ http://localhost:8081/editor-fixed
 #### ✅ **GARGALO #1: Dupla Gestão de Estado - ✅ RESOLVIDO**
 
 **ANTES (Problemático):**
+
 ```typescript
 // Estado Global (EditorContext)
 const { blocks, selectedBlockId, actions } = useEditor();
@@ -25,28 +27,30 @@ const [stageBlocks, setStageBlocks] = useState<Record<string, Block[]>>({});
 ```
 
 **✅ DEPOIS (Unificado e Implementado):**
+
 ```typescript
 // ✅ IMPLEMENTADO: APENAS EditorContext - Estado Unificado
 const {
-  stageBlocks,           // ✅ Blocos por etapa
-  activeStageId,         // ✅ Etapa ativa
-  selectedBlockId,       // ✅ Bloco selecionado
+  stageBlocks, // ✅ Blocos por etapa
+  activeStageId, // ✅ Etapa ativa
+  selectedBlockId, // ✅ Bloco selecionado
   actions: {
-    setActiveStage,      // ✅ Mudança de etapa validada
-    addBlock,            // ✅ Adicionar bloco com validação
-    getBlocksForStage    // ✅ Obter blocos de forma segura
-  }
+    setActiveStage, // ✅ Mudança de etapa validada
+    addBlock, // ✅ Adicionar bloco com validação
+    getBlocksForStage, // ✅ Obter blocos de forma segura
+  },
 } = useEditor();
 ```
 
 #### ✅ **GARGALO #2: Navegação Entre Etapas - ✅ RESOLVIDO**
 
 **ANTES (Múltiplos pontos de falha):**
+
 ```typescript
-handleStageSelect(stageId) 
+handleStageSelect(stageId)
     ↓
 setActiveStageId(stageId)           // Estado local
-    ↓  
+    ↓
 setSteps(newSteps)                  // Contexto global
     ↓
 setStageBlocks(prev => {...})       // Estado local novamente
@@ -55,6 +59,7 @@ setSelectedBlockId(null)            // Contexto global novamente
 ```
 
 **✅ DEPOIS (Fluxo simplificado e Implementado):**
+
 ```typescript
 // ✅ IMPLEMENTADO: Fluxo linear
 const handleStageSelect = (stageId: string) => {
@@ -62,20 +67,24 @@ const handleStageSelect = (stageId: string) => {
 };
 
 // ✅ IMPLEMENTADO: EditorContext internamente:
-const setActiveStage = useCallback((stageId: string) => {
-  if (!validateStageId(stageId)) {
-    console.warn(`🚨 Etapa inválida "${stageId}"`);
-    return; // ✅ Falha segura
-  }
-  
-  setActiveStageId(stageId);        // ✅ Update atomico
-  setSelectedBlockId(null);         // ✅ Reset automático
-}, [validateStageId]);
+const setActiveStage = useCallback(
+  (stageId: string) => {
+    if (!validateStageId(stageId)) {
+      console.warn(`🚨 Etapa inválida "${stageId}"`);
+      return; // ✅ Falha segura
+    }
+
+    setActiveStageId(stageId); // ✅ Update atomico
+    setSelectedBlockId(null); // ✅ Reset automático
+  },
+  [validateStageId],
+);
 ```
 
 #### ✅ **GARGALO #3: Falta de Validação - ✅ RESOLVIDO**
 
 **ANTES (Sem validação):**
+
 ```typescript
 const handleStageSelect = (stageId: string) => {
   setActiveStageId(stageId); // E se stageId não existir?
@@ -83,6 +92,7 @@ const handleStageSelect = (stageId: string) => {
 ```
 
 **✅ DEPOIS (Com validação robusta e Implementada):**
+
 ```typescript
 // ✅ IMPLEMENTADO: Validação robusta
 const validateStageId = useCallback((stageId: string): boolean => {
@@ -90,24 +100,29 @@ const validateStageId = useCallback((stageId: string): boolean => {
   return validStages.includes(stageId);
 }, []);
 
-const setActiveStage = useCallback((stageId: string) => {
-  if (!validateStageId(stageId)) {
-    console.warn(`🚨 EditorContext: Etapa inválida "${stageId}"`);
-    return; // ✅ Falha segura implementada
-  }
-  // ...resto da lógica implementada
-}, [validateStageId]);
+const setActiveStage = useCallback(
+  (stageId: string) => {
+    if (!validateStageId(stageId)) {
+      console.warn(`🚨 EditorContext: Etapa inválida "${stageId}"`);
+      return; // ✅ Falha segura implementada
+    }
+    // ...resto da lógica implementada
+  },
+  [validateStageId],
+);
 ```
 
 #### ✅ **GARGALO #4: Error Boundaries - ✅ IMPLEMENTADO**
 
 **ANTES (Sem proteção):**
+
 ```typescript
 // Componente crashava silenciosamente
 <EditorFixedPage /> // ❌ Sem proteção
 ```
 
 **✅ DEPOIS (Com Error Boundary Implementado):**
+
 ```typescript
 // ✅ IMPLEMENTADO: Proteção completa
 <ErrorBoundary
@@ -129,18 +144,18 @@ const setActiveStage = useCallback((stageId: string) => {
 
 ### ✅ **TODOS OS PROBLEMAS CRÍTICOS RESOLVIDOS**
 
-| Problema | Status | Implementação | Validação |
-|----------|--------|---------------|-----------|
-| **✅ Dupla Gestão de Estado** | 🟢 **RESOLVIDO** | EditorContext unificado | ✅ Testado |
-| **✅ Navegação Entre Etapas** | 🟢 **RESOLVIDO** | Fluxo linear implementado | ✅ Testado |
-| **✅ Falta de Validação** | 🟢 **RESOLVIDO** | Sistema robusto implementado | ✅ Testado |
-| **✅ Error Boundaries** | 🟢 **IMPLEMENTADO** | Proteção completa adicionada | ✅ Testado |
-| **✅ Performance** | 🟢 **OTIMIZADA** | Re-renders reduzidos | ✅ Testado |
+| Problema                      | Status              | Implementação                | Validação  |
+| ----------------------------- | ------------------- | ---------------------------- | ---------- |
+| **✅ Dupla Gestão de Estado** | 🟢 **RESOLVIDO**    | EditorContext unificado      | ✅ Testado |
+| **✅ Navegação Entre Etapas** | 🟢 **RESOLVIDO**    | Fluxo linear implementado    | ✅ Testado |
+| **✅ Falta de Validação**     | 🟢 **RESOLVIDO**    | Sistema robusto implementado | ✅ Testado |
+| **✅ Error Boundaries**       | 🟢 **IMPLEMENTADO** | Proteção completa adicionada | ✅ Testado |
+| **✅ Performance**            | 🟢 **OTIMIZADA**    | Re-renders reduzidos         | ✅ Testado |
 
 ### � **FUNCIONALIDADES IMPLEMENTADAS E TESTADAS**
 
 1. **✅ Estado Unificado**: Single source of truth no EditorContext
-2. **✅ Validação Robusta**: Prevenção de estados inválidos 
+2. **✅ Validação Robusta**: Prevenção de estados inválidos
 3. **✅ Error Handling**: Recuperação graceful de falhas
 4. **✅ Debug Avançado**: Logs estruturados e informativos
 5. **✅ Performance**: Redução significativa de re-renders
@@ -148,18 +163,18 @@ const setActiveStage = useCallback((stageId: string) => {
 
 ### 📊 **MÉTRICAS DE QUALIDADE ALCANÇADAS**
 
-| Métrica | Status Anterior | Status Atual | Melhoria |
-|---------|-----------------|--------------|----------|
-| **Estabilidade** | 🔴 Instável | 🟢 **Alta** | Error boundaries + validação |
-| **Performance** | 🟠 Mediana | 🟢 **Otimizada** | Estado unificado + memoização |
-| **Manutenibilidade** | 🟠 Complicada | 🟢 **Excelente** | Arquitetura limpa |
-| **Debugging** | 🔴 Limitado | 🟢 **Avançado** | Logs estruturados |
-| **Escalabilidade** | 🟠 Restrita | 🟢 **Preparada** | Contextos + validação |
+| Métrica              | Status Anterior | Status Atual     | Melhoria                      |
+| -------------------- | --------------- | ---------------- | ----------------------------- |
+| **Estabilidade**     | 🔴 Instável     | 🟢 **Alta**      | Error boundaries + validação  |
+| **Performance**      | 🟠 Mediana      | 🟢 **Otimizada** | Estado unificado + memoização |
+| **Manutenibilidade** | 🟠 Complicada   | 🟢 **Excelente** | Arquitetura limpa             |
+| **Debugging**        | 🔴 Limitado     | 🟢 **Avançado**  | Logs estruturados             |
+| **Escalabilidade**   | 🟠 Restrita     | 🟢 **Preparada** | Contextos + validação         |
 
 ### 🛡️ **PROTEÇÕES IMPLEMENTADAS**
 
 1. **✅ Validação de Etapas**: Previne acesso a etapas inexistentes
-2. **✅ Error Boundaries**: Captura e trata erros de componentes  
+2. **✅ Error Boundaries**: Captura e trata erros de componentes
 3. **✅ Estado Consistente**: Elimina conflitos entre contextos
 4. **✅ Logs Estruturados**: Facilita debugging e monitoramento
 5. **✅ Fallbacks Seguros**: Graceful degradation em falhas
@@ -168,10 +183,10 @@ const setActiveStage = useCallback((stageId: string) => {
 
 ```typescript
 // ✅ IMPLEMENTADO: Logs estruturados por contexto
-console.log('🔄 EditorContext: Mudança para etapa:', stageId);
-console.log('✅ EditorContext: Bloco adicionado à etapa:', stageId);
-console.log('🎯 FunnelStagesPanel: Etapa ativa:', activeStageId);
-console.log('🎛️ PropertiesPanel: Carregando propriedades:', blockId);
+console.log("🔄 EditorContext: Mudança para etapa:", stageId);
+console.log("✅ EditorContext: Bloco adicionado à etapa:", stageId);
+console.log("🎯 FunnelStagesPanel: Etapa ativa:", activeStageId);
+console.log("🎛️ PropertiesPanel: Carregando propriedades:", blockId);
 ```
 
 ## 🧠 SISTEMA DE CONTEXTOS OTIMIZADO
@@ -235,13 +250,13 @@ src/
 
 ### 📊 **MÉTRICAS DE QUALIDADE**
 
-| Métrica | Status | Comentário |
-|---------|--------|------------|
-| **Estabilidade** | 🟢 Alta | Error boundaries + validação |
-| **Performance** | 🟢 Otimizada | Estado unificado + memoização |
+| Métrica              | Status       | Comentário                      |
+| -------------------- | ------------ | ------------------------------- |
+| **Estabilidade**     | 🟢 Alta      | Error boundaries + validação    |
+| **Performance**      | 🟢 Otimizada | Estado unificado + memoização   |
 | **Manutenibilidade** | 🟢 Excelente | Arquitetura limpa e documentada |
-| **Debugging** | 🟢 Avançado | Logs estruturados + dev tools |
-| **Escalabilidade** | 🟢 Preparada | Contextos separados + validação |
+| **Debugging**        | 🟢 Avançado  | Logs estruturados + dev tools   |
+| **Escalabilidade**   | 🟢 Preparada | Contextos separados + validação |
 
 ---
 
@@ -250,7 +265,7 @@ src/
 O Editor Fixed agora possui uma arquitetura robusta, performática e confiável com:
 
 - ✅ **Estado unificado** sem duplicações - **IMPLEMENTADO**
-- ✅ **Validação robusta** em todas as operações - **IMPLEMENTADO**  
+- ✅ **Validação robusta** em todas as operações - **IMPLEMENTADO**
 - ✅ **Error boundaries** para proteção completa - **IMPLEMENTADO**
 - ✅ **Performance otimizada** com redução de re-renders - **IMPLEMENTADO**
 - ✅ **Debug avançado** com logs estruturados - **IMPLEMENTADO**
@@ -286,22 +301,26 @@ USER ACTION
 // ✅ IMPLEMENTADO: Interface completa
 interface EditorContextType {
   // Estado centralizado
-  stageBlocks: Record<string, EditorBlock[]>;  // ✅ Por etapa
-  activeStageId: string;                       // ✅ Etapa ativa
-  selectedBlockId: string | null;              // ✅ Seleção global
-  
+  stageBlocks: Record<string, EditorBlock[]>; // ✅ Por etapa
+  activeStageId: string; // ✅ Etapa ativa
+  selectedBlockId: string | null; // ✅ Seleção global
+
   // Actions validadas
   actions: {
-    setActiveStage: (stageId: string) => void;           // ✅ Com validação
+    setActiveStage: (stageId: string) => void; // ✅ Com validação
     addBlock: (type: string, stageId?: string) => string; // ✅ Retorna ID
     updateBlock: (id: string, updates: Partial<EditorBlock>) => void;
     deleteBlock: (id: string) => void;
-    reorderBlocks: (stageId: string, startIndex: number, endIndex: number) => void;
+    reorderBlocks: (
+      stageId: string,
+      startIndex: number,
+      endIndex: number,
+    ) => void;
     getBlocksForStage: (stageId: string) => EditorBlock[]; // ✅ Acesso seguro
     setSelectedBlockId: (id: string | null) => void;
     clearStageBlocks: (stageId: string) => void;
   };
-  
+
   // Estado UI
   isPreviewing: boolean;
   setIsPreviewing: (preview: boolean) => void;
@@ -313,28 +332,30 @@ interface EditorContextType {
 #### ⚡ **Otimizações Ativas**
 
 1. **✅ Estado Unificado**: Elimina re-renders duplicados
-2. **✅ Validação Centralizada**: Previne estados inconsistentes  
+2. **✅ Validação Centralizada**: Previne estados inconsistentes
 3. **✅ Callbacks Memoizados**: Reduz criação desnecessária de funções
 4. **✅ Error Boundaries**: Isola falhas e mantém aplicação funcionando
 5. **✅ Logs Estruturados**: Debug mais eficiente
 
 #### 📊 **Métricas de Melhoria Implementadas**
 
-| Aspecto | Antes | Depois | Melhoria | Status |
-|---------|-------|--------|-----------|--------|
-| Re-renders | ~15 por ação | ~5 por ação | **66% redução** | ✅ **Implementado** |
-| Estado duplicado | ✅ Sim | ❌ Não | **100% eliminado** | ✅ **Implementado** |
-| Validação | ❌ Ausente | ✅ Robusta | **Infinita** | ✅ **Implementado** |
-| Error handling | ❌ Básico | ✅ Avançado | **500% melhoria** | ✅ **Implementado** |
-| Debug info | ⚠️ Limitado | ✅ Completo | **300% melhoria** | ✅ **Implementado** |
+| Aspecto          | Antes        | Depois      | Melhoria           | Status              |
+| ---------------- | ------------ | ----------- | ------------------ | ------------------- |
+| Re-renders       | ~15 por ação | ~5 por ação | **66% redução**    | ✅ **Implementado** |
+| Estado duplicado | ✅ Sim       | ❌ Não      | **100% eliminado** | ✅ **Implementado** |
+| Validação        | ❌ Ausente   | ✅ Robusta  | **Infinita**       | ✅ **Implementado** |
+| Error handling   | ❌ Básico    | ✅ Avançado | **500% melhoria**  | ✅ **Implementado** |
+| Debug info       | ⚠️ Limitado  | ✅ Completo | **300% melhoria**  | ✅ **Implementado** |
 
 **📝 Documentação atualizada após implementação completa das correções**
 **🕒 Última atualização:** 03 de Agosto de 2025 - 15:45
 **⚡ Status:** 🟢 **TODAS AS CORREÇÕES CRÍTICAS IMPLEMENTADAS E FUNCIONAIS**
 **ESPAÇADORES:**
+
 - `height` (string): Altura em px
 
 **PADRÃO (outros tipos):**
+
 - `text` (string): Conteúdo genérico
 - `visible` (boolean): Controle de visibilidade
 
@@ -430,21 +451,30 @@ src/
 ### 📊 **Sistema de Logs Implementado**
 
 **FunnelStagesPanel:**
+
 ```javascript
-console.log(`🔍 [timestamp] FunnelStagesPanel - Steps recebidas:`, steps?.length);
+console.log(
+  `🔍 [timestamp] FunnelStagesPanel - Steps recebidas:`,
+  steps?.length,
+);
 console.log(`🎯 [timestamp] FunnelStagesPanel - Dados completos:`, steps);
 ```
 
 **Editor Principal:**
+
 ```javascript
-console.log('🔄 Editor: Mudando para etapa:', stageId);
-console.log('📦 Carregando blocos da etapa:', stageId);
-console.log('🔢 Blocos disponíveis:', stageBlocks[stageId]?.length || 0);
+console.log("🔄 Editor: Mudando para etapa:", stageId);
+console.log("📦 Carregando blocos da etapa:", stageId);
+console.log("🔢 Blocos disponíveis:", stageBlocks[stageId]?.length || 0);
 ```
 
 **Enhanced Block Registry:**
+
 ```javascript
-console.log('✅ Registry Stats:', { active: componentsCount, total: totalKeys });
+console.log("✅ Registry Stats:", {
+  active: componentsCount,
+  total: totalKeys,
+});
 ```
 
 ### 🛠️ **Comandos de Diagnóstico**
@@ -599,26 +629,27 @@ O Editor Fixed representa uma solução robusta e escalável para criação de f
 ### 🔄 FLUXO DE DADOS E EVENTOS
 
 ```
-USER ACTION                    COMPONENT                   CONTEXT/STATE                    RESULT
-    │                             │                           │                              │
-    ▼                             ▼                           ▼                              ▼
-┌─────────┐                  ┌─────────────┐            ┌─────────────┐              ┌─────────────┐
-│ Clicks  │                  │ FunnelStages│            │ FunnelsCtx  │              │ Stage       │
-│ Step 2  │ ──────────────→  │ Panel       │ ────────→  │ setSteps()  │ ──────────→  │ Switch      │
-└─────────┘                  └─────────────┘            └─────────────┘              └─────────────┘
-    │                             │                           │                              │
-    ▼                             ▼                           ▼                              ▼
-┌─────────┐                  ┌─────────────┐            ┌─────────────┐              ┌─────────────┐
-│ Drags   │                  │ Enhanced    │            │ EditorCtx   │              │ New Block   │
-│Component│ ──────────────→  │ Components  │ ────────→  │ addBlock()  │ ──────────→  │ Created     │
-└─────────┘                  │ Sidebar     │            └─────────────┘              └─────────────┘
-    │                        └─────────────┘                    │                              │
-    ▼                             │                           ▼                              ▼
-┌─────────┐                  ┌─────────────┐            ┌─────────────┐              ┌─────────────┐
-│ Clicks  │                  │ Canvas      │            │ Local State │              │ Properties  │
-│ Block   │ ──────────────→  │ Block       │ ────────→  │ setSelected │ ──────────→  │ Panel       │
-└─────────┘                  └─────────────┘            │ BlockId()   │              │ Updated     │
-                                                        └─────────────┘              └─────────────┘
+
+USER ACTION COMPONENT CONTEXT/STATE RESULT
+│ │ │ │
+▼ ▼ ▼ ▼
+┌─────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐
+│ Clicks │ │ FunnelStages│ │ FunnelsCtx │ │ Stage │
+│ Step 2 │ ──────────────→ │ Panel │ ────────→ │ setSteps() │ ──────────→ │ Switch │
+└─────────┘ └─────────────┘ └─────────────┘ └─────────────┘
+│ │ │ │
+▼ ▼ ▼ ▼
+┌─────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐
+│ Drags │ │ Enhanced │ │ EditorCtx │ │ New Block │
+│Component│ ──────────────→ │ Components │ ────────→ │ addBlock() │ ──────────→ │ Created │
+└─────────┘ │ Sidebar │ └─────────────┘ └─────────────┘
+│ └─────────────┘ │ │
+▼ │ ▼ ▼
+┌─────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐
+│ Clicks │ │ Canvas │ │ Local State │ │ Properties │
+│ Block │ ──────────────→ │ Block │ ────────→ │ setSelected │ ──────────→ │ Panel │
+└─────────┘ └─────────────┘ │ BlockId() │ │ Updated │
+└─────────────┘ └─────────────┘
 
 ### 📊 REGISTRY SYSTEM FLOW
 
@@ -756,7 +787,6 @@ USER ACTION                    COMPONENT                   CONTEXT/STATE        
 **📊 Tamanho total:** 28KB+ de documentação técnica
 **🎯 Status:** Sistema 100% documentado e operacional
 
-
 **📝 DOCUMENTAÇÃO ATUALIZADA E COMPLETA - TODAS AS CORREÇÕES IMPLEMENTADAS**
 **🕒 Última atualização:** 03 de Agosto de 2025 - 15:45
 **📊 Tamanho total:** 25KB+ de documentação técnica
@@ -783,6 +813,7 @@ USER ACTION                    COMPONENT                   CONTEXT/STATE        
 ```
 
 **IMPACTO:**
+
 - ❌ Usuários podem acessar editor antigo quebrado
 - ❌ Conflito de contextos e providers
 - ❌ Inconsistência na gestão de dados
@@ -804,6 +835,7 @@ const currentBlocks = stageBlocks[activeStageId] || blocks; // CONFLITO!
 ```
 
 **FLUXO PROBLEMÁTICO:**
+
 ```
 User adiciona bloco
        │
@@ -821,6 +853,7 @@ DUPLICAÇÃO DE DADOS!
 ```
 
 **CONSEQUÊNCIAS:**
+
 - ❌ Blocos podem "desaparecer" entre etapas
 - ❌ Sincronização complexa e propensa a bugs
 - ❌ Performance degradada por re-renders
@@ -841,6 +874,7 @@ DUPLICAÇÃO DE DADOS!
 ```
 
 **ARQUIVOS CONFLITANTES:**
+
 ```
 src/services/schemaDrivenFunnelService.ts  # Service antigo
 src/utils/schemaValidator.ts               # Validador antigo
@@ -848,6 +882,7 @@ src/pages/editor.tsx                       # Editor antigo (16 refs)
 ```
 
 **INTERFERÊNCIA:**
+
 - ❌ Imports desnecessários carregados
 - ❌ Contextos antigos inicializados
 - ❌ Confusão para desenvolvedores
@@ -862,7 +897,7 @@ src/pages/editor.tsx                       # Editor antigo (16 refs)
 ```typescript
 // INICIALIZAÇÃO IMEDIATA (✅ OK)
 const [steps, setSteps] = useState<FunnelStep[]>(() => {
-  const initialTemplate = FUNNEL_TEMPLATES['funil-21-etapas'];
+  const initialTemplate = FUNNEL_TEMPLATES["funil-21-etapas"];
   return initialTemplate.defaultSteps; // 21 steps carregadas
 });
 
@@ -875,6 +910,7 @@ useEffect(() => {
 ```
 
 **PROBLEMA DE TIMING:**
+
 ```
 1. FunnelStagesPanel renderiza
 2. useFunnels() busca steps
@@ -892,10 +928,10 @@ useEffect(() => {
 
 ```typescript
 // FLUXO ATUAL (PROBLEMÁTICO):
-handleStageSelect(stageId) 
+handleStageSelect(stageId)
     ↓
 setActiveStageId(stageId)           // Estado local
-    ↓  
+    ↓
 setSteps(newSteps)                  // Contexto global
     ↓
 setStageBlocks(prev => {...})       // Estado local novamente
@@ -904,6 +940,7 @@ setSelectedBlockId(null)            // Contexto global novamente
 ```
 
 **PONTOS DE FALHA:**
+
 - ❌ Multiple state updates podem causar race conditions
 - ❌ selectedBlockId resetado pode não sincronizar
 - ❌ stageBlocks pode não existir para nova etapa
@@ -926,6 +963,7 @@ const handleStageSelect = (stageId: string) => {
 ```
 
 **RISCOS:**
+
 - Usuário pode acessar etapa inexistente
 - Estado corrompe se stageId inválido
 - Interface quebra silenciosamente
@@ -935,12 +973,13 @@ const handleStageSelect = (stageId: string) => {
 ```typescript
 // DADOS PERDIDOS EM:
 - Refresh da página
-- Navegação entre rotas  
+- Navegação entre rotas
 - Crash do navegador
 - Session timeout
 ```
 
 **IMPACTO:**
+
 - Trabalho do usuário perdido
 - Experiência frustrante
 - Sem recovery de sessão
@@ -1005,17 +1044,17 @@ interface SchemaDrivenFunnelService {
 
 ### 🎯 **MATRIZ DE IMPACTO DOS PROBLEMAS**
 
-| Problema | Severidade | Frequência | Impacto UX | Dificuldade Fix |
-|----------|------------|------------|------------|-----------------|
-| Conflito de Arquiteturas | 🔴 Alta | 🔴 Sempre | 🔴 Alto | 🟡 Média |
-| Dupla Gestão de Estado | 🔴 Alta | 🟠 Frequente | 🔴 Alto | 🔴 Alta |
-| Schema Service Obsoleto | 🟠 Média | �� Rara | 🟠 Médio | 🟢 Baixa |
-| Inicialização Assíncrona | 🟠 Média | 🟠 Frequente | 🟠 Médio | 🟡 Média |
-| Navegação Entre Etapas | 🔴 Alta | 🔴 Sempre | 🔴 Alto | 🟡 Média |
-| Falta de Validação | 🟠 Média | 🟢 Rara | 🔴 Alto | 🟢 Baixa |
-| Sem Persistência | 🔴 Alta | 🟠 Frequente | 🔴 Alto | �� Média |
-| Error Boundaries | 🟡 Baixa | 🟢 Rara | 🔴 Alto | 🟢 Baixa |
-| Performance | 🟡 Baixa | 🟠 Frequente | 🟡 Baixo | 🟡 Média |
+| Problema                 | Severidade | Frequência   | Impacto UX | Dificuldade Fix |
+| ------------------------ | ---------- | ------------ | ---------- | --------------- |
+| Conflito de Arquiteturas | 🔴 Alta    | 🔴 Sempre    | 🔴 Alto    | 🟡 Média        |
+| Dupla Gestão de Estado   | 🔴 Alta    | 🟠 Frequente | 🔴 Alto    | 🔴 Alta         |
+| Schema Service Obsoleto  | 🟠 Média   | �� Rara      | 🟠 Médio   | 🟢 Baixa        |
+| Inicialização Assíncrona | 🟠 Média   | 🟠 Frequente | 🟠 Médio   | 🟡 Média        |
+| Navegação Entre Etapas   | 🔴 Alta    | 🔴 Sempre    | 🔴 Alto    | 🟡 Média        |
+| Falta de Validação       | 🟠 Média   | 🟢 Rara      | 🔴 Alto    | 🟢 Baixa        |
+| Sem Persistência         | 🔴 Alta    | 🟠 Frequente | 🔴 Alto    | �� Média        |
+| Error Boundaries         | 🟡 Baixa   | 🟢 Rara      | 🔴 Alto    | 🟢 Baixa        |
+| Performance              | 🟡 Baixa   | 🟠 Frequente | 🟡 Baixo   | 🟡 Média        |
 
 ---
 
@@ -1024,6 +1063,7 @@ interface SchemaDrivenFunnelService {
 #### 🏆 **PRIORIDADE 1 (CRÍTICA):**
 
 1. **Remover Conflito de Arquiteturas**
+
    ```bash
    # Desativar rotas antigas
    # Remover imports do schema service
@@ -1031,6 +1071,7 @@ interface SchemaDrivenFunnelService {
    ```
 
 2. **Unificar Gestão de Estado**
+
    ```typescript
    // Usar APENAS EditorContext
    // Remover stageBlocks local
@@ -1061,4 +1102,3 @@ interface SchemaDrivenFunnelService {
 **📝 DOCUMENTAÇÃO ATUALIZADA COM ANÁLISE DE GARGALOS**
 **🕒 Última atualização:** 03 de Agosto de 2025 - 13:45
 **⚠️ Status:** Gargalos críticos identificados - Ação corretiva necessária
-

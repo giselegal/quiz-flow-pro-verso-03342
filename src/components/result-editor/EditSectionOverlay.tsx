@@ -1,7 +1,6 @@
-
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
 
 export interface EditSectionOverlayProps {
   section: string;
@@ -14,7 +13,7 @@ const EditSectionOverlay: React.FC<EditSectionOverlayProps> = ({
   section,
   data,
   onSave,
-  onCancel
+  onCancel,
 }) => {
   const [content, setContent] = useState(data || {});
 
@@ -26,7 +25,7 @@ const EditSectionOverlay: React.FC<EditSectionOverlayProps> = ({
   const handleContentChange = (field: string, value: any) => {
     setContent((prev: any) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -39,18 +38,16 @@ const EditSectionOverlay: React.FC<EditSectionOverlayProps> = ({
             <X className="w-4 h-4" />
           </Button>
         </div>
-        
+
         <div className="space-y-4">
           {/* Add form fields based on section type */}
         </div>
-        
+
         <div className="flex justify-end gap-2 mt-4">
           <Button variant="outline" onClick={onCancel}>
             Cancelar
           </Button>
-          <Button onClick={handleSave}>
-            Salvar
-          </Button>
+          <Button onClick={handleSave}>Salvar</Button>
         </div>
       </div>
     </div>

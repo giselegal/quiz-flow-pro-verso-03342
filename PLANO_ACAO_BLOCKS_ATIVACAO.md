@@ -13,16 +13,18 @@
 ## 🔍 ANÁLISE ATUAL
 
 ### **STATUS DO EDITOR-FIXED**:
+
 ✅ **Funciona**: UniversalBlockRenderer (20+ tipos inline)
 ❌ **Limitado**: Sidebar com apenas ~15 componentes
 ❌ **Desconectado**: 150+ arquivos de bloco não utilizados
 ❌ **Painel básico**: PropertiesPanel genérico
 
 ### **COMPONENTES DISPONÍVEIS MAS INATIVOS**:
+
 ```bash
 /src/components/editor/blocks/
 ├── AdvancedCTABlock.tsx ❌ Não usado
-├── TestimonialsGridBlock.tsx ❌ Não usado  
+├── TestimonialsGridBlock.tsx ❌ Não usado
 ├── ProductCarouselBlock.tsx ❌ Não usado
 ├── QuizQuestionBlock.tsx ❌ Não usado
 ├── BonusCarouselBlockEditor.tsx ❌ Não usado
@@ -34,9 +36,11 @@
 ## 🎯 PLANO DE AÇÃO - 6 ETAPAS
 
 ### **ETAPA 1: AUDITORIA E MAPEAMENTO** (4-6 horas)
+
 **Objetivo**: Catalogar todos os componentes disponíveis e suas capacidades
 
 #### **1.1 Script de Auditoria de Componentes**
+
 ```bash
 # Criar script para listar todos os blocks
 - Escanear /src/components/editor/blocks/
@@ -46,6 +50,7 @@
 ```
 
 #### **1.2 Análise de Dependências**
+
 ```bash
 # Verificar importações e dependências
 - Props necessárias para cada componente
@@ -55,6 +60,7 @@
 ```
 
 #### **1.3 Mapeamento de Categorias**
+
 ```typescript
 // Definir sistema de categorização
 interface BlockCategory {
@@ -66,46 +72,51 @@ interface BlockCategory {
 }
 
 const BLOCK_CATEGORIES = {
-  'basico': { name: 'Básico', blocks: ['text', 'heading', 'image', 'button'] },
-  'quiz': { name: 'Quiz', blocks: ['quiz-question', 'quiz-progress', 'quiz-result'] },
-  'vendas': { name: 'Vendas', blocks: ['pricing', 'testimonials', 'guarantee'] },
-  'design': { name: 'Design', blocks: ['carousel', 'gallery', 'grid'] },
-  'avancado': { name: 'Avançado', blocks: ['advanced-cta', 'product-features'] }
+  basico: { name: "Básico", blocks: ["text", "heading", "image", "button"] },
+  quiz: {
+    name: "Quiz",
+    blocks: ["quiz-question", "quiz-progress", "quiz-result"],
+  },
+  vendas: { name: "Vendas", blocks: ["pricing", "testimonials", "guarantee"] },
+  design: { name: "Design", blocks: ["carousel", "gallery", "grid"] },
+  avancado: { name: "Avançado", blocks: ["advanced-cta", "product-features"] },
 };
 ```
 
 ---
 
 ### **ETAPA 2: SISTEMA DE REGISTRY UNIFICADO** (6-8 horas)
+
 **Objetivo**: Criar registry centralizado para todos os componentes
 
 #### **2.1 Enhanced Block Registry**
+
 ```typescript
 // /src/components/editor/blocks/EnhancedBlockRegistry.tsx
-import { lazy } from 'react';
+import { lazy } from "react";
 
 // Lazy loading para performance
 const ENHANCED_BLOCK_REGISTRY = {
   // Blocks Básicos
-  'text': lazy(() => import('./TextBlock')),
-  'heading': lazy(() => import('./HeadingBlock')),
-  'image': lazy(() => import('./ImageBlock')),
-  
+  text: lazy(() => import("./TextBlock")),
+  heading: lazy(() => import("./HeadingBlock")),
+  image: lazy(() => import("./ImageBlock")),
+
   // Blocks de Quiz
-  'quiz-question': lazy(() => import('./QuizQuestionBlock')),
-  'quiz-progress': lazy(() => import('./QuizProgressBlock')),
-  'quiz-result': lazy(() => import('./QuizResultCalculatedBlock')),
-  
+  "quiz-question": lazy(() => import("./QuizQuestionBlock")),
+  "quiz-progress": lazy(() => import("./QuizProgressBlock")),
+  "quiz-result": lazy(() => import("./QuizResultCalculatedBlock")),
+
   // Blocks de Vendas
-  'testimonials-grid': lazy(() => import('./TestimonialsGridBlock')),
-  'pricing-table': lazy(() => import('./AdvancedPricingTableBlock')),
-  'product-carousel': lazy(() => import('./ProductCarouselBlock')),
-  
+  "testimonials-grid": lazy(() => import("./TestimonialsGridBlock")),
+  "pricing-table": lazy(() => import("./AdvancedPricingTableBlock")),
+  "product-carousel": lazy(() => import("./ProductCarouselBlock")),
+
   // Blocks Avançados
-  'advanced-cta': lazy(() => import('./AdvancedCTABlock')),
-  'animated-stats': lazy(() => import('./AnimatedStatCounterBlock')),
-  'bonus-carousel': lazy(() => import('./BonusCarouselBlock')),
-  
+  "advanced-cta": lazy(() => import("./AdvancedCTABlock")),
+  "animated-stats": lazy(() => import("./AnimatedStatCounterBlock")),
+  "bonus-carousel": lazy(() => import("./BonusCarouselBlock")),
+
   // ... mais 140+ componentes
 };
 
@@ -122,30 +133,31 @@ export interface BlockDefinition {
 }
 
 export const BLOCK_DEFINITIONS: Record<string, BlockDefinition> = {
-  'quiz-question': {
-    type: 'quiz-question',
-    name: 'Questão do Quiz',
-    category: 'quiz',
-    icon: '❓',
-    description: 'Pergunta com opções de resposta',
-    component: ENHANCED_BLOCK_REGISTRY['quiz-question'],
-    editor: lazy(() => import('./editors/QuizQuestionEditor')),
+  "quiz-question": {
+    type: "quiz-question",
+    name: "Questão do Quiz",
+    category: "quiz",
+    icon: "❓",
+    description: "Pergunta com opções de resposta",
+    component: ENHANCED_BLOCK_REGISTRY["quiz-question"],
+    editor: lazy(() => import("./editors/QuizQuestionEditor")),
     defaultProps: {
-      question: 'Sua pergunta aqui',
-      options: ['Opção 1', 'Opção 2', 'Opção 3'],
-      multiSelect: false
+      question: "Sua pergunta aqui",
+      options: ["Opção 1", "Opção 2", "Opção 3"],
+      multiSelect: false,
     },
     schema: [
-      { key: 'question', type: 'textarea', label: 'Pergunta', required: true },
-      { key: 'options', type: 'array', label: 'Opções de Resposta' },
-      { key: 'multiSelect', type: 'boolean', label: 'Múltipla Escolha' }
-    ]
+      { key: "question", type: "textarea", label: "Pergunta", required: true },
+      { key: "options", type: "array", label: "Opções de Resposta" },
+      { key: "multiSelect", type: "boolean", label: "Múltipla Escolha" },
+    ],
   },
   // ... definições para todos os 150+ componentes
 };
 ```
 
 #### **2.2 Universal Block Renderer V2**
+
 ```typescript
 // /src/components/editor/blocks/UniversalBlockRendererV2.tsx
 import { Suspense } from 'react';
@@ -159,13 +171,13 @@ export const UniversalBlockRendererV2: React.FC<BlockRendererProps> = ({
   disabled
 }) => {
   const blockDef = BLOCK_DEFINITIONS[block.type];
-  
+
   if (!blockDef) {
     return <FallbackBlock blockType={block.type} />;
   }
-  
+
   const Component = blockDef.component;
-  
+
   return (
     <Suspense fallback={<BlockLoadingSkeleton />}>
       <ErrorBoundary blockType={block.type}>
@@ -186,9 +198,11 @@ export const UniversalBlockRendererV2: React.FC<BlockRendererProps> = ({
 ---
 
 ### **ETAPA 3: SIDEBAR EXPANDIDA E INTELIGENTE** (4-6 horas)
+
 **Objetivo**: Criar sidebar que suporte todos os 150+ componentes
 
 #### **3.1 Enhanced Components Sidebar**
+
 ```typescript
 // /src/components/editor/sidebar/EnhancedComponentsSidebar.tsx
 export const EnhancedComponentsSidebar: React.FC = ({ onComponentSelect }) => {
@@ -220,7 +234,7 @@ export const EnhancedComponentsSidebar: React.FC = ({ onComponentSelect }) => {
             className="pl-9"
           />
         </div>
-        
+
         <Select value={selectedCategory} onValueChange={setSelectedCategory}>
           <SelectTrigger>
             <SelectValue placeholder="Categoria" />
@@ -232,17 +246,17 @@ export const EnhancedComponentsSidebar: React.FC = ({ onComponentSelect }) => {
             ))}
           </SelectContent>
         </Select>
-        
+
         <div className="flex gap-1">
-          <Button 
-            variant={viewMode === 'list' ? 'default' : 'ghost'} 
+          <Button
+            variant={viewMode === 'list' ? 'default' : 'ghost'}
             size="sm"
             onClick={() => setViewMode('list')}
           >
             <List className="w-4 h-4" />
           </Button>
-          <Button 
-            variant={viewMode === 'grid' ? 'default' : 'ghost'} 
+          <Button
+            variant={viewMode === 'grid' ? 'default' : 'ghost'}
             size="sm"
             onClick={() => setViewMode('grid')}
           >
@@ -267,7 +281,7 @@ export const EnhancedComponentsSidebar: React.FC = ({ onComponentSelect }) => {
           ))}
         </div>
       </ScrollArea>
-      
+
       {/* Stats Footer */}
       <div className="p-3 border-t bg-gray-50 text-xs text-gray-600">
         {filteredBlocks.length} componentes disponíveis
@@ -280,9 +294,11 @@ export const EnhancedComponentsSidebar: React.FC = ({ onComponentSelect }) => {
 ---
 
 ### **ETAPA 4: PAINEL DE PROPRIEDADES MODERNO** (8-10 horas)
+
 **Objetivo**: Criar painel de propriedades dinâmico e avançado
 
 #### **4.1 Modern Properties Panel Architecture**
+
 ```typescript
 // /src/components/editor/properties/ModernPropertiesPanel.tsx
 export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
@@ -292,7 +308,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
   onClose
 }) => {
   const blockDef = selectedBlock ? BLOCK_DEFINITIONS[selectedBlock.type] : null;
-  
+
   if (!selectedBlock || !blockDef) {
     return <EmptyPropertiesState />;
   }
@@ -300,13 +316,13 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
   return (
     <div className="h-full bg-white border-l flex flex-col">
       {/* Header */}
-      <PropertiesPanelHeader 
+      <PropertiesPanelHeader
         block={selectedBlock}
         blockDef={blockDef}
         onClose={onClose}
         onDelete={onDelete}
       />
-      
+
       {/* Dynamic Properties */}
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-6">
@@ -320,7 +336,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
           ))}
         </div>
       </ScrollArea>
-      
+
       {/* Advanced Settings */}
       <Collapsible>
         <CollapsibleTrigger className="p-4 border-t">
@@ -328,7 +344,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
           Configurações Avançadas
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <AdvancedSettings 
+          <AdvancedSettings
             block={selectedBlock}
             onUpdate={onUpdate}
           />
@@ -340,6 +356,7 @@ export const ModernPropertiesPanel: React.FC<ModernPropertiesPanelProps> = ({
 ```
 
 #### **4.2 Dynamic Property Fields**
+
 ```typescript
 // /src/components/editor/properties/fields/PropertyField.tsx
 export const PropertyField: React.FC<PropertyFieldProps> = ({
@@ -404,15 +421,17 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
 ---
 
 ### **ETAPA 5: INTEGRAÇÃO COM EDITOR-FIXED** (4-6 horas)
+
 **Objetivo**: Conectar todos os novos sistemas ao editor-fixed
 
 #### **5.1 Atualizar Editor-Fixed**
+
 ```typescript
 // Substituir imports no editor-fixed.tsx
-import { EnhancedComponentsSidebar } from '@/components/editor/sidebar/EnhancedComponentsSidebar';
-import { UniversalBlockRendererV2 } from '@/components/editor/blocks/UniversalBlockRendererV2';
-import { ModernPropertiesPanel } from '@/components/editor/properties/ModernPropertiesPanel';
-import { BLOCK_DEFINITIONS } from '@/components/editor/blocks/EnhancedBlockRegistry';
+import { EnhancedComponentsSidebar } from "@/components/editor/sidebar/EnhancedComponentsSidebar";
+import { UniversalBlockRendererV2 } from "@/components/editor/blocks/UniversalBlockRendererV2";
+import { ModernPropertiesPanel } from "@/components/editor/properties/ModernPropertiesPanel";
+import { BLOCK_DEFINITIONS } from "@/components/editor/blocks/EnhancedBlockRegistry";
 
 // Atualizar EditorCanvas para usar UniversalBlockRendererV2
 // Substituir ComponentsSidebar por EnhancedComponentsSidebar
@@ -420,6 +439,7 @@ import { BLOCK_DEFINITIONS } from '@/components/editor/blocks/EnhancedBlockRegis
 ```
 
 #### **5.2 Performance Optimizations**
+
 ```typescript
 // Implementar lazy loading e code splitting
 // Virtualization para listas grandes de componentes
@@ -430,9 +450,11 @@ import { BLOCK_DEFINITIONS } from '@/components/editor/blocks/EnhancedBlockRegis
 ---
 
 ### **ETAPA 6: TESTES E VALIDAÇÃO** (4-6 horas)
+
 **Objetivo**: Garantir que todos os componentes funcionem corretamente
 
 #### **6.1 Testes Automatizados**
+
 ```bash
 # Script de teste de componentes
 - Verificar se todos os 150+ componentes carregam
@@ -442,6 +464,7 @@ import { BLOCK_DEFINITIONS } from '@/components/editor/blocks/EnhancedBlockRegis
 ```
 
 #### **6.2 Validação Manual**
+
 ```bash
 # Checklist de validação
 □ Todos os componentes aparecem na sidebar
@@ -458,14 +481,17 @@ import { BLOCK_DEFINITIONS } from '@/components/editor/blocks/EnhancedBlockRegis
 ## 🎯 CRONOGRAMA DETALHADO
 
 ### **DIA 1** (8 horas):
+
 - **Manhã**: Etapa 1 (Auditoria) + início Etapa 2 (Registry)
 - **Tarde**: Conclusão Etapa 2 + início Etapa 3 (Sidebar)
 
 ### **DIA 2** (8 horas):
+
 - **Manhã**: Conclusão Etapa 3 + início Etapa 4 (Painel Moderno)
 - **Tarde**: Continuação Etapa 4 (50% do painel)
 
 ### **DIA 3** (6 horas):
+
 - **Manhã**: Conclusão Etapa 4 + Etapa 5 (Integração)
 - **Tarde**: Etapa 6 (Testes e Validação)
 
@@ -474,12 +500,14 @@ import { BLOCK_DEFINITIONS } from '@/components/editor/blocks/EnhancedBlockRegis
 ## 📊 RESULTADOS ESPERADOS
 
 ### **ANTES** (Status Atual):
+
 - ❌ ~20 componentes ativos (apenas inline)
 - ❌ Sidebar limitada (15 tipos)
 - ❌ Painel genérico
 - ❌ 150+ componentes inutilizados
 
 ### **DEPOIS** (Meta Final):
+
 - ✅ **150+ componentes ativos** (todos os blocks)
 - ✅ **Sidebar inteligente** (busca, filtros, categorias)
 - ✅ **Painel dinâmico** (baseado em schema)
@@ -492,11 +520,13 @@ import { BLOCK_DEFINITIONS } from '@/components/editor/blocks/EnhancedBlockRegis
 ## 🚀 PRÓXIMOS PASSOS
 
 ### **IMPLEMENTAÇÃO IMEDIATA**:
+
 1. Executar **Etapa 1** (Auditoria)
 2. Criar **Enhanced Block Registry**
 3. Implementar **Enhanced Sidebar**
 
 ### **MELHORIAS FUTURAS**:
+
 1. **Template system** (templates pré-configurados)
 2. **Component marketplace** (novos componentes)
 3. **AI-powered suggestions** (sugestões inteligentes)

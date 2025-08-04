@@ -1,10 +1,17 @@
-
-import React, { useState } from 'react';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { QuizComponentData, QuizStage, QuizComponentType } from '@/types/quizBuilder';
-import { ComponentsSidebar } from '../ComponentsSidebar';
-import PreviewPanel from '../PreviewPanel';
-import { PropertyPanel } from './PropertyPanel';
+import React, { useState } from "react";
+import {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from "@/components/ui/resizable";
+import {
+  QuizComponentData,
+  QuizStage,
+  QuizComponentType,
+} from "@/types/quizBuilder";
+import { ComponentsSidebar } from "../ComponentsSidebar";
+import PreviewPanel from "../PreviewPanel";
+import { PropertyPanel } from "./PropertyPanel";
 
 interface BuilderLayoutProps {
   components: QuizComponentData[];
@@ -23,16 +30,18 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({
   onComponentAdd,
   onComponentUpdate,
   onComponentDelete,
-  onComponentSelect
+  onComponentSelect,
 }) => {
-  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
-  
+  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(
+    null,
+  );
+
   // Filter components for the active stage
-  const stageComponents = components.filter(c => c.stageId === activeStageId);
-  
+  const stageComponents = components.filter((c) => c.stageId === activeStageId);
+
   // Find the selected component
-  const selectedComponent = selectedComponentId 
-    ? components.find(c => c.id === selectedComponentId) || null 
+  const selectedComponent = selectedComponentId
+    ? components.find((c) => c.id === selectedComponentId) || null
     : null;
 
   const handleComponentSelect = (id: string | null) => {
@@ -48,15 +57,13 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({
     <div className="h-full">
       <ResizablePanelGroup direction="horizontal" className="h-full">
         <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-          <ComponentsSidebar 
-            onComponentSelect={handleComponentAdd}
-          />
+          <ComponentsSidebar onComponentSelect={handleComponentAdd} />
         </ResizablePanel>
 
         <ResizableHandle withHandle />
 
         <ResizablePanel defaultSize={55}>
-          <PreviewPanel 
+          <PreviewPanel
             components={stageComponents}
             selectedComponentId={selectedComponentId || undefined}
             onComponentSelect={handleComponentSelect}

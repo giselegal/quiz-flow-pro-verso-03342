@@ -1,6 +1,6 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { Shield, Lock, CreditCard, Clock } from 'lucide-react';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { Shield, Lock, CreditCard, Clock } from "lucide-react";
 
 interface SecurePurchaseBlockProps {
   title?: string;
@@ -9,27 +9,27 @@ interface SecurePurchaseBlockProps {
 }
 
 const SecurePurchaseBlock: React.FC<SecurePurchaseBlockProps> = ({
-  title = 'Compra 100% Segura e Protegida',
+  title = "Compra 100% Segura e Protegida",
   showFeatures = true,
-  className
+  className,
 }) => {
   const securityFeatures = [
     {
       icon: <Shield className="w-3 h-3 sm:w-4 sm:h-4" />,
-      text: "SSL 256-bits"
+      text: "SSL 256-bits",
     },
     {
       icon: <Lock className="w-3 h-3 sm:w-4 sm:h-4" />,
-      text: "Dados protegidos"
+      text: "Dados protegidos",
     },
     {
       icon: <CreditCard className="w-3 h-3 sm:w-4 sm:h-4" />,
-      text: "Pagamento seguro"
+      text: "Pagamento seguro",
     },
     {
       icon: <Clock className="w-3 h-3 sm:w-4 sm:h-4" />,
-      text: "Acesso imediato"
-    }
+      text: "Acesso imediato",
+    },
   ];
 
   return (
@@ -41,15 +41,18 @@ const SecurePurchaseBlock: React.FC<SecurePurchaseBlockProps> = ({
               <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
           </div>
-          
+
           <h3 className="text-base sm:text-lg font-semibold text-[#aa6b5d] mb-3 sm:mb-4 px-2">
             {title}
           </h3>
-          
+
           {showFeatures && (
             <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
               {securityFeatures.map((feature, index) => (
-                <div key={index} className="flex flex-col items-center gap-1 sm:gap-2">
+                <div
+                  key={index}
+                  className="flex flex-col items-center gap-1 sm:gap-2"
+                >
                   <div className="w-7 h-7 sm:w-8 sm:h-8 bg-white rounded-full flex items-center justify-center text-[#B89B7A] shadow-sm">
                     {feature.icon}
                   </div>
@@ -60,16 +63,17 @@ const SecurePurchaseBlock: React.FC<SecurePurchaseBlockProps> = ({
               ))}
             </div>
           )}
-          
+
           <p className="text-xs sm:text-sm text-[#8F7A6A] mb-3 sm:mb-4 leading-relaxed px-2">
-            Seus dados estão protegidos por criptografia de nível bancário. 
-            Processamento via Hotmart, plataforma líder em produtos digitais no Brasil.
+            Seus dados estão protegidos por criptografia de nível bancário.
+            Processamento via Hotmart, plataforma líder em produtos digitais no
+            Brasil.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-xs text-[#8F7A6A]">
-            <img 
-              src="https://static.hotmart.com/img/hotmart-logo.png" 
-              alt="Hotmart" 
+            <img
+              src="https://static.hotmart.com/img/hotmart-logo.png"
+              alt="Hotmart"
               className="h-3 sm:h-4 opacity-70"
             />
             <div className="hidden sm:block">•</div>

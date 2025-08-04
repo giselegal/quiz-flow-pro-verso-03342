@@ -1,34 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useLocation } from 'wouter';
-import { Loader2 } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useLocation } from "wouter";
+import { Loader2 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function AuthPage() {
   const [, setLocation] = useLocation();
   const { user, loading: authLoading, login, signup } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [message, setMessage] = useState('');
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     // Redirect if already logged in - using AuthContext
     if (user && !authLoading) {
-      setLocation('/');
+      setLocation("/");
     }
   }, [user, authLoading, setLocation]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setMessage('');
+    setError("");
+    setMessage("");
     setLoading(true);
 
     try {
@@ -39,10 +45,10 @@ export default function AuthPage() {
       } else {
         // Use AuthContext signup
         await signup(email, password, name);
-        setMessage('Verifique seu email para confirmar a conta!');
+        setMessage("Verifique seu email para confirmar a conta!");
       }
     } catch (error: any) {
-      setError(error.message || 'Erro durante autenticação');
+      setError(error.message || "Erro durante autenticação");
     } finally {
       setLoading(false);
     }
@@ -53,23 +59,22 @@ export default function AuthPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">
-            {isLogin ? 'Entrar' : 'Criar Conta'}
+            {isLogin ? "Entrar" : "Criar Conta"}
           </CardTitle>
           <CardDescription>
-            {isLogin 
-              ? 'Entre com sua conta para continuar' 
-              : 'Crie uma nova conta para começar'
-            }
+            {isLogin
+              ? "Entre com sua conta para continuar"
+              : "Crie uma nova conta para começar"}
           </CardDescription>
         </CardHeader>
-        
+
         <CardContent>
           {error && (
             <Alert variant="destructive" className="mb-4">
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-          
+
           {message && (
             <Alert className="mb-4">
               <AlertDescription>{message}</AlertDescription>
@@ -79,7 +84,10 @@ export default function AuthPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
               <div>
-                <label htmlFor="name" className="block text-sm font-medium mb-2">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium mb-2"
+                >
                   Nome
                 </label>
                 <Input
@@ -92,7 +100,7 @@ export default function AuthPage() {
                 />
               </div>
             )}
-            
+
             <div>
               <label htmlFor="email" className="block text-sm font-medium mb-2">
                 Email
@@ -106,9 +114,12 @@ export default function AuthPage() {
                 required
               />
             </div>
-            
+
             <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium mb-2"
+              >
                 Senha
               </label>
               <Input
@@ -121,37 +132,32 @@ export default function AuthPage() {
                 minLength={6}
               />
             </div>
-            
-            <Button 
-              type="submit" 
-              className="w-full" 
-              disabled={loading}
-            >
+
+            <Button type="submit" className="w-full" disabled={loading}>
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {isLogin ? 'Entrando...' : 'Criando conta...'}
+                  {isLogin ? "Entrando..." : "Criando conta..."}
                 </>
+              ) : isLogin ? (
+                "Entrar"
               ) : (
-                isLogin ? 'Entrar' : 'Criar Conta'
+                "Criar Conta"
               )}
             </Button>
           </form>
-          
+
           <div className="mt-6 text-center">
             <button
               type="button"
               onClick={() => {
                 setIsLogin(!isLogin);
-                setError('');
-                setMessage('');
+                setError("");
+                setMessage("");
               }}
               className="text-primary hover:text-primary/80 text-sm underline"
             >
-              {isLogin 
-                ? 'Não tem conta? Criar uma' 
-                : 'Já tem conta? Entrar'
-              }
+              {isLogin ? "Não tem conta? Criar uma" : "Já tem conta? Entrar"}
             </button>
           </div>
         </CardContent>

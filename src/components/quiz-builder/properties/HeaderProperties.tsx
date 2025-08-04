@@ -1,8 +1,7 @@
-
-import React from 'react';
-import { QuizComponentData } from '@/types/quizBuilder';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import React from "react";
+import { QuizComponentData } from "@/types/quizBuilder";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 interface HeaderPropertiesProps {
   component: QuizComponentData;
@@ -11,14 +10,14 @@ interface HeaderPropertiesProps {
 
 export const HeaderProperties: React.FC<HeaderPropertiesProps> = ({
   component,
-  onUpdate
+  onUpdate,
 }) => {
   const data = component.data || {};
 
   const handleUpdate = (field: string, value: any) => {
     onUpdate(component.id, {
       ...data,
-      [field]: value
+      [field]: value,
     });
   };
 
@@ -28,18 +27,18 @@ export const HeaderProperties: React.FC<HeaderPropertiesProps> = ({
         <Label htmlFor="title">Título</Label>
         <Input
           id="title"
-          value={data.title || ''}
-          onChange={(e) => handleUpdate('title', e.target.value)}
+          value={data.title || ""}
+          onChange={(e) => handleUpdate("title", e.target.value)}
           placeholder="Digite o título"
         />
       </div>
-      
+
       <div>
         <Label htmlFor="subtitle">Subtítulo</Label>
         <Input
           id="subtitle"
-          value={data.subtitle || ''}
-          onChange={(e) => handleUpdate('subtitle', e.target.value)}
+          value={data.subtitle || ""}
+          onChange={(e) => handleUpdate("subtitle", e.target.value)}
           placeholder="Digite o subtítulo"
         />
       </div>

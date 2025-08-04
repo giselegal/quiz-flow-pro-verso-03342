@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { StyleResult } from '@/types/quiz';
+import React from "react";
+import { StyleResult } from "@/types/quiz";
 
 interface Step20ResultProps {
   primaryStyle?: StyleResult;
@@ -11,7 +10,7 @@ interface Step20ResultProps {
 const Step20Result: React.FC<Step20ResultProps> = ({
   primaryStyle,
   secondaryStyles = [],
-  onContinue
+  onContinue,
 }) => {
   return (
     <div className="min-h-screen bg-[#FAF9F7] p-6">
@@ -34,9 +33,7 @@ const Step20Result: React.FC<Step20ResultProps> = ({
               <div className="text-3xl font-bold text-[#432818]">
                 {primaryStyle.percentage}%
               </div>
-              <div className="text-[#8F7A6A]">
-                de compatibilidade
-              </div>
+              <div className="text-[#8F7A6A]">de compatibilidade</div>
             </div>
           </div>
         )}
@@ -48,9 +45,16 @@ const Step20Result: React.FC<Step20ResultProps> = ({
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {secondaryStyles.slice(0, 4).map((style, index) => (
-                <div key={index} className="border border-[#B89B7A]/20 rounded-lg p-4">
-                  <div className="font-medium text-[#432818]">{style.category}</div>
-                  <div className="text-sm text-[#8F7A6A]">{style.percentage}%</div>
+                <div
+                  key={index}
+                  className="border border-[#B89B7A]/20 rounded-lg p-4"
+                >
+                  <div className="font-medium text-[#432818]">
+                    {style.category}
+                  </div>
+                  <div className="text-sm text-[#8F7A6A]">
+                    {style.percentage}%
+                  </div>
                 </div>
               ))}
             </div>
