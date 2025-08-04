@@ -1,10 +1,10 @@
-import React from "react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Block } from "@/types/editor";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Block } from "@/types/editor";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { GripVertical, Trash2 } from "lucide-react";
+import React from "react";
 import UniversalBlockRenderer from "../blocks/UniversalBlockRenderer";
 
 interface SortableBlockWrapperProps {
