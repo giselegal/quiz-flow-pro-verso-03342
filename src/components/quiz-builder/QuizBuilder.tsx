@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useUnifiedProperties } from "@/hooks/useUnifiedProperties";
 import {
   ResizablePanelGroup,
   ResizablePanel,

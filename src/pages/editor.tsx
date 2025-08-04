@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { useUnifiedProperties } from "@/hooks/useUnifiedProperties";
 import { useLocation } from "wouter";
 import {
   ResizablePanelGroup,
   ResizablePanel,
   ResizableHandle,
 } from "../components/ui/resizable";
-// import { ModernPropertiesPanel } from '../components/editor/panels/ModernPropertiesPanel';
+import UniversalPropertiesPanel from "@/components/universal/UniversalPropertiesPanel";
 import { ScrollArea } from "../components/ui/scroll-area";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -923,23 +924,28 @@ const EditorPage: React.FC = () => {
 
           {/* Properties Panel */}
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-            <div className="h-full border-l border-gray-200 bg-gray-50 p-4">
-              <div className="text-center text-gray-500">
-                <p className="mb-2">Painel de Propriedades</p>
-                {selectedComponentId ? (
-                  <div className="text-left space-y-2">
-                    <p className="text-sm">
-                      Selecionado:{" "}
-                      {blocks.find((b) => b.id === selectedComponentId)?.type}
-                    </p>
-                    <p className="text-xs text-gray-400">
-                      ModernPropertiesPanel não disponível
-                    </p>
-                  </div>
-                ) : (
-                  <p className="text-sm">Selecione um bloco para editar</p>
-                )}
-              </div>
+            <div className="h-full border-l border-gray-200 bg-gray-50">
+              {selectedComponentId ? (
+                <UniversalPropertiesPanel
+                  selectedBlock={{
+                    id: selectedComponentId,
+                    type: blocks.find((b) => b.id === selectedComponentId)?.type || 'unknown',
+                    properties: blocks.find((b) => b.id === selectedComponentId)?.properties || {}
+                  }}
+                  onUpdate={(blockId, updates) => {
+                    updateBlock(blockId, updates);
+                  }}
+                  onDelete={(blockId) => {
+                    deleteBlock(blockId);
+                    setSelectedComponentId(null);
+                  }}
+                  onClose={() => setSelectedComponentId(null)}
+                />
+              ) : (
+                <div className="h-full p-4 text-center text-gray-500">
+                  <p className="text-sm">Selecione um bloco para editar suas propriedades</p>
+                </div>
+              )}
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>
