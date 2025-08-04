@@ -11,6 +11,7 @@ import { useEditor } from '@/context/EditorContext';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 import { DndProvider } from '@/components/editor/dnd/DndProvider';
 import { SortableBlockWrapper } from '@/components/editor/canvas/SortableBlockWrapper';
+import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
 import { Type, Trash2, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -209,40 +210,16 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             canvas={
               <div ref={scrollRef} className="p-2 overflow-auto h-full bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm">
                 <div className={getCanvasClassName()}>
-                  <div className="p-3">
-                    {currentBlocks.length === 0 ? (
-                      <div className="text-center py-12">
-                        <h3 className="text-2xl font-semibold text-stone-700 mb-3 font-serif">Etapa {activeStageId}</h3>
-                        <p className="text-stone-500 text-lg mb-2">
-                          {isPreviewing ? 'Modo Preview - Nenhum componente nesta etapa' : 'Arraste componentes da sidebar para começar'}
-                        </p>
-                        <p className="text-xs text-stone-400 bg-stone-100/50 px-3 py-1 rounded-full inline-block">
-                          Sistema integrado com {stageCount} etapas • Drag & Drop ativo
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="space-y-3">
-                        {currentBlocks.map((block) => (
-                          <SortableBlockWrapper
-                            key={block.id}
-                            block={block}
-                            isSelected={!isPreviewing && selectedBlockId === block.id}
-                            onSelect={() => !isPreviewing && setSelectedBlockId(block.id)}
-                            onUpdate={(updates) => {
-                              if (!isPreviewing) {
-                                updateBlock(block.id, updates);
-                              }
-                            }}
-                            onDelete={() => {
-                              if (!isPreviewing) {
-                                handleDeleteBlock(block.id);
-                              }
-                            }}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                  <CanvasDropZone
+                    blocks={currentBlocks}
+                    selectedBlockId={selectedBlockId}
+                    isPreviewing={isPreviewing}
+                    activeStageId={activeStageId}
+                    stageCount={stageCount}
+                    onSelectBlock={setSelectedBlockId}
+                    onUpdateBlock={updateBlock}
+                    onDeleteBlock={handleDeleteBlock}
+                  />
                 </div>
               </div>
             }
