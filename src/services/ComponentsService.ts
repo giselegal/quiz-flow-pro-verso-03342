@@ -3,7 +3,7 @@
  * Conecta o EditorContext com o sistema de componentes reutilizáveis do Supabase
  */
 
-// Primeiro devemos colocar os imports no topo do arquivo
+// Imports devem estar no topo do arquivo
 import { createClient } from "@supabase/supabase-js";
 
 // Configuração de ambiente compatível com navegador
@@ -24,17 +24,14 @@ const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Criando um cliente real ou simulado com base na disponibilidade das credenciais
-const supabase =
-  SUPABASE_URL && SUPABASE_KEY
-    ? createClient(SUPABASE_URL, SUPABASE_KEY)
-    : createMockSupabaseClient();
+const supabase = SUPABASE_URL && SUPABASE_KEY 
+  ? createClient(SUPABASE_URL, SUPABASE_KEY)
+  : createMockSupabaseClient();
 
 // Função para criar um cliente Supabase simulado
 function createMockSupabaseClient() {
-  console.warn(
-    "⚠️ Usando cliente Supabase simulado! Configure as variáveis de ambiente para usar o cliente real."
-  );
-
+  console.warn('⚠️ Usando cliente Supabase simulado! Configure as variáveis de ambiente para usar o cliente real.');
+  
   // Implementação simulada para testes locais
   return {
     from: (table: string) => ({
@@ -43,165 +40,164 @@ function createMockSupabaseClient() {
           order: (column: string, { ascending }: { ascending: boolean }) => ({
             limit: (num: number) => ({
               single: () => Promise.resolve({ data: null, error: null }),
-              then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+              then: (callback: Function) => Promise.resolve(callback({ data: [], error: null }))
             }),
-            then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+            then: (callback: Function) => Promise.resolve(callback({ data: [], error: null }))
           }),
           limit: (num: number) => ({
-            then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+            then: (callback: Function) => Promise.resolve(callback({ data: [], error: null }))
           }),
-          then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+          then: (callback: Function) => Promise.resolve(callback({ data: [], error: null }))
         }),
         order: (column: string, { ascending }: { ascending: boolean }) => ({
-          then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+          then: (callback: Function) => Promise.resolve(callback({ data: [], error: null }))
         }),
-        then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+        then: (callback: Function) => Promise.resolve(callback({ data: [], error: null }))
       }),
       insert: (data: any) => Promise.resolve({ data: null, error: null }),
       update: (data: any) => ({
-        eq: (column: string, value: any) => Promise.resolve({ data: null, error: null }),
+        eq: (column: string, value: any) => Promise.resolve({ data: null, error: null })
       }),
       delete: () => ({
-        eq: (column: string, value: any) => Promise.resolve({ data: null, error: null }),
-      }),
+        eq: (column: string, value: any) => Promise.resolve({ data: null, error: null })
+      })
     }),
-    rpc: (func: string, params: any) =>
-      Promise.resolve({ data: `mock-id-${Date.now()}`, error: null }),
+    rpc: (func: string, params: any) => Promise.resolve({ data: `mock-id-${Date.now()}`, error: null })
   };
 }
-===============================================================
-// ============================================================================ANCO
-// TIPOS PARA COMPONENTES DO BANCO=================================
+
 // ============================================================================
-export interface Block {
-export interface Block {
-  id: string;
+// TIPOS PARA COMPONENTES DO BANCO
+// ============================================================================
+===============================================================
+export interface Block {ANCO
+  id: string;=================================
   type: string;
-  content: any;
-  properties?: any;der?: number;
-  order?: number;  metadata?: {
+  content: any;export interface Block {
+  properties?: any;
+  order?: number;
   metadata?: {
-    database_id?: string;key?: string;
-    stage_key?: string;
-    created_at?: string;
+    database_id?: string;
+    stage_key?: string;der?: number;
+    created_at?: string;  metadata?: {
     updated_at?: string;
-  };
+  };key?: string;
 }
 
 export interface ComponentInstance {
-  id: string; string;
+  id: string;
   instance_key: string;
-  type_key: string;string;
-  stage_key: string;
-  stage_order: number;
-  content: any; any;
-  properties: any;
-  created_at: string;t: string;
-  updated_at: string;
-}
-rface ComponentType {
-export interface ComponentType {
-  id: string;y: string;
   type_key: string;
-  type_name: string;
-  category: string;
-  description?: string;_content: any;
-  default_content: any;any;
-  default_properties: any;
-  created_at: string;_at: string;
+  stage_key: string;
+  stage_order: number; string;
+  content: any;
+  properties: any;string;
+  created_at: string;
   updated_at: string;
-}
-=========
-// ============================================================================LASSE DE SERVIÇO PRINCIPAL
-// CLASSE DE SERVIÇO PRINCIPAL/ ============================================================================
-// ============================================================================
+} any;
 
-export class ComponentsService {sOnline em estática
-  // Transformando a propriedade isOnline em estática
+export interface ComponentType {t: string;
+  id: string;
+  type_key: string;
+  type_name: string;rface ComponentType {
+  category: string;
+  description?: string;y: string;
+  default_content: any;
+  default_properties: any;
+  created_at: string;
+  updated_at: string;_content: any;
+}any;
+
+// ============================================================================_at: string;
+// CLASSE DE SERVIÇO PRINCIPAL
+// ============================================================================
+=========
+export class ComponentsService {LASSE DE SERVIÇO PRINCIPAL
+  // Propriedade estática para controle de estado online/offline/ ============================================================================
   private static isOnline = true;
 
-  /**blocos de uma stage específica do banco de dados
+  /**sOnline em estática
    * Carrega blocos de uma stage específica do banco de dados
-   */loadStageBlocks(stageKey: string): Promise<Block[]> {
+   */
   static async loadStageBlocks(stageKey: string): Promise<Block[]> {
-    try {sOnline) throw new Error("Serviço offline");
+    try {blocos de uma stage específica do banco de dados
       if (!this.isOnline) throw new Error("Serviço offline");
- } = await supabase
-      const { data, error } = await supabaset_instances")
-        .from("component_instances")
+loadStageBlocks(stageKey: string): Promise<Block[]> {
+      const { data, error } = await supabase
+        .from("component_instances")sOnline) throw new Error("Serviço offline");
         .select(
-          `      *,
-          *,         component_types!inner(
-          component_types!inner(            type_key,
+          ` } = await supabase
+          *,t_instances")
+          component_types!inner(
             type_key,
-            type_name,ategory,
-            category,tent,
-            default_content,_properties
+            type_name,      *,
+            category,         component_types!inner(
+            default_content,            type_key,
             default_properties
-          )
-        `
-        )_key", stageKey)
-        .eq("stage_key", stageKey)_order", { ascending: true });
+          )ategory,
+        `tent,
+        )_properties
+        .eq("stage_key", stageKey)
         .order("stage_order", { ascending: true });
-     if (error) {
-      if (error) {        console.error("Erro ao carregar blocos:", error);
-        console.error("Erro ao carregar blocos:", error);
+
+      if (error) {_key", stageKey)
+        console.error("Erro ao carregar blocos:", error);_order", { ascending: true });
         return [];
-      }
-ata.length === 0) {
+      }     if (error) {
+        console.error("Erro ao carregar blocos:", error);
       if (!data || data.length === 0) {
         return [];
       }
-tance: any) => ({
-      return data.map((instance: any) => ({instance_key,
-        id: instance.instance_key,e.component_types.type_key,
-        type: instance.component_types.type_key,       content: instance.content || instance.component_types.default_content,
-        content: instance.content || instance.component_types.default_content,        properties: instance.properties || instance.component_types.default_properties,
-        properties: instance.properties || instance.component_types.default_properties,
-        order: instance.stage_order,
-        metadata: {
-          database_id: instance.id,          stage_key: instance.stage_key,
-          stage_key: instance.stage_key,reated_at,
+ata.length === 0) {
+      return data.map((instance: any) => ({
+        id: instance.instance_key,
+        type: instance.component_types.type_key,
+        content: instance.content || instance.component_types.default_content,tance: any) => ({
+        properties: instance.properties || instance.component_types.default_properties,instance_key,
+        order: instance.stage_order,e.component_types.type_key,
+        metadata: {       content: instance.content || instance.component_types.default_content,
+          database_id: instance.id,        properties: instance.properties || instance.component_types.default_properties,
+          stage_key: instance.stage_key,
           created_at: instance.created_at,
           updated_at: instance.updated_at,
-        },      }));
-      })); catch (error) {
-    } catch (error) {r);
-      console.error("Erro ao carregar blocos da stage:", error); return [];
-      return [];
-    }
-  }
+        },          stage_key: instance.stage_key,
+      }));reated_at,
+    } catch (error) {
+      console.error("Erro ao carregar blocos da stage:", error);
+      return [];      }));
+    } catch (error) {
+  }r);
+ return [];
   /**
-  /**nco de dados
    * Sincroniza blocos de uma stage com o banco de dados
-   */yncStage(stageKey: string, blocks: Block[]): Promise<boolean> {
-  static async syncStage(stageKey: string, blocks: Block[]): Promise<boolean> {
-    try {his.isOnline) throw new Error("Serviço offline");
+   */
+  static async syncStage(stageKey: string, blocks: Block[]): Promise<boolean> {  /**
+    try {nco de dados
       if (!this.isOnline) throw new Error("Serviço offline");
-ncias existentes da stage
-      // Remove instâncias existentes da stagerom("component_instances").delete().eq("stage_key", stageKey);
-      await supabase.from("component_instances").delete().eq("stage_key", stageKey);
-cias
-      // Insere novas instâncias.map((block, index) => ({
-      const instances = blocks.map((block, index) => ({tance_key: block.id,
-        instance_key: block.id,ype_key: block.type,
-        type_key: block.type,tage_key: stageKey,
-        stage_key: stageKey,| index + 1,
-        stage_order: block.order || index + 1,
-        content: block.content,        properties: block.properties,
-        properties: block.properties,
-      }));
-s.length > 0) {
-      if (instances.length > 0) { const { error } = await supabase.from("component_instances").insert(instances);
+yncStage(stageKey: string, blocks: Block[]): Promise<boolean> {
+      // Remove instâncias existentes da stage
+      await supabase.from("component_instances").delete().eq("stage_key", stageKey);his.isOnline) throw new Error("Serviço offline");
+
+      // Insere novas instânciasncias existentes da stage
+      const instances = blocks.map((block, index) => ({rom("component_instances").delete().eq("stage_key", stageKey);
+        instance_key: block.id,
+        type_key: block.type,cias
+        stage_key: stageKey,.map((block, index) => ({
+        stage_order: block.order || index + 1,tance_key: block.id,
+        content: block.content,ype_key: block.type,
+        properties: block.properties,tage_key: stageKey,
+      }));| index + 1,
+
+      if (instances.length > 0) {        properties: block.properties,
         const { error } = await supabase.from("component_instances").insert(instances);
 
-        if (error) {error("Erro ao sincronizar stage:", error);
-          console.error("Erro ao sincronizar stage:", error);   return false;
-          return false;        }
+        if (error) {s.length > 0) {
+          console.error("Erro ao sincronizar stage:", error); const { error } = await supabase.from("component_instances").insert(instances);
+          return false;
         }
-      }
-
-      return true;
+      }error("Erro ao sincronizar stage:", error);
+   return false;
+      return true;        }
     } catch (error) {
       console.error("Erro ao sincronizar stage:", error);
       return false;
@@ -210,208 +206,212 @@ s.length > 0) {
 
   /**
    * Cria um novo bloco no banco de dados
-   */sync createBlock(
+   */
   static async createBlock(
     stageKey: string,
-    typeKey: string,y,
-    content?: any,roperties?: any
-    properties?: any: Promise<string | null> {
-  ): Promise<string | null> {    try {
-    try { if (!this.isOnline) throw new Error("Serviço offline");
-      if (!this.isOnline) throw new Error("Serviço offline");
- // Busca o tipo do componente
-      // Busca o tipo do componente
-      const { data: componentType, error: typeError } = await supabasefrom("component_types")
+    typeKey: string,
+    content?: any,sync createBlock(
+    properties?: any
+  ): Promise<string | null> {
+    try {y,
+      if (!this.isOnline) throw new Error("Serviço offline");roperties?: any
+: Promise<string | null> {
+      // Busca o tipo do componente    try {
+      const { data: componentType, error: typeError } = await supabase if (!this.isOnline) throw new Error("Serviço offline");
         .from("component_types")
-        .select("*")        .eq("type_key", typeKey)
+        .select("*") // Busca o tipo do componente
         .eq("type_key", typeKey)
-        .single();
-      if (typeError || !componentType) {
-      if (typeError || !componentType) {omponente não encontrado:", typeKey);
+        .single();from("component_types")
+
+      if (typeError || !componentType) {        .eq("type_key", typeKey)
         console.error("Tipo de componente não encontrado:", typeKey);
         return null;
-      }
-utomaticamente
-      // Gera instance_key automaticamentepabase.rpc("generate_instance_key", {
+      }      if (typeError || !componentType) {
+omponente não encontrado:", typeKey);
+      // Gera instance_key automaticamente
       const { data: result, error } = await supabase.rpc("generate_instance_key", {
         p_type_key: typeKey,
-        p_stage_key: stageKey,
-      });
+        p_stage_key: stageKey,utomaticamente
+      });pabase.rpc("generate_instance_key", {
 
       if (error || !result) {
-        console.error("Erro ao gerar instance_key:", error);        return null;
+        console.error("Erro ao gerar instance_key:", error);
         return null;
       }
- = result;
-      const instanceKey = result;
-/ Calcula a próxima ordem
-      // Calcula a próxima ordem      const { data: maxOrder } = await supabase
-      const { data: maxOrder } = await supabaseponent_instances")
-        .from("component_instances")e_order")
-        .select("stage_order")
-        .eq("stage_key", stageKey)ge_order", { ascending: false })
-        .order("stage_order", { ascending: false })   .limit(1);
-        .limit(1);
-      const nextOrder = (maxOrder?.[0]?.stage_order || 0) + 1;
-      const nextOrder = (maxOrder?.[0]?.stage_order || 0) + 1;
 
-      // Insere a nova instância const { error: insertError } = await supabase.from("component_instances").insert({
-      const { error: insertError } = await supabase.from("component_instances").insert({nceKey,
-        instance_key: instanceKey,eKey,
-        type_key: typeKey,tageKey,
-        stage_key: stageKey,r: nextOrder,
-        stage_order: nextOrder,tent || componentType.default_content,
-        content: content || componentType.default_content,s || componentType.default_properties,
-        properties: properties || componentType.default_properties,
-      });
-      if (insertError) {
-      if (insertError) {r bloco:", insertError);
+      const instanceKey = result;        return null;
+
+      // Calcula a próxima ordem
+      const { data: maxOrder } = await supabase = result;
+        .from("component_instances")
+        .select("stage_order")/ Calcula a próxima ordem
+        .eq("stage_key", stageKey)      const { data: maxOrder } = await supabase
+        .order("stage_order", { ascending: false })ponent_instances")
+        .limit(1);e_order")
+
+      const nextOrder = (maxOrder?.[0]?.stage_order || 0) + 1;ge_order", { ascending: false })
+   .limit(1);
+      // Insere a nova instância
+      const { error: insertError } = await supabase.from("component_instances").insert({      const nextOrder = (maxOrder?.[0]?.stage_order || 0) + 1;
+        instance_key: instanceKey,
+        type_key: typeKey,
+        stage_key: stageKey, const { error: insertError } = await supabase.from("component_instances").insert({
+        stage_order: nextOrder,nceKey,
+        content: content || componentType.default_content,eKey,
+        properties: properties || componentType.default_properties,tageKey,
+      });r: nextOrder,
+tent || componentType.default_content,
+      if (insertError) {s || componentType.default_properties,
         console.error("Erro ao criar bloco:", insertError);
         return null;
-      }
-
-      return instanceKey;) {
-    } catch (error) {      console.error("Erro ao criar bloco:", error);
+      }      if (insertError) {
+r bloco:", insertError);
+      return instanceKey;
+    } catch (error) {
       console.error("Erro ao criar bloco:", error);
       return null;
-    }
-  }
-  /**
+    }) {
+  }      console.error("Erro ao criar bloco:", error);
+
   /**
    * Atualiza um bloco existente
    */
-  static async updateBlock(
-    instanceKey: string,es: Partial<Pick<Block, "content" | "properties" | "order">>
-    updates: Partial<Pick<Block, "content" | "properties" | "order">>  ): Promise<boolean> {
+  static async updateBlock(  /**
+    instanceKey: string,
+    updates: Partial<Pick<Block, "content" | "properties" | "order">>
   ): Promise<boolean> {
     try {
-      const updateData: any = {};
-f (updates.content !== undefined) {
-      if (updates.content !== undefined) {        updateData.content = updates.content;
+      const updateData: any = {};es: Partial<Pick<Block, "content" | "properties" | "order">>
+  ): Promise<boolean> {
+      if (updates.content !== undefined) {
         updateData.content = updates.content;
-      }      if (updates.properties !== undefined) {
-      if (updates.properties !== undefined) {updates.properties;
-        updateData.properties = updates.properties;
-      }d) {
-      if (updates.order !== undefined) { = updates.order;
-        updateData.stage_order = updates.order;
       }
-r } = await supabase
-      const { error } = await supabase        .from("component_instances")
+      if (updates.properties !== undefined) {f (updates.content !== undefined) {
+        updateData.properties = updates.properties;        updateData.content = updates.content;
+      }
+      if (updates.order !== undefined) {      if (updates.properties !== undefined) {
+        updateData.stage_order = updates.order;updates.properties;
+      }
+d) {
+      const { error } = await supabase = updates.order;
         .from("component_instances")
-        .update(updateData)        .eq("instance_key", instanceKey);
-        .eq("instance_key", instanceKey);
-
-      if (error) {alizar bloco:", error);
-        console.error("Erro ao atualizar bloco:", error);
-        return false;
-      }
-
-      return true;
-    } catch (error) {sole.error("Erro ao atualizar bloco:", error);
-      console.error("Erro ao atualizar bloco:", error);      return false;
-      return false;
-    }
-  }
-
-  /**   * Remove um bloco
-   * Remove um bloco
-   */Block(instanceKey: string): Promise<boolean> {
-  static async deleteBlock(instanceKey: string): Promise<boolean> {
-    try {r } = await supabase
-      const { error } = await supabase   .from("component_instances")
-        .from("component_instances")     .delete()
-        .delete()        .eq("instance_key", instanceKey);
-        .eq("instance_key", instanceKey);
-
-      if (error) {   console.error("Erro ao deletar bloco:", error);
-        console.error("Erro ao deletar bloco:", error);
-        return false;
-      }
-
-      return true;ch (error) {
-    } catch (error) {tar bloco:", error);
-      console.error("Erro ao deletar bloco:", error);      return false;
-      return false;
-    }
-  }
-
-  /**s
-   * Lista todos os tipos de componentes disponíveis
-   */ise<ComponentType[]> {
-  static async getComponentTypes(): Promise<ComponentType[]> {
-    try {onst { data, error } = await supabase
-      const { data, error } = await supabase        .from("component_types")
-        .from("component_types")
-        .select("*")ng: true })
-        .order("category", { ascending: true }) { ascending: true });
-        .order("type_name", { ascending: true });
+        .update(updateData)
+        .eq("instance_key", instanceKey);r } = await supabase
+        .from("component_instances")
       if (error) {
-      if (error) {ror("Erro ao carregar tipos de componentes:", error);
-        console.error("Erro ao carregar tipos de componentes:", error);
-        return [];
+        console.error("Erro ao atualizar bloco:", error);        .eq("instance_key", instanceKey);
+        return false;
       }
-      return data || [];
-      return data || [];) {
-    } catch (error) {Erro ao carregar tipos de componentes:", error);
-      console.error("Erro ao carregar tipos de componentes:", error);
-      return [];
+alizar bloco:", error);
+      return true;
+    } catch (error) {
+      console.error("Erro ao atualizar bloco:", error);
+      return false;
     }
-  }
+  }sole.error("Erro ao atualizar bloco:", error);
+      return false;
   /**
-  /**Verifica se uma stage existe no banco
-   * Verifica se uma stage existe no banco
-   */tic async stageExists(stageKey: string): Promise<boolean> {
-  static async stageExists(stageKey: string): Promise<boolean> {
-    try {st { data, error } = await supabase
+   * Remove um bloco
+   */
+  static async deleteBlock(instanceKey: string): Promise<boolean> {
+    try {   * Remove um bloco
+      const { error } = await supabase
+        .from("component_instances")Block(instanceKey: string): Promise<boolean> {
+        .delete()
+        .eq("instance_key", instanceKey);r } = await supabase
+   .from("component_instances")
+      if (error) {     .delete()
+        console.error("Erro ao deletar bloco:", error);        .eq("instance_key", instanceKey);
+        return false;
+      }
+   console.error("Erro ao deletar bloco:", error);
+      return true;
+    } catch (error) {
+      console.error("Erro ao deletar bloco:", error);
+      return false;
+    }ch (error) {
+  }tar bloco:", error);
+      return false;
+  /**
+   * Lista todos os tipos de componentes disponíveis
+   */
+  static async getComponentTypes(): Promise<ComponentType[]> {
+    try {s
       const { data, error } = await supabase
-        .from("component_instances")
-        .select("id")e_key", stageKey)
-        .eq("stage_key", stageKey)
+        .from("component_types")ise<ComponentType[]> {
+        .select("*")
+        .order("category", { ascending: true })onst { data, error } = await supabase
+        .order("type_name", { ascending: true });        .from("component_types")
+
+      if (error) {ng: true })
+        console.error("Erro ao carregar tipos de componentes:", error); { ascending: true });
+        return [];
+      }      if (error) {
+ror("Erro ao carregar tipos de componentes:", error);
+      return data || [];
+    } catch (error) {
+      console.error("Erro ao carregar tipos de componentes:", error);
+      return [];      return data || [];
+    }) {
+  }Erro ao carregar tipos de componentes:", error);
+
+  /**
+   * Verifica se uma stage existe no banco
+   */
+  static async stageExists(stageKey: string): Promise<boolean> {  /**
+    try {Verifica se uma stage existe no banco
+      const { data, error } = await supabase
+        .from("component_instances")tic async stageExists(stageKey: string): Promise<boolean> {
+        .select("id")
+        .eq("stage_key", stageKey)st { data, error } = await supabase
         .limit(1);
 
-      if (error) {);
+      if (error) {e_key", stageKey)
         console.error("Erro ao verificar stage:", error);
         return false;
       }
- && data.length > 0) || false;
+);
       return (data && data.length > 0) || false;
-    } catch (error) {);
+    } catch (error) {
       console.error("Erro ao verificar stage:", error);
-      return false;
+      return false; && data.length > 0) || false;
     }
-  }
+  });
 
   /**
    * Lista todas as stages com componentes
    */
   static async getStagesWithComponents(): Promise<string[]> {
     try {
-      const { data, error } = await supabasees")
-        .from("component_instances")ge_key")
-        .select("stage_key"));
+      const { data, error } = await supabase
+        .from("component_instances")
+        .select("stage_key")
         .order("stage_key", { ascending: true });
-      if (error) {
-      if (error) {ror("Erro ao carregar stages:", error);
-        console.error("Erro ao carregar stages:", error);
+es")
+      if (error) {ge_key")
+        console.error("Erro ao carregar stages:", error););
         return [];
-      }
+      }      if (error) {
+ror("Erro ao carregar stages:", error);
       // Remove duplicatas
-      // Remove duplicatasArray.from(new Set(data?.map(item => item.stage_key) || []));
-      const stageKeys = Array.from(new Set(data?.map(item => item.stage_key) || []));s;
+      const stageKeys = Array.from(new Set(data?.map(item => item.stage_key) || []));
       return stageKeys;
-    } catch (error) {ror("Erro ao carregar stages:", error);
-      console.error("Erro ao carregar stages:", error); return [];
-      return []; }
-    }  }
-  }
-
-  /**Define o estado online/offline do serviço
-   * Define o estado online/offline do serviço
-   */setOnlineStatus(online: boolean): void {
+    } catch (error) {      // Remove duplicatas
+      console.error("Erro ao carregar stages:", error);Array.from(new Set(data?.map(item => item.stage_key) || []));
+      return [];s;
+    }
+  }ror("Erro ao carregar stages:", error);
+ return [];
+  /** }
+   * Define o estado online/offline do serviço  }
+   */
   static setOnlineStatus(online: boolean): void {
-    this.isOnline = online;${online ? "online" : "offline"}`);
+    this.isOnline = online;Define o estado online/offline do serviço
     console.log(`Serviço agora está ${online ? "online" : "offline"}`);
+  }setOnlineStatus(online: boolean): void {
+}
+${online ? "online" : "offline"}`);
+export default ComponentsService;
   }
 }
 export default ComponentsService;
