@@ -86,28 +86,31 @@ const createValidationSchema = (properties: Record<string, any>) => {
   const schemaFields: Record<string, any> = {};
 
   // Adiciona as propriedades de layout como campos universais e opcionais
-  schemaFields.maxWidth = z.number().optional().superRefine((val, ctx) => {
-    if (val !== undefined) {
-      if (val < 10) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.too_small,
-          minimum: 10,
-          type: "number",
-          inclusive: true,
-          message: "O valor mínimo é 10"
-        });
+  schemaFields.maxWidth = z
+    .number()
+    .optional()
+    .superRefine((val, ctx) => {
+      if (val !== undefined) {
+        if (val < 10) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.too_small,
+            minimum: 10,
+            type: "number",
+            inclusive: true,
+            message: "O valor mínimo é 10",
+          });
+        }
+        if (val > 100) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.too_big,
+            maximum: 100,
+            type: "number",
+            inclusive: true,
+            message: "O valor máximo é 100",
+          });
+        }
       }
-      if (val > 100) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.too_big,
-          maximum: 100,
-          type: "number",
-          inclusive: true,
-          message: "O valor máximo é 100"
-        });
-      }
-    }
-  });
+    });
   schemaFields.alignment = z.enum(["left", "center", "right", "justify"]).optional();
 
   Object.entries(properties).forEach(([key, property]) => {
@@ -117,17 +120,20 @@ const createValidationSchema = (properties: Record<string, any>) => {
         break;
       case "number":
         // Utilizando uma abordagem mais simples para números
-        schemaFields[key] = z.any().optional().transform(val => {
-          if (val === undefined) return undefined;
-          const num = Number(val);
-          if (isNaN(num)) return undefined;
-          
-          // Aplicar limites min/max se especificados
-          if (property.min !== undefined && num < property.min) return property.min;
-          if (property.max !== undefined && num > property.max) return property.max;
-          
-          return num;
-        });
+        schemaFields[key] = z
+          .any()
+          .optional()
+          .transform(val => {
+            if (val === undefined) return undefined;
+            const num = Number(val);
+            if (isNaN(num)) return undefined;
+
+            // Aplicar limites min/max se especificados
+            if (property.min !== undefined && num < property.min) return property.min;
+            if (property.max !== undefined && num > property.max) return property.max;
+
+            return num;
+          });
         break;
       case "boolean":
         schemaFields[key] = z.boolean().optional();
@@ -173,17 +179,18 @@ const OptimizedOptionsArrayEditor: React.FC<{
   });
 
   const addOption = useCallback(() => {
+    // 🎯 SISTEMA 1: ID Semântico para opções
+    const optionNumber = fields.length + 1;
     append({
-      id: `option-${Date.now()}`,
+      id: `option-${optionNumber}`,
       text: "Nova opção",
-      value: `value-${Date.now()}`,
+      value: `value-option-${optionNumber}`,
       category: "Geral",
       styleCategory: "Geral",
       points: 1,
       imageUrl: "https://via.placeholder.com/100x100",
     });
-  }, [append]);
-
+  }, [append, fields.length]);
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">

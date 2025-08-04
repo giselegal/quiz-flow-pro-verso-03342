@@ -1,20 +1,20 @@
-import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import {
-  DndContext,
   closestCenter,
+  DndContext,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import React, { useState } from "react";
 import LayoutSection from "./LayoutSection";
 import OptionsSection from "./OptionsSection";
 
@@ -67,7 +67,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    }),
+    })
   );
 
   // ✅ Handler para mudanças no layout
@@ -81,9 +81,9 @@ const Sidebar: React.FC<SidebarProps> = ({
     const { active, over } = event;
 
     if (active.id !== over.id) {
-      setOptions((items) => {
-        const oldIndex = items.findIndex((item) => item.id === active.id);
-        const newIndex = items.findIndex((item) => item.id === over.id);
+      setOptions(items => {
+        const oldIndex = items.findIndex(item => item.id === active.id);
+        const newIndex = items.findIndex(item => item.id === over.id);
 
         const newOptions = arrayMove(items, oldIndex, newIndex);
         onOptionsChange?.(newOptions);
@@ -94,18 +94,18 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   // ✅ Handler para edição de opções
   const handleOptionUpdate = (id: string, updates: Partial<OptionItem>) => {
-    setOptions((items) =>
-      items.map((item) => (item.id === id ? { ...item, ...updates } : item)),
-    );
+    setOptions(items => items.map(item => (item.id === id ? { ...item, ...updates } : item)));
   };
 
   // ✅ Handler para adicionar nova opção
   const handleAddOption = () => {
+    // 🎯 SISTEMA 1: ID Semântico ao invés de timestamp
+    const optionNumber = options.length + 1;
     const newOption: OptionItem = {
-      id: `option-${Date.now()}`,
+      id: `option-${optionNumber}`,
       text: "Nova opção",
       imageUrl: "https://via.placeholder.com/100x100",
-      value: `value-${Date.now()}`,
+      value: `value-option-${optionNumber}`,
       category: "Geral",
       points: 1,
     };
@@ -117,7 +117,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   // ✅ Handler para remover opção
   const handleRemoveOption = (id: string) => {
-    const newOptions = options.filter((item) => item.id !== id);
+    const newOptions = options.filter(item => item.id !== id);
     setOptions(newOptions);
     onOptionsChange?.(newOptions);
   };
@@ -132,16 +132,11 @@ const Sidebar: React.FC<SidebarProps> = ({
           <h2 className="text-lg font-semibold text-card-foreground flex items-center gap-2">
             🎨 Configurações
           </h2>
-          <p className="text-sm text-muted-foreground mt-1">
-            Configure layout e edite opções
-          </p>
+          <p className="text-sm text-muted-foreground mt-1">Configure layout e edite opções</p>
         </div>
 
         {/* ✅ Seção de Layout */}
-        <LayoutSection
-          layout={layoutConfig}
-          onLayoutChange={handleLayoutChange}
-        />
+        <LayoutSection layout={layoutConfig} onLayoutChange={handleLayoutChange} />
 
         {/* ✅ Seção de Opções com DND Context */}
         <DndContext
@@ -151,7 +146,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           modifiers={[restrictToVerticalAxis]}
         >
           <SortableContext
-            items={options.map((item) => item.id)}
+            items={options.map(item => item.id)}
             strategy={verticalListSortingStrategy}
           >
             <OptionsSection
@@ -165,20 +160,16 @@ const Sidebar: React.FC<SidebarProps> = ({
 
         {/* ✅ Preview do Layout Atual */}
         <Card className="p-4">
-          <h3 className="text-sm font-medium text-card-foreground mb-2">
-            📋 Preview Configuração
-          </h3>
+          <h3 className="text-sm font-medium text-card-foreground mb-2">📋 Preview Configuração</h3>
           <div className="text-xs text-muted-foreground space-y-1">
             <div>
               Layout: <span className="font-mono">{layoutConfig.layout}</span>
             </div>
             <div>
-              Direção:{" "}
-              <span className="font-mono">{layoutConfig.direction}</span>
+              Direção: <span className="font-mono">{layoutConfig.direction}</span>
             </div>
             <div>
-              Disposição:{" "}
-              <span className="font-mono">{layoutConfig.arrangement}</span>
+              Disposição: <span className="font-mono">{layoutConfig.arrangement}</span>
             </div>
             <div>
               Opções: <span className="font-mono">{options.length} itens</span>

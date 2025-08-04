@@ -24,6 +24,7 @@ interface EditorContextType {
   blockActions: {
     addBlock: (type: string, stageId?: string) => string;
     addBlockAtPosition: (type: string, position: number, stageId?: string) => string;
+    duplicateBlock: (blockId: string, stageId?: string) => string;
     deleteBlock: (blockId: string) => void;
     updateBlock: (blockId: string, updates: Partial<EditorBlock>) => void;
     reorderBlocks: (blockIds: string[], stageId?: string) => void;
@@ -315,14 +316,16 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         return "";
       }
 
-      const blockId = `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      // 🎯 SISTEMA 1: ID Semântico ao invés de timestamp
       const currentStageBlocks = stageBlocks[stageId] || [];
+      const blockOrder = currentStageBlocks.length + 1;
+      const blockId = `${stageId}-block-${type}-${blockOrder}`;
 
       const newBlock: EditorBlock = {
         id: blockId,
         type: type as any,
         content: { text: `Novo ${type}`, title: `Título do ${type}` },
-        order: currentStageBlocks.length + 1,
+        order: blockOrder,
         properties: {},
       };
 
@@ -338,7 +341,14 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         },
       });
 
-      console.log("➕ EditorContext: Bloco adicionado:", blockId, "tipo:", type, "etapa:", stageId);
+      console.log(
+        "➕ EditorContext: Bloco adicionado (Sistema Semântico):",
+        blockId,
+        "tipo:",
+        type,
+        "etapa:",
+        stageId
+      );
       return blockId;
     },
     [activeStageId, validateStageId, stageBlocks, updateStage, getStageById]
@@ -353,7 +363,8 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         return "";
       }
 
-      const blockId = `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      // 🎯 SISTEMA 1: ID Semântico com posição
+      const blockId = `${stageId}-block-${type}-pos-${position + 1}`;
       const currentStageBlocks = stageBlocks[stageId] || [];
 
       const newBlock: EditorBlock = {
@@ -387,7 +398,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       });
 
       console.log(
-        "➕ EditorContext: Bloco adicionado na posição:",
+        "➕ EditorContext: Bloco adicionado na posição (Sistema Semântico):",
         position,
         "blockId:",
         blockId,
@@ -397,6 +408,59 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         stageId
       );
       return blockId;
+    },
+    [activeStageId, validateStageId, stageBlocks, updateStage, getStageById]
+  );
+
+  // 🎯 SISTEMA 1: FUNÇÃO DE DUPLICAÇÃO SEMÂNTICA
+  const duplicateBlock = useCallback(
+    (blockId: string, targetStageId?: string): string => {
+      const stageId = targetStageId || activeStageId;
+
+      if (!validateStageId(stageId)) {
+        console.warn("⚠️ EditorContext: Tentativa de duplicar bloco em etapa inválida:", stageId);
+        return "";
+      }
+
+      const currentStageBlocks = stageBlocks[stageId] || [];
+      const blockToDuplicate = currentStageBlocks.find(b => b.id === blockId);
+
+      if (!blockToDuplicate) {
+        console.warn("⚠️ EditorContext: Bloco para duplicar não encontrado:", blockId);
+        return "";
+      }
+
+      // Gerar ID semântico para duplicação
+      const duplicateNumber =
+        currentStageBlocks.filter(b => b.type === blockToDuplicate.type).length + 1;
+
+      const duplicatedBlockId = `${stageId}-block-${blockToDuplicate.type}-copy-${duplicateNumber}`;
+
+      const duplicatedBlock: EditorBlock = {
+        ...JSON.parse(JSON.stringify(blockToDuplicate)), // Deep clone
+        id: duplicatedBlockId,
+        order: currentStageBlocks.length + 1,
+      };
+
+      setStageBlocks(prev => ({
+        ...prev,
+        [stageId]: [...(prev[stageId] || []), duplicatedBlock],
+      }));
+
+      updateStage(stageId, {
+        metadata: {
+          ...getStageById(stageId)?.metadata,
+          blocksCount: currentStageBlocks.length + 1,
+        },
+      });
+
+      console.log(
+        "🔄 EditorContext: Bloco duplicado (Sistema Semântico):",
+        duplicatedBlockId,
+        "original:",
+        blockId
+      );
+      return duplicatedBlockId;
     },
     [activeStageId, validateStageId, stageBlocks, updateStage, getStageById]
   );
@@ -565,6 +629,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     blockActions: {
       addBlock,
       addBlockAtPosition,
+      duplicateBlock,
       deleteBlock,
       updateBlock,
       reorderBlocks,
