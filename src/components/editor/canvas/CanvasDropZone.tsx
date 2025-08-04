@@ -31,13 +31,19 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   onDeleteBlock,
   className,
 }) => {
-  const { setNodeRef, isOver } = useDroppable({
+  const { setNodeRef, isOver, active } = useDroppable({
     id: "canvas-drop-zone",
     data: {
       type: "canvas-drop-zone",
-      accepts: ["component"],
+      accepts: ["sidebar-component", "canvas-block"],
+      position: blocks.length,
     },
   });
+
+  // Debug do drop zone
+  React.useEffect(() => {
+    console.log("🎯 CanvasDropZone: isOver =", isOver, "active =", active?.id);
+  }, [isOver, active]);
 
   return (
     <div

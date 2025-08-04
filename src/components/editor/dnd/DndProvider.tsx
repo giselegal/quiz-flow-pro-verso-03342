@@ -68,14 +68,17 @@ export const DndProvider: React.FC<DndProviderProps> = ({
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 3, // Reduzido de 8 para 3 para ativação mais fácil
+        distance: 1, // Mais sensível para ativação fácil
       },
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 100, // Reduzido de 200 para 100
-        tolerance: 5, // Reduzido de 8 para 5
+        delay: 50, // Mais rápido para resposta imediata
+        tolerance: 3, // Mais sensível para toque
       },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
 
@@ -89,8 +92,13 @@ export const DndProvider: React.FC<DndProviderProps> = ({
       data: active.data.current,
     });
 
-    // Garantir que o tipo seja reconhecido
-    if (!active.data.current?.type) {
+    // FIXME: Verificação mais robusta dos dados
+    if (!active.data.current) {
+      console.error("❌ DragStart: active.data.current está undefined!");
+      return;
+    }
+
+    if (!active.data.current.type) {
       console.error("❌ DragStart: active.data.current.type está undefined!");
       return;
     }
@@ -148,14 +156,19 @@ export const DndProvider: React.FC<DndProviderProps> = ({
 
     setActiveBlock(null);
 
-    if (!over) return;
-
-    console.log("🔄 DragEnd:", {
-      active: active.id,
-      over: over.id,
+    console.log("🔄 DragEnd START:", {
+      activeId: active.id,
+      overId: over?.id,
       activeType: active.data.current?.type,
-      overType: over.data.current?.type,
+      overType: over?.data.current?.type,
+      activeData: active.data.current,
+      overData: over?.data.current,
     });
+
+    if (!over) {
+      console.log("❌ DragEnd: Sem over target - drag cancelado");
+      return;
+    }
 
     // Reordenar blocos existentes no canvas
     if (
@@ -183,12 +196,19 @@ export const DndProvider: React.FC<DndProviderProps> = ({
     // Adicionar novo bloco do sidebar
     if (
       active.data.current?.type === "sidebar-component" &&
-      over.data.current?.type === "canvas-drop-zone"
+      (over.data.current?.type === "canvas-drop-zone" || over.id === "canvas-drop-zone")
     ) {
       const blockType = active.data.current.blockType;
-      const position = over.data.current.position || blocks.length;
-      console.log("➕ Adicionando bloco:", blockType, "na posição:", position);
-      onBlockAdd(blockType, position);
+      const position = over.data.current?.position || blocks.length;
+      console.log("✅ SUCESSO: Adicionando bloco:", blockType, "na posição:", position);
+      
+      // Garantir que o callback existe
+      if (typeof onBlockAdd === 'function') {
+        onBlockAdd(blockType, position);
+        console.log("✅ onBlockAdd chamado com sucesso");
+      } else {
+        console.error("❌ onBlockAdd não é uma função");
+      }
       return;
     }
 
@@ -204,7 +224,7 @@ export const DndProvider: React.FC<DndProviderProps> = ({
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={rectIntersection}
+      collisionDetection={closestCenter} // Mudando para closestCenter que é mais confiável
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
