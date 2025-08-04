@@ -1,7 +1,7 @@
 import React from 'react';
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
-import { EnhancedComponentsSidebar } from '@/components/editor/EnhancedComponentsSidebar';
+import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
 import { UniversalBlockRenderer } from '@/components/editor/blocks/UniversalBlockRenderer';
 import EnhancedPropertiesPanel from '@/components/editor/EnhancedPropertiesPanel';
 import { EditorToolbar } from '@/components/editor/toolbar/EditorToolbar';
