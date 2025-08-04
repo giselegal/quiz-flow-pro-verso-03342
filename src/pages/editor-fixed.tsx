@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
@@ -18,7 +18,7 @@ import { Button } from '@/components/ui/button';
 const EditorFixedPage: React.FC = () => {
   console.log('🔥 EditorFixedPage: PÁGINA RENDERIZANDO!');
   
-  // Hook para scroll sincronizado
+  // Hook para scroll sincronizado  
   const { scrollRef } = useSyncedScroll({ source: 'canvas' });
   
   // Hook para drop zone do canvas
@@ -222,21 +222,12 @@ const EditorFixedPage: React.FC = () => {
         }
         componentsPanel={
           !isPreviewing ? (
-            <EnhancedComponentsSidebar 
-              onAddComponent={(type: string) => {
-                // ✅ USAR CONTEXT UNIFICADO
-                const blockId = addBlock(type);
-                console.log(`➕ Bloco ${type} adicionado à etapa ${activeStageId}`);
-              }}
-            />
+            <EnhancedComponentsSidebar />
           ) : null
         }
         canvas={
           <div 
-            ref={(el) => {
-              scrollRef.current = el;
-              setDropRef(el);
-            }}
+            ref={setDropRef}
             className={`
               p-2 overflow-auto h-full bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm
               ${isOver ? 'ring-2 ring-brand/50 ring-offset-2 bg-brand/5' : ''}
