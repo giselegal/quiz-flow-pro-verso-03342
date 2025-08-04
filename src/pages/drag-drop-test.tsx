@@ -2,32 +2,32 @@ import React from "react";
 import { DndProvider } from "@/components/editor/dnd/DndProvider";
 import { DraggableComponentItem } from "@/components/editor/dnd/DraggableComponentItem";
 import { CanvasDropZone } from "@/components/editor/canvas/CanvasDropZone";
-import { Block } from "@/types/editor";
+import { Block, BlockType } from "@/types/editor";
 import { GripVertical, Square, Type, Image } from "lucide-react";
 
 // Componente de teste para validar drag and drop
 export const DragDropTestPage: React.FC = () => {
   const [blocks, setBlocks] = React.useState<Block[]>([]);
-  const [selectedBlockId, setSelectedBlockId] = React.useState<string | null>(null);
+  const [selectedBlockId, setSelectedBlockId] = React.useState<string | undefined>(undefined);
 
   // Componentes disponíveis para teste
   const availableComponents = [
     {
-      type: "text",
+      type: "text" as BlockType,
       name: "Texto",
       description: "Adicionar texto ao quiz",
       icon: <Type className="h-4 w-4" />,
       category: "Conteúdo",
     },
     {
-      type: "image",
+      type: "image" as BlockType,
       name: "Imagem", 
       description: "Adicionar imagem",
       icon: <Image className="h-4 w-4" />,
       category: "Mídia",
     },
     {
-      type: "button",
+      type: "button" as BlockType,
       name: "Botão",
       description: "Botão interativo",
       icon: <Square className="h-4 w-4" />,
@@ -38,11 +38,13 @@ export const DragDropTestPage: React.FC = () => {
   const handleBlockAdd = (blockType: string, position?: number) => {
     const newBlock: Block = {
       id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      type: blockType,
-      properties: {
+      type: blockType as BlockType,
+      content: {
         text: `Novo bloco ${blockType}`,
         style: {},
       },
+      order: position !== undefined ? position : blocks.length,
+      properties: {},
     };
 
     console.log("📦 Teste: Adicionando bloco:", newBlock, "na posição:", position);
@@ -52,7 +54,8 @@ export const DragDropTestPage: React.FC = () => {
         // Inserir na posição específica
         const newBlocks = [...prev];
         newBlocks.splice(position, 0, newBlock);
-        return newBlocks;
+        // Reordenar os números order
+        return newBlocks.map((block, index) => ({ ...block, order: index }));
       } else {
         // Adicionar no final
         return [...prev, newBlock];
@@ -64,11 +67,22 @@ export const DragDropTestPage: React.FC = () => {
     console.log("🔄 Teste: Reordenando blocos:", newBlocks);
     
     // Mapear de volta para o formato Block
-    const mappedBlocks: Block[] = newBlocks.map(blockData => ({
-      id: blockData.id,
-      type: blockData.type,
-      properties: blockData.properties || {},
-    }));
+    const mappedBlocks: Block[] = newBlocks.map((blockData, index) => {
+      // Encontrar o bloco original para manter dados completos
+      const originalBlock = blocks.find(b => b.id === blockData.id);
+      if (originalBlock) {
+        return { ...originalBlock, order: index };
+      }
+      
+      // Fallback: criar um bloco básico se não encontrar o original
+      return {
+        id: blockData.id,
+        type: blockData.type as BlockType,
+        content: blockData.properties || {},
+        order: index,
+        properties: blockData.properties || {},
+      };
+    });
     
     setBlocks(mappedBlocks);
   };
@@ -139,7 +153,7 @@ export const DragDropTestPage: React.FC = () => {
                 
                 <CanvasDropZone
                   blocks={blocks}
-                  selectedBlockId={selectedBlockId}
+                  selectedBlockId={selectedBlockId || null}
                   isPreviewing={false}
                   activeStageId="test"
                   stageCount={1}
