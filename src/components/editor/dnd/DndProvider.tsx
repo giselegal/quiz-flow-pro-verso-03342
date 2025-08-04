@@ -10,7 +10,8 @@ import {
   useSensors,
   closestCenter,
   KeyboardSensor,
-  TouchSensor
+  TouchSensor,
+  rectIntersection
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -69,13 +70,31 @@ export const DndProvider: React.FC<DndProviderProps> = ({
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
     
+    console.log('🟢 DragStart:', {
+      id: active.id,
+      type: active.data.current?.type,
+      blockType: active.data.current?.blockType,
+      data: active.data.current
+    });
+    
     // 🎯 Haptic feedback para dispositivos móveis
     if ('vibrate' in navigator) {
       navigator.vibrate(50);
     }
     
-    const activeBlockData = blocks.find(block => block.id === active.id);
-    setActiveBlock(activeBlockData || null);
+    // Configurar activeBlock baseado no tipo
+    if (active.data.current?.type === 'sidebar-component') {
+      // Para componentes do sidebar, criar um objeto temporário
+      setActiveBlock({
+        id: active.id.toString(),
+        type: active.data.current.blockType,
+        properties: {}
+      });
+    } else {
+      // Para blocos existentes, buscar no array
+      const activeBlockData = blocks.find(block => block.id === active.id);
+      setActiveBlock(activeBlockData || null);
+    }
   };
 
   const handleDragOver = (event: DragOverEvent) => {
@@ -83,9 +102,16 @@ export const DndProvider: React.FC<DndProviderProps> = ({
     
     if (!over) return;
 
+    console.log('🟡 DragOver:', {
+      activeId: active.id,
+      overId: over.id,
+      activeType: active.data.current?.type,
+      overType: over.data.current?.type
+    });
+
     // Se estamos arrastando de um sidebar (componente novo)
     if (active.data.current?.type === 'sidebar-component' && over.data.current?.type === 'canvas-drop-zone') {
-      // Lógica para adicionar novo bloco será implementada aqui
+      console.log('✅ Sidebar -> Canvas detectado durante DragOver');
       return;
     }
   };
@@ -123,19 +149,27 @@ export const DndProvider: React.FC<DndProviderProps> = ({
     if (active.data.current?.type === 'sidebar-component' && over.data.current?.type === 'canvas-drop-zone') {
       const blockType = active.data.current.blockType;
       const position = over.data.current.position || blocks.length;
+      console.log('➕ Adicionando bloco:', blockType, 'na posição:', position);
       onBlockAdd(blockType, position);
       return;
     }
+
+    // Debug: Log quando não há match
+    console.log('⚠️ Nenhuma condição de drop atendida:', {
+      activeType: active.data.current?.type,
+      overType: over.data.current?.type,
+      activeId: active.id,
+      overId: over.id
+    });
   };
 
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCenter}
+      collisionDetection={rectIntersection}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
-      modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
     >
       <SortableContext items={blocks.map(block => block.id)} strategy={verticalListSortingStrategy}>
         {children}

@@ -227,14 +227,16 @@ const EditorFixedPage: React.FC = () => {
         }
         canvas={
           <div 
-            ref={setDropRef}
-            className={`
-              p-2 overflow-auto h-full bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm
-              ${isOver ? 'ring-2 ring-brand/50 ring-offset-2 bg-brand/5' : ''}
-              transition-all duration-200
-            `}
+            className="p-2 overflow-auto h-full bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm transition-all duration-200"
           >
-            <div className={getCanvasClassName()}>
+            <div 
+              ref={setDropRef}
+              className={`
+                ${getCanvasClassName()}
+                ${isOver ? 'ring-2 ring-brand/50 ring-offset-2 bg-brand/5' : ''}
+                min-h-[600px] transition-all duration-200
+              `}
+            >
               <div className="p-3">
                 {currentBlocks.length === 0 ? (
                   <div className="text-center py-12">
