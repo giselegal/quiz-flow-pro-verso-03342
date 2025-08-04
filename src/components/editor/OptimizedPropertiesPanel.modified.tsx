@@ -54,11 +54,11 @@ import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 // Adicionamos as propriedades de layout ao tipo de conteúdo editável
-declare module '@/types/editor' {
+declare module "@/types/editor" {
   interface EditableContent {
     // Estas propriedades serão padrão para todos os blocos
     maxWidth?: number;
-    alignment?: 'left' | 'center' | 'right';
+    alignment?: "left" | "center" | "right";
   }
 }
 
@@ -88,7 +88,7 @@ interface OptimizedPropertiesPanelProps {
 // 🔧 SCHEMA DE VALIDAÇÃO DINÂMICO
 const createValidationSchema = (properties: Record<string, any>) => {
   const schemaFields: Record<string, any> = {};
-  
+
   // Adiciona as propriedades de layout como campos universais e opcionais
   schemaFields.maxWidth = z.number().min(10).max(100).optional();
   schemaFields.alignment = z.enum(["left", "center", "right"]).optional();
@@ -325,27 +325,27 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
 
   // 🔧 Definições padrão para as propriedades de layout
   const defaultLayoutProps = {
-    maxWidth: { 
-      type: 'range', 
-      label: 'Tamanho Máximo', 
-      description: "Define a largura máxima do componente (em % da largura disponível)", 
-      min: 10, 
-      max: 100, 
+    maxWidth: {
+      type: "range",
+      label: "Tamanho Máximo",
+      description: "Define a largura máxima do componente (em % da largura disponível)",
+      min: 10,
+      max: 100,
       step: 5,
-      category: 'layout',
-      default: 100
+      category: "layout",
+      default: 100,
     },
-    alignment: { 
-      type: 'select', 
-      label: 'Alinhamento', 
+    alignment: {
+      type: "select",
+      label: "Alinhamento",
       description: "Define como o componente será alinhado no espaço disponível",
       options: [
-        { value: 'left', label: 'Esquerda' }, 
-        { value: 'center', label: 'Centro' }, 
-        { value: 'right', label: 'Direita' }
-      ], 
-      category: 'layout',
-      default: 'left'
+        { value: "left", label: "Esquerda" },
+        { value: "center", label: "Centro" },
+        { value: "right", label: "Direita" },
+      ],
+      category: "layout",
+      default: "left",
     },
   };
 
@@ -367,7 +367,7 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
   const defaultValues = useMemo(() => {
     const values = { ...block.content };
     if (values.maxWidth === undefined) values.maxWidth = 100;
-    if (values.alignment === undefined) values.alignment = 'left';
+    if (values.alignment === undefined) values.alignment = "left";
     return values;
   }, [block.content]);
 
@@ -512,9 +512,18 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
                     className="w-full"
                   />
                   <div className="flex justify-between text-xs text-gray-500">
-                    <span>{property.min || 0}{key === 'maxWidth' ? '%' : ''}</span>
-                    <span className="font-medium">{field.value ?? property.default ?? 0}{key === 'maxWidth' ? '%' : ''}</span>
-                    <span>{property.max || 100}{key === 'maxWidth' ? '%' : ''}</span>
+                    <span>
+                      {property.min || 0}
+                      {key === "maxWidth" ? "%" : ""}
+                    </span>
+                    <span className="font-medium">
+                      {field.value ?? property.default ?? 0}
+                      {key === "maxWidth" ? "%" : ""}
+                    </span>
+                    <span>
+                      {property.max || 100}
+                      {key === "maxWidth" ? "%" : ""}
+                    </span>
                   </div>
                 </div>
               )}
@@ -656,15 +665,16 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
         </Tabs>
 
         {/* Fallback para propriedades não categorizadas */}
-        {Object.keys(blockDefinition.properties).length === 0 && Object.keys(defaultLayoutProps).length === 0 && (
-          <div className="text-center py-12 text-gray-500">
-            <Settings className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-            <p className="text-sm font-medium">Nenhuma propriedade disponível</p>
-            <p className="text-xs text-gray-400 mt-1">
-              Este componente não possui propriedades editáveis
-            </p>
-          </div>
-        )}
+        {Object.keys(blockDefinition.properties).length === 0 &&
+          Object.keys(defaultLayoutProps).length === 0 && (
+            <div className="text-center py-12 text-gray-500">
+              <Settings className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+              <p className="text-sm font-medium">Nenhuma propriedade disponível</p>
+              <p className="text-xs text-gray-400 mt-1">
+                Este componente não possui propriedades editáveis
+              </p>
+            </div>
+          )}
       </div>
 
       {/* 🎯 Footer Actions */}
