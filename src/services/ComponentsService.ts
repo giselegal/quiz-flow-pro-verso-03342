@@ -18,10 +18,56 @@ import { createClient } from "@supabase/supabase-js";
 // CONFIGURAÇÃO DO SUPABASE
 // ============================================================================
 
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL || "",
-  import.meta.env.VITE_SUPABASE_ANON_KEY || ""
-);
+// Verifique se as variáveis de ambiente do Supabase existem
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+// Criando um cliente real ou simulado com base na disponibilidade das credenciais
+const supabase =
+  SUPABASE_URL && SUPABASE_KEY
+    ? createClient(SUPABASE_URL, SUPABASE_KEY)
+    : createMockSupabaseClient();
+
+// Função para criar um cliente Supabase simulado
+function createMockSupabaseClient() {
+  console.warn(
+    "⚠️ Usando cliente Supabase simulado! Configure as variáveis de ambiente para usar o cliente real."
+  );
+
+  // Implementação simulada para testes locais
+  return {
+    from: (table: string) => ({
+      select: (query?: string) => ({
+        eq: (column: string, value: any) => ({
+          order: (column: string, { ascending }: { ascending: boolean }) => ({
+            limit: (num: number) => ({
+              single: () => Promise.resolve({ data: null, error: null }),
+              then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+            }),
+            then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+          }),
+          limit: (num: number) => ({
+            then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+          }),
+          then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+        }),
+        order: (column: string, { ascending }: { ascending: boolean }) => ({
+          then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+        }),
+        then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+      }),
+      insert: (data: any) => Promise.resolve({ data: null, error: null }),
+      update: (data: any) => ({
+        eq: (column: string, value: any) => Promise.resolve({ data: null, error: null }),
+      }),
+      delete: () => ({
+        eq: (column: string, value: any) => Promise.resolve({ data: null, error: null }),
+      }),
+    }),
+    rpc: (func: string, params: any) =>
+      Promise.resolve({ data: `mock-id-${Date.now()}`, error: null }),
+  };
+}
 
 // ============================================================================
 // TIPOS PARA COMPONENTES DO BANCO
