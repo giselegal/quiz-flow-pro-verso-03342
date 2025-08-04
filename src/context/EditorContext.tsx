@@ -1,6 +1,7 @@
 import { getAllSteps, getStepTemplate } from "@/config/stepTemplatesMapping";
 import { EditorBlock, FunnelStage } from "@/types/editor";
-import React, { createContext, ReactNode, useCallback, useContext, useState } from "react";
+import { createEditorAdapter, EditorDatabaseAdapter } from "@/adapters/EditorDatabaseAdapter";
+import React, { createContext, ReactNode, useCallback, useContext, useState, useEffect } from "react";
 
 // ✅ INTERFACE UNIFICADA DO CONTEXTO
 interface EditorContextType {
@@ -48,6 +49,18 @@ interface EditorContextType {
     totalBlocks: number;
     stageCount: number;
   };
+
+  // ═══════════════════════════════════════════════
+  // 🔌 SISTEMA DE COMPONENTES REUTILIZÁVEIS
+  // ═══════════════════════════════════════════════
+  databaseMode: {
+    isEnabled: boolean;
+    quizId: string;
+    setDatabaseMode: (enabled: boolean) => void;
+    setQuizId: (quizId: string) => void;
+    migrateToDatabase: () => Promise<boolean>;
+    getStats: () => Promise<any>;
+  };
 }
 
 const EditorContext = createContext<EditorContextType | undefined>(undefined);
@@ -62,6 +75,21 @@ export const useEditor = () => {
 
 export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   console.log("🔥 EditorProvider: INICIANDO PROVIDER!");
+
+  // ═══════════════════════════════════════════════
+  // 🔌 INICIALIZAR ADAPTER DO BANCO DE DADOS
+  // ═══════════════════════════════════════════════
+  const [adapter] = useState(() => {
+    return createEditorAdapter({
+      useDatabase: false, // Iniciar em modo local por segurança
+      quizId: 'quiz-demo-id', // Quiz padrão para desenvolvimento
+      fallbackToLocal: true
+    });
+  });
+
+  // Estado do modo banco
+  const [databaseModeEnabled, setDatabaseModeEnabled] = useState(false);
+  const [currentQuizId, setCurrentQuizId] = useState('quiz-demo-id');
 
   // ═══════════════════════════════════════════════
   // 🏗️ ESTADO PRINCIPAL CENTRALIZADO
@@ -259,52 +287,76 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     [validateStageId]
   );
 
-  // ✅ FUNÇÃO PARA CARREGAR BLOCOS DE TEMPLATE
+  // ✅ FUNÇÃO PARA CARREGAR BLOCOS DE TEMPLATE (COM ADAPTER)
   const loadStageTemplate = useCallback(
-    (stageId: string) => {
+    async (stageId: string) => {
       const stage = stages.find(s => s.id === stageId);
       if (!stage) return;
 
       const stepNumber = parseInt(stageId.replace("step-", ""));
-      const templateBlocks = getStepTemplate(stepNumber);
+      
+      try {
+        console.log(`🎨 EditorContext: Carregando blocos para etapa ${stepNumber} via adapter`);
+        
+        // ✅ CARREGAR VIA ADAPTER (BANCO OU LOCAL)
+        const editorBlocks = await adapter.loadStageBlocks(stageId);
 
-      if (templateBlocks && templateBlocks.length > 0) {
-        console.log(
-          `🎨 EditorContext: Carregando ${templateBlocks.length} blocos de template para etapa ${stepNumber}`
-        );
+        if (editorBlocks && editorBlocks.length > 0) {
+          console.log(`✅ EditorContext: ${editorBlocks.length} blocos carregados para etapa ${stepNumber}`);
 
-        // Converter blocos de template para EditorBlocks
-        const editorBlocks: EditorBlock[] = templateBlocks.map((block, index) => ({
-          id: `${stageId}-block-${index + 1}`,
-          type: block.type as any,
-          content: block.properties || block.content || {},
-          order: index + 1,
-          properties: block.properties || {},
-        }));
+          // Atualizar os blocos da etapa
+          setStageBlocks(prev => ({
+            ...prev,
+            [stageId]: editorBlocks,
+          }));
 
-        // Atualizar os blocos da etapa
-        setStageBlocks(prev => ({
-          ...prev,
-          [stageId]: editorBlocks,
-        }));
+          // Atualizar contagem de blocos na metadata
+          updateStage(stageId, {
+            metadata: {
+              ...stage.metadata,
+              blocksCount: editorBlocks.length,
+            },
+          });
 
-        // Atualizar contagem de blocos na metadata
-        updateStage(stageId, {
-          metadata: {
-            ...stage.metadata,
-            blocksCount: editorBlocks.length,
-          },
-        });
+          // Salvar no banco se modo banco estiver ativo
+          if (databaseModeEnabled) {
+            await adapter.saveStageBlocks(stageId, editorBlocks);
+          }
+        }
+      } catch (error) {
+        console.error(`❌ EditorContext: Erro ao carregar etapa ${stepNumber}:`, error);
+        
+        // Fallback para método original
+        const templateBlocks = getStepTemplate(stepNumber);
+        if (templateBlocks && templateBlocks.length > 0) {
+          const editorBlocks: EditorBlock[] = templateBlocks.map((block, index) => ({
+            id: block.id || `${stageId}-block-${index + 1}`,
+            type: block.type as any,
+            content: block.properties || block.content || {},
+            order: index + 1,
+            properties: block.properties || {},
+          }));
 
-        console.log(
-          `✅ EditorContext: ${editorBlocks.length} blocos carregados para etapa ${stepNumber}`
-        );
+          setStageBlocks(prev => ({
+            ...prev,
+            [stageId]: editorBlocks,
+          }));
+
+          updateStage(stageId, {
+            metadata: {
+              ...stage.metadata,
+              blocksCount: editorBlocks.length,
+            },
+          });
+
+          console.log(
+            `✅ EditorContext: ${editorBlocks.length} blocos carregados para etapa ${stepNumber}`
+          );
+        }
       }
     },
-    [stages, updateStage]
-  );
-
-  // ═══════════════════════════════════════════════
+    [stages, updateStage, adapter, databaseModeEnabled]
+  );  // ═══════════════════════════════════════════════
   // 🧩 BLOCK ACTIONS (GERENCIAMENTO DE BLOCOS)
   // ═══════════════════════════════════════════════
   const addBlock = useCallback(

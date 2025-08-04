@@ -284,6 +284,46 @@ CREATE INDEX idx_quiz_analytics_created_at ON quiz_analytics(created_at);
 CREATE INDEX idx_quiz_analytics_user_id ON quiz_analytics(user_id) WHERE user_id IS NOT NULL;
 
 -- =============================================================================
+-- ÍNDICES PARA COMPONENTES REUTILIZÁVEIS
+-- =============================================================================
+
+-- Índices para component_types
+CREATE INDEX idx_component_types_category ON component_types(category);
+CREATE INDEX idx_component_types_system ON component_types(is_system) WHERE is_system = true;
+
+-- Índices para component_instances  
+CREATE INDEX idx_component_instances_quiz_id ON component_instances(quiz_id);
+CREATE INDEX idx_component_instances_quiz_step ON component_instances(quiz_id, step_number);
+CREATE INDEX idx_component_instances_type ON component_instances(component_type_key);
+CREATE INDEX idx_component_instances_active ON component_instances(is_active) WHERE is_active = true;
+CREATE INDEX idx_component_instances_order ON component_instances(quiz_id, step_number, order_index);
+
+-- Índices para component_presets
+CREATE INDEX idx_component_presets_type ON component_presets(component_type_key);
+CREATE INDEX idx_component_presets_official ON component_presets(is_official) WHERE is_official = true;
+CREATE INDEX idx_component_presets_creator ON component_presets(created_by);
+CREATE INDEX idx_component_presets_usage ON component_presets(usage_count DESC);
+
+-- 🎯 ÍNDICES PARA COMPONENTES REUTILIZÁVEIS
+-- Índices para component_types
+CREATE INDEX idx_component_types_category ON component_types(category);
+CREATE INDEX idx_component_types_system ON component_types(is_system);
+
+-- Índices para component_instances
+CREATE INDEX idx_component_instances_quiz_id ON component_instances(quiz_id);
+CREATE INDEX idx_component_instances_type ON component_instances(component_type_key);
+CREATE INDEX idx_component_instances_step ON component_instances(quiz_id, step_number);
+CREATE INDEX idx_component_instances_order ON component_instances(quiz_id, step_number, order_index);
+CREATE INDEX idx_component_instances_instance_key ON component_instances(quiz_id, instance_key);
+CREATE INDEX idx_component_instances_active ON component_instances(is_active) WHERE is_active = true;
+
+-- Índices para component_presets
+CREATE INDEX idx_component_presets_type ON component_presets(component_type_key);
+CREATE INDEX idx_component_presets_category ON component_presets(category);
+CREATE INDEX idx_component_presets_official ON component_presets(is_official) WHERE is_official = true;
+CREATE INDEX idx_component_presets_creator ON component_presets(created_by);
+
+-- =============================================================================
 -- TRIGGERS PARA CAMPOS UPDATED_AT
 -- =============================================================================
 
@@ -308,6 +348,28 @@ CREATE TRIGGER set_timestamp_quizzes
 
 CREATE TRIGGER set_timestamp_quiz_templates
   BEFORE UPDATE ON quiz_templates
+  FOR EACH ROW
+  EXECUTE FUNCTION trigger_set_timestamp();
+
+-- Triggers para componentes
+CREATE TRIGGER set_timestamp_component_types
+  BEFORE UPDATE ON component_types
+  FOR EACH ROW
+  EXECUTE FUNCTION trigger_set_timestamp();
+
+CREATE TRIGGER set_timestamp_component_instances
+  BEFORE UPDATE ON component_instances
+  FOR EACH ROW
+  EXECUTE FUNCTION trigger_set_timestamp();
+
+-- 🎯 TRIGGERS PARA COMPONENTES REUTILIZÁVEIS
+CREATE TRIGGER set_timestamp_component_types
+  BEFORE UPDATE ON component_types
+  FOR EACH ROW
+  EXECUTE FUNCTION trigger_set_timestamp();
+
+CREATE TRIGGER set_timestamp_component_instances
+  BEFORE UPDATE ON component_instances
   FOR EACH ROW
   EXECUTE FUNCTION trigger_set_timestamp();
 
@@ -370,6 +432,14 @@ ALTER TABLE quiz_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE quiz_tags ENABLE ROW LEVEL SECURITY;
 ALTER TABLE quiz_analytics ENABLE ROW LEVEL SECURITY;
 ALTER TABLE quiz_feedback ENABLE ROW LEVEL SECURITY;
+ALTER TABLE component_types ENABLE ROW LEVEL SECURITY;
+ALTER TABLE component_instances ENABLE ROW LEVEL SECURITY;
+ALTER TABLE component_presets ENABLE ROW LEVEL SECURITY;
+
+-- 🎯 RLS para tabelas de componentes
+ALTER TABLE component_types ENABLE ROW LEVEL SECURITY;
+ALTER TABLE component_instances ENABLE ROW LEVEL SECURITY;
+ALTER TABLE component_presets ENABLE ROW LEVEL SECURITY;
 
 -- Políticas para profiles
 CREATE POLICY "Usuários podem ver todos os perfis públicos"
@@ -495,8 +565,346 @@ CREATE POLICY "Usuários autenticados podem criar feedback"
   WITH CHECK (auth.uid() = user_id);
 
 -- =============================================================================
+-- POLÍTICAS PARA COMPONENTES REUTILIZÁVEIS
+-- =============================================================================
+
+-- Políticas para component_types (todos podem ver, apenas admins criam)
+CREATE POLICY "Qualquer um pode ver tipos de componentes"
+  ON component_types FOR SELECT
+  USING (true);
+
+CREATE POLICY "Apenas sistema pode gerenciar tipos de componentes"
+  ON component_types FOR ALL
+  USING (is_system = true);
+
+-- Políticas para component_instances
+CREATE POLICY "Usuários podem ver instâncias de seus quizzes"
+  ON component_instances FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM quizzes 
+      WHERE quizzes.id = component_instances.quiz_id 
+      AND (quizzes.is_public = true OR quizzes.author_id = auth.uid())
+    )
+  );
+
+CREATE POLICY "Autores podem gerenciar instâncias de seus quizzes"
+  ON component_instances FOR ALL
+  USING (
+    EXISTS (
+      SELECT 1 FROM quizzes 
+      WHERE quizzes.id = component_instances.quiz_id 
+      AND quizzes.author_id = auth.uid()
+    )
+  )
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM quizzes 
+      WHERE quizzes.id = component_instances.quiz_id 
+      AND quizzes.author_id = auth.uid()
+    )
+  );
+
+-- Políticas para component_presets
+CREATE POLICY "Qualquer um pode ver presets oficiais"
+  ON component_presets FOR SELECT
+  USING (is_official = true OR created_by = auth.uid());
+
+CREATE POLICY "Usuários autenticados podem criar presets"
+  ON component_presets FOR INSERT
+  WITH CHECK (auth.uid() = created_by);
+
+CREATE POLICY "Criadores podem atualizar seus presets"
+  ON component_presets FOR UPDATE
+  USING (created_by = auth.uid());
+
+-- =============================================================================
+-- 🎯 POLÍTICAS PARA COMPONENTES REUTILIZÁVEIS
+-- =============================================================================
+
+-- Políticas para component_types (tipos de componentes)
+CREATE POLICY "Qualquer um pode ver tipos de componentes"
+  ON component_types FOR SELECT
+  USING (true);
+
+CREATE POLICY "Apenas admins podem gerenciar tipos de componentes do sistema"
+  ON component_types FOR ALL
+  USING (
+    EXISTS (
+      SELECT 1 FROM profiles 
+      WHERE profiles.id = auth.uid() 
+      AND profiles.role = 'admin'
+    )
+  );
+
+-- Políticas para component_instances (instâncias de componentes)
+CREATE POLICY "Usuários podem ver instâncias de componentes de quizzes acessíveis"
+  ON component_instances FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM quizzes 
+      WHERE quizzes.id = component_instances.quiz_id 
+      AND (quizzes.is_public = true OR quizzes.author_id = auth.uid())
+    )
+  );
+
+CREATE POLICY "Autores podem gerenciar instâncias de componentes de seus quizzes"
+  ON component_instances FOR ALL
+  USING (
+    EXISTS (
+      SELECT 1 FROM quizzes 
+      WHERE quizzes.id = component_instances.quiz_id 
+      AND quizzes.author_id = auth.uid()
+    )
+  );
+
+-- Políticas para component_presets (presets de componentes)
+CREATE POLICY "Qualquer um pode ver presets oficiais"
+  ON component_presets FOR SELECT
+  USING (is_official = true OR created_by = auth.uid());
+
+CREATE POLICY "Usuários autenticados podem criar presets"
+  ON component_presets FOR INSERT
+  WITH CHECK (auth.uid() = created_by);
+
+CREATE POLICY "Criadores podem atualizar seus presets"
+  ON component_presets FOR UPDATE
+  USING (auth.uid() = created_by);
+
+CREATE POLICY "Criadores podem deletar seus presets"
+  ON component_presets FOR DELETE
+  USING (auth.uid() = created_by);
+
+-- =============================================================================
+-- 11. SISTEMA DE COMPONENTES REUTILIZÁVEIS
+-- =============================================================================
+
+-- Tabela de tipos de componentes (padrão do sistema)
+CREATE TABLE component_types (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  type_key TEXT NOT NULL UNIQUE, -- ex: 'quiz-header', 'question-title', 'options-grid'
+  display_name TEXT NOT NULL,
+  description TEXT,
+  category TEXT NOT NULL, -- 'layout', 'question', 'navigation', 'media', 'form'
+  icon TEXT,
+  is_system BOOLEAN DEFAULT true, -- componente do sistema ou customizado
+  default_properties JSONB DEFAULT '{}'::jsonb,
+  validation_schema JSONB DEFAULT '{}'::jsonb,
+  
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Tabela de instâncias de componentes (usados em etapas específicas)
+CREATE TABLE component_instances (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  instance_key TEXT NOT NULL, -- ID semântico reutilizável gerado automaticamente
+  component_type_key TEXT NOT NULL REFERENCES component_types(type_key),
+  
+  -- Contexto de uso
+  quiz_id UUID REFERENCES quizzes(id) ON DELETE CASCADE,
+  step_number INTEGER NOT NULL,
+  order_index INTEGER NOT NULL DEFAULT 1,
+  
+  -- Propriedades específicas desta instância
+  properties JSONB NOT NULL DEFAULT '{}'::jsonb,
+  custom_styling JSONB DEFAULT '{}'::jsonb,
+  
+  -- Controle de estado
+  is_active BOOLEAN DEFAULT true,
+  is_locked BOOLEAN DEFAULT false, -- impede edição
+  
+  -- Metadados
+  created_by UUID REFERENCES profiles(id),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  
+  -- Garantir unicidade de instance_key por quiz
+  UNIQUE(quiz_id, instance_key)
+);
+
+-- Tabela de presets de componentes (templates predefinidos)
+CREATE TABLE component_presets (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  component_type_key TEXT NOT NULL REFERENCES component_types(type_key),
+  preset_name TEXT NOT NULL,
+  description TEXT,
+  
+  -- Dados do preset
+  preset_properties JSONB NOT NULL,
+  thumbnail_url TEXT,
+  
+  -- Classificação
+  category TEXT DEFAULT 'general',
+  tags TEXT[] DEFAULT '{}',
+  is_official BOOLEAN DEFAULT false,
+  
+  -- Estatísticas
+  usage_count INTEGER DEFAULT 0,
+  
+  -- Metadados
+  created_by UUID REFERENCES profiles(id),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  
+  UNIQUE(component_type_key, preset_name)
+);
+
+-- =============================================================================
+-- 12. FUNÇÕES PARA GERAÇÃO AUTOMÁTICA DE IDs SEMÂNTICOS
+-- =============================================================================
+
+-- Função para gerar instance_key semântico automaticamente
+CREATE OR REPLACE FUNCTION generate_instance_key(
+  p_component_type_key TEXT,
+  p_quiz_id UUID,
+  p_step_number INTEGER
+)
+RETURNS TEXT AS $$
+DECLARE
+  base_key TEXT;
+  final_key TEXT;
+  counter INTEGER := 1;
+BEGIN
+  -- Criar chave base baseada no tipo do componente
+  base_key := p_component_type_key;
+  final_key := base_key;
+  
+  -- Se já existe, adicionar sufixo numérico
+  WHILE EXISTS (
+    SELECT 1 FROM component_instances 
+    WHERE quiz_id = p_quiz_id 
+    AND instance_key = final_key
+  ) LOOP
+    counter := counter + 1;
+    final_key := base_key || '-' || counter;
+  END LOOP;
+  
+  RETURN final_key;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger para gerar instance_key automaticamente
+CREATE OR REPLACE FUNCTION auto_generate_instance_key()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.instance_key IS NULL OR NEW.instance_key = '' THEN
+    NEW.instance_key := generate_instance_key(
+      NEW.component_type_key,
+      NEW.quiz_id,
+      NEW.step_number
+    );
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_auto_generate_instance_key
+  BEFORE INSERT ON component_instances
+  FOR EACH ROW
+  EXECUTE FUNCTION auto_generate_instance_key();
+
+-- =============================================================================
+-- 13. VIEWS PARA COMPONENTES REUTILIZÁVEIS
+-- =============================================================================
+
+-- View para componentes por etapa
+CREATE OR REPLACE VIEW step_components AS
+SELECT 
+  ci.id,
+  ci.instance_key,
+  ci.quiz_id,
+  ci.step_number,
+  ci.order_index,
+  ct.type_key as component_type,
+  ct.display_name,
+  ct.category,
+  ci.properties,
+  ci.custom_styling,
+  ci.is_active,
+  ci.created_at,
+  ci.updated_at
+FROM component_instances ci
+JOIN component_types ct ON ci.component_type_key = ct.type_key
+ORDER BY ci.step_number, ci.order_index;
+
+-- View para estatísticas de uso de componentes
+CREATE OR REPLACE VIEW component_usage_stats AS
+SELECT 
+  ct.type_key,
+  ct.display_name,
+  ct.category,
+  COUNT(ci.id) as total_instances,
+  COUNT(DISTINCT ci.quiz_id) as unique_quizzes,
+  COUNT(DISTINCT ci.step_number) as unique_steps
+FROM component_types ct
+LEFT JOIN component_instances ci ON ct.type_key = ci.component_type_key
+GROUP BY ct.type_key, ct.display_name, ct.category;
+
+-- =============================================================================
 -- DADOS INICIAIS
 -- =============================================================================
+
+-- Inserir tipos de componentes padrão do sistema
+INSERT INTO component_types (type_key, display_name, description, category, icon, default_properties) VALUES
+  -- LAYOUT E ESTRUTURA
+  ('quiz-header', 'Cabeçalho do Quiz', 'Cabeçalho com logo, progresso e navegação', 'layout', 'layout-header', 
+   '{"logoUrl": "", "logoWidth": 96, "logoHeight": 96, "showProgress": true, "showBackButton": true}'::jsonb),
+  
+  -- QUESTÕES E CONTEÚDO
+  ('question-title', 'Título da Questão', 'Título principal da questão', 'question', 'type', 
+   '{"content": "Título da questão", "level": "h2", "fontSize": "text-2xl", "fontWeight": "font-bold", "textAlign": "text-center"}'::jsonb),
+   
+  ('question-counter', 'Contador de Questão', 'Indicador de progresso das questões', 'question', 'hash', 
+   '{"content": "Questão 1 de 10", "fontSize": "text-sm", "textAlign": "text-center", "color": "#6B7280"}'::jsonb),
+   
+  ('question-image', 'Imagem da Questão', 'Imagem ilustrativa para a questão', 'media', 'image', 
+   '{"src": "", "alt": "Imagem da questão", "width": "auto", "height": "auto", "borderRadius": "rounded-lg"}'::jsonb),
+   
+  ('options-grid', 'Grid de Opções', 'Grade de opções para seleção', 'question', 'grid-3x3', 
+   '{"columns": 2, "showImages": true, "allowMultiple": false, "options": []}'::jsonb),
+   
+  -- COMPONENTES ESPECIAIS
+  ('hero-image', 'Imagem Principal', 'Imagem principal/hero da etapa', 'media', 'image', 
+   '{"src": "", "alt": "Imagem principal", "size": "large", "position": "center"}'::jsonb),
+   
+  ('hero-subtitle', 'Subtítulo Hero', 'Subtítulo da seção hero', 'content', 'text', 
+   '{"content": "Subtítulo", "fontSize": "text-xl", "color": "#6B7280"}'::jsonb),
+   
+  ('hero-description', 'Descrição Hero', 'Descrição da seção hero', 'content', 'align-left', 
+   '{"content": "Descrição detalhada", "fontSize": "text-base", "textAlign": "text-center"}'::jsonb),
+   
+  ('cta-button', 'Botão de Ação', 'Botão call-to-action', 'navigation', 'cursor-pointer', 
+   '{"text": "Continuar", "variant": "primary", "size": "lg", "fullWidth": false}'::jsonb),
+   
+  -- TRANSIÇÕES E PROCESSAMENTO
+  ('transition-title', 'Título de Transição', 'Título para etapas de transição', 'content', 'arrow-right', 
+   '{"content": "Processando...", "fontSize": "text-3xl", "fontWeight": "font-bold"}'::jsonb),
+   
+  ('processing-title', 'Título de Processamento', 'Título para tela de processamento', 'content', 'cog', 
+   '{"content": "Analisando suas respostas...", "fontSize": "text-2xl", "showSpinner": true}'::jsonb),
+   
+  -- RESULTADOS E OFERTAS
+  ('result-title', 'Título do Resultado', 'Título da tela de resultado', 'content', 'star', 
+   '{"content": "Seu Resultado", "fontSize": "text-3xl", "fontWeight": "font-bold"}'::jsonb),
+   
+  ('result-description', 'Descrição do Resultado', 'Descrição detalhada do resultado', 'content', 'document-text', 
+   '{"content": "Descrição do resultado", "fontSize": "text-lg"}'::jsonb),
+   
+  ('transformation-gallery', 'Galeria de Transformações', 'Galeria de antes/depois', 'media', 'photograph', 
+   '{"items": [], "autoplay": true, "showControls": true}'::jsonb),
+   
+  ('lead-form', 'Formulário de Captura', 'Formulário para captura de leads', 'form', 'mail', 
+   '{"fields": ["name", "email"], "submitText": "Enviar", "required": true}'::jsonb),
+   
+  ('offer-title', 'Título da Oferta', 'Título da oferta comercial', 'content', 'gift', 
+   '{"content": "Oferta Especial", "fontSize": "text-3xl", "highlight": true}'::jsonb),
+   
+  ('offer-description', 'Descrição da Oferta', 'Descrição da oferta comercial', 'content', 'document', 
+   '{"content": "Descrição da oferta", "fontSize": "text-lg"}'::jsonb),
+   
+  ('offer-cta', 'CTA da Oferta', 'Call-to-action da oferta', 'navigation', 'shopping-cart', 
+   '{"text": "Comprar Agora", "variant": "primary", "size": "xl", "urgency": true}'::jsonb)
+ON CONFLICT (type_key) DO NOTHING;
 
 -- Inserir categorias padrão
 INSERT INTO quiz_categories (name, description, color, icon) VALUES
