@@ -97,10 +97,10 @@ const createValidationSchema = (properties: Record<string, any>) => {
       case "number":
       case "range": // <-- Adicionamos o 'range' aqui
         // Validação de número, opcionalmente com min e max
-        let numberSchema = z.number().optional();
+        let numberSchema = z.number();
         if (property.min !== undefined) numberSchema = numberSchema.min(property.min);
         if (property.max !== undefined) numberSchema = numberSchema.max(property.max);
-        schemaFields[key] = numberSchema;
+        schemaFields[key] = numberSchema.optional();
         break;
       case "boolean":
         schemaFields[key] = z.boolean().optional();
