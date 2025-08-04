@@ -5,20 +5,21 @@
  * As etapas são carregadas dinamicamente no EditorContext.
  */
 
+import type { FunnelStage } from "@/types/funnel";
+
 // 🚀 ETAPAS PADRÃO DO QUIZ
-// @ts-ignore - Tipos temporariamente ignorados para compilação
-export const defaultFunnelStages: any[] = [
+export const defaultFunnelStages: FunnelStage[] = [
   // Step 1 - Introdução
   {
     id: "step-1",
     name: "Introdução",
     description: "Página inicial do quiz",
     order: 1,
-    type: "content",
+    type: "intro",
     isActive: true,
     metadata: {
       blocksCount: 8,
-      lastModified: new Date(),
+      lastModified: new sDate(),
       isCustom: false,
     },
   },
@@ -293,17 +294,17 @@ export const defaultFunnelStages: any[] = [
 ];
 
 // 🎯 FUNÇÃO PARA OBTER ETAPAS
-export const getFunnelStages = (): any[] => {
+export const getFunnelStages = (): FunnelStage[] => {
   return defaultFunnelStages;
 };
 
 // 🎯 FUNÇÃO PARA OBTER ETAPA POR ID
-export const getFunnelStageById = (id: string): any | undefined => {
+export const getFunnelStageById = (id: string): FunnelStage | undefined => {
   return defaultFunnelStages.find(stage => stage.id === id);
 };
 
 // 🎯 FUNÇÃO PARA OBTER ETAPA POR ORDEM
-export const getFunnelStageByOrder = (order: number): any | undefined => {
+export const getFunnelStageByOrder = (order: number): FunnelStage | undefined => {
   return defaultFunnelStages.find(stage => stage.order === order);
 };
 

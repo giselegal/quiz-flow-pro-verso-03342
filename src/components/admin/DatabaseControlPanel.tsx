@@ -3,32 +3,30 @@
  * Interface para gerenciar modo banco/local e migração
  */
 
-import { useEditor } from "@/context/EditorContext";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from 'react';
+import { useEditor } from '@/context/EditorContext';
 
 interface DatabaseControlPanelProps {
   className?: string;
 }
 
-export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ className = "" }) => {
+export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ className = '' }) => {
   const { databaseMode } = useEditor();
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [migrationStatus, setMigrationStatus] = useState<
-    "idle" | "migrating" | "success" | "error"
-  >("idle");
+  const [migrationStatus, setMigrationStatus] = useState<'idle' | 'migrating' | 'success' | 'error'>('idle');
 
   // ============================================================================
   // CARREGAR ESTATÍSTICAS
   // ============================================================================
-
+  
   const loadStats = async () => {
     setLoading(true);
     try {
       const data = await databaseMode.getStats();
       setStats(data);
     } catch (error) {
-      console.error("Erro ao carregar estatísticas:", error);
+      console.error('Erro ao carregar estatísticas:', error);
     } finally {
       setLoading(false);
     }
@@ -47,16 +45,16 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
   };
 
   const handleMigration = async () => {
-    setMigrationStatus("migrating");
+    setMigrationStatus('migrating');
     try {
       const success = await databaseMode.migrateToDatabase();
-      setMigrationStatus(success ? "success" : "error");
+      setMigrationStatus(success ? 'success' : 'error');
       if (success) {
         await loadStats();
       }
     } catch (error) {
-      console.error("Erro na migração:", error);
-      setMigrationStatus("error");
+      console.error('Erro na migração:', error);
+      setMigrationStatus('error');
     }
   };
 
@@ -72,31 +70,34 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
 
   return (
     <div className={`bg-white border border-gray-200 rounded-lg p-6 ${className}`}>
+      
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-lg font-semibold text-gray-900">Sistema de Componentes</h3>
           <p className="text-sm text-gray-500">Gerenciar modo banco/local e migração</p>
         </div>
-
+        
         {/* Status Badge */}
-        <div
-          className={`px-3 py-1 rounded-full text-xs font-medium ${
-            databaseMode.isEnabled ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
-          }`}
-        >
-          {databaseMode.isEnabled ? "🔗 Banco Ativo" : "📁 Modo Local"}
+        <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+          databaseMode.isEnabled 
+            ? 'bg-green-100 text-green-800' 
+            : 'bg-yellow-100 text-yellow-800'
+        }`}>
+          {databaseMode.isEnabled ? '🔗 Banco Ativo' : '📁 Modo Local'}
         </div>
       </div>
 
       {/* Quiz ID Control */}
       <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">Quiz ID</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Quiz ID
+        </label>
         <div className="flex gap-2">
           <input
             type="text"
             value={databaseMode.quizId}
-            onChange={e => handleQuizIdChange(e.target.value)}
+            onChange={(e) => handleQuizIdChange(e.target.value)}
             className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
             placeholder="ex: quiz-demo-id"
           />
@@ -107,7 +108,9 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
             🎲 Gerar
           </button>
         </div>
-        <p className="text-xs text-gray-500 mt-1">ID único do quiz no banco de dados</p>
+        <p className="text-xs text-gray-500 mt-1">
+          ID único do quiz no banco de dados
+        </p>
       </div>
 
       {/* Mode Toggle */}
@@ -116,21 +119,22 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
           <div>
             <h4 className="text-sm font-medium text-gray-900">Modo de Operação</h4>
             <p className="text-xs text-gray-500">
-              {databaseMode.isEnabled
-                ? "Componentes salvos no banco de dados"
-                : "Componentes carregados de templates locais"}
+              {databaseMode.isEnabled 
+                ? 'Componentes salvos no banco de dados'
+                : 'Componentes carregados de templates locais'
+              }
             </p>
           </div>
-
+          
           <button
             onClick={handleToggleMode}
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              databaseMode.isEnabled ? "bg-blue-600" : "bg-gray-300"
+              databaseMode.isEnabled ? 'bg-blue-600' : 'bg-gray-300'
             }`}
           >
             <span
               className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                databaseMode.isEnabled ? "translate-x-6" : "translate-x-1"
+                databaseMode.isEnabled ? 'translate-x-6' : 'translate-x-1'
               }`}
             />
           </button>
@@ -140,37 +144,39 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
       {/* Migration Section */}
       {!databaseMode.isEnabled && (
         <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
-          <h4 className="text-sm font-medium text-blue-900 mb-2">🚀 Migrar para Banco de Dados</h4>
+          <h4 className="text-sm font-medium text-blue-900 mb-2">
+            🚀 Migrar para Banco de Dados
+          </h4>
           <p className="text-xs text-blue-700 mb-3">
             Converta seus templates locais para o sistema de componentes reutilizáveis no banco
           </p>
-
+          
           <button
             onClick={handleMigration}
-            disabled={migrationStatus === "migrating"}
+            disabled={migrationStatus === 'migrating'}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              migrationStatus === "migrating"
-                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : migrationStatus === "success"
-                  ? "bg-green-600 text-white"
-                  : migrationStatus === "error"
-                    ? "bg-red-600 text-white"
-                    : "bg-blue-600 text-white hover:bg-blue-700"
+              migrationStatus === 'migrating'
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                : migrationStatus === 'success'
+                ? 'bg-green-600 text-white'
+                : migrationStatus === 'error'
+                ? 'bg-red-600 text-white'
+                : 'bg-blue-600 text-white hover:bg-blue-700'
             }`}
           >
-            {migrationStatus === "migrating" && "⏳ Migrando..."}
-            {migrationStatus === "success" && "✅ Migrado"}
-            {migrationStatus === "error" && "❌ Erro"}
-            {migrationStatus === "idle" && "🚀 Iniciar Migração"}
+            {migrationStatus === 'migrating' && '⏳ Migrando...'}
+            {migrationStatus === 'success' && '✅ Migrado'}
+            {migrationStatus === 'error' && '❌ Erro'}
+            {migrationStatus === 'idle' && '🚀 Iniciar Migração'}
           </button>
-
-          {migrationStatus === "success" && (
+          
+          {migrationStatus === 'success' && (
             <p className="text-xs text-green-700 mt-2">
               ✅ Migração concluída! Modo banco ativado automaticamente.
             </p>
           )}
-
-          {migrationStatus === "error" && (
+          
+          {migrationStatus === 'error' && (
             <p className="text-xs text-red-700 mt-2">
               ❌ Erro na migração. Verifique a conexão com o banco.
             </p>
@@ -181,7 +187,7 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
       {/* Statistics */}
       <div className="space-y-4">
         <h4 className="text-sm font-medium text-gray-900">Estatísticas</h4>
-
+        
         {loading ? (
           <div className="text-center py-4">
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto"></div>
@@ -189,15 +195,20 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
           </div>
         ) : stats ? (
           <div className="grid grid-cols-2 gap-4">
+            
             {/* Total Components */}
             <div className="text-center p-3 bg-gray-50 rounded-md">
-              <div className="text-xl font-bold text-gray-900">{stats.totalComponents || 0}</div>
+              <div className="text-xl font-bold text-gray-900">
+                {stats.totalComponents || 0}
+              </div>
               <div className="text-xs text-gray-500">Componentes</div>
             </div>
-
+            
             {/* Total Steps */}
             <div className="text-center p-3 bg-gray-50 rounded-md">
-              <div className="text-xl font-bold text-gray-900">{stats.totalSteps || 0}</div>
+              <div className="text-xl font-bold text-gray-900">
+                {stats.totalSteps || 0}
+              </div>
               <div className="text-xs text-gray-500">Etapas</div>
             </div>
 
@@ -219,7 +230,7 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
             {/* Mode Info */}
             <div className="col-span-2 mt-4 p-3 bg-gray-50 rounded-md">
               <div className="text-xs text-gray-600">
-                <strong>Modo:</strong> {stats.mode || "local"}
+                <strong>Modo:</strong> {stats.mode || 'local'}
               </div>
               {stats.error && (
                 <div className="text-xs text-red-600 mt-1">
@@ -240,24 +251,24 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
           disabled={loading}
           className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50"
         >
-          {loading ? "⏳ Carregando..." : "🔄 Atualizar Estatísticas"}
+          {loading ? '⏳ Carregando...' : '🔄 Atualizar Estatísticas'}
         </button>
       </div>
 
       {/* Quick Actions */}
       <div className="mt-6 pt-4 border-t border-gray-200">
         <h4 className="text-sm font-medium text-gray-900 mb-3">Ações Rápidas</h4>
-
+        
         <div className="grid grid-cols-2 gap-2">
           <button
-            onClick={() => window.open("/editor", "_blank")}
+            onClick={() => window.open('/editor', '_blank')}
             className="px-3 py-2 text-xs bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200"
           >
             🎨 Abrir Editor
           </button>
-
+          
           <button
-            onClick={() => console.log("Debug:", { databaseMode, stats })}
+            onClick={() => console.log('Debug:', { databaseMode, stats })}
             className="px-3 py-2 text-xs bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
           >
             🐛 Debug Info
