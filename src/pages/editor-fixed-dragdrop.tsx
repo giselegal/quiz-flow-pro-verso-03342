@@ -142,9 +142,23 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         properties: block.properties || {},
       }))}
       onBlocksReorder={newBlocks => {
-        // Atualizar ordem dos blocos
+        // Implementar reordenação de blocos
         console.log('🔄 Reordenando blocos:', newBlocks);
-        // TODO: Implementar lógica de reordenação via EditorContext
+        
+        // Atualizar a ordem dos blocos no contexto
+        if (currentBlocks && newBlocks.length === currentBlocks.length) {
+          // Recriar o array de blocos na nova ordem
+          const reorderedBlocks = newBlocks.map(newBlock => {
+            const originalBlock = currentBlocks.find(block => block.id === newBlock.id);
+            return originalBlock || newBlock;
+          });
+          
+          // Usar setActiveStageBlocks para atualizar a ordem
+          setActiveStageBlocks(reorderedBlocks);
+          console.log('✅ Blocos reordenados com sucesso');
+        } else {
+          console.warn('⚠️ Erro na reordenação: quantidade de blocos não confere');
+        }
       }}
       onBlockAdd={(blockType, position) => {
         const blockId = addBlock(blockType);
