@@ -25,15 +25,30 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
     data: {
-      type: "canvas-block",
+      type: "canvas-block", // TIPO CRUCIAL que o DndProvider espera
+      blockId: block.id,
       block: block,
     },
   });
+
+  // Debug: verificar se o sortable está sendo configurado
+  React.useEffect(() => {
+    console.log("🔧 SortableBlockWrapper configurado:", {
+      id: block.id,
+      blockType: block.type,
+      isDragging,
+      data: {
+        type: "canvas-block",
+        blockId: block.id,
+      },
+    });
+  }, [block.id, block.type, isDragging]);
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 50 : 'auto', // Z-index maior durante drag
   };
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -50,7 +65,8 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           <Button
             variant="secondary"
             size="sm"
-            className="h-6 w-6 p-0 cursor-grab"
+            className="h-6 w-6 p-0 cursor-grab active:cursor-grabbing touch-none"
+            style={{ touchAction: 'none' }} // Importante para dispositivos touch
             {...attributes}
             {...listeners}
           >

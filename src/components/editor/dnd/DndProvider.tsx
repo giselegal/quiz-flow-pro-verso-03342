@@ -58,13 +58,13 @@ export const DndProvider: React.FC<DndProviderProps> = ({
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 1, // Mais sensível para ativação fácil
+        distance: 8, // Aumentar para evitar ativação acidental
       },
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 50, // Mais rápido para resposta imediata
-        tolerance: 3, // Mais sensível para toque
+        delay: 150, // Delay para evitar conflito com scroll
+        tolerance: 5,
       },
     }),
     useSensor(KeyboardSensor, {
@@ -75,23 +75,39 @@ export const DndProvider: React.FC<DndProviderProps> = ({
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
 
-    console.log("🟢 DragStart:", {
+    console.log("🟢 DragStart INICIO:", {
       id: active.id,
       type: active.data.current?.type,
       blockType: active.data.current?.blockType,
       data: active.data.current,
+      hasData: !!active.data.current,
+      hasType: !!active.data.current?.type,
     });
 
     // FIXME: Verificação mais robusta dos dados
     if (!active.data.current) {
-      console.error("❌ DragStart: active.data.current está undefined!");
+      console.error("❌ DragStart: active.data.current está undefined!", {
+        activeId: active.id,
+        activeKeys: Object.keys(active),
+        dataKeys: active.data ? Object.keys(active.data) : "data é undefined",
+      });
       return;
     }
 
     if (!active.data.current.type) {
-      console.error("❌ DragStart: active.data.current.type está undefined!");
+      console.error("❌ DragStart: active.data.current.type está undefined!", {
+        activeId: active.id,
+        data: active.data.current,
+        dataKeys: Object.keys(active.data.current),
+      });
       return;
     }
+
+    console.log("✅ DragStart: Dados válidos detectados:", {
+      type: active.data.current.type,
+      blockType: active.data.current.blockType,
+      allData: active.data.current,
+    });
 
     // 🎯 Haptic feedback para dispositivos móveis
     if ("vibrate" in navigator) {
@@ -238,6 +254,12 @@ export const DndProvider: React.FC<DndProviderProps> = ({
       overType: over.data.current?.type,
       activeId: active.id,
       overId: over.id,
+      // Debugging específico para sidebar-component
+      isSidebarComponent: active.data.current?.type === "sidebar-component",
+      isCanvasDropZoneType: over.data.current?.type === "canvas-drop-zone",
+      isCanvasDropZoneId: over.id === "canvas-drop-zone",
+      isDropZonePattern: over.id?.toString().startsWith("drop-zone-"),
+      overIdString: over.id?.toString(),
     });
   };
 

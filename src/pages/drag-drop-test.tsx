@@ -1,0 +1,182 @@
+import React from "react";
+import { DndProvider } from "@/components/editor/dnd/DndProvider";
+import { DraggableComponentItem } from "@/components/editor/dnd/DraggableComponentItem";
+import { CanvasDropZone } from "@/components/editor/canvas/CanvasDropZone";
+import { Block } from "@/types/editor";
+import { GripVertical, Square, Type, Image } from "lucide-react";
+
+// Componente de teste para validar drag and drop
+export const DragDropTestPage: React.FC = () => {
+  const [blocks, setBlocks] = React.useState<Block[]>([]);
+  const [selectedBlockId, setSelectedBlockId] = React.useState<string | null>(null);
+
+  // Componentes disponíveis para teste
+  const availableComponents = [
+    {
+      type: "text",
+      name: "Texto",
+      description: "Adicionar texto ao quiz",
+      icon: <Type className="h-4 w-4" />,
+      category: "Conteúdo",
+    },
+    {
+      type: "image",
+      name: "Imagem", 
+      description: "Adicionar imagem",
+      icon: <Image className="h-4 w-4" />,
+      category: "Mídia",
+    },
+    {
+      type: "button",
+      name: "Botão",
+      description: "Botão interativo",
+      icon: <Square className="h-4 w-4" />,
+      category: "Interação",
+    },
+  ];
+
+  const handleBlockAdd = (blockType: string, position?: number) => {
+    const newBlock: Block = {
+      id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      type: blockType,
+      properties: {
+        text: `Novo bloco ${blockType}`,
+        style: {},
+      },
+    };
+
+    console.log("📦 Teste: Adicionando bloco:", newBlock, "na posição:", position);
+
+    setBlocks(prev => {
+      if (position !== undefined && position < prev.length) {
+        // Inserir na posição específica
+        const newBlocks = [...prev];
+        newBlocks.splice(position, 0, newBlock);
+        return newBlocks;
+      } else {
+        // Adicionar no final
+        return [...prev, newBlock];
+      }
+    });
+  };
+
+  const handleBlocksReorder = (newBlocks: any[]) => {
+    console.log("🔄 Teste: Reordenando blocos:", newBlocks);
+    
+    // Mapear de volta para o formato Block
+    const mappedBlocks: Block[] = newBlocks.map(blockData => ({
+      id: blockData.id,
+      type: blockData.type,
+      properties: blockData.properties || {},
+    }));
+    
+    setBlocks(mappedBlocks);
+  };
+
+  const handleUpdateBlock = (id: string, updates: any) => {
+    console.log("✏️ Teste: Atualizando bloco:", id, updates);
+    setBlocks(prev => prev.map(block => 
+      block.id === id ? { ...block, ...updates } : block
+    ));
+  };
+
+  const handleDeleteBlock = (id: string) => {
+    console.log("🗑️ Teste: Deletando bloco:", id);
+    setBlocks(prev => prev.filter(block => block.id !== id));
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-4">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold text-center mb-8">Teste de Drag and Drop</h1>
+        
+        <DndProvider
+          blocks={blocks.map(block => ({
+            id: block.id,
+            type: block.type,
+            properties: block.properties || {},
+          }))}
+          onBlocksReorder={handleBlocksReorder}
+          onBlockAdd={handleBlockAdd}
+          onBlockSelect={setSelectedBlockId}
+          selectedBlockId={selectedBlockId}
+          onBlockUpdate={handleUpdateBlock}
+        >
+          <div className="grid grid-cols-12 gap-6">
+            {/* Sidebar com componentes arrastáveis */}
+            <div className="col-span-3">
+              <div className="bg-white rounded-lg p-4 shadow-sm border">
+                <h2 className="text-lg font-semibold mb-4">Componentes</h2>
+                <div className="space-y-2">
+                  {availableComponents.map((component) => (
+                    <DraggableComponentItem
+                      key={component.type}
+                      blockType={component.type}
+                      title={component.name}
+                      description={component.description}
+                      icon={component.icon}
+                      category={component.category}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Debug Info */}
+              <div className="mt-4 bg-blue-50 rounded-lg p-3 text-xs">
+                <h3 className="font-semibold mb-2">Debug Info:</h3>
+                <p>Blocos no canvas: {blocks.length}</p>
+                <p>Bloco selecionado: {selectedBlockId || "Nenhum"}</p>
+              </div>
+            </div>
+
+            {/* Canvas principal */}
+            <div className="col-span-9">
+              <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+                <div className="p-4 border-b bg-gray-50">
+                  <h2 className="text-lg font-semibold">Canvas de Teste</h2>
+                  <p className="text-sm text-gray-600">Arraste componentes da sidebar para aqui</p>
+                </div>
+                
+                <CanvasDropZone
+                  blocks={blocks}
+                  selectedBlockId={selectedBlockId}
+                  isPreviewing={false}
+                  activeStageId="test"
+                  stageCount={1}
+                  onSelectBlock={setSelectedBlockId}
+                  onUpdateBlock={handleUpdateBlock}
+                  onDeleteBlock={handleDeleteBlock}
+                  className="min-h-[500px]"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Lista de blocos para debug */}
+          {blocks.length > 0 && (
+            <div className="mt-6 bg-white rounded-lg p-4 shadow-sm border">
+              <h3 className="text-lg font-semibold mb-3">Blocos Criados (Debug)</h3>
+              <div className="space-y-2">
+                {blocks.map((block, index) => (
+                  <div key={block.id} className="flex items-center gap-3 p-2 bg-gray-50 rounded">
+                    <span className="text-sm font-mono">{index + 1}.</span>
+                    <span className="font-medium">{block.type}</span>
+                    <span className="text-xs text-gray-500 font-mono">{block.id}</span>
+                    <button
+                      className="ml-auto text-red-600 text-xs hover:text-red-800"
+                      onClick={() => handleDeleteBlock(block.id)}
+                    >
+                      Deletar
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </DndProvider>
+      </div>
+    </div>
+  );
+};
+
+export default DragDropTestPage;
