@@ -1,10 +1,11 @@
 /**
- * 🔌 ADAPTER PARA INTEGRAR EDITORCONTEXT COM BANCO DE DADOS
- * Conecta o sistema atual com o novo sistema de componentes reutilizáveis
+ * 🎯 ADAPTADOR HÍBRIDO BANCO/LOCAL - EDITOR DATABASE ADAPTER
  */
 
+import type { Block } from "@/types/editor";
+import { generateSemanticId } from "@/utils/semanticIdGenerator";
 import ComponentsService from '../services/ComponentsService';
-import type { EditorBlock, FunnelStage } from '@/types/editor';
+import type { Block as ServiceBlock } from '../services/ComponentsService';
 
 // ============================================================================
 // CONFIGURAÇÕES DO ADAPTER
@@ -40,11 +41,12 @@ export class EditorDatabaseAdapter {
     try {
       if (this.config.useDatabase) {
         // ✅ CARREGAR DO BANCO
-        const blocks = await ComponentsService.loadStageBlocks(this.config.quizId, stepNumber);
+        const stageKey = `step-${stepNumber.toString().padStart(2, '0')}`;
+        const blocks = await ComponentsService.loadStageBlocks(stageKey);
         
         if (blocks.length > 0) {
           console.log(`✅ Carregados ${blocks.length} blocos do banco`);
-          return blocks;
+          return blocks as Block[];
         }
         
         // Se não há blocos no banco, criar do template local
