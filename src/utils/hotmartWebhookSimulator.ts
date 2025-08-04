@@ -1,7 +1,7 @@
 // Simulador de Webhook Hotmart para testes
 // Este arquivo simula o recebimento de webhooks da Hotmart no frontend
 
-import { hotmartWebhookManager, HotmartWebhookData } from "./hotmartWebhook";
+import { HotmartWebhookData, hotmartWebhookManager } from "./hotmartWebhook";
 import { generateSemanticId } from "./semanticIdGenerator";
 
 export class HotmartWebhookSimulator {
