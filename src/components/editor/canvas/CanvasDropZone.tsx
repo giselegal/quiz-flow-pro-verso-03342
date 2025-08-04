@@ -5,6 +5,40 @@ import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import React from "react";
 import { SortableBlockWrapper } from "./SortableBlockWrapper";
 
+// Componente para drop zone entre blocos
+const InterBlockDropZone: React.FC<{ 
+  position: number; 
+  isActive: boolean;
+}> = ({ position, isActive }) => {
+  const { setNodeRef, isOver } = useDroppable({
+    id: `drop-zone-${position}`,
+    data: {
+      type: "canvas-drop-zone",
+      accepts: ["sidebar-component"],
+      position: position,
+    },
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={cn(
+        "h-3 transition-all duration-200 relative",
+        isOver && "h-12 bg-brand/10 border-2 border-dashed border-brand/40 rounded-lg",
+        isActive && !isOver && "h-1 bg-brand/20 rounded-full opacity-50"
+      )}
+    >
+      {isOver && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <p className="text-brand font-medium text-sm bg-white/80 px-2 py-1 rounded">
+            Inserir aqui (posição {position})
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};
+
 interface CanvasDropZoneProps {
   blocks: Block[];
   selectedBlockId: string | null;
@@ -33,14 +67,20 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
     data: {
       type: "canvas-drop-zone",
       accepts: ["sidebar-component", "canvas-block"],
-      position: blocks.length,
+      position: blocks.length, // Posição no final
     },
   });
+
+  // Detectar se estamos arrastando um componente da sidebar
+  const isDraggingSidebarComponent = active?.data.current?.type === "sidebar-component";
 
   // Debug do drop zone
   React.useEffect(() => {
     console.log("🎯 CanvasDropZone: isOver =", isOver, "active =", active?.id);
-  }, [isOver, active]);
+    if (isDraggingSidebarComponent) {
+      console.log("📦 Arrastando componente da sidebar:", active?.data.current?.blockType);
+    }
+  }, [isOver, active, isDraggingSidebarComponent]);
 
   return (
     <div
@@ -75,27 +115,40 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
           items={blocks.map(block => block.id)}
           strategy={verticalListSortingStrategy}
         >
-          <div className="space-y-3">
-            {blocks.map(block => (
-              <SortableBlockWrapper
-                key={block.id}
-                block={block}
-                isSelected={!isPreviewing && selectedBlockId === block.id}
-                onSelect={() => !isPreviewing && onSelectBlock(block.id)}
-                onUpdate={updates => {
-                  if (!isPreviewing) {
-                    onUpdateBlock(block.id, updates);
-                  }
-                }}
-                onDelete={() => {
-                  if (!isPreviewing) {
-                    onDeleteBlock(block.id);
-                  }
-                }}
-              />
+          <div className="space-y-0">
+            {/* Drop zone no início */}
+            {isDraggingSidebarComponent && (
+              <InterBlockDropZone position={0} isActive={true} />
+            )}
+            
+            {blocks.map((block, index) => (
+              <React.Fragment key={block.id}>
+                <SortableBlockWrapper
+                  block={block}
+                  isSelected={!isPreviewing && selectedBlockId === block.id}
+                  onSelect={() => !isPreviewing && onSelectBlock(block.id)}
+                  onUpdate={updates => {
+                    if (!isPreviewing) {
+                      onUpdateBlock(block.id, updates);
+                    }
+                  }}
+                  onDelete={() => {
+                    if (!isPreviewing) {
+                      onDeleteBlock(block.id);
+                    }
+                  }}
+                />
+                
+                {/* Drop zone entre blocos */}
+                {isDraggingSidebarComponent && index < blocks.length && (
+                  <InterBlockDropZone position={index + 1} isActive={true} />
+                )}
+              </React.Fragment>
             ))}
-            {isOver && !isPreviewing && (
-              <div className="p-4 border-2 border-dashed border-brand/30 rounded-lg bg-brand/5 text-center">
+            
+            {/* Zona de drop geral no final (quando não há componentes sendo arrastados da sidebar) */}
+            {!isDraggingSidebarComponent && isOver && !isPreviewing && (
+              <div className="mt-3 p-4 border-2 border-dashed border-brand/30 rounded-lg bg-brand/5 text-center">
                 <p className="text-brand font-medium">Solte o componente aqui</p>
               </div>
             )}
