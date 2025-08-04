@@ -48,7 +48,7 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-    zIndex: isDragging ? 50 : 'auto', // Z-index maior durante drag
+    zIndex: isDragging ? 50 : "auto", // Z-index maior durante drag
   };
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -66,7 +66,7 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
             variant="secondary"
             size="sm"
             className="h-6 w-6 p-0 cursor-grab active:cursor-grabbing touch-none"
-            style={{ touchAction: 'none' }} // Importante para dispositivos touch
+            style={{ touchAction: "none" }} // Importante para dispositivos touch
             {...attributes}
             {...listeners}
           >
