@@ -4,7 +4,8 @@ import EnhancedComponentsSidebar from "@/components/editor/EnhancedComponentsSid
 import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelSettingsPanel";
 import { FunnelStagesPanel } from "@/components/editor/funnel/FunnelStagesPanel";
 import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
-import OptimizedPropertiesPanel from "@/components/editor/OptimizedPropertiesPanel";
+import UniversalPropertiesPanel from "@/components/universal/UniversalPropertiesPanel";
+import { useUnifiedProperties } from "@/hooks/useUnifiedProperties";
 import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
 import { generateBlockDefinitions, getRegistryStats } from "@/config/enhancedBlockRegistry";
 import { useEditor } from "@/context/EditorContext";
@@ -252,15 +253,23 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             }
             propertiesPanel={
               !isPreviewing && selectedBlock ? (
-                <OptimizedPropertiesPanel
-                  block={selectedBlock}
-                  blockDefinition={getBlockDefinitionForType(selectedBlock.type)}
-                  onUpdateBlock={(blockId: string, updates: Partial<EditableContent>) => {
-                    console.log("🚀 Atualizando bloco via OptimizedPropertiesPanel:", {
+                <UniversalPropertiesPanel
+                  selectedBlock={{
+                    id: selectedBlock.id,
+                    type: selectedBlock.type,
+                    properties: selectedBlock.content || selectedBlock.properties || {}
+                  }}
+                  onUpdate={(blockId: string, updates: Record<string, any>) => {
+                    console.log("🚀 Atualizando bloco via UniversalPropertiesPanel:", {
                       blockId,
                       updates,
                     });
                     updateBlock(blockId, { content: updates });
+                  }}
+                  onDelete={(blockId: string) => {
+                    console.log("🗑️ Deletando bloco via UniversalPropertiesPanel:", blockId);
+                    deleteBlock(blockId);
+                    setSelectedBlockId(null);
                   }}
                   onClose={() => setSelectedBlockId(null)}
                 />
@@ -269,7 +278,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   <div className="text-center">
                     <p className="text-sm">Selecione um bloco para editar propriedades</p>
                     <p className="text-xs text-stone-400 mt-1">
-                      Painel aprimorado ativo • Drag & Drop habilitado
+                      Painel Universal ativo • Drag & Drop habilitado
                     </p>
                   </div>
                 </div>

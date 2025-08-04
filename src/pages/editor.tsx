@@ -1,4 +1,4 @@
-import UniversalPropertiesPanel from "@/components/universal/UniversalPropertiesPanel";
+import SimplePropertiesPanel from "@/components/universal/SimplePropertiesPanel";
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import BrandHeader from "../components/ui/BrandHeader";
