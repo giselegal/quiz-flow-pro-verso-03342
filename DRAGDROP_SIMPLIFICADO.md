@@ -3,7 +3,9 @@
 ## ✅ Correções Aplicadas
 
 ### 1. **Removido Logging Excessivo**
+
 O problema anterior pode ter sido **excesso de logs** que travavam o sistema. Simplificamos para:
+
 ```typescript
 // ✅ SIMPLES
 console.log("🟢 DragStart:", active.id, active.data.current);
@@ -11,6 +13,7 @@ console.log("✅ Dados válidos:", active.data.current.type);
 ```
 
 ### 2. **Sensores Resetados para Valores Mínimos**
+
 ```typescript
 // ✅ VALORES MÍNIMOS PARA MÁXIMA RESPONSIVIDADE
 PointerSensor: { distance: 1 }
@@ -18,6 +21,7 @@ TouchSensor: { delay: 10, tolerance: 5 }
 ```
 
 ### 3. **Debugging Simplificado**
+
 - Removido `dragDropDebugger` complexo
 - Removido logs detalhados do handleDragOver
 - Removido JSON.stringify que pode travar
@@ -37,6 +41,7 @@ TouchSensor: { delay: 10, tolerance: 5 }
 ## 🔍 **Possíveis Problemas Remanescentes**
 
 Se ainda não funcionar, pode ser:
+
 1. **CSS conflitando** - `pointer-events: none` ou `z-index`
 2. **React Strict Mode** - dupla renderização
 3. **Bibliotecas conflitantes** - outras libs interceptando eventos

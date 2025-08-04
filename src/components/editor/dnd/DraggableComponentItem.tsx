@@ -59,11 +59,11 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
     <div
       ref={setNodeRef}
       className={cn(
-        "w-full h-auto p-3 flex flex-col items-start gap-2 text-left cursor-grab hover:bg-stone-50 transition-all duration-200 border border-stone-200 rounded-lg bg-white",
-        // Melhorar controle de touch e pointer events
-        "touch-none select-none", // touch-none para melhor controle mobile, select-none para evitar seleção de texto
-        isDragging && "opacity-50 cursor-grabbing scale-105 z-50 shadow-lg", // z-50 e shadow-lg para garantir que fica por cima
-        disabled && "opacity-50 cursor-not-allowed pointer-events-none",
+        "w-full h-auto p-3 flex flex-col items-start gap-2 text-left transition-all duration-200 border border-stone-200 rounded-lg bg-white",
+        // Simplificar classes para debugging
+        "cursor-grab hover:bg-stone-50",
+        isDragging && "opacity-50 cursor-grabbing shadow-lg",
+        disabled && "opacity-50 cursor-not-allowed",
         className
       )}
       style={style}
