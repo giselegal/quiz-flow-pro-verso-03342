@@ -1,4 +1,9 @@
-import { SimpleComponent, QuizOption, BonusItem, FaqItem } from "@/interfaces/quiz";
+import {
+  SimpleComponent,
+  QuizOption,
+  BonusItem,
+  FaqItem,
+} from "@/interfaces/quiz";
 import PlaceholderUtils from "./placeholderUtils";
 
 // Dados padrão para componentes
@@ -19,7 +24,9 @@ export const defaultTestimonialData = {
   role: "Cliente satisfeito",
 };
 
-export const getDefaultData = (type: SimpleComponent["type"]): SimpleComponent["data"] => {
+export const getDefaultData = (
+  type: SimpleComponent["type"],
+): SimpleComponent["data"] => {
   switch (type) {
     case "logo":
       return {
@@ -124,7 +131,8 @@ export const getDefaultData = (type: SimpleComponent["type"]): SimpleComponent["
           {
             id: "faq2",
             question: "Quanto tempo tenho acesso?",
-            answer: "O acesso é vitalício! Você pode acessar quando quiser, quantas vezes quiser.",
+            answer:
+              "O acesso é vitalício! Você pode acessar quando quiser, quantas vezes quiser.",
           },
         ] as FaqItem[],
       };
@@ -140,7 +148,9 @@ export const getDefaultData = (type: SimpleComponent["type"]): SimpleComponent["
   }
 };
 
-export const getDefaultStyle = (type: SimpleComponent["type"]): SimpleComponent["style"] => {
+export const getDefaultStyle = (
+  type: SimpleComponent["type"],
+): SimpleComponent["style"] => {
   switch (type) {
     case "title":
       return {

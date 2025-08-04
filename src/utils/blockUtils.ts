@@ -2,7 +2,7 @@
  * Utilitários para manipulação segura de blocos do editor
  */
 
-import { generateSemanticId } from './semanticIdGenerator';
+import { generateSemanticId } from "./semanticIdGenerator";
 
 /**
  * Extrai propriedades de forma segura de um bloco
@@ -21,9 +21,7 @@ export const safeGetBlockProperties = (block: any): Record<string, any> => {
   let properties = block.content || block.properties || block.data || {};
 
   if (!properties || typeof properties !== "object") {
-    console.warn(
-      `⚠️ Propriedades undefined no bloco ${blockId} (tipo: ${block.type})`,
-    );
+    console.warn(`⚠️ Propriedades undefined no bloco ${blockId} (tipo: ${block.type})`);
     properties = {};
   }
 
@@ -55,7 +53,12 @@ export const isValidBlock = (block: any): boolean => {
 export const initializeSafeBlock = (block: any) => {
   if (!block) {
     return {
-      id: "default-block",
+      id: generateSemanticId({
+        context: "editor",
+        type: "block",
+        identifier: "default",
+        index: 1,
+      }),
       type: "text-inline",
       properties: {},
     };
@@ -63,24 +66,14 @@ export const initializeSafeBlock = (block: any) => {
 
   return {
     ...block,
-import { generateSemanticId } from './semanticIdGenerator';
-
-// ... existing imports and code ...
-
-// Replace the Date.now() usage
-const generateBlockId = (block: any): string => {
-  if (block.id) return block.id;
-  
-  return generateSemanticId({
-    context: 'editor',
-    type: 'block',
-    identifier: block.type || 'unknown',
-    index: 1
-  });
-};
-
-// Update the line that uses Date.now()
-id: block.id || generateBlockId(block),
+    id:
+      block.id ||
+      generateSemanticId({
+        context: "editor",
+        type: "block",
+        identifier: block.type || "unknown",
+        index: 1,
+      }),
     type: block.type || "text-inline",
     properties: block.properties || {},
   };
@@ -135,20 +128,13 @@ export const createSafeFallback = (blockType: string, error?: string) => {
 };
 
 // Função helper para obter valores com fallback
-export const getBlockValue = (
-  block: any,
-  key: string,
-  defaultValue: any = "",
-) => {
+export const getBlockValue = (block: any, key: string, defaultValue: any = "") => {
   const properties = safeGetBlockProperties(block);
   return properties[key] !== undefined ? properties[key] : defaultValue;
 };
 
 // Função para atualizar propriedades de um bloco de forma segura
-export const updateBlockProperties = (
-  block: any,
-  updates: Record<string, any>,
-) => {
+export const updateBlockProperties = (block: any, updates: Record<string, any>) => {
   if (!block) return block;
 
   const currentProperties = safeGetBlockProperties(block);

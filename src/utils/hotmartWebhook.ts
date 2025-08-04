@@ -3,6 +3,7 @@
 
 // Database operations are now handled by server-side API
 import { trackSaleConversion } from "./analytics";
+import { generateSemanticId } from "./semanticIdGenerator";
 
 // Interfaces para dados do webhook Hotmart
 export interface HotmartBuyer {
@@ -81,8 +82,7 @@ export class HotmartWebhookManager {
   // Armazenar dados do usuário para correlação futura
   public storeUserData(email: string, data: Partial<UserAnalyticsData>): void {
     try {
-      const existingData =
-        this.userDataStore.get(email) || ({} as UserAnalyticsData);
+      const existingData = this.userDataStore.get(email) || ({} as UserAnalyticsData);
 
       const userData: UserAnalyticsData = {
         ...existingData,
@@ -107,10 +107,7 @@ export class HotmartWebhookManager {
         userData,
       });
     } catch (error) {
-      console.error(
-        "[Hotmart Webhook] Erro ao armazenar dados do usuário:",
-        error,
-      );
+      console.error("[Hotmart Webhook] Erro ao armazenar dados do usuário:", error);
     }
   }
 
@@ -121,10 +118,7 @@ export class HotmartWebhookManager {
 
       // Validar webhook ID
       if (!this.validateWebhookId(webhookData.webhook_id)) {
-        console.warn(
-          "[Hotmart Webhook] ID do webhook inválido:",
-          webhookData.webhook_id,
-        );
+        console.warn("[Hotmart Webhook] ID do webhook inválido:", webhookData.webhook_id);
         return;
       }
 
@@ -144,10 +138,7 @@ export class HotmartWebhookManager {
           break;
 
         default:
-          console.log(
-            "[Hotmart Webhook] Evento não tratado:",
-            webhookData.event,
-          );
+          console.log("[Hotmart Webhook] Evento não tratado:", webhookData.event);
       }
     } catch (error) {
       console.error("[Hotmart Webhook] Erro ao processar webhook:", error);
@@ -155,9 +146,7 @@ export class HotmartWebhookManager {
   }
 
   // Tratar compra aprovada
-  private async handlePurchaseApproved(
-    data: HotmartWebhookData,
-  ): Promise<void> {
+  private async handlePurchaseApproved(data: HotmartWebhookData): Promise<void> {
     console.log("[Hotmart Webhook] Compra aprovada:", data.data.transaction.id);
 
     try {
@@ -166,10 +155,7 @@ export class HotmartWebhookManager {
       const userData = this.getUserData(userEmail);
 
       if (!userData) {
-        console.warn(
-          "[Hotmart Webhook] Dados do usuário não encontrados para:",
-          userEmail,
-        );
+        console.warn("[Hotmart Webhook] Dados do usuário não encontrados para:", userEmail);
         // Mesmo assim, processar a venda sem UTMs
       }
 
@@ -189,7 +175,7 @@ export class HotmartWebhookManager {
         window.fbq("track", "Purchase", purchaseEventData);
         console.log(
           "[Hotmart Webhook] Evento Purchase enviado ao Facebook Pixel:",
-          purchaseEventData,
+          purchaseEventData
         );
       }
 
@@ -209,36 +195,26 @@ export class HotmartWebhookManager {
           ],
           ...userData?.utm_parameters,
         });
-        console.log(
-          "[Hotmart Webhook] Evento purchase enviado ao Google Analytics",
-        );
+        console.log("[Hotmart Webhook] Evento purchase enviado ao Google Analytics");
       }
 
       // Usar o sistema de analytics interno
       trackSaleConversion(
         data.data.purchase.price.value,
         data.data.purchase.price.currency_value,
-        data.data.purchase.product.name,
+        data.data.purchase.product.name
       );
 
       // Notificar outros sistemas se necessário
       await this.notifyExternalSystems(data, userData);
     } catch (error) {
-      console.error(
-        "[Hotmart Webhook] Erro ao processar compra aprovada:",
-        error,
-      );
+      console.error("[Hotmart Webhook] Erro ao processar compra aprovada:", error);
     }
   }
 
   // Tratar cancelamento de compra
-  private async handlePurchaseCanceled(
-    data: HotmartWebhookData,
-  ): Promise<void> {
-    console.log(
-      "[Hotmart Webhook] Compra cancelada:",
-      data.data.transaction.id,
-    );
+  private async handlePurchaseCanceled(data: HotmartWebhookData): Promise<void> {
+    console.log("[Hotmart Webhook] Compra cancelada:", data.data.transaction.id);
 
     // Enviar evento de cancelamento se necessário
     if (typeof window !== "undefined" && window.fbq) {
@@ -252,13 +228,8 @@ export class HotmartWebhookManager {
   }
 
   // Tratar reembolso de compra
-  private async handlePurchaseRefunded(
-    data: HotmartWebhookData,
-  ): Promise<void> {
-    console.log(
-      "[Hotmart Webhook] Compra reembolsada:",
-      data.data.transaction.id,
-    );
+  private async handlePurchaseRefunded(data: HotmartWebhookData): Promise<void> {
+    console.log("[Hotmart Webhook] Compra reembolsada:", data.data.transaction.id);
 
     // Enviar evento de reembolso se necessário
     if (typeof window !== "undefined" && window.fbq) {
@@ -293,18 +264,13 @@ export class HotmartWebhookManager {
   }
 
   // Recuperar dados do localStorage
-  private retrieveUserDataFromStorage(
-    email: string,
-  ): UserAnalyticsData | undefined {
+  private retrieveUserDataFromStorage(email: string): UserAnalyticsData | undefined {
     try {
       const key = `user_data_${email}`;
       const stored = localStorage.getItem(key);
       return stored ? JSON.parse(stored) : undefined;
     } catch (error) {
-      console.error(
-        "[Hotmart Webhook] Erro ao recuperar dados do storage:",
-        error,
-      );
+      console.error("[Hotmart Webhook] Erro ao recuperar dados do storage:", error);
       return undefined;
     }
   }
@@ -339,7 +305,12 @@ export class HotmartWebhookManager {
 
   // Gerar ID de sessão único
   private generateSessionId(): string {
-    return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return generateSemanticId({
+      context: "hotmart",
+      type: "session",
+      identifier: "user",
+      index: Math.floor(Math.random() * 10000),
+    });
   }
 
   // Inicializar recuperação de dados do usuário
@@ -356,22 +327,16 @@ export class HotmartWebhookManager {
           }
         }
       }
-      console.log(
-        "[Hotmart Webhook] Dados de usuário carregados:",
-        this.userDataStore.size,
-      );
+      console.log("[Hotmart Webhook] Dados de usuário carregados:", this.userDataStore.size);
     } catch (error) {
-      console.error(
-        "[Hotmart Webhook] Erro ao carregar dados iniciais:",
-        error,
-      );
+      console.error("[Hotmart Webhook] Erro ao carregar dados iniciais:", error);
     }
   }
 
   // Notificar sistemas externos (CRM, etc.)
   private async notifyExternalSystems(
     data: HotmartWebhookData,
-    userData?: UserAnalyticsData | undefined,
+    userData?: UserAnalyticsData | undefined
   ): Promise<void> {
     try {
       // Aqui você pode adicionar integrações com CRM, Email Marketing, etc.
@@ -383,18 +348,12 @@ export class HotmartWebhookManager {
       // Exemplo: Enviar para Email Marketing
       // await this.sendToEmailMarketing(data, userData);
     } catch (error) {
-      console.error(
-        "[Hotmart Webhook] Erro ao notificar sistemas externos:",
-        error,
-      );
+      console.error("[Hotmart Webhook] Erro ao notificar sistemas externos:", error);
     }
   }
 
   // Método público para armazenar dados quando o usuário completa o quiz
-  public storeQuizCompletionData(
-    email: string,
-    quizResults: Record<string, unknown>,
-  ): void {
+  public storeQuizCompletionData(email: string, quizResults: Record<string, unknown>): void {
     this.storeUserData(email, {
       quiz_results: quizResults,
       funnel_step: "quiz_completion",
@@ -416,9 +375,7 @@ export class HotmartWebhookManager {
       const cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate() - daysToKeep);
 
-      for (const [email, userData] of Array.from(
-        this.userDataStore.entries(),
-      )) {
+      for (const [email, userData] of Array.from(this.userDataStore.entries())) {
         const dataDate = new Date(userData.timestamp);
         if (dataDate < cutoffDate) {
           this.userDataStore.delete(email);
@@ -437,22 +394,14 @@ export class HotmartWebhookManager {
 export const hotmartWebhookManager = new HotmartWebhookManager();
 
 // Função utilitária para fácil uso nos componentes
-export const storeUserForHotmart = (
-  email: string,
-  additionalData?: Partial<UserAnalyticsData>,
-) => {
+export const storeUserForHotmart = (email: string, additionalData?: Partial<UserAnalyticsData>) => {
   hotmartWebhookManager.storeUserData(email, additionalData || {});
 };
 
 // Função para simular webhook em desenvolvimento (apenas para testes)
-export const simulateHotmartWebhook = (
-  email: string,
-  transactionId?: string,
-) => {
+export const simulateHotmartWebhook = (email: string, transactionId?: string) => {
   if (process.env.NODE_ENV !== "development") {
-    console.warn(
-      "[Hotmart Webhook] Simulação disponível apenas em desenvolvimento",
-    );
+    console.warn("[Hotmart Webhook] Simulação disponível apenas em desenvolvimento");
     return;
   }
 
@@ -469,7 +418,14 @@ export const simulateHotmartWebhook = (
           value: 297,
           currency_value: "BRL",
         },
-        transaction: transactionId || `test_${Date.now()}`,
+        transaction:
+          transactionId ||
+          generateSemanticId({
+            context: "hotmart",
+            type: "transaction",
+            identifier: "test",
+            index: Math.floor(Math.random() * 10000),
+          }),
         product: {
           id: 123456,
           name: "Transformação de Imagem - Gisele Galvão",
@@ -477,12 +433,18 @@ export const simulateHotmartWebhook = (
         approved_date: new Date().toISOString(),
       },
       transaction: {
-        id: transactionId || `test_${Date.now()}`,
+        id:
+          transactionId ||
+          generateSemanticId({
+            context: "hotmart",
+            type: "transaction",
+            identifier: "mock",
+            index: Math.floor(Math.random() * 10000),
+          }),
         timestamp: new Date().toISOString(),
       },
     },
-    webhook_id:
-      "agQzTLUehWUfhPzjhdwntVQz0JNT5E0216ae0d-00a9-48ae-85d1-f0d14bd8e0df",
+    webhook_id: "agQzTLUehWUfhPzjhdwntVQz0JNT5E0216ae0d-00a9-48ae-85d1-f0d14bd8e0df",
     timestamp: new Date().toISOString(),
   };
 

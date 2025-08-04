@@ -15,18 +15,9 @@ import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { HexColorPicker } from "react-colorful";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
 import {
@@ -46,6 +37,7 @@ import {
   Edit3,
 } from "lucide-react";
 import { BlockDefinition, EditableContent } from "@/types/editor";
+import { generateSemanticId } from "../utils/semanticIdGenerator";
 
 // 🎯 Interface para uma opção
 interface OptionItem {
@@ -65,7 +57,12 @@ const OptionsArrayEditor: React.FC<{
 }> = ({ value = [], onChange }) => {
   const addOption = () => {
     const newOption: OptionItem = {
-      id: `option-${Date.now()}`,
+      id: generateSemanticId({
+        context: "editor",
+        type: "option",
+        identifier: "option",
+        index: Math.floor(Math.random() * 1000),
+      }),
       text: "Nova opção",
       value: `value-${Date.now()}`,
       category: "Geral",
@@ -81,11 +78,7 @@ const OptionsArrayEditor: React.FC<{
     onChange(newOptions);
   };
 
-  const updateOption = (
-    index: number,
-    field: keyof OptionItem,
-    newValue: string | number,
-  ) => {
+  const updateOption = (index: number, field: keyof OptionItem, newValue: string | number) => {
     const newOptions = [...value];
     newOptions[index] = { ...newOptions[index], [field]: newValue };
     onChange(newOptions);
@@ -96,10 +89,7 @@ const OptionsArrayEditor: React.FC<{
     const targetIndex = direction === "up" ? index - 1 : index + 1;
 
     if (targetIndex >= 0 && targetIndex < newOptions.length) {
-      [newOptions[index], newOptions[targetIndex]] = [
-        newOptions[targetIndex],
-        newOptions[index],
-      ];
+      [newOptions[index], newOptions[targetIndex]] = [newOptions[targetIndex], newOptions[index]];
       onChange(newOptions);
     }
   };
@@ -107,9 +97,7 @@ const OptionsArrayEditor: React.FC<{
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-gray-700">
-          Opções ({value.length})
-        </span>
+        <span className="text-sm font-medium text-gray-700">Opções ({value.length})</span>
         <Button onClick={addOption} size="sm" variant="outline">
           <Plus className="w-3 h-3 mr-1" />
           Adicionar
@@ -124,9 +112,7 @@ const OptionsArrayEditor: React.FC<{
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <GripVertical className="w-4 h-4 text-gray-400 cursor-move" />
-                  <span className="text-xs font-medium text-gray-600">
-                    Opção {index + 1}
-                  </span>
+                  <span className="text-xs font-medium text-gray-600">Opção {index + 1}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Button
@@ -164,9 +150,7 @@ const OptionsArrayEditor: React.FC<{
                   <Label className="text-xs">Texto</Label>
                   <Input
                     value={option.text}
-                    onChange={(e) =>
-                      updateOption(index, "text", e.target.value)
-                    }
+                    onChange={e => updateOption(index, "text", e.target.value)}
                     placeholder="Texto da opção"
                     className="text-xs"
                   />
@@ -177,9 +161,7 @@ const OptionsArrayEditor: React.FC<{
                     <Label className="text-xs">Valor</Label>
                     <Input
                       value={option.value}
-                      onChange={(e) =>
-                        updateOption(index, "value", e.target.value)
-                      }
+                      onChange={e => updateOption(index, "value", e.target.value)}
                       placeholder="Valor único"
                       className="text-xs"
                     />
@@ -188,9 +170,7 @@ const OptionsArrayEditor: React.FC<{
                     <Label className="text-xs">Categoria</Label>
                     <Input
                       value={option.category || ""}
-                      onChange={(e) =>
-                        updateOption(index, "category", e.target.value)
-                      }
+                      onChange={e => updateOption(index, "category", e.target.value)}
                       placeholder="Categoria"
                       className="text-xs"
                     />
@@ -203,13 +183,7 @@ const OptionsArrayEditor: React.FC<{
                     <Input
                       type="number"
                       value={option.points || 1}
-                      onChange={(e) =>
-                        updateOption(
-                          index,
-                          "points",
-                          parseInt(e.target.value) || 1,
-                        )
-                      }
+                      onChange={e => updateOption(index, "points", parseInt(e.target.value) || 1)}
                       min="1"
                       max="10"
                       className="text-xs"
@@ -219,9 +193,7 @@ const OptionsArrayEditor: React.FC<{
                     <Label className="text-xs">Estilo</Label>
                     <Input
                       value={option.styleCategory || ""}
-                      onChange={(e) =>
-                        updateOption(index, "styleCategory", e.target.value)
-                      }
+                      onChange={e => updateOption(index, "styleCategory", e.target.value)}
                       placeholder="Categoria de estilo"
                       className="text-xs"
                     />
@@ -233,9 +205,7 @@ const OptionsArrayEditor: React.FC<{
                   <div className="flex gap-2">
                     <Input
                       value={option.imageUrl || ""}
-                      onChange={(e) =>
-                        updateOption(index, "imageUrl", e.target.value)
-                      }
+                      onChange={e => updateOption(index, "imageUrl", e.target.value)}
                       placeholder="https://exemplo.com/imagem.jpg"
                       className="text-xs flex-1"
                     />
@@ -301,7 +271,7 @@ const ColorPicker: React.FC<{
         <HexColorPicker color={value || "#ffffff"} onChange={onChange} />
         <Input
           value={value || ""}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={e => onChange(e.target.value)}
           placeholder="#ffffff"
           className="mt-2"
         />
@@ -406,7 +376,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
         return (
           <Input
             value={currentValue || ""}
-            onChange={(e) => handlePropertyChange(key, e.target.value)}
+            onChange={e => handlePropertyChange(key, e.target.value)}
             placeholder={property.placeholder || property.label}
             className="text-sm"
           />
@@ -416,7 +386,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
         return (
           <Textarea
             value={currentValue || ""}
-            onChange={(e) => handlePropertyChange(key, e.target.value)}
+            onChange={e => handlePropertyChange(key, e.target.value)}
             placeholder={property.placeholder || property.label}
             rows={property.rows || 3}
             className="text-sm resize-none"
@@ -426,12 +396,10 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
       case "boolean":
         return (
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600">
-              {currentValue ? "Ativado" : "Desativado"}
-            </span>
+            <span className="text-sm text-gray-600">{currentValue ? "Ativado" : "Desativado"}</span>
             <Switch
               checked={currentValue || false}
-              onCheckedChange={(checked) => handlePropertyChange(key, checked)}
+              onCheckedChange={checked => handlePropertyChange(key, checked)}
             />
           </div>
         );
@@ -440,12 +408,10 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
         return (
           <Select
             value={currentValue || property.default}
-            onValueChange={(value) => handlePropertyChange(key, value)}
+            onValueChange={value => handlePropertyChange(key, value)}
           >
             <SelectTrigger className="text-sm">
-              <SelectValue
-                placeholder={`Selecione ${property.label.toLowerCase()}`}
-              />
+              <SelectValue placeholder={`Selecione ${property.label.toLowerCase()}`} />
             </SelectTrigger>
             <SelectContent>
               {property.options?.map((option: any) => (
@@ -462,9 +428,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           <Input
             type="number"
             value={currentValue || ""}
-            onChange={(e) =>
-              handlePropertyChange(key, parseFloat(e.target.value) || 0)
-            }
+            onChange={e => handlePropertyChange(key, parseFloat(e.target.value) || 0)}
             placeholder={property.placeholder || property.label}
             min={property.min}
             max={property.max}
@@ -478,7 +442,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           <div className="space-y-2">
             <Slider
               value={[currentValue || property.default || 0]}
-              onValueChange={(value) => handlePropertyChange(key, value[0])}
+              onValueChange={value => handlePropertyChange(key, value[0])}
               max={property.max || 100}
               min={property.min || 0}
               step={property.step || 1}
@@ -486,9 +450,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
             />
             <div className="flex justify-between text-xs text-gray-500">
               <span>{property.min || 0}</span>
-              <span className="font-medium">
-                {currentValue || property.default || 0}
-              </span>
+              <span className="font-medium">{currentValue || property.default || 0}</span>
               <span>{property.max || 100}</span>
             </div>
           </div>
@@ -498,7 +460,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
         return (
           <ColorPicker
             value={currentValue || property.default}
-            onChange={(color) => handlePropertyChange(key, color)}
+            onChange={color => handlePropertyChange(key, color)}
             label={property.label}
           />
         );
@@ -509,7 +471,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           return (
             <OptionsArrayEditor
               value={currentValue || []}
-              onChange={(newOptions) => handlePropertyChange(key, newOptions)}
+              onChange={newOptions => handlePropertyChange(key, newOptions)}
             />
           );
         }
@@ -530,7 +492,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
         return (
           <Input
             value={currentValue || ""}
-            onChange={(e) => handlePropertyChange(key, e.target.value)}
+            onChange={e => handlePropertyChange(key, e.target.value)}
             placeholder={property.placeholder || property.label}
             className="text-sm"
           />
@@ -542,7 +504,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
   const renderPropertyGroup = (
     title: string,
     icon: React.ReactNode,
-    properties: Record<string, any>,
+    properties: Record<string, any>
   ) => {
     if (Object.keys(properties).length === 0) return null;
 
@@ -587,9 +549,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
         </div>
 
         {blockDefinition.description && (
-          <p className="text-sm text-white/90 mt-2">
-            {blockDefinition.description}
-          </p>
+          <p className="text-sm text-white/90 mt-2">{blockDefinition.description}</p>
         )}
       </div>
 
@@ -608,30 +568,22 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           </TabsList>
 
           <TabsContent value="properties" className="p-2 space-y-2 mt-0">
-            {renderPropertyGroup(
-              "Geral",
-              <Type className="w-4 h-4" />,
-              categorizedProps.general,
-            )}
+            {renderPropertyGroup("Geral", <Type className="w-4 h-4" />, categorizedProps.general)}
             {renderPropertyGroup(
               "Conteúdo",
               <Type className="w-4 h-4" />,
-              categorizedProps.content,
+              categorizedProps.content
             )}
-            {renderPropertyGroup(
-              "Layout",
-              <Layout className="w-4 h-4" />,
-              categorizedProps.layout,
-            )}
+            {renderPropertyGroup("Layout", <Layout className="w-4 h-4" />, categorizedProps.layout)}
             {renderPropertyGroup(
               "Comportamento",
               <CheckCircle className="w-4 h-4" />,
-              categorizedProps.behavior,
+              categorizedProps.behavior
             )}
             {renderPropertyGroup(
               "Validação",
               <CheckCircle className="w-4 h-4" />,
-              categorizedProps.validation,
+              categorizedProps.validation
             )}
           </TabsContent>
 
@@ -639,12 +591,12 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
             {renderPropertyGroup(
               "Estilização",
               <Palette className="w-4 h-4" />,
-              categorizedProps.styling,
+              categorizedProps.styling
             )}
             {renderPropertyGroup(
               "Avançado",
               <Settings className="w-4 h-4" />,
-              categorizedProps.advanced,
+              categorizedProps.advanced
             )}
           </TabsContent>
         </Tabs>
@@ -652,9 +604,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
         {Object.keys(blockDefinition.properties).length === 0 && (
           <div className="text-center py-12 text-gray-500">
             <Settings className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-            <p className="text-sm font-medium">
-              Nenhuma propriedade disponível
-            </p>
+            <p className="text-sm font-medium">Nenhuma propriedade disponível</p>
             <p className="text-xs text-gray-400 mt-1">
               Este componente não possui propriedades editáveis
             </p>

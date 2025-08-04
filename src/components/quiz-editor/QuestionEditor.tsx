@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { QuizQuestion, QuizOption } from "@/types/quiz";
 import { Trash, Plus } from "lucide-react";
+import { generateSemanticId } from "../utils/semanticIdGenerator";
 
 interface QuestionEditorProps {
   question: QuizQuestion | null;
@@ -28,7 +29,12 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
 
     // Create a proper QuizQuestion object with all required properties
     return {
-      id: `question-${Date.now()}`,
+      id: generateSemanticId({
+        context: "quiz",
+        type: "question",
+        identifier: "question",
+        index: Math.floor(Math.random() * 1000),
+      }),
       text: "", // Add required 'text' property
       order: 0,
       question: "", // Add required 'question' property
@@ -57,12 +63,17 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
   };
 
   const handleAddOption = () => {
-    setEditedQuestion((prev) => ({
+    setEditedQuestion(prev => ({
       ...prev,
       options: [
         ...prev.options,
         {
-          id: `option-${Date.now()}`,
+          id: generateSemanticId({
+            context: "quiz",
+            type: "question",
+            identifier: "option",
+            index: Math.floor(Math.random() * 1000),
+          }),
           text: "",
           style: "natural",
         },
@@ -71,17 +82,17 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
   };
 
   const handleRemoveOption = (index: number) => {
-    setEditedQuestion((prev) => ({
+    setEditedQuestion(prev => ({
       ...prev,
       options: prev.options.filter((_, i) => i !== index),
     }));
   };
 
   const handleOptionChange = (index: number, field: string, value: string) => {
-    setEditedQuestion((prev) => ({
+    setEditedQuestion(prev => ({
       ...prev,
       options: prev.options.map((option, i) =>
-        i === index ? { ...option, [field]: value } : option,
+        i === index ? { ...option, [field]: value } : option
       ),
     }));
   };
@@ -110,8 +121,8 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
           <Input
             id="question-title"
             value={editedQuestion.title || ""}
-            onChange={(e) =>
-              setEditedQuestion((prev) => ({
+            onChange={e =>
+              setEditedQuestion(prev => ({
                 ...prev,
                 title: e.target.value,
                 question: e.target.value, // Keep in sync
@@ -130,8 +141,8 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
             min="1"
             max="10"
             value={editedQuestion.multiSelect || 3}
-            onChange={(e) =>
-              setEditedQuestion((prev) => ({
+            onChange={e =>
+              setEditedQuestion(prev => ({
                 ...prev,
                 multiSelect: parseInt(e.target.value) || 3,
               }))
@@ -164,9 +175,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
                 <div className="flex-1">
                   <Input
                     value={option.text}
-                    onChange={(e) =>
-                      handleOptionChange(index, "text", e.target.value)
-                    }
+                    onChange={e => handleOptionChange(index, "text", e.target.value)}
                     placeholder={`Opção ${index + 1}`}
                   />
                 </div>
@@ -186,17 +195,10 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
       </div>
 
       <div className="flex justify-end gap-3 pt-4 border-t border-[#B89B7A]/20">
-        <Button
-          variant="outline"
-          onClick={onCancel}
-          className="border-[#B89B7A] text-[#432818]"
-        >
+        <Button variant="outline" onClick={onCancel} className="border-[#B89B7A] text-[#432818]">
           Cancelar
         </Button>
-        <Button
-          onClick={handleSave}
-          className="bg-[#B89B7A] hover:bg-[#A38A69] text-white"
-        >
+        <Button onClick={handleSave} className="bg-[#B89B7A] hover:bg-[#A38A69] text-white">
           Salvar Pergunta
         </Button>
       </div>

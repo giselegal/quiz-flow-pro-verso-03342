@@ -2,6 +2,7 @@
 // Este arquivo simula o recebimento de webhooks da Hotmart no frontend
 
 import { hotmartWebhookManager, HotmartWebhookData } from "./hotmartWebhook";
+import { generateSemanticId } from "./semanticIdGenerator";
 
 export class HotmartWebhookSimulator {
   private static instance: HotmartWebhookSimulator;
@@ -18,21 +19,23 @@ export class HotmartWebhookSimulator {
    */
   public async simulateWebhook(
     email: string,
-    event:
-      | "PURCHASE_COMPLETE"
-      | "PURCHASE_APPROVED"
-      | "PURCHASE_CANCELED"
-      | "PURCHASE_REFUNDED",
-    transactionId?: string,
+    event: "PURCHASE_COMPLETE" | "PURCHASE_APPROVED" | "PURCHASE_CANCELED" | "PURCHASE_REFUNDED",
+    transactionId?: string
   ): Promise<void> {
     const webhookData: HotmartWebhookData = {
       event,
-      webhook_id:
-        "agQzTLUehWUfhPzjhdwntVQz0JNT5E0216ae0d-00a9-48ae-85d1-f0d14bd8e0df",
+      webhook_id: "agQzTLUehWUfhPzjhdwntVQz0JNT5E0216ae0d-00a9-48ae-85d1-f0d14bd8e0df",
       timestamp: new Date().toISOString(),
       data: {
         purchase: {
-          transaction: transactionId || `T${Date.now()}`,
+          transaction:
+            transactionId ||
+            generateSemanticId({
+              context: "hotmart",
+              type: "transaction",
+              identifier: "purchase",
+              index: Math.floor(Math.random() * 10000),
+            }),
           approved_date: new Date().toISOString(),
           price: {
             value: 297,
@@ -49,7 +52,14 @@ export class HotmartWebhookSimulator {
           document: "000.000.000-00",
         },
         transaction: {
-          id: transactionId || `T${Date.now()}`,
+          id:
+            transactionId ||
+            generateSemanticId({
+              context: "hotmart",
+              type: "transaction",
+              identifier: "payment",
+              index: Math.floor(Math.random() * 10000),
+            }),
           timestamp: new Date().toISOString(),
         },
       },
@@ -76,7 +86,7 @@ export class HotmartWebhookSimulator {
     console.log("[Webhook Simulator] 1️⃣ Simulando checkout...");
 
     // 2. Aguardar um pouco (simular delay real)
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     // 3. Simular webhook de compra completa
     console.log("[Webhook Simulator] 2️⃣ Simulando webhook...");
@@ -90,15 +100,8 @@ export class HotmartWebhookSimulator {
 export const webhookSimulator = HotmartWebhookSimulator.getInstance();
 
 // Funções utilitárias para uso direto
-export const simulateHotmartPurchase = (
-  email: string,
-  transactionId?: string,
-) => {
-  return webhookSimulator.simulateWebhook(
-    email,
-    "PURCHASE_COMPLETE",
-    transactionId,
-  );
+export const simulateHotmartPurchase = (email: string, transactionId?: string) => {
+  return webhookSimulator.simulateWebhook(email, "PURCHASE_COMPLETE", transactionId);
 };
 
 export const testWebhookFlow = (email: string) => {

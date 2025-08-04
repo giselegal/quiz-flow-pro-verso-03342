@@ -1,4 +1,3 @@
-import { generateSemanticId } from "../utils/semanticIdGenerator";
 // Simplified Page Structure Validator
 // Placeholder service to avoid complex type issues
 
@@ -62,7 +61,7 @@ export class PageStructureValidator {
 
   private static validateBlock(
     block: any,
-    index: number
+    index: number,
   ): { errors: string[]; warnings: string[] } {
     const errors: string[] = [];
     const warnings: string[] = [];
@@ -76,7 +75,9 @@ export class PageStructureValidator {
     }
 
     if (!block.content) {
-      warnings.push(`Bloco '${block.type}' no índice ${index} não possui conteúdo`);
+      warnings.push(
+        `Bloco '${block.type}' no índice ${index} não possui conteúdo`,
+      );
     }
 
     return { errors, warnings };
@@ -97,7 +98,7 @@ export class PageStructureValidator {
 
     if (page.blocks) {
       fixedPage.blocks = page.blocks.map((block: any, index: number) =>
-        this.fixBlockStructure(block, index)
+        this.fixBlockStructure(block, index),
       );
     } else {
       fixedPage.blocks = [
@@ -117,14 +118,7 @@ export class PageStructureValidator {
 
   private static fixBlockStructure(block: any, index: number): Block {
     return {
-      id:
-        block.id ||
-        generateSemanticId({
-          context: "validator",
-          type: "block",
-          identifier: block.type || "unknown",
-          index,
-        }),
+      id: block.id || `${block.type || "unknown"}-${Date.now()}-${index}`,
       type: block.type || "text",
       content: block.content || { text: "Conteúdo padrão" },
       order: block.order || index,
@@ -142,7 +136,7 @@ export class PageStructureValidator {
 
   private static generateDefaultProperties(
     blockType: string,
-    existingProps: Record<string, any> = {}
+    existingProps: Record<string, any> = {},
   ): Record<string, any> {
     return existingProps;
   }
@@ -161,12 +155,12 @@ export class PageStructureValidator {
         if (validation.fixedPage) {
           pagesFixed++;
           console.log(
-            `🔧 Página corrigida: "${page.title || page.name}" (${validation.errors.length} erros, ${validation.warnings.length} avisos)`
+            `🔧 Página corrigida: "${page.title || page.name}" (${validation.errors.length} erros, ${validation.warnings.length} avisos)`,
           );
           return validation.fixedPage;
         } else {
           console.error(
-            `❌ Erro crítico: Falha ao corrigir a página "${page.title || page.name}". Retornando página original.`
+            `❌ Erro crítico: Falha ao corrigir a página "${page.title || page.name}". Retornando página original.`,
           );
           return page;
         }
@@ -197,12 +191,14 @@ export class PageStructureValidator {
     }
 
     if (validation.fixedPage) {
-      console.log(`✅ Página "${page.title || page.name}" corrigida para ser schema-driven`);
+      console.log(
+        `✅ Página "${page.title || page.name}" corrigida para ser schema-driven`,
+      );
       return validation.fixedPage;
     }
 
     console.warn(
-      `⚠️ Recriando página "${page.title || page.name}" com estrutura schema-driven básica devido a falha na correção.`
+      `⚠️ Recriando página "${page.title || page.name}" com estrutura schema-driven básica devido a falha na correção.`,
     );
     return {
       id: page.id || `rebuilt-${Date.now()}`,

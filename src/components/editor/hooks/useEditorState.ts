@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { EditorBlock } from "@/types/editor";
+import { generateSemanticId } from "../utils/semanticIdGenerator";
 
 interface EditorState {
   blocks: EditorBlock[];
@@ -15,55 +16,54 @@ export const useEditorState = (initialBlocks: EditorBlock[] = []) => {
   });
 
   const updateBlocks = useCallback((blocks: EditorBlock[]) => {
-    setState((prev) => ({ ...prev, blocks }));
+    setState(prev => ({ ...prev, blocks }));
   }, []);
 
   const selectBlock = useCallback((blockId: string | null) => {
-    setState((prev) => ({ ...prev, selectedBlockId: blockId }));
+    setState(prev => ({ ...prev, selectedBlockId: blockId }));
   }, []);
 
   const togglePreview = useCallback(() => {
-    setState((prev) => ({ ...prev, isPreviewing: !prev.isPreviewing }));
+    setState(prev => ({ ...prev, isPreviewing: !prev.isPreviewing }));
   }, []);
 
   const addBlock = useCallback(
     (type: EditorBlock["type"]) => {
       const newBlock: EditorBlock = {
-        id: `block-${Date.now()}`,
+        id: generateSemanticId({
+          context: "editor",
+          type: "block",
+          identifier: "block",
+          index: Math.floor(Math.random() * 1000),
+        }),
         type,
         content: getDefaultContent(type),
         properties: {}, // Add missing properties field
         order: state.blocks.length,
       };
 
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         blocks: [...prev.blocks, newBlock],
       }));
 
       return newBlock.id;
     },
-    [state.blocks.length],
+    [state.blocks.length]
   );
 
-  const updateBlock = useCallback(
-    (id: string, updates: Partial<EditorBlock>) => {
-      setState((prev) => ({
-        ...prev,
-        blocks: prev.blocks.map((block) =>
-          block.id === id ? { ...block, ...updates } : block,
-        ),
-      }));
-    },
-    [],
-  );
+  const updateBlock = useCallback((id: string, updates: Partial<EditorBlock>) => {
+    setState(prev => ({
+      ...prev,
+      blocks: prev.blocks.map(block => (block.id === id ? { ...block, ...updates } : block)),
+    }));
+  }, []);
 
   const deleteBlock = useCallback((id: string) => {
-    setState((prev) => ({
+    setState(prev => ({
       ...prev,
-      blocks: prev.blocks.filter((block) => block.id !== id),
-      selectedBlockId:
-        prev.selectedBlockId === id ? null : prev.selectedBlockId,
+      blocks: prev.blocks.filter(block => block.id !== id),
+      selectedBlockId: prev.selectedBlockId === id ? null : prev.selectedBlockId,
     }));
   }, []);
 

@@ -1,4 +1,5 @@
 import { BlockData, BlockComponentProps } from "@/types/blocks";
+import { generateSemanticId } from "../utils/semanticIdGenerator";
 
 /**
  * Converts legacy block props to new BlockData format
@@ -21,7 +22,14 @@ export const convertToBlockData = (legacyBlock: any): BlockData => {
 
   // Convert legacy format
   return {
-    id: legacyBlock.id || `block-${Date.now()}`,
+    id:
+      legacyBlock.id ||
+      generateSemanticId({
+        context: "compatibility",
+        type: "block",
+        identifier: "block",
+        index: Math.floor(Math.random() * 1000),
+      }),
     type: legacyBlock.type || "text",
     properties: legacyBlock.properties || {},
     content: legacyBlock.content || legacyBlock.properties || {},
@@ -56,7 +64,7 @@ export const ensureBlockCompatibility = (block: any): BlockData => {
  */
 export const createSafeBlockProps = (
   block: any,
-  additionalProps: Partial<BlockComponentProps> = {},
+  additionalProps: Partial<BlockComponentProps> = {}
 ): BlockComponentProps => {
   const safeBlock = ensureBlockCompatibility(block);
 
