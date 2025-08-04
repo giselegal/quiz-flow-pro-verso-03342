@@ -1,26 +1,26 @@
-import React, { useState } from 'react';
-import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
-import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
-import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
-import { UniversalBlockRenderer } from '@/components/editor/blocks/UniversalBlockRenderer';
-import OptimizedPropertiesPanel from '@/components/editor/OptimizedPropertiesPanel';
-import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
-import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
-import { EditableContent } from '@/types/editor';
-import { getRegistryStats, generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
-import { useEditor } from '@/context/EditorContext';
-import { useSyncedScroll } from '@/hooks/useSyncedScroll';
-import { DndProvider } from '@/components/editor/dnd/DndProvider';
-import { SortableBlockWrapper } from '@/components/editor/canvas/SortableBlockWrapper';
-import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
-import { Type, Trash2, GripVertical } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React, { useState } from "react";
+import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
+import { FunnelStagesPanel } from "@/components/editor/funnel/FunnelStagesPanel";
+import EnhancedComponentsSidebar from "@/components/editor/EnhancedComponentsSidebar";
+import { UniversalBlockRenderer } from "@/components/editor/blocks/UniversalBlockRenderer";
+import OptimizedPropertiesPanel from "@/components/editor/OptimizedPropertiesPanel";
+import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
+import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelSettingsPanel";
+import { EditableContent } from "@/types/editor";
+import { getRegistryStats, generateBlockDefinitions } from "@/config/enhancedBlockRegistry";
+import { useEditor } from "@/context/EditorContext";
+import { useSyncedScroll } from "@/hooks/useSyncedScroll";
+import { DndProvider } from "@/components/editor/dnd/DndProvider";
+import { SortableBlockWrapper } from "@/components/editor/canvas/SortableBlockWrapper";
+import { CanvasDropZone } from "@/components/editor/canvas/CanvasDropZone";
+import { Type, Trash2, GripVertical } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const EditorFixedPageWithDragDrop: React.FC = () => {
-  console.log('🔥 EditorFixedPage: PÁGINA RENDERIZANDO COM DRAG&DROP!');
+  console.log("🔥 EditorFixedPage: PÁGINA RENDERIZANDO COM DRAG&DROP!");
 
   // Hook para scroll sincronizado
-  const { scrollRef } = useSyncedScroll({ source: 'canvas' });
+  const { scrollRef } = useSyncedScroll({ source: "canvas" });
 
   // Estado para controlar o painel de configurações
   const [showFunnelSettings, setShowFunnelSettings] = useState(false);
@@ -36,7 +36,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     computed: { currentBlocks, selectedBlock, totalBlocks, stageCount },
   } = useEditor();
 
-  console.log('🔥 EditorFixedPage: Dados do editor:', {
+  console.log("🔥 EditorFixedPage: Dados do editor:", {
     stages: stages?.length || 0,
     activeStageId,
     selectedBlockId,
@@ -61,37 +61,37 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     // Fallback com propriedades padrão para qualquer componente
     return {
       type: type,
-      name: type.charAt(0).toUpperCase() + type.slice(1).replace(/[-_]/g, ' '),
-      label: type.charAt(0).toUpperCase() + type.slice(1).replace(/[-_]/g, ' '),
+      name: type.charAt(0).toUpperCase() + type.slice(1).replace(/[-_]/g, " "),
+      label: type.charAt(0).toUpperCase() + type.slice(1).replace(/[-_]/g, " "),
       description: `Componente ${type}`,
-      category: 'basic',
+      category: "basic",
       icon: Type,
       component: React.Fragment,
       defaultProps: {},
       properties: {
         text: {
-          type: 'string' as const,
-          label: 'Texto',
-          default: '',
-          description: 'Conteúdo de texto do componente',
+          type: "string" as const,
+          label: "Texto",
+          default: "",
+          description: "Conteúdo de texto do componente",
         },
         title: {
-          type: 'string' as const,
-          label: 'Título',
-          default: '',
-          description: 'Título do componente',
+          type: "string" as const,
+          label: "Título",
+          default: "",
+          description: "Título do componente",
         },
         visible: {
-          type: 'boolean' as const,
-          label: 'Visível',
+          type: "boolean" as const,
+          label: "Visível",
           default: true,
-          description: 'Controla se o componente está visível',
+          description: "Controla se o componente está visível",
         },
         className: {
-          type: 'string' as const,
-          label: 'Classes CSS',
-          default: '',
-          description: 'Classes CSS customizadas',
+          type: "string" as const,
+          label: "Classes CSS",
+          default: "",
+          description: "Classes CSS customizadas",
         },
       },
     };
@@ -100,15 +100,15 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   // ✅ VIEWPORT RESPONSIVE CONFIGURATION
   const getCanvasClassName = () => {
     const baseClasses =
-      'transition-all duration-500 ease-out mx-auto bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20';
+      "transition-all duration-500 ease-out mx-auto bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20";
 
     switch (viewportSize) {
-      case 'sm':
+      case "sm":
         return `${baseClasses} w-[375px] min-h-[600px]`;
-      case 'md':
+      case "md":
         return `${baseClasses} w-[768px] min-h-[800px]`;
-      case 'lg':
-      case 'xl':
+      case "lg":
+      case "xl":
       default:
         return `${baseClasses} w-full max-w-4xl min-h-[900px]`;
     }
@@ -116,12 +116,12 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
   // Handler para salvar (placeholder)
   const handleSave = () => {
-    console.log('💾 Salvando editor...');
+    console.log("💾 Salvando editor...");
   };
 
   // Handler para deletar bloco
   const handleDeleteBlock = (blockId: string) => {
-    if (window.confirm('Tem certeza que deseja deletar este bloco?')) {
+    if (window.confirm("Tem certeza que deseja deletar este bloco?")) {
       deleteBlock(blockId);
       console.log(`🗑️ Bloco ${blockId} deletado`);
     }
@@ -129,7 +129,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
   // ✅ NAVEGAÇÃO SIMPLIFICADA (CALLBACK OPCIONAL)
   const handleStageSelect = (stageId: string) => {
-    console.log('🔄 Editor: Callback de mudança de etapa recebido:', stageId);
+    console.log("🔄 Editor: Callback de mudança de etapa recebido:", stageId);
     // O EditorContext já gerencia tudo internamente
     // Este callback é apenas para compatibilidade
   };
@@ -142,27 +142,66 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         properties: block.properties || {},
       }))}
       onBlocksReorder={newBlocks => {
-        // Implementar reordenação de blocos
-        console.log('🔄 Reordenando blocos:', newBlocks);
-        
-        // Atualizar a ordem dos blocos no contexto
+        // Implementar reordenação de blocos usando updateBlock
+        console.log("🔄 Reordenando blocos:", newBlocks);
+
         if (currentBlocks && newBlocks.length === currentBlocks.length) {
-          // Recriar o array de blocos na nova ordem
-          const reorderedBlocks = newBlocks.map(newBlock => {
+          // Para reordenar, vamos simular removendo e readicionando na ordem correta
+          // Primeiro, mapear os dados atualizados
+          newBlocks.forEach((newBlock, index) => {
             const originalBlock = currentBlocks.find(block => block.id === newBlock.id);
-            return originalBlock || newBlock;
+            if (originalBlock) {
+              // Atualizar apenas se a ordem mudou
+              if (originalBlock !== currentBlocks[index]) {
+                updateBlock(newBlock.id, {
+                  ...originalBlock,
+                  // Adicionar propriedade de ordem se necessário
+                  order: index,
+                });
+              }
+            }
           });
-          
-          // Usar setActiveStageBlocks para atualizar a ordem
-          setActiveStageBlocks(reorderedBlocks);
-          console.log('✅ Blocos reordenados com sucesso');
+          console.log("✅ Blocos reordenados com sucesso");
         } else {
-          console.warn('⚠️ Erro na reordenação: quantidade de blocos não confere');
+          console.warn("⚠️ Erro na reordenação: quantidade de blocos não confere");
         }
       }}
       onBlockAdd={(blockType, position) => {
+        console.log(`➕ Tentando adicionar bloco ${blockType} na posição ${position}`);
+
+        // Adicionar o bloco normalmente (será adicionado no final)
         const blockId = addBlock(blockType);
-        console.log(`➕ Bloco ${blockType} adicionado via drag&drop na posição ${position}`);
+
+        // Se a posição for diferente do final, reorganizar
+        if (position !== undefined && currentBlocks && position < currentBlocks.length) {
+          console.log(`🔄 Reorganizando: bloco ${blockId} deve ir para posição ${position}`);
+
+          // Aguardar um tick para o bloco ser adicionado ao estado
+          setTimeout(() => {
+            // Obter blocos atualizados
+            const updatedBlocks = getBlocksForStage(activeStageId || "default");
+            const newBlockIndex = updatedBlocks.findIndex(block => block.id === blockId);
+
+            if (newBlockIndex !== -1 && newBlockIndex !== position) {
+              // Criar nova ordem simulando arrayMove
+              const reorderedBlocks = [...updatedBlocks];
+              const [movedBlock] = reorderedBlocks.splice(newBlockIndex, 1);
+              reorderedBlocks.splice(position, 0, movedBlock);
+
+              console.log(
+                "🎯 Nova ordem após inserção:",
+                reorderedBlocks.map(b => b.id)
+              );
+
+              // Atualizar ordem de cada bloco
+              reorderedBlocks.forEach((block, index) => {
+                updateBlock(block.id, { order: index });
+              });
+            }
+          }, 100);
+        }
+
+        console.log(`✅ Bloco ${blockType} (${blockId}) processado para posição ${position}`);
       }}
       onBlockSelect={blockId => {
         setSelectedBlockId(blockId);
@@ -194,8 +233,8 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   Editor de Funil - Etapa {activeStageId}
                 </h1>
                 <div className="text-sm text-stone-500">
-                  {totalBlocks} componente{totalBlocks !== 1 ? 's' : ''} • {stageCount} etapa
-                  {stageCount !== 1 ? 's' : ''}
+                  {totalBlocks} componente{totalBlocks !== 1 ? "s" : ""} • {stageCount} etapa
+                  {stageCount !== 1 ? "s" : ""}
                 </div>
               </div>
             </div>
@@ -250,7 +289,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         {/* Painel de Configurações do Funil */}
         {showFunnelSettings && (
           <FunnelSettingsPanel
-            funnelId={activeStageId || 'default'}
+            funnelId={activeStageId || "default"}
             isOpen={showFunnelSettings}
             onClose={() => setShowFunnelSettings(false)}
           />
