@@ -7,7 +7,6 @@ import { AdminAuthProvider } from '@/context/AdminAuthContext';
 import { EditorProvider } from '@/context/EditorContext';
 import { ScrollSyncProvider } from '@/context/ScrollSyncContext';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
-import SchemaDrivenEditorResponsive from '@/components/editor/SchemaDrivenEditorResponsive';
 import EditorPage from '@/pages/editor-fixed';
 import DebugEditorContext from '@/pages/debug-editor';
 import ResultPage from './pages/ResultPage';
@@ -34,27 +33,21 @@ function App() {
           <Router>
             <div className="min-h-screen bg-background">
               <Switch>
-                {/* Editor Routes - envolvidas com EditorProvider */}
+                {/* Redirect /editor para /editor-fixed */}
                 <Route path="/editor">
-                  {() => (
-                    <ErrorBoundary>
-                      <EditorProvider>
-                        <SchemaDrivenEditorResponsive />
-                      </EditorProvider>
-                    </ErrorBoundary>
-                  )}
+                  {() => {
+                    window.location.href = '/editor-fixed';
+                    return null;
+                  }}
                 </Route>
                 <Route path="/editor/:id">
-                  {(params) => (
-                    <ErrorBoundary>
-                      <EditorProvider>
-                        <SchemaDrivenEditorResponsive funnelId={params.id} />
-                      </EditorProvider>
-                    </ErrorBoundary>
-                  )}
+                  {() => {
+                    window.location.href = '/editor-fixed';
+                    return null;
+                  }}
                 </Route>
                 
-                {/* Editor Fixed Route - nova rota ativada com proteção */}
+                {/* Editor Fixed Route - rota principal do editor */}
                 <Route path="/editor-fixed">
                   {() => (
                     <ErrorBoundary>

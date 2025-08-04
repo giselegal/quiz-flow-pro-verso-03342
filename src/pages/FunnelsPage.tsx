@@ -11,7 +11,7 @@ const FunnelsPage: React.FC = () => {
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Funis</h1>
-          <Button onClick={() => setLocation('/editor')}>
+          <Button onClick={() => setLocation('/editor-fixed')}>
             Criar Novo Funil
           </Button>
         </div>
@@ -24,7 +24,7 @@ const FunnelsPage: React.FC = () => {
             <p className="text-gray-600 mb-6">
               Comece criando seu primeiro funil de conversão
             </p>
-            <Button onClick={() => setLocation('/editor')}>
+            <Button onClick={() => setLocation('/editor-fixed')}>
               Criar Primeiro Funil
             </Button>
           </div>

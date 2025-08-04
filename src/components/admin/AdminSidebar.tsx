@@ -54,7 +54,7 @@ const sidebarItems = [
   },
   {
     title: 'Editor',
-    href: '/editor',
+    href: '/editor-fixed',
     icon: Code
   }
 ];

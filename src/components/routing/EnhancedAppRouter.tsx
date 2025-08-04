@@ -110,7 +110,7 @@ const SimpleDashboard: React.FC = () => (
           <h2 className="text-xl font-semibold mb-4">🎯 Editor Melhorado</h2>
           <p className="text-gray-600 mb-4">Acesse o novo editor com todas as funcionalidades avançadas</p>
           <a 
-            href="/editor" 
+            href="/editor-fixed" 
             className="inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           >
             Acessar Editor
@@ -224,7 +224,7 @@ export const EnhancedAppRouter: React.FC = () => {
                         Voltar ao Dashboard
                       </a>
                       <a 
-                        href="/editor"
+                        href="/editor-fixed"
                         className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
                       >
                         Acessar Editor
