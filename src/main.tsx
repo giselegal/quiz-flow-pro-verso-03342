@@ -8,7 +8,7 @@ import { cleanupConsoleWarnings } from "./utils/development";
 // import "./utils/hotmartWebhookSimulator"; // Carregar simulador de webhook - temporariamente desabilitado
 
 // 🧹 Inicializar limpeza de avisos do console em desenvolvimento
-if (process.env.NODE_ENV === "development") {
+if (import.meta.env.DEV) {
   cleanupConsoleWarnings();
 }
 

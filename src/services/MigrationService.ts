@@ -4,16 +4,14 @@
  */
 
 import { createClient } from "@supabase/supabase-js";
-import fs from "fs";
-import path from "path";
 
 // ============================================================================
 // CONFIGURAÇÃO DO SUPABASE COM PERMISSÕES ADMIN
 // ============================================================================
 
 const supabase = createClient(
-  process.env.SUPABASE_URL || "",
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || "",
+  import.meta.env.VITE_SUPABASE_URL || "",
+  import.meta.env.VITE_SUPABASE_ANON_KEY || "",
   {
     auth: {
       autoRefreshToken: false,
@@ -107,87 +105,12 @@ export class MigrationService {
   }
 
   /**
-   * Executa migração via queries SQL
+   * Executa migração via queries diretas (versão browser-compatible)
    */
   static async executeMigration(): Promise<MigrationResult> {
-    const result: MigrationResult = {
-      success: false,
-      message: "",
-      executed: [],
-      errors: [],
-      timestamp: new Date().toISOString(),
-    };
-
-    try {
-      console.log("🚀 Iniciando migração automática...");
-
-      // Carregar arquivo de migração
-      const migrationPath = path.join(
-        process.cwd(),
-        "supabase/migrations/002_complete_quiz_schema.sql"
-      );
-
-      if (!fs.existsSync(migrationPath)) {
-        throw new Error("Arquivo de migração não encontrado");
-      }
-
-      const sqlContent = fs.readFileSync(migrationPath, "utf8");
-
-      // Dividir em statements individuais
-      const statements = sqlContent
-        .split(";")
-        .map(s => s.trim())
-        .filter(s => s && !s.startsWith("--"));
-
-      console.log(`📄 ${statements.length} statements encontrados`);
-
-      // Executar cada statement
-      for (let i = 0; i < statements.length; i++) {
-        const statement = statements[i];
-
-        if (!statement) continue;
-
-        try {
-          console.log(`⚡ Executando statement ${i + 1}/${statements.length}`);
-
-          // Usar rpc para executar SQL direto
-          const { error } = await supabase.rpc("exec_sql", {
-            sql_query: statement,
-          });
-
-          if (error) {
-            console.error(`❌ Erro no statement ${i + 1}:`, error);
-            result.errors.push(`Statement ${i + 1}: ${error.message}`);
-          } else {
-            result.executed.push(`Statement ${i + 1} executado`);
-          }
-        } catch (statementError: any) {
-          console.error(`❌ Erro no statement ${i + 1}:`, statementError);
-          result.errors.push(`Statement ${i + 1}: ${statementError.message}`);
-        }
-      }
-
-      // Verificar resultado final
-      const finalStatus = await this.checkSchemaStatus();
-
-      if (finalStatus.hasSchema && finalStatus.missingTables.length === 0) {
-        result.success = true;
-        result.message = "Migração executada com sucesso!";
-      } else {
-        result.success = false;
-        result.message = `Migração parcial: ${finalStatus.missingTables.length} tabelas ainda ausentes`;
-      }
-    } catch (error: any) {
-      console.error("❌ Erro geral na migração:", error);
-      result.success = false;
-      result.message = error.message;
-      result.errors.push(error.message);
-    }
-
-    return result;
-  }
-
-  /**
+    // Redirecionar para executeMigrationDirect para compatibilidade com browser
+    return this.executeMigrationDirect();
+  } /**
    * Executa migração alternativa via queries diretas
    */
   static async executeMigrationDirect(): Promise<MigrationResult> {
