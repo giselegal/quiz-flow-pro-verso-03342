@@ -204,13 +204,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               />
             }
             componentsPanel={
-              <EnhancedComponentsSidebar 
-                onAddComponent={(type: string) => {
-                  // ✅ USAR CONTEXT UNIFICADO
-                  const blockId = addBlock(type);
-                  console.log(`➕ Bloco ${type} adicionado à etapa ${activeStageId}`);
-                }}
-              />
+              <EnhancedComponentsSidebar />
             }
             canvas={
               <div ref={scrollRef} className="p-2 overflow-auto h-full bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm">
