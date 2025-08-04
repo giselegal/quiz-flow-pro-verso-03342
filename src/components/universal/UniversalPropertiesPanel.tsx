@@ -40,7 +40,7 @@ interface UniversalPropertiesPanelProps {
 // -----------------------------------------------------------------------------
 // Componente UniversalPropertiesPanel
 // -----------------------------------------------------------------------------
-const UniversalPropertiesPanel: React.FC<UniversalPropertiesPanelProps> = ({
+export const UniversalPropertiesPanel: React.FC<UniversalPropertiesPanelProps> = ({
   selectedBlock,
   onUpdate,
   onDelete,
