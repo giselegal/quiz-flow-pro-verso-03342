@@ -17,7 +17,7 @@ export const getStep12Template = () => [
     },
   },
   {
-    id: "step12-title",
+    id: "step12-transition-title",
     type: "heading",
     properties: {
       content: "Agora vamos conhecer você melhor",
@@ -30,7 +30,7 @@ export const getStep12Template = () => [
     },
   },
   {
-    id: "step12-text",
+    id: "step12-transition-text",
     type: "text",
     properties: {
       content:
@@ -42,7 +42,7 @@ export const getStep12Template = () => [
     },
   },
   {
-    id: "step12-button",
+    id: "step12-continue-button",
     type: "button",
     properties: {
       text: "Continuar Análise",

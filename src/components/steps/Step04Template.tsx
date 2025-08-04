@@ -35,7 +35,7 @@ export const getStep04Template = () => {
 
     // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step04-title",
+      id: "step04-question-title",
       type: "heading",
       properties: {
         content: "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
@@ -50,7 +50,7 @@ export const getStep04Template = () => {
 
     // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step04-text",
+      id: "step04-question-counter",
       type: "text",
       properties: {
         content: "Questão 3 de 10",
@@ -63,7 +63,7 @@ export const getStep04Template = () => {
 
     // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
-      id: "step04-options",
+      id: "step04-visual-options",
       type: "options-grid",
       properties: {
         questionId: "q3",
@@ -160,7 +160,7 @@ export const getStep04Template = () => {
 
     // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step04-button",
+      id: "step04-continue-button",
       type: "button",
       properties: {
         text: "Continuar",

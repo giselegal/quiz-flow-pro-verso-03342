@@ -17,7 +17,7 @@ export const getStep10Template = () => [
     },
   },
   {
-    id: "step10-title",
+    id: "step10-question-title",
     type: "heading",
     properties: {
       content: "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?",
@@ -30,7 +30,7 @@ export const getStep10Template = () => [
     },
   },
   {
-    id: "step10-text",
+    id: "step10-question-counter",
     type: "text",
     properties: {
       content: "Questão 9 de 10",
@@ -41,7 +41,7 @@ export const getStep10Template = () => [
     },
   },
   {
-    id: "step10-options",
+    id: "step10-accessories-options",
     type: "options-grid",
     properties: {
       questionId: "q9",
@@ -136,7 +136,7 @@ export const getStep10Template = () => [
     },
   },
   {
-    id: "step10-button",
+    id: "step10-continue-button",
     type: "button",
     properties: {
       text: "Continuar",

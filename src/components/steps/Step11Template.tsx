@@ -17,7 +17,7 @@ export const getStep11Template = () => [
     },
   },
   {
-    id: "step11-title",
+    id: "step11-question-title",
     type: "heading",
     properties: {
       content: "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...",
@@ -30,7 +30,7 @@ export const getStep11Template = () => [
     },
   },
   {
-    id: "step11-text",
+    id: "step11-question-counter",
     type: "text",
     properties: {
       content: "Questão 10 de 10",
@@ -41,7 +41,7 @@ export const getStep11Template = () => [
     },
   },
   {
-    id: "step11-options",
+    id: "step11-fabrics-options",
     type: "options-grid",
     properties: {
       questionId: "q10",
@@ -127,7 +127,7 @@ export const getStep11Template = () => [
     },
   },
   {
-    id: "step11-button",
+    id: "step11-continue-button",
     type: "button",
     properties: {
       text: "Finalizar Quiz",

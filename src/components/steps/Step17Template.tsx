@@ -17,7 +17,7 @@ export const getStep17Template = () => [
     },
   },
   {
-    id: "step17-title",
+    id: "step17-question-title",
     type: "heading",
     properties: {
       content: "QUAL ORÇAMENTO VOCÊ COSTUMA DESTINAR PARA ROUPAS POR MÊS?",
@@ -30,7 +30,7 @@ export const getStep17Template = () => [
     },
   },
   {
-    id: "step17-text",
+    id: "step17-question-counter",
     type: "text",
     properties: {
       content: "Questão 17 de 21",
@@ -41,7 +41,7 @@ export const getStep17Template = () => [
     },
   },
   {
-    id: "step17-options",
+    id: "step17-final-options",
     type: "options-grid",
     properties: {
       questionId: "strategic-10",
@@ -95,7 +95,7 @@ export const getStep17Template = () => [
     },
   },
   {
-    id: "step17-button",
+    id: "step17-continue-button",
     type: "button",
     properties: {
       text: "Continuar",

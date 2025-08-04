@@ -17,7 +17,7 @@ export const getStep13Template = () => [
     },
   },
   {
-    id: "step13-title",
+    id: "step13-question-title",
     type: "heading",
     properties: {
       content: "QUANDO VOCÊ OLHA PARA O SEU GUARDA-ROUPA, QUAL DESSAS FRASES TE VEM A CABEÇA?",
@@ -30,7 +30,7 @@ export const getStep13Template = () => [
     },
   },
   {
-    id: "step13-text",
+    id: "step13-question-counter",
     type: "text",
     properties: {
       content: "Questão 13 de 21",
@@ -41,7 +41,7 @@ export const getStep13Template = () => [
     },
   },
   {
-    id: "step13-options",
+    id: "step13-wardrobe-options",
     type: "options-grid",
     properties: {
       questionId: "strategic-1",
@@ -95,7 +95,7 @@ export const getStep13Template = () => [
     },
   },
   {
-    id: "step13-button",
+    id: "step13-continue-button",
     type: "button",
     properties: {
       text: "Continuar",

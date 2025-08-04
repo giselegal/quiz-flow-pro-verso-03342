@@ -17,7 +17,7 @@ export const getStep09Template = () => [
     },
   },
   {
-    id: "step09-title",
+    id: "step09-question-title",
     type: "heading",
     properties: {
       content: "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?",
@@ -30,7 +30,7 @@ export const getStep09Template = () => [
     },
   },
   {
-    id: "step09-text",
+    id: "step09-question-counter",
     type: "text",
     properties: {
       content: "Questão 8 de 10",
@@ -41,7 +41,7 @@ export const getStep09Template = () => [
     },
   },
   {
-    id: "step09-options",
+    id: "step09-shoes-options",
     type: "options-grid",
     properties: {
       questionId: "q8",
@@ -136,7 +136,7 @@ export const getStep09Template = () => [
     },
   },
   {
-    id: "step09-button",
+    id: "step09-continue-button",
     type: "button",
     properties: {
       text: "Continuar",

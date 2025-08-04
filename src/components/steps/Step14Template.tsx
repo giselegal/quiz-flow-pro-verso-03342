@@ -17,7 +17,7 @@ export const getStep14Template = () => [
     },
   },
   {
-    id: "step14-title",
+    id: "step14-question-title",
     type: "heading",
     properties: {
       content: "QUAL É A SUA PRINCIPAL DIFICULDADE NA HORA DE SE ARRUMAR PARA SAIR?",
@@ -30,7 +30,7 @@ export const getStep14Template = () => [
     },
   },
   {
-    id: "step14-text",
+    id: "step14-question-counter",
     type: "text",
     properties: {
       content: "Questão 14 de 21",
@@ -41,7 +41,7 @@ export const getStep14Template = () => [
     },
   },
   {
-    id: "step14-options",
+    id: "step14-final-options",
     type: "options-grid",
     properties: {
       questionId: "strategic-2",
@@ -95,7 +95,7 @@ export const getStep14Template = () => [
     },
   },
   {
-    id: "step14-button",
+    id: "step14-continue-button",
     type: "button",
     properties: {
       text: "Continuar",

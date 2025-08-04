@@ -35,7 +35,7 @@ export const getStep06Template = () => {
 
     // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step06-title",
+      id: "step06-question-title",
       type: "heading",
       properties: {
         content: "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?",
@@ -50,7 +50,7 @@ export const getStep06Template = () => {
 
     // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step06-text",
+      id: "step06-question-counter",
       type: "text",
       properties: {
         content: "Questão 5 de 10",
@@ -63,7 +63,7 @@ export const getStep06Template = () => {
 
     // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
-      id: "step06-options",
+      id: "step06-pattern-options",
       type: "options-grid",
       properties: {
         questionId: "q5",
@@ -167,7 +167,7 @@ export const getStep06Template = () => {
 
     // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step06-button",
+      id: "step06-continue-button",
       type: "button",
       properties: {
         text: "Continuar",

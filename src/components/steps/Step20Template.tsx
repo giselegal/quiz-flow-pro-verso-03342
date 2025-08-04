@@ -17,7 +17,7 @@ export const getStep20Template = () => [
     },
   },
   {
-    id: "step20-result-header",
+    id: "step20-congratulations-header",
     type: "result-header",
     properties: {
       title: "Seu Resultado Personalizado",
@@ -26,7 +26,7 @@ export const getStep20Template = () => [
     },
   },
   {
-    id: "step20-result-card",
+    id: "step20-style-result-card",
     type: "result-card",
     properties: {
       styleType: "Contemporâneo Elegante",
@@ -37,7 +37,7 @@ export const getStep20Template = () => [
     },
   },
   {
-    id: "step20-button",
+    id: "step20-view-offer-button",
     type: "button",
     properties: {
       text: "Ver Oferta Especial",

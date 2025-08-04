@@ -17,7 +17,7 @@ export const getStep21Template = () => [
     },
   },
   {
-    id: "step21-title",
+    id: "step21-final-title",
     type: "heading",
     properties: {
       content: "Etapa 21 - Template em Desenvolvimento",
@@ -30,7 +30,7 @@ export const getStep21Template = () => [
     },
   },
   {
-    id: "step21-text",
+    id: "step21-final-text",
     type: "text",
     properties: {
       content: "Este template será personalizado em breve",
@@ -41,7 +41,7 @@ export const getStep21Template = () => [
     },
   },
   {
-    id: "step21-button",
+    id: "step21-final-button",
     type: "button",
     properties: {
       text: "Continuar",

@@ -35,7 +35,7 @@ export const getStep07Template = () => {
 
     // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step07-title",
+      id: "step07-question-title",
       type: "heading",
       properties: {
         content: "QUAL CASACO É SEU FAVORITO?",
@@ -50,7 +50,7 @@ export const getStep07Template = () => {
 
     // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step07-text",
+      id: "step07-question-counter",
       type: "text",
       properties: {
         content: "Questão 6 de 10",
@@ -63,7 +63,7 @@ export const getStep07Template = () => {
 
     // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
-      id: "step07-options",
+      id: "step07-jacket-options",
       type: "options-grid",
       properties: {
         questionId: "q6",
@@ -127,7 +127,7 @@ export const getStep07Template = () => {
 
     // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step07-button",
+      id: "step07-continue-button",
       type: "button",
       properties: {
         text: "Continuar",

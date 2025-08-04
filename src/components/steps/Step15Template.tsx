@@ -17,7 +17,7 @@ export const getStep15Template = () => [
     },
   },
   {
-    id: "step15-title",
+    id: "step15-question-title",
     type: "heading",
     properties: {
       content:
@@ -31,7 +31,7 @@ export const getStep15Template = () => [
     },
   },
   {
-    id: "step15-text",
+    id: "step15-question-counter",
     type: "text",
     properties: {
       content: "Questão 15 de 21",
@@ -42,7 +42,7 @@ export const getStep15Template = () => [
     },
   },
   {
-    id: "step15-options",
+    id: "step15-final-options",
     type: "options-grid",
     properties: {
       questionId: "strategic-8",
@@ -96,7 +96,7 @@ export const getStep15Template = () => [
     },
   },
   {
-    id: "step15-button",
+    id: "step15-continue-button",
     type: "button",
     properties: {
       text: "Continuar",

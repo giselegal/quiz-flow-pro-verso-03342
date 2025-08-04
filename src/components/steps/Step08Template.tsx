@@ -21,7 +21,7 @@ export const getStep08Template = () => {
 
     // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step08-title",
+      id: "step08-question-title",
       type: "heading",
       properties: {
         content: "QUAL SUA CALÇA FAVORITA?",
@@ -36,7 +36,7 @@ export const getStep08Template = () => {
 
     // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step08-text",
+      id: "step08-question-counter",
       type: "text",
       properties: {
         content: "Questão 7 de 10",
@@ -49,7 +49,7 @@ export const getStep08Template = () => {
 
     // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
-      id: "step08-options",
+      id: "step08-pants-options",
       type: "options-grid",
       properties: {
         questionId: "q7",
@@ -154,7 +154,7 @@ export const getStep08Template = () => {
 
     // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step08-button",
+      id: "step08-continue-button",
       type: "button",
       properties: {
         text: "Continuar",

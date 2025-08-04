@@ -17,7 +17,7 @@ export const getStep18Template = () => [
     },
   },
   {
-    id: "step18-title",
+    id: "step18-question-title",
     type: "heading",
     properties: {
       content: "O QUE VOCÊ MAIS DESEJA ALCANÇAR COM SEU NOVO ESTILO?",
@@ -30,7 +30,7 @@ export const getStep18Template = () => [
     },
   },
   {
-    id: "step18-text",
+    id: "step18-question-counter",
     type: "text",
     properties: {
       content: "Questão 18 de 21",
@@ -41,7 +41,7 @@ export const getStep18Template = () => [
     },
   },
   {
-    id: "step18-options",
+    id: "step18-final-options",
     type: "options-grid",
     properties: {
       questionId: "strategic-11",
@@ -95,7 +95,7 @@ export const getStep18Template = () => [
     },
   },
   {
-    id: "step18-button",
+    id: "step18-continue-button",
     type: "button",
     properties: {
       text: "Continuar",

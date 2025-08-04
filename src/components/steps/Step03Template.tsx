@@ -35,7 +35,7 @@ export const getStep03Template = () => {
 
     // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step03-title",
+      id: "step03-question-title",
       type: "heading",
       properties: {
         content: "RESUMA A SUA PERSONALIDADE:",
@@ -50,7 +50,7 @@ export const getStep03Template = () => {
 
     // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step03-text",
+      id: "step03-question-counter",
       type: "text",
       properties: {
         content: "Questão 2 de 10",
@@ -63,7 +63,7 @@ export const getStep03Template = () => {
 
     // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
-      id: "step03-options",
+      id: "step03-personality-options",
       type: "options-grid",
       properties: {
         questionId: "q2",
@@ -151,7 +151,7 @@ export const getStep03Template = () => {
 
     // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step03-button",
+      id: "step03-continue-button",
       type: "button",
       properties: {
         text: "Continuar",

@@ -17,7 +17,7 @@ export const getStep16Template = () => [
     },
   },
   {
-    id: "step16-title",
+    id: "step16-question-title",
     type: "heading",
     properties: {
       content: "QUANDO VOCÊ PENSA EM INVESTIR EM ROUPAS NOVAS, CONSIDERA:",
@@ -30,7 +30,7 @@ export const getStep16Template = () => [
     },
   },
   {
-    id: "step16-text",
+    id: "step16-question-counter",
     type: "text",
     properties: {
       content: "Questão 16 de 21",
@@ -41,7 +41,7 @@ export const getStep16Template = () => [
     },
   },
   {
-    id: "step16-options",
+    id: "step16-final-options",
     type: "options-grid",
     properties: {
       questionId: "strategic-9",
@@ -95,7 +95,7 @@ export const getStep16Template = () => [
     },
   },
   {
-    id: "step16-button",
+    id: "step16-continue-button",
     type: "button",
     properties: {
       text: "Continuar",

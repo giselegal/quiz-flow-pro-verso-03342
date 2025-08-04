@@ -55,7 +55,7 @@ export const getStep19Template = (): BlockData[] => {
       },
     },
     {
-      id: "step19-title",
+      id: "step19-thank-you-title",
       type: "heading",
       properties: {
         content: "Obrigada por compartilhar.".toUpperCase(),
@@ -68,7 +68,7 @@ export const getStep19Template = (): BlockData[] => {
       },
     },
     {
-      id: "step19-text",
+      id: "step19-thank-you-text",
       type: "text",
       properties: {
         content:
@@ -80,7 +80,7 @@ export const getStep19Template = (): BlockData[] => {
       },
     },
     {
-      id: "step19-text-2",
+      id: "step19-reveal-text",
       type: "text",
       properties: {
         content:
@@ -92,7 +92,7 @@ export const getStep19Template = (): BlockData[] => {
       },
     },
     {
-      id: "step19-text-3",
+      id: "step19-surprise-text",
       type: "text",
       properties: {
         content:
@@ -104,7 +104,7 @@ export const getStep19Template = (): BlockData[] => {
       },
     },
     {
-      id: "step19-button",
+      id: "step19-show-result-button",
       type: "button",
       properties: {
         text: "Vamos ao resultado?",
