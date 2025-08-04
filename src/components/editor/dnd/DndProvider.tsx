@@ -59,13 +59,13 @@ export const DndProvider: React.FC<DndProviderProps> = ({
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8, // Aumentar para evitar ativação acidental
+        distance: 3, // Reduzir distância para ativação mais fácil
       },
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 150, // Delay para evitar conflito com scroll
-        tolerance: 5,
+        delay: 50, // Reduzir delay para responsividade
+        tolerance: 8,
       },
     }),
     useSensor(KeyboardSensor, {
