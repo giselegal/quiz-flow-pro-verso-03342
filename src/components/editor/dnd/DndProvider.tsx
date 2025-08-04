@@ -50,20 +50,26 @@ export const DndProvider: React.FC<DndProviderProps> = ({
 }) => {
   const [activeBlock, setActiveBlock] = React.useState<BlockData | null>(null);
 
+  // Debug: Log de inicialização
+  React.useEffect(() => {
+    console.log('🚀 DndProvider montado! Blocks:', blocks.length);
+  }, []);
+
+  React.useEffect(() => {
+    console.log('📦 Blocks atualizados no DndProvider:', blocks.map(b => ({ id: b.id, type: b.type })));
+  }, [blocks]);
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8,
+        distance: 3, // Reduzido de 8 para 3 para ativação mais fácil
       },
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 200,
-        tolerance: 8,
+        delay: 100, // Reduzido de 200 para 100
+        tolerance: 5, // Reduzido de 8 para 5
       },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
     })
   );
 

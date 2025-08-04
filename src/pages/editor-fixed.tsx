@@ -28,6 +28,11 @@ const EditorFixedPage: React.FC = () => {
       type: 'canvas-drop-zone'
     }
   });
+
+  // Debug: Log do canvas drop zone
+  React.useEffect(() => {
+    console.log('🎯 Canvas drop zone configurado! isOver:', isOver);
+  }, [isOver]);
   
   // ✅ USAR NOVA ESTRUTURA UNIFICADA DO EDITORCONTEXT
   const { 
