@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import UniversalPropertiesPanel from "@/components/universal/UniversalPropertiesPanel";
+import { UnifiedBlock } from "@/hooks/useUnifiedProperties";
 
 const TestPropertiesPanel = () => {
-  const [selectedBlock, setSelectedBlock] = useState({
+  const [selectedBlock, setSelectedBlock] = useState<UnifiedBlock | null>({
     id: "test-block-1",
     type: "text-inline",
     properties: {
@@ -14,10 +15,13 @@ const TestPropertiesPanel = () => {
 
   const handleUpdate = (blockId: string, updates: Record<string, any>) => {
     console.log("🔄 Atualizando bloco:", blockId, updates);
-    setSelectedBlock(prev => ({
-      ...prev,
-      properties: { ...prev.properties, ...updates }
-    }));
+    setSelectedBlock(prev => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        properties: { ...prev.properties, ...updates }
+      };
+    });
   };
 
   const handleDelete = (blockId: string) => {
