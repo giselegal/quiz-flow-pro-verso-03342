@@ -241,6 +241,10 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   block={selectedBlock}
                   blockDefinition={getBlockDefinitionForType(selectedBlock.type)}
                   onUpdateBlock={(blockId: string, updates: Partial<EditableContent>) => {
+                    console.log("🚀 Atualizando bloco via OptimizedPropertiesPanel:", {
+                      blockId,
+                      updates,
+                    });
                     updateBlock(blockId, { content: updates });
                   }}
                   onClose={() => setSelectedBlockId(null)}

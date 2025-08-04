@@ -48,9 +48,9 @@ import {
   X,
   Zap,
 } from "lucide-react";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { HexColorPicker } from "react-colorful";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 // 🎯 TIPOS OTIMIZADOS
@@ -86,13 +86,221 @@ const createValidationSchema = (properties: Record<string, any>) => {
         schemaFields[key] = z.string().optional();
         break;
       case "number":
+        // Adicionando validação para números
         schemaFields[key] = z.number().optional();
         break;
       case "boolean":
         schemaFields[key] = z.boolean().optional();
         break;
       case "array":
-        schemaFields[key] = z.array(z.any()).optional();
+        // Corrigido para garantir que o array tem a estrutura correta de OptionItem
+        schemaFields[key] = z
+          .array(
+            z.object({
+              id: z.string(),
+              text: z.string(),
+              value: z.string(),
+              category: z.string().optional(),
+              styleCategory: z.string().optional(),
+              points: z.number().optional(),
+              imageUrl: z.string().optional(),
+            })
+          )
+          .optional();
+        break;
+      default:
+        schemaFields[key] = z.any().optional();
+    }
+  });
+
+  return z.object(schemaFields);
+};
+
+// 🎨 COMPONENTES OTIMIZADOS
+
+/**
+ * 🔧 Editor de Array de Opções MELHORADO
+ * Agora utiliza `useFieldArray` para uma integração perfeita com React Hook Form.
+ * Isso permite que a adição/remoção de itens seja gerida pelo formulário.
+ */
+const OptimizedOptionsArrayEditor: React.FC<{
+  control: any;
+  name: string;
+}> = ({ control, name }) => {
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name,
+  });
+
+  const addOption = useCallback(() => {
+    append({
+      id: `option-${Date.now()}`,
+      text: "Nova opção",
+      value: `value-${Date.now()}`,
+      category: "Geral",
+      styleCategory: "Geral",
+      points: 1,
+      imageUrl: "https://via.placeholder.com/100x100",
+    });
+  }, [append]);
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <span className="text-sm font-medium text-gray-700">Opções ({fields.length})</span>
+        <Button onClick={addOption} size="sm" variant="outline" type="button">
+          <Plus className="w-3 h-3 mr-1" />
+          Adicionar
+        </Button>
+      </div>
+
+      <div className="space-y-2 max-h-80 overflow-y-auto">
+        {fields.map((field, index) => (
+          <Card key={field.id} className="p-3 border border-gray-200">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-gray-600">Opção {index + 1}</span>
+                <Button
+                  onClick={() => remove(index)}
+                  size="sm"
+                  variant="ghost"
+                  className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
+                  type="button"
+                >
+                  <Trash2 className="w-3 h-3" />
+                </Button>
+              </div>
+
+              <div className="grid gap-2">
+                <Controller
+                  control={control}
+                  name={`${name}.${index}.text`}
+                  render={({ field: { onChange, ...rest } }) => (
+                    <Input
+                      {...rest}
+                      onChange={e => onChange(e.target.value)}
+                      placeholder="Texto da opção"
+                      className="text-xs"
+                    />
+                  )}
+                />
+                <Controller
+                  control={control}
+                  name={`${name}.${index}.value`}
+                  render={({ field: { onChange, ...rest } }) => (
+                    <Input
+                      {...rest}
+                      onChange={e => onChange(e.target.value)}
+                      placeholder="Valor da opção"
+                      className="text-xs"
+                    />
+                  )}
+                />
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+/**
+ * 🎨 Color Picker OTIMIZADO
+ * Agora utiliza `Controller` para atualizar o valor de forma síncrona.
+ */
+const OptimizedColorPicker: React.FC<{
+  control: any;
+  name: string;
+  label: string;
+}> = ({ control, name, label }) => (
+  <div className="flex items-center gap-2">
+    <Controller
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-8 h-8 p-0 border-2"
+                style={{ backgroundColor: field.value || "#ffffff" }}
+              >
+                <Palette className="w-4 h-4 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-3">
+              <HexColorPicker color={field.value || "#ffffff"} onChange={field.onChange} />
+              <Input
+                value={field.value || ""}
+                onChange={e => field.onChange(e.target.value)}
+                placeholder="#ffffff"
+                className="mt-2"
+              />
+            </PopoverContent>
+          </Popover>
+          <span className="text-xs text-gray-500">{field.value || "Nenhuma cor"}</span>
+        </>
+      )}
+    />
+  </div>
+);
+
+// 🎯 TIPOS OTIMIZADOS
+interface OptionItem {
+  id: string;
+  text: string;
+  value: string;
+  category?: string;
+  styleCategory?: string;
+  points?: number;
+  imageUrl?: string;
+}
+
+interface OptimizedPropertiesPanelProps {
+  block: {
+    id: string;
+    type: string;
+    content: EditableContent;
+    properties?: Record<string, any>;
+  };
+  blockDefinition: BlockDefinition;
+  onUpdateBlock: (id: string, content: Partial<EditableContent>) => void;
+  onClose: () => void;
+}
+
+// 🔧 SCHEMA DE VALIDAÇÃO DINÂMICO
+const createValidationSchema = (properties: Record<string, any>) => {
+  const schemaFields: Record<string, any> = {};
+
+  Object.entries(properties).forEach(([key, property]) => {
+    switch (property.type) {
+      case "text":
+        schemaFields[key] = z.string().optional();
+        break;
+      case "number":
+        // Adicionando validação para números
+        schemaFields[key] = z.number().optional();
+        break;
+      case "boolean":
+        schemaFields[key] = z.boolean().optional();
+        break;
+      case "array":
+        // Corrigido para garantir que o array tem a estrutura correta de OptionItem
+        schemaFields[key] = z
+          .array(
+            z.object({
+              id: z.string(),
+              text: z.string(),
+              value: z.string(),
+              category: z.string().optional(),
+              styleCategory: z.string().optional(),
+              points: z.number().optional(),
+              imageUrl: z.string().optional(),
+            })
+          )
+          .optional();
         break;
       default:
         schemaFields[key] = z.any().optional();
@@ -200,11 +408,11 @@ const OptimizedColorPicker: React.FC<{
           <PopoverContent className="w-auto p-3">
             <HexColorPicker
               color={field.value || "#ffffff"}
-              onChange={field.onChange} // 🎯 CORREÇÃO: Passamos diretamente o onChange do field
+              onChange={field.onChange} // Usa diretamente o onChange do field
             />
             <Input
               value={field.value || ""}
-              onChange={e => field.onChange(e.target.value)} // 🎯 CORREÇÃO: Usamos o onChange do field
+              onChange={e => field.onChange(e.target.value)} // Usa o onChange do field
               placeholder="#ffffff"
               className="mt-2"
             />
@@ -283,27 +491,25 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
 
   const {
     control,
-    watch,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(validationSchema),
-    // 🎯 CORREÇÃO: Garantir que defaultValues seja sempre um objeto válido
     defaultValues: block.content || {},
     mode: "onChange",
   });
 
-  // 🔄 DEBOUNCED UPDATE
-  const watchedValues = watch();
+  // 🔄 USAR useWatch para monitorar valores
+  const watchedValues = useWatch({ control });
   const debouncedValues = useDebounce(watchedValues, 300);
 
-  React.useEffect(() => {
+  useEffect(() => {
     console.log("🔍 OptimizedPropertiesPanel: watchedValues changed:", watchedValues);
   }, [watchedValues]);
 
-  React.useEffect(() => {
-    console.log("⏱️  OptimizedPropertiesPanel: debouncedValues changed:", debouncedValues);
-    if (debouncedValues) {
+  useEffect(() => {
+    console.log("⏱️ OptimizedPropertiesPanel: debouncedValues changed:", debouncedValues);
+    if (debouncedValues && Object.keys(debouncedValues).length > 0) {
       console.log("🚀 OptimizedPropertiesPanel: Calling onUpdateBlock with:", {
         blockId: block.id,
         updates: debouncedValues,
@@ -434,7 +640,7 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
           );
 
         case "color":
-          return <OptimizedColorPicker control={control} name={key} />;
+          return <OptimizedColorPicker control={control} name={key} label={property.label} />;
 
         case "array":
           if (key === "options") {
