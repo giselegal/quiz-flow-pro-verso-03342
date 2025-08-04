@@ -128,6 +128,12 @@ const EditorFixedPage: React.FC = () => {
     console.log('Salvando projeto...', currentBlocks);
   };
 
+  // Debug: Função para testar adição manual
+  const handleTestAddBlock = () => {
+    console.log('🧪 Testando adição manual de bloco...');
+    addBlock('titulo-principal');
+  };
+
   // ✅ USAR CONTEXT UNIFICADO PARA DELETAR
   const handleDeleteBlock = (blockId: string) => {
     deleteBlock(blockId);
@@ -252,6 +258,17 @@ const EditorFixedPage: React.FC = () => {
                     <p className="text-xs text-stone-400 bg-stone-100/50 px-3 py-1 rounded-full inline-block">
                       Sistema integrado com {stageCount} etapas
                     </p>
+                    {/* Botão de teste para debug */}
+                    {!isPreviewing && (
+                      <div className="mt-4">
+                        <Button 
+                          onClick={handleTestAddBlock}
+                          className="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1"
+                        >
+                          🧪 Teste: Adicionar Bloco
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="space-y-3">
