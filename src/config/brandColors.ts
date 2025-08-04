@@ -124,9 +124,21 @@ export const BRAND_CLASSES = {
 // ✅ MAPEAMENTO DE CORES ANTIGAS PARA NOVAS
 export const COLOR_MIGRATION = {
   // Azul → Brand
+  "bg-blue-50": "bg-[#B89B7A]/10",
+  "bg-blue-100": "bg-[#B89B7A]/20",
+  "bg-blue-500": "bg-[#B89B7A]",
+  "bg-blue-600": "bg-[#A38A69]",
+  "text-blue-600": "text-[#B89B7A]",
+  "text-blue-700": "text-[#A38A69]",
+  "text-blue-900": "text-[#432818]",
+  "border-blue-200": "border-[#B89B7A]/30",
+  "border-blue-300": "border-[#B89B7A]/40",
+  "border-blue-500": "border-[#B89B7A]",
+  "ring-blue-500": "ring-[#B89B7A]",
+
+  // Cores da marca já corretas (mantém)
   "bg-[#B89B7A]/10": "bg-[#B89B7A]/10",
   "bg-[#B89B7A]/20": "bg-[#B89B7A]/20",
-  "bg-[#B89B7A]/100": "bg-[#B89B7A]",
   "bg-[#B89B7A]": "bg-[#B89B7A]",
   "bg-[#A38A69]": "bg-[#A38A69]",
   "text-[#B89B7A]": "text-[#B89B7A]",
@@ -135,20 +147,27 @@ export const COLOR_MIGRATION = {
   "border-[#B89B7A]/30": "border-[#B89B7A]/30",
   "border-[#B89B7A]/40": "border-[#B89B7A]/40",
   "border-[#B89B7A]": "border-[#B89B7A]",
-  "border-[#B89B7A]": "border-[#B89B7A]",
   "ring-[#B89B7A]": "ring-[#B89B7A]",
 
   // Amarelo → Neutro (exceto warning)
-  "bg-stone-100": "bg-stone-100",
-  "text-stone-800": "text-stone-700",
+  "bg-yellow-100": "bg-stone-100",
+  "text-yellow-800": "text-stone-700",
 
-  // Laranja → Brand ou neutro
-  "bg-[#B89B7A]/10": "bg-[#B89B7A]/10",
-  "border-[#B89B7A]/40": "border-[#B89B7A]/40",
-  "text-[#B89B7A]": "text-[#B89B7A]",
+  // Laranja → Brand
+  "bg-orange-100": "bg-[#B89B7A]/10",
+  "border-orange-400": "border-[#B89B7A]/40",
+  "text-orange-600": "text-[#B89B7A]",
 
   // Roxo → Brand
-  "text-[#B89B7A]": "text-[#B89B7A]",
+  "text-purple-600": "text-[#B89B7A]",
+
+  // Verde → Manter para sucesso
+  "bg-green-100": "bg-green-100",
+  "text-green-800": "text-green-800",
+
+  // Vermelho → Manter para erro
+  "bg-red-100": "bg-red-100",
+  "text-red-800": "text-red-800",
 };
 
 // ✅ FUNÇÃO PARA MIGRAR CORES

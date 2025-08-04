@@ -4,13 +4,11 @@ import EnhancedComponentsSidebar from "@/components/editor/EnhancedComponentsSid
 import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelSettingsPanel";
 import { FunnelStagesPanel } from "@/components/editor/funnel/FunnelStagesPanel";
 import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
-import UniversalPropertiesPanel from "@/components/universal/UniversalPropertiesPanel";
-import { useUnifiedProperties } from "@/hooks/useUnifiedProperties";
 import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
+import UniversalPropertiesPanel from "@/components/universal/UniversalPropertiesPanel";
 import { generateBlockDefinitions, getRegistryStats } from "@/config/enhancedBlockRegistry";
 import { useEditor } from "@/context/EditorContext";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
-import { EditableContent } from "@/types/editor";
 import { Type } from "lucide-react";
 import React, { useState } from "react";
 
@@ -257,7 +255,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   selectedBlock={{
                     id: selectedBlock.id,
                     type: selectedBlock.type,
-                    properties: selectedBlock.content || selectedBlock.properties || {}
+                    properties: selectedBlock.content || selectedBlock.properties || {},
                   }}
                   onUpdate={(blockId: string, updates: Record<string, any>) => {
                     console.log("🚀 Atualizando bloco via UniversalPropertiesPanel:", {

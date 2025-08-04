@@ -30,10 +30,7 @@ const SimplePropertiesPanel: React.FC<SimplePropertiesPanelProps> = ({
       <div className="bg-[#B89B7A]/10 border-b border-[#B89B7A]/30 p-4">
         <div className="flex items-center justify-between">
           <h3 className="font-medium text-[#432818]">Propriedades</h3>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-lg font-bold"
-          >
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700 text-lg font-bold">
             ×
           </button>
         </div>
@@ -49,9 +46,7 @@ const SimplePropertiesPanel: React.FC<SimplePropertiesPanelProps> = ({
       <div className="flex-1 p-4 space-y-4">
         <div>
           <h4 className="font-medium text-[#432818] mb-2">🎯 TESTE FUNCIONANDO!</h4>
-          <p className="text-sm text-gray-600 mb-3">
-            ✅ Painel apareceu corretamente
-          </p>
+          <p className="text-sm text-gray-600 mb-3">✅ Painel apareceu corretamente</p>
         </div>
 
         {/* Properties Display */}
@@ -65,14 +60,12 @@ const SimplePropertiesPanel: React.FC<SimplePropertiesPanelProps> = ({
         {/* Test Inputs */}
         <div className="space-y-3">
           <div>
-            <label className="block text-sm font-medium text-[#432818] mb-1">
-              Teste - Texto:
-            </label>
+            <label className="block text-sm font-medium text-[#432818] mb-1">Teste - Texto:</label>
             <input
               type="text"
               className="w-full border border-[#B89B7A]/30 rounded px-3 py-2 text-sm"
               placeholder="Digite algo..."
-              onChange={(e) => {
+              onChange={e => {
                 if (onUpdate) {
                   onUpdate(selectedBlock.id, { testText: e.target.value });
                 }
@@ -81,13 +74,11 @@ const SimplePropertiesPanel: React.FC<SimplePropertiesPanelProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#432818] mb-1">
-              Teste - Cor:
-            </label>
+            <label className="block text-sm font-medium text-[#432818] mb-1">Teste - Cor:</label>
             <input
               type="color"
               className="w-full h-10 border border-[#B89B7A]/30 rounded"
-              onChange={(e) => {
+              onChange={e => {
                 if (onUpdate) {
                   onUpdate(selectedBlock.id, { testColor: e.target.value });
                 }

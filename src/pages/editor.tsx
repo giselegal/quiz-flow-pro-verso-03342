@@ -1,4 +1,3 @@
-import SimplePropertiesPanel from "@/components/universal/SimplePropertiesPanel";
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import BrandHeader from "../components/ui/BrandHeader";
@@ -11,7 +10,6 @@ import { toast } from "../components/ui/use-toast";
 import { useAutoSaveWithDebounce } from "../hooks/editor/useAutoSaveWithDebounce";
 import { useEditorPersistence } from "../hooks/editor/useEditorPersistence";
 import { useEditor } from "../hooks/useEditor";
-import { useUnifiedProperties } from "@/hooks/useUnifiedProperties";
 import { cn } from "../lib/utils";
 import { schemaDrivenFunnelService } from "../services/schemaDrivenFunnelService";
 import { normalizeBlock } from "../utils/blockTypeMapping";
