@@ -337,80 +337,11 @@ export class ComponentsService {
       console.error('Erro ao carregar stages:', error);
       return [];
     }
-  }
+
+}
 }
 
 export default ComponentsService;
-        .eq("step_number", stepNumber)
-        .eq("is_active", true)
-        .order("order_index");
-
-      if (error) {
-        console.error("❌ Erro ao carregar componentes:", error);
-        throw error;
-      }
-
-      // Converter componentes do banco para EditorBlocks
-      const editorBlocks: EditorBlock[] = (data || []).map(component => ({
-        id: component.instance_key, // ✅ Usar instance_key como ID do bloco
-        type: component.component_type as any,
-        content: component.properties || {},
-        order: component.order_index,
-        properties: {
-          ...component.properties,
-          ...component.custom_styling,
-        },
-      }));
-
-      console.log(`✅ Carregados ${editorBlocks.length} componentes da etapa ${stepNumber}`);
-      return editorBlocks;
-    } catch (error) {
-      console.error("❌ Erro no ComponentsService.loadStageBlocks:", error);
-      return [];
-    }
-  }
-
-  // ==========================================================================
-  // SALVAR EditorBlock NO BANCO COMO COMPONENTE
-  // ==========================================================================
-
-  static async saveBlock(quizId: string, stepNumber: number, block: EditorBlock): Promise<boolean> {
-    try {
-      console.log(`💾 Salvando bloco ${block.id} na etapa ${stepNumber}`);
-
-      // Verificar se já existe
-      const { data: existing } = await supabase
-        .from("component_instances")
-        .select("id")
-        .eq("quiz_id", quizId)
-        .eq("instance_key", block.id)
-        .single();
-
-      const componentData = {
-        component_type_key: block.type,
-        quiz_id: quizId,
-        step_number: stepNumber,
-        order_index: block.order,
-        properties: block.properties || block.content || {},
-        custom_styling: {},
-        is_active: true,
-      };
-
-      if (existing) {
-        // Atualizar existente
-        const { error } = await supabase
-          .from("component_instances")
-          .update(componentData)
-          .eq("id", existing.id);
-
-        if (error) throw error;
-        console.log(`✅ Bloco ${block.id} atualizado`);
-      } else {
-        // Criar novo
-        const { error } = await supabase.from("component_instances").insert({
-          instance_key: block.id,
-          ...componentData,
-        });
 
         if (error) throw error;
         console.log(`✅ Bloco ${block.id} criado`);
