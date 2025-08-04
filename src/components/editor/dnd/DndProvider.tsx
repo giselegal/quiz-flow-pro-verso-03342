@@ -78,6 +78,18 @@ export const DndProvider: React.FC<DndProviderProps> = ({
 
     performanceMonitor.startTiming("drag-operation");
 
+    // DEBUG CRÍTICO: Log completo dos dados do active
+    console.log("🟢 DragStart COMPLETO:", {
+      "active.id": active.id,
+      "active.data": active.data,
+      "active.data.current": active.data.current,
+      "active.data.current?.type": active.data.current?.type,
+      "active.data.current?.blockType": active.data.current?.blockType,
+      "Object.keys(active)": Object.keys(active),
+      "Object.keys(active.data)": active.data ? Object.keys(active.data) : "NO DATA",
+      "JSON.stringify(active.data.current)": JSON.stringify(active.data.current),
+    });
+
     // Use enhanced debugging
     dragDropDebugger.logDragStart({
       id: active.id,
