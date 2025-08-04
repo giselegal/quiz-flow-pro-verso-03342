@@ -287,75 +287,47 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     [validateStageId]
   );
 
-  // ✅ FUNÇÃO PARA CARREGAR BLOCOS DE TEMPLATE (COM ADAPTER)
+  // ✅ FUNÇÃO PARA CARREGAR BLOCOS DE TEMPLATE (DIRETO - SEM ADAPTER)
   const loadStageTemplate = useCallback(
-    async (stageId: string) => {
+    (stageId: string) => {
       const stage = stages.find(s => s.id === stageId);
       if (!stage) return;
 
       const stepNumber = parseInt(stageId.replace("step-", ""));
       
-      try {
-        console.log(`🎨 EditorContext: Carregando blocos para etapa ${stepNumber} via adapter`);
-        
-        // ✅ CARREGAR VIA ADAPTER (BANCO OU LOCAL)
-        const editorBlocks = await adapter.loadStageBlocks(stageId);
+      console.log(`🎨 EditorContext: Carregando template para etapa ${stepNumber}`);
+      
+      // ✅ CARREGAR DIRETAMENTE DO TEMPLATE
+      const templateBlocks = getStepTemplate(stepNumber);
+      if (templateBlocks && templateBlocks.length > 0) {
+        const editorBlocks: EditorBlock[] = templateBlocks.map((block, index) => ({
+          id: block.id || `${stageId}-block-${index + 1}`,
+          type: block.type as any,
+          content: block.properties || block.content || {},
+          order: index + 1,
+          properties: block.properties || {},
+        }));
 
-        if (editorBlocks && editorBlocks.length > 0) {
-          console.log(`✅ EditorContext: ${editorBlocks.length} blocos carregados para etapa ${stepNumber}`);
+        setStageBlocks(prev => ({
+          ...prev,
+          [stageId]: editorBlocks,
+        }));
 
-          // Atualizar os blocos da etapa
-          setStageBlocks(prev => ({
-            ...prev,
-            [stageId]: editorBlocks,
-          }));
+        updateStage(stageId, {
+          metadata: {
+            ...stage.metadata,
+            blocksCount: editorBlocks.length,
+          },
+        });
 
-          // Atualizar contagem de blocos na metadata
-          updateStage(stageId, {
-            metadata: {
-              ...stage.metadata,
-              blocksCount: editorBlocks.length,
-            },
-          });
-
-          // Salvar no banco se modo banco estiver ativo
-          if (databaseModeEnabled) {
-            await adapter.saveStageBlocks(stageId, editorBlocks);
-          }
-        }
-      } catch (error) {
-        console.error(`❌ EditorContext: Erro ao carregar etapa ${stepNumber}:`, error);
-        
-        // Fallback para método original
-        const templateBlocks = getStepTemplate(stepNumber);
-        if (templateBlocks && templateBlocks.length > 0) {
-          const editorBlocks: EditorBlock[] = templateBlocks.map((block, index) => ({
-            id: block.id || `${stageId}-block-${index + 1}`,
-            type: block.type as any,
-            content: block.properties || block.content || {},
-            order: index + 1,
-            properties: block.properties || {},
-          }));
-
-          setStageBlocks(prev => ({
-            ...prev,
-            [stageId]: editorBlocks,
-          }));
-
-          updateStage(stageId, {
-            metadata: {
-              ...stage.metadata,
-              blocksCount: editorBlocks.length,
-            },
-          });
-
-          console.log(
-            `✅ EditorContext: ${editorBlocks.length} blocos carregados para etapa ${stepNumber}`
-          );
-        }
+        console.log(
+          `✅ EditorContext: ${editorBlocks.length} blocos carregados para etapa ${stepNumber}`
+        );
+      } else {
+        console.warn(`⚠️ EditorContext: Nenhum template encontrado para etapa ${stepNumber}`);
       }
     },
-    [stages, updateStage, adapter, databaseModeEnabled]
+    [stages, updateStage]
   );  // ═══════════════════════════════════════════════
   // 🧩 BLOCK ACTIONS (GERENCIAMENTO DE BLOCOS)
   // ═══════════════════════════════════════════════
@@ -691,7 +663,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       return await adapter.getQuizStats();
     } catch (error) {
       console.error('❌ EditorContext: Erro ao obter estatísticas:', error);
-      return { error: error.message };
+      return { error: String(error) };
     }
   }, [adapter]);
 
