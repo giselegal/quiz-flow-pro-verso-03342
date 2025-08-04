@@ -33,7 +33,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
-import { BlockDefinition, EditableContent } from "@/types/editor";
+import { BlockDefinition } from "@/types/blocks";
+import { EditableContent } from "@/types/editor";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   CheckCircle,
@@ -54,13 +55,8 @@ import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 // Adicionamos as propriedades de layout ao tipo de conteúdo editável
-declare module '@/types/editor' {
-  interface EditableContent {
-    // Estas propriedades serão padrão para todos os blocos
-    maxWidth?: number;
-    alignment?: 'left' | 'center' | 'right';
-  }
-}
+// Nota: A interface EditableContent já tem as propriedades que precisamos
+// Não precisamos declarar novamente, apenas usar as existentes
 
 // 🎯 TIPOS OTIMIZADOS
 interface OptionItem {
@@ -81,17 +77,38 @@ interface OptimizedPropertiesPanelProps {
     properties?: Record<string, any>;
   };
   blockDefinition: BlockDefinition;
-  onUpdateBlock: (id: string, content: Partial<EditableContent>) => void;
+  onUpdateBlock: (id: string, content: any) => void;
   onClose: () => void;
 }
 
 // 🔧 SCHEMA DE VALIDAÇÃO DINÂMICO
 const createValidationSchema = (properties: Record<string, any>) => {
   const schemaFields: Record<string, any> = {};
-  
+
   // Adiciona as propriedades de layout como campos universais e opcionais
-  schemaFields.maxWidth = z.number().min(10).max(100).optional();
-  schemaFields.alignment = z.enum(["left", "center", "right"]).optional();
+  schemaFields.maxWidth = z.number().optional().superRefine((val, ctx) => {
+    if (val !== undefined) {
+      if (val < 10) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.too_small,
+          minimum: 10,
+          type: "number",
+          inclusive: true,
+          message: "O valor mínimo é 10"
+        });
+      }
+      if (val > 100) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.too_big,
+          maximum: 100,
+          type: "number",
+          inclusive: true,
+          message: "O valor máximo é 100"
+        });
+      }
+    }
+  });
+  schemaFields.alignment = z.enum(["left", "center", "right", "justify"]).optional();
 
   Object.entries(properties).forEach(([key, property]) => {
     switch (property.type) {
@@ -99,11 +116,18 @@ const createValidationSchema = (properties: Record<string, any>) => {
         schemaFields[key] = z.string().optional();
         break;
       case "number":
-        // Adicionando validação para números
-        let numberSchema = z.number().optional();
-        if (property.min !== undefined) numberSchema = numberSchema.min(property.min);
-        if (property.max !== undefined) numberSchema = numberSchema.max(property.max);
-        schemaFields[key] = numberSchema;
+        // Utilizando uma abordagem mais simples para números
+        schemaFields[key] = z.any().optional().transform(val => {
+          if (val === undefined) return undefined;
+          const num = Number(val);
+          if (isNaN(num)) return undefined;
+          
+          // Aplicar limites min/max se especificados
+          if (property.min !== undefined && num < property.min) return property.min;
+          if (property.max !== undefined && num > property.max) return property.max;
+          
+          return num;
+        });
         break;
       case "boolean":
         schemaFields[key] = z.boolean().optional();
@@ -325,27 +349,27 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
 
   // 🔧 Definições padrão para as propriedades de layout
   const defaultLayoutProps = {
-    maxWidth: { 
-      type: 'range', 
-      label: 'Tamanho Máximo', 
-      description: "Define a largura máxima do componente (em % da largura disponível)", 
-      min: 10, 
-      max: 100, 
+    maxWidth: {
+      type: "range",
+      label: "Tamanho Máximo",
+      description: "Define a largura máxima do componente (em % da largura disponível)",
+      min: 10,
+      max: 100,
       step: 5,
-      category: 'layout',
-      default: 100
+      category: "layout",
+      default: 100,
     },
-    alignment: { 
-      type: 'select', 
-      label: 'Alinhamento', 
+    alignment: {
+      type: "select",
+      label: "Alinhamento",
       description: "Define como o componente será alinhado no espaço disponível",
       options: [
-        { value: 'left', label: 'Esquerda' }, 
-        { value: 'center', label: 'Centro' }, 
-        { value: 'right', label: 'Direita' }
-      ], 
-      category: 'layout',
-      default: 'left'
+        { value: "left", label: "Esquerda" },
+        { value: "center", label: "Centro" },
+        { value: "right", label: "Direita" },
+      ],
+      category: "layout",
+      default: "left",
     },
   };
 
@@ -367,7 +391,7 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
   const defaultValues = useMemo(() => {
     const values = { ...block.content };
     if (values.maxWidth === undefined) values.maxWidth = 100;
-    if (values.alignment === undefined) values.alignment = 'left';
+    if (values.alignment === undefined) values.alignment = "left";
     return values;
   }, [block.content]);
 
@@ -512,9 +536,18 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
                     className="w-full"
                   />
                   <div className="flex justify-between text-xs text-gray-500">
-                    <span>{property.min || 0}{key === 'maxWidth' ? '%' : ''}</span>
-                    <span className="font-medium">{field.value ?? property.default ?? 0}{key === 'maxWidth' ? '%' : ''}</span>
-                    <span>{property.max || 100}{key === 'maxWidth' ? '%' : ''}</span>
+                    <span>
+                      {property.min || 0}
+                      {key === "maxWidth" ? "%" : ""}
+                    </span>
+                    <span className="font-medium">
+                      {field.value ?? property.default ?? 0}
+                      {key === "maxWidth" ? "%" : ""}
+                    </span>
+                    <span>
+                      {property.max || 100}
+                      {key === "maxWidth" ? "%" : ""}
+                    </span>
                   </div>
                 </div>
               )}
@@ -656,15 +689,16 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
         </Tabs>
 
         {/* Fallback para propriedades não categorizadas */}
-        {Object.keys(blockDefinition.properties).length === 0 && Object.keys(defaultLayoutProps).length === 0 && (
-          <div className="text-center py-12 text-gray-500">
-            <Settings className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-            <p className="text-sm font-medium">Nenhuma propriedade disponível</p>
-            <p className="text-xs text-gray-400 mt-1">
-              Este componente não possui propriedades editáveis
-            </p>
-          </div>
-        )}
+        {Object.keys(blockDefinition.properties).length === 0 &&
+          Object.keys(defaultLayoutProps).length === 0 && (
+            <div className="text-center py-12 text-gray-500">
+              <Settings className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+              <p className="text-sm font-medium">Nenhuma propriedade disponível</p>
+              <p className="text-xs text-gray-400 mt-1">
+                Este componente não possui propriedades editáveis
+              </p>
+            </div>
+          )}
       </div>
 
       {/* 🎯 Footer Actions */}
