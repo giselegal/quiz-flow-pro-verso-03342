@@ -176,7 +176,7 @@ const UniversalPropertiesPanel: React.FC<UniversalPropertiesPanelProps> = ({
                 <SelectValue placeholder="Selecionar..." />
               </SelectTrigger>
               <SelectContent>
-                {options?.map(option => (
+                {options?.map((option: any) => (
                   <SelectItem key={option} value={option}>
                     {option}
                   </SelectItem>
