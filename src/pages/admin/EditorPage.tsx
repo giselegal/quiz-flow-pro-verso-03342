@@ -1,10 +1,10 @@
 
 import React from 'react';
 import { useLocation } from 'wouter';
-import SchemaDrivenEditorPage from '../SchemaDrivenEditorPage';
+import EditorFixedPageWithDragDrop from '../editor-fixed-dragdrop';
 
 const EditorPage: React.FC = () => {
-  return <SchemaDrivenEditorPage />;
+  return <EditorFixedPageWithDragDrop />;
 };
 
 export default EditorPage;
