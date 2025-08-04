@@ -1,20 +1,17 @@
-import React, { useState } from "react";
-import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
-import { FunnelStagesPanel } from "@/components/editor/funnel/FunnelStagesPanel";
+import { CanvasDropZone } from "@/components/editor/canvas/CanvasDropZone";
+import { DndProvider } from "@/components/editor/dnd/DndProvider";
 import EnhancedComponentsSidebar from "@/components/editor/EnhancedComponentsSidebar";
-import { UniversalBlockRenderer } from "@/components/editor/blocks/UniversalBlockRenderer";
+import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelSettingsPanel";
+import { FunnelStagesPanel } from "@/components/editor/funnel/FunnelStagesPanel";
+import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
 import OptimizedPropertiesPanel from "@/components/editor/OptimizedPropertiesPanel";
 import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
-import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelSettingsPanel";
-import { EditableContent } from "@/types/editor";
-import { getRegistryStats, generateBlockDefinitions } from "@/config/enhancedBlockRegistry";
+import { generateBlockDefinitions, getRegistryStats } from "@/config/enhancedBlockRegistry";
 import { useEditor } from "@/context/EditorContext";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
-import { DndProvider } from "@/components/editor/dnd/DndProvider";
-import { SortableBlockWrapper } from "@/components/editor/canvas/SortableBlockWrapper";
-import { CanvasDropZone } from "@/components/editor/canvas/CanvasDropZone";
-import { Type, Trash2, GripVertical } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { EditableContent } from "@/types/editor";
+import { Type } from "lucide-react";
+import React, { useState } from "react";
 
 const EditorFixedPageWithDragDrop: React.FC = () => {
   console.log("🔥 EditorFixedPage: PÁGINA RENDERIZANDO COM DRAG&DROP!");
