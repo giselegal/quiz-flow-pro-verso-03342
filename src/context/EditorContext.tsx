@@ -654,6 +654,47 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   );
   const stageCount = stages.length;
 
+  // ═══════════════════════════════════════════════
+  // 🔌 FUNÇÕES DO MODO BANCO DE DADOS
+  // ═══════════════════════════════════════════════
+  
+  const setDatabaseMode = useCallback((enabled: boolean) => {
+    console.log(`🔧 EditorContext: Modo banco ${enabled ? 'ativado' : 'desativado'}`);
+    setDatabaseModeEnabled(enabled);
+    adapter.setDatabaseMode(enabled);
+  }, [adapter]);
+
+  const setQuizId = useCallback((quizId: string) => {
+    console.log(`🔧 EditorContext: Quiz ID alterado para: ${quizId}`);
+    setCurrentQuizId(quizId);
+    adapter.setQuizId(quizId);
+  }, [adapter]);
+
+  const migrateToDatabase = useCallback(async (): Promise<boolean> => {
+    console.log('🚀 EditorContext: Iniciando migração para banco...');
+    try {
+      const success = await adapter.migrateLocalToDatabase();
+      if (success) {
+        setDatabaseModeEnabled(true);
+        adapter.setDatabaseMode(true);
+        console.log('✅ EditorContext: Migração concluída, modo banco ativado');
+      }
+      return success;
+    } catch (error) {
+      console.error('❌ EditorContext: Erro na migração:', error);
+      return false;
+    }
+  }, [adapter]);
+
+  const getStats = useCallback(async () => {
+    try {
+      return await adapter.getQuizStats();
+    } catch (error) {
+      console.error('❌ EditorContext: Erro ao obter estatísticas:', error);
+      return { error: error.message };
+    }
+  }, [adapter]);
+
   // Debug logging para computed values
   console.log("📊 EditorContext: Computed values:", {
     activeStageId,
@@ -661,6 +702,8 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     selectedBlock: selectedBlock?.id || "none",
     totalBlocks,
     stageCount,
+    databaseMode: databaseModeEnabled,
+    quizId: currentQuizId,
   });
 
   // ═══════════════════════════════════════════════
@@ -701,6 +744,15 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       selectedBlock,
       totalBlocks,
       stageCount,
+    },
+
+    databaseMode: {
+      isEnabled: databaseModeEnabled,
+      quizId: currentQuizId,
+      setDatabaseMode,
+      setQuizId,
+      migrateToDatabase,
+      getStats,
     },
   };
 

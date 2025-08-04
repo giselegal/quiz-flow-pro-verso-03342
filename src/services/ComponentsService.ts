@@ -3,8 +3,9 @@
  * Conecta o EditorContext com o sistema de componentes reutilizáveis do Supabase
  */
 
-import type { EditorBlock } from "@/types/editor";
-import { createClient } from "@supabase/supabase-js";
+import { supabase } from '@/lib/supabase';
+import type { Block } from '@/types/block';
+import type { QuizStage } from '@/types/quiz';
 
 // ============================================================================
 // CONFIGURAÇÃO DO SUPABASE
