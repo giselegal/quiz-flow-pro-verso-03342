@@ -3,6 +3,7 @@ import React from "react";
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 8 - QUESTÃO 7: CALÇA FAVORITA (REAL)
 export const getStep08Template = () => {
   return [
+    // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
       type: "quiz-intro-header",
       properties: {
@@ -16,8 +17,10 @@ export const getStep08Template = () => {
         showBackButton: true,
       },
     },
+
+    // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      type: "heading-inline",
+      type: "heading",
       properties: {
         content: "QUAL SUA CALÇA FAVORITA?",
         level: "h2",
@@ -28,8 +31,10 @@ export const getStep08Template = () => {
         marginBottom: 8,
       },
     },
+
+    // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      type: "text-inline",
+      type: "text",
       properties: {
         content: "Questão 7 de 10",
         fontSize: "text-sm",
@@ -38,6 +43,8 @@ export const getStep08Template = () => {
         marginBottom: 24,
       },
     },
+
+    // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
       type: "options-grid",
       properties: {
@@ -140,8 +147,10 @@ export const getStep08Template = () => {
         showValidationFeedback: true,
       },
     },
+
+    // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
-      type: "button-inline",
+      type: "button",
       properties: {
         text: "Continuar",
         variant: "primary",

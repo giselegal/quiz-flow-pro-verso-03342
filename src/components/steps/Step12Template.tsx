@@ -16,7 +16,7 @@ export const getStep12Template = () => [
     },
   },
   {
-    type: "heading-inline",
+    type: "heading",
     properties: {
       content: "Agora vamos conhecer você melhor",
       level: "h2",
@@ -28,7 +28,7 @@ export const getStep12Template = () => [
     },
   },
   {
-    type: "text-inline",
+    type: "text",
     properties: {
       content:
         "Suas escolhas até agora já revelam muito sobre seu estilo. Agora vamos aprofundar para criar um perfil ainda mais preciso.",
@@ -39,7 +39,7 @@ export const getStep12Template = () => [
     },
   },
   {
-    type: "button-inline",
+    type: "button",
     properties: {
       text: "Continuar Análise",
       variant: "primary",

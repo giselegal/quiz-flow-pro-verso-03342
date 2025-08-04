@@ -11,16 +11,13 @@ export const Step02Question01: React.FC<Step02Question01Props> = ({
   onPrevious,
   onBlockAdd,
 }) => {
-  return (
-    <div className="step-02-question-01">
-      {/* Conteúdo da Etapa 2 renderizado aqui */}
-    </div>
-  );
+  return <div className="step-02-question-01">{/* Conteúdo da Etapa 2 renderizado aqui */}</div>;
 };
 
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 2 - QUESTÃO 1: TIPO DE ROUPA FAVORITA
 export const getStep02Template = () => {
   return [
+    // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
       type: "quiz-intro-header",
       properties: {
@@ -34,8 +31,10 @@ export const getStep02Template = () => {
         showBackButton: true,
       },
     },
+
+    // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      type: "heading-inline",
+      type: "heading",
       properties: {
         content: "QUAL O SEU TIPO DE ROUPA FAVORITA?",
         level: "h2",
@@ -46,8 +45,10 @@ export const getStep02Template = () => {
         marginBottom: 8,
       },
     },
+
+    // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      type: "text-inline",
+      type: "text",
       properties: {
         content: "Questão 1 de 10",
         fontSize: "text-sm",
@@ -56,19 +57,22 @@ export const getStep02Template = () => {
         marginBottom: 24,
       },
     },
+
+    // 🖼️ IMAGEM ILUSTRATIVA (EDITÁVEL SEPARADAMENTE)
     {
-      type: "image-display-inline",
+      type: "image",
       properties: {
         src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1687095491/style-quiz/elegante-6_u1ghdr.jpg",
         alt: "Tipos de roupas e estilos",
         width: 500,
         height: 300,
-        className:
-          "object-cover w-full max-w-lg h-64 rounded-xl mx-auto shadow-lg",
+        className: "object-cover w-full max-w-lg h-64 rounded-xl mx-auto shadow-lg",
         textAlign: "text-center",
         marginBottom: 32,
       },
     },
+
+    // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
       type: "options-grid",
       properties: {
@@ -101,8 +105,7 @@ export const getStep02Template = () => {
             category: "Contemporâneo",
             styleCategory: "Contemporâneo",
             points: 1,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
           },
           {
             id: "1d",
@@ -170,8 +173,10 @@ export const getStep02Template = () => {
         showValidationFeedback: true,
       },
     },
+
+    // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
-      type: "button-inline",
+      type: "button",
       properties: {
         text: "Continuar",
         variant: "primary",

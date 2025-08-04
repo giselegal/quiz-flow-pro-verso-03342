@@ -85,58 +85,37 @@ interface OptimizedPropertiesPanelProps {
 const createValidationSchema = (properties: Record<string, any>) => {
   const schemaFields: Record<string, any> = {};
 
-  // Adiciona as propriedades de layout como campos universais e opcionais
-  schemaFields.maxWidth = z
-    .number()
-    .optional()
-    .superRefine((val, ctx) => {
-      if (val !== undefined) {
-        if (val < 10) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.too_small,
-            minimum: 10,
-            type: "number",
-            inclusive: true,
-            message: "O valor mínimo é 10",
-          });
-        }
-        if (val > 100) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.too_big,
-            maximum: 100,
-            type: "number",
-            inclusive: true,
-            message: "O valor máximo é 100",
-          });
-        }
-      }
-    });
-  schemaFields.alignment = z.enum(["left", "center", "right", "justify"]).optional();
-
   Object.entries(properties).forEach(([key, property]) => {
     switch (property.type) {
       case "text":
+        // A validação de `text` deve usar o `z.string()`
+        schemaFields[key] = z.string().optional();
+        break;
+      case "textarea":
         schemaFields[key] = z.string().optional();
         break;
       case "number":
-        // Utilizando uma abordagem mais simples para números
-        schemaFields[key] = z
-          .any()
-          .optional()
-          .transform(val => {
-            if (val === undefined) return undefined;
-            const num = Number(val);
-            if (isNaN(num)) return undefined;
-
-            // Aplicar limites min/max se especificados
-            if (property.min !== undefined && num < property.min) return property.min;
-            if (property.max !== undefined && num > property.max) return property.max;
-
-            return num;
-          });
+      case "range": // <-- Adicionamos o 'range' aqui
+        // Validação de número, opcionalmente com min e max
+        let numberSchema = z.number().optional();
+        if (property.min !== undefined) numberSchema = numberSchema.min(property.min);
+        if (property.max !== undefined) numberSchema = numberSchema.max(property.max);
+        schemaFields[key] = numberSchema;
         break;
       case "boolean":
         schemaFields[key] = z.boolean().optional();
+        break;
+      case "select": // <-- Adicionamos o 'select' aqui
+        // Validação de enum para o Select
+        const options = property.options?.map((o: any) => o.value) || [];
+        if (options.length > 0) {
+          schemaFields[key] = z.enum(options as [string, ...string[]]).optional();
+        } else {
+          schemaFields[key] = z.string().optional();
+        }
+        break;
+      case "color":
+        schemaFields[key] = z.string().optional();
         break;
       case "array":
         // Corrigido para garantir que o array tem a estrutura correta de OptionItem
@@ -353,6 +332,15 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
   onUpdateBlock,
   onClose,
 }) => {
+  // 🐛 DEBUG: Log inicial para verificar se o painel está sendo chamado
+  console.log("🎯 OptimizedPropertiesPanel RENDERIZADO:", {
+    blockId: block.id,
+    blockType: block.type,
+    blockContent: block.content,
+    blockDefinition: blockDefinition.name,
+    hasProperties: Object.keys(blockDefinition.properties || {}).length > 0,
+  });
+
   const { scrollRef } = useSyncedScroll({ source: "properties" });
 
   // 🔧 Definições padrão para as propriedades de layout
@@ -458,6 +446,8 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
   // 🎨 Renderizar input baseado no tipo
   const renderPropertyInput = useCallback(
     (key: string, property: any) => {
+      const error = errors[key]?.message;
+
       switch (property.type) {
         case "text":
           return (
@@ -469,6 +459,7 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
                   {...field}
                   placeholder={property.placeholder || property.label}
                   className="text-sm"
+                  value={field.value || ""}
                 />
               )}
             />
@@ -485,6 +476,7 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
                   placeholder={property.placeholder || property.label}
                   rows={property.rows || 3}
                   className="text-sm"
+                  value={field.value || ""}
                 />
               )}
             />
@@ -536,7 +528,7 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
               render={({ field }) => (
                 <div className="space-y-2">
                   <Slider
-                    value={[field.value ?? property.default ?? 0]}
+                    value={[field.value ?? property.default ?? property.min ?? 0]}
                     onValueChange={value => field.onChange(value[0])}
                     max={property.max || 100}
                     min={property.min || 0}
@@ -549,7 +541,7 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
                       {key === "maxWidth" ? "%" : ""}
                     </span>
                     <span className="font-medium">
-                      {field.value ?? property.default ?? 0}
+                      {field.value ?? property.default ?? property.min ?? 0}
                       {key === "maxWidth" ? "%" : ""}
                     </span>
                     <span>
@@ -585,13 +577,14 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
                   {...field}
                   placeholder={property.placeholder || property.label}
                   className="text-sm"
+                  value={field.value || ""}
                 />
               )}
             />
           );
       }
     },
-    [control, watchedValues]
+    [control, errors]
   );
 
   // 🎯 Renderizar grupo de propriedades

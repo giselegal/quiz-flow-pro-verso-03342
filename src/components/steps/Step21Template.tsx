@@ -16,7 +16,7 @@ export const getStep21Template = () => [
     },
   },
   {
-    type: "heading-inline",
+    type: "heading",
     properties: {
       content: "Etapa 21 - Template em Desenvolvimento",
       level: "h2",
@@ -28,7 +28,7 @@ export const getStep21Template = () => [
     },
   },
   {
-    type: "text-inline",
+    type: "text",
     properties: {
       content: "Este template será personalizado em breve",
       fontSize: "text-lg",
@@ -38,7 +38,7 @@ export const getStep21Template = () => [
     },
   },
   {
-    type: "button-inline",
+    type: "button",
     properties: {
       text: "Continuar",
       variant: "primary",

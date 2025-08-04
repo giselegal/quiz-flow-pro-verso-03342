@@ -16,10 +16,9 @@ export const getStep13Template = () => [
     },
   },
   {
-    type: "heading-inline",
+    type: "heading",
     properties: {
-      content:
-        "QUANDO VOCÊ OLHA PARA O SEU GUARDA-ROUPA, QUAL DESSAS FRASES TE VEM A CABEÇA?",
+      content: "QUANDO VOCÊ OLHA PARA O SEU GUARDA-ROUPA, QUAL DESSAS FRASES TE VEM A CABEÇA?",
       level: "h2",
       fontSize: "text-2xl",
       fontWeight: "font-bold",
@@ -29,7 +28,7 @@ export const getStep13Template = () => [
     },
   },
   {
-    type: "text-inline",
+    type: "text",
     properties: {
       content: "Questão 13 de 21",
       fontSize: "text-sm",
@@ -92,7 +91,7 @@ export const getStep13Template = () => [
     },
   },
   {
-    type: "button-inline",
+    type: "button",
     properties: {
       text: "Continuar",
       variant: "primary",

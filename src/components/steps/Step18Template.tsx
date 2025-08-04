@@ -16,7 +16,7 @@ export const getStep18Template = () => [
     },
   },
   {
-    type: "heading-inline",
+    type: "heading",
     properties: {
       content: "O QUE VOCÊ MAIS DESEJA ALCANÇAR COM SEU NOVO ESTILO?",
       level: "h2",
@@ -28,7 +28,7 @@ export const getStep18Template = () => [
     },
   },
   {
-    type: "text-inline",
+    type: "text",
     properties: {
       content: "Questão 18 de 21",
       fontSize: "text-sm",
@@ -91,7 +91,7 @@ export const getStep18Template = () => [
     },
   },
   {
-    type: "button-inline",
+    type: "button",
     properties: {
       text: "Continuar",
       variant: "primary",

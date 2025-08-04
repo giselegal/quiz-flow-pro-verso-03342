@@ -16,7 +16,7 @@ export const getStep20Template = () => [
     },
   },
   {
-    type: "result-header-inline",
+    type: "result-header",
     properties: {
       title: "Seu Resultado Personalizado",
       subtitle: "Baseado nas suas 18 respostas",
@@ -24,18 +24,17 @@ export const getStep20Template = () => [
     },
   },
   {
-    type: "result-card-inline",
+    type: "result-card",
     properties: {
       styleType: "Contemporâneo Elegante",
-      description:
-        "Você tem um estilo que combina modernidade com sofisticação",
+      description: "Você tem um estilo que combina modernidade com sofisticação",
       showImage: true,
       showDescription: true,
       showCharacteristics: true,
     },
   },
   {
-    type: "button-inline",
+    type: "button",
     properties: {
       text: "Ver Oferta Especial",
       variant: "primary",

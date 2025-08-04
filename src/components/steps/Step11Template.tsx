@@ -16,7 +16,7 @@ export const getStep11Template = () => [
     },
   },
   {
-    type: "heading-inline",
+    type: "heading",
     properties: {
       content: "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...",
       level: "h2",
@@ -28,7 +28,7 @@ export const getStep11Template = () => [
     },
   },
   {
-    type: "text-inline",
+    type: "text",
     properties: {
       content: "Questão 10 de 10",
       fontSize: "text-sm",
@@ -123,7 +123,7 @@ export const getStep11Template = () => [
     },
   },
   {
-    type: "button-inline",
+    type: "button",
     properties: {
       text: "Finalizar Quiz",
       variant: "primary",

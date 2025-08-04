@@ -16,7 +16,7 @@ export const getStep17Template = () => [
     },
   },
   {
-    type: "heading-inline",
+    type: "heading",
     properties: {
       content: "QUAL ORÇAMENTO VOCÊ COSTUMA DESTINAR PARA ROUPAS POR MÊS?",
       level: "h2",
@@ -28,7 +28,7 @@ export const getStep17Template = () => [
     },
   },
   {
-    type: "text-inline",
+    type: "text",
     properties: {
       content: "Questão 17 de 21",
       fontSize: "text-sm",
@@ -91,7 +91,7 @@ export const getStep17Template = () => [
     },
   },
   {
-    type: "button-inline",
+    type: "button",
     properties: {
       text: "Continuar",
       variant: "primary",

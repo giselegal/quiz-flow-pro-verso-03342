@@ -11,16 +11,13 @@ export const Step04Template: React.FC<Step04TemplateProps> = ({
   onPrevious,
   onBlockAdd,
 }) => {
-  return (
-    <div className="step-04-template">
-      {/* Conteúdo da Etapa 4 renderizado aqui */}
-    </div>
-  );
+  return <div className="step-04-template">{/* Conteúdo da Etapa 4 renderizado aqui */}</div>;
 };
 
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 4 - QUESTÃO 3: QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?
 export const getStep04Template = () => {
   return [
+    // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
       type: "quiz-intro-header",
       properties: {
@@ -34,8 +31,10 @@ export const getStep04Template = () => {
         showBackButton: true,
       },
     },
+
+    // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      type: "heading-inline",
+      type: "heading",
       properties: {
         content: "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
         level: "h2",
@@ -46,8 +45,10 @@ export const getStep04Template = () => {
         marginBottom: 8,
       },
     },
+
+    // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      type: "text-inline",
+      type: "text",
       properties: {
         content: "Questão 3 de 10",
         fontSize: "text-sm",
@@ -56,6 +57,8 @@ export const getStep04Template = () => {
         marginBottom: 24,
       },
     },
+
+    // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
       type: "options-grid",
       properties: {
@@ -68,8 +71,7 @@ export const getStep04Template = () => {
             category: "Natural",
             styleCategory: "Natural",
             points: 1,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
           },
           {
             id: "3b",
@@ -78,8 +80,7 @@ export const getStep04Template = () => {
             category: "Clássico",
             styleCategory: "Clássico",
             points: 1,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
           },
           {
             id: "3c",
@@ -98,8 +99,7 @@ export const getStep04Template = () => {
             category: "Elegante",
             styleCategory: "Elegante",
             points: 1,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
           },
           {
             id: "3e",
@@ -108,8 +108,7 @@ export const getStep04Template = () => {
             category: "Romântico",
             styleCategory: "Romântico",
             points: 1,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
           },
           {
             id: "3f",
@@ -118,8 +117,7 @@ export const getStep04Template = () => {
             category: "Sexy",
             styleCategory: "Sexy",
             points: 1,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
           },
           {
             id: "3g",
@@ -128,8 +126,7 @@ export const getStep04Template = () => {
             category: "Dramático",
             styleCategory: "Dramático",
             points: 1,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
           },
           {
             id: "3h",
@@ -138,8 +135,7 @@ export const getStep04Template = () => {
             category: "Criativo",
             styleCategory: "Criativo",
             points: 1,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
           },
         ],
         columns: 2,
@@ -157,8 +153,10 @@ export const getStep04Template = () => {
         showValidationFeedback: true,
       },
     },
+
+    // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
-      type: "button-inline",
+      type: "button",
       properties: {
         text: "Continuar",
         variant: "primary",

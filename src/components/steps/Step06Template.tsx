@@ -11,16 +11,13 @@ export const Step06Question05: React.FC<Step06Question05Props> = ({
   onPrevious,
   onBlockAdd,
 }) => {
-  return (
-    <div className="step-06-question-05">
-      {/* Conteúdo da Etapa 6 renderizado aqui */}
-    </div>
-  );
+  return <div className="step-06-question-05">{/* Conteúdo da Etapa 6 renderizado aqui */}</div>;
 };
 
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 6 - QUESTÃO 5: QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?
 export const getStep06Template = () => {
   return [
+    // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
       type: "quiz-intro-header",
       properties: {
@@ -34,8 +31,10 @@ export const getStep06Template = () => {
         showBackButton: true,
       },
     },
+
+    // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      type: "heading-inline",
+      type: "heading",
       properties: {
         content: "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?",
         level: "h2",
@@ -46,8 +45,10 @@ export const getStep06Template = () => {
         marginBottom: 8,
       },
     },
+
+    // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      type: "text-inline",
+      type: "text",
       properties: {
         content: "Questão 5 de 10",
         fontSize: "text-sm",
@@ -56,6 +57,8 @@ export const getStep06Template = () => {
         marginBottom: 24,
       },
     },
+
+    // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
       type: "options-grid",
       properties: {
@@ -157,8 +160,10 @@ export const getStep06Template = () => {
         showValidationFeedback: true,
       },
     },
+
+    // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
-      type: "button-inline",
+      type: "button",
       properties: {
         text: "Continuar",
         variant: "primary",

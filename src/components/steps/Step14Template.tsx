@@ -16,10 +16,9 @@ export const getStep14Template = () => [
     },
   },
   {
-    type: "heading-inline",
+    type: "heading",
     properties: {
-      content:
-        "QUAL É A SUA PRINCIPAL DIFICULDADE NA HORA DE SE ARRUMAR PARA SAIR?",
+      content: "QUAL É A SUA PRINCIPAL DIFICULDADE NA HORA DE SE ARRUMAR PARA SAIR?",
       level: "h2",
       fontSize: "text-2xl",
       fontWeight: "font-bold",
@@ -29,7 +28,7 @@ export const getStep14Template = () => [
     },
   },
   {
-    type: "text-inline",
+    type: "text",
     properties: {
       content: "Questão 14 de 21",
       fontSize: "text-sm",
@@ -92,7 +91,7 @@ export const getStep14Template = () => [
     },
   },
   {
-    type: "button-inline",
+    type: "button",
     properties: {
       text: "Continuar",
       variant: "primary",

@@ -1,26 +1,23 @@
 import React from "react";
 
-export interface Step05Question04Props {
+export interface Step05TemplateProps {
   onNext?: () => void;
   onPrevious?: () => void;
   onBlockAdd?: (block: any) => void;
 }
 
-export const Step05Question04: React.FC<Step05Question04Props> = ({
+export const Step05Template: React.FC<Step05TemplateProps> = ({
   onNext,
   onPrevious,
   onBlockAdd,
 }) => {
-  return (
-    <div className="step-05-question-04">
-      {/* Conteúdo da Etapa 5 renderizado aqui */}
-    </div>
-  );
+  return <div className="step-05-template">{/* Conteúdo da Etapa 5 renderizado aqui */}</div>;
 };
 
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 5 - QUESTÃO 4: QUAIS DETALHES VOCÊ GOSTA?
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 5 - QUESTÃO 5: QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?
 export const getStep05Template = () => {
   return [
+    // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
       type: "quiz-intro-header",
       properties: {
@@ -29,15 +26,17 @@ export const getStep05Template = () => {
         logoAlt: "Logo Gisele Galvão",
         logoWidth: 96,
         logoHeight: 96,
-        progressValue: 40,
+        progressValue: 50,
         progressMax: 100,
         showBackButton: true,
       },
     },
+
+    // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      type: "heading-inline",
+      type: "heading",
       properties: {
-        content: "QUAIS DETALHES VOCÊ GOSTA?",
+        content: "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?",
         level: "h2",
         fontSize: "text-2xl",
         fontWeight: "font-bold",
@@ -46,93 +45,113 @@ export const getStep05Template = () => {
         marginBottom: 8,
       },
     },
+
+    // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      type: "text-inline",
+      type: "text",
       properties: {
-        content: "Questão 4 de 10",
+        content: "Questão 5 de 10",
         fontSize: "text-sm",
         textAlign: "text-center",
         color: "#6B7280",
         marginBottom: 24,
       },
     },
+
+    // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
       type: "options-grid",
       properties: {
-        questionId: "q4",
+        questionId: "q5",
         options: [
           {
-            id: "4a",
-            text: "Poucos detalhes, básico e prático",
-            value: "4a",
+            id: "5a",
+            text: "Estampas clean, com poucas informações",
+            value: "5a",
             category: "Natural",
             styleCategory: "Natural",
             points: 1,
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/20_oh44vh.webp",
           },
           {
-            id: "4b",
-            text: "Bem discretos e sutis, clean e clássico",
-            value: "4b",
+            id: "5b",
+            text: "Estampas clássicas e atemporais",
+            value: "5b",
             category: "Clássico",
             styleCategory: "Clássico",
             points: 1,
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735368/21_o7wkte.webp",
           },
           {
-            id: "4c",
-            text: "Básico, mas com um toque de estilo",
-            value: "4c",
+            id: "5c",
+            text: "Atemporais, mas que tenham uma pegada de atual e moderna",
+            value: "5c",
             category: "Contemporâneo",
             styleCategory: "Contemporâneo",
             points: 1,
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735369/22_siebw2.webp",
           },
           {
-            id: "4d",
-            text: "Detalhes refinados, chic e que deem status",
-            value: "4d",
+            id: "5d",
+            text: "Estampas clássicas e atemporais, mas sofisticadas",
+            value: "5d",
             category: "Elegante",
             styleCategory: "Elegante",
             points: 1,
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/23_bdfxrh.webp",
           },
           {
-            id: "4e",
-            text: "Detalhes delicados, laços, babados",
-            value: "4e",
+            id: "5e",
+            text: "Estampas florais e/ou delicadas como bolinhas, borboletas e corações",
+            value: "5e",
             category: "Romântico",
             styleCategory: "Romântico",
             points: 1,
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/24_nptszu.webp",
           },
           {
-            id: "4f",
-            text: "Roupas que valorizem meu corpo: couro, zíper, fendas",
-            value: "4f",
+            id: "5f",
+            text: "Estampas de animal print, como onça, zebra e cobra",
+            value: "5f",
             category: "Sexy",
             styleCategory: "Sexy",
             points: 1,
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/25_motk6b.webp",
           },
           {
-            id: "4g",
-            text: "Detalhes marcantes, firmeza e peso",
-            value: "4g",
+            id: "5g",
+            text: "Estampas geométricas, abstratas e exageradas como grandes poás",
+            value: "5g",
             category: "Dramático",
             styleCategory: "Dramático",
             points: 1,
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp",
           },
           {
-            id: "4h",
-            text: "Detalhes diferentes do convencional, produções ousadas",
-            value: "4h",
+            id: "5h",
+            text: "Estampas diferentes do usual, como africanas, xadrez grandes",
+            value: "5h",
             category: "Criativo",
             styleCategory: "Criativo",
             points: 1,
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp",
           },
         ],
-        columns: 1,
-        showImages: false,
+        columns: 2,
+        showImages: true,
         multipleSelection: true,
         maxSelections: 3,
         minSelections: 1,
         validationMessage: "Selecione até 3 opções",
-        gridGap: 12,
+        gridGap: 16,
         responsiveColumns: true,
         autoAdvanceOnComplete: true,
         autoAdvanceDelay: 800,
@@ -141,8 +160,10 @@ export const getStep05Template = () => {
         showValidationFeedback: true,
       },
     },
+
+    // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
-      type: "button-inline",
+      type: "button",
       properties: {
         text: "Continuar",
         variant: "primary",
@@ -157,4 +178,4 @@ export const getStep05Template = () => {
   ];
 };
 
-export default Step05Question04;
+export default Step05Template;

@@ -16,7 +16,7 @@ export const getStep10Template = () => [
     },
   },
   {
-    type: "heading-inline",
+    type: "heading",
     properties: {
       content: "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?",
       level: "h2",
@@ -28,7 +28,7 @@ export const getStep10Template = () => [
     },
   },
   {
-    type: "text-inline",
+    type: "text",
     properties: {
       content: "Questão 9 de 10",
       fontSize: "text-sm",
@@ -45,8 +45,7 @@ export const getStep10Template = () => [
         {
           id: "9a",
           text: "Pequenos e discretos, às vezes nem uso.",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/56_htzoxy.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/56_htzoxy.webp",
           value: "9a",
           category: "Natural",
           styleCategory: "Natural",
@@ -55,8 +54,7 @@ export const getStep10Template = () => [
         {
           id: "9b",
           text: "Brincos pequenos e discretos. Corrente fininha.",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/57_whzmff.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/57_whzmff.webp",
           value: "9b",
           category: "Clássico",
           styleCategory: "Clássico",
@@ -65,8 +63,7 @@ export const getStep10Template = () => [
         {
           id: "9c",
           text: "Acessórios que elevem meu look com um toque moderno.",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/61_joafud.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/61_joafud.webp",
           value: "9c",
           category: "Contemporâneo",
           styleCategory: "Contemporâneo",
@@ -75,8 +72,7 @@ export const getStep10Template = () => [
         {
           id: "9d",
           text: "Acessórios sofisticados, joias ou semijoias.",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/60_vzsnps.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/60_vzsnps.webp",
           value: "9d",
           category: "Elegante",
           styleCategory: "Elegante",
@@ -85,8 +81,7 @@ export const getStep10Template = () => [
         {
           id: "9e",
           text: "Peças delicadas e com um toque feminino.",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/59_dwaqrx.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/59_dwaqrx.webp",
           value: "9e",
           category: "Romântico",
           styleCategory: "Romântico",
@@ -95,8 +90,7 @@ export const getStep10Template = () => [
         {
           id: "9f",
           text: "Brincos longos, colares que valorizem minha beleza.",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735487/63_lwgokn.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735487/63_lwgokn.webp",
           value: "9f",
           category: "Sexy",
           styleCategory: "Sexy",
@@ -105,8 +99,7 @@ export const getStep10Template = () => [
         {
           id: "9g",
           text: "Acessórios pesados, que causem um impacto.",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735485/62_mno8wg.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735485/62_mno8wg.webp",
           value: "9g",
           category: "Dramático",
           styleCategory: "Dramático",
@@ -115,8 +108,7 @@ export const getStep10Template = () => [
         {
           id: "9h",
           text: "Acessórios diferentes, grandes e marcantes.",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735480/58_njdjoh.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735480/58_njdjoh.webp",
           value: "9h",
           category: "Criativo",
           styleCategory: "Criativo",
@@ -140,7 +132,7 @@ export const getStep10Template = () => [
     },
   },
   {
-    type: "button-inline",
+    type: "button",
     properties: {
       text: "Continuar",
       variant: "primary",

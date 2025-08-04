@@ -16,7 +16,7 @@ export const getStep16Template = () => [
     },
   },
   {
-    type: "heading-inline",
+    type: "heading",
     properties: {
       content: "QUANDO VOCÊ PENSA EM INVESTIR EM ROUPAS NOVAS, CONSIDERA:",
       level: "h2",
@@ -28,7 +28,7 @@ export const getStep16Template = () => [
     },
   },
   {
-    type: "text-inline",
+    type: "text",
     properties: {
       content: "Questão 16 de 21",
       fontSize: "text-sm",
@@ -91,7 +91,7 @@ export const getStep16Template = () => [
     },
   },
   {
-    type: "button-inline",
+    type: "button",
     properties: {
       text: "Continuar",
       variant: "primary",

@@ -11,16 +11,13 @@ export const Step03Question02: React.FC<Step03Question02Props> = ({
   onPrevious,
   onBlockAdd,
 }) => {
-  return (
-    <div className="step-03-question-02">
-      {/* Conteúdo da Etapa 3 renderizado aqui */}
-    </div>
-  );
+  return <div className="step-03-question-02">{/* Conteúdo da Etapa 3 renderizado aqui */}</div>;
 };
 
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 3 - QUESTÃO 2: PERSONALIDADE (REAL)
 export const getStep03Template = () => {
   return [
+    // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
       type: "quiz-intro-header",
       properties: {
@@ -34,8 +31,10 @@ export const getStep03Template = () => {
         showBackButton: true,
       },
     },
+
+    // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      type: "heading-inline",
+      type: "heading",
       properties: {
         content: "RESUMA A SUA PERSONALIDADE:",
         level: "h2",
@@ -46,8 +45,10 @@ export const getStep03Template = () => {
         marginBottom: 8,
       },
     },
+
+    // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      type: "text-inline",
+      type: "text",
       properties: {
         content: "Questão 2 de 10",
         fontSize: "text-sm",
@@ -56,6 +57,8 @@ export const getStep03Template = () => {
         marginBottom: 24,
       },
     },
+
+    // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
       type: "options-grid",
       properties: {
@@ -141,8 +144,10 @@ export const getStep03Template = () => {
         showValidationFeedback: true,
       },
     },
+
+    // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
-      type: "button-inline",
+      type: "button",
       properties: {
         text: "Continuar",
         variant: "primary",

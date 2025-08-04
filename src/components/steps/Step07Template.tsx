@@ -11,16 +11,13 @@ export const Step07Question06: React.FC<Step07Question06Props> = ({
   onPrevious,
   onBlockAdd,
 }) => {
-  return (
-    <div className="step-07-question-06">
-      {/* Conteúdo da Etapa 7 renderizado aqui */}
-    </div>
-  );
+  return <div className="step-07-question-06">{/* Conteúdo da Etapa 7 renderizado aqui */}</div>;
 };
 
 // �� TEMPLATE DE BLOCOS DA ETAPA 7 - QUESTÃO 6: QUAL CASACO É SEU FAVORITO?
 export const getStep07Template = () => {
   return [
+    // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
       type: "quiz-intro-header",
       properties: {
@@ -34,8 +31,10 @@ export const getStep07Template = () => {
         showBackButton: true,
       },
     },
+
+    // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      type: "heading-inline",
+      type: "heading",
       properties: {
         content: "QUAL CASACO É SEU FAVORITO?",
         level: "h2",
@@ -46,8 +45,10 @@ export const getStep07Template = () => {
         marginBottom: 8,
       },
     },
+
+    // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      type: "text-inline",
+      type: "text",
       properties: {
         content: "Questão 6 de 10",
         fontSize: "text-sm",
@@ -56,6 +57,8 @@ export const getStep07Template = () => {
         marginBottom: 24,
       },
     },
+
+    // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
       type: "options-grid",
       properties: {
@@ -117,8 +120,10 @@ export const getStep07Template = () => {
         showValidationFeedback: true,
       },
     },
+
+    // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
-      type: "button-inline",
+      type: "button",
       properties: {
         text: "Continuar",
         variant: "primary",

@@ -50,6 +50,21 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     stageCount,
   });
 
+  // 🔍 DEBUG ESPECÍFICO PARA PAINEL DE PROPRIEDADES
+  console.log("🎯 DEBUG Painel Propriedades:", {
+    selectedBlockId: selectedBlockId,
+    selectedBlock: selectedBlock
+      ? {
+          id: selectedBlock.id,
+          type: selectedBlock.type,
+          hasContent: !!selectedBlock.content,
+          hasProperties: !!selectedBlock.properties,
+        }
+      : null,
+    currentBlocksDetailed: currentBlocks?.map(b => ({ id: b.id, type: b.type })) || [],
+    shouldShowPanel: !isPreviewing && selectedBlock,
+  });
+
   // Mostrar estatísticas do registry
   const registryStats = getRegistryStats();
 

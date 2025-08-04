@@ -16,7 +16,7 @@ export const getStep15Template = () => [
     },
   },
   {
-    type: "heading-inline",
+    type: "heading",
     properties: {
       content:
         'QUANDO VOCÊ TEM UM COMPROMISSO, COM QUE FREQUÊNCIA BATE AQUELE PENSAMENTO: "COM QUE ROUPA EU VOU?"',
@@ -29,7 +29,7 @@ export const getStep15Template = () => [
     },
   },
   {
-    type: "text-inline",
+    type: "text",
     properties: {
       content: "Questão 15 de 21",
       fontSize: "text-sm",
@@ -92,7 +92,7 @@ export const getStep15Template = () => [
     },
   },
   {
-    type: "button-inline",
+    type: "button",
     properties: {
       text: "Continuar",
       variant: "primary",

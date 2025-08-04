@@ -1,6 +1,6 @@
-import React from "react";
 import { BlockDefinition } from "@/types/editor";
-import { Type, Grid } from "lucide-react";
+import { Grid, Type } from "lucide-react";
+import React from "react";
 
 // 🎯 Configurações avançadas para o painel de propriedades aprimorado
 export const enhancedPropertyConfigurations = {
@@ -58,30 +58,72 @@ export const enhancedPropertyConfigurations = {
       responsiveColumns: {
         type: "boolean" as const,
         label: "Colunas Responsivas",
-        description:
-          "Ajustar automaticamente o número de colunas em dispositivos móveis",
+        description: "Ajustar automaticamente o número de colunas em dispositivos móveis",
         category: "layout" as const,
         default: true,
       },
 
-      // 🖼️ ESTILIZAÇÃO
+      // 🖼️ ESTILIZAÇÃO E CONTROLES DE IMAGEM
       showImages: {
         type: "boolean" as const,
-        label: "Mostrar Imagens",
-        description: "Exibir imagens nas opções",
+        label: "Exibir Imagens",
+        description: "Controla se as imagens das opções são exibidas",
         category: "styling" as const,
         default: true,
       },
       imageSize: {
         type: "select" as const,
-        label: "Tamanho da Imagem",
-        description: "Tamanho das imagens das opções",
+        label: "Tamanho das Imagens",
+        description: "Define o tamanho padrão das imagens",
         category: "styling" as const,
         default: "medium",
         options: [
-          { value: "small", label: "Pequeno" },
-          { value: "medium", label: "Médio" },
-          { value: "large", label: "Grande" },
+          { value: "small", label: "Pequeno (64x64)" },
+          { value: "medium", label: "Médio (96x80)" },
+          { value: "large", label: "Grande (128x112)" },
+          { value: "custom", label: "Personalizado" },
+        ],
+      },
+      imageWidth: {
+        type: "number" as const,
+        label: "Largura da Imagem (px)",
+        description: "Largura personalizada em pixels (modo custom)",
+        category: "styling" as const,
+        default: 150,
+        min: 50,
+        max: 400,
+      },
+      imageHeight: {
+        type: "number" as const,
+        label: "Altura da Imagem (px)",
+        description: "Altura personalizada em pixels (modo custom)",
+        category: "styling" as const,
+        default: 120,
+        min: 50,
+        max: 300,
+      },
+      imagePosition: {
+        type: "select" as const,
+        label: "Posição da Imagem",
+        description: "Onde a imagem aparece no card",
+        category: "styling" as const,
+        default: "top",
+        options: [
+          { value: "top", label: "Acima do texto" },
+          { value: "bottom", label: "Abaixo do texto" },
+          { value: "left", label: "À esquerda do texto" },
+          { value: "right", label: "À direita do texto" },
+        ],
+      },
+      imageLayout: {
+        type: "select" as const,
+        label: "Layout do Card",
+        description: "Organização vertical ou horizontal",
+        category: "styling" as const,
+        default: "vertical",
+        options: [
+          { value: "vertical", label: "Vertical (imagem empilhada)" },
+          { value: "horizontal", label: "Horizontal (imagem lateral)" },
         ],
       },
       backgroundColor: {
@@ -251,13 +293,9 @@ export const enhancedPropertyConfigurations = {
 };
 
 // 🎯 Função para obter configuração aprimorada de um tipo de bloco
-export const getEnhancedBlockDefinition = (
-  blockType: string,
-): BlockDefinition | null => {
+export const getEnhancedBlockDefinition = (blockType: string): BlockDefinition | null => {
   const config =
-    enhancedPropertyConfigurations[
-      blockType as keyof typeof enhancedPropertyConfigurations
-    ];
+    enhancedPropertyConfigurations[blockType as keyof typeof enhancedPropertyConfigurations];
   return config ? (config as BlockDefinition) : null;
 };
 

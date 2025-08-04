@@ -30,9 +30,7 @@ const Step20Result: React.FC<Step20ResultProps> = ({
               Seu Estilo Principal: {primaryStyle.category}
             </h2>
             <div className="flex items-center gap-4 mb-4">
-              <div className="text-3xl font-bold text-[#432818]">
-                {primaryStyle.percentage}%
-              </div>
+              <div className="text-3xl font-bold text-[#432818]">{primaryStyle.percentage}%</div>
               <div className="text-[#8F7A6A]">de compatibilidade</div>
             </div>
           </div>
@@ -40,21 +38,12 @@ const Step20Result: React.FC<Step20ResultProps> = ({
 
         {secondaryStyles.length > 0 && (
           <div className="bg-white rounded-lg p-8 mb-6 shadow-lg">
-            <h3 className="text-xl font-playfair text-[#B89B7A] mb-4">
-              Estilos Secundários
-            </h3>
+            <h3 className="text-xl font-playfair text-[#B89B7A] mb-4">Estilos Secundários</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {secondaryStyles.slice(0, 4).map((style, index) => (
-                <div
-                  key={index}
-                  className="border border-[#B89B7A]/20 rounded-lg p-4"
-                >
-                  <div className="font-medium text-[#432818]">
-                    {style.category}
-                  </div>
-                  <div className="text-sm text-[#8F7A6A]">
-                    {style.percentage}%
-                  </div>
+                <div key={index} className="border border-[#B89B7A]/20 rounded-lg p-4">
+                  <div className="font-medium text-[#432818]">{style.category}</div>
+                  <div className="text-sm text-[#8F7A6A]">{style.percentage}%</div>
                 </div>
               ))}
             </div>

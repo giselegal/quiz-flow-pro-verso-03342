@@ -16,7 +16,7 @@ export const getStep09Template = () => [
     },
   },
   {
-    type: "heading-inline",
+    type: "heading",
     properties: {
       content: "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?",
       level: "h2",
@@ -28,7 +28,7 @@ export const getStep09Template = () => [
     },
   },
   {
-    type: "text-inline",
+    type: "text",
     properties: {
       content: "Questão 8 de 10",
       fontSize: "text-sm",
@@ -45,8 +45,7 @@ export const getStep09Template = () => [
         {
           id: "8a",
           text: "Tênis nude casual e confortável",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp",
           value: "8a",
           category: "Natural",
           styleCategory: "Natural",
@@ -55,8 +54,7 @@ export const getStep09Template = () => [
         {
           id: "8b",
           text: "Scarpin nude de salto baixo",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp",
           value: "8b",
           category: "Clássico",
           styleCategory: "Clássico",
@@ -65,8 +63,7 @@ export const getStep09Template = () => [
         {
           id: "8c",
           text: "Sandália dourada com salto bloco",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp",
           value: "8c",
           category: "Contemporâneo",
           styleCategory: "Contemporâneo",
@@ -75,8 +72,7 @@ export const getStep09Template = () => [
         {
           id: "8d",
           text: "Scarpin nude salto alto e fino",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp",
           value: "8d",
           category: "Elegante",
           styleCategory: "Elegante",
@@ -85,8 +81,7 @@ export const getStep09Template = () => [
         {
           id: "8e",
           text: "Sandália anabela off white",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp",
           value: "8e",
           category: "Romântico",
           styleCategory: "Romântico",
@@ -95,8 +90,7 @@ export const getStep09Template = () => [
         {
           id: "8f",
           text: "Sandália rosa de tiras finas",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp",
           value: "8f",
           category: "Sexy",
           styleCategory: "Sexy",
@@ -105,8 +99,7 @@ export const getStep09Template = () => [
         {
           id: "8g",
           text: "Scarpin preto moderno com vinil transparente",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp",
           value: "8g",
           category: "Dramático",
           styleCategory: "Dramático",
@@ -115,8 +108,7 @@ export const getStep09Template = () => [
         {
           id: "8h",
           text: "Scarpin colorido estampado",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp",
           value: "8h",
           category: "Criativo",
           styleCategory: "Criativo",
@@ -140,7 +132,7 @@ export const getStep09Template = () => [
     },
   },
   {
-    type: "button-inline",
+    type: "button",
     properties: {
       text: "Continuar",
       variant: "primary",
