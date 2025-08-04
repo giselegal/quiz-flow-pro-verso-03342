@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Clock } from "lucide-react";
-import type { BlockComponentProps } from "@/types/blocks";
+import React, { useState, useEffect } from 'react';
+import { Clock } from 'lucide-react';
+import type { BlockComponentProps } from '@/types/blocks';
 
 const QuizOfferCountdownBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -8,13 +8,13 @@ const QuizOfferCountdownBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
     countdownMinutes = 15,
-    title = "Oferta expira em:",
-    backgroundColor = "#dc2626",
-    textColor = "#ffffff",
+    title = 'Oferta expira em:',
+    backgroundColor = '#dc2626',
+    textColor = '#ffffff',
   } = block.properties;
 
   const [timeLeft, setTimeLeft] = useState(countdownMinutes * 60);
@@ -22,7 +22,7 @@ const QuizOfferCountdownBlock: React.FC<BlockComponentProps> = ({
   useEffect(() => {
     if (!isEditing) {
       const timer = setInterval(() => {
-        setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+        setTimeLeft(prev => (prev > 0 ? prev - 1 : 0));
       }, 1000);
 
       return () => clearInterval(timer);
@@ -38,18 +38,14 @@ const QuizOfferCountdownBlock: React.FC<BlockComponentProps> = ({
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   return (
     <div
       className={`
         w-full py-4 px-4 transition-all duration-200
-        ${
-          isSelected
-            ? "ring-1 ring-gray-400/40 bg-gray-50/30"
-            : "hover:shadow-sm"
-        }
+        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
         ${className}
       `}
       style={{ backgroundColor }}
@@ -63,10 +59,7 @@ const QuizOfferCountdownBlock: React.FC<BlockComponentProps> = ({
           <span className="text-lg font-semibold" style={{ color: textColor }}>
             {title}
           </span>
-          <span
-            className="text-3xl font-bold font-mono"
-            style={{ color: textColor }}
-          >
+          <span className="text-3xl font-bold font-mono" style={{ color: textColor }}>
             {formatTime(timeLeft)}
           </span>
         </div>

@@ -1,6 +1,6 @@
-import React from "react";
-import { cn } from "@/lib/utils";
-import type { BlockData } from "@/types/blocks";
+import React from 'react';
+import { cn } from '@/lib/utils';
+import type { BlockData } from '@/types/blocks';
 
 interface LoadingAnimationProps {
   block: BlockData;
@@ -18,12 +18,7 @@ const LoadingAnimationBlock: React.FC<LoadingAnimationProps> = ({
   onSelect,
 }) => {
   const properties = block.properties || {};
-  const {
-    type = "spinner",
-    size = "medium",
-    color = "#B89B7A",
-    duration = 3000,
-  } = properties;
+  const { type = 'spinner', size = 'medium', color = '#B89B7A', duration = 3000 } = properties;
 
   const handleClick = () => {
     onSelect?.();
@@ -31,21 +26,18 @@ const LoadingAnimationBlock: React.FC<LoadingAnimationProps> = ({
 
   const getSizeClass = (size: string) => {
     switch (size) {
-      case "small":
-        return "w-6 h-6";
-      case "large":
-        return "w-12 h-12";
+      case 'small':
+        return 'w-6 h-6';
+      case 'large':
+        return 'w-12 h-12';
       default:
-        return "w-8 h-8";
+        return 'w-8 h-8';
     }
   };
 
   const renderSpinner = () => (
     <div
-      className={cn(
-        "animate-spin rounded-full border-2 border-gray-300",
-        getSizeClass(size),
-      )}
+      className={cn('animate-spin rounded-full border-2 border-gray-300', getSizeClass(size))}
       style={{
         borderTopColor: color,
         animationDuration: `${duration / 1000}s`,
@@ -55,16 +47,12 @@ const LoadingAnimationBlock: React.FC<LoadingAnimationProps> = ({
 
   const renderDots = () => (
     <div className="flex space-x-1">
-      {[0, 1, 2].map((i) => (
+      {[0, 1, 2].map(i => (
         <div
           key={i}
           className={cn(
-            "rounded-full animate-pulse",
-            size === "small"
-              ? "w-2 h-2"
-              : size === "large"
-                ? "w-4 h-4"
-                : "w-3 h-3",
+            'rounded-full animate-pulse',
+            size === 'small' ? 'w-2 h-2' : size === 'large' ? 'w-4 h-4' : 'w-3 h-3',
           )}
           style={{
             backgroundColor: color,
@@ -78,7 +66,7 @@ const LoadingAnimationBlock: React.FC<LoadingAnimationProps> = ({
 
   const renderPulse = () => (
     <div
-      className={cn("rounded-full animate-pulse", getSizeClass(size))}
+      className={cn('rounded-full animate-pulse', getSizeClass(size))}
       style={{
         backgroundColor: color,
         animationDuration: `${duration / 1000}s`,
@@ -88,9 +76,9 @@ const LoadingAnimationBlock: React.FC<LoadingAnimationProps> = ({
 
   const renderAnimation = () => {
     switch (type) {
-      case "dots":
+      case 'dots':
         return renderDots();
-      case "pulse":
+      case 'pulse':
         return renderPulse();
       default:
         return renderSpinner();
@@ -100,9 +88,9 @@ const LoadingAnimationBlock: React.FC<LoadingAnimationProps> = ({
   return (
     <div
       className={cn(
-        "loading-animation w-full flex items-center justify-center py-8",
-        "transition-all duration-200",
-        isSelected && "ring-2 ring-blue-500 bg-blue-50",
+        'loading-animation w-full flex items-center justify-center py-8',
+        'transition-all duration-200',
+        isSelected && 'ring-2 ring-blue-500 bg-blue-50',
         className,
       )}
       onClick={handleClick}

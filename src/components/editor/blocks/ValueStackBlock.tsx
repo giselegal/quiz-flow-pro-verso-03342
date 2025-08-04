@@ -1,6 +1,6 @@
-import React from "react";
-import { cn } from "@/lib/utils";
-import { CheckCircle } from "lucide-react";
+import React from 'react';
+import { cn } from '@/lib/utils';
+import { CheckCircle } from 'lucide-react';
 
 interface ValueStackBlockProps {
   title?: string;
@@ -9,41 +9,41 @@ interface ValueStackBlockProps {
 }
 
 const ValueStackBlock: React.FC<ValueStackBlockProps> = ({
-  title = "O Que Você Recebe Hoje",
+  title = 'O Que Você Recebe Hoje',
   showPricing = true,
   className,
 }) => {
   // Dados reais da ancoragem de valor da ResultPage
   const valueItems = [
     {
-      title: "Guia de Estilo e Imagem Completo",
-      description: "Material exclusivo com seu perfil personalizado",
-      value: "R$ 197,00",
+      title: 'Guia de Estilo e Imagem Completo',
+      description: 'Material exclusivo com seu perfil personalizado',
+      value: 'R$ 197,00',
     },
     {
-      title: "Análise Detalhada do Seu Estilo",
-      description: "Relatório completo com suas características únicas",
-      value: "R$ 97,00",
+      title: 'Análise Detalhada do Seu Estilo',
+      description: 'Relatório completo com suas características únicas',
+      value: 'R$ 97,00',
     },
     {
-      title: "Bônus: Peças-chave do Guarda-roupa",
-      description: "Lista das peças essenciais para seu estilo",
-      value: "R$ 79,00",
+      title: 'Bônus: Peças-chave do Guarda-roupa',
+      description: 'Lista das peças essenciais para seu estilo',
+      value: 'R$ 79,00',
     },
     {
-      title: "Bônus: Visagismo Facial",
-      description: "Guia de maquiagem ideal para seu rosto",
-      value: "R$ 29,00",
+      title: 'Bônus: Visagismo Facial',
+      description: 'Guia de maquiagem ideal para seu rosto',
+      value: 'R$ 29,00',
     },
   ];
 
   const totalValue = valueItems.reduce((sum, item) => {
-    const value = parseInt(item.value.replace(/[^\d]/g, ""));
+    const value = parseInt(item.value.replace(/[^\d]/g, ''));
     return sum + value;
   }, 0);
 
   return (
-    <div className={cn("py-4 sm:py-6 md:py-8 px-4", className)}>
+    <div className={cn('py-4 sm:py-6 md:py-8 px-4', className)}>
       <div className="max-w-4xl mx-auto">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#aa6b5d] text-center mb-6 sm:mb-8 px-2">
           {title}
@@ -51,9 +51,7 @@ const ValueStackBlock: React.FC<ValueStackBlockProps> = ({
 
         <div className="bg-white rounded-xl shadow-lg border border-[#B89B7A]/20 overflow-hidden">
           <div className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white p-4 sm:p-5 md:p-6 text-center">
-            <h3 className="text-lg sm:text-xl font-semibold mb-2">
-              Pacote Completo de Transformação
-            </h3>
+            <h3 className="text-lg sm:text-xl font-semibold mb-2">Pacote Completo de Transformação</h3>
             <p className="opacity-90 text-sm sm:text-base">
               Tudo que você precisa para descobrir e aplicar seu estilo único
             </p>
@@ -72,16 +70,12 @@ const ValueStackBlock: React.FC<ValueStackBlockProps> = ({
                       <h4 className="font-semibold text-[#432818] mb-1 text-sm sm:text-base leading-tight">
                         {item.title}
                       </h4>
-                      <p className="text-xs sm:text-sm text-[#8F7A6A] leading-relaxed">
-                        {item.description}
-                      </p>
+                      <p className="text-xs sm:text-sm text-[#8F7A6A] leading-relaxed">{item.description}</p>
                     </div>
                   </div>
                   {showPricing && (
                     <div className="text-left sm:text-right sm:ml-4 flex-shrink-0">
-                      <span className="text-[#aa6b5d] font-bold text-sm sm:text-base">
-                        {item.value}
-                      </span>
+                      <span className="text-[#aa6b5d] font-bold text-sm sm:text-base">{item.value}</span>
                     </div>
                   )}
                 </div>
@@ -92,23 +86,17 @@ const ValueStackBlock: React.FC<ValueStackBlockProps> = ({
               <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-[#B89B7A]/20">
                 <div className="text-center">
                   <div className="mb-3 sm:mb-4">
-                    <span className="text-sm sm:text-lg text-[#8F7A6A]">
-                      Valor total se comprado separadamente:
-                    </span>
+                    <span className="text-sm sm:text-lg text-[#8F7A6A]">Valor total se comprado separadamente:</span>
                     <div className="text-xl sm:text-2xl font-bold text-gray-400 line-through">
-                      R$ {totalValue.toLocaleString("pt-BR")},00
+                      R$ {totalValue.toLocaleString('pt-BR')},00
                     </div>
                   </div>
 
                   <div className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white p-4 sm:p-5 md:p-6 rounded-lg">
-                    <div className="text-xs sm:text-sm opacity-90 mb-2">
-                      Seu investimento hoje:
-                    </div>
-                    <div className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
-                      R$ 97,00
-                    </div>
+                    <div className="text-xs sm:text-sm opacity-90 mb-2">Seu investimento hoje:</div>
+                    <div className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">R$ 97,00</div>
                     <div className="text-xs sm:text-sm opacity-90 leading-relaxed">
-                      Economize R$ {(totalValue - 97).toLocaleString("pt-BR")}
+                      Economize R$ {(totalValue - 97).toLocaleString('pt-BR')}
                       ,00 (mais de 75% de desconto)
                     </div>
                   </div>

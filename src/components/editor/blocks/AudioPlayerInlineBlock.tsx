@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
-import { cn } from "@/lib/utils";
-import InlineBaseWrapper from "./base/InlineBaseWrapper";
-import InlineEditableText from "./base/InlineEditableText";
-import type { BlockComponentProps } from "@/types/blocks";
+import React, { useState, useEffect, useRef } from 'react';
+import { cn } from '@/lib/utils';
+import InlineBaseWrapper from './base/InlineBaseWrapper';
+import InlineEditableText from './base/InlineEditableText';
+import type { BlockComponentProps } from '@/types/blocks';
 import {
   getPersonalizedText,
   trackComponentView,
@@ -10,7 +10,7 @@ import {
   trackComponentConversion,
   RESPONSIVE_PATTERNS,
   INLINE_ANIMATIONS,
-} from "@/utils/inlineComponentUtils";
+} from '@/utils/inlineComponentUtils';
 import {
   Play,
   Pause,
@@ -23,7 +23,7 @@ import {
   ExternalLink,
   Music,
   Headphones,
-} from "lucide-react";
+} from 'lucide-react';
 
 /**
  * AudioPlayerInlineBlock - Player de áudio inline responsivo
@@ -44,24 +44,24 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "Áudio de Apresentação",
-    artist = "Palestrante",
-    description = "Ouça nossa apresentação em áudio",
-    audioUrl = "https://www.soundjay.com/misc/sounds/magic-chime-02.wav",
-    coverUrl = "https://via.placeholder.com/150x150?text=Audio",
+    title = 'Áudio de Apresentação',
+    artist = 'Palestrante',
+    description = 'Ouça nossa apresentação em áudio',
+    audioUrl = 'https://www.soundjay.com/misc/sounds/magic-chime-02.wav',
+    coverUrl = 'https://via.placeholder.com/150x150?text=Audio',
     autoplay = false,
     loop = false,
     showCover = true,
     showTitle = true,
     showArtist = true,
     showDescription = true,
-    playerStyle = "modern",
+    playerStyle = 'modern',
     compactMode = false,
     trackingEnabled = true,
-    animation = "fadeIn",
+    animation = 'fadeIn',
     useUsername = false,
   } = block.properties;
 
@@ -74,11 +74,11 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
   const [playCount, setPlayCount] = useState(0);
 
   const audioRef = useRef<HTMLAudioElement>(null);
-  const username = "Usuário";
+  const username = 'Usuário';
 
   useEffect(() => {
     if (trackingEnabled) {
-      trackComponentView(block.id, "audio-player-inline");
+      trackComponentView(block.id, 'audio-player-inline');
     }
   }, [trackingEnabled, block.id]);
 
@@ -94,11 +94,11 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
         audioRef.current.pause();
       } else {
         audioRef.current.play();
-        setPlayCount((prev) => prev + 1);
+        setPlayCount(prev => prev + 1);
 
         // Track play event
         if (trackingEnabled) {
-          trackComponentClick(block.id, "audio-player-inline", "audio_play");
+          trackComponentClick(block.id, 'audio-player-inline', 'audio_play');
         }
       }
       setIsPlaying(!isPlaying);
@@ -160,42 +160,33 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
   const playerStyleClasses = {
-    modern:
-      "bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl shadow-lg",
-    minimal: "bg-white border border-gray-200 rounded-lg",
-    dark: "bg-gray-900 text-white rounded-lg border border-gray-700",
-    elegant: "bg-white rounded-2xl shadow-2xl border border-gray-100",
+    modern: 'bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl shadow-lg',
+    minimal: 'bg-white border border-gray-200 rounded-lg',
+    dark: 'bg-gray-900 text-white rounded-lg border border-gray-700',
+    elegant: 'bg-white rounded-2xl shadow-2xl border border-gray-100',
   };
 
-  const personalizedTitle = getPersonalizedText(
-    title,
-    title,
-    username,
-    useUsername,
-  );
+  const personalizedTitle = getPersonalizedText(title, title, username, useUsername);
 
   return (
     <InlineBaseWrapper
       block={block}
       isSelected={isSelected}
       onPropertyChange={onPropertyChange}
-      className={cn(
-        className,
-        INLINE_ANIMATIONS[animation as keyof typeof INLINE_ANIMATIONS],
-      )}
+      className={cn(className, INLINE_ANIMATIONS[animation as keyof typeof INLINE_ANIMATIONS])}
       gap="md"
       justify="center"
       align="center"
       direction="col"
       wrap={false}
-      minHeight={compactMode ? "8rem" : "12rem"}
+      minHeight={compactMode ? '8rem' : '12rem'}
       trackingData={{
-        componentName: "AudioPlayerInlineBlock",
-        category: "media",
+        componentName: 'AudioPlayerInlineBlock',
+        category: 'media',
         metadata: {
           playerStyle,
           compactMode,
@@ -219,7 +210,7 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
           onEnded={() => {
             setIsPlaying(false);
             if (trackingEnabled) {
-              trackComponentConversion(block.id, "audio-player-inline", 1);
+              trackComponentConversion(block.id, 'audio-player-inline', 1);
             }
           }}
         />
@@ -227,26 +218,17 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
         {/* Audio Player UI */}
         <div
           className={cn(
-            "p-6 transition-all duration-200",
+            'p-6 transition-all duration-200',
             playerStyleClasses[playerStyle as keyof typeof playerStyleClasses],
-            compactMode && "p-4",
+            compactMode && 'p-4',
           )}
         >
-          <div
-            className={cn(
-              "flex items-center gap-4",
-              compactMode ? "flex-row" : "flex-col sm:flex-row",
-            )}
-          >
+          <div className={cn('flex items-center gap-4', compactMode ? 'flex-row' : 'flex-col sm:flex-row')}>
             {/* Cover Image */}
             {showCover && !compactMode && (
               <div className="flex-shrink-0">
                 <div className="relative">
-                  <img
-                    src={coverUrl}
-                    alt={title}
-                    className="w-20 h-20 rounded-lg object-cover shadow-md"
-                  />
+                  <img src={coverUrl} alt={title} className="w-20 h-20 rounded-lg object-cover shadow-md" />
 
                   {isLoading && (
                     <div className="absolute inset-0 bg-black/50 rounded-lg flex items-center justify-center">
@@ -271,47 +253,31 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
                   {showTitle && (
                     <InlineEditableText
                       value={personalizedTitle}
-                      onChange={(value) => handlePropertyChange("title", value)}
+                      onChange={value => handlePropertyChange('title', value)}
                       placeholder="Título do áudio..."
                       fontSize="lg"
                       fontWeight="semibold"
-                      className={
-                        playerStyle === "modern" || playerStyle === "dark"
-                          ? "text-white"
-                          : "text-gray-800"
-                      }
+                      className={playerStyle === 'modern' || playerStyle === 'dark' ? 'text-white' : 'text-gray-800'}
                     />
                   )}
 
                   {showArtist && (
                     <InlineEditableText
                       value={artist}
-                      onChange={(value) =>
-                        handlePropertyChange("artist", value)
-                      }
+                      onChange={value => handlePropertyChange('artist', value)}
                       placeholder="Nome do artista..."
                       fontSize="sm"
-                      className={
-                        playerStyle === "modern" || playerStyle === "dark"
-                          ? "text-white/80"
-                          : "text-gray-600"
-                      }
+                      className={playerStyle === 'modern' || playerStyle === 'dark' ? 'text-white/80' : 'text-gray-600'}
                     />
                   )}
 
                   {showDescription && (
                     <InlineEditableText
                       value={description}
-                      onChange={(value) =>
-                        handlePropertyChange("description", value)
-                      }
+                      onChange={value => handlePropertyChange('description', value)}
                       placeholder="Descrição do áudio..."
                       fontSize="xs"
-                      className={
-                        playerStyle === "modern" || playerStyle === "dark"
-                          ? "text-white/70"
-                          : "text-gray-500"
-                      }
+                      className={playerStyle === 'modern' || playerStyle === 'dark' ? 'text-white/70' : 'text-gray-500'}
                       multiline={true}
                       maxLines={2}
                     />
@@ -328,20 +294,16 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
                   value={currentTime}
                   onChange={handleSeek}
                   className={cn(
-                    "w-full h-2 rounded-lg appearance-none cursor-pointer",
-                    playerStyle === "modern" || playerStyle === "dark"
-                      ? "bg-white/30"
-                      : "bg-gray-200",
+                    'w-full h-2 rounded-lg appearance-none cursor-pointer',
+                    playerStyle === 'modern' || playerStyle === 'dark' ? 'bg-white/30' : 'bg-gray-200',
                   )}
                   disabled={isLoading}
                 />
 
                 <div
                   className={cn(
-                    "flex justify-between text-xs",
-                    playerStyle === "modern" || playerStyle === "dark"
-                      ? "text-white/70"
-                      : "text-gray-500",
+                    'flex justify-between text-xs',
+                    playerStyle === 'modern' || playerStyle === 'dark' ? 'text-white/70' : 'text-gray-500',
                   )}
                 >
                   <span>{formatTime(currentTime)}</span>
@@ -356,10 +318,10 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
                   <button
                     onClick={() => skipTime(-10)}
                     className={cn(
-                      "transition-colors",
-                      playerStyle === "modern" || playerStyle === "dark"
-                        ? "text-white/80 hover:text-white"
-                        : "text-gray-600 hover:text-gray-800",
+                      'transition-colors',
+                      playerStyle === 'modern' || playerStyle === 'dark'
+                        ? 'text-white/80 hover:text-white'
+                        : 'text-gray-600 hover:text-gray-800',
                     )}
                     disabled={isLoading}
                   >
@@ -370,10 +332,10 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
                   <button
                     onClick={togglePlay}
                     className={cn(
-                      "w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200",
-                      playerStyle === "modern" || playerStyle === "dark"
-                        ? "bg-white/20 hover:bg-white/30 text-white"
-                        : "bg-blue-500 hover:bg-blue-600 text-white",
+                      'w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200',
+                      playerStyle === 'modern' || playerStyle === 'dark'
+                        ? 'bg-white/20 hover:bg-white/30 text-white'
+                        : 'bg-blue-500 hover:bg-blue-600 text-white',
                     )}
                     disabled={isLoading}
                   >
@@ -390,10 +352,10 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
                   <button
                     onClick={() => skipTime(10)}
                     className={cn(
-                      "transition-colors",
-                      playerStyle === "modern" || playerStyle === "dark"
-                        ? "text-white/80 hover:text-white"
-                        : "text-gray-600 hover:text-gray-800",
+                      'transition-colors',
+                      playerStyle === 'modern' || playerStyle === 'dark'
+                        ? 'text-white/80 hover:text-white'
+                        : 'text-gray-600 hover:text-gray-800',
                     )}
                     disabled={isLoading}
                   >
@@ -404,10 +366,10 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
                   <button
                     onClick={restart}
                     className={cn(
-                      "transition-colors",
-                      playerStyle === "modern" || playerStyle === "dark"
-                        ? "text-white/60 hover:text-white/80"
-                        : "text-gray-500 hover:text-gray-700",
+                      'transition-colors',
+                      playerStyle === 'modern' || playerStyle === 'dark'
+                        ? 'text-white/60 hover:text-white/80'
+                        : 'text-gray-500 hover:text-gray-700',
                     )}
                     disabled={isLoading}
                   >
@@ -420,17 +382,13 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
                   <button
                     onClick={toggleMute}
                     className={cn(
-                      "transition-colors",
-                      playerStyle === "modern" || playerStyle === "dark"
-                        ? "text-white/80 hover:text-white"
-                        : "text-gray-600 hover:text-gray-800",
+                      'transition-colors',
+                      playerStyle === 'modern' || playerStyle === 'dark'
+                        ? 'text-white/80 hover:text-white'
+                        : 'text-gray-600 hover:text-gray-800',
                     )}
                   >
-                    {isMuted || volume === 0 ? (
-                      <VolumeX className="w-5 h-5" />
-                    ) : (
-                      <Volume2 className="w-5 h-5" />
-                    )}
+                    {isMuted || volume === 0 ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
                   </button>
 
                   <input
@@ -441,10 +399,8 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
                     value={isMuted ? 0 : volume}
                     onChange={handleVolumeChange}
                     className={cn(
-                      "w-16 h-1 rounded-lg appearance-none cursor-pointer",
-                      playerStyle === "modern" || playerStyle === "dark"
-                        ? "bg-white/30"
-                        : "bg-gray-200",
+                      'w-16 h-1 rounded-lg appearance-none cursor-pointer',
+                      playerStyle === 'modern' || playerStyle === 'dark' ? 'bg-white/30' : 'bg-gray-200',
                     )}
                   />
                 </div>
@@ -454,11 +410,7 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
             {/* Compact Mode Cover */}
             {showCover && compactMode && (
               <div className="flex-shrink-0">
-                <img
-                  src={coverUrl}
-                  alt={title}
-                  className="w-12 h-12 rounded-lg object-cover shadow-md"
-                />
+                <img src={coverUrl} alt={title} className="w-12 h-12 rounded-lg object-cover shadow-md" />
               </div>
             )}
           </div>
@@ -473,7 +425,7 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
             <span>•</span>
             <span>Plays: {playCount}</span>
             <span>•</span>
-            <span>Mode: {compactMode ? "Compact" : "Full"}</span>
+            <span>Mode: {compactMode ? 'Compact' : 'Full'}</span>
           </div>
         )}
       </div>

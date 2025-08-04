@@ -1,6 +1,6 @@
-import React from "react";
-import { cn } from "@/lib/utils";
-import { Check, X } from "lucide-react";
+import React from 'react';
+import { cn } from '@/lib/utils';
+import { Check, X } from 'lucide-react';
 
 interface ComparisonTableBlockProps {
   title?: string;
@@ -9,22 +9,22 @@ interface ComparisonTableBlockProps {
 }
 
 const ComparisonTableBlock: React.FC<ComparisonTableBlockProps> = ({
-  title = "O Guia de Estilo e Imagem + Bônus Exclusivos",
+  title = 'O Guia de Estilo e Imagem + Bônus Exclusivos',
   showBenefits = true,
   className,
 }) => {
   // Dados reais da página de resultado
   const benefits = [
-    "Looks com intenção e identidade",
-    "Cores, modelagens e tecidos a seu favor",
-    "Imagem alinhada aos seus objetivos",
-    "Guarda-roupa funcional, sem compras por impulso",
+    'Looks com intenção e identidade',
+    'Cores, modelagens e tecidos a seu favor',
+    'Imagem alinhada aos seus objetivos',
+    'Guarda-roupa funcional, sem compras por impulso',
   ];
 
   return (
     <div
       className={cn(
-        "bg-gradient-to-r from-[#fff7f3] to-[#f9f4ef] p-6 rounded-lg mb-6 border border-[#B89B7A]/10 glass-panel",
+        'bg-gradient-to-r from-[#fff7f3] to-[#f9f4ef] p-6 rounded-lg mb-6 border border-[#B89B7A]/10 glass-panel',
         className,
       )}
     >

@@ -1,5 +1,5 @@
-import React from "react";
-import type { BlockComponentProps } from "@/types/blocks";
+import React from 'react';
+import type { BlockComponentProps } from '@/types/blocks';
 
 const QuizResultCalculatedBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -7,20 +7,20 @@ const QuizResultCalculatedBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "Seu Resultado",
+    title = 'Seu Resultado',
     showPercentages = true,
     showSecondaryStyles = true,
-    backgroundColor = "#ffffff",
+    backgroundColor = '#ffffff',
   } = block.properties;
 
   // Mock results for display
   const mockResults = [
-    { style: "Contemporâneo", percentage: 85, color: "#B89B7A" },
-    { style: "Elegante", percentage: 72, color: "#8B7355" },
-    { style: "Natural", percentage: 45, color: "#A68B5B" },
+    { style: 'Contemporâneo', percentage: 85, color: '#B89B7A' },
+    { style: 'Elegante', percentage: 72, color: '#8B7355' },
+    { style: 'Natural', percentage: 45, color: '#A68B5B' },
   ];
 
   const primaryResult = mockResults[0];
@@ -30,11 +30,7 @@ const QuizResultCalculatedBlock: React.FC<BlockComponentProps> = ({
     <div
       className={`
         py-8 px-4 cursor-pointer transition-all duration-200
-        ${
-          isSelected
-            ? "ring-1 ring-gray-400/40 bg-gray-50/30"
-            : "hover:shadow-sm"
-        }
+        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
         ${className}
       `}
       style={{ backgroundColor }}
@@ -47,16 +43,11 @@ const QuizResultCalculatedBlock: React.FC<BlockComponentProps> = ({
 
         {/* Primary Result */}
         <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
-          <h3
-            className="text-2xl font-semibold mb-4"
-            style={{ color: primaryResult.color }}
-          >
+          <h3 className="text-2xl font-semibold mb-4" style={{ color: primaryResult.color }}>
             Seu Estilo Principal: {primaryResult.style}
           </h3>
           {showPercentages && (
-            <div className="text-lg text-gray-600 mb-4">
-              {primaryResult.percentage}% de compatibilidade
-            </div>
+            <div className="text-lg text-gray-600 mb-4">{primaryResult.percentage}% de compatibilidade</div>
           )}
           <div className="w-full bg-gray-200 rounded-full h-3">
             <div
@@ -72,18 +63,12 @@ const QuizResultCalculatedBlock: React.FC<BlockComponentProps> = ({
         {/* Secondary Results */}
         {showSecondaryStyles && (
           <div className="space-y-4">
-            <h4 className="text-lg font-medium text-[#432818] mb-4">
-              Outros estilos que combinam com você:
-            </h4>
+            <h4 className="text-lg font-medium text-[#432818] mb-4">Outros estilos que combinam com você:</h4>
             {secondaryResults.map((style: any, index: number) => (
               <div key={index} className="bg-white rounded-lg p-4 shadow-sm">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="font-medium text-gray-800">
-                    {style.style}
-                  </span>
-                  {showPercentages && (
-                    <span className="text-gray-600">{style.percentage}%</span>
-                  )}
+                  <span className="font-medium text-gray-800">{style.style}</span>
+                  {showPercentages && <span className="text-gray-600">{style.percentage}%</span>}
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div

@@ -1,5 +1,5 @@
-import React from "react";
-import EditorFixedPageWithDragDrop from "./editor-fixed-dragdrop";
+import React from 'react';
+import EditorFixedPageWithDragDrop from './editor-fixed-dragdrop';
 
 const EditorFixedPage: React.FC = () => {
   return <EditorFixedPageWithDragDrop />;

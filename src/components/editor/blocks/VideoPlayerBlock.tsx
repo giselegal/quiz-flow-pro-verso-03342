@@ -1,5 +1,5 @@
-import React from "react";
-import { BlockComponentProps } from "@/types/blocks";
+import React from 'react';
+import { BlockComponentProps } from '@/types/blocks';
 
 interface VideoPlayerBlockProps extends BlockComponentProps {
   videoUrl?: string;
@@ -13,15 +13,15 @@ const VideoPlayerBlock: React.FC<VideoPlayerBlockProps> = ({
   isSelected,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
-  const videoUrl = block.properties?.videoUrl || "";
-  const title = block.properties?.title || "Vídeo";
+  const videoUrl = block.properties?.videoUrl || '';
+  const title = block.properties?.title || 'Vídeo';
 
   return (
     <div
       className={`p-4 border-2 border-dashed border-gray-300 rounded-lg ${
-        isSelected ? "border-blue-500 bg-blue-50" : "hover:border-gray-400"
+        isSelected ? 'border-blue-500 bg-blue-50' : 'hover:border-gray-400'
       } ${className}`}
       onClick={onClick}
     >
@@ -44,9 +44,7 @@ const VideoPlayerBlock: React.FC<VideoPlayerBlockProps> = ({
         </div>
       )}
 
-      {title && (
-        <h3 className="mt-3 text-lg font-medium text-gray-900">{title}</h3>
-      )}
+      {title && <h3 className="mt-3 text-lg font-medium text-gray-900">{title}</h3>}
     </div>
   );
 };

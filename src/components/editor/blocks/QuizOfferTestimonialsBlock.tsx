@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Star, Users } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
-import type { BlockComponentProps } from "@/types/blocks";
+import React, { useState, useEffect } from 'react';
+import { Star, Users } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
+import type { BlockComponentProps } from '@/types/blocks';
 
 const QuizOfferTestimonialsBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -10,32 +10,32 @@ const QuizOfferTestimonialsBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "O que nossas clientes dizem",
-    textColor = "#432818",
-    backgroundColor = "#f9fafb",
+    title = 'O que nossas clientes dizem',
+    textColor = '#432818',
+    backgroundColor = '#f9fafb',
     testimonials = [
       {
-        name: "Marina S.",
-        text: "Finalmente entendi meu estilo! Agora me visto com muito mais confiança.",
+        name: 'Marina S.',
+        text: 'Finalmente entendi meu estilo! Agora me visto com muito mais confiança.',
         rating: 5,
       },
       {
-        name: "Juliana R.",
-        text: "O guia transformou completamente meu guarda-roupa. Vale cada centavo!",
+        name: 'Juliana R.',
+        text: 'O guia transformou completamente meu guarda-roupa. Vale cada centavo!',
         rating: 5,
       },
       {
-        name: "Carla M.",
-        text: "Nunca pensei que descobrir meu estilo seria tão fácil e prático.",
+        name: 'Carla M.',
+        text: 'Nunca pensei que descobrir meu estilo seria tão fácil e prático.',
         rating: 5,
       },
     ],
     showStats = true,
-    totalCustomers = "+10.000 mulheres transformadas",
-    averageRating = "4.9/5 estrelas",
+    totalCustomers = '+10.000 mulheres transformadas',
+    averageRating = '4.9/5 estrelas',
   } = block.properties;
 
   const [isLoaded, setIsLoaded] = useState(false);
@@ -54,11 +54,7 @@ const QuizOfferTestimonialsBlock: React.FC<BlockComponentProps> = ({
     <div
       className={`
         w-full py-16 px-4 transition-all duration-200
-        ${
-          isSelected
-            ? "ring-1 ring-gray-400/40 bg-gray-50/30"
-            : "hover:shadow-sm"
-        }
+        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
         ${className}
       `}
       style={{ backgroundColor }}
@@ -68,10 +64,7 @@ const QuizOfferTestimonialsBlock: React.FC<BlockComponentProps> = ({
     >
       <AnimatedWrapper show={isLoaded}>
         <div className="max-w-6xl mx-auto">
-          <h3
-            className="text-3xl font-bold text-center mb-12"
-            style={{ color: textColor }}
-          >
+          <h3 className="text-3xl font-bold text-center mb-12" style={{ color: textColor }}>
             {title}
           </h3>
 
@@ -81,15 +74,10 @@ const QuizOfferTestimonialsBlock: React.FC<BlockComponentProps> = ({
                 <CardContent className="p-6 text-center">
                   <div className="flex justify-center mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className="w-5 h-5 fill-current text-yellow-400"
-                      />
+                      <Star key={i} className="w-5 h-5 fill-current text-yellow-400" />
                     ))}
                   </div>
-                  <p className="text-gray-700 mb-4 italic">
-                    "{testimonial.text}"
-                  </p>
+                  <p className="text-gray-700 mb-4 italic">"{testimonial.text}"</p>
                   <p className="font-semibold" style={{ color: textColor }}>
                     {testimonial.name}
                   </p>

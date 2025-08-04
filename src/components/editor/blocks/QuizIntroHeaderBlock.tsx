@@ -1,8 +1,8 @@
-import React from "react";
-import { cn } from "../../../lib/utils";
-import { ArrowLeft } from "lucide-react";
-import { InlineEditText } from "./InlineEditText";
-import type { BlockComponentProps } from "../../../types/blocks";
+import React from 'react';
+import { cn } from '../../../lib/utils';
+import { ArrowLeft } from 'lucide-react';
+import { InlineEditText } from './InlineEditText';
+import type { BlockComponentProps } from '../../../types/blocks';
 
 interface QuizIntroHeaderBlockProps extends BlockComponentProps {
   disabled?: boolean;
@@ -20,22 +20,17 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   if (!block || !block.properties) {
     return (
       <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
-        <p className="text-red-600">
-          Erro: Bloco não encontrado ou propriedades indefinidas
-        </p>
+        <p className="text-red-600">Erro: Bloco não encontrado ou propriedades indefinidas</p>
       </div>
     );
   }
 
   // Debug das propriedades recebidas
-  console.log(
-    "🔍 [QuizIntroHeaderBlock] Propriedades recebidas:",
-    block.properties,
-  );
+  console.log('🔍 [QuizIntroHeaderBlock] Propriedades recebidas:', block.properties);
 
   const {
-    logoUrl = "https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png",
-    logoAlt = "Logo",
+    logoUrl = 'https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png',
+    logoAlt = 'Logo',
     progressValue = 0,
     progressMax = 100,
     showBackButton = true,
@@ -53,9 +48,9 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   return (
     <div
       className={cn(
-        "relative w-full p-4 rounded-lg border-2 border-dashed",
-        isSelected ? "border-blue-500 bg-blue-50" : "border-gray-300 bg-white",
-        "cursor-pointer hover:border-gray-400 transition-colors",
+        'relative w-full p-4 rounded-lg border-2 border-dashed',
+        isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white',
+        'cursor-pointer hover:border-gray-400 transition-colors',
         className,
       )}
       onClick={onClick}
@@ -79,9 +74,8 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
               height: `${logoHeight}px`,
             }}
             className="object-contain"
-            onError={(e) => {
-              e.currentTarget.src =
-                "https://via.placeholder.com/96x96?text=Logo";
+            onError={e => {
+              e.currentTarget.src = 'https://via.placeholder.com/96x96?text=Logo';
             }}
           />
           {/* Edição inline removida - apenas no painel de propriedades */}

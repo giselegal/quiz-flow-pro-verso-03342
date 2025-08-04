@@ -1,34 +1,30 @@
-import React from "react";
-import { DollarSign } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import type { BlockComponentProps } from "../../../types/blocks";
+import React from 'react';
+import { DollarSign } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import type { BlockComponentProps } from '../../../types/blocks';
 
 const DynamicPricingBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "Preço Especial",
-    price = "197",
-    originalPrice = "497",
-    currency = "R$",
+    title = 'Preço Especial',
+    price = '197',
+    originalPrice = '497',
+    currency = 'R$',
     features = [],
-    buttonText = "Comprar Agora",
-    buttonUrl = "#",
+    buttonText = 'Comprar Agora',
+    buttonUrl = '#',
   } = block.properties || {};
 
   return (
     <div
       className={`
         p-6 bg-white rounded-lg border cursor-pointer transition-all duration-200
-        ${
-          isSelected
-            ? "border-blue-500 ring-2 ring-blue-200"
-            : "border-gray-200 hover:border-gray-300"
-        }
+        ${isSelected ? 'border-blue-500 ring-2 ring-blue-200' : 'border-gray-200 hover:border-gray-300'}
         ${className}
       `}
       onClick={onClick}
@@ -61,9 +57,7 @@ const DynamicPricingBlock: React.FC<BlockComponentProps> = ({
           </ul>
         )}
 
-        <Button className="w-full bg-green-600 hover:bg-green-700">
-          {buttonText}
-        </Button>
+        <Button className="w-full bg-green-600 hover:bg-green-700">{buttonText}</Button>
       </div>
     </div>
   );

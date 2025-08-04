@@ -1,15 +1,8 @@
-import React, { useState } from "react";
-import { cn } from "@/lib/utils";
-import {
-  Edit3,
-  Bell,
-  MessageSquare,
-  User,
-  DollarSign,
-  AlertCircle,
-} from "lucide-react";
+import React, { useState } from 'react';
+import { cn } from '@/lib/utils';
+import { Edit3, Bell, MessageSquare, User, DollarSign, AlertCircle } from 'lucide-react';
 
-type NotificationType = "message" | "user" | "payment" | "alert" | "general";
+type NotificationType = 'message' | 'user' | 'payment' | 'alert' | 'general';
 
 interface NotificationItem {
   id: string;
@@ -32,32 +25,32 @@ interface NotificationInlineBlockProps {
 const NotificationInlineBlock: React.FC<NotificationInlineBlockProps> = ({
   notifications = [
     {
-      id: "1",
-      icon: "🗞️",
-      title: "Novo evento",
-      subtitle: "Cakto",
-      backgroundColor: "rgb(0, 201, 167)",
+      id: '1',
+      icon: '🗞️',
+      title: 'Novo evento',
+      subtitle: 'Cakto',
+      backgroundColor: 'rgb(0, 201, 167)',
     },
     {
-      id: "2",
-      icon: "💬",
-      title: "Nova mensagem",
-      subtitle: "Cakto",
-      backgroundColor: "rgb(255, 61, 113)",
+      id: '2',
+      icon: '💬',
+      title: 'Nova mensagem',
+      subtitle: 'Cakto',
+      backgroundColor: 'rgb(255, 61, 113)',
     },
     {
-      id: "3",
-      icon: "👤",
-      title: "Usuário se cadastrou",
-      subtitle: "Cakto",
-      backgroundColor: "rgb(0, 201, 167)",
+      id: '3',
+      icon: '👤',
+      title: 'Usuário se cadastrou',
+      subtitle: 'Cakto',
+      backgroundColor: 'rgb(0, 201, 167)',
     },
     {
-      id: "4",
-      icon: "💸",
-      title: "Pagamento recebido",
-      subtitle: "Cakto",
-      backgroundColor: "rgb(255, 184, 0)",
+      id: '4',
+      icon: '💸',
+      title: 'Pagamento recebido',
+      subtitle: 'Cakto',
+      backgroundColor: 'rgb(255, 184, 0)',
     },
   ],
   maxVisible = 4,
@@ -75,11 +68,11 @@ const NotificationInlineBlock: React.FC<NotificationInlineBlockProps> = ({
       role="button"
       tabIndex={0}
       className={cn(
-        "group/canvas-item inline-block relative w-full",
-        "min-h-[1.25rem] border-2 border-dashed rounded-md p-4",
-        "hover:border-blue-500 transition-all cursor-pointer",
-        isHovered ? "border-blue-500" : "border-gray-300",
-        disabled && "opacity-75 cursor-not-allowed",
+        'group/canvas-item inline-block relative w-full',
+        'min-h-[1.25rem] border-2 border-dashed rounded-md p-4',
+        'hover:border-blue-500 transition-all cursor-pointer',
+        isHovered ? 'border-blue-500' : 'border-gray-300',
+        disabled && 'opacity-75 cursor-not-allowed',
         className,
       )}
       onClick={!disabled ? onClick : undefined}
@@ -91,14 +84,11 @@ const NotificationInlineBlock: React.FC<NotificationInlineBlockProps> = ({
           {visibleNotifications.map((notification, index) => (
             <div
               key={notification.id}
-              className={cn(
-                "mx-auto w-full transition-all duration-200 ease-in-out",
-                animated && "hover:scale-[103%]",
-              )}
+              className={cn('mx-auto w-full transition-all duration-200 ease-in-out', animated && 'hover:scale-[103%]')}
               style={{
                 opacity: 1,
-                transform: "none",
-                transformOrigin: "50% 0% 0px",
+                transform: 'none',
+                transformOrigin: '50% 0% 0px',
               }}
             >
               <figure className="relative mx-auto min-h-fit w-full max-w-sm cursor-pointer overflow-hidden rounded-2xl p-4 transition-all duration-200 ease-in-out hover:scale-[103%] bg-white shadow-sm border border-gray-100">
@@ -112,50 +102,36 @@ const NotificationInlineBlock: React.FC<NotificationInlineBlockProps> = ({
                   <div className="flex flex-col overflow-hidden">
                     <figcaption
                       className="flex flex-row items-center whitespace-pre text-lg font-medium cursor-pointer"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         if (onPropertyChange && !disabled) {
-                          const newTitle = prompt(
-                            "Novo título:",
-                            notification.title,
-                          );
+                          const newTitle = prompt('Novo título:', notification.title);
                           if (newTitle !== null) {
                             const updatedNotifications = [...notifications];
                             updatedNotifications[index] = {
                               ...notification,
                               title: newTitle,
                             };
-                            onPropertyChange(
-                              "notifications",
-                              updatedNotifications,
-                            );
+                            onPropertyChange('notifications', updatedNotifications);
                           }
                         }
                       }}
                     >
-                      <span className="text-sm sm:text-lg text-[#432818]">
-                        {notification.title}
-                      </span>
+                      <span className="text-sm sm:text-lg text-[#432818]">{notification.title}</span>
                     </figcaption>
                     <p
                       className="text-sm font-normal text-[#8F7A6A] cursor-pointer"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         if (onPropertyChange && !disabled) {
-                          const newSubtitle = prompt(
-                            "Novo subtítulo:",
-                            notification.subtitle,
-                          );
+                          const newSubtitle = prompt('Novo subtítulo:', notification.subtitle);
                           if (newSubtitle !== null) {
                             const updatedNotifications = [...notifications];
                             updatedNotifications[index] = {
                               ...notification,
                               subtitle: newSubtitle,
                             };
-                            onPropertyChange(
-                              "notifications",
-                              updatedNotifications,
-                            );
+                            onPropertyChange('notifications', updatedNotifications);
                           }
                         }
                       }}

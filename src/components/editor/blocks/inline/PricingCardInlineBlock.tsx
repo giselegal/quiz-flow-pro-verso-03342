@@ -1,7 +1,7 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { safeGetBlockProperties } from "@/utils/blockUtils";
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { safeGetBlockProperties } from '@/utils/blockUtils';
 
 interface PricingCardInlineBlockProps {
   block: {
@@ -23,15 +23,15 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
   const properties = safeGetBlockProperties(block);
 
   // Valores padrão para evitar undefined
-  const title = properties.title || "Oferta Especial";
-  const subtitle = properties.subtitle || "Aproveite esta oportunidade única";
-  const originalPrice = properties.originalPrice || "R$ 497,00";
-  const currentPrice = properties.currentPrice || "R$ 97,00";
-  const discount = properties.discount || "80% OFF";
-  const buttonText = properties.buttonText || "QUERO APROVEITAR";
-  const buttonUrl = properties.buttonUrl || "#";
+  const title = properties.title || 'Oferta Especial';
+  const subtitle = properties.subtitle || 'Aproveite esta oportunidade única';
+  const originalPrice = properties.originalPrice || 'R$ 497,00';
+  const currentPrice = properties.currentPrice || 'R$ 97,00';
+  const discount = properties.discount || '80% OFF';
+  const buttonText = properties.buttonText || 'QUERO APROVEITAR';
+  const buttonUrl = properties.buttonUrl || '#';
 
-  console.log("🛒 PricingCardInlineBlock render:", {
+  console.log('🛒 PricingCardInlineBlock render:', {
     blockId: block.id,
     hasProperties: !!properties,
     title,
@@ -41,7 +41,7 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
   return (
     <Card
       className={`p-6 max-w-md mx-auto border-2 transition-all duration-200 ${
-        isSelected ? "border-blue-500 shadow-lg" : "border-[#B89B7A]"
+        isSelected ? 'border-blue-500 shadow-lg' : 'border-[#B89B7A]'
       }`}
       onClick={onSelect}
     >
@@ -51,7 +51,7 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
           className="text-2xl font-bold text-[#432818] cursor-text"
           contentEditable
           suppressContentEditableWarning
-          onBlur={(e) => onUpdate?.({ title: e.target.textContent })}
+          onBlur={e => onUpdate?.({ title: e.target.textContent })}
         >
           {title}
         </h2>
@@ -61,7 +61,7 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
           className="text-[#8F7A6A] cursor-text"
           contentEditable
           suppressContentEditableWarning
-          onBlur={(e) => onUpdate?.({ subtitle: e.target.textContent })}
+          onBlur={e => onUpdate?.({ subtitle: e.target.textContent })}
         >
           {subtitle}
         </p>
@@ -72,9 +72,7 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
             <span
               contentEditable
               suppressContentEditableWarning
-              onBlur={(e) =>
-                onUpdate?.({ originalPrice: e.target.textContent })
-              }
+              onBlur={e => onUpdate?.({ originalPrice: e.target.textContent })}
             >
               {originalPrice}
             </span>
@@ -84,7 +82,7 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
             <span
               contentEditable
               suppressContentEditableWarning
-              onBlur={(e) => onUpdate?.({ currentPrice: e.target.textContent })}
+              onBlur={e => onUpdate?.({ currentPrice: e.target.textContent })}
             >
               {currentPrice}
             </span>
@@ -94,7 +92,7 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
             <span
               contentEditable
               suppressContentEditableWarning
-              onBlur={(e) => onUpdate?.({ discount: e.target.textContent })}
+              onBlur={e => onUpdate?.({ discount: e.target.textContent })}
             >
               {discount}
             </span>
@@ -104,17 +102,17 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
         {/* Botão CTA */}
         <Button
           className="w-full bg-[#B89B7A] hover:bg-[#A38A69] text-white font-bold py-3 px-6 text-lg"
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
-            if (buttonUrl && buttonUrl !== "#") {
-              window.open(buttonUrl, "_blank");
+            if (buttonUrl && buttonUrl !== '#') {
+              window.open(buttonUrl, '_blank');
             }
           }}
         >
           <span
             contentEditable
             suppressContentEditableWarning
-            onBlur={(e) => onUpdate?.({ buttonText: e.target.textContent })}
+            onBlur={e => onUpdate?.({ buttonText: e.target.textContent })}
           >
             {buttonText}
           </span>

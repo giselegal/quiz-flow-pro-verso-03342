@@ -1,5 +1,5 @@
-import React from "react";
-import { cn } from "@/lib/utils";
+import React from 'react';
+import { cn } from '@/lib/utils';
 
 interface TextInlineBlockProps {
   block?: {
@@ -13,7 +13,7 @@ interface TextInlineBlockProps {
         fontSize?: string;
         fontFamily?: string;
         color?: string;
-        textAlign?: "left" | "center" | "right" | "justify";
+        textAlign?: 'left' | 'center' | 'right' | 'justify';
         fontWeight?: string;
         fontStyle?: string;
         textDecoration?: string;
@@ -40,7 +40,7 @@ export const TextInlineBlock: React.FC<TextInlineBlockProps> = ({
   text: directText,
   style: directStyle,
 }) => {
-  console.log("🧱 TextInlineBlock render:", {
+  console.log('🧱 TextInlineBlock render:', {
     blockId: block?.id,
     properties: block?.properties,
     directText,
@@ -53,32 +53,32 @@ export const TextInlineBlock: React.FC<TextInlineBlockProps> = ({
   const styleProps = properties.style || {};
   const layoutProps = properties.layout || {};
 
-  const text = content.text || directText || "Digite seu texto aqui...";
+  const text = content.text || directText || 'Digite seu texto aqui...';
 
   // Construir estilos combinados
   const combinedStyle: React.CSSProperties = {
-    fontSize: styleProps.fontSize || "16px",
-    fontFamily: styleProps.fontFamily || "Inter, sans-serif",
-    color: styleProps.color || "#333333",
-    textAlign: styleProps.textAlign || "left",
-    fontWeight: styleProps.fontWeight || "normal",
-    fontStyle: styleProps.fontStyle || "normal",
-    textDecoration: styleProps.textDecoration || "none",
-    lineHeight: styleProps.lineHeight || "1.5",
-    letterSpacing: styleProps.letterSpacing || "normal",
-    maxWidth: layoutProps.maxWidth || "none",
-    margin: layoutProps.margin || "0",
-    padding: layoutProps.padding || "8px",
-    cursor: onClick ? "pointer" : "default",
-    transition: "all 0.2s ease",
+    fontSize: styleProps.fontSize || '16px',
+    fontFamily: styleProps.fontFamily || 'Inter, sans-serif',
+    color: styleProps.color || '#333333',
+    textAlign: styleProps.textAlign || 'left',
+    fontWeight: styleProps.fontWeight || 'normal',
+    fontStyle: styleProps.fontStyle || 'normal',
+    textDecoration: styleProps.textDecoration || 'none',
+    lineHeight: styleProps.lineHeight || '1.5',
+    letterSpacing: styleProps.letterSpacing || 'normal',
+    maxWidth: layoutProps.maxWidth || 'none',
+    margin: layoutProps.margin || '0',
+    padding: layoutProps.padding || '8px',
+    cursor: onClick ? 'pointer' : 'default',
+    transition: 'all 0.2s ease',
     ...directStyle,
   };
 
   return (
     <div
       className={cn(
-        "inline-text-block transition-all duration-200",
-        onClick && "hover:bg-gray-50 hover:shadow-sm",
+        'inline-text-block transition-all duration-200',
+        onClick && 'hover:bg-gray-50 hover:shadow-sm',
         className,
       )}
       style={combinedStyle}

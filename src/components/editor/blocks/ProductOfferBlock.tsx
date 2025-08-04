@@ -1,7 +1,7 @@
-import React from "react";
-import { ShoppingCart, Check } from "lucide-react";
-import { InlineEditableText } from "./InlineEditableText";
-import type { BlockComponentProps } from "@/types/blocks";
+import React from 'react';
+import { ShoppingCart, Check } from 'lucide-react';
+import { InlineEditableText } from './InlineEditableText';
+import type { BlockComponentProps } from '@/types/blocks';
 
 const ProductOfferBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -9,15 +9,15 @@ const ProductOfferBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    productName = "Produto Incrível",
-    productImage = "",
-    originalPrice = "R$ 297,00",
-    discountPrice = "R$ 197,00",
-    buttonText = "ADQUIRIR AGORA",
-    buttonUrl = "",
+    productName = 'Produto Incrível',
+    productImage = '',
+    originalPrice = 'R$ 297,00',
+    discountPrice = 'R$ 197,00',
+    buttonText = 'ADQUIRIR AGORA',
+    buttonUrl = '',
     features = [],
   } = block.properties;
 
@@ -33,8 +33,8 @@ const ProductOfferBlock: React.FC<BlockComponentProps> = ({
         p-6 rounded-lg cursor-pointer transition-all duration-200
         ${
           isSelected
-            ? "border-2 border-blue-500 bg-blue-50"
-            : "border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]"
+            ? 'border-2 border-blue-500 bg-blue-50'
+            : 'border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]'
         }
         ${className}
       `}
@@ -46,11 +46,7 @@ const ProductOfferBlock: React.FC<BlockComponentProps> = ({
         {/* Imagem do Produto */}
         {productImage && (
           <div className="aspect-video bg-gray-100">
-            <img
-              src={productImage}
-              alt={productName}
-              className="w-full h-full object-cover"
-            />
+            <img src={productImage} alt={productName} className="w-full h-full object-cover" />
           </div>
         )}
 
@@ -58,9 +54,7 @@ const ProductOfferBlock: React.FC<BlockComponentProps> = ({
           {/* Nome do Produto */}
           <InlineEditableText
             value={productName}
-            onChange={(value: string) =>
-              handlePropertyChange("productName", value)
-            }
+            onChange={(value: string) => handlePropertyChange('productName', value)}
             className="text-xl font-bold text-[#432818] mb-4"
             placeholder="Nome do produto"
           />
@@ -69,17 +63,13 @@ const ProductOfferBlock: React.FC<BlockComponentProps> = ({
           <div className="flex items-center space-x-3 mb-4">
             <InlineEditableText
               value={originalPrice}
-              onChange={(value: string) =>
-                handlePropertyChange("originalPrice", value)
-              }
+              onChange={(value: string) => handlePropertyChange('originalPrice', value)}
               className="text-sm text-gray-500 line-through"
               placeholder="Preço original"
             />
             <InlineEditableText
               value={discountPrice}
-              onChange={(value: string) =>
-                handlePropertyChange("discountPrice", value)
-              }
+              onChange={(value: string) => handlePropertyChange('discountPrice', value)}
               className="text-2xl font-bold text-[#B89B7A]"
               placeholder="Preço com desconto"
             />
@@ -95,19 +85,16 @@ const ProductOfferBlock: React.FC<BlockComponentProps> = ({
                     <InlineEditableText
                       value={feature.text}
                       onChange={(value: string) => {
-                        const updatedFeatures = features.map(
-                          (feat: any, i: number) =>
-                            i === index ? { ...feat, text: value } : feat,
+                        const updatedFeatures = features.map((feat: any, i: number) =>
+                          i === index ? { ...feat, text: value } : feat,
                         );
-                        handlePropertyChange("features", updatedFeatures);
+                        handlePropertyChange('features', updatedFeatures);
                       }}
                       className="text-sm text-gray-700"
                       placeholder="Benefício do produto"
                     />
                   ) : (
-                    <span className="text-sm text-gray-700">
-                      {feature.text}
-                    </span>
+                    <span className="text-sm text-gray-700">{feature.text}</span>
                   )}
                 </div>
               ))}
@@ -119,9 +106,7 @@ const ProductOfferBlock: React.FC<BlockComponentProps> = ({
             <ShoppingCart className="w-5 h-5" />
             <InlineEditableText
               value={buttonText}
-              onChange={(value: string) =>
-                handlePropertyChange("buttonText", value)
-              }
+              onChange={(value: string) => handlePropertyChange('buttonText', value)}
               className="text-white font-bold"
               placeholder="Texto do botão"
             />

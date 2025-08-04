@@ -1,6 +1,6 @@
-import React from "react";
-import { cn } from "../../../lib/utils";
-import type { BlockComponentProps } from "../../../types/blocks";
+import React from 'react';
+import { cn } from '../../../lib/utils';
+import type { BlockComponentProps } from '../../../types/blocks';
 
 /**
  * DecorativeBarInlineBlock - Barra decorativa dourada
@@ -11,13 +11,13 @@ const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  className = "",
+  className = '',
 }) => {
   const {
-    width = "100%",
+    width = '100%',
     height = 4,
-    color = "#B89B7A",
-    gradientColors = ["#B89B7A", "#D4C2A8", "#B89B7A"],
+    color = '#B89B7A',
+    gradientColors = ['#B89B7A', '#D4C2A8', '#B89B7A'],
     borderRadius = 3,
     marginTop = 8,
     marginBottom = 24,
@@ -27,9 +27,9 @@ const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
   return (
     <div
       className={cn(
-        "w-full flex justify-center items-center",
-        isSelected && "ring-2 ring-blue-500 ring-offset-2 rounded-md p-1",
-        "cursor-pointer transition-all duration-200",
+        'w-full flex justify-center items-center',
+        isSelected && 'ring-2 ring-blue-500 ring-offset-2 rounded-md p-1',
+        'cursor-pointer transition-all duration-200',
         className,
       )}
       style={{
@@ -43,10 +43,7 @@ const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
         style={{
           width: width,
           height: `${height}px`,
-          background:
-            gradientColors.length > 1
-              ? `linear-gradient(90deg, ${gradientColors.join(", ")})`
-              : color,
+          background: gradientColors.length > 1 ? `linear-gradient(90deg, ${gradientColors.join(', ')})` : color,
           borderRadius: `${borderRadius}px`,
           ...(showShadow && {
             boxShadow: `0 2px 6px rgba(184, 155, 122, 0.4)`,

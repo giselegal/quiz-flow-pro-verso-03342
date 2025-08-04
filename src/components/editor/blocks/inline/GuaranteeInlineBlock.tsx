@@ -1,6 +1,6 @@
-import React from "react";
-import { cn } from "../../../../lib/utils";
-import { Shield, CheckCircle2 } from "lucide-react";
+import React from 'react';
+import { cn } from '../../../../lib/utils';
+import { Shield, CheckCircle2 } from 'lucide-react';
 
 interface GuaranteeInlineBlockProps {
   title?: string;
@@ -14,18 +14,18 @@ interface GuaranteeInlineBlockProps {
 }
 
 const GuaranteeInlineBlock: React.FC<GuaranteeInlineBlockProps> = ({
-  title = "Garantia de Satisfação",
-  description = "Se você não ficar satisfeito, devolvemos 100% do seu dinheiro",
-  period = "7 dias",
-  iconColor = "#10b981",
-  bgColor = "#f0fdf4",
-  borderColor = "#bbf7d0",
+  title = 'Garantia de Satisfação',
+  description = 'Se você não ficar satisfeito, devolvemos 100% do seu dinheiro',
+  period = '7 dias',
+  iconColor = '#10b981',
+  bgColor = '#f0fdf4',
+  borderColor = '#bbf7d0',
   className,
   ...props
 }) => {
   return (
     <div
-      className={cn("w-full p-6 rounded-lg border-2 text-center", className)}
+      className={cn('w-full p-6 rounded-lg border-2 text-center', className)}
       style={{
         backgroundColor: bgColor,
         borderColor: borderColor,
@@ -33,10 +33,7 @@ const GuaranteeInlineBlock: React.FC<GuaranteeInlineBlockProps> = ({
       {...props}
     >
       <div className="flex flex-col items-center space-y-4">
-        <div
-          className="w-16 h-16 rounded-full flex items-center justify-center"
-          style={{ backgroundColor: iconColor }}
-        >
+        <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: iconColor }}>
           <Shield className="w-8 h-8 text-white" />
         </div>
 

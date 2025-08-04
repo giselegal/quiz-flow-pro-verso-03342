@@ -1,7 +1,7 @@
-import React from "react";
-import { LoaderCircle, RotateCcw } from "lucide-react";
-import { InlineEditableText } from "./InlineEditableText";
-import type { BlockComponentProps } from "@/types/blocks";
+import React from 'react';
+import { LoaderCircle, RotateCcw } from 'lucide-react';
+import { InlineEditableText } from './InlineEditableText';
+import type { BlockComponentProps } from '@/types/blocks';
 
 const LoaderBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -9,13 +9,9 @@ const LoaderBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
-  const {
-    message = "Carregando...",
-    type = "spinning",
-    duration = 4000,
-  } = block.properties;
+  const { message = 'Carregando...', type = 'spinning', duration = 4000 } = block.properties;
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {
@@ -26,7 +22,7 @@ const LoaderBlock: React.FC<BlockComponentProps> = ({
   let loaderContent: React.ReactNode;
 
   switch (type) {
-    case "elegant":
+    case 'elegant':
       loaderContent = (
         <div className="relative w-16 h-16">
           <div className="w-16 h-16 border-4 border-[#B89B7A] border-t-transparent rounded-full animate-spin"></div>
@@ -34,7 +30,7 @@ const LoaderBlock: React.FC<BlockComponentProps> = ({
         </div>
       );
       break;
-    case "dots":
+    case 'dots':
       loaderContent = (
         <div className="flex space-x-2">
           <span className="w-3 h-3 bg-[#B89B7A] rounded-full animate-bounce-delay-1"></span>
@@ -43,7 +39,7 @@ const LoaderBlock: React.FC<BlockComponentProps> = ({
         </div>
       );
       break;
-    case "bars":
+    case 'bars':
       loaderContent = (
         <div className="flex items-end h-16 space-x-1">
           <div className="w-2 bg-[#B89B7A] h-4 animate-scale-y-delay-1"></div>
@@ -53,11 +49,9 @@ const LoaderBlock: React.FC<BlockComponentProps> = ({
         </div>
       );
       break;
-    case "spinning":
+    case 'spinning':
     default:
-      loaderContent = (
-        <RotateCcw className="h-10 w-10 animate-spin text-[#B89B7A]" />
-      );
+      loaderContent = <RotateCcw className="h-10 w-10 animate-spin text-[#B89B7A]" />;
       break;
   }
 
@@ -65,11 +59,7 @@ const LoaderBlock: React.FC<BlockComponentProps> = ({
     <div
       className={`
         py-12 text-center cursor-pointer transition-all duration-200
-        ${
-          isSelected
-            ? "ring-1 ring-gray-400/40 bg-gray-50/30"
-            : "hover:shadow-sm"
-        }
+        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
         ${className}
       `}
       onClick={onClick}
@@ -81,16 +71,12 @@ const LoaderBlock: React.FC<BlockComponentProps> = ({
         <span className="text-[#432818] text-lg font-medium">
           <InlineEditableText
             value={message}
-            onChange={(value: string) => handlePropertyChange("message", value)}
+            onChange={(value: string) => handlePropertyChange('message', value)}
             className="inline-block"
             placeholder="Mensagem de carregamento"
           />
         </span>
-        {duration && (
-          <div className="text-sm text-gray-500">
-            Duração: {duration / 1000}s
-          </div>
-        )}
+        {duration && <div className="text-sm text-gray-500">Duração: {duration / 1000}s</div>}
       </div>
 
       {/* Keyframes para as animações */}

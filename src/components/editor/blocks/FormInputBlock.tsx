@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { TextCursorInput } from "lucide-react";
-import type { BlockComponentProps, BlockData } from "../../../types/blocks";
-import { userResponseService } from "../../../services/userResponseService";
+import React, { useState, useEffect } from 'react';
+import { TextCursorInput } from 'lucide-react';
+import type { BlockComponentProps, BlockData } from '../../../types/blocks';
+import { userResponseService } from '../../../services/userResponseService';
 
 interface FormInputBlockProps {
   block: BlockData;
@@ -19,20 +19,20 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
   isSelected = false,
   onClick,
   onPropertyChange,
-  className = "",
-  funnelId = "default-quiz-funnel-21-steps",
+  className = '',
+  funnelId = 'default-quiz-funnel-21-steps',
   onValueChange,
 }) => {
   const {
-    label = "Campo de Input",
-    placeholder = "Digite aqui...",
-    inputType = "text",
+    label = 'Campo de Input',
+    placeholder = 'Digite aqui...',
+    inputType = 'text',
     required = false,
     fullWidth = true,
-    name = "input",
+    name = 'input',
   } = block.properties;
 
-  const [value, setValue] = useState<string>("");
+  const [value, setValue] = useState<string>('');
   const [isValid, setIsValid] = useState<boolean>(false);
 
   // Carregar valor salvo se existir
@@ -51,7 +51,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
 
     // Disparar evento customizado para outros componentes sempre
     window.dispatchEvent(
-      new CustomEvent("quiz-input-change", {
+      new CustomEvent('quiz-input-change', {
         detail: { blockId: block.id, value: newValue.trim(), valid },
       }),
     );
@@ -63,9 +63,9 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
         userResponseService.saveStepResponse(block.id, newValue.trim());
 
         // Se for o campo de nome, salvar também como nome do usuário
-        if (name === "userName" || block.id === "intro-name-input") {
-          userResponseService.saveUserName("userId", newValue.trim());
-          console.log("✅ Nome do usuário salvo:", newValue.trim());
+        if (name === 'userName' || block.id === 'intro-name-input') {
+          userResponseService.saveUserName('userId', newValue.trim());
+          console.log('✅ Nome do usuário salvo:', newValue.trim());
         }
 
         // Notificar componente pai
@@ -73,7 +73,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
           onValueChange(newValue.trim());
         }
       } catch (error) {
-        console.error("❌ Erro ao salvar resposta:", error);
+        console.error('❌ Erro ao salvar resposta:', error);
       }
     }
   };
@@ -84,8 +84,8 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
         p-4 rounded-lg transition-all duration-200
         ${
           isSelected
-            ? "border-2 border-blue-500 bg-blue-50 cursor-pointer"
-            : "border-2 border-transparent hover:bg-[#FAF9F7]"
+            ? 'border-2 border-blue-500 bg-blue-50 cursor-pointer'
+            : 'border-2 border-transparent hover:bg-[#FAF9F7]'
         }
         ${className}
       `}
@@ -93,7 +93,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
       data-block-id={block.id}
       data-block-type={block.type}
     >
-      <div className={`space-y-3 ${fullWidth ? "w-full" : "w-auto"}`}>
+      <div className={`space-y-3 ${fullWidth ? 'w-full' : 'w-auto'}`}>
         <div className="flex items-center gap-2">
           <TextCursorInput className="w-4 h-4 text-[#B89B7A]" />
           <label className="text-sm font-medium text-[#432818] uppercase tracking-wide">
@@ -106,17 +106,17 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
           type={inputType}
           placeholder={placeholder}
           value={value}
-          onChange={(e) => handleInputChange(e.target.value)}
+          onChange={e => handleInputChange(e.target.value)}
           className={`
             w-full px-4 py-3 border-2 rounded-lg 
             focus:ring-2 focus:ring-[#B89B7A] focus:border-[#B89B7A] 
             transition-all outline-none text-[#432818] placeholder-[#B89B7A]/70
             ${
               isValid
-                ? "border-[#B89B7A] bg-[#B89B7A]/10"
+                ? 'border-[#B89B7A] bg-[#B89B7A]/10'
                 : value && !isValid
-                  ? "border-[#432818]/30 bg-[#432818]/5"
-                  : "border-[#B89B7A]/30 bg-white hover:border-[#B89B7A]/70"
+                  ? 'border-[#432818]/30 bg-[#432818]/5'
+                  : 'border-[#B89B7A]/30 bg-white hover:border-[#B89B7A]/70'
             }
           `}
         />

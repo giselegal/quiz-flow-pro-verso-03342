@@ -1,26 +1,26 @@
-import React from "react";
-import { Check, X } from "lucide-react";
-import type { BlockComponentProps } from "@/types/blocks";
+import React from 'react';
+import { Check, X } from 'lucide-react';
+import type { BlockComponentProps } from '@/types/blocks';
 
 const ComparisonTableInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "Comparação de Opções",
+    title = 'Comparação de Opções',
     items = [
       {
-        name: "Opção Básica",
-        price: "R$ 97",
-        features: ["Recurso 1", "Recurso 2"],
+        name: 'Opção Básica',
+        price: 'R$ 97',
+        features: ['Recurso 1', 'Recurso 2'],
         highlight: false,
       },
       {
-        name: "Opção Premium",
-        price: "R$ 197",
-        features: ["Recurso 1", "Recurso 2", "Recurso 3"],
+        name: 'Opção Premium',
+        price: 'R$ 197',
+        features: ['Recurso 1', 'Recurso 2', 'Recurso 3'],
         highlight: true,
       },
     ],
@@ -33,15 +33,13 @@ const ComparisonTableInlineBlock: React.FC<BlockComponentProps> = ({
         p-4 rounded-lg transition-all duration-200
         ${
           isSelected
-            ? "border-2 border-brand bg-brand/10"
-            : "border-2 border-dashed border-transparent hover:border-brand/40 hover:bg-brand/5"
+            ? 'border-2 border-brand bg-brand/10'
+            : 'border-2 border-dashed border-transparent hover:border-brand/40 hover:bg-brand/5'
         }
         ${className}
       `}
     >
-      <h3 className="text-xl font-bold text-center mb-4 text-brand-dark">
-        {title}
-      </h3>
+      <h3 className="text-xl font-bold text-center mb-4 text-brand-dark">{title}</h3>
 
       <div className="w-full overflow-x-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -52,18 +50,14 @@ const ComparisonTableInlineBlock: React.FC<BlockComponentProps> = ({
                 p-6 rounded-lg border-2 transition-all duration-200
                 ${
                   item.highlight
-                    ? "border-[#B89B7A] bg-gradient-to-br from-[#B89B7A]/10 to-[#B89B7A]/5 shadow-lg"
-                    : "border-gray-200 bg-white"
+                    ? 'border-[#B89B7A] bg-gradient-to-br from-[#B89B7A]/10 to-[#B89B7A]/5 shadow-lg'
+                    : 'border-gray-200 bg-white'
                 }
               `}
             >
               <div className="text-center mb-4">
-                <h4 className="text-lg font-semibold text-brand-dark mb-2">
-                  {item.name}
-                </h4>
-                <div className="text-2xl font-bold text-[#B89B7A]">
-                  {item.price}
-                </div>
+                <h4 className="text-lg font-semibold text-brand-dark mb-2">{item.name}</h4>
+                <div className="text-2xl font-bold text-[#B89B7A]">{item.price}</div>
               </div>
 
               <ul className="space-y-2">

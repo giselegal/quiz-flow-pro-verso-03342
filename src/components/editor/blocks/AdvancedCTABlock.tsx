@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { cn } from "@/lib/utils";
-import { Shield, ShoppingCart, Lock, ArrowDown } from "lucide-react";
+import React, { useState } from 'react';
+import { cn } from '@/lib/utils';
+import { Shield, ShoppingCart, Lock, ArrowDown } from 'lucide-react';
 
 interface AdvancedCTABlockProps {
   mainText?: string;
@@ -11,8 +11,8 @@ interface AdvancedCTABlockProps {
 }
 
 const AdvancedCTABlock: React.FC<AdvancedCTABlockProps> = ({
-  mainText = "Descubra Como Aplicar Seu Estilo na Prática",
-  buttonText = "Quero meu Guia de Estilo Agora",
+  mainText = 'Descubra Como Aplicar Seu Estilo na Prática',
+  buttonText = 'Quero meu Guia de Estilo Agora',
   showGuarantee = true,
   showSecurityBadge = true,
   className,
@@ -20,16 +20,13 @@ const AdvancedCTABlock: React.FC<AdvancedCTABlockProps> = ({
   const [isButtonHovered, setIsButtonHovered] = useState(false);
 
   const handleCTAClick = () => {
-    window.location.href =
-      "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
+    window.location.href = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912';
   };
 
   return (
-    <div className={cn("text-center my-10", className)}>
+    <div className={cn('text-center my-10', className)}>
       <div className="bg-[#f9f4ef] p-6 rounded-lg border border-[#B89B7A]/10 mb-6">
-        <h3 className="text-xl font-medium text-center text-[#aa6b5d] mb-4">
-          {mainText}
-        </h3>
+        <h3 className="text-xl font-medium text-center text-[#aa6b5d] mb-4">{mainText}</h3>
         <div className="flex justify-center">
           <ArrowDown className="w-8 h-8 text-[#B89B7A] animate-bounce" />
         </div>
@@ -41,14 +38,12 @@ const AdvancedCTABlock: React.FC<AdvancedCTABlockProps> = ({
         onMouseEnter={() => setIsButtonHovered(true)}
         onMouseLeave={() => setIsButtonHovered(false)}
         style={{
-          background: "linear-gradient(to right, #4CAF50, #45a049)",
-          boxShadow: "0 4px 14px rgba(76, 175, 80, 0.4)",
+          background: 'linear-gradient(to right, #4CAF50, #45a049)',
+          boxShadow: '0 4px 14px rgba(76, 175, 80, 0.4)',
         }}
       >
         <span className="flex items-center justify-center gap-2">
-          <ShoppingCart
-            className={`w-5 h-5 transition-transform duration-300 ${isButtonHovered ? "scale-110" : ""}`}
-          />
+          <ShoppingCart className={`w-5 h-5 transition-transform duration-300 ${isButtonHovered ? 'scale-110' : ''}`} />
           {buttonText}
         </span>
       </button>

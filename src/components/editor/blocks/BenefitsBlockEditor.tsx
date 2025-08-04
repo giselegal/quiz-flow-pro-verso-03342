@@ -1,23 +1,18 @@
-import React from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Plus, Trash } from "lucide-react";
-import { BlockEditorProps } from "./types";
+import React from 'react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Plus, Trash } from 'lucide-react';
+import { BlockEditorProps } from './types';
 
-export const BenefitsBlockEditor: React.FC<BlockEditorProps> = ({
-  block,
-  onUpdate,
-}) => {
+export const BenefitsBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
   // Ensure items is always a string array for benefits
   const items = Array.isArray(block.content.items)
-    ? block.content.items.filter(
-        (item): item is string => typeof item === "string",
-      )
+    ? block.content.items.filter((item): item is string => typeof item === 'string')
     : [];
 
   const addItem = () => {
-    const newItems = [...items, ""];
+    const newItems = [...items, ''];
     onUpdate({ items: newItems });
   };
 
@@ -39,8 +34,8 @@ export const BenefitsBlockEditor: React.FC<BlockEditorProps> = ({
         <Label htmlFor={`${block.id}-title`}>Título</Label>
         <Input
           id={`${block.id}-title`}
-          value={block.content.title || ""}
-          onChange={(e) => onUpdate({ title: e.target.value })}
+          value={block.content.title || ''}
+          onChange={e => onUpdate({ title: e.target.value })}
           className="mt-1"
         />
       </div>
@@ -52,7 +47,7 @@ export const BenefitsBlockEditor: React.FC<BlockEditorProps> = ({
             <div key={index} className="flex items-center gap-2">
               <Input
                 value={item}
-                onChange={(e) => updateItem(index, e.target.value)}
+                onChange={e => updateItem(index, e.target.value)}
                 placeholder={`Benefício ${index + 1}`}
               />
               <Button
@@ -65,12 +60,7 @@ export const BenefitsBlockEditor: React.FC<BlockEditorProps> = ({
               </Button>
             </div>
           ))}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={addItem}
-            className="mt-2 w-full"
-          >
+          <Button variant="outline" size="sm" onClick={addItem} className="mt-2 w-full">
             <Plus className="w-4 h-4 mr-2" />
             Adicionar Benefício
           </Button>

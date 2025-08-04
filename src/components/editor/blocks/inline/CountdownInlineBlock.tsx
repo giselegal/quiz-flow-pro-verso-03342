@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { InlineBlockProps } from "@/types/inlineBlocks";
-import { cn } from "@/lib/utils";
+import React, { useState, useEffect } from 'react';
+import { InlineBlockProps } from '@/types/inlineBlocks';
+import { cn } from '@/lib/utils';
 
 interface TimeLeft {
   days: number;
@@ -9,18 +9,11 @@ interface TimeLeft {
   seconds: number;
 }
 
-const CountdownInlineBlock: React.FC<InlineBlockProps> = ({
-  block,
-  onPropertyChange,
-  isSelected,
-  onClick,
-}) => {
+const CountdownInlineBlock: React.FC<InlineBlockProps> = ({ block, onPropertyChange, isSelected, onClick }) => {
   // Safety check for block and properties
   if (!block) {
-    console.warn("⚠️ CountdownInlineBlock: block is undefined");
-    return (
-      <div className="p-2 bg-red-50 text-red-600">Error: Block not found</div>
-    );
+    console.warn('⚠️ CountdownInlineBlock: block is undefined');
+    return <div className="p-2 bg-red-50 text-red-600">Error: Block not found</div>;
   }
 
   // Safe destructuring with fallbacks
@@ -28,13 +21,9 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({
   const content = properties.content || {};
   const style = properties.style || {};
 
-  const {
-    targetDate = "",
-    format = "full",
-    expiredMessage = "Tempo esgotado!",
-  } = content;
+  const { targetDate = '', format = 'full', expiredMessage = 'Tempo esgotado!' } = content;
 
-  const { size = "md", theme = "default" } = style;
+  const { size = 'md', theme = 'default' } = style;
 
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     days: 0,
@@ -44,7 +33,7 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({
   });
   const [isExpired, setIsExpired] = useState(false);
 
-  console.log("🔄 CountdownInlineBlock render:", {
+  console.log('🔄 CountdownInlineBlock render:', {
     blockId: block.id,
     hasProperties: !!block.properties,
     targetDate,
@@ -62,9 +51,7 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({
       if (difference > 0) {
         setTimeLeft({
           days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor(
-            (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-          ),
+          hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
           minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
           seconds: Math.floor((difference % (1000 * 60)) / 1000),
         });
@@ -82,27 +69,27 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({
 
   const getSizeClasses = (size: string) => {
     switch (size) {
-      case "sm":
-        return { number: "text-xl", label: "text-xs", container: "p-2" };
-      case "md":
-        return { number: "text-2xl", label: "text-sm", container: "p-3" };
-      case "lg":
-        return { number: "text-4xl", label: "text-base", container: "p-4" };
+      case 'sm':
+        return { number: 'text-xl', label: 'text-xs', container: 'p-2' };
+      case 'md':
+        return { number: 'text-2xl', label: 'text-sm', container: 'p-3' };
+      case 'lg':
+        return { number: 'text-4xl', label: 'text-base', container: 'p-4' };
       default:
-        return { number: "text-2xl", label: "text-sm", container: "p-3" };
+        return { number: 'text-2xl', label: 'text-sm', container: 'p-3' };
     }
   };
 
   const getThemeClasses = (theme: string) => {
     switch (theme) {
-      case "urgent":
-        return "bg-red-50 border-red-200 text-red-800";
-      case "elegant":
-        return "bg-gray-50 border-gray-200 text-gray-800";
-      case "default":
-        return "bg-blue-50 border-blue-200 text-blue-800";
+      case 'urgent':
+        return 'bg-red-50 border-red-200 text-red-800';
+      case 'elegant':
+        return 'bg-gray-50 border-gray-200 text-gray-800';
+      case 'default':
+        return 'bg-blue-50 border-blue-200 text-blue-800';
       default:
-        return "bg-blue-50 border-blue-200 text-blue-800";
+        return 'bg-blue-50 border-blue-200 text-blue-800';
     }
   };
 
@@ -110,15 +97,9 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({
   const themeClasses = getThemeClasses(theme);
 
   const TimeUnit = ({ value, label }: { value: number; label: string }) => (
-    <div
-      className={cn(
-        "text-center border rounded-lg",
-        sizeClasses.container,
-        themeClasses,
-      )}
-    >
-      <div className={cn("font-bold", sizeClasses.number)}>{value}</div>
-      <div className={cn("uppercase", sizeClasses.label)}>{label}</div>
+    <div className={cn('text-center border rounded-lg', sizeClasses.container, themeClasses)}>
+      <div className={cn('font-bold', sizeClasses.number)}>{value}</div>
+      <div className={cn('uppercase', sizeClasses.label)}>{label}</div>
     </div>
   );
 
@@ -127,14 +108,12 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({
       <div
         onClick={onClick}
         className={cn(
-          "text-center cursor-pointer p-4 rounded-lg transition-all duration-200",
-          "bg-gray-50 border border-gray-200",
-          isSelected && "ring-2 ring-blue-500 ring-offset-2",
+          'text-center cursor-pointer p-4 rounded-lg transition-all duration-200',
+          'bg-gray-50 border border-gray-200',
+          isSelected && 'ring-2 ring-blue-500 ring-offset-2',
         )}
       >
-        <div className="text-lg font-medium text-gray-600">
-          {expiredMessage}
-        </div>
+        <div className="text-lg font-medium text-gray-600">{expiredMessage}</div>
       </div>
     );
   }
@@ -142,13 +121,10 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({
   return (
     <div
       onClick={onClick}
-      className={cn(
-        "cursor-pointer transition-all duration-200",
-        isSelected && "ring-2 ring-blue-500 ring-offset-2",
-      )}
+      className={cn('cursor-pointer transition-all duration-200', isSelected && 'ring-2 ring-blue-500 ring-offset-2')}
     >
       <div className="flex justify-center space-x-2">
-        {format === "full" && (
+        {format === 'full' && (
           <>
             <TimeUnit value={timeLeft.days} label="dias" />
             <TimeUnit value={timeLeft.hours} label="horas" />
@@ -157,23 +133,15 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({
           </>
         )}
 
-        {format === "hours" && (
+        {format === 'hours' && (
           <>
-            <TimeUnit
-              value={timeLeft.hours + timeLeft.days * 24}
-              label="horas"
-            />
+            <TimeUnit value={timeLeft.hours + timeLeft.days * 24} label="horas" />
             <TimeUnit value={timeLeft.minutes} label="min" />
           </>
         )}
 
-        {format === "minutes" && (
-          <TimeUnit
-            value={
-              timeLeft.minutes + timeLeft.hours * 60 + timeLeft.days * 24 * 60
-            }
-            label="minutos"
-          />
+        {format === 'minutes' && (
+          <TimeUnit value={timeLeft.minutes + timeLeft.hours * 60 + timeLeft.days * 24 * 60} label="minutos" />
         )}
       </div>
     </div>

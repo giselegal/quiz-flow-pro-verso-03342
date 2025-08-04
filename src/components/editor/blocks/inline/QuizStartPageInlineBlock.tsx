@@ -1,7 +1,7 @@
-import React from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ChevronRight, Play, Star } from "lucide-react";
+import React from 'react';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { ChevronRight, Play, Star } from 'lucide-react';
 
 interface QuizStartPageInlineBlockProps {
   title?: string;
@@ -12,11 +12,11 @@ interface QuizStartPageInlineBlockProps {
 }
 
 const QuizStartPageInlineBlock: React.FC<QuizStartPageInlineBlockProps> = ({
-  title = "Descubra Seu Estilo",
-  subtitle = "Responda algumas perguntas rápidas e descubra o que combina com você",
-  buttonText = "Começar Quiz",
+  title = 'Descubra Seu Estilo',
+  subtitle = 'Responda algumas perguntas rápidas e descubra o que combina com você',
+  buttonText = 'Começar Quiz',
   onStart,
-  className = "",
+  className = '',
 }) => {
   return (
     <Card className={`p-8 text-center space-y-6 ${className}`}>
@@ -29,17 +29,11 @@ const QuizStartPageInlineBlock: React.FC<QuizStartPageInlineBlockProps> = ({
 
         <h1 className="text-3xl font-bold text-foreground">{title}</h1>
 
-        <p className="text-lg text-muted-foreground max-w-md mx-auto">
-          {subtitle}
-        </p>
+        <p className="text-lg text-muted-foreground max-w-md mx-auto">{subtitle}</p>
       </div>
 
       <div className="space-y-4">
-        <Button
-          size="lg"
-          onClick={onStart}
-          className="px-8 py-4 text-lg font-semibold"
-        >
+        <Button size="lg" onClick={onStart} className="px-8 py-4 text-lg font-semibold">
           <Play className="w-5 h-5 mr-2" />
           {buttonText}
           <ChevronRight className="w-5 h-5 ml-2" />

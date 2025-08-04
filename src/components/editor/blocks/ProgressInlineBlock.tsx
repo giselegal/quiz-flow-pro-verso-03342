@@ -1,6 +1,6 @@
-import React from "react";
-import { cn } from "@/lib/utils";
-import { TrendingUp, Edit3 } from "lucide-react";
+import React from 'react';
+import { cn } from '@/lib/utils';
+import { TrendingUp, Edit3 } from 'lucide-react';
 
 interface ProgressInlineBlockProps {
   label?: string;
@@ -14,9 +14,9 @@ interface ProgressInlineBlockProps {
 }
 
 const ProgressInlineBlock: React.FC<ProgressInlineBlockProps> = ({
-  label = "Progresso do Quiz",
+  label = 'Progresso do Quiz',
   percentage = 65,
-  color = "#B89B7A",
+  color = '#B89B7A',
   showPercentage = true,
   onClick,
   className,
@@ -26,10 +26,10 @@ const ProgressInlineBlock: React.FC<ProgressInlineBlockProps> = ({
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 shadow-sm",
-        "transition-all duration-200 hover:shadow-md hover:scale-105 cursor-pointer",
-        "w-full",
-        disabled && "opacity-75 cursor-not-allowed",
+        'inline-flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 shadow-sm',
+        'transition-all duration-200 hover:shadow-md hover:scale-105 cursor-pointer',
+        'w-full',
+        disabled && 'opacity-75 cursor-not-allowed',
         className,
       )}
       onClick={!disabled ? onClick : undefined}
@@ -47,11 +47,11 @@ const ProgressInlineBlock: React.FC<ProgressInlineBlockProps> = ({
         <div className="flex items-center justify-between mb-1">
           <span
             className="text-sm font-medium text-gray-700 truncate"
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               if (onPropertyChange && !disabled) {
-                const newLabel = prompt("Novo rótulo:", label);
-                if (newLabel !== null) onPropertyChange("label", newLabel);
+                const newLabel = prompt('Novo rótulo:', label);
+                if (newLabel !== null) onPropertyChange('label', newLabel);
               }
             }}
           >
@@ -61,18 +61,12 @@ const ProgressInlineBlock: React.FC<ProgressInlineBlockProps> = ({
             <span
               className="text-sm font-bold ml-2"
               style={{ color }}
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 if (onPropertyChange && !disabled) {
-                  const newPercentage = prompt(
-                    "Nova porcentagem (0-100):",
-                    percentage.toString(),
-                  );
+                  const newPercentage = prompt('Nova porcentagem (0-100):', percentage.toString());
                   if (newPercentage !== null && !isNaN(Number(newPercentage))) {
-                    onPropertyChange(
-                      "percentage",
-                      Math.max(0, Math.min(100, Number(newPercentage))),
-                    );
+                    onPropertyChange('percentage', Math.max(0, Math.min(100, Number(newPercentage))));
                   }
                 }
               }}

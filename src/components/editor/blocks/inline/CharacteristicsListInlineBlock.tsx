@@ -1,7 +1,7 @@
-import React from "react";
-import { cn } from "@/lib/utils";
-import type { BlockComponentProps } from "@/types/blocks";
-import { safeGetBlockProperties, logBlockDebug } from "@/utils/blockUtils";
+import React from 'react';
+import { cn } from '@/lib/utils';
+import type { BlockComponentProps } from '@/types/blocks';
+import { safeGetBlockProperties, logBlockDebug } from '@/utils/blockUtils';
 
 /**
  * CharacteristicsListInlineBlock - Lista de características
@@ -10,23 +10,19 @@ const CharacteristicsListInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  className = "",
+  className = '',
 }) => {
-  logBlockDebug("CharacteristicsListInlineBlock", block);
+  logBlockDebug('CharacteristicsListInlineBlock', block);
   const properties = safeGetBlockProperties(block);
 
-  const {
-    title = "Características",
-    items = ["Item 1", "Item 2", "Item 3"],
-    backgroundColor = "white",
-  } = properties;
+  const { title = 'Características', items = ['Item 1', 'Item 2', 'Item 3'], backgroundColor = 'white' } = properties;
 
   return (
     <div
       className={cn(
-        "w-full p-4 rounded-lg transition-all duration-200",
-        isSelected && "ring-2 ring-blue-500",
-        "cursor-pointer",
+        'w-full p-4 rounded-lg transition-all duration-200',
+        isSelected && 'ring-2 ring-blue-500',
+        'cursor-pointer',
         className,
       )}
       style={{ backgroundColor }}

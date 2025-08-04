@@ -1,25 +1,17 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { cn } from "@/lib/utils";
-import {
-  Edit3,
-  Eye,
-  Settings,
-  Move,
-  Copy,
-  Trash2,
-  MoreHorizontal,
-} from "lucide-react";
-import type { BlockComponentProps } from "@/types/blocks";
+import React, { useState, useEffect, useCallback } from 'react';
+import { cn } from '@/lib/utils';
+import { Edit3, Eye, Settings, Move, Copy, Trash2, MoreHorizontal } from 'lucide-react';
+import type { BlockComponentProps } from '@/types/blocks';
 
 interface InlineBaseWrapperProps extends BlockComponentProps {
   children: React.ReactNode;
 
   // 1. REUTILIZÁVEL: Props bem definidas e flexíveis
-  gap?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
-  justify?: "start" | "center" | "end" | "between" | "around" | "evenly";
-  align?: "start" | "center" | "end" | "stretch" | "baseline";
-  direction?: "row" | "col" | "row-reverse" | "col-reverse";
-  wrap?: boolean | "reverse";
+  gap?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  justify?: 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
+  align?: 'start' | 'center' | 'end' | 'stretch' | 'baseline';
+  direction?: 'row' | 'col' | 'row-reverse' | 'col-reverse';
+  wrap?: boolean | 'reverse';
   fullWidth?: boolean;
 
   // 2. INDEPENDENTE: Estado próprio e lógica encapsulada
@@ -28,19 +20,13 @@ interface InlineBaseWrapperProps extends BlockComponentProps {
   onEdit?: () => void;
   onDuplicate?: () => void;
   onDelete?: () => void;
-  onMove?: (direction: "up" | "down") => void;
+  onMove?: (direction: 'up' | 'down') => void;
 
   // 3. RESPONSIVO: Breakpoints e classes adaptativas
   responsive?: {
-    mobile?: Partial<
-      Pick<InlineBaseWrapperProps, "direction" | "gap" | "justify" | "align">
-    >;
-    tablet?: Partial<
-      Pick<InlineBaseWrapperProps, "direction" | "gap" | "justify" | "align">
-    >;
-    desktop?: Partial<
-      Pick<InlineBaseWrapperProps, "direction" | "gap" | "justify" | "align">
-    >;
+    mobile?: Partial<Pick<InlineBaseWrapperProps, 'direction' | 'gap' | 'justify' | 'align'>>;
+    tablet?: Partial<Pick<InlineBaseWrapperProps, 'direction' | 'gap' | 'justify' | 'align'>>;
+    desktop?: Partial<Pick<InlineBaseWrapperProps, 'direction' | 'gap' | 'justify' | 'align'>>;
   };
 
   // 4. INLINE (HORIZONTAL): Layout otimizado para componentes lado a lado
@@ -84,19 +70,19 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
   isSelected = false,
   onPropertyChange,
   children,
-  className = "",
+  className = '',
 
   // 1. REUTILIZÁVEL: Props de layout flexbox
-  gap = "md",
-  justify = "between",
-  align = "center",
-  direction = "row",
+  gap = 'md',
+  justify = 'between',
+  align = 'center',
+  direction = 'row',
   wrap = true,
   fullWidth = true,
 
   // 2. INDEPENDENTE: Props de controle
   showEditOverlay = true,
-  editLabel = "Editar",
+  editLabel = 'Editar',
   onEdit,
   onDuplicate,
   onDelete,
@@ -106,7 +92,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
   responsive,
 
   // 4. INLINE: Dimensões e proporções
-  minHeight = "3rem",
+  minHeight = '3rem',
   maxWidth,
   aspectRatio,
 
@@ -127,43 +113,43 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
 
   // 1. REUTILIZÁVEL: Sistema de classes CSS dinâmicas
   const gapClasses = {
-    none: "gap-0",
-    xs: "gap-1",
-    sm: "gap-2",
-    md: "gap-4",
-    lg: "gap-6",
-    xl: "gap-8",
+    none: 'gap-0',
+    xs: 'gap-1',
+    sm: 'gap-2',
+    md: 'gap-4',
+    lg: 'gap-6',
+    xl: 'gap-8',
   };
 
   const justifyClasses = {
-    start: "justify-start",
-    center: "justify-center",
-    end: "justify-end",
-    between: "justify-between",
-    around: "justify-around",
-    evenly: "justify-evenly",
+    start: 'justify-start',
+    center: 'justify-center',
+    end: 'justify-end',
+    between: 'justify-between',
+    around: 'justify-around',
+    evenly: 'justify-evenly',
   };
 
   const alignClasses = {
-    start: "items-start",
-    center: "items-center",
-    end: "items-end",
-    stretch: "items-stretch",
-    baseline: "items-baseline",
+    start: 'items-start',
+    center: 'items-center',
+    end: 'items-end',
+    stretch: 'items-stretch',
+    baseline: 'items-baseline',
   };
 
   const directionClasses = {
-    row: "flex-row",
-    col: "flex-col",
-    "row-reverse": "flex-row-reverse",
-    "col-reverse": "flex-col-reverse",
+    row: 'flex-row',
+    col: 'flex-col',
+    'row-reverse': 'flex-row-reverse',
+    'col-reverse': 'flex-col-reverse',
   };
 
   // 5. TRACKING GRANULAR: Hooks de analytics
   useEffect(() => {
     if (trackingData && isSelected) {
       // Track component view
-      console.log("📊 Component View:", {
+      console.log('📊 Component View:', {
         blockId: block.id,
         componentName: trackingData.componentName,
         category: trackingData.category,
@@ -180,10 +166,10 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
 
     // 5. TRACKING: Event tracking
     if (trackingData) {
-      console.log("📊 Component Edit:", {
+      console.log('📊 Component Edit:', {
         blockId: block.id,
         componentName: trackingData.componentName,
-        action: "edit_start",
+        action: 'edit_start',
         timestamp: Date.now(),
       });
     }
@@ -198,7 +184,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
 
     // 5. TRACKING: Duplicate event
     if (trackingData) {
-      console.log("📊 Component Duplicate:", {
+      console.log('📊 Component Duplicate:', {
         blockId: block.id,
         componentName: trackingData.componentName,
         timestamp: Date.now(),
@@ -211,12 +197,12 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
   }, [onDuplicate, trackingData, block.id]);
 
   const handleDelete = useCallback(() => {
-    if (confirm("Tem certeza que deseja deletar este componente?")) {
+    if (confirm('Tem certeza que deseja deletar este componente?')) {
       setLastInteraction(Date.now());
 
       // 5. TRACKING: Delete event
       if (trackingData) {
-        console.log("📊 Component Delete:", {
+        console.log('📊 Component Delete:', {
           blockId: block.id,
           componentName: trackingData.componentName,
           timestamp: Date.now(),
@@ -241,79 +227,63 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
 
     // Responsive overrides
     if (responsive?.mobile) {
-      if (responsive.mobile.gap)
-        classes.push(`sm:${gapClasses[responsive.mobile.gap]}`);
-      if (responsive.mobile.justify)
-        classes.push(`sm:${justifyClasses[responsive.mobile.justify]}`);
-      if (responsive.mobile.align)
-        classes.push(`sm:${alignClasses[responsive.mobile.align]}`);
-      if (responsive.mobile.direction)
-        classes.push(`sm:${directionClasses[responsive.mobile.direction]}`);
+      if (responsive.mobile.gap) classes.push(`sm:${gapClasses[responsive.mobile.gap]}`);
+      if (responsive.mobile.justify) classes.push(`sm:${justifyClasses[responsive.mobile.justify]}`);
+      if (responsive.mobile.align) classes.push(`sm:${alignClasses[responsive.mobile.align]}`);
+      if (responsive.mobile.direction) classes.push(`sm:${directionClasses[responsive.mobile.direction]}`);
     }
 
     if (responsive?.tablet) {
-      if (responsive.tablet.gap)
-        classes.push(`md:${gapClasses[responsive.tablet.gap]}`);
-      if (responsive.tablet.justify)
-        classes.push(`md:${justifyClasses[responsive.tablet.justify]}`);
-      if (responsive.tablet.align)
-        classes.push(`md:${alignClasses[responsive.tablet.align]}`);
-      if (responsive.tablet.direction)
-        classes.push(`md:${directionClasses[responsive.tablet.direction]}`);
+      if (responsive.tablet.gap) classes.push(`md:${gapClasses[responsive.tablet.gap]}`);
+      if (responsive.tablet.justify) classes.push(`md:${justifyClasses[responsive.tablet.justify]}`);
+      if (responsive.tablet.align) classes.push(`md:${alignClasses[responsive.tablet.align]}`);
+      if (responsive.tablet.direction) classes.push(`md:${directionClasses[responsive.tablet.direction]}`);
     }
 
     if (responsive?.desktop) {
-      if (responsive.desktop.gap)
-        classes.push(`lg:${gapClasses[responsive.desktop.gap]}`);
-      if (responsive.desktop.justify)
-        classes.push(`lg:${justifyClasses[responsive.desktop.justify]}`);
-      if (responsive.desktop.align)
-        classes.push(`lg:${alignClasses[responsive.desktop.align]}`);
-      if (responsive.desktop.direction)
-        classes.push(`lg:${directionClasses[responsive.desktop.direction]}`);
+      if (responsive.desktop.gap) classes.push(`lg:${gapClasses[responsive.desktop.gap]}`);
+      if (responsive.desktop.justify) classes.push(`lg:${justifyClasses[responsive.desktop.justify]}`);
+      if (responsive.desktop.align) classes.push(`lg:${alignClasses[responsive.desktop.align]}`);
+      if (responsive.desktop.direction) classes.push(`lg:${directionClasses[responsive.desktop.direction]}`);
     }
 
-    return classes.join(" ");
+    return classes.join(' ');
   };
 
   // Extract properties for block data access
-  const { trackingEnabled = false, useUsername = false } =
-    block.properties || {};
+  const { trackingEnabled = false, useUsername = false } = block.properties || {};
 
   return (
     <div
       className={cn(
         // 4. INLINE (HORIZONTAL): Base flexbox layout
-        "relative w-full flex transition-all duration-200",
+        'relative w-full flex transition-all duration-200',
         getResponsiveClasses(),
 
         // Wrap behavior
-        wrap === true && "flex-wrap",
-        wrap === "reverse" && "flex-wrap-reverse",
-        wrap === false && "flex-nowrap",
+        wrap === true && 'flex-wrap',
+        wrap === 'reverse' && 'flex-wrap-reverse',
+        wrap === false && 'flex-nowrap',
 
         // Width control
-        fullWidth ? "w-full" : "w-auto",
+        fullWidth ? 'w-full' : 'w-auto',
 
         // 4. INLINE: Padding responsivo para componentes lado a lado
-        "px-2 py-2 sm:px-4 sm:py-3 md:px-6 md:py-4",
+        'px-2 py-2 sm:px-4 sm:py-3 md:px-6 md:py-4',
 
         // 6. UX APRIMORADA: Estados visuais
-        "border-2 border-transparent rounded-lg",
-        "hover:border-blue-300 hover:bg-blue-50/30",
+        'border-2 border-transparent rounded-lg',
+        'hover:border-blue-300 hover:bg-blue-50/30',
 
         // Estado selecionado
-        isSelected && [
-          "border-blue-500 bg-blue-50",
-          "shadow-lg shadow-blue-500/20",
-        ],
+        isSelected && ['border-blue-500 bg-blue-50', 'shadow-lg shadow-blue-500/20'],
 
         // Estados de erro e loading
-        hasError && "border-red-500 bg-red-50",
-        isLoading && "opacity-70 pointer-events-none",
+        hasError && 'border-red-500 bg-red-50',
+        isLoading && 'opacity-70 pointer-events-none',
 
         // Cursor interativo
-        "cursor-pointer",
+        'cursor-pointer',
 
         // Classes customizadas (máxima flexibilidade)
         className,
@@ -370,7 +340,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
             <div className="flex items-center bg-white rounded-full shadow-lg border border-gray-200 overflow-hidden">
               {/* Edit Button */}
               <button
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   handleEdit();
                 }}
@@ -385,7 +355,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
               <div className="flex items-center">
                 {onDuplicate && (
                   <button
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       handleDuplicate();
                     }}
@@ -399,9 +369,9 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
                 {onMove && (
                   <>
                     <button
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
-                        onMove("up");
+                        onMove('up');
                       }}
                       className="p-1 hover:bg-gray-100 transition-colors"
                       title="Mover para cima"
@@ -409,9 +379,9 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
                       <Move className="w-3 h-3 text-gray-600 rotate-180" />
                     </button>
                     <button
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
-                        onMove("down");
+                        onMove('down');
                       }}
                       className="p-1 hover:bg-gray-100 transition-colors"
                       title="Mover para baixo"
@@ -423,7 +393,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
 
                 {onDelete && (
                   <button
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       handleDelete();
                     }}

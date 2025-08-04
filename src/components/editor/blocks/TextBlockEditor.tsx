@@ -1,21 +1,18 @@
-import React from "react";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { BlockEditorProps } from "./types";
+import React from 'react';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { BlockEditorProps } from './types';
 
-export const TextBlockEditor: React.FC<BlockEditorProps> = ({
-  block,
-  onUpdate,
-}) => {
+export const TextBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
   return (
     <div className="space-y-4">
       <div>
         <Label htmlFor={`${block.id}-text`}>Texto</Label>
         <Textarea
           id={`${block.id}-text`}
-          value={block.content.text || ""}
-          onChange={(e) => onUpdate({ text: e.target.value })}
+          value={block.content.text || ''}
+          onChange={e => onUpdate({ text: e.target.value })}
           className="mt-1"
           rows={5}
         />
@@ -24,8 +21,8 @@ export const TextBlockEditor: React.FC<BlockEditorProps> = ({
       <div>
         <Label>Alinhamento</Label>
         <RadioGroup
-          value={block.content.alignment || "left"}
-          onValueChange={(value) => onUpdate({ alignment: value })}
+          value={block.content.alignment || 'left'}
+          onValueChange={value => onUpdate({ alignment: value })}
           className="flex space-x-4 mt-1"
         >
           <div className="flex items-center space-x-2">

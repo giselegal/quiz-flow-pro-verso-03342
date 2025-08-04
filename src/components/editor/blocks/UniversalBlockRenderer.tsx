@@ -1,6 +1,6 @@
-import React from "react";
-import { Block } from "@/types/editor";
-import { getEnhancedComponent } from "@/config/enhancedBlockRegistry";
+import React from 'react';
+import { Block } from '@/types/editor';
+import { getEnhancedComponent } from '@/config/enhancedBlockRegistry';
 
 export interface BlockRendererProps {
   block: Block;

@@ -1,7 +1,7 @@
-import React from "react";
-import { InlineEditableText } from "./InlineEditableText";
-import { AlignHorizontalDistributeEnd } from "lucide-react";
-import type { BlockComponentProps } from "@/types/blocks";
+import React from 'react';
+import { InlineEditableText } from './InlineEditableText';
+import { AlignHorizontalDistributeEnd } from 'lucide-react';
+import type { BlockComponentProps } from '@/types/blocks';
 
 const CompareBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -9,16 +9,16 @@ const CompareBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "Antes vs Depois",
+    title = 'Antes vs Depois',
     value1 = 30,
-    label1 = "Antes",
+    label1 = 'Antes',
     value2 = 70,
-    label2 = "Depois",
-    color1 = "#B89B7A",
-    color2 = "#432818",
+    label2 = 'Depois',
+    color1 = '#B89B7A',
+    color2 = '#432818',
   } = block.properties;
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -37,11 +37,7 @@ const CompareBlock: React.FC<BlockComponentProps> = ({
     <div
       className={`
         py-6 text-center space-y-4 cursor-pointer transition-all duration-200
-        ${
-          isSelected
-            ? "ring-1 ring-gray-400/40 bg-gray-50/30"
-            : "hover:shadow-sm"
-        }
+        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
         ${className}
       `}
       onClick={onClick}
@@ -51,7 +47,7 @@ const CompareBlock: React.FC<BlockComponentProps> = ({
       <h3 className="text-xl font-bold text-[#432818]">
         <InlineEditableText
           value={title}
-          onChange={(value: string) => handlePropertyChange("title", value)}
+          onChange={(value: string) => handlePropertyChange('title', value)}
           className="inline-block"
           placeholder="Título da comparação"
         />
@@ -61,19 +57,19 @@ const CompareBlock: React.FC<BlockComponentProps> = ({
           className="flex items-center justify-center text-white text-sm font-semibold"
           style={{
             width: `${percent1}%`,
-            backgroundColor: color1 || "#B89B7A",
+            backgroundColor: color1 || '#B89B7A',
           }}
         >
-          {label1 || "Antes"} ({Math.round(percent1)}%)
+          {label1 || 'Antes'} ({Math.round(percent1)}%)
         </div>
         <div
           className="flex items-center justify-center text-white text-sm font-semibold"
           style={{
             width: `${percent2}%`,
-            backgroundColor: color2 || "#432818",
+            backgroundColor: color2 || '#432818',
           }}
         >
-          {label2 || "Depois"} ({Math.round(percent2)}%)
+          {label2 || 'Depois'} ({Math.round(percent2)}%)
         </div>
       </div>
       <div className="flex justify-center gap-8 text-sm text-gray-600">

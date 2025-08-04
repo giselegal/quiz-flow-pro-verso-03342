@@ -1,6 +1,6 @@
-import React from "react";
-import { cn } from "@/lib/utils";
-import { ChevronRight } from "lucide-react";
+import React from 'react';
+import { cn } from '@/lib/utils';
+import { ChevronRight } from 'lucide-react';
 
 interface QuizProgressBlockProps {
   currentStep?: number;
@@ -13,14 +13,14 @@ interface QuizProgressBlockProps {
 const QuizProgressBlock: React.FC<QuizProgressBlockProps> = ({
   currentStep = 3,
   totalSteps = 10,
-  stepTitle = "Descobrindo seu estilo...",
+  stepTitle = 'Descobrindo seu estilo...',
   showStepNumbers = true,
   className,
 }) => {
   const progressPercentage = (currentStep / totalSteps) * 100;
 
   return (
-    <div className={cn("py-4", className)}>
+    <div className={cn('py-4', className)}>
       <div className="max-w-4xl mx-auto px-4">
         {/* Step Info */}
         <div className="flex items-center justify-between mb-4">
@@ -30,9 +30,7 @@ const QuizProgressBlock: React.FC<QuizProgressBlockProps> = ({
                 {currentStep}
               </div>
             )}
-            <h3 className="text-lg font-semibold text-[#432818]">
-              {stepTitle}
-            </h3>
+            <h3 className="text-lg font-semibold text-[#432818]">{stepTitle}</h3>
           </div>
 
           <div className="text-sm text-[#8F7A6A] flex items-center gap-1">
@@ -64,11 +62,9 @@ const QuizProgressBlock: React.FC<QuizProgressBlockProps> = ({
                 <div
                   key={stepNumber}
                   className={cn(
-                    "w-3 h-3 rounded-full border-2 transform -translate-y-0.5 transition-all duration-300",
-                    isCompleted
-                      ? "bg-[#B89B7A] border-[#B89B7A]"
-                      : "bg-white border-gray-300",
-                    isCurrent && "scale-125 shadow-lg",
+                    'w-3 h-3 rounded-full border-2 transform -translate-y-0.5 transition-all duration-300',
+                    isCompleted ? 'bg-[#B89B7A] border-[#B89B7A]' : 'bg-white border-gray-300',
+                    isCurrent && 'scale-125 shadow-lg',
                   )}
                 />
               );
@@ -79,10 +75,8 @@ const QuizProgressBlock: React.FC<QuizProgressBlockProps> = ({
         {/* Progress Text */}
         <div className="text-center mt-3">
           <p className="text-sm text-[#8F7A6A]">
-            <span className="font-medium text-[#B89B7A]">
-              {Math.round(progressPercentage)}%
-            </span>{" "}
-            completo - Continue para descobrir mais sobre seu estilo único
+            <span className="font-medium text-[#B89B7A]">{Math.round(progressPercentage)}%</span> completo - Continue
+            para descobrir mais sobre seu estilo único
           </p>
         </div>
       </div>

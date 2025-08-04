@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
-import { Edit3 } from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
+import { Edit3 } from 'lucide-react';
 
 interface LoaderInlineBlockProps {
   title?: string;
@@ -15,11 +15,11 @@ interface LoaderInlineBlockProps {
 }
 
 const LoaderInlineBlock: React.FC<LoaderInlineBlockProps> = ({
-  title = "Carregando...",
+  title = 'Carregando...',
   percentage = 60,
-  description = "Analisando seu estilo pessoal...",
+  description = 'Analisando seu estilo pessoal...',
   animated = true,
-  color = "#B89B7A",
+  color = '#B89B7A',
   onClick,
   className,
   onPropertyChange,
@@ -44,11 +44,11 @@ const LoaderInlineBlock: React.FC<LoaderInlineBlockProps> = ({
       role="button"
       tabIndex={0}
       className={cn(
-        "group/canvas-item inline-block w-full",
-        "min-h-[1.25rem] relative border-2 border-dashed rounded-md p-4",
-        "hover:border-2 hover:border-blue-500 transition-all cursor-pointer",
-        isHovered ? "border-blue-500" : "border-gray-300",
-        disabled && "opacity-75 cursor-not-allowed",
+        'group/canvas-item inline-block w-full',
+        'min-h-[1.25rem] relative border-2 border-dashed rounded-md p-4',
+        'hover:border-2 hover:border-blue-500 transition-all cursor-pointer',
+        isHovered ? 'border-blue-500' : 'border-gray-300',
+        disabled && 'opacity-75 cursor-not-allowed',
         className,
       )}
       onClick={!disabled ? onClick : undefined}
@@ -74,9 +74,7 @@ const LoaderInlineBlock: React.FC<LoaderInlineBlockProps> = ({
         </div>
 
         {/* Description */}
-        <div className="text-[#8F7A6A] font-normal mt-2 text-center text-sm">
-          {description}
-        </div>
+        <div className="text-[#8F7A6A] font-normal mt-2 text-center text-sm">{description}</div>
       </div>
 
       {/* Edit indicator */}

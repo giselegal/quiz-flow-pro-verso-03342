@@ -1,6 +1,6 @@
-import React from "react";
-import { cn } from "../../../../lib/utils";
-import { BlockComponentProps } from "../../../../types/blocks";
+import React from 'react';
+import { cn } from '../../../../lib/utils';
+import { BlockComponentProps } from '../../../../types/blocks';
 
 const StyleCharacteristicsInlineBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -9,28 +9,27 @@ const StyleCharacteristicsInlineBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
 }) => {
   const styleData = block?.properties?.styleData || {
-    name: "Natural",
-    description: "Elegância espontânea e sofisticação despojada",
+    name: 'Natural',
+    description: 'Elegância espontânea e sofisticação despojada',
     characteristics: [
-      "Prefere tecidos naturais como algodão e linho",
-      "Gosta de cores neutras e terrosas",
-      "Valoriza o conforto sem abrir mão do estilo",
-      "Aprecia peças versáteis e atemporais",
+      'Prefere tecidos naturais como algodão e linho',
+      'Gosta de cores neutras e terrosas',
+      'Valoriza o conforto sem abrir mão do estilo',
+      'Aprecia peças versáteis e atemporais',
     ],
-    colors: ["#F5F5DC", "#D2B48C", "#DEB887", "#CD853F"],
-    mainColor: "#B89B7A",
+    colors: ['#F5F5DC', '#D2B48C', '#DEB887', '#CD853F'],
+    mainColor: '#B89B7A',
   };
 
-  const title =
-    block?.properties?.title || `Características do Estilo ${styleData.name}`;
+  const title = block?.properties?.title || `Características do Estilo ${styleData.name}`;
 
   return (
     <div
       className={cn(
-        "style-characteristics p-6 border border-gray-200 rounded-lg bg-white",
-        "hover:shadow-md transition-all duration-200",
-        isSelected && "ring-2 ring-[#B89B7A] bg-[#FAF9F7]",
-        "cursor-pointer",
+        'style-characteristics p-6 border border-gray-200 rounded-lg bg-white',
+        'hover:shadow-md transition-all duration-200',
+        isSelected && 'ring-2 ring-[#B89B7A] bg-[#FAF9F7]',
+        'cursor-pointer',
       )}
       onClick={onClick}
     >
@@ -42,9 +41,7 @@ const StyleCharacteristicsInlineBlock: React.FC<BlockComponentProps> = ({
 
       {/* Paleta de cores */}
       <div className="mb-6">
-        <h4 className="text-lg font-semibold text-[#432818] mb-3">
-          Paleta de Cores
-        </h4>
+        <h4 className="text-lg font-semibold text-[#432818] mb-3">Paleta de Cores</h4>
         <div className="flex justify-center gap-2">
           {styleData.colors.map((color: string, index: number) => (
             <div
@@ -59,25 +56,19 @@ const StyleCharacteristicsInlineBlock: React.FC<BlockComponentProps> = ({
 
       {/* Características */}
       <div>
-        <h4 className="text-lg font-semibold text-[#432818] mb-3">
-          Características Principais
-        </h4>
+        <h4 className="text-lg font-semibold text-[#432818] mb-3">Características Principais</h4>
         <ul className="space-y-3">
-          {styleData.characteristics.map(
-            (characteristic: string, index: number) => (
-              <li key={index} className="flex items-start">
-                <span
-                  className="w-6 h-6 rounded-full flex items-center justify-center text-white text-sm mr-3 mt-0.5 flex-shrink-0"
-                  style={{ backgroundColor: styleData.mainColor }}
-                >
-                  ✓
-                </span>
-                <span className="text-gray-700 leading-relaxed">
-                  {characteristic}
-                </span>
-              </li>
-            ),
-          )}
+          {styleData.characteristics.map((characteristic: string, index: number) => (
+            <li key={index} className="flex items-start">
+              <span
+                className="w-6 h-6 rounded-full flex items-center justify-center text-white text-sm mr-3 mt-0.5 flex-shrink-0"
+                style={{ backgroundColor: styleData.mainColor }}
+              >
+                ✓
+              </span>
+              <span className="text-gray-700 leading-relaxed">{characteristic}</span>
+            </li>
+          ))}
         </ul>
       </div>
 
@@ -86,8 +77,7 @@ const StyleCharacteristicsInlineBlock: React.FC<BlockComponentProps> = ({
         <div className="mt-6 pt-4 border-t border-gray-200">
           <div className="text-xs text-gray-500 text-center">
             <p>
-              💡 <strong>Editável:</strong> Personalize as características do
-              estilo
+              💡 <strong>Editável:</strong> Personalize as características do estilo
             </p>
           </div>
         </div>
