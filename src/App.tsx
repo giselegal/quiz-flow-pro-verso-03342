@@ -6,7 +6,7 @@ import { EditorProvider } from "@/context/EditorContext";
 import { ScrollSyncProvider } from "@/context/ScrollSyncContext";
 import DebugEditorContext from "@/pages/debug-editor";
 import EditorPage from "@/pages/editor-fixed";
-import TestPropertiesPanel from "@/pages/test-properties-panel";
+import TestPropertiesPanel from "@/pages/test-properties";
 import { Route, Router, Switch } from "wouter";
 import MigrationPanel from "./components/admin/MigrationPanel";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
