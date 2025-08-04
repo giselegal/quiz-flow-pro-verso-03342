@@ -6,6 +6,7 @@ import { EditorProvider } from "@/context/EditorContext";
 import { ScrollSyncProvider } from "@/context/ScrollSyncContext";
 import DebugEditorContext from "@/pages/debug-editor";
 import EditorPage from "@/pages/editor-fixed";
+import TestPropertiesPanel from "@/pages/test-properties-panel";
 import { Route, Router, Switch } from "wouter";
 import MigrationPanel from "./components/admin/MigrationPanel";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
@@ -68,6 +69,10 @@ function App() {
                     </ErrorBoundary>
                   )}
                 </Route>
+
+                {/* Debug/Test Routes */}
+                <Route path="/debug/editor" component={DebugEditorContext} />
+                <Route path="/test/properties" component={TestPropertiesPanel} />
 
                 {/* Admin Routes */}
                 <Route path="/admin" nest>

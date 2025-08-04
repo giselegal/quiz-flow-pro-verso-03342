@@ -1,12 +1,12 @@
-import { useState, useCallback, useEffect } from 'react';
-import { BRAND_COLORS } from '@/config/brandColors';
+import { BRAND_COLORS } from "@/config/brandColors";
+import { useCallback, useEffect, useState } from "react";
 
 export interface UnifiedProperty {
   key: string;
   value: any;
-  type: 'text' | 'textarea' | 'number' | 'boolean' | 'color' | 'select' | 'range';
+  type: "text" | "textarea" | "number" | "boolean" | "color" | "select" | "range";
   label: string;
-  category: 'content' | 'style' | 'layout' | 'advanced';
+  category: "content" | "style" | "layout" | "advanced";
   required?: boolean;
   options?: string[];
   min?: number;
@@ -39,176 +39,186 @@ export const useUnifiedProperties = (
   const [properties, setProperties] = useState<UnifiedProperty[]>([]);
 
   // Gerar propriedades padrão baseadas no tipo do bloco
-  const generateDefaultProperties = useCallback((blockType: string): UnifiedProperty[] => {
-    const baseProperties: UnifiedProperty[] = [
-      {
-        key: 'id',
-        value: block?.id || '',
-        type: 'text',
-        label: 'ID do Componente',
-        category: 'advanced',
-        required: true,
-      },
-      {
-        key: 'visible',
-        value: true,
-        type: 'boolean',
-        label: 'Visível',
-        category: 'layout',
-      },
-    ];
+  const generateDefaultProperties = useCallback(
+    (blockType: string): UnifiedProperty[] => {
+      const baseProperties: UnifiedProperty[] = [
+        {
+          key: "id",
+          value: block?.id || "",
+          type: "text",
+          label: "ID do Componente",
+          category: "advanced",
+          required: true,
+        },
+        {
+          key: "visible",
+          value: true,
+          type: "boolean",
+          label: "Visível",
+          category: "layout",
+        },
+      ];
 
-    // Propriedades específicas por tipo
-    switch (blockType) {
-      case 'text':
-      case 'text-inline':
-        return [
-          ...baseProperties,
-          {
-            key: 'content',
-            value: block?.properties?.content || 'Texto exemplo',
-            type: 'textarea',
-            label: 'Conteúdo',
-            category: 'content',
-            required: true,
-          },
-          {
-            key: 'fontSize',
-            value: block?.properties?.fontSize || 16,
-            type: 'range',
-            label: 'Tamanho da Fonte',
-            category: 'style',
-            min: 12,
-            max: 48,
-            step: 1,
-          },
-          {
-            key: 'textColor',
-            value: block?.properties?.textColor || BRAND_COLORS.brand.text,
-            type: 'color',
-            label: 'Cor do Texto',
-            category: 'style',
-          },
-        ];
+      // Propriedades específicas por tipo
+      switch (blockType) {
+        case "text":
+        case "text-inline":
+          return [
+            ...baseProperties,
+            {
+              key: "content",
+              value: block?.properties?.content || "Texto exemplo",
+              type: "textarea",
+              label: "Conteúdo",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "fontSize",
+              value: block?.properties?.fontSize || 16,
+              type: "range",
+              label: "Tamanho da Fonte",
+              category: "style",
+              min: 12,
+              max: 48,
+              step: 1,
+            },
+            {
+              key: "textColor",
+              value: block?.properties?.textColor || BRAND_COLORS.textPrimary,
+              type: "color",
+              label: "Cor do Texto",
+              category: "style",
+            },
+          ];
 
-      case 'heading':
-      case 'heading-inline':
-        return [
-          ...baseProperties,
-          {
-            key: 'content',
-            value: block?.properties?.content || 'Título Principal',
-            type: 'text',
-            label: 'Título',
-            category: 'content',
-            required: true,
-          },
-          {
-            key: 'level',
-            value: block?.properties?.level || 'h2',
-            type: 'select',
-            label: 'Nível do Título',
-            category: 'content',
-            options: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
-          },
-          {
-            key: 'textAlign',
-            value: block?.properties?.textAlign || 'left',
-            type: 'select',
-            label: 'Alinhamento',
-            category: 'style',
-            options: ['left', 'center', 'right', 'justify'],
-          },
-        ];
+        case "heading":
+        case "heading-inline":
+          return [
+            ...baseProperties,
+            {
+              key: "content",
+              value: block?.properties?.content || "Título Principal",
+              type: "text",
+              label: "Título",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "level",
+              value: block?.properties?.level || "h2",
+              type: "select",
+              label: "Nível do Título",
+              category: "content",
+              options: ["h1", "h2", "h3", "h4", "h5", "h6"],
+            },
+            {
+              key: "textAlign",
+              value: block?.properties?.textAlign || "left",
+              type: "select",
+              label: "Alinhamento",
+              category: "style",
+              options: ["left", "center", "right", "justify"],
+            },
+          ];
 
-      case 'button':
-      case 'button-inline':
-        return [
-          ...baseProperties,
-          {
-            key: 'text',
-            value: block?.properties?.text || 'Clique Aqui',
-            type: 'text',
-            label: 'Texto do Botão',
-            category: 'content',
-            required: true,
-          },
-          {
-            key: 'variant',
-            value: block?.properties?.variant || 'primary',
-            type: 'select',
-            label: 'Estilo',
-            category: 'style',
-            options: ['primary', 'secondary', 'outline', 'ghost'],
-          },
-          {
-            key: 'backgroundColor',
-            value: block?.properties?.backgroundColor || BRAND_COLORS.brand.primary,
-            type: 'color',
-            label: 'Cor de Fundo',
-            category: 'style',
-          },
-        ];
+        case "button":
+        case "button-inline":
+          return [
+            ...baseProperties,
+            {
+              key: "text",
+              value: block?.properties?.text || "Clique Aqui",
+              type: "text",
+              label: "Texto do Botão",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "variant",
+              value: block?.properties?.variant || "primary",
+              type: "select",
+              label: "Estilo",
+              category: "style",
+              options: ["primary", "secondary", "outline", "ghost"],
+            },
+            {
+              key: "backgroundColor",
+              value: block?.properties?.backgroundColor || BRAND_COLORS.primary,
+              type: "color",
+              label: "Cor de Fundo",
+              category: "style",
+            },
+          ];
 
-      case 'image':
-      case 'image-inline':
-        return [
-          ...baseProperties,
-          {
-            key: 'src',
-            value: block?.properties?.src || '',
-            type: 'text',
-            label: 'URL da Imagem',
-            category: 'content',
-            required: true,
-          },
-          {
-            key: 'alt',
-            value: block?.properties?.alt || 'Descrição da imagem',
-            type: 'text',
-            label: 'Texto Alternativo',
-            category: 'content',
-          },
-          {
-            key: 'width',
-            value: block?.properties?.width || 300,
-            type: 'range',
-            label: 'Largura',
-            category: 'layout',
-            min: 50,
-            max: 800,
-            step: 10,
-          },
-        ];
+        case "image":
+        case "image-inline":
+          return [
+            ...baseProperties,
+            {
+              key: "src",
+              value: block?.properties?.src || "",
+              type: "text",
+              label: "URL da Imagem",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "alt",
+              value: block?.properties?.alt || "Descrição da imagem",
+              type: "text",
+              label: "Texto Alternativo",
+              category: "content",
+            },
+            {
+              key: "width",
+              value: block?.properties?.width || 300,
+              type: "range",
+              label: "Largura",
+              category: "layout",
+              min: 50,
+              max: 800,
+              step: 10,
+            },
+          ];
 
-      default:
-        return baseProperties;
-    }
-  }, [block]);
+        default:
+          return baseProperties;
+      }
+    },
+    [block]
+  );
 
   // Atualizar propriedades quando o bloco mudar
   useEffect(() => {
-    if (block) {
+    console.log("🔄 useUnifiedProperties - useEffect triggered with block:", block);
+
+    if (block && block.type) {
+      console.log("✅ Block has type:", block.type);
+      console.log("🏗️ Block properties:", block.properties);
+
       const newProperties = generateDefaultProperties(block.type);
+      console.log("🎛️ Generated properties:", newProperties);
+
       setProperties(newProperties);
     } else {
+      console.log("❌ No block or no block type, clearing properties");
       setProperties([]);
     }
   }, [block, generateDefaultProperties]);
 
   // Função para atualizar uma propriedade
-  const updateProperty = useCallback((key: string, value: any) => {
-    setProperties(prev => 
-      prev.map(prop => 
-        prop.key === key ? { ...prop, value } : prop
-      )
-    );
+  const updateProperty = useCallback(
+    (key: string, value: any) => {
+      setProperties(prev => prev.map(prop => (prop.key === key ? { ...prop, value } : prop)));
 
-    // Notificar mudança externa
-    if (block && onUpdate) {
-      onUpdate(block.id, { [key]: value });
-    }
-  }, [block, onUpdate]);
+      // Notificar mudança externa
+      if (block && onUpdate) {
+        onUpdate(block.id, { [key]: value });
+      }
+    },
+    [block, onUpdate]
+  );
 
   // Resetar propriedades
   const resetProperties = useCallback(() => {
@@ -221,7 +231,7 @@ export const useUnifiedProperties = (
   // Validar propriedades
   const validateProperties = useCallback(() => {
     return properties.every(prop => {
-      if (prop.required && (!prop.value || prop.value === '')) {
+      if (prop.required && (!prop.value || prop.value === "")) {
         return false;
       }
       return true;
@@ -229,36 +239,48 @@ export const useUnifiedProperties = (
   }, [properties]);
 
   // Obter propriedade por chave
-  const getPropertyByKey = useCallback((key: string) => {
-    return properties.find(prop => prop.key === key);
-  }, [properties]);
+  const getPropertyByKey = useCallback(
+    (key: string) => {
+      return properties.find(prop => prop.key === key);
+    },
+    [properties]
+  );
 
   // Obter propriedades por categoria
-  const getPropertiesByCategory = useCallback((category: string) => {
-    return properties.filter(prop => prop.category === category);
-  }, [properties]);
+  const getPropertiesByCategory = useCallback(
+    (category: string) => {
+      if (!properties || !Array.isArray(properties)) {
+        return [];
+      }
+      return properties.filter(prop => prop.category === category);
+    },
+    [properties]
+  );
 
   // Exportar propriedades como objeto
   const exportProperties = useCallback(() => {
-    return properties.reduce((acc, prop) => {
-      acc[prop.key] = prop.value;
-      return acc;
-    }, {} as Record<string, any>);
+    return properties.reduce(
+      (acc, prop) => {
+        acc[prop.key] = prop.value;
+        return acc;
+      },
+      {} as Record<string, any>
+    );
   }, [properties]);
 
   // Aplicar cores da marca automaticamente
   const applyBrandColors = useCallback(() => {
-    setProperties(prev => 
+    setProperties(prev =>
       prev.map(prop => {
-        if (prop.type === 'color') {
-          if (prop.key.includes('text') || prop.key.includes('Text')) {
-            return { ...prop, value: BRAND_COLORS.brand.text };
+        if (prop.type === "color") {
+          if (prop.key.includes("text") || prop.key.includes("Text")) {
+            return { ...prop, value: BRAND_COLORS.textPrimary };
           }
-          if (prop.key.includes('background') || prop.key.includes('Background')) {
-            return { ...prop, value: BRAND_COLORS.brand.primary };
+          if (prop.key.includes("background") || prop.key.includes("Background")) {
+            return { ...prop, value: BRAND_COLORS.primary };
           }
-          if (prop.key.includes('border') || prop.key.includes('Border')) {
-            return { ...prop, value: BRAND_COLORS.brand.primary };
+          if (prop.key.includes("border") || prop.key.includes("Border")) {
+            return { ...prop, value: BRAND_COLORS.primary };
           }
         }
         return prop;
