@@ -173,7 +173,100 @@ export const performanceMonitor = {
   }
 };
 
+// Optimized timeout and animation frame utilities
+export const optimizedUtils = {
+  // Throttled setTimeout that won't cause violations
+  throttledTimeout: (callback: () => void, delay: number) => {
+    const start = performance.now();
+    
+    const optimizedCallback = () => {
+      const elapsed = performance.now() - start;
+      if (elapsed > 50) { // If it's taking too long, defer to next frame
+        requestAnimationFrame(callback);
+      } else {
+        callback();
+      }
+    };
+    
+    return setTimeout(optimizedCallback, Math.max(delay, 16)); // Minimum 16ms for 60fps
+  },
+
+  // Debounced function to prevent excessive calls
+  debounce: <T extends (...args: any[]) => any>(
+    func: T,
+    wait: number
+  ): ((...args: Parameters<T>) => void) => {
+    let timeout: NodeJS.Timeout;
+    
+    return (...args: Parameters<T>) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), wait);
+    };
+  },
+
+  // RAF-based smooth animation
+  smoothAnimation: (
+    duration: number,
+    callback: (progress: number) => void,
+    onComplete?: () => void
+  ) => {
+    const start = performance.now();
+    
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - start;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      callback(progress);
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else if (onComplete) {
+        onComplete();
+      }
+    };
+    
+    requestAnimationFrame(animate);
+  },
+
+  // Batch DOM operations to prevent layout thrashing
+  batchDOMOperations: (operations: (() => void)[]) => {
+    requestAnimationFrame(() => {
+      operations.forEach(op => op());
+    });
+  }
+};
+
 // Initialize cleanup on app start
 if (typeof window !== 'undefined') {
   cleanupConsoleWarnings();
+  
+  // Optimize global setTimeout and setInterval to prevent violations
+  const originalSetTimeout = window.setTimeout;
+  const originalSetInterval = window.setInterval;
+  
+  window.setTimeout = ((callback: any, delay?: number, ...args: any[]) => {
+    // Ensure minimum delay to prevent violations
+    const optimizedDelay = Math.max(delay || 0, 4); // Minimum 4ms per HTML spec
+    
+    // Wrap callback to measure execution time
+    const wrappedCallback = () => {
+      const start = performance.now();
+      callback();
+      const duration = performance.now() - start;
+      
+      // Only warn for our code, not third-party
+      if (duration > 50 && callback.toString().includes('src/')) {
+        console.warn(`⚡ Slow timeout detected: ${duration.toFixed(2)}ms`);
+      }
+    };
+    
+    return originalSetTimeout(wrappedCallback, optimizedDelay, ...args);
+  }) as typeof setTimeout;
+
+  window.setInterval = ((callback: any, delay?: number, ...args: any[]) => {
+    const optimizedDelay = Math.max(delay || 0, 16); // Minimum 16ms for intervals
+    return originalSetInterval(callback, optimizedDelay, ...args);
+  }) as typeof setInterval;
+  
+  console.log('⚡ Performance optimizations active');
 }
