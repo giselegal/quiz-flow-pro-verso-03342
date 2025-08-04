@@ -1,3 +1,4 @@
+import { dragDropDebugger, performanceMonitor } from "@/utils/development";
 import {
   closestCenter,
   DndContext,
@@ -14,7 +15,6 @@ import {
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import React from "react";
 import { createPortal } from "react-dom";
-import { dragDropDebugger, performanceMonitor } from "@/utils/development";
 
 // Tipo local para BlockData
 interface BlockData {
@@ -76,7 +76,7 @@ export const DndProvider: React.FC<DndProviderProps> = ({
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
 
-    performanceMonitor.startTiming('drag-operation');
+    performanceMonitor.startTiming("drag-operation");
 
     // Use enhanced debugging
     dragDropDebugger.logDragStart({
@@ -173,7 +173,7 @@ export const DndProvider: React.FC<DndProviderProps> = ({
     const { active, over } = event;
 
     setActiveBlock(null);
-    performanceMonitor.endTiming('drag-operation');
+    performanceMonitor.endTiming("drag-operation");
 
     // Use enhanced debugging
     dragDropDebugger.logDragEnd({

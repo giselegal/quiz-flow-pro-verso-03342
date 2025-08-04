@@ -1,22 +1,14 @@
-import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
-import "./index.css";
 import ClientLayout from "./components/ClientLayout";
-import {
-  initializeResourcePreloading,
-  setupRouteChangePreloading,
-} from "./utils/preloadResources";
-import { fixMainRoutes } from "./utils/fixMainRoutes";
-import { checkMainRoutes } from "./utils/routeChecker";
+import "./index.css";
 // 🚀 SUPABASE: Inicialização do serviço de dados
-import { saveUserSession } from "./services/quizSupabaseService";
 // 🧹 DEVELOPMENT: Sistema de limpeza de avisos do console
 import { cleanupConsoleWarnings } from "./utils/development";
 // import "./utils/hotmartWebhookSimulator"; // Carregar simulador de webhook - temporariamente desabilitado
 
 // 🧹 Inicializar limpeza de avisos do console em desenvolvimento
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === "development") {
   cleanupConsoleWarnings();
 }
 
@@ -29,6 +21,6 @@ console.log("🔧 DEBUG: Criando root do React...");
 createRoot(document.getElementById("root")!).render(
   <ClientLayout>
     <App />
-  </ClientLayout>,
+  </ClientLayout>
 );
 console.log("✅ DEBUG: App renderizado com sucesso");
