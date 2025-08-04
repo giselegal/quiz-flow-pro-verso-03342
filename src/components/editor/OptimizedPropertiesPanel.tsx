@@ -130,7 +130,7 @@ const OptimizedOptionsArrayEditor: React.FC<{
     (index: number) => {
       onChange(value.filter((_, i) => i !== index));
     },
-    [value, onChange]
+    [value, onChange],
   );
 
   const updateOption = useCallback(
@@ -139,7 +139,7 @@ const OptimizedOptionsArrayEditor: React.FC<{
       newOptions[index] = { ...newOptions[index], [field]: newValue };
       onChange(newOptions);
     },
-    [value, onChange]
+    [value, onChange],
   );
 
   return (
@@ -319,7 +319,7 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
   // 🔧 SETUP DO REACT HOOK FORM
   const validationSchema = useMemo(
     () => createValidationSchema(blockDefinition.properties),
-    [blockDefinition.properties]
+    [blockDefinition.properties],
   );
 
   const {
@@ -517,7 +517,7 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
           );
       }
     },
-    [control, watchedValues]
+    [control, watchedValues],
   );
 
   // 🎯 Renderizar grupo de propriedades
@@ -541,7 +541,7 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
         </OptimizedPropertyGroup>
       );
     },
-    [renderPropertyInput, errors]
+    [renderPropertyInput, errors],
   );
 
   return (
@@ -592,18 +592,18 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
             {renderPropertyGroup(
               'Conteúdo',
               <Edit3 className="w-4 h-4" />,
-              categorizedProps.content
+              categorizedProps.content,
             )}
             {renderPropertyGroup('Layout', <Layout className="w-4 h-4" />, categorizedProps.layout)}
             {renderPropertyGroup(
               'Comportamento',
               <CheckCircle className="w-4 h-4" />,
-              categorizedProps.behavior
+              categorizedProps.behavior,
             )}
             {renderPropertyGroup(
               'Validação',
               <CheckCircle className="w-4 h-4" />,
-              categorizedProps.validation
+              categorizedProps.validation,
             )}
           </TabsContent>
 
@@ -611,12 +611,12 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
             {renderPropertyGroup(
               'Estilização',
               <Palette className="w-4 h-4" />,
-              categorizedProps.styling
+              categorizedProps.styling,
             )}
             {renderPropertyGroup(
               'Avançado',
               <Zap className="w-4 h-4" />,
-              categorizedProps.advanced
+              categorizedProps.advanced,
             )}
           </TabsContent>
         </Tabs>
