@@ -1,236 +1,274 @@
-Nova Estratégia de Implementação
-Em vez de criar um novo componente de grupo (LayoutPropertiesGroup), vamos fazer com que as propriedades de layout sejam tratadas como propriedades padrão para todos os tipos de blocos. Isso significa que a lógica de renderização e validação será adaptada para lidar com maxWidth e alignment automaticamente.
+import { LucideIcon } from "lucide-react";
 
-Aqui está o novo plano:
+export interface PropertySchema {
+  type: "string" | "number" | "boolean" | "select" | "textarea" | "array" | "color" | "range";
 
-Atualizar a Definição do Tipo de Propriedades: Vamos ajustar a definição de tipo dos blocos para que maxWidth e alignment sejam propriedades opcionais em qualquer tipo de componente.
+  default: any;
 
-Modificar a Lógica de Propriedades Comuns: A nossa função getCommonProperties será o cérebro da operação. Ela vai garantir que, independentemente do tipo de bloco, as propriedades de maxWidth e alignment sejam sempre consideradas para a edição em lote.
+  label: string;
 
-Refatorar a Renderização do Painel: Vamos modificar o renderPropertyInput para que ele saiba como renderizar os componentes de Slider e Select para estas novas propriedades universais.
+  description?: string;
 
-Atualizar o Schema de Validação: O createValidationSchema será ajustado para sempre incluir a validação para maxWidth e alignment.
+  category?: "general" | "layout" | "styling" | "content" | "behavior" | "validation" | "advanced";
 
-Esta abordagem é mais alinhada com o que você pediu: ter um controle de layout que se aplica a cada componente, individualmente ou em lote, sem a necessidade de um grupo separado.
+  required?: boolean;
 
-Instruções para Implementação
-Passo 1: Atualizar o Arquivo OptimizedPropertiesPanel.tsx
-Vamos começar por alterar o seu arquivo principal para garantir que as novas propriedades de layout são tratadas como propriedades padrão do sistema.
+  placeholder?: string;
 
-TypeScript
+  options?: Array<{ value: string; label: string }>;
 
-// @/components/editor/OptimizedPropertiesPanel.tsx
-import React, { useEffect, useMemo, useCallback } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import {
-  Tabs,
-  TabsList,
-  TabsContent,
-} from '@/components/ui/tabs';
-import {
-  ScrollArea,
-  ScrollBar,
-} from '@/components/ui/scroll-area';
-import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
-import { ColorPicker } from '@/components/ui/color-picker';
-import { Badge } from '@/components/ui/badge';
-import { useDebounce } from '@/hooks/use-debounce';
-import { Type, Edit3, CheckCircle, XCircle } from 'lucide-react';
-import { BlockDefinition, EditableContent } from '@/types/editor';
+  min?: number;
 
-// Adicionamos as propriedades de layout ao tipo de conteúdo editável
-declare module '@/types/editor' {
-  interface EditableContent {
-    // Estas propriedades serão padrão para todos os blocos
-    maxWidth?: number;
-    alignment?: 'left' | 'center' | 'right';
-    // ... outras propriedades
-  }
+  max?: number;
+
+  step?: number;
+
+  rows?: number;
 }
 
-// ... (Resto dos imports e definições de tipo) ...
+export interface BlockDefinition {
+  type: string;
 
-// Função auxiliar para criar o schema de validação
-const createValidationSchema = (properties: Record<string, any>) => {
-  const schemaFields: Record<string, any> = {};
+  name: string;
 
-  // Adiciona as propriedades de layout como campos universais e opcionais
-  schemaFields.maxWidth = z.number().min(10).max(100).optional();
-  schemaFields.alignment = z.enum(['left', 'center', 'right']).optional();
+  description: string;
 
-  // Mapeia o resto das propriedades do bloco
-  Object.entries(properties).forEach(([key, property]) => {
-    switch (property.type) {
-      case 'text':
-        schemaFields[key] = z.string().optional();
-        break;
-      case 'number':
-        let numberSchema = z.number().optional();
-        if (property.min !== undefined) numberSchema = numberSchema.min(property.min);
-        if (property.max !== undefined) numberSchema = numberSchema.max(property.max);
-        schemaFields[key] = numberSchema;
-        break;
-      case 'boolean':
-        schemaFields[key] = z.boolean().optional();
-        break;
-      case 'color':
-        schemaFields[key] = z.string().optional();
-        break;
-      case 'select':
-        const options = property.options || [];
-        schemaFields[key] = z.enum(options.map((o: any) => o.value || o)).optional();
-        break;
-      default:
-        schemaFields[key] = z.any().optional();
-    }
-  });
+  category: string;
 
-  return z.object(schemaFields);
-};
+  icon: LucideIcon;
 
-// ... (Resto do código, como a definição do componente e a interface de props) ...
-Passo 2: Otimizar a Lógica de getCommonProperties
-Esta função agora precisa de garantir que as propriedades maxWidth e alignment sejam sempre incluídas, a menos que sejam explicitamente excluídas por uma definição de bloco.
+  component: React.ComponentType<any>;
 
-TypeScript
+  properties: Record<string, PropertySchema>;
 
-// Dentro do componente OptimizedPropertiesPanel
-const getCommonProperties = useCallback((): {
-  commonProps: Record<string, any>;
-  initialValues: Record<string, any>;
-  mixedValues: Record<string, boolean>;
-} => {
-  if (blocks.length === 0) {
-    return { commonProps: {}, initialValues: {}, mixedValues: {} };
-  }
+  label: string;
 
-  // Definições padrão para as propriedades de layout
-  const defaultLayoutProps = {
-    maxWidth: { type: 'range', label: 'Tamanho Máximo', min: 10, max: 100, category: 'layout' },
-    alignment: { type: 'select', label: 'Alinhamento', options: [{ value: 'left', label: 'Esquerda' }, { value: 'center', label: 'Centro' }, { value: 'right', label: 'Direita' }], category: 'layout' },
+  defaultProps: Record<string, any>;
+
+  defaultContent?: Record<string, any>;
+
+  tags?: string[];
+}
+
+export type BlockType =
+  | "headline"
+  | "text"
+  | "image"
+  | "button"
+  | "spacer"
+  | "text-inline"
+  | "image-display-inline"
+  | "badge-inline"
+  | "progress-inline"
+  | "stat-inline"
+  | "countdown-inline"
+  | "spacer-inline"
+  | "heading-inline"
+  | "button-inline"
+  | "benefits"
+  | "testimonials"
+  | "pricing"
+  | "guarantee"
+  | "cta"
+  | "header"
+  | "hero"
+  | "benefitsList"
+  | "testimonial"
+  | "styleResult"
+  | "secondaryStylesTitle"
+  | "offerHero"
+  | "carousel"
+  | "testimonialsSection"
+  | "style-result"
+  | "secondary-styles"
+  | "hero-section"
+  | "products"
+  | "video"
+  | "two-column"
+  | "icon"
+  | "faq"
+  | "quiz-start-page-inline"
+  | "pricing-card-inline"
+  | "testimonial-card-inline"
+  | "result-header-inline"
+  | "step-header-inline"
+  | "loading-animation"
+  | "quiz-offer-cta-inline"
+  | "style-card-inline"
+  | "result-card-inline"
+  | "quiz-question-inline"
+  | "quiz-result-inline"
+  | "custom-code"
+  | "animation-block";
+
+export interface FAQItem {
+  id: string;
+
+  question: string;
+
+  answer: string;
+}
+
+export interface EditableContent {
+  title?: string;
+
+  text?: string;
+
+  url?: string;
+
+  alt?: string;
+
+  width?: string;
+
+  height?: string;
+
+  borderRadius?: string;
+
+  objectFit?: "cover" | "contain" | "fill" | "none" | "scale-down";
+
+  fontSize?: string;
+
+  alignment?: "left" | "center" | "right" | "justify";
+
+  maxWidth?: number;
+
+  subtitle?: string;
+
+  style?: Record<string, any>;
+
+  borderWidth?: string;
+
+  borderStyle?: string;
+
+  borderColor?: string;
+
+  type?: string;
+
+  buttonColor?: string;
+
+  buttonText?: string;
+
+  buttonUrl?: string;
+
+  action?: string;
+
+  logo?: string;
+
+  logoAlt?: string;
+
+  logoWidth?: string;
+
+  logoHeight?: string;
+
+  backgroundColor?: string;
+
+  color?: string;
+
+  padding?: string;
+
+  margin?: string;
+
+  textAlign?: string;
+
+  fontWeight?: string;
+
+  fontFamily?: string;
+
+  boxShadow?: string;
+
+  imageUrl?: string;
+
+  imageAlt?: string;
+
+  description?: string;
+
+  customImage?: string;
+
+  items?: string[] | FAQItem[];
+
+  faqItems?: FAQItem[];
+
+  regularPrice?: string;
+
+  salePrice?: string;
+
+  ctaUrl?: string;
+
+  heroImage?: string;
+
+  heroImageAlt?: string;
+
+  quote?: string;
+
+  quoteAuthor?: string;
+
+  letterSpacing?: string;
+
+  lineHeight?: string;
+
+  display?: string;
+
+  flexDirection?: string;
+
+  justifyContent?: string;
+
+  alignItems?: string;
+
+  gap?: string;
+
+  useIcons?: boolean;
+
+  icon?: string;
+
+  iconColor?: string;
+
+  options?: Array<{ id: string; text: string; imageUrl?: string }>;
+
+  [key: string]: any;
+}
+
+export interface Block {
+  id: string;
+
+  type: BlockType;
+
+  content: EditableContent;
+
+  order: number;
+
+  properties?: Record<string, any>;
+}
+
+export type EditorBlock = Block;
+
+export interface FunnelStage {
+  id: string;
+
+  name: string;
+
+  order: number;
+
+  type: "intro" | "question" | "transition" | "processing" | "result" | "lead" | "offer" | "final";
+
+  description?: string;
+
+  isActive?: boolean;
+
+  metadata?: {
+    blocksCount?: number;
+
+    lastModified?: Date;
+
+    isCustom?: boolean;
+
+    templateBlocks?: any[]; // ✅ Adicionar suporte a blocos de template
   };
+}
 
-  // 1. Encontrar as propriedades comuns a todos os blocos
-  const firstBlockType = blocks[0].type;
-  let commonProps = {
-    ...defaultLayoutProps, // Começamos com as propriedades de layout padrão
-    ...(blockDefinitions[firstBlockType]?.properties || {}),
-  };
+export interface EditorConfig {
+  blocks: EditorBlock[];
 
-  blocks.slice(1).forEach(block => {
-    const currentProps = {
-      ...defaultLayoutProps, // Adicionamos novamente as propriedades padrão
-      ...(blockDefinitions[block.type]?.properties || {}),
-    };
+  globalStyles: Record<string, any>;
 
-    commonProps = Object.fromEntries(
-      Object.entries(commonProps).filter(([key]) => currentProps[key])
-    );
-  });
-
-  // 2. Determinar os valores iniciais e mistos
-  const initialValues: Record<string, any> = {};
-  const mixedValues: Record<string, boolean> = {};
-
-  Object.keys(commonProps).forEach(key => {
-    const firstValue = blocks[0].content[key];
-    const isMixed = blocks.some(block => block.content[key] !== firstValue);
-
-    mixedValues[key] = isMixed;
-    initialValues[key] = isMixed ? undefined : firstValue;
-  });
-
-  return { commonProps, initialValues, mixedValues };
-}, [blocks, blockDefinitions]);
-
-const { commonProps, initialValues, mixedValues } = getCommonProperties();
-Passo 3: Refatorar a Renderização dos Campos
-Agora, o nosso renderPropertyInput precisa de saber como renderizar os novos tipos de input (range e select) para as propriedades universais.
-
-TypeScript
-
-// Dentro do componente OptimizedPropertiesPanel
-const renderPropertyInput = useCallback(
-  (key: string, property: any) => {
-    const error = errors[key]?.message;
-
-    switch (property.type) {
-      case 'text':
-        // ... (código existente) ...
-      case 'number':
-        // ... (código existente) ...
-      case 'boolean':
-        // ... (código existente) ...
-      case 'color':
-        // ... (código existente) ...
-
-      // Novo case para o tipo `range` (usado pelo maxWidth)
-      case 'range':
-        return (
-          <Controller
-            control={control}
-            name={key}
-            render={({ field }) => (
-              <div className="space-y-2">
-                <Slider
-                  value={[field.value ?? property.default ?? property.max]}
-                  onValueChange={value => field.onChange(value[0])}
-                  max={property.max || 100}
-                  min={property.min || 10}
-                  step={property.step || 5}
-                  className="w-full"
-                />
-                <div className="flex justify-between text-xs text-gray-500">
-                  <span>{property.min || 10}%</span>
-                  <span className="font-medium">{field.value ?? property.default ?? property.max}%</span>
-                  <span>{property.max || 100}%</span>
-                </div>
-              </div>
-            )}
-          />
-        );
-
-      // Novo case para o tipo `select` (usado pelo alignment)
-      case 'select':
-        return (
-          <Controller
-            control={control}
-            name={key}
-            render={({ field }) => (
-              <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger className="text-sm">
-                  <SelectValue placeholder={`Selecione o ${property.label.toLowerCase()}`} />
-                </SelectTrigger>
-                <SelectContent>
-                  {property.options?.map((option: any) => (
-                    <SelectItem key={option.value || option} value={option.value || option}>
-                      {option.label || option}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          />
-        );
-
-      default:
-        return null;
-    }
-  },
-  [control, errors]
-);
-O que fazer agora
-Atualize o OptimizedPropertiesPanel.tsx: Substitua o código existente pelas novas versões das funções createValidationSchema, getCommonProperties e renderPropertyInput.
+  theme?: string;
+}
