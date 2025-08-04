@@ -3,6 +3,15 @@
  * Conecta o EditorContext com o sistema de componentes reutilizáveis do Supabase
  */
 
+// Configuração de ambiente compatível com navegador
+const env = {
+  // Valores padrão ou carregados de variáveis de ambiente durante o build
+  API_URL: import.meta.env?.VITE_API_URL || "https://api.default.com",
+  API_KEY: import.meta.env?.VITE_API_KEY || "",
+  DEBUG: import.meta.env?.VITE_DEBUG === "true",
+  // Adicione outras variáveis de ambiente necessárias aqui
+};
+
 import { createClient } from "@supabase/supabase-js";
 
 // ============================================================================
@@ -61,11 +70,16 @@ export interface ComponentType {
 // ============================================================================
 
 export class ComponentsService {
+  // Transformando a propriedade isOnline em estática
+  private static isOnline = true;
+
   /**
    * Carrega blocos de uma stage específica do banco de dados
    */
   static async loadStageBlocks(stageKey: string): Promise<Block[]> {
     try {
+      if (!this.isOnline) throw new Error("Serviço offline");
+
       const { data, error } = await supabase
         .from("component_instances")
         .select(
@@ -116,6 +130,8 @@ export class ComponentsService {
    */
   static async syncStage(stageKey: string, blocks: Block[]): Promise<boolean> {
     try {
+      if (!this.isOnline) throw new Error("Serviço offline");
+
       // Remove instâncias existentes da stage
       await supabase.from("component_instances").delete().eq("stage_key", stageKey);
 
@@ -155,6 +171,8 @@ export class ComponentsService {
     properties?: any
   ): Promise<string | null> {
     try {
+      if (!this.isOnline) throw new Error("Serviço offline");
+
       // Busca o tipo do componente
       const { data: componentType, error: typeError } = await supabase
         .from("component_types")
@@ -339,6 +357,14 @@ export class ComponentsService {
       console.error("Erro ao carregar stages:", error);
       return [];
     }
+  }
+
+  /**
+   * Define o estado online/offline do serviço
+   */
+  static setOnlineStatus(online: boolean): void {
+    this.isOnline = online;
+    console.log(`Serviço agora está ${online ? 'online' : 'offline'}`);
   }
 }
 
