@@ -3,7 +3,7 @@
  * Conecta o sistema atual com o novo sistema de componentes reutilizáveis
  */
 
-import ComponentsService from './ComponentsService';
+import ComponentsService from '../services/ComponentsService';
 import type { EditorBlock, FunnelStage } from '@/types/editor';
 
 // ============================================================================
