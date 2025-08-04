@@ -3,7 +3,7 @@ import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
 import { UniversalBlockRenderer } from '@/components/editor/blocks/UniversalBlockRenderer';
-import EnhancedPropertiesPanel from '@/components/editor/EnhancedPropertiesPanel';
+import OptimizedPropertiesPanel from '@/components/editor/OptimizedPropertiesPanel';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
 import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
 import { EditableContent } from '@/types/editor';
@@ -230,7 +230,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             }
             propertiesPanel={
               !isPreviewing && selectedBlock ? (
-                <EnhancedPropertiesPanel
+                <OptimizedPropertiesPanel
                   block={selectedBlock}
                   blockDefinition={getBlockDefinitionForType(selectedBlock.type)}
                   onUpdateBlock={(blockId: string, updates: Partial<EditableContent>) => {
