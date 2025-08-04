@@ -3,6 +3,7 @@ import React from "react";
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 18 - QUESTÃO ESTRATÉGICA 6
 export const getStep18Template = () => [
   {
+    id: "step18-header",
     type: "quiz-intro-header",
     properties: {
       logoUrl:
@@ -16,6 +17,7 @@ export const getStep18Template = () => [
     },
   },
   {
+    id: "step18-title",
     type: "heading",
     properties: {
       content: "O QUE VOCÊ MAIS DESEJA ALCANÇAR COM SEU NOVO ESTILO?",
@@ -28,6 +30,7 @@ export const getStep18Template = () => [
     },
   },
   {
+    id: "step18-text",
     type: "text",
     properties: {
       content: "Questão 18 de 21",
@@ -38,6 +41,7 @@ export const getStep18Template = () => [
     },
   },
   {
+    id: "step18-options",
     type: "options-grid",
     properties: {
       questionId: "strategic-11",
@@ -91,6 +95,7 @@ export const getStep18Template = () => [
     },
   },
   {
+    id: "step18-button",
     type: "button",
     properties: {
       text: "Continuar",

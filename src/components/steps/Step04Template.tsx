@@ -19,6 +19,7 @@ export const getStep04Template = () => {
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
+      id: "step04-header",
       type: "quiz-intro-header",
       properties: {
         logoUrl:
@@ -34,6 +35,7 @@ export const getStep04Template = () => {
 
     // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step04-title",
       type: "heading",
       properties: {
         content: "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
@@ -48,6 +50,7 @@ export const getStep04Template = () => {
 
     // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step04-text",
       type: "text",
       properties: {
         content: "Questão 3 de 10",
@@ -60,6 +63,7 @@ export const getStep04Template = () => {
 
     // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
+      id: "step04-options",
       type: "options-grid",
       properties: {
         questionId: "q3",
@@ -156,6 +160,7 @@ export const getStep04Template = () => {
 
     // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step04-button",
       type: "button",
       properties: {
         text: "Continuar",

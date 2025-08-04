@@ -3,6 +3,7 @@ import React from "react";
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 15 - QUESTÃO ESTRATÉGICA 3
 export const getStep15Template = () => [
   {
+    id: "step15-header",
     type: "quiz-intro-header",
     properties: {
       logoUrl:
@@ -16,6 +17,7 @@ export const getStep15Template = () => [
     },
   },
   {
+    id: "step15-title",
     type: "heading",
     properties: {
       content:
@@ -29,6 +31,7 @@ export const getStep15Template = () => [
     },
   },
   {
+    id: "step15-text",
     type: "text",
     properties: {
       content: "Questão 15 de 21",
@@ -39,6 +42,7 @@ export const getStep15Template = () => [
     },
   },
   {
+    id: "step15-options",
     type: "options-grid",
     properties: {
       questionId: "strategic-8",
@@ -92,6 +96,7 @@ export const getStep15Template = () => [
     },
   },
   {
+    id: "step15-button",
     type: "button",
     properties: {
       text: "Continuar",

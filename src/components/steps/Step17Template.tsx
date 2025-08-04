@@ -3,6 +3,7 @@ import React from "react";
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 17 - QUESTÃO ESTRATÉGICA 5
 export const getStep17Template = () => [
   {
+    id: "step17-header",
     type: "quiz-intro-header",
     properties: {
       logoUrl:
@@ -16,6 +17,7 @@ export const getStep17Template = () => [
     },
   },
   {
+    id: "step17-title",
     type: "heading",
     properties: {
       content: "QUAL ORÇAMENTO VOCÊ COSTUMA DESTINAR PARA ROUPAS POR MÊS?",
@@ -28,6 +30,7 @@ export const getStep17Template = () => [
     },
   },
   {
+    id: "step17-text",
     type: "text",
     properties: {
       content: "Questão 17 de 21",
@@ -38,6 +41,7 @@ export const getStep17Template = () => [
     },
   },
   {
+    id: "step17-options",
     type: "options-grid",
     properties: {
       questionId: "strategic-10",
@@ -91,6 +95,7 @@ export const getStep17Template = () => [
     },
   },
   {
+    id: "step17-button",
     type: "button",
     properties: {
       text: "Continuar",

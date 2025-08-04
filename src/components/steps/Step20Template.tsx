@@ -3,6 +3,7 @@ import React from "react";
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 20 - RESULTADO
 export const getStep20Template = () => [
   {
+    id: "step20-header",
     type: "quiz-intro-header",
     properties: {
       logoUrl:
@@ -16,6 +17,7 @@ export const getStep20Template = () => [
     },
   },
   {
+    id: "step20-result-header",
     type: "result-header",
     properties: {
       title: "Seu Resultado Personalizado",
@@ -24,6 +26,7 @@ export const getStep20Template = () => [
     },
   },
   {
+    id: "step20-result-card",
     type: "result-card",
     properties: {
       styleType: "Contemporâneo Elegante",
@@ -34,6 +37,7 @@ export const getStep20Template = () => [
     },
   },
   {
+    id: "step20-button",
     type: "button",
     properties: {
       text: "Ver Oferta Especial",

@@ -3,6 +3,7 @@ import React from "react";
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 9 - QUESTÃO 8: SAPATOS (REAL)
 export const getStep09Template = () => [
   {
+    id: "step09-header",
     type: "quiz-intro-header",
     properties: {
       logoUrl:
@@ -16,6 +17,7 @@ export const getStep09Template = () => [
     },
   },
   {
+    id: "step09-title",
     type: "heading",
     properties: {
       content: "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?",
@@ -28,6 +30,7 @@ export const getStep09Template = () => [
     },
   },
   {
+    id: "step09-text",
     type: "text",
     properties: {
       content: "Questão 8 de 10",
@@ -38,6 +41,7 @@ export const getStep09Template = () => [
     },
   },
   {
+    id: "step09-options",
     type: "options-grid",
     properties: {
       questionId: "q8",
@@ -132,6 +136,7 @@ export const getStep09Template = () => [
     },
   },
   {
+    id: "step09-button",
     type: "button",
     properties: {
       text: "Continuar",

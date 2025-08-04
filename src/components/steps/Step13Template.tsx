@@ -3,6 +3,7 @@ import React from "react";
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 13 - QUESTÃO ESTRATÉGICA 1
 export const getStep13Template = () => [
   {
+    id: "step13-header",
     type: "quiz-intro-header",
     properties: {
       logoUrl:
@@ -16,6 +17,7 @@ export const getStep13Template = () => [
     },
   },
   {
+    id: "step13-title",
     type: "heading",
     properties: {
       content: "QUANDO VOCÊ OLHA PARA O SEU GUARDA-ROUPA, QUAL DESSAS FRASES TE VEM A CABEÇA?",
@@ -28,6 +30,7 @@ export const getStep13Template = () => [
     },
   },
   {
+    id: "step13-text",
     type: "text",
     properties: {
       content: "Questão 13 de 21",
@@ -38,6 +41,7 @@ export const getStep13Template = () => [
     },
   },
   {
+    id: "step13-options",
     type: "options-grid",
     properties: {
       questionId: "strategic-1",
@@ -91,6 +95,7 @@ export const getStep13Template = () => [
     },
   },
   {
+    id: "step13-button",
     type: "button",
     properties: {
       text: "Continuar",

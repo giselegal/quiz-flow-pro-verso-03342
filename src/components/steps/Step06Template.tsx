@@ -19,6 +19,7 @@ export const getStep06Template = () => {
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
+      id: "step06-header",
       type: "quiz-intro-header",
       properties: {
         logoUrl:
@@ -34,6 +35,7 @@ export const getStep06Template = () => {
 
     // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step06-title",
       type: "heading",
       properties: {
         content: "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?",
@@ -48,6 +50,7 @@ export const getStep06Template = () => {
 
     // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step06-text",
       type: "text",
       properties: {
         content: "Questão 5 de 10",
@@ -60,6 +63,7 @@ export const getStep06Template = () => {
 
     // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
+      id: "step06-options",
       type: "options-grid",
       properties: {
         questionId: "q5",
@@ -163,6 +167,7 @@ export const getStep06Template = () => {
 
     // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step06-button",
       type: "button",
       properties: {
         text: "Continuar",

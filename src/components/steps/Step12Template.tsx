@@ -3,6 +3,7 @@ import React from "react";
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 12 - TRANSIÇÃO PRINCIPAL
 export const getStep12Template = () => [
   {
+    id: "step12-header",
     type: "quiz-intro-header",
     properties: {
       logoUrl:
@@ -16,6 +17,7 @@ export const getStep12Template = () => [
     },
   },
   {
+    id: "step12-title",
     type: "heading",
     properties: {
       content: "Agora vamos conhecer você melhor",
@@ -28,6 +30,7 @@ export const getStep12Template = () => [
     },
   },
   {
+    id: "step12-text",
     type: "text",
     properties: {
       content:
@@ -39,6 +42,7 @@ export const getStep12Template = () => [
     },
   },
   {
+    id: "step12-button",
     type: "button",
     properties: {
       text: "Continuar Análise",

@@ -19,6 +19,7 @@ export const getStep02Template = () => {
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
+      id: "step02-header",
       type: "quiz-intro-header",
       properties: {
         logoUrl:
@@ -34,6 +35,7 @@ export const getStep02Template = () => {
 
     // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step02-title",
       type: "heading",
       properties: {
         content: "QUAL O SEU TIPO DE ROUPA FAVORITA?",
@@ -48,6 +50,7 @@ export const getStep02Template = () => {
 
     // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step02-text",
       type: "text",
       properties: {
         content: "Questão 1 de 10",
@@ -60,6 +63,7 @@ export const getStep02Template = () => {
 
     // 🖼️ IMAGEM ILUSTRATIVA (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step02-image",
       type: "image",
       properties: {
         src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1687095491/style-quiz/elegante-6_u1ghdr.jpg",
@@ -74,6 +78,7 @@ export const getStep02Template = () => {
 
     // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
+      id: "step02-options",
       type: "options-grid",
       properties: {
         questionId: "q1",
@@ -176,6 +181,7 @@ export const getStep02Template = () => {
 
     // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step02-button",
       type: "button",
       properties: {
         text: "Continuar",

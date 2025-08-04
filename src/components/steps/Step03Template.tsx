@@ -19,6 +19,7 @@ export const getStep03Template = () => {
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
+      id: "step03-header",
       type: "quiz-intro-header",
       properties: {
         logoUrl:
@@ -34,6 +35,7 @@ export const getStep03Template = () => {
 
     // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step03-title",
       type: "heading",
       properties: {
         content: "RESUMA A SUA PERSONALIDADE:",
@@ -48,6 +50,7 @@ export const getStep03Template = () => {
 
     // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step03-text",
       type: "text",
       properties: {
         content: "Questão 2 de 10",
@@ -60,6 +63,7 @@ export const getStep03Template = () => {
 
     // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
+      id: "step03-options",
       type: "options-grid",
       properties: {
         questionId: "q2",
@@ -147,6 +151,7 @@ export const getStep03Template = () => {
 
     // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step03-button",
       type: "button",
       properties: {
         text: "Continuar",

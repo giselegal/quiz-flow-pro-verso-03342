@@ -3,6 +3,7 @@ import React from "react";
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 11 - QUESTÃO 10: TECIDOS (REAL)
 export const getStep11Template = () => [
   {
+    id: "step11-header",
     type: "quiz-intro-header",
     properties: {
       logoUrl:
@@ -16,6 +17,7 @@ export const getStep11Template = () => [
     },
   },
   {
+    id: "step11-title",
     type: "heading",
     properties: {
       content: "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...",
@@ -28,6 +30,7 @@ export const getStep11Template = () => [
     },
   },
   {
+    id: "step11-text",
     type: "text",
     properties: {
       content: "Questão 10 de 10",
@@ -38,6 +41,7 @@ export const getStep11Template = () => [
     },
   },
   {
+    id: "step11-options",
     type: "options-grid",
     properties: {
       questionId: "q10",
@@ -123,6 +127,7 @@ export const getStep11Template = () => [
     },
   },
   {
+    id: "step11-button",
     type: "button",
     properties: {
       text: "Finalizar Quiz",

@@ -19,6 +19,7 @@ export const getStep07Template = () => {
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
+      id: "step07-header",
       type: "quiz-intro-header",
       properties: {
         logoUrl:
@@ -34,6 +35,7 @@ export const getStep07Template = () => {
 
     // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step07-title",
       type: "heading",
       properties: {
         content: "QUAL CASACO É SEU FAVORITO?",
@@ -48,6 +50,7 @@ export const getStep07Template = () => {
 
     // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step07-text",
       type: "text",
       properties: {
         content: "Questão 6 de 10",
@@ -60,6 +63,7 @@ export const getStep07Template = () => {
 
     // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
+      id: "step07-options",
       type: "options-grid",
       properties: {
         questionId: "q6",
@@ -123,6 +127,7 @@ export const getStep07Template = () => {
 
     // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step07-button",
       type: "button",
       properties: {
         text: "Continuar",

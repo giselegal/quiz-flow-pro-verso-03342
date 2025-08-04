@@ -3,6 +3,7 @@ import React from "react";
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 16 - QUESTÃO ESTRATÉGICA 4
 export const getStep16Template = () => [
   {
+    id: "step16-header",
     type: "quiz-intro-header",
     properties: {
       logoUrl:
@@ -16,6 +17,7 @@ export const getStep16Template = () => [
     },
   },
   {
+    id: "step16-title",
     type: "heading",
     properties: {
       content: "QUANDO VOCÊ PENSA EM INVESTIR EM ROUPAS NOVAS, CONSIDERA:",
@@ -28,6 +30,7 @@ export const getStep16Template = () => [
     },
   },
   {
+    id: "step16-text",
     type: "text",
     properties: {
       content: "Questão 16 de 21",
@@ -38,6 +41,7 @@ export const getStep16Template = () => [
     },
   },
   {
+    id: "step16-options",
     type: "options-grid",
     properties: {
       questionId: "strategic-9",
@@ -91,6 +95,7 @@ export const getStep16Template = () => [
     },
   },
   {
+    id: "step16-button",
     type: "button",
     properties: {
       text: "Continuar",

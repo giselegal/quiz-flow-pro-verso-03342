@@ -41,6 +41,7 @@ export const getStep19Template = (): BlockData[] => {
 
   const blocks: BlockData[] = [
     {
+      id: "step19-header",
       type: "quiz-intro-header",
       properties: {
         logoUrl:
@@ -54,6 +55,7 @@ export const getStep19Template = (): BlockData[] => {
       },
     },
     {
+      id: "step19-title",
       type: "heading",
       properties: {
         content: "Obrigada por compartilhar.".toUpperCase(),
@@ -66,6 +68,7 @@ export const getStep19Template = (): BlockData[] => {
       },
     },
     {
+      id: "step19-text",
       type: "text",
       properties: {
         content:
@@ -77,6 +80,7 @@ export const getStep19Template = (): BlockData[] => {
       },
     },
     {
+      id: "step19-text-2",
       type: "text",
       properties: {
         content:
@@ -88,6 +92,7 @@ export const getStep19Template = (): BlockData[] => {
       },
     },
     {
+      id: "step19-text-3",
       type: "text",
       properties: {
         content:
@@ -99,6 +104,7 @@ export const getStep19Template = (): BlockData[] => {
       },
     },
     {
+      id: "step19-button",
       type: "button",
       properties: {
         text: "Vamos ao resultado?",

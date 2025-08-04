@@ -14,6 +14,7 @@ export const getStep01Template = () => {
   return [
     // 📱 CABEÇALHO COM LOGO (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step01-header-logo",
       type: "quiz-intro-header",
       properties: {
         logoUrl:
@@ -30,6 +31,7 @@ export const getStep01Template = () => {
 
     // 🎨 BARRA DECORATIVA DA MARCA (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step01-decorative-bar",
       type: "decorative-bar",
       properties: {
         width: "100%",
@@ -47,6 +49,7 @@ export const getStep01Template = () => {
 
     // 📝 DESCRIÇÃO MOTIVACIONAL (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step01-main-title",
       type: "text",
       properties: {
         content:
@@ -63,6 +66,7 @@ export const getStep01Template = () => {
 
     // 🖼️ IMAGEM PRINCIPAL (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step01-hero-image",
       type: "image",
       properties: {
         src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.webp",
@@ -75,6 +79,7 @@ export const getStep01Template = () => {
       },
     },
     {
+      id: "step01-motivation-text",
       type: "text",
       properties: {
         content:
@@ -90,6 +95,7 @@ export const getStep01Template = () => {
 
     // 📋 CAMPO DE CAPTURA DE NOME (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step01-name-input",
       type: "form-input",
       properties: {
         label: "COMO VOCÊ GOSTARIA DE SER CHAMADA?",
@@ -105,6 +111,7 @@ export const getStep01Template = () => {
 
     // 🔘 BOTÃO PRINCIPAL DE AÇÃO (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step01-cta-button",
       type: "button",
       properties: {
         text: "✨ Quero Descobrir meu Estilo Agora! ✨",
@@ -126,6 +133,7 @@ export const getStep01Template = () => {
 
     // ⚖️ AVISO LEGAL E COPYRIGHT (EDITÁVEL SEPARADAMENTE)
     {
+      id: "step01-legal-notice",
       type: "legal-notice",
       properties: {
         privacyText:

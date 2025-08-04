@@ -3,6 +3,7 @@ import React from "react";
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 14 - QUESTÃO ESTRATÉGICA 2
 export const getStep14Template = () => [
   {
+    id: "step14-header",
     type: "quiz-intro-header",
     properties: {
       logoUrl:
@@ -16,6 +17,7 @@ export const getStep14Template = () => [
     },
   },
   {
+    id: "step14-title",
     type: "heading",
     properties: {
       content: "QUAL É A SUA PRINCIPAL DIFICULDADE NA HORA DE SE ARRUMAR PARA SAIR?",
@@ -28,6 +30,7 @@ export const getStep14Template = () => [
     },
   },
   {
+    id: "step14-text",
     type: "text",
     properties: {
       content: "Questão 14 de 21",
@@ -38,6 +41,7 @@ export const getStep14Template = () => [
     },
   },
   {
+    id: "step14-options",
     type: "options-grid",
     properties: {
       questionId: "strategic-2",
@@ -91,6 +95,7 @@ export const getStep14Template = () => [
     },
   },
   {
+    id: "step14-button",
     type: "button",
     properties: {
       text: "Continuar",

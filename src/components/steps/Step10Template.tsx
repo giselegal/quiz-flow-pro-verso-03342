@@ -3,6 +3,7 @@ import React from "react";
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 10 - QUESTÃO 9: ACESSÓRIOS (REAL)
 export const getStep10Template = () => [
   {
+    id: "step10-header",
     type: "quiz-intro-header",
     properties: {
       logoUrl:
@@ -16,6 +17,7 @@ export const getStep10Template = () => [
     },
   },
   {
+    id: "step10-title",
     type: "heading",
     properties: {
       content: "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?",
@@ -28,6 +30,7 @@ export const getStep10Template = () => [
     },
   },
   {
+    id: "step10-text",
     type: "text",
     properties: {
       content: "Questão 9 de 10",
@@ -38,6 +41,7 @@ export const getStep10Template = () => [
     },
   },
   {
+    id: "step10-options",
     type: "options-grid",
     properties: {
       questionId: "q9",
@@ -132,6 +136,7 @@ export const getStep10Template = () => [
     },
   },
   {
+    id: "step10-button",
     type: "button",
     properties: {
       text: "Continuar",

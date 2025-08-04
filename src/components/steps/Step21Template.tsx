@@ -3,6 +3,7 @@ import React from "react";
 // Template para a Etapa 21
 export const getStep21Template = () => [
   {
+    id: "step21-header",
     type: "quiz-intro-header",
     properties: {
       logoUrl:
@@ -16,6 +17,7 @@ export const getStep21Template = () => [
     },
   },
   {
+    id: "step21-title",
     type: "heading",
     properties: {
       content: "Etapa 21 - Template em Desenvolvimento",
@@ -28,6 +30,7 @@ export const getStep21Template = () => [
     },
   },
   {
+    id: "step21-text",
     type: "text",
     properties: {
       content: "Este template será personalizado em breve",
@@ -38,6 +41,7 @@ export const getStep21Template = () => [
     },
   },
   {
+    id: "step21-button",
     type: "button",
     properties: {
       text: "Continuar",
