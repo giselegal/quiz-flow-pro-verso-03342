@@ -59,13 +59,13 @@ export const DndProvider: React.FC<DndProviderProps> = ({
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 3, // Reduzir distância para ativação mais fácil
+        distance: 1, // Valor mínimo para ativação imediata
       },
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 50, // Reduzir delay para responsividade
-        tolerance: 8,
+        delay: 10, // Delay mínimo
+        tolerance: 5,
       },
     }),
     useSensor(KeyboardSensor, {
@@ -78,50 +78,21 @@ export const DndProvider: React.FC<DndProviderProps> = ({
 
     performanceMonitor.startTiming("drag-operation");
 
-    // DEBUG CRÍTICO: Log completo dos dados do active
-    console.log("🟢 DragStart COMPLETO:", {
-      "active.id": active.id,
-      "active.data": active.data,
-      "active.data.current": active.data.current,
-      "active.data.current?.type": active.data.current?.type,
-      "active.data.current?.blockType": active.data.current?.blockType,
-      "Object.keys(active)": Object.keys(active),
-      "Object.keys(active.data)": active.data ? Object.keys(active.data) : "NO DATA",
-      "JSON.stringify(active.data.current)": JSON.stringify(active.data.current),
-    });
+    // Simples log para debug
+    console.log("🟢 DragStart:", active.id, active.data.current);
 
-    // Use enhanced debugging
-    dragDropDebugger.logDragStart({
-      id: active.id,
-      type: active.data.current?.type,
-      blockType: active.data.current?.blockType,
-      data: active.data.current,
-    });
-
-    // FIXME: Verificação mais robusta dos dados
+    // Verificação básica
     if (!active.data.current) {
-      dragDropDebugger.logError("active.data.current está undefined!", {
-        activeId: active.id,
-        activeKeys: Object.keys(active),
-        dataKeys: active.data ? Object.keys(active.data) : "data é undefined",
-      });
+      console.error("❌ active.data.current está undefined!");
       return;
     }
 
     if (!active.data.current.type) {
-      dragDropDebugger.logError("active.data.current.type está undefined!", {
-        activeId: active.id,
-        data: active.data.current,
-        dataKeys: Object.keys(active.data.current),
-      });
+      console.error("❌ active.data.current.type está undefined!");
       return;
     }
 
-    dragDropDebugger.logSuccess("Dados válidos detectados", {
-      type: active.data.current.type,
-      blockType: active.data.current.blockType,
-      allData: active.data.current,
-    });
+    console.log("✅ Dados válidos:", active.data.current.type, active.data.current.blockType);
 
     // 🎯 Haptic feedback para dispositivos móveis
     if ("vibrate" in navigator) {
@@ -146,38 +117,11 @@ export const DndProvider: React.FC<DndProviderProps> = ({
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
 
-    if (!over) {
-      console.log("🟡 DragOver: over é null - não está sobre nenhuma drop zone");
-      return;
-    }
+    if (!over) return;
 
-    console.log("🟡 DragOver:", {
-      activeId: active.id,
-      overId: over.id,
-      activeType: active.data.current?.type,
-      overType: over.data.current?.type,
-      overData: over.data.current,
-    });
-
-    // Se estamos arrastando de um sidebar (componente novo)
+    // Log simples
     if (active.data.current?.type === "sidebar-component") {
-      // Detectar drop zones múltiplas
-      if (
-        over.data.current?.type === "canvas-drop-zone" ||
-        over.id === "canvas-drop-zone" ||
-        over.id?.toString().startsWith("drop-zone-")
-      ) {
-        console.log("✅ Sidebar -> Canvas detectado durante DragOver");
-
-        // Log da posição específica se for uma drop zone numerada
-        if (over.id?.toString().startsWith("drop-zone-")) {
-          const positionMatch = over.id.toString().match(/drop-zone-(\d+)/);
-          if (positionMatch) {
-            console.log("📍 Posição específica detectada:", positionMatch[1]);
-          }
-        }
-        return;
-      }
+      console.log("🟡 DragOver sidebar->canvas");
     }
   };
 
@@ -187,19 +131,10 @@ export const DndProvider: React.FC<DndProviderProps> = ({
     setActiveBlock(null);
     performanceMonitor.endTiming("drag-operation");
 
-    // Use enhanced debugging
-    dragDropDebugger.logDragEnd({
-      activeId: active.id,
-      overId: over?.id,
-      activeType: active.data.current?.type,
-      overType: over?.data.current?.type,
-      activeData: active.data.current,
-      overData: over?.data.current,
-      success: !!over,
-    });
+    console.log("🔄 DragEnd:", active.id, "->", over?.id);
 
     if (!over) {
-      dragDropDebugger.logError("Sem over target - drag cancelado");
+      console.error("❌ Sem over target");
       return;
     }
 
@@ -211,14 +146,9 @@ export const DndProvider: React.FC<DndProviderProps> = ({
       const activeIndex = blocks.findIndex(block => block.id === active.id);
       const overIndex = blocks.findIndex(block => block.id === over.id);
 
-      console.log(`🔄 Reordenando: ${active.id} (${activeIndex}) -> ${over.id} (${overIndex})`);
-
       if (activeIndex !== overIndex && activeIndex !== -1 && overIndex !== -1) {
         const newBlocks = arrayMove(blocks, activeIndex, overIndex);
-        console.log(
-          "📦 Nova ordem dos blocos:",
-          newBlocks.map(b => b.id)
-        );
+        console.log("� Reordenando blocos");
         onBlocksReorder(newBlocks);
       }
       return;
@@ -232,51 +162,28 @@ export const DndProvider: React.FC<DndProviderProps> = ({
         over.id?.toString().startsWith("drop-zone-"))
     ) {
       const blockType = active.data.current.blockType;
-
-      // Calcular posição baseada no ID da drop zone
-      let position = blocks.length; // Default: adicionar no final
+      let position = blocks.length;
 
       if (over.id?.toString().startsWith("drop-zone-")) {
-        // Extrair posição do ID: "drop-zone-0", "drop-zone-1", etc.
         const positionMatch = over.id.toString().match(/drop-zone-(\d+)/);
         if (positionMatch) {
           position = parseInt(positionMatch[1], 10);
         }
-      } else if (over.data.current?.position !== undefined) {
-        // Usar posição dos dados da drop zone
-        position = over.data.current.position;
       }
 
-      console.log("✅ SUCESSO: Adicionando bloco:", blockType, "na posição:", position);
-      console.log("📍 Drop zone info:", {
-        overId: over.id,
-        overType: over.data.current?.type,
-        calculatedPosition: position,
-        totalBlocks: blocks.length,
-      });
+      console.log("✅ Adicionando bloco:", blockType, "posição:", position);
 
-      // Garantir que o callback existe
       if (typeof onBlockAdd === "function") {
         onBlockAdd(blockType, position);
-        dragDropDebugger.logSuccess("onBlockAdd chamado", { blockType, position });
       } else {
-        dragDropDebugger.logError("onBlockAdd não é uma função");
+        console.error("❌ onBlockAdd não é função");
       }
       return;
     }
 
-    // Debug: Log quando não há match
-    dragDropDebugger.logError("Nenhuma condição de drop atendida", {
+    console.error("❌ Nenhuma condição atendida:", {
       activeType: active.data.current?.type,
       overType: over.data.current?.type,
-      activeId: active.id,
-      overId: over.id,
-      // Debugging específico para sidebar-component
-      isSidebarComponent: active.data.current?.type === "sidebar-component",
-      isCanvasDropZoneType: over.data.current?.type === "canvas-drop-zone",
-      isCanvasDropZoneId: over.id === "canvas-drop-zone",
-      isDropZonePattern: over.id?.toString().startsWith("drop-zone-"),
-      overIdString: over.id?.toString(),
     });
   };
 

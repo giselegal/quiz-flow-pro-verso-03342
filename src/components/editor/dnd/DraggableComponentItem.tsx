@@ -40,36 +40,12 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
 
   // Debug: verificar se o draggable está sendo configurado
   React.useEffect(() => {
-    console.log("🔧 DraggableComponentItem configurado:", {
-      id: `sidebar-item-${blockType}`,
-      blockType,
-      disabled,
-      isDragging,
-      data: {
-        type: "sidebar-component",
-        blockType,
-        title,
-        category,
-      },
-    });
-  }, [blockType, disabled, isDragging, title, category]);
+    console.log("🔧 Item configurado:", blockType, "disabled:", disabled);
+  }, [blockType, disabled]);
 
-  // Debug: eventos de mouse para testar interação
+  // Debug simples para mouse events
   const handleMouseDown = (e: React.MouseEvent) => {
-    console.log("🖱️ MouseDown em DraggableComponentItem:", blockType, {
-      disabled,
-      canDrag: !disabled,
-      event: e.type,
-    });
-  };
-
-  const handlePointerDown = (e: React.PointerEvent) => {
-    console.log("👆 PointerDown em DraggableComponentItem:", blockType, {
-      disabled,
-      canDrag: !disabled,
-      event: e.type,
-      pointerType: e.pointerType,
-    });
+    console.log("🖱️ MouseDown:", blockType, "disabled:", disabled);
   };
 
   // Usar CSS Transform do @dnd-kit/utilities para melhor performance
@@ -92,7 +68,6 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
       )}
       style={style}
       onMouseDown={handleMouseDown}
-      onPointerDown={handlePointerDown}
       {...attributes}
       {...listeners}
     >
