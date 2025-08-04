@@ -1,22 +1,17 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { useUnifiedProperties } from "@/hooks/useUnifiedProperties";
-import { useLocation } from "wouter";
-import {
-  ResizablePanelGroup,
-  ResizablePanel,
-  ResizableHandle,
-} from "../components/ui/resizable";
 import UniversalPropertiesPanel from "@/components/universal/UniversalPropertiesPanel";
-import { ScrollArea } from "../components/ui/scroll-area";
+import React, { useCallback, useEffect, useState } from "react";
+import { useLocation } from "wouter";
+import BrandHeader from "../components/ui/BrandHeader";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-import { cn } from "../lib/utils";
-import BrandHeader from "../components/ui/BrandHeader";
-import { useEditor } from "../hooks/useEditor";
-import { useEditorPersistence } from "../hooks/editor/useEditorPersistence";
-import { useAutoSaveWithDebounce } from "../hooks/editor/useAutoSaveWithDebounce";
-import { toast } from "../components/ui/use-toast";
 import { LoadingSpinner } from "../components/ui/loading-spinner";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../components/ui/resizable";
+import { ScrollArea } from "../components/ui/scroll-area";
+import { toast } from "../components/ui/use-toast";
+import { useAutoSaveWithDebounce } from "../hooks/editor/useAutoSaveWithDebounce";
+import { useEditorPersistence } from "../hooks/editor/useEditorPersistence";
+import { useEditor } from "../hooks/useEditor";
+import { cn } from "../lib/utils";
 import { schemaDrivenFunnelService } from "../services/schemaDrivenFunnelService";
 import { normalizeBlock } from "../utils/blockTypeMapping";
 
@@ -26,29 +21,22 @@ const SimpleBlockRenderer: React.FC<{
   isSelected?: boolean;
   onClick?: () => void;
 }> = ({ block, isSelected, onClick }) => {
-  const content =
-    block.properties?.content || block.content || "Conteúdo do bloco";
+  const content = block.properties?.content || block.content || "Conteúdo do bloco";
 
   return (
     <div
       onClick={onClick}
       className={cn(
         "p-4 border rounded-lg cursor-pointer transition-all",
-        isSelected
-          ? "border-[#B89B7A] bg-[#B89B7A]/10"
-          : "border-gray-200 hover:border-gray-300",
+        isSelected ? "border-[#B89B7A] bg-[#B89B7A]/10" : "border-gray-200 hover:border-gray-300"
       )}
     >
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs bg-gray-100 px-2 py-1 rounded font-mono">
-          {block.type}
-        </span>
+        <span className="text-xs bg-gray-100 px-2 py-1 rounded font-mono">{block.type}</span>
         <span className="text-xs text-gray-500">#{block.id}</span>
       </div>
 
-      {block.type === "heading" && (
-        <h1 className="text-2xl font-bold">{content}</h1>
-      )}
+      {block.type === "heading" && <h1 className="text-2xl font-bold">{content}</h1>}
 
       {block.type === "text" && <p className="text-gray-700">{content}</p>}
 
@@ -60,48 +48,32 @@ const SimpleBlockRenderer: React.FC<{
 
       {block.type.includes("inline") && (
         <div className="p-3 bg-gradient-to-r from-purple-50 to-blue-50 rounded">
-          <div className="font-medium text-purple-800 mb-1">
-            Componente Inline
-          </div>
+          <div className="font-medium text-purple-800 mb-1">Componente Inline</div>
           <div className="text-sm text-gray-600">{content}</div>
         </div>
       )}
 
-      {!["heading", "text", "button"].includes(block.type) &&
-        !block.type.includes("inline") && (
-          <div className="p-3 bg-gray-50 rounded">
-            <div className="font-medium mb-1">Bloco: {block.type}</div>
-            <div className="text-sm text-gray-600">{content}</div>
-          </div>
-        )}
+      {!["heading", "text", "button"].includes(block.type) && !block.type.includes("inline") && (
+        <div className="p-3 bg-gray-50 rounded">
+          <div className="font-medium mb-1">Bloco: {block.type}</div>
+          <div className="text-sm text-gray-600">{content}</div>
+        </div>
+      )}
     </div>
   );
 };
 
 // Ícones Lucide
 import {
-  Plus,
+  Download,
   Eye,
   EyeOff,
-  Download,
-  Upload,
-  Trash2,
   Monitor,
-  Tablet,
-  Smartphone,
-  PlayCircle,
-  ExternalLink,
-  Search,
-  Filter,
-  Grid,
-  List,
-  Settings,
+  Plus,
   Save,
-  Copy,
-  Scissors,
-  Home,
-  ArrowLeft,
-  ArrowRight,
+  Search,
+  Smartphone,
+  Tablet,
 } from "lucide-react";
 
 // ===== INTERFACES E TIPOS =====
@@ -317,9 +289,7 @@ const AVAILABLE_BLOCKS = [
 
 const EditorPage: React.FC = () => {
   const [location, setLocation] = useLocation();
-  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(
-    null,
-  );
+  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [isLoadingFunnel, setIsLoadingFunnel] = useState(false);
   const [previewMode, setPreviewMode] = useState<PreviewMode>("desktop");
@@ -332,8 +302,7 @@ const EditorPage: React.FC = () => {
   const funnelId = urlParams.get("id");
 
   const { config, addBlock, updateBlock, deleteBlock } = useEditor();
-  const { saveFunnel, loadFunnel, isSaving, isLoading } =
-    useEditorPersistence();
+  const { saveFunnel, loadFunnel, isSaving, isLoading } = useEditorPersistence();
 
   // ===== DETECÇÃO DE MOBILE =====
   useEffect(() => {
@@ -357,7 +326,7 @@ const EditorPage: React.FC = () => {
       setSelectedComponentId(newBlockId);
       return newBlockId;
     },
-    [addBlock, setSelectedComponentId],
+    [addBlock, setSelectedComponentId]
   );
 
   const handleBlockClick = useCallback(
@@ -366,7 +335,7 @@ const EditorPage: React.FC = () => {
         setSelectedComponentId(blockId);
       }
     },
-    [isPreviewing],
+    [isPreviewing]
   );
 
   const handleLoadTemplate = useCallback(async () => {
@@ -409,8 +378,7 @@ const EditorPage: React.FC = () => {
           id: "test-4",
           type: "text-inline",
           properties: {
-            content:
-              "Componente de texto inline - totalmente responsivo e editável",
+            content: "Componente de texto inline - totalmente responsivo e editável",
           },
         },
         {
@@ -428,10 +396,7 @@ const EditorPage: React.FC = () => {
       for (const block of testBlocks) {
         try {
           const normalizedBlock = normalizeBlock(block);
-          console.log(
-            `📦 Adicionando bloco ${addedCount + 1}:`,
-            normalizedBlock.type,
-          );
+          console.log(`📦 Adicionando bloco ${addedCount + 1}:`, normalizedBlock.type);
 
           const newBlockId = addBlock(normalizedBlock.type as any);
           addedCount++;
@@ -459,19 +424,15 @@ const EditorPage: React.FC = () => {
   }, [addBlock, updateBlock]);
 
   // ===== COMPONENTE FILTRADO DE COMPONENTES =====
-  const filteredBlocks = AVAILABLE_BLOCKS.filter((block) => {
+  const filteredBlocks = AVAILABLE_BLOCKS.filter(block => {
     const matchesSearch =
       block.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       block.type.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      selectedCategory === "all" || block.category === selectedCategory;
+    const matchesCategory = selectedCategory === "all" || block.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
-  const categories = [
-    "all",
-    ...Array.from(new Set(AVAILABLE_BLOCKS.map((block) => block.category))),
-  ];
+  const categories = ["all", ...Array.from(new Set(AVAILABLE_BLOCKS.map(block => block.category)))];
 
   // Load funnel data if ID is provided in URL
   useEffect(() => {
@@ -481,18 +442,14 @@ const EditorPage: React.FC = () => {
       setIsLoadingFunnel(true);
       try {
         console.log("🔍 Loading funnel from schema service:", funnelId);
-        const schemaDrivenData =
-          await schemaDrivenFunnelService.loadFunnel(funnelId);
+        const schemaDrivenData = await schemaDrivenFunnelService.loadFunnel(funnelId);
 
         if (schemaDrivenData) {
           // Convert to editor format and load first page blocks
           const firstPage = schemaDrivenData.pages[0];
           if (firstPage && firstPage.blocks) {
             // setConfig not available in current hook
-            console.log(
-              "✅ Would load funnel blocks:",
-              firstPage.blocks.length,
-            );
+            console.log("✅ Would load funnel blocks:", firstPage.blocks.length);
           }
         } else {
           console.warn("❌ Funnel not found with ID:", funnelId);
@@ -614,11 +571,7 @@ const EditorPage: React.FC = () => {
             variant={isPreviewing ? "default" : "outline"}
             size="sm"
           >
-            {isPreviewing ? (
-              <EyeOff className="w-4 h-4 mr-2" />
-            ) : (
-              <Eye className="w-4 h-4 mr-2" />
-            )}
+            {isPreviewing ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
             {isPreviewing ? "Editar" : "Preview"}
           </Button>
 
@@ -640,20 +593,16 @@ const EditorPage: React.FC = () => {
                 <Input
                   placeholder="Buscar componentes..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={e => setSearchTerm(e.target.value)}
                   className="text-sm"
                 />
-                <Button
-                  onClick={handleLoadTemplate}
-                  size="sm"
-                  variant="outline"
-                >
+                <Button onClick={handleLoadTemplate} size="sm" variant="outline">
                   <Download className="w-4 h-4" />
                 </Button>
               </div>
 
               <div className="flex space-x-1 overflow-x-auto">
-                {filteredBlocks.slice(0, 10).map((block) => (
+                {filteredBlocks.slice(0, 10).map(block => (
                   <Button
                     key={block.type}
                     variant="outline"
@@ -695,7 +644,7 @@ const EditorPage: React.FC = () => {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {sortedBlocks.map((block) => {
+                    {sortedBlocks.map(block => {
                       const blockData = {
                         id: block.id,
                         type: block.type,
@@ -713,7 +662,7 @@ const EditorPage: React.FC = () => {
                             "relative p-4 rounded-lg border-2 transition-all cursor-pointer",
                             selectedComponentId === block.id
                               ? "border-[#B89B7A] bg-[#B89B7A]/10"
-                              : "border-gray-200 hover:border-gray-300",
+                              : "border-gray-200 hover:border-gray-300"
                           )}
                         >
                           <SimpleBlockRenderer
@@ -747,7 +696,7 @@ const EditorPage: React.FC = () => {
                       <Input
                         placeholder="Buscar componentes..."
                         value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        onChange={e => setSearchTerm(e.target.value)}
                         className="pl-8 text-sm"
                       />
                     </div>
@@ -755,14 +704,12 @@ const EditorPage: React.FC = () => {
                     {/* Category Filter */}
                     <select
                       value={selectedCategory}
-                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      onChange={e => setSelectedCategory(e.target.value)}
                       className="w-full p-2 border rounded text-sm"
                     >
-                      {categories.map((category) => (
+                      {categories.map(category => (
                         <option key={category} value={category}>
-                          {category === "all"
-                            ? "Todas as Categorias"
-                            : category}
+                          {category === "all" ? "Todas as Categorias" : category}
                         </option>
                       ))}
                     </select>
@@ -782,7 +729,7 @@ const EditorPage: React.FC = () => {
 
                   {/* Components Grid */}
                   <div className="p-2 space-y-1">
-                    {filteredBlocks.map((block) => (
+                    {filteredBlocks.map(block => (
                       <Button
                         key={block.type}
                         variant="outline"
@@ -792,12 +739,8 @@ const EditorPage: React.FC = () => {
                       >
                         <span className="mr-2">{block.icon}</span>
                         <div className="flex-1">
-                          <div className="font-medium text-xs">
-                            {block.name}
-                          </div>
-                          <div className="text-xs text-gray-500">
-                            {block.category}
-                          </div>
+                          <div className="font-medium text-xs">{block.name}</div>
+                          <div className="text-xs text-gray-500">{block.category}</div>
                         </div>
                       </Button>
                     ))}
@@ -856,8 +799,8 @@ const EditorPage: React.FC = () => {
                                 Construa Seu Funil
                               </h3>
                               <p className="text-gray-600 mb-4">
-                                Sistema completo para criar um funil de quiz de
-                                estilo pessoal otimizado para conversão
+                                Sistema completo para criar um funil de quiz de estilo pessoal
+                                otimizado para conversão
                               </p>
                             </div>
                             <div className="space-y-2">
@@ -874,8 +817,7 @@ const EditorPage: React.FC = () => {
                             </div>
                             <div className="mt-4 p-3 bg-[#B89B7A]/10 rounded-lg">
                               <p className="text-xs text-[#A38A69]">
-                                <strong>🎯 Status:</strong>{" "}
-                                {AVAILABLE_BLOCKS.length} componentes
+                                <strong>🎯 Status:</strong> {AVAILABLE_BLOCKS.length} componentes
                                 disponíveis
                               </p>
                             </div>
@@ -883,7 +825,7 @@ const EditorPage: React.FC = () => {
                         </div>
                       ) : (
                         <div className="space-y-4">
-                          {sortedBlocks.map((block) => {
+                          {sortedBlocks.map(block => {
                             const blockData = {
                               id: block.id,
                               type: block.type,
@@ -900,7 +842,7 @@ const EditorPage: React.FC = () => {
                                   "transition-all duration-200",
                                   selectedComponentId === block.id &&
                                     !isPreviewing &&
-                                    "ring-2 ring-[#B89B7A] rounded-lg",
+                                    "ring-2 ring-[#B89B7A] rounded-lg"
                                 )}
                               >
                                 <SimpleBlockRenderer
@@ -929,13 +871,13 @@ const EditorPage: React.FC = () => {
                 <UniversalPropertiesPanel
                   selectedBlock={{
                     id: selectedComponentId,
-                    type: blocks.find((b) => b.id === selectedComponentId)?.type || 'unknown',
-                    properties: blocks.find((b) => b.id === selectedComponentId)?.properties || {}
+                    type: blocks.find(b => b.id === selectedComponentId)?.type || "unknown",
+                    properties: blocks.find(b => b.id === selectedComponentId)?.properties || {},
                   }}
                   onUpdate={(blockId, updates) => {
                     updateBlock(blockId, updates);
                   }}
-                  onDelete={(blockId) => {
+                  onDelete={blockId => {
                     deleteBlock(blockId);
                     setSelectedComponentId(null);
                   }}
@@ -960,14 +902,11 @@ const EditorPage: React.FC = () => {
         <div className="flex items-center space-x-2">
           {selectedComponentId && (
             <span className="bg-[#B89B7A]/20 text-[#A38A69] px-2 py-1 rounded">
-              Selecionado:{" "}
-              {blocks.find((b) => b.id === selectedComponentId)?.type}
+              Selecionado: {blocks.find(b => b.id === selectedComponentId)?.type}
             </span>
           )}
           {isSaving && (
-            <span className="bg-green-100 text-green-700 px-2 py-1 rounded">
-              Salvando...
-            </span>
+            <span className="bg-green-100 text-green-700 px-2 py-1 rounded">Salvando...</span>
           )}
         </div>
       </div>
