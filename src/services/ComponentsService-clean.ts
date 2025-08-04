@@ -333,7 +333,7 @@ export class ComponentsService {
       }
 
       // Remove duplicatas
-      const stageKeys = Array.from(new Set(data?.map(item => item.stage_key) || []));
+      const stageKeys = [...new Set(data?.map(item => item.stage_key) || [])];
       return stageKeys;
     } catch (error) {
       console.error("Erro ao carregar stages:", error);

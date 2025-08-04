@@ -1,22 +1,21 @@
-import React from "react";
-import { Router, Route, Switch } from "wouter";
+import ErrorBoundary from "@/components/common/ErrorBoundary";
 import { Toaster } from "@/components/ui/toaster";
-import { AuthProvider } from "@/context/AuthContext";
 import { AdminAuthProvider } from "@/context/AdminAuthContext";
+import { AuthProvider } from "@/context/AuthContext";
 import { EditorProvider } from "@/context/EditorContext";
 import { ScrollSyncProvider } from "@/context/ScrollSyncContext";
-import ErrorBoundary from "@/components/common/ErrorBoundary";
-import EditorPage from "@/pages/editor-fixed";
 import DebugEditorContext from "@/pages/debug-editor";
-import ResultPage from "./pages/ResultPage";
-import Home from "./pages/Home";
+import EditorPage from "@/pages/editor-fixed";
+import { Route, Router, Switch } from "wouter";
+import MigrationPanel from "./components/admin/MigrationPanel";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import QuizPageUser from "./components/QuizPageUser";
+import DashboardPage from "./pages/admin/DashboardPage";
 import AuthPage from "./pages/AuthPage";
 import FunnelsPage from "./pages/FunnelsPage";
-import QuizPageUser from "./components/QuizPageUser";
+import Home from "./pages/Home";
 import { ResultConfigPage } from "./pages/ResultConfigPage";
-import { Auth } from "./components/auth/Auth";
-import { ProtectedRoute } from "./components/auth/ProtectedRoute";
-import DashboardPage from "./pages/admin/DashboardPage";
+import ResultPage from "./pages/ResultPage";
 
 function App() {
   console.log("🔧 DEBUG: App component iniciado");
@@ -74,6 +73,7 @@ function App() {
                 <Route path="/admin" nest>
                   <DashboardPage />
                 </Route>
+                <Route path="/admin/migrate" component={MigrationPanel} />
 
                 {/* Public Routes */}
                 <Route path="/" component={Home} />
@@ -83,10 +83,7 @@ function App() {
 
                 {/* Protected Routes */}
                 <ProtectedRoute path="/admin/funis" component={FunnelsPage} />
-                <ProtectedRoute
-                  path="/admin/resultados"
-                  component={ResultConfigPage}
-                />
+                <ProtectedRoute path="/admin/resultados" component={ResultConfigPage} />
               </Switch>
               <Toaster />
             </div>
