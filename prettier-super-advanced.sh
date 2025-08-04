@@ -9,7 +9,7 @@ echo "🌟 1. CONFIGURAÇÕES AVANÇADAS DE BELEZA:"
 echo "========================================"
 
 # Criar configuração SUPER otimizada
-cat > .prettierrc.super-beautiful << 'EOF'
+cat > .prettierrc.super-beautiful.json << 'EOF'
 {
   "semi": true,
   "trailingComma": "all",
