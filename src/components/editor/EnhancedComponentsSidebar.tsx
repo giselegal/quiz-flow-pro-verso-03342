@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, Plus, ChevronDown, ChevronRight } from 'lucide-react';
+import { Search, Plus, ChevronDown, ChevronRight, GripVertical } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
 import { BlockDefinition } from '@/types/editor';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
+import { DraggableComponentItem } from '@/components/editor/dnd/DraggableComponentItem';
 
 interface EnhancedComponentsSidebarProps {
   onAddComponent: (type: string) => void;
@@ -119,37 +120,15 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = ({
                 {expandedCategories[category] && (
                   <div className="pl-4 space-y-1">
                     {groupedBlocks[category].map((block) => (
-                      <Card key={block.type} className="p-2 cursor-pointer hover:bg-muted/50">
-                        <div className="space-y-1">
-                          {/* Nome do componente */}
-                          <h4 className="text-sm font-medium truncate">{block.name}</h4>
-                          
-                          {/* Descrição do componente */}
-                          <p className="text-xs text-muted-foreground leading-tight">
-                            {block.description}
-                          </p>
-                          
-                          {/* Botão adicionar */}
-                          <Button
-                            size="sm"
-                            onClick={() => onAddComponent(block.type)}
-                            className="w-full h-7 text-xs text-white border-0 shadow-md hover:shadow-lg transition-all duration-200 font-medium"
-                            style={{ 
-                              backgroundColor: '#d1b586',
-                              boxShadow: '0 2px 4px rgba(209, 181, 134, 0.3)'
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.backgroundColor = '#c4a373';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.backgroundColor = '#d1b586';
-                            }}
-                          >
-                            <Plus className="h-3 w-3 mr-1" />
-                            Adicionar
-                          </Button>
-                        </div>
-                      </Card>
+                      <DraggableComponentItem
+                        key={block.type}
+                        blockType={block.type}
+                        title={block.name}
+                        description={block.description}
+                        icon={<GripVertical className="h-4 w-4" />}
+                        category={category}
+                        className="w-full"
+                      />
                     ))}
                   </div>
                 )}

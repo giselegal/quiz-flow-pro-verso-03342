@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import EnhancedComponentsSidebar from '@/components/editor/EnhancedComponentsSidebar';
@@ -11,6 +11,7 @@ import { useEditor } from '@/context/EditorContext';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 import { DndProvider } from '@/components/editor/dnd/DndProvider';
 import { SortableBlockWrapper } from '@/components/editor/canvas/SortableBlockWrapper';
+import { useDroppable } from '@dnd-kit/core';
 import { Type, Trash2, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -19,6 +20,14 @@ const EditorFixedPage: React.FC = () => {
   
   // Hook para scroll sincronizado
   const { scrollRef } = useSyncedScroll({ source: 'canvas' });
+  
+  // Hook para drop zone do canvas
+  const { setNodeRef: setDropRef, isOver } = useDroppable({
+    id: 'canvas-drop-zone',
+    data: {
+      type: 'canvas-drop-zone'
+    }
+  });
   
   // ✅ USAR NOVA ESTRUTURA UNIFICADA DO EDITORCONTEXT
   const { 
@@ -223,7 +232,17 @@ const EditorFixedPage: React.FC = () => {
           ) : null
         }
         canvas={
-          <div ref={scrollRef} className="p-2 overflow-auto h-full bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm">
+          <div 
+            ref={(el) => {
+              scrollRef.current = el;
+              setDropRef(el);
+            }}
+            className={`
+              p-2 overflow-auto h-full bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm
+              ${isOver ? 'ring-2 ring-brand/50 ring-offset-2 bg-brand/5' : ''}
+              transition-all duration-200
+            `}
+          >
             <div className={getCanvasClassName()}>
               <div className="p-3">
                 {currentBlocks.length === 0 ? (
