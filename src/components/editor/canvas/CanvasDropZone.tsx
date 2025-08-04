@@ -6,8 +6,8 @@ import React from "react";
 import { SortableBlockWrapper } from "./SortableBlockWrapper";
 
 // Componente para drop zone entre blocos
-const InterBlockDropZone: React.FC<{ 
-  position: number; 
+const InterBlockDropZone: React.FC<{
+  position: number;
   isActive: boolean;
 }> = ({ position, isActive }) => {
   const { setNodeRef, isOver } = useDroppable({
@@ -117,10 +117,8 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
         >
           <div className="space-y-0">
             {/* Drop zone no início */}
-            {isDraggingSidebarComponent && (
-              <InterBlockDropZone position={0} isActive={true} />
-            )}
-            
+            {isDraggingSidebarComponent && <InterBlockDropZone position={0} isActive={true} />}
+
             {blocks.map((block, index) => (
               <React.Fragment key={block.id}>
                 <SortableBlockWrapper
@@ -138,14 +136,14 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
                     }
                   }}
                 />
-                
+
                 {/* Drop zone entre blocos */}
                 {isDraggingSidebarComponent && index < blocks.length && (
                   <InterBlockDropZone position={index + 1} isActive={true} />
                 )}
               </React.Fragment>
             ))}
-            
+
             {/* Zona de drop geral no final (quando não há componentes sendo arrastados da sidebar) */}
             {!isDraggingSidebarComponent && isOver && !isPreviewing && (
               <div className="mt-3 p-4 border-2 border-dashed border-brand/30 rounded-lg bg-brand/5 text-center">

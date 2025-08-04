@@ -130,12 +130,24 @@ export const DndProvider: React.FC<DndProviderProps> = ({
     });
 
     // Se estamos arrastando de um sidebar (componente novo)
-    if (
-      active.data.current?.type === "sidebar-component" &&
-      over.data.current?.type === "canvas-drop-zone"
-    ) {
-      console.log("✅ Sidebar -> Canvas detectado durante DragOver");
-      return;
+    if (active.data.current?.type === "sidebar-component") {
+      // Detectar drop zones múltiplas
+      if (
+        over.data.current?.type === "canvas-drop-zone" ||
+        over.id === "canvas-drop-zone" ||
+        over.id?.toString().startsWith("drop-zone-")
+      ) {
+        console.log("✅ Sidebar -> Canvas detectado durante DragOver");
+
+        // Log da posição específica se for uma drop zone numerada
+        if (over.id?.toString().startsWith("drop-zone-")) {
+          const positionMatch = over.id.toString().match(/drop-zone-(\d+)/);
+          if (positionMatch) {
+            console.log("📍 Posição específica detectada:", positionMatch[1]);
+          }
+        }
+        return;
+      }
     }
   };
 
@@ -182,11 +194,33 @@ export const DndProvider: React.FC<DndProviderProps> = ({
     // Adicionar novo bloco do sidebar
     if (
       active.data.current?.type === "sidebar-component" &&
-      (over.data.current?.type === "canvas-drop-zone" || over.id === "canvas-drop-zone")
+      (over.data.current?.type === "canvas-drop-zone" ||
+        over.id === "canvas-drop-zone" ||
+        over.id?.toString().startsWith("drop-zone-"))
     ) {
       const blockType = active.data.current.blockType;
-      const position = over.data.current?.position || blocks.length;
+
+      // Calcular posição baseada no ID da drop zone
+      let position = blocks.length; // Default: adicionar no final
+
+      if (over.id?.toString().startsWith("drop-zone-")) {
+        // Extrair posição do ID: "drop-zone-0", "drop-zone-1", etc.
+        const positionMatch = over.id.toString().match(/drop-zone-(\d+)/);
+        if (positionMatch) {
+          position = parseInt(positionMatch[1], 10);
+        }
+      } else if (over.data.current?.position !== undefined) {
+        // Usar posição dos dados da drop zone
+        position = over.data.current.position;
+      }
+
       console.log("✅ SUCESSO: Adicionando bloco:", blockType, "na posição:", position);
+      console.log("📍 Drop zone info:", {
+        overId: over.id,
+        overType: over.data.current?.type,
+        calculatedPosition: position,
+        totalBlocks: blocks.length,
+      });
 
       // Garantir que o callback existe
       if (typeof onBlockAdd === "function") {

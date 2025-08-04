@@ -22,14 +22,7 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   onUpdate,
   onDelete,
 }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
     data: {
       type: "canvas-block",
@@ -48,9 +41,9 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   };
 
   return (
-    <div ref={setNodeRef} style={style}>
+    <div ref={setNodeRef} style={style} className="my-2">
       <Card
-        className={`relative group ${isSelected ? "ring-2 ring-[#B89B7A]" : ""}`}
+        className={`relative group ${isSelected ? "ring-2 ring-[#B89B7A]" : ""} transition-all duration-200`}
       >
         {/* Drag handle and controls - only show on hover */}
         <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex items-center gap-1">
@@ -67,7 +60,7 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
             variant="secondary"
             size="sm"
             className="h-6 w-6 p-0 text-amber-700 hover:text-amber-800"
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               onDelete();
             }}
