@@ -34,8 +34,10 @@ interface EditorContextType {
 
   blockActions: {
     addBlock: (type: string, stageId?: string) => string;
+    addBlockAtPosition: (type: string, position: number, stageId?: string) => string;
     deleteBlock: (blockId: string) => void;
     updateBlock: (blockId: string, updates: Partial<EditorBlock>) => void;
+    reorderBlocks: (blockIds: string[], stageId?: string) => void;
     setSelectedBlockId: (blockId: string | null) => void;
     getBlocksForStage: (stageId: string) => EditorBlock[];
   };
@@ -386,6 +388,118 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
     [activeStageId, validateStageId, stageBlocks, updateStage, getStageById],
   );
 
+  const addBlockAtPosition = useCallback(
+    (type: string, position: number, targetStageId?: string): string => {
+      const stageId = targetStageId || activeStageId;
+
+      if (!validateStageId(stageId)) {
+        console.warn(
+          "⚠️ EditorContext: Tentativa de adicionar bloco em etapa inválida:",
+          stageId,
+        );
+        return "";
+      }
+
+      const blockId = `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const currentStageBlocks = stageBlocks[stageId] || [];
+
+      const newBlock: EditorBlock = {
+        id: blockId,
+        type: type as any,
+        content: { text: `Novo ${type}`, title: `Título do ${type}` },
+        order: position + 1, // order baseado na posição
+        properties: {},
+      };
+
+      // Inserir o bloco na posição específica
+      const updatedBlocks = [...currentStageBlocks];
+      updatedBlocks.splice(position, 0, newBlock);
+
+      // Reordenar os outros blocos
+      const reorderedBlocks = updatedBlocks.map((block, index) => ({
+        ...block,
+        order: index + 1,
+      }));
+
+      setStageBlocks((prev) => ({
+        ...prev,
+        [stageId]: reorderedBlocks,
+      }));
+
+      updateStage(stageId, {
+        metadata: {
+          ...getStageById(stageId)?.metadata,
+          blocksCount: reorderedBlocks.length,
+        },
+      });
+
+      console.log(
+        "➕ EditorContext: Bloco adicionado na posição:",
+        position,
+        "blockId:",
+        blockId,
+        "tipo:",
+        type,
+        "etapa:",
+        stageId,
+      );
+      return blockId;
+    },
+    [activeStageId, validateStageId, stageBlocks, updateStage, getStageById],
+  );
+
+  const reorderBlocks = useCallback(
+    (blockIds: string[], targetStageId?: string) => {
+      const stageId = targetStageId || activeStageId;
+
+      if (!validateStageId(stageId)) {
+        console.warn(
+          "⚠️ EditorContext: Tentativa de reordenar blocos em etapa inválida:",
+          stageId,
+        );
+        return;
+      }
+
+      const currentStageBlocks = stageBlocks[stageId] || [];
+      
+      if (blockIds.length !== currentStageBlocks.length) {
+        console.warn(
+          "⚠️ EditorContext: Número de blockIds não confere com blocos existentes",
+          blockIds.length,
+          "vs",
+          currentStageBlocks.length,
+        );
+        return;
+      }
+
+      // Reordenar blocos baseado na ordem dos IDs
+      const reorderedBlocks = blockIds.map((blockId, index) => {
+        const block = currentStageBlocks.find(b => b.id === blockId);
+        if (!block) {
+          console.warn("⚠️ EditorContext: Bloco não encontrado:", blockId);
+          return null;
+        }
+        return {
+          ...block,
+          order: index + 1,
+        };
+      }).filter(Boolean) as EditorBlock[];
+
+      setStageBlocks((prev) => ({
+        ...prev,
+        [stageId]: reorderedBlocks,
+      }));
+
+      console.log(
+        "🔄 EditorContext: Blocos reordenados na etapa:",
+        stageId,
+        "nova ordem:",
+        blockIds,
+      );
+    },
+    [activeStageId, validateStageId, stageBlocks],
+  );
+
   const deleteBlock = useCallback(
     (blockId: string) => {
       let deletedFromStage = "";
@@ -509,8 +623,10 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
 
     blockActions: {
       addBlock,
+      addBlockAtPosition,
       deleteBlock,
       updateBlock,
+      reorderBlocks,
       setSelectedBlockId,
       getBlocksForStage,
     },

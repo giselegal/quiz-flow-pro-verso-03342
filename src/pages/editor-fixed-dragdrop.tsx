@@ -10,6 +10,7 @@ import { generateBlockDefinitions, getRegistryStats } from "@/config/enhancedBlo
 import { useEditor } from "@/context/EditorContext";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
 import { EditableContent } from "@/types/editor";
+import { arrayMove } from "@dnd-kit/sortable";
 import { Type } from "lucide-react";
 import React, { useState } from "react";
 
@@ -28,7 +29,15 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     activeStageId,
     selectedBlockId,
     stageActions: { setActiveStage },
-    blockActions: { addBlock, getBlocksForStage, setSelectedBlockId, deleteBlock, updateBlock },
+    blockActions: { 
+      addBlock, 
+      addBlockAtPosition, 
+      getBlocksForStage, 
+      setSelectedBlockId, 
+      deleteBlock, 
+      updateBlock, 
+      reorderBlocks 
+    },
     uiState: { isPreviewing, setIsPreviewing, viewportSize, setViewportSize },
     computed: { currentBlocks, selectedBlock, totalBlocks, stageCount },
   } = useEditor();
@@ -138,67 +147,33 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         type: block.type,
         properties: block.properties || {},
       }))}
-      onBlocksReorder={newBlocks => {
-        // Implementar reordenação de blocos usando updateBlock
-        console.log("🔄 Reordenando blocos:", newBlocks);
+      onBlocksReorder={newBlocksData => {
+        console.log("🔄 Reordenando blocos:", newBlocksData);
 
-        if (currentBlocks && newBlocks.length === currentBlocks.length) {
-          // Para reordenar, vamos simular removendo e readicionando na ordem correta
-          // Primeiro, mapear os dados atualizados
-          newBlocks.forEach((newBlock, index) => {
-            const originalBlock = currentBlocks.find(block => block.id === newBlock.id);
-            if (originalBlock) {
-              // Atualizar apenas se a ordem mudou
-              if (originalBlock !== currentBlocks[index]) {
-                updateBlock(newBlock.id, {
-                  ...originalBlock,
-                  // Adicionar propriedade de ordem se necessário
-                  order: index,
-                });
-              }
-            }
-          });
-          console.log("✅ Blocos reordenados com sucesso");
-        } else {
-          console.warn("⚠️ Erro na reordenação: quantidade de blocos não confere");
+        const newBlockIds = newBlocksData.map(b => b.id);
+        const oldBlockIds = (currentBlocks || []).map(b => b.id);
+
+        if (oldBlockIds.length !== newBlockIds.length) {
+          console.warn("⚠️ Reordenação abortada: quantidade de blocos não confere");
+          return;
         }
+
+        // Usar a nova função reorderBlocks do contexto
+        reorderBlocks(newBlockIds, activeStageId || undefined);
+        console.log("✅ Blocos reordenados com sucesso usando EditorContext");
       }}
       onBlockAdd={(blockType, position) => {
-        console.log(`➕ Tentando adicionar bloco ${blockType} na posição ${position}`);
+        console.log(`➕ Adicionando bloco ${blockType} na posição ${position}`);
 
-        // Adicionar o bloco normalmente (será adicionado no final)
-        const blockId = addBlock(blockType);
-
-        // Se a posição for diferente do final, reorganizar
-        if (position !== undefined && currentBlocks && position < currentBlocks.length) {
-          console.log(`🔄 Reorganizando: bloco ${blockId} deve ir para posição ${position}`);
-
-          // Aguardar um tick para o bloco ser adicionado ao estado
-          setTimeout(() => {
-            // Obter blocos atualizados
-            const updatedBlocks = getBlocksForStage(activeStageId || "default");
-            const newBlockIndex = updatedBlocks.findIndex(block => block.id === blockId);
-
-            if (newBlockIndex !== -1 && newBlockIndex !== position) {
-              // Criar nova ordem simulando arrayMove
-              const reorderedBlocks = [...updatedBlocks];
-              const [movedBlock] = reorderedBlocks.splice(newBlockIndex, 1);
-              reorderedBlocks.splice(position, 0, movedBlock);
-
-              console.log(
-                "🎯 Nova ordem após inserção:",
-                reorderedBlocks.map(b => b.id)
-              );
-
-              // Atualizar ordem de cada bloco
-              reorderedBlocks.forEach((block, index) => {
-                updateBlock(block.id, { order: index });
-              });
-            }
-          }, 100);
+        if (position !== undefined && position >= 0) {
+          // Usar a nova função addBlockAtPosition para inserção atômica
+          const blockId = addBlockAtPosition(blockType, position, activeStageId || undefined);
+          console.log(`✅ Bloco ${blockType} (${blockId}) adicionado na posição ${position} usando EditorContext`);
+        } else {
+          // Fallback para adicionar no final
+          const blockId = addBlock(blockType, activeStageId || undefined);
+          console.log(`✅ Bloco ${blockType} (${blockId}) adicionado no final`);
         }
-
-        console.log(`✅ Bloco ${blockType} (${blockId}) processado para posição ${position}`);
       }}
       onBlockSelect={blockId => {
         setSelectedBlockId(blockId);
