@@ -14,6 +14,7 @@ import {
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import React from "react";
 import { createPortal } from "react-dom";
+import { dragDropDebugger, performanceMonitor } from "@/utils/development";
 
 // Tipo local para BlockData
 interface BlockData {
@@ -75,18 +76,19 @@ export const DndProvider: React.FC<DndProviderProps> = ({
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
 
-    console.log("🟢 DragStart INICIO:", {
+    performanceMonitor.startTiming('drag-operation');
+
+    // Use enhanced debugging
+    dragDropDebugger.logDragStart({
       id: active.id,
       type: active.data.current?.type,
       blockType: active.data.current?.blockType,
       data: active.data.current,
-      hasData: !!active.data.current,
-      hasType: !!active.data.current?.type,
     });
 
     // FIXME: Verificação mais robusta dos dados
     if (!active.data.current) {
-      console.error("❌ DragStart: active.data.current está undefined!", {
+      dragDropDebugger.logError("active.data.current está undefined!", {
         activeId: active.id,
         activeKeys: Object.keys(active),
         dataKeys: active.data ? Object.keys(active.data) : "data é undefined",
@@ -95,7 +97,7 @@ export const DndProvider: React.FC<DndProviderProps> = ({
     }
 
     if (!active.data.current.type) {
-      console.error("❌ DragStart: active.data.current.type está undefined!", {
+      dragDropDebugger.logError("active.data.current.type está undefined!", {
         activeId: active.id,
         data: active.data.current,
         dataKeys: Object.keys(active.data.current),
@@ -103,7 +105,7 @@ export const DndProvider: React.FC<DndProviderProps> = ({
       return;
     }
 
-    console.log("✅ DragStart: Dados válidos detectados:", {
+    dragDropDebugger.logSuccess("Dados válidos detectados", {
       type: active.data.current.type,
       blockType: active.data.current.blockType,
       allData: active.data.current,
@@ -171,18 +173,21 @@ export const DndProvider: React.FC<DndProviderProps> = ({
     const { active, over } = event;
 
     setActiveBlock(null);
+    performanceMonitor.endTiming('drag-operation');
 
-    console.log("🔄 DragEnd START:", {
+    // Use enhanced debugging
+    dragDropDebugger.logDragEnd({
       activeId: active.id,
       overId: over?.id,
       activeType: active.data.current?.type,
       overType: over?.data.current?.type,
       activeData: active.data.current,
       overData: over?.data.current,
+      success: !!over,
     });
 
     if (!over) {
-      console.log("❌ DragEnd: Sem over target - drag cancelado");
+      dragDropDebugger.logError("Sem over target - drag cancelado");
       return;
     }
 
@@ -241,15 +246,15 @@ export const DndProvider: React.FC<DndProviderProps> = ({
       // Garantir que o callback existe
       if (typeof onBlockAdd === "function") {
         onBlockAdd(blockType, position);
-        console.log("✅ onBlockAdd chamado com sucesso");
+        dragDropDebugger.logSuccess("onBlockAdd chamado", { blockType, position });
       } else {
-        console.error("❌ onBlockAdd não é uma função");
+        dragDropDebugger.logError("onBlockAdd não é uma função");
       }
       return;
     }
 
     // Debug: Log quando não há match
-    console.log("⚠️ Nenhuma condição de drop atendida:", {
+    dragDropDebugger.logError("Nenhuma condição de drop atendida", {
       activeType: active.data.current?.type,
       overType: over.data.current?.type,
       activeId: active.id,

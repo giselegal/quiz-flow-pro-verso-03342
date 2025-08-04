@@ -11,7 +11,14 @@ import { fixMainRoutes } from "./utils/fixMainRoutes";
 import { checkMainRoutes } from "./utils/routeChecker";
 // 🚀 SUPABASE: Inicialização do serviço de dados
 import { saveUserSession } from "./services/quizSupabaseService";
+// 🧹 DEVELOPMENT: Sistema de limpeza de avisos do console
+import { cleanupConsoleWarnings } from "./utils/development";
 // import "./utils/hotmartWebhookSimulator"; // Carregar simulador de webhook - temporariamente desabilitado
+
+// 🧹 Inicializar limpeza de avisos do console em desenvolvimento
+if (process.env.NODE_ENV === 'development') {
+  cleanupConsoleWarnings();
+}
 
 // 🚀 SUPABASE: Configuração inicial do serviço
 console.log("🚀 Inicializando serviços Supabase...");
