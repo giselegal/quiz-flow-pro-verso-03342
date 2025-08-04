@@ -1,17 +1,6 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useCallback,
-  useEffect,
-} from "react";
+import { getAllSteps, getStepTemplate } from "@/config/stepTemplatesMapping";
 import { EditorBlock, FunnelStage } from "@/types/editor";
-import {
-  getStepTemplate,
-  getStepInfo,
-  getAllSteps,
-} from "@/config/stepTemplatesMapping";
+import React, { createContext, ReactNode, useCallback, useContext, useState } from "react";
 
 // ✅ INTERFACE UNIFICADA DO CONTEXTO
 interface EditorContextType {
@@ -70,9 +59,7 @@ export const useEditor = () => {
   return context;
 };
 
-export const EditorProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   console.log("🔥 EditorProvider: INICIANDO PROVIDER!");
 
   // ═══════════════════════════════════════════════
@@ -80,16 +67,11 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
   // ═══════════════════════════════════════════════
   const [stages, setStages] = useState<FunnelStage[]>(() => {
     // ✅ INICIALIZAÇÃO SÍNCRONA NO ESTADO INICIAL COM TEMPLATES ESPECÍFICOS
-    console.log(
-      "🚀 EditorProvider: Inicializando stages com templates específicos",
-    );
+    console.log("🚀 EditorProvider: Inicializando stages com templates específicos");
 
     // ✅ USAR TEMPLATES ESPECÍFICOS DAS ETAPAS
     const allStepTemplates = getAllSteps();
-    console.log(
-      "📋 EditorProvider: Templates carregados:",
-      allStepTemplates.length,
-    );
+    console.log("📋 EditorProvider: Templates carregados:", allStepTemplates.length);
 
     const initialStages = allStepTemplates.map((stepTemplate, index) => ({
       id: `step-${stepTemplate.stepNumber}`,
@@ -121,24 +103,20 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
 
     console.log(
       "✅ EditorProvider: 21 stages criadas com templates específicos:",
-      initialStages.length,
+      initialStages.length
     );
     return initialStages;
   });
 
-  const [stageBlocks, setStageBlocks] = useState<Record<string, EditorBlock[]>>(
-    () => {
-      // ✅ INICIALIZAR BLOCOS VAZIOS PARA CADA ETAPA
-      const initialBlocks: Record<string, EditorBlock[]> = {};
-      for (let i = 1; i <= 21; i++) {
-        initialBlocks[`step-${i}`] = [];
-      }
-      console.log(
-        "✅ EditorProvider: Blocos vazios inicializados para 21 etapas",
-      );
-      return initialBlocks;
-    },
-  );
+  const [stageBlocks, setStageBlocks] = useState<Record<string, EditorBlock[]>>(() => {
+    // ✅ INICIALIZAR BLOCOS VAZIOS PARA CADA ETAPA
+    const initialBlocks: Record<string, EditorBlock[]> = {};
+    for (let i = 1; i <= 21; i++) {
+      initialBlocks[`step-${i}`] = [];
+    }
+    console.log("✅ EditorProvider: Blocos vazios inicializados para 21 etapas");
+    return initialBlocks;
+  });
 
   const [activeStageId, setActiveStageId] = useState<string>("step-1");
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
@@ -147,9 +125,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
   // 🎨 UI STATE
   // ═══════════════════════════════════════════════
   const [isPreviewing, setIsPreviewing] = useState(false);
-  const [viewportSize, setViewportSize] = useState<"sm" | "md" | "lg" | "xl">(
-    "lg",
-  );
+  const [viewportSize, setViewportSize] = useState<"sm" | "md" | "lg" | "xl">("lg");
 
   // ✅ DEBUG LOGGING
   console.log("📊 EditorProvider: Estado atual:", {
@@ -163,18 +139,18 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
   // ═══════════════════════════════════════════════
   const validateStageId = useCallback(
     (stageId: string): boolean => {
-      const isValid = stages.some((stage) => stage.id === stageId);
+      const isValid = stages.some(stage => stage.id === stageId);
       console.log(`🔍 EditorContext: Validando stage ${stageId}:`, isValid);
       return isValid;
     },
-    [stages],
+    [stages]
   );
 
   const getStageById = useCallback(
     (stageId: string): FunnelStage | undefined => {
-      return stages.find((stage) => stage.id === stageId);
+      return stages.find(stage => stage.id === stageId);
     },
-    [stages],
+    [stages]
   );
 
   // ═══════════════════════════════════════════════
@@ -196,16 +172,14 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
       // ✅ CARREGAR TEMPLATE SE A ETAPA ESTIVER VAZIA
       const currentBlocks = stageBlocks[stageId] || [];
       if (currentBlocks.length === 0) {
-        console.log(
-          `🎨 EditorContext: Etapa ${stageId} vazia, carregando template...`,
-        );
+        console.log(`🎨 EditorContext: Etapa ${stageId} vazia, carregando template...`);
         // Usar timeout para garantir que updateStage esteja disponível
         setTimeout(() => loadStageTemplate(stageId), 0);
       }
 
       console.log("✅ EditorContext: Etapa ativa alterada para:", stageId);
     },
-    [validateStageId, stageBlocks],
+    [validateStageId, stageBlocks]
   );
 
   const addStage = useCallback(
@@ -225,34 +199,31 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
         },
       };
 
-      setStages((prev) => [...prev, newStage]);
-      setStageBlocks((prev) => ({ ...prev, [newStageId]: [] }));
+      setStages(prev => [...prev, newStage]);
+      setStageBlocks(prev => ({ ...prev, [newStageId]: [] }));
 
       console.log("➕ EditorContext: Nova etapa adicionada:", newStageId);
       return newStageId;
     },
-    [stages.length],
+    [stages.length]
   );
 
   const removeStage = useCallback(
     (stageId: string) => {
       if (!validateStageId(stageId)) {
-        console.warn(
-          "⚠️ EditorContext: Tentativa de remover etapa inválida:",
-          stageId,
-        );
+        console.warn("⚠️ EditorContext: Tentativa de remover etapa inválida:", stageId);
         return;
       }
 
-      setStages((prev) => prev.filter((stage) => stage.id !== stageId));
-      setStageBlocks((prev) => {
+      setStages(prev => prev.filter(stage => stage.id !== stageId));
+      setStageBlocks(prev => {
         const updated = { ...prev };
         delete updated[stageId];
         return updated;
       });
 
       if (activeStageId === stageId) {
-        const remainingStages = stages.filter((stage) => stage.id !== stageId);
+        const remainingStages = stages.filter(stage => stage.id !== stageId);
         if (remainingStages.length > 0) {
           setActiveStageId(remainingStages[0].id);
         }
@@ -260,40 +231,37 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
 
       console.log("🗑️ EditorContext: Etapa removida:", stageId);
     },
-    [validateStageId, activeStageId, stages],
+    [validateStageId, activeStageId, stages]
   );
 
   const updateStage = useCallback(
     (stageId: string, updates: Partial<FunnelStage>) => {
       if (!validateStageId(stageId)) {
-        console.warn(
-          "⚠️ EditorContext: Tentativa de atualizar etapa inválida:",
-          stageId,
-        );
+        console.warn("⚠️ EditorContext: Tentativa de atualizar etapa inválida:", stageId);
         return;
       }
 
-      setStages((prev) =>
-        prev.map((stage) =>
+      setStages(prev =>
+        prev.map(stage =>
           stage.id === stageId
             ? {
                 ...stage,
                 ...updates,
                 metadata: { ...stage.metadata, lastModified: new Date() },
               }
-            : stage,
-        ),
+            : stage
+        )
       );
 
       console.log("📝 EditorContext: Etapa atualizada:", stageId, updates);
     },
-    [validateStageId],
+    [validateStageId]
   );
 
   // ✅ FUNÇÃO PARA CARREGAR BLOCOS DE TEMPLATE
   const loadStageTemplate = useCallback(
     (stageId: string) => {
-      const stage = stages.find((s) => s.id === stageId);
+      const stage = stages.find(s => s.id === stageId);
       if (!stage) return;
 
       const stepNumber = parseInt(stageId.replace("step-", ""));
@@ -301,22 +269,20 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
 
       if (templateBlocks && templateBlocks.length > 0) {
         console.log(
-          `🎨 EditorContext: Carregando ${templateBlocks.length} blocos de template para etapa ${stepNumber}`,
+          `🎨 EditorContext: Carregando ${templateBlocks.length} blocos de template para etapa ${stepNumber}`
         );
 
         // Converter blocos de template para EditorBlocks
-        const editorBlocks: EditorBlock[] = templateBlocks.map(
-          (block, index) => ({
-            id: `${stageId}-block-${index + 1}`,
-            type: block.type as any,
-            content: block.properties || block.content || {},
-            order: index + 1,
-            properties: block.properties || {},
-          }),
-        );
+        const editorBlocks: EditorBlock[] = templateBlocks.map((block, index) => ({
+          id: `${stageId}-block-${index + 1}`,
+          type: block.type as any,
+          content: block.properties || block.content || {},
+          order: index + 1,
+          properties: block.properties || {},
+        }));
 
         // Atualizar os blocos da etapa
-        setStageBlocks((prev) => ({
+        setStageBlocks(prev => ({
           ...prev,
           [stageId]: editorBlocks,
         }));
@@ -330,11 +296,11 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
         });
 
         console.log(
-          `✅ EditorContext: ${editorBlocks.length} blocos carregados para etapa ${stepNumber}`,
+          `✅ EditorContext: ${editorBlocks.length} blocos carregados para etapa ${stepNumber}`
         );
       }
     },
-    [stages, updateStage],
+    [stages, updateStage]
   );
 
   // ═══════════════════════════════════════════════
@@ -345,10 +311,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
       const stageId = targetStageId || activeStageId;
 
       if (!validateStageId(stageId)) {
-        console.warn(
-          "⚠️ EditorContext: Tentativa de adicionar bloco em etapa inválida:",
-          stageId,
-        );
+        console.warn("⚠️ EditorContext: Tentativa de adicionar bloco em etapa inválida:", stageId);
         return "";
       }
 
@@ -363,7 +326,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
         properties: {},
       };
 
-      setStageBlocks((prev) => ({
+      setStageBlocks(prev => ({
         ...prev,
         [stageId]: [...(prev[stageId] || []), newBlock],
       }));
@@ -375,17 +338,10 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
         },
       });
 
-      console.log(
-        "➕ EditorContext: Bloco adicionado:",
-        blockId,
-        "tipo:",
-        type,
-        "etapa:",
-        stageId,
-      );
+      console.log("➕ EditorContext: Bloco adicionado:", blockId, "tipo:", type, "etapa:", stageId);
       return blockId;
     },
-    [activeStageId, validateStageId, stageBlocks, updateStage, getStageById],
+    [activeStageId, validateStageId, stageBlocks, updateStage, getStageById]
   );
 
   const addBlockAtPosition = useCallback(
@@ -393,10 +349,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
       const stageId = targetStageId || activeStageId;
 
       if (!validateStageId(stageId)) {
-        console.warn(
-          "⚠️ EditorContext: Tentativa de adicionar bloco em etapa inválida:",
-          stageId,
-        );
+        console.warn("⚠️ EditorContext: Tentativa de adicionar bloco em etapa inválida:", stageId);
         return "";
       }
 
@@ -421,7 +374,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
         order: index + 1,
       }));
 
-      setStageBlocks((prev) => ({
+      setStageBlocks(prev => ({
         ...prev,
         [stageId]: reorderedBlocks,
       }));
@@ -441,11 +394,11 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
         "tipo:",
         type,
         "etapa:",
-        stageId,
+        stageId
       );
       return blockId;
     },
-    [activeStageId, validateStageId, stageBlocks, updateStage, getStageById],
+    [activeStageId, validateStageId, stageBlocks, updateStage, getStageById]
   );
 
   const reorderBlocks = useCallback(
@@ -453,39 +406,38 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
       const stageId = targetStageId || activeStageId;
 
       if (!validateStageId(stageId)) {
-        console.warn(
-          "⚠️ EditorContext: Tentativa de reordenar blocos em etapa inválida:",
-          stageId,
-        );
+        console.warn("⚠️ EditorContext: Tentativa de reordenar blocos em etapa inválida:", stageId);
         return;
       }
 
       const currentStageBlocks = stageBlocks[stageId] || [];
-      
+
       if (blockIds.length !== currentStageBlocks.length) {
         console.warn(
           "⚠️ EditorContext: Número de blockIds não confere com blocos existentes",
           blockIds.length,
           "vs",
-          currentStageBlocks.length,
+          currentStageBlocks.length
         );
         return;
       }
 
       // Reordenar blocos baseado na ordem dos IDs
-      const reorderedBlocks = blockIds.map((blockId, index) => {
-        const block = currentStageBlocks.find(b => b.id === blockId);
-        if (!block) {
-          console.warn("⚠️ EditorContext: Bloco não encontrado:", blockId);
-          return null;
-        }
-        return {
-          ...block,
-          order: index + 1,
-        };
-      }).filter(Boolean) as EditorBlock[];
+      const reorderedBlocks = blockIds
+        .map((blockId, index) => {
+          const block = currentStageBlocks.find(b => b.id === blockId);
+          if (!block) {
+            console.warn("⚠️ EditorContext: Bloco não encontrado:", blockId);
+            return null;
+          }
+          return {
+            ...block,
+            order: index + 1,
+          };
+        })
+        .filter(Boolean) as EditorBlock[];
 
-      setStageBlocks((prev) => ({
+      setStageBlocks(prev => ({
         ...prev,
         [stageId]: reorderedBlocks,
       }));
@@ -494,25 +446,25 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
         "🔄 EditorContext: Blocos reordenados na etapa:",
         stageId,
         "nova ordem:",
-        blockIds,
+        blockIds
       );
     },
-    [activeStageId, validateStageId, stageBlocks],
+    [activeStageId, validateStageId, stageBlocks]
   );
 
   const deleteBlock = useCallback(
     (blockId: string) => {
       let deletedFromStage = "";
 
-      setStageBlocks((prev) => {
+      setStageBlocks(prev => {
         const updated = { ...prev };
 
         for (const stageId in updated) {
           const blocks = updated[stageId];
-          const blockIndex = blocks.findIndex((block) => block.id === blockId);
+          const blockIndex = blocks.findIndex(block => block.id === blockId);
 
           if (blockIndex !== -1) {
-            updated[stageId] = blocks.filter((block) => block.id !== blockId);
+            updated[stageId] = blocks.filter(block => block.id !== blockId);
             deletedFromStage = stageId;
             break;
           }
@@ -537,51 +489,40 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
         setSelectedBlockId(null);
       }
 
-      console.log(
-        "🗑️ EditorContext: Bloco removido:",
-        blockId,
-        "da etapa:",
-        deletedFromStage,
-      );
+      console.log("🗑️ EditorContext: Bloco removido:", blockId, "da etapa:", deletedFromStage);
     },
-    [selectedBlockId, getStageById, updateStage],
+    [selectedBlockId, getStageById, updateStage]
   );
 
-  const updateBlock = useCallback(
-    (blockId: string, updates: Partial<EditorBlock>) => {
-      setStageBlocks((prev) => {
-        const updated = { ...prev };
+  const updateBlock = useCallback((blockId: string, updates: Partial<EditorBlock>) => {
+    setStageBlocks(prev => {
+      const updated = { ...prev };
 
-        for (const stageId in updated) {
-          const blocks = updated[stageId];
-          const blockIndex = blocks.findIndex((block) => block.id === blockId);
+      for (const stageId in updated) {
+        const blocks = updated[stageId];
+        const blockIndex = blocks.findIndex(block => block.id === blockId);
 
-          if (blockIndex !== -1) {
-            updated[stageId] = blocks.map((block) =>
-              block.id === blockId ? { ...block, ...updates } : block,
-            );
-            break;
-          }
+        if (blockIndex !== -1) {
+          updated[stageId] = blocks.map(block =>
+            block.id === blockId ? { ...block, ...updates } : block
+          );
+          break;
         }
+      }
 
-        return updated;
-      });
+      return updated;
+    });
 
-      console.log("📝 EditorContext: Bloco atualizado:", blockId, updates);
-    },
-    [],
-  );
+    console.log("📝 EditorContext: Bloco atualizado:", blockId, updates);
+  }, []);
 
   const getBlocksForStage = useCallback(
     (stageId: string): EditorBlock[] => {
       const blocks = stageBlocks[stageId] || [];
-      console.log(
-        `📦 EditorContext: Obtendo blocos para etapa ${stageId}:`,
-        blocks.length,
-      );
+      console.log(`📦 EditorContext: Obtendo blocos para etapa ${stageId}:`, blocks.length);
       return blocks;
     },
-    [stageBlocks],
+    [stageBlocks]
   );
 
   // ═══════════════════════════════════════════════
@@ -589,11 +530,11 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
   // ═══════════════════════════════════════════════
   const currentBlocks = getBlocksForStage(activeStageId);
   const selectedBlock = selectedBlockId
-    ? currentBlocks.find((block) => block.id === selectedBlockId)
+    ? currentBlocks.find(block => block.id === selectedBlockId)
     : undefined;
   const totalBlocks = Object.values(stageBlocks).reduce(
     (total, blocks) => total + blocks.length,
-    0,
+    0
   );
   const stageCount = stages.length;
 
@@ -646,15 +587,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
     },
   };
 
-  console.log(
-    "🎯 EditorContext: Providing context value com",
-    stages.length,
-    "etapas",
-  );
+  console.log("🎯 EditorContext: Providing context value com", stages.length, "etapas");
 
-  return (
-    <EditorContext.Provider value={contextValue}>
-      {children}
-    </EditorContext.Provider>
-  );
+  return <EditorContext.Provider value={contextValue}>{children}</EditorContext.Provider>;
 };

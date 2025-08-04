@@ -10,7 +10,6 @@ import { generateBlockDefinitions, getRegistryStats } from "@/config/enhancedBlo
 import { useEditor } from "@/context/EditorContext";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
 import { EditableContent } from "@/types/editor";
-import { arrayMove } from "@dnd-kit/sortable";
 import { Type } from "lucide-react";
 import React, { useState } from "react";
 
@@ -29,14 +28,14 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     activeStageId,
     selectedBlockId,
     stageActions: { setActiveStage },
-    blockActions: { 
-      addBlock, 
-      addBlockAtPosition, 
-      getBlocksForStage, 
-      setSelectedBlockId, 
-      deleteBlock, 
-      updateBlock, 
-      reorderBlocks 
+    blockActions: {
+      addBlock,
+      addBlockAtPosition,
+      getBlocksForStage,
+      setSelectedBlockId,
+      deleteBlock,
+      updateBlock,
+      reorderBlocks,
     },
     uiState: { isPreviewing, setIsPreviewing, viewportSize, setViewportSize },
     computed: { currentBlocks, selectedBlock, totalBlocks, stageCount },
@@ -168,7 +167,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         if (position !== undefined && position >= 0) {
           // Usar a nova função addBlockAtPosition para inserção atômica
           const blockId = addBlockAtPosition(blockType, position, activeStageId || undefined);
-          console.log(`✅ Bloco ${blockType} (${blockId}) adicionado na posição ${position} usando EditorContext`);
+          console.log(
+            `✅ Bloco ${blockType} (${blockId}) adicionado na posição ${position} usando EditorContext`
+          );
         } else {
           // Fallback para adicionar no final
           const blockId = addBlock(blockType, activeStageId || undefined);
