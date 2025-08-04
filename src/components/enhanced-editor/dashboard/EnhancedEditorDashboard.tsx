@@ -95,7 +95,7 @@ export const EnhancedEditorDashboard: React.FC<
       case "published":
         return "bg-green-100 text-green-700";
       case "draft":
-        return "bg-yellow-100 text-yellow-700";
+        return "bg-stone-100 text-stone-700";
       case "archived":
         return "bg-gray-100 text-gray-700";
       default:
@@ -159,7 +159,7 @@ export const EnhancedEditorDashboard: React.FC<
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
-              <Eye className="w-4 h-4 text-blue-500 mr-2" />
+              <Eye className="w-4 h-4 text-[#B89B7A] mr-2" />
               <span className="text-2xl font-bold">
                 {stats.totalViews.toLocaleString()}
               </span>

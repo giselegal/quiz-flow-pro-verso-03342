@@ -108,7 +108,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                   "group relative flex items-center p-3 rounded-lg border transition-all duration-200",
                   "hover:shadow-sm cursor-pointer",
                   selectedStepId === step.id
-                    ? "bg-blue-50 border-blue-200 shadow-sm"
+                    ? "bg-[#B89B7A]/10 border-[#B89B7A]/30 shadow-sm"
                     : "bg-white border-gray-200 hover:border-gray-300",
                 )}
                 onClick={() => setSelectedStepId(step.id)}
@@ -220,7 +220,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
 
                 {/* Selected Indicator */}
                 {selectedStepId === step.id && (
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-600 rounded-l-lg"></div>
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#B89B7A] rounded-l-lg"></div>
                 )}
               </div>
             ))}

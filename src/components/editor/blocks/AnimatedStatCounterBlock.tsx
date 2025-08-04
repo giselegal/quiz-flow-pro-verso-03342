@@ -42,10 +42,10 @@ const AnimatedStatCounterBlock: React.FC<BlockComponentProps> = ({
   // Cores para os diferentes esquemas
   const colorSchemes = {
     blue: {
-      bg: 'bg-blue-50',
+      bg: 'bg-[#B89B7A]/10',
       text: 'text-blue-600',
-      icon: 'text-blue-500',
-      border: 'border-blue-200',
+      icon: 'text-[#B89B7A]',
+      border: 'border-[#B89B7A]/30',
     },
     green: {
       bg: 'bg-green-50',

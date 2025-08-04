@@ -15,7 +15,7 @@ export const SpacerBlock: React.FC<SpacerBlockProps> = ({ content, isSelected, o
   return (
     <div
       className={`w-full border border-dashed border-gray-300 rounded cursor-pointer hover:border-gray-400 transition-colors ${
-        isSelected ? 'border-blue-500 bg-blue-50' : 'bg-gray-50'
+        isSelected ? 'border-blue-500 bg-[#B89B7A]/10' : 'bg-gray-50'
       }`}
       style={{ height }}
       onClick={onClick}

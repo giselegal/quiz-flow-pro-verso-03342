@@ -82,7 +82,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
   // Variantes de cor
   const variantClasses = {
-    primary: 'bg-blue-600 hover:bg-blue-700 text-white border-blue-600',
+    primary: 'bg-[#B89B7A] hover:bg-blue-700 text-white border-blue-600',
     secondary: 'bg-gray-600 hover:bg-gray-700 text-white border-gray-600',
     success: 'bg-green-600 hover:bg-green-700 text-white border-green-600',
     warning: 'bg-yellow-600 hover:bg-yellow-700 text-white border-yellow-600',
@@ -202,7 +202,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
       {/* Indicador de seleção */}
       {isSelected && (
-        <div className="absolute -top-2 -right-2 bg-blue-500 text-white rounded-full p-1">
+        <div className="absolute -top-2 -right-2 bg-[#B89B7A]/100 text-white rounded-full p-1">
           <Edit3 className="w-3 h-3" />
         </div>
       )}

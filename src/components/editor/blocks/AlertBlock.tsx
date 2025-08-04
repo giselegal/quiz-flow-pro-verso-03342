@@ -20,9 +20,9 @@ const AlertBlock: React.FC<BlockComponentProps> = ({
   };
 
   const variantClasses: Record<string, string> = {
-    info: 'bg-blue-50 border-blue-200 text-blue-800',
+    info: 'bg-[#B89B7A]/10 border-[#B89B7A]/30 text-blue-800',
     success: 'bg-green-50 border-green-200 text-green-800',
-    warning: 'bg-yellow-50 border-yellow-200 text-yellow-800',
+    warning: 'bg-yellow-50 border-yellow-200 text-stone-700',
     error: 'bg-red-50 border-red-200 text-red-800',
   };
 

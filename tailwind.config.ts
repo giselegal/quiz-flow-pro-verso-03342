@@ -1,6 +1,6 @@
+import tailwindcssTypography from "@tailwindcss/typography";
 import type { Config } from "tailwindcss";
 import tailwindcssAnimate from "tailwindcss-animate";
-import tailwindcssTypography from "@tailwindcss/typography";
 
 export default {
   darkMode: ["class"],
@@ -16,6 +16,14 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
+        // ✅ CORES DA MARCA
+        brand: {
+          primary: "#B89B7A", // Dourado elegante
+          light: "#D4C2A8", // Bege claro
+          dark: "#A38A69", // Dourado escuro
+          text: "#432818", // Marrom escuro
+        },
+
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

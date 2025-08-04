@@ -270,7 +270,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
 
         {/* Instructions - Only when selected */}
         {isSelected && (
-          <div className="mt-6 md:mt-8 p-3 md:p-4 bg-blue-50 rounded-lg border border-blue-200">
+          <div className="mt-6 md:mt-8 p-3 md:p-4 bg-[#B89B7A]/10 rounded-lg border border-[#B89B7A]/30">
             <p className={cn('text-sm', 'text-blue-700')}>
               💡 <strong>Dica:</strong> Clique nas perguntas para editá-las. Em mobile, o layout se adapta
               automaticamente para melhor legibilidade.

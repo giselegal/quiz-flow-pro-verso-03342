@@ -129,7 +129,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
     <Card
       className={cn(
         "mb-4 p-4 transition-colors",
-        isSelected && !isPreviewing ? "border-2 border-blue-400" : "",
+        isSelected && !isPreviewing ? "border-2 border-[#B89B7A]" : "",
         !isPreviewing && "hover:bg-gray-50 cursor-pointer",
       )}
       onClick={() => !isPreviewing && onSelect && onSelect()}

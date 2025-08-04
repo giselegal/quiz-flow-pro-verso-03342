@@ -276,7 +276,7 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
       case "medium":
         return "border-yellow-200 bg-yellow-50";
       case "low":
-        return "border-blue-200 bg-blue-50";
+        return "border-[#B89B7A]/30 bg-[#B89B7A]/10";
       default:
         return "border-gray-200 bg-gray-50";
     }

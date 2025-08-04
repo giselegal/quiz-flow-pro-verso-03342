@@ -846,7 +846,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
 
       case "guarantee-component-real":
         return (
-          <div className="bg-blue-50 p-8 rounded-xl border border-blue-200 mb-8">
+          <div className="bg-[#B89B7A]/10 p-8 rounded-xl border border-[#B89B7A]/30 mb-8">
             <div className="text-center">
               <Shield className="w-12 h-12 text-blue-600 mx-auto mb-4" />
               <h3
@@ -1009,7 +1009,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                   <p className="text-sm text-gray-600">{props.text}</p>
                 </div>
               )}
-              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+              <div className="mt-4 p-3 bg-[#B89B7A]/10 rounded-lg">
                 <p className="text-xs text-blue-600">
                   ✨ Componente com design moderno e responsivo aplicado!
                 </p>

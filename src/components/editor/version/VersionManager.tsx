@@ -103,7 +103,7 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center space-x-2">
-                  <FileText className="w-4 h-4 text-blue-500" />
+                  <FileText className="w-4 h-4 text-[#B89B7A]" />
                   <div>
                     <p className="text-sm font-medium">Total de Versões</p>
                     <p className="text-2xl font-bold">{versions.length}</p>
@@ -168,7 +168,7 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
                             border rounded-lg p-4 cursor-pointer transition-all duration-200
                             ${
                               selectedVersion === version.id
-                                ? "border-blue-500 bg-blue-50"
+                                ? "border-blue-500 bg-[#B89B7A]/10"
                                 : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                             }
                             ${currentVersion === version.version ? "ring-2 ring-green-200" : ""}
@@ -268,7 +268,7 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
               <div className="flex justify-between items-center p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                 <div className="flex items-center space-x-2">
                   <RotateCcw className="w-4 h-4 text-yellow-600" />
-                  <span className="text-sm font-medium text-yellow-800">
+                  <span className="text-sm font-medium text-stone-700">
                     Restaurar versão selecionada?
                   </span>
                 </div>

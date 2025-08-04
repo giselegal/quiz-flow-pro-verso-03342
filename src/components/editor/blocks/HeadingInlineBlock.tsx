@@ -74,7 +74,7 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
         'p-2 sm:p-3 rounded-lg border border-transparent',
         'hover:border-gray-200 hover:bg-gray-50/30 transition-all duration-200',
         'cursor-pointer',
-        isSelected && 'border-blue-500 bg-blue-50/30',
+        isSelected && 'border-blue-500 bg-[#B89B7A]/10/30',
         className,
       )}
       onClick={onClick}
@@ -102,7 +102,7 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
 
       {/* Indicador de seleção */}
       {isSelected && (
-        <div className="absolute -top-2 -right-2 bg-blue-500 text-white rounded-full p-1">
+        <div className="absolute -top-2 -right-2 bg-[#B89B7A]/100 text-white rounded-full p-1">
           <Settings className="w-3 h-3" />
         </div>
       )}
@@ -117,7 +117,7 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
 
       {/* Instrução quando selecionado */}
       {isSelected && content && (
-        <div className="absolute -bottom-8 left-0 bg-blue-600 text-white text-xs px-2 py-1 rounded text-nowrap">
+        <div className="absolute -bottom-8 left-0 bg-[#B89B7A] text-white text-xs px-2 py-1 rounded text-nowrap">
           💡 Edite no painel de propriedades
         </div>
       )}

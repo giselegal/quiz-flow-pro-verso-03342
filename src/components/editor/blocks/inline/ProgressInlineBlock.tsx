@@ -42,7 +42,7 @@ const ProgressInlineBlock: React.FC<InlineBlockProps> = ({
   const getColorClasses = (color: string) => {
     switch (color) {
       case 'blue':
-        return 'bg-blue-500';
+        return 'bg-[#B89B7A]/100';
       case 'green':
         return 'bg-green-500';
       case 'red':
@@ -52,7 +52,7 @@ const ProgressInlineBlock: React.FC<InlineBlockProps> = ({
       case 'purple':
         return 'bg-purple-500';
       default:
-        return 'bg-blue-500';
+        return 'bg-[#B89B7A]/100';
     }
   };
 

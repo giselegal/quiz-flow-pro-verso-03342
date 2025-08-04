@@ -166,7 +166,7 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({
           </div>
 
           {settings.customDomain && (
-            <Card className="bg-blue-50 border-blue-200">
+            <Card className="bg-[#B89B7A]/10 border-[#B89B7A]/30">
               <CardContent className="pt-4">
                 <h4 className="font-medium mb-2">
                   Configurações DNS Necessárias

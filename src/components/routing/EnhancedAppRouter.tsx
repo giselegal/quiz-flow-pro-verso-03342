@@ -33,7 +33,7 @@ const ErrorBoundary: React.FC<{ children: React.ReactNode }> = ({
           <p className="text-gray-600 mb-4">Ocorreu um erro inesperado</p>
           <button
             onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className="px-4 py-2 bg-[#B89B7A]/100 text-white rounded hover:bg-[#B89B7A]"
           >
             Recarregar Página
           </button>
@@ -123,7 +123,7 @@ const SimpleDashboard: React.FC = () => (
           </p>
           <a
             href="/editor-fixed"
-            className="inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className="inline-block px-4 py-2 bg-[#B89B7A]/100 text-white rounded hover:bg-[#B89B7A]"
           >
             Acessar Editor
           </a>
@@ -246,7 +246,7 @@ export const EnhancedAppRouter: React.FC = () => {
                     <div className="space-x-4">
                       <a
                         href="/"
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        className="px-4 py-2 bg-[#B89B7A]/100 text-white rounded hover:bg-[#B89B7A]"
                       >
                         Voltar ao Dashboard
                       </a>

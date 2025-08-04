@@ -100,7 +100,7 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
         {/* Header */}
         <div className="text-center space-y-2">
           <div className="flex items-center justify-center gap-2 mb-2">
-            <Layout className="w-5 h-5 text-blue-500" />
+            <Layout className="w-5 h-5 text-[#B89B7A]" />
             <InlineEditableText
               value={title}
               onChange={value => handlePropertyChange('title', value)}
@@ -134,7 +134,7 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
                 className={cn(
                   'flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-all duration-200',
                   activeDevice === device
-                    ? 'bg-blue-500 text-white shadow-md'
+                    ? 'bg-[#B89B7A]/100 text-white shadow-md'
                     : 'bg-white text-gray-600 hover:bg-gray-100',
                 )}
               >
@@ -148,7 +148,7 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
         )}
 
         {/* Configuration */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 bg-blue-50 rounded-lg">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 bg-[#B89B7A]/10 rounded-lg">
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Items</label>
             <select
@@ -260,7 +260,7 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
             </ul>
           </div>
 
-          <div className="p-4 bg-blue-50 rounded-lg">
+          <div className="p-4 bg-[#B89B7A]/10 rounded-lg">
             <h4 className="font-medium text-blue-800 mb-2 flex items-center gap-2">
               <Columns className="w-4 h-4" />
               Casos de Uso

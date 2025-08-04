@@ -458,7 +458,7 @@ export const ValidationSummary: React.FC<{
                     <AlertTriangle className="h-4 w-4 text-yellow-500" />
                   )}
                   {result.severity === "info" && (
-                    <Info className="h-4 w-4 text-blue-500" />
+                    <Info className="h-4 w-4 text-[#B89B7A]" />
                   )}
                   <div className="flex-1">
                     <AlertDescription className="text-sm">

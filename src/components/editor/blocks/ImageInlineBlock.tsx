@@ -90,7 +90,7 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
         'p-2 rounded-lg border border-transparent',
         'hover:border-gray-200 hover:bg-gray-50/30 transition-all duration-200',
         'cursor-pointer',
-        isSelected && 'border-blue-500 bg-blue-50/30',
+        isSelected && 'border-blue-500 bg-[#B89B7A]/10/30',
         className,
       )}
       onClick={onClick}
@@ -135,7 +135,7 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
 
       {/* Indicador de seleção */}
       {isSelected && (
-        <div className="absolute -top-2 -right-2 bg-blue-500 text-white rounded-full p-1">
+        <div className="absolute -top-2 -right-2 bg-[#B89B7A]/100 text-white rounded-full p-1">
           <Edit3 className="w-3 h-3" />
         </div>
       )}

@@ -128,7 +128,7 @@ export const QuizDataViewer: React.FC = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-1">
-                  <User className="w-4 h-4 text-blue-500" />
+                  <User className="w-4 h-4 text-[#B89B7A]" />
                   <span className="text-sm font-medium">Usuário</span>
                 </div>
                 <p className="text-lg font-bold">

@@ -84,7 +84,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
         p-4 rounded-lg transition-all duration-200
         ${
           isSelected
-            ? 'border-2 border-blue-500 bg-blue-50 cursor-pointer'
+            ? 'border-2 border-blue-500 bg-[#B89B7A]/10 cursor-pointer'
             : 'border-2 border-transparent hover:bg-[#FAF9F7]'
         }
         ${className}

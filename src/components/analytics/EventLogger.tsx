@@ -81,7 +81,7 @@ export const EventLogger: React.FC = () => {
   const getEventColor = (type: string) => {
     switch (type) {
       case "QuizStart":
-        return "bg-blue-500";
+        return "bg-[#B89B7A]/100";
       case "QuizAnswer":
         return "bg-purple-500";
       case "QuizComplete":

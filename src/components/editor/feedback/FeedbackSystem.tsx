@@ -224,7 +224,7 @@ const Toast: React.FC<{
       case "warning":
         return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
       case "info":
-        return <Info className="h-5 w-5 text-blue-500" />;
+        return <Info className="h-5 w-5 text-[#B89B7A]" />;
       case "loading":
         return <Loader2 className="h-5 w-5 text-gray-500 animate-spin" />;
     }
@@ -239,7 +239,7 @@ const Toast: React.FC<{
       case "warning":
         return "bg-yellow-50 border-yellow-200";
       case "info":
-        return "bg-blue-50 border-blue-200";
+        return "bg-[#B89B7A]/10 border-[#B89B7A]/30";
       case "loading":
         return "bg-gray-50 border-gray-200";
     }
@@ -263,7 +263,7 @@ const Toast: React.FC<{
             <div className="mt-3">
               <button
                 onClick={toast.action.onClick}
-                className="text-sm font-medium text-blue-600 hover:text-blue-500 focus:outline-none"
+                className="text-sm font-medium text-blue-600 hover:text-[#B89B7A] focus:outline-none"
               >
                 {toast.action.label}
               </button>
@@ -307,7 +307,7 @@ export const AutoSaveIndicator: React.FC<{
   const getStatusIcon = () => {
     switch (autoSaveState.status) {
       case "saving":
-        return <Loader2 className="h-4 w-4 animate-spin text-blue-500" />;
+        return <Loader2 className="h-4 w-4 animate-spin text-[#B89B7A]" />;
       case "saved":
         return <CheckCircle className="h-4 w-4 text-green-500" />;
       case "error":
@@ -391,13 +391,13 @@ export const LoadingOverlay: React.FC<{
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 max-w-sm w-full mx-4">
         <div className="flex items-center justify-center mb-4">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#B89B7A]" />
         </div>
         {message && <p className="text-center text-gray-700 mb-4">{message}</p>}
         {progress !== undefined && (
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div
-              className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+              className="bg-[#B89B7A]/100 h-2 rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>

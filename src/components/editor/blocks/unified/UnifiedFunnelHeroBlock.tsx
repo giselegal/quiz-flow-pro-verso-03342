@@ -60,7 +60,7 @@ const UnifiedFunnelHeroBlock: React.FC<BlockComponentProps> = ({ block, isSelect
 
       {/* Indicator visual para seleção no editor */}
       {isSelected && (
-        <div className="absolute top-0 left-0 bg-blue-500 text-white text-xs px-2 py-1 rounded-br-md z-10">
+        <div className="absolute top-0 left-0 bg-[#B89B7A]/100 text-white text-xs px-2 py-1 rounded-br-md z-10">
           Hero Section
         </div>
       )}

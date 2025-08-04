@@ -45,9 +45,9 @@ const BadgeInlineBlock: React.FC<BadgeInlineBlockProps> = ({
       case 'success':
         return 'bg-green-100 text-green-800 border-green-200';
       case 'warning':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+        return 'bg-stone-100 text-stone-700 border-yellow-200';
       case 'info':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'bg-blue-100 text-blue-800 border-[#B89B7A]/30';
       default:
         return 'bg-[#fff7f3] text-[#aa6b5d] border-[#B89B7A]/20';
     }

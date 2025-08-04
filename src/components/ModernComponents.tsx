@@ -418,7 +418,7 @@ const SocialProofBanner: React.FC<{
   }, [showLiveCounter]);
 
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-xl p-4">
+    <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-[#B89B7A]/30 rounded-xl p-4">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>

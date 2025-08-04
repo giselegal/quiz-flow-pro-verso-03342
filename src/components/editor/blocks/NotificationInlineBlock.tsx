@@ -149,13 +149,13 @@ const NotificationInlineBlock: React.FC<NotificationInlineBlockProps> = ({
       {/* Edit indicator */}
       {!disabled && (
         <div className="absolute top-2 right-2 opacity-0 group-hover/canvas-item:opacity-100 transition-opacity z-50">
-          <Edit3 className="w-4 h-4 text-blue-500" />
+          <Edit3 className="w-4 h-4 text-[#B89B7A]" />
         </div>
       )}
 
       {/* Hover Toolbar (inspirado no modelo) */}
       {isHovered && !disabled && (
-        <div className="absolute top-2 left-1 min-w-[50px] w-auto bg-blue-500 border-none rounded-md text-white p-0 flex flex-row z-50">
+        <div className="absolute top-2 left-1 min-w-[50px] w-auto bg-[#B89B7A]/100 border-none rounded-md text-white p-0 flex flex-row z-50">
           <span className="flex items-center justify-center w-auto h-auto p-2 cursor-move hover:bg-blue-700">
             <Bell className="h-4 w-4" />
           </span>

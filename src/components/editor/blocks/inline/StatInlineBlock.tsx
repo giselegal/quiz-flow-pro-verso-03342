@@ -49,7 +49,7 @@ const StatInlineBlock: React.FC<InlineBlockProps> = ({
       case 'error':
         return 'text-red-600 bg-red-50 border-red-200';
       case 'info':
-        return 'text-blue-600 bg-blue-50 border-blue-200';
+        return 'text-blue-600 bg-[#B89B7A]/10 border-[#B89B7A]/30';
       default:
         return 'text-[#B89B7A] bg-[#FFF7F3] border-[#B89B7A]/20';
     }

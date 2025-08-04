@@ -152,7 +152,7 @@ export const EditorShowcase: React.FC = () => {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center space-x-3 mb-4">
-            <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-[#B89B7A] rounded-lg flex items-center justify-center">
               <Sparkles className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -176,7 +176,7 @@ export const EditorShowcase: React.FC = () => {
             </Badge>
             <Badge
               variant="outline"
-              className="bg-blue-50 text-blue-700 border-blue-200"
+              className="bg-[#B89B7A]/10 text-blue-700 border-[#B89B7A]/30"
             >
               <Clock className="w-3 h-3 mr-1" />
               Última atualização: Agora

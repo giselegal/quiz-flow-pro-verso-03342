@@ -92,7 +92,7 @@ const ResultPageHeaderBlock: React.FC<ResultPageHeaderBlockProps> = ({
 
       {/* Editing Indicators */}
       {isEditing && (
-        <div className="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 rounded text-xs">Editando</div>
+        <div className="absolute top-2 right-2 bg-[#B89B7A]/100 text-white px-2 py-1 rounded text-xs">Editando</div>
       )}
     </div>
   );

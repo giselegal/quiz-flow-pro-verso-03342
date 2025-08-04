@@ -71,7 +71,7 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({
         {component.isPremium && (
           <Badge
             variant="outline"
-            className={`text-xs ${isLocked ? "border-gray-300 text-gray-400" : "border-yellow-400 text-yellow-700"}`}
+            className={`text-xs ${isLocked ? "border-gray-300 text-gray-400" : "border-yellow-400 text-stone-700"}`}
           >
             {isLocked ? <Lock className="w-3 h-3" /> : "PRO"}
           </Badge>
@@ -165,7 +165,7 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
               className={`${
                 hasPremiumFeatures
                   ? "border-green-500 text-green-700 bg-green-50"
-                  : "border-yellow-500 text-yellow-700 bg-yellow-50"
+                  : "border-yellow-500 text-stone-700 bg-yellow-50"
               }`}
             >
               {hasPremiumFeatures ? "Premium" : "Básico"}
@@ -238,10 +238,10 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
 
         {locked.length > 0 && !hasPremiumFeatures && (
           <div className="mt-6 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg">
-            <h4 className="font-semibold text-yellow-800 mb-2">
+            <h4 className="font-semibold text-stone-700 mb-2">
               🚀 Desbloqueie Mais Componentes
             </h4>
-            <p className="text-sm text-yellow-700 mb-3">
+            <p className="text-sm text-stone-700 mb-3">
               Upgrade para o plano Professional e tenha acesso a {locked.length}{" "}
               componentes premium:
             </p>

@@ -147,7 +147,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({
   const getEventIcon = (eventType: string) => {
     switch (eventType) {
       case "quiz_start":
-        return <Play className="h-4 w-4 text-blue-500" />;
+        return <Play className="h-4 w-4 text-[#B89B7A]" />;
       case "quiz_complete":
         return <CheckCircle className="h-4 w-4 text-green-500" />;
       case "quiz_answer":

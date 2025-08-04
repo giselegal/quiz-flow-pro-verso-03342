@@ -107,7 +107,7 @@ export const CreativePerformanceDashboard: React.FC = () => {
     if (rate >= 2.0)
       return <Badge className="bg-green-100 text-green-800">Excelente</Badge>;
     if (rate >= 1.0)
-      return <Badge className="bg-yellow-100 text-yellow-800">Bom</Badge>;
+      return <Badge className="bg-stone-100 text-stone-700">Bom</Badge>;
     if (rate >= 0.5)
       return <Badge className="bg-orange-100 text-orange-800">Regular</Badge>;
     return <Badge className="bg-red-100 text-red-800">Baixo</Badge>;
@@ -330,7 +330,7 @@ export const CreativePerformanceDashboard: React.FC = () => {
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div
-                          className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                          className="bg-[#B89B7A] h-2 rounded-full transition-all duration-300"
                           style={{
                             width: `${Math.min(parseFloat(creative.conversion_rate) * 20, 100)}%`,
                           }}
@@ -345,7 +345,7 @@ export const CreativePerformanceDashboard: React.FC = () => {
       </div>
 
       {/* Dicas */}
-      <Card className="bg-blue-50 border-blue-200">
+      <Card className="bg-[#B89B7A]/10 border-[#B89B7A]/30">
         <CardHeader>
           <CardTitle className="text-blue-800">
             💡 Dicas de Otimização

@@ -175,7 +175,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           title="Visualizações"
           value={metrics.total_views.toLocaleString()}
           description="Páginas visualizadas"
-          icon={<Eye className="h-4 w-4 text-blue-500" />}
+          icon={<Eye className="h-4 w-4 text-[#B89B7A]" />}
         />
         <MetricCard
           title="Iniciados"
@@ -374,7 +374,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                     )}
                     {metrics.average_time > 300 && (
                       <li className="flex items-start space-x-2">
-                        <Clock className="h-4 w-4 text-blue-500 mt-0.5" />
+                        <Clock className="h-4 w-4 text-[#B89B7A] mt-0.5" />
                         <span>
                           Quiz muito longo. Considere reduzir o número de
                           perguntas.

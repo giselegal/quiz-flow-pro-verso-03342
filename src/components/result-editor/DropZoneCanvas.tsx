@@ -213,7 +213,7 @@ export const DropZoneCanvas: React.FC<DropZoneCanvasProps> = ({
       <div
         ref={setNodeRef}
         className={`min-h-[calc(100vh-200px)] p-6 transition-all duration-200 ${
-          isOver ? "bg-blue-50 ring-2 ring-blue-300" : ""
+          isOver ? "bg-[#B89B7A]/10 ring-2 ring-blue-300" : ""
         }`}
         style={getPreviewStyles()}
       >

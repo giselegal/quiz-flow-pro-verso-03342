@@ -87,9 +87,9 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({ block, onPropertyCha
       case 'elegant':
         return 'bg-gray-50 border-gray-200 text-gray-800';
       case 'default':
-        return 'bg-blue-50 border-blue-200 text-blue-800';
+        return 'bg-[#B89B7A]/10 border-[#B89B7A]/30 text-blue-800';
       default:
-        return 'bg-blue-50 border-blue-200 text-blue-800';
+        return 'bg-[#B89B7A]/10 border-[#B89B7A]/30 text-blue-800';
     }
   };
 

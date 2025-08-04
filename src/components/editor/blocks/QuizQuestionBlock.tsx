@@ -66,7 +66,7 @@ export const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
       </div>
 
       {isSelected && (
-        <div className="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 rounded text-xs">Selecionado</div>
+        <div className="absolute top-2 right-2 bg-[#B89B7A]/100 text-white px-2 py-1 rounded text-xs">Selecionado</div>
       )}
     </div>
   );

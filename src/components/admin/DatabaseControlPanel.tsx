@@ -82,7 +82,7 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
         <div className={`px-3 py-1 rounded-full text-xs font-medium ${
           databaseMode.isEnabled 
             ? 'bg-green-100 text-green-800' 
-            : 'bg-yellow-100 text-yellow-800'
+            : 'bg-stone-100 text-stone-700'
         }`}>
           {databaseMode.isEnabled ? '🔗 Banco Ativo' : '📁 Modo Local'}
         </div>
@@ -129,7 +129,7 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
           <button
             onClick={handleToggleMode}
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              databaseMode.isEnabled ? 'bg-blue-600' : 'bg-gray-300'
+              databaseMode.isEnabled ? 'bg-[#B89B7A]' : 'bg-gray-300'
             }`}
           >
             <span
@@ -143,8 +143,8 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
 
       {/* Migration Section */}
       {!databaseMode.isEnabled && (
-        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
-          <h4 className="text-sm font-medium text-blue-900 mb-2">
+        <div className="mb-6 p-4 bg-[#B89B7A]/10 border border-[#B89B7A]/30 rounded-md">
+          <h4 className="text-sm font-medium text-[#432818] mb-2">
             🚀 Migrar para Banco de Dados
           </h4>
           <p className="text-xs text-blue-700 mb-3">
@@ -161,7 +161,7 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
                 ? 'bg-green-600 text-white'
                 : migrationStatus === 'error'
                 ? 'bg-red-600 text-white'
-                : 'bg-blue-600 text-white hover:bg-blue-700'
+                : 'bg-[#B89B7A] text-white hover:bg-blue-700'
             }`}
           >
             {migrationStatus === 'migrating' && '⏳ Migrando...'}

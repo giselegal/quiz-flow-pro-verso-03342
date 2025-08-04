@@ -51,7 +51,7 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
     <div
       className={cn(
         'relative w-full min-h-[350px] p-8 rounded-lg border-2 border-dashed',
-        isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white',
+        isSelected ? 'border-blue-500 bg-[#B89B7A]/10' : 'border-gray-300 bg-white',
         'cursor-pointer hover:border-gray-400 transition-colors',
         className,
       )}

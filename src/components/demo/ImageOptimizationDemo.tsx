@@ -26,7 +26,7 @@ const ImageOptimizationDemo: React.FC = () => {
             escopo limitado.
           </p>
 
-          <EnhancedAutoFixedImages className="border border-blue-200 rounded-lg p-4 bg-blue-50">
+          <EnhancedAutoFixedImages className="border border-[#B89B7A]/30 rounded-lg p-4 bg-[#B89B7A]/10">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <h3 className="text-sm font-medium mb-2">

@@ -33,7 +33,7 @@ export const PageEditorCanvas: React.FC<PageEditorCanvasProps> = ({
                 key={block.id}
                 className={`p-4 border rounded-lg cursor-pointer transition-colors ${
                   selectedBlockId === block.id
-                    ? "border-blue-500 bg-blue-50"
+                    ? "border-blue-500 bg-[#B89B7A]/10"
                     : "border-gray-200 hover:border-gray-300"
                 }`}
                 onClick={() => onSelectBlock(block.id)}

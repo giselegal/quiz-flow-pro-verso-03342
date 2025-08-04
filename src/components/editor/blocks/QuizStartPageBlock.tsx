@@ -69,7 +69,7 @@ const QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
         'relative w-full h-full flex flex-col bg-white rounded-lg border border-gray-200',
         // LAYOUT HORIZONTAL RESPONSIVO - LARGURA 100% - MÁXIMO 2 COLUNAS INTERNAS
         'p-4 md:p-6 min-h-[300px] max-w-full',
-        isSelected ? 'ring-2 ring-blue-500 bg-blue-50' : '',
+        isSelected ? 'ring-2 ring-blue-500 bg-[#B89B7A]/10' : '',
         'cursor-pointer hover:shadow-md transition-all duration-200',
         className,
       )}

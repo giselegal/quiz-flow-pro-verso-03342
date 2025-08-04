@@ -34,7 +34,7 @@ const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({
         p-6 rounded-lg cursor-pointer transition-all duration-200
         ${
           isSelected
-            ? 'border-2 border-blue-500 bg-blue-50'
+            ? 'border-2 border-blue-500 bg-[#B89B7A]/10'
             : 'border-2 border-dashed border-gray-300 hover:border-gray-400'
         }
         ${className}

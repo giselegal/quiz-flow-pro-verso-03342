@@ -78,7 +78,7 @@ const StatInlineBlock: React.FC<BlockComponentProps> = ({
       users: 'text-[#B89B7A]',
       'trending-up': 'text-green-500',
       heart: 'text-red-500',
-      clock: 'text-blue-500',
+      clock: 'text-[#B89B7A]',
       star: 'text-yellow-500',
       award: 'text-purple-500',
       target: 'text-indigo-500',

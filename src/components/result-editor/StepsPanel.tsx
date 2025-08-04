@@ -84,7 +84,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
               key={step.id}
               className={`w-12 h-12 rounded-lg border-2 flex items-center justify-center cursor-pointer ${
                 activeStepId === step.id
-                  ? "border-blue-500 bg-blue-50"
+                  ? "border-blue-500 bg-[#B89B7A]/10"
                   : "border-gray-200 hover:border-gray-300"
               }`}
               onClick={() => onStepSelect(step.id)}
@@ -126,7 +126,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
               key={step.id}
               className={`border-2 rounded-lg p-3 cursor-pointer transition-colors ${
                 activeStepId === step.id
-                  ? "border-blue-500 bg-blue-50"
+                  ? "border-blue-500 bg-[#B89B7A]/10"
                   : "border-gray-200 hover:border-gray-300"
               }`}
               onClick={() => onStepSelect(step.id)}

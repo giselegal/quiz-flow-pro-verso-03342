@@ -240,7 +240,7 @@ const SystemIntegrationTest: React.FC = () => {
       case "error":
         return <XCircle className="w-5 h-5 text-red-500" />;
       case "running":
-        return <Clock className="w-5 h-5 text-blue-500 animate-spin" />;
+        return <Clock className="w-5 h-5 text-[#B89B7A] animate-spin" />;
       default:
         return <Clock className="w-5 h-5 text-gray-400" />;
     }
@@ -253,7 +253,7 @@ const SystemIntegrationTest: React.FC = () => {
       case "error":
         return "border-red-200 bg-red-50";
       case "running":
-        return "border-blue-200 bg-blue-50";
+        return "border-[#B89B7A]/30 bg-[#B89B7A]/10";
       default:
         return "border-gray-200 bg-gray-50";
     }
@@ -288,7 +288,7 @@ const SystemIntegrationTest: React.FC = () => {
               </div>
               <div className="text-sm text-gray-600">Erros</div>
             </div>
-            <div className="text-center p-4 border rounded-lg bg-blue-50">
+            <div className="text-center p-4 border rounded-lg bg-[#B89B7A]/10">
               <div className="text-2xl font-bold text-blue-600">
                 {runningCount}
               </div>

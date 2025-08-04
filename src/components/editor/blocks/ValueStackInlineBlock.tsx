@@ -58,8 +58,8 @@ const ValueStackInlineBlock: React.FC<BlockComponentProps> = ({
         p-3 rounded-lg transition-all duration-200
         ${
           isSelected
-            ? 'border-2 border-blue-500 bg-blue-50'
-            : 'border-2 border-dashed border-transparent hover:border-blue-300 hover:bg-blue-50/30'
+            ? 'border-2 border-blue-500 bg-[#B89B7A]/10'
+            : 'border-2 border-dashed border-transparent hover:border-blue-300 hover:bg-[#B89B7A]/10/30'
         }
         ${className}
       `}
@@ -82,7 +82,7 @@ const ValueStackInlineBlock: React.FC<BlockComponentProps> = ({
                 <CheckCircle className="h-3 w-3" />
               </div>
               <span
-                className="cursor-pointer hover:bg-blue-50/50 rounded px-1"
+                className="cursor-pointer hover:bg-[#B89B7A]/10/50 rounded px-1"
                 onClick={() => {
                   const newBenefit = prompt('Editar benefício:', benefit);
                   if (newBenefit !== null) handleBenefitChange(index, newBenefit);
@@ -110,7 +110,7 @@ const ValueStackInlineBlock: React.FC<BlockComponentProps> = ({
           {items.map((item: ValueItem, index: number) => (
             <div key={index} className="flex justify-between items-center p-2 border-b border-[#B89B7A]/10">
               <span
-                className="cursor-pointer hover:bg-blue-50/50 rounded px-1"
+                className="cursor-pointer hover:bg-[#B89B7A]/10/50 rounded px-1"
                 onClick={() => {
                   const newName = prompt('Editar nome do item:', item.name);
                   if (newName !== null) handleItemChange(index, 'name', newName);
@@ -119,7 +119,7 @@ const ValueStackInlineBlock: React.FC<BlockComponentProps> = ({
                 {item.name}
               </span>
               <span
-                className="font-medium cursor-pointer hover:bg-blue-50/50 rounded px-1"
+                className="font-medium cursor-pointer hover:bg-[#B89B7A]/10/50 rounded px-1"
                 onClick={() => {
                   const newValue = prompt('Editar valor do item:', item.value);
                   if (newValue !== null) handleItemChange(index, 'value', newValue);
@@ -134,7 +134,7 @@ const ValueStackInlineBlock: React.FC<BlockComponentProps> = ({
             <span>Valor Total</span>
             <div className="relative">
               <span
-                className="cursor-pointer hover:bg-blue-50/50 rounded px-1"
+                className="cursor-pointer hover:bg-[#B89B7A]/10/50 rounded px-1"
                 onClick={() => {
                   const newTotal = prompt('Editar valor total:', totalValue);
                   if (newTotal !== null) handlePropertyChange('totalValue', newTotal);
@@ -157,7 +157,7 @@ const ValueStackInlineBlock: React.FC<BlockComponentProps> = ({
             />
           </p>
           <p
-            className="text-4xl font-bold text-[#B89B7A] cursor-pointer hover:bg-blue-50/50 rounded px-1"
+            className="text-4xl font-bold text-[#B89B7A] cursor-pointer hover:bg-[#B89B7A]/10/50 rounded px-1"
             onClick={() => {
               const newPrice = prompt('Editar preço final:', finalPrice);
               if (newPrice !== null) handlePropertyChange('finalPrice', newPrice);

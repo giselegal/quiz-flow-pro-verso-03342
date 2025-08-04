@@ -150,7 +150,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
       );
     if (rate >= 1.0)
       return (
-        <Badge className="bg-yellow-50 text-yellow-700 border-yellow-200 font-medium">
+        <Badge className="bg-yellow-50 text-stone-700 border-yellow-200 font-medium">
           <Target size={12} className="mr-1" />
           Bom
         </Badge>
@@ -735,7 +735,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
                 style={{ color: brandColors.text.medium }}
               >
                 <li className="flex items-start space-x-2">
-                  <span className="text-blue-500">•</span>
+                  <span className="text-[#B89B7A]">•</span>
                   <span>Criar variações do melhor criativo</span>
                 </li>
                 <li className="flex items-start space-x-2">

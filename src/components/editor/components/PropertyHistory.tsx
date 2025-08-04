@@ -169,7 +169,7 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
                           }}
                           className={`w-full text-left p-2 rounded-md transition-colors ${
                             isCurrentEntry
-                              ? "bg-blue-50 border border-blue-200"
+                              ? "bg-[#B89B7A]/10 border border-[#B89B7A]/30"
                               : isFutureEntry
                                 ? "opacity-50 hover:bg-gray-50"
                                 : "hover:bg-gray-50"

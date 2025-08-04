@@ -125,7 +125,7 @@ export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({
             id="event-tracking"
             checked={trackingEnabled}
             onCheckedChange={setTrackingEnabled}
-            className="data-[state=checked]:bg-blue-600"
+            className="data-[state=checked]:bg-[#B89B7A]"
           />
           <Label htmlFor="event-tracking" className="text-sm">
             Habilitar rastreamento de eventos

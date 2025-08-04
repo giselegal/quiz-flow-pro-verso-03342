@@ -23,7 +23,7 @@ export const TextBlock: React.FC<TextBlockProps> = ({ content, isSelected, onCon
   return (
     <div
       className={`relative p-4 rounded border-2 border-dashed border-gray-300 cursor-pointer hover:border-gray-400 transition-colors ${
-        isSelected ? 'border-blue-500 bg-blue-50' : ''
+        isSelected ? 'border-blue-500 bg-[#B89B7A]/10' : ''
       }`}
       onClick={onClick}
     >

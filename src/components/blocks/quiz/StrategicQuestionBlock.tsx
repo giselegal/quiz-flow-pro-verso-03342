@@ -158,7 +158,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
     // list style
     return `${baseClasses} ${
       isSelected(option)
-        ? "bg-blue-50 border-blue-300 text-blue-900"
+        ? "bg-[#B89B7A]/10 border-blue-300 text-[#432818]"
         : "bg-white border-gray-200 hover:bg-gray-50"
     }`;
   };

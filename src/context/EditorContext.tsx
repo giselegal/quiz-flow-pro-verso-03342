@@ -1,7 +1,7 @@
+import { createEditorAdapter } from "@/adapters/EditorDatabaseAdapter";
 import { getAllSteps, getStepTemplate } from "@/config/stepTemplatesMapping";
 import { EditorBlock, FunnelStage } from "@/types/editor";
-import { createEditorAdapter, EditorDatabaseAdapter } from "@/adapters/EditorDatabaseAdapter";
-import React, { createContext, ReactNode, useCallback, useContext, useState, useEffect } from "react";
+import React, { createContext, ReactNode, useCallback, useContext, useState } from "react";
 
 // ✅ INTERFACE UNIFICADA DO CONTEXTO
 interface EditorContextType {
@@ -82,14 +82,14 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const [adapter] = useState(() => {
     return createEditorAdapter({
       useDatabase: false, // Iniciar em modo local por segurança
-      quizId: 'quiz-demo-id', // Quiz padrão para desenvolvimento
-      fallbackToLocal: true
+      quizId: "quiz-demo-id", // Quiz padrão para desenvolvimento
+      fallbackToLocal: true,
     });
   });
 
   // Estado do modo banco
   const [databaseModeEnabled, setDatabaseModeEnabled] = useState(false);
-  const [currentQuizId, setCurrentQuizId] = useState('quiz-demo-id');
+  const [currentQuizId, setCurrentQuizId] = useState("quiz-demo-id");
 
   // ═══════════════════════════════════════════════
   // 🏗️ ESTADO PRINCIPAL CENTRALIZADO
@@ -294,9 +294,9 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       if (!stage) return;
 
       const stepNumber = parseInt(stageId.replace("step-", ""));
-      
+
       console.log(`🎨 EditorContext: Carregando template para etapa ${stepNumber}`);
-      
+
       // ✅ CARREGAR DIRETAMENTE DO TEMPLATE
       const templateBlocks = getStepTemplate(stepNumber);
       if (templateBlocks && templateBlocks.length > 0) {
@@ -328,7 +328,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       }
     },
     [stages, updateStage]
-  );  // ═══════════════════════════════════════════════
+  ); // ═══════════════════════════════════════════════
   // 🧩 BLOCK ACTIONS (GERENCIAMENTO DE BLOCOS)
   // ═══════════════════════════════════════════════
   const addBlock = useCallback(
@@ -629,31 +629,37 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   // ═══════════════════════════════════════════════
   // 🔌 FUNÇÕES DO MODO BANCO DE DADOS
   // ═══════════════════════════════════════════════
-  
-  const setDatabaseMode = useCallback((enabled: boolean) => {
-    console.log(`🔧 EditorContext: Modo banco ${enabled ? 'ativado' : 'desativado'}`);
-    setDatabaseModeEnabled(enabled);
-    adapter.setDatabaseMode(enabled);
-  }, [adapter]);
 
-  const setQuizId = useCallback((quizId: string) => {
-    console.log(`🔧 EditorContext: Quiz ID alterado para: ${quizId}`);
-    setCurrentQuizId(quizId);
-    adapter.setQuizId(quizId);
-  }, [adapter]);
+  const setDatabaseMode = useCallback(
+    (enabled: boolean) => {
+      console.log(`🔧 EditorContext: Modo banco ${enabled ? "ativado" : "desativado"}`);
+      setDatabaseModeEnabled(enabled);
+      adapter.setDatabaseMode(enabled);
+    },
+    [adapter]
+  );
+
+  const setQuizId = useCallback(
+    (quizId: string) => {
+      console.log(`🔧 EditorContext: Quiz ID alterado para: ${quizId}`);
+      setCurrentQuizId(quizId);
+      adapter.setQuizId(quizId);
+    },
+    [adapter]
+  );
 
   const migrateToDatabase = useCallback(async (): Promise<boolean> => {
-    console.log('🚀 EditorContext: Iniciando migração para banco...');
+    console.log("🚀 EditorContext: Iniciando migração para banco...");
     try {
       const success = await adapter.migrateLocalToDatabase();
       if (success) {
         setDatabaseModeEnabled(true);
         adapter.setDatabaseMode(true);
-        console.log('✅ EditorContext: Migração concluída, modo banco ativado');
+        console.log("✅ EditorContext: Migração concluída, modo banco ativado");
       }
       return success;
     } catch (error) {
-      console.error('❌ EditorContext: Erro na migração:', error);
+      console.error("❌ EditorContext: Erro na migração:", error);
       return false;
     }
   }, [adapter]);
@@ -662,7 +668,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     try {
       return await adapter.getQuizStats();
     } catch (error) {
-      console.error('❌ EditorContext: Erro ao obter estatísticas:', error);
+      console.error("❌ EditorContext: Erro ao obter estatísticas:", error);
       return { error: String(error) };
     }
   }, [adapter]);

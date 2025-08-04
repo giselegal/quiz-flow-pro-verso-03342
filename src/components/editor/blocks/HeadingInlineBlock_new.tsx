@@ -112,7 +112,7 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({ block, isSelected =
         alignmentClasses[alignment as keyof typeof alignmentClasses] || alignmentClasses.center,
         // Estados visuais
         'transition-all duration-200',
-        isSelected && 'ring-2 ring-blue-500 bg-blue-50',
+        isSelected && 'ring-2 ring-blue-500 bg-[#B89B7A]/10',
         'cursor-pointer hover:bg-gray-50',
         className,
       )}

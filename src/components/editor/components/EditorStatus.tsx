@@ -112,7 +112,7 @@ export const EditorStatus: React.FC<EditorStatusProps> = ({
             {/* Undo/Redo Status */}
             <div className="flex items-center space-x-1">
               <div
-                className={`w-2 h-2 rounded-full ${canUndo ? "bg-blue-500" : "bg-gray-300"}`}
+                className={`w-2 h-2 rounded-full ${canUndo ? "bg-[#B89B7A]/100" : "bg-gray-300"}`}
                 title={canUndo ? "Desfazer disponível" : "Nada para desfazer"}
               />
               <div

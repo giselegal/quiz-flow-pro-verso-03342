@@ -273,10 +273,10 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
 
         // 6. UX APRIMORADA: Estados visuais
         'border-2 border-transparent rounded-lg',
-        'hover:border-blue-300 hover:bg-blue-50/30',
+        'hover:border-blue-300 hover:bg-[#B89B7A]/10/30',
 
         // Estado selecionado
-        isSelected && ['border-blue-500 bg-blue-50', 'shadow-lg shadow-blue-500/20'],
+        isSelected && ['border-blue-500 bg-[#B89B7A]/10', 'shadow-lg shadow-blue-500/20'],
 
         // Estados de erro e loading
         hasError && 'border-red-500 bg-red-50',
@@ -344,7 +344,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
                   e.stopPropagation();
                   handleEdit();
                 }}
-                className="px-3 py-1 bg-blue-500 text-white text-xs font-medium hover:bg-blue-600 flex items-center gap-1 transition-colors"
+                className="px-3 py-1 bg-[#B89B7A]/100 text-white text-xs font-medium hover:bg-[#B89B7A] flex items-center gap-1 transition-colors"
                 title={editLabel}
               >
                 <Edit3 className="w-3 h-3" />

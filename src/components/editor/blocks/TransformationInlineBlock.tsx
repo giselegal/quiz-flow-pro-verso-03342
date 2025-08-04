@@ -34,8 +34,8 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
         p-3 rounded-lg transition-all duration-200
         ${
           isSelected
-            ? 'border-2 border-blue-500 bg-blue-50'
-            : 'border-2 border-dashed border-transparent hover:border-blue-300 hover:bg-blue-50/30'
+            ? 'border-2 border-blue-500 bg-[#B89B7A]/10'
+            : 'border-2 border-dashed border-transparent hover:border-blue-300 hover:bg-[#B89B7A]/10/30'
         }
         ${className}
       `}

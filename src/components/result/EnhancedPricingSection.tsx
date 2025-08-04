@@ -468,7 +468,7 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({
                 {
                   icon: <Zap className="w-4 h-4" />,
                   text: "Acesso Imediato",
-                  color: "text-blue-500",
+                  color: "text-[#B89B7A]",
                 },
                 {
                   icon: <Star className="w-4 h-4" />,

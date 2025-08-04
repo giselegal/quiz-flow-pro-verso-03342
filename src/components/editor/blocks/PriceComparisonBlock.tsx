@@ -82,7 +82,7 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
           w-full p-6 rounded-lg cursor-pointer transition-all duration-200
           ${
             isSelected
-              ? 'border-2 border-blue-500 bg-blue-50'
+              ? 'border-2 border-blue-500 bg-[#B89B7A]/10'
               : 'border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]'
           }
           ${className}
@@ -118,7 +118,7 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
                     <div className="flex items-center gap-2">
                       <span className="font-semibold">{plan.name}</span>
                       {plan.isPopular && highlightPopular && (
-                        <Badge className="bg-blue-500 text-white">Mais Popular</Badge>
+                        <Badge className="bg-[#B89B7A]/100 text-white">Mais Popular</Badge>
                       )}
                     </div>
                   </td>
@@ -173,7 +173,7 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
         w-full p-6 rounded-lg cursor-pointer transition-all duration-200
         ${
           isSelected
-            ? 'border-2 border-blue-500 bg-blue-50'
+            ? 'border-2 border-blue-500 bg-[#B89B7A]/10'
             : 'border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]'
         }
         ${className}
@@ -216,7 +216,7 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
           >
             {plan.isPopular && highlightPopular && (
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <Badge className="bg-blue-500 text-white px-4 py-1">Mais Popular</Badge>
+                <Badge className="bg-[#B89B7A]/100 text-white px-4 py-1">Mais Popular</Badge>
               </div>
             )}
 

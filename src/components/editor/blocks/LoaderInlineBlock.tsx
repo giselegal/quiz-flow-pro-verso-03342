@@ -80,7 +80,7 @@ const LoaderInlineBlock: React.FC<LoaderInlineBlockProps> = ({
       {/* Edit indicator */}
       {!disabled && (
         <div className="absolute top-2 right-2 opacity-0 group-hover/canvas-item:opacity-100 transition-opacity">
-          <Edit3 className="w-4 h-4 text-blue-500" />
+          <Edit3 className="w-4 h-4 text-[#B89B7A]" />
         </div>
       )}
     </div>

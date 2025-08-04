@@ -124,8 +124,8 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
       className={cn(
         'w-full p-4 md:p-6 transition-all duration-200',
         'bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg',
-        isSelected && 'ring-2 ring-blue-400 bg-blue-50',
-        !disabled && 'cursor-pointer hover:bg-blue-50/80',
+        isSelected && 'ring-2 ring-blue-400 bg-[#B89B7A]/10',
+        !disabled && 'cursor-pointer hover:bg-[#B89B7A]/10/80',
         className,
       )}
       onClick={onClick}
@@ -145,7 +145,7 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
       {/* Ícone central de transformação para layout lado a lado */}
       {layoutStyle === 'side-by-side' && (
         <div className="flex justify-center -mt-3 mb-3">
-          <div className="bg-blue-500 text-white p-3 rounded-full shadow-lg">
+          <div className="bg-[#B89B7A]/100 text-white p-3 rounded-full shadow-lg">
             <ArrowRightLeft className="w-5 h-5" />
           </div>
         </div>
@@ -156,7 +156,7 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
         <p className="text-gray-700 text-sm md:text-base mb-4">
           Esta pode ser sua transformação! Comece hoje mesmo sua jornada rumo ao estilo dos sonhos.
         </p>
-        <div className="inline-flex items-center gap-2 bg-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition-colors">
+        <div className="inline-flex items-center gap-2 bg-[#B89B7A]/100 text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#B89B7A] transition-colors">
           <ArrowRightLeft className="w-4 h-4" />
           Quero Minha Transformação
         </div>

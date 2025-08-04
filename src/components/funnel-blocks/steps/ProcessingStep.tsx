@@ -172,7 +172,7 @@ export const ProcessingStep: React.FC<FunnelStepProps> = ({
       )}
 
       {isEditable && (
-        <div className="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded">
+        <div className="absolute top-2 right-2 bg-[#B89B7A]/100 text-white text-xs px-2 py-1 rounded">
           Editar
         </div>
       )}

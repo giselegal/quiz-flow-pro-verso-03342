@@ -27,7 +27,7 @@ const QuizWelcome: React.FC<QuizWelcomeProps> = ({ onStart }) => {
       <button
         onClick={handleStart}
         disabled={isLoading}
-        className="px-8 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50"
+        className="px-8 py-3 bg-[#B89B7A]/100 text-white rounded-lg hover:bg-[#B89B7A] disabled:opacity-50"
       >
         {isLoading ? "Carregando..." : "Começar Quiz"}
       </button>

@@ -335,7 +335,7 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
                       'w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200',
                       playerStyle === 'modern' || playerStyle === 'dark'
                         ? 'bg-white/20 hover:bg-white/30 text-white'
-                        : 'bg-blue-500 hover:bg-blue-600 text-white',
+                        : 'bg-[#B89B7A]/100 hover:bg-[#B89B7A] text-white',
                     )}
                     disabled={isLoading}
                   >

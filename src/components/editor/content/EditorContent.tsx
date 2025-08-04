@@ -34,7 +34,7 @@ export const EditorContent: React.FC<EditorContentProps> = ({
           <div
             key={block.id}
             className={`p-4 border rounded-lg cursor-pointer ${
-              isSelected ? "border-blue-500 bg-blue-50" : "border-gray-200"
+              isSelected ? "border-blue-500 bg-[#B89B7A]/10" : "border-gray-200"
             }`}
             onClick={() => {}}
           >
@@ -56,7 +56,7 @@ export const EditorContent: React.FC<EditorContentProps> = ({
           <div
             key={block.id}
             className={`p-4 border rounded-lg cursor-pointer ${
-              isSelected ? "border-blue-500 bg-blue-50" : "border-gray-200"
+              isSelected ? "border-blue-500 bg-[#B89B7A]/10" : "border-gray-200"
             }`}
           >
             <p className="text-gray-600">Tipo de bloco: {block.type}</p>
