@@ -53,11 +53,11 @@ const ABTestPage: React.FC = () => {
                       43.2% conversão (234 visitantes)
                     </div>
                   </div>
-                  <div className="p-3 bg-blue-50 rounded">
-                    <div className="text-sm font-medium text-blue-700">
+                  <div className="p-3 bg-[#B89B7A]/10 rounded">
+                    <div className="text-sm font-medium text-[#A38A69]">
                       Variante B
                     </div>
-                    <div className="text-xs text-blue-600 mt-1">
+                    <div className="text-xs text-[#B89B7A] mt-1">
                       47.8% conversão (221 visitantes)
                     </div>
                   </div>

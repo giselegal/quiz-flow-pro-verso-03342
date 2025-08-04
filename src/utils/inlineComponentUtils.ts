@@ -44,7 +44,7 @@ export const RESPONSIVE_PATTERNS = {
 
 export const getThemeClasses = (theme: string) => {
   const themes = {
-    primary: "bg-blue-500 text-white",
+    primary: "bg-[#B89B7A]/100 text-white",
     secondary: "bg-gray-500 text-white",
     brand: "bg-[#B89B7A] text-white",
   };

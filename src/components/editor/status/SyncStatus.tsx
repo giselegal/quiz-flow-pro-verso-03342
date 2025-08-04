@@ -249,7 +249,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
 
         {/* Mudanças pendentes */}
         {autoSaveState.pendingChanges && (
-          <div className="text-xs text-yellow-600 bg-yellow-50 p-2 rounded flex items-center space-x-1">
+          <div className="text-xs text-stone-600 bg-stone-50 p-2 rounded flex items-center space-x-1">
             <Clock className="w-3 h-3" />
             <span>Existem mudanças não salvas no backend</span>
           </div>

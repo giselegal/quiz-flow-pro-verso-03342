@@ -90,7 +90,7 @@ const LoadingAnimationBlock: React.FC<LoadingAnimationProps> = ({
       className={cn(
         'loading-animation w-full flex items-center justify-center py-8',
         'transition-all duration-200',
-        isSelected && 'ring-2 ring-blue-500 bg-[#B89B7A]/10',
+        isSelected && 'ring-2 ring-[#B89B7A] bg-[#B89B7A]/10',
         className,
       )}
       onClick={handleClick}

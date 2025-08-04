@@ -446,7 +446,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">
+                <div className="text-2xl font-bold text-[#B89B7A]">
                   {dailyData.reduce((sum, day) => sum + day["Visitantes A"], 0)}
                 </div>
                 <div className="text-sm text-muted-foreground">
@@ -462,7 +462,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({
                 </div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">
+                <div className="text-2xl font-bold text-[#B89B7A]">
                   {(
                     dailyData.reduce(
                       (sum, day) => sum + day["Conversão B"],
@@ -669,7 +669,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({
                   </Badge>
                 </div>
               </div>
-              <Target className="h-8 w-8 text-blue-600" />
+              <Target className="h-8 w-8 text-[#B89B7A]" />
             </div>
             <div className="mt-2 text-xs text-muted-foreground">
               {
@@ -738,7 +738,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({
                   </Badge>
                 </div>
               </div>
-              <MousePointer className="h-8 w-8 text-purple-600" />
+              <MousePointer className="h-8 w-8 text-[#B89B7A]" />
             </div>
             <div className="mt-2 text-xs text-muted-foreground">
               {getMetricComparison(metrics.A.leads, metrics.B.leads).difference}{" "}
@@ -772,7 +772,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({
                   </Badge>
                 </div>
               </div>
-              <ShoppingCart className="h-8 w-8 text-orange-600" />
+              <ShoppingCart className="h-8 w-8 text-[#B89B7A]" />
             </div>
             <div className="mt-2 text-xs text-muted-foreground">
               {
@@ -946,7 +946,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({
             </CardHeader>
             <CardContent className="space-y-4">
               {/* Insight sobre significância */}
-              <div className="border-l-4 border-blue-500 pl-4">
+              <div className="border-l-4 border-[#B89B7A] pl-4">
                 <h4 className="font-semibold flex items-center gap-2">
                   <Activity className="h-4 w-4" />
                   Significância Estatística

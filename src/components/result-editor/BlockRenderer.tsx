@@ -100,7 +100,7 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
     case "button":
       return (
         <div className="text-center">
-          <button className="bg-[#B89B7A] text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+          <button className="bg-[#B89B7A] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#A38A69] transition-colors">
             {content.buttonText || "Clique aqui"}
           </button>
         </div>
@@ -172,7 +172,7 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
               R$ {content.regularPrice}
             </div>
           )}
-          <div className="text-3xl font-bold text-blue-600 mb-4">
+          <div className="text-3xl font-bold text-[#B89B7A] mb-4">
             R$ {content.salePrice || "97"}
           </div>
           <button className="bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-600 transition-colors">

@@ -64,7 +64,7 @@ const UnifiedFunnelPainBlock: React.FC<BlockComponentProps> = ({ block, isSelect
     // Props específicas do editor
     isSelected,
     onClick: () => onBlockSelect(block.id),
-    className: isSelected ? 'ring-2 ring-blue-500 ring-offset-2' : '',
+    className: isSelected ? 'ring-2 ring-[#B89B7A] ring-offset-2' : '',
   };
 
   return (

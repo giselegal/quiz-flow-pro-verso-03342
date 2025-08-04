@@ -55,8 +55,8 @@ const UrgencyTimerBlock: React.FC<BlockComponentProps> = ({
 
   const colorClasses = {
     red: 'bg-red-500 text-white',
-    orange: 'bg-orange-500 text-white',
-    yellow: 'bg-yellow-500 text-black',
+    orange: 'bg-[#B89B7A]/100 text-white',
+    yellow: 'bg-stone-500 text-black',
     green: 'bg-green-500 text-white',
   };
 
@@ -66,7 +66,7 @@ const UrgencyTimerBlock: React.FC<BlockComponentProps> = ({
         p-6 rounded-lg cursor-pointer transition-all duration-200
         ${
           isSelected
-            ? 'border-2 border-blue-500 bg-[#B89B7A]/10'
+            ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10'
             : 'border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]'
         }
         ${className}

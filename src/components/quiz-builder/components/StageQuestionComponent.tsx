@@ -58,7 +58,7 @@ const StageQuestionComponent: React.FC<StageQuestionComponentProps> = ({
   return (
     <Card
       className={`w-full min-h-[300px] p-6 cursor-pointer transition-all ${
-        isSelected ? "ring-2 ring-blue-500" : ""
+        isSelected ? "ring-2 ring-[#B89B7A]" : ""
       }`}
       style={questionStyle}
       onClick={onClick}

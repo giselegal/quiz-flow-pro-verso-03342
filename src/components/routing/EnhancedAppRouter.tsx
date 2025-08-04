@@ -6,7 +6,7 @@ import { Router, Route, Switch, useLocation } from "wouter";
 const PageLoader: React.FC = () => (
   <div className="min-h-screen bg-gray-50 flex items-center justify-center">
     <div className="text-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#B89B7A] mx-auto"></div>
       <p className="mt-4 text-gray-600">Carregando...</p>
     </div>
   </div>
@@ -149,7 +149,7 @@ const SimpleDashboard: React.FC = () => (
           </p>
           <a
             href="/admin/funis/demo/analytics"
-            className="inline-block px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
+            className="inline-block px-4 py-2 bg-[#B89B7A]/100 text-white rounded hover:bg-purple-600"
           >
             Ver Analytics
           </a>
@@ -166,15 +166,15 @@ const SimpleDashboard: React.FC = () => (
             <div className="text-gray-600">Sistemas</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">100%</div>
+            <div className="text-2xl font-bold text-[#B89B7A]">100%</div>
             <div className="text-gray-600">Completo</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-purple-600">✅</div>
+            <div className="text-2xl font-bold text-[#B89B7A]">✅</div>
             <div className="text-gray-600">Pronto</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-orange-600">🔧</div>
+            <div className="text-2xl font-bold text-[#B89B7A]">🔧</div>
             <div className="text-gray-600">Testando</div>
           </div>
         </div>

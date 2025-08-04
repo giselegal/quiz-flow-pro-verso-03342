@@ -46,7 +46,7 @@ export const VideoComponent: React.FC<ComponentProps> = ({
 
   return (
     <div
-      className={`relative ${isSelected ? "ring-2 ring-blue-500" : ""}`}
+      className={`relative ${isSelected ? "ring-2 ring-[#B89B7A]" : ""}`}
       onClick={onSelect}
       style={{ marginBottom: props.marginBottom }}
     >
@@ -138,7 +138,7 @@ export const AudioComponent: React.FC<ComponentProps> = ({
 
   return (
     <div
-      className={`p-4 rounded-lg ${isSelected ? "ring-2 ring-blue-500" : ""}`}
+      className={`p-4 rounded-lg ${isSelected ? "ring-2 ring-[#B89B7A]" : ""}`}
       onClick={onSelect}
       style={{
         backgroundColor: props.backgroundColor,
@@ -217,7 +217,7 @@ export const ImageCarouselComponent: React.FC<ComponentProps> = ({
 
   return (
     <div
-      className={`relative ${isSelected ? "ring-2 ring-blue-500" : ""}`}
+      className={`relative ${isSelected ? "ring-2 ring-[#B89B7A]" : ""}`}
       onClick={onSelect}
       style={{ marginBottom: props.marginBottom }}
       onMouseEnter={() => setIsAutoPlaying(false)}
@@ -293,7 +293,7 @@ export const BenefitsListComponent: React.FC<ComponentProps> = ({
 }) => {
   return (
     <div
-      className={`p-6 rounded-lg ${isSelected ? "ring-2 ring-blue-500" : ""}`}
+      className={`p-6 rounded-lg ${isSelected ? "ring-2 ring-[#B89B7A]" : ""}`}
       onClick={onSelect}
       style={{
         backgroundColor: props.backgroundColor,

@@ -202,7 +202,7 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
                   style={{ animationDelay: "0.5s" }}
                 />
                 <Sparkles
-                  className="absolute top-0 left-8 w-3 h-3 text-blue-400 animate-ping"
+                  className="absolute top-0 left-8 w-3 h-3 text-[#B89B7A] animate-ping"
                   style={{ animationDelay: "1s" }}
                 />
               </>

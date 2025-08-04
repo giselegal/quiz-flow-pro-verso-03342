@@ -106,8 +106,8 @@ export const StyleResultDisplay: React.FC<StyleResultDisplayProps> = (
   // Cores baseadas na porcentagem
   const getPercentageColor = (percent: number) => {
     if (percent >= 90) return "text-green-600 bg-green-100";
-    if (percent >= 80) return "text-blue-600 bg-blue-100";
-    if (percent >= 70) return "text-yellow-600 bg-stone-100";
+    if (percent >= 80) return "text-[#B89B7A] bg-[#B89B7A]/20";
+    if (percent >= 70) return "text-stone-600 bg-stone-100";
     return "text-gray-600 bg-gray-100";
   };
 

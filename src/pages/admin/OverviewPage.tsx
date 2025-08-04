@@ -160,7 +160,7 @@ const OverviewPage: React.FC = () => {
                   </p>
                   <p className="text-sm text-gray-500">Ontem</p>
                 </div>
-                <Badge className="bg-blue-100 text-blue-800">Recorde</Badge>
+                <Badge className="bg-[#B89B7A]/20 text-[#432818]">Recorde</Badge>
               </div>
             </div>
           </CardContent>
@@ -178,13 +178,13 @@ const OverviewPage: React.FC = () => {
               <div className="text-2xl font-bold text-green-600">3</div>
               <div className="text-sm text-green-700">Quizzes Ativos</div>
             </div>
-            <div className="text-center p-4 bg-yellow-50 rounded-lg">
-              <div className="text-2xl font-bold text-yellow-600">1</div>
-              <div className="text-sm text-yellow-700">Em Teste A/B</div>
+            <div className="text-center p-4 bg-stone-50 rounded-lg">
+              <div className="text-2xl font-bold text-stone-600">1</div>
+              <div className="text-sm text-stone-700">Em Teste A/B</div>
             </div>
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600">2</div>
-              <div className="text-sm text-blue-700">Rascunhos</div>
+            <div className="text-center p-4 bg-[#B89B7A]/10 rounded-lg">
+              <div className="text-2xl font-bold text-[#B89B7A]">2</div>
+              <div className="text-sm text-[#A38A69]">Rascunhos</div>
             </div>
           </div>
         </CardContent>

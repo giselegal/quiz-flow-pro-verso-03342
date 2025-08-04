@@ -122,7 +122,7 @@ const ProsConsBlock: React.FC<ProsConsBlockProps> = ({ block, isSelected = false
             {con.severity && con.severity !== 'low' && (
               <div
                 className={`px-2 py-1 rounded-full text-xs font-medium text-white flex-shrink-0 ${
-                  con.severity === 'high' ? 'bg-red-500' : 'bg-orange-500'
+                  con.severity === 'high' ? 'bg-red-500' : 'bg-[#B89B7A]/100'
                 }`}
               >
                 {con.severity === 'high' ? 'Alto' : 'Médio'}
@@ -140,7 +140,7 @@ const ProsConsBlock: React.FC<ProsConsBlockProps> = ({ block, isSelected = false
         w-full p-6 rounded-lg cursor-pointer transition-all duration-200
         ${
           isSelected
-            ? 'border-2 border-blue-500 bg-[#B89B7A]/10'
+            ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10'
             : 'border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]'
         }
         ${className}

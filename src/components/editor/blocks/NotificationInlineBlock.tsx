@@ -70,8 +70,8 @@ const NotificationInlineBlock: React.FC<NotificationInlineBlockProps> = ({
       className={cn(
         'group/canvas-item inline-block relative w-full',
         'min-h-[1.25rem] border-2 border-dashed rounded-md p-4',
-        'hover:border-blue-500 transition-all cursor-pointer',
-        isHovered ? 'border-blue-500' : 'border-gray-300',
+        'hover:border-[#B89B7A] transition-all cursor-pointer',
+        isHovered ? 'border-[#B89B7A]' : 'border-gray-300',
         disabled && 'opacity-75 cursor-not-allowed',
         className,
       )}
@@ -156,10 +156,10 @@ const NotificationInlineBlock: React.FC<NotificationInlineBlockProps> = ({
       {/* Hover Toolbar (inspirado no modelo) */}
       {isHovered && !disabled && (
         <div className="absolute top-2 left-1 min-w-[50px] w-auto bg-[#B89B7A]/100 border-none rounded-md text-white p-0 flex flex-row z-50">
-          <span className="flex items-center justify-center w-auto h-auto p-2 cursor-move hover:bg-blue-700">
+          <span className="flex items-center justify-center w-auto h-auto p-2 cursor-move hover:bg-[#A38A69]">
             <Bell className="h-4 w-4" />
           </span>
-          <span className="flex items-center justify-center w-auto h-auto p-2 cursor-pointer hover:bg-blue-700">
+          <span className="flex items-center justify-center w-auto h-auto p-2 cursor-pointer hover:bg-[#A38A69]">
             <Edit3 className="h-4 w-4" />
           </span>
         </div>

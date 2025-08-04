@@ -43,7 +43,7 @@ const AnimatedStatCounterBlock: React.FC<BlockComponentProps> = ({
   const colorSchemes = {
     blue: {
       bg: 'bg-[#B89B7A]/10',
-      text: 'text-blue-600',
+      text: 'text-[#B89B7A]',
       icon: 'text-[#B89B7A]',
       border: 'border-[#B89B7A]/30',
     },
@@ -60,14 +60,14 @@ const AnimatedStatCounterBlock: React.FC<BlockComponentProps> = ({
       border: 'border-red-200',
     },
     yellow: {
-      bg: 'bg-yellow-50',
-      text: 'text-yellow-600',
+      bg: 'bg-stone-50',
+      text: 'text-stone-600',
       icon: 'text-yellow-500',
       border: 'border-yellow-200',
     },
     purple: {
-      bg: 'bg-purple-50',
-      text: 'text-purple-600',
+      bg: 'bg-[#B89B7A]/10',
+      text: 'text-[#B89B7A]',
       icon: 'text-purple-500',
       border: 'border-purple-200',
     },
@@ -169,7 +169,7 @@ const AnimatedStatCounterBlock: React.FC<BlockComponentProps> = ({
   return (
     <div
       className={`transition-all duration-200 ${colors.bg} border ${colors.border} rounded-lg ${
-        isSelected ? 'ring-2 ring-blue-500' : ''
+        isSelected ? 'ring-2 ring-[#B89B7A]' : ''
       } ${className}`}
       onClick={onClick}
       data-block-id={block.id}

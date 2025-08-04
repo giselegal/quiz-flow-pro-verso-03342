@@ -587,7 +587,7 @@ const FaqSectionAdvanced = () => {
           >
             <button
               onClick={() => toggleItem(index)}
-              className="w-full px-6 py-6 text-left flex justify-between items-center hover:bg-orange-50 transition-colors"
+              className="w-full px-6 py-6 text-left flex justify-between items-center hover:bg-[#B89B7A]/10 transition-colors"
             >
               <span className="font-semibold text-[#432818] text-lg pr-4">
                 {item.question}
@@ -601,7 +601,7 @@ const FaqSectionAdvanced = () => {
             </button>
 
             {openItem === index && (
-              <div className="px-6 py-4 text-gray-700 bg-orange-50 border-t border-orange-100 text-base leading-relaxed">
+              <div className="px-6 py-4 text-gray-700 bg-[#B89B7A]/10 border-t border-orange-100 text-base leading-relaxed">
                 {item.answer}
               </div>
             )}

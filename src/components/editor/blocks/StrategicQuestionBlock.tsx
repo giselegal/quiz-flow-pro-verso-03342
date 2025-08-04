@@ -65,7 +65,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
     <div
       className={cn(
         'relative w-full min-h-[400px] p-8 rounded-lg border-2 border-dashed',
-        isSelected ? 'border-blue-500 bg-[#B89B7A]/10' : 'border-gray-300 bg-white',
+        isSelected ? 'border-[#B89B7A] bg-[#B89B7A]/10' : 'border-gray-300 bg-white',
         'cursor-pointer hover:border-gray-400 transition-colors',
         className,
       )}
@@ -159,7 +159,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
 
       {/* Selected indicator */}
       {isSelected && (
-        <div className="absolute top-2 left-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
+        <div className="absolute top-2 left-2 bg-[#B89B7A]/100 text-white text-xs px-2 py-1 rounded">
           Questão Estratégica
         </div>
       )}

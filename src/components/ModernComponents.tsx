@@ -424,7 +424,7 @@ const SocialProofBanner: React.FC<{
           <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
           <span className="font-semibold text-gray-800">Atividade ao vivo</span>
         </div>
-        <div className="text-sm font-medium text-blue-600">
+        <div className="text-sm font-medium text-[#B89B7A]">
           {liveCount.toLocaleString("pt-BR")} participantes
         </div>
       </div>

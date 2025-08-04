@@ -134,7 +134,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
       onClick={onClick}
       className={cn(
         "transition-all cursor-pointer",
-        isSelected ? "ring-2 ring-blue-500" : "",
+        isSelected ? "ring-2 ring-[#B89B7A]" : "",
       )}
     >
       <Card className="p-4">{renderComponent()}</Card>

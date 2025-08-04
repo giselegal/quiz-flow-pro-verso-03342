@@ -230,8 +230,8 @@ const useEditor = () => {
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <Monitor className="w-4 h-4 text-blue-600" />
+                      <div className="w-8 h-8 bg-[#B89B7A]/20 rounded-lg flex items-center justify-center">
+                        <Monitor className="w-4 h-4 text-[#B89B7A]" />
                       </div>
                       <div>
                         <p className="font-medium">Desktop (1200px+)</p>
@@ -252,8 +252,8 @@ const useEditor = () => {
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
-                        <Monitor className="w-4 h-4 text-orange-600" />
+                      <div className="w-8 h-8 bg-[#B89B7A]/20 rounded-lg flex items-center justify-center">
+                        <Monitor className="w-4 h-4 text-[#B89B7A]" />
                       </div>
                       <div>
                         <p className="font-medium">Mobile (375px)</p>
@@ -318,8 +318,8 @@ const useEditor = () => {
                       ].map((step, index, array) => (
                         <React.Fragment key={index}>
                           <div className="text-center">
-                            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-2">
-                              <span className="text-blue-600 font-semibold">
+                            <div className="w-12 h-12 bg-[#B89B7A]/20 rounded-lg flex items-center justify-center mx-auto mb-2">
+                              <span className="text-[#B89B7A] font-semibold">
                                 {index + 1}
                               </span>
                             </div>
@@ -344,8 +344,8 @@ const useEditor = () => {
                 <Card key={index}>
                   <CardHeader>
                     <CardTitle className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
-                        <span className="text-indigo-600 font-semibold">
+                      <div className="w-8 h-8 bg-[#B89B7A]/20 rounded-lg flex items-center justify-center">
+                        <span className="text-[#B89B7A] font-semibold">
                           {guide.step}
                         </span>
                       </div>

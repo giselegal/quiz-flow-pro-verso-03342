@@ -237,7 +237,7 @@ const Toast: React.FC<{
       case "error":
         return "bg-red-50 border-red-200";
       case "warning":
-        return "bg-yellow-50 border-yellow-200";
+        return "bg-stone-50 border-yellow-200";
       case "info":
         return "bg-[#B89B7A]/10 border-[#B89B7A]/30";
       case "loading":
@@ -263,7 +263,7 @@ const Toast: React.FC<{
             <div className="mt-3">
               <button
                 onClick={toast.action.onClick}
-                className="text-sm font-medium text-blue-600 hover:text-[#B89B7A] focus:outline-none"
+                className="text-sm font-medium text-[#B89B7A] hover:text-[#B89B7A] focus:outline-none"
               >
                 {toast.action.label}
               </button>

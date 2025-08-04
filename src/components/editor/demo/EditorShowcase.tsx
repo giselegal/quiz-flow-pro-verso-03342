@@ -176,7 +176,7 @@ export const EditorShowcase: React.FC = () => {
             </Badge>
             <Badge
               variant="outline"
-              className="bg-[#B89B7A]/10 text-blue-700 border-[#B89B7A]/30"
+              className="bg-[#B89B7A]/10 text-[#A38A69] border-[#B89B7A]/30"
             >
               <Clock className="w-3 h-3 mr-1" />
               Última atualização: Agora
@@ -312,7 +312,7 @@ export const EditorShowcase: React.FC = () => {
         {/* Footer */}
         <div className="mt-12 text-center">
           <div className="inline-flex items-center space-x-2 bg-white rounded-lg px-4 py-2 shadow-sm border border-gray-200">
-            <Sparkles className="w-4 h-4 text-blue-600" />
+            <Sparkles className="w-4 h-4 text-[#B89B7A]" />
             <span className="text-sm text-gray-700">
               Sistema completo implementado com React, TypeScript e Tailwind CSS
             </span>

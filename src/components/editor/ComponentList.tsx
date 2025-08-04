@@ -453,7 +453,7 @@ const ComponentList: React.FC<ComponentListProps> = ({ onComponentSelect, select
                   return (
                     <div
                       key={component.id}
-                      className={`${styles.componentItem} ${isSelected ? "ring-2 ring-blue-500" : ""}`}
+                      className={`${styles.componentItem} ${isSelected ? "ring-2 ring-[#B89B7A]" : ""}`}
                       draggable
                       onDragStart={e => handleComponentDragStart(e, component)}
                       onClick={() => handleComponentClick(component)}

@@ -28,7 +28,7 @@ const QuizOfferPricingInlineBlock: React.FC<BlockComponentProps> = ({
         'w-full p-6 rounded-lg transition-all duration-200 text-center',
         'bg-gradient-to-br from-[#B89B7A]/10 to-[#A1835D]/5',
         'border-2 border-[#B89B7A]/30',
-        isSelected && 'ring-2 ring-blue-500',
+        isSelected && 'ring-2 ring-[#B89B7A]',
         'cursor-pointer',
         className,
       )}

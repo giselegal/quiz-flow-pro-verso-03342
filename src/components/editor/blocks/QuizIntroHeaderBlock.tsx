@@ -49,7 +49,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
     <div
       className={cn(
         'relative w-full p-4 rounded-lg border-2 border-dashed',
-        isSelected ? 'border-blue-500 bg-[#B89B7A]/10' : 'border-gray-300 bg-white',
+        isSelected ? 'border-[#B89B7A] bg-[#B89B7A]/10' : 'border-gray-300 bg-white',
         'cursor-pointer hover:border-gray-400 transition-colors',
         className,
       )}

@@ -92,7 +92,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({ block, isSelected = fa
         'rounded-lg transition-all duration-200',
 
         // EDITOR STATES: Seleção e interação - ES7+ logical AND
-        isSelected && 'ring-2 ring-blue-500 ring-offset-2',
+        isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2',
         'cursor-pointer',
 
         // SPACING - ES7+ Computed property com fallback

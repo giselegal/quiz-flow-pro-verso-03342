@@ -49,8 +49,8 @@ const GuaranteeInlineBlock: React.FC<BlockComponentProps> = ({
         p-3 rounded-lg transition-all duration-200
         ${
           isSelected
-            ? 'border-2 border-blue-500 bg-[#B89B7A]/10'
-            : 'border-2 border-dashed border-transparent hover:border-blue-300 hover:bg-[#B89B7A]/10/30'
+            ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10'
+            : 'border-2 border-dashed border-transparent hover:border-[#B89B7A]/40 hover:bg-[#B89B7A]/10/30'
         }
         ${className}
       `}
@@ -71,8 +71,8 @@ const GuaranteeInlineBlock: React.FC<BlockComponentProps> = ({
           {/* Title */}
           <h3
             className={cn(
-              'text-2xl font-bold text-[#aa6b5d] mb-4 cursor-pointer p-2 rounded border-2 border-transparent hover:border-blue-300',
-              isSelected && 'ring-2 ring-blue-500 ring-opacity-50',
+              'text-2xl font-bold text-[#aa6b5d] mb-4 cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40',
+              isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50',
             )}
             onClick={onClick}
             title="Clique para editar no Painel de Propriedades"
@@ -83,8 +83,8 @@ const GuaranteeInlineBlock: React.FC<BlockComponentProps> = ({
           {/* Description */}
           <p
             className={cn(
-              'text-[#432818] text-lg leading-relaxed mb-6 cursor-pointer p-2 rounded border-2 border-transparent hover:border-blue-300',
-              isSelected && 'ring-2 ring-blue-500 ring-opacity-50',
+              'text-[#432818] text-lg leading-relaxed mb-6 cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40',
+              isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50',
             )}
             onClick={onClick}
             title="Clique para editar no Painel de Propriedades"

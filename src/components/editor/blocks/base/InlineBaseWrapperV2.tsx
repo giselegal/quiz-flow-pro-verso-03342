@@ -273,10 +273,10 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
 
         // 6. UX APRIMORADA: Estados visuais
         'border-2 border-transparent rounded-lg',
-        'hover:border-blue-300 hover:bg-[#B89B7A]/10/30',
+        'hover:border-[#B89B7A]/40 hover:bg-[#B89B7A]/10/30',
 
         // Estado selecionado
-        isSelected && ['border-blue-500 bg-[#B89B7A]/10', 'shadow-lg shadow-blue-500/20'],
+        isSelected && ['border-[#B89B7A] bg-[#B89B7A]/10', 'shadow-lg shadow-blue-500/20'],
 
         // Estados de erro e loading
         hasError && 'border-red-500 bg-red-50',
@@ -303,7 +303,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
       {/* 6. UX: Loading Overlay */}
       {isLoading && (
         <div className="absolute inset-0 bg-white/70 flex items-center justify-center rounded-lg z-20">
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#B89B7A]"></div>
         </div>
       )}
 
@@ -331,7 +331,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
 
             {/* Username Indicator */}
             {useUsername && (
-              <div className="px-2 py-1 bg-purple-500 text-white rounded-full text-xs font-medium">
+              <div className="px-2 py-1 bg-[#B89B7A]/100 text-white rounded-full text-xs font-medium">
                 👤 Personalizado
               </div>
             )}

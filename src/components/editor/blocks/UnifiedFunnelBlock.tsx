@@ -64,8 +64,8 @@ const UnifiedFunnelBlock: React.FC<UnifiedFunnelBlockProps> = ({
 
     default:
       return (
-        <div className="p-4 border-2 border-yellow-300 bg-yellow-50 rounded-lg">
-          <p className="text-yellow-600 font-medium">Tipo de bloco não suportado: {block.type}</p>
+        <div className="p-4 border-2 border-stone-300 bg-stone-50 rounded-lg">
+          <p className="text-stone-600 font-medium">Tipo de bloco não suportado: {block.type}</p>
           <p className="text-sm text-yellow-500 mt-1">Adicione o suporte para este tipo no UnifiedFunnelBlock.</p>
         </div>
       );

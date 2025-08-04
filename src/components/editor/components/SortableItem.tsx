@@ -44,7 +44,7 @@ export function SortableItem({
       style={style}
       className={`group relative rounded-lg border-2 transition-all ${
         isSelected
-          ? "border-blue-500 bg-[#B89B7A]/10 shadow-md"
+          ? "border-[#B89B7A] bg-[#B89B7A]/10 shadow-md"
           : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm"
       }`}
       onClick={onClick}
@@ -93,7 +93,7 @@ export function SortableItem({
 
       {/* Indicador de seleção */}
       {isSelected && (
-        <div className="absolute inset-0 pointer-events-none rounded-lg border-2 border-blue-500 bg-[#B89B7A]/100/5"></div>
+        <div className="absolute inset-0 pointer-events-none rounded-lg border-2 border-[#B89B7A] bg-[#B89B7A]/100/5"></div>
       )}
     </div>
   );

@@ -60,20 +60,20 @@ const TestStep20Integration: React.FC = () => {
 
       {/* Preview dos dados */}
       <div className="max-w-6xl mx-auto p-4">
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-          <h2 className="text-lg font-semibold text-blue-800 mb-3">
+        <div className="bg-[#B89B7A]/10 border border-[#B89B7A]/30 rounded-lg p-4 mb-6">
+          <h2 className="text-lg font-semibold text-[#432818] mb-3">
             📊 Dados de Teste Utilizados:
           </h2>
           <div className="grid md:grid-cols-3 gap-4">
             <div className="bg-white p-3 rounded">
-              <h3 className="font-medium text-blue-700">Estilo Principal:</h3>
+              <h3 className="font-medium text-[#A38A69]">Estilo Principal:</h3>
               <p>
                 <strong>{mockPrimaryStyle.category}</strong> (
                 {mockPrimaryStyle.percentage}%)
               </p>
             </div>
             <div className="bg-white p-3 rounded">
-              <h3 className="font-medium text-blue-700">
+              <h3 className="font-medium text-[#A38A69]">
                 Estilos Secundários:
               </h3>
               {mockSecondaryStyles.map((style) => (
@@ -83,7 +83,7 @@ const TestStep20Integration: React.FC = () => {
               ))}
             </div>
             <div className="bg-white p-3 rounded">
-              <h3 className="font-medium text-blue-700">Nome do Usuário:</h3>
+              <h3 className="font-medium text-[#A38A69]">Nome do Usuário:</h3>
               <p>{mockData.userName}</p>
             </div>
           </div>

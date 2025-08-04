@@ -41,7 +41,7 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
   return (
     <Card
       className={`p-6 max-w-md mx-auto border-2 transition-all duration-200 ${
-        isSelected ? 'border-blue-500 shadow-lg' : 'border-[#B89B7A]'
+        isSelected ? 'border-[#B89B7A] shadow-lg' : 'border-[#B89B7A]'
       }`}
       onClick={onSelect}
     >

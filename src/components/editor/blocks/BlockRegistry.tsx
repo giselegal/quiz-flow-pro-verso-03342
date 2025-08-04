@@ -86,13 +86,13 @@ export const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({ 
 
   if (!Component) {
     return (
-      <div className="p-6 bg-yellow-50 border border-yellow-200 rounded-lg">
+      <div className="p-6 bg-stone-50 border border-yellow-200 rounded-lg">
         <div className="flex items-center gap-2 mb-2">
-          <div className="w-4 h-4 bg-yellow-500 rounded-full" />
+          <div className="w-4 h-4 bg-stone-500 rounded-full" />
           <h3 className="font-medium text-stone-700">Componente não encontrado</h3>
         </div>
         <p className="text-sm text-stone-700">O tipo de bloco "{type}" não está registrado no sistema.</p>
-        <p className="text-xs text-yellow-600 mt-2">
+        <p className="text-xs text-stone-600 mt-2">
           Verifique se o componente foi importado e adicionado ao registro.
         </p>
       </div>

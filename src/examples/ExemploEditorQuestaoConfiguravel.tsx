@@ -112,8 +112,8 @@ const ExemploEditorQuestao: React.FC = () => {
 
       {/* Resumo da configuração atual */}
       {isEditing && (
-        <div className="bg-blue-50 border-b p-4">
-          <h3 className="font-semibold text-blue-900 mb-2">
+        <div className="bg-[#B89B7A]/10 border-b p-4">
+          <h3 className="font-semibold text-[#432818] mb-2">
             Configuração Atual:
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">

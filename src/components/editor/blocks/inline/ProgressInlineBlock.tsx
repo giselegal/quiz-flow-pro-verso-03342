@@ -48,9 +48,9 @@ const ProgressInlineBlock: React.FC<InlineBlockProps> = ({
       case 'red':
         return 'bg-red-500';
       case 'yellow':
-        return 'bg-yellow-500';
+        return 'bg-stone-500';
       case 'purple':
-        return 'bg-purple-500';
+        return 'bg-[#B89B7A]/100';
       default:
         return 'bg-[#B89B7A]/100';
     }
@@ -78,7 +78,7 @@ const ProgressInlineBlock: React.FC<InlineBlockProps> = ({
       onClick={onClick}
       className={cn(
         'cursor-pointer p-4 rounded-lg transition-all duration-200',
-        isSelected && 'ring-2 ring-blue-500 ring-offset-2',
+        isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2',
         'space-y-2',
       )}
     >

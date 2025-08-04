@@ -219,7 +219,7 @@ const SimpleEditor: React.FC = () => {
             {/* Cores */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <Palette className="h-5 w-5 mr-2 text-blue-600" />
+                <Palette className="h-5 w-5 mr-2 text-[#B89B7A]" />
                 <h2 className="text-xl font-semibold">Cores</h2>
               </div>
 
@@ -283,7 +283,7 @@ const SimpleEditor: React.FC = () => {
             {/* Layout */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <Settings className="h-5 w-5 mr-2 text-purple-600" />
+                <Settings className="h-5 w-5 mr-2 text-[#B89B7A]" />
                 <h2 className="text-xl font-semibold">Layout</h2>
               </div>
 

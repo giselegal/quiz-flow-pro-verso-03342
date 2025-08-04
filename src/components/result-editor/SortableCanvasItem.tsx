@@ -46,7 +46,7 @@ export const SortableCanvasItem: React.FC<SortableCanvasItemProps> = ({
       style={style}
       className={`
         relative group bg-white rounded-lg transition-all duration-200
-        ${isSelected ? "ring-2 ring-blue-500 shadow-lg" : "hover:shadow-md"}
+        ${isSelected ? "ring-2 ring-[#B89B7A] shadow-lg" : "hover:shadow-md"}
         ${isDragging ? "opacity-50 z-50" : ""}
       `}
       onClick={(e) => {

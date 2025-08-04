@@ -164,10 +164,10 @@ const templates: PropertyTemplate[] = [
 ];
 
 const categoryColors = {
-  layout: "bg-blue-100 text-blue-800",
-  styling: "bg-purple-100 text-purple-800",
+  layout: "bg-[#B89B7A]/20 text-[#432818]",
+  styling: "bg-[#B89B7A]/20 text-purple-800",
   content: "bg-green-100 text-green-800",
-  interaction: "bg-orange-100 text-orange-800",
+  interaction: "bg-[#B89B7A]/20 text-orange-800",
 };
 
 const categoryIcons = {

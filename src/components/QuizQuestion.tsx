@@ -40,7 +40,7 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
             key={option.id}
             className={`p-3 border rounded-lg cursor-pointer transition-colors ${
               currentAnswers.includes(option.id)
-                ? "bg-blue-100 border-blue-500"
+                ? "bg-[#B89B7A]/20 border-[#B89B7A]"
                 : "hover:bg-gray-50"
             }`}
             onClick={() =>

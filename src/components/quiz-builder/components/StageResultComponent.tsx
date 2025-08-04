@@ -48,7 +48,7 @@ const StageResultComponent: React.FC<StageResultComponentProps> = ({
   return (
     <Card
       className={`w-full min-h-[500px] p-6 cursor-pointer transition-all ${
-        isSelected ? "ring-2 ring-blue-500" : ""
+        isSelected ? "ring-2 ring-[#B89B7A]" : ""
       }`}
       style={resultStyle}
       onClick={onClick}

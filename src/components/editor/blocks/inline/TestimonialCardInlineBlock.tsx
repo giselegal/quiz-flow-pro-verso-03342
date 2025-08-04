@@ -44,7 +44,7 @@ const TestimonialCardInlineBlock: React.FC<BlockComponentProps> = ({
         'bg-white rounded-xl border border-[#B89B7A]/20',
         'shadow-lg hover:shadow-xl transition-all duration-300',
         // Estados
-        isSelected && 'ring-2 ring-blue-500',
+        isSelected && 'ring-2 ring-[#B89B7A]',
         'cursor-pointer hover:scale-105',
         'relative',
         className,

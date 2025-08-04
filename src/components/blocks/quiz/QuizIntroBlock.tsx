@@ -158,8 +158,8 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
         <div className="space-y-4">
           <h1
             className={cn(
-              "text-4xl md:text-5xl font-bold leading-tight cursor-pointer p-2 rounded border-2 border-transparent hover:border-blue-300",
-              isSelected && "ring-2 ring-blue-500 ring-opacity-50",
+              "text-4xl md:text-5xl font-bold leading-tight cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40",
+              isSelected && "ring-2 ring-[#B89B7A] ring-opacity-50",
             )}
             style={{ color: textColor }}
             onClick={onClick}
@@ -170,8 +170,8 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
 
           <h2
             className={cn(
-              "text-xl md:text-2xl text-opacity-80 cursor-pointer p-2 rounded border-2 border-transparent hover:border-blue-300",
-              isSelected && "ring-2 ring-blue-500 ring-opacity-50",
+              "text-xl md:text-2xl text-opacity-80 cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40",
+              isSelected && "ring-2 ring-[#B89B7A] ring-opacity-50",
             )}
             style={{ color: textColor }}
             onClick={onClick}
@@ -182,8 +182,8 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
 
           <p
             className={cn(
-              "text-lg text-opacity-70 cursor-pointer p-2 rounded border-2 border-transparent hover:border-blue-300",
-              isSelected && "ring-2 ring-blue-500 ring-opacity-50",
+              "text-lg text-opacity-70 cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40",
+              isSelected && "ring-2 ring-[#B89B7A] ring-opacity-50",
             )}
             style={{ color: textColor }}
             onClick={onClick}

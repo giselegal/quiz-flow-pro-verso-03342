@@ -848,14 +848,14 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
         return (
           <div className="bg-[#B89B7A]/10 p-8 rounded-xl border border-[#B89B7A]/30 mb-8">
             <div className="text-center">
-              <Shield className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+              <Shield className="w-12 h-12 text-[#B89B7A] mx-auto mb-4" />
               <h3
-                className="text-2xl font-bold text-blue-800 mb-4"
+                className="text-2xl font-bold text-[#432818] mb-4"
                 style={{ fontFamily: "Playfair Display, serif" }}
               >
                 Garantia de 7 Dias
               </h3>
-              <p className="text-blue-700 max-w-2xl mx-auto">
+              <p className="text-[#A38A69] max-w-2xl mx-auto">
                 Experimente por 7 dias. Se não ficar completamente satisfeita
                 com os resultados, devolvemos 100% do seu investimento, sem
                 perguntas.
@@ -1010,7 +1010,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                 </div>
               )}
               <div className="mt-4 p-3 bg-[#B89B7A]/10 rounded-lg">
-                <p className="text-xs text-blue-600">
+                <p className="text-xs text-[#B89B7A]">
                   ✨ Componente com design moderno e responsivo aplicado!
                 </p>
               </div>

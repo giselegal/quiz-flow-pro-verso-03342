@@ -68,7 +68,7 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
     id: index + 1,
     title: `Item ${index + 1}`,
     content: `Conteúdo do item ${index + 1}`,
-    color: ['bg-blue-100', 'bg-green-100', 'bg-purple-100'][index % 3],
+    color: ['bg-[#B89B7A]/20', 'bg-green-100', 'bg-[#B89B7A]/20'][index % 3],
   }));
 
   const deviceClasses = {
@@ -261,11 +261,11 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
           </div>
 
           <div className="p-4 bg-[#B89B7A]/10 rounded-lg">
-            <h4 className="font-medium text-blue-800 mb-2 flex items-center gap-2">
+            <h4 className="font-medium text-[#432818] mb-2 flex items-center gap-2">
               <Columns className="w-4 h-4" />
               Casos de Uso
             </h4>
-            <ul className="text-sm text-blue-700 space-y-1">
+            <ul className="text-sm text-[#A38A69] space-y-1">
               <li>• Cards de produtos</li>
               <li>• Seções de depoimentos</li>
               <li>• Galerias de imagens</li>

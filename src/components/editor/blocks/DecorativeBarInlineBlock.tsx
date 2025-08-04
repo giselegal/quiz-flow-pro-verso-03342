@@ -28,7 +28,7 @@ const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
     <div
       className={cn(
         'w-full flex justify-center items-center',
-        isSelected && 'ring-2 ring-blue-500 ring-offset-2 rounded-md p-1',
+        isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2 rounded-md p-1',
         'cursor-pointer transition-all duration-200',
         className,
       )}

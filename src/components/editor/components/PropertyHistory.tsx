@@ -178,7 +178,7 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
                           <div className="flex items-center space-x-2">
                             <div className="flex-shrink-0">
                               {isCurrentEntry ? (
-                                <CheckCircle className="w-4 h-4 text-blue-600" />
+                                <CheckCircle className="w-4 h-4 text-[#B89B7A]" />
                               ) : (
                                 <Circle className="w-4 h-4 text-gray-400" />
                               )}

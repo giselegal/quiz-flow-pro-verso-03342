@@ -29,12 +29,12 @@ const CTAInlineBlock: React.FC<CTAInlineBlockProps> = ({
     primary: {
       bg: 'bg-gradient-to-r from-blue-600 to-purple-600',
       text: 'text-white',
-      button: 'bg-white text-blue-600 hover:bg-gray-50',
+      button: 'bg-white text-[#B89B7A] hover:bg-gray-50',
     },
     secondary: {
       bg: 'bg-gradient-to-r from-gray-50 to-gray-100',
       text: 'text-gray-900',
-      button: 'bg-[#B89B7A] text-white hover:bg-blue-700',
+      button: 'bg-[#B89B7A] text-white hover:bg-[#A38A69]',
     },
     urgent: {
       bg: 'bg-gradient-to-r from-red-600 to-orange-600',

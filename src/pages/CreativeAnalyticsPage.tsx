@@ -216,7 +216,7 @@ const CreativeAnalyticsPage = (): JSX.Element => {
                 variant="outline"
                 size="sm"
                 onClick={handleGenerateTestData}
-                className="flex items-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
+                className="flex items-center gap-2 bg-[#B89B7A]/10 hover:bg-[#B89B7A]/20 text-[#A38A69] border-[#B89B7A]/30"
               >
                 <TestTube className="h-4 w-4" />
                 Gerar Dados de Teste
@@ -238,13 +238,13 @@ const CreativeAnalyticsPage = (): JSX.Element => {
 
       {/* Instruções */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <Card className="mb-6 bg-blue-50 border-blue-200">
+        <Card className="mb-6 bg-[#B89B7A]/10 border-[#B89B7A]/30">
           <CardHeader>
-            <CardTitle className="text-blue-800">
+            <CardTitle className="text-[#432818]">
               🚀 Como Funciona o Tracking de Criativos
             </CardTitle>
           </CardHeader>
-          <CardContent className="text-blue-700 space-y-3">
+          <CardContent className="text-[#A38A69] space-y-3">
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <h4 className="font-semibold mb-2">📊 Dados Rastreados:</h4>
@@ -271,7 +271,7 @@ const CreativeAnalyticsPage = (): JSX.Element => {
 
               <div>
                 <div className="font-semibold mb-2">🎯 URLs de Exemplo:</div>
-                <div className="text-xs space-y-1 bg-blue-100 p-2 rounded">
+                <div className="text-xs space-y-1 bg-[#B89B7A]/20 p-2 rounded">
                   <div>
                     <strong>Criativo A:</strong>{" "}
                     ?utm_content=elegante_mulher_vestido
@@ -287,7 +287,7 @@ const CreativeAnalyticsPage = (): JSX.Element => {
               </div>
             </div>
 
-            <div className="pt-3 border-t border-blue-300">
+            <div className="pt-3 border-t border-[#B89B7A]/40">
               <p className="text-sm">
                 <strong>💡 Dica:</strong> Use o botão "Gerar Dados de Teste"
                 para ver o dashboard em ação, ou aguarde dados reais das suas

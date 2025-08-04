@@ -315,9 +315,9 @@ export const FieldValidationFeedback: React.FC<{
       case "error":
         return "border-red-500 text-red-600";
       case "warning":
-        return "border-yellow-500 text-yellow-600";
+        return "border-yellow-500 text-stone-600";
       case "info":
-        return "border-blue-500 text-blue-600";
+        return "border-[#B89B7A] text-[#B89B7A]";
       case "success":
         return "border-green-500 text-green-600";
     }
@@ -373,7 +373,7 @@ export const ValidationSummary: React.FC<{
 
   const getScoreColor = (score: number) => {
     if (score >= 90) return "text-green-600";
-    if (score >= 70) return "text-yellow-600";
+    if (score >= 70) return "text-stone-600";
     return "text-red-600";
   };
 
@@ -427,13 +427,13 @@ export const ValidationSummary: React.FC<{
               </div>
             )}
             {summary.warnings > 0 && (
-              <div className="flex items-center gap-2 text-yellow-600">
+              <div className="flex items-center gap-2 text-stone-600">
                 <AlertTriangle className="h-4 w-4" />
                 <span className="text-sm">{summary.warnings} aviso(s)</span>
               </div>
             )}
             {summary.info > 0 && (
-              <div className="flex items-center gap-2 text-blue-600">
+              <div className="flex items-center gap-2 text-[#B89B7A]">
                 <Info className="h-4 w-4" />
                 <span className="text-sm">{summary.info} sugestão(ões)</span>
               </div>

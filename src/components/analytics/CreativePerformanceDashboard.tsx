@@ -109,7 +109,7 @@ export const CreativePerformanceDashboard: React.FC = () => {
     if (rate >= 1.0)
       return <Badge className="bg-stone-100 text-stone-700">Bom</Badge>;
     if (rate >= 0.5)
-      return <Badge className="bg-orange-100 text-orange-800">Regular</Badge>;
+      return <Badge className="bg-[#B89B7A]/20 text-orange-800">Regular</Badge>;
     return <Badge className="bg-red-100 text-red-800">Baixo</Badge>;
   };
 
@@ -144,7 +144,7 @@ export const CreativePerformanceDashboard: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="flex items-center p-6">
-            <Eye className="h-8 w-8 text-blue-600" />
+            <Eye className="h-8 w-8 text-[#B89B7A]" />
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Visualizações</p>
               <p className="text-2xl font-bold text-gray-900">
@@ -168,7 +168,7 @@ export const CreativePerformanceDashboard: React.FC = () => {
 
         <Card>
           <CardContent className="flex items-center p-6">
-            <DollarSign className="h-8 w-8 text-yellow-600" />
+            <DollarSign className="h-8 w-8 text-stone-600" />
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Vendas</p>
               <p className="text-2xl font-bold text-gray-900">
@@ -180,7 +180,7 @@ export const CreativePerformanceDashboard: React.FC = () => {
 
         <Card>
           <CardContent className="flex items-center p-6">
-            <TrendingUp className="h-8 w-8 text-purple-600" />
+            <TrendingUp className="h-8 w-8 text-[#B89B7A]" />
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Receita</p>
               <p className="text-2xl font-bold text-gray-900">
@@ -232,7 +232,7 @@ export const CreativePerformanceDashboard: React.FC = () => {
 
         {isLoading ? (
           <div className="text-center py-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#B89B7A] mx-auto"></div>
             <p className="mt-4 text-gray-600">Carregando dados...</p>
           </div>
         ) : creativesList.length === 0 ? (
@@ -264,8 +264,8 @@ export const CreativePerformanceDashboard: React.FC = () => {
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                          <span className="text-sm font-bold text-blue-800">
+                        <div className="w-8 h-8 bg-[#B89B7A]/20 rounded-full flex items-center justify-center">
+                          <span className="text-sm font-bold text-[#432818]">
                             #{index + 1}
                           </span>
                         </div>
@@ -347,11 +347,11 @@ export const CreativePerformanceDashboard: React.FC = () => {
       {/* Dicas */}
       <Card className="bg-[#B89B7A]/10 border-[#B89B7A]/30">
         <CardHeader>
-          <CardTitle className="text-blue-800">
+          <CardTitle className="text-[#432818]">
             💡 Dicas de Otimização
           </CardTitle>
         </CardHeader>
-        <CardContent className="text-blue-700">
+        <CardContent className="text-[#A38A69]">
           <ul className="space-y-2 text-sm">
             <li>
               • <strong>Criativos com conversão acima de 2%:</strong> Considere

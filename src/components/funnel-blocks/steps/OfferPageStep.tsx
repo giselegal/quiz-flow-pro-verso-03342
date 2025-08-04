@@ -107,7 +107,7 @@ const OfferPageStep: React.FC<OfferPageStepProps> = ({
             {onNext && (
               <button
                 onClick={onNext}
-                className="px-8 py-3 bg-[#B89B7A] text-white rounded-lg hover:bg-blue-700 ml-auto"
+                className="px-8 py-3 bg-[#B89B7A] text-white rounded-lg hover:bg-[#A38A69] ml-auto"
               >
                 Aceitar Oferta
               </button>

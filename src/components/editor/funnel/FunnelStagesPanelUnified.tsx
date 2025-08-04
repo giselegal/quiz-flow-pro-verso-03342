@@ -172,7 +172,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                     "min-h-[80px] bg-white",
                     // ✅ USAR activeStageId DO EDITORCONTEXT PARA HIGHLIGHT
                     activeStageId === stage.id
-                      ? "border-purple-500 bg-purple-50 shadow-md ring-2 ring-purple-200"
+                      ? "border-purple-500 bg-[#B89B7A]/10 shadow-md ring-2 ring-purple-200"
                       : "border-gray-300 bg-white hover:bg-gray-50",
                   )}
                   onClick={(e) => {
@@ -197,7 +197,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                             className={cn(
                               "font-medium text-sm",
                               activeStageId === stage.id
-                                ? "text-purple-700"
+                                ? "text-[#A38A69]"
                                 : "text-foreground",
                             )}
                           >
@@ -220,8 +220,8 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                         {/* ✅ INDICADOR VISUAL DE ETAPA ATIVA */}
                         {activeStageId === stage.id && (
                           <div className="flex items-center gap-1 mt-1">
-                            <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
-                            <span className="text-xs text-purple-600 font-medium">
+                            <div className="w-2 h-2 bg-[#B89B7A]/100 rounded-full animate-pulse"></div>
+                            <span className="text-xs text-[#B89B7A] font-medium">
                               ATIVA
                             </span>
                           </div>

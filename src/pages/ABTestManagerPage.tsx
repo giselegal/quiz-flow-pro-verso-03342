@@ -944,7 +944,7 @@ const ABTestManagerPage: React.FC = () => {
                               </div>
 
                               <div className="mt-2 md:mt-0 flex flex-wrap gap-2">
-                                <div className="bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full text-xs">
+                                <div className="bg-[#B89B7A]/10 text-[#A38A69] px-2.5 py-0.5 rounded-full text-xs">
                                   CR:{" "}
                                   {getConversionRate(
                                     selectedTest.id,
@@ -959,7 +959,7 @@ const ABTestManagerPage: React.FC = () => {
                                     }
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center text-xs text-blue-600 hover:underline"
+                                    className="inline-flex items-center text-xs text-[#B89B7A] hover:underline"
                                   >
                                     <ExternalLink className="h-3 w-3 mr-1" />
                                     Abrir checkout

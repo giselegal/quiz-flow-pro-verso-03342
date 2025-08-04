@@ -92,9 +92,9 @@ export const EnhancedFallbackBlock: React.FC<BlockComponentProps & { blockType: 
   return (
     <div
       className={cn(
-        'border-2 border-dashed border-orange-300 bg-orange-50 rounded-lg p-6 text-center transition-all duration-200',
-        'hover:border-orange-400 hover:bg-orange-100',
-        isSelected && 'border-orange-500 bg-orange-100 ring-2 ring-orange-200',
+        'border-2 border-dashed border-[#B89B7A]/40 bg-[#B89B7A]/10 rounded-lg p-6 text-center transition-all duration-200',
+        'hover:border-orange-400 hover:bg-[#B89B7A]/20',
+        isSelected && 'border-orange-500 bg-[#B89B7A]/20 ring-2 ring-orange-200',
         className,
       )}
       onClick={onClick}
@@ -104,28 +104,28 @@ export const EnhancedFallbackBlock: React.FC<BlockComponentProps & { blockType: 
         <div className="flex flex-col items-center space-y-2">
           <div className="text-4xl">{info.icon}</div>
           <h3 className="text-lg font-semibold text-orange-900">{info.name}</h3>
-          <Badge variant="outline" className="bg-orange-100 text-orange-800 border-orange-300">
+          <Badge variant="outline" className="bg-[#B89B7A]/20 text-orange-800 border-[#B89B7A]/40">
             {info.category}
           </Badge>
         </div>
 
         {/* Descrição */}
-        <p className="text-orange-700 text-sm max-w-md mx-auto">{info.description}</p>
+        <p className="text-[#A38A69] text-sm max-w-md mx-auto">{info.description}</p>
 
         {/* Status de desenvolvimento */}
         <div className="bg-white rounded-md p-3 border border-orange-200">
-          <div className="text-xs text-orange-600 font-medium mb-1">🚧 Em Desenvolvimento</div>
+          <div className="text-xs text-[#B89B7A] font-medium mb-1">🚧 Em Desenvolvimento</div>
           <div className="text-xs text-orange-500">
-            Tipo: <code className="bg-orange-100 px-1 rounded">{blockType}</code>
+            Tipo: <code className="bg-[#B89B7A]/20 px-1 rounded">{blockType}</code>
           </div>
         </div>
 
         {/* Informações para o desenvolvedor */}
         <details className="text-left bg-white rounded-md border border-orange-200">
-          <summary className="p-2 text-xs font-medium text-orange-700 cursor-pointer hover:bg-orange-50">
+          <summary className="p-2 text-xs font-medium text-[#A38A69] cursor-pointer hover:bg-[#B89B7A]/10">
             🔍 Informações do Bloco
           </summary>
-          <div className="p-3 border-t border-orange-200 text-xs text-orange-600 space-y-1">
+          <div className="p-3 border-t border-orange-200 text-xs text-[#B89B7A] space-y-1">
             <div>
               <strong>ID:</strong> {block.id}
             </div>
@@ -135,7 +135,7 @@ export const EnhancedFallbackBlock: React.FC<BlockComponentProps & { blockType: 
             <div>
               <strong>Propriedades:</strong>
             </div>
-            <pre className="bg-orange-50 p-2 rounded text-xs overflow-auto">
+            <pre className="bg-[#B89B7A]/10 p-2 rounded text-xs overflow-auto">
               {JSON.stringify(block.properties || {}, null, 2)}
             </pre>
           </div>
@@ -145,7 +145,7 @@ export const EnhancedFallbackBlock: React.FC<BlockComponentProps & { blockType: 
         <Button
           variant="outline"
           size="sm"
-          className="border-orange-300 text-orange-700 hover:bg-orange-100"
+          className="border-[#B89B7A]/40 text-[#A38A69] hover:bg-[#B89B7A]/20"
           onClick={e => {
             e.stopPropagation();
             onClick?.();

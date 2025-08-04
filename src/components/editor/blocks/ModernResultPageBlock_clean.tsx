@@ -51,7 +51,7 @@ const ModernResultPageBlock: React.FC<BlockComponentProps> = ({
         paddingClasses[padding as keyof typeof paddingClasses] || paddingClasses.large,
         // Estados visuais
         'transition-all duration-200',
-        isSelected && 'ring-2 ring-blue-500',
+        isSelected && 'ring-2 ring-[#B89B7A]',
         className,
       )}
       onClick={onClick}

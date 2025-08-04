@@ -69,7 +69,7 @@ const QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
         'relative w-full h-full flex flex-col bg-white rounded-lg border border-gray-200',
         // LAYOUT HORIZONTAL RESPONSIVO - LARGURA 100% - MÁXIMO 2 COLUNAS INTERNAS
         'p-4 md:p-6 min-h-[300px] max-w-full',
-        isSelected ? 'ring-2 ring-blue-500 bg-[#B89B7A]/10' : '',
+        isSelected ? 'ring-2 ring-[#B89B7A] bg-[#B89B7A]/10' : '',
         'cursor-pointer hover:shadow-md transition-all duration-200',
         className,
       )}
@@ -85,8 +85,8 @@ const QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
         {/* Title */}
         <h1
           className={cn(
-            'text-lg md:text-xl font-bold mb-2 leading-tight cursor-pointer p-2 rounded border-2 border-transparent hover:border-blue-300',
-            isSelected && 'ring-2 ring-blue-500 ring-opacity-50',
+            'text-lg md:text-xl font-bold mb-2 leading-tight cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40',
+            isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50',
           )}
           onClick={onClick}
         >
@@ -96,8 +96,8 @@ const QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
         {/* Subtitle */}
         <p
           className={cn(
-            'text-sm mb-3 opacity-80 leading-relaxed cursor-pointer p-2 rounded border-2 border-transparent hover:border-blue-300',
-            isSelected && 'ring-2 ring-blue-500 ring-opacity-50',
+            'text-sm mb-3 opacity-80 leading-relaxed cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40',
+            isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50',
           )}
           onClick={onClick}
         >
@@ -108,8 +108,8 @@ const QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
       {/* Description */}
       <p
         className={cn(
-          'text-xs md:text-sm mb-4 opacity-75 text-center leading-relaxed cursor-pointer p-2 rounded border-2 border-transparent hover:border-blue-300',
-          isSelected && 'ring-2 ring-blue-500 ring-opacity-50',
+          'text-xs md:text-sm mb-4 opacity-75 text-center leading-relaxed cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40',
+          isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50',
         )}
         onClick={onClick}
       >
@@ -136,7 +136,7 @@ const QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
           <input
             type="text"
             placeholder={nameInputPlaceholder}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#B89B7A] focus:border-transparent"
             disabled={disabled}
           />
         </div>

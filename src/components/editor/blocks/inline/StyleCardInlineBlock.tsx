@@ -70,7 +70,7 @@ const StyleCardInlineBlock: React.FC<BlockComponentProps> = ({
         'bg-white/90 backdrop-blur-sm rounded-lg border',
         'shadow-md hover:shadow-lg transition-all duration-200',
         // Estados do editor
-        isSelected && 'ring-2 ring-blue-500 ring-offset-2',
+        isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2',
         'cursor-pointer hover:scale-[1.02]',
         className,
       )}

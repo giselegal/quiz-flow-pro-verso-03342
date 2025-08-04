@@ -165,7 +165,7 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
               className={`${
                 hasPremiumFeatures
                   ? "border-green-500 text-green-700 bg-green-50"
-                  : "border-yellow-500 text-stone-700 bg-yellow-50"
+                  : "border-yellow-500 text-stone-700 bg-stone-50"
               }`}
             >
               {hasPremiumFeatures ? "Premium" : "Básico"}
@@ -245,7 +245,7 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
               Upgrade para o plano Professional e tenha acesso a {locked.length}{" "}
               componentes premium:
             </p>
-            <ul className="text-xs text-yellow-600 mb-3 space-y-1">
+            <ul className="text-xs text-stone-600 mb-3 space-y-1">
               <li>• Vídeos e áudios</li>
               <li>• Gráficos e carrosseis</li>
               <li>• Componentes de preço</li>

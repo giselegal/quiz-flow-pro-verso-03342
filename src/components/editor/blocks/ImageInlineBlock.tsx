@@ -90,7 +90,7 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
         'p-2 rounded-lg border border-transparent',
         'hover:border-gray-200 hover:bg-gray-50/30 transition-all duration-200',
         'cursor-pointer',
-        isSelected && 'border-blue-500 bg-[#B89B7A]/10/30',
+        isSelected && 'border-[#B89B7A] bg-[#B89B7A]/10/30',
         className,
       )}
       onClick={onClick}

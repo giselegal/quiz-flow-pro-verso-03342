@@ -72,7 +72,7 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({ block, isSelected =
   const themeClasses = {
     primary: 'text-[#432818]',
     secondary: 'text-[#B89B7A]',
-    accent: 'text-blue-600',
+    accent: 'text-[#B89B7A]',
     dark: 'text-gray-900',
     light: 'text-gray-100',
   };
@@ -112,7 +112,7 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({ block, isSelected =
         alignmentClasses[alignment as keyof typeof alignmentClasses] || alignmentClasses.center,
         // Estados visuais
         'transition-all duration-200',
-        isSelected && 'ring-2 ring-blue-500 bg-[#B89B7A]/10',
+        isSelected && 'ring-2 ring-[#B89B7A] bg-[#B89B7A]/10',
         'cursor-pointer hover:bg-gray-50',
         className,
       )}

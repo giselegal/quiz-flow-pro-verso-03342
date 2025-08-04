@@ -198,12 +198,12 @@ const LimitedSpotsNotification: React.FC = () => {
   return (
     <div className="bg-brand-light border border-orange-400 rounded-lg p-3.5 sm:p-4 flex flex-col sm:flex-row items-center justify-between w-full max-w-md text-xs sm:text-sm shadow-md">
       <div className="flex items-center mb-2 sm:mb-0">
-        <TrendingUp size={20} className="text-orange-600 mr-2" />
+        <TrendingUp size={20} className="text-[#B89B7A] mr-2" />
         <div>
           <p className="font-semibold text-orange-800">
             Vagas limitadas para hoje!
           </p>
-          <p className="text-orange-700">
+          <p className="text-[#A38A69]">
             Apenas {100 - spotsFilled} vagas restantes
           </p>
         </div>

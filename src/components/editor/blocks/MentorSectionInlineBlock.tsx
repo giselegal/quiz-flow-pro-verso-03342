@@ -54,8 +54,8 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
       className={cn(
         'w-full p-4 md:p-6 transition-all duration-200',
         'bg-gradient-to-br from-purple-50 to-indigo-50 rounded-lg',
-        isSelected && 'ring-2 ring-purple-400 bg-purple-50',
-        !disabled && 'cursor-pointer hover:bg-purple-50/80',
+        isSelected && 'ring-2 ring-purple-400 bg-[#B89B7A]/10',
+        !disabled && 'cursor-pointer hover:bg-[#B89B7A]/10/80',
         className,
       )}
       onClick={onClick}
@@ -90,7 +90,7 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
           {/* Nome e Título */}
           <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">{mentorName}</h3>
 
-          <p className="text-purple-600 font-semibold text-sm md:text-base mb-4">{mentorTitle}</p>
+          <p className="text-[#B89B7A] font-semibold text-sm md:text-base mb-4">{mentorTitle}</p>
 
           {/* Bio */}
           <div className="bg-white p-4 rounded-lg shadow-sm border border-purple-100 mb-6">

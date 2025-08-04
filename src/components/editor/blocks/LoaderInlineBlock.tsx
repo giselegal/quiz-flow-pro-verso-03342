@@ -46,8 +46,8 @@ const LoaderInlineBlock: React.FC<LoaderInlineBlockProps> = ({
       className={cn(
         'group/canvas-item inline-block w-full',
         'min-h-[1.25rem] relative border-2 border-dashed rounded-md p-4',
-        'hover:border-2 hover:border-blue-500 transition-all cursor-pointer',
-        isHovered ? 'border-blue-500' : 'border-gray-300',
+        'hover:border-2 hover:border-[#B89B7A] transition-all cursor-pointer',
+        isHovered ? 'border-[#B89B7A]' : 'border-gray-300',
         disabled && 'opacity-75 cursor-not-allowed',
         className,
       )}

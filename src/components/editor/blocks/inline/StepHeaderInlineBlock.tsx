@@ -60,7 +60,7 @@ const StepHeaderInlineBlock: React.FC<BlockComponentProps> = ({
         gapClass,
         'p-4',
         // Estados do editor
-        isSelected && 'ring-2 ring-blue-500 ring-offset-2',
+        isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2',
         'cursor-pointer transition-all duration-200',
         className,
       )}

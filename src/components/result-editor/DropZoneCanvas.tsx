@@ -38,7 +38,7 @@ const BasicComponentRenderer: React.FC<{
     case "heading":
       return (
         <div
-          className={`cursor-pointer ${isSelected ? "ring-2 ring-blue-500 ring-offset-2" : ""}`}
+          className={`cursor-pointer ${isSelected ? "ring-2 ring-[#B89B7A] ring-offset-2" : ""}`}
           onClick={handleClick}
           style={{ marginBottom: props.marginBottom || 20 }}
         >
@@ -58,7 +58,7 @@ const BasicComponentRenderer: React.FC<{
     case "text":
       return (
         <div
-          className={`cursor-pointer ${isSelected ? "ring-2 ring-blue-500 ring-offset-2" : ""}`}
+          className={`cursor-pointer ${isSelected ? "ring-2 ring-[#B89B7A] ring-offset-2" : ""}`}
           onClick={handleClick}
           style={{ marginBottom: props.marginBottom || 16 }}
         >
@@ -78,7 +78,7 @@ const BasicComponentRenderer: React.FC<{
     case "button":
       return (
         <div
-          className={`cursor-pointer ${isSelected ? "ring-2 ring-blue-500 ring-offset-2" : ""}`}
+          className={`cursor-pointer ${isSelected ? "ring-2 ring-[#B89B7A] ring-offset-2" : ""}`}
           onClick={handleClick}
           style={{ marginTop: props.marginTop || 20 }}
         >
@@ -102,7 +102,7 @@ const BasicComponentRenderer: React.FC<{
     case "image":
       return (
         <div
-          className={`cursor-pointer ${isSelected ? "ring-2 ring-blue-500 ring-offset-2" : ""}`}
+          className={`cursor-pointer ${isSelected ? "ring-2 ring-[#B89B7A] ring-offset-2" : ""}`}
           onClick={handleClick}
         >
           <img
@@ -122,7 +122,7 @@ const BasicComponentRenderer: React.FC<{
       return (
         <div
           className={`p-4 border-2 border-dashed border-gray-300 rounded-lg text-center cursor-pointer ${
-            isSelected ? "ring-2 ring-blue-500 ring-offset-2" : ""
+            isSelected ? "ring-2 ring-[#B89B7A] ring-offset-2" : ""
           }`}
           onClick={handleClick}
         >
@@ -213,7 +213,7 @@ export const DropZoneCanvas: React.FC<DropZoneCanvasProps> = ({
       <div
         ref={setNodeRef}
         className={`min-h-[calc(100vh-200px)] p-6 transition-all duration-200 ${
-          isOver ? "bg-[#B89B7A]/10 ring-2 ring-blue-300" : ""
+          isOver ? "bg-[#B89B7A]/10 ring-2 ring-[#B89B7A]/40" : ""
         }`}
         style={getPreviewStyles()}
       >

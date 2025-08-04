@@ -83,17 +83,17 @@ export const EventLogger: React.FC = () => {
       case "QuizStart":
         return "bg-[#B89B7A]/100";
       case "QuizAnswer":
-        return "bg-purple-500";
+        return "bg-[#B89B7A]/100";
       case "QuizComplete":
         return "bg-green-500";
       case "ResultView":
-        return "bg-yellow-500";
+        return "bg-stone-500";
       case "Lead":
-        return "bg-indigo-500";
+        return "bg-[#B89B7A]/100";
       case "Purchase":
         return "bg-red-500";
       case "ButtonClick":
-        return "bg-orange-500";
+        return "bg-[#B89B7A]/100";
       default:
         return "bg-gray-500";
     }

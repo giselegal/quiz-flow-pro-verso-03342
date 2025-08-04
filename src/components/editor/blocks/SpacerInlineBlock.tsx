@@ -123,7 +123,7 @@ const SpacerInlineBlock: React.FC<BlockComponentProps> = ({
           borderClasses[borderStyle as keyof typeof borderClasses],
 
           // Visual feedback
-          isSelected && ['bg-[#B89B7A]/10/50', showGuides && 'border-2 border-dashed border-blue-300'],
+          isSelected && ['bg-[#B89B7A]/10/50', showGuides && 'border-2 border-dashed border-[#B89B7A]/40'],
 
           !isSelected && isHovered && ['bg-gray-50/30', showGuides && 'border-2 border-dashed border-gray-200'],
 

@@ -34,7 +34,7 @@ const SimpleBlockRenderer: React.FC<{
       className={cn(
         "p-4 border rounded-lg cursor-pointer transition-all",
         isSelected
-          ? "border-blue-500 bg-blue-50"
+          ? "border-[#B89B7A] bg-[#B89B7A]/10"
           : "border-gray-200 hover:border-gray-300",
       )}
     >
@@ -576,7 +576,7 @@ const EditorPage: React.FC = () => {
       <div className="flex-shrink-0 border-b bg-white px-4 py-2 flex items-center justify-between">
         <div className="flex items-center space-x-2">
           {funnelId && (
-            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+            <span className="text-xs bg-[#B89B7A]/20 text-[#A38A69] px-2 py-1 rounded">
               ID: {funnelId}
             </span>
           )}
@@ -675,8 +675,8 @@ const EditorPage: React.FC = () => {
                 {sortedBlocks.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-96 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
                     <div className="text-center space-y-4 max-w-md">
-                      <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center">
-                        <Plus className="w-8 h-8 text-blue-600" />
+                      <div className="w-16 h-16 mx-auto bg-[#B89B7A]/20 rounded-full flex items-center justify-center">
+                        <Plus className="w-8 h-8 text-[#B89B7A]" />
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -711,7 +711,7 @@ const EditorPage: React.FC = () => {
                           className={cn(
                             "relative p-4 rounded-lg border-2 transition-all cursor-pointer",
                             selectedComponentId === block.id
-                              ? "border-blue-500 bg-blue-50"
+                              ? "border-[#B89B7A] bg-[#B89B7A]/10"
                               : "border-gray-200 hover:border-gray-300",
                           )}
                         >
@@ -847,8 +847,8 @@ const EditorPage: React.FC = () => {
                       {sortedBlocks.length === 0 ? (
                         <div className="flex flex-col items-center justify-center h-96 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
                           <div className="text-center space-y-4 max-w-md">
-                            <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center">
-                              <Plus className="w-8 h-8 text-blue-600" />
+                            <div className="w-16 h-16 mx-auto bg-[#B89B7A]/20 rounded-full flex items-center justify-center">
+                              <Plus className="w-8 h-8 text-[#B89B7A]" />
                             </div>
                             <div>
                               <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -871,8 +871,8 @@ const EditorPage: React.FC = () => {
                                 Ou adicione componentes da barra lateral
                               </p>
                             </div>
-                            <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                              <p className="text-xs text-blue-700">
+                            <div className="mt-4 p-3 bg-[#B89B7A]/10 rounded-lg">
+                              <p className="text-xs text-[#A38A69]">
                                 <strong>🎯 Status:</strong>{" "}
                                 {AVAILABLE_BLOCKS.length} componentes
                                 disponíveis
@@ -899,7 +899,7 @@ const EditorPage: React.FC = () => {
                                   "transition-all duration-200",
                                   selectedComponentId === block.id &&
                                     !isPreviewing &&
-                                    "ring-2 ring-blue-500 rounded-lg",
+                                    "ring-2 ring-[#B89B7A] rounded-lg",
                                 )}
                               >
                                 <SimpleBlockRenderer
@@ -953,7 +953,7 @@ const EditorPage: React.FC = () => {
         </div>
         <div className="flex items-center space-x-2">
           {selectedComponentId && (
-            <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded">
+            <span className="bg-[#B89B7A]/20 text-[#A38A69] px-2 py-1 rounded">
               Selecionado:{" "}
               {blocks.find((b) => b.id === selectedComponentId)?.type}
             </span>

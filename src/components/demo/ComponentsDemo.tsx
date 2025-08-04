@@ -124,7 +124,7 @@ export function ComponentsDemo() {
               <Card
                 key={block.id}
                 className={`cursor-pointer transition-all ${
-                  selectedBlock?.id === block.id ? "ring-2 ring-blue-500" : ""
+                  selectedBlock?.id === block.id ? "ring-2 ring-[#B89B7A]" : ""
                 }`}
                 onClick={() => setSelectedBlock(block)}
               >

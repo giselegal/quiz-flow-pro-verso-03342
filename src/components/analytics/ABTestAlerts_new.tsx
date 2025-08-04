@@ -259,9 +259,9 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
       case "significance_reached":
         return <CheckCircle className="h-4 w-4 text-green-600" />;
       case "sample_size_warning":
-        return <AlertTriangle className="h-4 w-4 text-yellow-600" />;
+        return <AlertTriangle className="h-4 w-4 text-stone-600" />;
       case "duration_warning":
-        return <Clock className="h-4 w-4 text-blue-600" />;
+        return <Clock className="h-4 w-4 text-[#B89B7A]" />;
       case "conversion_anomaly":
         return <AlertTriangle className="h-4 w-4 text-red-600" />;
       default:
@@ -274,7 +274,7 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
       case "high":
         return "border-red-200 bg-red-50";
       case "medium":
-        return "border-yellow-200 bg-yellow-50";
+        return "border-yellow-200 bg-stone-50";
       case "low":
         return "border-[#B89B7A]/30 bg-[#B89B7A]/10";
       default:
@@ -325,7 +325,7 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">
+              <div className="text-2xl font-bold text-[#B89B7A]">
                 {alerts.length}
               </div>
               <div className="text-sm text-muted-foreground">

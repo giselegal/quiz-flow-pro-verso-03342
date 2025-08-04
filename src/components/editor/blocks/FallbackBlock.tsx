@@ -30,7 +30,7 @@ const FallbackBlock: React.FC<BlockComponentProps & { blockType?: string }> = ({
         // Layout base
         'w-full min-h-[80px] p-4 rounded-lg border-2 border-dashed transition-all duration-200',
         // Estados visuais
-        'border-yellow-300 bg-yellow-50 hover:bg-stone-100',
+        'border-stone-300 bg-stone-50 hover:bg-stone-100',
         isSelected && 'border-yellow-500 bg-stone-100 ring-2 ring-yellow-200',
         // Cursor
         'cursor-pointer',
@@ -40,14 +40,14 @@ const FallbackBlock: React.FC<BlockComponentProps & { blockType?: string }> = ({
     >
       <div className="flex items-center space-x-3">
         <div className="flex-shrink-0">
-          <AlertTriangle className="w-6 h-6 text-yellow-600" />
+          <AlertTriangle className="w-6 h-6 text-stone-600" />
         </div>
         <div className="flex-grow">
           <h4 className="text-sm font-semibold text-stone-700 mb-1">Componente não encontrado</h4>
           <p className="text-xs text-stone-700 mb-2">
-            Tipo: <code className="bg-yellow-200 px-1 rounded">{blockType || block.type || 'unknown'}</code>
+            Tipo: <code className="bg-stone-200 px-1 rounded">{blockType || block.type || 'unknown'}</code>
           </p>
-          <div className="flex items-center space-x-2 text-xs text-yellow-600">
+          <div className="flex items-center space-x-2 text-xs text-stone-600">
             <Info className="w-3 h-3" />
             <span>Clique para configurar no painel de propriedades →</span>
           </div>
@@ -57,7 +57,7 @@ const FallbackBlock: React.FC<BlockComponentProps & { blockType?: string }> = ({
       {/* Propriedades do bloco (para debug) */}
       {process.env.NODE_ENV === 'development' && (
         <details className="mt-3">
-          <summary className="text-xs text-yellow-600 cursor-pointer">Debug: Propriedades do bloco</summary>
+          <summary className="text-xs text-stone-600 cursor-pointer">Debug: Propriedades do bloco</summary>
           <pre className="mt-2 text-xs text-stone-700 bg-stone-100 p-2 rounded overflow-auto">
             {JSON.stringify(block, null, 2)}
           </pre>

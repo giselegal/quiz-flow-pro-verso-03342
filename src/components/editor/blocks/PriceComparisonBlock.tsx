@@ -82,7 +82,7 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
           w-full p-6 rounded-lg cursor-pointer transition-all duration-200
           ${
             isSelected
-              ? 'border-2 border-blue-500 bg-[#B89B7A]/10'
+              ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10'
               : 'border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]'
           }
           ${className}
@@ -173,7 +173,7 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
         w-full p-6 rounded-lg cursor-pointer transition-all duration-200
         ${
           isSelected
-            ? 'border-2 border-blue-500 bg-[#B89B7A]/10'
+            ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10'
             : 'border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]'
         }
         ${className}
@@ -209,7 +209,7 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
             key={plan.id}
             className={`
               relative h-full ${getCardStyleClasses()}
-              ${plan.isPopular && highlightPopular ? 'ring-2 ring-blue-500 scale-105' : ''}
+              ${plan.isPopular && highlightPopular ? 'ring-2 ring-[#B89B7A] scale-105' : ''}
               ${animateOnHover ? 'hover:scale-105 transition-transform' : ''}
             `}
             style={{ borderRadius }}

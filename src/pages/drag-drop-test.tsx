@@ -136,7 +136,7 @@ export const DragDropTestPage: React.FC = () => {
               </div>
 
               {/* Debug Info */}
-              <div className="mt-4 bg-blue-50 rounded-lg p-3 text-xs">
+              <div className="mt-4 bg-[#B89B7A]/10 rounded-lg p-3 text-xs">
                 <h3 className="font-semibold mb-2">Debug Info:</h3>
                 <p>Blocos no canvas: {blocks.length}</p>
                 <p>Bloco selecionado: {selectedBlockId || "Nenhum"}</p>

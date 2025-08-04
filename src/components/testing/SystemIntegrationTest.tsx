@@ -289,7 +289,7 @@ const SystemIntegrationTest: React.FC = () => {
               <div className="text-sm text-gray-600">Erros</div>
             </div>
             <div className="text-center p-4 border rounded-lg bg-[#B89B7A]/10">
-              <div className="text-2xl font-bold text-blue-600">
+              <div className="text-2xl font-bold text-[#B89B7A]">
                 {runningCount}
               </div>
               <div className="text-sm text-gray-600">Executando</div>

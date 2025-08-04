@@ -64,7 +64,7 @@ export const Auth: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsLogin(!isLogin)}
-            className="text-blue-600 hover:text-blue-800 text-sm"
+            className="text-[#B89B7A] hover:text-[#432818] text-sm"
           >
             {isLogin ? "Não tem conta? Criar uma" : "Já tem conta? Entrar"}
           </button>

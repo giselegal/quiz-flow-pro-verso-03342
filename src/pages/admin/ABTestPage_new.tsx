@@ -170,7 +170,7 @@ const ABTestPage: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <Badge
                     variant="default"
-                    className="bg-yellow-100 text-yellow-800"
+                    className="bg-stone-100 text-stone-800"
                   >
                     Coletando dados
                   </Badge>
@@ -213,8 +213,8 @@ const ABTestPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="mt-4 p-3 bg-yellow-50 rounded-lg">
-                <p className="text-sm text-yellow-800">
+              <div className="mt-4 p-3 bg-stone-50 rounded-lg">
+                <p className="text-sm text-stone-800">
                   <strong>Status:</strong> Teste em andamento. Precisa de mais 3
                   dias para significância estatística.
                 </p>

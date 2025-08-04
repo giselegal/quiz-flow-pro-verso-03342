@@ -100,7 +100,7 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
     <section
       className={cn(
         "py-8 md:py-16 px-4 md:px-8 transition-all duration-200",
-        isSelected && "ring-2 ring-blue-500 ring-offset-2",
+        isSelected && "ring-2 ring-[#B89B7A] ring-offset-2",
         className,
       )}
       style={{

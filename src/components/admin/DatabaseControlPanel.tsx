@@ -147,7 +147,7 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
           <h4 className="text-sm font-medium text-[#432818] mb-2">
             🚀 Migrar para Banco de Dados
           </h4>
-          <p className="text-xs text-blue-700 mb-3">
+          <p className="text-xs text-[#A38A69] mb-3">
             Converta seus templates locais para o sistema de componentes reutilizáveis no banco
           </p>
           
@@ -161,7 +161,7 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
                 ? 'bg-green-600 text-white'
                 : migrationStatus === 'error'
                 ? 'bg-red-600 text-white'
-                : 'bg-[#B89B7A] text-white hover:bg-blue-700'
+                : 'bg-[#B89B7A] text-white hover:bg-[#A38A69]'
             }`}
           >
             {migrationStatus === 'migrating' && '⏳ Migrando...'}
@@ -190,7 +190,7 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
         
         {loading ? (
           <div className="text-center py-4">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto"></div>
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#B89B7A] mx-auto"></div>
             <p className="text-xs text-gray-500 mt-2">Carregando...</p>
           </div>
         ) : stats ? (
@@ -262,7 +262,7 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
         <div className="grid grid-cols-2 gap-2">
           <button
             onClick={() => window.open('/editor', '_blank')}
-            className="px-3 py-2 text-xs bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200"
+            className="px-3 py-2 text-xs bg-[#B89B7A]/20 text-[#A38A69] rounded-md hover:bg-[#B89B7A]/30"
           >
             🎨 Abrir Editor
           </button>

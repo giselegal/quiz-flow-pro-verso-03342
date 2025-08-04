@@ -133,12 +133,12 @@ export const STANDARD_CANVAS_CONFIG: CanvasLayoutConfig = {
     },
     container: {
       className:
-        "min-h-[1.25rem] min-w-full relative self-auto box-border customizable-gap group-hover/canvas-item:border-2 border-dashed hover:border-2 border-blue-500 rounded-md",
+        "min-h-[1.25rem] min-w-full relative self-auto box-border customizable-gap group-hover/canvas-item:border-2 border-dashed hover:border-2 border-[#B89B7A] rounded-md",
       minHeight: "min-h-[1.25rem]",
       minWidth: "min-w-full",
       border: {
-        hover: "hover:border-2 border-blue-500",
-        selected: "border-2 border-blue-500",
+        hover: "hover:border-2 border-[#B89B7A]",
+        selected: "border-2 border-[#B89B7A]",
         default: "border-dashed",
       },
     },

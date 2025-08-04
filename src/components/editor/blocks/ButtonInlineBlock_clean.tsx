@@ -82,7 +82,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
   // Variantes de cor
   const variantClasses = {
-    primary: 'bg-[#B89B7A] hover:bg-blue-700 text-white border-blue-600',
+    primary: 'bg-[#B89B7A] hover:bg-[#A38A69] text-white border-[#B89B7A]',
     secondary: 'bg-gray-600 hover:bg-gray-700 text-white border-gray-600',
     success: 'bg-green-600 hover:bg-green-700 text-white border-green-600',
     warning: 'bg-yellow-600 hover:bg-yellow-700 text-white border-yellow-600',
@@ -111,7 +111,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     const baseClasses = cn(
       // Classes base do botão
       'inline-flex items-center justify-center rounded-md font-medium transition-all duration-200',
-      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
+      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B89B7A] focus-visible:ring-offset-2',
       'disabled:pointer-events-none disabled:opacity-50',
       'border w-full',
 
@@ -122,7 +122,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
       sizeClasses[size as keyof typeof sizeClasses],
 
       // Estado de seleção no editor
-      isSelected && 'ring-2 ring-blue-400 ring-offset-2',
+      isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2',
 
       // Classes customizadas
       className,
@@ -135,7 +135,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     <div
       className={cn(
         'group relative inline-flex w-full cursor-pointer transition-all duration-200',
-        isSelected && 'ring-1 ring-blue-400/40',
+        isSelected && 'ring-1 ring-[#B89B7A]/40',
       )}
       onClick={onClick}
       data-block-id={block.id}

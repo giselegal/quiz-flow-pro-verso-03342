@@ -163,7 +163,7 @@ export function ImageUploader({
                       className={cn(
                         "border-2 border-dashed rounded-lg p-6 text-center transition-colors",
                         dragActive
-                          ? "border-blue-500 bg-[#B89B7A]/10"
+                          ? "border-[#B89B7A] bg-[#B89B7A]/10"
                           : "border-gray-300",
                         "hover:border-gray-400",
                       )}

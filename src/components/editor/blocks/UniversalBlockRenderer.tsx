@@ -79,9 +79,9 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
     });
 
     return (
-      <div className="p-4 border-2 border-dashed border-orange-300 rounded-lg bg-orange-50">
+      <div className="p-4 border-2 border-dashed border-[#B89B7A]/40 rounded-lg bg-[#B89B7A]/10">
         <div className="text-center">
-          <div className="text-orange-600 font-medium">⚠️ Erro na renderização</div>
+          <div className="text-[#B89B7A] font-medium">⚠️ Erro na renderização</div>
           <div className="text-sm mt-1">Tipo: {block.type}</div>
           <div className="text-xs text-stone-500 mt-2">ID: {block.id}</div>
           <div className="text-xs text-stone-400 mt-1">Erro: {String(error)}</div>

@@ -158,7 +158,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
     // list style
     return `${baseClasses} ${
       isSelected(option)
-        ? "bg-[#B89B7A]/10 border-blue-300 text-[#432818]"
+        ? "bg-[#B89B7A]/10 border-[#B89B7A]/40 text-[#432818]"
         : "bg-white border-gray-200 hover:bg-gray-50"
     }`;
   };
@@ -178,7 +178,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
         {/* Categoria */}
         {category && (
           <div className="mb-4">
-            <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
+            <span className="inline-block px-3 py-1 bg-[#B89B7A]/20 text-[#432818] text-sm font-medium rounded-full">
               Questão Estratégica: {category}
             </span>
           </div>
@@ -237,7 +237,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
             ) : (
               <div className="space-y-4">
                 <div
-                  className="w-full p-4 border-2 border-gray-300 rounded-lg min-h-[80px] bg-gray-50 text-gray-500 flex items-center justify-center cursor-pointer hover:border-blue-300"
+                  className="w-full p-4 border-2 border-gray-300 rounded-lg min-h-[80px] bg-gray-50 text-gray-500 flex items-center justify-center cursor-pointer hover:border-[#B89B7A]/40"
                   onClick={onClick}
                   title="Configure a área de texto no Painel de Propriedades"
                 >

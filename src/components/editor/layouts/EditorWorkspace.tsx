@@ -41,7 +41,7 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
               key={block.id}
               className={`block-item p-4 border rounded-lg cursor-pointer transition-colors ${
                 selectedBlockId === block.id
-                  ? "border-blue-500 bg-[#B89B7A]/10"
+                  ? "border-[#B89B7A] bg-[#B89B7A]/10"
                   : "border-gray-200 hover:border-gray-300"
               }`}
               onClick={() => onSelectBlock(block.id)}

@@ -43,7 +43,7 @@ const FunnelPanelPage: React.FC = () => {
                   </p>
                   <div className="flex items-center gap-4 mt-2 text-xs">
                     <span className="text-green-600">87% conversão</span>
-                    <span className="text-blue-600">1,234 visitantes</span>
+                    <span className="text-[#B89B7A]">1,234 visitantes</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">

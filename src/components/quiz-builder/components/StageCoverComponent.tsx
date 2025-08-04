@@ -33,7 +33,7 @@ const StageCoverComponent: React.FC<StageCoverComponentProps> = ({
   return (
     <Card
       className={`w-full min-h-[400px] flex items-center justify-center cursor-pointer transition-all ${
-        isSelected ? "ring-2 ring-blue-500" : ""
+        isSelected ? "ring-2 ring-[#B89B7A]" : ""
       }`}
       style={backgroundStyle}
       onClick={onClick}

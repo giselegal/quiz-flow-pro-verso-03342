@@ -124,7 +124,7 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
       className={cn(
         'w-full p-4 md:p-6 transition-all duration-200',
         'bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg',
-        isSelected && 'ring-2 ring-blue-400 bg-[#B89B7A]/10',
+        isSelected && 'ring-2 ring-[#B89B7A] bg-[#B89B7A]/10',
         !disabled && 'cursor-pointer hover:bg-[#B89B7A]/10/80',
         className,
       )}

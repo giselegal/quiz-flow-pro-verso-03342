@@ -264,7 +264,7 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
           <Button
             variant="ghost"
             size="sm"
-            className="h-6 w-6 p-0 text-[#B89B7A] hover:text-blue-600"
+            className="h-6 w-6 p-0 text-[#B89B7A] hover:text-[#B89B7A]"
             onClick={() => setShowHelp(!showHelp)}
           >
             <Info className="w-4 h-4" />
@@ -276,7 +276,7 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
 
       {showHelp && property.description && (
         <div className="p-3 bg-[#B89B7A]/10 border border-[#B89B7A]/30 rounded-md">
-          <p className="text-sm text-blue-800">{property.description}</p>
+          <p className="text-sm text-[#432818]">{property.description}</p>
         </div>
       )}
     </div>

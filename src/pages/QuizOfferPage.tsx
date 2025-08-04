@@ -546,7 +546,7 @@ const QuizOfferPage: React.FC = () => {
                       <strong>Sente que "nada fica bom"</strong> em você?
                     </p>
                   </div>
-                  <div className="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-400 mt-6">
+                  <div className="bg-[#B89B7A]/10 p-4 rounded-lg border-l-4 border-orange-400 mt-6">
                     <p className="text-[var(--text-dark)] font-semibold">
                       Isso acontece porque você ainda não descobriu seu{" "}
                       <strong>estilo predominante</strong>.

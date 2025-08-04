@@ -30,7 +30,7 @@ const FunnelPainSection: React.FC<FunnelPainSectionProps> = ({
   return (
     <div
       className={`bg-white rounded-lg p-8 shadow-sm border ${
-        isSelected ? "border-blue-500" : "border-gray-100"
+        isSelected ? "border-[#B89B7A]" : "border-gray-100"
       } ${className}`}
       onClick={onClick}
     >

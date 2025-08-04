@@ -36,8 +36,8 @@ const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
         'group/canvas-item inline-block overflow-hidden relative cursor-col-resize',
         'w-full h-[200px]',
         'border-2 border-dashed rounded-md',
-        'hover:border-blue-500 transition-all',
-        isHovered ? 'border-blue-500' : 'border-gray-300',
+        'hover:border-[#B89B7A] transition-all',
+        isHovered ? 'border-[#B89B7A]' : 'border-gray-300',
         disabled && 'opacity-75 cursor-not-allowed',
         className,
       )}
@@ -113,7 +113,7 @@ const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
         style={{ left: `${dragPosition}%`, top: '0px', zIndex: 40 }}
       >
         <div className="w-36 h-full flex items-center justify-center">
-          <div className="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center shadow-lg">
+          <div className="w-8 h-8 bg-[#B89B7A]/100 rounded-full flex items-center justify-center shadow-lg">
             <ArrowLeftRight className="w-4 h-4 text-white" />
           </div>
         </div>

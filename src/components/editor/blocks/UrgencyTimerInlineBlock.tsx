@@ -79,7 +79,7 @@ const UrgencyTimerInlineBlock: React.FC<BlockComponentProps> = ({
         w-full
         ${spacingClasses[spacing as keyof typeof spacingClasses] || spacingClasses.md}
         transition-all duration-200
-        ${isSelected ? 'ring-2 ring-yellow-400 bg-yellow-50/30' : 'hover:shadow-lg'}
+        ${isSelected ? 'ring-2 ring-yellow-400 bg-stone-50/30' : 'hover:shadow-lg'}
         ${className}
       `}
       style={{ backgroundColor }}

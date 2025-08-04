@@ -47,7 +47,7 @@ const ResultPageHeaderBlock: React.FC<ResultPageHeaderBlockProps> = ({
     <div
       className={cn(
         'w-full border-2 border-transparent transition-all duration-200 rounded-lg',
-        isSelected && 'border-blue-500 shadow-lg',
+        isSelected && 'border-[#B89B7A] shadow-lg',
         className,
       )}
       onClick={onClick}

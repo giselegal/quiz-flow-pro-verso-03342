@@ -22,7 +22,7 @@ const QuizOfferCTAInlineBlock: React.FC<BlockComponentProps> = ({
     <div
       className={cn(
         'w-full p-4 transition-all duration-200',
-        isSelected && 'ring-2 ring-blue-500',
+        isSelected && 'ring-2 ring-[#B89B7A]',
         'cursor-pointer',
         className,
       )}

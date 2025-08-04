@@ -87,9 +87,9 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({ block, onPropertyCha
       case 'elegant':
         return 'bg-gray-50 border-gray-200 text-gray-800';
       case 'default':
-        return 'bg-[#B89B7A]/10 border-[#B89B7A]/30 text-blue-800';
+        return 'bg-[#B89B7A]/10 border-[#B89B7A]/30 text-[#432818]';
       default:
-        return 'bg-[#B89B7A]/10 border-[#B89B7A]/30 text-blue-800';
+        return 'bg-[#B89B7A]/10 border-[#B89B7A]/30 text-[#432818]';
     }
   };
 
@@ -110,7 +110,7 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({ block, onPropertyCha
         className={cn(
           'text-center cursor-pointer p-4 rounded-lg transition-all duration-200',
           'bg-gray-50 border border-gray-200',
-          isSelected && 'ring-2 ring-blue-500 ring-offset-2',
+          isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2',
         )}
       >
         <div className="text-lg font-medium text-gray-600">{expiredMessage}</div>
@@ -121,7 +121,7 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({ block, onPropertyCha
   return (
     <div
       onClick={onClick}
-      className={cn('cursor-pointer transition-all duration-200', isSelected && 'ring-2 ring-blue-500 ring-offset-2')}
+      className={cn('cursor-pointer transition-all duration-200', isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2')}
     >
       <div className="flex justify-center space-x-2">
         {format === 'full' && (

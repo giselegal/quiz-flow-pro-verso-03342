@@ -30,7 +30,7 @@ const LandingPage: React.FC = () => {
         </p>
         <p className="mt-2 text-sm text-gray-500">
           Ou acesse diretamente:{" "}
-          <a href="/quiz" className="text-blue-600 hover:underline">
+          <a href="/quiz" className="text-[#B89B7A] hover:underline">
             Quiz Original
           </a>
         </p>

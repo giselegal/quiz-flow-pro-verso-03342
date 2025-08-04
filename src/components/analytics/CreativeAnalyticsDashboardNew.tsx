@@ -150,14 +150,14 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
       );
     if (rate >= 1.0)
       return (
-        <Badge className="bg-yellow-50 text-stone-700 border-yellow-200 font-medium">
+        <Badge className="bg-stone-50 text-stone-700 border-yellow-200 font-medium">
           <Target size={12} className="mr-1" />
           Bom
         </Badge>
       );
     if (rate >= 0.5)
       return (
-        <Badge className="bg-orange-50 text-orange-700 border-orange-200 font-medium">
+        <Badge className="bg-[#B89B7A]/10 text-[#A38A69] border-orange-200 font-medium">
           <AlertCircle size={12} className="mr-1" />
           Regular
         </Badge>
