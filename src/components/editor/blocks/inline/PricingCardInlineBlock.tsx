@@ -280,5 +280,3 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
 };
 
 export default PricingCardInlineBlock;
-
-export default PricingCardInlineBlock;
