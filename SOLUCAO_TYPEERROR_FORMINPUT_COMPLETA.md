@@ -66,6 +66,7 @@ setAllBlocks(newBlocks);
 ```
 
 ### 3. **Correção Crítica do UniversalBlockRenderer** ✅
+
 **UniversalBlockRenderer.tsx** - Problema raiz identificado e corrigido:
 
 ```typescript

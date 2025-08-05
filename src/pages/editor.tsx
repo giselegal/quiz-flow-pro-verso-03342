@@ -589,11 +589,11 @@ const EditorPage: React.FC = () => {
       // Adicionar todos os blocos de uma vez
       setAllBlocks(newBlocks);
       console.log(`✅ ${addedCount} blocos da Etapa 1 carregados:`, newBlocks);
-      
+
       // Debug: Verificar se os blocos foram realmente adicionados
       setTimeout(() => {
-        console.log('🔍 Debug - Blocos no estado após setAllBlocks:', config?.blocks);
-        console.log('🔍 Debug - Primeiro bloco detalhado:', config?.blocks?.[0]);
+        console.log("🔍 Debug - Blocos no estado após setAllBlocks:", config?.blocks);
+        console.log("🔍 Debug - Primeiro bloco detalhado:", config?.blocks?.[0]);
       }, 100);
 
       toast({
