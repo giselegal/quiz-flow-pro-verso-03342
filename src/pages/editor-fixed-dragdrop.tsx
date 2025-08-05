@@ -5,10 +5,12 @@ import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelS
 import { FunnelStagesPanel } from "@/components/editor/funnel/FunnelStagesPanel";
 import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
 import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
-import UniversalPropertiesPanel from "@/components/universal/UniversalPropertiesPanel";
+import { UniversalPropertiesPanel } from "@/components/universal/UniversalPropertiesPanel";
 import { generateBlockDefinitions, getRegistryStats } from "@/config/enhancedBlockRegistry";
 import { useEditor } from "@/context/EditorContext";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
+import { Type } from "lucide-react";
+import React, { useState } from "react";
 import { Type } from "lucide-react";
 import React, { useState } from "react";
 
@@ -251,23 +253,18 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             }
             propertiesPanel={
               !isPreviewing && selectedBlock ? (
-                <UniversalPropertiesPanel
+                <EnhancedUniversalPropertiesPanel
                   selectedBlock={{
                     id: selectedBlock.id,
                     type: selectedBlock.type,
                     properties: selectedBlock.properties || {},
                   }}
-                  onUpdate={(blockId: string, updates: Record<string, any>) => {
-                    console.log("🚀 Atualizando bloco via UniversalPropertiesPanel:", {
-                      blockId,
-                      updates,
+                  onUpdate={(updatedBlock) => {
+                    console.log("🚀 Atualizando bloco via EnhancedUniversalPropertiesPanel:", {
+                      blockId: updatedBlock.id,
+                      updates: updatedBlock.properties,
                     });
-                    updateBlock(blockId, { properties: updates });
-                  }}
-                  onDelete={(blockId: string) => {
-                    console.log("🗑️ Deletando bloco via UniversalPropertiesPanel:", blockId);
-                    deleteBlock(blockId);
-                    setSelectedBlockId(null);
+                    updateBlock(updatedBlock.id, { properties: updatedBlock.properties });
                   }}
                   onClose={() => setSelectedBlockId(null)}
                 />
