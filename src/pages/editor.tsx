@@ -867,21 +867,10 @@ const EditorPage: React.FC = () => {
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
             <div className="h-full border-l border-gray-200 bg-gray-50">
               {selectedComponentId ? (
-                <UniversalPropertiesPanel
-                  selectedBlock={{
-                    id: selectedComponentId,
-                    type: blocks.find(b => b.id === selectedComponentId)?.type || "unknown",
-                    properties: blocks.find(b => b.id === selectedComponentId)?.properties || {},
-                  }}
-                  onUpdate={(blockId, updates) => {
-                    updateBlock(blockId, updates);
-                  }}
-                  onDelete={blockId => {
-                    deleteBlock(blockId);
-                    setSelectedComponentId(null);
-                  }}
-                  onClose={() => setSelectedComponentId(null)}
-                />
+                <div className="h-full p-4 text-center text-gray-500">
+                  <p className="text-sm">Painel de propriedades em desenvolvimento</p>
+                  <p className="text-xs mt-2">Bloco selecionado: {selectedComponentId}</p>
+                </div>
               ) : (
                 <div className="h-full p-4 text-center text-gray-500">
                   <p className="text-sm">Selecione um bloco para editar suas propriedades</p>

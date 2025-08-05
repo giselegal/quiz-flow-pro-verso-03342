@@ -7,11 +7,10 @@
 export { default as ComponentList } from "./ComponentList";
 export { default as PageEditorCanvas } from "./PageEditorCanvas";
 export { default as QuizEditorSteps } from "./QuizEditorSteps";
-export { default as SchemaDrivenEditorResponsive } from "./SchemaDrivenEditorResponsive";
-
-// Componentes com named exports
-export { PropertyPanel } from "./PropertyPanel";
-export { ModernPropertyPanel } from "./ModernPropertyPanel";
+// Missing components removed
+// export { default as SchemaDrivenEditorResponsive } from "./SchemaDrivenEditorResponsive";
+// export { PropertyPanel } from "./PropertyPanel";
+// export { ModernPropertyPanel } from "./ModernPropertyPanel";
 export { EditorBlockItem } from "./EditorBlockItem";
 export { AddBlockButton } from "./AddBlockButton";
 export { DeleteBlockButton } from "./DeleteBlockButton";

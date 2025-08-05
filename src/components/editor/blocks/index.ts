@@ -23,11 +23,7 @@ export { default as StyleCharacteristicsInlineBlock } from "./inline/StyleCharac
 export { default as LoadingAnimationBlock } from "./inline/LoadingAnimationBlock";
 
 // Componentes que existem mas podem estar vazios
-export { default as CharacteristicsListInlineBlock } from "./inline/CharacteristicsListInlineBlock";
-export { default as TestimonialsInlineBlock } from "./inline/TestimonialsInlineBlock";
-export { default as BeforeAfterInlineBlock } from "./inline/BeforeAfterInlineBlock";
-export { default as BonusListInlineBlock } from "./inline/BonusListInlineBlock";
-export { default as QuizOfferPricingInlineBlock } from "./inline/QuizOfferPricingInlineBlock";
+// Missing inline blocks - removed exports
 export { default as QuizOfferCTAInlineBlock } from "./inline/QuizOfferCTAInlineBlock";
 
 // Block components
@@ -44,9 +40,6 @@ export { default as StyleCardBlock } from "./StyleCardBlock";
 export { default as QuizResultCalculatedBlock } from "./QuizResultCalculatedBlock";
 export { default as VerticalCanvasHeaderBlock } from "./VerticalCanvasHeaderBlock";
 
-// Universal renderer
-export { default as UniversalBlockRenderer } from "./UniversalBlockRenderer";
-export type { BlockRendererProps } from "./UniversalBlockRenderer";
-
-// Re-exports from BlockRenderer
-export { BlockRenderer } from "./BlockRenderer";
+// Universal renderer moved to backup
+// export { default as UniversalBlockRenderer } from "./UniversalBlockRenderer";
+// export type { BlockRendererProps } from "./UniversalBlockRenderer";
