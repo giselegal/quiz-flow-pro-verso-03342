@@ -15,6 +15,15 @@ const FAQSectionInlineBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = '',
 }) => {
+  // Verificação de segurança para evitar erro de undefined
+  if (!block) {
+    return (
+      <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
+        <p className="text-red-600">Erro: Bloco não encontrado</p>
+      </div>
+    );
+  }
+
   const { title = 'Perguntas Frequentes', faqItems = [] } = block.properties || {};
 
   const handleAddItem = () => {
@@ -48,8 +57,8 @@ const FAQSectionInlineBlock: React.FC<BlockComponentProps> = ({
         ${className}
       `}
       onClick={onClick}
-      data-block-id={block.id}
-      data-block-type={block.type}
+      data-block-id={block?.id}
+      data-block-type={block?.type}
     >
       <h3 className="text-2xl font-bold mb-6 text-center text-gray-800">{title}</h3>
 

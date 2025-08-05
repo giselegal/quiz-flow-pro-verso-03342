@@ -9,11 +9,27 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = '',
 }) => {
+  // Verificação de segurança para evitar erro de undefined
+  if (!block) {
+    return (
+      <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
+        <p className="text-red-600">Erro: Bloco não encontrado</p>
+      </div>
+    );
+  }
+
   const {
     title = 'Aviso Legal',
     content = 'Este é um aviso legal padrão.',
-    backgroundColor = '#f8f9fa',
+    privacyText = 'Política de privacidade',
+    copyrightText = '© 2025 Todos os direitos reservados',
+    backgroundColor = 'transparent',
     textColor = '#6c757d',
+    linkColor = '#B89B7A',
+    showIcon = true,
+    iconType = 'shield',
+    textSize = 'text-xs',
+    textAlign = 'text-center',
   } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -34,8 +50,8 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
       `}
       style={{ backgroundColor }}
       onClick={onClick}
-      data-block-id={block.id}
-      data-block-type={block.type}
+      data-block-id={block?.id}
+      data-block-type={block?.type}
     >
       <div className="max-w-4xl mx-auto text-center">
         <h3 className="text-sm font-semibold mb-4" style={{ color: textColor }}>

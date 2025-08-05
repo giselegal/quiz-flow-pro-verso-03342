@@ -138,8 +138,8 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         isSelected && 'ring-1 ring-[#B89B7A]/40',
       )}
       onClick={onClick}
-      data-block-id={block.id}
-      data-block-type={block.type}
+      data-block-id={block?.id}
+      data-block-type={block?.type}
     >
       {/* Botão principal */}
       <button

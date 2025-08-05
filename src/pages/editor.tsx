@@ -885,25 +885,7 @@ const EditorPage: React.FC = () => {
                     </select>
                   </div>
 
-                  {/* Template Buttons */}
-                  <div className="p-2 space-y-2">
-                    <Button
-                      onClick={handleLoadTemplate}
-                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                      size="sm"
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      Carregar Template
-                    </Button>
 
-                    <Button
-                      onClick={handleLoadStep1}
-                      className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700"
-                      size="sm"
-                    >
-                      🚀 Carregar Etapa 1
-                    </Button>
-                  </div>
 
                   {/* Components Grid */}
                   <div className="p-2 space-y-1">
@@ -988,13 +970,6 @@ const EditorPage: React.FC = () => {
                               >
                                 <Download className="w-4 h-4 mr-2" />
                                 Carregar Template Completo
-                              </Button>
-
-                              <Button
-                                onClick={handleLoadStep1}
-                                className="w-full mb-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700"
-                              >
-                                🚀 Carregar Etapa 1 do Quiz
                               </Button>
 
                               <p className="text-sm text-gray-500 text-center">
