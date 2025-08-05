@@ -300,7 +300,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       // ✅ CARREGAR DIRETAMENTE DO TEMPLATE
       const templateBlocks = getStepTemplate(stepNumber);
       if (templateBlocks && templateBlocks.length > 0) {
-        const editorBlocks: EditorBlock[] = templateBlocks.map((block, index) => ({
+        const editorBlocks: EditorBlock[] = templateBlocks.map((block: { id: any; type: any; properties: any; content: any; }, index: number) => ({
           id: block.id || `${stageId}-block-${index + 1}`,
           type: block.type as any,
           content: block.properties || block.content || {},
