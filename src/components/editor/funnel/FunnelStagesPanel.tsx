@@ -32,6 +32,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   const {
     stages,
     activeStageId,
+    isInitialized, // ← ADICIONAR
     stageActions: { setActiveStage, addStage, removeStage, updateStage },
     computed: { stageCount },
   } = useEditor();
