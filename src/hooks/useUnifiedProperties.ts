@@ -1,4 +1,5 @@
 import { BRAND_COLORS } from "@/config/brandColors";
+import { useCallback, useEffect, useState } from "react";
 // Assumindo PropertyDefinition e PropertyType são definidos em "@/types/editor"
 // Para simplicidade, vamos definir PropertyType aqui se não for fornecido em outro lugar.
 export enum PropertyType {

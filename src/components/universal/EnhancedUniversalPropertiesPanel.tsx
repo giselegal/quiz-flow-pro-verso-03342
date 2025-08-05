@@ -13,8 +13,14 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { UnifiedBlock } from "@/hooks/useUnifiedProperties";
-import { BlockDefinition } from "@/types/editor";
+// ✅ Importa UnifiedBlock, useUnifiedProperties e PropertyType do hook
+import {
+  UnifiedBlock,
+  useUnifiedProperties,
+  UnifiedProperty,
+  PropertyType,
+} from "@/hooks/useUnifiedProperties";
+import { BlockDefinition } from "@/types/editor"; // Mantido para compatibilidade da interface
 import {
   EyeOff,
   Layout,
@@ -25,102 +31,47 @@ import {
   Trash2,
   Type,
 } from "lucide-react";
-import React, { useMemo } from "react";
-// Importar do arquivo index.ts que agora exporta corretamente os componentes e funções
-import { getComponentProperties } from "./";
+import React from "react";
 
-// Interface atualizada para compatibilidade com editor-fixed-dragdrop
+// A interface UnifiedBlock é importada do hook, garantindo consistência
 interface EnhancedUniversalPropertiesPanelProps {
-  // Interface original
   selectedBlock: UnifiedBlock | null;
   onUpdate?: (blockId: string, updates: Record<string, any>) => void;
   onDelete?: (blockId: string) => void;
   onClose?: () => void;
 
-  // Propriedades adicionadas para compatibilidade
-  block?: any; // Compatibilidade com OptimizedPropertiesPanel
-  blockDefinition?: BlockDefinition; // Compatibilidade com novo sistema
-  onUpdateBlock?: (blockId: string, updates: Partial<any>) => void; // Compatibilidade com novo sistema
+  // Propriedades adicionadas para compatibilidade (o hook agora lida com `selectedBlock`)
+  block?: any; // Compatibilidade com OptimizedPropertiesPanel (agora será `selectedBlock`)
+  blockDefinition?: BlockDefinition; // Compatibilidade com novo sistema (não usado diretamente pelo hook)
+  onUpdateBlock?: (blockId: string, updates: Partial<any>) => void; // Compatibilidade com novo sistema (agora será `onUpdate`)
 }
-
-// Tipo para definição de propriedades (mantido para compatibilidade)
-interface PropertyDefinition {
-  key: string;
-  label: string;
-  type: string;
-  category: string;
-  value: any;
-  required?: boolean;
-  options?: Array<{ value: string; label: string }>;
-  rows?: number;
-  min?: number;
-  max?: number;
-  step?: number;
-  unit?: string;
-}
-
-// Agora estamos importando getComponentProperties do UniversalPropertiesPanel
-// para garantir uma fonte única das propriedades de cada componente
-
-// Converter BlockDefinition para PropertyDefinition[]
-const convertBlockDefinitionToPropertyDefinitions = (
-  blockDefinition: BlockDefinition | undefined,
-  blockProperties: Record<string, any>
-): Record<string, PropertyDefinition> => {
-  if (!blockDefinition) return {};
-
-  const result: Record<string, PropertyDefinition> = {};
-
-  Object.entries(blockDefinition.properties).forEach(([key, schema]) => {
-    result[key] = {
-      key,
-      label: schema.label,
-      type: mapSchemaTypeToPropertyType(schema.type),
-      category: schema.category || "general",
-      value: blockProperties?.[key] !== undefined ? blockProperties[key] : schema.default,
-      required: schema.required || false,
-      options: schema.options,
-      rows: schema.rows,
-      min: schema.min,
-      max: schema.max,
-      step: schema.step,
-    };
-  });
-
-  return result;
-};
-
-// Mapear tipos de schema para tipos de property
-const mapSchemaTypeToPropertyType = (
-  schemaType: "string" | "number" | "boolean" | "select" | "textarea" | "array" | "color" | "range"
-): string => {
-  const typeMap: Record<string, string> = {
-    string: "text",
-    number: "number",
-    boolean: "boolean",
-    select: "select",
-    textarea: "textarea",
-    array: "select", // Simplificação
-    color: "color",
-    range: "range",
-  };
-
-  return typeMap[schemaType] || "text";
-};
 
 // Componente principal com compatibilidade dupla
 const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPanelProps> = ({
   selectedBlock,
-  onUpdate,
+  onUpdate, // Este é o `onUpdateExternal` para o hook
   onDelete,
   onClose,
-  block,
-  blockDefinition,
-  onUpdateBlock,
+  // As props `block`, `blockDefinition`, `onUpdateBlock` são agora redundantes
+  // pois o `selectedBlock` e `onUpdate` são as fontes de verdade para o hook.
+  // Elas podem ser removidas se a compatibilidade legada não for mais necessária.
 }) => {
-  // Normalizar dados para compatibilidade entre os dois sistemas
-  const actualBlock = block || selectedBlock;
+  // ✅ Normaliza `selectedBlock` para ser a única fonte de verdade para o hook.
+  // Se `block` for passado, ele será usado. Caso contrário, `selectedBlock`.
+  // No entanto, para usar o `useUnifiedProperties` como pretendido, ele deve receber
+  // um único objeto `UnifiedBlock`. Assumimos que `selectedBlock` é o principal.
+  const actualBlock = selectedBlock;
 
+  // ✅ Usa o hook useUnifiedProperties para gerenciar as propriedades do bloco selecionado.
+  // O `onUpdate` passado aqui é o `onUpdateExternal` para o hook, que por sua vez,
+  // chamará o `onUpdate` do `EditorProvider`.
+  const { properties, updateProperty, resetProperties, getPropertiesByCategory } =
+    useUnifiedProperties(
+      actualBlock,
+      onUpdate // Passa o `onUpdate` do painel diretamente para o hook
+    );
+
+  // Se nenhum bloco estiver selecionado, exibe uma mensagem
   if (!actualBlock) {
     return (
       <Card className="w-80 h-fit border-[#B89B7A]/30 bg-white/95 backdrop-blur-sm">
@@ -134,117 +85,8 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
     );
   }
 
-  // Determinar o método para obter propriedades com base no que está disponível
-  const properties = useMemo(() => {
-    console.log("🔄 Re-calculando propriedades para bloco:", actualBlock);
-
-    if (blockDefinition) {
-      // Usar o novo sistema baseado em BlockDefinition
-      const props = convertBlockDefinitionToPropertyDefinitions(
-        blockDefinition,
-        actualBlock.properties || actualBlock.content || {}
-      );
-      console.log("🧩 Propriedades convertidas de BlockDefinition:", props);
-      return props;
-    } else {
-      // Usar a implementação original do componente UniversalPropertiesPanel
-      const props = getComponentProperties(actualBlock as UnifiedBlock);
-      console.log("🧩 Propriedades obtidas de getComponentProperties:", props);
-      return props;
-    }
-  }, [actualBlock, actualBlock.properties, actualBlock.content, blockDefinition]);
-
-  // Função de atualização unificada - melhorada para garantir detecção de mudanças
-  const updateProperty = (key: string, value: any) => {
-    const blockId = actualBlock.id;
-    console.log(
-      `🔍 EnhancedUniversalPropertiesPanel: Atualizando propriedade ${key} para ${JSON.stringify(value)}`
-    );
-    console.log(`🔍 Estado atual do bloco antes da atualização:`, actualBlock);
-
-    if (onUpdateBlock) {
-      // Para propriedades aninhadas, garantimos que criamos um novo objeto
-      if (key.includes(".")) {
-        const [mainKey, subKey] = key.split(".");
-        const currentMainValue = actualBlock[mainKey] || {};
-
-        // Criamos um novo objeto para a propriedade principal
-        const updatedMainValue = {
-          ...currentMainValue,
-          [subKey]: value,
-        };
-
-        // Enviamos a atualização com o novo objeto
-        console.log(`🔄 Atualizando via onUpdateBlock - propriedade aninhada:`, {
-          [mainKey]: updatedMainValue,
-        });
-        onUpdateBlock(blockId, { [mainKey]: updatedMainValue });
-      } else {
-        // Para propriedades simples, verificamos se é uma propriedade direta ou de 'properties'
-        // Se a chave não existir diretamente no bloco, assumimos que faz parte de 'properties'
-        if (actualBlock[key] !== undefined || key === "type" || key === "name") {
-          console.log(`🔄 Atualizando via onUpdateBlock - propriedade direta:`, { [key]: value });
-          onUpdateBlock(blockId, { [key]: value });
-        } else {
-          // Garantir que properties existe e criar uma nova referência
-          const properties = { ...(actualBlock.properties || {}) };
-          console.log(`🔄 Atualizando via onUpdateBlock - propriedade em properties:`, {
-            properties: { ...properties, [key]: value },
-          });
-          onUpdateBlock(blockId, {
-            properties: { ...properties, [key]: value },
-          });
-        }
-      }
-    } else if (onUpdate) {
-      // Sistema legado - garantir imutabilidade para properties
-      const currentProperties = { ...(actualBlock.properties || {}) };
-
-      // Criamos um novo objeto de propriedades para garantir referência nova
-      const updatedProperties = {
-        ...currentProperties,
-        [key]: value,
-      };
-
-      // Enviamos o objeto completo de propriedades atualizado
-      console.log(`🔄 Atualizando via onUpdate (sistema legado):`, {
-        properties: updatedProperties,
-      });
-      onUpdate(blockId, { properties: updatedProperties });
-    }
-  };
-
-  // Função de reset unificada
-  const resetProperties = () => {
-    const blockId = actualBlock.id;
-
-    if (onUpdateBlock && blockDefinition) {
-      // Redefinir usando valores padrão da definição
-      const defaultValues: Record<string, any> = {};
-      Object.entries(blockDefinition.properties).forEach(([key, schema]) => {
-        defaultValues[key] = schema.default;
-      });
-      onUpdateBlock(blockId, defaultValues);
-    } else if (onUpdate) {
-      // Sistema existente
-      onUpdate(blockId, { properties: {} });
-    }
-  };
-
-  // Organizar propriedades por categoria
-  const categorizedProperties = useMemo(() => {
-    return Object.values(properties).reduce(
-      (acc, property) => {
-        const category = property.category || "general";
-        if (!acc[category]) acc[category] = [];
-        acc[category].push(property);
-        return acc;
-      },
-      {} as Record<string, PropertyDefinition[]>
-    );
-  }, [properties]);
-
-  // Ordem das categorias
+  // ✅ A ordem das categorias e ícones agora deve refletir as categorias definidas no hook.
+  // Adicionado 'layout', 'basic', 'quiz' para cobrir todas as categorias do hook.
   const categoryOrder = [
     "content",
     "alignment",
@@ -252,8 +94,12 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
     "behavior",
     "scoring",
     "advanced",
-    "general",
+    "general", // Mantido se ainda usado em algum lugar, mas 'layout' e 'basic' são mais específicos
+    "layout",
+    "basic",
+    "quiz",
   ];
+
   const categoryIcons = {
     content: Type,
     alignment: Layout,
@@ -261,7 +107,10 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
     behavior: Settings,
     scoring: Palette,
     advanced: Settings,
-    general: Palette,
+    general: Palette, // Ícone genérico
+    layout: Layout,
+    basic: Settings,
+    quiz: Palette,
   };
 
   const categoryLabels = {
@@ -272,14 +121,20 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
     scoring: "Pontuação e Categorias",
     advanced: "Avançado",
     general: "Geral",
+    layout: "Layout",
+    basic: "Básico",
+    quiz: "Quiz",
   };
 
   // Renderizar campo baseado no tipo
-  const renderField = (property: PropertyDefinition) => {
+  const renderField = (property: UnifiedProperty) => {
     const { key, label, type, value, required, options, rows, min, max, step, unit } = property;
 
+    // `options` já vem no formato correto ({ value, label }) do `useUnifiedProperties`
+    const formattedOptions = options;
+
     switch (type) {
-      case "text":
+      case PropertyType.TEXT:
         return (
           <div key={key} className="space-y-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
@@ -294,7 +149,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
           </div>
         );
 
-      case "textarea":
+      case PropertyType.TEXTAREA:
         return (
           <div key={key} className="space-y-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
@@ -310,20 +165,20 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
           </div>
         );
 
-      case "number":
-      case "range":
+      case PropertyType.NUMBER:
+      case PropertyType.RANGE:
         return (
           <div key={key} className="space-y-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
               {label} {required && <span className="text-red-500">*</span>}
-              {type === "range" && (
+              {(type === PropertyType.RANGE || type === PropertyType.NUMBER) && (
                 <span className="text-[#B89B7A] ml-2">
                   ({value}
                   {unit || ""})
                 </span>
               )}
             </Label>
-            {type === "range" ? (
+            {type === PropertyType.RANGE ? (
               <Slider
                 value={[value || 0]}
                 onValueChange={values => updateProperty(key, values[0])}
@@ -347,7 +202,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
           </div>
         );
 
-      case "select":
+      case PropertyType.SELECT:
         return (
           <div key={key} className="space-y-2">
             <Label className="text-sm font-medium text-[#432818]">
@@ -358,7 +213,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
                 <SelectValue placeholder={`Selecione ${label.toLowerCase()}`} />
               </SelectTrigger>
               <SelectContent>
-                {options?.map(option => (
+                {formattedOptions?.map(option => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
                   </SelectItem>
@@ -368,20 +223,22 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
           </div>
         );
 
-      case "boolean":
+      case PropertyType.BOOLEAN:
         return (
           <div key={key} className="flex items-center justify-between py-2">
-            <Label className="text-sm font-medium text-[#432818]">
+            <Label htmlFor={key} className="text-sm font-medium text-[#432818] cursor-pointer">
               {label} {required && <span className="text-red-500">*</span>}
             </Label>
             <Switch
-              checked={value === true}
+              id={key}
+              checked={!!value} // Garante que o valor é booleano
               onCheckedChange={checked => updateProperty(key, checked)}
+              className="data-[state=checked]:bg-[#B89B7A]"
             />
           </div>
         );
 
-      case "color":
+      case PropertyType.COLOR:
         return (
           <div key={key} className="space-y-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
@@ -404,13 +261,69 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
           </div>
         );
 
+      case PropertyType.IMAGE: // Tipo de imagem (input de texto para URL)
+        return (
+          <div key={key} className="space-y-2">
+            <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
+              {label} {required && <span className="text-red-500">*</span>}
+            </Label>
+            <Input
+              id={key}
+              type="text"
+              value={value || ""}
+              onChange={e => updateProperty(key, e.target.value)}
+              placeholder="URL da imagem"
+              className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
+            />
+          </div>
+        );
+
+      case PropertyType.OPTION_SCORE: // Tipo de pontuação de opção
+        return (
+          <div key={key} className="space-y-2">
+            <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
+              {label} {required && <span className="text-red-500">*</span>}
+            </Label>
+            <Input
+              id={key}
+              type="number"
+              value={value || 0}
+              onChange={e => updateProperty(key, Number(e.target.value))}
+              min={min}
+              max={max}
+              step={step}
+              className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
+            />
+          </div>
+        );
+
+      case PropertyType.OPTION_CATEGORY: // Tipo de categoria de opção
+        return (
+          <div key={key} className="space-y-2">
+            <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
+              {label} {required && <span className="text-red-500">*</span>}
+            </Label>
+            <Input
+              id={key}
+              type="text"
+              value={value || ""}
+              onChange={e => updateProperty(key, e.target.value)}
+              className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
+            />
+          </div>
+        );
+
       default:
-        return null;
+        return (
+          <div key={key} className="space-y-2 text-red-500 text-sm">
+            Tipo de propriedade desconhecido: {type}
+          </div>
+        );
     }
   };
 
-  // Normalizar o tipo para exibição
-  const displayType = blockDefinition?.name || actualBlock.type;
+  // Normalizar o tipo e ID para exibição
+  const displayType = actualBlock.type; // Ou blockDefinition?.name || actualBlock.type; se blockDefinition for relevante
   const displayId = actualBlock.id;
 
   return (
@@ -439,8 +352,9 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
       <CardContent className="p-4 space-y-6 max-h-[70vh] overflow-y-auto">
         {/* Seções organizadas por categoria */}
         {categoryOrder.map(categoryKey => {
-          const categoryProps = categorizedProperties[categoryKey];
-          if (!categoryProps || categoryProps.length === 0) return null;
+          // ✅ Usando `getPropertiesByCategory` do hook
+          const categorizedProps = getPropertiesByCategory(categoryKey);
+          if (!categorizedProps || categorizedProps.length === 0) return null;
 
           const Icon = categoryIcons[categoryKey as keyof typeof categoryIcons];
           const categoryLabel = categoryLabels[categoryKey as keyof typeof categoryLabels];
@@ -448,10 +362,10 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
           return (
             <div key={categoryKey} className="space-y-3">
               <div className="flex items-center gap-2 pb-2 border-b border-[#B89B7A]/20">
-                <Icon className="w-4 h-4 text-[#B89B7A]" />
+                {Icon && <Icon className="w-4 h-4 text-[#B89B7A]" />}
                 <h3 className="font-medium text-[#432818]">{categoryLabel}</h3>
               </div>
-              <div className="space-y-3">{categoryProps.map(renderField)}</div>
+              <div className="space-y-3">{categorizedProps.map(renderField)}</div>
             </div>
           );
         })}
@@ -461,25 +375,18 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
           <Button
             variant="outline"
             size="sm"
-            onClick={resetProperties}
+            onClick={resetProperties} // ✅ Usando `resetProperties` do hook
             className="w-full border-[#B89B7A]/30 text-[#432818] hover:bg-[#B89B7A]/10"
           >
             <RotateCcw className="w-4 h-4 mr-2" />
             Redefinir Propriedades
           </Button>
 
-          {(onDelete || typeof onUpdateBlock === "function") && (
+          {onDelete && ( // Simplificado, já que `onUpdateBlock` não é mais a principal forma de atualização aqui
             <Button
               variant="destructive"
               size="sm"
-              onClick={() => {
-                if (onDelete) {
-                  onDelete(actualBlock.id);
-                } else if (typeof onUpdateBlock === "function") {
-                  // Implementar lógica de exclusão alternativa se necessário
-                  console.log("Exclusão não implementada diretamente no sistema novo");
-                }
-              }}
+              onClick={() => onDelete(actualBlock.id)}
               className="w-full"
             >
               <Trash2 className="w-4 h-4 mr-2" />
