@@ -1,10 +1,10 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import { safeGetBlockProperties } from "@/utils/blockUtils";
-import { ArrowRight, Check, Crown, Sparkles, Star, Zap } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { safeGetBlockProperties } from '@/utils/blockUtils';
+import { cn } from '@/lib/utils';
+import { Crown, Zap, Star, ArrowRight, Check, Sparkles } from 'lucide-react';
 
 interface PricingCardInlineBlockProps {
   block: {
@@ -13,7 +13,7 @@ interface PricingCardInlineBlockProps {
     content?: any;
     properties?: {
       style?: {
-        variant?: "default" | "premium" | "elegant" | "minimal";
+        variant?: 'default' | 'premium' | 'elegant' | 'minimal';
         showBadge?: boolean;
         showFeatures?: boolean;
         isPopular?: boolean;
@@ -38,28 +38,24 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
   const styleProps = block.properties?.style || {};
 
   // Valores padrão para evitar undefined
-  const title = properties.title || "Oferta Especial";
-  const subtitle = properties.subtitle || "Aproveite esta oportunidade única";
-  const originalPrice = properties.originalPrice || "R$ 497,00";
-  const currentPrice = properties.currentPrice || "R$ 97,00";
-  const discount = properties.discount || "80% OFF";
-  const buttonText = properties.buttonText || "QUERO APROVEITAR";
-  const buttonUrl = properties.buttonUrl || "#";
-  const features = properties.features || [
-    "Acesso completo",
-    "Suporte prioritário",
-    "Garantia 30 dias",
-  ];
-
-  const variant = styleProps.variant || "elegant";
+  const title = properties.title || 'Oferta Especial';
+  const subtitle = properties.subtitle || 'Aproveite esta oportunidade única';
+  const originalPrice = properties.originalPrice || 'R$ 497,00';
+  const currentPrice = properties.currentPrice || 'R$ 97,00';
+  const discount = properties.discount || '80% OFF';
+  const buttonText = properties.buttonText || 'QUERO APROVEITAR';
+  const buttonUrl = properties.buttonUrl || '#';
+  const features = properties.features || ['Acesso completo', 'Suporte prioritário', 'Garantia 30 dias'];
+  
+  const variant = styleProps.variant || 'elegant';
   const showBadge = styleProps.showBadge !== false;
   const showFeatures = styleProps.showFeatures !== false;
   const isPopular = styleProps.isPopular || false;
 
   // Função para calcular desconto
   const calculateDiscountPercentage = () => {
-    const original = parseFloat(originalPrice.replace(/[^\d,]/g, "").replace(",", "."));
-    const current = parseFloat(currentPrice.replace(/[^\d,]/g, "").replace(",", "."));
+    const original = parseFloat(originalPrice.replace(/[^\d,]/g, '').replace(',', '.'));
+    const current = parseFloat(currentPrice.replace(/[^\d,]/g, '').replace(',', '.'));
     if (original && current) {
       return Math.round(((original - current) / original) * 100);
     }
@@ -69,31 +65,29 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
   // Estilos baseados na variante
   const getVariantStyles = () => {
     switch (variant) {
-      case "premium":
+      case 'premium':
         return {
-          card: "bg-gradient-to-br from-[#432818] via-[#5C3A29] to-[#432818] text-white border-[#B89B7A] shadow-2xl shadow-[#B89B7A]/20",
-          badge: "bg-gradient-to-r from-[#B89B7A] to-[#E8D5C4] text-[#432818] shadow-lg",
-          price: "text-[#E8D5C4]",
-          button:
-            "bg-gradient-to-r from-[#B89B7A] to-[#D4C2A8] hover:from-[#A08967] hover:to-[#B89B7A] text-[#432818] shadow-lg",
+          card: 'bg-gradient-to-br from-[#432818] via-[#5C3A29] to-[#432818] text-white border-[#B89B7A] shadow-2xl shadow-[#B89B7A]/20',
+          badge: 'bg-gradient-to-r from-[#B89B7A] to-[#E8D5C4] text-[#432818] shadow-lg',
+          price: 'text-[#E8D5C4]',
+          button: 'bg-gradient-to-r from-[#B89B7A] to-[#D4C2A8] hover:from-[#A08967] hover:to-[#B89B7A] text-[#432818] shadow-lg',
           icon: Crown,
         };
-      case "minimal":
+      case 'minimal':
         return {
-          card: "bg-white border-[#B89B7A]/30 hover:border-[#B89B7A] shadow-sm hover:shadow-md",
-          badge: "bg-[#E8D5C4] text-[#432818] border border-[#B89B7A]/30",
-          price: "text-[#432818]",
-          button: "bg-[#B89B7A] hover:bg-[#A08967] text-white",
+          card: 'bg-white border-[#B89B7A]/30 hover:border-[#B89B7A] shadow-sm hover:shadow-md',
+          badge: 'bg-[#E8D5C4] text-[#432818] border border-[#B89B7A]/30',
+          price: 'text-[#432818]',
+          button: 'bg-[#B89B7A] hover:bg-[#A08967] text-white',
           icon: Star,
         };
-      case "elegant":
+      case 'elegant':
       default:
         return {
-          card: "bg-gradient-to-br from-white via-[#FEFCFA] to-[#E8D5C4]/30 border-2 border-[#B89B7A]/40 shadow-xl hover:shadow-2xl",
-          badge: "bg-gradient-to-r from-[#B89B7A] to-[#D4C2A8] text-white shadow-md",
-          price: "text-[#432818]",
-          button:
-            "bg-gradient-to-r from-[#B89B7A] via-[#C8A882] to-[#B89B7A] hover:from-[#A08967] hover:to-[#A08967] text-white shadow-lg hover:shadow-xl",
+          card: 'bg-gradient-to-br from-white via-[#FEFCFA] to-[#E8D5C4]/30 border-2 border-[#B89B7A]/40 shadow-xl hover:shadow-2xl',
+          badge: 'bg-gradient-to-r from-[#B89B7A] to-[#D4C2A8] text-white shadow-md',
+          price: 'text-[#432818]',
+          button: 'bg-gradient-to-r from-[#B89B7A] via-[#C8A882] to-[#B89B7A] hover:from-[#A08967] hover:to-[#A08967] text-white shadow-lg hover:shadow-xl',
           icon: Sparkles,
         };
     }
@@ -102,7 +96,7 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
   const variantStyles = getVariantStyles();
   const IconComponent = variantStyles.icon;
 
-  console.log("🛒 PricingCardInlineBlock render:", {
+  console.log('🛒 PricingCardInlineBlock render:', {
     blockId: block.id,
     hasProperties: !!properties,
     title,
@@ -124,11 +118,11 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
 
       <Card
         className={cn(
-          "p-6 max-w-md mx-auto transition-all duration-300 cursor-pointer relative overflow-hidden",
+          'p-6 max-w-md mx-auto transition-all duration-300 cursor-pointer relative overflow-hidden',
           variantStyles.card,
-          isSelected && "ring-2 ring-[#B89B7A]/60 ring-offset-2",
-          isHovered && "transform scale-105",
-          isPopular && "mt-4"
+          isSelected && 'ring-2 ring-[#B89B7A]/60 ring-offset-2',
+          isHovered && 'transform scale-105',
+          isPopular && 'mt-4'
         )}
         onClick={onSelect}
         onMouseEnter={() => setIsHovered(true)}
@@ -142,9 +136,7 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
           {/* Badge de desconto */}
           {showBadge && (
             <div className="flex justify-center">
-              <Badge
-                className={cn(variantStyles.badge, "text-sm font-bold px-3 py-1 animate-pulse")}
-              >
+              <Badge className={cn(variantStyles.badge, 'text-sm font-bold px-3 py-1 animate-pulse')}>
                 <Zap className="w-3 h-3 mr-1" />
                 {calculateDiscountPercentage()}% OFF
               </Badge>
@@ -153,36 +145,28 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
 
           {/* Ícone */}
           <div className="flex justify-center">
-            <div
-              className={cn(
-                "p-3 rounded-full transition-all duration-300",
-                variant === "premium"
-                  ? "bg-[#B89B7A]/20"
-                  : variant === "minimal"
-                    ? "bg-[#E8D5C4]/50"
-                    : "bg-gradient-to-br from-[#B89B7A]/20 to-[#E8D5C4]/30"
-              )}
-            >
-              <IconComponent
-                className={cn(
-                  "w-6 h-6 transition-all duration-300",
-                  variant === "premium"
-                    ? "text-[#E8D5C4]"
-                    : variant === "minimal"
-                      ? "text-[#B89B7A]"
-                      : "text-[#B89B7A]",
-                  isHovered && "scale-110"
-                )}
-              />
+            <div className={cn(
+              'p-3 rounded-full transition-all duration-300',
+              variant === 'premium' ? 'bg-[#B89B7A]/20' :
+              variant === 'minimal' ? 'bg-[#E8D5C4]/50' :
+              'bg-gradient-to-br from-[#B89B7A]/20 to-[#E8D5C4]/30'
+            )}>
+              <IconComponent className={cn(
+                'w-6 h-6 transition-all duration-300',
+                variant === 'premium' ? 'text-[#E8D5C4]' :
+                variant === 'minimal' ? 'text-[#B89B7A]' :
+                'text-[#B89B7A]',
+                isHovered && 'scale-110'
+              )} />
             </div>
           </div>
 
           {/* Título */}
           <h2
             className={cn(
-              "text-2xl font-bold cursor-text transition-all duration-300",
-              variant === "premium" ? "text-white" : "text-[#432818]",
-              isHovered && "scale-105"
+              'text-2xl font-bold cursor-text transition-all duration-300',
+              variant === 'premium' ? 'text-white' : 'text-[#432818]',
+              isHovered && 'scale-105'
             )}
             contentEditable
             suppressContentEditableWarning
@@ -194,8 +178,8 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
           {/* Subtítulo */}
           <p
             className={cn(
-              "cursor-text font-medium",
-              variant === "premium" ? "text-[#E8D5C4]/90" : "text-[#8F7A6A]"
+              'cursor-text font-medium',
+              variant === 'premium' ? 'text-[#E8D5C4]/90' : 'text-[#8F7A6A]'
             )}
             contentEditable
             suppressContentEditableWarning
@@ -206,12 +190,10 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
 
           {/* Preços */}
           <div className="space-y-3">
-            <div
-              className={cn(
-                "text-lg line-through",
-                variant === "premium" ? "text-[#E8D5C4]/60" : "text-gray-500"
-              )}
-            >
+            <div className={cn(
+              'text-lg line-through',
+              variant === 'premium' ? 'text-[#E8D5C4]/60' : 'text-gray-500'
+            )}>
               <span
                 contentEditable
                 suppressContentEditableWarning
@@ -221,7 +203,7 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
               </span>
             </div>
 
-            <div className={cn("text-4xl font-bold", variantStyles.price)}>
+            <div className={cn('text-4xl font-bold', variantStyles.price)}>
               <span
                 contentEditable
                 suppressContentEditableWarning
@@ -241,18 +223,14 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
             <div className="space-y-2 text-left">
               {features.map((feature: string, index: number) => (
                 <div key={index} className="flex items-center gap-2">
-                  <Check
-                    className={cn(
-                      "w-4 h-4 flex-shrink-0",
-                      variant === "premium" ? "text-[#B89B7A]" : "text-[#B89B7A]"
-                    )}
-                  />
-                  <span
-                    className={cn(
-                      "text-sm",
-                      variant === "premium" ? "text-[#E8D5C4]" : "text-[#432818]"
-                    )}
-                  >
+                  <Check className={cn(
+                    'w-4 h-4 flex-shrink-0',
+                    variant === 'premium' ? 'text-[#B89B7A]' : 'text-[#B89B7A]'
+                  )} />
+                  <span className={cn(
+                    'text-sm',
+                    variant === 'premium' ? 'text-[#E8D5C4]' : 'text-[#432818]'
+                  )}>
                     {feature}
                   </span>
                 </div>
@@ -263,14 +241,14 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
           {/* Botão CTA */}
           <Button
             className={cn(
-              "w-full font-bold py-3 px-6 text-lg transition-all duration-300 group relative overflow-hidden",
+              'w-full font-bold py-3 px-6 text-lg transition-all duration-300 group relative overflow-hidden',
               variantStyles.button,
-              isHovered && "transform scale-105"
+              isHovered && 'transform scale-105'
             )}
             onClick={e => {
               e.stopPropagation();
-              if (buttonUrl && buttonUrl !== "#") {
-                window.open(buttonUrl, "_blank");
+              if (buttonUrl && buttonUrl !== '#') {
+                window.open(buttonUrl, '_blank');
               }
             }}
           >
@@ -284,7 +262,7 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
               </span>
               <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
             </span>
-
+            
             {/* Button hover effect */}
             <div className="absolute inset-0 bg-white/10 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
           </Button>

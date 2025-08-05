@@ -1,7 +1,7 @@
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-import { Award, Star, Tag, Zap } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+import { Tag, Star, Award, Zap } from 'lucide-react';
 
 interface BadgeInlineBlockProps {
   block?: {
@@ -13,15 +13,7 @@ interface BadgeInlineBlockProps {
         icon?: string;
       };
       style?: {
-        variant?:
-          | "default"
-          | "secondary"
-          | "destructive"
-          | "outline"
-          | "brand"
-          | "elegant"
-          | "minimal"
-          | "accent";
+        variant?: 'default' | 'secondary' | 'destructive' | 'outline' | 'brand' | 'elegant' | 'minimal' | 'accent';
         backgroundColor?: string;
         color?: string;
         fontSize?: string;
@@ -31,7 +23,7 @@ interface BadgeInlineBlockProps {
         gradient?: boolean;
       };
       layout?: {
-        alignment?: "left" | "center" | "right";
+        alignment?: 'left' | 'center' | 'right';
         margin?: string;
       };
     };
@@ -42,16 +34,16 @@ interface BadgeInlineBlockProps {
   onPropertyChange?: (key: string, value: any) => void;
 }
 
-export const BadgeInlineBlock: React.FC<BadgeInlineBlockProps> = ({
-  block,
-  className,
+export const BadgeInlineBlock: React.FC<BadgeInlineBlockProps> = ({ 
+  block, 
+  className, 
   onClick,
   isSelected = false,
-  onPropertyChange,
+  onPropertyChange
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  console.log("🧱 BadgeInlineBlock render:", {
+  console.log('🧱 BadgeInlineBlock render:', {
     blockId: block?.id,
     properties: block?.properties,
   });
@@ -61,19 +53,19 @@ export const BadgeInlineBlock: React.FC<BadgeInlineBlockProps> = ({
   const styleProps = properties.style || {};
   const layoutProps = properties.layout || {};
 
-  const text = content.text || "Badge";
-  const variant = styleProps.variant || "brand";
+  const text = content.text || 'Badge';
+  const variant = styleProps.variant || 'brand';
 
   // Função para obter ícone baseado no tipo
   const getIcon = () => {
     if (content.icon) return content.icon;
-
+    
     switch (variant) {
-      case "brand":
+      case 'brand':
         return <Star className="w-3 h-3" />;
-      case "elegant":
+      case 'elegant':
         return <Award className="w-3 h-3" />;
-      case "accent":
+      case 'accent':
         return <Zap className="w-3 h-3" />;
       default:
         return <Tag className="w-3 h-3" />;
@@ -83,49 +75,49 @@ export const BadgeInlineBlock: React.FC<BadgeInlineBlockProps> = ({
   // Estilos baseados na variante com cores da marca
   const getVariantStyles = () => {
     switch (variant) {
-      case "brand":
+      case 'brand':
         return {
-          backgroundColor: "#B89B7A",
-          color: "white",
-          border: "none",
-          boxShadow: "0 2px 8px rgba(184, 155, 122, 0.3)",
-          fontWeight: "600",
+          backgroundColor: '#B89B7A',
+          color: 'white',
+          border: 'none',
+          boxShadow: '0 2px 8px rgba(184, 155, 122, 0.3)',
+          fontWeight: '600',
         };
-      case "elegant":
+      case 'elegant':
         return {
-          background: "linear-gradient(135deg, #B89B7A 0%, #D4C2A8 100%)",
-          color: "white",
-          border: "none",
-          boxShadow: "0 4px 12px rgba(184, 155, 122, 0.4)",
-          fontWeight: "600",
-          textShadow: "0 1px 2px rgba(0,0,0,0.1)",
+          background: 'linear-gradient(135deg, #B89B7A 0%, #D4C2A8 100%)',
+          color: 'white',
+          border: 'none',
+          boxShadow: '0 4px 12px rgba(184, 155, 122, 0.4)',
+          fontWeight: '600',
+          textShadow: '0 1px 2px rgba(0,0,0,0.1)',
         };
-      case "minimal":
+      case 'minimal':
         return {
-          backgroundColor: "#E8D5C4",
-          color: "#432818",
-          border: "1px solid #B89B7A",
-          fontWeight: "500",
+          backgroundColor: '#E8D5C4',
+          color: '#432818',
+          border: '1px solid #B89B7A',
+          fontWeight: '500',
         };
-      case "accent":
+      case 'accent':
         return {
-          backgroundColor: "#432818",
-          color: "#E8D5C4",
-          border: "none",
-          boxShadow: "0 2px 8px rgba(67, 40, 24, 0.3)",
-          fontWeight: "600",
+          backgroundColor: '#432818',
+          color: '#E8D5C4',
+          border: 'none',
+          boxShadow: '0 2px 8px rgba(67, 40, 24, 0.3)',
+          fontWeight: '600',
         };
-      case "outline":
+      case 'outline':
         return {
-          backgroundColor: "transparent",
-          color: "#B89B7A",
-          border: "2px solid #B89B7A",
-          fontWeight: "500",
+          backgroundColor: 'transparent',
+          color: '#B89B7A',
+          border: '2px solid #B89B7A',
+          fontWeight: '500',
         };
       default:
         return {
-          backgroundColor: styleProps.backgroundColor || "#B89B7A",
-          color: styleProps.color || "white",
+          backgroundColor: styleProps.backgroundColor || '#B89B7A',
+          color: styleProps.color || 'white',
         };
     }
   };
@@ -134,35 +126,35 @@ export const BadgeInlineBlock: React.FC<BadgeInlineBlockProps> = ({
 
   // Estilos customizados
   const customStyle: React.CSSProperties = {
-    fontSize: styleProps.fontSize || "14px",
-    padding: styleProps.padding || "6px 12px",
-    borderRadius: styleProps.borderRadius || "6px",
-    margin: layoutProps.margin || "0 4px",
-    transition: "all 0.3s ease",
-    cursor: onClick ? "pointer" : "default",
-    transform: isHovered ? "translateY(-1px) scale(1.05)" : "translateY(0) scale(1)",
+    fontSize: styleProps.fontSize || '14px',
+    padding: styleProps.padding || '6px 12px',
+    borderRadius: styleProps.borderRadius || '6px',
+    margin: layoutProps.margin || '0 4px',
+    transition: 'all 0.3s ease',
+    cursor: onClick ? 'pointer' : 'default',
+    transform: isHovered ? 'translateY(-1px) scale(1.05)' : 'translateY(0) scale(1)',
     ...variantStyles,
     ...(styleProps.glow && {
-      boxShadow: `${variantStyles.boxShadow || "0 2px 8px rgba(184, 155, 122, 0.3)"}, 0 0 20px rgba(184, 155, 122, 0.2)`,
+      boxShadow: `${variantStyles.boxShadow || '0 2px 8px rgba(184, 155, 122, 0.3)'}, 0 0 20px rgba(184, 155, 122, 0.2)`,
     }),
   };
 
   // Container com alinhamento
-  const containerClass = cn("badge-container inline-block group", {
-    "text-left": layoutProps.alignment === "left",
-    "text-center": layoutProps.alignment === "center",
-    "text-right": layoutProps.alignment === "right",
+  const containerClass = cn('badge-container inline-block group', {
+    'text-left': layoutProps.alignment === 'left',
+    'text-center': layoutProps.alignment === 'center',
+    'text-right': layoutProps.alignment === 'right',
   });
 
-  const isEmpty = !text || text === "Badge";
+  const isEmpty = !text || text === 'Badge';
 
   return (
     <div
       className={cn(
-        containerClass,
+        containerClass, 
         className,
-        isSelected && "ring-2 ring-[#B89B7A]/40 ring-offset-2",
-        isEmpty && "border-2 border-dashed border-[#B89B7A]/30 rounded p-2"
+        isSelected && 'ring-2 ring-[#B89B7A]/40 ring-offset-2',
+        isEmpty && 'border-2 border-dashed border-[#B89B7A]/30 rounded p-2'
       )}
       data-block-type="badge-inline"
       data-block-id={block?.id}
@@ -176,9 +168,9 @@ export const BadgeInlineBlock: React.FC<BadgeInlineBlockProps> = ({
       ) : (
         <Badge
           className={cn(
-            "inline-flex items-center gap-1.5 transition-all duration-300 border-0",
-            onClick && "hover:scale-105 cursor-pointer",
-            styleProps.gradient && "bg-gradient-to-r"
+            'inline-flex items-center gap-1.5 transition-all duration-300 border-0',
+            onClick && 'hover:scale-105 cursor-pointer',
+            styleProps.gradient && 'bg-gradient-to-r'
           )}
           style={customStyle}
           onMouseEnter={() => setIsHovered(true)}
@@ -186,13 +178,13 @@ export const BadgeInlineBlock: React.FC<BadgeInlineBlockProps> = ({
         >
           {getIcon()}
           <span className="relative z-10">{text}</span>
-
+          
           {/* Decorative elements */}
-          {variant === "elegant" && (
+          {variant === 'elegant' && (
             <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-md opacity-50" />
           )}
-
-          {variant === "brand" && isHovered && (
+          
+          {variant === 'brand' && isHovered && (
             <div className="absolute inset-0 bg-white/10 rounded-md" />
           )}
         </Badge>
