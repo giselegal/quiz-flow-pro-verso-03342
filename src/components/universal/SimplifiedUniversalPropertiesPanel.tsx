@@ -1,5 +1,4 @@
 // Este é um componente simplificado para resolver problemas de compilação
-import React from 'react';
 
 const UniversalPropertiesPanel = ({ selectedBlock, onUpdate, onDelete, onClose }: any) => {
   return (
