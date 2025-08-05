@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "wouter";
+import UniversalBlockRenderer from "../components/editor/blocks/UniversalBlockRenderer";
 import BrandHeader from "../components/ui/BrandHeader";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -14,7 +15,6 @@ import { useEditor } from "../hooks/useEditor";
 import { cn } from "../lib/utils";
 import { schemaDrivenFunnelService } from "../services/schemaDrivenFunnelService";
 import { normalizeBlock } from "../utils/blockTypeMapping";
-import UniversalBlockRenderer from "../components/editor/blocks/UniversalBlockRenderer";
 
 // Componente simples para renderizar blocos
 const SimpleBlockRenderer: React.FC<{
@@ -823,7 +823,7 @@ const EditorPage: React.FC = () => {
                             block={{
                               ...blockData,
                               content: blockData.properties || {},
-                              order: 0
+                              order: 0,
                             }}
                             onClick={() => setSelectedComponentId(block.id)}
                             isSelected={selectedComponentId === block.id}
@@ -1023,7 +1023,7 @@ const EditorPage: React.FC = () => {
                                   block={{
                                     ...blockData,
                                     content: blockData.properties || {},
-                                    order: 0
+                                    order: 0,
                                   }}
                                   isSelected={selectedComponentId === block.id}
                                   onClick={() => handleBlockClick(block.id)}
