@@ -1,37 +1,6 @@
 import React, { useCallback, useMemo } from "react";
 import { cn } from "../../../lib/utils";
-import type { BlockComponentP  // Verificar se o conte    console.log("🐛 TextInlineBlock DEBUG COMPLETO:", {
-      blockId: block?.id,
-      blockType: block?.type,
-      rawContent: personalizedContent,
-      contentLength: personalizedContent?.length,
-      hasHtml,
-      hasSpanTag,
-      hasStrongTag,
-      willRenderAsHTML: hasHtml || hasSpanTag || hasStrongTag,
-      contentPreview: personalizedContent?.substring(0, 200),
-      fullContent: personalizedContent, // Conteúdo completo para análise
-      blockProperties: block?.properties,
-    }); HTML
-  const isHtmlContent = useMemo(() => {
-    const hasHtml = personalizedContent?.includes("<") && personalizedContent?.includes(">");
-    const hasSpanTag = personalizedContent?.includes("<span");
-    const hasStrongTag = personalizedContent?.includes("<strong");
-    
-    console.log("🐛 TextInlineBlock DEBUG COMPLETO:", {
-      blockId: block?.id,
-      rawContent: personalizedContent,
-      contentLength: personalizedContent?.length,
-      hasHtml,
-      hasSpanTag,
-      hasStrongTag,
-      willRenderAsHTML: hasHtml || hasSpanTag || hasStrongTag,
-      contentPreview: personalizedContent?.substring(0, 200),
-      fullContent: personalizedContent, // Adicionar conteúdo completo para debug
-    });
-    
-    return hasHtml || hasSpanTag || hasStrongTag;
-  }, [personalizedContent, block?.id]);../types/blocks";
+import type { BlockComponentProps } from "../types/blocks";
 
 /**
  * TextInlineBlock - Componente modular inline horizontal

@@ -1,5 +1,7 @@
-// Importa apenas a exportação padrão
-import UniversalPropertiesPanel from "./UniversalPropertiesPanel";
+// Importa o componente simplificado
+import UniversalPropertiesPanel from "./SimplifiedUniversalPropertiesPanel";
 
-// Re-exporta como padrão
+// Exporta-o diretamente como padrão
 export default UniversalPropertiesPanel;
+// Também exporta como exportação nomeada para compatibilidade
+export { UniversalPropertiesPanel };
