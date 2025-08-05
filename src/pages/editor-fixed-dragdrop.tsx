@@ -262,7 +262,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                     // Garantir que properties é sempre um objeto
                     properties: selectedBlock.properties || {},
                     // Manter content se existir
-                    ...(selectedBlock.content ? { content: selectedBlock.content } : {})
+                    ...(selectedBlock.content ? { content: selectedBlock.content } : {}),
                   }}
                   onUpdate={(blockId, updates) => {
                     console.log("🚀 Atualizando bloco via EnhancedUniversalPropertiesPanel:", {

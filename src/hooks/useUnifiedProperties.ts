@@ -1,65 +1,109 @@
 import { BRAND_COLORS } from "@/config/brandColors";
 import { useCallback, useEffect, useState } from "react";
-// Assumindo PropertyDefinition e PropertyType são definidos em "@/types/editor"
-// Para simplicidade, vamos definir PropertyType aqui se não for fornecido em outro lugar.
+
+// Tipos de propriedades suportados pelo sistema
 export enum PropertyType {
   TEXT = "text",
-  TEXTAREA = "textarea",
   NUMBER = "number",
-  BOOLEAN = "boolean",
-  COLOR = "color",
   SELECT = "select",
+  SWITCH = "switch",
+  TEXTAREA = "textarea",
+  COLOR = "color",
+  ALIGNMENT = "alignment",
+  RICHTEXT = "richtext",
+  FONTFAMILY = "fontfamily",
+  FONTSTYLE = "fontstyle",
   RANGE = "range",
-  IMAGE = "image", // Adicionado tipo de imagem
-  OPTION_SCORE = "optionScore", // Assumindo que estes são tipos personalizados para pontuação
-  OPTION_CATEGORY = "optionCategory", // Assumindo que estes são tipos personalizados para categorias
+  FILE = "file",
+  IMAGE = "image",
+  TAGS = "tags",
+  CHECKBOX = "checkbox",
+  RADIO = "radio",
+  ANIMATION = "animation",
+  OPTION_SCORE = "option_score",
+  OPTION_CATEGORY = "option_category",
 }
+
+// Categorias de propriedades para organização no painel
+export enum PropertyCategory {
+  CONTENT = "content",
+  STYLE = "style",
+  BEHAVIOR = "behavior",
+  ADVANCED = "advanced",
+  LAYOUT = "layout",
+  BASIC = "basic",
+  QUIZ = "quiz",
+  SCORING = "scoring",
+  ALIGNMENT = "alignment",
+}
+
+// Tipo que permite uso de string literal ou enum PropertyCategory para compatibilidade
+export type PropertyCategoryOrString = PropertyCategory | string;
 
 // Interface para cada propriedade unificada que o painel irá exibir
 export interface UnifiedProperty {
-  key: string; // Chave única para a propriedade (ex: "htmlContent", "fontSize")
-  value: any; // O valor atual da propriedade
-  type: PropertyType; // O tipo de controle de UI (text, number, boolean, etc.)
-  label: string; // Rótulo exibido no painel
-  category:
-    | "content"
-    | "style"
-    | "layout"
-    | "advanced"
-    | "basic"
-    | "quiz"
-    | "behavior"
-    | "scoring"
-    | "alignment"; // Categoria para agrupar no painel
-  required?: boolean; // Se o campo é obrigatório
-  options?: Array<{ value: string; label: string }>; // Opções para tipos 'select'
-  rows?: number; // Número de linhas para 'textarea'
-  min?: number; // Valor mínimo para 'number' ou 'range'
-  max?: number; // Valor máximo para 'number' ou 'range'
-  step?: number; // Incremento para 'number' ou 'range'
-  unit?: string; // Unidade de medida (ex: "px", "%")
-  defaultValue?: any; // Valor padrão para inicialização
+  key: string;
+  value: any;
+  type: PropertyType;
+  label: string;
+  category: PropertyCategoryOrString;
+  required?: boolean;
+  options?: Array<{ value: string; label: string }>;
+  rows?: number;
+  min?: number;
+  max?: number;
+  step?: number;
+  unit?: string;
+  defaultValue?: any;
 }
 
 // Interface para o bloco unificado que o hook recebe
 export interface UnifiedBlock {
   id: string;
   type: string;
-  properties: Record<string, any>; // Objeto de propriedades do bloco
-  brandColors?: typeof BRAND_COLORS; // Cores da marca (opcional)
+  properties: Record<string, any>;
+  brandColors?: typeof BRAND_COLORS;
 }
 
 // Interface para o retorno do hook useUnifiedProperties
 export interface UseUnifiedPropertiesReturn {
-  properties: UnifiedProperty[]; // Lista de propriedades geradas
-  updateProperty: (key: string, value: any) => void; // Função para atualizar uma propriedade
-  resetProperties: () => void; // Função para resetar todas as propriedades para seus valores padrão
-  validateProperties: () => boolean; // Função para validar se todas as propriedades obrigatórias estão preenchidas
-  getPropertyByKey: (key: string) => UnifiedProperty | undefined; // Obtém uma propriedade específica pela chave
-  getPropertiesByCategory: (category: string) => UnifiedProperty[]; // Obtém propriedades filtradas por categoria
-  exportProperties: () => Record<string, any>; // Exporta as propriedades como um objeto simples
-  applyBrandColors: () => void; // Aplica cores da marca a propriedades de cor
+  properties: UnifiedProperty[];
+  updateProperty: (key: string, value: any) => void;
+  resetProperties: () => void;
+  validateProperties: () => boolean;
+  getPropertyByKey: (key: string) => UnifiedProperty | undefined;
+  getPropertiesByCategory: (category: PropertyCategoryOrString) => UnifiedProperty[];
+  exportProperties: () => Record<string, any>;
+  applyBrandColors: () => void;
 }
+
+// Função utilitária para criar uma propriedade com valores padrão
+const createProperty = (
+  key: string,
+  value: any,
+  type: PropertyType,
+  label: string,
+  category: PropertyCategoryOrString,
+  options?: Partial<Omit<UnifiedProperty, "key" | "value" | "type" | "label" | "category">>
+): UnifiedProperty => ({
+  key,
+  value,
+  type,
+  label,
+  category,
+  ...options,
+});
+
+// Função utilitária para criar opções de select
+const createSelectOptions = (
+  options: Array<{ value: string; label: string }>
+): Array<{ value: string; label: string }> => options;
+
+// Função utilitária para forçar o tipo PropertyCategoryOrString em strings literais
+// Esta função é usada apenas para compatibilidade e será removida quando todas as strings forem atualizadas
+const asCategory = (categoryString: string): PropertyCategoryOrString => {
+  return categoryString as PropertyCategoryOrString;
+};
 
 export const useUnifiedProperties = (
   block: UnifiedBlock | null,
@@ -78,22 +122,22 @@ export const useUnifiedProperties = (
           value: currentBlock?.id || "",
           type: PropertyType.TEXT,
           label: "ID do Componente",
-          category: "advanced",
+          category: PropertyCategory.ADVANCED,
           required: true,
         },
         {
           key: "visible",
           value: currentBlock?.properties?.visible !== false, // Padrão é visível, a menos que seja explicitamente false
-          type: PropertyType.BOOLEAN,
+          type: PropertyType.SWITCH,
           label: "Visível",
-          category: "layout",
+          category: PropertyCategory.LAYOUT,
         },
         {
           key: "scale",
           value: currentBlock?.properties?.scale || 100, // Valor padrão de 100%
           type: PropertyType.RANGE,
           label: "Tamanho Uniforme",
-          category: "style",
+          category: PropertyCategory.STYLE,
           min: 50,
           max: 200,
           step: 10,
@@ -103,91 +147,101 @@ export const useUnifiedProperties = (
 
       // Propriedades específicas adicionadas com base no tipo do bloco
       switch (blockType) {
-        case "text-inline":
-          return [
-            ...baseProperties,
-            {
-              key: "htmlContent",
-              value: currentBlock?.properties?.htmlContent || "Texto exemplo",
-              type: PropertyType.TEXTAREA,
-              label: "Conteúdo HTML",
-              category: "content",
-              required: true,
-              rows: 6,
-            },
-            {
-              key: "className",
-              value: currentBlock?.properties?.className || "",
-              type: PropertyType.TEXT,
-              label: "Classes CSS",
-              category: "style",
-            },
-            {
-              key: "textAlign",
-              value: currentBlock?.properties?.textAlign || "left",
-              type: PropertyType.SELECT,
-              label: "Alinhamento",
-              category: "alignment",
-              options: [
-                { value: "left", label: "Esquerda" },
-                { value: "center", label: "Centro" },
-                { value: "right", label: "Direita" },
-                { value: "justify", label: "Justificado" },
-              ],
-            },
-            {
-              key: "fontSize",
-              value: currentBlock?.properties?.fontSize || "base",
-              type: PropertyType.SELECT,
-              label: "Tamanho da Fonte",
-              category: "style",
-              options: [
-                { value: "xs", label: "Extra Pequeno" },
-                { value: "sm", label: "Pequeno" },
-                { value: "base", label: "Normal" },
-                { value: "lg", label: "Grande" },
-                { value: "xl", label: "Extra Grande" },
-                { value: "2xl", label: "2X Grande" },
-                { value: "3xl", label: "3X Grande" },
-              ],
-            },
-            {
-              key: "color",
-              value: currentBlock?.properties?.color || "default",
-              type: PropertyType.SELECT,
-              label: "Cor do Texto",
-              category: "style",
-              options: [
-                { value: "default", label: "Padrão" },
-                { value: "primary", label: "Primária" },
-                { value: "secondary", label: "Secundária" },
-                { value: "muted", label: "Sutil" },
-                { value: "accent", label: "Destaque" },
-              ],
-            },
-            {
-              key: "marginTop",
-              value: currentBlock?.properties?.marginTop || 0,
-              type: PropertyType.RANGE,
-              label: "Margem Superior",
-              category: "style",
-              min: 0,
-              max: 100,
-              step: 4,
-              unit: "px",
-            },
-            {
-              key: "marginBottom",
-              value: currentBlock?.properties?.marginBottom || 0,
-              type: PropertyType.RANGE,
-              label: "Margem Inferior",
-              category: "style",
-              min: 0,
-              max: 100,
-              step: 4,
-              unit: "px",
-            },
+        case "text-inline": {
+          // Propriedades de conteúdo
+          const contentProps = [
+            createProperty(
+              "htmlContent",
+              currentBlock?.properties?.htmlContent || "Texto exemplo",
+              PropertyType.TEXTAREA,
+              "Conteúdo HTML",
+              PropertyCategory.CONTENT,
+              { required: true, rows: 6 }
+            ),
           ];
+
+          // Propriedades de estilo
+          const styleProps = [
+            createProperty(
+              "className",
+              currentBlock?.properties?.className || "",
+              PropertyType.TEXT,
+              "Classes CSS",
+              PropertyCategory.STYLE
+            ),
+            createProperty(
+              "fontSize",
+              currentBlock?.properties?.fontSize || "base",
+              PropertyType.SELECT,
+              "Tamanho da Fonte",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "xs", label: "Extra Pequeno" },
+                  { value: "sm", label: "Pequeno" },
+                  { value: "base", label: "Normal" },
+                  { value: "lg", label: "Grande" },
+                  { value: "xl", label: "Extra Grande" },
+                  { value: "2xl", label: "2X Grande" },
+                  { value: "3xl", label: "3X Grande" },
+                ]),
+              }
+            ),
+            createProperty(
+              "color",
+              currentBlock?.properties?.color || "default",
+              PropertyType.SELECT,
+              "Cor do Texto",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "default", label: "Padrão" },
+                  { value: "primary", label: "Primária" },
+                  { value: "secondary", label: "Secundária" },
+                  { value: "muted", label: "Sutil" },
+                  { value: "accent", label: "Destaque" },
+                ]),
+              }
+            ),
+            createProperty(
+              "marginTop",
+              currentBlock?.properties?.marginTop || 0,
+              PropertyType.RANGE,
+              "Margem Superior",
+              PropertyCategory.STYLE,
+              { min: 0, max: 100, step: 4, unit: "px" }
+            ),
+            createProperty(
+              "marginBottom",
+              currentBlock?.properties?.marginBottom || 0,
+              PropertyType.RANGE,
+              "Margem Inferior",
+              PropertyCategory.STYLE,
+              { min: 0, max: 100, step: 4, unit: "px" }
+            ),
+          ];
+
+          // Propriedades de alinhamento
+          const alignmentProps = [
+            createProperty(
+              "textAlign",
+              currentBlock?.properties?.textAlign || "left",
+              PropertyType.SELECT,
+              "Alinhamento",
+              PropertyCategory.ALIGNMENT,
+              {
+                options: createSelectOptions([
+                  { value: "left", label: "Esquerda" },
+                  { value: "center", label: "Centro" },
+                  { value: "right", label: "Direita" },
+                  { value: "justify", label: "Justificado" },
+                ]),
+              }
+            ),
+          ];
+
+          return [...baseProperties, ...contentProps, ...styleProps, ...alignmentProps];
+        }
 
         case "quiz-intro-header":
           return [
@@ -230,7 +284,7 @@ export const useUnifiedProperties = (
             {
               key: "showDivider",
               value: currentBlock?.properties?.showDivider !== false,
-              type: PropertyType.BOOLEAN,
+              type: PropertyType.SWITCH,
               label: "Mostrar Divisor",
               category: "style",
             },
@@ -326,21 +380,21 @@ export const useUnifiedProperties = (
             {
               key: "requireOption",
               value: currentBlock?.properties?.requireOption !== false,
-              type: PropertyType.BOOLEAN,
+              type: PropertyType.SWITCH,
               label: "Seleção Obrigatória",
               category: "behavior",
             },
             {
               key: "autoAdvance",
               value: currentBlock?.properties?.autoAdvance === true,
-              type: PropertyType.BOOLEAN,
+              type: PropertyType.SWITCH,
               label: "Avançar Automaticamente",
               category: "behavior",
             },
             {
               key: "showCorrectAnswer",
               value: currentBlock?.properties?.showCorrectAnswer !== false,
-              type: PropertyType.BOOLEAN,
+              type: PropertyType.SWITCH,
               label: "Mostrar Resposta Correta",
               category: "behavior",
             },
@@ -357,7 +411,7 @@ export const useUnifiedProperties = (
             {
               key: "useLetterOptions",
               value: currentBlock?.properties?.useLetterOptions === true,
-              type: PropertyType.BOOLEAN,
+              type: PropertyType.SWITCH,
               label: "Usar Letras nas Opções (A-H)",
               category: "style",
             },
@@ -409,7 +463,7 @@ export const useUnifiedProperties = (
             {
               key: "showOptionImages",
               value: currentBlock?.properties?.showOptionImages === true,
-              type: PropertyType.BOOLEAN,
+              type: PropertyType.SWITCH,
               label: "Mostrar Imagens nas Opções",
               category: "style",
             },
@@ -476,14 +530,14 @@ export const useUnifiedProperties = (
             {
               key: "disabled",
               value: currentBlock?.properties?.disabled === true,
-              type: PropertyType.BOOLEAN,
+              type: PropertyType.SWITCH,
               label: "Desabilitado",
               category: "behavior",
             },
             {
               key: "fullWidth",
               value: currentBlock?.properties?.fullWidth === true,
-              type: PropertyType.BOOLEAN,
+              type: PropertyType.SWITCH,
               label: "Largura Completa",
               category: "style",
             },
@@ -662,21 +716,21 @@ export const useUnifiedProperties = (
             {
               key: "requireSelection",
               value: currentBlock?.properties?.requireSelection !== false,
-              type: PropertyType.BOOLEAN,
+              type: PropertyType.SWITCH,
               label: "Seleção Obrigatória",
               category: "behavior",
             },
             {
               key: "autoAdvance",
               value: currentBlock?.properties?.autoAdvance === true,
-              type: PropertyType.BOOLEAN,
+              type: PropertyType.SWITCH,
               label: "Avançar Automaticamente",
               category: "behavior",
             },
             {
               key: "showFeedback",
               value: currentBlock?.properties?.showFeedback !== false,
-              type: PropertyType.BOOLEAN,
+              type: PropertyType.SWITCH,
               label: "Mostrar Feedback Imediato",
               category: "behavior",
             },
@@ -701,14 +755,14 @@ export const useUnifiedProperties = (
             {
               key: "randomizeOptions",
               value: currentBlock?.properties?.randomizeOptions === true,
-              type: PropertyType.BOOLEAN,
+              type: PropertyType.SWITCH,
               label: "Embaralhar Opções",
               category: "behavior",
             },
             {
               key: "useLetterOptions",
               value: currentBlock?.properties?.useLetterOptions === true,
-              type: PropertyType.BOOLEAN,
+              type: PropertyType.SWITCH,
               label: "Usar Letras nas Opções (A-H)",
               category: "style",
             },
@@ -751,7 +805,7 @@ export const useUnifiedProperties = (
             {
               key: "showOptionImages",
               value: currentBlock?.properties?.showOptionImages === true,
-              type: PropertyType.BOOLEAN,
+              type: PropertyType.SWITCH,
               label: "Mostrar Imagens nas Opções",
               category: "style",
             },
@@ -777,7 +831,7 @@ export const useUnifiedProperties = (
             {
               key: "required",
               value: currentBlock?.properties?.required === true,
-              type: PropertyType.BOOLEAN,
+              type: PropertyType.SWITCH,
               label: "Campo Obrigatório",
               category: "behavior",
             },
@@ -852,7 +906,7 @@ export const useUnifiedProperties = (
             {
               key: "showIcon",
               value: currentBlock?.properties?.showIcon !== false,
-              type: PropertyType.BOOLEAN,
+              type: PropertyType.SWITCH,
               label: "Mostrar Ícone",
               category: "style",
             },
@@ -980,7 +1034,7 @@ export const useUnifiedProperties = (
 
   // Função para obter propriedades filtradas por categoria
   const getPropertiesByCategory = useCallback(
-    (category: string) => {
+    (category: PropertyCategoryOrString) => {
       if (!properties || !Array.isArray(properties)) {
         return [];
       }

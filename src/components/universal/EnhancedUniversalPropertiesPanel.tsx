@@ -15,10 +15,10 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 // ✅ Importa UnifiedBlock, useUnifiedProperties e PropertyType do hook
 import {
-  UnifiedBlock,
-  useUnifiedProperties,
-  UnifiedProperty,
   PropertyType,
+  UnifiedBlock,
+  UnifiedProperty,
+  useUnifiedProperties,
 } from "@/hooks/useUnifiedProperties";
 import { BlockDefinition } from "@/types/editor"; // Mantido para compatibilidade da interface
 import {
@@ -223,7 +223,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
           </div>
         );
 
-      case PropertyType.BOOLEAN:
+      case PropertyType.SWITCH:
         return (
           <div key={key} className="flex items-center justify-between py-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818] cursor-pointer">
