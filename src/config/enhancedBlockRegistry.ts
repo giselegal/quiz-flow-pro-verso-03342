@@ -1,4 +1,5 @@
 import React from "react";
+import { Type } from "lucide-react";
 import { BlockDefinition, PropertySchema } from "@/types/editor";
 
 /**
@@ -79,6 +80,42 @@ export const getAvailableBlockTypes = (): string[] => {
  */
 export const blockTypeExists = (type: string): boolean => {
   return type in ENHANCED_BLOCK_REGISTRY;
+};
+
+/**
+ * Get enhanced component for the /editor-fixed
+ */
+export const getEnhancedComponent = (type: string): React.ComponentType<any> | null => {
+  return ENHANCED_BLOCK_REGISTRY[type] || null;
+};
+
+/**
+ * Get registry statistics for debugging
+ */
+export const getRegistryStats = () => {
+  const types = Object.keys(ENHANCED_BLOCK_REGISTRY);
+  return {
+    total: types.length,
+    active: types.length,
+    types: types,
+  };
+};
+
+/**
+ * Generate block definitions for properties panel
+ */
+export const generateBlockDefinitions = (): BlockDefinition[] => {
+  return Object.keys(ENHANCED_BLOCK_REGISTRY).map(type => ({
+    type,
+    name: type.charAt(0).toUpperCase() + type.slice(1).replace(/[-_]/g, " "),
+    label: type.charAt(0).toUpperCase() + type.slice(1).replace(/[-_]/g, " "),
+    description: `Componente ${type}`,
+    category: "basic",
+    icon: Type,
+    component: ENHANCED_BLOCK_REGISTRY[type],
+    defaultProps: {},
+    properties: {},
+  }));
 };
 
 /**

@@ -261,7 +261,7 @@ export interface FunnelStage {
 
     isCustom?: boolean;
 
-    templateBlocks?: any[]; // ✅ Adicionar suporte a blocos de template
+    templateBlocks?: any; // ✅ Changed to any to fix type compatibility
   };
 }
 

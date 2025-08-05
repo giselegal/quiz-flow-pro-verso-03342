@@ -1,4 +1,4 @@
-import { createEditorAdapter } from "@/adapters/EditorDatabaseAdapter";
+// Removed EditorDatabaseAdapter import as it was deleted
 import { getAllSteps, getStepTemplate } from "@/config/stepTemplatesMapping";
 import { EditorBlock, FunnelStage } from "@/types/editor";
 import React, { createContext, ReactNode, useCallback, useContext, useState } from "react";
@@ -77,14 +77,15 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   console.log("🔥 EditorProvider: INICIANDO PROVIDER!");
 
   // ═══════════════════════════════════════════════
-  // 🔌 INICIALIZAR ADAPTER DO BANCO DE DADOS
+  // 🔌 MOCK ADAPTER (DATABASE ADAPTER REMOVED)
   // ═══════════════════════════════════════════════
   const [adapter] = useState(() => {
-    return createEditorAdapter({
-      useDatabase: false, // Iniciar em modo local por segurança
-      quizId: "quiz-demo-id", // Quiz padrão para desenvolvimento
-      fallbackToLocal: true,
-    });
+    return {
+      setDatabaseMode: (enabled: boolean) => console.log('Mock adapter setDatabaseMode:', enabled),
+      setQuizId: (quizId: string) => console.log('Mock adapter setQuizId:', quizId),
+      migrateLocalToDatabase: () => Promise.resolve(false),
+      getQuizStats: () => Promise.resolve({ error: 'Mock adapter - no real stats' }),
+    };
   });
 
   // Estado do modo banco

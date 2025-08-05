@@ -68,7 +68,7 @@ const getComponentProperties = (block: UnifiedBlock) => {
         label: "Texto",
         type: "textarea",
         category: "content",
-        value: block.content || "",
+        value: (block.properties?.content || block.content?.text) || "",
       },
       fontSize: {
         key: "fontSize",
@@ -109,7 +109,7 @@ const getComponentProperties = (block: UnifiedBlock) => {
         label: "Título",
         type: "text",
         category: "content",
-        value: block.content || "",
+        value: (block.properties?.content || block.content?.title) || "",
       },
       level: {
         key: "level",
@@ -150,7 +150,7 @@ const getComponentProperties = (block: UnifiedBlock) => {
         label: "Texto do Botão",
         type: "text",
         category: "content",
-        value: block.text || "Botão",
+        value: (block.properties?.text || block.content?.text) || "Botão",
       },
       variant: {
         key: "variant",
