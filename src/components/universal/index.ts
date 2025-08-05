@@ -1,8 +1,5 @@
-// Importa as duas formas de exportação
-import UniversalPropertiesPanelDefault, {
-  UniversalPropertiesPanel as UniversalPropertiesPanelNamed,
-} from "./UniversalPropertiesPanel";
+// Importa apenas a exportação padrão
+import UniversalPropertiesPanel from "./UniversalPropertiesPanel";
 
-// Re-exporta tanto como exportação nomeada quanto como padrão para compatibilidade
-export const UniversalPropertiesPanel = UniversalPropertiesPanelNamed;
-export default UniversalPropertiesPanelDefault;
+// Re-exporta como padrão
+export default UniversalPropertiesPanel;
