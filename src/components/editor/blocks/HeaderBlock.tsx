@@ -26,7 +26,7 @@ const HeaderBlock: React.FC<BlockComponentProps> = ({
     fontSize = '2.5rem',
     fontWeight = 'bold',
     fontFamily = 'inherit',
-  } = block.properties;
+  } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {

@@ -31,7 +31,7 @@ const QuizOfferPricingBlock: React.FC<BlockComponentProps> = ({
       'Garantia de 7 dias',
       'Suporte especializado',
     ],
-  } = block.properties;
+  } = block?.properties || {};
 
   const [isLoaded, setIsLoaded] = useState(false);
 

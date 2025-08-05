@@ -53,7 +53,7 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
     trackingEnabled = true,
     overlayColor = 'rgba(0,0,0,0.3)',
     spacing = 'normal',
-  } = block.properties;
+  } = block?.properties || {};
 
   // 2. INDEPENDENTE: Estado próprio do componente
   const [isPlaying, setIsPlaying] = useState(false);

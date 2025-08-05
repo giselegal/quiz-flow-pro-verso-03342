@@ -84,7 +84,7 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
     backgroundColor = '#ffffff',
     textColor = '#432818',
     accentColor = '#B89B7A',
-  } = block.properties;
+  } = block?.properties || {};
 
   // Usar estatísticas dinâmicas se disponíveis, senão usar estáticas/padrão
   const stats = staticStats || [

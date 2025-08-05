@@ -17,7 +17,7 @@ const GuaranteeInlineBlock: React.FC<BlockComponentProps> = ({
     iconType = 'shield', // shield, star, check
     backgroundColor = '#f9f4ef',
     borderColor = '#B89B7A',
-  } = block.properties;
+  } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {

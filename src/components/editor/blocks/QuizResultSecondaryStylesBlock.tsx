@@ -19,7 +19,7 @@ const QuizResultSecondaryStylesBlock: React.FC<BlockComponentProps> = ({
     accentColor = '#B89B7A',
     textColor = '#432818',
     maxStyles = 3,
-  } = block.properties;
+  } = block?.properties || {};
 
   const [isLoaded, setIsLoaded] = useState(false);
 

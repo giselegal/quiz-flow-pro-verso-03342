@@ -11,7 +11,7 @@ const ResultDescriptionBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = '',
 }) => {
-  const { content = 'Baseado nas suas respostas, identificamos que...', showIcon = true } = block.properties;
+  const { content = 'Baseado nas suas respostas, identificamos que...', showIcon = true } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {

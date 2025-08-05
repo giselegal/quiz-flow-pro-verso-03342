@@ -24,7 +24,7 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
     fontWeight = 'bold',
     maxWidth = 'full',
     responsive = true,
-  } = block.properties;
+  } = block?.properties || {};
 
   // Tamanhos responsivos por nível
   const levelClasses = {

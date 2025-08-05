@@ -19,7 +19,7 @@ const ProductOfferBlock: React.FC<BlockComponentProps> = ({
     buttonText = 'ADQUIRIR AGORA',
     buttonUrl = '',
     features = [],
-  } = block.properties;
+  } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {

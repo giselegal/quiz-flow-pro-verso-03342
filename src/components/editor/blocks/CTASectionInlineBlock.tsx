@@ -18,7 +18,7 @@ const CTASectionInlineBlock: React.FC<BlockComponentProps> = ({
     securityText = 'Oferta exclusiva nesta página',
     arrowEnabled = true,
     style = 'green', // green, primary, secondary
-  } = block.properties;
+  } = block?.properties || {};
 
   const [isButtonHovered, setIsButtonHovered] = useState(false);
 

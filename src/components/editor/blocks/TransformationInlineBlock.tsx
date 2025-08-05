@@ -19,7 +19,7 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
     afterDescription = 'Com um estilo autêntico, confiante e alinhado com seus objetivos pessoais e profissionais.',
     afterImage = 'https://via.placeholder.com/300x200?text=Depois',
     arrowColor = '#B89B7A',
-  } = block.properties;
+  } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {

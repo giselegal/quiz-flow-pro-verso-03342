@@ -38,7 +38,7 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
     showDevicePreview = true,
     animation = 'fadeIn',
     trackingEnabled = true,
-  } = block.properties;
+  } = block?.properties || {};
 
   const [activeDevice, setActiveDevice] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
 

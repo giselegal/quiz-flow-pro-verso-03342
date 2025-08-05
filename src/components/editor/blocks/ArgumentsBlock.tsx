@@ -18,7 +18,7 @@ const ArgumentsBlock: React.FC<BlockComponentProps> = ({
       { text: 'Suporte 24/7', icon: 'CheckCircle' },
       { text: 'Entrega rápida', icon: 'CheckCircle' },
     ],
-  } = block.properties;
+  } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {

@@ -63,7 +63,7 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
     trackingEnabled = true,
     animation = 'fadeIn',
     useUsername = false,
-  } = block.properties;
+  } = block?.properties || {};
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);

@@ -18,7 +18,7 @@ const QuizResultMainCardBlock: React.FC<BlockComponentProps> = ({
     showCharacteristics = true,
     accentColor = '#B89B7A',
     textColor = '#432818',
-  } = block.properties;
+  } = block?.properties || {};
 
   const [isLoaded, setIsLoaded] = useState(false);
 

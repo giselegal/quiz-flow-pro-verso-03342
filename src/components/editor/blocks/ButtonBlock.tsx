@@ -26,7 +26,7 @@ const ButtonBlock: React.FC<BlockComponentProps> = ({
     width = 'auto',
     margin = '0',
     boxShadow = 'none',
-  } = block.properties;
+  } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {

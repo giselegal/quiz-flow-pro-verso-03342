@@ -15,7 +15,7 @@ const QuizOfferCountdownBlock: React.FC<BlockComponentProps> = ({
     title = 'Oferta expira em:',
     backgroundColor = '#dc2626',
     textColor = '#ffffff',
-  } = block.properties;
+  } = block?.properties || {};
 
   const [timeLeft, setTimeLeft] = useState(countdownMinutes * 60);
 

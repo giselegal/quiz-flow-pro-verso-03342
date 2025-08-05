@@ -31,7 +31,7 @@ const QuizOfferFAQBlock: React.FC<BlockComponentProps> = ({
         answer: 'Sim! Nosso método funciona para mulheres de todas as idades e estilos de vida.',
       },
     ],
-  } = block.properties;
+  } = block?.properties || {};
 
   const [isLoaded, setIsLoaded] = useState(false);
 

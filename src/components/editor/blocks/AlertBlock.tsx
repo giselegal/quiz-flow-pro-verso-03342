@@ -11,7 +11,7 @@ const AlertBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = '',
 }) => {
-  const { title = 'Atenção!', message = 'Esta é uma mensagem importante.', variant = 'info' } = block.properties;
+  const { title = 'Atenção!', message = 'Esta é uma mensagem importante.', variant = 'info' } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {

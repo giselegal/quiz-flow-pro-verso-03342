@@ -34,7 +34,7 @@ const AnimatedStatCounterBlock: React.FC<BlockComponentProps> = ({
     textAlign = 'center',
     animateOnScroll = true,
     size = 'medium', // small, medium, large
-  } = block.properties;
+  } = block?.properties || {};
 
   const [count, setCount] = useState(startValue);
   const [hasAnimated, setHasAnimated] = useState(!animateOnScroll);

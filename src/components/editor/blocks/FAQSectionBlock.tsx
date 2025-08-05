@@ -63,7 +63,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
     useUsername = false,
     trackingEnabled = false,
     animation = 'fadeIn',
-  } = block.properties;
+  } = block?.properties || {};
 
   // Get username from context (placeholder)
   const username = 'Usuário';

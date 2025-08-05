@@ -18,7 +18,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
     guideImageUrl = 'https://via.placeholder.com/540x300?text=Guia+de+Estilo',
     progressColor = '#B89B7A',
     badgeText = 'Exclusivo',
-  } = block.properties;
+  } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {

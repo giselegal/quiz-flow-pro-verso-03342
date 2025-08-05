@@ -30,7 +30,7 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
     clickable = false,
     href = '',
     target = '_blank',
-  } = block.properties;
+  } = block?.properties || {};
 
   // Object fit classes
   const objectFitClasses = {

@@ -31,7 +31,7 @@ const ValueStackInlineBlock: React.FC<BlockComponentProps> = ({
       'Imagem alinhada aos seus objetivos',
       'Guarda-roupa funcional, sem compras por impulso',
     ] as string[],
-  } = block.properties;
+  } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {

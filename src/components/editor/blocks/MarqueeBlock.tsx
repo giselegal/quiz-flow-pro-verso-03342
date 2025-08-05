@@ -17,7 +17,7 @@ const MarqueeBlock: React.FC<BlockComponentProps> = ({
     direction = 'left',
     textColor = '#000000',
     backgroundColor = '#f0f0f0',
-  } = block.properties;
+  } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {

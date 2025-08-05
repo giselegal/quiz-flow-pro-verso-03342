@@ -46,7 +46,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
     progressValue = 80,
     backgroundColor = '#ffffff',
     textColor = '#432818',
-  } = block.properties;
+  } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {

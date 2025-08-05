@@ -21,7 +21,7 @@ const QuizOfferHeroBlock: React.FC<BlockComponentProps> = ({
     textColor = '#432818',
     showLogo = true,
     showImage = true,
-  } = block.properties;
+  } = block?.properties || {};
 
   const [isLoaded, setIsLoaded] = useState(false);
 

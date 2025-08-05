@@ -45,7 +45,7 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
     icon = '🎯',
     backgroundColor = '#ffffff',
     textColor = '#432818',
-  } = block.properties;
+  } = block?.properties || {};
 
   return (
     <div
