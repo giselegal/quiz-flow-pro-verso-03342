@@ -1,7 +1,3 @@
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -13,10 +9,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { useToast } from "@/components/ui/use-toast";
-import { BlockDefinition, PropertyType, PropertyDefinition } from "@/types/editor";
 import {
   Select,
   SelectContent,
@@ -24,11 +16,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useUnifiedProperties } from "@/hooks/useUnifiedProperties";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
+import { useUnifiedProperties } from "@/hooks/useUnifiedProperties";
+import { BlockDefinition, PropertyDefinition, PropertyType } from "@/types/editor";
 import { UnifiedBlock } from "@/types/unified";
-import { generateSemanticId } from "@/lib/semanticIdGenerator";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
 interface EnhancedUniversalPropertiesPanelProps {
   selectedBlock?: UnifiedBlock;

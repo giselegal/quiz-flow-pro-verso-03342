@@ -1,6 +1,6 @@
 import { BRAND_COLORS } from "@/config/brandColors";
+import { PropertyDefinition, PropertyType } from "@/types/editor";
 import { useCallback, useEffect, useState } from "react";
-import { PropertyType, PropertyDefinition } from "@/types/editor";
 
 export interface UnifiedProperty {
   key: string;

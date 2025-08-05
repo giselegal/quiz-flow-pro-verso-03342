@@ -5,7 +5,6 @@ import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelS
 import { FunnelStagesPanel } from "@/components/editor/funnel/FunnelStagesPanel";
 import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
 import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
-import UniversalPropertiesPanel from "@/components/universal/UniversalPropertiesPanel";
 import EnhancedUniversalPropertiesPanel from "@/components/universal/EnhancedUniversalPropertiesPanel";
 import { generateBlockDefinitions, getRegistryStats } from "@/config/enhancedBlockRegistry";
 import { useEditor } from "@/context/EditorContext";

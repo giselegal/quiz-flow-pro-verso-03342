@@ -13,7 +13,8 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { BlockDefinition, PropertySchema } from "@/types/editor";
+import { UnifiedBlock } from "@/hooks/useUnifiedProperties";
+import { BlockDefinition } from "@/types/editor";
 import {
   EyeOff,
   Layout,
@@ -25,7 +26,6 @@ import {
   Type,
 } from "lucide-react";
 import React, { useMemo } from "react";
-import { UnifiedBlock } from "@/hooks/useUnifiedProperties";
 
 // Interface atualizada para compatibilidade com editor-fixed-dragdrop
 interface EnhancedUniversalPropertiesPanelProps {
@@ -34,7 +34,7 @@ interface EnhancedUniversalPropertiesPanelProps {
   onUpdate?: (blockId: string, updates: Record<string, any>) => void;
   onDelete?: (blockId: string) => void;
   onClose?: () => void;
-  
+
   // Propriedades adicionadas para compatibilidade
   block?: any; // Compatibilidade com OptimizedPropertiesPanel
   blockDefinition?: BlockDefinition; // Compatibilidade com novo sistema
@@ -61,7 +61,7 @@ const getComponentProperties = (block: UnifiedBlock): Record<string, PropertyDef
   // Código existente da função getComponentProperties
   // Criamos um objeto vazio do tipo esperado
   const result: Record<string, PropertyDefinition> = {};
-  
+
   // Definimos as propriedades base
   result.id = {
     key: "id",
@@ -71,7 +71,7 @@ const getComponentProperties = (block: UnifiedBlock): Record<string, PropertyDef
     value: block.id,
     required: true,
   };
-  
+
   result.visible = {
     key: "visible",
     label: "Visível",
@@ -92,7 +92,7 @@ const getComponentProperties = (block: UnifiedBlock): Record<string, PropertyDef
     step: 5,
     unit: "%",
   };
-  
+
   result.scale = {
     key: "scale",
     label: "Escala",
@@ -169,7 +169,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
 }) => {
   // Normalizar dados para compatibilidade entre os dois sistemas
   const actualBlock = block || selectedBlock;
-  
+
   if (!actualBlock) {
     return (
       <Card className="w-80 h-fit border-[#B89B7A]/30 bg-white/95 backdrop-blur-sm">
@@ -247,7 +247,15 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
   }, [properties]);
 
   // Ordem das categorias
-  const categoryOrder = ["content", "alignment", "style", "behavior", "scoring", "advanced", "general"];
+  const categoryOrder = [
+    "content",
+    "alignment",
+    "style",
+    "behavior",
+    "scoring",
+    "advanced",
+    "general",
+  ];
   const categoryIcons = {
     content: Type,
     alignment: Layout,
@@ -282,7 +290,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
             <Input
               id={key}
               value={value || ""}
-              onChange={(e) => updateProperty(key, e.target.value)}
+              onChange={e => updateProperty(key, e.target.value)}
               className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
             />
           </div>
@@ -297,7 +305,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
             <Textarea
               id={key}
               value={value || ""}
-              onChange={(e) => updateProperty(key, e.target.value)}
+              onChange={e => updateProperty(key, e.target.value)}
               rows={rows || 3}
               className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
             />
@@ -320,7 +328,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
             {type === "range" ? (
               <Slider
                 value={[value || 0]}
-                onValueChange={(values) => updateProperty(key, values[0])}
+                onValueChange={values => updateProperty(key, values[0])}
                 min={min || 0}
                 max={max || 100}
                 step={step || 1}
@@ -331,7 +339,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
                 id={key}
                 type="number"
                 value={value || ""}
-                onChange={(e) => updateProperty(key, Number(e.target.value))}
+                onChange={e => updateProperty(key, Number(e.target.value))}
                 min={min}
                 max={max}
                 step={step}
@@ -347,12 +355,12 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
             <Label className="text-sm font-medium text-[#432818]">
               {label} {required && <span className="text-red-500">*</span>}
             </Label>
-            <Select value={value || ""} onValueChange={(val) => updateProperty(key, val)}>
+            <Select value={value || ""} onValueChange={val => updateProperty(key, val)}>
               <SelectTrigger className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20">
                 <SelectValue placeholder={`Selecione ${label.toLowerCase()}`} />
               </SelectTrigger>
               <SelectContent>
-                {options?.map((option) => (
+                {options?.map(option => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
                   </SelectItem>
@@ -370,7 +378,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
             </Label>
             <Switch
               checked={value === true}
-              onCheckedChange={(checked) => updateProperty(key, checked)}
+              onCheckedChange={checked => updateProperty(key, checked)}
             />
           </div>
         );
@@ -386,12 +394,12 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
                 type="color"
                 id={key}
                 value={value || "#000000"}
-                onChange={(e) => updateProperty(key, e.target.value)}
+                onChange={e => updateProperty(key, e.target.value)}
                 className="w-10 h-10 p-0 border-none rounded cursor-pointer"
               />
               <Input
                 value={value || "#000000"}
-                onChange={(e) => updateProperty(key, e.target.value)}
+                onChange={e => updateProperty(key, e.target.value)}
                 className="flex-1 border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
               />
             </div>
@@ -432,7 +440,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
 
       <CardContent className="p-4 space-y-6 max-h-[70vh] overflow-y-auto">
         {/* Seções organizadas por categoria */}
-        {categoryOrder.map((categoryKey) => {
+        {categoryOrder.map(categoryKey => {
           const categoryProps = categorizedProperties[categoryKey];
           if (!categoryProps || categoryProps.length === 0) return null;
 
@@ -462,14 +470,14 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
             Redefinir Propriedades
           </Button>
 
-          {(onDelete || typeof onUpdateBlock === 'function') && (
+          {(onDelete || typeof onUpdateBlock === "function") && (
             <Button
               variant="destructive"
               size="sm"
               onClick={() => {
                 if (onDelete) {
                   onDelete(actualBlock.id);
-                } else if (typeof onUpdateBlock === 'function') {
+                } else if (typeof onUpdateBlock === "function") {
                   // Implementar lógica de exclusão alternativa se necessário
                   console.log("Exclusão não implementada diretamente no sistema novo");
                 }
