@@ -593,9 +593,29 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         const blockIndex = blocks.findIndex(block => block.id === blockId);
 
         if (blockIndex !== -1) {
-          updated[stageId] = blocks.map(block =>
-            block.id === blockId ? { ...block, ...updates } : block
-          );
+          updated[stageId] = blocks.map(block => {
+            if (block.id === blockId) {
+              // Criar uma nova cópia do bloco
+              const updatedBlock = { ...block };
+
+              // Processar cada propriedade de atualização separadamente
+              Object.entries(updates).forEach(([key, value]) => {
+                if (key === "properties" && block.properties) {
+                  // Para properties, fazer um merge profundo preservando imutabilidade
+                  updatedBlock.properties = {
+                    ...block.properties,
+                    ...(value as Record<string, any>),
+                  };
+                } else {
+                  // Para outras propriedades, atualização direta com casting seguro
+                  (updatedBlock as any)[key] = value;
+                }
+              });
+
+              return updatedBlock;
+            }
+            return block;
+          });
           break;
         }
       }

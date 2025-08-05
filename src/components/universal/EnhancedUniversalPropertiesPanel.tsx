@@ -26,7 +26,8 @@ import {
   Type,
 } from "lucide-react";
 import React, { useMemo } from "react";
-import { UniversalPropertiesPanel, getComponentProperties } from "./UniversalPropertiesPanel";
+// Importar do arquivo index.ts que agora exporta corretamente os componentes e funções
+import { getComponentProperties } from "./";
 
 // Interface atualizada para compatibilidade com editor-fixed-dragdrop
 interface EnhancedUniversalPropertiesPanelProps {
@@ -135,33 +136,80 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
 
   // Determinar o método para obter propriedades com base no que está disponível
   const properties = useMemo(() => {
+    console.log("🔄 Re-calculando propriedades para bloco:", actualBlock);
+
     if (blockDefinition) {
       // Usar o novo sistema baseado em BlockDefinition
-      return convertBlockDefinitionToPropertyDefinitions(
+      const props = convertBlockDefinitionToPropertyDefinitions(
         blockDefinition,
         actualBlock.properties || actualBlock.content || {}
       );
+      console.log("🧩 Propriedades convertidas de BlockDefinition:", props);
+      return props;
     } else {
       // Usar a implementação original do componente UniversalPropertiesPanel
-      return getComponentProperties(actualBlock as UnifiedBlock);
+      const props = getComponentProperties(actualBlock as UnifiedBlock);
+      console.log("🧩 Propriedades obtidas de getComponentProperties:", props);
+      return props;
     }
-  }, [actualBlock, blockDefinition]);
+  }, [actualBlock, actualBlock.properties, actualBlock.content, blockDefinition]);
 
-  // Função de atualização unificada
+  // Função de atualização unificada - melhorada para garantir detecção de mudanças
   const updateProperty = (key: string, value: any) => {
     const blockId = actualBlock.id;
+    console.log(
+      `🔍 EnhancedUniversalPropertiesPanel: Atualizando propriedade ${key} para ${JSON.stringify(value)}`
+    );
+    console.log(`🔍 Estado atual do bloco antes da atualização:`, actualBlock);
 
     if (onUpdateBlock) {
-      // Usar o novo sistema
-      onUpdateBlock(blockId, { [key]: value });
+      // Para propriedades aninhadas, garantimos que criamos um novo objeto
+      if (key.includes(".")) {
+        const [mainKey, subKey] = key.split(".");
+        const currentMainValue = actualBlock[mainKey] || {};
+
+        // Criamos um novo objeto para a propriedade principal
+        const updatedMainValue = {
+          ...currentMainValue,
+          [subKey]: value,
+        };
+
+        // Enviamos a atualização com o novo objeto
+        console.log(`🔄 Atualizando via onUpdateBlock - propriedade aninhada:`, {
+          [mainKey]: updatedMainValue,
+        });
+        onUpdateBlock(blockId, { [mainKey]: updatedMainValue });
+      } else {
+        // Para propriedades simples, verificamos se é uma propriedade direta ou de 'properties'
+        // Se a chave não existir diretamente no bloco, assumimos que faz parte de 'properties'
+        if (actualBlock[key] !== undefined || key === "type" || key === "name") {
+          console.log(`🔄 Atualizando via onUpdateBlock - propriedade direta:`, { [key]: value });
+          onUpdateBlock(blockId, { [key]: value });
+        } else {
+          // Garantir que properties existe e criar uma nova referência
+          const properties = { ...(actualBlock.properties || {}) };
+          console.log(`🔄 Atualizando via onUpdateBlock - propriedade em properties:`, {
+            properties: { ...properties, [key]: value },
+          });
+          onUpdateBlock(blockId, {
+            properties: { ...properties, [key]: value },
+          });
+        }
+      }
     } else if (onUpdate) {
-      // Usar o sistema existente
-      const currentProperties = actualBlock.properties || {};
+      // Sistema legado - garantir imutabilidade para properties
+      const currentProperties = { ...(actualBlock.properties || {}) };
+
+      // Criamos um novo objeto de propriedades para garantir referência nova
       const updatedProperties = {
         ...currentProperties,
         [key]: value,
       };
 
+      // Enviamos o objeto completo de propriedades atualizado
+      console.log(`🔄 Atualizando via onUpdate (sistema legado):`, {
+        properties: updatedProperties,
+      });
       onUpdate(blockId, { properties: updatedProperties });
     }
   };

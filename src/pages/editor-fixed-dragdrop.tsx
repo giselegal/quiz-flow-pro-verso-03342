@@ -255,14 +255,16 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   selectedBlock={{
                     id: selectedBlock.id,
                     type: selectedBlock.type,
-                    properties: selectedBlock.properties || {},
+                    // Garantimos uma nova referência para properties usando spread
+                    properties: { ...(selectedBlock.properties || {}) },
                   }}
                   onUpdate={(blockId, updates) => {
                     console.log("🚀 Atualizando bloco via EnhancedUniversalPropertiesPanel:", {
                       blockId,
                       updates,
                     });
-                    updateBlock(blockId, updates);
+                    // Garantir que estamos criando um novo objeto para as atualizações
+                    updateBlock(blockId, { ...updates });
                   }}
                   onClose={() => setSelectedBlockId(null)}
                 />
