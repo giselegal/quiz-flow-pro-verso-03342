@@ -6,6 +6,16 @@ export const generateSemanticId = (type: string, suffix?: string): string => {
   return `${type}-${timestamp}-${random}${baseSuffix}`;
 };
 
+// Legacy function for object parameter - converts to string
+export const generateSemanticIdFromObject = (config: {
+  context: string;
+  type: string;
+  identifier: string;
+  index: number;
+}): string => {
+  return generateSemanticId(`${config.context}-${config.type}`, config.identifier);
+};
+
 export const generateBlockId = (blockType: string): string => {
   return generateSemanticId(blockType, "block");
 };

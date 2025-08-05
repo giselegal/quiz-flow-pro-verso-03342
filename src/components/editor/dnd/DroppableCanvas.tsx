@@ -1,7 +1,7 @@
 import React from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { Block } from "@/types/editor";
-import { generateSemanticId } from "../utils/semanticIdGenerator";
+import { generateSemanticIdFromObject } from "@/components/editor/utils/semanticIdGenerator";
 
 interface DroppableCanvasProps {
   blocks: Block[];
@@ -20,7 +20,7 @@ const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
 }) => {
   const handleDrop = (blockType: Block["type"]) => {
     const newBlock: Block = {
-      id: generateSemanticId({
+      id: generateSemanticIdFromObject({
         context: "canvas",
         type: "block",
         identifier: "block",

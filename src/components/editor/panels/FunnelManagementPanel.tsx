@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { QuizFunnel, SimplePage } from "@/interfaces/quiz";
 import styles from "@/styles/editor.module.css";
-import { generateSemanticId } from "../utils/semanticIdGenerator";
+import { generateSemanticIdFromObject } from "@/components/editor/utils/semanticIdGenerator";
 
 interface FunnelManagementPanelProps {
   funnel: QuizFunnel;
@@ -60,7 +60,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
 
   const handleCreatePage = () => {
     const newPage: SimplePage = {
-      id: generateSemanticId({
+        id: generateSemanticIdFromObject({
         context: "funnel",
         type: "page",
         identifier: "page",
@@ -107,7 +107,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
     const originalPage = funnel.pages[pageIndex];
     const duplicatedPage: SimplePage = {
       ...originalPage,
-      id: generateSemanticId({
+      id: generateSemanticIdFromObject({
         context: "funnel",
         type: "page",
         identifier: "page",

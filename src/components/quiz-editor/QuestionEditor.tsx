@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { QuizQuestion, QuizOption } from "@/types/quiz";
 import { Trash, Plus } from "lucide-react";
-import { generateSemanticId } from "../utils/semanticIdGenerator";
+import { generateSemanticIdFromObject } from "@/components/editor/utils/semanticIdGenerator";
 
 interface QuestionEditorProps {
   question: QuizQuestion | null;
@@ -29,7 +29,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
 
     // Create a proper QuizQuestion object with all required properties
     return {
-      id: generateSemanticId({
+        id: generateSemanticIdFromObject({
         context: "quiz",
         type: "question",
         identifier: "question",
@@ -68,7 +68,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
       options: [
         ...prev.options,
         {
-          id: generateSemanticId({
+          id: generateSemanticIdFromObject({
             context: "quiz",
             type: "question",
             identifier: "option",
