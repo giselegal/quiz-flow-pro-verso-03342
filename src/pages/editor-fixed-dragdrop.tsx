@@ -58,6 +58,10 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
           type: selectedBlock.type,
           hasContent: !!selectedBlock.content,
           hasProperties: !!selectedBlock.properties,
+          propertiesKeys: selectedBlock.properties ? Object.keys(selectedBlock.properties) : [],
+          propertiesValues: selectedBlock.properties,
+          contentKeys: selectedBlock.content ? Object.keys(selectedBlock.content) : [],
+          contentValues: selectedBlock.content,
         }
       : null,
     currentBlocksDetailed: currentBlocks?.map(b => ({ id: b.id, type: b.type })) || [],
@@ -255,16 +259,18 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   selectedBlock={{
                     id: selectedBlock.id,
                     type: selectedBlock.type,
-                    // Garantimos uma nova referência para properties usando spread
-                    properties: { ...(selectedBlock.properties || {}) },
+                    // Garantir que properties é sempre um objeto
+                    properties: selectedBlock.properties || {},
+                    // Manter content se existir
+                    ...(selectedBlock.content ? { content: selectedBlock.content } : {})
                   }}
                   onUpdate={(blockId, updates) => {
                     console.log("🚀 Atualizando bloco via EnhancedUniversalPropertiesPanel:", {
                       blockId,
                       updates,
                     });
-                    // Garantir que estamos criando um novo objeto para as atualizações
-                    updateBlock(blockId, { ...updates });
+                    // Atualizar diretamente usando o blockId e updates
+                    updateBlock(blockId, updates);
                   }}
                   onClose={() => setSelectedBlockId(null)}
                 />
