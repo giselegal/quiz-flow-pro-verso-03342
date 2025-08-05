@@ -118,32 +118,36 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
     switch (theme) {
       case 'elegant':
         return {
-          container: 'bg-gradient-to-r from-[#B89B7A] to-[#A68A6A] text-white',
-          card: 'bg-white/20 backdrop-blur-sm border border-white/30',
-          text: 'text-white',
-          accent: 'text-yellow-300',
+          container: 'bg-gradient-to-br from-[#B89B7A] via-[#D4C2A8] to-[#E8D5C4] text-[#432818] shadow-xl',
+          card: 'bg-white/90 backdrop-blur-sm border border-[#B89B7A]/30 shadow-lg hover:shadow-xl transition-all duration-300',
+          text: 'text-[#432818]',
+          accent: 'text-[#B89B7A]',
+          glow: 'shadow-[#B89B7A]/25',
         };
       case 'minimal':
         return {
-          container: 'bg-gray-50 text-gray-800',
-          card: 'bg-white border border-gray-200',
-          text: 'text-gray-800',
-          accent: 'text-gray-600',
+          container: 'bg-gradient-to-br from-[#E8D5C4] to-white text-[#432818] border border-[#B89B7A]/20',
+          card: 'bg-white border border-[#B89B7A]/20 shadow-sm hover:shadow-md transition-all duration-300',
+          text: 'text-[#432818]',
+          accent: 'text-[#B89B7A]',
+          glow: 'shadow-[#B89B7A]/10',
         };
       case 'neon':
         return {
-          container: 'bg-black text-green-400',
-          card: 'bg-gray-900 border border-green-400 shadow-lg shadow-green-400/20',
-          text: 'text-green-400',
-          accent: 'text-green-300',
+          container: 'bg-gradient-to-br from-[#432818] to-black text-[#B89B7A]',
+          card: 'bg-[#432818]/80 border border-[#B89B7A] shadow-lg shadow-[#B89B7A]/20 hover:shadow-[#B89B7A]/40 transition-all duration-300',
+          text: 'text-[#B89B7A]',
+          accent: 'text-[#E8D5C4]',
+          glow: 'shadow-[#B89B7A]/30',
         };
       case 'urgent':
       default:
         return {
-          container: 'bg-red-600 text-white',
-          card: 'bg-white/10 backdrop-blur-sm border border-white/20',
+          container: 'bg-gradient-to-br from-red-600 via-red-500 to-orange-600 text-white shadow-xl',
+          card: 'bg-white/15 backdrop-blur-sm border border-white/30 shadow-lg hover:bg-white/20 transition-all duration-300',
           text: 'text-white',
-          accent: 'text-yellow-300',
+          accent: 'text-orange-200',
+          glow: 'shadow-red-500/25',
         };
     }
   };
@@ -167,14 +171,31 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
           <span key={unit.label} className="inline-flex items-baseline gap-1">
             <span
               className={cn(
-                'text-xl sm:text-2xl md:text-3xl font-bold tabular-nums',
+                'text-xl sm:text-2xl md:text-3xl font-bold tabular-nums px-2 py-1 rounded-lg transition-all duration-300',
                 pulseAnimation && isUrgent && 'animate-pulse',
+                theme === 'elegant' ? 'bg-white/20 text-[#432818] shadow-lg' :
+                theme === 'minimal' ? 'bg-[#E8D5C4]/30 text-[#432818]' :
+                theme === 'neon' ? 'bg-[#B89B7A]/20 text-[#B89B7A] shadow-lg shadow-[#B89B7A]/25' :
+                'bg-white/20 text-white',
+                themeClasses.text
               )}
             >
               {unit.value.toString().padStart(2, '0')}
             </span>
-            <span className="text-xs sm:text-sm opacity-80">{unit.shortLabel}</span>
-            {index < 3 && <span className="mx-0.5 sm:mx-1 opacity-60">:</span>}
+            <span className={cn(
+              'text-xs sm:text-sm font-medium uppercase tracking-wider',
+              themeClasses.accent
+            )}>
+              {unit.shortLabel}
+            </span>
+            {index < 3 && (
+              <span className={cn(
+                'mx-0.5 sm:mx-1 text-lg font-bold',
+                themeClasses.accent
+              )}>
+                :
+              </span>
+            )}
           </span>
         );
 
@@ -183,14 +204,22 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
           <div key={unit.label} className="flex flex-col items-center">
             <div
               className={cn(
-                'bg-black/80 text-green-400 px-2 py-1 sm:px-3 sm:py-2 rounded font-mono text-xl sm:text-2xl md:text-3xl font-bold border',
-                'border-green-400/30 shadow-lg',
+                'px-2 py-1 sm:px-3 sm:py-2 rounded-lg font-mono text-xl sm:text-2xl md:text-3xl font-bold border shadow-lg transition-all duration-300 hover:scale-105',
+                theme === 'elegant' ? 'bg-[#432818] text-[#B89B7A] border-[#B89B7A]/30 shadow-[#B89B7A]/20' :
+                theme === 'minimal' ? 'bg-white text-[#432818] border-[#B89B7A]/30 shadow-[#B89B7A]/10' :
+                theme === 'neon' ? 'bg-black text-[#B89B7A] border-[#B89B7A] shadow-[#B89B7A]/30' :
+                'bg-black/90 text-white border-white/30 shadow-white/10',
                 pulseAnimation && isUrgent && 'animate-pulse',
               )}
             >
               {unit.value.toString().padStart(2, '0')}
             </div>
-            <span className="text-xs mt-1 opacity-80">{unit.label}</span>
+            <span className={cn(
+              'text-xs mt-1 font-medium uppercase tracking-wider',
+              themeClasses.accent
+            )}>
+              {unit.label}
+            </span>
           </div>
         );
 
@@ -200,15 +229,15 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
         const strokeDashoffset = circumference - (unit.value / (unit.label === 'segundos' ? 60 : 24)) * circumference;
 
         return (
-          <div key={unit.label} className="flex flex-col items-center">
+          <div key={unit.label} className="flex flex-col items-center group">
             <div className="relative w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20">
-              <svg className="w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 transform -rotate-90" viewBox="0 0 100 100">
+              <svg className="w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 transform -rotate-90 transition-transform duration-300 group-hover:scale-110" viewBox="0 0 100 100">
                 <circle
                   cx="50"
                   cy="50"
                   r="40"
                   stroke="currentColor"
-                  strokeWidth="8"
+                  strokeWidth="6"
                   fill="none"
                   className="opacity-20"
                 />
@@ -216,26 +245,38 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
                   cx="50"
                   cy="50"
                   r="40"
-                  stroke={accentColor}
-                  strokeWidth="8"
+                  stroke={theme === 'elegant' ? '#B89B7A' : 
+                         theme === 'minimal' ? '#B89B7A' :
+                         theme === 'neon' ? '#B89B7A' :
+                         accentColor}
+                  strokeWidth="6"
                   fill="none"
                   strokeDasharray={strokeDasharray}
                   strokeDashoffset={strokeDashoffset}
-                  className="transition-all duration-300"
+                  className="transition-all duration-500 drop-shadow-sm"
+                  style={{
+                    filter: theme === 'neon' ? `drop-shadow(0 0 4px #B89B7A)` : undefined
+                  }}
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
                 <span
                   className={cn(
-                    'text-base sm:text-lg md:text-xl font-bold tabular-nums',
+                    'text-base sm:text-lg md:text-xl font-bold tabular-nums transition-all duration-300',
                     pulseAnimation && isUrgent && 'animate-pulse',
+                    themeClasses.text
                   )}
                 >
                   {unit.value}
                 </span>
               </div>
             </div>
-            <span className="text-xs mt-1 opacity-80">{unit.label}</span>
+            <span className={cn(
+              'text-xs mt-1 font-medium uppercase tracking-wider',
+              themeClasses.accent
+            )}>
+              {unit.label}
+            </span>
           </div>
         );
 
@@ -249,13 +290,32 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
               scale: pulseAnimation && isUrgent && unit.label === 'segundos' ? [1, 1.05, 1] : 1,
             }}
             transition={{ duration: 1, repeat: Infinity }}
+            whileHover={{ scale: 1.02, y: -2 }}
           >
-            <Card className={themeClasses.card}>
-              <CardContent className="p-3 sm:p-4 text-center">
-                <div className={cn('text-2xl sm:text-3xl md:text-4xl font-bold tabular-nums mb-1', themeClasses.text)}>
+            <Card className={cn(themeClasses.card, 'relative overflow-hidden group')}>
+              <div className="absolute inset-0 bg-gradient-to-br from-[#B89B7A]/5 to-[#E8D5C4]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <CardContent className="p-3 sm:p-4 text-center relative z-10">
+                <div className={cn(
+                  'text-2xl sm:text-3xl md:text-4xl font-bold tabular-nums mb-1 transition-all duration-300',
+                  themeClasses.text,
+                  pulseAnimation && isUrgent && 'animate-pulse drop-shadow-lg'
+                )}>
                   {unit.value.toString().padStart(2, '0')}
                 </div>
-                <div className={cn('text-xs sm:text-sm opacity-80', themeClasses.accent)}>{unit.label}</div>
+                <div className={cn(
+                  'text-xs sm:text-sm font-medium opacity-80 uppercase tracking-wider',
+                  themeClasses.accent
+                )}>
+                  {unit.label}
+                </div>
+                {/* Decorative accent */}
+                <div className={cn(
+                  'w-8 h-0.5 mx-auto mt-2 rounded-full bg-gradient-to-r transition-all duration-300',
+                  theme === 'elegant' ? 'from-[#B89B7A] to-[#E8D5C4]' : 
+                  theme === 'minimal' ? 'from-[#B89B7A]/50 to-[#E8D5C4]/50' :
+                  theme === 'neon' ? 'from-[#B89B7A] to-[#E8D5C4]' :
+                  'from-orange-200 to-yellow-200'
+                )} />
               </CardContent>
             </Card>
           </motion.div>
@@ -278,7 +338,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="flex items-center justify-center gap-2 text-red-600 font-bold"
+          className="flex items-center justify-center gap-2 text-red-600 font-bold bg-red-50 px-4 py-2 rounded-lg border border-red-200"
         >
           <AlertTriangle className="w-5 h-5" />
           Oferta Expirada!
@@ -291,7 +351,13 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
         <motion.div
           animate={{ scale: [1, 1.05, 1] }}
           transition={{ duration: 1, repeat: Infinity }}
-          className="flex items-center justify-center gap-2 text-red-500 font-bold"
+          className={cn(
+            'flex items-center justify-center gap-2 font-bold px-4 py-2 rounded-lg border',
+            theme === 'elegant' ? 'text-[#432818] bg-orange-100 border-orange-200' :
+            theme === 'minimal' ? 'text-[#432818] bg-[#E8D5C4] border-[#B89B7A]/30' :
+            theme === 'neon' ? 'text-orange-400 bg-orange-900/20 border-orange-400/30' :
+            'text-orange-200 bg-orange-900/20 border-orange-400/30'
+          )}
         >
           <Flame className="w-5 h-5" />
           Últimos minutos!
@@ -307,18 +373,27 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
     return (
       <div
         className={cn(
-          'bg-gray-100 p-4 sm:p-6 md:p-8 rounded-lg text-gray-500 flex flex-col items-center justify-center min-h-[150px] sm:min-h-[180px] md:min-h-[200px] cursor-pointer transition-all duration-200',
-          isSelected && 'ring-1 ring-gray-400/40 bg-gray-50/30',
-          !isSelected && 'hover:shadow-sm',
+          'bg-gradient-to-br from-[#E8D5C4] to-white p-4 sm:p-6 md:p-8 rounded-xl text-[#432818] flex flex-col items-center justify-center min-h-[150px] sm:min-h-[180px] md:min-h-[200px] cursor-pointer transition-all duration-300 border border-[#B89B7A]/20',
+          isSelected && 'ring-2 ring-[#B89B7A]/40 shadow-lg shadow-[#B89B7A]/10',
+          !isSelected && 'hover:shadow-lg hover:shadow-[#B89B7A]/5 hover:border-[#B89B7A]/30',
           className,
         )}
         onClick={onClick}
         data-block-id={block.id}
         data-block-type={block.type}
       >
-        <Timer className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 mb-3 sm:mb-4 opacity-50" />
-        <p className="text-center text-sm sm:text-base">Countdown Timer (Preview)</p>
-        <p className="text-xs sm:text-sm text-center mt-2">Configure o timer no painel de propriedades</p>
+        <div className="relative">
+          <Timer className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 mb-3 sm:mb-4 text-[#B89B7A]" />
+          <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#B89B7A] rounded-full animate-ping" />
+        </div>
+        <p className="text-center text-sm sm:text-base font-medium mb-2">Countdown Timer (Preview)</p>
+        <p className="text-xs sm:text-sm text-center text-[#432818]/70">Configure o timer no painel de propriedades</p>
+        <div className="mt-4 flex gap-2">
+          <div className="w-12 h-8 bg-[#B89B7A]/20 rounded border border-[#B89B7A]/30 flex items-center justify-center text-xs font-mono">00</div>
+          <div className="w-12 h-8 bg-[#B89B7A]/20 rounded border border-[#B89B7A]/30 flex items-center justify-center text-xs font-mono">00</div>
+          <div className="w-12 h-8 bg-[#B89B7A]/20 rounded border border-[#B89B7A]/30 flex items-center justify-center text-xs font-mono">00</div>
+          <div className="w-12 h-8 bg-[#B89B7A]/20 rounded border border-[#B89B7A]/30 flex items-center justify-center text-xs font-mono">00</div>
+        </div>
       </div>
     );
   }
@@ -326,10 +401,11 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
   return (
     <div
       className={cn(
-        'py-4 sm:py-6 md:py-8 px-4 cursor-pointer transition-all duration-200 w-full',
-        isSelected && 'ring-1 ring-gray-400/40 bg-gray-50/30',
-        !isSelected && 'hover:shadow-sm',
+        'py-4 sm:py-6 md:py-8 px-4 cursor-pointer transition-all duration-300 w-full rounded-xl relative overflow-hidden',
+        isSelected && 'ring-2 ring-[#B89B7A]/40 shadow-lg',
+        !isSelected && 'hover:shadow-lg hover:scale-[1.01]',
         themeClasses.container,
+        themeClasses.glow && `shadow-lg ${themeClasses.glow}`,
         className,
       )}
       onClick={onClick}
@@ -339,10 +415,19 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
         backgroundColor: backgroundColor !== '#ffffff' ? backgroundColor : undefined,
       }}
     >
+      {/* Decorative background pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/10 to-transparent" />
+        <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/5 rounded-full" />
+        <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-white/5 rounded-full" />
+      </div>
       {/* Header */}
-      <div className="text-center mb-6 sm:mb-8">
+      <div className="text-center mb-6 sm:mb-8 relative z-10">
         {title && (
-          <h2 className={cn('text-xl sm:text-2xl md:text-3xl font-bold mb-2', themeClasses.text)}>
+          <h2 className={cn(
+            'text-xl sm:text-2xl md:text-3xl font-bold mb-2 drop-shadow-sm',
+            themeClasses.text
+          )}>
             <InlineEditableText
               value={title}
               onChange={(value: string) => handlePropertyChange('title', value)}
@@ -352,7 +437,10 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
           </h2>
         )}
         {subtitle && (
-          <p className={cn('text-base sm:text-lg mb-3 sm:mb-4', themeClasses.accent)}>
+          <p className={cn(
+            'text-base sm:text-lg mb-3 sm:mb-4 font-medium',
+            themeClasses.accent
+          )}>
             <InlineEditableText
               value={subtitle}
               onChange={(value: string) => handlePropertyChange('subtitle', value)}
@@ -363,7 +451,13 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
         )}
 
         {urgencyText && !isExpired && (
-          <div className="flex items-center justify-center gap-2 mb-3 sm:mb-4">
+          <div className={cn(
+            'flex items-center justify-center gap-2 mb-3 sm:mb-4 px-4 py-2 rounded-lg',
+            theme === 'elegant' ? 'bg-white/20 backdrop-blur-sm' :
+            theme === 'minimal' ? 'bg-[#B89B7A]/10' :
+            theme === 'neon' ? 'bg-[#B89B7A]/20' :
+            'bg-white/20 backdrop-blur-sm'
+          )}>
             <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
             <span className="font-medium text-sm sm:text-base">{urgencyText}</span>
           </div>
@@ -389,15 +483,30 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
         {/* Progress Bar */}
         {showProgress && initialTotal > 0 && !isExpired && (
           <div className="mt-6 sm:mt-8">
-            <div className="w-full bg-white/20 rounded-full h-2 overflow-hidden">
+            <div className={cn(
+              'w-full rounded-full h-2 overflow-hidden shadow-inner',
+              theme === 'elegant' ? 'bg-white/30' :
+              theme === 'minimal' ? 'bg-[#B89B7A]/20' :
+              theme === 'neon' ? 'bg-[#432818]/50' :
+              'bg-white/20'
+            )}>
               <motion.div
-                className="h-full bg-white rounded-full"
+                className={cn(
+                  'h-full rounded-full',
+                  theme === 'elegant' ? 'bg-gradient-to-r from-[#B89B7A] to-[#E8D5C4]' :
+                  theme === 'minimal' ? 'bg-gradient-to-r from-[#B89B7A] to-[#432818]' :
+                  theme === 'neon' ? 'bg-gradient-to-r from-[#B89B7A] to-[#E8D5C4] shadow-[#B89B7A]/50 shadow-lg' :
+                  'bg-gradient-to-r from-white to-orange-200'
+                )}
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercentage}%` }}
                 transition={{ duration: 0.5 }}
               />
             </div>
-            <p className="text-center text-xs sm:text-sm mt-2 opacity-80">
+            <p className={cn(
+              'text-center text-xs sm:text-sm mt-2',
+              themeClasses.accent
+            )}>
               {Math.round(progressPercentage)}% da oferta já expirou
             </p>
           </div>
