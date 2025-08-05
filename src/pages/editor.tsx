@@ -13,6 +13,7 @@ import { useEditor } from "../hooks/useEditor";
 import { cn } from "../lib/utils";
 import { schemaDrivenFunnelService } from "../services/schemaDrivenFunnelService";
 import { normalizeBlock } from "../utils/blockTypeMapping";
+import { UniversalPropertiesPanel } from "../components/universal/UniversalPropertiesPanel";
 
 // Componente simples para renderizar blocos
 const SimpleBlockRenderer: React.FC<{

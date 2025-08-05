@@ -355,6 +355,32 @@ const getComponentProperties = (block: UnifiedBlock) => {
     },
     image: {
       src: {
+    divider: {
+      color: {
+        key: "color",
+        label: "Cor",
+        type: "color",
+        category: "style",
+        value: block.properties?.color || "#B89B7A",
+      },
+      thickness: {
+        key: "thickness",
+        label: "Espessura",
+        type: "number",
+        category: "style",
+        value: block.properties?.thickness || 2,
+        min: 1,
+        max: 10,
+      },
+      style: {
+        key: "style",
+        label: "Estilo",
+        type: "select",
+        category: "style",
+        value: block.properties?.style || "solid",
+        options: ["solid", "dashed", "dotted"],
+      },
+    },
         key: "src",
         label: "URL da Imagem",
         type: "text",
