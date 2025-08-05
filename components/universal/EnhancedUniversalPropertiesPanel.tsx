@@ -3,13 +3,27 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/use-toast";
 import { BlockDefinition, PropertyType, PropertyDefinition } from "@/types/editor";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUnifiedProperties } from "@/hooks/useUnifiedProperties";
 import { Separator } from "@/components/ui/separator";
@@ -48,10 +62,10 @@ export const EnhancedUniversalPropertiesPanel = ({
   // Função auxiliar para criar um esquema Zod para validação
   const createZodSchema = (properties: PropertyDefinition[]) => {
     const schemaObj: Record<string, any> = {};
-    
-    properties.forEach((prop) => {
+
+    properties.forEach(prop => {
       let fieldSchema;
-      
+
       switch (prop.type) {
         case PropertyType.TEXT:
         case PropertyType.TEXTAREA:
@@ -75,10 +89,10 @@ export const EnhancedUniversalPropertiesPanel = ({
         default:
           fieldSchema = z.any().optional();
       }
-      
+
       schemaObj[prop.id] = fieldSchema;
     });
-    
+
     return z.object(schemaObj);
   };
 
@@ -151,7 +165,7 @@ export const EnhancedUniversalPropertiesPanel = ({
             )}
           />
         );
-      
+
       case PropertyType.TEXTAREA:
         return (
           <FormField
@@ -170,7 +184,7 @@ export const EnhancedUniversalPropertiesPanel = ({
             )}
           />
         );
-      
+
       case PropertyType.NUMBER:
         return (
           <FormField
@@ -181,10 +195,10 @@ export const EnhancedUniversalPropertiesPanel = ({
               <FormItem>
                 <FormLabel>{property.label}</FormLabel>
                 <FormControl>
-                  <Input 
-                    type="number" 
-                    {...field} 
-                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  <Input
+                    type="number"
+                    {...field}
+                    onChange={e => field.onChange(Number(e.target.value))}
                     value={field.value === undefined ? "" : field.value}
                   />
                 </FormControl>
@@ -194,7 +208,7 @@ export const EnhancedUniversalPropertiesPanel = ({
             )}
           />
         );
-      
+
       case PropertyType.BOOLEAN:
         return (
           <FormField
@@ -205,20 +219,19 @@ export const EnhancedUniversalPropertiesPanel = ({
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                 <div className="space-y-0.5">
                   <FormLabel>{property.label}</FormLabel>
-                  {property.description && <FormDescription>{property.description}</FormDescription>}
+                  {property.description && (
+                    <FormDescription>{property.description}</FormDescription>
+                  )}
                 </div>
                 <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
+                  <Switch checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
         );
-      
+
       case PropertyType.COLOR:
         return (
           <FormField
@@ -236,7 +249,7 @@ export const EnhancedUniversalPropertiesPanel = ({
                     type="color"
                     className="w-12 p-1 h-10"
                     value={field.value || "#000000"}
-                    onChange={(e) => field.onChange(e.target.value)}
+                    onChange={e => field.onChange(e.target.value)}
                   />
                 </div>
                 {property.description && <FormDescription>{property.description}</FormDescription>}
@@ -245,7 +258,7 @@ export const EnhancedUniversalPropertiesPanel = ({
             )}
           />
         );
-      
+
       case PropertyType.SELECT:
         return (
           <FormField
@@ -262,7 +275,7 @@ export const EnhancedUniversalPropertiesPanel = ({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {property.options?.map((option) => (
+                    {property.options?.map(option => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
                       </SelectItem>
@@ -305,10 +318,10 @@ export const EnhancedUniversalPropertiesPanel = ({
               <FormItem>
                 <FormLabel>{property.label}</FormLabel>
                 <FormControl>
-                  <Input 
-                    type="number" 
-                    {...field} 
-                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  <Input
+                    type="number"
+                    {...field}
+                    onChange={e => field.onChange(Number(e.target.value))}
                     value={field.value === undefined ? "" : field.value}
                   />
                 </FormControl>
@@ -337,7 +350,7 @@ export const EnhancedUniversalPropertiesPanel = ({
             )}
           />
         );
-      
+
       default:
         return null;
     }
@@ -359,7 +372,7 @@ export const EnhancedUniversalPropertiesPanel = ({
           </Button>
         )}
       </div>
-      
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -369,34 +382,34 @@ export const EnhancedUniversalPropertiesPanel = ({
               {hasQuizProperties && <TabsTrigger value="quiz">Quiz</TabsTrigger>}
               {hasAdvancedProperties && <TabsTrigger value="advanced">Avançado</TabsTrigger>}
             </TabsList>
-            
+
             {hasBasicProperties && (
               <TabsContent value="basic" className="space-y-4 pt-4">
                 {basicProperties.map(renderField)}
               </TabsContent>
             )}
-            
+
             {hasStyleProperties && (
               <TabsContent value="style" className="space-y-4 pt-4">
                 {styleProperties.map(renderField)}
               </TabsContent>
             )}
-            
+
             {hasQuizProperties && (
               <TabsContent value="quiz" className="space-y-4 pt-4">
                 {quizProperties.map(renderField)}
               </TabsContent>
             )}
-            
+
             {hasAdvancedProperties && (
               <TabsContent value="advanced" className="space-y-4 pt-4">
                 {advancedProperties.map(renderField)}
               </TabsContent>
             )}
           </Tabs>
-          
+
           <Separator />
-          
+
           <div className="flex justify-end">
             <Button type="submit">Salvar alterações</Button>
           </div>

@@ -298,15 +298,15 @@ export const useUnifiedProperties = (
         type: PropertyType.TEXT,
         label: "ID do Componente",
         category: "advanced",
-        required: true
+        required: true,
       },
       {
         id: "visible",
         type: PropertyType.BOOLEAN,
         label: "Visível",
         category: "basic",
-        defaultValue: true
-      }
+        defaultValue: true,
+      },
     ];
 
     // Propriedades específicas por tipo de bloco
@@ -321,7 +321,7 @@ export const useUnifiedProperties = (
             label: "Conteúdo",
             category: "basic",
             required: true,
-            defaultValue: "Texto exemplo"
+            defaultValue: "Texto exemplo",
           },
           {
             id: "fontSize",
@@ -331,15 +331,15 @@ export const useUnifiedProperties = (
             defaultValue: 16,
             min: 12,
             max: 48,
-            step: 1
+            step: 1,
           },
           {
             id: "textColor",
             type: PropertyType.COLOR,
             label: "Cor do Texto",
             category: "style",
-            defaultValue: BRAND_COLORS.textPrimary
-          }
+            defaultValue: BRAND_COLORS.textPrimary,
+          },
         ];
 
       case "heading":
@@ -352,7 +352,7 @@ export const useUnifiedProperties = (
             label: "Título",
             category: "basic",
             required: true,
-            defaultValue: "Título exemplo"
+            defaultValue: "Título exemplo",
           },
           {
             id: "level",
@@ -366,8 +366,8 @@ export const useUnifiedProperties = (
               { value: "h3", label: "H3" },
               { value: "h4", label: "H4" },
               { value: "h5", label: "H5" },
-              { value: "h6", label: "H6" }
-            ]
+              { value: "h6", label: "H6" },
+            ],
           },
           {
             id: "fontSize",
@@ -377,15 +377,15 @@ export const useUnifiedProperties = (
             defaultValue: 24,
             min: 16,
             max: 64,
-            step: 1
+            step: 1,
           },
           {
             id: "textColor",
             type: PropertyType.COLOR,
             label: "Cor do Texto",
             category: "style",
-            defaultValue: BRAND_COLORS.textPrimary
-          }
+            defaultValue: BRAND_COLORS.textPrimary,
+          },
         ];
 
       case "image":
@@ -398,28 +398,28 @@ export const useUnifiedProperties = (
             label: "URL da Imagem",
             category: "basic",
             required: true,
-            defaultValue: "https://via.placeholder.com/400x300"
+            defaultValue: "https://via.placeholder.com/400x300",
           },
           {
             id: "alt",
             type: PropertyType.TEXT,
             label: "Texto Alternativo",
             category: "basic",
-            defaultValue: "Descrição da imagem"
+            defaultValue: "Descrição da imagem",
           },
           {
             id: "width",
             type: PropertyType.NUMBER,
             label: "Largura",
             category: "style",
-            defaultValue: 400
+            defaultValue: 400,
           },
           {
             id: "height",
             type: PropertyType.NUMBER,
             label: "Altura",
             category: "style",
-            defaultValue: 300
+            defaultValue: 300,
           },
           {
             id: "borderRadius",
@@ -428,8 +428,8 @@ export const useUnifiedProperties = (
             category: "style",
             defaultValue: 0,
             min: 0,
-            max: 50
-          }
+            max: 50,
+          },
         ];
 
       case "button":
@@ -442,28 +442,28 @@ export const useUnifiedProperties = (
             label: "Texto do Botão",
             category: "basic",
             required: true,
-            defaultValue: "Clique Aqui"
+            defaultValue: "Clique Aqui",
           },
           {
             id: "url",
             type: PropertyType.TEXT,
             label: "URL",
             category: "basic",
-            defaultValue: "#"
+            defaultValue: "#",
           },
           {
             id: "backgroundColor",
             type: PropertyType.COLOR,
             label: "Cor de Fundo",
             category: "style",
-            defaultValue: BRAND_COLORS.primary
+            defaultValue: BRAND_COLORS.primary,
           },
           {
             id: "textColor",
             type: PropertyType.COLOR,
             label: "Cor do Texto",
             category: "style",
-            defaultValue: "#FFFFFF"
+            defaultValue: "#FFFFFF",
           },
           {
             id: "borderRadius",
@@ -472,8 +472,8 @@ export const useUnifiedProperties = (
             category: "style",
             defaultValue: 4,
             min: 0,
-            max: 50
-          }
+            max: 50,
+          },
         ];
 
       case "quiz-question-inline":
@@ -485,28 +485,28 @@ export const useUnifiedProperties = (
             label: "Título da Pergunta",
             category: "basic",
             required: true,
-            defaultValue: "Sua pergunta aqui"
+            defaultValue: "Sua pergunta aqui",
           },
           {
             id: "description",
             type: PropertyType.TEXTAREA,
             label: "Descrição",
             category: "basic",
-            defaultValue: "Descrição opcional da pergunta"
+            defaultValue: "Descrição opcional da pergunta",
           },
           {
             id: "required",
             type: PropertyType.BOOLEAN,
             label: "Resposta Obrigatória",
             category: "quiz",
-            defaultValue: true
+            defaultValue: true,
           },
           {
             id: "autoAdvance",
             type: PropertyType.BOOLEAN,
             label: "Avançar Automaticamente",
             category: "quiz",
-            defaultValue: false
+            defaultValue: false,
           },
           {
             id: "optionA",
@@ -514,21 +514,21 @@ export const useUnifiedProperties = (
             label: "Opção A",
             category: "basic",
             required: true,
-            defaultValue: "Opção A"
+            defaultValue: "Opção A",
           },
           {
             id: "optionAScore",
             type: PropertyType.OPTION_SCORE,
             label: "Pontuação Opção A",
             category: "quiz",
-            defaultValue: 0
+            defaultValue: 0,
           },
           {
             id: "optionACategory",
             type: PropertyType.OPTION_CATEGORY,
             label: "Categoria Opção A",
             category: "quiz",
-            defaultValue: ""
+            defaultValue: "",
           },
           {
             id: "optionB",
@@ -536,148 +536,148 @@ export const useUnifiedProperties = (
             label: "Opção B",
             category: "basic",
             required: true,
-            defaultValue: "Opção B"
+            defaultValue: "Opção B",
           },
           {
             id: "optionBScore",
             type: PropertyType.OPTION_SCORE,
             label: "Pontuação Opção B",
             category: "quiz",
-            defaultValue: 0
+            defaultValue: 0,
           },
           {
             id: "optionBCategory",
             type: PropertyType.OPTION_CATEGORY,
             label: "Categoria Opção B",
             category: "quiz",
-            defaultValue: ""
+            defaultValue: "",
           },
           {
             id: "optionC",
             type: PropertyType.TEXT,
             label: "Opção C",
             category: "basic",
-            defaultValue: "Opção C"
+            defaultValue: "Opção C",
           },
           {
             id: "optionCScore",
             type: PropertyType.OPTION_SCORE,
             label: "Pontuação Opção C",
             category: "quiz",
-            defaultValue: 0
+            defaultValue: 0,
           },
           {
             id: "optionCCategory",
             type: PropertyType.OPTION_CATEGORY,
             label: "Categoria Opção C",
             category: "quiz",
-            defaultValue: ""
+            defaultValue: "",
           },
           {
             id: "optionD",
             type: PropertyType.TEXT,
             label: "Opção D",
             category: "basic",
-            defaultValue: "Opção D"
+            defaultValue: "Opção D",
           },
           {
             id: "optionDScore",
             type: PropertyType.OPTION_SCORE,
             label: "Pontuação Opção D",
             category: "quiz",
-            defaultValue: 0
+            defaultValue: 0,
           },
           {
             id: "optionDCategory",
             type: PropertyType.OPTION_CATEGORY,
             label: "Categoria Opção D",
             category: "quiz",
-            defaultValue: ""
+            defaultValue: "",
           },
           {
             id: "optionE",
             type: PropertyType.TEXT,
             label: "Opção E",
             category: "basic",
-            defaultValue: ""
+            defaultValue: "",
           },
           {
             id: "optionEScore",
             type: PropertyType.OPTION_SCORE,
             label: "Pontuação Opção E",
             category: "quiz",
-            defaultValue: 0
+            defaultValue: 0,
           },
           {
             id: "optionECategory",
             type: PropertyType.OPTION_CATEGORY,
             label: "Categoria Opção E",
             category: "quiz",
-            defaultValue: ""
+            defaultValue: "",
           },
           {
             id: "optionF",
             type: PropertyType.TEXT,
             label: "Opção F",
             category: "basic",
-            defaultValue: ""
+            defaultValue: "",
           },
           {
             id: "optionFScore",
             type: PropertyType.OPTION_SCORE,
             label: "Pontuação Opção F",
             category: "quiz",
-            defaultValue: 0
+            defaultValue: 0,
           },
           {
             id: "optionFCategory",
             type: PropertyType.OPTION_CATEGORY,
             label: "Categoria Opção F",
             category: "quiz",
-            defaultValue: ""
+            defaultValue: "",
           },
           {
             id: "optionG",
             type: PropertyType.TEXT,
             label: "Opção G",
             category: "basic",
-            defaultValue: ""
+            defaultValue: "",
           },
           {
             id: "optionGScore",
             type: PropertyType.OPTION_SCORE,
             label: "Pontuação Opção G",
             category: "quiz",
-            defaultValue: 0
+            defaultValue: 0,
           },
           {
             id: "optionGCategory",
             type: PropertyType.OPTION_CATEGORY,
             label: "Categoria Opção G",
             category: "quiz",
-            defaultValue: ""
+            defaultValue: "",
           },
           {
             id: "optionH",
             type: PropertyType.TEXT,
             label: "Opção H",
             category: "basic",
-            defaultValue: ""
+            defaultValue: "",
           },
           {
             id: "optionHScore",
             type: PropertyType.OPTION_SCORE,
             label: "Pontuação Opção H",
             category: "quiz",
-            defaultValue: 0
+            defaultValue: 0,
           },
           {
             id: "optionHCategory",
             type: PropertyType.OPTION_CATEGORY,
             label: "Categoria Opção H",
             category: "quiz",
-            defaultValue: ""
-          }
+            defaultValue: "",
+          },
         ];
 
       default:

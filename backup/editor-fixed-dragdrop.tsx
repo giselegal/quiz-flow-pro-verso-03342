@@ -214,7 +214,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                 <EnhancedUniversalPropertiesPanel
                   selectedBlock={selectedBlock}
                   blockDefinition={getBlockDefinitionForType(selectedBlock.type)}
-                  onUpdate={(updatedBlock) => {
+                  onUpdate={updatedBlock => {
                     updateBlock(updatedBlock.id, { content: updatedBlock.properties });
                   }}
                   onClose={() => setSelectedBlockId(null)}

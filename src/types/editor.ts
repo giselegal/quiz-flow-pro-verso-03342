@@ -10,7 +10,7 @@ export enum PropertyType {
   RANGE = "range",
   IMAGE = "image",
   OPTION_SCORE = "option_score",
-  OPTION_CATEGORY = "option_category"
+  OPTION_CATEGORY = "option_category",
 }
 
 export interface PropertyDefinition {
