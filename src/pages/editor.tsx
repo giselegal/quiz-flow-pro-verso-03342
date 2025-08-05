@@ -7,13 +7,13 @@ import { LoadingSpinner } from "../components/ui/loading-spinner";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../components/ui/resizable";
 import { ScrollArea } from "../components/ui/scroll-area";
 import { toast } from "../components/ui/use-toast";
+import { UniversalPropertiesPanel } from "../components/universal/UniversalPropertiesPanel";
 import { useAutoSaveWithDebounce } from "../hooks/editor/useAutoSaveWithDebounce";
 import { useEditorPersistence } from "../hooks/editor/useEditorPersistence";
 import { useEditor } from "../hooks/useEditor";
 import { cn } from "../lib/utils";
 import { schemaDrivenFunnelService } from "../services/schemaDrivenFunnelService";
 import { normalizeBlock } from "../utils/blockTypeMapping";
-import { UniversalPropertiesPanel } from "../components/universal/UniversalPropertiesPanel";
 
 // Componente simples para renderizar blocos
 const SimpleBlockRenderer: React.FC<{
@@ -439,8 +439,8 @@ const EditorPage: React.FC = () => {
             alt: "Logo Gisele Galvão",
             width: 120,
             height: 120,
-            className: "mx-auto mb-4"
-          }
+            className: "mx-auto mb-4",
+          },
         },
         {
           id: "step01-progress-text",
@@ -449,61 +449,62 @@ const EditorPage: React.FC = () => {
             content: "Progresso: 0% • Etapa 1 de 21",
             fontSize: "text-sm",
             textAlign: "text-center",
-            color: "#8F7A6A"
-          }
+            color: "#8F7A6A",
+          },
         },
         {
-          id: "step01-decorative-divider", 
+          id: "step01-decorative-divider",
           type: "divider",
           properties: {
             color: "#B89B7A",
             thickness: 4,
-            style: "solid"
-          }
+            style: "solid",
+          },
         },
         {
           id: "step01-main-heading",
-          type: "heading", 
+          type: "heading",
           properties: {
             content: "Chega de um guarda-roupa lotado e da sensação de que nada combina com você.",
             level: 1,
             fontSize: "text-3xl",
             fontWeight: "font-bold",
             textAlign: "text-center",
-            color: "#432818"
-          }
+            color: "#432818",
+          },
         },
         {
           id: "step01-hero-image",
           type: "image",
           properties: {
             src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.webp",
-            alt: "Transforme seu guarda-roupa", 
+            alt: "Transforme seu guarda-roupa",
             width: 600,
             height: 400,
-            className: "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg"
-          }
+            className: "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
+          },
         },
         {
           id: "step01-motivation-text",
           type: "text",
           properties: {
-            content: "Em poucos minutos, descubra seu <strong style=\"color: #B89B7A;\">Estilo Predominante</strong> — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
+            content:
+              'Em poucos minutos, descubra seu <strong style="color: #B89B7A;">Estilo Predominante</strong> — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
             fontSize: "text-xl",
             textAlign: "text-center",
-            color: "#432818"
-          }
+            color: "#432818",
+          },
         },
         {
           id: "step01-name-label",
-          type: "text", 
+          type: "text",
           properties: {
             content: "COMO VOCÊ GOSTARIA DE SER CHAMADA?",
             fontSize: "text-lg",
             fontWeight: "font-bold",
             textAlign: "text-center",
-            color: "#432818"
-          }
+            color: "#432818",
+          },
         },
         {
           id: "step01-name-placeholder",
@@ -515,8 +516,8 @@ const EditorPage: React.FC = () => {
             color: "#8F7A6A",
             backgroundColor: "#F9F7F5",
             borderRadius: "rounded-lg",
-            border: "2px dashed #B89B7A"
-          }
+            border: "2px dashed #B89B7A",
+          },
         },
         {
           id: "step01-cta-button",
@@ -528,19 +529,20 @@ const EditorPage: React.FC = () => {
             backgroundColor: "#B89B7A",
             textColor: "#ffffff",
             textAlign: "text-center",
-            borderRadius: "rounded-full"
-          }
+            borderRadius: "rounded-full",
+          },
         },
         {
           id: "step01-legal-text",
           type: "text",
           properties: {
-            content: "🛡️ Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade.<br><br>© 2025 Gisele Galvão - Todos os direitos reservados",
+            content:
+              "🛡️ Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade.<br><br>© 2025 Gisele Galvão - Todos os direitos reservados",
             fontSize: "text-xs",
             textAlign: "text-center",
-            color: "#6B7280"
-          }
-        }
+            color: "#6B7280",
+          },
+        },
       ];
 
       let addedCount = 0;
@@ -876,7 +878,7 @@ const EditorPage: React.FC = () => {
                       <Download className="w-4 h-4 mr-2" />
                       Carregar Template
                     </Button>
-                    
+
                     <Button
                       onClick={handleLoadStep1}
                       className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700"
@@ -970,14 +972,14 @@ const EditorPage: React.FC = () => {
                                 <Download className="w-4 h-4 mr-2" />
                                 Carregar Template Completo
                               </Button>
-                              
+
                               <Button
                                 onClick={handleLoadStep1}
                                 className="w-full mb-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700"
                               >
                                 🚀 Carregar Etapa 1 do Quiz
                               </Button>
-                              
+
                               <p className="text-sm text-gray-500 text-center">
                                 Ou adicione componentes da barra lateral
                               </p>
