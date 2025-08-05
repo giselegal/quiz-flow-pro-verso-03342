@@ -68,7 +68,10 @@ export const TextInlineBlock: React.FC<TextInlineBlockProps> = ({
   // CORREÇÃO: Aceitar content como string OU objeto
   // Se content é string, usar diretamente
   // Se content é objeto, usar content.text
-  const text = (typeof content === 'string' ? content : content.text) || directText || "Digite seu texto aqui...";
+  const text =
+    (typeof content === "string" ? content : content.text) ||
+    directText ||
+    "Digite seu texto aqui...";
   const variant = styleProps.variant || "default";
 
   // Definir estilos baseados na variante

@@ -423,6 +423,157 @@ const EditorPage: React.FC = () => {
     }
   }, [addBlock, updateBlock]);
 
+  // ===== CARREGAR ETAPA 1 =====
+  const handleLoadStep1 = useCallback(async () => {
+    try {
+      setSelectedComponentId(null);
+
+      console.log("🚀 Carregando Etapa 1 do Quiz...");
+
+      const step1Blocks = [
+        {
+          id: "step01-logo-image",
+          type: "image",
+          properties: {
+            src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+            alt: "Logo Gisele Galvão",
+            width: 120,
+            height: 120,
+            className: "mx-auto mb-4"
+          }
+        },
+        {
+          id: "step01-progress-text",
+          type: "text",
+          properties: {
+            content: "Progresso: 0% • Etapa 1 de 21",
+            fontSize: "text-sm",
+            textAlign: "text-center",
+            color: "#8F7A6A"
+          }
+        },
+        {
+          id: "step01-decorative-divider", 
+          type: "divider",
+          properties: {
+            color: "#B89B7A",
+            thickness: 4,
+            style: "solid"
+          }
+        },
+        {
+          id: "step01-main-heading",
+          type: "heading", 
+          properties: {
+            content: "Chega de um guarda-roupa lotado e da sensação de que nada combina com você.",
+            level: 1,
+            fontSize: "text-3xl",
+            fontWeight: "font-bold",
+            textAlign: "text-center",
+            color: "#432818"
+          }
+        },
+        {
+          id: "step01-hero-image",
+          type: "image",
+          properties: {
+            src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.webp",
+            alt: "Transforme seu guarda-roupa", 
+            width: 600,
+            height: 400,
+            className: "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg"
+          }
+        },
+        {
+          id: "step01-motivation-text",
+          type: "text",
+          properties: {
+            content: "Em poucos minutos, descubra seu <strong style=\"color: #B89B7A;\">Estilo Predominante</strong> — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
+            fontSize: "text-xl",
+            textAlign: "text-center",
+            color: "#432818"
+          }
+        },
+        {
+          id: "step01-name-label",
+          type: "text", 
+          properties: {
+            content: "COMO VOCÊ GOSTARIA DE SER CHAMADA?",
+            fontSize: "text-lg",
+            fontWeight: "font-bold",
+            textAlign: "text-center",
+            color: "#432818"
+          }
+        },
+        {
+          id: "step01-name-placeholder",
+          type: "text",
+          properties: {
+            content: "[CAMPO DE NOME - Digite seu nome aqui...]",
+            fontSize: "text-base",
+            textAlign: "text-center",
+            color: "#8F7A6A",
+            backgroundColor: "#F9F7F5",
+            borderRadius: "rounded-lg",
+            border: "2px dashed #B89B7A"
+          }
+        },
+        {
+          id: "step01-cta-button",
+          type: "button",
+          properties: {
+            text: "✨ Quero Descobrir meu Estilo Agora! ✨",
+            variant: "primary",
+            size: "large",
+            backgroundColor: "#B89B7A",
+            textColor: "#ffffff",
+            textAlign: "text-center",
+            borderRadius: "rounded-full"
+          }
+        },
+        {
+          id: "step01-legal-text",
+          type: "text",
+          properties: {
+            content: "🛡️ Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade.<br><br>© 2025 Gisele Galvão - Todos os direitos reservados",
+            fontSize: "text-xs",
+            textAlign: "text-center",
+            color: "#6B7280"
+          }
+        }
+      ];
+
+      let addedCount = 0;
+      for (const block of step1Blocks) {
+        try {
+          const normalizedBlock = normalizeBlock(block);
+          console.log(`📦 Adicionando bloco Etapa 1 ${addedCount + 1}:`, normalizedBlock.type);
+
+          const newBlockId = addBlock(normalizedBlock.type as any);
+          addedCount++;
+
+          setTimeout(() => {
+            updateBlock(newBlockId, normalizedBlock.properties);
+          }, 100);
+        } catch (blockError) {
+          console.warn(`⚠️ Erro ao adicionar bloco ${block.type}:`, blockError);
+        }
+      }
+
+      toast({
+        title: "Etapa 1 Carregada! 🎉",
+        description: `${addedCount} blocos da Etapa 1 adicionados com sucesso`,
+      });
+    } catch (error) {
+      console.error("❌ Erro ao carregar Etapa 1:", error);
+      toast({
+        title: "Erro",
+        description: "Erro ao carregar Etapa 1",
+        variant: "destructive",
+      });
+    }
+  }, [addBlock, updateBlock]);
+
   // ===== COMPONENTE FILTRADO DE COMPONENTES =====
   const filteredBlocks = AVAILABLE_BLOCKS.filter(block => {
     const matchesSearch =
@@ -725,6 +876,14 @@ const EditorPage: React.FC = () => {
                       <Download className="w-4 h-4 mr-2" />
                       Carregar Template
                     </Button>
+                    
+                    <Button
+                      onClick={handleLoadStep1}
+                      className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700"
+                      size="sm"
+                    >
+                      🚀 Carregar Etapa 1
+                    </Button>
                   </div>
 
                   {/* Components Grid */}
@@ -811,6 +970,14 @@ const EditorPage: React.FC = () => {
                                 <Download className="w-4 h-4 mr-2" />
                                 Carregar Template Completo
                               </Button>
+                              
+                              <Button
+                                onClick={handleLoadStep1}
+                                className="w-full mb-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700"
+                              >
+                                🚀 Carregar Etapa 1 do Quiz
+                              </Button>
+                              
                               <p className="text-sm text-gray-500 text-center">
                                 Ou adicione componentes da barra lateral
                               </p>
