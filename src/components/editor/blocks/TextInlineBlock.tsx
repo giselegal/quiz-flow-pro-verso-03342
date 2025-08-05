@@ -1,6 +1,37 @@
 import React, { useCallback, useMemo } from "react";
 import { cn } from "../../../lib/utils";
-import type { BlockComponentProps } from "../../../types/blocks";
+import type { BlockComponentP  // Verificar se o conte    console.log("🐛 TextInlineBlock DEBUG COMPLETO:", {
+      blockId: block?.id,
+      blockType: block?.type,
+      rawContent: personalizedContent,
+      contentLength: personalizedContent?.length,
+      hasHtml,
+      hasSpanTag,
+      hasStrongTag,
+      willRenderAsHTML: hasHtml || hasSpanTag || hasStrongTag,
+      contentPreview: personalizedContent?.substring(0, 200),
+      fullContent: personalizedContent, // Conteúdo completo para análise
+      blockProperties: block?.properties,
+    }); HTML
+  const isHtmlContent = useMemo(() => {
+    const hasHtml = personalizedContent?.includes("<") && personalizedContent?.includes(">");
+    const hasSpanTag = personalizedContent?.includes("<span");
+    const hasStrongTag = personalizedContent?.includes("<strong");
+    
+    console.log("🐛 TextInlineBlock DEBUG COMPLETO:", {
+      blockId: block?.id,
+      rawContent: personalizedContent,
+      contentLength: personalizedContent?.length,
+      hasHtml,
+      hasSpanTag,
+      hasStrongTag,
+      willRenderAsHTML: hasHtml || hasSpanTag || hasStrongTag,
+      contentPreview: personalizedContent?.substring(0, 200),
+      fullContent: personalizedContent, // Adicionar conteúdo completo para debug
+    });
+    
+    return hasHtml || hasSpanTag || hasStrongTag;
+  }, [personalizedContent, block?.id]);../types/blocks";
 
 /**
  * TextInlineBlock - Componente modular inline horizontal
@@ -124,12 +155,21 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   // Verificar se o conteúdo contém HTML
   const isHtmlContent = useMemo(() => {
     const hasHtml = personalizedContent?.includes("<") && personalizedContent?.includes(">");
-    console.log("🔍 TextInlineBlock:", {
+    const hasSpanTag = personalizedContent?.includes("<span");
+    const hasStrongTag = personalizedContent?.includes("<strong");
+    
+    console.log("� TextInlineBlock DEBUG COMPLETO:", {
       blockId: block?.id,
+      rawContent: personalizedContent,
+      contentLength: personalizedContent?.length,
       hasHtml,
-      contentPreview: personalizedContent?.substring(0, 100) + "...",
+      hasSpanTag,
+      hasStrongTag,
+      willRenderAsHTML: hasHtml || hasSpanTag || hasStrongTag,
+      contentPreview: personalizedContent?.substring(0, 200) + "...",
     });
-    return hasHtml;
+    
+    return hasHtml || hasSpanTag || hasStrongTag;
   }, [personalizedContent, block?.id]);
 
   // ES7+ useCallback para otimização de re-renders
@@ -188,8 +228,8 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         }}
         // ES7+ Conditional data attributes
       >
-        {isHtmlContent || personalizedContent?.includes('<') ? (
-          // Renderiza como HTML se detectar qualquer tag ou se isHtmlContent for true
+        {isHtmlContent ? (
+          // Renderiza como HTML se detectar qualquer tag HTML
           <div
             dangerouslySetInnerHTML={{ __html: personalizedContent }}
             style={{ display: "contents" }}
