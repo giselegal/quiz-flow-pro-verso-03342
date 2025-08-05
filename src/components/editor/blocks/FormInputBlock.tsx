@@ -23,6 +23,15 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
   funnelId = 'default-quiz-funnel-21-steps',
   onValueChange,
 }) => {
+  // Verificação de segurança para evitar erro de undefined
+  if (!block) {
+    return (
+      <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
+        <p className="text-red-600">Erro: Bloco não encontrado</p>
+      </div>
+    );
+  }
+
   const {
     label = 'Campo de Input',
     placeholder = 'Digite aqui...',
@@ -37,12 +46,12 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
 
   // Carregar valor salvo se existir
   useEffect(() => {
-    const savedValue = userResponseService.getResponse(block.id);
+    const savedValue = userResponseService.getResponse(block?.id || '');
     if (savedValue) {
       setValue(savedValue);
       setIsValid(true);
     }
-  }, [block.id]);
+  }, [block?.id]);
 
   const handleInputChange = async (newValue: string) => {
     setValue(newValue);
@@ -52,7 +61,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
     // Disparar evento customizado para outros componentes sempre
     window.dispatchEvent(
       new CustomEvent('quiz-input-change', {
-        detail: { blockId: block.id, value: newValue.trim(), valid },
+        detail: { blockId: block?.id || '', value: newValue.trim(), valid },
       }),
     );
 
@@ -60,10 +69,10 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
     if (valid && newValue.trim()) {
       try {
         // Salvar resposta específica
-        userResponseService.saveStepResponse(block.id, newValue.trim());
+        userResponseService.saveStepResponse(block?.id || '', newValue.trim());
 
         // Se for o campo de nome, salvar também como nome do usuário
-        if (name === 'userName' || block.id === 'intro-name-input') {
+        if (name === 'userName' || block?.id === 'intro-name-input') {
           userResponseService.saveUserName('userId', newValue.trim());
           console.log('✅ Nome do usuário salvo:', newValue.trim());
         }
@@ -90,8 +99,8 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
         ${className}
       `}
       onClick={onClick}
-      data-block-id={block.id}
-      data-block-type={block.type}
+      data-block-id={block?.id}
+      data-block-type={block?.type}
     >
       <div className={`space-y-3 ${fullWidth ? 'w-full' : 'w-auto'}`}>
         <div className="flex items-center gap-2">

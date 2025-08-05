@@ -885,8 +885,6 @@ const EditorPage: React.FC = () => {
                     </select>
                   </div>
 
-
-
                   {/* Components Grid */}
                   <div className="p-2 space-y-1">
                     {filteredBlocks.map(block => (
