@@ -55,6 +55,8 @@ export interface QuestionOption {
   isCorrect?: boolean;
   weight?: number;
   category?: string;
+  points?: number;
+  styleCategory?: string;
 }
 
 // Interface para depoimentos

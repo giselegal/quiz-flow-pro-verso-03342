@@ -47,6 +47,7 @@ import QuizIntroHeaderBlock from "../components/editor/blocks/QuizIntroHeaderBlo
 // Componentes de Quiz - para compatibilidade com DynamicStepTemplate
 import OptionsGridBlock from "../components/editor/blocks/OptionsGridBlock";
 import QuizProgressBlock from "../components/editor/blocks/QuizProgressBlock";
+import QuizResultsEditor from "../components/editor/blocks/QuizResultsEditor";
 import QuizStepBlock from "../components/editor/blocks/QuizStepBlock";
 
 // === REGISTRY PRINCIPAL - SEM DUPLICATAS ===
@@ -83,6 +84,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   "quiz-step": QuizStepBlock,
   "quiz-progress": QuizProgressBlock,
   "options-grid": OptionsGridBlock,
+  "quiz-results": QuizResultsEditor,
 
   // Form Components
   "form-input": FormInputBlock,

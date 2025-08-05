@@ -1,13 +1,12 @@
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { getOptimizedContainerClasses } from "@/config/containerConfig";
+import React, { useState } from "react";
 import {
+  Alignment,
   BlockComponentProps,
+  InteractionCallbacks,
   ProgressConfig,
   QuestionOption,
-  Alignment,
-  InteractionCallbacks,
 } from "./types";
 
 /**
@@ -51,6 +50,7 @@ export interface QuizQuestionProps extends BlockComponentProps, InteractionCallb
   optionLayout?: "vertical" | "horizontal" | "grid";
   optionStyle?: "card" | "button" | "radio" | "checkbox";
   showLetters?: boolean; // A, B, C, D
+  optionImageSize?: "small" | "medium" | "large";
 
   // Progresso
   progressConfig?: ProgressConfig;
@@ -91,6 +91,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   optionLayout = "vertical",
   optionStyle = "card",
   showLetters = true,
+  optionImageSize = "medium",
 
   // Progresso
   progressConfig,
@@ -126,7 +127,14 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   const layoutClasses = {
     vertical: "flex flex-col space-y-3",
     horizontal: "flex flex-wrap gap-3",
-    grid: deviceView === "mobile" ? "grid grid-cols-1 gap-3" : "grid grid-cols-2 gap-3",
+    grid: deviceView === "mobile" ? "grid grid-cols-1 gap-3" : "grid grid-cols-2 gap-4",
+  };
+
+  // Classes para tamanhos de imagem
+  const imageSizeClasses = {
+    small: "h-24",
+    medium: "h-32",
+    large: "h-40",
   };
 
   // Classes de alinhamento
@@ -284,7 +292,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
               <img
                 src={option.imageUrl}
                 alt={option.text}
-                className="w-full h-32 object-cover rounded-lg"
+                className={`w-full ${imageSizeClasses[(optionImageSize || "medium") as keyof typeof imageSizeClasses]} object-cover rounded-lg`}
                 loading="lazy"
               />
             </div>

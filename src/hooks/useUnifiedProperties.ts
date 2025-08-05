@@ -968,6 +968,52 @@ export const useUnifiedProperties = (
     [] // Sem dependências, pois `currentBlock` é passado como argumento
   );
 
+  // Adicionar suporte ao bloco de resultados de quiz
+  const generateResultsBlockProperties = useCallback(
+    (currentBlock: UnifiedBlock | null): UnifiedProperty[] => {
+      return [
+        {
+          key: "calculationMethod",
+          value: currentBlock?.properties?.calculationMethod || '{"type":"sum"}',
+          type: PropertyType.TEXTAREA,
+          label: "Método de Cálculo (JSON)",
+          category: "scoring",
+          rows: 5,
+        },
+        {
+          key: "results",
+          value: currentBlock?.properties?.results || "[]",
+          type: PropertyType.TEXTAREA,
+          label: "Resultados Possíveis (JSON)",
+          category: "scoring",
+          rows: 8,
+        },
+        {
+          key: "showScores",
+          value: currentBlock?.properties?.showScores !== false,
+          type: PropertyType.SWITCH,
+          label: "Mostrar Pontuações",
+          category: "scoring",
+        },
+        {
+          key: "showAllResults",
+          value: currentBlock?.properties?.showAllResults === true,
+          type: PropertyType.SWITCH,
+          label: "Mostrar Todos os Resultados",
+          category: "scoring",
+        },
+        {
+          key: "demoResult",
+          value: currentBlock?.properties?.demoResult || "",
+          type: PropertyType.TEXT,
+          label: "ID do Resultado para Preview",
+          category: "scoring",
+        },
+      ];
+    },
+    []
+  );
+
   // Efeito para atualizar as propriedades quando o bloco selecionado muda
   useEffect(() => {
     console.log("🔄 useUnifiedProperties - useEffect triggered with block:", block);
@@ -977,7 +1023,16 @@ export const useUnifiedProperties = (
       console.log("🏗️ Block properties:", block.properties);
 
       // Gera as novas propriedades usando os valores do bloco atual
-      const newProperties = generateDefaultProperties(block.type, block);
+      let newProperties;
+
+      // Para blocos de resultados de quiz, usar o gerador específico
+      if (block.type === "quiz-results") {
+        newProperties = generateResultsBlockProperties(block);
+      } else {
+        // Caso contrário, usar o gerador padrão
+        newProperties = generateDefaultProperties(block.type, block);
+      }
+
       console.log("🎛️ Generated properties:", newProperties);
 
       setProperties(newProperties); // Atualiza o estado interno do hook
@@ -985,7 +1040,7 @@ export const useUnifiedProperties = (
       console.log("❌ No block or no block type, clearing properties");
       setProperties([]); // Limpa as propriedades se nenhum bloco estiver selecionado
     }
-  }, [block, generateDefaultProperties]);
+  }, [block, generateDefaultProperties, generateResultsBlockProperties]);
 
   // Função para atualizar o valor de uma propriedade
   const updateProperty = useCallback(
