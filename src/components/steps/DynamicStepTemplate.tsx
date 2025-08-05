@@ -17,7 +17,6 @@ export interface QuestionOption {
 }
 
 export interface QuestionConfig {
-  [x: string]: number;
   id: string;
   title: string;
   subtitle?: string;

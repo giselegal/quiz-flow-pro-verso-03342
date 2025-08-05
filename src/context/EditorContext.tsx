@@ -1,4 +1,4 @@
-import { createEditorAdapter } from "@/adapters/EditorDatabaseAdapter";
+// EditorDatabaseAdapter removed - using direct context state management
 import { getAllSteps, getStepTemplate } from "@/config/stepTemplatesMapping";
 import { EditorBlock, FunnelStage } from "@/types/editor";
 import React, { createContext, ReactNode, useCallback, useContext, useState } from "react";
@@ -79,13 +79,13 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   // ═══════════════════════════════════════════════
   // 🔌 INICIALIZAR ADAPTER DO BANCO DE DADOS
   // ═══════════════════════════════════════════════
-  const [adapter] = useState(() => {
-    return createEditorAdapter({
-      useDatabase: false, // Iniciar em modo local por segurança
-      quizId: "quiz-demo-id", // Quiz padrão para desenvolvimento
-      fallbackToLocal: true,
-    });
-  });
+  // Database adapter removed - using direct state management only
+  const adapter = {
+    setDatabaseMode: (_enabled: boolean) => {},
+    setQuizId: (_quizId: string) => {},
+    migrateLocalToDatabase: () => Promise.resolve(false),
+    getQuizStats: () => Promise.resolve({ error: "Database adapter not available" }),
+  };
 
   // Estado do modo banco
   const [databaseModeEnabled, setDatabaseModeEnabled] = useState(false);
