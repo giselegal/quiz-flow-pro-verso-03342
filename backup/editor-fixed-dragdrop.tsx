@@ -211,11 +211,11 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             }
             propertiesPanel={
               !isPreviewing && selectedBlock ? (
-                <OptimizedPropertiesPanel
-                  block={selectedBlock}
+                <EnhancedUniversalPropertiesPanel
+                  selectedBlock={selectedBlock}
                   blockDefinition={getBlockDefinitionForType(selectedBlock.type)}
-                  onUpdateBlock={(blockId: string, updates: Partial<EditableContent>) => {
-                    updateBlock(blockId, { content: updates });
+                  onUpdate={(updatedBlock) => {
+                    updateBlock(updatedBlock.id, { content: updatedBlock.properties });
                   }}
                   onClose={() => setSelectedBlockId(null)}
                 />

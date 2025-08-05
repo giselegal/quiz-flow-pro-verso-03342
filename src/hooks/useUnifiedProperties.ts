@@ -1,5 +1,6 @@
 import { BRAND_COLORS } from "@/config/brandColors";
 import { useCallback, useEffect, useState } from "react";
+import { PropertyType, PropertyDefinition } from "@/types/editor";
 
 export interface UnifiedProperty {
   key: string;
@@ -30,6 +31,7 @@ export interface UseUnifiedPropertiesReturn {
   getPropertiesByCategory: (category: string) => UnifiedProperty[];
   exportProperties: () => Record<string, any>;
   applyBrandColors: () => void;
+  getComponentProperties: (blockType: string) => PropertyDefinition[];
 }
 
 export const useUnifiedProperties = (
