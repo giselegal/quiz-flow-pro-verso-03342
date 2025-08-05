@@ -232,11 +232,12 @@ export const getStepProps = (stepNumber: number, progressValue: number = 0) => {
     stepNumber,
     questionData: stepTemplate.questionConfig,
     progressValue,
-    logoUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+    logoUrl:
+      "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
     brandColors: {
       primary: "#B89B7A",
       secondary: "#432818",
-      accent: "#E8D5C4"
-    }
+      accent: "#E8D5C4",
+    },
   };
 };
