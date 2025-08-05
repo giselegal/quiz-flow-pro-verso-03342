@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { generateSemanticIdFromObject } from "@/components/editor/utils/semanticIdGenerator";
+import { generateSemanticId } from "../utils/semanticIdGenerator";
 
 interface QuizStep {
   id: string;
@@ -44,7 +44,7 @@ export const useStepHandlers = (
 
   const handleStepAdd = useCallback(() => {
     const newStep: QuizStep = {
-        id: generateSemanticIdFromObject({
+      id: generateSemanticId({
         context: "editor",
         type: "step",
         identifier: "etapa",
@@ -90,7 +90,7 @@ export const useStepHandlers = (
       if (stepToDuplicate) {
         const newStep: QuizStep = {
           ...stepToDuplicate,
-          id: generateSemanticIdFromObject({
+          id: generateSemanticId({
             context: "editor",
             type: "step",
             identifier: "etapa",

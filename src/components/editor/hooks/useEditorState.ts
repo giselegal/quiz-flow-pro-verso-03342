@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { EditorBlock } from "@/types/editor";
-import { generateSemanticIdFromObject } from "@/components/editor/utils/semanticIdGenerator";
+import { generateSemanticId } from "../utils/semanticIdGenerator";
 
 interface EditorState {
   blocks: EditorBlock[];
@@ -30,7 +30,7 @@ export const useEditorState = (initialBlocks: EditorBlock[] = []) => {
   const addBlock = useCallback(
     (type: EditorBlock["type"]) => {
       const newBlock: EditorBlock = {
-        id: generateSemanticIdFromObject({
+        id: generateSemanticId({
           context: "editor",
           type: "block",
           identifier: "block",

@@ -26,7 +26,11 @@ export { default as StyleCharacteristicsInlineBlock } from "./StyleCharacteristi
 export { default as LoadingAnimationBlock } from "./LoadingAnimationBlock";
 
 // Componentes que existem mas podem estar vazios
-// Missing inline blocks - removed exports
+export { default as CharacteristicsListInlineBlock } from "./CharacteristicsListInlineBlock";
+export { default as TestimonialsInlineBlock } from "./TestimonialsInlineBlock";
+export { default as BeforeAfterInlineBlock } from "./BeforeAfterInlineBlock";
+export { default as BonusListInlineBlock } from "./BonusListInlineBlock";
+export { default as QuizOfferPricingInlineBlock } from "./QuizOfferPricingInlineBlock";
 export { default as QuizOfferCTAInlineBlock } from "./QuizOfferCTAInlineBlock";
 
 // Re-exportar tipos necessários

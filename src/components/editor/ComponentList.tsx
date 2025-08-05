@@ -23,7 +23,7 @@ import {
 import { EditorComponent } from "@/interfaces/editor";
 import { SimpleComponent } from "@/interfaces/quiz";
 import styles from "@/styles/editor.module.css";
-import { generateSemanticId } from "@/components/editor/utils/semanticIdGenerator";
+import { generateSemanticId } from "../utils/semanticIdGenerator";
 
 // Definição dos componentes disponíveis
 const COMPONENT_CATEGORIES = {

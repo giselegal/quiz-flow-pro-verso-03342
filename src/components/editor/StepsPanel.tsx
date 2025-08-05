@@ -26,7 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { cn } from "../../lib/utils";
-// stepTemplateService removed
+import { stepTemplateService } from "../../services/stepTemplateService";
 
 interface Step {
   id: string;
@@ -112,8 +112,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
       console.log(
         "📋 StepsPanel: Obtendo referência das etapas do stepTemplateService...",
       );
-      // stepTemplateService removed - return empty array
-      const allSteps: any[] = [];
+      const allSteps = stepTemplateService.getAllSteps();
 
       if (allSteps && allSteps.length > 0) {
         const serviceSteps = allSteps.map((stepInfo) => ({
@@ -132,7 +131,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
         );
         console.log(
           "📊 StepsPanel: Estatísticas dos templates:",
-          {},
+          stepTemplateService.getTemplateStats(),
         );
         return serviceSteps;
       }
@@ -281,7 +280,8 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                       <p className="text-xs text-gray-500 mt-1">
                         {(() => {
                           const stepInfo = getStepReferenceInfo(step.id);
-                            const typeLabels: Record<string, string> = {
+                          const typeLabel =
+                            {
                               intro: "🎯 Introdução",
                               question: "❓ Questão",
                               strategic: "🎪 Estratégica",
@@ -289,8 +289,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                               result: "🏆 Resultado",
                               offer: "💎 Oferta",
                               custom: "⚙️ Personalizada",
-                            };
-                            const typeLabel = typeLabels[stepInfo.type] || "📄 Etapa";
+                            }[stepInfo.type] || "📄 Etapa";
 
                           return `${typeLabel} • ${step.blocksCount} componente${step.blocksCount !== 1 ? "s" : ""}${stepInfo.hasTemplate ? " • Template disponível" : ""}`;
                         })()}

@@ -15,10 +15,10 @@ export const useQuizComponents = () => {
       const newComponent = {
         id: `quiz-component-${type}-${componentNumber}`,
         type,
-        content: {}, // Default empty content
+        content: getDefaultComponentContent(type),
         order: components.length,
       };
-      setComponents(prev => [...prev, newComponent as any]);
+      setComponents(prev => [...prev, newComponent]);
       return newComponent.id;
     },
     [components.length]

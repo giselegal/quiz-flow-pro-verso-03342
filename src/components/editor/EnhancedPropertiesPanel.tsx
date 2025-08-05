@@ -37,7 +37,7 @@ import {
   Edit3,
 } from "lucide-react";
 import { BlockDefinition, EditableContent } from "@/types/editor";
-import { generateSemanticIdFromObject } from "@/components/editor/utils/semanticIdGenerator";
+import { generateSemanticId } from "../utils/semanticIdGenerator";
 
 // 🎯 Interface para uma opção
 interface OptionItem {
@@ -57,7 +57,7 @@ const OptionsArrayEditor: React.FC<{
 }> = ({ value = [], onChange }) => {
   const addOption = () => {
     const newOption: OptionItem = {
-      id: generateSemanticIdFromObject({
+      id: generateSemanticId({
         context: "editor",
         type: "option",
         identifier: "option",

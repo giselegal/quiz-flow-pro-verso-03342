@@ -17,8 +17,7 @@ export interface UnifiedProperty {
 export interface UnifiedBlock {
   id: string;
   type: string;
-  properties?: Record<string, any>;
-  content?: Record<string, any>;
+  properties: Record<string, any>;
   brandColors?: typeof BRAND_COLORS;
 }
 
@@ -66,14 +65,14 @@ export const useUnifiedProperties = (
         case "text-inline":
           return [
             ...baseProperties,
-        {
-          key: "content",
-          value: block?.properties?.content || block?.content?.text || "Texto exemplo",
-          type: "textarea",
-          label: "Conteúdo",
-          category: "content",
-          required: true,
-        },
+            {
+              key: "content",
+              value: block?.properties?.content || "Texto exemplo",
+              type: "textarea",
+              label: "Conteúdo",
+              category: "content",
+              required: true,
+            },
             {
               key: "fontSize",
               value: block?.properties?.fontSize || 16,
@@ -97,14 +96,14 @@ export const useUnifiedProperties = (
         case "heading-inline":
           return [
             ...baseProperties,
-        {
-          key: "content",
-          value: block?.properties?.content || block?.content?.title || "Título Principal",
-          type: "text",
-          label: "Título",
-          category: "content",
-          required: true,
-        },
+            {
+              key: "content",
+              value: block?.properties?.content || "Título Principal",
+              type: "text",
+              label: "Título",
+              category: "content",
+              required: true,
+            },
             {
               key: "level",
               value: block?.properties?.level || "h2",
@@ -127,14 +126,14 @@ export const useUnifiedProperties = (
         case "button-inline":
           return [
             ...baseProperties,
-        {
-          key: "text",
-          value: block?.properties?.text || block?.content?.text || "Clique Aqui",
-          type: "text",
-          label: "Texto do Botão",
-          category: "content",
-          required: true,
-        },
+            {
+              key: "text",
+              value: block?.properties?.text || "Clique Aqui",
+              type: "text",
+              label: "Texto do Botão",
+              category: "content",
+              required: true,
+            },
             {
               key: "variant",
               value: block?.properties?.variant || "primary",
@@ -156,21 +155,21 @@ export const useUnifiedProperties = (
         case "image-inline":
           return [
             ...baseProperties,
-        {
-          key: "src",
-          value: block?.properties?.src || block?.content?.imageUrl || "",
-          type: "text",
-          label: "URL da Imagem",
-          category: "content",
-          required: true,
-        },
-        {
-          key: "alt",
-          value: block?.properties?.alt || block?.content?.imageAlt || "Descrição da imagem",
-          type: "text",
-          label: "Texto Alternativo",
-          category: "content",
-        },
+            {
+              key: "src",
+              value: block?.properties?.src || "",
+              type: "text",
+              label: "URL da Imagem",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "alt",
+              value: block?.properties?.alt || "Descrição da imagem",
+              type: "text",
+              label: "Texto Alternativo",
+              category: "content",
+            },
             {
               key: "width",
               value: block?.properties?.width || 300,

@@ -86,7 +86,10 @@ export const splitRoutes = {
   EditorPage: () => dynamicImport(() => import("@/pages/admin/EditorPage")),
 
   // Editor components
-  // SchemaDrivenEditor: () => dynamicImport(() => import("@/components/editor/SchemaDrivenEditorResponsive")),
+  SchemaDrivenEditor: () =>
+    dynamicImport(
+      () => import("@/components/editor/SchemaDrivenEditorResponsive"),
+    ),
 
   // Large components that exist
   // PropertyPanel: () => dynamicImport(() => import('@/components/editor/PropertyPanel')),

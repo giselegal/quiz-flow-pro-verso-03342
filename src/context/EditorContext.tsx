@@ -1,4 +1,4 @@
-// Removed EditorDatabaseAdapter import as it was deleted
+import { createEditorAdapter } from "@/adapters/EditorDatabaseAdapter";
 import { getAllSteps, getStepTemplate } from "@/config/stepTemplatesMapping";
 import { EditorBlock, FunnelStage } from "@/types/editor";
 import React, { createContext, ReactNode, useCallback, useContext, useState } from "react";
@@ -77,15 +77,14 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   console.log("🔥 EditorProvider: INICIANDO PROVIDER!");
 
   // ═══════════════════════════════════════════════
-  // 🔌 MOCK ADAPTER (DATABASE ADAPTER REMOVED)
+  // 🔌 INICIALIZAR ADAPTER DO BANCO DE DADOS
   // ═══════════════════════════════════════════════
   const [adapter] = useState(() => {
-    return {
-      setDatabaseMode: (enabled: boolean) => console.log('Mock adapter setDatabaseMode:', enabled),
-      setQuizId: (quizId: string) => console.log('Mock adapter setQuizId:', quizId),
-      migrateLocalToDatabase: () => Promise.resolve(false),
-      getQuizStats: () => Promise.resolve({ error: 'Mock adapter - no real stats' }),
-    };
+    return createEditorAdapter({
+      useDatabase: false, // Iniciar em modo local por segurança
+      quizId: "quiz-demo-id", // Quiz padrão para desenvolvimento
+      fallbackToLocal: true,
+    });
   });
 
   // Estado do modo banco
@@ -300,8 +299,8 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
       // ✅ CARREGAR DIRETAMENTE DO TEMPLATE
       const templateBlocks = getStepTemplate(stepNumber);
-      if (Array.isArray(templateBlocks) && templateBlocks.length > 0) {
-        const editorBlocks: EditorBlock[] = templateBlocks.map((block: any, index: number) => ({
+      if (templateBlocks && templateBlocks.length > 0) {
+        const editorBlocks: EditorBlock[] = templateBlocks.map((block, index) => ({
           id: block.id || `${stageId}-block-${index + 1}`,
           type: block.type as any,
           content: block.properties || block.content || {},
