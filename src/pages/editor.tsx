@@ -819,8 +819,12 @@ const EditorPage: React.FC = () => {
                               : "border-gray-200 hover:border-gray-300"
                           )}
                         >
-                          <SimpleBlockRenderer
-                            block={blockData}
+                          <UniversalBlockRenderer
+                            block={{
+                              ...blockData,
+                              content: blockData.properties || {},
+                              order: 0
+                            }}
                             onClick={() => setSelectedComponentId(block.id)}
                             isSelected={selectedComponentId === block.id}
                           />
@@ -1015,8 +1019,12 @@ const EditorPage: React.FC = () => {
                                     "ring-2 ring-[#B89B7A] rounded-lg"
                                 )}
                               >
-                                <SimpleBlockRenderer
-                                  block={blockData}
+                                <UniversalBlockRenderer
+                                  block={{
+                                    ...blockData,
+                                    content: blockData.properties || {},
+                                    order: 0
+                                  }}
                                   isSelected={selectedComponentId === block.id}
                                   onClick={() => handleBlockClick(block.id)}
                                 />
