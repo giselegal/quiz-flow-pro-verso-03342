@@ -26,7 +26,7 @@ import {
   Type,
 } from "lucide-react";
 import React, { useMemo } from "react";
-import UniversalPropertiesPanel from "./UniversalPropertiesPanel";
+import { UniversalPropertiesPanel, getComponentProperties } from "./UniversalPropertiesPanel";
 
 // Interface atualizada para compatibilidade com editor-fixed-dragdrop
 interface EnhancedUniversalPropertiesPanelProps {
@@ -58,59 +58,8 @@ interface PropertyDefinition {
   unit?: string;
 }
 
-const getComponentProperties = (block: UnifiedBlock): Record<string, PropertyDefinition> => {
-  // Código existente da função getComponentProperties
-  // Criamos um objeto vazio do tipo esperado
-  const result: Record<string, PropertyDefinition> = {};
-
-  // Definimos as propriedades base
-  result.id = {
-    key: "id",
-    label: "ID",
-    type: "text",
-    category: "advanced",
-    value: block.id,
-    required: true,
-  };
-
-  result.visible = {
-    key: "visible",
-    label: "Visível",
-    type: "boolean",
-    category: "general",
-    value: block.properties?.visible !== false,
-  };
-
-  // Propriedades universais de layout e tamanho
-  result.width = {
-    key: "width",
-    label: "Largura",
-    type: "range",
-    category: "style",
-    value: block.properties?.width || 100,
-    min: 10,
-    max: 100,
-    step: 5,
-    unit: "%",
-  };
-
-  result.scale = {
-    key: "scale",
-    label: "Escala",
-    type: "range",
-    category: "style",
-    value: block.properties?.scale || 100,
-    min: 50,
-    max: 200,
-    step: 10,
-    unit: "%",
-  };
-
-  // Código existente para mapear propriedades específicas de cada tipo de bloco
-  // ...
-
-  return result;
-};
+// Agora estamos importando getComponentProperties do UniversalPropertiesPanel
+// para garantir uma fonte única das propriedades de cada componente
 
 // Converter BlockDefinition para PropertyDefinition[]
 const convertBlockDefinitionToPropertyDefinitions = (
