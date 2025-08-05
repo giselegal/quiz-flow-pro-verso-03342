@@ -19,7 +19,7 @@ const CompareBlock: React.FC<BlockComponentProps> = ({
     label2 = 'Depois',
     color1 = '#B89B7A',
     color2 = '#432818',
-  } = block.properties;
+  } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {

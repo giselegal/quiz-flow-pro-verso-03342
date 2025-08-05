@@ -14,7 +14,7 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
     content = 'Este é um aviso legal padrão.',
     backgroundColor = '#f8f9fa',
     textColor = '#6c757d',
-  } = block.properties;
+  } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {

@@ -10,7 +10,7 @@ const CarouselBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = '',
 }) => {
-  const { images = [], autoplay = true, interval = 5000 } = block.properties;
+  const { images = [], autoplay = true, interval = 5000 } = block?.properties || {};
 
   const [currentIndex, setCurrentIndex] = useState(0);
 

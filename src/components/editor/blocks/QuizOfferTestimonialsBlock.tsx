@@ -36,7 +36,7 @@ const QuizOfferTestimonialsBlock: React.FC<BlockComponentProps> = ({
     showStats = true,
     totalCustomers = '+10.000 mulheres transformadas',
     averageRating = '4.9/5 estrelas',
-  } = block.properties;
+  } = block?.properties || {};
 
   const [isLoaded, setIsLoaded] = useState(false);
 

@@ -1,196 +1,185 @@
 // src/config/stepTemplatesMapping.ts
-// ✅ SISTEMA DINÂMICO - Mapeamento atualizado para usar DynamicStepTemplate
+// Mapeamento das 21 etapas para seus templates específicos
 
-// Importação do sistema dinâmico
-import { DynamicStepTemplate, QuestionConfig } from "@/components/steps/DynamicStepTemplate";
-import { STEP_CONFIGURATIONS } from "@/components/steps/StepConfigurations";
+// Importações dos templates de cada etapa
+import { getStep01Template } from "@/components/steps/Step01Template";
+import { getStep02Template } from "@/components/steps/Step02Template";
+import { getStep03Template } from "@/components/steps/Step03Template";
+import { getStep04Template } from "@/components/steps/Step04Template";
+import { getStep05Template } from "@/components/steps/Step05Template";
+import { getStep06Template } from "@/components/steps/Step06Template";
+import { getStep07Template } from "@/components/steps/Step07Template";
+import { getStep08Template } from "@/components/steps/Step08Template";
+import { getStep09Template } from "@/components/steps/Step09Template";
+import { getStep10Template } from "@/components/steps/Step10Template";
+import { getStep11Template } from "@/components/steps/Step11Template";
+import { getStep12Template } from "@/components/steps/Step12Template";
+import { getStep13Template } from "@/components/steps/Step13Template";
+import { getStep14Template } from "@/components/steps/Step14Template";
+import { getStep15Template } from "@/components/steps/Step15Template";
+import { getStep16Template } from "@/components/steps/Step16Template";
+import { getStep17Template } from "@/components/steps/Step17Template";
+import { getStep18Template } from "@/components/steps/Step18Template";
+import { getStep19Template } from "@/components/steps/Step19Template";
+import { getStep20Template } from "@/components/steps/Step20Template";
+import { getStep21Template } from "@/components/steps/Step21Template";
 
-// Interface para o template de etapa - NOVA ESTRUTURA DINÂMICA
+// Interface para o template de etapa
 export interface StepTemplate {
   stepNumber: number;
-  questionConfig: QuestionConfig; // Mudança: agora usa configuração JSON
+  templateFunction: () => any[];
   name: string;
   description: string;
-  component: typeof DynamicStepTemplate; // Mudança: todos usam o mesmo componente
 }
 
-// ✅ MAPEAMENTO DINÂMICO - SUBSTITUI OS 21 TEMPLATES INDIVIDUAIS
+// ✅ MAPEAMENTO COMPLETO DAS 21 ETAPAS
 export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
   1: {
     stepNumber: 1,
-    questionConfig: STEP_CONFIGURATIONS.step01,
+    templateFunction: getStep01Template,
     name: "Introdução",
     description: "Página inicial do quiz",
-    component: DynamicStepTemplate,
   },
   2: {
     stepNumber: 2,
-    questionConfig: STEP_CONFIGURATIONS.step02,
+    templateFunction: getStep02Template,
     name: "Q1 - Tipo de Roupa",
     description: "Qual o seu tipo de roupa favorita?",
-    component: DynamicStepTemplate,
   },
   3: {
     stepNumber: 3,
-    questionConfig: STEP_CONFIGURATIONS.step03,
+    templateFunction: getStep03Template,
     name: "Q2 - Personalidade",
     description: "RESUMA A SUA PERSONALIDADE:",
-    component: DynamicStepTemplate,
   },
   4: {
     stepNumber: 4,
-    questionConfig: STEP_CONFIGURATIONS.step04,
+    templateFunction: getStep04Template,
     name: "Q3 - Visual",
     description: "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
-    component: DynamicStepTemplate,
   },
   5: {
     stepNumber: 5,
-    questionConfig: STEP_CONFIGURATIONS.step05,
+    templateFunction: getStep05Template,
     name: "Q4 - Detalhes",
     description: "QUAIS DETALHES VOCÊ GOSTA?",
-    component: DynamicStepTemplate,
   },
   6: {
     stepNumber: 6,
-    questionConfig: STEP_CONFIGURATIONS.step06,
+    templateFunction: getStep06Template,
     name: "Q5 - Estampas",
     description: "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?",
-    component: DynamicStepTemplate,
   },
   7: {
     stepNumber: 7,
-    questionConfig: STEP_CONFIGURATIONS.step07,
+    templateFunction: getStep07Template,
     name: "Q6 - Casacos",
     description: "QUAL CASACO É SEU FAVORITO?",
-    component: DynamicStepTemplate,
   },
   8: {
     stepNumber: 8,
-    questionConfig: STEP_CONFIGURATIONS.step08,
+    templateFunction: getStep08Template,
     name: "Q7 - Calças",
     description: "QUAL SUA CALÇA FAVORITA?",
-    component: DynamicStepTemplate,
   },
   9: {
     stepNumber: 9,
-    questionConfig: STEP_CONFIGURATIONS.step09,
+    templateFunction: getStep09Template,
     name: "Q8 - Sapatos",
     description: "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?",
-    component: DynamicStepTemplate,
   },
   10: {
     stepNumber: 10,
-    questionConfig: STEP_CONFIGURATIONS.step10,
+    templateFunction: getStep10Template,
     name: "Q9 - Acessórios",
     description: "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?",
-    component: DynamicStepTemplate,
   },
   11: {
     stepNumber: 11,
-    questionConfig: STEP_CONFIGURATIONS.step11,
+    templateFunction: getStep11Template,
     name: "Q10 - Tecidos",
     description: "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...",
-    component: DynamicStepTemplate,
   },
   12: {
     stepNumber: 12,
-    questionConfig: STEP_CONFIGURATIONS.step12,
+    templateFunction: getStep12Template,
     name: "Transição Pessoal",
     description: "Agora vamos conhecer você melhor",
-    component: DynamicStepTemplate,
   },
   13: {
     stepNumber: 13,
-    questionConfig: STEP_CONFIGURATIONS.step13,
+    templateFunction: getStep13Template,
     name: "Q11 - Guarda-Roupa",
     description: "QUANDO VOCÊ OLHA PARA O SEU GUARDA-ROUPA, QUAL DESSAS FRASES TE VEM A CABEÇA?",
-    component: DynamicStepTemplate,
   },
   14: {
     stepNumber: 14,
-    questionConfig: STEP_CONFIGURATIONS.step14,
+    templateFunction: getStep14Template,
     name: "Q13 - Final",
     description: "Última pergunta do quiz",
-    component: DynamicStepTemplate,
   },
   15: {
     stepNumber: 15,
-    questionConfig: STEP_CONFIGURATIONS.step15,
+    templateFunction: getStep15Template,
     name: "Transição",
     description: "Processando suas respostas...",
-    component: DynamicStepTemplate,
   },
   16: {
     stepNumber: 16,
-    questionConfig: STEP_CONFIGURATIONS.step16,
+    templateFunction: getStep16Template,
     name: "Processamento",
     description: "Analisando seu perfil...",
-    component: DynamicStepTemplate,
   },
   17: {
     stepNumber: 17,
-    questionConfig: STEP_CONFIGURATIONS.step17,
+    templateFunction: getStep17Template,
     name: "Resultado",
     description: "Seu resultado personalizado",
-    component: DynamicStepTemplate,
   },
   18: {
     stepNumber: 18,
-    questionConfig: STEP_CONFIGURATIONS.step18,
+    templateFunction: getStep18Template,
     name: "Detalhes",
     description: "Detalhes do seu estilo",
-    component: DynamicStepTemplate,
   },
   19: {
     stepNumber: 19,
-    questionConfig: STEP_CONFIGURATIONS.step19,
+    templateFunction: getStep19Template,
     name: "Guia",
     description: "Guia personalizado",
-    component: DynamicStepTemplate,
   },
   20: {
     stepNumber: 20,
-    questionConfig: STEP_CONFIGURATIONS.step20,
+    templateFunction: getStep20Template,
     name: "Oferta",
     description: "Oferta especial",
-    component: DynamicStepTemplate,
   },
   21: {
     stepNumber: 21,
-    questionConfig: STEP_CONFIGURATIONS.step21,
+    templateFunction: getStep21Template,
     name: "Finalização",
     description: "Conclusão e próximos passos",
-    component: DynamicStepTemplate,
   },
 };
 
-// ✅ FUNÇÕES UTILITÁRIAS - ATUALIZADAS PARA SISTEMA DINÂMICO
+// ✅ FUNÇÕES UTILITÁRIAS
 
 /**
- * Obtém a configuração de uma etapa específica (substitui templateFunction)
+ * Obtém o template de uma etapa específica
  */
-export const getStepTemplate = (stepNumber: number): QuestionConfig | null => {
+export const getStepTemplate = (stepNumber: number): any[] => {
   const stepTemplate = STEP_TEMPLATES_MAPPING[stepNumber];
   if (!stepTemplate) {
     console.warn(`Template não encontrado para a etapa ${stepNumber}`);
-    return null;
+    return [];
   }
 
   try {
-    return stepTemplate.questionConfig;
+    return stepTemplate.templateFunction();
   } catch (error) {
-    console.error(`Erro ao carregar configuração da etapa ${stepNumber}:`, error);
-    return null;
+    console.error(`Erro ao carregar template da etapa ${stepNumber}:`, error);
+    return [];
   }
-};
-
-/**
- * Obtém o componente React para uma etapa (sempre DynamicStepTemplate)
- */
-export const getStepComponent = (stepNumber: number): typeof DynamicStepTemplate | null => {
-  const stepTemplate = STEP_TEMPLATES_MAPPING[stepNumber];
-  return stepTemplate?.component || null;
 };
 
 /**
@@ -219,24 +208,4 @@ export const stepExists = (stepNumber: number): boolean => {
  */
 export const getTotalSteps = (): number => {
   return Object.keys(STEP_TEMPLATES_MAPPING).length;
-};
-
-/**
- * NOVA: Obtém props completas para renderizar uma etapa
- */
-export const getStepProps = (stepNumber: number, progressValue: number = 0) => {
-  const stepTemplate = STEP_TEMPLATES_MAPPING[stepNumber];
-  if (!stepTemplate) return null;
-
-  return {
-    stepNumber,
-    questionData: stepTemplate.questionConfig,
-    progressValue,
-    logoUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-    brandColors: {
-      primary: "#B89B7A",
-      secondary: "#432818",
-      accent: "#E8D5C4"
-    }
-  };
 };

@@ -44,7 +44,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
     accentColor = "#dc2626",
     pulseAnimation = true,
     showProgress = false,
-  } = block.properties;
+  } = block?.properties || {};
 
   const [timeLeft, setTimeLeft] = useState<{
     days: number;

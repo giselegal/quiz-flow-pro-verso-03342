@@ -36,7 +36,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     disabled = false,
     customStyles = '',
     requiresValidInput = false,
-  } = block.properties;
+  } = block?.properties || {};
 
   const [isValidated, setIsValidated] = useState(false);
 

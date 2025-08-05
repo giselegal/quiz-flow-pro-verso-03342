@@ -27,7 +27,7 @@ const ModernResultPageBlock: React.FC<BlockComponentProps> = ({
     showSecondaryStyles = true,
     backgroundColor = 'bg-gradient-to-br from-[#fffaf7] to-[#f9f4ef]',
     padding = 'large',
-  } = block.properties;
+  } = block?.properties || {};
 
   // Get username from context (placeholder)
   const username = 'Usuário';

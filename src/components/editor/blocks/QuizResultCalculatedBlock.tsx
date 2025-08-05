@@ -14,7 +14,7 @@ const QuizResultCalculatedBlock: React.FC<BlockComponentProps> = ({
     showPercentages = true,
     showSecondaryStyles = true,
     backgroundColor = '#ffffff',
-  } = block.properties;
+  } = block?.properties || {};
 
   // Mock results for display
   const mockResults = [

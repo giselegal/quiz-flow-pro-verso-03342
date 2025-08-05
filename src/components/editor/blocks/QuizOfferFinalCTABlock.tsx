@@ -21,7 +21,7 @@ const QuizOfferFinalCTABlock: React.FC<BlockComponentProps> = ({
     accentColor = '#B89B7A',
     textColor = '#432818',
     backgroundColor = undefined, // Will use accent color with opacity
-  } = block.properties;
+  } = block?.properties || {};
 
   const [isLoaded, setIsLoaded] = useState(false);
 

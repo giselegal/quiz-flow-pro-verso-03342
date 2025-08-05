@@ -11,7 +11,7 @@ const ChartLevelBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = '',
 }) => {
-  const { value = 75, label = 'Nível de Progresso', color = '#3b82f6', backgroundColor = '#e0e7ff' } = block.properties;
+  const { value = 75, label = 'Nível de Progresso', color = '#3b82f6', backgroundColor = '#e0e7ff' } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {

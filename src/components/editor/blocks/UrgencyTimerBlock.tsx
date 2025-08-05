@@ -17,7 +17,7 @@ const UrgencyTimerBlock: React.FC<BlockComponentProps> = ({
     showExpiredMessage = true,
     expiredMessage = '⏰ Esta oferta especial expirou! Mas não se preocupe, ainda temos outras oportunidades para você.',
     timerColor = 'red',
-  } = block.properties;
+  } = block?.properties || {};
 
   const [timeLeft, setTimeLeft] = useState(duration * 60); // Convert to seconds
   const [isExpired, setIsExpired] = useState(false);

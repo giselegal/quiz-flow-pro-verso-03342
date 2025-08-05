@@ -55,7 +55,7 @@ const ExampleInlineBlock: React.FC<BlockComponentProps> = ({
     borderRadius = 'lg',
     spacing = 'normal',
     responsiveLayout = true,
-  } = block.properties;
+  } = block?.properties || {};
 
   // 2. INDEPENDENTE: Estado próprio do componente
   const [isHovered, setIsHovered] = useState(false);

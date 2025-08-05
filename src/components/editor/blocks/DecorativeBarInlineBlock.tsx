@@ -22,7 +22,7 @@ const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
     marginTop = 8,
     marginBottom = 24,
     showShadow = true,
-  } = block.properties;
+  } = block?.properties || {};
 
   return (
     <div

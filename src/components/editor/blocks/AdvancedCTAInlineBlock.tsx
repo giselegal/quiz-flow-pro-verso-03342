@@ -16,7 +16,7 @@ const AdvancedCTAInlineBlock: React.FC<BlockComponentProps> = ({
     originalPrice = 'R$ 397',
     features = ['Acesso Imediato', 'Garantia de 30 dias', 'Suporte Exclusivo'],
     urgencyText = 'Oferta válida apenas hoje!',
-  } = block.properties;
+  } = block?.properties || {};
 
   return (
     <div

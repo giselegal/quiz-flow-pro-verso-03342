@@ -1,20 +1,21 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import React from "react";
 
 interface ButtonInlineBlockProps {
   block?: {
     id: string;
     type: string;
     properties?: {
+      text?: string; // CORREÇÃO: Adicionar text direto
       content?: {
         text?: string;
         url?: string;
         icon?: string;
       };
       style?: {
-        variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
-        size?: 'small' | 'medium' | 'large';
+        variant?: "primary" | "secondary" | "outline" | "ghost";
+        size?: "small" | "medium" | "large";
         backgroundColor?: string;
         color?: string;
         borderRadius?: string;
@@ -23,7 +24,7 @@ interface ButtonInlineBlockProps {
         width?: string;
       };
       layout?: {
-        alignment?: 'left' | 'center' | 'right';
+        alignment?: "left" | "center" | "right";
         margin?: string;
       };
       advanced?: {
@@ -37,8 +38,12 @@ interface ButtonInlineBlockProps {
   onClick?: () => void;
 }
 
-export const ButtonInlineBlock: React.FC<ButtonInlineBlockProps> = ({ block, className, onClick }) => {
-  console.log('🧱 ButtonInlineBlock render:', {
+export const ButtonInlineBlock: React.FC<ButtonInlineBlockProps> = ({
+  block,
+  className,
+  onClick,
+}) => {
+  console.log("🧱 ButtonInlineBlock render:", {
     blockId: block?.id,
     properties: block?.properties,
   });
@@ -49,32 +54,33 @@ export const ButtonInlineBlock: React.FC<ButtonInlineBlockProps> = ({ block, cla
   const layoutProps = properties.layout || {};
   const advanced = properties.advanced || {};
 
-  const text = content.text || 'Clique aqui';
-  const url = content.url || '#';
+  // CORREÇÃO: Aceitar text diretamente OU content.text
+  const text = properties.text || content.text || "Clique aqui";
+  const url = content.url || "#";
 
   // Determinar o variant do botão
   const getVariant = () => {
     switch (styleProps.variant) {
-      case 'secondary':
-        return 'secondary';
-      case 'outline':
-        return 'outline';
-      case 'ghost':
-        return 'ghost';
+      case "secondary":
+        return "secondary";
+      case "outline":
+        return "outline";
+      case "ghost":
+        return "ghost";
       default:
-        return 'default';
+        return "default";
     }
   };
 
   // Determinar o tamanho do botão
   const getSize = () => {
     switch (styleProps.size) {
-      case 'small':
-        return 'sm';
-      case 'large':
-        return 'lg';
+      case "small":
+        return "sm";
+      case "large":
+        return "lg";
       default:
-        return 'default';
+        return "default";
     }
   };
 
@@ -90,10 +96,10 @@ export const ButtonInlineBlock: React.FC<ButtonInlineBlockProps> = ({ block, cla
   };
 
   // Container com alinhamento
-  const containerClass = cn('button-container', {
-    'text-left': layoutProps.alignment === 'left',
-    'text-center': layoutProps.alignment === 'center',
-    'text-right': layoutProps.alignment === 'right',
+  const containerClass = cn("button-container", {
+    "text-left": layoutProps.alignment === "left",
+    "text-center": layoutProps.alignment === "center",
+    "text-right": layoutProps.alignment === "right",
   });
 
   const handleClick = (e: React.MouseEvent) => {
@@ -101,9 +107,9 @@ export const ButtonInlineBlock: React.FC<ButtonInlineBlockProps> = ({ block, cla
 
     if (onClick) {
       onClick();
-    } else if (url && url !== '#' && !advanced.disabled) {
+    } else if (url && url !== "#" && !advanced.disabled) {
       if (advanced.openInNewTab) {
-        window.open(url, '_blank');
+        window.open(url, "_blank");
       } else {
         window.location.href = url;
       }
@@ -111,14 +117,18 @@ export const ButtonInlineBlock: React.FC<ButtonInlineBlockProps> = ({ block, cla
   };
 
   return (
-    <div className={cn(containerClass, className)} data-block-type="button-inline" data-block-id={block?.id}>
+    <div
+      className={cn(containerClass, className)}
+      data-block-type="button-inline"
+      data-block-id={block?.id}
+    >
       <Button
         variant={getVariant()}
         size={getSize()}
         disabled={advanced.disabled || advanced.loading}
         onClick={handleClick}
         style={customStyle}
-        className={cn('transition-all duration-200', advanced.loading && 'opacity-70')}
+        className={cn("transition-all duration-200", advanced.loading && "opacity-70")}
       >
         {advanced.loading ? (
           <>

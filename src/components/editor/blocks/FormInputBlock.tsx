@@ -30,7 +30,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
     required = false,
     fullWidth = true,
     name = 'input',
-  } = block.properties;
+  } = block?.properties || {};
 
   const [value, setValue] = useState<string>('');
   const [isValid, setIsValid] = useState<boolean>(false);

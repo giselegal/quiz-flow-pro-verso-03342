@@ -35,7 +35,7 @@ const QuizTitleBlock: React.FC<QuizTitleBlockProps> = ({
     textStyle = '',
     spacing = 16,
     margin = 'mb-6',
-  } = block.properties;
+  } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {

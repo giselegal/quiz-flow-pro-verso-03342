@@ -14,7 +14,7 @@ const ListBlock: React.FC<BlockComponentProps> = ({
   const {
     listType = 'ul',
     items = [{ text: 'Primeiro item da lista' }, { text: 'Segundo item da lista' }, { text: 'Terceiro item da lista' }],
-  } = block.properties;
+  } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {

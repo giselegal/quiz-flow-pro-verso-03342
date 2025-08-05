@@ -9,7 +9,7 @@ const ProgressBarStepBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = '',
 }) => {
-  const { currentStep = 1, totalSteps = 5, stepLabels = [], showLabels = true } = block.properties;
+  const { currentStep = 1, totalSteps = 5, stepLabels = [], showLabels = true } = block?.properties || {};
 
   return (
     <div

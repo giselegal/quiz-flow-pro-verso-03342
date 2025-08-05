@@ -11,7 +11,7 @@ const LoaderBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = '',
 }) => {
-  const { message = 'Carregando...', type = 'spinning', duration = 4000 } = block.properties;
+  const { message = 'Carregando...', type = 'spinning', duration = 4000 } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {

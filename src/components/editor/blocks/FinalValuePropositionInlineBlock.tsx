@@ -24,7 +24,7 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
     buttonUrl = '#',
     securityText = 'Oferta exclusiva nesta página',
     dividerEnabled = true,
-  } = block.properties;
+  } = block?.properties || {};
 
   const [isButtonHovered, setIsButtonHovered] = useState(false);
 

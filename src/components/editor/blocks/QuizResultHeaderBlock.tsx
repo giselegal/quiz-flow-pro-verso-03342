@@ -21,7 +21,7 @@ const QuizResultHeaderBlock: React.FC<BlockComponentProps> = ({
     backgroundColor = '#FFFBF7',
     textColor = '#432818',
     showLogo = true,
-  } = block.properties;
+  } = block?.properties || {};
 
   const [isLoaded, setIsLoaded] = useState(false);
 

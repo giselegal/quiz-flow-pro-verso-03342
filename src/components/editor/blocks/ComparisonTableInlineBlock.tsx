@@ -24,7 +24,7 @@ const ComparisonTableInlineBlock: React.FC<BlockComponentProps> = ({
         highlight: true,
       },
     ],
-  } = block.properties;
+  } = block?.properties || {};
 
   return (
     <div

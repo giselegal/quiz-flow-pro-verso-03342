@@ -11,7 +11,7 @@ const ChartAreaBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = '',
 }) => {
-  const { title = 'Gráfico de Área', data = [], xAxisKey = 'x', yAxisKey = 'y' } = block.properties;
+  const { title = 'Gráfico de Área', data = [], xAxisKey = 'x', yAxisKey = 'y' } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {

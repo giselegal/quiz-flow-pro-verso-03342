@@ -53,7 +53,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     gridGap = 16,
     responsiveColumns = true,
     multipleSelection = false,
-  } = block.properties;
+  } = block?.properties || {};
 
   // 🎯 CALCULAR TAMANHOS DE IMAGEM
   const getImageClasses = () => {

@@ -10,7 +10,7 @@ const ConfettiBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = '',
 }) => {
-  const { duration = 3000, particleCount = 100 } = block.properties;
+  const { duration = 3000, particleCount = 100 } = block?.properties || {};
 
   const confettiRef = useRef<HTMLDivElement>(null);
 

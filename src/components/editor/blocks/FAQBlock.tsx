@@ -71,7 +71,7 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
     accentColor = '#B89B7A',
     cardStyle = 'modern',
     searchPlaceholder = 'Buscar perguntas...',
-  } = block.properties;
+  } = block?.properties || {};
 
   const [openItems, setOpenItems] = useState<Set<string>>(new Set());
   const [searchTerm, setSearchTerm] = useState('');

@@ -41,7 +41,7 @@ const ResultPageHeaderBlock: React.FC<ResultPageHeaderBlockProps> = ({
     progressValue = 100,
     backgroundColor = '#ffffff',
     textColor = '#432818',
-  } = block.properties;
+  } = block?.properties || {};
 
   return (
     <div

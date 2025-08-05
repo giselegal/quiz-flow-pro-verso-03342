@@ -46,7 +46,7 @@ const ProsConsBlock: React.FC<ProsConsBlockProps> = ({ block, isSelected = false
     consColor = '#ef4444',
     backgroundColor = '#ffffff',
     textColor = '#374151',
-  } = block.properties;
+  } = block?.properties || {};
 
   const getIcon = (iconName?: string, isPositive: boolean = true) => {
     const iconProps = {

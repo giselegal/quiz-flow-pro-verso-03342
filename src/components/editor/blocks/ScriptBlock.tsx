@@ -10,7 +10,7 @@ const ScriptBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = '',
 }) => {
-  const { code = '// Seu código JavaScript aqui...', placement = 'body-end' } = block.properties;
+  const { code = '// Seu código JavaScript aqui...', placement = 'body-end' } = block?.properties || {};
 
   return (
     <div

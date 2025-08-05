@@ -59,7 +59,7 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
     accentColor = '#3b82f6',
     borderRadius = '12px',
     cardStyle = 'modern',
-  } = block.properties;
+  } = block?.properties || {};
 
   const getCardStyleClasses = () => {
     switch (cardStyle) {

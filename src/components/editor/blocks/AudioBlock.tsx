@@ -10,7 +10,7 @@ const AudioBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = '',
 }) => {
-  const { audioUrl = '', autoplay = false, controls = true } = block.properties;
+  const { audioUrl = '', autoplay = false, controls = true } = block?.properties || {};
 
   return (
     <div

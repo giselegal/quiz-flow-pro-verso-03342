@@ -32,7 +32,7 @@ const StatInlineBlock: React.FC<BlockComponentProps> = ({
     theme = 'primary',
     size = 'medium',
     layout = 'horizontal',
-  } = block.properties;
+  } = block?.properties || {};
 
   const [displayValue, setDisplayValue] = useState('0');
   const [isAnimating, setIsAnimating] = useState(false);
