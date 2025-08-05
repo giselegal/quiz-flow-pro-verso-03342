@@ -119,10 +119,10 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({ block, isSelected = fa
   // Verificar se o conteúdo contém HTML
   const isHtmlContent = useMemo(() => {
     const hasHtml = personalizedContent?.includes('<') && personalizedContent?.includes('>');
-    console.log('🔍 TextInlineBlock Debug:', {
-      content: personalizedContent,
-      hasHtml,
+    console.log('🔍 TextInlineBlock:', {
       blockId: block?.id,
+      hasHtml,
+      contentPreview: personalizedContent?.substring(0, 100) + '...',
     });
     return hasHtml;
   }, [personalizedContent, block?.id]);
@@ -183,6 +183,9 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({ block, isSelected = fa
         // ES7+ Conditional data attributes
       >
         {isHtmlContent ? (
+          <div dangerouslySetInnerHTML={{ __html: personalizedContent }} style={{ display: 'contents' }} />
+        ) : personalizedContent?.includes('<span') ? (
+          // Força renderização de HTML se contém tags span (comum em textos formatados)
           <div dangerouslySetInnerHTML={{ __html: personalizedContent }} style={{ display: 'contents' }} />
         ) : (
           personalizedContent

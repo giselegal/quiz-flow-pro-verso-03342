@@ -65,7 +65,30 @@ const newBlocks = step1Blocks.map((block, index) => ({
 setAllBlocks(newBlocks);
 ```
 
-### 3. **Carregamento Atômico vs Assíncrono** ✅
+### 3. **Correção Crítica do UniversalBlockRenderer** ✅
+**UniversalBlockRenderer.tsx** - Problema raiz identificado e corrigido:
+
+```typescript
+// ❌ ANTES: Passando propriedades separadas (CAUSA DO ERRO)
+<Component
+  {...block.properties}
+  id={block.id}
+  type={block.type}
+  onPropertyChange={onPropertyChange}
+/>
+
+// ✅ DEPOIS: Passando objeto block completo
+<Component
+  block={block}
+  isSelected={isSelected}
+  onClick={onClick}
+  onPropertyChange={onPropertyChange}
+/>
+```
+
+**Root Cause Real**: O renderer não estava passando o objeto `block` completo, causando `block` undefined nos componentes.
+
+### 4. **Carregamento Atômico vs Assíncrono** ✅
 
 - ❌ **Antes**: Carregamento sequencial com timeouts (falhas de sincronização)
 - ✅ **Depois**: Carregamento atômico de todos os blocos de uma vez
