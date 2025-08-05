@@ -1,7 +1,7 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 interface QuizTransitionBlockProps {
   block: {
@@ -39,21 +39,21 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
   }
 
   const {
-    title = 'Transição',
-    description = 'Vamos continuar para a próxima etapa',
-    buttonText = 'Continuar',
-    icon = '🎯',
-    backgroundColor = '#ffffff',
-    textColor = '#432818',
+    title = "Transição",
+    description = "Vamos continuar para a próxima etapa",
+    buttonText = "Continuar",
+    icon = "🎯",
+    backgroundColor = "#ffffff",
+    textColor = "#432818",
   } = block?.properties || {};
 
   return (
     <div
       className={cn(
-        'relative w-full min-h-[350px] p-8 rounded-lg border-2 border-dashed',
-        isSelected ? 'border-[#B89B7A] bg-[#B89B7A]/10' : 'border-gray-300 bg-white',
-        'cursor-pointer hover:border-gray-400 transition-colors',
-        className,
+        "relative w-full min-h-[350px] p-8 rounded-lg border-2 border-dashed",
+        isSelected ? "border-[#B89B7A] bg-[#B89B7A]/10" : "border-gray-300 bg-white",
+        "cursor-pointer hover:border-gray-400 transition-colors",
+        className
       )}
       onClick={onClick}
       style={{ backgroundColor, color: textColor }}
@@ -84,7 +84,9 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
 
       {/* Selected indicator */}
       {isSelected && (
-        <div className="absolute top-2 left-2 bg-[#B89B7A]/100 text-white text-xs px-2 py-1 rounded">Transição</div>
+        <div className="absolute top-2 left-2 bg-[#B89B7A]/100 text-white text-xs px-2 py-1 rounded">
+          Transição
+        </div>
       )}
     </div>
   );

@@ -13,31 +13,31 @@
  * - Funcionalidade completa
  */
 
-import React, { useMemo, useCallback } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
+import React, { useMemo, useCallback } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { HexColorPicker } from 'react-colorful';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useSyncedScroll } from '@/hooks/useSyncedScroll';
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { HexColorPicker } from "react-colorful";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useSyncedScroll } from "@/hooks/useSyncedScroll";
 import {
   X,
   Info,
@@ -51,9 +51,9 @@ import {
   CheckCircle,
   Edit3,
   Zap,
-} from 'lucide-react';
-import { BlockDefinition, EditableContent } from '@/types/editor';
-import { useDebounce } from '@/hooks/useDebounce';
+} from "lucide-react";
+import { BlockDefinition, EditableContent } from "@/types/editor";
+import { useDebounce } from "@/hooks/useDebounce";
 
 // 🎯 TIPOS OTIMIZADOS
 interface OptionItem {
@@ -84,16 +84,16 @@ const createValidationSchema = (properties: Record<string, any>) => {
 
   Object.entries(properties).forEach(([key, property]) => {
     switch (property.type) {
-      case 'text':
+      case "text":
         schemaFields[key] = z.string().optional();
         break;
-      case 'number':
+      case "number":
         schemaFields[key] = z.number().optional();
         break;
-      case 'boolean':
+      case "boolean":
         schemaFields[key] = z.boolean().optional();
         break;
-      case 'array':
+      case "array":
         schemaFields[key] = z.array(z.any()).optional();
         break;
       default:
@@ -116,12 +116,12 @@ const OptimizedOptionsArrayEditor: React.FC<{
   const addOption = useCallback(() => {
     const newOption: OptionItem = {
       id: `option-${Date.now()}`,
-      text: 'Nova opção',
+      text: "Nova opção",
       value: `value-${Date.now()}`,
-      category: 'Geral',
-      styleCategory: 'Geral',
+      category: "Geral",
+      styleCategory: "Geral",
       points: 1,
-      imageUrl: 'https://via.placeholder.com/100x100',
+      imageUrl: "https://via.placeholder.com/100x100",
     };
     onChange([...value, newOption]);
   }, [value, onChange]);
@@ -179,7 +179,7 @@ const OptimizedOptionsArrayEditor: React.FC<{
                       className="text-xs"
                       onChange={e => {
                         field.onChange(e);
-                        updateOption(index, 'text', e.target.value);
+                        updateOption(index, "text", e.target.value);
                       }}
                     />
                   )}
@@ -195,7 +195,7 @@ const OptimizedOptionsArrayEditor: React.FC<{
                       className="text-xs"
                       onChange={e => {
                         field.onChange(e);
-                        updateOption(index, 'value', e.target.value);
+                        updateOption(index, "value", e.target.value);
                       }}
                     />
                   )}
@@ -227,21 +227,21 @@ const OptimizedColorPicker: React.FC<{
             <Button
               variant="outline"
               className="w-8 h-8 p-0 border-2"
-              style={{ backgroundColor: field.value || '#ffffff' }}
+              style={{ backgroundColor: field.value || "#ffffff" }}
             >
               <Palette className="w-4 h-4 opacity-50" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-3">
             <HexColorPicker
-              color={field.value || '#ffffff'}
+              color={field.value || "#ffffff"}
               onChange={color => {
                 field.onChange(color);
                 onChange(color);
               }}
             />
             <Input
-              value={field.value || ''}
+              value={field.value || ""}
               onChange={e => {
                 field.onChange(e.target.value);
                 onChange(e.target.value);
@@ -253,7 +253,7 @@ const OptimizedColorPicker: React.FC<{
         </Popover>
       )}
     />
-    <span className="text-xs text-gray-500">{value || 'Nenhuma cor'}</span>
+    <span className="text-xs text-gray-500">{value || "Nenhuma cor"}</span>
   </div>
 );
 
@@ -314,7 +314,7 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
   onUpdateBlock,
   onClose,
 }) => {
-  const { scrollRef } = useSyncedScroll({ source: 'properties' });
+  const { scrollRef } = useSyncedScroll({ source: "properties" });
 
   // 🔧 SETUP DO REACT HOOK FORM
   const validationSchema = useMemo(
@@ -330,7 +330,7 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
   } = useForm({
     resolver: zodResolver(validationSchema),
     defaultValues: block.content,
-    mode: 'onChange',
+    mode: "onChange",
   });
 
   // 🔄 DEBOUNCED UPDATE
@@ -338,13 +338,13 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
   const debouncedValues = useDebounce(watchedValues, 300);
 
   React.useEffect(() => {
-    console.log('🔍 OptimizedPropertiesPanel: watchedValues changed:', watchedValues);
+    console.log("🔍 OptimizedPropertiesPanel: watchedValues changed:", watchedValues);
   }, [watchedValues]);
 
   React.useEffect(() => {
-    console.log('⏱️  OptimizedPropertiesPanel: debouncedValues changed:', debouncedValues);
+    console.log("⏱️  OptimizedPropertiesPanel: debouncedValues changed:", debouncedValues);
     if (debouncedValues) {
-      console.log('🚀 OptimizedPropertiesPanel: Calling onUpdateBlock with:', {
+      console.log("🚀 OptimizedPropertiesPanel: Calling onUpdateBlock with:", {
         blockId: block.id,
         updates: debouncedValues,
       });
@@ -366,7 +366,7 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
     };
 
     Object.entries(properties).forEach(([key, prop]) => {
-      const category = (prop as any).category || 'general';
+      const category = (prop as any).category || "general";
       (categories as any)[category][key] = prop;
     });
 
@@ -379,7 +379,7 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
   const renderPropertyInput = useCallback(
     (key: string, property: any) => {
       switch (property.type) {
-        case 'text':
+        case "text":
           return (
             <Controller
               control={control}
@@ -394,7 +394,7 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
             />
           );
 
-        case 'textarea':
+        case "textarea":
           return (
             <Controller
               control={control}
@@ -410,7 +410,7 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
             />
           );
 
-        case 'boolean':
+        case "boolean":
           return (
             <Controller
               control={control}
@@ -419,14 +419,14 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
                 <div className="flex items-center space-x-2">
                   <Switch checked={field.value || false} onCheckedChange={field.onChange} />
                   <span className="text-sm text-gray-600">
-                    {field.value ? 'Ativado' : 'Desativado'}
+                    {field.value ? "Ativado" : "Desativado"}
                   </span>
                 </div>
               )}
             />
           );
 
-        case 'select':
+        case "select":
           return (
             <Controller
               control={control}
@@ -448,7 +448,7 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
             />
           );
 
-        case 'range':
+        case "range":
           return (
             <Controller
               control={control}
@@ -473,7 +473,7 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
             />
           );
 
-        case 'color':
+        case "color":
           return (
             <OptimizedColorPicker
               value={watchedValues[key] || property.default}
@@ -484,8 +484,8 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
             />
           );
 
-        case 'array':
-          if (key === 'options') {
+        case "array":
+          if (key === "options") {
             return (
               <OptimizedOptionsArrayEditor
                 value={watchedValues[key] || []}
@@ -588,20 +588,20 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
           </TabsList>
 
           <TabsContent value="properties" className="p-4 space-y-4 mt-0">
-            {renderPropertyGroup('Geral', <Type className="w-4 h-4" />, categorizedProps.general)}
+            {renderPropertyGroup("Geral", <Type className="w-4 h-4" />, categorizedProps.general)}
             {renderPropertyGroup(
-              'Conteúdo',
+              "Conteúdo",
               <Edit3 className="w-4 h-4" />,
               categorizedProps.content
             )}
-            {renderPropertyGroup('Layout', <Layout className="w-4 h-4" />, categorizedProps.layout)}
+            {renderPropertyGroup("Layout", <Layout className="w-4 h-4" />, categorizedProps.layout)}
             {renderPropertyGroup(
-              'Comportamento',
+              "Comportamento",
               <CheckCircle className="w-4 h-4" />,
               categorizedProps.behavior
             )}
             {renderPropertyGroup(
-              'Validação',
+              "Validação",
               <CheckCircle className="w-4 h-4" />,
               categorizedProps.validation
             )}
@@ -609,12 +609,12 @@ const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
 
           <TabsContent value="style" className="p-4 space-y-4 mt-0">
             {renderPropertyGroup(
-              'Estilização',
+              "Estilização",
               <Palette className="w-4 h-4" />,
               categorizedProps.styling
             )}
             {renderPropertyGroup(
-              'Avançado',
+              "Avançado",
               <Zap className="w-4 h-4" />,
               categorizedProps.advanced
             )}

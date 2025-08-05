@@ -19,9 +19,7 @@ interface ComponentsSidebarProps {
   onComponentSelect: (type: EditorBlock["type"]) => void;
 }
 
-export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
-  onComponentSelect,
-}) => {
+export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect }) => {
   const componentGroups = [
     {
       title: "Básico",
@@ -124,9 +122,7 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
     <div className="h-full flex flex-col border-r border-stone-200 bg-white">
       <div className="p-4 border-b border-stone-200">
         <h2 className="text-lg font-semibold text-stone-900">Componentes</h2>
-        <p className="text-sm text-stone-600 mt-1">
-          Clique nos componentes para adicionar
-        </p>
+        <p className="text-sm text-stone-600 mt-1">Clique nos componentes para adicionar</p>
       </div>
 
       <ScrollArea className="flex-1">
@@ -146,9 +142,7 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
                     onClick={() => onComponentSelect(component.type)}
                   >
                     <span className="text-gray-600">{component.icon}</span>
-                    <span className="text-xs font-medium">
-                      {component.label}
-                    </span>
+                    <span className="text-xs font-medium">{component.label}</span>
                   </Button>
                 ))}
               </div>

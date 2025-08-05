@@ -42,10 +42,7 @@ const validateComponent = (component: any, type: string): boolean => {
 #### 3. **Registry Centralizado e Inteligente**
 
 ```typescript
-export const ENHANCED_BLOCK_REGISTRY: Record<
-  string,
-  React.ComponentType<any>
-> = (() => {
+export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = (() => {
   const registry: Record<string, React.ComponentType<any>> = {};
 
   // Validação e registro automático de componentes reais

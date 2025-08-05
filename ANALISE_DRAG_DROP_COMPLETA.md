@@ -211,7 +211,7 @@ const sensors = useSensors(
       tolerance: 8,
     },
   }),
-  useSensor(KeyboardSensor), // Acessibilidade
+  useSensor(KeyboardSensor) // Acessibilidade
 );
 ```
 
@@ -251,9 +251,7 @@ const canDrop = (dragType: string, dropZone: string) => {
     button: ["content-section", "footer-section"],
     text: ["any"],
   };
-  return (
-    rules[dragType]?.includes(dropZone) || rules[dragType]?.includes("any")
-  );
+  return rules[dragType]?.includes(dropZone) || rules[dragType]?.includes("any");
 };
 ```
 

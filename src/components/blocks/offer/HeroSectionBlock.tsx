@@ -86,15 +86,11 @@ const HeroSectionBlock: React.FC<HeroSectionBlockProps> = ({
             </h1>
 
             {subtitle && (
-              <h2 className="text-xl md:text-2xl text-[#6B5B73] mb-6 font-medium">
-                {subtitle}
-              </h2>
+              <h2 className="text-xl md:text-2xl text-[#6B5B73] mb-6 font-medium">{subtitle}</h2>
             )}
 
             {description && (
-              <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-                {description}
-              </p>
+              <p className="text-lg text-gray-700 mb-8 leading-relaxed">{description}</p>
             )}
 
             <Button

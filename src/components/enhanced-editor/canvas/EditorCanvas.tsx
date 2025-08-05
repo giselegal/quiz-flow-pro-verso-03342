@@ -26,7 +26,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
           Viewport: {viewportSize} | Preview: {isPreviewing ? "On" : "Off"}
         </div>
         <div className="space-y-4">
-          {blocks.map((block) => (
+          {blocks.map(block => (
             <div
               key={block.id}
               className={`p-4 border rounded cursor-pointer ${

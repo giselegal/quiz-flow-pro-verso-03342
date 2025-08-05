@@ -34,7 +34,7 @@ export const QuizQuestionComponent = ({
         onAnswer(option);
       }
     },
-    [isAnswered, onAnswer],
+    [isAnswered, onAnswer]
   );
 
   return (
@@ -101,7 +101,7 @@ export const QuizTimer = ({ duration, onTimeUp }: QuizTimerProps) => {
     }
 
     const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
+      setTimeLeft(prev => prev - 1);
     }, 1000);
 
     return () => clearInterval(timer);
@@ -117,9 +117,7 @@ export const QuizTimer = ({ duration, onTimeUp }: QuizTimerProps) => {
   return (
     <div className="quiz-timer">
       <span className="timer-label">Tempo restante:</span>
-      <span className={`timer-value ${timeLeft <= 30 ? "warning" : ""}`}>
-        {formattedTime}
-      </span>
+      <span className={`timer-value ${timeLeft <= 30 ? "warning" : ""}`}>{formattedTime}</span>
     </div>
   );
 };
@@ -145,7 +143,7 @@ const useQuiz = (totalQuestions: number) => {
 
   // Digite: useCallback + Tab
   const answerQuestion = useCallback((answer: string) => {
-    setState((prev) => ({
+    setState(prev => ({
       ...prev,
       answers: {
         ...prev.answers,
@@ -156,7 +154,7 @@ const useQuiz = (totalQuestions: number) => {
 
   // Digite: useCallback + Tab
   const nextQuestion = useCallback(() => {
-    setState((prev) => {
+    setState(prev => {
       const nextQuestionIndex = prev.currentQuestion + 1;
       return {
         ...prev,
@@ -207,7 +205,7 @@ const useQuizProgress = (quizId: string) => {
       setProgress(state);
       localStorage.setItem(`quiz-${quizId}`, JSON.stringify(state));
     },
-    [quizId],
+    [quizId]
   );
 
   // Digite: useCallback + Tab
@@ -240,14 +238,9 @@ interface QuizProps {
 
 export const Quiz = ({ questions, onComplete }: QuizProps) => {
   // Usando hooks customizados
-  const {
-    currentQuestion,
-    answers,
-    isComplete,
-    answerQuestion,
-    nextQuestion,
-    resetQuiz,
-  } = useQuiz(questions.length);
+  const { currentQuestion, answers, isComplete, answerQuestion, nextQuestion, resetQuiz } = useQuiz(
+    questions.length
+  );
 
   const { saveProgress, clearProgress } = useQuizProgress("style-quiz");
 
@@ -259,14 +252,7 @@ export const Quiz = ({ questions, onComplete }: QuizProps) => {
     } else {
       saveProgress({ currentQuestion, answers, score: 0, isComplete });
     }
-  }, [
-    isComplete,
-    answers,
-    currentQuestion,
-    onComplete,
-    saveProgress,
-    clearProgress,
-  ]);
+  }, [isComplete, answers, currentQuestion, onComplete, saveProgress, clearProgress]);
 
   // Digite: useCallback + Tab
   const handleAnswer = useCallback(
@@ -278,7 +264,7 @@ export const Quiz = ({ questions, onComplete }: QuizProps) => {
         nextQuestion();
       }, 1000);
     },
-    [answerQuestion, nextQuestion],
+    [answerQuestion, nextQuestion]
   );
 
   // Digite: useCallback + Tab
@@ -301,10 +287,7 @@ export const Quiz = ({ questions, onComplete }: QuizProps) => {
 
   return (
     <div className="quiz-container">
-      <ProgressBar
-        currentStep={currentQuestion + 1}
-        totalSteps={questions.length}
-      />
+      <ProgressBar currentStep={currentQuestion + 1} totalSteps={questions.length} />
 
       <QuizTimer
         duration={300} // 5 minutos
@@ -342,7 +325,7 @@ export const QuizResultComponent = ({ result, onRetake }: QuizResultProps) => {
 
   // Digite: useCallback + Tab
   const toggleDetails = useCallback(() => {
-    setShowDetails((prev) => !prev);
+    setShowDetails(prev => !prev);
   }, []);
 
   // Digite: useEffect + Tab
@@ -396,18 +379,15 @@ export const QuizResultComponent = ({ result, onRetake }: QuizResultProps) => {
 // 8. Hook para tracking de eventos
 const useAnalytics = () => {
   // Digite: useCallback + Tab
-  const trackEvent = useCallback(
-    (eventName: string, properties?: Record<string, any>) => {
-      // Digite: clg + Tab
-      console.log("Tracking event:", eventName, properties);
+  const trackEvent = useCallback((eventName: string, properties?: Record<string, any>) => {
+    // Digite: clg + Tab
+    console.log("Tracking event:", eventName, properties);
 
-      // Aqui você pode integrar com Google Analytics, Hotjar, etc.
-      if (window.gtag) {
-        window.gtag("event", eventName, properties);
-      }
-    },
-    [],
-  );
+    // Aqui você pode integrar com Google Analytics, Hotjar, etc.
+    if (window.gtag) {
+      window.gtag("event", eventName, properties);
+    }
+  }, []);
 
   // Digite: useCallback + Tab
   const trackQuizStart = useCallback(() => {
@@ -426,7 +406,7 @@ const useAnalytics = () => {
         total_questions: Object.keys(answers).length,
       });
     },
-    [trackEvent],
+    [trackEvent]
   );
 
   return {
@@ -463,15 +443,12 @@ const QuizApplication = () => {
         dominantStyle: "Elegante",
         percentage: 85,
         description: "Você tem um estilo elegante e sofisticado...",
-        recommendations: [
-          "Invista em peças clássicas",
-          "Prefira cores neutras",
-        ],
+        recommendations: ["Invista em peças clássicas", "Prefira cores neutras"],
       };
 
       setQuizResult(result);
     },
-    [trackQuizComplete],
+    [trackQuizComplete]
   );
 
   // Digite: useCallback + Tab
@@ -485,12 +462,7 @@ const QuizApplication = () => {
     {
       id: 1,
       text: "Qual dessas peças você usaria para um evento importante?",
-      options: [
-        "Vestido clássico",
-        "Conjunto casual",
-        "Look romântico",
-        "Peça moderna",
-      ],
+      options: ["Vestido clássico", "Conjunto casual", "Look romântico", "Peça moderna"],
       category: "formal",
     },
     // ... mais perguntas
@@ -507,9 +479,7 @@ const QuizApplication = () => {
   return (
     <div className="quiz-intro">
       <h1>Descubra Seu Estilo Pessoal</h1>
-      <p>
-        Responda algumas perguntas e descubra qual é seu estilo predominante!
-      </p>
+      <p>Responda algumas perguntas e descubra qual é seu estilo predominante!</p>
       <button onClick={handleStartQuiz} className="btn-primary">
         Começar Quiz
       </button>

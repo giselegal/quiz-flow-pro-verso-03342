@@ -26,9 +26,7 @@ export const ComponentPreviewPanel: React.FC<ComponentPreviewPanelProps> = ({
   if (!activeStage) {
     return (
       <div className="h-full flex items-center justify-center">
-        <p className="text-gray-500">
-          Selecione uma etapa para visualizar seus componentes.
-        </p>
+        <p className="text-gray-500">Selecione uma etapa para visualizar seus componentes.</p>
       </div>
     );
   }
@@ -47,7 +45,7 @@ export const ComponentPreviewPanel: React.FC<ComponentPreviewPanelProps> = ({
         <div
           className={cn(
             "min-h-full w-full max-w-4xl mx-auto",
-            isPreviewing ? "pointer-events-none select-none" : "",
+            isPreviewing ? "pointer-events-none select-none" : ""
           )}
         >
           {sortedComponents.length === 0 ? (
@@ -55,17 +53,12 @@ export const ComponentPreviewPanel: React.FC<ComponentPreviewPanelProps> = ({
               <p className="text-gray-500 mb-2">
                 Adicione componentes para esta etapa usando o painel lateral.
               </p>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {}}
-                className="text-gray-500"
-              >
+              <Button variant="outline" size="sm" onClick={() => {}} className="text-gray-500">
                 <Plus className="w-4 h-4 mr-1" /> Adicionar Componente
               </Button>
             </div>
           ) : (
-            sortedComponents.map((component) => (
+            sortedComponents.map(component => (
               <ComponentRenderer
                 key={component.id}
                 component={component}

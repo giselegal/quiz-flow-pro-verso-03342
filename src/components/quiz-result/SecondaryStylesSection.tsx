@@ -6,9 +6,7 @@ interface SecondaryStylesSectionProps {
   secondaryStyles: StyleResult[];
 }
 
-const SecondaryStylesSection: React.FC<SecondaryStylesSectionProps> = ({
-  secondaryStyles,
-}) => {
+const SecondaryStylesSection: React.FC<SecondaryStylesSectionProps> = ({ secondaryStyles }) => {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -47,10 +45,7 @@ const SecondaryStylesSection: React.FC<SecondaryStylesSectionProps> = ({
         </motion.h3>
       </motion.div>
 
-      <motion.div
-        className="grid grid-cols-1 gap-3"
-        variants={containerVariants}
-      >
+      <motion.div className="grid grid-cols-1 gap-3" variants={containerVariants}>
         {secondaryStyles.slice(0, 2).map((style, index) => (
           <motion.div
             key={style.category}
@@ -58,16 +53,12 @@ const SecondaryStylesSection: React.FC<SecondaryStylesSectionProps> = ({
             variants={itemVariants}
             whileHover={{
               y: -2,
-              boxShadow:
-                "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+              boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
             }}
           >
             <div className="flex-1">
               <div className="flex justify-between items-center mb-1.5">
-                <motion.h4
-                  className="text-sm font-medium text-[#432818]"
-                  whileHover={{ x: 2 }}
-                >
+                <motion.h4 className="text-sm font-medium text-[#432818]" whileHover={{ x: 2 }}>
                   {style.category}
                 </motion.h4>
                 <motion.span

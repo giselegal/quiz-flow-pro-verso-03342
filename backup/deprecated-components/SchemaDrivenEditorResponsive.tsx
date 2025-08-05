@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-import {
-  ResizablePanelGroup,
-  ResizablePanel,
-  ResizableHandle,
-} from "@/components/ui/resizable";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { useEditor } from "@/context/EditorContext";
 import EnhancedComponentsSidebar from "./EnhancedComponentsSidebar";
 import { CanvasDropZone } from "./canvas/CanvasDropZone";
@@ -15,9 +11,10 @@ interface SchemaDrivenEditorResponsiveProps {
   className?: string;
 }
 
-const SchemaDrivenEditorResponsive: React.FC<
-  SchemaDrivenEditorResponsiveProps
-> = ({ funnelId, className = "" }) => {
+const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> = ({
+  funnelId,
+  className = "",
+}) => {
   const {
     computed: { currentBlocks, selectedBlock },
     selectedBlockId,
@@ -28,22 +25,20 @@ const SchemaDrivenEditorResponsive: React.FC<
   return (
     <div className={`h-full w-full bg-gray-50 ${className}`}>
       <DndProvider
-        blocks={currentBlocks.map((block) => ({
+        blocks={currentBlocks.map(block => ({
           id: block.id,
           type: block.type,
           properties: block.properties || {},
         }))}
-        onBlocksReorder={(newBlocks) => {
+        onBlocksReorder={newBlocks => {
           console.log("🔄 Reordenando blocos via schema editor:", newBlocks);
           // TODO: Implementar reordenação no EditorContext
         }}
         onBlockAdd={(blockType, position) => {
           const blockId = addBlock(blockType);
-          console.log(
-            `➕ Bloco ${blockType} adicionado via schema editor na posição ${position}`,
-          );
+          console.log(`➕ Bloco ${blockType} adicionado via schema editor na posição ${position}`);
         }}
-        onBlockSelect={(blockId) => {
+        onBlockSelect={blockId => {
           setSelectedBlockId(blockId);
         }}
         selectedBlockId={selectedBlockId || undefined}

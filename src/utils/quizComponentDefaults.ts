@@ -25,12 +25,7 @@ export const getDefaultData = (type: QuizComponentType) => {
         question: "Digite sua pergunta aqui?",
         options: ["Opção 1", "Opção 2", "Opção 3", "Opção 4"],
         optionImages: [],
-        optionStyleCategories: [
-          "Natural",
-          "Clássico",
-          "Contemporâneo",
-          "Elegante",
-        ],
+        optionStyleCategories: ["Natural", "Clássico", "Contemporâneo", "Elegante"],
         multiSelect: 3,
         required: true,
         displayType: "text" as "text" | "image" | "both",
@@ -81,8 +76,7 @@ export const getDefaultData = (type: QuizComponentType) => {
     case "quizResult":
       return {
         title: "Seu Resultado",
-        description:
-          "Descrição do resultado do quiz baseado nas respostas fornecidas.",
+        description: "Descrição do resultado do quiz baseado nas respostas fornecidas.",
         showSecondaryStyles: true,
         showOffer: true,
       };

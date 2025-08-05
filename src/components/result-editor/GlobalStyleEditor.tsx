@@ -13,10 +13,7 @@ interface GlobalStyleEditorProps {
   onUpdate: (styles: any) => void;
 }
 
-const GlobalStyleEditor: React.FC<GlobalStyleEditorProps> = ({
-  globalStyles,
-  onUpdate,
-}) => {
+const GlobalStyleEditor: React.FC<GlobalStyleEditorProps> = ({ globalStyles, onUpdate }) => {
   const handleChange = (key: string, value: string) => {
     onUpdate({
       ...globalStyles,
@@ -34,29 +31,25 @@ const GlobalStyleEditor: React.FC<GlobalStyleEditorProps> = ({
             <Label>Cor Primária</Label>
             <ColorPicker
               color={globalStyles.primaryColor || "#B89B7A"}
-              onChange={(color) => handleChange("primaryColor", color)}
+              onChange={color => handleChange("primaryColor", color)}
             />
-            <p className="text-xs text-[#8F7A6A]">
-              Usada em títulos, botões e destaques
-            </p>
+            <p className="text-xs text-[#8F7A6A]">Usada em títulos, botões e destaques</p>
           </div>
 
           <div className="space-y-2">
             <Label>Cor Secundária</Label>
             <ColorPicker
               color={globalStyles.secondaryColor || "#432818"}
-              onChange={(color) => handleChange("secondaryColor", color)}
+              onChange={color => handleChange("secondaryColor", color)}
             />
-            <p className="text-xs text-[#8F7A6A]">
-              Usada em subtítulos e elementos secundários
-            </p>
+            <p className="text-xs text-[#8F7A6A]">Usada em subtítulos e elementos secundários</p>
           </div>
 
           <div className="space-y-2">
             <Label>Cor do Texto</Label>
             <ColorPicker
               color={globalStyles.textColor || "#1A1818"}
-              onChange={(color) => handleChange("textColor", color)}
+              onChange={color => handleChange("textColor", color)}
             />
           </div>
 
@@ -64,7 +57,7 @@ const GlobalStyleEditor: React.FC<GlobalStyleEditorProps> = ({
             <Label>Cor de Fundo</Label>
             <ColorPicker
               color={globalStyles.backgroundColor || "#fffaf7"}
-              onChange={(color) => handleChange("backgroundColor", color)}
+              onChange={color => handleChange("backgroundColor", color)}
             />
           </div>
         </div>
@@ -79,7 +72,7 @@ const GlobalStyleEditor: React.FC<GlobalStyleEditorProps> = ({
             id="fontFamily"
             className="w-full border rounded-md p-2"
             value={globalStyles.fontFamily || ""}
-            onChange={(e) => handleChange("fontFamily", e.target.value)}
+            onChange={e => handleChange("fontFamily", e.target.value)}
           >
             <option value="">Padrão do Sistema</option>
             <option value="'Playfair Display', serif">Playfair Display</option>

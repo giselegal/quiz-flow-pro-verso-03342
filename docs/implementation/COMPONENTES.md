@@ -45,16 +45,12 @@ interface SchemaDrivenEditorResponsiveProps {
 // Estado principal do editor
 const [blocks, setBlocks] = useState<Block[]>([]);
 const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
-const [viewMode, setViewMode] = useState<"mobile" | "tablet" | "desktop">(
-  "desktop",
-);
+const [viewMode, setViewMode] = useState<"mobile" | "tablet" | "desktop">("desktop");
 const [sidebarOpen, setSidebarOpen] = useState(false);
 
 // Estados de UI
 const [isLoading, setIsLoading] = useState(false);
-const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "error">(
-  "saved",
-);
+const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "error">("saved");
 const [isDragging, setIsDragging] = useState(false);
 ```
 
@@ -347,8 +343,7 @@ const {
 
 ```typescript
 // Hook para responsividade
-const { viewMode, setViewMode, isMobile, isTablet, isDesktop } =
-  useResponsiveLayout();
+const { viewMode, setViewMode, isMobile, isTablet, isDesktop } = useResponsiveLayout();
 ```
 
 ### useDragAndDrop
@@ -372,7 +367,7 @@ const { sensors, handleDragStart, handleDragEnd, isDragging } = useDragAndDrop({
 export const createBlock = (
   type: BlockType,
   position?: number,
-  customContent?: Partial<EditableContent>,
+  customContent?: Partial<EditableContent>
 ): Block => ({
   id: generateId(),
   type,
@@ -389,10 +384,7 @@ export const createBlock = (
 
 ```typescript
 // Validação de conteúdo por tipo
-export const validateBlockContent = (
-  type: BlockType,
-  content: EditableContent,
-): boolean => {
+export const validateBlockContent = (type: BlockType, content: EditableContent): boolean => {
   switch (type) {
     case "quiz-question":
       return !!(content.question && content.options?.length);
@@ -448,7 +440,7 @@ const buttonClasses = cn(
   variant === "primary" && "bg-primary text-white hover:bg-primary/90",
   variant === "secondary" && "bg-secondary text-white hover:bg-secondary/90",
   size === "sm" && "text-sm px-3 py-1",
-  size === "lg" && "text-lg px-6 py-3",
+  size === "lg" && "text-lg px-6 py-3"
 );
 ```
 

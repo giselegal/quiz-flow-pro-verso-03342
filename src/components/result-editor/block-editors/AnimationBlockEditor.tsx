@@ -16,10 +16,7 @@ interface AnimationBlockEditorProps {
   onUpdate: (content: any) => void;
 }
 
-const AnimationBlockEditor: React.FC<AnimationBlockEditorProps> = ({
-  block,
-  onUpdate,
-}) => {
+const AnimationBlockEditor: React.FC<AnimationBlockEditorProps> = ({ block, onUpdate }) => {
   const { content = {} } = block;
 
   const animationTypes = [
@@ -45,15 +42,13 @@ const AnimationBlockEditor: React.FC<AnimationBlockEditorProps> = ({
           <Label htmlFor="animationType">Tipo de Animação</Label>
           <Select
             value={content.animationType || "fade-in"}
-            onValueChange={(value) =>
-              onUpdate({ ...content, animationType: value })
-            }
+            onValueChange={value => onUpdate({ ...content, animationType: value })}
           >
             <SelectTrigger id="animationType">
               <SelectValue placeholder="Escolha o tipo de animação" />
             </SelectTrigger>
             <SelectContent>
-              {animationTypes.map((animation) => (
+              {animationTypes.map(animation => (
                 <SelectItem key={animation.value} value={animation.value}>
                   {animation.label}
                 </SelectItem>
@@ -67,9 +62,7 @@ const AnimationBlockEditor: React.FC<AnimationBlockEditorProps> = ({
           <Input
             id="animationDuration"
             value={content.animationDuration || "500"}
-            onChange={(e) =>
-              onUpdate({ ...content, animationDuration: e.target.value })
-            }
+            onChange={e => onUpdate({ ...content, animationDuration: e.target.value })}
             placeholder="500"
             type="number"
             min="100"
@@ -82,9 +75,7 @@ const AnimationBlockEditor: React.FC<AnimationBlockEditorProps> = ({
           <Input
             id="animationDelay"
             value={content.animationDelay || "0"}
-            onChange={(e) =>
-              onUpdate({ ...content, animationDelay: e.target.value })
-            }
+            onChange={e => onUpdate({ ...content, animationDelay: e.target.value })}
             placeholder="0"
             type="number"
             min="0"
@@ -96,15 +87,13 @@ const AnimationBlockEditor: React.FC<AnimationBlockEditorProps> = ({
           <Label htmlFor="animationTrigger">Gatilho da Animação</Label>
           <Select
             value={content.animationTrigger || "onLoad"}
-            onValueChange={(value) =>
-              onUpdate({ ...content, animationTrigger: value })
-            }
+            onValueChange={value => onUpdate({ ...content, animationTrigger: value })}
           >
             <SelectTrigger id="animationTrigger">
               <SelectValue placeholder="Escolha quando a animação acontece" />
             </SelectTrigger>
             <SelectContent>
-              {animationTriggers.map((trigger) => (
+              {animationTriggers.map(trigger => (
                 <SelectItem key={trigger.value} value={trigger.value}>
                   {trigger.label}
                 </SelectItem>
@@ -118,14 +107,14 @@ const AnimationBlockEditor: React.FC<AnimationBlockEditorProps> = ({
         <Label>Estilo do Container</Label>
         <StyleEditor
           style={content.style || {}}
-          onUpdate={(style) => onUpdate({ ...content, style })}
+          onUpdate={style => onUpdate({ ...content, style })}
         />
       </div>
 
       <div className="text-sm text-gray-500 pt-4">
         <p>
-          Este bloco permite animar outros elementos da página. Adicione outros
-          blocos dentro deste para aplicar a animação.
+          Este bloco permite animar outros elementos da página. Adicione outros blocos dentro deste
+          para aplicar a animação.
         </p>
       </div>
     </div>

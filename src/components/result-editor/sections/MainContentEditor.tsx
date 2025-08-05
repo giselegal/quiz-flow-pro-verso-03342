@@ -36,9 +36,7 @@ export const MainContentEditor: React.FC<MainContentEditorProps> = ({
             <Textarea
               id="introText"
               value={content.introText || ""}
-              onChange={(e) =>
-                onUpdate({ ...content, introText: e.target.value })
-              }
+              onChange={e => onUpdate({ ...content, introText: e.target.value })}
               rows={4}
             />
           </div>
@@ -49,7 +47,7 @@ export const MainContentEditor: React.FC<MainContentEditorProps> = ({
               <Input
                 key={index}
                 value={benefit}
-                onChange={(e) => {
+                onChange={e => {
                   const newBenefits = [...(content.benefits || [])];
                   newBenefits[index] = e.target.value;
                   onUpdate({ ...content, benefits: newBenefits });
@@ -64,9 +62,7 @@ export const MainContentEditor: React.FC<MainContentEditorProps> = ({
             <Input
               id="tabletImage"
               value={content.tabletImage || ""}
-              onChange={(e) =>
-                onUpdate({ ...content, tabletImage: e.target.value })
-              }
+              onChange={e => onUpdate({ ...content, tabletImage: e.target.value })}
             />
             {content.tabletImage && (
               <img

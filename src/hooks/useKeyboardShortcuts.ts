@@ -24,11 +24,7 @@ export const useKeyboardShortcuts = (shortcuts: KeyboardShortcuts) => {
         target.contentEditable === "true";
 
       // Ctrl/Cmd + Z (Undo)
-      if (
-        (event.ctrlKey || event.metaKey) &&
-        event.key === "z" &&
-        !event.shiftKey
-      ) {
+      if ((event.ctrlKey || event.metaKey) && event.key === "z" && !event.shiftKey) {
         if (!isInputField && shortcuts.onUndo) {
           event.preventDefault();
           shortcuts.onUndo();
@@ -38,9 +34,7 @@ export const useKeyboardShortcuts = (shortcuts: KeyboardShortcuts) => {
       // Ctrl/Cmd + Y ou Ctrl/Cmd + Shift + Z (Redo)
       if (
         ((event.ctrlKey || event.metaKey) && event.key === "y") ||
-        ((event.ctrlKey || event.metaKey) &&
-          event.shiftKey &&
-          event.key === "Z")
+        ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === "Z")
       ) {
         if (!isInputField && shortcuts.onRedo) {
           event.preventDefault();

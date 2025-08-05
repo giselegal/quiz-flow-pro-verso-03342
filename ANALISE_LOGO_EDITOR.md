@@ -172,9 +172,7 @@ className = "h-12 mx-auto"; // Diminuir altura
 // Criar um novo componente TextBrand
 const TextBrand = () => (
   <div className="text-center py-6">
-    <h1 className="text-2xl font-brand text-brand-dark">
-      Quiz Quest Challenge Verse
-    </h1>
+    <h1 className="text-2xl font-brand text-brand-dark">Quiz Quest Challenge Verse</h1>
   </div>
 );
 

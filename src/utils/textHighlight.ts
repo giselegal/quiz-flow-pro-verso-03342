@@ -70,26 +70,20 @@ export const highlightStrategicWords = (text: string): React.ReactNode => {
   ];
 
   // Remove duplicates and sort by length (longer words first to prevent partial matches)
-  const uniqueSortedWords = Array.from(new Set(strategicWords)).sort(
-    (a, b) => b.length - a.length,
-  );
+  const uniqueSortedWords = Array.from(new Set(strategicWords)).sort((a, b) => b.length - a.length);
 
   const pattern = new RegExp(`(${uniqueSortedWords.join("|")})`, "gi");
   const parts = text.split(pattern);
 
   return parts.map((part, index) => {
-    if (
-      uniqueSortedWords.some(
-        (word) => part.toLowerCase() === word.toLowerCase(),
-      )
-    ) {
+    if (uniqueSortedWords.some(word => part.toLowerCase() === word.toLowerCase())) {
       return React.createElement(
         "strong",
         {
           key: index,
           className: "highlight-strategic font-medium", // Usando a classe highlight-strategic
         },
-        part,
+        part
       );
     }
     return part;

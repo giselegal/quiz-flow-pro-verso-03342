@@ -199,15 +199,7 @@ CREATE TABLE funnel_pages (
   "metadata": {
     "scoring": {
       "type": "points",
-      "categories": [
-        "warrior",
-        "mage",
-        "explorer",
-        "healer",
-        "ranger",
-        "druid",
-        "nomad"
-      ]
+      "categories": ["warrior", "mage", "explorer", "healer", "ranger", "druid", "nomad"]
     }
   }
 }

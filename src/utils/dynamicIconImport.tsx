@@ -14,28 +14,23 @@ export const dynamicIconImport = (iconName: string): React.ElementType => {
   const formatIconName = (name: string) => {
     return name
       .split("-")
-      .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+      .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
       .join("");
   };
 
   const formattedName = formatIconName(iconName);
 
   // Return the icon component if it exists, otherwise return Star
-  return (
-    (Icons[formattedName as keyof typeof Icons] as React.ElementType) ||
-    Icons.Star
-  );
+  return (Icons[formattedName as keyof typeof Icons] as React.ElementType) || Icons.Star;
 };
 
 // Function to get all available icon names
 export const getAvailableIcons = (): string[] => {
   return Object.keys(Icons)
     .filter(
-      (key) =>
-        typeof Icons[key as keyof typeof Icons] === "function" &&
-        key !== "createLucideIcon",
+      key => typeof Icons[key as keyof typeof Icons] === "function" && key !== "createLucideIcon"
     )
-    .map((key) => {
+    .map(key => {
       // Convert PascalCase to kebab-case
       return key.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
     });

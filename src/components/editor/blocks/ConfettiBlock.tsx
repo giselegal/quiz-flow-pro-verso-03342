@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from 'react';
-import { Sparkles } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
+import React, { useEffect, useRef } from "react";
+import { Sparkles } from "lucide-react";
+import type { BlockComponentProps } from "@/types/blocks";
 
 const ConfettiBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -8,7 +8,7 @@ const ConfettiBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = '',
+  className = "",
 }) => {
   const { duration = 3000, particleCount = 100 } = block?.properties || {};
 
@@ -32,7 +32,7 @@ const ConfettiBlock: React.FC<BlockComponentProps> = ({
       ref={confettiRef}
       className={`
         py-12 text-center bg-brand/10 rounded-lg border border-brand/30 cursor-pointer transition-all duration-200
-        ${isSelected ? 'ring-1 ring-brand/40 bg-brand/10' : 'hover:shadow-sm hover:bg-brand/20'}
+        ${isSelected ? "ring-1 ring-brand/40 bg-brand/10" : "hover:shadow-sm hover:bg-brand/20"}
         ${className}
       `}
       onClick={onClick}

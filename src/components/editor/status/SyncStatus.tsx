@@ -75,9 +75,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
     }
 
     if (autoSaveState.lastSave) {
-      const timeDiff = Math.floor(
-        (Date.now() - autoSaveState.lastSave.getTime()) / 1000,
-      );
+      const timeDiff = Math.floor((Date.now() - autoSaveState.lastSave.getTime()) / 1000);
       if (timeDiff < 60) {
         return `Salvo há ${timeDiff}s`;
       } else if (timeDiff < 3600) {
@@ -167,25 +165,15 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
             {getStatusIcon()}
             <span className="text-sm">{getStatusText()}</span>
           </div>
-          <Badge variant={getStatusBadgeVariant()}>
-            {isOnline ? "Online" : "Offline"}
-          </Badge>
+          <Badge variant={getStatusBadgeVariant()}>{isOnline ? "Online" : "Offline"}</Badge>
         </div>
 
         {/* Auto-save settings */}
         <div className="flex items-center justify-between">
           <div className="text-sm text-gray-600">
-            Auto-save:{" "}
-            {autoSaveState.isEnabled
-              ? `${autoSaveState.interval}s`
-              : "Desabilitado"}
+            Auto-save: {autoSaveState.isEnabled ? `${autoSaveState.interval}s` : "Desabilitado"}
           </div>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={onToggleAutoSave}
-            className="h-7 text-xs"
-          >
+          <Button size="sm" variant="outline" onClick={onToggleAutoSave} className="h-7 text-xs">
             {autoSaveState.isEnabled ? "Desabilitar" : "Habilitar"}
           </Button>
         </div>
@@ -197,9 +185,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
               <AlertCircle className="w-3 h-3" />
               <span>Falhas no auto-save: {autoSaveState.errorCount}</span>
             </div>
-            <div className="mt-1">
-              Intervalo aumentado para {autoSaveState.interval}s
-            </div>
+            <div className="mt-1">Intervalo aumentado para {autoSaveState.interval}s</div>
           </div>
         )}
 
@@ -207,21 +193,13 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
         {autoSaveState.lastSave && (
           <div className="text-xs text-gray-500 flex items-center space-x-1">
             <History className="w-3 h-3" />
-            <span>
-              Última sincronização:{" "}
-              {autoSaveState.lastSave.toLocaleTimeString()}
-            </span>
+            <span>Última sincronização: {autoSaveState.lastSave.toLocaleTimeString()}</span>
           </div>
         )}
 
         {/* Ações */}
         <div className="flex space-x-2">
-          <Button
-            size="sm"
-            onClick={onManualSave}
-            disabled={isSaving}
-            className="flex-1"
-          >
+          <Button size="sm" onClick={onManualSave} disabled={isSaving} className="flex-1">
             {isSaving ? (
               <>
                 <Loader2 className="w-3 h-3 mr-1 animate-spin" />

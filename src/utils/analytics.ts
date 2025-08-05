@@ -11,7 +11,7 @@ export const trackCustomEvent = (
   category: string,
   action: string,
   label: string,
-  value?: number,
+  value?: number
 ) => {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", action, {
@@ -20,18 +20,11 @@ export const trackCustomEvent = (
       value: value,
     });
   }
-  console.log(
-    `[Analytics] Custom Event: ${category} - ${action} - ${label} - ${value}`,
-  );
+  console.log(`[Analytics] Custom Event: ${category} - ${action} - ${label} - ${value}`);
 };
 
 // Function to track timing
-export const trackTiming = (
-  category: string,
-  variable: string,
-  value: number,
-  label?: string,
-) => {
+export const trackTiming = (category: string, variable: string, value: number, label?: string) => {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "timing_complete", {
       event_category: category,
@@ -40,9 +33,7 @@ export const trackTiming = (
       event_label: label,
     });
   }
-  console.log(
-    `[Analytics] Timing: ${category} - ${variable} - ${value} - ${label}`,
-  );
+  console.log(`[Analytics] Timing: ${category} - ${variable} - ${value} - ${label}`);
 };
 
 // Function to track an exception
@@ -65,10 +56,7 @@ export const setUserProperties = (properties: object) => {
 };
 
 // Function to track a page view
-export const trackPageView = (
-  pagePath: string,
-  additionalData?: Record<string, any>,
-) => {
+export const trackPageView = (pagePath: string, additionalData?: Record<string, any>) => {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "page_view", {
       page_path: pagePath,
@@ -125,9 +113,7 @@ export const trackResultView = (resultType: string, data?: any) => {
 };
 
 // Fix getCreativePerformance to accept no arguments and return proper format
-export const getCreativePerformance = async (): Promise<
-  Record<string, any>
-> => {
+export const getCreativePerformance = async (): Promise<Record<string, any>> => {
   // Mock implementation for now
   return {
     "creative-1": {
@@ -161,11 +147,7 @@ export const getAnalyticsEvents = (): any[] => {
 };
 
 // Function to track a social interaction
-export const trackSocialInteraction = (
-  network: string,
-  action: string,
-  target: string,
-) => {
+export const trackSocialInteraction = (network: string, action: string, target: string) => {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "social", {
       event_category: "social",
@@ -174,17 +156,11 @@ export const trackSocialInteraction = (
       social_target: target,
     });
   }
-  console.log(
-    `[Analytics] Social Interaction: ${network} - ${action} - ${target}`,
-  );
+  console.log(`[Analytics] Social Interaction: ${network} - ${action} - ${target}`);
 };
 
 // Function to track a refund
-export const trackRefund = (
-  transaction_id: string,
-  value?: number,
-  currency?: string,
-) => {
+export const trackRefund = (transaction_id: string, value?: number, currency?: string) => {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "refund", {
       transaction_id: transaction_id,
@@ -207,10 +183,7 @@ export const trackCheckoutProgress = (step: number, option?: string) => {
 };
 
 // Function to track a product impression
-export const trackProductImpression = (
-  products: object[],
-  list_name: string,
-) => {
+export const trackProductImpression = (products: object[], list_name: string) => {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "view_item_list", {
       items: products,
@@ -291,7 +264,7 @@ export const trackPurchase = (
   products: object[],
   coupon?: string,
   shipping?: number,
-  tax?: number,
+  tax?: number
 ) => {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "purchase", {
@@ -312,7 +285,7 @@ export const trackPurchase = (
     products,
     coupon,
     shipping,
-    tax,
+    tax
   );
 };
 
@@ -332,7 +305,7 @@ export const captureUTMParameters = () => {
     "gclid",
   ];
 
-  utmKeys.forEach((key) => {
+  utmKeys.forEach(key => {
     const value = urlParams.get(key);
     if (value) {
       utmParams[key] = value;
@@ -374,11 +347,7 @@ export const initFacebookPixel = (pixelData?: any) => {
   console.log(`[Analytics] Facebook Pixel initialized with ID: ${pixelId}`);
 };
 
-export const trackButtonClick = (
-  buttonId: string,
-  buttonText?: string,
-  location?: string,
-) => {
+export const trackButtonClick = (buttonId: string, buttonText?: string, location?: string) => {
   if (typeof window === "undefined") return;
 
   const data = {
@@ -401,7 +370,7 @@ export const trackButtonClick = (
 export const trackSaleConversion = (
   value: number,
   currency: string = "BRL",
-  productName?: string,
+  productName?: string
 ) => {
   if (typeof window === "undefined") return;
 

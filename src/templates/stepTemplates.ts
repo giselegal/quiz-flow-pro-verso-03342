@@ -180,8 +180,7 @@ export const transitionTemplate = [
   {
     type: "text-inline",
     properties: {
-      content:
-        "Preparando questões especiais para você baseadas nas suas respostas anteriores",
+      content: "Preparando questões especiais para você baseadas nas suas respostas anteriores",
       textAlign: "center",
       fontSize: "medium",
     },
@@ -202,8 +201,7 @@ export const resultTemplate = [
     type: "result-card-inline",
     properties: {
       styleType: "Contemporâneo Elegante",
-      description:
-        "Você tem um estilo que combina modernidade com sofisticação",
+      description: "Você tem um estilo que combina modernidade com sofisticação",
       showImage: true,
       showDescription: true,
       showCharacteristics: true,

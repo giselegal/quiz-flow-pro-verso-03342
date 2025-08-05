@@ -12,10 +12,7 @@ interface TwoColumnBlockEditorProps {
   onUpdate: (content: any) => void;
 }
 
-const TwoColumnBlockEditor: React.FC<TwoColumnBlockEditorProps> = ({
-  block,
-  onUpdate,
-}) => {
+const TwoColumnBlockEditor: React.FC<TwoColumnBlockEditorProps> = ({ block, onUpdate }) => {
   const { content = {} } = block;
 
   // Ensure leftColumn and rightColumn exist and have style property
@@ -72,23 +69,17 @@ const TwoColumnBlockEditor: React.FC<TwoColumnBlockEditorProps> = ({
               <Input
                 id="columnGap"
                 value={content.columnGap || "20px"}
-                onChange={(e) =>
-                  onUpdate({ ...content, columnGap: e.target.value })
-                }
+                onChange={e => onUpdate({ ...content, columnGap: e.target.value })}
                 placeholder="ex: 20px ou 1rem"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="leftColumnWidth">
-                Largura da Coluna Esquerda
-              </Label>
+              <Label htmlFor="leftColumnWidth">Largura da Coluna Esquerda</Label>
               <Input
                 id="leftColumnWidth"
                 value={leftColumn.width || "50%"}
-                onChange={(e) =>
-                  handleLeftColumnUpdate({ width: e.target.value })
-                }
+                onChange={e => handleLeftColumnUpdate({ width: e.target.value })}
                 placeholder="ex: 50% ou 300px"
               />
               <p className="text-xs text-muted-foreground">
@@ -97,15 +88,11 @@ const TwoColumnBlockEditor: React.FC<TwoColumnBlockEditorProps> = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="rightColumnWidth">
-                Largura da Coluna Direita
-              </Label>
+              <Label htmlFor="rightColumnWidth">Largura da Coluna Direita</Label>
               <Input
                 id="rightColumnWidth"
                 value={rightColumn.width || "50%"}
-                onChange={(e) =>
-                  handleRightColumnUpdate({ width: e.target.value })
-                }
+                onChange={e => handleRightColumnUpdate({ width: e.target.value })}
                 placeholder="ex: 50% ou 300px"
               />
             </div>
@@ -117,15 +104,12 @@ const TwoColumnBlockEditor: React.FC<TwoColumnBlockEditorProps> = ({
               <Textarea
                 id="leftContent"
                 value={leftColumn.content || ""}
-                onChange={(e) =>
-                  handleLeftColumnUpdate({ content: e.target.value })
-                }
+                onChange={e => handleLeftColumnUpdate({ content: e.target.value })}
                 placeholder="Adicione conteúdo HTML ou texto simples aqui"
                 className="min-h-[150px]"
               />
               <p className="text-xs text-muted-foreground">
-                Você pode adicionar HTML básico como &lt;h2&gt;, &lt;p&gt;,
-                &lt;strong&gt;, etc.
+                Você pode adicionar HTML básico como &lt;h2&gt;, &lt;p&gt;, &lt;strong&gt;, etc.
               </p>
             </div>
 
@@ -133,7 +117,7 @@ const TwoColumnBlockEditor: React.FC<TwoColumnBlockEditorProps> = ({
               <Label>Estilo da Coluna Esquerda</Label>
               <StyleEditor
                 style={leftColumn.style || {}}
-                onUpdate={(style) => handleLeftColumnUpdate({ style })}
+                onUpdate={style => handleLeftColumnUpdate({ style })}
               />
             </div>
           </TabsContent>
@@ -144,15 +128,12 @@ const TwoColumnBlockEditor: React.FC<TwoColumnBlockEditorProps> = ({
               <Textarea
                 id="rightContent"
                 value={rightColumn.content || ""}
-                onChange={(e) =>
-                  handleRightColumnUpdate({ content: e.target.value })
-                }
+                onChange={e => handleRightColumnUpdate({ content: e.target.value })}
                 placeholder="Adicione conteúdo HTML ou texto simples aqui"
                 className="min-h-[150px]"
               />
               <p className="text-xs text-muted-foreground">
-                Você pode adicionar HTML básico como &lt;h2&gt;, &lt;p&gt;,
-                &lt;strong&gt;, etc.
+                Você pode adicionar HTML básico como &lt;h2&gt;, &lt;p&gt;, &lt;strong&gt;, etc.
               </p>
             </div>
 
@@ -160,7 +141,7 @@ const TwoColumnBlockEditor: React.FC<TwoColumnBlockEditorProps> = ({
               <Label>Estilo da Coluna Direita</Label>
               <StyleEditor
                 style={rightColumn.style || {}}
-                onUpdate={(style) => handleRightColumnUpdate({ style })}
+                onUpdate={style => handleRightColumnUpdate({ style })}
               />
             </div>
           </TabsContent>
@@ -171,7 +152,7 @@ const TwoColumnBlockEditor: React.FC<TwoColumnBlockEditorProps> = ({
         <Label>Estilo do Container</Label>
         <StyleEditor
           style={content.style || {}}
-          onUpdate={(style) => onUpdate({ ...content, style })}
+          onUpdate={style => onUpdate({ ...content, style })}
         />
       </div>
     </div>

@@ -111,9 +111,7 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
   isFirstQuestion = false,
   isLastQuestion = false,
 }) => {
-  const getButtonClasses = (
-    variant: "primary" | "secondary" | "outline" = buttonStyle,
-  ) => {
+  const getButtonClasses = (variant: "primary" | "secondary" | "outline" = buttonStyle) => {
     const baseClasses = `
       font-semibold transition-all duration-300 transform hover:scale-105
       ${
@@ -127,8 +125,7 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
     `;
 
     const variants = {
-      primary:
-        "bg-[#B89B7A] hover:bg-[#A1835D] text-white rounded-full shadow-md",
+      primary: "bg-[#B89B7A] hover:bg-[#A1835D] text-white rounded-full shadow-md",
       secondary: "bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-full",
       outline:
         "border-2 border-[#B89B7A] text-[#B89B7A] hover:bg-[#B89B7A] hover:text-white rounded-full",
@@ -177,11 +174,7 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
   const isActuallyLast = isLastQuestion || currentQuestion === totalQuestions;
 
   return (
-    <div
-      className={`quiz-navigation-block ${className}`}
-      style={style}
-      data-block-id={blockId}
-    >
+    <div className={`quiz-navigation-block ${className}`} style={style} data-block-id={blockId}>
       <div className="py-6">
         <div className={getContainerClasses()}>
           {/* Botão Voltar */}
@@ -217,8 +210,7 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
           )}
 
           {/* Spacer para space-between quando não há botão esquerdo */}
-          {alignment === "space-between" &&
-            (!showBackButton || isActuallyFirst) && <div></div>}
+          {alignment === "space-between" && (!showBackButton || isActuallyFirst) && <div></div>}
 
           {/* Grupo de botões direitos */}
           <div className="flex items-center gap-3">
@@ -247,9 +239,7 @@ const QuizNavigationBlock: React.FC<QuizNavigationBlockProps> = ({
                   !isActuallyLast && <ChevronRight className="w-4 h-4 ml-2" />
                 )}
                 {isActuallyLast ? "Finalizar" : nextButtonText}
-                {!isActuallyLast && !loadingNext && (
-                  <ChevronRight className="w-4 h-4 ml-2" />
-                )}
+                {!isActuallyLast && !loadingNext && <ChevronRight className="w-4 h-4 ml-2" />}
               </Button>
             )}
           </div>

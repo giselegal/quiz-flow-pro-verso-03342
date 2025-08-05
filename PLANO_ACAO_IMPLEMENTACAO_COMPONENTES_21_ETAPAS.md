@@ -434,7 +434,7 @@ echo "🎯 TESTE CONCLUÍDO"
 // 2. Executar no console:
 
 // Testar navegação para etapa 1
-window.testStepNavigation = (stepId) => {
+window.testStepNavigation = stepId => {
   console.log(`🧪 Testando navegação para etapa ${stepId}`);
 
   // Simular seleção de etapa
@@ -446,7 +446,7 @@ window.testStepNavigation = (stepId) => {
   setTimeout(() => {
     const blocks = document.querySelectorAll("[data-block-type]");
     console.log(`📊 ${blocks.length} blocos renderizados`);
-    blocks.forEach((block) => {
+    blocks.forEach(block => {
       console.log(`  - ${block.getAttribute("data-block-type")}`);
     });
   }, 500);
@@ -462,7 +462,7 @@ for (let i = 1; i <= 21; i++) {
 
 ```typescript
 // Teste individual de componentes
-const testComponentRendering = (componentType) => {
+const testComponentRendering = componentType => {
   const testBlock = {
     id: "test-block",
     type: componentType,
@@ -600,7 +600,7 @@ URL: http://localhost:8081/editor
 // Abrir DevTools (F12) e executar:
 
 // Testar componente específico
-window.testComponent = (componentType) => {
+window.testComponent = componentType => {
   console.log(`🧪 Testando componente: ${componentType}`);
 
   const testBlock = {
@@ -618,11 +618,9 @@ window.testComponent = (componentType) => {
 };
 
 // Testar componentes críticos
-["text-inline", "quiz-start-page-inline", "quiz-question-inline"].forEach(
-  (type) => {
-    window.testComponent(type);
-  },
-);
+["text-inline", "quiz-start-page-inline", "quiz-question-inline"].forEach(type => {
+  window.testComponent(type);
+});
 ```
 
 ### **3. Verificar Logs do Console**

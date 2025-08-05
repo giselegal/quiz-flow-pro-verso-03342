@@ -27,8 +27,7 @@ objects.forEach((obj, index) => {
   // Reconstituir o objeto
   let fullObj = obj;
   if (index > 0 && !fullObj.startsWith("{")) fullObj = "{" + fullObj;
-  if (index < objects.length - 1 && !fullObj.endsWith("}"))
-    fullObj = fullObj + "}";
+  if (index < objects.length - 1 && !fullObj.endsWith("}")) fullObj = fullObj + "}";
 
   const hasType = /type:\s*['"`]([^'"`]+)['"`]/.test(fullObj);
   const hasName = /name:\s*['"`]([^'"`]+)['"`]/.test(fullObj);
@@ -47,8 +46,7 @@ console.log(`\n🎯 BLOCOS VÁLIDOS ENCONTRADOS: ${validBlocks.length}`);
 
 // Reconstituir o arquivo limpo
 const cleanedArrayContent = validBlocks.join(",\n\n  ");
-const cleanedFile =
-  beforeArray + "\n  " + cleanedArrayContent + "\n\n" + afterArray;
+const cleanedFile = beforeArray + "\n  " + cleanedArrayContent + "\n\n" + afterArray;
 
 // Salvar backup do arquivo original
 const backupPath = "./client/src/config/blockDefinitions.backup.ts";
@@ -61,9 +59,7 @@ console.log(`✨ Arquivo limpo salvo: ${filePath}`);
 
 console.log("\n" + "=".repeat(60));
 console.log(`🎉 LIMPEZA CONCLUÍDA!`);
-console.log(
-  `📊 Removidos: ${objects.length - validBlocks.length} objetos inválidos`,
-);
+console.log(`📊 Removidos: ${objects.length - validBlocks.length} objetos inválidos`);
 console.log(`✅ Mantidos: ${validBlocks.length} blocos válidos`);
 console.log(`📁 Backup: blockDefinitions.backup.ts`);
 console.log("\n🚀 Agora o editor terá apenas componentes válidos!");

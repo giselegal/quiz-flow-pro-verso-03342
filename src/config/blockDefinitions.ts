@@ -216,16 +216,16 @@ export const blockDefinitions: BlockDefinition[] = [
 
 export const getCategories = (): string[] => {
   const categories = new Set<string>();
-  blockDefinitions.forEach((block) => {
+  blockDefinitions.forEach(block => {
     categories.add(block.category);
   });
   return Array.from(categories);
 };
 
 export const getBlocksByCategory = (category: string): BlockDefinition[] => {
-  return blockDefinitions.filter((block) => block.category === category);
+  return blockDefinitions.filter(block => block.category === category);
 };
 
 export const getBlockByType = (type: string): BlockDefinition | undefined => {
-  return blockDefinitions.find((block) => block.type === type);
+  return blockDefinitions.find(block => block.type === type);
 };

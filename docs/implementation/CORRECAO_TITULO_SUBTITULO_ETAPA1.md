@@ -42,17 +42,15 @@ Chega de um guarda-roupa lotado... (com "Chega" e "nada combina com você" em de
 **Título Corrigido:**
 
 ```html
-<span style="color: #B89B7A; font-weight: 700;">Chega</span> de um guarda-roupa
-lotado e da sensação de que
-<span style="color: #B89B7A; font-weight: 700;">nada combina com você.</span>
+<span style="color: #B89B7A; font-weight: 700;">Chega</span> de um guarda-roupa lotado e da sensação
+de que <span style="color: #B89B7A; font-weight: 700;">nada combina com você.</span>
 ```
 
 **Subtítulo:**
 
 ```html
-Em poucos minutos, descubra seu
-<strong style="color: #B89B7A;">Estilo Predominante</strong> — e aprenda a
-montar looks que realmente refletem sua essência, com praticidade e confiança.
+Em poucos minutos, descubra seu <strong style="color: #B89B7A;">Estilo Predominante</strong> — e
+aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.
 ```
 
 ### 3. **Validação do TextInlineBlock**

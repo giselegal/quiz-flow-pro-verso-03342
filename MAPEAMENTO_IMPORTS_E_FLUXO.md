@@ -17,11 +17,7 @@ import React, { useState, useCallback, useMemo, useEffect } from "react";
 ### 🎨 **UI Components (Shadcn/UI)**
 
 ```typescript
-import {
-  ResizablePanelGroup,
-  ResizablePanel,
-  ResizableHandle,
-} from "../ui/resizable";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "../ui/resizable";
 import { ScrollArea } from "../ui/scroll-area";
 import { Button } from "../ui/button";
 ```
@@ -159,7 +155,7 @@ useEffect(() => {
 // 🎯 Fonte única de verdade: stepTemplateService
 const getStepsFromService = useCallback(() => {
   const allSteps = stepTemplateService.getAllSteps();
-  return allSteps.map((stepInfo) => ({
+  return allSteps.map(stepInfo => ({
     id: stepInfo.id, // "etapa-1", "etapa-2"...
     name: stepInfo.name, // "Introdução", "Q1: Tipo de Roupa"...
     order: stepInfo.order, // 1, 2, 3...
@@ -183,11 +179,9 @@ const handleStepSelect = useCallback(
     setSelectedBlockId(null); // Limpar seleção de bloco
 
     // 2. Verificar se etapa está vazia
-    const selectedStep = steps.find((step) => step.id === stepId);
+    const selectedStep = steps.find(step => step.id === stepId);
     if (selectedStep && selectedStep.blocksCount === 0) {
-      console.log(
-        `📝 Etapa ${stepId} está vazia, populando automaticamente...`,
-      );
+      console.log(`📝 Etapa ${stepId} está vazia, populando automaticamente...`);
 
       // 3. Popular etapa automaticamente
       setTimeout(() => {
@@ -195,7 +189,7 @@ const handleStepSelect = useCallback(
       }, 100);
     }
   },
-  [steps],
+  [steps]
 );
 ```
 
@@ -222,10 +216,10 @@ const handlePopulateStep = useCallback((stepId: string) => {
   });
 
   // 4. Atualizar contador de blocos
-  setSteps((prevSteps) =>
-    prevSteps.map((step) =>
-      step.id === stepId ? { ...step, blocksCount: stepTemplate.length } : step,
-    ),
+  setSteps(prevSteps =>
+    prevSteps.map(step =>
+      step.id === stepId ? { ...step, blocksCount: stepTemplate.length } : step
+    )
   );
 }, []);
 ```
@@ -235,7 +229,7 @@ const handlePopulateStep = useCallback((stepId: string) => {
 ```typescript
 // 🎯 CORREÇÃO: Filtrar blocos apenas da etapa atual
 const sortedBlocks = useMemo(() => {
-  const stepBlocks = blocks.filter((block) => {
+  const stepBlocks = blocks.filter(block => {
     // Se o bloco tem stepId, verificar se corresponde à etapa atual
     if (block.stepId) {
       return block.stepId === selectedStepId;
@@ -307,7 +301,7 @@ const handleAddBlock = useCallback(
       updateBlock(newBlockId, { stepId: selectedStepId });
     }, 50);
   },
-  [addBlock, selectedStepId, updateBlock],
+  [addBlock, selectedStepId, updateBlock]
 );
 ```
 
@@ -482,7 +476,7 @@ O canvas está localizado na **estrutura de layout dividida em 3 painéis**:
 
 ```typescript
 const sortedBlocks = useMemo(() => {
-  const stepBlocks = blocks.filter((block) => {
+  const stepBlocks = blocks.filter(block => {
     if (block.stepId) {
       return block.stepId === selectedStepId; // 🔑 CHAVE DO SISTEMA
     }
@@ -552,9 +546,7 @@ if (!stepTemplate || stepTemplate.length === 0) {
 return blocks; // Sem filtro
 
 // ✅ SOLUÇÃO: Filtro por stepId
-return blocks.filter(
-  (block) => block.stepId === selectedStepId || !block.stepId,
-);
+return blocks.filter(block => block.stepId === selectedStepId || !block.stepId);
 ```
 
 ### 🎨 **CANVAS EM AÇÃO**

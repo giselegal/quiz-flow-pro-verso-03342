@@ -49,7 +49,7 @@ const SortableOptionItem: React.FC<SortableOptionItemProps> = ({
             <label className="text-sm font-medium">Text</label>
             <Input
               value={option.text || ""}
-              onChange={(e) => onUpdate({ text: e.target.value })}
+              onChange={e => onUpdate({ text: e.target.value })}
               placeholder="Option text"
             />
           </div>
@@ -57,7 +57,7 @@ const SortableOptionItem: React.FC<SortableOptionItemProps> = ({
             <label className="text-sm font-medium">Image URL</label>
             <Input
               value={option.imageUrl || ""}
-              onChange={(e) => onUpdate({ imageUrl: e.target.value })}
+              onChange={e => onUpdate({ imageUrl: e.target.value })}
               placeholder="Image URL"
             />
           </div>

@@ -62,20 +62,18 @@ export const FileLoadingSimulator: React.FC<FileLoadingSimulatorProps> = ({
               ? Math.floor(Math.random() * 10) + 5
               : Math.floor(Math.random() * 50) + 20;
 
-        setFilesLoaded((prev) => {
+        setFilesLoaded(prev => {
           const newValue = prev + increment;
           return newValue > totalFiles ? totalFiles : newValue;
         });
 
         // Gerar um nome de arquivo aleatório
-        const randomBase =
-          fileNames[Math.floor(Math.random() * fileNames.length)];
-        const randomExt =
-          fileExtensions[Math.floor(Math.random() * fileExtensions.length)];
+        const randomBase = fileNames[Math.floor(Math.random() * fileNames.length)];
+        const randomExt = fileExtensions[Math.floor(Math.random() * fileExtensions.length)];
         const fileName = randomBase.replace(/\.\w+$/, "") + randomExt;
         setRandomFileName(fileName);
       },
-      speed === "slow" ? 1000 : speed === "medium" ? 300 : 100,
+      speed === "slow" ? 1000 : speed === "medium" ? 300 : 100
     );
 
     return () => clearInterval(interval);
@@ -105,27 +103,19 @@ export const FileLoadingSimulator: React.FC<FileLoadingSimulatorProps> = ({
               </svg>
             </div>
             <div className="ml-4">
-              <h1 className="text-2xl font-medium text-[#432818]">
-                Carregando Editor
-              </h1>
-              <p className="text-[#8F7A6A]">
-                Preparando recursos para o editor visual
-              </p>
+              <h1 className="text-2xl font-medium text-[#432818]">Carregando Editor</h1>
+              <p className="text-[#8F7A6A]">Preparando recursos para o editor visual</p>
             </div>
           </div>
           <div>
-            <span className="text-sm font-semibold text-[#B89B7A]">
-              Lovable Studio
-            </span>
+            <span className="text-sm font-semibold text-[#B89B7A]">Lovable Studio</span>
           </div>
         </div>
 
         <div className="space-y-6">
           <div>
             <div className="flex justify-between mb-1">
-              <span className="text-sm font-medium text-[#432818]">
-                Progresso
-              </span>
+              <span className="text-sm font-medium text-[#432818]">Progresso</span>
               <span className="text-sm font-medium text-[#432818]">
                 {Math.round(progressPercentage)}%
               </span>
@@ -135,9 +125,7 @@ export const FileLoadingSimulator: React.FC<FileLoadingSimulatorProps> = ({
 
           <div className="bg-[#F9F6F3] rounded-md p-4 border border-[#B89B7A]/20">
             <div className="flex justify-between mb-2">
-              <span className="text-sm font-medium text-[#432818]">
-                Arquivos
-              </span>
+              <span className="text-sm font-medium text-[#432818]">Arquivos</span>
               <span className="text-sm font-medium text-[#432818]">
                 {filesLoaded} de {totalFiles}
               </span>

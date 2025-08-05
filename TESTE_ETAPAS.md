@@ -24,7 +24,7 @@ export interface EditorBlock extends Block {
 ```typescript
 // Agora o canvas só mostra blocos da etapa selecionada
 const sortedBlocks = useMemo(() => {
-  const stepBlocks = blocks.filter((block) => {
+  const stepBlocks = blocks.filter(block => {
     if (block.stepId) {
       return block.stepId === selectedStepId;
     }
@@ -38,14 +38,12 @@ const sortedBlocks = useMemo(() => {
 
 ```typescript
 // Quando um bloco é adicionado, ele recebe o stepId da etapa atual
-const handleAddBlocksToStep = useCallback(
-  (stepId: string, blocksToAdd: any[]) => {
-    const blockProperties = {
-      ...block.properties,
-      stepId: stepId, // ✅ Associar bloco à etapa
-    };
-  },
-);
+const handleAddBlocksToStep = useCallback((stepId: string, blocksToAdd: any[]) => {
+  const blockProperties = {
+    ...block.properties,
+    stepId: stepId, // ✅ Associar bloco à etapa
+  };
+});
 ```
 
 ## 🧪 COMO TESTAR

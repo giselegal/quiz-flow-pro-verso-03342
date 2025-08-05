@@ -1,6 +1,6 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { Shield, Lock, CreditCard, Clock } from 'lucide-react';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { Shield, Lock, CreditCard, Clock } from "lucide-react";
 
 interface SecurePurchaseBlockProps {
   title?: string;
@@ -9,31 +9,31 @@ interface SecurePurchaseBlockProps {
 }
 
 const SecurePurchaseBlock: React.FC<SecurePurchaseBlockProps> = ({
-  title = 'Compra 100% Segura e Protegida',
+  title = "Compra 100% Segura e Protegida",
   showFeatures = true,
   className,
 }) => {
   const securityFeatures = [
     {
       icon: <Shield className="w-3 h-3 sm:w-4 sm:h-4" />,
-      text: 'SSL 256-bits',
+      text: "SSL 256-bits",
     },
     {
       icon: <Lock className="w-3 h-3 sm:w-4 sm:h-4" />,
-      text: 'Dados protegidos',
+      text: "Dados protegidos",
     },
     {
       icon: <CreditCard className="w-3 h-3 sm:w-4 sm:h-4" />,
-      text: 'Pagamento seguro',
+      text: "Pagamento seguro",
     },
     {
       icon: <Clock className="w-3 h-3 sm:w-4 sm:h-4" />,
-      text: 'Acesso imediato',
+      text: "Acesso imediato",
     },
   ];
 
   return (
-    <div className={cn('py-4 sm:py-6 px-4', className)}>
+    <div className={cn("py-4 sm:py-6 px-4", className)}>
       <div className="max-w-2xl mx-auto">
         <div className="bg-gradient-to-r from-[#f9f4ef] to-[#fff7f3] p-4 sm:p-5 md:p-6 rounded-lg border border-[#B89B7A]/20 text-center">
           <div className="flex justify-center mb-3 sm:mb-4">
@@ -42,7 +42,9 @@ const SecurePurchaseBlock: React.FC<SecurePurchaseBlockProps> = ({
             </div>
           </div>
 
-          <h3 className="text-base sm:text-lg font-semibold text-[#aa6b5d] mb-3 sm:mb-4 px-2">{title}</h3>
+          <h3 className="text-base sm:text-lg font-semibold text-[#aa6b5d] mb-3 sm:mb-4 px-2">
+            {title}
+          </h3>
 
           {showFeatures && (
             <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
@@ -60,8 +62,8 @@ const SecurePurchaseBlock: React.FC<SecurePurchaseBlockProps> = ({
           )}
 
           <p className="text-xs sm:text-sm text-[#8F7A6A] mb-3 sm:mb-4 leading-relaxed px-2">
-            Seus dados estão protegidos por criptografia de nível bancário. Processamento via Hotmart, plataforma líder
-            em produtos digitais no Brasil.
+            Seus dados estão protegidos por criptografia de nível bancário. Processamento via
+            Hotmart, plataforma líder em produtos digitais no Brasil.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-xs text-[#8F7A6A]">

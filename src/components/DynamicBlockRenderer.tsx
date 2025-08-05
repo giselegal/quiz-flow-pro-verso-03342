@@ -72,7 +72,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
       | "button_click"
       | "option_select"
       | "result_view",
-    eventData: any = {},
+    eventData: any = {}
   ) => {
     if (enableSupabaseTracking) {
       try {
@@ -156,9 +156,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               <div className="w-full bg-white/20 rounded-full h-2 mb-4">
                 <div className="bg-[#B89B7A] h-2 rounded-full w-2/3 animate-pulse"></div>
               </div>
-              <p className="text-white/70 text-sm">
-                Isso pode levar alguns segundos
-              </p>
+              <p className="text-white/70 text-sm">Isso pode levar alguns segundos</p>
             </div>
           </div>
         );
@@ -213,9 +211,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                 </div>
               )}
               {props.caption && (
-                <div className="bg-black/50 text-white p-3 text-sm">
-                  {props.caption}
-                </div>
+                <div className="bg-black/50 text-white p-3 text-sm">{props.caption}</div>
               )}
             </div>
           </div>
@@ -230,9 +226,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                   {props.title}
                 </h3>
               )}
-              <div className="text-gray-600">
-                {props.content || "Container content here"}
-              </div>
+              <div className="text-gray-600">{props.content || "Container content here"}</div>
             </div>
           </div>
         );
@@ -245,9 +239,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                 <div className="w-full border-t border-gray-300"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="bg-white px-4 text-gray-500">
-                  {props.text || ""}
-                </span>
+                <span className="bg-white px-4 text-gray-500">{props.text || ""}</span>
               </div>
             </div>
           </div>
@@ -264,12 +256,8 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               <div className="w-12 h-12 bg-[#B89B7A] rounded-lg flex items-center justify-center mx-auto mb-3">
                 <StretchHorizontal className="w-6 h-6 text-white" />
               </div>
-              <h4 className="font-semibold text-[#432818] mb-2">
-                Container Horizontal
-              </h4>
-              <p className="text-sm text-gray-600">
-                Elementos organizados lado a lado
-              </p>
+              <h4 className="font-semibold text-[#432818] mb-2">Container Horizontal</h4>
+              <p className="text-sm text-gray-600">Elementos organizados lado a lado</p>
             </div>
             <div className="text-center flex-1 min-w-[200px]">
               <div className="p-4 bg-white rounded-lg border border-gray-200">
@@ -291,12 +279,8 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               <div className="w-12 h-12 bg-[#B89B7A] rounded-lg flex items-center justify-center mx-auto mb-3">
                 <Rows3 className="w-6 h-6 text-white" />
               </div>
-              <h4 className="font-semibold text-[#432818] mb-2">
-                Container Vertical
-              </h4>
-              <p className="text-sm text-gray-600">
-                Elementos organizados verticalmente
-              </p>
+              <h4 className="font-semibold text-[#432818] mb-2">Container Vertical</h4>
+              <p className="text-sm text-gray-600">Elementos organizados verticalmente</p>
             </div>
             <div className="space-y-3">
               <div className="p-4 bg-white rounded-lg border border-gray-200">
@@ -318,10 +302,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
 
       case "countdown-timer-real":
         return (
-          <CountdownTimer
-            title="⏰ Oferta Limitada!"
-            urgencyText="Aproveite enquanto há tempo"
-          />
+          <CountdownTimer title="⏰ Oferta Limitada!" urgencyText="Aproveite enquanto há tempo" />
         );
 
       case "pricing-card-modern":
@@ -357,8 +338,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                 <HelpCircle className="w-6 h-6 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-[#432818] mb-2">
-                {props.question ||
-                  "Qual dessas opções representa melhor seu estilo?"}
+                {props.question || "Qual dessas opções representa melhor seu estilo?"}
               </h3>
               <p className="text-sm text-gray-600">
                 {props.allowMultiple
@@ -386,9 +366,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                   key={option.id}
                   className="p-4 border border-gray-200 rounded-lg hover:border-[#B89B7A] cursor-pointer transition-all"
                 >
-                  <div className="font-medium text-[#432818]">
-                    {option.text}
-                  </div>
+                  <div className="font-medium text-[#432818]">{option.text}</div>
                   {option.styleCategory && (
                     <div className="text-sm text-[#B89B7A] mt-1">
                       Categoria: {option.styleCategory}
@@ -452,15 +430,11 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                   key={option.id}
                   className="group bg-white border border-gray-200 rounded-lg p-4 hover:border-[#B89B7A] hover:shadow-lg cursor-pointer transition-all duration-300"
                 >
-                  <div className="font-semibold text-[#432818] mb-2">
-                    {option.text}
-                  </div>
+                  <div className="font-semibold text-[#432818] mb-2">{option.text}</div>
                   <div className="text-xs text-gray-500 space-y-1">
                     <div>
                       Categoria:{" "}
-                      <span className="text-[#B89B7A] font-medium">
-                        {option.styleCategory}
-                      </span>
+                      <span className="text-[#B89B7A] font-medium">{option.styleCategory}</span>
                     </div>
                     <div>
                       Pontos:{" "}
@@ -505,23 +479,15 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
 
             <div className="bg-white/10 rounded-lg p-6 mb-6">
               <div className="text-center">
-                <div className="text-4xl font-bold text-[#B89B7A] mb-2">
-                  92%
-                </div>
-                <div className="text-lg font-semibold">
-                  Estilo Romântico Clássico
-                </div>
-                <div className="text-sm text-white/70 mt-2">
-                  Compatibilidade com seu perfil
-                </div>
+                <div className="text-4xl font-bold text-[#B89B7A] mb-2">92%</div>
+                <div className="text-lg font-semibold">Estilo Romântico Clássico</div>
+                <div className="text-sm text-white/70 mt-2">Compatibilidade com seu perfil</div>
               </div>
             </div>
 
             {props.showSecondaryStyles && (
               <div className="space-y-3">
-                <h4 className="font-semibold text-white/90">
-                  Estilos Secundários:
-                </h4>
+                <h4 className="font-semibold text-white/90">Estilos Secundários:</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-white/10 rounded-lg p-4 text-center">
                     <div className="text-2xl font-bold text-[#B89B7A]">75%</div>
@@ -563,34 +529,22 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                     <div className="w-12 h-12 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
                       <Clock className="w-6 h-6 text-[#B89B7A]" />
                     </div>
-                    <div className="font-semibold text-[#432818]">
-                      5 minutos
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      Duração estimada
-                    </div>
+                    <div className="font-semibold text-[#432818]">5 minutos</div>
+                    <div className="text-sm text-gray-600">Duração estimada</div>
                   </div>
                   <div>
                     <div className="w-12 h-12 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
                       <HelpCircle className="w-6 h-6 text-[#B89B7A]" />
                     </div>
-                    <div className="font-semibold text-[#432818]">
-                      16 questões
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      Cuidadosamente selecionadas
-                    </div>
+                    <div className="font-semibold text-[#432818]">16 questões</div>
+                    <div className="text-sm text-gray-600">Cuidadosamente selecionadas</div>
                   </div>
                   <div>
                     <div className="w-12 h-12 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
                       <Award className="w-6 h-6 text-[#B89B7A]" />
                     </div>
-                    <div className="font-semibold text-[#432818]">
-                      Resultado único
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      Personalizado para você
-                    </div>
+                    <div className="font-semibold text-[#432818]">Resultado único</div>
+                    <div className="text-sm text-gray-600">Personalizado para você</div>
                   </div>
                 </div>
               </div>
@@ -621,9 +575,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                     >
                       Seu Resultado Personalizado
                     </h1>
-                    <p className="text-[#6B5B73] text-sm">
-                      Descubra seu estilo único
-                    </p>
+                    <p className="text-[#6B5B73] text-sm">Descubra seu estilo único</p>
                   </div>
                 </div>
               </div>
@@ -643,9 +595,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               </h2>
               <div className="max-w-md mx-auto">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-[#8F7A6A]">
-                    Seu estilo predominante
-                  </span>
+                  <span className="text-sm text-[#8F7A6A]">Seu estilo predominante</span>
                   <span className="text-[#aa6b5d] font-medium">92%</span>
                 </div>
                 <div className="w-full bg-[#F3E8E6] rounded-full h-3">
@@ -662,14 +612,11 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                   Estilo Romântico Clássico
                 </h3>
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  Você possui uma elegância natural que combina feminilidade e
-                  sofisticação. Seu estilo é atemporal, com peças que valorizam
-                  sua personalidade única.
+                  Você possui uma elegância natural que combina feminilidade e sofisticação. Seu
+                  estilo é atemporal, com peças que valorizam sua personalidade única.
                 </p>
                 <div className="bg-[#f9f4ef] rounded-lg p-4">
-                  <h4 className="font-medium text-[#432818] mb-2">
-                    Características principais:
-                  </h4>
+                  <h4 className="font-medium text-[#432818] mb-2">Características principais:</h4>
                   <ul className="space-y-1 text-sm text-gray-600">
                     <li>• Feminilidade e delicadeza</li>
                     <li>• Elegância atemporal</li>
@@ -700,12 +647,10 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
             <div className="grid md:grid-cols-2 gap-8">
               <div className="text-center">
                 <div className="bg-gray-100 p-6 rounded-lg mb-4">
-                  <h4 className="text-lg font-semibold text-gray-600 mb-2">
-                    Antes
-                  </h4>
+                  <h4 className="text-lg font-semibold text-gray-600 mb-2">Antes</h4>
                   <p className="text-gray-600 text-sm">
-                    Guarda-roupa desorganizado, compras por impulso, dúvidas
-                    sobre o que vestir a cada ocasião.
+                    Guarda-roupa desorganizado, compras por impulso, dúvidas sobre o que vestir a
+                    cada ocasião.
                   </p>
                 </div>
               </div>
@@ -713,8 +658,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                 <div className="bg-gradient-to-br from-[#B89B7A] to-[#aa6b5d] text-white p-6 rounded-lg mb-4">
                   <h4 className="text-lg font-semibold mb-2">Depois</h4>
                   <p className="text-sm">
-                    Estilo definido, looks intencionais, confiança em cada
-                    escolha de roupa.
+                    Estilo definido, looks intencionais, confiança em cada escolha de roupa.
                   </p>
                 </div>
               </div>
@@ -740,29 +684,21 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                   <Star className="w-8 h-8 text-[#B89B7A]" />
                 </div>
                 <h4 className="font-semibold text-[#432818] mb-2">Confiança</h4>
-                <p className="text-sm text-gray-600">
-                  Sinta-se poderosa e autêntica em cada look
-                </p>
+                <p className="text-sm text-gray-600">Sinta-se poderosa e autêntica em cada look</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
                   <Clock className="w-8 h-8 text-[#B89B7A]" />
                 </div>
-                <h4 className="font-semibold text-[#432818] mb-2">
-                  Praticidade
-                </h4>
-                <p className="text-sm text-gray-600">
-                  Economize tempo decidindo o que vestir
-                </p>
+                <h4 className="font-semibold text-[#432818] mb-2">Praticidade</h4>
+                <p className="text-sm text-gray-600">Economize tempo decidindo o que vestir</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
                   <Gift className="w-8 h-8 text-[#B89B7A]" />
                 </div>
                 <h4 className="font-semibold text-[#432818] mb-2">Economia</h4>
-                <p className="text-sm text-gray-600">
-                  Compre apenas o que realmente funciona
-                </p>
+                <p className="text-sm text-gray-600">Compre apenas o que realmente funciona</p>
               </div>
             </div>
           </div>
@@ -779,23 +715,17 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               >
                 Bônus Exclusivos
               </h3>
-              <p className="text-green-700">
-                Conteúdos extras para potencializar seus resultados
-              </p>
+              <p className="text-green-700">Conteúdos extras para potencializar seus resultados</p>
             </div>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-white p-4 rounded-lg border border-green-200">
-                <h4 className="font-semibold text-green-800 mb-2">
-                  🎯 Guia de Peças-Chave
-                </h4>
+                <h4 className="font-semibold text-green-800 mb-2">🎯 Guia de Peças-Chave</h4>
                 <p className="text-sm text-gray-600">
                   As 10 peças essenciais para seu guarda-roupa
                 </p>
               </div>
               <div className="bg-white p-4 rounded-lg border border-green-200">
-                <h4 className="font-semibold text-green-800 mb-2">
-                  ✨ Visagismo Facial
-                </h4>
+                <h4 className="font-semibold text-green-800 mb-2">✨ Visagismo Facial</h4>
                 <p className="text-sm text-gray-600">
                   Como valorizar seu rosto com as escolhas certas
                 </p>
@@ -856,9 +786,8 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                 Garantia de 7 Dias
               </h3>
               <p className="text-[#A38A69] max-w-2xl mx-auto">
-                Experimente por 7 dias. Se não ficar completamente satisfeita
-                com os resultados, devolvemos 100% do seu investimento, sem
-                perguntas.
+                Experimente por 7 dias. Se não ficar completamente satisfeita com os resultados,
+                devolvemos 100% do seu investimento, sem perguntas.
               </p>
             </div>
           </div>
@@ -876,9 +805,8 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                   Sobre Gisele Galvão
                 </h3>
                 <p className="text-gray-700 mb-4">
-                  Consultora de imagem com mais de 10 anos de experiência, já
-                  transformou a vida de milhares de mulheres através do poder do
-                  estilo pessoal.
+                  Consultora de imagem com mais de 10 anos de experiência, já transformou a vida de
+                  milhares de mulheres através do poder do estilo pessoal.
                 </p>
                 <div className="flex items-center gap-2 text-sm text-[#B89B7A]">
                   <Star className="w-4 h-4 fill-current" />
@@ -906,8 +834,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               Vista-se de Você — na Prática
             </h2>
             <p className="text-[#432818] mb-8 max-w-xl mx-auto">
-              Agora que você conhece seu estilo, é hora de aplicá-lo com clareza
-              e intenção.
+              Agora que você conhece seu estilo, é hora de aplicá-lo com clareza e intenção.
             </p>
 
             <div className="bg-white p-6 rounded-lg shadow-md border border-[#B89B7A]/20 mb-8 max-w-md mx-auto">
@@ -938,9 +865,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               </div>
 
               <div className="text-center p-4 bg-[#f9f4ef] rounded-lg">
-                <p className="text-sm text-[#aa6b5d] uppercase font-medium">
-                  Hoje por apenas
-                </p>
+                <p className="text-sm text-[#aa6b5d] uppercase font-medium">Hoje por apenas</p>
                 <p className="text-4xl font-bold text-[#432818]">R$ 39,00</p>
                 <p className="text-xs text-gray-500 mt-1">Pagamento único</p>
               </div>
@@ -988,9 +913,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Code className="w-6 h-6 text-gray-500" />
               </div>
-              <h3 className="font-semibold text-gray-700 mb-2">
-                Componente: {componentType}
-              </h3>
+              <h3 className="font-semibold text-gray-700 mb-2">Componente: {componentType}</h3>
               <p className="text-sm text-gray-500 mb-4">
                 Este componente agora possui um design personalizado
               </p>

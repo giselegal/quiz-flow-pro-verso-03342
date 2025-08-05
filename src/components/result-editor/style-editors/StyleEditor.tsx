@@ -42,21 +42,17 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
             <Label htmlFor="fontFamily">Família da Fonte</Label>
             <Select
               value={style.fontFamily || ""}
-              onValueChange={(value) => updateStyle("fontFamily", value)}
+              onValueChange={value => updateStyle("fontFamily", value)}
             >
               <SelectTrigger id="fontFamily">
                 <SelectValue placeholder="Selecione uma fonte" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="default">Padrão</SelectItem>
-                <SelectItem value="'Playfair Display', serif">
-                  Playfair Display
-                </SelectItem>
+                <SelectItem value="'Playfair Display', serif">Playfair Display</SelectItem>
                 <SelectItem value="'Inter', sans-serif">Inter</SelectItem>
                 <SelectItem value="'Roboto', sans-serif">Roboto</SelectItem>
-                <SelectItem value="'Montserrat', sans-serif">
-                  Montserrat
-                </SelectItem>
+                <SelectItem value="'Montserrat', sans-serif">Montserrat</SelectItem>
                 <SelectItem value="'Poppins', sans-serif">Poppins</SelectItem>
                 <SelectItem value="'Nunito', sans-serif">Nunito</SelectItem>
               </SelectContent>
@@ -68,7 +64,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
             <Input
               id="fontSize"
               value={style.fontSize || ""}
-              onChange={(e) => updateStyle("fontSize", e.target.value)}
+              onChange={e => updateStyle("fontSize", e.target.value)}
               placeholder="ex: 16px ou 1.2rem"
             />
           </div>
@@ -77,7 +73,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
             <Label htmlFor="fontWeight">Peso da Fonte</Label>
             <Select
               value={style.fontWeight || ""}
-              onValueChange={(value) => updateStyle("fontWeight", value)}
+              onValueChange={value => updateStyle("fontWeight", value)}
             >
               <SelectTrigger id="fontWeight">
                 <SelectValue placeholder="Selecione um peso" />
@@ -99,7 +95,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
             <Input
               id="lineHeight"
               value={style.lineHeight || ""}
-              onChange={(e) => updateStyle("lineHeight", e.target.value)}
+              onChange={e => updateStyle("lineHeight", e.target.value)}
               placeholder="ex: 1.5 ou 24px"
             />
           </div>
@@ -108,7 +104,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
             <Label htmlFor="textAlign">Alinhamento do Texto</Label>
             <Select
               value={style.textAlign || "left"}
-              onValueChange={(value) => updateStyle("textAlign", value)}
+              onValueChange={value => updateStyle("textAlign", value)}
             >
               <SelectTrigger id="textAlign">
                 <SelectValue placeholder="Selecione um alinhamento" />
@@ -127,7 +123,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
             <Input
               id="letterSpacing"
               value={style.letterSpacing || ""}
-              onChange={(e) => updateStyle("letterSpacing", e.target.value)}
+              onChange={e => updateStyle("letterSpacing", e.target.value)}
               placeholder="ex: 1px ou 0.05em"
             />
           </div>
@@ -140,7 +136,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
               <Input
                 id="margin"
                 value={style.margin || ""}
-                onChange={(e) => updateStyle("margin", e.target.value)}
+                onChange={e => updateStyle("margin", e.target.value)}
                 placeholder="ex: 1rem ou 16px"
               />
             </div>
@@ -150,7 +146,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
               <Input
                 id="padding"
                 value={style.padding || ""}
-                onChange={(e) => updateStyle("padding", e.target.value)}
+                onChange={e => updateStyle("padding", e.target.value)}
                 placeholder="ex: 1rem ou 16px"
               />
             </div>
@@ -162,7 +158,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
               <Input
                 id="width"
                 value={style.width || ""}
-                onChange={(e) => updateStyle("width", e.target.value)}
+                onChange={e => updateStyle("width", e.target.value)}
                 placeholder="ex: 100% ou 300px"
               />
             </div>
@@ -172,7 +168,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
               <Input
                 id="height"
                 value={style.height || ""}
-                onChange={(e) => updateStyle("height", e.target.value)}
+                onChange={e => updateStyle("height", e.target.value)}
                 placeholder="ex: auto ou 300px"
               />
             </div>
@@ -182,7 +178,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
             <Label htmlFor="display">Display</Label>
             <Select
               value={style.display || ""}
-              onValueChange={(value) => updateStyle("display", value)}
+              onValueChange={value => updateStyle("display", value)}
             >
               <SelectTrigger id="display">
                 <SelectValue placeholder="Selecione um valor" />
@@ -204,7 +200,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
                 <Label htmlFor="flexDirection">Direção do Flex</Label>
                 <Select
                   value={style.flexDirection || "row"}
-                  onValueChange={(value) => updateStyle("flexDirection", value)}
+                  onValueChange={value => updateStyle("flexDirection", value)}
                 >
                   <SelectTrigger id="flexDirection">
                     <SelectValue placeholder="Selecione uma direção" />
@@ -213,9 +209,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
                     <SelectItem value="row">Row</SelectItem>
                     <SelectItem value="column">Column</SelectItem>
                     <SelectItem value="row-reverse">Row Reverse</SelectItem>
-                    <SelectItem value="column-reverse">
-                      Column Reverse
-                    </SelectItem>
+                    <SelectItem value="column-reverse">Column Reverse</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -224,9 +218,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
                 <Label htmlFor="justifyContent">Justify Content</Label>
                 <Select
                   value={style.justifyContent || "flex-start"}
-                  onValueChange={(value) =>
-                    updateStyle("justifyContent", value)
-                  }
+                  onValueChange={value => updateStyle("justifyContent", value)}
                 >
                   <SelectTrigger id="justifyContent">
                     <SelectValue placeholder="Selecione uma opção" />
@@ -246,7 +238,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
                 <Label htmlFor="alignItems">Align Items</Label>
                 <Select
                   value={style.alignItems || "stretch"}
-                  onValueChange={(value) => updateStyle("alignItems", value)}
+                  onValueChange={value => updateStyle("alignItems", value)}
                 >
                   <SelectTrigger id="alignItems">
                     <SelectValue placeholder="Selecione uma opção" />
@@ -266,7 +258,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
                 <Input
                   id="gap"
                   value={style.gap || ""}
-                  onChange={(e) => updateStyle("gap", e.target.value)}
+                  onChange={e => updateStyle("gap", e.target.value)}
                   placeholder="ex: 10px ou 1rem"
                 />
               </div>
@@ -278,7 +270,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
             <Input
               id="borderRadius"
               value={style.borderRadius || ""}
-              onChange={(e) => updateStyle("borderRadius", e.target.value)}
+              onChange={e => updateStyle("borderRadius", e.target.value)}
               placeholder="ex: 8px ou 0.5rem"
             />
           </div>
@@ -288,7 +280,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
             <Input
               id="boxShadow"
               value={style.boxShadow || ""}
-              onChange={(e) => updateStyle("boxShadow", e.target.value)}
+              onChange={e => updateStyle("boxShadow", e.target.value)}
               placeholder="ex: 0 2px 4px rgba(0,0,0,0.1)"
             />
           </div>
@@ -299,7 +291,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
             <Label htmlFor="color">Cor do Texto</Label>
             <ColorPicker
               color={style.color || "#000000"}
-              onChange={(color) => updateStyle("color", color)}
+              onChange={color => updateStyle("color", color)}
             />
           </div>
 
@@ -307,7 +299,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
             <Label htmlFor="backgroundColor">Cor de Fundo</Label>
             <ColorPicker
               color={style.backgroundColor || "#ffffff"}
-              onChange={(color) => updateStyle("backgroundColor", color)}
+              onChange={color => updateStyle("backgroundColor", color)}
             />
           </div>
 
@@ -319,7 +311,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
                 <Input
                   id="borderWidth"
                   value={style.borderWidth || ""}
-                  onChange={(e) => updateStyle("borderWidth", e.target.value)}
+                  onChange={e => updateStyle("borderWidth", e.target.value)}
                   placeholder="ex: 1px"
                 />
               </div>
@@ -328,7 +320,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
                 <Label htmlFor="borderStyle">Estilo</Label>
                 <Select
                   value={style.borderStyle || ""}
-                  onValueChange={(value) => updateStyle("borderStyle", value)}
+                  onValueChange={value => updateStyle("borderStyle", value)}
                 >
                   <SelectTrigger id="borderStyle">
                     <SelectValue placeholder="Selecione um estilo" />
@@ -348,7 +340,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
               <Label htmlFor="borderColor">Cor da Borda</Label>
               <ColorPicker
                 color={style.borderColor || "#000000"}
-                onChange={(color) => updateStyle("borderColor", color)}
+                onChange={color => updateStyle("borderColor", color)}
               />
             </div>
           </div>
@@ -358,7 +350,7 @@ const StyleEditor: React.FC<StyleEditorProps> = ({ style = {}, onUpdate }) => {
               <Label htmlFor="objectFit">Ajuste de Imagem</Label>
               <Select
                 value={style.objectFit || "cover"}
-                onValueChange={(value) => updateStyle("objectFit", value)}
+                onValueChange={value => updateStyle("objectFit", value)}
               >
                 <SelectTrigger id="objectFit">
                   <SelectValue placeholder="Selecione um ajuste" />

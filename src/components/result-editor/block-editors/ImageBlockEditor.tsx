@@ -8,10 +8,7 @@ interface ImageBlockEditorProps {
   onUpdate: (content: any) => void;
 }
 
-const ImageBlockEditor: React.FC<ImageBlockEditorProps> = ({
-  block,
-  onUpdate,
-}) => {
+const ImageBlockEditor: React.FC<ImageBlockEditorProps> = ({ block, onUpdate }) => {
   const content = block.content;
 
   return (
@@ -21,7 +18,7 @@ const ImageBlockEditor: React.FC<ImageBlockEditorProps> = ({
         <Input
           id="imageUrl"
           value={content.imageUrl || ""}
-          onChange={(e) => onUpdate({ imageUrl: e.target.value })}
+          onChange={e => onUpdate({ imageUrl: e.target.value })}
           placeholder="https://exemplo.com/imagem.jpg"
         />
         {content.imageUrl && (
@@ -40,7 +37,7 @@ const ImageBlockEditor: React.FC<ImageBlockEditorProps> = ({
         <Input
           id="imageAlt"
           value={content.imageAlt || ""}
-          onChange={(e) => onUpdate({ imageAlt: e.target.value })}
+          onChange={e => onUpdate({ imageAlt: e.target.value })}
           placeholder="Descrição da imagem"
         />
       </div>
@@ -50,12 +47,10 @@ const ImageBlockEditor: React.FC<ImageBlockEditorProps> = ({
         <Input
           id="width"
           value={content.width || ""}
-          onChange={(e) => onUpdate({ width: e.target.value })}
+          onChange={e => onUpdate({ width: e.target.value })}
           placeholder="100%"
         />
-        <p className="text-xs text-[#8F7A6A]">
-          Use valores como "100%", "300px", etc.
-        </p>
+        <p className="text-xs text-[#8F7A6A]">Use valores como "100%", "300px", etc.</p>
       </div>
 
       <div className="space-y-2">
@@ -63,7 +58,7 @@ const ImageBlockEditor: React.FC<ImageBlockEditorProps> = ({
         <Input
           id="borderRadius"
           value={content.borderRadius || ""}
-          onChange={(e) => onUpdate({ borderRadius: e.target.value })}
+          onChange={e => onUpdate({ borderRadius: e.target.value })}
           placeholder="8px"
         />
       </div>

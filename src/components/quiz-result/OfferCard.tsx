@@ -25,12 +25,9 @@ const OfferCard: React.FC<OfferCardProps> = ({ primaryStyle, config }) => {
     `Descubra como expressar seu estilo ${primaryStyle.category} com confiança e naturalidade, eliminando as dúvidas do "o que vestir" para sempre. ✨`;
   const regularPrice = config?.regularPrice || "197,00";
   const salePrice = config?.price || "39,00";
-  const ctaText =
-    config?.ctaText ||
-    `Quero Meu Guia Personalizado + Bônus por R$${salePrice}`;
+  const ctaText = config?.ctaText || `Quero Meu Guia Personalizado + Bônus por R$${salePrice}`;
   const ctaUrl =
-    config?.ctaUrl ||
-    "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
+    config?.ctaUrl || "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
 
   // Images with fallbacks
   const heroImage =
@@ -62,13 +59,9 @@ const OfferCard: React.FC<OfferCardProps> = ({ primaryStyle, config }) => {
         <div className="inline-block px-6 py-1.5 bg-gradient-to-r from-[#B89B7A]/30 to-[#aa6b5d]/30 rounded-full text-[#aa6b5d] text-sm font-medium mb-3 shadow-sm transform hover:scale-105 transition-transform duration-300">
           OFERTA EXCLUSIVA E PERSONALIZADA
         </div>
-        <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-4">
-          {title}
-        </h2>
+        <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-4">{title}</h2>
         <div className="elegant-divider w-32 mx-auto mb-3"></div>
-        <p className="text-[#3a3a3a] max-w-2xl mx-auto leading-relaxed">
-          {subtitle}
-        </p>
+        <p className="text-[#3a3a3a] max-w-2xl mx-auto leading-relaxed">{subtitle}</p>
       </div>
 
       <div className="relative z-10 group">
@@ -84,8 +77,7 @@ const OfferCard: React.FC<OfferCardProps> = ({ primaryStyle, config }) => {
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#FAF9F7]/50 to-transparent pointer-events-none"></div>
 
         <h2 className="text-2xl font-playfair text-[#aa6b5d] mb-5 relative">
-          {config?.productTitle ||
-            "Guia de Estilo Personalizado + Bônus Exclusivos"}
+          {config?.productTitle || "Guia de Estilo Personalizado + Bônus Exclusivos"}
           <motion.div
             className="absolute -bottom-2 left-0 h-0.5 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d]/80"
             initial={{ width: "0%" }}
@@ -137,9 +129,7 @@ const OfferCard: React.FC<OfferCardProps> = ({ primaryStyle, config }) => {
                   repeatType: "reverse",
                 }}
               />
-              <p className="text-sm text-[#aa6b5d] font-medium mb-1">
-                Oferta Exclusiva
-              </p>
+              <p className="text-sm text-[#aa6b5d] font-medium mb-1">Oferta Exclusiva</p>
               <p className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d]">
                 R$ {salePrice}
               </p>
@@ -195,9 +185,7 @@ const OfferCard: React.FC<OfferCardProps> = ({ primaryStyle, config }) => {
             className="w-full rounded-lg transition-transform duration-300"
           />
           <div className="p-3 bg-gradient-to-r from-[#B89B7A]/10 to-[#aa6b5d]/10 text-center">
-            <span className="text-[#432818] font-medium">
-              Acesse de qualquer dispositivo
-            </span>
+            <span className="text-[#432818] font-medium">Acesse de qualquer dispositivo</span>
           </div>
         </motion.div>
         <motion.div
@@ -211,9 +199,7 @@ const OfferCard: React.FC<OfferCardProps> = ({ primaryStyle, config }) => {
             className="w-full rounded-lg transition-transform duration-300"
           />
           <div className="p-3 bg-gradient-to-r from-[#B89B7A]/10 to-[#aa6b5d]/10 text-center">
-            <span className="text-[#432818] font-medium">
-              Criado por especialista em imagem
-            </span>
+            <span className="text-[#432818] font-medium">Criado por especialista em imagem</span>
           </div>
         </motion.div>
       </div>

@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  ResizablePanelGroup,
-  ResizablePanel,
-  ResizableHandle,
-} from "@/components/ui/resizable";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { ComponentsSidebar } from "../sidebar/ComponentsSidebar";
 import { EditorCanvas } from "../canvas/EditorCanvas";
 import PropertiesPanel from "../properties/PropertiesPanel";
@@ -15,12 +11,8 @@ interface UnifiedEditorLayoutProps {
   className?: string;
 }
 
-export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({
-  className = "",
-}) => {
-  const [activeTab, setActiveTab] = useState<"quiz" | "result" | "sales">(
-    "result",
-  );
+export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ className = "" }) => {
+  const [activeTab, setActiveTab] = useState<"quiz" | "result" | "sales">("result");
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
 
@@ -43,10 +35,7 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({
     }
   };
 
-  const handleReorderBlocks = (
-    sourceIndex: number,
-    destinationIndex: number,
-  ) => {
+  const handleReorderBlocks = (sourceIndex: number, destinationIndex: number) => {
     console.log("Blocks reordered:", sourceIndex, destinationIndex);
   };
 
@@ -101,7 +90,7 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({
       <div className={`h-screen flex flex-col ${className}`}>
         <Tabs
           value={activeTab}
-          onValueChange={(value) => setActiveTab(value as any)}
+          onValueChange={value => setActiveTab(value as any)}
           className="flex-1"
         >
           <div className="border-b">
@@ -154,9 +143,7 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({
 
           <TabsContent value="sales" className="flex-1 mt-0">
             <div className="h-full flex items-center justify-center">
-              <p className="text-gray-500">
-                Sales Page Editor - Em desenvolvimento
-              </p>
+              <p className="text-gray-500">Sales Page Editor - Em desenvolvimento</p>
             </div>
           </TabsContent>
         </Tabs>

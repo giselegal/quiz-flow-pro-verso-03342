@@ -1,9 +1,6 @@
 import React from "react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { Block } from "@/types/editor";
 import UniversalBlockRenderer from "../blocks/UniversalBlockRenderer";
 import { SortableBlockWrapper } from "./SortableBlockWrapper";
@@ -34,8 +31,8 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
 
     if (!over || active.id === over.id) return;
 
-    const oldIndex = blocks.findIndex((block) => block.id === active.id);
-    const newIndex = blocks.findIndex((block) => block.id === over.id);
+    const oldIndex = blocks.findIndex(block => block.id === active.id);
+    const newIndex = blocks.findIndex(block => block.id === over.id);
 
     if (oldIndex !== -1 && newIndex !== -1) {
       onReorderBlocks(oldIndex, newIndex);
@@ -63,14 +60,10 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
     return (
       <div className={`py-2 ${getViewportClasses()}`}>
         <div className="space-y-2">
-          {blocks.map((block) => (
+          {blocks.map(block => (
             <div key={block.id} className="w-full flex justify-center">
               <div className="w-full max-w-none">
-                <UniversalBlockRenderer
-                  block={block}
-                  isSelected={false}
-                  disabled={true}
-                />
+                <UniversalBlockRenderer block={block} isSelected={false} disabled={true} />
               </div>
             </div>
           ))}
@@ -82,12 +75,9 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
   return (
     <div className={`py-2 ${getViewportClasses()}`}>
       <DndContext onDragEnd={handleDragEnd}>
-        <SortableContext
-          items={blocks.map((b) => b.id)}
-          strategy={verticalListSortingStrategy}
-        >
+        <SortableContext items={blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
           <div className="space-y-2">
-            {blocks.map((block) => (
+            {blocks.map(block => (
               <div key={block.id} className="w-full flex justify-center">
                 <div className="w-full max-w-none">
                   <SortableBlockWrapper
@@ -95,7 +85,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
                     block={block}
                     isSelected={selectedBlockId === block.id}
                     onSelect={() => onSelectBlock(block.id)}
-                    onUpdate={(updates) => handleUpdateBlock(block.id, updates)}
+                    onUpdate={updates => handleUpdateBlock(block.id, updates)}
                     onDelete={() => onDeleteBlock(block.id)}
                   />
                 </div>
@@ -104,9 +94,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
             {blocks.length === 0 && (
               <div className="text-center py-12 text-gray-500">
                 <p>Nenhum componente adicionado ainda.</p>
-                <p className="text-sm">
-                  Arraste componentes da barra lateral para começar.
-                </p>
+                <p className="text-sm">Arraste componentes da barra lateral para começar.</p>
               </div>
             )}
           </div>

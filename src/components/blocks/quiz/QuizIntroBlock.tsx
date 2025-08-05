@@ -48,18 +48,12 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
 
   // Validação defensiva para evitar erro quando block ou properties não existem
   if (!block || !block.properties) {
-    console.warn(
-      "QuizIntroBlock: block ou block.properties não foi fornecido",
-      { block },
-    );
+    console.warn("QuizIntroBlock: block ou block.properties não foi fornecido", { block });
     return (
       <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
-        <p className="text-red-600 font-medium">
-          Erro: Configuração do bloco inválida
-        </p>
+        <p className="text-red-600 font-medium">Erro: Configuração do bloco inválida</p>
         <p className="text-sm text-red-500 mt-1">
-          O componente QuizIntroBlock precisa de um objeto 'block' com
-          'properties' válidas.
+          O componente QuizIntroBlock precisa de um objeto 'block' com 'properties' válidas.
         </p>
       </div>
     );
@@ -138,7 +132,7 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
         "min-h-screen flex flex-col items-center justify-center p-8",
         "transition-all duration-200",
         isSelected && "ring-2 ring-[#B89B7A] ring-offset-2",
-        className,
+        className
       )}
       style={{ backgroundColor, color: textColor }}
       onClick={handleClick}
@@ -159,7 +153,7 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
           <h1
             className={cn(
               "text-4xl md:text-5xl font-bold leading-tight cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40",
-              isSelected && "ring-2 ring-[#B89B7A] ring-opacity-50",
+              isSelected && "ring-2 ring-[#B89B7A] ring-opacity-50"
             )}
             style={{ color: textColor }}
             onClick={onClick}
@@ -171,7 +165,7 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
           <h2
             className={cn(
               "text-xl md:text-2xl text-opacity-80 cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40",
-              isSelected && "ring-2 ring-[#B89B7A] ring-opacity-50",
+              isSelected && "ring-2 ring-[#B89B7A] ring-opacity-50"
             )}
             style={{ color: textColor }}
             onClick={onClick}
@@ -183,7 +177,7 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
           <p
             className={cn(
               "text-lg text-opacity-70 cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40",
-              isSelected && "ring-2 ring-[#B89B7A] ring-opacity-50",
+              isSelected && "ring-2 ring-[#B89B7A] ring-opacity-50"
             )}
             style={{ color: textColor }}
             onClick={onClick}
@@ -220,14 +214,12 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
                 "w-full p-4 text-lg rounded-lg border-2 bg-white/90",
                 error
                   ? "border-red-500 focus:ring-red-500"
-                  : "border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20",
+                  : "border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
               )}
               autoFocus
               required
             />
-            {error && (
-              <p className="mt-2 text-sm text-red-500 font-medium">{error}</p>
-            )}
+            {error && <p className="mt-2 text-sm text-red-500 font-medium">{error}</p>}
           </div>
 
           <button
@@ -239,7 +231,7 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
               "focus:outline-none focus:ring-4 focus:ring-opacity-50",
               nome.trim()
                 ? "bg-[#B89B7A] hover:bg-[#A38A69] text-white hover:scale-105 shadow-lg focus:ring-[#B89B7A]"
-                : "bg-gray-300 text-gray-500 cursor-not-allowed",
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
             )}
             title="Texto do botão editável no Painel de Propriedades"
           >
@@ -249,8 +241,7 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
 
         {/* Privacy notice */}
         <p className="text-sm opacity-70 max-w-md mx-auto">
-          Seu nome é necessário para personalizar sua experiência. Respeitamos
-          sua privacidade.
+          Seu nome é necessário para personalizar sua experiência. Respeitamos sua privacidade.
         </p>
       </div>
     </div>

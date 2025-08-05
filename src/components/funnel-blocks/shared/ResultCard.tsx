@@ -1,12 +1,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 interface ResultCardProps {
@@ -50,26 +45,17 @@ export const ResultCard: React.FC<ResultCardProps> = ({
     <Card
       className={cn(
         "overflow-hidden transition-shadow duration-300 hover:shadow-lg",
-        isHighlighted
-          ? "border-2 border-primary shadow-md"
-          : "border border-gray-200",
-        className,
+        isHighlighted ? "border-2 border-primary shadow-md" : "border border-gray-200",
+        className
       )}
       style={style}
     >
       {/* Cabeçalho com imagem */}
       {imageUrl && (
         <div className="relative w-full h-48">
-          <img
-            src={imageUrl}
-            alt={title}
-            className="w-full h-full object-cover"
-          />
+          <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
           {showBadge && (
-            <Badge
-              className="absolute top-2 right-2 bg-primary text-white"
-              variant="default"
-            >
+            <Badge className="absolute top-2 right-2 bg-primary text-white" variant="default">
               {badgeText}
             </Badge>
           )}
@@ -89,9 +75,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
               {badgeText}
             </Badge>
           )}
-          {category && (
-            <div className="text-sm text-gray-500 mb-1">{category}</div>
-          )}
+          {category && <div className="text-sm text-gray-500 mb-1">{category}</div>}
           <h3 className="text-lg font-bold">{title}</h3>
         </CardHeader>
       )}

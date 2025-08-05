@@ -11,11 +11,11 @@ const DragDropTest: React.FC = () => {
   };
 
   const handleBlockDelete = (blockId: string) => {
-    setBlocks(blocks.filter((block) => block.id !== blockId));
+    setBlocks(blocks.filter(block => block.id !== blockId));
   };
 
   const handleBlockDuplicate = (blockId: string) => {
-    const blockToDuplicate = blocks.find((block) => block.id === blockId);
+    const blockToDuplicate = blocks.find(block => block.id === blockId);
     if (blockToDuplicate) {
       const newBlock = {
         ...blockToDuplicate,
@@ -37,15 +37,9 @@ const DragDropTest: React.FC = () => {
       />
 
       <div className="mt-4 space-x-2">
-        <Button onClick={() => handleBlockSelect("test")}>
-          Select Test Block
-        </Button>
-        <Button onClick={() => handleBlockDelete("test")}>
-          Delete Test Block
-        </Button>
-        <Button onClick={() => handleBlockDuplicate("test")}>
-          Duplicate Test Block
-        </Button>
+        <Button onClick={() => handleBlockSelect("test")}>Select Test Block</Button>
+        <Button onClick={() => handleBlockDelete("test")}>Delete Test Block</Button>
+        <Button onClick={() => handleBlockDuplicate("test")}>Duplicate Test Block</Button>
       </div>
     </div>
   );

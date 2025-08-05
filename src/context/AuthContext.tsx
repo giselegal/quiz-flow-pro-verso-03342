@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User as SupabaseUser, Session } from "@supabase/supabase-js";
 
@@ -97,7 +91,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const cleanupAuthState = () => {
-    Object.keys(localStorage).forEach((key) => {
+    Object.keys(localStorage).forEach(key => {
       if (key.startsWith("supabase.auth.") || key.includes("sb-")) {
         localStorage.removeItem(key);
       }

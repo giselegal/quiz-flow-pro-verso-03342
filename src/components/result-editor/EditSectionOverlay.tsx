@@ -39,9 +39,7 @@ const EditSectionOverlay: React.FC<EditSectionOverlayProps> = ({
           </Button>
         </div>
 
-        <div className="space-y-4">
-          {/* Add form fields based on section type */}
-        </div>
+        <div className="space-y-4">{/* Add form fields based on section type */}</div>
 
         <div className="flex justify-end gap-2 mt-4">
           <Button variant="outline" onClick={onCancel}>

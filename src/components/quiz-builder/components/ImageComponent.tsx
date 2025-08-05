@@ -17,11 +17,7 @@ interface ImageComponentProps {
   isSelected?: boolean;
 }
 
-const ImageComponent: React.FC<ImageComponentProps> = ({
-  data,
-  style,
-  isSelected,
-}) => {
+const ImageComponent: React.FC<ImageComponentProps> = ({ data, style, isSelected }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
@@ -31,10 +27,7 @@ const ImageComponent: React.FC<ImageComponentProps> = ({
 
   return (
     <div
-      className={cn(
-        "p-4 text-center",
-        isSelected && "outline-dashed outline-1 outline-blue-400",
-      )}
+      className={cn("p-4 text-center", isSelected && "outline-dashed outline-1 outline-blue-400")}
       style={{
         backgroundColor: style?.backgroundColor || "transparent",
         color: style?.textColor || "inherit",
@@ -57,7 +50,7 @@ const ImageComponent: React.FC<ImageComponentProps> = ({
               className={cn(
                 "max-w-full mx-auto rounded-md",
                 imageLoaded ? "opacity-100" : "opacity-0",
-                "transition-opacity duration-300",
+                "transition-opacity duration-300"
               )}
               onLoad={() => setImageLoaded(true)}
               onError={() => setImageError(true)}
@@ -69,9 +62,7 @@ const ImageComponent: React.FC<ImageComponentProps> = ({
           </div>
         )}
       </div>
-      {data.caption && (
-        <p className="text-sm mt-2 opacity-75">{data.caption}</p>
-      )}
+      {data.caption && <p className="text-sm mt-2 opacity-75">{data.caption}</p>}
     </div>
   );
 };

@@ -16,11 +16,7 @@ const benefits = [
   {
     title: "Bônus Exclusivos",
     icon: <Star className="w-5 h-5 text-amber-500" />,
-    items: [
-      "Visagismo Facial Estratégico",
-      "Peças-Chave do Guarda-Roupa",
-      "Consultoria em Grupo",
-    ],
+    items: ["Visagismo Facial Estratégico", "Peças-Chave do Guarda-Roupa", "Consultoria em Grupo"],
   },
 ];
 
@@ -100,10 +96,7 @@ const ProductShowcase = () => {
                 transition={{ delay: 0.8, duration: 0.8 }}
               />
             </motion.h2>
-            <motion.p
-              className="text-[#8F7A6A] text-lg"
-              variants={itemVariants}
-            >
+            <motion.p className="text-[#8F7A6A] text-lg" variants={itemVariants}>
               Tudo o que você precisa para transformar seu visual
             </motion.p>
           </motion.div>
@@ -117,15 +110,10 @@ const ProductShowcase = () => {
             >
               <Card className="p-6 bg-white border-[#aa6b5d]/20 hover:shadow-lg transition-shadow duration-300">
                 <div className="flex items-center gap-3 mb-4">
-                  <motion.div
-                    className="p-2 bg-amber-50 rounded-full"
-                    whileHover={{ rotate: 10 }}
-                  >
+                  <motion.div className="p-2 bg-amber-50 rounded-full" whileHover={{ rotate: 10 }}>
                     {section.icon}
                   </motion.div>
-                  <h3 className="text-xl font-playfair text-[#aa6b5d]">
-                    {section.title}
-                  </h3>
+                  <h3 className="text-xl font-playfair text-[#aa6b5d]">{section.title}</h3>
                 </div>
 
                 <motion.div className="space-y-3" variants={containerVariants}>

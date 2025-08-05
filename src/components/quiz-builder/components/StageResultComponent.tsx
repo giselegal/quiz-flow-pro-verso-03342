@@ -64,9 +64,7 @@ const StageResultComponent: React.FC<StageResultComponentProps> = ({
         {/* Primary Style */}
         <div className="text-center">
           <h2 className="text-xl font-medium mb-4">
-            {primaryStyleTitle ||
-              data.primaryStyleTitle ||
-              "Seu estilo predominante é:"}
+            {primaryStyleTitle || data.primaryStyleTitle || "Seu estilo predominante é:"}
           </h2>
 
           <div className="inline-block bg-[#ffefec] px-6 py-4 rounded-lg">
@@ -74,14 +72,11 @@ const StageResultComponent: React.FC<StageResultComponentProps> = ({
               {mockPrimaryStyle.category.toUpperCase()}
             </h3>
             {(showPercentages || data.showPercentages) && (
-              <p className="text-lg text-[#432818]/80">
-                {mockPrimaryStyle.percentage}%
-              </p>
+              <p className="text-lg text-[#432818]/80">{mockPrimaryStyle.percentage}%</p>
             )}
             {(showDescriptions || data.showDescriptions) && (
               <p className="text-[#432818]/80 mt-2">
-                Você valoriza o conforto e a praticidade, com um visual
-                descontraído e autêntico.
+                Você valoriza o conforto e a praticidade, com um visual descontraído e autêntico.
               </p>
             )}
           </div>
@@ -90,25 +85,16 @@ const StageResultComponent: React.FC<StageResultComponentProps> = ({
         {/* Secondary Styles */}
         <div>
           <h2 className="text-xl font-medium text-center mb-6">
-            {secondaryStylesTitle ||
-              data.secondaryStylesTitle ||
-              "Seus estilos complementares:"}
+            {secondaryStylesTitle || data.secondaryStylesTitle || "Seus estilos complementares:"}
           </h2>
 
           <div className="grid md:grid-cols-2 gap-4">
             {mockSecondaryStyles.map((style, index) => (
-              <div
-                key={index}
-                className="bg-white p-4 rounded-lg border border-[#B89B7A]/20"
-              >
+              <div key={index} className="bg-white p-4 rounded-lg border border-[#B89B7A]/20">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="font-medium text-[#432818]">
-                    {style.category}
-                  </span>
+                  <span className="font-medium text-[#432818]">{style.category}</span>
                   {(showPercentages || data.showPercentages) && (
-                    <span className="text-[#B89B7A]">
-                      {Math.round(style.percentage)}%
-                    </span>
+                    <span className="text-[#B89B7A]">{Math.round(style.percentage)}%</span>
                   )}
                 </div>
                 {(showPercentages || data.showPercentages) && (
@@ -133,9 +119,7 @@ const StageResultComponent: React.FC<StageResultComponentProps> = ({
               color: data.buttonTextColor || "white",
             }}
           >
-            {callToActionText ||
-              data.callToActionText ||
-              "Conhecer o Guia Completo"}
+            {callToActionText || data.callToActionText || "Conhecer o Guia Completo"}
           </Button>
         </div>
       </div>

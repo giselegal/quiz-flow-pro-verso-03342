@@ -19,12 +19,9 @@ export const UnifiedVisualEditor: React.FC<UnifiedVisualEditorProps> = ({
     <div className="unified-visual-editor">
       <div className="p-4">
         <h2 className="text-xl font-semibold mb-4">Unified Visual Editor</h2>
-        <p className="text-muted-foreground">
-          Editor visual unificado em desenvolvimento...
-        </p>
+        <p className="text-muted-foreground">Editor visual unificado em desenvolvimento...</p>
         <p className="text-xs text-gray-500 mt-2">
-          Active Tab: {initialActiveTab} | Primary Style:{" "}
-          {primaryStyle?.category || "None"}
+          Active Tab: {initialActiveTab} | Primary Style: {primaryStyle?.category || "None"}
         </p>
       </div>
     </div>

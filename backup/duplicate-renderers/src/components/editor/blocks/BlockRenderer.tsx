@@ -7,10 +7,10 @@
  * LIMPEZA: Janeiro 2025 - Removida duplicação de código de SchemaDrivenEditorLayoutV2
  */
 
-import UniversalBlockRenderer from './UniversalBlockRenderer';
-import type { BlockRendererProps } from './UniversalBlockRenderer';
+import UniversalBlockRenderer from "./UniversalBlockRenderer";
+import type { BlockRendererProps } from "./UniversalBlockRenderer";
 
 export { UniversalBlockRenderer as BlockRenderer, type BlockRendererProps };
 
 // Re-export padrão para compatibilidade
-export { default } from './UniversalBlockRenderer';
+export { default } from "./UniversalBlockRenderer";

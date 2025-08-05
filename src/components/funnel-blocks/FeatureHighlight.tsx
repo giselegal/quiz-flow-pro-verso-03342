@@ -71,17 +71,12 @@ export const FeatureHighlight: React.FC<FeatureHighlightProps> = ({
   style,
   customStyles,
 }) => {
-  const {
-    disabled: animationsDisabled,
-    duration = 400,
-    staggerDelay = 200,
-  } = animationConfig;
+  const { disabled: animationsDisabled, duration = 400, staggerDelay = 200 } = animationConfig;
   const isLowPerformance = deviceView === "mobile";
 
   const getGridColumns = () => {
     if (deviceView === "mobile") return "grid-cols-1";
-    if (deviceView === "tablet")
-      return columns > 2 ? "grid-cols-2" : `grid-cols-${columns}`;
+    if (deviceView === "tablet") return columns > 2 ? "grid-cols-2" : `grid-cols-${columns}`;
     return `grid-cols-${Math.min(columns, features.length)}`;
   };
 
@@ -141,9 +136,7 @@ export const FeatureHighlight: React.FC<FeatureHighlightProps> = ({
                   <div className="flex justify-center">
                     <div
                       className={`w-32 h-32 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full flex items-center justify-center text-white ${
-                        feature.isHighlighted
-                          ? "ring-4 ring-[#B89B7A] ring-opacity-30"
-                          : ""
+                        feature.isHighlighted ? "ring-4 ring-[#B89B7A] ring-opacity-30" : ""
                       }`}
                     >
                       {feature.icon || getDefaultIcon(index)}
@@ -162,12 +155,8 @@ export const FeatureHighlight: React.FC<FeatureHighlightProps> = ({
                 </span>
               </div>
             )}
-            <h3 className="text-2xl font-semibold text-[#432818] mb-4">
-              {feature.title}
-            </h3>
-            <p className="text-[#6B4F43] leading-relaxed text-lg">
-              {feature.description}
-            </p>
+            <h3 className="text-2xl font-semibold text-[#432818] mb-4">{feature.title}</h3>
+            <p className="text-[#6B4F43] leading-relaxed text-lg">{feature.description}</p>
           </div>
         </div>
       );
@@ -185,9 +174,7 @@ export const FeatureHighlight: React.FC<FeatureHighlightProps> = ({
             <div className="flex-shrink-0">
               <div
                 className={`w-12 h-12 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full flex items-center justify-center text-white ${
-                  feature.isHighlighted
-                    ? "ring-2 ring-[#B89B7A] ring-opacity-30"
-                    : ""
+                  feature.isHighlighted ? "ring-2 ring-[#B89B7A] ring-opacity-30" : ""
                 }`}
               >
                 {feature.icon || getDefaultIcon(index)}
@@ -204,12 +191,8 @@ export const FeatureHighlight: React.FC<FeatureHighlightProps> = ({
                 </span>
               </div>
             )}
-            <h3 className="text-lg font-semibold text-[#432818] mb-2">
-              {feature.title}
-            </h3>
-            <p className="text-[#6B4F43] leading-relaxed">
-              {feature.description}
-            </p>
+            <h3 className="text-lg font-semibold text-[#432818] mb-2">{feature.title}</h3>
+            <p className="text-[#6B4F43] leading-relaxed">{feature.description}</p>
           </div>
         </div>
       );
@@ -250,9 +233,7 @@ export const FeatureHighlight: React.FC<FeatureHighlightProps> = ({
               <div className="mb-6">
                 <div
                   className={`w-16 h-16 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full flex items-center justify-center text-white mx-auto ${
-                    feature.isHighlighted
-                      ? "ring-4 ring-[#B89B7A] ring-opacity-30"
-                      : ""
+                    feature.isHighlighted ? "ring-4 ring-[#B89B7A] ring-opacity-30" : ""
                   }`}
                 >
                   {feature.icon || getDefaultIcon(index)}
@@ -262,12 +243,8 @@ export const FeatureHighlight: React.FC<FeatureHighlightProps> = ({
           )}
 
           {/* Content */}
-          <h3 className="text-xl font-semibold text-[#432818] mb-4">
-            {feature.title}
-          </h3>
-          <p className="text-[#6B4F43] leading-relaxed">
-            {feature.description}
-          </p>
+          <h3 className="text-xl font-semibold text-[#432818] mb-4">{feature.title}</h3>
+          <p className="text-[#6B4F43] leading-relaxed">{feature.description}</p>
         </Card>
       );
     }
@@ -297,9 +274,7 @@ export const FeatureHighlight: React.FC<FeatureHighlightProps> = ({
           <div className="mb-4">
             <div
               className={`w-12 h-12 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full flex items-center justify-center text-white mx-auto ${
-                feature.isHighlighted
-                  ? "ring-2 ring-[#B89B7A] ring-opacity-30"
-                  : ""
+                feature.isHighlighted ? "ring-2 ring-[#B89B7A] ring-opacity-30" : ""
               }`}
             >
               {feature.icon || getDefaultIcon(index)}
@@ -308,32 +283,20 @@ export const FeatureHighlight: React.FC<FeatureHighlightProps> = ({
         )}
 
         {/* Content */}
-        <h3 className="text-lg font-semibold text-[#432818] mb-3">
-          {feature.title}
-        </h3>
-        <p className="text-[#6B4F43] leading-relaxed text-sm">
-          {feature.description}
-        </p>
+        <h3 className="text-lg font-semibold text-[#432818] mb-3">{feature.title}</h3>
+        <p className="text-[#6B4F43] leading-relaxed text-sm">{feature.description}</p>
       </Card>
     );
   };
 
   return (
     <div className={`py-12 ${className || ""}`} style={style}>
-      {customStyles && (
-        <style dangerouslySetInnerHTML={{ __html: customStyles }} />
-      )}
+      {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
 
       {/* Header */}
       <div className="text-center mb-10">
-        <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-2">
-          {title}
-        </h2>
-        {subtitle && (
-          <p className="text-center text-[#3a3a3a] mb-6 max-w-lg mx-auto">
-            {subtitle}
-          </p>
-        )}
+        <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-2">{title}</h2>
+        {subtitle && <p className="text-center text-[#3a3a3a] mb-6 max-w-lg mx-auto">{subtitle}</p>}
         <div className="elegant-divider w-32 mx-auto"></div>
       </div>
 
@@ -343,9 +306,7 @@ export const FeatureHighlight: React.FC<FeatureHighlightProps> = ({
           {features.map((feature, index) => (
             <AnimatedWrapper
               key={feature.id}
-              animation={
-                animationsDisabled || isLowPerformance ? "none" : "fade"
-              }
+              animation={animationsDisabled || isLowPerformance ? "none" : "fade"}
               show={true}
               duration={duration}
               delay={staggerDelay * index}

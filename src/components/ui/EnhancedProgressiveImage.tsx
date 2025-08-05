@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  optimizeCloudinaryUrl,
-  normalizeCloudinaryUrl,
-} from "@/utils/imageUtils";
+import { optimizeCloudinaryUrl, normalizeCloudinaryUrl } from "@/utils/imageUtils";
 
 interface EnhancedProgressiveImageProps {
   src: string;
@@ -61,12 +58,12 @@ const EnhancedProgressiveImage: React.FC<EnhancedProgressiveImageProps> = ({
       // Tenta novamente após um delay
       setTimeout(
         () => {
-          setRetryCount((prev) => prev + 1);
+          setRetryCount(prev => prev + 1);
           if (imgRef.current) {
             imgRef.current.src = optimizedSrc + `?retry=${retryCount + 1}`;
           }
         },
-        1000 * (retryCount + 1),
+        1000 * (retryCount + 1)
       );
     } else {
       setError(true);
@@ -162,9 +159,7 @@ const EnhancedProgressiveImage: React.FC<EnhancedProgressiveImageProps> = ({
                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
               />
             </svg>
-            <span className="text-sm font-medium text-gray-500">
-              Imagem não disponível
-            </span>
+            <span className="text-sm font-medium text-gray-500">Imagem não disponível</span>
             <span className="text-xs text-gray-400 mt-1">
               Tentativas: {retryCount}/{maxRetries}
             </span>

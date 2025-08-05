@@ -11,7 +11,7 @@ const typeMatches = content.match(/type:\s*['"]([^'"]+)['"]/g);
 
 if (typeMatches) {
   const types = typeMatches
-    .map((match) => {
+    .map(match => {
       const typeMatch = match.match(/type:\s*['"]([^'"]+)['"]/);
       return typeMatch ? typeMatch[1] : null;
     })
@@ -19,13 +19,11 @@ if (typeMatches) {
 
   // Verificar duplicatas
   const typeCounts = {};
-  types.forEach((type) => {
+  types.forEach(type => {
     typeCounts[type] = (typeCounts[type] || 0) + 1;
   });
 
-  const duplicates = Object.entries(typeCounts).filter(
-    ([type, count]) => count > 1,
-  );
+  const duplicates = Object.entries(typeCounts).filter(([type, count]) => count > 1);
 
   if (duplicates.length > 0) {
     console.log("Tipos duplicados encontrados:");

@@ -1,11 +1,5 @@
 import React, { useState, useMemo } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -44,10 +38,7 @@ interface UsersTabProps {
   loading: boolean;
 }
 
-export const UsersTab: React.FC<UsersTabProps> = ({
-  analyticsData,
-  loading,
-}) => {
+export const UsersTab: React.FC<UsersTabProps> = ({ analyticsData, loading }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [selectedUserData, setSelectedUserData] = useState<any>(null);
@@ -102,9 +93,9 @@ export const UsersTab: React.FC<UsersTabProps> = ({
     // Convert map to array and filter by search term
     return Array.from(uniqueUsers.values())
       .filter(
-        (user) =>
+        user =>
           user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          user.email.toLowerCase().includes(searchTerm.toLowerCase()),
+          user.email.toLowerCase().includes(searchTerm.toLowerCase())
       )
       .sort((a, b) => {
         // Sort by most recent activity first
@@ -182,7 +173,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({
                 className="w-[250px]"
                 placeholder="Buscar por nome ou email..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={e => setSearchTerm(e.target.value)}
               />
             </div>
           </div>
@@ -211,21 +202,14 @@ export const UsersTab: React.FC<UsersTabProps> = ({
                       <TableCell>{formatDate(user.lastActivity)}</TableCell>
                       <TableCell>
                         {user.completed ? (
-                          <Badge className="bg-green-500 text-white">
-                            Concluído
-                          </Badge>
+                          <Badge className="bg-green-500 text-white">Concluído</Badge>
                         ) : (
-                          <Badge
-                            variant="outline"
-                            className="border-yellow-500 text-yellow-500"
-                          >
+                          <Badge variant="outline" className="border-yellow-500 text-yellow-500">
                             Em progresso
                           </Badge>
                         )}
                       </TableCell>
-                      <TableCell className="text-center">
-                        {user.totalQuestions}
-                      </TableCell>
+                      <TableCell className="text-center">{user.totalQuestions}</TableCell>
                       <TableCell className="text-right">
                         <Dialog>
                           <DialogTrigger asChild>
@@ -249,33 +233,21 @@ export const UsersTab: React.FC<UsersTabProps> = ({
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                               <div>
-                                <p className="text-sm font-medium text-gray-500">
-                                  Nome
-                                </p>
-                                <p className="text-base">
-                                  {selectedUserData?.name}
-                                </p>
+                                <p className="text-sm font-medium text-gray-500">Nome</p>
+                                <p className="text-base">{selectedUserData?.name}</p>
                               </div>
                               <div>
-                                <p className="text-sm font-medium text-gray-500">
-                                  Email
-                                </p>
-                                <p className="text-base">
-                                  {selectedUserData?.email}
-                                </p>
+                                <p className="text-sm font-medium text-gray-500">Email</p>
+                                <p className="text-base">{selectedUserData?.email}</p>
                               </div>
                               <div>
-                                <p className="text-sm font-medium text-gray-500">
-                                  Início
-                                </p>
+                                <p className="text-sm font-medium text-gray-500">Início</p>
                                 <p className="text-base">
                                   {formatDate(selectedUserData?.startTime)}
                                 </p>
                               </div>
                               <div>
-                                <p className="text-sm font-medium text-gray-500">
-                                  Conclusão
-                                </p>
+                                <p className="text-sm font-medium text-gray-500">Conclusão</p>
                                 <p className="text-base">
                                   {formatDate(selectedUserData?.completeTime)}
                                 </p>
@@ -284,19 +256,13 @@ export const UsersTab: React.FC<UsersTabProps> = ({
                                 <p className="text-sm font-medium text-gray-500">
                                   Perguntas Respondidas
                                 </p>
-                                <p className="text-base">
-                                  {selectedUserData?.totalQuestions}
-                                </p>
+                                <p className="text-base">{selectedUserData?.totalQuestions}</p>
                               </div>
                               <div>
-                                <p className="text-sm font-medium text-gray-500">
-                                  Status
-                                </p>
+                                <p className="text-sm font-medium text-gray-500">Status</p>
                                 <p className="text-base">
                                   {selectedUserData?.completed ? (
-                                    <Badge className="bg-green-500 text-white">
-                                      Concluído
-                                    </Badge>
+                                    <Badge className="bg-green-500 text-white">Concluído</Badge>
                                   ) : (
                                     <Badge
                                       variant="outline"
@@ -326,43 +292,29 @@ export const UsersTab: React.FC<UsersTabProps> = ({
                                       <div className="flex-1">
                                         <p className="text-sm font-medium">
                                           {event.type === "quiz_answer" ? (
-                                            <>
-                                              Respondeu à questão{" "}
-                                              {event.questionIndex + 1}
-                                            </>
+                                            <>Respondeu à questão {event.questionIndex + 1}</>
                                           ) : event.type === "quiz_start" ? (
                                             <>Iniciou o quiz</>
                                           ) : event.type === "quiz_complete" ? (
                                             <>Completou o quiz</>
                                           ) : event.type === "result_view" ? (
-                                            <>
-                                              Visualizou o resultado:{" "}
-                                              {event.resultType}
-                                            </>
-                                          ) : event.type ===
-                                            "lead_generated" ? (
+                                            <>Visualizou o resultado: {event.resultType}</>
+                                          ) : event.type === "lead_generated" ? (
                                             <>Lead gerado: {event.email}</>
                                           ) : event.type === "sale" ? (
-                                            <>
-                                              Realizou uma compra no valor de R${" "}
-                                              {event.value}
-                                            </>
+                                            <>Realizou uma compra no valor de R$ {event.value}</>
                                           ) : (
                                             <>Evento: {event.type}</>
                                           )}
                                         </p>
                                         <p className="text-xs text-gray-500">
-                                          {new Date(
-                                            event.timestamp,
-                                          ).toLocaleString()}
+                                          {new Date(event.timestamp).toLocaleString()}
                                         </p>
                                         {event.type === "quiz_answer" && (
                                           <div className="mt-1 text-xs text-gray-600">
                                             <p>
                                               Opções selecionadas:{" "}
-                                              {event.selectedOptions?.join(
-                                                ", ",
-                                              ) || "N/A"}
+                                              {event.selectedOptions?.join(", ") || "N/A"}
                                             </p>
                                           </div>
                                         )}
@@ -371,8 +323,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({
                                   ))}
                                   {userEvents.length === 0 && (
                                     <p className="text-sm text-gray-500">
-                                      Nenhum evento encontrado para este
-                                      usuário.
+                                      Nenhum evento encontrado para este usuário.
                                     </p>
                                   )}
                                 </div>
@@ -384,10 +335,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({
                                 variant="outline"
                                 onClick={() => {
                                   // Export functionality kept the same as original
-                                  console.log(
-                                    "Exporting data for user:",
-                                    selectedUserData?.name,
-                                  );
+                                  console.log("Exporting data for user:", selectedUserData?.name);
                                 }}
                               >
                                 <Download className="h-4 w-4 mr-2" />
@@ -401,10 +349,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell
-                      colSpan={7}
-                      className="text-center py-6 text-muted-foreground"
-                    >
+                    <TableCell colSpan={7} className="text-center py-6 text-muted-foreground">
                       {searchTerm
                         ? "Nenhum usuário encontrado para esta busca."
                         : "Nenhum usuário encontrado."}

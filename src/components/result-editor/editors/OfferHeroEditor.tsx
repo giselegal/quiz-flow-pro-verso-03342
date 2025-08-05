@@ -14,10 +14,7 @@ interface OfferHeroEditorProps {
   onUpdate: (content: any) => void;
 }
 
-const OfferHeroEditor: React.FC<OfferHeroEditorProps> = ({
-  content,
-  onUpdate,
-}) => {
+const OfferHeroEditor: React.FC<OfferHeroEditorProps> = ({ content, onUpdate }) => {
   const handleChange = (key: string, value: any) => {
     onUpdate({
       ...content,
@@ -32,7 +29,7 @@ const OfferHeroEditor: React.FC<OfferHeroEditorProps> = ({
         <Textarea
           id="title"
           value={content.title || ""}
-          onChange={(e) => handleChange("title", e.target.value)}
+          onChange={e => handleChange("title", e.target.value)}
           placeholder="VOCÊ DESCOBRIU SEU ESTILO"
           rows={2}
         />
@@ -43,7 +40,7 @@ const OfferHeroEditor: React.FC<OfferHeroEditorProps> = ({
         <Textarea
           id="subtitle"
           value={content.subtitle || ""}
-          onChange={(e) => handleChange("subtitle", e.target.value)}
+          onChange={e => handleChange("subtitle", e.target.value)}
           placeholder="Agora é hora de aplicar com clareza — e se vestir de você"
           rows={2}
         />
@@ -54,7 +51,7 @@ const OfferHeroEditor: React.FC<OfferHeroEditorProps> = ({
         <Input
           id="heroImage"
           value={content.heroImage || ""}
-          onChange={(e) => handleChange("heroImage", e.target.value)}
+          onChange={e => handleChange("heroImage", e.target.value)}
           placeholder="https://exemplo.com/imagem-principal.jpg"
         />
 
@@ -66,7 +63,7 @@ const OfferHeroEditor: React.FC<OfferHeroEditorProps> = ({
                 src={content.heroImage}
                 alt="Imagem principal"
                 className="h-40 object-contain mx-auto"
-                onError={(e) => {
+                onError={e => {
                   (e.target as HTMLImageElement).src =
                     "https://placehold.co/400x300?text=Imagem+Inválida";
                 }}
@@ -81,7 +78,7 @@ const OfferHeroEditor: React.FC<OfferHeroEditorProps> = ({
         <Input
           id="heroImage2"
           value={content.heroImage2 || ""}
-          onChange={(e) => handleChange("heroImage2", e.target.value)}
+          onChange={e => handleChange("heroImage2", e.target.value)}
           placeholder="https://exemplo.com/imagem-secundaria.jpg"
         />
 
@@ -93,7 +90,7 @@ const OfferHeroEditor: React.FC<OfferHeroEditorProps> = ({
                 src={content.heroImage2}
                 alt="Imagem secundária"
                 className="h-40 object-contain mx-auto"
-                onError={(e) => {
+                onError={e => {
                   (e.target as HTMLImageElement).src =
                     "https://placehold.co/400x300?text=Imagem+Inválida";
                 }}

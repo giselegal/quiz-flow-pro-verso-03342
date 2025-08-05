@@ -22,8 +22,7 @@ const StyleResultBlockPreview: React.FC<StyleResultBlockPreviewProps> = ({
     <div className="p-6 bg-[#FAF9F7] rounded-lg">
       <div className="text-center mb-4">
         <h3 className="text-2xl font-playfair text-[#432818]">
-          Seu estilo predominante é{" "}
-          <span className="font-bold">{primaryStyle.category}</span>
+          Seu estilo predominante é <span className="font-bold">{primaryStyle.category}</span>
         </h3>
         <div className="inline-block bg-[#B89B7A] text-white px-4 py-1 rounded-full text-sm mt-2">
           {primaryStyle.percentage}% de compatibilidade

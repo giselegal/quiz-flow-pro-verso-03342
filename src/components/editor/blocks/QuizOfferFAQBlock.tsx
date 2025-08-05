@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
-import type { BlockComponentProps } from '@/types/blocks';
+import React, { useState, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
+import type { BlockComponentProps } from "@/types/blocks";
 
 const QuizOfferFAQBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -9,26 +9,26 @@ const QuizOfferFAQBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = '',
+  className = "",
 }) => {
   const {
-    title = 'Perguntas Frequentes',
-    textColor = '#432818',
-    backgroundColor = '#ffffff',
+    title = "Perguntas Frequentes",
+    textColor = "#432818",
+    backgroundColor = "#ffffff",
     faqItems = [
       {
-        question: 'Como funciona o quiz?',
+        question: "Como funciona o quiz?",
         answer:
-          'O quiz é baseado em metodologia científica de análise de estilo. Você responde perguntas sobre suas preferências e recebe um resultado personalizado.',
+          "O quiz é baseado em metodologia científica de análise de estilo. Você responde perguntas sobre suas preferências e recebe um resultado personalizado.",
       },
       {
-        question: 'O que está incluso no guia?',
+        question: "O que está incluso no guia?",
         answer:
-          'Você recebe um guia completo com seu estilo predominante, dicas de combinações, paleta de cores ideal e muito mais.',
+          "Você recebe um guia completo com seu estilo predominante, dicas de combinações, paleta de cores ideal e muito mais.",
       },
       {
-        question: 'Posso usar em qualquer idade?',
-        answer: 'Sim! Nosso método funciona para mulheres de todas as idades e estilos de vida.',
+        question: "Posso usar em qualquer idade?",
+        answer: "Sim! Nosso método funciona para mulheres de todas as idades e estilos de vida.",
       },
     ],
   } = block?.properties || {};
@@ -49,7 +49,7 @@ const QuizOfferFAQBlock: React.FC<BlockComponentProps> = ({
     <div
       className={`
         w-full py-16 px-4 transition-all duration-200
-        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
+        ${isSelected ? "ring-1 ring-gray-400/40 bg-gray-50/30" : "hover:shadow-sm"}
         ${className}
       `}
       style={{ backgroundColor }}

@@ -35,7 +35,7 @@ const handlePopulateStep = useCallback(
     // Adicionar os blocos usando handleAddBlocksToStep
     handleAddBlocksToStep(stepId, defaultBlocks);
   },
-  [handleAddBlocksToStep],
+  [handleAddBlocksToStep]
 );
 ```
 

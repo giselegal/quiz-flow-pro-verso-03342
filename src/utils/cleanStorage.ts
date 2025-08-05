@@ -13,7 +13,7 @@ export const cleanEditorLocalStorage = () => {
 
     // Count quiz-question blocks before cleanup
     const quizQuestionsBefore = config.blocks.filter(
-      (block: any) => block.type === "quiz-question",
+      (block: any) => block.type === "quiz-question"
     ).length;
 
     // Remove quiz-question blocks (these belong in steps 2-11, not step 1)
@@ -34,7 +34,7 @@ export const cleanEditorLocalStorage = () => {
 
     if (quizQuestionsBefore > 0) {
       console.log(
-        `✅ Cleaned ${quizQuestionsBefore} invalid quiz-question blocks from localStorage`,
+        `✅ Cleaned ${quizQuestionsBefore} invalid quiz-question blocks from localStorage`
       );
       return quizQuestionsBefore;
     }

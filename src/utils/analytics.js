@@ -41,12 +41,7 @@ export const trackPageView = (pageName, pageData = {}) => {
  * @param {string} pageName - Nome da página onde o botão está
  * @param {object} eventData - Dados adicionais sobre o evento
  */
-export const trackButtonClick = (
-  buttonId,
-  buttonText,
-  pageName,
-  eventData = {},
-) => {
+export const trackButtonClick = (buttonId, buttonText, pageName, eventData = {}) => {
   if (typeof window === "undefined") return;
 
   // Google Analytics
@@ -72,10 +67,7 @@ export const trackButtonClick = (
     });
   }
 
-  console.log(
-    `[Analytics] Clique em botão: ${buttonText} (${buttonId}) em ${pageName}`,
-    eventData,
-  );
+  console.log(`[Analytics] Clique em botão: ${buttonText} (${buttonId}) em ${pageName}`, eventData);
 };
 
 /**
@@ -135,7 +127,7 @@ export const captureUTMParameters = () => {
   ];
 
   // Extrair parâmetros da URL
-  utmKeys.forEach((key) => {
+  utmKeys.forEach(key => {
     const value = urlParams.get(key);
     if (value) {
       utmParams[key] = value;
@@ -144,10 +136,7 @@ export const captureUTMParameters = () => {
       try {
         localStorage.setItem(key, value);
       } catch (e) {
-        console.warn(
-          `[Analytics] Falha ao armazenar ${key} no localStorage`,
-          e,
-        );
+        console.warn(`[Analytics] Falha ao armazenar ${key} no localStorage`, e);
       }
     }
   });
@@ -176,11 +165,7 @@ export const captureUTMParameters = () => {
  * @returns {Array<object>} Array de eventos de analytics.
  */
 export const getAnalyticsEvents = () => {
-  if (
-    typeof window !== "undefined" &&
-    window.dataLayer &&
-    Array.isArray(window.dataLayer)
-  ) {
+  if (typeof window !== "undefined" && window.dataLayer && Array.isArray(window.dataLayer)) {
     // Retorna uma cópia para evitar mutações externas do dataLayer original
     return [...window.dataLayer];
   }
@@ -211,7 +196,7 @@ export const clearAnalyticsData = () => {
   ];
 
   // Remover parâmetros UTM do localStorage
-  utmKeys.forEach((key) => {
+  utmKeys.forEach(key => {
     try {
       localStorage.removeItem(key);
     } catch (e) {
@@ -231,9 +216,7 @@ export const clearAnalyticsData = () => {
 export const testFacebookPixel = () => {
   if (typeof window !== "undefined" && window.fbq) {
     window.fbq("trackCustom", "QuizStart", { test: true });
-    console.log(
-      "[Analytics] Evento QuizStart de teste enviado para o Facebook Pixel.",
-    );
+    console.log("[Analytics] Evento QuizStart de teste enviado para o Facebook Pixel.");
     return true;
   }
   console.warn("[Analytics] Facebook Pixel (window.fbq) não encontrado.");
@@ -325,10 +308,7 @@ export const trackResultView = (quizId, resultId, eventData = {}) => {
   if (window.dataLayer) {
     window.dataLayer.push({ event: "result_view", ...data });
   }
-  console.log(
-    `[Analytics] Visualização de resultado: ${quizId} - ${resultId}`,
-    data,
-  );
+  console.log(`[Analytics] Visualização de resultado: ${quizId} - ${resultId}`, data);
 };
 
 /**
@@ -358,7 +338,7 @@ function formatCreativeName(utmContent) {
   // Converter snake_case para Title Case
   return utmContent
     .split("_")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 }
 
@@ -373,7 +353,7 @@ export const getCreativePerformance = (days = 7) => {
 
   // Filtrar por período, se necessário
   const filteredEvents = days
-    ? events.filter((event) => {
+    ? events.filter(event => {
         const eventDate = new Date(event.date || event.timestamp);
         const cutoffDate = new Date();
         cutoffDate.setDate(cutoffDate.getDate() - days);
@@ -385,7 +365,7 @@ export const getCreativePerformance = (days = 7) => {
   const creativeStats = {};
 
   // Processar eventos para calcular estatísticas
-  filteredEvents.forEach((event) => {
+  filteredEvents.forEach(event => {
     const creative = event.utm_content || "unknown";
 
     if (!creativeStats[creative]) {
@@ -423,7 +403,7 @@ export const getCreativePerformance = (days = 7) => {
   });
 
   // Calcular taxas e métricas derivadas
-  Object.values(creativeStats).forEach((stats) => {
+  Object.values(creativeStats).forEach(stats => {
     if (stats.page_views > 0) {
       const convRate = (stats.leads / stats.page_views) * 100;
       stats.conversion_rate = `${convRate.toFixed(1)}%`;
@@ -445,12 +425,7 @@ export const getCreativePerformance = (days = 7) => {
  * @param {string} productName - Nome do produto
  * @param {object} additionalData - Dados adicionais sobre a venda
  */
-export const trackSaleConversion = (
-  value,
-  currency = "BRL",
-  productName,
-  additionalData = {},
-) => {
+export const trackSaleConversion = (value, currency = "BRL", productName, additionalData = {}) => {
   if (typeof window === "undefined") return;
 
   const saleData = {
@@ -466,6 +441,6 @@ export const trackSaleConversion = (
 
   console.log(
     `[Analytics] Conversão de venda rastreada: ${productName} - ${currency} ${value}`,
-    saleData,
+    saleData
   );
 };

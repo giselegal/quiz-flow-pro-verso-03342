@@ -44,10 +44,7 @@ const QuizProgress: React.FC<QuizProgressProps> = ({
   };
 
   return (
-    <div
-      style={containerStyle}
-      className={`${quizStyles.quizProgress} ${className}`}
-    >
+    <div style={containerStyle} className={`${quizStyles.quizProgress} ${className}`}>
       {showPercentage && (
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-medium text-gray-700">Progresso</span>

@@ -68,8 +68,7 @@
 
     <script>
       // Configuração da data
-      document.getElementById("currentDate").textContent =
-        new Date().toLocaleString("pt-BR");
+      document.getElementById("currentDate").textContent = new Date().toLocaleString("pt-BR");
 
       // Verificar status do servidor
       fetch("/api/health")
@@ -142,7 +141,7 @@
 
       // Função para testar renderização de componente
       function testComponentRendering(componentType) {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
           try {
             // Simular teste de renderização
             const testElement = document.createElement("div");
@@ -155,9 +154,7 @@
             resolve({
               component: componentType,
               status: isSupported ? "success" : "error",
-              message: isSupported
-                ? "Componente mapeado e funcional"
-                : "Componente não encontrado",
+              message: isSupported ? "Componente mapeado e funcional" : "Componente não encontrado",
             });
           } catch (error) {
             resolve({
@@ -173,12 +170,8 @@
       function renderTestResults(components, containerId) {
         const container = document.getElementById(containerId);
 
-        Promise.all(
-          components.map((comp) => testComponentRendering(comp)),
-        ).then((results) => {
-          const successCount = results.filter(
-            (r) => r.status === "success",
-          ).length;
+        Promise.all(components.map(comp => testComponentRendering(comp))).then(results => {
+          const successCount = results.filter(r => r.status === "success").length;
           const totalCount = results.length;
 
           let html = `
@@ -190,7 +183,7 @@
                         </div>
                     `;
 
-          results.forEach((result) => {
+          results.forEach(result => {
             html += `
                             <div class="component-test">
                                 <strong>${result.component}</strong>

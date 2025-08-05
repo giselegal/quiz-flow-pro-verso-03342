@@ -49,7 +49,7 @@ export class VersioningService {
       quiz?: any;
       questions?: any[];
       settings?: any;
-    },
+    }
   ): Promise<QuizVersion> {
     console.log("Would create version for quiz:", quizId);
 
@@ -81,7 +81,7 @@ export class VersioningService {
       limit?: number;
       offset?: number;
       includeData?: boolean;
-    },
+    }
   ): Promise<QuizVersion[]> {
     console.log("Would get versions for quiz:", quizId);
     return [];
@@ -112,10 +112,7 @@ export class VersioningService {
     console.log("Would restore version:", versionId);
   }
 
-  static async compareVersions(
-    versionAId: string,
-    versionBId: string,
-  ): Promise<VersionComparison> {
+  static async compareVersions(versionAId: string, versionBId: string): Promise<VersionComparison> {
     console.log("Would compare versions:", versionAId, versionBId);
     const version = await this.getVersion(versionAId);
     return {

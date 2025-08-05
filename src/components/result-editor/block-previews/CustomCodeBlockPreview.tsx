@@ -7,9 +7,7 @@ interface CustomCodeBlockPreviewProps {
   };
 }
 
-const CustomCodeBlockPreview: React.FC<CustomCodeBlockPreviewProps> = ({
-  content,
-}) => {
+const CustomCodeBlockPreview: React.FC<CustomCodeBlockPreviewProps> = ({ content }) => {
   const { code = "", style = {} } = content;
 
   if (!code.trim()) {

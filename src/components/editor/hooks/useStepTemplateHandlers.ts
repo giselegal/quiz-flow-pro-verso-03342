@@ -4,9 +4,7 @@ import { stepTemplateService } from "../../../services/stepTemplateService";
 // 🎯 FUNÇÃO PARA OBTER TEMPLATE DE ETAPA USANDO STEPTEMPLATE SERVICE
 export const getStepTemplate = (stepId: string) => {
   try {
-    console.log(
-      `🔍 Obtendo template da etapa "${stepId}" via stepTemplateService...`,
-    );
+    console.log(`🔍 Obtendo template da etapa "${stepId}" via stepTemplateService...`);
 
     // Converter stepId para número (etapa-1 → 1, ou "1" → 1)
     const stepNumber =
@@ -20,12 +18,10 @@ export const getStepTemplate = (stepId: string) => {
     const template = stepTemplateService.getStepTemplate(stepNumber);
 
     if (template && template.length > 0) {
-      console.log(
-        `✅ Template encontrado para etapa ${stepNumber}: ${template.length} blocos`,
-      );
+      console.log(`✅ Template encontrado para etapa ${stepNumber}: ${template.length} blocos`);
       console.log(
         `🧱 Tipos de blocos:`,
-        template.map((b) => b.type),
+        template.map(b => b.type)
       );
 
       return template.map((block: any) => ({
@@ -48,14 +44,12 @@ export const useStepTemplateHandlers = (
   updateBlock: (id: string, properties: any) => void,
   deleteBlock: (id: string) => void,
   setSteps: (updater: (prev: any[]) => any[]) => void,
-  blocks: any[],
+  blocks: any[]
 ) => {
   // Função para adicionar múltiplos blocos a uma etapa específica
   const handleAddBlocksToStep = useCallback(
     (stepId: string, blocksToAdd: any[]) => {
-      console.log(
-        `🎯 Adicionando ${blocksToAdd.length} blocos à etapa ${stepId}`,
-      );
+      console.log(`🎯 Adicionando ${blocksToAdd.length} blocos à etapa ${stepId}`);
 
       blocksToAdd.forEach((block, index) => {
         setTimeout(() => {
@@ -70,13 +64,13 @@ export const useStepTemplateHandlers = (
               updateBlock(newBlockId, blockProperties);
 
               // Também atualizar o bloco diretamente para ter stepId
-              const blockToUpdate = blocks.find((b) => b.id === newBlockId);
+              const blockToUpdate = blocks.find(b => b.id === newBlockId);
               if (blockToUpdate) {
                 blockToUpdate.stepId = stepId;
               }
             }
             console.log(
-              `✅ Bloco ${index + 1}/${blocksToAdd.length} adicionado à etapa ${stepId}: ${block.type}`,
+              `✅ Bloco ${index + 1}/${blocksToAdd.length} adicionado à etapa ${stepId}: ${block.type}`
             );
           } catch (error) {
             console.error(`❌ Erro ao adicionar bloco ${block.type}:`, error);
@@ -85,33 +79,27 @@ export const useStepTemplateHandlers = (
       });
 
       // Atualizar contador de blocos da etapa
-      setSteps((prev) =>
-        prev.map((step) =>
+      setSteps(prev =>
+        prev.map(step =>
           step.id === stepId
             ? { ...step, blocksCount: step.blocksCount + blocksToAdd.length }
-            : step,
-        ),
+            : step
+        )
       );
     },
-    [addBlock, updateBlock, blocks, setSteps],
+    [addBlock, updateBlock, blocks, setSteps]
   );
 
   // Handler para popular uma etapa com blocos padrão - TODAS AS 21 ETAPAS
   const handlePopulateStep = useCallback(
     (stepId: string) => {
-      console.log(
-        `🎯 [NOVO SISTEMA] Populando etapa ${stepId} com template modular`,
-      );
+      console.log(`🎯 [NOVO SISTEMA] Populando etapa ${stepId} com template modular`);
 
       // 🧹 LIMPEZA: Remover blocos existentes antes de carregar novos
-      console.log(
-        `🧹 Limpando blocos existentes antes de carregar template...`,
-      );
-      blocks.forEach((block) => {
+      console.log(`🧹 Limpando blocos existentes antes de carregar template...`);
+      blocks.forEach(block => {
         if (block.type === "guarantee" || block.type === "Garantia") {
-          console.log(
-            `🗑️ Removendo bloco corrompido: ${block.type} (${block.id})`,
-          );
+          console.log(`🗑️ Removendo bloco corrompido: ${block.type} (${block.id})`);
           deleteBlock(block.id);
         }
       });
@@ -123,25 +111,18 @@ export const useStepTemplateHandlers = (
         return;
       }
 
-      console.log(
-        `🔧 [NOVO SISTEMA] Carregando template da Step ${stepNumber}...`,
-      );
+      console.log(`🔧 [NOVO SISTEMA] Carregando template da Step ${stepNumber}...`);
 
       try {
         // 🎯 Usar novo sistema de templates das steps
         const stepTemplate = getStepTemplate(stepNumber.toString());
 
         console.log(`🧪 [DEBUG] Template retornado:`, stepTemplate);
-        console.log(
-          `🧪 [DEBUG] Template é array?`,
-          Array.isArray(stepTemplate),
-        );
+        console.log(`🧪 [DEBUG] Template é array?`, Array.isArray(stepTemplate));
         console.log(`🧪 [DEBUG] Template length:`, stepTemplate?.length);
 
         if (!stepTemplate || stepTemplate.length === 0) {
-          console.warn(
-            `⚠️ Template vazio para Step ${stepNumber}, usando fallback`,
-          );
+          console.warn(`⚠️ Template vazio para Step ${stepNumber}, usando fallback`);
           // Fallback simples
           const fallbackBlocks = [
             {
@@ -168,43 +149,33 @@ export const useStepTemplateHandlers = (
             },
           ];
 
-          console.log(
-            `🔄 Aplicando ${fallbackBlocks.length} blocos fallback...`,
-          );
+          console.log(`🔄 Aplicando ${fallbackBlocks.length} blocos fallback...`);
           fallbackBlocks.forEach((blockData, index) => {
             const newBlockId = addBlock(blockData.type as any);
 
             setTimeout(() => {
               updateBlock(newBlockId, blockData.properties);
-              console.log(
-                `✅ Bloco fallback ${index + 1} aplicado:`,
-                blockData.type,
-              );
+              console.log(`✅ Bloco fallback ${index + 1} aplicado:`, blockData.type);
             }, index * 100);
           });
           return;
         }
 
-        console.log(
-          `Template encontrado! ${stepTemplate.length} blocos para carregar`,
-        );
+        console.log(`Template encontrado! ${stepTemplate.length} blocos para carregar`);
         console.log(
           `🧱 Tipos de blocos:`,
-          stepTemplate.map((b) => b.type),
+          stepTemplate.map(b => b.type)
         );
 
         // 🔄 Aplicar todos os blocos do template
         stepTemplate.forEach((blockData, index) => {
-          console.log(
-            `🧱 Adicionando bloco ${index + 1}/${stepTemplate.length}:`,
-            blockData.type,
-          );
+          console.log(`🧱 Adicionando bloco ${index + 1}/${stepTemplate.length}:`, blockData.type);
           console.log(`🧪 [DEBUG] Dados do bloco:`, blockData);
 
           // 🛡️ VALIDAÇÃO: Garantir que não é um bloco 'guarantee' indesejado
           if (blockData.type === "guarantee" || blockData.type === "Garantia") {
             console.warn(
-              `⚠️ Bloco 'guarantee' detectado no template - pulando para evitar problema`,
+              `⚠️ Bloco 'guarantee' detectado no template - pulando para evitar problema`
             );
             return;
           }
@@ -214,33 +185,25 @@ export const useStepTemplateHandlers = (
           // Aplicar propriedades com delay para evitar problemas de timing
           setTimeout(() => {
             updateBlock(newBlockId, blockData.properties);
-            console.log(
-              `✅ Propriedades aplicadas para bloco ${index + 1}:`,
-              blockData.type,
-            );
+            console.log(`✅ Propriedades aplicadas para bloco ${index + 1}:`, blockData.type);
           }, index * 100);
         });
 
         // 📊 Atualizar contador de blocos da step
         const updatedBlocksCount = stepTemplate.filter(
-          (b) => b.type !== "guarantee" && b.type !== "Garantia",
+          b => b.type !== "guarantee" && b.type !== "Garantia"
         ).length;
-        setSteps((prevSteps) =>
-          prevSteps.map((step) =>
-            step.id === stepId
-              ? { ...step, blocksCount: updatedBlocksCount, isActive: true }
-              : step,
-          ),
+        setSteps(prevSteps =>
+          prevSteps.map(step =>
+            step.id === stepId ? { ...step, blocksCount: updatedBlocksCount, isActive: true } : step
+          )
         );
 
         console.log(
-          `✅ Template da Step ${stepNumber} aplicado com sucesso! ${updatedBlocksCount} blocos adicionados`,
+          `✅ Template da Step ${stepNumber} aplicado com sucesso! ${updatedBlocksCount} blocos adicionados`
         );
       } catch (error) {
-        console.error(
-          `❌ Erro ao aplicar template da Step ${stepNumber}:`,
-          error,
-        );
+        console.error(`❌ Erro ao aplicar template da Step ${stepNumber}:`, error);
 
         // 🚨 Fallback de emergência
         const emergencyBlocks = [
@@ -264,7 +227,7 @@ export const useStepTemplateHandlers = (
         });
       }
     },
-    [addBlock, updateBlock, deleteBlock, setSteps, blocks],
+    [addBlock, updateBlock, deleteBlock, setSteps, blocks]
   );
 
   return {

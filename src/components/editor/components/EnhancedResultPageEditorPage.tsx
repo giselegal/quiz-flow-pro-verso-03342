@@ -7,9 +7,7 @@ interface EnhancedResultPageEditorPageProps {
   // Define props if needed
 }
 
-const EnhancedResultPageEditorPage: React.FC<
-  EnhancedResultPageEditorPageProps
-> = () => {
+const EnhancedResultPageEditorPage: React.FC<EnhancedResultPageEditorPageProps> = () => {
   return (
     <Card>
       <Card>

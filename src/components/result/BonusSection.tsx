@@ -9,13 +9,13 @@ const BonusSection: React.FC = () => {
   // Criar imagem otimizada de alta qualidade
   const bonus1ImageUrl = optimizeCloudinaryUrl(
     "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/C%C3%B3pia_de_Passo_5_Pe%C3%A7as_chaves_Documento_A4_lxmekf.webp",
-    { quality: 95, format: "webp" },
+    { quality: 95, format: "webp" }
   );
 
   // Criar imagem otimizada para o segundo bônus
   const bonus2ImageUrl = optimizeCloudinaryUrl(
     "https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp",
-    { quality: 95, format: "webp" },
+    { quality: 95, format: "webp" }
   );
 
   return (
@@ -24,8 +24,8 @@ const BonusSection: React.FC = () => {
         Bônus Exclusivos para Você
       </h2>
       <p className="text-center text-[#3a3a3a] mb-6 max-w-md mx-auto">
-        Além do guia principal, você receberá estas ferramentas complementares
-        para potencializar sua jornada de transformação:
+        Além do guia principal, você receberá estas ferramentas complementares para potencializar
+        sua jornada de transformação:
       </p>
       <div className="elegant-divider w-32 mx-auto mt-0 mb-6"></div>
 
@@ -71,22 +71,17 @@ const BonusSection: React.FC = () => {
               Peças-chave do Guarda-roupa
             </h3>
             <p className="text-[#432818] text-sm">
-              Descubra as peças essenciais para seu estilo que maximizam suas
-              combinações com investimento inteligente.
+              Descubra as peças essenciais para seu estilo que maximizam suas combinações com
+              investimento inteligente.
             </p>
 
             <div className="mt-3 flex items-center">
               <div className="flex">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star
-                    key={star}
-                    className="w-4 h-4 fill-[#B89B7A] text-[#B89B7A]"
-                  />
+                {[1, 2, 3, 4, 5].map(star => (
+                  <Star key={star} className="w-4 h-4 fill-[#B89B7A] text-[#B89B7A]" />
                 ))}
               </div>
-              <span className="ml-2 text-xs text-[#3a3a3a]">
-                Edição Premium
-              </span>
+              <span className="ml-2 text-xs text-[#3a3a3a]">Edição Premium</span>
             </div>
           </motion.div>
 
@@ -129,22 +124,17 @@ const BonusSection: React.FC = () => {
               Visagismo Facial
             </h3>
             <p className="text-[#432818] text-sm">
-              Aprenda a valorizar seus traços faciais, cortes de cabelo e
-              acessórios que harmonizam com seu rosto.
+              Aprenda a valorizar seus traços faciais, cortes de cabelo e acessórios que harmonizam
+              com seu rosto.
             </p>
 
             <div className="mt-3 flex items-center">
               <div className="flex">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star
-                    key={star}
-                    className="w-4 h-4 fill-[#B89B7A] text-[#B89B7A]"
-                  />
+                {[1, 2, 3, 4, 5].map(star => (
+                  <Star key={star} className="w-4 h-4 fill-[#B89B7A] text-[#B89B7A]" />
                 ))}
               </div>
-              <span className="ml-2 text-xs text-[#3a3a3a]">
-                Edição Premium
-              </span>
+              <span className="ml-2 text-xs text-[#3a3a3a]">Edição Premium</span>
             </div>
           </motion.div>
         </div>

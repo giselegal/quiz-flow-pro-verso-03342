@@ -1,11 +1,6 @@
 import { getOptimizedContainerClasses } from "@/config/containerConfig";
 import React, { useEffect, useState } from "react";
-import {
-  BlockComponentProps,
-  LoadingType,
-  Alignment,
-  InteractionCallbacks,
-} from "./types";
+import { BlockComponentProps, LoadingType, Alignment, InteractionCallbacks } from "./types";
 
 /**
  * LoadingTransition - Componente de transição com animação de carregamento
@@ -23,9 +18,7 @@ import {
  * />
  */
 
-export interface LoadingTransitionProps
-  extends BlockComponentProps,
-    InteractionCallbacks {
+export interface LoadingTransitionProps extends BlockComponentProps, InteractionCallbacks {
   // Conteúdo
   message: string;
   submessage?: string;
@@ -93,7 +86,7 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
     if (isComplete) return;
 
     const interval = setInterval(() => {
-      setProgress((prev) => {
+      setProgress(prev => {
         const newProgress = Math.min(prev + 100 / (duration / 100), 100);
         onProgress?.(newProgress);
 
@@ -112,7 +105,7 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
     let textInterval: NodeJS.Timeout;
     if (loadingTexts.length > 0) {
       textInterval = setInterval(() => {
-        setCurrentTextIndex((prev) => (prev + 1) % loadingTexts.length);
+        setCurrentTextIndex(prev => (prev + 1) % loadingTexts.length);
       }, 2000);
     }
 
@@ -120,14 +113,7 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
       clearInterval(interval);
       if (textInterval) clearInterval(textInterval);
     };
-  }, [
-    duration,
-    autoAdvance,
-    onComplete,
-    onProgress,
-    loadingTexts.length,
-    isComplete,
-  ]);
+  }, [duration, autoAdvance, onComplete, onProgress, loadingTexts.length, isComplete]);
 
   // Renderizar animação baseada no tipo
   const renderAnimation = () => {
@@ -210,11 +196,10 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
     deviceView || "desktop",
     "tight",
     "full",
-    className,
+    className
   );
 
-  const currentLoadingText =
-    loadingTexts.length > 0 ? loadingTexts[currentTextIndex] : null;
+  const currentLoadingText = loadingTexts.length > 0 ? loadingTexts[currentTextIndex] : null;
 
   return (
     <div
@@ -226,14 +211,10 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
       {renderAnimation()}
 
       {/* Mensagem Principal */}
-      <h2 className="text-2xl md:text-3xl font-bold mb-4 max-w-2xl">
-        {message}
-      </h2>
+      <h2 className="text-2xl md:text-3xl font-bold mb-4 max-w-2xl">{message}</h2>
 
       {/* Submensagem */}
-      {submessage && (
-        <p className="text-lg text-gray-600 mb-8 max-w-xl">{submessage}</p>
-      )}
+      {submessage && <p className="text-lg text-gray-600 mb-8 max-w-xl">{submessage}</p>}
 
       {/* Texto Rotativo */}
       {currentLoadingText && (
@@ -254,9 +235,7 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
               }}
             />
           </div>
-          <p className="text-sm text-gray-500 mt-2 text-center">
-            {Math.round(progress)}%
-          </p>
+          <p className="text-sm text-gray-500 mt-2 text-center">{Math.round(progress)}%</p>
         </div>
       )}
 

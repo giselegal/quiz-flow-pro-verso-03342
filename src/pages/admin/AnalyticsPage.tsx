@@ -23,9 +23,7 @@ const AnalyticsPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-[#8F7A6A]">
-              Visitantes Únicos
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-[#8F7A6A]">Visitantes Únicos</CardTitle>
             <Users className="h-4 w-4 text-[#B89B7A]" />
           </CardHeader>
           <CardContent>
@@ -36,9 +34,7 @@ const AnalyticsPage: React.FC = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-[#8F7A6A]">
-              Taxa de Conversão
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-[#8F7A6A]">Taxa de Conversão</CardTitle>
             <Target className="h-4 w-4 text-[#B89B7A]" />
           </CardHeader>
           <CardContent>
@@ -49,9 +45,7 @@ const AnalyticsPage: React.FC = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-[#8F7A6A]">
-              Pageviews
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-[#8F7A6A]">Pageviews</CardTitle>
             <Eye className="h-4 w-4 text-[#B89B7A]" />
           </CardHeader>
           <CardContent>
@@ -62,9 +56,7 @@ const AnalyticsPage: React.FC = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-[#8F7A6A]">
-              Tempo Médio
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-[#8F7A6A]">Tempo Médio</CardTitle>
             <Clock className="h-4 w-4 text-[#B89B7A]" />
           </CardHeader>
           <CardContent>
@@ -75,9 +67,7 @@ const AnalyticsPage: React.FC = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-[#8F7A6A]">
-              Receita Total
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-[#8F7A6A]">Receita Total</CardTitle>
             <TrendingUp className="h-4 w-4 text-[#B89B7A]" />
           </CardHeader>
           <CardContent>
@@ -90,30 +80,22 @@ const AnalyticsPage: React.FC = () => {
       {/* Análise por Funil */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-[#432818]">
-            Performance por Funil
-          </CardTitle>
+          <CardTitle className="text-[#432818]">Performance por Funil</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="flex items-center justify-between p-4 border border-[#D4C4A0] rounded-lg">
               <div>
-                <h3 className="font-semibold text-[#432818]">
-                  Funil de Descoberta de Estilo
-                </h3>
+                <h3 className="font-semibold text-[#432818]">Funil de Descoberta de Estilo</h3>
                 <div className="flex items-center gap-4 mt-2 text-sm">
                   <span className="text-[#8F7A6A]">2,847 visitantes</span>
-                  <Badge className="bg-green-100 text-green-800">
-                    87.2% conversão
-                  </Badge>
+                  <Badge className="bg-green-100 text-green-800">87.2% conversão</Badge>
                   <span className="text-[#8F7A6A]">R$ 18,745 receita</span>
                 </div>
               </div>
               <div className="text-right">
                 <div className="text-lg font-bold text-green-600">+15.8%</div>
-                <div className="text-xs text-[#8F7A6A]">
-                  vs período anterior
-                </div>
+                <div className="text-xs text-[#8F7A6A]">vs período anterior</div>
               </div>
             </div>
           </div>

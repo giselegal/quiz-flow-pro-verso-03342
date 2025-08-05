@@ -6,20 +6,16 @@ interface SimpleSidebarProps {
   onComponentSelect: (type: string) => void;
 }
 
-export const SimpleSidebar: React.FC<SimpleSidebarProps> = ({
-  onComponentSelect,
-}) => {
+export const SimpleSidebar: React.FC<SimpleSidebarProps> = ({ onComponentSelect }) => {
   console.log("SimpleSidebar - Total blocks:", blockDefinitions.length);
 
   return (
     <div className="h-full p-4 bg-white border-r">
       <h2 className="font-bold text-lg mb-4">Blocos Disponíveis</h2>
-      <p className="text-sm text-gray-600 mb-4">
-        Total: {blockDefinitions.length} blocos
-      </p>
+      <p className="text-sm text-gray-600 mb-4">Total: {blockDefinitions.length} blocos</p>
 
       <div className="space-y-2 max-h-96 overflow-y-auto">
-        {blockDefinitions.slice(0, 10).map((block) => (
+        {blockDefinitions.slice(0, 10).map(block => (
           <Button
             key={block.type}
             variant="outline"

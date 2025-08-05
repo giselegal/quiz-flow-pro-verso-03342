@@ -49,7 +49,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
     if (!currentImgRef) return;
 
     observerRef.current = new IntersectionObserver(
-      (entries) => {
+      entries => {
         const [entry] = entries;
         if (entry.isIntersecting) {
           setIsInView(true);
@@ -59,7 +59,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
       {
         rootMargin: "50px",
         threshold: 0.1,
-      },
+      }
     );
 
     observerRef.current.observe(currentImgRef);
@@ -93,11 +93,9 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
     if (!width || hasError) return undefined;
 
     const breakpoints = [480, 640, 768, 1024, 1280, 1536];
-    const relevantBreakpoints = breakpoints.filter((bp) => bp <= width * 2);
+    const relevantBreakpoints = breakpoints.filter(bp => bp <= width * 2);
 
-    return relevantBreakpoints
-      .map((bp) => `${getOptimizedSrc(src, bp)} ${bp}w`)
-      .join(", ");
+    return relevantBreakpoints.map(bp => `${getOptimizedSrc(src, bp)} ${bp}w`).join(", ");
   };
 
   const handleLoad = () => {
@@ -115,11 +113,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
     return (
       <div
         ref={imgRef}
-        className={cn(
-          "bg-gray-200 animate-pulse",
-          fill ? "absolute inset-0" : "",
-          className,
-        )}
+        className={cn("bg-gray-200 animate-pulse", fill ? "absolute inset-0" : "", className)}
         style={fill ? { ...style } : { width, height, ...style }}
       />
     );
@@ -132,7 +126,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         className={cn(
           "bg-gray-100 flex items-center justify-center text-gray-400",
           fill ? "absolute inset-0" : "",
-          className,
+          className
         )}
         style={fill ? { ...style } : { width, height, ...style }}
       >
@@ -143,11 +137,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
   return (
     <div
-      className={cn(
-        "relative overflow-hidden",
-        fill ? "absolute inset-0" : "",
-        className,
-      )}
+      className={cn("relative overflow-hidden", fill ? "absolute inset-0" : "", className)}
       style={fill ? { ...style } : { width, height, ...style }}
     >
       {/* Placeholder/blur effect */}
@@ -181,10 +171,8 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         onError={handleError}
         className={cn(
           "transition-opacity duration-300",
-          fill
-            ? "absolute inset-0 w-full h-full object-cover"
-            : "w-full h-auto",
-          isLoaded ? "opacity-100" : "opacity-0",
+          fill ? "absolute inset-0 w-full h-full object-cover" : "w-full h-auto",
+          isLoaded ? "opacity-100" : "opacity-0"
         )}
       />
     </div>

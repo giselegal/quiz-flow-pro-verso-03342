@@ -15,9 +15,7 @@ const CreativesPage: React.FC = () => {
           >
             Biblioteca de Criativos
           </h1>
-          <p className="text-[#8F7A6A] mt-2">
-            Gerencie suas imagens, vídeos e materiais criativos
-          </p>
+          <p className="text-[#8F7A6A] mt-2">Gerencie suas imagens, vídeos e materiais criativos</p>
         </div>
         <Button className="bg-[#B89B7A] hover:bg-[#A0895B] text-white">
           <Plus className="w-4 h-4 mr-2" />
@@ -29,9 +27,7 @@ const CreativesPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-[#8F7A6A]">
-              Imagens
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-[#8F7A6A]">Imagens</CardTitle>
             <Image className="h-4 w-4 text-[#B89B7A]" />
           </CardHeader>
           <CardContent>
@@ -42,9 +38,7 @@ const CreativesPage: React.FC = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-[#8F7A6A]">
-              Vídeos
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-[#8F7A6A]">Vídeos</CardTitle>
             <Video className="h-4 w-4 text-[#B89B7A]" />
           </CardHeader>
           <CardContent>
@@ -55,9 +49,7 @@ const CreativesPage: React.FC = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-[#8F7A6A]">
-              Documentos
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-[#8F7A6A]">Documentos</CardTitle>
             <FileText className="h-4 w-4 text-[#B89B7A]" />
           </CardHeader>
           <CardContent>

@@ -45,7 +45,7 @@ export function initPerformanceObservers() {
 
   try {
     // LCP Observer
-    const lcpObserver = new PerformanceObserver((entryList) => {
+    const lcpObserver = new PerformanceObserver(entryList => {
       const entries = entryList.getEntries();
       const lastEntry = entries[entries.length - 1] as EnhancedPerformanceEntry;
 
@@ -64,7 +64,7 @@ export function initPerformanceObservers() {
     lcpObserver.observe({ type: "largest-contentful-paint", buffered: true });
 
     // FID Observer
-    const fidObserver = new PerformanceObserver((entryList) => {
+    const fidObserver = new PerformanceObserver(entryList => {
       const entries = entryList.getEntries();
       for (const entry of entries) {
         const customEntry = entry as EnhancedPerformanceEntry;
@@ -86,7 +86,7 @@ export function initPerformanceObservers() {
 
     // Metrics para CLS
     let cumulativeLayoutShift = 0;
-    const clsObserver = new PerformanceObserver((entryList) => {
+    const clsObserver = new PerformanceObserver(entryList => {
       const entries = entryList.getEntries();
       for (const entry of entries) {
         const customEntry = entry as EnhancedPerformanceEntry;

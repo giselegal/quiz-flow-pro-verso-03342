@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Clock, AlertTriangle } from 'lucide-react';
-import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
-import type { BlockComponentProps } from '@/types/blocks';
+import React, { useState, useEffect } from "react";
+import { Clock, AlertTriangle } from "lucide-react";
+import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
+import type { BlockComponentProps } from "@/types/blocks";
 
 /**
  * UrgencyTimerInlineBlock - Timer de urgência com design mais agressivo
@@ -12,20 +12,20 @@ const UrgencyTimerInlineBlock: React.FC<BlockComponentProps> = ({
   isSelected = false,
   onClick,
   onPropertyChange,
-  className = '',
+  className = "",
 }) => {
   // Validate and extract properties with default values
   const properties = block?.properties || {};
 
   const {
     initialMinutes = 15,
-    title = '⚡ OFERTA EXPIRA EM:',
-    urgencyMessage = 'Restam apenas alguns minutos!',
-    backgroundColor = '#dc2626',
-    textColor = '#ffffff',
-    pulseColor = '#fbbf24',
+    title = "⚡ OFERTA EXPIRA EM:",
+    urgencyMessage = "Restam apenas alguns minutos!",
+    backgroundColor = "#dc2626",
+    textColor = "#ffffff",
+    pulseColor = "#fbbf24",
     showAlert = true,
-    spacing = 'md',
+    spacing = "md",
   } = properties;
 
   const [isLoaded, setIsLoaded] = useState(false);
@@ -60,11 +60,11 @@ const UrgencyTimerInlineBlock: React.FC<BlockComponentProps> = ({
   }, []);
 
   const spacingClasses = {
-    none: 'p-0',
-    sm: 'p-4',
-    md: 'p-6',
-    lg: 'p-8',
-    xl: 'p-12',
+    none: "p-0",
+    sm: "p-4",
+    md: "p-6",
+    lg: "p-8",
+    xl: "p-12",
   };
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -79,26 +79,26 @@ const UrgencyTimerInlineBlock: React.FC<BlockComponentProps> = ({
         w-full
         ${spacingClasses[spacing as keyof typeof spacingClasses] || spacingClasses.md}
         transition-all duration-200
-        ${isSelected ? 'ring-2 ring-yellow-400 bg-stone-50/30' : 'hover:shadow-lg'}
+        ${isSelected ? "ring-2 ring-yellow-400 bg-stone-50/30" : "hover:shadow-lg"}
         ${className}
       `}
       style={{ backgroundColor }}
       onClick={onClick}
-      data-block-id={block?.id || 'urgency-timer-block'}
-      data-block-type={block?.type || 'urgency-timer-inline'}
+      data-block-id={block?.id || "urgency-timer-block"}
+      data-block-type={block?.type || "urgency-timer-inline"}
     >
       <AnimatedWrapper show={isLoaded}>
         <div className="text-center">
           {/* Alert Icon */}
           {showAlert && (
-            <div className={`mb-4 ${isUrgent ? 'animate-bounce' : ''}`}>
+            <div className={`mb-4 ${isUrgent ? "animate-bounce" : ""}`}>
               <AlertTriangle className="w-8 h-8 mx-auto" style={{ color: pulseColor }} />
             </div>
           )}
 
           {/* Title */}
           <h2
-            className={`text-xl lg:text-2xl font-bold mb-4 ${isUrgent ? 'animate-pulse' : ''}`}
+            className={`text-xl lg:text-2xl font-bold mb-4 ${isUrgent ? "animate-pulse" : ""}`}
             style={{ color: textColor }}
           >
             {title}
@@ -108,18 +108,21 @@ const UrgencyTimerInlineBlock: React.FC<BlockComponentProps> = ({
           <div
             className={`
               inline-flex items-center gap-6 px-8 py-6 rounded-xl border-4 shadow-2xl
-              ${isUrgent ? 'animate-pulse border-red-400' : 'border-yellow-400'}
+              ${isUrgent ? "animate-pulse border-red-400" : "border-yellow-400"}
             `}
             style={{
-              backgroundColor: 'rgba(0, 0, 0, 0.3)',
-              backdropFilter: 'blur(10px)',
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
+              backdropFilter: "blur(10px)",
             }}
           >
             <Clock className="w-8 h-8" style={{ color: pulseColor }} />
 
             <div className="text-center">
-              <div className="text-4xl lg:text-5xl font-black font-mono tracking-wider" style={{ color: textColor }}>
-                {String(timer.minutes).padStart(2, '0')}:{String(timer.seconds).padStart(2, '0')}
+              <div
+                className="text-4xl lg:text-5xl font-black font-mono tracking-wider"
+                style={{ color: textColor }}
+              >
+                {String(timer.minutes).padStart(2, "0")}:{String(timer.seconds).padStart(2, "0")}
               </div>
               <div className="text-sm font-medium mt-1" style={{ color: pulseColor }}>
                 MINUTOS : SEGUNDOS

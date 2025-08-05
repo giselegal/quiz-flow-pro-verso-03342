@@ -5,8 +5,7 @@ import path from "path";
 
 console.log("🔍 ANÁLISE DETALHADA DE RESPONSIVIDADE - ETAPAS 20 E 21\n");
 
-const componentsDir =
-  "/workspaces/quiz-quest-challenge-verse/client/src/components/editor/blocks";
+const componentsDir = "/workspaces/quiz-quest-challenge-verse/client/src/components/editor/blocks";
 
 // Componentes das etapas 20 e 21
 const step20Components = [
@@ -78,7 +77,7 @@ function analyzeComponent(filePath, componentName, step) {
   let score = 100;
 
   // Verificar cada padrão problemático
-  responsiveIssues.forEach((issue) => {
+  responsiveIssues.forEach(issue => {
     const matches = content.match(issue.pattern) || [];
     if (matches.length > 0) {
       // Para overflow-x-auto, verificar se está em contexto de carrossel mobile
@@ -102,9 +101,7 @@ function analyzeComponent(filePath, componentName, step) {
                   : 5;
         } else {
           // É um carrossel responsivo - apenas nota informativa
-          issues.push(
-            `📱 Carrossel mobile detectado: ${matches.length} implementação(s)`,
-          );
+          issues.push(`📱 Carrossel mobile detectado: ${matches.length} implementação(s)`);
         }
       } else {
         issues.push(`${issue.description}: ${matches.length} ocorrência(s)`);
@@ -131,7 +128,7 @@ function analyzeComponent(filePath, componentName, step) {
   ];
 
   let responsiveImplementations = 0;
-  positivePatterns.forEach((pattern) => {
+  positivePatterns.forEach(pattern => {
     const matches = content.match(pattern) || [];
     responsiveImplementations += matches.length;
   });
@@ -163,25 +160,16 @@ function analyzeComponent(filePath, componentName, step) {
 console.log("📊 ETAPA 20 - RESULTADO");
 console.log("==================================================");
 
-step20Components.forEach((component) => {
+step20Components.forEach(component => {
   const filePath = path.join(componentsDir, component);
-  const analysis = analyzeComponent(
-    filePath,
-    component.replace(".tsx", ""),
-    20,
-  );
+  const analysis = analyzeComponent(filePath, component.replace(".tsx", ""), 20);
 
-  const emoji =
-    analysis.score >= 90 ? "✅" : analysis.score >= 70 ? "⚠️" : "❌";
+  const emoji = analysis.score >= 90 ? "✅" : analysis.score >= 70 ? "⚠️" : "❌";
   console.log(`${emoji} ${analysis.name} - Score: ${analysis.score}/100`);
 
   if (analysis.issues.length > 0) {
-    analysis.issues.forEach((issue) => {
-      const issueEmoji = issue.includes("📱")
-        ? "📱"
-        : issue.includes("Carrossel")
-          ? "📱"
-          : "   •";
+    analysis.issues.forEach(issue => {
+      const issueEmoji = issue.includes("📱") ? "📱" : issue.includes("Carrossel") ? "📱" : "   •";
       console.log(`${issueEmoji} ${issue}`);
     });
   }
@@ -191,25 +179,16 @@ step20Components.forEach((component) => {
 console.log("📊 ETAPA 21 - OFERTA");
 console.log("==================================================");
 
-step21Components.forEach((component) => {
+step21Components.forEach(component => {
   const filePath = path.join(componentsDir, component);
-  const analysis = analyzeComponent(
-    filePath,
-    component.replace(".tsx", ""),
-    21,
-  );
+  const analysis = analyzeComponent(filePath, component.replace(".tsx", ""), 21);
 
-  const emoji =
-    analysis.score >= 90 ? "✅" : analysis.score >= 70 ? "⚠️" : "❌";
+  const emoji = analysis.score >= 90 ? "✅" : analysis.score >= 70 ? "⚠️" : "❌";
   console.log(`${emoji} ${analysis.name} - Score: ${analysis.score}/100`);
 
   if (analysis.issues.length > 0) {
-    analysis.issues.forEach((issue) => {
-      const issueEmoji = issue.includes("📱")
-        ? "📱"
-        : issue.includes("Carrossel")
-          ? "📱"
-          : "   •";
+    analysis.issues.forEach(issue => {
+      const issueEmoji = issue.includes("📱") ? "📱" : issue.includes("Carrossel") ? "📱" : "   •";
       console.log(`${issueEmoji} ${issue}`);
     });
   }
@@ -229,12 +208,12 @@ const criticalPatterns = [
 
 console.log("🚨 VERIFICANDO PADRÕES CRÍTICOS:\n");
 
-[...step20Components, ...step21Components].forEach((component) => {
+[...step20Components, ...step21Components].forEach(component => {
   const filePath = path.join(componentsDir, component);
   if (fs.existsSync(filePath)) {
     const content = fs.readFileSync(filePath, "utf8");
 
-    criticalPatterns.forEach((pattern) => {
+    criticalPatterns.forEach(pattern => {
       if (content.includes(pattern)) {
         console.log(`❌ ${component}: Contém "${pattern}"`);
 

@@ -8,7 +8,7 @@ const content = fs.readFileSync(filePath, "utf8");
 
 // Extrair blocos válidos (que têm type, name e outras propriedades)
 const blockMatches = content.match(
-  /{\s*type:\s*['"`]([^'"`]+)['"`][^}]*name:\s*['"`]([^'"`]+)['"`][^}]*}/g,
+  /{\s*type:\s*['"`]([^'"`]+)['"`][^}]*name:\s*['"`]([^'"`]+)['"`][^}]*}/g
 );
 
 console.log("🎯 ANÁLISE COMPLETA DE TODOS OS COMPONENTES:");
@@ -16,7 +16,7 @@ console.log("=".repeat(60));
 
 if (blockMatches) {
   const blocks = blockMatches
-    .map((match) => {
+    .map(match => {
       const typeMatch = match.match(/type:\s*['"`]([^'"`]+)['"`]/);
       const nameMatch = match.match(/name:\s*['"`]([^'"`]+)['"`]/);
       const categoryMatch = match.match(/category:\s*['"`]([^'"`]+)['"`]/);
@@ -27,7 +27,7 @@ if (blockMatches) {
         category: categoryMatch ? categoryMatch[1] : "Sem Categoria",
       };
     })
-    .filter((block) => block.type !== "unknown");
+    .filter(block => block.type !== "unknown");
 
   console.log(`📦 TOTAL DE BLOCOS VÁLIDOS: ${blocks.length}`);
 
@@ -41,10 +41,8 @@ if (blockMatches) {
   const categories = Object.keys(byCategory).sort();
   console.log(`\n🏷️ CATEGORIAS DISPONÍVEIS: ${categories.length}`);
 
-  categories.forEach((category) => {
-    console.log(
-      `\n📁 ${category.toUpperCase()} (${byCategory[category].length} componentes)`,
-    );
+  categories.forEach(category => {
+    console.log(`\n📁 ${category.toUpperCase()} (${byCategory[category].length} componentes)`);
     console.log("-".repeat(40));
     byCategory[category].forEach((block, index) => {
       console.log(`${index + 1}. ${block.type} - ${block.name}`);

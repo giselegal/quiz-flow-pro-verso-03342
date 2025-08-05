@@ -14,7 +14,7 @@ interface FixedImage {
  */
 export function fixBlurryIntroQuizImages(
   rootElement?: HTMLElement,
-  opts?: FixBlurryImagesOptions,
+  opts?: FixBlurryImagesOptions
 ): HTMLImageElement[] {
   const options = {
     quality: 85,
@@ -34,19 +34,15 @@ export function fixBlurryIntroQuizImages(
     const images = targetElement.querySelectorAll("img");
 
     if (options.debug) {
-      console.log(
-        `[fixBlurryIntroQuizImages] Analisando ${images.length} imagens`,
-      );
+      console.log(`[fixBlurryIntroQuizImages] Analisando ${images.length} imagens`);
     }
 
     // Para cada imagem, verifique se precisa ser otimizada
-    images.forEach((img) => {
+    images.forEach(img => {
       // Ignore imagens já processadas
       if (img.dataset.optimized === "true" && !options.forceOptimize) {
         if (options.debug) {
-          console.log(
-            `[fixBlurryIntroQuizImages] Imagem já otimizada: ${img.src}`,
-          );
+          console.log(`[fixBlurryIntroQuizImages] Imagem já otimizada: ${img.src}`);
         }
         return;
       }
@@ -71,9 +67,7 @@ export function fixBlurryIntroQuizImages(
 
       // Verifique se a imagem já tem um tamanho menor (aproximado)
       const shouldOptimize =
-        options.forceOptimize ||
-        !originalSrc.includes("w_") ||
-        !originalSrc.includes("q_");
+        options.forceOptimize || !originalSrc.includes("w_") || !originalSrc.includes("q_");
 
       if (shouldOptimize) {
         // Aplicar otimização de imagem
@@ -93,25 +87,17 @@ export function fixBlurryIntroQuizImages(
     });
 
     if (options.debug) {
-      console.log(
-        `[fixBlurryIntroQuizImages] Total de imagens otimizadas: ${fixedImages.length}`,
-      );
+      console.log(`[fixBlurryIntroQuizImages] Total de imagens otimizadas: ${fixedImages.length}`);
     }
   } catch (error) {
-    console.error(
-      "[fixBlurryIntroQuizImages] Erro ao otimizar imagens:",
-      error,
-    );
+    console.error("[fixBlurryIntroQuizImages] Erro ao otimizar imagens:", error);
   }
 
   return fixedImages;
 }
 
 // Função auxiliar para aplicar otimizações à URL da imagem
-function applyOptimizations(
-  imageUrl: string,
-  options: FixBlurryImagesOptions,
-): string {
+function applyOptimizations(imageUrl: string, options: FixBlurryImagesOptions): string {
   // Implementação simplificada
   if (!imageUrl) return imageUrl;
 
@@ -123,10 +109,7 @@ function applyOptimizations(
 
       if (hasExistingTransformations) {
         // Inserir após /upload/
-        return imageUrl.replace(
-          /\/upload\//,
-          `/upload/q_${options.quality},f_auto/`,
-        );
+        return imageUrl.replace(/\/upload\//, `/upload/q_${options.quality},f_auto/`);
       }
     }
 

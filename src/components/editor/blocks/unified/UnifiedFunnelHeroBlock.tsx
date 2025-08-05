@@ -1,5 +1,5 @@
-import React from 'react';
-import FunnelHeroSection from '@/components/funnel/base/FunnelHeroSection';
+import React from "react";
+import FunnelHeroSection from "@/components/funnel/base/FunnelHeroSection";
 
 // Interface local para máxima independência
 interface Block {
@@ -24,32 +24,38 @@ interface BlockComponentProps {
   onBlockSelect: (blockId: string) => void;
 }
 
-const UnifiedFunnelHeroBlock: React.FC<BlockComponentProps> = ({ block, isSelected, onSaveInline, onBlockSelect }) => {
+const UnifiedFunnelHeroBlock: React.FC<BlockComponentProps> = ({
+  block,
+  isSelected,
+  onSaveInline,
+  onBlockSelect,
+}) => {
   // Valores padrão para máxima reutilização
   const props = {
-    title: block.properties.title || 'Seu Título Persuasivo Aqui',
-    description: block.properties.description || 'Descrição que conecta com seu público e gera conversão',
-    ctaText: block.properties.ctaText || 'Call to Action',
+    title: block.properties.title || "Seu Título Persuasivo Aqui",
+    description:
+      block.properties.description || "Descrição que conecta com seu público e gera conversão",
+    ctaText: block.properties.ctaText || "Call to Action",
     ctaSubtext: block.properties.ctaSubtext,
     logoUrl: block.properties.logoUrl,
-    logoAlt: block.properties.logoAlt || 'Logo da marca',
+    logoAlt: block.properties.logoAlt || "Logo da marca",
     heroImageUrl: block.properties.heroImageUrl,
-    heroImageAlt: block.properties.heroImageAlt || 'Imagem hero',
-    backgroundColor: block.properties.backgroundColor || '#FAF9F7',
-    textColor: block.properties.textColor || '#432818',
-    primaryColor: block.properties.primaryColor || '#B89B7A',
-    layout: block.properties.layout || 'side-by-side',
-    imagePosition: block.properties.imagePosition || 'right',
+    heroImageAlt: block.properties.heroImageAlt || "Imagem hero",
+    backgroundColor: block.properties.backgroundColor || "#FAF9F7",
+    textColor: block.properties.textColor || "#432818",
+    primaryColor: block.properties.primaryColor || "#B89B7A",
+    layout: block.properties.layout || "side-by-side",
+    imagePosition: block.properties.imagePosition || "right",
 
     // Props específicas do editor
     isSelected,
     onClick: () => onBlockSelect(block.id),
-    className: isSelected ? 'ring-2 ring-[#B89B7A] ring-offset-2' : '',
+    className: isSelected ? "ring-2 ring-[#B89B7A] ring-offset-2" : "",
 
     // Handler para CTA (totalmente configurável)
     onCTAClick: () => {
       // Em produção, pode navegar para próxima página ou executar ação
-      console.log('CTA clicked:', block.properties.ctaText);
+      console.log("CTA clicked:", block.properties.ctaText);
       // Pode chamar onSaveInline para track de interação se necessário
     },
   };

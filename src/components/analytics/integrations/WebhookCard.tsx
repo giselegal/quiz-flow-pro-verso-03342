@@ -37,8 +37,7 @@ export const WebhookCard: React.FC<WebhookCardProps> = ({
     } catch (error) {
       toast({
         title: "Error saving settings",
-        description:
-          "There was an error saving your settings. Please try again.",
+        description: "There was an error saving your settings. Please try again.",
         variant: "destructive",
       });
     }
@@ -47,8 +46,7 @@ export const WebhookCard: React.FC<WebhookCardProps> = ({
   const handleTestConnection = () => {
     toast({
       title: "Testing Webhook connection",
-      description:
-        "Connection test initiated. Please check the console for results.",
+      description: "Connection test initiated. Please check the console for results.",
     });
     console.log("Testing connection to Webhook...");
   };
@@ -59,9 +57,7 @@ export const WebhookCard: React.FC<WebhookCardProps> = ({
         <div className="flex items-center justify-between">
           <div>
             <CardTitle>Custom Webhook</CardTitle>
-            <CardDescription>
-              Send analytics events to your own endpoint
-            </CardDescription>
+            <CardDescription>Send analytics events to your own endpoint</CardDescription>
           </div>
           <Badge variant={webhookEnabled ? "default" : "outline"}>
             {webhookEnabled ? "Active" : "Inactive"}
@@ -75,7 +71,7 @@ export const WebhookCard: React.FC<WebhookCardProps> = ({
             id="webhook-url"
             placeholder="https://your-api.com/analytics-webhook"
             value={webhookUrl}
-            onChange={(e) => setWebhookUrl(e.target.value)}
+            onChange={e => setWebhookUrl(e.target.value)}
           />
           <p className="text-sm text-muted-foreground">
             Your endpoint that will receive analytics events

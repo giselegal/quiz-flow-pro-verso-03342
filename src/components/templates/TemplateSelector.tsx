@@ -69,7 +69,7 @@ const allTemplates: Template[] = [
   },
 ];
 
-const categories = new Set(allTemplates.map((template) => template.category));
+const categories = new Set(allTemplates.map(template => template.category));
 
 export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   onSelectTemplate,
@@ -78,9 +78,7 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
 }) => {
   const getFilteredTemplates = (): Template[] => {
     if (selectedCategory === "all") return allTemplates;
-    return allTemplates.filter(
-      (template) => template.category === selectedCategory,
-    );
+    return allTemplates.filter(template => template.category === selectedCategory);
   };
 
   const filteredTemplates = getFilteredTemplates();
@@ -89,9 +87,7 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
     <div className="h-full flex flex-col bg-white">
       {/* Header */}
       <div className="p-4 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">
-          Selecionar Template
-        </h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Selecionar Template</h2>
 
         {/* Category filters */}
         <div className="flex flex-wrap gap-2">
@@ -103,7 +99,7 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
           >
             Todos
           </Button>
-          {Array.from(categories).map((category) => (
+          {Array.from(categories).map(category => (
             <Button
               key={category}
               variant={selectedCategory === category ? "default" : "outline"}
@@ -125,12 +121,8 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredTemplates.map((template) => (
-              <TemplateCard
-                key={template.id}
-                template={template}
-                onSelect={onSelectTemplate}
-              />
+            {filteredTemplates.map(template => (
+              <TemplateCard key={template.id} template={template} onSelect={onSelectTemplate} />
             ))}
           </div>
         )}
@@ -154,9 +146,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({ template, onSelect }) => {
     >
       <CardHeader>
         <CardTitle className="text-sm font-medium">{template.name}</CardTitle>
-        <CardDescription className="text-xs text-gray-500">
-          {template.description}
-        </CardDescription>
+        <CardDescription className="text-xs text-gray-500">{template.description}</CardDescription>
       </CardHeader>
       <CardContent className="p-0">
         <img

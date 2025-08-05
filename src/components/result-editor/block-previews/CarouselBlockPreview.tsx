@@ -23,9 +23,7 @@ interface CarouselBlockPreviewProps {
   };
 }
 
-const CarouselBlockPreview: React.FC<CarouselBlockPreviewProps> = ({
-  content,
-}) => {
+const CarouselBlockPreview: React.FC<CarouselBlockPreviewProps> = ({ content }) => {
   const {
     carouselImages = [],
     autoPlay = false,
@@ -70,9 +68,7 @@ const CarouselBlockPreview: React.FC<CarouselBlockPreviewProps> = ({
                       className="w-full h-auto aspect-[16/9] object-cover"
                     />
                     {image.caption && (
-                      <div className="p-2 text-center text-sm">
-                        {image.caption}
-                      </div>
+                      <div className="p-2 text-center text-sm">{image.caption}</div>
                     )}
                   </div>
                 </div>
@@ -83,15 +79,9 @@ const CarouselBlockPreview: React.FC<CarouselBlockPreviewProps> = ({
           {showArrows && carouselImages.length > 1 && (
             <>
               <CarouselPrevious
-                className={cn(
-                  "absolute left-2 top-1/2 transform -translate-y-1/2",
-                )}
+                className={cn("absolute left-2 top-1/2 transform -translate-y-1/2")}
               />
-              <CarouselNext
-                className={cn(
-                  "absolute right-2 top-1/2 transform -translate-y-1/2",
-                )}
-              />
+              <CarouselNext className={cn("absolute right-2 top-1/2 transform -translate-y-1/2")} />
             </>
           )}
 

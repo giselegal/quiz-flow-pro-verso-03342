@@ -8,10 +8,7 @@ interface ImagePropertiesProps {
   onUpdate: (id: string, data: any) => void;
 }
 
-export const ImageProperties: React.FC<ImagePropertiesProps> = ({
-  component,
-  onUpdate,
-}) => {
+export const ImageProperties: React.FC<ImagePropertiesProps> = ({ component, onUpdate }) => {
   const data = component.data || {};
 
   const handleUpdate = (field: string, value: any) => {
@@ -28,7 +25,7 @@ export const ImageProperties: React.FC<ImagePropertiesProps> = ({
         <Input
           id="imageUrl"
           value={data.imageUrl || ""}
-          onChange={(e) => handleUpdate("imageUrl", e.target.value)}
+          onChange={e => handleUpdate("imageUrl", e.target.value)}
           placeholder="https://exemplo.com/imagem.jpg"
         />
       </div>
@@ -38,7 +35,7 @@ export const ImageProperties: React.FC<ImagePropertiesProps> = ({
         <Input
           id="alt"
           value={data.alt || ""}
-          onChange={(e) => handleUpdate("alt", e.target.value)}
+          onChange={e => handleUpdate("alt", e.target.value)}
           placeholder="Descrição da imagem"
         />
       </div>
@@ -49,7 +46,7 @@ export const ImageProperties: React.FC<ImagePropertiesProps> = ({
           <Input
             id="width"
             value={data.width || ""}
-            onChange={(e) => handleUpdate("width", e.target.value)}
+            onChange={e => handleUpdate("width", e.target.value)}
             placeholder="100%"
           />
         </div>
@@ -58,7 +55,7 @@ export const ImageProperties: React.FC<ImagePropertiesProps> = ({
           <Input
             id="height"
             value={data.height || ""}
-            onChange={(e) => handleUpdate("height", e.target.value)}
+            onChange={e => handleUpdate("height", e.target.value)}
             placeholder="auto"
           />
         </div>

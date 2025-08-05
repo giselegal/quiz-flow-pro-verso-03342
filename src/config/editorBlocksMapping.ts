@@ -37,9 +37,7 @@ export const UNIFIED_BLOCK_MAP: Record<string, ComponentType<any>> = {
 };
 
 // FUNÇÃO PRINCIPAL - Busca primeiro no Enhanced Registry, depois no Unified Map
-export const getBlockComponent = (
-  blockType: string,
-): ComponentType<any> | undefined => {
+export const getBlockComponent = (blockType: string): ComponentType<any> | undefined => {
   // 1. Tentar Enhanced Registry primeiro (sistema principal)
   const enhancedComponent = getEnhancedComponent(blockType);
   if (enhancedComponent) {
@@ -56,11 +54,7 @@ export const hasBlockComponent = (blockType: string): boolean => {
 };
 
 // Re-export do sistema Enhanced para compatibilidade
-export {
-  UniversalBlockRendererV2 as UniversalBlockRenderer,
-  getBlockDefinition,
-  getAllBlockTypes,
-};
+export { UniversalBlockRendererV2 as UniversalBlockRenderer, getBlockDefinition, getAllBlockTypes };
 
 // Mantém compatibilidade com código legado
 export const EDITOR_BLOCKS_MAP = UNIFIED_BLOCK_MAP;

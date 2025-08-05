@@ -1,8 +1,8 @@
-import React from 'react';
-import { cn } from '../../../lib/utils';
-import { ArrowLeft } from 'lucide-react';
-import { InlineEditText } from './InlineEditText';
-import type { BlockComponentProps } from '../../../types/blocks';
+import React from "react";
+import { cn } from "../../../lib/utils";
+import { ArrowLeft } from "lucide-react";
+import { InlineEditText } from "./InlineEditText";
+import type { BlockComponentProps } from "../../../types/blocks";
 
 interface QuizIntroHeaderBlockProps extends BlockComponentProps {
   disabled?: boolean;
@@ -26,11 +26,11 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   }
 
   // Debug das propriedades recebidas
-  console.log('🔍 [QuizIntroHeaderBlock] Propriedades recebidas:', block.properties);
+  console.log("🔍 [QuizIntroHeaderBlock] Propriedades recebidas:", block.properties);
 
   const {
-    logoUrl = 'https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png',
-    logoAlt = 'Logo',
+    logoUrl = "https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png",
+    logoAlt = "Logo",
     progressValue = 0,
     progressMax = 100,
     showBackButton = true,
@@ -48,10 +48,10 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   return (
     <div
       className={cn(
-        'relative w-full p-4 rounded-lg border-2 border-dashed',
-        isSelected ? 'border-[#B89B7A] bg-[#B89B7A]/10' : 'border-gray-300 bg-white',
-        'cursor-pointer hover:border-gray-400 transition-colors',
-        className,
+        "relative w-full p-4 rounded-lg border-2 border-dashed",
+        isSelected ? "border-[#B89B7A] bg-[#B89B7A]/10" : "border-gray-300 bg-white",
+        "cursor-pointer hover:border-gray-400 transition-colors",
+        className
       )}
       onClick={onClick}
     >
@@ -75,7 +75,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
             }}
             className="object-contain"
             onError={e => {
-              e.currentTarget.src = 'https://via.placeholder.com/96x96?text=Logo';
+              e.currentTarget.src = "https://via.placeholder.com/96x96?text=Logo";
             }}
           />
           {/* Edição inline removida - apenas no painel de propriedades */}

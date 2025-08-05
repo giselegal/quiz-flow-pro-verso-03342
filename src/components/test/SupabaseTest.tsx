@@ -10,10 +10,7 @@ export const SupabaseTest: React.FC = () => {
   const [funnelId, setFunnelId] = useState("");
 
   const addResult = (message: string) => {
-    setResults((prev) => [
-      ...prev,
-      `${new Date().toLocaleTimeString()}: ${message}`,
-    ]);
+    setResults(prev => [...prev, `${new Date().toLocaleTimeString()}: ${message}`]);
   };
 
   const testConnection = async () => {
@@ -21,13 +18,9 @@ export const SupabaseTest: React.FC = () => {
     try {
       const { data, error } = await supabase.from("funnels").select("count");
       if (error) throw error;
-      addResult(
-        `✅ Conexão bem-sucedida. Dados encontrados: ${data?.length || 0}`,
-      );
+      addResult(`✅ Conexão bem-sucedida. Dados encontrados: ${data?.length || 0}`);
     } catch (error) {
-      addResult(
-        `❌ Erro na conexão: ${error instanceof Error ? error.message : String(error)}`,
-      );
+      addResult(`❌ Erro na conexão: ${error instanceof Error ? error.message : String(error)}`);
     }
     setLoading(false);
   };
@@ -50,9 +43,7 @@ export const SupabaseTest: React.FC = () => {
       if (error) throw error;
       addResult(`✅ Inserção bem-sucedida: ${JSON.stringify(data)}`);
     } catch (error) {
-      addResult(
-        `❌ Erro na inserção: ${error instanceof Error ? error.message : String(error)}`,
-      );
+      addResult(`❌ Erro na inserção: ${error instanceof Error ? error.message : String(error)}`);
     }
     setLoading(false);
   };
@@ -60,19 +51,12 @@ export const SupabaseTest: React.FC = () => {
   const testRead = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from("funnels")
-        .select("*")
-        .limit(5);
+      const { data, error } = await supabase.from("funnels").select("*").limit(5);
 
       if (error) throw error;
-      addResult(
-        `✅ Leitura bem-sucedida: ${data?.length || 0} registros encontrados`,
-      );
+      addResult(`✅ Leitura bem-sucedida: ${data?.length || 0} registros encontrados`);
     } catch (error) {
-      addResult(
-        `❌ Erro na leitura: ${error instanceof Error ? error.message : String(error)}`,
-      );
+      addResult(`❌ Erro na leitura: ${error instanceof Error ? error.message : String(error)}`);
     }
     setLoading(false);
   };
@@ -98,7 +82,7 @@ export const SupabaseTest: React.FC = () => {
       addResult(`✅ Atualização bem-sucedida: ${JSON.stringify(data)}`);
     } catch (error) {
       addResult(
-        `❌ Erro na atualização: ${error instanceof Error ? error.message : String(error)}`,
+        `❌ Erro na atualização: ${error instanceof Error ? error.message : String(error)}`
       );
     }
     setLoading(false);
@@ -112,17 +96,12 @@ export const SupabaseTest: React.FC = () => {
 
     setLoading(true);
     try {
-      const { error } = await supabase
-        .from("funnels")
-        .delete()
-        .eq("id", funnelId);
+      const { error } = await supabase.from("funnels").delete().eq("id", funnelId);
 
       if (error) throw error;
       addResult(`✅ Exclusão bem-sucedida para ID: ${funnelId}`);
     } catch (error) {
-      addResult(
-        `❌ Erro na exclusão: ${error instanceof Error ? error.message : String(error)}`,
-      );
+      addResult(`❌ Erro na exclusão: ${error instanceof Error ? error.message : String(error)}`);
     }
     setLoading(false);
   };
@@ -138,17 +117,15 @@ export const SupabaseTest: React.FC = () => {
           funnels (
             name
           )
-        `,
+        `
         )
         .limit(3);
 
       if (error) throw error;
-      addResult(
-        `✅ Teste de páginas bem-sucedido: ${data?.length || 0} páginas encontradas`,
-      );
+      addResult(`✅ Teste de páginas bem-sucedido: ${data?.length || 0} páginas encontradas`);
     } catch (error) {
       addResult(
-        `❌ Erro no teste de páginas: ${error instanceof Error ? error.message : String(error)}`,
+        `❌ Erro no teste de páginas: ${error instanceof Error ? error.message : String(error)}`
       );
     }
     setLoading(false);
@@ -164,11 +141,11 @@ export const SupabaseTest: React.FC = () => {
           schema: "public",
           table: "funnels",
         },
-        (payload) => {
+        payload => {
           addResult(`🔄 Mudança em tempo real detectada: ${payload.eventType}`);
-        },
+        }
       )
-      .subscribe((status) => {
+      .subscribe(status => {
         if (status === "SUBSCRIBED") {
           addResult("✅ Subscrição em tempo real ativa");
         } else if (status === "CHANNEL_ERROR") {
@@ -211,16 +188,12 @@ export const SupabaseTest: React.FC = () => {
             <Input
               placeholder="ID do funil para testes de Update/Delete"
               value={funnelId}
-              onChange={(e) => setFunnelId(e.target.value)}
+              onChange={e => setFunnelId(e.target.value)}
             />
             <Button onClick={testUpdate} disabled={loading || !funnelId}>
               Testar Update
             </Button>
-            <Button
-              onClick={testDelete}
-              disabled={loading || !funnelId}
-              variant="destructive"
-            >
+            <Button onClick={testDelete} disabled={loading || !funnelId} variant="destructive">
               Testar Delete
             </Button>
           </div>
@@ -233,8 +206,7 @@ export const SupabaseTest: React.FC = () => {
             ))}
             {results.length === 0 && (
               <div className="text-gray-500 text-sm">
-                Nenhum teste executado ainda. Clique nos botões acima para
-                começar.
+                Nenhum teste executado ainda. Clique nos botões acima para começar.
               </div>
             )}
           </div>

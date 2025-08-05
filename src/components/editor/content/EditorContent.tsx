@@ -25,9 +25,7 @@ export const EditorContent: React.FC<EditorContentProps> = ({
     switch (block.type) {
       case "benefits":
         const items = Array.isArray(block.content?.items)
-          ? block.content.items.filter(
-              (item): item is string => typeof item === "string",
-            )
+          ? block.content.items.filter((item): item is string => typeof item === "string")
           : [];
 
         return (
@@ -38,9 +36,7 @@ export const EditorContent: React.FC<EditorContentProps> = ({
             }`}
             onClick={() => {}}
           >
-            <h3 className="font-medium mb-2">
-              {block.content?.title || "Benefícios"}
-            </h3>
+            <h3 className="font-medium mb-2">{block.content?.title || "Benefícios"}</h3>
             <ul className="list-disc list-inside">
               {items.map((item, index) => (
                 <li key={index} className="text-gray-700">

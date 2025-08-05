@@ -86,9 +86,7 @@
 **Verificar localStorage** (F12 → Console):
 
 ```javascript
-Object.keys(localStorage).filter(
-  (k) => k.includes("funnel") || k.includes("schema"),
-);
+Object.keys(localStorage).filter(k => k.includes("funnel") || k.includes("schema"));
 ```
 
 ---
@@ -105,30 +103,21 @@ console.log("🧪 TESTANDO FUNCIONALIDADES...");
 if (location.pathname.includes("/admin")) {
   const templates = document.querySelectorAll('[class*="Card"], .card');
   const buttons = Array.from(document.querySelectorAll("button")).filter(
-    (b) =>
-      b.textContent?.includes("Template") || b.textContent?.includes("Usar"),
+    b => b.textContent?.includes("Template") || b.textContent?.includes("Usar")
   );
-  console.log(
-    `✅ Dashboard: ${templates.length} templates, ${buttons.length} botões`,
-  );
+  console.log(`✅ Dashboard: ${templates.length} templates, ${buttons.length} botões`);
 }
 
 // 2. Verificar se está no editor
 if (location.pathname.includes("/editor")) {
   const sidebars = document.querySelectorAll('[class*="sidebar"], aside');
-  const canvas = document.querySelector(
-    'main, [class*="canvas"], [class*="preview"]',
-  );
+  const canvas = document.querySelector('main, [class*="canvas"], [class*="preview"]');
   const tabs = document.querySelectorAll('[role="tab"], [class*="tab"]');
-  console.log(
-    `✅ Editor: ${sidebars.length} sidebars, canvas: ${!!canvas}, ${tabs.length} abas`,
-  );
+  console.log(`✅ Editor: ${sidebars.length} sidebars, canvas: ${!!canvas}, ${tabs.length} abas`);
 }
 
 // 3. Verificar localStorage
-const storage = Object.keys(localStorage).filter(
-  (k) => k.includes("funnel") || k.includes("schema"),
-);
+const storage = Object.keys(localStorage).filter(k => k.includes("funnel") || k.includes("schema"));
 console.log(`✅ Storage: ${storage.length} chaves`, storage);
 
 console.log("🎉 Teste concluído!");

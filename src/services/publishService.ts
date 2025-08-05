@@ -24,9 +24,7 @@ export class PublishService {
     } catch (error: any) {
       return {
         success: false,
-        errors: [
-          `Erro durante publicação: ${error?.message || "Erro desconhecido"}`,
-        ],
+        errors: [`Erro durante publicação: ${error?.message || "Erro desconhecido"}`],
       };
     }
   }

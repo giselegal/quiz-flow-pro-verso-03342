@@ -54,7 +54,7 @@ class LazyErrorBoundary extends React.Component<
 // Factory para criar componentes lazy otimizados
 export const createLazyComponent = <T extends ComponentType<any>>(
   importFn: () => Promise<{ default: T }>,
-  options: LazyComponentWrapperProps = {},
+  options: LazyComponentWrapperProps = {}
 ) => {
   const LazyComponent = lazy(importFn);
 
@@ -77,14 +77,14 @@ export const useLazyLoad = (threshold = 0.1) => {
 
   React.useEffect(() => {
     const observer = createIntersectionObserver(
-      (entries) => {
+      entries => {
         const [entry] = entries;
         if (entry.isIntersecting) {
           setIsVisible(true);
           observer.disconnect();
         }
       },
-      { threshold },
+      { threshold }
     );
 
     if (ref.current) {

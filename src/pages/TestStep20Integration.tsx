@@ -68,15 +68,12 @@ const TestStep20Integration: React.FC = () => {
             <div className="bg-white p-3 rounded">
               <h3 className="font-medium text-[#A38A69]">Estilo Principal:</h3>
               <p>
-                <strong>{mockPrimaryStyle.category}</strong> (
-                {mockPrimaryStyle.percentage}%)
+                <strong>{mockPrimaryStyle.category}</strong> ({mockPrimaryStyle.percentage}%)
               </p>
             </div>
             <div className="bg-white p-3 rounded">
-              <h3 className="font-medium text-[#A38A69]">
-                Estilos Secundários:
-              </h3>
-              {mockSecondaryStyles.map((style) => (
+              <h3 className="font-medium text-[#A38A69]">Estilos Secundários:</h3>
+              {mockSecondaryStyles.map(style => (
                 <p key={style.category}>
                   {style.category} ({style.percentage}%)
                 </p>
@@ -101,9 +98,7 @@ const TestStep20Integration: React.FC = () => {
                   {index + 1}. {block.type}
                 </strong>
                 {block.properties.title && (
-                  <span className="text-gray-600 ml-2">
-                    - {block.properties.title}
-                  </span>
+                  <span className="text-gray-600 ml-2">- {block.properties.title}</span>
                 )}
               </div>
             ))}

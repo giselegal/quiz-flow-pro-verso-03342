@@ -37,9 +37,7 @@ export interface BeforeAfterTransformationBlockProps {
   className?: string;
 }
 
-const BeforeAfterTransformationBlock: React.FC<
-  BeforeAfterTransformationBlockProps
-> = ({
+const BeforeAfterTransformationBlock: React.FC<BeforeAfterTransformationBlockProps> = ({
   blockId = "before-after-transformation",
   title = "Sua Transformação Começa Agora",
   beforeTitle = "Antes",

@@ -1,6 +1,6 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { Star, Quote } from 'lucide-react';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { Star, Quote } from "lucide-react";
 
 interface SocialProofBlockProps {
   title?: string;
@@ -9,33 +9,35 @@ interface SocialProofBlockProps {
 }
 
 const SocialProofBlock: React.FC<SocialProofBlockProps> = ({
-  title = 'Depoimentos Reais de Quem Transformou o Guarda-Roupa',
+  title = "Depoimentos Reais de Quem Transformou o Guarda-Roupa",
   showTitle = true,
   className,
 }) => {
   // Dados reais dos depoimentos do funil
   const testimonials = [
     {
-      name: 'Ana Paula, 34 anos',
-      text: 'Nunca imaginei que descobrir meu estilo seria tão transformador. Agora me visto com confiança e recebo elogios todos os dias!',
-      style: 'Elegante',
-      image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/depoimento1.webp',
+      name: "Ana Paula, 34 anos",
+      text: "Nunca imaginei que descobrir meu estilo seria tão transformador. Agora me visto com confiança e recebo elogios todos os dias!",
+      style: "Elegante",
+      image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/depoimento1.webp",
     },
     {
-      name: 'Carla Santos, 28 anos',
-      text: 'O guia me ensinou a montar looks incríveis com peças que já tinha no armário. Economizei muito e ainda melhoro minha imagem!',
-      style: 'Contemporâneo',
-      image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/depoimento2.webp',
+      name: "Carla Santos, 28 anos",
+      text: "O guia me ensinou a montar looks incríveis com peças que já tinha no armário. Economizei muito e ainda melhoro minha imagem!",
+      style: "Contemporâneo",
+      image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/depoimento2.webp",
     },
     {
-      name: 'Fernanda Lima, 42 anos',
-      text: 'Finalmente entendi qual estilo combina comigo. Minha autoestima subiu muito e me sinto mais eu mesma a cada dia.',
-      style: 'Natural',
-      image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/depoimento3.webp',
+      name: "Fernanda Lima, 42 anos",
+      text: "Finalmente entendi qual estilo combina comigo. Minha autoestima subiu muito e me sinto mais eu mesma a cada dia.",
+      style: "Natural",
+      image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/depoimento3.webp",
     },
   ];
   const renderStars = () => {
-    return Array.from({ length: 5 }, (_, i) => <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />);
+    return Array.from({ length: 5 }, (_, i) => (
+      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+    ));
   };
 
   const renderTestimonial = (testimonial: any, index: number) => (
@@ -65,7 +67,7 @@ const SocialProofBlock: React.FC<SocialProofBlockProps> = ({
   );
 
   return (
-    <div className={cn('py-12 bg-gradient-to-br from-[#faf8f5] to-[#f9f4ef]', className)}>
+    <div className={cn("py-12 bg-gradient-to-br from-[#faf8f5] to-[#f9f4ef]", className)}>
       <div className="max-w-7xl mx-auto px-6">
         {showTitle && (
           <div className="text-center mb-12">
@@ -89,7 +91,9 @@ const SocialProofBlock: React.FC<SocialProofBlockProps> = ({
         <div className="text-center mt-12">
           <div className="inline-flex items-center bg-white px-6 py-3 rounded-full shadow-md border border-[#B89B7A]/20">
             <div className="flex mr-3">{renderStars()}</div>
-            <span className="text-[#432818] font-medium">Mais de 2.500 mulheres já transformaram seu estilo</span>
+            <span className="text-[#432818] font-medium">
+              Mais de 2.500 mulheres já transformaram seu estilo
+            </span>
           </div>
         </div>
       </div>

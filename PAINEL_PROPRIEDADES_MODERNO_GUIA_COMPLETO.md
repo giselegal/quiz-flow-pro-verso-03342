@@ -54,7 +54,7 @@ categories = {
 // Implementado com react-colorful (já instalado)
 <ColorPicker
   value={currentColor}
-  onChange={(color) => handleChange(color)}
+  onChange={color => handleChange(color)}
   label="Cor do componente"
 />
 ```
@@ -65,7 +65,7 @@ categories = {
 // Sliders com feedback visual
 <Slider
   value={[currentValue]}
-  onValueChange={(value) => handleChange(value[0])}
+  onValueChange={value => handleChange(value[0])}
   max={100}
   min={0}
   step={1}

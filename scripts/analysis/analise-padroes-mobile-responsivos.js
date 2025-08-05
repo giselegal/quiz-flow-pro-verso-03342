@@ -75,7 +75,7 @@ Object.entries(componentesModelo).forEach(([componente, info]) => {
   console.log(`   📁 ${info.arquivo}`);
   console.log(`   💡 ${info.estrategia}`);
   console.log("   🔧 Padrões Técnicos:");
-  info.padroes.forEach((padrao) => {
+  info.padroes.forEach(padrao => {
     console.log(`      • ${padrao}`);
   });
 });
@@ -85,11 +85,7 @@ const principiosFundamentais = {
   espacamento: {
     problema: "Grids forçam layout horizontal",
     solucao: "space-y para vertical natural",
-    exemplos: [
-      "space-y-4 (BonusListInline)",
-      "space-y-2 (FormInput)",
-      "gap-6 (Testimonials)",
-    ],
+    exemplos: ["space-y-4 (BonusListInline)", "space-y-2 (FormInput)", "gap-6 (Testimonials)"],
   },
 
   breakpoints: {
@@ -131,7 +127,7 @@ Object.entries(principiosFundamentais).forEach(([principio, detalhes]) => {
   console.log(`   ❌ Problema: ${detalhes.problema}`);
   console.log(`   ✅ Solução: ${detalhes.solucao}`);
   console.log("   💡 Exemplos:");
-  detalhes.exemplos.forEach((exemplo) => {
+  detalhes.exemplos.forEach(exemplo => {
     console.log(`      • ${exemplo}`);
   });
 });
@@ -200,7 +196,7 @@ Object.entries(estrategiasLayout).forEach(([estrategia, info]) => {
   console.log(`   🎪 Quando usar: ${info.quando}`);
   console.log(`   📋 Exemplos: ${info.exemplos.join(", ")}`);
   console.log("   ✅ Benefícios:");
-  info.beneficios.forEach((beneficio) => {
+  info.beneficios.forEach(beneficio => {
     console.log(`      • ${beneficio}`);
   });
 });

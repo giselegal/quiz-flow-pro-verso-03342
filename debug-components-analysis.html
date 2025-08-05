@@ -6,8 +6,7 @@
     <title>Debug - Componentes das Etapas</title>
     <style>
       body {
-        font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
         margin: 20px;
         background: #f8fafc;
       }
@@ -328,12 +327,7 @@
           "characteristics-list-inline",
           "button-inline",
         ],
-        19: [
-          "result-header-inline",
-          "style-card-inline",
-          "benefits-inline",
-          "button-inline",
-        ],
+        19: ["result-header-inline", "style-card-inline", "benefits-inline", "button-inline"],
         20: ["heading-inline", "text-inline", "form-input", "button-inline"],
         21: [
           "quiz-offer-pricing-inline",
@@ -372,17 +366,11 @@
       function analyzeStep(stepNumber) {
         const blocks = stepTemplates[stepNumber] || [];
         const totalBlocks = blocks.length;
-        const renderableBlocks = blocks.filter(
-          (block) => componentRegistry[block],
-        ).length;
-        const missingBlocks = blocks.filter(
-          (block) => !componentRegistry[block],
-        );
+        const renderableBlocks = blocks.filter(block => componentRegistry[block]).length;
+        const missingBlocks = blocks.filter(block => !componentRegistry[block]);
 
         const successRate =
-          totalBlocks > 0
-            ? Math.round((renderableBlocks / totalBlocks) * 100)
-            : 0;
+          totalBlocks > 0 ? Math.round((renderableBlocks / totalBlocks) * 100) : 0;
 
         let status = "ok";
         if (successRate < 70) status = "error";
@@ -409,11 +397,9 @@
               : "status-error";
 
         const blocksHtml = analysis.blocks
-          .map((block) => {
+          .map(block => {
             const isRenderable = componentRegistry[block];
-            const indicatorClass = isRenderable
-              ? "indicator-ok"
-              : "indicator-error";
+            const indicatorClass = isRenderable ? "indicator-ok" : "indicator-error";
             const statusText = isRenderable ? "✅" : "❌";
 
             return `
@@ -459,12 +445,9 @@
 
         // Atualizar resumo
         document.getElementById("total-blocks").textContent = totalBlocks;
-        document.getElementById("renderable-blocks").textContent =
-          totalRenderableBlocks;
+        document.getElementById("renderable-blocks").textContent = totalRenderableBlocks;
         document.getElementById("success-rate").textContent =
-          totalBlocks > 0
-            ? `${Math.round((totalRenderableBlocks / totalBlocks) * 100)}%`
-            : "0%";
+          totalBlocks > 0 ? `${Math.round((totalRenderableBlocks / totalBlocks) * 100)}%` : "0%";
       }
 
       // Inicializar quando a página carregar

@@ -26,9 +26,7 @@ const QuizOptionEditor: React.FC<QuizOptionEditorProps> = ({
   return (
     <div className="space-y-4 p-4 border border-[#B89B7A]/20 rounded-lg hover:border-[#B89B7A]/40 transition-colors">
       <div className="flex items-center justify-between">
-        <Label className="text-sm font-medium text-[#432818]">
-          Opção {index + 1}
-        </Label>
+        <Label className="text-sm font-medium text-[#432818]">Opção {index + 1}</Label>
         <Button
           variant="ghost"
           size="sm"
@@ -47,7 +45,7 @@ const QuizOptionEditor: React.FC<QuizOptionEditorProps> = ({
           <Input
             id={`option-text-${index}`}
             value={option.text}
-            onChange={(e) => onUpdate(index, "text", e.target.value)}
+            onChange={e => onUpdate(index, "text", e.target.value)}
             placeholder="Digite o texto da opção"
             className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]"
           />
@@ -62,7 +60,7 @@ const QuizOptionEditor: React.FC<QuizOptionEditorProps> = ({
               <Input
                 id={`option-image-${index}`}
                 value={option.imageUrl || ""}
-                onChange={(e) => onUpdate(index, "imageUrl", e.target.value)}
+                onChange={e => onUpdate(index, "imageUrl", e.target.value)}
                 placeholder="URL da imagem"
                 className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]"
               />
@@ -78,16 +76,13 @@ const QuizOptionEditor: React.FC<QuizOptionEditorProps> = ({
         )}
 
         <div className="space-y-2">
-          <Label
-            htmlFor={`option-category-${index}`}
-            className="text-[#432818]"
-          >
+          <Label htmlFor={`option-category-${index}`} className="text-[#432818]">
             Categoria de Estilo
           </Label>
           <Input
             id={`option-category-${index}`}
             value={option.styleCategory || ""}
-            onChange={(e) => onUpdate(index, "styleCategory", e.target.value)}
+            onChange={e => onUpdate(index, "styleCategory", e.target.value)}
             placeholder="Categoria de estilo"
             className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]"
           />

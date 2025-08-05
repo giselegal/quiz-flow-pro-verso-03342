@@ -4,16 +4,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import {
-  Search,
-  Zap,
-  Type,
-  Image,
-  MousePointer,
-  Layout,
-  BarChart3,
-  Palette,
-} from "lucide-react";
+import { Search, Zap, Type, Image, MousePointer, Layout, BarChart3, Palette } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ComponentCategory {
@@ -95,9 +86,10 @@ const COMPONENT_CATEGORIES: ComponentCategory[] = [
   },
 ];
 
-export const SchemaDrivenComponentsSidebar: React.FC<
-  SchemaDrivenComponentsSidebarProps
-> = ({ onComponentSelect, className = "" }) => {
+export const SchemaDrivenComponentsSidebar: React.FC<SchemaDrivenComponentsSidebarProps> = ({
+  onComponentSelect,
+  className = "",
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
 
@@ -105,29 +97,19 @@ export const SchemaDrivenComponentsSidebar: React.FC<
     onComponentSelect?.(componentId);
   };
 
-  const filteredComponents = COMPONENT_CATEGORIES.flatMap((category) =>
+  const filteredComponents = COMPONENT_CATEGORIES.flatMap(category =>
     category.components.filter(
-      (component) =>
-        (selectedCategory === "all" ||
-          component.category === selectedCategory) &&
+      component =>
+        (selectedCategory === "all" || component.category === selectedCategory) &&
         (searchTerm === "" ||
           component.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          component.description
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          component.tags.some((tag) =>
-            tag.toLowerCase().includes(searchTerm.toLowerCase()),
-          )),
-    ),
+          component.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          component.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())))
+    )
   );
 
   return (
-    <div
-      className={cn(
-        "h-full bg-white border-r border-gray-200 flex flex-col",
-        className,
-      )}
-    >
+    <div className={cn("h-full bg-white border-r border-gray-200 flex flex-col", className)}>
       {/* Header */}
       <div className="p-4 border-b">
         <h2 className="font-semibold text-gray-900 mb-3">Componentes</h2>
@@ -138,7 +120,7 @@ export const SchemaDrivenComponentsSidebar: React.FC<
           <Input
             placeholder="Buscar componentes..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={e => setSearchTerm(e.target.value)}
             className="pl-9"
           />
         </div>
@@ -156,7 +138,7 @@ export const SchemaDrivenComponentsSidebar: React.FC<
       {/* Components List */}
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-2">
-          {filteredComponents.map((component) => {
+          {filteredComponents.map(component => {
             const IconComponent = component.icon;
 
             return (
@@ -172,9 +154,7 @@ export const SchemaDrivenComponentsSidebar: React.FC<
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center space-x-2">
-                      <p className="text-sm font-medium text-gray-900">
-                        {component.name}
-                      </p>
+                      <p className="text-sm font-medium text-gray-900">{component.name}</p>
                       {component.isPremium && (
                         <Badge variant="secondary" className="text-xs">
                           <Zap className="h-3 w-3 mr-1" />
@@ -182,9 +162,7 @@ export const SchemaDrivenComponentsSidebar: React.FC<
                         </Badge>
                       )}
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {component.description}
-                    </p>
+                    <p className="text-xs text-gray-500 mt-1">{component.description}</p>
                   </div>
                 </div>
               </Button>

@@ -20,9 +20,7 @@ export const markTestVariant = (testId, variant, expireDays = 30) => {
     });
   }
 
-  console.log(
-    `[AB Testing] Usuário marcado para teste ${testId}, variante ${variant}`,
-  );
+  console.log(`[AB Testing] Usuário marcado para teste ${testId}, variante ${variant}`);
 
   return variant;
 };
@@ -68,6 +66,6 @@ export const trackTestConversion = (testId, conversionType, extraData = {}) => {
   }
 
   console.log(
-    `[AB Testing] Conversão registrada para teste ${testId}, variante ${variant}, tipo ${conversionType}`,
+    `[AB Testing] Conversão registrada para teste ${testId}, variante ${variant}, tipo ${conversionType}`
   );
 };

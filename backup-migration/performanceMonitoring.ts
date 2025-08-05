@@ -70,9 +70,7 @@ class PerformanceMonitor {
       const currentTime = performance.now();
 
       if (currentTime >= lastTime + 1000) {
-        this.metrics.fps = Math.round(
-          (frames * 1000) / (currentTime - lastTime),
-        );
+        this.metrics.fps = Math.round((frames * 1000) / (currentTime - lastTime));
         this.trackEvent("fps-update", "performance", { fps: this.metrics.fps });
 
         frames = 0;
@@ -92,8 +90,7 @@ class PerformanceMonitor {
 
     const checkMemory = () => {
       const memory = (performance as any).memory;
-      const usagePercent =
-        (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100;
+      const usagePercent = (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100;
 
       this.metrics.memoryUsage = usagePercent;
 
@@ -113,21 +110,16 @@ class PerformanceMonitor {
   private monitorBundleSize() {
     if (!("getEntriesByType" in performance)) return;
 
-    const resources = performance.getEntriesByType(
-      "resource",
-    ) as PerformanceResourceTiming[];
-    const jsResources = resources.filter((r) => r.name.includes(".js"));
+    const resources = performance.getEntriesByType("resource") as PerformanceResourceTiming[];
+    const jsResources = resources.filter(r => r.name.includes(".js"));
 
-    const totalSize = jsResources.reduce(
-      (total, resource) => total + resource.transferSize,
-      0,
-    );
+    const totalSize = jsResources.reduce((total, resource) => total + resource.transferSize, 0);
     this.metrics.bundleSize = totalSize;
 
     this.trackEvent("bundle-size", "performance", {
       totalSize,
       resourceCount: jsResources.length,
-      resources: jsResources.map((r) => ({
+      resources: jsResources.map(r => ({
         name: r.name,
         size: r.transferSize,
         loadTime: r.responseEnd - r.fetchStart,
@@ -138,7 +130,7 @@ class PerformanceMonitor {
   private monitorWebVitals() {
     // Largest Contentful Paint (LCP)
     if ("PerformanceObserver" in window) {
-      const lcpObserver = new PerformanceObserver((list) => {
+      const lcpObserver = new PerformanceObserver(list => {
         const entries = list.getEntries();
         const lastEntry = entries[entries.length - 1];
 
@@ -156,14 +148,13 @@ class PerformanceMonitor {
       lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] });
 
       // First Input Delay (FID)
-      const fidObserver = new PerformanceObserver((list) => {
+      const fidObserver = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
           const fid = (entry as any).processingStart - entry.startTime;
 
           this.trackEvent("fid", "performance", {
             value: fid,
-            rating:
-              fid > 300 ? "poor" : fid > 100 ? "needs-improvement" : "good",
+            rating: fid > 300 ? "poor" : fid > 100 ? "needs-improvement" : "good",
           });
         }
       });
@@ -172,7 +163,7 @@ class PerformanceMonitor {
 
       // Cumulative Layout Shift (CLS)
       let clsValue = 0;
-      const clsObserver = new PerformanceObserver((list) => {
+      const clsObserver = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
           if (!(entry as any).hadRecentInput) {
             clsValue += (entry as any).value;
@@ -181,12 +172,7 @@ class PerformanceMonitor {
 
         this.trackEvent("cls", "performance", {
           value: clsValue,
-          rating:
-            clsValue > 0.25
-              ? "poor"
-              : clsValue > 0.1
-                ? "needs-improvement"
-                : "good",
+          rating: clsValue > 0.25 ? "poor" : clsValue > 0.1 ? "needs-improvement" : "good",
         });
       });
 
@@ -194,11 +180,7 @@ class PerformanceMonitor {
     }
   }
 
-  trackEvent(
-    name: string,
-    category: AnalyticsEvent["category"],
-    data: Record<string, any>,
-  ) {
+  trackEvent(name: string, category: AnalyticsEvent["category"], data: Record<string, any>) {
     const event: AnalyticsEvent = {
       name,
       category,
@@ -214,10 +196,7 @@ class PerformanceMonitor {
     }
 
     // Log critical events
-    if (
-      category === "error" ||
-      (category === "performance" && this.isCriticalMetric(name, data))
-    ) {
+    if (category === "error" || (category === "performance" && this.isCriticalMetric(name, data))) {
       console.warn(`[Performance] ${name}:`, data);
     }
   }
@@ -237,9 +216,7 @@ class PerformanceMonitor {
   }
 
   getEvents(category?: AnalyticsEvent["category"]): AnalyticsEvent[] {
-    return category
-      ? this.events.filter((event) => event.category === category)
-      : [...this.events];
+    return category ? this.events.filter(event => event.category === category) : [...this.events];
   }
 
   exportData() {
@@ -280,8 +257,7 @@ class PerformanceMonitor {
 
     if (metrics.fps < 60) score -= 60 - metrics.fps;
     if (metrics.memoryUsage > 50) score -= metrics.memoryUsage - 50;
-    if (metrics.bundleSize > 500000)
-      score -= Math.round((metrics.bundleSize - 500000) / 10000);
+    if (metrics.bundleSize > 500000) score -= Math.round((metrics.bundleSize - 500000) / 10000);
 
     return Math.max(0, score);
   }
@@ -289,16 +265,12 @@ class PerformanceMonitor {
   private findIssues(events: AnalyticsEvent[]): string[] {
     const issues = [];
 
-    const highMemoryEvents = events.filter(
-      (e) => e.name === "high-memory-usage",
-    );
+    const highMemoryEvents = events.filter(e => e.name === "high-memory-usage");
     if (highMemoryEvents.length > 0) {
       issues.push(`Memory usage exceeded 80% ${highMemoryEvents.length} times`);
     }
 
-    const lowFpsEvents = events.filter(
-      (e) => e.name === "fps-update" && e.data.fps < 30,
-    );
+    const lowFpsEvents = events.filter(e => e.name === "fps-update" && e.data.fps < 30);
     if (lowFpsEvents.length > 0) {
       issues.push(`FPS dropped below 30 ${lowFpsEvents.length} times`);
     }
@@ -306,22 +278,15 @@ class PerformanceMonitor {
     return issues;
   }
 
-  private getRecommendations(
-    metrics: PerformanceMetrics,
-    events: AnalyticsEvent[],
-  ): string[] {
+  private getRecommendations(metrics: PerformanceMetrics, events: AnalyticsEvent[]): string[] {
     const recommendations = [];
 
     if (metrics.fps < 45) {
-      recommendations.push(
-        "Consider implementing React.memo for heavy components",
-      );
+      recommendations.push("Consider implementing React.memo for heavy components");
     }
 
     if (metrics.memoryUsage > 70) {
-      recommendations.push(
-        "Review component cleanup and event listener removal",
-      );
+      recommendations.push("Review component cleanup and event listener removal");
     }
 
     if (metrics.bundleSize > 1000000) {

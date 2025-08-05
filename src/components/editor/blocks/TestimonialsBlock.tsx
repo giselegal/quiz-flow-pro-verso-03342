@@ -1,50 +1,53 @@
-import React from 'react';
-import { cn } from '../../../lib/utils';
-import { Quote, Star } from 'lucide-react';
+import React from "react";
+import { cn } from "../../../lib/utils";
+import { Quote, Star } from "lucide-react";
 
 interface TestimonialsBlockProps {
   title?: string;
   showRatings?: boolean;
-  layout?: 'grid' | 'carousel';
+  layout?: "grid" | "carousel";
   className?: string;
 }
 
 const TestimonialsBlock: React.FC<TestimonialsBlockProps> = ({
-  title = 'Transformações Reais',
+  title = "Transformações Reais",
   showRatings = true,
-  layout = 'grid',
+  layout = "grid",
   className,
 }) => {
   // Dados reais dos depoimentos da ResultPage
   const testimonials = [
     {
-      name: 'Mariangela',
-      role: 'Engenheira',
-      text: 'Antes, a roupa me vestia. Hoje, eu me visto com intenção. Essa jornada me reconectou com a mulher que sempre fui.',
+      name: "Mariangela",
+      role: "Engenheira",
+      text: "Antes, a roupa me vestia. Hoje, eu me visto com intenção. Essa jornada me reconectou com a mulher que sempre fui.",
       rating: 5,
     },
     {
-      name: 'Patrícia Paranhos',
-      role: 'Advogada',
-      text: 'Aprendi a reconhecer meu valor e refletir isso na forma como me apresento. As pessoas começaram a me enxergar diferente — porque eu estava diferente.',
+      name: "Patrícia Paranhos",
+      role: "Advogada",
+      text: "Aprendi a reconhecer meu valor e refletir isso na forma como me apresento. As pessoas começaram a me enxergar diferente — porque eu estava diferente.",
       rating: 5,
     },
     {
-      name: 'Sônia Spier',
-      role: 'Terapeuta',
-      text: 'Com a Gisele, entendi o poder da linguagem visual. Hoje eu escolho minhas roupas com consciência, propósito e leveza.',
+      name: "Sônia Spier",
+      role: "Terapeuta",
+      text: "Com a Gisele, entendi o poder da linguagem visual. Hoje eu escolho minhas roupas com consciência, propósito e leveza.",
       rating: 5,
     },
   ];
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
-      <Star key={i} className={cn('w-4 h-4', i < rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300')} />
+      <Star
+        key={i}
+        className={cn("w-4 h-4", i < rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300")}
+      />
     ));
   };
 
   return (
-    <div className={cn('py-10', className)}>
+    <div className={cn("py-10", className)}>
       <div className="text-center mb-10">
         <h3 className="text-2xl md:text-3xl font-bold text-[#B89B7A] mb-3">{title}</h3>
         <p className="text-center text-[#8F7A6A] mb-4 max-w-2xl mx-auto">
@@ -55,16 +58,18 @@ const TestimonialsBlock: React.FC<TestimonialsBlockProps> = ({
 
       <div
         className={cn(
-          'max-w-6xl mx-auto',
-          layout === 'grid' ? 'grid md:grid-cols-2 gap-6' : 'flex overflow-x-auto gap-6 pb-4 snap-x snap-mandatory',
+          "max-w-6xl mx-auto",
+          layout === "grid"
+            ? "grid md:grid-cols-2 gap-6"
+            : "flex overflow-x-auto gap-6 pb-4 snap-x snap-mandatory"
         )}
       >
         {testimonials.map((item, index) => (
           <div
             key={index}
             className={cn(
-              'p-8 relative overflow-hidden rounded-xl border border-[#B89B7A]/20 shadow-md hover:shadow-lg transition-all duration-300 h-full flex flex-col bg-white',
-              layout === 'carousel' && 'min-w-[300px] snap-start',
+              "p-8 relative overflow-hidden rounded-xl border border-[#B89B7A]/20 shadow-md hover:shadow-lg transition-all duration-300 h-full flex flex-col bg-white",
+              layout === "carousel" && "min-w-[300px] snap-start"
             )}
           >
             {/* Decorative elements */}
@@ -77,10 +82,14 @@ const TestimonialsBlock: React.FC<TestimonialsBlockProps> = ({
             </div>
 
             {/* Testimonial text */}
-            <p className="text-[#432818] leading-relaxed text-center mb-6 flex-grow italic">"{item.text}"</p>
+            <p className="text-[#432818] leading-relaxed text-center mb-6 flex-grow italic">
+              "{item.text}"
+            </p>
 
             {/* Rating */}
-            {showRatings && <div className="flex justify-center mb-4">{renderStars(item.rating)}</div>}
+            {showRatings && (
+              <div className="flex justify-center mb-4">{renderStars(item.rating)}</div>
+            )}
 
             {/* Author info */}
             <div className="text-center border-t border-[#B89B7A]/10 pt-4">

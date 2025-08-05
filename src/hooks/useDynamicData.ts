@@ -100,10 +100,7 @@ export const useDynamicData = (): DynamicContextData => {
     // Gerar recomendações baseadas no resultado do quiz
     if (primaryStyle) {
       const dynamicProducts = generateProductRecommendations(primaryStyle);
-      const dynamicStyles = generateStyleRecommendations(
-        primaryStyle,
-        secondaryStyles,
-      );
+      const dynamicStyles = generateStyleRecommendations(primaryStyle, secondaryStyles);
       const dynamicContent = generateContentRecommendations(primaryStyle);
 
       setRecommendations({
@@ -181,14 +178,13 @@ function generateProductRecommendations(primaryStyle: any): Product[] {
 
 function generateStyleRecommendations(
   primaryStyle: any,
-  secondaryStyles: any[],
+  secondaryStyles: any[]
 ): StyleRecommendation[] {
   return [
     {
       id: "primary",
       name: primaryStyle?.name || "Estilo Principal",
-      description:
-        primaryStyle?.description || "Seu estilo principal identificado",
+      description: primaryStyle?.description || "Seu estilo principal identificado",
       percentage: 85,
       color: primaryStyle?.color || "#B89B7A",
     },
@@ -202,25 +198,21 @@ function generateStyleRecommendations(
   ];
 }
 
-function generateContentRecommendations(
-  primaryStyle: any,
-): ContentRecommendation[] {
+function generateContentRecommendations(primaryStyle: any): ContentRecommendation[] {
   return [
     {
       id: "content-1",
       title: `Como usar ${primaryStyle?.name || "seu estilo"} no dia a dia`,
       type: "article",
       url: "#",
-      image:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/content-daily.webp",
+      image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/content-daily.webp",
     },
     {
       id: "content-2",
       title: "Cores que combinam com você",
       type: "guide",
       url: "#",
-      image:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/content-colors.webp",
+      image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/content-colors.webp",
     },
   ];
 }

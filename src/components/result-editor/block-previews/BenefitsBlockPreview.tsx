@@ -21,9 +21,7 @@ interface BenefitsBlockPreviewProps {
   };
 }
 
-const BenefitsBlockPreview: React.FC<BenefitsBlockPreviewProps> = ({
-  content,
-}) => {
+const BenefitsBlockPreview: React.FC<BenefitsBlockPreviewProps> = ({ content }) => {
   const renderIcon = (iconName: string) => {
     const iconColor = content.iconColor || "#aa6b5d";
     const iconProps = { size: 18, color: iconColor };
@@ -51,9 +49,7 @@ const BenefitsBlockPreview: React.FC<BenefitsBlockPreviewProps> = ({
 
   return (
     <div style={content.style}>
-      <h3 className="text-xl font-bold mb-4 text-[#aa6b5d]">
-        {content.title || "Benefícios"}
-      </h3>
+      <h3 className="text-xl font-bold mb-4 text-[#aa6b5d]">{content.title || "Benefícios"}</h3>
       <ul className="space-y-3">
         {(
           content.items || [

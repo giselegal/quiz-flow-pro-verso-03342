@@ -26,14 +26,8 @@ interface Question {
 }
 
 const QuizEditorContent: React.FC = () => {
-  const {
-    activeTab,
-    setActiveTab,
-    blockSearch,
-    setBlockSearch,
-    availableBlocks,
-    handleAddBlock,
-  } = useEditor();
+  const { activeTab, setActiveTab, blockSearch, setBlockSearch, availableBlocks, handleAddBlock } =
+    useEditor();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [quizTitle, setQuizTitle] = useState("Novo Quiz");
   const [quizDescription, setQuizDescription] = useState("");
@@ -77,7 +71,7 @@ const QuizEditorContent: React.FC = () => {
     questionIndex: number,
     optionIndex: number,
     option: any,
-    optIndex: number,
+    optIndex: number
   ) => {
     const updatedQuestions = [...questions];
     updatedQuestions[questionIndex].options[optionIndex] = option;
@@ -105,9 +99,7 @@ const QuizEditorContent: React.FC = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                Editor de Quiz
-              </h1>
+              <h1 className="text-2xl font-bold text-gray-900">Editor de Quiz</h1>
               <p className="text-gray-600">Crie e edite suas perguntas</p>
             </div>
             <div className="flex items-center gap-2">
@@ -163,21 +155,17 @@ const QuizEditorContent: React.FC = () => {
                     <Input
                       placeholder="Buscar blocos..."
                       value={blockSearch}
-                      onChange={(e) => setBlockSearch(e.target.value)}
+                      onChange={e => setBlockSearch(e.target.value)}
                     />
 
                     {/* Content Blocks */}
                     <div className="space-y-1">
-                      <h4 className="font-medium text-sm text-gray-700">
-                        Conteúdo
-                      </h4>
+                      <h4 className="font-medium text-sm text-gray-700">Conteúdo</h4>
                       {availableBlocks
                         .filter(
                           (block: any) =>
                             block.category === "content" &&
-                            block.name
-                              .toLowerCase()
-                              .includes(blockSearch.toLowerCase()),
+                            block.name.toLowerCase().includes(blockSearch.toLowerCase())
                         )
                         .map((block: any) => (
                           <Button
@@ -195,16 +183,12 @@ const QuizEditorContent: React.FC = () => {
 
                     {/* Layout Blocks */}
                     <div className="space-y-1">
-                      <h4 className="font-medium text-sm text-gray-700">
-                        Layout
-                      </h4>
+                      <h4 className="font-medium text-sm text-gray-700">Layout</h4>
                       {availableBlocks
                         .filter(
                           (block: any) =>
                             block.category === "layout" &&
-                            block.name
-                              .toLowerCase()
-                              .includes(blockSearch.toLowerCase()),
+                            block.name.toLowerCase().includes(blockSearch.toLowerCase())
                         )
                         .map((block: any) => (
                           <Button
@@ -222,16 +206,12 @@ const QuizEditorContent: React.FC = () => {
 
                     {/* Quiz Blocks */}
                     <div className="space-y-1">
-                      <h4 className="font-medium text-sm text-gray-700">
-                        Quiz
-                      </h4>
+                      <h4 className="font-medium text-sm text-gray-700">Quiz</h4>
                       {availableBlocks
                         .filter(
                           (block: any) =>
                             block.category === "quiz" &&
-                            block.name
-                              .toLowerCase()
-                              .includes(blockSearch.toLowerCase()),
+                            block.name.toLowerCase().includes(blockSearch.toLowerCase())
                         )
                         .map((block: any) => (
                           <Button
@@ -249,11 +229,7 @@ const QuizEditorContent: React.FC = () => {
                   </div>
 
                   <div className="mt-4 pt-4 border-t">
-                    <Button
-                      onClick={addQuestion}
-                      className="w-full"
-                      variant="outline"
-                    >
+                    <Button onClick={addQuestion} className="w-full" variant="outline">
                       <Plus className="w-4 h-4 mr-2" />
                       Nova Pergunta
                     </Button>
@@ -278,7 +254,7 @@ const QuizEditorContent: React.FC = () => {
                       <Input
                         id="quiz-title"
                         value={quizTitle}
-                        onChange={(e) => setQuizTitle(e.target.value)}
+                        onChange={e => setQuizTitle(e.target.value)}
                         placeholder="Digite o título do seu quiz"
                       />
                     </div>
@@ -287,7 +263,7 @@ const QuizEditorContent: React.FC = () => {
                       <Input
                         id="quiz-description"
                         value={quizDescription}
-                        onChange={(e) => setQuizDescription(e.target.value)}
+                        onChange={e => setQuizDescription(e.target.value)}
                         placeholder="Descreva brevemente seu quiz"
                       />
                     </div>
@@ -300,9 +276,7 @@ const QuizEditorContent: React.FC = () => {
                     <QuestionEditor
                       key={question.id}
                       question={question}
-                      onUpdate={(updatedQuestion) =>
-                        updateQuestion(updatedQuestion, index)
-                      }
+                      onUpdate={updatedQuestion => updateQuestion(updatedQuestion, index)}
                       onDelete={() => deleteQuestion(index)}
                     />
                   ))}
@@ -310,9 +284,7 @@ const QuizEditorContent: React.FC = () => {
                   {questions.length === 0 && (
                     <Card>
                       <CardContent className="py-12 text-center">
-                        <p className="text-gray-500 mb-4">
-                          Nenhuma pergunta adicionada ainda
-                        </p>
+                        <p className="text-gray-500 mb-4">Nenhuma pergunta adicionada ainda</p>
                         <Button onClick={addQuestion}>
                           <Plus className="w-4 h-4 mr-2" />
                           Adicionar Primeira Pergunta

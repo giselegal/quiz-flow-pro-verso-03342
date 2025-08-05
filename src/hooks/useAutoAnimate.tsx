@@ -46,10 +46,7 @@ export const AnimatedOptionsEditor: React.FC<{
       {/* Lista com animação automática */}
       <div ref={listRef as any} className="space-y-2">
         {options.map((option, index) => (
-          <div
-            key={option.id}
-            className="p-4 bg-card border border-border rounded-lg shadow-sm"
-          >
+          <div key={option.id} className="p-4 bg-card border border-border rounded-lg shadow-sm">
             <div className="flex items-center justify-between">
               <span className="font-medium">{option.text}</span>
               <button

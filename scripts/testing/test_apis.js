@@ -17,10 +17,10 @@ class QuizAPITester {
     return new Promise((resolve, reject) => {
       const module = url.startsWith("https") ? https : http;
 
-      const req = module.get(url, (res) => {
+      const req = module.get(url, res => {
         let data = "";
 
-        res.on("data", (chunk) => {
+        res.on("data", chunk => {
           data += chunk;
         });
 
@@ -38,7 +38,7 @@ class QuizAPITester {
         });
       });
 
-      req.on("error", (error) => {
+      req.on("error", error => {
         reject(error);
       });
 
@@ -80,13 +80,11 @@ class QuizAPITester {
             console.log(`📋 Amostra do primeiro registro:`);
             const sample = response.data.data[0];
             const keys = Object.keys(sample).slice(0, 3);
-            keys.forEach((key) => {
+            keys.forEach(key => {
               console.log(`   • ${key}: ${sample[key]}`);
             });
             if (Object.keys(sample).length > 3) {
-              console.log(
-                `   ... e mais ${Object.keys(sample).length - 3} campos`,
-              );
+              console.log(`   ... e mais ${Object.keys(sample).length - 3} campos`);
             }
           }
 
@@ -142,35 +140,27 @@ class QuizAPITester {
     // Resumo final
     this.printHeader("RESUMO DOS TESTES");
     console.log(`✅ APIs funcionando: ${successCount}/${endpoints.length}`);
-    console.log(
-      `❌ APIs com problema: ${endpoints.length - successCount}/${endpoints.length}`,
-    );
+    console.log(`❌ APIs com problema: ${endpoints.length - successCount}/${endpoints.length}`);
 
     console.log("\n📊 Detalhamento:");
-    results.forEach((result) => {
+    results.forEach(result => {
       const status = result.success ? "✅" : "❌";
       console.log(
-        `${status} ${result.endpoint} - ${result.description} (${result.count} registros)`,
+        `${status} ${result.endpoint} - ${result.description} (${result.count} registros)`
       );
     });
 
     if (successCount === endpoints.length) {
-      console.log(
-        "\n🎉 PARABÉNS! Todas as APIs estão funcionando perfeitamente!",
-      );
+      console.log("\n🎉 PARABÉNS! Todas as APIs estão funcionando perfeitamente!");
     } else if (successCount > 0) {
-      console.log(
-        "\n⚠️  Algumas APIs estão funcionando. Verifique os erros acima.",
-      );
+      console.log("\n⚠️  Algumas APIs estão funcionando. Verifique os erros acima.");
     } else {
       console.log(
-        "\n🚨 ATENÇÃO! Nenhuma API está funcionando. Verifique se o servidor está rodando:",
+        "\n🚨 ATENÇÃO! Nenhuma API está funcionando. Verifique se o servidor está rodando:"
       );
       console.log("   1. Execute: npm run dev");
       console.log("   2. Verifique se a porta 3000 está correta");
-      console.log(
-        "   3. Teste manualmente: curl http://localhost:3000/api/quiz-results",
-      );
+      console.log("   3. Teste manualmente: curl http://localhost:3000/api/quiz-results");
     }
 
     return results;
@@ -182,7 +172,7 @@ class QuizAPITester {
 
     const result = await this.testEndpoint(
       `/conversion-events/email/${email}`,
-      `Eventos do usuário ${email}`,
+      `Eventos do usuário ${email}`
     );
 
     if (result.success && result.data && result.data.data) {
@@ -192,9 +182,7 @@ class QuizAPITester {
         const timestamp = event.createdAt || "N/A";
         const eventType = event.eventType || "N/A";
         const value = event.value || 0;
-        console.log(
-          `   ${index + 1}. ${timestamp} - ${eventType} (R$ ${value})`,
-        );
+        console.log(`   ${index + 1}. ${timestamp} - ${eventType} (R$ ${value})`);
       });
     }
 
@@ -253,9 +241,7 @@ async function main() {
   await tester.demonstrateUsage();
 
   console.log("\n🏁 Teste finalizado!");
-  console.log(
-    "💡 Para visualizar os dados em um dashboard, abra: dashboard_analytics.html",
-  );
+  console.log("💡 Para visualizar os dados em um dashboard, abra: dashboard_analytics.html");
 }
 
 // Executar se for chamado diretamente

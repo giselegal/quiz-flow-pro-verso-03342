@@ -201,15 +201,11 @@ export const corporateTheme: FunnelTheme = {
 };
 
 // 📚 COLEÇÃO DE TODOS OS TEMAS
-export const funnelThemes: FunnelTheme[] = [
-  elegantTheme,
-  fitnessTheme,
-  corporateTheme,
-];
+export const funnelThemes: FunnelTheme[] = [elegantTheme, fitnessTheme, corporateTheme];
 
 // 🔍 HELPERS PARA TEMAS
 export const getThemeById = (id: string): FunnelTheme | undefined => {
-  return funnelThemes.find((theme) => theme.id === id);
+  return funnelThemes.find(theme => theme.id === id);
 };
 
 export const getDefaultTheme = (): FunnelTheme => {
@@ -223,7 +219,7 @@ export const getDefaultTheme = (): FunnelTheme => {
  */
 export const applyThemeToBlock = (
   blockProperties: Record<string, any>,
-  theme: FunnelTheme,
+  theme: FunnelTheme
 ): Record<string, any> => {
   return {
     ...blockProperties,
@@ -231,8 +227,7 @@ export const applyThemeToBlock = (
     textColor: blockProperties.textColor || theme.colors.text,
     primaryColor: blockProperties.primaryColor || theme.colors.primary,
     // Para pain blocks
-    cardBorderColor:
-      blockProperties.cardBorderColor || `${theme.colors.primary}33`, // 20% opacity
+    cardBorderColor: blockProperties.cardBorderColor || `${theme.colors.primary}33`, // 20% opacity
   };
 };
 

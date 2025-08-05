@@ -129,7 +129,7 @@ const StartButtonBlock: React.FC<StartButtonBlockProps> = ({
       ? "hover:shadow-lg transform hover:scale-[1.02]"
       : "",
     enablePulseEffect && !disabled && !loading ? "animate-pulse" : "",
-    className,
+    className
   );
 
   // Estilos do botão baseados na variante
@@ -160,8 +160,7 @@ const StartButtonBlock: React.FC<StartButtonBlockProps> = ({
       default: // primary
         return {
           ...baseStyle,
-          backgroundColor:
-            disabled || loading ? `${colors.primary}80` : colors.primary,
+          backgroundColor: disabled || loading ? `${colors.primary}80` : colors.primary,
           color: colors.text,
           border: "none",
         };
@@ -186,25 +185,13 @@ const StartButtonBlock: React.FC<StartButtonBlockProps> = ({
   };
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
-    if (
-      variant === "primary" &&
-      enableHoverEffect &&
-      !disabled &&
-      !loading &&
-      colors.primaryDark
-    ) {
+    if (variant === "primary" && enableHoverEffect && !disabled && !loading && colors.primaryDark) {
       e.currentTarget.style.backgroundColor = colors.primaryDark;
     }
   };
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
-    if (
-      variant === "primary" &&
-      enableHoverEffect &&
-      !disabled &&
-      !loading &&
-      colors.primary
-    ) {
+    if (variant === "primary" && enableHoverEffect && !disabled && !loading && colors.primary) {
       e.currentTarget.style.backgroundColor = colors.primary;
     }
   };

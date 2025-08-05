@@ -11,19 +11,13 @@ import {
   Shield,
   MousePointer,
 } from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface AddBlockButtonProps {
   onAddBlock: (type: EditorBlock["type"]) => void;
 }
 
-export const AddBlockButton: React.FC<AddBlockButtonProps> = ({
-  onAddBlock,
-}) => {
+export const AddBlockButton: React.FC<AddBlockButtonProps> = ({ onAddBlock }) => {
   const [open, setOpen] = useState(false);
 
   const handleAddBlock = (type: EditorBlock["type"]) => {
@@ -56,7 +50,7 @@ export const AddBlockButton: React.FC<AddBlockButtonProps> = ({
       </PopoverTrigger>
       <PopoverContent className="w-64 p-2">
         <div className="space-y-1">
-          {blockTypes.map((blockType) => (
+          {blockTypes.map(blockType => (
             <Button
               key={blockType.type}
               variant="ghost"

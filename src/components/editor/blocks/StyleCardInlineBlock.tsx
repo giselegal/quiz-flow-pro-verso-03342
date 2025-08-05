@@ -1,6 +1,6 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { Sparkles, Edit3 } from 'lucide-react';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { Sparkles, Edit3 } from "lucide-react";
 
 interface StyleCardInlineBlockProps {
   title?: string;
@@ -14,9 +14,9 @@ interface StyleCardInlineBlockProps {
 }
 
 const StyleCardInlineBlock: React.FC<StyleCardInlineBlockProps> = ({
-  title = 'Seu Estilo Único',
-  subtitle = 'Descoberto através do quiz',
-  description = 'Características principais do seu perfil de estilo pessoal',
+  title = "Seu Estilo Único",
+  subtitle = "Descoberto através do quiz",
+  description = "Características principais do seu perfil de estilo pessoal",
   showIcon = true,
   onClick,
   className,
@@ -26,11 +26,11 @@ const StyleCardInlineBlock: React.FC<StyleCardInlineBlockProps> = ({
   return (
     <div
       className={cn(
-        'inline-flex items-center gap-3 p-4 bg-white rounded-lg border-l-4 border-[#B89B7A] shadow-sm',
-        'transition-all duration-200 hover:shadow-md hover:scale-105 cursor-pointer',
-        'w-full',
-        disabled && 'opacity-75 cursor-not-allowed',
-        className,
+        "inline-flex items-center gap-3 p-4 bg-white rounded-lg border-l-4 border-[#B89B7A] shadow-sm",
+        "transition-all duration-200 hover:shadow-md hover:scale-105 cursor-pointer",
+        "w-full",
+        disabled && "opacity-75 cursor-not-allowed",
+        className
       )}
       onClick={!disabled ? onClick : undefined}
     >
@@ -48,8 +48,8 @@ const StyleCardInlineBlock: React.FC<StyleCardInlineBlockProps> = ({
           onClick={e => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
-              const newTitle = prompt('Novo título:', title);
-              if (newTitle !== null) onPropertyChange('title', newTitle);
+              const newTitle = prompt("Novo título:", title);
+              if (newTitle !== null) onPropertyChange("title", newTitle);
             }
           }}
         >
@@ -60,8 +60,8 @@ const StyleCardInlineBlock: React.FC<StyleCardInlineBlockProps> = ({
           onClick={e => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
-              const newSubtitle = prompt('Novo subtítulo:', subtitle);
-              if (newSubtitle !== null) onPropertyChange('subtitle', newSubtitle);
+              const newSubtitle = prompt("Novo subtítulo:", subtitle);
+              if (newSubtitle !== null) onPropertyChange("subtitle", newSubtitle);
             }
           }}
         >
@@ -73,8 +73,8 @@ const StyleCardInlineBlock: React.FC<StyleCardInlineBlockProps> = ({
             onClick={e => {
               e.stopPropagation();
               if (onPropertyChange && !disabled) {
-                const newDescription = prompt('Nova descrição:', description);
-                if (newDescription !== null) onPropertyChange('description', newDescription);
+                const newDescription = prompt("Nova descrição:", description);
+                if (newDescription !== null) onPropertyChange("description", newDescription);
               }
             }}
           >

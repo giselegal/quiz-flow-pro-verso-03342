@@ -16,7 +16,7 @@ async function createTables() {
     console.log("📄 SQL carregado:", sql.substring(0, 100) + "...");
 
     // Dividir em comandos individuais
-    const commands = sql.split(";").filter((cmd) => cmd.trim().length > 0);
+    const commands = sql.split(";").filter(cmd => cmd.trim().length > 0);
 
     for (let i = 0; i < commands.length; i++) {
       const command = commands[i].trim();

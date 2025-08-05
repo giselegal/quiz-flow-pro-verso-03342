@@ -11,10 +11,7 @@ async function checkTables() {
 
   try {
     // Tentar uma operação simples na tabela funnels
-    const { data, error } = await supabase
-      .from("funnels")
-      .select("id")
-      .limit(1);
+    const { data, error } = await supabase.from("funnels").select("id").limit(1);
 
     if (error) {
       console.error("Erro ao acessar tabela funnels:", error);
@@ -22,9 +19,7 @@ async function checkTables() {
       if (error.code === "42P01") {
         console.log('\n❌ A tabela "funnels" não existe no banco de dados.');
         console.log("\n=== SOLUÇÃO MANUAL ===");
-        console.log(
-          "1. Acesse: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw",
-        );
+        console.log("1. Acesse: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw");
         console.log('2. Vá para "SQL Editor"');
         console.log("3. Execute o SQL abaixo:");
         console.log("\n```sql");
@@ -44,9 +39,7 @@ async function checkTables() {
         console.log("-- Criar tabela funnel_pages");
         console.log("CREATE TABLE funnel_pages (");
         console.log("  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),");
-        console.log(
-          "  funnel_id UUID NOT NULL REFERENCES funnels(id) ON DELETE CASCADE,",
-        );
+        console.log("  funnel_id UUID NOT NULL REFERENCES funnels(id) ON DELETE CASCADE,");
         console.log("  page_type TEXT NOT NULL,");
         console.log("  page_order INTEGER NOT NULL,");
         console.log("  title TEXT,");
@@ -56,15 +49,11 @@ async function checkTables() {
         console.log("  updated_at TIMESTAMPTZ DEFAULT NOW()");
         console.log(");");
         console.log("```");
-        console.log(
-          "\n4. Após executar, teste novamente o salvamento do funil.",
-        );
+        console.log("\n4. Após executar, teste novamente o salvamento do funil.");
       } else if (error.message.includes("Invalid API key")) {
         console.log("\n❌ Chave de API inválida.");
         console.log("A chave anônima pode estar incorreta ou expirada.");
-        console.log(
-          "Verifique as configurações do projeto no Supabase Dashboard.",
-        );
+        console.log("Verifique as configurações do projeto no Supabase Dashboard.");
       } else {
         console.log("\n❌ Erro desconhecido:", error);
       }

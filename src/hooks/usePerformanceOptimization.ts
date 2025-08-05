@@ -18,9 +18,7 @@ export const usePerformanceOptimization = () => {
   const endRenderTracking = useCallback((componentName: string) => {
     if (renderStartTime.current) {
       const renderTime = performance.now() - renderStartTime.current;
-      console.log(
-        `[Performance] ${componentName} rendered in ${renderTime.toFixed(2)}ms`,
-      );
+      console.log(`[Performance] ${componentName} rendered in ${renderTime.toFixed(2)}ms`);
     }
   }, []);
 
@@ -37,7 +35,7 @@ export const usePerformanceOptimization = () => {
   const createIntersectionObserver = useCallback(
     (
       callback: (entries: IntersectionObserverEntry[]) => void,
-      options?: IntersectionObserverInit,
+      options?: IntersectionObserverInit
     ) => {
       if (observerRef.current) {
         observerRef.current.disconnect();
@@ -51,7 +49,7 @@ export const usePerformanceOptimization = () => {
 
       return observerRef.current;
     },
-    [],
+    []
   );
 
   // Cleanup on unmount
@@ -73,7 +71,7 @@ export const usePerformanceOptimization = () => {
         timeoutId = setTimeout(() => fn(...args), delay);
       }) as T;
     },
-    [],
+    []
   );
 
   // Throttled function creator for performance
@@ -89,7 +87,7 @@ export const usePerformanceOptimization = () => {
         }
       }) as T;
     },
-    [],
+    []
   );
 
   return {
@@ -104,8 +102,7 @@ export const usePerformanceOptimization = () => {
 
 // Hook for component-level performance optimization
 export const useComponentOptimization = (componentName: string) => {
-  const { startRenderTracking, endRenderTracking } =
-    usePerformanceOptimization();
+  const { startRenderTracking, endRenderTracking } = usePerformanceOptimization();
 
   useEffect(() => {
     startRenderTracking();

@@ -55,11 +55,7 @@ export const NameCollectStep: React.FC<FunnelStepProps> = ({
 
   return (
     <div
-      className={cn(
-        "relative rounded-xl shadow-md p-8",
-        backgroundColor,
-        className,
-      )}
+      className={cn("relative rounded-xl shadow-md p-8", backgroundColor, className)}
       onClick={isEditable ? onEdit : undefined}
       data-funnel-step-id={id}
     >
@@ -76,9 +72,7 @@ export const NameCollectStep: React.FC<FunnelStepProps> = ({
           </div>
         )}
 
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-          {title}
-        </h2>
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">{title}</h2>
 
         <p className="text-gray-600 mb-6">{description}</p>
 
@@ -93,7 +87,7 @@ export const NameCollectStep: React.FC<FunnelStepProps> = ({
                 type="text"
                 placeholder={placeholder}
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={e => setName(e.target.value)}
                 className={cn("w-full", error && "border-red-500")}
                 disabled={isEditable}
               />

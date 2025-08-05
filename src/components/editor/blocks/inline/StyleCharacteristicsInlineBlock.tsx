@@ -1,6 +1,6 @@
-import React from 'react';
-import { cn } from '../../../../lib/utils';
-import { BlockComponentProps } from '../../../../types/blocks';
+import React from "react";
+import { cn } from "../../../../lib/utils";
+import { BlockComponentProps } from "../../../../types/blocks";
 
 const StyleCharacteristicsInlineBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -9,16 +9,16 @@ const StyleCharacteristicsInlineBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
 }) => {
   const styleData = block?.properties?.styleData || {
-    name: 'Natural',
-    description: 'Elegância espontânea e sofisticação despojada',
+    name: "Natural",
+    description: "Elegância espontânea e sofisticação despojada",
     characteristics: [
-      'Prefere tecidos naturais como algodão e linho',
-      'Gosta de cores neutras e terrosas',
-      'Valoriza o conforto sem abrir mão do estilo',
-      'Aprecia peças versáteis e atemporais',
+      "Prefere tecidos naturais como algodão e linho",
+      "Gosta de cores neutras e terrosas",
+      "Valoriza o conforto sem abrir mão do estilo",
+      "Aprecia peças versáteis e atemporais",
     ],
-    colors: ['#F5F5DC', '#D2B48C', '#DEB887', '#CD853F'],
-    mainColor: '#B89B7A',
+    colors: ["#F5F5DC", "#D2B48C", "#DEB887", "#CD853F"],
+    mainColor: "#B89B7A",
   };
 
   const title = block?.properties?.title || `Características do Estilo ${styleData.name}`;
@@ -26,10 +26,10 @@ const StyleCharacteristicsInlineBlock: React.FC<BlockComponentProps> = ({
   return (
     <div
       className={cn(
-        'style-characteristics p-6 border border-gray-200 rounded-lg bg-white',
-        'hover:shadow-md transition-all duration-200',
-        isSelected && 'ring-2 ring-[#B89B7A] bg-[#FAF9F7]',
-        'cursor-pointer',
+        "style-characteristics p-6 border border-gray-200 rounded-lg bg-white",
+        "hover:shadow-md transition-all duration-200",
+        isSelected && "ring-2 ring-[#B89B7A] bg-[#FAF9F7]",
+        "cursor-pointer"
       )}
       onClick={onClick}
     >

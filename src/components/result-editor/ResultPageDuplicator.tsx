@@ -40,11 +40,11 @@ export const ResultPageDuplicator: React.FC<ResultPageDuplicatorProps> = ({
   const [newFunnelName, setNewFunnelName] = useState("");
   const [isAbTestDialogOpen, setIsAbTestDialogOpen] = useState(false);
   const [abTestVariants, setAbTestVariants] = useState<string[]>(
-    currentFunnel.resultPage.settings.abTestVariants || [],
+    currentFunnel.resultPage.settings.abTestVariants || []
   );
   const [newVariantName, setNewVariantName] = useState("");
   const [isAbTestEnabled, setIsAbTestEnabled] = useState(
-    currentFunnel.resultPage.settings.abTestEnabled || false,
+    currentFunnel.resultPage.settings.abTestEnabled || false
   );
 
   const handleDuplicateFunnel = () => {
@@ -110,8 +110,7 @@ export const ResultPageDuplicator: React.FC<ResultPageDuplicatorProps> = ({
           <DialogHeader>
             <DialogTitle>Duplicar Funil</DialogTitle>
             <DialogDescription>
-              Crie uma cópia deste funil com um novo nome. Todos os elementos
-              serão duplicados.
+              Crie uma cópia deste funil com um novo nome. Todos os elementos serão duplicados.
             </DialogDescription>
           </DialogHeader>
 
@@ -122,7 +121,7 @@ export const ResultPageDuplicator: React.FC<ResultPageDuplicatorProps> = ({
                 id="funnelName"
                 placeholder="Ex: Funil de Estilo Verão 2023"
                 value={newFunnelName}
-                onChange={(e) => setNewFunnelName(e.target.value)}
+                onChange={e => setNewFunnelName(e.target.value)}
               />
             </div>
           </div>
@@ -142,8 +141,7 @@ export const ResultPageDuplicator: React.FC<ResultPageDuplicatorProps> = ({
           <DialogHeader>
             <DialogTitle>Configurar Teste A/B</DialogTitle>
             <DialogDescription>
-              Configure variantes para testar diferentes versões da sua página
-              de resultados.
+              Configure variantes para testar diferentes versões da sua página de resultados.
             </DialogDescription>
           </DialogHeader>
 
@@ -161,21 +159,15 @@ export const ResultPageDuplicator: React.FC<ResultPageDuplicatorProps> = ({
               <div className="space-y-4">
                 <Card>
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-sm font-medium">
-                      Variantes
-                    </CardTitle>
+                    <CardTitle className="text-sm font-medium">Variantes</CardTitle>
                     <CardDescription>
-                      Adicione variantes para testar diferentes versões da sua
-                      página.
+                      Adicione variantes para testar diferentes versões da sua página.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2">
                       {abTestVariants.map((variant, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center justify-between"
-                        >
+                        <div key={index} className="flex items-center justify-between">
                           <span className="text-sm">{variant}</span>
                           <Button
                             size="sm"
@@ -191,7 +183,7 @@ export const ResultPageDuplicator: React.FC<ResultPageDuplicatorProps> = ({
                         <Input
                           placeholder="Nome da variante"
                           value={newVariantName}
-                          onChange={(e) => setNewVariantName(e.target.value)}
+                          onChange={e => setNewVariantName(e.target.value)}
                           className="flex-1"
                         />
                         <Button size="sm" onClick={handleAddVariant}>
@@ -203,25 +195,17 @@ export const ResultPageDuplicator: React.FC<ResultPageDuplicatorProps> = ({
                 </Card>
 
                 <div className="text-sm text-gray-500">
-                  <p>
-                    Após salvar, você poderá configurar quais blocos aparecem em
-                    cada variante.
-                  </p>
+                  <p>Após salvar, você poderá configurar quais blocos aparecem em cada variante.</p>
                 </div>
               </div>
             )}
           </div>
 
           <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setIsAbTestDialogOpen(false)}
-            >
+            <Button variant="outline" onClick={() => setIsAbTestDialogOpen(false)}>
               Cancelar
             </Button>
-            <Button onClick={handleSaveAbTestSettings}>
-              Salvar Configurações
-            </Button>
+            <Button onClick={handleSaveAbTestSettings}>Salvar Configurações</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

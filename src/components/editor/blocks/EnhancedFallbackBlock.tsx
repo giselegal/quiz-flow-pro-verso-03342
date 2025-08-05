@@ -1,8 +1,8 @@
-import React from 'react';
-import { cn } from '../../../lib/utils';
-import { Button } from '../../ui/button';
-import { Badge } from '../../ui/badge';
-import type { BlockComponentProps } from '../../../types/blocks';
+import React from "react";
+import { cn } from "../../../lib/utils";
+import { Button } from "../../ui/button";
+import { Badge } from "../../ui/badge";
+import type { BlockComponentProps } from "../../../types/blocks";
 
 // Componente de fallback mais rico para componentes não implementados
 export const EnhancedFallbackBlock: React.FC<BlockComponentProps & { blockType: string }> = ({
@@ -11,78 +11,81 @@ export const EnhancedFallbackBlock: React.FC<BlockComponentProps & { blockType: 
   onClick,
   onPropertyChange,
   blockType,
-  className = '',
+  className = "",
 }) => {
   const getComponentInfo = (type: string) => {
-    const componentMap: Record<string, { name: string; description: string; category: string; icon: string }> = {
-      'section-divider': {
-        name: 'Divisor de Seção',
-        description: 'Linha divisória entre seções com estilo customizável',
-        category: 'Layout',
-        icon: '➖',
+    const componentMap: Record<
+      string,
+      { name: string; description: string; category: string; icon: string }
+    > = {
+      "section-divider": {
+        name: "Divisor de Seção",
+        description: "Linha divisória entre seções com estilo customizável",
+        category: "Layout",
+        icon: "➖",
       },
-      'flex-container-horizontal': {
-        name: 'Container Flex Horizontal',
-        description: 'Container flexbox para organizar elementos horizontalmente',
-        category: 'Layout',
-        icon: '↔️',
+      "flex-container-horizontal": {
+        name: "Container Flex Horizontal",
+        description: "Container flexbox para organizar elementos horizontalmente",
+        category: "Layout",
+        icon: "↔️",
       },
-      'flex-container-vertical': {
-        name: 'Container Flex Vertical',
-        description: 'Container flexbox para organizar elementos verticalmente',
-        category: 'Layout',
-        icon: '↕️',
+      "flex-container-vertical": {
+        name: "Container Flex Vertical",
+        description: "Container flexbox para organizar elementos verticalmente",
+        category: "Layout",
+        icon: "↕️",
       },
-      'feature-highlight': {
-        name: 'Destaque de Recurso',
-        description: 'Card destacado para apresentar recursos importantes',
-        category: 'Conteúdo',
-        icon: '⭐',
+      "feature-highlight": {
+        name: "Destaque de Recurso",
+        description: "Card destacado para apresentar recursos importantes",
+        category: "Conteúdo",
+        icon: "⭐",
       },
-      'testimonial-card': {
-        name: 'Card de Depoimento',
-        description: 'Card individual para exibir depoimentos de clientes',
-        category: 'Social Proof',
-        icon: '💬',
+      "testimonial-card": {
+        name: "Card de Depoimento",
+        description: "Card individual para exibir depoimentos de clientes",
+        category: "Social Proof",
+        icon: "💬",
       },
-      'stats-counter': {
-        name: 'Contador de Estatísticas',
-        description: 'Números animados para exibir estatísticas importantes',
-        category: 'Métricas',
-        icon: '📊',
+      "stats-counter": {
+        name: "Contador de Estatísticas",
+        description: "Números animados para exibir estatísticas importantes",
+        category: "Métricas",
+        icon: "📊",
       },
-      'progress-bar-modern': {
-        name: 'Barra de Progresso Moderna',
-        description: 'Barra de progresso com animações e estilo moderno',
-        category: 'UI',
-        icon: '📈',
+      "progress-bar-modern": {
+        name: "Barra de Progresso Moderna",
+        description: "Barra de progresso com animações e estilo moderno",
+        category: "UI",
+        icon: "📈",
       },
-      'quiz-question-modern': {
-        name: 'Questão Quiz Moderna',
-        description: 'Componente de questão com design moderno e interativo',
-        category: 'Quiz',
-        icon: '❓',
+      "quiz-question-modern": {
+        name: "Questão Quiz Moderna",
+        description: "Componente de questão com design moderno e interativo",
+        category: "Quiz",
+        icon: "❓",
       },
-      'quiz-question-configurable': {
-        name: 'Questão Quiz Configurável',
-        description: 'Questão totalmente configurável com múltiplas opções',
-        category: 'Quiz',
-        icon: '⚙️',
+      "quiz-question-configurable": {
+        name: "Questão Quiz Configurável",
+        description: "Questão totalmente configurável com múltiplas opções",
+        category: "Quiz",
+        icon: "⚙️",
       },
-      'image-text-card': {
-        name: 'Card Imagem + Texto',
-        description: 'Card combinando imagem e texto de forma elegante',
-        category: 'Conteúdo',
-        icon: '🖼️',
+      "image-text-card": {
+        name: "Card Imagem + Texto",
+        description: "Card combinando imagem e texto de forma elegante",
+        category: "Conteúdo",
+        icon: "🖼️",
       },
     };
 
     return (
       componentMap[type] || {
-        name: type.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-        description: 'Componente personalizado em desenvolvimento',
-        category: 'Personalizado',
-        icon: '🔧',
+        name: type.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()),
+        description: "Componente personalizado em desenvolvimento",
+        category: "Personalizado",
+        icon: "🔧",
       }
     );
   };
@@ -92,10 +95,10 @@ export const EnhancedFallbackBlock: React.FC<BlockComponentProps & { blockType: 
   return (
     <div
       className={cn(
-        'border-2 border-dashed border-[#B89B7A]/40 bg-[#B89B7A]/10 rounded-lg p-6 text-center transition-all duration-200',
-        'hover:border-orange-400 hover:bg-[#B89B7A]/20',
-        isSelected && 'border-orange-500 bg-[#B89B7A]/20 ring-2 ring-orange-200',
-        className,
+        "border-2 border-dashed border-[#B89B7A]/40 bg-[#B89B7A]/10 rounded-lg p-6 text-center transition-all duration-200",
+        "hover:border-orange-400 hover:bg-[#B89B7A]/20",
+        isSelected && "border-orange-500 bg-[#B89B7A]/20 ring-2 ring-orange-200",
+        className
       )}
       onClick={onClick}
     >

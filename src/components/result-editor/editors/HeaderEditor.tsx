@@ -29,7 +29,7 @@ const HeaderEditor: React.FC<HeaderEditorProps> = ({ content, onUpdate }) => {
         <Textarea
           id="title"
           value={content.title || ""}
-          onChange={(e) => handleChange("title", e.target.value)}
+          onChange={e => handleChange("title", e.target.value)}
           placeholder="Olá, seu Estilo Predominante é:"
           rows={2}
         />
@@ -40,7 +40,7 @@ const HeaderEditor: React.FC<HeaderEditorProps> = ({ content, onUpdate }) => {
         <Textarea
           id="subtitle"
           value={content.subtitle || ""}
-          onChange={(e) => handleChange("subtitle", e.target.value)}
+          onChange={e => handleChange("subtitle", e.target.value)}
           placeholder="Subtítulo personalizado"
           rows={2}
         />
@@ -51,7 +51,7 @@ const HeaderEditor: React.FC<HeaderEditorProps> = ({ content, onUpdate }) => {
         <Input
           id="logoUrl"
           value={content.logoUrl || ""}
-          onChange={(e) => handleChange("logoUrl", e.target.value)}
+          onChange={e => handleChange("logoUrl", e.target.value)}
           placeholder="https://exemplo.com/seu-logo.png"
         />
 
@@ -63,7 +63,7 @@ const HeaderEditor: React.FC<HeaderEditorProps> = ({ content, onUpdate }) => {
                 src={content.logoUrl}
                 alt="Logo"
                 className="h-10 object-contain"
-                onError={(e) => {
+                onError={e => {
                   (e.target as HTMLImageElement).src =
                     "https://placehold.co/200x80?text=Logo+Inválido";
                 }}
@@ -74,13 +74,11 @@ const HeaderEditor: React.FC<HeaderEditorProps> = ({ content, onUpdate }) => {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="userName">
-          Nome Padrão (se o usuário não fornecer)
-        </Label>
+        <Label htmlFor="userName">Nome Padrão (se o usuário não fornecer)</Label>
         <Input
           id="userName"
           value={content.userName || ""}
-          onChange={(e) => handleChange("userName", e.target.value)}
+          onChange={e => handleChange("userName", e.target.value)}
           placeholder="Visitante"
         />
       </div>

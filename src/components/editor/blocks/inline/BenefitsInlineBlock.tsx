@@ -1,6 +1,6 @@
-import React from 'react';
-import { cn } from '../../../../lib/utils';
-import { Check } from 'lucide-react';
+import React from "react";
+import { cn } from "../../../../lib/utils";
+import { Check } from "lucide-react";
 
 interface BenefitsInlineBlockProps {
   title?: string;
@@ -13,20 +13,20 @@ interface BenefitsInlineBlockProps {
 }
 
 const BenefitsInlineBlock: React.FC<BenefitsInlineBlockProps> = ({
-  title = 'Principais Benefícios',
+  title = "Principais Benefícios",
   benefits = [
-    'Resultados comprovados em até 7 dias',
-    'Método validado por especialistas',
-    'Suporte personalizado incluído',
+    "Resultados comprovados em até 7 dias",
+    "Método validado por especialistas",
+    "Suporte personalizado incluído",
   ],
-  iconColor = '#10b981',
-  titleColor = '#1f2937',
-  textColor = '#374151',
+  iconColor = "#10b981",
+  titleColor = "#1f2937",
+  textColor = "#374151",
   className,
   ...props
 }) => {
   return (
-    <div className={cn('w-full py-6', className)} {...props}>
+    <div className={cn("w-full py-6", className)} {...props}>
       <h3 className="text-xl font-semibold mb-4 text-center" style={{ color: titleColor }}>
         {title}
       </h3>

@@ -63,14 +63,10 @@ const VideoBlockPreview: React.FC<VideoBlockPreviewProps> = ({ content }) => {
       )}
 
       {content.videoTitle && (
-        <h3 className="text-lg font-medium text-[#432818]">
-          {content.videoTitle}
-        </h3>
+        <h3 className="text-lg font-medium text-[#432818]">{content.videoTitle}</h3>
       )}
 
-      {content.videoDescription && (
-        <p className="text-[#8F7A6A]">{content.videoDescription}</p>
-      )}
+      {content.videoDescription && <p className="text-[#8F7A6A]">{content.videoDescription}</p>}
     </div>
   );
 };

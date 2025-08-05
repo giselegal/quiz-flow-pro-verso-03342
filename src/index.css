@@ -404,12 +404,7 @@ img:hover,
 
   /* Destaque de termos estratégicos */
   .highlight-strategic {
-    background-color: rgba(
-      240,
-      240,
-      245,
-      0.3
-    ); /* Versão mais segura do hsl(var(--accent) / 0.3) */
+    background-color: rgba(240, 240, 245, 0.3); /* Versão mais segura do hsl(var(--accent) / 0.3) */
     padding: 0.1em 0.2em;
     border-radius: 0.2em;
     font-weight: 600;
@@ -434,12 +429,7 @@ img:hover,
 
   /* Destaque mais pronunciado em mobile */
   .highlight-strategic {
-    background-color: rgba(
-      240,
-      240,
-      245,
-      0.4
-    ); /* Versão mais segura do hsl(var(--accent) / 0.4) */
+    background-color: rgba(240, 240, 245, 0.4); /* Versão mais segura do hsl(var(--accent) / 0.4) */
     padding: 0.15em 0.25em;
   }
 }

@@ -14,27 +14,21 @@ interface PermissionsContextType {
   removePermission: (id: string) => void;
 }
 
-const PermissionsContext = createContext<PermissionsContextType | undefined>(
-  undefined,
-);
+const PermissionsContext = createContext<PermissionsContextType | undefined>(undefined);
 
-export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [permissions, setPermissions] = useState<Permission[]>([]);
 
   const hasPermission = (resource: string, action: string) => {
-    return permissions.some(
-      (p) => p.resource === resource && p.action === action,
-    );
+    return permissions.some(p => p.resource === resource && p.action === action);
   };
 
   const addPermission = (permission: Permission) => {
-    setPermissions((prev) => [...prev, permission]);
+    setPermissions(prev => [...prev, permission]);
   };
 
   const removePermission = (id: string) => {
-    setPermissions((prev) => prev.filter((p) => p.id !== id));
+    setPermissions(prev => prev.filter(p => p.id !== id));
   };
 
   return (
@@ -62,12 +56,8 @@ export const usePermissions = () => {
 const AccessControlSystem: React.FC = () => {
   return (
     <div className="p-4">
-      <h2 className="text-lg font-semibold mb-4">
-        Sistema de Controle de Acesso
-      </h2>
-      <p className="text-gray-600">
-        Sistema de controle de acesso em desenvolvimento...
-      </p>
+      <h2 className="text-lg font-semibold mb-4">Sistema de Controle de Acesso</h2>
+      <p className="text-gray-600">Sistema de controle de acesso em desenvolvimento...</p>
     </div>
   );
 };

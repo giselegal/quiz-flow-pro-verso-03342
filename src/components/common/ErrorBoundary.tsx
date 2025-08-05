@@ -54,29 +54,18 @@ export class ErrorBoundary extends Component<Props, State> {
               <AlertTriangle size={48} className="mx-auto" />
             </div>
 
-            <h2 className="text-xl font-bold text-gray-800 mb-2">
-              Oops! Algo deu errado
-            </h2>
+            <h2 className="text-xl font-bold text-gray-800 mb-2">Oops! Algo deu errado</h2>
 
             <p className="text-gray-600 mb-6">
-              O editor encontrou um erro inesperado. Não se preocupe, seus dados
-              estão seguros.
+              O editor encontrou um erro inesperado. Não se preocupe, seus dados estão seguros.
             </p>
 
             <div className="space-y-3">
-              <Button
-                onClick={this.handleReset}
-                className="w-full"
-                variant="default"
-              >
+              <Button onClick={this.handleReset} className="w-full" variant="default">
                 Tentar Novamente
               </Button>
 
-              <Button
-                onClick={this.handleReload}
-                className="w-full"
-                variant="outline"
-              >
+              <Button onClick={this.handleReload} className="w-full" variant="outline">
                 Recarregar Página
               </Button>
             </div>

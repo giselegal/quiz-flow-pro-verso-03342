@@ -12,8 +12,7 @@ export const styleQuizTemplate2: QuizBuilderState = {
         title: "Quiz de Estilo Avançado",
         subtitle:
           "Descubra seu estilo predominante e como criar looks que valorizam sua personalidade",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
         stageTitle: "Início",
         stageNumber: 1,
         buttonText: "Iniciar Quiz",
@@ -215,8 +214,7 @@ export const styleQuizTemplate2: QuizBuilderState = {
       stageId: "result",
       data: {
         title: "Seu Resultado de Estilo Pessoal",
-        subtitle:
-          "Baseado nas suas escolhas, calculamos seu estilo predominante",
+        subtitle: "Baseado nas suas escolhas, calculamos seu estilo predominante",
         stageTitle: "Resultado",
         stageNumber: 5,
         resultLayout: "modern",

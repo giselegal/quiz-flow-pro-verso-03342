@@ -1,7 +1,7 @@
-import React from 'react';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { BlockEditorProps } from './types';
+import React from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { BlockEditorProps } from "./types";
 
 export const SecondaryStylesBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
   return (
@@ -10,7 +10,7 @@ export const SecondaryStylesBlockEditor: React.FC<BlockEditorProps> = ({ block, 
         <Label htmlFor={`${block.id}-title`}>Título dos Estilos Secundários</Label>
         <Input
           id={`${block.id}-title`}
-          value={block.content.title || ''}
+          value={block.content.title || ""}
           onChange={e => onUpdate({ title: e.target.value })}
           className="mt-1"
           placeholder="Seus Estilos Complementares"
@@ -21,7 +21,7 @@ export const SecondaryStylesBlockEditor: React.FC<BlockEditorProps> = ({ block, 
         <Label htmlFor={`${block.id}-description`}>Descrição dos Estilos Secundários</Label>
         <Input
           id={`${block.id}-description`}
-          value={block.content.text || ''}
+          value={block.content.text || ""}
           onChange={e => onUpdate({ text: e.target.value })}
           className="mt-1"
           placeholder="Descrição dos estilos complementares"

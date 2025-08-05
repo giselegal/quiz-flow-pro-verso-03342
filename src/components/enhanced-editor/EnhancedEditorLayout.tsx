@@ -57,9 +57,7 @@ export const EnhancedEditorLayout: React.FC<EnhancedEditorLayoutProps> = ({
             <button
               onClick={() => setActiveTab("editor")}
               className={`px-3 py-1 rounded ${
-                activeTab === "editor"
-                  ? "bg-[#B89B7A] text-white"
-                  : "bg-gray-100"
+                activeTab === "editor" ? "bg-[#B89B7A] text-white" : "bg-gray-100"
               }`}
             >
               Editor
@@ -67,9 +65,7 @@ export const EnhancedEditorLayout: React.FC<EnhancedEditorLayoutProps> = ({
             <button
               onClick={() => setActiveTab("preview")}
               className={`px-3 py-1 rounded ${
-                activeTab === "preview"
-                  ? "bg-[#B89B7A] text-white"
-                  : "bg-gray-100"
+                activeTab === "preview" ? "bg-[#B89B7A] text-white" : "bg-gray-100"
               }`}
             >
               Preview
@@ -81,13 +77,11 @@ export const EnhancedEditorLayout: React.FC<EnhancedEditorLayoutProps> = ({
           {blocks.length === 0 ? (
             <div className="text-center text-gray-500 mt-8">
               <p>Nenhum bloco adicionado ainda</p>
-              <p className="text-sm">
-                Use o painel lateral para adicionar componentes
-              </p>
+              <p className="text-sm">Use o painel lateral para adicionar componentes</p>
             </div>
           ) : (
             <div className="space-y-4">
-              {blocks.map((block) => (
+              {blocks.map(block => (
                 <div
                   key={block.id}
                   className={`border rounded p-4 cursor-pointer ${

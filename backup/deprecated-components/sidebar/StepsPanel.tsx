@@ -8,13 +8,7 @@ import { cn } from "@/lib/utils";
 interface Step {
   id: string;
   title: string;
-  type:
-    | "intro"
-    | "quiz-question"
-    | "result-page"
-    | "offer-page"
-    | "form"
-    | "content";
+  type: "intro" | "quiz-question" | "result-page" | "offer-page" | "form" | "content";
   isCompleted?: boolean;
   isActive?: boolean;
   order: number;
@@ -112,12 +106,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
   const [hoveredStepId, setHoveredStepId] = useState<string | null>(null);
 
   return (
-    <div
-      className={cn(
-        "h-full bg-white border-r border-gray-200 flex flex-col",
-        className,
-      )}
-    >
+    <div className={cn("h-full bg-white border-r border-gray-200 flex flex-col", className)}>
       {/* Header */}
       <div className="p-4 border-b">
         <div className="flex items-center justify-between">
@@ -143,7 +132,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                 "group relative mb-2 p-3 rounded-lg border cursor-pointer transition-all duration-200",
                 currentStepId === step.id
                   ? "border-blue-200 bg-blue-50"
-                  : "border-gray-200 hover:border-gray-300 hover:bg-gray-50",
+                  : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
               )}
               onClick={() => onStepSelect?.(step.id)}
               onMouseEnter={() => setHoveredStepId(step.id)}
@@ -158,7 +147,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                       ? "bg-green-100 text-green-700"
                       : step.isActive
                         ? "bg-blue-100 text-blue-700"
-                        : "bg-gray-100 text-gray-500",
+                        : "bg-gray-100 text-gray-500"
                   )}
                 >
                   {step.isCompleted ? "✓" : index + 1}
@@ -166,9 +155,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center space-x-2 mb-1">
-                    <h3 className="text-sm font-medium text-gray-900 truncate">
-                      {step.title}
-                    </h3>
+                    <h3 className="text-sm font-medium text-gray-900 truncate">{step.title}</h3>
                     <Badge
                       variant="secondary"
                       className={cn("text-xs", getStepTypeColor(step.type))}
@@ -178,9 +165,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                   </div>
 
                   <div className="flex items-center space-x-2">
-                    <span className="text-xs text-gray-500">
-                      Etapa {step.order}
-                    </span>
+                    <span className="text-xs text-gray-500">Etapa {step.order}</span>
                     {step.isActive && (
                       <Badge variant="outline" className="text-xs">
                         <Play className="w-3 h-3 mr-1" />
@@ -201,7 +186,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                       size="sm"
                       variant="ghost"
                       className="h-6 w-6 p-0"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         onStepEdit(step.id);
                       }}
@@ -214,7 +199,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                       size="sm"
                       variant="ghost"
                       className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         onStepDelete(step.id);
                       }}

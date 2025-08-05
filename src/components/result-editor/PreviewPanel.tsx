@@ -8,10 +8,7 @@ interface PreviewPanelProps {
   selectedStyle: StyleResult;
 }
 
-const PreviewPanel: React.FC<PreviewPanelProps> = ({
-  resultPageConfig,
-  selectedStyle,
-}) => {
+const PreviewPanel: React.FC<PreviewPanelProps> = ({ resultPageConfig, selectedStyle }) => {
   // Create complete StyleResult objects with all required properties
   const secondaryStyles: StyleResult[] = [
     {
@@ -23,10 +20,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
       rank: 2,
     },
     {
-      category:
-        selectedStyle.category === "Contemporâneo"
-          ? "Elegante"
-          : "Contemporâneo",
+      category: selectedStyle.category === "Contemporâneo" ? "Elegante" : "Contemporâneo",
       score: 5,
       percentage: 15,
       style: "contemporaneo" as any,
@@ -46,10 +40,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
         </div>
 
         <div className="overflow-auto h-[calc(100vh-180px)]">
-          <QuizResults
-            primaryStyle={selectedStyle}
-            secondaryStyles={secondaryStyles}
-          />
+          <QuizResults primaryStyle={selectedStyle} secondaryStyles={secondaryStyles} />
         </div>
       </div>
     </div>

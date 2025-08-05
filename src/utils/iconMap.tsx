@@ -54,7 +54,7 @@ const iconMap: Record<string, LucideIcon> = {
 export const renderLucideIcon = (
   iconName: string,
   className?: string,
-  fallback: LucideIcon = AlertCircle,
+  fallback: LucideIcon = AlertCircle
 ): React.ReactElement => {
   const IconComponent = iconMap[iconName] || fallback;
   return React.createElement(IconComponent, { className });
@@ -67,10 +67,7 @@ export const renderLucideIcon = (
  * @param fallback - Ícone padrão caso o nome não seja encontrado
  * @returns Componente do ícone
  */
-export const getLucideIcon = (
-  iconName: string,
-  fallback: LucideIcon = AlertCircle,
-): LucideIcon => {
+export const getLucideIcon = (iconName: string, fallback: LucideIcon = AlertCircle): LucideIcon => {
   return iconMap[iconName] || fallback;
 };
 

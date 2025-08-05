@@ -9,7 +9,7 @@ import { ImageSettings, ImageOptimizationOptions } from "./types";
  */
 export const optimizeCloudinaryUrl = (
   url: string,
-  settings: ImageSettings = { quality: 75, format: "auto", responsive: false },
+  settings: ImageSettings = { quality: 75, format: "auto", responsive: false }
 ): string => {
   if (!url) return "";
   if (!url.includes("cloudinary.com")) return url;
@@ -29,8 +29,7 @@ export const optimizeCloudinaryUrl = (
 
   const baseUrlParts = parts;
   const secondPart = baseUrlParts[1];
-  const hasTransformations =
-    secondPart.includes("/") && !/v\d+\//.test(secondPart.split("/")[0]); // Distingue transforms de version strings
+  const hasTransformations = secondPart.includes("/") && !/v\d+\//.test(secondPart.split("/")[0]); // Distingue transforms de version strings
 
   // Constrói a string de transformação
   let transformations = `f_${format === "auto" ? "auto" : format},q_${quality}`;
@@ -68,7 +67,7 @@ export const optimizeCloudinaryUrl = (
  */
 export const getLowQualityPlaceholder = (
   url: string,
-  options: { width?: number; quality?: number } = {},
+  options: { width?: number; quality?: number } = {}
 ): string => {
   if (!url || !url.includes("cloudinary.com")) {
     return url;
@@ -98,7 +97,7 @@ export const getLowQualityPlaceholder = (
  */
 export const getOptimizedImageUrl = (
   url: string,
-  options: { width?: number; height?: number; quality?: number } = {},
+  options: { width?: number; height?: number; quality?: number } = {}
 ): string => {
   if (!url || !url.includes("cloudinary.com")) return url;
 
@@ -128,10 +127,7 @@ export const getOptimizedImageUrl = (
  * @param url URL da imagem
  * @param settings Configurações de otimização
  */
-export const getOptimizedImage = (
-  url: string,
-  settings?: ImageSettings,
-): string => {
+export const getOptimizedImage = (url: string, settings?: ImageSettings): string => {
   if (!url) return "";
   return optimizeCloudinaryUrl(url, settings);
 };
@@ -146,11 +142,11 @@ export const getOptimizedImage = (
 export const getResponsiveImageSources = (
   url: string,
   widths: number[] = [640, 768, 1024, 1280],
-  options: { quality?: number } = {},
+  options: { quality?: number } = {}
 ): string[] => {
   if (!url || !url.includes("cloudinary.com")) return [url];
 
   const { quality = 80 } = options;
 
-  return widths.map((width) => getOptimizedImageUrl(url, { width, quality }));
+  return widths.map(width => getOptimizedImageUrl(url, { width, quality }));
 };

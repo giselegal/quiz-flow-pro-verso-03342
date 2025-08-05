@@ -21,7 +21,7 @@ export const useLiveEditor = () => {
   };
 
   const addStage = (stage: Stage) => {
-    setStages((prev) => [...prev, stage]);
+    setStages(prev => [...prev, stage]);
   };
 
   return {

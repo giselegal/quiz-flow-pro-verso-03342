@@ -1,7 +1,7 @@
-import React from 'react';
-import { ChartArea } from 'lucide-react';
-import { InlineEditableText } from './InlineEditableText';
-import type { BlockComponentProps } from '@/types/blocks';
+import React from "react";
+import { ChartArea } from "lucide-react";
+import { InlineEditableText } from "./InlineEditableText";
+import type { BlockComponentProps } from "@/types/blocks";
 
 const ChartAreaBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -9,9 +9,14 @@ const ChartAreaBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = '',
+  className = "",
 }) => {
-  const { title = 'Gráfico de Área', data = [], xAxisKey = 'x', yAxisKey = 'y' } = block?.properties || {};
+  const {
+    title = "Gráfico de Área",
+    data = [],
+    xAxisKey = "x",
+    yAxisKey = "y",
+  } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {
@@ -23,7 +28,7 @@ const ChartAreaBlock: React.FC<BlockComponentProps> = ({
     <div
       className={`
         py-6 text-center bg-gray-100 rounded-lg border border-gray-200 cursor-pointer transition-all duration-200
-        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
+        ${isSelected ? "ring-1 ring-gray-400/40 bg-gray-50/30" : "hover:shadow-sm"}
         ${className}
       `}
       onClick={onClick}
@@ -33,7 +38,7 @@ const ChartAreaBlock: React.FC<BlockComponentProps> = ({
       <h3 className="text-xl font-bold text-[#432818] mb-4">
         <InlineEditableText
           value={title}
-          onChange={(value: string) => handlePropertyChange('title', value)}
+          onChange={(value: string) => handlePropertyChange("title", value)}
           className="inline-block"
           placeholder="Título do gráfico"
         />

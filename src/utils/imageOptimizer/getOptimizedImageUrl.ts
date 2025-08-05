@@ -13,7 +13,7 @@ const getOptimizedImageUrl = (
     quality?: number;
     format?: "auto" | "webp" | "jpg" | "png";
     priority?: "high" | "medium" | "low";
-  } = {},
+  } = {}
 ): string => {
   // If no image URL provided, return empty string
   if (!originalUrl) return "";

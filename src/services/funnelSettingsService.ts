@@ -57,9 +57,7 @@ export class FunnelSettingsService {
 
       // Tentar carregar do localStorage como fallback
       try {
-        const localSettings = localStorage.getItem(
-          `funnel-settings-${funnelId}`,
-        );
+        const localSettings = localStorage.getItem(`funnel-settings-${funnelId}`);
         if (localSettings) {
           console.log("📱 Usando configurações do localStorage como fallback");
           return JSON.parse(localSettings);
@@ -75,10 +73,7 @@ export class FunnelSettingsService {
   /**
    * Salva as configurações de um funil
    */
-  static async saveSettings(
-    funnelId: string,
-    settings: FunnelSettings,
-  ): Promise<void> {
+  static async saveSettings(funnelId: string, settings: FunnelSettings): Promise<void> {
     try {
       console.log("💾 Salvando configurações do funil:", funnelId, settings);
 
@@ -98,10 +93,7 @@ export class FunnelSettingsService {
 
       // Backup no localStorage
       try {
-        localStorage.setItem(
-          `funnel-settings-${funnelId}`,
-          JSON.stringify(settings),
-        );
+        localStorage.setItem(`funnel-settings-${funnelId}`, JSON.stringify(settings));
       } catch (localError) {
         console.warn("Não foi possível salvar no localStorage:", localError);
       }
@@ -112,10 +104,7 @@ export class FunnelSettingsService {
 
       // Tentar salvar apenas no localStorage como fallback
       try {
-        localStorage.setItem(
-          `funnel-settings-${funnelId}`,
-          JSON.stringify(settings),
-        );
+        localStorage.setItem(`funnel-settings-${funnelId}`, JSON.stringify(settings));
         console.log("📱 Configurações salvas no localStorage como fallback");
       } catch (localError) {
         console.error("Erro ao salvar no localStorage:", localError);
@@ -208,17 +197,12 @@ export class FunnelSettingsService {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
 
-      reader.onload = (e) => {
+      reader.onload = e => {
         try {
           const settings = JSON.parse(e.target?.result as string);
 
           // Validar estrutura básica
-          if (
-            !settings.seo ||
-            !settings.analytics ||
-            !settings.webhooks ||
-            !settings.domain
-          ) {
+          if (!settings.seo || !settings.analytics || !settings.webhooks || !settings.domain) {
             throw new Error("Arquivo de configurações inválido");
           }
 

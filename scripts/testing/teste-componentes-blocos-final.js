@@ -31,13 +31,7 @@ const componentesImplementados = [
   {
     nome: "QuizQuestionBlock",
     status: "✅ FUNCIONANDO",
-    props: [
-      "questionText",
-      "options",
-      "layout",
-      "primaryColor",
-      "...50+ props",
-    ],
+    props: ["questionText", "options", "layout", "primaryColor", "...50+ props"],
   },
   {
     nome: "ComponentsSidebar",
@@ -53,7 +47,7 @@ componentesImplementados.forEach((comp, i) => {
   console.log(`${i + 1}. ${comp.nome}`);
   console.log(`   Status: ${comp.status}`);
   console.log(
-    `   Props: ${comp.props.slice(0, 3).join(", ")}${comp.props.length > 3 ? "..." : ""}`,
+    `   Props: ${comp.props.slice(0, 3).join(", ")}${comp.props.length > 3 ? "..." : ""}`
   );
   console.log("");
 });
@@ -69,9 +63,7 @@ console.log("✅ Contadores dinâmicos por categoria");
 console.log("");
 
 console.log("📈 ESTATÍSTICAS:");
-console.log(
-  `Total de componentes implementados: ${componentesImplementados.length}`,
-);
+console.log(`Total de componentes implementados: ${componentesImplementados.length}`);
 console.log("Componentes com interface completa: 6");
 console.log("Componentes avançados (Quiz): 1");
 console.log("Sistema de busca e categorização: 1");
@@ -95,9 +87,7 @@ console.log("• Expandir biblioteca de componentes");
 console.log("");
 
 console.log("🎉 MISSÃO CUMPRIDA!");
-console.log(
-  'A aba "Blocos" agora está totalmente funcional e pronta para uso.',
-);
+console.log('A aba "Blocos" agora está totalmente funcional e pronta para uso.');
 console.log("");
 console.log("📁 Arquivos principais criados:");
 console.log("• client/src/components/editor/blocks/BlockComponents.tsx");
@@ -108,27 +98,14 @@ console.log("• client/src/components/editor/blocks/ButtonBlock.tsx");
 console.log("• client/src/components/editor/blocks/ImageBlock.tsx");
 console.log("• client/src/components/editor/blocks/SpacerBlock.tsx");
 console.log("• client/src/components/editor/blocks/QuizQuestionBlock.tsx");
-console.log(
-  "• src/components/editor/sidebar/ComponentsSidebar.tsx (ATUALIZADO)",
-);
-console.log(
-  "• client/src/components/editor/blocks/ImprovedBlocksSidebar.tsx (DEMO)",
-);
+console.log("• src/components/editor/sidebar/ComponentsSidebar.tsx (ATUALIZADO)");
+console.log("• client/src/components/editor/blocks/ImprovedBlocksSidebar.tsx (DEMO)");
 console.log("");
 
 // Simular teste de funcionalidade
-const testarBusca = (termo) => {
-  const componentes = [
-    "heading",
-    "text",
-    "button",
-    "image",
-    "spacer",
-    "quiz-question",
-  ];
-  const resultados = componentes.filter((comp) =>
-    comp.includes(termo.toLowerCase()),
-  );
+const testarBusca = termo => {
+  const componentes = ["heading", "text", "button", "image", "spacer", "quiz-question"];
+  const resultados = componentes.filter(comp => comp.includes(termo.toLowerCase()));
   return `Busca por "${termo}": ${resultados.length} resultado(s) - ${resultados.join(", ")}`;
 };
 

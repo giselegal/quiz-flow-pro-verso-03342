@@ -21,9 +21,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   if (!selectedBlock) {
     return (
       <div className="h-full bg-white border-l border-gray-200 p-4 flex items-center justify-center">
-        <p className="text-gray-500">
-          Selecione um bloco para editar suas propriedades
-        </p>
+        <p className="text-gray-500">Selecione um bloco para editar suas propriedades</p>
       </div>
     );
   }
@@ -50,12 +48,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
       <div className="flex-1 p-4 space-y-4 overflow-y-auto">
         <div>
           <Label htmlFor="block-type">Tipo</Label>
-          <Input
-            id="block-type"
-            value={selectedBlock.type}
-            disabled
-            className="bg-gray-50"
-          />
+          <Input id="block-type" value={selectedBlock.type} disabled className="bg-gray-50" />
         </div>
 
         {selectedBlock.type === "text" && (
@@ -64,7 +57,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             <Textarea
               id="text-content"
               value={selectedBlock.content?.text || ""}
-              onChange={(e) => handlePropertyChange("text", e.target.value)}
+              onChange={e => handlePropertyChange("text", e.target.value)}
               rows={4}
             />
           </div>
@@ -77,7 +70,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <Input
                 id="heading-text"
                 value={selectedBlock.content?.text || ""}
-                onChange={(e) => handlePropertyChange("text", e.target.value)}
+                onChange={e => handlePropertyChange("text", e.target.value)}
               />
             </div>
             <div>
@@ -85,7 +78,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <select
                 id="heading-level"
                 value={selectedBlock.content?.level || "h2"}
-                onChange={(e) => handlePropertyChange("level", e.target.value)}
+                onChange={e => handlePropertyChange("level", e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
               >
                 <option value="h1">H1</option>
@@ -106,9 +99,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <Input
                 id="image-url"
                 value={selectedBlock.content?.imageUrl || ""}
-                onChange={(e) =>
-                  handlePropertyChange("imageUrl", e.target.value)
-                }
+                onChange={e => handlePropertyChange("imageUrl", e.target.value)}
                 placeholder="https://exemplo.com/imagem.jpg"
               />
             </div>
@@ -117,7 +108,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <Input
                 id="image-alt"
                 value={selectedBlock.content?.alt || ""}
-                onChange={(e) => handlePropertyChange("alt", e.target.value)}
+                onChange={e => handlePropertyChange("alt", e.target.value)}
                 placeholder="Descrição da imagem"
               />
             </div>
@@ -131,7 +122,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <Input
                 id="button-text"
                 value={selectedBlock.content?.text || ""}
-                onChange={(e) => handlePropertyChange("text", e.target.value)}
+                onChange={e => handlePropertyChange("text", e.target.value)}
               />
             </div>
             <div>
@@ -139,7 +130,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <Input
                 id="button-url"
                 value={selectedBlock.content?.url || ""}
-                onChange={(e) => handlePropertyChange("url", e.target.value)}
+                onChange={e => handlePropertyChange("url", e.target.value)}
                 placeholder="https://exemplo.com"
               />
             </div>

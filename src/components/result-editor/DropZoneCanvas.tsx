@@ -1,9 +1,6 @@
 import React from "react";
 import { useDroppable } from "@dnd-kit/core";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { Monitor, Tablet, Smartphone } from "lucide-react";
 import { ComponentRenderers } from "./ComponentRenderers";
 import { SortableCanvasItem } from "./SortableCanvasItem";
@@ -127,9 +124,7 @@ const BasicComponentRenderer: React.FC<{
           onClick={handleClick}
         >
           <p className="text-gray-500">Componente: {type}</p>
-          <p className="text-xs text-gray-400 mt-1">
-            Renderizador não encontrado
-          </p>
+          <p className="text-xs text-gray-400 mt-1">Renderizador não encontrado</p>
         </div>
       );
   }
@@ -174,8 +169,7 @@ export const DropZoneCanvas: React.FC<DropZoneCanvasProps> = ({
   const renderComponent = (item: CanvasItem) => {
     const isSelected = selectedItemId === item.id;
 
-    const SpecificRenderer =
-      ComponentRenderers[item.type as keyof typeof ComponentRenderers];
+    const SpecificRenderer = ComponentRenderers[item.type as keyof typeof ComponentRenderers];
     if (SpecificRenderer) {
       return (
         <SpecificRenderer
@@ -223,26 +217,22 @@ export const DropZoneCanvas: React.FC<DropZoneCanvasProps> = ({
               <div className="w-16 h-16 bg-[#B89B7A] rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl text-white">+</span>
               </div>
-              <h3 className="text-lg font-semibold text-[#432818] mb-2">
-                Comece criando seu quiz
-              </h3>
+              <h3 className="text-lg font-semibold text-[#432818] mb-2">Comece criando seu quiz</h3>
               <p className="text-[#B89B7A] mb-4">
                 Arraste componentes da barra lateral para começar
               </p>
-              <div className="text-sm text-[#B89B7A]">
-                💡 Dica: Comece com um título chamativo
-              </div>
+              <div className="text-sm text-[#B89B7A]">💡 Dica: Comece com um título chamativo</div>
             </div>
           </div>
         ) : (
           <SortableContext
-            items={items.map((item) => item.id)}
+            items={items.map(item => item.id)}
             strategy={verticalListSortingStrategy}
           >
             <div className="space-y-4">
               {items
                 .sort((a, b) => a.position - b.position)
-                .map((item) => (
+                .map(item => (
                   <SortableCanvasItem
                     key={item.id}
                     id={item.id}

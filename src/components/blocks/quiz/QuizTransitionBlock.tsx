@@ -97,8 +97,7 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
 }) => {
   const [animationActive, setAnimationActive] = useState(false);
   const [showContent, setShowContent] = useState(false);
-  const { trackUIInteraction, trackCTAClick, trackLoadingState } =
-    useQuizTracking();
+  const { trackUIInteraction, trackCTAClick, trackLoadingState } = useQuizTracking();
 
   useEffect(() => {
     // Track visualização da transição
@@ -162,11 +161,7 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
       case "celebration":
         return (
           <div className="relative">
-            <div
-              className={`text-6xl ${animationActive ? "animate-bounce" : ""}`}
-            >
-              🎉
-            </div>
+            <div className={`text-6xl ${animationActive ? "animate-bounce" : ""}`}>🎉</div>
             {animationActive && (
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-16 h-16 border-4 border-[#B89B7A] border-t-transparent rounded-full animate-spin"></div>
@@ -190,9 +185,7 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
         return (
           <div className="relative">
             <Sparkles
-              className={`w-12 h-12 text-[#B89B7A] ${
-                animationActive ? "animate-pulse" : ""
-              }`}
+              className={`w-12 h-12 text-[#B89B7A] ${animationActive ? "animate-pulse" : ""}`}
             />
             {animationActive && (
               <>
@@ -255,29 +248,21 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
         {/* Conteúdo */}
         <div
           className={`space-y-4 max-w-2xl mx-auto transition-all duration-500 ${
-            showContent
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-4"
+            showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
           {/* Título */}
           {title && (
-            <h2 className="text-3xl md:text-4xl font-bold text-[#432818] font-playfair">
-              {title}
-            </h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#432818] font-playfair">{title}</h2>
           )}
 
           {/* Subtítulo */}
           {subtitle && (
-            <h3 className="text-xl md:text-2xl font-semibold text-[#6B5B73]">
-              {subtitle}
-            </h3>
+            <h3 className="text-xl md:text-2xl font-semibold text-[#6B5B73]">{subtitle}</h3>
           )}
 
           {/* Mensagem */}
-          {message && (
-            <p className="text-lg text-[#6B5B73] leading-relaxed">{message}</p>
-          )}
+          {message && <p className="text-lg text-[#6B5B73] leading-relaxed">{message}</p>}
         </div>
 
         {/* Botão Continuar */}

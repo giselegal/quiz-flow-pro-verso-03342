@@ -1,12 +1,7 @@
 import React from "react";
 import { QuizStage, QuizComponentType } from "@/types/quizBuilder";
 import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-  TooltipProvider,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import {
   Eye,
   EyeOff,
@@ -33,9 +28,7 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
     return (
       <div className="border-b bg-white p-3 flex items-center justify-between opacity-50">
         <div className="flex items-center space-x-2">
-          <p className="text-sm text-gray-500">
-            Selecione uma etapa para adicionar componentes
-          </p>
+          <p className="text-sm text-gray-500">Selecione uma etapa para adicionar componentes</p>
         </div>
       </div>
     );
@@ -59,7 +52,7 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
       <div className="flex items-center space-x-2">
         <TooltipProvider>
           {!isPreviewing &&
-            componentTypes.map((component) => (
+            componentTypes.map(component => (
               <Tooltip key={component.type}>
                 <TooltipTrigger asChild>
                   <Button

@@ -21,21 +21,13 @@ export function useFunnelNavigation({
   preventExit = true,
 }: UseFunnelNavigationOptions = {}) {
   // Acesso ao contexto global do funil
-  const {
-    config,
-    currentStepIndex,
-    setCurrentStepIndex,
-    userData,
-    updateUserData,
-    answers,
-  } = useFunnelConfig();
+  const { config, currentStepIndex, setCurrentStepIndex, userData, updateUserData, answers } =
+    useFunnelConfig();
 
   // const router = useRouter(); // Removido para React puro
 
   // Estado local para histórico de navegação
-  const [navigationHistory, setNavigationHistory] = useState<number[]>([
-    initialStep,
-  ]);
+  const [navigationHistory, setNavigationHistory] = useState<number[]>([initialStep]);
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
 
   // Verificar localStorage ao iniciar
@@ -83,8 +75,7 @@ export function useFunnelNavigation({
   useEffect(() => {
     if (preventExit && typeof window !== "undefined") {
       const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-        const message =
-          "Você tem progresso não salvo. Tem certeza que deseja sair?";
+        const message = "Você tem progresso não salvo. Tem certeza que deseja sair?";
         e.returnValue = message;
         return message;
       };
@@ -101,13 +92,13 @@ export function useFunnelNavigation({
   const goToStep = (stepIndex: number) => {
     if (stepIndex >= 0 && stepIndex < config.steps.length) {
       setCurrentStepIndex(stepIndex);
-      setNavigationHistory((prev) => [...prev, stepIndex]);
+      setNavigationHistory(prev => [...prev, stepIndex]);
     }
   };
 
   const goToNextStep = () => {
     if (currentStepIndex < config.steps.length - 1) {
-      setCompletedSteps((prev) => new Set(prev).add(currentStepIndex));
+      setCompletedSteps(prev => new Set(prev).add(currentStepIndex));
       goToStep(currentStepIndex + 1);
     }
   };
@@ -155,10 +146,7 @@ export function useFunnelNavigation({
     isFirstStep: currentStepIndex === 0,
     isLastStep: currentStepIndex === config.steps.length - 1,
     totalSteps: config.steps.length,
-    progress:
-      config.steps.length > 0
-        ? (currentStepIndex + 1) / config.steps.length
-        : 0,
+    progress: config.steps.length > 0 ? (currentStepIndex + 1) / config.steps.length : 0,
   };
 }
 

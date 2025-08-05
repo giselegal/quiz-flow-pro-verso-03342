@@ -49,10 +49,8 @@ export const styleQuizData = {
       stepType: "intro",
       title: "Quiz de Estilo",
       settings: {
-        title:
-          "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
-        subtitle:
-          "Descubra seu estilo predominante e transforme seu guarda-roupa",
+        title: "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
+        subtitle: "Descubra seu estilo predominante e transforme seu guarda-roupa",
         description:
           "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
         buttonText: "Começar agora",
@@ -68,8 +66,7 @@ export const styleQuizData = {
       title: "Como podemos te chamar?",
       settings: {
         title: "Como podemos te chamar?",
-        description:
-          "Para personalizar sua experiência, gostaríamos de saber seu nome:",
+        description: "Para personalizar sua experiência, gostaríamos de saber seu nome:",
         buttonText: "Continuar",
         placeholder: "Digite seu nome aqui",
       },
@@ -106,64 +103,56 @@ export const styleQuizData = {
         {
           id: "q1-natural",
           text: "Conforto, leveza e praticidade no vestir",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
           value: "natural",
           category: "Natural",
         },
         {
           id: "q1-classico",
           text: "Discrição, caimento clássico e sobriedade",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
           value: "classico",
           category: "Clássico",
         },
         {
           id: "q1-contemporaneo",
           text: "Praticidade com um toque de estilo atual",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
           value: "contemporaneo",
           category: "Contemporâneo",
         },
         {
           id: "q1-elegante",
           text: "Elegância refinada, moderna e sem exageros",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
           value: "elegante",
           category: "Elegante",
         },
         {
           id: "q1-romantico",
           text: "Delicadeza em tecidos suaves e fluidos",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
           value: "romantico",
           category: "Romântico",
         },
         {
           id: "q1-sexy",
           text: "Sensualidade com destaque para o corpo",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
           value: "sexy",
           category: "Sexy",
         },
         {
           id: "q1-dramatico",
           text: "Impacto visual com peças estruturadas e assimétricas",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
           value: "dramatico",
           category: "Dramático",
         },
         {
           id: "q1-criativo",
           text: "Mix criativo com formas ousadas e originais",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
           value: "criativo",
           category: "Criativo",
         },
@@ -242,64 +231,56 @@ export const styleQuizData = {
         {
           id: "q3-natural",
           text: "Visual leve, despojado e natural",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
           value: "natural",
           category: "Natural",
         },
         {
           id: "q3-classico",
           text: "Visual clássico e tradicional",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
           value: "classico",
           category: "Clássico",
         },
         {
           id: "q3-contemporaneo",
           text: "Visual casual com toque atual",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
           value: "contemporaneo",
           category: "Contemporâneo",
         },
         {
           id: "q3-elegante",
           text: "Visual refinado e imponente",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
           value: "elegante",
           category: "Elegante",
         },
         {
           id: "q3-romantico",
           text: "Visual romântico, feminino e delicado",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
           value: "romantico",
           category: "Romântico",
         },
         {
           id: "q3-sexy",
           text: "Visual sensual, com saia justa e decote",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
           value: "sexy",
           category: "Sexy",
         },
         {
           id: "q3-dramatico",
           text: "Visual marcante e urbano (jeans + jaqueta)",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
           value: "dramatico",
           category: "Dramático",
         },
         {
           id: "q3-criativo",
           text: "Visual criativo, colorido e ousado",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
           value: "criativo",
           category: "Criativo",
         },
@@ -379,64 +360,56 @@ export const styleQuizData = {
         {
           id: "q5-natural",
           text: "Estampas clean, com poucas informações",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/20_oh44vh.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/20_oh44vh.webp",
           value: "natural",
           category: "Natural",
         },
         {
           id: "q5-classico",
           text: "Estampas clássicas e atemporais",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735368/21_o7wkte.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735368/21_o7wkte.webp",
           value: "classico",
           category: "Clássico",
         },
         {
           id: "q5-contemporaneo",
           text: "Atemporais, mas que tenham uma pegada de atual e moderna",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735369/22_siebw2.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735369/22_siebw2.webp",
           value: "contemporaneo",
           category: "Contemporâneo",
         },
         {
           id: "q5-elegante",
           text: "Estampas clássicas e atemporais, mas sofisticadas",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/23_bdfxrh.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/23_bdfxrh.webp",
           value: "elegante",
           category: "Elegante",
         },
         {
           id: "q5-romantico",
           text: "Estampas florais e/ou delicadas como bolinhas, borboletas e corações",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/24_nptszu.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/24_nptszu.webp",
           value: "romantico",
           category: "Romântico",
         },
         {
           id: "q5-sexy",
           text: "Estampas de animal print, como onça, zebra e cobra",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/25_motk6b.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/25_motk6b.webp",
           value: "sexy",
           category: "Sexy",
         },
         {
           id: "q5-dramatico",
           text: "Estampas geométricas, abstratas e exageradas como grandes poás",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp",
           value: "dramatico",
           category: "Dramático",
         },
         {
           id: "q5-criativo",
           text: "Estampas diferentes do usual, como africanas, xadrez grandes",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp",
           value: "criativo",
           category: "Criativo",
         },
@@ -549,8 +522,7 @@ export const styleQuizData = {
       title: "Guia de Estilo",
       settings: {
         title: "Seu Guia Personalizado",
-        subtitle:
-          "Use este guia completo para aproveitar ao máximo suas características",
+        subtitle: "Use este guia completo para aproveitar ao máximo suas características",
         showDownloadOption: true,
         nextButtonText: "Próximo passo",
         prevButtonText: "Voltar",
@@ -565,8 +537,7 @@ export const styleQuizData = {
       title: "Transição para oferta",
       settings: {
         title: "Leve sua experiência para o próximo nível",
-        subtitle:
-          "Descubra como potencializar seus resultados com nossa solução completa",
+        subtitle: "Descubra como potencializar seus resultados com nossa solução completa",
         buttonText: "Quero conhecer a oferta",
         prevButtonText: "Voltar ao meu resultado",
         benefits: [
@@ -592,8 +563,7 @@ export const styleQuizData = {
         countdownHours: 24,
         offer: {
           name: "Guia de Estilo Completo",
-          description:
-            "Transforme seu guarda-roupa com nosso guia passo a passo",
+          description: "Transforme seu guarda-roupa com nosso guia passo a passo",
           price: "97",
           originalPrice: "297",
           features: [

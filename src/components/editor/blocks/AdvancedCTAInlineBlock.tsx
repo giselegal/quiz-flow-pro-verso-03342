@@ -1,21 +1,21 @@
-import React from 'react';
-import { ArrowRight, Star, Shield } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
+import React from "react";
+import { ArrowRight, Star, Shield } from "lucide-react";
+import type { BlockComponentProps } from "@/types/blocks";
 
 const AdvancedCTAInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onPropertyChange,
-  className = '',
+  className = "",
 }) => {
   const {
-    title = 'Transforme Seu Estilo Hoje!',
-    subtitle = 'Descubra o método que já mudou a vida de mais de 10.000 mulheres',
-    buttonText = 'QUERO TRANSFORMAR MEU ESTILO',
-    price = 'R$ 197',
-    originalPrice = 'R$ 397',
-    features = ['Acesso Imediato', 'Garantia de 30 dias', 'Suporte Exclusivo'],
-    urgencyText = 'Oferta válida apenas hoje!',
+    title = "Transforme Seu Estilo Hoje!",
+    subtitle = "Descubra o método que já mudou a vida de mais de 10.000 mulheres",
+    buttonText = "QUERO TRANSFORMAR MEU ESTILO",
+    price = "R$ 197",
+    originalPrice = "R$ 397",
+    features = ["Acesso Imediato", "Garantia de 30 dias", "Suporte Exclusivo"],
+    urgencyText = "Oferta válida apenas hoje!",
   } = block?.properties || {};
 
   return (
@@ -26,8 +26,8 @@ const AdvancedCTAInlineBlock: React.FC<BlockComponentProps> = ({
         bg-gradient-to-br from-[#B89B7A]/10 to-[#B89B7A]/5
         ${
           isSelected
-            ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10'
-            : 'border-2 border-dashed border-transparent hover:border-[#B89B7A]/40 hover:bg-[#B89B7A]/10/30'
+            ? "border-2 border-[#B89B7A] bg-[#B89B7A]/10"
+            : "border-2 border-dashed border-transparent hover:border-[#B89B7A]/40 hover:bg-[#B89B7A]/10/30"
         }
         ${className}
       `}
@@ -42,7 +42,10 @@ const AdvancedCTAInlineBlock: React.FC<BlockComponentProps> = ({
         {/* Recursos */}
         <div className="flex flex-wrap justify-center gap-4 py-4">
           {features.map((feature: string, index: number) => (
-            <div key={index} className="flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-gray-200">
+            <div
+              key={index}
+              className="flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-gray-200"
+            >
               <Star className="w-4 h-4 text-[#B89B7A]" />
               <span className="text-sm font-medium text-gray-700">{feature}</span>
             </div>

@@ -1,7 +1,7 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { Crown, Star, Quote, Award } from 'lucide-react';
-import type { BlockData } from '@/types/blocks';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { Crown, Star, Quote, Award } from "lucide-react";
+import type { BlockData } from "@/types/blocks";
 
 interface MentorSectionInlineBlockProps {
   block: BlockData;
@@ -25,22 +25,23 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
   className,
 }) => {
   const properties = block.properties || {};
-  const mentorName = properties.mentorName || 'Juliana Estilo';
-  const mentorTitle = properties.mentorTitle || 'Consultora de Imagem e Estilo';
-  const mentorImage = properties.mentorImage || 'https://placehold.co/200x200/cccccc/333333?text=Mentora';
+  const mentorName = properties.mentorName || "Juliana Estilo";
+  const mentorTitle = properties.mentorTitle || "Consultora de Imagem e Estilo";
+  const mentorImage =
+    properties.mentorImage || "https://placehold.co/200x200/cccccc/333333?text=Mentora";
   const mentorBio =
     properties.mentorBio ||
-    'Com mais de 10 anos de experiência, já transformei a vida de mais de 5.000 mulheres através da consultoria de imagem personalizada.';
+    "Com mais de 10 anos de experiência, já transformei a vida de mais de 5.000 mulheres através da consultoria de imagem personalizada.";
   const achievements = properties.achievements || [
-    '+ 5.000 clientes transformadas',
-    '+ 10 anos de experiência',
-    'Certificada internacionalmente',
-    'Featured na Vogue e Marie Claire',
+    "+ 5.000 clientes transformadas",
+    "+ 10 anos de experiência",
+    "Certificada internacionalmente",
+    "Featured na Vogue e Marie Claire",
   ];
   const credentials = properties.credentials || [
-    'Certificação Internacional em Personal Styling',
-    'Pós-graduação em Consultoria de Imagem',
-    'Mentora de outros consultores',
+    "Certificação Internacional em Personal Styling",
+    "Pós-graduação em Consultoria de Imagem",
+    "Mentora de outros consultores",
   ];
 
   const handleEdit = (field: string, value: any) => {
@@ -52,11 +53,11 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
   return (
     <div
       className={cn(
-        'w-full p-4 md:p-6 transition-all duration-200',
-        'bg-gradient-to-br from-purple-50 to-indigo-50 rounded-lg',
-        isSelected && 'ring-2 ring-purple-400 bg-[#B89B7A]/10',
-        !disabled && 'cursor-pointer hover:bg-[#B89B7A]/10/80',
-        className,
+        "w-full p-4 md:p-6 transition-all duration-200",
+        "bg-gradient-to-br from-purple-50 to-indigo-50 rounded-lg",
+        isSelected && "ring-2 ring-purple-400 bg-[#B89B7A]/10",
+        !disabled && "cursor-pointer hover:bg-[#B89B7A]/10/80",
+        className
       )}
       onClick={onClick}
     >

@@ -1,8 +1,8 @@
-import React from 'react';
-import { cn } from '../../../../lib/utils';
+import React from "react";
+import { cn } from "../../../../lib/utils";
 
 interface DividerInlineBlockProps {
-  style?: 'solid' | 'dashed' | 'dotted';
+  style?: "solid" | "dashed" | "dotted";
   thickness?: number;
   color?: string;
   marginY?: number;
@@ -11,16 +11,16 @@ interface DividerInlineBlockProps {
 }
 
 const DividerInlineBlock: React.FC<DividerInlineBlockProps> = ({
-  style = 'solid',
+  style = "solid",
   thickness = 1,
-  color = '#e2e8f0',
+  color = "#e2e8f0",
   marginY = 20,
   className,
   ...props
 }) => {
   return (
     <div
-      className={cn('w-full flex items-center justify-center', className)}
+      className={cn("w-full flex items-center justify-center", className)}
       style={{ marginTop: `${marginY}px`, marginBottom: `${marginY}px` }}
       {...props}
     >

@@ -98,12 +98,7 @@ import { getOptimizedContainerClasses } from "@/config/containerConfig";
 #### **Uso Padrão:**
 
 ```typescript
-const containerClasses = getOptimizedContainerClasses(
-  deviceView,
-  "tight",
-  "full",
-  className,
-);
+const containerClasses = getOptimizedContainerClasses(deviceView, "tight", "full", className);
 ```
 
 ---

@@ -33,7 +33,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
           <div
             className={cn(
               "animate-spin rounded-full border-2 border-primary border-t-transparent",
-              sizeClasses[size],
+              sizeClasses[size]
             )}
           />
         );
@@ -47,11 +47,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
                 key={i}
                 className={cn(
                   "rounded-full bg-primary animate-pulse",
-                  size === "sm"
-                    ? "w-1 h-1"
-                    : size === "md"
-                      ? "w-2 h-2"
-                      : "w-3 h-3",
+                  size === "sm" ? "w-1 h-1" : size === "md" ? "w-2 h-2" : "w-3 h-3"
                 )}
                 style={{ animationDelay: `${i * 0.2}s` }}
               />
@@ -59,30 +55,16 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
           </div>
         );
       case "pulse":
-        return (
-          <div
-            className={cn(
-              "rounded bg-primary animate-pulse",
-              sizeClasses[size],
-            )}
-          />
-        );
+        return <div className={cn("rounded bg-primary animate-pulse", sizeClasses[size])} />;
       default:
         return null;
     }
   };
 
   return (
-    <div
-      className={cn(
-        "flex flex-col items-center justify-center space-y-2",
-        className,
-      )}
-    >
+    <div className={cn("flex flex-col items-center justify-center space-y-2", className)}>
       {renderLoadingType()}
-      {message && (
-        <p className="text-sm text-muted-foreground text-center">{message}</p>
-      )}
+      {message && <p className="text-sm text-muted-foreground text-center">{message}</p>}
     </div>
   );
 };
@@ -114,9 +96,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
     )}
     <h3 className="text-lg font-semibold text-foreground">{title}</h3>
     {description && (
-      <p className="mt-2 text-sm text-muted-foreground max-w-md mx-auto">
-        {description}
-      </p>
+      <p className="mt-2 text-sm text-muted-foreground max-w-md mx-auto">{description}</p>
     )}
     {action && (
       <Button onClick={action.onClick} className="mt-6" variant="default">
@@ -159,19 +139,15 @@ export const UnifiedCard: React.FC<UnifiedCardProps> = ({
       className={cn(
         "p-6 cursor-pointer transition-all hover:shadow-md",
         onClick && "hover:scale-[1.02]",
-        className,
+        className
       )}
       onClick={onClick}
     >
       <div className="flex justify-between items-start mb-4">
         <div className="flex-1">
-          <h3 className="font-semibold text-foreground line-clamp-2">
-            {title}
-          </h3>
+          <h3 className="font-semibold text-foreground line-clamp-2">{title}</h3>
           {description && (
-            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-              {description}
-            </p>
+            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{description}</p>
           )}
         </div>
         {status && <Badge className={statusColors[status]}>{status}</Badge>}
@@ -181,20 +157,14 @@ export const UnifiedCard: React.FC<UnifiedCardProps> = ({
         <div className="grid grid-cols-2 gap-4 mb-4">
           {stats.map((stat, index) => (
             <div key={index} className="text-center">
-              <div className="text-2xl font-bold text-foreground">
-                {stat.value}
-              </div>
+              <div className="text-2xl font-bold text-foreground">{stat.value}</div>
               <div className="text-xs text-muted-foreground">{stat.label}</div>
             </div>
           ))}
         </div>
       )}
 
-      {actions && (
-        <div className="flex justify-end space-x-2 pt-4 border-t">
-          {actions}
-        </div>
-      )}
+      {actions && <div className="flex justify-end space-x-2 pt-4 border-t">{actions}</div>}
     </Card>
   );
 };
@@ -219,9 +189,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
     <div className="flex justify-between items-start mb-8">
       <div>
         <h1 className="text-3xl font-bold text-foreground">{title}</h1>
-        {description && (
-          <p className="text-muted-foreground mt-2">{description}</p>
-        )}
+        {description && <p className="text-muted-foreground mt-2">{description}</p>}
       </div>
       {actions && <div className="flex space-x-2">{actions}</div>}
     </div>
@@ -245,12 +213,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
 }) => (
   <div className={cn("text-center py-12 px-4", className)}>
     <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center text-destructive">
-      <svg
-        className="h-6 w-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
+      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -260,9 +223,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
       </svg>
     </div>
     <h3 className="text-lg font-semibold text-foreground">{title}</h3>
-    <p className="mt-2 text-sm text-muted-foreground max-w-md mx-auto">
-      {message}
-    </p>
+    <p className="mt-2 text-sm text-muted-foreground max-w-md mx-auto">{message}</p>
     {onRetry && (
       <Button onClick={onRetry} variant="outline" className="mt-6">
         Tentar novamente

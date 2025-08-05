@@ -35,9 +35,7 @@ import {
  * />
  */
 
-export interface SalesOfferProps
-  extends BlockComponentProps,
-    InteractionCallbacks {
+export interface SalesOfferProps extends BlockComponentProps, InteractionCallbacks {
   // Conteúdo da oferta
   title: string;
   subtitle?: string;
@@ -74,7 +72,7 @@ export interface SalesOfferProps
   onPurchase?: () => void;
 }
 
-export const SalesOffer: React.FC<SalesOfferProps> = (props) => {
+export const SalesOffer: React.FC<SalesOfferProps> = props => {
   const {
     // Conteúdo
     title,
@@ -127,8 +125,7 @@ export const SalesOffer: React.FC<SalesOfferProps> = (props) => {
 
   // Classes de estilo do card
   const cardStyleClasses = {
-    elegant:
-      "bg-gradient-to-br from-white to-gray-50 border border-gray-200 shadow-xl",
+    elegant: "bg-gradient-to-br from-white to-gray-50 border border-gray-200 shadow-xl",
     bold: "bg-gradient-to-br from-[#432818] to-[#5D3A26] text-white shadow-2xl",
     minimal: "bg-white border border-gray-100 shadow-lg",
   };
@@ -137,19 +134,15 @@ export const SalesOffer: React.FC<SalesOfferProps> = (props) => {
     deviceView || "desktop",
     "tight",
     "full",
-    className,
+    className
   );
 
   // Calcular desconto em porcentagem
   const calculateDiscountPercent = () => {
     if (!priceConfig.originalPrice || !priceConfig.currentPrice) return 0;
 
-    const original = parseFloat(
-      priceConfig.originalPrice.replace(/[^\d,]/g, "").replace(",", "."),
-    );
-    const current = parseFloat(
-      priceConfig.currentPrice.replace(/[^\d,]/g, "").replace(",", "."),
-    );
+    const original = parseFloat(priceConfig.originalPrice.replace(/[^\d,]/g, "").replace(",", "."));
+    const current = parseFloat(priceConfig.currentPrice.replace(/[^\d,]/g, "").replace(",", "."));
 
     return Math.round(((original - current) / original) * 100);
   };
@@ -161,27 +154,15 @@ export const SalesOffer: React.FC<SalesOfferProps> = (props) => {
       <div className="max-w-full mx-auto w-full">
         {/* Header da Oferta */}
         <div className="mb-8 text-center">
-          <h1 className="text-3xl md:text-5xl font-bold text-[#432818] mb-4">
-            {title}
-          </h1>
+          <h1 className="text-3xl md:text-5xl font-bold text-[#432818] mb-4">{title}</h1>
 
-          {subtitle && (
-            <h2 className="text-xl md:text-2xl text-gray-600 mb-6">
-              {subtitle}
-            </h2>
-          )}
+          {subtitle && <h2 className="text-xl md:text-2xl text-gray-600 mb-6">{subtitle}</h2>}
 
-          {description && (
-            <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-              {description}
-            </p>
-          )}
+          {description && <p className="text-lg text-gray-700 max-w-2xl mx-auto">{description}</p>}
         </div>
 
         {/* Card Principal da Oferta */}
-        <Card
-          className={`overflow-hidden ${cardStyleClasses[cardStyle]} max-w-2xl mx-auto`}
-        >
+        <Card className={`overflow-hidden ${cardStyleClasses[cardStyle]} max-w-2xl mx-auto`}>
           <CardContent className="p-8 md:p-12">
             {/* Badge de Desconto */}
             {highlightDiscount && priceConfig.discount && (
@@ -213,8 +194,7 @@ export const SalesOffer: React.FC<SalesOfferProps> = (props) => {
                 {priceConfig.installments && (
                   <div className="mt-2">
                     <span className="text-lg text-gray-600">
-                      ou {priceConfig.installments.quantity}x de{" "}
-                      {priceConfig.installments.value}
+                      ou {priceConfig.installments.quantity}x de {priceConfig.installments.value}
                     </span>
                   </div>
                 )}
@@ -231,9 +211,7 @@ export const SalesOffer: React.FC<SalesOfferProps> = (props) => {
             {/* Recursos Inclusos */}
             {showFeatures && features.length > 0 && (
               <div className="mb-8">
-                <h3 className="text-xl font-semibold mb-4 text-center">
-                  O que está incluído:
-                </h3>
+                <h3 className="text-xl font-semibold mb-4 text-center">O que está incluído:</h3>
                 <div className="space-y-3">
                   {features.map((feature, index) => (
                     <div key={index} className="flex items-center space-x-3">
@@ -292,29 +270,21 @@ export const SalesOffer: React.FC<SalesOfferProps> = (props) => {
                 {buttonText}
               </Button>
 
-              {buttonSubtext && (
-                <p className="text-sm text-gray-500 mt-3">{buttonSubtext}</p>
-              )}
+              {buttonSubtext && <p className="text-sm text-gray-500 mt-3">{buttonSubtext}</p>}
             </div>
 
             {/* Garantia */}
             {showGuarantee && (
               <div className="mt-8 text-center">
                 <div className="inline-flex items-center space-x-2 px-4 py-2 bg-green-50 border border-green-200 rounded-lg">
-                  <svg
-                    className="w-5 h-5 text-green-600"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
+                  <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fillRule="evenodd"
                       d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="text-green-800 font-medium">
-                    {guaranteeText}
-                  </span>
+                  <span className="text-green-800 font-medium">{guaranteeText}</span>
                 </div>
               </div>
             )}

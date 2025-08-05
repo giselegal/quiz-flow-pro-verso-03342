@@ -61,7 +61,7 @@ export interface SocialProofProps extends BlockComponentProps {
   accentColor?: string;
 }
 
-export const SocialProof: React.FC<SocialProofProps> = (props) => {
+export const SocialProof: React.FC<SocialProofProps> = props => {
   const {
     // Conteúdo
     title,
@@ -182,7 +182,7 @@ export const SocialProof: React.FC<SocialProofProps> = (props) => {
     deviceView || "desktop",
     "tight",
     "full",
-    className,
+    className
   );
 
   return (
@@ -195,21 +195,13 @@ export const SocialProof: React.FC<SocialProofProps> = (props) => {
         {/* Header */}
         {(title || subtitle || description) && (
           <div className={`mb-12 ${alignmentClasses[alignment]}`}>
-            {title && (
-              <h2 className="text-2xl md:text-4xl font-bold mb-4">{title}</h2>
-            )}
+            {title && <h2 className="text-2xl md:text-4xl font-bold mb-4">{title}</h2>}
 
             {subtitle && (
-              <h3 className="text-xl md:text-2xl font-medium mb-4 opacity-90">
-                {subtitle}
-              </h3>
+              <h3 className="text-xl md:text-2xl font-medium mb-4 opacity-90">{subtitle}</h3>
             )}
 
-            {description && (
-              <p className="text-lg opacity-80 max-w-2xl mx-auto">
-                {description}
-              </p>
-            )}
+            {description && <p className="text-lg opacity-80 max-w-2xl mx-auto">{description}</p>}
           </div>
         )}
 
@@ -221,15 +213,10 @@ export const SocialProof: React.FC<SocialProofProps> = (props) => {
               className="text-center"
               data-testid={`stat-${index}`}
             >
-              <div
-                className="text-4xl md:text-5xl font-bold mb-2"
-                style={{ color: accentColor }}
-              >
+              <div className="text-4xl md:text-5xl font-bold mb-2" style={{ color: accentColor }}>
                 {stat.number}
               </div>
-              <div className="text-lg md:text-xl font-medium opacity-80">
-                {stat.label}
-              </div>
+              <div className="text-lg md:text-xl font-medium opacity-80">{stat.label}</div>
               {stat.icon && <div className="mt-2 text-2xl">{stat.icon}</div>}
             </div>
           ))}
@@ -240,16 +227,12 @@ export const SocialProof: React.FC<SocialProofProps> = (props) => {
           <div className="mb-12 text-center">
             <div className="inline-flex flex-col items-center space-y-2 px-6 py-4 bg-white bg-opacity-80 rounded-lg shadow-lg">
               {renderStars(averageRating)}
-              <div className="text-lg font-semibold">
-                {averageRating} de 5 estrelas
-              </div>
+              <div className="text-lg font-semibold">{averageRating} de 5 estrelas</div>
               <div className="text-sm opacity-70">
                 Baseado em {totalReviews.toLocaleString()} avaliações
               </div>
               {reviewPlatforms.length > 0 && (
-                <div className="text-xs opacity-60">
-                  {reviewPlatforms.join(" • ")}
-                </div>
+                <div className="text-xs opacity-60">{reviewPlatforms.join(" • ")}</div>
               )}
             </div>
           </div>
@@ -258,9 +241,7 @@ export const SocialProof: React.FC<SocialProofProps> = (props) => {
         {/* Logos de Empresas/Parceiros */}
         {showLogos && logoUrls.length > 0 && (
           <div className="mb-12">
-            <p className="text-center text-sm opacity-70 mb-6">
-              Confiam em nós:
-            </p>
+            <p className="text-center text-sm opacity-70 mb-6">Confiam em nós:</p>
             <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
               {logoUrls.map((logoUrl, index) => (
                 <img

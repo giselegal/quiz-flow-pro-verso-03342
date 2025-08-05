@@ -59,13 +59,10 @@ class ErrorBoundary extends Component<Props, State> {
                 </svg>
               </div>
 
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Ops! Algo deu errado
-              </h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Ops! Algo deu errado</h3>
 
               <p className="text-sm text-gray-500 mb-4">
-                Ocorreu um erro inesperado. Por favor, recarregue a página ou
-                tente novamente.
+                Ocorreu um erro inesperado. Por favor, recarregue a página ou tente novamente.
               </p>
 
               <div className="space-y-3">
@@ -98,9 +95,7 @@ class ErrorBoundary extends Component<Props, State> {
                   <div className="bg-gray-100 p-3 rounded text-xs text-gray-800 overflow-auto max-h-40">
                     <pre>{this.state.error.toString()}</pre>
                     {this.state.errorInfo && (
-                      <pre className="mt-2">
-                        {this.state.errorInfo.componentStack}
-                      </pre>
+                      <pre className="mt-2">{this.state.errorInfo.componentStack}</pre>
                     )}
                   </div>
                 </details>

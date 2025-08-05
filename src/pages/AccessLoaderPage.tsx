@@ -12,11 +12,7 @@ const AccessLoaderPage: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      <FileLoadingScreen
-        fileUrl="/admin"
-        onFileLoaded={handleFileLoaded}
-        onError={handleError}
-      />
+      <FileLoadingScreen fileUrl="/admin" onFileLoaded={handleFileLoaded} onError={handleError} />
     </div>
   );
 };

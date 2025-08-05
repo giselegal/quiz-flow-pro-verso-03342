@@ -7,9 +7,7 @@ export const BuildInfo: React.FC = () => {
   useEffect(() => {
     // Only show in development mode or when triggered
     const isDev = process.env.NODE_ENV === "development";
-    const hasDebugParam = new URLSearchParams(window.location.search).has(
-      "debug",
-    );
+    const hasDebugParam = new URLSearchParams(window.location.search).has("debug");
     setIsVisible(isDev || hasDebugParam);
   }, []);
 
@@ -17,8 +15,7 @@ export const BuildInfo: React.FC = () => {
 
   return (
     <div className="fixed bottom-1 right-1 text-xs text-gray-500 bg-white/80 p-1 rounded">
-      v{VERSION.buildNumber} •{" "}
-      {new Date(VERSION.lastUpdated).toLocaleDateString()}
+      v{VERSION.buildNumber} • {new Date(VERSION.lastUpdated).toLocaleDateString()}
     </div>
   );
 };

@@ -119,9 +119,9 @@ export const COMPONENT_REGISTRY: ComponentDefinition[] = [
 // Função para filtrar componentes baseado nas permissões do usuário
 export const getAvailableComponents = (
   userFeatures: string[] = [],
-  hasPremiumFeatures: boolean = false,
+  hasPremiumFeatures: boolean = false
 ) => {
-  return COMPONENT_REGISTRY.filter((component) => {
+  return COMPONENT_REGISTRY.filter(component => {
     // Se não é premium, sempre disponível
     if (!component.isPremium) return true;
 
@@ -130,8 +130,7 @@ export const getAvailableComponents = (
       // Verificar se tem a feature específica
       if (component.requiredFeature) {
         return (
-          userFeatures.includes(component.requiredFeature) ||
-          userFeatures.includes("all-features")
+          userFeatures.includes(component.requiredFeature) || userFeatures.includes("all-features")
         );
       }
       return true;

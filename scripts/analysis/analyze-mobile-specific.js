@@ -5,8 +5,7 @@ import path from "path";
 
 console.log("📱 ANÁLISE MOBILE - StyleResultCardBlock & ResultCTABlock\n");
 
-const componentsDir =
-  "/workspaces/quiz-quest-challenge-verse/client/src/components/editor/blocks";
+const componentsDir = "/workspaces/quiz-quest-challenge-verse/client/src/components/editor/blocks";
 
 // Componentes a analisar
 const componentsToAnalyze = ["StyleResultCardBlock.tsx", "ResultCTABlock.tsx"];
@@ -76,21 +75,16 @@ function analyzeMobileResponsiveness(filePath, componentName) {
   console.log("==================================================");
 
   // Verificar problemas mobile
-  mobileIssues.forEach((issue) => {
+  mobileIssues.forEach(issue => {
     const matches = content.match(issue.pattern) || [];
     if (matches.length > 0) {
-      const penalty =
-        issue.severity === "critical"
-          ? 25
-          : issue.severity === "high"
-            ? 15
-            : 10;
+      const penalty = issue.severity === "critical" ? 25 : issue.severity === "high" ? 15 : 10;
       score -= penalty * matches.length;
       issues.push(`${issue.description}: ${matches.length} ocorrência(s)`);
 
       console.log(`❌ ${issue.description}`);
       console.log(
-        `   Ocorrências: ${matches.slice(0, 3).join(", ")}${matches.length > 3 ? "..." : ""}`,
+        `   Ocorrências: ${matches.slice(0, 3).join(", ")}${matches.length > 3 ? "..." : ""}`
       );
       console.log(`   Penalidade: -${penalty * matches.length} pontos`);
     }
@@ -98,7 +92,7 @@ function analyzeMobileResponsiveness(filePath, componentName) {
 
   // Verificar padrões positivos
   let positiveScore = 0;
-  mobilePositivePatterns.forEach((pattern) => {
+  mobilePositivePatterns.forEach(pattern => {
     const matches = content.match(pattern) || [];
     positiveScore += matches.length;
   });
@@ -128,11 +122,7 @@ function analyzeMobileResponsiveness(filePath, componentName) {
   }
 
   // Verificar padding excessivo
-  if (
-    content.includes("p-8") ||
-    content.includes("py-8") ||
-    content.includes("px-8")
-  ) {
+  if (content.includes("p-8") || content.includes("py-8") || content.includes("px-8")) {
     console.log(`🟡 BAIXO: Padding grande pode ser excessivo no mobile`);
     console.log(`   💡 Recomendação: p-4 md:p-8`);
   }
@@ -149,23 +139,14 @@ function analyzeMobileResponsiveness(filePath, componentName) {
 
   const responsiveMatches = content.match(/(?:sm|md|lg|xl):/g) || [];
   if (responsiveMatches.length > 0) {
-    console.log(
-      `   ✓ Breakpoints responsivos: ${responsiveMatches.length} encontrados`,
-    );
+    console.log(`   ✓ Breakpoints responsivos: ${responsiveMatches.length} encontrados`);
   }
 
   console.log(`\n🎯 SCORE FINAL: ${score}/100`);
 
-  const emoji =
-    score >= 80 ? "🟢" : score >= 60 ? "🟡" : score >= 40 ? "🟠" : "🔴";
+  const emoji = score >= 80 ? "🟢" : score >= 60 ? "🟡" : score >= 40 ? "🟠" : "🔴";
   const status =
-    score >= 80
-      ? "EXCELENTE"
-      : score >= 60
-        ? "BOM"
-        : score >= 40
-          ? "REGULAR"
-          : "CRÍTICO";
+    score >= 80 ? "EXCELENTE" : score >= 60 ? "BOM" : score >= 40 ? "REGULAR" : "CRÍTICO";
 
   console.log(`${emoji} Status: ${status}`);
   console.log("");
@@ -183,7 +164,7 @@ console.log("🎯 INICIANDO ANÁLISE MOBILE...\n");
 
 const results = [];
 
-componentsToAnalyze.forEach((component) => {
+componentsToAnalyze.forEach(component => {
   const filePath = path.join(componentsDir, component);
   const componentName = component.replace(".tsx", "");
   const result = analyzeMobileResponsiveness(filePath, componentName);
@@ -196,9 +177,9 @@ console.log("==================================================");
 const avgScore = results.reduce((sum, r) => sum + r.score, 0) / results.length;
 console.log(`📊 Score médio: ${Math.round(avgScore)}/100`);
 
-const criticalComponents = results.filter((r) => r.score < 40);
-const needsImprovement = results.filter((r) => r.score >= 40 && r.score < 80);
-const goodComponents = results.filter((r) => r.score >= 80);
+const criticalComponents = results.filter(r => r.score < 40);
+const needsImprovement = results.filter(r => r.score >= 40 && r.score < 80);
+const goodComponents = results.filter(r => r.score >= 80);
 
 console.log(`🔴 Componentes críticos: ${criticalComponents.length}`);
 console.log(`🟠 Precisam melhorar: ${needsImprovement.length}`);
@@ -209,11 +190,9 @@ console.log("==================================================");
 
 if (criticalComponents.length > 0 || needsImprovement.length > 0) {
   console.log("1. 📱 Para StyleResultCardBlock:");
+  console.log("   • Mudar md:grid-cols-3 para grid-cols-1 md:grid-cols-2 lg:grid-cols-3");
   console.log(
-    "   • Mudar md:grid-cols-3 para grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
-  );
-  console.log(
-    "   • Adicionar breakpoints para imagens: max-w-[120px] sm:max-w-[150px] md:max-w-[200px]",
+    "   • Adicionar breakpoints para imagens: max-w-[120px] sm:max-w-[150px] md:max-w-[200px]"
   );
   console.log("   • Responsividade de padding: p-4 md:p-6");
   console.log("   • Texto responsivo: text-xl md:text-2xl");

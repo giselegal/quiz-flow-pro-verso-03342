@@ -6,7 +6,7 @@ import { getDefaultContentForType } from "@/utils/editorDefaults";
 export const useEditorActions = (
   blocks: EditorBlock[],
   onBlocksChange: (blocks: EditorBlock[]) => void,
-  addToHistory: (blocks: EditorBlock[]) => void,
+  addToHistory: (blocks: EditorBlock[]) => void
 ) => {
   const { toast } = useToast();
 
@@ -25,33 +25,31 @@ export const useEditorActions = (
       onBlocksChange(newBlocks);
       addToHistory(newBlocks);
     },
-    [blocks, onBlocksChange, addToHistory],
+    [blocks, onBlocksChange, addToHistory]
   );
 
   const handleUpdateBlock = useCallback(
     (id: string, content: Partial<EditableContent>) => {
-      const newBlocks = blocks.map((block) =>
-        block.id === id
-          ? { ...block, content: { ...block.content, ...content } }
-          : block,
+      const newBlocks = blocks.map(block =>
+        block.id === id ? { ...block, content: { ...block.content, ...content } } : block
       );
 
       onBlocksChange(newBlocks);
       addToHistory(newBlocks);
     },
-    [blocks, onBlocksChange, addToHistory],
+    [blocks, onBlocksChange, addToHistory]
   );
 
   const handleDeleteBlock = useCallback(
     (id: string) => {
       const newBlocks = blocks
-        .filter((block) => block.id !== id)
+        .filter(block => block.id !== id)
         .map((block, index) => ({ ...block, order: index }));
 
       onBlocksChange(newBlocks);
       addToHistory(newBlocks);
     },
-    [blocks, onBlocksChange, addToHistory],
+    [blocks, onBlocksChange, addToHistory]
   );
 
   const handleSave = useCallback(() => {

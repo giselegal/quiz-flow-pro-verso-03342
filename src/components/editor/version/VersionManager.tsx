@@ -11,15 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  History,
-  Clock,
-  User,
-  RotateCcw,
-  Save,
-  FileText,
-  GitBranch,
-} from "lucide-react";
+import { History, Clock, User, RotateCcw, Save, FileText, GitBranch } from "lucide-react";
 import { type FunnelVersion } from "@/services/schemaDrivenFunnelService";
 
 interface VersionManagerProps {
@@ -92,8 +84,8 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
             <span>Histórico de Versões</span>
           </DialogTitle>
           <DialogDescription>
-            Visualize e restaure versões anteriores do seu funil. As versões são
-            salvas automaticamente conforme você edita.
+            Visualize e restaure versões anteriores do seu funil. As versões são salvas
+            automaticamente conforme você edita.
           </DialogDescription>
         </DialogHeader>
 
@@ -119,7 +111,7 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
                   <div>
                     <p className="text-sm font-medium">Auto-saves</p>
                     <p className="text-2xl font-bold">
-                      {versions.filter((v) => v.isAutoSave).length}
+                      {versions.filter(v => v.isAutoSave).length}
                     </p>
                   </div>
                 </div>
@@ -133,7 +125,7 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
                   <div>
                     <p className="text-sm font-medium">Manuais</p>
                     <p className="text-2xl font-bold">
-                      {versions.filter((v) => !v.isAutoSave).length}
+                      {versions.filter(v => !v.isAutoSave).length}
                     </p>
                   </div>
                 </div>
@@ -154,14 +146,13 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
                       <History className="w-8 h-8 mx-auto mb-2 opacity-50" />
                       <p>Nenhuma versão encontrada</p>
                       <p className="text-sm">
-                        As versões serão criadas automaticamente conforme você
-                        edita
+                        As versões serão criadas automaticamente conforme você edita
                       </p>
                     </div>
                   ) : (
                     versions
                       .sort((a, b) => b.version - a.version)
-                      .map((version) => (
+                      .map(version => (
                         <div
                           key={version.id}
                           className={`
@@ -180,21 +171,14 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
                               <div className="flex items-center space-x-2 mb-2">
                                 <Badge
                                   variant={
-                                    currentVersion === version.version
-                                      ? "default"
-                                      : "outline"
+                                    currentVersion === version.version ? "default" : "outline"
                                   }
                                 >
                                   v{version.version}
-                                  {currentVersion === version.version &&
-                                    " (atual)"}
+                                  {currentVersion === version.version && " (atual)"}
                                 </Badge>
 
-                                <Badge
-                                  variant={
-                                    version.isAutoSave ? "secondary" : "outline"
-                                  }
-                                >
+                                <Badge variant={version.isAutoSave ? "secondary" : "outline"}>
                                   {version.isAutoSave ? "Auto-save" : "Manual"}
                                 </Badge>
                               </div>
@@ -209,28 +193,22 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
                                   <span>{formatDate(version.createdAt)}</span>
                                 </div>
                                 <span>•</span>
-                                <span>
-                                  {getTimeDifference(version.createdAt)}
-                                </span>
+                                <span>{getTimeDifference(version.createdAt)}</span>
                               </div>
 
                               {/* Informações da versão */}
                               <div className="mt-2 text-xs text-gray-600">
                                 <span>
                                   {version.data.pages.length} página
-                                  {version.data.pages.length !== 1
-                                    ? "s"
-                                    : ""} •{" "}
+                                  {version.data.pages.length !== 1 ? "s" : ""} •{" "}
                                   {version.data.pages.reduce(
-                                    (total: number, page: any) =>
-                                      total + page.blocks.length,
-                                    0,
+                                    (total: number, page: any) => total + page.blocks.length,
+                                    0
                                   )}{" "}
                                   bloco
                                   {version.data.pages.reduce(
-                                    (total: number, page: any) =>
-                                      total + page.blocks.length,
-                                    0,
+                                    (total: number, page: any) => total + page.blocks.length,
+                                    0
                                   ) !== 1
                                     ? "s"
                                     : ""}
@@ -242,7 +220,7 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
                               currentVersion !== version.version && (
                                 <Button
                                   size="sm"
-                                  onClick={(e) => {
+                                  onClick={e => {
                                     e.stopPropagation();
                                     handleRestore();
                                   }}
@@ -263,8 +241,7 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
 
           {/* Ações */}
           {selectedVersion &&
-            currentVersion !==
-              versions.find((v) => v.id === selectedVersion)?.version && (
+            currentVersion !== versions.find(v => v.id === selectedVersion)?.version && (
               <div className="flex justify-between items-center p-4 bg-stone-50 border border-yellow-200 rounded-lg">
                 <div className="flex items-center space-x-2">
                   <RotateCcw className="w-4 h-4 text-stone-600" />
@@ -273,11 +250,7 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
                   </span>
                 </div>
                 <div className="space-x-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => setSelectedVersion(null)}
-                  >
+                  <Button size="sm" variant="outline" onClick={() => setSelectedVersion(null)}>
                     Cancelar
                   </Button>
                   <Button

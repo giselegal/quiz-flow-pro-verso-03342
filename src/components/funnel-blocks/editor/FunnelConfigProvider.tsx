@@ -57,9 +57,7 @@ export const FunnelConfigProvider: React.FC<{
   children: ReactNode;
   initialConfig?: FunnelConfig;
 }> = ({ children, initialConfig }) => {
-  const [config, setConfig] = useState<FunnelConfig>(
-    initialConfig || defaultConfig,
-  );
+  const [config, setConfig] = useState<FunnelConfig>(initialConfig || defaultConfig);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [userData, setUserData] = useState<Record<string, any>>({});
   const [answers, setAnswers] = useState<Record<string, any>>({});
@@ -67,16 +65,14 @@ export const FunnelConfigProvider: React.FC<{
 
   // Atualizar configuração
   const updateConfig = (newConfig: Partial<FunnelConfig>) => {
-    setConfig((current) => ({ ...current, ...newConfig }));
+    setConfig(current => ({ ...current, ...newConfig }));
   };
 
   // Atualizar uma etapa específica
   const updateStep = (stepId: string, updates: Partial<FunnelStepConfig>) => {
-    setConfig((current) => ({
+    setConfig(current => ({
       ...current,
-      steps: current.steps.map((step) =>
-        step.id === stepId ? { ...step, ...updates } : step,
-      ),
+      steps: current.steps.map(step => (step.id === stepId ? { ...step, ...updates } : step)),
     }));
   };
 
@@ -95,12 +91,12 @@ export const FunnelConfigProvider: React.FC<{
 
   // Atualizar dados do usuário
   const updateUserData = (data: Record<string, any>) => {
-    setUserData((current) => ({ ...current, ...data }));
+    setUserData(current => ({ ...current, ...data }));
   };
 
   // Atualizar resposta
   const updateAnswer = (questionId: string, answer: any) => {
-    setAnswers((current) => ({ ...current, [questionId]: answer }));
+    setAnswers(current => ({ ...current, [questionId]: answer }));
   };
 
   return (

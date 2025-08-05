@@ -52,10 +52,7 @@ export const addToCache = (url: string, metadata: any): ImageCacheEntry => {
   return cacheEntry;
 };
 
-export const updateImageCache = (
-  url: string,
-  updates: Partial<ImageCacheEntry>,
-): void => {
+export const updateImageCache = (url: string, updates: Partial<ImageCacheEntry>): void => {
   try {
     const cache = getImageCache();
     cache[url] = { ...cache[url], ...updates };
@@ -67,7 +64,7 @@ export const updateImageCache = (
 
 export const hasImageWithStatus = (
   url: string,
-  status: "loading" | "loaded" | "error",
+  status: "loading" | "loaded" | "error"
 ): boolean => {
   const entry = getImageFromCache(url);
   return entry?.loadStatus === status || false;

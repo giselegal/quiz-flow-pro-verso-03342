@@ -35,9 +35,7 @@ const InlineTextEditor: React.FC<InlineTextEditorProps> = ({
     }
   }, [isEditing]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setText(e.target.value);
     onChange?.(e.target.value);
   };
@@ -79,7 +77,7 @@ const InlineTextEditor: React.FC<InlineTextEditorProps> = ({
             className={cn(
               "w-full cursor-text whitespace-pre-wrap",
               !text && "text-gray-400",
-              className,
+              className
             )}
           >
             {text || placeholder}
@@ -105,11 +103,7 @@ const InlineTextEditor: React.FC<InlineTextEditorProps> = ({
       ) : (
         <div
           onClick={handleClick}
-          className={cn(
-            "w-full cursor-text",
-            !text && "text-gray-400",
-            className,
-          )}
+          className={cn("w-full cursor-text", !text && "text-gray-400", className)}
         >
           {text || placeholder}
         </div>

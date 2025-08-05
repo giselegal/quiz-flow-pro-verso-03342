@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  safeGetBlockProperties,
-  logBlockDebug,
-  isValidBlock,
-} from "@/utils/blockUtils";
+import { safeGetBlockProperties, logBlockDebug, isValidBlock } from "@/utils/blockUtils";
 
 interface QuestionBlockProps {
   question: string;
@@ -39,9 +35,7 @@ const DynamicBlockRenderer: React.FC<{ block: any }> = ({ block }) => {
   if (!isValidBlock(block)) {
     console.warn("⚠️ Invalid block received:", block);
     return (
-      <div className="p-4 bg-red-50 border border-red-200 rounded text-red-700">
-        Block inválido
-      </div>
+      <div className="p-4 bg-red-50 border border-red-200 rounded text-red-700">Block inválido</div>
     );
   }
 
@@ -72,20 +66,17 @@ const DynamicBlockRenderer: React.FC<{ block: any }> = ({ block }) => {
     } = questionProps;
 
     return (
-      <div
-        className="question-block p-6 bg-white rounded-lg shadow-sm border"
-        style={{ height }}
-      >
+      <div className="question-block p-6 bg-white rounded-lg shadow-sm border" style={{ height }}>
         <h3 className="text-xl font-medium mb-4">{question}</h3>
         <div className="space-y-3">
-          {options.map((option) => (
+          {options.map(option => (
             <div
               key={option.id}
               className="p-3 border rounded hover:bg-gray-50 cursor-pointer transition-colors"
               onClick={() => {
                 if (autoAdvance) {
                   console.log(
-                    `Auto-advancing from question ${questionId} with option ${option.id}`,
+                    `Auto-advancing from question ${questionId} with option ${option.id}`
                   );
                 }
               }}
@@ -138,9 +129,7 @@ const DynamicBlockRenderer: React.FC<{ block: any }> = ({ block }) => {
     default:
       return (
         <div className="unknown-block p-4 bg-gray-50 border border-gray-200 rounded">
-          <p className="text-gray-600">
-            Tipo de bloco desconhecido: {block.type}
-          </p>
+          <p className="text-gray-600">Tipo de bloco desconhecido: {block.type}</p>
         </div>
       );
   }

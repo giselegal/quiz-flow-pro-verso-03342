@@ -82,60 +82,54 @@ const StageQuestionComponent: React.FC<StageQuestionComponentProps> = ({
 
         {/* Options */}
         <div className="space-y-3">
-          {(options || data.options || []).map(
-            (option: string, index: number) => (
-              <div
-                key={index}
-                className="flex items-center p-3 rounded-lg border-2 border-[#B89B7A]/20 hover:border-[#B89B7A]/40 transition-colors cursor-pointer"
-                style={{
-                  borderColor: data.accentColor
-                    ? `${data.accentColor}40`
-                    : "#B89B7A40",
-                }}
-              >
-                {(multiSelect || data.multiSelect || 0) > 0 ? (
-                  <input
-                    type="checkbox"
-                    className="mr-3"
-                    style={{ accentColor: data.accentColor || "#B89B7A" }}
-                  />
-                ) : (
-                  <input
-                    type="radio"
-                    name="quiz-option"
-                    className="mr-3"
-                    style={{ accentColor: data.accentColor || "#B89B7A" }}
-                  />
-                )}
+          {(options || data.options || []).map((option: string, index: number) => (
+            <div
+              key={index}
+              className="flex items-center p-3 rounded-lg border-2 border-[#B89B7A]/20 hover:border-[#B89B7A]/40 transition-colors cursor-pointer"
+              style={{
+                borderColor: data.accentColor ? `${data.accentColor}40` : "#B89B7A40",
+              }}
+            >
+              {(multiSelect || data.multiSelect || 0) > 0 ? (
+                <input
+                  type="checkbox"
+                  className="mr-3"
+                  style={{ accentColor: data.accentColor || "#B89B7A" }}
+                />
+              ) : (
+                <input
+                  type="radio"
+                  name="quiz-option"
+                  className="mr-3"
+                  style={{ accentColor: data.accentColor || "#B89B7A" }}
+                />
+              )}
 
-                <span className="flex-1 text-left">{option}</span>
+              <span className="flex-1 text-left">{option}</span>
 
-                {isSelected && onUpdate && (
-                  <div className="flex items-center space-x-2 ml-2">
-                    <Input
-                      value={option}
-                      onChange={(e) =>
-                        handleOptionChange(index, e.target.value)
-                      }
-                      className="w-32 h-8 text-xs"
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemoveOption(index);
-                      }}
-                      className="text-red-500 hover:text-red-700 p-1 h-auto"
-                    >
-                      <X className="w-3 h-3" />
-                    </Button>
-                  </div>
-                )}
-              </div>
-            ),
-          )}
+              {isSelected && onUpdate && (
+                <div className="flex items-center space-x-2 ml-2">
+                  <Input
+                    value={option}
+                    onChange={e => handleOptionChange(index, e.target.value)}
+                    className="w-32 h-8 text-xs"
+                    onClick={e => e.stopPropagation()}
+                  />
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={e => {
+                      e.stopPropagation();
+                      handleRemoveOption(index);
+                    }}
+                    className="text-red-500 hover:text-red-700 p-1 h-auto"
+                  >
+                    <X className="w-3 h-3" />
+                  </Button>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
 
         {/* Add Option (when selected) */}
@@ -143,11 +137,11 @@ const StageQuestionComponent: React.FC<StageQuestionComponentProps> = ({
           <div className="flex items-center space-x-2">
             <Input
               value={newOption}
-              onChange={(e) => setNewOption(e.target.value)}
+              onChange={e => setNewOption(e.target.value)}
               placeholder="Nova opção..."
               className="flex-1"
-              onClick={(e) => e.stopPropagation()}
-              onKeyPress={(e) => {
+              onClick={e => e.stopPropagation()}
+              onKeyPress={e => {
                 if (e.key === "Enter") {
                   e.stopPropagation();
                   handleAddOption();
@@ -156,7 +150,7 @@ const StageQuestionComponent: React.FC<StageQuestionComponentProps> = ({
             />
             <Button
               size="sm"
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 handleAddOption();
               }}

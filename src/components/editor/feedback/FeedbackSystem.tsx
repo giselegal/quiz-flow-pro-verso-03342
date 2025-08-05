@@ -63,7 +63,7 @@ export const useToast = () => {
       ...toast,
     };
 
-    setToasts((prev) => [...prev, newToast]);
+    setToasts(prev => [...prev, newToast]);
 
     // Auto remove se não for persistente
     if (!newToast.persistent && newToast.duration) {
@@ -76,7 +76,7 @@ export const useToast = () => {
   }, []);
 
   const removeToast = useCallback((id: string) => {
-    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+    setToasts(prev => prev.filter(toast => toast.id !== id));
   }, []);
 
   const clearToasts = useCallback(() => {
@@ -102,7 +102,7 @@ export const useLoadingState = () => {
   }, []);
 
   const updateProgress = useCallback((progress: number, message?: string) => {
-    setLoadingState((prev) => ({ ...prev, progress, message }));
+    setLoadingState(prev => ({ ...prev, progress, message }));
   }, []);
 
   const stopLoading = useCallback(() => {
@@ -121,7 +121,7 @@ export const useLoadingState = () => {
 export const useAutoSave = (
   saveFunction: () => Promise<void>,
   deps: any[],
-  options: { interval?: number; enabled?: boolean } = {},
+  options: { interval?: number; enabled?: boolean } = {}
 ) => {
   const { interval = 3000, enabled = true } = options;
   const [autoSaveState, setAutoSaveState] = useState<AutoSaveState>({
@@ -134,7 +134,7 @@ export const useAutoSave = (
   // Detectar mudanças
   useEffect(() => {
     if (enabled) {
-      setPendingChanges((prev) => prev + 1);
+      setPendingChanges(prev => prev + 1);
     }
   }, deps);
 
@@ -143,7 +143,7 @@ export const useAutoSave = (
     if (!enabled || pendingChanges === 0) return;
 
     const timer = setTimeout(async () => {
-      setAutoSaveState((prev) => ({ ...prev, status: "saving" }));
+      setAutoSaveState(prev => ({ ...prev, status: "saving" }));
 
       try {
         await saveFunction();
@@ -160,7 +160,7 @@ export const useAutoSave = (
           duration: 2000,
         });
       } catch (error) {
-        setAutoSaveState((prev) => ({ ...prev, status: "error" }));
+        setAutoSaveState(prev => ({ ...prev, status: "error" }));
         addToast({
           type: "error",
           title: "Erro ao salvar",
@@ -191,11 +191,11 @@ export const useConnectionState = () => {
 
   useEffect(() => {
     const handleOnline = () => {
-      setConnectionState((prev) => ({ ...prev, isOnline: true }));
+      setConnectionState(prev => ({ ...prev, isOnline: true }));
     };
 
     const handleOffline = () => {
-      setConnectionState((prev) => ({ ...prev, isOnline: false }));
+      setConnectionState(prev => ({ ...prev, isOnline: false }));
     };
 
     window.addEventListener("online", handleOnline);
@@ -256,9 +256,7 @@ const Toast: React.FC<{
         <div className="flex-shrink-0">{getIcon()}</div>
         <div className="ml-3 w-0 flex-1">
           <p className="text-sm font-medium text-gray-900">{toast.title}</p>
-          {toast.description && (
-            <p className="mt-1 text-sm text-gray-500">{toast.description}</p>
-          )}
+          {toast.description && <p className="mt-1 text-sm text-gray-500">{toast.description}</p>}
           {toast.action && (
             <div className="mt-3">
               <button
@@ -290,12 +288,12 @@ export const ToastContainer: React.FC = () => {
   return createPortal(
     <div className="fixed bottom-0 right-0 z-50 p-6 space-y-4">
       <AnimatePresence>
-        {toasts.map((toast) => (
+        {toasts.map(toast => (
           <Toast key={toast.id} toast={toast} onRemove={removeToast} />
         ))}
       </AnimatePresence>
     </div>,
-    document.body,
+    document.body
   );
 };
 
@@ -370,9 +368,7 @@ export const SkeletonLoader: React.FC<{
       {Array.from({ length: lines }).map((_, index) => (
         <div
           key={index}
-          className={`h-4 bg-gray-200 rounded mb-3 ${
-            index === lines - 1 ? "w-3/4" : "w-full"
-          }`}
+          className={`h-4 bg-gray-200 rounded mb-3 ${index === lines - 1 ? "w-3/4" : "w-full"}`}
         />
       ))}
     </div>

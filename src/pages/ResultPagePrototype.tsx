@@ -32,16 +32,14 @@ export const ResultPagePrototype: React.FC = () => {
         rank: 1,
       };
 
-  const secondaryStyles: StyleResult[] = mockSecondaryStyles.map(
-    (style, index) => ({
-      category: style,
-      score: 80 - index * 10,
-      percentage: 75 - index * 10,
-      style: style.toLowerCase(),
-      points: 80 - index * 10,
-      rank: index + 2,
-    }),
-  );
+  const secondaryStyles: StyleResult[] = mockSecondaryStyles.map((style, index) => ({
+    category: style,
+    score: 80 - index * 10,
+    percentage: 75 - index * 10,
+    style: style.toLowerCase(),
+    points: 80 - index * 10,
+    rank: index + 2,
+  }));
 
   return (
     <div className="min-h-screen bg-[#FAF9F7]">

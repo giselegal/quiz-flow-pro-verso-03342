@@ -28,7 +28,7 @@ export const PageEditorCanvas: React.FC<PageEditorCanvasProps> = ({
           </div>
         ) : (
           <div className="space-y-4">
-            {blocks.map((block) => (
+            {blocks.map(block => (
               <div
                 key={block.id}
                 className={`p-4 border rounded-lg cursor-pointer transition-colors ${
@@ -38,13 +38,9 @@ export const PageEditorCanvas: React.FC<PageEditorCanvasProps> = ({
                 }`}
                 onClick={() => onSelectBlock(block.id)}
               >
-                <div className="text-sm text-gray-500 mb-2">
-                  Bloco: {block.type}
-                </div>
+                <div className="text-sm text-gray-500 mb-2">Bloco: {block.type}</div>
                 <div>
-                  {block.properties?.title ||
-                    block.properties?.text ||
-                    "Conteúdo do bloco"}
+                  {block.properties?.title || block.properties?.text || "Conteúdo do bloco"}
                 </div>
               </div>
             ))}

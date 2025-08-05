@@ -41,9 +41,7 @@ const Home: React.FC = () => {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-xl font-bold">Quiz Quest</h1>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground">
-              Olá, {user.name || user.email}
-            </span>
+            <span className="text-sm text-muted-foreground">Olá, {user.name || user.email}</span>
             <LogoutButton />
           </div>
         </div>
@@ -57,8 +55,8 @@ const Home: React.FC = () => {
               Quiz Quest Challenge Verse
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Crie quizzes interativos incríveis, funis de conversão e capture
-              leads de forma inteligente.
+              Crie quizzes interativos incríveis, funis de conversão e capture leads de forma
+              inteligente.
             </p>
           </div>
 
@@ -66,11 +64,7 @@ const Home: React.FC = () => {
             <Button size="lg" onClick={handleStartQuiz}>
               Criar Quiz
             </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={() => setLocation("/admin/funis")}
-            >
+            <Button variant="outline" size="lg" onClick={() => setLocation("/admin/funis")}>
               Ver Funis
             </Button>
           </div>
@@ -78,40 +72,31 @@ const Home: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
             <div className="space-y-4">
               <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mx-auto">
-                <span className="text-primary-foreground text-lg font-bold">
-                  Q
-                </span>
+                <span className="text-primary-foreground text-lg font-bold">Q</span>
               </div>
               <h3 className="text-lg font-semibold">Quizzes Inteligentes</h3>
               <p className="text-muted-foreground">
-                Crie quizzes envolventes com lógica avançada e personalização
-                completa.
+                Crie quizzes envolventes com lógica avançada e personalização completa.
               </p>
             </div>
 
             <div className="space-y-4">
               <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mx-auto">
-                <span className="text-primary-foreground text-lg font-bold">
-                  F
-                </span>
+                <span className="text-primary-foreground text-lg font-bold">F</span>
               </div>
               <h3 className="text-lg font-semibold">Funis de Conversão</h3>
               <p className="text-muted-foreground">
-                Construa funis poderosos que convertem visitantes em leads
-                qualificados.
+                Construa funis poderosos que convertem visitantes em leads qualificados.
               </p>
             </div>
 
             <div className="space-y-4">
               <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mx-auto">
-                <span className="text-primary-foreground text-lg font-bold">
-                  A
-                </span>
+                <span className="text-primary-foreground text-lg font-bold">A</span>
               </div>
               <h3 className="text-lg font-semibold">Analytics Avançado</h3>
               <p className="text-muted-foreground">
-                Acompanhe métricas detalhadas e otimize seus resultados em tempo
-                real.
+                Acompanhe métricas detalhadas e otimize seus resultados em tempo real.
               </p>
             </div>
           </div>

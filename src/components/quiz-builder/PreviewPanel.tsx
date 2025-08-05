@@ -16,7 +16,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
   return (
     <div className="h-full overflow-auto p-4">
       <div className="space-y-4">
-        {components.map((component) => (
+        {components.map(component => (
           <ComponentRenderer
             key={component.id}
             component={component}

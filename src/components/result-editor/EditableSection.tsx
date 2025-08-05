@@ -7,11 +7,7 @@ export interface EditableSectionProps {
   onChange: (newContent: any) => void;
 }
 
-const EditableSection: React.FC<EditableSectionProps> = ({
-  title,
-  content,
-  onChange,
-}) => {
+const EditableSection: React.FC<EditableSectionProps> = ({ title, content, onChange }) => {
   return (
     <Card>
       <CardHeader>

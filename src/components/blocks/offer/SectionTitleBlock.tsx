@@ -50,10 +50,7 @@ const SectionTitleBlock: React.FC<SectionTitleBlockProps> = ({
   className = "",
 }) => {
   return (
-    <div
-      className={`section-title-block py-12 px-6 ${className}`}
-      data-block-id={blockId}
-    >
+    <div className={`section-title-block py-12 px-6 ${className}`} data-block-id={blockId}>
       <div className="max-w-4xl mx-auto" style={{ textAlign: alignment }}>
         {showBadge && badgeText && (
           <div className="mb-6">
@@ -82,10 +79,7 @@ const SectionTitleBlock: React.FC<SectionTitleBlockProps> = ({
         </h2>
 
         {subtitle && (
-          <p
-            className="text-lg max-w-2xl mx-auto leading-relaxed"
-            style={{ color: subtitleColor }}
-          >
+          <p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: subtitleColor }}>
             {subtitle}
           </p>
         )}

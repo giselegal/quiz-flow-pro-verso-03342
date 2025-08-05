@@ -30,8 +30,7 @@ export interface ABTest {
  */
 export const useABTest = (type: "result" | "sales") => {
   const [isLoading, setIsLoading] = useState(true);
-  const [currentVariation, setCurrentVariation] =
-    useState<ABTestVariation | null>(null);
+  const [currentVariation, setCurrentVariation] = useState<ABTestVariation | null>(null);
   const [activeTest, setActiveTest] = useState<ABTest | null>(null);
 
   useEffect(() => {
@@ -50,11 +49,11 @@ export const useABTest = (type: "result" | "sales") => {
 
         // Filtrar testes ativos para o tipo de página atual
         const activeTests = tests.filter(
-          (test) =>
+          test =>
             test.isActive &&
             test.type === type &&
             new Date(test.startDate) <= new Date() &&
-            (!test.endDate || new Date(test.endDate) >= new Date()),
+            (!test.endDate || new Date(test.endDate) >= new Date())
         );
 
         if (activeTests.length === 0) {
@@ -69,8 +68,7 @@ export const useABTest = (type: "result" | "sales") => {
         // Verificar se há correspondência de domínio
         const currentDomain = window.location.hostname;
         const domainMatch = test.variations.find(
-          (variation) =>
-            variation.domain && currentDomain.includes(variation.domain),
+          variation => variation.domain && currentDomain.includes(variation.domain)
         );
 
         if (domainMatch) {
@@ -90,10 +88,7 @@ export const useABTest = (type: "result" | "sales") => {
         } else {
           // Gerar novo ID para o usuário
           randomPercentage = Math.floor(Math.random() * 100);
-          localStorage.setItem(
-            `ab_test_${test.id}_visitor_id`,
-            randomPercentage.toString(),
-          );
+          localStorage.setItem(`ab_test_${test.id}_visitor_id`, randomPercentage.toString());
         }
 
         // Encontrar a variação com base na distribuição de tráfego
@@ -126,9 +121,7 @@ export const useABTest = (type: "result" | "sales") => {
       // Salvar a conversão no localStorage (em produção seria uma API)
       const conversionKey = `ab_test_${activeTest.id}_${currentVariation.id}_conversions`;
       const currentConversions = localStorage.getItem(conversionKey);
-      const newConversions = currentConversions
-        ? parseInt(currentConversions, 10) + 1
-        : 1;
+      const newConversions = currentConversions ? parseInt(currentConversions, 10) + 1 : 1;
       localStorage.setItem(conversionKey, newConversions.toString());
 
       // Registrar timestamp da conversão
@@ -139,7 +132,7 @@ export const useABTest = (type: "result" | "sales") => {
       localStorage.setItem(timestampKey, JSON.stringify(timestamps));
 
       console.log(
-        `Conversão registrada para teste ${activeTest.id}, variação ${currentVariation.id}`,
+        `Conversão registrada para teste ${activeTest.id}, variação ${currentVariation.id}`
       );
     } catch (error) {
       console.error("Erro ao registrar conversão:", error);

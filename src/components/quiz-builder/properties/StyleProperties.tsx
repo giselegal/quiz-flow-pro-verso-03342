@@ -9,10 +9,7 @@ interface StylePropertiesProps {
   onUpdate: (style: QuizComponentStyle) => void;
 }
 
-const StyleProperties: React.FC<StylePropertiesProps> = ({
-  style,
-  onUpdate,
-}) => {
+const StyleProperties: React.FC<StylePropertiesProps> = ({ style, onUpdate }) => {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -25,9 +22,7 @@ const StyleProperties: React.FC<StylePropertiesProps> = ({
           <Input
             id="backgroundColor"
             value={style.backgroundColor || ""}
-            onChange={(e) =>
-              onUpdate({ ...style, backgroundColor: e.target.value })
-            }
+            onChange={e => onUpdate({ ...style, backgroundColor: e.target.value })}
             placeholder="ex: #ffffff"
           />
         </div>
@@ -43,7 +38,7 @@ const StyleProperties: React.FC<StylePropertiesProps> = ({
           <Input
             id="textColor"
             value={style.textColor || ""}
-            onChange={(e) => onUpdate({ ...style, textColor: e.target.value })}
+            onChange={e => onUpdate({ ...style, textColor: e.target.value })}
             placeholder="ex: #000000"
           />
         </div>
@@ -57,9 +52,7 @@ const StyleProperties: React.FC<StylePropertiesProps> = ({
             min={0}
             max={64}
             step={4}
-            onValueChange={(values) =>
-              onUpdate({ ...style, paddingY: String(values[0]) })
-            }
+            onValueChange={values => onUpdate({ ...style, paddingY: String(values[0]) })}
             className="flex-1"
           />
           <div className="w-12 text-center">{style.paddingY || "16"}px</div>
@@ -74,9 +67,7 @@ const StyleProperties: React.FC<StylePropertiesProps> = ({
             min={0}
             max={64}
             step={4}
-            onValueChange={(values) =>
-              onUpdate({ ...style, paddingX: String(values[0]) })
-            }
+            onValueChange={values => onUpdate({ ...style, paddingX: String(values[0]) })}
             className="flex-1"
           />
           <div className="w-12 text-center">{style.paddingX || "16"}px</div>
@@ -91,9 +82,7 @@ const StyleProperties: React.FC<StylePropertiesProps> = ({
             min={0}
             max={24}
             step={1}
-            onValueChange={(values) =>
-              onUpdate({ ...style, borderRadius: String(values[0]) })
-            }
+            onValueChange={values => onUpdate({ ...style, borderRadius: String(values[0]) })}
             className="flex-1"
           />
           <div className="w-12 text-center">{style.borderRadius || "0"}px</div>

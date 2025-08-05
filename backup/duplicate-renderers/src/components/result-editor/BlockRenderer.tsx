@@ -29,9 +29,7 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
   };
 
   const isFAQItemArray = (items: any[]): items is FAQItem[] => {
-    return (
-      items.length > 0 && typeof items[0] === "object" && "question" in items[0]
-    );
+    return items.length > 0 && typeof items[0] === "object" && "question" in items[0];
   };
 
   switch (block.type) {
@@ -43,18 +41,14 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
             <input
               type="text"
               value={content.title || ""}
-              onChange={(e) => handleContentChange("title", e.target.value)}
+              onChange={e => handleContentChange("title", e.target.value)}
               className="text-2xl font-bold w-full border-none outline-none bg-transparent"
               placeholder="Digite o título"
             />
           ) : (
-            <h1 className="text-2xl font-bold text-gray-900">
-              {content.title || "Título"}
-            </h1>
+            <h1 className="text-2xl font-bold text-gray-900">{content.title || "Título"}</h1>
           )}
-          {content.subtitle && (
-            <p className="text-lg text-gray-600 mt-2">{content.subtitle}</p>
-          )}
+          {content.subtitle && <p className="text-lg text-gray-600 mt-2">{content.subtitle}</p>}
         </div>
       );
 
@@ -64,15 +58,13 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
           {isEditing ? (
             <textarea
               value={content.text || ""}
-              onChange={(e) => handleContentChange("text", e.target.value)}
+              onChange={e => handleContentChange("text", e.target.value)}
               className="w-full p-2 border rounded resize-none"
               rows={4}
               placeholder="Digite o texto"
             />
           ) : (
-            <p className="text-gray-700 leading-relaxed">
-              {content.text || "Texto de exemplo"}
-            </p>
+            <p className="text-gray-700 leading-relaxed">{content.text || "Texto de exemplo"}</p>
           )}
         </div>
       );
@@ -110,9 +102,7 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
       const benefitItems = content.items || [];
       return (
         <div>
-          <h3 className="text-xl font-semibold mb-4">
-            {content.title || "Benefícios"}
-          </h3>
+          <h3 className="text-xl font-semibold mb-4">{content.title || "Benefícios"}</h3>
           <ul className="space-y-2">
             {benefitItems.length > 0 && isStringArray(benefitItems) ? (
               benefitItems.map((item: string, index: number) => (
@@ -132,16 +122,12 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
       const faqItems = content.faqItems || content.items || [];
       return (
         <div>
-          <h3 className="text-xl font-semibold mb-4">
-            {content.title || "Perguntas Frequentes"}
-          </h3>
+          <h3 className="text-xl font-semibold mb-4">{content.title || "Perguntas Frequentes"}</h3>
           <div className="space-y-4">
             {faqItems.length > 0 && isFAQItemArray(faqItems) ? (
               faqItems.map((item: FAQItem, index: number) => (
                 <div key={index} className="border-b pb-3">
-                  <h4 className="font-medium text-gray-900 mb-2">
-                    {item.question}
-                  </h4>
+                  <h4 className="font-medium text-gray-900 mb-2">{item.question}</h4>
                   <p className="text-gray-600">{item.answer}</p>
                 </div>
               ))
@@ -168,9 +154,7 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
       return (
         <div className="bg-white border-2 border-[#B89B7A]/30 rounded-lg p-6 text-center">
           {content.regularPrice && (
-            <div className="text-gray-500 line-through text-lg">
-              R$ {content.regularPrice}
-            </div>
+            <div className="text-gray-500 line-through text-lg">R$ {content.regularPrice}</div>
           )}
           <div className="text-3xl font-bold text-[#B89B7A] mb-4">
             R$ {content.salePrice || "97"}

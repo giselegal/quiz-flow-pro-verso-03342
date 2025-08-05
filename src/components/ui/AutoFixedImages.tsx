@@ -41,7 +41,7 @@ const AutoFixedImages: React.FC<AutoFixedImagesProps> = ({
             fixBlurryIntroQuizImages();
             debounceTimeoutRef.current = null;
           },
-          { timeout: 1000 },
+          { timeout: 1000 }
         );
       }, 300) as unknown as number;
     } else {
@@ -58,13 +58,11 @@ const AutoFixedImages: React.FC<AutoFixedImagesProps> = ({
       // Detectar se o navegador suporta métricas de performance
       const supportsPerformanceObserver =
         "PerformanceObserver" in window &&
-        PerformanceObserver.supportedEntryTypes?.includes(
-          "largest-contentful-paint",
-        );
+        PerformanceObserver.supportedEntryTypes?.includes("largest-contentful-paint");
 
       if (supportsPerformanceObserver) {
         // Aguardar o LCP antes de executar otimizações
-        const lcpObserver = new PerformanceObserver((entryList) => {
+        const lcpObserver = new PerformanceObserver(entryList => {
           const entries = entryList.getEntries();
           if (entries.length > 0) {
             // Executar após o LCP
@@ -97,14 +95,13 @@ const AutoFixedImages: React.FC<AutoFixedImagesProps> = ({
       }
 
       // Configurar MutationObserver otimizado
-      const observer = new MutationObserver((mutations) => {
+      const observer = new MutationObserver(mutations => {
         // Verificar se alguma das mutações é relevante (adiciona imagens)
-        const hasImageChanges = mutations.some((mutation) =>
+        const hasImageChanges = mutations.some(mutation =>
           Array.from(mutation.addedNodes).some(
-            (node) =>
-              node.nodeName === "IMG" ||
-              (node instanceof Element && node.querySelector("img")),
-          ),
+            node =>
+              node.nodeName === "IMG" || (node instanceof Element && node.querySelector("img"))
+          )
         );
 
         // Só processar se houver mudanças em imagens
@@ -114,7 +111,7 @@ const AutoFixedImages: React.FC<AutoFixedImagesProps> = ({
       });
 
       // Observar apenas os elementos específicos, não todo o body
-      elementsToObserve.forEach((element) => {
+      elementsToObserve.forEach(element => {
         observer.observe(element, {
           childList: true,
           subtree: true,

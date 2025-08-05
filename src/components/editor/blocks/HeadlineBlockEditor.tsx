@@ -1,8 +1,8 @@
-import React from 'react';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { BlockEditorProps } from './types';
+import React from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { BlockEditorProps } from "./types";
 
 export const HeadlineBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
   return (
@@ -11,7 +11,7 @@ export const HeadlineBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdat
         <Label htmlFor={`${block.id}-title`}>Título</Label>
         <Input
           id={`${block.id}-title`}
-          value={block.content.title || ''}
+          value={block.content.title || ""}
           onChange={e => onUpdate({ title: e.target.value })}
           className="mt-1"
         />
@@ -21,7 +21,7 @@ export const HeadlineBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdat
         <Label htmlFor={`${block.id}-subtitle`}>Subtítulo</Label>
         <Input
           id={`${block.id}-subtitle`}
-          value={block.content.subtitle || ''}
+          value={block.content.subtitle || ""}
           onChange={e => onUpdate({ subtitle: e.target.value })}
           className="mt-1"
         />
@@ -30,7 +30,7 @@ export const HeadlineBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdat
       <div>
         <Label>Alinhamento</Label>
         <RadioGroup
-          value={block.content.alignment || 'left'}
+          value={block.content.alignment || "left"}
           onValueChange={value => onUpdate({ alignment: value })}
           className="flex space-x-4 mt-1"
         >

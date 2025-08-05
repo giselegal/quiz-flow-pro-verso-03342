@@ -1,28 +1,28 @@
-import React, { useState } from 'react';
-import { InlineEditableText } from './InlineEditableText';
-import { Button } from '@/components/ui/button';
-import { CheckCircle, ShoppingCart, Lock } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
+import React, { useState } from "react";
+import { InlineEditableText } from "./InlineEditableText";
+import { Button } from "@/components/ui/button";
+import { CheckCircle, ShoppingCart, Lock } from "lucide-react";
+import type { BlockComponentProps } from "@/types/blocks";
 
 const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onPropertyChange,
-  className = '',
+  className = "",
 }) => {
   const {
-    title = 'Vista-se de Você — na Prática',
-    description = 'Agora que você conhece seu estilo, é hora de aplicá-lo com clareza e intenção.',
-    sectionTitle = 'O Guia de Estilo e Imagem + Bônus Exclusivos',
+    title = "Vista-se de Você — na Prática",
+    description = "Agora que você conhece seu estilo, é hora de aplicá-lo com clareza e intenção.",
+    sectionTitle = "O Guia de Estilo e Imagem + Bônus Exclusivos",
     benefits = [
-      'Looks com intenção e identidade',
-      'Cores, modelagens e tecidos a seu favor',
-      'Imagem alinhada aos seus objetivos',
-      'Guarda-roupa funcional, sem compras por impulso',
+      "Looks com intenção e identidade",
+      "Cores, modelagens e tecidos a seu favor",
+      "Imagem alinhada aos seus objetivos",
+      "Guarda-roupa funcional, sem compras por impulso",
     ] as string[],
-    buttonText = 'Garantir Meu Guia + Bônus Especiais',
-    buttonUrl = '#',
-    securityText = 'Oferta exclusiva nesta página',
+    buttonText = "Garantir Meu Guia + Bônus Especiais",
+    buttonUrl = "#",
+    securityText = "Oferta exclusiva nesta página",
     dividerEnabled = true,
   } = block?.properties || {};
 
@@ -37,12 +37,12 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
   const handleBenefitChange = (index: number, newValue: string) => {
     const newBenefits = [...benefits];
     newBenefits[index] = newValue;
-    handlePropertyChange('benefits', newBenefits);
+    handlePropertyChange("benefits", newBenefits);
   };
 
   const handleCTAClick = () => {
-    if (buttonUrl && buttonUrl !== '#') {
-      window.open(buttonUrl, '_blank');
+    if (buttonUrl && buttonUrl !== "#") {
+      window.open(buttonUrl, "_blank");
     }
   };
 
@@ -53,8 +53,8 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
         p-3 rounded-lg transition-all duration-200
         ${
           isSelected
-            ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10'
-            : 'border-2 border-dashed border-transparent hover:border-[#B89B7A]/40 hover:bg-[#B89B7A]/10/30'
+            ? "border-2 border-[#B89B7A] bg-[#B89B7A]/10"
+            : "border-2 border-dashed border-transparent hover:border-[#B89B7A]/40 hover:bg-[#B89B7A]/10/30"
         }
         ${className}
       `}
@@ -64,7 +64,7 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
         <h2 className="text-2xl md:text-3xl font-bold text-[#aa6b5d] mb-4">
           <InlineEditableText
             value={title}
-            onChange={value => handlePropertyChange('title', value)}
+            onChange={value => handlePropertyChange("title", value)}
             placeholder="Título principal"
             className="text-2xl md:text-3xl font-bold text-[#aa6b5d]"
           />
@@ -79,7 +79,7 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
         <p className="text-[#432818] mb-6 max-w-xl mx-auto">
           <InlineEditableText
             value={description}
-            onChange={value => handlePropertyChange('description', value)}
+            onChange={value => handlePropertyChange("description", value)}
             placeholder="Descrição principal..."
             className="text-[#432818] max-w-xl mx-auto"
             multiline
@@ -91,7 +91,7 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
           <h3 className="text-xl font-medium text-[#aa6b5d] mb-4">
             <InlineEditableText
               value={sectionTitle}
-              onChange={value => handlePropertyChange('sectionTitle', value)}
+              onChange={value => handlePropertyChange("sectionTitle", value)}
               placeholder="Título da seção"
               className="text-xl font-medium text-[#aa6b5d]"
             />
@@ -114,16 +114,16 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
           onClick={handleCTAClick}
           className="text-white py-5 px-8 rounded-md shadow-md transition-all duration-300 hover:scale-105"
           style={{
-            background: 'linear-gradient(to right, #4CAF50, #45a049)',
-            boxShadow: '0 4px 14px rgba(76, 175, 80, 0.4)',
-            fontSize: '1rem',
+            background: "linear-gradient(to right, #4CAF50, #45a049)",
+            boxShadow: "0 4px 14px rgba(76, 175, 80, 0.4)",
+            fontSize: "1rem",
           }}
           onMouseEnter={() => setIsButtonHovered(true)}
           onMouseLeave={() => setIsButtonHovered(false)}
         >
           <span className="flex items-center justify-center gap-2">
             <ShoppingCart
-              className={`w-4 h-4 transition-transform duration-300 ${isButtonHovered ? 'scale-110' : ''}`}
+              className={`w-4 h-4 transition-transform duration-300 ${isButtonHovered ? "scale-110" : ""}`}
             />
             <span>{buttonText}</span>
           </span>

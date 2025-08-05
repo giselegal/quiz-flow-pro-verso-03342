@@ -28,7 +28,7 @@
 // Content Security Policy - Allow necessary resources
 res.header(
   "Content-Security-Policy",
-  "default-src 'self'; script-src 'self' 'unsafe-inline' https://replit.com; style-src 'self' 'unsafe-inline' data:; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self';",
+  "default-src 'self'; script-src 'self' 'unsafe-inline' https://replit.com; style-src 'self' 'unsafe-inline' data:; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self';"
 );
 ```
 

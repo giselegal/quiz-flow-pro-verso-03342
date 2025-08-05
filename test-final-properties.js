@@ -16,7 +16,7 @@ const simulateEditorFlow = () => {
   ];
 
   // 2. Simular função getPropertiesForBlockType
-  const getPropertiesForBlockType = (blockType) => {
+  const getPropertiesForBlockType = blockType => {
     if (blockType.includes("text") || blockType.includes("heading")) {
       return {
         text: {
@@ -114,11 +114,9 @@ const simulateEditorFlow = () => {
 
   // 3. Simular generateBlockDefinitions
   const generateBlockDefinitions = () => {
-    return availableBlocks.map((blockType) => ({
+    return availableBlocks.map(blockType => ({
       type: blockType,
-      name:
-        blockType.charAt(0).toUpperCase() +
-        blockType.slice(1).replace(/[-_]/g, " "),
+      name: blockType.charAt(0).toUpperCase() + blockType.slice(1).replace(/[-_]/g, " "),
       description: `Componente ${blockType} validado`,
       category: "Content",
       icon: "Square",
@@ -130,9 +128,9 @@ const simulateEditorFlow = () => {
   };
 
   // 4. Simular getBlockDefinitionForType
-  const getBlockDefinitionForType = (type) => {
+  const getBlockDefinitionForType = type => {
     const allDefinitions = generateBlockDefinitions();
-    const definition = allDefinitions.find((def) => def.type === type);
+    const definition = allDefinitions.find(def => def.type === type);
 
     if (definition) {
       return definition;
@@ -185,31 +183,21 @@ const allDefinitions = generateBlockDefinitions();
 console.log(`Total de definições: ${allDefinitions.length}`);
 
 // Testar alguns blocos específicos
-const testBlocks = [
-  "heading-inline-block",
-  "button-inline-block",
-  "image-display-inline-block",
-];
+const testBlocks = ["heading-inline-block", "button-inline-block", "image-display-inline-block"];
 
-testBlocks.forEach((blockType) => {
+testBlocks.forEach(blockType => {
   console.log(`\n🔍 TESTANDO: ${blockType}`);
   const definition = getBlockDefinitionForType(blockType);
 
   console.log(`  ✅ Tipo: ${definition.type}`);
   console.log(`  ✅ Nome: ${definition.name}`);
-  console.log(
-    `  ✅ Propriedades disponíveis: ${Object.keys(definition.properties).length}`,
-  );
-  console.log(
-    `  📄 Lista de propriedades:`,
-    Object.keys(definition.properties),
-  );
+  console.log(`  ✅ Propriedades disponíveis: ${Object.keys(definition.properties).length}`);
+  console.log(`  📄 Lista de propriedades:`, Object.keys(definition.properties));
 
   // Verificar se tem propriedades editáveis
   const editableProps = Object.entries(definition.properties).filter(
     ([key, prop]) =>
-      prop.type &&
-      ["string", "textarea", "select", "boolean", "number"].includes(prop.type),
+      prop.type && ["string", "textarea", "select", "boolean", "number"].includes(prop.type)
   );
 
   console.log(`  🎯 Propriedades editáveis: ${editableProps.length}`);

@@ -58,7 +58,7 @@ const TestimonialSlider: React.FC<{
     if (!autoPlay) return;
 
     const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+      setCurrentIndex(prev => (prev + 1) % testimonials.length);
     }, interval);
 
     return () => clearInterval(timer);
@@ -76,10 +76,7 @@ const TestimonialSlider: React.FC<{
       </div>
 
       <div className="text-center mb-6">
-        <h3
-          className="text-2xl font-bold mb-2"
-          style={{ fontFamily: "Playfair Display, serif" }}
-        >
+        <h3 className="text-2xl font-bold mb-2" style={{ fontFamily: "Playfair Display, serif" }}>
           O que nossas clientes dizem
         </h3>
         <div className="flex items-center justify-center gap-2 text-sm text-white/70">
@@ -105,17 +102,13 @@ const TestimonialSlider: React.FC<{
               <span className="text-lg font-semibold">
                 {testimonials[currentIndex].name
                   .split(" ")
-                  .map((n) => n[0])
+                  .map(n => n[0])
                   .join("")}
               </span>
             </div>
             <div>
-              <div className="font-semibold">
-                {testimonials[currentIndex].name}
-              </div>
-              <div className="text-sm text-white/70">
-                {testimonials[currentIndex].role}
-              </div>
+              <div className="font-semibold">{testimonials[currentIndex].name}</div>
+              <div className="text-sm text-white/70">{testimonials[currentIndex].role}</div>
             </div>
           </div>
         </div>
@@ -167,9 +160,7 @@ const CountdownTimer: React.FC<{
       }
 
       setTimeLeft({
-        hours: Math.floor(
-          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-        ),
+        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
         minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
         seconds: Math.floor((distance % (1000 * 60)) / 1000),
       });
@@ -271,13 +262,10 @@ const PricingCard: React.FC<{
                 -{discount}% OFF
               </span>
             </div>
-            <div className="text-4xl font-bold text-[#432818]">
-              R$ {discountPrice.toFixed(2)}
-            </div>
+            <div className="text-4xl font-bold text-[#432818]">R$ {discountPrice.toFixed(2)}</div>
             {paymentOptions && paymentOptions.installmentValue && (
               <div className="text-sm text-gray-600 mt-2">
-                ou {paymentOptions.installments}x de R${" "}
-                {paymentOptions.installmentValue.toFixed(2)}
+                ou {paymentOptions.installments}x de R$ {paymentOptions.installmentValue.toFixed(2)}
               </div>
             )}
           </div>
@@ -287,11 +275,7 @@ const PricingCard: React.FC<{
           {features.map((feature, index) => (
             <div key={index} className="flex items-center gap-3">
               <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                <svg
-                  className="w-3 h-3 text-white"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
+                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path
                     fillRule="evenodd"
                     d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -346,9 +330,7 @@ const InteractiveProgressBar: React.FC<{
       <div className="flex items-center justify-between mb-4">
         <h4 className="font-semibold text-[#432818]">Progresso do Quiz</h4>
         {showPercentage && (
-          <span className="text-sm font-medium text-[#B89B7A]">
-            {percentage}% concluído
-          </span>
+          <span className="text-sm font-medium text-[#B89B7A]">{percentage}% concluído</span>
         )}
       </div>
 
@@ -410,7 +392,7 @@ const SocialProofBanner: React.FC<{
     const interval = setInterval(() => {
       if (Math.random() > 0.7) {
         // 30% chance to increment
-        setLiveCount((prev) => prev + 1);
+        setLiveCount(prev => prev + 1);
       }
     }, 10000); // Every 10 seconds
 
@@ -431,10 +413,7 @@ const SocialProofBanner: React.FC<{
 
       <div className="space-y-2 max-h-24 overflow-hidden">
         {recentActivity.map((activity, index) => (
-          <div
-            key={index}
-            className="flex items-center justify-between text-sm"
-          >
+          <div key={index} className="flex items-center justify-between text-sm">
             <span className="text-gray-700">
               <strong>{activity.name}</strong> {activity.action}
             </span>

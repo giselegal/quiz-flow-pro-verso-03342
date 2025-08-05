@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 const supabase = createClient(
   "https://qikbokffxhofhjehpyxm.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpa2Jva2ZmeGhvZmhqZWhweXhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzM4NjQ2NDIsImV4cCI6MjA0OTQ0MDY0Mn0.DiqbhgHCOOOEGYsqXJlSllGOgx0M4hZ9S5OhTjGh85k",
-  { auth: { persistSession: false } },
+  { auth: { persistSession: false } }
 );
 
 async function createTemplates() {
@@ -13,8 +13,7 @@ async function createTemplates() {
   const defaultTemplate = {
     id: "template-default-21-steps",
     name: "Funil Completo de Descoberta Pessoal (TEMPLATE)",
-    description:
-      "Template completo para descoberta do estilo pessoal - 21 etapas modulares",
+    description: "Template completo para descoberta do estilo pessoal - 21 etapas modulares",
     is_published: false,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
@@ -33,8 +32,7 @@ async function createTemplates() {
   const quickTemplate = {
     id: "template-quick-personality",
     name: "Quiz Rápido de Personalidade (TEMPLATE)",
-    description:
-      "Template curto e direto para descobrir traços básicos de personalidade",
+    description: "Template curto e direto para descobrir traços básicos de personalidade",
     is_published: false,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),

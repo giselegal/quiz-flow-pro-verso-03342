@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  getOptimizedImageUrl,
-  getLowQualityPlaceholder,
-} from "@/utils/imageManager";
+import { getOptimizedImageUrl, getLowQualityPlaceholder } from "@/utils/imageManager";
 
 interface OptimizedImageProps {
   src: string;
@@ -35,9 +32,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   const [error, setError] = useState(false);
 
   // Get optimized image URLs
-  const optimizedSrc = src
-    ? getOptimizedImageUrl(src, { width, height, quality })
-    : "";
+  const optimizedSrc = src ? getOptimizedImageUrl(src, { width, height, quality }) : "";
   const placeholderSrc = src ? getLowQualityPlaceholder(src) : "";
 
   // Handle image loading completion

@@ -52,10 +52,7 @@ const IconBlockPreview: React.FC<IconBlockPreviewProps> = ({ content }) => {
 
       {title && (
         <div
-          className={cn(
-            "text-center",
-            (position === "left" || position === "right") && "flex-1",
-          )}
+          className={cn("text-center", (position === "left" || position === "right") && "flex-1")}
         >
           {title}
         </div>

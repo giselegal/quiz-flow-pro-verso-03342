@@ -29,10 +29,7 @@ export { useDynamicData } from "./useDynamicData";
 
 // ✅ PERFORMANCE HOOKS (otimização)
 export { useGlobalLoading } from "./useGlobalLoading";
-export {
-  usePerformanceOptimization,
-  useComponentOptimization,
-} from "./usePerformanceOptimization";
+export { usePerformanceOptimization, useComponentOptimization } from "./usePerformanceOptimization";
 
 // ✅ MEMORY & MONITORING HOOKS
 export {
