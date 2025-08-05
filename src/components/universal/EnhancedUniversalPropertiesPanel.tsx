@@ -26,6 +26,7 @@ import {
   Type,
 } from "lucide-react";
 import React, { useMemo } from "react";
+import { getComponentProperties as originalGetComponentProperties } from "./UniversalPropertiesPanel";
 
 // Interface atualizada para compatibilidade com editor-fixed-dragdrop
 interface EnhancedUniversalPropertiesPanelProps {
@@ -192,8 +193,8 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         actualBlock.properties || actualBlock.content || {}
       );
     } else {
-      // Cair de volta para o sistema existente
-      return getComponentProperties(actualBlock as UnifiedBlock);
+      // Usar a implementação original do UniversalPropertiesPanel
+      return originalGetComponentProperties(actualBlock as UnifiedBlock);
     }
   }, [actualBlock, blockDefinition]);
 
