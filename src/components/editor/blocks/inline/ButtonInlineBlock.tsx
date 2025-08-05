@@ -7,6 +7,7 @@ interface ButtonInlineBlockProps {
     id: string;
     type: string;
     properties?: {
+      text?: string; // CORREÇÃO: Adicionar text direto
       content?: {
         text?: string;
         url?: string;
@@ -49,7 +50,8 @@ export const ButtonInlineBlock: React.FC<ButtonInlineBlockProps> = ({ block, cla
   const layoutProps = properties.layout || {};
   const advanced = properties.advanced || {};
 
-  const text = content.text || 'Clique aqui';
+  // CORREÇÃO: Aceitar text diretamente OU content.text
+  const text = properties.text || content.text || 'Clique aqui';
   const url = content.url || '#';
 
   // Determinar o variant do botão
