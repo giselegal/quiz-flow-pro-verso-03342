@@ -1,5 +1,3 @@
-import React from "react";
-
 /**
  * ETAPA 1: INTRODUÇÃO COM COLETA DE NOME
  * Primeira etapa do quiz de estilo com formulário de nome
@@ -43,7 +41,7 @@ export const Step01Intro = () => {
         properties: {
           content:
             "<span style=\"color: #B89B7A; font-weight: 700; font-family: 'Playfair Display', serif;\">Chega</span> <span style=\"font-family: 'Playfair Display', serif;\">de um guarda-roupa lotado e da sensação de que</span> <span style=\"color: #B89B7A; font-weight: 700; font-family: 'Playfair Display', serif;\">nada combina com você.</span>",
-          fontSize: "text-3xl",
+          fontSize: "text-4xl",
           fontWeight: "font-bold",
           fontFamily: "Playfair Display, serif",
           textAlign: "text-center",
@@ -59,8 +57,7 @@ export const Step01Intro = () => {
           alt: "Transforme seu guarda-roupa",
           width: 600,
           height: 400,
-          className:
-            "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
+          className: "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
           textAlign: "text-center",
           marginBottom: 32,
         },
@@ -108,6 +105,10 @@ export const Step01Intro = () => {
           fontWeight: "font-bold",
           boxShadow: "shadow-xl",
           hoverEffect: true,
+          justifyContent: "center",
+          alignItems: "center",
+          display: "flex",
+          margin: "0 auto",
         },
       },
       {
