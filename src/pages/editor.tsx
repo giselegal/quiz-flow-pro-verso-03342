@@ -429,119 +429,131 @@ const EditorPage: React.FC = () => {
     try {
       setSelectedComponentId(null);
 
-      console.log("🚀 Carregando Etapa 1 do Quiz...");
+      console.log("🚀 Carregando Etapa 1 do Quiz com modelo correto...");
 
+      // Usando exatamente a estrutura do modelo fornecido
       const step1Blocks = [
         {
-          id: "step01-logo-image",
-          type: "image",
+          id: "quiz-intro-header-step01",
+          type: "quiz-intro-header",
           properties: {
-            src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-            alt: "Logo Gisele Galvão",
-            width: 120,
-            height: 120,
-            className: "mx-auto mb-4",
+            logoUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+            logoAlt: "Logo Gisele Galvão",
+            logoWidth: 120,
+            logoHeight: 120,
+            progressValue: 0,
+            progressMax: 100,
+            showBackButton: false,
+            showProgress: false,
           },
         },
         {
-          id: "step01-progress-text",
-          type: "text",
+          id: "decorative-bar-step01",
+          type: "decorative-bar-inline",
           properties: {
-            content: "Progresso: 0% • Etapa 1 de 21",
-            fontSize: "text-sm",
-            textAlign: "text-center",
-            color: "#8F7A6A",
-          },
-        },
-        {
-          id: "step01-decorative-divider",
-          type: "divider",
-          properties: {
+            width: "100%",
+            height: 4,
             color: "#B89B7A",
-            thickness: 4,
-            style: "solid",
+            gradientColors: ["#B89B7A", "#D4C2A8", "#B89B7A"],
+            borderRadius: 3,
+            marginTop: 8,
+            marginBottom: 24,
+            showShadow: true,
           },
         },
         {
-          id: "step01-main-heading",
-          type: "heading",
+          id: "main-title-step01",
+          type: "text-inline",
           properties: {
-            content: "Chega de um guarda-roupa lotado e da sensação de que nada combina com você.",
-            level: 1,
+            content:
+              "<span style=\"color: #B89B7A; font-weight: 700; font-family: 'Playfair Display', serif;\">Chega</span> <span style=\"font-family: 'Playfair Display', serif;\">de um guarda-roupa lotado e da sensação de que</span> <span style=\"color: #B89B7A; font-weight: 700; font-family: 'Playfair Display', serif;\">nada combina com você.</span>",
             fontSize: "text-3xl",
             fontWeight: "font-bold",
+            fontFamily: "Playfair Display, serif",
             textAlign: "text-center",
             color: "#432818",
+            marginBottom: 32,
+            lineHeight: "1.2",
           },
         },
         {
-          id: "step01-hero-image",
-          type: "image",
+          id: "hero-image-step01",
+          type: "image-display-inline",
           properties: {
             src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.webp",
             alt: "Transforme seu guarda-roupa",
             width: 600,
             height: 400,
             className: "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
+            textAlign: "text-center",
+            marginBottom: 32,
           },
         },
         {
-          id: "step01-motivation-text",
-          type: "text",
+          id: "motivation-text-step01",
+          type: "text-inline",
           properties: {
             content:
               'Em poucos minutos, descubra seu <strong style="color: #B89B7A;">Estilo Predominante</strong> — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
             fontSize: "text-xl",
             textAlign: "text-center",
             color: "#432818",
+            marginTop: 0,
+            marginBottom: 40,
+            lineHeight: "1.6",
           },
         },
         {
-          id: "step01-name-label",
-          type: "text",
+          id: "name-input-step01",
+          type: "form-input",
           properties: {
-            content: "COMO VOCÊ GOSTARIA DE SER CHAMADA?",
-            fontSize: "text-lg",
-            fontWeight: "font-bold",
+            label: "COMO VOCÊ GOSTARIA DE SER CHAMADA?",
+            placeholder: "Digite seu nome aqui...",
+            required: true,
+            inputType: "text",
+            helperText: "Seu nome será usado para personalizar sua experiência",
+            name: "userName",
             textAlign: "text-center",
-            color: "#432818",
+            marginBottom: 32,
           },
         },
         {
-          id: "step01-name-placeholder",
-          type: "text",
-          properties: {
-            content: "[CAMPO DE NOME - Digite seu nome aqui...]",
-            fontSize: "text-base",
-            textAlign: "text-center",
-            color: "#8F7A6A",
-            backgroundColor: "#F9F7F5",
-            borderRadius: "rounded-lg",
-            border: "2px dashed #B89B7A",
-          },
-        },
-        {
-          id: "step01-cta-button",
-          type: "button",
+          id: "cta-button-step01",
+          type: "button-inline",
           properties: {
             text: "✨ Quero Descobrir meu Estilo Agora! ✨",
             variant: "primary",
             size: "large",
+            fullWidth: true,
             backgroundColor: "#B89B7A",
             textColor: "#ffffff",
+            requiresValidInput: true,
             textAlign: "text-center",
             borderRadius: "rounded-full",
+            padding: "py-4 px-8",
+            fontSize: "text-lg",
+            fontWeight: "font-bold",
+            boxShadow: "shadow-xl",
+            hoverEffect: true,
           },
         },
         {
-          id: "step01-legal-text",
-          type: "text",
+          id: "legal-notice-step01",
+          type: "legal-notice-inline",
           properties: {
-            content:
-              "🛡️ Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade.<br><br>© 2025 Gisele Galvão - Todos os direitos reservados",
-            fontSize: "text-xs",
+            privacyText:
+              "Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade",
+            copyrightText: "© 2025 Gisele Galvão - Todos os direitos reservados",
+            showIcon: true,
+            iconType: "shield",
             textAlign: "text-center",
-            color: "#6B7280",
+            textSize: "text-xs",
+            textColor: "#6B7280",
+            linkColor: "#B89B7A",
+            marginTop: 24,
+            marginBottom: 0,
+            backgroundColor: "transparent",
           },
         },
       ];
@@ -564,8 +576,8 @@ const EditorPage: React.FC = () => {
       }
 
       toast({
-        title: "Etapa 1 Carregada! 🎉",
-        description: `${addedCount} blocos da Etapa 1 adicionados com sucesso`,
+        title: "Etapa 1 Carregada com Modelo Correto! 🎉",
+        description: `${addedCount} componentes específicos da Etapa 1 carregados com as informações e imagens do modelo`,
       });
     } catch (error) {
       console.error("❌ Erro ao carregar Etapa 1:", error);

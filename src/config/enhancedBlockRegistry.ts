@@ -38,6 +38,12 @@ import SpacerInlineBlock from "../components/editor/blocks/inline/SpacerInlineBl
 import StatInlineBlock from "../components/editor/blocks/inline/StatInlineBlock";
 import TextInlineBlock from "../components/editor/blocks/inline/TextInlineBlock";
 
+// Componentes específicos da Etapa 1
+import DecorativeBarInlineBlock from "../components/editor/blocks/DecorativeBarInlineBlock";
+import FormInputBlock from "../components/editor/blocks/FormInputBlock";
+import LegalNoticeInlineBlock from "../components/editor/blocks/LegalNoticeInlineBlock";
+import QuizIntroHeaderBlock from "../components/editor/blocks/QuizIntroHeaderBlock";
+
 // Componentes de Quiz - para compatibilidade com DynamicStepTemplate
 import OptionsGridBlock from "../components/editor/blocks/OptionsGridBlock";
 import QuizProgressBlock from "../components/editor/blocks/QuizProgressBlock";
@@ -48,16 +54,20 @@ import QuizStepBlock from "../components/editor/blocks/QuizStepBlock";
 export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
   // Text and Content
   text: TextInlineBlock,
+  "text-inline": TextInlineBlock,
   heading: HeadingInlineBlock,
   image: ImageDisplayInlineBlock,
+  "image-display-inline": ImageDisplayInlineBlock,
 
   // Interactive Elements
   button: ButtonInlineBlock,
+  "button-inline": ButtonInlineBlock,
   cta: CTAInlineBlock,
 
   // Layout and Design
   spacer: SpacerInlineBlock,
   divider: DividerInlineBlock,
+  "decorative-bar-inline": DecorativeBarInlineBlock,
   badge: BadgeInlineBlock,
 
   // Commerce and Pricing
@@ -68,10 +78,15 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   progress: ProgressInlineBlock,
   stat: StatInlineBlock,
 
-  // Quiz Components (para DynamicStepTemplate)
+  // Quiz Components específicos
+  "quiz-intro-header": QuizIntroHeaderBlock,
   "quiz-step": QuizStepBlock,
   "quiz-progress": QuizProgressBlock,
   "options-grid": OptionsGridBlock,
+
+  // Form Components
+  "form-input": FormInputBlock,
+  "legal-notice-inline": LegalNoticeInlineBlock,
 };
 
 /**
@@ -113,6 +128,17 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       defaultProps: { content: "Digite seu texto aqui..." },
     },
     {
+      type: "text-inline",
+      name: "TextInlineBlock",
+      label: "Texto Inline",
+      category: "Conteúdo",
+      description: "Bloco de texto inline editável",
+      icon: Type,
+      component: ENHANCED_BLOCK_REGISTRY["text-inline"],
+      properties: {},
+      defaultProps: { content: "Digite seu texto aqui..." },
+    },
+    {
       type: "heading",
       name: "HeadingInlineBlock",
       label: "Título",
@@ -134,6 +160,17 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       properties: {},
       defaultProps: { src: "", alt: "Imagem" },
     },
+    {
+      type: "image-display-inline",
+      name: "ImageDisplayInlineBlock",
+      label: "Imagem Inline",
+      category: "Mídia",
+      description: "Exibição de imagens inline",
+      icon: Image,
+      component: ENHANCED_BLOCK_REGISTRY["image-display-inline"],
+      properties: {},
+      defaultProps: { src: "", alt: "Imagem" },
+    },
 
     // Interactive Elements
     {
@@ -144,6 +181,17 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       description: "Botão clicável",
       icon: MousePointer,
       component: ENHANCED_BLOCK_REGISTRY["button"],
+      properties: {},
+      defaultProps: { text: "Clique aqui", variant: "primary" },
+    },
+    {
+      type: "button-inline",
+      name: "ButtonInlineBlock",
+      label: "Botão Inline",
+      category: "Interativo",
+      description: "Botão clicável inline",
+      icon: MousePointer,
+      component: ENHANCED_BLOCK_REGISTRY["button-inline"],
       properties: {},
       defaultProps: { text: "Clique aqui", variant: "primary" },
     },
@@ -183,6 +231,17 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       defaultProps: { style: "solid" },
     },
     {
+      type: "decorative-bar-inline",
+      name: "DecorativeBarInlineBlock",
+      label: "Barra Decorativa",
+      category: "Layout",
+      description: "Barra decorativa dourada",
+      icon: Minus,
+      component: ENHANCED_BLOCK_REGISTRY["decorative-bar-inline"],
+      properties: {},
+      defaultProps: { color: "#B89B7A", height: 4 },
+    },
+    {
       type: "badge",
       name: "BadgeInlineBlock",
       label: "Badge",
@@ -192,6 +251,55 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       component: ENHANCED_BLOCK_REGISTRY["badge"],
       properties: {},
       defaultProps: { text: "Novo", variant: "primary" },
+    },
+
+    // Quiz Components
+    {
+      type: "quiz-intro-header",
+      name: "QuizIntroHeaderBlock",
+      label: "Cabeçalho do Quiz",
+      category: "Quiz",
+      description: "Cabeçalho com logo e progresso",
+      icon: Heading,
+      component: ENHANCED_BLOCK_REGISTRY["quiz-intro-header"],
+      properties: {},
+      defaultProps: {
+        logoUrl:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        logoAlt: "Logo",
+        progressValue: 0,
+      },
+    },
+
+    // Form Components
+    {
+      type: "form-input",
+      name: "FormInputBlock",
+      label: "Campo de Entrada",
+      category: "Formulário",
+      description: "Campo de entrada de dados",
+      icon: Type,
+      component: ENHANCED_BLOCK_REGISTRY["form-input"],
+      properties: {},
+      defaultProps: {
+        label: "Campo de Input",
+        placeholder: "Digite aqui...",
+        required: false,
+      },
+    },
+    {
+      type: "legal-notice-inline",
+      name: "LegalNoticeInlineBlock",
+      label: "Aviso Legal",
+      category: "Formulário",
+      description: "Aviso legal e termos",
+      icon: Tag,
+      component: ENHANCED_BLOCK_REGISTRY["legal-notice-inline"],
+      properties: {},
+      defaultProps: {
+        privacyText: "Política de privacidade",
+        copyrightText: "© 2025 Todos os direitos reservados",
+      },
     },
 
     // Commerce and Pricing
