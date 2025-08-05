@@ -294,6 +294,163 @@ export const STEP_CONFIGURATIONS: Record<string, QuestionConfig> = {
     showImages: false
   },
 
+  // STEP 11 - Tecidos
+  step11: {
+    id: "step11",
+    title: "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...",
+    subtitle: "Como você seleciona suas roupas?",
+    questionNumber: 11,
+    totalQuestions: 21,
+    options: [
+      { id: "11a", text: "São confortáveis e práticos", value: "11a", category: "Natural", styleCategory: "Natural", points: 1 },
+      { id: "11b", text: "São elegantes e sofisticados", value: "11b", category: "Clássico", styleCategory: "Clássico", points: 1 },
+      { id: "11c", text: "São modernos e inovadores", value: "11c", category: "Contemporâneo", styleCategory: "Contemporâneo", points: 1 },
+      { id: "11d", text: "São luxuosos e refinados", value: "11d", category: "Elegante", styleCategory: "Elegante", points: 1 }
+    ],
+    layout: 'grid-2',
+    allowMultiple: false,
+    showImages: false
+  },
+
+  // STEP 12 - Transição Pessoal
+  step12: {
+    id: "step12",
+    title: "AGORA VAMOS CONHECER VOCÊ MELHOR",
+    subtitle: "Algumas perguntas sobre sua personalidade",
+    questionNumber: 12,
+    totalQuestions: 21,
+    options: [
+      { id: "12a", text: "Vamos continuar!", value: "12a", category: "Transição", styleCategory: "Transição", points: 0 }
+    ],
+    layout: 'grid-2',
+    allowMultiple: false,
+    showImages: false
+  },
+
+  // STEP 13 - Guarda-Roupa
+  step13: {
+    id: "step13",
+    title: "QUANDO VOCÊ OLHA PARA O SEU GUARDA-ROUPA, QUAL DESSAS FRASES TE VEM A CABEÇA?",
+    subtitle: "Como você vê suas roupas?",
+    questionNumber: 13,
+    totalQuestions: 21,
+    options: [
+      { id: "13a", text: "Tenho tudo que preciso", value: "13a", category: "Natural", styleCategory: "Natural", points: 1 },
+      { id: "13b", text: "Preciso de mais variedade", value: "13b", category: "Dramático", styleCategory: "Dramático", points: 1 },
+      { id: "13c", text: "Gosto de experimentar coisas novas", value: "13c", category: "Contemporâneo", styleCategory: "Contemporâneo", points: 1 },
+      { id: "13d", text: "Busco peças especiais e únicas", value: "13d", category: "Elegante", styleCategory: "Elegante", points: 1 }
+    ],
+    layout: 'grid-2',
+    allowMultiple: false,
+    showImages: false
+  },
+
+  // STEP 14 - Pergunta Final
+  step14: {
+    id: "step14",
+    title: "ÚLTIMA PERGUNTA!",
+    subtitle: "Finalizando seu perfil de estilo",
+    questionNumber: 14,
+    totalQuestions: 21,
+    options: [
+      { id: "14a", text: "Estou pronta para o resultado!", value: "14a", category: "Final", styleCategory: "Final", points: 1 }
+    ],
+    layout: 'grid-2',
+    allowMultiple: false,
+    showImages: false
+  },
+
+  // STEP 15 - Transição
+  step15: {
+    id: "step15",
+    title: "PROCESSANDO SUAS RESPOSTAS...",
+    subtitle: "Analisando seu perfil único",
+    questionNumber: 15,
+    totalQuestions: 21,
+    options: [
+      { id: "15a", text: "Ver resultado", value: "15a", category: "Processamento", styleCategory: "Processamento", points: 0 }
+    ],
+    layout: 'grid-2',
+    allowMultiple: false,
+    showImages: false
+  },
+
+  // STEP 16 - Processamento
+  step16: {
+    id: "step16",
+    title: "ANALISANDO SEU PERFIL...",
+    subtitle: "Descobrindo seu estilo único",
+    questionNumber: 16,
+    totalQuestions: 21,
+    options: [
+      { id: "16a", text: "Continuar", value: "16a", category: "Análise", styleCategory: "Análise", points: 0 }
+    ],
+    layout: 'grid-2',
+    allowMultiple: false,
+    showImages: false
+  },
+
+  // STEP 17 - Resultado
+  step17: {
+    id: "step17",
+    title: "SEU RESULTADO PERSONALIZADO",
+    subtitle: "Descubra seu estilo único",
+    questionNumber: 17,
+    totalQuestions: 21,
+    options: [
+      { id: "17a", text: "Ver detalhes do meu estilo", value: "17a", category: "Resultado", styleCategory: "Resultado", points: 0 }
+    ],
+    layout: 'grid-2',
+    allowMultiple: false,
+    showImages: false
+  },
+
+  // STEP 18 - Detalhes
+  step18: {
+    id: "step18",
+    title: "DETALHES DO SEU ESTILO",
+    subtitle: "Características principais do seu perfil",
+    questionNumber: 18,
+    totalQuestions: 21,
+    options: [
+      { id: "18a", text: "Ver guia personalizado", value: "18a", category: "Detalhes", styleCategory: "Detalhes", points: 0 }
+    ],
+    layout: 'grid-2',
+    allowMultiple: false,
+    showImages: false
+  },
+
+  // STEP 19 - Guia
+  step19: {
+    id: "step19",
+    title: "SEU GUIA PERSONALIZADO",
+    subtitle: "Dicas específicas para o seu estilo",
+    questionNumber: 19,
+    totalQuestions: 21,
+    options: [
+      { id: "19a", text: "Ver oferta especial", value: "19a", category: "Guia", styleCategory: "Guia", points: 0 }
+    ],
+    layout: 'grid-2',
+    allowMultiple: false,
+    showImages: false
+  },
+
+  // STEP 20 - Oferta
+  step20: {
+    id: "step20",
+    title: "OFERTA ESPECIAL PARA VOCÊ!",
+    subtitle: "Consultoria personalizada com desconto",
+    questionNumber: 20,
+    totalQuestions: 21,
+    options: [
+      { id: "20a", text: "Quero aproveitar a oferta", value: "20a", category: "Oferta", styleCategory: "Oferta", points: 0 },
+      { id: "20b", text: "Finalizar quiz", value: "20b", category: "Finalizar", styleCategory: "Finalizar", points: 0 }
+    ],
+    layout: 'grid-2',
+    allowMultiple: false,
+    showImages: false
+  },
+
   // RESULTADO - Step 21 
   step21: {
     id: "step21",
