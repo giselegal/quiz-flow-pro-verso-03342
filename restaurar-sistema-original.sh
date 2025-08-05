@@ -1,3 +1,36 @@
+#!/bin/bash
+
+# 🔄 RESTAURAR SISTEMA ORIGINAL - REVERTER PARA ETAPAS FIXAS
+echo "🔄 RESTAURANDO SISTEMA ORIGINAL"
+echo "==============================="
+
+echo ""
+echo "📋 OBJETIVOS:"
+echo "   • Restaurar 21 templates individuais (Step01-21Template.tsx)"
+echo "   • Reverter stepTemplatesMapping.ts para estrutura original"
+echo "   • Manter componentes funcionais e melhorias de design"
+echo "   • Remover sistema dinâmico"
+
+echo ""
+echo "📁 RESTAURANDO STEPS ORIGINAIS..."
+
+# Restaurar os 21 templates de steps
+echo "   📂 Copiando Step01-21Template.tsx do backup..."
+cp backup/fase2-steps-refactor/*.tsx src/components/steps/
+
+# Verificar se copiou corretamente
+RESTORED_COUNT=$(ls src/components/steps/Step*Template.tsx 2>/dev/null | wc -l)
+echo "   ✅ Restaurados: $RESTORED_COUNT templates de steps"
+
+echo ""
+echo "📝 REVERTENDO stepTemplatesMapping.ts..."
+
+# Criar backup do arquivo atual
+cp src/config/stepTemplatesMapping.ts backup/stepTemplatesMapping-dinamico.backup.ts
+echo "   💾 Backup do sistema dinâmico salvo em: backup/stepTemplatesMapping-dinamico.backup.ts"
+
+# Restaurar estrutura original do mapping
+cat > src/config/stepTemplatesMapping.ts << 'EOF'
 // src/config/stepTemplatesMapping.ts
 // Mapeamento das 21 etapas para seus templates específicos
 
@@ -209,3 +242,43 @@ export const stepExists = (stepNumber: number): boolean => {
 export const getTotalSteps = (): number => {
   return Object.keys(STEP_TEMPLATES_MAPPING).length;
 };
+EOF
+
+echo "   ✅ stepTemplatesMapping.ts restaurado para estrutura original"
+
+echo ""
+echo "🗑️  REMOVENDO ARQUIVOS DO SISTEMA DINÂMICO..."
+
+# Mover arquivos dinâmicos para backup
+mkdir -p backup/sistema-dinamico/
+mv src/components/steps/DynamicStepTemplate.tsx backup/sistema-dinamico/ 2>/dev/null
+mv src/components/steps/StepConfigurations.ts backup/sistema-dinamico/ 2>/dev/null
+
+echo "   💾 DynamicStepTemplate.tsx → backup/sistema-dinamico/"
+echo "   💾 StepConfigurations.ts → backup/sistema-dinamico/"
+
+echo ""
+echo "📊 VERIFICAÇÃO FINAL:"
+
+# Contar templates restaurados
+STEP_FILES=$(ls src/components/steps/Step*Template.tsx 2>/dev/null | wc -l)
+echo "   📁 Templates de steps: $STEP_FILES/21"
+
+# Verificar se mapping foi restaurado
+if grep -q "templateFunction" src/config/stepTemplatesMapping.ts; then
+    echo "   ✅ stepTemplatesMapping.ts: Estrutura original restaurada"
+else
+    echo "   ❌ stepTemplatesMapping.ts: Erro na restauração"
+fi
+
+echo ""
+echo "🎉 RESTAURAÇÃO CONCLUÍDA!"
+echo "========================"
+echo ""
+echo "✅ SISTEMA ORIGINAL RESTAURADO:"
+echo "   • 21 templates individuais (Step01-21Template.tsx)"
+echo "   • stepTemplatesMapping.ts com templateFunction"
+echo "   • Sistema dinâmico salvo em backup/"
+echo "   • Componentes melhorados mantidos"
+echo ""
+echo "🚀 O editor agora deve exibir as etapas e componentes normalmente!"
