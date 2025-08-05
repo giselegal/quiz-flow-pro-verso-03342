@@ -18,7 +18,15 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   className = "",
 }) => {
   // Verificação de segurança para evitar erro de undefined
-  if (!block || !block.properties) {
+  if (!block) {
+    return (
+      <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
+        <p className="text-red-600">Erro: Bloco não encontrado</p>
+      </div>
+    );
+  }
+
+  if (!block.properties) {
     return (
       <div className="bg-red-100 p-2 text-red-600 text-sm rounded">
         ⚠️ Erro: Propriedades do bloco não encontradas

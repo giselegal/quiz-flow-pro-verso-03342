@@ -14,6 +14,7 @@ import { useEditorPersistence } from "../hooks/editor/useEditorPersistence";
 import { useEditor } from "../hooks/useEditor";
 import { cn } from "../lib/utils";
 import { schemaDrivenFunnelService } from "../services/schemaDrivenFunnelService";
+import { BlockType } from "../types/editor";
 import { normalizeBlock } from "../utils/blockTypeMapping";
 
 // Componente simples para renderizar blocos
@@ -302,7 +303,7 @@ const EditorPage: React.FC = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const funnelId = urlParams.get("id");
 
-  const { config, addBlock, updateBlock, deleteBlock } = useEditor();
+  const { config, addBlock, updateBlock, deleteBlock, setAllBlocks, clearAllBlocks } = useEditor();
   const { saveFunnel, loadFunnel, isSaving, isLoading } = useEditorPersistence();
 
   // ===== DETECÇÃO DE MOBILE =====
@@ -558,22 +559,36 @@ const EditorPage: React.FC = () => {
         },
       ];
 
+      // Limpar blocos existentes primeiro
+      clearAllBlocks();
+
       let addedCount = 0;
+      const newBlocks = [];
+
       for (const block of step1Blocks) {
         try {
           const normalizedBlock = normalizeBlock(block);
-          console.log(`📦 Adicionando bloco Etapa 1 ${addedCount + 1}:`, normalizedBlock.type);
+          console.log(`📦 Preparando bloco Etapa 1 ${addedCount + 1}:`, normalizedBlock.type);
 
-          const newBlockId = addBlock(normalizedBlock.type as any);
+          // Criar bloco completo de uma vez
+          const fullBlock = {
+            id: block.id,
+            type: normalizedBlock.type as BlockType,
+            content: normalizedBlock.content || {},
+            properties: normalizedBlock.properties || {},
+            order: addedCount,
+          };
+
+          newBlocks.push(fullBlock);
           addedCount++;
-
-          setTimeout(() => {
-            updateBlock(newBlockId, normalizedBlock.properties);
-          }, 100);
         } catch (blockError) {
-          console.warn(`⚠️ Erro ao adicionar bloco ${block.type}:`, blockError);
+          console.warn(`⚠️ Erro ao preparar bloco ${block.type}:`, blockError);
         }
       }
+
+      // Adicionar todos os blocos de uma vez
+      setAllBlocks(newBlocks);
+      console.log(`✅ ${addedCount} blocos da Etapa 1 carregados:`, newBlocks);
 
       toast({
         title: "Etapa 1 Carregada com Modelo Correto! 🎉",

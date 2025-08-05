@@ -41,11 +41,21 @@ export const useEditor = () => {
     });
   };
 
+  const setAllBlocks = (newBlocks: Block[]) => {
+    setBlocks(newBlocks);
+  };
+
+  const clearAllBlocks = () => {
+    setBlocks([]);
+  };
+
   const actions = {
     addBlock,
     updateBlock,
     deleteBlock,
     reorderBlocks,
+    setAllBlocks,
+    clearAllBlocks,
   };
 
   return {
@@ -55,6 +65,8 @@ export const useEditor = () => {
     updateBlock,
     deleteBlock,
     reorderBlocks,
+    setAllBlocks,
+    clearAllBlocks,
     actions,
   };
 };
