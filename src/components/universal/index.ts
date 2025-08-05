@@ -1,2 +1,1 @@
-import { EnhancedUniversalPropertiesPanel } from "@/components/universal";
-import
+export { EnhancedUniversalPropertiesPanel, SimplifiedUniversalPropertiesPanel };
