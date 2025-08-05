@@ -22,7 +22,7 @@ export const getStep01Template = () => {
         width: 120,
         height: 120,
         className: "mx-auto mb-4",
-        textAlign: "text-center"
+        textAlign: "text-center",
       },
     },
 
@@ -35,7 +35,7 @@ export const getStep01Template = () => {
         fontSize: "text-sm",
         textAlign: "text-center",
         color: "#8F7A6A",
-        marginBottom: 16
+        marginBottom: 16,
       },
     },
 
@@ -48,7 +48,7 @@ export const getStep01Template = () => {
         thickness: 4,
         style: "solid",
         marginTop: 8,
-        marginBottom: 24
+        marginBottom: 24,
       },
     },
 
@@ -64,7 +64,7 @@ export const getStep01Template = () => {
         textAlign: "text-center",
         color: "#432818",
         marginBottom: 32,
-        fontFamily: "Playfair Display, serif"
+        fontFamily: "Playfair Display, serif",
       },
     },
 
@@ -79,7 +79,7 @@ export const getStep01Template = () => {
         height: 400,
         className: "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
         textAlign: "text-center",
-        marginBottom: 32
+        marginBottom: 32,
       },
     },
 
@@ -88,12 +88,13 @@ export const getStep01Template = () => {
       id: "step01-motivation-text",
       type: "text",
       properties: {
-        content: 'Em poucos minutos, descubra seu <strong style="color: #B89B7A;">Estilo Predominante</strong> — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
+        content:
+          'Em poucos minutos, descubra seu <strong style="color: #B89B7A;">Estilo Predominante</strong> — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
         fontSize: "text-xl",
         textAlign: "text-center",
         color: "#432818",
         marginBottom: 40,
-        lineHeight: "1.6"
+        lineHeight: "1.6",
       },
     },
 
@@ -107,7 +108,7 @@ export const getStep01Template = () => {
         fontWeight: "font-bold",
         textAlign: "text-center",
         color: "#432818",
-        marginBottom: 16
+        marginBottom: 16,
       },
     },
 
@@ -124,7 +125,7 @@ export const getStep01Template = () => {
         padding: "py-3 px-4",
         borderRadius: "rounded-lg",
         border: "2px dashed #B89B7A",
-        marginBottom: 32
+        marginBottom: 32,
       },
     },
 
@@ -145,7 +146,7 @@ export const getStep01Template = () => {
         fontSize: "text-lg",
         fontWeight: "font-bold",
         boxShadow: "shadow-xl",
-        marginBottom: 24
+        marginBottom: 24,
       },
     },
 
@@ -154,12 +155,13 @@ export const getStep01Template = () => {
       id: "step01-legal-text",
       type: "text",
       properties: {
-        content: "🛡️ Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade.<br><br>© 2025 Gisele Galvão - Todos os direitos reservados",
+        content:
+          "🛡️ Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade.<br><br>© 2025 Gisele Galvão - Todos os direitos reservados",
         fontSize: "text-xs",
         textAlign: "text-center",
         color: "#6B7280",
         marginTop: 24,
-        lineHeight: "1.4"
+        lineHeight: "1.4",
       },
     },
   ];
