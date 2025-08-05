@@ -5,12 +5,11 @@ import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelS
 import { FunnelStagesPanel } from "@/components/editor/funnel/FunnelStagesPanel";
 import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
 import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
-import { UniversalPropertiesPanel } from "@/components/universal/UniversalPropertiesPanel";
+import UniversalPropertiesPanel from "@/components/universal/UniversalPropertiesPanel";
+import EnhancedUniversalPropertiesPanel from "@/components/universal/EnhancedUniversalPropertiesPanel";
 import { generateBlockDefinitions, getRegistryStats } from "@/config/enhancedBlockRegistry";
 import { useEditor } from "@/context/EditorContext";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
-import { Type } from "lucide-react";
-import React, { useState } from "react";
 import { Type } from "lucide-react";
 import React, { useState } from "react";
 
@@ -259,12 +258,12 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                     type: selectedBlock.type,
                     properties: selectedBlock.properties || {},
                   }}
-                  onUpdate={(updatedBlock) => {
+                  onUpdate={(blockId, updates) => {
                     console.log("🚀 Atualizando bloco via EnhancedUniversalPropertiesPanel:", {
-                      blockId: updatedBlock.id,
-                      updates: updatedBlock.properties,
+                      blockId,
+                      updates,
                     });
-                    updateBlock(updatedBlock.id, { properties: updatedBlock.properties });
+                    updateBlock(blockId, updates);
                   }}
                   onClose={() => setSelectedBlockId(null)}
                 />

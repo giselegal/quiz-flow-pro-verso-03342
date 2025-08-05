@@ -3,7 +3,7 @@ import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
 import { FunnelStagesPanel } from "@/components/editor/funnel/FunnelStagesPanel";
 import EnhancedComponentsSidebar from "@/components/editor/EnhancedComponentsSidebar";
 import { UniversalBlockRenderer } from "@/components/editor/blocks/UniversalBlockRenderer";
-import { EnhancedUniversalPropertiesPanel } from "@/components/universal/EnhancedUniversalPropertiesPanel";
+import { EnhancedUniversalPropertiesPanel } from "@/components/editor/properties/EnhancedUniversalPropertiesPanel";
 import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
 import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelSettingsPanel";
 import { EditableContent } from "@/types/editor";

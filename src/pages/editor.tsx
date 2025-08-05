@@ -8,7 +8,7 @@ import { LoadingSpinner } from "../components/ui/loading-spinner";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../components/ui/resizable";
 import { ScrollArea } from "../components/ui/scroll-area";
 import { toast } from "../components/ui/use-toast";
-import { UniversalPropertiesPanel } from "../components/universal/UniversalPropertiesPanel";
+import UniversalPropertiesPanel from "../components/universal/UniversalPropertiesPanel";
 import { useAutoSaveWithDebounce } from "../hooks/editor/useAutoSaveWithDebounce";
 import { useEditorPersistence } from "../hooks/editor/useEditorPersistence";
 import { useEditor } from "../hooks/useEditor";
