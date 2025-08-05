@@ -9,62 +9,66 @@ export const Step01Intro: React.FC<Step01IntroProps> = ({ onNext, onBlockAdd }) 
   return <div className="step-01-intro">{/* Conteúdo da Etapa 1 renderizado aqui */}</div>;
 };
 
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 1
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 1 - CORRIGIDO
 export const getStep01Template = () => {
   return [
-    // 📱 CABEÇALHO COM LOGO (EDITÁVEL SEPARADAMENTE)
+    // � LOGO DA GISELE (SUBSTITUI QUIZ-INTRO-HEADER)
     {
-      id: "step01-header-logo",
-      type: "quiz-intro-header",
+      id: "step01-logo-image",
+      type: "image",
       properties: {
-        logoUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        logoAlt: "Logo Gisele Galvão",
-        logoWidth: 120,
-        logoHeight: 120,
-        progressValue: 0,
-        progressMax: 100,
-        showBackButton: false,
-        showProgress: false,
+        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        alt: "Logo Gisele Galvão",
+        width: 120,
+        height: 120,
+        className: "mx-auto mb-4",
+        textAlign: "text-center"
       },
     },
 
-    // 🎨 BARRA DECORATIVA DA MARCA (EDITÁVEL SEPARADAMENTE)
+    // 📊 INDICADOR DE PROGRESSO (SUBSTITUI PARTE DO HEADER)
     {
-      id: "step01-decorative-bar",
-      type: "decorative-bar",
-      properties: {
-        width: "100%",
-        height: 4,
-        color: "#B89B7A",
-        gradientColors: ["#B89B7A", "#D4C2A8", "#B89B7A"],
-        borderRadius: 3,
-        marginTop: 8,
-        marginBottom: 24,
-        showShadow: true,
-      },
-    },
-
-    // 🎯 TÍTULO PRINCIPAL (EDITÁVEL SEPARADAMENTE)
-
-    // 📝 DESCRIÇÃO MOTIVACIONAL (EDITÁVEL SEPARADAMENTE)
-    {
-      id: "step01-main-title",
+      id: "step01-progress-text",
       type: "text",
       properties: {
-        content:
-          "<span style=\"color: #B89B7A; font-weight: 700; font-family: 'Playfair Display', serif;\">Chega</span> <span style=\"font-family: 'Playfair Display', serif;\">de um guarda-roupa lotado e da sensação de que</span> <span style=\"color: #B89B7A; font-weight: 700; font-family: 'Playfair Display', serif;\">nada combina com você.</span>",
+        content: "Progresso: 0% • Etapa 1 de 21",
+        fontSize: "text-sm",
+        textAlign: "text-center",
+        color: "#8F7A6A",
+        marginBottom: 16
+      },
+    },
+
+    // ➖ BARRA DECORATIVA (SUBSTITUI DECORATIVE-BAR)
+    {
+      id: "step01-decorative-divider",
+      type: "divider",
+      properties: {
+        color: "#B89B7A",
+        thickness: 4,
+        style: "solid",
+        marginTop: 8,
+        marginBottom: 24
+      },
+    },
+
+    // 📢 TÍTULO PRINCIPAL (MUDA DE TEXT PARA HEADING)
+    {
+      id: "step01-main-heading",
+      type: "heading",
+      properties: {
+        content: "Chega de um guarda-roupa lotado e da sensação de que nada combina com você.",
+        level: 1,
         fontSize: "text-3xl",
         fontWeight: "font-bold",
-        fontFamily: "Playfair Display, serif",
         textAlign: "text-center",
         color: "#432818",
         marginBottom: 32,
-        lineHeight: "1.2",
+        fontFamily: "Playfair Display, serif"
       },
     },
 
-    // 🖼️ IMAGEM PRINCIPAL (EDITÁVEL SEPARADAMENTE)
+    // 🖼️ IMAGEM PRINCIPAL (MANTÉM COMO IMAGE)
     {
       id: "step01-hero-image",
       type: "image",
@@ -75,41 +79,56 @@ export const getStep01Template = () => {
         height: 400,
         className: "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
         textAlign: "text-center",
-        marginBottom: 32,
+        marginBottom: 32
       },
     },
+
+    // 💬 TEXTO MOTIVACIONAL (MANTÉM COMO TEXT)
     {
       id: "step01-motivation-text",
       type: "text",
       properties: {
-        content:
-          'Em poucos minutos, descubra seu <strong style="color: #B89B7A;">Estilo Predominante</strong> — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
+        content: 'Em poucos minutos, descubra seu <strong style="color: #B89B7A;">Estilo Predominante</strong> — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
         fontSize: "text-xl",
         textAlign: "text-center",
         color: "#432818",
-        marginTop: 0,
         marginBottom: 40,
-        lineHeight: "1.6",
+        lineHeight: "1.6"
       },
     },
 
-    // 📋 CAMPO DE CAPTURA DE NOME (EDITÁVEL SEPARADAMENTE)
+    // 🏷️ LABEL DO CAMPO NOME (SUBSTITUI FORM-INPUT PARTE 1)
     {
-      id: "step01-name-input",
-      type: "form-input",
+      id: "step01-name-label",
+      type: "text",
       properties: {
-        label: "COMO VOCÊ GOSTARIA DE SER CHAMADA?",
-        placeholder: "Digite seu nome aqui...",
-        required: true,
-        inputType: "text",
-        helperText: "Seu nome será usado para personalizar sua experiência",
-        name: "userName",
+        content: "COMO VOCÊ GOSTARIA DE SER CHAMADA?",
+        fontSize: "text-lg",
+        fontWeight: "font-bold",
         textAlign: "text-center",
-        marginBottom: 32,
+        color: "#432818",
+        marginBottom: 16
       },
     },
 
-    // 🔘 BOTÃO PRINCIPAL DE AÇÃO (EDITÁVEL SEPARADAMENTE)
+    // 📝 PLACEHOLDER DO INPUT (SUBSTITUI FORM-INPUT PARTE 2)
+    {
+      id: "step01-name-placeholder",
+      type: "text",
+      properties: {
+        content: "[CAMPO DE NOME - Digite seu nome aqui...]",
+        fontSize: "text-base",
+        textAlign: "text-center",
+        color: "#8F7A6A",
+        backgroundColor: "#F9F7F5",
+        padding: "py-3 px-4",
+        borderRadius: "rounded-lg",
+        border: "2px dashed #B89B7A",
+        marginBottom: 32
+      },
+    },
+
+    // 🔘 BOTÃO CTA (MANTÉM COMO BUTTON)
     {
       id: "step01-cta-button",
       type: "button",
@@ -120,34 +139,27 @@ export const getStep01Template = () => {
         fullWidth: true,
         backgroundColor: "#B89B7A",
         textColor: "#ffffff",
-        requiresValidInput: true,
         textAlign: "text-center",
         borderRadius: "rounded-full",
         padding: "py-4 px-8",
         fontSize: "text-lg",
         fontWeight: "font-bold",
         boxShadow: "shadow-xl",
-        hoverEffect: true,
+        marginBottom: 24
       },
     },
 
-    // ⚖️ AVISO LEGAL E COPYRIGHT (EDITÁVEL SEPARADAMENTE)
+    // ⚖️ TEXTO LEGAL (SUBSTITUI LEGAL-NOTICE)
     {
-      id: "step01-legal-notice",
-      type: "legal-notice",
+      id: "step01-legal-text",
+      type: "text",
       properties: {
-        privacyText:
-          "Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade",
-        copyrightText: "© 2025 Gisele Galvão - Todos os direitos reservados",
-        showIcon: true,
-        iconType: "shield",
+        content: "🛡️ Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade.<br><br>© 2025 Gisele Galvão - Todos os direitos reservados",
+        fontSize: "text-xs",
         textAlign: "text-center",
-        textSize: "text-xs",
-        textColor: "#6B7280",
-        linkColor: "#B89B7A",
+        color: "#6B7280",
         marginTop: 24,
-        marginBottom: 0,
-        backgroundColor: "transparent",
+        lineHeight: "1.4"
       },
     },
   ];
