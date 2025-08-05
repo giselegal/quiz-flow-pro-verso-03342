@@ -1,19 +1,19 @@
-import React from "react";
-import { BlockDefinition, PropertySchema } from "@/types/editor";
-import { 
-  Type, 
-  Heading, 
-  Image, 
-  MousePointer, 
-  Zap, 
-  Space, 
-  Minus, 
-  Tag, 
-  CreditCard, 
-  Clock, 
-  TrendingUp, 
-  BarChart 
+import { BlockDefinition } from "@/types/editor";
+import {
+  BarChart,
+  Clock,
+  CreditCard,
+  Heading,
+  Image,
+  Minus,
+  MousePointer,
+  Space,
+  Tag,
+  TrendingUp,
+  Type,
+  Zap,
 } from "lucide-react";
+import React from "react";
 
 /**
  * ENHANCED BLOCK REGISTRY - APENAS COMPONENTES PRINCIPAIS
@@ -25,49 +25,49 @@ import {
 // === IMPORTS DE COMPONENTES PRINCIPAIS ===
 
 // Componentes Inline mais usados
-import TextInlineBlock from "../components/editor/blocks/inline/TextInlineBlock";
-import ButtonInlineBlock from "../components/editor/blocks/inline/ButtonInlineBlock";
-import ImageDisplayInlineBlock from "../components/editor/blocks/inline/ImageDisplayInlineBlock";
-import HeadingInlineBlock from "../components/editor/blocks/inline/HeadingInlineBlock";
 import BadgeInlineBlock from "../components/editor/blocks/inline/BadgeInlineBlock";
-import SpacerInlineBlock from "../components/editor/blocks/inline/SpacerInlineBlock";
-import DividerInlineBlock from "../components/editor/blocks/inline/DividerInlineBlock";
-import PricingCardInlineBlock from "../components/editor/blocks/inline/PricingCardInlineBlock";
+import ButtonInlineBlock from "../components/editor/blocks/inline/ButtonInlineBlock";
 import CountdownInlineBlock from "../components/editor/blocks/inline/CountdownInlineBlock";
-import ProgressInlineBlock from "../components/editor/blocks/inline/ProgressInlineBlock";
-import StatInlineBlock from "../components/editor/blocks/inline/StatInlineBlock";
 import CTAInlineBlock from "../components/editor/blocks/inline/CTAInlineBlock";
+import DividerInlineBlock from "../components/editor/blocks/inline/DividerInlineBlock";
+import HeadingInlineBlock from "../components/editor/blocks/inline/HeadingInlineBlock";
+import ImageDisplayInlineBlock from "../components/editor/blocks/inline/ImageDisplayInlineBlock";
+import PricingCardInlineBlock from "../components/editor/blocks/inline/PricingCardInlineBlock";
+import ProgressInlineBlock from "../components/editor/blocks/inline/ProgressInlineBlock";
+import SpacerInlineBlock from "../components/editor/blocks/inline/SpacerInlineBlock";
+import StatInlineBlock from "../components/editor/blocks/inline/StatInlineBlock";
+import TextInlineBlock from "../components/editor/blocks/inline/TextInlineBlock";
 
 // Componentes de Quiz - para compatibilidade com DynamicStepTemplate
-import QuizStepBlock from "../components/editor/blocks/QuizStepBlock";
-import QuizProgressBlock from "../components/editor/blocks/QuizProgressBlock";
 import OptionsGridBlock from "../components/editor/blocks/OptionsGridBlock";
+import QuizProgressBlock from "../components/editor/blocks/QuizProgressBlock";
+import QuizStepBlock from "../components/editor/blocks/QuizStepBlock";
 
 // === REGISTRY PRINCIPAL - SEM DUPLICATAS ===
 
 export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
   // Text and Content
-  "text": TextInlineBlock,
-  "heading": HeadingInlineBlock,
-  "image": ImageDisplayInlineBlock,
-  
+  text: TextInlineBlock,
+  heading: HeadingInlineBlock,
+  image: ImageDisplayInlineBlock,
+
   // Interactive Elements
-  "button": ButtonInlineBlock,
-  "cta": CTAInlineBlock,
-  
+  button: ButtonInlineBlock,
+  cta: CTAInlineBlock,
+
   // Layout and Design
-  "spacer": SpacerInlineBlock,
-  "divider": DividerInlineBlock,
-  "badge": BadgeInlineBlock,
-  
+  spacer: SpacerInlineBlock,
+  divider: DividerInlineBlock,
+  badge: BadgeInlineBlock,
+
   // Commerce and Pricing
   "pricing-card": PricingCardInlineBlock,
-  "countdown": CountdownInlineBlock,
-  
+  countdown: CountdownInlineBlock,
+
   // Data and Stats
-  "progress": ProgressInlineBlock,
-  "stat": StatInlineBlock,
-  
+  progress: ProgressInlineBlock,
+  stat: StatInlineBlock,
+
   // Quiz Components (para DynamicStepTemplate)
   "quiz-step": QuizStepBlock,
   "quiz-progress": QuizProgressBlock,
@@ -110,18 +110,18 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       icon: Type,
       component: ENHANCED_BLOCK_REGISTRY["text"],
       properties: {},
-      defaultProps: { content: "Digite seu texto aqui..." }
+      defaultProps: { content: "Digite seu texto aqui..." },
     },
     {
       type: "heading",
       name: "HeadingInlineBlock",
       label: "Título",
-      category: "Conteúdo", 
+      category: "Conteúdo",
       description: "Título com diferentes tamanhos",
       icon: Heading,
       component: ENHANCED_BLOCK_REGISTRY["heading"],
       properties: {},
-      defaultProps: { content: "Seu título aqui", level: 2 }
+      defaultProps: { content: "Seu título aqui", level: 2 },
     },
     {
       type: "image",
@@ -132,9 +132,9 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       icon: Image,
       component: ENHANCED_BLOCK_REGISTRY["image"],
       properties: {},
-      defaultProps: { src: "", alt: "Imagem" }
+      defaultProps: { src: "", alt: "Imagem" },
     },
-    
+
     // Interactive Elements
     {
       type: "button",
@@ -145,7 +145,7 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       icon: MousePointer,
       component: ENHANCED_BLOCK_REGISTRY["button"],
       properties: {},
-      defaultProps: { text: "Clique aqui", variant: "primary" }
+      defaultProps: { text: "Clique aqui", variant: "primary" },
     },
     {
       type: "cta",
@@ -156,9 +156,9 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       icon: Zap,
       component: ENHANCED_BLOCK_REGISTRY["cta"],
       properties: {},
-      defaultProps: { title: "Ação Especial", description: "Aproveite agora!" }
+      defaultProps: { title: "Ação Especial", description: "Aproveite agora!" },
     },
-    
+
     // Layout and Design
     {
       type: "spacer",
@@ -169,7 +169,7 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       icon: Space,
       component: ENHANCED_BLOCK_REGISTRY["spacer"],
       properties: {},
-      defaultProps: { height: 40 }
+      defaultProps: { height: 40 },
     },
     {
       type: "divider",
@@ -180,7 +180,7 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       icon: Minus,
       component: ENHANCED_BLOCK_REGISTRY["divider"],
       properties: {},
-      defaultProps: { style: "solid" }
+      defaultProps: { style: "solid" },
     },
     {
       type: "badge",
@@ -191,9 +191,9 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       icon: Tag,
       component: ENHANCED_BLOCK_REGISTRY["badge"],
       properties: {},
-      defaultProps: { text: "Novo", variant: "primary" }
+      defaultProps: { text: "Novo", variant: "primary" },
     },
-    
+
     // Commerce and Pricing
     {
       type: "pricing-card",
@@ -204,7 +204,7 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       icon: CreditCard,
       component: ENHANCED_BLOCK_REGISTRY["pricing-card"],
       properties: {},
-      defaultProps: { title: "Plano Premium", price: "R$ 97", features: [] }
+      defaultProps: { title: "Plano Premium", price: "R$ 97", features: [] },
     },
     {
       type: "countdown",
@@ -215,9 +215,9 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       icon: Clock,
       component: ENHANCED_BLOCK_REGISTRY["countdown"],
       properties: {},
-      defaultProps: { targetDate: "2024-12-31" }
+      defaultProps: { targetDate: "2024-12-31" },
     },
-    
+
     // Data and Stats
     {
       type: "progress",
@@ -228,7 +228,7 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       icon: TrendingUp,
       component: ENHANCED_BLOCK_REGISTRY["progress"],
       properties: {},
-      defaultProps: { value: 75, max: 100 }
+      defaultProps: { value: 75, max: 100 },
     },
     {
       type: "stat",
@@ -239,8 +239,8 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       icon: BarChart,
       component: ENHANCED_BLOCK_REGISTRY["stat"],
       properties: {},
-      defaultProps: { value: "1000+", label: "Clientes satisfeitos" }
-    }
+      defaultProps: { value: "1000+", label: "Clientes satisfeitos" },
+    },
   ];
 };
 
@@ -252,12 +252,12 @@ export const getRegistryStats = () => {
   const definitions = generateBlockDefinitions();
   const categoriesSet = new Set(definitions.map(d => d.category));
   const categories = Array.from(categoriesSet);
-  
+
   return {
     totalComponents,
     totalDefinitions: definitions.length,
     categories: categories.length,
-    categoriesList: categories
+    categoriesList: categories,
   };
 };
 

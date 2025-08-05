@@ -1,6 +1,6 @@
-import React from "react";
-import { Block } from "@/types/editor";
 import { getBlockComponent } from "@/config/enhancedBlockRegistry";
+import { Block } from "@/types/editor";
+import React from "react";
 
 interface UniversalBlockRendererProps {
   block: Block;
@@ -19,15 +19,15 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
   block,
   isSelected = false,
   onClick,
-  onPropertyChange
+  onPropertyChange,
 }) => {
   // Buscar componente no registry
   const Component = getBlockComponent(block.type);
-  
+
   if (!Component) {
     // Fallback para tipo desconhecido
     return (
-      <div 
+      <div
         className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center text-gray-500"
         onClick={onClick}
       >
@@ -39,10 +39,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
 
   try {
     return (
-      <div 
-        className={`block-wrapper ${isSelected ? 'selected' : ''}`}
-        onClick={onClick}
-      >
+      <div className={`block-wrapper ${isSelected ? "selected" : ""}`} onClick={onClick}>
         <Component
           {...block.properties}
           id={block.id}
@@ -53,14 +50,16 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
     );
   } catch (error) {
     console.error(`Erro ao renderizar bloco ${block.type}:`, error);
-    
+
     return (
-      <div 
+      <div
         className="p-4 border-2 border-red-300 rounded-lg text-center text-red-500"
         onClick={onClick}
       >
         <p>Erro ao renderizar: {block.type}</p>
-        <p className="text-xs mt-1">{error instanceof Error ? error.message : 'Erro desconhecido'}</p>
+        <p className="text-xs mt-1">
+          {error instanceof Error ? error.message : "Erro desconhecido"}
+        </p>
       </div>
     );
   }

@@ -1,9 +1,9 @@
-import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import React from "react";
 
 // 🎯 CONFIGURAÇÃO DE QUESTÕES - JSON DINÂMICO
 export interface QuestionOption {
@@ -23,7 +23,7 @@ export interface QuestionConfig {
   questionNumber: number;
   totalQuestions: number;
   options: QuestionOption[];
-  layout: 'grid-2' | 'grid-3' | 'grid-4' | 'list';
+  layout: "grid-2" | "grid-3" | "grid-4" | "list";
   allowMultiple: boolean;
   showImages: boolean;
 }
@@ -56,18 +56,18 @@ export const DynamicStepTemplate: React.FC<DynamicStepProps> = ({
   logoUrl = "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
   brandColors = {
     primary: "#B89B7A",
-    secondary: "#432818", 
-    accent: "#E8D5C4"
-  }
+    secondary: "#432818",
+    accent: "#E8D5C4",
+  },
 }) => {
   const [localSelected, setLocalSelected] = React.useState<string[]>(selectedAnswers);
   const [isAnimating, setIsAnimating] = React.useState(false);
 
   const handleOptionClick = (optionId: string) => {
     setIsAnimating(true);
-    
+
     let newSelection: string[];
-    
+
     if (questionData.allowMultiple) {
       // Múltipla seleção
       newSelection = localSelected.includes(optionId)
@@ -77,10 +77,10 @@ export const DynamicStepTemplate: React.FC<DynamicStepProps> = ({
       // Seleção única
       newSelection = [optionId];
     }
-    
+
     setLocalSelected(newSelection);
     onAnswer?.(questionData.allowMultiple ? newSelection : newSelection[0]);
-    
+
     // Reset animation
     setTimeout(() => setIsAnimating(false), 300);
   };
@@ -89,11 +89,16 @@ export const DynamicStepTemplate: React.FC<DynamicStepProps> = ({
 
   const getGridColumns = () => {
     switch (questionData.layout) {
-      case 'grid-2': return 'grid-cols-1 md:grid-cols-2';
-      case 'grid-3': return 'grid-cols-1 md:grid-cols-3';
-      case 'grid-4': return 'grid-cols-2 md:grid-cols-4';
-      case 'list': return 'grid-cols-1';
-      default: return 'grid-cols-1 md:grid-cols-2';
+      case "grid-2":
+        return "grid-cols-1 md:grid-cols-2";
+      case "grid-3":
+        return "grid-cols-1 md:grid-cols-3";
+      case "grid-4":
+        return "grid-cols-2 md:grid-cols-4";
+      case "list":
+        return "grid-cols-1";
+      default:
+        return "grid-cols-1 md:grid-cols-2";
     }
   };
 
@@ -105,8 +110,8 @@ export const DynamicStepTemplate: React.FC<DynamicStepProps> = ({
           <div className="flex items-center justify-between">
             {/* Logo */}
             <div className="flex items-center gap-4">
-              <img 
-                src={logoUrl} 
+              <img
+                src={logoUrl}
                 alt="Logo"
                 className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover shadow-md"
               />
@@ -130,7 +135,7 @@ export const DynamicStepTemplate: React.FC<DynamicStepProps> = ({
                 <span className="ml-auto">{progressValue}%</span>
               </div>
               <div className="w-full bg-[#E8D5C4]/50 rounded-full h-2">
-                <div 
+                <div
                   className="bg-gradient-to-r from-[#B89B7A] to-[#D4C2A8] h-2 rounded-full transition-all duration-700 ease-out"
                   style={{ width: `${progressValue}%` }}
                 />
@@ -144,52 +149,44 @@ export const DynamicStepTemplate: React.FC<DynamicStepProps> = ({
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Question Header */}
         <div className="text-center mb-8">
-          <Badge 
-            variant="outline" 
-            className="mb-4 border-[#B89B7A] text-[#B89B7A] bg-[#B89B7A]/5"
-          >
+          <Badge variant="outline" className="mb-4 border-[#B89B7A] text-[#B89B7A] bg-[#B89B7A]/5">
             Questão {questionData.questionNumber} de {questionData.totalQuestions}
           </Badge>
-          
+
           <h1 className="text-3xl md:text-4xl font-bold text-[#432818] mb-4 leading-tight">
             {questionData.title}
           </h1>
-          
+
           {questionData.subtitle && (
-            <p className="text-lg text-[#8F7A6A] max-w-2xl mx-auto">
-              {questionData.subtitle}
-            </p>
+            <p className="text-lg text-[#8F7A6A] max-w-2xl mx-auto">{questionData.subtitle}</p>
           )}
         </div>
 
         {/* Options Grid */}
-        <div className={cn(
-          "grid gap-4 mb-8",
-          getGridColumns()
-        )}>
+        <div className={cn("grid gap-4 mb-8", getGridColumns())}>
           {questionData.options.map((option, index) => {
             const isSelected = localSelected.includes(option.id);
-            
+
             return (
               <Card
                 key={option.id}
                 className={cn(
                   "p-6 cursor-pointer transition-all duration-300 group hover:shadow-lg",
                   "border-2 transform hover:scale-105",
-                  isSelected 
-                    ? "border-[#B89B7A] bg-gradient-to-br from-[#B89B7A]/10 to-[#E8D5C4]/20 shadow-md" 
+                  isSelected
+                    ? "border-[#B89B7A] bg-gradient-to-br from-[#B89B7A]/10 to-[#E8D5C4]/20 shadow-md"
                     : "border-[#E8D5C4] hover:border-[#B89B7A]/50 bg-white",
                   isAnimating && "animate-pulse"
                 )}
                 onClick={() => handleOptionClick(option.id)}
                 style={{
-                  animationDelay: `${index * 100}ms`
+                  animationDelay: `${index * 100}ms`,
                 }}
               >
                 {/* Option Image (se habilitado) */}
                 {questionData.showImages && option.imageUrl && (
                   <div className="mb-4 overflow-hidden rounded-lg">
-                    <img 
+                    <img
                       src={option.imageUrl}
                       alt={option.text}
                       className="w-full h-32 object-cover transition-transform duration-300 group-hover:scale-110"
@@ -199,20 +196,22 @@ export const DynamicStepTemplate: React.FC<DynamicStepProps> = ({
 
                 {/* Option Content */}
                 <div className="text-center">
-                  <h3 className={cn(
-                    "font-semibold text-lg mb-2 transition-colors duration-300",
-                    isSelected ? "text-[#432818]" : "text-[#5C4A3A] group-hover:text-[#432818]"
-                  )}>
+                  <h3
+                    className={cn(
+                      "font-semibold text-lg mb-2 transition-colors duration-300",
+                      isSelected ? "text-[#432818]" : "text-[#5C4A3A] group-hover:text-[#432818]"
+                    )}
+                  >
                     {option.text}
                   </h3>
-                  
+
                   {option.category && (
-                    <Badge 
+                    <Badge
                       variant="secondary"
                       className={cn(
                         "text-xs transition-colors duration-300",
-                        isSelected 
-                          ? "bg-[#B89B7A] text-white" 
+                        isSelected
+                          ? "bg-[#B89B7A] text-white"
                           : "bg-[#E8D5C4] text-[#8F7A6A] group-hover:bg-[#B89B7A]/20"
                       )}
                     >
@@ -242,8 +241,8 @@ export const DynamicStepTemplate: React.FC<DynamicStepProps> = ({
             size="lg"
             className={cn(
               "px-8 py-4 text-lg font-bold transition-all duration-300 relative overflow-hidden group",
-              canProceed 
-                ? "bg-gradient-to-r from-[#B89B7A] to-[#D4C2A8] hover:from-[#A08967] hover:to-[#B89B7A] text-white shadow-lg hover:shadow-xl transform hover:scale-105" 
+              canProceed
+                ? "bg-gradient-to-r from-[#B89B7A] to-[#D4C2A8] hover:from-[#A08967] hover:to-[#B89B7A] text-white shadow-lg hover:shadow-xl transform hover:scale-105"
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
             )}
           >
@@ -251,7 +250,7 @@ export const DynamicStepTemplate: React.FC<DynamicStepProps> = ({
               Continuar
               <ChevronRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
             </span>
-            
+
             {/* Button animation effect */}
             {canProceed && (
               <div className="absolute inset-0 bg-white/10 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
@@ -260,7 +259,8 @@ export const DynamicStepTemplate: React.FC<DynamicStepProps> = ({
 
           {!canProceed && (
             <p className="text-sm text-[#8F7A6A] mt-2">
-              Selecione {questionData.allowMultiple ? "uma ou mais opções" : "uma opção"} para continuar
+              Selecione {questionData.allowMultiple ? "uma ou mais opções" : "uma opção"} para
+              continuar
             </p>
           )}
         </div>
