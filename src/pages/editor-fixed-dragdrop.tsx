@@ -255,14 +255,14 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   selectedBlock={{
                     id: selectedBlock.id,
                     type: selectedBlock.type,
-                    properties: selectedBlock.content || selectedBlock.properties || {},
+                    properties: selectedBlock.properties || {},
                   }}
                   onUpdate={(blockId: string, updates: Record<string, any>) => {
                     console.log("🚀 Atualizando bloco via UniversalPropertiesPanel:", {
                       blockId,
                       updates,
                     });
-                    updateBlock(blockId, { content: updates });
+                    updateBlock(blockId, { properties: updates });
                   }}
                   onDelete={(blockId: string) => {
                     console.log("🗑️ Deletando bloco via UniversalPropertiesPanel:", blockId);

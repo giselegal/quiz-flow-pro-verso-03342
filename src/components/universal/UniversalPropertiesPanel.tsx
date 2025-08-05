@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { UnifiedBlock } from "@/hooks/useUnifiedProperties";
 import {
@@ -948,7 +947,12 @@ export const UniversalPropertiesPanel: React.FC<UniversalPropertiesPanelProps> =
     }));
 
     if (onUpdate && selectedBlock) {
-      onUpdate(selectedBlock.id, { [key]: value });
+      // Enviar no formato properties.key = value
+      const updates = {
+        ...selectedBlock.properties,
+        [key]: value,
+      };
+      onUpdate(selectedBlock.id, updates);
     }
   };
 
@@ -1251,7 +1255,7 @@ export const UniversalPropertiesPanel: React.FC<UniversalPropertiesPanelProps> =
             {/* Content */}     {" "}
       <CardContent className="flex-1 overflow-y-auto p-0">
                {" "}
-        <Tabs defaultValue="content" className="h-full">
+        <div className="h-full space-y-4 p-2">
                    {" "}
           <TabsList className="grid w-full grid-cols-4 bg-[#B89B7A]/10 rounded-none border-b border-[#B89B7A]/30">
                        {" "}
@@ -1325,7 +1329,7 @@ export const UniversalPropertiesPanel: React.FC<UniversalPropertiesPanelProps> =
                      {" "}
           </TabsContent>
                  {" "}
-        </Tabs>
+        </div>
              {" "}
       </CardContent>
             {/* Footer com ações */}     {" "}
