@@ -18,7 +18,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   console.log("🎯 CONFIGURAÇÃO OTIMIZADA:", {
     hasConfig: !!OPTIMIZED_FUNNEL_CONFIG,
     totalSteps: OPTIMIZED_FUNNEL_CONFIG?.metadata?.totalSteps,
-    stepsCount: OPTIMIZED_FUNNEL_CONFIG?.steps?.length || 0
+    stepsCount: OPTIMIZED_FUNNEL_CONFIG?.steps?.length || 0,
   });
 
   // Hook para scroll sincronizado

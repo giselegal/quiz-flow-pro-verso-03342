@@ -1,17 +1,14 @@
 import React from "react";
 
-export interface Step05TemplateProps {
+export interface Step05Props {
   onNext?: () => void;
-  onPrevious?: () => void;
   onBlockAdd?: (block: any) => void;
+  onAnswer?: (answer: any) => void;
+  userAnswers?: Record<string, any>;
 }
 
-export const Step05Template: React.FC<Step05TemplateProps> = ({
-  onNext,
-  onPrevious,
-  onBlockAdd,
-}) => {
-  return <div className="step-05-template">{/* Conteúdo da Etapa 5 renderizado aqui */}</div>;
+export const Step05 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step05Props) => {
+  return <div className="step-05">{/* Conteúdo da Etapa 5 renderizado aqui */}</div>;
 };
 
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 5 - QUESTÃO 5: QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?
@@ -27,7 +24,7 @@ export const getStep05Template = () => {
         logoAlt: "Logo Gisele Galvão",
         logoWidth: 96,
         logoHeight: 96,
-        progressValue: 50,
+        progressValue: 25,
         progressMax: 100,
         showBackButton: true,
       },

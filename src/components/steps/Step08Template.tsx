@@ -1,173 +1,187 @@
 import React from "react";
 
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 8 - QUESTÃO 7: CALÇA FAVORITA (REAL)
+export interface Step08Props {
+  onNext?: () => void;
+  onBlockAdd?: (block: any) => void;
+  onAnswer?: (answer: any) => void;
+  userAnswers?: Record<string, any>;
+}
+
+export const Step08 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step08Props) => {
+  return <div className="step-08">{/* Conteúdo da Etapa 8 renderizado aqui */}</div>;
+};
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 8 - Quando o assunto são estampas, você prefere:
 export const getStep08Template = () => {
   return [
-    // 📱 CABEÇALHO COM LOGO E PROGRESSO
+    // 🎯 CABEÇALHO COM PROGRESSO
     {
-      id: "step08-header",
-      type: "quiz-intro-header",
+      id: "quiz-header-step08",
+      type: "quiz-header",
       properties: {
-        logoUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        logoUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         logoAlt: "Logo Gisele Galvão",
-        logoWidth: 96,
-        logoHeight: 96,
-        progressValue: 70,
+        logoWidth: 80,
+        logoHeight: 80,
+        progressValue: 40,
         progressMax: 100,
         showBackButton: true,
+        showProgress: true,
+        stepNumber: "8 de 21",
       },
     },
 
-    // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
+    // 🎨 BARRA DECORATIVA
     {
-      id: "step08-question-title",
-      type: "heading",
+      id: "decorative-bar-step08",
+      type: "decorative-bar-inline",
       properties: {
-        content: "QUAL SUA CALÇA FAVORITA?",
-        level: "h2",
+        width: "100%",
+        height: 3,
+        color: "#B89B7A",
+        gradientColors: ["#B89B7A", "#D4C2A8", "#B89B7A"],
+        borderRadius: 2,
+        marginTop: 6,
+        marginBottom: 20,
+        showShadow: true,
+      },
+    },
+
+    // 📝 PERGUNTA PRINCIPAL
+    {
+      id: "question-text-step08",
+      type: "text-inline",
+      properties: {
+        content: "Quando o assunto são estampas, você prefere:",
         fontSize: "text-2xl",
         fontWeight: "font-bold",
+        fontFamily: "Playfair Display, serif",
         textAlign: "text-center",
         color: "#432818",
-        marginBottom: 8,
+        marginBottom: 24,
+        lineHeight: "1.3",
       },
     },
 
-    // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
+    // 🖼️ IMAGEM DA PERGUNTA
     {
-      id: "step08-question-counter",
-      type: "text",
+      id: "question-image-step08",
+      type: "image-display-inline",
       properties: {
-        content: "Questão 7 de 10",
-        fontSize: "text-sm",
+        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838139/20250509_2144_Estampas_e_Padr%C3%B5es_simple_compose_01jtvt6y84tcz2w0tqp7j3rbpy_nwevaw.webp",
+        alt: "Imagem da pergunta 8",
+        width: 400,
+        height: 300,
+        className: "object-cover w-full max-w-md h-64 rounded-lg mx-auto shadow-md",
         textAlign: "text-center",
-        color: "#6B7280",
         marginBottom: 24,
       },
     },
 
-    // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
+    // 🎯 OPÇÕES DE RESPOSTA
+    
     {
-      id: "step08-pants-options",
-      type: "options-grid",
+      id: "option-1-step08",
+      type: "quiz-option",
       properties: {
-        questionId: "q7",
-        options: [
-          {
-            id: "7a",
-            text: "Calça fluida acetinada bege",
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/38_iilv0l.webp",
-            value: "7a",
-            category: "Natural",
-            styleCategory: "Natural",
-            points: 1,
-          },
-          {
-            id: "7b",
-            text: "Calça de alfaiataria cinza",
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735417/39_arsswu.webp",
-            value: "7b",
-            category: "Clássico",
-            styleCategory: "Clássico",
-            points: 1,
-          },
-          {
-            id: "7c",
-            text: "Jeans reto e básico",
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/40_beq52x.webp",
-            value: "7c",
-            category: "Contemporâneo",
-            styleCategory: "Contemporâneo",
-            points: 1,
-          },
-          {
-            id: "7d",
-            text: "Calça reta bege de tecido",
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/41_hconq4.webp",
-            value: "7d",
-            category: "Elegante",
-            styleCategory: "Elegante",
-            points: 1,
-          },
-          {
-            id: "7e",
-            text: "Calça ampla rosa alfaiatada",
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735420/42_q8xws1.webp",
-            value: "7e",
-            category: "Romântico",
-            styleCategory: "Romântico",
-            points: 1,
-          },
-          {
-            id: "7f",
-            text: "Legging preta de couro",
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/43_ljy7sh.webp",
-            value: "7f",
-            category: "Sexy",
-            styleCategory: "Sexy",
-            points: 1,
-          },
-          {
-            id: "7g",
-            text: "Calça reta preta de couro",
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/44_nqgvoq.webp",
-            value: "7g",
-            category: "Dramático",
-            styleCategory: "Dramático",
-            points: 1,
-          },
-          {
-            id: "7h",
-            text: "Calça estampada floral leve e ampla",
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735425/45_lp64m8.webp",
-            value: "7h",
-            category: "Criativo",
-            styleCategory: "Criativo",
-            points: 1,
-          },
-        ],
-        columns: 2,
-        showImages: true,
-        imageSize: "large",
-        multipleSelection: true,
-        maxSelections: 3,
-        minSelections: 1,
-        validationMessage: "Selecione até 3 opções",
-        gridGap: 16,
-        responsiveColumns: true,
-        autoAdvanceOnComplete: true,
-        autoAdvanceDelay: 800,
-        requiredSelections: 3,
-        enableButtonOnlyWhenValid: true,
-        showValidationFeedback: true,
+        optionId: "sem-estampas",
+        label: "Prefiro sem estampas - lisas e elegantes",
+        value: "sem-estampas",
+        points: {"elegante":3,"casual":2,"criativo":1,"classico":3,"romantico":1,"minimalista":3,"boho":1},
+        
+        
+        variant: "default",
+        size: "large",
+        textAlign: "text-left",
+        marginBottom: 12,
+        borderRadius: "rounded-lg",
+        backgroundColor: "#ffffff",
+        hoverColor: "#F8F4F1",
+        selectedColor: "#B89B7A",
+      },
+    },
+    {
+      id: "option-2-step08",
+      type: "quiz-option",
+      properties: {
+        optionId: "listras-classicas",
+        label: "Listras clássicas",
+        value: "listras-classicas",
+        points: {"elegante":2,"casual":3,"criativo":1,"classico":3,"romantico":1,"minimalista":2,"boho":1},
+        
+        
+        variant: "default",
+        size: "large",
+        textAlign: "text-left",
+        marginBottom: 12,
+        borderRadius: "rounded-lg",
+        backgroundColor: "#ffffff",
+        hoverColor: "#F8F4F1",
+        selectedColor: "#B89B7A",
+      },
+    },
+    {
+      id: "option-3-step08",
+      type: "quiz-option",
+      properties: {
+        optionId: "florais-delicadas",
+        label: "Florais delicadas e femininas",
+        value: "florais-delicadas",
+        points: {"elegante":1,"casual":2,"criativo":2,"classico":2,"romantico":3,"minimalista":1,"boho":3},
+        
+        
+        variant: "default",
+        size: "large",
+        textAlign: "text-left",
+        marginBottom: 12,
+        borderRadius: "rounded-lg",
+        backgroundColor: "#ffffff",
+        hoverColor: "#F8F4F1",
+        selectedColor: "#B89B7A",
+      },
+    },
+    {
+      id: "option-4-step08",
+      type: "quiz-option",
+      properties: {
+        optionId: "geometricas-modernas",
+        label: "Geométricas e modernas",
+        value: "geometricas-modernas",
+        points: {"elegante":2,"casual":1,"criativo":3,"classico":1,"romantico":1,"minimalista":2,"boho":2},
+        
+        
+        variant: "default",
+        size: "large",
+        textAlign: "text-left",
+        marginBottom: 12,
+        borderRadius: "rounded-lg",
+        backgroundColor: "#ffffff",
+        hoverColor: "#F8F4F1",
+        selectedColor: "#B89B7A",
       },
     },
 
-    // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
+    // 🎯 BOTÃO CONTINUAR
     {
-      id: "step08-continue-button",
-      type: "button",
+      id: "continue-button-step08",
+      type: "button-inline",
       properties: {
-        text: "Continuar",
+        text: "Continuar →",
         variant: "primary",
         size: "large",
         fullWidth: true,
         backgroundColor: "#B89B7A",
         textColor: "#ffffff",
+        requiresSelection: true,
+        textAlign: "text-center",
+        borderRadius: "rounded-full",
+        padding: "py-3 px-6",
+        fontSize: "text-base",
+        fontWeight: "font-semibold",
+        marginTop: 24,
         disabled: true,
-        requiresValidSelection: true,
       },
     },
   ];
 };
 
-export default getStep08Template;
+export default Step08;

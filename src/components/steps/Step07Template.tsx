@@ -1,17 +1,14 @@
 import React from "react";
 
-export interface Step07Question06Props {
+export interface Step07Props {
   onNext?: () => void;
-  onPrevious?: () => void;
   onBlockAdd?: (block: any) => void;
+  onAnswer?: (answer: any) => void;
+  userAnswers?: Record<string, any>;
 }
 
-export const Step07Question06: React.FC<Step07Question06Props> = ({
-  onNext,
-  onPrevious,
-  onBlockAdd,
-}) => {
-  return <div className="step-07-question-06">{/* Conteúdo da Etapa 7 renderizado aqui */}</div>;
+export const Step07 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step07Props) => {
+  return <div className="step-07">{/* Conteúdo da Etapa 7 renderizado aqui */}</div>;
 };
 
 // �� TEMPLATE DE BLOCOS DA ETAPA 7 - QUESTÃO 6: QUAL CASACO É SEU FAVORITO?
@@ -27,7 +24,7 @@ export const getStep07Template = () => {
         logoAlt: "Logo Gisele Galvão",
         logoWidth: 96,
         logoHeight: 96,
-        progressValue: 60,
+        progressValue: 35,
         progressMax: 100,
         showBackButton: true,
       },

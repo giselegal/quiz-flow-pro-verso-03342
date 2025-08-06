@@ -1,113 +1,96 @@
 import React from "react";
 
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 18 - QUESTÃO ESTRATÉGICA 6
-export const getStep18Template = () => [
-  {
-    id: "step18-header",
-    type: "quiz-intro-header",
-    properties: {
-      logoUrl:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-      logoAlt: "Logo Gisele Galvão",
-      logoWidth: 96,
-      logoHeight: 96,
-      progressValue: 86,
-      progressMax: 100,
-      showBackButton: true,
-    },
-  },
-  {
-    id: "step18-question-title",
-    type: "heading",
-    properties: {
-      content: "O QUE VOCÊ MAIS DESEJA ALCANÇAR COM SEU NOVO ESTILO?",
-      level: "h2",
-      fontSize: "text-2xl",
-      fontWeight: "font-bold",
-      textAlign: "text-center",
-      color: "#432818",
-      marginBottom: 8,
-    },
-  },
-  {
-    id: "step18-question-counter",
-    type: "text",
-    properties: {
-      content: "Questão 18 de 21",
-      fontSize: "text-sm",
-      textAlign: "text-center",
-      color: "#6B7280",
-      marginBottom: 24,
-    },
-  },
-  {
-    id: "step18-final-options",
-    type: "options-grid",
-    properties: {
-      questionId: "strategic-11",
-      options: [
-        {
-          id: "strategic-11-1",
-          text: "Mais confiança e autoestima no dia a dia",
-          value: "strategic-11-1",
-          category: "Strategic",
-          styleCategory: "Strategic",
-          points: 0,
-        },
-        {
-          id: "strategic-11-2",
-          text: "Praticidade e facilidade para me vestir",
-          value: "strategic-11-2",
-          category: "Strategic",
-          styleCategory: "Strategic",
-          points: 0,
-        },
-        {
-          id: "strategic-11-3",
-          text: "Uma imagem mais profissional e elegante",
-          value: "strategic-11-3",
-          category: "Strategic",
-          styleCategory: "Strategic",
-          points: 0,
-        },
-        {
-          id: "strategic-11-4",
-          text: "Expressar melhor minha personalidade através das roupas",
-          value: "strategic-11-4",
-          category: "Strategic",
-          styleCategory: "Strategic",
-          points: 0,
-        },
-      ],
-      columns: 1,
-      showImages: false,
-      multipleSelection: false,
-      maxSelections: 1,
-      minSelections: 1,
-      validationMessage: "Selecione uma opção",
-      gridGap: 12,
-      responsiveColumns: true,
-      autoAdvanceOnComplete: false,
-      autoAdvanceDelay: 800,
-      requiredSelections: 1,
-      enableButtonOnlyWhenValid: true,
-      showValidationFeedback: true,
-    },
-  },
-  {
-    id: "step18-continue-button",
-    type: "button",
-    properties: {
-      text: "Continuar",
-      variant: "primary",
-      size: "large",
-      fullWidth: true,
-      backgroundColor: "#B89B7A",
-      textColor: "#ffffff",
-      disabled: true,
-      requiresValidSelection: true,
-    },
-  },
-];
+export interface Step18Props {
+  onNext?: () => void;
+  onBlockAdd?: (block: any) => void;
+  onAnswer?: (answer: any) => void;
+  userAnswers?: Record<string, any>;
+}
 
-export default getStep18Template;
+export const Step18 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step18Props) => {
+  return <div className="step-18">{/* Conteúdo da Etapa 18 renderizado aqui */}</div>;
+};
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 18 - Calculando seu Resultado...
+export const getStep18Template = () => {
+  return [
+    // 🎯 CABEÇALHO COM PROGRESSO
+    {
+      id: "progress-header-step18",
+      type: "quiz-header",
+      properties: {
+        logoUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        logoAlt: "Logo Gisele Galvão",
+        logoWidth: 80,
+        logoHeight: 80,
+        progressValue: 90,
+        progressMax: 100,
+        showBackButton: false,
+        showProgress: true,
+        stepNumber: "18 de 21",
+      },
+    },
+
+    // 🎨 BARRA DECORATIVA
+    {
+      id: "decorative-bar-step18",
+      type: "decorative-bar-inline",
+      properties: {
+        width: "100%",
+        height: 4,
+        color: "#B89B7A",
+        gradientColors: ["#B89B7A", "#D4C2A8", "#B89B7A"],
+        borderRadius: 3,
+        marginTop: 8,
+        marginBottom: 32,
+        showShadow: true,
+      },
+    },
+
+    // 📱 TÍTULO DA TRANSIÇÃO
+    {
+      id: "transition-title-step18",
+      type: "text-inline",
+      properties: {
+        content: "Calculando seu Resultado...",
+        fontSize: "text-3xl",
+        fontWeight: "font-bold",
+        fontFamily: "Playfair Display, serif",
+        textAlign: "text-center",
+        color: "#432818",
+        marginBottom: 24,
+        lineHeight: "1.2",
+      },
+    },
+
+    // 🖼️ IMAGEM DE LOADING/TRANSIÇÃO
+    {
+      id: "transition-image-step18",
+      type: "image-display-inline",
+      properties: {
+        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838169/20250509_2154_C%C3%A1lculo_Final_simple_compose_01jtvthhq8wcbj2q6r9f8g3jrm_dqbdpt.webp",
+        alt: "Calculando seu Resultado...",
+        width: 500,
+        height: 350,
+        className: "object-cover w-full max-w-lg h-72 rounded-xl mx-auto shadow-lg",
+        textAlign: "text-center",
+        marginBottom: 32,
+      },
+    },
+
+    // 💭 TEXTO DESCRITIVO
+    {
+      id: "transition-description-step18",
+      type: "text-inline",
+      properties: {
+        content: "Seus dados estão sendo processados por nosso algoritmo de estilo. Aguarde...",
+        fontSize: "text-lg",
+        textAlign: "text-center",
+        color: "#432818",
+        marginBottom: 40,
+        lineHeight: "1.6",
+      },
+    },
+  ];
+};
+
+export default Step18;

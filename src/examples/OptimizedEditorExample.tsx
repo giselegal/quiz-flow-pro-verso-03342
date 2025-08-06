@@ -1,14 +1,14 @@
 /**
  * 🚀 EXEMPLO PRÁTICO DO SISTEMA INTEGRADO
  * =======================================
- * 
+ *
  * Demonstração completa de como usar o editor otimizado
  * aproveitando todos os 50 hooks e sistema existente.
  */
 
-import React, { useEffect, useState } from 'react';
-import { useOptimizedEditor } from '@/utils/optimizedEditorLoader';
-import { withOptimizedInline } from '@/utils/optimizedPerformance';
+import { useOptimizedEditor } from "@/utils/optimizedEditorLoader";
+import { withOptimizedInline } from "@/utils/optimizedPerformance";
+import React, { useEffect, useState } from "react";
 
 // Exemplo de uso do hook principal
 const OptimizedEditorExample: React.FC = () => {
@@ -21,13 +21,13 @@ const OptimizedEditorExample: React.FC = () => {
     calculatedStyle,
     isLoading,
     hasUnsavedChanges,
-    
+
     // Ações principais
     loadStep,
     navigateToStep,
     updateResponse,
     calculateResult,
-    
+
     // Hooks integrados
     unifiedProps,
     editor,
@@ -36,7 +36,7 @@ const OptimizedEditorExample: React.FC = () => {
     autoSave,
     shortcuts,
     performance,
-    
+
     // Utilitários
     getCurrentStep,
     getProgress,
@@ -44,7 +44,7 @@ const OptimizedEditorExample: React.FC = () => {
     canGoPrev,
     isSaving,
     lastSaved,
-    isOptimized
+    isOptimized,
   } = useOptimizedEditor();
 
   const [currentStepData, setCurrentStepData] = useState(null);
@@ -82,29 +82,28 @@ const OptimizedEditorExample: React.FC = () => {
   // Exemplo de cálculo de resultado
   const handleCalculateResult = () => {
     const result = calculateResult();
-    console.log('🎯 Resultado calculado:', result);
+    console.log("🎯 Resultado calculado:", result);
   };
 
   return (
     <div className="optimized-editor-example">
       {/* Header com informações do sistema */}
       <div className="editor-header">
-        <h1>Editor Otimizado - Etapa {currentStep} de {totalSteps}</h1>
+        <h1>
+          Editor Otimizado - Etapa {currentStep} de {totalSteps}
+        </h1>
         <div className="status-bar">
           <span>Progresso: {getProgress()}%</span>
-          <span>Otimizado: {isOptimized ? '✅' : '❌'}</span>
-          <span>Salvando: {isSaving ? '💾' : '✅'}</span>
-          <span>Último save: {lastSaved ? new Date(lastSaved).toLocaleTimeString() : 'Nunca'}</span>
-          <span>Alterações: {hasUnsavedChanges ? '⚠️' : '✅'}</span>
+          <span>Otimizado: {isOptimized ? "✅" : "❌"}</span>
+          <span>Salvando: {isSaving ? "💾" : "✅"}</span>
+          <span>Último save: {lastSaved ? new Date(lastSaved).toLocaleTimeString() : "Nunca"}</span>
+          <span>Alterações: {hasUnsavedChanges ? "⚠️" : "✅"}</span>
         </div>
       </div>
 
       {/* Barra de progresso */}
       <div className="progress-bar">
-        <div 
-          className="progress-fill"
-          style={{ width: `${getProgress()}%` }}
-        />
+        <div className="progress-fill" style={{ width: `${getProgress()}%` }} />
       </div>
 
       {/* Conteúdo da etapa atual */}
@@ -115,7 +114,7 @@ const OptimizedEditorExample: React.FC = () => {
           <div>
             <h2>{currentStepData.name}</h2>
             <p>{currentStepData.description}</p>
-            
+
             {/* Renderizar blocos da etapa */}
             {currentStepData.blocks?.map((block, index) => (
               <div key={index} className="step-block">
@@ -123,13 +122,13 @@ const OptimizedEditorExample: React.FC = () => {
                 <pre>{JSON.stringify(block.properties, null, 2)}</pre>
               </div>
             ))}
-            
+
             {/* Área de resposta */}
             <div className="response-area">
               <h3>Sua resposta:</h3>
               <textarea
-                value={responses[`step-${currentStep}`] || ''}
-                onChange={(e) => handleResponseUpdate(e.target.value)}
+                value={responses[`step-${currentStep}`] || ""}
+                onChange={e => handleResponseUpdate(e.target.value)}
                 placeholder="Digite sua resposta aqui..."
                 rows={4}
                 cols={50}
@@ -143,26 +142,15 @@ const OptimizedEditorExample: React.FC = () => {
 
       {/* Controles de navegação */}
       <div className="navigation-controls">
-        <button 
-          onClick={handlePrev} 
-          disabled={!canGoPrev()}
-          className="nav-button prev"
-        >
+        <button onClick={handlePrev} disabled={!canGoPrev()} className="nav-button prev">
           ← Anterior
         </button>
-        
-        <button 
-          onClick={handleCalculateResult}
-          className="calculate-button"
-        >
+
+        <button onClick={handleCalculateResult} className="calculate-button">
           Calcular Resultado
         </button>
-        
-        <button 
-          onClick={handleNext} 
-          disabled={!canGoNext()}
-          className="nav-button next"
-        >
+
+        <button onClick={handleNext} disabled={!canGoNext()} className="nav-button next">
           Próximo →
         </button>
       </div>
@@ -179,7 +167,7 @@ const OptimizedEditorExample: React.FC = () => {
       <details className="debug-info">
         <summary>🔍 Informações de Debug</summary>
         <pre>
-{`Hooks disponíveis:
+          {`Hooks disponíveis:
 - unifiedProps: ${!!unifiedProps}
 - editor: ${!!editor}
 - quiz: ${!!quiz}
@@ -203,11 +191,11 @@ Estado atual:
           max-width: 800px;
           margin: 0 auto;
           padding: 20px;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         .editor-header {
-          background: linear-gradient(135deg, #B89B7A, #8F7A6A);
+          background: linear-gradient(135deg, #b89b7a, #8f7a6a);
           color: white;
           padding: 20px;
           border-radius: 12px;
@@ -238,7 +226,7 @@ Estado atual:
 
         .progress-fill {
           height: 100%;
-          background: linear-gradient(90deg, #B89B7A, #8F7A6A);
+          background: linear-gradient(90deg, #b89b7a, #8f7a6a);
           transition: width 0.3s ease;
         }
 
@@ -251,7 +239,8 @@ Estado atual:
           min-height: 300px;
         }
 
-        .loading, .no-step {
+        .loading,
+        .no-step {
           text-align: center;
           color: #666;
           font-style: italic;
@@ -289,7 +278,8 @@ Estado atual:
           margin: 30px 0;
         }
 
-        .nav-button, .calculate-button {
+        .nav-button,
+        .calculate-button {
           padding: 12px 24px;
           border: none;
           border-radius: 8px;
@@ -299,12 +289,12 @@ Estado atual:
         }
 
         .nav-button {
-          background: #B89B7A;
+          background: #b89b7a;
           color: white;
         }
 
         .nav-button:hover:not(:disabled) {
-          background: #8F7A6A;
+          background: #8f7a6a;
           transform: translateY(-1px);
         }
 
@@ -408,30 +398,30 @@ export default function QuizPage() {
 export const quickStartGuide = {
   step1: {
     title: "1. Importar o hook principal",
-    code: `import { useOptimizedEditor } from '@/utils/optimizedEditorLoader';`
+    code: `import { useOptimizedEditor } from '@/utils/optimizedEditorLoader';`,
   },
   step2: {
     title: "2. Usar no componente",
-    code: `const editor = useOptimizedEditor();`
+    code: `const editor = useOptimizedEditor();`,
   },
   step3: {
     title: "3. Carregar etapa",
-    code: `const stepData = editor.loadStep(1);`
+    code: `const stepData = editor.loadStep(1);`,
   },
   step4: {
     title: "4. Navegar entre etapas",
-    code: `editor.navigateToStep(2);`
+    code: `editor.navigateToStep(2);`,
   },
   step5: {
     title: "5. Atualizar resposta",
-    code: `editor.updateResponse('step-1', userData);`
+    code: `editor.updateResponse('step-1', userData);`,
   },
   step6: {
     title: "6. Calcular resultado",
-    code: `const result = editor.calculateResult();`
-  }
+    code: `const result = editor.calculateResult();`,
+  },
 };
 
-console.log('🚀 EXEMPLO PRÁTICO CRIADO!');
-console.log('📖 Use o OptimizedEditorExampleComponent para testar');
-console.log('🎯 Veja quickStartGuide para começar rapidamente');
+console.log("🚀 EXEMPLO PRÁTICO CRIADO!");
+console.log("📖 Use o OptimizedEditorExampleComponent para testar");
+console.log("🎯 Veja quickStartGuide para começar rapidamente");

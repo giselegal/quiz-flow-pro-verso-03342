@@ -1,17 +1,14 @@
 import React from "react";
 
-export interface Step04TemplateProps {
+export interface Step04Props {
   onNext?: () => void;
-  onPrevious?: () => void;
   onBlockAdd?: (block: any) => void;
+  onAnswer?: (answer: any) => void;
+  userAnswers?: Record<string, any>;
 }
 
-export const Step04Template: React.FC<Step04TemplateProps> = ({
-  onNext,
-  onPrevious,
-  onBlockAdd,
-}) => {
-  return <div className="step-04-template">{/* Conteúdo da Etapa 4 renderizado aqui */}</div>;
+export const Step04 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step04Props) => {
+  return <div className="step-04">{/* Conteúdo da Etapa 4 renderizado aqui */}</div>;
 };
 
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 4 - QUESTÃO 3: QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?
@@ -27,7 +24,7 @@ export const getStep04Template = () => {
         logoAlt: "Logo Gisele Galvão",
         logoWidth: 96,
         logoHeight: 96,
-        progressValue: 30,
+        progressValue: 20,
         progressMax: 100,
         showBackButton: true,
       },

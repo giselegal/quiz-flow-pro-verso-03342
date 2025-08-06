@@ -1,154 +1,187 @@
 import React from "react";
 
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 10 - QUESTÃO 9: ACESSÓRIOS (REAL)
-export const getStep10Template = () => [
-  {
-    id: "step10-header",
-    type: "quiz-intro-header",
-    properties: {
-      logoUrl:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-      logoAlt: "Logo Gisele Galvão",
-      logoWidth: 96,
-      logoHeight: 96,
-      progressValue: 90,
-      progressMax: 100,
-      showBackButton: true,
-    },
-  },
-  {
-    id: "step10-question-title",
-    type: "heading",
-    properties: {
-      content: "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?",
-      level: "h2",
-      fontSize: "text-2xl",
-      fontWeight: "font-bold",
-      textAlign: "text-center",
-      color: "#432818",
-      marginBottom: 8,
-    },
-  },
-  {
-    id: "step10-question-counter",
-    type: "text",
-    properties: {
-      content: "Questão 9 de 10",
-      fontSize: "text-sm",
-      textAlign: "text-center",
-      color: "#6B7280",
-      marginBottom: 24,
-    },
-  },
-  {
-    id: "step10-accessories-options",
-    type: "options-grid",
-    properties: {
-      questionId: "q9",
-      options: [
-        {
-          id: "9a",
-          text: "Pequenos e discretos, às vezes nem uso.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/56_htzoxy.webp",
-          value: "9a",
-          category: "Natural",
-          styleCategory: "Natural",
-          points: 1,
-        },
-        {
-          id: "9b",
-          text: "Brincos pequenos e discretos. Corrente fininha.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/57_whzmff.webp",
-          value: "9b",
-          category: "Clássico",
-          styleCategory: "Clássico",
-          points: 1,
-        },
-        {
-          id: "9c",
-          text: "Acessórios que elevem meu look com um toque moderno.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/61_joafud.webp",
-          value: "9c",
-          category: "Contemporâneo",
-          styleCategory: "Contemporâneo",
-          points: 1,
-        },
-        {
-          id: "9d",
-          text: "Acessórios sofisticados, joias ou semijoias.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/60_vzsnps.webp",
-          value: "9d",
-          category: "Elegante",
-          styleCategory: "Elegante",
-          points: 1,
-        },
-        {
-          id: "9e",
-          text: "Peças delicadas e com um toque feminino.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/59_dwaqrx.webp",
-          value: "9e",
-          category: "Romântico",
-          styleCategory: "Romântico",
-          points: 1,
-        },
-        {
-          id: "9f",
-          text: "Brincos longos, colares que valorizem minha beleza.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735487/63_lwgokn.webp",
-          value: "9f",
-          category: "Sexy",
-          styleCategory: "Sexy",
-          points: 1,
-        },
-        {
-          id: "9g",
-          text: "Acessórios pesados, que causem um impacto.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735485/62_mno8wg.webp",
-          value: "9g",
-          category: "Dramático",
-          styleCategory: "Dramático",
-          points: 1,
-        },
-        {
-          id: "9h",
-          text: "Acessórios diferentes, grandes e marcantes.",
-          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735480/58_njdjoh.webp",
-          value: "9h",
-          category: "Criativo",
-          styleCategory: "Criativo",
-          points: 1,
-        },
-      ],
-      columns: 2,
-      showImages: true,
-      imageSize: "large",
-      multipleSelection: true,
-      maxSelections: 3,
-      minSelections: 1,
-      validationMessage: "Selecione até 3 opções",
-      gridGap: 16,
-      responsiveColumns: true,
-      autoAdvanceOnComplete: true,
-      autoAdvanceDelay: 800,
-      requiredSelections: 3,
-      enableButtonOnlyWhenValid: true,
-      showValidationFeedback: true,
-    },
-  },
-  {
-    id: "step10-continue-button",
-    type: "button",
-    properties: {
-      text: "Continuar",
-      variant: "primary",
-      size: "large",
-      fullWidth: true,
-      backgroundColor: "#B89B7A",
-      textColor: "#ffffff",
-      disabled: true,
-      requiresValidSelection: true,
-    },
-  },
-];
+export interface Step10Props {
+  onNext?: () => void;
+  onBlockAdd?: (block: any) => void;
+  onAnswer?: (answer: any) => void;
+  userAnswers?: Record<string, any>;
+}
 
-export default getStep10Template;
+export const Step10 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step10Props) => {
+  return <div className="step-10">{/* Conteúdo da Etapa 10 renderizado aqui */}</div>;
+};
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 10 - Seu estilo de maquiagem preferido:
+export const getStep10Template = () => {
+  return [
+    // 🎯 CABEÇALHO COM PROGRESSO
+    {
+      id: "quiz-header-step10",
+      type: "quiz-header",
+      properties: {
+        logoUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        logoAlt: "Logo Gisele Galvão",
+        logoWidth: 80,
+        logoHeight: 80,
+        progressValue: 50,
+        progressMax: 100,
+        showBackButton: true,
+        showProgress: true,
+        stepNumber: "10 de 21",
+      },
+    },
+
+    // 🎨 BARRA DECORATIVA
+    {
+      id: "decorative-bar-step10",
+      type: "decorative-bar-inline",
+      properties: {
+        width: "100%",
+        height: 3,
+        color: "#B89B7A",
+        gradientColors: ["#B89B7A", "#D4C2A8", "#B89B7A"],
+        borderRadius: 2,
+        marginTop: 6,
+        marginBottom: 20,
+        showShadow: true,
+      },
+    },
+
+    // 📝 PERGUNTA PRINCIPAL
+    {
+      id: "question-text-step10",
+      type: "text-inline",
+      properties: {
+        content: "Seu estilo de maquiagem preferido:",
+        fontSize: "text-2xl",
+        fontWeight: "font-bold",
+        fontFamily: "Playfair Display, serif",
+        textAlign: "text-center",
+        color: "#432818",
+        marginBottom: 24,
+        lineHeight: "1.3",
+      },
+    },
+
+    // 🖼️ IMAGEM DA PERGUNTA
+    {
+      id: "question-image-step10",
+      type: "image-display-inline",
+      properties: {
+        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838145/20250509_2146_Maquiagem_e_Beleza_simple_compose_01jtvt92fckdz7pz5r9n3j4q8m_bvtwpb.webp",
+        alt: "Imagem da pergunta 10",
+        width: 400,
+        height: 300,
+        className: "object-cover w-full max-w-md h-64 rounded-lg mx-auto shadow-md",
+        textAlign: "text-center",
+        marginBottom: 24,
+      },
+    },
+
+    // 🎯 OPÇÕES DE RESPOSTA
+    
+    {
+      id: "option-1-step10",
+      type: "quiz-option",
+      properties: {
+        optionId: "sofisticada-marcante",
+        label: "Sofisticada e marcante",
+        value: "sofisticada-marcante",
+        points: {"elegante":3,"casual":1,"criativo":1,"classico":2,"romantico":2,"minimalista":1,"boho":1},
+        
+        
+        variant: "default",
+        size: "large",
+        textAlign: "text-left",
+        marginBottom: 12,
+        borderRadius: "rounded-lg",
+        backgroundColor: "#ffffff",
+        hoverColor: "#F8F4F1",
+        selectedColor: "#B89B7A",
+      },
+    },
+    {
+      id: "option-2-step10",
+      type: "quiz-option",
+      properties: {
+        optionId: "natural-pratica",
+        label: "Natural e prática",
+        value: "natural-pratica",
+        points: {"elegante":1,"casual":3,"criativo":1,"classico":2,"romantico":1,"minimalista":3,"boho":2},
+        
+        
+        variant: "default",
+        size: "large",
+        textAlign: "text-left",
+        marginBottom: 12,
+        borderRadius: "rounded-lg",
+        backgroundColor: "#ffffff",
+        hoverColor: "#F8F4F1",
+        selectedColor: "#B89B7A",
+      },
+    },
+    {
+      id: "option-3-step10",
+      type: "quiz-option",
+      properties: {
+        optionId: "romantica-delicada",
+        label: "Romântica e delicada",
+        value: "romantica-delicada",
+        points: {"elegante":2,"casual":1,"criativo":2,"classico":3,"romantico":3,"minimalista":2,"boho":2},
+        
+        
+        variant: "default",
+        size: "large",
+        textAlign: "text-left",
+        marginBottom: 12,
+        borderRadius: "rounded-lg",
+        backgroundColor: "#ffffff",
+        hoverColor: "#F8F4F1",
+        selectedColor: "#B89B7A",
+      },
+    },
+    {
+      id: "option-4-step10",
+      type: "quiz-option",
+      properties: {
+        optionId: "colorida-criativa",
+        label: "Colorida e criativa",
+        value: "colorida-criativa",
+        points: {"elegante":1,"casual":2,"criativo":3,"classico":1,"romantico":1,"minimalista":1,"boho":3},
+        
+        
+        variant: "default",
+        size: "large",
+        textAlign: "text-left",
+        marginBottom: 12,
+        borderRadius: "rounded-lg",
+        backgroundColor: "#ffffff",
+        hoverColor: "#F8F4F1",
+        selectedColor: "#B89B7A",
+      },
+    },
+
+    // 🎯 BOTÃO CONTINUAR
+    {
+      id: "continue-button-step10",
+      type: "button-inline",
+      properties: {
+        text: "Continuar →",
+        variant: "primary",
+        size: "large",
+        fullWidth: true,
+        backgroundColor: "#B89B7A",
+        textColor: "#ffffff",
+        requiresSelection: true,
+        textAlign: "text-center",
+        borderRadius: "rounded-full",
+        padding: "py-3 px-6",
+        fontSize: "text-base",
+        fontWeight: "font-semibold",
+        marginTop: 24,
+        disabled: true,
+      },
+    },
+  ];
+};
+
+export default Step10;

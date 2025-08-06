@@ -1,17 +1,14 @@
 import React from "react";
 
-export interface Step02Question01Props {
+export interface Step02Props {
   onNext?: () => void;
-  onPrevious?: () => void;
   onBlockAdd?: (block: any) => void;
+  onAnswer?: (answer: any) => void;
+  userAnswers?: Record<string, any>;
 }
 
-export const Step02Question01: React.FC<Step02Question01Props> = ({
-  onNext,
-  onPrevious,
-  onBlockAdd,
-}) => {
-  return <div className="step-02-question-01">{/* Conteúdo da Etapa 2 renderizado aqui */}</div>;
+export const Step02 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step02Props) => {
+  return <div className="step-02">{/* Conteúdo da Etapa 2 renderizado aqui */}</div>;
 };
 
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 2 - QUESTÃO 1: TIPO DE ROUPA FAVORITA

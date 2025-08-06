@@ -1,12 +1,14 @@
 import React from "react";
 
-export interface Step01IntroProps {
+export interface Step01Props {
   onNext?: () => void;
   onBlockAdd?: (block: any) => void;
+  onAnswer?: (answer: any) => void;
+  userAnswers?: Record<string, any>;
 }
 
-export const Step01Intro: React.FC<Step01IntroProps> = ({ onNext, onBlockAdd }) => {
-  return <div className="step-01-intro">{/* Conteúdo da Etapa 1 renderizado aqui */}</div>;
+export const Step01 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step01Props) => {
+  return <div className="step-01">{/* Conteúdo da Etapa 1 renderizado aqui */}</div>;
 };
 
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 1 - MODELO EXATO

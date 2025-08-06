@@ -1,87 +1,96 @@
-// Template para a Etapa 21 - Resultados do Quiz de Estilo
-export const getStep21Template = () => [
-  {
-    id: "step21-header",
-    type: "quiz-intro-header",
-    properties: {
-      logoUrl:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-      logoAlt: "Logo Gisele Galvão",
-      logoWidth: 96,
-      logoHeight: 96,
-      progressValue: 100,
-      progressMax: 100,
-      showBackButton: false,
-    },
-  },
-  {
-    id: "step21-final-title",
-    type: "heading",
-    properties: {
-      content: "Seu Estilo Predominante",
-      level: "h2",
-      fontSize: "text-3xl",
-      fontWeight: "font-bold",
-      textAlign: "text-center",
-      color: "#432818",
-      marginBottom: 4,
-    },
-  },
-  {
-    id: "step21-final-subtitle",
-    type: "text",
-    properties: {
-      content: "Descubra seu estilo único e as melhores escolhas para você",
-      fontSize: "text-lg",
-      textAlign: "text-center",
-      color: "#6B7280",
-      marginBottom: 24,
-    },
-  },
-  {
-    id: "step21-style-results",
-    type: "style-results-block",
-    properties: {
-      result: {
-        id: "style-Natural",
-        title: "Natural",
-        description:
-          "Você valoriza o conforto e a praticidade, com um visual descontraído e autêntico.",
-        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
-        category: "Natural",
-        minScore: 0,
-        maxScore: 100,
-        displayOrder: 1,
-      },
-      categoryScores: {
-        Natural: 10,
-        Clássico: 7,
-        Elegante: 5,
-        Romântico: 3,
-        Contemporâneo: 2,
-        Sexy: 1,
-        Dramático: 1,
-        Criativo: 1,
-      },
-      showAllStyles: false,
-      showGuideImage: true,
-      guideImageUrl:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
-    },
-  },
-  {
-    id: "step21-final-button",
-    type: "button",
-    properties: {
-      text: "Agendar Consultoria Personalizada",
-      variant: "primary",
-      size: "large",
-      fullWidth: true,
-      backgroundColor: "#B89B7A",
-      textColor: "#ffffff",
-      marginTop: 24,
-    },
-  },
-];
+import React from "react";
 
-export default getStep21Template;
+export interface Step21Props {
+  onNext?: () => void;
+  onBlockAdd?: (block: any) => void;
+  onAnswer?: (answer: any) => void;
+  userAnswers?: Record<string, any>;
+}
+
+export const Step21 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step21Props) => {
+  return <div className="step-21">{/* Conteúdo da Etapa 21 renderizado aqui */}</div>;
+};
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 21 - Transforme seu Guarda-Roupa Agora!
+export const getStep21Template = () => {
+  return [
+    // 🎯 CABEÇALHO COM PROGRESSO
+    {
+      id: "progress-header-step21",
+      type: "quiz-header",
+      properties: {
+        logoUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        logoAlt: "Logo Gisele Galvão",
+        logoWidth: 80,
+        logoHeight: 80,
+        progressValue: 100,
+        progressMax: 100,
+        showBackButton: false,
+        showProgress: true,
+        stepNumber: "21 de 21",
+      },
+    },
+
+    // 🎨 BARRA DECORATIVA
+    {
+      id: "decorative-bar-step21",
+      type: "decorative-bar-inline",
+      properties: {
+        width: "100%",
+        height: 4,
+        color: "#B89B7A",
+        gradientColors: ["#B89B7A", "#D4C2A8", "#B89B7A"],
+        borderRadius: 3,
+        marginTop: 8,
+        marginBottom: 32,
+        showShadow: true,
+      },
+    },
+
+    // 📱 TÍTULO DA TRANSIÇÃO
+    {
+      id: "transition-title-step21",
+      type: "text-inline",
+      properties: {
+        content: "Transforme seu Guarda-Roupa Agora!",
+        fontSize: "text-3xl",
+        fontWeight: "font-bold",
+        fontFamily: "Playfair Display, serif",
+        textAlign: "text-center",
+        color: "#432818",
+        marginBottom: 24,
+        lineHeight: "1.2",
+      },
+    },
+
+    // 🖼️ IMAGEM DE LOADING/TRANSIÇÃO
+    {
+      id: "transition-image-step21",
+      type: "image-display-inline",
+      properties: {
+        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838178/20250509_2157_Oferta_Especial_simple_compose_01jtvtkoxf9n4q6r7bnz5z4mvd_pnqrsm.webp",
+        alt: "Transforme seu Guarda-Roupa Agora!",
+        width: 500,
+        height: 350,
+        className: "object-cover w-full max-w-lg h-72 rounded-xl mx-auto shadow-lg",
+        textAlign: "text-center",
+        marginBottom: 32,
+      },
+    },
+
+    // 💭 TEXTO DESCRITIVO
+    {
+      id: "transition-description-step21",
+      type: "text-inline",
+      properties: {
+        content: "Com base no seu estilo, temos uma oferta especial para você começar sua transformação hoje mesmo.",
+        fontSize: "text-lg",
+        textAlign: "text-center",
+        color: "#432818",
+        marginBottom: 40,
+        lineHeight: "1.6",
+      },
+    },
+  ];
+};
+
+export default Step21;

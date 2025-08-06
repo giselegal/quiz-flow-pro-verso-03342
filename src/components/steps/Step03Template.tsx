@@ -1,17 +1,14 @@
 import React from "react";
 
-export interface Step03Question02Props {
+export interface Step03Props {
   onNext?: () => void;
-  onPrevious?: () => void;
   onBlockAdd?: (block: any) => void;
+  onAnswer?: (answer: any) => void;
+  userAnswers?: Record<string, any>;
 }
 
-export const Step03Question02: React.FC<Step03Question02Props> = ({
-  onNext,
-  onPrevious,
-  onBlockAdd,
-}) => {
-  return <div className="step-03-question-02">{/* Conteúdo da Etapa 3 renderizado aqui */}</div>;
+export const Step03 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step03Props) => {
+  return <div className="step-03">{/* Conteúdo da Etapa 3 renderizado aqui */}</div>;
 };
 
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 3 - QUESTÃO 2: PERSONALIDADE (REAL)
@@ -27,7 +24,7 @@ export const getStep03Template = () => {
         logoAlt: "Logo Gisele Galvão",
         logoWidth: 96,
         logoHeight: 96,
-        progressValue: 20,
+        progressValue: 15,
         progressMax: 100,
         showBackButton: true,
       },

@@ -1,113 +1,96 @@
 import React from "react";
 
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 14 - QUESTÃO ESTRATÉGICA 2
-export const getStep14Template = () => [
-  {
-    id: "step14-header",
-    type: "quiz-intro-header",
-    properties: {
-      logoUrl:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-      logoAlt: "Logo Gisele Galvão",
-      logoWidth: 96,
-      logoHeight: 96,
-      progressValue: 67,
-      progressMax: 100,
-      showBackButton: true,
-    },
-  },
-  {
-    id: "step14-question-title",
-    type: "heading",
-    properties: {
-      content: "QUAL É A SUA PRINCIPAL DIFICULDADE NA HORA DE SE ARRUMAR PARA SAIR?",
-      level: "h2",
-      fontSize: "text-2xl",
-      fontWeight: "font-bold",
-      textAlign: "text-center",
-      color: "#432818",
-      marginBottom: 8,
-    },
-  },
-  {
-    id: "step14-question-counter",
-    type: "text",
-    properties: {
-      content: "Questão 14 de 21",
-      fontSize: "text-sm",
-      textAlign: "text-center",
-      color: "#6B7280",
-      marginBottom: 24,
-    },
-  },
-  {
-    id: "step14-final-options",
-    type: "options-grid",
-    properties: {
-      questionId: "strategic-2",
-      options: [
-        {
-          id: "strategic-2-1",
-          text: "Demoro uma eternidade pra escolher e no fim nem gosto do que visto.",
-          value: "strategic-2-1",
-          category: "Strategic",
-          styleCategory: "Strategic",
-          points: 0,
-        },
-        {
-          id: "strategic-2-2",
-          text: "Meu guarda-roupa está lotado, mas sinto que nunca tenho NADA pra vestir.",
-          value: "strategic-2-2",
-          category: "Strategic",
-          styleCategory: "Strategic",
-          points: 0,
-        },
-        {
-          id: "strategic-2-3",
-          text: "Compro roupas por impulso que acabam paradas no armário, sem uso.",
-          value: "strategic-2-3",
-          category: "Strategic",
-          styleCategory: "Strategic",
-          points: 0,
-        },
-        {
-          id: "strategic-2-4",
-          text: "Não consigo passar a imagem que eu gostaria através das minhas roupas.",
-          value: "strategic-2-4",
-          category: "Strategic",
-          styleCategory: "Strategic",
-          points: 0,
-        },
-      ],
-      columns: 1,
-      showImages: false,
-      multipleSelection: false,
-      maxSelections: 1,
-      minSelections: 1,
-      validationMessage: "Selecione uma opção",
-      gridGap: 12,
-      responsiveColumns: true,
-      autoAdvanceOnComplete: false,
-      autoAdvanceDelay: 800,
-      requiredSelections: 1,
-      enableButtonOnlyWhenValid: true,
-      showValidationFeedback: true,
-    },
-  },
-  {
-    id: "step14-continue-button",
-    type: "button",
-    properties: {
-      text: "Continuar",
-      variant: "primary",
-      size: "large",
-      fullWidth: true,
-      backgroundColor: "#B89B7A",
-      textColor: "#ffffff",
-      disabled: true,
-      requiresValidSelection: true,
-    },
-  },
-];
+export interface Step14Props {
+  onNext?: () => void;
+  onBlockAdd?: (block: any) => void;
+  onAnswer?: (answer: any) => void;
+  userAnswers?: Record<string, any>;
+}
 
-export default getStep14Template;
+export const Step14 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step14Props) => {
+  return <div className="step-14">{/* Conteúdo da Etapa 14 renderizado aqui */}</div>;
+};
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 14 - undefined
+export const getStep14Template = () => {
+  return [
+    // 🎯 CABEÇALHO COM PROGRESSO
+    {
+      id: "progress-header-step14",
+      type: "quiz-header",
+      properties: {
+        logoUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        logoAlt: "Logo Gisele Galvão",
+        logoWidth: 80,
+        logoHeight: 80,
+        progressValue: 70,
+        progressMax: 100,
+        showBackButton: false,
+        showProgress: true,
+        stepNumber: "14 de 21",
+      },
+    },
+
+    // 🎨 BARRA DECORATIVA
+    {
+      id: "decorative-bar-step14",
+      type: "decorative-bar-inline",
+      properties: {
+        width: "100%",
+        height: 4,
+        color: "#B89B7A",
+        gradientColors: ["#B89B7A", "#D4C2A8", "#B89B7A"],
+        borderRadius: 3,
+        marginTop: 8,
+        marginBottom: 32,
+        showShadow: true,
+      },
+    },
+
+    // 📱 TÍTULO DA TRANSIÇÃO
+    {
+      id: "transition-title-step14",
+      type: "text-inline",
+      properties: {
+        content: "undefined",
+        fontSize: "text-3xl",
+        fontWeight: "font-bold",
+        fontFamily: "Playfair Display, serif",
+        textAlign: "text-center",
+        color: "#432818",
+        marginBottom: 24,
+        lineHeight: "1.2",
+      },
+    },
+
+    // 🖼️ IMAGEM DE LOADING/TRANSIÇÃO
+    {
+      id: "transition-image-step14",
+      type: "image-display-inline",
+      properties: {
+        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838157/20250509_2150_Idade_e_Experi%C3%AAncia_simple_compose_01jtvtdbkfcj3g9f8tmexn5chm_wppuxb.webp",
+        alt: "undefined",
+        width: 500,
+        height: 350,
+        className: "object-cover w-full max-w-lg h-72 rounded-xl mx-auto shadow-lg",
+        textAlign: "text-center",
+        marginBottom: 32,
+      },
+    },
+
+    // 💭 TEXTO DESCRITIVO
+    {
+      id: "transition-description-step14",
+      type: "text-inline",
+      properties: {
+        content: "undefined",
+        fontSize: "text-lg",
+        textAlign: "text-center",
+        color: "#432818",
+        marginBottom: 40,
+        lineHeight: "1.6",
+      },
+    },
+  ];
+};
+
+export default Step14;

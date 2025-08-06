@@ -1,17 +1,14 @@
 import React from "react";
 
-export interface Step06Question05Props {
+export interface Step06Props {
   onNext?: () => void;
-  onPrevious?: () => void;
   onBlockAdd?: (block: any) => void;
+  onAnswer?: (answer: any) => void;
+  userAnswers?: Record<string, any>;
 }
 
-export const Step06Question05: React.FC<Step06Question05Props> = ({
-  onNext,
-  onPrevious,
-  onBlockAdd,
-}) => {
-  return <div className="step-06-question-05">{/* Conteúdo da Etapa 6 renderizado aqui */}</div>;
+export const Step06 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step06Props) => {
+  return <div className="step-06">{/* Conteúdo da Etapa 6 renderizado aqui */}</div>;
 };
 
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 6 - QUESTÃO 5: QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?
@@ -27,7 +24,7 @@ export const getStep06Template = () => {
         logoAlt: "Logo Gisele Galvão",
         logoWidth: 96,
         logoHeight: 96,
-        progressValue: 50,
+        progressValue: 30,
         progressMax: 100,
         showBackButton: true,
       },

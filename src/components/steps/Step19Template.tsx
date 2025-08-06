@@ -1,16 +1,18 @@
 import React from "react";
 
-// --- Interfaces Necessárias ---
-// Interface para uma opção de quiz
-export interface QuizOption {
-  id: string;
-  text: string;
-  styleCategory: string;
-  points?: number;
-  keywords?: string[];
-  imageUrl?: string;
+export interface Step19Props {
+  onNext?: () => void;
+  onBlockAdd?: (block: any) => void;
+  onAnswer?: (answer: any) => void;
+  userAnswers?: Record<string, any>;
 }
 
+export const Step19 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step19Props) => {
+  return <div className="step-19">{/* Conteúdo da Etapa 19 renderizado aqui */}</div>;
+};
+
+// --- Interfaces Necessárias ---
+// Interface para uma opção de quiz
 // Interface para uma questão de quiz
 export interface QuizQuestion {
   id: string;

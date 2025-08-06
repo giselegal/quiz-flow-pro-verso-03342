@@ -1,12 +1,12 @@
 /**
  * 🖼️ COMPONENTE IMAGEM INLINE
  * ===========================
- * 
+ *
  * Componente para exibição de imagens otimizado
  * totalmente integrado com o sistema de propriedades unificado.
  */
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 interface ImageDisplayInlineProps {
   src: string;
@@ -15,10 +15,10 @@ interface ImageDisplayInlineProps {
   height?: string;
   borderRadius?: number;
   shadow?: boolean;
-  alignment?: 'left' | 'center' | 'right';
-  objectFit?: 'cover' | 'contain' | 'fill' | 'scale-down';
-  loading?: 'lazy' | 'eager';
-  quality?: 'high' | 'medium' | 'low';
+  alignment?: "left" | "center" | "right";
+  objectFit?: "cover" | "contain" | "fill" | "scale-down";
+  loading?: "lazy" | "eager";
+  quality?: "high" | "medium" | "low";
   className?: string;
   style?: React.CSSProperties;
   onClick?: () => void;
@@ -26,16 +26,16 @@ interface ImageDisplayInlineProps {
 
 const ImageDisplayInline: React.FC<ImageDisplayInlineProps> = ({
   src,
-  alt = 'Imagem',
-  width = '100%',
-  height = 'auto',
+  alt = "Imagem",
+  width = "100%",
+  height = "auto",
   borderRadius = 12,
   shadow = true,
-  alignment = 'center',
-  objectFit = 'cover',
-  loading = 'lazy',
-  quality = 'high',
-  className = '',
+  alignment = "center",
+  objectFit = "cover",
+  loading = "lazy",
+  quality = "high",
+  className = "",
   style = {},
   onClick,
   ...props
@@ -44,10 +44,10 @@ const ImageDisplayInline: React.FC<ImageDisplayInlineProps> = ({
   const [hasError, setHasError] = useState(false);
 
   const containerStyle: React.CSSProperties = {
-    display: 'flex',
+    display: "flex",
     justifyContent: alignment,
-    width: '100%',
-    ...style
+    width: "100%",
+    ...style,
   };
 
   const imageStyle: React.CSSProperties = {
@@ -55,10 +55,10 @@ const ImageDisplayInline: React.FC<ImageDisplayInlineProps> = ({
     height,
     borderRadius: `${borderRadius}px`,
     objectFit,
-    boxShadow: shadow ? '0 4px 12px rgba(0, 0, 0, 0.1)' : 'none',
-    transition: 'all 0.3s ease',
-    cursor: onClick ? 'pointer' : 'default',
-    filter: quality === 'low' ? 'blur(0.5px)' : 'none',
+    boxShadow: shadow ? "0 4px 12px rgba(0, 0, 0, 0.1)" : "none",
+    transition: "all 0.3s ease",
+    cursor: onClick ? "pointer" : "default",
+    filter: quality === "low" ? "blur(0.5px)" : "none",
     opacity: isLoading ? 0.7 : 1,
   };
 
@@ -73,21 +73,18 @@ const ImageDisplayInline: React.FC<ImageDisplayInlineProps> = ({
 
   if (hasError) {
     return (
-      <div 
-        className={`image-display-inline error ${className}`}
-        style={containerStyle}
-      >
-        <div 
+      <div className={`image-display-inline error ${className}`} style={containerStyle}>
+        <div
           style={{
             ...imageStyle,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: '#f5f5f5',
-            border: '2px dashed #ddd',
-            color: '#999',
-            fontSize: '14px',
-            textAlign: 'center'
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#f5f5f5",
+            border: "2px dashed #ddd",
+            color: "#999",
+            fontSize: "14px",
+            textAlign: "center",
           }}
         >
           Erro ao carregar imagem
@@ -97,19 +94,16 @@ const ImageDisplayInline: React.FC<ImageDisplayInlineProps> = ({
   }
 
   return (
-    <div 
-      className={`image-display-inline ${className}`}
-      style={containerStyle}
-    >
+    <div className={`image-display-inline ${className}`} style={containerStyle}>
       {isLoading && (
-        <div 
+        <div
           style={{
             ...imageStyle,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: '#f0f0f0',
-            color: '#999'
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#f0f0f0",
+            color: "#999",
           }}
         >
           Carregando...
@@ -120,7 +114,7 @@ const ImageDisplayInline: React.FC<ImageDisplayInlineProps> = ({
         alt={alt}
         style={{
           ...imageStyle,
-          display: isLoading ? 'none' : 'block'
+          display: isLoading ? "none" : "block",
         }}
         loading={loading}
         onLoad={handleLoad}

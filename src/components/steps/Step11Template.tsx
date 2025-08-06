@@ -1,145 +1,187 @@
 import React from "react";
 
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 11 - QUESTÃO 10: TECIDOS (REAL)
-export const getStep11Template = () => [
-  {
-    id: "step11-header",
-    type: "quiz-intro-header",
-    properties: {
-      logoUrl:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-      logoAlt: "Logo Gisele Galvão",
-      logoWidth: 96,
-      logoHeight: 96,
-      progressValue: 100,
-      progressMax: 100,
-      showBackButton: true,
-    },
-  },
-  {
-    id: "step11-question-title",
-    type: "heading",
-    properties: {
-      content: "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...",
-      level: "h2",
-      fontSize: "text-2xl",
-      fontWeight: "font-bold",
-      textAlign: "text-center",
-      color: "#432818",
-      marginBottom: 8,
-    },
-  },
-  {
-    id: "step11-question-counter",
-    type: "text",
-    properties: {
-      content: "Questão 10 de 10",
-      fontSize: "text-sm",
-      textAlign: "text-center",
-      color: "#6B7280",
-      marginBottom: 24,
-    },
-  },
-  {
-    id: "step11-fabrics-options",
-    type: "options-grid",
-    properties: {
-      questionId: "q10",
-      options: [
-        {
-          id: "10a",
-          text: "São fáceis de cuidar",
-          value: "10a",
-          category: "Natural",
-          styleCategory: "Natural",
-          points: 1,
-        },
-        {
-          id: "10b",
-          text: "São de excelente qualidade",
-          value: "10b",
-          category: "Clássico",
-          styleCategory: "Clássico",
-          points: 1,
-        },
-        {
-          id: "10c",
-          text: "São fáceis de cuidar e modernos",
-          value: "10c",
-          category: "Contemporâneo",
-          styleCategory: "Contemporâneo",
-          points: 1,
-        },
-        {
-          id: "10d",
-          text: "São sofisticados",
-          value: "10d",
-          category: "Elegante",
-          styleCategory: "Elegante",
-          points: 1,
-        },
-        {
-          id: "10e",
-          text: "São delicados",
-          value: "10e",
-          category: "Romântico",
-          styleCategory: "Romântico",
-          points: 1,
-        },
-        {
-          id: "10f",
-          text: "São perfeitos ao meu corpo",
-          value: "10f",
-          category: "Sexy",
-          styleCategory: "Sexy",
-          points: 1,
-        },
-        {
-          id: "10g",
-          text: "São diferentes, e trazem um efeito para minha roupa",
-          value: "10g",
-          category: "Dramático",
-          styleCategory: "Dramático",
-          points: 1,
-        },
-        {
-          id: "10h",
-          text: "São exclusivos, criam identidade no look",
-          value: "10h",
-          category: "Criativo",
-          styleCategory: "Criativo",
-          points: 1,
-        },
-      ],
-      columns: 1,
-      showImages: false,
-      multipleSelection: true,
-      maxSelections: 3,
-      minSelections: 1,
-      validationMessage: "Selecione até 3 opções",
-      gridGap: 12,
-      responsiveColumns: true,
-      autoAdvanceOnComplete: true,
-      autoAdvanceDelay: 800,
-      requiredSelections: 3,
-      enableButtonOnlyWhenValid: true,
-      showValidationFeedback: true,
-    },
-  },
-  {
-    id: "step11-continue-button",
-    type: "button",
-    properties: {
-      text: "Finalizar Quiz",
-      variant: "primary",
-      size: "large",
-      fullWidth: true,
-      backgroundColor: "#B89B7A",
-      textColor: "#ffffff",
-      disabled: true,
-      requiresValidSelection: true,
-    },
-  },
-];
+export interface Step11Props {
+  onNext?: () => void;
+  onBlockAdd?: (block: any) => void;
+  onAnswer?: (answer: any) => void;
+  userAnswers?: Record<string, any>;
+}
 
-export default getStep11Template;
+export const Step11 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step11Props) => {
+  return <div className="step-11">{/* Conteúdo da Etapa 11 renderizado aqui */}</div>;
+};
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 11 - No ambiente de trabalho, você se veste:
+export const getStep11Template = () => {
+  return [
+    // 🎯 CABEÇALHO COM PROGRESSO
+    {
+      id: "quiz-header-step11",
+      type: "quiz-header",
+      properties: {
+        logoUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        logoAlt: "Logo Gisele Galvão",
+        logoWidth: 80,
+        logoHeight: 80,
+        progressValue: 55,
+        progressMax: 100,
+        showBackButton: true,
+        showProgress: true,
+        stepNumber: "11 de 21",
+      },
+    },
+
+    // 🎨 BARRA DECORATIVA
+    {
+      id: "decorative-bar-step11",
+      type: "decorative-bar-inline",
+      properties: {
+        width: "100%",
+        height: 3,
+        color: "#B89B7A",
+        gradientColors: ["#B89B7A", "#D4C2A8", "#B89B7A"],
+        borderRadius: 2,
+        marginTop: 6,
+        marginBottom: 20,
+        showShadow: true,
+      },
+    },
+
+    // 📝 PERGUNTA PRINCIPAL
+    {
+      id: "question-text-step11",
+      type: "text-inline",
+      properties: {
+        content: "No ambiente de trabalho, você se veste:",
+        fontSize: "text-2xl",
+        fontWeight: "font-bold",
+        fontFamily: "Playfair Display, serif",
+        textAlign: "text-center",
+        color: "#432818",
+        marginBottom: 24,
+        lineHeight: "1.3",
+      },
+    },
+
+    // 🖼️ IMAGEM DA PERGUNTA
+    {
+      id: "question-image-step11",
+      type: "image-display-inline",
+      properties: {
+        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838148/20250509_2147_Trabalho_e_Profissionalismo_simple_compose_01jtvta4gb3qhd4d6v3xr3jvtw_wnpshv.webp",
+        alt: "Imagem da pergunta 11",
+        width: 400,
+        height: 300,
+        className: "object-cover w-full max-w-md h-64 rounded-lg mx-auto shadow-md",
+        textAlign: "text-center",
+        marginBottom: 24,
+      },
+    },
+
+    // 🎯 OPÇÕES DE RESPOSTA
+    
+    {
+      id: "option-1-step11",
+      type: "quiz-option",
+      properties: {
+        optionId: "executiva-formal",
+        label: "Executiva e formal",
+        value: "executiva-formal",
+        points: {"elegante":3,"casual":1,"criativo":1,"classico":3,"romantico":1,"minimalista":2,"boho":1},
+        
+        
+        variant: "default",
+        size: "large",
+        textAlign: "text-left",
+        marginBottom: 12,
+        borderRadius: "rounded-lg",
+        backgroundColor: "#ffffff",
+        hoverColor: "#F8F4F1",
+        selectedColor: "#B89B7A",
+      },
+    },
+    {
+      id: "option-2-step11",
+      type: "quiz-option",
+      properties: {
+        optionId: "smart-casual",
+        label: "Smart casual - elegante mas descontraída",
+        value: "smart-casual",
+        points: {"elegante":2,"casual":2,"criativo":2,"classico":2,"romantico":2,"minimalista":3,"boho":1},
+        
+        
+        variant: "default",
+        size: "large",
+        textAlign: "text-left",
+        marginBottom: 12,
+        borderRadius: "rounded-lg",
+        backgroundColor: "#ffffff",
+        hoverColor: "#F8F4F1",
+        selectedColor: "#B89B7A",
+      },
+    },
+    {
+      id: "option-3-step11",
+      type: "quiz-option",
+      properties: {
+        optionId: "feminina-profissional",
+        label: "Feminina e profissional",
+        value: "feminina-profissional",
+        points: {"elegante":2,"casual":1,"criativo":1,"classico":3,"romantico":3,"minimalista":2,"boho":1},
+        
+        
+        variant: "default",
+        size: "large",
+        textAlign: "text-left",
+        marginBottom: 12,
+        borderRadius: "rounded-lg",
+        backgroundColor: "#ffffff",
+        hoverColor: "#F8F4F1",
+        selectedColor: "#B89B7A",
+      },
+    },
+    {
+      id: "option-4-step11",
+      type: "quiz-option",
+      properties: {
+        optionId: "criativa-autentica",
+        label: "Criativa e autêntica",
+        value: "criativa-autentica",
+        points: {"elegante":1,"casual":2,"criativo":3,"classico":1,"romantico":1,"minimalista":1,"boho":3},
+        
+        
+        variant: "default",
+        size: "large",
+        textAlign: "text-left",
+        marginBottom: 12,
+        borderRadius: "rounded-lg",
+        backgroundColor: "#ffffff",
+        hoverColor: "#F8F4F1",
+        selectedColor: "#B89B7A",
+      },
+    },
+
+    // 🎯 BOTÃO CONTINUAR
+    {
+      id: "continue-button-step11",
+      type: "button-inline",
+      properties: {
+        text: "Continuar →",
+        variant: "primary",
+        size: "large",
+        fullWidth: true,
+        backgroundColor: "#B89B7A",
+        textColor: "#ffffff",
+        requiresSelection: true,
+        textAlign: "text-center",
+        borderRadius: "rounded-full",
+        padding: "py-3 px-6",
+        fontSize: "text-base",
+        fontWeight: "font-semibold",
+        marginTop: 24,
+        disabled: true,
+      },
+    },
+  ];
+};
+
+export default Step11;
