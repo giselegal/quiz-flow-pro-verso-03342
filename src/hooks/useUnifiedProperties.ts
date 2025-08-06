@@ -1692,8 +1692,11 @@ export const useUnifiedProperties = (
 
       // Notificar o sistema externo se o callback for fornecido
       if (onUpdateExternal) {
-        // ✅ CORREÇÃO: Passar as propriedades atualizadas completas
-        onUpdateExternal(block.id, updatedProperties);
+        // ✅ CORREÇÃO CRÍTICA: Passar a estrutura correta para EditorContext.updateBlock
+        // O EditorContext espera receber Partial<EditorBlock>, não apenas as properties
+        onUpdateExternal(block.id, {
+          properties: updatedProperties,
+        });
       }
     },
     [block, onUpdateExternal]

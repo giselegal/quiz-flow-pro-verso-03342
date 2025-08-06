@@ -606,14 +606,21 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
               Object.entries(updates).forEach(([key, value]) => {
                 console.log(`🔧 Processando update: ${key} =`, value);
 
-                if (key === "properties" && block.properties) {
-                  // Para properties, fazer um merge profundo preservando imutabilidade
+                if (key === "properties") {
+                  // ✅ CORREÇÃO CRÍTICA: Para properties, fazer merge completo
                   updatedBlock.properties = {
                     ...block.properties,
                     ...(value as Record<string, any>),
                   };
-                  console.log("🔧 Properties atualizadas:", updatedBlock.properties);
-                } else if (key === "content" && block.content) {
+                  console.log("🔧 Properties merged:", updatedBlock.properties);
+
+                  // ✅ TAMBÉM SINCRONIZAR COM CONTENT para compatibilidade
+                  updatedBlock.content = {
+                    ...block.content,
+                    ...(value as Record<string, any>),
+                  };
+                  console.log("🔧 Content também sincronizado:", updatedBlock.content);
+                } else if (key === "content") {
                   // Para content, fazer um merge profundo preservando imutabilidade
                   updatedBlock.content = {
                     ...block.content,
@@ -621,14 +628,21 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
                   };
                   console.log("🔧 Content atualizado:", updatedBlock.content);
                 } else {
-                  // ✅ CORREÇÃO: Para campos que podem ser tanto content quanto properties
-                  // Se não for properties ou content específico, tentar atualizar em content primeiro
+                  // ✅ CORREÇÃO: Para campos individuais, atualizar tanto properties quanto content
                   if (block.content && typeof value !== "object") {
                     updatedBlock.content = {
                       ...block.content,
                       [key]: value,
                     };
                     console.log("🔧 Content direto atualizado:", updatedBlock.content);
+                  }
+
+                  if (block.properties) {
+                    updatedBlock.properties = {
+                      ...block.properties,
+                      [key]: value,
+                    };
+                    console.log("🔧 Properties direto atualizada:", updatedBlock.properties);
                   } else {
                     // Para outras propriedades, atualização direta com casting seguro
                     (updatedBlock as any)[key] = value;
