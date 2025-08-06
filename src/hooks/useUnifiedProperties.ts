@@ -1016,7 +1016,350 @@ export const useUnifiedProperties = (
             },
           ];
 
+        // ✅ CORREÇÃO: Adicionar casos para tipos de bloco comuns que estavam faltando
+        case "text":
+          return [
+            ...baseProperties,
+            {
+              key: "content",
+              value: currentBlock?.properties?.content || currentBlock?.properties?.text || "",
+              type: PropertyType.TEXTAREA,
+              label: "Texto",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "fontSize",
+              value: currentBlock?.properties?.fontSize || "text-base",
+              type: PropertyType.SELECT,
+              label: "Tamanho da Fonte",
+              category: "style",
+              options: [
+                { value: "text-xs", label: "Extra Pequeno" },
+                { value: "text-sm", label: "Pequeno" },
+                { value: "text-base", label: "Normal" },
+                { value: "text-lg", label: "Grande" },
+                { value: "text-xl", label: "Extra Grande" },
+              ],
+            },
+            {
+              key: "textAlign",
+              value: currentBlock?.properties?.textAlign || "left",
+              type: PropertyType.ALIGNMENT,
+              label: "Alinhamento",
+              category: "style",
+            },
+            {
+              key: "textColor",
+              value: currentBlock?.properties?.textColor || "#432818",
+              type: PropertyType.COLOR,
+              label: "Cor do Texto",
+              category: "style",
+            },
+          ];
+
+        case "heading":
+          return [
+            ...baseProperties,
+            {
+              key: "content",
+              value: currentBlock?.properties?.content || currentBlock?.properties?.text || "",
+              type: PropertyType.TEXT,
+              label: "Título",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "level",
+              value: currentBlock?.properties?.level || 2,
+              type: PropertyType.SELECT,
+              label: "Nível do Título",
+              category: "style",
+              options: [
+                { value: "1", label: "H1 - Principal" },
+                { value: "2", label: "H2 - Seção" },
+                { value: "3", label: "H3 - Subseção" },
+                { value: "4", label: "H4 - Subtítulo" },
+              ],
+            },
+            {
+              key: "textAlign",
+              value: currentBlock?.properties?.textAlign || "left",
+              type: PropertyType.ALIGNMENT,
+              label: "Alinhamento",
+              category: "style",
+            },
+            {
+              key: "textColor",
+              value: currentBlock?.properties?.textColor || "#432818",
+              type: PropertyType.COLOR,
+              label: "Cor do Texto",
+              category: "style",
+            },
+          ];
+
+        case "image":
+          return [
+            ...baseProperties,
+            {
+              key: "src",
+              value: currentBlock?.properties?.src || "",
+              type: PropertyType.IMAGE,
+              label: "URL da Imagem",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "alt",
+              value: currentBlock?.properties?.alt || "",
+              type: PropertyType.TEXT,
+              label: "Texto Alternativo",
+              category: "content",
+            },
+            {
+              key: "width",
+              value: currentBlock?.properties?.width || "100%",
+              type: PropertyType.TEXT,
+              label: "Largura",
+              category: "style",
+            },
+            {
+              key: "height",
+              value: currentBlock?.properties?.height || "auto",
+              type: PropertyType.TEXT,
+              label: "Altura",
+              category: "style",
+            },
+            {
+              key: "borderRadius",
+              value: currentBlock?.properties?.borderRadius || 0,
+              type: PropertyType.RANGE,
+              label: "Bordas Arredondadas",
+              category: "style",
+              min: 0,
+              max: 50,
+              step: 1,
+              unit: "px",
+            },
+          ];
+
+        case "button":
+          return [
+            ...baseProperties,
+            {
+              key: "text",
+              value: currentBlock?.properties?.text || "",
+              type: PropertyType.TEXT,
+              label: "Texto do Botão",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "variant",
+              value: currentBlock?.properties?.variant || "primary",
+              type: PropertyType.SELECT,
+              label: "Estilo do Botão",
+              category: "style",
+              options: [
+                { value: "primary", label: "Primário" },
+                { value: "secondary", label: "Secundário" },
+                { value: "outline", label: "Contorno" },
+                { value: "ghost", label: "Transparente" },
+              ],
+            },
+            {
+              key: "size",
+              value: currentBlock?.properties?.size || "default",
+              type: PropertyType.SELECT,
+              label: "Tamanho",
+              category: "style",
+              options: [
+                { value: "sm", label: "Pequeno" },
+                { value: "default", label: "Normal" },
+                { value: "lg", label: "Grande" },
+              ],
+            },
+            {
+              key: "href",
+              value: currentBlock?.properties?.href || "",
+              type: PropertyType.TEXT,
+              label: "Link (URL)",
+              category: "behavior",
+            },
+          ];
+
+        case "spacer":
+          return [
+            ...baseProperties,
+            {
+              key: "height",
+              value: currentBlock?.properties?.height || 40,
+              type: PropertyType.RANGE,
+              label: "Altura do Espaçamento",
+              category: "style",
+              min: 10,
+              max: 200,
+              step: 5,
+              unit: "px",
+            },
+          ];
+
+        case "divider":
+          return [
+            ...baseProperties,
+            {
+              key: "style",
+              value: currentBlock?.properties?.style || "solid",
+              type: PropertyType.SELECT,
+              label: "Estilo da Linha",
+              category: "style",
+              options: [
+                { value: "solid", label: "Sólida" },
+                { value: "dashed", label: "Tracejada" },
+                { value: "dotted", label: "Pontilhada" },
+              ],
+            },
+            {
+              key: "color",
+              value: currentBlock?.properties?.color || "#E5E7EB",
+              type: PropertyType.COLOR,
+              label: "Cor da Linha",
+              category: "style",
+            },
+            {
+              key: "thickness",
+              value: currentBlock?.properties?.thickness || 1,
+              type: PropertyType.RANGE,
+              label: "Espessura",
+              category: "style",
+              min: 1,
+              max: 10,
+              step: 1,
+              unit: "px",
+            },
+          ];
+
+        case "badge":
+          return [
+            ...baseProperties,
+            {
+              key: "text",
+              value: currentBlock?.properties?.text || "",
+              type: PropertyType.TEXT,
+              label: "Texto do Badge",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "variant",
+              value: currentBlock?.properties?.variant || "primary",
+              type: PropertyType.SELECT,
+              label: "Estilo do Badge",
+              category: "style",
+              options: [
+                { value: "primary", label: "Primário" },
+                { value: "secondary", label: "Secundário" },
+                { value: "success", label: "Sucesso" },
+                { value: "warning", label: "Aviso" },
+                { value: "error", label: "Erro" },
+              ],
+            },
+          ];
+
+        case "cta":
+          return [
+            ...baseProperties,
+            {
+              key: "title",
+              value: currentBlock?.properties?.title || "",
+              type: PropertyType.TEXT,
+              label: "Título",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "description",
+              value: currentBlock?.properties?.description || "",
+              type: PropertyType.TEXTAREA,
+              label: "Descrição",
+              category: "content",
+            },
+            {
+              key: "buttonText",
+              value: currentBlock?.properties?.buttonText || "Clique aqui",
+              type: PropertyType.TEXT,
+              label: "Texto do Botão",
+              category: "content",
+            },
+            {
+              key: "buttonLink",
+              value: currentBlock?.properties?.buttonLink || "",
+              type: PropertyType.TEXT,
+              label: "Link do Botão",
+              category: "behavior",
+            },
+          ];
+
+        case "progress":
+          return [
+            ...baseProperties,
+            {
+              key: "value",
+              value: currentBlock?.properties?.value || 50,
+              type: PropertyType.RANGE,
+              label: "Valor do Progresso",
+              category: "content",
+              min: 0,
+              max: 100,
+              step: 1,
+              unit: "%",
+            },
+            {
+              key: "max",
+              value: currentBlock?.properties?.max || 100,
+              type: PropertyType.NUMBER,
+              label: "Valor Máximo",
+              category: "behavior",
+            },
+            {
+              key: "showLabel",
+              value: currentBlock?.properties?.showLabel === true,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Percentual",
+              category: "style",
+            },
+          ];
+
+        case "stat":
+          return [
+            ...baseProperties,
+            {
+              key: "value",
+              value: currentBlock?.properties?.value || "0",
+              type: PropertyType.TEXT,
+              label: "Valor da Estatística",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "label",
+              value: currentBlock?.properties?.label || "",
+              type: PropertyType.TEXT,
+              label: "Rótulo",
+              category: "content",
+            },
+            {
+              key: "unit",
+              value: currentBlock?.properties?.unit || "",
+              type: PropertyType.TEXT,
+              label: "Unidade",
+              category: "content",
+            },
+          ];
+
         default:
+          // ✅ CORREÇÃO: Log para debug dos tipos não mapeados
+          console.warn(`🔧 useUnifiedProperties: Tipo de bloco "${blockType}" não tem propriedades específicas definidas. Usando propriedades base.`);
           return baseProperties;
       }
     },

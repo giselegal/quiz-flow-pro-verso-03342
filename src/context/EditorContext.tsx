@@ -585,6 +585,8 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   );
 
   const updateBlock = useCallback((blockId: string, updates: Partial<EditorBlock>) => {
+    console.log("🔧 EditorContext updateBlock chamado:", { blockId, updates });
+    
     setStageBlocks(prev => {
       const updated = { ...prev };
 
@@ -595,23 +597,29 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         if (blockIndex !== -1) {
           updated[stageId] = blocks.map(block => {
             if (block.id === blockId) {
+              console.log("🔧 Bloco encontrado, estado atual:", block);
+              
               // Criar uma nova cópia do bloco
               const updatedBlock = { ...block };
 
               // Processar cada propriedade de atualização separadamente
               Object.entries(updates).forEach(([key, value]) => {
+                console.log(`🔧 Processando update: ${key} =`, value);
+                
                 if (key === "properties" && block.properties) {
                   // Para properties, fazer um merge profundo preservando imutabilidade
                   updatedBlock.properties = {
                     ...block.properties,
                     ...(value as Record<string, any>),
                   };
+                  console.log("🔧 Properties atualizadas:", updatedBlock.properties);
                 } else if (key === "content" && block.content) {
                   // Para content, fazer um merge profundo preservando imutabilidade
                   updatedBlock.content = {
                     ...block.content,
                     ...(value as Record<string, any>),
                   };
+                  console.log("🔧 Content atualizado:", updatedBlock.content);
                 } else {
                   // ✅ CORREÇÃO: Para campos que podem ser tanto content quanto properties
                   // Se não for properties ou content específico, tentar atualizar em content primeiro
@@ -620,13 +628,16 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
                       ...block.content,
                       [key]: value,
                     };
+                    console.log("🔧 Content direto atualizado:", updatedBlock.content);
                   } else {
                     // Para outras propriedades, atualização direta com casting seguro
                     (updatedBlock as any)[key] = value;
+                    console.log(`🔧 Propriedade direta ${key} atualizada:`, value);
                   }
                 }
               });
 
+              console.log("🔧 Bloco final atualizado:", updatedBlock);
               return updatedBlock;
             }
             return block;

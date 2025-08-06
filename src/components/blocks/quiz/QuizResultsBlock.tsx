@@ -192,7 +192,7 @@ const QuizResultsBlockCore: React.FC<QuizResultsBlockProps> = ({
 };
 
 // ✅ WRAPPER PARA COMPATIBILIDADE
-const QuizResultsBlock: React.FC<QuizResultsBlockProps> = (props) => (
+const QuizResultsBlock: React.FC<QuizResultsBlockProps> = props => (
   <QuizResultsBlockCore {...props} />
 );
 

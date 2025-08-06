@@ -55,14 +55,11 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
   onUpdate, // Este é o `onUpdateExternal` para o hook
   onDelete,
   onClose,
-  // As props `block`, `blockDefinition`, `onUpdateBlock` são agora redundantes
+  blockDefinition, // ✅ CORREÇÃO: Usar blockDefinition passado pelo editor
+  // As props `block`, `onUpdateBlock` são agora redundantes
   // pois o `selectedBlock` e `onUpdate` são as fontes de verdade para o hook.
-  // Elas podem ser removidas se a compatibilidade legada não for mais necessária.
 }) => {
   // ✅ Normaliza `selectedBlock` para ser a única fonte de verdade para o hook.
-  // Se `block` for passado, ele será usado. Caso contrário, `selectedBlock`.
-  // No entanto, para usar o `useUnifiedProperties` como pretendido, ele deve receber
-  // um único objeto `UnifiedBlock`. Assumimos que `selectedBlock` é o principal.
   const actualBlock = selectedBlock;
 
   // ✅ Usa o hook useUnifiedProperties para gerenciar as propriedades do bloco selecionado.
@@ -83,6 +80,11 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
       propertiesValues: actualBlock.properties,
     } : null,
     propertiesCount: properties.length,
+    blockDefinition: blockDefinition ? {
+      type: blockDefinition.type,
+      name: blockDefinition.name,
+      label: blockDefinition.label,
+    } : null,
   });
 
   // Se nenhum bloco estiver selecionado, exibe uma mensagem

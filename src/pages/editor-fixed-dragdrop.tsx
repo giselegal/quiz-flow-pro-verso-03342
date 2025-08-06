@@ -264,7 +264,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                       ...(selectedBlock.content || {}),
                     },
                   }}
+                  blockDefinition={getBlockDefinitionForType(selectedBlock.type)}
                   onUpdate={(blockId, updates) => {
+                    console.log("🔧 Painel onUpdate chamado:", { blockId, updates });
                     updateBlock(blockId, updates);
                   }}
                   onClose={() => setSelectedBlockId(null)}
