@@ -657,6 +657,22 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const selectedBlock = selectedBlockId
     ? currentBlocks.find(block => block.id === selectedBlockId)
     : undefined;
+
+  // 🔍 DEBUG LOGS PARA DIAGNÓSTICO
+  console.log("🔍 EditorContext - Computed Values Debug:", {
+    activeStageId,
+    selectedBlockId,
+    currentBlocksCount: currentBlocks.length,
+    currentBlocksIds: currentBlocks.map(b => b.id),
+    selectedBlockFound: !!selectedBlock,
+    selectedBlockDetails: selectedBlock ? {
+      id: selectedBlock.id,
+      type: selectedBlock.type,
+      hasProperties: !!selectedBlock.properties,
+      hasContent: !!selectedBlock.content
+    } : null
+  });
+
   const totalBlocks = Object.values(stageBlocks).reduce(
     (total, blocks) => total + blocks.length,
     0

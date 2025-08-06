@@ -4,6 +4,7 @@ import EnhancedComponentsSidebar from "@/components/editor/EnhancedComponentsSid
 import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelSettingsPanel";
 import { FunnelStagesPanel } from "@/components/editor/funnel/FunnelStagesPanel";
 import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
+import PropertiesPanelDebug from "@/components/debug/PropertiesPanelDebug";
 import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
 import EnhancedUniversalPropertiesPanel from "@/components/universal/EnhancedUniversalPropertiesPanel";
 import { generateBlockDefinitions, getRegistryStats } from "@/config/enhancedBlockRegistry";
@@ -195,7 +196,13 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         }
       }}
       onBlockSelect={blockId => {
+        console.log("🎯 DndProvider.onBlockSelect chamado:", {
+          blockId,
+          currentSelectedBlockId: selectedBlockId,
+          willChange: blockId !== selectedBlockId,
+        });
         setSelectedBlockId(blockId);
+        console.log("✅ setSelectedBlockId executado com:", blockId);
       }}
       selectedBlockId={selectedBlockId || undefined}
       onBlockUpdate={(blockId, updates) => {
@@ -246,7 +253,15 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                     isPreviewing={isPreviewing}
                     activeStageId={activeStageId}
                     stageCount={stageCount}
-                    onSelectBlock={setSelectedBlockId}
+                    onSelectBlock={(blockId) => {
+                      console.log("🎯 CanvasDropZone.onSelectBlock chamado:", {
+                        blockId,
+                        currentSelectedBlockId: selectedBlockId,
+                        willChange: blockId !== selectedBlockId,
+                      });
+                      setSelectedBlockId(blockId);
+                      console.log("✅ setSelectedBlockId (Canvas) executado com:", blockId);
+                    }}
                     onUpdateBlock={updateBlock}
                     onDeleteBlock={handleDeleteBlock}
                   />
@@ -254,37 +269,90 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               </div>
             }
             propertiesPanel={
-              !isPreviewing && selectedBlock ? (
-                <EnhancedUniversalPropertiesPanel
-                  selectedBlock={{
-                    id: selectedBlock.id,
-                    type: selectedBlock.type,
-                    // ✅ CORREÇÃO: Mesclar properties e content em um objeto unificado
-                    properties: {
-                      ...(selectedBlock.properties || {}),
-                      ...(selectedBlock.content || {}),
-                    },
-                  }}
-                  onUpdate={(blockId, updates) => {
-                    console.log("🚀 Atualizando bloco via EnhancedUniversalPropertiesPanel:", {
-                      blockId,
-                      updates,
-                    });
-                    // ✅ CORREÇÃO: Atualizar tanto properties quanto content
-                    updateBlock(blockId, updates);
-                  }}
-                  onClose={() => setSelectedBlockId(null)}
-                />
-              ) : !isPreviewing ? (
-                <div className="h-full p-4 flex items-center justify-center text-stone-500">
-                  <div className="text-center">
-                    <p className="text-sm">Selecione um bloco para editar propriedades</p>
-                    <p className="text-xs text-stone-400 mt-1">
-                      Painel Universal ativo • Drag & Drop habilitado
-                    </p>
-                  </div>
-                </div>
-              ) : null
+              <div>
+                <PropertiesPanelDebug title="Debug Painel de Propriedades" />
+                
+                {/* ✅ SOLUÇÃO: Verificações de segurança adicionais */}
+                {(() => {
+                  console.log("🔍 Renderização do Painel - Verificações:", {
+                    isPreviewing,
+                    hasSelectedBlock: !!selectedBlock,
+                    selectedBlockId,
+                    currentBlocksCount: currentBlocks?.length || 0,
+                    canShowPanel: !isPreviewing && selectedBlock && selectedBlock.id,
+                  });
+
+                  // Verificação 1: Não estar em modo preview
+                  if (isPreviewing) {
+                    console.log("❌ Painel oculto: Modo preview ativo");
+                    return null;
+                  }
+
+                  // Verificação 2: Ter bloco selecionado
+                  if (!selectedBlock) {
+                    console.log("❌ Painel oculto: Nenhum bloco selecionado");
+                    return (
+                      <div className="h-full p-4 flex items-center justify-center text-stone-500">
+                        <div className="text-center">
+                          <p className="text-sm">Selecione um bloco para editar propriedades</p>
+                          <p className="text-xs text-stone-400 mt-1">
+                            Painel Universal ativo • Drag & Drop habilitado
+                          </p>
+                          <div className="text-xs text-gray-400 mt-2">
+                            Debug: currentBlocks={currentBlocks?.length || 0}, activeStageId={activeStageId}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  // Verificação 3: Bloco ter ID válido
+                  if (!selectedBlock.id) {
+                    console.log("❌ Painel oculto: Bloco sem ID válido");
+                    return (
+                      <div className="h-full p-4 flex items-center justify-center text-red-500">
+                        <div className="text-center">
+                          <p className="text-sm">Erro: Bloco selecionado sem ID</p>
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  // ✅ TODAS AS VERIFICAÇÕES PASSARAM - RENDERIZAR PAINEL
+                  console.log("✅ Painel sendo renderizado:", {
+                    blockId: selectedBlock.id,
+                    blockType: selectedBlock.type,
+                    properties: selectedBlock.properties,
+                    content: selectedBlock.content,
+                  });
+
+                  return (
+                    <EnhancedUniversalPropertiesPanel
+                      selectedBlock={{
+                        id: selectedBlock.id,
+                        type: selectedBlock.type,
+                        // ✅ CORREÇÃO: Mesclar properties e content em um objeto unificado
+                        properties: {
+                          ...(selectedBlock.properties || {}),
+                          ...(selectedBlock.content || {}),
+                        },
+                      }}
+                      onUpdate={(blockId, updates) => {
+                        console.log("🚀 Atualizando bloco via EnhancedUniversalPropertiesPanel:", {
+                          blockId,
+                          updates,
+                        });
+                        // ✅ CORREÇÃO: Atualizar tanto properties quanto content
+                        updateBlock(blockId, updates);
+                      }}
+                      onClose={() => {
+                        console.log("🔒 Fechando painel de propriedades");
+                        setSelectedBlockId(null);
+                      }}
+                    />
+                  );
+                })()}
+              </div>
             }
           />
         </div>

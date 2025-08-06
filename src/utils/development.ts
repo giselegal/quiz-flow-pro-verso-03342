@@ -34,6 +34,9 @@ export const cleanupConsoleWarnings = () => {
         "Cannot access 'E' before initialization",
         "forms-B8WT14Rn.js",
         "forms-Ba1JuZFL.js",
+        "contentScript.bundle.js",
+        "[vite] connecting...",
+        "Strategy 4: No clear indicators found, assuming All tab",
       ];
 
       const shouldIgnore = ignoredWarnings.some(warning => message.includes(warning));
