@@ -8,7 +8,7 @@ import { LoadingSpinner } from "../components/ui/loading-spinner";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../components/ui/resizable";
 import { ScrollArea } from "../components/ui/scroll-area";
 import { toast } from "../components/ui/use-toast";
-import UniversalPropertiesPanel from "../components/universal/UniversalPropertiesPanel";
+import { EnhancedUniversalPropertiesPanel } from "../components/universal/EnhancedUniversalPropertiesPanel";
 import { useAutoSaveWithDebounce } from "../hooks/editor/useAutoSaveWithDebounce";
 import { useEditorPersistence } from "../hooks/editor/useEditorPersistence";
 import { useEditor } from "../hooks/useEditor";
@@ -1052,21 +1052,21 @@ const EditorPage: React.FC = () => {
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
             <div className="h-full border-l border-gray-200 bg-gray-50">
               {selectedComponentId ? (
-                <UniversalPropertiesPanel
-                  selectedBlock={{
-                    id: selectedComponentId,
-                    type: blocks.find(b => b.id === selectedComponentId)?.type || "unknown",
-                    properties: blocks.find(b => b.id === selectedComponentId)?.properties || {},
-                  }}
-                  onUpdate={(blockId, updates) => {
-                    updateBlock(blockId, updates);
-                  }}
-                  onDelete={blockId => {
-                    deleteBlock(blockId);
-                    setSelectedComponentId(null);
-                  }}
-                  onClose={() => setSelectedComponentId(null)}
-                />
+                 <EnhancedUniversalPropertiesPanel
+                   selectedBlock={{
+                     id: selectedComponentId,
+                     type: blocks.find(b => b.id === selectedComponentId)?.type || "unknown",
+                     properties: blocks.find(b => b.id === selectedComponentId)?.properties || {},
+                   }}
+                   onUpdate={(blockId: string, updates: any) => {
+                     updateBlock(blockId, updates);
+                   }}
+                   onDelete={(blockId: string) => {
+                     deleteBlock(blockId);
+                     setSelectedComponentId(null);
+                   }}
+                   onClose={() => setSelectedComponentId(null)}
+                 />
               ) : (
                 <div className="h-full p-4 text-center text-gray-500">
                   <p className="text-sm">Selecione um bloco para editar suas propriedades</p>
