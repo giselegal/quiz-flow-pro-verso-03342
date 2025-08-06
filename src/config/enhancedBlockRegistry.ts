@@ -40,10 +40,10 @@ import StatInlineBlock from "../components/blocks/inline/StatInlineBlock";
 import TextInlineBlock from "../components/blocks/inline/TextInlineBlock";
 
 // Componentes específicos da Etapa 1
-import DecorativeBarInlineBlock from "../components/blocks/DecorativeBarInlineBlock";
-import FormInputBlock from "../components/blocks/FormInputBlock";
-import LegalNoticeInlineBlock from "../components/blocks/LegalNoticeInlineBlock";
-import QuizIntroHeaderBlock from "../components/blocks/QuizIntroHeaderBlock";
+import DecorativeBarInlineBlock from "../components/editor/blocks/DecorativeBarInlineBlock";
+import FormInputBlock from "../components/blocks/inline/FormInputBlock";
+import LegalNoticeInlineBlock from "../components/editor/blocks/LegalNoticeInlineBlock";
+import QuizIntroHeaderBlock from "../components/blocks/inline/QuizIntroHeaderBlock";
 
 // Componentes de Quiz - para compatibilidade com DynamicStepTemplate
 import QuizResultsBlock from "../components/blocks/quiz/QuizResultsBlock";
