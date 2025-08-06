@@ -65,7 +65,6 @@ for component in "${COMPONENTS[@]}"; do
             }
             in_case && /return \[/ {
                 print
-                # Adicionar o controle de tamanho do container após a linha "return ["
                 print "              // ✅ Controle de tamanho do container"
                 print "              {"
                 print "                key: \"containerSize\","

@@ -71,6 +71,15 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
       onUpdate // Passa o `onUpdate` do painel diretamente para o hook
     );
 
+  // 🐛 DEBUG: Logs detalhados para investigar o problema
+  console.log("🔧 [EnhancedUniversalPropertiesPanel] DEBUG:", {
+    actualBlock,
+    blockType: actualBlock?.type,
+    propertiesLength: properties?.length,
+    properties: properties?.map(p => ({ key: p.key, type: p.type, category: p.category })),
+    allCategories: Array.from(new Set(properties?.map(p => p.category))),
+  });
+
   // ✅ CORREÇÃO: Adicionar logs de debug e validação
   console.log("🎯 EnhancedUniversalPropertiesPanel renderizado:", {
     selectedBlock: actualBlock
