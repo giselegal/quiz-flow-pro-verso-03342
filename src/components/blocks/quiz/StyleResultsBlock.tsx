@@ -4,25 +4,32 @@ import { styleConfig } from "@/data/styleConfig";
 import { QuizResult } from "@/hooks/useQuizResults";
 import React, { useState } from "react";
 import StyleGuideModal from "./StyleGuideModal";
+import type { BlockComponentProps } from "@/types/blocks";
+import { cn } from "@/lib/utils";
 
-interface StyleResultsBlockProps {
-  result: QuizResult;
-  categoryScores: Record<string, number>;
-  showAllStyles?: boolean;
-  showGuideImage?: boolean;
-  guideImageUrl?: string | null;
-  onReset?: () => void;
-  onShare?: () => void;
+interface StyleResultsProperties {
+  styleType?: string;
+  styleDescription?: string;
+  styleImage?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
+  showPersonality?: boolean;
+  personalityTraits?: string;
+  showStyleTips?: boolean;
+  styleTips?: string;
+  showColorPalette?: boolean;
+  colorPalette?: string;
+  resultLayout?: 'simple' | 'detailed' | 'compact' | 'extended';
+  showScore?: boolean;
+  enableSharing?: boolean;
 }
 
-const StyleResultsBlock: React.FC<StyleResultsBlockProps> = ({
-  result,
-  categoryScores,
-  showAllStyles = false,
-  showGuideImage = true,
-  guideImageUrl = null,
-  onReset,
-  onShare,
+const StyleResultsBlock: React.FC<BlockComponentProps> = ({
+  block,
+  properties,
+  isSelected,
+  onClick,
+  onPropertyChange,
 }) => {
   const { user } = useAuth();
   const userName = user?.name || user?.email || "Usuário";

@@ -1,6 +1,6 @@
-import React from "react";
 import { cn } from "@/lib/utils";
-import { Award, Users, BookOpen } from "lucide-react";
+import { Award, BookOpen, Users } from "lucide-react";
+import React from "react";
 import type { BlockComponentProps } from "../../../types/blocks";
 
 interface MentorBlockProps extends BlockComponentProps {

@@ -39,9 +39,9 @@ const QuizOptionsGridBlock: React.FC<BlockComponentProps> = ({
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
 
   const {
-    question = "Sua pergunta aqui?",
+    question: questionText = "Sua pergunta aqui?",
     description,
-    options = "Opção 1\nOpção 2\nOpção 3",
+    options: optionsText = "Opção 1\nOpção 2\nOpção 3",
     requireOption = true,
     autoAdvance = false,
     autoAdvanceDelay = 800,
@@ -55,8 +55,8 @@ const QuizOptionsGridBlock: React.FC<BlockComponentProps> = ({
     alignment = "left",
     optionStyle = "card",
     nextButtonText = "Continuar",
-    minSelections = 3,
-    maxSelections = 3,
+    minSelections: minSelectionsCount = 3,
+    maxSelections: maxSelectionsCount = 3,
   } = (properties || {}) as QuizOptionsGridProperties;
 
   const handlePropertyUpdate = (key: string, value: any) => {
@@ -76,61 +76,75 @@ const QuizOptionsGridBlock: React.FC<BlockComponentProps> = ({
       }));
   };
 
-  const options = parseOptions(properties?.options || "");
-
-  // Determinar o número mínimo de seleções com base nas propriedades
-  // Por padrão são 3 opções obrigatórias conforme requisito
-  const minSelections = properties?.minSelections || 3;
-  const maxSelections = properties?.maxSelections || options.length;
+  const parsedOptions = parseOptions(optionsText);
 
   // Callbacks para interações do usuário
   const handleAnswer = (selectedOptions: any[]) => {
     setSelectedOptions(selectedOptions);
 
     // Notificar o editor que uma seleção foi feita
-    if (onPropertyChange) {
-      onPropertyChange(
-        "selectedOptions",
-        selectedOptions.map(opt => opt.id)
-      );
-      onPropertyChange("hasCompleteSelection", selectedOptions.length >= minSelections);
-    }
+    handlePropertyUpdate("selectedOptions", selectedOptions.map(opt => opt.id));
+    handlePropertyUpdate("hasCompleteSelection", selectedOptions.length >= minSelectionsCount);
   };
 
   const handleNext = () => {
     // Notificar o editor que o usuário quer avançar
-    if (onPropertyChange) {
-      onPropertyChange("complete", true);
-      onPropertyChange(
-        "selectedOptions",
-        selectedOptions.map(opt => opt.id)
-      );
-    }
+    handlePropertyUpdate("complete", true);
+    handlePropertyUpdate("selectedOptions", selectedOptions.map(opt => opt.id));
+  };
+
+  // Edição inline para question
+  const handleQuestionEdit = (newQuestion: string) => {
+    handlePropertyUpdate("question", newQuestion);
   };
 
   // Mapear propriedades do editor para o componente QuizQuestion
   return (
-    <div className="quiz-options-grid-block" data-block-id={id}>
+    <div 
+      className={`quiz-options-grid-block transition-all duration-200 ${isSelected ? 'ring-2 ring-blue-500 ring-opacity-50 rounded-md p-2' : ''}`} 
+      data-block-id={block.id}
+      onClick={onClick}
+    >
+      {/* Edição inline da pergunta quando selecionado */}
+      {isSelected ? (
+        <div className="mb-4">
+          <textarea
+            className="w-full p-2 border border-gray-300 rounded-md resize-none"
+            value={questionText}
+            onChange={(e) => handleQuestionEdit(e.target.value)}
+            placeholder="Digite sua pergunta aqui..."
+            rows={2}
+          />
+          <textarea
+            className="w-full p-2 border border-gray-300 rounded-md resize-none mt-2"
+            value={optionsText}
+            onChange={(e) => handlePropertyUpdate("options", e.target.value)}
+            placeholder="Digite as opções, uma por linha..."
+            rows={4}
+          />
+        </div>
+      ) : null}
+      
       <QuizQuestion
-        question={properties?.question || ""}
-        description={properties?.description || ""}
-        options={options}
-        multipleSelection={true}
-        minSelections={minSelections}
-        maxSelections={maxSelections}
-        required={properties?.requireOption !== false}
-        alignment={properties?.alignment || "center"}
-        optionLayout={properties?.optionsLayout || "vertical"}
-        optionStyle={properties?.optionStyle || "card"}
-        showLetters={properties?.useLetterOptions === true}
-        optionImageSize={(properties?.optionImageSize as "small" | "medium" | "large") || "medium"}
-        autoAdvance={properties?.autoAdvance === true}
-        autoAdvanceDelay={properties?.autoAdvanceDelay || 1000}
-        showNextButton={true}
-        nextButtonText={properties?.nextButtonText || "Avançar"}
+        question={questionText}
+        description={description || ""}
+        options={parsedOptions}
+        optionLayout={optionsLayout}
+        required={requireOption}
+        multipleSelection={maxSelectionsCount > 1}
+        maxSelections={maxSelectionsCount}
+        minSelections={minSelectionsCount}
+        initialSelections={selectedOptions.map(opt => opt.id)}
         onAnswer={handleAnswer}
         onNext={handleNext}
-        deviceView={props.deviceView || "desktop"}
+        autoAdvance={autoAdvance}
+        autoAdvanceDelay={autoAdvanceDelay}
+        showLetters={useLetterOptions}
+        optionImageSize={optionImageSize}
+        alignment={alignment}
+        optionStyle={optionStyle}
+        nextButtonText={nextButtonText}
+        showNextButton={true}
       />
     </div>
   );

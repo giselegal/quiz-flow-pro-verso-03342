@@ -1,6 +1,6 @@
-import React from "react";
 import { cn } from "@/lib/utils";
-import { Star, Quote } from "lucide-react";
+import { Quote, Star } from "lucide-react";
+import React from "react";
 import type { BlockComponentProps } from "../../../types/blocks";
 
 interface SocialProofBlockProps extends BlockComponentProps {
