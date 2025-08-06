@@ -305,9 +305,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             onClose={() => setShowFunnelSettings(false)}
           />
         )}
-
-        {/* Ativador do Lovable */}
-        <LovableActivator forceActivate={true} />
       </div>
     </DndProvider>
   );
