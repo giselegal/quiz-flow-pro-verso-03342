@@ -1,6 +1,7 @@
 import { BlockDefinition } from "@/types/editor";
 import {
   BarChart,
+  Check,
   Clock,
   CreditCard,
   Heading,
@@ -45,10 +46,14 @@ import LegalNoticeInlineBlock from "../components/editor/blocks/LegalNoticeInlin
 import QuizIntroHeaderBlock from "../components/editor/blocks/QuizIntroHeaderBlock";
 
 // Componentes de Quiz - para compatibilidade com DynamicStepTemplate
+import QuizResultsBlock from "../components/blocks/quiz/QuizResultsBlock";
+import StyleResultsBlock from "../components/blocks/quiz/StyleResultsBlock";
+import FinalStepEditor from "../components/editor/blocks/FinalStepEditor";
 import OptionsGridBlock from "../components/editor/blocks/OptionsGridBlock";
 import QuizProgressBlock from "../components/editor/blocks/QuizProgressBlock";
 import QuizResultsEditor from "../components/editor/blocks/QuizResultsEditor";
 import QuizStepBlock from "../components/editor/blocks/QuizStepBlock";
+import StyleResultsEditor from "../components/editor/blocks/StyleResultsEditor";
 
 // === REGISTRY PRINCIPAL - SEM DUPLICATAS ===
 
@@ -85,6 +90,10 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   "quiz-progress": QuizProgressBlock,
   "options-grid": OptionsGridBlock,
   "quiz-results": QuizResultsEditor,
+  "quiz-results-block": QuizResultsBlock,
+  "style-results": StyleResultsEditor,
+  "style-results-block": StyleResultsBlock,
+  "final-step": FinalStepEditor,
 
   // Form Components
   "form-input": FormInputBlock,
@@ -270,6 +279,80 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
           "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         logoAlt: "Logo",
         progressValue: 0,
+      },
+    },
+    {
+      type: "quiz-results-block",
+      name: "QuizResultsBlock",
+      label: "Resultados do Quiz",
+      category: "Quiz",
+      description: "Exibe os resultados do quiz com pontuações e categorias",
+      icon: TrendingUp,
+      component: ENHANCED_BLOCK_REGISTRY["quiz-results-block"],
+      properties: {},
+      defaultProps: {
+        result: {
+          id: "default-result",
+          title: "Seu Resultado",
+          description: "Parabéns por completar o quiz!",
+          category: "Geral",
+          minScore: 0,
+          maxScore: 100,
+          displayOrder: 1,
+        },
+        showScores: true,
+      },
+    },
+    {
+      type: "style-results-block",
+      name: "StyleResultsBlock",
+      label: "Resultados de Estilo",
+      category: "Quiz",
+      description: "Exibe os resultados do quiz de estilo com guia personalizado",
+      icon: TrendingUp,
+      component: ENHANCED_BLOCK_REGISTRY["style-results-block"],
+      properties: {},
+      defaultProps: {
+        result: {
+          id: "style-Natural",
+          title: "Natural",
+          description:
+            "Você valoriza o conforto e a praticidade, com um visual descontraído e autêntico.",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+          category: "Natural",
+          minScore: 0,
+          maxScore: 100,
+          displayOrder: 1,
+        },
+        categoryScores: {
+          Natural: 10,
+          Clássico: 7,
+          Elegante: 5,
+        },
+        showAllStyles: false,
+        showGuideImage: true,
+        guideImageUrl:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
+      },
+    },
+    {
+      type: "final-step",
+      name: "FinalStepEditor",
+      label: "Etapa Final (21)",
+      category: "Quiz",
+      description: "Etapa final do funil com resultado de estilo",
+      icon: Check,
+      component: ENHANCED_BLOCK_REGISTRY["final-step"],
+      properties: {},
+      defaultProps: {
+        stepNumber: 21,
+        title: "Seu Estilo Predominante",
+        subtitle: "Descubra seu estilo de moda único",
+        styleResult: {
+          selectedStyle: "Natural",
+          showAllStyles: false,
+          showGuideImage: true,
+        },
       },
     },
 
