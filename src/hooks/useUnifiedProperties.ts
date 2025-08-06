@@ -146,6 +146,8 @@ export const useUnifiedProperties = (
       ];
 
       // Propriedades específicas adicionadas com base no tipo do bloco
+      console.log("🔧 [useUnifiedProperties] Processando blockType:", blockType, "currentBlock:", currentBlock);
+      
       switch (blockType) {
         case "text-inline": {
           // ✅ NO-CODE: Propriedades de conteúdo simples (sem HTML)
@@ -299,15 +301,83 @@ export const useUnifiedProperties = (
         }
 
         case "quiz-intro-header":
+          console.log("🎯 [useUnifiedProperties] Processando quiz-intro-header, properties:", currentBlock?.properties);
           return [
             ...baseProperties,
+            {
+              key: "logoUrl",
+              value: currentBlock?.properties?.logoUrl || "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+              type: PropertyType.IMAGE,
+              label: "URL do Logo",
+              category: "content",
+            },
+            {
+              key: "logoAlt",
+              value: currentBlock?.properties?.logoAlt || "Logo",
+              type: PropertyType.TEXT,
+              label: "Texto Alternativo do Logo",
+              category: "content",
+            },
+            {
+              key: "logoWidth",
+              value: currentBlock?.properties?.logoWidth || 96,
+              type: PropertyType.RANGE,
+              label: "Largura do Logo",
+              category: "style",
+              min: 32,
+              max: 200,
+              step: 4,
+              unit: "px",
+            },
+            {
+              key: "logoHeight",
+              value: currentBlock?.properties?.logoHeight || 96,
+              type: PropertyType.RANGE,
+              label: "Altura do Logo",
+              category: "style",
+              min: 32,
+              max: 200,
+              step: 4,
+              unit: "px",
+            },
+            {
+              key: "progressValue",
+              value: currentBlock?.properties?.progressValue || 0,
+              type: PropertyType.RANGE,
+              label: "Valor do Progresso",
+              category: "content",
+              min: 0,
+              max: 100,
+              step: 1,
+              unit: "%",
+            },
+            {
+              key: "progressMax",
+              value: currentBlock?.properties?.progressMax || 100,
+              type: PropertyType.NUMBER,
+              label: "Valor Máximo",
+              category: "behavior",
+            },
+            {
+              key: "showBackButton",
+              value: currentBlock?.properties?.showBackButton === true,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Botão Voltar",
+              category: "behavior",
+            },
+            {
+              key: "showProgress",
+              value: currentBlock?.properties?.showProgress !== false,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Barra de Progresso",
+              category: "behavior",
+            },
             {
               key: "title",
               value: currentBlock?.properties?.title || "",
               type: PropertyType.TEXT,
               label: "Título",
               category: "content",
-              required: true,
             },
             {
               key: "subtitle",
