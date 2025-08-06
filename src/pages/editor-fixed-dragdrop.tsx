@@ -259,17 +259,18 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   selectedBlock={{
                     id: selectedBlock.id,
                     type: selectedBlock.type,
-                    // Garantir que properties é sempre um objeto
-                    properties: selectedBlock.properties || {},
-                    // Manter content se existir
-                    ...(selectedBlock.content ? { content: selectedBlock.content } : {}),
+                    // ✅ CORREÇÃO: Mesclar properties e content em um objeto unificado
+                    properties: {
+                      ...(selectedBlock.properties || {}),
+                      ...(selectedBlock.content || {}),
+                    },
                   }}
                   onUpdate={(blockId, updates) => {
                     console.log("🚀 Atualizando bloco via EnhancedUniversalPropertiesPanel:", {
                       blockId,
                       updates,
                     });
-                    // Atualizar diretamente usando o blockId e updates
+                    // ✅ CORREÇÃO: Atualizar tanto properties quanto content
                     updateBlock(blockId, updates);
                   }}
                   onClose={() => setSelectedBlockId(null)}

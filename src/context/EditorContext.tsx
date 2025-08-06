@@ -606,9 +606,24 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
                     ...block.properties,
                     ...(value as Record<string, any>),
                   };
+                } else if (key === "content" && block.content) {
+                  // Para content, fazer um merge profundo preservando imutabilidade
+                  updatedBlock.content = {
+                    ...block.content,
+                    ...(value as Record<string, any>),
+                  };
                 } else {
-                  // Para outras propriedades, atualização direta com casting seguro
-                  (updatedBlock as any)[key] = value;
+                  // ✅ CORREÇÃO: Para campos que podem ser tanto content quanto properties
+                  // Se não for properties ou content específico, tentar atualizar em content primeiro
+                  if (block.content && typeof value !== 'object') {
+                    updatedBlock.content = {
+                      ...block.content,
+                      [key]: value,
+                    };
+                  } else {
+                    // Para outras propriedades, atualização direta com casting seguro
+                    (updatedBlock as any)[key] = value;
+                  }
                 }
               });
 
