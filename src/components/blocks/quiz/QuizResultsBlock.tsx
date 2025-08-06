@@ -191,4 +191,9 @@ const QuizResultsBlockCore: React.FC<QuizResultsBlockProps> = ({
   );
 };
 
+// ... Novo wrapper para compatibilidade ...
+const QuizResultsBlock: React.FC<QuizResultsBlockProps> = (props) => (
+  <QuizResultsBlockCore {...props} />
+);
+
 export default QuizResultsBlock;
