@@ -1,6 +1,7 @@
 // EditorDatabaseAdapter removed - using direct context state management
 import { getAllSteps, getStepTemplate } from "@/config/stepTemplatesMapping";
 import { EditorBlock, FunnelStage } from "@/types/editor";
+import { OPTIMIZED_FUNNEL_CONFIG } from '@/config/optimized21StepsFunnel';
 import React, { createContext, ReactNode, useCallback, useContext, useState } from "react";
 
 // ✅ INTERFACE UNIFICADA DO CONTEXTO
