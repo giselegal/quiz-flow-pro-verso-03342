@@ -495,6 +495,7 @@ export const useUnifiedProperties = (
           ];
 
         case "quiz-options-grid":
+        case "options-grid":
           return [
             ...baseProperties,
             {
@@ -616,6 +617,212 @@ export const useUnifiedProperties = (
                 { value: "medium", label: "Médio" },
                 { value: "large", label: "Grande" },
               ],
+            },
+          ];
+
+        case "result-header":
+          return [
+            ...baseProperties,
+            {
+              key: "title",
+              value: currentBlock?.properties?.title || "Seu Resultado",
+              type: PropertyType.TEXT,
+              label: "Título",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "subtitle",
+              value: currentBlock?.properties?.subtitle || "",
+              type: PropertyType.TEXT,
+              label: "Subtítulo",
+              category: "content",
+            },
+            {
+              key: "description",
+              value: currentBlock?.properties?.description || "",
+              type: PropertyType.TEXTAREA,
+              label: "Descrição",
+              category: "content",
+              rows: 3,
+            },
+            {
+              key: "resultType",
+              value: currentBlock?.properties?.resultType || "",
+              type: PropertyType.TEXT,
+              label: "Tipo de Resultado",
+              category: "content",
+            },
+            {
+              key: "showIcon",
+              value: currentBlock?.properties?.showIcon !== false,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Ícone",
+              category: "style",
+            },
+            {
+              key: "iconName",
+              value: currentBlock?.properties?.iconName || "trophy",
+              type: PropertyType.SELECT,
+              label: "Ícone",
+              category: "style",
+              options: [
+                { value: "trophy", label: "Troféu" },
+                { value: "star", label: "Estrela" },
+                { value: "crown", label: "Coroa" },
+                { value: "award", label: "Prêmio" },
+                { value: "medal", label: "Medalha" },
+                { value: "target", label: "Alvo" },
+                { value: "check", label: "Check" },
+                { value: "heart", label: "Coração" },
+              ],
+            },
+            {
+              key: "headerStyle",
+              value: currentBlock?.properties?.headerStyle || "centered",
+              type: PropertyType.SELECT,
+              label: "Estilo do Cabeçalho",
+              category: "style",
+              options: [
+                { value: "centered", label: "Centralizado" },
+                { value: "left", label: "Alinhado à Esquerda" },
+                { value: "right", label: "Alinhado à Direita" },
+              ],
+            },
+            {
+              key: "backgroundColor",
+              value: currentBlock?.properties?.backgroundColor || "transparent",
+              type: PropertyType.SELECT,
+              label: "Cor de Fundo",
+              category: "style",
+              options: [
+                { value: "transparent", label: "Transparente" },
+                { value: "primary", label: "Primária" },
+                { value: "secondary", label: "Secundária" },
+                { value: "muted", label: "Sutil" },
+                { value: "success", label: "Sucesso" },
+                { value: "warning", label: "Aviso" },
+                { value: "info", label: "Informação" },
+              ],
+            },
+          ];
+
+        case "result-card":
+          return [
+            ...baseProperties,
+            {
+              key: "resultTitle",
+              value: currentBlock?.properties?.resultTitle || "",
+              type: PropertyType.TEXT,
+              label: "Título do Resultado",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "resultDescription",
+              value: currentBlock?.properties?.resultDescription || "",
+              type: PropertyType.TEXTAREA,
+              label: "Descrição do Resultado",
+              category: "content",
+              rows: 4,
+            },
+            {
+              key: "score",
+              value: currentBlock?.properties?.score || 0,
+              type: PropertyType.NUMBER,
+              label: "Pontuação",
+              category: "content",
+              min: 0,
+              max: 100,
+              step: 1,
+            },
+            {
+              key: "percentage",
+              value: currentBlock?.properties?.percentage || 0,
+              type: PropertyType.RANGE,
+              label: "Percentual",
+              category: "content",
+              min: 0,
+              max: 100,
+              step: 1,
+              unit: "%",
+            },
+            {
+              key: "category",
+              value: currentBlock?.properties?.category || "",
+              type: PropertyType.TEXT,
+              label: "Categoria",
+              category: "content",
+            },
+            {
+              key: "level",
+              value: currentBlock?.properties?.level || "intermediate",
+              type: PropertyType.SELECT,
+              label: "Nível",
+              category: "content",
+              options: [
+                { value: "beginner", label: "Iniciante" },
+                { value: "intermediate", label: "Intermediário" },
+                { value: "advanced", label: "Avançado" },
+                { value: "expert", label: "Especialista" },
+              ],
+            },
+            {
+              key: "showScore",
+              value: currentBlock?.properties?.showScore !== false,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Pontuação",
+              category: "style",
+            },
+            {
+              key: "showPercentage",
+              value: currentBlock?.properties?.showPercentage !== false,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Percentual",
+              category: "style",
+            },
+            {
+              key: "cardStyle",
+              value: currentBlock?.properties?.cardStyle || "default",
+              type: PropertyType.SELECT,
+              label: "Estilo do Card",
+              category: "style",
+              options: [
+                { value: "default", label: "Padrão" },
+                { value: "outlined", label: "Com Borda" },
+                { value: "elevated", label: "Elevado" },
+                { value: "flat", label: "Plano" },
+              ],
+            },
+            {
+              key: "colorScheme",
+              value: currentBlock?.properties?.colorScheme || "default",
+              type: PropertyType.SELECT,
+              label: "Esquema de Cores",
+              category: "style",
+              options: [
+                { value: "default", label: "Padrão" },
+                { value: "success", label: "Sucesso" },
+                { value: "warning", label: "Aviso" },
+                { value: "info", label: "Informação" },
+                { value: "primary", label: "Primário" },
+                { value: "secondary", label: "Secundário" },
+              ],
+            },
+            {
+              key: "showRecommendations",
+              value: currentBlock?.properties?.showRecommendations === true,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Recomendações",
+              category: "behavior",
+            },
+            {
+              key: "recommendations",
+              value: currentBlock?.properties?.recommendations || "",
+              type: PropertyType.TEXTAREA,
+              label: "Recomendações",
+              category: "content",
+              rows: 3,
             },
           ];
 

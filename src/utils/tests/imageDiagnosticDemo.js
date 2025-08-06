@@ -10,9 +10,9 @@
  */
 
 import { analyzeImageUrl } from "../utils/ImageChecker";
+import { imageCache } from "../utils/images/caching";
 import { checkRenderedImages, generateImageReport } from "../utils/images/diagnostic";
 import { runImageUrlAnalysis } from "../utils/tests/imageUrlAnalyzer";
-import { imageCache } from "../utils/images/caching";
 
 /**
  * Executa uma demonstração completa do diagnóstico de imagens

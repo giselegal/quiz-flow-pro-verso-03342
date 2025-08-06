@@ -1,18 +1,40 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Star, Quote } from "lucide-react";
+import type { BlockComponentProps } from "../../../types/blocks";
 
-interface SocialProofBlockProps {
-  title?: string;
-  showTitle?: boolean;
-  className?: string;
+interface SocialProofBlockProps extends BlockComponentProps {
+  disabled?: boolean;
 }
 
 const SocialProofBlock: React.FC<SocialProofBlockProps> = ({
-  title = "Depoimentos Reais de Quem Transformou o Guarda-Roupa",
-  showTitle = true,
+  block,
+  isSelected = false,
+  onClick,
+  onPropertyChange,
+  disabled = false,
   className,
 }) => {
+  // Verificação de segurança para evitar erro de undefined
+  if (!block || !block.properties) {
+    return (
+      <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
+        <p className="text-red-600">Erro: Bloco não encontrado ou propriedades indefinidas</p>
+      </div>
+    );
+  }
+
+  // Debug das propriedades recebidas
+  console.log("🔍 [SocialProofBlock] Propriedades recebidas:", block.properties);
+
+  const { title = "Depoimentos Reais de Quem Transformou o Guarda-Roupa", showTitle = true } =
+    block?.properties || {};
+
+  const handlePropertyChange = (key: string, value: any) => {
+    if (onPropertyChange) {
+      onPropertyChange(key, value);
+    }
+  };
   // Dados reais dos depoimentos do funil
   const testimonials = [
     {
@@ -67,33 +89,43 @@ const SocialProofBlock: React.FC<SocialProofBlockProps> = ({
   );
 
   return (
-    <div className={cn("py-12 bg-gradient-to-br from-[#faf8f5] to-[#f9f4ef]", className)}>
-      <div className="max-w-7xl mx-auto px-6">
-        {showTitle && (
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#aa6b5d] mb-4">{title}</h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] mx-auto rounded-full"></div>
-            <p className="text-[#432818] mt-4 max-w-2xl mx-auto">
-              Veja como outras mulheres transformaram seu estilo e autoestima
-            </p>
-          </div>
-        )}
-
-        <div className="flex flex-wrap gap-8 justify-center">
-          {testimonials.map((testimonial, index) => (
-            <div key={index} className="flex-1 min-w-[300px] max-w-lg">
-              {renderTestimonial(testimonial, index)}
+    <div
+      className={cn(
+        "relative w-full p-4 rounded-lg border-2 border-dashed",
+        isSelected ? "border-[#B89B7A] bg-[#B89B7A]/10" : "border-gray-300 bg-white",
+        "cursor-pointer hover:border-gray-400 transition-colors",
+        className
+      )}
+      onClick={onClick}
+    >
+      <div className={cn("py-12 bg-gradient-to-br from-[#faf8f5] to-[#f9f4ef]")}>
+        <div className="max-w-7xl mx-auto px-6">
+          {showTitle && (
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-[#aa6b5d] mb-4">{title}</h2>
+              <div className="w-24 h-1 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] mx-auto rounded-full"></div>
+              <p className="text-[#432818] mt-4 max-w-2xl mx-auto">
+                Veja como outras mulheres transformaram seu estilo e autoestima
+              </p>
             </div>
-          ))}
-        </div>
+          )}
 
-        {/* Elemento de confiança adicional */}
-        <div className="text-center mt-12">
-          <div className="inline-flex items-center bg-white px-6 py-3 rounded-full shadow-md border border-[#B89B7A]/20">
-            <div className="flex mr-3">{renderStars()}</div>
-            <span className="text-[#432818] font-medium">
-              Mais de 2.500 mulheres já transformaram seu estilo
-            </span>
+          <div className="flex flex-wrap gap-8 justify-center">
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="flex-1 min-w-[300px] max-w-lg">
+                {renderTestimonial(testimonial, index)}
+              </div>
+            ))}
+          </div>
+
+          {/* Elemento de confiança adicional */}
+          <div className="text-center mt-12">
+            <div className="inline-flex items-center bg-white px-6 py-3 rounded-full shadow-md border border-[#B89B7A]/20">
+              <div className="flex mr-3">{renderStars()}</div>
+              <span className="text-[#432818] font-medium">
+                Mais de 2.500 mulheres já transformaram seu estilo
+              </span>
+            </div>
           </div>
         </div>
       </div>

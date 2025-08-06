@@ -56,11 +56,9 @@ const functionName = () => {};
 
 // ===== 9. IMPORT DEFAULT (imp) =====
 // Digite: imp + Tab
-import moduleName from "module";
 
 // ===== 10. IMPORT DESTRUCTURING (imd) =====
 // Digite: imd + Tab
-import { destructured } from "module";
 
 // ===== 11. DESTRUCTURING OBJECT (dob) =====
 // Digite: dob + Tab
@@ -354,11 +352,11 @@ Agora você pode usar "qcomp" + Tab para criar componentes de quiz rapidamente!
 */
 
 export {
+  LoadingSpinner,
+  QuizProvider,
   QuizQuestion,
   QuizResult,
-  QuizProvider,
-  LoadingSpinner,
-  useQuizState,
-  useLocalStorage,
   useFetch,
+  useLocalStorage,
+  useQuizState,
 };
