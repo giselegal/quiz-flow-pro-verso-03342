@@ -3163,71 +3163,70 @@ export const useUnifiedProperties = (
   };
 };
 
-
 /**
  * 🎯 Helper para componentes inline otimizados
  */
 export const getInlineComponentProperties = (type: string, currentProps: any = {}) => {
   const inlineDefaults = {
-    'heading-inline': {
-      content: 'Título',
-      level: 'h2',
-      textAlign: 'center',
-      color: '#432818',
-      fontWeight: 'normal'
+    "heading-inline": {
+      content: "Título",
+      level: "h2",
+      textAlign: "center",
+      color: "#432818",
+      fontWeight: "normal",
     },
-    'text-inline': {
-      text: 'Digite seu texto aqui...',
-      fontSize: '1rem',
-      alignment: 'center',
-      color: '#6B5B4E',
-      fontWeight: 'normal'
+    "text-inline": {
+      text: "Digite seu texto aqui...",
+      fontSize: "1rem",
+      alignment: "center",
+      color: "#6B5B4E",
+      fontWeight: "normal",
     },
-    'button-inline': {
-      text: 'Clique aqui',
-      style: 'primary',
-      size: 'medium',
-      backgroundColor: '#B89B7A',
-      textColor: '#FFFFFF',
-      action: 'next-step'
+    "button-inline": {
+      text: "Clique aqui",
+      style: "primary",
+      size: "medium",
+      backgroundColor: "#B89B7A",
+      textColor: "#FFFFFF",
+      action: "next-step",
     },
-    'decorative-bar-inline': {
+    "decorative-bar-inline": {
       height: 4,
-      color: '#B89B7A',
+      color: "#B89B7A",
       marginTop: 20,
-      marginBottom: 30
+      marginBottom: 30,
     },
-    'form-input': {
-      label: 'Digite aqui',
-      placeholder: 'Digite seu primeiro nome...',
+    "form-input": {
+      label: "Digite aqui",
+      placeholder: "Digite seu primeiro nome...",
       required: true,
-      type: 'text',
-      backgroundColor: '#FFFFFF',
-      borderColor: '#B89B7A'
+      type: "text",
+      backgroundColor: "#FFFFFF",
+      borderColor: "#B89B7A",
     },
-    'image-display-inline': {
-      src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp',
-      alt: 'Imagem',
-      width: '100%',
-      height: 'auto',
+    "image-display-inline": {
+      src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
+      alt: "Imagem",
+      width: "100%",
+      height: "auto",
       borderRadius: 12,
       shadow: true,
-      alignment: 'center'
+      alignment: "center",
     },
-    'legal-notice-inline': {
-      privacyText: 'Política de Privacidade',
-      copyrightText: '© 2025 Gisele Galvão Consultoria',
-      termsText: 'Termos de Uso',
-      fontSize: '0.75rem',
-      textAlign: 'center',
-      color: '#8F7A6A',
-      linkColor: '#B89B7A'
-    }
+    "legal-notice-inline": {
+      privacyText: "Política de Privacidade",
+      copyrightText: "© 2025 Gisele Galvão Consultoria",
+      termsText: "Termos de Uso",
+      fontSize: "0.75rem",
+      textAlign: "center",
+      color: "#8F7A6A",
+      linkColor: "#B89B7A",
+    },
   };
-  
+
   return {
-    ...inlineDefaults[type] || {},
-    ...currentProps
+    ...(inlineDefaults[type] || {}),
+    ...currentProps,
   };
 };
 
