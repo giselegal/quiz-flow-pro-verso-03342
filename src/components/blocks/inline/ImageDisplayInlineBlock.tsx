@@ -1,6 +1,7 @@
 import React from "react";
-import { cn } from "../../../../lib/utils";
-import type { BlockComponentProps } from "../../../../types/blocks";
+import { cn } from "@/lib/utils";
+// Update the import path below to the correct location of BlockComponentProps
+import type { BlockComponentProps } from "@/types/blocks";
 
 /**
  * ImageDisplayInlineBlock - Componente modular inline horizontal

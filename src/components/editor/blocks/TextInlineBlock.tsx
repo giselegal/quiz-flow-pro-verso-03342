@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import type { BlockComponentProps } from "../../../types/blocks";
 
 /**

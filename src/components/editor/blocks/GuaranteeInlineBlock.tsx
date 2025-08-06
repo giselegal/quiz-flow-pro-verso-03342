@@ -1,6 +1,6 @@
 import React from "react";
 import { Shield, CheckCircle, Star } from "lucide-react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import type { BlockComponentProps } from "../../../types/blocks";
 
 const GuaranteeInlineBlock: React.FC<BlockComponentProps> = ({

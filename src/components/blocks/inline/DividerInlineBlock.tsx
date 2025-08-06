@@ -1,6 +1,6 @@
 import React from "react";
 import type { BlockComponentProps } from "@/types/blocks";
-import { cn } from "../../../../lib/utils";
+import { cn } from "@/lib/utils";
 
 interface Props extends BlockComponentProps {
   style?: "solid" | "dashed" | "dotted";

@@ -40,20 +40,20 @@ import StatInlineBlock from "../components/blocks/inline/StatInlineBlock";
 import TextInlineBlock from "../components/blocks/inline/TextInlineBlock";
 
 // Componentes específicos da Etapa 1
-import DecorativeBarInlineBlock from "../components/editor/blocks/DecorativeBarInlineBlock";
 import FormInputBlock from "../components/blocks/inline/FormInputBlock";
-import LegalNoticeInlineBlock from "../components/editor/blocks/LegalNoticeInlineBlock";
 import QuizIntroHeaderBlock from "../components/blocks/inline/QuizIntroHeaderBlock";
+import DecorativeBarInlineBlock from "../components/editor/blocks/DecorativeBarInlineBlock";
+import LegalNoticeInlineBlock from "../components/editor/blocks/LegalNoticeInlineBlock";
 
 // Componentes de Quiz - para compatibilidade com DynamicStepTemplate
 import QuizResultsBlock from "../components/blocks/quiz/QuizResultsBlock";
 import StyleResultsBlock from "../components/blocks/quiz/StyleResultsBlock";
-import FinalStepEditor from "../components/blocks/FinalStepEditor";
-import OptionsGridBlock from "../components/blocks/OptionsGridBlock";
-import QuizProgressBlock from "../components/blocks/QuizProgressBlock";
-import QuizResultsEditor from "../components/blocks/QuizResultsEditor";
-import QuizStepBlock from "../components/blocks/QuizStepBlock";
-import StyleResultsEditor from "../components/blocks/StyleResultsEditor";
+import FinalStepEditor from "../components/editor/blocks/FinalStepEditor";
+import OptionsGridBlock from "../components/editor/blocks/OptionsGridBlock";
+import QuizProgressBlock from "../components/editor/blocks/QuizProgressBlock";
+import QuizResultsEditor from "../components/editor/blocks/QuizResultsEditor";
+import QuizStepBlock from "../components/editor/blocks/QuizStepBlock";
+import StyleResultsEditor from "../components/editor/blocks/StyleResultsEditor";
 
 // === REGISTRY PRINCIPAL - SEM DUPLICATAS ===
 

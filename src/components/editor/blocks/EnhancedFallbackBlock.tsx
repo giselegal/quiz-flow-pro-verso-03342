@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import { Button } from "../../ui/button";
 import { Badge } from "../../ui/badge";
 import type { BlockComponentProps } from "../../../types/blocks";

@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
 import { useSteps, QuizStep } from "../../context/StepsContext";
 
 interface StepsPanelProps {
