@@ -299,8 +299,12 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
           minScore: 0,
           maxScore: 100,
           displayOrder: 1,
+          imageUrl: undefined,
         },
         showScores: true,
+        categoryScores: [],
+        onReset: undefined,
+        onShare: undefined,
       },
     },
     {
