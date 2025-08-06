@@ -1,4 +1,5 @@
 import PropertiesPanelDebug from "@/components/debug/PropertiesPanelDebug";
+import LovableActivator from "@/components/debug/LovableActivator";
 import { CanvasDropZone } from "@/components/editor/canvas/CanvasDropZone";
 import { DndProvider } from "@/components/editor/dnd/DndProvider";
 import EnhancedComponentsSidebar from "@/components/editor/EnhancedComponentsSidebar";
@@ -366,6 +367,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             onClose={() => setShowFunnelSettings(false)}
           />
         )}
+
+        {/* Ativador do Lovable */}
+        <LovableActivator forceActivate={true} />
       </div>
     </DndProvider>
   );
