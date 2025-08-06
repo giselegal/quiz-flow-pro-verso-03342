@@ -195,13 +195,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         }
       }}
       onBlockSelect={blockId => {
-        console.log("🎯 DndProvider.onBlockSelect chamado:", {
-          blockId,
-          currentSelectedBlockId: selectedBlockId,
-          willChange: blockId !== selectedBlockId,
-        });
         setSelectedBlockId(blockId);
-        console.log("✅ setSelectedBlockId executado com:", blockId);
       }}
       selectedBlockId={selectedBlockId || undefined}
       onBlockUpdate={(blockId, updates) => {
@@ -252,15 +246,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                     isPreviewing={isPreviewing}
                     activeStageId={activeStageId}
                     stageCount={stageCount}
-                    onSelectBlock={blockId => {
-                      console.log("🎯 CanvasDropZone.onSelectBlock chamado:", {
-                        blockId,
-                        currentSelectedBlockId: selectedBlockId,
-                        willChange: blockId !== selectedBlockId,
-                      });
-                      setSelectedBlockId(blockId);
-                      console.log("✅ setSelectedBlockId (Canvas) executado com:", blockId);
-                    }}
+                    onSelectBlock={setSelectedBlockId}
                     onUpdateBlock={updateBlock}
                     onDeleteBlock={handleDeleteBlock}
                   />
