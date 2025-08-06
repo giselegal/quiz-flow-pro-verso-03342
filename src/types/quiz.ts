@@ -6,7 +6,7 @@ export type StyleType =
   | "romântico"
   | "sexy"
   | "dramático"
-  | "criativo"
+  | "criativo";
 
 export interface Style {
   id: StyleType;

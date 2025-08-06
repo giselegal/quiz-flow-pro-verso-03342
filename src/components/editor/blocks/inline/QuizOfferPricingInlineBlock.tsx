@@ -1,7 +1,7 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '@/types/blocks';
-import { safeGetBlockProperties, logBlockDebug } from '@/utils/blockUtils';
+import React from "react";
+import { cn } from "@/lib/utils";
+import type { BlockComponentProps } from "@/types/blocks";
+import { safeGetBlockProperties, logBlockDebug } from "@/utils/blockUtils";
 
 /**
  * QuizOfferPricingInlineBlock - Preço da oferta do quiz
@@ -10,27 +10,27 @@ const QuizOfferPricingInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  className = '',
+  className = "",
 }) => {
-  logBlockDebug('QuizOfferPricingInlineBlock', block);
+  logBlockDebug("QuizOfferPricingInlineBlock", block);
   const properties = safeGetBlockProperties(block);
 
   const {
-    originalPrice = 'R$ 197,00',
-    offerPrice = 'R$ 97,00',
-    discount = '50% OFF',
-    urgencyText = 'Oferta por tempo limitado',
+    originalPrice = "R$ 197,00",
+    offerPrice = "R$ 97,00",
+    discount = "50% OFF",
+    urgencyText = "Oferta por tempo limitado",
   } = properties;
 
   return (
     <div
       className={cn(
-        'w-full p-6 rounded-lg transition-all duration-200 text-center',
-        'bg-gradient-to-br from-[#B89B7A]/10 to-[#A1835D]/5',
-        'border-2 border-[#B89B7A]/30',
-        isSelected && 'ring-2 ring-blue-500',
-        'cursor-pointer',
-        className,
+        "w-full p-6 rounded-lg transition-all duration-200 text-center",
+        "bg-gradient-to-br from-[#B89B7A]/10 to-[#A1835D]/5",
+        "border-2 border-[#B89B7A]/30",
+        isSelected && "ring-2 ring-blue-500",
+        "cursor-pointer",
+        className
       )}
       onClick={onClick}
     >

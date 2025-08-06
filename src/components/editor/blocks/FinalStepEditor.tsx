@@ -40,8 +40,11 @@ const FinalStepEditor: React.FC<FinalStepEditorProps> = ({ stepConfig, onChange 
 
   // ✅ CORREÇÃO: Função para atualizar com validação
   const updateConfig = (updates: Partial<FinalStepEditorProps["stepConfig"]>) => {
-    console.log("🚀 FinalStepEditor.updateConfig chamado:", { updates, currentConfig: safeStepConfig });
-    
+    console.log("🚀 FinalStepEditor.updateConfig chamado:", {
+      updates,
+      currentConfig: safeStepConfig,
+    });
+
     if (onChange) {
       const newConfig = {
         ...safeStepConfig,
