@@ -665,12 +665,14 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     currentBlocksCount: currentBlocks.length,
     currentBlocksIds: currentBlocks.map(b => b.id),
     selectedBlockFound: !!selectedBlock,
-    selectedBlockDetails: selectedBlock ? {
-      id: selectedBlock.id,
-      type: selectedBlock.type,
-      hasProperties: !!selectedBlock.properties,
-      hasContent: !!selectedBlock.content
-    } : null
+    selectedBlockDetails: selectedBlock
+      ? {
+          id: selectedBlock.id,
+          type: selectedBlock.type,
+          hasProperties: !!selectedBlock.properties,
+          hasContent: !!selectedBlock.content,
+        }
+      : null,
   });
 
   const totalBlocks = Object.values(stageBlocks).reduce(

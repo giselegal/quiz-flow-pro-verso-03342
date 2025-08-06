@@ -1,10 +1,10 @@
+import PropertiesPanelDebug from "@/components/debug/PropertiesPanelDebug";
 import { CanvasDropZone } from "@/components/editor/canvas/CanvasDropZone";
 import { DndProvider } from "@/components/editor/dnd/DndProvider";
 import EnhancedComponentsSidebar from "@/components/editor/EnhancedComponentsSidebar";
 import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelSettingsPanel";
 import { FunnelStagesPanel } from "@/components/editor/funnel/FunnelStagesPanel";
 import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
-import PropertiesPanelDebug from "@/components/debug/PropertiesPanelDebug";
 import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
 import EnhancedUniversalPropertiesPanel from "@/components/universal/EnhancedUniversalPropertiesPanel";
 import { generateBlockDefinitions, getRegistryStats } from "@/config/enhancedBlockRegistry";
@@ -253,7 +253,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                     isPreviewing={isPreviewing}
                     activeStageId={activeStageId}
                     stageCount={stageCount}
-                    onSelectBlock={(blockId) => {
+                    onSelectBlock={blockId => {
                       console.log("🎯 CanvasDropZone.onSelectBlock chamado:", {
                         blockId,
                         currentSelectedBlockId: selectedBlockId,
@@ -271,7 +271,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             propertiesPanel={
               <div>
                 <PropertiesPanelDebug title="Debug Painel de Propriedades" />
-                
+
                 {/* ✅ SOLUÇÃO: Verificações de segurança adicionais */}
                 {(() => {
                   console.log("🔍 Renderização do Painel - Verificações:", {
@@ -299,7 +299,8 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                             Painel Universal ativo • Drag & Drop habilitado
                           </p>
                           <div className="text-xs text-gray-400 mt-2">
-                            Debug: currentBlocks={currentBlocks?.length || 0}, activeStageId={activeStageId}
+                            Debug: currentBlocks={currentBlocks?.length || 0}, activeStageId=
+                            {activeStageId}
                           </div>
                         </div>
                       </div>
