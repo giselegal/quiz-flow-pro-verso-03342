@@ -2407,6 +2407,629 @@ export const useUnifiedProperties = (
             },
           ];
 
+        case "quiz-intro-header":
+          return [
+            ...baseProperties,
+            {
+              key: "logoUrl",
+              value:
+                currentBlock?.properties?.logoUrl ||
+                "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+              type: PropertyType.TEXT,
+              label: "URL do Logo",
+              category: "content",
+            },
+            {
+              key: "logoAlt",
+              value: currentBlock?.properties?.logoAlt || "Logo",
+              type: PropertyType.TEXT,
+              label: "Alt do Logo",
+              category: "content",
+            },
+            {
+              key: "progressValue",
+              value: currentBlock?.properties?.progressValue || 0,
+              type: PropertyType.NUMBER,
+              label: "Progresso (%)",
+              category: "content",
+              min: 0,
+              max: 100,
+            },
+            {
+              key: "showProgress",
+              value: currentBlock?.properties?.showProgress || true,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Progresso",
+              category: "content",
+            },
+            {
+              key: "backgroundColor",
+              value: currentBlock?.properties?.backgroundColor || "#F9F5F1",
+              type: PropertyType.COLOR,
+              label: "Cor de Fundo",
+              category: "content",
+            },
+            {
+              key: "height",
+              value: currentBlock?.properties?.height || 80,
+              type: PropertyType.NUMBER,
+              label: "Altura (px)",
+              category: "content",
+              min: 50,
+              max: 200,
+            },
+          ];
+
+        case "form-input":
+          return [
+            ...baseProperties,
+            {
+              key: "label",
+              value: currentBlock?.properties?.label || "Campo de Input",
+              type: PropertyType.TEXT,
+              label: "Rótulo",
+              category: "content",
+            },
+            {
+              key: "placeholder",
+              value: currentBlock?.properties?.placeholder || "Digite aqui...",
+              type: PropertyType.TEXT,
+              label: "Placeholder",
+              category: "content",
+            },
+            {
+              key: "required",
+              value: currentBlock?.properties?.required || false,
+              type: PropertyType.SWITCH,
+              label: "Obrigatório",
+              category: "content",
+            },
+            {
+              key: "type",
+              value: currentBlock?.properties?.type || "text",
+              type: PropertyType.SELECT,
+              label: "Tipo",
+              category: "content",
+              options: [
+                { value: "text", label: "Texto" },
+                { value: "email", label: "Email" },
+                { value: "tel", label: "Telefone" },
+                { value: "password", label: "Senha" },
+              ],
+            },
+            {
+              key: "width",
+              value: currentBlock?.properties?.width || "100%",
+              type: PropertyType.TEXT,
+              label: "Largura",
+              category: "content",
+            },
+            {
+              key: "backgroundColor",
+              value: currentBlock?.properties?.backgroundColor || "#FFFFFF",
+              type: PropertyType.COLOR,
+              label: "Cor de Fundo",
+              category: "content",
+            },
+            {
+              key: "borderColor",
+              value: currentBlock?.properties?.borderColor || "#B89B7A",
+              type: PropertyType.COLOR,
+              label: "Cor da Borda",
+              category: "content",
+            },
+          ];
+
+        case "legal-notice-inline":
+          return [
+            ...baseProperties,
+            {
+              key: "privacyText",
+              value: currentBlock?.properties?.privacyText || "Política de privacidade",
+              type: PropertyType.TEXT,
+              label: "Texto de Privacidade",
+              category: "content",
+            },
+            {
+              key: "copyrightText",
+              value:
+                currentBlock?.properties?.copyrightText || "© 2025 Todos os direitos reservados",
+              type: PropertyType.TEXT,
+              label: "Texto de Copyright",
+              category: "content",
+            },
+            {
+              key: "termsText",
+              value: currentBlock?.properties?.termsText || "Termos de uso",
+              type: PropertyType.TEXT,
+              label: "Texto de Termos",
+              category: "content",
+            },
+            {
+              key: "fontSize",
+              value: currentBlock?.properties?.fontSize || "text-xs",
+              type: PropertyType.SELECT,
+              label: "Tamanho da Fonte",
+              category: "content",
+              options: [
+                { value: "text-xs", label: "Extra Pequeno" },
+                { value: "text-sm", label: "Pequeno" },
+                { value: "text-base", label: "Normal" },
+              ],
+            },
+            {
+              key: "textAlign",
+              value: currentBlock?.properties?.textAlign || "center",
+              type: PropertyType.SELECT,
+              label: "Alinhamento",
+              category: "content",
+              options: [
+                { value: "left", label: "Esquerda" },
+                { value: "center", label: "Centro" },
+                { value: "right", label: "Direita" },
+              ],
+            },
+            {
+              key: "color",
+              value: currentBlock?.properties?.color || "#6B7280",
+              type: PropertyType.COLOR,
+              label: "Cor do Texto",
+              category: "content",
+            },
+            {
+              key: "linkColor",
+              value: currentBlock?.properties?.linkColor || "#B89B7A",
+              type: PropertyType.COLOR,
+              label: "Cor dos Links",
+              category: "content",
+            },
+          ];
+
+        case "image-display-inline":
+          return [
+            ...baseProperties,
+            {
+              key: "src",
+              value: currentBlock?.properties?.src || "",
+              type: PropertyType.TEXT,
+              label: "URL da Imagem",
+              category: "content",
+            },
+            {
+              key: "alt",
+              value: currentBlock?.properties?.alt || "Imagem",
+              type: PropertyType.TEXT,
+              label: "Texto Alternativo",
+              category: "content",
+            },
+            {
+              key: "width",
+              value: currentBlock?.properties?.width || "100%",
+              type: PropertyType.TEXT,
+              label: "Largura",
+              category: "content",
+            },
+            {
+              key: "height",
+              value: currentBlock?.properties?.height || "auto",
+              type: PropertyType.TEXT,
+              label: "Altura",
+              category: "content",
+            },
+            {
+              key: "objectFit",
+              value: currentBlock?.properties?.objectFit || "cover",
+              type: PropertyType.SELECT,
+              label: "Ajuste",
+              category: "content",
+              options: [
+                { value: "cover", label: "Cobrir" },
+                { value: "contain", label: "Conter" },
+                { value: "fill", label: "Preencher" },
+                { value: "none", label: "Nenhum" },
+              ],
+            },
+            {
+              key: "borderRadius",
+              value: currentBlock?.properties?.borderRadius || 8,
+              type: PropertyType.NUMBER,
+              label: "Borda Arredondada",
+              category: "content",
+              min: 0,
+              max: 50,
+            },
+            {
+              key: "shadow",
+              value: currentBlock?.properties?.shadow || false,
+              type: PropertyType.SWITCH,
+              label: "Sombra",
+              category: "content",
+            },
+            {
+              key: "alignment",
+              value: currentBlock?.properties?.alignment || "center",
+              type: PropertyType.SELECT,
+              label: "Alinhamento",
+              category: "content",
+              options: [
+                { value: "left", label: "Esquerda" },
+                { value: "center", label: "Centro" },
+                { value: "right", label: "Direita" },
+              ],
+            },
+          ];
+
+        case "options-grid":
+          return [
+            ...baseProperties,
+            {
+              key: "question",
+              value: currentBlock?.properties?.question || "Qual opção você escolhe?",
+              type: PropertyType.TEXTAREA,
+              label: "Pergunta",
+              category: "content",
+            },
+            {
+              key: "columns",
+              value: currentBlock?.properties?.columns || "2",
+              type: PropertyType.SELECT,
+              label: "Colunas",
+              category: "content",
+              options: [
+                { value: "1", label: "1 Coluna" },
+                { value: "2", label: "2 Colunas" },
+                { value: "3", label: "3 Colunas" },
+                { value: "4", label: "4 Colunas" },
+              ],
+            },
+            {
+              key: "gap",
+              value: currentBlock?.properties?.gap || 16,
+              type: PropertyType.NUMBER,
+              label: "Espaçamento",
+              category: "content",
+              min: 0,
+              max: 50,
+            },
+            {
+              key: "selectionMode",
+              value: currentBlock?.properties?.selectionMode || "single",
+              type: PropertyType.SELECT,
+              label: "Seleção",
+              category: "content",
+              options: [
+                { value: "single", label: "Única" },
+                { value: "multiple", label: "Múltipla" },
+              ],
+            },
+            {
+              key: "primaryColor",
+              value: currentBlock?.properties?.primaryColor || "#B89B7A",
+              type: PropertyType.COLOR,
+              label: "Cor Principal",
+              category: "content",
+            },
+            {
+              key: "accentColor",
+              value: currentBlock?.properties?.accentColor || "#D4C2A8",
+              type: PropertyType.COLOR,
+              label: "Cor de Destaque",
+              category: "content",
+            },
+            {
+              key: "showImages",
+              value: currentBlock?.properties?.showImages || true,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Imagens",
+              category: "content",
+            },
+            {
+              key: "imagePosition",
+              value: currentBlock?.properties?.imagePosition || "top",
+              type: PropertyType.SELECT,
+              label: "Posição da Imagem",
+              category: "content",
+              options: [
+                { value: "top", label: "Acima" },
+                { value: "left", label: "Esquerda" },
+                { value: "right", label: "Direita" },
+                { value: "background", label: "Fundo" },
+              ],
+            },
+          ];
+
+        case "quiz-progress":
+          return [
+            ...baseProperties,
+            {
+              key: "currentStep",
+              value: currentBlock?.properties?.currentStep || 1,
+              type: PropertyType.NUMBER,
+              label: "Etapa Atual",
+              category: "content",
+              min: 1,
+              max: 21,
+            },
+            {
+              key: "totalSteps",
+              value: currentBlock?.properties?.totalSteps || 21,
+              type: PropertyType.NUMBER,
+              label: "Total de Etapas",
+              category: "content",
+              min: 1,
+              max: 50,
+            },
+            {
+              key: "showNumbers",
+              value: currentBlock?.properties?.showNumbers || true,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Números",
+              category: "content",
+            },
+            {
+              key: "showPercentage",
+              value: currentBlock?.properties?.showPercentage || true,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Percentual",
+              category: "content",
+            },
+            {
+              key: "barColor",
+              value: currentBlock?.properties?.barColor || "#B89B7A",
+              type: PropertyType.COLOR,
+              label: "Cor da Barra",
+              category: "content",
+            },
+            {
+              key: "backgroundColor",
+              value: currentBlock?.properties?.backgroundColor || "#E5E7EB",
+              type: PropertyType.COLOR,
+              label: "Cor de Fundo",
+              category: "content",
+            },
+            {
+              key: "height",
+              value: currentBlock?.properties?.height || 8,
+              type: PropertyType.NUMBER,
+              label: "Altura (px)",
+              category: "content",
+              min: 4,
+              max: 20,
+            },
+            {
+              key: "borderRadius",
+              value: currentBlock?.properties?.borderRadius || 4,
+              type: PropertyType.NUMBER,
+              label: "Borda Arredondada",
+              category: "content",
+              min: 0,
+              max: 20,
+            },
+            {
+              key: "animated",
+              value: currentBlock?.properties?.animated || true,
+              type: PropertyType.SWITCH,
+              label: "Animado",
+              category: "content",
+            },
+          ];
+
+        case "quiz-results":
+          return [
+            ...baseProperties,
+            {
+              key: "title",
+              value: currentBlock?.properties?.title || "Seus Resultados",
+              type: PropertyType.TEXT,
+              label: "Título",
+              category: "content",
+            },
+            {
+              key: "showScores",
+              value: currentBlock?.properties?.showScores || true,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Pontuações",
+              category: "content",
+            },
+            {
+              key: "showPercentages",
+              value: currentBlock?.properties?.showPercentages || true,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Percentuais",
+              category: "content",
+            },
+            {
+              key: "showRanking",
+              value: currentBlock?.properties?.showRanking || false,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Ranking",
+              category: "content",
+            },
+            {
+              key: "primaryColor",
+              value: currentBlock?.properties?.primaryColor || "#B89B7A",
+              type: PropertyType.COLOR,
+              label: "Cor Principal",
+              category: "content",
+            },
+            {
+              key: "secondaryColor",
+              value: currentBlock?.properties?.secondaryColor || "#D4C2A8",
+              type: PropertyType.COLOR,
+              label: "Cor Secundária",
+              category: "content",
+            },
+            {
+              key: "layout",
+              value: currentBlock?.properties?.layout || "vertical",
+              type: PropertyType.SELECT,
+              label: "Layout",
+              category: "content",
+              options: [
+                { value: "vertical", label: "Vertical" },
+                { value: "horizontal", label: "Horizontal" },
+                { value: "grid", label: "Grade" },
+              ],
+            },
+            {
+              key: "showImages",
+              value: currentBlock?.properties?.showImages || true,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Imagens",
+              category: "content",
+            },
+            {
+              key: "animatedEntry",
+              value: currentBlock?.properties?.animatedEntry || true,
+              type: PropertyType.SWITCH,
+              label: "Entrada Animada",
+              category: "content",
+            },
+          ];
+
+        case "style-results":
+          return [
+            ...baseProperties,
+            {
+              key: "title",
+              value: currentBlock?.properties?.title || "Seu Estilo Predominante",
+              type: PropertyType.TEXT,
+              label: "Título",
+              category: "content",
+            },
+            {
+              key: "showAllStyles",
+              value: currentBlock?.properties?.showAllStyles || false,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Todos os Estilos",
+              category: "content",
+            },
+            {
+              key: "showGuideImage",
+              value: currentBlock?.properties?.showGuideImage || true,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Guia",
+              category: "content",
+            },
+            {
+              key: "guideImageUrl",
+              value:
+                currentBlock?.properties?.guideImageUrl ||
+                "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
+              type: PropertyType.TEXT,
+              label: "URL do Guia",
+              category: "content",
+            },
+            {
+              key: "primaryStyle",
+              value: currentBlock?.properties?.primaryStyle || "Natural",
+              type: PropertyType.SELECT,
+              label: "Estilo Principal",
+              category: "content",
+              options: [
+                { value: "Natural", label: "Natural" },
+                { value: "Clássico", label: "Clássico" },
+                { value: "Elegante", label: "Elegante" },
+                { value: "Contemporâneo", label: "Contemporâneo" },
+                { value: "Romântico", label: "Romântico" },
+              ],
+            },
+            {
+              key: "layout",
+              value: currentBlock?.properties?.layout || "card",
+              type: PropertyType.SELECT,
+              label: "Layout",
+              category: "content",
+              options: [
+                { value: "card", label: "Card" },
+                { value: "banner", label: "Banner" },
+                { value: "split", label: "Dividido" },
+              ],
+            },
+            {
+              key: "showDescription",
+              value: currentBlock?.properties?.showDescription || true,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Descrição",
+              category: "content",
+            },
+            {
+              key: "showPercentage",
+              value: currentBlock?.properties?.showPercentage || true,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Percentual",
+              category: "content",
+            },
+          ];
+
+        case "final-step":
+          return [
+            ...baseProperties,
+            {
+              key: "stepNumber",
+              value: currentBlock?.properties?.stepNumber || 21,
+              type: PropertyType.NUMBER,
+              label: "Número da Etapa",
+              category: "content",
+              min: 1,
+              max: 50,
+            },
+            {
+              key: "title",
+              value: currentBlock?.properties?.title || "Seu Estilo Predominante",
+              type: PropertyType.TEXT,
+              label: "Título",
+              category: "content",
+            },
+            {
+              key: "subtitle",
+              value: currentBlock?.properties?.subtitle || "Descubra seu estilo de moda único",
+              type: PropertyType.TEXT,
+              label: "Subtítulo",
+              category: "content",
+            },
+            {
+              key: "showNavigation",
+              value: currentBlock?.properties?.showNavigation || true,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Navegação",
+              category: "content",
+            },
+            {
+              key: "showProgress",
+              value: currentBlock?.properties?.showProgress || true,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Progresso",
+              category: "content",
+            },
+            {
+              key: "backgroundColor",
+              value: currentBlock?.properties?.backgroundColor || "#F9F5F1",
+              type: PropertyType.COLOR,
+              label: "Cor de Fundo",
+              category: "content",
+            },
+            {
+              key: "accentColor",
+              value: currentBlock?.properties?.accentColor || "#B89B7A",
+              type: PropertyType.COLOR,
+              label: "Cor de Destaque",
+              category: "content",
+            },
+            {
+              key: "layout",
+              value: currentBlock?.properties?.layout || "centered",
+              type: PropertyType.SELECT,
+              label: "Layout",
+              category: "content",
+              options: [
+                { value: "centered", label: "Centralizado" },
+                { value: "split", label: "Dividido" },
+                { value: "full", label: "Tela Cheia" },
+              ],
+            },
+          ];
+
         default:
           // ✅ CORREÇÃO: Log para debug dos tipos não mapeados
           console.warn(
