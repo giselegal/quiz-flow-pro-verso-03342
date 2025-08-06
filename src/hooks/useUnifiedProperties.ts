@@ -107,12 +107,10 @@ const asCategory = (categoryString: string): PropertyCategoryOrString => {
 
 export const useUnifiedProperties = (
   block: UnifiedBlock | null,
-  onUpdateExternal?: (blockId: string, updates: Record<string, any>) => void // Callback para notificar o sistema externo
+  onUpdateExternal?: (blockId: string, updates: Record<string, any>) => void
 ): UseUnifiedPropertiesReturn => {
-  // Estado interno para armazenar as propriedades do bloco
   const [properties, setProperties] = useState<UnifiedProperty[]>([]);
 
-  // Caso o hook seja chamado com block nulo, retorna um objeto padrão para evitar erro de retorno
   if (!block) {
     const emptyReturn: UseUnifiedPropertiesReturn = {
       properties: [],
@@ -126,20 +124,6 @@ export const useUnifiedProperties = (
     };
     return emptyReturn;
   }
-  // ...restante da função...
-
-  // Garantir retorno em todos os caminhos
-  return {
-    properties,
-    updateProperty,
-    resetProperties,
-    validateProperties,
-    getPropertyByKey,
-    getPropertiesByCategory,
-    exportProperties,
-    applyBrandColors,
-  };
-}
 
   // Função memoizada para gerar as definições de propriedades com base no tipo do bloco
   const generateDefaultProperties = useCallback(
@@ -552,6 +536,13 @@ export const useUnifiedProperties = (
               category: "content",
               required: true,
               rows: 3,
+            },
+            {
+              key: "showImages",
+              value: currentBlock?.properties?.showImages || true,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Imagens",
+              category: "content",
             },
             {
               key: "options",
@@ -1363,367 +1354,383 @@ export const useUnifiedProperties = (
               type: PropertyType.TEXT,
               label: "URL da Imagem",
               category: "content",
-              required: true,
             },
             {
               key: "alt",
-              value: currentBlock?.properties?.alt || "",
+              value: currentBlock?.properties?.alt || "Imagem",
               type: PropertyType.TEXT,
               label: "Texto Alternativo",
               category: "content",
-              required: true,
             },
             {
               key: "width",
-              value: currentBlock?.properties?.width || 600,
-              type: PropertyType.NUMBER,
+              value: currentBlock?.properties?.width || "100%",
+              type: PropertyType.TEXT,
               label: "Largura",
-              category: "style",
+              category: "content",
             },
             {
               key: "height",
-              value: currentBlock?.properties?.height || 400,
-              type: PropertyType.NUMBER,
+              value: currentBlock?.properties?.height || "auto",
+              type: PropertyType.TEXT,
               label: "Altura",
-              category: "style",
-            },
-            {
-              key: "className",
-              value: currentBlock?.properties?.className || "",
-              type: PropertyType.TEXT,
-              label: "Classes CSS",
-              category: "style",
-            },
-            {
-              key: "textAlign",
-              value: currentBlock?.properties?.textAlign || "text-center",
-              type: PropertyType.SELECT,
-              label: "Alinhamento",
-              category: "alignment",
-              options: [
-                { value: "text-left", label: "Esquerda" },
-                { value: "text-center", label: "Centro" },
-                { value: "text-right", label: "Direita" },
-              ],
-            },
-            {
-              key: "marginBottom",
-              value: currentBlock?.properties?.marginBottom || 32,
-              type: PropertyType.NUMBER,
-              label: "Margem Inferior",
-              category: "style",
-            },
-          ];
-
-        case "quiz-intro-image":
-          return [
-            ...baseProperties,
-            {
-              key: "src",
-              value: currentBlock?.properties?.src || "",
-              type: PropertyType.TEXT,
-              label: "URL da Imagem",
               category: "content",
-              required: true,
-            },
-            {
-              key: "alt",
-              value: currentBlock?.properties?.alt || "",
-              type: PropertyType.TEXT,
-              label: "Texto Alternativo",
-              category: "content",
-              required: true,
-            },
-            {
-              key: "caption",
-              value: currentBlock?.properties?.caption || "",
-              type: PropertyType.TEXT,
-              label: "Legenda",
-              category: "content",
-            },
-            {
-              key: "aspectRatio",
-              value: currentBlock?.properties?.aspectRatio || "auto",
-              type: PropertyType.SELECT,
-              label: "Proporção",
-              category: "style",
-              options: [
-                { value: "auto", label: "Automática" },
-                { value: "square", label: "Quadrada (1:1)" },
-                { value: "video", label: "Vídeo (16:9)" },
-                { value: "photo", label: "Foto (4:3)" },
-                { value: "portrait", label: "Retrato (3:4)" },
-              ],
             },
             {
               key: "objectFit",
-              value: currentBlock?.properties?.objectFit || "contain",
+              value: currentBlock?.properties?.objectFit || "cover",
               type: PropertyType.SELECT,
-              label: "Ajuste da Imagem",
-              category: "style",
+              label: "Ajuste",
+              category: "content",
               options: [
-                { value: "contain", label: "Conter (não corta)" },
-                { value: "cover", label: "Cobrir (pode cortar)" },
+                { value: "cover", label: "Cobrir" },
+                { value: "contain", label: "Conter" },
                 { value: "fill", label: "Preencher" },
-                { value: "scale-down", label: "Reduzir" },
+                { value: "none", label: "Nenhum" },
               ],
             },
             {
               key: "borderRadius",
-              value: currentBlock?.properties?.borderRadius || "md",
-              type: PropertyType.SELECT,
-              label: "Bordas Arredondadas",
-              category: "style",
-              options: [
-                { value: "none", label: "Nenhuma" },
-                { value: "sm", label: "Pequena" },
-                { value: "md", label: "Média" },
-                { value: "lg", label: "Grande" },
-                { value: "full", label: "Circular" },
-              ],
-            },
-          ];
-
-        case "quiz-multiple-choice":
-          return [
-            ...baseProperties,
-            {
-              key: "question",
-              value: currentBlock?.properties?.question || "",
-              type: PropertyType.TEXTAREA,
-              label: "Pergunta",
-              category: "content",
-              required: true,
-              rows: 3,
-            },
-            {
-              key: "explanation",
-              value: currentBlock?.properties?.explanation || "",
-              type: PropertyType.TEXTAREA,
-              label: "Explicação da Resposta",
-              category: "content",
-              rows: 3,
-            },
-            {
-              key: "options",
-              value: currentBlock?.properties?.options || "",
-              type: PropertyType.TEXTAREA,
-              label: "Opções (uma por linha)",
-              category: "content",
-              required: true,
-              rows: 4,
-            },
-            {
-              key: "optionType",
-              value: currentBlock?.properties?.optionType || "radio",
-              type: PropertyType.SELECT,
-              label: "Tipo de Opção",
-              category: "behavior",
-              options: [
-                { value: "radio", label: "Única Escolha (Radio)" },
-                { value: "checkbox", label: "Múltipla Escolha (Checkbox)" },
-              ],
-            },
-            {
-              key: "requireSelection",
-              value: currentBlock?.properties?.requireSelection !== false,
-              type: PropertyType.SWITCH,
-              label: "Seleção Obrigatória",
-              category: "behavior",
-            },
-            {
-              key: "autoAdvance",
-              value: currentBlock?.properties?.autoAdvance === true,
-              type: PropertyType.SWITCH,
-              label: "Avançar Automaticamente",
-              category: "behavior",
-            },
-            {
-              key: "showFeedback",
-              value: currentBlock?.properties?.showFeedback !== false,
-              type: PropertyType.SWITCH,
-              label: "Mostrar Feedback Imediato",
-              category: "behavior",
-            },
-            {
-              key: "feedbackDelay",
-              value: currentBlock?.properties?.feedbackDelay || 500,
+              value: currentBlock?.properties?.borderRadius || 8,
               type: PropertyType.NUMBER,
-              label: "Atraso do Feedback (ms)",
-              category: "behavior",
+              label: "Borda Arredondada",
+              category: "content",
               min: 0,
-              max: 5000,
-              step: 100,
+              max: 50,
             },
             {
-              key: "correctAnswers",
-              value: currentBlock?.properties?.correctAnswers || "0",
-              type: PropertyType.TEXT,
-              label: "Respostas Corretas (índices)",
-              category: "content",
-              required: true,
-            },
-            {
-              key: "randomizeOptions",
-              value: currentBlock?.properties?.randomizeOptions === true,
+              key: "shadow",
+              value: currentBlock?.properties?.shadow || false,
               type: PropertyType.SWITCH,
-              label: "Embaralhar Opções",
-              category: "behavior",
-            },
-            {
-              key: "useLetterOptions",
-              value: currentBlock?.properties?.useLetterOptions === true,
-              type: PropertyType.SWITCH,
-              label: "Usar Letras nas Opções (A-H)",
-              category: "style",
-            },
-            // Propriedades de pontuação para opções A-H
-            ...Array.from({ length: 8 }).flatMap((_, i) => {
-              const char = String.fromCharCode(65 + i);
-              return [
-                {
-                  key: `option${char}Score`,
-                  value: currentBlock?.properties?.[`option${char}Score`] || 0,
-                  type: PropertyType.NUMBER,
-                  label: `Pontuação da Opção ${char}`,
-                  category: "scoring",
-                  min: 0,
-                  max: 100,
-                  step: 1,
-                },
-                {
-                  key: `option${char}Category`,
-                  value: currentBlock?.properties?.[`option${char}Category`] || "",
-                  type: PropertyType.TEXT,
-                  label: `Categoria da Opção ${char}`,
-                  category: "scoring",
-                },
-              ];
-            }),
-            {
-              key: "optionStyle",
-              value: currentBlock?.properties?.optionStyle || "default",
-              type: PropertyType.SELECT,
-              label: "Estilo das Opções",
-              category: "style",
-              options: [
-                { value: "default", label: "Padrão" },
-                { value: "buttons", label: "Botões" },
-                { value: "cards", label: "Cartões" },
-                { value: "minimal", label: "Minimalista" },
-              ],
-            },
-            {
-              key: "showOptionImages",
-              value: currentBlock?.properties?.showOptionImages === true,
-              type: PropertyType.SWITCH,
-              label: "Mostrar Imagens nas Opções",
-              category: "style",
-            },
-          ];
-
-        case "form-input":
-          return [
-            ...baseProperties,
-            {
-              key: "label",
-              value: currentBlock?.properties?.label || "",
-              type: PropertyType.TEXT,
-              label: "Rótulo do Campo",
+              label: "Sombra",
               category: "content",
             },
             {
-              key: "placeholder",
-              value: currentBlock?.properties?.placeholder || "",
-              type: PropertyType.TEXT,
-              label: "Texto de Placeholder",
-              category: "content",
-            },
-            {
-              key: "required",
-              value: currentBlock?.properties?.required === true,
-              type: PropertyType.SWITCH,
-              label: "Campo Obrigatório",
-              category: "behavior",
-            },
-            {
-              key: "inputType",
-              value: currentBlock?.properties?.inputType || "text",
-              type: PropertyType.SELECT,
-              label: "Tipo de Entrada",
-              category: "behavior",
-              options: [
-                { value: "text", label: "Texto" },
-                { value: "email", label: "Email" },
-                { value: "password", label: "Senha" },
-                { value: "number", label: "Número" },
-                { value: "tel", label: "Telefone" },
-              ],
-            },
-            {
-              key: "helperText",
-              value: currentBlock?.properties?.helperText || "",
-              type: PropertyType.TEXT,
-              label: "Texto de Ajuda",
-              category: "content",
-            },
-            {
-              key: "name",
-              value: currentBlock?.properties?.name || "",
-              type: PropertyType.TEXT,
-              label: "Nome do Campo",
-              category: "behavior",
-              required: true,
-            },
-            {
-              key: "textAlign",
-              value: currentBlock?.properties?.textAlign || "text-left",
+              key: "alignment",
+              value: currentBlock?.properties?.alignment || "center",
               type: PropertyType.SELECT,
               label: "Alinhamento",
-              category: "style",
+              category: "content",
               options: [
-                { value: "text-left", label: "Esquerda" },
-                { value: "text-center", label: "Centro" },
-                { value: "text-right", label: "Direita" },
+                { value: "left", label: "Esquerda" },
+                { value: "center", label: "Centro" },
+                { value: "right", label: "Direita" },
               ],
-            },
-            {
-              key: "marginBottom",
-              value: currentBlock?.properties?.marginBottom || 32,
-              type: PropertyType.NUMBER,
-              label: "Margem Inferior",
-              category: "style",
             },
           ];
 
-        case "legal-notice-inline":
-          return [
-            ...baseProperties,
-            {
-              key: "privacyText",
-              value: currentBlock?.properties?.privacyText || "",
-              type: PropertyType.TEXTAREA,
-              label: "Texto de Privacidade",
-              category: "content",
-              rows: 3,
-            },
-            {
-              key: "copyrightText",
-              value: currentBlock?.properties?.copyrightText || "",
-              type: PropertyType.TEXT,
-              label: "Texto de Copyright",
-              category: "content",
-            },
-            {
-              key: "showIcon",
-              value: currentBlock?.properties?.showIcon !== false,
-              type: PropertyType.SWITCH,
-              label: "Mostrar Ícone",
-              category: "style",
-            },
-            {
-              key: "iconType",
-              value: currentBlock?.properties?.iconType || "shield",
+        default:
+          // ✅ CORREÇÃO: Log para debug dos tipos não mapeados
+          console.warn(
+            `🔧 useUnifiedProperties: Tipo de bloco "${blockType}" não tem propriedades específicas definidas. Usando propriedades base.`
+          );
+          console.warn(
+            `🔧 Debug - blockType recebido:`,
+            JSON.stringify(currentBlock?.type),
+            "length:",
+            currentBlock?.type?.length
+          );
+          console.warn(
+            `🔧 Debug - Comparação com 'quiz-intro-header':`,
+            currentBlock?.type === "quiz-intro-header"
+          );
+          return baseProperties;
+      }
+      // Garantir retorno em todos os caminhos
+      return baseProperties;
+    },
+    [] // Sem dependências, pois `currentBlock` é passado como argumento
+  );
+
+  // Adicionar suporte ao bloco de resultados de quiz
+  const generateResultsBlockProperties = useCallback(
+    (currentBlock: UnifiedBlock | null): UnifiedProperty[] => {
+      return [
+        {
+          key: "calculationMethod",
+          value: currentBlock?.properties?.calculationMethod || '{"type":"sum"}',
+          type: PropertyType.TEXTAREA,
+          label: "Método de Cálculo (JSON)",
+          category: "scoring",
+          rows: 5,
+        },
+        {
+          key: "results",
+          value: currentBlock?.properties?.results || "[]",
+          type: PropertyType.TEXTAREA,
+          label: "Resultados Possíveis (JSON)",
+          category: "scoring",
+          rows: 8,
+        },
+        {
+          key: "showScores",
+          value: currentBlock?.properties?.showScores !== false,
+          type: PropertyType.SWITCH,
+          label: "Mostrar Pontuações",
+          category: "scoring",
+        },
+        {
+          key: "showAllResults",
+          value: currentBlock?.properties?.showAllResults === true,
+          type: PropertyType.SWITCH,
+          label: "Mostrar Todos os Resultados",
+          category: "scoring",
+        },
+        {
+          key: "demoResult",
+          value: currentBlock?.properties?.demoResult || "",
+          type: PropertyType.TEXT,
+          label: "ID do Resultado para Preview",
+          category: "scoring",
+        },
+      ];
+    },
+    []
+  );
+
+  // Efeito para atualizar as propriedades quando o bloco selecionado muda
+  useEffect(() => {
+    console.log("🔄 useUnifiedProperties - useEffect triggered with block:", block);
+
+    if (block && block.type) {
+      console.log("✅ Block has type:", block.type);
+      console.log("🏗️ Block properties:", block.properties);
+
+      // Gera as novas propriedades usando os valores do bloco atual
+      let newProperties;
+
+      // Para blocos de resultados de quiz, usar o gerador específico
+      if (block.type === "quiz-results") {
+        newProperties = generateResultsBlockProperties(block);
+      } else {
+        // Caso contrário, usar o gerador padrão
+        newProperties = generateDefaultProperties(block.type, block);
+      }
+
+      console.log("🎛️ Generated properties:", newProperties);
+
+      setProperties(newProperties); // Atualiza o estado interno do hook
+    } else {
+      console.log("❌ No block or no block type, clearing properties");
+      setProperties([]); // Limpa as propriedades se nenhum bloco estiver selecionado
+    }
+  }, [block, generateDefaultProperties, generateResultsBlockProperties]);
+
+  // Função para atualizar uma propriedade específica
+  const updateProperty = useCallback(
+    (key: string, value: any) => {
+      if (!block) return;
+
+      // ✅ CORREÇÃO: Tratar final-step de forma especial para estruturar stepConfig
+      let updatedProperties;
+
+      if (block.type === "final-step" && ["stepNumber", "title", "subtitle"].includes(key)) {
+        // Para final-step, estruturar dentro de stepConfig
+        const currentStepConfig = block.properties?.stepConfig || {};
+        updatedProperties = {
+          ...block.properties,
+          stepConfig: {
+            ...currentStepConfig,
+            [key]: value,
+          },
+        };
+      } else {
+        // Para outros tipos, atualizar diretamente
+        updatedProperties = { ...block.properties, [key]: value };
+      }
+
+      // Atualizar o estado interno
+      setProperties(prevProps =>
+        prevProps.map(prop => (prop.key === key ? { ...prop, value } : prop))
+      );
+
+      // Notificar o sistema externo se o callback for fornecido
+      if (onUpdateExternal) {
+        // ✅ CORREÇÃO CRÍTICA: Passar a estrutura correta para EditorContext.updateBlock
+        // O EditorContext espera receber Partial<EditorBlock>, não apenas as properties
+        onUpdateExternal(block.id, {
+          properties: updatedProperties,
+        });
+      }
+    },
+    [block, onUpdateExternal]
+  );
+
+  // Função para resetar as propriedades para seus valores padrão
+  const resetProperties = useCallback(() => {
+    if (block) {
+      const defaultProperties = generateDefaultProperties(block.type, block);
+      setProperties(defaultProperties); // Atualiza o estado interno do hook
+      // Também notifica o sistema externo sobre o reset
+      if (onUpdateExternal) {
+        onUpdateExternal(block.id, { properties: {} }); // Reseta todas as propriedades no bloco
+      }
+    }
+  }, [block, generateDefaultProperties, onUpdateExternal]);
+
+  // Função para validar se todas as propriedades obrigatórias estão preenchidas
+  const validateProperties = useCallback(() => {
+    return properties.every(prop => {
+      if (prop.required && (!prop.value || prop.value === "")) {
+        return false;
+      }
+      return true;
+    });
+  }, [properties]);
+
+  // Função para obter uma propriedade específica pela chave
+  const getPropertyByKey = useCallback(
+    (key: string) => {
+      return properties.find(prop => prop.key === key);
+    },
+    [properties]
+  );
+
+  // Função para obter propriedades filtradas por categoria
+  const getPropertiesByCategory = useCallback(
+    (category: PropertyCategoryOrString) => {
+      if (!properties || !Array.isArray(properties)) {
+        return [];
+      }
+      return properties.filter(prop => prop.category === category);
+    },
+    [properties]
+  );
+
+  // Função para exportar as propriedades como um objeto simples (chave: valor)
+  const exportProperties = useCallback(() => {
+    return properties.reduce(
+      (acc, prop) => {
+        acc[prop.key] = prop.value;
+        return acc;
+      },
+      {} as Record<string, any>
+    );
+  }, [properties]);
+
+  // Função para aplicar cores da marca automaticamente a propriedades de cor
+  const applyBrandColors = useCallback(() => {
+    setProperties(prev =>
+      prev.map(prop => {
+        if (prop.type === PropertyType.COLOR) {
+          if (prop.key.includes("text") || prop.key.includes("Text")) {
+            return { ...prop, value: BRAND_COLORS.textPrimary };
+          }
+          if (prop.key.includes("background") || prop.key.includes("Background")) {
+            return { ...prop, value: BRAND_COLORS.primary };
+          }
+          if (prop.key.includes("border") || prop.key.includes("Border")) {
+            return { ...prop, value: BRAND_COLORS.primary };
+          }
+        }
+        return prop;
+      })
+    );
+    // Notifica o sistema externo sobre a aplicação das cores da marca
+    if (block && onUpdateExternal) {
+      const updatedProps = properties.reduce(
+        (acc, prop) => {
+          if (prop.type === PropertyType.COLOR) {
+            if (prop.key.includes("text") || prop.key.includes("Text")) {
+              acc[prop.key] = BRAND_COLORS.textPrimary;
+            } else if (prop.key.includes("background") || prop.key.includes("Background")) {
+              acc[prop.key] = BRAND_COLORS.primary;
+            } else if (prop.key.includes("border") || prop.key.includes("Border")) {
+              acc[prop.key] = BRAND_COLORS.primary;
+            } else {
+              acc[prop.key] = prop.value;
+            }
+          } else {
+            acc[prop.key] = prop.value;
+          }
+          return acc;
+        },
+        {} as Record<string, any>
+      );
+      onUpdateExternal(block.id, { properties: updatedProps });
+    }
+  }, [block, properties, onUpdateExternal]);
+
+  return {
+    properties,
+    updateProperty,
+    resetProperties,
+    validateProperties,
+    getPropertyByKey,
+    getPropertiesByCategory,
+    exportProperties,
+    applyBrandColors,
+  };
+};
+
+/**
+ * 🎯 Helper para componentes inline otimizados
+ */
+export const getInlineComponentProperties = (type: string, currentProps: any = {}) => {
+  const inlineDefaults = {
+    "heading-inline": {
+      content: "Título",
+      level: "h2",
+      textAlign: "center",
+      color: "#432818",
+      fontWeight: "normal",
+    },
+    "text-inline": {
+      text: "Digite seu texto aqui...",
+      fontSize: "1rem",
+      alignment: "center",
+      color: "#6B5B4E",
+      fontWeight: "normal",
+    },
+    "button-inline": {
+      text: "Clique aqui",
+      style: "primary",
+      size: "medium",
+      backgroundColor: "#B89B7A",
+      textColor: "#FFFFFF",
+      action: "next-step",
+    },
+    "decorative-bar-inline": {
+      height: 4,
+      color: "#B89B7A",
+      marginTop: 20,
+      marginBottom: 30,
+    },
+    "form-input": {
+      label: "Digite aqui",
+      placeholder: "Digite seu primeiro nome...",
+      required: true,
+      type: "text",
+      backgroundColor: "#FFFFFF",
+      borderColor: "#B89B7A",
+    },
+    "image-display-inline": {
+      src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
+      alt: "Imagem",
+      width: "100%",
+      height: "auto",
+      borderRadius: 12,
+      shadow: true,
+      alignment: "center",
+    },
+    "legal-notice-inline": {
+      privacyText: "Política de Privacidade",
+      copyrightText: "© 2025 Gisele Galvão Consultoria",
+      termsText: "Termos de Uso",
+      fontSize: "0.75rem",
+      textAlign: "center",
+      color: "#8F7A6A",
+      linkColor: "#B89B7A",
+    },
+  };
+
+  return {
+    ...(inlineDefaults[type] || {}),
+    ...currentProps,
+  };
+};
+
+export default useUnifiedProperties;
               type: PropertyType.SELECT,
               label: "Tipo de Ícone",
               category: "style",
