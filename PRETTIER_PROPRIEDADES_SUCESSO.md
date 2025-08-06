@@ -7,6 +7,7 @@
 ### 🔧 1. Configurações Personalizadas Criadas
 
 #### `.prettierrc.properties.json` - Para propriedades específicas:
+
 ```json
 {
   "printWidth": 100,
@@ -26,6 +27,7 @@
 ```
 
 #### `.prettierrc.editor-components.json` - Para componentes do editor:
+
 ```json
 {
   "printWidth": 120,
@@ -52,6 +54,7 @@
 ### 🚀 3. O que o Prettier pode fazer com propriedades:
 
 #### ✅ Formatação de Props:
+
 ```typescript
 // ANTES
 const MyComponent = ({prop1,prop2, prop3,prop4}: {prop1:string,prop2:number,prop3?:boolean,prop4:any}) => {
@@ -71,31 +74,40 @@ const MyComponent = ({
 ```
 
 #### ✅ Formatação de Objetos de Configuração:
+
 ```typescript
 // ANTES
-const blockConfig={type:"text",properties:{editable:true,placeholder:"Digite aqui",maxLength:100}}
+const blockConfig = {
+  type: "text",
+  properties: { editable: true, placeholder: "Digite aqui", maxLength: 100 },
+};
 
 // DEPOIS
 const blockConfig = {
-  type: 'text',
+  type: "text",
   properties: {
     editable: true,
-    placeholder: 'Digite aqui',
+    placeholder: "Digite aqui",
     maxLength: 100,
   },
 };
 ```
 
 #### ✅ Formatação de Arrays de Propriedades:
+
 ```typescript
 // ANTES
-const properties=[{name:"color",type:"string"},{name:"size",type:"number"},{name:"visible",type:"boolean"}]
+const properties = [
+  { name: "color", type: "string" },
+  { name: "size", type: "number" },
+  { name: "visible", type: "boolean" },
+];
 
 // DEPOIS
 const properties = [
-  { name: 'color', type: 'string' },
-  { name: 'size', type: 'number' },
-  { name: 'visible', type: 'boolean' },
+  { name: "color", type: "string" },
+  { name: "size", type: "number" },
+  { name: "visible", type: "boolean" },
 ];
 ```
 
@@ -115,6 +127,7 @@ const properties = [
 ### ⚙️ 5. Integração com VS Code
 
 O Prettier está configurado para:
+
 - ✅ Formatar automaticamente ao salvar
 - ✅ Usar configurações específicas por tipo de arquivo
 - ✅ Aplicar regras diferentes para propriedades vs. componentes
@@ -131,6 +144,7 @@ O Prettier está configurado para:
 ### 🎉 Conclusão
 
 **O Prettier PODE e FOI configurado** para:
+
 - ✅ Formatar propriedades de componentes de forma consistente
 - ✅ Aplicar regras específicas para diferentes contextos
 - ✅ Manter código legível e organizizado para edição

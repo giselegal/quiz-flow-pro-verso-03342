@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { QuizQuestion, QuizOption } from "@/types/quiz";
-import { Trash, Plus } from "lucide-react";
-import { generateSemanticId } from "../utils/semanticIdGenerator";
+import { QuizOption, QuizQuestion } from "@/types/quiz";
+import { Plus, Trash } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { generateSemanticId } from "../../utils/semanticIdGenerator";
 
 interface QuestionEditorProps {
   question: QuizQuestion | null;

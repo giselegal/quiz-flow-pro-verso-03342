@@ -7,11 +7,7 @@
 import React from "react";
 import { useBlockForm } from "@/hooks/useBlockForm";
 import { Block } from "@/hooks/useBlockForm";
-import {
-  PropertyGroup,
-  PropertyField,
-  PropertySection,
-} from "@/components/ui/PropertyGroup";
+import { PropertyGroup, PropertyField, PropertySection } from "@/components/ui/PropertyGroup";
 import { ColorPicker } from "@/components/ui/ColorPicker";
 import { ImageUploader } from "@/components/ui/ImageUploader";
 import { Input } from "@/components/ui/input";
@@ -43,26 +39,19 @@ export function ModernPropertyPanel({
   onUpdate,
   className,
 }: ModernPropertyPanelProps) {
-  const { form, updateProperty, errors, isValid, isDirty } = useBlockForm(
-    selectedBlock,
-    {
-      onUpdate,
-      debounceMs: 300,
-      validateOnChange: true,
-    },
-  );
+  const { form, updateProperty, errors, isValid, isDirty } = useBlockForm(selectedBlock, {
+    onUpdate,
+    debounceMs: 300,
+    validateOnChange: true,
+  });
 
   if (!selectedBlock) {
     return (
-      <div
-        className={cn("h-full flex items-center justify-center p-6", className)}
-      >
+      <div className={cn("h-full flex items-center justify-center p-6", className)}>
         <div className="text-center space-y-3">
           <Settings className="w-12 h-12 text-gray-400 mx-auto" />
           <div>
-            <h3 className="text-sm font-medium text-gray-900">
-              Nenhum bloco selecionado
-            </h3>
+            <h3 className="text-sm font-medium text-gray-900">Nenhum bloco selecionado</h3>
             <p className="text-xs text-gray-500 mt-1">
               Selecione um bloco para editar suas propriedades
             </p>
@@ -81,9 +70,7 @@ export function ModernPropertyPanel({
       <div className="p-4 border-b border-gray-200 bg-white">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-semibold text-gray-900">
-              Propriedades
-            </h2>
+            <h2 className="text-sm font-semibold text-gray-900">Propriedades</h2>
             <div className="flex items-center gap-2 mt-1">
               <Badge variant="outline" className="text-xs">
                 {selectedBlock.type}
@@ -106,12 +93,7 @@ export function ModernPropertyPanel({
       {/* Content */}
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-4">
-          {renderPropertiesForBlockType(
-            selectedBlock.type,
-            formValues,
-            updateProperty,
-            errors,
-          )}
+          {renderPropertiesForBlockType(selectedBlock.type, formValues, updateProperty, errors)}
         </div>
       </ScrollArea>
     </div>
@@ -125,7 +107,7 @@ function renderPropertiesForBlockType(
   blockType: string,
   values: Record<string, any>,
   updateProperty: (key: string, value: any) => void,
-  errors: Record<string, string>,
+  errors: Record<string, string>
 ) {
   switch (blockType) {
     case "text":
@@ -161,7 +143,7 @@ function renderPropertiesForBlockType(
 function renderTextProperties(
   values: any,
   updateProperty: (key: string, value: any) => void,
-  errors: Record<string, string>,
+  errors: Record<string, string>
 ) {
   return (
     <>
@@ -169,7 +151,7 @@ function renderTextProperties(
         <PropertyField label="Texto" error={errors.content} required>
           <Textarea
             value={values.content || ""}
-            onChange={(e) => updateProperty("content", e.target.value)}
+            onChange={e => updateProperty("content", e.target.value)}
             placeholder="Digite o texto aqui..."
             rows={3}
           />
@@ -187,23 +169,21 @@ function renderTextProperties(
               step={1}
               className="flex-1"
             />
-            <div className="text-xs text-gray-500 text-center">
-              {values.fontSize || 16}px
-            </div>
+            <div className="text-xs text-gray-500 text-center">{values.fontSize || 16}px</div>
           </div>
         </PropertyField>
 
         <PropertyField label="Cor do Texto" error={errors.textColor}>
           <ColorPicker
             value={values.textColor || "#000000"}
-            onChange={(color) => updateProperty("textColor", color)}
+            onChange={color => updateProperty("textColor", color)}
           />
         </PropertyField>
 
         <PropertyField label="Alinhamento" error={errors.textAlign}>
           <Select
             value={values.textAlign || "left"}
-            onValueChange={(value) => updateProperty("textAlign", value)}
+            onValueChange={value => updateProperty("textAlign", value)}
           >
             <SelectTrigger>
               <SelectValue />
@@ -226,14 +206,11 @@ function renderTextProperties(
 function renderRichTextProperties(
   values: any,
   updateProperty: (key: string, value: any) => void,
-  errors: Record<string, string>,
+  errors: Record<string, string>
 ) {
   return (
     <>
-      <PropertyGroup
-        title="Configurações"
-        description="Opções do editor de texto rico"
-      >
+      <PropertyGroup title="Configurações" description="Opções do editor de texto rico">
         <PropertyField label="Altura Mínima" error={errors.minHeight}>
           <div className="space-y-2">
             <Slider
@@ -243,16 +220,14 @@ function renderRichTextProperties(
               max={500}
               step={10}
             />
-            <div className="text-xs text-gray-500 text-center">
-              {values.minHeight || 100}px
-            </div>
+            <div className="text-xs text-gray-500 text-center">{values.minHeight || 100}px</div>
           </div>
         </PropertyField>
 
         <PropertyField label="Texto de Placeholder" error={errors.placeholder}>
           <Input
             value={values.placeholder || ""}
-            onChange={(e) => updateProperty("placeholder", e.target.value)}
+            onChange={e => updateProperty("placeholder", e.target.value)}
             placeholder="Digite seu texto aqui..."
           />
         </PropertyField>
@@ -267,7 +242,7 @@ function renderRichTextProperties(
 function renderHeaderProperties(
   values: any,
   updateProperty: (key: string, value: any) => void,
-  errors: Record<string, string>,
+  errors: Record<string, string>
 ) {
   return (
     <>
@@ -275,7 +250,7 @@ function renderHeaderProperties(
         <PropertyField label="Título" error={errors.content} required>
           <Input
             value={values.content || ""}
-            onChange={(e) => updateProperty("content", e.target.value)}
+            onChange={e => updateProperty("content", e.target.value)}
             placeholder="Título do cabeçalho"
           />
         </PropertyField>
@@ -283,7 +258,7 @@ function renderHeaderProperties(
         <PropertyField label="Nível" error={errors.level}>
           <Select
             value={values.level || "h1"}
-            onValueChange={(value) => updateProperty("level", value)}
+            onValueChange={value => updateProperty("level", value)}
           >
             <SelectTrigger>
               <SelectValue />
@@ -310,23 +285,21 @@ function renderHeaderProperties(
               max={96}
               step={2}
             />
-            <div className="text-xs text-gray-500 text-center">
-              {values.fontSize || 32}px
-            </div>
+            <div className="text-xs text-gray-500 text-center">{values.fontSize || 32}px</div>
           </div>
         </PropertyField>
 
         <PropertyField label="Cor do Texto" error={errors.textColor}>
           <ColorPicker
             value={values.textColor || "#1a202c"}
-            onChange={(color) => updateProperty("textColor", color)}
+            onChange={color => updateProperty("textColor", color)}
           />
         </PropertyField>
 
         <PropertyField label="Alinhamento" error={errors.textAlign}>
           <Select
             value={values.textAlign || "center"}
-            onValueChange={(value) => updateProperty("textAlign", value)}
+            onValueChange={value => updateProperty("textAlign", value)}
           >
             <SelectTrigger>
               <SelectValue />
@@ -349,7 +322,7 @@ function renderHeaderProperties(
 function renderButtonProperties(
   values: any,
   updateProperty: (key: string, value: any) => void,
-  errors: Record<string, string>,
+  errors: Record<string, string>
 ) {
   return (
     <>
@@ -357,7 +330,7 @@ function renderButtonProperties(
         <PropertyField label="Texto do Botão" error={errors.text} required>
           <Input
             value={values.text || ""}
-            onChange={(e) => updateProperty("text", e.target.value)}
+            onChange={e => updateProperty("text", e.target.value)}
             placeholder="Clique aqui"
           />
         </PropertyField>
@@ -365,7 +338,7 @@ function renderButtonProperties(
         <PropertyField label="Link/URL" error={errors.link}>
           <Input
             value={values.link || ""}
-            onChange={(e) => updateProperty("link", e.target.value)}
+            onChange={e => updateProperty("link", e.target.value)}
             placeholder="https://exemplo.com"
             type="url"
           />
@@ -376,14 +349,14 @@ function renderButtonProperties(
         <PropertyField label="Cor de Fundo" error={errors.backgroundColor}>
           <ColorPicker
             value={values.backgroundColor || "#3b82f6"}
-            onChange={(color) => updateProperty("backgroundColor", color)}
+            onChange={color => updateProperty("backgroundColor", color)}
           />
         </PropertyField>
 
         <PropertyField label="Cor do Texto" error={errors.textColor}>
           <ColorPicker
             value={values.textColor || "#ffffff"}
-            onChange={(color) => updateProperty("textColor", color)}
+            onChange={color => updateProperty("textColor", color)}
           />
         </PropertyField>
 
@@ -391,9 +364,7 @@ function renderButtonProperties(
           <div className="flex items-center space-x-2">
             <Checkbox
               checked={values.fullWidth || false}
-              onCheckedChange={(checked) =>
-                updateProperty("fullWidth", checked)
-              }
+              onCheckedChange={checked => updateProperty("fullWidth", checked)}
             />
             <span className="text-sm">Ocupar toda a largura</span>
           </div>
@@ -410,9 +381,7 @@ function renderButtonProperties(
               max={48}
               step={2}
             />
-            <div className="text-xs text-gray-500 text-center">
-              {values.paddingX || 16}px
-            </div>
+            <div className="text-xs text-gray-500 text-center">{values.paddingX || 16}px</div>
           </div>
         </PropertyField>
 
@@ -425,9 +394,7 @@ function renderButtonProperties(
               max={32}
               step={2}
             />
-            <div className="text-xs text-gray-500 text-center">
-              {values.paddingY || 8}px
-            </div>
+            <div className="text-xs text-gray-500 text-center">{values.paddingY || 8}px</div>
           </div>
         </PropertyField>
 
@@ -440,9 +407,7 @@ function renderButtonProperties(
               max={24}
               step={1}
             />
-            <div className="text-xs text-gray-500 text-center">
-              {values.borderRadius || 6}px
-            </div>
+            <div className="text-xs text-gray-500 text-center">{values.borderRadius || 6}px</div>
           </div>
         </PropertyField>
       </PropertyGroup>
@@ -456,25 +421,19 @@ function renderButtonProperties(
 function renderImageProperties(
   values: any,
   updateProperty: (key: string, value: any) => void,
-  errors: Record<string, string>,
+  errors: Record<string, string>
 ) {
   return (
     <>
-      <PropertyGroup
-        title="Imagem"
-        description="Fonte e configuração da imagem"
-      >
+      <PropertyGroup title="Imagem" description="Fonte e configuração da imagem">
         <PropertyField label="URL da Imagem" error={errors.src} required>
-          <ImageUploader
-            value={values.src || ""}
-            onChange={(url) => updateProperty("src", url)}
-          />
+          <ImageUploader value={values.src || ""} onChange={url => updateProperty("src", url)} />
         </PropertyField>
 
         <PropertyField label="Texto Alternativo" error={errors.alt} required>
           <Input
             value={values.alt || ""}
-            onChange={(e) => updateProperty("alt", e.target.value)}
+            onChange={e => updateProperty("alt", e.target.value)}
             placeholder="Descrição da imagem"
           />
         </PropertyField>
@@ -485,7 +444,7 @@ function renderImageProperties(
           <Input
             type="number"
             value={values.width || ""}
-            onChange={(e) => updateProperty("width", Number(e.target.value))}
+            onChange={e => updateProperty("width", Number(e.target.value))}
             placeholder="Auto"
           />
         </PropertyField>
@@ -494,7 +453,7 @@ function renderImageProperties(
           <Input
             type="number"
             value={values.height || ""}
-            onChange={(e) => updateProperty("height", Number(e.target.value))}
+            onChange={e => updateProperty("height", Number(e.target.value))}
             placeholder="Auto"
           />
         </PropertyField>
@@ -502,7 +461,7 @@ function renderImageProperties(
         <PropertyField label="Ajuste" error={errors.objectFit}>
           <Select
             value={values.objectFit || "cover"}
-            onValueChange={(value) => updateProperty("objectFit", value)}
+            onValueChange={value => updateProperty("objectFit", value)}
           >
             <SelectTrigger>
               <SelectValue />
@@ -527,14 +486,11 @@ function renderImageProperties(
 function renderSpacerProperties(
   values: any,
   updateProperty: (key: string, value: any) => void,
-  errors: Record<string, string>,
+  errors: Record<string, string>
 ) {
   return (
     <>
-      <PropertyGroup
-        title="Espaçamento"
-        description="Altura e aparência do espaçador"
-      >
+      <PropertyGroup title="Espaçamento" description="Altura e aparência do espaçador">
         <PropertyField label="Altura" error={errors.height} required>
           <div className="space-y-2">
             <Slider
@@ -544,16 +500,14 @@ function renderSpacerProperties(
               max={200}
               step={1}
             />
-            <div className="text-xs text-gray-500 text-center">
-              {values.height || 20}px
-            </div>
+            <div className="text-xs text-gray-500 text-center">{values.height || 20}px</div>
           </div>
         </PropertyField>
 
         <PropertyField label="Cor de Fundo">
           <ColorPicker
             value={values.backgroundColor || "transparent"}
-            onChange={(color) => updateProperty("backgroundColor", color)}
+            onChange={color => updateProperty("backgroundColor", color)}
           />
         </PropertyField>
       </PropertyGroup>
@@ -562,7 +516,7 @@ function renderSpacerProperties(
         <PropertyField label="Estilo da Borda" error={errors.borderStyle}>
           <Select
             value={values.borderStyle || "none"}
-            onValueChange={(value) => updateProperty("borderStyle", value)}
+            onValueChange={value => updateProperty("borderStyle", value)}
           >
             <SelectTrigger>
               <SelectValue />
@@ -580,7 +534,7 @@ function renderSpacerProperties(
           <PropertyField label="Cor da Borda" error={errors.borderColor}>
             <ColorPicker
               value={values.borderColor || "#e5e7eb"}
-              onChange={(color) => updateProperty("borderColor", color)}
+              onChange={color => updateProperty("borderColor", color)}
             />
           </PropertyField>
         )}
@@ -595,22 +549,15 @@ function renderSpacerProperties(
 function renderQuizStepProperties(
   values: any,
   updateProperty: (key: string, value: any) => void,
-  errors: Record<string, string>,
+  errors: Record<string, string>
 ) {
   return (
     <>
-      <PropertyGroup
-        title="Pergunta"
-        description="Texto e formatação da pergunta"
-      >
-        <PropertyField
-          label="Texto da Pergunta"
-          error={errors.questionText}
-          required
-        >
+      <PropertyGroup title="Pergunta" description="Texto e formatação da pergunta">
+        <PropertyField label="Texto da Pergunta" error={errors.questionText} required>
           <Textarea
             value={values.questionText || ""}
-            onChange={(e) => updateProperty("questionText", e.target.value)}
+            onChange={e => updateProperty("questionText", e.target.value)}
             placeholder="Digite a pergunta aqui..."
             rows={2}
           />
@@ -620,9 +567,7 @@ function renderQuizStepProperties(
           <div className="space-y-2">
             <Slider
               value={[values.questionTextSize || 24]}
-              onValueChange={([value]) =>
-                updateProperty("questionTextSize", value)
-              }
+              onValueChange={([value]) => updateProperty("questionTextSize", value)}
               min={12}
               max={48}
               step={2}
@@ -636,7 +581,7 @@ function renderQuizStepProperties(
         <PropertyField label="Cor do Texto" error={errors.questionTextColor}>
           <ColorPicker
             value={values.questionTextColor || "#000000"}
-            onChange={(color) => updateProperty("questionTextColor", color)}
+            onChange={color => updateProperty("questionTextColor", color)}
           />
         </PropertyField>
       </PropertyGroup>
@@ -645,7 +590,7 @@ function renderQuizStepProperties(
         <PropertyField label="Colunas" error={errors.layout}>
           <Select
             value={values.layout || "2-columns"}
-            onValueChange={(value) => updateProperty("layout", value)}
+            onValueChange={value => updateProperty("layout", value)}
           >
             <SelectTrigger>
               <SelectValue />
@@ -662,7 +607,7 @@ function renderQuizStepProperties(
         <PropertyField label="Estilo das Opções" error={errors.optionStyle}>
           <Select
             value={values.optionStyle || "card"}
-            onValueChange={(value) => updateProperty("optionStyle", value)}
+            onValueChange={value => updateProperty("optionStyle", value)}
           >
             <SelectTrigger>
               <SelectValue />
@@ -680,9 +625,7 @@ function renderQuizStepProperties(
           <div className="flex items-center space-x-2">
             <Checkbox
               checked={values.isMultipleChoice || false}
-              onCheckedChange={(checked) =>
-                updateProperty("isMultipleChoice", checked)
-              }
+              onCheckedChange={checked => updateProperty("isMultipleChoice", checked)}
             />
             <span className="text-sm">Permitir múltiplas seleções</span>
           </div>
@@ -692,9 +635,7 @@ function renderQuizStepProperties(
           <div className="flex items-center space-x-2">
             <Checkbox
               checked={values.isRequired !== false}
-              onCheckedChange={(checked) =>
-                updateProperty("isRequired", checked)
-              }
+              onCheckedChange={checked => updateProperty("isRequired", checked)}
             />
             <span className="text-sm">Seleção obrigatória</span>
           </div>
@@ -704,9 +645,7 @@ function renderQuizStepProperties(
           <div className="flex items-center space-x-2">
             <Checkbox
               checked={values.autoProceed || false}
-              onCheckedChange={(checked) =>
-                updateProperty("autoProceed", checked)
-              }
+              onCheckedChange={checked => updateProperty("autoProceed", checked)}
             />
             <span className="text-sm">Avançar após seleção</span>
           </div>
@@ -717,21 +656,21 @@ function renderQuizStepProperties(
         <PropertyField label="Cor Primária" error={errors.primaryColor}>
           <ColorPicker
             value={values.primaryColor || "#3b82f6"}
-            onChange={(color) => updateProperty("primaryColor", color)}
+            onChange={color => updateProperty("primaryColor", color)}
           />
         </PropertyField>
 
         <PropertyField label="Cor Secundária" error={errors.secondaryColor}>
           <ColorPicker
             value={values.secondaryColor || "#ffffff"}
-            onChange={(color) => updateProperty("secondaryColor", color)}
+            onChange={color => updateProperty("secondaryColor", color)}
           />
         </PropertyField>
 
         <PropertyField label="Cor da Borda" error={errors.borderColor}>
           <ColorPicker
             value={values.borderColor || "#e5e7eb"}
-            onChange={(color) => updateProperty("borderColor", color)}
+            onChange={color => updateProperty("borderColor", color)}
           />
         </PropertyField>
       </PropertyGroup>
@@ -745,7 +684,7 @@ function renderQuizStepProperties(
 function renderGenericProperties(
   values: any,
   updateProperty: (key: string, value: any) => void,
-  errors: Record<string, string>,
+  errors: Record<string, string>
 ) {
   return (
     <PropertyGroup title="Propriedades" description="Configurações disponíveis">
@@ -756,7 +695,7 @@ function renderGenericProperties(
               <div className="flex items-center space-x-2">
                 <Checkbox
                   checked={value}
-                  onCheckedChange={(checked) => updateProperty(key, checked)}
+                  onCheckedChange={checked => updateProperty(key, checked)}
                 />
                 <span className="text-sm">{key}</span>
               </div>
@@ -764,13 +703,10 @@ function renderGenericProperties(
               <Input
                 type="number"
                 value={value}
-                onChange={(e) => updateProperty(key, Number(e.target.value))}
+                onChange={e => updateProperty(key, Number(e.target.value))}
               />
             ) : (
-              <Input
-                value={String(value)}
-                onChange={(e) => updateProperty(key, e.target.value)}
-              />
+              <Input value={String(value)} onChange={e => updateProperty(key, e.target.value)} />
             )}
           </PropertyField>
         ))}

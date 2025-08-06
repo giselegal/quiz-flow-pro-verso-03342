@@ -15,8 +15,7 @@ const LoadingAccessPage: React.FC<LoadingAccessPageProps> = ({ route }) => {
     "result-editor": "/admin/result/editor",
     "sales-editor": "/admin/sales/editor",
     lovable: "https://a10d1b34-b5d4-426b-8c97-45f125d03ec1.lovableproject.com",
-    "lovable-admin":
-      "https://a10d1b34-b5d4-426b-8c97-45f125d03ec1.lovableproject.com/admin",
+    "lovable-admin": "https://a10d1b34-b5d4-426b-8c97-45f125d03ec1.lovableproject.com/admin",
     "lovable-editor":
       "https://a10d1b34-b5d4-426b-8c97-45f125d03ec1.lovableproject.com/resultado/editor",
   };
@@ -46,11 +45,7 @@ const LoadingAccessPage: React.FC<LoadingAccessPageProps> = ({ route }) => {
       return 4200; // Mais arquivos para Lovable
     }
 
-    if (
-      ["editor", "unified-editor", "result-editor", "sales-editor"].includes(
-        route,
-      )
-    ) {
+    if (["editor", "unified-editor", "result-editor", "sales-editor"].includes(route)) {
       return 3700; // Quantidade padrão para editores
     }
 

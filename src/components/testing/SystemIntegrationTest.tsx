@@ -27,9 +27,7 @@ const SystemIntegrationTest: React.FC = () => {
   const [isRunning, setIsRunning] = useState(false);
 
   const updateTest = (name: string, updates: Partial<TestResult>) => {
-    setTests((prev) =>
-      prev.map((test) => (test.name === name ? { ...test, ...updates } : test)),
-    );
+    setTests(prev => prev.map(test => (test.name === name ? { ...test, ...updates } : test)));
   };
 
   const runTest = async (testName: string): Promise<void> => {
@@ -38,9 +36,7 @@ const SystemIntegrationTest: React.FC = () => {
 
     try {
       // Simulate test execution
-      await new Promise((resolve) =>
-        setTimeout(resolve, 1000 + Math.random() * 2000),
-      );
+      await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
 
       // Mock test logic
       switch (testName) {
@@ -217,12 +213,12 @@ const SystemIntegrationTest: React.FC = () => {
     setIsRunning(true);
 
     // Reset all tests
-    setTests((prev) =>
-      prev.map((test) => ({
+    setTests(prev =>
+      prev.map(test => ({
         ...test,
         status: "pending" as const,
         message: "Waiting...",
-      })),
+      }))
     );
 
     // Run tests sequentially
@@ -259,9 +255,9 @@ const SystemIntegrationTest: React.FC = () => {
     }
   };
 
-  const successCount = tests.filter((t) => t.status === "success").length;
-  const errorCount = tests.filter((t) => t.status === "error").length;
-  const runningCount = tests.filter((t) => t.status === "running").length;
+  const successCount = tests.filter(t => t.status === "success").length;
+  const errorCount = tests.filter(t => t.status === "error").length;
+  const runningCount = tests.filter(t => t.status === "running").length;
 
   return (
     <div className="p-6 space-y-6">
@@ -277,27 +273,21 @@ const SystemIntegrationTest: React.FC = () => {
         <CardContent>
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="text-center p-4 border rounded-lg bg-green-50">
-              <div className="text-2xl font-bold text-green-600">
-                {successCount}
-              </div>
+              <div className="text-2xl font-bold text-green-600">{successCount}</div>
               <div className="text-sm text-gray-600">Sucessos</div>
             </div>
             <div className="text-center p-4 border rounded-lg bg-red-50">
-              <div className="text-2xl font-bold text-red-600">
-                {errorCount}
-              </div>
+              <div className="text-2xl font-bold text-red-600">{errorCount}</div>
               <div className="text-sm text-gray-600">Erros</div>
             </div>
             <div className="text-center p-4 border rounded-lg bg-[#B89B7A]/10">
-              <div className="text-2xl font-bold text-[#B89B7A]">
-                {runningCount}
-              </div>
+              <div className="text-2xl font-bold text-[#B89B7A]">{runningCount}</div>
               <div className="text-sm text-gray-600">Executando</div>
             </div>
           </div>
 
           <div className="space-y-3">
-            {tests.map((test) => (
+            {tests.map(test => (
               <div
                 key={test.name}
                 className={`p-4 border rounded-lg ${getStatusColor(test.status)}`}
@@ -307,16 +297,12 @@ const SystemIntegrationTest: React.FC = () => {
                     {getStatusIcon(test.status)}
                     <div>
                       <div className="font-medium">{test.name}</div>
-                      <div className="text-sm text-gray-600">
-                        {test.message}
-                      </div>
+                      <div className="text-sm text-gray-600">{test.message}</div>
                     </div>
                   </div>
                   <div className="text-right">
                     {test.duration && (
-                      <div className="text-sm text-gray-500">
-                        {test.duration}ms
-                      </div>
+                      <div className="text-sm text-gray-500">{test.duration}ms</div>
                     )}
                     <Button
                       size="sm"

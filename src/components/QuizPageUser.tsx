@@ -7,8 +7,7 @@ const UserQuizPage: React.FC = () => {
   const { isLoading, setLoading } = useLoadingState({ initialState: false });
 
   // Get userName safely from user object or localStorage
-  const userName =
-    user?.name || user?.email || localStorage.getItem("userName") || "";
+  const userName = user?.name || user?.email || localStorage.getItem("userName") || "";
 
   // Handle potential null values
   const safeUserName = userName || undefined;
@@ -23,9 +22,7 @@ const UserQuizPage: React.FC = () => {
       <h1>Quiz Page</h1>
       <p>Welcome, {userName}</p>
       {isLoading && <div>Loading...</div>}
-      <button onClick={() => handleSomeFunction("test", safeUserName)}>
-        Start Quiz
-      </button>
+      <button onClick={() => handleSomeFunction("test", safeUserName)}>Start Quiz</button>
     </div>
   );
 };

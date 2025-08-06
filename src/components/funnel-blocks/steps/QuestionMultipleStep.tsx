@@ -32,11 +32,7 @@ const QuizOption: React.FC<QuizOptionProps> = ({
       } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
     >
       {imageUrl && (
-        <img
-          src={imageUrl}
-          alt={text}
-          className="w-full h-32 object-cover rounded mb-2"
-        />
+        <img src={imageUrl} alt={text} className="w-full h-32 object-cover rounded mb-2" />
       )}
       <span className="text-sm font-medium">{text}</span>
     </button>
@@ -75,9 +71,9 @@ const QuestionMultipleStep: React.FC<QuestionMultipleStepProps> = ({
 
   const handleOptionSelect = (optionId: string) => {
     if (multiSelect) {
-      setSelectedOptions((prev) => {
+      setSelectedOptions(prev => {
         if (prev.includes(optionId)) {
-          return prev.filter((id) => id !== optionId);
+          return prev.filter(id => id !== optionId);
         } else {
           if (prev.length < (maxAnswers || 99)) {
             return [...prev, optionId];
@@ -91,16 +87,13 @@ const QuestionMultipleStep: React.FC<QuestionMultipleStepProps> = ({
   };
 
   const canProceed =
-    selectedOptions.length >= (minAnswers || 1) &&
-    selectedOptions.length <= (maxAnswers || 99);
+    selectedOptions.length >= (minAnswers || 1) && selectedOptions.length <= (maxAnswers || 99);
 
   return (
     <div className="min-h-screen flex flex-col p-6 bg-[#FFFAF0]">
       <div className="max-w-4xl mx-auto flex-1">
         <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-[#432818] mb-4">
-            {question}
-          </h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-[#432818] mb-4">{question}</h2>
           <p className="text-[#8F7A6A]">
             Pergunta {stepNumber} de {totalSteps}
           </p>

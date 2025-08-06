@@ -8,10 +8,7 @@ interface QuizTransitionProps {
   onComplete: () => void;
 }
 
-const QuizTransition: React.FC<QuizTransitionProps> = ({
-  isCompleting,
-  onComplete,
-}) => {
+const QuizTransition: React.FC<QuizTransitionProps> = ({ isCompleting, onComplete }) => {
   React.useEffect(() => {
     if (isCompleting) {
       const timer = setTimeout(() => {
@@ -44,7 +41,7 @@ const QuizTransition: React.FC<QuizTransitionProps> = ({
       </p>
 
       <div className="flex space-x-2">
-        {[0, 1, 2].map((i) => (
+        {[0, 1, 2].map(i => (
           <motion.div
             key={i}
             className="w-3 h-3 bg-[#B89B7A]/100 rounded-full"

@@ -26,18 +26,16 @@ export const analyzeImageUrl = (url: string) => {
       results.transformations = transforms;
 
       // Check for format
-      const formatMatch = transforms.find((t) => t.startsWith("f_"));
+      const formatMatch = transforms.find(t => t.startsWith("f_"));
       if (formatMatch) {
         results.format = formatMatch.replace("f_", "");
       } else {
         results.issues.push("No explicit format specified");
-        results.suggestions.push(
-          "Add f_auto for automatic format optimization",
-        );
+        results.suggestions.push("Add f_auto for automatic format optimization");
       }
 
       // Check for quality
-      const qualityMatch = transforms.find((t) => t.startsWith("q_"));
+      const qualityMatch = transforms.find(t => t.startsWith("q_"));
       if (qualityMatch) {
         results.quality = qualityMatch.replace("q_", "");
         if (results.quality === "auto") {
@@ -46,46 +44,38 @@ export const analyzeImageUrl = (url: string) => {
           const qualityNum = parseInt(results.quality as string);
           if (qualityNum > 85) {
             results.suggestions.push(
-              "Consider using q_auto or reducing quality to 85 for better performance",
+              "Consider using q_auto or reducing quality to 85 for better performance"
             );
           }
         }
       } else {
         results.issues.push("No quality parameter specified");
-        results.suggestions.push(
-          "Add q_auto for automatic quality optimization",
-        );
+        results.suggestions.push("Add q_auto for automatic quality optimization");
       }
 
       // Check for width/DPR
-      const widthMatch = transforms.find((t) => t.startsWith("w_"));
+      const widthMatch = transforms.find(t => t.startsWith("w_"));
       if (widthMatch) {
         results.width = widthMatch.replace("w_", "");
       } else {
         results.issues.push("No width specified");
-        results.suggestions.push(
-          "Specify image width to avoid oversized images",
-        );
+        results.suggestions.push("Specify image width to avoid oversized images");
       }
 
       // Check for DPR
-      const dprMatch = transforms.find((t) => t.startsWith("dpr_"));
+      const dprMatch = transforms.find(t => t.startsWith("dpr_"));
       if (!dprMatch) {
-        results.suggestions.push(
-          "Add dpr_auto for automatic device pixel ratio handling",
-        );
+        results.suggestions.push("Add dpr_auto for automatic device pixel ratio handling");
       }
     } else {
       results.issues.push("No transformations found in Cloudinary URL");
       results.suggestions.push(
-        "Add optimization parameters like f_auto,q_auto,w_[appropriate width]",
+        "Add optimization parameters like f_auto,q_auto,w_[appropriate width]"
       );
     }
   } else {
     results.issues.push("Not a Cloudinary URL, optimization status unknown");
-    results.suggestions.push(
-      "Consider using Cloudinary for better image optimization",
-    );
+    results.suggestions.push("Consider using Cloudinary for better image optimization");
   }
 
   return results;
@@ -120,7 +110,7 @@ export const checkRenderedImages = () => {
     const dpr = window.devicePixelRatio || 1;
     if (naturalWidth > displayWidth * 1.5 * dpr && displayWidth > 0) {
       issues.push(
-        `Oversized: ${naturalWidth}x${naturalHeight} natural size for ${displayWidth}x${displayHeight} display size`,
+        `Oversized: ${naturalWidth}x${naturalHeight} natural size for ${displayWidth}x${displayHeight} display size`
       );
     }
 
@@ -134,17 +124,13 @@ export const checkRenderedImages = () => {
     // Check for Cloudinary optimization
     if (src.includes("cloudinary.com")) {
       if (!src.includes("f_auto")) {
-        issues.push(
-          "Missing f_auto parameter for automatic format optimization",
-        );
+        issues.push("Missing f_auto parameter for automatic format optimization");
       }
       if (!src.includes("q_auto") && !src.includes("q_")) {
         issues.push("Missing quality parameter");
       }
       if (src.includes("q_100")) {
-        issues.push(
-          "Using maximum quality (q_100) which is unnecessary for most use cases",
-        );
+        issues.push("Using maximum quality (q_100) which is unnecessary for most use cases");
       }
     }
 

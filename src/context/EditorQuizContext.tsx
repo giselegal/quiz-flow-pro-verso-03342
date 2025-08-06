@@ -16,17 +16,13 @@ interface EditorQuizContextType {
   completeQuiz: () => void;
 }
 
-const EditorQuizContext = createContext<EditorQuizContextType | undefined>(
-  undefined,
-);
+const EditorQuizContext = createContext<EditorQuizContextType | undefined>(undefined);
 
 interface EditorQuizProviderProps {
   children: React.ReactNode;
 }
 
-export const EditorQuizProvider: React.FC<EditorQuizProviderProps> = ({
-  children,
-}) => {
+export const EditorQuizProvider: React.FC<EditorQuizProviderProps> = ({ children }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<QuizAnswer[]>([]);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
@@ -42,10 +38,8 @@ export const EditorQuizProvider: React.FC<EditorQuizProviderProps> = ({
   }, []);
 
   const answerQuestion = useCallback((questionId: string, optionId: string) => {
-    setAnswers((prev) => {
-      const existingAnswerIndex = prev.findIndex(
-        (a) => a.questionId === questionId,
-      );
+    setAnswers(prev => {
+      const existingAnswerIndex = prev.findIndex(a => a.questionId === questionId);
       const newAnswer: QuizAnswer = { questionId, optionId };
 
       if (existingAnswerIndex >= 0) {
@@ -59,11 +53,11 @@ export const EditorQuizProvider: React.FC<EditorQuizProviderProps> = ({
   }, []);
 
   const previousQuestion = useCallback(() => {
-    setCurrentQuestionIndex((prev) => Math.max(0, prev - 1));
+    setCurrentQuestionIndex(prev => Math.max(0, prev - 1));
   }, []);
 
   const nextQuestion = useCallback(() => {
-    setCurrentQuestionIndex((prev) => Math.min(questions.length - 1, prev + 1));
+    setCurrentQuestionIndex(prev => Math.min(questions.length - 1, prev + 1));
   }, [questions.length]);
 
   const resetQuiz = useCallback(() => {
@@ -95,11 +89,7 @@ export const EditorQuizProvider: React.FC<EditorQuizProviderProps> = ({
     completeQuiz,
   };
 
-  return (
-    <EditorQuizContext.Provider value={value}>
-      {children}
-    </EditorQuizContext.Provider>
-  );
+  return <EditorQuizContext.Provider value={value}>{children}</EditorQuizContext.Provider>;
 };
 
 export const useEditorQuiz = (): EditorQuizContextType => {

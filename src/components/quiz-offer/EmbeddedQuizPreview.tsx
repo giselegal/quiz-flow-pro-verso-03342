@@ -40,9 +40,7 @@ interface EmbeddedQuizPreviewProps {
   onStartQuiz: () => void;
 }
 
-export const EmbeddedQuizPreview: React.FC<EmbeddedQuizPreviewProps> = ({
-  onStartQuiz,
-}) => {
+export const EmbeddedQuizPreview: React.FC<EmbeddedQuizPreviewProps> = ({ onStartQuiz }) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
   const handleOptionSelect = (optionId: string) => {
@@ -57,7 +55,7 @@ export const EmbeddedQuizPreview: React.FC<EmbeddedQuizPreviewProps> = ({
         </h3>
 
         <div className="grid grid-cols-2 gap-3 mb-4">
-          {SAMPLE_OPTIONS.map((option) => (
+          {SAMPLE_OPTIONS.map(option => (
             <div key={option.id} className="aspect-[3/4]">
               <QuizOption
                 option={option}
@@ -79,8 +77,8 @@ export const EmbeddedQuizPreview: React.FC<EmbeddedQuizPreviewProps> = ({
         </Button>
 
         <p className="text-xs text-center text-[#432818]/70 mt-3">
-          Este é apenas um exemplo. O quiz completo tem vários passos para
-          identificar seu estilo com precisão.
+          Este é apenas um exemplo. O quiz completo tem vários passos para identificar seu estilo
+          com precisão.
         </p>
       </CardContent>
     </Card>

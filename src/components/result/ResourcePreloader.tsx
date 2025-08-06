@@ -3,10 +3,7 @@ import { useGlobalStyles } from "@/hooks/useGlobalStyles";
 import { preloadImagesByUrls } from "@/utils/imageManager";
 
 // Lista de CDNs de imagens usados no aplicativo
-const IMAGE_CDNS = [
-  "https://res.cloudinary.com",
-  "https://images.unsplash.com",
-];
+const IMAGE_CDNS = ["https://res.cloudinary.com", "https://images.unsplash.com"];
 
 // Lista de imagens críticas para pré-carregar
 const CRITICAL_IMAGES = [
@@ -40,14 +37,12 @@ const ResourcePreloader: React.FC = () => {
       quality: 85,
       format: "auto",
       onComplete: () => {
-        console.debug(
-          "[ResourcePreloader] Pré-carregamento de imagens críticas concluído",
-        );
+        console.debug("[ResourcePreloader] Pré-carregamento de imagens críticas concluído");
       },
     });
 
     // Informar o navegador sobre recurso de terceiros para melhorar conexão
-    IMAGE_CDNS.forEach((cdnUrl) => {
+    IMAGE_CDNS.forEach(cdnUrl => {
       const preconnect = document.createElement("link");
       preconnect.rel = "preconnect";
       preconnect.href = cdnUrl;
@@ -75,14 +70,14 @@ const ResourcePreloader: React.FC = () => {
       // Limpar links de preconnect quando componente desmontar
       document
         .querySelectorAll(
-          'link[rel="preconnect"], link[rel="dns-prefetch"], link[rel="preload"][as="image"]',
+          'link[rel="preconnect"], link[rel="dns-prefetch"], link[rel="preload"][as="image"]'
         )
-        .forEach((el) => {
+        .forEach(el => {
           const href = el.getAttribute("href");
           if (
             href &&
-            (IMAGE_CDNS.some((cdn) => href.includes(cdn)) ||
-              criticalImages.some((img) => href.includes(img.split("?")[0])))
+            (IMAGE_CDNS.some(cdn => href.includes(cdn)) ||
+              criticalImages.some(img => href.includes(img.split("?")[0])))
           ) {
             el.remove();
           }

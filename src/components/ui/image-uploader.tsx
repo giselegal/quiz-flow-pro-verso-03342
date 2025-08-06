@@ -15,9 +15,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
   className,
 }) => {
   const [isUploading, setIsUploading] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(
-    currentImage || null,
-  );
+  const [previewUrl, setPreviewUrl] = useState<string | null>(currentImage || null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -62,9 +60,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
       ) : (
         <div className="w-full h-40 border-2 border-dashed border-gray-300 rounded-md flex flex-col items-center justify-center p-4">
           <ImagePlus className="w-12 h-12 text-gray-400 mb-2" />
-          <p className="text-sm text-gray-500 mb-2">
-            Clique para fazer upload de uma imagem
-          </p>
+          <p className="text-sm text-gray-500 mb-2">Clique para fazer upload de uma imagem</p>
           <input
             type="file"
             accept="image/*"

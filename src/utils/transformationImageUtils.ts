@@ -1,21 +1,12 @@
-import {
-  preloadCriticalImages,
-  getLowQualityPlaceholder,
-} from "@/utils/imageManager";
+import { preloadCriticalImages, getLowQualityPlaceholder } from "@/utils/imageManager";
 
 /**
  * Pré-carrega imagens de antes e depois para melhorar a experiência do usuário
  * @param transformations Array de transformações com URLs de imagens antes/depois
  */
 export const preloadTransformationImages = (transformations: any[]) => {
-  if (
-    !transformations ||
-    !Array.isArray(transformations) ||
-    transformations.length === 0
-  ) {
-    console.warn(
-      "Não foi possível pré-carregar imagens de transformação: dados inválidos",
-    );
+  if (!transformations || !Array.isArray(transformations) || transformations.length === 0) {
+    console.warn("Não foi possível pré-carregar imagens de transformação: dados inválidos");
     return;
   }
 

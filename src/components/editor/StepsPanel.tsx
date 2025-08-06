@@ -8,16 +8,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
 import { Badge } from "../ui/badge";
-import {
-  GripVertical,
-  Plus,
-  MoreHorizontal,
-  Edit2,
-  Trash2,
-  Copy,
-  Check,
-  X,
-} from "lucide-react";
+import { GripVertical, Plus, MoreHorizontal, Edit2, Trash2, Copy, Check, X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -109,13 +100,11 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
   // 🎯 OBTER DEFINIÇÕES DAS ETAPAS DO STEPTEMPLATE SERVICE (FONTE ÚNICA)
   const serviceStepsReference = useMemo(() => {
     try {
-      console.log(
-        "📋 StepsPanel: Obtendo referência das etapas do stepTemplateService...",
-      );
+      console.log("📋 StepsPanel: Obtendo referência das etapas do stepTemplateService...");
       const allSteps = stepTemplateService.getAllSteps();
 
       if (allSteps && allSteps.length > 0) {
-        const serviceSteps = allSteps.map((stepInfo) => ({
+        const serviceSteps = allSteps.map(stepInfo => ({
           id: stepInfo.id,
           name: stepInfo.name,
           order: stepInfo.order,
@@ -126,20 +115,15 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
           multiSelect: stepInfo.multiSelect,
         }));
 
-        console.log(
-          `✅ StepsPanel: ${serviceSteps.length} etapas de referência obtidas`,
-        );
+        console.log(`✅ StepsPanel: ${serviceSteps.length} etapas de referência obtidas`);
         console.log(
           "📊 StepsPanel: Estatísticas dos templates:",
-          stepTemplateService.getTemplateStats(),
+          stepTemplateService.getTemplateStats()
         );
         return serviceSteps;
       }
     } catch (error) {
-      console.error(
-        "❌ StepsPanel: Erro ao obter referência do stepTemplateService:",
-        error,
-      );
+      console.error("❌ StepsPanel: Erro ao obter referência do stepTemplateService:", error);
     }
 
     return [];
@@ -166,7 +150,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
   // 🔧 FUNÇÃO UTILITÁRIA: Obter informações da etapa do service
   const getStepReferenceInfo = useCallback(
     (stepId: string) => {
-      const serviceStep = serviceStepsReference.find((s) => s.id === stepId);
+      const serviceStep = serviceStepsReference.find(s => s.id === stepId);
       if (serviceStep) {
         return {
           originalName: serviceStep.name,
@@ -184,7 +168,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
         hasTemplate: false,
       };
     },
-    [serviceStepsReference],
+    [serviceStepsReference]
   );
 
   const handleKeyPress = useCallback(
@@ -195,16 +179,14 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
         handleEditCancel();
       }
     },
-    [handleEditSave, handleEditCancel],
+    [handleEditSave, handleEditCancel]
   );
 
   return (
     <Card className={cn("h-full flex flex-col", className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-semibold text-gray-900">
-            Etapas Quiz
-          </CardTitle>
+          <CardTitle className="text-base font-semibold text-gray-900">Etapas Quiz</CardTitle>
           <Badge variant="secondary" className="text-xs">
             {steps.length}
           </Badge>
@@ -222,7 +204,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                   "hover:shadow-sm cursor-pointer",
                   selectedStepId === step.id
                     ? "bg-[#B89B7A]/10 border-[#B89B7A]/30 shadow-sm"
-                    : "bg-white border-gray-200 hover:border-gray-300",
+                    : "bg-white border-gray-200 hover:border-gray-300"
                 )}
                 onClick={() => onStepSelect(step.id)}
               >
@@ -237,7 +219,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                     <div className="flex items-center space-x-2">
                       <Input
                         value={editingName}
-                        onChange={(e) => setEditingName(e.target.value)}
+                        onChange={e => setEditingName(e.target.value)}
                         onKeyDown={handleKeyPress}
                         className="h-7 text-sm"
                         autoFocus
@@ -263,9 +245,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                   ) : (
                     <div>
                       <div className="flex items-center justify-between">
-                        <h4 className="text-sm font-medium text-gray-900 truncate">
-                          {step.name}
-                        </h4>
+                        <h4 className="text-sm font-medium text-gray-900 truncate">{step.name}</h4>
                         <div className="flex items-center space-x-1">
                           {step.blocksCount > 0 && (
                             <Badge variant="outline" className="text-xs px-1">
@@ -307,7 +287,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                           variant="ghost"
                           size="sm"
                           className="h-7 w-7 p-0"
-                          onClick={(e) => e.stopPropagation()}
+                          onClick={e => e.stopPropagation()}
                         >
                           <MoreHorizontal className="w-4 h-4" />
                         </Button>
@@ -317,16 +297,12 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                           <Edit2 className="w-4 h-4 mr-2" />
                           Renomear
                         </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => onStepDuplicate(step.id)}
-                        >
+                        <DropdownMenuItem onClick={() => onStepDuplicate(step.id)}>
                           <Copy className="w-4 h-4 mr-2" />
                           Duplicar
                         </DropdownMenuItem>
                         {onPopulateStep && (
-                          <DropdownMenuItem
-                            onClick={() => onPopulateStep(step.id)}
-                          >
+                          <DropdownMenuItem onClick={() => onPopulateStep(step.id)}>
                             <Plus className="w-4 h-4 mr-2" />
                             Popular Etapa
                           </DropdownMenuItem>

@@ -4,18 +4,14 @@ import path from "path";
 // Vamos verificar se há implementações de carrossel nos componentes
 function checkForCarouselImplementations() {
   const baseDir = "./client/src/components/editor/blocks";
-  console.log(
-    "🎠 Verificando implementações de carrossel para múltiplos itens...\n",
-  );
+  console.log("🎠 Verificando implementações de carrossel para múltiplos itens...\n");
 
   if (!fs.existsSync(baseDir)) {
     console.log("❌ Diretório de componentes não encontrado!");
     return;
   }
 
-  const allFiles = fs
-    .readdirSync(baseDir)
-    .filter((file) => file.endsWith(".tsx"));
+  const allFiles = fs.readdirSync(baseDir).filter(file => file.endsWith(".tsx"));
 
   const carouselPatterns = [
     "carousel",
@@ -30,29 +26,24 @@ function checkForCarouselImplementations() {
   let carouselImplementations = [];
   let componentsWithMultipleItems = [];
 
-  allFiles.forEach((fileName) => {
+  allFiles.forEach(fileName => {
     const filePath = path.join(baseDir, fileName);
     try {
       const content = fs.readFileSync(filePath, "utf8");
 
       // Verificar implementações de carrossel
-      const hasCarousel = carouselPatterns.some((pattern) =>
-        content.toLowerCase().includes(pattern),
-      );
+      const hasCarousel = carouselPatterns.some(pattern => content.toLowerCase().includes(pattern));
 
       if (hasCarousel) {
         carouselImplementations.push({
           file: fileName,
-          patterns: carouselPatterns.filter((pattern) =>
-            content.toLowerCase().includes(pattern),
-          ),
+          patterns: carouselPatterns.filter(pattern => content.toLowerCase().includes(pattern)),
         });
       }
 
       // Verificar componentes com múltiplos itens que poderiam beneficiar de carrossel
       const hasMultipleItems =
-        content.includes(".map(") &&
-        (content.includes("grid-cols-") || content.includes("flex"));
+        content.includes(".map(") && (content.includes("grid-cols-") || content.includes("flex"));
 
       if (hasMultipleItems) {
         componentsWithMultipleItems.push(fileName);
@@ -66,7 +57,7 @@ function checkForCarouselImplementations() {
   if (carouselImplementations.length > 0) {
     console.log("✅ COMPONENTES COM CARROSSEL IMPLEMENTADO:");
     console.log("=".repeat(50));
-    carouselImplementations.forEach((impl) => {
+    carouselImplementations.forEach(impl => {
       console.log(`📁 ${impl.file}`);
       console.log(`   Padrões encontrados: ${impl.patterns.join(", ")}`);
       console.log("");
@@ -80,17 +71,15 @@ function checkForCarouselImplementations() {
   console.log("=".repeat(50));
 
   const candidateComponents = componentsWithMultipleItems.filter(
-    (comp) => !carouselImplementations.some((impl) => impl.file === comp),
+    comp => !carouselImplementations.some(impl => impl.file === comp)
   );
 
   if (candidateComponents.length > 0) {
-    candidateComponents.forEach((comp) => {
+    candidateComponents.forEach(comp => {
       console.log(`📱 ${comp} - Poderia usar carrossel em mobile`);
     });
   } else {
-    console.log(
-      "✅ Todos os componentes com múltiplos itens já implementam carrossel!",
-    );
+    console.log("✅ Todos os componentes com múltiplos itens já implementam carrossel!");
   }
 
   // Recomendações específicas
@@ -99,9 +88,7 @@ function checkForCarouselImplementations() {
   console.log("1. Use overflow-x-auto para scroll horizontal simples");
   console.log("2. Combine com snap-x snap-mandatory para navegação suave");
   console.log("3. Adicione padding-right para mostrar próximo item");
-  console.log(
-    "4. Considere usar bibliotecas como Swiper.js para funcionalidades avançadas",
-  );
+  console.log("4. Considere usar bibliotecas como Swiper.js para funcionalidades avançadas");
   console.log("5. Teste em dispositivos móveis reais");
 
   // Exemplo de implementação

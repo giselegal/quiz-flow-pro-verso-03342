@@ -23,11 +23,7 @@ export const StagesPanel: React.FC<StagesPanelProps> = ({
   onStageDelete,
   onStageUpdate,
 }) => {
-  const handleStageEdit = (
-    stage: QuizStage,
-    field: keyof QuizStage,
-    value: any,
-  ) => {
+  const handleStageEdit = (stage: QuizStage, field: keyof QuizStage, value: any) => {
     onStageUpdate(stage.id, { [field]: value });
   };
 
@@ -51,25 +47,19 @@ export const StagesPanel: React.FC<StagesPanelProps> = ({
       </div>
 
       <div className="space-y-3">
-        {stages.map((stage) => (
+        {stages.map(stage => (
           <Card
             key={stage.id}
             className={`p-3 cursor-pointer transition-colors ${
-              activeStageId === stage.id
-                ? "bg-[#B89B7A]/10 border-[#B89B7A]"
-                : "hover:bg-gray-50"
+              activeStageId === stage.id ? "bg-[#B89B7A]/10 border-[#B89B7A]" : "hover:bg-gray-50"
             }`}
             onClick={() => onStageSelect(stage.id)}
           >
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 <div className="flex items-center space-x-2 mb-2">
-                  <span className="text-xs bg-gray-100 px-2 py-1 rounded">
-                    {stage.type}
-                  </span>
-                  <span className="text-xs text-gray-500">
-                    Ordem: {stage.order}
-                  </span>
+                  <span className="text-xs bg-gray-100 px-2 py-1 rounded">{stage.type}</span>
+                  <span className="text-xs text-gray-500">Ordem: {stage.order}</span>
                 </div>
 
                 <Label htmlFor={`stage-title-${stage.id}`} className="text-xs">
@@ -78,19 +68,17 @@ export const StagesPanel: React.FC<StagesPanelProps> = ({
                 <Input
                   id={`stage-title-${stage.id}`}
                   value={stage.title}
-                  onChange={(e) =>
-                    handleStageEdit(stage, "title", e.target.value)
-                  }
+                  onChange={e => handleStageEdit(stage, "title", e.target.value)}
                   className="text-sm mt-1"
                   placeholder="Nome da etapa"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={e => e.stopPropagation()}
                 />
               </div>
 
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   onStageDelete(stage.id);
                 }}
@@ -105,10 +93,7 @@ export const StagesPanel: React.FC<StagesPanelProps> = ({
         {stages.length === 0 && (
           <div className="text-center text-gray-500 py-8">
             <p className="mb-4">Nenhuma etapa criada ainda</p>
-            <Button
-              onClick={handleAddStage}
-              className="bg-[#B89B7A] hover:bg-[#A08A72] text-white"
-            >
+            <Button onClick={handleAddStage} className="bg-[#B89B7A] hover:bg-[#A08A72] text-white">
               <Plus className="w-4 h-4 mr-2" />
               Criar Primeira Etapa
             </Button>

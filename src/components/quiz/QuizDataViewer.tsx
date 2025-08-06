@@ -47,13 +47,9 @@ export const QuizDataViewer: React.FC = () => {
   };
 
   const handleClearData = () => {
-    if (
-      confirm(
-        "Tem certeza que deseja limpar todos os dados? Esta ação não pode ser desfeita.",
-      )
-    ) {
+    if (confirm("Tem certeza que deseja limpar todos os dados? Esta ação não pode ser desfeita.")) {
       clearAllData();
-      setRefreshKey((prev) => prev + 1);
+      setRefreshKey(prev => prev + 1);
     }
   };
 
@@ -104,11 +100,7 @@ export const QuizDataViewer: React.FC = () => {
               )}
             </CardTitle>
             <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setRefreshKey((prev) => prev + 1)}
-              >
+              <Button variant="outline" size="sm" onClick={() => setRefreshKey(prev => prev + 1)}>
                 <RefreshCw className="w-4 h-4 mr-1" />
                 Atualizar
               </Button>
@@ -131,27 +123,21 @@ export const QuizDataViewer: React.FC = () => {
                   <User className="w-4 h-4 text-[#B89B7A]" />
                   <span className="text-sm font-medium">Usuário</span>
                 </div>
-                <p className="text-lg font-bold">
-                  {currentStats.userName || "Anônimo"}
-                </p>
+                <p className="text-lg font-bold">{currentStats.userName || "Anônimo"}</p>
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-1">
                   <Clock className="w-4 h-4 text-green-500" />
                   <span className="text-sm font-medium">Duração</span>
                 </div>
-                <p className="text-lg font-bold">
-                  {formatDuration(currentStats.duration)}
-                </p>
+                <p className="text-lg font-bold">{formatDuration(currentStats.duration)}</p>
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-1">
                   <Target className="w-4 h-4 text-purple-500" />
                   <span className="text-sm font-medium">Questões</span>
                 </div>
-                <p className="text-lg font-bold">
-                  {currentStats.questionsAnswered}
-                </p>
+                <p className="text-lg font-bold">{currentStats.questionsAnswered}</p>
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-1">
@@ -189,21 +175,16 @@ export const QuizDataViewer: React.FC = () => {
                         <h4 className="font-medium text-sm">
                           Questão {index + 1}: {answer.questionText}
                         </h4>
-                        <Badge variant="outline">
-                          {(answer.responseTime / 1000).toFixed(1)}s
-                        </Badge>
+                        <Badge variant="outline">{(answer.responseTime / 1000).toFixed(1)}s</Badge>
                       </div>
                       <div className="text-sm text-gray-600 mb-2">
-                        <strong>Respostas:</strong>{" "}
-                        {answer.optionTexts.join(", ")}
+                        <strong>Respostas:</strong> {answer.optionTexts.join(", ")}
                       </div>
                       <div className="text-xs text-gray-500">
-                        <strong>Pontos de Estilo:</strong>{" "}
-                        {JSON.stringify(answer.stylePoints)}
+                        <strong>Pontos de Estilo:</strong> {JSON.stringify(answer.stylePoints)}
                       </div>
                       <div className="text-xs text-gray-500">
-                        <strong>Timestamp:</strong>{" "}
-                        {formatTime(answer.timestamp)}
+                        <strong>Timestamp:</strong> {formatTime(answer.timestamp)}
                       </div>
                     </div>
                   ))}
@@ -235,14 +216,10 @@ export const QuizDataViewer: React.FC = () => {
                             {click.elementType}
                           </Badge>
                           <span className="text-sm">
-                            {click.elementText ||
-                              click.elementId ||
-                              "Elemento sem texto"}
+                            {click.elementText || click.elementId || "Elemento sem texto"}
                           </span>
                         </div>
-                        <div className="text-xs text-gray-500">
-                          {formatTime(click.timestamp)}
-                        </div>
+                        <div className="text-xs text-gray-500">{formatTime(click.timestamp)}</div>
                       </div>
                     ))}
                 </div>
@@ -263,9 +240,7 @@ export const QuizDataViewer: React.FC = () => {
                   <>
                     <div className="flex justify-between">
                       <span>Tempo médio por resposta:</span>
-                      <Badge>
-                        {(currentStats.averageResponseTime / 1000).toFixed(1)}s
-                      </Badge>
+                      <Badge>{(currentStats.averageResponseTime / 1000).toFixed(1)}s</Badge>
                     </div>
                     <div className="flex justify-between">
                       <span>Cliques por questão:</span>
@@ -284,8 +259,7 @@ export const QuizDataViewer: React.FC = () => {
                     <div className="flex justify-between">
                       <span>Resolução:</span>
                       <Badge>
-                        {currentStats.device?.viewportWidth}x
-                        {currentStats.device?.viewportHeight}
+                        {currentStats.device?.viewportWidth}x{currentStats.device?.viewportHeight}
                       </Badge>
                     </div>
                   </>
@@ -310,9 +284,7 @@ export const QuizDataViewer: React.FC = () => {
                 </div>
                 <div className="flex justify-between">
                   <span>Referrer:</span>
-                  <Badge className="max-w-32 truncate">
-                    {session.referrer || "Direto"}
-                  </Badge>
+                  <Badge className="max-w-32 truncate">{session.referrer || "Direto"}</Badge>
                 </div>
                 <div className="flex justify-between">
                   <span>User Agent:</span>

@@ -63,7 +63,7 @@ const ExemploEditorQuestao: React.FC = () => {
 
   // Handler para mudanças nas propriedades
   const handlePropertyChange = (key: string, value: any) => {
-    setBlock((prevBlock) => ({
+    setBlock(prevBlock => ({
       ...prevBlock,
       props: {
         ...prevBlock.props,
@@ -85,9 +85,7 @@ const ExemploEditorQuestao: React.FC = () => {
     <div className="w-full min-h-screen bg-gray-50">
       {/* Controles do exemplo */}
       <div className="bg-white border-b p-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold text-gray-900">
-          Exemplo: Questão Configurável
-        </h1>
+        <h1 className="text-xl font-bold text-gray-900">Exemplo: Questão Configurável</h1>
 
         <div className="flex gap-2">
           <Button
@@ -98,10 +96,7 @@ const ExemploEditorQuestao: React.FC = () => {
           </Button>
 
           {isEditing && (
-            <Button
-              variant="outline"
-              onClick={() => setShowProperties(!showProperties)}
-            >
+            <Button variant="outline" onClick={() => setShowProperties(!showProperties)}>
               {showProperties ? "Ocultar Propriedades" : "Mostrar Propriedades"}
             </Button>
           )}
@@ -113,9 +108,7 @@ const ExemploEditorQuestao: React.FC = () => {
       {/* Resumo da configuração atual */}
       {isEditing && (
         <div className="bg-[#B89B7A]/10 border-b p-4">
-          <h3 className="font-semibold text-[#432818] mb-2">
-            Configuração Atual:
-          </h3>
+          <h3 className="font-semibold text-[#432818] mb-2">Configuração Atual:</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
             <div>
               <span className="font-medium">Pergunta:</span>
@@ -125,18 +118,13 @@ const ExemploEditorQuestao: React.FC = () => {
             <div>
               <span className="font-medium">Opções:</span>
               <br />
-              <span className="text-gray-600">
-                {block.props.options.length} opções
-              </span>
+              <span className="text-gray-600">{block.props.options.length} opções</span>
             </div>
             <div>
               <span className="font-medium">Pontos Total:</span>
               <br />
               <span className="text-gray-600">
-                {block.props.options.reduce(
-                  (total: number, opt: any) => total + opt.points,
-                  0,
-                )}{" "}
+                {block.props.options.reduce((total: number, opt: any) => total + opt.points, 0)}{" "}
                 pontos
               </span>
             </div>
@@ -145,11 +133,8 @@ const ExemploEditorQuestao: React.FC = () => {
               <br />
               <span className="text-gray-600">
                 {
-                  Array.from(
-                    new Set(
-                      block.props.options.map((opt: any) => opt.styleCategory),
-                    ),
-                  ).length
+                  Array.from(new Set(block.props.options.map((opt: any) => opt.styleCategory)))
+                    .length
                 }{" "}
                 categorias
               </span>

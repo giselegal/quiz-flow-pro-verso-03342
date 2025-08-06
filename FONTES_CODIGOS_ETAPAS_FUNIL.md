@@ -222,7 +222,7 @@ const setActiveStage = useCallback(
       loadStageTemplate(stageId); // ✅ CARREGA TEMPLATE ESPECÍFICO
     }
   },
-  [validateStageId, stageBlocks],
+  [validateStageId, stageBlocks]
 );
 
 // ✅ FUNÇÃO DE CARREGAMENTO
@@ -233,7 +233,7 @@ const loadStageTemplate = useCallback(
 
     // Converte para EditorBlocks e adiciona à etapa
   },
-  [stages, updateStage],
+  [stages, updateStage]
 );
 ```
 
@@ -246,15 +246,7 @@ export interface FunnelStage {
   id: string;
   name: string;
   order: number;
-  type:
-    | "intro"
-    | "question"
-    | "transition"
-    | "processing"
-    | "result"
-    | "lead"
-    | "offer"
-    | "final";
+  type: "intro" | "question" | "transition" | "processing" | "result" | "lead" | "offer" | "final";
   description?: string;
   isActive?: boolean;
   metadata?: {

@@ -27,12 +27,8 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
       <div className="container max-w-3xl mx-auto text-center">
         <div className="bg-[#FAF9F7] p-8 rounded-lg shadow-sm">
           <div className="space-y-4 mb-6">
-            <p className="text-[#8F7A6A] line-through">
-              De R$ {regularPrice.toFixed(2)}
-            </p>
-            <h3 className="text-4xl font-bold text-[#432818]">
-              Por R$ {salePrice.toFixed(2)}
-            </h3>
+            <p className="text-[#8F7A6A] line-through">De R$ {regularPrice.toFixed(2)}</p>
+            <h3 className="text-4xl font-bold text-[#432818]">Por R$ {salePrice.toFixed(2)}</h3>
             {installments && (
               <p className="text-[#8F7A6A]">
                 ou {installments.number}x de R$ {installments.value.toFixed(2)}

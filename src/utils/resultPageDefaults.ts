@@ -73,8 +73,7 @@ export const createDefaultConfig = (styleType: string): ResultPageConfig => {
             },
             {
               title: "Economia",
-              description:
-                "Elimine compras por impulso e desperdício de dinheiro",
+              description: "Elimine compras por impulso e desperdício de dinheiro",
             },
           ],
         },

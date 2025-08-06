@@ -67,7 +67,7 @@ export const useResultPageConfig = (category: string): ResultPageConfigHook => {
   });
 
   const updateSection = useCallback((section: string, content: any) => {
-    setResultPageConfig((prev) => ({
+    setResultPageConfig(prev => ({
       ...prev,
       [section]: content,
     }));
@@ -77,10 +77,7 @@ export const useResultPageConfig = (category: string): ResultPageConfigHook => {
     setLoading(true);
     try {
       // Save to localStorage or API
-      localStorage.setItem(
-        `result_config_${category}`,
-        JSON.stringify(resultPageConfig),
-      );
+      localStorage.setItem(`result_config_${category}`, JSON.stringify(resultPageConfig));
       return true;
     } catch (error) {
       console.error("Error saving config:", error);

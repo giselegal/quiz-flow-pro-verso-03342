@@ -8,10 +8,8 @@ const CaktoQuizFlow: React.FC = () => {
   const [, setLocation] = useLocation();
 
   // Convert QuizResponse to UserResponse format
-  const convertResponsesToUserResponses = (
-    quizResponses: QuizResponse[],
-  ): UserResponse[] => {
-    return quizResponses.map((response) => ({
+  const convertResponsesToUserResponses = (quizResponses: QuizResponse[]): UserResponse[] => {
+    return quizResponses.map(response => ({
       questionId: response.questionId,
       selectedOptions: response.selectedOptions,
       timestamp: response.timestamp,
@@ -28,9 +26,7 @@ const CaktoQuizFlow: React.FC = () => {
     <div className="min-h-screen bg-[#FAF9F7] flex items-center justify-center p-4">
       <div className="max-w-2xl w-full">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-playfair text-[#432818] mb-4">
-            Quiz de Estilo Pessoal
-          </h1>
+          <h1 className="text-3xl font-playfair text-[#432818] mb-4">Quiz de Estilo Pessoal</h1>
           <p className="text-[#8F7A6A] text-lg">
             Descubra seu estilo único respondendo algumas perguntas
           </p>
@@ -38,9 +34,7 @@ const CaktoQuizFlow: React.FC = () => {
 
         <div className="bg-white rounded-lg shadow-sm border border-[#B89B7A]/20 p-8">
           {/* Quiz content would go here */}
-          <p className="text-center text-[#8F7A6A]">
-            Componente do quiz em desenvolvimento...
-          </p>
+          <p className="text-center text-[#8F7A6A]">Componente do quiz em desenvolvimento...</p>
         </div>
       </div>
     </div>

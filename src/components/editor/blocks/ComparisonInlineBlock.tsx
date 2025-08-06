@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { cn } from '@/lib/utils';
-import { ArrowLeftRight, Edit3 } from 'lucide-react';
+import React, { useState } from "react";
+import { cn } from "@/lib/utils";
+import { ArrowLeftRight, Edit3 } from "lucide-react";
 
 interface ComparisonInlineBlockProps {
   beforeTitle?: string;
@@ -15,10 +15,10 @@ interface ComparisonInlineBlockProps {
 }
 
 const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
-  beforeTitle = 'Antes',
-  afterTitle = 'Depois',
-  beforeText = 'Sem direção de estilo, compras por impulso',
-  afterText = 'Estilo definido, compras certeiras',
+  beforeTitle = "Antes",
+  afterTitle = "Depois",
+  beforeText = "Sem direção de estilo, compras por impulso",
+  afterText = "Estilo definido, compras certeiras",
   dividerPosition = 50,
   onClick,
   className,
@@ -33,13 +33,13 @@ const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
       role="button"
       tabIndex={0}
       className={cn(
-        'group/canvas-item inline-block overflow-hidden relative cursor-col-resize',
-        'w-full h-[200px]',
-        'border-2 border-dashed rounded-md',
-        'hover:border-[#B89B7A] transition-all',
-        isHovered ? 'border-[#B89B7A]' : 'border-gray-300',
-        disabled && 'opacity-75 cursor-not-allowed',
-        className,
+        "group/canvas-item inline-block overflow-hidden relative cursor-col-resize",
+        "w-full h-[200px]",
+        "border-2 border-dashed rounded-md",
+        "hover:border-[#B89B7A] transition-all",
+        isHovered ? "border-[#B89B7A]" : "border-gray-300",
+        disabled && "opacity-75 cursor-not-allowed",
+        className
       )}
       onClick={!disabled ? onClick : undefined}
       onMouseEnter={() => setIsHovered(true)}
@@ -56,7 +56,7 @@ const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
               const newTitle = prompt('Novo título "Antes":', beforeTitle);
-              if (newTitle !== null) onPropertyChange('beforeTitle', newTitle);
+              if (newTitle !== null) onPropertyChange("beforeTitle", newTitle);
             }
           }}
         >
@@ -68,7 +68,7 @@ const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
               const newText = prompt('Novo texto "Antes":', beforeText);
-              if (newText !== null) onPropertyChange('beforeText', newText);
+              if (newText !== null) onPropertyChange("beforeText", newText);
             }
           }}
         >
@@ -87,7 +87,7 @@ const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
               const newTitle = prompt('Novo título "Depois":', afterTitle);
-              if (newTitle !== null) onPropertyChange('afterTitle', newTitle);
+              if (newTitle !== null) onPropertyChange("afterTitle", newTitle);
             }
           }}
         >
@@ -99,7 +99,7 @@ const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
               const newText = prompt('Novo texto "Depois":', afterText);
-              if (newText !== null) onPropertyChange('afterText', newText);
+              if (newText !== null) onPropertyChange("afterText", newText);
             }
           }}
         >
@@ -110,7 +110,7 @@ const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
       {/* Divider */}
       <div
         className="h-full w-px absolute top-0 m-auto z-30 bg-gradient-to-b from-transparent from-[5%] to-[95%] via-indigo-500 to-transparent"
-        style={{ left: `${dragPosition}%`, top: '0px', zIndex: 40 }}
+        style={{ left: `${dragPosition}%`, top: "0px", zIndex: 40 }}
       >
         <div className="w-36 h-full flex items-center justify-center">
           <div className="w-8 h-8 bg-[#B89B7A]/100 rounded-full flex items-center justify-center shadow-lg">

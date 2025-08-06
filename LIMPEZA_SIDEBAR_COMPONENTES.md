@@ -21,7 +21,7 @@
 <div className="mb-4">
   <h3 className="text-sm font-medium mb-2">Categorias</h3>
   <div className="grid grid-cols-2 gap-2">
-    {BLOCK_CATEGORIES.map((category) => (
+    {BLOCK_CATEGORIES.map(category => (
       <Button key={category}>{category}</Button>
     ))}
   </div>
@@ -73,7 +73,7 @@ const EnhancedComponentsSidebar = ({ onAddComponent }) => {
     setSearchQuery(query);
   };
 
-  const filteredBlocks = allBlocks.filter((block) => {
+  const filteredBlocks = allBlocks.filter(block => {
     return (
       !searchQuery ||
       block.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -90,7 +90,7 @@ const EnhancedComponentsSidebar = ({ onAddComponent }) => {
           <Input
             placeholder="Buscar componentes..."
             value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
+            onChange={e => handleSearch(e.target.value)}
             className="pl-8"
           />
         </div>
@@ -99,11 +99,8 @@ const EnhancedComponentsSidebar = ({ onAddComponent }) => {
       <CardContent className="flex-1 overflow-hidden">
         <ScrollArea className="h-full">
           <div className="space-y-2">
-            {filteredBlocks.map((block) => (
-              <Card
-                key={block.type}
-                className="p-3 cursor-pointer hover:bg-muted/50"
-              >
+            {filteredBlocks.map(block => (
+              <Card key={block.type} className="p-3 cursor-pointer hover:bg-muted/50">
                 <div className="flex items-center justify-between">
                   <h4 className="text-sm font-medium truncate">{block.name}</h4>
                   <Button

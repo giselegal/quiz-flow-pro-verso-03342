@@ -105,9 +105,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
                   whileHover={{ x: 3 }}
                 >
                   <span className="text-[#432818]">{item.label}</span>
-                  <span className="font-medium text-[#aa6b5d]">
-                    R$ {item.value}
-                  </span>
+                  <span className="font-medium text-[#aa6b5d]">R$ {item.value}</span>
                 </motion.div>
               ))}
 
@@ -118,10 +116,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
                 transition={{ duration: 0.5, delay: 1 }}
               >
                 <span className="font-medium text-[#432818]">Valor Total</span>
-                <motion.span
-                  className="font-medium relative"
-                  whileHover={{ scale: 1.05 }}
-                >
+                <motion.span className="font-medium relative" whileHover={{ scale: 1.05 }}>
                   R$ {regularPrice}
                   <motion.div
                     className="absolute top-1/2 left-0 right-0 h-[2px] bg-[#ff5a5a] transform -translate-y-1/2 -rotate-3"
@@ -147,9 +142,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
               transition={{ type: "spring", stiffness: 300 }}
             >
               <p className="text-sm text-[#3a3a3a]/60 mb-1">De</p>
-              <p className="text-2xl line-through text-[#3a3a3a]/60">
-                R$ {regularPrice}
-              </p>
+              <p className="text-2xl line-through text-[#3a3a3a]/60">R$ {regularPrice}</p>
               <motion.div
                 className="absolute -top-1 -left-1 -right-1 -bottom-1 border-2 border-[#ff5a5a] transform rotate-[-8deg] rounded-sm"
                 animate={{
@@ -201,9 +194,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
                   HOJE
                 </motion.div>
               </div>
-              <p className="text-xs text-[#3a3a3a]/60 mt-1">
-                Pagamento único ou em 4x de R$ 10,86
-              </p>
+              <p className="text-xs text-[#3a3a3a]/60 mt-1">Pagamento único ou em 4x de R$ 10,86</p>
             </motion.div>
           </motion.div>
 

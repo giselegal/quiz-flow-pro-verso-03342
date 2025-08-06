@@ -4,11 +4,11 @@
  * Fornece edição de texto avançada com formatação, listas, links, etc.
  */
 
-import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
-import 'quill/dist/quill.snow.css';
+import React, { useState, useEffect, useRef, lazy, Suspense } from "react";
+import "quill/dist/quill.snow.css";
 
 // Importação lazy do ReactQuill
-const ReactQuill = lazy(() => import('react-quill'));
+const ReactQuill = lazy(() => import("react-quill"));
 
 export interface RichTextBlockProps {
   blockId: string;
@@ -27,28 +27,28 @@ export interface RichTextBlockProps {
 const quillModules = {
   toolbar: [
     [{ header: [1, 2, 3, false] }],
-    ['bold', 'italic', 'underline', 'strike'],
+    ["bold", "italic", "underline", "strike"],
     [{ color: [] }, { background: [] }],
-    [{ list: 'ordered' }, { list: 'bullet' }],
+    [{ list: "ordered" }, { list: "bullet" }],
     [{ align: [] }],
-    ['link', 'image'],
-    ['clean'],
+    ["link", "image"],
+    ["clean"],
   ],
 };
 
 const quillFormats = [
-  'header',
-  'bold',
-  'italic',
-  'underline',
-  'strike',
-  'color',
-  'background',
-  'list',
-  'bullet',
-  'align',
-  'link',
-  'image',
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "color",
+  "background",
+  "list",
+  "bullet",
+  "align",
+  "link",
+  "image",
 ];
 
 export const RichTextBlock: React.FC<RichTextBlockProps> = ({
@@ -59,9 +59,9 @@ export const RichTextBlock: React.FC<RichTextBlockProps> = ({
   isSelected = false,
   onEdit,
   onSelect,
-  className = '',
+  className = "",
   minHeight = 100,
-  placeholder = 'Clique para selecionar e editar no painel',
+  placeholder = "Clique para selecionar e editar no painel",
 }) => {
   const [currentContent, setCurrentContent] = useState(content);
 
@@ -74,9 +74,9 @@ export const RichTextBlock: React.FC<RichTextBlockProps> = ({
   };
 
   const stripHtml = (html: string) => {
-    const tmp = document.createElement('div');
+    const tmp = document.createElement("div");
     tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || '';
+    return tmp.textContent || tmp.innerText || "";
   };
 
   const isEmpty = !currentContent || stripHtml(currentContent).trim().length === 0;
@@ -84,13 +84,13 @@ export const RichTextBlock: React.FC<RichTextBlockProps> = ({
   return (
     <div
       className={`relative group transition-all duration-200 ${
-        isSelected ? 'ring-2 ring-[#B89B7A] ring-opacity-50' : ''
+        isSelected ? "ring-2 ring-[#B89B7A] ring-opacity-50" : ""
       } ${className}`}
       onClick={handleClick}
     >
       <div
         className={`rich-text-display cursor-pointer hover:bg-gray-50 transition-colors duration-200 p-4 rounded-md border-2 border-transparent hover:border-gray-200 ${
-          isEmpty ? 'text-gray-400 italic' : ''
+          isEmpty ? "text-gray-400 italic" : ""
         }`}
         style={{ minHeight: `${minHeight}px` }}
         dangerouslySetInnerHTML={{

@@ -126,11 +126,7 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
   };
 
   const renderVideoPlayer = () => {
-    if (
-      videoType === "youtube" ||
-      videoType === "vimeo" ||
-      videoType === "embedded"
-    ) {
+    if (videoType === "youtube" || videoType === "vimeo" || videoType === "embedded") {
       return (
         <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
           <iframe
@@ -205,11 +201,7 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
                 onClick={() => setIsMuted(!isMuted)}
                 className="p-1 hover:bg-white hover:bg-opacity-20 rounded transition-colors duration-300"
               >
-                {isMuted ? (
-                  <VolumeX className="w-4 h-4" />
-                ) : (
-                  <Volume2 className="w-4 h-4" />
-                )}
+                {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
               </button>
             </div>
           </div>
@@ -227,22 +219,16 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
 
   return (
     <div className={`py-12 ${className || ""}`} style={style}>
-      {customStyles && (
-        <style dangerouslySetInnerHTML={{ __html: customStyles }} />
-      )}
+      {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
 
       {/* Header */}
       {(title || subtitle) && (
         <div className="text-center mb-8">
           {title && (
-            <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-2">
-              {title}
-            </h2>
+            <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-2">{title}</h2>
           )}
           {subtitle && (
-            <p className="text-center text-[#3a3a3a] mb-6 max-w-lg mx-auto">
-              {subtitle}
-            </p>
+            <p className="text-center text-[#3a3a3a] mb-6 max-w-lg mx-auto">{subtitle}</p>
           )}
           <div className="elegant-divider w-32 mx-auto"></div>
         </div>
@@ -264,10 +250,7 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
               {/* Rating */}
               <div className="flex justify-center items-center gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="w-4 h-4 text-yellow-500 fill-yellow-500"
-                  />
+                  <Star key={i} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
                 ))}
                 <span className="text-sm text-[#6B4F43] ml-2">
                   Avaliação 5.0 - Mais de 1000 visualizações

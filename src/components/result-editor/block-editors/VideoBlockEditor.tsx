@@ -10,10 +10,7 @@ interface VideoBlockEditorProps {
   onUpdate: (content: any) => void;
 }
 
-const VideoBlockEditor: React.FC<VideoBlockEditorProps> = ({
-  block,
-  onUpdate,
-}) => {
+const VideoBlockEditor: React.FC<VideoBlockEditorProps> = ({ block, onUpdate }) => {
   const content = block.content;
 
   const getVideoId = (url: string) => {
@@ -54,7 +51,7 @@ const VideoBlockEditor: React.FC<VideoBlockEditorProps> = ({
         <Input
           id="videoUrl"
           value={content.videoUrl || ""}
-          onChange={(e) => onUpdate({ videoUrl: e.target.value })}
+          onChange={e => onUpdate({ videoUrl: e.target.value })}
           placeholder="https://www.youtube.com/watch?v=..."
         />
       </div>
@@ -64,7 +61,7 @@ const VideoBlockEditor: React.FC<VideoBlockEditorProps> = ({
         <Input
           id="videoTitle"
           value={content.videoTitle || ""}
-          onChange={(e) => onUpdate({ videoTitle: e.target.value })}
+          onChange={e => onUpdate({ videoTitle: e.target.value })}
           placeholder="Título do vídeo"
         />
       </div>
@@ -75,7 +72,7 @@ const VideoBlockEditor: React.FC<VideoBlockEditorProps> = ({
           id="videoDescription"
           rows={3}
           value={content.videoDescription || ""}
-          onChange={(e) => onUpdate({ videoDescription: e.target.value })}
+          onChange={e => onUpdate({ videoDescription: e.target.value })}
           placeholder="Descrição do vídeo"
         />
       </div>
@@ -85,7 +82,7 @@ const VideoBlockEditor: React.FC<VideoBlockEditorProps> = ({
         <Input
           id="videoThumbnail"
           value={content.videoThumbnail || ""}
-          onChange={(e) => onUpdate({ videoThumbnail: e.target.value })}
+          onChange={e => onUpdate({ videoThumbnail: e.target.value })}
           placeholder="https://exemplo.com/miniatura.jpg"
         />
       </div>
@@ -95,7 +92,7 @@ const VideoBlockEditor: React.FC<VideoBlockEditorProps> = ({
         <Switch
           id="videoAutoplay"
           checked={content.videoAutoplay || false}
-          onCheckedChange={(checked) => onUpdate({ videoAutoplay: checked })}
+          onCheckedChange={checked => onUpdate({ videoAutoplay: checked })}
         />
       </div>
 
@@ -104,7 +101,7 @@ const VideoBlockEditor: React.FC<VideoBlockEditorProps> = ({
         <Switch
           id="videoControls"
           checked={content.videoControls !== false}
-          onCheckedChange={(checked) => onUpdate({ videoControls: checked })}
+          onCheckedChange={checked => onUpdate({ videoControls: checked })}
         />
       </div>
 

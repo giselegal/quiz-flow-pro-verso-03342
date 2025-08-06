@@ -16,11 +16,7 @@ interface QuestionProps {
   onSelect: (optionIds: string[]) => void;
 }
 
-const QuestionComponent: React.FC<QuestionProps> = ({
-  question,
-  onNext,
-  onSelect,
-}) => {
+const QuestionComponent: React.FC<QuestionProps> = ({ question, onNext, onSelect }) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const requiredSelections = question.isStrategic ? 1 : 3;
 
@@ -30,10 +26,10 @@ const QuestionComponent: React.FC<QuestionProps> = ({
   }, [question.id]);
 
   const handleOptionSelect = (optionId: string) => {
-    setSelectedOptions((prev) => {
+    setSelectedOptions(prev => {
       // If the option is already selected, remove it
       if (prev.includes(optionId)) {
-        return prev.filter((id) => id !== optionId);
+        return prev.filter(id => id !== optionId);
       }
 
       // If already reached the limit of selections, show message and don't add
@@ -82,13 +78,12 @@ const QuestionComponent: React.FC<QuestionProps> = ({
       <h2 className="text-xl font-semibold text-[#432818]">{question.text}</h2>
 
       <div className="space-y-3">
-        {question.options.map((option) => (
+        {question.options.map(option => (
           <button
             key={option.id}
             onClick={() => handleOptionSelect(option.id)}
             disabled={
-              selectedOptions.length >= requiredSelections &&
-              !selectedOptions.includes(option.id)
+              selectedOptions.length >= requiredSelections && !selectedOptions.includes(option.id)
             }
             className={`w-full p-4 text-left rounded-lg border transition-all ${
               selectedOptions.includes(option.id)

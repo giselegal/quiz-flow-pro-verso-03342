@@ -15,9 +15,7 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({
   onSelectComponent,
   selectedComponentId,
 }) => {
-  const [viewMode, setViewMode] = React.useState<"desktop" | "mobile">(
-    "desktop",
-  );
+  const [viewMode, setViewMode] = React.useState<"desktop" | "mobile">("desktop");
   const [isPreviewing, setIsPreviewing] = React.useState(false);
 
   return (
@@ -45,28 +43,17 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({
           </Button>
         </div>
 
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setIsPreviewing(!isPreviewing)}
-        >
+        <Button variant="outline" size="sm" onClick={() => setIsPreviewing(!isPreviewing)}>
           <Eye className="w-4 h-4 mr-2" />
           {isPreviewing ? "Editar" : "Visualizar"}
         </Button>
       </div>
 
       {/* Preview Content */}
-      <div
-        className={cn(
-          "flex-1 overflow-auto p-8",
-          viewMode === "mobile" && "max-w-md mx-auto",
-        )}
-      >
+      <div className={cn("flex-1 overflow-auto p-8", viewMode === "mobile" && "max-w-md mx-auto")}>
         <div className="min-h-full">
           <div className="text-center space-y-4">
-            <h1 className="text-4xl font-playfair text-[#aa6b5d]">
-              VOCÊ DESCOBRIU SEU ESTILO
-            </h1>
+            <h1 className="text-4xl font-playfair text-[#aa6b5d]">VOCÊ DESCOBRIU SEU ESTILO</h1>
             <p className="text-xl font-playfair text-[#3a3a3a]">
               Agora é hora de aplicar com clareza — e se vestir de você
             </p>

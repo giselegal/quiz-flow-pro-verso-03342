@@ -1,4 +1,4 @@
-import UniversalPropertiesPanel from "@/components/universal/UniversalPropertiesPanel";
+import { EnhancedUniversalPropertiesPanel } from "@/components/universal/EnhancedUniversalPropertiesPanel";
 import React, { useState } from "react";
 
 const TestPropertiesPanel = () => {
@@ -130,7 +130,7 @@ const TestPropertiesPanel = () => {
             </div>
 
             <div className="w-80">
-              <UniversalPropertiesPanel
+              <EnhancedUniversalPropertiesPanel
                 selectedBlock={selectedBlock}
                 onUpdate={handleUpdate}
                 onDelete={handleDelete}

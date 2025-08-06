@@ -14,10 +14,7 @@ interface StyleSelectorProps {
   onStyleChange: (style: StyleResult) => void;
 }
 
-const StyleSelector: React.FC<StyleSelectorProps> = ({
-  selectedStyle,
-  onStyleChange,
-}) => {
+const StyleSelector: React.FC<StyleSelectorProps> = ({ selectedStyle, onStyleChange }) => {
   const handleStyleChange = (value: string) => {
     onStyleChange({
       category: value as StyleType,
@@ -29,9 +26,7 @@ const StyleSelector: React.FC<StyleSelectorProps> = ({
     });
   };
 
-  const currentStyleConfig = (styleConfig as StyleConfigMap)[
-    selectedStyle.category
-  ];
+  const currentStyleConfig = (styleConfig as StyleConfigMap)[selectedStyle.category];
 
   return (
     <div className="space-y-4">
@@ -39,15 +34,12 @@ const StyleSelector: React.FC<StyleSelectorProps> = ({
         <label className="text-sm font-medium mb-1 block text-[#1A1818]/70">
           Estilo para Editar
         </label>
-        <Select
-          value={selectedStyle.category}
-          onValueChange={handleStyleChange}
-        >
+        <Select value={selectedStyle.category} onValueChange={handleStyleChange}>
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Selecione um estilo" />
           </SelectTrigger>
           <SelectContent>
-            {Object.keys(styleConfig).map((style) => (
+            {Object.keys(styleConfig).map(style => (
               <SelectItem key={style} value={style}>
                 {style}
               </SelectItem>
@@ -65,9 +57,7 @@ const StyleSelector: React.FC<StyleSelectorProps> = ({
               className="w-16 h-16 object-cover rounded-md"
             />
             <div>
-              <h3 className="font-medium text-[#432818]">
-                {selectedStyle.category}
-              </h3>
+              <h3 className="font-medium text-[#432818]">{selectedStyle.category}</h3>
               <p className="text-xs text-[#1A1818]/70 mt-1">
                 {currentStyleConfig.description.substring(0, 80)}...
               </p>

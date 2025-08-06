@@ -31,7 +31,7 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
     try {
       if (typeof PerformanceObserver !== "undefined") {
         // Criar observer para LCP
-        const lcpObserver = new PerformanceObserver((entries) => {
+        const lcpObserver = new PerformanceObserver(entries => {
           const lcpEntry = entries.getEntries().at(-1);
           if (lcpEntry) {
             lcpOccurred = true;
@@ -43,13 +43,11 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
               window.requestIdleCallback(
                 () => {
                   if (wrapperRef.current) {
-                    console.log(
-                      "Executando correção após LCP (via requestIdleCallback)",
-                    );
+                    console.log("Executando correção após LCP (via requestIdleCallback)");
                     fixBlurryImages(wrapperRef.current);
                   }
                 },
-                { timeout: 1000 },
+                { timeout: 1000 }
               );
             } else {
               setTimeout(() => {
@@ -74,9 +72,7 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
         // Fallback: Se após 3 segundos o LCP ainda não ocorreu, executar mesmo assim
         setTimeout(() => {
           if (!lcpOccurred && wrapperRef.current) {
-            console.log(
-              "Fallback: Executando correção após timeout sem LCP detectado",
-            );
+            console.log("Fallback: Executando correção após timeout sem LCP detectado");
             fixBlurryImages(wrapperRef.current);
             lcpObserver.disconnect();
           }
@@ -86,7 +82,7 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
         setTimeout(() => {
           if (wrapperRef.current) {
             console.log(
-              "Fallback: Executando correção após timeout (sem suporte a PerformanceObserver)",
+              "Fallback: Executando correção após timeout (sem suporte a PerformanceObserver)"
             );
             fixBlurryImages(wrapperRef.current);
           }
@@ -113,10 +109,10 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
     let pendingCorrection = false;
 
     // Configurar MutationObserver de escopo limitado
-    const observer = new MutationObserver((mutations) => {
+    const observer = new MutationObserver(mutations => {
       // Verificar se alguma das mutações realmente adicionou imagens
-      const hasNewImages = mutations.some((mutation) => {
-        return Array.from(mutation.addedNodes).some((node) => {
+      const hasNewImages = mutations.some(mutation => {
+        return Array.from(mutation.addedNodes).some(node => {
           // Verificar se o nó adicionado é uma imagem ou contém imagens
           if (node.nodeType === Node.ELEMENT_NODE) {
             const element = node as Element;
@@ -143,21 +139,17 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
             window.requestIdleCallback(
               () => {
                 if (wrapperRef.current) {
-                  console.log(
-                    "Executando correção após mutações (via requestIdleCallback)",
-                  );
+                  console.log("Executando correção após mutações (via requestIdleCallback)");
                   fixBlurryImages(wrapperRef.current);
                   pendingCorrection = false;
                 }
               },
-              { timeout: 1000 },
+              { timeout: 1000 }
             );
           } else {
             setTimeout(() => {
               if (wrapperRef.current) {
-                console.log(
-                  "Executando correção após mutações (via setTimeout)",
-                );
+                console.log("Executando correção após mutações (via setTimeout)");
                 fixBlurryImages(wrapperRef.current);
                 pendingCorrection = false;
               }

@@ -76,9 +76,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
   // Calculate target timestamp
   const getTargetTimestamp = () => {
     if (targetDate) {
-      return typeof targetDate === "string"
-        ? new Date(targetDate).getTime()
-        : targetDate;
+      return typeof targetDate === "string" ? new Date(targetDate).getTime() : targetDate;
     }
     return Date.now() + durationMinutes * 60 * 1000;
   };
@@ -99,9 +97,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
       }
 
       const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor(
-        (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-      );
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
@@ -163,13 +159,11 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
         ];
       default:
         const units = [];
-        if (timeLeft.days > 0)
-          units.push({ value: timeLeft.days, label: "dias" });
+        if (timeLeft.days > 0) units.push({ value: timeLeft.days, label: "dias" });
         if (timeLeft.hours > 0 || timeLeft.days > 0)
           units.push({ value: timeLeft.hours, label: "horas" });
         units.push({ value: timeLeft.minutes, label: "minutos" });
-        if (format === "full")
-          units.push({ value: timeLeft.seconds, label: "segundos" });
+        if (format === "full") units.push({ value: timeLeft.seconds, label: "segundos" });
         return units;
     }
   };
@@ -187,13 +181,9 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
           >
             {formatNumber(value)}
           </div>
-          {showLabels && (
-            <div className="text-xs text-gray-600 mt-1">{label}</div>
-          )}
+          {showLabels && <div className="text-xs text-gray-600 mt-1">{label}</div>}
         </div>
-        {!isLast && (
-          <div className={`mx-2 text-xl font-bold ${colors.text}`}>:</div>
-        )}
+        {!isLast && <div className={`mx-2 text-xl font-bold ${colors.text}`}>:</div>}
       </div>
     );
   };
@@ -201,17 +191,12 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
   if (isExpired) {
     return (
       <div className={`py-8 ${className || ""}`} style={style}>
-        {customStyles && (
-          <style dangerouslySetInnerHTML={{ __html: customStyles }} />
-        )}
+        {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
         <Card className="p-6 text-center bg-gray-100 border border-gray-300">
           <AlertCircle className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">
-            Tempo Esgotado
-          </h3>
+          <h3 className="text-xl font-semibold text-gray-700 mb-2">Tempo Esgotado</h3>
           <p className="text-gray-600">
-            Esta oferta especial expirou. Entre em contato para verificar novas
-            oportunidades.
+            Esta oferta especial expirou. Entre em contato para verificar novas oportunidades.
           </p>
         </Card>
       </div>
@@ -220,9 +205,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
 
   return (
     <div className={`py-8 ${className || ""}`} style={style}>
-      {customStyles && (
-        <style dangerouslySetInnerHTML={{ __html: customStyles }} />
-      )}
+      {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
 
       <AnimatedWrapper animation="fade" show={true} duration={400}>
         <Card
@@ -259,7 +242,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
           <div className="flex justify-center items-center mb-6">
             <div className="flex items-center gap-1 md:gap-2">
               {getVisibleUnits().map((unit, index) =>
-                renderTimerUnit(unit.value, unit.label, index),
+                renderTimerUnit(unit.value, unit.label, index)
               )}
             </div>
           </div>

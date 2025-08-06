@@ -21,10 +21,7 @@ interface LayoutSectionProps {
   onLayoutChange: (layout: LayoutConfig) => void;
 }
 
-const LayoutSection: React.FC<LayoutSectionProps> = ({
-  layout,
-  onLayoutChange,
-}) => {
+const LayoutSection: React.FC<LayoutSectionProps> = ({ layout, onLayoutChange }) => {
   // ✅ Handler para mudança de layout
   const handleLayoutChange = (key: keyof LayoutConfig, value: string) => {
     const newLayout = { ...layout, [key]: value };
@@ -48,9 +45,7 @@ const LayoutSection: React.FC<LayoutSectionProps> = ({
   return (
     <Card>
       <CardHeader className="pb-3">
-        <CardTitle className="text-base flex items-center gap-2">
-          🎯 Layout
-        </CardTitle>
+        <CardTitle className="text-base flex items-center gap-2">🎯 Layout</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* ✅ Select de Layout */}
@@ -60,7 +55,7 @@ const LayoutSection: React.FC<LayoutSectionProps> = ({
           </Label>
           <Select
             value={layout.layout}
-            onValueChange={(value) => handleLayoutChange("layout", value)}
+            onValueChange={value => handleLayoutChange("layout", value)}
           >
             <SelectTrigger id="layout-select">
               <div className="flex items-center gap-2">
@@ -98,7 +93,7 @@ const LayoutSection: React.FC<LayoutSectionProps> = ({
           </Label>
           <Select
             value={layout.direction}
-            onValueChange={(value) => handleLayoutChange("direction", value)}
+            onValueChange={value => handleLayoutChange("direction", value)}
           >
             <SelectTrigger id="direction-select">
               <SelectValue placeholder="Selecione a direção" />
@@ -117,7 +112,7 @@ const LayoutSection: React.FC<LayoutSectionProps> = ({
           </Label>
           <Select
             value={layout.arrangement}
-            onValueChange={(value) => handleLayoutChange("arrangement", value)}
+            onValueChange={value => handleLayoutChange("arrangement", value)}
           >
             <SelectTrigger id="arrangement-select">
               <SelectValue placeholder="Selecione a disposição" />
@@ -133,9 +128,7 @@ const LayoutSection: React.FC<LayoutSectionProps> = ({
 
         {/* ✅ Preview Visual do Layout */}
         <div className="mt-4 p-3 bg-muted rounded-lg">
-          <Label className="text-xs font-medium text-muted-foreground mb-2 block">
-            Preview
-          </Label>
+          <Label className="text-xs font-medium text-muted-foreground mb-2 block">Preview</Label>
           <div className="flex items-center justify-center h-16 bg-background rounded border border-dashed">
             <div className="text-xs text-muted-foreground flex items-center gap-1">
               {getLayoutIcon(layout.layout)}

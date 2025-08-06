@@ -18,9 +18,7 @@ setTimeout(() => {
     console.log(`🎯 Testando exclusão do bloco: ${blockId}`);
 
     // Procurar o botão de exclusão específico
-    const deleteBtn = firstBlock.querySelector(
-      'button[title="Excluir Componente"]',
-    );
+    const deleteBtn = firstBlock.querySelector('button[title="Excluir Componente"]');
 
     if (deleteBtn) {
       console.log("✅ Botão de exclusão encontrado!");
@@ -46,9 +44,7 @@ setTimeout(() => {
       const allButtons = firstBlock.querySelectorAll("button");
       console.log(`🔍 Botões no bloco (${allButtons.length}):`);
       allButtons.forEach((btn, i) => {
-        console.log(
-          `   ${i}: ${btn.title || btn.textContent || btn.innerHTML}`,
-        );
+        console.log(`   ${i}: ${btn.title || btn.textContent || btn.innerHTML}`);
       });
     }
   } else {

@@ -1,8 +1,8 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { Gift } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
-import { safeGetBlockProperties, logBlockDebug } from '@/utils/blockUtils';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { Gift } from "lucide-react";
+import type { BlockComponentProps } from "@/types/blocks";
+import { safeGetBlockProperties, logBlockDebug } from "@/utils/blockUtils";
 
 /**
  * BonusListInlineBlock - Lista de bônus
@@ -11,23 +11,23 @@ const BonusListInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  className = '',
+  className = "",
 }) => {
-  logBlockDebug('BonusListInlineBlock', block);
+  logBlockDebug("BonusListInlineBlock", block);
   const properties = safeGetBlockProperties(block);
 
   const {
-    title = 'Bônus Inclusos',
-    bonuses = [{ title: 'Bônus 1', value: 'R$ 97', description: 'Descrição do bônus' }],
+    title = "Bônus Inclusos",
+    bonuses = [{ title: "Bônus 1", value: "R$ 97", description: "Descrição do bônus" }],
   } = properties;
 
   return (
     <div
       className={cn(
-        'w-full p-4 rounded-lg transition-all duration-200',
-        isSelected && 'ring-2 ring-[#B89B7A]',
-        'cursor-pointer',
-        className,
+        "w-full p-4 rounded-lg transition-all duration-200",
+        isSelected && "ring-2 ring-[#B89B7A]",
+        "cursor-pointer",
+        className
       )}
       onClick={onClick}
     >

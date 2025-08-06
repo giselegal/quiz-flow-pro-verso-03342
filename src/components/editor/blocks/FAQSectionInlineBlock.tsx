@@ -1,7 +1,11 @@
-import React from 'react';
-import { ChevronDown } from 'lucide-react';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import type { BlockComponentProps } from '../../../types/blocks';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import React from "react";
+import type { BlockComponentProps } from "../../../types/blocks";
 
 interface FAQItem {
   question: string;
@@ -13,27 +17,38 @@ const FAQSectionInlineBlock: React.FC<BlockComponentProps> = ({
   isSelected = false,
   onClick,
   onPropertyChange,
-  className = '',
+  className = "",
 }) => {
-  const { title = 'Perguntas Frequentes', faqItems = [] } = block.properties || {};
+  // Verificação de segurança para evitar erro de undefined
+  if (!block) {
+    return (
+      <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
+        <p className="text-red-600">Erro: Bloco não encontrado</p>
+      </div>
+    );
+  }
+
+  const { title = "Perguntas Frequentes", faqItems = [] } = block.properties || {};
 
   const handleAddItem = () => {
     const newItem: FAQItem = {
-      question: 'Nova pergunta',
-      answer: 'Nova resposta',
+      question: "Nova pergunta",
+      answer: "Nova resposta",
     };
     const updatedItems = [...faqItems, newItem];
-    onPropertyChange?.('faqItems', updatedItems);
+    onPropertyChange?.("faqItems", updatedItems);
   };
 
   const handleUpdateItem = (index: number, field: keyof FAQItem, value: string) => {
-    const updatedItems = faqItems.map((item: FAQItem, i: number) => (i === index ? { ...item, [field]: value } : item));
-    onPropertyChange?.('faqItems', updatedItems);
+    const updatedItems = faqItems.map((item: FAQItem, i: number) =>
+      i === index ? { ...item, [field]: value } : item
+    );
+    onPropertyChange?.("faqItems", updatedItems);
   };
 
   const handleRemoveItem = (index: number) => {
     const updatedItems = faqItems.filter((_: FAQItem, i: number) => i !== index);
-    onPropertyChange?.('faqItems', updatedItems);
+    onPropertyChange?.("faqItems", updatedItems);
   };
 
   return (
@@ -42,14 +57,14 @@ const FAQSectionInlineBlock: React.FC<BlockComponentProps> = ({
         p-6 rounded-lg cursor-pointer transition-all duration-200
         ${
           isSelected
-            ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10'
-            : 'border-2 border-dashed border-gray-300 hover:border-gray-400'
+            ? "border-2 border-[#B89B7A] bg-[#B89B7A]/10"
+            : "border-2 border-dashed border-gray-300 hover:border-gray-400"
         }
         ${className}
       `}
       onClick={onClick}
-      data-block-id={block.id}
-      data-block-type={block.type}
+      data-block-id={block?.id}
+      data-block-type={block?.type}
     >
       <h3 className="text-2xl font-bold mb-6 text-center text-gray-800">{title}</h3>
 

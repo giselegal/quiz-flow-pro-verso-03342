@@ -30,9 +30,7 @@ async function createTables() {
     });
 
     if (error) {
-      console.log(
-        "❌ Erro ao executar via rpc, tentando método alternativo...",
-      );
+      console.log("❌ Erro ao executar via rpc, tentando método alternativo...");
       console.log("Erro:", error.message);
 
       // Método alternativo: executar SQL diretamente
@@ -45,15 +43,13 @@ async function createTables() {
         });
 
       if (altError) {
-        console.log(
-          "❌ Método alternativo também falhou, tentando execução por partes...",
-        );
+        console.log("❌ Método alternativo também falhou, tentando execução por partes...");
 
         // Dividir o SQL em comandos individuais
         const commands = sqlContent
           .split(";")
-          .map((cmd) => cmd.trim())
-          .filter((cmd) => cmd.length > 0 && !cmd.startsWith("--"));
+          .map(cmd => cmd.trim())
+          .filter(cmd => cmd.length > 0 && !cmd.startsWith("--"));
 
         let successCount = 0;
         let errorCount = 0;
@@ -69,15 +65,11 @@ async function createTables() {
               console.log(`   Erro: ${cmdError.message}`);
               errorCount++;
             } else {
-              console.log(
-                `✅ Comando executado: ${command.substring(0, 50)}...`,
-              );
+              console.log(`✅ Comando executado: ${command.substring(0, 50)}...`);
               successCount++;
             }
           } catch (err) {
-            console.log(
-              `❌ Exceção no comando: ${command.substring(0, 50)}...`,
-            );
+            console.log(`❌ Exceção no comando: ${command.substring(0, 50)}...`);
             console.log(`   Erro: ${err.message}`);
             errorCount++;
           }

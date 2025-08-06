@@ -18,9 +18,10 @@ interface StyleResultPropertyEditorProps {
   onPropertyChange: (key: string, value: any) => void;
 }
 
-export const StyleResultPropertyEditor: React.FC<
-  StyleResultPropertyEditorProps
-> = ({ properties = {}, onPropertyChange }) => {
+export const StyleResultPropertyEditor: React.FC<StyleResultPropertyEditorProps> = ({
+  properties = {},
+  onPropertyChange,
+}) => {
   const {
     styleName = "Elegante",
     percentage = 85,
@@ -45,7 +46,7 @@ export const StyleResultPropertyEditor: React.FC<
             <Input
               id="styleName"
               value={styleName}
-              onChange={(e) => onPropertyChange("styleName", e.target.value)}
+              onChange={e => onPropertyChange("styleName", e.target.value)}
               placeholder="Elegante"
             />
           </div>
@@ -58,9 +59,7 @@ export const StyleResultPropertyEditor: React.FC<
               min="0"
               max="100"
               value={percentage}
-              onChange={(e) =>
-                onPropertyChange("percentage", parseInt(e.target.value) || 0)
-              }
+              onChange={e => onPropertyChange("percentage", parseInt(e.target.value) || 0)}
             />
           </div>
 
@@ -69,7 +68,7 @@ export const StyleResultPropertyEditor: React.FC<
             <Textarea
               id="description"
               value={description}
-              onChange={(e) => onPropertyChange("description", e.target.value)}
+              onChange={e => onPropertyChange("description", e.target.value)}
               placeholder="Descrição do estilo..."
               rows={3}
             />
@@ -84,10 +83,7 @@ export const StyleResultPropertyEditor: React.FC<
         <CardContent className="space-y-4">
           <div>
             <Label htmlFor="cardSize">Tamanho do Card</Label>
-            <Select
-              value={cardSize}
-              onValueChange={(value) => onPropertyChange("cardSize", value)}
-            >
+            <Select value={cardSize} onValueChange={value => onPropertyChange("cardSize", value)}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -104,9 +100,7 @@ export const StyleResultPropertyEditor: React.FC<
             <Switch
               id="showProgress"
               checked={showProgress}
-              onCheckedChange={(checked) =>
-                onPropertyChange("showProgress", checked)
-              }
+              onCheckedChange={checked => onPropertyChange("showProgress", checked)}
             />
           </div>
 
@@ -115,9 +109,7 @@ export const StyleResultPropertyEditor: React.FC<
             <Switch
               id="showStars"
               checked={showStars}
-              onCheckedChange={(checked) =>
-                onPropertyChange("showStars", checked)
-              }
+              onCheckedChange={checked => onPropertyChange("showStars", checked)}
             />
           </div>
         </CardContent>
@@ -132,7 +124,7 @@ export const StyleResultPropertyEditor: React.FC<
             <Label>Cor de Fundo</Label>
             <ColorPicker
               color={backgroundColor}
-              onChange={(color) => onPropertyChange("backgroundColor", color)}
+              onChange={color => onPropertyChange("backgroundColor", color)}
             />
           </div>
 
@@ -140,7 +132,7 @@ export const StyleResultPropertyEditor: React.FC<
             <Label>Cor da Borda</Label>
             <ColorPicker
               color={borderColor}
-              onChange={(color) => onPropertyChange("borderColor", color)}
+              onChange={color => onPropertyChange("borderColor", color)}
             />
           </div>
         </CardContent>

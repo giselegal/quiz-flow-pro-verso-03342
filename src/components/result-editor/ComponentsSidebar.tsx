@@ -2,20 +2,14 @@ import React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  blockDefinitions,
-  getCategories,
-  getBlocksByCategory,
-} from "@/config/blockDefinitions";
+import { blockDefinitions, getCategories, getBlocksByCategory } from "@/config/blockDefinitions";
 import { BlockDefinition } from "@/types/editor";
 
 interface ComponentsSidebarProps {
   onComponentSelect: (type: string) => void;
 }
 
-export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
-  onComponentSelect,
-}) => {
+export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect }) => {
   const categories = getCategories();
 
   return (
@@ -27,15 +21,13 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
 
       <ScrollArea className="h-full">
         <div className="p-4 space-y-4">
-          {categories.map((category) => {
+          {categories.map(category => {
             const categoryBlocks = getBlocksByCategory(category);
 
             return (
               <Card key={category}>
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-gray-700">
-                    {category}
-                  </CardTitle>
+                  <CardTitle className="text-sm font-medium text-gray-700">{category}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   {categoryBlocks.map((block: BlockDefinition) => {
@@ -49,12 +41,8 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
                       >
                         <IconComponent className="w-4 h-4 mr-3 shrink-0" />
                         <div className="min-w-0">
-                          <div className="font-medium text-sm">
-                            {block.name}
-                          </div>
-                          <div className="text-xs text-gray-500 truncate">
-                            {block.description}
-                          </div>
+                          <div className="font-medium text-sm">{block.name}</div>
+                          <div className="text-xs text-gray-500 truncate">{block.description}</div>
                         </div>
                       </Button>
                     );

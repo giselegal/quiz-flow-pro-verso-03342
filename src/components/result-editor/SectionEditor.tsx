@@ -18,11 +18,7 @@ interface SectionEditorProps {
   sectionName: string;
 }
 
-const SectionEditor: React.FC<SectionEditorProps> = ({
-  section,
-  onUpdate,
-  sectionName,
-}) => {
+const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, sectionName }) => {
   const handleVisibilityChange = (checked: boolean) => {
     onUpdate({ ...section, visible: checked });
   };
@@ -43,10 +39,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
         <CardTitle className="text-base flex items-center justify-between">
           <span>{sectionName}</span>
           <div className="flex items-center gap-2">
-            <Label
-              htmlFor={`visible-${sectionName}`}
-              className="text-sm font-normal"
-            >
+            <Label htmlFor={`visible-${sectionName}`} className="text-sm font-normal">
               Visível
             </Label>
             <Switch
@@ -79,9 +72,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                           <Textarea
                             id={key}
                             value={value}
-                            onChange={(e) =>
-                              handleContentChange(key, e.target.value)
-                            }
+                            onChange={e => handleContentChange(key, e.target.value)}
                             rows={3}
                           />
                         </div>
@@ -96,9 +87,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                         <Input
                           id={key}
                           value={value}
-                          onChange={(e) =>
-                            handleContentChange(key, e.target.value)
-                          }
+                          onChange={e => handleContentChange(key, e.target.value)}
                         />
                       </div>
                     );
@@ -115,20 +104,14 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                     Object.entries(section.appearance).map(([key, value]) => {
                       if (typeof value === "boolean") {
                         return (
-                          <div
-                            key={key}
-                            className="flex items-center justify-between"
-                          >
-                            <Label
-                              htmlFor={`${key}-appearance`}
-                              className="text-xs capitalize"
-                            >
+                          <div key={key} className="flex items-center justify-between">
+                            <Label htmlFor={`${key}-appearance`} className="text-xs capitalize">
                               {key.replace(/([A-Z])/g, " $1").trim()}
                             </Label>
                             <Switch
                               id={`${key}-appearance`}
                               checked={value}
-                              onCheckedChange={(checked) => {
+                              onCheckedChange={checked => {
                                 onUpdate({
                                   ...section,
                                   appearance: {
@@ -144,16 +127,13 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
 
                       return (
                         <div key={key} className="space-y-2">
-                          <Label
-                            htmlFor={`${key}-appearance`}
-                            className="text-xs capitalize"
-                          >
+                          <Label htmlFor={`${key}-appearance`} className="text-xs capitalize">
                             {key.replace(/([A-Z])/g, " $1").trim()}
                           </Label>
                           <Input
                             id={`${key}-appearance`}
                             value={value}
-                            onChange={(e) => {
+                            onChange={e => {
                               onUpdate({
                                 ...section,
                                 appearance: {

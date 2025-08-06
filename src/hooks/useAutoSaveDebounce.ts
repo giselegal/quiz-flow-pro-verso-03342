@@ -7,13 +7,11 @@ import { useCallback, useRef, useEffect, useState } from "react";
 export const useAutoSaveDebounce = (
   saveFunction: () => Promise<void>,
   delay: number = 1000,
-  maxInterval: number = 10000,
+  maxInterval: number = 10000
 ) => {
   const [isActive, setIsActive] = useState(true);
   const [lastSave, setLastSave] = useState<Date | null>(null);
-  const [saveStatus, setSaveStatus] = useState<
-    "idle" | "saving" | "success" | "error"
-  >("idle");
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
   const debounceRef = useRef<NodeJS.Timeout>();
   const maxDelayRef = useRef<NodeJS.Timeout>();
   const lastSaveRef = useRef<number>(0);
@@ -52,34 +50,25 @@ export const useAutoSaveDebounce = (
         lastSaveRef.current = now;
         setLastSave(new Date());
         setSaveStatus("success");
-        console.log(
-          `✅ Auto-save successful: ${new Date().toLocaleTimeString()}`,
-        );
+        console.log(`✅ Auto-save successful: ${new Date().toLocaleTimeString()}`);
       } catch (error) {
         setSaveStatus("error");
         console.error("❌ Auto-save failed:", error);
 
         // Se for erro de localStorage, tentar limpeza
-        if (
-          error instanceof DOMException &&
-          error.name === "QuotaExceededError"
-        ) {
+        if (error instanceof DOMException && error.name === "QuotaExceededError") {
           console.warn("⚠️ LocalStorage quota exceeded, attempting cleanup...");
           try {
             // Limpar dados antigos do localStorage
             const keysToRemove = [];
             for (let i = 0; i < localStorage.length; i++) {
               const key = localStorage.key(i);
-              if (
-                key &&
-                (key.startsWith("quiz-versions-") ||
-                  key.startsWith("caktoquiz-"))
-              ) {
+              if (key && (key.startsWith("quiz-versions-") || key.startsWith("caktoquiz-"))) {
                 keysToRemove.push(key);
               }
             }
             // Remover apenas versões antigas, manter as mais recentes
-            keysToRemove.slice(0, -3).forEach((key) => {
+            keysToRemove.slice(0, -3).forEach(key => {
               try {
                 localStorage.removeItem(key);
               } catch (e) {

@@ -41,17 +41,13 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
     });
   };
 
-  const renderPropertyEditor = (
-    key: string,
-    value: any,
-    type: string = "text",
-  ) => {
+  const renderPropertyEditor = (key: string, value: any, type: string = "text") => {
     switch (type) {
       case "textarea":
         return (
           <Textarea
             value={value || ""}
-            onChange={(e) => handlePropertyChange(key, e.target.value)}
+            onChange={e => handlePropertyChange(key, e.target.value)}
             className="mt-1"
           />
         );
@@ -59,7 +55,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
         return (
           <Switch
             checked={value || false}
-            onCheckedChange={(checked) => handlePropertyChange(key, checked)}
+            onCheckedChange={checked => handlePropertyChange(key, checked)}
             className="mt-1"
           />
         );
@@ -67,7 +63,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
         return (
           <Select
             value={value || ""}
-            onValueChange={(newValue) => handlePropertyChange(key, newValue)}
+            onValueChange={newValue => handlePropertyChange(key, newValue)}
           >
             <SelectTrigger className="mt-1">
               <SelectValue placeholder="Selecione uma opção" />
@@ -82,7 +78,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
         return (
           <Input
             value={value || ""}
-            onChange={(e) => handlePropertyChange(key, e.target.value)}
+            onChange={e => handlePropertyChange(key, e.target.value)}
             className="mt-1"
           />
         );

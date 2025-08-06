@@ -7,7 +7,7 @@ export interface PreloadResource {
 }
 
 export const preloadResources = (resources: PreloadResource[]): void => {
-  resources.forEach((resource) => {
+  resources.forEach(resource => {
     const link = document.createElement("link");
     link.rel = "preload";
     link.href = resource.url;

@@ -1,5 +1,5 @@
-import React from 'react';
-import type { BlockComponentProps } from '@/types/blocks';
+import React from "react";
+import type { BlockComponentProps } from "@/types/blocks";
 
 const ProgressBarStepBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -7,15 +7,20 @@ const ProgressBarStepBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = '',
+  className = "",
 }) => {
-  const { currentStep = 1, totalSteps = 5, stepLabels = [], showLabels = true } = block?.properties || {};
+  const {
+    currentStep = 1,
+    totalSteps = 5,
+    stepLabels = [],
+    showLabels = true,
+  } = block?.properties || {};
 
   return (
     <div
       className={`
         py-6 px-4 cursor-pointer transition-all duration-200
-        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
+        ${isSelected ? "ring-1 ring-gray-400/40 bg-gray-50/30" : "hover:shadow-sm"}
         ${className}
       `}
       onClick={onClick}
@@ -28,7 +33,9 @@ const ProgressBarStepBlock: React.FC<BlockComponentProps> = ({
             <span className="text-sm font-medium text-[#432818]">
               Etapa {currentStep} de {totalSteps}
             </span>
-            <span className="text-sm text-gray-600">{Math.round((currentStep / totalSteps) * 100)}%</span>
+            <span className="text-sm text-gray-600">
+              {Math.round((currentStep / totalSteps) * 100)}%
+            </span>
           </div>
 
           <div className="w-full bg-gray-200 rounded-full h-2">
@@ -42,7 +49,7 @@ const ProgressBarStepBlock: React.FC<BlockComponentProps> = ({
         {showLabels && (
           <div className="flex justify-between text-xs text-gray-600">
             {(stepLabels || []).map((label: string, index: number) => (
-              <span key={index} className={index < currentStep ? 'text-[#B89B7A] font-medium' : ''}>
+              <span key={index} className={index < currentStep ? "text-[#B89B7A] font-medium" : ""}>
                 {label}
               </span>
             ))}

@@ -1,5 +1,5 @@
-import React from 'react';
-import type { BlockComponentProps } from '@/types/blocks';
+import type { BlockComponentProps } from "@/types/blocks";
+import React from "react";
 
 const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -7,13 +7,29 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = '',
+  className = "",
 }) => {
+  // Verificação de segurança para evitar erro de undefined
+  if (!block) {
+    return (
+      <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
+        <p className="text-red-600">Erro: Bloco não encontrado</p>
+      </div>
+    );
+  }
+
   const {
-    title = 'Aviso Legal',
-    content = 'Este é um aviso legal padrão.',
-    backgroundColor = '#f8f9fa',
-    textColor = '#6c757d',
+    title = "Aviso Legal",
+    content = "Este é um aviso legal padrão.",
+    privacyText = "Política de privacidade",
+    copyrightText = "© 2025 Todos os direitos reservados",
+    backgroundColor = "transparent",
+    textColor = "#6c757d",
+    linkColor = "#B89B7A",
+    showIcon = true,
+    iconType = "shield",
+    textSize = "text-xs",
+    textAlign = "text-center",
   } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -23,19 +39,19 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
   };
 
   // Split content into parts for rendering
-  const parts = content.split('\n').filter((part: string) => part.trim());
+  const parts = content.split("\n").filter((part: string) => part.trim());
 
   return (
     <div
       className={`
         py-6 px-4 cursor-pointer transition-all duration-200
-        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
+        ${isSelected ? "ring-1 ring-gray-400/40 bg-gray-50/30" : "hover:shadow-sm"}
         ${className}
       `}
       style={{ backgroundColor }}
       onClick={onClick}
-      data-block-id={block.id}
-      data-block-type={block.type}
+      data-block-id={block?.id}
+      data-block-type={block?.type}
     >
       <div className="max-w-4xl mx-auto text-center">
         <h3 className="text-sm font-semibold mb-4" style={{ color: textColor }}>

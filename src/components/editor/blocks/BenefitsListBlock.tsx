@@ -1,6 +1,6 @@
-import React from 'react';
-import { Check } from 'lucide-react';
-import type { BlockComponentProps } from '../../../types/blocks';
+import React from "react";
+import { Check } from "lucide-react";
+import type { BlockComponentProps } from "../../../types/blocks";
 
 interface BenefitItem {
   text: string;
@@ -24,9 +24,14 @@ const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({
   isSelected = false,
   onClick,
   onPropertyChange,
-  className = '',
+  className = "",
 }) => {
-  const { title = 'Benefícios', benefits = [], showIcons = true, layout = 'list' } = block.properties || {};
+  const {
+    title = "Benefícios",
+    benefits = [],
+    showIcons = true,
+    layout = "list",
+  } = block.properties || {};
 
   return (
     <div
@@ -34,8 +39,8 @@ const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({
         p-6 rounded-lg cursor-pointer transition-all duration-200
         ${
           isSelected
-            ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10'
-            : 'border-2 border-dashed border-gray-300 hover:border-gray-400'
+            ? "border-2 border-[#B89B7A] bg-[#B89B7A]/10"
+            : "border-2 border-dashed border-gray-300 hover:border-gray-400"
         }
         ${className}
       `}
@@ -45,7 +50,7 @@ const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({
     >
       <h3 className="text-xl font-semibold mb-4 text-gray-800">{title}</h3>
 
-      <div className={`space-y-3 ${layout === 'grid' ? 'grid grid-cols-2 gap-4' : ''}`}>
+      <div className={`space-y-3 ${layout === "grid" ? "grid grid-cols-2 gap-4" : ""}`}>
         {benefits.map((benefit: BenefitItem, index: number) => (
           <div key={index} className="flex items-start gap-3">
             {showIcons && (
@@ -58,7 +63,9 @@ const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({
         ))}
       </div>
 
-      {benefits.length === 0 && <p className="text-gray-400 italic">Adicione benefícios nas propriedades do bloco</p>}
+      {benefits.length === 0 && (
+        <p className="text-gray-400 italic">Adicione benefícios nas propriedades do bloco</p>
+      )}
     </div>
   );
 };

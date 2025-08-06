@@ -46,14 +46,12 @@ export const checkImageStatus = () => {
 
   // Verificar problemas comuns
   if (error > 0) {
-    console.warn(
-      `⚠️ ${error} imagens falharam ao carregar. Verifique os console.error acima.`,
-    );
+    console.warn(`⚠️ ${error} imagens falharam ao carregar. Verifique os console.error acima.`);
   }
 
   if (withLowQuality < cacheSize * 0.8 && cacheSize > 5) {
     console.warn(
-      `⚠️ Apenas ${withLowQuality} de ${cacheSize} imagens têm placeholders de baixa qualidade.`,
+      `⚠️ Apenas ${withLowQuality} de ${cacheSize} imagens têm placeholders de baixa qualidade.`
     );
   }
 
@@ -61,7 +59,7 @@ export const checkImageStatus = () => {
   const bankImages = getAllImages();
   console.log(`📚 Total no ImageBank: ${bankImages.length} imagens`);
 
-  const uncachedImages = bankImages.filter((img) => {
+  const uncachedImages = bankImages.filter(img => {
     const optimizedUrl = optimizeCloudinaryUrl(img.src, {
       quality: 85,
       format: "auto",
@@ -70,13 +68,11 @@ export const checkImageStatus = () => {
   });
 
   if (uncachedImages.length > 0) {
-    console.warn(
-      `⚠️ ${uncachedImages.length} imagens no banco de dados não estão em cache.`,
-    );
+    console.warn(`⚠️ ${uncachedImages.length} imagens no banco de dados não estão em cache.`);
     if (uncachedImages.length < 10) {
       console.log(
         "Imagens não cacheadas:",
-        uncachedImages.map((img) => img.id),
+        uncachedImages.map(img => img.id)
       );
     }
   }
@@ -159,7 +155,7 @@ export const checkIntroImages = () => {
  * @param {string} url - URL da imagem para análise
  * @returns {Object} Objeto com informações detalhadas sobre a URL da imagem
  */
-export const analyzeImageUrl = (url) => {
+export const analyzeImageUrl = url => {
   if (!url) {
     return {
       isValid: false,
@@ -171,12 +167,9 @@ export const analyzeImageUrl = (url) => {
   console.log(`URL Original: ${url}`);
 
   // Verificar se é uma URL do Cloudinary
-  const isCloudinary =
-    url.includes("cloudinary.com") || url.includes("res.cloudinary.com");
+  const isCloudinary = url.includes("cloudinary.com") || url.includes("res.cloudinary.com");
   if (!isCloudinary) {
-    console.warn(
-      "⚠️ Esta não é uma URL do Cloudinary. A análise pode ser limitada.",
-    );
+    console.warn("⚠️ Esta não é uma URL do Cloudinary. A análise pode ser limitada.");
   }
 
   // Informações básicas
@@ -198,9 +191,7 @@ export const analyzeImageUrl = (url) => {
   try {
     // Extrair formato
     if (url.match(/\.(jpg|jpeg|png|webp|avif|gif|svg)/i)) {
-      info.format = url
-        .match(/\.(jpg|jpeg|png|webp|avif|gif|svg)/i)[1]
-        .toLowerCase();
+      info.format = url.match(/\.(jpg|jpeg|png|webp|avif|gif|svg)/i)[1].toLowerCase();
     }
 
     // Verificar versões (v1234567890)
@@ -214,17 +205,14 @@ export const analyzeImageUrl = (url) => {
       const uploadIndex = url.indexOf("/upload/");
       if (uploadIndex > 0) {
         const pathAfterUpload = url.substring(uploadIndex + 8);
-        const transformationPart = pathAfterUpload.substring(
-          0,
-          pathAfterUpload.indexOf("/"),
-        );
+        const transformationPart = pathAfterUpload.substring(0, pathAfterUpload.indexOf("/"));
 
         if (transformationPart) {
           const params = transformationPart.split(",");
           info.transformations = params;
 
           // Analisar parâmetros específicos
-          params.forEach((param) => {
+          params.forEach(param => {
             if (param.startsWith("f_")) {
               info.format = param.substring(2);
               info.hasOptimization = true;
@@ -253,30 +241,24 @@ export const analyzeImageUrl = (url) => {
     // Gerar sugestões
     if (isCloudinary) {
       if (!info.hasOptimization) {
-        info.suggestions.push(
-          "Adicionar parâmetros de otimização (f_auto,q_auto)",
-        );
+        info.suggestions.push("Adicionar parâmetros de otimização (f_auto,q_auto)");
       }
 
       if (!info.width && !info.height) {
         info.suggestions.push(
-          "Especificar largura e/ou altura para evitar servir imagens muito grandes",
+          "Especificar largura e/ou altura para evitar servir imagens muito grandes"
         );
       }
 
       if (info.format === "png" && !url.includes("transparent")) {
         info.suggestions.push(
-          "Considerar usar formato WEBP ou AVIF em vez de PNG para melhor compressão",
+          "Considerar usar formato WEBP ou AVIF em vez de PNG para melhor compressão"
         );
       }
 
-      if (
-        info.quality &&
-        parseInt(info.quality) > 85 &&
-        info.quality !== "auto"
-      ) {
+      if (info.quality && parseInt(info.quality) > 85 && info.quality !== "auto") {
         info.suggestions.push(
-          "Considerar reduzir a qualidade para 80-85 para melhorar o desempenho sem perda visual perceptível",
+          "Considerar reduzir a qualidade para 80-85 para melhorar o desempenho sem perda visual perceptível"
         );
       }
     }

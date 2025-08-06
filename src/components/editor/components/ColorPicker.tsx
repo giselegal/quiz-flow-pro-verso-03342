@@ -86,7 +86,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
       setInputValue(color);
       onChange(color);
     },
-    [onChange],
+    [onChange]
   );
 
   const handleInputChange = useCallback(
@@ -95,22 +95,16 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
       setInputValue(newValue);
 
       // Validate hex color
-      if (
-        /^#[0-9A-F]{6}$/i.test(newValue) ||
-        /^#[0-9A-F]{3}$/i.test(newValue)
-      ) {
+      if (/^#[0-9A-F]{6}$/i.test(newValue) || /^#[0-9A-F]{3}$/i.test(newValue)) {
         onChange(newValue);
       }
     },
-    [onChange],
+    [onChange]
   );
 
   const handleInputBlur = useCallback(() => {
     // If invalid color, revert to original value
-    if (
-      !/^#[0-9A-F]{6}$/i.test(inputValue) &&
-      !/^#[0-9A-F]{3}$/i.test(inputValue)
-    ) {
+    if (!/^#[0-9A-F]{6}$/i.test(inputValue) && !/^#[0-9A-F]{3}$/i.test(inputValue)) {
       setInputValue(value);
     }
   }, [inputValue, value]);
@@ -140,7 +134,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
               <input
                 type="color"
                 value={value}
-                onChange={(e) => handleColorChange(e.target.value)}
+                onChange={e => handleColorChange(e.target.value)}
                 className="w-8 h-8 rounded border cursor-pointer"
               />
               <span className="text-xs text-gray-500">Seletor nativo</span>
@@ -152,14 +146,12 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                 Cores predefinidas
               </span>
               <div className="grid grid-cols-7 gap-1">
-                {presets.map((preset) => (
+                {presets.map(preset => (
                   <button
                     key={preset}
                     onClick={() => handleColorChange(preset)}
                     className={`w-6 h-6 rounded border-2 transition-all hover:scale-110 ${
-                      value === preset
-                        ? "border-gray-900 shadow-md"
-                        : "border-gray-300"
+                      value === preset ? "border-gray-900 shadow-md" : "border-gray-300"
                     }`}
                     style={{ backgroundColor: preset }}
                     title={preset}

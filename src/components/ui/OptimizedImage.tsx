@@ -5,11 +5,7 @@ import {
   getResponsiveImageSources,
   getLowQualityPlaceholder,
 } from "@/utils/imageUtils";
-import {
-  getImageMetadata,
-  isImagePreloaded,
-  getOptimizedImage,
-} from "@/utils/imageManager";
+import { getImageMetadata, isImagePreloaded, getOptimizedImage } from "@/utils/imageManager";
 
 interface OptimizedImageProps {
   src: string;
@@ -49,10 +45,7 @@ export default function OptimizedImage({
   const [blurredLoaded, setBlurredLoaded] = useState(false);
 
   // Check if this image has metadata in our image bank
-  const imageMetadata = useMemo(
-    () => (src ? getImageMetadata(src) : undefined),
-    [src],
-  );
+  const imageMetadata = useMemo(() => (src ? getImageMetadata(src) : undefined), [src]);
 
   // Generate placeholders and optimized URLs only once
   const placeholderSrc = useMemo(() => {
@@ -140,7 +133,7 @@ export default function OptimizedImage({
                 objectFit === "fill" && "object-fill",
                 objectFit === "none" && "object-none",
                 objectFit === "scale-down" && "object-scale-down",
-                "blur-xl scale-110", // Blur effect for placeholders
+                "blur-xl scale-110" // Blur effect for placeholders
               )}
               aria-hidden="true"
             />
@@ -175,7 +168,7 @@ export default function OptimizedImage({
           objectFit === "fill" && "object-fill",
           objectFit === "none" && "object-none",
           objectFit === "scale-down" && "object-scale-down",
-          className,
+          className
         )}
         style={style}
       />

@@ -6,17 +6,9 @@ interface UseSyncedScrollOptions {
   enabled?: boolean;
 }
 
-export const useSyncedScroll = ({
-  source,
-  enabled = true,
-}: UseSyncedScrollOptions) => {
-  const {
-    canvasScrollRef,
-    componentsScrollRef,
-    propertiesScrollRef,
-    syncScroll,
-    isScrolling,
-  } = useScrollSync();
+export const useSyncedScroll = ({ source, enabled = true }: UseSyncedScrollOptions) => {
+  const { canvasScrollRef, componentsScrollRef, propertiesScrollRef, syncScroll, isScrolling } =
+    useScrollSync();
 
   const getScrollRef = () => {
     switch (source) {
@@ -38,7 +30,7 @@ export const useSyncedScroll = ({
       const target = event.target as HTMLDivElement;
       syncScroll(source, target.scrollTop);
     },
-    [enabled, isScrolling, source, syncScroll],
+    [enabled, isScrolling, source, syncScroll]
   );
 
   const scrollRef = getScrollRef();

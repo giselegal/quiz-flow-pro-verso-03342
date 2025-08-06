@@ -7,16 +7,14 @@ interface QuizEditorInterfaceProps {
   onSave?: () => void;
 }
 
-export const QuizEditorInterface: React.FC<QuizEditorInterfaceProps> = ({
-  onSave,
-}) => {
+export const QuizEditorInterface: React.FC<QuizEditorInterfaceProps> = ({ onSave }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSave = async () => {
     setIsLoading(true);
     try {
       // Simulate save operation
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       onSave?.();
       toast({
         title: "Sucesso",
@@ -38,7 +36,7 @@ export const QuizEditorInterface: React.FC<QuizEditorInterfaceProps> = ({
     setIsLoading(true);
     try {
       // Simulate publish operation
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       toast({
         title: "Sucesso",
         description: "Quiz publicado com sucesso",

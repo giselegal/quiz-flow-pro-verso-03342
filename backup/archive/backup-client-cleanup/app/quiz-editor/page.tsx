@@ -72,13 +72,11 @@ export default function QuizEditorPage() {
   };
 
   const updateBlock = (id: string, content: EditableContent) => {
-    setBlocks(
-      blocks.map((block) => (block.id === id ? { ...block, content } : block)),
-    );
+    setBlocks(blocks.map(block => (block.id === id ? { ...block, content } : block)));
   };
 
   const deleteBlock = (id: string) => {
-    setBlocks(blocks.filter((block) => block.id !== id));
+    setBlocks(blocks.filter(block => block.id !== id));
   };
 
   const handleQuizSelect = (quiz: Quiz) => {
@@ -113,21 +111,15 @@ export default function QuizEditorPage() {
         <div className="container mx-auto p-8">
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-3xl font-bold">Quiz Editor</h1>
-            <Button
-              onClick={handleCreateQuiz}
-              className="flex items-center gap-2"
-            >
+            <Button onClick={handleCreateQuiz} className="flex items-center gap-2">
               <Plus size={16} />
               Criar Novo Quiz
             </Button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {quizzes.map((quiz) => (
-              <Card
-                key={quiz.id}
-                className="cursor-pointer hover:shadow-lg transition-shadow"
-              >
+            {quizzes.map(quiz => (
+              <Card key={quiz.id} className="cursor-pointer hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
                     {quiz.title}
@@ -157,17 +149,13 @@ export default function QuizEditorPage() {
         <div className="flex h-screen">
           {/* Sidebar */}
           <div className="w-64 bg-white border-r p-4">
-            <Button
-              variant="ghost"
-              onClick={() => setSelectedView("dashboard")}
-              className="mb-4"
-            >
+            <Button variant="ghost" onClick={() => setSelectedView("dashboard")} className="mb-4">
               ← Voltar
             </Button>
 
             <h2 className="font-bold mb-4">Componentes</h2>
             <div className="space-y-2">
-              {Object.keys(blockComponents).map((type) => (
+              {Object.keys(blockComponents).map(type => (
                 <Button
                   key={type}
                   variant="outline"
@@ -188,13 +176,13 @@ export default function QuizEditorPage() {
               <div className="mb-6">
                 <Input
                   value={selectedQuiz.title}
-                  onChange={(e) => updateQuiz({ title: e.target.value })}
+                  onChange={e => updateQuiz({ title: e.target.value })}
                   className="text-2xl font-bold mb-2"
                   placeholder="Título do Quiz"
                 />
                 <Textarea
                   value={selectedQuiz.description || ""}
-                  onChange={(e) => updateQuiz({ description: e.target.value })}
+                  onChange={e => updateQuiz({ description: e.target.value })}
                   placeholder="Descrição do quiz"
                   className="mb-4"
                 />
@@ -202,7 +190,7 @@ export default function QuizEditorPage() {
             )}
 
             <div className="space-y-4">
-              {blocks.map((block) => {
+              {blocks.map(block => {
                 const BlockComponent = blockComponents[block.type];
                 if (!BlockComponent) return null;
 
@@ -210,9 +198,7 @@ export default function QuizEditorPage() {
                   <div key={block.id} className="border rounded-lg p-4">
                     <BlockComponent
                       content={block.content}
-                      onUpdate={(content: EditableContent) =>
-                        updateBlock(block.id, content)
-                      }
+                      onUpdate={(content: EditableContent) => updateBlock(block.id, content)}
                       onDelete={() => deleteBlock(block.id)}
                     />
                   </div>

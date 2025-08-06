@@ -43,9 +43,7 @@ const LiveEditorPage: React.FC = () => {
 
             <div className="h-6 w-px bg-gray-300" />
 
-            <h1 className="text-xl font-bold text-[#432818]">
-              Editor Visual ao Vivo
-            </h1>
+            <h1 className="text-xl font-bold text-[#432818]">Editor Visual ao Vivo</h1>
           </div>
         </div>
       </div>

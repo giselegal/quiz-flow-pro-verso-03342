@@ -1,7 +1,7 @@
-import React from 'react';
-import { InlineEditableText } from './InlineEditableText';
-import { Scale } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
+import React from "react";
+import { InlineEditableText } from "./InlineEditableText";
+import { Scale } from "lucide-react";
+import type { BlockComponentProps } from "@/types/blocks";
 
 const TermsBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -9,11 +9,11 @@ const TermsBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = '',
+  className = "",
 }) => {
   const {
-    title = 'Termos e Condições',
-    content = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+    title = "Termos e Condições",
+    content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
   } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -26,7 +26,7 @@ const TermsBlock: React.FC<BlockComponentProps> = ({
     <div
       className={`
         py-6 px-4 space-y-4 bg-gray-50 rounded-lg border border-gray-100 cursor-pointer transition-all duration-200
-        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
+        ${isSelected ? "ring-1 ring-gray-400/40 bg-gray-50/30" : "hover:shadow-sm"}
         ${className}
       `}
       onClick={onClick}
@@ -38,7 +38,7 @@ const TermsBlock: React.FC<BlockComponentProps> = ({
         <h3 className="text-xl font-bold text-[#432818] text-center">
           <InlineEditableText
             value={title}
-            onChange={(value: string) => handlePropertyChange('title', value)}
+            onChange={(value: string) => handlePropertyChange("title", value)}
             className="inline-block"
             placeholder="Título dos termos"
           />
@@ -47,7 +47,7 @@ const TermsBlock: React.FC<BlockComponentProps> = ({
       <div className="text-sm text-gray-700 leading-relaxed">
         <InlineEditableText
           value={content}
-          onChange={(value: string) => handlePropertyChange('content', value)}
+          onChange={(value: string) => handlePropertyChange("content", value)}
           className="inline-block w-full"
           placeholder="Conteúdo dos termos e condições"
         />

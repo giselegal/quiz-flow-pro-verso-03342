@@ -17,20 +17,12 @@ interface UseResultPageEditorReturn {
   };
 }
 
-export const useResultPageEditor = (
-  category: string,
-): UseResultPageEditorReturn => {
+export const useResultPageEditor = (category: string): UseResultPageEditorReturn => {
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [isGlobalStylesOpen, setIsGlobalStylesOpen] = useState(false);
 
-  const {
-    resultPageConfig,
-    updateSection,
-    saveConfig,
-    resetConfig,
-    importConfig,
-    loading,
-  } = useResultPageConfig(category);
+  const { resultPageConfig, updateSection, saveConfig, resetConfig, importConfig, loading } =
+    useResultPageConfig(category);
 
   const handleSave = useCallback(async () => {
     await saveConfig();
@@ -41,11 +33,11 @@ export const useResultPageEditor = (
   }, [resetConfig]);
 
   const toggleGlobalStyles = useCallback(() => {
-    setIsGlobalStylesOpen((prev) => !prev);
+    setIsGlobalStylesOpen(prev => !prev);
   }, []);
 
   const togglePreview = useCallback(() => {
-    setIsPreviewing((prev) => !prev);
+    setIsPreviewing(prev => !prev);
   }, []);
 
   return {

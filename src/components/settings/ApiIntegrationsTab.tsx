@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -52,8 +46,7 @@ export const ApiIntegrationsTab: React.FC = () => {
   const handleTestConnection = (service: string) => {
     toast({
       title: `Testing ${service} connection`,
-      description:
-        "Connection test initiated. Please check the console for results.",
+      description: "Connection test initiated. Please check the console for results.",
     });
     console.log(`Testing connection to ${service}...`);
   };
@@ -63,9 +56,7 @@ export const ApiIntegrationsTab: React.FC = () => {
       <Card>
         <CardHeader>
           <CardTitle>Google Analytics</CardTitle>
-          <CardDescription>
-            Configure Google Analytics integration
-          </CardDescription>
+          <CardDescription>Configure Google Analytics integration</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2">
@@ -74,11 +65,10 @@ export const ApiIntegrationsTab: React.FC = () => {
               id="ga-id"
               placeholder="G-XXXXXXXXXX"
               value={googleAnalyticsId}
-              onChange={(e) => setGoogleAnalyticsId(e.target.value)}
+              onChange={e => setGoogleAnalyticsId(e.target.value)}
             />
             <p className="text-sm text-muted-foreground">
-              Found in your Google Analytics property settings under "Data
-              Streams"
+              Found in your Google Analytics property settings under "Data Streams"
             </p>
           </div>
 
@@ -88,23 +78,15 @@ export const ApiIntegrationsTab: React.FC = () => {
               checked={googleAnalyticsEnabled}
               onCheckedChange={setGoogleAnalyticsEnabled}
             />
-            <Label htmlFor="ga-tracking">
-              Enable Google Analytics tracking
-            </Label>
+            <Label htmlFor="ga-tracking">Enable Google Analytics tracking</Label>
           </div>
 
           <div className="flex justify-between">
-            <Button
-              variant="outline"
-              onClick={() => handleTestConnection("Google Analytics")}
-            >
+            <Button variant="outline" onClick={() => handleTestConnection("Google Analytics")}>
               Test Connection
             </Button>
 
-            <Button
-              className="bg-[#B89B7A] hover:bg-[#A38A69]"
-              onClick={handleSaveGoogleAnalytics}
-            >
+            <Button className="bg-[#B89B7A] hover:bg-[#A38A69]" onClick={handleSaveGoogleAnalytics}>
               Save Settings
             </Button>
           </div>
@@ -114,9 +96,7 @@ export const ApiIntegrationsTab: React.FC = () => {
       <Card>
         <CardHeader>
           <CardTitle>Webhook Integration</CardTitle>
-          <CardDescription>
-            Configure webhook for event notifications
-          </CardDescription>
+          <CardDescription>Configure webhook for event notifications</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2">
@@ -125,7 +105,7 @@ export const ApiIntegrationsTab: React.FC = () => {
               id="webhook-url"
               placeholder="https://your-api.com/webhook"
               value={webhookUrl}
-              onChange={(e) => setWebhookUrl(e.target.value)}
+              onChange={e => setWebhookUrl(e.target.value)}
             />
             <p className="text-sm text-muted-foreground">
               Enter the URL that should receive webhook notifications
@@ -138,23 +118,15 @@ export const ApiIntegrationsTab: React.FC = () => {
               checked={webhookEnabled}
               onCheckedChange={setWebhookEnabled}
             />
-            <Label htmlFor="webhook-enabled">
-              Enable webhook notifications
-            </Label>
+            <Label htmlFor="webhook-enabled">Enable webhook notifications</Label>
           </div>
 
           <div className="flex justify-between">
-            <Button
-              variant="outline"
-              onClick={() => handleTestConnection("Webhook")}
-            >
+            <Button variant="outline" onClick={() => handleTestConnection("Webhook")}>
               Test Webhook
             </Button>
 
-            <Button
-              className="bg-[#B89B7A] hover:bg-[#A38A69]"
-              onClick={handleSaveWebhook}
-            >
+            <Button className="bg-[#B89B7A] hover:bg-[#A38A69]" onClick={handleSaveWebhook}>
               Save Settings
             </Button>
           </div>
@@ -164,14 +136,11 @@ export const ApiIntegrationsTab: React.FC = () => {
       <Card>
         <CardHeader>
           <CardTitle>API Tokens</CardTitle>
-          <CardDescription>
-            Manage API tokens for your application
-          </CardDescription>
+          <CardDescription>Manage API tokens for your application</CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground mb-4">
-            API tokens allow external services to access your application's
-            data.
+            API tokens allow external services to access your application's data.
           </p>
           <Button variant="outline">Generate New API Token</Button>
         </CardContent>

@@ -21,15 +21,15 @@ const SecondaryStylesBlockEditor: React.FC<SecondaryStylesBlockEditorProps> = ({
         <Input
           id="title"
           value={content.title || ""}
-          onChange={(e) => onUpdate({ title: e.target.value })}
+          onChange={e => onUpdate({ title: e.target.value })}
           placeholder="Seus Estilos Complementares"
         />
       </div>
 
       <div className="p-4 bg-gray-50 rounded-lg">
         <p className="text-sm text-[#8F7A6A]">
-          <strong>Nota:</strong> Este componente exibirá automaticamente os
-          estilos secundários do usuário. Você pode personalizar o título aqui.
+          <strong>Nota:</strong> Este componente exibirá automaticamente os estilos secundários do
+          usuário. Você pode personalizar o título aqui.
         </p>
       </div>
     </div>

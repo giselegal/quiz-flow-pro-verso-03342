@@ -24,7 +24,7 @@
       }
     },
     {
-      "id": "step01-decorative-divider", 
+      "id": "step01-decorative-divider",
       "type": "divider",
       "properties": {
         "color": "#B89B7A",
@@ -34,7 +34,7 @@
     },
     {
       "id": "step01-main-heading",
-      "type": "heading", 
+      "type": "heading",
       "properties": {
         "content": "Chega de um guarda-roupa lotado e da sensação de que nada combina com você.",
         "level": 1,
@@ -49,7 +49,7 @@
       "type": "image",
       "properties": {
         "src": "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.webp",
-        "alt": "Transforme seu guarda-roupa", 
+        "alt": "Transforme seu guarda-roupa",
         "width": 600,
         "height": 400,
         "className": "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg"
@@ -67,7 +67,7 @@
     },
     {
       "id": "step01-name-label",
-      "type": "text", 
+      "type": "text",
       "properties": {
         "content": "COMO VOCÊ GOSTARIA DE SER CHAMADA?",
         "fontSize": "text-lg",

@@ -27,8 +27,7 @@ export const ParticleSystem: React.FC<ParticleSystemProps> = ({
   const [particles, setParticles] = useState<Particle[]>([]);
 
   const createParticles = () => {
-    const particleCount =
-      type === "celebration" ? 20 : type === "strategic" ? 15 : 8;
+    const particleCount = type === "celebration" ? 20 : type === "strategic" ? 15 : 8;
     const colors = {
       selection: ["#8B5CF6", "#A78BFA", "#C4B5FD"],
       celebration: ["#F59E0B", "#EAB308", "#FDE047", "#84CC16"],
@@ -60,9 +59,9 @@ export const ParticleSystem: React.FC<ParticleSystemProps> = ({
       createParticles();
 
       const interval = setInterval(() => {
-        setParticles((prev) =>
+        setParticles(prev =>
           prev
-            .map((particle) => ({
+            .map(particle => ({
               ...particle,
               x: particle.x + particle.velocity.x * 0.016,
               y: particle.y + particle.velocity.y * 0.016,
@@ -72,7 +71,7 @@ export const ParticleSystem: React.FC<ParticleSystemProps> = ({
               },
               life: particle.life - 0.02,
             }))
-            .filter((particle) => particle.life > 0),
+            .filter(particle => particle.life > 0)
         );
       }, 16);
 
@@ -91,7 +90,7 @@ export const ParticleSystem: React.FC<ParticleSystemProps> = ({
   return (
     <div className="fixed inset-0 pointer-events-none z-50">
       <AnimatePresence>
-        {particles.map((particle) => (
+        {particles.map(particle => (
           <motion.div
             key={particle.id}
             className="absolute rounded-full"

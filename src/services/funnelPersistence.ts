@@ -47,9 +47,7 @@ class FunnelPersistenceService {
   }
 
   // Save funnel with Supabase primary, localStorage fallback
-  async saveFunnel(
-    data: FunnelData,
-  ): Promise<{ success: boolean; error?: string }> {
+  async saveFunnel(data: FunnelData): Promise<{ success: boolean; error?: string }> {
     try {
       // Save to Supabase first
       const { data: funnel, error: funnelError } = await supabase
@@ -83,7 +81,7 @@ class FunnelPersistenceService {
         await supabase.from("funnel_pages").delete().eq("funnel_id", data.id);
 
         // Insert new pages
-        const pagesData = data.pages.map((page) => ({
+        const pagesData = data.pages.map(page => ({
           id: page.id,
           funnel_id: data.id,
           page_type: page.pageType,
@@ -93,9 +91,7 @@ class FunnelPersistenceService {
           metadata: page.metadata,
         }));
 
-        const { error: pagesError } = await supabase
-          .from("funnel_pages")
-          .insert(pagesData);
+        const { error: pagesError } = await supabase.from("funnel_pages").insert(pagesData);
 
         if (pagesError) {
           console.error("Supabase pages error:", pagesError);
@@ -126,16 +122,13 @@ class FunnelPersistenceService {
           `
           *,
           funnel_pages (*)
-        `,
+        `
         )
         .eq("id", id)
         .single();
 
       if (error || !funnel) {
-        console.warn(
-          "Failed to load from Supabase, trying localStorage:",
-          error,
-        );
+        console.warn("Failed to load from Supabase, trying localStorage:", error);
         return this.loadFromLocalStorage(id);
       }
 
@@ -180,7 +173,7 @@ class FunnelPersistenceService {
           `
           *,
           funnel_pages (*)
-        `,
+        `
         )
         .order("updated_at", { ascending: false });
 
@@ -189,7 +182,7 @@ class FunnelPersistenceService {
         return [];
       }
 
-      return funnels.map((funnel) => ({
+      return funnels.map(funnel => ({
         id: funnel.id,
         name: funnel.name,
         description: funnel.description || undefined,
@@ -216,9 +209,7 @@ class FunnelPersistenceService {
   }
 
   // Delete funnel
-  async deleteFunnel(
-    id: string,
-  ): Promise<{ success: boolean; error?: string }> {
+  async deleteFunnel(id: string): Promise<{ success: boolean; error?: string }> {
     try {
       const { error } = await supabase.from("funnels").delete().eq("id", id);
 
@@ -238,9 +229,7 @@ class FunnelPersistenceService {
   }
 
   // Publish funnel
-  async publishFunnel(
-    id: string,
-  ): Promise<{ success: boolean; error?: string }> {
+  async publishFunnel(id: string): Promise<{ success: boolean; error?: string }> {
     try {
       const { error } = await supabase
         .from("funnels")

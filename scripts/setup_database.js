@@ -153,16 +153,7 @@ const insertParticipant = db.prepare(`
 `);
 
 const participants = [
-  [
-    "part_001",
-    "João Silva",
-    "joao@email.com",
-    "quiz_001",
-    "google",
-    "cpc",
-    "campanha_teste",
-    now,
-  ],
+  ["part_001", "João Silva", "joao@email.com", "quiz_001", "google", "cpc", "campanha_teste", now],
   [
     "part_002",
     "Maria Santos",
@@ -185,7 +176,7 @@ const participants = [
   ],
 ];
 
-participants.forEach((p) => insertParticipant.run(...p));
+participants.forEach(p => insertParticipant.run(...p));
 
 // Resultados de quiz de exemplo
 const insertQuizResult = db.prepare(`
@@ -220,7 +211,7 @@ const quizResults = [
   ],
 ];
 
-quizResults.forEach((r) => insertQuizResult.run(...r));
+quizResults.forEach(r => insertQuizResult.run(...r));
 
 // Analytics UTM de exemplo
 const insertUtm = db.prepare(`
@@ -261,7 +252,7 @@ const utmData = [
   ],
 ];
 
-utmData.forEach((u) => insertUtm.run(...u));
+utmData.forEach(u => insertUtm.run(...u));
 
 // Eventos de conversão de exemplo
 const insertEvent = db.prepare(`
@@ -305,7 +296,7 @@ const events = [
   ],
 ];
 
-events.forEach((e) => insertEvent.run(...e));
+events.forEach(e => insertEvent.run(...e));
 
 // Compras Hotmart de exemplo
 const insertPurchase = db.prepare(`
@@ -344,7 +335,7 @@ const purchases = [
   ],
 ];
 
-purchases.forEach((p) => insertPurchase.run(...p));
+purchases.forEach(p => insertPurchase.run(...p));
 
 // Funnels de exemplo
 const insertFunnel = db.prepare(`
@@ -377,22 +368,18 @@ const funnels = [
   ],
 ];
 
-funnels.forEach((f) => insertFunnel.run(...f));
+funnels.forEach(f => insertFunnel.run(...f));
 
 console.log("✅ Dados de exemplo inseridos com sucesso!");
 
 // Verificar se os dados foram inseridos
 const counts = {
   users: db.prepare("SELECT COUNT(*) as count FROM users").get().count,
-  participants: db
-    .prepare("SELECT COUNT(*) as count FROM quiz_participants")
-    .get().count,
+  participants: db.prepare("SELECT COUNT(*) as count FROM quiz_participants").get().count,
   results: db.prepare("SELECT COUNT(*) as count FROM quiz_results").get().count,
   utm: db.prepare("SELECT COUNT(*) as count FROM utm_analytics").get().count,
-  events: db.prepare("SELECT COUNT(*) as count FROM conversion_events").get()
-    .count,
-  purchases: db.prepare("SELECT COUNT(*) as count FROM hotmart_purchases").get()
-    .count,
+  events: db.prepare("SELECT COUNT(*) as count FROM conversion_events").get().count,
+  purchases: db.prepare("SELECT COUNT(*) as count FROM hotmart_purchases").get().count,
   funnels: db.prepare("SELECT COUNT(*) as count FROM funnels").get().count,
 };
 

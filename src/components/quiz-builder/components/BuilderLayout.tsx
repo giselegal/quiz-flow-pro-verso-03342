@@ -1,14 +1,6 @@
 import React, { useState } from "react";
-import {
-  ResizablePanelGroup,
-  ResizablePanel,
-  ResizableHandle,
-} from "@/components/ui/resizable";
-import {
-  QuizComponentData,
-  QuizStage,
-  QuizComponentType,
-} from "@/types/quizBuilder";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
+import { QuizComponentData, QuizStage, QuizComponentType } from "@/types/quizBuilder";
 import { ComponentsSidebar } from "../ComponentsSidebar";
 import PreviewPanel from "../PreviewPanel";
 import { PropertyPanel } from "./PropertyPanel";
@@ -32,16 +24,14 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({
   onComponentDelete,
   onComponentSelect,
 }) => {
-  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(
-    null,
-  );
+  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
 
   // Filter components for the active stage
-  const stageComponents = components.filter((c) => c.stageId === activeStageId);
+  const stageComponents = components.filter(c => c.stageId === activeStageId);
 
   // Find the selected component
   const selectedComponent = selectedComponentId
-    ? components.find((c) => c.id === selectedComponentId) || null
+    ? components.find(c => c.id === selectedComponentId) || null
     : null;
 
   const handleComponentSelect = (id: string | null) => {

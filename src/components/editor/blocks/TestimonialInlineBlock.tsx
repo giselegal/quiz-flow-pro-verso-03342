@@ -1,6 +1,6 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { Quote, Star, Edit3 } from 'lucide-react';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { Quote, Star, Edit3 } from "lucide-react";
 
 interface TestimonialInlineBlockProps {
   text?: string;
@@ -15,9 +15,9 @@ interface TestimonialInlineBlockProps {
 }
 
 const TestimonialInlineBlock: React.FC<TestimonialInlineBlockProps> = ({
-  text = 'Descobri meu estilo autêntico e agora me visto com muito mais confiança!',
-  authorName = 'Maria Silva',
-  authorRole = 'Cliente satisfeita',
+  text = "Descobri meu estilo autêntico e agora me visto com muito mais confiança!",
+  authorName = "Maria Silva",
+  authorRole = "Cliente satisfeita",
   rating = 5,
   showStars = true,
   onClick,
@@ -28,11 +28,11 @@ const TestimonialInlineBlock: React.FC<TestimonialInlineBlockProps> = ({
   return (
     <div
       className={cn(
-        'inline-flex items-start gap-3 p-4 bg-[#fff7f3] rounded-lg border border-[#B89B7A]/20',
-        'transition-all duration-200 hover:shadow-md hover:scale-105 cursor-pointer',
-        'w-full',
-        disabled && 'opacity-75 cursor-not-allowed',
-        className,
+        "inline-flex items-start gap-3 p-4 bg-[#fff7f3] rounded-lg border border-[#B89B7A]/20",
+        "transition-all duration-200 hover:shadow-md hover:scale-105 cursor-pointer",
+        "w-full",
+        disabled && "opacity-75 cursor-not-allowed",
+        className
       )}
       onClick={!disabled ? onClick : undefined}
     >
@@ -47,7 +47,13 @@ const TestimonialInlineBlock: React.FC<TestimonialInlineBlockProps> = ({
         {showStars && (
           <div className="flex items-center gap-1 mb-2">
             {Array.from({ length: 5 }, (_, i) => (
-              <Star key={i} className={cn('w-3 h-3', i < rating ? 'text-yellow-400 fill-current' : 'text-gray-300')} />
+              <Star
+                key={i}
+                className={cn(
+                  "w-3 h-3",
+                  i < rating ? "text-yellow-400 fill-current" : "text-gray-300"
+                )}
+              />
             ))}
           </div>
         )}
@@ -58,8 +64,8 @@ const TestimonialInlineBlock: React.FC<TestimonialInlineBlockProps> = ({
           onClick={e => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
-              const newText = prompt('Novo depoimento:', text);
-              if (newText !== null) onPropertyChange('text', newText);
+              const newText = prompt("Novo depoimento:", text);
+              if (newText !== null) onPropertyChange("text", newText);
             }
           }}
         >
@@ -73,8 +79,8 @@ const TestimonialInlineBlock: React.FC<TestimonialInlineBlockProps> = ({
             onClick={e => {
               e.stopPropagation();
               if (onPropertyChange && !disabled) {
-                const newName = prompt('Novo nome:', authorName);
-                if (newName !== null) onPropertyChange('authorName', newName);
+                const newName = prompt("Novo nome:", authorName);
+                if (newName !== null) onPropertyChange("authorName", newName);
               }
             }}
           >
@@ -87,8 +93,8 @@ const TestimonialInlineBlock: React.FC<TestimonialInlineBlockProps> = ({
                 onClick={e => {
                   e.stopPropagation();
                   if (onPropertyChange && !disabled) {
-                    const newRole = prompt('Novo cargo/descrição:', authorRole);
-                    if (newRole !== null) onPropertyChange('authorRole', newRole);
+                    const newRole = prompt("Novo cargo/descrição:", authorRole);
+                    if (newRole !== null) onPropertyChange("authorRole", newRole);
                   }
                 }}
               >

@@ -1,6 +1,6 @@
-import React from 'react';
-import { cn } from '../../../../lib/utils';
-import { BlockComponentProps } from '../../../../types/blocks';
+import React from "react";
+import { cn } from "../../../../lib/utils";
+import { BlockComponentProps } from "../../../../types/blocks";
 
 const SecondaryStylesInlineBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -9,21 +9,21 @@ const SecondaryStylesInlineBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
 }) => {
   const secondaryStyles = block?.properties?.secondaryStyles || [
-    { name: 'Moderno', percentage: 20, color: '#8B5CF6' },
-    { name: 'Casual', percentage: 15, color: '#06B6D4' },
-    { name: 'Romântico', percentage: 10, color: '#EC4899' },
+    { name: "Moderno", percentage: 20, color: "#8B5CF6" },
+    { name: "Casual", percentage: 15, color: "#06B6D4" },
+    { name: "Romântico", percentage: 10, color: "#EC4899" },
   ];
 
-  const title = block?.properties?.title || 'Seus Estilos Secundários';
+  const title = block?.properties?.title || "Seus Estilos Secundários";
   const showPercentages = block?.properties?.showPercentages !== false;
 
   return (
     <div
       className={cn(
-        'secondary-styles p-6 border border-gray-200 rounded-lg bg-white',
-        'hover:shadow-md transition-all duration-200',
-        isSelected && 'ring-2 ring-[#B89B7A] bg-[#FAF9F7]',
-        'cursor-pointer',
+        "secondary-styles p-6 border border-gray-200 rounded-lg bg-white",
+        "hover:shadow-md transition-all duration-200",
+        isSelected && "ring-2 ring-[#B89B7A] bg-[#FAF9F7]",
+        "cursor-pointer"
       )}
       onClick={onClick}
     >
@@ -31,7 +31,10 @@ const SecondaryStylesInlineBlock: React.FC<BlockComponentProps> = ({
 
       <div className="grid gap-4 md:grid-cols-3">
         {secondaryStyles.map((style: any, index: number) => (
-          <div key={index} className="text-center p-4 rounded-lg border bg-gray-50 hover:bg-gray-100 transition-colors">
+          <div
+            key={index}
+            className="text-center p-4 rounded-lg border bg-gray-50 hover:bg-gray-100 transition-colors"
+          >
             {/* Círculo com porcentagem */}
             <div className="relative inline-block mb-3">
               <div

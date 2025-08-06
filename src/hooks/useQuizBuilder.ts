@@ -2,19 +2,14 @@ import { useState, useCallback, useEffect } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { useQuizStages } from "./useQuizStages";
 import { useQuizComponents } from "./useQuizComponents";
-import {
-  generateInitialStages,
-  createBuilderStateFromQuiz,
-} from "@/services/quizBuilderService";
+import { generateInitialStages, createBuilderStateFromQuiz } from "@/services/quizBuilderService";
 import caktoquizQuestions from "@/data/caktoquizQuestions";
 
 const STORAGE_KEY = "quiz_builder_data";
 
 export const useQuizBuilder = () => {
   const [loading, setLoading] = useState(true);
-  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(
-    null,
-  );
+  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
 
   const {
     stages,
@@ -64,8 +59,7 @@ export const useQuizBuilder = () => {
       } catch (error) {
         console.error("Error loading quiz data:", error);
         // Fallback to generated stages if there's an error
-        const { stages: initialStages, components: initialComponents } =
-          generateInitialStages();
+        const { stages: initialStages, components: initialComponents } = generateInitialStages();
         initializeStages(initialStages);
         initializeComponents(initialComponents);
         if (initialStages.length > 0) {
@@ -93,7 +87,7 @@ export const useQuizBuilder = () => {
           JSON.stringify({
             components,
             stages,
-          }),
+          })
         );
       } catch (error) {
         console.error("Error saving quiz data:", error);
@@ -113,7 +107,7 @@ export const useQuizBuilder = () => {
         JSON.stringify({
           components,
           stages,
-        }),
+        })
       );
       return true;
     } catch (error) {

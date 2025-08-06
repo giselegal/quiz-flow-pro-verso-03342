@@ -25,9 +25,7 @@ const LandingPage: React.FC = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="text-center">
         <LoadingSpinner size="lg" color="#B89B7A" className="mx-auto" />
-        <p className="mt-4 text-gray-600">
-          Carregando sua experiência personalizada...
-        </p>
+        <p className="mt-4 text-gray-600">Carregando sua experiência personalizada...</p>
         <p className="mt-2 text-sm text-gray-500">
           Ou acesse diretamente:{" "}
           <a href="/quiz" className="text-[#B89B7A] hover:underline">

@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   PieChart,
   Pie,
@@ -43,10 +37,7 @@ interface UtmTabProps {
   loading: boolean;
 }
 
-export const UtmTab: React.FC<UtmTabProps> = ({
-  analyticsData,
-  loading: initialLoading,
-}) => {
+export const UtmTab: React.FC<UtmTabProps> = ({ analyticsData, loading: initialLoading }) => {
   const [utmData, setUtmData] = useState<UtmData[]>([]);
   const [loading, setLoading] = useState(initialLoading);
 
@@ -133,7 +124,7 @@ export const UtmTab: React.FC<UtmTabProps> = ({
     // Group the data by source, medium, and campaign
     const groupedData: Record<string, UtmData> = {};
 
-    data.forEach((item) => {
+    data.forEach(item => {
       const key = `${item.utm_source || "direct"}-${item.utm_medium || "none"}-${item.utm_campaign || "none"}`;
 
       if (!groupedData[key]) {
@@ -151,7 +142,7 @@ export const UtmTab: React.FC<UtmTabProps> = ({
     });
 
     // Calculate conversion rates (in a real scenario, you would track actual conversions)
-    Object.values(groupedData).forEach((item) => {
+    Object.values(groupedData).forEach(item => {
       // This is just a placeholder - in a real scenario, you would track actual conversions
       // For now, we're using a random number between 5-25% for the conversion rate
       const randomConversionRate = Math.floor(Math.random() * 20) + 5;
@@ -166,7 +157,7 @@ export const UtmTab: React.FC<UtmTabProps> = ({
   const sourceData = React.useMemo(() => {
     return utmData.reduce(
       (acc, item) => {
-        const existingSource = acc.find((s) => s.name === item.source);
+        const existingSource = acc.find(s => s.name === item.source);
         if (existingSource) {
           existingSource.value += item.users;
         } else {
@@ -174,19 +165,12 @@ export const UtmTab: React.FC<UtmTabProps> = ({
         }
         return acc;
       },
-      [] as { name: string; value: number }[],
+      [] as { name: string; value: number }[]
     );
   }, [utmData]);
 
   // Colors for the pie chart
-  const COLORS = [
-    "#8B5CF6",
-    "#10b981",
-    "#f59e0b",
-    "#ef4444",
-    "#0ea5e9",
-    "#ec4899",
-  ];
+  const COLORS = ["#8B5CF6", "#10b981", "#f59e0b", "#ef4444", "#0ea5e9", "#ec4899"];
 
   // Chart configuration
   const chartConfig: ChartConfig = {
@@ -246,15 +230,10 @@ export const UtmTab: React.FC<UtmTabProps> = ({
                     outerRadius={50}
                     fill="#8884d8"
                     dataKey="value"
-                    label={({ name, percent }) =>
-                      `${name}: ${(percent * 100).toFixed(0)}%`
-                    }
+                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                   >
                     {sourceData.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
                   <Tooltip content={renderTooltipContent} />
@@ -275,9 +254,7 @@ export const UtmTab: React.FC<UtmTabProps> = ({
             <div className="h-[55px]">
               <ChartContainer config={chartConfig}>
                 <BarChart
-                  data={utmData.filter(
-                    (d) => d.campaign && d.campaign !== "none",
-                  )}
+                  data={utmData.filter(d => d.campaign && d.campaign !== "none")}
                   margin={{ top: 5, right: 5, left: 0, bottom: 0 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -325,21 +302,11 @@ export const UtmTab: React.FC<UtmTabProps> = ({
                 {utmData.length > 0 ? (
                   utmData.map((item, i) => (
                     <TableRow key={i}>
-                      <TableCell className="py-1.5 text-xs">
-                        {item.source || "direct"}
-                      </TableCell>
-                      <TableCell className="py-1.5 text-xs">
-                        {item.medium || "none"}
-                      </TableCell>
-                      <TableCell className="py-1.5 text-xs">
-                        {item.campaign || "none"}
-                      </TableCell>
-                      <TableCell className="py-1.5 text-xs">
-                        {item.users}
-                      </TableCell>
-                      <TableCell className="py-1.5 text-xs">
-                        {item.conversions}
-                      </TableCell>
+                      <TableCell className="py-1.5 text-xs">{item.source || "direct"}</TableCell>
+                      <TableCell className="py-1.5 text-xs">{item.medium || "none"}</TableCell>
+                      <TableCell className="py-1.5 text-xs">{item.campaign || "none"}</TableCell>
+                      <TableCell className="py-1.5 text-xs">{item.users}</TableCell>
+                      <TableCell className="py-1.5 text-xs">{item.conversions}</TableCell>
                       <TableCell className="py-1.5 text-xs">
                         {item.conversionRate.toFixed(1)}%
                       </TableCell>

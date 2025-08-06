@@ -68,10 +68,28 @@ export const TextInlineBlock: React.FC<TextInlineBlockProps> = ({
   // CORREÇÃO: Aceitar content como string OU objeto
   // Se content é string, usar diretamente
   // Se content é objeto, usar content.text
-  const text =
+  const rawContent =
     (typeof content === "string" ? content : content.text) ||
     directText ||
     "Digite seu texto aqui...";
+
+  // 🐛 DEBUG: Análise completa do conteúdo HTML
+  const hasSpanTag = rawContent?.includes("<span");
+  const hasStrongTag = rawContent?.includes("<strong");
+  const hasEmTag = rawContent?.includes("<em");
+  const hasHtmlTags = hasSpanTag || hasStrongTag || hasEmTag || rawContent?.includes("<");
+
+  console.log("🐛 TextInlineBlock DEBUG COMPLETO:", {
+    blockId: block?.id,
+    rawContent,
+    hasSpanTag,
+    hasStrongTag,
+    hasEmTag,
+    hasHtmlTags,
+    willRenderAsHTML: hasHtmlTags,
+  });
+
+  const text = rawContent;
   const variant = styleProps.variant || "default";
 
   // Definir estilos baseados na variante
@@ -172,7 +190,11 @@ export const TextInlineBlock: React.FC<TextInlineBlockProps> = ({
       )}
 
       {/* Text content */}
-      {!isEmpty && <span className="relative z-10">{text}</span>}
+      {!isEmpty && hasHtmlTags ? (
+        <div className="relative z-10" dangerouslySetInnerHTML={{ __html: text }} />
+      ) : (
+        !isEmpty && <span className="relative z-10">{text}</span>
+      )}
 
       {/* Decorative elements for variants */}
       {variant === "elegant" && !isEmpty && (

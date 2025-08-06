@@ -3,11 +3,7 @@ import { ChevronDown, ChevronRight, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { QuizCategory, QUIZ_CATEGORIES } from "@/types/quizEditor";
 import { QuizQuestion } from "@/types/quiz";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface CategoryInfo {
   id: QuizCategory;
@@ -41,9 +37,7 @@ const QuizCategoryTab: React.FC<QuizCategoryTabProps> = ({
   }, [isActive]);
 
   return (
-    <div
-      className={`rounded-md border ${isActive ? "border-[#B89B7A]" : "border-gray-200"}`}
-    >
+    <div className={`rounded-md border ${isActive ? "border-[#B89B7A]" : "border-gray-200"}`}>
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CollapsibleTrigger asChild>
           <div
@@ -64,7 +58,7 @@ const QuizCategoryTab: React.FC<QuizCategoryTabProps> = ({
         <CollapsibleContent>
           <div className="p-2 space-y-1 bg-[#FAF9F7] rounded-b-md">
             {questions.length > 0 ? (
-              questions.map((question) => (
+              questions.map(question => (
                 <div
                   key={question.id}
                   className="p-2 rounded-md hover:bg-white flex justify-between items-center group"
@@ -73,7 +67,7 @@ const QuizCategoryTab: React.FC<QuizCategoryTabProps> = ({
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       onEditQuestion(question.id);
                     }}
@@ -84,9 +78,7 @@ const QuizCategoryTab: React.FC<QuizCategoryTabProps> = ({
                 </div>
               ))
             ) : (
-              <div className="text-sm text-gray-400 p-2">
-                Nenhuma pergunta nesta categoria
-              </div>
+              <div className="text-sm text-gray-400 p-2">Nenhuma pergunta nesta categoria</div>
             )}
           </div>
         </CollapsibleContent>

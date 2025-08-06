@@ -52,7 +52,7 @@ export const getOptimizedContainerClasses = (
   deviceView: "mobile" | "tablet" | "desktop" = "desktop",
   spacing: "tight" | "normal" | "loose" = "tight",
   maxWidth: "full" | "content" | "narrow" = "full",
-  customClasses?: string,
+  customClasses?: string
 ): string => {
   const config = containerConfig;
 
@@ -73,28 +73,17 @@ export const getOptimizedContainerClasses = (
  * Container padrão para componentes do editor - máximo aproveitamento
  */
 export const getEditorContainerClasses = (customClasses?: string): string => {
-  return getOptimizedContainerClasses(
-    "desktop",
-    "tight",
-    "full",
-    customClasses,
-  );
+  return getOptimizedContainerClasses("desktop", "tight", "full", customClasses);
 };
 
 /**
  * Container responsivo com padding mínimo
  */
 export const getResponsiveContainerClasses = (
-  deviceView: "mobile" | "tablet" | "desktop" = "desktop",
+  deviceView: "mobile" | "tablet" | "desktop" = "desktop"
 ): string => {
   return `
     w-full mx-auto
-    ${
-      deviceView === "mobile"
-        ? "px-1 py-0"
-        : deviceView === "tablet"
-          ? "px-1 py-0"
-          : "px-2 py-1"
-    }
+    ${deviceView === "mobile" ? "px-1 py-0" : deviceView === "tablet" ? "px-1 py-0" : "px-2 py-1"}
   `.trim();
 };

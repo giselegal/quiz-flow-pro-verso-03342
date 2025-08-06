@@ -5,19 +5,9 @@
  */
 
 import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -47,9 +37,7 @@ export function PropertyGroup({
       <Card className={cn("mb-4", className)}>
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-medium">{title}</CardTitle>
-          {description && (
-            <CardDescription className="text-xs">{description}</CardDescription>
-          )}
+          {description && <CardDescription className="text-xs">{description}</CardDescription>}
         </CardHeader>
         <CardContent className="space-y-4">{children}</CardContent>
       </Card>
@@ -72,9 +60,7 @@ export function PropertyGroup({
                   {title}
                 </CardTitle>
                 {description && (
-                  <CardDescription className="text-xs mt-1">
-                    {description}
-                  </CardDescription>
+                  <CardDescription className="text-xs mt-1">{description}</CardDescription>
                 )}
               </div>
             </div>
@@ -115,9 +101,7 @@ export function PropertyField({
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>
-        {description && (
-          <p className="text-xs text-muted-foreground">{description}</p>
-        )}
+        {description && <p className="text-xs text-muted-foreground">{description}</p>}
       </div>
       {children}
       {error && <p className="text-xs text-red-500">{error}</p>}
@@ -134,16 +118,10 @@ interface PropertySectionProps {
   className?: string;
 }
 
-export function PropertySection({
-  title,
-  children,
-  className,
-}: PropertySectionProps) {
+export function PropertySection({ title, children, className }: PropertySectionProps) {
   return (
     <div className={cn("space-y-3", className)}>
-      <h4 className="text-sm font-medium text-gray-700 border-b border-gray-200 pb-1">
-        {title}
-      </h4>
+      <h4 className="text-sm font-medium text-gray-700 border-b border-gray-200 pb-1">{title}</h4>
       <div className="space-y-3">{children}</div>
     </div>
   );

@@ -4,9 +4,7 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
-  plugins: [react(), mode === "development" && componentTagger()].filter(
-    Boolean,
-  ),
+  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   server: {
     host: "0.0.0.0",
     port: 8080,
@@ -38,7 +36,7 @@ export default defineConfig(({ mode }) => ({
     chunkSizeWarningLimit: 1000, // Aumentar limite para 1MB
     rollupOptions: {
       output: {
-        manualChunks: (id) => {
+        manualChunks: id => {
           // 📦 CHUNKING SUPER OTIMIZADO V2
 
           // React Core (separar react e react-dom)
@@ -72,10 +70,7 @@ export default defineConfig(({ mode }) => ({
           }
 
           // Blocks - dividir por categoria específica
-          if (
-            id.includes("blocks/inline/Quiz") ||
-            id.includes("QuizInlineBlock")
-          ) {
+          if (id.includes("blocks/inline/Quiz") || id.includes("QuizInlineBlock")) {
             return "blocks-quiz-inline";
           }
           if (id.includes("blocks/inline/") && !id.includes("Quiz")) {
@@ -185,11 +180,7 @@ export default defineConfig(({ mode }) => ({
               return "charts";
             }
             // Utilities
-            if (
-              id.includes("lodash") ||
-              id.includes("date-fns") ||
-              id.includes("clsx")
-            ) {
+            if (id.includes("lodash") || id.includes("date-fns") || id.includes("clsx")) {
               return "utilities";
             }
             // Fallback para outras libraries
@@ -197,7 +188,7 @@ export default defineConfig(({ mode }) => ({
           }
         },
         // Configurações adicionais para otimização
-        chunkFileNames: (chunkInfo) => {
+        chunkFileNames: chunkInfo => {
           const facadeModuleId = chunkInfo.facadeModuleId
             ? chunkInfo.facadeModuleId.split("/").pop()
             : "chunk";

@@ -1,12 +1,12 @@
 export type StyleType =
-  | "classico"
-  | "romantico"
-  | "dramatico"
   | "natural"
-  | "criativo"
+  | "classico"
+  | "contemporâneo"
   | "elegante"
-  | "sensual"
-  | "contemporaneo";
+  | "romântico"
+  | "sexy"
+  | "dramático"
+  | "criativo"
 
 export interface Style {
   id: StyleType;

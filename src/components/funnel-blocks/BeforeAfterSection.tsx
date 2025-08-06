@@ -79,26 +79,21 @@ export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
     if (!autoPlay || displayMode !== "carousel") return;
 
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % transformations.length);
+      setCurrentIndex(prev => (prev + 1) % transformations.length);
     }, autoPlayInterval);
 
     return () => clearInterval(interval);
   }, [autoPlay, autoPlayInterval, transformations.length, displayMode]);
 
   const nextTransformation = () => {
-    setCurrentIndex((prev) => (prev + 1) % transformations.length);
+    setCurrentIndex(prev => (prev + 1) % transformations.length);
   };
 
   const prevTransformation = () => {
-    setCurrentIndex(
-      (prev) => (prev - 1 + transformations.length) % transformations.length,
-    );
+    setCurrentIndex(prev => (prev - 1 + transformations.length) % transformations.length);
   };
 
-  const renderTransformation = (
-    transformation: TransformationItem,
-    index: number,
-  ) => (
+  const renderTransformation = (transformation: TransformationItem, index: number) => (
     <div
       key={transformation.id}
       className="w-full"
@@ -107,14 +102,10 @@ export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
       <Card className="p-6 bg-white shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer">
         {/* Header with name and info */}
         <div className="text-center mb-4">
-          <h3 className="text-xl font-semibold text-[#432818] mb-1">
-            {transformation.name}
-          </h3>
+          <h3 className="text-xl font-semibold text-[#432818] mb-1">{transformation.name}</h3>
           {(transformation.age || transformation.location) && (
             <p className="text-sm text-[#6B4F43]">
-              {[transformation.age, transformation.location]
-                .filter(Boolean)
-                .join(" • ")}
+              {[transformation.age, transformation.location].filter(Boolean).join(" • ")}
             </p>
           )}
         </div>
@@ -180,46 +171,31 @@ export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
         )}
 
         {/* Results */}
-        {showResults &&
-          transformation.results &&
-          transformation.results.length > 0 && (
-            <div className="space-y-2">
-              <h4 className="text-sm font-semibold text-[#aa6b5d] mb-2">
-                Resultados alcançados:
-              </h4>
-              <ul className="space-y-1">
-                {transformation.results.map((result, idx) => (
-                  <li
-                    key={idx}
-                    className="text-sm text-[#432818] flex items-start"
-                  >
-                    <span className="text-[#B89B7A] mr-2">•</span>
-                    {result}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+        {showResults && transformation.results && transformation.results.length > 0 && (
+          <div className="space-y-2">
+            <h4 className="text-sm font-semibold text-[#aa6b5d] mb-2">Resultados alcançados:</h4>
+            <ul className="space-y-1">
+              {transformation.results.map((result, idx) => (
+                <li key={idx} className="text-sm text-[#432818] flex items-start">
+                  <span className="text-[#B89B7A] mr-2">•</span>
+                  {result}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </Card>
     </div>
   );
 
   return (
     <div className={`py-10 ${className || ""}`} style={style}>
-      {customStyles && (
-        <style dangerouslySetInnerHTML={{ __html: customStyles }} />
-      )}
+      {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
 
       {/* Header */}
       <div className="text-center mb-8">
-        <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-2">
-          {title}
-        </h2>
-        {subtitle && (
-          <p className="text-center text-[#3a3a3a] mb-6 max-w-lg mx-auto">
-            {subtitle}
-          </p>
-        )}
+        <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-2">{title}</h2>
+        {subtitle && <p className="text-center text-[#3a3a3a] mb-6 max-w-lg mx-auto">{subtitle}</p>}
         <div className="elegant-divider w-32 mx-auto"></div>
       </div>
 
@@ -229,16 +205,11 @@ export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
           <div className="relative">
             {/* Carousel content */}
             <AnimatedWrapper
-              animation={
-                animationsDisabled || isLowPerformance ? "none" : "fade"
-              }
+              animation={animationsDisabled || isLowPerformance ? "none" : "fade"}
               show={true}
               duration={duration}
             >
-              {renderTransformation(
-                transformations[currentIndex],
-                currentIndex,
-              )}
+              {renderTransformation(transformations[currentIndex], currentIndex)}
             </AnimatedWrapper>
 
             {/* Navigation */}
@@ -280,9 +251,7 @@ export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
             {transformations.map((transformation, index) => (
               <AnimatedWrapper
                 key={transformation.id}
-                animation={
-                  animationsDisabled || isLowPerformance ? "none" : "fade"
-                }
+                animation={animationsDisabled || isLowPerformance ? "none" : "fade"}
                 show={true}
                 duration={duration}
                 delay={200 * index}
@@ -295,9 +264,7 @@ export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
           // Single mode
           transformations.length > 0 && (
             <AnimatedWrapper
-              animation={
-                animationsDisabled || isLowPerformance ? "none" : "fade"
-              }
+              animation={animationsDisabled || isLowPerformance ? "none" : "fade"}
               show={true}
               duration={duration}
             >

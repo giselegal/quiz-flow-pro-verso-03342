@@ -1,26 +1,12 @@
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import {
-  FolderTree,
-  Plus,
-  Copy,
-  Trash2,
-  Edit,
-  Move,
-  ArrowRight,
-  ArrowDown,
-  ArrowUp,
-  Eye,
-  EyeOff,
-  Settings,
-  MoreVertical,
-} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { QuizFunnel, SimplePage } from "@/interfaces/quiz";
 import styles from "@/styles/editor.module.css";
-import { generateSemanticId } from "../utils/semanticIdGenerator";
+import { ArrowDown, ArrowUp, Copy, FolderTree, MoreVertical, Plus, Trash2 } from "lucide-react";
+import React, { useState } from "react";
+import { generateSemanticId } from "../../../utils/semanticIdGenerator";
 
 interface FunnelManagementPanelProps {
   funnel: QuizFunnel;

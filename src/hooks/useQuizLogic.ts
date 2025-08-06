@@ -1,10 +1,5 @@
 import { useState, useCallback } from "react";
-import {
-  QuizQuestion,
-  QuizAnswer,
-  QuizResult,
-  StyleResult,
-} from "@/types/quiz";
+import { QuizQuestion, QuizAnswer, QuizResult, StyleResult } from "@/types/quiz";
 import { getStyleColor } from "@/utils/styleUtils";
 import caktoquizQuestions from "@/data/caktoquizQuestions";
 
@@ -28,7 +23,7 @@ export const useQuizLogic = () => {
   };
 
   const answerQuestion = useCallback((questionId: string, optionId: string) => {
-    setAnswers((prevAnswers) => {
+    setAnswers(prevAnswers => {
       const newAnswer: QuizAnswer = {
         questionId,
         optionId,
@@ -38,13 +33,11 @@ export const useQuizLogic = () => {
   }, []);
 
   const goToNextQuestion = useCallback(() => {
-    setCurrentQuestionIndex((prevIndex) =>
-      Math.min(prevIndex + 1, totalQuestions - 1),
-    );
+    setCurrentQuestionIndex(prevIndex => Math.min(prevIndex + 1, totalQuestions - 1));
   }, [totalQuestions]);
 
   const goToPreviousQuestion = useCallback(() => {
-    setCurrentQuestionIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+    setCurrentQuestionIndex(prevIndex => Math.max(prevIndex - 1, 0));
   }, []);
 
   const restartQuiz = useCallback(() => {
@@ -57,17 +50,12 @@ export const useQuizLogic = () => {
   const calculateStyleScores = (answers: QuizAnswer[]) => {
     const styleScores: { [style: string]: number } = {};
 
-    answers.forEach((answer) => {
-      const question = caktoquizQuestions.find(
-        (q: any) => q.id === answer.questionId,
-      );
-      const option = question?.options.find(
-        (opt: any) => opt.id === answer.optionId,
-      );
+    answers.forEach(answer => {
+      const question = caktoquizQuestions.find((q: any) => q.id === answer.questionId);
+      const option = question?.options.find((opt: any) => opt.id === answer.optionId);
 
       if (option?.style) {
-        styleScores[option.style] =
-          (styleScores[option.style] || 0) + (option.weight || 1);
+        styleScores[option.style] = (styleScores[option.style] || 0) + (option.weight || 1);
       }
     });
 
@@ -87,14 +75,11 @@ export const useQuizLogic = () => {
     const styleScores = calculateStyleScores(answers);
 
     const sortedStyles = Object.entries(styleScores).sort(
-      ([, scoreA], [, scoreB]) => scoreB - scoreA,
+      ([, scoreA], [, scoreB]) => scoreB - scoreA
     );
     const topStyle = sortedStyles[0]?.[0] || "estilo-neutro";
 
-    const primaryResult = createStyleResult(
-      topStyle,
-      styleScores[topStyle] || 0,
-    );
+    const primaryResult = createStyleResult(topStyle, styleScores[topStyle] || 0);
 
     const secondaryResults = sortedStyles
       .slice(1, 4)

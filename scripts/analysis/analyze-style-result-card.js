@@ -58,11 +58,9 @@ nentAnalysis = {
 console.log("📋 ESTRUTURA ATUAL:");
 console.log("==================");
 
-Object.entries(componentAnalysis.estruturaAtual).forEach(
-  ([elemento, classes]) => {
-    console.log(`${elemento.padEnd(15)}: ${classes}`);
-  },
-);
+Object.entries(componentAnalysis.estruturaAtual).forEach(([elemento, classes]) => {
+  console.log(`${elemento.padEnd(15)}: ${classes}`);
+});
 
 console.log("\n❌ PROBLEMA IDENTIFICADO:");
 console.log("=========================");
@@ -70,9 +68,7 @@ console.log("=========================");
 console.log(`🎯 Linha 87: ${componentAnalysis.problemaIdentificado.linha87}`);
 console.log(`🎯 Linha 119: ${componentAnalysis.problemaIdentificado.linha119}`);
 console.log(`⚠️  Problema: ${componentAnalysis.problemaIdentificado.problema}`);
-console.log(
-  `📱 Resultado: ${componentAnalysis.problemaIdentificado.resultadoMobile}`,
-);
+console.log(`📱 Resultado: ${componentAnalysis.problemaIdentificado.resultadoMobile}`);
 
 console.log("\n🔍 ANÁLISE DETALHADA POR SEÇÃO:");
 console.log("===============================");
@@ -126,15 +122,13 @@ const problemasEspecificos = [
   },
   {
     problema: "Breakpoints Conflitantes",
-    descricao:
-      "lg:grid-cols-2 (1024px) para content + md:grid-cols-2 (768px) para images",
+    descricao: "lg:grid-cols-2 (1024px) para content + md:grid-cols-2 (768px) para images",
     impacto: "Comportamento inconsistente entre 768px-1024px",
     gravidade: "ALTO",
   },
   {
     problema: "Mobile não Garantido",
-    descricao:
-      "md:grid-cols-2 (768px) pode ativar 2 colunas em tablets pequenos",
+    descricao: "md:grid-cols-2 (768px) pode ativar 2 colunas em tablets pequenos",
     impacto: "Images lado a lado em tablets pequenos",
     gravidade: "ALTO",
   },

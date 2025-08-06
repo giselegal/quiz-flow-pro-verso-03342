@@ -23,9 +23,7 @@ export const useQuiz = () => {
   // ou lógica de UI que não pertence ao core do quiz.
   const startQuiz = async (name: string, email: string, quizId: string) => {
     try {
-      console.log(
-        `Starting quiz for ${name} (${email}) with quiz ID ${quizId}`,
-      );
+      console.log(`Starting quiz for ${name} (${email}) with quiz ID ${quizId}`);
       // Aqui poderia haver uma chamada de API para registrar o início do quiz
       // Por enquanto, retorna um mock
       return { id: "1", name, email };
@@ -40,7 +38,7 @@ export const useQuiz = () => {
   };
 
   const submitAnswers = async (
-    answers: Array<{ questionId: string; optionId: string; points: number }>,
+    answers: Array<{ questionId: string; optionId: string; points: number }>
   ) => {
     try {
       console.log("Submitting answers:", answers);
@@ -88,7 +86,7 @@ export const useQuiz = () => {
         setIsSubmittingResults(false);
       }
     },
-    [setLocation],
+    [setLocation]
   ); // Removed calculateResults dependency
 
   // A função de reset pode chamar a função de reset do useQuizLogic
@@ -102,12 +100,9 @@ export const useQuiz = () => {
   useEffect(() => {
     if (
       !quizResult &&
-      (window.location.href.includes("/admin/editor") ||
-        process.env.NODE_ENV === "development")
+      (window.location.href.includes("/admin/editor") || process.env.NODE_ENV === "development")
     ) {
-      console.log(
-        "Using mock data for editor as quizResult is null in useQuiz",
-      );
+      console.log("Using mock data for editor as quizResult is null in useQuiz");
       // Se precisar setar mock data, idealmente useQuizLogic deveria ter uma função para isso,
       // ou o componente que precisa do mock data o faria diretamente.
       // Por ora, esta lógica de mock data está efetivamente desabilitada pois primaryStyle/secondaryStyles são derivados.

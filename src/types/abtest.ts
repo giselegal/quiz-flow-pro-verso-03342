@@ -17,8 +17,5 @@ export interface ABTestResult {
   variant: ABTestVariant;
   route: string;
   description: string;
-  trackConversion: (
-    conversionType: string,
-    additionalData?: Record<string, any>,
-  ) => void;
+  trackConversion: (conversionType: string, additionalData?: Record<string, any>) => void;
 }

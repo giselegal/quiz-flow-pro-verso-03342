@@ -13,8 +13,7 @@ export const setCookie = (name, value, days = 30) => {
   date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
   const expires = "; expires=" + date.toUTCString();
 
-  document.cookie =
-    name + "=" + encodeURIComponent(value) + expires + "; path=/";
+  document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/";
 };
 
 /**
@@ -22,7 +21,7 @@ export const setCookie = (name, value, days = 30) => {
  * @param {string} name - Nome do cookie
  * @returns {string|null} - Valor do cookie ou null se não existir
  */
-export const getCookie = (name) => {
+export const getCookie = name => {
   if (typeof window === "undefined") return null;
 
   const nameEQ = name + "=";
@@ -31,8 +30,7 @@ export const getCookie = (name) => {
   for (let i = 0; i < ca.length; i++) {
     let c = ca[i];
     while (c.charAt(0) === " ") c = c.substring(1, c.length);
-    if (c.indexOf(nameEQ) === 0)
-      return decodeURIComponent(c.substring(nameEQ.length, c.length));
+    if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
   }
 
   return null;
@@ -42,7 +40,7 @@ export const getCookie = (name) => {
  * Remove um cookie
  * @param {string} name - Nome do cookie a ser removido
  */
-export const deleteCookie = (name) => {
+export const deleteCookie = name => {
   if (typeof window === "undefined") return;
 
   document.cookie = name + "=; Max-Age=-99999999; path=/";

@@ -135,7 +135,7 @@ const sensors = useSensors(
       tolerance: 8,
     },
   }),
-  useSensor(KeyboardSensor),
+  useSensor(KeyboardSensor)
 );
 ```
 

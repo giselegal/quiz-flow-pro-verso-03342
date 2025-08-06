@@ -44,7 +44,7 @@ export interface FAQSectionProps extends BlockComponentProps {
   onFAQToggle?: (faqId: string, isOpen: boolean) => void;
 }
 
-export const FAQSection: React.FC<FAQSectionProps> = (props) => {
+export const FAQSection: React.FC<FAQSectionProps> = props => {
   const {
     // Conteúdo
     title = "Perguntas Frequentes",
@@ -74,7 +74,7 @@ export const FAQSection: React.FC<FAQSectionProps> = (props) => {
   } = props;
 
   const [openFAQs, setOpenFAQs] = useState<Set<string>>(
-    new Set(openFirst && faqs.length > 0 ? [faqs[0].id || "0"] : []),
+    new Set(openFirst && faqs.length > 0 ? [faqs[0].id || "0"] : [])
   );
 
   // Classes de alinhamento
@@ -87,10 +87,8 @@ export const FAQSection: React.FC<FAQSectionProps> = (props) => {
   // Classes de estilo do card
   const cardStyleClasses = {
     minimal: "border-none shadow-none bg-transparent",
-    bordered:
-      "border border-gray-200 hover:border-[#B89B7A] transition-colors duration-200",
-    elevated:
-      "shadow-lg hover:shadow-xl transition-shadow duration-200 border-none",
+    bordered: "border border-gray-200 hover:border-[#B89B7A] transition-colors duration-200",
+    elevated: "shadow-lg hover:shadow-xl transition-shadow duration-200 border-none",
   };
 
   // Manipular toggle de FAQ
@@ -121,18 +119,8 @@ export const FAQSection: React.FC<FAQSectionProps> = (props) => {
     switch (iconStyle) {
       case "chevron":
         return (
-          <svg
-            className={iconClasses}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 9l-7 7-7-7"
-            />
+          <svg className={iconClasses} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         );
       case "plus":
@@ -140,12 +128,7 @@ export const FAQSection: React.FC<FAQSectionProps> = (props) => {
           <div className="w-5 h-5 text-[#B89B7A] transition-transform duration-200">
             {isOpen ? (
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M20 12H4"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
               </svg>
             ) : (
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -161,18 +144,8 @@ export const FAQSection: React.FC<FAQSectionProps> = (props) => {
         );
       case "arrow":
         return (
-          <svg
-            className={iconClasses}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
+          <svg className={iconClasses} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         );
       default:
@@ -184,7 +157,7 @@ export const FAQSection: React.FC<FAQSectionProps> = (props) => {
     deviceView || "desktop",
     "tight",
     "full",
-    className,
+    className
   );
 
   return (
@@ -194,16 +167,10 @@ export const FAQSection: React.FC<FAQSectionProps> = (props) => {
         {(title || subtitle) && (
           <div className={`mb-12 ${alignmentClasses[alignment]}`}>
             {title && (
-              <h2 className="text-3xl md:text-4xl font-bold text-[#432818] mb-4">
-                {title}
-              </h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#432818] mb-4">{title}</h2>
             )}
 
-            {subtitle && (
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                {subtitle}
-              </p>
-            )}
+            {subtitle && <p className="text-xl text-gray-600 max-w-2xl mx-auto">{subtitle}</p>}
           </div>
         )}
 

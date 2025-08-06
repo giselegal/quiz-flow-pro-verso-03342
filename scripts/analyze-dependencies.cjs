@@ -27,32 +27,16 @@ const categories = {
   typescript: [],
 };
 
-Object.keys(dependencies).forEach((dep) => {
+Object.keys(dependencies).forEach(dep => {
   if (dep.includes("radix") || dep.includes("ui") || dep.includes("tailwind")) {
     categories.ui.push(dep);
-  } else if (
-    dep.includes("zustand") ||
-    dep.includes("redux") ||
-    dep.includes("context")
-  ) {
+  } else if (dep.includes("zustand") || dep.includes("redux") || dep.includes("context")) {
     categories.state.push(dep);
-  } else if (
-    dep.includes("vite") ||
-    dep.includes("build") ||
-    dep.includes("esbuild")
-  ) {
+  } else if (dep.includes("vite") || dep.includes("build") || dep.includes("esbuild")) {
     categories.build.push(dep);
-  } else if (
-    dep.includes("supabase") ||
-    dep.includes("database") ||
-    dep.includes("pg")
-  ) {
+  } else if (dep.includes("supabase") || dep.includes("database") || dep.includes("pg")) {
     categories.database.push(dep);
-  } else if (
-    dep.includes("test") ||
-    dep.includes("jest") ||
-    dep.includes("vitest")
-  ) {
+  } else if (dep.includes("test") || dep.includes("jest") || dep.includes("vitest")) {
     categories.testing.push(dep);
   } else if (dep.includes("react") || dep.includes("@types/react")) {
     categories.react.push(dep);
@@ -67,7 +51,7 @@ Object.keys(dependencies).forEach((dep) => {
 Object.entries(categories).forEach(([category, deps]) => {
   if (deps.length > 0) {
     console.log(`📂 ${category.toUpperCase()}: ${deps.length} pacotes`);
-    deps.forEach((dep) => console.log(`   - ${dep}: ${dependencies[dep]}`));
+    deps.forEach(dep => console.log(`   - ${dep}: ${dependencies[dep]}`));
     console.log("");
   }
 });

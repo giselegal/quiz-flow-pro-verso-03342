@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  Legend,
-  Tooltip,
-} from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -28,13 +21,7 @@ const CreativeAnalyticsPageNew: React.FC = () => {
     index,
   }: any) => {
     return (
-      <text
-        x={cx}
-        y={cy}
-        dy={-4}
-        textAnchor="middle"
-        fill={testData[index].color}
-      >
+      <text x={cx} y={cy} dy={-4} textAnchor="middle" fill={testData[index].color}>
         {testData[index].name}
       </text>
     );

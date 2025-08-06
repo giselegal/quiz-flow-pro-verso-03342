@@ -122,7 +122,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           size="sm"
           className={cn(
             "text-white hover:bg-white/20 transition-all",
-            viewportSize === "sm" && "bg-white/30 shadow-md",
+            viewportSize === "sm" && "bg-white/30 shadow-md"
           )}
           onClick={() => onViewportSizeChange("sm")}
           title="Mobile"
@@ -135,7 +135,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           size="sm"
           className={cn(
             "text-white hover:bg-white/20 transition-all",
-            viewportSize === "md" && "bg-white/30 shadow-md",
+            viewportSize === "md" && "bg-white/30 shadow-md"
           )}
           onClick={() => onViewportSizeChange("md")}
           title="Tablet"
@@ -148,7 +148,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           size="sm"
           className={cn(
             "text-white hover:bg-white/20 transition-all",
-            viewportSize === "lg" && "bg-white/30 shadow-md",
+            viewportSize === "lg" && "bg-white/30 shadow-md"
           )}
           onClick={() => onViewportSizeChange("lg")}
           title="Desktop"
@@ -161,7 +161,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           size="sm"
           className={cn(
             "text-white hover:bg-white/20 transition-all",
-            viewportSize === "xl" && "bg-white/30 shadow-md",
+            viewportSize === "xl" && "bg-white/30 shadow-md"
           )}
           onClick={() => onViewportSizeChange("xl")}
           title="Desktop Large"

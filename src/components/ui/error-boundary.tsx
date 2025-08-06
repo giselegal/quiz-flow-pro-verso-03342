@@ -29,15 +29,11 @@ export class ErrorBoundary extends Component<Props, State> {
 
     // Track error in performance monitoring
     if (typeof window !== "undefined" && (window as any).PerformanceMonitor) {
-      (window as any).PerformanceMonitor.getInstance().trackEvent(
-        "error",
-        "error",
-        {
-          message: error.message,
-          stack: error.stack,
-          componentStack: errorInfo.componentStack,
-        },
-      );
+      (window as any).PerformanceMonitor.getInstance().trackEvent("error", "error", {
+        message: error.message,
+        stack: error.stack,
+        componentStack: errorInfo.componentStack,
+      });
     }
   }
 
@@ -75,12 +71,9 @@ export class ErrorBoundary extends Component<Props, State> {
             </div>
 
             <div>
-              <h1 className="text-2xl font-bold text-foreground mb-2">
-                Oops! Algo deu errado
-              </h1>
+              <h1 className="text-2xl font-bold text-foreground mb-2">Oops! Algo deu errado</h1>
               <p className="text-muted-foreground">
-                Encontramos um erro inesperado. Tente novamente ou recarregue a
-                página.
+                Encontramos um erro inesperado. Tente novamente ou recarregue a página.
               </p>
             </div>
 

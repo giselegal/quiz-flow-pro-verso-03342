@@ -1,9 +1,9 @@
-import React, { useMemo } from 'react';
-import { cn } from '@/lib/utils';
-import { Progress } from '@/components/ui/progress';
-import { Card } from '@/components/ui/card';
-import { Award, Star, CheckCircle, ArrowRight } from 'lucide-react';
-import type { BlockComponentProps } from '@/types/blocks';
+import React, { useMemo } from "react";
+import { cn } from "@/lib/utils";
+import { Progress } from "@/components/ui/progress";
+import { Card } from "@/components/ui/card";
+import { Award, Star, CheckCircle, ArrowRight } from "lucide-react";
+import type { BlockComponentProps } from "@/types/blocks";
 
 /**
  * ModernResultPageBlock - Componente de página de resultado moderna (Etapa 20)
@@ -14,45 +14,45 @@ const ModernResultPageBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  className = '',
+  className = "",
 }) => {
   const {
-    title = 'Parabéns! Descobrimos seu estilo',
-    subtitle = 'Aqui está seu resultado personalizado',
-    resultStyle = 'Elegante',
-    description = 'Você tem um estilo único que combina elegância com modernidade...',
-    imageUrl = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp',
-    guideImageUrl = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp',
+    title = "Parabéns! Descobrimos seu estilo",
+    subtitle = "Aqui está seu resultado personalizado",
+    resultStyle = "Elegante",
+    description = "Você tem um estilo único que combina elegância com modernidade...",
+    imageUrl = "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+    guideImageUrl = "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
     percentage = 85,
     showSecondaryStyles = true,
-    backgroundColor = 'bg-gradient-to-br from-[#fffaf7] to-[#f9f4ef]',
-    padding = 'large',
+    backgroundColor = "bg-gradient-to-br from-[#fffaf7] to-[#f9f4ef]",
+    padding = "large",
   } = block?.properties || {};
 
   // Get username from context (placeholder)
-  const username = 'Usuário';
+  const username = "Usuário";
 
   // Classes de padding
   const paddingClasses = {
-    none: 'p-0',
-    small: 'p-4 sm:p-6',
-    medium: 'p-6 sm:p-8 lg:p-12',
-    large: 'p-8 sm:p-12 lg:p-16',
+    none: "p-0",
+    small: "p-4 sm:p-6",
+    medium: "p-6 sm:p-8 lg:p-12",
+    large: "p-8 sm:p-12 lg:p-16",
   };
 
   return (
     <div
       className={cn(
         // Layout responsivo base
-        'w-full h-full min-h-screen flex flex-col',
+        "w-full h-full min-h-screen flex flex-col",
         // Background
-        backgroundColor || 'bg-gradient-to-br from-[#fffaf7] to-[#f9f4ef]',
+        backgroundColor || "bg-gradient-to-br from-[#fffaf7] to-[#f9f4ef]",
         // Padding responsivo
         paddingClasses[padding as keyof typeof paddingClasses] || paddingClasses.large,
         // Estados visuais
-        'transition-all duration-200',
-        isSelected && 'ring-2 ring-[#B89B7A]',
-        className,
+        "transition-all duration-200",
+        isSelected && "ring-2 ring-[#B89B7A]",
+        className
       )}
       onClick={onClick}
     >
@@ -60,7 +60,9 @@ const ModernResultPageBlock: React.FC<BlockComponentProps> = ({
       <div className="max-w-6xl mx-auto w-full">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#432818] mb-4">{title}</h1>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#432818] mb-4">
+            {title}
+          </h1>
           <p className="text-lg sm:text-xl text-[#5D4A3A] max-w-2xl mx-auto">{subtitle}</p>
         </div>
 
@@ -75,13 +77,17 @@ const ModernResultPageBlock: React.FC<BlockComponentProps> = ({
                   <Award className="w-12 h-12 sm:w-16 sm:h-16 text-white" />
                 </div>
                 <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
-                  <div className="bg-[#432818] text-white px-3 py-1 rounded-full text-sm font-bold">{percentage}%</div>
+                  <div className="bg-[#432818] text-white px-3 py-1 rounded-full text-sm font-bold">
+                    {percentage}%
+                  </div>
                 </div>
               </div>
 
               {/* Estilo Resultado */}
               <div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-[#432818] mb-2">Estilo {resultStyle}</h2>
+                <h2 className="text-2xl sm:text-3xl font-bold text-[#432818] mb-2">
+                  Estilo {resultStyle}
+                </h2>
                 <div className="w-16 h-1 bg-gradient-to-r from-[#B89B7A] to-[#A1835D] mx-auto rounded-full"></div>
               </div>
 
@@ -100,8 +106,10 @@ const ModernResultPageBlock: React.FC<BlockComponentProps> = ({
                   <Star
                     key={star}
                     className={cn(
-                      'w-6 h-6',
-                      star <= Math.floor(percentage / 20) ? 'text-yellow-400 fill-current' : 'text-gray-300',
+                      "w-6 h-6",
+                      star <= Math.floor(percentage / 20)
+                        ? "text-yellow-400 fill-current"
+                        : "text-gray-300"
                     )}
                   />
                 ))}
@@ -134,7 +142,9 @@ const ModernResultPageBlock: React.FC<BlockComponentProps> = ({
         <Card className="p-6 sm:p-8 bg-white/60 backdrop-blur-sm border-[#B89B7A]/20 mb-8">
           <div className="text-center">
             <h3 className="text-xl sm:text-2xl font-bold text-[#432818] mb-4">Sobre Seu Estilo</h3>
-            <p className="text-base sm:text-lg text-[#5D4A3A] leading-relaxed max-w-4xl mx-auto">{description}</p>
+            <p className="text-base sm:text-lg text-[#5D4A3A] leading-relaxed max-w-4xl mx-auto">
+              {description}
+            </p>
           </div>
         </Card>
 
@@ -143,7 +153,9 @@ const ModernResultPageBlock: React.FC<BlockComponentProps> = ({
           <Card className="p-6 sm:p-8 bg-white/60 backdrop-blur-sm border-[#B89B7A]/20">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
               <div>
-                <h3 className="text-xl sm:text-2xl font-bold text-[#432818] mb-4">Seu Guia de Estilo Personalizado</h3>
+                <h3 className="text-xl sm:text-2xl font-bold text-[#432818] mb-4">
+                  Seu Guia de Estilo Personalizado
+                </h3>
                 <p className="text-[#5D4A3A] mb-6">
                   Descubra todas as peças que combinam perfeitamente com seu estilo único.
                 </p>
@@ -156,7 +168,11 @@ const ModernResultPageBlock: React.FC<BlockComponentProps> = ({
               </div>
 
               <div className="relative">
-                <img src={guideImageUrl} alt="Guia de Estilo" className="w-full h-auto rounded-lg shadow-lg" />
+                <img
+                  src={guideImageUrl}
+                  alt="Guia de Estilo"
+                  className="w-full h-auto rounded-lg shadow-lg"
+                />
               </div>
             </div>
           </Card>

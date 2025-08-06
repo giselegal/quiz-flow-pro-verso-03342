@@ -1,12 +1,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Check, Star } from "lucide-react";
 import CountdownTimer from "./CountdownTimer";
 
@@ -79,15 +74,11 @@ export const OfferCard: React.FC<OfferCardProps> = ({
               key={index}
               className={cn(
                 "w-4 h-4",
-                index < ratingValue
-                  ? "text-yellow-500 fill-yellow-500"
-                  : "text-gray-300",
+                index < ratingValue ? "text-yellow-500 fill-yellow-500" : "text-gray-300"
               )}
             />
           ))}
-        {reviewCount && (
-          <span className="text-xs text-gray-500 ml-1">({reviewCount})</span>
-        )}
+        {reviewCount && <span className="text-xs text-gray-500 ml-1">({reviewCount})</span>}
       </div>
     );
   };
@@ -96,10 +87,8 @@ export const OfferCard: React.FC<OfferCardProps> = ({
     <Card
       className={cn(
         "overflow-hidden transition-shadow duration-300 hover:shadow-lg",
-        isHighlighted
-          ? "border-2 border-primary shadow-md"
-          : "border border-gray-200",
-        className,
+        isHighlighted ? "border-2 border-primary shadow-md" : "border border-gray-200",
+        className
       )}
       style={style}
     >
@@ -113,11 +102,7 @@ export const OfferCard: React.FC<OfferCardProps> = ({
       {/* Imagem */}
       {imageUrl && (
         <div className="relative w-full h-48">
-          <img
-            src={imageUrl}
-            alt={title}
-            className="w-full h-full object-cover"
-          />
+          <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
 
           {/* Desconto sobre imagem */}
           {discount && (
@@ -130,9 +115,7 @@ export const OfferCard: React.FC<OfferCardProps> = ({
 
       <CardHeader className={cn("relative", imageUrl ? "pt-4 pb-2" : "")}>
         {/* Título */}
-        <h3 className={cn("font-bold", isHighlighted ? "text-xl" : "text-lg")}>
-          {title}
-        </h3>
+        <h3 className={cn("font-bold", isHighlighted ? "text-xl" : "text-lg")}>{title}</h3>
 
         {/* Avaliação */}
         {renderRating()}
@@ -146,15 +129,11 @@ export const OfferCard: React.FC<OfferCardProps> = ({
         {price && (
           <div className="space-y-1">
             {originalPrice && (
-              <div className="text-sm text-gray-500 line-through">
-                De R$ {originalPrice}
-              </div>
+              <div className="text-sm text-gray-500 line-through">De R$ {originalPrice}</div>
             )}
 
             <div className="flex items-end gap-2">
-              <span className="text-2xl font-bold text-primary">
-                R$ {price}
-              </span>
+              <span className="text-2xl font-bold text-primary">R$ {price}</span>
 
               {installments && (
                 <span className="text-xs text-gray-600">
@@ -182,14 +161,8 @@ export const OfferCard: React.FC<OfferCardProps> = ({
         {/* Contagem regressiva */}
         {showCountdown && (
           <div className="pt-2">
-            <p className="text-xs text-center text-gray-500 mb-2">
-              Esta oferta expira em:
-            </p>
-            <CountdownTimer
-              hours={countdownHours}
-              variant="compact"
-              className="mx-auto"
-            />
+            <p className="text-xs text-center text-gray-500 mb-2">Esta oferta expira em:</p>
+            <CountdownTimer hours={countdownHours} variant="compact" className="mx-auto" />
           </div>
         )}
       </CardContent>

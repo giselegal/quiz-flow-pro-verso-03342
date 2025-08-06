@@ -18,9 +18,7 @@ const OptionsSection: React.FC<OptionsSectionProps> = ({
   onAddOption,
   onRemoveOption,
 }) => {
-  const [expandedOptions, setExpandedOptions] = useState<Set<string>>(
-    new Set(),
-  );
+  const [expandedOptions, setExpandedOptions] = useState<Set<string>>(new Set());
 
   // ✅ Toggle de expansão de opções
   const toggleExpanded = (id: string) => {
@@ -37,15 +35,8 @@ const OptionsSection: React.FC<OptionsSectionProps> = ({
     <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-base flex items-center justify-between">
-          <span className="flex items-center gap-2">
-            📝 Opções ({options.length})
-          </span>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={onAddOption}
-            className="h-8 w-8 p-0"
-          >
+          <span className="flex items-center gap-2">📝 Opções ({options.length})</span>
+          <Button size="sm" variant="outline" onClick={onAddOption} className="h-8 w-8 p-0">
             <Plus className="w-4 h-4" />
           </Button>
         </CardTitle>
@@ -66,7 +57,7 @@ const OptionsSection: React.FC<OptionsSectionProps> = ({
                 index={index}
                 isExpanded={expandedOptions.has(option.id)}
                 onToggleExpanded={() => toggleExpanded(option.id)}
-                onUpdate={(updates) => onOptionUpdate(option.id, updates)}
+                onUpdate={updates => onOptionUpdate(option.id, updates)}
                 onRemove={() => onRemoveOption(option.id)}
               />
             ))}
@@ -82,7 +73,7 @@ const OptionsSection: React.FC<OptionsSectionProps> = ({
                 variant="outline"
                 onClick={() => {
                   if (confirm(`Remover todas as ${options.length} opções?`)) {
-                    options.forEach((option) => onRemoveOption(option.id));
+                    options.forEach(option => onRemoveOption(option.id));
                   }
                 }}
                 className="flex-1 text-xs"
@@ -90,12 +81,7 @@ const OptionsSection: React.FC<OptionsSectionProps> = ({
                 <Trash2 className="w-3 h-3 mr-1" />
                 Limpar Todas
               </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={onAddOption}
-                className="flex-1 text-xs"
-              >
+              <Button size="sm" variant="outline" onClick={onAddOption} className="flex-1 text-xs">
                 <Plus className="w-3 h-3 mr-1" />
                 Adicionar
               </Button>
@@ -113,22 +99,14 @@ const OptionsSection: React.FC<OptionsSectionProps> = ({
                   Com imagem:{" "}
                   {
                     options.filter(
-                      (o) =>
-                        o.imageUrl &&
-                        o.imageUrl !== "https://via.placeholder.com/100x100",
+                      o => o.imageUrl && o.imageUrl !== "https://via.placeholder.com/100x100"
                     ).length
                   }
                 </div>
                 <div>
-                  Categorias:{" "}
-                  {
-                    new Set(options.map((o) => o.category || "Sem categoria"))
-                      .size
-                  }
+                  Categorias: {new Set(options.map(o => o.category || "Sem categoria")).size}
                 </div>
-                <div>
-                  Pontos: {options.reduce((sum, o) => sum + (o.points || 0), 0)}
-                </div>
+                <div>Pontos: {options.reduce((sum, o) => sum + (o.points || 0), 0)}</div>
               </div>
             </div>
           </div>

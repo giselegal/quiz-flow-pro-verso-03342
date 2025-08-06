@@ -153,8 +153,7 @@ export const STANDARD_CANVAS_CONFIG: CanvasLayoutConfig = {
     },
 
     spacer: {
-      className:
-        "min-w-full py-2 border-dashed border-yellow-500 border rounded-lg",
+      className: "min-w-full py-2 border-dashed border-yellow-500 border rounded-lg",
       padding: "py-2",
       border: "border-dashed border-yellow-500 border rounded-lg",
     },
@@ -307,7 +306,7 @@ export class CanvasConfigUtils {
   static getResponsiveClasses(
     mobile: string,
     tablet: string = mobile,
-    desktop: string = tablet,
+    desktop: string = tablet
   ): string {
     return `${mobile} md:${tablet} lg:${desktop}`;
   }
@@ -317,7 +316,7 @@ export class CanvasConfigUtils {
    */
   static mergeConfig(
     defaultConfig: Partial<CanvasLayoutConfig>,
-    customConfig: Partial<CanvasLayoutConfig>,
+    customConfig: Partial<CanvasLayoutConfig>
   ): CanvasLayoutConfig {
     return {
       ...defaultConfig,
@@ -335,7 +334,7 @@ export class CanvasConfigUtils {
       "canvasItems.wrapper.className",
     ];
 
-    return requiredPaths.every((path) => {
+    return requiredPaths.every(path => {
       const keys = path.split(".");
       let current: any = config;
 
@@ -352,7 +351,7 @@ export class CanvasConfigUtils {
    * Gera configuração otimizada para dispositivo específico
    */
   static getDeviceOptimizedConfig(
-    device: "mobile" | "tablet" | "desktop",
+    device: "mobile" | "tablet" | "desktop"
   ): Partial<CanvasLayoutConfig> {
     const responsive = RESPONSIVE_BREAKPOINTS[device];
 

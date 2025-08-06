@@ -12,7 +12,7 @@ const DebugEditorContext: React.FC = () => {
 
   console.log("🔥 DebugEditorContext: Dados do context:", {
     stages: stages?.length || 0,
-    stagesIds: stages?.map((s) => s.id) || [],
+    stagesIds: stages?.map(s => s.id) || [],
     activeStageId,
     stageCount,
   });

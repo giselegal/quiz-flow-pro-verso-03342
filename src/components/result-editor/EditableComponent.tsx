@@ -11,10 +11,7 @@ interface EditableComponentProps {
   onUpdate: (section: string, data: any) => void;
 }
 
-const EditableComponent: React.FC<EditableComponentProps> = ({
-  components,
-  onUpdate,
-}) => {
+const EditableComponent: React.FC<EditableComponentProps> = ({ components, onUpdate }) => {
   const { primaryStyle, secondaryStyles, config } = components;
 
   return (
@@ -24,8 +21,7 @@ const EditableComponent: React.FC<EditableComponentProps> = ({
         <Card className="p-6">
           <div className="text-center">
             <h1 className="text-3xl font-playfair text-[#432818] mb-4">
-              {config?.header?.content?.title ||
-                `Seu estilo é ${primaryStyle.category}`}
+              {config?.header?.content?.title || `Seu estilo é ${primaryStyle.category}`}
             </h1>
             <p className="text-lg text-[#1A1818]/80">
               Descubra as características únicas do seu estilo pessoal
@@ -51,9 +47,7 @@ const EditableComponent: React.FC<EditableComponentProps> = ({
                 </div>
                 <div className="flex justify-between">
                   <span>Percentual:</span>
-                  <span className="font-medium">
-                    {primaryStyle.percentage}%
-                  </span>
+                  <span className="font-medium">{primaryStyle.percentage}%</span>
                 </div>
               </div>
             </div>
@@ -71,9 +65,7 @@ const EditableComponent: React.FC<EditableComponentProps> = ({
         {/* Secondary Styles */}
         {secondaryStyles.length > 0 && (
           <Card className="p-6">
-            <h2 className="text-2xl font-medium text-[#432818] mb-4">
-              Estilos Secundários
-            </h2>
+            <h2 className="text-2xl font-medium text-[#432818] mb-4">Estilos Secundários</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {secondaryStyles.map((style, index) => (
                 <div key={index} className="bg-[#FAF9F7] p-4 rounded-lg">
@@ -100,8 +92,7 @@ const EditableComponent: React.FC<EditableComponentProps> = ({
                 {config.offer.hero.content.title || "Oferta Especial"}
               </h2>
               <p className="text-lg text-[#1A1818]/80 mb-6">
-                {config.offer.hero.content.subtitle ||
-                  "Descubra mais sobre seu estilo"}
+                {config.offer.hero.content.subtitle || "Descubra mais sobre seu estilo"}
               </p>
               <button className="bg-[#B89B7A] text-white px-8 py-3 rounded-lg hover:bg-[#A38A69] transition-colors">
                 Saiba Mais

@@ -5,9 +5,7 @@ interface SecurePurchaseElementProps {
   className?: string;
 }
 
-const SecurePurchaseElement: React.FC<SecurePurchaseElementProps> = ({
-  className = "",
-}) => {
+const SecurePurchaseElement: React.FC<SecurePurchaseElementProps> = ({ className = "" }) => {
   return (
     <div
       className={`flex items-center justify-center gap-2 mt-4 text-xs text-[#3a3a3a]/70 ${className}`}

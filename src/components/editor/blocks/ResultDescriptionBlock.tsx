@@ -1,7 +1,7 @@
-import React from 'react';
-import { FileText } from 'lucide-react';
-import { InlineEditableText } from './InlineEditableText';
-import type { BlockComponentProps } from '@/types/blocks';
+import React from "react";
+import { FileText } from "lucide-react";
+import { InlineEditableText } from "./InlineEditableText";
+import type { BlockComponentProps } from "@/types/blocks";
 
 const ResultDescriptionBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -9,9 +9,10 @@ const ResultDescriptionBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = '',
+  className = "",
 }) => {
-  const { content = 'Baseado nas suas respostas, identificamos que...', showIcon = true } = block?.properties || {};
+  const { content = "Baseado nas suas respostas, identificamos que...", showIcon = true } =
+    block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {
@@ -25,8 +26,8 @@ const ResultDescriptionBlock: React.FC<BlockComponentProps> = ({
         p-6 rounded-lg cursor-pointer transition-all duration-200
         ${
           isSelected
-            ? 'border-2 border-brand bg-brand/10'
-            : 'border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]'
+            ? "border-2 border-brand bg-brand/10"
+            : "border-2 border-dashed border-[#B89B7A]/40 hover:bg-[#FAF9F7]"
         }
         ${className}
       `}
@@ -44,7 +45,7 @@ const ResultDescriptionBlock: React.FC<BlockComponentProps> = ({
         <div className="flex-1">
           <InlineEditableText
             value={content}
-            onChange={(value: string) => handlePropertyChange('content', value)}
+            onChange={(value: string) => handlePropertyChange("content", value)}
             className="text-stone-700 leading-relaxed"
             placeholder="Descrição detalhada do resultado baseado nas respostas do quiz"
           />

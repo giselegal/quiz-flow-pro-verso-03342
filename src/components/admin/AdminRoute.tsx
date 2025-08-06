@@ -5,10 +5,7 @@ interface AdminRouteProps {
   requireEditor?: boolean;
 }
 
-export const AdminRoute: React.FC<AdminRouteProps> = ({
-  children,
-  requireEditor = false,
-}) => {
+export const AdminRoute: React.FC<AdminRouteProps> = ({ children, requireEditor = false }) => {
   // Acesso livre ao painel administrativo - sem autenticação
   return <>{children}</>;
 };

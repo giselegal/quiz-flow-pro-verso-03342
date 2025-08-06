@@ -10,12 +10,7 @@ import {
   Maximize2,
   Settings,
 } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 interface EditorToolbarProps {
@@ -38,9 +33,7 @@ export function EditorToolbar({
   return (
     <div className="border-b border-[#B89B7A]/20 p-4 bg-white flex items-center justify-between">
       <div className="flex items-center space-x-2">
-        <h1 className="text-xl font-semibold text-[#432818] mr-4">
-          Editor Visual
-        </h1>
+        <h1 className="text-xl font-semibold text-[#432818] mr-4">Editor Visual</h1>
 
         <TooltipProvider>
           <div className="flex items-center bg-[#FAF9F7] rounded-md p-1">
@@ -52,7 +45,7 @@ export function EditorToolbar({
                   onClick={() => onViewportSizeChange("sm")}
                   className={cn(
                     "w-8 h-8 rounded-md",
-                    viewportSize === "sm" && "bg-white shadow-sm",
+                    viewportSize === "sm" && "bg-white shadow-sm"
                   )}
                 >
                   <Smartphone className="w-4 h-4 text-[#8F7A6A]" />
@@ -69,7 +62,7 @@ export function EditorToolbar({
                   onClick={() => onViewportSizeChange("md")}
                   className={cn(
                     "w-8 h-8 rounded-md",
-                    viewportSize === "md" && "bg-white shadow-sm",
+                    viewportSize === "md" && "bg-white shadow-sm"
                   )}
                 >
                   <Tablet className="w-4 h-4 text-[#8F7A6A]" />
@@ -86,7 +79,7 @@ export function EditorToolbar({
                   onClick={() => onViewportSizeChange("lg")}
                   className={cn(
                     "w-8 h-8 rounded-md",
-                    viewportSize === "lg" && "bg-white shadow-sm",
+                    viewportSize === "lg" && "bg-white shadow-sm"
                   )}
                 >
                   <Monitor className="w-4 h-4 text-[#8F7A6A]" />
@@ -103,7 +96,7 @@ export function EditorToolbar({
                   onClick={() => onViewportSizeChange("xl")}
                   className={cn(
                     "w-8 h-8 rounded-md",
-                    viewportSize === "xl" && "bg-white shadow-sm",
+                    viewportSize === "xl" && "bg-white shadow-sm"
                   )}
                 >
                   <Maximize2 className="w-4 h-4 text-[#8F7A6A]" />

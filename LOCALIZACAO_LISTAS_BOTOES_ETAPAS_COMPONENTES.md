@@ -22,7 +22,7 @@
     <div
       key={stage.id}
       className={/* Classes dinâmicas baseadas no activeStageId */}
-      onClick={(e) => handleStageClick(stage.id, e)}
+      onClick={e => handleStageClick(stage.id, e)}
     >
       {/* Conteúdo do botão da etapa */}
     </div>
@@ -85,7 +85,7 @@ const handleStageClick = (stageId: string, e?: React.MouseEvent) => {
 ```tsx
 // Linhas 80-95: Grid de categorias
 <div className="grid grid-cols-2 gap-2">
-  {BLOCK_CATEGORIES.map((category) => (
+  {BLOCK_CATEGORIES.map(category => (
     <Button
       key={category}
       variant={selectedCategory === category ? "default" : "outline"}
@@ -94,7 +94,7 @@ const handleStageClick = (stageId: string, e?: React.MouseEvent) => {
       <div className="text-left">
         <div className="font-medium">{category}</div>
         <div className="text-xs text-muted-foreground">
-          {allBlocks.filter((b) => b.category === category).length} itens
+          {allBlocks.filter(b => b.category === category).length} itens
         </div>
       </div>
     </Button>
@@ -107,7 +107,7 @@ const handleStageClick = (stageId: string, e?: React.MouseEvent) => {
 ```tsx
 // Linhas 100-135: Lista de componentes
 <div className="space-y-2">
-  {filteredBlocks.map((block) => (
+  {filteredBlocks.map(block => (
     <Card key={block.type} className="p-3 cursor-pointer hover:bg-muted/50">
       <div className="flex items-start gap-3">
         {/* Ícone Plus */}
@@ -124,16 +124,10 @@ const handleStageClick = (stageId: string, e?: React.MouseEvent) => {
           </div>
 
           {/* Descrição */}
-          <p className="text-xs text-muted-foreground mb-2">
-            {block.description}
-          </p>
+          <p className="text-xs text-muted-foreground mb-2">{block.description}</p>
 
           {/* Botão Adicionar */}
-          <Button
-            size="sm"
-            onClick={() => onAddComponent(block.type)}
-            className="h-6 text-xs"
-          >
+          <Button size="sm" onClick={() => onAddComponent(block.type)} className="h-6 text-xs">
             <Plus className="h-3 w-3 mr-1" />
             Adicionar
           </Button>

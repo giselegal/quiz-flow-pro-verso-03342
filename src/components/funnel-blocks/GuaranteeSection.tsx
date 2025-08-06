@@ -52,7 +52,7 @@ export interface GuaranteeSectionProps extends BlockComponentProps {
   legalText?: string;
 }
 
-export const GuaranteeSection: React.FC<GuaranteeSectionProps> = (props) => {
+export const GuaranteeSection: React.FC<GuaranteeSectionProps> = props => {
   const {
     // Conteúdo
     title,
@@ -97,8 +97,7 @@ export const GuaranteeSection: React.FC<GuaranteeSectionProps> = (props) => {
 
   // Classes de layout
   const layoutClasses = {
-    horizontal:
-      "flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-8",
+    horizontal: "flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-8",
     vertical: "flex flex-col items-center space-y-2",
     centered: "flex flex-col items-center text-center space-y-2",
   };
@@ -136,11 +135,7 @@ export const GuaranteeSection: React.FC<GuaranteeSectionProps> = (props) => {
           <div
             className={`${iconClasses} bg-green-500 rounded-full flex items-center justify-center`}
           >
-            <svg
-              className="w-8 h-8 text-white"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
+            <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fillRule="evenodd"
                 d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -246,7 +241,7 @@ export const GuaranteeSection: React.FC<GuaranteeSectionProps> = (props) => {
     deviceView || "desktop",
     "tight",
     "full",
-    className,
+    className
   );
 
   return (
@@ -255,8 +250,7 @@ export const GuaranteeSection: React.FC<GuaranteeSectionProps> = (props) => {
         <Card
           className={`${cardStyleClasses[cardStyle]} overflow-hidden`}
           style={{
-            backgroundColor:
-              cardStyle === "background" ? backgroundColor : undefined,
+            backgroundColor: cardStyle === "background" ? backgroundColor : undefined,
           }}
         >
           <CardContent className="p-8 md:p-12">
@@ -270,9 +264,7 @@ export const GuaranteeSection: React.FC<GuaranteeSectionProps> = (props) => {
               {/* Lado Direito: Conteúdo */}
               <div className="flex-1">
                 {/* Título */}
-                <h2 className="text-2xl md:text-4xl font-bold text-[#432818] mb-4">
-                  {title}
-                </h2>
+                <h2 className="text-2xl md:text-4xl font-bold text-[#432818] mb-4">{title}</h2>
 
                 {/* Descrição */}
                 <p className="text-lg md:text-xl text-gray-700 mb-6 leading-relaxed">
@@ -284,10 +276,7 @@ export const GuaranteeSection: React.FC<GuaranteeSectionProps> = (props) => {
                   <div className="mb-6">
                     <div className="space-y-3">
                       {features.map((feature, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center space-x-3"
-                        >
+                        <div key={index} className="flex items-center space-x-3">
                           <div className="flex-shrink-0">
                             {feature.isIncluded ? (
                               <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
@@ -319,9 +308,7 @@ export const GuaranteeSection: React.FC<GuaranteeSectionProps> = (props) => {
                               </div>
                             )}
                           </div>
-                          <span className="text-lg font-medium text-gray-800">
-                            {feature.title}
-                          </span>
+                          <span className="text-lg font-medium text-gray-800">{feature.title}</span>
                         </div>
                       ))}
                     </div>
@@ -329,16 +316,10 @@ export const GuaranteeSection: React.FC<GuaranteeSectionProps> = (props) => {
                 )}
 
                 {/* Texto Adicional */}
-                {additionalText && (
-                  <p className="text-base text-gray-600 mb-4">
-                    {additionalText}
-                  </p>
-                )}
+                {additionalText && <p className="text-base text-gray-600 mb-4">{additionalText}</p>}
 
                 {/* Texto Legal */}
-                {legalText && (
-                  <p className="text-sm text-gray-500 italic">{legalText}</p>
-                )}
+                {legalText && <p className="text-sm text-gray-500 italic">{legalText}</p>}
               </div>
             </div>
           </CardContent>

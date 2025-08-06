@@ -6,11 +6,7 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Palette, Check } from "lucide-react";
@@ -96,7 +92,7 @@ export function ColorPicker({
         {/* Input de texto */}
         <Input
           value={inputValue}
-          onChange={(e) => handleInputChange(e.target.value)}
+          onChange={e => handleInputChange(e.target.value)}
           placeholder="#000000"
           className="font-mono text-sm"
           disabled={disabled}
@@ -105,23 +101,16 @@ export function ColorPicker({
         {/* Popover com seletor */}
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              disabled={disabled}
-              className="flex-shrink-0"
-            >
+            <Button variant="outline" size="icon" disabled={disabled} className="flex-shrink-0">
               <Palette className="w-4 h-4" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-64 p-4">
             <div className="space-y-4">
               <div>
-                <Label className="text-sm font-medium mb-2 block">
-                  Cores Predefinidas
-                </Label>
+                <Label className="text-sm font-medium mb-2 block">Cores Predefinidas</Label>
                 <div className="grid grid-cols-6 gap-2">
-                  {presetColors.map((color) => (
+                  {presetColors.map(color => (
                     <button
                       key={color}
                       className="w-8 h-8 rounded-md border border-gray-300 relative hover:scale-110 transition-transform"
@@ -137,31 +126,25 @@ export function ColorPicker({
               </div>
 
               <div>
-                <Label className="text-sm font-medium mb-2 block">
-                  Seletor Nativo
-                </Label>
+                <Label className="text-sm font-medium mb-2 block">Seletor Nativo</Label>
                 <input
                   type="color"
                   value={isValidColor ? value : "#000000"}
-                  onChange={(e) => handlePresetClick(e.target.value)}
+                  onChange={e => handlePresetClick(e.target.value)}
                   className="w-full h-10 rounded-md border border-gray-300 cursor-pointer"
                 />
               </div>
 
               <div>
-                <Label className="text-sm font-medium mb-2 block">
-                  Código Hex
-                </Label>
+                <Label className="text-sm font-medium mb-2 block">Código Hex</Label>
                 <Input
                   value={inputValue}
-                  onChange={(e) => handleInputChange(e.target.value)}
+                  onChange={e => handleInputChange(e.target.value)}
                   placeholder="#000000"
                   className="font-mono text-sm"
                 />
                 {!isValidColor && inputValue && (
-                  <p className="text-xs text-red-500 mt-1">
-                    Formato inválido. Use #RRGGBB
-                  </p>
+                  <p className="text-xs text-red-500 mt-1">Formato inválido. Use #RRGGBB</p>
                 )}
               </div>
             </div>

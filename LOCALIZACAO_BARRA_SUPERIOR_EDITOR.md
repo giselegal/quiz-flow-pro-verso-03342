@@ -38,9 +38,7 @@ A barra superior do **editor-fixed** está localizada em `/src/pages/editor-fixe
 ```tsx
 // Linhas 150-168 em /src/pages/editor-fixed.tsx
 <div className="bg-gradient-to-r from-stone-50/90 via-white/80 to-stone-50/90 border-b border-stone-200/60 backdrop-blur-md px-6 py-3 shadow-sm">
-  <div className="flex items-center justify-between text-sm">
-    {/* Status indicators */}
-  </div>
+  <div className="flex items-center justify-between text-sm">{/* Status indicators */}</div>
 </div>
 ```
 

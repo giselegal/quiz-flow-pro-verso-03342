@@ -9,7 +9,7 @@ export const useBlockHandlers = (
   blocks: any[],
   selectedStepId: string,
   setSelectedBlockId: (blockId: string | null) => void,
-  isPreviewing: boolean,
+  isPreviewing: boolean
 ) => {
   const { toast } = useToast();
 
@@ -21,21 +21,19 @@ export const useBlockHandlers = (
       // 🎯 CORREÇÃO: Associar bloco à etapa atual
       if (newBlockId) {
         setTimeout(() => {
-          const blockToUpdate = blocks.find((b) => b.id === newBlockId);
+          const blockToUpdate = blocks.find(b => b.id === newBlockId);
           if (blockToUpdate) {
             blockToUpdate.stepId = selectedStepId;
             updateBlock(newBlockId, {
               ...blockToUpdate.properties,
               stepId: selectedStepId,
             });
-            console.log(
-              `✅ Bloco ${blockType} adicionado à etapa ${selectedStepId}`,
-            );
+            console.log(`✅ Bloco ${blockType} adicionado à etapa ${selectedStepId}`);
           }
         }, 50);
       }
     },
-    [addBlock, selectedStepId, blocks, updateBlock, setSelectedBlockId],
+    [addBlock, selectedStepId, blocks, updateBlock, setSelectedBlockId]
   );
 
   const handleLoadTemplate = useCallback(async () => {
@@ -79,8 +77,7 @@ export const useBlockHandlers = (
           id: "test-4",
           type: "text-inline",
           properties: {
-            content:
-              "Componente de texto inline - totalmente responsivo e editável",
+            content: "Componente de texto inline - totalmente responsivo e editável",
           },
         },
         {
@@ -110,10 +107,7 @@ export const useBlockHandlers = (
             addedCount++;
           }
         } catch (blockError) {
-          console.error(
-            `❌ Erro ao adicionar bloco ${block.type}:`,
-            blockError,
-          );
+          console.error(`❌ Erro ao adicionar bloco ${block.type}:`, blockError);
         }
       }
 
@@ -126,7 +120,7 @@ export const useBlockHandlers = (
   const handleClearAll = useCallback(() => {
     if (confirm("Tem certeza que deseja limpar todos os blocos?")) {
       // Limpar todos os blocos
-      blocks.forEach((block) => {
+      blocks.forEach(block => {
         deleteBlock(block.id);
       });
       setSelectedBlockId(null);
@@ -149,11 +143,9 @@ export const useBlockHandlers = (
     console.log('🧹 Procurando blocos "guarantee" corrompidos...');
 
     let removedCount = 0;
-    blocks.forEach((block) => {
+    blocks.forEach(block => {
       if (block.type === "guarantee" || block.type === "Garantia") {
-        console.log(
-          `🗑️ Removendo bloco corrompido: ${block.type} (${block.id})`,
-        );
+        console.log(`🗑️ Removendo bloco corrompido: ${block.type} (${block.id})`);
         deleteBlock(block.id);
         removedCount++;
       }
@@ -174,7 +166,7 @@ export const useBlockHandlers = (
     (blockId: string, updates: Partial<BlockData>) => {
       updateBlock(blockId, updates.properties || {});
     },
-    [updateBlock],
+    [updateBlock]
   );
 
   const handleBlockClick = useCallback(
@@ -183,14 +175,14 @@ export const useBlockHandlers = (
         setSelectedBlockId(blockId);
       }
     },
-    [isPreviewing, setSelectedBlockId],
+    [isPreviewing, setSelectedBlockId]
   );
 
   const handleComponentSelect = useCallback(
     (componentId: string) => {
       handleAddBlock(componentId);
     },
-    [handleAddBlock],
+    [handleAddBlock]
   );
 
   return {

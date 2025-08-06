@@ -21,9 +21,7 @@ import { BlockComponentProps, Alignment, InteractionCallbacks } from "./types";
  * />
  */
 
-export interface StyleResultDisplayProps
-  extends BlockComponentProps,
-    InteractionCallbacks {
+export interface StyleResultDisplayProps extends BlockComponentProps, InteractionCallbacks {
   // Conteúdo do resultado
   styleName: string;
   styleImage: string;
@@ -52,9 +50,7 @@ export interface StyleResultDisplayProps
   onContinue?: () => void;
 }
 
-export const StyleResultDisplay: React.FC<StyleResultDisplayProps> = (
-  props,
-) => {
+export const StyleResultDisplay: React.FC<StyleResultDisplayProps> = props => {
   const {
     // Conteúdo
     styleName,
@@ -115,7 +111,7 @@ export const StyleResultDisplay: React.FC<StyleResultDisplayProps> = (
     deviceView || "desktop",
     "tight",
     "full",
-    className,
+    className
   );
 
   return (
@@ -128,9 +124,7 @@ export const StyleResultDisplay: React.FC<StyleResultDisplayProps> = (
           </h1>
 
           {subtitleText && (
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              {subtitleText}
-            </p>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">{subtitleText}</p>
           )}
         </div>
 
@@ -185,14 +179,10 @@ export const StyleResultDisplay: React.FC<StyleResultDisplayProps> = (
               `}
               >
                 {/* Nome do Estilo */}
-                <h2 className="text-4xl md:text-5xl font-bold text-[#B89B7A] mb-6">
-                  {styleName}
-                </h2>
+                <h2 className="text-4xl md:text-5xl font-bold text-[#B89B7A] mb-6">{styleName}</h2>
 
                 {/* Descrição */}
-                <p className="text-lg text-gray-700 leading-relaxed mb-8">
-                  {styleDescription}
-                </p>
+                <p className="text-lg text-gray-700 leading-relaxed mb-8">{styleDescription}</p>
 
                 {/* Características */}
                 {showCharacteristics && characteristics.length > 0 && (
@@ -237,12 +227,8 @@ export const StyleResultDisplay: React.FC<StyleResultDisplayProps> = (
                 {showPercentage && (
                   <div className="mb-8">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-medium text-gray-600">
-                        Compatibilidade
-                      </span>
-                      <span className="text-sm font-bold text-[#B89B7A]">
-                        {percentMatch}%
-                      </span>
+                      <span className="text-sm font-medium text-gray-600">Compatibilidade</span>
+                      <span className="text-sm font-bold text-[#B89B7A]">{percentMatch}%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-3">
                       <div

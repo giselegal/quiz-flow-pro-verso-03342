@@ -64,21 +64,22 @@ propertiesPanel={
 
 ## 📈 **COMPARATIVO COM OUTROS PAINÉIS:**
 
-| Painel | Usado no /editor-fixed | Qualidade | Performance | Funcionalidades |
-|--------|----------------------|-----------|-------------|-----------------|
-| **OptimizedPropertiesPanel** | ✅ **SIM** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
-| EnhancedPropertiesPanel | ❌ Não | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐⭐ |
-| DynamicPropertiesPanel | ❌ Não | ⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐ |
-| ModernPropertiesPanel | ❌ Não (vazio) | ⭐ | ⭐ | ⭐ |
+| Painel                       | Usado no /editor-fixed | Qualidade  | Performance | Funcionalidades |
+| ---------------------------- | ---------------------- | ---------- | ----------- | --------------- |
+| **OptimizedPropertiesPanel** | ✅ **SIM**             | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐  | ⭐⭐⭐⭐⭐      |
+| EnhancedPropertiesPanel      | ❌ Não                 | ⭐⭐⭐⭐⭐ | ⭐⭐⭐      | ⭐⭐⭐⭐        |
+| DynamicPropertiesPanel       | ❌ Não                 | ⭐⭐⭐     | ⭐⭐⭐      | ⭐⭐⭐          |
+| ModernPropertiesPanel        | ❌ Não (vazio)         | ⭐         | ⭐          | ⭐              |
 
 ---
 
 ## 🎯 **FUNCIONALIDADES IMPLEMENTADAS:**
 
 ### **✅ Tipos de Propriedades Suportados:**
+
 - 📝 `string` - Campos de texto
 - 📄 `textarea` - Áreas de texto
-- 🔢 `number` - Campos numéricos  
+- 🔢 `number` - Campos numéricos
 - ✅ `boolean` - Switches/toggles
 - 🎨 `color` - Color picker
 - 📊 `range` - Sliders
@@ -86,6 +87,7 @@ propertiesPanel={
 - 📂 `array` - Arrays/listas (opções de quiz)
 
 ### **✅ Recursos Avançados:**
+
 - 🎯 **Categorização** automática de propriedades
 - 🔄 **Debouncing** para performance
 - ✅ **Validação** em tempo real com Zod

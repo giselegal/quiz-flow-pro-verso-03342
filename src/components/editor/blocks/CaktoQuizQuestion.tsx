@@ -1,6 +1,6 @@
-import React from 'react';
-import { QuizQuestionBlock } from './QuizQuestionBlock';
-import { EditableContent } from '@/types/editor';
+import React from "react";
+import { QuizQuestionBlock } from "./QuizQuestionBlock";
+import { EditableContent } from "@/types/editor";
 
 interface CaktoQuizQuestionProps {
   content?: EditableContent;

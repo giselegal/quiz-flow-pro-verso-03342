@@ -65,7 +65,7 @@ if (require.main === module) {
       console.log("🎉 Script concluído!");
       process.exit(0);
     })
-    .catch((error) => {
+    .catch(error => {
       console.error("💥 Erro fatal:", error);
       process.exit(1);
     });

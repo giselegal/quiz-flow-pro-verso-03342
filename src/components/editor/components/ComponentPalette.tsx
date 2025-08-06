@@ -15,11 +15,11 @@ export default function ComponentPalette() {
     <div className="space-y-4">
       <h3 className="font-medium">Componentes</h3>
       <div className="space-y-2">
-        {componentTypes.map((component) => (
+        {componentTypes.map(component => (
           <div
             key={component.id}
             draggable
-            onDragStart={(e) => handleDragStart(e, component.id)}
+            onDragStart={e => handleDragStart(e, component.id)}
             className="cursor-move rounded border bg-white p-3 text-sm hover:bg-gray-50 hover:shadow-sm"
           >
             <div className="flex items-center gap-2">

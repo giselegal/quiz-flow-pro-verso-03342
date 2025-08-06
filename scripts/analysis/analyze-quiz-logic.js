@@ -21,7 +21,7 @@ const questionSelection = [
   "✅ DUAS CATEGORIAS: Questões normais (que pontuam) e estratégicas (que não pontuam)",
 ];
 
-questionSelection.forEach((item) => console.log(item));
+questionSelection.forEach(item => console.log(item));
 
 console.log("\n🧮 2. LÓGICA DE CÁLCULO DOS RESULTADOS:");
 console.log("-".repeat(50));
@@ -48,7 +48,7 @@ const calculationLogic = [
   "   4. Demais resultados = estilos secundários",
 ];
 
-calculationLogic.forEach((item) => console.log(item));
+calculationLogic.forEach(item => console.log(item));
 
 console.log("\n⚙️ 3. QUESTÕES ESTRATÉGICAS:");
 console.log("-".repeat(50));
@@ -71,7 +71,7 @@ const strategicLogic = [
   "   • 3ª+ questões → pré-carrega bônus e depoimentos",
 ];
 
-strategicLogic.forEach((item) => console.log(item));
+strategicLogic.forEach(item => console.log(item));
 
 console.log("\n🔢 4. ESTRUTURA DOS DADOS:");
 console.log("-".repeat(50));
@@ -99,7 +99,7 @@ const questionStructure = [
   "   • userName: nome do usuário",
 ];
 
-questionStructure.forEach((item) => console.log(item));
+questionStructure.forEach(item => console.log(item));
 
 console.log("\n💾 5. PERSISTÊNCIA DE DADOS:");
 console.log("-".repeat(50));
@@ -116,7 +116,7 @@ const persistence = [
   "   • Reset limpa todos os dados salvos",
 ];
 
-persistence.forEach((item) => console.log(item));
+persistence.forEach(item => console.log(item));
 
 console.log("\n🎮 6. FLUXO COMPLETO DO QUIZ:");
 console.log("-".repeat(50));
@@ -145,7 +145,7 @@ const completeFlow = [
   "   14. Exibe componentes baseados no resultado",
 ];
 
-completeFlow.forEach((item) => console.log(item));
+completeFlow.forEach(item => console.log(item));
 
 console.log("\n" + "=".repeat(70));
 console.log("📈 RESUMO TÉCNICO:");

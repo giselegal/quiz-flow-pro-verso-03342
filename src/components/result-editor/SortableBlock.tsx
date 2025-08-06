@@ -25,8 +25,9 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
   onDuplicate,
   onDelete,
 }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: block.id });
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+    id: block.id,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -39,15 +40,9 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
   const getBlockPreview = () => {
     switch (block.type as BlockType) {
       case "heading":
-        return (
-          <h2 className="text-xl font-medium">{content.text || "Título"}</h2>
-        );
+        return <h2 className="text-xl font-medium">{content.text || "Título"}</h2>;
       case "paragraph":
-        return (
-          <p className="text-sm line-clamp-2">
-            {content.text || "Parágrafo de texto"}
-          </p>
-        );
+        return <p className="text-sm line-clamp-2">{content.text || "Parágrafo de texto"}</p>;
       case "image":
         return content.imageUrl ? (
           <div className="h-20 bg-gray-100 flex items-center justify-center overflow-hidden">
@@ -107,7 +102,7 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
                 variant="ghost"
                 size="sm"
                 className="h-7 w-7 p-0"
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   onDuplicate();
                 }}
@@ -121,7 +116,7 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
                 variant="ghost"
                 size="sm"
                 className="h-7 w-7 p-0"
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   onDelete();
                 }}

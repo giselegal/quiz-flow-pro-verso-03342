@@ -1,7 +1,7 @@
-import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { ChevronRight, Play, Star } from 'lucide-react';
+import React from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ChevronRight, Play, Star } from "lucide-react";
 
 interface QuizStartPageInlineBlockProps {
   title?: string;
@@ -12,11 +12,11 @@ interface QuizStartPageInlineBlockProps {
 }
 
 const QuizStartPageInlineBlock: React.FC<QuizStartPageInlineBlockProps> = ({
-  title = 'Descubra Seu Estilo',
-  subtitle = 'Responda algumas perguntas rápidas e descubra o que combina com você',
-  buttonText = 'Começar Quiz',
+  title = "Descubra Seu Estilo",
+  subtitle = "Responda algumas perguntas rápidas e descubra o que combina com você",
+  buttonText = "Começar Quiz",
   onStart,
-  className = '',
+  className = "",
 }) => {
   return (
     <Card className={`p-8 text-center space-y-6 ${className}`}>

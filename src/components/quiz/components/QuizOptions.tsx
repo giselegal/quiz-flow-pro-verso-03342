@@ -34,7 +34,7 @@ const QuizOptions: React.FC<QuizOptionsProps> = ({
 
     if (multiSelect) {
       if (selectedOptions.includes(optionId)) {
-        newSelection = selectedOptions.filter((id) => id !== optionId);
+        newSelection = selectedOptions.filter(id => id !== optionId);
       } else if (selectedOptions.length < maxSelections) {
         newSelection = [...selectedOptions, optionId];
       } else {
@@ -62,9 +62,7 @@ const QuizOptions: React.FC<QuizOptionsProps> = ({
 
   const optionsContainerStyle: React.CSSProperties = {
     display: "grid",
-    gridTemplateColumns: hasImages
-      ? "repeat(auto-fit, minmax(200px, 1fr))"
-      : "1fr",
+    gridTemplateColumns: hasImages ? "repeat(auto-fit, minmax(200px, 1fr))" : "1fr",
     gap: "0.75rem",
     maxWidth: hasImages ? "768px" : "600px",
     margin: "0 auto",
@@ -86,12 +84,9 @@ const QuizOptions: React.FC<QuizOptionsProps> = ({
       <div style={questionStyle}>{question}</div>
 
       <div style={optionsContainerStyle}>
-        {options.map((option) => {
+        {options.map(option => {
           const isSelected = selectedOptions.includes(option.id);
-          const isDisabled =
-            !isSelected &&
-            selectedOptions.length >= maxSelections &&
-            multiSelect;
+          const isDisabled = !isSelected && selectedOptions.length >= maxSelections && multiSelect;
 
           const optionStyle: React.CSSProperties = {
             padding: hasImages ? "0" : "1rem 1.25rem",
@@ -106,9 +101,7 @@ const QuizOptions: React.FC<QuizOptionsProps> = ({
             flexDirection: hasImages ? "column" : "row",
             alignItems: hasImages ? "stretch" : "center",
             justifyContent: hasImages ? "flex-start" : "space-between",
-            backgroundColor: isSelected
-              ? "rgba(184, 155, 122, 0.05)"
-              : "#ffffff",
+            backgroundColor: isSelected ? "rgba(184, 155, 122, 0.05)" : "#ffffff",
           };
 
           const textStyle: React.CSSProperties = {
@@ -125,19 +118,16 @@ const QuizOptions: React.FC<QuizOptionsProps> = ({
               key={option.id}
               style={optionStyle}
               onClick={() => !isDisabled && handleOptionClick(option.id)}
-              onMouseEnter={(e) => {
+              onMouseEnter={e => {
                 if (!isDisabled) {
                   e.currentTarget.style.borderColor = "#d4c4b0";
                   e.currentTarget.style.transform = "translateY(-1px)";
-                  e.currentTarget.style.boxShadow =
-                    "0 4px 8px rgba(0, 0, 0, 0.1)";
+                  e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)";
                 }
               }}
-              onMouseLeave={(e) => {
+              onMouseLeave={e => {
                 if (!isDisabled) {
-                  e.currentTarget.style.borderColor = isSelected
-                    ? "#b89b7a"
-                    : "#e5e7eb";
+                  e.currentTarget.style.borderColor = isSelected ? "#b89b7a" : "#e5e7eb";
                   e.currentTarget.style.transform = "translateY(0)";
                   e.currentTarget.style.boxShadow = "none";
                 }
@@ -195,13 +185,11 @@ const QuizOptions: React.FC<QuizOptionsProps> = ({
         >
           {selectedOptions.length < maxSelections ? (
             <span>
-              💡 Selecione até {maxSelections} opções ({selectedOptions.length}/
-              {maxSelections})
+              💡 Selecione até {maxSelections} opções ({selectedOptions.length}/{maxSelections})
             </span>
           ) : (
             <span style={{ color: "#059669" }}>
-              ✅ Máximo de seleções atingido ({selectedOptions.length}/
-              {maxSelections})
+              ✅ Máximo de seleções atingido ({selectedOptions.length}/{maxSelections})
             </span>
           )}
         </div>

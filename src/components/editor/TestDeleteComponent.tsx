@@ -2,9 +2,7 @@ import React from "react";
 import { Trash2 } from "lucide-react";
 
 // Componente de teste simples para verificar se a exclusão funciona
-export const TestDeleteComponent: React.FC<{ onDelete: () => void }> = ({
-  onDelete,
-}) => {
+export const TestDeleteComponent: React.FC<{ onDelete: () => void }> = ({ onDelete }) => {
   const handleClick = () => {
     console.log("🗑️ Botão de exclusão clicado!");
     onDelete();
@@ -12,9 +10,7 @@ export const TestDeleteComponent: React.FC<{ onDelete: () => void }> = ({
 
   return (
     <div className="relative w-full p-4 border border-gray-300 rounded-lg mb-4 bg-white">
-      <div className="text-lg font-semibold mb-2">
-        🧪 Componente de Teste de Exclusão
-      </div>
+      <div className="text-lg font-semibold mb-2">🧪 Componente de Teste de Exclusão</div>
       <div className="text-sm text-gray-600 mb-4">
         Este é um componente especial apenas para testar a exclusão.
       </div>

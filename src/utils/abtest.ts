@@ -27,8 +27,7 @@ export function getABTestVariant(testConfig: ABTestConfig): ABTestVariant {
   const hash = simpleHash(userKey + testConfig.testName);
   const percentage = Math.abs(hash) % 100;
 
-  const variant: ABTestVariant =
-    percentage < testConfig.trafficSplit ? "B" : "A";
+  const variant: ABTestVariant = percentage < testConfig.trafficSplit ? "B" : "A";
 
   // Track da variante atribuída
   trackABTestAssignment(testConfig.testName, variant);
@@ -79,18 +78,12 @@ function simpleHash(str: string): number {
  */
 function trackABTestAssignment(testName: string, variant: ABTestVariant) {
   try {
-    trackButtonClick(
-      `ab_test_${testName}_variant_${variant}`,
-      `AB Test ${variant}`,
-      testName,
-    );
+    trackButtonClick(`ab_test_${testName}_variant_${variant}`, `AB Test ${variant}`, testName);
 
     // Salva no localStorage para referência
     localStorage.setItem(`ab_test_${testName}_variant`, variant);
 
-    console.log(
-      `✅ A/B Test: Usuário atribuído à variante ${variant} do teste ${testName}`,
-    );
+    console.log(`✅ A/B Test: Usuário atribuído à variante ${variant} do teste ${testName}`);
   } catch (error) {
     console.error("Erro ao rastrear atribuição do teste A/B:", error);
   }
@@ -102,22 +95,20 @@ function trackABTestAssignment(testName: string, variant: ABTestVariant) {
 export function trackABTestConversion(
   testName: string,
   conversionType: string,
-  additionalData?: Record<string, any>,
+  additionalData?: Record<string, any>
 ) {
   try {
-    const variant = localStorage.getItem(
-      `ab_test_${testName}_variant`,
-    ) as ABTestVariant;
+    const variant = localStorage.getItem(`ab_test_${testName}_variant`) as ABTestVariant;
 
     if (variant) {
       trackButtonClick(
         `ab_test_${testName}_conversion_${conversionType}`,
         `AB Test Conversion ${conversionType}`,
-        testName,
+        testName
       );
 
       console.log(
-        `🎯 A/B Test Conversion: ${conversionType} para variante ${variant} do teste ${testName}`,
+        `🎯 A/B Test Conversion: ${conversionType} para variante ${variant} do teste ${testName}`
       );
     }
   } catch (error) {
@@ -130,9 +121,7 @@ export function trackABTestConversion(
  */
 export function getABTestRedirectUrl(testConfig: ABTestConfig): string {
   const variant = getABTestVariant(testConfig);
-  return variant === "A"
-    ? testConfig.variantA.route
-    : testConfig.variantB.route;
+  return variant === "A" ? testConfig.variantA.route : testConfig.variantB.route;
 }
 
 /**
@@ -140,22 +129,14 @@ export function getABTestRedirectUrl(testConfig: ABTestConfig): string {
  */
 export function useABTestInfo(testConfig: ABTestConfig) {
   const variant = getABTestVariant(testConfig);
-  const currentVariant =
-    variant === "A" ? testConfig.variantA : testConfig.variantB;
+  const currentVariant = variant === "A" ? testConfig.variantA : testConfig.variantB;
 
   return {
     variant,
     route: currentVariant.route,
     description: currentVariant.description,
-    trackConversion: (
-      conversionType: string,
-      additionalData?: Record<string, any>,
-    ) =>
-      trackABTestConversion(
-        testConfig.testName,
-        conversionType,
-        additionalData,
-      ),
+    trackConversion: (conversionType: string, additionalData?: Record<string, any>) =>
+      trackABTestConversion(testConfig.testName, conversionType, additionalData),
   };
 }
 
@@ -165,9 +146,7 @@ export function useABTestInfo(testConfig: ABTestConfig) {
 export function forceABTestVariant(testName: string, variant: ABTestVariant) {
   localStorage.setItem(`ab_test_${testName}_variant`, variant);
   localStorage.setItem(`ab_test_${testName}_forced`, "true");
-  console.log(
-    `🔧 A/B Test: Forçando variante ${variant} para o teste ${testName}`,
-  );
+  console.log(`🔧 A/B Test: Forçando variante ${variant} para o teste ${testName}`);
 }
 
 /**
@@ -183,7 +162,7 @@ export function clearForcedABTestVariant(testName: string) {
 export const logABTestView = (
   testName: string,
   variant: ABTestVariant,
-  page: string = "unknown",
+  page: string = "unknown"
 ) => {
   try {
     const logEntry = {
@@ -206,7 +185,7 @@ export const logABTestConversion = (
   testName: string,
   variant: ABTestVariant,
   conversionType: string,
-  page: string = "unknown",
+  page: string = "unknown"
 ) => {
   try {
     const logEntry = {

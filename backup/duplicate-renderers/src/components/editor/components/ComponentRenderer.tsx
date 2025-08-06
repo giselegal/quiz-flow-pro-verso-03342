@@ -28,10 +28,7 @@ export function ComponentRenderer({ component }: ComponentRendererProps) {
 
     case "paragraph":
       return (
-        <p
-          className={`text-gray-700 leading-relaxed ${props.className || ""}`}
-          style={props.style}
-        >
+        <p className={`text-gray-700 leading-relaxed ${props.className || ""}`} style={props.style}>
           {props.text || "Parágrafo de texto."}
         </p>
       );
@@ -42,7 +39,7 @@ export function ComponentRenderer({ component }: ComponentRendererProps) {
           variant={props.variant || "default"}
           size={props.size || "default"}
           className={props.className}
-          onClick={(e) => e.preventDefault()}
+          onClick={e => e.preventDefault()}
         >
           {props.text || "Botão"}
         </Button>
@@ -59,12 +56,7 @@ export function ComponentRenderer({ component }: ComponentRendererProps) {
       );
 
     case "divider":
-      return (
-        <hr
-          className={`border-gray-300 ${props.className || ""}`}
-          style={props.style}
-        />
-      );
+      return <hr className={`border-gray-300 ${props.className || ""}`} style={props.style} />;
 
     case "container":
       return (
@@ -72,9 +64,7 @@ export function ComponentRenderer({ component }: ComponentRendererProps) {
           className={`rounded border-2 border-dashed border-gray-300 min-h-[100px] flex items-center justify-center ${props.className || ""}`}
           style={props.style}
         >
-          <span className="text-gray-400">
-            Container - Arraste componentes aqui
-          </span>
+          <span className="text-gray-400">Container - Arraste componentes aqui</span>
         </div>
       );
 

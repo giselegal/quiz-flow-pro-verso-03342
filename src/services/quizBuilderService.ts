@@ -75,7 +75,7 @@ export const createBuilderStateFromQuiz = (
   quizQuestions: any[],
   title: string = "Quiz de Estilo Pessoal",
   subtitle: string = "Descubra seu estilo predominante",
-  resultTitle: string = "Seu Resultado de Estilo Pessoal",
+  resultTitle: string = "Seu Resultado de Estilo Pessoal"
 ) => {
   // Create stages
   const welcomeStage: QuizStage = {
@@ -176,19 +176,13 @@ export const createBuilderStateFromQuiz = (
     },
   ];
 
-  const components = [
-    ...welcomeComponents,
-    ...questionComponents,
-    ...resultComponents,
-  ];
+  const components = [...welcomeComponents, ...questionComponents, ...resultComponents];
 
   return { stages, components };
 };
 
 // Add function to convert ResultPageConfig to QuizBuilderState
-export const createBuilderStateFromResultPage = (
-  config: ResultPageConfig,
-): QuizBuilderState => {
+export const createBuilderStateFromResultPage = (config: ResultPageConfig): QuizBuilderState => {
   const resultStageId = generateId();
 
   const stage: QuizStage = {

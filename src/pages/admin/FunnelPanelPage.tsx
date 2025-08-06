@@ -15,9 +15,7 @@ const FunnelPanelPage: React.FC = () => {
           >
             Gerenciamento de Funis
           </h1>
-          <p className="text-[#8F7A6A] mt-2">
-            Gerencie seus funis de venda e campanhas
-          </p>
+          <p className="text-[#8F7A6A] mt-2">Gerencie seus funis de venda e campanhas</p>
         </div>
         <Button className="bg-[#B89B7A] hover:bg-[#A0895B] text-white">
           <Plus className="w-4 h-4 mr-2" />
@@ -35,12 +33,8 @@ const FunnelPanelPage: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 border border-[#D4C4A0] rounded-lg">
                 <div>
-                  <h3 className="font-semibold text-[#432818]">
-                    Funil de Descoberta de Estilo
-                  </h3>
-                  <p className="text-sm text-[#8F7A6A]">
-                    Quiz → Resultado → Oferta
-                  </p>
+                  <h3 className="font-semibold text-[#432818]">Funil de Descoberta de Estilo</h3>
+                  <p className="text-sm text-[#8F7A6A]">Quiz → Resultado → Oferta</p>
                   <div className="flex items-center gap-4 mt-2 text-xs">
                     <span className="text-green-600">87% conversão</span>
                     <span className="text-[#B89B7A]">1,234 visitantes</span>

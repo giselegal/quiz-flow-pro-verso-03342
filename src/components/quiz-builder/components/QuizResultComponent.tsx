@@ -19,19 +19,12 @@ interface QuizResultComponentProps {
   isSelected?: boolean;
 }
 
-const QuizResultComponent: React.FC<QuizResultComponentProps> = ({
-  data,
-  style,
-  isSelected,
-}) => {
+const QuizResultComponent: React.FC<QuizResultComponentProps> = ({ data, style, isSelected }) => {
   const accentColor = style?.accentColor || "#B89B7A";
 
   return (
     <div
-      className={cn(
-        "p-4",
-        isSelected && "outline-dashed outline-1 outline-blue-400",
-      )}
+      className={cn("p-4", isSelected && "outline-dashed outline-1 outline-blue-400")}
       style={{
         backgroundColor: style?.backgroundColor || "transparent",
         color: style?.textColor || "inherit",

@@ -26,17 +26,14 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
       {blocks.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full text-center">
           <p className="text-gray-500 mb-4">Nenhum bloco adicionado ainda</p>
-          <Button
-            onClick={() => handleAddBlock("text")}
-            className="flex items-center gap-2"
-          >
+          <Button onClick={() => handleAddBlock("text")} className="flex items-center gap-2">
             <Plus className="w-4 h-4" />
             Adicionar primeiro bloco
           </Button>
         </div>
       ) : (
         <div className="space-y-4">
-          {blocks.map((block) => (
+          {blocks.map(block => (
             <div
               key={block.id}
               className={`block-item p-4 border rounded-lg cursor-pointer transition-colors ${
@@ -46,16 +43,10 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
               }`}
               onClick={() => onSelectBlock(block.id)}
             >
-              <div className="block-type text-sm text-gray-500 mb-2">
-                {block.type}
-              </div>
+              <div className="block-type text-sm text-gray-500 mb-2">{block.type}</div>
               <div className="block-content">
-                {block.content.title && (
-                  <h3 className="font-medium">{block.content.title}</h3>
-                )}
-                {block.content.text && (
-                  <p className="text-gray-700">{block.content.text}</p>
-                )}
+                {block.content.title && <h3 className="font-medium">{block.content.title}</h3>}
+                {block.content.text && <p className="text-gray-700">{block.content.text}</p>}
               </div>
             </div>
           ))}

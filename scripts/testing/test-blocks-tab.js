@@ -15,13 +15,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Caminho para o arquivo de definições
-const blockDefsPath = path.join(
-  __dirname,
-  "client",
-  "src",
-  "config",
-  "blockDefinitionsClean.ts",
-);
+const blockDefsPath = path.join(__dirname, "client", "src", "config", "blockDefinitionsClean.ts");
 
 try {
   // Ler o arquivo
@@ -36,11 +30,9 @@ try {
   const categoryMatches = content.match(/category:\s*['"`]([^'"`]+)['"`]/g);
 
   if (typeMatches && nameMatches && categoryMatches) {
-    const types = typeMatches.map((m) => m.match(/['"`]([^'"`]+)['"`]/)[1]);
-    const names = nameMatches.map((m) => m.match(/['"`]([^'"`]+)['"`]/)[1]);
-    const categories = categoryMatches.map(
-      (m) => m.match(/['"`]([^'"`]+)['"`]/)[1],
-    );
+    const types = typeMatches.map(m => m.match(/['"`]([^'"`]+)['"`]/)[1]);
+    const names = nameMatches.map(m => m.match(/['"`]([^'"`]+)['"`]/)[1]);
+    const categories = categoryMatches.map(m => m.match(/['"`]([^'"`]+)['"`]/)[1]);
 
     console.log(`📝 Total de componentes registrados: ${types.length}\n`);
 
@@ -63,11 +55,9 @@ try {
     // Mostrar por categoria
     Object.keys(categoryCounts)
       .sort()
-      .forEach((category) => {
-        console.log(
-          `📂 ${category}: ${categoryCounts[category]} componente(s)`,
-        );
-        categoryBlocks[category].forEach((block) => {
+      .forEach(category => {
+        console.log(`📂 ${category}: ${categoryCounts[category]} componente(s)`);
+        categoryBlocks[category].forEach(block => {
           console.log(`   • ${block.name} (${block.type})`);
         });
         console.log("");
@@ -92,7 +82,7 @@ try {
       "countdown-inline",
     ];
 
-    criticalComponents.forEach((component) => {
+    criticalComponents.forEach(component => {
       const found = types.includes(component);
       console.log(`${found ? "✅" : "❌"} ${component}`);
     });
@@ -100,8 +90,8 @@ try {
     console.log("\n🔍 COMPONENTES INLINE MODERNOS:");
     console.log("==========================================\n");
 
-    const inlineComponents = types.filter((type) => type.includes("inline"));
-    inlineComponents.forEach((component) => {
+    const inlineComponents = types.filter(type => type.includes("inline"));
+    inlineComponents.forEach(component => {
       console.log(`✨ ${component}`);
     });
 
@@ -112,12 +102,10 @@ try {
     console.log("==========================================\n");
 
     // Verificar duplicatas
-    const duplicates = types.filter(
-      (type, index) => types.indexOf(type) !== index,
-    );
+    const duplicates = types.filter((type, index) => types.indexOf(type) !== index);
     if (duplicates.length > 0) {
       console.log("❌ Componentes duplicados encontrados:");
-      duplicates.forEach((dup) => console.log(`   • ${dup}`));
+      duplicates.forEach(dup => console.log(`   • ${dup}`));
     } else {
       console.log("✅ Nenhum componente duplicado encontrado");
     }
@@ -142,6 +130,4 @@ console.log("💡 Para testar visualmente:");
 console.log("   1. Acesse http://localhost:3000");
 console.log('   2. Vá para "Editor Schema-Driven"');
 console.log('   3. Verifique a aba "Blocos" na lateral direita');
-console.log(
-  "   4. Confirme se todos os componentes aparecem organizados por categoria",
-);
+console.log("   4. Confirme se todos os componentes aparecem organizados por categoria");

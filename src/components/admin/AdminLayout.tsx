@@ -5,10 +5,7 @@ interface AdminLayoutProps {
   title?: string;
 }
 
-const AdminLayout: React.FC<AdminLayoutProps> = ({
-  children,
-  title = "Administração",
-}) => {
+const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title = "Administração" }) => {
   return (
     <div className="min-h-screen bg-[#FAF9F7]">
       <header className="bg-white border-b border-[#B89B7A]/20">
@@ -18,9 +15,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
           </div>
         </div>
       </header>
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {children}
-      </main>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">{children}</main>
     </div>
   );
 };

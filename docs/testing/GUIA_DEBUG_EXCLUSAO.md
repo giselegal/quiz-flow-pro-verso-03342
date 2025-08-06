@@ -19,8 +19,8 @@
 ```javascript
 // SCRIPT DE DEBUG - Cole no console do navegador
 fetch("/debug-editor-deletion.js")
-  .then((response) => response.text())
-  .then((script) => eval(script))
+  .then(response => response.text())
+  .then(script => eval(script))
   .catch(() => {
     // Script inline se fetch falhar
     console.log("🔧 Debug inline...");
@@ -44,7 +44,7 @@ fetch("/debug-editor-deletion.js")
     // Procurar botões de exclusão
     const buttons = document.querySelectorAll("button");
     let found = 0;
-    buttons.forEach((btn) => {
+    buttons.forEach(btn => {
       if (btn.innerHTML.includes("trash") || btn.innerHTML.includes("Trash2")) {
         btn.style.background = "red";
         btn.style.opacity = "1";
@@ -79,15 +79,11 @@ async function deleteBlockDirect() {
 
   try {
     // Buscar funnel atual
-    const response = await fetch(
-      `http://localhost:3001/api/schema-driven/funnels/${funnelId}`,
-    );
+    const response = await fetch(`http://localhost:3001/api/schema-driven/funnels/${funnelId}`);
     const funnel = await response.json();
 
     // Remover o bloco
-    funnel.pages[0].blocks = funnel.pages[0].blocks.filter(
-      (block) => block.id !== blockId,
-    );
+    funnel.pages[0].blocks = funnel.pages[0].blocks.filter(block => block.id !== blockId);
 
     // Salvar de volta
     const updateResponse = await fetch(
@@ -96,7 +92,7 @@ async function deleteBlockDirect() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(funnel),
-      },
+      }
     );
 
     if (updateResponse.ok) {
@@ -120,7 +116,7 @@ deleteBlockDirect();
 
 ```javascript
 // Verificar se componentes têm classe 'group'
-document.querySelectorAll(".group").forEach((el) => {
+document.querySelectorAll(".group").forEach(el => {
   el.style.border = "2px solid blue";
 });
 ```
@@ -130,10 +126,7 @@ document.querySelectorAll(".group").forEach((el) => {
 ```javascript
 // Verificar estado do editor
 console.log("Funnel ID:", localStorage.getItem("currentFunnelId"));
-console.log(
-  "Componentes na tela:",
-  document.querySelectorAll("[data-block-id]").length,
-);
+console.log("Componentes na tela:", document.querySelectorAll("[data-block-id]").length);
 ```
 
 ### **Problema 3: CSS conflitando**

@@ -72,11 +72,11 @@ export const normalizeBlock = (block: any): any => {
     properties: {
       ...block.content,
       ...block.properties,
-      // Garantir propriedades básicas
+      // Preservar o content original se já existir, senão usar fallbacks
       content:
+        block.properties?.content ||
         block.content?.title ||
         block.content?.question ||
-        block.properties?.content ||
         "Componente sem conteúdo definido",
     },
   };

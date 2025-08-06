@@ -300,13 +300,15 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       // ✅ CARREGAR DIRETAMENTE DO TEMPLATE
       const templateBlocks = getStepTemplate(stepNumber);
       if (templateBlocks && templateBlocks.length > 0) {
-        const editorBlocks: EditorBlock[] = templateBlocks.map((block: { id: any; type: any; properties: any; content: any; }, index: number) => ({
-          id: block.id || `${stageId}-block-${index + 1}`,
-          type: block.type as any,
-          content: block.properties || block.content || {},
-          order: index + 1,
-          properties: block.properties || {},
-        }));
+        const editorBlocks: EditorBlock[] = templateBlocks.map(
+          (block: { id: any; type: any; properties: any; content: any }, index: number) => ({
+            id: block.id || `${stageId}-block-${index + 1}`,
+            type: block.type as any,
+            content: block.properties || block.content || {},
+            order: index + 1,
+            properties: block.properties || {},
+          })
+        );
 
         setStageBlocks(prev => ({
           ...prev,
@@ -591,9 +593,44 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         const blockIndex = blocks.findIndex(block => block.id === blockId);
 
         if (blockIndex !== -1) {
-          updated[stageId] = blocks.map(block =>
-            block.id === blockId ? { ...block, ...updates } : block
-          );
+          updated[stageId] = blocks.map(block => {
+            if (block.id === blockId) {
+              // Criar uma nova cópia do bloco
+              const updatedBlock = { ...block };
+
+              // Processar cada propriedade de atualização separadamente
+              Object.entries(updates).forEach(([key, value]) => {
+                if (key === "properties" && block.properties) {
+                  // Para properties, fazer um merge profundo preservando imutabilidade
+                  updatedBlock.properties = {
+                    ...block.properties,
+                    ...(value as Record<string, any>),
+                  };
+                } else if (key === "content" && block.content) {
+                  // Para content, fazer um merge profundo preservando imutabilidade
+                  updatedBlock.content = {
+                    ...block.content,
+                    ...(value as Record<string, any>),
+                  };
+                } else {
+                  // ✅ CORREÇÃO: Para campos que podem ser tanto content quanto properties
+                  // Se não for properties ou content específico, tentar atualizar em content primeiro
+                  if (block.content && typeof value !== "object") {
+                    updatedBlock.content = {
+                      ...block.content,
+                      [key]: value,
+                    };
+                  } else {
+                    // Para outras propriedades, atualização direta com casting seguro
+                    (updatedBlock as any)[key] = value;
+                  }
+                }
+              });
+
+              return updatedBlock;
+            }
+            return block;
+          });
           break;
         }
       }
@@ -620,6 +657,24 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const selectedBlock = selectedBlockId
     ? currentBlocks.find(block => block.id === selectedBlockId)
     : undefined;
+
+  // 🔍 DEBUG LOGS PARA DIAGNÓSTICO
+  console.log("🔍 EditorContext - Computed Values Debug:", {
+    activeStageId,
+    selectedBlockId,
+    currentBlocksCount: currentBlocks.length,
+    currentBlocksIds: currentBlocks.map(b => b.id),
+    selectedBlockFound: !!selectedBlock,
+    selectedBlockDetails: selectedBlock
+      ? {
+          id: selectedBlock.id,
+          type: selectedBlock.type,
+          hasProperties: !!selectedBlock.properties,
+          hasContent: !!selectedBlock.content,
+        }
+      : null,
+  });
+
   const totalBlocks = Object.values(stageBlocks).reduce(
     (total, blocks) => total + blocks.length,
     0

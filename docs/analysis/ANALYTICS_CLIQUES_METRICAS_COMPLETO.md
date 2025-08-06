@@ -134,14 +134,14 @@ analyticsService.trackQuestionAnswer(
   "quiz_quest_challenge_v1",
   "question_1",
   "mountains", // resposta selecionada
-  "user_12345",
+  "user_12345"
 );
 
 analyticsService.trackButtonClick(
   "quiz_quest_challenge_v1",
   "option_mountains",
   "🏔️ Montanhas geladas",
-  "user_12345",
+  "user_12345"
 );
 ```
 
@@ -293,11 +293,7 @@ ORDER BY click_count DESC;
 // Em SchemaDrivenEditorResponsive.tsx
 const handleSave = async () => {
   // Rastrear clique no botão salvar
-  await analyticsService.trackButtonClick(
-    funnel?.id || "",
-    "save_button",
-    "Salvar Funil",
-  );
+  await analyticsService.trackButtonClick(funnel?.id || "", "save_button", "Salvar Funil");
 
   // Salvar funil
   await saveFunnel(true);

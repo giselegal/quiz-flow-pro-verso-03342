@@ -1,4 +1,4 @@
-import UniversalPropertiesPanel from "@/components/universal/UniversalPropertiesPanel";
+import UniversalPropertiesPanel from "@/components/universal";
 import { UnifiedBlock } from "@/hooks/useUnifiedProperties";
 import { useState } from "react";
 

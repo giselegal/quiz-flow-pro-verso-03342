@@ -77,7 +77,7 @@ const setActiveStage = useCallback(
     setActiveStageId(stageId); // ✅ Update atomico
     setSelectedBlockId(null); // ✅ Reset automático
   },
-  [validateStageId],
+  [validateStageId]
 );
 ```
 
@@ -108,7 +108,7 @@ const setActiveStage = useCallback(
     }
     // ...resto da lógica implementada
   },
-  [validateStageId],
+  [validateStageId]
 );
 ```
 
@@ -311,11 +311,7 @@ interface EditorContextType {
     addBlock: (type: string, stageId?: string) => string; // ✅ Retorna ID
     updateBlock: (id: string, updates: Partial<EditorBlock>) => void;
     deleteBlock: (id: string) => void;
-    reorderBlocks: (
-      stageId: string,
-      startIndex: number,
-      endIndex: number,
-    ) => void;
+    reorderBlocks: (stageId: string, startIndex: number, endIndex: number) => void;
     getBlocksForStage: (stageId: string) => EditorBlock[]; // ✅ Acesso seguro
     setSelectedBlockId: (id: string | null) => void;
     clearStageBlocks: (stageId: string) => void;
@@ -453,10 +449,7 @@ src/
 **FunnelStagesPanel:**
 
 ```javascript
-console.log(
-  `🔍 [timestamp] FunnelStagesPanel - Steps recebidas:`,
-  steps?.length,
-);
+console.log(`🔍 [timestamp] FunnelStagesPanel - Steps recebidas:`, steps?.length);
 console.log(`🎯 [timestamp] FunnelStagesPanel - Dados completos:`, steps);
 ```
 

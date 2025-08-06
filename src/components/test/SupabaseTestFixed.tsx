@@ -8,14 +8,10 @@ export const SupabaseTestFixed: React.FC = () => {
   const handleTest = async (testName: string) => {
     try {
       // Simulate test
-      setTestResults((prev) => [...prev, `${testName}: OK`]);
+      setTestResults(prev => [...prev, `${testName}: OK`]);
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Unknown error occurred";
-      setTestResults((prev) => [
-        ...prev,
-        `${testName}: Error - ${errorMessage}`,
-      ]);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+      setTestResults(prev => [...prev, `${testName}: Error - ${errorMessage}`]);
     }
   };
 
@@ -26,9 +22,7 @@ export const SupabaseTestFixed: React.FC = () => {
       </CardHeader>
       <CardContent>
         <div className="space-y-2">
-          <Button onClick={() => handleTest("Connection Test")}>
-            Test Connection
-          </Button>
+          <Button onClick={() => handleTest("Connection Test")}>Test Connection</Button>
           <div className="mt-4">
             <h4 className="font-medium">Results:</h4>
             <ul className="text-sm">

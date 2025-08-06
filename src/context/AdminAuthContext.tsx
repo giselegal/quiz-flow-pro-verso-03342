@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 interface AdminUser {
   email: string;
@@ -20,13 +14,9 @@ interface AdminAuthContextType {
   isLoading: boolean;
 }
 
-const AdminAuthContext = createContext<AdminAuthContextType | undefined>(
-  undefined,
-);
+const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefined);
 
-export const AdminAuthProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const AdminAuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -44,10 +34,7 @@ export const AdminAuthProvider: React.FC<{ children: ReactNode }> = ({
     autoLogin();
   }, []);
 
-  const adminLogin = async (
-    email: string,
-    password: string,
-  ): Promise<boolean> => {
+  const adminLogin = async (email: string, password: string): Promise<boolean> => {
     // Sempre retorna sucesso (acesso livre)
     const user: AdminUser = {
       email: email || "admin@local.dev",

@@ -5,9 +5,7 @@ interface ComponentsSidebarProps {
   onComponentSelect: (type: string) => void;
 }
 
-export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
-  onComponentSelect,
-}) => {
+export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect }) => {
   const components = [
     { type: "header", label: "Header" },
     { type: "text", label: "Text" },
@@ -19,7 +17,7 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
     <div className="h-full bg-gray-50 p-4">
       <h3 className="text-lg font-semibold mb-4">Components</h3>
       <div className="space-y-2">
-        {components.map((component) => (
+        {components.map(component => (
           <Button
             key={component.type}
             variant="outline"

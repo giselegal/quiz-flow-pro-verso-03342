@@ -1,13 +1,12 @@
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { getOptimizedContainerClasses } from "@/config/containerConfig";
+import React, { useState } from "react";
 import {
+  Alignment,
   BlockComponentProps,
+  InteractionCallbacks,
   ProgressConfig,
   QuestionOption,
-  Alignment,
-  InteractionCallbacks,
 } from "./types";
 
 /**
@@ -29,9 +28,7 @@ import {
  * />
  */
 
-export interface QuizQuestionProps
-  extends BlockComponentProps,
-    InteractionCallbacks {
+export interface QuizQuestionProps extends BlockComponentProps, InteractionCallbacks {
   // Conteúdo da pergunta
   question: string;
   description?: string;
@@ -53,6 +50,7 @@ export interface QuizQuestionProps
   optionLayout?: "vertical" | "horizontal" | "grid";
   optionStyle?: "card" | "button" | "radio" | "checkbox";
   showLetters?: boolean; // A, B, C, D
+  optionImageSize?: "small" | "medium" | "large";
 
   // Progresso
   progressConfig?: ProgressConfig;
@@ -93,6 +91,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   optionLayout = "vertical",
   optionStyle = "card",
   showLetters = true,
+  optionImageSize = "medium",
 
   // Progresso
   progressConfig,
@@ -120,8 +119,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   testId = "quiz-question",
   ...props
 }) => {
-  const [selectedOptionIds, setSelectedOptionIds] =
-    useState<string[]>(initialSelections);
+  const [selectedOptionIds, setSelectedOptionIds] = useState<string[]>(initialSelections);
   const [hasAnswered, setHasAnswered] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
 
@@ -129,10 +127,14 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   const layoutClasses = {
     vertical: "flex flex-col space-y-3",
     horizontal: "flex flex-wrap gap-3",
-    grid:
-      deviceView === "mobile"
-        ? "grid grid-cols-1 gap-3"
-        : "grid grid-cols-2 gap-3",
+    grid: deviceView === "mobile" ? "grid grid-cols-1 gap-3" : "grid grid-cols-2 gap-4",
+  };
+
+  // Classes para tamanhos de imagem
+  const imageSizeClasses = {
+    small: "h-24",
+    medium: "h-32",
+    large: "h-40",
   };
 
   // Classes de alinhamento
@@ -142,9 +144,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
     right: "text-right",
   };
 
-  const selectedOptions = options.filter((option) =>
-    selectedOptionIds.includes(option.id),
-  );
+  const selectedOptions = options.filter(option => selectedOptionIds.includes(option.id));
 
   // Validação
   const validateSelection = (selections: string[]) => {
@@ -170,7 +170,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
 
     if (multipleSelection) {
       if (selectedOptionIds.includes(optionId)) {
-        newSelections = selectedOptionIds.filter((id) => id !== optionId);
+        newSelections = selectedOptionIds.filter(id => id !== optionId);
       } else {
         newSelections = [...selectedOptionIds, optionId];
       }
@@ -184,9 +184,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
     const error = validateSelection(newSelections);
     setValidationError(error);
 
-    const newSelectedOptions = options.filter((option) =>
-      newSelections.includes(option.id),
-    );
+    const newSelectedOptions = options.filter(option => newSelections.includes(option.id));
 
     onSelectionChange?.(newSelectedOptions);
     onValidation?.(!error);
@@ -236,9 +234,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
         break;
       case "button":
         optionClasses += ` px-6 py-3 rounded-lg ${
-          isSelected
-            ? "bg-[#B89B7A] text-white"
-            : "bg-gray-100 hover:bg-gray-200 text-gray-800"
+          isSelected ? "bg-[#B89B7A] text-white" : "bg-gray-100 hover:bg-gray-200 text-gray-800"
         }`;
         contentClasses = "text-center";
         break;
@@ -264,9 +260,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
                 isSelected ? "border-[#B89B7A] bg-[#B89B7A]" : "border-gray-300"
               }`}
             >
-              {isSelected && (
-                <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
-              )}
+              {isSelected && <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>}
             </div>
           )}
 
@@ -298,25 +292,19 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
               <img
                 src={option.imageUrl}
                 alt={option.text}
-                className="w-full h-32 object-cover rounded-lg"
+                className={`w-full ${imageSizeClasses[(optionImageSize || "medium") as keyof typeof imageSizeClasses]} object-cover rounded-lg`}
                 loading="lazy"
               />
             </div>
           )}
 
           {/* Texto e letra em uma linha quando há imagem */}
-          <div
-            className={
-              option.imageUrl ? "flex items-center space-x-3" : "contents"
-            }
-          >
+          <div className={option.imageUrl ? "flex items-center space-x-3" : "contents"}>
             {/* Letra da opção */}
             {showLetters && optionStyle === "card" && (
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
-                  isSelected
-                    ? "bg-[#B89B7A] text-white"
-                    : "bg-gray-200 text-gray-600"
+                  isSelected ? "bg-[#B89B7A] text-white" : "bg-gray-200 text-gray-600"
                 }`}
               >
                 {letter}
@@ -335,16 +323,11 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
     deviceView || "desktop",
     "tight",
     "full",
-    className,
+    className
   );
 
   return (
-    <div
-      className={containerClasses}
-      style={style}
-      data-testid={testId}
-      {...props}
-    >
+    <div className={containerClasses} style={style} data-testid={testId} {...props}>
       {/* Barra de Progresso */}
       {progressConfig?.showProgress && (
         <div className="w-full max-w-2xl mx-auto mb-8">
@@ -378,17 +361,11 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
             {question}
           </h2>
 
-          {description && (
-            <p className="text-lg text-gray-600 leading-relaxed">
-              {description}
-            </p>
-          )}
+          {description && <p className="text-lg text-gray-600 leading-relaxed">{description}</p>}
         </div>
 
         {/* Opções */}
-        <div
-          className={`mb-8 ${layoutClasses[optionLayout as keyof typeof layoutClasses]}`}
-        >
+        <div className={`mb-8 ${layoutClasses[optionLayout as keyof typeof layoutClasses]}`}>
           {options.map((option, index) => renderOption(option, index))}
         </div>
 

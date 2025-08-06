@@ -8,9 +8,7 @@ interface TestimonialsBlockPreviewProps {
   };
 }
 
-const TestimonialsBlockPreview: React.FC<TestimonialsBlockPreviewProps> = ({
-  content,
-}) => {
+const TestimonialsBlockPreview: React.FC<TestimonialsBlockPreviewProps> = ({ content }) => {
   return (
     <div style={content.style}>
       <h3 className="text-xl font-bold mb-6 text-[#aa6b5d] text-center">

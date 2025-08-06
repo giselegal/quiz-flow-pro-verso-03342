@@ -110,14 +110,7 @@ Object.entries(analysis).forEach(([section, data]) => {
   console.log(`\n📊 ${section.toUpperCase()}:`);
 
   if (data.score !== undefined) {
-    const emoji =
-      data.score >= 8
-        ? "🟢"
-        : data.score >= 6
-          ? "🟡"
-          : data.score >= 4
-            ? "🟠"
-            : "🔴";
+    const emoji = data.score >= 8 ? "🟢" : data.score >= 6 ? "🟡" : data.score >= 4 ? "🟠" : "🔴";
     console.log(`   ${emoji} Score: ${data.score}/10`);
   }
 
@@ -141,22 +134,22 @@ Object.entries(analysis).forEach(([section, data]) => {
 
   if (data.positives?.length) {
     console.log("   ✅ Pontos Positivos:");
-    data.positives.forEach((item) => console.log(`      • ${item}`));
+    data.positives.forEach(item => console.log(`      • ${item}`));
   }
 
   if (data.issues?.length) {
     console.log("   ❌ Problemas:");
-    data.issues.forEach((item) => console.log(`      • ${item}`));
+    data.issues.forEach(item => console.log(`      • ${item}`));
   }
 
   if (data.improvements?.length) {
     console.log("   💡 Melhorias:");
-    data.improvements.forEach((item) => console.log(`      • ${item}`));
+    data.improvements.forEach(item => console.log(`      • ${item}`));
   }
 
   if (data.recommendations?.length) {
     console.log("   🎯 Recomendações:");
-    data.recommendations.forEach((item) => console.log(`      • ${item}`));
+    data.recommendations.forEach(item => console.log(`      • ${item}`));
   }
 });
 
@@ -316,9 +309,7 @@ export const ReviewsBlock: React.FC<ReviewsBlockProps> = ({
 console.log("\n📝 CÓDIGO MELHORADO:");
 console.log("====================");
 console.log("✨ Principais melhorias implementadas:");
-console.log(
-  "   • 📱 Responsividade completa (grid-cols-1 sm:grid-cols-2 lg:grid-cols-3)",
-);
+console.log("   • 📱 Responsividade completa (grid-cols-1 sm:grid-cols-2 lg:grid-cols-3)");
 console.log("   • 🎯 Sistema @dnd-kit padronizado integrado");
 console.log('   • ♿ Acessibilidade aprimorada (aria-label, role="article")');
 console.log("   • 🎨 Feedback visual melhorado (hover, drag states)");

@@ -60,7 +60,7 @@ const StageList: React.FC<StageListProps> = ({
       </div>
 
       <div className="space-y-2">
-        {stages.map((stage) => (
+        {stages.map(stage => (
           <Card
             key={stage.id}
             className={`p-3 cursor-pointer transition-all ${
@@ -74,12 +74,8 @@ const StageList: React.FC<StageListProps> = ({
               <div className="flex items-center space-x-3">
                 <span className="text-lg">{getStageIcon(stage.type)}</span>
                 <div>
-                  <p className="font-medium text-sm text-[#432818]">
-                    {stage.title}
-                  </p>
-                  <p className="text-xs text-[#8F7A6A] capitalize">
-                    {stage.type}
-                  </p>
+                  <p className="font-medium text-sm text-[#432818]">{stage.title}</p>
+                  <p className="text-xs text-[#8F7A6A] capitalize">{stage.type}</p>
                 </div>
               </div>
 
@@ -87,7 +83,7 @@ const StageList: React.FC<StageListProps> = ({
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={(e) => {
+                  onClick={e => {
                     e.stopPropagation();
                     handleResultPreview(stage);
                   }}
@@ -99,7 +95,7 @@ const StageList: React.FC<StageListProps> = ({
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={(e) => {
+                  onClick={e => {
                     e.stopPropagation();
                     onStageDelete(stage.id);
                   }}

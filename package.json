@@ -11,6 +11,7 @@
     "build:dev": "vite build --mode development",
     "start": "set NODE_ENV=production && node dist/server.js",
     "check": "tsc",
+    "check-imports": "node ./scripts/check-imports.js",
     "db:push": "drizzle-kit push",
     "lovable:prepare": "echo 'Preparando ambiente para desenvolvimento' && npm install",
     "format": "prettier --write .",

@@ -104,9 +104,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         suppressContentEditableWarning={true}
         style={{ minHeight: "100px" }}
       >
-        {!value && (
-          <div className="text-gray-400 pointer-events-none">{placeholder}</div>
-        )}
+        {!value && <div className="text-gray-400 pointer-events-none">{placeholder}</div>}
       </div>
     </div>
   );

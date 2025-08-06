@@ -1,6 +1,7 @@
 // Quiz components exports
 export const QUIZ_COMPONENTS = {
   intro: "QuizIntroBlock",
-  question: "QuizQuestionBlock",
+  optionsGrid: "QuizOptionsGridBlock",
+  multipleChoice: "QuizMultipleChoiceBlock",
   result: "QuizResultBlock",
 };

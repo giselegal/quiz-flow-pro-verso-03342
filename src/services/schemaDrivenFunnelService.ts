@@ -46,8 +46,7 @@ export interface FunnelVersion {
   description?: string;
 }
 
-const generateId = () =>
-  `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+const generateId = () => `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
 export const schemaDrivenFunnelService = {
   async createFunnel(funnel: any): Promise<SchemaDrivenFunnelData> {
@@ -70,11 +69,7 @@ export const schemaDrivenFunnelService = {
         },
       };
 
-      const { data, error } = await supabase
-        .from("funnels")
-        .insert([funnelData])
-        .select()
-        .single();
+      const { data, error } = await supabase.from("funnels").insert([funnelData]).select().single();
 
       if (error) throw error;
 
@@ -113,10 +108,7 @@ export const schemaDrivenFunnelService = {
     }
   },
 
-  async updateFunnel(
-    id: string,
-    updates: any,
-  ): Promise<SchemaDrivenFunnelData | null> {
+  async updateFunnel(id: string, updates: any): Promise<SchemaDrivenFunnelData | null> {
     try {
       const {
         data: { user },
@@ -126,10 +118,8 @@ export const schemaDrivenFunnelService = {
       const updateData: any = {};
 
       if (updates.name !== undefined) updateData.name = updates.name;
-      if (updates.description !== undefined)
-        updateData.description = updates.description;
-      if (updates.isPublished !== undefined)
-        updateData.is_published = updates.isPublished;
+      if (updates.description !== undefined) updateData.description = updates.description;
+      if (updates.isPublished !== undefined) updateData.is_published = updates.isPublished;
       if (updates.version !== undefined) updateData.version = updates.version;
 
       if (updates.theme || updates.config) {
@@ -247,7 +237,7 @@ export const schemaDrivenFunnelService = {
 
       if (error) throw error;
 
-      return (funnels || []).map((funnel) => {
+      return (funnels || []).map(funnel => {
         const settings = (funnel.settings as any) || {};
         return {
           id: funnel.id,
@@ -280,11 +270,7 @@ export const schemaDrivenFunnelService = {
       await supabase.from("funnel_pages").delete().eq("funnel_id", id);
 
       // Deletar funil
-      const { error } = await supabase
-        .from("funnels")
-        .delete()
-        .eq("id", id)
-        .eq("user_id", user.id);
+      const { error } = await supabase.from("funnels").delete().eq("id", id).eq("user_id", user.id);
 
       if (error) throw error;
       return true;
@@ -316,13 +302,9 @@ export const schemaDrivenFunnelService = {
       const updateData: any = {};
       if (updates.title !== undefined) updateData.title = updates.title;
       if (updates.blocks !== undefined) updateData.blocks = updates.blocks;
-      if (updates.page_order !== undefined)
-        updateData.page_order = updates.page_order;
+      if (updates.page_order !== undefined) updateData.page_order = updates.page_order;
 
-      const { error } = await supabase
-        .from("funnel_pages")
-        .update(updateData)
-        .eq("id", pageId);
+      const { error } = await supabase.from("funnel_pages").update(updateData).eq("id", pageId);
 
       if (error) throw error;
       return true;
@@ -332,10 +314,7 @@ export const schemaDrivenFunnelService = {
     }
   },
 
-  async createPage(
-    funnelId: string,
-    page: any,
-  ): Promise<SchemaDrivenPageData | null> {
+  async createPage(funnelId: string, page: any): Promise<SchemaDrivenPageData | null> {
     try {
       const {
         data: { user },

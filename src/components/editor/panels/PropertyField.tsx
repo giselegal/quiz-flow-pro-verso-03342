@@ -51,7 +51,7 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
         return (
           <Input
             value={value || ""}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={e => onChange(e.target.value)}
             placeholder={property.placeholder}
             className="w-full"
           />
@@ -61,7 +61,7 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
         return (
           <Textarea
             value={value || ""}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={e => onChange(e.target.value)}
             placeholder={property.placeholder}
             rows={property.rows || 3}
             className="w-full"
@@ -73,7 +73,7 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
           <Input
             type="number"
             value={value || ""}
-            onChange={(e) => onChange(Number(e.target.value))}
+            onChange={e => onChange(Number(e.target.value))}
             min={property.min}
             max={property.max}
             step={property.step}
@@ -87,15 +87,13 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
           <div className="space-y-2">
             <Slider
               value={[value || 0]}
-              onValueChange={(values) => onChange(values[0])}
+              onValueChange={values => onChange(values[0])}
               min={property.min || 0}
               max={property.max || 100}
               step={property.step || 1}
               className="w-full"
             />
-            <div className="text-sm text-gray-500 text-center">
-              {value || 0}
-            </div>
+            <div className="text-sm text-gray-500 text-center">{value || 0}</div>
           </div>
         );
 
@@ -103,9 +101,7 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
         return (
           <div className="flex items-center justify-between">
             <Switch checked={Boolean(value)} onCheckedChange={onChange} />
-            <span className="text-sm text-gray-600">
-              {value ? "Ativado" : "Desativado"}
-            </span>
+            <span className="text-sm text-gray-600">{value ? "Ativado" : "Desativado"}</span>
           </div>
         );
 
@@ -115,12 +111,12 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
             <Input
               type="color"
               value={value || "#000000"}
-              onChange={(e) => onChange(e.target.value)}
+              onChange={e => onChange(e.target.value)}
               className="w-16 h-10 p-1 rounded border"
             />
             <Input
               value={value || ""}
-              onChange={(e) => onChange(e.target.value)}
+              onChange={e => onChange(e.target.value)}
               placeholder="#000000"
               className="flex-1"
             />
@@ -134,7 +130,7 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
               <SelectValue placeholder={property.placeholder} />
             </SelectTrigger>
             <SelectContent>
-              {property.options?.map((option) => (
+              {property.options?.map(option => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>
@@ -153,7 +149,7 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
                 const input = document.createElement("input");
                 input.type = "file";
                 input.accept = property.accept || "image/*";
-                input.onchange = (e) => {
+                input.onchange = e => {
                   const file = (e.target as HTMLInputElement).files?.[0];
                   if (file) {
                     const reader = new FileReader();
@@ -172,7 +168,7 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
             {value && (
               <Input
                 value={value}
-                onChange={(e) => onChange(e.target.value)}
+                onChange={e => onChange(e.target.value)}
                 placeholder="URL da imagem"
                 className="w-full"
               />
@@ -185,7 +181,7 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
           <Input
             type="url"
             value={value || ""}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={e => onChange(e.target.value)}
             placeholder={property.placeholder || "https://"}
             className="w-full"
           />
@@ -196,7 +192,7 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
           <Input
             type="datetime-local"
             value={value || ""}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={e => onChange(e.target.value)}
             className="w-full"
           />
         );
@@ -209,7 +205,7 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
               <div key={index} className="flex gap-2">
                 <Input
                   value={item}
-                  onChange={(e) => {
+                  onChange={e => {
                     const newArray = [...arrayValue];
                     newArray[index] = e.target.value;
                     onChange(newArray);
@@ -244,7 +240,7 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
         return (
           <Input
             value={value || ""}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={e => onChange(e.target.value)}
             placeholder={property.placeholder}
             className="w-full"
           />

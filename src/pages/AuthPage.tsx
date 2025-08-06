@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useLocation } from "wouter";
 import { Loader2 } from "lucide-react";
@@ -58,13 +52,9 @@ export default function AuthPage() {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">
-            {isLogin ? "Entrar" : "Criar Conta"}
-          </CardTitle>
+          <CardTitle className="text-2xl font-bold">{isLogin ? "Entrar" : "Criar Conta"}</CardTitle>
           <CardDescription>
-            {isLogin
-              ? "Entre com sua conta para continuar"
-              : "Crie uma nova conta para começar"}
+            {isLogin ? "Entre com sua conta para continuar" : "Crie uma nova conta para começar"}
           </CardDescription>
         </CardHeader>
 
@@ -84,17 +74,14 @@ export default function AuthPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
               <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium mb-2"
-                >
+                <label htmlFor="name" className="block text-sm font-medium mb-2">
                   Nome
                 </label>
                 <Input
                   id="name"
                   type="text"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={e => setName(e.target.value)}
                   placeholder="Seu nome"
                   required={!isLogin}
                 />
@@ -109,24 +96,21 @@ export default function AuthPage() {
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
                 placeholder="seu@email.com"
                 required
               />
             </div>
 
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium mb-2"
-              >
+              <label htmlFor="password" className="block text-sm font-medium mb-2">
                 Senha
               </label>
               <Input
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
                 minLength={6}

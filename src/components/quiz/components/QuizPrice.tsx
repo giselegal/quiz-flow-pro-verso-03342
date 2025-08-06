@@ -52,9 +52,7 @@ const QuizPrice: React.FC<QuizPriceProps> = ({
             </span>
           </div>
 
-          {installments && (
-            <div className={styles.installments}>ou {installments}</div>
-          )}
+          {installments && <div className={styles.installments}>ou {installments}</div>}
         </div>
 
         <div className={styles.priceFeatures}>

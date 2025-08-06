@@ -33,10 +33,7 @@ export const QuizIntroStep: React.FC<FunnelStepProps> = ({
 
   return (
     <div
-      className={cn(
-        "relative flex flex-col bg-white rounded-xl shadow-md p-6",
-        className,
-      )}
+      className={cn("relative flex flex-col bg-white rounded-xl shadow-md p-6", className)}
       onClick={isEditable ? onEdit : undefined}
       data-funnel-step-id={id}
     >
@@ -47,9 +44,7 @@ export const QuizIntroStep: React.FC<FunnelStepProps> = ({
             Etapa {stepNumber} de {totalSteps}
           </div>
 
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-            {title}
-          </h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">{title}</h2>
 
           <p className="text-gray-600">{description}</p>
 

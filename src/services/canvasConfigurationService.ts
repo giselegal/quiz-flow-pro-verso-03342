@@ -7,7 +7,7 @@ export const createSimpleBlockData = (
   id: string,
   type: string,
   properties: any,
-  order: number = 0,
+  order: number = 0
 ): BlockData => ({
   id,
   type,
@@ -27,12 +27,7 @@ export const getStep20CanvasConfig = (userResult: any) => {
     order: 20,
     components: [
       createSimpleBlockData("header", "header", { title: "Resultado" }, 0),
-      createSimpleBlockData(
-        "content",
-        "text",
-        { text: "Conteúdo do resultado" },
-        1,
-      ),
+      createSimpleBlockData("content", "text", { text: "Conteúdo do resultado" }, 1),
       createSimpleBlockData("cta", "button", { text: "Ação Principal" }, 2),
     ],
   };

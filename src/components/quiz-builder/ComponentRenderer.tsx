@@ -27,9 +27,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
         );
 
       case "text":
-        return (
-          <div className="prose max-w-none">{data.text || "Texto padrão"}</div>
-        );
+        return <div className="prose max-w-none">{data.text || "Texto padrão"}</div>;
 
       case "headline":
         return (
@@ -60,9 +58,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
               data.options.map((option: string, index: number) => (
                 <div key={index} className="flex items-center space-x-2">
                   <input type="checkbox" id={`opt-${component.id}-${index}`} />
-                  <label htmlFor={`opt-${component.id}-${index}`}>
-                    {option}
-                  </label>
+                  <label htmlFor={`opt-${component.id}-${index}`}>{option}</label>
                 </div>
               ))
             ) : (
@@ -83,9 +79,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
                     name={`opt-${component.id}`}
                     id={`opt-${component.id}-${index}`}
                   />
-                  <label htmlFor={`opt-${component.id}-${index}`}>
-                    {option}
-                  </label>
+                  <label htmlFor={`opt-${component.id}-${index}`}>{option}</label>
                 </div>
               ))
             ) : (
@@ -104,13 +98,10 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
                 {Array.from(
                   { length: (data.maxValue || 10) - (data.minValue || 1) + 1 },
                   (_, i) => (
-                    <button
-                      key={i}
-                      className="w-10 h-10 border rounded hover:bg-gray-100"
-                    >
+                    <button key={i} className="w-10 h-10 border rounded hover:bg-gray-100">
                       {(data.minValue || 1) + i}
                     </button>
-                  ),
+                  )
                 )}
               </div>
               <span className="text-sm">{data.maxLabel || "Máximo"}</span>
@@ -121,9 +112,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
       default:
         return (
           <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center">
-            <p className="text-gray-500">
-              Tipo de componente desconhecido: {component.type}
-            </p>
+            <p className="text-gray-500">Tipo de componente desconhecido: {component.type}</p>
           </div>
         );
     }
@@ -132,10 +121,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
   return (
     <div
       onClick={onClick}
-      className={cn(
-        "transition-all cursor-pointer",
-        isSelected ? "ring-2 ring-[#B89B7A]" : "",
-      )}
+      className={cn("transition-all cursor-pointer", isSelected ? "ring-2 ring-[#B89B7A]" : "")}
     >
       <Card className="p-4">{renderComponent()}</Card>
     </div>

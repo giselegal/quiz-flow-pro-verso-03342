@@ -13,19 +13,17 @@ function testeDashboardCriacaoFunil() {
     console.log("✅ Localização atual:", window.location.pathname);
 
     // Verificar se componentes do dashboard existem
-    const templates = document.querySelectorAll(
-      '[class*="template"], [class*="Card"]',
-    );
+    const templates = document.querySelectorAll('[class*="template"], [class*="Card"]');
     console.log("✅ Templates encontrados:", templates.length);
 
     // Verificar botões de criação
     const createButtons = document.querySelectorAll("button");
     const templateButtons = Array.from(createButtons).filter(
-      (btn) =>
+      btn =>
         btn.textContent?.includes("Template") ||
         btn.textContent?.includes("Usar") ||
         btn.textContent?.includes("Duplicar") ||
-        btn.textContent?.includes("Personalizado"),
+        btn.textContent?.includes("Personalizado")
     );
     console.log("✅ Botões de template encontrados:", templateButtons.length);
 
@@ -59,23 +57,16 @@ function testeEditorComponentesPropriedades() {
     console.log("✅ No editor:", isOnEditor);
 
     // Verificar sidebars
-    const sidebars = document.querySelectorAll(
-      '[class*="sidebar"], [class*="panel"]',
-    );
+    const sidebars = document.querySelectorAll('[class*="sidebar"], [class*="panel"]');
     console.log("✅ Sidebars encontradas:", sidebars.length);
 
     // Verificar canvas principal
-    const canvas = document.querySelector(
-      '[class*="canvas"], [class*="preview"], main',
-    );
-    console.log(
-      "✅ Canvas principal:",
-      canvas ? "Encontrado" : "Não encontrado",
-    );
+    const canvas = document.querySelector('[class*="canvas"], [class*="preview"], main');
+    console.log("✅ Canvas principal:", canvas ? "Encontrado" : "Não encontrado");
 
     // Verificar componentes disponíveis
     const components = document.querySelectorAll(
-      '[draggable="true"], [class*="component"], [class*="block"]',
+      '[draggable="true"], [class*="component"], [class*="block"]'
     );
     console.log("✅ Componentes arrastavéis:", components.length);
 
@@ -88,13 +79,8 @@ function testeEditorComponentesPropriedades() {
     });
 
     // Verificar área de propriedades
-    const propertiesPanel = document.querySelector(
-      '[class*="properties"], [class*="config"]',
-    );
-    console.log(
-      "✅ Painel de propriedades:",
-      propertiesPanel ? "Encontrado" : "Não encontrado",
-    );
+    const propertiesPanel = document.querySelector('[class*="properties"], [class*="config"]');
+    console.log("✅ Painel de propriedades:", propertiesPanel ? "Encontrado" : "Não encontrado");
 
     if (isOnEditor && canvas && components.length > 0) {
       console.log("✅ Editor tem interface completa para edição");
@@ -119,19 +105,19 @@ function teste21EtapasResponsividade() {
   try {
     // Verificar lista de páginas/etapas
     const pagesList = document.querySelectorAll(
-      '[class*="page"], [class*="step"], [class*="etapa"]',
+      '[class*="page"], [class*="step"], [class*="etapa"]'
     );
     console.log("✅ Etapas/páginas encontradas:", pagesList.length);
 
     // Verificar se há navegação entre etapas
     const navigation = document.querySelectorAll(
-      '[class*="nav"], button[class*="page"], [role="button"]',
+      '[class*="nav"], button[class*="page"], [role="button"]'
     );
     console.log("✅ Elementos de navegação:", navigation.length);
 
     // Verificar controles de dispositivo (responsividade)
     const deviceControls = document.querySelectorAll(
-      '[class*="device"], [class*="mobile"], [class*="tablet"], [class*="desktop"]',
+      '[class*="device"], [class*="mobile"], [class*="tablet"], [class*="desktop"]'
     );
     console.log("✅ Controles de dispositivo:", deviceControls.length);
 
@@ -144,14 +130,11 @@ function teste21EtapasResponsividade() {
     const isTablet = screenWidth >= 768 && screenWidth < 1024;
     const isDesktop = screenWidth >= 1024;
 
-    console.log(
-      "✅ Dispositivo detectado:",
-      isMobile ? "Mobile" : isTablet ? "Tablet" : "Desktop",
-    );
+    console.log("✅ Dispositivo detectado:", isMobile ? "Mobile" : isTablet ? "Tablet" : "Desktop");
 
     // Verificar se elementos se adaptam
     const responsiveElements = document.querySelectorAll(
-      '[class*="responsive"], [class*="hidden"], [class*="lg:"], [class*="md:"], [class*="sm:"]',
+      '[class*="responsive"], [class*="hidden"], [class*="lg:"], [class*="md:"], [class*="sm:"]'
     );
     console.log("✅ Elementos responsivos:", responsiveElements.length);
 
@@ -179,20 +162,17 @@ function testeSalvamentoPersistencia() {
     // Verificar localStorage
     const localStorageKeys = Object.keys(localStorage);
     const funnelKeys = localStorageKeys.filter(
-      (key) =>
-        key.includes("funnel") ||
-        key.includes("schema") ||
-        key.includes("editor"),
+      key => key.includes("funnel") || key.includes("schema") || key.includes("editor")
     );
     console.log("✅ Chaves no localStorage:", funnelKeys.length);
-    funnelKeys.forEach((key) => console.log(`   - ${key}`));
+    funnelKeys.forEach(key => console.log(`   - ${key}`));
 
     // Verificar botões de salvamento
     const saveButtons = Array.from(document.querySelectorAll("button")).filter(
-      (btn) =>
+      btn =>
         btn.textContent?.includes("Salvar") ||
         btn.textContent?.includes("Save") ||
-        btn.textContent?.includes("Publicar"),
+        btn.textContent?.includes("Publicar")
     );
     console.log("✅ Botões de salvamento:", saveButtons.length);
 
@@ -202,7 +182,7 @@ function testeSalvamentoPersistencia() {
 
     // Verificar indicadores de status
     const statusIndicators = document.querySelectorAll(
-      '[class*="saving"], [class*="saved"], [class*="status"]',
+      '[class*="saving"], [class*="saved"], [class*="status"]'
     );
     console.log("✅ Indicadores de status:", statusIndicators.length);
 
@@ -212,12 +192,8 @@ function testeSalvamentoPersistencia() {
 
     // Verificar funções globais de salvamento
     const hasSaveFunction =
-      typeof window.forceSave === "function" ||
-      typeof window.saveFunnel === "function";
-    console.log(
-      "✅ Funções de salvamento:",
-      hasSaveFunction ? "Disponíveis" : "Não encontradas",
-    );
+      typeof window.forceSave === "function" || typeof window.saveFunnel === "function";
+    console.log("✅ Funções de salvamento:", hasSaveFunction ? "Disponíveis" : "Não encontradas");
 
     if (saveButtons.length > 0 && (hasSavedData || funnelKeys.length > 0)) {
       console.log("✅ Sistema de salvamento está operacional");
@@ -241,9 +217,7 @@ function testeFuncionalidadesAvancadas() {
 
   try {
     // Verificar barra superior com funcionalidades
-    const advancedButtons = Array.from(
-      document.querySelectorAll("button"),
-    ).filter((btn) => {
+    const advancedButtons = Array.from(document.querySelectorAll("button")).filter(btn => {
       const text = btn.textContent?.toLowerCase() || "";
       return (
         text.includes("template") ||
@@ -262,14 +236,12 @@ function testeFuncionalidadesAvancadas() {
 
     // Verificar se há modais/dialogs
     const modals = document.querySelectorAll(
-      '[role="dialog"], [class*="modal"], [class*="dialog"]',
+      '[role="dialog"], [class*="modal"], [class*="dialog"]'
     );
     console.log("✅ Modais disponíveis:", modals.length);
 
     // Verificar undo/redo
-    const undoRedoButtons = Array.from(
-      document.querySelectorAll("button"),
-    ).filter((btn) => {
+    const undoRedoButtons = Array.from(document.querySelectorAll("button")).filter(btn => {
       const text = btn.textContent?.toLowerCase() || "";
       return (
         text.includes("desfazer") ||
@@ -324,22 +296,14 @@ function executarTodosOsTestes() {
   });
 
   console.log("=".repeat(50));
-  console.log(
-    `📈 SUCESSO: ${testesPassaram}/${totalTestes} (${porcentagemSucesso}%)`,
-  );
+  console.log(`📈 SUCESSO: ${testesPassaram}/${totalTestes} (${porcentagemSucesso}%)`);
 
   if (porcentagemSucesso >= 80) {
-    console.log(
-      "🎉 SISTEMA APROVADO! Todas as funcionalidades principais estão operacionais.",
-    );
+    console.log("🎉 SISTEMA APROVADO! Todas as funcionalidades principais estão operacionais.");
   } else if (porcentagemSucesso >= 60) {
-    console.log(
-      "⚠️ SISTEMA PARCIALMENTE FUNCIONAL. Algumas melhorias são necessárias.",
-    );
+    console.log("⚠️ SISTEMA PARCIALMENTE FUNCIONAL. Algumas melhorias são necessárias.");
   } else {
-    console.log(
-      "❌ SISTEMA REQUER ATENÇÃO. Várias funcionalidades precisam de correção.",
-    );
+    console.log("❌ SISTEMA REQUER ATENÇÃO. Várias funcionalidades precisam de correção.");
   }
 
   console.log("\n💡 DICAS PARA PRÓXIMOS PASSOS:");
@@ -359,6 +323,4 @@ if (typeof window !== "undefined") {
 
 // Disponibilizar globalmente para uso manual
 window.testarSistema = executarTodosOsTestes;
-console.log(
-  '💡 Execute "testarSistema()" a qualquer momento para repetir os testes.',
-);
+console.log('💡 Execute "testarSistema()" a qualquer momento para repetir os testes.');

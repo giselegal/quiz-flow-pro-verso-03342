@@ -18,8 +18,7 @@ export const FUNNEL_CONFIGS: Record<string, FunnelConfig> = {
       "EAAEJYWeJHLABOwGC1ZC1GxRfJBAAIBHFB4kYqIFrNyoyuRpnRLyNp7L2VZBop3sGuyzchC6XkD1EfBrlxmCoMxTZCBEWrP2DwZBOPu5fZBKZCZBybZBG9xAxaSFJJzk3VZB4i08EKFImWmsKhYXWK9RdtfR0eZCQaoNHFm4rGmby9LNjvZAcuVYEAX6M2e0vSfdB96vWQZDZD",
     utmCampaign: "Teste Lovable - Por Fora",
     funnelName: "quiz_isca",
-    ctaUrl:
-      "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+    ctaUrl: "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
   },
   // Funnel 2 - Quiz embutido na oferta
   "quiz-descubra-seu-estilo": {
@@ -28,8 +27,7 @@ export const FUNNEL_CONFIGS: Record<string, FunnelConfig> = {
       "EAAEJYWeJHLABOwGC1ZC1GxRfJBAAIBHFB4kYqIFrNyoyuRpnRLyNp7L2VZBop3sGuyzchC6XkD1EfBrlxmCoMxTZCBEWrP2DwZBOPu5fZBKZCZBybZBG9xAxaSFJJzk3VZB4i08EKFImWmsKhYXWK9RdtfR0eZCQaoNHFm4rGmby9LNjvZAcuVYEAX6M2e0vSfdB96vWQZDZD",
     utmCampaign: "Teste Lovable - Por Dentro",
     funnelName: "quiz_embutido",
-    ctaUrl:
-      "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+    ctaUrl: "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
   },
 };
 
@@ -89,20 +87,14 @@ export const getCtaUrl = (): string => {
 /**
  * Marca evento específico de funil para análises
  */
-export const trackFunnelEvent = (
-  eventName: string,
-  eventData: Record<string, any> = {},
-): void => {
+export const trackFunnelEvent = (eventName: string, eventData: Record<string, any> = {}): void => {
   const funnelConfig = getCurrentFunnelConfig();
 
   // Adiciona informações do funil aos dados do evento
   const enrichedData = {
     ...eventData,
     funnel_id: funnelConfig.funnelName,
-    funnel_name:
-      funnelConfig.funnelName === "quiz_isca"
-        ? "Quiz como Isca"
-        : "Quiz Embutido",
+    funnel_name: funnelConfig.funnelName === "quiz_isca" ? "Quiz como Isca" : "Quiz Embutido",
     funnel_campaign: funnelConfig.utmCampaign,
   };
 

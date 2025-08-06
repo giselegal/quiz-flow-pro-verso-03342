@@ -31,11 +31,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
         );
 
       case "text":
-        return (
-          <div className="prose max-w-none">
-            {data.text || "Texto de exemplo"}
-          </div>
-        );
+        return <div className="prose max-w-none">{data.text || "Texto de exemplo"}</div>;
 
       case "image":
         return data.imageUrl ? (
@@ -53,16 +49,11 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
       case "stageQuestion":
         return (
           <div className="space-y-4">
-            <h3 className="text-xl font-medium">
-              {data.question || "Pergunta não definida"}
-            </h3>
+            <h3 className="text-xl font-medium">{data.question || "Pergunta não definida"}</h3>
             {data.options && data.options.length > 0 ? (
               <div className="space-y-2">
                 {data.options.map((option: string, index: number) => (
-                  <div
-                    key={index}
-                    className="p-3 border rounded hover:bg-gray-50 cursor-pointer"
-                  >
+                  <div key={index} className="p-3 border rounded hover:bg-gray-50 cursor-pointer">
                     {option}
                   </div>
                 ))}
@@ -86,9 +77,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
                     id={`opt-${component.id}-${index}`}
                     disabled={isPreviewing}
                   />
-                  <label htmlFor={`opt-${component.id}-${index}`}>
-                    {option}
-                  </label>
+                  <label htmlFor={`opt-${component.id}-${index}`}>{option}</label>
                 </div>
               ))
             ) : (
@@ -109,9 +98,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
                     id={`opt-${component.id}-${index}`}
                     disabled={isPreviewing}
                   />
-                  <label htmlFor={`opt-${component.id}-${index}`}>
-                    {option}
-                  </label>
+                  <label htmlFor={`opt-${component.id}-${index}`}>{option}</label>
                 </div>
               ))
             ) : (
@@ -130,7 +117,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
       className={cn(
         "mb-4 p-4 transition-colors",
         isSelected && !isPreviewing ? "border-2 border-[#B89B7A]" : "",
-        !isPreviewing && "hover:bg-gray-50 cursor-pointer",
+        !isPreviewing && "hover:bg-gray-50 cursor-pointer"
       )}
       onClick={() => !isPreviewing && onSelect && onSelect()}
     >

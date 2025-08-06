@@ -6,9 +6,7 @@ interface EnhancedEditorPageProps {
   funnelId?: string;
 }
 
-const EnhancedEditorPage: React.FC<EnhancedEditorPageProps> = ({
-  funnelId,
-}) => {
+const EnhancedEditorPage: React.FC<EnhancedEditorPageProps> = ({ funnelId }) => {
   return (
     <EditorQuizProvider>
       <div className="h-screen w-full">

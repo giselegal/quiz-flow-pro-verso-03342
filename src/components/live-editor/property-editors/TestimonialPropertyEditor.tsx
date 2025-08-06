@@ -35,7 +35,7 @@ const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps> = ({
         <Input
           id="name"
           value={name}
-          onChange={(e) => onPropertyChange("name", e.target.value)}
+          onChange={e => onPropertyChange("name", e.target.value)}
           placeholder="Nome do cliente"
         />
       </div>
@@ -45,7 +45,7 @@ const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps> = ({
         <Textarea
           id="testimonial"
           value={testimonial}
-          onChange={(e) => onPropertyChange("testimonial", e.target.value)}
+          onChange={e => onPropertyChange("testimonial", e.target.value)}
           placeholder="Texto do depoimento"
           rows={3}
         />
@@ -56,7 +56,7 @@ const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps> = ({
         <Input
           id="location"
           value={location}
-          onChange={(e) => onPropertyChange("location", e.target.value)}
+          onChange={e => onPropertyChange("location", e.target.value)}
           placeholder="Cidade, Estado"
         />
       </div>
@@ -66,7 +66,7 @@ const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps> = ({
         <Input
           id="avatar"
           value={avatar}
-          onChange={(e) => onPropertyChange("avatar", e.target.value)}
+          onChange={e => onPropertyChange("avatar", e.target.value)}
           placeholder="https://exemplo.com/avatar.jpg"
         />
       </div>
@@ -75,7 +75,7 @@ const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps> = ({
         <Label htmlFor="rating">Avaliação (1-5 estrelas)</Label>
         <Select
           value={rating.toString()}
-          onValueChange={(value) => onPropertyChange("rating", parseInt(value))}
+          onValueChange={value => onPropertyChange("rating", parseInt(value))}
         >
           <SelectTrigger>
             <SelectValue />
@@ -92,10 +92,7 @@ const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps> = ({
 
       <div>
         <Label htmlFor="cardSize">Tamanho do Card</Label>
-        <Select
-          value={cardSize}
-          onValueChange={(value) => onPropertyChange("cardSize", value)}
-        >
+        <Select value={cardSize} onValueChange={value => onPropertyChange("cardSize", value)}>
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>

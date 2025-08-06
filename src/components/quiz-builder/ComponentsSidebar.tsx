@@ -28,9 +28,7 @@ const componentTypes: {
   { type: "cta", label: "Call to Action", icon: "📢" },
 ];
 
-export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
-  onComponentSelect,
-}) => {
+export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect }) => {
   return (
     <div className="h-full bg-white border-r border-[#B89B7A]/20 p-4">
       <h3 className="text-lg font-medium text-[#432818] mb-4">Componentes</h3>

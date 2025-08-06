@@ -66,11 +66,7 @@ export const MentorSection: React.FC<MentorSectionProps> = ({
   style,
   customStyles,
 }) => {
-  const {
-    disabled: animationsDisabled,
-    duration = 400,
-    delay = 0,
-  } = animationConfig;
+  const { disabled: animationsDisabled, duration = 400, delay = 0 } = animationConfig;
   const isLowPerformance = deviceView === "mobile";
 
   const getLayoutClasses = () => {
@@ -95,22 +91,16 @@ export const MentorSection: React.FC<MentorSectionProps> = ({
 
   return (
     <div className={`py-12 ${className || ""}`} style={style}>
-      {customStyles && (
-        <style dangerouslySetInnerHTML={{ __html: customStyles }} />
-      )}
+      {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
 
       {/* Header */}
       {(title || subtitle) && (
         <div className="text-center mb-10">
           {title && (
-            <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-2">
-              {title}
-            </h2>
+            <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-2">{title}</h2>
           )}
           {subtitle && (
-            <p className="text-center text-[#3a3a3a] mb-6 max-w-lg mx-auto">
-              {subtitle}
-            </p>
+            <p className="text-center text-[#3a3a3a] mb-6 max-w-lg mx-auto">{subtitle}</p>
           )}
           <div className="elegant-divider w-32 mx-auto"></div>
         </div>
@@ -158,104 +148,78 @@ export const MentorSection: React.FC<MentorSectionProps> = ({
                     <User className="w-5 h-5 text-[#B89B7A]" />
                     {mentor.name}
                   </h3>
-                  <p className="text-lg text-[#aa6b5d] font-medium">
-                    {mentor.title}
-                  </p>
+                  <p className="text-lg text-[#aa6b5d] font-medium">{mentor.title}</p>
                 </div>
 
                 {/* Description */}
-                <p className="text-[#432818] leading-relaxed">
-                  {mentor.description}
-                </p>
+                <p className="text-[#432818] leading-relaxed">{mentor.description}</p>
 
                 {/* Experience */}
                 {mentor.experience && (
                   <div className="bg-[#f9f4ef] p-4 rounded-lg">
                     <div className="flex items-center gap-2 mb-2">
                       <TrendingUp className="w-4 h-4 text-[#B89B7A]" />
-                      <span className="font-semibold text-[#432818] text-sm">
-                        Experiência
-                      </span>
+                      <span className="font-semibold text-[#432818] text-sm">Experiência</span>
                     </div>
-                    <p className="text-sm text-[#432818]">
-                      {mentor.experience}
-                    </p>
+                    <p className="text-sm text-[#432818]">{mentor.experience}</p>
                   </div>
                 )}
 
                 {/* Credentials */}
-                {showCredentials &&
-                  mentor.credentials &&
-                  mentor.credentials.length > 0 && (
-                    <div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <Star className="w-4 h-4 text-[#B89B7A]" />
-                        <span className="font-semibold text-[#432818] text-sm">
-                          Credenciais
-                        </span>
-                      </div>
-                      <ul className="space-y-1">
-                        {mentor.credentials.map((credential, index) => (
-                          <li
-                            key={index}
-                            className="text-sm text-[#432818] flex items-start"
-                          >
-                            <span className="text-[#B89B7A] mr-2">•</span>
-                            {credential}
-                          </li>
-                        ))}
-                      </ul>
+                {showCredentials && mentor.credentials && mentor.credentials.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <Star className="w-4 h-4 text-[#B89B7A]" />
+                      <span className="font-semibold text-[#432818] text-sm">Credenciais</span>
                     </div>
-                  )}
+                    <ul className="space-y-1">
+                      {mentor.credentials.map((credential, index) => (
+                        <li key={index} className="text-sm text-[#432818] flex items-start">
+                          <span className="text-[#B89B7A] mr-2">•</span>
+                          {credential}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
                 {/* Achievements */}
-                {showAchievements &&
-                  mentor.achievements &&
-                  mentor.achievements.length > 0 && (
-                    <div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <Award className="w-4 h-4 text-[#B89B7A]" />
-                        <span className="font-semibold text-[#432818] text-sm">
-                          Conquistas
-                        </span>
-                      </div>
-                      <ul className="space-y-1">
-                        {mentor.achievements.map((achievement, index) => (
-                          <li
-                            key={index}
-                            className="text-sm text-[#432818] flex items-start"
-                          >
-                            <span className="text-[#B89B7A] mr-2">•</span>
-                            {achievement}
-                          </li>
-                        ))}
-                      </ul>
+                {showAchievements && mentor.achievements && mentor.achievements.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <Award className="w-4 h-4 text-[#B89B7A]" />
+                      <span className="font-semibold text-[#432818] text-sm">Conquistas</span>
                     </div>
-                  )}
+                    <ul className="space-y-1">
+                      {mentor.achievements.map((achievement, index) => (
+                        <li key={index} className="text-sm text-[#432818] flex items-start">
+                          <span className="text-[#B89B7A] mr-2">•</span>
+                          {achievement}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
                 {/* Specialties */}
-                {showSpecialties &&
-                  mentor.specialties &&
-                  mentor.specialties.length > 0 && (
-                    <div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <Heart className="w-4 h-4 text-[#B89B7A]" />
-                        <span className="font-semibold text-[#432818] text-sm">
-                          Especialidades
-                        </span>
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        {mentor.specialties.map((specialty, index) => (
-                          <span
-                            key={index}
-                            className="bg-[#B89B7A]/10 text-[#432818] px-3 py-1 rounded-full text-xs font-medium"
-                          >
-                            {specialty}
-                          </span>
-                        ))}
-                      </div>
+                {showSpecialties && mentor.specialties && mentor.specialties.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <Heart className="w-4 h-4 text-[#B89B7A]" />
+                      <span className="font-semibold text-[#432818] text-sm">Especialidades</span>
                     </div>
-                  )}
+                    <div className="flex flex-wrap gap-2">
+                      {mentor.specialties.map((specialty, index) => (
+                        <span
+                          key={index}
+                          className="bg-[#B89B7A]/10 text-[#432818] px-3 py-1 rounded-full text-xs font-medium"
+                        >
+                          {specialty}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Action */}
                 {onAction && (

@@ -22,19 +22,11 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           {content?.logo && (
-            <img
-              src={content.logo}
-              alt="Logo"
-              className="h-10 w-10 object-contain"
-            />
+            <img src={content.logo} alt="Logo" className="h-10 w-10 object-contain" />
           )}
           <div>
-            <h1 className="text-xl font-bold">
-              {content?.title || "Quiz: Descubra Seu Estilo"}
-            </h1>
-            {content?.subtitle && (
-              <p className="text-sm opacity-90 mt-1">{content.subtitle}</p>
-            )}
+            <h1 className="text-xl font-bold">{content?.title || "Quiz: Descubra Seu Estilo"}</h1>
+            {content?.subtitle && <p className="text-sm opacity-90 mt-1">{content.subtitle}</p>}
           </div>
         </div>
 

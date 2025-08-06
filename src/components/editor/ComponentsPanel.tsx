@@ -5,14 +5,12 @@ interface ComponentsPanelProps {
   onAddComponent: (type: string) => void;
 }
 
-export const ComponentsPanel: React.FC<ComponentsPanelProps> = ({
-  onAddComponent,
-}) => {
+export const ComponentsPanel: React.FC<ComponentsPanelProps> = ({ onAddComponent }) => {
   return (
     <div className="bg-white border-r border-gray-200 p-4">
       <h3 className="font-medium text-gray-900 mb-4">Componentes</h3>
       <div className="space-y-2">
-        {blockDefinitions.map((block) => {
+        {blockDefinitions.map(block => {
           const IconComponent = block.icon;
           return (
             <button
@@ -22,9 +20,7 @@ export const ComponentsPanel: React.FC<ComponentsPanelProps> = ({
             >
               <IconComponent size={20} />
               <div>
-                <div className="font-medium text-sm text-gray-900">
-                  {block.name}
-                </div>
+                <div className="font-medium text-sm text-gray-900">{block.name}</div>
                 <div className="text-xs text-gray-500">{block.description}</div>
               </div>
             </button>

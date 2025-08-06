@@ -89,9 +89,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
   disabled = false,
   onClick,
 }) => {
-  const [currentAnswer, setCurrentAnswer] = useState<string | string[]>(
-    selectedAnswer,
-  );
+  const [currentAnswer, setCurrentAnswer] = useState<string | string[]>(selectedAnswer);
   const [freeTextAnswer, setFreeTextAnswer] = useState("");
   const [showFreeText, setShowFreeText] = useState(false);
 
@@ -106,7 +104,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
     } else {
       const currentArray = Array.isArray(currentAnswer) ? currentAnswer : [];
       if (currentArray.includes(option)) {
-        newAnswer = currentArray.filter((a) => a !== option);
+        newAnswer = currentArray.filter(a => a !== option);
       } else {
         newAnswer = [...currentArray, option];
       }
@@ -136,8 +134,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
   };
 
   const getOptionClasses = (option: string) => {
-    const baseClasses =
-      "w-full p-4 rounded-lg transition-all duration-200 border-2 cursor-pointer";
+    const baseClasses = "w-full p-4 rounded-lg transition-all duration-200 border-2 cursor-pointer";
 
     if (optionStyle === "cards") {
       return `${baseClasses} ${
@@ -196,11 +193,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
         </h2>
 
         {/* Descrição */}
-        {description && (
-          <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-            {description}
-          </p>
-        )}
+        {description && <p className="text-lg text-gray-600 mb-8 leading-relaxed">{description}</p>}
 
         {/* Opções */}
         <div className="space-y-4 mb-8">
@@ -241,9 +234,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
                   onClick={onClick}
                   title="Configure a área de texto no Painel de Propriedades"
                 >
-                  {freeTextAnswer ||
-                    placeholder ||
-                    "Área de texto configurável"}
+                  {freeTextAnswer || placeholder || "Área de texto configurável"}
                 </div>
                 <div className="flex gap-2">
                   <Button
@@ -253,10 +244,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
                   >
                     Confirmar Resposta
                   </Button>
-                  <Button
-                    onClick={() => setShowFreeText(false)}
-                    variant="outline"
-                  >
+                  <Button onClick={() => setShowFreeText(false)} variant="outline">
                     Cancelar
                   </Button>
                 </div>
@@ -267,9 +255,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
 
         {/* Informação adicional */}
         <div className="mt-8 text-sm text-gray-500 text-center">
-          <p>
-            💭 Esta pergunta nos ajuda a personalizar ainda mais seu resultado
-          </p>
+          <p>💭 Esta pergunta nos ajuda a personalizar ainda mais seu resultado</p>
         </div>
       </div>
     </div>

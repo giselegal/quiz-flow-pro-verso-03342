@@ -1,6 +1,6 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { Gift } from 'lucide-react';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { Gift } from "lucide-react";
 
 interface BonusBlockProps {
   title?: string;
@@ -9,35 +9,36 @@ interface BonusBlockProps {
 }
 
 const BonusBlock: React.FC<BonusBlockProps> = ({
-  title = 'Bônus Exclusivos para Você',
+  title = "Bônus Exclusivos para Você",
   showImages = true,
   className,
 }) => {
   // Dados reais dos bônus da ResultPage
   const bonuses = [
     {
-      title: 'Peças-chave do Guarda-roupa',
+      title: "Peças-chave do Guarda-roupa",
       description:
-        'Lista completa das peças essenciais que toda mulher deve ter no guarda-roupa, organizadas por estilo e ocasião.',
+        "Lista completa das peças essenciais que toda mulher deve ter no guarda-roupa, organizadas por estilo e ocasião.",
       image:
-        'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/C%C3%B3pia_de_Passo_5_Pe%C3%A7as_chaves_Documento_A4_lxmekf.webp',
-      value: 'R$ 79,00',
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/C%C3%B3pia_de_Passo_5_Pe%C3%A7as_chaves_Documento_A4_lxmekf.webp",
+      value: "R$ 79,00",
     },
     {
-      title: 'Visagismo Facial',
-      description: 'Guia completo de maquiagem e penteados ideais para o formato do seu rosto e estilo pessoal.',
+      title: "Visagismo Facial",
+      description:
+        "Guia completo de maquiagem e penteados ideais para o formato do seu rosto e estilo pessoal.",
       image:
-        'https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp',
-      value: 'R$ 29,00',
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp",
+      value: "R$ 29,00",
     },
   ];
 
   return (
-    <div className={cn('py-10', className)}>
+    <div className={cn("py-10", className)}>
       <h2 className="text-2xl md:text-3xl font-bold text-[#aa6b5d] text-center mb-2">{title}</h2>
       <p className="text-center text-[#432818] mb-6 max-w-md mx-auto">
-        Além do guia principal, você receberá estas ferramentas complementares para potencializar sua jornada de
-        transformação:
+        Além do guia principal, você receberá estas ferramentas complementares para potencializar
+        sua jornada de transformação:
       </p>
       <div className="w-32 h-1 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] mx-auto rounded-full mb-8"></div>
 
@@ -69,7 +70,9 @@ const BonusBlock: React.FC<BonusBlockProps> = ({
               <p className="text-[#432818] text-sm leading-relaxed mb-3">{bonus.description}</p>
 
               <div className="flex justify-between items-center">
-                <span className="text-xs text-[#8F7A6A] bg-[#f9f4ef] px-3 py-1 rounded-full">Valor: {bonus.value}</span>
+                <span className="text-xs text-[#8F7A6A] bg-[#f9f4ef] px-3 py-1 rounded-full">
+                  Valor: {bonus.value}
+                </span>
                 <span className="text-[#B89B7A] font-semibold text-sm">🎁 GRÁTIS</span>
               </div>
             </div>

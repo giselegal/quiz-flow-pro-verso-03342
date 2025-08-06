@@ -1,5 +1,32 @@
 import { LucideIcon } from "lucide-react";
 
+export enum PropertyType {
+  TEXT = "text",
+  TEXTAREA = "textarea",
+  NUMBER = "number",
+  BOOLEAN = "boolean",
+  COLOR = "color",
+  SELECT = "select",
+  RANGE = "range",
+  IMAGE = "image",
+  OPTION_SCORE = "option_score",
+  OPTION_CATEGORY = "option_category",
+}
+
+export interface PropertyDefinition {
+  id: string;
+  type: PropertyType;
+  label: string;
+  description?: string;
+  category?: "basic" | "style" | "advanced" | "quiz";
+  required?: boolean;
+  defaultValue?: any;
+  options?: Array<{ value: string; label: string }>;
+  min?: number;
+  max?: number;
+  step?: number;
+}
+
 export interface PropertySchema {
   type: "string" | "number" | "boolean" | "select" | "textarea" | "array" | "color" | "range";
 

@@ -33,8 +33,7 @@ export const TechnicalDocs: React.FC = () => {
     },
     {
       title: "Painel de Propriedades Avançado",
-      description:
-        "Sistema completo de configuração com histórico de alterações e validação",
+      description: "Sistema completo de configuração com histórico de alterações e validação",
       tech: ["React Context", "TypeScript", "Real-time Updates"],
       status: "✅ Implementado",
     },
@@ -52,8 +51,7 @@ export const TechnicalDocs: React.FC = () => {
     },
     {
       title: "Sistema de Blocks Universal",
-      description:
-        "Renderização dinâmica de blocos com suporte completo a tipos",
+      description: "Renderização dinâmica de blocos com suporte completo a tipos",
       tech: ["UniversalBlockRenderer", "Type Safety", "Props Validation"],
       status: "✅ Implementado",
     },
@@ -161,21 +159,13 @@ const useEditor = () => {
               <Code2 className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Documentação Técnica
-              </h1>
-              <p className="text-gray-600">
-                Arquitetura e implementação do Editor Visual
-              </p>
+              <h1 className="text-3xl font-bold text-gray-900">Documentação Técnica</h1>
+              <p className="text-gray-600">Arquitetura e implementação do Editor Visual</p>
             </div>
           </div>
         </div>
 
-        <Tabs
-          value={activeSection}
-          onValueChange={setActiveSection}
-          className="w-full"
-        >
+        <Tabs value={activeSection} onValueChange={setActiveSection} className="w-full">
           <TabsList className="grid w-full grid-cols-4 mb-6">
             <TabsTrigger value="overview">Visão Geral</TabsTrigger>
             <TabsTrigger value="architecture">Arquitetura</TabsTrigger>
@@ -198,16 +188,11 @@ const useEditor = () => {
                     <div key={index} className="border rounded-lg p-4">
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="font-semibold">{feature.title}</h4>
-                        <Badge
-                          variant="outline"
-                          className="bg-green-50 text-green-700"
-                        >
+                        <Badge variant="outline" className="bg-green-50 text-green-700">
                           {feature.status}
                         </Badge>
                       </div>
-                      <p className="text-sm text-gray-600 mb-3">
-                        {feature.description}
-                      </p>
+                      <p className="text-sm text-gray-600 mb-3">{feature.description}</p>
                       <div className="flex flex-wrap gap-1">
                         {feature.tech.map((tech, i) => (
                           <Badge key={i} variant="outline" className="text-xs">
@@ -235,9 +220,7 @@ const useEditor = () => {
                       </div>
                       <div>
                         <p className="font-medium">Desktop (1200px+)</p>
-                        <p className="text-sm text-gray-600">
-                          Layout horizontal com 3 painéis
-                        </p>
+                        <p className="text-sm text-gray-600">Layout horizontal com 3 painéis</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
@@ -282,15 +265,10 @@ const useEditor = () => {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {technicalSpecs.map((spec, index) => (
                       <div key={index} className="space-y-3">
-                        <h4 className="font-semibold text-lg">
-                          {spec.category}
-                        </h4>
+                        <h4 className="font-semibold text-lg">{spec.category}</h4>
                         <ul className="space-y-2">
                           {spec.items.map((item, i) => (
-                            <li
-                              key={i}
-                              className="flex items-center space-x-2 text-sm"
-                            >
+                            <li key={i} className="flex items-center space-x-2 text-sm">
                               <CheckCircle className="w-3 h-3 text-green-600 flex-shrink-0" />
                               <span>{item}</span>
                             </li>
@@ -319,9 +297,7 @@ const useEditor = () => {
                         <React.Fragment key={index}>
                           <div className="text-center">
                             <div className="w-12 h-12 bg-[#B89B7A]/20 rounded-lg flex items-center justify-center mx-auto mb-2">
-                              <span className="text-[#B89B7A] font-semibold">
-                                {index + 1}
-                              </span>
+                              <span className="text-[#B89B7A] font-semibold">{index + 1}</span>
                             </div>
                             <p className="text-sm font-medium">{step}</p>
                           </div>
@@ -345,9 +321,7 @@ const useEditor = () => {
                   <CardHeader>
                     <CardTitle className="flex items-center space-x-3">
                       <div className="w-8 h-8 bg-[#B89B7A]/20 rounded-lg flex items-center justify-center">
-                        <span className="text-[#B89B7A] font-semibold">
-                          {guide.step}
-                        </span>
+                        <span className="text-[#B89B7A] font-semibold">{guide.step}</span>
                       </div>
                       <span>{guide.title}</span>
                     </CardTitle>
@@ -377,9 +351,7 @@ const useEditor = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <h4 className="font-semibold mb-2">
-                      Dependências Principais
-                    </h4>
+                    <h4 className="font-semibold mb-2">Dependências Principais</h4>
                     <div className="space-y-1 text-sm">
                       <p>• React ^18.0.0</p>
                       <p>• TypeScript ^5.0.0</p>

@@ -23,14 +23,9 @@ export function SortableItem({
   onDuplicate,
   children,
 }: SortableItemProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -59,14 +54,12 @@ export function SortableItem({
           <GripVertical className="h-4 w-4" />
         </button>
 
-        <span className="text-xs text-gray-500 capitalize px-2">
-          {component.type}
-        </span>
+        <span className="text-xs text-gray-500 capitalize px-2">{component.type}</span>
 
         <Button
           variant="ghost"
           size="sm"
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             onDuplicate();
           }}
@@ -78,7 +71,7 @@ export function SortableItem({
         <Button
           variant="ghost"
           size="sm"
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             onDelete();
           }}

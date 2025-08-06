@@ -50,7 +50,7 @@ const getStyleMotivationContent = (styleCategory: string): string => {
 #### 🔄 **Estilos Secundários:**
 
 ```typescript
-secondaryStyles: secondaryStyles.slice(0, 2).map((style) => {
+secondaryStyles: secondaryStyles.slice(0, 2).map(style => {
   const styleInfo = styleConfig[style.category];
   return {
     category: style.category,

@@ -4,23 +4,9 @@
 import React, { useState, useEffect } from "react";
 import { useRoute } from "wouter";
 import { Button } from "../../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
-import {
-  ArrowLeft,
-  Settings,
-  Eye,
-  Edit3,
-  BarChart3,
-  Users,
-  Calendar,
-  Globe,
-} from "lucide-react";
+import { ArrowLeft, Settings, Eye, Edit3, BarChart3, Users, Calendar, Globe } from "lucide-react";
 
 // Importar o editor melhorado
 import EnhancedEditor from "../../components/editor/EnhancedEditor";
@@ -97,9 +83,7 @@ const FunnelManagementPage: React.FC = () => {
     } as const;
 
     return (
-      <Badge variant={variants[status as keyof typeof variants] || "secondary"}>
-        {status}
-      </Badge>
+      <Badge variant={variants[status as keyof typeof variants] || "secondary"}>{status}</Badge>
     );
   };
 
@@ -114,8 +98,7 @@ const FunnelManagementPage: React.FC = () => {
                 Voltar para Lista
               </Button>
               <h2 className="text-lg font-semibold">
-                Editando:{" "}
-                {mockFunnels.find((f) => f.id === selectedFunnel)?.name}
+                Editando: {mockFunnels.find(f => f.id === selectedFunnel)?.name}
               </h2>
             </div>
             <div className="flex-1">
@@ -137,9 +120,7 @@ const FunnelManagementPage: React.FC = () => {
             {/* Aqui você pode importar e usar o AdvancedAnalytics diretamente */}
             <Card>
               <CardContent className="p-6">
-                <p className="text-center text-gray-600">
-                  Dashboard de Analytics estará aqui
-                </p>
+                <p className="text-center text-gray-600">Dashboard de Analytics estará aqui</p>
               </CardContent>
             </Card>
           </div>
@@ -157,18 +138,13 @@ const FunnelManagementPage: React.FC = () => {
             </div>
 
             <div className="grid gap-4">
-              {mockFunnels.map((funnel) => (
-                <Card
-                  key={funnel.id}
-                  className="hover:shadow-md transition-shadow"
-                >
+              {mockFunnels.map(funnel => (
+                <Card key={funnel.id} className="hover:shadow-md transition-shadow">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-lg font-semibold">
-                            {funnel.name}
-                          </h3>
+                          <h3 className="text-lg font-semibold">{funnel.name}</h3>
                           {renderStatusBadge(funnel.status)}
                         </div>
 
@@ -204,9 +180,7 @@ const FunnelManagementPage: React.FC = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() =>
-                            window.open(`/preview/${funnel.id}`, "_blank")
-                          }
+                          onClick={() => window.open(`/preview/${funnel.id}`, "_blank")}
                         >
                           <Eye className="h-4 w-4 mr-2" />
                           Preview
@@ -346,8 +320,7 @@ const useEnhancedEditor = (funnelId: string) => {
     // Métodos de navegação
     openEditor: () => window.open(`/admin/funis/${funnelId}/editor`, "_blank"),
     openPreview: () => window.open(`/preview/${funnelId}`, "_blank"),
-    openAnalytics: () =>
-      window.open(`/admin/funis/${funnelId}/analytics`, "_blank"),
+    openAnalytics: () => window.open(`/admin/funis/${funnelId}/analytics`, "_blank"),
 
     // Método para recarregar dados
     refresh: () => {
@@ -417,11 +390,7 @@ const ExistingComponentExample: React.FC = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
-        <Button
-          onClick={openEditor}
-          disabled={!isEditorReady}
-          className="w-full"
-        >
+        <Button onClick={openEditor} disabled={!isEditorReady} className="w-full">
           <Edit3 className="h-4 w-4 mr-2" />
           Abrir Editor Melhorado
         </Button>
@@ -475,8 +444,7 @@ const ExistingComponentExample: React.FC = () => {
               <strong>Páginas:</strong> {funnelData.pages?.length || 0}
             </p>
             <p>
-              <strong>Última atualização:</strong>{" "}
-              {new Date().toLocaleDateString()}
+              <strong>Última atualização:</strong> {new Date().toLocaleDateString()}
             </p>
           </div>
         )}
@@ -486,9 +454,4 @@ const ExistingComponentExample: React.FC = () => {
 };
 
 export default EditorPage;
-export {
-  EmbeddedEditor,
-  FunnelManagementPage,
-  useEnhancedEditor,
-  ExistingComponentExample,
-};
+export { EmbeddedEditor, FunnelManagementPage, useEnhancedEditor, ExistingComponentExample };

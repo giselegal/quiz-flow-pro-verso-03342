@@ -61,18 +61,14 @@ const QuizOption: React.FC<QuizOptionProps> = ({
               ? "ring-2 ring-[#B89B7A] border-[#B89B7A]"
               : "border-gray-200 hover:border-gray-300",
             disabled && "opacity-50 cursor-not-allowed",
-            className,
+            className
           )}
           onClick={handleClick}
           data-value={value}
         >
           {imageUrl && (
             <div className="relative aspect-video w-full">
-              <img
-                src={imageUrl}
-                alt={text}
-                className="w-full h-full object-cover"
-              />
+              <img src={imageUrl} alt={text} className="w-full h-full object-cover" />
 
               {/* Overlay para seleção */}
               {isSelected && (
@@ -109,9 +105,7 @@ const QuizOption: React.FC<QuizOptionProps> = ({
               <div
                 className={cn(
                   "w-5 h-5 border rounded-full flex items-center justify-center transition-colors",
-                  isSelected
-                    ? "bg-[#B89B7A] border-[#B89B7A]"
-                    : "border-gray-300",
+                  isSelected ? "bg-[#B89B7A] border-[#B89B7A]" : "border-gray-300"
                 )}
               >
                 {isSelected && (
@@ -146,7 +140,7 @@ const QuizOption: React.FC<QuizOptionProps> = ({
               ? "bg-[#B89B7A] bg-opacity-10 border-[#B89B7A]"
               : "border-gray-200 hover:border-gray-300",
             disabled && "opacity-50 cursor-not-allowed",
-            className,
+            className
           )}
           onClick={handleClick}
           data-value={value}
@@ -156,9 +150,7 @@ const QuizOption: React.FC<QuizOptionProps> = ({
             <div
               className={cn(
                 "w-5 h-5 border rounded-full flex items-center justify-center flex-shrink-0",
-                isSelected
-                  ? "bg-[#B89B7A] border-[#B89B7A]"
-                  : "border-gray-300",
+                isSelected ? "bg-[#B89B7A] border-[#B89B7A]" : "border-gray-300"
               )}
             >
               {isSelected && (
@@ -187,11 +179,7 @@ const QuizOption: React.FC<QuizOptionProps> = ({
             {/* Imagem opcional */}
             {imageUrl && (
               <div className="flex-shrink-0 w-12 h-12 rounded-md overflow-hidden">
-                <img
-                  src={imageUrl}
-                  alt=""
-                  className="w-full h-full object-cover"
-                />
+                <img src={imageUrl} alt="" className="w-full h-full object-cover" />
               </div>
             )}
           </div>
@@ -204,11 +192,9 @@ const QuizOption: React.FC<QuizOptionProps> = ({
         <div
           className={cn(
             "relative rounded-lg border px-4 py-3 cursor-pointer transition-all duration-200",
-            isSelected
-              ? "bg-[#B89B7A] text-white"
-              : "border-gray-200 hover:border-gray-300",
+            isSelected ? "bg-[#B89B7A] text-white" : "border-gray-200 hover:border-gray-300",
             disabled && "opacity-50 cursor-not-allowed",
-            className,
+            className
           )}
           onClick={handleClick}
           data-value={value}
@@ -227,7 +213,7 @@ const QuizOption: React.FC<QuizOptionProps> = ({
               ? "ring-2 ring-[#B89B7A] border-[#B89B7A]"
               : "border-gray-200 hover:border-gray-300",
             disabled && "opacity-50 cursor-not-allowed",
-            className,
+            className
           )}
           onClick={handleClick}
           data-value={value}
@@ -236,11 +222,7 @@ const QuizOption: React.FC<QuizOptionProps> = ({
             {/* Imagem opcional */}
             {imageUrl && (
               <div className="w-20 h-20 flex-shrink-0">
-                <img
-                  src={imageUrl}
-                  alt=""
-                  className="w-full h-full object-cover"
-                />
+                <img src={imageUrl} alt="" className="w-full h-full object-cover" />
               </div>
             )}
 
@@ -249,7 +231,7 @@ const QuizOption: React.FC<QuizOptionProps> = ({
               className={cn(
                 "flex-grow",
                 sizeClasses[size],
-                isSelected ? "bg-[#B89B7A] bg-opacity-10" : "",
+                isSelected ? "bg-[#B89B7A] bg-opacity-10" : ""
               )}
             >
               <p className="font-medium">{text}</p>
@@ -261,9 +243,7 @@ const QuizOption: React.FC<QuizOptionProps> = ({
                 <div
                   className={cn(
                     "w-5 h-5 border rounded flex items-center justify-center transition-colors",
-                    isSelected
-                      ? "bg-[#B89B7A] border-[#B89B7A]"
-                      : "border-gray-300",
+                    isSelected ? "bg-[#B89B7A] border-[#B89B7A]" : "border-gray-300"
                   )}
                 >
                   {isSelected && (

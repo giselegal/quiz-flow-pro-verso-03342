@@ -20,9 +20,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row items-center">
           <div className="md:w-1/2 mb-8 md:mb-0">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-              {title}
-            </h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">{title}</h1>
             <p className="text-lg md:text-xl text-gray-600 mb-6">{subtitle}</p>
             <button
               onClick={onCtaClick}
@@ -32,11 +30,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             </button>
           </div>
           <div className="md:w-1/2">
-            <img
-              src={imageUrl}
-              alt="Hero image"
-              className="rounded-lg shadow-lg w-full h-auto"
-            />
+            <img src={imageUrl} alt="Hero image" className="rounded-lg shadow-lg w-full h-auto" />
           </div>
         </div>
       </div>

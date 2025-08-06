@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
-import type { BlockComponentProps } from '@/types/blocks';
+import React, { useState, useEffect } from "react";
+import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
+import type { BlockComponentProps } from "@/types/blocks";
 
 const QuizOfferHeroBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -8,17 +8,17 @@ const QuizOfferHeroBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = '',
+  className = "",
 }) => {
   const {
-    logoUrl = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-    logoAlt = 'Logo Gisele Galvão',
-    logoHeight = '60px',
-    title = 'Descubra Seu Estilo Predominante',
-    subtitle = 'Tenha finalmente um guarda-roupa que funciona 100%',
-    heroImage = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911574/ELEGANTE_PREDOMINANTE_awmgit.webp',
-    backgroundColor = '#FFFBF7',
-    textColor = '#432818',
+    logoUrl = "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+    logoAlt = "Logo Gisele Galvão",
+    logoHeight = "60px",
+    title = "Descubra Seu Estilo Predominante",
+    subtitle = "Tenha finalmente um guarda-roupa que funciona 100%",
+    heroImage = "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911574/ELEGANTE_PREDOMINANTE_awmgit.webp",
+    backgroundColor = "#FFFBF7",
+    textColor = "#432818",
     showLogo = true,
     showImage = true,
   } = block?.properties || {};
@@ -39,7 +39,7 @@ const QuizOfferHeroBlock: React.FC<BlockComponentProps> = ({
     <div
       className={`
         w-full py-8 px-4 transition-all duration-200
-        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
+        ${isSelected ? "ring-1 ring-gray-400/40 bg-gray-50/30" : "hover:shadow-sm"}
         ${className}
       `}
       style={{ backgroundColor }}

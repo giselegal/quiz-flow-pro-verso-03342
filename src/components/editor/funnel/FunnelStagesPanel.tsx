@@ -1,19 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Plus,
-  GripVertical,
-  Eye,
-  Settings,
-  Copy,
-  Trash2,
-  Loader2,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
 import { useEditor } from "@/context/EditorContext";
+import { cn } from "@/lib/utils";
+import { Copy, Eye, Loader2, Plus, Settings, Trash2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
 
 interface FunnelStagesPanelProps {
   className?: string;
@@ -32,7 +23,6 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   const {
     stages,
     activeStageId,
-    isInitialized, // ← ADICIONAR
     stageActions: { setActiveStage, addStage, removeStage, updateStage },
     computed: { stageCount },
   } = useEditor();
@@ -42,32 +32,23 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
 
   // ✅ INCREMENTAR CONTADOR DE RENDER
   useEffect(() => {
-    setRenderCount((prev) => prev + 1);
-    console.log(
-      `� [${timestamp}] FunnelStagesPanel - RENDER #${renderCount + 1} INICIADO`,
-    );
+    setRenderCount(prev => prev + 1);
+    console.log(`� [${timestamp}] FunnelStagesPanel - RENDER #${renderCount + 1} INICIADO`);
     console.log(
       `🔍 [${timestamp}] FunnelStagesPanel - Stages:`,
       stages?.length || 0,
       "ActiveStage:",
-      activeStageId,
+      activeStageId
     );
     console.log(`🔍 [${timestamp}] FunnelStagesPanel - Stages Array:`, stages);
-    console.log(
-      `🔍 [${timestamp}] FunnelStagesPanel - StageCount:`,
-      stageCount,
-    );
+    console.log(`🔍 [${timestamp}] FunnelStagesPanel - StageCount:`, stageCount);
 
     // ✅ SIMULAR DELAY DE LOADING PARA VERIFICAR TIMING
     if (stages && stages.length > 0) {
-      console.log(
-        `✅ [${timestamp}] FunnelStagesPanel - STAGES CARREGADAS, removendo loading`,
-      );
+      console.log(`✅ [${timestamp}] FunnelStagesPanel - STAGES CARREGADAS, removendo loading`);
       setTimeout(() => setIsLoading(false), 100);
     } else {
-      console.warn(
-        `⚠️ [${timestamp}] FunnelStagesPanel - STAGES VAZIAS ou UNDEFINED`,
-      );
+      console.warn(`⚠️ [${timestamp}] FunnelStagesPanel - STAGES VAZIAS ou UNDEFINED`);
       setTimeout(() => setIsLoading(false), 500); // Maior delay para stages vazias
     }
   }, [stages, activeStageId, stageCount]);
@@ -105,11 +86,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   };
 
   // ✅ HANDLER PARA ACTIONS DOS BOTÕES
-  const handleActionClick = (
-    action: string,
-    stageId: string,
-    e: React.MouseEvent,
-  ) => {
+  const handleActionClick = (action: string, stageId: string, e: React.MouseEvent) => {
     console.log("🚨 ACTION CLICK RECEBIDO:", action, stageId);
 
     e.preventDefault();
@@ -144,7 +121,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
       <Card
         className={cn(
           "h-full flex flex-col min-h-[400px] bg-stone-50/50 border-stone-200",
-          className,
+          className
         )}
       >
         <CardHeader className="flex-shrink-0 pb-3 bg-stone-100/50">
@@ -169,17 +146,14 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
 
   if (!stages || stages.length === 0) {
     console.warn(
-      `⚠️ [${timestamp}] FunnelStagesPanel - PROBLEMA: Nenhuma etapa encontrada após loading!`,
+      `⚠️ [${timestamp}] FunnelStagesPanel - PROBLEMA: Nenhuma etapa encontrada após loading!`
     );
-    console.warn(
-      `⚠️ [${timestamp}] FunnelStagesPanel - Render #${renderCount}, Stages:`,
-      stages,
-    );
+    console.warn(`⚠️ [${timestamp}] FunnelStagesPanel - Render #${renderCount}, Stages:`, stages);
     return (
       <Card
         className={cn(
           "h-full flex flex-col min-h-[400px] bg-brand-dark/5 border-brand-dark/30",
-          className,
+          className
         )}
       >
         <CardHeader className="flex-shrink-0 pb-3 bg-brand-dark/10">
@@ -194,13 +168,9 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
               <div className="text-4xl animate-bounce">🚨</div>
               <p className="font-medium">Etapas não carregaram</p>
               <p className="text-sm">Render #{renderCount}</p>
-              <p className="text-xs">
-                Stages: {stages ? stages.length : "undefined"}
-              </p>
+              <p className="text-xs">Stages: {stages ? stages.length : "undefined"}</p>
               <p className="text-xs">StageCount: {stageCount || "undefined"}</p>
-              <p className="text-xs">
-                ActiveStageId: {activeStageId || "undefined"}
-              </p>
+              <p className="text-xs">ActiveStageId: {activeStageId || "undefined"}</p>
               <Button
                 onClick={() => window.location.reload()}
                 variant="outline"
@@ -217,20 +187,19 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
 
   // ✅ RENDERIZAÇÃO PRINCIPAL COM SUCESSO
   console.log(
-    `✅ [${timestamp}] FunnelStagesPanel - SUCESSO: Renderizando ${stages.length} etapas`,
+    `✅ [${timestamp}] FunnelStagesPanel - SUCESSO: Renderizando ${stages.length} etapas`
   );
 
   return (
     <Card
       className={cn(
         "h-full flex flex-col min-h-[400px] border-2 bg-brand/5 border-brand/30",
-        className,
+        className
       )}
     >
       <CardHeader className="flex-shrink-0 pb-3 bg-brand/10 border-b border-brand/30">
         <CardTitle className="text-lg font-semibold text-brand-dark flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-brand animate-pulse"></div>✅
-          Etapas do Funil
+          <div className="w-2 h-2 rounded-full bg-brand animate-pulse"></div>✅ Etapas do Funil
           <span className="ml-auto text-sm bg-brand/20 text-brand-dark px-2 py-1 rounded font-bold">
             {stageCount}/21 etapas
           </span>
@@ -252,16 +221,16 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                     // ✅ USAR activeStageId DO EDITORCONTEXT PARA HIGHLIGHT
                     activeStageId === stage.id
                       ? "border-brand bg-brand/10 shadow-md ring-2 ring-brand/30"
-                      : "border-gray-300 bg-white hover:bg-gray-50",
+                      : "border-gray-300 bg-white hover:bg-gray-50"
                   )}
-                  onClick={(e) => {
+                  onClick={e => {
                     console.log("🚨 CLICK DIRETO NO DIV - StageID:", stage.id);
                     console.log("🚨 Current activeStageId:", activeStageId);
                     handleStageClick(stage.id, e);
                   }}
                   role="button"
                   tabIndex={0}
-                  onKeyDown={(e) => {
+                  onKeyDown={e => {
                     if (e.key === "Enter" || e.key === " ") {
                       handleStageClick(stage.id);
                     }
@@ -272,9 +241,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                       <span
                         className={cn(
                           "font-medium text-lg",
-                          activeStageId === stage.id
-                            ? "text-brand-dark"
-                            : "text-foreground",
+                          activeStageId === stage.id ? "text-brand-dark" : "text-foreground"
                         )}
                       >
                         Etapa {stage.order}
@@ -294,7 +261,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                         variant="ghost"
                         size="sm"
                         className="h-6 w-6 p-0 hover:bg-background/80"
-                        onClick={(e) => handleActionClick("view", stage.id, e)}
+                        onClick={e => handleActionClick("view", stage.id, e)}
                         title="Visualizar etapa"
                       >
                         <Eye className="w-3 h-3" />
@@ -303,9 +270,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                         variant="ghost"
                         size="sm"
                         className="h-6 w-6 p-0 hover:bg-background/80"
-                        onClick={(e) =>
-                          handleActionClick("settings", stage.id, e)
-                        }
+                        onClick={e => handleActionClick("settings", stage.id, e)}
                         title="Configurações"
                       >
                         <Settings className="w-3 h-3" />
@@ -314,7 +279,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                         variant="ghost"
                         size="sm"
                         className="h-6 w-6 p-0 hover:bg-background/80"
-                        onClick={(e) => handleActionClick("copy", stage.id, e)}
+                        onClick={e => handleActionClick("copy", stage.id, e)}
                         title="Copiar etapa"
                       >
                         <Copy className="w-3 h-3" />
@@ -323,9 +288,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                         variant="ghost"
                         size="sm"
                         className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground"
-                        onClick={(e) =>
-                          handleActionClick("delete", stage.id, e)
-                        }
+                        onClick={e => handleActionClick("delete", stage.id, e)}
                         title="Excluir etapa"
                       >
                         <Trash2 className="w-3 h-3" />

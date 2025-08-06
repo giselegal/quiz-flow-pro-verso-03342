@@ -10,10 +10,7 @@ interface ConfigPanelProps {
   onConfigChange: (newConfig: Record<string, any>) => void;
 }
 
-export const ConfigPanel: React.FC<ConfigPanelProps> = ({
-  config,
-  onConfigChange,
-}) => {
+export const ConfigPanel: React.FC<ConfigPanelProps> = ({ config, onConfigChange }) => {
   const [localConfig, setLocalConfig] = useState(config || {});
 
   const handleChange = (key: string, value: any) => {
@@ -39,13 +36,13 @@ export const ConfigPanel: React.FC<ConfigPanelProps> = ({
               <Switch
                 id={key}
                 checked={value}
-                onCheckedChange={(checked) => handleChange(key, checked)}
+                onCheckedChange={checked => handleChange(key, checked)}
               />
             ) : (
               <Input
                 id={key}
                 value={String(value)}
-                onChange={(e) => handleChange(key, e.target.value)}
+                onChange={e => handleChange(key, e.target.value)}
               />
             )}
           </div>

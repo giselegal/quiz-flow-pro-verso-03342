@@ -3,7 +3,7 @@ console.log("🔍 TESTANDO REGISTRY PROPERTIES...");
 
 try {
   // Simulação simples da função
-  const getPropertiesForBlockType = (blockType) => {
+  const getPropertiesForBlockType = blockType => {
     if (blockType.includes("text") || blockType.includes("heading")) {
       return {
         text: {
@@ -72,7 +72,7 @@ try {
     "other-type",
   ];
 
-  testTypes.forEach((type) => {
+  testTypes.forEach(type => {
     const props = getPropertiesForBlockType(type);
     console.log(`\n📝 Tipo: ${type}`);
     console.log(`📊 Propriedades:`, Object.keys(props));

@@ -2,7 +2,7 @@ import { getBlockComponent } from "@/config/enhancedBlockRegistry";
 import { Block } from "@/types/editor";
 import React from "react";
 
-interface UniversalBlockRendererProps {
+export interface UniversalBlockRendererProps {
   block: Block;
   isSelected?: boolean;
   onClick?: () => void;
@@ -41,9 +41,9 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
     return (
       <div className={`block-wrapper ${isSelected ? "selected" : ""}`} onClick={onClick}>
         <Component
-          {...block.properties}
-          id={block.id}
-          type={block.type}
+          block={block}
+          isSelected={isSelected}
+          onClick={onClick}
           onPropertyChange={onPropertyChange}
         />
       </div>

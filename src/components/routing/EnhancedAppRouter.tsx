@@ -13,9 +13,7 @@ const PageLoader: React.FC = () => (
 );
 
 // Componente de Erro Simples
-const ErrorBoundary: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+const ErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [hasError, setHasError] = useState(false);
 
   React.useEffect(() => {
@@ -52,12 +50,11 @@ const EnhancedEditor = lazy(() =>
       <div className="p-8 text-center">
         <p className="text-red-600">Erro ao carregar o Editor Melhorado</p>
         <p className="text-sm text-gray-600 mt-2">
-          Verifique se o arquivo está no local correto:
-          /src/components/editor/EnhancedEditor.tsx
+          Verifique se o arquivo está no local correto: /src/components/editor/EnhancedEditor.tsx
         </p>
       </div>
     ),
-  })),
+  }))
 );
 
 const SystemIntegrationTest = lazy(() =>
@@ -71,12 +68,12 @@ const SystemIntegrationTest = lazy(() =>
         </p>
       </div>
     ),
-  })),
+  }))
 );
 
 const FunnelManagementPage = lazy(() =>
   import("../../pages/examples/EnhancedEditorIntegration")
-    .then((module) => ({
+    .then(module => ({
       default: module.FunnelManagementPage,
     }))
     .catch(() => ({
@@ -89,12 +86,12 @@ const FunnelManagementPage = lazy(() =>
           </p>
         </div>
       ),
-    })),
+    }))
 );
 
 const EditorPage = lazy(() =>
   import("../../pages/examples/EnhancedEditorIntegration")
-    .then((module) => ({
+    .then(module => ({
       default: module.default,
     }))
     .catch(() => ({
@@ -107,7 +104,7 @@ const EditorPage = lazy(() =>
           </p>
         </div>
       ),
-    })),
+    }))
 );
 
 // Dashboard simples se não existir
@@ -131,9 +128,7 @@ const SimpleDashboard: React.FC = () => (
 
         <div className="bg-white p-6 rounded-lg shadow-sm border">
           <h2 className="text-xl font-semibold mb-4">🧪 Testes</h2>
-          <p className="text-gray-600 mb-4">
-            Execute testes de integração dos sistemas
-          </p>
+          <p className="text-gray-600 mb-4">Execute testes de integração dos sistemas</p>
           <a
             href="/dev/test"
             className="inline-block px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
@@ -144,9 +139,7 @@ const SimpleDashboard: React.FC = () => (
 
         <div className="bg-white p-6 rounded-lg shadow-sm border">
           <h2 className="text-xl font-semibold mb-4">📊 Analytics</h2>
-          <p className="text-gray-600 mb-4">
-            Visualize métricas e relatórios detalhados
-          </p>
+          <p className="text-gray-600 mb-4">Visualize métricas e relatórios detalhados</p>
           <a
             href="/admin/funis/demo/analytics"
             className="inline-block px-4 py-2 bg-[#B89B7A]/100 text-white rounded hover:bg-purple-600"
@@ -157,9 +150,7 @@ const SimpleDashboard: React.FC = () => (
       </div>
 
       <div className="mt-12 bg-white p-6 rounded-lg shadow-sm border">
-        <h2 className="text-xl font-semibold mb-4">
-          🚀 Status da Implementação
-        </h2>
+        <h2 className="text-xl font-semibold mb-4">🚀 Status da Implementação</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
           <div className="text-center">
             <div className="text-2xl font-bold text-green-600">7/7</div>
@@ -199,18 +190,13 @@ export const EnhancedAppRouter: React.FC = () => {
               <Route path="/editor" component={FunnelManagementPage} />
               <Route path="/editor/:funnelId" component={EditorPage} />
               <Route path="/admin/funis" component={FunnelManagementPage} />
-              <Route
-                path="/admin/funis/:funnelId/editor"
-                component={EditorPage}
-              />
+              <Route path="/admin/funis/:funnelId/editor" component={EditorPage} />
 
               {/* Rota para Analytics */}
               <Route path="/admin/funis/:funnelId/analytics">
                 {({ funnelId }) => (
                   <div className="p-6">
-                    <h1 className="text-2xl font-bold mb-4">
-                      Analytics - Funil {funnelId}
-                    </h1>
+                    <h1 className="text-2xl font-bold mb-4">Analytics - Funil {funnelId}</h1>
                     <div className="bg-white p-8 rounded-lg shadow-sm border text-center">
                       <p className="text-gray-600 mb-4">
                         Dashboard de Analytics será carregado aqui
@@ -239,9 +225,7 @@ export const EnhancedAppRouter: React.FC = () => {
               <Route>
                 <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                   <div className="text-center">
-                    <h1 className="text-4xl font-bold text-gray-800 mb-4">
-                      404
-                    </h1>
+                    <h1 className="text-4xl font-bold text-gray-800 mb-4">404</h1>
                     <p className="text-gray-600 mb-4">Página não encontrada</p>
                     <div className="space-x-4">
                       <a
@@ -283,8 +267,7 @@ export const useAppNavigation = () => {
         setLocation("/editor");
       }
     },
-    goToAnalytics: (funnelId: string) =>
-      setLocation(`/admin/funis/${funnelId}/analytics`),
+    goToAnalytics: (funnelId: string) => setLocation(`/admin/funis/${funnelId}/analytics`),
     openInNewTab: (path: string) => window.open(path, "_blank"),
   };
 };

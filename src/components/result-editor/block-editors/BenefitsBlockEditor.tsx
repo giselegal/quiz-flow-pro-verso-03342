@@ -10,10 +10,7 @@ interface BenefitsBlockEditorProps {
   onUpdate: (updates: Partial<Block>) => void;
 }
 
-const BenefitsBlockEditor: React.FC<BenefitsBlockEditorProps> = ({
-  block,
-  onUpdate,
-}) => {
+const BenefitsBlockEditor: React.FC<BenefitsBlockEditorProps> = ({ block, onUpdate }) => {
   const content = block.content || {};
   const items = content.items || [];
 
@@ -64,7 +61,7 @@ const BenefitsBlockEditor: React.FC<BenefitsBlockEditorProps> = ({
         <Input
           id="benefits-title"
           value={content.title || ""}
-          onChange={(e) => handleTitleChange(e.target.value)}
+          onChange={e => handleTitleChange(e.target.value)}
           placeholder="Título da seção"
         />
       </div>
@@ -83,7 +80,7 @@ const BenefitsBlockEditor: React.FC<BenefitsBlockEditorProps> = ({
             <div key={index} className="flex items-center gap-2">
               <Input
                 value={item}
-                onChange={(e) => handleUpdateItem(index, e.target.value)}
+                onChange={e => handleUpdateItem(index, e.target.value)}
                 placeholder={`Benefício ${index + 1}`}
               />
               <Button

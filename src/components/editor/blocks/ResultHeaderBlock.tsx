@@ -1,6 +1,6 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
-import { useAuth } from '@/context/AuthContext';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { useAuth } from "@/context/AuthContext";
 
 interface ResultHeaderBlockProps {
   title?: string;
@@ -11,17 +11,19 @@ interface ResultHeaderBlockProps {
 }
 
 const ResultHeaderBlock: React.FC<ResultHeaderBlockProps> = ({
-  title = 'Parabéns!',
-  subtitle = 'Seu Estilo Pessoal foi Revelado',
-  logoUrl = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+  title = "Parabéns!",
+  subtitle = "Seu Estilo Pessoal foi Revelado",
+  logoUrl = "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
   showLogo = true,
   className,
 }) => {
   const { user } = useAuth();
-  const userName = (user as any)?.userName || localStorage.getItem('userName') || '';
+  const userName = (user as any)?.userName || localStorage.getItem("userName") || "";
 
   return (
-    <div className={cn('text-center py-8 bg-gradient-to-b from-[#faf8f5] to-transparent', className)}>
+    <div
+      className={cn("text-center py-8 bg-gradient-to-b from-[#faf8f5] to-transparent", className)}
+    >
       <div className="max-w-4xl mx-auto px-4">
         {showLogo && (
           <div className="mb-6">

@@ -18,7 +18,7 @@ export const LimitedStockIndicator: React.FC<LimitedStockIndicatorProps> = ({
       const shouldDecrease = Math.random() < 0.05; // 5% chance to decrease stock
 
       if (shouldDecrease && stockLeft > 1) {
-        setStockLeft((prev) => prev - 1);
+        setStockLeft(prev => prev - 1);
         setIsActive(true);
 
         setTimeout(() => {

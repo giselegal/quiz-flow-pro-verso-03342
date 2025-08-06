@@ -51,9 +51,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
       <div className="space-y-4">
         <div>
           <Label>Block Type</Label>
-          <div className="text-sm text-gray-600 bg-gray-100 p-2 rounded">
-            {selectedBlock.type}
-          </div>
+          <div className="text-sm text-gray-600 bg-gray-100 p-2 rounded">{selectedBlock.type}</div>
         </div>
 
         {selectedBlock.type === "text" && (
@@ -62,7 +60,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             <Textarea
               id="text"
               value={selectedBlock.content?.text || ""}
-              onChange={(e) => handleContentUpdate("text", e.target.value)}
+              onChange={e => handleContentUpdate("text", e.target.value)}
               placeholder="Enter text content..."
             />
           </div>
@@ -75,7 +73,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <Input
                 id="title"
                 value={selectedBlock.content?.title || ""}
-                onChange={(e) => handleContentUpdate("title", e.target.value)}
+                onChange={e => handleContentUpdate("title", e.target.value)}
                 placeholder="Enter title..."
               />
             </div>
@@ -84,9 +82,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <Input
                 id="subtitle"
                 value={selectedBlock.content?.subtitle || ""}
-                onChange={(e) =>
-                  handleContentUpdate("subtitle", e.target.value)
-                }
+                onChange={e => handleContentUpdate("subtitle", e.target.value)}
                 placeholder="Enter subtitle..."
               />
             </div>
@@ -100,9 +96,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <Input
                 id="imageUrl"
                 value={selectedBlock.content?.imageUrl || ""}
-                onChange={(e) =>
-                  handleContentUpdate("imageUrl", e.target.value)
-                }
+                onChange={e => handleContentUpdate("imageUrl", e.target.value)}
                 placeholder="Enter image URL..."
               />
             </div>
@@ -111,9 +105,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <Input
                 id="imageAlt"
                 value={selectedBlock.content?.imageAlt || ""}
-                onChange={(e) =>
-                  handleContentUpdate("imageAlt", e.target.value)
-                }
+                onChange={e => handleContentUpdate("imageAlt", e.target.value)}
                 placeholder="Enter alt text..."
               />
             </div>
@@ -121,12 +113,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         )}
 
         <div className="pt-4 border-t">
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={onDelete}
-            className="w-full"
-          >
+          <Button variant="destructive" size="sm" onClick={onDelete} className="w-full">
             Delete Block
           </Button>
         </div>

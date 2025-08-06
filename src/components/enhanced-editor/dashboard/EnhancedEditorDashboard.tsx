@@ -2,16 +2,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  BarChart3,
-  Users,
-  TrendingUp,
-  Eye,
-  Edit3,
-  Copy,
-  Trash2,
-  Plus,
-} from "lucide-react";
+import { BarChart3, Users, TrendingUp, Eye, Edit3, Copy, Trash2, Plus } from "lucide-react";
 
 interface DashboardStats {
   totalFunnels: number;
@@ -77,9 +68,7 @@ const DEFAULT_FUNNELS: FunnelSummary[] = [
   },
 ];
 
-export const EnhancedEditorDashboard: React.FC<
-  EnhancedEditorDashboardProps
-> = ({
+export const EnhancedEditorDashboard: React.FC<EnhancedEditorDashboardProps> = ({
   stats = DEFAULT_STATS,
   funnels = DEFAULT_FUNNELS,
   onCreateFunnel,
@@ -121,15 +110,10 @@ export const EnhancedEditorDashboard: React.FC<
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Dashboard de Funis
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-900">Dashboard de Funis</h1>
           <p className="text-gray-600">Gerencie seus funis de conversão</p>
         </div>
-        <Button
-          onClick={onCreateFunnel}
-          className="bg-[#B89B7A] hover:bg-[#A38A69]"
-        >
+        <Button onClick={onCreateFunnel} className="bg-[#B89B7A] hover:bg-[#A38A69]">
           <Plus className="w-4 h-4 mr-2" />
           Criar Funil
         </Button>
@@ -139,9 +123,7 @@ export const EnhancedEditorDashboard: React.FC<
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Total de Funis
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">Total de Funis</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
@@ -153,41 +135,31 @@ export const EnhancedEditorDashboard: React.FC<
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Visualizações
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">Visualizações</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
               <Eye className="w-4 h-4 text-[#B89B7A] mr-2" />
-              <span className="text-2xl font-bold">
-                {stats.totalViews.toLocaleString()}
-              </span>
+              <span className="text-2xl font-bold">{stats.totalViews.toLocaleString()}</span>
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Taxa de Conversão
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">Taxa de Conversão</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
               <TrendingUp className="w-4 h-4 text-green-500 mr-2" />
-              <span className="text-2xl font-bold">
-                {stats.conversionRate}%
-              </span>
+              <span className="text-2xl font-bold">{stats.conversionRate}%</span>
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Usuários Ativos
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">Usuários Ativos</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
@@ -205,7 +177,7 @@ export const EnhancedEditorDashboard: React.FC<
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {funnels.map((funnel) => (
+            {funnels.map(funnel => (
               <div
                 key={funnel.id}
                 className={`p-4 border rounded-lg transition-all cursor-pointer hover:shadow-md ${
@@ -218,16 +190,12 @@ export const EnhancedEditorDashboard: React.FC<
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-2">
-                      <h3 className="font-medium text-gray-900">
-                        {funnel.title}
-                      </h3>
+                      <h3 className="font-medium text-gray-900">{funnel.title}</h3>
                       <Badge className={getStatusColor(funnel.status)}>
                         {getStatusLabel(funnel.status)}
                       </Badge>
                     </div>
-                    <p className="text-sm text-gray-600 mb-3">
-                      {funnel.description}
-                    </p>
+                    <p className="text-sm text-gray-600 mb-3">{funnel.description}</p>
 
                     <div className="flex items-center space-x-4 text-xs text-gray-500">
                       <span>{funnel.views} visualizações</span>
@@ -240,7 +208,7 @@ export const EnhancedEditorDashboard: React.FC<
                     <Button
                       size="sm"
                       variant="ghost"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         onPreviewFunnel?.(funnel.id);
                       }}
@@ -250,7 +218,7 @@ export const EnhancedEditorDashboard: React.FC<
                     <Button
                       size="sm"
                       variant="ghost"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         onEditFunnel?.(funnel.id);
                       }}
@@ -260,7 +228,7 @@ export const EnhancedEditorDashboard: React.FC<
                     <Button
                       size="sm"
                       variant="ghost"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         onDuplicateFunnel?.(funnel.id);
                       }}
@@ -271,7 +239,7 @@ export const EnhancedEditorDashboard: React.FC<
                       size="sm"
                       variant="ghost"
                       className="text-red-500 hover:text-red-700"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         onDeleteFunnel?.(funnel.id);
                       }}

@@ -1,6 +1,6 @@
 # Configuração geral
 semi: true
-trailingComma: 'all'
+trailingComma: "all"
 singleQuote: true
 printWidth: 100
 tabWidth: 2
@@ -12,17 +12,17 @@ overrides:
       printWidth: 100
       tabWidth: 2
       semi: true
-      
+
   - files: "*.{css,scss,less}"
     options:
       printWidth: 120
       tabWidth: 2
-      
+
   - files: "*.{json,yml,yaml}"
     options:
       printWidth: 80
       tabWidth: 2
-      
+
   - files: "*.md"
     options:
       printWidth: 80

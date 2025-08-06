@@ -66,8 +66,7 @@ const optimizeCloudinaryUrl = (originalUrl: string): string => {
 export const fixBlurryIntroQuizImages = (): number => {
   // Evitar logs desnecessários em produção
   const isDevEnvironment =
-    process.env.NODE_ENV === "development" ||
-    window.location.hostname === "localhost";
+    process.env.NODE_ENV === "development" || window.location.hostname === "localhost";
 
   if (isDevEnvironment) {
     console.log("Iniciando correção de imagens...");
@@ -75,7 +74,7 @@ export const fixBlurryIntroQuizImages = (): number => {
 
   // Usar seletores específicos e limitar escopo para melhor desempenho
   const quizIntroImages = document.querySelectorAll<HTMLImageElement>(
-    '.quiz-intro img, [data-section="intro"] img, .quiz-intro-image',
+    '.quiz-intro img, [data-section="intro"] img, .quiz-intro-image'
   );
   let count = 0;
 
@@ -87,7 +86,7 @@ export const fixBlurryIntroQuizImages = (): number => {
   const processImageBatch = (
     images: NodeListOf<HTMLImageElement>,
     startIdx: number,
-    batchSize: number,
+    batchSize: number
   ): void => {
     const endIdx = Math.min(startIdx + batchSize, images.length);
 
@@ -96,11 +95,7 @@ export const fixBlurryIntroQuizImages = (): number => {
       const src = img.src;
 
       // Processar apenas imagens Cloudinary não otimizadas
-      if (
-        src &&
-        src.includes("cloudinary.com") &&
-        !processedImagesCache[src]?.processed
-      ) {
+      if (src && src.includes("cloudinary.com") && !processedImagesCache[src]?.processed) {
         const highQualitySrc = optimizeCloudinaryUrl(src);
 
         // Aplicar mudanças apenas se necessário
@@ -169,7 +164,7 @@ export const initializeImageFixer = (): void => {
           () => {
             fixBlurryIntroQuizImages();
           },
-          { timeout: 3000 },
+          { timeout: 3000 }
         );
       } else {
         setTimeout(fixBlurryIntroQuizImages, 2000);
@@ -189,10 +184,7 @@ export const initializeImageFixer = (): void => {
       // Adiar para não competir com renderização inicial
       setTimeout(runFixer, isLowPerformance ? 1500 : 500);
     });
-  } else if (
-    document.readyState === "interactive" ||
-    document.readyState === "complete"
-  ) {
+  } else if (document.readyState === "interactive" || document.readyState === "complete") {
     // Caso já esteja carregado, adiar para priorizar interatividade
     setTimeout(runFixer, isLowPerformance ? 1000 : 300);
   }

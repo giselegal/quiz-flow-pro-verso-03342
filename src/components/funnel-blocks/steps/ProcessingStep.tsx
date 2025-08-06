@@ -41,13 +41,13 @@ export const ProcessingStep: React.FC<FunnelStepProps> = ({
 
       // Intervalo para mudar as mensagens
       messageInterval = setInterval(() => {
-        setCurrentMessageIndex((prev) => (prev + 1) % messages.length);
+        setCurrentMessageIndex(prev => (prev + 1) % messages.length);
       }, duration / messages.length);
 
       // Intervalo para atualizar a barra de progresso
       if (showProgress) {
         progressInterval = setInterval(() => {
-          setProgress((prev) => {
+          setProgress(prev => {
             const newProgress = prev + 100 / (duration / 100);
             return newProgress > 100 ? 100 : newProgress;
           });
@@ -81,7 +81,7 @@ export const ProcessingStep: React.FC<FunnelStepProps> = ({
     <div
       className={cn(
         "relative flex flex-col items-center justify-center p-6 rounded-xl shadow-md",
-        className,
+        className
       )}
       onClick={isEditable ? onEdit : undefined}
       data-funnel-step-id={id}
@@ -93,10 +93,7 @@ export const ProcessingStep: React.FC<FunnelStepProps> = ({
       {/* Tipos de loading */}
       <div className="text-4xl mb-6">
         {loadingType === "spinning" && (
-          <svg
-            className="animate-spin h-10 w-10 text-primary"
-            viewBox="0 0 24 24"
-          >
+          <svg className="animate-spin h-10 w-10 text-primary" viewBox="0 0 24 24">
             <circle
               className="opacity-25"
               cx="12"
@@ -114,10 +111,7 @@ export const ProcessingStep: React.FC<FunnelStepProps> = ({
         )}
 
         {loadingType === "elegant" && (
-          <svg
-            className="processing-spinner h-10 w-10 text-primary"
-            viewBox="0 0 66 66"
-          >
+          <svg className="processing-spinner h-10 w-10 text-primary" viewBox="0 0 66 66">
             <circle
               className="path"
               fill="none"

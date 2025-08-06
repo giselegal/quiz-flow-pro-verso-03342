@@ -1,24 +1,11 @@
 "use client";
 import React, { useState, useMemo } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import {
-  TrendingDown,
-  TrendingUp,
-  Users,
-  Clock,
-  Target,
-  AlertTriangle,
-} from "lucide-react";
+import { TrendingDown, TrendingUp, Users, Clock, Target, AlertTriangle } from "lucide-react";
 import {
   BarChart,
   Bar,
@@ -138,7 +125,7 @@ const AdvancedFunnel: React.FC = () => {
 
   const criticalDropoffs = useMemo(() => {
     return mockFunnelData
-      .filter((stage) => stage.dropoffRate > 25)
+      .filter(stage => stage.dropoffRate > 25)
       .sort((a, b) => b.dropoffRate - a.dropoffRate);
   }, []);
 
@@ -147,13 +134,11 @@ const AdvancedFunnel: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Funil Avançado</h2>
-          <p className="text-gray-600">
-            Análise detalhada do comportamento dos usuários
-          </p>
+          <p className="text-gray-600">Análise detalhada do comportamento dos usuários</p>
         </div>
 
         <div className="flex gap-2">
-          {(["7d", "30d", "90d"] as const).map((period) => (
+          {(["7d", "30d", "90d"] as const).map(period => (
             <Button
               key={period}
               variant={timeframe === period ? "default" : "outline"}
@@ -180,9 +165,7 @@ const AdvancedFunnel: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Taxa de Conversão Geral
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">Taxa de Conversão Geral</CardTitle>
                 <Target className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -196,9 +179,7 @@ const AdvancedFunnel: React.FC = () => {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Conclusão do Quiz
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">Conclusão do Quiz</CardTitle>
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -212,9 +193,7 @@ const AdvancedFunnel: React.FC = () => {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Tempo Médio
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">Tempo Médio</CardTitle>
                 <Clock className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -228,9 +207,7 @@ const AdvancedFunnel: React.FC = () => {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Maior Abandono
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">Maior Abandono</CardTitle>
                 <AlertTriangle className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -244,29 +221,19 @@ const AdvancedFunnel: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Funil de Conversão</CardTitle>
-                <CardDescription>
-                  Progressão dos usuários através das etapas
-                </CardDescription>
+                <CardDescription>Progressão dos usuários através das etapas</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {mockFunnelData.map((stage, index) => (
                     <div key={stage.stage} className="space-y-2">
                       <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium">
-                          {stage.stage}
-                        </span>
+                        <span className="text-sm font-medium">{stage.stage}</span>
                         <div className="flex items-center gap-2">
                           <span className="text-sm text-gray-600">
                             {stage.count.toLocaleString()}
                           </span>
-                          <Badge
-                            variant={
-                              stage.dropoffRate > 30
-                                ? "destructive"
-                                : "secondary"
-                            }
-                          >
+                          <Badge variant={stage.dropoffRate > 30 ? "destructive" : "secondary"}>
                             {stage.percentage.toFixed(1)}%
                           </Badge>
                         </div>
@@ -286,9 +253,7 @@ const AdvancedFunnel: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Distribuição por Dispositivo</CardTitle>
-                <CardDescription>
-                  Como os usuários acessam o quiz
-                </CardDescription>
+                <CardDescription>Como os usuários acessam o quiz</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="h-64">
@@ -299,9 +264,7 @@ const AdvancedFunnel: React.FC = () => {
                         cx="50%"
                         cy="50%"
                         labelLine={false}
-                        label={({ name, percent }) =>
-                          `${name}: ${(percent * 100).toFixed(0)}%`
-                        }
+                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                         outerRadius={80}
                         fill="#8884d8"
                         dataKey="value"
@@ -323,9 +286,7 @@ const AdvancedFunnel: React.FC = () => {
           <Card>
             <CardHeader>
               <CardTitle>Análise Detalhada por Etapa</CardTitle>
-              <CardDescription>
-                Métricas específicas de cada ponto do funil
-              </CardDescription>
+              <CardDescription>Métricas específicas de cada ponto do funil</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -344,28 +305,14 @@ const AdvancedFunnel: React.FC = () => {
                     {mockFunnelData.map((stage, index) => (
                       <tr key={stage.stage} className="border-b">
                         <td className="p-2 font-medium">{stage.stage}</td>
+                        <td className="p-2 text-right">{stage.count.toLocaleString()}</td>
                         <td className="p-2 text-right">
-                          {stage.count.toLocaleString()}
-                        </td>
-                        <td className="p-2 text-right">
-                          <Badge
-                            variant={
-                              stage.conversionRate < 50
-                                ? "destructive"
-                                : "secondary"
-                            }
-                          >
+                          <Badge variant={stage.conversionRate < 50 ? "destructive" : "secondary"}>
                             {stage.conversionRate}%
                           </Badge>
                         </td>
                         <td className="p-2 text-right">
-                          <Badge
-                            variant={
-                              stage.dropoffRate > 30
-                                ? "destructive"
-                                : "secondary"
-                            }
-                          >
+                          <Badge variant={stage.dropoffRate > 30 ? "destructive" : "secondary"}>
                             {stage.dropoffRate}%
                           </Badge>
                         </td>
@@ -433,28 +380,21 @@ const AdvancedFunnel: React.FC = () => {
                   <AlertTriangle className="h-5 w-5 text-red-500" />
                   Pontos Críticos
                 </CardTitle>
-                <CardDescription>
-                  Etapas com maior necessidade de otimização
-                </CardDescription>
+                <CardDescription>Etapas com maior necessidade de otimização</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {criticalDropoffs.map((stage) => (
+                  {criticalDropoffs.map(stage => (
                     <div key={stage.stage} className="p-4 border rounded-lg">
                       <div className="flex justify-between items-start mb-2">
                         <h4 className="font-medium">{stage.stage}</h4>
-                        <Badge variant="destructive">
-                          {stage.dropoffRate}% abandono
-                        </Badge>
+                        <Badge variant="destructive">{stage.dropoffRate}% abandono</Badge>
                       </div>
                       <div className="text-sm text-gray-600 mb-3">
-                        {stage.count.toLocaleString()} usuários •{" "}
-                        {stage.avgTimeSpent} tempo médio
+                        {stage.count.toLocaleString()} usuários • {stage.avgTimeSpent} tempo médio
                       </div>
                       <div className="space-y-2">
-                        <h5 className="text-sm font-medium">
-                          Sugestões de melhoria:
-                        </h5>
+                        <h5 className="text-sm font-medium">Sugestões de melhoria:</h5>
                         <ul className="text-xs text-gray-600 space-y-1">
                           {stage.stage.includes("Oferta") && (
                             <>
@@ -481,16 +421,12 @@ const AdvancedFunnel: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Recomendações de A/B Tests</CardTitle>
-                <CardDescription>
-                  Testes sugeridos para melhorar conversões
-                </CardDescription>
+                <CardDescription>Testes sugeridos para melhorar conversões</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">
-                      Teste 1: Página de Oferta
-                    </h4>
+                    <h4 className="font-medium mb-2">Teste 1: Página de Oferta</h4>
                     <p className="text-sm text-gray-600 mb-3">
                       Testar diferentes headlines na proposta de valor
                     </p>

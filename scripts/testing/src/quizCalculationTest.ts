@@ -25,25 +25,21 @@ const mockResponses: QuizResponse[] = [
 
 console.log("📝 Respostas simuladas:");
 mockResponses.forEach((response, index) => {
-  console.log(
-    `Q${index + 1}: ${response.selectedOptionId} → ${response.selectedStyle}`,
-  );
+  console.log(`Q${index + 1}: ${response.selectedOptionId} → ${response.selectedStyle}`);
 });
 
 console.log("\n🏆 Calculando resultado...");
 const result = calculateQuizResult(mockResponses, "Teste");
 
 console.log("\n📊 Scores por estilo:");
-result.styleScores.forEach((score) => {
+result.styleScores.forEach(score => {
   console.log(
-    `${score.rank}º lugar: ${score.style} - ${score.points} pontos (${score.percentage}%)`,
+    `${score.rank}º lugar: ${score.style} - ${score.points} pontos (${score.percentage}%)`
   );
 });
 
 console.log(`\n🎯 Estilo predominante: ${result.predominantStyle}`);
-console.log(
-  `🤝 Estilos complementares: ${result.complementaryStyles.join(", ")}`,
-);
+console.log(`🤝 Estilos complementares: ${result.complementaryStyles.join(", ")}`);
 console.log(`📝 Total de questões normais: ${result.totalNormalQuestions}`);
 
 // Teste de desempate
@@ -58,7 +54,7 @@ const tieResponses: QuizResponse[] = [
 const tieResult = calculateQuizResult(tieResponses, "Teste Empate");
 console.log("🎯 Resultado com empate:");
 console.log(
-  `1º lugar: ${tieResult.predominantStyle} (deve ser 'natural' por ter aparecido primeiro)`,
+  `1º lugar: ${tieResult.predominantStyle} (deve ser 'natural' por ter aparecido primeiro)`
 );
 
 console.log("\n✅ Teste concluído com sucesso!");

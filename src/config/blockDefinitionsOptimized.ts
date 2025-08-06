@@ -55,8 +55,7 @@ export const blockDefinitions: BlockDefinition[] = [
   {
     type: "header-boxflex-inline",
     name: "Header do Resultado",
-    description:
-      "Cabeçalho elegante com logo da Gisele Galvão e resultado personalizado",
+    description: "Cabeçalho elegante com logo da Gisele Galvão e resultado personalizado",
     icon: "Crown",
     category: "Resultado Elegante",
     isNew: true,
@@ -78,8 +77,7 @@ export const blockDefinitions: BlockDefinition[] = [
         key: "subtitle",
         label: "Subtítulo",
         type: "text-input",
-        defaultValue:
-          "Baseado nas suas respostas, criamos seu perfil personalizado",
+        defaultValue: "Baseado nas suas respostas, criamos seu perfil personalizado",
       },
     ],
   },
@@ -87,8 +85,7 @@ export const blockDefinitions: BlockDefinition[] = [
   {
     type: "result-main-boxflex-inline",
     name: "Estilo Principal",
-    description:
-      "Resultado principal com estilo detectado e porcentagem real da marca",
+    description: "Resultado principal com estilo detectado e porcentagem real da marca",
     icon: "Sparkles",
     category: "Resultado Elegante",
     isNew: true,
@@ -126,8 +123,7 @@ export const blockDefinitions: BlockDefinition[] = [
         key: "styleImage",
         label: "Imagem do Estilo",
         type: "image-url",
-        defaultValue:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+        defaultValue: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
       },
     ],
   },
@@ -135,8 +131,7 @@ export const blockDefinitions: BlockDefinition[] = [
   {
     type: "secondary-styles-boxflex-inline",
     name: "Estilos Secundários",
-    description:
-      "Outros estilos presentes na personalidade com cores elegantes da marca",
+    description: "Outros estilos presentes na personalidade com cores elegantes da marca",
     icon: "BarChart3",
     category: "Resultado Elegante",
     isNew: true,
@@ -156,8 +151,7 @@ export const blockDefinitions: BlockDefinition[] = [
   {
     type: "before-after-boxflex-inline",
     name: "Transformação Elegante",
-    description:
-      "Seção antes/depois com design sofisticado da marca Gisele Galvão",
+    description: "Seção antes/depois com design sofisticado da marca Gisele Galvão",
     icon: "RefreshCw",
     category: "Resultado Elegante",
     isNew: true,
@@ -215,8 +209,7 @@ export const blockDefinitions: BlockDefinition[] = [
         key: "motivationText",
         label: "Frase Motivacional",
         type: "textarea",
-        defaultValue:
-          "Vista-se de você — na prática, com o seu Guia de Estilo Personalizado",
+        defaultValue: "Vista-se de você — na prática, com o seu Guia de Estilo Personalizado",
         rows: 2,
       },
     ],
@@ -225,8 +218,7 @@ export const blockDefinitions: BlockDefinition[] = [
   {
     type: "bonus-boxflex-inline",
     name: "Bônus Elegantes",
-    description:
-      "Lista refinada de bônus inclusos no guia personalizado da marca",
+    description: "Lista refinada de bônus inclusos no guia personalizado da marca",
     icon: "Gift",
     category: "Resultado Elegante",
     isNew: true,
@@ -267,8 +259,7 @@ export const blockDefinitions: BlockDefinition[] = [
   {
     type: "cta-green-boxflex-inline",
     name: "CTA Premium",
-    description:
-      "Call-to-action elegante otimizado para conversão com design da marca",
+    description: "Call-to-action elegante otimizado para conversão com design da marca",
     icon: "ShoppingBag",
     category: "Resultado Elegante",
     isNew: true,
@@ -285,8 +276,7 @@ export const blockDefinitions: BlockDefinition[] = [
   {
     type: "guarantee-boxflex-inline",
     name: "Garantia Elegante",
-    description:
-      "Garantia sofisticada com política de devolução clara da marca",
+    description: "Garantia sofisticada com política de devolução clara da marca",
     icon: "Shield",
     category: "Resultado Elegante",
     isNew: true,
