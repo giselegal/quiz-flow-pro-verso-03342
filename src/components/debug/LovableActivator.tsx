@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 interface LovableActivatorProps {
   forceActivate?: boolean;
@@ -8,19 +8,20 @@ export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivat
   const [lovableStatus, setLovableStatus] = useState({
     isActive: false,
     hasConfig: false,
-    currentPath: '',
-    searchParams: '',
+    currentPath: "",
+    searchParams: "",
     shouldActivate: false,
-    error: null as string | null
+    error: null as string | null,
   });
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const currentPath = window.location.pathname;
       const searchParams = window.location.search;
-      
+
       // Condições para ativar Lovable
-      const shouldActivate = forceActivate ||
+      const shouldActivate =
+        forceActivate ||
         currentPath.includes("/admin") ||
         currentPath === "/" ||
         currentPath.startsWith("/dashboard") ||
@@ -33,12 +34,12 @@ export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivat
       try {
         if (shouldActivate && !hasConfig) {
           console.log("🚀 Ativando Lovable...");
-          
+
           // Configurar Lovable
           (window as any).LOVABLE_CONFIG = {
             projectId: "quiz-sell-genius",
             apiBaseUrl: "https://api.lovable.dev",
-            environment: process.env.NODE_ENV || "development"
+            environment: process.env.NODE_ENV || "development",
           };
 
           // Adicionar classes necessárias ao body
@@ -55,14 +56,13 @@ export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivat
           currentPath,
           searchParams,
           shouldActivate,
-          error: null
+          error: null,
         });
-
       } catch (error) {
         console.error("❌ Erro ao ativar Lovable:", error);
         setLovableStatus(prev => ({
           ...prev,
-          error: error instanceof Error ? error.message : 'Erro desconhecido'
+          error: error instanceof Error ? error.message : "Erro desconhecido",
         }));
       }
     }
@@ -72,7 +72,7 @@ export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivat
   useEffect(() => {
     if (typeof window !== "undefined") {
       const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('lovable') === 'true' || urlParams.get('activate') === 'lovable') {
+      if (urlParams.get("lovable") === "true" || urlParams.get("activate") === "lovable") {
         console.log("🔄 Auto-ativando Lovable baseado na URL...");
         setLovableStatus(prev => ({ ...prev, shouldActivate: true }));
       }
@@ -86,26 +86,26 @@ export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivat
   return (
     <div className="fixed top-4 right-4 z-50 bg-blue-500 text-white p-4 rounded-lg shadow-lg max-w-sm">
       <h3 className="font-bold mb-2">🚀 Lovable Status</h3>
-      
+
       <div className="space-y-1 text-sm">
         <div>
-          <strong>Ativo:</strong> {lovableStatus.isActive ? '✅ Sim' : '❌ Não'}
+          <strong>Ativo:</strong> {lovableStatus.isActive ? "✅ Sim" : "❌ Não"}
         </div>
-        
+
         <div>
-          <strong>Config:</strong> {lovableStatus.hasConfig ? '✅ Carregada' : '❌ Ausente'}
+          <strong>Config:</strong> {lovableStatus.hasConfig ? "✅ Carregada" : "❌ Ausente"}
         </div>
-        
+
         <div>
           <strong>Caminho:</strong> {lovableStatus.currentPath}
         </div>
-        
+
         {lovableStatus.searchParams && (
           <div>
             <strong>Params:</strong> {lovableStatus.searchParams}
           </div>
         )}
-        
+
         {lovableStatus.error && (
           <div className="text-red-200">
             <strong>Erro:</strong> {lovableStatus.error}
@@ -116,24 +116,25 @@ export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivat
       <div className="mt-3 space-y-2">
         <button
           onClick={() => {
-            window.location.href = window.location.href + (window.location.search ? '&' : '?') + 'lovable=true';
+            window.location.href =
+              window.location.href + (window.location.search ? "&" : "?") + "lovable=true";
           }}
           className="w-full bg-white text-blue-500 px-3 py-1 rounded text-sm font-medium"
         >
           Ativar Lovable
         </button>
-        
+
         <button
           onClick={() => {
             console.log("📊 Debug Lovable:", {
               window_LOVABLE_CONFIG: (window as any).LOVABLE_CONFIG,
               body_classes: document.body.className,
               body_attributes: {
-                'data-lovable-root': document.body.getAttribute('data-lovable-root')
+                "data-lovable-root": document.body.getAttribute("data-lovable-root"),
               },
               pathname: window.location.pathname,
               search: window.location.search,
-              href: window.location.href
+              href: window.location.href,
             });
           }}
           className="w-full bg-gray-200 text-gray-700 px-3 py-1 rounded text-sm"

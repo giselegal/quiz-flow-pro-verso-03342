@@ -30,10 +30,10 @@ const UniversalQuizResultsBlock: React.FC<UniversalQuizResultsBlockProps> = ({
   // Extrair propriedades do bloco
   const blockProps = block.properties || {};
   const blockContent = block.content || {};
-  
+
   // Mesclar properties e content
   const allProps = { ...blockProps, ...blockContent };
-  
+
   // Extrair result das propriedades ou criar um padrão
   const result: QuizResult = allProps.result || {
     id: "default-result",
@@ -43,12 +43,12 @@ const UniversalQuizResultsBlock: React.FC<UniversalQuizResultsBlockProps> = ({
     minScore: 0,
     maxScore: 100,
     displayOrder: 1,
-    imageUrl: undefined
+    imageUrl: undefined,
   };
 
   const categoryScores = allProps.categoryScores || [];
   const showScores = allProps.showScores !== false; // default true
-  
+
   const handleReset = () => {
     if (allProps.onReset) {
       allProps.onReset();
@@ -66,8 +66,8 @@ const UniversalQuizResultsBlock: React.FC<UniversalQuizResultsBlockProps> = ({
   };
 
   return (
-    <div 
-      className={`quiz-results-wrapper ${isSelected ? 'ring-2 ring-blue-500' : ''}`}
+    <div
+      className={`quiz-results-wrapper ${isSelected ? "ring-2 ring-blue-500" : ""}`}
       onClick={onClick}
     >
       <QuizResultsBlockCore
@@ -100,9 +100,17 @@ const QuizResultsBlockCore: React.FC<QuizResultsBlockProps> = ({
       minScore: 0,
       maxScore: 100,
       displayOrder: 1,
-      imageUrl: undefined
+      imageUrl: undefined,
     };
-    return <QuizResultsBlock result={defaultResult} categoryScores={categoryScores} showScores={showScores} onReset={onReset} onShare={onShare} />;
+    return (
+      <QuizResultsBlock
+        result={defaultResult}
+        categoryScores={categoryScores}
+        showScores={showScores}
+        onReset={onReset}
+        onShare={onShare}
+      />
+    );
   }
 
   // ✅ CORREÇÃO: Verificação adicional de propriedades obrigatórias
@@ -114,7 +122,7 @@ const QuizResultsBlockCore: React.FC<QuizResultsBlockProps> = ({
     minScore: result.minScore || 0,
     maxScore: result.maxScore || 100,
     displayOrder: result.displayOrder || 1,
-    imageUrl: result.imageUrl
+    imageUrl: result.imageUrl,
   };
 
   return (
