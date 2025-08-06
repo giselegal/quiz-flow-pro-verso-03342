@@ -1,6 +1,6 @@
 import QuizQuestion from "@/components/funnel-blocks/QuizQuestion";
-import type { BlockComponentProps } from "@/types/blocks";
 import React, { useState } from "react";
+import { QuizBlockProps } from "./types";
 
 /**
  * QuizOptionsGridBlock - Componente de grid de opções para quiz
@@ -8,60 +8,37 @@ import React, { useState } from "react";
  * Utiliza o componente base QuizQuestion para renderizar uma pergunta
  * com múltiplas opções em formato de grid, permitindo seleção única ou múltipla.
  */
-export interface QuizOptionsGridProperties {
-  question: string;
-  description?: string;
-  options: string;
-  requireOption?: boolean;
-  autoAdvance?: boolean;
-  autoAdvanceDelay?: number;
-  showCorrectAnswer?: boolean;
-  correctOptionIndex?: number;
-  useLetterOptions?: boolean;
-  optionsLayout?: "vertical" | "horizontal" | "grid";
-  optionsPerRow?: number;
-  showOptionImages?: boolean;
-  optionImageSize?: "small" | "medium" | "large";
-  alignment?: "left" | "center" | "right";
-  optionStyle?: "card" | "button" | "radio" | "checkbox";
-  nextButtonText?: string;
-  minSelections?: number;
-  maxSelections?: number;
+export interface QuizOptionsGridBlockProps extends QuizBlockProps {
+  properties: {
+    question: string;
+    description?: string;
+    options: string;
+    requireOption?: boolean;
+    autoAdvance?: boolean;
+    autoAdvanceDelay?: number;
+    showCorrectAnswer?: boolean;
+    correctOptionIndex?: number;
+    useLetterOptions?: boolean;
+    optionsLayout?: "vertical" | "horizontal" | "grid";
+    optionsPerRow?: number;
+    showOptionImages?: boolean;
+    optionImageSize?: "small" | "medium" | "large";
+    alignment?: "left" | "center" | "right";
+    optionStyle?: "card" | "button" | "radio" | "checkbox";
+    nextButtonText?: string;
+    minSelections?: number;
+    maxSelections?: number;
+  };
+  deviceView?: "mobile" | "tablet" | "desktop";
 }
 
-const QuizOptionsGridBlock: React.FC<BlockComponentProps> = ({
-  block,
+const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   properties,
-  isSelected,
-  onClick,
+  id,
   onPropertyChange,
+  ...props
 }) => {
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
-
-  const {
-    question = "Sua pergunta aqui?",
-    description,
-    options: optionsText = "Opção 1\nOpção 2\nOpção 3",
-    requireOption = true,
-    autoAdvance = false,
-    autoAdvanceDelay = 800,
-    showCorrectAnswer = false,
-    correctOptionIndex = 0,
-    useLetterOptions = false,
-    optionsLayout = "vertical",
-    optionsPerRow = 1,
-    showOptionImages = false,
-    optionImageSize = "medium",
-    alignment = "left",
-    optionStyle = "card",
-    nextButtonText = "Continuar",
-    minSelections: propMinSelections = 3,
-    maxSelections: propMaxSelections = 3,
-  } = (properties || {}) as QuizOptionsGridProperties;
-
-  const handlePropertyUpdate = (key: string, value: any) => {
-    onPropertyChange?.(key, value);
-  };
 
   // Extrair as opções do formato texto para array de objetos
   const parseOptions = (optionsText: string) => {
@@ -76,12 +53,12 @@ const QuizOptionsGridBlock: React.FC<BlockComponentProps> = ({
       }));
   };
 
-  const optionsList = parseOptions(optionsText);
+  const options = parseOptions(properties?.options || "");
 
   // Determinar o número mínimo de seleções com base nas propriedades
   // Por padrão são 3 opções obrigatórias conforme requisito
-  const minSelections = propMinSelections;
-  const maxSelections = propMaxSelections;
+  const minSelections = properties?.minSelections || 3;
+  const maxSelections = properties?.maxSelections || options.length;
 
   // Callbacks para interações do usuário
   const handleAnswer = (selectedOptions: any[]) => {
@@ -110,33 +87,27 @@ const QuizOptionsGridBlock: React.FC<BlockComponentProps> = ({
 
   // Mapear propriedades do editor para o componente QuizQuestion
   return (
-    <div
-      className={`quiz-options-grid-block transition-all duration-200 ${
-        isSelected ? "ring-2 ring-blue-500 ring-opacity-50" : ""
-      }`}
-      data-block-id={block?.id}
-      onClick={onClick}
-    >
+    <div className="quiz-options-grid-block" data-block-id={id}>
       <QuizQuestion
-        question={question}
-        description={description}
-        options={optionsList}
+        question={properties?.question || ""}
+        description={properties?.description || ""}
+        options={options}
         multipleSelection={true}
         minSelections={minSelections}
         maxSelections={maxSelections}
-        required={requireOption}
-        alignment={alignment}
-        optionLayout={optionsLayout}
-        optionStyle={optionStyle}
-        showLetters={useLetterOptions}
-        optionImageSize={optionImageSize}
-        autoAdvance={autoAdvance}
-        autoAdvanceDelay={autoAdvanceDelay}
+        required={properties?.requireOption !== false}
+        alignment={properties?.alignment || "center"}
+        optionLayout={properties?.optionsLayout || "vertical"}
+        optionStyle={properties?.optionStyle || "card"}
+        showLetters={properties?.useLetterOptions === true}
+        optionImageSize={(properties?.optionImageSize as "small" | "medium" | "large") || "medium"}
+        autoAdvance={properties?.autoAdvance === true}
+        autoAdvanceDelay={properties?.autoAdvanceDelay || 1000}
         showNextButton={true}
-        nextButtonText={nextButtonText}
+        nextButtonText={properties?.nextButtonText || "Avançar"}
         onAnswer={handleAnswer}
         onNext={handleNext}
-        deviceView="desktop"
+        deviceView={props.deviceView || "desktop"}
       />
     </div>
   );
