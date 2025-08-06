@@ -604,10 +604,12 @@ export const getInlineComponentProperties = (type: string, currentProps: any = {
       color: "#8F7A6A",
       linkColor: "#B89B7A",
     },
-  };
+  } as const;
+
+  type InlineDefaultsKey = keyof typeof inlineDefaults;
 
   return {
-    ...(inlineDefaults[type] || {}),
+    ...((inlineDefaults[type as InlineDefaultsKey] || {}) as object),
     ...currentProps,
   };
 };
