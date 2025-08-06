@@ -265,6 +265,39 @@ export const useUnifiedProperties = (
           return [...baseProperties, ...contentProps, ...styleProps, ...alignmentProps];
         }
 
+        case "final-step": {
+          // ✅ CORREÇÃO: Garantir que final-step tenha stepConfig estruturado corretamente
+          const stepConfig = currentBlock?.properties?.stepConfig || {};
+          return [
+            ...baseProperties,
+            {
+              key: "stepNumber",
+              value: stepConfig.stepNumber || currentBlock?.properties?.stepNumber || 21,
+              type: PropertyType.NUMBER,
+              label: "Número da Etapa",
+              category: "content",
+              required: true,
+              min: 1,
+              max: 99,
+            },
+            {
+              key: "title", 
+              value: stepConfig.title || currentBlock?.properties?.title || "Seu Resultado",
+              type: PropertyType.TEXT,
+              label: "Título",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "subtitle",
+              value: stepConfig.subtitle || currentBlock?.properties?.subtitle || "Descubra seu estilo predominante",
+              type: PropertyType.TEXT,
+              label: "Subtítulo",
+              category: "content",
+            },
+          ];
+        }
+
         case "quiz-intro-header":
           return [
             ...baseProperties,
@@ -1064,16 +1097,38 @@ export const useUnifiedProperties = (
     }
   }, [block, generateDefaultProperties, generateResultsBlockProperties]);
 
-  // Função para atualizar o valor de uma propriedade
+  // Função para atualizar uma propriedade específica
   const updateProperty = useCallback(
     (key: string, value: any) => {
-      // Atualiza o estado interno do hook (para re-renderizar o painel)
-      setProperties(prev => prev.map(prop => (prop.key === key ? { ...prop, value } : prop)));
+      if (!block) return;
 
-      // Notifica o sistema externo (EditorProvider) sobre a mudança
-      if (block && onUpdateExternal) {
-        // ✅ CORREÇÃO CRÍTICA: Enviar updates aninhados sob 'properties'
-        onUpdateExternal(block.id, { properties: { ...block.properties, [key]: value } });
+      // ✅ CORREÇÃO: Tratar final-step de forma especial para estruturar stepConfig
+      let updatedProperties;
+      
+      if (block.type === "final-step" && ["stepNumber", "title", "subtitle"].includes(key)) {
+        // Para final-step, estruturar dentro de stepConfig
+        const currentStepConfig = block.properties?.stepConfig || {};
+        updatedProperties = {
+          ...block.properties,
+          stepConfig: {
+            ...currentStepConfig,
+            [key]: value,
+          },
+        };
+      } else {
+        // Para outros tipos, atualizar diretamente
+        updatedProperties = { ...block.properties, [key]: value };
+      }
+
+      // Atualizar o estado interno
+      setProperties(prevProps =>
+        prevProps.map(prop => (prop.key === key ? { ...prop, value } : prop))
+      );
+
+      // Notificar o sistema externo se o callback for fornecido
+      if (onUpdateExternal) {
+        // ✅ CORREÇÃO: Passar as propriedades atualizadas completas
+        onUpdateExternal(block.id, updatedProperties);
       }
     },
     [block, onUpdateExternal]
