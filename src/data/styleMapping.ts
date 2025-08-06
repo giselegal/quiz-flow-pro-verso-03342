@@ -1,28 +1,28 @@
-import type { StyleType, QuizOption } from "@/types/quiz";
+import type { QuizOption, StyleType } from "@/types/quiz";
 
 // Mapeamento exato das opções A-H para os estilos
 // Baseado no sistema original do CaktoQuiz
 export const OPTION_TO_STYLE_MAPPING: Record<string, StyleType> = {
   A: "natural", // Opção A: Natural
   B: "classico", // Opção B: Clássico
-  C: "contemporaneo", // Opção C: Contemporâneo
+  C: "contemporâneo", // Opção C: Contemporâneo
   D: "elegante", // Opção D: Elegante
-  E: "romantico", // Opção E: Romântico
-  F: "sensual", // Opção F: Sexy (mantendo 'sensual' no código)
-  G: "dramatico", // Opção G: Dramático
+  E: "romântico", // Opção E: Romântico
+  F: "sexy", // Opção F: Sexy
+  G: "dramático", // Opção G: Dramático
   H: "criativo", // Opção H: Criativo
 };
 
 // Ordem padrão dos estilos para exibição
 export const STYLE_DISPLAY_ORDER: StyleType[] = [
   "classico",
-  "romantico",
-  "dramatico",
+  "romântico",
+  "dramático",
   "natural",
   "criativo",
   "elegante",
-  "sensual",
-  "contemporaneo",
+  "sexy",
+  "contemporâneo",
 ];
 
 // Helper para criar opções de quiz com mapeamento automático

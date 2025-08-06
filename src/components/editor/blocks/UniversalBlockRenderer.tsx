@@ -2,7 +2,7 @@ import { getBlockComponent } from "@/config/enhancedBlockRegistry";
 import { Block } from "@/types/editor";
 import React from "react";
 
-interface UniversalBlockRendererProps {
+export interface UniversalBlockRendererProps {
   block: Block;
   isSelected?: boolean;
   onClick?: () => void;

@@ -1,7 +1,7 @@
-import React from "react";
+import { Block } from "@/types/editor";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { Block } from "@/types/editor";
+import React from "react";
 import UniversalBlockRenderer from "../blocks/UniversalBlockRenderer";
 import { SortableBlockWrapper } from "./SortableBlockWrapper";
 
@@ -63,7 +63,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
           {blocks.map(block => (
             <div key={block.id} className="w-full flex justify-center">
               <div className="w-full max-w-none">
-                <UniversalBlockRenderer block={block} isSelected={false} disabled={true} />
+                <UniversalBlockRenderer block={block} isSelected={false} />
               </div>
             </div>
           ))}

@@ -1,7 +1,7 @@
-import React from "react";
-import { useDroppable } from "@dnd-kit/core";
 import { Block } from "@/types/editor";
-import { generateSemanticId } from "../utils/semanticIdGenerator";
+import { useDroppable } from "@dnd-kit/core";
+import React from "react";
+import { generateSemanticId } from "../../../utils/semanticIdGenerator";
 
 interface DroppableCanvasProps {
   blocks: Block[];

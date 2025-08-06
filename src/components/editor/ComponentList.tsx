@@ -1,29 +1,26 @@
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import {
-  Type,
-  Image as ImageIcon,
-  MousePointer,
-  Layout,
-  Video,
-  Star,
-  DollarSign,
-  Clock,
-  Shield,
-  Gift,
-  HelpCircle,
-  Users,
-  BarChart3,
-  Mail,
-  Phone,
-  MapPin,
-} from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { EditorComponent } from "@/interfaces/editor";
 import { SimpleComponent } from "@/interfaces/quiz";
 import styles from "@/styles/editor.module.css";
-import { generateSemanticId } from "../utils/semanticIdGenerator";
+import {
+  BarChart3,
+  Clock,
+  DollarSign,
+  Gift,
+  HelpCircle,
+  Image as ImageIcon,
+  Layout,
+  Mail,
+  MousePointer,
+  Phone,
+  Shield,
+  Star,
+  Type,
+  Users,
+  Video,
+} from "lucide-react";
+import React, { useState } from "react";
 
 // Definição dos componentes disponíveis
 const COMPONENT_CATEGORIES = {

@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from "react";
 import { cn } from "../../../lib/utils";
-import type { BlockComponentProps } from "../types/blocks";
+import type { BlockComponentProps } from "../../../types/blocks";
 
 /**
  * TextInlineBlock - Componente modular inline horizontal
@@ -126,7 +126,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     const hasHtml = personalizedContent?.includes("<") && personalizedContent?.includes(">");
     const hasSpanTag = personalizedContent?.includes("<span");
     const hasStrongTag = personalizedContent?.includes("<strong");
-    
+
     console.log("� TextInlineBlock DEBUG COMPLETO:", {
       blockId: block?.id,
       rawContent: personalizedContent,
@@ -137,7 +137,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
       willRenderAsHTML: hasHtml || hasSpanTag || hasStrongTag,
       contentPreview: personalizedContent?.substring(0, 200) + "...",
     });
-    
+
     return hasHtml || hasSpanTag || hasStrongTag;
   }, [personalizedContent, block?.id]);
 

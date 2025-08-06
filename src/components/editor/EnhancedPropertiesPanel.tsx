@@ -1,9 +1,9 @@
-import React from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -12,32 +12,27 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { HexColorPicker } from "react-colorful";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
-import {
-  X,
-  Info,
-  Plus,
-  Trash2,
-  GripVertical,
-  Eye,
-  EyeOff,
-  Palette,
-  Settings,
-  Layout,
-  Type,
-  CheckCircle,
-  Upload,
-  Edit3,
-} from "lucide-react";
 import { BlockDefinition, EditableContent } from "@/types/editor";
-import { generateSemanticId } from "../utils/semanticIdGenerator";
+import {
+  CheckCircle,
+  GripVertical,
+  Info,
+  Layout,
+  Palette,
+  Plus,
+  Settings,
+  Trash2,
+  Type,
+  X,
+} from "lucide-react";
+import React from "react";
+import { HexColorPicker } from "react-colorful";
+import { generateSemanticId } from "../../utils/semanticIdGenerator";
 
 // 🎯 Interface para uma opção
 interface OptionItem {
