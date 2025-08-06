@@ -826,6 +826,120 @@ export const useUnifiedProperties = (
             },
           ];
 
+        case "style-results-block":
+          return [
+            ...baseProperties,
+            {
+              key: "styleType",
+              value: currentBlock?.properties?.styleType || "",
+              type: PropertyType.TEXT,
+              label: "Tipo de Estilo",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "styleDescription",
+              value: currentBlock?.properties?.styleDescription || "",
+              type: PropertyType.TEXTAREA,
+              label: "Descrição do Estilo",
+              category: "content",
+              rows: 4,
+            },
+            {
+              key: "styleImage",
+              value: currentBlock?.properties?.styleImage || "",
+              type: PropertyType.IMAGE,
+              label: "Imagem do Estilo",
+              category: "content",
+            },
+            {
+              key: "primaryColor",
+              value: currentBlock?.properties?.primaryColor || "#000000",
+              type: PropertyType.COLOR,
+              label: "Cor Primária",
+              category: "style",
+            },
+            {
+              key: "secondaryColor",
+              value: currentBlock?.properties?.secondaryColor || "#ffffff",
+              type: PropertyType.COLOR,
+              label: "Cor Secundária",
+              category: "style",
+            },
+            {
+              key: "showPersonality",
+              value: currentBlock?.properties?.showPersonality !== false,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Personalidade",
+              category: "content",
+            },
+            {
+              key: "personalityTraits",
+              value: currentBlock?.properties?.personalityTraits || "",
+              type: PropertyType.TEXTAREA,
+              label: "Traços de Personalidade",
+              category: "content",
+              rows: 3,
+            },
+            {
+              key: "showStyleTips",
+              value: currentBlock?.properties?.showStyleTips !== false,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Dicas de Estilo",
+              category: "content",
+            },
+            {
+              key: "styleTips",
+              value: currentBlock?.properties?.styleTips || "",
+              type: PropertyType.TEXTAREA,
+              label: "Dicas de Estilo",
+              category: "content",
+              rows: 4,
+            },
+            {
+              key: "showColorPalette",
+              value: currentBlock?.properties?.showColorPalette !== false,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Paleta de Cores",
+              category: "style",
+            },
+            {
+              key: "colorPalette",
+              value: currentBlock?.properties?.colorPalette || "",
+              type: PropertyType.TEXTAREA,
+              label: "Paleta de Cores",
+              category: "style",
+              rows: 2,
+            },
+            {
+              key: "resultLayout",
+              value: currentBlock?.properties?.resultLayout || "detailed",
+              type: PropertyType.SELECT,
+              label: "Layout do Resultado",
+              category: "style",
+              options: [
+                { value: "simple", label: "Simples" },
+                { value: "detailed", label: "Detalhado" },
+                { value: "compact", label: "Compacto" },
+                { value: "extended", label: "Estendido" },
+              ],
+            },
+            {
+              key: "showScore",
+              value: currentBlock?.properties?.showScore !== false,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Pontuação",
+              category: "behavior",
+            },
+            {
+              key: "enableSharing",
+              value: currentBlock?.properties?.enableSharing === true,
+              type: PropertyType.SWITCH,
+              label: "Permitir Compartilhamento",
+              category: "behavior",
+            },
+          ];
+
         case "button-inline":
           return [
             ...baseProperties,
