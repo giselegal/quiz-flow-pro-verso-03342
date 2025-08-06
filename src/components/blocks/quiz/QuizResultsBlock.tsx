@@ -191,7 +191,11 @@ const QuizResultsBlockCore: React.FC<QuizResultsBlockProps> = ({
   );
 };
 
+// ✅ WRAPPER PARA COMPATIBILIDADE
+const QuizResultsBlock: React.FC<QuizResultsBlockProps> = (props) => (
+  <QuizResultsBlockCore {...props} />
+);
+
 // ✅ EXPORTAÇÕES CORRETAS
-export const QuizResultsBlock = QuizResultsBlockCore;
-export { UniversalQuizResultsBlock };
+export { QuizResultsBlock, UniversalQuizResultsBlock };
 export default QuizResultsBlock;
