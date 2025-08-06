@@ -7,6 +7,7 @@ import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
 import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
 import EnhancedUniversalPropertiesPanel from "@/components/universal/EnhancedUniversalPropertiesPanel";
 import { generateBlockDefinitions, getRegistryStats } from "@/config/enhancedBlockRegistry";
+import { OPTIMIZED_FUNNEL_CONFIG } from "@/config/optimized21StepsFunnel";
 import { useEditor } from "@/context/EditorContext";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
 import { Type } from "lucide-react";
@@ -14,6 +15,11 @@ import React, { useState } from "react";
 
 const EditorFixedPageWithDragDrop: React.FC = () => {
   console.log("🔥 EditorFixedPage: PÁGINA RENDERIZANDO COM DRAG&DROP!");
+  console.log("🎯 CONFIGURAÇÃO OTIMIZADA:", {
+    hasConfig: !!OPTIMIZED_FUNNEL_CONFIG,
+    totalSteps: OPTIMIZED_FUNNEL_CONFIG?.metadata?.totalSteps,
+    stepsCount: OPTIMIZED_FUNNEL_CONFIG?.steps?.length || 0
+  });
 
   // Hook para scroll sincronizado
   const { scrollRef } = useSyncedScroll({ source: "canvas" });

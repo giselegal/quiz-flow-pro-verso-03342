@@ -510,7 +510,938 @@ export const OPTIMIZED_FUNNEL_CONFIG = {
           },
         },
       ],
-    },
+    },,
+    {
+      id: "step-5",
+      name: "Q4 - Ocasiões especiais",
+      description: "Para que tipo de evento você gosta de se arrumar?",
+      order: 5,
+      type: "question",
+      questionData: {
+        "id": "q4",
+        "title": "Ocasiões especiais",
+        "text": "Para que tipo de evento você gosta de se arrumar?",
+        "options": [
+                {
+                        "id": "a",
+                        "text": "Eventos ao ar livre e casuais",
+                        "score": {
+                                "natural": 3,
+                                "contemporaneo": 1
+                        }
+                },
+                {
+                        "id": "b",
+                        "text": "Reuniões formais e corporativas",
+                        "score": {
+                                "classico": 3,
+                                "elegante": 2
+                        }
+                },
+                {
+                        "id": "c",
+                        "text": "Jantares românticos e festas",
+                        "score": {
+                                "romantico": 3,
+                                "elegante": 1
+                        }
+                },
+                {
+                        "id": "d",
+                        "text": "Eventos exclusivos e gala",
+                        "score": {
+                                "dramatico": 3,
+                                "elegante": 2
+                        }
+                }
+        ]
+},
+      blocks: [
+        {
+                "id": "header-progress",
+                "type": "quiz-intro-header",
+                "properties": {
+                        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+                        "logoAlt": "Logo Gisele Galvão",
+                        "progressValue": 24,
+                        "showProgress": true,
+                        "backgroundColor": "#F9F5F1",
+                        "height": 80
+                }
+        },
+        {
+                "id": "question-title",
+                "type": "heading-inline",
+                "properties": {
+                        "content": "Ocasiões especiais",
+                        "level": "h2",
+                        "textAlign": "center",
+                        "color": "#432818",
+                        "fontWeight": "600"
+                }
+        },
+        {
+                "id": "options-grid",
+                "type": "options-grid",
+                "properties": {
+                        "question": "Para que tipo de evento você gosta de se arrumar?",
+                        "columns": "2",
+                        "gap": 16,
+                        "selectionMode": "single",
+                        "primaryColor": "#B89B7A",
+                        "accentColor": "#D4C2A8",
+                        "showImages": false,
+                        "imagePosition": "top",
+                        "options": [
+                                {
+                                        "id": "a",
+                                        "text": "Eventos ao ar livre e casuais",
+                                        "score": {
+                                                "natural": 3,
+                                                "contemporaneo": 1
+                                        }
+                                },
+                                {
+                                        "id": "b",
+                                        "text": "Reuniões formais e corporativas",
+                                        "score": {
+                                                "classico": 3,
+                                                "elegante": 2
+                                        }
+                                },
+                                {
+                                        "id": "c",
+                                        "text": "Jantares românticos e festas",
+                                        "score": {
+                                                "romantico": 3,
+                                                "elegante": 1
+                                        }
+                                },
+                                {
+                                        "id": "d",
+                                        "text": "Eventos exclusivos e gala",
+                                        "score": {
+                                                "dramatico": 3,
+                                                "elegante": 2
+                                        }
+                                }
+                        ]
+                }
+        },,
+    {
+      id: "step-6",
+      name: "Q5 - Estilo de cabelo",
+      description: "Qual tipo de penteado combina mais com você?",
+      order: 6,
+      type: "question",
+      questionData: {
+        "id": "q5",
+        "title": "Estilo de cabelo",
+        "text": "Qual tipo de penteado combina mais com você?",
+        "options": [
+                {
+                        "id": "a",
+                        "text": "Solto e natural",
+                        "score": {
+                                "natural": 3,
+                                "romantico": 1
+                        }
+                },
+                {
+                        "id": "b",
+                        "text": "Bem estruturado e arrumado",
+                        "score": {
+                                "classico": 3,
+                                "elegante": 2
+                        }
+                },
+                {
+                        "id": "c",
+                        "text": "Com ondas e textura",
+                        "score": {
+                                "romantico": 3,
+                                "criativo": 1
+                        }
+                },
+                {
+                        "id": "d",
+                        "text": "Liso e impecável",
+                        "score": {
+                                "dramatico": 2,
+                                "elegante": 3
+                        }
+                }
+        ]
+},
+      blocks: [
+        {
+                "id": "header-progress",
+                "type": "quiz-intro-header",
+                "properties": {
+                        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+                        "logoAlt": "Logo Gisele Galvão",
+                        "progressValue": 29,
+                        "showProgress": true,
+                        "backgroundColor": "#F9F5F1",
+                        "height": 80
+                }
+        },
+        {
+                "id": "question-title",
+                "type": "heading-inline",
+                "properties": {
+                        "content": "Estilo de cabelo",
+                        "level": "h2",
+                        "textAlign": "center",
+                        "color": "#432818",
+                        "fontWeight": "600"
+                }
+        },
+        {
+                "id": "options-grid",
+                "type": "options-grid",
+                "properties": {
+                        "question": "Qual tipo de penteado combina mais com você?",
+                        "columns": "2",
+                        "gap": 16,
+                        "selectionMode": "single",
+                        "primaryColor": "#B89B7A",
+                        "accentColor": "#D4C2A8",
+                        "showImages": false,
+                        "imagePosition": "top",
+                        "options": [
+                                {
+                                        "id": "a",
+                                        "text": "Solto e natural",
+                                        "score": {
+                                                "natural": 3,
+                                                "romantico": 1
+                                        }
+                                },
+                                {
+                                        "id": "b",
+                                        "text": "Bem estruturado e arrumado",
+                                        "score": {
+                                                "classico": 3,
+                                                "elegante": 2
+                                        }
+                                },
+                                {
+                                        "id": "c",
+                                        "text": "Com ondas e textura",
+                                        "score": {
+                                                "romantico": 3,
+                                                "criativo": 1
+                                        }
+                                },
+                                {
+                                        "id": "d",
+                                        "text": "Liso e impecável",
+                                        "score": {
+                                                "dramatico": 2,
+                                                "elegante": 3
+                                        }
+                                }
+                        ]
+                }
+        },,
+    {
+      id: "step-7",
+      name: "Q6 - Acessórios favoritos",
+      description: "Que tipo de acessórios você prefere?",
+      order: 7,
+      type: "question",
+      questionData: {
+        "id": "q6",
+        "title": "Acessórios favoritos",
+        "text": "Que tipo de acessórios você prefere?",
+        "options": [
+                {
+                        "id": "a",
+                        "text": "Minimalistas e funcionais",
+                        "score": {
+                                "natural": 2,
+                                "classico": 2
+                        }
+                },
+                {
+                        "id": "b",
+                        "text": "Clássicos e atemporais",
+                        "score": {
+                                "classico": 3,
+                                "elegante": 1
+                        }
+                },
+                {
+                        "id": "c",
+                        "text": "Delicados e femininos",
+                        "score": {
+                                "romantico": 3,
+                                "natural": 1
+                        }
+                },
+                {
+                        "id": "d",
+                        "text": "Marcantes e chamativos",
+                        "score": {
+                                "dramatico": 3,
+                                "criativo": 2
+                        }
+                }
+        ]
+},
+      blocks: [
+        {
+                "id": "header-progress",
+                "type": "quiz-intro-header",
+                "properties": {
+                        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+                        "logoAlt": "Logo Gisele Galvão",
+                        "progressValue": 33,
+                        "showProgress": true,
+                        "backgroundColor": "#F9F5F1",
+                        "height": 80
+                }
+        },
+        {
+                "id": "question-title",
+                "type": "heading-inline",
+                "properties": {
+                        "content": "Acessórios favoritos",
+                        "level": "h2",
+                        "textAlign": "center",
+                        "color": "#432818",
+                        "fontWeight": "600"
+                }
+        },
+        {
+                "id": "options-grid",
+                "type": "options-grid",
+                "properties": {
+                        "question": "Que tipo de acessórios você prefere?",
+                        "columns": "2",
+                        "gap": 16,
+                        "selectionMode": "single",
+                        "primaryColor": "#B89B7A",
+                        "accentColor": "#D4C2A8",
+                        "showImages": false,
+                        "imagePosition": "top",
+                        "options": [
+                                {
+                                        "id": "a",
+                                        "text": "Minimalistas e funcionais",
+                                        "score": {
+                                                "natural": 2,
+                                                "classico": 2
+                                        }
+                                },
+                                {
+                                        "id": "b",
+                                        "text": "Clássicos e atemporais",
+                                        "score": {
+                                                "classico": 3,
+                                                "elegante": 1
+                                        }
+                                },
+                                {
+                                        "id": "c",
+                                        "text": "Delicados e femininos",
+                                        "score": {
+                                                "romantico": 3,
+                                                "natural": 1
+                                        }
+                                },
+                                {
+                                        "id": "d",
+                                        "text": "Marcantes e chamativos",
+                                        "score": {
+                                                "dramatico": 3,
+                                                "criativo": 2
+                                        }
+                                }
+                        ]
+                }
+        },,
+    {
+      id: "step-8",
+      name: "Q7 - Estampa preferida",
+      description: "Que tipo de estampa mais te atrai?",
+      order: 8,
+      type: "question",
+      questionData: {
+        "id": "q7",
+        "title": "Estampa preferida",
+        "text": "Que tipo de estampa mais te atrai?",
+        "options": [
+                {
+                        "id": "a",
+                        "text": "Lisas ou com texturas sutis",
+                        "score": {
+                                "natural": 2,
+                                "classico": 2
+                        }
+                },
+                {
+                        "id": "b",
+                        "text": "Listras e xadrez clássicos",
+                        "score": {
+                                "classico": 3,
+                                "contemporaneo": 1
+                        }
+                },
+                {
+                        "id": "c",
+                        "text": "Florais e estampas delicadas",
+                        "score": {
+                                "romantico": 3,
+                                "criativo": 1
+                        }
+                },
+                {
+                        "id": "d",
+                        "text": "Geométricas e contrastantes",
+                        "score": {
+                                "dramatico": 3,
+                                "contemporaneo": 2
+                        }
+                }
+        ]
+},
+      blocks: [
+        {
+                "id": "header-progress",
+                "type": "quiz-intro-header",
+                "properties": {
+                        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+                        "logoAlt": "Logo Gisele Galvão",
+                        "progressValue": 38,
+                        "showProgress": true,
+                        "backgroundColor": "#F9F5F1",
+                        "height": 80
+                }
+        },
+        {
+                "id": "question-title",
+                "type": "heading-inline",
+                "properties": {
+                        "content": "Estampa preferida",
+                        "level": "h2",
+                        "textAlign": "center",
+                        "color": "#432818",
+                        "fontWeight": "600"
+                }
+        },
+        {
+                "id": "options-grid",
+                "type": "options-grid",
+                "properties": {
+                        "question": "Que tipo de estampa mais te atrai?",
+                        "columns": "2",
+                        "gap": 16,
+                        "selectionMode": "single",
+                        "primaryColor": "#B89B7A",
+                        "accentColor": "#D4C2A8",
+                        "showImages": false,
+                        "imagePosition": "top",
+                        "options": [
+                                {
+                                        "id": "a",
+                                        "text": "Lisas ou com texturas sutis",
+                                        "score": {
+                                                "natural": 2,
+                                                "classico": 2
+                                        }
+                                },
+                                {
+                                        "id": "b",
+                                        "text": "Listras e xadrez clássicos",
+                                        "score": {
+                                                "classico": 3,
+                                                "contemporaneo": 1
+                                        }
+                                },
+                                {
+                                        "id": "c",
+                                        "text": "Florais e estampas delicadas",
+                                        "score": {
+                                                "romantico": 3,
+                                                "criativo": 1
+                                        }
+                                },
+                                {
+                                        "id": "d",
+                                        "text": "Geométricas e contrastantes",
+                                        "score": {
+                                                "dramatico": 3,
+                                                "contemporaneo": 2
+                                        }
+                                }
+                        ]
+                }
+        },,
+    {
+      id: "step-9",
+      name: "Q8 - Calçados preferidos",
+      description: "Que tipo de sapato você mais usa?",
+      order: 9,
+      type: "question",
+      questionData: {
+        "id": "q8",
+        "title": "Calçados preferidos",
+        "text": "Que tipo de sapato você mais usa?",
+        "options": [
+                {
+                        "id": "a",
+                        "text": "Tênis e sapatos baixos",
+                        "score": {
+                                "natural": 3,
+                                "contemporaneo": 1
+                        }
+                },
+                {
+                        "id": "b",
+                        "text": "Scarpin e sapatos clássicos",
+                        "score": {
+                                "classico": 3,
+                                "elegante": 2
+                        }
+                },
+                {
+                        "id": "c",
+                        "text": "Sapatilhas e sandálias delicadas",
+                        "score": {
+                                "romantico": 3,
+                                "natural": 1
+                        }
+                },
+                {
+                        "id": "d",
+                        "text": "Botas e sapatos statement",
+                        "score": {
+                                "dramatico": 3,
+                                "criativo": 1
+                        }
+                }
+        ]
+},
+      blocks: [
+        {
+                "id": "header-progress",
+                "type": "quiz-intro-header",
+                "properties": {
+                        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+                        "logoAlt": "Logo Gisele Galvão",
+                        "progressValue": 43,
+                        "showProgress": true,
+                        "backgroundColor": "#F9F5F1",
+                        "height": 80
+                }
+        },
+        {
+                "id": "question-title",
+                "type": "heading-inline",
+                "properties": {
+                        "content": "Calçados preferidos",
+                        "level": "h2",
+                        "textAlign": "center",
+                        "color": "#432818",
+                        "fontWeight": "600"
+                }
+        },
+        {
+                "id": "options-grid",
+                "type": "options-grid",
+                "properties": {
+                        "question": "Que tipo de sapato você mais usa?",
+                        "columns": "2",
+                        "gap": 16,
+                        "selectionMode": "single",
+                        "primaryColor": "#B89B7A",
+                        "accentColor": "#D4C2A8",
+                        "showImages": false,
+                        "imagePosition": "top",
+                        "options": [
+                                {
+                                        "id": "a",
+                                        "text": "Tênis e sapatos baixos",
+                                        "score": {
+                                                "natural": 3,
+                                                "contemporaneo": 1
+                                        }
+                                },
+                                {
+                                        "id": "b",
+                                        "text": "Scarpin e sapatos clássicos",
+                                        "score": {
+                                                "classico": 3,
+                                                "elegante": 2
+                                        }
+                                },
+                                {
+                                        "id": "c",
+                                        "text": "Sapatilhas e sandálias delicadas",
+                                        "score": {
+                                                "romantico": 3,
+                                                "natural": 1
+                                        }
+                                },
+                                {
+                                        "id": "d",
+                                        "text": "Botas e sapatos statement",
+                                        "score": {
+                                                "dramatico": 3,
+                                                "criativo": 1
+                                        }
+                                }
+                        ]
+                }
+        },,
+    {
+      id: "step-10",
+      name: "Q9 - Maquiagem preferida",
+      description: "Como você gosta de usar maquiagem?",
+      order: 10,
+      type: "question",
+      questionData: {
+        "id": "q9",
+        "title": "Maquiagem preferida",
+        "text": "Como você gosta de usar maquiagem?",
+        "options": [
+                {
+                        "id": "a",
+                        "text": "Natural e minimalista",
+                        "score": {
+                                "natural": 3,
+                                "classico": 1
+                        }
+                },
+                {
+                        "id": "b",
+                        "text": "Bem feita e discreta",
+                        "score": {
+                                "classico": 3,
+                                "elegante": 1
+                        }
+                },
+                {
+                        "id": "c",
+                        "text": "Suave com destaque nos olhos",
+                        "score": {
+                                "romantico": 3,
+                                "elegante": 1
+                        }
+                },
+                {
+                        "id": "d",
+                        "text": "Marcante e impactante",
+                        "score": {
+                                "dramatico": 3,
+                                "criativo": 2
+                        }
+                }
+        ]
+},
+      blocks: [
+        {
+                "id": "header-progress",
+                "type": "quiz-intro-header",
+                "properties": {
+                        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+                        "logoAlt": "Logo Gisele Galvão",
+                        "progressValue": 48,
+                        "showProgress": true,
+                        "backgroundColor": "#F9F5F1",
+                        "height": 80
+                }
+        },
+        {
+                "id": "question-title",
+                "type": "heading-inline",
+                "properties": {
+                        "content": "Maquiagem preferida",
+                        "level": "h2",
+                        "textAlign": "center",
+                        "color": "#432818",
+                        "fontWeight": "600"
+                }
+        },
+        {
+                "id": "options-grid",
+                "type": "options-grid",
+                "properties": {
+                        "question": "Como você gosta de usar maquiagem?",
+                        "columns": "2",
+                        "gap": 16,
+                        "selectionMode": "single",
+                        "primaryColor": "#B89B7A",
+                        "accentColor": "#D4C2A8",
+                        "showImages": false,
+                        "imagePosition": "top",
+                        "options": [
+                                {
+                                        "id": "a",
+                                        "text": "Natural e minimalista",
+                                        "score": {
+                                                "natural": 3,
+                                                "classico": 1
+                                        }
+                                },
+                                {
+                                        "id": "b",
+                                        "text": "Bem feita e discreta",
+                                        "score": {
+                                                "classico": 3,
+                                                "elegante": 1
+                                        }
+                                },
+                                {
+                                        "id": "c",
+                                        "text": "Suave com destaque nos olhos",
+                                        "score": {
+                                                "romantico": 3,
+                                                "elegante": 1
+                                        }
+                                },
+                                {
+                                        "id": "d",
+                                        "text": "Marcante e impactante",
+                                        "score": {
+                                                "dramatico": 3,
+                                                "criativo": 2
+                                        }
+                                }
+                        ]
+                }
+        },,
+    {
+      id: "step-11",
+      name: "Q10 - Ambiente de trabalho",
+      description: "Como é seu ambiente de trabalho?",
+      order: 11,
+      type: "question",
+      questionData: {
+        "id": "q10",
+        "title": "Ambiente de trabalho",
+        "text": "Como é seu ambiente de trabalho?",
+        "options": [
+                {
+                        "id": "a",
+                        "text": "Casual e flexível",
+                        "score": {
+                                "natural": 3,
+                                "contemporaneo": 2
+                        }
+                },
+                {
+                        "id": "b",
+                        "text": "Formal e corporativo",
+                        "score": {
+                                "classico": 3,
+                                "elegante": 2
+                        }
+                },
+                {
+                        "id": "c",
+                        "text": "Criativo e descontraído",
+                        "score": {
+                                "criativo": 3,
+                                "contemporaneo": 1
+                        }
+                },
+                {
+                        "id": "d",
+                        "text": "Executivo e sofisticado",
+                        "score": {
+                                "elegante": 3,
+                                "dramatico": 1
+                        }
+                }
+        ]
+},
+      blocks: [
+        {
+                "id": "header-progress",
+                "type": "quiz-intro-header",
+                "properties": {
+                        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+                        "logoAlt": "Logo Gisele Galvão",
+                        "progressValue": 52,
+                        "showProgress": true,
+                        "backgroundColor": "#F9F5F1",
+                        "height": 80
+                }
+        },
+        {
+                "id": "question-title",
+                "type": "heading-inline",
+                "properties": {
+                        "content": "Ambiente de trabalho",
+                        "level": "h2",
+                        "textAlign": "center",
+                        "color": "#432818",
+                        "fontWeight": "600"
+                }
+        },
+        {
+                "id": "options-grid",
+                "type": "options-grid",
+                "properties": {
+                        "question": "Como é seu ambiente de trabalho?",
+                        "columns": "2",
+                        "gap": 16,
+                        "selectionMode": "single",
+                        "primaryColor": "#B89B7A",
+                        "accentColor": "#D4C2A8",
+                        "showImages": false,
+                        "imagePosition": "top",
+                        "options": [
+                                {
+                                        "id": "a",
+                                        "text": "Casual e flexível",
+                                        "score": {
+                                                "natural": 3,
+                                                "contemporaneo": 2
+                                        }
+                                },
+                                {
+                                        "id": "b",
+                                        "text": "Formal e corporativo",
+                                        "score": {
+                                                "classico": 3,
+                                                "elegante": 2
+                                        }
+                                },
+                                {
+                                        "id": "c",
+                                        "text": "Criativo e descontraído",
+                                        "score": {
+                                                "criativo": 3,
+                                                "contemporaneo": 1
+                                        }
+                                },
+                                {
+                                        "id": "d",
+                                        "text": "Executivo e sofisticado",
+                                        "score": {
+                                                "elegante": 3,
+                                                "dramatico": 1
+                                        }
+                                }
+                        ]
+                }
+        },
+        {
+                "id": "progress-bar",
+                "type": "quiz-progress",
+                "properties": {
+                        "currentStep": 11,
+                        "totalSteps": 21,
+                        "showNumbers": true,
+                        "showPercentage": true,
+                        "barColor": "#B89B7A",
+                        "backgroundColor": "#E5E7EB",
+                        "height": 8,
+                        "animated": true
+                }
+        }
+],
+    }
+        {
+                "id": "progress-bar",
+                "type": "quiz-progress",
+                "properties": {
+                        "currentStep": 10,
+                        "totalSteps": 21,
+                        "showNumbers": true,
+                        "showPercentage": true,
+                        "barColor": "#B89B7A",
+                        "backgroundColor": "#E5E7EB",
+                        "height": 8,
+                        "animated": true
+                }
+        }
+],
+    }
+        {
+                "id": "progress-bar",
+                "type": "quiz-progress",
+                "properties": {
+                        "currentStep": 9,
+                        "totalSteps": 21,
+                        "showNumbers": true,
+                        "showPercentage": true,
+                        "barColor": "#B89B7A",
+                        "backgroundColor": "#E5E7EB",
+                        "height": 8,
+                        "animated": true
+                }
+        }
+],
+    }
+        {
+                "id": "progress-bar",
+                "type": "quiz-progress",
+                "properties": {
+                        "currentStep": 8,
+                        "totalSteps": 21,
+                        "showNumbers": true,
+                        "showPercentage": true,
+                        "barColor": "#B89B7A",
+                        "backgroundColor": "#E5E7EB",
+                        "height": 8,
+                        "animated": true
+                }
+        }
+],
+    }
+        {
+                "id": "progress-bar",
+                "type": "quiz-progress",
+                "properties": {
+                        "currentStep": 7,
+                        "totalSteps": 21,
+                        "showNumbers": true,
+                        "showPercentage": true,
+                        "barColor": "#B89B7A",
+                        "backgroundColor": "#E5E7EB",
+                        "height": 8,
+                        "animated": true
+                }
+        }
+],
+    }
+        {
+                "id": "progress-bar",
+                "type": "quiz-progress",
+                "properties": {
+                        "currentStep": 6,
+                        "totalSteps": 21,
+                        "showNumbers": true,
+                        "showPercentage": true,
+                        "barColor": "#B89B7A",
+                        "backgroundColor": "#E5E7EB",
+                        "height": 8,
+                        "animated": true
+                }
+        }
+],
+    }
+        {
+                "id": "progress-bar",
+                "type": "quiz-progress",
+                "properties": {
+                        "currentStep": 5,
+                        "totalSteps": 21,
+                        "showNumbers": true,
+                        "showPercentage": true,
+                        "barColor": "#B89B7A",
+                        "backgroundColor": "#E5E7EB",
+                        "height": 8,
+                        "animated": true
+                }
+        }
+],
+    }
     {
       id: "step-12",
       name: "Análise Parcial",
@@ -667,7 +1598,381 @@ export const OPTIMIZED_FUNNEL_CONFIG = {
           },
         },
       ],
-    },
+    },,
+    {
+      id: "step-14",
+      name: "Estratégica 2 - Idade",
+      description: "Qual sua faixa etária?",
+      order: 14,
+      type: "strategic",
+      questionData: {
+        "id": "s2",
+        "title": "Faixa etária",
+        "text": "Qual sua faixa etária?",
+        "options": [
+                {
+                        "id": "a",
+                        "text": "18-25 anos",
+                        "segment": "jovem"
+                },
+                {
+                        "id": "b",
+                        "text": "26-35 anos",
+                        "segment": "adulta_jovem"
+                },
+                {
+                        "id": "c",
+                        "text": "36-45 anos",
+                        "segment": "adulta"
+                },
+                {
+                        "id": "d",
+                        "text": "46+ anos",
+                        "segment": "madura"
+                }
+        ]
+},
+      blocks: [
+        {
+                "id": "header-progress",
+                "type": "quiz-intro-header",
+                "properties": {
+                        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+                        "logoAlt": "Logo Gisele Galvão",
+                        "progressValue": 67,
+                        "showProgress": true,
+                        "backgroundColor": "#F9F5F1",
+                        "height": 80
+                }
+        },
+        {
+                "id": "question-title",
+                "type": "heading-inline",
+                "properties": {
+                        "content": "Faixa etária",
+                        "level": "h2",
+                        "textAlign": "center",
+                        "color": "#432818"
+                }
+        },
+        {
+                "id": "options-grid",
+                "type": "options-grid",
+                "properties": {
+                        "question": "Qual sua faixa etária?",
+                        "columns": "1",
+                        "gap": 12,
+                        "selectionMode": "single",
+                        "primaryColor": "#B89B7A",
+                        "accentColor": "#D4C2A8",
+                        "showImages": false,
+                        "options": [
+                                {
+                                        "id": "a",
+                                        "text": "18-25 anos",
+                                        "segment": "jovem"
+                                },
+                                {
+                                        "id": "b",
+                                        "text": "26-35 anos",
+                                        "segment": "adulta_jovem"
+                                },
+                                {
+                                        "id": "c",
+                                        "text": "36-45 anos",
+                                        "segment": "adulta"
+                                },,
+    {
+      id: "step-15",
+      name: "Estratégica 3 - Profissão",
+      description: "Qual área profissional você atua?",
+      order: 15,
+      type: "strategic",
+      questionData: {
+        "id": "s3",
+        "title": "Área profissional",
+        "text": "Qual área profissional você atua?",
+        "options": [
+                {
+                        "id": "a",
+                        "text": "Saúde/Educação",
+                        "segment": "cuidado"
+                },
+                {
+                        "id": "b",
+                        "text": "Corporativo/Executivo",
+                        "segment": "corporativo"
+                },
+                {
+                        "id": "c",
+                        "text": "Criativo/Artístico",
+                        "segment": "criativo"
+                },
+                {
+                        "id": "d",
+                        "text": "Empreendedora/Autônoma",
+                        "segment": "empreendedora"
+                }
+        ]
+},
+      blocks: [
+        {
+                "id": "header-progress",
+                "type": "quiz-intro-header",
+                "properties": {
+                        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+                        "logoAlt": "Logo Gisele Galvão",
+                        "progressValue": 71,
+                        "showProgress": true,
+                        "backgroundColor": "#F9F5F1",
+                        "height": 80
+                }
+        },
+        {
+                "id": "question-title",
+                "type": "heading-inline",
+                "properties": {
+                        "content": "Área profissional",
+                        "level": "h2",
+                        "textAlign": "center",
+                        "color": "#432818"
+                }
+        },
+        {
+                "id": "options-grid",
+                "type": "options-grid",
+                "properties": {
+                        "question": "Qual área profissional você atua?",
+                        "columns": "1",
+                        "gap": 12,
+                        "selectionMode": "single",
+                        "primaryColor": "#B89B7A",
+                        "accentColor": "#D4C2A8",
+                        "showImages": false,
+                        "options": [
+                                {
+                                        "id": "a",
+                                        "text": "Saúde/Educação",
+                                        "segment": "cuidado"
+                                },
+                                {
+                                        "id": "b",
+                                        "text": "Corporativo/Executivo",
+                                        "segment": "corporativo"
+                                },
+                                {
+                                        "id": "c",
+                                        "text": "Criativo/Artístico",
+                                        "segment": "criativo"
+                                },,
+    {
+      id: "step-16",
+      name: "Estratégica 4 - Objetivos",
+      description: "Qual seu principal objetivo com o estilo?",
+      order: 16,
+      type: "strategic",
+      questionData: {
+        "id": "s4",
+        "title": "Objetivos com estilo",
+        "text": "Qual seu principal objetivo com o estilo?",
+        "options": [
+                {
+                        "id": "a",
+                        "text": "Mais confiança",
+                        "segment": "autoestima"
+                },
+                {
+                        "id": "b",
+                        "text": "Profissionalismo",
+                        "segment": "carreira"
+                },
+                {
+                        "id": "c",
+                        "text": "Expressão pessoal",
+                        "segment": "criatividade"
+                },
+                {
+                        "id": "d",
+                        "text": "Elegância",
+                        "segment": "sofisticacao"
+                }
+        ]
+},
+      blocks: [
+        {
+                "id": "header-progress",
+                "type": "quiz-intro-header",
+                "properties": {
+                        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+                        "logoAlt": "Logo Gisele Galvão",
+                        "progressValue": 76,
+                        "showProgress": true,
+                        "backgroundColor": "#F9F5F1",
+                        "height": 80
+                }
+        },
+        {
+                "id": "question-title",
+                "type": "heading-inline",
+                "properties": {
+                        "content": "Objetivos com estilo",
+                        "level": "h2",
+                        "textAlign": "center",
+                        "color": "#432818"
+                }
+        },
+        {
+                "id": "options-grid",
+                "type": "options-grid",
+                "properties": {
+                        "question": "Qual seu principal objetivo com o estilo?",
+                        "columns": "1",
+                        "gap": 12,
+                        "selectionMode": "single",
+                        "primaryColor": "#B89B7A",
+                        "accentColor": "#D4C2A8",
+                        "showImages": false,
+                        "options": [
+                                {
+                                        "id": "a",
+                                        "text": "Mais confiança",
+                                        "segment": "autoestima"
+                                },
+                                {
+                                        "id": "b",
+                                        "text": "Profissionalismo",
+                                        "segment": "carreira"
+                                },
+                                {
+                                        "id": "c",
+                                        "text": "Expressão pessoal",
+                                        "segment": "criatividade"
+                                },,
+    {
+      id: "step-17",
+      name: "Finalizando Análise",
+      description: "Últimos ajustes na sua análise...",
+      order: 17,
+      type: "transition",
+      blocks: [
+        {
+                "id": "header-progress",
+                "type": "quiz-intro-header",
+                "properties": {
+                        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+                        "logoAlt": "Logo Gisele Galvão",
+                        "progressValue": 81,
+                        "showProgress": true,
+                        "backgroundColor": "#F9F5F1",
+                        "height": 80
+                }
+        },
+        {
+                "id": "transition-title",
+                "type": "heading-inline",
+                "properties": {
+                        "content": "Analisando suas respostas...",
+                        "level": "h2",
+                        "textAlign": "center",
+                        "color": "#432818"
+                }
+        },
+        {
+                "id": "transition-text",
+                "type": "text-inline",
+                "properties": {
+                        "text": "Estamos processando suas respostas para criar seu perfil personalizado.",
+                        "fontSize": "1.125rem",
+                        "alignment": "center",
+                        "color": "#6B5B4E"
+                }
+        },,
+    {
+      id: "step-18",
+      name: "Calculando Resultado",
+      description: "Processando seu perfil completo...",
+      order: 18,
+      type: "processing",
+      blocks: [
+        {
+                "id": "header-progress",
+                "type": "quiz-intro-header",
+                "properties": {
+                        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+                        "logoAlt": "Logo Gisele Galvão",
+                        "progressValue": 86,
+                        "showProgress": true,
+                        "backgroundColor": "#F9F5F1",
+                        "height": 80
+                }
+        },
+        {
+                "id": "processing-title",
+                "type": "heading-inline",
+                "properties": {
+                        "content": "Calculando seu resultado...",
+                        "level": "h2",
+                        "textAlign": "center",
+                        "color": "#432818"
+                }
+        },
+        {
+                "id": "loading-progress",
+                "type": "quiz-progress",
+                "properties": {
+                        "currentStep": 18,
+                        "totalSteps": 21,
+                        "showNumbers": false,
+                        "showPercentage": true,
+                        "barColor": "#B89B7A",
+                        "backgroundColor": "#E5E7EB",
+                        "animated": true
+                }
+        }
+],
+    }
+        {
+                "id": "continue-button",
+                "type": "button-inline",
+                "properties": {
+                        "text": "Continuar",
+                        "style": "primary",
+                        "backgroundColor": "#B89B7A",
+                        "textColor": "#FFFFFF"
+                }
+        }
+],
+    }
+                                {
+                                        "id": "d",
+                                        "text": "Elegância",
+                                        "segment": "sofisticacao"
+                                }
+                        ]
+                }
+        }
+],
+    }
+                                {
+                                        "id": "d",
+                                        "text": "Empreendedora/Autônoma",
+                                        "segment": "empreendedora"
+                                }
+                        ]
+                }
+        }
+],
+    }
+                                {
+                                        "id": "d",
+                                        "text": "46+ anos",
+                                        "segment": "madura"
+                                }
+                        ]
+                }
+        }
+],
+    }
     {
       id: "step-19",
       name: "Preparando Resultado",
@@ -1062,7 +2367,280 @@ export const OPTIMIZED_FUNNEL_CONFIG = {
           },
         ],
       },
-    ],
+    ,
+      {
+      "id": "q4",
+      "title": "Ocasiões especiais",
+      "text": "Para que tipo de evento você gosta de se arrumar?",
+      "options": [
+            {
+                  "id": "a",
+                  "text": "Eventos ao ar livre e casuais",
+                  "score": {
+                        "natural": 3,
+                        "contemporaneo": 1
+                  }
+            },
+            {
+                  "id": "b",
+                  "text": "Reuniões formais e corporativas",
+                  "score": {
+                        "classico": 3,
+                        "elegante": 2
+                  }
+            },
+            {
+                  "id": "c",
+                  "text": "Jantares românticos e festas",
+                  "score": {
+                        "romantico": 3,
+                        "elegante": 1
+                  }
+            },
+            {
+                  "id": "d",
+                  "text": "Eventos exclusivos e gala",
+                  "score": {
+                        "dramatico": 3,
+                        "elegante": 2
+                  }
+            }
+      ]
+},
+      {
+      "id": "q5",
+      "title": "Estilo de cabelo",
+      "text": "Qual tipo de penteado combina mais com você?",
+      "options": [
+            {
+                  "id": "a",
+                  "text": "Solto e natural",
+                  "score": {
+                        "natural": 3,
+                        "romantico": 1
+                  }
+            },
+            {
+                  "id": "b",
+                  "text": "Bem estruturado e arrumado",
+                  "score": {
+                        "classico": 3,
+                        "elegante": 2
+                  }
+            },
+            {
+                  "id": "c",
+                  "text": "Com ondas e textura",
+                  "score": {
+                        "romantico": 3,
+                        "criativo": 1
+                  }
+            },
+            {
+                  "id": "d",
+                  "text": "Liso e impecável",
+                  "score": {
+                        "dramatico": 2,
+                        "elegante": 3
+                  }
+            }
+      ]
+},
+      {
+      "id": "q6",
+      "title": "Acessórios favoritos",
+      "text": "Que tipo de acessórios você prefere?",
+      "options": [
+            {
+                  "id": "a",
+                  "text": "Minimalistas e funcionais",
+                  "score": {
+                        "natural": 2,
+                        "classico": 2
+                  }
+            },
+            {
+                  "id": "b",
+                  "text": "Clássicos e atemporais",
+                  "score": {
+                        "classico": 3,
+                        "elegante": 1
+                  }
+            },
+            {
+                  "id": "c",
+                  "text": "Delicados e femininos",
+                  "score": {
+                        "romantico": 3,
+                        "natural": 1
+                  }
+            },
+            {
+                  "id": "d",
+                  "text": "Marcantes e chamativos",
+                  "score": {
+                        "dramatico": 3,
+                        "criativo": 2
+                  }
+            }
+      ]
+},
+      {
+      "id": "q7",
+      "title": "Estampa preferida",
+      "text": "Que tipo de estampa mais te atrai?",
+      "options": [
+            {
+                  "id": "a",
+                  "text": "Lisas ou com texturas sutis",
+                  "score": {
+                        "natural": 2,
+                        "classico": 2
+                  }
+            },
+            {
+                  "id": "b",
+                  "text": "Listras e xadrez clássicos",
+                  "score": {
+                        "classico": 3,
+                        "contemporaneo": 1
+                  }
+            },
+            {
+                  "id": "c",
+                  "text": "Florais e estampas delicadas",
+                  "score": {
+                        "romantico": 3,
+                        "criativo": 1
+                  }
+            },
+            {
+                  "id": "d",
+                  "text": "Geométricas e contrastantes",
+                  "score": {
+                        "dramatico": 3,
+                        "contemporaneo": 2
+                  }
+            }
+      ]
+},
+      {
+      "id": "q8",
+      "title": "Calçados preferidos",
+      "text": "Que tipo de sapato você mais usa?",
+      "options": [
+            {
+                  "id": "a",
+                  "text": "Tênis e sapatos baixos",
+                  "score": {
+                        "natural": 3,
+                        "contemporaneo": 1
+                  }
+            },
+            {
+                  "id": "b",
+                  "text": "Scarpin e sapatos clássicos",
+                  "score": {
+                        "classico": 3,
+                        "elegante": 2
+                  }
+            },
+            {
+                  "id": "c",
+                  "text": "Sapatilhas e sandálias delicadas",
+                  "score": {
+                        "romantico": 3,
+                        "natural": 1
+                  }
+            },
+            {
+                  "id": "d",
+                  "text": "Botas e sapatos statement",
+                  "score": {
+                        "dramatico": 3,
+                        "criativo": 1
+                  }
+            }
+      ]
+},
+      {
+      "id": "q9",
+      "title": "Maquiagem preferida",
+      "text": "Como você gosta de usar maquiagem?",
+      "options": [
+            {
+                  "id": "a",
+                  "text": "Natural e minimalista",
+                  "score": {
+                        "natural": 3,
+                        "classico": 1
+                  }
+            },
+            {
+                  "id": "b",
+                  "text": "Bem feita e discreta",
+                  "score": {
+                        "classico": 3,
+                        "elegante": 1
+                  }
+            },
+            {
+                  "id": "c",
+                  "text": "Suave com destaque nos olhos",
+                  "score": {
+                        "romantico": 3,
+                        "elegante": 1
+                  }
+            },
+            {
+                  "id": "d",
+                  "text": "Marcante e impactante",
+                  "score": {
+                        "dramatico": 3,
+                        "criativo": 2
+                  }
+            }
+      ]
+},
+      {
+      "id": "q10",
+      "title": "Ambiente de trabalho",
+      "text": "Como é seu ambiente de trabalho?",
+      "options": [
+            {
+                  "id": "a",
+                  "text": "Casual e flexível",
+                  "score": {
+                        "natural": 3,
+                        "contemporaneo": 2
+                  }
+            },
+            {
+                  "id": "b",
+                  "text": "Formal e corporativo",
+                  "score": {
+                        "classico": 3,
+                        "elegante": 2
+                  }
+            },
+            {
+                  "id": "c",
+                  "text": "Criativo e descontraído",
+                  "score": {
+                        "criativo": 3,
+                        "contemporaneo": 1
+                  }
+            },
+            {
+                  "id": "d",
+                  "text": "Executivo e sofisticado",
+                  "score": {
+                        "elegante": 3,
+                        "dramatico": 1
+                  }
+            }
+      ]
+}],
     strategicQuestions: [
       {
         id: "s1",
@@ -1091,7 +2669,88 @@ export const OPTIMIZED_FUNNEL_CONFIG = {
           },
         ],
       },
-    ],
+    ,
+      {
+      "id": "s2",
+      "title": "Faixa etária",
+      "text": "Qual sua faixa etária?",
+      "options": [
+            {
+                  "id": "a",
+                  "text": "18-25 anos",
+                  "segment": "jovem"
+            },
+            {
+                  "id": "b",
+                  "text": "26-35 anos",
+                  "segment": "adulta_jovem"
+            },
+            {
+                  "id": "c",
+                  "text": "36-45 anos",
+                  "segment": "adulta"
+            },
+            {
+                  "id": "d",
+                  "text": "46+ anos",
+                  "segment": "madura"
+            }
+      ]
+},
+      {
+      "id": "s3",
+      "title": "Área profissional",
+      "text": "Qual área profissional você atua?",
+      "options": [
+            {
+                  "id": "a",
+                  "text": "Saúde/Educação",
+                  "segment": "cuidado"
+            },
+            {
+                  "id": "b",
+                  "text": "Corporativo/Executivo",
+                  "segment": "corporativo"
+            },
+            {
+                  "id": "c",
+                  "text": "Criativo/Artístico",
+                  "segment": "criativo"
+            },
+            {
+                  "id": "d",
+                  "text": "Empreendedora/Autônoma",
+                  "segment": "empreendedora"
+            }
+      ]
+},
+      {
+      "id": "s4",
+      "title": "Objetivos com estilo",
+      "text": "Qual seu principal objetivo com o estilo?",
+      "options": [
+            {
+                  "id": "a",
+                  "text": "Mais confiança",
+                  "segment": "autoestima"
+            },
+            {
+                  "id": "b",
+                  "text": "Profissionalismo",
+                  "segment": "carreira"
+            },
+            {
+                  "id": "c",
+                  "text": "Expressão pessoal",
+                  "segment": "criatividade"
+            },
+            {
+                  "id": "d",
+                  "text": "Elegância",
+                  "segment": "sofisticacao"
+            }
+      ]
+}],
     styles: {
       natural: {
         name: "Natural",
