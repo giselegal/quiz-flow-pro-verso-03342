@@ -586,7 +586,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
   const updateBlock = useCallback((blockId: string, updates: Partial<EditorBlock>) => {
     console.log("🔧 EditorContext updateBlock chamado:", { blockId, updates });
-    
+
     setStageBlocks(prev => {
       const updated = { ...prev };
 
@@ -598,14 +598,14 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
           updated[stageId] = blocks.map(block => {
             if (block.id === blockId) {
               console.log("🔧 Bloco encontrado, estado atual:", block);
-              
+
               // Criar uma nova cópia do bloco
               const updatedBlock = { ...block };
 
               // Processar cada propriedade de atualização separadamente
               Object.entries(updates).forEach(([key, value]) => {
                 console.log(`🔧 Processando update: ${key} =`, value);
-                
+
                 if (key === "properties" && block.properties) {
                   // Para properties, fazer um merge profundo preservando imutabilidade
                   updatedBlock.properties = {

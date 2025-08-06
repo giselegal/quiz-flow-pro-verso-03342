@@ -146,8 +146,13 @@ export const useUnifiedProperties = (
       ];
 
       // Propriedades específicas adicionadas com base no tipo do bloco
-      console.log("🔧 [useUnifiedProperties] Processando blockType:", blockType, "currentBlock:", currentBlock);
-      
+      console.log(
+        "🔧 [useUnifiedProperties] Processando blockType:",
+        blockType,
+        "currentBlock:",
+        currentBlock
+      );
+
       switch (blockType) {
         case "text-inline": {
           // ✅ NO-CODE: Propriedades de conteúdo simples (sem HTML)
@@ -283,7 +288,7 @@ export const useUnifiedProperties = (
               max: 99,
             },
             {
-              key: "title", 
+              key: "title",
               value: stepConfig.title || currentBlock?.properties?.title || "Seu Resultado",
               type: PropertyType.TEXT,
               label: "Título",
@@ -292,7 +297,10 @@ export const useUnifiedProperties = (
             },
             {
               key: "subtitle",
-              value: stepConfig.subtitle || currentBlock?.properties?.subtitle || "Descubra seu estilo predominante",
+              value:
+                stepConfig.subtitle ||
+                currentBlock?.properties?.subtitle ||
+                "Descubra seu estilo predominante",
               type: PropertyType.TEXT,
               label: "Subtítulo",
               category: "content",
@@ -301,12 +309,17 @@ export const useUnifiedProperties = (
         }
 
         case "quiz-intro-header":
-          console.log("🎯 [useUnifiedProperties] Processando quiz-intro-header, properties:", currentBlock?.properties);
+          console.log(
+            "🎯 [useUnifiedProperties] Processando quiz-intro-header, properties:",
+            currentBlock?.properties
+          );
           return [
             ...baseProperties,
             {
               key: "logoUrl",
-              value: currentBlock?.properties?.logoUrl || "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+              value:
+                currentBlock?.properties?.logoUrl ||
+                "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
               type: PropertyType.IMAGE,
               label: "URL do Logo",
               category: "content",
@@ -1427,48 +1440,6 @@ export const useUnifiedProperties = (
             },
           ];
 
-        // ✅ CORREÇÃO: Tipos com hífen também precisam de casos específicos
-        case "text-inline":
-          return [
-            ...baseProperties,
-            {
-              key: "content",
-              value: currentBlock?.properties?.content || currentBlock?.properties?.text || "",
-              type: PropertyType.TEXTAREA,
-              label: "Texto",
-              category: "content",
-              required: true,
-            },
-            {
-              key: "fontSize",
-              value: currentBlock?.properties?.fontSize || "text-base",
-              type: PropertyType.SELECT,
-              label: "Tamanho da Fonte",
-              category: "style",
-              options: [
-                { value: "text-xs", label: "Extra Pequeno" },
-                { value: "text-sm", label: "Pequeno" },
-                { value: "text-base", label: "Normal" },
-                { value: "text-lg", label: "Grande" },
-                { value: "text-xl", label: "Extra Grande" },
-              ],
-            },
-            {
-              key: "textAlign",
-              value: currentBlock?.properties?.textAlign || "left",
-              type: PropertyType.ALIGNMENT,
-              label: "Alinhamento",
-              category: "style",
-            },
-            {
-              key: "textColor",
-              value: currentBlock?.properties?.textColor || "#432818",
-              type: PropertyType.COLOR,
-              label: "Cor do Texto",
-              category: "style",
-            },
-          ];
-
         case "image-display-inline":
           return [
             ...baseProperties,
@@ -1511,51 +1482,6 @@ export const useUnifiedProperties = (
               max: 50,
               step: 1,
               unit: "px",
-            },
-          ];
-
-        case "button-inline":
-          return [
-            ...baseProperties,
-            {
-              key: "text",
-              value: currentBlock?.properties?.text || "",
-              type: PropertyType.TEXT,
-              label: "Texto do Botão",
-              category: "content",
-              required: true,
-            },
-            {
-              key: "variant",
-              value: currentBlock?.properties?.variant || "primary",
-              type: PropertyType.SELECT,
-              label: "Estilo do Botão",
-              category: "style",
-              options: [
-                { value: "primary", label: "Primário" },
-                { value: "secondary", label: "Secundário" },
-                { value: "outline", label: "Contorno" },
-                { value: "ghost", label: "Transparente" },
-              ],
-            },
-            {
-              key: "size",
-              value: currentBlock?.properties?.size || "default",
-              type: PropertyType.SELECT,
-              label: "Tamanho",
-              category: "style",
-              options: [
-                { value: "sm", label: "Pequeno" },
-                { value: "default", label: "Normal" },
-                { value: "lg", label: "Grande" },
-              ],
-            },
-            {
-              key: "href",
-              value: currentBlock?.properties?.href || "",
-              type: PropertyType.TEXT,
-              label: "Link (URL)",
-              category: "behavior",
             },
           ];
 
@@ -1643,7 +1569,19 @@ export const useUnifiedProperties = (
 
         default:
           // ✅ CORREÇÃO: Log para debug dos tipos não mapeados
-          console.warn(`🔧 useUnifiedProperties: Tipo de bloco "${blockType}" não tem propriedades específicas definidas. Usando propriedades base.`);
+          console.warn(
+            `🔧 useUnifiedProperties: Tipo de bloco "${blockType}" não tem propriedades específicas definidas. Usando propriedades base.`
+          );
+          console.warn(
+            `🔧 Debug - blockType recebido:`,
+            JSON.stringify(blockType),
+            "length:",
+            blockType?.length
+          );
+          console.warn(
+            `🔧 Debug - Comparação com 'quiz-intro-header':`,
+            blockType === "quiz-intro-header"
+          );
           return baseProperties;
       }
     },
@@ -1731,7 +1669,7 @@ export const useUnifiedProperties = (
 
       // ✅ CORREÇÃO: Tratar final-step de forma especial para estruturar stepConfig
       let updatedProperties;
-      
+
       if (block.type === "final-step" && ["stepNumber", "title", "subtitle"].includes(key)) {
         // Para final-step, estruturar dentro de stepConfig
         const currentStepConfig = block.properties?.stepConfig || {};

@@ -73,19 +73,28 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
 
   // ✅ CORREÇÃO: Adicionar logs de debug e validação
   console.log("🎯 EnhancedUniversalPropertiesPanel renderizado:", {
-    selectedBlock: actualBlock ? {
-      id: actualBlock.id,
-      type: actualBlock.type,
-      propertiesKeys: Object.keys(actualBlock.properties || {}),
-      propertiesValues: actualBlock.properties,
-    } : null,
-    propertiesCount: properties.length,
-    blockDefinition: blockDefinition ? {
-      type: blockDefinition.type,
-      name: blockDefinition.name,
-      label: blockDefinition.label,
-    } : null,
+    selectedBlock: actualBlock
+      ? {
+          id: actualBlock.id,
+          type: actualBlock.type,
+          propertiesKeys: Object.keys(actualBlock.properties || {}),
+          propertiesValues: actualBlock.properties,
+        }
+      : null,
+    hookProperties: properties,
+    hookPropertiesLength: properties?.length || 0,
   });
+
+  // Log específico para quiz-intro-header
+  if (actualBlock?.type === "quiz-intro-header") {
+    console.log("🏠 [quiz-intro-header] Debug específico:", {
+      blockId: actualBlock.id,
+      blockType: actualBlock.type,
+      blockProperties: actualBlock.properties,
+      hookPropertiesGenerated: properties?.length || 0,
+      hookPropertiesPreview: properties?.slice(0, 5)?.map(p => ({ key: p.key, value: p.value })),
+    });
+  }
 
   // Se nenhum bloco estiver selecionado, exibe uma mensagem
   if (!actualBlock) {
