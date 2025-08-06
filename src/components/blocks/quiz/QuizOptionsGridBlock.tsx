@@ -1,6 +1,6 @@
 import QuizQuestion from "@/components/funnel-blocks/QuizQuestion";
-import React, { useState } from "react";
 import type { BlockComponentProps } from "@/types/blocks";
+import React, { useState } from "react";
 
 /**
  * QuizOptionsGridBlock - Componente de grid de opções para quiz
@@ -41,7 +41,7 @@ const QuizOptionsGridBlock: React.FC<BlockComponentProps> = ({
   const {
     question = "Sua pergunta aqui?",
     description,
-    options = "Opção 1\nOpção 2\nOpção 3",
+    options: optionsText = "Opção 1\nOpção 2\nOpção 3",
     requireOption = true,
     autoAdvance = false,
     autoAdvanceDelay = 800,
@@ -55,8 +55,8 @@ const QuizOptionsGridBlock: React.FC<BlockComponentProps> = ({
     alignment = "left",
     optionStyle = "card",
     nextButtonText = "Continuar",
-    minSelections = 3,
-    maxSelections = 3,
+    minSelections: propMinSelections = 3,
+    maxSelections: propMaxSelections = 3,
   } = (properties || {}) as QuizOptionsGridProperties;
 
   const handlePropertyUpdate = (key: string, value: any) => {
@@ -76,12 +76,12 @@ const QuizOptionsGridBlock: React.FC<BlockComponentProps> = ({
       }));
   };
 
-  const options = parseOptions(properties?.options || "");
+  const optionsList = parseOptions(optionsText);
 
   // Determinar o número mínimo de seleções com base nas propriedades
   // Por padrão são 3 opções obrigatórias conforme requisito
-  const minSelections = properties?.minSelections || 3;
-  const maxSelections = properties?.maxSelections || options.length;
+  const minSelections = propMinSelections;
+  const maxSelections = propMaxSelections;
 
   // Callbacks para interações do usuário
   const handleAnswer = (selectedOptions: any[]) => {
@@ -110,27 +110,33 @@ const QuizOptionsGridBlock: React.FC<BlockComponentProps> = ({
 
   // Mapear propriedades do editor para o componente QuizQuestion
   return (
-    <div className="quiz-options-grid-block" data-block-id={id}>
+    <div
+      className={`quiz-options-grid-block transition-all duration-200 ${
+        isSelected ? "ring-2 ring-blue-500 ring-opacity-50" : ""
+      }`}
+      data-block-id={block?.id}
+      onClick={onClick}
+    >
       <QuizQuestion
-        question={properties?.question || ""}
-        description={properties?.description || ""}
-        options={options}
+        question={question}
+        description={description}
+        options={optionsList}
         multipleSelection={true}
         minSelections={minSelections}
         maxSelections={maxSelections}
-        required={properties?.requireOption !== false}
-        alignment={properties?.alignment || "center"}
-        optionLayout={properties?.optionsLayout || "vertical"}
-        optionStyle={properties?.optionStyle || "card"}
-        showLetters={properties?.useLetterOptions === true}
-        optionImageSize={(properties?.optionImageSize as "small" | "medium" | "large") || "medium"}
-        autoAdvance={properties?.autoAdvance === true}
-        autoAdvanceDelay={properties?.autoAdvanceDelay || 1000}
+        required={requireOption}
+        alignment={alignment}
+        optionLayout={optionsLayout}
+        optionStyle={optionStyle}
+        showLetters={useLetterOptions}
+        optionImageSize={optionImageSize}
+        autoAdvance={autoAdvance}
+        autoAdvanceDelay={autoAdvanceDelay}
         showNextButton={true}
-        nextButtonText={properties?.nextButtonText || "Avançar"}
+        nextButtonText={nextButtonText}
         onAnswer={handleAnswer}
         onNext={handleNext}
-        deviceView={props.deviceView || "desktop"}
+        deviceView="desktop"
       />
     </div>
   );

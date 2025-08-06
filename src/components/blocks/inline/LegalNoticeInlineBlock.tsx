@@ -1,7 +1,7 @@
-import React from "react";
 import { cn } from "@/lib/utils";
 import type { BlockComponentProps } from "@/types/blocks";
-import { Shield, Lock, Eye, Info, AlertTriangle, FileText } from "lucide-react";
+import { AlertTriangle, Eye, FileText, Info, Lock, Shield } from "lucide-react";
+import React from "react";
 
 interface LegalNoticeInlineProperties {
   content: string;

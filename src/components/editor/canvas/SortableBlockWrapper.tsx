@@ -52,7 +52,15 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   };
 
   const handlePropertyChange = (key: string, value: any) => {
-    onUpdate({ [key]: value });
+    // Atualizar propriedades do bloco de forma correta
+    const currentProperties = block.properties || {};
+    const updatedProperties = { ...currentProperties, [key]: value };
+    
+    // Chamar onUpdate com a estrutura correta
+    onUpdate({
+      ...block,
+      properties: updatedProperties
+    });
   };
 
   return (

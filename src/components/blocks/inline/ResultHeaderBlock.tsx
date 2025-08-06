@@ -1,7 +1,7 @@
-import React from "react";
 import { cn } from "@/lib/utils";
 import type { BlockComponentProps } from "@/types/blocks";
-import { Trophy, Star, Crown, Award, Medal, Target, Check, Heart } from "lucide-react";
+import { Award, Check, Crown, Heart, Medal, Star, Target, Trophy } from "lucide-react";
+import React from "react";
 
 interface ResultHeaderProperties {
   title: string;

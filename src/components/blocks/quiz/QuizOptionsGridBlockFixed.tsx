@@ -1,6 +1,6 @@
 import QuizQuestion from "@/components/funnel-blocks/QuizQuestion";
-import React, { useState } from "react";
 import type { BlockComponentProps } from "@/types/blocks";
+import React, { useState } from "react";
 
 /**
  * QuizOptionsGridBlock - Componente de grid de opções para quiz

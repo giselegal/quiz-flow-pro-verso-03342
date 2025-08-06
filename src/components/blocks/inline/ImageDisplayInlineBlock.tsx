@@ -1,6 +1,6 @@
-import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { BlockComponentProps } from "@/types/blocks";
+import React, { useState } from "react";
 
 interface ImageDisplayInlineProperties {
   src: string;

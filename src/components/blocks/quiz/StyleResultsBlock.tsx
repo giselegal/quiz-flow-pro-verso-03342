@@ -1,11 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { styleConfig } from "@/data/styleConfig";
-import { QuizResult } from "@/hooks/useQuizResults";
+import type { BlockComponentProps } from "@/types/blocks";
 import React, { useState } from "react";
 import StyleGuideModal from "./StyleGuideModal";
-import type { BlockComponentProps } from "@/types/blocks";
-import { cn } from "@/lib/utils";
 
 interface StyleResultsProperties {
   styleType?: string;
@@ -35,18 +33,78 @@ const StyleResultsBlock: React.FC<BlockComponentProps> = ({
   const userName = user?.name || user?.email || "Usuário";
   const [showGuideModal, setShowGuideModal] = useState(false);
 
+  const {
+    styleType = "clássico",
+    styleDescription = "Seu estilo reflete elegância e sofisticação.",
+    styleImage = "",
+    primaryColor = "#432818",
+    secondaryColor = "#8B7355",
+    showPersonality = true,
+    personalityTraits = "Elegante, Refinado, Atemporal",
+    showStyleTips = true,
+    styleTips = "Invista em peças clássicas e de qualidade.",
+    showColorPalette = true,
+    colorPalette = "#432818,#8B7355,#DCC7AA,#F5F1E8",
+    resultLayout = "detailed",
+    showScore = false,
+    enableSharing = true,
+  } = (properties || {}) as StyleResultsProperties;
+
+  const handlePropertyUpdate = (key: string, value: any) => {
+    onPropertyChange?.(key, value);
+  };
+
+  // Mock data para demonstração
+  const categoryScores = {
+    [styleType]: 85,
+    moderno: 65,
+    romântico: 45,
+    dramático: 30,
+  };
+
   // Obter estilos ordenados por pontuação
   const sortedStyles = Object.entries(categoryScores)
-    .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
+    .sort(([, scoreA], [, scoreB]) => (scoreB as number) - (scoreA as number))
     .filter(([style]) => style in styleConfig);
 
   // Estilo principal (maior pontuação)
   const mainStyle = sortedStyles[0]?.[0] as keyof typeof styleConfig | undefined;
 
+  // Dados do resultado
+  const result = {
+    title: styleType.charAt(0).toUpperCase() + styleType.slice(1),
+    imageUrl: styleImage,
+    description: styleDescription,
+  };
+
+  const showGuideImage = true;
+  const guideImageUrl = "/api/placeholder/400/300";
+  const showAllStyles = true;
+
+  const onReset = () => {
+    // Função para reiniciar o quiz
+  };
+
+  const onShare = () => {
+    // Função para compartilhar resultado
+  };
+
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-lg">
+    <div
+      className={`max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-lg transition-all duration-200 ${
+        isSelected ? "ring-2 ring-blue-500 ring-opacity-50" : ""
+      }`}
+      onClick={onClick}
+    >
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-[#432818] mb-2">{result.title}</h2>
+        <h2
+          className="text-3xl font-bold text-[#432818] mb-2"
+          contentEditable={isSelected}
+          suppressContentEditableWarning
+          onBlur={e => handlePropertyUpdate("styleType", e.target.textContent || "")}
+        >
+          {result.title}
+        </h2>
         <p className="text-lg text-gray-500 mb-6">
           Parabéns, {userName}! Seu estilo predominante é:
         </p>
@@ -104,7 +162,7 @@ const StyleResultsBlock: React.FC<BlockComponentProps> = ({
                       style={{
                         width: `${Math.min(
                           100,
-                          (score / Math.max(...Object.values(categoryScores))) * 100
+                          ((score as number) / Math.max(...Object.values(categoryScores))) * 100
                         )}%`,
                       }}
                     />
