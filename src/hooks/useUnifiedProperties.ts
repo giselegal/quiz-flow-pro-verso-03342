@@ -958,64 +958,6 @@ export const useUnifiedProperties = (
             },
           ];
 
-        case "final-step":
-          return [
-            ...baseProperties,
-            {
-              key: "stepNumber",
-              value: currentBlock?.properties?.stepNumber || 21,
-              type: PropertyType.NUMBER,
-              label: "Número da Etapa",
-              category: "content",
-              required: true,
-              min: 1,
-              max: 99,
-            },
-            {
-              key: "title",
-              value: currentBlock?.properties?.title || "Resultado Final",
-              type: PropertyType.TEXT,
-              label: "Título",
-              category: "content",
-              required: true,
-            },
-            {
-              key: "subtitle",
-              value: currentBlock?.properties?.subtitle || "Descubra seu perfil",
-              type: PropertyType.TEXT,
-              label: "Subtítulo",
-              category: "content",
-            },
-            {
-              key: "showResults",
-              value: currentBlock?.properties?.showResults !== false,
-              type: PropertyType.SWITCH,
-              label: "Mostrar Resultados",
-              category: "behavior",
-            },
-            {
-              key: "showScore",
-              value: currentBlock?.properties?.showScore !== false,
-              type: PropertyType.SWITCH,
-              label: "Mostrar Pontuação",
-              category: "behavior",
-            },
-            {
-              key: "allowRetake",
-              value: currentBlock?.properties?.allowRetake === true,
-              type: PropertyType.SWITCH,
-              label: "Permitir Refazer Quiz",
-              category: "behavior",
-            },
-            {
-              key: "showShareButtons",
-              value: currentBlock?.properties?.showShareButtons === true,
-              type: PropertyType.SWITCH,
-              label: "Mostrar Botões de Compartilhamento",
-              category: "behavior",
-            },
-          ];
-
         case "pricing-card":
         case "pricing-card-inline":
           return [
@@ -1970,57 +1912,6 @@ export const useUnifiedProperties = (
               type: PropertyType.TEXT,
               label: "Link (URL)",
               category: "behavior",
-            },
-          ];
-
-        case "spacer":
-          return [
-            ...baseProperties,
-            {
-              key: "height",
-              value: currentBlock?.properties?.height || 40,
-              type: PropertyType.RANGE,
-              label: "Altura do Espaçamento",
-              category: "style",
-              min: 10,
-              max: 200,
-              step: 5,
-              unit: "px",
-            },
-          ];
-
-        case "divider":
-          return [
-            ...baseProperties,
-            {
-              key: "style",
-              value: currentBlock?.properties?.style || "solid",
-              type: PropertyType.SELECT,
-              label: "Estilo da Linha",
-              category: "style",
-              options: [
-                { value: "solid", label: "Sólida" },
-                { value: "dashed", label: "Tracejada" },
-                { value: "dotted", label: "Pontilhada" },
-              ],
-            },
-            {
-              key: "color",
-              value: currentBlock?.properties?.color || "#E5E7EB",
-              type: PropertyType.COLOR,
-              label: "Cor da Linha",
-              category: "style",
-            },
-            {
-              key: "thickness",
-              value: currentBlock?.properties?.thickness || 1,
-              type: PropertyType.RANGE,
-              label: "Espessura",
-              category: "style",
-              min: 1,
-              max: 10,
-              step: 1,
-              unit: "px",
             },
           ];
 
