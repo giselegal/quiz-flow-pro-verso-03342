@@ -103,7 +103,7 @@ const QuizResultsBlockCore: React.FC<QuizResultsBlockProps> = ({
       imageUrl: undefined,
     };
     return (
-      <QuizResultsBlock
+      <QuizResultsBlockCore
         result={defaultResult}
         categoryScores={categoryScores}
         showScores={showScores}
@@ -191,4 +191,7 @@ const QuizResultsBlockCore: React.FC<QuizResultsBlockProps> = ({
   );
 };
 
+// ✅ EXPORTAÇÕES CORRETAS
+export const QuizResultsBlock = QuizResultsBlockCore;
+export { UniversalQuizResultsBlock };
 export default QuizResultsBlock;
