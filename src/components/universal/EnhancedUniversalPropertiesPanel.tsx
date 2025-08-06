@@ -13,6 +13,11 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+// ✅ Importa controles visuais NO-CODE
+import AlignmentButtons from "@/components/visual-controls/AlignmentButtons";
+import ColorPicker from "@/components/visual-controls/ColorPicker";
+import SizeSlider from "@/components/visual-controls/SizeSlider";
+import StyleButtons from "@/components/visual-controls/StyleButtons";
 // ✅ Importa UnifiedBlock, useUnifiedProperties e PropertyType do hook
 import {
   PropertyType,
@@ -85,48 +90,35 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
     );
   }
 
-  // ✅ A ordem das categorias e ícones agora deve refletir as categorias definidas no hook.
-  // Adicionado 'layout', 'basic', 'quiz' para cobrir todas as categorias do hook.
+  // ✅ NO-CODE: Categorias visuais e amigáveis
   const categoryOrder = [
     "content",
-    "alignment",
     "style",
+    "alignment", 
     "behavior",
     "scoring",
     "advanced",
-    "general", // Mantido se ainda usado em algum lugar, mas 'layout' e 'basic' são mais específicos
-    "layout",
-    "basic",
-    "quiz",
   ];
 
   const categoryIcons = {
     content: Type,
-    alignment: Layout,
     style: Paintbrush,
+    alignment: Layout,
     behavior: Settings,
     scoring: Palette,
     advanced: Settings,
-    general: Palette, // Ícone genérico
-    layout: Layout,
-    basic: Settings,
-    quiz: Palette,
   };
 
   const categoryLabels = {
-    content: "Conteúdo",
-    alignment: "Alinhamento",
-    style: "Personalização",
-    behavior: "Comportamento",
-    scoring: "Pontuação e Categorias",
-    advanced: "Avançado",
-    general: "Geral",
-    layout: "Layout",
-    basic: "Básico",
-    quiz: "Quiz",
+    content: "📝 Conteúdo",
+    style: "🎨 Aparência", 
+    alignment: "📐 Alinhamento",
+    behavior: "⚙️ Comportamento",
+    scoring: "🏆 Pontuação",
+    advanced: "🔧 Avançado",
   };
 
-  // Renderizar campo baseado no tipo
+  // ✅ NO-CODE: Renderizar campo baseado no tipo com controles visuais
   const renderField = (property: UnifiedProperty) => {
     const { key, label, type, value, required, options, rows, min, max, step, unit } = property;
 
@@ -134,6 +126,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
     const formattedOptions = options;
 
     switch (type) {
+      // ✅ NO-CODE: Campo de texto simples
       case PropertyType.TEXT:
         return (
           <div key={key} className="space-y-2">
@@ -144,11 +137,13 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
               id={key}
               value={value || ""}
               onChange={e => updateProperty(key, e.target.value)}
+              placeholder={`Digite ${label.toLowerCase()}`}
               className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
             />
           </div>
         );
 
+      // ✅ NO-CODE: Área de texto simples (sem HTML)
       case PropertyType.TEXTAREA:
         return (
           <div key={key} className="space-y-2">
@@ -160,48 +155,81 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
               value={value || ""}
               onChange={e => updateProperty(key, e.target.value)}
               rows={rows || 3}
+              placeholder={`Digite ${label.toLowerCase()}`}
               className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
             />
           </div>
         );
 
-      case PropertyType.NUMBER:
+      // ✅ NO-CODE: Seletor de cores visual
+      case PropertyType.COLOR:
+        return (
+          <div key={key}>
+            <ColorPicker
+              value={value || "#432818"}
+              onChange={color => updateProperty(key, color)}
+              label={label}
+              allowTransparent={true}
+            />
+          </div>
+        );
+
+      // ✅ NO-CODE: Slider visual para tamanhos e espaçamentos
       case PropertyType.RANGE:
+        return (
+          <div key={key}>
+            <SizeSlider
+              value={value || 0}
+              onChange={val => updateProperty(key, val)}
+              min={min || 0}
+              max={max || 100}
+              step={step || 1}
+              unit={unit || "px"}
+              label={label}
+              showValue={true}
+            />
+          </div>
+        );
+
+      // ✅ NO-CODE: Botões de alinhamento visual
+      case PropertyType.ALIGNMENT:
+        return (
+          <div key={key} className="space-y-2">
+            <Label className="text-sm font-medium text-[#432818]">
+              {label} {required && <span className="text-red-500">*</span>}
+            </Label>
+            <AlignmentButtons
+              value={value || "left"}
+              onChange={alignment => updateProperty(key, alignment)}
+            />
+          </div>
+        );
+
+      case PropertyType.NUMBER:
         return (
           <div key={key} className="space-y-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
               {label} {required && <span className="text-red-500">*</span>}
-              {(type === PropertyType.RANGE || type === PropertyType.NUMBER) && (
+              {unit && (
                 <span className="text-[#B89B7A] ml-2">
-                  ({value}
-                  {unit || ""})
+                  ({value || 0}{unit})
                 </span>
               )}
             </Label>
-            {type === PropertyType.RANGE ? (
-              <Slider
-                value={[value || 0]}
-                onValueChange={values => updateProperty(key, values[0])}
-                min={min || 0}
-                max={max || 100}
-                step={step || 1}
-                className="w-full"
-              />
-            ) : (
-              <Input
-                id={key}
-                type="number"
-                value={value || ""}
-                onChange={e => updateProperty(key, Number(e.target.value))}
-                min={min}
-                max={max}
-                step={step}
-                className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
-              />
-            )}
+            <Input
+              id={key}
+              type="number"
+              value={value || ""}
+              onChange={e => updateProperty(key, Number(e.target.value))}
+              min={min}
+              max={max}
+              step={step}
+              className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
+            />
           </div>
         );
 
+      // ✅ NO-CODE: Dropdown com opções visuais
       case PropertyType.SELECT:
         return (
           <div key={key} className="space-y-2">
@@ -210,7 +238,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
             </Label>
             <Select value={value || ""} onValueChange={val => updateProperty(key, val)}>
               <SelectTrigger className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20">
-                <SelectValue placeholder={`Selecione ${label.toLowerCase()}`} />
+                <SelectValue placeholder={`Escolha ${label.toLowerCase()}`} />
               </SelectTrigger>
               <SelectContent>
                 {formattedOptions?.map(option => (
@@ -223,6 +251,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
           </div>
         );
 
+      // ✅ NO-CODE: Switch visual (liga/desliga)
       case PropertyType.SWITCH:
         return (
           <div key={key} className="flex items-center justify-between py-2">
@@ -238,30 +267,8 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
           </div>
         );
 
-      case PropertyType.COLOR:
-        return (
-          <div key={key} className="space-y-2">
-            <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
-              {label} {required && <span className="text-red-500">*</span>}
-            </Label>
-            <div className="flex gap-2 items-center">
-              <input
-                type="color"
-                id={key}
-                value={value || "#000000"}
-                onChange={e => updateProperty(key, e.target.value)}
-                className="w-10 h-10 p-0 border-none rounded cursor-pointer"
-              />
-              <Input
-                value={value || "#000000"}
-                onChange={e => updateProperty(key, e.target.value)}
-                className="flex-1 border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
-              />
-            </div>
-          </div>
-        );
-
-      case PropertyType.IMAGE: // Tipo de imagem (input de texto para URL)
+      // ✅ NO-CODE: Upload de imagem visual
+      case PropertyType.IMAGE:
         return (
           <div key={key} className="space-y-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
@@ -272,13 +279,26 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
               type="text"
               value={value || ""}
               onChange={e => updateProperty(key, e.target.value)}
-              placeholder="URL da imagem"
+              placeholder="Cole o link da imagem aqui"
               className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
             />
+            {value && (
+              <div className="mt-2">
+                <img
+                  src={value}
+                  alt="Preview"
+                  className="w-full max-w-32 h-auto rounded border"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none';
+                  }}
+                />
+              </div>
+            )}
           </div>
         );
 
-      case PropertyType.OPTION_SCORE: // Tipo de pontuação de opção
+      // ✅ NO-CODE: Pontuação de opção (para quiz)
+      case PropertyType.OPTION_SCORE:
         return (
           <div key={key} className="space-y-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
@@ -292,12 +312,14 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
               min={min}
               max={max}
               step={step}
+              placeholder="Pontos para esta opção"
               className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
             />
           </div>
         );
 
-      case PropertyType.OPTION_CATEGORY: // Tipo de categoria de opção
+      // ✅ NO-CODE: Categoria de opção (para quiz)
+      case PropertyType.OPTION_CATEGORY:
         return (
           <div key={key} className="space-y-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
@@ -308,6 +330,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
               type="text"
               value={value || ""}
               onChange={e => updateProperty(key, e.target.value)}
+              placeholder="Ex: Clássico, Moderno, Casual"
               className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
             />
           </div>
@@ -316,7 +339,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
       default:
         return (
           <div key={key} className="space-y-2 text-red-500 text-sm">
-            Tipo de propriedade desconhecido: {type}
+            ⚠️ Tipo não suportado: {type}
           </div>
         );
     }

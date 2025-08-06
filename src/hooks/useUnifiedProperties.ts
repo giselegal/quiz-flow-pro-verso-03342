@@ -148,27 +148,35 @@ export const useUnifiedProperties = (
       // Propriedades específicas adicionadas com base no tipo do bloco
       switch (blockType) {
         case "text-inline": {
-          // Propriedades de conteúdo
+          // ✅ NO-CODE: Propriedades de conteúdo simples (sem HTML)
           const contentProps = [
             createProperty(
-              "htmlContent",
-              currentBlock?.properties?.htmlContent || "Texto exemplo",
+              "text",
+              currentBlock?.properties?.text || "Digite seu texto aqui",
               PropertyType.TEXTAREA,
-              "Conteúdo HTML",
+              "Texto",
               PropertyCategory.CONTENT,
-              { required: true, rows: 6 }
+              { required: true, rows: 3 }
+            ),
+            createProperty(
+              "alignment",
+              currentBlock?.properties?.alignment || "left",
+              PropertyType.SELECT,
+              "Alinhamento",
+              PropertyCategory.CONTENT,
+              {
+                options: createSelectOptions([
+                  { value: "left", label: "Esquerda" },
+                  { value: "center", label: "Centro" },
+                  { value: "right", label: "Direita" },
+                  { value: "justify", label: "Justificado" },
+                ]),
+              }
             ),
           ];
 
-          // Propriedades de estilo
+          // ✅ NO-CODE: Propriedades de estilo visuais
           const styleProps = [
-            createProperty(
-              "className",
-              currentBlock?.properties?.className || "",
-              PropertyType.TEXT,
-              "Classes CSS",
-              PropertyCategory.STYLE
-            ),
             createProperty(
               "fontSize",
               currentBlock?.properties?.fontSize || "base",
@@ -177,27 +185,46 @@ export const useUnifiedProperties = (
               PropertyCategory.STYLE,
               {
                 options: createSelectOptions([
-                  { value: "xs", label: "Extra Pequeno" },
-                  { value: "sm", label: "Pequeno" },
-                  { value: "base", label: "Normal" },
-                  { value: "lg", label: "Grande" },
-                  { value: "xl", label: "Extra Grande" },
-                  { value: "2xl", label: "2X Grande" },
-                  { value: "3xl", label: "3X Grande" },
+                  { value: "xs", label: "Extra Pequeno (12px)" },
+                  { value: "sm", label: "Pequeno (14px)" },
+                  { value: "base", label: "Normal (16px)" },
+                  { value: "lg", label: "Grande (18px)" },
+                  { value: "xl", label: "Extra Grande (20px)" },
+                  { value: "2xl", label: "Muito Grande (24px)" },
+                  { value: "3xl", label: "Gigante (30px)" },
                 ]),
               }
             ),
             createProperty(
-              "color",
-              currentBlock?.properties?.color || "default",
+              "fontWeight",
+              currentBlock?.properties?.fontWeight || "normal",
               PropertyType.SELECT,
-              "Cor do Texto",
+              "Peso da Fonte",
               PropertyCategory.STYLE,
               {
                 options: createSelectOptions([
-                  { value: "default", label: "Padrão" },
-                  { value: "primary", label: "Primária" },
-                  { value: "secondary", label: "Secundária" },
+                  { value: "light", label: "Leve" },
+                  { value: "normal", label: "Normal" },
+                  { value: "medium", label: "Médio" },
+                  { value: "semibold", label: "Semi-negrito" },
+                  { value: "bold", label: "Negrito" },
+                ]),
+              }
+            ),
+            createProperty(
+              "textColor",
+              currentBlock?.properties?.textColor || "#333333",
+              PropertyType.COLOR,
+              "Cor do Texto",
+              PropertyCategory.STYLE
+            ),
+            createProperty(
+              "backgroundColor",
+              currentBlock?.properties?.backgroundColor || "transparent",
+              PropertyType.COLOR,
+              "Cor de Fundo",
+              PropertyCategory.STYLE
+            ),
                   { value: "muted", label: "Sutil" },
                   { value: "accent", label: "Destaque" },
                 ]),
