@@ -2,8 +2,8 @@ import { BlockDefinition } from "@/types/editor";
 import { AlignLeft, Heading, Image, Minus, Square, Type } from "lucide-react";
 
 // Import real components instead of placeholder
-import BadgeInlineBlock from "@/components/editor/blocks/BadgeInlineBlock";
-import SpacerInlineBlock from "@/components/editor/blocks/SpacerInlineBlock";
+import BadgeInlineBlock from "@/components/blocks/inline/BadgeInlineBlock";
+import SpacerInlineBlock from "@/components/blocks/inline/SpacerInlineBlock";
 import QuizIntroHeaderBlock from "@/components/editor/blocks/QuizIntroHeaderBlock";
 import FormInputBlock from "@/components/editor/blocks/FormInputBlock";
 import LegalNoticeInlineBlock from "@/components/editor/blocks/LegalNoticeInlineBlock";
@@ -14,7 +14,7 @@ import QuizResultsEditor from "@/components/editor/blocks/QuizResultsEditor";
 import StyleResultsEditor from "@/components/editor/blocks/StyleResultsEditor";
 import FinalStepEditor from "@/components/editor/blocks/FinalStepEditor";
 import StyleCardInlineBlock from "@/components/blocks/inline/StyleCardInlineBlock";
-import TextInlineBlock from "@/components/editor/blocks/TextInlineBlock";
+import TextInlineBlock from "@/components/blocks/inline/TextInlineBlock";
 import DecorativeBarInlineBlock from "@/components/editor/blocks/DecorativeBarInlineBlock";
 import HeadingInlineBlock from "@/components/editor/blocks/HeadingInlineBlock";
 
