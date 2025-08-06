@@ -19,7 +19,7 @@ interface StyleResultsProperties {
   styleTips?: string;
   showColorPalette?: boolean;
   colorPalette?: string;
-  resultLayout?: 'simple' | 'detailed' | 'compact' | 'extended';
+  resultLayout?: "simple" | "detailed" | "compact" | "extended";
   showScore?: boolean;
   enableSharing?: boolean;
 }

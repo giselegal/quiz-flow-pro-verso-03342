@@ -83,14 +83,20 @@ const QuizOptionsGridBlock: React.FC<BlockComponentProps> = ({
     setSelectedOptions(selectedOptions);
 
     // Notificar o editor que uma seleção foi feita
-    handlePropertyUpdate("selectedOptions", selectedOptions.map(opt => opt.id));
+    handlePropertyUpdate(
+      "selectedOptions",
+      selectedOptions.map(opt => opt.id)
+    );
     handlePropertyUpdate("hasCompleteSelection", selectedOptions.length >= minSelectionsCount);
   };
 
   const handleNext = () => {
     // Notificar o editor que o usuário quer avançar
     handlePropertyUpdate("complete", true);
-    handlePropertyUpdate("selectedOptions", selectedOptions.map(opt => opt.id));
+    handlePropertyUpdate(
+      "selectedOptions",
+      selectedOptions.map(opt => opt.id)
+    );
   };
 
   // Edição inline para question
@@ -100,8 +106,8 @@ const QuizOptionsGridBlock: React.FC<BlockComponentProps> = ({
 
   // Mapear propriedades do editor para o componente QuizQuestion
   return (
-    <div 
-      className={`quiz-options-grid-block transition-all duration-200 ${isSelected ? 'ring-2 ring-blue-500 ring-opacity-50 rounded-md p-2' : ''}`} 
+    <div
+      className={`quiz-options-grid-block transition-all duration-200 ${isSelected ? "ring-2 ring-blue-500 ring-opacity-50 rounded-md p-2" : ""}`}
       data-block-id={block.id}
       onClick={onClick}
     >
@@ -111,20 +117,20 @@ const QuizOptionsGridBlock: React.FC<BlockComponentProps> = ({
           <textarea
             className="w-full p-2 border border-gray-300 rounded-md resize-none"
             value={questionText}
-            onChange={(e) => handleQuestionEdit(e.target.value)}
+            onChange={e => handleQuestionEdit(e.target.value)}
             placeholder="Digite sua pergunta aqui..."
             rows={2}
           />
           <textarea
             className="w-full p-2 border border-gray-300 rounded-md resize-none mt-2"
             value={optionsText}
-            onChange={(e) => handlePropertyUpdate("options", e.target.value)}
+            onChange={e => handlePropertyUpdate("options", e.target.value)}
             placeholder="Digite as opções, uma por linha..."
             rows={4}
           />
         </div>
       ) : null}
-      
+
       <QuizQuestion
         question={questionText}
         description={description || ""}
