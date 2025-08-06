@@ -1,5 +1,5 @@
-import { BRAND_COLORS } from "@/config/brandColors";
 import { useCallback, useEffect, useState } from "react";
+import { BRAND_COLORS } from "../config/brandColors";
 
 // Tipos de propriedades suportados pelo sistema
 export enum PropertyType {
@@ -224,11 +224,6 @@ export const useUnifiedProperties = (
               PropertyType.COLOR,
               "Cor de Fundo",
               PropertyCategory.STYLE
-            ),
-                  { value: "muted", label: "Sutil" },
-                  { value: "accent", label: "Destaque" },
-                ]),
-              }
             ),
             createProperty(
               "marginTop",

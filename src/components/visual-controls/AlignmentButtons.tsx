@@ -1,7 +1,7 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
-import { AlignLeft, AlignCenter, AlignRight, AlignJustify } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AlignCenter, AlignJustify, AlignLeft, AlignRight } from "lucide-react";
+import React from "react";
 
 interface AlignmentButtonsProps {
   value: "left" | "center" | "right" | "justify";

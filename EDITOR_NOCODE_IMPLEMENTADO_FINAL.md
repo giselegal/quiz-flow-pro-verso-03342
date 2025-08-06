@@ -28,15 +28,17 @@
 ### 🔄 **Substituições Técnicas → No-Code:**
 
 #### ❌ **ANTES** (Técnico):
+
 ```
 - "Conteúdo HTML" (textarea com código)
-- "Classes CSS" (input de texto)  
+- "Classes CSS" (input de texto)
 - "Properties avançadas"
 - color: "#hex" (campo texto)
 - marginTop: "20px" (input número)
 ```
 
 #### ✅ **DEPOIS** (No-Code):
+
 ```
 - "Texto" (campo simples)
 - "Aparência" (controles visuais)
@@ -98,7 +100,7 @@
 ### 📱 **Teste Imediato:**
 
 1. **Abrir**: `http://localhost:8087/editor-fixed`
-2. **Adicionar**: Componente "Text Inline" 
+2. **Adicionar**: Componente "Text Inline"
 3. **Selecionar**: O componente no canvas
 4. **Verificar**: Painel com controles visuais à direita
 5. **Testar**: Mudar cor, alinhamento, tamanho visualmente
@@ -112,4 +114,4 @@
 
 ---
 
-*Implementação No-Code concluída com sucesso!* 🎨✨
+_Implementação No-Code concluída com sucesso!_ 🎨✨

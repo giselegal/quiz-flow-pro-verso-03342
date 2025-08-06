@@ -1,7 +1,7 @@
-import React from "react";
-import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
+import React from "react";
 
 interface SizeSliderProps {
   value: number;
@@ -31,30 +31,35 @@ export const SizeSlider: React.FC<SizeSliderProps> = ({
   return (
     <div className={cn("space-y-2", className)}>
       <div className="flex items-center justify-between">
-        <Label className="text-sm font-medium text-[#432818]">
-          {label}
-        </Label>
+        <Label className="text-sm font-medium text-[#432818]">{label}</Label>
         {showValue && (
           <span className="text-sm text-[#B89B7A] font-medium">
-            {value}{unit}
+            {value}
+            {unit}
           </span>
         )}
       </div>
-      
+
       <div className="px-1">
         <Slider
           value={[value]}
-          onValueChange={(values) => onChange(values[0])}
+          onValueChange={values => onChange(values[0])}
           min={min}
           max={max}
           step={step}
           className="w-full"
         />
       </div>
-      
+
       <div className="flex justify-between text-xs text-gray-500">
-        <span>{min}{unit}</span>
-        <span>{max}{unit}</span>
+        <span>
+          {min}
+          {unit}
+        </span>
+        <span>
+          {max}
+          {unit}
+        </span>
       </div>
     </div>
   );

@@ -615,7 +615,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
                 } else {
                   // ✅ CORREÇÃO: Para campos que podem ser tanto content quanto properties
                   // Se não for properties ou content específico, tentar atualizar em content primeiro
-                  if (block.content && typeof value !== 'object') {
+                  if (block.content && typeof value !== "object") {
                     updatedBlock.content = {
                       ...block.content,
                       [key]: value,

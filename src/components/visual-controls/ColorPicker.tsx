@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import React, { useState } from "react";
 
 interface ColorPickerProps {
   value: string;
@@ -42,10 +42,8 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
 
   return (
     <div className={cn("space-y-2", className)}>
-      <Label className="text-sm font-medium text-[#432818]">
-        {label}
-      </Label>
-      
+      <Label className="text-sm font-medium text-[#432818]">{label}</Label>
+
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -62,19 +60,15 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                   backgroundColor: isTransparent ? "transparent" : value,
                 }}
               />
-              <span className="text-sm">
-                {isTransparent ? "Transparente" : displayValue}
-              </span>
+              <span className="text-sm">{isTransparent ? "Transparente" : displayValue}</span>
             </div>
           </Button>
         </PopoverTrigger>
-        
+
         <PopoverContent className="w-64 p-4">
           <div className="space-y-4">
             <div>
-              <Label className="text-sm font-medium mb-2 block">
-                Cores Pré-definidas
-              </Label>
+              <Label className="text-sm font-medium mb-2 block">Cores Pré-definidas</Label>
               <div className="grid grid-cols-4 gap-2">
                 {presetColors.map(({ color, name }) => (
                   <button
@@ -85,7 +79,9 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                     }}
                     className={cn(
                       "w-10 h-10 rounded border-2 hover:scale-110 transition-transform",
-                      value === color ? "border-[#B89B7A] ring-2 ring-[#B89B7A]/30" : "border-gray-300"
+                      value === color
+                        ? "border-[#B89B7A] ring-2 ring-[#B89B7A]/30"
+                        : "border-gray-300"
                     )}
                     style={{ backgroundColor: color }}
                     title={name}
@@ -96,9 +92,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
 
             {allowTransparent && (
               <div>
-                <Label className="text-sm font-medium mb-2 block">
-                  Transparente
-                </Label>
+                <Label className="text-sm font-medium mb-2 block">Transparente</Label>
                 <button
                   onClick={() => {
                     onChange("transparent");
@@ -115,13 +109,11 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
             )}
 
             <div>
-              <Label className="text-sm font-medium mb-2 block">
-                Cor Personalizada
-              </Label>
+              <Label className="text-sm font-medium mb-2 block">Cor Personalizada</Label>
               <input
                 type="color"
                 value={isTransparent ? "#432818" : value}
-                onChange={(e) => {
+                onChange={e => {
                   onChange(e.target.value);
                   setIsOpen(false);
                 }}

@@ -10,14 +10,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 // ✅ Importa controles visuais NO-CODE
 import AlignmentButtons from "@/components/visual-controls/AlignmentButtons";
 import ColorPicker from "@/components/visual-controls/ColorPicker";
 import SizeSlider from "@/components/visual-controls/SizeSlider";
-import StyleButtons from "@/components/visual-controls/StyleButtons";
 // ✅ Importa UnifiedBlock, useUnifiedProperties e PropertyType do hook
 import {
   PropertyType,
@@ -91,14 +89,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
   }
 
   // ✅ NO-CODE: Categorias visuais e amigáveis
-  const categoryOrder = [
-    "content",
-    "style",
-    "alignment", 
-    "behavior",
-    "scoring",
-    "advanced",
-  ];
+  const categoryOrder = ["content", "style", "alignment", "behavior", "scoring", "advanced"];
 
   const categoryIcons = {
     content: Type,
@@ -111,7 +102,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
 
   const categoryLabels = {
     content: "📝 Conteúdo",
-    style: "🎨 Aparência", 
+    style: "🎨 Aparência",
     alignment: "📐 Alinhamento",
     behavior: "⚙️ Comportamento",
     scoring: "🏆 Pontuação",
@@ -212,7 +203,8 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
               {label} {required && <span className="text-red-500">*</span>}
               {unit && (
                 <span className="text-[#B89B7A] ml-2">
-                  ({value || 0}{unit})
+                  ({value || 0}
+                  {unit})
                 </span>
               )}
             </Label>
@@ -288,8 +280,8 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
                   src={value}
                   alt="Preview"
                   className="w-full max-w-32 h-auto rounded border"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
+                  onError={e => {
+                    (e.target as HTMLImageElement).style.display = "none";
                   }}
                 />
               </div>

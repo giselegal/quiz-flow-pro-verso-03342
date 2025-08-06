@@ -3,11 +3,13 @@
 ## 🎯 PROBLEMA IDENTIFICADO
 
 Você quer um editor **NO-CODE** completamente visual, sem:
+
 - ❌ Campos HTML/CSS
-- ❌ Código técnico  
+- ❌ Código técnico
 - ❌ Terminologia de programação
 
 E sim com:
+
 - ✅ Controles visuais intuitivos
 - ✅ Linguagem amigável
 - ✅ Interface drag-and-drop
@@ -18,6 +20,7 @@ E sim com:
 ### 1. **Substituição de Campos Técnicos por Visuais**
 
 #### ❌ ANTES (Técnico):
+
 ```
 - "Conteúdo HTML" (textarea com código)
 - "Classes CSS" (input de texto)
@@ -25,6 +28,7 @@ E sim com:
 ```
 
 #### ✅ DEPOIS (Visual):
+
 ```
 - "Texto" (editor simples de texto)
 - "Alinhamento" (botões visuais: ← ■ →)
@@ -37,22 +41,26 @@ E sim com:
 ### 2. **Controles Visuais por Categoria**
 
 #### 📝 **CONTEÚDO** (O que o usuário vê)
+
 - **Texto**: Campo simples de texto
 - **Alinhamento**: Botões visuais (esquerda, centro, direita)
 - **Tipo**: Título, Subtítulo, Parágrafo, Lista
 
 #### 🎨 **APARÊNCIA** (Como fica bonito)
+
 - **Tamanho**: Pequeno, Normal, Grande, Gigante
 - **Estilo**: Normal, Negrito, Itálico
 - **Cor do Texto**: Seletor de cores visual
 - **Cor de Fundo**: Seletor de cores visual
 
 #### 📐 **ESPAÇAMENTO** (Posição na página)
+
 - **Margem Superior**: Slider visual (0-100px)
 - **Margem Inferior**: Slider visual (0-100px)
 - **Largura**: Auto, Pequena, Média, Grande, Total
 
 #### ⚙️ **COMPORTAMENTO** (O que acontece quando clica)
+
 - **Ação**: Nenhuma, Próxima Etapa, Link Externo
 - **Animação**: Nenhuma, Fade In, Slide, Bounce
 
@@ -87,6 +95,7 @@ E sim com:
 ## 🚀 IMPLEMENTAÇÃO IMEDIATA
 
 ### ETAPA 1: Criar Componentes Visuais (30 min)
+
 ```typescript
 // Criar: src/components/visual-controls/
 ├── ColorPicker.tsx          // Seletor de cores visual
@@ -97,12 +106,14 @@ E sim com:
 ```
 
 ### ETAPA 2: Substituir Campos Técnicos (30 min)
+
 ```typescript
 // Atualizar: useUnifiedProperties.ts
 // Substituir campos HTML por controles visuais
 ```
 
 ### ETAPA 3: Interface Amigável (30 min)
+
 ```typescript
 // Atualizar: EnhancedUniversalPropertiesPanel.tsx
 // Usar novos componentes visuais
@@ -112,6 +123,7 @@ E sim com:
 ## 📋 CAMPOS NO-CODE POR COMPONENTE
 
 ### 🔤 **Text Inline** (Texto simples)
+
 - Texto: Campo de texto simples
 - Alinhamento: Botões visuais
 - Tamanho: Dropdown com preview
@@ -119,18 +131,21 @@ E sim com:
 - Margens: Sliders
 
 ### 🔘 **Button Inline** (Botão)
+
 - Texto do Botão: Campo simples
 - Cor do Botão: Seletor visual
 - Tamanho: Pequeno, Médio, Grande
 - Ação: Próxima Etapa, Link, Enviar
 
 ### 🖼️ **Image Inline** (Imagem)
+
 - Imagem: Upload visual
 - Tamanho: Slider visual
 - Alinhamento: Botões visuais
 - Borda: Liga/Desliga + espessura
 
 ### ❓ **Quiz Question** (Pergunta do Quiz)
+
 - Pergunta: Campo de texto
 - Tipo: Múltipla Escolha, Verdadeiro/Falso
 - Opções: Lista editável visual
@@ -139,6 +154,7 @@ E sim com:
 ## 🎯 RESULTADO FINAL NO-CODE
 
 ### ✅ O que o usuário verá:
+
 1. **Linguagem amigável**: "Texto" em vez de "htmlContent"
 2. **Controles visuais**: Sliders, seletores de cor, botões
 3. **Preview instantâneo**: Vê mudanças em tempo real

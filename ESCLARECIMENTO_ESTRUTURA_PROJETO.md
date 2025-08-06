@@ -5,12 +5,14 @@
 ### 1. Dois Sistemas Diferentes Trabalhando Juntos
 
 **SISTEMA 1: Editor de Componentes (useEditorBlocks.ts)**
+
 - Arquivo atual que você está vendo: `/src/hooks/editor/useEditorBlocks.ts`
 - **Função**: Gerencia blocos individuais dentro de uma etapa
 - **Escopo**: Adiciona, edita, deleta e reordena componentes como botões, textos, imagens
 - **Usado em**: Editor drag-and-drop para montar o conteúdo de cada página
 
 **SISTEMA 2: Gerenciador de Etapas (StepsContext.tsx)**
+
 - Arquivo: `/src/context/StepsContext.tsx`
 - **Função**: Gerencia as 21 etapas do quiz (navegação entre páginas)
 - **Escopo**: Etapa 1 (intro) → Etapa 2 (nome) → ... → Etapa 20 (resultado) → Etapa 21 (oferta)
@@ -40,6 +42,7 @@
 **Pergunta**: "o QuizResultsBlock.tsx é usado nas etapas do /editor-fixed???????"
 
 **Resposta Esclarecida**:
+
 - O `QuizResultsBlock.tsx` é um **COMPONENTE** (bloco)
 - Ele pode ser adicionado na **ETAPA 20** (página de resultado)
 - O `useEditorBlocks.ts` é a ferramenta que **adiciona** esse componente
@@ -72,20 +75,23 @@ src/
 **Cenário**: Você quer que a Etapa 20 mostre o resultado do quiz
 
 **Passos**:
+
 1. Abrir `/editor-fixed`
 2. Selecionar "Etapa 20"
-3. Usar `addBlock("quiz-results-block")` 
+3. Usar `addBlock("quiz-results-block")`
 4. O `QuizResultsBlock.tsx` é renderizado na Etapa 20
 5. Quando usuário chegar na Etapa 20, verá seu resultado
 
 ### 7. Estado Atual do Projeto
 
 ✅ **Funcionando**:
+
 - Sistema de etapas (StepsContext)
 - Sistema de blocos (useEditorBlocks)
 - Componente QuizResultsBlock existe
 
 ❌ **Não Conectado Ainda**:
+
 - QuizResultsBlock não está automaticamente na Etapa 20
 - Precisa ser adicionado manualmente via editor
 
@@ -98,8 +104,9 @@ src/
 ## 🤝 Resumo da Confusão
 
 A confusão acontece porque:
+
 - **Você vê muitos arquivos** TypeScript (.tsx, .ts)
-- **Dois sistemas diferentes** (etapas vs componentes) 
+- **Dois sistemas diferentes** (etapas vs componentes)
 - **Não está claro** como eles trabalham juntos
 
 Agora ficou mais claro? 😊

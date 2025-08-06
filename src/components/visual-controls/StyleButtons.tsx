@@ -1,7 +1,7 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
-import { Bold, Italic, Underline } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Bold, Italic, Underline } from "lucide-react";
+import React from "react";
 
 interface StyleButtonsProps {
   fontWeight?: "light" | "normal" | "medium" | "semibold" | "bold";
@@ -15,7 +15,7 @@ interface StyleButtonsProps {
 
 export const StyleButtons: React.FC<StyleButtonsProps> = ({
   fontWeight = "normal",
-  fontStyle = "normal", 
+  fontStyle = "normal",
   textDecoration = "none",
   onFontWeightChange,
   onFontStyleChange,
