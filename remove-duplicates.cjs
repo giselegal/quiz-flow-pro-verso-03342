@@ -1,5 +1,5 @@
 // remove-duplicates.cjs
-const fs = require('fs');
+const fs = require("fs");
 
 // Ler o arquivo
 const filePath = "src/hooks/useUnifiedProperties.ts";
