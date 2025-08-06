@@ -1357,6 +1357,220 @@ export const useUnifiedProperties = (
             },
           ];
 
+        // ✅ CORREÇÃO: Tipos com hífen também precisam de casos específicos
+        case "text-inline":
+          return [
+            ...baseProperties,
+            {
+              key: "content",
+              value: currentBlock?.properties?.content || currentBlock?.properties?.text || "",
+              type: PropertyType.TEXTAREA,
+              label: "Texto",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "fontSize",
+              value: currentBlock?.properties?.fontSize || "text-base",
+              type: PropertyType.SELECT,
+              label: "Tamanho da Fonte",
+              category: "style",
+              options: [
+                { value: "text-xs", label: "Extra Pequeno" },
+                { value: "text-sm", label: "Pequeno" },
+                { value: "text-base", label: "Normal" },
+                { value: "text-lg", label: "Grande" },
+                { value: "text-xl", label: "Extra Grande" },
+              ],
+            },
+            {
+              key: "textAlign",
+              value: currentBlock?.properties?.textAlign || "left",
+              type: PropertyType.ALIGNMENT,
+              label: "Alinhamento",
+              category: "style",
+            },
+            {
+              key: "textColor",
+              value: currentBlock?.properties?.textColor || "#432818",
+              type: PropertyType.COLOR,
+              label: "Cor do Texto",
+              category: "style",
+            },
+          ];
+
+        case "image-display-inline":
+          return [
+            ...baseProperties,
+            {
+              key: "src",
+              value: currentBlock?.properties?.src || "",
+              type: PropertyType.IMAGE,
+              label: "URL da Imagem",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "alt",
+              value: currentBlock?.properties?.alt || "",
+              type: PropertyType.TEXT,
+              label: "Texto Alternativo",
+              category: "content",
+            },
+            {
+              key: "width",
+              value: currentBlock?.properties?.width || "100%",
+              type: PropertyType.TEXT,
+              label: "Largura",
+              category: "style",
+            },
+            {
+              key: "height",
+              value: currentBlock?.properties?.height || "auto",
+              type: PropertyType.TEXT,
+              label: "Altura",
+              category: "style",
+            },
+            {
+              key: "borderRadius",
+              value: currentBlock?.properties?.borderRadius || 0,
+              type: PropertyType.RANGE,
+              label: "Bordas Arredondadas",
+              category: "style",
+              min: 0,
+              max: 50,
+              step: 1,
+              unit: "px",
+            },
+          ];
+
+        case "button-inline":
+          return [
+            ...baseProperties,
+            {
+              key: "text",
+              value: currentBlock?.properties?.text || "",
+              type: PropertyType.TEXT,
+              label: "Texto do Botão",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "variant",
+              value: currentBlock?.properties?.variant || "primary",
+              type: PropertyType.SELECT,
+              label: "Estilo do Botão",
+              category: "style",
+              options: [
+                { value: "primary", label: "Primário" },
+                { value: "secondary", label: "Secundário" },
+                { value: "outline", label: "Contorno" },
+                { value: "ghost", label: "Transparente" },
+              ],
+            },
+            {
+              key: "size",
+              value: currentBlock?.properties?.size || "default",
+              type: PropertyType.SELECT,
+              label: "Tamanho",
+              category: "style",
+              options: [
+                { value: "sm", label: "Pequeno" },
+                { value: "default", label: "Normal" },
+                { value: "lg", label: "Grande" },
+              ],
+            },
+            {
+              key: "href",
+              value: currentBlock?.properties?.href || "",
+              type: PropertyType.TEXT,
+              label: "Link (URL)",
+              category: "behavior",
+            },
+          ];
+
+        case "pricing-card":
+          return [
+            ...baseProperties,
+            {
+              key: "title",
+              value: currentBlock?.properties?.title || "",
+              type: PropertyType.TEXT,
+              label: "Título do Plano",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "price",
+              value: currentBlock?.properties?.price || "",
+              type: PropertyType.TEXT,
+              label: "Preço",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "currency",
+              value: currentBlock?.properties?.currency || "R$",
+              type: PropertyType.TEXT,
+              label: "Moeda",
+              category: "content",
+            },
+            {
+              key: "period",
+              value: currentBlock?.properties?.period || "mensal",
+              type: PropertyType.SELECT,
+              label: "Período",
+              category: "content",
+              options: [
+                { value: "mensal", label: "Mensal" },
+                { value: "anual", label: "Anual" },
+                { value: "único", label: "Pagamento Único" },
+              ],
+            },
+            {
+              key: "features",
+              value: currentBlock?.properties?.features || "",
+              type: PropertyType.TEXTAREA,
+              label: "Recursos (um por linha)",
+              category: "content",
+              rows: 4,
+            },
+            {
+              key: "highlighted",
+              value: currentBlock?.properties?.highlighted === true,
+              type: PropertyType.SWITCH,
+              label: "Plano em Destaque",
+              category: "style",
+            },
+          ];
+
+        case "countdown":
+          return [
+            ...baseProperties,
+            {
+              key: "targetDate",
+              value: currentBlock?.properties?.targetDate || "",
+              type: PropertyType.TEXT,
+              label: "Data Alvo (YYYY-MM-DD)",
+              category: "content",
+              required: true,
+            },
+            {
+              key: "title",
+              value: currentBlock?.properties?.title || "Oferta Limitada",
+              type: PropertyType.TEXT,
+              label: "Título",
+              category: "content",
+            },
+            {
+              key: "showLabels",
+              value: currentBlock?.properties?.showLabels === true,
+              type: PropertyType.SWITCH,
+              label: "Mostrar Rótulos",
+              category: "style",
+            },
+          ];
+
         default:
           // ✅ CORREÇÃO: Log para debug dos tipos não mapeados
           console.warn(`🔧 useUnifiedProperties: Tipo de bloco "${blockType}" não tem propriedades específicas definidas. Usando propriedades base.`);
