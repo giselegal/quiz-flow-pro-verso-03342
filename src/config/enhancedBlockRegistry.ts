@@ -1,14 +1,5 @@
 import { BlockDefinition } from "@/types/editor";
-import {
-  Check,
-  Clock,
-  CreditCard,
-  Heading,
-  Image,
-  Minus,
-  MousePointer,
-  Type,
-} from "lucide-react";
+import { Heading, Image, Minus, MousePointer, Type } from "lucide-react";
 import React from "react";
 
 /**
@@ -22,15 +13,14 @@ import React from "react";
 
 // Componentes Inline existentes
 import ButtonInline from "../components/blocks/inline/ButtonInline";
-import TextInline from "../components/blocks/inline/TextInline";
-import HeadingInline from "../components/blocks/inline/HeadingInline";
 import CountdownInlineBlock from "../components/blocks/inline/CountdownInlineBlock";
-import DividerInlineBlock from "../components/blocks/inline/DividerInlineBlock";
-import ImageDisplayInlineBlock from "../components/blocks/inline/ImageDisplayInlineBlock";
-import PricingCardInlineBlock from "../components/blocks/inline/PricingCardInlineBlock";
 import DecorativeBarInline from "../components/blocks/inline/DecorativeBarInline";
-import LegalNoticeInline from "../components/blocks/inline/LegalNoticeInline";
+import DividerInlineBlock from "../components/blocks/inline/DividerInlineBlock";
+import HeadingInline from "../components/blocks/inline/HeadingInline";
 import ImageDisplayInline from "../components/blocks/inline/ImageDisplayInline";
+import LegalNoticeInline from "../components/blocks/inline/LegalNoticeInline";
+import PricingCardInlineBlock from "../components/blocks/inline/PricingCardInlineBlock";
+import TextInline from "../components/blocks/inline/TextInline";
 
 // === REGISTRY PRINCIPAL - SEM DUPLICATAS ===
 
@@ -40,16 +30,16 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   "heading-inline": HeadingInline,
   "image-display-inline": ImageDisplayInline,
 
-  // Interactive Elements  
+  // Interactive Elements
   "button-inline": ButtonInline,
   "decorative-bar-inline": DecorativeBarInline,
-  
+
   // Layout and Design
-  "divider": DividerInlineBlock,
-  
+  divider: DividerInlineBlock,
+
   // Commerce and Pricing
   "pricing-card": PricingCardInlineBlock,
-  "countdown": CountdownInlineBlock,
+  countdown: CountdownInlineBlock,
 
   // Legal
   "legal-notice-inline": LegalNoticeInline,
@@ -93,7 +83,7 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       defaultProps: {},
     },
     {
-      type: "heading-inline", 
+      type: "heading-inline",
       name: "Título",
       icon: Heading,
       category: "content",
@@ -146,7 +136,7 @@ export const getRegistryStats = () => {
   const types = Object.keys(ENHANCED_BLOCK_REGISTRY);
   const definitions = generateBlockDefinitions();
   const categories = Array.from(new Set(definitions.map(def => def.category)));
-  
+
   return {
     totalBlocks: types.length,
     categories,

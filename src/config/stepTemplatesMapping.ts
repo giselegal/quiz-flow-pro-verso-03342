@@ -1,28 +1,28 @@
 // src/config/stepTemplatesMapping.ts
 // Mapeamento das 21 etapas para seus templates específicos
 
-// Importações dos templates de cada etapa
-import { getStep01Template } from "@/components/steps/Step01Template";
-import { getStep02Template } from "@/components/steps/Step02Template";
-import { getStep03Template } from "@/components/steps/Step03Template";
-import { getStep04Template } from "@/components/steps/Step04Template";
-import { getStep05Template } from "@/components/steps/Step05Template";
-import { getStep06Template } from "@/components/steps/Step06Template";
-import { getStep07Template } from "@/components/steps/Step07Template";
-import { getStep08Template } from "@/components/steps/Step08Template";
-import { getStep09Template } from "@/components/steps/Step09Template";
-import { getStep10Template } from "@/components/steps/Step10Template";
-import { getStep11Template } from "@/components/steps/Step11Template";
-import { getStep12Template } from "@/components/steps/Step12Template";
-import { getStep13Template } from "@/components/steps/Step13Template";
-import { getStep14Template } from "@/components/steps/Step14Template";
-import { getStep15Template } from "@/components/steps/Step15Template";
-import { getStep16Template } from "@/components/steps/Step16Template";
-import { getStep17Template } from "@/components/steps/Step17Template";
-import { getStep18Template } from "@/components/steps/Step18Template";
-import { getStep19Template } from "@/components/steps/Step19Template";
-import { getStep20Template } from "@/components/steps/Step20Template";
-import { getStep21Template } from "@/components/steps/Step21Template";
+// Importações dos templates de cada etapa (arquivos .tsx)
+import { getStep01Template } from "@/components/steps/Step01Template.tsx";
+import { getStep02Template } from "@/components/steps/Step02Template.tsx";
+import { getStep03Template } from "@/components/steps/Step03Template.tsx";
+import { getStep04Template } from "@/components/steps/Step04Template.tsx";
+import { getStep05Template } from "@/components/steps/Step05Template.tsx";
+import { getStep06Template } from "@/components/steps/Step06Template.tsx";
+import { getStep07Template } from "@/components/steps/Step07Template.tsx";
+import { getStep08Template } from "@/components/steps/Step08Template.tsx";
+import { getStep09Template } from "@/components/steps/Step09Template.tsx";
+import { getStep10Template } from "@/components/steps/Step10Template.tsx";
+import { getStep11Template } from "@/components/steps/Step11Template.tsx";
+import { getStep12Template } from "@/components/steps/Step12Template.tsx";
+import { getStep13Template } from "@/components/steps/Step13Template.tsx";
+import { getStep14Template } from "@/components/steps/Step14Template.tsx";
+import { getStep15Template } from "@/components/steps/Step15Template.tsx";
+import { getStep16Template } from "@/components/steps/Step16Template.tsx";
+import { getStep17Template } from "@/components/steps/Step17Template.tsx";
+import { getStep18Template } from "@/components/steps/Step18Template.tsx";
+import { getStep19Template } from "@/components/steps/Step19Template.tsx";
+import { getStep20Template } from "@/components/steps/Step20Template.tsx";
+import { getStep21Template } from "@/components/steps/Step21Template.tsx";
 
 // Interface para o template de etapa
 export interface StepTemplate {
@@ -43,8 +43,8 @@ export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
   2: {
     stepNumber: 2,
     templateFunction: getStep02Template,
-    name: "Q1 - Tipo de Roupa",
-    description: "Qual o seu tipo de roupa favorita?",
+    name: "Q1 - Rotina Diária",
+    description: "Como você descreveria sua rotina diária?",
   },
   3: {
     stepNumber: 3,
@@ -109,14 +109,14 @@ export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
   13: {
     stepNumber: 13,
     templateFunction: getStep13Template,
-    name: "Q11 - Guarda-Roupa",
-    description: "QUANDO VOCÊ OLHA PARA O SEU GUARDA-ROUPA, QUAL DESSAS FRASES TE VEM A CABEÇA?",
+    name: "Q11 - Orçamento",
+    description: "Quanto você investe mensalmente em roupas?",
   },
   14: {
     stepNumber: 14,
     templateFunction: getStep14Template,
-    name: "Q13 - Final",
-    description: "Última pergunta do quiz",
+    name: "Q12 - Guarda-Roupa",
+    description: "QUANDO VOCÊ OLHA PARA O SEU GUARDA-ROUPA, QUAL DESSAS FRASES TE VEM A CABEÇA?",
   },
   15: {
     stepNumber: 15,
@@ -151,14 +151,14 @@ export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
   20: {
     stepNumber: 20,
     templateFunction: getStep20Template,
-    name: "Oferta",
-    description: "Oferta especial",
+    name: "Seu Resultado",
+    description: "Seu resultado está pronto!",
   },
   21: {
     stepNumber: 21,
     templateFunction: getStep21Template,
-    name: "Finalização",
-    description: "Conclusão e próximos passos",
+    name: "Oferta Personalizada",
+    description: "Transforme seu guarda-roupa agora!",
   },
 };
 

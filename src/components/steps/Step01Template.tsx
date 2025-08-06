@@ -1,4 +1,5 @@
 import React from "react";
+import Step01Intro from "../editor/steps/Step01Intro";
 
 export interface Step01Props {
   onNext?: () => void;
