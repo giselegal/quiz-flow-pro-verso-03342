@@ -5,12 +5,12 @@
  * Verifica se todos os componentes necessários estão disponíveis e funcionais
  */
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);n/env node
+const __dirname = path.dirname(__filename);
 
 /**
  * TESTE DOS COMPONENTES DA ETAPA 1

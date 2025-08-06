@@ -12,14 +12,10 @@ Como usar:
 
 // ===== 1. COMPONENTE FUNCIONAL COM EXPORT (rafce) =====
 // Digite: rafce + Tab
-import React from 'react';
+import React from "react";
 
 const NomeDoComponente = () => {
-  return (
-    <div>
-      
-    </div>
-  );
+  return <div></div>;
 };
 
 export default NomeDoComponente;
@@ -48,25 +44,23 @@ const memoizedValue = React.useMemo(() => {
 
 // ===== 6. CONSOLE.LOG (clg) =====
 // Digite: clg + Tab
-console.log('texto');
+console.log("texto");
 
 // ===== 7. CONSOLE.LOG COM OBJETO (clo) =====
 // Digite: clo + Tab
-console.log('objeto', objeto);
+console.log("objeto", objeto);
 
 // ===== 8. ARROW FUNCTION (anfn) =====
 // Digite: anfn + Tab
-const functionName = () => {
-  
-};
+const functionName = () => {};
 
 // ===== 9. IMPORT DEFAULT (imp) =====
 // Digite: imp + Tab
-import moduleName from 'module';
+import moduleName from "module";
 
 // ===== 10. IMPORT DESTRUCTURING (imd) =====
 // Digite: imd + Tab
-import { destructured } from 'module';
+import { destructured } from "module";
 
 // ===== 11. DESTRUCTURING OBJECT (dob) =====
 // Digite: dob + Tab
@@ -78,17 +72,15 @@ const [propertyName] = arrayToDestructure;
 
 // ===== 13. SETTIMEOUT (sti) =====
 // Digite: sti + Tab
-setTimeout(() => {
-  
-}, timeout);
+setTimeout(() => {}, timeout);
 
 // ===== 14. EXPORT DEFAULT (exp) =====
 // Digite: exp + Tab
-export default moduleName;
+// export default moduleName;
 
 // ===== 15. EXPORT NAMED (exd) =====
 // Digite: exd + Tab
-export { destructured } from 'module';
+// export { destructured } from 'module';
 
 // ===== 16. USEREF HOOK (useRef) =====
 // Digite: useRef + Tab
@@ -113,7 +105,7 @@ class ComponentName extends React.Component {
     super(props);
     this.state = {};
   }
-  
+
   render() {
     return <div></div>;
   }
@@ -133,13 +125,13 @@ try {
 // Digite: rafce + Tab e personalize:
 const QuizQuestion = ({ question, onAnswer }) => {
   const [selectedAnswer, setSelectedAnswer] = React.useState(null);
-  
+
   const handleSubmit = React.useCallback(() => {
     if (selectedAnswer) {
       onAnswer(selectedAnswer);
     }
   }, [selectedAnswer, onAnswer]);
-  
+
   return (
     <div className="quiz-question">
       <h2>{question.text}</h2>
@@ -147,7 +139,7 @@ const QuizQuestion = ({ question, onAnswer }) => {
         <button
           key={index}
           onClick={() => setSelectedAnswer(option)}
-          className={selectedAnswer === option ? 'selected' : ''}
+          className={selectedAnswer === option ? "selected" : ""}
         >
           {option.text}
         </button>
@@ -163,21 +155,21 @@ const useQuizState = () => {
   const [currentQuestion, setCurrentQuestion] = React.useState(0);
   const [answers, setAnswers] = React.useState([]);
   const [isCompleted, setIsCompleted] = React.useState(false);
-  
+
   const nextQuestion = React.useCallback(() => {
     setCurrentQuestion(prev => prev + 1);
   }, []);
-  
-  const saveAnswer = React.useCallback((answer) => {
+
+  const saveAnswer = React.useCallback(answer => {
     setAnswers(prev => [...prev, answer]);
   }, []);
-  
+
   return {
     currentQuestion,
     answers,
     isCompleted,
     nextQuestion,
-    saveAnswer
+    saveAnswer,
   };
 };
 
@@ -187,17 +179,19 @@ const QuizResult = ({ score, totalQuestions, onRestart }) => {
   const percentage = React.useMemo(() => {
     return (score / totalQuestions) * 100;
   }, [score, totalQuestions]);
-  
+
   React.useEffect(() => {
     // Analytics do resultado
-    console.log('Quiz completed with score:', score);
+    console.log("Quiz completed with score:", score);
   }, [score]);
-  
+
   return (
     <div className="quiz-result">
       <h2>Resultado Final</h2>
       <div className="score">{percentage.toFixed(1)}%</div>
-      <p>Você acertou {score} de {totalQuestions} perguntas</p>
+      <p>
+        Você acertou {score} de {totalQuestions} perguntas
+      </p>
       <button onClick={onRestart}>Refazer Quiz</button>
     </div>
   );
@@ -212,17 +206,15 @@ const QuizProvider = ({ children }) => {
     questions: [],
     currentIndex: 0,
     answers: [],
-    isCompleted: false
+    isCompleted: false,
   });
-  
-  const updateQuizData = React.useCallback((updates) => {
+
+  const updateQuizData = React.useCallback(updates => {
     setQuizData(prev => ({ ...prev, ...updates }));
   }, []);
-  
+
   return (
-    <QuizContext.Provider value={{ quizData, updateQuizData }}>
-      {children}
-    </QuizContext.Provider>
+    <QuizContext.Provider value={{ quizData, updateQuizData }}>{children}</QuizContext.Provider>
   );
 };
 
@@ -237,16 +229,19 @@ const useLocalStorage = (key, initialValue) => {
       return initialValue;
     }
   });
-  
-  const setValue = React.useCallback((value) => {
-    try {
-      setStoredValue(value);
-      window.localStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-      console.error('Error saving to localStorage:', error);
-    }
-  }, [key]);
-  
+
+  const setValue = React.useCallback(
+    value => {
+      try {
+        setStoredValue(value);
+        window.localStorage.setItem(key, JSON.stringify(value));
+      } catch (error) {
+        console.error("Error saving to localStorage:", error);
+      }
+    },
+    [key]
+  );
+
   return [storedValue, setValue];
 };
 
@@ -263,11 +258,11 @@ const LoadingSpinner = ({ message = "Carregando..." }) => {
 
 // 📝 TEMPLATE: Hook para Fetch de Dados
 // Digite: uch + Tab e personalize:
-const useFetch = (url) => {
+const useFetch = url => {
   const [data, setData] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
-  
+
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -281,10 +276,10 @@ const useFetch = (url) => {
         setLoading(false);
       }
     };
-    
+
     fetchData();
   }, [url]);
-  
+
   return { data, loading, error };
 };
 
@@ -365,5 +360,5 @@ export {
   LoadingSpinner,
   useQuizState,
   useLocalStorage,
-  useFetch
+  useFetch,
 };

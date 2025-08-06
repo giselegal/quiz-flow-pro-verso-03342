@@ -389,7 +389,7 @@ const mockModule = jest.mock('./module', () => ({
 // ===== SNIPPETS PARA PERFORMANCE =====
 
 // 1. DEBOUNCE HOOK (Digite "useDebounce" + Tab):
-const useDebounce = <T>(value: T, delay: number): T => {
+const useDebounce = function<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = React.useState<T>(value);
 
   React.useEffect(() => {
