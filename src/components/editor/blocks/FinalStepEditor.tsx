@@ -23,7 +23,10 @@ interface FinalStepEditorProps {
 const FinalStepEditor: React.FC<FinalStepEditorProps> = ({ stepConfig, onChange }) => {
   const [activeTab, setActiveTab] = useState("general");
 
-  // Valores padrão
+  // ✅ CORREÇÃO: Validação e valores padrão mais robustos
+  console.log("🎯 FinalStepEditor recebeu:", { stepConfig, onChange: !!onChange });
+
+  const safeStepConfig = stepConfig || {};
   const {
     stepNumber = 21,
     title = "Seu Resultado",
@@ -33,14 +36,21 @@ const FinalStepEditor: React.FC<FinalStepEditorProps> = ({ stepConfig, onChange 
       showAllStyles: false,
       showGuideImage: true,
     },
-  } = stepConfig;
+  } = safeStepConfig;
 
-  // Função para atualizar a configuração
+  // ✅ CORREÇÃO: Função para atualizar com validação
   const updateConfig = (updates: Partial<FinalStepEditorProps["stepConfig"]>) => {
-    onChange({
-      ...stepConfig,
-      ...updates,
-    });
+    console.log("🚀 FinalStepEditor.updateConfig chamado:", { updates, currentConfig: safeStepConfig });
+    
+    if (onChange) {
+      const newConfig = {
+        ...safeStepConfig,
+        ...updates,
+      };
+      onChange(newConfig);
+    } else {
+      console.warn("⚠️ FinalStepEditor: onChange não foi fornecido");
+    }
   };
 
   // Atualizar configuração de resultado de estilo

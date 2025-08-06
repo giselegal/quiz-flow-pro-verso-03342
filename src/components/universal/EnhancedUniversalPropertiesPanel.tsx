@@ -74,6 +74,17 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
       onUpdate // Passa o `onUpdate` do painel diretamente para o hook
     );
 
+  // ✅ CORREÇÃO: Adicionar logs de debug e validação
+  console.log("🎯 EnhancedUniversalPropertiesPanel renderizado:", {
+    selectedBlock: actualBlock ? {
+      id: actualBlock.id,
+      type: actualBlock.type,
+      propertiesKeys: Object.keys(actualBlock.properties || {}),
+      propertiesValues: actualBlock.properties,
+    } : null,
+    propertiesCount: properties.length,
+  });
+
   // Se nenhum bloco estiver selecionado, exibe uma mensagem
   if (!actualBlock) {
     return (
