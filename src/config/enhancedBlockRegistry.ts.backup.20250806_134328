@@ -26,34 +26,34 @@ import React from "react";
 // === IMPORTS DE COMPONENTES PRINCIPAIS ===
 
 // Componentes Inline mais usados
-import BadgeInlineBlock from "../components/blocks/inline/BadgeInlineBlock";
-import ButtonInlineBlock from "../components/blocks/inline/ButtonInlineBlock";
-import CountdownInlineBlock from "../components/blocks/inline/CountdownInlineBlock";
-import CTAInlineBlock from "../components/blocks/inline/CTAInlineBlock";
-import DividerInlineBlock from "../components/blocks/inline/DividerInlineBlock";
-import HeadingInlineBlock from "../components/blocks/inline/HeadingInlineBlock";
-import ImageDisplayInlineBlock from "../components/blocks/inline/ImageDisplayInlineBlock";
-import PricingCardInlineBlock from "../components/blocks/inline/PricingCardInlineBlock";
-import ProgressInlineBlock from "../components/blocks/inline/ProgressInlineBlock";
-import SpacerInlineBlock from "../components/blocks/inline/SpacerInlineBlock";
-import StatInlineBlock from "../components/blocks/inline/StatInlineBlock";
-import TextInlineBlock from "../components/blocks/inline/TextInlineBlock";
+import BadgeInlineBlock from "../components/editor/blocks/inline/BadgeInlineBlock";
+import ButtonInlineBlock from "../components/editor/blocks/inline/ButtonInlineBlock";
+import CountdownInlineBlock from "../components/editor/blocks/inline/CountdownInlineBlock";
+import CTAInlineBlock from "../components/editor/blocks/inline/CTAInlineBlock";
+import DividerInlineBlock from "../components/editor/blocks/inline/DividerInlineBlock";
+import HeadingInlineBlock from "../components/editor/blocks/inline/HeadingInlineBlock";
+import ImageDisplayInlineBlock from "../components/editor/blocks/inline/ImageDisplayInlineBlock";
+import PricingCardInlineBlock from "../components/editor/blocks/inline/PricingCardInlineBlock";
+import ProgressInlineBlock from "../components/editor/blocks/inline/ProgressInlineBlock";
+import SpacerInlineBlock from "../components/editor/blocks/inline/SpacerInlineBlock";
+import StatInlineBlock from "../components/editor/blocks/inline/StatInlineBlock";
+import TextInlineBlock from "../components/editor/blocks/inline/TextInlineBlock";
 
 // Componentes específicos da Etapa 1
-import DecorativeBarInlineBlock from "../components/blocks/DecorativeBarInlineBlock";
-import FormInputBlock from "../components/blocks/FormInputBlock";
-import LegalNoticeInlineBlock from "../components/blocks/LegalNoticeInlineBlock";
-import QuizIntroHeaderBlock from "../components/blocks/QuizIntroHeaderBlock";
+import DecorativeBarInlineBlock from "../components/editor/blocks/DecorativeBarInlineBlock";
+import FormInputBlock from "../components/editor/blocks/FormInputBlock";
+import LegalNoticeInlineBlock from "../components/editor/blocks/LegalNoticeInlineBlock";
+import QuizIntroHeaderBlock from "../components/editor/blocks/QuizIntroHeaderBlock";
 
 // Componentes de Quiz - para compatibilidade com DynamicStepTemplate
 import QuizResultsBlock from "../components/blocks/quiz/QuizResultsBlock";
 import StyleResultsBlock from "../components/blocks/quiz/StyleResultsBlock";
-import FinalStepEditor from "../components/blocks/FinalStepEditor";
-import OptionsGridBlock from "../components/blocks/OptionsGridBlock";
-import QuizProgressBlock from "../components/blocks/QuizProgressBlock";
-import QuizResultsEditor from "../components/blocks/QuizResultsEditor";
-import QuizStepBlock from "../components/blocks/QuizStepBlock";
-import StyleResultsEditor from "../components/blocks/StyleResultsEditor";
+import FinalStepEditor from "../components/editor/blocks/FinalStepEditor";
+import OptionsGridBlock from "../components/editor/blocks/OptionsGridBlock";
+import QuizProgressBlock from "../components/editor/blocks/QuizProgressBlock";
+import QuizResultsEditor from "../components/editor/blocks/QuizResultsEditor";
+import QuizStepBlock from "../components/editor/blocks/QuizStepBlock";
+import StyleResultsEditor from "../components/editor/blocks/StyleResultsEditor";
 
 // === REGISTRY PRINCIPAL - SEM DUPLICATAS ===
 

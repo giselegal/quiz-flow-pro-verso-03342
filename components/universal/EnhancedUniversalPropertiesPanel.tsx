@@ -21,9 +21,13 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { useUnifiedProperties } from "@/hooks/useUnifiedProperties";
-import { BlockDefinition, PropertyDefinition, PropertyType } from "@/types/editor";
-import { UnifiedBlock } from "@/types/unified";
+import {
+  PropertyCategory,
+  PropertyType,
+  UnifiedBlock,
+  UnifiedProperty,
+  useUnifiedProperties,
+} from "@/hooks/useUnifiedProperties";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -31,20 +35,26 @@ import * as z from "zod";
 
 interface EnhancedUniversalPropertiesPanelProps {
   selectedBlock?: UnifiedBlock;
-  blockDefinition?: BlockDefinition;
-  onUpdate?: (updatedBlock: UnifiedBlock) => void;
+  onUpdate?: (blockId: string, updates: Record<string, any>) => void;
   onClose?: () => void;
 }
 
 export const EnhancedUniversalPropertiesPanel = ({
   selectedBlock,
-  blockDefinition,
   onUpdate,
   onClose,
 }: EnhancedUniversalPropertiesPanelProps) => {
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("basic");
-  const { getComponentProperties } = useUnifiedProperties();
+  const [activeTab, setActiveTab] = useState("content");
+
+  // ✅ CORREÇÃO: Usar o hook correto com o bloco selecionado
+  const {
+    properties,
+    updateProperty,
+    resetProperties,
+    validateProperties,
+    getPropertiesByCategory,
+  } = useUnifiedProperties(selectedBlock, onUpdate);
 
   // Se não houver bloco selecionado, mostrar mensagem
   if (!selectedBlock) {
@@ -55,11 +65,8 @@ export const EnhancedUniversalPropertiesPanel = ({
     );
   }
 
-  // Obter propriedades do componente com base no tipo do bloco
-  const properties = getComponentProperties(selectedBlock.type);
-
-  // Função auxiliar para criar um esquema Zod para validação
-  const createZodSchema = (properties: PropertyDefinition[]) => {
+  // ✅ CORREÇÃO: Função para criar esquema Zod baseado em UnifiedProperty
+  const createZodSchema = (properties: UnifiedProperty[]) => {
     const schemaObj: Record<string, any> = {};
 
     properties.forEach(prop => {
@@ -71,31 +78,38 @@ export const EnhancedUniversalPropertiesPanel = ({
         case PropertyType.COLOR:
         case PropertyType.SELECT:
         case PropertyType.IMAGE:
+        case PropertyType.ALIGNMENT:
+        case PropertyType.FONTFAMILY:
+        case PropertyType.FONTSTYLE:
+        case PropertyType.RICHTEXT:
+        case PropertyType.FILE:
+        case PropertyType.TAGS:
+        case PropertyType.RADIO:
+        case PropertyType.ANIMATION:
+        case PropertyType.OPTION_CATEGORY:
           fieldSchema = z.string().optional();
           break;
         case PropertyType.NUMBER:
+        case PropertyType.RANGE:
+        case PropertyType.OPTION_SCORE:
           fieldSchema = z.number().optional();
           break;
-        case PropertyType.BOOLEAN:
+        case PropertyType.SWITCH:
+        case PropertyType.CHECKBOX:
           fieldSchema = z.boolean().optional();
-          break;
-        case PropertyType.OPTION_SCORE:
-          fieldSchema = z.number().min(0).optional();
-          break;
-        case PropertyType.OPTION_CATEGORY:
-          fieldSchema = z.string().optional();
           break;
         default:
           fieldSchema = z.any().optional();
       }
 
-      schemaObj[prop.id] = fieldSchema;
+      // ✅ CORREÇÃO: Usar prop.key em vez de prop.id
+      schemaObj[prop.key] = fieldSchema;
     });
 
     return z.object(schemaObj);
   };
 
-  // Criar esquema Zod com base nas propriedades do componente
+  // Criar esquema Zod com base nas propriedades
   const formSchema = createZodSchema(properties);
 
   // Inicializar formulário com os valores atuais do bloco
@@ -107,28 +121,18 @@ export const EnhancedUniversalPropertiesPanel = ({
   // Atualizar valores do formulário quando o bloco selecionado mudar
   useEffect(() => {
     if (selectedBlock && selectedBlock.properties) {
-      // Redefinir valores do formulário para as propriedades do bloco atual
       form.reset(selectedBlock.properties);
     }
   }, [selectedBlock, form]);
 
-  // Manipular envio do formulário
+  // ✅ CORREÇÃO: Manipular envio correto
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     if (!selectedBlock) return;
 
-    // Criar cópia atualizada do bloco
-    const updatedBlock = {
-      ...selectedBlock,
-      properties: {
-        ...selectedBlock.properties,
-        ...values,
-      },
-    };
-
-    // Chamar função de atualização, se fornecida
-    if (onUpdate) {
-      onUpdate(updatedBlock);
-    }
+    // Atualizar cada propriedade individualmente
+    Object.entries(values).forEach(([key, value]) => {
+      updateProperty(key, value);
+    });
 
     // Mostrar notificação de sucesso
     toast({
@@ -137,28 +141,35 @@ export const EnhancedUniversalPropertiesPanel = ({
     });
   };
 
-  // Agrupar propriedades por categoria
-  const basicProperties = properties.filter(prop => !prop.category || prop.category === "basic");
-  const styleProperties = properties.filter(prop => prop.category === "style");
-  const advancedProperties = properties.filter(prop => prop.category === "advanced");
-  const quizProperties = properties.filter(prop => prop.category === "quiz");
+  // ✅ CORREÇÃO: Agrupar propriedades por categoria usando o hook
+  const contentProperties = getPropertiesByCategory(PropertyCategory.CONTENT);
+  const styleProperties = getPropertiesByCategory(PropertyCategory.STYLE);
+  const behaviorProperties = getPropertiesByCategory(PropertyCategory.BEHAVIOR);
+  const quizProperties = getPropertiesByCategory(PropertyCategory.QUIZ);
+  const advancedProperties = getPropertiesByCategory(PropertyCategory.ADVANCED);
 
-  // Função para renderizar o campo apropriado com base no tipo de propriedade
-  const renderField = (property: PropertyDefinition) => {
+  // ✅ CORREÇÃO: Função para renderizar campo baseado em UnifiedProperty
+  const renderField = (property: UnifiedProperty) => {
     switch (property.type) {
       case PropertyType.TEXT:
         return (
           <FormField
-            key={property.id}
+            key={property.key}
             control={form.control}
-            name={property.id}
+            name={property.key}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{property.label}</FormLabel>
                 <FormControl>
-                  <Input {...field} value={field.value || ""} />
+                  <Input
+                    {...field}
+                    value={field.value || ""}
+                    onChange={e => {
+                      field.onChange(e.target.value);
+                      updateProperty(property.key, e.target.value);
+                    }}
+                  />
                 </FormControl>
-                {property.description && <FormDescription>{property.description}</FormDescription>}
                 <FormMessage />
               </FormItem>
             )}
@@ -168,16 +179,23 @@ export const EnhancedUniversalPropertiesPanel = ({
       case PropertyType.TEXTAREA:
         return (
           <FormField
-            key={property.id}
+            key={property.key}
             control={form.control}
-            name={property.id}
+            name={property.key}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{property.label}</FormLabel>
                 <FormControl>
-                  <Textarea {...field} value={field.value || ""} />
+                  <Textarea
+                    {...field}
+                    value={field.value || ""}
+                    rows={property.rows || 3}
+                    onChange={e => {
+                      field.onChange(e.target.value);
+                      updateProperty(property.key, e.target.value);
+                    }}
+                  />
                 </FormControl>
-                {property.description && <FormDescription>{property.description}</FormDescription>}
                 <FormMessage />
               </FormItem>
             )}
@@ -187,9 +205,9 @@ export const EnhancedUniversalPropertiesPanel = ({
       case PropertyType.NUMBER:
         return (
           <FormField
-            key={property.id}
+            key={property.key}
             control={form.control}
-            name={property.id}
+            name={property.key}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{property.label}</FormLabel>
@@ -197,33 +215,76 @@ export const EnhancedUniversalPropertiesPanel = ({
                   <Input
                     type="number"
                     {...field}
-                    onChange={e => field.onChange(Number(e.target.value))}
+                    min={property.min}
+                    max={property.max}
+                    step={property.step}
                     value={field.value === undefined ? "" : field.value}
+                    onChange={e => {
+                      const value = Number(e.target.value);
+                      field.onChange(value);
+                      updateProperty(property.key, value);
+                    }}
                   />
                 </FormControl>
-                {property.description && <FormDescription>{property.description}</FormDescription>}
+                {property.unit && <FormDescription>Unidade: {property.unit}</FormDescription>}
                 <FormMessage />
               </FormItem>
             )}
           />
         );
 
-      case PropertyType.BOOLEAN:
+      case PropertyType.RANGE:
         return (
           <FormField
-            key={property.id}
+            key={property.key}
             control={form.control}
-            name={property.id}
+            name={property.key}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  {property.label}: {field.value || property.defaultValue || 0}
+                  {property.unit && ` ${property.unit}`}
+                </FormLabel>
+                <FormControl>
+                  <input
+                    type="range"
+                    min={property.min || 0}
+                    max={property.max || 100}
+                    step={property.step || 1}
+                    value={field.value || property.defaultValue || 0}
+                    onChange={e => {
+                      const value = Number(e.target.value);
+                      field.onChange(value);
+                      updateProperty(property.key, value);
+                    }}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        );
+
+      case PropertyType.SWITCH:
+        return (
+          <FormField
+            key={property.key}
+            control={form.control}
+            name={property.key}
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                 <div className="space-y-0.5">
                   <FormLabel>{property.label}</FormLabel>
-                  {property.description && (
-                    <FormDescription>{property.description}</FormDescription>
-                  )}
                 </div>
                 <FormControl>
-                  <Switch checked={field.value} onCheckedChange={field.onChange} />
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={checked => {
+                      field.onChange(checked);
+                      updateProperty(property.key, checked);
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -234,24 +295,33 @@ export const EnhancedUniversalPropertiesPanel = ({
       case PropertyType.COLOR:
         return (
           <FormField
-            key={property.id}
+            key={property.key}
             control={form.control}
-            name={property.id}
+            name={property.key}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{property.label}</FormLabel>
                 <div className="flex gap-2">
                   <FormControl>
-                    <Input {...field} value={field.value || ""} />
+                    <Input
+                      {...field}
+                      value={field.value || ""}
+                      onChange={e => {
+                        field.onChange(e.target.value);
+                        updateProperty(property.key, e.target.value);
+                      }}
+                    />
                   </FormControl>
                   <Input
                     type="color"
                     className="w-12 p-1 h-10"
                     value={field.value || "#000000"}
-                    onChange={e => field.onChange(e.target.value)}
+                    onChange={e => {
+                      field.onChange(e.target.value);
+                      updateProperty(property.key, e.target.value);
+                    }}
                   />
                 </div>
-                {property.description && <FormDescription>{property.description}</FormDescription>}
                 <FormMessage />
               </FormItem>
             )}
@@ -261,13 +331,19 @@ export const EnhancedUniversalPropertiesPanel = ({
       case PropertyType.SELECT:
         return (
           <FormField
-            key={property.id}
+            key={property.key}
             control={form.control}
-            name={property.id}
+            name={property.key}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{property.label}</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={value => {
+                    field.onChange(value);
+                    updateProperty(property.key, value);
+                  }}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Selecione uma opção" />
@@ -281,7 +357,6 @@ export const EnhancedUniversalPropertiesPanel = ({
                     ))}
                   </SelectContent>
                 </Select>
-                {property.description && <FormDescription>{property.description}</FormDescription>}
                 <FormMessage />
               </FormItem>
             )}
@@ -291,59 +366,23 @@ export const EnhancedUniversalPropertiesPanel = ({
       case PropertyType.IMAGE:
         return (
           <FormField
-            key={property.id}
+            key={property.key}
             control={form.control}
-            name={property.id}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{property.label}</FormLabel>
-                <FormControl>
-                  <Input {...field} value={field.value || ""} />
-                </FormControl>
-                {property.description && <FormDescription>{property.description}</FormDescription>}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        );
-
-      case PropertyType.OPTION_SCORE:
-        return (
-          <FormField
-            key={property.id}
-            control={form.control}
-            name={property.id}
+            name={property.key}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{property.label}</FormLabel>
                 <FormControl>
                   <Input
-                    type="number"
                     {...field}
-                    onChange={e => field.onChange(Number(e.target.value))}
-                    value={field.value === undefined ? "" : field.value}
+                    value={field.value || ""}
+                    placeholder="https://exemplo.com/imagem.jpg"
+                    onChange={e => {
+                      field.onChange(e.target.value);
+                      updateProperty(property.key, e.target.value);
+                    }}
                   />
                 </FormControl>
-                {property.description && <FormDescription>{property.description}</FormDescription>}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        );
-
-      case PropertyType.OPTION_CATEGORY:
-        return (
-          <FormField
-            key={property.id}
-            control={form.control}
-            name={property.id}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{property.label}</FormLabel>
-                <FormControl>
-                  <Input {...field} value={field.value || ""} />
-                </FormControl>
-                {property.description && <FormDescription>{property.description}</FormDescription>}
                 <FormMessage />
               </FormItem>
             )}
@@ -355,11 +394,12 @@ export const EnhancedUniversalPropertiesPanel = ({
     }
   };
 
-  // Renderizar as abas somente se houver propriedades nas respectivas categorias
-  const hasBasicProperties = basicProperties.length > 0;
+  // ✅ CORREÇÃO: Verificações usando as variáveis corretas do hook
+  const hasContentProperties = contentProperties.length > 0;
   const hasStyleProperties = styleProperties.length > 0;
-  const hasAdvancedProperties = advancedProperties.length > 0;
+  const hasBehaviorProperties = behaviorProperties.length > 0;
   const hasQuizProperties = quizProperties.length > 0;
+  const hasAdvancedProperties = advancedProperties.length > 0;
 
   return (
     <div className="p-4 space-y-4 h-full overflow-y-auto">
@@ -376,21 +416,28 @@ export const EnhancedUniversalPropertiesPanel = ({
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="w-full">
-              {hasBasicProperties && <TabsTrigger value="basic">Básico</TabsTrigger>}
+              {hasContentProperties && <TabsTrigger value="content">Conteúdo</TabsTrigger>}
               {hasStyleProperties && <TabsTrigger value="style">Estilo</TabsTrigger>}
+              {hasBehaviorProperties && <TabsTrigger value="behavior">Comportamento</TabsTrigger>}
               {hasQuizProperties && <TabsTrigger value="quiz">Quiz</TabsTrigger>}
               {hasAdvancedProperties && <TabsTrigger value="advanced">Avançado</TabsTrigger>}
             </TabsList>
 
-            {hasBasicProperties && (
-              <TabsContent value="basic" className="space-y-4 pt-4">
-                {basicProperties.map(renderField)}
+            {hasContentProperties && (
+              <TabsContent value="content" className="space-y-4 pt-4">
+                {contentProperties.map(renderField)}
               </TabsContent>
             )}
 
             {hasStyleProperties && (
               <TabsContent value="style" className="space-y-4 pt-4">
                 {styleProperties.map(renderField)}
+              </TabsContent>
+            )}
+
+            {hasBehaviorProperties && (
+              <TabsContent value="behavior" className="space-y-4 pt-4">
+                {behaviorProperties.map(renderField)}
               </TabsContent>
             )}
 
