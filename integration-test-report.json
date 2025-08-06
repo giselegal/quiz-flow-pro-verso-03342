@@ -1,0 +1,128 @@
+{
+  "timestamp": "2025-08-06T19:44:46.177Z",
+  "overallStatus": "excellent",
+  "totalTests": 8,
+  "passedTests": 8,
+  "failedTests": 0,
+  "averageScore": 100,
+  "details": {
+    "blockDefinitions": {
+      "passed": true,
+      "score": 100,
+      "details": {
+        "heading-inline": "✅ INTEGRADO",
+        "text-inline": "✅ INTEGRADO",
+        "button-inline": "✅ INTEGRADO",
+        "decorative-bar-inline": "✅ INTEGRADO",
+        "form-input": "✅ INTEGRADO",
+        "image-display-inline": "✅ INTEGRADO",
+        "legal-notice-inline": "✅ INTEGRADO"
+      }
+    },
+    "unifiedProperties": {
+      "passed": true,
+      "score": 100,
+      "details": {
+        "hasHelper": true,
+        "hasInlineTypes": true,
+        "hasInlineDefaults": true
+      }
+    },
+    "editorContext": {
+      "passed": true,
+      "score": 100,
+      "details": {
+        "hasOptimizedImport": true,
+        "hasLoadFunction": true,
+        "hasMetadata": true
+      }
+    },
+    "optimizedLoader": {
+      "passed": true,
+      "score": 98,
+      "details": [
+        {
+          "name": "Hook principal",
+          "present": true
+        },
+        {
+          "name": "Provider",
+          "present": true
+        },
+        {
+          "name": "Context",
+          "present": true
+        },
+        {
+          "name": "Navegação",
+          "present": true
+        },
+        {
+          "name": "AutoSave",
+          "present": true
+        },
+        {
+          "name": "Atalhos",
+          "present": true
+        },
+        {
+          "name": "Performance",
+          "present": true
+        }
+      ]
+    },
+    "performance": {
+      "passed": true,
+      "score": 100,
+      "details": {
+        "hasMobileOpt": true,
+        "hasMemoization": true,
+        "hasHOC": true,
+        "hasStepUtils": true,
+        "hasIntersectionObserver": true
+      }
+    },
+    "typeDefinitions": {
+      "passed": true,
+      "score": 100,
+      "details": {
+        "hasDecorativeBar": true,
+        "hasFormInput": true,
+        "hasLegalNotice": true,
+        "hasOptimizedConfig": true,
+        "hasOptimizedState": true
+      }
+    },
+    "inlineComponents": {
+      "passed": true,
+      "score": 102,
+      "details": {
+        "HeadingInline.tsx": "✅ COMPLETO",
+        "TextInline.tsx": "✅ COMPLETO",
+        "ButtonInline.tsx": "✅ COMPLETO",
+        "DecorativeBarInline.tsx": "✅ COMPLETO",
+        "ImageDisplayInline.tsx": "✅ COMPLETO",
+        "LegalNoticeInline.tsx": "✅ COMPLETO"
+      }
+    },
+    "hooksCompatibility": {
+      "passed": true,
+      "essentialScore": 100,
+      "bonusScore": 75,
+      "details": {
+        "essentialHooks": [
+          "useUnifiedProperties.ts",
+          "useEditor.ts",
+          "useQuiz.ts",
+          "useHistory.ts"
+        ],
+        "bonusHooks": [
+          "useAutoSave.ts",
+          "useKeyboardShortcuts.ts",
+          "usePerformanceOptimization.ts",
+          "use-mobile.ts"
+        ]
+      }
+    }
+  }
+}
