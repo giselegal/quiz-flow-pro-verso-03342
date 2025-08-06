@@ -2,21 +2,21 @@ import { BlockDefinition } from "@/types/editor";
 import { AlignLeft, Heading, Image, Minus, Square, Type } from "lucide-react";
 
 // Import real components instead of placeholder
-import BadgeInlineBlock from "@/components/editor/blocks/BadgeInlineBlock";
-import SpacerInlineBlock from "@/components/editor/blocks/SpacerInlineBlock";
-import QuizIntroHeaderBlock from "@/components/editor/blocks/QuizIntroHeaderBlock";
-import FormInputBlock from "@/components/editor/blocks/FormInputBlock";
-import LegalNoticeInlineBlock from "@/components/editor/blocks/LegalNoticeInlineBlock";
 import ImageDisplayInlineBlock from "@/components/blocks/inline/ImageDisplayInlineBlock";
+import StyleCardInlineBlock from "@/components/blocks/inline/StyleCardInlineBlock";
+import BadgeInlineBlock from "@/components/editor/blocks/BadgeInlineBlock";
+import DecorativeBarInlineBlock from "@/components/editor/blocks/DecorativeBarInlineBlock";
+import FinalStepEditor from "@/components/editor/blocks/FinalStepEditor";
+import FormInputBlock from "@/components/editor/blocks/FormInputBlock";
+import HeadingInlineBlock from "@/components/editor/blocks/HeadingInlineBlock";
+import LegalNoticeInlineBlock from "@/components/editor/blocks/LegalNoticeInlineBlock";
 import OptionsGridBlock from "@/components/editor/blocks/OptionsGridBlock";
+import QuizIntroHeaderBlock from "@/components/editor/blocks/QuizIntroHeaderBlock";
 import QuizProgressBlock from "@/components/editor/blocks/QuizProgressBlock";
 import QuizResultsEditor from "@/components/editor/blocks/QuizResultsEditor";
+import SpacerInlineBlock from "@/components/editor/blocks/SpacerInlineBlock";
 import StyleResultsEditor from "@/components/editor/blocks/StyleResultsEditor";
-import FinalStepEditor from "@/components/editor/blocks/FinalStepEditor";
-import StyleCardInlineBlock from "@/components/blocks/inline/StyleCardInlineBlock";
 import TextInlineBlock from "@/components/editor/blocks/TextInlineBlock";
-import DecorativeBarInlineBlock from "@/components/editor/blocks/DecorativeBarInlineBlock";
-import HeadingInlineBlock from "@/components/editor/blocks/HeadingInlineBlock";
 
 export const blockDefinitions: BlockDefinition[] = [
   {
@@ -1032,4 +1032,314 @@ export const getBlocksByCategory = (category: string): BlockDefinition[] => {
 
 export const getBlockByType = (type: string): BlockDefinition | undefined => {
   return blockDefinitions.find(block => block.type === type);
+
+  // 🎯 COMPONENTES INLINE OTIMIZADOS
+  'heading-inline': {
+    component: HeadingInline,
+    label: 'Título Inline',
+    category: 'text',
+    properties: {
+      content: { 
+        type: 'text', 
+        label: 'Conteúdo', 
+        default: 'Título',
+        category: 'content'
+      },
+      level: { 
+        type: 'select', 
+        label: 'Nível', 
+        options: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'], 
+        default: 'h2',
+        category: 'basic'
+      },
+      textAlign: { 
+        type: 'select', 
+        label: 'Alinhamento', 
+        options: ['left', 'center', 'right'], 
+        default: 'left',
+        category: 'style'
+      },
+      color: { 
+        type: 'color', 
+        label: 'Cor', 
+        default: '#432818',
+        category: 'style'
+      },
+      fontWeight: { 
+        type: 'select', 
+        label: 'Peso da Fonte', 
+        options: ['normal', 'bold', '600', '700'], 
+        default: 'normal',
+        category: 'style'
+      }
+    }
+  },
+  
+  'text-inline': {
+    component: TextInline,
+    label: 'Texto Inline',
+    category: 'text',
+    properties: {
+      text: { 
+        type: 'textarea', 
+        label: 'Texto', 
+        default: 'Digite seu texto aqui...',
+        category: 'content'
+      },
+      fontSize: { 
+        type: 'text', 
+        label: 'Tamanho da Fonte', 
+        default: '1rem',
+        category: 'style'
+      },
+      alignment: { 
+        type: 'select', 
+        label: 'Alinhamento', 
+        options: ['left', 'center', 'right'], 
+        default: 'left',
+        category: 'style'
+      },
+      color: { 
+        type: 'color', 
+        label: 'Cor', 
+        default: '#6B5B4E',
+        category: 'style'
+      },
+      fontWeight: { 
+        type: 'select', 
+        label: 'Peso da Fonte', 
+        options: ['normal', 'bold'], 
+        default: 'normal',
+        category: 'style'
+      }
+    }
+  },
+  
+  'button-inline': {
+    component: ButtonInline,
+    label: 'Botão Inline',
+    category: 'interactive',
+    properties: {
+      text: { 
+        type: 'text', 
+        label: 'Texto do Botão', 
+        default: 'Clique aqui',
+        category: 'content'
+      },
+      style: { 
+        type: 'select', 
+        label: 'Estilo', 
+        options: ['primary', 'secondary', 'outline'], 
+        default: 'primary',
+        category: 'style'
+      },
+      size: { 
+        type: 'select', 
+        label: 'Tamanho', 
+        options: ['small', 'medium', 'large'], 
+        default: 'medium',
+        category: 'style'
+      },
+      backgroundColor: { 
+        type: 'color', 
+        label: 'Cor de Fundo', 
+        default: '#B89B7A',
+        category: 'style'
+      },
+      textColor: { 
+        type: 'color', 
+        label: 'Cor do Texto', 
+        default: '#FFFFFF',
+        category: 'style'
+      },
+      action: {
+        type: 'select',
+        label: 'Ação',
+        options: ['next-step', 'submit-form', 'external-link'],
+        default: 'next-step',
+        category: 'behavior'
+      }
+    }
+  },
+  
+  'decorative-bar-inline': {
+    component: DecorativeBarInline,
+    label: 'Barra Decorativa',
+    category: 'layout',
+    properties: {
+      height: { 
+        type: 'number', 
+        label: 'Altura (px)', 
+        default: 4,
+        min: 1,
+        max: 20,
+        category: 'style'
+      },
+      color: { 
+        type: 'color', 
+        label: 'Cor', 
+        default: '#B89B7A',
+        category: 'style'
+      },
+      marginTop: { 
+        type: 'number', 
+        label: 'Margem Superior (px)', 
+        default: 20,
+        category: 'layout'
+      },
+      marginBottom: { 
+        type: 'number', 
+        label: 'Margem Inferior (px)', 
+        default: 30,
+        category: 'layout'
+      }
+    }
+  },
+  
+  'form-input': {
+    component: FormInput,
+    label: 'Campo de Entrada',
+    category: 'forms',
+    properties: {
+      label: { 
+        type: 'text', 
+        label: 'Rótulo', 
+        default: 'Digite aqui',
+        category: 'content'
+      },
+      placeholder: { 
+        type: 'text', 
+        label: 'Placeholder', 
+        default: 'Digite seu primeiro nome...',
+        category: 'content'
+      },
+      required: { 
+        type: 'boolean', 
+        label: 'Obrigatório', 
+        default: true,
+        category: 'behavior'
+      },
+      type: { 
+        type: 'select', 
+        label: 'Tipo', 
+        options: ['text', 'email', 'tel', 'password'], 
+        default: 'text',
+        category: 'behavior'
+      },
+      backgroundColor: { 
+        type: 'color', 
+        label: 'Cor de Fundo', 
+        default: '#FFFFFF',
+        category: 'style'
+      },
+      borderColor: { 
+        type: 'color', 
+        label: 'Cor da Borda', 
+        default: '#B89B7A',
+        category: 'style'
+      }
+    }
+  },
+  
+  'image-display-inline': {
+    component: ImageDisplayInline,
+    label: 'Imagem Inline',
+    category: 'media',
+    properties: {
+      src: { 
+        type: 'text', 
+        label: 'URL da Imagem', 
+        default: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp',
+        category: 'content'
+      },
+      alt: { 
+        type: 'text', 
+        label: 'Texto Alternativo', 
+        default: 'Imagem',
+        category: 'content'
+      },
+      width: { 
+        type: 'text', 
+        label: 'Largura', 
+        default: '100%',
+        category: 'style'
+      },
+      height: { 
+        type: 'text', 
+        label: 'Altura', 
+        default: 'auto',
+        category: 'style'
+      },
+      borderRadius: { 
+        type: 'number', 
+        label: 'Borda Arredondada (px)', 
+        default: 12,
+        category: 'style'
+      },
+      shadow: { 
+        type: 'boolean', 
+        label: 'Sombra', 
+        default: true,
+        category: 'style'
+      },
+      alignment: { 
+        type: 'select', 
+        label: 'Alinhamento', 
+        options: ['left', 'center', 'right'], 
+        default: 'center',
+        category: 'style'
+      }
+    }
+  },
+  
+  'legal-notice-inline': {
+    component: LegalNoticeInline,
+    label: 'Aviso Legal',
+    category: 'legal',
+    properties: {
+      privacyText: { 
+        type: 'text', 
+        label: 'Texto Privacidade', 
+        default: 'Política de Privacidade',
+        category: 'content'
+      },
+      copyrightText: { 
+        type: 'text', 
+        label: 'Texto Copyright', 
+        default: '© 2025 Gisele Galvão Consultoria',
+        category: 'content'
+      },
+      termsText: { 
+        type: 'text', 
+        label: 'Texto Termos', 
+        default: 'Termos de Uso',
+        category: 'content'
+      },
+      fontSize: { 
+        type: 'text', 
+        label: 'Tamanho da Fonte', 
+        default: '0.75rem',
+        category: 'style'
+      },
+      textAlign: { 
+        type: 'select', 
+        label: 'Alinhamento', 
+        options: ['left', 'center', 'right'], 
+        default: 'center',
+        category: 'style'
+      },
+      color: { 
+        type: 'color', 
+        label: 'Cor', 
+        default: '#8F7A6A',
+        category: 'style'
+      },
+      linkColor: { 
+        type: 'color', 
+        label: 'Cor dos Links', 
+        default: '#B89B7A',
+        category: 'style'
+      }
+    }
+  },
 };

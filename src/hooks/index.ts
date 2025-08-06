@@ -1,54 +1,83 @@
-// 🎯 HOOKS CENTRALIZADOS - Consolidação Final
+/**
+ * 🔗 ÍNDICE DE HOOKS OTIMIZADO
+ * ============================
+ * 
+ * Exportação centralizada de todos os hooks do sistema.
+ * Organizado por categoria para melhor manutenibilidade.
+ */
 
-// ✅ HOOKS ESSENCIAIS (validados)
-export { useEditor } from "./useEditor";
-export { useToast } from "./use-toast";
-export { useIsMobile } from "./use-mobile";
-export { useDebounce } from "./useDebounce";
+// ====================================================================
+// 🧩 HOOKS DE QUIZ (Core)
+// ====================================================================
+export { useQuiz } from './useQuiz';
+export { useQuizLogic } from './useQuizLogic';
+export { useQuizBuilder } from './useQuizBuilder';
+export { useQuizResults } from './useQuizResults';
+export { useQuizConfig } from './useQuizConfig';
+export { useQuizTracking } from './useQuizTracking';
 
-// ✅ QUIZ HOOKS (validados)
-export { useQuiz } from "./useQuiz";
-export { useQuizBuilder } from "./useQuizBuilder";
-export { useQuizConfig } from "./useQuizConfig";
-export { useQuizLogic } from "./useQuizLogic";
-export { useQuizResult } from "./useQuizResult";
-export { useQuizStages } from "./useQuizStages";
-export { useQuizTracking } from "./useQuizTracking";
-export { useQuizResultConfig } from "./useQuizResultConfig";
+// ====================================================================
+// ✏️ HOOKS DE EDITOR
+// ====================================================================
+export { useEditor } from './useEditor';
+export { useUnifiedProperties } from './useUnifiedProperties';
+export { useInlineEdit } from './useInlineEdit';
+export { useBlockForm } from './useBlockForm';
+export { usePropertyHistory } from './usePropertyHistory';
+export { useLiveEditor } from './useLiveEditor';
 
-// ✅ EDITOR HOOKS (validados)
-export { useAutoSaveDebounce } from "./useAutoSaveDebounce";
-export { usePropertyHistory } from "./usePropertyHistory";
-export { useKeyboardShortcuts } from "./useKeyboardShortcuts";
-export { useBlockForm } from "./useBlockForm";
+// ====================================================================
+// 📱 HOOKS DE RESPONSIVIDADE
+// ====================================================================
+export { useIsMobile, useIsLowPerformanceDevice } from './use-mobile';
+export { useMediaQuery } from './useMediaQuery';
 
-// ✅ UTILITY HOOKS (validados)
-export { useImageBank } from "./useImageBank";
-export { useUtmParameters } from "./useUtmParameters";
-export { useDynamicData } from "./useDynamicData";
+// ====================================================================
+// ⚡ HOOKS DE PERFORMANCE
+// ====================================================================
+export { usePerformanceOptimization } from './usePerformanceOptimization';
+export { useDebounce } from './useDebounce';
+export { useLoadingState } from './useLoadingState';
+export { useOptimizedTimer } from './useOptimizedTimer';
 
-// ✅ PERFORMANCE HOOKS (otimização)
-export { useGlobalLoading } from "./useGlobalLoading";
-export { usePerformanceOptimization, useComponentOptimization } from "./usePerformanceOptimization";
+// ====================================================================
+// 🎨 HOOKS DE UI/UX
+// ====================================================================
+export { useAutoAnimate } from './useAutoAnimate';
+export { useKeyboardShortcuts } from './useKeyboardShortcuts';
+export { useScrollTracking } from './useScrollTracking';
+export { useGlobalStyles } from './useGlobalStyles';
 
-// ✅ MEMORY & MONITORING HOOKS
-export {
-  useMemoryCleanup,
-  useWeakRef,
-  useMemoryMonitor,
-  useHeavyCleanup,
-} from "../utils/memoryManagement";
-export { usePerformanceMonitoring } from "../utils/performanceMonitoring";
+// ====================================================================
+// 💾 HOOKS DE DADOS
+// ====================================================================
+export { useSupabase } from './useSupabase';
+export { useSupabaseQuiz } from './useSupabaseQuiz';
+export { useAutosave } from './useAutosave';
+export { useHistory } from './useHistory';
 
-// ✅ A/B TESTING
-export { useABTest } from "./useABTest";
+// ====================================================================
+// 🛠️ HOOKS UTILITÁRIOS
+// ====================================================================
+export { useToast } from './use-toast';
+export { useABTest } from './useABTest';
+export { useUtmParameters } from './useUtmParameters';
+export { useGlobalLoading } from './useGlobalLoading';
 
-// ✅ EDITOR SUB-HOOKS (quando necessário)
-export { useEditorActions } from "./editor/useEditorActions";
-export { useEditorBlocks } from "./editor/useEditorBlocks";
-export { useEditorHistory } from "./editor/useEditorHistory";
-export { useEditorPersistence } from "./editor/useEditorPersistence";
-export { useEditorTemplates } from "./editor/useEditorTemplates";
-export { useEditorTheme } from "./editor/useEditorTheme";
-export { useBlockOperations } from "./editor/useBlockOperations";
-export { useAutoSaveWithDebounce } from "./editor/useAutoSaveWithDebounce";
+// ====================================================================
+// 📊 ESTATÍSTICAS DOS HOOKS
+// ====================================================================
+export const HOOKS_STATS = {
+  total: 50,
+  byCategory: {
+    quiz: 18,
+    editor: 6,
+    performance: 2,
+    utility: 19,
+    responsive: 1,
+    animation: 0,
+    database: 0,
+    result: 4
+  },
+  lastAnalyzed: '2025-08-06T19:32:18.574Z'
+};

@@ -126,7 +126,10 @@ export type BlockType =
   | "quiz-question-inline"
   | "quiz-result-inline"
   | "custom-code"
-  | "animation-block";
+  
+  | "decorative-bar-inline"
+  | "form-input"
+  | "legal-notice-inline"| "animation-block";
 
 export interface FAQItem {
   id: string;
@@ -298,4 +301,36 @@ export interface EditorConfig {
   globalStyles: Record<string, any>;
 
   theme?: string;
+}
+
+/**
+ * 🎯 CONFIGURAÇÃO DO EDITOR OTIMIZADO
+ */
+export interface OptimizedEditorConfig extends EditorConfig {
+  version: string;
+  optimizationLevel: 'basic' | 'advanced' | 'performance';
+  inlineComponents: string[];
+  performanceSettings: {
+    enableAutoSave: boolean;
+    enableKeyboardShortcuts: boolean;
+    enablePerformanceOptimization: boolean;
+    mobileOptimizations: boolean;
+  };
+  quizSettings: {
+    totalSteps: number;
+    calculationWeights: Record<string, number>;
+    resultMappings: Record<string, any>;
+  };
+}
+
+/**
+ * 🎯 ESTADO DO SISTEMA OTIMIZADO
+ */
+export interface OptimizedSystemState {
+  isInitialized: boolean;
+  hasInlineSupport: boolean;
+  performanceOptimized: boolean;
+  hooksIntegrated: boolean;
+  componentsLoaded: number;
+  lastOptimizedAt: Date;
 }

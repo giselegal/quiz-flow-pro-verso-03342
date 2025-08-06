@@ -64,7 +64,28 @@ interface EditorContextType {
   };
 }
 
-const EditorContext = createContext<EditorContextType | undefined>(undefined);
+
+  /**
+   * 🎯 Carrega etapas otimizadas do funil de 21 etapas
+   */
+  const loadOptimizedSteps = useCallback(() => {
+    if (OPTIMIZED_FUNNEL_CONFIG?.steps) {
+      const optimizedSteps = OPTIMIZED_FUNNEL_CONFIG.steps.map(step => ({
+        ...step,
+        metadata: {
+          ...step.metadata,
+          isOptimized: true,
+          loadedAt: new Date()
+        }
+      }));
+      
+      console.log('🎯 Carregadas', optimizedSteps.length, 'etapas otimizadas');
+      return optimizedSteps;
+    }
+    return [];
+  }, []);
+
+  const EditorContext = createContext<EditorContextType | undefined>(undefined);
 
 export const useEditor = () => {
   const context = useContext(EditorContext);

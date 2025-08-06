@@ -1,3 +1,4 @@
+import { getInlineComponentProperties } from '@/hooks/useUnifiedProperties';
 import React from 'react';
 
 interface Block {
@@ -11,6 +12,15 @@ interface EnhancedUniversalPropertiesPanelProps {
   onUpdateBlock: (blockId: string, properties: any) => void;
   className?: string;
 }
+
+
+  // 🎯 Suporte otimizado para componentes inline
+  const getComponentProperties = useCallback((block: any) => {
+    if (block.type?.includes('inline') || ['form-input'].includes(block.type)) {
+      return getInlineComponentProperties(block.type, block.properties);
+    }
+    return block.properties || {};
+  }, []);
 
 export const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPanelProps> = ({
   selectedBlock,
