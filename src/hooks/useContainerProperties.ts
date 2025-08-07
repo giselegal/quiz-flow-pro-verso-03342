@@ -1,5 +1,15 @@
 /**
- * Hook para processar propriedades de container e gerar classes CSS
+ * Hook parexport const useContainerProperties = (properties: ContainerProperties = {}) => {
+  const {
+    containerWidth = "full",
+    containerPosition = "center",
+    spacing = "normal",
+    gridColumns = "auto",
+    backgroundColor = "transparent",
+    marginTop,
+    marginBottom,
+    scale = 100, // 🎯 Valor padrão 100%
+  } = properties;r propriedades de container e gerar classes CSS
  * Converte as propriedades do Step01Template em classes Tailwind
  */
 export interface ContainerProperties {
@@ -10,6 +20,7 @@ export interface ContainerProperties {
   backgroundColor?: "transparent" | "white" | "gray-50" | "brand-light";
   marginTop?: number;
   marginBottom?: number;
+  scale?: number; // 🎯 Propriedade de escala (50-200%)
 }
 
 export const useContainerProperties = (properties: ContainerProperties = {}) => {
@@ -21,6 +32,7 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
     backgroundColor = "transparent",
     marginTop = 0,
     marginBottom = 0,
+    scale = 100, // 🎯 Valor padrão 100%
   } = properties;
 
   // Gerar classes CSS baseadas nas propriedades
@@ -125,6 +137,12 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
   const getInlineStyles = (): React.CSSProperties => {
     const styles: React.CSSProperties = {};
 
+    // 🎯 Aplicar escala se diferente de 100%
+    if (scale && scale !== 100) {
+      styles.transform = `scale(${scale / 100})`;
+      styles.transformOrigin = "center center";
+    }
+
     // Adicionar estilos específicos se necessário
     if (
       backgroundColor &&
@@ -148,6 +166,7 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
       backgroundColor,
       marginTop,
       marginBottom,
+      scale, // 🎯 Propriedade de escala
     },
   };
 };
