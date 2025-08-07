@@ -3,13 +3,13 @@
  * Sistema padronizado com paleta organizada e preview em tempo real
  */
 
-import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Palette, Check } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { Check, Palette } from "lucide-react";
+import { useState } from "react";
 import { COLOR_GROUPS, ColorOption, ColorUtils, POPULAR_COLORS } from "../../config/colorPalette";
 
 interface ColorPickerProps {
@@ -66,25 +66,24 @@ export function ColorPicker({
       onClick={() => !disabled && setIsOpen(true)}
     >
       {color === "transparent" && (
-        <div 
+        <div
           className="absolute inset-0"
           style={{
-            backgroundImage: 'linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)',
-            backgroundSize: '8px 8px',
-            backgroundPosition: '0 0, 0 4px, 4px -4px, 4px 0px'
+            backgroundImage:
+              "linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)",
+            backgroundSize: "8px 8px",
+            backgroundPosition: "0 0, 0 4px, 4px -4px, 4px 0px",
           }}
         />
       )}
-      {!isValidColor && (
-        <Palette className="w-4 h-4 text-gray-400" />
-      )}
+      {!isValidColor && <Palette className="w-4 h-4 text-gray-400" />}
     </div>
   );
 
   // Renderizar swatch de cor
   const ColorSwatch = ({ colorOption }: { colorOption: ColorOption }) => {
     const isSelected = value === colorOption.value;
-    
+
     return (
       <button
         onClick={() => handleColorSelect(colorOption.value)}
@@ -192,7 +191,7 @@ export function ColorPicker({
                 <div>
                   <Label className="text-sm font-medium mb-2 block">Cores Mais Usadas</Label>
                   <div className="grid grid-cols-6 gap-2">
-                    {POPULAR_COLORS.map((colorOption) => (
+                    {POPULAR_COLORS.map(colorOption => (
                       <ColorSwatch key={colorOption.value} colorOption={colorOption} />
                     ))}
                   </div>
@@ -201,13 +200,11 @@ export function ColorPicker({
 
               {activeTab === "all" && (
                 <div className="space-y-4">
-                  {COLOR_GROUPS.map((group) => (
+                  {COLOR_GROUPS.map(group => (
                     <div key={group.id}>
-                      <Label className="text-sm font-medium mb-2 block">
-                        {group.name}
-                      </Label>
+                      <Label className="text-sm font-medium mb-2 block">{group.name}</Label>
                       <div className="grid grid-cols-6 gap-2">
-                        {group.colors.map((colorOption) => (
+                        {group.colors.map(colorOption => (
                           <ColorSwatch key={colorOption.value} colorOption={colorOption} />
                         ))}
                       </div>
@@ -227,7 +224,7 @@ export function ColorPicker({
                       className="w-full h-12 rounded-lg border-2 border-gray-200 cursor-pointer"
                     />
                   </div>
-                  
+
                   <div>
                     <Label className="text-sm font-medium mb-2 block">Código Personalizado</Label>
                     <Input
@@ -263,9 +260,9 @@ export function ColorPicker({
             <span>Preview:</span>
             <div
               className="px-3 py-1 rounded-md font-medium transition-colors"
-              style={{ 
+              style={{
                 backgroundColor: value === "transparent" ? "#B89B7A" : value,
-                color: ColorUtils.getContrastColor(value === "transparent" ? "#B89B7A" : value)
+                color: ColorUtils.getContrastColor(value === "transparent" ? "#B89B7A" : value),
               }}
             >
               Texto de Exemplo

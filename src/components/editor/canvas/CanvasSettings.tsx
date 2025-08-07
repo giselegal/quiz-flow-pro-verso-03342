@@ -3,14 +3,19 @@
  * Permite alterar cor de fundo e outras propriedades visuais do canvas
  */
 
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ColorPicker } from "@/components/ui/ColorPicker";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Settings, Palette, Monitor, Smartphone, Tablet } from "lucide-react";
-import { CANVAS_BACKGROUND_OPTIONS } from "../../../config/colorPalette";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Monitor, Palette, Settings, Smartphone, Tablet } from "lucide-react";
+import React, { useState } from "react";
 
 interface CanvasSettingsProps {
   backgroundColor: string;
@@ -51,7 +56,7 @@ const CanvasSettings: React.FC<CanvasSettingsProps> = ({
             Configurações do Canvas
           </CardTitle>
         </CardHeader>
-        
+
         <CardContent className="space-y-6">
           {/* Cor de Fundo do Canvas */}
           <div className="space-y-3">
@@ -59,32 +64,34 @@ const CanvasSettings: React.FC<CanvasSettingsProps> = ({
               <Palette className="w-4 h-4" />
               Cor de Fundo do Canvas
             </Label>
-            
+
             {/* Presets Rápidos */}
             <div className="grid grid-cols-4 gap-2">
-              {presetBackgrounds.map((preset) => (
+              {presetBackgrounds.map(preset => (
                 <button
                   key={preset.value}
                   onClick={() => onBackgroundColorChange(preset.value)}
                   className={`
                     relative h-12 rounded-lg border-2 transition-all hover:scale-105 flex items-center justify-center
-                    ${backgroundColor === preset.value 
-                      ? "border-[#B89B7A] ring-2 ring-[#B89B7A]/20" 
-                      : "border-gray-200 hover:border-[#B89B7A]"
+                    ${
+                      backgroundColor === preset.value
+                        ? "border-[#B89B7A] ring-2 ring-[#B89B7A]/20"
+                        : "border-gray-200 hover:border-[#B89B7A]"
                     }
                   `}
                   style={{
-                    backgroundColor: preset.value === "transparent" ? "transparent" : preset.value
+                    backgroundColor: preset.value === "transparent" ? "transparent" : preset.value,
                   }}
                   title={preset.label}
                 >
                   {preset.value === "transparent" && (
-                    <div 
+                    <div
                       className="absolute inset-0 rounded-lg"
                       style={{
-                        backgroundImage: 'linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)',
-                        backgroundSize: '8px 8px',
-                        backgroundPosition: '0 0, 0 4px, 4px -4px, 4px 0px'
+                        backgroundImage:
+                          "linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)",
+                        backgroundSize: "8px 8px",
+                        backgroundPosition: "0 0, 0 4px, 4px -4px, 4px 0px",
                       }}
                     />
                   )}
@@ -111,7 +118,7 @@ const CanvasSettings: React.FC<CanvasSettingsProps> = ({
               <Monitor className="w-4 h-4" />
               Modo de Visualização
             </Label>
-            
+
             <Select value={viewportMode} onValueChange={(value: any) => setViewportMode(value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Selecionar modo de visualização" />
@@ -142,12 +149,13 @@ const CanvasSettings: React.FC<CanvasSettingsProps> = ({
                 style={{ backgroundColor: backgroundColor }}
               >
                 {backgroundColor === "transparent" && (
-                  <div 
+                  <div
                     className="absolute inset-0"
                     style={{
-                      backgroundImage: 'linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)',
-                      backgroundSize: '12px 12px',
-                      backgroundPosition: '0 0, 0 6px, 6px -6px, 6px 0px'
+                      backgroundImage:
+                        "linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)",
+                      backgroundSize: "12px 12px",
+                      backgroundPosition: "0 0, 0 6px, 6px -6px, 6px 0px",
                     }}
                   />
                 )}

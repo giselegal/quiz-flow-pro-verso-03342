@@ -15,7 +15,10 @@ interface FormInputBlockProps {
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value: string | number, type: "top" | "bottom" | "left" | "right"): string => {
+const getMarginClass = (
+  value: string | number,
+  type: "top" | "bottom" | "left" | "right"
+): string => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return "";
@@ -168,7 +171,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
       <div className={`space-y-3 ${fullWidth ? "w-full" : "w-auto"}`}>
         <div className="flex items-center gap-2">
           <TextCursorInput className="w-4 h-4" style={{ color: borderColor }} />
-          <label 
+          <label
             className="text-sm font-medium uppercase tracking-wide"
             style={{
               color: labelColor,
@@ -177,7 +180,11 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
             }}
           >
             {label}
-            {required && <span style={{ color: borderColor }} className="ml-1">*</span>}
+            {required && (
+              <span style={{ color: borderColor }} className="ml-1">
+                *
+              </span>
+            )}
           </label>
         </div>
 

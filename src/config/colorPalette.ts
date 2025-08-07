@@ -7,7 +7,7 @@
 export interface ColorOption {
   value: string;
   label: string;
-  category: 'brand' | 'neutral' | 'accent' | 'semantic';
+  category: "brand" | "neutral" | "accent" | "semantic";
   preview?: string;
 }
 
@@ -78,7 +78,7 @@ export const COLOR_GROUPS: ColorGroup[] = [
   },
   {
     id: "semantic",
-    name: "Cores Semânticas", 
+    name: "Cores Semânticas",
     colors: SEMANTIC_COLORS,
   },
 ];
@@ -109,11 +109,13 @@ export class ColorUtils {
   static hexToRgb(hex: string): { r: number; g: number; b: number } | null {
     if (hex === "transparent") return null;
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    } : null;
+    return result
+      ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16),
+        }
+      : null;
   }
 
   /**

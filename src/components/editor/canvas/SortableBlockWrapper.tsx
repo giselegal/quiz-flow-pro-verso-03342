@@ -163,7 +163,8 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
         )}
         style={{
           ...contentStyles, // 🎯 Aplicar estilos inline (scale) apenas no Card, não nas margens
-          backgroundColor: containerBackgroundColor === "transparent" ? "transparent" : containerBackgroundColor,
+          backgroundColor:
+            containerBackgroundColor === "transparent" ? "transparent" : containerBackgroundColor,
         }}
       >
         {/* Drag handle and controls - only show on hover */}

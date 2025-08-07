@@ -916,6 +916,123 @@ export const useUnifiedProperties = (
             ),
           ];
 
+        case "legal-notice-inline":
+          return [
+            ...baseProperties,
+            createProperty(
+              "privacyText",
+              currentBlock?.properties?.privacyText || "Política de Privacidade",
+              PropertyType.TEXT,
+              "Texto Política de Privacidade",
+              PropertyCategory.CONTENT
+            ),
+            createProperty(
+              "copyrightText",
+              currentBlock?.properties?.copyrightText || "© 2025 Gisele Galvão Consultoria",
+              PropertyType.TEXT,
+              "Texto de Copyright",
+              PropertyCategory.CONTENT
+            ),
+            createProperty(
+              "termsText",
+              currentBlock?.properties?.termsText || "Termos de Uso",
+              PropertyType.TEXT,
+              "Texto Termos de Uso",
+              PropertyCategory.CONTENT
+            ),
+            createProperty(
+              "fontSize",
+              currentBlock?.properties?.fontSize ?? 12,
+              PropertyType.RANGE,
+              "Tamanho da Fonte",
+              PropertyCategory.STYLE,
+              { min: 10, max: 20, step: 1, unit: "px" }
+            ),
+            createProperty(
+              "fontFamily",
+              currentBlock?.properties?.fontFamily || "inherit",
+              PropertyType.SELECT,
+              "Família da Fonte",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "inherit", label: "Padrão" },
+                  { value: "Inter", label: "Inter" },
+                  { value: "Roboto", label: "Roboto" },
+                  { value: "Open Sans", label: "Open Sans" },
+                  { value: "Playfair Display", label: "Playfair Display" },
+                ]),
+              }
+            ),
+            createProperty(
+              "fontWeight",
+              currentBlock?.properties?.fontWeight || "400",
+              PropertyType.SELECT,
+              "Peso da Fonte",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "300", label: "Leve (300)" },
+                  { value: "400", label: "Normal (400)" },
+                  { value: "500", label: "Médio (500)" },
+                  { value: "600", label: "Semi-negrito (600)" },
+                  { value: "700", label: "Negrito (700)" },
+                ]),
+              }
+            ),
+            createProperty(
+              "textAlign",
+              currentBlock?.properties?.textAlign || "center",
+              PropertyType.SELECT,
+              "Alinhamento do Texto",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "left", label: "Esquerda" },
+                  { value: "center", label: "Centro" },
+                  { value: "right", label: "Direita" },
+                ]),
+              }
+            ),
+            createProperty(
+              "textColor",
+              currentBlock?.properties?.textColor || "#8F7A6A",
+              PropertyType.COLOR,
+              "Cor do Texto",
+              PropertyCategory.STYLE
+            ),
+            createProperty(
+              "linkColor",
+              currentBlock?.properties?.linkColor || "#B89B7A",
+              PropertyType.COLOR,
+              "Cor dos Links",
+              PropertyCategory.STYLE
+            ),
+            createProperty(
+              "backgroundColor",
+              currentBlock?.properties?.backgroundColor || "transparent",
+              PropertyType.COLOR,
+              "Cor de Fundo",
+              PropertyCategory.STYLE
+            ),
+            createProperty(
+              "lineHeight",
+              currentBlock?.properties?.lineHeight || "1.5",
+              PropertyType.SELECT,
+              "Altura da Linha",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "1", label: "1" },
+                  { value: "1.25", label: "1.25" },
+                  { value: "1.5", label: "1.5" },
+                  { value: "1.75", label: "1.75" },
+                  { value: "2", label: "2" },
+                ]),
+              }
+            ),
+          ];
+
         // etc...
 
         default:

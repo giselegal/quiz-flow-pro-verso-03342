@@ -12,7 +12,10 @@ import { trackQuizStart } from "../../../utils/analytics";
  */
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value: string | number, type: "top" | "bottom" | "left" | "right"): string => {
+const getMarginClass = (
+  value: string | number,
+  type: "top" | "bottom" | "left" | "right"
+): string => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return "";
@@ -83,7 +86,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   const {
     text = "Clique aqui",
     variant = "primary",
-    size = "medium", 
+    size = "medium",
     icon = "none",
     iconPosition = "right",
     href = "",
@@ -94,7 +97,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     requiresValidInput = false,
     // Configurações de cores
     backgroundColor = "#B89B7A",
-    textColor = "#FFFFFF", 
+    textColor = "#FFFFFF",
     borderColor = "#B89B7A",
     // Configurações de fonte
     fontSize = "16",
@@ -164,11 +167,11 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         fontWeight: fontWeight,
       };
     }
-    
+
     const predefinedStyles = {
       secondary: {
         backgroundColor: "#6B7280",
-        color: "#FFFFFF", 
+        color: "#FFFFFF",
         borderColor: "#6B7280",
       },
       success: {
@@ -182,7 +185,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         borderColor: "#F59E0B",
       },
       danger: {
-        backgroundColor: "#EF4444", 
+        backgroundColor: "#EF4444",
         color: "#FFFFFF",
         borderColor: "#EF4444",
       },
@@ -192,11 +195,11 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         borderColor: backgroundColor,
       },
     };
-    
+
     return {
       ...(predefinedStyles[variant as keyof typeof predefinedStyles] || predefinedStyles.secondary),
       fontFamily: fontFamily,
-      fontSize: `${fontSize}px`, 
+      fontSize: `${fontSize}px`,
       fontWeight: fontWeight,
     };
   };
@@ -214,12 +217,12 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     large: "w-5 h-5",
   };
 
-  // Função para determinar classes responsivas 
+  // Função para determinar classes responsivas
   const getResponsiveClasses = () => {
     return cn(
       // Classes base do botão
       "inline-flex items-center justify-center rounded-md font-medium transition-all duration-200",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B89B7A] focus-visible:ring-offset-2", 
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B89B7A] focus-visible:ring-offset-2",
       "disabled:pointer-events-none disabled:opacity-50",
       "border-2 w-full hover:opacity-90",
 
@@ -258,7 +261,6 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         onClick={async e => {
           e.stopPropagation();
           if (!isButtonDisabled) {
-            
             // Ação baseada na configuração
             if (action === "next-step" && nextStepId) {
               window.dispatchEvent(
@@ -270,7 +272,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
               const targetUrl = url || href;
               window.open(targetUrl, target);
             }
-            
+
             // Se for o botão de iniciar quiz (Step 1), fazer tracking e navegação
             if (text && text.includes("Descobrir meu Estilo")) {
               const userName = userResponseService.getResponse("intro-name-input") || "Anônimo";
