@@ -10,6 +10,25 @@ export default {
       screens: {
         xs: "475px",
       },
+      spacing: {
+        // ✅ EXTENSÃO DE ESPACAMENTOS PARA SUPORTE COMPLETO DE MARGENS
+        '18': '4.5rem', // 72px
+        '22': '5.5rem', // 88px
+        '26': '6.5rem', // 104px
+        '30': '7.5rem', // 120px
+        '34': '8.5rem', // 136px
+        '38': '9.5rem', // 152px
+        '42': '10.5rem', // 168px
+        '46': '11.5rem', // 184px
+        '50': '12.5rem', // 200px
+      },
+      margin: {
+        // ✅ MARGENS NEGATIVAS ESTENDIDAS PARA CONTROLE PRECISO
+        '-0.5': '-0.125rem',
+        '-1.5': '-0.375rem',
+        '-2.5': '-0.625rem',
+        '-3.5': '-0.875rem',
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
