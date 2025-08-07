@@ -66,7 +66,14 @@ export function ColorPicker({
       onClick={() => !disabled && setIsOpen(true)}
     >
       {color === "transparent" && (
-        <div className="absolute inset-0 bg-[linear-gradient(45deg,#ccc_25%,transparent_25%),linear-gradient(-45deg,#ccc_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#ccc_75%),linear-gradient(-45deg,transparent_75%,#ccc_75%)] bg-[length:8px_8px] bg-[0_0,0_4px,4px_-4px,4px_0px]" />
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: 'linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)',
+            backgroundSize: '8px 8px',
+            backgroundPosition: '0 0, 0 4px, 4px -4px, 4px 0px'
+          }}
+        />
       )}
       {!isValidColor && (
         <Palette className="w-4 h-4 text-gray-400" />

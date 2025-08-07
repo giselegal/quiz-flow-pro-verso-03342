@@ -77,12 +77,13 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     block.properties
   );
 
-  // 🔧 Extrair propriedades de margem do bloco
+  // 🔧 Extrair propriedades de margem e cor de fundo do bloco
   const {
     marginTop = 0,
     marginBottom = 0,
     marginLeft = 0,
     marginRight = 0,
+    containerBackgroundColor = "transparent",
   } = block.properties || {};
 
   // Buscar componente no registry (eliminando UniversalBlockRenderer)
@@ -160,7 +161,10 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           getMarginClass(marginLeft, "left"),
           getMarginClass(marginRight, "right")
         )}
-        style={contentStyles} // 🎯 Aplicar estilos inline (scale) apenas no Card, não nas margens
+        style={{
+          ...contentStyles, // 🎯 Aplicar estilos inline (scale) apenas no Card, não nas margens
+          backgroundColor: containerBackgroundColor === "transparent" ? "transparent" : containerBackgroundColor,
+        }}
       >
         {/* Drag handle and controls - only show on hover */}
         <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex items-center gap-1">
