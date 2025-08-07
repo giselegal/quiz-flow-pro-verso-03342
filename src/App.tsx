@@ -7,6 +7,7 @@ import { ScrollSyncProvider } from "@/context/ScrollSyncContext";
 import DebugEditorContext from "@/pages/debug-editor";
 import EditorPage from "@/pages/editor-fixed";
 import TestPropertiesPanel from "@/pages/test-properties";
+import TestButton from "@/pages/test-button";
 import { Route, Router, Switch } from "wouter";
 import MigrationPanel from "./components/admin/MigrationPanel";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
@@ -73,6 +74,7 @@ function App() {
                 {/* Debug/Test Routes */}
                 <Route path="/debug/editor" component={DebugEditorContext} />
                 <Route path="/test/properties" component={TestPropertiesPanel} />
+                <Route path="/test/button" component={TestButton} />
 
                 {/* Admin Routes */}
                 <Route path="/admin" nest>
