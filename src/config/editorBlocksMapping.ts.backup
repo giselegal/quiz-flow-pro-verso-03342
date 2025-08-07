@@ -11,7 +11,7 @@ import {
   getBlockComponent as getEnhancedComponent,
   getBlockDefinition,
   getAllBlockTypes,
-} from "./enhancedBlockRegistry";
+} from "../components/editor/blocks/EnhancedBlockRegistry";
 
 // Blocos básicos consolidados (mais completos)
 import HeaderBlock from "../components/editor/blocks/HeaderBlock";

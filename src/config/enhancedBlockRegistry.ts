@@ -102,6 +102,11 @@ export const getAvailableBlockTypes = (): string[] => {
 };
 
 /**
+ * Alias para compatibilidade com editorBlocksMapping
+ */
+export const getAllBlockTypes = getAvailableBlockTypes;
+
+/**
  * Verificar se um tipo de bloco existe
  */
 export const blockTypeExists = (type: string): boolean => {
@@ -169,6 +174,14 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       defaultProps: {},
     },
   ];
+};
+
+/**
+ * Obter definição de um bloco específico (para compatibilidade)
+ */
+export const getBlockDefinition = (type: string) => {
+  const definitions = generateBlockDefinitions();
+  return definitions.find(def => def.type === type) || null;
 };
 
 /**
