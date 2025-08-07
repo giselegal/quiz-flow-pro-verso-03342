@@ -158,15 +158,15 @@ export const getStep02Template = () => {
               "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
           },
         ],
-        // 🎨 LAYOUT BASEADO EM IMAGENS - REGRA: 2 COLUNAS COM IMAGENS, 1 COLUNA SEM IMAGENS
-        columns: 2, // 2 colunas porque TEM IMAGENS
+        // 🎨 LAYOUT BASEADO EM IMAGENS - EDITÁVEL
+        columns: 2, // ✏️ 2 colunas porque TEM IMAGENS (você pode mudar para 1 ou 3)
         responsiveColumns: true, // Mobile sempre 1 coluna
-        gridGap: 20,
+        gridGap: 24, // ✏️ AUMENTEI O ESPAÇO - você pode ajustar
 
-        // 🖼️ CONTROLES DE IMAGEM - OPÇÕES COM IMAGENS
+        // 🖼️ CONTROLES DE IMAGEM - EDITÁVEL
         showImages: true, // TEM IMAGENS = 2 COLUNAS
-        imageSize: "medium",
-        imagePosition: "top",
+        imageSize: "large", // ✏️ MUDEI PARA GRANDE - "small", "medium", "large"
+        imagePosition: "top", // ✏️ "top", "left", "right"
         imageLayout: "vertical",
 
         // 🎯 REGRAS DE SELEÇÃO - ATIVAÇÃO INSTANTÂNEA
@@ -175,9 +175,9 @@ export const getStep02Template = () => {
         minSelections: 1,
         requiredSelections: 3,
 
-        // 📝 FEEDBACK OTIMIZADO
-        validationMessage: "Escolha até 3 estilos que mais combinam com você",
-        progressMessage: "{selected} de {required} selecionados",
+        // 📝 FEEDBACK OTIMIZADO - EDITÁVEL
+        validationMessage: "✨ Selecione 3 estilos que representam você!", // ✏️ MENSAGEM PERSONALIZADA
+        progressMessage: "🎯 {selected} de {required} estilos escolhidos", // ✏️ CONTADOR PERSONALIZADO
 
         // 🚀 AUTOAVANÇO INSTANTÂNEO APÓS COMPLETAR
         autoAdvanceOnComplete: true,
@@ -209,15 +209,15 @@ export const getStep02Template = () => {
       id: "step02-continue-button",
       type: "button-inline",
       properties: {
-        // 📝 TEXTO DINÂMICO
-        text: "Continuar →",
-        textWhenDisabled: "Selecione 3 estilos",
-        textWhenComplete: "Continuar →",
+        // 📝 TEXTO DINÂMICO - EDITÁVEL
+        text: "Próxima Etapa ✨", // ✏️ VOCÊ PODE EDITAR ESTE TEXTO
+        textWhenDisabled: "👆 Escolha 3 estilos primeiro", // ✏️ TEXTO QUANDO DESABILITADO
+        textWhenComplete: "Vamos Continuar! 🚀", // ✏️ TEXTO QUANDO COMPLETO
 
-        // 🎨 ESTILO
+        // 🎨 ESTILO - EDITÁVEL
         variant: "primary",
         size: "large",
-        backgroundColor: "#B89B7A",
+        backgroundColor: "#22C55E", // ✏️ MUDOU PARA VERDE - VOCÊ PODE ALTERAR
         textColor: "#ffffff",
         disabledBackgroundColor: "#E5E7EB",
         disabledTextColor: "#9CA3AF",

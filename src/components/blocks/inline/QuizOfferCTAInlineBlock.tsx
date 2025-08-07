@@ -1,8 +1,8 @@
-import React from "react";
 import { cn } from "@/lib/utils";
-import { ShoppingCart } from "lucide-react";
 import type { BlockComponentProps } from "@/types/blocks";
-import { safeGetBlockProperties, logBlockDebug } from "@/utils/blockUtils";
+import { logBlockDebug, safeGetBlockProperties } from "@/utils/blockUtils";
+import { ShoppingCart } from "lucide-react";
+import React from "react";
 
 /**
  * QuizOfferCTAInlineBlock - CTA da oferta do quiz

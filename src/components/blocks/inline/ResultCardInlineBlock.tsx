@@ -1,9 +1,9 @@
-import React from "react";
-import { cn } from "@/lib/utils";
-import { Award, TrendingUp } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
 import type { BlockComponentProps } from "@/types/blocks";
-import { safeGetBlockProperties, isValidBlock, logBlockDebug } from "@/utils/blockUtils";
+import { isValidBlock, logBlockDebug, safeGetBlockProperties } from "@/utils/blockUtils";
+import { Award, TrendingUp } from "lucide-react";
+import React from "react";
 
 /**
  * ResultCardInlineBlock - Componente modular inline horizontal

@@ -1,8 +1,7 @@
-import React from "react";
-import type { BlockComponentProps } from "../../../types/blocks";
 import { cn } from "@/lib/utils";
-import { Button } from "../../../components/ui/button";
+import React from "react";
 import { Badge } from "../../../components/ui/badge";
+import { Button } from "../../../components/ui/button";
 
 interface QuizStartPageBlockProps {
   block: {

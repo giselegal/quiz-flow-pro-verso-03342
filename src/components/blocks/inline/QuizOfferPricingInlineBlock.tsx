@@ -1,7 +1,7 @@
-import React from "react";
 import { cn } from "@/lib/utils";
 import type { BlockComponentProps } from "@/types/blocks";
-import { safeGetBlockProperties, logBlockDebug } from "@/utils/blockUtils";
+import { logBlockDebug, safeGetBlockProperties } from "@/utils/blockUtils";
+import React from "react";
 
 /**
  * QuizOfferPricingInlineBlock - Preço da oferta do quiz

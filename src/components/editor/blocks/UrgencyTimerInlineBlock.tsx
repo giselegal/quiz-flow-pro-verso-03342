@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Clock, AlertTriangle } from "lucide-react";
 import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
 import type { BlockComponentProps } from "@/types/blocks";
+import { AlertTriangle, Clock } from "lucide-react";
+import React, { useEffect, useState } from "react";
 
 /**
  * UrgencyTimerInlineBlock - Timer de urgência com design mais agressivo
