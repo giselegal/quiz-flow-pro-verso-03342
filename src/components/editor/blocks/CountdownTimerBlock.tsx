@@ -17,14 +17,12 @@ interface TimeUnit {
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+const getMarginClass = (value: number | string | undefined, type: "top" | "bottom" | "left" | "right"): string => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
-
-  if (isNaN(numValue) || numValue === 0) return "";
-
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
-
-  // Margens negativas
+  
+  if (!numValue || isNaN(numValue) || numValue === 0) return "";
+  
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";  // Margens negativas
   if (numValue < 0) {
     const absValue = Math.abs(numValue);
     if (absValue <= 4) return `-${prefix}-1`;
@@ -69,6 +67,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
   onPropertyChange,
   className = "",
 }) => {
+  const properties = block?.properties as any; // Type assertion para propriedades dinâmicas
   const {
     title = "Oferta por Tempo Limitado",
     subtitle = "Aproveite antes que expire!",
@@ -89,7 +88,12 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
     accentColor = "#dc2626",
     pulseAnimation = true,
     showProgress = false,
-  } = block?.properties || {};
+    // Sistema completo de margens com controles deslizantes
+    marginTop = 8,
+    marginBottom = 8,
+    marginLeft = 0,
+    marginRight = 0,
+  } = properties || {};
 
   const [timeLeft, setTimeLeft] = useState<{
     days: number;
