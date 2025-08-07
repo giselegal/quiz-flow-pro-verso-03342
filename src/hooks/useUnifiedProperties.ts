@@ -106,9 +106,23 @@ const asCategory = (categoryString: string): PropertyCategoryOrString => {
 
 export const useUnifiedProperties = (
   block: UnifiedBlock | null,
-  onUpdateExternal?: (blockId: string, updates: Record<string, any>) => void // Callback para notificar o sistema externo
+  onUpdateExternal?: (blockId: string, updates: Record<string, any>) => void
 ): UseUnifiedPropertiesReturn => {
   const [properties, setProperties] = useState<UnifiedProperty[]>([]);
+
+  // Retorno antecipado para casos onde block é null
+  if (!block) {
+    return {
+      properties: [],
+      updateProperty: () => {},
+      resetProperties: () => {},
+      validateProperties: () => true,
+      getPropertyByKey: () => undefined,
+      getPropertiesByCategory: () => [],
+      exportProperties: () => ({}),
+      applyBrandColors: () => {},
+    };
+  }
 
   // Função memoizada para gerar as definições de propriedades com base no tipo do bloco
   const generateDefaultProperties = useCallback(
