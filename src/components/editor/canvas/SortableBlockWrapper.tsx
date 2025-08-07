@@ -74,6 +74,14 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     block.properties
   );
 
+  // 🔧 Extrair propriedades de margem do bloco
+  const {
+    marginTop = 0,
+    marginBottom = 0,
+    marginLeft = 0,
+    marginRight = 0,
+  } = block.properties || {};
+
   // Buscar componente no registry (eliminando UniversalBlockRenderer)
   const Component = getBlockComponent(block.type);
 
