@@ -47,7 +47,7 @@ export const getStep02Template = () => {
         color: "#432818",
         marginBottom: 8,
       },
-    },
+edi    },
 
     // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {

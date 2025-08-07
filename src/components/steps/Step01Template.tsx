@@ -1,7 +1,4 @@
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useContainerProperties } from "@/hooks/useContainerProperties";
-import { useDebounce } from "@/hooks/useDebounce";
-import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
 import Step01Intro from "../editor/steps/Step01Intro";
 
 export interface Step01Props {
