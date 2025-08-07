@@ -48,18 +48,17 @@ export const getStep01Template = () => {
       },
     },
 
-    // � TÍTULO PRINCIPAL COM FORMATAÇÃO ESPECÍFICA
+    // 📝 TÍTULO PRINCIPAL COM PROPRIEDADES EDITÁVEIS
     {
       id: "main-title-step01",
       type: "text-inline",
       properties: {
-        content:
-          "<span style=\"color: #B89B7A; font-weight: 700; font-family: 'Playfair Display', serif;\">Chega</span> <span style=\"font-family: 'Playfair Display', serif;\">de um guarda-roupa lotado e da sensação de que</span> <span style=\"color: #B89B7A; font-weight: 700; font-family: 'Playfair Display', serif;\">nada combina com você.</span>",
+        content: "Chega de um guarda-roupa lotado e da sensação de que nada combina com você.",
         fontSize: "text-3xl",
         fontWeight: "font-bold",
         fontFamily: "Playfair Display, serif",
         textAlign: "text-center",
-        color: "#432818",
+        color: "#B89B7A", // Cor dourada da marca como padrão
         marginBottom: 32,
         lineHeight: "1.2",
       },
@@ -80,16 +79,48 @@ export const getStep01Template = () => {
       },
     },
 
-    // 💬 TEXTO MOTIVACIONAL COM DESTAQUE
+    // 💬 TEXTO MOTIVACIONAL COM PROPRIEDADES EDITÁVEIS
     {
       id: "motivation-text-step01",
       type: "text-inline",
       properties: {
         content:
-          'Em poucos minutos, descubra seu <strong style="color: #B89B7A;">Estilo Predominante</strong> — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
+          "Em poucos minutos, descubra seu",
         fontSize: "text-xl",
         textAlign: "text-center",
-        color: "#432818",
+        color: "#432818", // Cor marrom escuro
+        marginTop: 0,
+        marginBottom: 8,
+        lineHeight: "1.6",
+      },
+    },
+
+    // ✨ TEXTO DESTACADO EDITÁVEL SEPARADAMENTE
+    {
+      id: "highlight-text-step01",
+      type: "text-inline",
+      properties: {
+        content: "Estilo Predominante",
+        fontSize: "text-xl",
+        fontWeight: "font-bold",
+        textAlign: "text-center",
+        color: "#B89B7A", // Cor dourada destacada
+        marginTop: 0,
+        marginBottom: 8,
+        lineHeight: "1.6",
+      },
+    },
+
+    // 📝 CONTINUAÇÃO DO TEXTO MOTIVACIONAL
+    {
+      id: "motivation-continuation-step01",
+      type: "text-inline",
+      properties: {
+        content:
+          "— e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
+        fontSize: "text-xl",
+        textAlign: "text-center",
+        color: "#432818", // Cor marrom escuro
         marginTop: 0,
         marginBottom: 40,
         lineHeight: "1.6",
