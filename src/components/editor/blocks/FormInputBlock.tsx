@@ -116,7 +116,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
 
     // ✅ Usar onPropertyChange para edição no painel de propriedades
     if (onPropertyChange) {
-      onPropertyChange('value', newValue);
+      onPropertyChange("value", newValue);
     }
 
     // Disparar evento customizado para outros componentes sempre
