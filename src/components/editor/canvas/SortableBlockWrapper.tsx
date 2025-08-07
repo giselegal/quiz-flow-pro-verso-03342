@@ -29,31 +29,6 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     block.properties
   );
 
-  // 🎯 Calcular espaçamento adaptativo baseado na escala do componente
-  const getAdaptiveSpacing = (scale: number = 100): string => {
-    // Margem base de 8px (my-2)
-    const baseMargin = 8;
-
-    // Ajustar margem baseado na escala
-    const scaleFactor = scale / 100;
-    const adaptiveMargin = Math.round(baseMargin * scaleFactor);
-
-    // Mapear para classes Tailwind
-    if (adaptiveMargin <= 4)
-      return "my-1"; // 4px
-    else if (adaptiveMargin <= 8)
-      return "my-2"; // 8px (padrão)
-    else if (adaptiveMargin <= 12)
-      return "my-3"; // 12px
-    else if (adaptiveMargin <= 16)
-      return "my-4"; // 16px
-    else if (adaptiveMargin <= 20)
-      return "my-5"; // 20px
-    else return "my-6"; // 24px
-  };
-
-  const adaptiveSpacingClass = getAdaptiveSpacing(block.properties?.scale);
-
   // Buscar componente no registry (eliminando UniversalBlockRenderer)
   const Component = getBlockComponent(block.type);
 
@@ -95,7 +70,7 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   // Fallback se componente não for encontrado
   if (!Component) {
     return (
-      <div ref={setNodeRef} style={style} className={adaptiveSpacingClass}>
+      <div ref={setNodeRef} style={style} className="my-2">
         <Card className="relative group border-red-300">
           <div className="p-4 text-center text-red-500">
             <p>Componente não encontrado: {block.type}</p>
@@ -107,7 +82,9 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   }
 
   return (
-    <div ref={setNodeRef} style={style} className={adaptiveSpacingClass}>
+    <div ref={setNodeRef} style={style} className="my-2">
+      {" "}
+      {/* 🎯 Espaçamento fixo de 8px */}
       <Card
         className={cn(
           "relative group transition-all duration-200 border-transparent", // 🎯 Borda transparente por padrão
