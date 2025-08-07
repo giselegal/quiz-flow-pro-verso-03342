@@ -9,16 +9,18 @@ O painel de propriedades está mostrando controles de tamanho (50%, 90%, 200%), 
 ### ✅ **O QUE FOI IMPLEMENTADO:**
 
 1. **Step01Template.tsx** - Propriedades adicionadas:
+
    ```javascript
-   containerWidth: "large"       // ✅ Adicionado
-   containerPosition: "center"   // ✅ Adicionado  
-   spacing: "normal"            // ✅ Adicionado
-   backgroundColor: "transparent" // ✅ Adicionado
-   marginTop: 0                 // ✅ Adicionado
-   marginBottom: 32             // ✅ Adicionado
+   containerWidth: "large"; // ✅ Adicionado
+   containerPosition: "center"; // ✅ Adicionado
+   spacing: "normal"; // ✅ Adicionado
+   backgroundColor: "transparent"; // ✅ Adicionado
+   marginTop: 0; // ✅ Adicionado
+   marginBottom: 32; // ✅ Adicionado
    ```
 
 2. **UniversalBlockRenderer.tsx** - Processamento CSS:
+
    ```typescript
    // ✅ Hook useContainerProperties implementado
    // ✅ Classes Tailwind sendo geradas
@@ -35,9 +37,10 @@ O painel de propriedades está mostrando controles de tamanho (50%, 90%, 200%), 
 ### ❌ **O QUE ESTÁ FALTANDO:**
 
 1. **Painel de Propriedades** - As novas propriedades não aparecem:
+
    ```
    ❌ containerWidth não aparece no painel
-   ❌ containerPosition não aparece no painel  
+   ❌ containerPosition não aparece no painel
    ❌ spacing não aparece no painel
    ❌ backgroundColor não aparece no painel
    ❌ marginTop/marginBottom não aparecem no painel
@@ -67,7 +70,7 @@ Adicionar às `baseProperties` as seguintes propriedades:
 },
 {
   key: "containerPosition",
-  value: currentBlock?.properties?.containerPosition || "center", 
+  value: currentBlock?.properties?.containerPosition || "center",
   type: PropertyType.SELECT,
   label: "Posição do Container",
   category: PropertyCategory.LAYOUT,
@@ -97,7 +100,7 @@ Adicionar às `baseProperties` as seguintes propriedades:
 
 1. ✅ Implementação backend completa (FEITO)
 2. ❌ **Atualizar useUnifiedProperties.ts** (PENDENTE)
-3. ❌ **Testar no navegador** (PENDENTE) 
+3. ❌ **Testar no navegador** (PENDENTE)
 4. ❌ **Validar funcionalidade completa** (PENDENTE)
 
 ## 📊 **RESULTADO ESPERADO**

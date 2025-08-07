@@ -13,14 +13,14 @@ export const CONTAINER_WIDTH_OPTIONS: ContainerPropertyOption[] = [
   { value: "full", label: "Completa (100%)" },
   { value: "large", label: "Grande (1024px)" },
   { value: "medium", label: "Média (672px)" },
-  { value: "small", label: "Pequena (448px)" }
+  { value: "small", label: "Pequena (448px)" },
 ];
 
 // 🎯 Opções de posicionamento do container
 export const CONTAINER_POSITION_OPTIONS: ContainerPropertyOption[] = [
   { value: "left", label: "Esquerda" },
   { value: "center", label: "Centralizado" },
-  { value: "right", label: "Direita" }
+  { value: "right", label: "Direita" },
 ];
 
 // 📦 Opções de espaçamento interno
@@ -29,7 +29,7 @@ export const SPACING_OPTIONS: ContainerPropertyOption[] = [
   { value: "compact", label: "Compacto (8px)" },
   { value: "normal", label: "Normal (16px)" },
   { value: "comfortable", label: "Confortável (24px)" },
-  { value: "spacious", label: "Espaçoso (32px)" }
+  { value: "spacious", label: "Espaçoso (32px)" },
 ];
 
 // 🎨 Opções de cor de fundo
@@ -37,14 +37,14 @@ export const BACKGROUND_COLOR_OPTIONS: ContainerPropertyOption[] = [
   { value: "transparent", label: "Transparente" },
   { value: "white", label: "Branco" },
   { value: "gray-50", label: "Cinza Claro" },
-  { value: "brand-light", label: "Cor da Marca" }
+  { value: "brand-light", label: "Cor da Marca" },
 ];
 
 // 📐 Opções de grid
 export const GRID_COLUMNS_OPTIONS: ContainerPropertyOption[] = [
   { value: "auto", label: "Automático" },
   { value: "full", label: "Linha Completa" },
-  { value: "half", label: "Metade da Linha" }
+  { value: "half", label: "Metade da Linha" },
 ];
 
 // 🏗️ Propriedades de container completas para o painel
@@ -59,11 +59,11 @@ export const getContainerProperties = (currentBlock: any) => {
       options: CONTAINER_WIDTH_OPTIONS,
     },
     {
-      key: "containerPosition", 
+      key: "containerPosition",
       value: currentBlock?.properties?.containerPosition || "center",
       type: "SELECT",
       label: "Posição do Container",
-      category: "LAYOUT", 
+      category: "LAYOUT",
       options: CONTAINER_POSITION_OPTIONS,
     },
     {
@@ -76,7 +76,7 @@ export const getContainerProperties = (currentBlock: any) => {
     },
     {
       key: "backgroundColor",
-      value: currentBlock?.properties?.backgroundColor || "transparent", 
+      value: currentBlock?.properties?.backgroundColor || "transparent",
       type: "SELECT",
       label: "Cor de Fundo",
       category: "STYLE",
@@ -86,7 +86,7 @@ export const getContainerProperties = (currentBlock: any) => {
       key: "marginTop",
       value: currentBlock?.properties?.marginTop || 0,
       type: "RANGE",
-      label: "Margem Superior", 
+      label: "Margem Superior",
       category: "LAYOUT",
       min: 0,
       max: 80,
@@ -94,15 +94,15 @@ export const getContainerProperties = (currentBlock: any) => {
       unit: "px",
     },
     {
-      key: "marginBottom", 
+      key: "marginBottom",
       value: currentBlock?.properties?.marginBottom || 0,
       type: "RANGE",
       label: "Margem Inferior",
-      category: "LAYOUT", 
+      category: "LAYOUT",
       min: 0,
       max: 80,
       step: 8,
       unit: "px",
-    }
+    },
   ];
 };

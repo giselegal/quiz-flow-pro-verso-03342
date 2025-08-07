@@ -1,7 +1,7 @@
 import { getBlockComponent } from "@/config/enhancedBlockRegistry";
-import { Block } from "@/types/editor";
-import { cn } from "@/lib/utils";
 import { useContainerProperties } from "@/hooks/useContainerProperties";
+import { cn } from "@/lib/utils";
+import { Block } from "@/types/editor";
 import React from "react";
 
 export interface UniversalBlockRendererProps {
@@ -28,15 +28,20 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
   const Component = getBlockComponent(block.type);
 
   // Processar propriedades de container usando o hook
-  const { containerClasses, inlineStyles, processedProperties } = useContainerProperties(block.properties);
+  const { containerClasses, inlineStyles, processedProperties } = useContainerProperties(
+    block.properties
+  );
 
   // Log para debug das propriedades de container (apenas em desenvolvimento)
-  if (process.env.NODE_ENV === 'development' && (block.properties?.containerWidth || block.properties?.containerPosition)) {
+  if (
+    process.env.NODE_ENV === "development" &&
+    (block.properties?.containerWidth || block.properties?.containerPosition)
+  ) {
     console.log(`🎯 Container properties for ${block.id}:`, {
       blockType: block.type,
       originalProperties: block.properties,
       processedProperties,
-      generatedClasses: containerClasses
+      generatedClasses: containerClasses,
     });
   }
 
@@ -59,12 +64,12 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
 
   try {
     return (
-      <div 
+      <div
         className={cn(
           "block-wrapper transition-all duration-200",
           containerClasses,
           isSelected && "ring-2 ring-[#B89B7A] ring-offset-2"
-        )} 
+        )}
         onClick={onClick}
         style={inlineStyles}
       >

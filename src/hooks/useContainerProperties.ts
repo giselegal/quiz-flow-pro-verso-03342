@@ -15,52 +15,52 @@ export interface ContainerProperties {
 export const useContainerProperties = (properties: ContainerProperties = {}) => {
   const {
     containerWidth = "full",
-    containerPosition = "center", 
+    containerPosition = "center",
     spacing = "normal",
     gridColumns = "auto",
     backgroundColor = "transparent",
     marginTop = 0,
-    marginBottom = 0
+    marginBottom = 0,
   } = properties;
 
   // Gerar classes CSS baseadas nas propriedades
   const getContainerClasses = (): string => {
     const classes: string[] = [];
 
-    // 🔧 Container Width Classes
+    // 🔧 Container Width Classes (aplicar apenas o tamanho, sem mx-auto duplicado)
     switch (containerWidth) {
       case "full":
         classes.push("w-full");
         break;
       case "large":
-        classes.push("w-full max-w-4xl mx-auto");
+        classes.push("w-full max-w-4xl");
         break;
       case "medium":
-        classes.push("w-full max-w-2xl mx-auto");
+        classes.push("w-full max-w-2xl");
         break;
       case "small":
-        classes.push("w-full max-w-md mx-auto");
+        classes.push("w-full max-w-md");
         break;
       default:
         classes.push("w-full");
     }
 
-    // 🎯 Container Position Classes
+    // 🎯 Container Position Classes (aplicar apenas uma vez)
     switch (containerPosition) {
       case "left":
-        classes.push("justify-start ml-0 mr-auto");
+        classes.push("ml-0 mr-auto");
         break;
       case "center":
-        classes.push("justify-center mx-auto");
+        classes.push("mx-auto");
         break;
       case "right":
-        classes.push("justify-end ml-auto mr-0");
+        classes.push("ml-auto mr-0");
         break;
       default:
-        classes.push("justify-center mx-auto");
+        classes.push("mx-auto");
     }
 
-    // 📦 Spacing Classes
+    // 📦 Spacing Classes (padding interno do componente)
     switch (spacing) {
       case "none":
         // Sem padding
@@ -81,20 +81,6 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
         classes.push("p-4");
     }
 
-    // 📐 Grid Columns Classes
-    switch (gridColumns) {
-      case "full":
-        classes.push("col-span-full");
-        break;
-      case "half":
-        classes.push("col-span-6");
-        break;
-      case "auto":
-      default:
-        classes.push("w-full md:w-[calc(50%-0.5rem)]");
-        break;
-    }
-
     // 🎨 Background Color Classes
     switch (backgroundColor) {
       case "white":
@@ -112,8 +98,8 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
         break;
     }
 
-    // 📏 Margin Top Classes
-    if (marginTop) {
+    // 📏 Margin Top Classes (espaço entre componentes)
+    if (marginTop && marginTop > 0) {
       if (marginTop <= 8) classes.push("mt-2");
       else if (marginTop <= 16) classes.push("mt-4");
       else if (marginTop <= 24) classes.push("mt-6");
@@ -122,8 +108,8 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
       else classes.push("mt-12");
     }
 
-    // 📏 Margin Bottom Classes
-    if (marginBottom) {
+    // 📏 Margin Bottom Classes (espaço entre componentes)
+    if (marginBottom && marginBottom > 0) {
       if (marginBottom <= 8) classes.push("mb-2");
       else if (marginBottom <= 16) classes.push("mb-4");
       else if (marginBottom <= 24) classes.push("mb-6");
@@ -140,7 +126,10 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
     const styles: React.CSSProperties = {};
 
     // Adicionar estilos específicos se necessário
-    if (backgroundColor && !["transparent", "white", "gray-50", "brand-light"].includes(backgroundColor)) {
+    if (
+      backgroundColor &&
+      !["transparent", "white", "gray-50", "brand-light"].includes(backgroundColor)
+    ) {
       styles.backgroundColor = backgroundColor;
     }
 
@@ -158,8 +147,8 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
       gridColumns,
       backgroundColor,
       marginTop,
-      marginBottom
-    }
+      marginBottom,
+    },
   };
 };
 
