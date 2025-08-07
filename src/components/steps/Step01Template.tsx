@@ -35,8 +35,8 @@ export const getStep01Template = () => {
         // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
         containerWidth: "full", // Opções: "full", "large", "medium", "small"
         containerPosition: "center", // Opções: "left", "center", "right"
-        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
-        spacing: "none", // 🎯 Sem padding por padrão
+        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)],
+        spacing: "none", // 🎯 Sem padding por padrão,
         marginTop: 0,
         marginBottom: 0,
         backgroundColor: "transparent",
@@ -53,13 +53,13 @@ export const getStep01Template = () => {
         color: "#B89B7A",
         gradientColors: ["#B89B7A", "#D4C2A8", "#B89B7A"],
         borderRadius: 3,
-        marginTop: 8,
+        marginTop: 0,
         marginBottom: 24,
         showShadow: true,
         // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
         containerWidth: "full", // Opções: "full", "large", "medium", "small"
         containerPosition: "center", // Opções: "left", "center", "right"
-        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
+        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)],
         spacing: "none", // 🎯 Sem padding por padrão
         backgroundColor: "transparent",
       },
@@ -76,7 +76,7 @@ export const getStep01Template = () => {
         fontWeight: "font-bold",
         fontFamily: "Playfair Display, serif",
         textAlign: "text-center",
-        color: "#B89B7A", // Cor dourada da marca como padrão (texto normal)
+        color: "#B89B7A", // Cor dourada da marca como padrão (texto normal),
         marginBottom: 32,
         marginLeft: 0,
         marginRight: 0,
@@ -84,8 +84,8 @@ export const getStep01Template = () => {
         // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
         containerWidth: "large", // Opções: "full", "large", "medium", "small"
         containerPosition: "center", // Opções: "left", "center", "right"
-        gridColumns: "full", // 🎯 Alterado de "auto" para "full" para usar 100% da largura
-        spacing: "none", // 🎯 Sem padding por padrão
+        gridColumns: "full", // 🎯 Alterado de "auto" para "full" para usar 100% da largura,
+        spacing: "none", // 🎯 Sem padding por padrão,
         marginTop: 0,
         backgroundColor: "transparent",
       },
@@ -106,8 +106,8 @@ export const getStep01Template = () => {
         // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
         containerWidth: "large", // Opções: "full", "large", "medium", "small"
         containerPosition: "center", // Opções: "left", "center", "right"
-        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
-        spacing: "normal", // p-4 (16px padding)
+        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)],
+        spacing: "small", // p-4 (16px padding),
         marginTop: 0,
         backgroundColor: "transparent",
       },
@@ -122,7 +122,7 @@ export const getStep01Template = () => {
           "Em poucos minutos, descubra seu [#B89B7A]**Estilo Predominante**[/#B89B7A] — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
         fontSize: "text-xl",
         textAlign: "text-center",
-        color: "#432818", // Cor marrom escuro (texto padrão)
+        color: "#432818", // Cor marrom escuro (texto padrão),
         marginTop: 0,
         marginBottom: 40,
         marginLeft: 0,
@@ -131,8 +131,8 @@ export const getStep01Template = () => {
         // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
         containerWidth: "medium", // Opções: "full", "large", "medium", "small"
         containerPosition: "center", // Opções: "left", "center", "right"
-        gridColumns: "full", // 🎯 Largura 100% para melhor apresentação
-        spacing: "normal", // p-4 (16px padding)
+        gridColumns: "full", // 🎯 Largura 100% para melhor apresentação,
+        spacing: "small", // p-4 (16px padding)
         backgroundColor: "transparent",
       },
     },
@@ -153,8 +153,8 @@ export const getStep01Template = () => {
         // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
         containerWidth: "medium", // Opções: "full", "large", "medium", "small"
         containerPosition: "center", // Opções: "left", "center", "right"
-        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
-        spacing: "normal", // p-4 (16px padding)
+        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)],
+        spacing: "small", // p-4 (16px padding),
         marginTop: 0,
         backgroundColor: "transparent",
       },
@@ -182,8 +182,8 @@ export const getStep01Template = () => {
         // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
         containerWidth: "large", // Opções: "full", "large", "medium", "small"
         containerPosition: "center", // Opções: "left", "center", "right"
-        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
-        spacing: "normal", // p-4 (16px padding)
+        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)],
+        spacing: "small", // p-4 (16px padding),
         marginTop: 0,
         marginBottom: 0,
       },
@@ -209,8 +209,8 @@ export const getStep01Template = () => {
         // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
         containerWidth: "full", // Opções: "full", "large", "medium", "small"
         containerPosition: "center", // Opções: "left", "center", "right"
-        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
-        spacing: "compact", // p-2 (8px padding) para textos menores
+        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)],
+        spacing: "small", // p-2 (8px padding) para textos menores
       },
     },
   ];

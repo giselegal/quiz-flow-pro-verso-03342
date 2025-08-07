@@ -34,6 +34,9 @@ export const getStep11Template = () => {
         showBackButton: true,
         showProgress: true,
         stepNumber: "11 de 21",
+        spacing: "small",
+        marginTop: 0,
+        marginBottom: 0,
       },
     },
 
@@ -47,9 +50,10 @@ export const getStep11Template = () => {
         color: "#B89B7A",
         gradientColors: ["#B89B7A", "#D4C2A8", "#B89B7A"],
         borderRadius: 2,
-        marginTop: 6,
+        marginTop: 0,
         marginBottom: 20,
         showShadow: true,
+        spacing: "small",
       },
     },
 
@@ -66,6 +70,8 @@ export const getStep11Template = () => {
         color: "#432818",
         marginBottom: 24,
         lineHeight: "1.3",
+        spacing: "small",
+        marginTop: 0,
       },
     },
 
@@ -81,6 +87,8 @@ export const getStep11Template = () => {
         className: "object-cover w-full max-w-md h-64 rounded-lg mx-auto shadow-md",
         textAlign: "text-center",
         marginBottom: 24,
+        spacing: "small",
+        marginTop: 0,
       },
     },
 
@@ -101,6 +109,9 @@ export const getStep11Template = () => {
           romantico: 1,
           minimalista: 2,
           boho: 1,
+          spacing: "small",
+          marginTop: 0,
+          marginBottom: 0,
         },
 
         variant: "default",
@@ -128,6 +139,9 @@ export const getStep11Template = () => {
           romantico: 2,
           minimalista: 3,
           boho: 1,
+          spacing: "small",
+          marginTop: 0,
+          marginBottom: 0,
         },
 
         variant: "default",
@@ -155,6 +169,9 @@ export const getStep11Template = () => {
           romantico: 3,
           minimalista: 2,
           boho: 1,
+          spacing: "small",
+          marginTop: 0,
+          marginBottom: 0,
         },
 
         variant: "default",
@@ -182,6 +199,9 @@ export const getStep11Template = () => {
           romantico: 1,
           minimalista: 1,
           boho: 3,
+          spacing: "small",
+          marginTop: 0,
+          marginBottom: 0,
         },
 
         variant: "default",
@@ -214,6 +234,8 @@ export const getStep11Template = () => {
         fontWeight: "font-semibold",
         marginTop: 24,
         disabled: true,
+        spacing: "small",
+        marginBottom: 0,
       },
     },
   ];

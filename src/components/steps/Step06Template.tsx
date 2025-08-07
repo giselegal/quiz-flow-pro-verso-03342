@@ -30,6 +30,9 @@ export const getStep06Template = () => {
         progressValue: 30,
         progressMax: 100,
         showBackButton: true,
+        marginTop: 0,
+        spacing: "small",
+        marginBottom: 0,
       },
     },
 
@@ -44,7 +47,9 @@ export const getStep06Template = () => {
         fontWeight: "font-bold",
         textAlign: "text-center",
         color: "#432818",
-        marginBottom: 8,
+        marginBottom: 0,
+        marginTop: 0,
+        spacing: "small",
       },
     },
 
@@ -58,6 +63,8 @@ export const getStep06Template = () => {
         textAlign: "text-center",
         color: "#6B7280",
         marginBottom: 24,
+        marginTop: 0,
+        spacing: "small",
       },
     },
 
@@ -77,6 +84,9 @@ export const getStep06Template = () => {
             points: 1,
             imageUrl:
               "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/29_sdogoy.webp",
+            marginTop: 0,
+            spacing: "small",
+            marginBottom: 0,
           },
           {
             id: "5b",
@@ -179,6 +189,9 @@ export const getStep06Template = () => {
         textColor: "#ffffff",
         disabled: true,
         requiresValidSelection: true,
+        marginTop: 0,
+        spacing: "small",
+        marginBottom: 0,
       },
     },
   ];

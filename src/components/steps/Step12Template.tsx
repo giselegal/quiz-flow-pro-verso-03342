@@ -34,6 +34,9 @@ export const getStep12Template = () => {
         showBackButton: false,
         showProgress: true,
         stepNumber: "12 de 21",
+        spacing: "small",
+        marginTop: 0,
+        marginBottom: 0,
       },
     },
 
@@ -47,9 +50,10 @@ export const getStep12Template = () => {
         color: "#B89B7A",
         gradientColors: ["#B89B7A", "#D4C2A8", "#B89B7A"],
         borderRadius: 3,
-        marginTop: 8,
+        marginTop: 0,
         marginBottom: 32,
         showShadow: true,
+        spacing: "small",
       },
     },
 
@@ -66,6 +70,8 @@ export const getStep12Template = () => {
         color: "#432818",
         marginBottom: 24,
         lineHeight: "1.2",
+        spacing: "small",
+        marginTop: 0,
       },
     },
 
@@ -81,6 +87,8 @@ export const getStep12Template = () => {
         className: "object-cover w-full max-w-lg h-72 rounded-xl mx-auto shadow-lg",
         textAlign: "text-center",
         marginBottom: 32,
+        spacing: "small",
+        marginTop: 0,
       },
     },
 
@@ -95,6 +103,8 @@ export const getStep12Template = () => {
         color: "#432818",
         marginBottom: 40,
         lineHeight: "1.6",
+        spacing: "small",
+        marginTop: 0,
       },
     },
   ];

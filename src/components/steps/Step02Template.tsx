@@ -32,6 +32,9 @@ export const getStep02Template = () => {
         progressValue: 10,
         progressMax: 100,
         showBackButton: true,
+        spacing: "small",
+        marginTop: 0,
+        marginBottom: 0,
       },
     },
 
@@ -45,9 +48,11 @@ export const getStep02Template = () => {
         fontWeight: "font-bold",
         textAlign: "text-center",
         color: "#432818",
-        marginBottom: 8,
+        marginBottom: 0,
+        spacing: "small",
+        marginTop: 0,
       },
-edi    },
+    },
 
     // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
@@ -59,6 +64,8 @@ edi    },
         textAlign: "text-center",
         color: "#6B7280",
         marginBottom: 24,
+        spacing: "small",
+        marginTop: 0,
       },
     },
 
@@ -78,6 +85,9 @@ edi    },
             points: 1,
             imageUrl:
               "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+            spacing: "small",
+            marginTop: 0,
+            marginBottom: 0,
           },
           {
             id: "executivo-elegante",
@@ -247,9 +257,11 @@ edi    },
         showPulseWhenEnabled: false,
         quickFeedback: true,
 
-        // 📱 RESPONSIVIDADE
+        // 📱 RESPONSIVIDADE,
         marginTop: 24,
         textAlign: "text-center",
+        spacing: "small",
+        marginBottom: 0,
       },
     },
   ];

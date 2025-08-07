@@ -9,6 +9,7 @@ import { ScrollArea } from "../components/ui/scroll-area";
 import { toast } from "../components/ui/use-toast";
 import { EnhancedUniversalPropertiesPanel } from "../components/universal/EnhancedUniversalPropertiesPanel";
 import { getBlockComponent } from "../config/enhancedBlockRegistry";
+import { getStepTemplate } from "../config/stepTemplatesMapping"; // 🎯 IMPORTAÇÃO DO SISTEMA DE TEMPLATES
 import { useAutoSaveWithDebounce } from "../hooks/editor/useAutoSaveWithDebounce";
 import { useEditorPersistence } from "../hooks/editor/useEditorPersistence";
 import { useContainerProperties } from "../hooks/useContainerProperties";
@@ -603,6 +604,65 @@ const EditorPage: React.FC = () => {
     }
   }, [addBlock, updateBlock]);
 
+  // ===== CARREGAR ETAPA 2 (STEP02) =====
+  const handleLoadStep2 = useCallback(async () => {
+    try {
+      setSelectedComponentId(null);
+
+      console.log("🚀 Carregando Etapa 2 do Quiz usando template...");
+
+      // Usar o sistema de templates para carregar Step02
+      const step2Blocks = getStepTemplate(2);
+
+      if (!step2Blocks || step2Blocks.length === 0) {
+        throw new Error("Template da Step02 não encontrado ou vazio");
+      }
+
+      // Limpar blocos existentes primeiro
+      clearAllBlocks();
+
+      let addedCount = 0;
+      const newBlocks = [];
+
+      for (const block of step2Blocks) {
+        try {
+          const normalizedBlock = normalizeBlock(block);
+          console.log(`📦 Preparando bloco Step02 ${addedCount + 1}:`, normalizedBlock.type);
+
+          // Criar bloco completo de uma vez
+          const fullBlock = {
+            id: block.id,
+            type: normalizedBlock.type as BlockType,
+            content: normalizedBlock.content || {},
+            properties: normalizedBlock.properties || {},
+            order: addedCount,
+          };
+
+          newBlocks.push(fullBlock);
+          addedCount++;
+        } catch (blockError) {
+          console.warn(`⚠️ Erro ao preparar bloco ${block.type}:`, blockError);
+        }
+      }
+
+      // Adicionar todos os blocos de uma vez
+      setAllBlocks(newBlocks);
+      console.log(`✅ ${addedCount} blocos da Etapa 2 carregados:`, newBlocks);
+
+      toast({
+        title: "Etapa 2 Carregada! 🎉",
+        description: `${addedCount} componentes da Step02 carregados com propriedades configuráveis`,
+      });
+    } catch (error) {
+      console.error("❌ Erro ao carregar Etapa 2:", error);
+      toast({
+        title: "Erro",
+        description: "Erro ao carregar Etapa 2",
+        variant: "destructive",
+      });
+    }
+  }, [addBlock, updateBlock, clearAllBlocks, setAllBlocks]);
+
   // ===== COMPONENTE FILTRADO DE COMPONENTES =====
   const filteredBlocks = AVAILABLE_BLOCKS.filter(block => {
     const matchesSearch =
@@ -819,6 +879,33 @@ const EditorPage: React.FC = () => {
                           <Download className="w-4 h-4 mr-2" />
                           Carregar Template
                         </Button>
+
+                        {/* 🎯 SEÇÃO PARA CARREGAR STEPS DO FUNIL */}
+                        <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+                          <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                            📋 Etapas do Quiz
+                          </h4>
+                          <div className="flex flex-col gap-2">
+                            <Button
+                              onClick={handleLoadStep1}
+                              size="sm"
+                              variant="outline"
+                              className="w-full justify-start"
+                            >
+                              <span className="mr-2">1️⃣</span>
+                              Step 01 - Introdução
+                            </Button>
+                            <Button
+                              onClick={handleLoadStep2}
+                              size="sm"
+                              variant="outline"
+                              className="w-full justify-start"
+                            >
+                              <span className="mr-2">2️⃣</span>
+                              Step 02 - Questão 1
+                            </Button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>

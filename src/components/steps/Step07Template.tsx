@@ -32,6 +32,9 @@ export const getStep07Template = () => {
         progressValue: 35,
         progressMax: 100,
         showBackButton: true,
+        marginTop: 0,
+        spacing: "small",
+        marginBottom: 0,
       },
     },
 
@@ -46,7 +49,9 @@ export const getStep07Template = () => {
         fontWeight: "font-bold",
         textAlign: "text-center",
         color: "#432818",
-        marginBottom: 8,
+        marginBottom: 0,
+        marginTop: 0,
+        spacing: "small",
       },
     },
 
@@ -60,6 +65,8 @@ export const getStep07Template = () => {
         textAlign: "text-center",
         color: "#6B7280",
         marginBottom: 24,
+        marginTop: 0,
+        spacing: "small",
       },
     },
 
@@ -79,6 +86,9 @@ export const getStep07Template = () => {
             points: 1,
             imageUrl:
               "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911571/CASACO_CLASSICO_MARROM_z9vhq3.webp",
+            marginTop: 0,
+            spacing: "small",
+            marginBottom: 0,
           },
           {
             id: "6b",
@@ -141,6 +151,9 @@ export const getStep07Template = () => {
         textColor: "#ffffff",
         disabled: true,
         requiresValidSelection: true,
+        marginTop: 0,
+        spacing: "small",
+        marginBottom: 0,
       },
     },
   ];

@@ -72,6 +72,9 @@ export const getStep19Template = (): BlockData[] => {
         progressValue: (questionNumberInFullQuiz / TOTAL_QUIZ_QUESTIONS) * 100,
         progressMax: 100,
         showBackButton: true,
+        marginTop: 0,
+        spacing: "small",
+        marginBottom: 0,
       },
     },
     {
@@ -85,6 +88,8 @@ export const getStep19Template = (): BlockData[] => {
         textAlign: "text-center",
         color: "#432818",
         marginBottom: 16,
+        marginTop: 0,
+        spacing: "small",
       },
     },
     {
@@ -97,6 +102,8 @@ export const getStep19Template = (): BlockData[] => {
         textAlign: "text-left",
         color: "#3a3a3a",
         marginBottom: 16,
+        marginTop: 0,
+        spacing: "small",
       },
     },
     {
@@ -109,6 +116,8 @@ export const getStep19Template = (): BlockData[] => {
         textAlign: "text-left",
         color: "#3a3a3a",
         marginBottom: 16,
+        marginTop: 0,
+        spacing: "small",
       },
     },
     {
@@ -121,6 +130,8 @@ export const getStep19Template = (): BlockData[] => {
         textAlign: "text-left",
         color: "#3a3a3a",
         marginBottom: 24,
+        marginTop: 0,
+        spacing: "small",
       },
     },
     {
@@ -138,6 +149,9 @@ export const getStep19Template = (): BlockData[] => {
         display: "flex",
         justifyContent: "center",
         margin: "mx-auto",
+        marginTop: 0,
+        spacing: "small",
+        marginBottom: 0,
       },
     },
   ];

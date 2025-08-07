@@ -32,6 +32,9 @@ export const getStep04Template = () => {
         progressValue: 20,
         progressMax: 100,
         showBackButton: true,
+        marginTop: 0,
+        spacing: "small",
+        marginBottom: 0,
       },
     },
 
@@ -46,7 +49,9 @@ export const getStep04Template = () => {
         fontWeight: "font-bold",
         textAlign: "text-center",
         color: "#432818",
-        marginBottom: 8,
+        marginBottom: 0,
+        marginTop: 0,
+        spacing: "small",
       },
     },
 
@@ -60,6 +65,8 @@ export const getStep04Template = () => {
         textAlign: "text-center",
         color: "#6B7280",
         marginBottom: 24,
+        marginTop: 0,
+        spacing: "small",
       },
     },
 
@@ -78,6 +85,9 @@ export const getStep04Template = () => {
             styleCategory: "Natural",
             points: 1,
             imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+            marginTop: 0,
+            spacing: "small",
+            marginBottom: 0,
           },
           {
             id: "3b",
@@ -173,6 +183,9 @@ export const getStep04Template = () => {
         textColor: "#ffffff",
         disabled: true,
         requiresValidSelection: true,
+        marginTop: 0,
+        spacing: "small",
+        marginBottom: 0,
       },
     },
   ];

@@ -32,6 +32,9 @@ export const getStep03Template = () => {
         progressValue: 15,
         progressMax: 100,
         showBackButton: true,
+        marginTop: 0,
+        spacing: "small",
+        marginBottom: 0,
       },
     },
 
@@ -46,7 +49,9 @@ export const getStep03Template = () => {
         fontWeight: "font-bold",
         textAlign: "text-center",
         color: "#432818",
-        marginBottom: 8,
+        marginBottom: 0,
+        marginTop: 0,
+        spacing: "small",
       },
     },
 
@@ -60,6 +65,8 @@ export const getStep03Template = () => {
         textAlign: "text-center",
         color: "#6B7280",
         marginBottom: 24,
+        marginTop: 0,
+        spacing: "small",
       },
     },
 
@@ -77,6 +84,9 @@ export const getStep03Template = () => {
             category: "Natural",
             styleCategory: "Natural",
             points: 1,
+            marginTop: 0,
+            spacing: "small",
+            marginBottom: 0,
           },
           {
             id: "2b",
@@ -189,7 +199,10 @@ export const getStep03Template = () => {
         // 📊 FEEDBACK MÍNIMO (RÁPIDO)
         showSuccessAnimation: false, // Sem animação para não atrasar
         showPulseWhenEnabled: false, // Sem pulse para não atrasar
-        quickFeedback: true, // Feedback rápido apenas
+        quickFeedback: true, // Feedback rápido apenas,
+        marginTop: 0,
+        spacing: "small",
+        marginBottom: 0,
       },
     },
   ];
