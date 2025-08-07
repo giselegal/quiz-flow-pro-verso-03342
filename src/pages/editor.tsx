@@ -263,29 +263,21 @@ const SimpleBlockRenderer: React.FC<{
   return (
     <div
       className={cn(
-        "transition-all duration-200 border border-transparent rounded", // 🎯 Container 1: Borda transparente por padrão
+        "transition-all duration-200 border-transparent rounded", // 🎯 Container 1: Borda transparente por padrão
         containerClasses,
-        // 🎯 Borda apenas quando selecionado para layout mais limpo
-        isSelected && "border-[#B89B7A] border-2 shadow-sm"
+        // 🎯 Apenas borda tracejada discreta quando selecionado
+        isSelected && "border-dashed border-[#B89B7A]/60 border-2"
       )}
       style={inlineStyles}
       onClick={onClick}
     >
-      {/* 🎯 Container 2: Componente Individual com seleção sutil */}
-      <div 
-        className={cn(
-          "transition-all duration-200 rounded p-1",
-          // 🎯 Background sutil quando selecionado
-          isSelected && "ring-1 ring-[#B89B7A]/30 bg-[#B89B7A]/5"
-        )}
-      >
-        <Component
-          block={block}
-          isSelected={isSelected}
-          onClick={onClick}
-          onPropertyChange={onPropertyChange}
-        />
-      </div>
+      {/* 🎯 Container 2: Componente Individual sem bordas extras */}
+      <Component
+        block={block}
+        isSelected={isSelected}
+        onClick={onClick}
+        onPropertyChange={onPropertyChange}
+      />
     </div>
   );
 };

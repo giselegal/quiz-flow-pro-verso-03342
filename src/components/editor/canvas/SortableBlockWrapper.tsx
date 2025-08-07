@@ -88,8 +88,8 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           "relative group transition-all duration-200 border-transparent", // 🎯 Borda transparente por padrão
           // 🎯 Aplicar classes de container diretamente no Card
           containerClasses,
-          // 🎯 Borda apenas quando selecionado para layout mais limpo
-          isSelected && "border-[#B89B7A] border-2 shadow-md"
+          // 🎯 Apenas borda tracejada discreta quando selecionado
+          isSelected && "border-dashed border-[#B89B7A]/60 border-2"
         )}
         style={inlineStyles} // 🎯 Aplicar estilos inline (scale) diretamente
       >
@@ -118,13 +118,9 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           </Button>
         </div>
 
-        {/* 🎯 Container 2: Componente Individual com borda de seleção sutil */}
+        {/* 🎯 Container 2: Componente Individual sem bordas extras */}
         <div 
-          className={cn(
-            "p-2 transition-all duration-200 rounded", 
-            // 🎯 Ring sutil no componente individual quando selecionado
-            isSelected && "ring-1 ring-[#B89B7A]/30 bg-[#B89B7A]/5"
-          )} 
+          className="p-2" // 🎯 Removido todas as bordas do container 2
           onClick={onSelect}
         >
           <Component
