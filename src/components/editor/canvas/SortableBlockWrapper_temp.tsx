@@ -72,7 +72,7 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     return (
       <div ref={setNodeRef} style={style} className="my-2">
         {" "}
-        {/* 🎯 Espaçamento FIXO de 4px */}
+        {/* 🎯 Espaçamento FIXO de 8px */}
         <Card className="relative group border-red-300">
           <div className="p-4 text-center text-red-500">
             <p>Componente não encontrado: {block.type}</p>
@@ -86,7 +86,7 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   return (
     <div ref={setNodeRef} style={style} className="my-2">
       {" "}
-      {/* 🎯 Espaçamento FIXO de 4px - SEMPRE IGUAL independente da escala */}
+      {/* 🎯 Espaçamento FIXO de 8px - SEMPRE IGUAL independente da escala */}
       <Card
         className={cn(
           "relative group transition-all duration-200 border-transparent", // 🎯 Borda transparente por padrão

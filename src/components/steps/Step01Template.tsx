@@ -66,7 +66,8 @@ export const getStep01Template = () => {
       id: "main-title-step01",
       type: "text-inline",
       properties: {
-        content: "Chega de um guarda-roupa lotado e da sensação de que [#432818]nada combina com você[/#432818].",
+        content:
+          "Chega de um guarda-roupa lotado e da sensação de que [#432818]nada combina com você[/#432818].",
         fontSize: "text-3xl",
         fontWeight: "font-bold",
         fontFamily: "Playfair Display, serif",
@@ -111,7 +112,8 @@ export const getStep01Template = () => {
       id: "motivation-unified-step01",
       type: "text-inline",
       properties: {
-        content: "Em poucos minutos, descubra seu [#B89B7A]**Estilo Predominante**[/#B89B7A] — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
+        content:
+          "Em poucos minutos, descubra seu [#B89B7A]**Estilo Predominante**[/#B89B7A] — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
         fontSize: "text-xl",
         textAlign: "text-center",
         color: "#432818", // Cor marrom escuro (texto padrão)

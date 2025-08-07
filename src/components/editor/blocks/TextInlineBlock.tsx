@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo } from "react";
 import { cn } from "@/lib/utils";
+import React, { useCallback, useMemo } from "react";
 import type { BlockComponentProps } from "../../../types/blocks";
 
 /**
@@ -126,7 +126,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   // Formato: [cor]texto em cor[/cor] ou [cor]**texto negrito**[/cor]
   const parseMultiColorText = (text: string): JSX.Element[] => {
     if (!text) return [];
-    
+
     // Regex para capturar padrões [cor]texto[/cor] com suporte a **negrito**
     const colorPattern = /\[([^\]]+)\](.*?)\[\/\1\]/g;
     const parts: JSX.Element[] = [];
@@ -171,17 +171,19 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     }
 
     // Se não há marcações de cor, retorna o texto com formatação
-    return parts.length === 0 ? [
-      <span key="0" style={{ color }}>
-        {parseFormattedText(text)}
-      </span>
-    ] : parts;
+    return parts.length === 0
+      ? [
+          <span key="0" style={{ color }}>
+            {parseFormattedText(text)}
+          </span>,
+        ]
+      : parts;
   };
 
   // 🎯 Função para processar formatação (negrito, itálico, etc.)
   const parseFormattedText = (text: string): React.ReactNode => {
     if (!text) return text;
-    
+
     // Processar **negrito**
     const boldPattern = /\*\*(.*?)\*\*/g;
     const parts: React.ReactNode[] = [];
@@ -200,11 +202,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
 
       // Texto em negrito
       const [, boldText] = match;
-      parts.push(
-        <strong key={`bold-${keyIndex++}`}>
-          {boldText}
-        </strong>
-      );
+      parts.push(<strong key={`bold-${keyIndex++}`}>{boldText}</strong>);
 
       lastIndex = match.index + match[0].length;
     }
@@ -222,12 +220,12 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
 
   // 🎯 Função para detectar se tem marcações de cor ou formatação
   const hasColorMarkings = useMemo(() => {
-    return personalizedContent?.includes('[') && personalizedContent?.includes('[/');
+    return personalizedContent?.includes("[") && personalizedContent?.includes("[/");
   }, [personalizedContent]);
 
   // 🎯 Função para detectar formatação simples (sem cores)
   const hasSimpleFormatting = useMemo(() => {
-    return !hasColorMarkings && personalizedContent?.includes('**');
+    return !hasColorMarkings && personalizedContent?.includes("**");
   }, [personalizedContent, hasColorMarkings]);
 
   // Verificar se o conteúdo contém HTML
@@ -308,14 +306,10 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
       >
         {hasColorMarkings ? (
           // 🎯 Renderiza texto com múltiplas cores e formatação usando marcação [cor]**texto**[/cor]
-          <>
-            {parseMultiColorText(personalizedContent)}
-          </>
+          <>{parseMultiColorText(personalizedContent)}</>
         ) : hasSimpleFormatting ? (
           // 🎯 Renderiza texto com formatação simples **negrito** sem cores
-          <span style={{ color }}>
-            {parseFormattedText(personalizedContent)}
-          </span>
+          <span style={{ color }}>{parseFormattedText(personalizedContent)}</span>
         ) : isHtmlContent ? (
           // Renderiza como HTML se detectar qualquer tag HTML
           <div
