@@ -12,7 +12,7 @@ import React from "react";
 // === IMPORTS DE COMPONENTES PRINCIPAIS ===
 
 // Componentes Inline existentes
-import ButtonInline from "../components/blocks/inline/ButtonInline";
+import ButtonInlineFixed from "../components/blocks/inline/ButtonInlineFixed";
 import CountdownInlineBlock from "../components/blocks/inline/CountdownInlineBlock";
 import DecorativeBarInline from "../components/blocks/inline/DecorativeBarInline";
 import DividerInlineBlock from "../components/blocks/inline/DividerInlineBlock";
