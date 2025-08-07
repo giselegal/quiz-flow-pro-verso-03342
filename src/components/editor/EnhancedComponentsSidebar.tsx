@@ -6,17 +6,17 @@ import { generateBlockDefinitions } from "@/config/enhancedBlockRegistry";
 import { useEditor } from "@/context/EditorContext";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
 import { BlockDefinition } from "@/types/editor";
-import { 
-  ChevronDown, 
-  ChevronRight, 
-  GripVertical, 
+import {
+  ChevronDown,
+  ChevronRight,
+  FormInput,
+  GripVertical,
+  Layers,
+  MousePointer,
+  Scale,
   Search,
   Trophy,
   Type,
-  MousePointer,
-  FormInput,
-  Scale,
-  Layers
 } from "lucide-react";
 import React, { useState } from "react";
 
@@ -127,7 +127,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
     (groups, block) => {
       // Mapear tipos de componentes para categorias organizadas
       let category = "Outros";
-      
+
       switch (block.type) {
         case "quiz-intro-header":
           category = "Quiz";
@@ -150,7 +150,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
         default:
           category = "Estrutura";
       }
-      
+
       if (!groups[category]) {
         groups[category] = [];
       }
@@ -161,15 +161,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
   );
 
   // Ordenar categorias por relevância no quiz
-  const categoryOrder = [
-    "Quiz",
-    "Interativo", 
-    "CTA",
-    "Conteúdo",
-    "Legal",
-    "Estrutura",
-    "Outros",
-  ];
+  const categoryOrder = ["Quiz", "Interativo", "CTA", "Conteúdo", "Legal", "Estrutura", "Outros"];
 
   const orderedCategories = categoryOrder.filter(cat => groupedBlocks[cat]);
 
@@ -205,8 +197,8 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
                     ) : (
                       <ChevronRight className="h-4 w-4" />
                     )}
-                    {React.createElement(categoryIcons[category] || GripVertical, { 
-                      className: "h-4 w-4 text-primary" 
+                    {React.createElement(categoryIcons[category] || GripVertical, {
+                      className: "h-4 w-4 text-primary",
                     })}
                     <span className="text-sm font-medium">{category}</span>
                   </div>

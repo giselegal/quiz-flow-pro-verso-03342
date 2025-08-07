@@ -162,20 +162,31 @@ export const ButtonInline: React.FC<ButtonInlineProps> = ({
         className
       )}
       style={{
-        backgroundColor: actualVariant === "primary" ? backgroundColor : actualVariant === "secondary" ? undefined : "transparent",
-        color: actualVariant === "primary" ? textColor : actualVariant === "outline" ? backgroundColor : textColor,
+        backgroundColor:
+          actualVariant === "primary"
+            ? backgroundColor
+            : actualVariant === "secondary"
+              ? undefined
+              : "transparent",
+        color:
+          actualVariant === "primary"
+            ? textColor
+            : actualVariant === "outline"
+              ? backgroundColor
+              : textColor,
         borderColor: backgroundColor,
-        ...(actualVariant === "outline" && {
-          "--hover-bg": backgroundColor,
-        } as React.CSSProperties),
+        ...(actualVariant === "outline" &&
+          ({
+            "--hover-bg": backgroundColor,
+          } as React.CSSProperties)),
       }}
-      onMouseEnter={(e) => {
+      onMouseEnter={e => {
         if (actualVariant === "outline") {
           e.currentTarget.style.backgroundColor = backgroundColor;
           e.currentTarget.style.color = textColor;
         }
       }}
-      onMouseLeave={(e) => {
+      onMouseLeave={e => {
         if (actualVariant === "outline") {
           e.currentTarget.style.backgroundColor = "transparent";
           e.currentTarget.style.color = backgroundColor;

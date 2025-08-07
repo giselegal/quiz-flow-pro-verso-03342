@@ -1,5 +1,3 @@
-import React from "react";
-
 export interface Step02Props {
   onNext?: () => void;
   onBlockAdd?: (block: any) => void;
@@ -33,14 +31,13 @@ export const getStep02Template = () => {
     // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
       id: "step02-question-title",
-      type: "heading",
+      type: "text-inline",
       properties: {
-        content: "QUAL O SEU TIPO DE ROUPA FAVORITA?",
-        level: "h2",
-        fontSize: "text-2xl",
-        fontWeight: "font-bold",
-        textAlign: "text-center",
-        color: "#432818",
+        text: "QUAL O SEU TIPO DE ROUPA FAVORITA?",
+        fontSize: "2xl",
+        fontWeight: "bold",
+        textAlign: "center",
+        textColor: "#432818",
         marginBottom: 8,
       },
     },
@@ -48,13 +45,29 @@ export const getStep02Template = () => {
     // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
       id: "step02-question-counter",
-      type: "text",
+      type: "text-inline",
       properties: {
-        content: "Questão 1 de 10",
-        fontSize: "text-sm",
-        textAlign: "text-center",
-        color: "#6B7280",
+        text: "Questão 1 de 10",
+        fontSize: "sm",
+        textAlign: "center",
+        textColor: "#6B7280",
         marginBottom: 24,
+      },
+    },
+
+    // 🖼️ IMAGEM ILUSTRATIVA (EDITÁVEL SEPARADAMENTE)
+    {
+      id: "step02-clothing-image",
+      type: "image-display-inline",
+      properties: {
+        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1687095491/style-quiz/elegante-6_u1ghdr.jpg",
+        alt: "Tipos de roupas e estilos",
+        width: "75%",
+        height: "300px",
+        alignment: "center",
+        borderRadius: 12,
+        shadow: true,
+        marginBottom: 32,
       },
     },
 
@@ -145,35 +158,84 @@ export const getStep02Template = () => {
               "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
           },
         ],
-        columns: 2,
-        showImages: true,
+        // 🎨 LAYOUT BASEADO EM IMAGENS - REGRA: 2 COLUNAS COM IMAGENS, 1 COLUNA SEM IMAGENS
+        columns: 2, // 2 colunas porque TEM IMAGENS
+        responsiveColumns: true, // Mobile sempre 1 coluna
+        gridGap: 20,
+
+        // 🖼️ CONTROLES DE IMAGEM - OPÇÕES COM IMAGENS
+        showImages: true, // TEM IMAGENS = 2 COLUNAS
+        imageSize: "medium",
+        imagePosition: "top",
+        imageLayout: "vertical",
+
+        // 🎯 REGRAS DE SELEÇÃO - ATIVAÇÃO INSTANTÂNEA
         multipleSelection: true,
         maxSelections: 3,
         minSelections: 1,
-        validationMessage: "Selecione até 3 opções",
-        gridGap: 16,
-        responsiveColumns: true,
-        autoAdvanceOnComplete: true,
-        autoAdvanceDelay: 800,
         requiredSelections: 3,
+
+        // 📝 FEEDBACK OTIMIZADO
+        validationMessage: "Escolha até 3 estilos que mais combinam com você",
+        progressMessage: "{selected} de {required} selecionados",
+
+        // 🚀 AUTOAVANÇO INSTANTÂNEO APÓS COMPLETAR
+        autoAdvanceOnComplete: true,
+        autoAdvanceDelay: 0, // INSTANTÂNEO após última seleção
+        instantActivation: true, // Botão ativa na hora
+        showAutoAdvanceIndicator: false, // Sem indicador pois é instantâneo
+
+        // 🔘 ATIVAÇÃO IMEDIATA DO BOTÃO
         enableButtonOnlyWhenValid: true,
+        instantButtonActivation: true, // Ativa assim que completar
         showValidationFeedback: true,
+        buttonTextWhenInvalid: "Selecione 3 estilos",
+        buttonTextWhenValid: "Continuar →",
+
+        // 🎨 ESTILO VISUAL APRIMORADO
+        selectionStyle: "border",
+        selectedColor: "#B89B7A",
+        hoverColor: "#D4B896",
+
+        // 📊 UX MELHORADA
+        showSelectionCount: true,
+        allowDeselection: true,
+        trackSelectionOrder: true,
       },
     },
 
-    // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
+    // 🔘 BOTÃO COM ATIVAÇÃO INSTANTÂNEA (EDITÁVEL SEPARADAMENTE)
     {
       id: "step02-continue-button",
-      type: "button",
+      type: "button-inline",
       properties: {
-        text: "Continuar",
+        // 📝 TEXTO DINÂMICO
+        text: "Continuar →",
+        textWhenDisabled: "Selecione 3 estilos",
+        textWhenComplete: "Continuar →",
+
+        // 🎨 ESTILO
         variant: "primary",
         size: "large",
-        fullWidth: true,
         backgroundColor: "#B89B7A",
         textColor: "#ffffff",
+        disabledBackgroundColor: "#E5E7EB",
+        disabledTextColor: "#9CA3AF",
+
+        // ⚡ ATIVAÇÃO INSTANTÂNEA - SEM DELAYS
         disabled: true,
-        requiresValidSelection: true,
+        requiresValidInput: true,
+        instantActivation: true, // Ativa na hora que completar
+        noDelay: true, // Sem atraso para ativar
+
+        // � AUTOAVANÇO IMEDIATO
+        autoAdvanceAfterActivation: true, // Avança logo após ativar
+        autoAdvanceDelay: 0, // Instantâneo
+
+        // � FEEDBACK MÍNIMO (RÁPIDO)
+        showSuccessAnimation: false, // Sem animação para não atrasar
+        showPulseWhenEnabled: false, // Sem pulse para não atrasar
+        quickFeedback: true, // Feedback rápido apenas
       },
     },
   ];

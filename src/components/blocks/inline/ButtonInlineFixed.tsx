@@ -18,7 +18,7 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
   const {
     text = "Clique aqui",
     style = "primary",
-    variant = "primary", 
+    variant = "primary",
     size = "large",
     backgroundColor = "#B89B7A",
     textColor = "#ffffff",
@@ -26,7 +26,7 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
     borderRadius = "rounded-full",
     padding,
     fontSize = "text-lg",
-    fontWeight = "font-bold", 
+    fontWeight = "font-bold",
     boxShadow = "shadow-xl",
     hoverEffect = true,
     requiresValidInput = false,
@@ -51,7 +51,7 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
     fullWidth,
     size,
     variant,
-    allProperties: block?.properties
+    allProperties: block?.properties,
   });
 
   // Usar variant se style não estiver definido
@@ -59,16 +59,16 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
 
   const sizeClasses = {
     small: "px-4 py-2 text-sm",
-    medium: "px-6 py-3 text-base", 
+    medium: "px-6 py-3 text-base",
     large: "px-8 py-4 text-lg",
   };
 
   // Função para converter margens numéricas em classes Tailwind
   const getMarginClass = (value: number, type: "top" | "bottom" | "left" | "right"): string => {
     if (!value || value === 0) return "";
-    
+
     const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
-    
+
     // Converter pixels em unidades Tailwind (aproximadamente)
     if (value <= 4) return `${prefix}-1`;
     if (value <= 8) return `${prefix}-2`;
@@ -86,11 +86,11 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
 
   const handleButtonClick = () => {
     onClick?.();
-    console.log("🎯 ButtonInline CTA clicado:", { 
-      text, 
-      blockId: block?.id, 
+    console.log("🎯 ButtonInline CTA clicado:", {
+      text,
+      blockId: block?.id,
       requiresValidInput,
-      disabled 
+      disabled,
     });
   };
 
@@ -100,7 +100,7 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
         "flex justify-center items-center w-full",
         // Margins do container
         getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"), 
+        getMarginClass(marginBottom, "bottom"),
         getMarginClass(marginLeft, "left"),
         getMarginClass(marginRight, "right"),
         isSelected && "ring-2 ring-[#B89B7A] ring-offset-2",
@@ -115,28 +115,28 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
           "inline-flex items-center justify-center font-bold transition-all duration-300",
           "focus:outline-none focus:ring-4 focus:ring-[#B89B7A] focus:ring-opacity-50",
           "border-2",
-          
+
           // Size
           padding || sizeClasses[size as keyof typeof sizeClasses] || sizeClasses.large,
-          
+
           // Layout
           fullWidth ? "w-full" : "w-auto",
           borderRadius || "rounded-full",
-          
+
           // Typography
           fontSize || "text-lg",
           fontWeight || "font-bold",
-          
+
           // Effects
           boxShadow,
           hoverEffect && "hover:shadow-xl hover:scale-105 active:scale-95",
-          
+
           // States
           disabled && "opacity-50 cursor-not-allowed",
           requiresValidInput && "opacity-75 cursor-not-allowed",
-          
+
           // Hover effects
-          "hover:shadow-2xl hover:brightness-110",
+          "hover:shadow-2xl hover:brightness-110"
         )}
         style={{
           backgroundColor,

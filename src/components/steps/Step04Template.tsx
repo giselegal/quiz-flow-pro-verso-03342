@@ -33,7 +33,7 @@ export const getStep04Template = () => {
     // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
       id: "step04-question-title",
-      type: "heading",
+      type: "text-inline",
       properties: {
         content: "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
         level: "h2",
@@ -48,7 +48,7 @@ export const getStep04Template = () => {
     // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
       id: "step04-question-counter",
-      type: "text",
+      type: "text-inline",
       properties: {
         content: "Questão 3 de 10",
         fontSize: "text-sm",
@@ -148,17 +148,17 @@ export const getStep04Template = () => {
         gridGap: 16,
         responsiveColumns: true,
         autoAdvanceOnComplete: true,
-        autoAdvanceDelay: 800,
+        autoAdvanceDelay: 0,
         requiredSelections: 3,
-        enableButtonOnlyWhenValid: true,
+        enableButtonOnlyWhenValid: false,
+        instantActivation: true,
         showValidationFeedback: true,
       },
     },
-
     // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
       id: "step04-continue-button",
-      type: "button",
+      type: "button-inline",
       properties: {
         text: "Continuar",
         variant: "primary",
@@ -169,6 +169,7 @@ export const getStep04Template = () => {
         disabled: true,
         requiresValidSelection: true,
       },
+    },},
     },
   ];
 };

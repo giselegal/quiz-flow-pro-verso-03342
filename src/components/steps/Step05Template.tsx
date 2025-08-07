@@ -33,7 +33,7 @@ export const getStep05Template = () => {
     // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
       id: "step05-question-title",
-      type: "heading",
+      type: "text-inline",
       properties: {
         content: "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?",
         level: "h2",
@@ -48,7 +48,7 @@ export const getStep05Template = () => {
     // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
       id: "step05-question-counter",
-      type: "text",
+      type: "text-inline",
       properties: {
         content: "Questão 5 de 10",
         fontSize: "text-sm",
@@ -155,9 +155,10 @@ export const getStep05Template = () => {
         gridGap: 16,
         responsiveColumns: true,
         autoAdvanceOnComplete: true,
-        autoAdvanceDelay: 800,
+        autoAdvanceDelay: 0,
         requiredSelections: 3,
-        enableButtonOnlyWhenValid: true,
+        enableButtonOnlyWhenValid: false,
+        instantActivation: true,
         showValidationFeedback: true,
       },
     },
@@ -165,7 +166,7 @@ export const getStep05Template = () => {
     // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
       id: "step05-continue-button",
-      type: "button",
+      type: "button-inline",
       properties: {
         text: "Continuar",
         variant: "primary",

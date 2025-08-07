@@ -1,5 +1,3 @@
-import React from "react";
-
 export interface Step03Props {
   onNext?: () => void;
   onBlockAdd?: (block: any) => void;
@@ -130,35 +128,61 @@ export const getStep03Template = () => {
             points: 1,
           },
         ],
-        columns: 1,
-        showImages: false,
+        // 🎨 LAYOUT BASEADO EM IMAGENS - REGRA: 1 COLUNA SEM IMAGENS
+        columns: 1, // 1 coluna porque NÃO TEM IMAGENS
+        showImages: false, // SEM IMAGENS = 1 COLUNA
         multipleSelection: true,
         maxSelections: 3,
         minSelections: 1,
         validationMessage: "Selecione até 3 opções",
-        gridGap: 12,
-        responsiveColumns: true,
+        gridGap: 12, // Menor gap para texto
+        responsiveColumns: false, // Sempre 1 coluna
+
+        // 🚀 AUTOAVANÇO INSTANTÂNEO APÓS COMPLETAR
         autoAdvanceOnComplete: true,
-        autoAdvanceDelay: 800,
+        autoAdvanceDelay: 0, // INSTANTÂNEO após última seleção
+        instantActivation: true, // Botão ativa na hora
         requiredSelections: 3,
+
+        // 🔘 ATIVAÇÃO IMEDIATA
         enableButtonOnlyWhenValid: true,
+        instantButtonActivation: true, // Ativa assim que completar
         showValidationFeedback: true,
       },
     },
 
-    // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
+    // 🔘 BOTÃO COM ATIVAÇÃO INSTANTÂNEA (EDITÁVEL SEPARADAMENTE)
     {
       id: "step03-continue-button",
-      type: "button",
+      type: "button-inline",
       properties: {
-        text: "Continuar",
+        // 📝 TEXTO DINÂMICO
+        text: "Continuar →",
+        textWhenDisabled: "Selecione 3 características",
+        textWhenComplete: "Continuar →",
+
+        // 🎨 ESTILO
         variant: "primary",
         size: "large",
-        fullWidth: true,
         backgroundColor: "#B89B7A",
         textColor: "#ffffff",
+        disabledBackgroundColor: "#E5E7EB",
+        disabledTextColor: "#9CA3AF",
+
+        // ⚡ ATIVAÇÃO INSTANTÂNEA - SEM DELAYS
         disabled: true,
-        requiresValidSelection: true,
+        requiresValidInput: true,
+        instantActivation: true, // Ativa na hora que completar
+        noDelay: true, // Sem atraso para ativar
+
+        // 🚀 AUTOAVANÇO IMEDIATO
+        autoAdvanceAfterActivation: true, // Avança logo após ativar
+        autoAdvanceDelay: 0, // Instantâneo
+
+        // 📊 FEEDBACK MÍNIMO (RÁPIDO)
+        showSuccessAnimation: false, // Sem animação para não atrasar
+        showPulseWhenEnabled: false, // Sem pulse para não atrasar
+        quickFeedback: true, // Feedback rápido apenas
       },
     },
   ];

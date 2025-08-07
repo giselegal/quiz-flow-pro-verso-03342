@@ -1,4 +1,3 @@
-import React from "react";
 import ButtonInlineFixed from "../components/blocks/inline/ButtonInlineFixed";
 
 const TestButton = () => {
@@ -28,7 +27,7 @@ const TestButton = () => {
   return (
     <div className="p-8 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold mb-8 text-center">Teste do Botão CTA</h1>
-      
+
       <div className="border-2 border-dashed border-gray-300 p-4 rounded-lg">
         <ButtonInlineFixed
           block={testBlock}
@@ -38,7 +37,9 @@ const TestButton = () => {
       </div>
 
       <div className="mt-4 text-sm text-gray-600">
-        <p><strong>Propriedades do teste:</strong></p>
+        <p>
+          <strong>Propriedades do teste:</strong>
+        </p>
         <pre className="bg-gray-100 p-2 rounded text-xs overflow-auto">
           {JSON.stringify(testBlock.properties, null, 2)}
         </pre>
