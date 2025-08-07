@@ -59,10 +59,8 @@ export const useReusableComponents = (quizId?: string) => {
   // Supabase client (opcional - se não configurado, usa dados mock)
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
   const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-  
-  const supabase = supabaseUrl && supabaseKey 
-    ? createClient(supabaseUrl, supabaseKey)
-    : null;
+
+  const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
   // ============================================================================
   // CARREGAR TIPOS DE COMPONENTES DISPONÍVEIS
@@ -71,7 +69,7 @@ export const useReusableComponents = (quizId?: string) => {
   const loadComponentTypes = useCallback(async () => {
     try {
       setLoading(true);
-      
+
       if (!supabase) {
         // Retorna dados mock quando Supabase não está configurado
         const mockData: ComponentType[] = [];
@@ -79,7 +77,7 @@ export const useReusableComponents = (quizId?: string) => {
         setError(null);
         return;
       }
-      
+
       const { data, error } = await supabase
         .from("component_types")
         .select("*")
