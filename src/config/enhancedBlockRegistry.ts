@@ -45,11 +45,11 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   "text-inline": TextInlineBlock,
   "heading-inline": HeadingInlineBlock,
   "image-display-inline": ImageDisplayInlineBlock,
-  
+
   // Quiz Components
   "quiz-intro-header": QuizIntroHeaderBlock,
   "form-input": FormInputBlock,
-  
+
   // Interactive Elements
   "button-inline": BadgeInlineBlock,
   "decorative-bar-inline": DecorativeBarInlineBlock,
@@ -64,14 +64,14 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
 
   // Legal
   "legal-notice-inline": LegalNoticeInlineBlock,
-  
+
   // Quiz Advanced
   "options-grid": OptionsGridBlock,
   "quiz-progress": QuizProgressBlock,
   "quiz-results": QuizResultsEditor,
   "style-results": StyleResultsEditor,
   "final-step": FinalStepEditor,
-  
+
   // Legacy inline components (para compatibilidade)
   text: TextInline,
   heading: HeadingInline,
@@ -86,15 +86,12 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
  */
 export const getBlockComponent = (type: string): React.ComponentType<any> | null => {
   const component = ENHANCED_BLOCK_REGISTRY[type];
-  
-  // Debug: Log qual componente está sendo solicitado
-  console.log(`🔍 getBlockComponent(${type}):`, component ? "✅ ENCONTRADO" : "❌ NÃO ENCONTRADO");
-  
+
   if (!component) {
     console.warn(`⚠️ Componente não registrado: ${type}`);
     console.log("📋 Componentes disponíveis:", Object.keys(ENHANCED_BLOCK_REGISTRY));
   }
-  
+
   return component || null;
 };
 

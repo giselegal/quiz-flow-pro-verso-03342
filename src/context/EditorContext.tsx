@@ -1,7 +1,14 @@
 // EditorDatabaseAdapter removed - using direct context state management
 import { getAllSteps, getStepTemplate } from "@/config/stepTemplatesMapping";
 import { EditorBlock, FunnelStage } from "@/types/editor";
-import React, { createContext, ReactNode, useCallback, useContext, useState } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 // ✅ INTERFACE UNIFICADA DO CONTEXTO
 interface EditorContextType {
@@ -63,9 +70,7 @@ interface EditorContextType {
   };
 }
 
-
-
-  const EditorContext = createContext<EditorContextType | undefined>(undefined);
+const EditorContext = createContext<EditorContextType | undefined>(undefined);
 
 export const useEditor = () => {
   const context = useContext(EditorContext);
@@ -103,11 +108,14 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     // ✅ USAR TEMPLATES ESPECÍFICOS DAS ETAPAS
     const allStepTemplates = getAllSteps();
     console.log("📋 EditorProvider: Templates carregados:", allStepTemplates.length);
-    console.log("📋 EditorProvider: Templates detalhados:", allStepTemplates.map(t => ({
-      stepNumber: t.stepNumber,
-      name: t.name,
-      hasFunction: typeof t.templateFunction === 'function'
-    })));
+    console.log(
+      "📋 EditorProvider: Templates detalhados:",
+      allStepTemplates.map(t => ({
+        stepNumber: t.stepNumber,
+        name: t.name,
+        hasFunction: typeof t.templateFunction === "function",
+      }))
+    );
 
     const initialStages = allStepTemplates.map((stepTemplate, index) => ({
       id: `step-${stepTemplate.stepNumber}`,
@@ -207,7 +215,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         // ✅ CARREGAR DIRETAMENTE DO TEMPLATE
         const templateBlocks = getStepTemplate(stepNumber);
         console.log(`📦 Template blocks recebidos:`, templateBlocks?.length || 0, templateBlocks);
-        
+
         if (templateBlocks && templateBlocks.length > 0) {
           const editorBlocks: EditorBlock[] = templateBlocks.map(
             (block: { id: any; type: any; properties: any; content: any }, index: number) => {
@@ -234,10 +242,10 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
               stage.id === stageId
                 ? {
                     ...stage,
-                    metadata: { 
-                      ...stage.metadata, 
+                    metadata: {
+                      ...stage.metadata,
                       blocksCount: editorBlocks.length,
-                      lastModified: new Date() 
+                      lastModified: new Date(),
                     },
                   }
                 : stage
@@ -272,13 +280,16 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       // ✅ CARREGAR TEMPLATE SE A ETAPA ESTIVER VAZIA
       const currentBlocks = stageBlocks[stageId] || [];
       console.log(`🔍 EditorContext: Etapa ${stageId} tem ${currentBlocks.length} blocos`);
-      
+
       if (currentBlocks.length === 0) {
         console.log(`🎨 EditorContext: Etapa ${stageId} vazia, carregando template...`);
         // Executar imediatamente ao invés de timeout
         loadStageTemplate(stageId);
       } else {
-        console.log(`📋 EditorContext: Etapa ${stageId} já tem blocos:`, currentBlocks.map(b => b.type));
+        console.log(
+          `📋 EditorContext: Etapa ${stageId} já tem blocos:`,
+          currentBlocks.map(b => b.type)
+        );
       }
 
       console.log("✅ EditorContext: Etapa ativa alterada para:", stageId);
@@ -777,6 +788,23 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     databaseMode: databaseModeEnabled,
     quizId: currentQuizId,
   });
+
+  // ✅ INICIALIZAÇÃO AUTOMÁTICA - CARREGAR TEMPLATE DA ETAPA ATIVA
+  useEffect(() => {
+    console.log("🚀 EditorContext: useEffect de inicialização executado");
+    console.log("📋 EditorContext: activeStageId:", activeStageId);
+    console.log("📋 EditorContext: currentBlocks.length:", currentBlocks.length);
+
+    // Só carregar se a etapa ativa não tiver blocos
+    if (activeStageId && currentBlocks.length === 0) {
+      console.log(`🎨 EditorContext: Carregando template automaticamente para ${activeStageId}`);
+      loadStageTemplate(activeStageId);
+    } else {
+      console.log(
+        `📋 EditorContext: Etapa ${activeStageId} já tem ${currentBlocks.length} blocos ou etapa inválida`
+      );
+    }
+  }, [activeStageId, currentBlocks.length, loadStageTemplate]);
 
   // ═══════════════════════════════════════════════
   // 🎯 CONTEXT VALUE (INTERFACE COMPLETA)
