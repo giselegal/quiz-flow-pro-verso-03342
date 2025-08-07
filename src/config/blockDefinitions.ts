@@ -3,7 +3,7 @@ import { AlignLeft, Heading, Image, Minus, Square, Type } from "lucide-react";
 
 // Import real components instead of placeholder
 import ImageDisplayInlineBlock from "@/components/blocks/inline/ImageDisplayInlineBlock";
-import StyleCardInlineBlock from "@/components/blocks/inline/StyleCardInlineBlock";
+// import StyleCardInlineBlock from "@/components/blocks/inline/StyleCardInlineBlock";
 import BadgeInlineBlock from "@/components/editor/blocks/BadgeInlineBlock";
 import DecorativeBarInlineBlock from "@/components/editor/blocks/DecorativeBarInlineBlock";
 import FinalStepEditor from "@/components/editor/blocks/FinalStepEditor";
@@ -270,7 +270,7 @@ export const blockDefinitions: BlockDefinition[] = [
     description: "Componente de imagem",
     category: "Media",
     icon: Image,
-    component: StyleCardInlineBlock, // ✅ CONECTADO ao componente real
+    component: ImageDisplayInlineBlock, // ✅ CONECTADO ao componente real
     properties: {
       url: {
         type: "string",

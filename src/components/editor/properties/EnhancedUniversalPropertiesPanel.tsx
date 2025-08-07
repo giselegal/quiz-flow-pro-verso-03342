@@ -1,5 +1,5 @@
 import { getInlineComponentProperties } from '@/hooks/useUnifiedProperties';
-import React from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 interface Block {
   id: string;

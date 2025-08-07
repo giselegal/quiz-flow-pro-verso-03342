@@ -2,14 +2,14 @@ import React from "react";
 import { Block } from "@/types/editor";
 import { StyleResult } from "@/types/quiz";
 
-// Import specific block editors
-import TextInlineBlock from "./blocks/inline/TextInlineBlock";
-import ImageDisplayInlineBlock from "./blocks/inline/ImageDisplayInlineBlock";
-import BadgeInlineBlock from "./blocks/inline/BadgeInlineBlock";
-import ProgressInlineBlock from "./blocks/inline/ProgressInlineBlock";
-import StatInlineBlock from "./blocks/inline/StatInlineBlock";
-import CountdownInlineBlock from "./blocks/inline/CountdownInlineBlock";
-import SpacerInlineBlock from "./blocks/inline/SpacerInlineBlock";
+// Import specific block editors (commented out missing components)
+// import TextInlineBlock from "./blocks/inline/TextInlineBlock";
+// import ImageDisplayInlineBlock from "./blocks/inline/ImageDisplayInlineBlock";
+// import BadgeInlineBlock from "./blocks/inline/BadgeInlineBlock";
+// import ProgressInlineBlock from "./blocks/inline/ProgressInlineBlock";
+// import StatInlineBlock from "./blocks/inline/StatInlineBlock";
+// import { CountdownInlineBlock } from "./blocks/inline";
+// import SpacerInlineBlock from "./blocks/inline/SpacerInlineBlock";
 
 interface EditBlockContentProps {
   block: Block;
@@ -47,45 +47,19 @@ const EditBlockContent: React.FC<EditBlockContentProps> = ({
     disabled: false,
   };
 
-  // Map block types to their respective editors
+  // Map block types to their respective editors - simplified version
   const renderBlock = () => {
-    switch (block.type) {
-      case "text-inline":
-        return <TextInlineBlock {...blockProps} />;
-      case "image-display-inline":
-        return <ImageDisplayInlineBlock {...blockProps} />;
-      case "badge-inline":
-        return <BadgeInlineBlock {...blockProps} />;
-      case "progress-inline":
-        return <ProgressInlineBlock {...blockProps} />;
-      case "stat-inline":
-        return <StatInlineBlock {...blockProps} />;
-      case "countdown-inline":
-        return <CountdownInlineBlock {...blockProps} />;
-      case "spacer-inline":
-        return <SpacerInlineBlock {...blockProps} />;
-      case "text":
-      case "headline":
-      case "image":
-      case "button":
-      case "spacer":
-        // Handle legacy block types
-        return (
-          <div className="p-4 border border-gray-300 bg-gray-50 rounded-lg">
-            <p className="text-gray-600">
-              Bloco tipo: <strong>{block.type}</strong>
-            </p>
-          </div>
-        );
-      default:
-        return (
-          <div className="p-4 border border-gray-300 bg-gray-50 rounded-lg">
-            <p className="text-gray-600">
-              Editor não implementado para o tipo: <strong>{block.type}</strong>
-            </p>
-          </div>
-        );
-    }
+    // For now, just render a simple preview for all block types
+    return (
+      <div className="p-4 border border-gray-300 bg-gray-50 rounded-lg">
+        <p className="text-gray-600">
+          Bloco tipo: <strong>{block.type}</strong>
+        </p>
+        <pre className="text-xs mt-2 bg-gray-100 p-2 rounded max-h-32 overflow-y-auto">
+          {JSON.stringify(block.properties || {}, null, 2)}
+        </pre>
+      </div>
+    );
   };
 
   return <div className="w-full">{renderBlock()}</div>;

@@ -1,42 +1,37 @@
-// Export de todos os componentes inline disponíveis
+// Export de componentes inline que realmente existem
 // Este arquivo resolve o problema de importação no UniversalBlockRenderer
 
-// Componentes básicos
-export { default as TextInlineBlock } from "./TextInlineBlock";
-export { default as ImageDisplayInlineBlock } from "./ImageDisplayInlineBlock";
-export { default as BadgeInlineBlock } from "./BadgeInlineBlock";
-export { default as ProgressInlineBlock } from "./ProgressInlineBlock";
-export { default as StatInlineBlock } from "./StatInlineBlock";
+// Componentes básicos que existem
+export { default as TextInlineBlock } from "./TextInline";
+export { default as ImageDisplayInlineBlock } from "./ImageDisplayInline";
 export { default as CountdownInlineBlock } from "./CountdownInlineBlock";
-export { default as SpacerInlineBlock } from "./SpacerInlineBlock";
 
-// Componentes de cards
+// Componentes de cards que existem
 export { default as PricingCardInlineBlock } from "./PricingCardInlineBlock";
 export { default as TestimonialCardInlineBlock } from "./TestimonialCardInlineBlock";
-export { default as StyleCardInlineBlock } from "./StyleCardInlineBlock";
 export { default as ResultCardInlineBlock } from "./ResultCardInlineBlock";
 
-// Componentes de resultado
-export { default as ResultHeaderInlineBlock } from "./ResultHeaderInlineBlock";
+// Componentes de resultado que existem
 export { default as StepHeaderInlineBlock } from "./StepHeaderInlineBlock";
 export { default as SecondaryStylesInlineBlock } from "./SecondaryStylesInlineBlock";
 export { default as StyleCharacteristicsInlineBlock } from "./StyleCharacteristicsInlineBlock";
 
-// Componentes de quiz
-export { default as QuizIntroHeaderBlock } from "./QuizIntroHeaderBlock";
+// Componentes de quiz que existem
 export { default as LoadingAnimationBlock } from "./LoadingAnimationBlock";
-export { default as QuizPersonalInfoInlineBlock } from "./QuizPersonalInfoInlineBlock";
-export { default as QuizResultInlineBlock } from "./QuizResultInlineBlock";
-export { default as QuizStartPageInlineBlock } from "./QuizStartPageInlineBlock";
-export { default as QuizQuestionInlineBlock } from "./QuizQuestionInlineBlock";
-export { default as QuizOfferCTAInlineBlock } from "./QuizOfferCTAInlineBlock";
 
-// Componentes que existem mas podem estar vazios
+// Componentes especiais que existem
 export { default as CharacteristicsListInlineBlock } from "./CharacteristicsListInlineBlock";
 export { default as TestimonialsInlineBlock } from "./TestimonialsInlineBlock";
-export { default as BeforeAfterInlineBlock } from "./BeforeAfterInlineBlock";
 export { default as BonusListInlineBlock } from "./BonusListInlineBlock";
+export { default as QuizOfferCTAInlineBlock } from "./QuizOfferCTAInlineBlock";
 export { default as QuizOfferPricingInlineBlock } from "./QuizOfferPricingInlineBlock";
 
-// Re-exportar tipos necessários
-export type { BlockComponentProps } from "../../../../types/blocks";
+// Utilitários
+export { default as DividerInlineBlock } from "./DividerInlineBlock";
+export { default as BenefitsInlineBlock } from "./BenefitsInlineBlock";
+
+// Componentes de interface
+export { default as HeadingInline } from "./HeadingInline";
+export { default as ButtonInline } from "./ButtonInline";
+export { default as DecorativeBarInline } from "./DecorativeBarInline";
+export { default as LegalNoticeInline } from "./LegalNoticeInline";

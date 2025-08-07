@@ -13,7 +13,7 @@ interface Props extends BlockComponentProps {
   [key: string]: any;
 }
 
-const BenefitsInlineBlock: React.FC<BenefitsInlineBlockProps> = ({
+const BenefitsInlineBlock: React.FC<Props> = ({
   title = "Principais Benefícios",
   benefits = [
     "Resultados comprovados em até 7 dias",

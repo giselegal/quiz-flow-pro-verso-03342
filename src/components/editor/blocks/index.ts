@@ -1,16 +1,8 @@
-// Export all block components for easy importing
-export { default as BadgeInlineBlock } from "./inline/BadgeInlineBlock";
+// Export only components that actually exist
+// Components that exist and can be exported:
 export { default as CountdownInlineBlock } from "./inline/CountdownInlineBlock";
-export { default as ImageDisplayInlineBlock } from "./inline/ImageDisplayInlineBlock";
-export { default as ProgressInlineBlock } from "./inline/ProgressInlineBlock";
-export { default as SpacerInlineBlock } from "./inline/SpacerInlineBlock";
-export { default as StatInlineBlock } from "./inline/StatInlineBlock";
-export { default as TextInlineBlock } from "./inline/TextInlineBlock";
-
-// Componentes de cards
 export { default as PricingCardInlineBlock } from "./inline/PricingCardInlineBlock";
 export { default as ResultCardInlineBlock } from "./inline/ResultCardInlineBlock";
-export { default as StyleCardInlineBlock } from "./inline/StyleCardInlineBlock";
 export { default as TestimonialCardInlineBlock } from "./inline/TestimonialCardInlineBlock";
 
 // Componentes de resultado

@@ -11,7 +11,7 @@ interface Props extends BlockComponentProps {
   [key: string]: any;
 }
 
-const DividerInlineBlock: React.FC<DividerInlineBlockProps> = ({
+const DividerInlineBlock: React.FC<Props> = ({
   style = "solid",
   thickness = 1,
   color = "#432818",

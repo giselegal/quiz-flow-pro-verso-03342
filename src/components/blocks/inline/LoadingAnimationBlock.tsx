@@ -11,7 +11,7 @@ interface Props extends BlockComponentProps {
   onSelect?: () => void;
 }
 
-const LoadingAnimationBlock: React.FC<LoadingAnimationProps> = ({
+const LoadingAnimationBlock: React.FC<Props> = ({
   block,
   className,
   onUpdate,

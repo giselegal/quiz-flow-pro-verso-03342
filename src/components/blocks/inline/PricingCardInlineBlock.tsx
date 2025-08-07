@@ -27,7 +27,7 @@ interface Props extends BlockComponentProps {
   onPropertyChange?: (key: string, value: any) => void;
 }
 
-export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
+export const PricingCardInlineBlock: React.FC<Props> = ({
   block,
   isSelected = false,
   onSelect,
