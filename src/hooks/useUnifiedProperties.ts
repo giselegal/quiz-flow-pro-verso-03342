@@ -151,7 +151,7 @@ export const useUnifiedProperties = (
             { value: "full", label: "Completa (100%)" },
             { value: "large", label: "Grande (1024px)" },
             { value: "medium", label: "Média (672px)" },
-            { value: "small", label: "Pequena (448px)" }
+            { value: "small", label: "Pequena (448px)" },
           ],
         },
         {
@@ -163,7 +163,7 @@ export const useUnifiedProperties = (
           options: [
             { value: "left", label: "Esquerda" },
             { value: "center", label: "Centralizado" },
-            { value: "right", label: "Direita" }
+            { value: "right", label: "Direita" },
           ],
         },
         {
@@ -177,7 +177,7 @@ export const useUnifiedProperties = (
             { value: "compact", label: "Compacto (8px)" },
             { value: "normal", label: "Normal (16px)" },
             { value: "comfortable", label: "Confortável (24px)" },
-            { value: "spacious", label: "Espaçoso (32px)" }
+            { value: "spacious", label: "Espaçoso (32px)" },
           ],
         },
         {
@@ -190,7 +190,7 @@ export const useUnifiedProperties = (
             { value: "transparent", label: "Transparente" },
             { value: "white", label: "Branco" },
             { value: "gray-50", label: "Cinza Claro" },
-            { value: "brand-light", label: "Cor da Marca" }
+            { value: "brand-light", label: "Cor da Marca" },
           ],
         },
         {
@@ -215,8 +215,28 @@ export const useUnifiedProperties = (
           step: 8,
           unit: "px",
         },
-
-
+        {
+          key: "marginLeft",
+          value: currentBlock?.properties?.marginLeft || 0,
+          type: PropertyType.RANGE,
+          label: "Margem Esquerda",
+          category: PropertyCategory.LAYOUT,
+          min: 0,
+          max: 80,
+          step: 4,
+          unit: "px",
+        },
+        {
+          key: "marginRight",
+          value: currentBlock?.properties?.marginRight || 0,
+          type: PropertyType.RANGE,
+          label: "Margem Direita",
+          category: PropertyCategory.LAYOUT,
+          min: 0,
+          max: 80,
+          step: 4,
+          unit: "px",
+        },
       ];
 
       // ---- Mescla de todos os campos para cada tipo de bloco ----
@@ -308,6 +328,22 @@ export const useUnifiedProperties = (
               currentBlock?.properties?.marginBottom ?? 0,
               PropertyType.RANGE,
               "Margem Inferior",
+              PropertyCategory.STYLE,
+              { min: 0, max: 100, step: 4, unit: "px" }
+            ),
+            createProperty(
+              "marginLeft",
+              currentBlock?.properties?.marginLeft ?? 0,
+              PropertyType.RANGE,
+              "Margem Esquerda",
+              PropertyCategory.STYLE,
+              { min: 0, max: 100, step: 4, unit: "px" }
+            ),
+            createProperty(
+              "marginRight",
+              currentBlock?.properties?.marginRight ?? 0,
+              PropertyType.RANGE,
+              "Margem Direita",
               PropertyCategory.STYLE,
               { min: 0, max: 100, step: 4, unit: "px" }
             ),

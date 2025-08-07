@@ -74,6 +74,8 @@ export const getStep01Template = () => {
         textAlign: "text-center",
         color: "#B89B7A", // Cor dourada da marca como padrão (texto normal)
         marginBottom: 32,
+        marginLeft: 0,
+        marginRight: 0,
         lineHeight: "1.2",
         // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
         containerWidth: "large", // Opções: "full", "large", "medium", "small"
@@ -119,6 +121,8 @@ export const getStep01Template = () => {
         color: "#432818", // Cor marrom escuro (texto padrão)
         marginTop: 0,
         marginBottom: 40,
+        marginLeft: 16,
+        marginRight: 16,
         lineHeight: "1.6",
         // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
         containerWidth: "medium", // Opções: "full", "large", "medium", "small"

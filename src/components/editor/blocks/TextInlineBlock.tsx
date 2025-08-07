@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { BlockComponentProps } from "../../../types/blocks";
 
 /**
@@ -33,6 +33,8 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     // Propriedades de espaçamento
     marginTop = 0,
     marginBottom = 0,
+    marginLeft = 0,
+    marginRight = 0,
     lineHeight = "leading-normal",
   } = block?.properties ?? {};
 
@@ -97,18 +99,21 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   } as const;
 
   // Função para converter valores numéricos de margem em classes Tailwind
-  const getMarginClass = (value: number | string, type: "top" | "bottom") => {
+  const getMarginClass = (value: number | string, type: "top" | "bottom" | "left" | "right") => {
     if (typeof value === "number" && value > 0) {
+      const prefix =
+        type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+
       // Converter px para valores Tailwind aproximados
-      if (value <= 4) return `m${type[0]}-1`; // mt-1 ou mb-1
-      if (value <= 8) return `m${type[0]}-2`; // mt-2 ou mb-2
-      if (value <= 12) return `m${type[0]}-3`;
-      if (value <= 16) return `m${type[0]}-4`;
-      if (value <= 20) return `m${type[0]}-5`;
-      if (value <= 24) return `m${type[0]}-6`;
-      if (value <= 32) return `m${type[0]}-8`;
-      if (value <= 40) return `m${type[0]}-10`;
-      return `m${type[0]}-12`;
+      if (value <= 4) return `${prefix}-1`; // mt-1, mb-1, ml-1, mr-1
+      if (value <= 8) return `${prefix}-2`; // mt-2, mb-2, ml-2, mr-2
+      if (value <= 12) return `${prefix}-3`;
+      if (value <= 16) return `${prefix}-4`;
+      if (value <= 20) return `${prefix}-5`;
+      if (value <= 24) return `${prefix}-6`;
+      if (value <= 32) return `${prefix}-8`;
+      if (value <= 40) return `${prefix}-10`;
+      return `${prefix}-12`;
     }
     return "";
   };
@@ -253,6 +258,74 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     onClick?.();
   }, [onClick]);
 
+  // 🎯 EDIÇÃO INLINE - Estados e handlers
+  const [isEditing, setIsEditing] = useState(false);
+  const [editContent, setEditContent] = useState(personalizedContent);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Atualizar conteúdo de edição quando personalizedContent mudar
+  useEffect(() => {
+    setEditContent(personalizedContent);
+  }, [personalizedContent]);
+
+  // Handler para duplo clique para editar
+  const handleDoubleClick = useCallback(() => {
+    if (onPropertyChange) {
+      setIsEditing(true);
+      setEditContent(personalizedContent);
+    }
+  }, [onPropertyChange, personalizedContent]);
+
+  // Handler para salvar mudanças
+  const handleSave = useCallback(() => {
+    if (onPropertyChange && editContent !== personalizedContent) {
+      onPropertyChange("content", editContent);
+    }
+    setIsEditing(false);
+  }, [onPropertyChange, editContent, personalizedContent]);
+
+  // Handler para cancelar edição
+  const handleCancel = useCallback(() => {
+    setEditContent(personalizedContent);
+    setIsEditing(false);
+  }, [personalizedContent]);
+
+  // Handler para teclas durante edição
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        handleSave();
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        handleCancel();
+      }
+    },
+    [handleSave, handleCancel]
+  );
+
+  // Auto-focus quando inicia edição
+  useEffect(() => {
+    if (isEditing && textareaRef.current) {
+      textareaRef.current.focus();
+      textareaRef.current.select();
+    }
+  }, [isEditing]);
+
+  // Auto-resize textarea
+  const autoResizeTextarea = useCallback(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isEditing) {
+      autoResizeTextarea();
+    }
+  }, [isEditing, editContent, autoResizeTextarea]);
+
   return (
     <div
       className={cn(
@@ -268,58 +341,103 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         isSelected && "ring-2 ring-brand ring-offset-2",
         "cursor-pointer",
 
+        // Estados de edição
+        isEditing && "ring-2 ring-blue-500 ring-offset-2",
+
         // SPACING - ES7+ Computed property com fallback
         spacingClasses[spacing as keyof typeof spacingClasses] ?? spacingClasses.normal,
 
-        // MARGIN SPACING
+        // MARGIN SPACING - Suporte completo para todas as direções
         getMarginClass(marginTop, "top"),
         getMarginClass(marginBottom, "bottom"),
+        getMarginClass(marginLeft, "left"),
+        getMarginClass(marginRight, "right"),
 
         className
       )}
       style={{ backgroundColor }}
       onClick={handleClick}
+      onDoubleClick={handleDoubleClick}
       // ES7+ Object spread para data attributes
       {...(block?.id && { "data-block-id": block.id })}
       {...(block?.type && { "data-block-type": block.type })}
     >
-      <div
-        className={cn(
-          // ES7+ Computed properties com fallbacks
-          fontSizeClasses[fontSize as keyof typeof fontSizeClasses] ?? fontSizeClasses.medium,
-          fontWeightClasses[fontWeight as keyof typeof fontWeightClasses] ??
-            fontWeightClasses.normal,
-          textAlignClasses[textAlign as keyof typeof textAlignClasses] ?? textAlignClasses.left,
-
-          // Responsividade e quebra de texto
-          "break-words whitespace-pre-wrap",
-
-          // Line height
-          lineHeight || "leading-normal"
-        )}
-        style={{
-          color,
-          ...(fontFamily !== "inherit" && { fontFamily }),
-          ...(maxWidth !== "auto" && { maxWidth }),
-        }}
-        // ES7+ Conditional data attributes
-      >
-        {hasColorMarkings ? (
-          // 🎯 Renderiza texto com múltiplas cores e formatação usando marcação [cor]**texto**[/cor]
-          <>{parseMultiColorText(personalizedContent)}</>
-        ) : hasSimpleFormatting ? (
-          // 🎯 Renderiza texto com formatação simples **negrito** sem cores
-          <span style={{ color }}>{parseFormattedText(personalizedContent)}</span>
-        ) : isHtmlContent ? (
-          // Renderiza como HTML se detectar qualquer tag HTML
-          <div
-            dangerouslySetInnerHTML={{ __html: personalizedContent }}
-            style={{ display: "contents" }}
+      {isEditing ? (
+        // 🎯 MODO EDIÇÃO: Textarea para editar conteúdo
+        <div className="w-full">
+          <textarea
+            ref={textareaRef}
+            value={editContent}
+            onChange={e => {
+              setEditContent(e.target.value);
+              autoResizeTextarea();
+            }}
+            onKeyDown={handleKeyDown}
+            onBlur={handleSave}
+            className={cn(
+              "w-full bg-transparent border-none resize-none outline-none",
+              fontSizeClasses[fontSize as keyof typeof fontSizeClasses] ?? fontSizeClasses.medium,
+              fontWeightClasses[fontWeight as keyof typeof fontWeightClasses] ??
+                fontWeightClasses.normal,
+              textAlignClasses[textAlign as keyof typeof textAlignClasses] ?? textAlignClasses.left,
+              "break-words whitespace-pre-wrap",
+              lineHeight || "leading-normal"
+            )}
+            style={{
+              color,
+              ...(fontFamily !== "inherit" && { fontFamily }),
+              ...(maxWidth !== "auto" && { maxWidth }),
+              minHeight: "1.5em",
+            }}
+            placeholder="Digite seu texto..."
           />
-        ) : (
-          personalizedContent
-        )}
-      </div>
+          <div className="text-xs text-gray-500 mt-1">
+            Cmd/Ctrl + Enter para salvar • Esc para cancelar
+          </div>
+        </div>
+      ) : (
+        // 🎯 MODO VISUALIZAÇÃO: Texto renderizado
+        <div
+          className={cn(
+            // ES7+ Computed properties com fallbacks
+            fontSizeClasses[fontSize as keyof typeof fontSizeClasses] ?? fontSizeClasses.medium,
+            fontWeightClasses[fontWeight as keyof typeof fontWeightClasses] ??
+              fontWeightClasses.normal,
+            textAlignClasses[textAlign as keyof typeof textAlignClasses] ?? textAlignClasses.left,
+
+            // Responsividade e quebra de texto
+            "break-words whitespace-pre-wrap",
+
+            // Line height
+            lineHeight || "leading-normal",
+
+            // Hover para indicar que é editável
+            onPropertyChange && "hover:bg-gray-50 hover:bg-opacity-50 rounded px-1"
+          )}
+          style={{
+            color,
+            ...(fontFamily !== "inherit" && { fontFamily }),
+            ...(maxWidth !== "auto" && { maxWidth }),
+          }}
+          title={onPropertyChange ? "Duplo clique para editar" : undefined}
+        >
+          {hasColorMarkings ? (
+            // 🎯 Renderiza texto com múltiplas cores e formatação usando marcação [cor]**texto**[/cor]
+            <>{parseMultiColorText(personalizedContent)}</>
+          ) : hasSimpleFormatting ? (
+            // 🎯 Renderiza texto com formatação simples **negrito** sem cores
+            <span style={{ color }}>{parseFormattedText(personalizedContent)}</span>
+          ) : isHtmlContent ? (
+            // Renderiza como HTML se detectar qualquer tag HTML
+            <div
+              dangerouslySetInnerHTML={{ __html: personalizedContent }}
+              style={{ display: "contents" }}
+            />
+          ) : (
+            personalizedContent
+          )}
+        </div>
+      )}
     </div>
   );
 };

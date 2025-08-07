@@ -20,6 +20,8 @@ export interface ContainerProperties {
   backgroundColor?: "transparent" | "white" | "gray-50" | "brand-light";
   marginTop?: number;
   marginBottom?: number;
+  marginLeft?: number;
+  marginRight?: number;
   scale?: number; // 🎯 Propriedade de escala (50-200%)
 }
 
@@ -32,6 +34,8 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
     backgroundColor = "transparent",
     marginTop = 0,
     marginBottom = 0,
+    marginLeft = 0,
+    marginRight = 0,
     scale = 100, // 🎯 Valor padrão 100%
   } = properties; // Gerar classes CSS baseadas nas propriedades
   const getContainerClasses = (): string => {
@@ -128,6 +132,26 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
       else classes.push("mb-12");
     }
 
+    // 📏 Margin Left Classes (espaço lateral esquerdo)
+    if (marginLeft && marginLeft > 0) {
+      if (marginLeft <= 8) classes.push("ml-2");
+      else if (marginLeft <= 16) classes.push("ml-4");
+      else if (marginLeft <= 24) classes.push("ml-6");
+      else if (marginLeft <= 32) classes.push("ml-8");
+      else if (marginLeft <= 40) classes.push("ml-10");
+      else classes.push("ml-12");
+    }
+
+    // 📏 Margin Right Classes (espaço lateral direito)
+    if (marginRight && marginRight > 0) {
+      if (marginRight <= 8) classes.push("mr-2");
+      else if (marginRight <= 16) classes.push("mr-4");
+      else if (marginRight <= 24) classes.push("mr-6");
+      else if (marginRight <= 32) classes.push("mr-8");
+      else if (marginRight <= 40) classes.push("mr-10");
+      else classes.push("mr-12");
+    }
+
     return classes.filter(Boolean).join(" ");
   };
 
@@ -138,11 +162,11 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
     // 🎯 Aplicar escala que afeta realmente o layout flow
     if (scale && scale !== 100) {
       const scaleFactor = scale / 100;
-      
+
       // Usar transform com configuração que minimiza espaço vazio
       styles.transform = `scale(${scaleFactor})`;
       styles.transformOrigin = "top center"; // Escalar do topo para baixo
-      
+
       // 🎯 CRUCIAL: Ajustar altura do container para eliminar espaço vazio
       styles.height = `${scaleFactor * 100}%`;
       styles.margin = `${(1 - scaleFactor) * -50}% 0`; // Compensar espaço vazio
@@ -171,6 +195,8 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
       backgroundColor,
       marginTop,
       marginBottom,
+      marginLeft,
+      marginRight,
       scale, // 🎯 Propriedade de escala
     },
   };
