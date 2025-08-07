@@ -123,13 +123,18 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
         else if (marginTop >= -40) classes.push("-mt-10");
         else classes.push("-mt-12");
       } else {
-        // Margens positivas
+        // Margens positivas - expandido para suportar até 100px
         if (marginTop <= 8) classes.push("mt-2");
         else if (marginTop <= 16) classes.push("mt-4");
         else if (marginTop <= 24) classes.push("mt-6");
         else if (marginTop <= 32) classes.push("mt-8");
         else if (marginTop <= 40) classes.push("mt-10");
-        else classes.push("mt-12");
+        else if (marginTop <= 48) classes.push("mt-12");
+        else if (marginTop <= 56) classes.push("mt-14");
+        else if (marginTop <= 64) classes.push("mt-16");
+        else if (marginTop <= 80) classes.push("mt-20");
+        else if (marginTop <= 96) classes.push("mt-24");
+        else classes.push("mt-28");
       }
     }
 
@@ -144,13 +149,18 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
         else if (marginBottom >= -40) classes.push("-mb-10");
         else classes.push("-mb-12");
       } else {
-        // Margens positivas
+        // Margens positivas - expandido para suportar até 100px
         if (marginBottom <= 8) classes.push("mb-2");
         else if (marginBottom <= 16) classes.push("mb-4");
         else if (marginBottom <= 24) classes.push("mb-6");
         else if (marginBottom <= 32) classes.push("mb-8");
         else if (marginBottom <= 40) classes.push("mb-10");
-        else classes.push("mb-12");
+        else if (marginBottom <= 48) classes.push("mb-12");
+        else if (marginBottom <= 56) classes.push("mb-14");
+        else if (marginBottom <= 64) classes.push("mb-16");
+        else if (marginBottom <= 80) classes.push("mb-20");
+        else if (marginBottom <= 96) classes.push("mb-24");
+        else classes.push("mb-28");
       }
     }
 

@@ -31,8 +31,8 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     gridColumns = "auto", // 'auto', 'half', 'full'
     spacing = "normal",
     // Propriedades de espaçamento
-    marginTop = 0,
-    marginBottom = 0,
+    marginTop = 8,
+    marginBottom = 8,
     marginLeft = 0,
     marginRight = 0,
     lineHeight = "leading-normal",
@@ -93,9 +93,9 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   } as const;
 
   const spacingClasses = {
-    tight: "py-2",   // 🎯 Apenas padding vertical para não interferir com margens laterais
-    normal: "py-4",  // 🎯 Apenas padding vertical para não interferir com margens laterais  
-    loose: "py-6",   // 🎯 Apenas padding vertical para não interferir com margens laterais
+    tight: "py-2", // 🎯 Apenas padding vertical para não interferir com margens laterais
+    normal: "py-4", // 🎯 Apenas padding vertical para não interferir com margens laterais
+    loose: "py-6", // 🎯 Apenas padding vertical para não interferir com margens laterais
   } as const;
 
   // Função para converter valores numéricos de margem em classes Tailwind
@@ -105,22 +105,18 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
       if (value < 0) {
-        // Margens negativas (apenas para top e bottom)
-        if (type === "top" || type === "bottom") {
-          if (value >= -4) return `-${prefix}-1`;
-          if (value >= -8) return `-${prefix}-2`;
-          if (value >= -12) return `-${prefix}-3`;
-          if (value >= -16) return `-${prefix}-4`;
-          if (value >= -20) return `-${prefix}-5`;
-          if (value >= -24) return `-${prefix}-6`;
-          if (value >= -32) return `-${prefix}-8`;
-          if (value >= -40) return `-${prefix}-10`;
-          return `-${prefix}-12`;
-        }
-        // Para left/right negativos, não aplicar (pode causar problemas de layout)
-        return "";
+        // Margens negativas - agora suportadas para todas as direções
+        if (value >= -4) return `-${prefix}-1`;
+        if (value >= -8) return `-${prefix}-2`;
+        if (value >= -12) return `-${prefix}-3`;
+        if (value >= -16) return `-${prefix}-4`;
+        if (value >= -20) return `-${prefix}-5`;
+        if (value >= -24) return `-${prefix}-6`;
+        if (value >= -32) return `-${prefix}-8`;
+        if (value >= -40) return `-${prefix}-10`;
+        return `-${prefix}-12`;
       } else {
-        // Margens positivas
+        // Margens positivas - expandido para suportar até 100px
         if (value <= 4) return `${prefix}-1`;
         if (value <= 8) return `${prefix}-2`;
         if (value <= 12) return `${prefix}-3`;
@@ -129,7 +125,12 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         if (value <= 24) return `${prefix}-6`;
         if (value <= 32) return `${prefix}-8`;
         if (value <= 40) return `${prefix}-10`;
-        return `${prefix}-12`;
+        if (value <= 48) return `${prefix}-12`;
+        if (value <= 56) return `${prefix}-14`;
+        if (value <= 64) return `${prefix}-16`;
+        if (value <= 80) return `${prefix}-20`;
+        if (value <= 96) return `${prefix}-24`;
+        return `${prefix}-28`; // Para valores acima de 96px
       }
     }
     return "";
