@@ -1127,140 +1127,136 @@ export const useUnifiedProperties = (
         case "options-grid":
           return [
             ...baseProperties,
-            // Configurações básicas
+            // 🔧 COMPORTAMENTO
             createProperty(
-              "multiple",
-              currentBlock?.properties?.multiple ?? true,
+              "multipleSelection",
+              currentBlock?.properties?.multipleSelection ?? false,
               PropertyType.SWITCH,
               "Seleção Múltipla",
               PropertyCategory.BEHAVIOR
             ),
             createProperty(
-              "minSelections",
-              currentBlock?.properties?.minSelections ?? 1,
-              PropertyType.RANGE,
-              "Mínimo de Seleções",
-              PropertyCategory.BEHAVIOR,
-              { min: 0, max: 10, step: 1, unit: "" }
-            ),
-            createProperty(
-              "maxSelections",
-              currentBlock?.properties?.maxSelections ?? 3,
-              PropertyType.RANGE,
-              "Máximo de Seleções",
-              PropertyCategory.BEHAVIOR,
-              { min: 1, max: 10, step: 1, unit: "" }
-            ),
-            // Layout
-            createProperty(
-              "layout",
-              currentBlock?.properties?.layout || "responsive",
+              "requiredSelections",
+              currentBlock?.properties?.requiredSelections ?? 1,
               PropertyType.SELECT,
-              "Layout",
+              "Seleções Obrigatórias",
+              PropertyCategory.BEHAVIOR,
+              {
+                options: createSelectOptions([
+                  { value: "1", label: "1 seleção" },
+                  { value: "2", label: "2 seleções" },
+                  { value: "3", label: "3 seleções" },
+                  { value: "4", label: "4 seleções" },
+                ]),
+              }
+            ),
+            // 🎨 LAYOUT
+            createProperty(
+              "columns",
+              currentBlock?.properties?.columns ?? 2,
+              PropertyType.SELECT,
+              "Colunas no Desktop",
               PropertyCategory.LAYOUT,
               {
                 options: createSelectOptions([
-                  { value: "responsive", label: "Responsivo" },
-                  { value: "fixed", label: "Fixo" },
-                  { value: "flex", label: "Flexível" },
+                  { value: "1", label: "1 coluna" },
+                  { value: "2", label: "2 colunas" },
+                  { value: "3", label: "3 colunas" },
+                  { value: "4", label: "4 colunas" },
                 ]),
               }
             ),
             createProperty(
-              "gridCols",
-              currentBlock?.properties?.gridCols ?? 2,
-              PropertyType.RANGE,
-              "Colunas Desktop",
+              "responsiveColumns",
+              currentBlock?.properties?.responsiveColumns ?? true,
+              PropertyType.SWITCH,
+              "Layout Responsivo",
+              PropertyCategory.LAYOUT
+            ),
+            createProperty(
+              "gridGap",
+              currentBlock?.properties?.gridGap ?? 8,
+              PropertyType.SELECT,
+              "Espaçamento entre Cards",
               PropertyCategory.LAYOUT,
-              { min: 1, max: 4, step: 1, unit: "" }
+              {
+                options: createSelectOptions([
+                  { value: "2", label: "Pequeno (2px)" },
+                  { value: "4", label: "Médio (4px)" },
+                  { value: "8", label: "Grande (8px)" },
+                  { value: "16", label: "Muito Grande (16px)" },
+                ]),
+              }
+            ),
+            // 🖼️ IMAGENS
+            createProperty(
+              "showImages",
+              currentBlock?.properties?.showImages ?? true,
+              PropertyType.SWITCH,
+              "Mostrar Imagens",
+              PropertyCategory.CONTENT
             ),
             createProperty(
-              "gridColsMobile",
-              currentBlock?.properties?.gridColsMobile ?? 1,
-              PropertyType.RANGE,
-              "Colunas Mobile",
-              PropertyCategory.LAYOUT,
-              { min: 1, max: 2, step: 1, unit: "" }
-            ),
-            createProperty(
-              "gap",
-              currentBlock?.properties?.gap ?? 8,
-              PropertyType.RANGE,
-              "Espaçamento",
-              PropertyCategory.LAYOUT,
-              { min: 0, max: 32, step: 2, unit: "px" }
-            ),
-            createProperty(
-              "className",
-              currentBlock?.properties?.className || "w-full h-full gap-2",
-              PropertyType.TEXT,
-              "Classes CSS",
-              PropertyCategory.ADVANCED
-            ),
-            // Configurações das opções (resumidas - seria ideal ter um editor mais complexo)
-            createProperty(
-              "optionsCount",
-              currentBlock?.properties?.options?.length ?? 8,
-              PropertyType.RANGE,
-              "Número de Opções",
-              PropertyCategory.CONTENT,
-              { min: 2, max: 12, step: 1, unit: "" }
-            ),
-            // Configurações visuais das opções
-            createProperty(
-              "optionClassName",
-              currentBlock?.properties?.optionProps?.className ||
-                "flex flex-col items-center p-4 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 cursor-pointer",
-              PropertyType.TEXTAREA,
-              "Classes CSS das Opções",
-              PropertyCategory.ADVANCED,
-              { rows: 3 }
-            ),
-            createProperty(
-              "selectedClassName",
-              currentBlock?.properties?.optionProps?.selectedClassName ||
-                "border-blue-500 bg-blue-100",
-              PropertyType.TEXT,
-              "Classes CSS Selecionado",
-              PropertyCategory.ADVANCED
-            ),
-            createProperty(
-              "textClassName",
-              currentBlock?.properties?.optionProps?.textClassName ||
-                "text-center font-medium text-gray-700 mt-3",
-              PropertyType.TEXT,
-              "Classes CSS do Texto",
-              PropertyCategory.ADVANCED
-            ),
-            createProperty(
-              "imageClassName",
-              currentBlock?.properties?.optionProps?.imageClassName ||
-                "w-full h-full object-cover rounded-lg",
-              PropertyType.TEXT,
-              "Classes CSS da Imagem",
-              PropertyCategory.ADVANCED
-            ),
-            // Configurações de imagem
-            createProperty(
-              "imageWidth",
-              currentBlock?.properties?.options?.[0]?.imageProps?.width?.replace("px", "") || "256",
-              PropertyType.RANGE,
-              "Largura das Imagens",
+              "imageSize",
+              currentBlock?.properties?.imageSize || "256px",
+              PropertyType.SELECT,
+              "Tamanho das Imagens",
               PropertyCategory.STYLE,
-              { min: 64, max: 512, step: 16, unit: "px" }
+              {
+                options: createSelectOptions([
+                  { value: "128px", label: "Pequeno (128px)" },
+                  { value: "192px", label: "Médio (192px)" },
+                  { value: "256px", label: "Grande (256px)" },
+                  { value: "320px", label: "Muito Grande (320px)" },
+                ]),
+              }
             ),
             createProperty(
-              "imageHeight",
-              currentBlock?.properties?.options?.[0]?.imageProps?.height?.replace("px", "") ||
-                "256",
-              PropertyType.RANGE,
-              "Altura das Imagens",
+              "imagePosition",
+              currentBlock?.properties?.imagePosition || "top",
+              PropertyType.SELECT,
+              "Posição da Imagem",
+              PropertyCategory.LAYOUT,
+              {
+                options: createSelectOptions([
+                  { value: "top", label: "Acima do Texto" },
+                  { value: "left", label: "À Esquerda" },
+                  { value: "right", label: "À Direita" },
+                  { value: "background", label: "Como Fundo" },
+                ]),
+              }
+            ),
+            // 🎨 CORES E ESTILO
+            createProperty(
+              "selectionStyle",
+              currentBlock?.properties?.selectionStyle || "border",
+              PropertyType.SELECT,
+              "Estilo de Seleção",
               PropertyCategory.STYLE,
-              { min: 64, max: 512, step: 16, unit: "px" }
+              {
+                options: createSelectOptions([
+                  { value: "border", label: "Borda Colorida" },
+                  { value: "background", label: "Fundo Colorido" },
+                  { value: "shadow", label: "Sombra" },
+                  { value: "scale", label: "Aumentar Tamanho" },
+                ]),
+              }
+            ),
+            createProperty(
+              "selectedColor",
+              currentBlock?.properties?.selectedColor || "#B89B7A",
+              PropertyType.COLOR,
+              "Cor Quando Selecionado",
+              PropertyCategory.STYLE
+            ),
+            createProperty(
+              "hoverColor",
+              currentBlock?.properties?.hoverColor || "#D4C2A8",
+              PropertyType.COLOR,
+              "Cor ao Passar o Mouse",
+              PropertyCategory.STYLE
             ),
           ];
-
-        // etc...
 
         default:
           // Log para debug dos tipos não mapeados
