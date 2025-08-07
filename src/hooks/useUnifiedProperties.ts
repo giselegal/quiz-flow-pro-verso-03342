@@ -303,7 +303,8 @@ export const useUnifiedProperties = (
         },
         {
           key: "textColor",
-          value: currentBlock?.properties?.textColor || currentBlock?.properties?.color || "#333333",
+          value:
+            currentBlock?.properties?.textColor || currentBlock?.properties?.color || "#333333",
           type: PropertyType.COLOR,
           label: "Cor do Texto",
           category: PropertyCategory.STYLE,
@@ -505,7 +506,8 @@ export const useUnifiedProperties = (
             // Propriedades específicas da imagem
             {
               key: "src",
-              value: currentBlock?.properties?.src ||
+              value:
+                currentBlock?.properties?.src ||
                 "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
               type: PropertyType.TEXT,
               label: "URL da Imagem",
@@ -1335,6 +1337,119 @@ export const useUnifiedProperties = (
               "Mostrar Sombra",
               PropertyCategory.STYLE
             ),
+          ];
+
+        // 🎯 COMPONENTES BÁSICOS DO EDITOR
+        case "heading":
+          return [
+            ...baseProperties,
+            {
+              key: "level",
+              value: currentBlock?.properties?.level || "h2",
+              type: PropertyType.SELECT,
+              label: "Nível do Título",
+              category: PropertyCategory.CONTENT,
+              options: [
+                { value: "h1", label: "Título 1 (H1)" },
+                { value: "h2", label: "Título 2 (H2)" },
+                { value: "h3", label: "Título 3 (H3)" },
+                { value: "h4", label: "Título 4 (H4)" },
+                { value: "h5", label: "Título 5 (H5)" },
+                { value: "h6", label: "Título 6 (H6)" },
+              ],
+            },
+          ];
+
+        case "text":
+          return [
+            ...baseProperties,
+            // Já tem as propriedades básicas de texto
+          ];
+
+        case "image":
+          return [
+            ...baseProperties,
+            {
+              key: "src",
+              value: currentBlock?.properties?.src || "",
+              type: PropertyType.TEXT,
+              label: "URL da Imagem",
+              category: PropertyCategory.CONTENT,
+              required: true,
+            },
+            {
+              key: "alt",
+              value: currentBlock?.properties?.alt || "Imagem",
+              type: PropertyType.TEXT,
+              label: "Texto Alternativo",
+              category: PropertyCategory.CONTENT,
+            },
+          ];
+
+        case "button":
+          return [
+            ...baseProperties,
+            {
+              key: "variant",
+              value: currentBlock?.properties?.variant || "primary",
+              type: PropertyType.SELECT,
+              label: "Variante",
+              category: PropertyCategory.STYLE,
+              options: [
+                { value: "primary", label: "Primário" },
+                { value: "secondary", label: "Secundário" },
+                { value: "outline", label: "Contorno" },
+                { value: "ghost", label: "Fantasma" },
+              ],
+            },
+            {
+              key: "action",
+              value: currentBlock?.properties?.action || "none",
+              type: PropertyType.SELECT,
+              label: "Ação do Botão",
+              category: PropertyCategory.BEHAVIOR,
+              options: [
+                { value: "none", label: "Nenhuma" },
+                { value: "next-step", label: "Próxima Etapa" },
+                { value: "url", label: "Abrir URL" },
+              ],
+            },
+          ];
+
+        case "spacer":
+          return [
+            ...baseProperties,
+            {
+              key: "height",
+              value: currentBlock?.properties?.height ?? 20,
+              type: PropertyType.RANGE,
+              label: "Altura do Espaçador",
+              category: PropertyCategory.LAYOUT,
+              min: 10,
+              max: 200,
+              step: 10,
+              unit: "px",
+            },
+          ];
+
+        case "heading-inline":
+          return [
+            ...baseProperties,
+            {
+              key: "level",
+              value: currentBlock?.properties?.level || "h2",
+              type: PropertyType.SELECT,
+              label: "Nível do Título",
+              category: PropertyCategory.CONTENT,
+              options: [
+                { value: "h1", label: "Título 1 (H1)" },
+                { value: "h2", label: "Título 2 (H2)" },
+                { value: "h3", label: "Título 3 (H3)" },
+                { value: "h4", label: "Título 4 (H4)" },
+                { value: "h5", label: "Título 5 (H5)" },
+                { value: "h6", label: "Título 6 (H6)" },
+              ],
+            },
           ];
 
         default:
