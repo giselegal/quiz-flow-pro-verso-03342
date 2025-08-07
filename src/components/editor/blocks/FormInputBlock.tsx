@@ -15,7 +15,7 @@ interface FormInputBlockProps {
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+const getMarginClass = (value: string | number, type: "top" | "bottom" | "left" | "right"): string => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return "";
@@ -84,7 +84,11 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
     required = false,
     fullWidth = true,
     name = "input",
-  } = block?.properties || {};
+    marginTop = 8,
+    marginBottom = 8,
+    marginLeft = 0,
+    marginRight = 0,
+  } = (block?.properties as any) || {};
 
   const [value, setValue] = useState<string>("");
   const [isValid, setIsValid] = useState<boolean>(false);
@@ -142,6 +146,10 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
             : "border-2 border-transparent hover:bg-[#FAF9F7]"
         }
         ${className}
+        ${getMarginClass(marginTop, "top")}
+        ${getMarginClass(marginBottom, "bottom")}
+        ${getMarginClass(marginLeft, "left")}
+        ${getMarginClass(marginRight, "right")}
       `}
       onClick={onClick}
       data-block-id={block?.id}
