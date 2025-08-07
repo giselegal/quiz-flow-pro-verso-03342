@@ -1,4 +1,3 @@
-import React from "react";
 import Step01Intro from "../editor/steps/Step01Intro";
 
 export interface Step01Props {
@@ -29,6 +28,14 @@ export const getStep01Template = () => {
         progressMax: 100,
         showBackButton: false,
         showProgress: false,
+        // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
+        containerWidth: "full", // Opções: "full", "large", "medium", "small"
+        containerPosition: "center", // Opções: "left", "center", "right"
+        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
+        spacing: "normal", // p-4 (16px padding)
+        marginTop: 0,
+        marginBottom: 0,
+        backgroundColor: "transparent",
       },
     },
 
@@ -45,6 +52,12 @@ export const getStep01Template = () => {
         marginTop: 8,
         marginBottom: 24,
         showShadow: true,
+        // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
+        containerWidth: "full", // Opções: "full", "large", "medium", "small"
+        containerPosition: "center", // Opções: "left", "center", "right"
+        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
+        spacing: "normal", // p-4 (16px padding)
+        backgroundColor: "transparent",
       },
     },
 
@@ -61,6 +74,13 @@ export const getStep01Template = () => {
         color: "#B89B7A", // Cor dourada da marca como padrão
         marginBottom: 32,
         lineHeight: "1.2",
+        // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
+        containerWidth: "large", // Opções: "full", "large", "medium", "small"
+        containerPosition: "center", // Opções: "left", "center", "right"
+        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
+        spacing: "normal", // p-4 (16px padding)
+        marginTop: 0,
+        backgroundColor: "transparent",
       },
     },
 
@@ -76,6 +96,13 @@ export const getStep01Template = () => {
         className: "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
         textAlign: "text-center",
         marginBottom: 32,
+        // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
+        containerWidth: "large", // Opções: "full", "large", "medium", "small"
+        containerPosition: "center", // Opções: "left", "center", "right"
+        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
+        spacing: "normal", // p-4 (16px padding)
+        marginTop: 0,
+        backgroundColor: "transparent",
       },
     },
 
@@ -84,14 +111,19 @@ export const getStep01Template = () => {
       id: "motivation-text-step01",
       type: "text-inline",
       properties: {
-        content:
-          "Em poucos minutos, descubra seu",
+        content: "Em poucos minutos, descubra seu",
         fontSize: "text-xl",
         textAlign: "text-center",
         color: "#432818", // Cor marrom escuro
         marginTop: 0,
         marginBottom: 8,
         lineHeight: "1.6",
+        // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
+        containerWidth: "medium", // Opções: "full", "large", "medium", "small"
+        containerPosition: "center", // Opções: "left", "center", "right"
+        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
+        spacing: "normal", // p-4 (16px padding)
+        backgroundColor: "transparent",
       },
     },
 
@@ -108,6 +140,12 @@ export const getStep01Template = () => {
         marginTop: 0,
         marginBottom: 8,
         lineHeight: "1.6",
+        // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
+        containerWidth: "medium", // Opções: "full", "large", "medium", "small"
+        containerPosition: "center", // Opções: "left", "center", "right"
+        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
+        spacing: "normal", // p-4 (16px padding)
+        backgroundColor: "transparent",
       },
     },
 
@@ -124,6 +162,12 @@ export const getStep01Template = () => {
         marginTop: 0,
         marginBottom: 40,
         lineHeight: "1.6",
+        // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
+        containerWidth: "medium", // Opções: "full", "large", "medium", "small"
+        containerPosition: "center", // Opções: "left", "center", "right"
+        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
+        spacing: "normal", // p-4 (16px padding)
+        backgroundColor: "transparent",
       },
     },
 
@@ -140,6 +184,13 @@ export const getStep01Template = () => {
         name: "userName",
         textAlign: "text-center",
         marginBottom: 32,
+        // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
+        containerWidth: "medium", // Opções: "full", "large", "medium", "small"
+        containerPosition: "center", // Opções: "left", "center", "right"
+        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
+        spacing: "normal", // p-4 (16px padding)
+        marginTop: 0,
+        backgroundColor: "transparent",
       },
     },
 
@@ -162,6 +213,13 @@ export const getStep01Template = () => {
         fontWeight: "font-bold",
         boxShadow: "shadow-xl",
         hoverEffect: true,
+        // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
+        containerWidth: "large", // Opções: "full", "large", "medium", "small"
+        containerPosition: "center", // Opções: "left", "center", "right"
+        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
+        spacing: "normal", // p-4 (16px padding)
+        marginTop: 0,
+        marginBottom: 0,
       },
     },
 
@@ -182,6 +240,11 @@ export const getStep01Template = () => {
         marginTop: 24,
         marginBottom: 0,
         backgroundColor: "transparent",
+        // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
+        containerWidth: "full", // Opções: "full", "large", "medium", "small"
+        containerPosition: "center", // Opções: "left", "center", "right"
+        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
+        spacing: "compact", // p-2 (8px padding) para textos menores
       },
     },
   ];
