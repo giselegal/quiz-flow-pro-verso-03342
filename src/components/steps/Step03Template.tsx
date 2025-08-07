@@ -31,7 +31,7 @@ export const getStep03Template = () => {
     // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
       id: "step03-question-title",
-      type: "heading",
+      type: "text-inline",
       properties: {
         content: "RESUMA A SUA PERSONALIDADE:",
         level: "h2",
@@ -46,7 +46,7 @@ export const getStep03Template = () => {
     // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
       id: "step03-question-counter",
-      type: "text",
+      type: "text-inline",
       properties: {
         content: "Questão 2 de 10",
         fontSize: "text-sm",
@@ -145,7 +145,7 @@ export const getStep03Template = () => {
         requiredSelections: 3,
 
         // 🔘 ATIVAÇÃO IMEDIATA
-        enableButtonOnlyWhenValid: true,
+        enableButtonOnlyWhenValid: false,
         instantButtonActivation: true, // Ativa assim que completar
         showValidationFeedback: true,
       },

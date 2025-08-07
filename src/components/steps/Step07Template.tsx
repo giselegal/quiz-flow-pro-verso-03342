@@ -33,7 +33,7 @@ export const getStep07Template = () => {
     // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
       id: "step07-question-title",
-      type: "heading",
+      type: "text-inline",
       properties: {
         content: "QUAL CASACO É SEU FAVORITO?",
         level: "h2",
@@ -48,7 +48,7 @@ export const getStep07Template = () => {
     // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
       id: "step07-question-counter",
-      type: "text",
+      type: "text-inline",
       properties: {
         content: "Questão 6 de 10",
         fontSize: "text-sm",
@@ -115,9 +115,10 @@ export const getStep07Template = () => {
         gridGap: 16,
         responsiveColumns: true,
         autoAdvanceOnComplete: true,
-        autoAdvanceDelay: 800,
+        autoAdvanceDelay: 0,
         requiredSelections: 1,
-        enableButtonOnlyWhenValid: true,
+        enableButtonOnlyWhenValid: false,
+        instantActivation: true,
         showValidationFeedback: true,
       },
     },
@@ -125,7 +126,7 @@ export const getStep07Template = () => {
     // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
       id: "step07-continue-button",
-      type: "button",
+      type: "button-inline",
       properties: {
         text: "Continuar",
         variant: "primary",

@@ -69,7 +69,7 @@ export const getStep19Template = (): BlockData[] => {
     },
     {
       id: "step19-thank-you-title",
-      type: "heading",
+      type: "text-inline",
       properties: {
         content: "Obrigada por compartilhar.".toUpperCase(),
         level: "h2",
@@ -82,7 +82,7 @@ export const getStep19Template = (): BlockData[] => {
     },
     {
       id: "step19-thank-you-text",
-      type: "text",
+      type: "text-inline",
       properties: {
         content:
           "Chegar até aqui já mostra que você está pronta para se olhar com mais **amor**, se vestir com mais **intenção** e deixar sua imagem comunicar quem você é de verdade — com **leveza**, **presença** e **propósito**.",
@@ -94,7 +94,7 @@ export const getStep19Template = (): BlockData[] => {
     },
     {
       id: "step19-reveal-text",
-      type: "text",
+      type: "text-inline",
       properties: {
         content:
           "Agora, é hora de revelar o seu **Estilo Predominante** — e os seus **Estilos Complementares**. E, mais do que isso, uma oportunidade real de aplicar o seu Estilo com **leveza** e **confiança** — todos os dias.",
@@ -106,7 +106,7 @@ export const getStep19Template = (): BlockData[] => {
     },
     {
       id: "step19-surprise-text",
-      type: "text",
+      type: "text-inline",
       properties: {
         content:
           "Ah, e lembra do valor que mencionamos? Prepare-se para uma **surpresa**: o que você vai receber vale muito mais do que imagina — e vai custar muito menos do que você esperava.",
@@ -118,7 +118,7 @@ export const getStep19Template = (): BlockData[] => {
     },
     {
       id: "step19-show-result-button",
-      type: "button",
+      type: "button-inline",
       properties: {
         text: "Vamos ao resultado?",
         variant: "primary",

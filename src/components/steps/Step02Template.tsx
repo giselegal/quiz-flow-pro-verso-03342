@@ -186,7 +186,7 @@ export const getStep02Template = () => {
         showAutoAdvanceIndicator: false, // Sem indicador pois é instantâneo
 
         // 🔘 ATIVAÇÃO IMEDIATA DO BOTÃO
-        enableButtonOnlyWhenValid: true,
+        enableButtonOnlyWhenValid: false,
         instantButtonActivation: true, // Ativa assim que completar
         showValidationFeedback: true,
         buttonTextWhenInvalid: "Selecione 3 estilos",
