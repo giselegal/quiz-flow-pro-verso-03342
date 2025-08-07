@@ -7,6 +7,7 @@ import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
 import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
 import EnhancedUniversalPropertiesPanel from "@/components/universal/EnhancedUniversalPropertiesPanel";
 import { generateBlockDefinitions, getRegistryStats } from "@/config/enhancedBlockRegistry";
+import CombinedComponentsPanel from "@/components/editor/CombinedComponentsPanel";
 
 import { useEditor } from "@/context/EditorContext";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
@@ -158,6 +159,13 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     // Este callback é apenas para compatibilidade
   };
 
+  // Função para extrair número da etapa do stageId
+  const getStepNumberFromStageId = (stageId: string | null): number => {
+    if (!stageId) return 1;
+    const match = stageId.match(/stage-(\d+)/);
+    return match ? parseInt(match[1], 10) : 1;
+  };
+
   return (
     <DndProvider
       blocks={(currentBlocks || []).map(block => ({
@@ -234,7 +242,11 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
           <FourColumnLayout
             stagesPanel={<FunnelStagesPanel onStageSelect={handleStageSelect} />}
-            componentsPanel={<EnhancedComponentsSidebar />}
+            componentsPanel={
+              <CombinedComponentsPanel 
+                currentStepNumber={getStepNumberFromStageId(activeStageId)} 
+              />
+            }
             canvas={
               <div
                 ref={scrollRef}
