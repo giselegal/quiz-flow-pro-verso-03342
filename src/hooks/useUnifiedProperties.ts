@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { BRAND_COLORS } from "../config/brandColors";
-import { useEditorContext } from "../context/EditorContext";
+import { useEditor } from "../context/EditorContext";
+import type { FunnelStage } from "../types/editor";
 
 // Tipos de propriedades suportados pelo sistema
 export enum PropertyType {
@@ -110,14 +111,14 @@ export const useUnifiedProperties = (
   onUpdateExternal?: (blockId: string, updates: Record<string, any>) => void
 ): UseUnifiedPropertiesReturn => {
   const [properties, setProperties] = useState<UnifiedProperty[]>([]);
-  const { stages } = useEditorContext(); // 🎯 ACESSO ÀS ETAPAS DO EDITOR
+  const { stages } = useEditor(); // 🎯 ACESSO ÀS ETAPAS DO EDITOR
 
   // Função memoizada para gerar as definições de propriedades com base no tipo do bloco
   const generateDefaultProperties = useCallback(
     (blockType: string, currentBlock: UnifiedBlock | null): UnifiedProperty[] => {
       // 🎯 Função helper para gerar opções de etapas disponíveis
       const getStageSelectOptions = () => {
-        const stageOptions = stages.map(stage => ({
+        const stageOptions = stages.map((stage: FunnelStage) => ({
           value: stage.id,
           label: `${stage.name} (${stage.id})`,
         }));
@@ -1118,7 +1119,7 @@ export const useUnifiedProperties = (
           return baseProperties;
       }
     },
-    []
+    [stages] // 🎯 Dependência das etapas para atualizar as opções dinamicamente
   );
 
   // Otimizar useEffect com dependências específicas
