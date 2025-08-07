@@ -57,13 +57,15 @@ export const SortableBlockItem: React.FC<SortableBlockItemProps> = ({
       {...attributes}
       {...listeners}
     >
-      {/* 🎯 Container 2: Componente Individual sem bordas extras */}
-      <Component
-        block={block}
-        isSelected={isSelected}
-        onClick={onClick}
-        onPropertyChange={onPropertyChange}
-      />
+      {/* 🎯 Container 2: Componente Individual com padding mínimo para máximo aproveitamento */}
+      <div className="p-1"> {/* 🎯 Padding mínimo (4px) em vez de p-2 (8px) */}
+        <Component
+          block={block}
+          isSelected={isSelected}
+          onClick={onClick}
+          onPropertyChange={onPropertyChange}
+        />
+      </div>
     </div>
   );
 };

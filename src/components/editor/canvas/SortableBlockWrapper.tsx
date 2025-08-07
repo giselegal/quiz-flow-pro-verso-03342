@@ -1,6 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { getBlockComponent } from "@/config/enhancedBlockRegistry";
+import { getBlockComponent        {/* 🎯 Container 2: Componente Individual com padding mínimo */}
+        <div 
+          className="p-1" // 🎯 Padding mínimo para máximo aproveitamento do espaço
+          onClick={onSelect}
+        >om "@/config/enhancedBlockRegistry";
 import { useContainerProperties } from "@/hooks/useContainerProperties";
 import { cn } from "@/lib/utils";
 import { Block } from "@/types/editor";
