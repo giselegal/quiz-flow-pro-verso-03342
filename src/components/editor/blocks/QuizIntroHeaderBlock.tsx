@@ -48,9 +48,8 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   return (
     <div
       className={cn(
-        "relative w-full p-4 rounded-lg border-2 border-dashed",
-        isSelected ? "border-[#B89B7A] bg-[#B89B7A]/10" : "border-gray-300 bg-white",
-        "cursor-pointer hover:border-gray-400 transition-colors",
+        "relative w-full p-4 rounded-lg", // 🎯 Sem bordas próprias - seleção via Container 1 apenas
+        "cursor-pointer hover:bg-gray-50 transition-colors", // 🎯 Hover sutil sem borda
         className
       )}
       onClick={onClick}
