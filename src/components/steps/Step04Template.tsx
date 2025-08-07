@@ -1,5 +1,3 @@
-import React from "react";
-
 export interface Step04Props {
   onNext?: () => void;
   onBlockAdd?: (block: any) => void;
@@ -169,7 +167,6 @@ export const getStep04Template = () => {
         disabled: true,
         requiresValidSelection: true,
       },
-    },},
     },
   ];
 };

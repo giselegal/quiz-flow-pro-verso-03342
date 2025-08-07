@@ -1,5 +1,3 @@
-import React from "react";
-
 // Define the missing QuizOption interface
 interface QuizOption {
   id: string;

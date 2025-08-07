@@ -1,5 +1,3 @@
-import React from "react";
-
 export interface Step05Props {
   onNext?: () => void;
   onBlockAdd?: (block: any) => void;
