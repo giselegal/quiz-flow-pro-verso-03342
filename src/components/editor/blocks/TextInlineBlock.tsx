@@ -12,6 +12,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
+  onPropertyChange, // 🎯 Adicionando suporte a edição de propriedades
   className = "",
 }) => {
   // ES7+ Destructuring com default values e optional chaining
@@ -121,6 +122,114 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     return content;
   }, [content, useUsername, usernamePattern]);
 
+  // 🎯 Sistema de múltiplas cores e formatação no mesmo texto
+  // Formato: [cor]texto em cor[/cor] ou [cor]**texto negrito**[/cor]
+  const parseMultiColorText = (text: string): JSX.Element[] => {
+    if (!text) return [];
+    
+    // Regex para capturar padrões [cor]texto[/cor] com suporte a **negrito**
+    const colorPattern = /\[([^\]]+)\](.*?)\[\/\1\]/g;
+    const parts: JSX.Element[] = [];
+    let lastIndex = 0;
+    let match;
+    let keyIndex = 0;
+
+    while ((match = colorPattern.exec(text)) !== null) {
+      // Adicionar texto antes da marcação
+      if (match.index > lastIndex) {
+        const beforeText = text.slice(lastIndex, match.index);
+        if (beforeText.trim()) {
+          parts.push(
+            <span key={keyIndex++} style={{ color }}>
+              {parseFormattedText(beforeText)}
+            </span>
+          );
+        }
+      }
+
+      // Adicionar texto colorido com possível formatação
+      const [, colorValue, coloredText] = match;
+      parts.push(
+        <span key={keyIndex++} style={{ color: colorValue }}>
+          {parseFormattedText(coloredText)}
+        </span>
+      );
+
+      lastIndex = match.index + match[0].length;
+    }
+
+    // Adicionar texto restante
+    if (lastIndex < text.length) {
+      const remainingText = text.slice(lastIndex);
+      if (remainingText.trim()) {
+        parts.push(
+          <span key={keyIndex++} style={{ color }}>
+            {parseFormattedText(remainingText)}
+          </span>
+        );
+      }
+    }
+
+    // Se não há marcações de cor, retorna o texto com formatação
+    return parts.length === 0 ? [
+      <span key="0" style={{ color }}>
+        {parseFormattedText(text)}
+      </span>
+    ] : parts;
+  };
+
+  // 🎯 Função para processar formatação (negrito, itálico, etc.)
+  const parseFormattedText = (text: string): React.ReactNode => {
+    if (!text) return text;
+    
+    // Processar **negrito**
+    const boldPattern = /\*\*(.*?)\*\*/g;
+    const parts: React.ReactNode[] = [];
+    let lastIndex = 0;
+    let match;
+    let keyIndex = 0;
+
+    while ((match = boldPattern.exec(text)) !== null) {
+      // Texto antes do negrito
+      if (match.index > lastIndex) {
+        const beforeText = text.slice(lastIndex, match.index);
+        if (beforeText) {
+          parts.push(beforeText);
+        }
+      }
+
+      // Texto em negrito
+      const [, boldText] = match;
+      parts.push(
+        <strong key={`bold-${keyIndex++}`}>
+          {boldText}
+        </strong>
+      );
+
+      lastIndex = match.index + match[0].length;
+    }
+
+    // Texto restante
+    if (lastIndex < text.length) {
+      const remainingText = text.slice(lastIndex);
+      if (remainingText) {
+        parts.push(remainingText);
+      }
+    }
+
+    return parts.length === 0 ? text : parts;
+  };
+
+  // 🎯 Função para detectar se tem marcações de cor ou formatação
+  const hasColorMarkings = useMemo(() => {
+    return personalizedContent?.includes('[') && personalizedContent?.includes('[/');
+  }, [personalizedContent]);
+
+  // 🎯 Função para detectar formatação simples (sem cores)
+  const hasSimpleFormatting = useMemo(() => {
+    return !hasColorMarkings && personalizedContent?.includes('**');
+  }, [personalizedContent, hasColorMarkings]);
+
   // Verificar se o conteúdo contém HTML
   const isHtmlContent = useMemo(() => {
     const hasHtml = personalizedContent?.includes("<") && personalizedContent?.includes(">");
@@ -197,7 +306,17 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         }}
         // ES7+ Conditional data attributes
       >
-        {isHtmlContent ? (
+        {hasColorMarkings ? (
+          // 🎯 Renderiza texto com múltiplas cores e formatação usando marcação [cor]**texto**[/cor]
+          <>
+            {parseMultiColorText(personalizedContent)}
+          </>
+        ) : hasSimpleFormatting ? (
+          // 🎯 Renderiza texto com formatação simples **negrito** sem cores
+          <span style={{ color }}>
+            {parseFormattedText(personalizedContent)}
+          </span>
+        ) : isHtmlContent ? (
           // Renderiza como HTML se detectar qualquer tag HTML
           <div
             dangerouslySetInnerHTML={{ __html: personalizedContent }}

@@ -66,18 +66,18 @@ export const getStep01Template = () => {
       id: "main-title-step01",
       type: "text-inline",
       properties: {
-        content: "Chega de um guarda-roupa lotado e da sensação de que nada combina com você.",
+        content: "Chega de um guarda-roupa lotado e da sensação de que [#432818]nada combina com você[/#432818].",
         fontSize: "text-3xl",
         fontWeight: "font-bold",
         fontFamily: "Playfair Display, serif",
         textAlign: "text-center",
-        color: "#B89B7A", // Cor dourada da marca como padrão
+        color: "#B89B7A", // Cor dourada da marca como padrão (texto normal)
         marginBottom: 32,
         lineHeight: "1.2",
         // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
         containerWidth: "large", // Opções: "full", "large", "medium", "small"
         containerPosition: "center", // Opções: "left", "center", "right"
-        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
+        gridColumns: "full", // 🎯 Alterado de "auto" para "full" para usar 100% da largura
         spacing: "normal", // p-4 (16px padding)
         marginTop: 0,
         backgroundColor: "transparent",
@@ -106,66 +106,22 @@ export const getStep01Template = () => {
       },
     },
 
-    // 💬 TEXTO MOTIVACIONAL COM PROPRIEDADES EDITÁVEIS
+    // 💬 TEXTO MOTIVACIONAL UNIFICADO COM MÚLTIPLAS CORES E FORMATAÇÃO
     {
-      id: "motivation-text-step01",
+      id: "motivation-unified-step01",
       type: "text-inline",
       properties: {
-        content: "Em poucos minutos, descubra seu",
+        content: "Em poucos minutos, descubra seu [#B89B7A]**Estilo Predominante**[/#B89B7A] — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
         fontSize: "text-xl",
         textAlign: "text-center",
-        color: "#432818", // Cor marrom escuro
-        marginTop: 0,
-        marginBottom: 8,
-        lineHeight: "1.6",
-        // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
-        containerWidth: "medium", // Opções: "full", "large", "medium", "small"
-        containerPosition: "center", // Opções: "left", "center", "right"
-        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
-        spacing: "normal", // p-4 (16px padding)
-        backgroundColor: "transparent",
-      },
-    },
-
-    // ✨ TEXTO DESTACADO EDITÁVEL SEPARADAMENTE
-    {
-      id: "highlight-text-step01",
-      type: "text-inline",
-      properties: {
-        content: "Estilo Predominante",
-        fontSize: "text-xl",
-        fontWeight: "font-bold",
-        textAlign: "text-center",
-        color: "#B89B7A", // Cor dourada destacada
-        marginTop: 0,
-        marginBottom: 8,
-        lineHeight: "1.6",
-        // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
-        containerWidth: "medium", // Opções: "full", "large", "medium", "small"
-        containerPosition: "center", // Opções: "left", "center", "right"
-        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
-        spacing: "normal", // p-4 (16px padding)
-        backgroundColor: "transparent",
-      },
-    },
-
-    // 📝 CONTINUAÇÃO DO TEXTO MOTIVACIONAL
-    {
-      id: "motivation-continuation-step01",
-      type: "text-inline",
-      properties: {
-        content:
-          "— e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
-        fontSize: "text-xl",
-        textAlign: "text-center",
-        color: "#432818", // Cor marrom escuro
+        color: "#432818", // Cor marrom escuro (texto padrão)
         marginTop: 0,
         marginBottom: 40,
         lineHeight: "1.6",
         // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
         containerWidth: "medium", // Opções: "full", "large", "medium", "small"
         containerPosition: "center", // Opções: "left", "center", "right"
-        gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
+        gridColumns: "full", // 🎯 Largura 100% para melhor apresentação
         spacing: "normal", // p-4 (16px padding)
         backgroundColor: "transparent",
       },
