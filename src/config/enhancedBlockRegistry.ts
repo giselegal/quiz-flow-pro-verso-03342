@@ -50,7 +50,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   "form-input": FormInputBlock,
 
   // Interactive Elements
-  "button-inline": ButtonInline,
+  "button-inline": ButtonInlineFixed,
   "decorative-bar-inline": DecorativeBarInlineBlock,
 
   // Layout and Design
@@ -74,7 +74,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   // Legacy inline components (para compatibilidade)
   text: TextInline,
   heading: HeadingInline,
-  button: ButtonInline,
+  button: ButtonInlineFixed,
   image: ImageDisplayInline,
   "decorative-bar": DecorativeBarInline,
   "legal-notice": LegalNoticeInline,
@@ -141,7 +141,7 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       icon: MousePointer,
       category: "interactive",
       description: "Botão clicável",
-      component: ButtonInline,
+      component: ButtonInlineFixed,
       label: "Botão",
       properties: {},
       defaultProps: {},
