@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { BRAND_COLORS } from "../config/brandColors";
+import { useEditorContext } from "../context/EditorContext";
 
 // Tipos de propriedades suportados pelo sistema
 export enum PropertyType {
@@ -109,10 +110,24 @@ export const useUnifiedProperties = (
   onUpdateExternal?: (blockId: string, updates: Record<string, any>) => void
 ): UseUnifiedPropertiesReturn => {
   const [properties, setProperties] = useState<UnifiedProperty[]>([]);
+  const { stages } = useEditorContext(); // 🎯 ACESSO ÀS ETAPAS DO EDITOR
 
   // Função memoizada para gerar as definições de propriedades com base no tipo do bloco
   const generateDefaultProperties = useCallback(
     (blockType: string, currentBlock: UnifiedBlock | null): UnifiedProperty[] => {
+      // 🎯 Função helper para gerar opções de etapas disponíveis
+      const getStageSelectOptions = () => {
+        const stageOptions = stages.map(stage => ({
+          value: stage.id,
+          label: `${stage.name} (${stage.id})`,
+        }));
+        
+        return createSelectOptions([
+          { value: "", label: "Selecionar Etapa..." },
+          ...stageOptions,
+        ]);
+      };
+
       const baseProperties: UnifiedProperty[] = [
         {
           key: "id",
@@ -721,9 +736,12 @@ export const useUnifiedProperties = (
             createProperty(
               "nextStepId",
               currentBlock?.properties?.nextStepId || "",
-              PropertyType.TEXT,
-              "ID da Próxima Etapa",
-              PropertyCategory.BEHAVIOR
+              PropertyType.SELECT,
+              "Próxima Etapa",
+              PropertyCategory.BEHAVIOR,
+              {
+                options: getStageSelectOptions(),
+              }
             ),
             createProperty(
               "url",
