@@ -18,54 +18,6 @@ import { schemaDrivenFunnelService } from "../services/schemaDrivenFunnelService
 import { BlockType } from "../types/editor";
 import { normalizeBlock } from "../utils/blockTypeMapping";
 
-// Componente simples para renderizar blocos
-const SimpleBlockRenderer: React.FC<{
-  block: any;
-  isSelected?: boolean;
-  onClick?: () => void;
-}> = ({ block, isSelected, onClick }) => {
-  const content = block.properties?.content || block.content || "Conteúdo do bloco";
-
-  return (
-    <div
-      onClick={onClick}
-      className={cn(
-        "p-4 border rounded-lg cursor-pointer transition-all",
-        isSelected ? "border-[#B89B7A] bg-[#B89B7A]/10" : "border-gray-200 hover:border-gray-300"
-      )}
-    >
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-xs bg-gray-100 px-2 py-1 rounded font-mono">{block.type}</span>
-        <span className="text-xs text-gray-500">#{block.id}</span>
-      </div>
-
-      {block.type === "heading" && <h1 className="text-2xl font-bold">{content}</h1>}
-
-      {block.type === "text" && <p className="text-gray-700">{content}</p>}
-
-      {block.type === "button" && (
-        <Button variant="outline" disabled>
-          {content || "Botão"}
-        </Button>
-      )}
-
-      {block.type.includes("inline") && (
-        <div className="p-3 bg-gradient-to-r from-purple-50 to-blue-50 rounded">
-          <div className="font-medium text-purple-800 mb-1">Componente Inline</div>
-          <div className="text-sm text-gray-600">{content}</div>
-        </div>
-      )}
-
-      {!["heading", "text", "button"].includes(block.type) && !block.type.includes("inline") && (
-        <div className="p-3 bg-gray-50 rounded">
-          <div className="font-medium mb-1">Bloco: {block.type}</div>
-          <div className="text-sm text-gray-600">{content}</div>
-        </div>
-      )}
-    </div>
-  );
-};
-
 // Ícones Lucide
 import {
   Download,
@@ -887,7 +839,7 @@ const EditorPage: React.FC = () => {
                               : "border-gray-200 hover:border-gray-300"
                           )}
                         >
-                          <UniversalBlockRenderer
+                          <SimpleBlockRenderer
                             block={{
                               ...blockData,
                               content: blockData.properties || {},
@@ -1060,7 +1012,7 @@ const EditorPage: React.FC = () => {
                                     "ring-2 ring-[#B89B7A] rounded-lg"
                                 )}
                               >
-                                <UniversalBlockRenderer
+                                <SimpleBlockRenderer
                                   block={{
                                     ...blockData,
                                     content: blockData.properties || {},
