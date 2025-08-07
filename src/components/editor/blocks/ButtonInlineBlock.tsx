@@ -111,6 +111,12 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     marginBottom = 8,
     marginLeft = 0,
     marginRight = 0,
+    // Novas propriedades de efeitos visuais
+    shadowType = "none",
+    shadowColor = "#000000",
+    effectType = "none",
+    borderRadius = 8,
+    hoverOpacity = 90,
   } = (block?.properties as any) || {};
 
   const [isValidated, setIsValidated] = useState(false);
@@ -155,16 +161,84 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
   const IconComponent = iconMap[icon as keyof typeof iconMap];
 
+  // Função para gerar classes de sombra
+  const getShadowClasses = () => {
+    const shadowClasses = {
+      none: "",
+      small: "shadow-sm",
+      medium: "shadow-md",
+      large: "shadow-lg",
+      inner: "shadow-inner",
+      glow: `shadow-lg`,
+    };
+
+    return shadowClasses[shadowType as keyof typeof shadowClasses] || "";
+  };
+
+  // Função para gerar estilos de sombra customizada
+  const getShadowStyles = () => {
+    if (shadowType === "glow") {
+      return {
+        boxShadow: `0 0 20px ${shadowColor}40, 0 0 40px ${shadowColor}20`,
+      };
+    }
+    if (shadowType === "inner") {
+      return {
+        boxShadow: `inset 0 2px 4px ${shadowColor}30`,
+      };
+    }
+    if (shadowType !== "none" && shadowColor !== "#000000") {
+      const intensity = shadowType === "small" ? "20" : shadowType === "medium" ? "30" : "40";
+      const blur = shadowType === "small" ? "6px" : shadowType === "medium" ? "10px" : "15px";
+      const offset = shadowType === "small" ? "2px" : shadowType === "medium" ? "4px" : "6px";
+      return {
+        boxShadow: `0 ${offset} ${blur} ${shadowColor}${intensity}`,
+      };
+    }
+    return {};
+  };
+
+  // Função para gerar classes de efeitos visuais
+  const getEffectClasses = () => {
+    const effectClasses = {
+      none: "",
+      "hover-lift": "hover:transform hover:-translate-y-1 hover:scale-105",
+      pulse: "animate-pulse",
+      bounce: "animate-bounce",
+      gradient: "bg-gradient-to-r",
+      shine: "relative overflow-hidden",
+    };
+
+    return effectClasses[effectType as keyof typeof effectClasses] || "";
+  };
+
   // Variantes de cor - usando as configurações customizáveis
   const getButtonStyles = () => {
+    const baseStyle = {
+      fontFamily: fontFamily,
+      fontSize: `${fontSize}px`,
+      fontWeight: fontWeight,
+      borderRadius: `${borderRadius}px`,
+      transition: "all 0.3s ease",
+      ...getShadowStyles(),
+    };
+
     if (variant === "custom" || variant === "primary") {
+      // Suporte a gradiente para effectType === "gradient"
+      if (effectType === "gradient") {
+        return {
+          ...baseStyle,
+          background: `linear-gradient(135deg, ${backgroundColor}, ${backgroundColor}dd)`,
+          color: textColor,
+          borderColor: borderColor,
+        };
+      }
+
       return {
+        ...baseStyle,
         backgroundColor: backgroundColor,
         color: textColor,
         borderColor: borderColor,
-        fontFamily: fontFamily,
-        fontSize: `${fontSize}px`,
-        fontWeight: fontWeight,
       };
     }
 
@@ -196,11 +270,22 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
       },
     };
 
+    const selectedStyle =
+      predefinedStyles[variant as keyof typeof predefinedStyles] || predefinedStyles.secondary;
+
+    // Aplicar gradiente se necessário
+    if (effectType === "gradient") {
+      return {
+        ...baseStyle,
+        background: `linear-gradient(135deg, ${selectedStyle.backgroundColor}, ${selectedStyle.backgroundColor}dd)`,
+        color: selectedStyle.color,
+        borderColor: selectedStyle.borderColor,
+      };
+    }
+
     return {
-      ...(predefinedStyles[variant as keyof typeof predefinedStyles] || predefinedStyles.secondary),
-      fontFamily: fontFamily,
-      fontSize: `${fontSize}px`,
-      fontWeight: fontWeight,
+      ...baseStyle,
+      ...selectedStyle,
     };
   };
 
@@ -221,13 +306,22 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   const getResponsiveClasses = () => {
     return cn(
       // Classes base do botão
-      "inline-flex items-center justify-center rounded-md font-medium transition-all duration-200",
+      "inline-flex items-center justify-center font-medium transition-all duration-300",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B89B7A] focus-visible:ring-offset-2",
       "disabled:pointer-events-none disabled:opacity-50",
-      "border-2 w-full hover:opacity-90",
+      "border-2 w-full",
 
       // Aplicar tamanho
       sizeClasses[size as keyof typeof sizeClasses],
+
+      // Classes de sombra
+      getShadowClasses(),
+
+      // Classes de efeitos visuais
+      getEffectClasses(),
+
+      // Hover dinâmico baseado na opacidade configurada
+      `hover:opacity-[${hoverOpacity}%]`,
 
       // Estado de seleção no editor
       isSelected && "ring-2 ring-[#B89B7A] ring-offset-2",
@@ -306,17 +400,28 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
           }
         }}
       >
+        {/* Efeito de brilho deslizante */}
+        {effectType === "shine" && (
+          <div className="absolute inset-0 -top-1 -bottom-1 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
+        )}
+
         {/* Ícone à esquerda */}
         {IconComponent && iconPosition === "left" && (
-          <IconComponent className={cn(iconSizes[size as keyof typeof iconSizes], "mr-2")} />
+          <IconComponent
+            className={cn(iconSizes[size as keyof typeof iconSizes], "mr-2 relative z-10")}
+          />
         )}
 
         {/* Texto do botão */}
-        <span className="flex-1 text-center truncate">{text || "Clique aqui"}</span>
+        <span className="flex-1 text-center truncate relative z-10 font-medium">
+          {text || "Clique aqui"}
+        </span>
 
         {/* Ícone à direita */}
         {IconComponent && iconPosition === "right" && (
-          <IconComponent className={cn(iconSizes[size as keyof typeof iconSizes], "ml-2")} />
+          <IconComponent
+            className={cn(iconSizes[size as keyof typeof iconSizes], "ml-2 relative z-10")}
+          />
         )}
       </button>
 

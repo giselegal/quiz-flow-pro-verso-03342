@@ -788,6 +788,63 @@ export const useUnifiedProperties = (
               "Desabilitado",
               PropertyCategory.BEHAVIOR
             ),
+            createProperty(
+              "shadowType",
+              currentBlock?.properties?.shadowType || "none",
+              PropertyType.SELECT,
+              "Tipo de Sombra",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "none", label: "Sem Sombra" },
+                  { value: "small", label: "Sombra Pequena" },
+                  { value: "medium", label: "Sombra Média" },
+                  { value: "large", label: "Sombra Grande" },
+                  { value: "inner", label: "Sombra Interna" },
+                  { value: "glow", label: "Brilho" },
+                ]),
+              }
+            ),
+            createProperty(
+              "shadowColor",
+              currentBlock?.properties?.shadowColor || "#000000",
+              PropertyType.COLOR,
+              "Cor da Sombra",
+              PropertyCategory.STYLE
+            ),
+            createProperty(
+              "effectType",
+              currentBlock?.properties?.effectType || "none",
+              PropertyType.SELECT,
+              "Efeito Visual",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "none", label: "Sem Efeito" },
+                  { value: "gradient", label: "Gradiente" },
+                  { value: "hover-lift", label: "Elevação no Hover" },
+                  { value: "pulse", label: "Pulsar" },
+                  { value: "shine", label: "Brilho Deslizante" },
+                  { value: "bounce", label: "Saltar" },
+                ]),
+              }
+            ),
+            createProperty(
+              "borderRadius",
+              currentBlock?.properties?.borderRadius ?? 8,
+              PropertyType.RANGE,
+              "Raio da Borda",
+              PropertyCategory.STYLE,
+              { min: 0, max: 50, step: 1, unit: "px" }
+            ),
+            createProperty(
+              "hoverOpacity",
+              currentBlock?.properties?.hoverOpacity ?? 90,
+              PropertyType.RANGE,
+              "Opacidade no Hover",
+              PropertyCategory.STYLE,
+              { min: 50, max: 100, step: 5, unit: "%" }
+            ),
           ];
 
         case "form-input":

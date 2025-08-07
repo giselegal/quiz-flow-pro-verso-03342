@@ -133,8 +133,8 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   // Fallback se componente não for encontrado
   if (!Component) {
     return (
-      <div ref={setNodeRef} style={style} className="my-2">
-        {/* 🎯 Espaçamento FIXO de 8px (my-2 = 0.5rem = 8px) */}
+      <div ref={setNodeRef} style={style} className="my-1">
+        {/* 🎯 Espaçamento FIXO de 4px (my-1 = 0.25rem = 4px) */}
         <Card className="relative group border-red-300">
           <div className="p-4 text-center text-red-500">
             <p>Componente não encontrado: {block.type}</p>
@@ -146,8 +146,8 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   }
 
   return (
-    <div ref={setNodeRef} style={style} className="my-2">
-      {/* 🎯 Espaçamento FIXO de 8px (my-2 = 0.5rem = 8px) - SEMPRE IGUAL independente da escala */}
+    <div ref={setNodeRef} style={style} className="my-1">
+      {/* 🎯 Espaçamento FIXO de 4px (my-1 = 0.25rem = 4px) - SEMPRE IGUAL independente da escala */}
       <Card
         className={cn(
           "relative group transition-all duration-200 border-transparent", // 🎯 Borda transparente por padrão

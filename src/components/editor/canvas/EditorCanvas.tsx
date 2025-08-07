@@ -80,8 +80,8 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
 
   if (isPreviewing) {
     return (
-      <div className={`py-2 ${getViewportClasses()}`}>
-        <div className="space-y-2">
+      <div className={`py-1 ${getViewportClasses()}`}>
+        <div className="space-y-1">
           {blocks.map(block => (
             <div key={block.id} className="w-full flex justify-center">
               <div className="w-full max-w-none">
@@ -95,10 +95,10 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
   }
 
   return (
-    <div className={`py-2 ${getViewportClasses()}`}>
+    <div className={`py-1 ${getViewportClasses()}`}>
       <DndContext onDragEnd={handleDragEnd}>
         <SortableContext items={blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
-          <div className="space-y-2">
+          <div className="space-y-1">
             {blocks.map(block => (
               <div key={block.id} className="w-full flex justify-center">
                 <div className="w-full max-w-none">

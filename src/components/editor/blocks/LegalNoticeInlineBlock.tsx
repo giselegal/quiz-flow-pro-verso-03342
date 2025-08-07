@@ -146,13 +146,14 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
         </div>
 
         {/* Links legais */}
-        <div 
-          style={{ 
-            display: "flex", 
-            flexWrap: "wrap", 
-            justifyContent: textAlign === "left" ? "flex-start" : textAlign === "right" ? "flex-end" : "center",
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent:
+              textAlign === "left" ? "flex-start" : textAlign === "right" ? "flex-end" : "center",
             gap: "16px",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <a
