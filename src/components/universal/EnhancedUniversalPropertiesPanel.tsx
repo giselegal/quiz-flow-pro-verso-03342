@@ -259,16 +259,21 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
             <Label className="text-sm font-medium text-[#432818]">
               {label} {required && <span className="text-red-500">*</span>}
             </Label>
-            <Select value={value && value !== "" ? value : null} onValueChange={val => updateProperty(key, val)}>
+            <Select
+              value={value && value !== "" ? value : null}
+              onValueChange={val => updateProperty(key, val)}
+            >
               <SelectTrigger className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20">
                 <SelectValue placeholder={`Escolha ${label.toLowerCase()}`} />
               </SelectTrigger>
               <SelectContent>
-                {formattedOptions?.filter(option => option.value && option.value.trim() !== "")?.map(option => (
-                  <SelectItem key={option.value} value={option.value || "default"}>
-                    {option.label}
-                  </SelectItem>
-                ))}
+                {formattedOptions
+                  ?.filter(option => option.value && option.value.trim() !== "")
+                  ?.map(option => (
+                    <SelectItem key={option.value} value={option.value || "default"}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
               </SelectContent>
             </Select>
           </div>

@@ -24,7 +24,6 @@ import PricingCardInlineBlock from "../components/blocks/inline/PricingCardInlin
 import TextInline from "../components/blocks/inline/TextInline";
 
 // Componentes Editor Blocks
-import BadgeInlineBlock from "../components/editor/blocks/BadgeInlineBlock";
 import DecorativeBarInlineBlock from "../components/editor/blocks/DecorativeBarInlineBlock";
 import FinalStepEditor from "../components/editor/blocks/FinalStepEditor";
 import FormInputBlock from "../components/editor/blocks/FormInputBlock";
@@ -51,7 +50,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   "form-input": FormInputBlock,
 
   // Interactive Elements
-  "button-inline": BadgeInlineBlock,
+  "button-inline": ButtonInline,
   "decorative-bar-inline": DecorativeBarInlineBlock,
 
   // Layout and Design

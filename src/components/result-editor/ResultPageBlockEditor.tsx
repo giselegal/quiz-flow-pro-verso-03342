@@ -1,14 +1,8 @@
-import React, { useState } from "react";
-import {
-  ResultPageBlock,
-  StyleResultBlock,
-  CTABlock,
-  TestimonialBlock,
-  CarouselBlock,
-} from "@/types/quizResult";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -17,19 +11,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { PlusCircle, Trash2, Copy } from "lucide-react";
+  CarouselBlock,
+  CTABlock,
+  ResultPageBlock,
+  StyleResultBlock,
+  TestimonialBlock,
+} from "@/types/quizResult";
+import { Copy, PlusCircle, Trash2 } from "lucide-react";
+import React, { useState } from "react";
 
 interface ResultPageBlockEditorProps {
   block: ResultPageBlock;
@@ -390,7 +382,10 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
             {abTestEnabled && (
               <div className="space-y-2">
                 <Label htmlFor="abTestVariant">Variante de Teste A/B</Label>
-                <Select value={block.abTestVariant || "all"} onValueChange={handleAbTestVariantChange}>
+                <Select
+                  value={block.abTestVariant || "all"}
+                  onValueChange={handleAbTestVariantChange}
+                >
                   <SelectTrigger id="abTestVariant">
                     <SelectValue placeholder="Selecione a variante" />
                   </SelectTrigger>
@@ -406,18 +401,24 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
               </div>
             )}
 
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="isVisible">Visibilidade</Label>
-                <Switch
-                  id="isVisible"
-                  checked={block.isVisible !== false}
-                  onCheckedChange={() => handleVisibilityToggle()}
-                />
+            <div className="space-y-4">
+              <div className="p-4 border border-[#B89B7A]/20 rounded-lg bg-[#B89B7A]/5">
+                <div className="flex items-center justify-between mb-2">
+                  <Label htmlFor="isVisible" className="font-medium">
+                    Visibilidade do Bloco
+                  </Label>
+                  <Switch
+                    id="isVisible"
+                    checked={block.isVisible !== false}
+                    onCheckedChange={() => handleVisibilityToggle()}
+                  />
+                </div>
+                <p className="text-sm text-[#8F7A6A]">
+                  {block.isVisible !== false
+                    ? "🟢 Este bloco será exibido na página de resultados"
+                    : "🔴 Este bloco está oculto e não será exibido"}
+                </p>
               </div>
-              <p className="text-sm text-gray-500">
-                Controle se este bloco deve ser exibido na página de resultados
-              </p>
             </div>
           </div>
         </TabsContent>
