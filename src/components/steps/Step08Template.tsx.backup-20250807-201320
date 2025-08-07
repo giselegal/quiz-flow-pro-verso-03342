@@ -1,27 +1,28 @@
 import React from "react";
 import { useContainerProperties } from "@/hooks/useContainerProperties";
 import { useDebounce } from "@/hooks/useDebounce";
-import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-export interface Step11Props {
+export interface Step08Props {
   onNext?: () => void;
   onBlockAdd?: (block: any) => void;
   onAnswer?: (answer: any) => void;
   userAnswers?: Record<string, any>;
 }
 
-export const Step11 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step11Props) => {
+export const Step08 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step08Props) => {
   // 🚀 Hooks otimizados aplicados automaticamente
   const isMobile = useIsMobile();
-  return <div className="step-11">{/* Conteúdo da Etapa 11 renderizado aqui */}</div>;
+  return <div className="step-08">{/* Conteúdo da Etapa 8 renderizado aqui */}</div>;
 };
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 11 - No ambiente de trabalho, você se veste:
-export const getStep11Template = () => {
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 8 - Quando o assunto são estampas, você prefere:
+export const getStep08Template = () => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return [
     // 🎯 CABEÇALHO COM PROGRESSO
     {
-      id: "quiz-header-step11",
+      id: "quiz-header-step08",
       type: "quiz-header",
       properties: {
         logoUrl:
@@ -29,17 +30,17 @@ export const getStep11Template = () => {
         logoAlt: "Logo Gisele Galvão",
         logoWidth: 80,
         logoHeight: 80,
-        progressValue: 55,
+        progressValue: 40,
         progressMax: 100,
         showBackButton: true,
         showProgress: true,
-        stepNumber: "11 de 21",
+        stepNumber: "8 de 21",
       },
     },
 
     // 🎨 BARRA DECORATIVA
     {
-      id: "decorative-bar-step11",
+      id: "decorative-bar-step08",
       type: "decorative-bar-inline",
       properties: {
         width: "100%",
@@ -55,10 +56,10 @@ export const getStep11Template = () => {
 
     // 📝 PERGUNTA PRINCIPAL
     {
-      id: "question-text-step11",
+      id: "question-text-step08",
       type: "text-inline",
       properties: {
-        content: "No ambiente de trabalho, você se veste:",
+        content: "Quando o assunto são estampas, você prefere:",
         fontSize: "text-2xl",
         fontWeight: "font-bold",
         fontFamily: "Playfair Display, serif",
@@ -71,11 +72,11 @@ export const getStep11Template = () => {
 
     // 🖼️ IMAGEM DA PERGUNTA
     {
-      id: "question-image-step11",
+      id: "question-image-step08",
       type: "image-display-inline",
       properties: {
-        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838148/20250509_2147_Trabalho_e_Profissionalismo_simple_compose_01jtvta4gb3qhd4d6v3xr3jvtw_wnpshv.webp",
-        alt: "Imagem da pergunta 11",
+        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838139/20250509_2144_Estampas_e_Padr%C3%B5es_simple_compose_01jtvt6y84tcz2w0tqp7j3rbpy_nwevaw.webp",
+        alt: "Imagem da pergunta 8",
         width: 400,
         height: 300,
         className: "object-cover w-full max-w-md h-64 rounded-lg mx-auto shadow-md",
@@ -87,45 +88,18 @@ export const getStep11Template = () => {
     // 🎯 OPÇÕES DE RESPOSTA
 
     {
-      id: "option-1-step11",
+      id: "option-1-step08",
       type: "quiz-option",
       properties: {
-        optionId: "executiva-formal",
-        label: "Executiva e formal",
-        value: "executiva-formal",
+        optionId: "sem-estampas",
+        label: "Prefiro sem estampas - lisas e elegantes",
+        value: "sem-estampas",
         points: {
           elegante: 3,
-          casual: 1,
+          casual: 2,
           criativo: 1,
           classico: 3,
           romantico: 1,
-          minimalista: 2,
-          boho: 1,
-        },
-
-        variant: "default",
-        size: "large",
-        textAlign: "text-left",
-        marginBottom: 12,
-        borderRadius: "rounded-lg",
-        backgroundColor: "#ffffff",
-        hoverColor: "#F8F4F1",
-        selectedColor: "#B89B7A",
-      },
-    },
-    {
-      id: "option-2-step11",
-      type: "quiz-option",
-      properties: {
-        optionId: "smart-casual",
-        label: "Smart casual - elegante mas descontraída",
-        value: "smart-casual",
-        points: {
-          elegante: 2,
-          casual: 2,
-          criativo: 2,
-          classico: 2,
-          romantico: 2,
           minimalista: 3,
           boho: 1,
         },
@@ -141,18 +115,18 @@ export const getStep11Template = () => {
       },
     },
     {
-      id: "option-3-step11",
+      id: "option-2-step08",
       type: "quiz-option",
       properties: {
-        optionId: "feminina-profissional",
-        label: "Feminina e profissional",
-        value: "feminina-profissional",
+        optionId: "listras-classicas",
+        label: "Listras clássicas",
+        value: "listras-classicas",
         points: {
           elegante: 2,
-          casual: 1,
+          casual: 3,
           criativo: 1,
           classico: 3,
-          romantico: 3,
+          romantico: 1,
           minimalista: 2,
           boho: 1,
         },
@@ -168,20 +142,47 @@ export const getStep11Template = () => {
       },
     },
     {
-      id: "option-4-step11",
+      id: "option-3-step08",
       type: "quiz-option",
       properties: {
-        optionId: "criativa-autentica",
-        label: "Criativa e autêntica",
-        value: "criativa-autentica",
+        optionId: "florais-delicadas",
+        label: "Florais delicadas e femininas",
+        value: "florais-delicadas",
         points: {
           elegante: 1,
           casual: 2,
+          criativo: 2,
+          classico: 2,
+          romantico: 3,
+          minimalista: 1,
+          boho: 3,
+        },
+
+        variant: "default",
+        size: "large",
+        textAlign: "text-left",
+        marginBottom: 12,
+        borderRadius: "rounded-lg",
+        backgroundColor: "#ffffff",
+        hoverColor: "#F8F4F1",
+        selectedColor: "#B89B7A",
+      },
+    },
+    {
+      id: "option-4-step08",
+      type: "quiz-option",
+      properties: {
+        optionId: "geometricas-modernas",
+        label: "Geométricas e modernas",
+        value: "geometricas-modernas",
+        points: {
+          elegante: 2,
+          casual: 1,
           criativo: 3,
           classico: 1,
           romantico: 1,
-          minimalista: 1,
-          boho: 3,
+          minimalista: 2,
+          boho: 2,
         },
 
         variant: "default",
@@ -197,7 +198,7 @@ export const getStep11Template = () => {
 
     // 🎯 BOTÃO CONTINUAR
     {
-      id: "continue-button-step11",
+      id: "continue-button-step08",
       type: "button-inline",
       properties: {
         text: "Continuar →",
@@ -219,4 +220,4 @@ export const getStep11Template = () => {
   ];
 };
 
-export default Step11;
+export default Step08;

@@ -1,6 +1,7 @@
 import React from "react";
 import { useContainerProperties } from "@/hooks/useContainerProperties";
 import { useDebounce } from "@/hooks/useDebounce";
+import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 export interface Step12Props {
@@ -17,8 +18,6 @@ export const Step12 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step12Prop
 };
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 12 - Analisando seu Perfil...
 export const getStep12Template = () => {
-  // 🚀 Hooks otimizados aplicados automaticamente
-  const isMobile = useIsMobile();
   return [
     // 🎯 CABEÇALHO COM PROGRESSO
     {

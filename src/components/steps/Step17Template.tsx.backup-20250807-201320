@@ -1,27 +1,28 @@
 import React from "react";
 import { useContainerProperties } from "@/hooks/useContainerProperties";
 import { useDebounce } from "@/hooks/useDebounce";
-import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-export interface Step18Props {
+export interface Step17Props {
   onNext?: () => void;
   onBlockAdd?: (block: any) => void;
   onAnswer?: (answer: any) => void;
   userAnswers?: Record<string, any>;
 }
 
-export const Step18 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step18Props) => {
+export const Step17 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step17Props) => {
   // 🚀 Hooks otimizados aplicados automaticamente
   const isMobile = useIsMobile();
-  return <div className="step-18">{/* Conteúdo da Etapa 18 renderizado aqui */}</div>;
+  return <div className="step-17">{/* Conteúdo da Etapa 17 renderizado aqui */}</div>;
 };
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 18 - Calculando seu Resultado...
-export const getStep18Template = () => {
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 17 - Finalizando sua Análise...
+export const getStep17Template = () => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return [
     // 🎯 CABEÇALHO COM PROGRESSO
     {
-      id: "progress-header-step18",
+      id: "progress-header-step17",
       type: "quiz-header",
       properties: {
         logoUrl:
@@ -29,17 +30,17 @@ export const getStep18Template = () => {
         logoAlt: "Logo Gisele Galvão",
         logoWidth: 80,
         logoHeight: 80,
-        progressValue: 90,
+        progressValue: 85,
         progressMax: 100,
         showBackButton: false,
         showProgress: true,
-        stepNumber: "18 de 21",
+        stepNumber: "17 de 21",
       },
     },
 
     // 🎨 BARRA DECORATIVA
     {
-      id: "decorative-bar-step18",
+      id: "decorative-bar-step17",
       type: "decorative-bar-inline",
       properties: {
         width: "100%",
@@ -55,10 +56,10 @@ export const getStep18Template = () => {
 
     // 📱 TÍTULO DA TRANSIÇÃO
     {
-      id: "transition-title-step18",
+      id: "transition-title-step17",
       type: "text-inline",
       properties: {
-        content: "Calculando seu Resultado...",
+        content: "Finalizando sua Análise...",
         fontSize: "text-3xl",
         fontWeight: "font-bold",
         fontFamily: "Playfair Display, serif",
@@ -71,11 +72,11 @@ export const getStep18Template = () => {
 
     // 🖼️ IMAGEM DE LOADING/TRANSIÇÃO
     {
-      id: "transition-image-step18",
+      id: "transition-image-step17",
       type: "image-display-inline",
       properties: {
-        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838169/20250509_2154_C%C3%A1lculo_Final_simple_compose_01jtvthhq8wcbj2q6r9f8g3jrm_dqbdpt.webp",
-        alt: "Calculando seu Resultado...",
+        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838166/20250509_2153_Finaliza%C3%A7%C3%A3o_simple_compose_01jtvtggn0nvy3q7bnz5z4mvcj_q4bgjl.webp",
+        alt: "Finalizando sua Análise...",
         width: 500,
         height: 350,
         className: "object-cover w-full max-w-lg h-72 rounded-xl mx-auto shadow-lg",
@@ -86,10 +87,10 @@ export const getStep18Template = () => {
 
     // 💭 TEXTO DESCRITIVO
     {
-      id: "transition-description-step18",
+      id: "transition-description-step17",
       type: "text-inline",
       properties: {
-        content: "Seus dados estão sendo processados por nosso algoritmo de estilo. Aguarde...",
+        content: "Estamos cruzando todos os dados para criar seu perfil de estilo personalizado.",
         fontSize: "text-lg",
         textAlign: "text-center",
         color: "#432818",
@@ -100,4 +101,4 @@ export const getStep18Template = () => {
   ];
 };
 
-export default Step18;
+export default Step17;

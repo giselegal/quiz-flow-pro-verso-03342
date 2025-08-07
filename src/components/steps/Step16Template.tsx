@@ -1,6 +1,7 @@
 import React from "react";
 import { useContainerProperties } from "@/hooks/useContainerProperties";
 import { useDebounce } from "@/hooks/useDebounce";
+import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 export interface Step16Props {
@@ -17,8 +18,6 @@ export const Step16 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step16Prop
 };
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 16 - undefined
 export const getStep16Template = () => {
-  // 🚀 Hooks otimizados aplicados automaticamente
-  const isMobile = useIsMobile();
   return [
     // 🎯 CABEÇALHO COM PROGRESSO
     {

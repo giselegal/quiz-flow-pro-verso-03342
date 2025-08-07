@@ -1,4 +1,7 @@
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useContainerProperties } from "@/hooks/useContainerProperties";
+import { useDebounce } from "@/hooks/useDebounce";
+import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
 
 export interface Step06Props {
   onNext?: () => void;

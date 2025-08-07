@@ -1,27 +1,28 @@
-import { useIsMobile } from "@/hooks/use-mobile";
-import { useContainerProperties } from "@/hooks/useContainerProperties";
-import { useDebounce } from "@/hooks/useDebounce";
-import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
-export interface Step04Props {
+export interface Step05Props {
   onNext?: () => void;
   onBlockAdd?: (block: any) => void;
   onAnswer?: (answer: any) => void;
   userAnswers?: Record<string, any>;
 }
 
-export const Step04 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step04Props) => {
+export const Step05 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step05Props) => {
   // 🚀 Hooks otimizados aplicados automaticamente
   const isMobile = useIsMobile();
   // 🚀 Hooks otimizados aplicados automaticamente
-  return <div className="step-04">{/* Conteúdo da Etapa 4 renderizado aqui */}</div>;
+  const isMobile = useIsMobile();
+  return <div className="step-05">{/* Conteúdo da Etapa 5 renderizado aqui */}</div>;
 };
 
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 4 - QUESTÃO 3: QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?
-export const getStep04Template = () => {
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 5 - QUESTÃO 5: QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?
+export const getStep05Template = () => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
-      id: "step04-header",
+      id: "step05-header",
       type: "quiz-intro-header",
       properties: {
         logoUrl:
@@ -29,7 +30,7 @@ export const getStep04Template = () => {
         logoAlt: "Logo Gisele Galvão",
         logoWidth: 96,
         logoHeight: 96,
-        progressValue: 20,
+        progressValue: 25,
         progressMax: 100,
         showBackButton: true,
       },
@@ -37,10 +38,10 @@ export const getStep04Template = () => {
 
     // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step04-question-title",
+      id: "step05-question-title",
       type: "text-inline",
       properties: {
-        content: "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
+        content: "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?",
         level: "h2",
         fontSize: "text-2xl",
         fontWeight: "font-bold",
@@ -52,10 +53,10 @@ export const getStep04Template = () => {
 
     // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step04-question-counter",
+      id: "step05-question-counter",
       type: "text-inline",
       properties: {
-        content: "Questão 3 de 10",
+        content: "Questão 5 de 10",
         fontSize: "text-sm",
         textAlign: "text-center",
         color: "#6B7280",
@@ -65,83 +66,90 @@ export const getStep04Template = () => {
 
     // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
-      id: "step04-visual-options",
+      id: "step05-details-options",
       type: "options-grid",
       properties: {
-        questionId: "q3",
+        questionId: "q5",
         options: [
           {
-            id: "3a",
-            text: "Visual leve, despojado e natural",
-            value: "3a",
+            id: "5a",
+            text: "Estampas clean, com poucas informações",
+            value: "5a",
             category: "Natural",
             styleCategory: "Natural",
             points: 1,
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/20_oh44vh.webp",
           },
           {
-            id: "3b",
-            text: "Visual clássico e tradicional",
-            value: "3b",
+            id: "5b",
+            text: "Estampas clássicas e atemporais",
+            value: "5b",
             category: "Clássico",
             styleCategory: "Clássico",
             points: 1,
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735368/21_o7wkte.webp",
           },
           {
-            id: "3c",
-            text: "Visual casual com toque atual",
-            value: "3c",
+            id: "5c",
+            text: "Atemporais, mas que tenham uma pegada de atual e moderna",
+            value: "5c",
             category: "Contemporâneo",
             styleCategory: "Contemporâneo",
             points: 1,
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735369/22_siebw2.webp",
           },
           {
-            id: "3d",
-            text: "Visual refinado e imponente",
-            value: "3d",
+            id: "5d",
+            text: "Estampas clássicas e atemporais, mas sofisticadas",
+            value: "5d",
             category: "Elegante",
             styleCategory: "Elegante",
             points: 1,
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/23_bdfxrh.webp",
           },
           {
-            id: "3e",
-            text: "Visual romântico, feminino e delicado",
-            value: "3e",
+            id: "5e",
+            text: "Estampas florais e/ou delicadas como bolinhas, borboletas e corações",
+            value: "5e",
             category: "Romântico",
             styleCategory: "Romântico",
             points: 1,
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/24_nptszu.webp",
           },
           {
-            id: "3f",
-            text: "Visual sensual, com saia justa e decote",
-            value: "3f",
+            id: "5f",
+            text: "Estampas de animal print, como onça, zebra e cobra",
+            value: "5f",
             category: "Sexy",
             styleCategory: "Sexy",
             points: 1,
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/25_motk6b.webp",
           },
           {
-            id: "3g",
-            text: "Visual marcante e urbano (jeans + jaqueta)",
-            value: "3g",
+            id: "5g",
+            text: "Estampas geométricas, abstratas e exageradas como grandes poás",
+            value: "5g",
             category: "Dramático",
             styleCategory: "Dramático",
             points: 1,
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp",
           },
           {
-            id: "3h",
-            text: "Visual criativo, colorido e ousado",
-            value: "3h",
+            id: "5h",
+            text: "Estampas diferentes do usual, como africanas, xadrez grandes",
+            value: "5h",
             category: "Criativo",
             styleCategory: "Criativo",
             points: 1,
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp",
           },
         ],
         columns: 2,
@@ -160,9 +168,10 @@ export const getStep04Template = () => {
         showValidationFeedback: true,
       },
     },
+
     // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step04-continue-button",
+      id: "step05-continue-button",
       type: "button-inline",
       properties: {
         text: "Continuar",
@@ -178,4 +187,4 @@ export const getStep04Template = () => {
   ];
 };
 
-export default getStep04Template;
+export default getStep05Template;

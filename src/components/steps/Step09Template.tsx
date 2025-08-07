@@ -1,6 +1,7 @@
 import React from "react";
 import { useContainerProperties } from "@/hooks/useContainerProperties";
 import { useDebounce } from "@/hooks/useDebounce";
+import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 export interface Step09Props {
@@ -17,8 +18,6 @@ export const Step09 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step09Prop
 };
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 9 - Seus calçados preferidos para o dia a dia:
 export const getStep09Template = () => {
-  // 🚀 Hooks otimizados aplicados automaticamente
-  const isMobile = useIsMobile();
   return [
     // 🎯 CABEÇALHO COM PROGRESSO
     {

@@ -1,6 +1,7 @@
 import React from "react";
 import { useContainerProperties } from "@/hooks/useContainerProperties";
 import { useDebounce } from "@/hooks/useDebounce";
+import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 export interface Step10Props {
@@ -17,8 +18,6 @@ export const Step10 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step10Prop
 };
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 10 - Seu estilo de maquiagem preferido:
 export const getStep10Template = () => {
-  // 🚀 Hooks otimizados aplicados automaticamente
-  const isMobile = useIsMobile();
   return [
     // 🎯 CABEÇALHO COM PROGRESSO
     {

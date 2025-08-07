@@ -1,6 +1,7 @@
 import React from "react";
 import { useContainerProperties } from "@/hooks/useContainerProperties";
 import { useDebounce } from "@/hooks/useDebounce";
+import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 export interface Step08Props {
@@ -17,8 +18,6 @@ export const Step08 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step08Prop
 };
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 8 - Quando o assunto são estampas, você prefere:
 export const getStep08Template = () => {
-  // 🚀 Hooks otimizados aplicados automaticamente
-  const isMobile = useIsMobile();
   return [
     // 🎯 CABEÇALHO COM PROGRESSO
     {
