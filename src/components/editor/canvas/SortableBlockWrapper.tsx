@@ -1,10 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { getBlockComponent        {/* 🎯 Container 2: Componente Individual com padding mínimo */}
-        <div 
-          className="p-1" // 🎯 Padding mínimo para máximo aproveitamento do espaço
-          onClick={onSelect}
-        >om "@/config/enhancedBlockRegistry";
+import { getBlockComponent } from "@/config/enhancedBlockRegistry";
 import { useContainerProperties } from "@/hooks/useContainerProperties";
 import { cn } from "@/lib/utils";
 import { Block } from "@/types/editor";
@@ -122,9 +118,9 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           </Button>
         </div>
 
-        {/* 🎯 Container 2: Componente Individual sem bordas extras */}
+        {/* 🎯 Container 2: Componente Individual com padding mínimo */}
         <div
-          className="p-2" // 🎯 Removido todas as bordas do container 2
+          className="p-1" // 🎯 Padding mínimo para máximo aproveitamento do espaço
           onClick={onSelect}
         >
           <Component
