@@ -154,25 +154,9 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
       }
     }
 
-    // 📏 Margin Left Classes (espaço lateral esquerdo)
-    if (marginLeft && marginLeft > 0) {
-      if (marginLeft <= 8) classes.push("ml-2");
-      else if (marginLeft <= 16) classes.push("ml-4");
-      else if (marginLeft <= 24) classes.push("ml-6");
-      else if (marginLeft <= 32) classes.push("ml-8");
-      else if (marginLeft <= 40) classes.push("ml-10");
-      else classes.push("ml-12");
-    }
-
-    // 📏 Margin Right Classes (espaço lateral direito)
-    if (marginRight && marginRight > 0) {
-      if (marginRight <= 8) classes.push("mr-2");
-      else if (marginRight <= 16) classes.push("mr-4");
-      else if (marginRight <= 24) classes.push("mr-6");
-      else if (marginRight <= 32) classes.push("mr-8");
-      else if (marginRight <= 40) classes.push("mr-10");
-      else classes.push("mr-12");
-    }
+    // 🎯 MARGENS LATERAIS REMOVIDAS: Agora são aplicadas dentro do componente TextInlineBlock
+    // As margens laterais (marginLeft, marginRight) são processadas internamente
+    // para não afetar o posicionamento do container no layout
 
     return classes.filter(Boolean).join(" ");
   };
