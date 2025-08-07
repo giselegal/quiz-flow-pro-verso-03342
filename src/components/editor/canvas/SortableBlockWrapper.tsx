@@ -118,14 +118,14 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           </Button>
         </div>
 
-        {/* 🎯 Container 2: Componente Individual com padding mínimo */}
+        {/* 🎯 Container 2: Componente Individual sem bordas - apenas padding mínimo */}
         <div
-          className="p-1" // 🎯 Padding mínimo para máximo aproveitamento do espaço
+          className="p-1" // 🎯 Apenas padding, sem bordas
           onClick={onSelect}
         >
           <Component
             block={block}
-            isSelected={isSelected}
+            isSelected={false} // 🎯 Forçar isSelected=false para remover bordas do componente
             onClick={onSelect}
             onPropertyChange={handlePropertyChange}
           />
