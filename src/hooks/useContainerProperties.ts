@@ -160,7 +160,7 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
       }
     }
 
-    // 📏 Margin Left Classes (suporte a valores positivos e negativos) 
+    // 📏 Margin Left Classes (suporte a valores positivos e negativos)
     if (marginLeft && marginLeft !== 0) {
       if (marginLeft < 0) {
         // Margens negativas

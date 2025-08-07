@@ -146,11 +146,12 @@ export const useUnifiedProperties = (
           label: "Visível",
           category: PropertyCategory.LAYOUT,
         },
+        // 🎯 1. ESCALA DO BLOCO (renomeado)
         {
           key: "scale",
           value: currentBlock?.properties?.scale ?? 100,
           type: PropertyType.RANGE,
-          label: "Tamanho Uniforme",
+          label: "Escala Bloco",
           category: PropertyCategory.STYLE,
           min: 50,
           max: 200,
@@ -198,19 +199,7 @@ export const useUnifiedProperties = (
             { value: "spacious", label: "Espaçoso (32px)" },
           ],
         },
-        {
-          key: "backgroundColor",
-          value: currentBlock?.properties?.backgroundColor || "transparent",
-          type: PropertyType.SELECT,
-          label: "Cor de Fundo",
-          category: PropertyCategory.STYLE,
-          options: [
-            { value: "transparent", label: "Transparente" },
-            { value: "white", label: "Branco" },
-            { value: "gray-50", label: "Cinza Claro" },
-            { value: "brand-light", label: "Cor da Marca" },
-          ],
-        },
+        // 🎯 3. COR DE FUNDO DO CONTAINER (ColorPicker)
         {
           key: "containerBackgroundColor",
           value: currentBlock?.properties?.containerBackgroundColor || "transparent",
@@ -218,6 +207,15 @@ export const useUnifiedProperties = (
           label: "Cor de Fundo do Container",
           category: PropertyCategory.STYLE,
         },
+        // 🎯 4. COR DE FUNDO DO COMPONENTE (ColorPicker)
+        {
+          key: "backgroundColor",
+          value: currentBlock?.properties?.backgroundColor || "transparent",
+          type: PropertyType.COLOR,
+          label: "Cor de Fundo do Componente",
+          category: PropertyCategory.STYLE,
+        },
+        // 🎯 1. CONTROLES DE MARGENS (4 controles obrigatórios)
         {
           key: "marginTop",
           value: currentBlock?.properties?.marginTop || 0, // 🎯 Padrão alterado para 0
@@ -262,6 +260,82 @@ export const useUnifiedProperties = (
           step: 4,
           unit: "px",
         },
+        // 🎯 7. CONFIGURAÇÕES BÁSICAS DE TEXTO (para todos os componentes com texto)
+        {
+          key: "text",
+          value: currentBlock?.properties?.text || currentBlock?.properties?.content || "Texto",
+          type: PropertyType.TEXTAREA,
+          label: "Texto",
+          category: PropertyCategory.CONTENT,
+          required: true,
+          rows: 3,
+        },
+        {
+          key: "fontSize",
+          value: currentBlock?.properties?.fontSize || "text-base",
+          type: PropertyType.SELECT,
+          label: "Tamanho da Fonte",
+          category: PropertyCategory.STYLE,
+          options: [
+            { value: "text-xs", label: "Extra Pequeno (12px)" },
+            { value: "text-sm", label: "Pequeno (14px)" },
+            { value: "text-base", label: "Normal (16px)" },
+            { value: "text-lg", label: "Grande (18px)" },
+            { value: "text-xl", label: "Extra Grande (20px)" },
+            { value: "text-2xl", label: "Muito Grande (24px)" },
+            { value: "text-3xl", label: "Gigante (30px)" },
+          ],
+        },
+        {
+          key: "fontWeight",
+          value: currentBlock?.properties?.fontWeight || "font-normal",
+          type: PropertyType.SELECT,
+          label: "Peso da Fonte",
+          category: PropertyCategory.STYLE,
+          options: [
+            { value: "font-light", label: "Leve" },
+            { value: "font-normal", label: "Normal" },
+            { value: "font-medium", label: "Médio" },
+            { value: "font-semibold", label: "Semi-negrito" },
+            { value: "font-bold", label: "Negrito" },
+            { value: "font-extrabold", label: "Extra Negrito" },
+          ],
+        },
+        {
+          key: "textColor",
+          value: currentBlock?.properties?.textColor || currentBlock?.properties?.color || "#333333",
+          type: PropertyType.COLOR,
+          label: "Cor do Texto",
+          category: PropertyCategory.STYLE,
+        },
+        // 🎯 5. ALINHAMENTO CENTRALIZADO POR PADRÃO
+        {
+          key: "textAlign",
+          value: currentBlock?.properties?.textAlign || "text-center",
+          type: PropertyType.SELECT,
+          label: "Alinhamento do Texto",
+          category: PropertyCategory.LAYOUT,
+          options: [
+            { value: "text-left", label: "Esquerda" },
+            { value: "text-center", label: "Centro" },
+            { value: "text-right", label: "Direita" },
+            { value: "text-justify", label: "Justificado" },
+          ],
+        },
+        // 🎯 6. LARGURA DO TEXTO 100% POR PADRÃO
+        {
+          key: "textWidth",
+          value: currentBlock?.properties?.textWidth || "w-full",
+          type: PropertyType.SELECT,
+          label: "Largura do Texto",
+          category: PropertyCategory.LAYOUT,
+          options: [
+            { value: "w-full", label: "100%" },
+            { value: "w-3/4", label: "75%" },
+            { value: "w-1/2", label: "50%" },
+            { value: "w-1/4", label: "25%" },
+          ],
+        },
       ];
 
       // ---- Mescla de todos os campos para cada tipo de bloco ----
@@ -269,123 +343,21 @@ export const useUnifiedProperties = (
         case "text-inline":
           return [
             ...baseProperties,
-            // 📝 CONTEÚDO
-            createProperty(
-              "content",
-              currentBlock?.properties?.content || "Digite seu texto aqui",
-              PropertyType.TEXTAREA,
-              "Texto",
-              PropertyCategory.CONTENT,
-              { required: true, rows: 3 }
-            ),
-
-            // 🎨 ALINHAMENTO
-            createProperty(
-              "textAlign",
-              currentBlock?.properties?.textAlign || "text-left",
-              PropertyType.SELECT,
-              "Alinhamento do Texto",
-              PropertyCategory.LAYOUT,
-              {
-                options: createSelectOptions([
-                  { value: "text-left", label: "Esquerda" },
-                  { value: "text-center", label: "Centro" },
-                  { value: "text-right", label: "Direita" },
-                  { value: "text-justify", label: "Justificado" },
-                ]),
-              }
-            ),
-
-            // 📏 TAMANHO DA FONTE (TAILWIND)
-            createProperty(
-              "fontSize",
-              currentBlock?.properties?.fontSize || "text-base",
-              PropertyType.SELECT,
-              "Tamanho da Fonte",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "text-xs", label: "Extra Pequeno (12px)" },
-                  { value: "text-sm", label: "Pequeno (14px)" },
-                  { value: "text-base", label: "Normal (16px)" },
-                  { value: "text-lg", label: "Grande (18px)" },
-                  { value: "text-xl", label: "Extra Grande (20px)" },
-                  { value: "text-2xl", label: "Muito Grande (24px)" },
-                  { value: "text-3xl", label: "Gigante (30px)" },
-                ]),
-              }
-            ),
-
-            // ⚖️ PESO DA FONTE (TAILWIND)
-            createProperty(
-              "fontWeight",
-              currentBlock?.properties?.fontWeight || "font-normal",
-              PropertyType.SELECT,
-              "Peso da Fonte",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "font-light", label: "Leve" },
-                  { value: "font-normal", label: "Normal" },
-                  { value: "font-medium", label: "Médio" },
-                  { value: "font-semibold", label: "Semi-negrito" },
-                  { value: "font-bold", label: "Negrito" },
-                  { value: "font-extrabold", label: "Extra Negrito" },
-                ]),
-              }
-            ),
-
-            // 🎨 CORES
-            createProperty(
-              "color",
-              currentBlock?.properties?.color || "#333333",
-              PropertyType.COLOR,
-              "Cor do Texto",
-              PropertyCategory.STYLE
-            ),
-            createProperty(
-              "backgroundColor",
-              currentBlock?.properties?.backgroundColor || "transparent",
-              PropertyType.COLOR,
-              "Cor de Fundo",
-              PropertyCategory.STYLE
-            ),
-
-            // 📏 ESPAÇAMENTO (APENAS CONTROLES ESSENCIAIS)
-            createProperty(
-              "marginTop",
-              currentBlock?.properties?.marginTop ?? 0,
-              PropertyType.SELECT,
-              "Espaçamento Superior",
-              PropertyCategory.LAYOUT,
-              {
-                options: createSelectOptions([
-                  { value: "0", label: "Nenhum (0px)" },
-                  { value: "4", label: "Pequeno (4px)" },
-                  { value: "8", label: "Médio (8px)" },
-                  { value: "16", label: "Grande (16px)" },
-                  { value: "24", label: "Muito Grande (24px)" },
-                  { value: "32", label: "Extra Grande (32px)" },
-                ]),
-              }
-            ),
-            createProperty(
-              "marginBottom",
-              currentBlock?.properties?.marginBottom ?? 8,
-              PropertyType.SELECT,
-              "Espaçamento Inferior",
-              PropertyCategory.LAYOUT,
-              {
-                options: createSelectOptions([
-                  { value: "0", label: "Nenhum (0px)" },
-                  { value: "4", label: "Pequeno (4px)" },
-                  { value: "8", label: "Médio (8px)" },
-                  { value: "16", label: "Grande (16px)" },
-                  { value: "24", label: "Muito Grande (24px)" },
-                  { value: "32", label: "Extra Grande (32px)" },
-                ]),
-              }
-            ),
+            // Propriedades específicas do texto (além das básicas já incluídas)
+            {
+              key: "lineHeight",
+              value: currentBlock?.properties?.lineHeight || "1.2",
+              type: PropertyType.SELECT,
+              label: "Altura da Linha",
+              category: PropertyCategory.STYLE,
+              options: [
+                { value: "1", label: "1" },
+                { value: "1.2", label: "1.2" },
+                { value: "1.5", label: "1.5" },
+                { value: "1.75", label: "1.75" },
+                { value: "2", label: "2" },
+              ],
+            },
           ];
 
         case "quiz-intro-header":

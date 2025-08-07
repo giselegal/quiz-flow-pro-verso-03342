@@ -1079,7 +1079,7 @@ const EditorPage: React.FC = () => {
                           </div>
                         </div>
                       ) : (
-                        <div className="space-y-4">
+                        <div className="space-y-1">
                           {sortedBlocks.map(block => {
                             const blockData = {
                               id: block.id,
