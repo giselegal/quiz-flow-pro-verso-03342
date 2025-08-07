@@ -68,7 +68,7 @@ interface EditorContextType {
   /**
    * 🎯 Carrega etapas otimizadas do funil de 21 etapas
    */
-  const loadOptimizedSteps = useCallback(() => {
+  const loadOptimizedSteps = () => {
     if (OPTIMIZED_FUNNEL_CONFIG?.steps) {
       const optimizedSteps = OPTIMIZED_FUNNEL_CONFIG.steps.map(step => ({
         ...step,
@@ -83,7 +83,7 @@ interface EditorContextType {
       return optimizedSteps;
     }
     return [];
-  }, []);
+  };
 
   const EditorContext = createContext<EditorContextType | undefined>(undefined);
 
