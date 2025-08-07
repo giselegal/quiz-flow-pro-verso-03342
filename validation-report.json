@@ -1,11 +1,7 @@
 {
   "results": {
     "components": {
-      "existing": [
-        "heading-inline",
-        "text-inline",
-        "button-inline"
-      ],
+      "existing": ["heading-inline", "text-inline", "button-inline"],
       "missing": [
         "quiz-intro-header",
         "decorative-bar-inline",

@@ -1414,113 +1414,50 @@
       "natural": {
         "name": "Natural",
         "description": "Você valoriza o conforto e a praticidade sem abrir mão do estilo.",
-        "characteristics": [
-          "Confortável",
-          "Prática",
-          "Autêntica",
-          "Descomplicada"
-        ],
-        "colors": [
-          "#8B7355",
-          "#A0956B",
-          "#6B5B73"
-        ],
+        "characteristics": ["Confortável", "Prática", "Autêntica", "Descomplicada"],
+        "colors": ["#8B7355", "#A0956B", "#6B5B73"],
         "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp"
       },
       "classico": {
         "name": "Clássico",
         "description": "Você prefere peças atemporais, elegantes e bem estruturadas.",
-        "characteristics": [
-          "Atemporal",
-          "Elegante",
-          "Sofisticada",
-          "Refinada"
-        ],
-        "colors": [
-          "#2C3E50",
-          "#34495E",
-          "#7F8C8D"
-        ],
+        "characteristics": ["Atemporal", "Elegante", "Sofisticada", "Refinada"],
+        "colors": ["#2C3E50", "#34495E", "#7F8C8D"],
         "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_CLASSICO_abc123.webp"
       },
       "romantico": {
         "name": "Romântico",
         "description": "Você adora peças femininas, delicadas e com detalhes especiais.",
-        "characteristics": [
-          "Feminina",
-          "Delicada",
-          "Suave",
-          "Detalhista"
-        ],
-        "colors": [
-          "#F8BBD9",
-          "#E8A2C0",
-          "#D7819F"
-        ],
+        "characteristics": ["Feminina", "Delicada", "Suave", "Detalhista"],
+        "colors": ["#F8BBD9", "#E8A2C0", "#D7819F"],
         "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_ROMANTICO_def456.webp"
       },
       "dramatico": {
         "name": "Dramático",
         "description": "Você gosta de peças marcantes, estruturadas e com presença.",
-        "characteristics": [
-          "Marcante",
-          "Poderosa",
-          "Estruturada",
-          "Impactante"
-        ],
-        "colors": [
-          "#000000",
-          "#8B0000",
-          "#4B0082"
-        ],
+        "characteristics": ["Marcante", "Poderosa", "Estruturada", "Impactante"],
+        "colors": ["#000000", "#8B0000", "#4B0082"],
         "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_DRAMATICO_ghi789.webp"
       },
       "elegante": {
         "name": "Elegante",
         "description": "Você aprecia sofisticação, qualidade e peças bem cortadas.",
-        "characteristics": [
-          "Sofisticada",
-          "Refinada",
-          "Polida",
-          "Impecável"
-        ],
-        "colors": [
-          "#1C1C1C",
-          "#8B4513",
-          "#CD853F"
-        ],
+        "characteristics": ["Sofisticada", "Refinada", "Polida", "Impecável"],
+        "colors": ["#1C1C1C", "#8B4513", "#CD853F"],
         "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_ELEGANTE_jkl012.webp"
       },
       "criativo": {
         "name": "Criativo",
         "description": "Você gosta de experimentar, misturar e criar looks únicos.",
-        "characteristics": [
-          "Criativa",
-          "Ousada",
-          "Única",
-          "Experimental"
-        ],
-        "colors": [
-          "#FF6B35",
-          "#F7931E",
-          "#FFD23F"
-        ],
+        "characteristics": ["Criativa", "Ousada", "Única", "Experimental"],
+        "colors": ["#FF6B35", "#F7931E", "#FFD23F"],
         "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_CRIATIVO_mno345.webp"
       },
       "contemporaneo": {
         "name": "Contemporâneo",
         "description": "Você acompanha tendências mas adapta ao seu estilo pessoal.",
-        "characteristics": [
-          "Moderna",
-          "Atualizada",
-          "Versátil",
-          "Inovadora"
-        ],
-        "colors": [
-          "#95A5A6",
-          "#BDC3C7",
-          "#ECF0F1"
-        ],
+        "characteristics": ["Moderna", "Atualizada", "Versátil", "Inovadora"],
+        "colors": ["#95A5A6", "#BDC3C7", "#ECF0F1"],
         "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_CONTEMPORANEO_pqr678.webp"
       }
     }

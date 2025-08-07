@@ -307,10 +307,10 @@ export function generateStepFromTemplate(stepNumber: number, questionData: any =
   }
 
   if (stepNumber >= 2 && stepNumber <= 11) {
-    const template = { 
+    const template = {
       ...OPTIMIZED_STEP_TEMPLATES.questionTemplate,
       id: `step-${stepNumber}`,
-      name: `Q${stepNumber - 1} - ${questionData?.title || "Questão"}`
+      name: `Q${stepNumber - 1} - ${questionData?.title || "Questão"}`,
     };
 
     // Substituir placeholders dinâmicos

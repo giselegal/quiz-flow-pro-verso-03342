@@ -28,7 +28,9 @@
 ## 3. ANÁLISE DETALHADA POR COMPONENTE
 
 ### text-inline
+
 **Status**: ❌ FALTANDO - sem controles de tamanho
+
 - Width RANGE: 0 | Width total: 0
 - Height RANGE: 0 | Height total: 0
 - Size controls: 0
@@ -36,7 +38,9 @@
 - Margin controls: 0
 
 ### image-display-inline
+
 **Status**: ⚠️ INCOMPLETO - tem width/height sem RANGE
+
 - Width RANGE: 0 | Width total: 2
 - Height RANGE: 0 | Height total: 2
 - Size controls: 0
@@ -44,7 +48,9 @@
 - Margin controls: 0
 
 ### button-inline
+
 **Status**: ❌ FALTANDO - sem controles de tamanho
+
 - Width RANGE: 0 | Width total: 0
 - Height RANGE: 0 | Height total: 0
 - Size controls: 1
@@ -52,7 +58,9 @@
 - Margin controls: 0
 
 ### decorative-bar-inline
+
 **Status**: ⚠️ INCOMPLETO - tem width/height sem RANGE
+
 - Width RANGE: 0 | Width total: 0
 - Height RANGE: 0 | Height total: 1
 - Size controls: 0
@@ -60,7 +68,9 @@
 - Margin controls: 0
 
 ### pricing-card
+
 **Status**: ❌ FALTANDO - sem controles de tamanho
+
 - Width RANGE: 0 | Width total: 0
 - Height RANGE: 0 | Height total: 0
 - Size controls: 0
@@ -68,7 +78,9 @@
 - Margin controls: 0
 
 ### quiz-intro-header
+
 **Status**: ❌ FALTANDO - sem controles de tamanho
+
 - Width RANGE: 0 | Width total: 0
 - Height RANGE: 0 | Height total: 0
 - Size controls: 0
@@ -76,7 +88,9 @@
 - Margin controls: 0
 
 ### quiz-step
+
 **Status**: ❌ FALTANDO - sem controles de tamanho
+
 - Width RANGE: 0 | Width total: 0
 - Height RANGE: 0 | Height total: 0
 - Size controls: 0
@@ -84,7 +98,9 @@
 - Margin controls: 0
 
 ### quiz-progress
+
 **Status**: ❌ FALTANDO - sem controles de tamanho
+
 - Width RANGE: 0 | Width total: 0
 - Height RANGE: 0 | Height total: 0
 - Size controls: 0
@@ -92,7 +108,9 @@
 - Margin controls: 0
 
 ### options-grid
+
 **Status**: ❌ FALTANDO - sem controles de tamanho
+
 - Width RANGE: 0 | Width total: 0
 - Height RANGE: 0 | Height total: 0
 - Size controls: 0
@@ -100,7 +118,9 @@
 - Margin controls: 0
 
 ### quiz-results
+
 **Status**: ❌ FALTANDO - sem controles de tamanho
+
 - Width RANGE: 0 | Width total: 0
 - Height RANGE: 0 | Height total: 0
 - Size controls: 0
@@ -108,7 +128,9 @@
 - Margin controls: 0
 
 ### quiz-results-block
+
 **Status**: ❌ FALTANDO - sem controles de tamanho
+
 - Width RANGE: 0 | Width total: 0
 - Height RANGE: 0 | Height total: 0
 - Size controls: 0
@@ -116,7 +138,9 @@
 - Margin controls: 0
 
 ### style-results
+
 **Status**: ❌ FALTANDO - sem controles de tamanho
+
 - Width RANGE: 0 | Width total: 0
 - Height RANGE: 0 | Height total: 0
 - Size controls: 0
@@ -124,7 +148,9 @@
 - Margin controls: 0
 
 ### style-results-block
+
 **Status**: ❌ FALTANDO - sem controles de tamanho
+
 - Width RANGE: 0 | Width total: 0
 - Height RANGE: 0 | Height total: 0
 - Size controls: 0
@@ -132,7 +158,9 @@
 - Margin controls: 0
 
 ### final-step
+
 **Status**: ❌ FALTANDO - sem controles de tamanho
+
 - Width RANGE: 0 | Width total: 0
 - Height RANGE: 0 | Height total: 0
 - Size controls: 0
@@ -140,7 +168,9 @@
 - Margin controls: 0
 
 ### form-input
+
 **Status**: ❌ FALTANDO - sem controles de tamanho
+
 - Width RANGE: 0 | Width total: 0
 - Height RANGE: 0 | Height total: 0
 - Size controls: 0
@@ -148,13 +178,14 @@
 - Margin controls: 0
 
 ### legal-notice-inline
+
 **Status**: ❌ FALTANDO - sem controles de tamanho
+
 - Width RANGE: 0 | Width total: 0
 - Height RANGE: 0 | Height total: 0
 - Size controls: 0
 - Padding controls: 0
 - Margin controls: 0
-
 
 ## 4. ESTATÍSTICAS GERAIS
 
@@ -165,6 +196,7 @@
 ## 5. COMANDOS PARA IMPLEMENTAR CONTROLES FALTANTES
 
 ### Script para adicionar Width RANGE:
+
 ```bash
 # Para cada componente sem width RANGE, adicionar:
 # {
@@ -180,12 +212,13 @@
 ```
 
 ### Script para adicionar Height RANGE:
+
 ```bash
 # Para cada componente sem height RANGE, adicionar:
 # {
 #   key: "height",
 #   type: PropertyType.RANGE,
-#   label: "Altura", 
+#   label: "Altura",
 #   value: currentBlock?.properties?.height || 200,
 #   min: 50,
 #   max: 600,
@@ -193,4 +226,3 @@
 #   unit: "px"
 # }
 ```
-

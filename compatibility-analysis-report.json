@@ -21,12 +21,7 @@
     },
     "hooks": {
       "compatible": true,
-      "foundEssential": [
-        "useUnifiedProperties.ts",
-        "useEditor.ts",
-        "useQuiz.ts",
-        "useHistory.ts"
-      ],
+      "foundEssential": ["useUnifiedProperties.ts", "useEditor.ts", "useQuiz.ts", "useHistory.ts"],
       "foundOptional": [
         "useKeyboardShortcuts.ts",
         "usePerformanceOptimization.ts",
@@ -91,11 +86,7 @@
     "conflicts": [
       {
         "type": "duplicate-hooks",
-        "items": [
-          "useQuiz.ts",
-          "useQuizResult.ts",
-          "useSupabase.ts"
-        ],
+        "items": ["useQuiz.ts", "useQuizResult.ts", "useSupabase.ts"],
         "severity": "medium"
       }
     ]

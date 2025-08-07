@@ -11,50 +11,50 @@ import { safeGetBlockProperties, isValidBlock, logBlockDebug } from "@/utils/blo
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
 
-  // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-  const getMarginClass = (value, type) => {
-    const numValue = typeof value === "string" ? parseInt(value, 10) : value;
-    
-    if (isNaN(numValue) || numValue === 0) return "";
-    
-    const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
-    
-    // Margens negativas
-    if (numValue < 0) {
-      const absValue = Math.abs(numValue);
-      if (absValue <= 4) return `-${prefix}-1`;
-      if (absValue <= 8) return `-${prefix}-2`;
-      if (absValue <= 12) return `-${prefix}-3`;
-      if (absValue <= 16) return `-${prefix}-4`;
-      if (absValue <= 20) return `-${prefix}-5`;
-      if (absValue <= 24) return `-${prefix}-6`;
-      if (absValue <= 28) return `-${prefix}-7`;
-      if (absValue <= 32) return `-${prefix}-8`;
-      if (absValue <= 36) return `-${prefix}-9`;
-      if (absValue <= 40) return `-${prefix}-10`;
-      return `-${prefix}-10`; // Máximo para negativas
-    }
-    
-    // Margens positivas (expandido para suportar até 100px)
-    if (numValue <= 4) return `${prefix}-1`;
-    if (numValue <= 8) return `${prefix}-2`;
-    if (numValue <= 12) return `${prefix}-3`;
-    if (numValue <= 16) return `${prefix}-4`;
-    if (numValue <= 20) return `${prefix}-5`;
-    if (numValue <= 24) return `${prefix}-6`;
-    if (numValue <= 28) return `${prefix}-7`;
-    if (numValue <= 32) return `${prefix}-8`;
-    if (numValue <= 36) return `${prefix}-9`;
-    if (numValue <= 40) return `${prefix}-10`;
-    if (numValue <= 44) return `${prefix}-11`;
-    if (numValue <= 48) return `${prefix}-12`;
-    if (numValue <= 56) return `${prefix}-14`;
-    if (numValue <= 64) return `${prefix}-16`;
-    if (numValue <= 80) return `${prefix}-20`;
-    if (numValue <= 96) return `${prefix}-24`;
-    if (numValue <= 112) return `${prefix}-28`;
-    return `${prefix}-32`; // Máximo suportado
-  };
+// Função para converter valores de margem em classes Tailwind (Sistema Universal)
+const getMarginClass = (value, type) => {
+  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+
+  if (isNaN(numValue) || numValue === 0) return "";
+
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+
+  // Margens negativas
+  if (numValue < 0) {
+    const absValue = Math.abs(numValue);
+    if (absValue <= 4) return `-${prefix}-1`;
+    if (absValue <= 8) return `-${prefix}-2`;
+    if (absValue <= 12) return `-${prefix}-3`;
+    if (absValue <= 16) return `-${prefix}-4`;
+    if (absValue <= 20) return `-${prefix}-5`;
+    if (absValue <= 24) return `-${prefix}-6`;
+    if (absValue <= 28) return `-${prefix}-7`;
+    if (absValue <= 32) return `-${prefix}-8`;
+    if (absValue <= 36) return `-${prefix}-9`;
+    if (absValue <= 40) return `-${prefix}-10`;
+    return `-${prefix}-10`; // Máximo para negativas
+  }
+
+  // Margens positivas (expandido para suportar até 100px)
+  if (numValue <= 4) return `${prefix}-1`;
+  if (numValue <= 8) return `${prefix}-2`;
+  if (numValue <= 12) return `${prefix}-3`;
+  if (numValue <= 16) return `${prefix}-4`;
+  if (numValue <= 20) return `${prefix}-5`;
+  if (numValue <= 24) return `${prefix}-6`;
+  if (numValue <= 28) return `${prefix}-7`;
+  if (numValue <= 32) return `${prefix}-8`;
+  if (numValue <= 36) return `${prefix}-9`;
+  if (numValue <= 40) return `${prefix}-10`;
+  if (numValue <= 44) return `${prefix}-11`;
+  if (numValue <= 48) return `${prefix}-12`;
+  if (numValue <= 56) return `${prefix}-14`;
+  if (numValue <= 64) return `${prefix}-16`;
+  if (numValue <= 80) return `${prefix}-20`;
+  if (numValue <= 96) return `${prefix}-24`;
+  if (numValue <= 112) return `${prefix}-28`;
+  return `${prefix}-32`; // Máximo suportado
+};
 
 const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -73,7 +73,8 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
   // 🛡️ Extração segura das propriedades
   const properties = safeGetBlockProperties(block);
 
-  const {styleName = "Elegante",
+  const {
+    styleName = "Elegante",
     percentage = 85,
     description = "Você valoriza sofisticação e refinamento",
     showProgress = true,
@@ -81,12 +82,12 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
     cardVariant = "elevated", // elevated, flat, outlined
     size = "medium", // small, medium, large
     backgroundColor = "white",
-    accentColor = "#432818",,
+    accentColor = "#432818",
     // Sistema completo de margens com controles deslizantes
     marginTop = 8,
     marginBottom = 8,
     marginLeft = 0,
-    marginRight = 0
+    marginRight = 0,
   } = properties;
 
   // Variantes de card
@@ -129,14 +130,13 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
         // Estados do editor
         isSelected && "ring-2 ring-[#432818] ring-offset-2",
         "cursor-pointer hover:scale-[1.02]",
-        className
-      ,
-    // Margens universais com controles deslizantes
-    getMarginClass(marginTop, "top"),
-    getMarginClass(marginBottom, "bottom"),
-    getMarginClass(marginLeft, "left"),
-    getMarginClass(marginRight, "right")
-  )}
+        className,
+        // Margens universais com controles deslizantes
+        getMarginClass(marginTop, "top"),
+        getMarginClass(marginBottom, "bottom"),
+        getMarginClass(marginLeft, "left"),
+        getMarginClass(marginRight, "right")
+      )}
       style={{
         backgroundColor: backgroundColor === "white" ? undefined : backgroundColor,
       }}

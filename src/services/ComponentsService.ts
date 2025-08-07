@@ -144,7 +144,7 @@ export class ComponentsService {
         )
         .eq("stage_key", stageKey)
         .order("stage_order", { ascending: true }) as any;
-      
+
       const { data, error } = await query;
 
       if (error) {
@@ -233,7 +233,7 @@ export class ComponentsService {
         .select("*")
         .eq("type_key", typeKey)
         .single() as any;
-      
+
       const { data: componentType, error: typeError } = await componentQuery;
 
       if (typeError || !componentType) {
@@ -260,7 +260,7 @@ export class ComponentsService {
         .eq("stage_key", stageKey)
         .order("stage_order", { ascending: false })
         .limit(1) as any;
-      
+
       const { data: maxOrder } = await orderQuery;
 
       const nextOrder = (maxOrder?.[0]?.stage_order || 0) + 1;
@@ -356,14 +356,12 @@ export class ComponentsService {
    */
   public static async getComponentTypes(): Promise<ComponentType[]> {
     try {
-      const query = supabase
-        .from("component_types")
-        .select("*") as any;
-      
+      const query = supabase.from("component_types").select("*") as any;
+
       const queryWithOrder = query
         .order("category", { ascending: true })
         .order("type_name", { ascending: true });
-      
+
       const { data, error } = await queryWithOrder;
 
       if (error) {
@@ -390,7 +388,7 @@ export class ComponentsService {
         .select("id")
         .eq("stage_key", stageKey)
         .limit(1) as any;
-      
+
       const { data, error } = await query;
 
       if (error) {
@@ -415,7 +413,7 @@ export class ComponentsService {
         .from("component_instances")
         .select("stage_key")
         .order("stage_key", { ascending: true }) as any;
-      
+
       const { data, error } = await query;
 
       if (error) {
@@ -424,7 +422,9 @@ export class ComponentsService {
       }
 
       // Remove duplicatas usando Set
-      const stageKeys = Array.from(new Set((data?.map((item: any) => item.stage_key) || []) as string[]));
+      const stageKeys = Array.from(
+        new Set((data?.map((item: any) => item.stage_key) || []) as string[])
+      );
       return stageKeys;
     } catch (error) {
       console.error("Erro ao carregar stages:", error);

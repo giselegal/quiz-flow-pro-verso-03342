@@ -126,10 +126,10 @@ export type BlockType =
   | "quiz-question-inline"
   | "quiz-result-inline"
   | "custom-code"
-  
   | "decorative-bar-inline"
   | "form-input"
-  | "legal-notice-inline"| "animation-block";
+  | "legal-notice-inline"
+  | "animation-block";
 
 export interface FAQItem {
   id: string;
@@ -308,7 +308,7 @@ export interface EditorConfig {
  */
 export interface OptimizedEditorConfig extends EditorConfig {
   version: string;
-  optimizationLevel: 'basic' | 'advanced' | 'performance';
+  optimizationLevel: "basic" | "advanced" | "performance";
   inlineComponents: string[];
   performanceSettings: {
     enableAutoSave: boolean;
