@@ -193,6 +193,70 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   // 🎯 STAGE ACTIONS (GERENCIAMENTO DE ETAPAS)
   // ═══════════════════════════════════════════════
 
+  // ✅ FUNÇÃO PARA CARREGAR BLOCOS DE TEMPLATE (DIRETO - SEM ADAPTER)
+  const loadStageTemplate = useCallback(
+    (stageId: string) => {
+      const stage = stages.find(s => s.id === stageId);
+      if (!stage) return;
+
+      const stepNumber = parseInt(stageId.replace("step-", ""));
+
+      console.log(`🎨 EditorContext: Carregando template para etapa ${stepNumber}`);
+
+      try {
+        // ✅ CARREGAR DIRETAMENTE DO TEMPLATE
+        const templateBlocks = getStepTemplate(stepNumber);
+        console.log(`📦 Template blocks recebidos:`, templateBlocks?.length || 0, templateBlocks);
+        
+        if (templateBlocks && templateBlocks.length > 0) {
+          const editorBlocks: EditorBlock[] = templateBlocks.map(
+            (block: { id: any; type: any; properties: any; content: any }, index: number) => {
+              console.log(`🔧 Processando bloco ${index}:`, block);
+              return {
+                id: block.id || `${stageId}-block-${index + 1}`,
+                type: block.type as any,
+                content: block.properties || block.content || {},
+                order: index + 1,
+                properties: block.properties || {},
+              };
+            }
+          );
+
+          console.log(`💾 Salvando ${editorBlocks.length} blocos para etapa ${stepNumber}`);
+          setStageBlocks(prev => ({
+            ...prev,
+            [stageId]: editorBlocks,
+          }));
+
+          // Chamar updateStage diretamente
+          setStages(prev =>
+            prev.map(stage =>
+              stage.id === stageId
+                ? {
+                    ...stage,
+                    metadata: { 
+                      ...stage.metadata, 
+                      blocksCount: editorBlocks.length,
+                      lastModified: new Date() 
+                    },
+                  }
+                : stage
+            )
+          );
+
+          console.log(
+            `✅ EditorContext: ${editorBlocks.length} blocos carregados para etapa ${stepNumber}`
+          );
+        } else {
+          console.warn(`⚠️ EditorContext: Nenhum template encontrado para etapa ${stepNumber}`);
+        }
+      } catch (error) {
+        console.error(`❌ EditorContext: Erro ao carregar template da etapa ${stepNumber}:`, error);
+      }
+    },
+    [stages]
+  );
+
   const setActiveStage = useCallback(
     (stageId: string) => {
       console.log("🔄 EditorContext: Mudando etapa ativa para:", stageId);
@@ -207,15 +271,19 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
       // ✅ CARREGAR TEMPLATE SE A ETAPA ESTIVER VAZIA
       const currentBlocks = stageBlocks[stageId] || [];
+      console.log(`🔍 EditorContext: Etapa ${stageId} tem ${currentBlocks.length} blocos`);
+      
       if (currentBlocks.length === 0) {
         console.log(`🎨 EditorContext: Etapa ${stageId} vazia, carregando template...`);
-        // Usar timeout para garantir que updateStage esteja disponível
-        setTimeout(() => loadStageTemplate(stageId), 0);
+        // Executar imediatamente ao invés de timeout
+        loadStageTemplate(stageId);
+      } else {
+        console.log(`📋 EditorContext: Etapa ${stageId} já tem blocos:`, currentBlocks.map(b => b.type));
       }
 
       console.log("✅ EditorContext: Etapa ativa alterada para:", stageId);
     },
-    [validateStageId, stageBlocks]
+    [validateStageId, stageBlocks, loadStageTemplate]
   );
 
   const addStage = useCallback(
@@ -294,50 +362,6 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     [validateStageId]
   );
 
-  // ✅ FUNÇÃO PARA CARREGAR BLOCOS DE TEMPLATE (DIRETO - SEM ADAPTER)
-  const loadStageTemplate = useCallback(
-    (stageId: string) => {
-      const stage = stages.find(s => s.id === stageId);
-      if (!stage) return;
-
-      const stepNumber = parseInt(stageId.replace("step-", ""));
-
-      console.log(`🎨 EditorContext: Carregando template para etapa ${stepNumber}`);
-
-      // ✅ CARREGAR DIRETAMENTE DO TEMPLATE
-      const templateBlocks = getStepTemplate(stepNumber);
-      if (templateBlocks && templateBlocks.length > 0) {
-        const editorBlocks: EditorBlock[] = templateBlocks.map(
-          (block: { id: any; type: any; properties: any; content: any }, index: number) => ({
-            id: block.id || `${stageId}-block-${index + 1}`,
-            type: block.type as any,
-            content: block.properties || block.content || {},
-            order: index + 1,
-            properties: block.properties || {},
-          })
-        );
-
-        setStageBlocks(prev => ({
-          ...prev,
-          [stageId]: editorBlocks,
-        }));
-
-        updateStage(stageId, {
-          metadata: {
-            ...stage.metadata,
-            blocksCount: editorBlocks.length,
-          },
-        });
-
-        console.log(
-          `✅ EditorContext: ${editorBlocks.length} blocos carregados para etapa ${stepNumber}`
-        );
-      } else {
-        console.warn(`⚠️ EditorContext: Nenhum template encontrado para etapa ${stepNumber}`);
-      }
-    },
-    [stages, updateStage]
-  ); // ═══════════════════════════════════════════════
   // 🧩 BLOCK ACTIONS (GERENCIAMENTO DE BLOCOS)
   // ═══════════════════════════════════════════════
   const addBlock = useCallback(
