@@ -93,9 +93,9 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   } as const;
 
   const spacingClasses = {
-    tight: "p-2",
-    normal: "p-4",
-    loose: "p-6",
+    tight: "py-2",   // 🎯 Apenas padding vertical para não interferir com margens laterais
+    normal: "py-4",  // 🎯 Apenas padding vertical para não interferir com margens laterais  
+    loose: "py-6",   // 🎯 Apenas padding vertical para não interferir com margens laterais
   } as const;
 
   // Função para converter valores numéricos de margem em classes Tailwind
@@ -429,8 +429,8 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
             // Line height
             lineHeight || "leading-normal",
 
-            // Hover para indicar que é editável
-            onPropertyChange && "hover:bg-gray-50 hover:bg-opacity-50 rounded px-1",
+            // Hover para indicar que é editável (sem padding lateral para não interferir com margens)
+            onPropertyChange && "hover:bg-gray-50 hover:bg-opacity-50 rounded py-0.5",
 
             // 🎯 MARGENS LATERAIS aplicadas no conteúdo interno
             getMarginClass(marginLeft, "left"),
