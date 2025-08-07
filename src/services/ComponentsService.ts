@@ -27,14 +27,28 @@ function createMockSupabaseClient() {
     from: (table: string) => ({
       select: (query?: string) => ({
         eq: (column: string, value: any) => ({
-          order: (column: string, { ascending }: { ascending: boolean }) => ({
+          order: (column: string, options: { ascending: boolean }) => ({
             then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+            limit: (num: number) => ({
+              then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+              single: () => Promise.resolve({ data: null, error: null }),
+            }),
+            single: () => Promise.resolve({ data: null, error: null }),
           }),
           limit: (num: number) => ({
             then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
             single: () => Promise.resolve({ data: null, error: null }),
           }),
+          single: () => Promise.resolve({ data: null, error: null }),
         }),
+        order: (column: string, options: { ascending: boolean }) => ({
+          then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+        }),
+        limit: (num: number) => ({
+          then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+        }),
+        single: () => Promise.resolve({ data: null, error: null }),
+        then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
       }),
       insert: (data: any) => Promise.resolve({ data: null, error: null }),
       update: (data: any) => ({
@@ -114,7 +128,7 @@ export class ComponentsService {
     try {
       if (!this.isOnline) throw new Error("Serviço offline");
 
-      const { data, error } = await supabase
+      const query = supabase
         .from("component_instances")
         .select(
           `
@@ -129,7 +143,9 @@ export class ComponentsService {
         `
         )
         .eq("stage_key", stageKey)
-        .order("stage_order", { ascending: true });
+        .order("stage_order", { ascending: true }) as any;
+      
+      const { data, error } = await query;
 
       if (error) {
         console.error("Erro ao carregar blocos:", error);
@@ -212,12 +228,13 @@ export class ComponentsService {
     try {
       if (!this.isOnline) throw new Error("Serviço offline");
 
-      // 1. Busca o tipo do componente para obter os valores padrão
-      const { data: componentType, error: typeError } = await supabase
+      const componentQuery = supabase
         .from("component_types")
         .select("*")
         .eq("type_key", typeKey)
-        .single();
+        .single() as any;
+      
+      const { data: componentType, error: typeError } = await componentQuery;
 
       if (typeError || !componentType) {
         console.error("Tipo de componente não encontrado:", typeKey);
@@ -237,13 +254,14 @@ export class ComponentsService {
 
       const instanceKey = result as string;
 
-      // 3. Calcula a próxima ordem
-      const { data: maxOrder } = await supabase
+      const orderQuery = supabase
         .from("component_instances")
         .select("stage_order")
         .eq("stage_key", stageKey)
         .order("stage_order", { ascending: false })
-        .limit(1);
+        .limit(1) as any;
+      
+      const { data: maxOrder } = await orderQuery;
 
       const nextOrder = (maxOrder?.[0]?.stage_order || 0) + 1;
 
@@ -338,11 +356,15 @@ export class ComponentsService {
    */
   public static async getComponentTypes(): Promise<ComponentType[]> {
     try {
-      const { data, error } = await supabase
+      const query = supabase
         .from("component_types")
-        .select("*")
+        .select("*") as any;
+      
+      const queryWithOrder = query
         .order("category", { ascending: true })
         .order("type_name", { ascending: true });
+      
+      const { data, error } = await queryWithOrder;
 
       if (error) {
         console.error("Erro ao carregar tipos de componentes:", error);
@@ -363,11 +385,13 @@ export class ComponentsService {
    */
   public static async stageExists(stageKey: string): Promise<boolean> {
     try {
-      const { data, error } = await supabase
+      const query = supabase
         .from("component_instances")
         .select("id")
         .eq("stage_key", stageKey)
-        .limit(1);
+        .limit(1) as any;
+      
+      const { data, error } = await query;
 
       if (error) {
         console.error("Erro ao verificar stage:", error);
@@ -387,10 +411,12 @@ export class ComponentsService {
    */
   public static async getStagesWithComponents(): Promise<string[]> {
     try {
-      const { data, error } = await supabase
+      const query = supabase
         .from("component_instances")
         .select("stage_key")
-        .order("stage_key", { ascending: true });
+        .order("stage_key", { ascending: true }) as any;
+      
+      const { data, error } = await query;
 
       if (error) {
         console.error("Erro ao carregar stages:", error);
@@ -398,7 +424,7 @@ export class ComponentsService {
       }
 
       // Remove duplicatas usando Set
-      const stageKeys = Array.from(new Set(data?.map(item => item.stage_key) || []));
+      const stageKeys = Array.from(new Set((data?.map((item: any) => item.stage_key) || []) as string[]));
       return stageKeys;
     } catch (error) {
       console.error("Erro ao carregar stages:", error);
