@@ -119,7 +119,7 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
         </div>
 
         {/* 🎯 Container 2: Componente Individual sem bordas extras */}
-        <div 
+        <div
           className="p-2" // 🎯 Removido todas as bordas do container 2
           onClick={onSelect}
         >
