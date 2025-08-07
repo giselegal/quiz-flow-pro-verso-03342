@@ -18,38 +18,84 @@ import DecorativeBarInline from "../components/blocks/inline/DecorativeBarInline
 import DividerInlineBlock from "../components/blocks/inline/DividerInlineBlock";
 import HeadingInline from "../components/blocks/inline/HeadingInline";
 import ImageDisplayInline from "../components/blocks/inline/ImageDisplayInline";
+import ImageDisplayInlineBlock from "../components/blocks/inline/ImageDisplayInlineBlock";
 import LegalNoticeInline from "../components/blocks/inline/LegalNoticeInline";
 import PricingCardInlineBlock from "../components/blocks/inline/PricingCardInlineBlock";
 import TextInline from "../components/blocks/inline/TextInline";
+
+// Componentes Editor Blocks
+import BadgeInlineBlock from "../components/editor/blocks/BadgeInlineBlock";
+import DecorativeBarInlineBlock from "../components/editor/blocks/DecorativeBarInlineBlock";
+import FinalStepEditor from "../components/editor/blocks/FinalStepEditor";
+import FormInputBlock from "../components/editor/blocks/FormInputBlock";
+import HeadingInlineBlock from "../components/editor/blocks/HeadingInlineBlock";
+import LegalNoticeInlineBlock from "../components/editor/blocks/LegalNoticeInlineBlock";
+import OptionsGridBlock from "../components/editor/blocks/OptionsGridBlock";
+import QuizIntroHeaderBlock from "../components/editor/blocks/QuizIntroHeaderBlock";
+import QuizProgressBlock from "../components/editor/blocks/QuizProgressBlock";
+import QuizResultsEditor from "../components/editor/blocks/QuizResultsEditor";
+import SpacerInlineBlock from "../components/editor/blocks/SpacerInlineBlock";
+import StyleResultsEditor from "../components/editor/blocks/StyleResultsEditor";
+import TextInlineBlock from "../components/editor/blocks/TextInlineBlock";
 
 // === REGISTRY PRINCIPAL - SEM DUPLICATAS ===
 
 export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
   // Text and Content
-  "text-inline": TextInline,
-  "heading-inline": HeadingInline,
-  "image-display-inline": ImageDisplayInline,
-
+  "text-inline": TextInlineBlock,
+  "heading-inline": HeadingInlineBlock,
+  "image-display-inline": ImageDisplayInlineBlock,
+  
+  // Quiz Components
+  "quiz-intro-header": QuizIntroHeaderBlock,
+  "form-input": FormInputBlock,
+  
   // Interactive Elements
-  "button-inline": ButtonInline,
-  "decorative-bar-inline": DecorativeBarInline,
+  "button-inline": BadgeInlineBlock,
+  "decorative-bar-inline": DecorativeBarInlineBlock,
 
   // Layout and Design
   divider: DividerInlineBlock,
+  spacer: SpacerInlineBlock,
 
   // Commerce and Pricing
   "pricing-card": PricingCardInlineBlock,
   countdown: CountdownInlineBlock,
 
   // Legal
-  "legal-notice-inline": LegalNoticeInline,
+  "legal-notice-inline": LegalNoticeInlineBlock,
+  
+  // Quiz Advanced
+  "options-grid": OptionsGridBlock,
+  "quiz-progress": QuizProgressBlock,
+  "quiz-results": QuizResultsEditor,
+  "style-results": StyleResultsEditor,
+  "final-step": FinalStepEditor,
+  
+  // Legacy inline components (para compatibilidade)
+  text: TextInline,
+  heading: HeadingInline,
+  button: ButtonInline,
+  image: ImageDisplayInline,
+  "decorative-bar": DecorativeBarInline,
+  "legal-notice": LegalNoticeInline,
 };
 
 /**
  * Obter componente por tipo
  */
 export const getBlockComponent = (type: string): React.ComponentType<any> | null => {
-  return ENHANCED_BLOCK_REGISTRY[type] || null;
+  const component = ENHANCED_BLOCK_REGISTRY[type];
+  
+  // Debug: Log qual componente está sendo solicitado
+  console.log(`🔍 getBlockComponent(${type}):`, component ? "✅ ENCONTRADO" : "❌ NÃO ENCONTRADO");
+  
+  if (!component) {
+    console.warn(`⚠️ Componente não registrado: ${type}`);
+    console.log("📋 Componentes disponíveis:", Object.keys(ENHANCED_BLOCK_REGISTRY));
+  }
+  
+  return component || null;
 };
 
 /**
