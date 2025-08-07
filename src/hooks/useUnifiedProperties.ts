@@ -433,7 +433,7 @@ export const useUnifiedProperties = (
   const updateProperty = useCallback(
     (key: string, value: any) => {
       if (!block) return;
-      
+
       const updatedProperties = { ...block.properties, [key]: value };
 
       setProperties(prevProps =>
@@ -451,10 +451,10 @@ export const useUnifiedProperties = (
 
   const resetProperties = useCallback(() => {
     if (!block) return;
-    
+
     const defaultProperties = generateDefaultProperties(block.type, block);
     setProperties(defaultProperties);
-    
+
     if (onUpdateExternal) {
       onUpdateExternal(block.id, { properties: {} });
     }
@@ -515,7 +515,7 @@ export const useUnifiedProperties = (
         return prop;
       })
     );
-    
+
     if (onUpdateExternal && block) {
       const updatedProps = properties.reduce(
         (acc, prop) => {
@@ -615,13 +615,6 @@ export const getInlineComponentProperties = (type: string, currentProps: any = {
 
   type InlineDefaultsKey = keyof typeof inlineDefaults;
 
-  return {
-    ...((inlineDefaults[type as InlineDefaultsKey] || {}) as object),
-    ...currentProps,
-  };
-};
-
-export default useUnifiedProperties;
   return {
     ...((inlineDefaults[type as InlineDefaultsKey] || {}) as object),
     ...currentProps,
