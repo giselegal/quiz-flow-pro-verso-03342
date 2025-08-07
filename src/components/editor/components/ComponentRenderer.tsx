@@ -7,7 +7,7 @@ interface ComponentRendererProps {
   onUpdate?: (updates: any) => void;
 }
 
-export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
+// Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
