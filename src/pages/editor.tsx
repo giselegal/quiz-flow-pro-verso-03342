@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "wouter";
-import { getBlockComponent } from "../config/enhancedBlockRegistry";
-import { useContainerProperties } from "../hooks/useContainerProperties";
 import BrandHeader from "../components/ui/BrandHeader";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -10,8 +8,10 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../compone
 import { ScrollArea } from "../components/ui/scroll-area";
 import { toast } from "../components/ui/use-toast";
 import { EnhancedUniversalPropertiesPanel } from "../components/universal/EnhancedUniversalPropertiesPanel";
+import { getBlockComponent } from "../config/enhancedBlockRegistry";
 import { useAutoSaveWithDebounce } from "../hooks/editor/useAutoSaveWithDebounce";
 import { useEditorPersistence } from "../hooks/editor/useEditorPersistence";
+import { useContainerProperties } from "../hooks/useContainerProperties";
 import { useEditor } from "../hooks/useEditor";
 import { cn } from "../lib/utils";
 import { schemaDrivenFunnelService } from "../services/schemaDrivenFunnelService";
@@ -262,16 +262,30 @@ const SimpleBlockRenderer: React.FC<{
 
   return (
     <div
-      className={cn("transition-all duration-200", containerClasses)}
+      className={cn(
+        "transition-all duration-200 border border-transparent rounded", // 🎯 Container 1: Borda transparente por padrão
+        containerClasses,
+        // 🎯 Borda apenas quando selecionado para layout mais limpo
+        isSelected && "border-[#B89B7A] border-2 shadow-sm"
+      )}
       style={inlineStyles}
       onClick={onClick}
     >
-      <Component
-        block={block}
-        isSelected={isSelected}
-        onClick={onClick}
-        onPropertyChange={onPropertyChange}
-      />
+      {/* 🎯 Container 2: Componente Individual com seleção sutil */}
+      <div 
+        className={cn(
+          "transition-all duration-200 rounded p-1",
+          // 🎯 Background sutil quando selecionado
+          isSelected && "ring-1 ring-[#B89B7A]/30 bg-[#B89B7A]/5"
+        )}
+      >
+        <Component
+          block={block}
+          isSelected={isSelected}
+          onClick={onClick}
+          onPropertyChange={onPropertyChange}
+        />
+      </div>
     </div>
   );
 };
@@ -832,12 +846,7 @@ const EditorPage: React.FC = () => {
                         <div
                           key={block.id}
                           onClick={() => setSelectedComponentId(block.id)}
-                          className={cn(
-                            "relative p-4 rounded-lg border-2 transition-all cursor-pointer",
-                            selectedComponentId === block.id
-                              ? "border-[#B89B7A] bg-[#B89B7A]/10"
-                              : "border-gray-200 hover:border-gray-300"
-                          )}
+                          className="relative transition-all cursor-pointer" // 🎯 Bordas gerenciadas pelo SimpleBlockRenderer
                         >
                           <SimpleBlockRenderer
                             block={{
@@ -1005,12 +1014,7 @@ const EditorPage: React.FC = () => {
                             return (
                               <div
                                 key={block.id}
-                                className={cn(
-                                  "transition-all duration-200",
-                                  selectedComponentId === block.id &&
-                                    !isPreviewing &&
-                                    "ring-2 ring-[#B89B7A] rounded-lg"
-                                )}
+                                className="transition-all duration-200" // 🎯 Removido ring externo - agora gerenciado pelo SimpleBlockRenderer
                               >
                                 <SimpleBlockRenderer
                                   block={{

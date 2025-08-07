@@ -1,10 +1,10 @@
+import { getBlockComponent } from "@/config/enhancedBlockRegistry";
+import { useContainerProperties } from "@/hooks/useContainerProperties";
+import { cn } from "@/lib/utils";
 import { Block } from "@/types/editor";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import React from "react";
-import { getBlockComponent } from "@/config/enhancedBlockRegistry";
-import { useContainerProperties } from "@/hooks/useContainerProperties";
-import { cn } from "@/lib/utils";
 import { SortableBlockWrapper } from "./SortableBlockWrapper";
 
 interface EditorCanvasProps {
@@ -72,10 +72,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
     }
 
     return (
-      <div
-        className={cn("transition-all duration-200", containerClasses)}
-        style={inlineStyles}
-      >
+      <div className={cn("transition-all duration-200", containerClasses)} style={inlineStyles}>
         <Component block={block} isSelected={false} />
       </div>
     );

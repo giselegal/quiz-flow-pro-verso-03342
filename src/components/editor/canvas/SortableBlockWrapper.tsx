@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { getBlockComponent } from "@/config/enhancedBlockRegistry";
+import { useContainerProperties } from "@/hooks/useContainerProperties";
+import { cn } from "@/lib/utils";
 import { Block } from "@/types/editor";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, Trash2 } from "lucide-react";
 import React from "react";
-import { getBlockComponent } from "@/config/enhancedBlockRegistry";
-import { useContainerProperties } from "@/hooks/useContainerProperties";
-import { cn } from "@/lib/utils";
 
 interface SortableBlockWrapperProps {
   block: Block;
@@ -85,10 +85,11 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     <div ref={setNodeRef} style={style} className="my-2">
       <Card
         className={cn(
-          "relative group transition-all duration-200",
+          "relative group transition-all duration-200 border-transparent", // 🎯 Borda transparente por padrão
           // 🎯 Aplicar classes de container diretamente no Card
           containerClasses,
-          isSelected && "ring-2 ring-[#B89B7A]"
+          // 🎯 Borda apenas quando selecionado para layout mais limpo
+          isSelected && "border-[#B89B7A] border-2 shadow-md"
         )}
         style={inlineStyles} // 🎯 Aplicar estilos inline (scale) diretamente
       >
@@ -117,8 +118,15 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           </Button>
         </div>
 
-        {/* 🎯 Container 2: Componente Individual (sem wrapper extra) */}
-        <div className="p-2" onClick={onSelect}>
+        {/* 🎯 Container 2: Componente Individual com borda de seleção sutil */}
+        <div 
+          className={cn(
+            "p-2 transition-all duration-200 rounded", 
+            // 🎯 Ring sutil no componente individual quando selecionado
+            isSelected && "ring-1 ring-[#B89B7A]/30 bg-[#B89B7A]/5"
+          )} 
+          onClick={onSelect}
+        >
           <Component
             block={block}
             isSelected={isSelected}
