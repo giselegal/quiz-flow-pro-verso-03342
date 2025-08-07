@@ -340,6 +340,12 @@ export const useUnifiedProperties = (
       ];
 
       // ---- Mescla de todos os campos para cada tipo de bloco ----
+      console.log("🎯 useUnifiedProperties - generateDefaultProperties chamado:", {
+        blockType,
+        currentBlock: currentBlock?.id,
+        basePropertiesCount: baseProperties.length,
+      });
+
       switch (blockType) {
         case "text-inline":
           return [

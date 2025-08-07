@@ -10,6 +10,7 @@ import { generateBlockDefinitions, getRegistryStats } from "@/config/enhancedBlo
 
 import { useEditor } from "@/context/EditorContext";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
+import { useUnifiedProperties } from "@/hooks/useUnifiedProperties"; // ✅ ADICIONADO IMPORT
 import { Type } from "lucide-react";
 import React, { useState } from "react";
 
@@ -50,6 +51,17 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     stageCount,
   });
 
+  // ✅ VERIFICAÇÃO DE SINCRONIZAÇÃO DOS IMPORTS - Movido após as declarações
+  const registryStats = getRegistryStats();
+  const allBlockDefinitions = generateBlockDefinitions();
+  console.log("🎯 VERIFICAÇÃO DE SINCRONIZAÇÃO:", {
+    registryBlocks: registryStats.totalBlocks,
+    registryCategories: registryStats.categories,
+    blockDefinitionsCount: allBlockDefinitions.length,
+    stepComponents: allBlockDefinitions.filter(d => d.category === "steps").length,
+    unifiedPropertiesHook: typeof useUnifiedProperties,
+  });
+
   // 🔍 DEBUG ESPECÍFICO PARA PAINEL DE PROPRIEDADES
   console.log("🎯 DEBUG Painel Propriedades:", {
     selectedBlockId: selectedBlockId,
@@ -68,12 +80,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     currentBlocksDetailed: currentBlocks?.map(b => ({ id: b.id, type: b.type })) || [],
     shouldShowPanel: !isPreviewing && selectedBlock,
   });
-
-  // Mostrar estatísticas do registry
-  const registryStats = getRegistryStats();
-
-  // Obter todas as definições de blocos para properties
-  const allBlockDefinitions = generateBlockDefinitions();
 
   // Função para obter blockDefinition com propriedades reais
   const getBlockDefinitionForType = (type: string) => {
