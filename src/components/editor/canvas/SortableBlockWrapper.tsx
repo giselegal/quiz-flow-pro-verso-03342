@@ -5,7 +5,9 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, Trash2 } from "lucide-react";
 import React from "react";
-import UniversalBlockRenderer from "../blocks/UniversalBlockRenderer";
+import { getBlockComponent } from "@/config/enhancedBlockRegistry";
+import { useContainerProperties } from "@/hooks/useContainerProperties";
+import { cn } from "@/lib/utils";
 
 interface SortableBlockWrapperProps {
   block: Block;
@@ -22,6 +24,14 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   onUpdate,
   onDelete,
 }) => {
+  // 🔧 Integrar propriedades de container diretamente
+  const { containerClasses, inlineStyles, processedProperties } = useContainerProperties(
+    block.properties
+  );
+
+  // Buscar componente no registry (eliminando UniversalBlockRenderer)
+  const Component = getBlockComponent(block.type);
+
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
     data: {
@@ -37,12 +47,14 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
       id: block.id,
       blockType: block.type,
       isDragging,
+      containerClasses, // Agora integrado diretamente
+      processedProperties,
       data: {
         type: "canvas-block",
         blockId: block.id,
       },
     });
-  }, [block.id, block.type, isDragging]);
+  }, [block.id, block.type, isDragging, containerClasses, processedProperties]);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -55,10 +67,30 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     onUpdate({ [key]: value });
   };
 
+  // Fallback se componente não for encontrado
+  if (!Component) {
+    return (
+      <div ref={setNodeRef} style={style} className="my-2">
+        <Card className="relative group border-red-300">
+          <div className="p-4 text-center text-red-500">
+            <p>Componente não encontrado: {block.type}</p>
+            <p className="text-xs mt-1">Verifique se o tipo está registrado</p>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div ref={setNodeRef} style={style} className="my-2">
       <Card
-        className={`relative group ${isSelected ? "ring-2 ring-[#B89B7A]" : ""} transition-all duration-200`}
+        className={cn(
+          "relative group transition-all duration-200",
+          // 🎯 Aplicar classes de container diretamente no Card
+          containerClasses,
+          isSelected && "ring-2 ring-[#B89B7A]"
+        )}
+        style={inlineStyles} // 🎯 Aplicar estilos inline (scale) diretamente
       >
         {/* Drag handle and controls - only show on hover */}
         <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex items-center gap-1">
@@ -85,9 +117,9 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           </Button>
         </div>
 
-        {/* Block content */}
+        {/* 🎯 Container 2: Componente Individual (sem wrapper extra) */}
         <div className="p-2" onClick={onSelect}>
-          <UniversalBlockRenderer
+          <Component
             block={block}
             isSelected={isSelected}
             onClick={onSelect}

@@ -2,7 +2,9 @@ import { Block } from "@/types/editor";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import React from "react";
-import UniversalBlockRenderer from "../blocks/UniversalBlockRenderer";
+import { getBlockComponent } from "@/config/enhancedBlockRegistry";
+import { useContainerProperties } from "@/hooks/useContainerProperties";
+import { cn } from "@/lib/utils";
 import { SortableBlockWrapper } from "./SortableBlockWrapper";
 
 interface EditorCanvasProps {
@@ -56,6 +58,29 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
     onUpdateBlock(blockId, updates);
   };
 
+  // 🎯 Componente simplificado para preview (2 containers apenas)
+  const PreviewBlock: React.FC<{ block: Block }> = ({ block }) => {
+    const { containerClasses, inlineStyles } = useContainerProperties(block.properties);
+    const Component = getBlockComponent(block.type);
+
+    if (!Component) {
+      return (
+        <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center text-gray-500">
+          <p>Componente não encontrado: {block.type}</p>
+        </div>
+      );
+    }
+
+    return (
+      <div
+        className={cn("transition-all duration-200", containerClasses)}
+        style={inlineStyles}
+      >
+        <Component block={block} isSelected={false} />
+      </div>
+    );
+  };
+
   if (isPreviewing) {
     return (
       <div className={`py-2 ${getViewportClasses()}`}>
@@ -63,7 +88,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
           {blocks.map(block => (
             <div key={block.id} className="w-full flex justify-center">
               <div className="w-full max-w-none">
-                <UniversalBlockRenderer block={block} isSelected={false} />
+                <PreviewBlock block={block} />
               </div>
             </div>
           ))}

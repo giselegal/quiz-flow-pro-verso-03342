@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "wouter";
-import UniversalBlockRenderer from "../components/editor/blocks/UniversalBlockRenderer";
+import { getBlockComponent } from "../config/enhancedBlockRegistry";
+import { useContainerProperties } from "../hooks/useContainerProperties";
 import BrandHeader from "../components/ui/BrandHeader";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -288,6 +289,40 @@ const AVAILABLE_BLOCKS = [
   },
   { type: "guarantee", name: "Garantia", icon: "✅", category: "content" },
 ];
+
+// 🎯 Componente simplificado para renderizar blocos (2 containers apenas)
+const SimpleBlockRenderer: React.FC<{
+  block: any;
+  isSelected?: boolean;
+  onClick?: () => void;
+  onPropertyChange?: (key: string, value: any) => void;
+}> = ({ block, isSelected = false, onClick, onPropertyChange }) => {
+  const { containerClasses, inlineStyles } = useContainerProperties(block.properties || {});
+  const Component = getBlockComponent(block.type);
+
+  if (!Component) {
+    return (
+      <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center text-gray-500">
+        <p>Componente não encontrado: {block.type}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={cn("transition-all duration-200", containerClasses)}
+      style={inlineStyles}
+      onClick={onClick}
+    >
+      <Component
+        block={block}
+        isSelected={isSelected}
+        onClick={onClick}
+        onPropertyChange={onPropertyChange}
+      />
+    </div>
+  );
+};
 
 const EditorPage: React.FC = () => {
   const [location, setLocation] = useLocation();
