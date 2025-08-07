@@ -58,21 +58,6 @@ export const getStep02Template = () => {
       },
     },
 
-    // 🖼️ IMAGEM ILUSTRATIVA (EDITÁVEL SEPARADAMENTE)
-    {
-      id: "step02-clothing-image",
-      type: "image",
-      properties: {
-        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1687095491/style-quiz/elegante-6_u1ghdr.jpg",
-        alt: "Tipos de roupas e estilos",
-        width: 500,
-        height: 300,
-        className: "object-cover w-full max-w-lg h-64 rounded-xl mx-auto shadow-lg",
-        textAlign: "text-center",
-        marginBottom: 32,
-      },
-    },
-
     // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
       id: "step02-clothing-options",
