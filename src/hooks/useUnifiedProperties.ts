@@ -594,6 +594,195 @@ export const useUnifiedProperties = (
             ),
           ];
 
+        case "button-inline":
+          return [
+            ...baseProperties,
+            createProperty(
+              "text",
+              currentBlock?.properties?.text || "Clique aqui",
+              PropertyType.TEXT,
+              "Texto do Botão",
+              PropertyCategory.CONTENT,
+              { required: true }
+            ),
+            createProperty(
+              "variant",
+              currentBlock?.properties?.variant || "primary",
+              PropertyType.SELECT,
+              "Variante",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "primary", label: "Primário" },
+                  { value: "secondary", label: "Secundário" },
+                  { value: "success", label: "Sucesso" },
+                  { value: "warning", label: "Aviso" },
+                  { value: "danger", label: "Perigo" },
+                  { value: "outline", label: "Contorno" },
+                ]),
+              }
+            ),
+            createProperty(
+              "size",
+              currentBlock?.properties?.size || "medium",
+              PropertyType.SELECT,
+              "Tamanho",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "small", label: "Pequeno" },
+                  { value: "medium", label: "Médio" },
+                  { value: "large", label: "Grande" },
+                ]),
+              }
+            ),
+            createProperty(
+              "backgroundColor",
+              currentBlock?.properties?.backgroundColor || "#B89B7A",
+              PropertyType.COLOR,
+              "Cor de Fundo",
+              PropertyCategory.STYLE
+            ),
+            createProperty(
+              "textColor",
+              currentBlock?.properties?.textColor || "#FFFFFF",
+              PropertyType.COLOR,
+              "Cor do Texto",
+              PropertyCategory.STYLE
+            ),
+            createProperty(
+              "borderColor",
+              currentBlock?.properties?.borderColor || "#B89B7A",
+              PropertyType.COLOR,
+              "Cor da Borda",
+              PropertyCategory.STYLE
+            ),
+            createProperty(
+              "fontSize",
+              currentBlock?.properties?.fontSize ?? 16,
+              PropertyType.RANGE,
+              "Tamanho da Fonte",
+              PropertyCategory.STYLE,
+              { min: 12, max: 24, step: 1, unit: "px" }
+            ),
+            createProperty(
+              "fontFamily",
+              currentBlock?.properties?.fontFamily || "inherit",
+              PropertyType.SELECT,
+              "Família da Fonte",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "inherit", label: "Padrão" },
+                  { value: "Inter", label: "Inter" },
+                  { value: "Roboto", label: "Roboto" },
+                  { value: "Open Sans", label: "Open Sans" },
+                  { value: "Playfair Display", label: "Playfair Display" },
+                ]),
+              }
+            ),
+            createProperty(
+              "fontWeight",
+              currentBlock?.properties?.fontWeight || "500",
+              PropertyType.SELECT,
+              "Peso da Fonte",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "300", label: "Leve (300)" },
+                  { value: "400", label: "Normal (400)" },
+                  { value: "500", label: "Médio (500)" },
+                  { value: "600", label: "Semi-negrito (600)" },
+                  { value: "700", label: "Negrito (700)" },
+                ]),
+              }
+            ),
+            createProperty(
+              "action",
+              currentBlock?.properties?.action || "none",
+              PropertyType.SELECT,
+              "Ação do Botão",
+              PropertyCategory.BEHAVIOR,
+              {
+                options: createSelectOptions([
+                  { value: "none", label: "Nenhuma" },
+                  { value: "next-step", label: "Próxima Etapa" },
+                  { value: "url", label: "Abrir URL" },
+                ]),
+              }
+            ),
+            createProperty(
+              "nextStepId",
+              currentBlock?.properties?.nextStepId || "",
+              PropertyType.TEXT,
+              "ID da Próxima Etapa",
+              PropertyCategory.BEHAVIOR
+            ),
+            createProperty(
+              "url",
+              currentBlock?.properties?.url || "",
+              PropertyType.TEXT,
+              "URL de Destino",
+              PropertyCategory.BEHAVIOR
+            ),
+            createProperty(
+              "target",
+              currentBlock?.properties?.target || "_blank",
+              PropertyType.SELECT,
+              "Destino do Link",
+              PropertyCategory.BEHAVIOR,
+              {
+                options: createSelectOptions([
+                  { value: "_blank", label: "Nova Aba (_blank)" },
+                  { value: "_self", label: "Mesma Aba (_self)" },
+                ]),
+              }
+            ),
+            createProperty(
+              "icon",
+              currentBlock?.properties?.icon || "none",
+              PropertyType.SELECT,
+              "Ícone",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "none", label: "Nenhum" },
+                  { value: "arrow-right", label: "Seta para Direita" },
+                  { value: "download", label: "Download" },
+                  { value: "play", label: "Play" },
+                  { value: "star", label: "Estrela" },
+                ]),
+              }
+            ),
+            createProperty(
+              "iconPosition",
+              currentBlock?.properties?.iconPosition || "right",
+              PropertyType.SELECT,
+              "Posição do Ícone",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "left", label: "Esquerda" },
+                  { value: "right", label: "Direita" },
+                ]),
+              }
+            ),
+            createProperty(
+              "requiresValidInput",
+              currentBlock?.properties?.requiresValidInput === true,
+              PropertyType.SWITCH,
+              "Requer Input Válido",
+              PropertyCategory.BEHAVIOR
+            ),
+            createProperty(
+              "disabled",
+              currentBlock?.properties?.disabled === true,
+              PropertyType.SWITCH,
+              "Desabilitado",
+              PropertyCategory.BEHAVIOR
+            ),
+          ];
+
         // EXEMPLO DE COMO CONTINUAR:
         // case "form-input":
         //   return [

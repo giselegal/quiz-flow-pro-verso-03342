@@ -12,7 +12,7 @@ import { trackQuizStart } from "../../../utils/analytics";
  */
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+const getMarginClass = (value: string | number, type: "top" | "bottom" | "left" | "right"): string => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return "";
@@ -81,22 +81,34 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   }
 
   const {
-    text = "",
-    variant = "custom",
-    size = "medium",
+    text = "Clique aqui",
+    variant = "primary",
+    size = "medium", 
     icon = "none",
     iconPosition = "right",
     href = "",
+    url = "", // Campo adicional para URL
     target = "_blank",
     disabled = false,
     customStyles = "",
     requiresValidInput = false,
+    // Configurações de cores
+    backgroundColor = "#B89B7A",
+    textColor = "#FFFFFF", 
+    borderColor = "#B89B7A",
+    // Configurações de fonte
+    fontSize = "16",
+    fontFamily = "inherit",
+    fontWeight = "500",
+    // Configurações de navegação/fluxo
+    action = "none", // "next-step", "url", "none"
+    nextStepId = "", // ID da próxima etapa
     // Sistema completo de margens com controles deslizantes
     marginTop = 8,
     marginBottom = 8,
     marginLeft = 0,
     marginRight = 0,
-  } = block?.properties || {};
+  } = (block?.properties as any) || {};
 
   const [isValidated, setIsValidated] = useState(false);
 
@@ -140,17 +152,53 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
   const IconComponent = iconMap[icon as keyof typeof iconMap];
 
-  // Variantes de cor
-  const variantClasses = {
-    primary: "bg-[#B89B7A] hover:bg-[#A38A69] text-white border-[#B89B7A]",
-    secondary: "bg-gray-600 hover:bg-gray-700 text-white border-gray-600",
-    success: "bg-green-600 hover:bg-green-700 text-white border-green-600",
-    warning: "bg-yellow-600 hover:bg-yellow-700 text-white border-yellow-600",
-    danger: "bg-red-600 hover:bg-red-700 text-white border-red-600",
-    accent: "bg-purple-600 hover:bg-purple-700 text-white border-purple-600",
-    outline: "bg-transparent hover:bg-gray-50 text-gray-700 border-gray-300",
-    ghost: "bg-transparent hover:bg-gray-50 text-gray-700 border-transparent",
-    custom: customStyles || "bg-[#B89B7A] hover:bg-[#A08968] text-white border-[#B89B7A]",
+  // Variantes de cor - usando as configurações customizáveis
+  const getButtonStyles = () => {
+    if (variant === "custom" || variant === "primary") {
+      return {
+        backgroundColor: backgroundColor,
+        color: textColor,
+        borderColor: borderColor,
+        fontFamily: fontFamily,
+        fontSize: `${fontSize}px`,
+        fontWeight: fontWeight,
+      };
+    }
+    
+    const predefinedStyles = {
+      secondary: {
+        backgroundColor: "#6B7280",
+        color: "#FFFFFF", 
+        borderColor: "#6B7280",
+      },
+      success: {
+        backgroundColor: "#10B981",
+        color: "#FFFFFF",
+        borderColor: "#10B981",
+      },
+      warning: {
+        backgroundColor: "#F59E0B",
+        color: "#FFFFFF",
+        borderColor: "#F59E0B",
+      },
+      danger: {
+        backgroundColor: "#EF4444", 
+        color: "#FFFFFF",
+        borderColor: "#EF4444",
+      },
+      outline: {
+        backgroundColor: "transparent",
+        color: backgroundColor,
+        borderColor: backgroundColor,
+      },
+    };
+    
+    return {
+      ...(predefinedStyles[variant as keyof typeof predefinedStyles] || predefinedStyles.secondary),
+      fontFamily: fontFamily,
+      fontSize: `${fontSize}px`, 
+      fontWeight: fontWeight,
+    };
   };
 
   // Tamanhos de botão
@@ -166,17 +214,14 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     large: "w-5 h-5",
   };
 
-  // Função para determinar classes responsivas
+  // Função para determinar classes responsivas 
   const getResponsiveClasses = () => {
-    const baseClasses = cn(
+    return cn(
       // Classes base do botão
       "inline-flex items-center justify-center rounded-md font-medium transition-all duration-200",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B89B7A] focus-visible:ring-offset-2",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B89B7A] focus-visible:ring-offset-2", 
       "disabled:pointer-events-none disabled:opacity-50",
-      "border w-full",
-
-      // Aplicar variante
-      variantClasses[variant as keyof typeof variantClasses],
+      "border-2 w-full hover:opacity-90",
 
       // Aplicar tamanho
       sizeClasses[size as keyof typeof sizeClasses],
@@ -187,8 +232,6 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
       // Classes customizadas
       className
     );
-
-    return baseClasses;
   };
 
   return (
@@ -211,9 +254,23 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         type="button"
         disabled={isButtonDisabled}
         className={getResponsiveClasses()}
+        style={getButtonStyles()}
         onClick={async e => {
           e.stopPropagation();
           if (!isButtonDisabled) {
+            
+            // Ação baseada na configuração
+            if (action === "next-step" && nextStepId) {
+              window.dispatchEvent(
+                new CustomEvent("navigate-to-step", {
+                  detail: { stepId: nextStepId, source: `button-${block?.id}` },
+                })
+              );
+            } else if (action === "url" && (href || url)) {
+              const targetUrl = url || href;
+              window.open(targetUrl, target);
+            }
+            
             // Se for o botão de iniciar quiz (Step 1), fazer tracking e navegação
             if (text && text.includes("Descobrir meu Estilo")) {
               const userName = userResponseService.getResponse("intro-name-input") || "Anônimo";
@@ -243,10 +300,6 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
                   detail: { stepId: "etapa-2", source: "step1-button" },
                 })
               );
-            }
-
-            if (href) {
-              window.open(href, target);
             }
           }
         }}
