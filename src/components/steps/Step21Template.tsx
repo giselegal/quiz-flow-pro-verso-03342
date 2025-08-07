@@ -1,4 +1,7 @@
 import React from "react";
+import { useContainerProperties } from "@/hooks/useContainerProperties";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export interface Step21Props {
   onNext?: () => void;
@@ -8,10 +11,14 @@ export interface Step21Props {
 }
 
 export const Step21 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step21Props) => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return <div className="step-21">{/* Conteúdo da Etapa 21 renderizado aqui */}</div>;
 };
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 21 - Transforme seu Guarda-Roupa Agora!
 export const getStep21Template = () => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return [
     // 🎯 CABEÇALHO COM PROGRESSO
     {

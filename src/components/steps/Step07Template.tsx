@@ -6,11 +6,19 @@ export interface Step07Props {
 }
 
 export const Step07 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step07Props) => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return <div className="step-07">{/* Conteúdo da Etapa 7 renderizado aqui */}</div>;
 };
 
 // �� TEMPLATE DE BLOCOS DA ETAPA 7 - QUESTÃO 6: QUAL CASACO É SEU FAVORITO?
 export const getStep07Template = () => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {

@@ -6,11 +6,19 @@ export interface Step02Props {
 }
 
 export const Step02 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step02Props) => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return <div className="step-02">{/* Conteúdo da Etapa 2 renderizado aqui */}</div>;
 };
 
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 2 - QUESTÃO 1: TIPO DE ROUPA FAVORITA
 export const getStep02Template = () => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {

@@ -17,6 +17,10 @@ export interface Step19Props {
 }
 
 export const Step19 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step19Props) => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return <div className="step-19">{/* Conteúdo da Etapa 19 renderizado aqui */}</div>;
 };
 
@@ -48,6 +52,10 @@ const TOTAL_QUIZ_QUESTIONS = 21; // Número total de questões no quiz completo
  * Esta etapa agradece ao usuário e o prepara para a revelação do resultado.
  */
 export const getStep19Template = (): BlockData[] => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   const questionNumberInFullQuiz = 19; // Esta é a 19ª etapa do quiz completo
 
   const blocks: BlockData[] = [

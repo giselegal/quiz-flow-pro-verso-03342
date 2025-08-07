@@ -6,11 +6,19 @@ export interface Step03Props {
 }
 
 export const Step03 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step03Props) => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return <div className="step-03">{/* Conteúdo da Etapa 3 renderizado aqui */}</div>;
 };
 
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 3 - QUESTÃO 2: PERSONALIDADE (REAL)
 export const getStep03Template = () => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {

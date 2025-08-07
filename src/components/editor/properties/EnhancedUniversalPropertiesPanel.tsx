@@ -1,5 +1,15 @@
+/**
+ * ❌ DEPRECADO - BasicPropertiesPanel
+ *
+ * Este componente foi substituído pelo EnhancedUniversalPropertiesPanel
+ * localizado em /src/components/universal/
+ *
+ * ⚠️ NÃO USE ESTE ARQUIVO - Será removido em versão futura
+ * Use: /src/components/universal/EnhancedUniversalPropertiesPanel.tsx
+ */
+
 import { getInlineComponentProperties } from "@/hooks/useUnifiedProperties";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback } from "react";
 
 interface Block {
   id: string;
@@ -21,7 +31,7 @@ const getComponentProperties = useCallback((block: any) => {
   return block.properties || {};
 }, []);
 
-export const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPanelProps> = ({
+export const BasicPropertiesPanel: React.FC<EnhancedUniversalPropertiesPanelProps> = ({
   selectedBlock,
   onUpdateBlock,
   className = "",
@@ -103,4 +113,4 @@ export const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropert
   );
 };
 
-export default EnhancedUniversalPropertiesPanel;
+export default BasicPropertiesPanel;

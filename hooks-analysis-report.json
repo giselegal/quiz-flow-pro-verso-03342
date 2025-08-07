@@ -153,6 +153,23 @@
       "isUsed": true,
       "lastModified": "2025-08-05T19:04:47.683Z"
     },
+    "useContainerProperties": {
+      "totalLines": 214,
+      "patterns": {
+        "useState": 0,
+        "useEffect": 0,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 2,
+        "exports": 3,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "utility",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-07T13:13:20.377Z"
+    },
     "useDebounce": {
       "totalLines": 44,
       "patterns": {
@@ -519,13 +536,13 @@
         "useMemo": 0,
         "customHooks": 9,
         "exports": 1,
-        "typescript": false,
+        "typescript": true,
         "hasTests": true
       },
       "functionality": "quiz",
       "complexity": "medium",
       "isUsed": true,
-      "lastModified": "2025-08-04T22:17:23.067Z"
+      "lastModified": "2025-08-07T01:25:41.910Z"
     },
     "useQuizConfig": {
       "totalLines": 142,
@@ -800,13 +817,13 @@
       "lastModified": "2025-08-05T19:04:47.975Z"
     },
     "useUnifiedProperties": {
-      "totalLines": 3276,
+      "totalLines": 1951,
       "patterns": {
         "useState": 2,
         "useEffect": 3,
-        "useCallback": 10,
+        "useCallback": 9,
         "useMemo": 0,
-        "customHooks": 26,
+        "customHooks": 20,
         "exports": 12,
         "typescript": true,
         "hasTests": true
@@ -814,7 +831,7 @@
       "functionality": "quiz",
       "complexity": "high",
       "isUsed": true,
-      "lastModified": "2025-08-06T19:17:42.568Z"
+      "lastModified": "2025-08-07T19:28:42.634Z"
     },
     "useUniversalNavigation": {
       "totalLines": 47,
@@ -953,13 +970,13 @@
           "useMemo": 0,
           "customHooks": 9,
           "exports": 1,
-          "typescript": false,
+          "typescript": true,
           "hasTests": true
         },
         "functionality": "quiz",
         "complexity": "medium",
         "isUsed": true,
-        "lastModified": "2025-08-04T22:17:23.067Z"
+        "lastModified": "2025-08-07T01:25:41.910Z"
       },
       {
         "name": "useQuizConfig",
@@ -1161,13 +1178,13 @@
       },
       {
         "name": "useUnifiedProperties",
-        "totalLines": 3276,
+        "totalLines": 1951,
         "patterns": {
           "useState": 2,
           "useEffect": 3,
-          "useCallback": 10,
+          "useCallback": 9,
           "useMemo": 0,
-          "customHooks": 26,
+          "customHooks": 20,
           "exports": 12,
           "typescript": true,
           "hasTests": true
@@ -1175,7 +1192,7 @@
         "functionality": "quiz",
         "complexity": "high",
         "isUsed": true,
-        "lastModified": "2025-08-06T19:17:42.568Z"
+        "lastModified": "2025-08-07T19:28:42.634Z"
       }
     ],
     "editor": [
@@ -1478,6 +1495,24 @@
         "lastModified": "2025-08-04T22:17:22.943Z"
       },
       {
+        "name": "useContainerProperties",
+        "totalLines": 214,
+        "patterns": {
+          "useState": 0,
+          "useEffect": 0,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 2,
+          "exports": 3,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "utility",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-07T13:13:20.377Z"
+      },
+      {
         "name": "useDebounce",
         "totalLines": 44,
         "patterns": {
@@ -1767,5 +1802,5 @@
       }
     ]
   },
-  "totalHooks": 50
+  "totalHooks": 51
 }

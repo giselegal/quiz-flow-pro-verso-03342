@@ -1,4 +1,7 @@
 import React from "react";
+import { useContainerProperties } from "@/hooks/useContainerProperties";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export interface Step11Props {
   onNext?: () => void;
@@ -8,10 +11,14 @@ export interface Step11Props {
 }
 
 export const Step11 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step11Props) => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return <div className="step-11">{/* Conteúdo da Etapa 11 renderizado aqui */}</div>;
 };
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 11 - No ambiente de trabalho, você se veste:
 export const getStep11Template = () => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return [
     // 🎯 CABEÇALHO COM PROGRESSO
     {

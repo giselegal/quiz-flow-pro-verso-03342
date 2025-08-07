@@ -1,4 +1,7 @@
 import React from "react";
+import { useContainerProperties } from "@/hooks/useContainerProperties";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export interface Step18Props {
   onNext?: () => void;
@@ -8,10 +11,14 @@ export interface Step18Props {
 }
 
 export const Step18 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step18Props) => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return <div className="step-18">{/* Conteúdo da Etapa 18 renderizado aqui */}</div>;
 };
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 18 - Calculando seu Resultado...
 export const getStep18Template = () => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return [
     // 🎯 CABEÇALHO COM PROGRESSO
     {

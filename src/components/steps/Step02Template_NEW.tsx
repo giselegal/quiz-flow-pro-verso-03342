@@ -6,11 +6,19 @@ export interface Step02Props {
 }
 
 export const Step02 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step02Props) => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return <div className="step-02">{/* Conteúdo da Etapa 2 renderizado aqui */}</div>;
 };
 
 // 🎯 TEMPLATE OTIMIZADO DA ETAPA 2 - PREFERÊNCIAS DE VESTUÁRIO
 export const Step02Template = {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   id: "step02-quiz-clothing-preferences",
   meta: {
     createdAt: "2024-01-10T12:00:00Z",
@@ -251,6 +259,10 @@ export const Step02Template = {
 
 // 📊 FUNÇÃO ALTERNATIVA PARA COMPATIBILIDADE
 export const getStep02Template = () => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {

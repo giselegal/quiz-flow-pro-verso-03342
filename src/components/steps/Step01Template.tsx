@@ -8,11 +8,19 @@ export interface Step01Props {
 }
 
 export const Step01 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step01Props) => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return <div className="step-01">{/* Conteúdo da Etapa 1 renderizado aqui */}</div>;
 };
 
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 1 - MODELO EXATO
 export const getStep01Template = () => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return [
     // 🎯 CABEÇALHO DO QUIZ COM LOGO E PROGRESSO
     {

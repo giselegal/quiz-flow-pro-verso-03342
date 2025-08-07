@@ -6,11 +6,19 @@ export interface Step04Props {
 }
 
 export const Step04 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step04Props) => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return <div className="step-04">{/* Conteúdo da Etapa 4 renderizado aqui */}</div>;
 };
 
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 4 - QUESTÃO 3: QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?
 export const getStep04Template = () => {
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
+  // 🚀 Hooks otimizados aplicados automaticamente
+  const isMobile = useIsMobile();
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
