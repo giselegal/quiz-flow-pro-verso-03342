@@ -140,4 +140,4 @@ export const getStep07Template = () => {
   ];
 };
 
-export default Step07Question06;
+export default getStep07Template;

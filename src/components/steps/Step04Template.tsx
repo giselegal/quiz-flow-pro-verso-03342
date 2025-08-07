@@ -173,4 +173,4 @@ export const getStep04Template = () => {
   ];
 };
 
-export default Step04Template;
+export default getStep04Template;

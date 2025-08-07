@@ -164,4 +164,4 @@ export const getStep03Template = () => {
   ];
 };
 
-export default Step03Question02;
+export default getStep03Template;
