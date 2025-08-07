@@ -1,11 +1,10 @@
 import { ENHANCED_BLOCK_REGISTRY } from "@/config/enhancedBlockRegistry";
 import { useEditor } from "@/context/EditorContext";
-import { useReusableComponents } from "@/hooks/useReusableComponents";
 import { useCallback, useEffect, useState } from "react";
 
 // ============================================================================
-// HOOK INTEGRADO: useEditorReusableComponents
-// Conecta o sistema de componentes reutilizáveis com o editor
+// HOOK INTEGRADO: useEditorReusableComponents (Versão Simplificada)
+// Conecta o sistema de componentes reutilizáveis com o editor sem Supabase
 // ============================================================================
 
 export interface EditorComponentType {
