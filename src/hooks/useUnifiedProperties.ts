@@ -502,554 +502,184 @@ export const useUnifiedProperties = (
         case "image-display-inline":
           return [
             ...baseProperties,
-            createProperty(
-              "src",
-              currentBlock?.properties?.src ||
+            // Propriedades específicas da imagem
+            {
+              key: "src",
+              value: currentBlock?.properties?.src ||
                 "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
-              PropertyType.TEXT,
-              "URL da Imagem",
-              PropertyCategory.CONTENT,
-              { required: true }
-            ),
-            createProperty(
-              "alt",
-              currentBlock?.properties?.alt || "Imagem",
-              PropertyType.TEXT,
-              "Texto Alternativo",
-              PropertyCategory.CONTENT
-            ),
-            createProperty(
-              "width",
-              currentBlock?.properties?.width || "100%",
-              PropertyType.SELECT,
-              "Largura",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "25%", label: "25%" },
-                  { value: "50%", label: "50%" },
-                  { value: "75%", label: "75%" },
-                  { value: "100%", label: "100%" },
-                  { value: "auto", label: "Automática" },
-                ]),
-              }
-            ),
-            createProperty(
-              "height",
-              currentBlock?.properties?.height || "auto",
-              PropertyType.SELECT,
-              "Altura",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "auto", label: "Automática" },
-                  { value: "200px", label: "200px" },
-                  { value: "300px", label: "300px" },
-                  { value: "400px", label: "400px" },
-                  { value: "500px", label: "500px" },
-                ]),
-              }
-            ),
-            createProperty(
-              "borderRadius",
-              currentBlock?.properties?.borderRadius ?? 12,
-              PropertyType.RANGE,
-              "Arredondamento",
-              PropertyCategory.STYLE,
-              { min: 0, max: 50, step: 2, unit: "px" }
-            ),
-            createProperty(
-              "shadow",
-              currentBlock?.properties?.shadow !== false,
-              PropertyType.SWITCH,
-              "Sombra",
-              PropertyCategory.STYLE
-            ),
-            createProperty(
-              "alignment",
-              currentBlock?.properties?.alignment || "center",
-              PropertyType.SELECT,
-              "Alinhamento",
-              PropertyCategory.LAYOUT,
-              {
-                options: createSelectOptions([
-                  { value: "left", label: "Esquerda" },
-                  { value: "center", label: "Centro" },
-                  { value: "right", label: "Direita" },
-                ]),
-              }
-            ),
+              type: PropertyType.TEXT,
+              label: "URL da Imagem",
+              category: PropertyCategory.CONTENT,
+              required: true,
+            },
+            {
+              key: "alt",
+              value: currentBlock?.properties?.alt || "Imagem",
+              type: PropertyType.TEXT,
+              label: "Texto Alternativo",
+              category: PropertyCategory.CONTENT,
+            },
+            {
+              key: "width",
+              value: currentBlock?.properties?.width || "100%",
+              type: PropertyType.SELECT,
+              label: "Largura",
+              category: PropertyCategory.STYLE,
+              options: [
+                { value: "25%", label: "25%" },
+                { value: "50%", label: "50%" },
+                { value: "75%", label: "75%" },
+                { value: "100%", label: "100%" },
+                { value: "auto", label: "Automática" },
+              ],
+            },
+            {
+              key: "height",
+              value: currentBlock?.properties?.height || "auto",
+              type: PropertyType.SELECT,
+              label: "Altura",
+              category: PropertyCategory.STYLE,
+              options: [
+                { value: "auto", label: "Automática" },
+                { value: "200px", label: "200px" },
+                { value: "300px", label: "300px" },
+                { value: "400px", label: "400px" },
+                { value: "500px", label: "500px" },
+              ],
+            },
+            {
+              key: "borderRadius",
+              value: currentBlock?.properties?.borderRadius ?? 12,
+              type: PropertyType.RANGE,
+              label: "Arredondamento",
+              category: PropertyCategory.STYLE,
+              min: 0,
+              max: 50,
+              step: 2,
+              unit: "px",
+            },
+            {
+              key: "shadow",
+              value: currentBlock?.properties?.shadow !== false,
+              type: PropertyType.SWITCH,
+              label: "Sombra",
+              category: PropertyCategory.STYLE,
+            },
           ];
 
         case "button-inline":
           return [
             ...baseProperties,
-            createProperty(
-              "text",
-              currentBlock?.properties?.text || "Clique aqui",
-              PropertyType.TEXT,
-              "Texto do Botão",
-              PropertyCategory.CONTENT,
-              { required: true }
-            ),
-            createProperty(
-              "variant",
-              currentBlock?.properties?.variant || "primary",
-              PropertyType.SELECT,
-              "Variante",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "primary", label: "Primário" },
-                  { value: "secondary", label: "Secundário" },
-                  { value: "success", label: "Sucesso" },
-                  { value: "warning", label: "Aviso" },
-                  { value: "danger", label: "Perigo" },
-                  { value: "outline", label: "Contorno" },
-                ]),
-              }
-            ),
-            createProperty(
-              "size",
-              currentBlock?.properties?.size || "medium",
-              PropertyType.SELECT,
-              "Tamanho",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "small", label: "Pequeno" },
-                  { value: "medium", label: "Médio" },
-                  { value: "large", label: "Grande" },
-                ]),
-              }
-            ),
-            createProperty(
-              "backgroundColor",
-              currentBlock?.properties?.backgroundColor || "#B89B7A",
-              PropertyType.COLOR,
-              "Cor de Fundo",
-              PropertyCategory.STYLE
-            ),
-            createProperty(
-              "textColor",
-              currentBlock?.properties?.textColor || "#FFFFFF",
-              PropertyType.COLOR,
-              "Cor do Texto",
-              PropertyCategory.STYLE
-            ),
-            createProperty(
-              "borderColor",
-              currentBlock?.properties?.borderColor || "#B89B7A",
-              PropertyType.COLOR,
-              "Cor da Borda",
-              PropertyCategory.STYLE
-            ),
-            createProperty(
-              "fontSize",
-              currentBlock?.properties?.fontSize ?? 16,
-              PropertyType.RANGE,
-              "Tamanho da Fonte",
-              PropertyCategory.STYLE,
-              { min: 12, max: 24, step: 1, unit: "px" }
-            ),
-            createProperty(
-              "fontFamily",
-              currentBlock?.properties?.fontFamily || "inherit",
-              PropertyType.SELECT,
-              "Família da Fonte",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "inherit", label: "Padrão" },
-                  { value: "Inter", label: "Inter" },
-                  { value: "Roboto", label: "Roboto" },
-                  { value: "Open Sans", label: "Open Sans" },
-                  { value: "Playfair Display", label: "Playfair Display" },
-                ]),
-              }
-            ),
-            createProperty(
-              "fontWeight",
-              currentBlock?.properties?.fontWeight || "500",
-              PropertyType.SELECT,
-              "Peso da Fonte",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "300", label: "Leve (300)" },
-                  { value: "400", label: "Normal (400)" },
-                  { value: "500", label: "Médio (500)" },
-                  { value: "600", label: "Semi-negrito (600)" },
-                  { value: "700", label: "Negrito (700)" },
-                ]),
-              }
-            ),
-            createProperty(
-              "action",
-              currentBlock?.properties?.action || "none",
-              PropertyType.SELECT,
-              "Ação do Botão",
-              PropertyCategory.BEHAVIOR,
-              {
-                options: createSelectOptions([
-                  { value: "none", label: "Nenhuma" },
-                  { value: "next-step", label: "Próxima Etapa" },
-                  { value: "url", label: "Abrir URL" },
-                ]),
-              }
-            ),
-            createProperty(
-              "nextStepId",
-              currentBlock?.properties?.nextStepId || "",
-              PropertyType.SELECT,
-              "Próxima Etapa",
-              PropertyCategory.BEHAVIOR,
-              {
-                options: getStageSelectOptions(),
-              }
-            ),
-            createProperty(
-              "url",
-              currentBlock?.properties?.url || "",
-              PropertyType.TEXT,
-              "URL de Destino",
-              PropertyCategory.BEHAVIOR
-            ),
-            createProperty(
-              "target",
-              currentBlock?.properties?.target || "_blank",
-              PropertyType.SELECT,
-              "Destino do Link",
-              PropertyCategory.BEHAVIOR,
-              {
-                options: createSelectOptions([
-                  { value: "_blank", label: "Nova Aba (_blank)" },
-                  { value: "_self", label: "Mesma Aba (_self)" },
-                ]),
-              }
-            ),
-            createProperty(
-              "icon",
-              currentBlock?.properties?.icon || "none",
-              PropertyType.SELECT,
-              "Ícone",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "none", label: "Nenhum" },
-                  { value: "arrow-right", label: "Seta para Direita" },
-                  { value: "download", label: "Download" },
-                  { value: "play", label: "Play" },
-                  { value: "star", label: "Estrela" },
-                ]),
-              }
-            ),
-            createProperty(
-              "iconPosition",
-              currentBlock?.properties?.iconPosition || "right",
-              PropertyType.SELECT,
-              "Posição do Ícone",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "left", label: "Esquerda" },
-                  { value: "right", label: "Direita" },
-                ]),
-              }
-            ),
-            createProperty(
-              "requiresValidInput",
-              currentBlock?.properties?.requiresValidInput === true,
-              PropertyType.SWITCH,
-              "Requer Input Válido",
-              PropertyCategory.BEHAVIOR
-            ),
-            createProperty(
-              "disabled",
-              currentBlock?.properties?.disabled === true,
-              PropertyType.SWITCH,
-              "Desabilitado",
-              PropertyCategory.BEHAVIOR
-            ),
-            createProperty(
-              "shadowType",
-              currentBlock?.properties?.shadowType || "none",
-              PropertyType.SELECT,
-              "Tipo de Sombra",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "none", label: "Sem Sombra" },
-                  { value: "small", label: "Sombra Pequena" },
-                  { value: "medium", label: "Sombra Média" },
-                  { value: "large", label: "Sombra Grande" },
-                  { value: "inner", label: "Sombra Interna" },
-                  { value: "glow", label: "Brilho" },
-                ]),
-              }
-            ),
-            createProperty(
-              "shadowColor",
-              currentBlock?.properties?.shadowColor || "#000000",
-              PropertyType.COLOR,
-              "Cor da Sombra",
-              PropertyCategory.STYLE
-            ),
-            createProperty(
-              "effectType",
-              currentBlock?.properties?.effectType || "none",
-              PropertyType.SELECT,
-              "Efeito Visual",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "none", label: "Sem Efeito" },
-                  { value: "gradient", label: "Gradiente" },
-                  { value: "hover-lift", label: "Elevação no Hover" },
-                  { value: "pulse", label: "Pulsar" },
-                  { value: "shine", label: "Brilho Deslizante" },
-                  { value: "bounce", label: "Saltar" },
-                ]),
-              }
-            ),
-            createProperty(
-              "fullWidth",
-              currentBlock?.properties?.fullWidth === true,
-              PropertyType.SWITCH,
-              "Largura Total",
-              PropertyCategory.LAYOUT
-            ),
-            createProperty(
-              "hoverEffect",
-              currentBlock?.properties?.hoverEffect !== false,
-              PropertyType.SWITCH,
-              "Efeito Hover",
-              PropertyCategory.STYLE
-            ),
-            createProperty(
-              "borderRadius",
-              currentBlock?.properties?.borderRadius ?? 8,
-              PropertyType.RANGE,
-              "Raio da Borda",
-              PropertyCategory.STYLE,
-              { min: 0, max: 50, step: 1, unit: "px" }
-            ),
-            createProperty(
-              "hoverOpacity",
-              currentBlock?.properties?.hoverOpacity ?? 90,
-              PropertyType.RANGE,
-              "Opacidade no Hover",
-              PropertyCategory.STYLE,
-              { min: 50, max: 100, step: 5, unit: "%" }
-            ),
-            createProperty(
-              "padding",
-              currentBlock?.properties?.padding || "py-3 px-6",
-              PropertyType.SELECT,
-              "Espaçamento Interno",
-              PropertyCategory.LAYOUT,
-              {
-                options: createSelectOptions([
-                  { value: "py-2 px-4", label: "Pequeno" },
-                  { value: "py-3 px-6", label: "Normal" },
-                  { value: "py-4 px-8", label: "Grande" },
-                  { value: "py-5 px-10", label: "Extra Grande" },
-                ]),
-              }
-            ),
-            createProperty(
-              "borderRadiusTailwind",
-              currentBlock?.properties?.borderRadiusTailwind || "rounded-lg",
-              PropertyType.SELECT,
-              "Arredondamento (Tailwind)",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "rounded-none", label: "Sem arredondamento" },
-                  { value: "rounded-sm", label: "Pequeno" },
-                  { value: "rounded", label: "Normal" },
-                  { value: "rounded-lg", label: "Grande" },
-                  { value: "rounded-xl", label: "Extra Grande" },
-                  { value: "rounded-full", label: "Circular" },
-                ]),
-              }
-            ),
-            createProperty(
-              "fontSizeTailwind",
-              currentBlock?.properties?.fontSizeTailwind || "text-base",
-              PropertyType.SELECT,
-              "Tamanho da Fonte (Tailwind)",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "text-sm", label: "Pequeno (14px)" },
-                  { value: "text-base", label: "Normal (16px)" },
-                  { value: "text-lg", label: "Grande (18px)" },
-                  { value: "text-xl", label: "Extra Grande (20px)" },
-                  { value: "text-2xl", label: "XXL (24px)" },
-                ]),
-              }
-            ),
-            createProperty(
-              "fontWeightTailwind",
-              currentBlock?.properties?.fontWeightTailwind || "font-medium",
-              PropertyType.SELECT,
-              "Peso da Fonte (Tailwind)",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "font-light", label: "Leve" },
-                  { value: "font-normal", label: "Normal" },
-                  { value: "font-medium", label: "Médio" },
-                  { value: "font-semibold", label: "Semi-negrito" },
-                  { value: "font-bold", label: "Negrito" },
-                ]),
-              }
-            ),
-            createProperty(
-              "boxShadow",
-              currentBlock?.properties?.boxShadow || "shadow-md",
-              PropertyType.SELECT,
-              "Sombra",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "shadow-none", label: "Sem sombra" },
-                  { value: "shadow-sm", label: "Pequena" },
-                  { value: "shadow", label: "Normal" },
-                  { value: "shadow-md", label: "Média" },
-                  { value: "shadow-lg", label: "Grande" },
-                  { value: "shadow-xl", label: "Extra Grande" },
-                  { value: "shadow-2xl", label: "Gigante" },
-                ]),
-              }
-            ),
+            // Propriedades específicas do botão
+            {
+              key: "variant",
+              value: currentBlock?.properties?.variant || "primary",
+              type: PropertyType.SELECT,
+              label: "Variante",
+              category: PropertyCategory.STYLE,
+              options: [
+                { value: "primary", label: "Primário" },
+                { value: "secondary", label: "Secundário" },
+                { value: "success", label: "Sucesso" },
+                { value: "warning", label: "Aviso" },
+                { value: "danger", label: "Perigo" },
+                { value: "outline", label: "Contorno" },
+              ],
+            },
+            {
+              key: "size",
+              value: currentBlock?.properties?.size || "medium",
+              type: PropertyType.SELECT,
+              label: "Tamanho",
+              category: PropertyCategory.STYLE,
+              options: [
+                { value: "small", label: "Pequeno" },
+                { value: "medium", label: "Médio" },
+                { value: "large", label: "Grande" },
+              ],
+            },
+            {
+              key: "borderColor",
+              value: currentBlock?.properties?.borderColor || "#B89B7A",
+              type: PropertyType.COLOR,
+              label: "Cor da Borda",
+              category: PropertyCategory.STYLE,
+            },
+            {
+              key: "action",
+              value: currentBlock?.properties?.action || "none",
+              type: PropertyType.SELECT,
+              label: "Ação do Botão",
+              category: PropertyCategory.BEHAVIOR,
+              options: [
+                { value: "none", label: "Nenhuma" },
+                { value: "next-step", label: "Próxima Etapa" },
+                { value: "url", label: "Abrir URL" },
+              ],
+            },
+            {
+              key: "url",
+              value: currentBlock?.properties?.url || "",
+              type: PropertyType.TEXT,
+              label: "URL de Destino",
+              category: PropertyCategory.BEHAVIOR,
+            },
+            {
+              key: "disabled",
+              value: currentBlock?.properties?.disabled === true,
+              type: PropertyType.SWITCH,
+              label: "Desabilitado",
+              category: PropertyCategory.BEHAVIOR,
+            },
           ];
 
         case "form-input":
           return [
             ...baseProperties,
-            createProperty(
-              "label",
-              currentBlock?.properties?.label || "Campo de Input",
-              PropertyType.TEXT,
-              "Rótulo do Campo",
-              PropertyCategory.CONTENT,
-              { required: true }
-            ),
-            createProperty(
-              "placeholder",
-              currentBlock?.properties?.placeholder || "Digite aqui...",
-              PropertyType.TEXT,
-              "Texto de Placeholder",
-              PropertyCategory.CONTENT
-            ),
-            createProperty(
-              "inputType",
-              currentBlock?.properties?.inputType || "text",
-              PropertyType.SELECT,
-              "Tipo de Input",
-              PropertyCategory.BEHAVIOR,
-              {
-                options: createSelectOptions([
-                  { value: "text", label: "Texto" },
-                  { value: "email", label: "E-mail" },
-                  { value: "tel", label: "Telefone" },
-                  { value: "number", label: "Número" },
-                  { value: "password", label: "Senha" },
-                ]),
-              }
-            ),
-            createProperty(
-              "required",
-              currentBlock?.properties?.required === true,
-              PropertyType.SWITCH,
-              "Campo Obrigatório",
-              PropertyCategory.BEHAVIOR
-            ),
-            createProperty(
-              "name",
-              currentBlock?.properties?.name || "input",
-              PropertyType.TEXT,
-              "Nome do Campo",
-              PropertyCategory.BEHAVIOR
-            ),
-            createProperty(
-              "backgroundColor",
-              currentBlock?.properties?.backgroundColor || "#FFFFFF",
-              PropertyType.COLOR,
-              "Cor de Fundo",
-              PropertyCategory.STYLE
-            ),
-            createProperty(
-              "borderColor",
-              currentBlock?.properties?.borderColor || "#B89B7A",
-              PropertyType.COLOR,
-              "Cor da Borda",
-              PropertyCategory.STYLE
-            ),
-            createProperty(
-              "textColor",
-              currentBlock?.properties?.textColor || "#432818",
-              PropertyType.COLOR,
-              "Cor do Texto",
-              PropertyCategory.STYLE
-            ),
-            createProperty(
-              "labelColor",
-              currentBlock?.properties?.labelColor || "#432818",
-              PropertyType.COLOR,
-              "Cor do Rótulo",
-              PropertyCategory.STYLE
-            ),
-            createProperty(
-              "fontSize",
-              currentBlock?.properties?.fontSize ?? 16,
-              PropertyType.RANGE,
-              "Tamanho da Fonte",
-              PropertyCategory.STYLE,
-              { min: 12, max: 24, step: 1, unit: "px" }
-            ),
-            createProperty(
-              "fontFamily",
-              currentBlock?.properties?.fontFamily || "inherit",
-              PropertyType.SELECT,
-              "Família da Fonte",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "inherit", label: "Padrão" },
-                  { value: "Inter", label: "Inter" },
-                  { value: "Roboto", label: "Roboto" },
-                  { value: "Open Sans", label: "Open Sans" },
-                  { value: "Playfair Display", label: "Playfair Display" },
-                ]),
-              }
-            ),
-            createProperty(
-              "fontWeight",
-              currentBlock?.properties?.fontWeight || "400",
-              PropertyType.SELECT,
-              "Peso da Fonte",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "300", label: "Leve (300)" },
-                  { value: "400", label: "Normal (400)" },
-                  { value: "500", label: "Médio (500)" },
-                  { value: "600", label: "Semi-negrito (600)" },
-                  { value: "700", label: "Negrito (700)" },
-                ]),
-              }
-            ),
-            createProperty(
-              "borderRadius",
-              currentBlock?.properties?.borderRadius ?? 8,
-              PropertyType.RANGE,
-              "Arredondamento",
-              PropertyCategory.STYLE,
-              { min: 0, max: 20, step: 1, unit: "px" }
-            ),
+            // Propriedades específicas do formulário
+            {
+              key: "label",
+              value: currentBlock?.properties?.label || "Campo de Input",
+              type: PropertyType.TEXT,
+              label: "Rótulo do Campo",
+              category: PropertyCategory.CONTENT,
+              required: true,
+            },
+            {
+              key: "placeholder",
+              value: currentBlock?.properties?.placeholder || "Digite aqui...",
+              type: PropertyType.TEXT,
+              label: "Texto de Placeholder",
+              category: PropertyCategory.CONTENT,
+            },
+            {
+              key: "inputType",
+              value: currentBlock?.properties?.inputType || "text",
+              type: PropertyType.SELECT,
+              label: "Tipo de Input",
+              category: PropertyCategory.BEHAVIOR,
+              options: [
+                { value: "text", label: "Texto" },
+                { value: "email", label: "E-mail" },
+                { value: "tel", label: "Telefone" },
+                { value: "number", label: "Número" },
+                { value: "password", label: "Senha" },
+              ],
+            },
+            {
+              key: "required",
+              value: currentBlock?.properties?.required === true,
+              type: PropertyType.SWITCH,
+              label: "Campo Obrigatório",
+              category: PropertyCategory.BEHAVIOR,
+            },
+            {
+              key: "borderColor",
+              value: currentBlock?.properties?.borderColor || "#B89B7A",
+              type: PropertyType.COLOR,
+              label: "Cor da Borda",
+              category: PropertyCategory.STYLE,
+            },
           ];
 
         case "legal-notice-inline":
