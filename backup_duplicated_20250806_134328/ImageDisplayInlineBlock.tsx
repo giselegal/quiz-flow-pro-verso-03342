@@ -1,4 +1,6 @@
 import React from "react";
+// ⚠️ ARQUIVO DE BACKUP - Aliases @/ não funcionam aqui
+// Use a versão atual em: src/components/blocks/inline/ImageDisplayInlineBlock.tsx
 import { cn } from "../../../../lib/utils";
 import type { BlockComponentProps } from "../../../../types/blocks";
 

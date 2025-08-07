@@ -1,7 +1,7 @@
-import React from "react";
-import type { BlockComponentProps } from "@/types/blocks";
 import { cn } from "@/lib/utils";
+import type { BlockComponentProps } from "@/types/blocks";
 import { Check } from "lucide-react";
+import React from "react";
 
 interface Props extends BlockComponentProps {
   title?: string;
@@ -14,10 +14,10 @@ interface Props extends BlockComponentProps {
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+const getMarginClass = (value: number | string | undefined, type: string): string => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (!numValue || isNaN(numValue) || numValue === 0) return "";
 
   const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
@@ -68,6 +68,10 @@ const BenefitsInlineBlock: React.FC<Props> = ({
   iconColor = "#432818",
   titleColor = "#432818",
   textColor = "#432818",
+  marginTop = 0,
+  marginBottom = 0,
+  marginLeft = 0,
+  marginRight = 0,
   className,
   ...props
 }) => {

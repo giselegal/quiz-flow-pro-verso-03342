@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
-
-interface Props extends BlockComponentProps {
-  // Props específicas do componente
-}
-import type { BlockComponentProps } from "@/types/blocks";
-
-interface Props extends BlockComponentProps {
-  // Props específicas do componente
-}
-import { InlineBlockProps } from "@/types/inlineBlocks";
-
-interface Props extends BlockComponentProps {
-  // Props específicas do componente
-}
 import { cn } from "@/lib/utils";
+import type { BlockComponentProps } from "@/types/blocks";
+import { InlineBlockProps } from "@/types/inlineBlocks";
+import React, { useEffect, useState } from "react";
+
+interface Props extends BlockComponentProps {
+  // Props específicas do componente
+}
+
+interface Props extends BlockComponentProps {
+  // Props específicas do componente
+}
+
+interface Props extends BlockComponentProps {
+  // Props específicas do componente
+}
 
 interface Props extends BlockComponentProps {
   // Props específicas do componente
@@ -90,7 +90,14 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({
 
   const { targetDate = "", format = "full", expiredMessage = "Tempo esgotado!" } = content;
 
-  const { size = "md", theme = "default" } = style;
+  const {
+    size = "md",
+    theme = "default",
+    marginTop = 0,
+    marginBottom = 0,
+    marginLeft = 0,
+    marginRight = 0,
+  } = style;
 
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     days: 0,

@@ -1,18 +1,18 @@
-import React from "react";
 import { cn } from "@/lib/utils";
-import { Gift } from "lucide-react";
 import type { BlockComponentProps } from "@/types/blocks";
-import { safeGetBlockProperties, logBlockDebug } from "@/utils/blockUtils";
+import { logBlockDebug, safeGetBlockProperties } from "@/utils/blockUtils";
+import { Gift } from "lucide-react";
+import React from "react";
 
 /**
  * BonusListInlineBlock - Lista de bônus
  */
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+const getMarginClass = (value: number | string | undefined, type: string): string => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (!numValue || isNaN(numValue) || numValue === 0) return "";
 
   const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
@@ -65,6 +65,10 @@ const BonusListInlineBlock: React.FC<BlockComponentProps> = ({
   const {
     title = "Bônus Inclusos",
     bonuses = [{ title: "Bônus 1", value: "R$ 97", description: "Descrição do bônus" }],
+    marginTop = 0,
+    marginBottom = 0,
+    marginLeft = 0,
+    marginRight = 0,
   } = properties;
 
   return (
