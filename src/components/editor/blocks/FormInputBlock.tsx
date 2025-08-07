@@ -1,15 +1,9 @@
 import { TextCursorInput } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { userResponseService } from "../../../services/userResponseService";
-import type { BlockData } from "../../../types/blocks";
+import type { BlockComponentProps } from "../../../types/blocks";
 
-interface FormInputBlockProps {
-  block: BlockData;
-  isSelected?: boolean;
-  isEditing?: boolean;
-  onClick?: () => void;
-  onPropertyChange?: (key: string, value: any) => void;
-  className?: string;
+interface FormInputBlockProps extends BlockComponentProps {
   funnelId?: string;
   onValueChange?: (value: string) => void;
 }
@@ -119,6 +113,11 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
     setValue(newValue);
     const valid = !required || newValue.trim().length > 0;
     setIsValid(valid);
+
+    // ✅ Usar onPropertyChange para edição no painel de propriedades
+    if (onPropertyChange) {
+      onPropertyChange('value', newValue);
+    }
 
     // Disparar evento customizado para outros componentes sempre
     window.dispatchEvent(

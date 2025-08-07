@@ -12,6 +12,7 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
+  onPropertyChange, // ✅ Adicionando suporte a edição de propriedades
   className = "",
 }) => {
   // Safely extract properties with fallbacks

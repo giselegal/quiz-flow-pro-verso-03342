@@ -1,6 +1,6 @@
-import { ENHANCED_BLOCK_REGISTRY } from "@/config/enhancedBlockRegistry";
-import { useEditor } from "@/context/EditorContext";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { ENHANCED_BLOCK_REGISTRY } from "../config/enhancedBlockRegistry";
+import { useEditor } from "../context/EditorContext";
 
 // ============================================================================
 // HOOK SIMPLIFICADO: useEditorReusableComponents (Sem Supabase)
@@ -33,7 +33,7 @@ export const useEditorReusableComponents = () => {
           .map(word => word.charAt(0).toUpperCase() + word.slice(1))
           .join(" "),
         category: key.includes("quiz") ? "Quiz" : key.includes("form") ? "Forms" : "Basic",
-        component,
+        component: component as React.ComponentType<any>, // ✅ Casting explícito para resolver tipo
         is_available: true,
         default_properties: {},
       })

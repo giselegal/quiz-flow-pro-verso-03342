@@ -1459,6 +1459,271 @@ export const useUnifiedProperties = (
           ];
 
         default:
+
+        case "pricing-card":
+        return [
+          ...baseProperties,
+          createProperty(
+            "title",
+            currentBlock?.properties?.title || "Plano Premium",
+            PropertyType.TEXT,
+            "Título do Plano",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "price",
+            currentBlock?.properties?.price || "R$ 97,00",
+            PropertyType.TEXT,
+            "Preço",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "description",
+            currentBlock?.properties?.description || "Melhor valor para você",
+            PropertyType.TEXTAREA,
+            "Descrição",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "features",
+            currentBlock?.properties?.features || "Acesso completo\\nSuporte premium\\nGarantia 30 dias",
+            PropertyType.TEXTAREA,
+            "Recursos Inclusos",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "buttonText",
+            currentBlock?.properties?.buttonText || "Adquirir Agora",
+            PropertyType.TEXT,
+            "Texto do Botão",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "buttonUrl",
+            currentBlock?.properties?.buttonUrl || "#",
+            PropertyType.TEXT,
+            "URL do Botão",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "highlighted",
+            currentBlock?.properties?.highlighted || false,
+            PropertyType.SWITCH,
+            "Destacar Plano",
+            PropertyCategory.STYLE
+          ),
+        ];
+
+        case "quiz-progress":
+        return [
+          ...baseProperties,
+          createProperty(
+            "currentStep",
+            currentBlock?.properties?.currentStep || 1,
+            PropertyType.RANGE,
+            "Etapa Atual",
+            PropertyCategory.CONTENT,
+            { min: 1, max: 10, step: 1 }
+          ),
+          createProperty(
+            "totalSteps",
+            currentBlock?.properties?.totalSteps || 5,
+            PropertyType.RANGE,
+            "Total de Etapas",
+            PropertyCategory.CONTENT,
+            { min: 1, max: 20, step: 1 }
+          ),
+          createProperty(
+            "showPercentage",
+            currentBlock?.properties?.showPercentage || true,
+            PropertyType.SWITCH,
+            "Mostrar Porcentagem",
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            "progressColor",
+            currentBlock?.properties?.progressColor || "#3b82f6",
+            PropertyType.COLOR,
+            "Cor da Barra",
+            PropertyCategory.STYLE
+          ),
+        ];
+
+        case "quiz-results":
+        return [
+          ...baseProperties,
+          createProperty(
+            "title",
+            currentBlock?.properties?.title || "Seus Resultados",
+            PropertyType.TEXT,
+            "Título dos Resultados",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "subtitle",
+            currentBlock?.properties?.subtitle || "Baseado nas suas respostas...",
+            PropertyType.TEXT,
+            "Subtítulo",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "showScore",
+            currentBlock?.properties?.showScore || true,
+            PropertyType.SWITCH,
+            "Mostrar Pontuação",
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            "showRecommendations",
+            currentBlock?.properties?.showRecommendations || true,
+            PropertyType.SWITCH,
+            "Mostrar Recomendações",
+            PropertyCategory.CONTENT
+          ),
+        ];
+
+        case "style-results":
+        return [
+          ...baseProperties,
+          createProperty(
+            "resultStyle",
+            currentBlock?.properties?.resultStyle || "card",
+            PropertyType.SELECT,
+            "Estilo do Resultado",
+            PropertyCategory.STYLE,
+            {
+              options: createSelectOptions([
+                { value: "card", label: "Cartão" },
+                { value: "list", label: "Lista" },
+                { value: "grid", label: "Grade" },
+              ])
+            }
+          ),
+          createProperty(
+            "showIcons",
+            currentBlock?.properties?.showIcons || true,
+            PropertyType.SWITCH,
+            "Mostrar Ícones",
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            "columns",
+            currentBlock?.properties?.columns || 2,
+            PropertyType.RANGE,
+            "Colunas",
+            PropertyCategory.LAYOUT,
+            { min: 1, max: 4, step: 1 }
+          ),
+        ];
+
+        case "final-step":
+        return [
+          ...baseProperties,
+          createProperty(
+            "title",
+            currentBlock?.properties?.title || "Parabéns!",
+            PropertyType.TEXT,
+            "Título Final",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "message",
+            currentBlock?.properties?.message || "Você completou o quiz com sucesso!",
+            PropertyType.TEXTAREA,
+            "Mensagem Final",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "showCTA",
+            currentBlock?.properties?.showCTA || true,
+            PropertyType.SWITCH,
+            "Mostrar Botão de Ação",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "ctaText",
+            currentBlock?.properties?.ctaText || "Ver Meus Resultados",
+            PropertyType.TEXT,
+            "Texto do Botão",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "ctaUrl",
+            currentBlock?.properties?.ctaUrl || "#",
+            PropertyType.TEXT,
+            "URL do Botão",
+            PropertyCategory.CONTENT
+          ),
+        ];
+
+        case "decorative-bar":
+        return [
+          ...baseProperties,
+          createProperty(
+            "height",
+            currentBlock?.properties?.height || 4,
+            PropertyType.RANGE,
+            "Altura",
+            PropertyCategory.STYLE,
+            { min: 1, max: 20, step: 1 }
+          ),
+          createProperty(
+            "color",
+            currentBlock?.properties?.color || "#3b82f6",
+            PropertyType.COLOR,
+            "Cor da Barra",
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            "style",
+            currentBlock?.properties?.style || "solid",
+            PropertyType.SELECT,
+            "Estilo da Barra",
+            PropertyCategory.STYLE,
+            {
+              options: createSelectOptions([
+                { value: "solid", label: "Sólida" },
+                { value: "dashed", label: "Tracejada" },
+                { value: "dotted", label: "Pontilhada" },
+              ])
+            }
+          ),
+        ];
+
+        case "legal-notice":
+        return [
+          ...baseProperties,
+          createProperty(
+            "content",
+            currentBlock?.properties?.content || "Este é um aviso legal importante.",
+            PropertyType.TEXTAREA,
+            "Conteúdo do Aviso",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "type",
+            currentBlock?.properties?.type || "info",
+            PropertyType.SELECT,
+            "Tipo do Aviso",
+            PropertyCategory.STYLE,
+            {
+              options: createSelectOptions([
+                { value: "info", label: "Informação" },
+                { value: "warning", label: "Aviso" },
+                { value: "error", label: "Erro" },
+                { value: "success", label: "Sucesso" },
+              ])
+            }
+          ),
+          createProperty(
+            "showIcon",
+            currentBlock?.properties?.showIcon || true,
+            PropertyType.SWITCH,
+            "Mostrar Ícone",
+            PropertyCategory.STYLE
+          ),
+        ];
+
           // Log para debug dos tipos não mapeados
           console.warn(
             `🔧 useUnifiedProperties: Tipo de bloco "${blockType}" não tem propriedades específicas definidas. Usando propriedades base.`
