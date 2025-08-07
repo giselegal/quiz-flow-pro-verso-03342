@@ -77,6 +77,14 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     block.properties
   );
 
+  console.log("🔧 SortableBlockWrapper - processedProperties:", {
+    blockId: block.id,
+    blockType: block.type,
+    originalProperties: block.properties,
+    processedProperties,
+    containerClasses,
+  });
+
   // 🔧 Extrair propriedades de margem e cor de fundo do bloco
   const {
     marginTop = 0,
@@ -198,7 +206,13 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           onClick={onSelect}
         >
           <Component
-            block={block}
+            block={{
+              ...block,
+              properties: {
+                ...block.properties,
+                ...processedProperties, // ✅ CORREÇÃO: Passar propriedades processadas para o componente
+              },
+            }}
             isSelected={false} // 🎯 Forçar isSelected=false para remover bordas do componente
             onClick={onSelect}
             onPropertyChange={handlePropertyChange}

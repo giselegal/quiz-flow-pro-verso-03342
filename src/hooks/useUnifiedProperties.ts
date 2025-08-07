@@ -1482,18 +1482,34 @@ export const useUnifiedProperties = (
 
   const updateProperty = useCallback(
     (key: string, value: any) => {
-      if (!block) return;
+      console.log("🔧 useUnifiedProperties - updateProperty chamado:", {
+        key,
+        value,
+        blockId: block?.id,
+      });
+
+      if (!block) {
+        console.warn("⚠️ updateProperty: block is null");
+        return;
+      }
 
       const updatedProperties = { ...block.properties, [key]: value };
+      console.log("📝 updatedProperties:", updatedProperties);
 
       setProperties(prevProps =>
         prevProps.map(prop => (prop.key === key ? { ...prop, value } : prop))
       );
 
       if (onUpdateExternal) {
+        console.log("🚀 Calling onUpdateExternal with:", {
+          blockId: block.id,
+          properties: updatedProperties,
+        });
         onUpdateExternal(block.id, {
           properties: updatedProperties,
         });
+      } else {
+        console.warn("⚠️ onUpdateExternal is null");
       }
     },
     [block?.id, onUpdateExternal]

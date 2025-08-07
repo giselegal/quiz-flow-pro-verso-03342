@@ -16,6 +16,8 @@ export interface ContainerProperties {
 }
 
 export const useContainerProperties = (properties: ContainerProperties = {}) => {
+  console.log("🏗️ useContainerProperties chamado com:", properties);
+
   const {
     containerWidth = "full",
     containerPosition = "center",
