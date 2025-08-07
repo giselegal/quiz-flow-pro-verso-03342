@@ -1,7 +1,6 @@
 // EditorDatabaseAdapter removed - using direct context state management
 import { getAllSteps, getStepTemplate } from "@/config/stepTemplatesMapping";
 import { EditorBlock, FunnelStage } from "@/types/editor";
-import { OPTIMIZED_FUNNEL_CONFIG } from '@/config/optimized21StepsFunnel';
 import React, { createContext, ReactNode, useCallback, useContext, useState } from "react";
 
 // ✅ INTERFACE UNIFICADA DO CONTEXTO
@@ -65,25 +64,6 @@ interface EditorContextType {
 }
 
 
-  /**
-   * 🎯 Carrega etapas otimizadas do funil de 21 etapas
-   */
-  const loadOptimizedSteps = () => {
-    if (OPTIMIZED_FUNNEL_CONFIG?.steps) {
-      const optimizedSteps = OPTIMIZED_FUNNEL_CONFIG.steps.map(step => ({
-        ...step,
-        metadata: {
-          ...(step as any).metadata,
-          isOptimized: true,
-          loadedAt: new Date()
-        }
-      }));
-      
-      console.log('🎯 Carregadas', optimizedSteps.length, 'etapas otimizadas');
-      return optimizedSteps;
-    }
-    return [];
-  };
 
   const EditorContext = createContext<EditorContextType | undefined>(undefined);
 
@@ -123,6 +103,11 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     // ✅ USAR TEMPLATES ESPECÍFICOS DAS ETAPAS
     const allStepTemplates = getAllSteps();
     console.log("📋 EditorProvider: Templates carregados:", allStepTemplates.length);
+    console.log("📋 EditorProvider: Templates detalhados:", allStepTemplates.map(t => ({
+      stepNumber: t.stepNumber,
+      name: t.name,
+      hasFunction: typeof t.templateFunction === 'function'
+    })));
 
     const initialStages = allStepTemplates.map((stepTemplate, index) => ({
       id: `step-${stepTemplate.stepNumber}`,

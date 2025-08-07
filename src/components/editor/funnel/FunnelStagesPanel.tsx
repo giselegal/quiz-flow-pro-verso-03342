@@ -43,13 +43,13 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
     console.log(`🔍 [${timestamp}] FunnelStagesPanel - Stages Array:`, stages);
     console.log(`🔍 [${timestamp}] FunnelStagesPanel - StageCount:`, stageCount);
 
-    // ✅ SIMULAR DELAY DE LOADING PARA VERIFICAR TIMING
+    // ✅ CARREGAR IMEDIATAMENTE SE HÁ STAGES
     if (stages && stages.length > 0) {
       console.log(`✅ [${timestamp}] FunnelStagesPanel - STAGES CARREGADAS, removendo loading`);
-      setTimeout(() => setIsLoading(false), 100);
+      setIsLoading(false);
     } else {
       console.warn(`⚠️ [${timestamp}] FunnelStagesPanel - STAGES VAZIAS ou UNDEFINED`);
-      setTimeout(() => setIsLoading(false), 500); // Maior delay para stages vazias
+      setIsLoading(false); // Remover delay artificial
     }
   }, [stages, activeStageId, stageCount]);
 
@@ -210,7 +210,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
         <ScrollArea className="h-full">
           <div className="space-y-2 p-4">
             {stages.map((stage, index) => {
-              console.log("🚨 RENDERIZANDO STAGE:", stage.id, stage.name);
+              console.log("🚨 RENDERIZANDO STAGE:", stage.id, stage.name, "Order:", stage.order);
               return (
                 <div
                   key={stage.id}
@@ -238,14 +238,19 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                 >
                   <div className="p-4 relative z-10">
                     <div className="flex items-center justify-center">
-                      <span
-                        className={cn(
-                          "font-medium text-lg",
-                          activeStageId === stage.id ? "text-brand-dark" : "text-foreground"
-                        )}
-                      >
-                        Etapa {stage.order}
-                      </span>
+                      <div className="text-center">
+                        <span
+                          className={cn(
+                            "font-medium text-lg",
+                            activeStageId === stage.id ? "text-brand-dark" : "text-foreground"
+                          )}
+                        >
+                          Etapa {stage.order}
+                        </span>
+                        <div className="text-sm text-gray-600 mt-1">
+                          {stage.name}
+                        </div>
+                      </div>
                     </div>
 
                     {/* ✅ INDICADOR VISUAL DE ETAPA ATIVA - MINIMALISTA */}
