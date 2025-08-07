@@ -5,7 +5,7 @@
 export interface ContainerProperties {
   containerWidth?: "full" | "large" | "medium" | "small";
   containerPosition?: "left" | "center" | "right";
-  spacing?: "none" | "compact" | "normal" | "comfortable" | "spacious";
+  spacing?: "none" | "small" | "compact" | "normal" | "comfortable" | "spacious";
   gridColumns?: "auto" | "full" | "half";
   backgroundColor?: "transparent" | "white" | "gray-50" | "brand-light";
   marginTop?: number;
@@ -19,7 +19,7 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
   const {
     containerWidth = "full",
     containerPosition = "center",
-    spacing = "none", // 🎯 Padrão alterado para "none" - sem margens internas
+    spacing = "small", // 🎯 Padrão alterado para "small" (0.75rem/12px)
     gridColumns = "auto",
     backgroundColor = "transparent",
     marginTop = 0,
@@ -71,6 +71,9 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
       case "none":
         // Sem padding
         break;
+      case "small":
+        classes.push("p-3"); // 0.75rem (12px)
+        break;
       case "compact":
         classes.push("p-2");
         break;
@@ -84,8 +87,8 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
         classes.push("p-8");
         break;
       default:
-        // 🎯 Padrão alterado para não adicionar padding
-        break;
+        // 🎯 Padrão para "small" (0.75rem)
+        classes.push("p-3");
     }
 
     // 🎨 Background Color Classes

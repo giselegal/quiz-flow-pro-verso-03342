@@ -39,7 +39,7 @@ export const getStep01Template = () => {
         containerWidth: "full", // Opções: "full", "large", "medium", "small"
         containerPosition: "center", // Opções: "left", "center", "right"
         gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
-        spacing: "normal", // p-4 (16px padding)
+        spacing: "none", // 🎯 Sem padding por padrão
         marginTop: 0,
         marginBottom: 0,
         backgroundColor: "transparent",
@@ -63,7 +63,7 @@ export const getStep01Template = () => {
         containerWidth: "full", // Opções: "full", "large", "medium", "small"
         containerPosition: "center", // Opções: "left", "center", "right"
         gridColumns: "auto", // w-full md:w-[calc(50%-0.5rem)]
-        spacing: "normal", // p-4 (16px padding)
+        spacing: "none", // 🎯 Sem padding por padrão
         backgroundColor: "transparent",
       },
     },
@@ -88,7 +88,7 @@ export const getStep01Template = () => {
         containerWidth: "large", // Opções: "full", "large", "medium", "small"
         containerPosition: "center", // Opções: "left", "center", "right"
         gridColumns: "full", // 🎯 Alterado de "auto" para "full" para usar 100% da largura
-        spacing: "normal", // p-4 (16px padding)
+        spacing: "none", // 🎯 Sem padding por padrão
         marginTop: 0,
         backgroundColor: "transparent",
       },

@@ -185,12 +185,13 @@ export const useUnifiedProperties = (
         },
         {
           key: "spacing",
-          value: currentBlock?.properties?.spacing || "none", // 🎯 Padrão alterado para "none"
+          value: currentBlock?.properties?.spacing || "small", // 🎯 Padrão alterado para "small" (0.75rem)
           type: PropertyType.SELECT,
           label: "Espaçamento Interno",
           category: PropertyCategory.LAYOUT,
           options: [
             { value: "none", label: "Nenhum" },
+            { value: "small", label: "Pequeno (12px)" },
             { value: "compact", label: "Compacto (8px)" },
             { value: "normal", label: "Normal (16px)" },
             { value: "comfortable", label: "Confortável (24px)" },

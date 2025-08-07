@@ -15,7 +15,7 @@ export interface StepWithContainerProps {
   stepId: number;
   containerWidth?: "full" | "large" | "medium" | "small";
   containerPosition?: "left" | "center" | "right";
-  spacing?: "none" | "compact" | "normal" | "comfortable" | "spacious";
+  spacing?: "none" | "small" | "compact" | "normal" | "comfortable" | "spacious";
   backgroundColor?: "transparent" | "white" | "gray-50" | "brand-light";
   enableMobileOptimizations?: boolean;
   enablePerformanceOptimizations?: boolean;
@@ -143,7 +143,7 @@ export const useQuizStepContainer = (
     stepId,
     containerWidth: "large",
     containerPosition: "center",
-    spacing: "none", // 🎯 Padrão alterado para "none" - sem margens internas
+    spacing: "small", // 🎯 Padrão alterado para "small" (0.75rem/12px)
     backgroundColor: "white",
     enableMobileOptimizations: true,
     enablePerformanceOptimizations: true,
