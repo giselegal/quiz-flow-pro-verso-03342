@@ -16,8 +16,8 @@ export const STYLES: Record<StyleType, Style> = {
     },
     keywords: ["atemporal", "sofisticado", "elegante", "neutro", "versátil"],
   },
-  romantico: {
-    id: "romantico",
+  romântico: {
+    id: "romântico",
     name: "Romântico",
     description:
       "Seu estilo é delicado e feminino. Você adora peças com detalhes florais, rendas, babados e cores suaves. Sua personalidade doce se reflete nas escolhas de roupas que fazem você se sentir especial e única.",
@@ -30,8 +30,8 @@ export const STYLES: Record<StyleType, Style> = {
     },
     keywords: ["delicado", "feminino", "floral", "suave", "doce"],
   },
-  dramatico: {
-    id: "dramatico",
+  dramático: {
+    id: "dramático",
     name: "Dramático",
     description:
       "Seu estilo é marcante e impactante. Você não tem medo de se destacar e adora peças com contrastes fortes, geometrias definidas e elementos que causam impacto visual. Você é uma pessoa confiante e isso transpareece no seu visual.",
@@ -86,8 +86,8 @@ export const STYLES: Record<StyleType, Style> = {
     },
     keywords: ["refinado", "polido", "qualidade", "sofisticação", "bom gosto"],
   },
-  sensual: {
-    id: "sensual",
+  sexy: {
+    id: "sexy",
     name: "Sexy",
     description:
       "Seu estilo é sedutor e confiante. Você não tem medo de mostrar sua feminilidade e sabe usar peças que realçam suas curvas e destacam sua personalidade marcante. Você se sente poderosa quando está bem vestida.",
@@ -100,8 +100,8 @@ export const STYLES: Record<StyleType, Style> = {
     },
     keywords: ["sedutor", "confiante", "feminino", "marcante", "poderosa"],
   },
-  contemporaneo: {
-    id: "contemporaneo",
+  contemporâneo: {
+    id: "contemporâneo",
     name: "Contemporâneo",
     description:
       "Seu estilo é moderno e atual. Você está sempre antenada nas últimas tendências, mas sabe adaptá-las ao seu gosto pessoal. Gosta de peças com design inovador e não tem medo de experimentar o que há de novo na moda.",

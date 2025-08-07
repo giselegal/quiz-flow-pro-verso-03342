@@ -12,7 +12,7 @@ export const caktoquizQuestions: QuizQuestion[] = [
       {
         id: "q1_o1",
         text: "Vestidos femininos e delicados",
-        style: "romantico",
+        style: "romântico",
         imageUrl: "https://example.com/romantic-dress.jpg",
         weight: 2,
       },
@@ -33,7 +33,7 @@ export const caktoquizQuestions: QuizQuestion[] = [
       {
         id: "q1_o4",
         text: "Looks modernos e ousados",
-        style: "contemporaneo",
+        style: "contemporâneo",
         imageUrl: "https://example.com/modern-outfit.jpg",
         weight: 2,
       },
@@ -48,7 +48,7 @@ export const caktoquizQuestions: QuizQuestion[] = [
       {
         id: "q2_o1",
         text: "Joias delicadas e femininas",
-        style: "romantico",
+        style: "romântico",
         weight: 2,
       },
       {
@@ -66,7 +66,7 @@ export const caktoquizQuestions: QuizQuestion[] = [
       {
         id: "q2_o4",
         text: "Acessórios statement",
-        style: "dramatico",
+        style: "dramático",
         weight: 2,
       },
     ],
@@ -80,7 +80,7 @@ export const caktoquizQuestions: QuizQuestion[] = [
       {
         id: "q3_o1",
         text: "Feminina e delicada",
-        style: "romantico",
+        style: "romântico",
         weight: 2,
       },
       {
@@ -98,7 +98,7 @@ export const caktoquizQuestions: QuizQuestion[] = [
       {
         id: "q3_o4",
         text: "Poderosa e marcante",
-        style: "dramatico",
+        style: "dramático",
         weight: 2,
       },
     ],

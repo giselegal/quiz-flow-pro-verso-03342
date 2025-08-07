@@ -89,7 +89,7 @@ const QuizBuilder: React.FC = () => {
       return;
     }
 
-    addComponent(type, activeStageId);
+    addComponent(type);
   };
 
   const handleComponentUpdate = (id: string, updates: Partial<QuizComponentData>) => {
