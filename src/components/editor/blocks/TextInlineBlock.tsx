@@ -364,11 +364,9 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         // SPACING - ES7+ Computed property com fallback
         spacingClasses[spacing as keyof typeof spacingClasses] ?? spacingClasses.normal,
 
-        // MARGIN SPACING - Suporte completo para todas as direções
+        // MARGIN SPACING - Apenas margens verticais no container
         getMarginClass(marginTop, "top"),
         getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right"),
 
         className
       )}
@@ -398,7 +396,10 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
                 fontWeightClasses.normal,
               textAlignClasses[textAlign as keyof typeof textAlignClasses] ?? textAlignClasses.left,
               "break-words whitespace-pre-wrap",
-              lineHeight || "leading-normal"
+              lineHeight || "leading-normal",
+              // 🎯 MARGENS LATERAIS aplicadas no textarea de edição
+              getMarginClass(marginLeft, "left"),
+              getMarginClass(marginRight, "right")
             )}
             style={{
               color,
@@ -429,7 +430,11 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
             lineHeight || "leading-normal",
 
             // Hover para indicar que é editável
-            onPropertyChange && "hover:bg-gray-50 hover:bg-opacity-50 rounded px-1"
+            onPropertyChange && "hover:bg-gray-50 hover:bg-opacity-50 rounded px-1",
+
+            // 🎯 MARGENS LATERAIS aplicadas no conteúdo interno
+            getMarginClass(marginLeft, "left"),
+            getMarginClass(marginRight, "right")
           )}
           style={{
             color,
