@@ -110,20 +110,6 @@ export const useUnifiedProperties = (
 ): UseUnifiedPropertiesReturn => {
   const [properties, setProperties] = useState<UnifiedProperty[]>([]);
 
-  // Retorno antecipado para casos onde block é null
-  if (!block) {
-    return {
-      properties: [],
-      updateProperty: () => {},
-      resetProperties: () => {},
-      validateProperties: () => true,
-      getPropertyByKey: () => undefined,
-      getPropertiesByCategory: () => [],
-      exportProperties: () => ({}),
-      applyBrandColors: () => {},
-    };
-  }
-
   // Função memoizada para gerar as definições de propriedades com base no tipo do bloco
   const generateDefaultProperties = useCallback(
     (blockType: string, currentBlock: UnifiedBlock | null): UnifiedProperty[] => {
@@ -433,19 +419,22 @@ export const useUnifiedProperties = (
     []
   );
 
+  // Otimizar useEffect com dependências específicas
   useEffect(() => {
-    if (block && block.type) {
-      let newProperties = generateDefaultProperties(block.type, block);
-      setProperties(newProperties);
-    } else {
+    if (!block || !block.type) {
       setProperties([]);
+      return;
     }
-  }, [block, generateDefaultProperties]);
+
+    const newProperties = generateDefaultProperties(block.type, block);
+    setProperties(newProperties);
+  }, [block?.id, block?.type, generateDefaultProperties]);
 
   const updateProperty = useCallback(
     (key: string, value: any) => {
       if (!block) return;
-      let updatedProperties = { ...block.properties, [key]: value };
+      
+      const updatedProperties = { ...block.properties, [key]: value };
 
       setProperties(prevProps =>
         prevProps.map(prop => (prop.key === key ? { ...prop, value } : prop))
@@ -457,18 +446,19 @@ export const useUnifiedProperties = (
         });
       }
     },
-    [block, onUpdateExternal]
+    [block?.id, onUpdateExternal]
   );
 
   const resetProperties = useCallback(() => {
-    if (block) {
-      const defaultProperties = generateDefaultProperties(block.type, block);
-      setProperties(defaultProperties);
-      if (onUpdateExternal) {
-        onUpdateExternal(block.id, { properties: {} });
-      }
+    if (!block) return;
+    
+    const defaultProperties = generateDefaultProperties(block.type, block);
+    setProperties(defaultProperties);
+    
+    if (onUpdateExternal) {
+      onUpdateExternal(block.id, { properties: {} });
     }
-  }, [block, generateDefaultProperties, onUpdateExternal]);
+  }, [block?.id, block?.type, generateDefaultProperties, onUpdateExternal]);
 
   const validateProperties = useCallback(() => {
     return properties.every(prop => {
@@ -507,6 +497,8 @@ export const useUnifiedProperties = (
   }, [properties]);
 
   const applyBrandColors = useCallback(() => {
+    if (!properties.length || !block) return;
+
     setProperties(prev =>
       prev.map(prop => {
         if (prop.type === PropertyType.COLOR) {
@@ -523,7 +515,8 @@ export const useUnifiedProperties = (
         return prop;
       })
     );
-    if (block && onUpdateExternal) {
+    
+    if (onUpdateExternal && block) {
       const updatedProps = properties.reduce(
         (acc, prop) => {
           if (prop.type === PropertyType.COLOR) {
@@ -545,7 +538,7 @@ export const useUnifiedProperties = (
       );
       onUpdateExternal(block.id, { properties: updatedProps });
     }
-  }, [block, properties, onUpdateExternal]);
+  }, [properties, block?.id, onUpdateExternal]);
 
   return {
     properties,
@@ -622,6 +615,13 @@ export const getInlineComponentProperties = (type: string, currentProps: any = {
 
   type InlineDefaultsKey = keyof typeof inlineDefaults;
 
+  return {
+    ...((inlineDefaults[type as InlineDefaultsKey] || {}) as object),
+    ...currentProps,
+  };
+};
+
+export default useUnifiedProperties;
   return {
     ...((inlineDefaults[type as InlineDefaultsKey] || {}) as object),
     ...currentProps,
