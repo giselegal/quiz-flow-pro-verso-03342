@@ -194,6 +194,13 @@ export const useUnifiedProperties = (
           ],
         },
         {
+          key: "containerBackgroundColor",
+          value: currentBlock?.properties?.containerBackgroundColor || "transparent",
+          type: PropertyType.COLOR,
+          label: "Cor de Fundo do Container",
+          category: PropertyCategory.STYLE,
+        },
+        {
           key: "marginTop",
           value: currentBlock?.properties?.marginTop || 8,
           type: PropertyType.RANGE,
