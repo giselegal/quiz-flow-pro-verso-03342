@@ -1,6 +1,6 @@
-import React from "react";
 import { cn } from "@/lib/utils";
-import { Shield, Check, Star, Award, Edit3 } from "lucide-react";
+import { Award, Check, Shield, Star } from "lucide-react";
+import React from "react";
 
 type BadgeType = "security" | "guarantee" | "rating" | "achievement";
 
@@ -21,7 +21,10 @@ interface BadgeInlineBlockProps {
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value: number | string | undefined, type: "top" | "bottom" | "left" | "right"): string => {
+const getMarginClass = (
+  value: number | string | undefined,
+  type: "top" | "bottom" | "left" | "right"
+): string => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
   if (!numValue || isNaN(numValue) || numValue === 0) return "";

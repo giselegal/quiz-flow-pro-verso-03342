@@ -1,13 +1,11 @@
-import React from "react";
 import { Trash2 } from "lucide-react";
+import React from "react";
 
 interface DeleteBlockButtonProps {
   blockId: string;
   onDelete: (blockId: string) => void;
   className?: string;
 }
-
-import { cn } from "@/lib/utils";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {

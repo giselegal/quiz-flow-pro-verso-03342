@@ -17,12 +17,15 @@ interface TimeUnit {
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value: number | string | undefined, type: "top" | "bottom" | "left" | "right"): string => {
+const getMarginClass = (
+  value: number | string | undefined,
+  type: "top" | "bottom" | "left" | "right"
+): string => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
-  
+
   if (!numValue || isNaN(numValue) || numValue === 0) return "";
-  
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";  // Margens negativas
+
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr"; // Margens negativas
   if (numValue < 0) {
     const absValue = Math.abs(numValue);
     if (absValue <= 4) return `-${prefix}-1`;

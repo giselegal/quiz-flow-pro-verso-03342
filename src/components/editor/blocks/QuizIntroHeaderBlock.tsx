@@ -8,7 +8,7 @@ interface QuizIntroHeaderBlockProps extends BlockComponentProps {
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+const getMarginClass = (value: string | number, type: "top" | "bottom" | "left" | "right"): string => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return "";
@@ -81,7 +81,11 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
     showProgress = true,
     logoWidth = 96,
     logoHeight = 96,
-  } = block?.properties || {};
+    marginTop = 0,
+    marginBottom = 0,
+    marginLeft = 0,
+    marginRight = 0,
+  } = (block?.properties as any) || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {
