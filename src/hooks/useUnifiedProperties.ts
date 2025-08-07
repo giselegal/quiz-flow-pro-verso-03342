@@ -869,6 +869,88 @@ export const useUnifiedProperties = (
               PropertyCategory.STYLE,
               { min: 50, max: 100, step: 5, unit: "%" }
             ),
+            createProperty(
+              "padding",
+              currentBlock?.properties?.padding || "py-3 px-6",
+              PropertyType.SELECT,
+              "Espaçamento Interno",
+              PropertyCategory.LAYOUT,
+              {
+                options: createSelectOptions([
+                  { value: "py-2 px-4", label: "Pequeno" },
+                  { value: "py-3 px-6", label: "Normal" },
+                  { value: "py-4 px-8", label: "Grande" },
+                  { value: "py-5 px-10", label: "Extra Grande" },
+                ]),
+              }
+            ),
+            createProperty(
+              "borderRadiusTailwind",
+              currentBlock?.properties?.borderRadiusTailwind || "rounded-lg",
+              PropertyType.SELECT,
+              "Arredondamento (Tailwind)",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "rounded-none", label: "Sem arredondamento" },
+                  { value: "rounded-sm", label: "Pequeno" },
+                  { value: "rounded", label: "Normal" },
+                  { value: "rounded-lg", label: "Grande" },
+                  { value: "rounded-xl", label: "Extra Grande" },
+                  { value: "rounded-full", label: "Circular" },
+                ]),
+              }
+            ),
+            createProperty(
+              "fontSizeTailwind",
+              currentBlock?.properties?.fontSizeTailwind || "text-base",
+              PropertyType.SELECT,
+              "Tamanho da Fonte (Tailwind)",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "text-sm", label: "Pequeno (14px)" },
+                  { value: "text-base", label: "Normal (16px)" },
+                  { value: "text-lg", label: "Grande (18px)" },
+                  { value: "text-xl", label: "Extra Grande (20px)" },
+                  { value: "text-2xl", label: "XXL (24px)" },
+                ]),
+              }
+            ),
+            createProperty(
+              "fontWeightTailwind",
+              currentBlock?.properties?.fontWeightTailwind || "font-medium",
+              PropertyType.SELECT,
+              "Peso da Fonte (Tailwind)",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "font-light", label: "Leve" },
+                  { value: "font-normal", label: "Normal" },
+                  { value: "font-medium", label: "Médio" },
+                  { value: "font-semibold", label: "Semi-negrito" },
+                  { value: "font-bold", label: "Negrito" },
+                ]),
+              }
+            ),
+            createProperty(
+              "boxShadow",
+              currentBlock?.properties?.boxShadow || "shadow-md",
+              PropertyType.SELECT,
+              "Sombra",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "shadow-none", label: "Sem sombra" },
+                  { value: "shadow-sm", label: "Pequena" },
+                  { value: "shadow", label: "Normal" },
+                  { value: "shadow-md", label: "Média" },
+                  { value: "shadow-lg", label: "Grande" },
+                  { value: "shadow-xl", label: "Extra Grande" },
+                  { value: "shadow-2xl", label: "Gigante" },
+                ]),
+              }
+            ),
           ];
 
         case "form-input":
@@ -1109,6 +1191,43 @@ export const useUnifiedProperties = (
                   { value: "1.5", label: "1.5" },
                   { value: "1.75", label: "1.75" },
                   { value: "2", label: "2" },
+                ]),
+              }
+            ),
+            createProperty(
+              "showIcon",
+              currentBlock?.properties?.showIcon !== false,
+              PropertyType.SWITCH,
+              "Mostrar Ícone",
+              PropertyCategory.CONTENT
+            ),
+            createProperty(
+              "iconType",
+              currentBlock?.properties?.iconType || "shield",
+              PropertyType.SELECT,
+              "Tipo do Ícone",
+              PropertyCategory.CONTENT,
+              {
+                options: createSelectOptions([
+                  { value: "shield", label: "Escudo (Privacidade)" },
+                  { value: "lock", label: "Cadeado (Segurança)" },
+                  { value: "info", label: "Informação" },
+                  { value: "warning", label: "Aviso" },
+                  { value: "none", label: "Nenhum" },
+                ]),
+              }
+            ),
+            createProperty(
+              "textSize",
+              currentBlock?.properties?.textSize || "text-sm",
+              PropertyType.SELECT,
+              "Tamanho do Texto",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "text-xs", label: "Extra Pequeno (12px)" },
+                  { value: "text-sm", label: "Pequeno (14px)" },
+                  { value: "text-base", label: "Normal (16px)" },
                 ]),
               }
             ),
