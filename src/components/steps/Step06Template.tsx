@@ -1,3 +1,5 @@
+import { useIsMobile } from '@/hooks/use-mobile';
+
 export interface Step06Props {
   onNext?: () => void;
   onBlockAdd?: (block: any) => void;
@@ -8,17 +10,12 @@ export interface Step06Props {
 export const Step06 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step06Props) => {
   // 🚀 Hooks otimizados aplicados automaticamente
   const isMobile = useIsMobile();
-  // 🚀 Hooks otimizados aplicados automaticamente
-  const isMobile = useIsMobile();
+  
   return <div className="step-06">{/* Conteúdo da Etapa 6 renderizado aqui */}</div>;
 };
 
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 6 - QUESTÃO 5: QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?
 export const getStep06Template = () => {
-  // 🚀 Hooks otimizados aplicados automaticamente
-  const isMobile = useIsMobile();
-  // 🚀 Hooks otimizados aplicados automaticamente
-  const isMobile = useIsMobile();
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
