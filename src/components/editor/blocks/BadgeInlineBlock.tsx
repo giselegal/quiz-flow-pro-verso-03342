@@ -24,7 +24,7 @@ interface BadgeInlineBlockProps {
 const getMarginClass = (value: number | string | undefined, type: "top" | "bottom" | "left" | "right"): string => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (!numValue || isNaN(numValue) || numValue === 0) return "";
 
   const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
@@ -74,6 +74,11 @@ const BadgeInlineBlock: React.FC<BadgeInlineBlockProps> = ({
   className,
   onPropertyChange,
   disabled = false,
+  // Sistema completo de margens com controles deslizantes
+  marginTop = 0,
+  marginBottom = 0,
+  marginLeft = 0,
+  marginRight = 0,
 }) => {
   const getIcon = () => {
     switch (type) {
