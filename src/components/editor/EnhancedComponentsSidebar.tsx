@@ -6,7 +6,18 @@ import { generateBlockDefinitions } from "@/config/enhancedBlockRegistry";
 import { useEditor } from "@/context/EditorContext";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
 import { BlockDefinition } from "@/types/editor";
-import { ChevronDown, ChevronRight, GripVertical, Search } from "lucide-react";
+import { 
+  ChevronDown, 
+  ChevronRight, 
+  GripVertical, 
+  Search,
+  Trophy,
+  Type,
+  MousePointer,
+  FormInput,
+  Scale,
+  Layers
+} from "lucide-react";
 import React, { useState } from "react";
 
 interface EnhancedComponentsSidebarProps {
@@ -14,7 +25,7 @@ interface EnhancedComponentsSidebarProps {
 }
 
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+const getMarginClass = (value: string | number, type: string): string => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return "";
@@ -62,12 +73,11 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
   const { scrollRef } = useSyncedScroll({ source: "components" });
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
-    Cabeçalho: true,
     Quiz: true,
-    "Venda - Atenção": true,
-    "Venda - Interesse": false,
-    "Venda - Desejo": false,
-    "Venda - Ação": true,
+    Interativo: true,
+    CTA: true,
+    Conteúdo: false,
+    Legal: false,
     Estrutura: false,
   });
 
@@ -102,10 +112,45 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
     return matchesSearch;
   });
 
-  // Agrupar blocos por categoria
+  // Agrupar blocos por categoria corrigida com ícones
+  const categoryIcons: Record<string, React.ComponentType<any>> = {
+    Quiz: Trophy,
+    Interativo: FormInput,
+    CTA: MousePointer,
+    Conteúdo: Type,
+    Legal: Scale,
+    Estrutura: Layers,
+    Outros: GripVertical,
+  };
+
   const groupedBlocks = filteredBlocks.reduce(
     (groups, block) => {
-      const category = block.category;
+      // Mapear tipos de componentes para categorias organizadas
+      let category = "Outros";
+      
+      switch (block.type) {
+        case "quiz-intro-header":
+          category = "Quiz";
+          break;
+        case "text-inline":
+          category = "Conteúdo";
+          break;
+        case "image-display-inline":
+          category = "Conteúdo";
+          break;
+        case "button-inline":
+          category = "CTA";
+          break;
+        case "form-input":
+          category = "Interativo";
+          break;
+        case "legal-notice-inline":
+          category = "Legal";
+          break;
+        default:
+          category = "Estrutura";
+      }
+      
       if (!groups[category]) {
         groups[category] = [];
       }
@@ -115,14 +160,13 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
     {} as Record<string, BlockDefinition[]>
   );
 
-  // Ordenar categorias na ordem AIDA
+  // Ordenar categorias por relevância no quiz
   const categoryOrder = [
-    "Cabeçalho",
     "Quiz",
-    "Venda - Atenção",
-    "Venda - Interesse",
-    "Venda - Desejo",
-    "Venda - Ação",
+    "Interativo", 
+    "CTA",
+    "Conteúdo",
+    "Legal",
     "Estrutura",
     "Outros",
   ];
@@ -132,7 +176,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
   return (
     <Card className="h-full flex flex-col">
       <CardHeader>
-        <CardTitle>Componentes</CardTitle>
+        <CardTitle>🎯 Quiz Builder</CardTitle>
         <div className="relative">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
@@ -152,7 +196,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
               <div key={category} className="space-y-1">
                 {/* Category Header */}
                 <div
-                  className="flex items-center justify-between p-1 bg-muted/30 rounded-md cursor-pointer hover:bg-muted/50 transition-colors"
+                  className="flex items-center justify-between p-2 bg-muted/30 rounded-md cursor-pointer hover:bg-muted/50 transition-colors"
                   onClick={() => toggleCategory(category)}
                 >
                   <div className="flex items-center space-x-2">
@@ -161,6 +205,9 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
                     ) : (
                       <ChevronRight className="h-4 w-4" />
                     )}
+                    {React.createElement(categoryIcons[category] || GripVertical, { 
+                      className: "h-4 w-4 text-primary" 
+                    })}
                     <span className="text-sm font-medium">{category}</span>
                   </div>
                   <Badge variant="secondary" className="text-xs">
