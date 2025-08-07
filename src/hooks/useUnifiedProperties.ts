@@ -850,6 +850,20 @@ export const useUnifiedProperties = (
               }
             ),
             createProperty(
+              "fullWidth",
+              currentBlock?.properties?.fullWidth === true,
+              PropertyType.SWITCH,
+              "Largura Total",
+              PropertyCategory.LAYOUT
+            ),
+            createProperty(
+              "hoverEffect",
+              currentBlock?.properties?.hoverEffect !== false,
+              PropertyType.SWITCH,
+              "Efeito Hover",
+              PropertyCategory.STYLE
+            ),
+            createProperty(
               "borderRadius",
               currentBlock?.properties?.borderRadius ?? 8,
               PropertyType.RANGE,

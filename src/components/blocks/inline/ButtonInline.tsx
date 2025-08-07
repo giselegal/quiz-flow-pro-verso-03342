@@ -68,10 +68,38 @@ export const ButtonInline: React.FC<ButtonInlineProps> = ({
     large: "px-8 py-4 text-lg",
   };
 
+  // Converter fontSize numérico em classes Tailwind
+  const getFontSizeClass = (size: string | number | undefined): string => {
+    if (typeof size === "number") {
+      if (size <= 12) return "text-xs";
+      if (size <= 14) return "text-sm";
+      if (size <= 16) return "text-base";
+      if (size <= 18) return "text-lg";
+      if (size <= 20) return "text-xl";
+      if (size <= 24) return "text-2xl";
+      return "text-3xl";
+    }
+    return size || "text-base";
+  };
+
+  // Converter fontWeight numérico em classes Tailwind
+  const getFontWeightClass = (weight: string | number | undefined): string => {
+    if (typeof weight === "number" || !isNaN(Number(weight))) {
+      const numWeight = Number(weight);
+      if (numWeight <= 300) return "font-light";
+      if (numWeight <= 400) return "font-normal";
+      if (numWeight <= 500) return "font-medium";
+      if (numWeight <= 600) return "font-semibold";
+      if (numWeight <= 700) return "font-bold";
+      return "font-extrabold";
+    }
+    return weight || "font-bold";
+  };
+
   const variantClasses = {
-    primary: `bg-[${backgroundColor}] text-[${textColor}] hover:bg-[${backgroundColor}]/90 border-[${backgroundColor}]`,
+    primary: "",
     secondary: "bg-gray-600 text-white hover:bg-gray-700 border-gray-600",
-    outline: `bg-transparent text-[${backgroundColor}] border-2 border-[${backgroundColor}] hover:bg-[${backgroundColor}] hover:text-white`,
+    outline: "bg-transparent hover:text-white",
   };
 
   // Função para converter margens numéricas em classes Tailwind
@@ -101,14 +129,11 @@ export const ButtonInline: React.FC<ButtonInlineProps> = ({
       disabled={disabled || requiresValidInput}
       className={cn(
         // Base styles
-        "inline-flex items-center justify-center font-bold transition-all duration-300 border",
+        "inline-flex items-center justify-center transition-all duration-300 border",
         "focus:outline-none focus:ring-4 focus:ring-opacity-50",
 
         // Size
         padding || sizeClasses[size],
-
-        // Variant/Style
-        variantClasses[actualVariant as keyof typeof variantClasses],
 
         // Layout
         fullWidth && "w-full",
@@ -116,8 +141,8 @@ export const ButtonInline: React.FC<ButtonInlineProps> = ({
         textAlign,
 
         // Typography
-        fontSize || sizeClasses[size].split(" ")[1], // Extrai classe de texto do size
-        fontWeight,
+        getFontSizeClass(fontSize),
+        getFontWeightClass(fontWeight),
 
         // Effects
         boxShadow,
@@ -137,13 +162,24 @@ export const ButtonInline: React.FC<ButtonInlineProps> = ({
         className
       )}
       style={{
-        backgroundColor: actualVariant === "primary" ? backgroundColor : undefined,
-        color: actualVariant === "primary" ? textColor : undefined,
+        backgroundColor: actualVariant === "primary" ? backgroundColor : actualVariant === "secondary" ? undefined : "transparent",
+        color: actualVariant === "primary" ? textColor : actualVariant === "outline" ? backgroundColor : textColor,
         borderColor: backgroundColor,
         ...(actualVariant === "outline" && {
-          backgroundColor: "transparent",
-          color: backgroundColor,
-        }),
+          "--hover-bg": backgroundColor,
+        } as React.CSSProperties),
+      }}
+      onMouseEnter={(e) => {
+        if (actualVariant === "outline") {
+          e.currentTarget.style.backgroundColor = backgroundColor;
+          e.currentTarget.style.color = textColor;
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (actualVariant === "outline") {
+          e.currentTarget.style.backgroundColor = "transparent";
+          e.currentTarget.style.color = backgroundColor;
+        }
       }}
     >
       {text}
