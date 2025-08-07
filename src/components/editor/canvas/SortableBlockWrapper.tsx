@@ -61,6 +61,12 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     transition,
     opacity: isDragging ? 0.5 : 1,
     zIndex: isDragging ? 50 : "auto", // Z-index maior durante drag
+    // 🎯 NÃO aplicar scale aqui para não afetar margens
+  };
+
+  // 🎯 Separar estilos inline para aplicar apenas no Card (conteúdo)
+  const contentStyles = {
+    ...inlineStyles, // Aplicar scale apenas no conteúdo, não nas margens
   };
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -71,8 +77,7 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   if (!Component) {
     return (
       <div ref={setNodeRef} style={style} className="my-2">
-        {" "}
-        {/* 🎯 Espaçamento FIXO de 4px */}
+        {/* 🎯 Espaçamento FIXO de 8px (my-2 = 0.5rem = 8px) */}
         <Card className="relative group border-red-300">
           <div className="p-4 text-center text-red-500">
             <p>Componente não encontrado: {block.type}</p>
@@ -85,8 +90,7 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
 
   return (
     <div ref={setNodeRef} style={style} className="my-2">
-      {" "}
-      {/* 🎯 Espaçamento FIXO de 4px - SEMPRE IGUAL independente da escala */}
+      {/* 🎯 Espaçamento FIXO de 8px (my-2 = 0.5rem = 8px) - SEMPRE IGUAL independente da escala */}
       <Card
         className={cn(
           "relative group transition-all duration-200 border-transparent", // 🎯 Borda transparente por padrão
@@ -95,7 +99,7 @@ export const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           // 🎯 Apenas borda tracejada discreta quando selecionado
           isSelected && "border-dashed border-[#B89B7A]/60 border-2"
         )}
-        style={inlineStyles} // 🎯 Aplicar estilos inline (scale) diretamente
+        style={contentStyles} // 🎯 Aplicar estilos inline (scale) apenas no Card, não nas margens
       >
         {/* Drag handle and controls - only show on hover */}
         <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex items-center gap-1">
