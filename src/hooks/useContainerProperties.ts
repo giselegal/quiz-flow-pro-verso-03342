@@ -160,9 +160,57 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
       }
     }
 
-    // 🎯 MARGENS LATERAIS REMOVIDAS: Agora são aplicadas dentro do componente TextInlineBlock
-    // As margens laterais (marginLeft, marginRight) são processadas internamente
-    // para não afetar o posicionamento do container no layout
+    // 📏 Margin Left Classes (suporte a valores positivos e negativos) 
+    if (marginLeft && marginLeft !== 0) {
+      if (marginLeft < 0) {
+        // Margens negativas
+        if (marginLeft >= -8) classes.push("-ml-2");
+        else if (marginLeft >= -16) classes.push("-ml-4");
+        else if (marginLeft >= -24) classes.push("-ml-6");
+        else if (marginLeft >= -32) classes.push("-ml-8");
+        else if (marginLeft >= -40) classes.push("-ml-10");
+        else classes.push("-ml-12");
+      } else {
+        // Margens positivas
+        if (marginLeft <= 8) classes.push("ml-2");
+        else if (marginLeft <= 16) classes.push("ml-4");
+        else if (marginLeft <= 24) classes.push("ml-6");
+        else if (marginLeft <= 32) classes.push("ml-8");
+        else if (marginLeft <= 40) classes.push("ml-10");
+        else if (marginLeft <= 48) classes.push("ml-12");
+        else if (marginLeft <= 56) classes.push("ml-14");
+        else if (marginLeft <= 64) classes.push("ml-16");
+        else if (marginLeft <= 80) classes.push("ml-20");
+        else if (marginLeft <= 96) classes.push("ml-24");
+        else classes.push("ml-28");
+      }
+    }
+
+    // 📏 Margin Right Classes (suporte a valores positivos e negativos)
+    if (marginRight && marginRight !== 0) {
+      if (marginRight < 0) {
+        // Margens negativas
+        if (marginRight >= -8) classes.push("-mr-2");
+        else if (marginRight >= -16) classes.push("-mr-4");
+        else if (marginRight >= -24) classes.push("-mr-6");
+        else if (marginRight >= -32) classes.push("-mr-8");
+        else if (marginRight >= -40) classes.push("-mr-10");
+        else classes.push("-mr-12");
+      } else {
+        // Margens positivas
+        if (marginRight <= 8) classes.push("mr-2");
+        else if (marginRight <= 16) classes.push("mr-4");
+        else if (marginRight <= 24) classes.push("mr-6");
+        else if (marginRight <= 32) classes.push("mr-8");
+        else if (marginRight <= 40) classes.push("mr-10");
+        else if (marginRight <= 48) classes.push("mr-12");
+        else if (marginRight <= 56) classes.push("mr-14");
+        else if (marginRight <= 64) classes.push("mr-16");
+        else if (marginRight <= 80) classes.push("mr-20");
+        else if (marginRight <= 96) classes.push("mr-24");
+        else classes.push("mr-28");
+      }
+    }
 
     return classes.filter(Boolean).join(" ");
   };

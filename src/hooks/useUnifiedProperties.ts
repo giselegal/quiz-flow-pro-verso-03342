@@ -246,7 +246,7 @@ export const useUnifiedProperties = (
           type: PropertyType.RANGE,
           label: "Margem Esquerda",
           category: PropertyCategory.LAYOUT,
-          min: 0,
+          min: -40, // 🎯 Permitir valores negativos como as outras margens
           max: 100,
           step: 4,
           unit: "px",
@@ -257,7 +257,7 @@ export const useUnifiedProperties = (
           type: PropertyType.RANGE,
           label: "Margem Direita",
           category: PropertyCategory.LAYOUT,
-          min: 0,
+          min: -40, // 🎯 Permitir valores negativos como as outras margens
           max: 100,
           step: 4,
           unit: "px",
