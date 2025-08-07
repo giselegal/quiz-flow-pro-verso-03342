@@ -19,7 +19,7 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
   const {
     containerWidth = "full",
     containerPosition = "center",
-    spacing = "normal",
+    spacing = "none", // 🎯 Padrão alterado para "none" - sem margens internas
     gridColumns = "auto",
     backgroundColor = "transparent",
     marginTop = 0,
@@ -84,7 +84,8 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
         classes.push("p-8");
         break;
       default:
-        classes.push("p-4");
+        // 🎯 Padrão alterado para não adicionar padding
+        break;
     }
 
     // 🎨 Background Color Classes

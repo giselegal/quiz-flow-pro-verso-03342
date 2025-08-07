@@ -143,7 +143,7 @@ export const useQuizStepContainer = (
     stepId,
     containerWidth: "large",
     containerPosition: "center",
-    spacing: "comfortable",
+    spacing: "none", // 🎯 Padrão alterado para "none" - sem margens internas
     backgroundColor: "white",
     enableMobileOptimizations: true,
     enablePerformanceOptimizations: true,

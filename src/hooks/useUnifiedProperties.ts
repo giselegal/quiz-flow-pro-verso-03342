@@ -185,7 +185,7 @@ export const useUnifiedProperties = (
         },
         {
           key: "spacing",
-          value: currentBlock?.properties?.spacing || "normal",
+          value: currentBlock?.properties?.spacing || "none", // 🎯 Padrão alterado para "none"
           type: PropertyType.SELECT,
           label: "Espaçamento Interno",
           category: PropertyCategory.LAYOUT,
@@ -219,7 +219,7 @@ export const useUnifiedProperties = (
         },
         {
           key: "marginTop",
-          value: currentBlock?.properties?.marginTop || 8,
+          value: currentBlock?.properties?.marginTop || 0, // 🎯 Padrão alterado para 0
           type: PropertyType.RANGE,
           label: "Margem Superior",
           category: PropertyCategory.LAYOUT,
@@ -230,7 +230,7 @@ export const useUnifiedProperties = (
         },
         {
           key: "marginBottom",
-          value: currentBlock?.properties?.marginBottom || 8,
+          value: currentBlock?.properties?.marginBottom || 0, // 🎯 Padrão alterado para 0
           type: PropertyType.RANGE,
           label: "Margem Inferior",
           category: PropertyCategory.LAYOUT,

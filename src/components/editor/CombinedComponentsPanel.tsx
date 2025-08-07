@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Package, Grid3X3 } from "lucide-react";
 import EnhancedComponentsSidebar from "@/components/editor/EnhancedComponentsSidebar";
 import ReusableComponentsPanel from "@/components/editor/ReusableComponentsPanel";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Grid3X3, Package } from "lucide-react";
+import React from "react";
 
 interface CombinedComponentsPanelProps {
   currentStepNumber?: number;
 }
 
 export const CombinedComponentsPanel: React.FC<CombinedComponentsPanelProps> = ({
-  currentStepNumber = 1
+  currentStepNumber = 1,
 }) => {
   return (
     <div className="h-full flex flex-col">
@@ -26,17 +26,17 @@ export const CombinedComponentsPanel: React.FC<CombinedComponentsPanelProps> = (
             </TabsTrigger>
           </TabsList>
         </div>
-        
+
         <div className="flex-1 overflow-hidden">
           <TabsContent value="blocks" className="h-full m-0 p-0">
             <EnhancedComponentsSidebar />
           </TabsContent>
-          
+
           <TabsContent value="reusable" className="h-full m-0 p-0 overflow-auto">
             <div className="p-2">
-              <ReusableComponentsPanel 
+              <ReusableComponentsPanel
                 currentStepNumber={currentStepNumber}
-                onComponentAdd={(type) => {
+                onComponentAdd={type => {
                   console.log(`✅ Componente reutilizável ${type} adicionado!`);
                 }}
               />

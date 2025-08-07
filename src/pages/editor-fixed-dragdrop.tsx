@@ -1,13 +1,12 @@
 import { CanvasDropZone } from "@/components/editor/canvas/CanvasDropZone";
+import CombinedComponentsPanel from "@/components/editor/CombinedComponentsPanel";
 import { DndProvider } from "@/components/editor/dnd/DndProvider";
-import EnhancedComponentsSidebar from "@/components/editor/EnhancedComponentsSidebar";
 import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelSettingsPanel";
 import { FunnelStagesPanel } from "@/components/editor/funnel/FunnelStagesPanel";
 import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
 import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
 import EnhancedUniversalPropertiesPanel from "@/components/universal/EnhancedUniversalPropertiesPanel";
 import { generateBlockDefinitions, getRegistryStats } from "@/config/enhancedBlockRegistry";
-import CombinedComponentsPanel from "@/components/editor/CombinedComponentsPanel";
 
 import { useEditor } from "@/context/EditorContext";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
@@ -243,8 +242,8 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
           <FourColumnLayout
             stagesPanel={<FunnelStagesPanel onStageSelect={handleStageSelect} />}
             componentsPanel={
-              <CombinedComponentsPanel 
-                currentStepNumber={getStepNumberFromStageId(activeStageId)} 
+              <CombinedComponentsPanel
+                currentStepNumber={getStepNumberFromStageId(activeStageId)}
               />
             }
             canvas={
