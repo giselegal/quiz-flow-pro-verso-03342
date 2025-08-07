@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { PlusCircle, Trash2, Copy, Eye, EyeOff } from "lucide-react";
+import { PlusCircle, Trash2, Copy } from "lucide-react";
 
 interface ResultPageBlockEditorProps {
   block: ResultPageBlock;
@@ -77,7 +77,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
   const handleAbTestVariantChange = (variant: string) => {
     onUpdate({
       ...block,
-      abTestVariant: variant,
+      abTestVariant: variant === "all" ? "" : variant,
     });
   };
 
@@ -364,18 +364,6 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <h3 className="text-lg font-medium capitalize">{block.type}</h3>
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={handleVisibilityToggle}
-            title={block.isVisible === false ? "Mostrar bloco" : "Ocultar bloco"}
-          >
-            {block.isVisible === false ? (
-              <EyeOff className="h-4 w-4" />
-            ) : (
-              <Eye className="h-4 w-4" />
-            )}
-          </Button>
         </div>
         <div className="flex space-x-2">
           <Button size="sm" variant="outline" onClick={onDuplicate}>
@@ -402,12 +390,12 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
             {abTestEnabled && (
               <div className="space-y-2">
                 <Label htmlFor="abTestVariant">Variante de Teste A/B</Label>
-                <Select value={block.abTestVariant || ""} onValueChange={handleAbTestVariantChange}>
+                <Select value={block.abTestVariant || "all"} onValueChange={handleAbTestVariantChange}>
                   <SelectTrigger id="abTestVariant">
                     <SelectValue placeholder="Selecione a variante" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todas as variantes</SelectItem>
+                    <SelectItem value="all">Todas as variantes</SelectItem>
                     {abTestVariants.map(variant => (
                       <SelectItem key={variant} value={variant}>
                         {variant}

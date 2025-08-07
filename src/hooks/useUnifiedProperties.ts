@@ -99,7 +99,8 @@ const createProperty = (
 // Função utilitária para criar opções de select
 const createSelectOptions = (
   options: Array<{ value: string; label: string }>
-): Array<{ value: string; label: string }> => options;
+): Array<{ value: string; label: string }> => 
+  options.filter(option => option.value != null && option.value.trim() !== "");
 
 // Função utilitária para forçar o tipo PropertyCategoryOrString em strings literais
 const asCategory = (categoryString: string): PropertyCategoryOrString => {
@@ -122,11 +123,8 @@ export const useUnifiedProperties = (
           value: stage.id,
           label: `${stage.name} (${stage.id})`,
         }));
-        
-        return createSelectOptions([
-          { value: "", label: "Selecionar Etapa..." },
-          ...stageOptions,
-        ]);
+
+        return createSelectOptions([{ value: "none", label: "Selecionar Etapa..." }, ...stageOptions]);
       };
 
       const baseProperties: UnifiedProperty[] = [
