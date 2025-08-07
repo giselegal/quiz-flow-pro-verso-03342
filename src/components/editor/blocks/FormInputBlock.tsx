@@ -84,6 +84,16 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
     required = false,
     fullWidth = true,
     name = "input",
+    // Configurações de estilo
+    backgroundColor = "#FFFFFF",
+    borderColor = "#B89B7A",
+    textColor = "#432818",
+    labelColor = "#432818",
+    fontSize = "16",
+    fontFamily = "inherit",
+    fontWeight = "400",
+    borderRadius = "8",
+    // Sistema de margens
     marginTop = 8,
     marginBottom = 8,
     marginLeft = 0,
@@ -157,10 +167,17 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
     >
       <div className={`space-y-3 ${fullWidth ? "w-full" : "w-auto"}`}>
         <div className="flex items-center gap-2">
-          <TextCursorInput className="w-4 h-4 text-[#B89B7A]" />
-          <label className="text-sm font-medium text-[#432818] uppercase tracking-wide">
+          <TextCursorInput className="w-4 h-4" style={{ color: borderColor }} />
+          <label 
+            className="text-sm font-medium uppercase tracking-wide"
+            style={{
+              color: labelColor,
+              fontFamily: fontFamily,
+              fontWeight: fontWeight,
+            }}
+          >
             {label}
-            {required && <span className="text-[#B89B7A] ml-1">*</span>}
+            {required && <span style={{ color: borderColor }} className="ml-1">*</span>}
           </label>
         </div>
 
@@ -169,16 +186,25 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
           placeholder={placeholder}
           value={value}
           onChange={e => handleInputChange(e.target.value)}
+          style={{
+            backgroundColor: backgroundColor,
+            borderColor: borderColor,
+            color: textColor,
+            fontSize: `${fontSize}px`,
+            fontFamily: fontFamily,
+            fontWeight: fontWeight,
+            borderRadius: `${borderRadius}px`,
+          }}
           className={`
-            w-full px-4 py-3 border-2 rounded-lg 
-            focus:ring-2 focus:ring-[#B89B7A] focus:border-[#B89B7A] 
-            transition-all outline-none text-[#432818] placeholder-[#B89B7A]/70
+            w-full px-4 py-3 border-2 
+            focus:ring-2 focus:ring-opacity-50 
+            transition-all outline-none placeholder-opacity-70
             ${
               isValid
-                ? "border-[#B89B7A] bg-[#B89B7A]/10"
+                ? "ring-2 ring-opacity-20"
                 : value && !isValid
-                  ? "border-[#432818]/30 bg-[#432818]/5"
-                  : "border-[#B89B7A]/30 bg-white hover:border-[#B89B7A]/70"
+                  ? "border-opacity-50"
+                  : "hover:border-opacity-80"
             }
           `}
         />

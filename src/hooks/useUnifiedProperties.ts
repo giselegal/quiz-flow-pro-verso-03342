@@ -790,12 +790,131 @@ export const useUnifiedProperties = (
             ),
           ];
 
-        // EXEMPLO DE COMO CONTINUAR:
-        // case "form-input":
-        //   return [
-        //     ...baseProperties,
-        //     // Adicione aqui todos os campos presentes em qualquer duplicata do case form-input
-        //   ];
+        case "form-input":
+          return [
+            ...baseProperties,
+            createProperty(
+              "label",
+              currentBlock?.properties?.label || "Campo de Input",
+              PropertyType.TEXT,
+              "Rótulo do Campo",
+              PropertyCategory.CONTENT,
+              { required: true }
+            ),
+            createProperty(
+              "placeholder",
+              currentBlock?.properties?.placeholder || "Digite aqui...",
+              PropertyType.TEXT,
+              "Texto de Placeholder",
+              PropertyCategory.CONTENT
+            ),
+            createProperty(
+              "inputType",
+              currentBlock?.properties?.inputType || "text",
+              PropertyType.SELECT,
+              "Tipo de Input",
+              PropertyCategory.BEHAVIOR,
+              {
+                options: createSelectOptions([
+                  { value: "text", label: "Texto" },
+                  { value: "email", label: "E-mail" },
+                  { value: "tel", label: "Telefone" },
+                  { value: "number", label: "Número" },
+                  { value: "password", label: "Senha" },
+                ]),
+              }
+            ),
+            createProperty(
+              "required",
+              currentBlock?.properties?.required === true,
+              PropertyType.SWITCH,
+              "Campo Obrigatório",
+              PropertyCategory.BEHAVIOR
+            ),
+            createProperty(
+              "name",
+              currentBlock?.properties?.name || "input",
+              PropertyType.TEXT,
+              "Nome do Campo",
+              PropertyCategory.BEHAVIOR
+            ),
+            createProperty(
+              "backgroundColor",
+              currentBlock?.properties?.backgroundColor || "#FFFFFF",
+              PropertyType.COLOR,
+              "Cor de Fundo",
+              PropertyCategory.STYLE
+            ),
+            createProperty(
+              "borderColor",
+              currentBlock?.properties?.borderColor || "#B89B7A",
+              PropertyType.COLOR,
+              "Cor da Borda",
+              PropertyCategory.STYLE
+            ),
+            createProperty(
+              "textColor",
+              currentBlock?.properties?.textColor || "#432818",
+              PropertyType.COLOR,
+              "Cor do Texto",
+              PropertyCategory.STYLE
+            ),
+            createProperty(
+              "labelColor",
+              currentBlock?.properties?.labelColor || "#432818",
+              PropertyType.COLOR,
+              "Cor do Rótulo",
+              PropertyCategory.STYLE
+            ),
+            createProperty(
+              "fontSize",
+              currentBlock?.properties?.fontSize ?? 16,
+              PropertyType.RANGE,
+              "Tamanho da Fonte",
+              PropertyCategory.STYLE,
+              { min: 12, max: 24, step: 1, unit: "px" }
+            ),
+            createProperty(
+              "fontFamily",
+              currentBlock?.properties?.fontFamily || "inherit",
+              PropertyType.SELECT,
+              "Família da Fonte",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "inherit", label: "Padrão" },
+                  { value: "Inter", label: "Inter" },
+                  { value: "Roboto", label: "Roboto" },
+                  { value: "Open Sans", label: "Open Sans" },
+                  { value: "Playfair Display", label: "Playfair Display" },
+                ]),
+              }
+            ),
+            createProperty(
+              "fontWeight",
+              currentBlock?.properties?.fontWeight || "400",
+              PropertyType.SELECT,
+              "Peso da Fonte",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "300", label: "Leve (300)" },
+                  { value: "400", label: "Normal (400)" },
+                  { value: "500", label: "Médio (500)" },
+                  { value: "600", label: "Semi-negrito (600)" },
+                  { value: "700", label: "Negrito (700)" },
+                ]),
+              }
+            ),
+            createProperty(
+              "borderRadius",
+              currentBlock?.properties?.borderRadius ?? 8,
+              PropertyType.RANGE,
+              "Arredondamento",
+              PropertyCategory.STYLE,
+              { min: 0, max: 20, step: 1, unit: "px" }
+            ),
+          ];
 
         // etc...
 

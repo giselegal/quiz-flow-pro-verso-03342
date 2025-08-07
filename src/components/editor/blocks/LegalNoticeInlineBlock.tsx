@@ -2,7 +2,7 @@ import type { BlockComponentProps } from "@/types/blocks";
 import React from "react";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+const getMarginClass = (value: string | number, type: "top" | "bottom" | "left" | "right"): string => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return "";
@@ -64,18 +64,25 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
   }
 
   const {
-    title = "Aviso Legal",
-    content = "Este é um aviso legal padrão.",
-    privacyText = "Política de privacidade",
-    copyrightText = "© 2025 Todos os direitos reservados",
-    backgroundColor = "transparent",
-    textColor = "#6c757d",
+    // Configurações de conteúdo
+    privacyText = "Política de Privacidade",
+    copyrightText = "© 2025 Gisele Galvão Consultoria",
+    termsText = "Termos de Uso",
+    // Configurações de estilo
+    fontSize = "12",
+    fontFamily = "inherit",
+    fontWeight = "400",
+    textAlign = "center",
+    textColor = "#8F7A6A",
     linkColor = "#B89B7A",
-    showIcon = true,
-    iconType = "shield",
-    textSize = "text-xs",
-    textAlign = "text-center",
-  } = block?.properties || {};
+    backgroundColor = "transparent",
+    lineHeight = "1.5",
+    // Sistema de margens
+    marginTop = 8,
+    marginBottom = 8,
+    marginLeft = 0,
+    marginRight = 0,
+  } = (block?.properties as any) || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {
@@ -83,29 +90,68 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
     }
   };
 
-  // Split content into parts for rendering
-  const parts = content.split("\n").filter((part: string) => part.trim());
+  // Estilos CSS dinâmicos
+  const containerStyles = {
+    backgroundColor: backgroundColor,
+    textAlign: textAlign as "left" | "center" | "right",
+  };
+
+  const textStyles = {
+    fontSize: `${fontSize}px`,
+    fontFamily: fontFamily,
+    fontWeight: fontWeight,
+    color: textColor,
+    lineHeight: lineHeight,
+  };
+
+  const linkStyles = {
+    ...textStyles,
+    color: linkColor,
+    textDecoration: "none",
+    cursor: "pointer",
+  };
 
   return (
     <div
       className={`
         py-6 px-4 cursor-pointer transition-all duration-200
-        ${isSelected ? "ring-1 ring-gray-400/40 bg-gray-50/30" : "hover:shadow-sm"}
+        ${isSelected ? "ring-2 ring-[#B89B7A]/50 bg-gray-50/30" : "hover:shadow-sm"}
         ${className}
+        ${getMarginClass(marginTop, "top")}
+        ${getMarginClass(marginBottom, "bottom")}
+        ${getMarginClass(marginLeft, "left")}
+        ${getMarginClass(marginRight, "right")}
       `}
-      style={{ backgroundColor }}
+      style={containerStyles}
       onClick={onClick}
       data-block-id={block?.id}
       data-block-type={block?.type}
     >
-      <div className="max-w-4xl mx-auto text-center">
-        <h3 className="text-sm font-semibold mb-4" style={{ color: textColor }}>
-          {title}
-        </h3>
-        <div className="text-xs space-y-2" style={{ color: textColor }}>
-          {parts.map((part: string, index: number) => (
-            <p key={index}>{part}</p>
-          ))}
+      <div className="max-w-4xl mx-auto space-y-2">
+        {/* Copyright */}
+        <div style={textStyles}>
+          {copyrightText}
+        </div>
+        
+        {/* Links legais */}
+        <div className="flex flex-wrap justify-center gap-4 text-sm">
+          <a
+            href="#privacy"
+            style={linkStyles}
+            className="hover:underline"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {privacyText}
+          </a>
+          <span style={textStyles}>•</span>
+          <a
+            href="#terms"
+            style={linkStyles}
+            className="hover:underline"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {termsText}
+          </a>
         </div>
       </div>
     </div>
