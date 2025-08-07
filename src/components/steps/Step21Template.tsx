@@ -18,7 +18,8 @@ export const getStep21Template = () => {
       id: "progress-header-step21",
       type: "quiz-header",
       properties: {
-        logoUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        logoUrl:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         logoAlt: "Logo Gisele Galvão",
         logoWidth: 80,
         logoHeight: 80,
@@ -82,7 +83,8 @@ export const getStep21Template = () => {
       id: "transition-description-step21",
       type: "text-inline",
       properties: {
-        content: "Com base no seu estilo, temos uma oferta especial para você começar sua transformação hoje mesmo.",
+        content:
+          "Com base no seu estilo, temos uma oferta especial para você começar sua transformação hoje mesmo.",
         fontSize: "text-lg",
         textAlign: "text-center",
         color: "#432818",

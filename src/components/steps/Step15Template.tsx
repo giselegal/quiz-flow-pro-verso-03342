@@ -18,7 +18,8 @@ export const getStep15Template = () => {
       id: "progress-header-step15",
       type: "quiz-header",
       properties: {
-        logoUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        logoUrl:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         logoAlt: "Logo Gisele Galvão",
         logoWidth: 80,
         logoHeight: 80,

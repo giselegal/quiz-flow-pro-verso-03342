@@ -1,5 +1,5 @@
-import { getInlineComponentProperties } from '@/hooks/useUnifiedProperties';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { getInlineComponentProperties } from "@/hooks/useUnifiedProperties";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 interface Block {
   id: string;
@@ -13,19 +13,18 @@ interface EnhancedUniversalPropertiesPanelProps {
   className?: string;
 }
 
-
-  // 🎯 Suporte otimizado para componentes inline
-  const getComponentProperties = useCallback((block: any) => {
-    if (block.type?.includes('inline') || ['form-input'].includes(block.type)) {
-      return getInlineComponentProperties(block.type, block.properties);
-    }
-    return block.properties || {};
-  }, []);
+// 🎯 Suporte otimizado para componentes inline
+const getComponentProperties = useCallback((block: any) => {
+  if (block.type?.includes("inline") || ["form-input"].includes(block.type)) {
+    return getInlineComponentProperties(block.type, block.properties);
+  }
+  return block.properties || {};
+}, []);
 
 export const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPanelProps> = ({
   selectedBlock,
   onUpdateBlock,
-  className = ''
+  className = "",
 }) => {
   if (!selectedBlock) {
     return (
@@ -35,59 +34,54 @@ export const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropert
       </div>
     );
   }
-  
+
   const handlePropertyChange = (propertyKey: string, value: any) => {
     const updatedProperties = {
       ...selectedBlock.properties,
-      [propertyKey]: value
+      [propertyKey]: value,
     };
-    
+
     onUpdateBlock(selectedBlock.id, updatedProperties);
   };
-  
+
   return (
     <div className="p-4 bg-white rounded-lg shadow-sm">
-      <h3 className="text-lg font-semibold mb-4">
-        Propriedades: {selectedBlock.type}
-      </h3>
-      
+      <h3 className="text-lg font-semibold mb-4">Propriedades: {selectedBlock.type}</h3>
+
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Conteúdo/Texto
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Conteúdo/Texto</label>
           <input
             type="text"
-            value={selectedBlock.properties?.content || selectedBlock.properties?.text || ''}
-            onChange={(e) => {
-              const prop = selectedBlock.properties?.content !== undefined ? 'content' : 'text';
+            value={selectedBlock.properties?.content || selectedBlock.properties?.text || ""}
+            onChange={e => {
+              const prop = selectedBlock.properties?.content !== undefined ? "content" : "text";
               handlePropertyChange(prop, e.target.value);
             }}
             className="w-full p-2 border border-gray-300 rounded"
             placeholder="Digite o conteúdo..."
           />
         </div>
-        
+
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Cor
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Cor</label>
           <input
             type="color"
-            value={selectedBlock.properties?.color || '#000000'}
-            onChange={(e) => handlePropertyChange('color', e.target.value)}
+            value={selectedBlock.properties?.color || "#000000"}
+            onChange={e => handlePropertyChange("color", e.target.value)}
             className="w-full h-10 border border-gray-300 rounded"
           />
         </div>
-        
+
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Alinhamento
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Alinhamento</label>
           <select
-            value={selectedBlock.properties?.textAlign || selectedBlock.properties?.alignment || 'left'}
-            onChange={(e) => {
-              const prop = selectedBlock.properties?.textAlign !== undefined ? 'textAlign' : 'alignment';
+            value={
+              selectedBlock.properties?.textAlign || selectedBlock.properties?.alignment || "left"
+            }
+            onChange={e => {
+              const prop =
+                selectedBlock.properties?.textAlign !== undefined ? "textAlign" : "alignment";
               handlePropertyChange(prop, e.target.value);
             }}
             className="w-full p-2 border border-gray-300 rounded"
@@ -98,7 +92,7 @@ export const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropert
           </select>
         </div>
       </div>
-      
+
       <div className="mt-6 pt-4 border-t border-gray-200">
         <div className="text-xs text-gray-500">
           <div>ID: {selectedBlock.id}</div>

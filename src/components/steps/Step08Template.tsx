@@ -18,7 +18,8 @@ export const getStep08Template = () => {
       id: "quiz-header-step08",
       type: "quiz-header",
       properties: {
-        logoUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        logoUrl:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         logoAlt: "Logo Gisele Galvão",
         logoWidth: 80,
         logoHeight: 80,
@@ -78,7 +79,7 @@ export const getStep08Template = () => {
     },
 
     // 🎯 OPÇÕES DE RESPOSTA
-    
+
     {
       id: "option-1-step08",
       type: "quiz-option",
@@ -86,9 +87,16 @@ export const getStep08Template = () => {
         optionId: "sem-estampas",
         label: "Prefiro sem estampas - lisas e elegantes",
         value: "sem-estampas",
-        points: {"elegante":3,"casual":2,"criativo":1,"classico":3,"romantico":1,"minimalista":3,"boho":1},
-        
-        
+        points: {
+          elegante: 3,
+          casual: 2,
+          criativo: 1,
+          classico: 3,
+          romantico: 1,
+          minimalista: 3,
+          boho: 1,
+        },
+
         variant: "default",
         size: "large",
         textAlign: "text-left",
@@ -106,9 +114,16 @@ export const getStep08Template = () => {
         optionId: "listras-classicas",
         label: "Listras clássicas",
         value: "listras-classicas",
-        points: {"elegante":2,"casual":3,"criativo":1,"classico":3,"romantico":1,"minimalista":2,"boho":1},
-        
-        
+        points: {
+          elegante: 2,
+          casual: 3,
+          criativo: 1,
+          classico: 3,
+          romantico: 1,
+          minimalista: 2,
+          boho: 1,
+        },
+
         variant: "default",
         size: "large",
         textAlign: "text-left",
@@ -126,9 +141,16 @@ export const getStep08Template = () => {
         optionId: "florais-delicadas",
         label: "Florais delicadas e femininas",
         value: "florais-delicadas",
-        points: {"elegante":1,"casual":2,"criativo":2,"classico":2,"romantico":3,"minimalista":1,"boho":3},
-        
-        
+        points: {
+          elegante: 1,
+          casual: 2,
+          criativo: 2,
+          classico: 2,
+          romantico: 3,
+          minimalista: 1,
+          boho: 3,
+        },
+
         variant: "default",
         size: "large",
         textAlign: "text-left",
@@ -146,9 +168,16 @@ export const getStep08Template = () => {
         optionId: "geometricas-modernas",
         label: "Geométricas e modernas",
         value: "geometricas-modernas",
-        points: {"elegante":2,"casual":1,"criativo":3,"classico":1,"romantico":1,"minimalista":2,"boho":2},
-        
-        
+        points: {
+          elegante: 2,
+          casual: 1,
+          criativo: 3,
+          classico: 1,
+          romantico: 1,
+          minimalista: 2,
+          boho: 2,
+        },
+
         variant: "default",
         size: "large",
         textAlign: "text-left",

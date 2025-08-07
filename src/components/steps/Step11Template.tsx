@@ -18,7 +18,8 @@ export const getStep11Template = () => {
       id: "quiz-header-step11",
       type: "quiz-header",
       properties: {
-        logoUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        logoUrl:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         logoAlt: "Logo Gisele Galvão",
         logoWidth: 80,
         logoHeight: 80,
@@ -78,7 +79,7 @@ export const getStep11Template = () => {
     },
 
     // 🎯 OPÇÕES DE RESPOSTA
-    
+
     {
       id: "option-1-step11",
       type: "quiz-option",
@@ -86,9 +87,16 @@ export const getStep11Template = () => {
         optionId: "executiva-formal",
         label: "Executiva e formal",
         value: "executiva-formal",
-        points: {"elegante":3,"casual":1,"criativo":1,"classico":3,"romantico":1,"minimalista":2,"boho":1},
-        
-        
+        points: {
+          elegante: 3,
+          casual: 1,
+          criativo: 1,
+          classico: 3,
+          romantico: 1,
+          minimalista: 2,
+          boho: 1,
+        },
+
         variant: "default",
         size: "large",
         textAlign: "text-left",
@@ -106,9 +114,16 @@ export const getStep11Template = () => {
         optionId: "smart-casual",
         label: "Smart casual - elegante mas descontraída",
         value: "smart-casual",
-        points: {"elegante":2,"casual":2,"criativo":2,"classico":2,"romantico":2,"minimalista":3,"boho":1},
-        
-        
+        points: {
+          elegante: 2,
+          casual: 2,
+          criativo: 2,
+          classico: 2,
+          romantico: 2,
+          minimalista: 3,
+          boho: 1,
+        },
+
         variant: "default",
         size: "large",
         textAlign: "text-left",
@@ -126,9 +141,16 @@ export const getStep11Template = () => {
         optionId: "feminina-profissional",
         label: "Feminina e profissional",
         value: "feminina-profissional",
-        points: {"elegante":2,"casual":1,"criativo":1,"classico":3,"romantico":3,"minimalista":2,"boho":1},
-        
-        
+        points: {
+          elegante: 2,
+          casual: 1,
+          criativo: 1,
+          classico: 3,
+          romantico: 3,
+          minimalista: 2,
+          boho: 1,
+        },
+
         variant: "default",
         size: "large",
         textAlign: "text-left",
@@ -146,9 +168,16 @@ export const getStep11Template = () => {
         optionId: "criativa-autentica",
         label: "Criativa e autêntica",
         value: "criativa-autentica",
-        points: {"elegante":1,"casual":2,"criativo":3,"classico":1,"romantico":1,"minimalista":1,"boho":3},
-        
-        
+        points: {
+          elegante: 1,
+          casual: 2,
+          criativo: 3,
+          classico: 1,
+          romantico: 1,
+          minimalista: 1,
+          boho: 3,
+        },
+
         variant: "default",
         size: "large",
         textAlign: "text-left",

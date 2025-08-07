@@ -517,7 +517,8 @@ export const useUnifiedProperties = (
             ...baseProperties,
             createProperty(
               "src",
-              currentBlock?.properties?.src || "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
+              currentBlock?.properties?.src ||
+                "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
               PropertyType.TEXT,
               "URL da Imagem",
               PropertyCategory.CONTENT,

@@ -1,5 +1,5 @@
-import React from "react";
 import { cn } from "@/lib/utils";
+import React from "react";
 // Update the import path below to the correct location of BlockComponentProps
 import type { BlockComponentProps } from "@/types/blocks";
 
@@ -85,11 +85,11 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
   // Função para converter valores de margem em classes Tailwind (alinhada com useContainerProperties)
   const getMarginClass = (value: number | string, type: "top" | "bottom" | "left" | "right") => {
     const numValue = typeof value === "string" ? parseInt(value, 10) : value;
-    
+
     if (isNaN(numValue) || numValue === 0) return "";
-    
+
     const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
-    
+
     // Margens negativas
     if (numValue < 0) {
       const absValue = Math.abs(numValue);
@@ -105,7 +105,7 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
       if (absValue <= 40) return `-${prefix}-10`;
       return `-${prefix}-10`; // Máximo para negativas
     }
-    
+
     // Margens positivas (expandido para suportar até 100px)
     if (numValue <= 4) return `${prefix}-1`;
     if (numValue <= 8) return `${prefix}-2`;
@@ -132,11 +132,13 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
     // INLINE HORIZONTAL: Flexível e quebra linha automaticamente
     "flex-shrink-0 flex-grow-0 relative",
     // Centralização baseada no alignment ou textAlign
-    (alignment === "center" || textAlign === "center" || textAlign === "text-center") 
-      ? "mx-auto flex justify-center" 
-      : alignment === "left" ? "justify-start"
-      : alignment === "right" ? "justify-end ml-auto"
-      : "",
+    alignment === "center" || textAlign === "center" || textAlign === "text-center"
+      ? "mx-auto flex justify-center"
+      : alignment === "left"
+        ? "justify-start"
+        : alignment === "right"
+          ? "justify-end ml-auto"
+          : "",
     // Usar classes customizadas ou responsivo modular
     customClassName || sizeClasses[size as keyof typeof sizeClasses],
     // Estados do editor
