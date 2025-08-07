@@ -10,10 +10,13 @@ export const COMPONENT_CATEGORIES = [
 export interface ComponentDefinition {
   id: string;
   name: string;
+  label: string;
+  icon: React.ComponentType<any>;
   category: string;
   component: React.ComponentType<any>;
   preview?: string;
   description?: string;
+  isPremium?: boolean;
 }
 
 export interface ComponentRegistryItem {

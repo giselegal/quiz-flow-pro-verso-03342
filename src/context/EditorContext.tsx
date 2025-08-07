@@ -73,7 +73,7 @@ interface EditorContextType {
       const optimizedSteps = OPTIMIZED_FUNNEL_CONFIG.steps.map(step => ({
         ...step,
         metadata: {
-          ...step.metadata,
+          ...(step as any).metadata,
           isOptimized: true,
           loadedAt: new Date()
         }

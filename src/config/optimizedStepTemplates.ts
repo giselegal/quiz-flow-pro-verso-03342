@@ -301,23 +301,25 @@ export const OPTIMIZED_STEP_TEMPLATES = {
 };
 
 // Função para gerar etapas dinâmicas baseadas nos templates
-export function generateStepFromTemplate(stepNumber, questionData = null) {
+export function generateStepFromTemplate(stepNumber: number, questionData: any = null) {
   if (stepNumber === 1) {
     return OPTIMIZED_STEP_TEMPLATES.step01;
   }
 
   if (stepNumber >= 2 && stepNumber <= 11) {
-    const template = { ...OPTIMIZED_STEP_TEMPLATES.questionTemplate };
-    template.id = `step-${stepNumber}`;
-    template.name = `Q${stepNumber - 1} - ${questionData?.title || "Questão"}`;
+    const template = { 
+      ...OPTIMIZED_STEP_TEMPLATES.questionTemplate,
+      id: `step-${stepNumber}`,
+      name: `Q${stepNumber - 1} - ${questionData?.title || "Questão"}`
+    };
 
     // Substituir placeholders dinâmicos
-    template.blocks = template.blocks.map(block => ({
+    template.blocks = template.blocks.map((block: any) => ({
       ...block,
       properties: {
         ...block.properties,
         progressValue: Math.round(((stepNumber - 1) / 20) * 100),
-        currentStep: stepNumber,
+        currentStep: stepNumber.toString(),
         questionTitle: questionData?.title || `Questão ${stepNumber - 1}`,
         questionText: questionData?.text || "Selecione uma opção:",
       },

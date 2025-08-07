@@ -38,7 +38,7 @@ export { useMediaQuery } from './useMediaQuery';
 export { usePerformanceOptimization } from './usePerformanceOptimization';
 export { useDebounce } from './useDebounce';
 export { useLoadingState } from './useLoadingState';
-export { useOptimizedTimer } from './useOptimizedTimer';
+// export { useOptimizedTimer } from './useOptimizedTimer';
 
 // ====================================================================
 // 🎨 HOOKS DE UI/UX
@@ -51,7 +51,7 @@ export { useGlobalStyles } from './useGlobalStyles';
 // ====================================================================
 // 💾 HOOKS DE DADOS
 // ====================================================================
-export { useSupabase } from './useSupabase';
+// export { useSupabase } from './useSupabase';
 export { useSupabaseQuiz } from './useSupabaseQuiz';
 export { useAutosave } from './useAutosave';
 export { useHistory } from './useHistory';

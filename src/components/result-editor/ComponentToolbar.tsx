@@ -112,7 +112,7 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
     const matchesCategory = selectedCategory === "all" || component.category === selectedCategory;
     const matchesSearch =
       component.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      component.description.toLowerCase().includes(searchTerm.toLowerCase());
+      component.description?.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 

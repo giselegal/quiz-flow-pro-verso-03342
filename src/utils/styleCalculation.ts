@@ -27,13 +27,13 @@ export class StyleCalculationEngine {
     // 2. Contar pontos por estilo
     const stylePoints: Record<StyleType, number> = {
       classico: 0,
-      romantico: 0,
-      dramatico: 0,
+      romântico: 0,
+      dramático: 0,
       natural: 0,
       criativo: 0,
       elegante: 0,
-      sensual: 0,
-      contemporaneo: 0,
+      sexy: 0,
+      contemporâneo: 0,
     };
 
     // Manter ordem das respostas para desempate
@@ -171,13 +171,13 @@ export class StyleCalculationEngine {
     if (answeredQuestions > 0) {
       const tempPoints: Record<StyleType, number> = {
         classico: 0,
-        romantico: 0,
-        dramatico: 0,
+        romântico: 0,
+        dramático: 0,
         natural: 0,
         criativo: 0,
         elegante: 0,
-        sensual: 0,
-        contemporaneo: 0,
+        sexy: 0,
+        contemporâneo: 0,
       };
 
       responses.forEach(response => {
