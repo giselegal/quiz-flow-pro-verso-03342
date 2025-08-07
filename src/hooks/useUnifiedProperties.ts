@@ -512,6 +512,87 @@ export const useUnifiedProperties = (
         // ... Repita esse padrão para todos os outros tipos de bloco do seu projeto,
         // mesclando todos os campos de todos os cases para cada tipo de bloco
 
+        case "image-display-inline":
+          return [
+            ...baseProperties,
+            createProperty(
+              "src",
+              currentBlock?.properties?.src || "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
+              PropertyType.TEXT,
+              "URL da Imagem",
+              PropertyCategory.CONTENT,
+              { required: true }
+            ),
+            createProperty(
+              "alt",
+              currentBlock?.properties?.alt || "Imagem",
+              PropertyType.TEXT,
+              "Texto Alternativo",
+              PropertyCategory.CONTENT
+            ),
+            createProperty(
+              "width",
+              currentBlock?.properties?.width || "100%",
+              PropertyType.SELECT,
+              "Largura",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "25%", label: "25%" },
+                  { value: "50%", label: "50%" },
+                  { value: "75%", label: "75%" },
+                  { value: "100%", label: "100%" },
+                  { value: "auto", label: "Automática" },
+                ]),
+              }
+            ),
+            createProperty(
+              "height",
+              currentBlock?.properties?.height || "auto",
+              PropertyType.SELECT,
+              "Altura",
+              PropertyCategory.STYLE,
+              {
+                options: createSelectOptions([
+                  { value: "auto", label: "Automática" },
+                  { value: "200px", label: "200px" },
+                  { value: "300px", label: "300px" },
+                  { value: "400px", label: "400px" },
+                  { value: "500px", label: "500px" },
+                ]),
+              }
+            ),
+            createProperty(
+              "borderRadius",
+              currentBlock?.properties?.borderRadius ?? 12,
+              PropertyType.RANGE,
+              "Arredondamento",
+              PropertyCategory.STYLE,
+              { min: 0, max: 50, step: 2, unit: "px" }
+            ),
+            createProperty(
+              "shadow",
+              currentBlock?.properties?.shadow !== false,
+              PropertyType.SWITCH,
+              "Sombra",
+              PropertyCategory.STYLE
+            ),
+            createProperty(
+              "alignment",
+              currentBlock?.properties?.alignment || "center",
+              PropertyType.SELECT,
+              "Alinhamento",
+              PropertyCategory.LAYOUT,
+              {
+                options: createSelectOptions([
+                  { value: "left", label: "Esquerda" },
+                  { value: "center", label: "Centro" },
+                  { value: "right", label: "Direita" },
+                ]),
+              }
+            ),
+          ];
+
         // EXEMPLO DE COMO CONTINUAR:
         // case "form-input":
         //   return [
