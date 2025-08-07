@@ -9,7 +9,7 @@ import type { BlockComponentProps } from "../../../types/blocks";
  */
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+const getMarginClass = (value: string | number, type: "top" | "bottom" | "left" | "right"): string => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return "";
@@ -67,8 +67,10 @@ const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
     borderRadius = 3,
     marginTop = 8,
     marginBottom = 24,
+    marginLeft = 0,
+    marginRight = 0,
     showShadow = true,
-  } = block?.properties || {};
+  } = (block?.properties as any) || {};
 
   return (
     <div
@@ -86,6 +88,8 @@ const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
       style={{
         marginTop: `${marginTop}px`,
         marginBottom: `${marginBottom}px`,
+        marginLeft: `${marginLeft}px`,
+        marginRight: `${marginRight}px`,
       }}
       onClick={onClick}
     >
