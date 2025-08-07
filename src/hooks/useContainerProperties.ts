@@ -1,15 +1,5 @@
 /**
- * Hook parexport const useContainerProperties = (properties: ContainerProperties = {}) => {
-  const {
-    containerWidth = "full",
-    containerPosition = "center",
-    spacing = "normal",
-    gridColumns = "auto",
-    backgroundColor = "transparent",
-    marginTop,
-    marginBottom,
-    scale = 100, // 🎯 Valor padrão 100%
-  } = properties;r propriedades de container e gerar classes CSS
+ * Hook para propriedades de container e gerar classes CSS
  * Converte as propriedades do Step01Template em classes Tailwind
  */
 export interface ContainerProperties {
@@ -37,7 +27,9 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
     marginLeft = 0,
     marginRight = 0,
     scale = 100, // 🎯 Valor padrão 100%
-  } = properties; // Gerar classes CSS baseadas nas propriedades
+  } = properties;
+
+  // Gerar classes CSS baseadas nas propriedades
   const getContainerClasses = (): string => {
     const classes: string[] = [];
 
