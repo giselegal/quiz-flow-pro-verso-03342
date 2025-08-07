@@ -1,5 +1,16 @@
 import React from "react";
 
+// Define the missing QuizOption interface
+interface QuizOption {
+  id: string;
+  text: string;
+  value: string;
+  category: string;
+  styleCategory: string;
+  points: number;
+  imageUrl?: string;
+}
+
 export interface Step19Props {
   onNext?: () => void;
   onBlockAdd?: (block: any) => void;

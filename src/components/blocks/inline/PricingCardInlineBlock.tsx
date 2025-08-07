@@ -7,11 +7,12 @@ import { ArrowRight, Check, Crown, Sparkles, Star, Zap } from "lucide-react";
 import React, { useState } from "react";
 import type { BlockComponentProps } from "@/types/blocks";
 
-interface Props extends BlockComponentProps {
+interface Props {
   block: {
     id: string;
     type: string;
     content?: any;
+    order?: number; // Adding the missing order property
     properties?: {
       style?: {
         variant?: "default" | "premium" | "elegant" | "minimal";
