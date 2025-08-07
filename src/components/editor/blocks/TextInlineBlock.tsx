@@ -100,20 +100,37 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
 
   // Função para converter valores numéricos de margem em classes Tailwind
   const getMarginClass = (value: number | string, type: "top" | "bottom" | "left" | "right") => {
-    if (typeof value === "number" && value > 0) {
+    if (typeof value === "number" && value !== 0) {
       const prefix =
         type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
-      // Converter px para valores Tailwind aproximados
-      if (value <= 4) return `${prefix}-1`; // mt-1, mb-1, ml-1, mr-1
-      if (value <= 8) return `${prefix}-2`; // mt-2, mb-2, ml-2, mr-2
-      if (value <= 12) return `${prefix}-3`;
-      if (value <= 16) return `${prefix}-4`;
-      if (value <= 20) return `${prefix}-5`;
-      if (value <= 24) return `${prefix}-6`;
-      if (value <= 32) return `${prefix}-8`;
-      if (value <= 40) return `${prefix}-10`;
-      return `${prefix}-12`;
+      if (value < 0) {
+        // Margens negativas (apenas para top e bottom)
+        if (type === "top" || type === "bottom") {
+          if (value >= -4) return `-${prefix}-1`;
+          if (value >= -8) return `-${prefix}-2`;
+          if (value >= -12) return `-${prefix}-3`;
+          if (value >= -16) return `-${prefix}-4`;
+          if (value >= -20) return `-${prefix}-5`;
+          if (value >= -24) return `-${prefix}-6`;
+          if (value >= -32) return `-${prefix}-8`;
+          if (value >= -40) return `-${prefix}-10`;
+          return `-${prefix}-12`;
+        }
+        // Para left/right negativos, não aplicar (pode causar problemas de layout)
+        return "";
+      } else {
+        // Margens positivas
+        if (value <= 4) return `${prefix}-1`;
+        if (value <= 8) return `${prefix}-2`;
+        if (value <= 12) return `${prefix}-3`;
+        if (value <= 16) return `${prefix}-4`;
+        if (value <= 20) return `${prefix}-5`;
+        if (value <= 24) return `${prefix}-6`;
+        if (value <= 32) return `${prefix}-8`;
+        if (value <= 40) return `${prefix}-10`;
+        return `${prefix}-12`;
+      }
     }
     return "";
   };

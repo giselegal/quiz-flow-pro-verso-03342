@@ -112,24 +112,46 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
         break;
     }
 
-    // 📏 Margin Top Classes (espaço entre componentes - fixo)
-    if (marginTop && marginTop > 0) {
-      if (marginTop <= 8) classes.push("mt-2");
-      else if (marginTop <= 16) classes.push("mt-4");
-      else if (marginTop <= 24) classes.push("mt-6");
-      else if (marginTop <= 32) classes.push("mt-8");
-      else if (marginTop <= 40) classes.push("mt-10");
-      else classes.push("mt-12");
+    // 📏 Margin Top Classes (suporte a valores positivos e negativos)
+    if (marginTop && marginTop !== 0) {
+      if (marginTop < 0) {
+        // Margens negativas
+        if (marginTop >= -8) classes.push("-mt-2");
+        else if (marginTop >= -16) classes.push("-mt-4");
+        else if (marginTop >= -24) classes.push("-mt-6");
+        else if (marginTop >= -32) classes.push("-mt-8");
+        else if (marginTop >= -40) classes.push("-mt-10");
+        else classes.push("-mt-12");
+      } else {
+        // Margens positivas
+        if (marginTop <= 8) classes.push("mt-2");
+        else if (marginTop <= 16) classes.push("mt-4");
+        else if (marginTop <= 24) classes.push("mt-6");
+        else if (marginTop <= 32) classes.push("mt-8");
+        else if (marginTop <= 40) classes.push("mt-10");
+        else classes.push("mt-12");
+      }
     }
 
-    // 📏 Margin Bottom Classes (espaço entre componentes - fixo)
-    if (marginBottom && marginBottom > 0) {
-      if (marginBottom <= 8) classes.push("mb-2");
-      else if (marginBottom <= 16) classes.push("mb-4");
-      else if (marginBottom <= 24) classes.push("mb-6");
-      else if (marginBottom <= 32) classes.push("mb-8");
-      else if (marginBottom <= 40) classes.push("mb-10");
-      else classes.push("mb-12");
+    // 📏 Margin Bottom Classes (suporte a valores positivos e negativos)
+    if (marginBottom && marginBottom !== 0) {
+      if (marginBottom < 0) {
+        // Margens negativas
+        if (marginBottom >= -8) classes.push("-mb-2");
+        else if (marginBottom >= -16) classes.push("-mb-4");
+        else if (marginBottom >= -24) classes.push("-mb-6");
+        else if (marginBottom >= -32) classes.push("-mb-8");
+        else if (marginBottom >= -40) classes.push("-mb-10");
+        else classes.push("-mb-12");
+      } else {
+        // Margens positivas
+        if (marginBottom <= 8) classes.push("mb-2");
+        else if (marginBottom <= 16) classes.push("mb-4");
+        else if (marginBottom <= 24) classes.push("mb-6");
+        else if (marginBottom <= 32) classes.push("mb-8");
+        else if (marginBottom <= 40) classes.push("mb-10");
+        else classes.push("mb-12");
+      }
     }
 
     // 📏 Margin Left Classes (espaço lateral esquerdo)

@@ -199,9 +199,9 @@ export const useUnifiedProperties = (
           type: PropertyType.RANGE,
           label: "Margem Superior",
           category: PropertyCategory.LAYOUT,
-          min: 0,
+          min: -40,
           max: 80,
-          step: 8,
+          step: 4,
           unit: "px",
         },
         {
@@ -210,9 +210,9 @@ export const useUnifiedProperties = (
           type: PropertyType.RANGE,
           label: "Margem Inferior",
           category: PropertyCategory.LAYOUT,
-          min: 0,
+          min: -40,
           max: 80,
-          step: 8,
+          step: 4,
           unit: "px",
         },
         {
@@ -321,7 +321,7 @@ export const useUnifiedProperties = (
               PropertyType.RANGE,
               "Margem Superior",
               PropertyCategory.STYLE,
-              { min: 0, max: 100, step: 4, unit: "px" }
+              { min: -40, max: 100, step: 4, unit: "px" }
             ),
             createProperty(
               "marginBottom",
@@ -329,7 +329,7 @@ export const useUnifiedProperties = (
               PropertyType.RANGE,
               "Margem Inferior",
               PropertyCategory.STYLE,
-              { min: 0, max: 100, step: 4, unit: "px" }
+              { min: -40, max: 100, step: 4, unit: "px" }
             ),
             createProperty(
               "marginLeft",
