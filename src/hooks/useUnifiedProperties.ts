@@ -1124,6 +1124,142 @@ export const useUnifiedProperties = (
             ),
           ];
 
+        case "options-grid":
+          return [
+            ...baseProperties,
+            // Configurações básicas
+            createProperty(
+              "multiple",
+              currentBlock?.properties?.multiple ?? true,
+              PropertyType.SWITCH,
+              "Seleção Múltipla",
+              PropertyCategory.BEHAVIOR
+            ),
+            createProperty(
+              "minSelections",
+              currentBlock?.properties?.minSelections ?? 1,
+              PropertyType.RANGE,
+              "Mínimo de Seleções",
+              PropertyCategory.BEHAVIOR,
+              { min: 0, max: 10, step: 1, unit: "" }
+            ),
+            createProperty(
+              "maxSelections",
+              currentBlock?.properties?.maxSelections ?? 3,
+              PropertyType.RANGE,
+              "Máximo de Seleções",
+              PropertyCategory.BEHAVIOR,
+              { min: 1, max: 10, step: 1, unit: "" }
+            ),
+            // Layout
+            createProperty(
+              "layout",
+              currentBlock?.properties?.layout || "responsive",
+              PropertyType.SELECT,
+              "Layout",
+              PropertyCategory.LAYOUT,
+              {
+                options: createSelectOptions([
+                  { value: "responsive", label: "Responsivo" },
+                  { value: "fixed", label: "Fixo" },
+                  { value: "flex", label: "Flexível" },
+                ]),
+              }
+            ),
+            createProperty(
+              "gridCols",
+              currentBlock?.properties?.gridCols ?? 2,
+              PropertyType.RANGE,
+              "Colunas Desktop",
+              PropertyCategory.LAYOUT,
+              { min: 1, max: 4, step: 1, unit: "" }
+            ),
+            createProperty(
+              "gridColsMobile",
+              currentBlock?.properties?.gridColsMobile ?? 1,
+              PropertyType.RANGE,
+              "Colunas Mobile",
+              PropertyCategory.LAYOUT,
+              { min: 1, max: 2, step: 1, unit: "" }
+            ),
+            createProperty(
+              "gap",
+              currentBlock?.properties?.gap ?? 8,
+              PropertyType.RANGE,
+              "Espaçamento",
+              PropertyCategory.LAYOUT,
+              { min: 0, max: 32, step: 2, unit: "px" }
+            ),
+            createProperty(
+              "className",
+              currentBlock?.properties?.className || "w-full h-full gap-2",
+              PropertyType.TEXT,
+              "Classes CSS",
+              PropertyCategory.ADVANCED
+            ),
+            // Configurações das opções (resumidas - seria ideal ter um editor mais complexo)
+            createProperty(
+              "optionsCount",
+              currentBlock?.properties?.options?.length ?? 8,
+              PropertyType.RANGE,
+              "Número de Opções",
+              PropertyCategory.CONTENT,
+              { min: 2, max: 12, step: 1, unit: "" }
+            ),
+            // Configurações visuais das opções
+            createProperty(
+              "optionClassName",
+              currentBlock?.properties?.optionProps?.className ||
+                "flex flex-col items-center p-4 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 cursor-pointer",
+              PropertyType.TEXTAREA,
+              "Classes CSS das Opções",
+              PropertyCategory.ADVANCED,
+              { rows: 3 }
+            ),
+            createProperty(
+              "selectedClassName",
+              currentBlock?.properties?.optionProps?.selectedClassName ||
+                "border-blue-500 bg-blue-100",
+              PropertyType.TEXT,
+              "Classes CSS Selecionado",
+              PropertyCategory.ADVANCED
+            ),
+            createProperty(
+              "textClassName",
+              currentBlock?.properties?.optionProps?.textClassName ||
+                "text-center font-medium text-gray-700 mt-3",
+              PropertyType.TEXT,
+              "Classes CSS do Texto",
+              PropertyCategory.ADVANCED
+            ),
+            createProperty(
+              "imageClassName",
+              currentBlock?.properties?.optionProps?.imageClassName ||
+                "w-full h-full object-cover rounded-lg",
+              PropertyType.TEXT,
+              "Classes CSS da Imagem",
+              PropertyCategory.ADVANCED
+            ),
+            // Configurações de imagem
+            createProperty(
+              "imageWidth",
+              currentBlock?.properties?.options?.[0]?.imageProps?.width?.replace("px", "") || "256",
+              PropertyType.RANGE,
+              "Largura das Imagens",
+              PropertyCategory.STYLE,
+              { min: 64, max: 512, step: 16, unit: "px" }
+            ),
+            createProperty(
+              "imageHeight",
+              currentBlock?.properties?.options?.[0]?.imageProps?.height?.replace("px", "") ||
+                "256",
+              PropertyType.RANGE,
+              "Altura das Imagens",
+              PropertyCategory.STYLE,
+              { min: 64, max: 512, step: 16, unit: "px" }
+            ),
+          ];
+
         // etc...
 
         default:
