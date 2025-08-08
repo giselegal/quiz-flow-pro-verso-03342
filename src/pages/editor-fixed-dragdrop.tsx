@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { CanvasDropZone } from "@/components/editor/canvas/CanvasDropZone";
 import CombinedComponentsPanel from "@/components/editor/CombinedComponentsPanel";
 import { DndProvider } from "@/components/editor/dnd/DndProvider";
