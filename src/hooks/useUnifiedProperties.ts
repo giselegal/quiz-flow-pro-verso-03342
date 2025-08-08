@@ -773,6 +773,399 @@ export const useUnifiedProperties = (
           ),
         ];
 
+      case "options-grid":
+        return [
+          ...getUniversalProperties(),
+          // 📊 LAYOUT DO GRID
+          createProperty(
+            "gridColumns",
+            currentBlock?.properties?.gridColumns ?? 2,
+            PropertyType.SELECT,
+            "Colunas do Grid",
+            PropertyCategory.LAYOUT,
+            {
+              options: [
+                { value: 1, label: "1 Coluna" },
+                { value: 2, label: "2 Colunas" },
+              ],
+            }
+          ),
+          createProperty(
+            "contentDirection",
+            currentBlock?.properties?.contentDirection || "vertical",
+            PropertyType.SELECT,
+            "Direção do Conteúdo",
+            PropertyCategory.LAYOUT,
+            {
+              options: [
+                { value: "vertical", label: "Vertical (Imagem → Texto)" },
+                { value: "horizontal", label: "Horizontal (Lado a Lado)" },
+              ],
+            }
+          ),
+          createProperty(
+            "contentLayout",
+            currentBlock?.properties?.contentLayout || "image-text",
+            PropertyType.SELECT,
+            "Disposição Texto",
+            PropertyCategory.LAYOUT,
+            {
+              options: [
+                { value: "image-text", label: "Imagem | Texto" },
+                { value: "text-only", label: "Apenas | Texto" },
+                { value: "image-only", label: "Apenas | Imagem" },
+              ],
+            }
+          ),
+          createProperty(
+            "imageSize",
+            currentBlock?.properties?.imageSize || "256x256",
+            PropertyType.SELECT,
+            "Tamanho da Imagem (256x256px)",
+            PropertyCategory.LAYOUT,
+            {
+              options: [
+                { value: "200x200", label: "200x200 pixels" },
+                { value: "256x256", label: "256x256 pixels (Padrão)" },
+                { value: "300x300", label: "300x300 pixels" },
+              ],
+            }
+          ),
+          createProperty(
+            "imageClasses",
+            currentBlock?.properties?.imageClasses || "w-full h-full object-cover rounded-lg",
+            PropertyType.TEXT,
+            "Classes CSS da Imagem",
+            PropertyCategory.ADVANCED
+          ),
+          createProperty(
+            "gridGap",
+            currentBlock?.properties?.gridGap ?? 8,
+            PropertyType.SELECT,
+            "Espaçamento Grid (gap-2 = 8px)",
+            PropertyCategory.LAYOUT,
+            {
+              options: [
+                { value: 2, label: "gap-0.5 (2px)" },
+                { value: 4, label: "gap-1 (4px)" },
+                { value: 8, label: "gap-2 (8px) - Padrão" },
+                { value: 16, label: "gap-4 (16px)" },
+              ],
+            }
+          ),
+
+          // 📝 EDITOR DE OPÇÕES
+          createProperty(
+            "options",
+            currentBlock?.properties?.options || [
+              {
+                id: "option-a",
+                text: "Amo roupas confortáveis e práticas para o dia a dia.",
+                image: "",
+                points: 1,
+                category: "Casual",
+              },
+            ],
+            PropertyType.ARRAY,
+            "Lista de Opções",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "enableAddOption",
+            currentBlock?.properties?.enableAddOption !== false,
+            PropertyType.SWITCH,
+            "Permitir Adicionar Opções",
+            PropertyCategory.BEHAVIOR
+          ),
+
+          // ⚖️ VALIDAÇÕES
+          createProperty(
+            "multipleSelection",
+            currentBlock?.properties?.multipleSelection !== false,
+            PropertyType.SWITCH,
+            "Múltipla Escolha",
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            "minSelections",
+            currentBlock?.properties?.minSelections ?? 1,
+            PropertyType.RANGE,
+            "Mínimo de Seleções",
+            PropertyCategory.BEHAVIOR,
+            { min: 1, max: 8, step: 1 }
+          ),
+          createProperty(
+            "maxSelections",
+            currentBlock?.properties?.maxSelections ?? 3,
+            PropertyType.RANGE,
+            "Máximo de Seleções",
+            PropertyCategory.BEHAVIOR,
+            { min: 1, max: 8, step: 1 }
+          ),
+          createProperty(
+            "autoAdvance",
+            currentBlock?.properties?.autoAdvance === true,
+            PropertyType.SWITCH,
+            "Auto-avançar",
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            "autoAdvanceDelay",
+            currentBlock?.properties?.autoAdvanceDelay ?? 1000,
+            PropertyType.RANGE,
+            "Delay do Auto-avanço (ms)",
+            PropertyCategory.BEHAVIOR,
+            { min: 500, max: 3000, step: 100 }
+          ),
+          createProperty(
+            "enableButtonWhenValid",
+            currentBlock?.properties?.enableButtonWhenValid !== false,
+            PropertyType.SWITCH,
+            "Ativar Botão Apenas Quando Válido",
+            PropertyCategory.BEHAVIOR
+          ),
+
+          // 🎨 ESTILIZAÇÃO
+          createProperty(
+            "borderWidth",
+            currentBlock?.properties?.borderWidth || "medium",
+            PropertyType.SELECT,
+            "Espessura das Bordas",
+            PropertyCategory.STYLE,
+            {
+              options: [
+                { value: "thin", label: "Fina (1px)" },
+                { value: "medium", label: "Média (2px)" },
+                { value: "thick", label: "Grossa (3px)" },
+              ],
+            }
+          ),
+          createProperty(
+            "shadowSize",
+            currentBlock?.properties?.shadowSize || "small",
+            PropertyType.SELECT,
+            "Tamanho da Sombra",
+            PropertyCategory.STYLE,
+            {
+              options: [
+                { value: "none", label: "Sem Sombra" },
+                { value: "small", label: "Pequena" },
+                { value: "medium", label: "Média" },
+                { value: "large", label: "Grande" },
+              ],
+            }
+          ),
+          createProperty(
+            "optionSpacing",
+            currentBlock?.properties?.optionSpacing || "none",
+            PropertyType.SELECT,
+            "Espaçamento entre Opções",
+            PropertyCategory.STYLE,
+            {
+              options: [
+                { value: "none", label: "Nenhum (0px)" },
+                { value: "small", label: "Pequeno (4px)" },
+                { value: "medium", label: "Médio (8px)" },
+                { value: "large", label: "Grande (16px)" },
+              ],
+            }
+          ),
+          createProperty(
+            "visualDetail",
+            currentBlock?.properties?.visualDetail || "simple",
+            PropertyType.SELECT,
+            "Estilo do Detalhe Visual",
+            PropertyCategory.STYLE,
+            {
+              options: [
+                { value: "simple", label: "Simples" },
+                { value: "modern", label: "Moderno" },
+                { value: "elegant", label: "Elegante" },
+              ],
+            }
+          ),
+
+          // 🔘 PROPRIEDADES DO BOTÃO
+          createProperty(
+            "buttonText",
+            currentBlock?.properties?.buttonText || "Continuar",
+            PropertyType.TEXT,
+            "Texto do Botão",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "buttonScale",
+            currentBlock?.properties?.buttonScale || "100%",
+            PropertyType.SELECT,
+            "Tamanho Uniforme",
+            PropertyCategory.STYLE,
+            {
+              options: [
+                { value: "50%", label: "50%" },
+                { value: "100%", label: "100%" },
+                { value: "200%", label: "200%" },
+              ],
+            }
+          ),
+          createProperty(
+            "buttonTextColor",
+            currentBlock?.properties?.buttonTextColor || "#FFFFFF",
+            PropertyType.COLOR,
+            "Cor de Fundo do Texto",
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            "buttonContainerColor",
+            currentBlock?.properties?.buttonContainerColor || BRAND_COLORS.primary,
+            PropertyType.COLOR,
+            "Cor de Fundo do Container",
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            "buttonBorderColor",
+            currentBlock?.properties?.buttonBorderColor || BRAND_COLORS.primary,
+            PropertyType.COLOR,
+            "Cor da Borda",
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            "fontFamily",
+            currentBlock?.properties?.fontFamily || "inherit",
+            PropertyType.SELECT,
+            "Família da Fonte",
+            PropertyCategory.STYLE,
+            {
+              options: [
+                { value: "inherit", label: "Padrão" },
+                { value: "Inter", label: "Inter" },
+                { value: "Roboto", label: "Roboto" },
+                { value: "Open Sans", label: "Open Sans" },
+              ],
+            }
+          ),
+          createProperty(
+            "buttonAlignment",
+            currentBlock?.properties?.buttonAlignment || "center",
+            PropertyType.SELECT,
+            "Alinhamento",
+            PropertyCategory.LAYOUT,
+            {
+              options: [
+                { value: "left", label: "Esquerda" },
+                { value: "center", label: "Centro" },
+                { value: "right", label: "Direita" },
+              ],
+            }
+          ),
+          createProperty(
+            "shadowType",
+            currentBlock?.properties?.shadowType || "none",
+            PropertyType.SELECT,
+            "Tipo de Sombra",
+            PropertyCategory.STYLE,
+            {
+              options: [
+                { value: "none", label: "Sem Sombra" },
+                { value: "small", label: "Pequena" },
+                { value: "medium", label: "Média" },
+              ],
+            }
+          ),
+          createProperty(
+            "shadowColor",
+            currentBlock?.properties?.shadowColor || "#000000",
+            PropertyType.COLOR,
+            "Cor da Sombra",
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            "visualEffect",
+            currentBlock?.properties?.visualEffect || "shine",
+            PropertyType.SELECT,
+            "Efeito Visual",
+            PropertyCategory.STYLE,
+            {
+              options: [
+                { value: "none", label: "Nenhum" },
+                { value: "shine", label: "Brilho Deslizante" },
+                { value: "pulse", label: "Pulsação" },
+                { value: "hover", label: "Efeito Hover" },
+              ],
+            }
+          ),
+          createProperty(
+            "borderRadius",
+            currentBlock?.properties?.borderRadius ?? 7,
+            PropertyType.RANGE,
+            "Raio da Borda",
+            PropertyCategory.STYLE,
+            { min: 0, max: 50, step: 1, unit: "px" }
+          ),
+          createProperty(
+            "hoverOpacity",
+            currentBlock?.properties?.hoverOpacity ?? 75,
+            PropertyType.RANGE,
+            "Opacidade no Hover",
+            PropertyCategory.STYLE,
+            { min: 50, max: 100, step: 5, unit: "%" }
+          ),
+          createProperty(
+            "buttonAction",
+            currentBlock?.properties?.buttonAction || "next-step",
+            PropertyType.SELECT,
+            "Ação do Botão",
+            PropertyCategory.BEHAVIOR,
+            {
+              options: [
+                { value: "next-step", label: "Próxima Etapa" },
+                { value: "specific-step", label: "Etapa Específica" },
+                { value: "url", label: "URL Externa" },
+              ],
+            }
+          ),
+          createProperty(
+            "targetUrl",
+            currentBlock?.properties?.targetUrl || "",
+            PropertyType.URL,
+            "URL de Destino",
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            "linkTarget",
+            currentBlock?.properties?.linkTarget || "_blank",
+            PropertyType.SELECT,
+            "Destino do Link",
+            PropertyCategory.BEHAVIOR,
+            {
+              options: [
+                { value: "_self", label: "Mesma Aba (_self)" },
+                { value: "_blank", label: "Nova Aba (_blank)" },
+              ],
+            }
+          ),
+          createProperty(
+            "requireValidInput",
+            currentBlock?.properties?.requireValidInput !== false,
+            PropertyType.SWITCH,
+            "Requer Input Válido",
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            "disabled",
+            currentBlock?.properties?.disabled === true,
+            PropertyType.SWITCH,
+            "Desabilitado",
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            "componentId",
+            currentBlock?.properties?.componentId || "step-2-block-options-grid-pos-1",
+            PropertyType.TEXT,
+            "ID do Componente",
+            PropertyCategory.ADVANCED
+          ),
+        ];
+
       default:
         console.warn(
           `🔧 useUnifiedProperties: Tipo de bloco "${blockType}" não tem propriedades específicas definidas.`
