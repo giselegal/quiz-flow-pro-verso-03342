@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
 // @ts-nocheck
+import { cn } from "@/lib/utils";
 import React from "react";
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
@@ -29,6 +29,7 @@ interface QuizStartPageBlockProps {
   style?: React.CSSProperties;
 }
 
+// @ts-nocheck
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;

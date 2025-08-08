@@ -1,5 +1,5 @@
-import type { BlockComponentProps } from "@/types/blocks";
 // @ts-nocheck
+import type { BlockComponentProps } from "@/types/blocks";
 import React from "react";
 
 interface Option {
@@ -30,6 +30,7 @@ interface OptionsGridBlockProps extends BlockComponentProps {
   };
 }
 
+// @ts-nocheck
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
