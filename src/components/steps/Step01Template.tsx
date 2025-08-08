@@ -123,8 +123,8 @@ export const getStep01Template = () => {
         fontSize: "text-xl",
         textAlign: "text-center",
         color: "#432818", // Cor marrom escuro (texto padrão),
-        marginTop: 0,
-        marginBottom: 40,
+        marginTop: 25,    // 🎯 Alterado de 0 para 25
+        marginBottom: 25, // 🎯 Alterado de 40 para 25
         marginLeft: 0,
         marginRight: 0,
         lineHeight: "1.6",
