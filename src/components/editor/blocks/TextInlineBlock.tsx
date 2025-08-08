@@ -93,9 +93,9 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   } as const;
 
   const spacingClasses = {
-    tight: "py-2", // 🎯 Apenas padding vertical para não interferir com margens laterais
-    normal: "py-4", // 🎯 Apenas padding vertical para não interferir com margens laterais
-    loose: "py-6", // 🎯 Apenas padding vertical para não interferir com margens laterais
+    tight: "py-0",   // 🎯 Zero padding vertical
+    normal: "py-0",  // 🎯 Zero padding vertical
+    loose: "py-0",   // 🎯 Zero padding vertical
   } as const;
 
   // Função para converter valores numéricos de margem em classes Tailwind
