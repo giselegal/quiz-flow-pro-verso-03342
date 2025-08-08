@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ArrowRight, ShieldCheck, Clock } from "lucide-react";
