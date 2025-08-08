@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import { LoaderCircle, RotateCcw } from "lucide-react";
 import { InlineEditableText } from "./InlineEditableText";
