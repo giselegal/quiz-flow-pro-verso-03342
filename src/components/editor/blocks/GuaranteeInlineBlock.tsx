@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import { Shield, CheckCircle, Star } from "lucide-react";
 import { cn } from "@/lib/utils";

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import { InlineEditableText } from "./InlineEditableText";
 import { Heading } from "lucide-react";

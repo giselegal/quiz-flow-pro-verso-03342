@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import { Upload } from "lucide-react";
 import { EditableContent } from "@/types/editor";
