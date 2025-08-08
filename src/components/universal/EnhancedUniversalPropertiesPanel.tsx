@@ -132,9 +132,8 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
   };
 
   // ✅ NO-CODE: Renderizar campo baseado no tipo com controles visuais
-  - const renderField = (property: UnifiedProperty) => {
-  + const renderField = (property: UnifiedProperty, idx: number) => {
-      const { key, label, type, value, required, options, rows, min, max, step, unit } = property;
+  const renderField = (property: UnifiedProperty, idx: number) => {
+    const { key, label, type, value, required, options, rows, min, max, step, unit } = property;
   
       // `options` já vem no formato correto ({ value, label }) do `useUnifiedProperties`
       const formattedOptions = options;
@@ -144,7 +143,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         case PropertyType.TEXT:
           return (
             <EnhancedPropertyInput
-              key={key}
+              key={`${key}-${idx}`}
               label={label}
               value={value || ""}
               placeholder={`Digite ${label.toLowerCase()}`}
@@ -172,7 +171,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         // ✅ NO-CODE: Seletor de cores visual com feedback
         case PropertyType.COLOR:
           return (
-            <PropertyChangeIndicator key={key}>
+            <PropertyChangeIndicator key={`${key}-${idx}`}>
               <ColorPicker
                 value={value || "#432818"}
                 onChange={color => updateProperty(key, color)}
@@ -185,7 +184,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         // ✅ NO-CODE: Slider visual com feedback
         case PropertyType.RANGE:
           return (
-            <PropertyChangeIndicator key={key}>
+            <PropertyChangeIndicator key={`${key}-${idx}`}>
               <SizeSlider
                 value={value || 0}
                 onChange={val => updateProperty(key, val)}
@@ -202,67 +201,81 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         // ✅ NO-CODE: Botões de alinhamento visual
         case PropertyType.ALIGNMENT:
           return (
-            <div key={key} className="space-y-2">
-              <Label className="text-sm font-medium text-[#432818]">
-                {label} {required && <span className="text-red-500">*</span>}
-              </Label>
-              <AlignmentButtons
+            <PropertyChangeIndicator key={`${key}-${idx}`}>
+              <AlignmentPicker
                 value={value || "left"}
                 onChange={alignment => updateProperty(key, alignment)}
+                label={label}
               />
-            </div>
+            </PropertyChangeIndicator>
           );
   
         case PropertyType.NUMBER:
           return (
-            <div key={key} className="space-y-2">
-              <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
-                {label} {required && <span className="text-red-500">*</span>}
-                {unit && (
-                  <span className="text-[#B89B7A] ml-2">
-                    ({value || 0}
-                    {unit})
-                  </span>
-                )}
-              </Label>
-              <Input
-                id={key}
-                type="number"
-                value={value || ""}
-                onChange={e => updateProperty(key, Number(e.target.value))}
-                min={min}
-                max={max}
-                step={step}
-                className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
+            <EnhancedPropertyInput
+              key={`${key}-${idx}`}
+              label={label}
+              value={value || ""}
+              placeholder={`Digite ${label.toLowerCase()}`}
+              onChange={(newValue) => updateProperty(key, newValue)}
+              type="number"
+              className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
+            />
+          );
+  
+        case PropertyType.SWITCH:
+          return (
+            <PropertyChangeIndicator key={`${key}-${idx}`}>
+              <Switch
+                checked={value || false}
+                onChange={checked => updateProperty(key, checked)}
+                label={label}
               />
-            </div>
+            </PropertyChangeIndicator>
+          );
+  
+        case PropertyType.IMAGE:
+          return (
+            <PropertyChangeIndicator key={`${key}-${idx}`}>
+              <ImagePicker
+                value={value || ""}
+                onChange={image => updateProperty(key, image)}
+                label={label}
+              />
+            </PropertyChangeIndicator>
+          );
+  
+        case PropertyType.OPTION_SCORE:
+          return (
+            <PropertyChangeIndicator key={`${key}-${idx}`}>
+              <ScorePicker
+                value={value || 0}
+                onChange={score => updateProperty(key, score)}
+                label={label}
+              />
+            </PropertyChangeIndicator>
           );
   
         // ✅ NO-CODE: Dropdown com opções visuais
         case PropertyType.SELECT:
           return (
-            <div key={key} className="space-y-2">
-              <Label className="text-sm font-medium text-[#432818]">
-                {label} {required && <span className="text-red-500">*</span>}
-              </Label>
+            <PropertyChangeIndicator key={`${key}-${idx}`}>
               <Select
-                value={value && value !== "" ? value : null}
-                onValueChange={val => updateProperty(key, val)}
+                value={value || options?.[0]?.value}
+                onValueChange={newValue => updateProperty(key, newValue)}
               >
                 <SelectTrigger className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20">
-                  <SelectValue placeholder={`Escolha ${label.toLowerCase()}`} />
+                  <SelectValue placeholder={`Selecione ${label.toLowerCase()}`} />
                 </SelectTrigger>
                 <SelectContent>
-                  {formattedOptions
-                    ?.filter(option => option.value && option.value.trim() !== "")
-                    ?.map(option => (
-                      <SelectItem key={option.value} value={option.value || "default"}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
+                  {options?.map((option, optionIdx) => (
+                    <SelectItem key={`${option.value}-${optionIdx}`} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
-            </div>
+            </PropertyChangeIndicator>
           );
   
         // ✅ NO-CODE: Switch visual (liga/desliga)
@@ -402,8 +415,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
                   {Icon && <Icon className="w-4 h-4 text-[#B89B7A]" />}
                   <h3 className="font-medium text-[#432818]">{categoryLabel}</h3>
                 </div>
-                - <div className="space-y-3">{categorizedProps.map(renderField)}</div>
-                + <div className="space-y-3">{categorizedProps.map((prop, idx) => renderField(prop, idx))}</div>
+                <div className="space-y-3">{categorizedProps.map((prop, idx) => renderField(prop, idx))}</div>
               </div>
             );
           })}
