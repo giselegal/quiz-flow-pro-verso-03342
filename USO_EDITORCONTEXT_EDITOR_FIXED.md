@@ -13,10 +13,13 @@ App.tsx (Route) → EditorProvider → useEditor() → Componentes
 ## 📋 **PONTOS DE USO DO EDITORCONTEXT**
 
 ### **1. 🛣️ INICIALIZAÇÃO (App.tsx):**
+
 ```tsx
 <Route path="/editor-fixed">
   <ErrorBoundary>
-    <EditorProvider>           {/* ← Provedor do contexto */}
+    <EditorProvider>
+      {" "}
+      {/* ← Provedor do contexto */}
       <ScrollSyncProvider>
         <EditorPage />
       </ScrollSyncProvider>
@@ -26,15 +29,18 @@ App.tsx (Route) → EditorProvider → useEditor() → Componentes
 ```
 
 ### **2. 🎯 COMPONENTE PRINCIPAL (editor-fixed-dragdrop.tsx):**
+
 ```tsx
 const {
-  stages,                    // 21 etapas do funil
-  activeStageId,            // Etapa selecionada
-  selectedBlockId,          // Bloco selecionado
-  stageActions: {           // Ações de etapas
-    setActiveStage
+  stages, // 21 etapas do funil
+  activeStageId, // Etapa selecionada
+  selectedBlockId, // Bloco selecionado
+  stageActions: {
+    // Ações de etapas
+    setActiveStage,
   },
-  blockActions: {           // Ações de blocos
+  blockActions: {
+    // Ações de blocos
     addBlock,
     addBlockAtPosition,
     getBlocksForStage,
@@ -43,35 +49,39 @@ const {
     updateBlock,
     reorderBlocks,
   },
-  uiState: {               // Estados da UI
+  uiState: {
+    // Estados da UI
     isPreviewing,
     setIsPreviewing,
     viewportSize,
-    setViewportSize
+    setViewportSize,
   },
-  computed: {              // Dados computados
+  computed: {
+    // Dados computados
     currentBlocks,
     selectedBlock,
     totalBlocks,
-    stageCount
-  }
+    stageCount,
+  },
 } = useEditor();
 ```
 
 ### **3. 📋 PAINEL DE ETAPAS (FunnelStagesPanel.tsx):**
+
 ```tsx
 const {
-  stages,                  // Lista das 21 etapas
-  activeStageId,          // Etapa ativa
-  stageActions: {         // Controles de etapas
+  stages, // Lista das 21 etapas
+  activeStageId, // Etapa ativa
+  stageActions: {
+    // Controles de etapas
     setActiveStage,
     addStage,
     removeStage,
-    updateStage
+    updateStage,
   },
   computed: {
-    stageCount             // Total de etapas (21)
-  }
+    stageCount, // Total de etapas (21)
+  },
 } = useEditor();
 ```
 
@@ -80,6 +90,7 @@ const {
 ## 🎛️ **FLUXOS DE DADOS PRINCIPAIS**
 
 ### **⚡ 1. NAVEGAÇÃO ENTRE ETAPAS:**
+
 ```typescript
 // Usuário clica em uma etapa
 FunnelStagesPanel → setActiveStage(stageId)
@@ -92,6 +103,7 @@ SortableBlockWrapper → Renderiza componentes
 ```
 
 ### **🎨 2. EDIÇÃO DE BLOCOS:**
+
 ```typescript
 // Usuário seleciona um bloco
 CanvasDropZone → setSelectedBlockId(blockId)
@@ -103,11 +115,12 @@ EnhancedUniversalPropertiesPanel → Mostra propriedades
 Usuário edita → updateBlock(id, changes)
              ↓
 EditorContext → Atualiza estado
-             ↓ 
+             ↓
 CanvasDropZone → Re-renderiza bloco
 ```
 
 ### **🧩 3. ADIÇÃO DE COMPONENTES:**
+
 ```typescript
 // Usuário arrasta componente
 CombinedComponentsPanel → Drag start
@@ -126,21 +139,22 @@ CanvasDropZone → Renderiza novo bloco
 ## 📊 **ESTADOS GERENCIADOS**
 
 ### **🗂️ ESTRUTURA DE DADOS:**
+
 ```typescript
 // Estados principais no EditorContext:
 {
   // ETAPAS E NAVEGAÇÃO
   stages: FunnelStage[],          // 21 etapas do funil
   activeStageId: string,          // "step-1", "step-2", etc
-  
-  // BLOCOS E CONTEÚDO  
+
+  // BLOCOS E CONTEÚDO
   stageBlocks: Record<string, EditorBlock[]>,  // Blocos por etapa
   selectedBlockId: string | null,              // Bloco selecionado
-  
+
   // INTERFACE DO USUÁRIO
   isPreviewing: boolean,          // Modo preview ativo
   viewportSize: "desktop" | "mobile",  // Viewport atual
-  
+
   // DADOS COMPUTADOS (derivados)
   currentBlocks: EditorBlock[],   // Blocos da etapa ativa
   selectedBlock: EditorBlock,     // Bloco sendo editado
@@ -150,6 +164,7 @@ CanvasDropZone → Renderiza novo bloco
 ```
 
 ### **🔄 AÇÕES DISPONÍVEIS:**
+
 ```typescript
 // Ações de etapas
 setActiveStage(stageId: string)
@@ -177,23 +192,27 @@ setViewportSize(size: "desktop" | "mobile")
 ### **✅ COMPONENTES CONECTADOS:**
 
 **1. 🎛️ CONTROLE PRINCIPAL:**
+
 - **`editor-fixed-dragdrop.tsx`** - Orquestra todo o editor
 - **`FunnelStagesPanel.tsx`** - Navegação entre etapas
 
 **2. 🎨 ÁREA DE EDIÇÃO:**
+
 - **`CanvasDropZone.tsx`** - Canvas principal (via props)
 - **`SortableBlockWrapper.tsx`** - Wrapper de blocos (via props)
 
 **3. 🧩 PAINÉIS LATERAIS:**
+
 - **`CombinedComponentsPanel.tsx`** - Biblioteca de componentes (via props)
 - **`EnhancedUniversalPropertiesPanel.tsx`** - Painel de propriedades (via props)
 
 ### **📋 FLUXO DE PROPS:**
+
 ```typescript
 // EditorContext não é usado diretamente nos componentes filhos
 // Os dados fluem via props para manter performance
 
-editor-fixed-dragdrop.tsx (useEditor) 
+editor-fixed-dragdrop.tsx (useEditor)
   ↓ (props)
 FourColumnLayout
   ↓ (props)
@@ -210,23 +229,24 @@ CombinedComponentsPanel → activeStageId
 ### **🎯 ESTRATÉGIAS APLICADAS:**
 
 **1. 📦 LAZY LOADING DE TEMPLATES:**
+
 ```typescript
 // Templates são carregados apenas quando etapa é selecionada
 const templateBlocks = getStepTemplate(stepNumber);
 ```
 
 **2. 🔄 COMPUTED PROPERTIES:**
+
 ```typescript
 // Dados derivados são computados automaticamente
-const currentBlocks = useMemo(() => 
-  stageBlocks[activeStageId] || [], [stageBlocks, activeStageId]
-);
+const currentBlocks = useMemo(() => stageBlocks[activeStageId] || [], [stageBlocks, activeStageId]);
 ```
 
 **3. 📊 MINIMAL RE-RENDERS:**
+
 ```typescript
 // Props específicas evitam re-renders desnecessários
-<CanvasDropZone 
+<CanvasDropZone
   blocks={currentBlocks}           // Apenas blocos da etapa ativa
   selectedBlockId={selectedBlockId} // ID específico
   onSelectBlock={setSelectedBlockId} // Callback memorizado
@@ -238,6 +258,7 @@ const currentBlocks = useMemo(() =>
 ## 🚀 **INICIALIZAÇÃO COMPLETA**
 
 ### **📋 SEQUÊNCIA DE STARTUP:**
+
 ```typescript
 1. App.tsx monta <EditorProvider>
 2. EditorContext.tsx executa inicialização:
@@ -252,6 +273,7 @@ const currentBlocks = useMemo(() =>
 ```
 
 ### **🔍 DEBUG E MONITORING:**
+
 ```typescript
 // Logs detalhados em cada componente
 console.log("🔥 EditorFixedPage: Dados do editor:", {
@@ -271,7 +293,7 @@ console.log("🔥 EditorFixedPage: Dados do editor:", {
 O **EditorContext** é o **CÉREBRO CENTRAL** do `/editor-fixed`:
 
 1. **🎯 Gerencia estado** de 21 etapas + blocos
-2. **🔄 Coordena fluxos** de dados entre componentes  
+2. **🔄 Coordena fluxos** de dados entre componentes
 3. **⚡ Carrega templates** dinamicamente conforme navegação
 4. **📊 Computa dados** derivados para performance
 5. **🎛️ Expõe ações** para manipulação do estado
