@@ -1070,12 +1070,39 @@ const EditorPage: React.FC = () => {
                                 Ou adicione componentes da barra lateral
                               </p>
                             </div>
-                            <div className="mt-4 p-3 bg-[#B89B7A]/10 rounded-lg">
-                              <p className="text-xs text-[#A38A69]">
-                                <strong>🎯 Status:</strong> {AVAILABLE_BLOCKS.length} componentes
-                                disponíveis
-                              </p>
-                            </div>
+                            {/* 🎯 SEÇÃO PARA CARREGAR STEPS DO FUNIL */}
+                              <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+                                <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                                  📋 Etapas do Quiz
+                                </h4>
+                                <div className="flex flex-col gap-2">
+                                  <Button
+                                    onClick={handleLoadStep1}
+                                    size="sm"
+                                    variant="outline"
+                                    className="w-full justify-start"
+                                  >
+                                    <span className="mr-2">1️⃣</span>
+                                    Step 01 - Introdução
+                                  </Button>
+                                  <Button
+                                    onClick={handleLoadStep2}
+                                    size="sm"
+                                    variant="outline"
+                                    className="w-full justify-start"
+                                  >
+                                    <span className="mr-2">2️⃣</span>
+                                    Step 02 - Questão 1
+                                  </Button>
+                                </div>
+                              </div>
+
+                              <div className="mt-4 p-3 bg-[#B89B7A]/10 rounded-lg">
+                                <p className="text-xs text-[#A38A69]">
+                                  <strong>🎯 Status:</strong> {AVAILABLE_BLOCKS.length} componentes
+                                  disponíveis
+                                </p>
+                              </div>
                           </div>
                         </div>
                       ) : (
