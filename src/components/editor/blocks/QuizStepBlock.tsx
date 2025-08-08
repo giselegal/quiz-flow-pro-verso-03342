@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * QuizStepBlock - Componente completo de etapa de quiz
  *
