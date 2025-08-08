@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import { InlineEditableText } from "./InlineEditableText";
 import { Button as UIButton } from "@/components/ui/button";

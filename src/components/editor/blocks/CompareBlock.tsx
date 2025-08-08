@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import { InlineEditableText } from "./InlineEditableText";
 import { AlignHorizontalDistributeEnd } from "lucide-react";

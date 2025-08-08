@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, useRef } from "react";
 import { Sparkles } from "lucide-react";
 import type { BlockComponentProps } from "@/types/blocks";

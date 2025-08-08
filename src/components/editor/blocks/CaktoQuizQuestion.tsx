@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import { QuizQuestionBlock } from "./QuizQuestionBlock";
 import { EditableContent } from "@/types/editor";

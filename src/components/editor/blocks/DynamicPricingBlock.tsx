@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import { DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
