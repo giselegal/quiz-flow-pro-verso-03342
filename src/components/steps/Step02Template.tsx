@@ -1,7 +1,4 @@
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useContainerProperties } from "@/hooks/useContainerProperties";
-import { useDebounce } from "@/hooks/useDebounce";
-import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
 export interface Step02Props {
   onNext?: () => void;
   onBlockAdd?: (block: any) => void;
@@ -83,7 +80,8 @@ export const getStep02Template = () => {
             category: "Casual",
             keyword: "casual",
             points: 1,
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
             spacing: "small",
             marginTop: 0,
             marginBottom: 0,
@@ -95,7 +93,8 @@ export const getStep02Template = () => {
             category: "Clássica",
             keyword: "classica",
             points: 2,
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
           },
           {
             id: "option-c",
@@ -113,7 +112,8 @@ export const getStep02Template = () => {
             category: "Elegante",
             keyword: "elegante",
             points: 3,
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_mjrfcl.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_mjrfcl.webp",
           },
           {
             id: "option-e",
@@ -122,7 +122,8 @@ export const getStep02Template = () => {
             category: "Romântica",
             keyword: "romantica",
             points: 2,
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
           },
           {
             id: "option-f",
@@ -131,7 +132,8 @@ export const getStep02Template = () => {
             category: "Sensual",
             keyword: "sensual",
             points: 3,
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
           },
           {
             id: "option-g",
@@ -140,7 +142,8 @@ export const getStep02Template = () => {
             category: "Moderna",
             keyword: "moderna",
             points: 3,
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
           },
           {
             id: "option-h",
@@ -149,7 +152,8 @@ export const getStep02Template = () => {
             category: "Criativa",
             keyword: "criativa",
             points: 4,
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
           },
         ],
 
