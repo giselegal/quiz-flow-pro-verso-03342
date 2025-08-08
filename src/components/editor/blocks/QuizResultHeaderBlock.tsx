@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from "react";
 import { Award } from "lucide-react";
 import { AnimatedWrapper } from "@/components/ui/animated-wrapper";

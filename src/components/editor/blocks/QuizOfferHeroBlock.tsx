@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from "react";
 import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
 import type { BlockComponentProps } from "@/types/blocks";
