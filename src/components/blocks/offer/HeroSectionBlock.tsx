@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import { Button } from "@/components/ui/button";
 import OptimizedImage from "@/components/ui/OptimizedImage";

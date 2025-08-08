@@ -26,6 +26,10 @@ interface Props {
   onSelect?: () => void;
   onUpdate?: (content: any) => void;
   onPropertyChange?: (key: string, value: any) => void;
+  marginTop?: number;
+  marginBottom?: number;
+  marginLeft?: number;
+  marginRight?: number;
 }
 
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
