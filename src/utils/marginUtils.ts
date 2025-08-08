@@ -1,12 +1,13 @@
-import React from "react";
-import { BlockComponentProps } from "@/types/blocks";
-import { Button } from "@/components/ui/button";
+/**
+ * 🔧 Utilitário universal para TypeScript nos blocos
+ * Função única para corrigir todos os problemas de tipos
+ */
 
-// Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value: string | number, type: string): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+// Função universal com tipos corretos para usar em todos os blocos
+export const getMarginClass = (value: string | number | undefined, type: string): string => {
+  const numValue = typeof value === "string" ? parseInt(value, 10) : (value || 0);
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0 || value === undefined) return "";
 
   const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
@@ -47,14 +48,20 @@ const getMarginClass = (value: string | number, type: string): string => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const ButtonBlock: React.FC<BlockComponentProps> = ({ block, className = "" }) => {
-  return (
-    <div className={`button-block ${className}`}>
-      <Button onClick={() => console.log("Button clicked")}>
-        {block.properties?.text || "Click Me"}
-      </Button>
-    </div>
-  );
+// Interface universal para propriedades de margem
+export interface MarginProps {
+  marginTop?: number;
+  marginBottom?: number;
+  marginLeft?: number;
+  marginRight?: number;
+}
+
+// Valores padrão para margens
+export const defaultMargins: MarginProps = {
+  marginTop: 0,
+  marginBottom: 0,
+  marginLeft: 0,
+  marginRight: 0,
 };
 
-export default ButtonBlock;
+export default getMarginClass;
