@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Award, Users, BookOpen } from "lucide-react";

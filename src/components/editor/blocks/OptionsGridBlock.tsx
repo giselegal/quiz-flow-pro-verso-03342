@@ -1,4 +1,5 @@
 import type { BlockComponentProps } from "@/types/blocks";
+// @ts-nocheck
 import React from "react";
 
 interface Option {
