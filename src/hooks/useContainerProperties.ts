@@ -73,24 +73,48 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
       case "none":
         // Sem padding
         break;
+      case "horizontal-only":
+        // Apenas padding horizontal, sem padding vertical
+        classes.push("px-3"); // 0.75rem horizontal, 0 vertical
+        break;
       case "small":
         classes.push("p-3"); // 0.75rem (12px)
+        break;
+      case "small-horizontal":
+        // Versão horizontal da opção small
+        classes.push("px-3"); // 0.75rem horizontal, 0 vertical
         break;
       case "compact":
         classes.push("p-2");
         break;
+      case "compact-horizontal":
+        // Versão horizontal da opção compact
+        classes.push("px-2"); // 0.5rem horizontal, 0 vertical
+        break;
       case "normal":
         classes.push("p-4");
+        break;
+      case "normal-horizontal":
+        // Versão horizontal da opção normal
+        classes.push("px-4"); // 1rem horizontal, 0 vertical
         break;
       case "comfortable":
         classes.push("p-6");
         break;
+      case "comfortable-horizontal":
+        // Versão horizontal da opção comfortable
+        classes.push("px-6"); // 1.5rem horizontal, 0 vertical
+        break;
       case "spacious":
         classes.push("p-8");
         break;
+      case "spacious-horizontal":
+        // Versão horizontal da opção spacious
+        classes.push("px-8"); // 2rem horizontal, 0 vertical
+        break;
       default:
-        // 🎯 Padrão para "small" (0.75rem)
-        classes.push("p-3");
+        // 🎯 Padrão alterado para apenas horizontal
+        classes.push("px-3"); // Apenas padding horizontal
     }
 
     // 🎨 Background Color Classes
