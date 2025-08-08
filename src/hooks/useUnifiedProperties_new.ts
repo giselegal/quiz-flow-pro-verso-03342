@@ -389,128 +389,6 @@ export const useUnifiedProperties = (
             "Cor da Borda",
             PropertyCategory.STYLE
           ),
-          // 🔹 CONFIGURAÇÕES DO BOTÃO ASSOCIADO
-          createProperty(
-            "buttonText",
-            currentBlock?.properties?.buttonText || "Continuar",
-            PropertyType.TEXT,
-            "Texto do Botão",
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            "buttonStyle",
-            currentBlock?.properties?.buttonStyle || "primary",
-            PropertyType.SELECT,
-            "Estilo do Botão",
-            PropertyCategory.STYLE,
-            {
-              options: [
-                { value: "primary", label: "Primário" },
-                { value: "secondary", label: "Secundário" },
-                { value: "outline", label: "Contorno" },
-                { value: "ghost", label: "Fantasma" },
-              ],
-            }
-          ),
-          createProperty(
-            "buttonSize",
-            currentBlock?.properties?.buttonSize || "medium",
-            PropertyType.SELECT,
-            "Tamanho do Botão",
-            PropertyCategory.STYLE,
-            {
-              options: [
-                { value: "small", label: "Pequeno" },
-                { value: "medium", label: "Médio" },
-                { value: "large", label: "Grande" },
-                { value: "full", label: "Largura Total (Responsivo)" },
-              ],
-            }
-          ),
-          createProperty(
-            "enableButtonWhenFilled",
-            currentBlock?.properties?.enableButtonWhenFilled !== false,
-            PropertyType.SWITCH,
-            "Ativar Botão Apenas Quando Preenchido",
-            PropertyCategory.BEHAVIOR
-          ),
-          // 🔹 CONFIGURAÇÕES DE NAVEGAÇÃO
-          createProperty(
-            "nextStepAction",
-            currentBlock?.properties?.nextStepAction || "next-step",
-            PropertyType.SELECT,
-            "Ação ao Avançar",
-            PropertyCategory.BEHAVIOR,
-            {
-              options: [
-                { value: "next-step", label: "Próxima Etapa Automática" },
-                { value: "specific-step", label: "Etapa Específica" },
-                { value: "url", label: "Abrir URL" },
-                { value: "submit", label: "Enviar Formulário" },
-              ],
-            }
-          ),
-          createProperty(
-            "specificStep",
-            currentBlock?.properties?.specificStep || "",
-            PropertyType.SELECT,
-            "Etapa de Destino",
-            PropertyCategory.BEHAVIOR,
-            {
-              options: [
-                { value: "step-01", label: "Etapa 1" },
-                { value: "step-02", label: "Etapa 2" },
-                { value: "step-03", label: "Etapa 3" },
-                { value: "step-04", label: "Etapa 4" },
-                { value: "step-05", label: "Etapa 5" },
-                { value: "step-06", label: "Etapa 6" },
-                { value: "step-07", label: "Etapa 7" },
-                { value: "step-08", label: "Etapa 8" },
-                { value: "step-09", label: "Etapa 9" },
-                { value: "step-10", label: "Etapa 10" },
-                { value: "results", label: "Resultados" },
-                { value: "thank-you", label: "Página de Agradecimento" },
-              ],
-            }
-          ),
-          createProperty(
-            "targetUrl",
-            currentBlock?.properties?.targetUrl || "",
-            PropertyType.URL,
-            "URL de Destino",
-            PropertyCategory.BEHAVIOR
-          ),
-          // 🔹 CONFIGURAÇÕES AVANÇADAS
-          createProperty(
-            "minLength",
-            currentBlock?.properties?.minLength || 1,
-            PropertyType.RANGE,
-            "Mínimo de Caracteres",
-            PropertyCategory.BEHAVIOR,
-            { min: 0, max: 50, step: 1 }
-          ),
-          createProperty(
-            "maxLength",
-            currentBlock?.properties?.maxLength || 255,
-            PropertyType.RANGE,
-            "Máximo de Caracteres",
-            PropertyCategory.BEHAVIOR,
-            { min: 1, max: 1000, step: 10 }
-          ),
-          createProperty(
-            "validationPattern",
-            currentBlock?.properties?.validationPattern || "",
-            PropertyType.TEXT,
-            "Padrão de Validação (RegEx)",
-            PropertyCategory.ADVANCED
-          ),
-          createProperty(
-            "errorMessage",
-            currentBlock?.properties?.errorMessage || "Por favor, preencha este campo",
-            PropertyType.TEXT,
-            "Mensagem de Erro",
-            PropertyCategory.CONTENT
-          ),
         ];
 
       case "button-inline":
@@ -531,7 +409,6 @@ export const useUnifiedProperties = (
                 { value: "warning", label: "Aviso" },
                 { value: "danger", label: "Perigo" },
                 { value: "outline", label: "Contorno" },
-                { value: "ghost", label: "Fantasma" },
               ],
             }
           ),
@@ -546,107 +423,28 @@ export const useUnifiedProperties = (
                 { value: "small", label: "Pequeno" },
                 { value: "medium", label: "Médio" },
                 { value: "large", label: "Grande" },
-                { value: "full", label: "Largura Total (Responsivo)" },
               ],
             }
           ),
-          // 🔹 SISTEMA DE NAVEGAÇÃO AVANÇADO
           createProperty(
             "action",
-            currentBlock?.properties?.action || "next-step",
+            currentBlock?.properties?.action || "none",
             PropertyType.SELECT,
             "Ação do Botão",
             PropertyCategory.BEHAVIOR,
             {
               options: [
-                { value: "none", label: "Nenhuma Ação" },
-                { value: "next-step", label: "Próxima Etapa Automática" },
-                { value: "specific-step", label: "Etapa Específica" },
+                { value: "none", label: "Nenhuma" },
+                { value: "next-step", label: "Próxima Etapa" },
                 { value: "url", label: "Abrir URL" },
-                { value: "submit", label: "Enviar Formulário" },
-                { value: "download", label: "Download de Arquivo" },
-              ],
-            }
-          ),
-          createProperty(
-            "specificStep",
-            currentBlock?.properties?.specificStep || "",
-            PropertyType.SELECT,
-            "Etapa de Destino",
-            PropertyCategory.BEHAVIOR,
-            {
-              options: [
-                { value: "step-01", label: "Etapa 1" },
-                { value: "step-02", label: "Etapa 2" },
-                { value: "step-03", label: "Etapa 3" },
-                { value: "step-04", label: "Etapa 4" },
-                { value: "step-05", label: "Etapa 5" },
-                { value: "step-06", label: "Etapa 6" },
-                { value: "step-07", label: "Etapa 7" },
-                { value: "step-08", label: "Etapa 8" },
-                { value: "step-09", label: "Etapa 9" },
-                { value: "step-10", label: "Etapa 10" },
-                { value: "results", label: "Resultados" },
-                { value: "thank-you", label: "Página de Agradecimento" },
               ],
             }
           ),
           createProperty(
             "url",
             currentBlock?.properties?.url || "",
-            PropertyType.URL,
-            "URL de Destino",
-            PropertyCategory.BEHAVIOR
-          ),
-          createProperty(
-            "downloadUrl",
-            currentBlock?.properties?.downloadUrl || "",
-            PropertyType.URL,
-            "URL do Arquivo para Download",
-            PropertyCategory.BEHAVIOR
-          ),
-          createProperty(
-            "openInNewTab",
-            currentBlock?.properties?.openInNewTab !== false,
-            PropertyType.SWITCH,
-            "Abrir em Nova Aba",
-            PropertyCategory.BEHAVIOR
-          ),
-          // 🔹 CONFIGURAÇÕES VISUAIS AVANÇADAS
-          createProperty(
-            "icon",
-            currentBlock?.properties?.icon || "",
             PropertyType.TEXT,
-            "Ícone (Nome ou SVG)",
-            PropertyCategory.STYLE
-          ),
-          createProperty(
-            "iconPosition",
-            currentBlock?.properties?.iconPosition || "left",
-            PropertyType.SELECT,
-            "Posição do Ícone",
-            PropertyCategory.STYLE,
-            {
-              options: [
-                { value: "left", label: "Esquerda" },
-                { value: "right", label: "Direita" },
-                { value: "top", label: "Acima" },
-                { value: "bottom", label: "Abaixo" },
-              ],
-            }
-          ),
-          createProperty(
-            "loading",
-            currentBlock?.properties?.loading === true,
-            PropertyType.SWITCH,
-            "Estado de Carregamento",
-            PropertyCategory.BEHAVIOR
-          ),
-          createProperty(
-            "disabled",
-            currentBlock?.properties?.disabled === true,
-            PropertyType.SWITCH,
-            "Botão Desabilitado",
+            "URL de Destino",
             PropertyCategory.BEHAVIOR
           ),
         ];
