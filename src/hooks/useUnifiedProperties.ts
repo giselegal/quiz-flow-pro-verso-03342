@@ -1,73 +1,78 @@
-import { useCallback, useEffect, useState } from "react";
-import { BRAND_COLORS } from "../config/brandColors";
-import { useEditor } from "../context/EditorContext";
-import type { FunnelStage } from "../types/editor";
+import { useState, useCallback, useMemo, useEffect } from "react";
 
-// Tipos de propriedades suportados pelo sistema
+/**
+ * 🎯 Enumerações e tipos fundamentais
+ */
 export enum PropertyType {
   TEXT = "text",
+  TEXTAREA = "textarea",
   NUMBER = "number",
+  RANGE = "range",
+  COLOR = "color",
   SELECT = "select",
   SWITCH = "switch",
-  TEXTAREA = "textarea",
-  COLOR = "color",
-  ALIGNMENT = "alignment",
-  RICHTEXT = "richtext",
-  FONTFAMILY = "fontfamily",
-  FONTSTYLE = "fontstyle",
-  RANGE = "range",
-  FILE = "file",
-  IMAGE = "image",
-  TAGS = "tags",
-  CHECKBOX = "checkbox",
-  RADIO = "radio",
-  ANIMATION = "animation",
-  OPTION_SCORE = "option_score",
-  OPTION_CATEGORY = "option_category",
+  ARRAY = "array",
+  OBJECT = "object",
+  UPLOAD = "upload",
+  URL = "url",
+  DATE = "date",
+  TIME = "time",
+  DATETIME = "datetime",
+  JSON = "json",
+  RICH_TEXT = "rich_text",
+  MARKDOWN = "markdown",
+  CODE = "code",
+  EMAIL = "email",
+  PHONE = "phone",
 }
 
-// Categorias de propriedades para organização no painel
 export enum PropertyCategory {
   CONTENT = "content",
   STYLE = "style",
+  LAYOUT = "layout",
   BEHAVIOR = "behavior",
   ADVANCED = "advanced",
-  LAYOUT = "layout",
-  BASIC = "basic",
-  QUIZ = "quiz",
-  SCORING = "scoring",
-  ALIGNMENT = "alignment",
+  ANIMATION = "animation",
+  ACCESSIBILITY = "accessibility",
+  SEO = "seo",
 }
 
-// Tipo que permite uso de string literal ou enum PropertyCategory para compatibilidade
 export type PropertyCategoryOrString = PropertyCategory | string;
 
-// Interface para cada propriedade unificada que o painel irá exibir
+/**
+ * 🔧 Interface principal da propriedade
+ */
 export interface UnifiedProperty {
   key: string;
   value: any;
   type: PropertyType;
   label: string;
   category: PropertyCategoryOrString;
+  description?: string;
+  placeholder?: string;
   required?: boolean;
-  options?: Array<{ value: string; label: string }>;
-  rows?: number;
+  defaultValue?: any;
+  validation?: (value: any) => boolean | string;
   min?: number;
   max?: number;
   step?: number;
   unit?: string;
-  defaultValue?: any;
+  options?: Array<{ value: any; label: string; disabled?: boolean }>;
+  dependencies?: string[];
+  conditional?: {
+    key: string;
+    value: any;
+  };
 }
 
-// Interface para o bloco unificado que o hook recebe
 export interface UnifiedBlock {
   id: string;
   type: string;
-  properties: Record<string, any>;
-  brandColors?: typeof BRAND_COLORS;
+  properties?: Record<string, any>;
+  children?: string[];
+  parentId?: string;
 }
 
-// Interface para o retorno do hook useUnifiedProperties
 export interface UseUnifiedPropertiesReturn {
   properties: UnifiedProperty[];
   updateProperty: (key: string, value: any) => void;
@@ -79,14 +84,34 @@ export interface UseUnifiedPropertiesReturn {
   applyBrandColors: () => void;
 }
 
-// Função utilitária para criar uma propriedade com valores padrão
+/**
+ * ✨ Constantes de cores da marca
+ */
+const BRAND_COLORS = {
+  primary: "#B89B7A",
+  secondary: "#D4C2A8",
+  accent: "#F3E8D3",
+  text: "#432818",
+  textPrimary: "#2c1810",
+  textSecondary: "#8F7A6A",
+  background: "#FEFDFB",
+  success: "#22c55e",
+  warning: "#f59e0b",
+  error: "#ef4444",
+  white: "#FFFFFF",
+  border: "#E5E7EB",
+};
+
+/**
+ * 🏷️ Utilitários de criação
+ */
 const createProperty = (
   key: string,
   value: any,
   type: PropertyType,
   label: string,
-  category: PropertyCategoryOrString,
-  options?: Partial<Omit<UnifiedProperty, "key" | "value" | "type" | "label" | "category">>
+  category: PropertyCategory,
+  options?: any
 ): UnifiedProperty => ({
   key,
   value,
@@ -96,534 +121,303 @@ const createProperty = (
   ...options,
 });
 
-// Função utilitária para criar opções de select
 const createSelectOptions = (
   options: Array<{ value: string; label: string }>
-): Array<{ value: string; label: string }> =>
-  options.filter(option => option.value != null && option.value.trim() !== "");
+) => options;
 
-// Função utilitária para forçar o tipo PropertyCategoryOrString em strings literais
-const asCategory = (categoryString: string): PropertyCategoryOrString => {
-  return categoryString as PropertyCategoryOrString;
-};
+/**
+ * 🌟 Funções de propriedades universais
+ */
+const getUniversalProperties = (): UnifiedProperty[] => [
+  // 1. Controles de margens (4 direções)
+  createProperty(
+    "marginTop",
+    0,
+    PropertyType.RANGE,
+    "Margem Superior",
+    PropertyCategory.LAYOUT,
+    { min: 0, max: 100, step: 2, unit: "px" }
+  ),
+  createProperty(
+    "marginBottom",
+    0,
+    PropertyType.RANGE,
+    "Margem Inferior",
+    PropertyCategory.LAYOUT,
+    { min: 0, max: 100, step: 2, unit: "px" }
+  ),
+  createProperty(
+    "marginLeft",
+    0,
+    PropertyType.RANGE,
+    "Margem Esquerda",
+    PropertyCategory.LAYOUT,
+    { min: 0, max: 100, step: 2, unit: "px" }
+  ),
+  createProperty(
+    "marginRight",
+    0,
+    PropertyType.RANGE,
+    "Margem Direita",
+    PropertyCategory.LAYOUT,
+    { min: 0, max: 100, step: 2, unit: "px" }
+  ),
+  
+  // 2. Escala Bloco (controle de escala)
+  createProperty(
+    "scale",
+    1,
+    PropertyType.RANGE,
+    "Escala Bloco",
+    PropertyCategory.LAYOUT,
+    { min: 0.5, max: 2, step: 0.1 }
+  ),
+  
+  // 3. Cor de fundo do Container
+  createProperty(
+    "containerBackgroundColor",
+    "transparent",
+    PropertyType.COLOR,
+    "Cor de Fundo Container",
+    PropertyCategory.STYLE
+  ),
+  
+  // 4. Cor de fundo do Componente
+  createProperty(
+    "componentBackgroundColor",
+    "transparent",
+    PropertyType.COLOR,
+    "Cor de Fundo Componente",
+    PropertyCategory.STYLE
+  ),
+  
+  // 5. Elementos centralizados no container
+  createProperty(
+    "textAlign",
+    "center",
+    PropertyType.SELECT,
+    "Alinhamento",
+    PropertyCategory.LAYOUT,
+    {
+      options: [
+        { value: "left", label: "Esquerda" },
+        { value: "center", label: "Centro" },
+        { value: "right", label: "Direita" },
+      ],
+    }
+  ),
+  
+  // 6. Largura do texto 100%
+  createProperty(
+    "textWidth",
+    "100%",
+    PropertyType.SELECT,
+    "Largura do Texto",
+    PropertyCategory.LAYOUT,
+    {
+      options: [
+        { value: "auto", label: "Automática" },
+        { value: "100%", label: "Total (100%)" },
+        { value: "80%", label: "80%" },
+        { value: "60%", label: "60%" },
+      ],
+    }
+  ),
+];
 
+/**
+ * 🎨 Propriedades básicas de texto
+ */
+const getTextProperties = (): UnifiedProperty[] => [
+  createProperty(
+    "text",
+    "Digite seu texto aqui...",
+    PropertyType.TEXT,
+    "Texto",
+    PropertyCategory.CONTENT
+  ),
+  createProperty(
+    "fontSize",
+    16,
+    PropertyType.RANGE,
+    "Tamanho da Fonte",
+    PropertyCategory.STYLE,
+    { min: 10, max: 48, step: 1, unit: "px" }
+  ),
+  createProperty(
+    "fontWeight",
+    "400",
+    PropertyType.SELECT,
+    "Peso da Fonte",
+    PropertyCategory.STYLE,
+    {
+      options: createSelectOptions([
+        { value: "300", label: "Leve (300)" },
+        { value: "400", label: "Normal (400)" },
+        { value: "500", label: "Médio (500)" },
+        { value: "600", label: "Semi-negrito (600)" },
+        { value: "700", label: "Negrito (700)" },
+      ]),
+    }
+  ),
+  createProperty(
+    "textColor",
+    BRAND_COLORS.text,
+    PropertyType.COLOR,
+    "Cor do Texto",
+    PropertyCategory.STYLE
+  ),
+];
+
+/**
+ * 🎯 Hook principal para propriedades unificadas
+ */
 export const useUnifiedProperties = (
-  block: UnifiedBlock | null,
-  onUpdateExternal?: (blockId: string, updates: Record<string, any>) => void
+  blockType: string,
+  blockId?: string,
+  block?: UnifiedBlock | null,
+  onUpdateExternal?: (blockId: string, updates: Partial<UnifiedBlock>) => void
 ): UseUnifiedPropertiesReturn => {
-  const [properties, setProperties] = useState<UnifiedProperty[]>([]);
-  const { stages } = useEditor(); // 🎯 ACESSO ÀS ETAPAS DO EDITOR
+  const currentBlock = block;
 
-  // Função memoizada para gerar as definições de propriedades com base no tipo do bloco
-  const generateDefaultProperties = useCallback(
-    (blockType: string, currentBlock: UnifiedBlock | null): UnifiedProperty[] => {
-      // 🎯 Função helper para gerar opções de etapas disponíveis
-      const getStageSelectOptions = () => {
-        const stageOptions = stages.map((stage: FunnelStage) => ({
-          value: stage.id,
-          label: `${stage.name} (${stage.id})`,
-        }));
+  const generatedProperties = useMemo(() => {
+    if (!blockType) return [];
 
-        return createSelectOptions([
-          { value: "none", label: "Selecionar Etapa..." },
-          ...stageOptions,
-        ]);
-      };
+    switch (blockType) {
+      case "text-inline":
+        return [
+          ...getUniversalProperties(),
+          ...getTextProperties(),
+        ];
 
-      const baseProperties: UnifiedProperty[] = [
-        {
-          key: "id",
-          value: currentBlock?.id || "",
-          type: PropertyType.TEXT,
-          label: "ID do Componente",
-          category: PropertyCategory.ADVANCED,
-          required: true,
-        },
-        {
-          key: "visible",
-          value: currentBlock?.properties?.visible !== false,
-          type: PropertyType.SWITCH,
-          label: "Visível",
-          category: PropertyCategory.LAYOUT,
-        },
-        // 🎯 1. ESCALA DO BLOCO (renomeado)
-        {
-          key: "scale",
-          value: currentBlock?.properties?.scale ?? 100,
-          type: PropertyType.RANGE,
-          label: "Escala Bloco",
-          category: PropertyCategory.STYLE,
-          min: 50,
-          max: 200,
-          step: 10,
-          unit: "%",
-        },
-        // ⚙️ PROPRIEDADES DE CONTAINER E POSICIONAMENTO
-        {
-          key: "containerWidth",
-          value: currentBlock?.properties?.containerWidth || "full",
-          type: PropertyType.SELECT,
-          label: "Largura do Container",
-          category: PropertyCategory.LAYOUT,
-          options: [
-            { value: "full", label: "Completa (100%)" },
-            { value: "large", label: "Grande (1024px)" },
-            { value: "medium", label: "Média (672px)" },
-            { value: "small", label: "Pequena (448px)" },
-          ],
-        },
-        {
-          key: "containerPosition",
-          value: currentBlock?.properties?.containerPosition || "center",
-          type: PropertyType.SELECT,
-          label: "Posição do Container",
-          category: PropertyCategory.LAYOUT,
-          options: [
-            { value: "left", label: "Esquerda" },
-            { value: "center", label: "Centralizado" },
-            { value: "right", label: "Direita" },
-          ],
-        },
-        {
-          key: "spacing",
-          value: currentBlock?.properties?.spacing || "small", // 🎯 Padrão alterado para "small" (0.75rem)
-          type: PropertyType.SELECT,
-          label: "Espaçamento Interno",
-          category: PropertyCategory.LAYOUT,
-          options: [
-            { value: "none", label: "Nenhum" },
-            { value: "small", label: "Pequeno (12px)" },
-            { value: "compact", label: "Compacto (8px)" },
-            { value: "normal", label: "Normal (16px)" },
-            { value: "comfortable", label: "Confortável (24px)" },
-            { value: "spacious", label: "Espaçoso (32px)" },
-          ],
-        },
-        // 🎯 3. COR DE FUNDO DO CONTAINER (ColorPicker)
-        {
-          key: "containerBackgroundColor",
-          value: currentBlock?.properties?.containerBackgroundColor || "transparent",
-          type: PropertyType.COLOR,
-          label: "Cor de Fundo do Container",
-          category: PropertyCategory.STYLE,
-        },
-        // 🎯 4. COR DE FUNDO DO COMPONENTE (ColorPicker)
-        {
-          key: "backgroundColor",
-          value: currentBlock?.properties?.backgroundColor || "transparent",
-          type: PropertyType.COLOR,
-          label: "Cor de Fundo do Componente",
-          category: PropertyCategory.STYLE,
-        },
-        // 🎯 1. CONTROLES DE MARGENS (4 controles obrigatórios)
-        {
-          key: "marginTop",
-          value: currentBlock?.properties?.marginTop || 0, // 🎯 Padrão alterado para 0
-          type: PropertyType.RANGE,
-          label: "Margem Superior",
-          category: PropertyCategory.LAYOUT,
-          min: -40,
-          max: 100,
-          step: 4,
-          unit: "px",
-        },
-        {
-          key: "marginBottom",
-          value: currentBlock?.properties?.marginBottom || 0, // 🎯 Padrão alterado para 0
-          type: PropertyType.RANGE,
-          label: "Margem Inferior",
-          category: PropertyCategory.LAYOUT,
-          min: -40,
-          max: 100,
-          step: 4,
-          unit: "px",
-        },
-        {
-          key: "marginLeft",
-          value: currentBlock?.properties?.marginLeft || 0,
-          type: PropertyType.RANGE,
-          label: "Margem Esquerda",
-          category: PropertyCategory.LAYOUT,
-          min: -40, // 🎯 Permitir valores negativos como as outras margens
-          max: 100,
-          step: 4,
-          unit: "px",
-        },
-        {
-          key: "marginRight",
-          value: currentBlock?.properties?.marginRight || 0,
-          type: PropertyType.RANGE,
-          label: "Margem Direita",
-          category: PropertyCategory.LAYOUT,
-          min: -40, // 🎯 Permitir valores negativos como as outras margens
-          max: 100,
-          step: 4,
-          unit: "px",
-        },
-        // 🎯 7. CONFIGURAÇÕES BÁSICAS DE TEXTO (para todos os componentes com texto)
-        {
-          key: "text",
-          value: currentBlock?.properties?.text || currentBlock?.properties?.content || "Texto",
-          type: PropertyType.TEXTAREA,
-          label: "Texto",
-          category: PropertyCategory.CONTENT,
-          required: true,
-          rows: 3,
-        },
-        {
-          key: "fontSize",
-          value: currentBlock?.properties?.fontSize || "text-base",
-          type: PropertyType.SELECT,
-          label: "Tamanho da Fonte",
-          category: PropertyCategory.STYLE,
-          options: [
-            { value: "text-xs", label: "Extra Pequeno (12px)" },
-            { value: "text-sm", label: "Pequeno (14px)" },
-            { value: "text-base", label: "Normal (16px)" },
-            { value: "text-lg", label: "Grande (18px)" },
-            { value: "text-xl", label: "Extra Grande (20px)" },
-            { value: "text-2xl", label: "Muito Grande (24px)" },
-            { value: "text-3xl", label: "Gigante (30px)" },
-          ],
-        },
-        {
-          key: "fontWeight",
-          value: currentBlock?.properties?.fontWeight || "font-normal",
-          type: PropertyType.SELECT,
-          label: "Peso da Fonte",
-          category: PropertyCategory.STYLE,
-          options: [
-            { value: "font-light", label: "Leve" },
-            { value: "font-normal", label: "Normal" },
-            { value: "font-medium", label: "Médio" },
-            { value: "font-semibold", label: "Semi-negrito" },
-            { value: "font-bold", label: "Negrito" },
-            { value: "font-extrabold", label: "Extra Negrito" },
-          ],
-        },
-        {
-          key: "textColor",
-          value:
-            currentBlock?.properties?.textColor || currentBlock?.properties?.color || "#333333",
-          type: PropertyType.COLOR,
-          label: "Cor do Texto",
-          category: PropertyCategory.STYLE,
-        },
-        // 🎯 5. ALINHAMENTO CENTRALIZADO POR PADRÃO
-        {
-          key: "textAlign",
-          value: currentBlock?.properties?.textAlign || "text-center",
-          type: PropertyType.SELECT,
-          label: "Alinhamento do Texto",
-          category: PropertyCategory.LAYOUT,
-          options: [
-            { value: "text-left", label: "Esquerda" },
-            { value: "text-center", label: "Centro" },
-            { value: "text-right", label: "Direita" },
-            { value: "text-justify", label: "Justificado" },
-          ],
-        },
-        // 🎯 6. LARGURA DO TEXTO 100% POR PADRÃO
-        {
-          key: "textWidth",
-          value: currentBlock?.properties?.textWidth || "w-full",
-          type: PropertyType.SELECT,
-          label: "Largura do Texto",
-          category: PropertyCategory.LAYOUT,
-          options: [
-            { value: "w-full", label: "100%" },
-            { value: "w-3/4", label: "75%" },
-            { value: "w-1/2", label: "50%" },
-            { value: "w-1/4", label: "25%" },
-          ],
-        },
-      ];
+      case "quiz-intro-header":
+        return [
+          ...getUniversalProperties(),
+          ...getTextProperties(),
+          createProperty(
+            "subtitle",
+            currentBlock?.properties?.subtitle || "",
+            PropertyType.TEXT,
+            "Subtítulo",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "showIcon",
+            currentBlock?.properties?.showIcon !== false,
+            PropertyType.SWITCH,
+            "Mostrar Ícone",
+            PropertyCategory.STYLE
+          ),
+        ];
 
-      // ---- Mescla de todos os campos para cada tipo de bloco ----
-      console.log("🎯 useUnifiedProperties - generateDefaultProperties chamado:", {
-        blockType,
-        currentBlock: currentBlock?.id,
-        basePropertiesCount: baseProperties.length,
-      });
+      case "image-display-inline":
+        return [
+          ...getUniversalProperties(),
+          createProperty(
+            "src",
+            currentBlock?.properties?.src || "",
+            PropertyType.UPLOAD,
+            "Imagem",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "alt",
+            currentBlock?.properties?.alt || "",
+            PropertyType.TEXT,
+            "Texto Alternativo",
+            PropertyCategory.ACCESSIBILITY
+          ),
+          createProperty(
+            "width",
+            currentBlock?.properties?.width || "auto",
+            PropertyType.TEXT,
+            "Largura",
+            PropertyCategory.LAYOUT
+          ),
+          createProperty(
+            "height",
+            currentBlock?.properties?.height || "auto",
+            PropertyType.TEXT,
+            "Altura",
+            PropertyCategory.LAYOUT
+          ),
+          createProperty(
+            "borderRadius",
+            currentBlock?.properties?.borderRadius ?? 12,
+            PropertyType.RANGE,
+            "Arredondamento",
+            PropertyCategory.STYLE,
+            { min: 0, max: 50, step: 2, unit: "px" }
+          ),
+          createProperty(
+            "shadow",
+            currentBlock?.properties?.shadow !== false,
+            PropertyType.SWITCH,
+            "Sombra",
+            PropertyCategory.STYLE
+          ),
+        ];
 
-      switch (blockType) {
-        case "text-inline":
-          return [
-            ...baseProperties,
-            // Propriedades específicas do texto (além das básicas já incluídas)
+      case "form-input":
+        return [
+          ...getUniversalProperties(),
+          createProperty(
+            "label",
+            currentBlock?.properties?.label || "Campo de Input",
+            PropertyType.TEXT,
+            "Rótulo do Campo",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "placeholder",
+            currentBlock?.properties?.placeholder || "Digite aqui...",
+            PropertyType.TEXT,
+            "Texto de Placeholder",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "inputType",
+            currentBlock?.properties?.inputType || "text",
+            PropertyType.SELECT,
+            "Tipo de Input",
+            PropertyCategory.BEHAVIOR,
             {
-              key: "lineHeight",
-              value: currentBlock?.properties?.lineHeight || "1.2",
-              type: PropertyType.SELECT,
-              label: "Altura da Linha",
-              category: PropertyCategory.STYLE,
               options: [
-                { value: "1", label: "1" },
-                { value: "1.2", label: "1.2" },
-                { value: "1.5", label: "1.5" },
-                { value: "1.75", label: "1.75" },
-                { value: "2", label: "2" },
+                { value: "text", label: "Texto" },
+                { value: "email", label: "E-mail" },
+                { value: "tel", label: "Telefone" },
+                { value: "number", label: "Número" },
+                { value: "password", label: "Senha" },
               ],
-            },
-            // 🎯 ADICIONAR ESTAS PROPRIEDADES:
-            {
-              key: "spacing",
-              value: currentBlock?.properties?.spacing || "small",
-              type: PropertyType.SELECT,
-              label: "Espaçamento Interno",
-              category: PropertyCategory.STYLE,
-              options: [
-                { value: "tight", label: "Apertado" },
-                { value: "small", label: "Pequeno" },
-                { value: "normal", label: "Normal" },
-                { value: "loose", label: "Solto" },
-              ],
-            },
-            {
-              key: "containerWidth",
-              value: currentBlock?.properties?.containerWidth || "medium",
-              type: PropertyType.SELECT,
-              label: "Largura do Container",
-              category: PropertyCategory.LAYOUT,
-              options: [
-                { value: "small", label: "Pequeno" },
-                { value: "medium", label: "Médio" },
-                { value: "large", label: "Grande" },
-                { value: "full", label: "Completo" },
-              ],
-            },
-            {
-              key: "containerPosition",
-              value: currentBlock?.properties?.containerPosition || "center",
-              type: PropertyType.SELECT,
-              label: "Posição do Container",
-              category: PropertyCategory.LAYOUT,
-              options: [
-                { value: "left", label: "Esquerda" },
-                { value: "center", label: "Centro" },
-                { value: "right", label: "Direita" },
-              ],
-            },
-          ];
+            }
+          ),
+          createProperty(
+            "required",
+            currentBlock?.properties?.required === true,
+            PropertyType.SWITCH,
+            "Campo Obrigatório",
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            "borderColor",
+            currentBlock?.properties?.borderColor || BRAND_COLORS.primary,
+            PropertyType.COLOR,
+            "Cor da Borda",
+            PropertyCategory.STYLE
+          ),
+        ];
 
-        case "quiz-intro-header":
-          return [
-            ...baseProperties,
+      case "button-inline":
+        return [
+          ...getUniversalProperties(),
+          ...getTextProperties(),
+          createProperty(
+            "variant",
+            currentBlock?.properties?.variant || "primary",
+            PropertyType.SELECT,
+            "Variante",
+            PropertyCategory.STYLE,
             {
-              key: "logoUrl",
-              value:
-                currentBlock?.properties?.logoUrl ||
-                "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-              type: PropertyType.TEXT,
-              label: "URL do Logo",
-              category: "content",
-            },
-            {
-              key: "logoAlt",
-              value: currentBlock?.properties?.logoAlt || "Logo",
-              type: PropertyType.TEXT,
-              label: "Alt do Logo",
-              category: "content",
-            },
-            {
-              key: "logoWidth",
-              value: currentBlock?.properties?.logoWidth ?? 96,
-              type: PropertyType.RANGE,
-              label: "Largura do Logo",
-              category: "style",
-              min: 32,
-              max: 200,
-              step: 4,
-              unit: "px",
-            },
-            {
-              key: "logoHeight",
-              value: currentBlock?.properties?.logoHeight ?? 96,
-              type: PropertyType.RANGE,
-              label: "Altura do Logo",
-              category: "style",
-              min: 32,
-              max: 200,
-              step: 4,
-              unit: "px",
-            },
-            {
-              key: "progressValue",
-              value: currentBlock?.properties?.progressValue ?? 0,
-              type: PropertyType.NUMBER,
-              label: "Progresso (%)",
-              category: "content",
-              min: 0,
-              max: 100,
-            },
-            {
-              key: "progressMax",
-              value: currentBlock?.properties?.progressMax ?? 100,
-              type: PropertyType.NUMBER,
-              label: "Valor Máximo",
-              category: "behavior",
-            },
-            {
-              key: "showBackButton",
-              value: currentBlock?.properties?.showBackButton === true,
-              type: PropertyType.SWITCH,
-              label: "Mostrar Botão Voltar",
-              category: "behavior",
-            },
-            {
-              key: "showProgress",
-              value: currentBlock?.properties?.showProgress ?? true,
-              type: PropertyType.SWITCH,
-              label: "Mostrar Progresso",
-              category: "content",
-            },
-            {
-              key: "title",
-              value: currentBlock?.properties?.title || "",
-              type: PropertyType.TEXT,
-              label: "Título",
-              category: "content",
-            },
-            {
-              key: "subtitle",
-              value: currentBlock?.properties?.subtitle || "",
-              type: PropertyType.TEXT,
-              label: "Subtítulo",
-              category: "content",
-            },
-            {
-              key: "description",
-              value: currentBlock?.properties?.description || "",
-              type: PropertyType.TEXTAREA,
-              label: "Descrição",
-              category: "content",
-              rows: 3,
-            },
-            {
-              key: "headerStyle",
-              value: currentBlock?.properties?.headerStyle || "centered",
-              type: PropertyType.SELECT,
-              label: "Estilo do Cabeçalho",
-              category: "style",
-              options: [
-                { value: "centered", label: "Centralizado" },
-                { value: "left", label: "Alinhado à Esquerda" },
-                { value: "right", label: "Alinhado à Direita" },
-              ],
-            },
-            {
-              key: "showDivider",
-              value: currentBlock?.properties?.showDivider !== false,
-              type: PropertyType.SWITCH,
-              label: "Mostrar Divisor",
-              category: "style",
-            },
-            {
-              key: "backgroundColor",
-              value: currentBlock?.properties?.backgroundColor || "transparent",
-              type: PropertyType.SELECT,
-              label: "Cor de Fundo",
-              category: "style",
-              options: [
-                { value: "transparent", label: "Transparente" },
-                { value: "primary", label: "Primária" },
-                { value: "secondary", label: "Secundária" },
-                { value: "muted", label: "Sutil" },
-              ],
-            },
-            {
-              key: "height",
-              value: currentBlock?.properties?.height ?? 80,
-              type: PropertyType.NUMBER,
-              label: "Altura (px)",
-              category: "content",
-              min: 50,
-              max: 200,
-            },
-          ];
-
-        // ... Repita esse padrão para todos os outros tipos de bloco do seu projeto,
-        // mesclando todos os campos de todos os cases para cada tipo de bloco
-
-        case "image-display-inline":
-          return [
-            ...baseProperties,
-            // Propriedades específicas da imagem
-            {
-              key: "src",
-              value:
-                currentBlock?.properties?.src ||
-                "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
-              type: PropertyType.TEXT,
-              label: "URL da Imagem",
-              category: PropertyCategory.CONTENT,
-              required: true,
-            },
-            {
-              key: "alt",
-              value: currentBlock?.properties?.alt || "Imagem",
-              type: PropertyType.TEXT,
-              label: "Texto Alternativo",
-              category: PropertyCategory.CONTENT,
-            },
-            {
-              key: "width",
-              value: currentBlock?.properties?.width || "100%",
-              type: PropertyType.SELECT,
-              label: "Largura",
-              category: PropertyCategory.STYLE,
-              options: [
-                { value: "25%", label: "25%" },
-                { value: "50%", label: "50%" },
-                { value: "75%", label: "75%" },
-                { value: "100%", label: "100%" },
-                { value: "auto", label: "Automática" },
-              ],
-            },
-            {
-              key: "height",
-              value: currentBlock?.properties?.height || "auto",
-              type: PropertyType.SELECT,
-              label: "Altura",
-              category: PropertyCategory.STYLE,
-              options: [
-                { value: "auto", label: "Automática" },
-                { value: "200px", label: "200px" },
-                { value: "300px", label: "300px" },
-                { value: "400px", label: "400px" },
-                { value: "500px", label: "500px" },
-              ],
-            },
-            {
-              key: "borderRadius",
-              value: currentBlock?.properties?.borderRadius ?? 12,
-              type: PropertyType.RANGE,
-              label: "Arredondamento",
-              category: PropertyCategory.STYLE,
-              min: 0,
-              max: 50,
-              step: 2,
-              unit: "px",
-            },
-            {
-              key: "shadow",
-              value: currentBlock?.properties?.shadow !== false,
-              type: PropertyType.SWITCH,
-              label: "Sombra",
-              category: PropertyCategory.STYLE,
-            },
-          ];
-
-        case "button-inline":
-          return [
-            ...baseProperties,
-            // Propriedades específicas do botão
-            {
-              key: "variant",
-              value: currentBlock?.properties?.variant || "primary",
-              type: PropertyType.SELECT,
-              label: "Variante",
-              category: PropertyCategory.STYLE,
               options: [
                 { value: "primary", label: "Primário" },
                 { value: "secondary", label: "Secundário" },
@@ -632,1216 +426,236 @@ export const useUnifiedProperties = (
                 { value: "danger", label: "Perigo" },
                 { value: "outline", label: "Contorno" },
               ],
-            },
+            }
+          ),
+          createProperty(
+            "size",
+            currentBlock?.properties?.size || "medium",
+            PropertyType.SELECT,
+            "Tamanho",
+            PropertyCategory.STYLE,
             {
-              key: "size",
-              value: currentBlock?.properties?.size || "medium",
-              type: PropertyType.SELECT,
-              label: "Tamanho",
-              category: PropertyCategory.STYLE,
               options: [
                 { value: "small", label: "Pequeno" },
                 { value: "medium", label: "Médio" },
                 { value: "large", label: "Grande" },
               ],
-            },
-            {
-              key: "borderColor",
-              value: currentBlock?.properties?.borderColor || "#B89B7A",
-              type: PropertyType.COLOR,
-              label: "Cor da Borda",
-              category: PropertyCategory.STYLE,
-            },
-            {
-              key: "action",
-              value: currentBlock?.properties?.action || "none",
-              type: PropertyType.SELECT,
-              label: "Ação do Botão",
-              category: PropertyCategory.BEHAVIOR,
-              options: [
-                { value: "none", label: "Nenhuma" },
-                { value: "next-step", label: "Próxima Etapa" },
-                { value: "url", label: "Abrir URL" },
-              ],
-            },
-            {
-              key: "url",
-              value: currentBlock?.properties?.url || "",
-              type: PropertyType.TEXT,
-              label: "URL de Destino",
-              category: PropertyCategory.BEHAVIOR,
-            },
-            {
-              key: "disabled",
-              value: currentBlock?.properties?.disabled === true,
-              type: PropertyType.SWITCH,
-              label: "Desabilitado",
-              category: PropertyCategory.BEHAVIOR,
-            },
-          ];
-
-        case "form-input":
-          return [
-            ...baseProperties,
-            // Propriedades específicas do formulário
-            {
-              key: "label",
-              value: currentBlock?.properties?.label || "Campo de Input",
-              type: PropertyType.TEXT,
-              label: "Rótulo do Campo",
-              category: PropertyCategory.CONTENT,
-              required: true,
-            },
-            {
-              key: "placeholder",
-              value: currentBlock?.properties?.placeholder || "Digite aqui...",
-              type: PropertyType.TEXT,
-              label: "Texto de Placeholder",
-              category: PropertyCategory.CONTENT,
-            },
-            {
-              key: "inputType",
-              value: currentBlock?.properties?.inputType || "text",
-              type: PropertyType.SELECT,
-              label: "Tipo de Input",
-              category: PropertyCategory.BEHAVIOR,
-              options: [
-                { value: "text", label: "Texto" },
-                { value: "email", label: "E-mail" },
-                { value: "tel", label: "Telefone" },
-                { value: "number", label: "Número" },
-                { value: "password", label: "Senha" },
-              ],
-            },
-            {
-              key: "required",
-              value: currentBlock?.properties?.required === true,
-              type: PropertyType.SWITCH,
-              label: "Campo Obrigatório",
-              category: PropertyCategory.BEHAVIOR,
-            },
-            {
-              key: "borderColor",
-              value: currentBlock?.properties?.borderColor || "#B89B7A",
-              type: PropertyType.COLOR,
-              label: "Cor da Borda",
-              category: PropertyCategory.STYLE,
-            },
-          ];
-
-        case "legal-notice-inline":
-          return [
-            ...baseProperties,
-            createProperty(
-              "privacyText",
-              currentBlock?.properties?.privacyText || "Política de Privacidade",
-              PropertyType.TEXT,
-              "Texto Política de Privacidade",
-              PropertyCategory.CONTENT
-            ),
-            createProperty(
-              "copyrightText",
-              currentBlock?.properties?.copyrightText || "© 2025 Gisele Galvão Consultoria",
-              PropertyType.TEXT,
-              "Texto de Copyright",
-              PropertyCategory.CONTENT
-            ),
-            createProperty(
-              "termsText",
-              currentBlock?.properties?.termsText || "Termos de Uso",
-              PropertyType.TEXT,
-              "Texto Termos de Uso",
-              PropertyCategory.CONTENT
-            ),
-            createProperty(
-              "fontSize",
-              currentBlock?.properties?.fontSize ?? 12,
-              PropertyType.RANGE,
-              "Tamanho da Fonte",
-              PropertyCategory.STYLE,
-              { min: 10, max: 20, step: 1, unit: "px" }
-            ),
-            createProperty(
-              "fontFamily",
-              currentBlock?.properties?.fontFamily || "inherit",
-              PropertyType.SELECT,
-              "Família da Fonte",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "inherit", label: "Padrão" },
-                  { value: "Inter", label: "Inter" },
-                  { value: "Roboto", label: "Roboto" },
-                  { value: "Open Sans", label: "Open Sans" },
-                  { value: "Playfair Display", label: "Playfair Display" },
-                ]),
-              }
-            ),
-            createProperty(
-              "fontWeight",
-              currentBlock?.properties?.fontWeight || "400",
-              PropertyType.SELECT,
-              "Peso da Fonte",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "300", label: "Leve (300)" },
-                  { value: "400", label: "Normal (400)" },
-                  { value: "500", label: "Médio (500)" },
-                  { value: "600", label: "Semi-negrito (600)" },
-                  { value: "700", label: "Negrito (700)" },
-                ]),
-              }
-            ),
-            createProperty(
-              "textAlign",
-              currentBlock?.properties?.textAlign || "center",
-              PropertyType.SELECT,
-              "Alinhamento do Texto",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "left", label: "Esquerda" },
-                  { value: "center", label: "Centro" },
-                  { value: "right", label: "Direita" },
-                ]),
-              }
-            ),
-            createProperty(
-              "textColor",
-              currentBlock?.properties?.textColor || "#8F7A6A",
-              PropertyType.COLOR,
-              "Cor do Texto",
-              PropertyCategory.STYLE
-            ),
-            createProperty(
-              "linkColor",
-              currentBlock?.properties?.linkColor || "#B89B7A",
-              PropertyType.COLOR,
-              "Cor dos Links",
-              PropertyCategory.STYLE
-            ),
-            createProperty(
-              "backgroundColor",
-              currentBlock?.properties?.backgroundColor || "transparent",
-              PropertyType.COLOR,
-              "Cor de Fundo",
-              PropertyCategory.STYLE
-            ),
-            createProperty(
-              "lineHeight",
-              currentBlock?.properties?.lineHeight || "1.5",
-              PropertyType.SELECT,
-              "Altura da Linha",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "1", label: "1" },
-                  { value: "1.25", label: "1.25" },
-                  { value: "1.5", label: "1.5" },
-                  { value: "1.75", label: "1.75" },
-                  { value: "2", label: "2" },
-                ]),
-              }
-            ),
-            createProperty(
-              "showIcon",
-              currentBlock?.properties?.showIcon !== false,
-              PropertyType.SWITCH,
-              "Mostrar Ícone",
-              PropertyCategory.CONTENT
-            ),
-            createProperty(
-              "iconType",
-              currentBlock?.properties?.iconType || "shield",
-              PropertyType.SELECT,
-              "Tipo do Ícone",
-              PropertyCategory.CONTENT,
-              {
-                options: createSelectOptions([
-                  { value: "shield", label: "Escudo (Privacidade)" },
-                  { value: "lock", label: "Cadeado (Segurança)" },
-                  { value: "info", label: "Informação" },
-                  { value: "warning", label: "Aviso" },
-                  { value: "none", label: "Nenhum" },
-                ]),
-              }
-            ),
-            createProperty(
-              "textSize",
-              currentBlock?.properties?.textSize || "text-sm",
-              PropertyType.SELECT,
-              "Tamanho do Texto",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "text-xs", label: "Extra Pequeno (12px)" },
-                  { value: "text-sm", label: "Pequeno (14px)" },
-                  { value: "text-base", label: "Normal (16px)" },
-                ]),
-              }
-            ),
-          ];
-
-        case "options-grid":
-          return [
-            ...baseProperties,
-            // 🔧 COMPORTAMENTO
-            createProperty(
-              "multipleSelection",
-              currentBlock?.properties?.multipleSelection ?? false,
-              PropertyType.SWITCH,
-              "Seleção Múltipla",
-              PropertyCategory.BEHAVIOR
-            ),
-            createProperty(
-              "requiredSelections",
-              currentBlock?.properties?.requiredSelections ?? 1,
-              PropertyType.SELECT,
-              "Seleções Obrigatórias",
-              PropertyCategory.BEHAVIOR,
-              {
-                options: createSelectOptions([
-                  { value: "1", label: "1 seleção" },
-                  { value: "2", label: "2 seleções" },
-                  { value: "3", label: "3 seleções" },
-                  { value: "4", label: "4 seleções" },
-                ]),
-              }
-            ),
-            // 🎨 LAYOUT
-            createProperty(
-              "columns",
-              currentBlock?.properties?.columns ?? 2,
-              PropertyType.SELECT,
-              "Colunas no Desktop",
-              PropertyCategory.LAYOUT,
-              {
-                options: createSelectOptions([
-                  { value: "1", label: "1 coluna" },
-                  { value: "2", label: "2 colunas" },
-                  { value: "3", label: "3 colunas" },
-                  { value: "4", label: "4 colunas" },
-                ]),
-              }
-            ),
-            createProperty(
-              "responsiveColumns",
-              currentBlock?.properties?.responsiveColumns ?? true,
-              PropertyType.SWITCH,
-              "Layout Responsivo",
-              PropertyCategory.LAYOUT
-            ),
-            createProperty(
-              "gridGap",
-              currentBlock?.properties?.gridGap ?? 8,
-              PropertyType.SELECT,
-              "Espaçamento entre Cards",
-              PropertyCategory.LAYOUT,
-              {
-                options: createSelectOptions([
-                  { value: "2", label: "Pequeno (2px)" },
-                  { value: "4", label: "Médio (4px)" },
-                  { value: "8", label: "Grande (8px)" },
-                  { value: "16", label: "Muito Grande (16px)" },
-                ]),
-              }
-            ),
-            // 🖼️ IMAGENS
-            createProperty(
-              "showImages",
-              currentBlock?.properties?.showImages ?? true,
-              PropertyType.SWITCH,
-              "Mostrar Imagens",
-              PropertyCategory.CONTENT
-            ),
-            createProperty(
-              "imageSize",
-              currentBlock?.properties?.imageSize || "256px",
-              PropertyType.SELECT,
-              "Tamanho das Imagens",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "128px", label: "Pequeno (128px)" },
-                  { value: "192px", label: "Médio (192px)" },
-                  { value: "256px", label: "Grande (256px)" },
-                  { value: "320px", label: "Muito Grande (320px)" },
-                ]),
-              }
-            ),
-            createProperty(
-              "imagePosition",
-              currentBlock?.properties?.imagePosition || "top",
-              PropertyType.SELECT,
-              "Posição da Imagem",
-              PropertyCategory.LAYOUT,
-              {
-                options: createSelectOptions([
-                  { value: "top", label: "Acima do Texto" },
-                  { value: "left", label: "À Esquerda" },
-                  { value: "right", label: "À Direita" },
-                  { value: "background", label: "Como Fundo" },
-                ]),
-              }
-            ),
-            // 🎨 CORES E ESTILO
-            createProperty(
-              "selectionStyle",
-              currentBlock?.properties?.selectionStyle || "border",
-              PropertyType.SELECT,
-              "Estilo de Seleção",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "border", label: "Borda Colorida" },
-                  { value: "background", label: "Fundo Colorido" },
-                  { value: "shadow", label: "Sombra" },
-                  { value: "scale", label: "Aumentar Tamanho" },
-                ]),
-              }
-            ),
-            createProperty(
-              "selectedColor",
-              currentBlock?.properties?.selectedColor || "#B89B7A",
-              PropertyType.COLOR,
-              "Cor Quando Selecionado",
-              PropertyCategory.STYLE
-            ),
-            createProperty(
-              "hoverColor",
-              currentBlock?.properties?.hoverColor || "#D4C2A8",
-              PropertyType.COLOR,
-              "Cor ao Passar o Mouse",
-              PropertyCategory.STYLE
-            ),
-          ];
-
-        case "quiz-option":
-          return [
-            ...baseProperties,
-            createProperty(
-              "text",
-              currentBlock?.properties?.text || "Opção do Quiz",
-              PropertyType.TEXT,
-              "Texto da Opção",
-              PropertyCategory.CONTENT
-            ),
-            createProperty(
-              "value",
-              currentBlock?.properties?.value || "",
-              PropertyType.TEXT,
-              "Valor da Opção",
-              PropertyCategory.CONTENT
-            ),
-            createProperty(
-              "description",
-              currentBlock?.properties?.description || "",
-              PropertyType.TEXTAREA,
-              "Descrição",
-              PropertyCategory.CONTENT
-            ),
-            createProperty(
-              "color",
-              currentBlock?.properties?.color || BRAND_COLORS.textPrimary,
-              PropertyType.COLOR,
-              "Cor do Texto",
-              PropertyCategory.STYLE
-            ),
-            createProperty(
-              "backgroundColor",
-              currentBlock?.properties?.backgroundColor || "#ffffff",
-              PropertyType.COLOR,
-              "Cor de Fundo",
-              PropertyCategory.STYLE
-            ),
-            createProperty(
-              "borderColor",
-              currentBlock?.properties?.borderColor || BRAND_COLORS.primary,
-              PropertyType.COLOR,
-              "Cor da Borda",
-              PropertyCategory.STYLE
-            ),
-            createProperty(
-              "fontSize",
-              currentBlock?.properties?.fontSize || "text-base",
-              PropertyType.SELECT,
-              "Tamanho da Fonte",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "text-sm", label: "Pequeno (14px)" },
-                  { value: "text-base", label: "Normal (16px)" },
-                  { value: "text-lg", label: "Grande (18px)" },
-                  { value: "text-xl", label: "Extra Grande (20px)" },
-                  { value: "text-2xl", label: "XXL (24px)" },
-                ]),
-              }
-            ),
-            createProperty(
-              "fontWeight",
-              currentBlock?.properties?.fontWeight || "font-medium",
-              PropertyType.SELECT,
-              "Peso da Fonte",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "font-light", label: "Leve" },
-                  { value: "font-normal", label: "Normal" },
-                  { value: "font-medium", label: "Médio" },
-                  { value: "font-semibold", label: "Semi-negrito" },
-                  { value: "font-bold", label: "Negrito" },
-                ]),
-              }
-            ),
-            createProperty(
-              "textAlign",
-              currentBlock?.properties?.textAlign || "text-left",
-              PropertyType.SELECT,
-              "Alinhamento do Texto",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "text-left", label: "Esquerda" },
-                  { value: "text-center", label: "Centro" },
-                  { value: "text-right", label: "Direita" },
-                ]),
-              }
-            ),
-            createProperty(
-              "borderRadius",
-              currentBlock?.properties?.borderRadius || "rounded-lg",
-              PropertyType.SELECT,
-              "Arredondamento",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "rounded-none", label: "Sem" },
-                  { value: "rounded-sm", label: "Pequeno" },
-                  { value: "rounded", label: "Normal" },
-                  { value: "rounded-lg", label: "Grande" },
-                  { value: "rounded-xl", label: "Extra Grande" },
-                  { value: "rounded-full", label: "Circular" },
-                ]),
-              }
-            ),
-            createProperty(
-              "borderWidth",
-              currentBlock?.properties?.borderWidth || "border",
-              PropertyType.SELECT,
-              "Espessura da Borda",
-              PropertyCategory.STYLE,
-              {
-                options: createSelectOptions([
-                  { value: "border-0", label: "Sem borda" },
-                  { value: "border", label: "Padrão (1px)" },
-                  { value: "border-2", label: "Média (2px)" },
-                  { value: "border-4", label: "Grossa (4px)" },
-                ]),
-              }
-            ),
-            createProperty(
-              "padding",
-              currentBlock?.properties?.padding || "p-4",
-              PropertyType.SELECT,
-              "Espaçamento Interno",
-              PropertyCategory.LAYOUT,
-              {
-                options: createSelectOptions([
-                  { value: "p-2", label: "Pequeno" },
-                  { value: "p-4", label: "Normal" },
-                  { value: "p-6", label: "Grande" },
-                  { value: "p-8", label: "Extra Grande" },
-                ]),
-              }
-            ),
-            createProperty(
-              "margin",
-              currentBlock?.properties?.margin || "m-2",
-              PropertyType.SELECT,
-              "Espaçamento Externo",
-              PropertyCategory.LAYOUT,
-              {
-                options: createSelectOptions([
-                  { value: "m-1", label: "Mínimo" },
-                  { value: "m-2", label: "Pequeno" },
-                  { value: "m-4", label: "Normal" },
-                  { value: "m-6", label: "Grande" },
-                ]),
-              }
-            ),
-            createProperty(
-              "isSelectable",
-              currentBlock?.properties?.isSelectable !== false,
-              PropertyType.SWITCH,
-              "Opção Selecionável",
-              PropertyCategory.BEHAVIOR
-            ),
-            createProperty(
-              "isCorrect",
-              currentBlock?.properties?.isCorrect || false,
-              PropertyType.SWITCH,
-              "Resposta Correta",
-              PropertyCategory.BEHAVIOR
-            ),
-            createProperty(
-              "points",
-              currentBlock?.properties?.points ?? 10,
-              PropertyType.RANGE,
-              "Pontos",
-              PropertyCategory.BEHAVIOR,
-              { min: 0, max: 100, step: 5, unit: "pts" }
-            ),
-            createProperty(
-              "hoverEffect",
-              currentBlock?.properties?.hoverEffect !== false,
-              PropertyType.SWITCH,
-              "Efeito Hover",
-              PropertyCategory.BEHAVIOR
-            ),
-            createProperty(
-              "animationDuration",
-              currentBlock?.properties?.animationDuration || "duration-200",
-              PropertyType.SELECT,
-              "Duração da Animação",
-              PropertyCategory.BEHAVIOR,
-              {
-                options: createSelectOptions([
-                  { value: "duration-75", label: "Muito Rápida" },
-                  { value: "duration-150", label: "Rápida" },
-                  { value: "duration-200", label: "Normal" },
-                  { value: "duration-300", label: "Lenta" },
-                  { value: "duration-500", label: "Muito Lenta" },
-                ]),
-              }
-            ),
-          ];
-
-        case "quiz-header":
-          return [
-            ...baseProperties,
-            createProperty(
-              "logoUrl",
-              currentBlock?.properties?.logoUrl || "",
-              PropertyType.TEXT,
-              "URL do Logo",
-              PropertyCategory.CONTENT
-            ),
-            createProperty(
-              "logoAlt",
-              currentBlock?.properties?.logoAlt || "Logo",
-              PropertyType.TEXT,
-              "Texto Alternativo do Logo",
-              PropertyCategory.CONTENT
-            ),
-            createProperty(
-              "logoWidth",
-              currentBlock?.properties?.logoWidth ?? 80,
-              PropertyType.RANGE,
-              "Largura do Logo",
-              PropertyCategory.LAYOUT,
-              { min: 40, max: 200, step: 10, unit: "px" }
-            ),
-            createProperty(
-              "logoHeight",
-              currentBlock?.properties?.logoHeight ?? 80,
-              PropertyType.RANGE,
-              "Altura do Logo",
-              PropertyCategory.LAYOUT,
-              { min: 40, max: 200, step: 10, unit: "px" }
-            ),
-            createProperty(
-              "progressValue",
-              currentBlock?.properties?.progressValue ?? 50,
-              PropertyType.RANGE,
-              "Valor do Progresso",
-              PropertyCategory.BEHAVIOR,
-              { min: 0, max: 100, step: 5, unit: "%" }
-            ),
-            createProperty(
-              "progressMax",
-              currentBlock?.properties?.progressMax ?? 100,
-              PropertyType.RANGE,
-              "Máximo do Progresso",
-              PropertyCategory.BEHAVIOR,
-              { min: 50, max: 200, step: 10, unit: "pts" }
-            ),
-            createProperty(
-              "stepNumber",
-              currentBlock?.properties?.stepNumber || "1 de 21",
-              PropertyType.TEXT,
-              "Número da Etapa",
-              PropertyCategory.CONTENT
-            ),
-            createProperty(
-              "showBackButton",
-              currentBlock?.properties?.showBackButton !== false,
-              PropertyType.SWITCH,
-              "Mostrar Botão Voltar",
-              PropertyCategory.BEHAVIOR
-            ),
-            createProperty(
-              "showProgress",
-              currentBlock?.properties?.showProgress !== false,
-              PropertyType.SWITCH,
-              "Mostrar Barra de Progresso",
-              PropertyCategory.BEHAVIOR
-            ),
-            createProperty(
-              "backgroundColor",
-              currentBlock?.properties?.backgroundColor || "#ffffff",
-              PropertyType.COLOR,
-              "Cor de Fundo",
-              PropertyCategory.STYLE
-            ),
-            createProperty(
-              "borderColor",
-              currentBlock?.properties?.borderColor || BRAND_COLORS.primary,
-              PropertyType.COLOR,
-              "Cor da Borda",
-              PropertyCategory.STYLE
-            ),
-          ];
-
-        case "decorative-bar-inline":
-          return [
-            ...baseProperties,
-            createProperty(
-              "width",
-              currentBlock?.properties?.width || "100%",
-              PropertyType.SELECT,
-              "Largura",
-              PropertyCategory.LAYOUT,
-              {
-                options: createSelectOptions([
-                  { value: "25%", label: "Pequena (25%)" },
-                  { value: "50%", label: "Média (50%)" },
-                  { value: "75%", label: "Grande (75%)" },
-                  { value: "100%", label: "Total (100%)" },
-                  { value: "300px", label: "Fixa 300px" },
-                  { value: "500px", label: "Fixa 500px" },
-                ]),
-              }
-            ),
-            createProperty(
-              "height",
-              currentBlock?.properties?.height ?? 4,
-              PropertyType.RANGE,
-              "Altura",
-              PropertyCategory.LAYOUT,
-              { min: 1, max: 20, step: 1, unit: "px" }
-            ),
-            createProperty(
-              "color",
-              currentBlock?.properties?.color || BRAND_COLORS.primary,
-              PropertyType.COLOR,
-              "Cor Principal",
-              PropertyCategory.STYLE
-            ),
-            createProperty(
-              "gradientColors",
-              JSON.stringify(
-                currentBlock?.properties?.gradientColors || [
-                  BRAND_COLORS.primary,
-                  "#D4C2A8",
-                  BRAND_COLORS.primary,
-                ]
-              ),
-              PropertyType.TEXTAREA,
-              "Cores do Gradiente (JSON)",
-              PropertyCategory.STYLE
-            ),
-            createProperty(
-              "borderRadius",
-              currentBlock?.properties?.borderRadius ?? 3,
-              PropertyType.RANGE,
-              "Arredondamento",
-              PropertyCategory.STYLE,
-              { min: 0, max: 20, step: 1, unit: "px" }
-            ),
-            createProperty(
-              "marginTop",
-              currentBlock?.properties?.marginTop ?? 8,
-              PropertyType.RANGE,
-              "Margem Superior",
-              PropertyCategory.LAYOUT,
-              { min: 0, max: 50, step: 2, unit: "px" }
-            ),
-            createProperty(
-              "marginBottom",
-              currentBlock?.properties?.marginBottom ?? 32,
-              PropertyType.RANGE,
-              "Margem Inferior",
-              PropertyCategory.LAYOUT,
-              { min: 0, max: 100, step: 4, unit: "px" }
-            ),
-            createProperty(
-              "showShadow",
-              currentBlock?.properties?.showShadow !== false,
-              PropertyType.SWITCH,
-              "Mostrar Sombra",
-              PropertyCategory.STYLE
-            ),
-          ];
-
-        // 🎯 COMPONENTES BÁSICOS DO EDITOR
-        case "heading":
-          return [
-            ...baseProperties,
-            {
-              key: "level",
-              value: currentBlock?.properties?.level || "h2",
-              type: PropertyType.SELECT,
-              label: "Nível do Título",
-              category: PropertyCategory.CONTENT,
-              options: [
-                { value: "h1", label: "Título 1 (H1)" },
-                { value: "h2", label: "Título 2 (H2)" },
-                { value: "h3", label: "Título 3 (H3)" },
-                { value: "h4", label: "Título 4 (H4)" },
-                { value: "h5", label: "Título 5 (H5)" },
-                { value: "h6", label: "Título 6 (H6)" },
-              ],
-            },
-          ];
-
-        case "text":
-          return [
-            ...baseProperties,
-            // Já tem as propriedades básicas de texto
-          ];
-
-        case "image":
-          return [
-            ...baseProperties,
-            {
-              key: "src",
-              value: currentBlock?.properties?.src || "",
-              type: PropertyType.TEXT,
-              label: "URL da Imagem",
-              category: PropertyCategory.CONTENT,
-              required: true,
-            },
-            {
-              key: "alt",
-              value: currentBlock?.properties?.alt || "Imagem",
-              type: PropertyType.TEXT,
-              label: "Texto Alternativo",
-              category: PropertyCategory.CONTENT,
-            },
-          ];
-
-        case "button":
-          return [
-            ...baseProperties,
-            {
-              key: "variant",
-              value: currentBlock?.properties?.variant || "primary",
-              type: PropertyType.SELECT,
-              label: "Variante",
-              category: PropertyCategory.STYLE,
-              options: [
-                { value: "primary", label: "Primário" },
-                { value: "secondary", label: "Secundário" },
-                { value: "outline", label: "Contorno" },
-                { value: "ghost", label: "Fantasma" },
-              ],
-            },
-            {
-              key: "action",
-              value: currentBlock?.properties?.action || "none",
-              type: PropertyType.SELECT,
-              label: "Ação do Botão",
-              category: PropertyCategory.BEHAVIOR,
-              options: [
-                { value: "none", label: "Nenhuma" },
-                { value: "next-step", label: "Próxima Etapa" },
-                { value: "url", label: "Abrir URL" },
-              ],
-            },
-          ];
-
-        case "spacer":
-          return [
-            ...baseProperties,
-            {
-              key: "height",
-              value: currentBlock?.properties?.height ?? 20,
-              type: PropertyType.RANGE,
-              label: "Altura do Espaçador",
-              category: PropertyCategory.LAYOUT,
-              min: 10,
-              max: 200,
-              step: 10,
-              unit: "px",
-            },
-          ];
-
-        case "heading-inline":
-          return [
-            ...baseProperties,
-            {
-              key: "level",
-              value: currentBlock?.properties?.level || "h2",
-              type: PropertyType.SELECT,
-              label: "Nível do Título",
-              category: PropertyCategory.CONTENT,
-              options: [
-                { value: "h1", label: "Título 1 (H1)" },
-                { value: "h2", label: "Título 2 (H2)" },
-                { value: "h3", label: "Título 3 (H3)" },
-                { value: "h4", label: "Título 4 (H4)" },
-                { value: "h5", label: "Título 5 (H5)" },
-                { value: "h6", label: "Título 6 (H6)" },
-              ],
-            },
-          ];
-
-        default:
-          // Log para debug dos tipos não mapeados
-          console.warn(
-            `🔧 useUnifiedProperties: Tipo de bloco "${blockType}" não tem propriedades específicas definidas. Usando propriedades base.`
-          );
-          return baseProperties;
-
-        case "pricing-card":
-        return [
-          ...baseProperties,
-          createProperty(
-            "title",
-            currentBlock?.properties?.title || "Plano Premium",
-            PropertyType.TEXT,
-            "Título do Plano",
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            "price",
-            currentBlock?.properties?.price || "R$ 97,00",
-            PropertyType.TEXT,
-            "Preço",
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            "description",
-            currentBlock?.properties?.description || "Melhor valor para você",
-            PropertyType.TEXTAREA,
-            "Descrição",
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            "features",
-            currentBlock?.properties?.features || "Acesso completo\\nSuporte premium\\nGarantia 30 dias",
-            PropertyType.TEXTAREA,
-            "Recursos Inclusos",
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            "buttonText",
-            currentBlock?.properties?.buttonText || "Adquirir Agora",
-            PropertyType.TEXT,
-            "Texto do Botão",
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            "buttonUrl",
-            currentBlock?.properties?.buttonUrl || "#",
-            PropertyType.TEXT,
-            "URL do Botão",
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            "highlighted",
-            currentBlock?.properties?.highlighted || false,
-            PropertyType.SWITCH,
-            "Destacar Plano",
-            PropertyCategory.STYLE
-          ),
-        ];
-
-        case "quiz-progress":
-        return [
-          ...baseProperties,
-          createProperty(
-            "currentStep",
-            currentBlock?.properties?.currentStep || 1,
-            PropertyType.RANGE,
-            "Etapa Atual",
-            PropertyCategory.CONTENT,
-            { min: 1, max: 10, step: 1 }
-          ),
-          createProperty(
-            "totalSteps",
-            currentBlock?.properties?.totalSteps || 5,
-            PropertyType.RANGE,
-            "Total de Etapas",
-            PropertyCategory.CONTENT,
-            { min: 1, max: 20, step: 1 }
-          ),
-          createProperty(
-            "showPercentage",
-            currentBlock?.properties?.showPercentage || true,
-            PropertyType.SWITCH,
-            "Mostrar Porcentagem",
-            PropertyCategory.STYLE
-          ),
-          createProperty(
-            "progressColor",
-            currentBlock?.properties?.progressColor || "#3b82f6",
-            PropertyType.COLOR,
-            "Cor da Barra",
-            PropertyCategory.STYLE
-          ),
-        ];
-
-        case "quiz-results":
-        return [
-          ...baseProperties,
-          createProperty(
-            "title",
-            currentBlock?.properties?.title || "Seus Resultados",
-            PropertyType.TEXT,
-            "Título dos Resultados",
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            "subtitle",
-            currentBlock?.properties?.subtitle || "Baseado nas suas respostas...",
-            PropertyType.TEXT,
-            "Subtítulo",
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            "showScore",
-            currentBlock?.properties?.showScore || true,
-            PropertyType.SWITCH,
-            "Mostrar Pontuação",
-            PropertyCategory.STYLE
-          ),
-          createProperty(
-            "showRecommendations",
-            currentBlock?.properties?.showRecommendations || true,
-            PropertyType.SWITCH,
-            "Mostrar Recomendações",
-            PropertyCategory.CONTENT
-          ),
-        ];
-
-        case "style-results":
-        return [
-          ...baseProperties,
-          createProperty(
-            "resultStyle",
-            currentBlock?.properties?.resultStyle || "card",
-            PropertyType.SELECT,
-            "Estilo do Resultado",
-            PropertyCategory.STYLE,
-            {
-              options: createSelectOptions([
-                { value: "card", label: "Cartão" },
-                { value: "list", label: "Lista" },
-                { value: "grid", label: "Grade" },
-              ])
             }
           ),
           createProperty(
-            "showIcons",
-            currentBlock?.properties?.showIcons || true,
-            PropertyType.SWITCH,
-            "Mostrar Ícones",
-            PropertyCategory.STYLE
+            "action",
+            currentBlock?.properties?.action || "none",
+            PropertyType.SELECT,
+            "Ação do Botão",
+            PropertyCategory.BEHAVIOR,
+            {
+              options: [
+                { value: "none", label: "Nenhuma" },
+                { value: "next-step", label: "Próxima Etapa" },
+                { value: "url", label: "Abrir URL" },
+              ],
+            }
           ),
           createProperty(
-            "columns",
-            currentBlock?.properties?.columns || 2,
-            PropertyType.RANGE,
-            "Colunas",
+            "url",
+            currentBlock?.properties?.url || "",
+            PropertyType.TEXT,
+            "URL de Destino",
+            PropertyCategory.BEHAVIOR
+          ),
+        ];
+
+      case "decorative-bar-inline":
+        return [
+          ...getUniversalProperties(),
+          createProperty(
+            "width",
+            currentBlock?.properties?.width || "100%",
+            PropertyType.SELECT,
+            "Largura",
             PropertyCategory.LAYOUT,
-            { min: 1, max: 4, step: 1 }
+            {
+              options: createSelectOptions([
+                { value: "25%", label: "Pequena (25%)" },
+                { value: "50%", label: "Média (50%)" },
+                { value: "75%", label: "Grande (75%)" },
+                { value: "100%", label: "Total (100%)" },
+                { value: "300px", label: "Fixa 300px" },
+                { value: "500px", label: "Fixa 500px" },
+              ]),
+            }
           ),
-        ];
-
-        case "final-step":
-        return [
-          ...baseProperties,
-          createProperty(
-            "title",
-            currentBlock?.properties?.title || "Parabéns!",
-            PropertyType.TEXT,
-            "Título Final",
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            "message",
-            currentBlock?.properties?.message || "Você completou o quiz com sucesso!",
-            PropertyType.TEXTAREA,
-            "Mensagem Final",
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            "showCTA",
-            currentBlock?.properties?.showCTA || true,
-            PropertyType.SWITCH,
-            "Mostrar Botão de Ação",
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            "ctaText",
-            currentBlock?.properties?.ctaText || "Ver Meus Resultados",
-            PropertyType.TEXT,
-            "Texto do Botão",
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            "ctaUrl",
-            currentBlock?.properties?.ctaUrl || "#",
-            PropertyType.TEXT,
-            "URL do Botão",
-            PropertyCategory.CONTENT
-          ),
-        ];
-
-        case "decorative-bar":
-        return [
-          ...baseProperties,
           createProperty(
             "height",
-            currentBlock?.properties?.height || 4,
+            currentBlock?.properties?.height ?? 4,
             PropertyType.RANGE,
             "Altura",
-            PropertyCategory.STYLE,
-            { min: 1, max: 20, step: 1 }
+            PropertyCategory.LAYOUT,
+            { min: 1, max: 20, step: 1, unit: "px" }
           ),
           createProperty(
             "color",
-            currentBlock?.properties?.color || "#3b82f6",
+            currentBlock?.properties?.color || BRAND_COLORS.primary,
             PropertyType.COLOR,
-            "Cor da Barra",
+            "Cor Principal",
             PropertyCategory.STYLE
           ),
           createProperty(
-            "style",
-            currentBlock?.properties?.style || "solid",
-            PropertyType.SELECT,
-            "Estilo da Barra",
+            "gradientColors",
+            JSON.stringify(
+              currentBlock?.properties?.gradientColors || [
+                BRAND_COLORS.primary,
+                "#D4C2A8",
+                BRAND_COLORS.primary,
+              ]
+            ),
+            PropertyType.TEXTAREA,
+            "Cores do Gradiente (JSON)",
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            "borderRadius",
+            currentBlock?.properties?.borderRadius ?? 3,
+            PropertyType.RANGE,
+            "Arredondamento",
             PropertyCategory.STYLE,
-            {
-              options: createSelectOptions([
-                { value: "solid", label: "Sólida" },
-                { value: "dashed", label: "Tracejada" },
-                { value: "dotted", label: "Pontilhada" },
-              ])
-            }
+            { min: 0, max: 20, step: 1, unit: "px" }
+          ),
+          createProperty(
+            "showShadow",
+            currentBlock?.properties?.showShadow !== false,
+            PropertyType.SWITCH,
+            "Mostrar Sombra",
+            PropertyCategory.STYLE
           ),
         ];
 
-        case "legal-notice":
+      case "legal-notice-inline":
         return [
-          ...baseProperties,
+          ...getUniversalProperties(),
+          ...getTextProperties(),
           createProperty(
-            "content",
-            currentBlock?.properties?.content || "Este é um aviso legal importante.",
-            PropertyType.TEXTAREA,
-            "Conteúdo do Aviso",
+            "privacyText",
+            currentBlock?.properties?.privacyText || "Política de Privacidade",
+            PropertyType.TEXT,
+            "Texto Política de Privacidade",
             PropertyCategory.CONTENT
           ),
           createProperty(
-            "type",
-            currentBlock?.properties?.type || "info",
+            "copyrightText",
+            currentBlock?.properties?.copyrightText || "© 2025 Gisele Galvão Consultoria",
+            PropertyType.TEXT,
+            "Texto de Copyright",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "termsText",
+            currentBlock?.properties?.termsText || "Termos de Uso",
+            PropertyType.TEXT,
+            "Texto Termos de Uso",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "fontFamily",
+            currentBlock?.properties?.fontFamily || "inherit",
             PropertyType.SELECT,
-            "Tipo do Aviso",
+            "Família da Fonte",
             PropertyCategory.STYLE,
             {
               options: createSelectOptions([
-                { value: "info", label: "Informação" },
-                { value: "warning", label: "Aviso" },
-                { value: "error", label: "Erro" },
-                { value: "success", label: "Sucesso" },
-              ])
+                { value: "inherit", label: "Padrão" },
+                { value: "Inter", label: "Inter" },
+                { value: "Roboto", label: "Roboto" },
+                { value: "Open Sans", label: "Open Sans" },
+                { value: "Playfair Display", label: "Playfair Display" },
+              ]),
             }
           ),
           createProperty(
-            "showIcon",
-            currentBlock?.properties?.showIcon || true,
-            PropertyType.SWITCH,
-            "Mostrar Ícone",
+            "linkColor",
+            currentBlock?.properties?.linkColor || BRAND_COLORS.accent,
+            PropertyType.COLOR,
+            "Cor dos Links",
             PropertyCategory.STYLE
+          ),
+          createProperty(
+            "separatorText",
+            currentBlock?.properties?.separatorText || " | ",
+            PropertyType.TEXT,
+            "Separador",
+            PropertyCategory.CONTENT
           ),
         ];
 
-          // Log para debug dos tipos não mapeados
-          console.warn(
-            `🔧 useUnifiedProperties: Tipo de bloco "${blockType}" não tem propriedades específicas definidas. Usando propriedades base.`
-          );
-          return baseProperties;
-      }
-    },
-    [stages] // 🎯 Dependência das etapas para atualizar as opções dinamicamente
-  );
-
-  // Otimizar useEffect com dependências específicas
-  useEffect(() => {
-    if (!block || !block.type) {
-      setProperties([]);
-      return;
+      default:
+        console.warn(
+          `🔧 useUnifiedProperties: Tipo de bloco "${blockType}" não tem propriedades específicas definidas.`
+        );
+        return getUniversalProperties();
     }
+  }, [blockType, blockId, currentBlock]);
 
-    const newProperties = generateDefaultProperties(block.type, block);
-    setProperties(newProperties);
-  }, [block?.id, block?.type, generateDefaultProperties]);
+  const [properties, setProperties] = useState<UnifiedProperty[]>([]);
+
+  // Sincronizar propriedades quando mudarem
+  useEffect(() => {
+    if (generatedProperties && Array.isArray(generatedProperties)) {
+      setProperties(generatedProperties);
+    }
+  }, [generatedProperties]);
 
   const updateProperty = useCallback(
     (key: string, value: any) => {
-      console.log("🔧 useUnifiedProperties - updateProperty chamado:", {
-        key,
-        value,
-        blockId: block?.id,
-      });
-
-      if (!block) {
-        console.warn("⚠️ updateProperty: block is null");
-        return;
-      }
-
-      const updatedProperties = { ...block.properties, [key]: value };
-      console.log("📝 updatedProperties:", updatedProperties);
-
-      setProperties(prevProps =>
-        prevProps.map(prop => (prop.key === key ? { ...prop, value } : prop))
+      setProperties(prev =>
+        prev.map(prop => (prop.key === key ? { ...prop, value } : prop))
       );
 
-      if (onUpdateExternal) {
-        console.log("🚀 Calling onUpdateExternal with:", {
-          blockId: block.id,
-          properties: updatedProperties,
-        });
-        onUpdateExternal(block.id, {
-          properties: updatedProperties,
-        });
-      } else {
-        console.warn("⚠️ onUpdateExternal is null");
+      if (onUpdateExternal && block) {
+        const updatedProps = { ...block.properties, [key]: value };
+        onUpdateExternal(block.id, { properties: updatedProps });
       }
     },
-    [block?.id, onUpdateExternal]
+    [onUpdateExternal, block]
   );
 
   const resetProperties = useCallback(() => {
-    if (!block) return;
-
-    const defaultProperties = generateDefaultProperties(block.type, block);
-    setProperties(defaultProperties);
-
-    if (onUpdateExternal) {
-      onUpdateExternal(block.id, { properties: {} });
+    const resetProps = generatedProperties?.map(prop => ({
+      ...prop,
+      value: prop.defaultValue ?? prop.value,
+    }));
+    if (resetProps) {
+      setProperties(resetProps);
     }
-  }, [block?.id, block?.type, generateDefaultProperties, onUpdateExternal]);
+  }, [generatedProperties]);
+
+  const validateProperty = (property: UnifiedProperty): boolean => {
+    if (!property.key || property.value === undefined) {
+      return false;
+    }
+
+    switch (property.type) {
+      case PropertyType.RANGE:
+        const numValue = Number(property.value);
+        return (
+          !isNaN(numValue) &&
+          (property.min === undefined || numValue >= property.min) &&
+          (property.max === undefined || numValue <= property.max)
+        );
+      case PropertyType.SELECT:
+        return (
+          property.options?.some(opt => opt.value === property.value) ?? true
+        );
+      case PropertyType.COLOR:
+        return typeof property.value === "string" && property.value.length > 0;
+      case PropertyType.SWITCH:
+        return typeof property.value === "boolean";
+      default:
+        return true;
+    }
+  };
 
   const validateProperties = useCallback(() => {
-    return properties.every(prop => {
-      if (prop.required && (!prop.value || prop.value === "")) {
-        return false;
-      }
-      return true;
-    });
+    return properties.every(prop => validateProperty(prop));
   }, [properties]);
 
   const getPropertyByKey = useCallback(
@@ -1953,25 +767,17 @@ export const getInlineComponentProperties = (type: string, currentProps: any = {
       backgroundColor: "#B89B7A",
       textColor: "#FFFFFF",
       action: "next-step",
-    },
-    "decorative-bar-inline": {
-      height: 4,
-      color: "#B89B7A",
-      marginTop: 20,
-      marginBottom: 30,
-    },
-    "form-input": {
-      label: "Digite aqui",
-      placeholder: "Digite seu primeiro nome...",
-      required: true,
-      type: "text",
-      backgroundColor: "#FFFFFF",
-      borderColor: "#B89B7A",
+      borderRadius: 8,
+      padding: "12px 24px",
+      fontWeight: "medium",
+      cursor: "pointer",
+      border: "none",
+      transition: "all 0.2s ease",
     },
     "image-display-inline": {
-      src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
+      src: "",
       alt: "Imagem",
-      width: "100%",
+      width: "auto",
       height: "auto",
       borderRadius: 12,
       shadow: true,
