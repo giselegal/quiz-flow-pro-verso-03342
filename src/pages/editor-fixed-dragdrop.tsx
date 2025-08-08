@@ -11,6 +11,8 @@ import { generateBlockDefinitions, getRegistryStats } from "@/config/enhancedBlo
 import { useEditor } from "@/context/EditorContext";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
 import { useUnifiedProperties } from "@/hooks/useUnifiedProperties"; // ✅ ADICIONADO IMPORT
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts"; // ✅ ADICIONADO ATALHOS
+import { usePropertyHistory } from "@/hooks/usePropertyHistory"; // ✅ ADICIONADO HISTÓRICO
 import { Type } from "lucide-react";
 import React, { useState } from "react";
 
@@ -22,6 +24,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
   // Estado para controlar o painel de configurações
   const [showFunnelSettings, setShowFunnelSettings] = useState(false);
+
+  // ✅ HISTÓRICO DE PROPRIEDADES para undo/redo
+  const propertyHistory = usePropertyHistory();
 
   // ✅ USAR NOVA ESTRUTURA UNIFICADA DO EDITORCONTEXT
   const {
@@ -153,9 +158,20 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   const handleDeleteBlock = (blockId: string) => {
     if (window.confirm("Tem certeza que deseja deletar este bloco?")) {
       deleteBlock(blockId);
+      setSelectedBlockId(null);
       console.log(`🗑️ Bloco ${blockId} deletado`);
     }
   };
+
+  // ✅ ATALHOS DE TECLADO para melhor UX
+  useKeyboardShortcuts({
+    onUndo: propertyHistory.undo,
+    onRedo: propertyHistory.redo,
+    onDelete: selectedBlockId ? () => handleDeleteBlock(selectedBlockId) : undefined,
+    canUndo: propertyHistory.canUndo,
+    canRedo: propertyHistory.canRedo,
+    hasSelectedBlock: !!selectedBlockId,
+  });
 
   // ✅ NAVEGAÇÃO SIMPLIFICADA (CALLBACK OPCIONAL)
   const handleStageSelect = (stageId: string) => {

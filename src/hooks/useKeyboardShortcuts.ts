@@ -1,84 +1,92 @@
-// =====================================================================
-// hooks/useKeyboardShortcuts.ts - Hook para atalhos de teclado
-// =====================================================================
+/**
+ * 🎹 useKeyboardShortcuts - Sistema de atalhos para o painel de propriedades
+ * Implementa atalhos Ctrl+Z, Ctrl+Y, Delete para melhor UX
+ */
 
 import { useEffect } from "react";
 
-interface KeyboardShortcuts {
+interface UseKeyboardShortcutsOptions {
   onUndo?: () => void;
   onRedo?: () => void;
-  onSave?: () => void;
-  onCopy?: () => void;
-  onPaste?: () => void;
   onDelete?: () => void;
+  canUndo?: boolean;
+  canRedo?: boolean;
+  hasSelectedBlock?: boolean;
+  disabled?: boolean;
 }
 
-export const useKeyboardShortcuts = (shortcuts: KeyboardShortcuts) => {
+export const useKeyboardShortcuts = (options: UseKeyboardShortcutsOptions) => {
+  const {
+    onUndo,
+    onRedo,
+    onDelete,
+    canUndo = false,
+    canRedo = false,
+    hasSelectedBlock = false,
+    disabled = false,
+  } = options;
+
   useEffect(() => {
+    if (disabled) return;
+
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Verificar se está em um campo de entrada
+      // Ignore if user is typing in an input/textarea
       const target = event.target as HTMLElement;
-      const isInputField =
+      if (
         target.tagName === "INPUT" ||
         target.tagName === "TEXTAREA" ||
-        target.contentEditable === "true";
-
-      // Ctrl/Cmd + Z (Undo)
-      if ((event.ctrlKey || event.metaKey) && event.key === "z" && !event.shiftKey) {
-        if (!isInputField && shortcuts.onUndo) {
-          event.preventDefault();
-          shortcuts.onUndo();
-        }
-      }
-
-      // Ctrl/Cmd + Y ou Ctrl/Cmd + Shift + Z (Redo)
-      if (
-        ((event.ctrlKey || event.metaKey) && event.key === "y") ||
-        ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === "Z")
+        target.contentEditable === "true"
       ) {
-        if (!isInputField && shortcuts.onRedo) {
-          event.preventDefault();
-          shortcuts.onRedo();
-        }
+        return;
       }
 
-      // Ctrl/Cmd + S (Save)
-      if ((event.ctrlKey || event.metaKey) && event.key === "s") {
-        if (shortcuts.onSave) {
-          event.preventDefault();
-          shortcuts.onSave();
+      const isCtrl = event.ctrlKey || event.metaKey;
+
+      // Ctrl+Z - Undo
+      if (isCtrl && event.key === "z" && !event.shiftKey) {
+        event.preventDefault();
+        if (canUndo && onUndo) {
+          onUndo();
         }
+        return;
       }
 
-      // Ctrl/Cmd + C (Copy)
-      if ((event.ctrlKey || event.metaKey) && event.key === "c") {
-        if (!isInputField && shortcuts.onCopy) {
-          event.preventDefault();
-          shortcuts.onCopy();
+      // Ctrl+Y ou Ctrl+Shift+Z - Redo
+      if (
+        (isCtrl && event.key === "y") ||
+        (isCtrl && event.shiftKey && event.key === "z")
+      ) {
+        event.preventDefault();
+        if (canRedo && onRedo) {
+          onRedo();
         }
+        return;
       }
 
-      // Ctrl/Cmd + V (Paste)
-      if ((event.ctrlKey || event.metaKey) && event.key === "v") {
-        if (!isInputField && shortcuts.onPaste) {
-          event.preventDefault();
-          shortcuts.onPaste();
-        }
-      }
-
-      // Delete (Delete)
+      // Delete - Delete selected block
       if (event.key === "Delete" || event.key === "Backspace") {
-        if (!isInputField && shortcuts.onDelete) {
+        if (hasSelectedBlock && onDelete) {
           event.preventDefault();
-          shortcuts.onDelete();
+          onDelete();
         }
+        return;
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [shortcuts]);
+  }, [onUndo, onRedo, onDelete, canUndo, canRedo, hasSelectedBlock, disabled]);
+
+  return {
+    shortcuts: {
+      undo: canUndo ? "Ctrl+Z" : null,
+      redo: canRedo ? "Ctrl+Y" : null,
+      delete: hasSelectedBlock ? "Delete" : null,
+    },
+  };
 };
+
+export default useKeyboardShortcuts;

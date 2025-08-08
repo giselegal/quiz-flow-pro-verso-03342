@@ -16,6 +16,9 @@ import { Textarea } from "@/components/ui/textarea";
 import AlignmentButtons from "@/components/visual-controls/AlignmentButtons";
 import ColorPicker from "@/components/visual-controls/ColorPicker";
 import SizeSlider from "@/components/visual-controls/SizeSlider";
+// ✅ Importa componentes de feedback melhorados
+import { EnhancedPropertyInput } from "./EnhancedPropertyInput";
+import { PropertyChangeIndicator } from "./PropertyChangeIndicator";
 // ✅ Importa UnifiedBlock, useUnifiedProperties e PropertyType do hook
 import {
   PropertyType,
@@ -71,28 +74,16 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
       onUpdate // Passa o `onUpdate` do painel diretamente para o hook
     );
 
-  // 🐛 DEBUG: Logs detalhados para investigar o problema
-  console.log("🔧 [EnhancedUniversalPropertiesPanel] DEBUG:", {
-    actualBlock,
-    blockType: actualBlock?.type,
-    propertiesLength: properties?.length,
-    properties: properties?.map(p => ({ key: p.key, type: p.type, category: p.category })),
-    allCategories: Array.from(new Set(properties?.map(p => p.category))),
-  });
-
-  // ✅ CORREÇÃO: Adicionar logs de debug e validação
-  console.log("🎯 EnhancedUniversalPropertiesPanel renderizado:", {
-    selectedBlock: actualBlock
-      ? {
-          id: actualBlock.id,
-          type: actualBlock.type,
-          propertiesKeys: Object.keys(actualBlock.properties || {}),
-          propertiesValues: actualBlock.properties,
-        }
-      : null,
-    hookProperties: properties,
-    hookPropertiesLength: properties?.length || 0,
-  });
+  // ✅ OTIMIZAÇÃO: Logs de debug removidos para melhor performance
+  const debugInfo = actualBlock && process.env.NODE_ENV === 'development' ? {
+    id: actualBlock.id,
+    type: actualBlock.type,
+    propertiesCount: properties?.length || 0,
+  } : null;
+  
+  if (debugInfo) {
+    console.log("🎯 EnhancedUniversalPropertiesPanel:", debugInfo);
+  }
 
   // Log específico para quiz-intro-header
   if (actualBlock?.type === "quiz-intro-header") {
@@ -148,58 +139,52 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
     const formattedOptions = options;
 
     switch (type) {
-      // ✅ NO-CODE: Campo de texto simples
+      // ✅ NO-CODE: Campo de texto simples com feedback melhorado
       case PropertyType.TEXT:
         return (
-          <div key={key} className="space-y-2">
-            <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
-              {label} {required && <span className="text-red-500">*</span>}
-            </Label>
-            <Input
-              id={key}
-              value={value || ""}
-              onChange={e => updateProperty(key, e.target.value)}
-              placeholder={`Digite ${label.toLowerCase()}`}
-              className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
-            />
-          </div>
+          <EnhancedPropertyInput
+            key={key}
+            label={label}
+            value={value || ""}
+            placeholder={`Digite ${label.toLowerCase()}`}
+            onChange={(newValue) => updateProperty(key, newValue)}
+            type="text"
+            className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
+          />
         );
 
-      // ✅ NO-CODE: Área de texto simples (sem HTML)
+      // ✅ NO-CODE: Área de texto simples com feedback melhorado
       case PropertyType.TEXTAREA:
         return (
-          <div key={key} className="space-y-2">
-            <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
-              {label} {required && <span className="text-red-500">*</span>}
-            </Label>
-            <Textarea
-              id={key}
-              value={value || ""}
-              onChange={e => updateProperty(key, e.target.value)}
-              rows={rows || 3}
-              placeholder={`Digite ${label.toLowerCase()}`}
-              className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
-            />
-          </div>
+          <EnhancedPropertyInput
+            key={key}
+            label={label}
+            value={value || ""}
+            placeholder={`Digite ${label.toLowerCase()}`}
+            onChange={(newValue) => updateProperty(key, newValue)}
+            type="textarea"
+            rows={rows || 3}
+            className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
+          />
         );
 
-      // ✅ NO-CODE: Seletor de cores visual
+      // ✅ NO-CODE: Seletor de cores visual com feedback
       case PropertyType.COLOR:
         return (
-          <div key={key}>
+          <PropertyChangeIndicator key={key}>
             <ColorPicker
               value={value || "#432818"}
               onChange={color => updateProperty(key, color)}
               label={label}
               allowTransparent={true}
             />
-          </div>
+          </PropertyChangeIndicator>
         );
 
-      // ✅ NO-CODE: Slider visual para tamanhos e espaçamentos
+      // ✅ NO-CODE: Slider visual com feedback
       case PropertyType.RANGE:
         return (
-          <div key={key}>
+          <PropertyChangeIndicator key={key}>
             <SizeSlider
               value={value || 0}
               onChange={val => updateProperty(key, val)}
@@ -210,7 +195,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
               label={label}
               showValue={true}
             />
-          </div>
+          </PropertyChangeIndicator>
         );
 
       // ✅ NO-CODE: Botões de alinhamento visual
