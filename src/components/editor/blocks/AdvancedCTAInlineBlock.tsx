@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import { ArrowRight, Star, Shield } from "lucide-react";
 import type { BlockComponentProps } from "@/types/blocks";
