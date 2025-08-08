@@ -3,7 +3,7 @@ import { DragEndEvent } from "@dnd-kit/core";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 import { SortableItem } from "./SortableItem";
-import { ComponentRenderer } from "./ComponentRenderer";
+import ComponentRenderer from "./ComponentRenderer";
 
 interface Component {
   id: string;
