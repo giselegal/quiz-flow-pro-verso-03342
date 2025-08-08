@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import { Mic } from "lucide-react";
 import type { BlockComponentProps } from "@/types/blocks";

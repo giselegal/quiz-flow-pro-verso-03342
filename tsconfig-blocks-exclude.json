@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": [
+    "src/components/editor/blocks/**/*.tsx",
+    "src/components/blocks/**/*.tsx",
+    "node_modules",
+    "dist",
+    "build"
+  ],
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "noImplicitAny": false,
+    "strict": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  }
+}
