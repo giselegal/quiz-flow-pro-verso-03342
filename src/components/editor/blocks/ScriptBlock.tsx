@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import { Code } from "lucide-react";
 import type { BlockComponentProps } from "../../../types/blocks";

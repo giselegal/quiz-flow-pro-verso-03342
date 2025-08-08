@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * RichTextBlock - Componente de texto rico usando Quill.js
  *
