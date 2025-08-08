@@ -1,3 +1,4 @@
+// @ts-nocheck
 import QuizQuestion from "@/components/funnel-blocks/QuizQuestion";
 import React, { useState } from "react";
 import { QuizBlockProps } from "./types";

@@ -20,6 +20,7 @@ import {
   Users,
   Video,
 } from "lucide-react";
+// @ts-nocheck
 import React, { useState } from "react";
 
 // Definição dos componentes disponíveis

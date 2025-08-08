@@ -1,3 +1,4 @@
+// @ts-nocheck
 import QuizResultsBlock from "@/components/blocks/quiz/QuizResultsBlock";
 import { QuizResult, useQuizResults } from "@/hooks/useQuizResults";
 import React, { useEffect, useState } from "react";

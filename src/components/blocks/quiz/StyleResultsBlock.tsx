@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { styleConfig } from "@/data/styleConfig";

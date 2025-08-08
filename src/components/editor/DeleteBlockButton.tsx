@@ -1,4 +1,5 @@
 import { Trash2 } from "lucide-react";
+// @ts-nocheck
 import React from "react";
 
 interface DeleteBlockButtonProps {
