@@ -365,6 +365,45 @@ export const useUnifiedProperties = (
                 { value: "2", label: "2" },
               ],
             },
+            // 🎯 ADICIONAR ESTAS PROPRIEDADES:
+            {
+              key: "spacing",
+              value: currentBlock?.properties?.spacing || "small",
+              type: PropertyType.SELECT,
+              label: "Espaçamento Interno",
+              category: PropertyCategory.STYLE,
+              options: [
+                { value: "tight", label: "Apertado" },
+                { value: "small", label: "Pequeno" },
+                { value: "normal", label: "Normal" },
+                { value: "loose", label: "Solto" },
+              ],
+            },
+            {
+              key: "containerWidth",
+              value: currentBlock?.properties?.containerWidth || "medium",
+              type: PropertyType.SELECT,
+              label: "Largura do Container",
+              category: PropertyCategory.LAYOUT,
+              options: [
+                { value: "small", label: "Pequeno" },
+                { value: "medium", label: "Médio" },
+                { value: "large", label: "Grande" },
+                { value: "full", label: "Completo" },
+              ],
+            },
+            {
+              key: "containerPosition",
+              value: currentBlock?.properties?.containerPosition || "center",
+              type: PropertyType.SELECT,
+              label: "Posição do Container",
+              category: PropertyCategory.LAYOUT,
+              options: [
+                { value: "left", label: "Esquerda" },
+                { value: "center", label: "Centro" },
+                { value: "right", label: "Direita" },
+              ],
+            },
           ];
 
         case "quiz-intro-header":
@@ -1459,6 +1498,11 @@ export const useUnifiedProperties = (
           ];
 
         default:
+          // Log para debug dos tipos não mapeados
+          console.warn(
+            `🔧 useUnifiedProperties: Tipo de bloco "${blockType}" não tem propriedades específicas definidas. Usando propriedades base.`
+          );
+          return baseProperties;
 
         case "pricing-card":
         return [
