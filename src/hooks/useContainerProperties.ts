@@ -5,7 +5,19 @@
 export interface ContainerProperties {
   containerWidth?: "full" | "large" | "medium" | "small";
   containerPosition?: "left" | "center" | "right";
-  spacing?: "none" | "small" | "compact" | "normal" | "comfortable" | "spacious";
+  spacing?:
+    | "none"
+    | "horizontal-only"
+    | "small"
+    | "small-horizontal"
+    | "compact"
+    | "compact-horizontal"
+    | "normal"
+    | "normal-horizontal"
+    | "comfortable"
+    | "comfortable-horizontal"
+    | "spacious"
+    | "spacious-horizontal";
   gridColumns?: "auto" | "full" | "half";
   backgroundColor?: "transparent" | "white" | "gray-50" | "brand-light";
   marginTop?: number;

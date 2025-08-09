@@ -7,7 +7,6 @@
 
 import { ComponentType } from "react";
 import {
-  UniversalBlockRendererV2,
   getBlockComponent as getEnhancedComponent,
   getBlockDefinition,
   getAllBlockTypes,
@@ -54,7 +53,7 @@ export const hasBlockComponent = (blockType: string): boolean => {
 };
 
 // Re-export do sistema Enhanced para compatibilidade
-export { UniversalBlockRendererV2 as UniversalBlockRenderer, getBlockDefinition, getAllBlockTypes };
+export { getBlockDefinition, getAllBlockTypes };
 
 // Mantém compatibilidade com código legado
 export const EDITOR_BLOCKS_MAP = UNIFIED_BLOCK_MAP;

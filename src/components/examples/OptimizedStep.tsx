@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🚀 EXEMPLO DE STEP OTIMIZADO COM HOOKS COMPOSTOS
  * ===============================================

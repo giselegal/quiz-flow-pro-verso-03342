@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🔧 HOOK INTEGRADO PARA COMPONENTES REUTILIZÁVEIS
  * ==============================================

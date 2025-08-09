@@ -47,6 +47,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
 
   // Quiz Components
   "quiz-intro-header": QuizIntroHeaderBlock,
+  "quiz-header": QuizIntroHeaderBlock,
   "form-input": FormInputBlock,
 
   // Interactive Elements

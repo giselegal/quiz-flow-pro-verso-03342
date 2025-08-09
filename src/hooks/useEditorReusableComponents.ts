@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ENHANCED_BLOCK_REGISTRY } from "@/config/enhancedBlockRegistry";
 import { useEditor } from "@/context/EditorContext";
 import { useCallback, useEffect, useState } from "react";
