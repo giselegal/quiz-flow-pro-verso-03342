@@ -102,7 +102,11 @@ export const useReusableComponents = (quizId?: string) => {
 
       try {
         setLoading(true);
-        const { data, error } = await supabase
+        if (!supabase) {
+          setStepComponents(prev => ({ ...prev, [stepNumber]: [] }));
+          return [];
+        }
+        const { data, error } = await supabase!
           .from("step_components")
           .select("*")
           .eq("quiz_id", quizId)
@@ -137,7 +141,11 @@ export const useReusableComponents = (quizId?: string) => {
 
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      if (!supabase) {
+        setStepComponents({});
+        return {} as Record<number, StepComponent[]>;
+      }
+      const { data, error } = await supabase!
         .from("step_components")
         .select("*")
         .eq("quiz_id", quizId)
@@ -187,7 +195,11 @@ export const useReusableComponents = (quizId?: string) => {
           orderIndex = currentComponents.length + 1;
         }
 
-        const { data, error } = await supabase
+        if (!supabase) {
+          throw new Error("Supabase não configurado");
+        }
+
+        const { data, error } = await supabase!
           .from("component_instances")
           .insert({
             component_type_key: componentTypeKey,
@@ -195,7 +207,7 @@ export const useReusableComponents = (quizId?: string) => {
             step_number: stepNumber,
             order_index: orderIndex,
             properties,
-            created_by: (await supabase.auth.getUser()).data.user?.id,
+            created_by: (await supabase!.auth.getUser()).data.user?.id,
           })
           .select()
           .single();
@@ -228,7 +240,11 @@ export const useReusableComponents = (quizId?: string) => {
       try {
         setLoading(true);
 
-        const { data, error } = await supabase
+        if (!supabase) {
+          throw new Error("Supabase não configurado");
+        }
+
+        const { data, error } = await supabase!
           .from("component_instances")
           .update(updates)
           .eq("id", instanceId)
@@ -262,9 +278,12 @@ export const useReusableComponents = (quizId?: string) => {
       try {
         setLoading(true);
 
+        if (!supabase) {
+          throw new Error("Supabase não configurado");
+        }
         // Atualizar order_index de cada componente
         const updates = orderedInstanceIds.map((instanceId, index) =>
-          supabase
+          supabase!
             .from("component_instances")
             .update({ order_index: index + 1 })
             .eq("id", instanceId)
@@ -293,14 +312,18 @@ export const useReusableComponents = (quizId?: string) => {
       try {
         setLoading(true);
 
+        if (!supabase) {
+          throw new Error("Supabase não configurado");
+        }
+
         // Obter dados do componente antes de deletar
-        const { data: componentData } = await supabase
+        const { data: componentData } = await supabase!
           .from("component_instances")
           .select("step_number")
           .eq("id", instanceId)
           .single();
 
-        const { error } = await supabase.from("component_instances").delete().eq("id", instanceId);
+        const { error } = await supabase!.from("component_instances").delete().eq("id", instanceId);
 
         if (error) throw error;
 
@@ -327,8 +350,12 @@ export const useReusableComponents = (quizId?: string) => {
       try {
         setLoading(true);
 
+        if (!supabase) {
+          throw new Error("Supabase não configurado");
+        }
+
         // Obter dados do componente original
-        const { data: originalComponent, error: fetchError } = await supabase
+        const { data: originalComponent, error: fetchError } = await supabase!
           .from("component_instances")
           .select("*")
           .eq("id", instanceId)
@@ -340,7 +367,7 @@ export const useReusableComponents = (quizId?: string) => {
         const currentComponents = stepComponents[targetStep] || [];
 
         // Criar nova instância
-        const { data, error } = await supabase
+        const { data, error } = await supabase!
           .from("component_instances")
           .insert({
             component_type_key: originalComponent.component_type_key,
@@ -349,7 +376,7 @@ export const useReusableComponents = (quizId?: string) => {
             order_index: currentComponents.length + 1,
             properties: originalComponent.properties,
             custom_styling: originalComponent.custom_styling,
-            created_by: (await supabase.auth.getUser()).data.user?.id,
+            created_by: (await supabase!.auth.getUser()).data.user?.id,
           })
           .select()
           .single();
