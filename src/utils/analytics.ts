@@ -328,7 +328,8 @@ export const captureUTMParameters = () => {
 export const initFacebookPixel = (pixelData?: any) => {
   if (typeof window === "undefined") return;
 
-  const pixelId = process.env.REACT_APP_FACEBOOK_PIXEL_ID || "1234567890123456";
+  // Pixel ID fornecido: 1311550759901086
+  const pixelId = "1311550759901086";
 
   if (!window.fbq) {
     window.fbq = function () {
@@ -344,6 +345,7 @@ export const initFacebookPixel = (pixelData?: any) => {
   }
 
   window.fbq("init", pixelId);
+  window.fbq("track", "PageView");
   console.log(`[Analytics] Facebook Pixel initialized with ID: ${pixelId}`);
 };
 
@@ -390,4 +392,210 @@ export const trackSaleConversion = (
   }
 
   console.log(`[Analytics] Sale conversion: ${value} ${currency}`, data);
+};
+
+// ✨ EVENTOS ESPECÍFICOS PARA FUNIL DE ESTILO
+export const trackStyleQuizStart = (templateType: string = "style_quiz") => {
+  if (typeof window === "undefined") return;
+
+  const data = {
+    content_category: "quiz",
+    content_name: templateType,
+    event_category: "engagement",
+  };
+
+  if (window.gtag) {
+    window.gtag("event", "begin_checkout", data);
+  }
+
+  if (window.fbq) {
+    window.fbq("track", "InitiateCheckout", data);
+    window.fbq("trackCustom", "StyleQuizStart", data);
+  }
+
+  console.log(`[Analytics] Style Quiz Started: ${templateType}`, data);
+};
+
+export const trackStyleConsultationStart = (formData?: any) => {
+  if (typeof window === "undefined") return;
+
+  const data = {
+    content_category: "consultation",
+    content_name: "style_consultation",
+    event_category: "engagement",
+    ...formData,
+  };
+
+  if (window.gtag) {
+    window.gtag("event", "generate_lead", data);
+  }
+
+  if (window.fbq) {
+    window.fbq("track", "Lead", data);
+    window.fbq("trackCustom", "StyleConsultationStart", data);
+  }
+
+  console.log("[Analytics] Style Consultation Started", data);
+};
+
+export const trackResultGenerated = (resultType: string, templateType: string) => {
+  if (typeof window === "undefined") return;
+
+  const data = {
+    content_category: "result",
+    content_name: resultType,
+    template_type: templateType,
+    event_category: "conversion",
+  };
+
+  if (window.gtag) {
+    window.gtag("event", "conversion", data);
+  }
+
+  if (window.fbq) {
+    window.fbq("track", "CompleteRegistration", data);
+    window.fbq("trackCustom", "StyleResultGenerated", data);
+  }
+
+  console.log(`[Analytics] Result Generated: ${resultType}`, data);
+};
+
+export const trackOfferView = (offerType: string = "style_guide") => {
+  if (typeof window === "undefined") return;
+
+  const data = {
+    content_category: "offer",
+    content_name: offerType,
+    event_category: "engagement",
+  };
+
+  if (window.gtag) {
+    window.gtag("event", "view_promotion", data);
+  }
+
+  if (window.fbq) {
+    window.fbq("track", "ViewContent", data);
+    window.fbq("trackCustom", "OfferView", data);
+  }
+
+  console.log(`[Analytics] Offer Viewed: ${offerType}`, data);
+};
+
+export const trackEmailCapture = (email: string, source: string = "style_offer") => {
+  if (typeof window === "undefined") return;
+
+  const data = {
+    content_category: "lead",
+    content_name: source,
+    event_category: "conversion",
+    email_domain: email.split("@")[1] || "unknown",
+  };
+
+  if (window.gtag) {
+    window.gtag("event", "sign_up", data);
+  }
+
+  if (window.fbq) {
+    window.fbq("track", "CompleteRegistration", data);
+    window.fbq("trackCustom", "EmailCapture", data);
+  }
+
+  console.log(`[Analytics] Email Captured: ${email}`, data);
+};
+
+// 🚀 CONVERSÃO HOTMART - Link específico fornecido
+export const trackHotmartClick = (source: string = "style_result") => {
+  if (typeof window === "undefined") return;
+
+  const hotmartUrl = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
+  const data = {
+    content_category: "hotmart",
+    content_name: "style_guide_premium",
+    content_url: hotmartUrl,
+    event_category: "conversion",
+    source_page: source,
+    value: 97, // Valor estimado do produto
+    currency: "BRL",
+  };
+
+  if (window.gtag) {
+    window.gtag("event", "add_to_cart", data);
+    window.gtag("event", "begin_checkout", data);
+  }
+
+  if (window.fbq) {
+    window.fbq("track", "AddToCart", data);
+    window.fbq("track", "InitiateCheckout", data);
+    window.fbq("trackCustom", "HotmartClick", data);
+  }
+
+  console.log("[Analytics] Hotmart Click Tracked", data);
+};
+
+export const trackHotmartConversion = (transactionId?: string, value: number = 97) => {
+  if (typeof window === "undefined") return;
+
+  const data = {
+    content_category: "hotmart",
+    content_name: "style_guide_premium",
+    event_category: "purchase",
+    transaction_id: transactionId || `hotmart_${Date.now()}`,
+    value,
+    currency: "BRL",
+  };
+
+  if (window.gtag) {
+    window.gtag("event", "purchase", data);
+  }
+
+  if (window.fbq) {
+    window.fbq("track", "Purchase", data);
+    window.fbq("trackCustom", "HotmartConversion", data);
+  }
+
+  console.log("[Analytics] Hotmart Conversion Tracked", data);
+};
+
+// 📊 EVENTOS DE TEMPLATES IA
+export const trackAIAgentStart = (templateType: string) => {
+  if (typeof window === "undefined") return;
+
+  const data = {
+    content_category: "ai_agent",
+    content_name: templateType,
+    event_category: "engagement",
+  };
+
+  if (window.gtag) {
+    window.gtag("event", "begin_checkout", data);
+  }
+
+  if (window.fbq) {
+    window.fbq("track", "InitiateCheckout", data);
+    window.fbq("trackCustom", "AIAgentStart", data);
+  }
+
+  console.log(`[Analytics] AI Agent Started: ${templateType}`, data);
+};
+
+export const trackTemplateGenerated = (templateType: string, funnelId: string) => {
+  if (typeof window === "undefined") return;
+
+  const data = {
+    content_category: "ai_generated",
+    content_name: templateType,
+    funnel_id: funnelId,
+    event_category: "conversion",
+  };
+
+  if (window.gtag) {
+    window.gtag("event", "conversion", data);
+  }
+
+  if (window.fbq) {
+    window.fbq("track", "CompleteRegistration", data);
+    window.fbq("trackCustom", "TemplateGenerated", data);
+  }
+
+  console.log(`[Analytics] Template Generated: ${templateType} - ${funnelId}`, data);
 };

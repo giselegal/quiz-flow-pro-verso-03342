@@ -6,6 +6,7 @@ import { EditorProvider } from "@/context/EditorContext";
 import { ScrollSyncProvider } from "@/context/ScrollSyncContext";
 import DebugEditorContext from "@/pages/debug-editor";
 import EditorPage from "@/pages/editor-fixed";
+import TemplatesIA from "@/pages/TemplatesIA";
 import TestButton from "@/pages/test-button";
 import TestPropertiesPanel from "@/pages/test-properties";
 import { Route, Router, Switch } from "wouter";
@@ -56,6 +57,15 @@ function App() {
                           <EditorPage />
                         </ScrollSyncProvider>
                       </EditorProvider>
+                    </ErrorBoundary>
+                  )}
+                </Route>
+
+                {/* Templates IA Route */}
+                <Route path="/templatesia">
+                  {() => (
+                    <ErrorBoundary>
+                      <TemplatesIA />
                     </ErrorBoundary>
                   )}
                 </Route>
