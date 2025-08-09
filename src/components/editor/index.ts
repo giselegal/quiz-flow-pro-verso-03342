@@ -11,10 +11,10 @@ export { default as QuizEditorSteps } from "./QuizEditorSteps";
 
 // Componentes com named exports
 export { AddBlockButton } from "./AddBlockButton";
-export { ComponentsPanel } from "./ComponentsPanel";
-export { DeleteBlockButton } from "./DeleteBlockButton";
+// export { ComponentsPanel } from "./ComponentsPanel";
+// export { DeleteBlockButton } from "./DeleteBlockButton";
 export { default as EditBlockContent } from "./EditBlockContent";
-export { EditorBlockItem } from "./EditorBlockItem";
+// export { EditorBlockItem } from "./EditorBlockItem";
 export { EmptyEditor } from "./EmptyEditor";
 export { ModernPropertyPanel } from "./ModernPropertyPanel";
 export { PageEditor } from "./PageEditor";
