@@ -4,16 +4,17 @@ import CombinedComponentsPanel from "@/components/editor/CombinedComponentsPanel
 import { DndProvider } from "@/components/editor/dnd/DndProvider";
 import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelSettingsPanel";
 import { FunnelStagesPanel } from "@/components/editor/funnel/FunnelStagesPanel";
-import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
+import { FiveColumnLayout } from "@/components/editor/layout/FiveColumnLayout";
+import QuizStepsPanel from "@/components/editor/QuizStepsPanel";
 import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
 import EnhancedUniversalPropertiesPanel from "@/components/universal/EnhancedUniversalPropertiesPanel";
 import { generateBlockDefinitions, getRegistryStats } from "@/config/enhancedBlockRegistry";
 
 import { useEditor } from "@/context/EditorContext";
-import { useSyncedScroll } from "@/hooks/useSyncedScroll";
-import { useUnifiedProperties } from "@/hooks/useUnifiedProperties"; // ✅ ADICIONADO IMPORT
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts"; // ✅ ADICIONADO ATALHOS
 import { usePropertyHistory } from "@/hooks/usePropertyHistory"; // ✅ ADICIONADO HISTÓRICO
+import { useSyncedScroll } from "@/hooks/useSyncedScroll";
+import { useUnifiedProperties } from "@/hooks/useUnifiedProperties"; // ✅ ADICIONADO IMPORT
 import { Type } from "lucide-react";
 import React, { useState } from "react";
 
@@ -25,6 +26,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
   // Estado para controlar o painel de configurações
   const [showFunnelSettings, setShowFunnelSettings] = useState(false);
+  const [showQuizSteps, setShowQuizSteps] = useState(true); // Por padrão ativo
 
   // ✅ HISTÓRICO DE PROPRIEDADES para undo/redo
   const propertyHistory = usePropertyHistory();
@@ -240,7 +242,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         <div className="relative z-10">
           <EditorToolbar
             isPreviewing={isPreviewing}
+            showQuizSteps={showQuizSteps}
             onTogglePreview={() => setIsPreviewing(!isPreviewing)}
+            onToggleQuizSteps={() => setShowQuizSteps(!showQuizSteps)}
             onSave={handleSave}
             viewportSize={viewportSize}
             onViewportSizeChange={setViewportSize}
@@ -262,7 +266,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             </div>
           </div>
 
-          <FourColumnLayout
+          <FiveColumnLayout
             stagesPanel={<FunnelStagesPanel onStageSelect={handleStageSelect} />}
             componentsPanel={
               <CombinedComponentsPanel
@@ -288,6 +292,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                 </div>
               </div>
             }
+            quizStepsPanel={showQuizSteps ? <QuizStepsPanel templateId="style-consultant" /> : null}
             propertiesPanel={
               !isPreviewing && selectedBlock ? (
                 <EnhancedUniversalPropertiesPanel
