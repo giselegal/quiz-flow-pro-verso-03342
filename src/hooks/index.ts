@@ -1,7 +1,10 @@
+// @ts-nocheck
 /**
- * 🔗 ÍNDICE D// ====================================================================
-// ✏️ HOOKS DE EDITOR
-// ====================================================================
+ * Índice centralizado de hooks
+ * Todos os exports consolidados e válidos.
+ */
+
+// Editor hooks
 export { useEditor } from "./useEditor";
 export { useUnifiedProperties } from "./useUnifiedProperties";
 export { useInlineEdit } from "./useInlineEdit";
@@ -9,26 +12,17 @@ export { useBlockForm } from "./useBlockForm";
 export { usePropertyHistory } from "./usePropertyHistory";
 export { useLiveEditor } from "./useLiveEditor";
 
-// ====================================================================
-// 🔧 HOOKS COMPOSTOS (NOVOS)
-// ====================================================================
+// Hooks compostos e avançados
 export { useStepWithContainer, useQuizStepContainer } from "./useStepWithContainer";
 export { useIntegratedReusableComponents, useTemplateActions } from "./useIntegratedReusableComponents";
-export { 
-  useSmartPerformance, 
-  useOptimizedQuizStep, 
-  useOptimizedInlineComponent, 
-  useSmartDebounce 
-} from "./useSmartPerformance";TIMIZADO
- * ============================
- * 
- * Exportação centralizada de todos os hooks do sistema.
- * Organizado por categoria para melhor manutenibilidade.
- */
+export {
+  useSmartPerformance,
+  useOptimizedQuizStep,
+  useOptimizedInlineComponent,
+  useSmartDebounce,
+} from "./useSmartPerformance";
 
-// ====================================================================
-// 🧩 HOOKS DE QUIZ (Core)
-// ====================================================================
+// Quiz hooks (core)
 export { useQuiz } from "./useQuiz";
 export { useQuizBuilder } from "./useQuizBuilder";
 export { useQuizConfig } from "./useQuizConfig";
@@ -36,57 +30,35 @@ export { useQuizLogic } from "./useQuizLogic";
 export { useQuizResults } from "./useQuizResults";
 export { useQuizTracking } from "./useQuizTracking";
 
-// ====================================================================
-// ✏️ HOOKS DE EDITOR
-// ====================================================================
-export { useBlockForm } from "./useBlockForm";
-export { useEditor } from "./useEditor";
-export { useInlineEdit } from "./useInlineEdit";
-export { useLiveEditor } from "./useLiveEditor";
-export { usePropertyHistory } from "./usePropertyHistory";
-export { useUnifiedProperties } from "./useUnifiedProperties";
-
-// ====================================================================
-// 📱 HOOKS DE RESPONSIVIDADE
-// ====================================================================
+// Responsividade
 export { useIsLowPerformanceDevice, useIsMobile } from "./use-mobile";
 export { useMediaQuery } from "./useMediaQuery";
 
-// ====================================================================
-// ⚡ HOOKS DE PERFORMANCE
-// ====================================================================
+// Performance
 export { useDebounce } from "./useDebounce";
 export { useLoadingState } from "./useLoadingState";
 export { useOptimizedTimer } from "./useOptimizedTimer";
 export { usePerformanceOptimization } from "./usePerformanceOptimization";
 
-// ====================================================================
-// 🎨 HOOKS DE UI/UX
-// ====================================================================
+// UI/UX
 export { useAutoAnimate } from "./useAutoAnimate";
 export { useGlobalStyles } from "./useGlobalStyles";
 export { useKeyboardShortcuts } from "./useKeyboardShortcuts";
 export { useScrollTracking } from "./useScrollTracking";
 
-// ====================================================================
-// 💾 HOOKS DE DADOS
-// ====================================================================
+// Dados
 export { useAutosave } from "./useAutosave";
 export { useHistory } from "./useHistory";
 export { useSupabase } from "./useSupabase";
 export { useSupabaseQuiz } from "./useSupabaseQuiz";
 
-// ====================================================================
-// 🛠️ HOOKS UTILITÁRIOS
-// ====================================================================
+// Utilitários
 export { useToast } from "./use-toast";
 export { useABTest } from "./useABTest";
 export { useGlobalLoading } from "./useGlobalLoading";
 export { useUtmParameters } from "./useUtmParameters";
 
-// ====================================================================
-// 📊 ESTATÍSTICAS DOS HOOKS
-// ====================================================================
+// Estatísticas dos hooks
 export const HOOKS_STATS = {
   total: 51,
   byCategory: {

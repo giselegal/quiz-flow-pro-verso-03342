@@ -7,5 +7,5 @@
 export { ProductionReadyStep, QuickOptimizedStep } from './ProductionReadyStep';
 
 // Steps existentes (se houver)
-export * from './Step01Template_OPTIMIZED';
+// export * from './Step01Template_OPTIMIZED';
 

@@ -9,7 +9,7 @@ interface SecurePurchaseBlockProps {
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+const getMarginClass = (value: string | number, type: string): string => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return "";
@@ -83,10 +83,10 @@ const SecurePurchaseBlock: React.FC<SecurePurchaseBlockProps> = ({
         "py-4 sm:py-6 px-4",
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass((marginTop as number | string) ?? 0, "top"),
+        getMarginClass((marginBottom as number | string) ?? 0, "bottom"),
+        getMarginClass((marginLeft as number | string) ?? 0, "left"),
+        getMarginClass((marginRight as number | string) ?? 0, "right")
       )}
     >
       <div className="max-w-2xl mx-auto">

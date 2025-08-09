@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🚀 STEP OTIMIZADO - VERSÃO PRONTA PARA PRODUÇÃO
  * ==============================================

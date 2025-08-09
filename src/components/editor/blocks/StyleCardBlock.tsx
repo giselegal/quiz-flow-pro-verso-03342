@@ -12,7 +12,7 @@ interface StyleCardBlockProps {
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+const getMarginClass = (value: string | number, type: string): string => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return "";
@@ -71,10 +71,10 @@ const StyleCardBlock: React.FC<StyleCardBlockProps> = ({
           "p-6 text-center text-[#432818]",
           className,
           // Margens universais com controles deslizantes
-          getMarginClass(marginTop, "top"),
-          getMarginClass(marginBottom, "bottom"),
-          getMarginClass(marginLeft, "left"),
-          getMarginClass(marginRight, "right")
+          getMarginClass((marginTop as number | string) ?? 0, "top"),
+          getMarginClass((marginBottom as number | string) ?? 0, "bottom"),
+          getMarginClass((marginLeft as number | string) ?? 0, "left"),
+          getMarginClass((marginRight as number | string) ?? 0, "right")
         )}
       >
         <p>Finalize o quiz para ver seu estilo predominante</p>
