@@ -1,24 +1,23 @@
+import React from "react";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
 import {
   Eye,
-  FileText,
-  Maximize2,
-  Monitor,
   Save,
-  Settings,
+  Download,
   Smartphone,
   Tablet,
+  Monitor,
+  Maximize2,
+  Settings,
 } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 interface EditorToolbarProps {
   isPreviewing: boolean;
   viewportSize: "sm" | "md" | "lg" | "xl";
-  showQuizSteps?: boolean;
   onViewportSizeChange: (size: "sm" | "md" | "lg" | "xl") => void;
   onTogglePreview: () => void;
-  onToggleQuizSteps?: () => void;
   onSave: () => void;
   onShowFunnelSettings?: () => void;
 }
@@ -26,10 +25,8 @@ interface EditorToolbarProps {
 export function EditorToolbar({
   isPreviewing,
   viewportSize,
-  showQuizSteps,
   onViewportSizeChange,
   onTogglePreview,
-  onToggleQuizSteps,
   onSave,
   onShowFunnelSettings,
 }: EditorToolbarProps) {
@@ -112,21 +109,6 @@ export function EditorToolbar({
       </div>
 
       <div className="flex gap-2">
-        {onToggleQuizSteps && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onToggleQuizSteps}
-            className={cn(
-              "border-[#B89B7A] text-[#432818]",
-              showQuizSteps && "bg-[#B89B7A]/10 border-[#8F7A6A]"
-            )}
-          >
-            <FileText className="w-4 h-4 mr-2" />
-            Template Quiz
-          </Button>
-        )}
-
         {onShowFunnelSettings && (
           <Button
             variant="outline"
